@@ -1,6 +1,7 @@
 package roomescape;
 
 import io.restassured.RestAssured;
+import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.annotation.DirtiesContext;
@@ -10,7 +11,8 @@ import org.springframework.test.annotation.DirtiesContext;
 public class MissionStepTest {
 
     @Test
-    void 일단계() {
+    @DisplayName("홈 화면을 요청하면 200 OK을 응답한다.")
+    void adminPageTest() {
         RestAssured.given().log().all()
                 .when().get("/admin")
                 .then().log().all()

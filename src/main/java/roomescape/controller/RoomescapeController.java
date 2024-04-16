@@ -8,7 +8,6 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
-import roomescape.domain.Reservation;
 import roomescape.dto.CreateReservationRequest;
 import roomescape.dto.ReservationResponse;
 import roomescape.service.ReservationService;
@@ -34,22 +33,16 @@ public class RoomescapeController {
 
     @GetMapping("/reservations")
     public ResponseEntity<List<ReservationResponse>> getReservations() {
-
-        List<Reservation> reservations = reservationService.getAllReservations();
-
-        List<ReservationResponse> reservationResponses = reservations.stream()
-                .map(ReservationResponse::from)
-                .toList();
+        List<ReservationResponse> reservationResponses = reservationService.getReservations();
 
         return ResponseEntity.ok(reservationResponses);
     }
 
     @PostMapping("/reservations")
-    public ResponseEntity<ReservationResponse> addReservation(
-            @RequestBody CreateReservationRequest dto) {
-        Reservation reservation = reservationService.addReservation(dto);
+    public ResponseEntity<ReservationResponse> addReservation(@RequestBody CreateReservationRequest dto) {
+        ReservationResponse reservationResponse = reservationService.addReservation(dto);
 
-        return ResponseEntity.ok(ReservationResponse.from(reservation));
+        return ResponseEntity.ok(reservationResponse);
     }
 
     @DeleteMapping("/reservations/{id}")

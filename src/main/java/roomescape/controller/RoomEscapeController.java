@@ -5,7 +5,9 @@ import java.util.List;
 import java.util.concurrent.atomic.AtomicLong;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.ResponseBody;
@@ -40,4 +42,14 @@ public class RoomEscapeController {
         return reservation;
     }
 
+    @DeleteMapping("/reservations/{id}")
+    public ResponseEntity<Void> deleteReservation(@PathVariable long id) {
+        Reservation findReservation = reservations.stream()
+                .filter(reservation -> reservation.getId() == id)
+                .findAny()
+                .orElseThrow(() -> new IllegalArgumentException("해당 id(%d)의 예약이 존재하지 않습니다.".formatted(id)));
+
+        reservations.remove(findReservation);
+        return ResponseEntity.ok().build();
+    }
 }

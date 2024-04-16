@@ -1,26 +1,39 @@
 package roomescape.controller;
 
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.bind.annotation.*;
+import roomescape.domain.Reservation;
+import roomescape.dto.ReservationRequest;
 import roomescape.dto.ReservationResponse;
 
+import java.net.URI;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.concurrent.atomic.AtomicLong;
 
 @Controller
+@RequestMapping("/reservations")
 public class ReservationController {
 
-    private static final List<ReservationResponse> RESPONSES = new ArrayList<>();
-
-    static {
-        RESPONSES.add(new ReservationResponse(1, "브라운", "2023-01-01", "10:00"));
-        RESPONSES.add(new ReservationResponse(2, "브라운", "2023-01-02", "11:00"));
-    }
+    private final List<Reservation> reservations = new ArrayList<>();
+    private final AtomicLong index = new AtomicLong(1);
 
     @ResponseBody
-    @GetMapping("/reservations")
+    @GetMapping("")
     public List<ReservationResponse> findAllReservations() {
-        return RESPONSES;
+        List<ReservationResponse> responses = new ArrayList<>();
+        for (final Reservation reservation : reservations) {
+            responses.add(new ReservationResponse(reservation));
+        }
+        return responses;
+    }
+
+    @PostMapping("")
+    public ResponseEntity<Void> createReservation(@RequestBody ReservationRequest reservationRequest) {
+        Reservation reservation = new Reservation(reservationRequest.name(), reservationRequest.date(), reservationRequest.time());
+        Reservation newReservation = Reservation.toEntity(index.getAndIncrement(), reservation);
+        reservations.add(newReservation);
+        return ResponseEntity.created(URI.create("/reservations/" + newReservation.getId())).build();
     }
 }

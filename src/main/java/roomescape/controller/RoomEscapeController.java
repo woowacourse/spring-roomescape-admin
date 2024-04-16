@@ -43,7 +43,8 @@ public class RoomEscapeController {
                 .map(ReservationDto::from)
                 .toList();
 
-        return ResponseEntity.ok().body(reservationDtos);
+        return ResponseEntity.ok()
+                .body(reservationDtos);
     }
 
     @PostMapping("/reservations")

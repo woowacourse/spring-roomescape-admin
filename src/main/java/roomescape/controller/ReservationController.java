@@ -11,22 +11,23 @@ import org.springframework.web.bind.annotation.RestController;
 import roomescape.domain.Reservation;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 import java.util.concurrent.atomic.AtomicLong;
 
 @RestController
 @RequestMapping("/reservations")
 public class ReservationController {
-    private final List<Reservation> reservations = new ArrayList<>();
+    private final List<Reservation> reservations = Collections.synchronizedList(new ArrayList<>());
     private final AtomicLong index = new AtomicLong(1);
 
     @GetMapping("")
-    public ResponseEntity<List<Reservation>> readReservations() {
+    public ResponseEntity<List<Reservation>> getReservationDatum() {
         return ResponseEntity.ok(reservations);
     }
 
     @PostMapping("")
-    public ResponseEntity<Reservation> createReservation(@RequestBody Reservation request) {
+    public ResponseEntity<Reservation> addReservationData(@RequestBody Reservation request) {
         Reservation reservation = new Reservation(index.getAndIncrement(), request);
         reservations.add(reservation);
 
@@ -34,7 +35,7 @@ public class ReservationController {
     }
 
     @DeleteMapping("/{id}")
-    public ResponseEntity<Void> deleteReservation(@PathVariable long id) {
+    public ResponseEntity<Void> deleteReservationsData(@PathVariable long id) {
         boolean isRemoved = reservations.removeIf(reservation -> reservation.getId().equals(id));
         if (isRemoved) {
             return ResponseEntity.ok().build();

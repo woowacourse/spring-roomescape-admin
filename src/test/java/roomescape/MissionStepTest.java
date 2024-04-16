@@ -57,5 +57,16 @@ public class MissionStepTest {
                 .then().log().all()
                 .statusCode(200)
                 .body("size()", is(1));
+
+        RestAssured.given().log().all()
+                .when().delete("/admin/reservations/1")
+                .then().log().all()
+                .statusCode(200);
+
+        RestAssured.given().log().all()
+                .when().get("/admin/reservations")
+                .then().log().all()
+                .statusCode(200)
+                .body("size()", is(0));
     }
 }

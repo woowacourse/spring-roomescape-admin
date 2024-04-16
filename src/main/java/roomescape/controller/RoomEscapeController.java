@@ -3,16 +3,14 @@ package roomescape.controller;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.*;
 import roomescape.domain.Reservation;
 import roomescape.dto.ReservationResponse;
 import roomescape.dto.ReservationSaveRequest;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 import java.util.concurrent.atomic.AtomicLong;
 
 @Controller
@@ -48,5 +46,17 @@ public class RoomEscapeController {
         Reservation reservation = request.toReservation(index.getAndIncrement());
         reservations.add(reservation);
         return ResponseEntity.ok(reservation.toDto());
+    }
+
+    @DeleteMapping("/reservations/{id}")
+    public ResponseEntity<Void> deleteReservation(@PathVariable Long id) {
+        Reservation target = reservations.stream()
+                .filter(reservation -> Objects.equals(reservation.getId(), id))
+                .findFirst()
+                .orElseThrow(() -> new IllegalArgumentException("해당 ID의 예약이 없습니다."));
+
+        reservations.remove(target);
+        
+        return ResponseEntity.ok().build();
     }
 }

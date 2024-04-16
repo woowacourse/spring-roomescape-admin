@@ -21,4 +21,8 @@ public class Reservation {
     public ReservationResponse toDto() {
         return new ReservationResponse(id, name, date, time);
     }
+
+    public Long getId() {
+        return id;
+    }
 }

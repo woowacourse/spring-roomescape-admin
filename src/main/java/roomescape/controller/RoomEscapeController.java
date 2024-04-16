@@ -4,16 +4,22 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import roomescape.domain.Reservation;
+import roomescape.dto.ReservationDto;
+import roomescape.dto.ReservationSaveRequest;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.concurrent.atomic.AtomicLong;
 
 @Controller
 @RequestMapping("/admin")
 public class RoomEscapeController {
     private List<Reservation> reservations = new ArrayList<>();
+    private AtomicLong index = new AtomicLong(1);
 
     @GetMapping
     public String getAdminPage() {
@@ -30,7 +36,17 @@ public class RoomEscapeController {
     }
 
     @GetMapping("/reservations")
-    public ResponseEntity<List<Reservation>> getReservations() {
-        return ResponseEntity.ok(reservations);
+    public ResponseEntity<List<ReservationDto>> getReservations() {
+        var reservationDtos = reservations.stream()
+                .map(Reservation::toDto)
+                .toList();
+        return ResponseEntity.ok(reservationDtos);
+    }
+
+    @PostMapping("/reservations")
+    public ResponseEntity<ReservationDto> createReservation(@RequestBody ReservationSaveRequest request) {
+        Reservation reservation = request.toReservation(index.getAndIncrement());
+        reservations.add(reservation);
+        return ResponseEntity.ok(reservation.toDto());
     }
 }

@@ -12,7 +12,7 @@ import java.util.List;
 import java.util.concurrent.atomic.AtomicLong;
 
 @Controller
-public class RoomEscapeController {
+public class AdminController {
     private final ReservationRepository reservationRepository = new ReservationRepository();
     private final AtomicLong index = new AtomicLong(1);
 
@@ -37,7 +37,7 @@ public class RoomEscapeController {
 
     @PostMapping("/reservations")
     public ResponseEntity<ReservationResponse> createReservation(@RequestBody ReservationSaveRequest request) {
-        Reservation reservation = request.toReservation(index.getAndIncrement());
+        var reservation = request.toReservation(index.getAndIncrement());
         reservationRepository.save(reservation);
         return ResponseEntity.ok(reservation.toDto());
     }

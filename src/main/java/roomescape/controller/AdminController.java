@@ -14,6 +14,7 @@ import org.springframework.web.bind.annotation.ResponseBody;
 
 import roomescape.domain.reservation.Reservation;
 import roomescape.domain.reservation.ReservationRepository;
+import roomescape.dto.ReservationDto;
 
 @Controller
 public class AdminController {
@@ -43,8 +44,9 @@ public class AdminController {
 
     @PostMapping("/reservations")
     @ResponseBody
-    public ResponseEntity<Reservation> createReservation(@RequestBody Reservation reservation) {
-        Reservation newReservation = reservationRepository.save(reservation);
+    public ResponseEntity<Reservation> createReservation(@RequestBody ReservationDto reservationDto) {
+        Reservation newReservation = reservationRepository.save(
+                new Reservation(reservationDto.name(), reservationDto.date(), reservationDto.time()));
         return ResponseEntity.ok(newReservation);
     }
 

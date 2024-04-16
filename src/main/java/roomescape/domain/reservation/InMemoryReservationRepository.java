@@ -1,17 +1,23 @@
 package roomescape.domain.reservation;
 
-import java.util.Comparator;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.concurrent.ConcurrentSkipListMap;
 import java.util.concurrent.atomic.AtomicLong;
 
 import org.springframework.stereotype.Repository;
 
 @Repository
 public class InMemoryReservationRepository implements ReservationRepository {
-    private final Map<Long, Reservation> reservations = new HashMap<>();
-    private AtomicLong index = new AtomicLong(1L);
+    private static final long INITIAL_VALUE = 1L;
+
+    private final Map<Long, Reservation> reservations;
+    private final AtomicLong index;
+
+    public InMemoryReservationRepository() {
+        this.reservations = new ConcurrentSkipListMap<>();
+        this.index = new AtomicLong(INITIAL_VALUE);
+    }
 
     @Override
     public Reservation save(Reservation reservation) {
@@ -22,9 +28,7 @@ public class InMemoryReservationRepository implements ReservationRepository {
 
     @Override
     public List<Reservation> findAll() {
-        return reservations.values().stream()
-                .sorted(Comparator.comparing(Reservation::getId))
-                .toList();
+        return List.copyOf(reservations.values());
     }
 
     @Override

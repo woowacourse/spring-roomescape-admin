@@ -1,4 +1,4 @@
-package roomescape;
+package roomescape.acceptance;
 
 import static org.hamcrest.Matchers.is;
 
@@ -8,12 +8,10 @@ import java.util.HashMap;
 import java.util.Map;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
-import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.annotation.DirtiesContext;
 
-@SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.DEFINED_PORT)
 @DirtiesContext(classMode = DirtiesContext.ClassMode.BEFORE_EACH_TEST_METHOD)
-public class ReservationTest {
+class ReservationTest extends AcceptanceTest {
 
     @Test
     @DisplayName("전체 예약을 조회한다.")

@@ -23,11 +23,6 @@ public class ReservationController {
     private List<Reservation> reservations = new ArrayList<>();
     private final AtomicLong index = new AtomicLong(1);
 
-    @GetMapping("/admin/reservation")
-    public String reservation() {
-        return "admin/reservation-legacy";
-    }
-
     @GetMapping("/reservations")
     @ResponseBody
     public List<Reservation> reservations() {

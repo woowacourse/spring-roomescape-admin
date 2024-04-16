@@ -27,7 +27,7 @@ public class ReservationController {
 
     @GetMapping("")
     @ResponseBody
-    public List<Reservation> reservations() {
+    public List<Reservation> readAllReservations() {
         return reservations;
     }
 
@@ -45,7 +45,7 @@ public class ReservationController {
     }
 
     @DeleteMapping("/{id}")
-    public ResponseEntity<Void> delete(@PathVariable("id") long id) {
+    public ResponseEntity<Void> deleteReservationById(@PathVariable("id") long id) {
         Reservation findReservation = reservations.stream()
                 .filter(reservation -> reservation.getId() == id)
                 .findAny()

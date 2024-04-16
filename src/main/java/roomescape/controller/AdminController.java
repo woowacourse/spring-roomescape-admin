@@ -10,4 +10,9 @@ public class AdminController {
     public String adminPage() {
         return "admin/index";
     }
+
+    @GetMapping("/admin/reservation")
+    public String reservationPage() {
+        return "admin/reservation-legacy";
+    }
 }

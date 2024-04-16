@@ -44,7 +44,7 @@ public class ReservationController {
     @DeleteMapping("/reservations/{id}")
     public ResponseEntity<Void> delete(@PathVariable long id) {
         reservations.stream()
-                .filter(reservation -> reservation.getId() == id)
+                .filter(reservation -> reservation.hasId(id))
                 .findFirst()
                 .ifPresent(reservations::remove);
 

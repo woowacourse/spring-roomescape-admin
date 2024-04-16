@@ -19,13 +19,13 @@ public class ReservationController {
     private final Map<Long, Reservation> reservations = new HashMap<>();
 
     @GetMapping("/reservation")
-    public String landReservationPage() {
+    public String land() {
         return "admin/reservation-legacy";
     }
 
     @GetMapping("/reservations")
     @ResponseBody
-    public ResponseEntity<List<Reservation>> getAllReservations() {
+    public ResponseEntity<List<Reservation>> getAll() {
         List<Reservation> totalReservations = reservations.values()
                 .stream()
                 .toList();
@@ -34,7 +34,7 @@ public class ReservationController {
 
     @PostMapping("/reservations")
     @ResponseBody
-    public ResponseEntity<Reservation> createReservation(@RequestBody ReservationDto reservationDto) {
+    public ResponseEntity<Reservation> create(@RequestBody ReservationDto reservationDto) {
         Reservation reservation = reservationDto.toEntity(idCount.getAndIncrement());
         reservations.put(reservation.getId(), reservation);
         return ResponseEntity.status(HttpStatus.CREATED)
@@ -42,7 +42,7 @@ public class ReservationController {
     }
 
     @DeleteMapping("/reservations/{id}")
-    public ResponseEntity<Void> deleteReservation(@PathVariable Long id) {
+    public ResponseEntity<Void> delete(@PathVariable Long id) {
         if (!reservations.containsKey(id)) {
             throw new IllegalArgumentException("id에 해당하는 예약을 찾을 수 없습니다.");
         }

@@ -1,5 +1,7 @@
 package roomescape.domain;
 
+import roomescape.ReservationDto;
+
 public class Reservation {
     private final Long id;
     private final String name;
@@ -28,4 +30,9 @@ public class Reservation {
     public String getTime() {
         return time;
     }
+
+    public static Reservation toEntity(Long id, ReservationDto reservationDto) {
+        return new Reservation(id, reservationDto.name(), reservationDto.date(), reservationDto.time());
+    }
+
 }

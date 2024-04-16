@@ -25,5 +25,11 @@ public class MissionStepTest {
                 .when().get("/admin/reservation")
                 .then().log().all()
                 .statusCode(200);
+
+        RestAssured.given().log().all()
+                .when().get("/admin/reservations")
+                .then().log().all()
+                .statusCode(200)
+                .body("size()", is(2));
     }
 }

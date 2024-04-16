@@ -1,8 +1,10 @@
 package roomescape.controller;
 
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.ResponseBody;
 import roomescape.domain.Reservation;
 import roomescape.dto.ReservationDto;
 
@@ -27,5 +29,12 @@ public class ReservationController {
         List<ReservationDto> reservationDtos = reservations.stream().map(reservation -> ReservationDto.fromEntity(reservation)).toList();
         model.addAttribute("reservationDtos", reservationDtos);
         return "/admin/reservation-legacy";
+    }
+
+    @GetMapping("/admin/reservations")
+    @ResponseBody
+    public ResponseEntity<List<ReservationDto>> getReservations() {
+        List<ReservationDto> reservationDtos = reservations.stream().map(reservation -> ReservationDto.fromEntity(reservation)).toList();
+        return ResponseEntity.ok(reservationDtos);
     }
 }

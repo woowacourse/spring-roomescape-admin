@@ -17,4 +17,12 @@ public class MissionStepTest {
                 .statusCode(200);
     }
 
+    @Test
+    void 일단계_admin() {
+        RestAssured.given().log().all()
+                .when().get("/admin")
+                .then().log().all()
+                .statusCode(200);
+    }
+
 }

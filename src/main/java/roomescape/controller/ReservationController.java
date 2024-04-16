@@ -22,11 +22,9 @@ public class ReservationController {
     @ResponseBody
     @GetMapping("")
     public List<ReservationResponse> findAllReservations() {
-        List<ReservationResponse> responses = new ArrayList<>();
-        for (final Reservation reservation : reservations) {
-            responses.add(new ReservationResponse(reservation));
-        }
-        return responses;
+        return reservations.stream()
+                .map(ReservationResponse::new)
+                .toList();
     }
 
     @PostMapping("")
@@ -35,5 +33,15 @@ public class ReservationController {
         Reservation newReservation = Reservation.toEntity(index.getAndIncrement(), reservation);
         reservations.add(newReservation);
         return ResponseEntity.created(URI.create("/reservations/" + newReservation.getId())).build();
+    }
+
+    @DeleteMapping("/{id}")
+    public ResponseEntity<Void> deleteReservation(@PathVariable long id) {
+        Reservation target = reservations.stream()
+                .filter(reservation -> reservation.getId() == id)
+                .findFirst()
+                .orElseThrow(() -> new IllegalArgumentException("존재하지 않는 id입니다."));
+        reservations.remove(target);
+        return ResponseEntity.ok().build();
     }
 }

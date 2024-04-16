@@ -44,4 +44,16 @@ public class ReservationControllerTest {
                 () -> assertThat(response.jsonPath().getList("", ReservationResponse.class)).hasSize(1)
         );
     }
+
+    @DisplayName("예약 취소 테스트")
+    @Test
+    void deleteReservation() {
+        createReservation();
+
+        Response response = RestAssured.given().log().all()
+                .when().delete("/reservations/1")
+                .then().log().all().extract().response();
+
+        assertThat(response.getStatusCode()).isEqualTo(HttpStatus.OK.value());
+    }
 }

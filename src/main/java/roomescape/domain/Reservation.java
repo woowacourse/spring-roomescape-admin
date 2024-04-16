@@ -34,5 +34,4 @@ public class Reservation {
     public static Reservation toEntity(Long id, ReservationDto reservationDto) {
         return new Reservation(id, reservationDto.name(), reservationDto.date(), reservationDto.time());
     }
-
 }

@@ -2,10 +2,10 @@ package roomescape;
 
 import java.time.format.DateTimeFormatter;
 
-public record FindReservationDto(Long id, String name, String date, String time) {
+public record FindReservationResponse(Long id, String name, String date, String time) {
 
-    public static FindReservationDto of(final Reservation reservation) {
-        return new FindReservationDto(
+    public static FindReservationResponse of(final Reservation reservation) {
+        return new FindReservationResponse(
                 reservation.getId(),
                 reservation.getName(),
                 reservation.getDateTime().format(DateTimeFormatter.ofPattern("yyyy-MM-dd")),

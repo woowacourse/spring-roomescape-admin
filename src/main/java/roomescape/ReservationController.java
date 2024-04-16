@@ -2,7 +2,6 @@ package roomescape;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Optional;
 import java.util.concurrent.atomic.AtomicLong;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -21,9 +20,9 @@ public class ReservationController {
     private AtomicLong index = new AtomicLong(1);
 
     @GetMapping
-    public ResponseEntity<List<FindReservationDto>> getReservation() {
-        List<FindReservationDto> reservationsDtos = reservations.stream()
-                .map(FindReservationDto::of)
+    public ResponseEntity<List<FindReservationResponse>> getReservation() {
+        List<FindReservationResponse> reservationsDtos = reservations.stream()
+                .map(FindReservationResponse::of)
                 .toList();
         return ResponseEntity.ok(reservationsDtos);
     }

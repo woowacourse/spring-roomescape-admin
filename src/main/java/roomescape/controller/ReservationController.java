@@ -1,6 +1,5 @@
 package roomescape.controller;
 
-import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
@@ -33,8 +32,7 @@ public class ReservationController {
     public ResponseEntity<Reservation> create(@RequestBody ReservationDto reservationDto) {
         Reservation reservation = reservationDto.toEntity(idCount.getAndIncrement());
         reservations.put(reservation.getId(), reservation);
-        return ResponseEntity.status(HttpStatus.CREATED)
-                .body(reservation);
+        return ResponseEntity.ok(reservation);
     }
 
     @DeleteMapping("/{id}")

@@ -9,7 +9,6 @@ import roomescape.dto.ReservationSaveRequest;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Objects;
 import java.util.concurrent.atomic.AtomicLong;
 
 @Controller
@@ -45,7 +44,7 @@ public class RoomEscapeController {
     @DeleteMapping("/reservations/{id}")
     public ResponseEntity<Void> deleteReservation(@PathVariable Long id) {
         Reservation target = reservations.stream()
-                .filter(reservation -> Objects.equals(reservation.getId(), id))
+                .filter(reservation -> reservation.isSameId(id))
                 .findFirst()
                 .orElseThrow(() -> new IllegalArgumentException("해당 ID의 예약이 없습니다."));
 

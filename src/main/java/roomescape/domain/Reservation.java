@@ -22,7 +22,7 @@ public class Reservation {
         return new ReservationResponse(id, name, date, time);
     }
 
-    public Long getId() {
-        return id;
+    public boolean isSameId(Long id) {
+        return this.id.equals(id);
     }
 }

@@ -1,14 +1,18 @@
 package roomescape;
 
+import java.util.concurrent.atomic.AtomicLong;
+
 public class Reservation {
+
+    private final static AtomicLong index = new AtomicLong(1);
 
     private final Long id;
     private final String name;
     private final String date;
     private final String time;
 
-    public Reservation(Long id, String name, String date, String time) {
-        this.id = id;
+    public Reservation(String name, String date, String time) {
+        this.id = index.getAndIncrement();
         this.name = name;
         this.date = date;
         this.time = time;

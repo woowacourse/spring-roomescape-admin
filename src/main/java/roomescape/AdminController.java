@@ -1,22 +1,21 @@
 package roomescape;
 
+import java.util.Map;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.ResponseBody;
 import roomescape.dto.Reservation;
-
-import java.time.LocalDate;
-import java.time.LocalTime;
-import java.util.List;
+import roomescape.dto.ReservationRequest;
 
 @Controller
 public class AdminController {
-    private final List<Reservation> reservations = List.of(
-            new Reservation(1, "브라운", LocalDate.of(2023, 1, 1), LocalTime.of(10, 0)),
-            new Reservation(2, "브라운", LocalDate.of(2023, 1, 2), LocalTime.of(11, 0)),
-            new Reservation(3, "안나", LocalDate.of(2001, 1, 1), LocalTime.of(11, 9))
-    );
+    private final AdminRepository adminRepository = new AdminRepository();
 
     @GetMapping("/admin")
     public String getAdminPage() {
@@ -30,7 +29,20 @@ public class AdminController {
 
     @ResponseBody
     @GetMapping("/admin/reservations")
-    public ResponseEntity<List<Reservation>> getReservations() {
-        return ResponseEntity.ok(reservations);
+    public ResponseEntity<Map<Long, Reservation>> getReservations() {
+        return ResponseEntity.ok(adminRepository.getReservations());
+    }
+
+    @ResponseBody
+    @PostMapping("/admin/reservations")
+    public Reservation addReservation(@RequestBody ReservationRequest request) {
+        return adminRepository.saveReservation(request);
+    }
+
+    @ResponseBody
+    @DeleteMapping("/admin/reservations/{id}")
+    public ResponseEntity<Void> deleteReservation(@PathVariable("id") long id) {
+        adminRepository.deleteReservation(id);
+        return new ResponseEntity<>(HttpStatus.OK);
     }
 }

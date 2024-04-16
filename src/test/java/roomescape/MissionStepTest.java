@@ -16,6 +16,7 @@ public class MissionStepTest {
 
     @Test
     void 일단계() {
+        // when & then
         RestAssured.given().log().all()
                 .when().get("/")
                 .then().log().all()
@@ -24,6 +25,7 @@ public class MissionStepTest {
 
     @Test
     void 이단계() {
+        // given
         Map<String, String> params = new HashMap<>();
         params.put("name", "브라운");
         params.put("date", "2023-08-05");
@@ -33,17 +35,18 @@ public class MissionStepTest {
                 .contentType(ContentType.JSON)
                 .body(params)
                 .when().post("/admin/reservations");
-        
-        RestAssured.given().log().all()
-                .contentType(ContentType.JSON)
-                .body(params)
-                .when().post("/admin/reservations");
 
         RestAssured.given().log().all()
                 .contentType(ContentType.JSON)
                 .body(params)
                 .when().post("/admin/reservations");
 
+        RestAssured.given().log().all()
+                .contentType(ContentType.JSON)
+                .body(params)
+                .when().post("/admin/reservations");
+
+        // when & then
         RestAssured.given().log().all()
                 .when().get("/admin/reservation")
                 .then().log().all()
@@ -53,16 +56,18 @@ public class MissionStepTest {
                 .when().get("/admin/reservations")
                 .then().log().all()
                 .statusCode(200)
-                .body("size()", is(3)); // 아직 생성 요청이 없으니 Controller에서 임의로 넣어준 Reservation 갯수 만큼 검증하거나 0개임을 확인하세요.
+                .body("size()", is(3));
     }
 
     @Test
     void 삼단계() {
+        // given
         Map<String, String> params = new HashMap<>();
         params.put("name", "브라운");
         params.put("date", "2023-08-05");
         params.put("time", "15:40");
 
+        // when & then
         RestAssured.given().log().all()
                 .contentType(ContentType.JSON)
                 .body(params)
@@ -77,6 +82,7 @@ public class MissionStepTest {
                 .statusCode(200)
                 .body("size()", is(1));
 
+        // when & then
         RestAssured.given().log().all()
                 .when().delete("/admin/reservations/1")
                 .then().log().all()

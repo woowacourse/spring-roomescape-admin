@@ -13,14 +13,13 @@ public class ReservationController {
 
     private final List<Reservation> reservations = new ArrayList<>();
 
-    @GetMapping("admin/reservation")
+    @GetMapping("reservation")
     public String showReservationPage() {
         return "admin/reservation-legacy";
     }
 
-    @GetMapping("admin/reservations")
+    @GetMapping("reservations")
     public ResponseEntity<List<Reservation>> reservations() {
-        reservations.add(new Reservation(Long.valueOf(1), "방탈출", "2024-04-01", "10:00"));
         return ResponseEntity.ok()
                              .body(reservations);
     }

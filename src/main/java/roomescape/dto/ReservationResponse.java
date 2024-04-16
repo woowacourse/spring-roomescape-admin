@@ -1,8 +1,7 @@
 package roomescape.dto;
 
-import roomescape.domain.Reservation;
-
 import java.time.format.DateTimeFormatter;
+import roomescape.domain.Reservation;
 
 public record ReservationResponse(
         Long id,

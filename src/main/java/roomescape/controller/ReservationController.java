@@ -1,24 +1,36 @@
 package roomescape.controller;
 
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.*;
 import roomescape.domain.Reservation;
+import roomescape.domain.ReservationCreateRequest;
 
-import java.time.LocalDate;
-import java.time.LocalTime;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.concurrent.atomic.AtomicInteger;
 
 @RestController
 @RequestMapping("/reservations")
 public class ReservationController {
-    private List<Reservation> reservations = new ArrayList<>();
+
+    private final AtomicInteger atomicInteger = new AtomicInteger(1);
+    private final List<Reservation> reservations = new ArrayList<>();
 
     @GetMapping()
-    public List<Reservation> reservations() {
-        Reservation reservation = new Reservation(1, "클로버", LocalDate.of(2023, 1, 1), LocalTime.of(10, 0));
+    public ResponseEntity<List<Reservation>> reservations() {
+        return ResponseEntity.ok(reservations);
+    }
+
+    @PostMapping()
+    public ResponseEntity<Reservation> createReservation(@RequestBody ReservationCreateRequest request) {
+        Reservation reservation = request.toEntity(atomicInteger.getAndIncrement());
         reservations.add(reservation);
-        return reservations;
+        return ResponseEntity.ok(reservation);
+    }
+
+    @DeleteMapping("/{id}")
+    public ResponseEntity<Void> deleteReservation(@PathVariable int id) {
+        reservations.removeIf((reservation) -> reservation.getId() == id);
+        return ResponseEntity.ok().build();
     }
 }

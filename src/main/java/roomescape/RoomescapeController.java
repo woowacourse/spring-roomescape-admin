@@ -3,6 +3,7 @@ package roomescape;
 import java.util.List;
 import java.util.concurrent.atomic.AtomicLong;
 import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 import roomescape.domain.Reservation;
@@ -23,7 +24,8 @@ public class RoomescapeController {
     }
 
     @GetMapping("/admin/reservation")
-    public String reservation() {
+    public String reservation(Model model) {
+        model.addAttribute("reservations", reservations);
         return "admin/reservation-legacy";
     }
 

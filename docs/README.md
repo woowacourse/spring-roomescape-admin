@@ -10,7 +10,7 @@
 
 ## reservationPage
 
-- [ ] "/admin/reservation" 으로 GET 요청 시 templates/admin/reservation-legacy.html 파일을 반환한다.
+- [x] "/admin/reservation" 으로 GET 요청 시 templates/admin/reservation-legacy.html 파일을 반환한다.
 
 # API 명세
 

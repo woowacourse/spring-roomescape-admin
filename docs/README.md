@@ -3,5 +3,5 @@
 - [x] `/admin` 으로 `GET` 요청 시 어드민 메인 페이지를 응답한다.
 
 # 2단계 기능 요구사항 - 예약 조회
-- [ ] `/reservations` 으로 `GET` 요청 시 저장된 예약 정보를 응답한다.
-- [ ] `/admin/reservation` 으로 `GET` 요청 시 예약 관리 페이지를 응답한다.
+- [x] `/reservations` 으로 `GET` 요청 시 저장된 예약 정보를 응답한다.
+- [x] `/admin/reservation` 으로 `GET` 요청 시 예약 관리 페이지를 응답한다.

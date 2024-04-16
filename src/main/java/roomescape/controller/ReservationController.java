@@ -13,23 +13,25 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 import roomescape.controller.dto.ReservationDto;
 import roomescape.entity.Reservation;
 
+@RequestMapping("/reservations")
 @Controller
 public class ReservationController {
 
     private List<Reservation> reservations = new ArrayList<>();
     private final AtomicLong index = new AtomicLong(1);
 
-    @GetMapping("/reservations")
+    @GetMapping("")
     @ResponseBody
     public List<Reservation> reservations() {
         return reservations;
     }
 
-    @PostMapping("/reservations")
+    @PostMapping("")
     @ResponseBody
     public Reservation createReservation(@RequestBody ReservationDto reservationDto) {
         long id = index.getAndIncrement();
@@ -42,7 +44,7 @@ public class ReservationController {
         return newReservation;
     }
 
-    @DeleteMapping("/reservations/{id}")
+    @DeleteMapping("/{id}")
     public ResponseEntity<Void> delete(@PathVariable("id") long id) {
         Reservation findReservation = reservations.stream()
                 .filter(reservation -> reservation.getId() == id)

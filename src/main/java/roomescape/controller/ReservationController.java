@@ -7,16 +7,16 @@ import org.springframework.web.bind.annotation.*;
 import roomescape.domain.Reservation;
 import roomescape.domain.ReservationDto;
 
-import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.concurrent.atomic.AtomicLong;
 
 @Controller
-@RequestMapping("/admin")
 public class ReservationController {
 
     private final AtomicLong idCount = new AtomicLong(1);
-    private final List<Reservation> reservations = new ArrayList<>();
+    private final Map<Long, Reservation> reservations = new HashMap<>();
 
     @GetMapping("/reservation")
     public String landReservationPage() {
@@ -26,15 +26,27 @@ public class ReservationController {
     @GetMapping("/reservations")
     @ResponseBody
     public ResponseEntity<List<Reservation>> getAllReservations() {
-        return ResponseEntity.ok(reservations);
+        List<Reservation> totalReservations = reservations.values()
+                .stream()
+                .toList();
+        return ResponseEntity.ok(totalReservations);
     }
 
     @PostMapping("/reservations")
     @ResponseBody
     public ResponseEntity<Reservation> createReservation(@RequestBody ReservationDto reservationDto) {
         Reservation reservation = reservationDto.toEntity(idCount.getAndIncrement());
-        reservations.add(reservation);
+        reservations.put(reservation.getId(), reservation);
         return ResponseEntity.status(HttpStatus.CREATED)
                 .body(reservation);
+    }
+
+    @DeleteMapping("/reservations/{id}")
+    public ResponseEntity<Void> deleteReservation(@PathVariable Long id) {
+        if (!reservations.containsKey(id)) {
+            throw new IllegalArgumentException("id에 해당하는 예약을 찾을 수 없습니다.");
+        }
+        reservations.remove(id);
+        return ResponseEntity.ok().build();
     }
 }

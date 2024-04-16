@@ -29,7 +29,7 @@ public class MissionStepTest {
     @DisplayName("예약 관리 페이지를 요청하면 200 OK를 반환한다.")
     void reservationPageTest() {
         RestAssured.given().log().all()
-                .when().get("/admin/reservation")
+                .when().get("/reservation")
                 .then().log().all()
                 .statusCode(200);
     }
@@ -37,7 +37,7 @@ public class MissionStepTest {
     @Test
     void getAllReservationsTest() {
         RestAssured.given().log().all()
-                .when().get("/admin/reservations")
+                .when().get("/reservations")
                 .then().log().all()
                 .statusCode(200)
                 .body("size()", is(0));
@@ -53,18 +53,19 @@ public class MissionStepTest {
         RestAssured.given().log().all()
                 .contentType(ContentType.JSON)
                 .body(params)
-                .when().post("/admin/reservations")
+                .when().post("/reservations")
                 .then().log().all()
                 .statusCode(201)
                 .body("id", is(1));
 
         RestAssured.given().log().all()
-                .when().get("/admin/reservations")
+                .when().get("/reservations")
                 .then().log().all()
                 .statusCode(200)
                 .body("size()", is(1));
     }
 
+    @Test
     void deleteReservationTest() {
         Map<String, String> params = new HashMap<>();
         params.put("name", "브라운");
@@ -74,18 +75,18 @@ public class MissionStepTest {
         RestAssured.given().log().all()
                 .contentType(ContentType.JSON)
                 .body(params)
-                .when().post("/admin/reservations")
+                .when().post("/reservations")
                 .then().log().all()
-                .statusCode(200)
+                .statusCode(201)
                 .body("id", is(1));
 
         RestAssured.given().log().all()
-                .when().delete("/admin/reservations/1")
+                .when().delete("/reservations/1")
                 .then().log().all()
                 .statusCode(200);
 
         RestAssured.given().log().all()
-                .when().get("/admin/reservations")
+                .when().get("/reservations")
                 .then().log().all()
                 .statusCode(200)
                 .body("size()", is(0));

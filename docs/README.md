@@ -13,4 +13,4 @@
 
 - [x] `POST`|`/reservations` : 예약 추가
 
-- [ ] `DELETE`|`/reservations/{id}` : 예약 취소
+- [x] `DELETE`|`/reservations/{id}` : 예약 취소

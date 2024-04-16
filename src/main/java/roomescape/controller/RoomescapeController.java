@@ -1,10 +1,13 @@
-package roomescape;
+package roomescape.controller;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.atomic.AtomicLong;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.ResponseBody;
 import roomescape.domain.Reservation;
 
@@ -12,11 +15,7 @@ import roomescape.domain.Reservation;
 public class RoomescapeController {
 
     private final AtomicLong index = new AtomicLong(1);
-    private final List<Reservation> reservations = List.of(
-        new Reservation(index.getAndIncrement(), "트레", "2024-04-16", "10:00"),
-        new Reservation(index.getAndIncrement(), "에버", "2024-04-17", "11:00"),
-        new Reservation(index.getAndIncrement(), "냥인", "2024-04-18", "12:00")
-    );
+    private final List<Reservation> reservations = new ArrayList<>();
 
     @GetMapping("/admin")
     public String index() {
@@ -29,9 +28,18 @@ public class RoomescapeController {
         return "admin/reservation-legacy";
     }
 
-    @GetMapping("/admin/reservations")
+    @GetMapping("/reservations")
     @ResponseBody
     public List<Reservation> reservations() {
         return reservations;
+    }
+
+    @PostMapping("/reservations")
+    @ResponseBody
+    public Reservation createReservation(@RequestBody ReservationRequestDto request) {
+        Reservation newReservation = new Reservation(
+            index.getAndIncrement(), request.name(), request.date(), request.time());
+        reservations.add(newReservation);
+        return newReservation;
     }
 }

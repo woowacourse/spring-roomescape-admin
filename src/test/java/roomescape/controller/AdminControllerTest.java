@@ -5,7 +5,6 @@ import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 
 class AdminControllerTest {
-
     @Test
     @DisplayName("관리자 메인 페이지 경로를 정해진 경로로 매핑한다.")
     void mainPage() {

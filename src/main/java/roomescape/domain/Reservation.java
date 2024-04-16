@@ -11,10 +11,7 @@ public class Reservation {
     }
 
     public Reservation(final Long id, final Reservation reservation) {
-        this.id = id;
-        this.name = reservation.name;
-        this.date = reservation.date;
-        this.time = reservation.time;
+        this(id, reservation.name, reservation.date, reservation.time);
     }
 
     public Reservation(Long id, String name, String date, String time) {

@@ -4,9 +4,9 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
 import roomescape.domain.Reservation;
+import roomescape.dto.ReservationDto;
 
-import java.time.LocalDate;
-import java.time.LocalTime;
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -14,8 +14,8 @@ import java.util.List;
 public class RoomEscapeController {
 
     private List<Reservation> reservations = new ArrayList<>(List.of(
-            new Reservation(1L, "브라운", LocalDate.now(), LocalTime.now()),
-            new Reservation(2L, "솔라", LocalDate.now(), LocalTime.now())));
+            new Reservation(1L, "브라운", LocalDateTime.now()),
+            new Reservation(2L, "솔라", LocalDateTime.now())));
 
     @GetMapping("/")
     public String index() {
@@ -33,7 +33,11 @@ public class RoomEscapeController {
     }
 
     @GetMapping("/reservations")
-    public ResponseEntity<List<Reservation>> reservations() {
-        return ResponseEntity.ok().body(reservations);
+    public ResponseEntity<List<ReservationDto>> reservations() {
+        List<ReservationDto> reservationDtos = reservations.stream()
+                .map(ReservationDto::from)
+                .toList();
+
+        return ResponseEntity.ok().body(reservationDtos);
     }
 }

@@ -24,4 +24,13 @@ public class AdminControllerTest {
         assertThat(response.getStatusCode()).isEqualTo(HttpStatus.OK.value());
     }
 
+    @DisplayName("Admin Reservation Page 접근 성공 테스트")
+    @Test
+    void responseAdminReservationPage() {
+        Response response = RestAssured.given().log().all()
+                .when().get("/admin/reservation")
+                .then().log().all().extract().response();
+
+        assertThat(response.getStatusCode()).isEqualTo(HttpStatus.OK.value());
+    }
 }

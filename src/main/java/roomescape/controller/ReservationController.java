@@ -24,7 +24,7 @@ public class ReservationController {
     private final AtomicLong index = new AtomicLong(1);
 
     @GetMapping("")
-    public ResponseEntity<List<ReservationResponse>> reservations() {
+    public ResponseEntity<List<ReservationResponse>> read() {
         List<ReservationResponse> reservationResponses = reservations.stream()
                 .map(ReservationResponse::from)
                 .toList();

@@ -47,4 +47,16 @@ class InMemoryReservationRepositoryTest {
                 () -> assertThat(reservations.get(1).getName()).isEqualTo("user2")
         );
     }
+
+    @Test
+    @DisplayName("예약을 삭제한다")
+    void deleteById() {
+        Reservation reservation = new Reservation(1L, "user1", "2021-07-01", "09:00");
+        reservationRepository.save(reservation);
+
+        reservationRepository.deleteById(1L);
+
+        List<Reservation> reservations = reservationRepository.findAll();
+        assertThat(reservations).hasSize(0);
+    }
 }

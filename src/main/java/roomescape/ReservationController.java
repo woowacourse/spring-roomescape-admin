@@ -7,6 +7,7 @@ import roomescape.domain.Reservation;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 import java.util.concurrent.atomic.AtomicLong;
 
 @Controller
@@ -32,5 +33,17 @@ public class ReservationController {
         reservations.add(reservation);
         return ResponseEntity.ok()
                              .body(reservation);
+    }
+
+    @DeleteMapping("reservations/{id}")
+    public ResponseEntity<Void> deleteReservation(@PathVariable final Long id) {
+        final Reservation reservation = reservations.stream()
+                                                    .filter(it -> Objects.equals(it.getId(), id))
+                                                    .findFirst()
+                                                    .orElseThrow(RuntimeException::new);
+
+        reservations.remove(reservation);
+        return ResponseEntity.ok()
+                             .build();
     }
 }

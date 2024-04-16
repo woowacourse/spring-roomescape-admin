@@ -37,7 +37,7 @@ public class RoomEscapeController {
     @ResponseBody
     @PostMapping("/reservations")
     public Reservation createReservation(@RequestBody ReservationCreateDto dto) {
-        Reservation reservation = new Reservation(dto, index.getAndIncrement());
+        Reservation reservation = new Reservation(index.getAndIncrement(), dto.getName(), dto.getDate(), dto.getTime());
         reservations.add(reservation);
         return reservation;
     }

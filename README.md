@@ -13,5 +13,7 @@
 
 - [x] 예약 관리 페이지 응답
   - `/admin/reservation`으로 요청하면 `admin/reservation-legacy.html`을 응답한다.
-- [ ] 예약 도메인 추가
+- [x] 전체 예약 조회
+  - `/admin/reservations`으로 요쳥하면 전체 예약 내역을 반환한다.
+- [x] 예약 도메인 추가
   - 이름, 날짜, 시간을 가진다. 

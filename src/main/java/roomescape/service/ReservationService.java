@@ -2,9 +2,12 @@ package roomescape.service;
 
 import java.util.ArrayList;
 import java.util.List;
+
+import org.springframework.stereotype.Service;
 import roomescape.dto.ReservationResponseDto;
 import roomescape.model.Reservation;
 
+@Service
 public class ReservationService {
 
     private final List<Reservation> reservations = new ArrayList<>();

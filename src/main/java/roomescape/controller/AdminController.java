@@ -17,12 +17,12 @@ public class AdminController {
     private final AtomicLong index = new AtomicLong(1);
 
     @GetMapping("/admin")
-    public String getAdminPage() {
+    public String adminPage() {
         return "/admin/index";
     }
 
     @GetMapping("/reservation")
-    public String getAdminReservations() {
+    public String reservationPage() {
         return "/admin/reservation-legacy";
     }
 

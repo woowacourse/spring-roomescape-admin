@@ -4,15 +4,30 @@
 - http method: GET
 - uri: /admin
 
-### 어드민 예약 관리
+### 어드민 예약 페이지 접근
 - http method: GET
 - uri: /admin/reservation
-- 요청 시, 존재하는 모든 예약을 조회한다.
 
-### 예약 조회
+### 모든 예약 조회
 - http method: GET
 - uri: /reservations
-- 요청 시, 존재하는 모든 예약을 조회한다.
+- response body
+  - id
+  - name
+  - date
+  - time
+
+### 예약 추가
+- http method: POST
+- uri: /reservations
+- request body
+  - name
+  - date
+  - time
+
+### 예약 삭제
+- http method: DELETE
+- uri: /reservations/{id}
 
 ## 기능 목록
 

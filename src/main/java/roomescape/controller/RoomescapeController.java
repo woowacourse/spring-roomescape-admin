@@ -1,13 +1,9 @@
-package roomescape;
+package roomescape.controller;
 
-import java.lang.reflect.Member;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 import java.util.concurrent.atomic.AtomicLong;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -15,9 +11,9 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.ResponseBody;
-import org.springframework.web.bind.annotation.ResponseStatus;
-import roomescape.dto.ReservationRequest;
+import roomescape.domain.Reservation;
+import roomescape.dto.CreateReservationRequest;
+import roomescape.dto.ReservationResponse;
 
 @Controller
 public class RoomescapeController {
@@ -36,20 +32,21 @@ public class RoomescapeController {
     }
 
     @GetMapping("/reservations")
-    @ResponseBody()
-    @ResponseStatus(HttpStatus.OK)
-    public List<Reservation> reservations() {
-        return reservations;
+    public ResponseEntity<List<ReservationResponse>> getReservations() {
+        List<ReservationResponse> reservationResponses = reservations.stream()
+                .map(ReservationResponse::from)
+                .toList();
+
+        return ResponseEntity.ok(reservationResponses);
     }
 
     @PostMapping("/reservations")
-    @ResponseBody()
-    @ResponseStatus(HttpStatus.OK)
-    public Reservation addReservation(@RequestBody ReservationRequest reservationRequest) {
+    public ResponseEntity<ReservationResponse> addReservation(@RequestBody CreateReservationRequest request) {
         Long id = index.getAndIncrement();
-        Reservation reservation = reservationRequest.toReservation(id);
+        Reservation reservation = request.toReservation(id);
         reservations.add(reservation);
-        return reservation;
+
+        return ResponseEntity.ok(ReservationResponse.from(reservation));
     }
 
     @DeleteMapping("/reservations/{id}")
@@ -57,7 +54,7 @@ public class RoomescapeController {
         Reservation reservation = reservations.stream()
                 .filter(it -> Objects.equals(it.getId(), id))
                 .findFirst()
-                .orElseThrow(RuntimeException::new);
+                .orElseThrow(() -> new IllegalArgumentException("존재하지 않는 예약입니다."));
 
         reservations.remove(reservation);
 

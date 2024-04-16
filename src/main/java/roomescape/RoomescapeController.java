@@ -10,4 +10,6 @@ public class RoomescapeController {
     public String index() {
         return "admin/index";
     }
+
+
 }

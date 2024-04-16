@@ -15,4 +15,9 @@ public class AdminController {
     public String enterAdminPage() {
         return "admin/index";
     }
+
+    @GetMapping("/admin/reservation")
+    public String readReservations() {
+        return "admin/reservation-legacy";
+    }
 }

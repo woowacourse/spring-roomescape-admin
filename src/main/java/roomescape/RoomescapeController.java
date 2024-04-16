@@ -5,7 +5,8 @@ import org.springframework.web.bind.annotation.GetMapping;
 
 @Controller
 public class RoomescapeController {
-    @GetMapping("")
+
+    @GetMapping("admin")
     public String showAdminPage() {
         return "index";
     }

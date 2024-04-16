@@ -26,4 +26,9 @@ public class InMemoryReservationRepository implements ReservationRepository {
                 .sorted(Comparator.comparing(Reservation::getId))
                 .toList();
     }
+
+    @Override
+    public void deleteById(Long id) {
+        reservations.remove(id);
+    }
 }

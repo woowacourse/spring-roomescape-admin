@@ -1,6 +1,7 @@
 package roomescape;
 
 import io.restassured.RestAssured;
+import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.annotation.DirtiesContext;
@@ -10,6 +11,7 @@ import org.springframework.test.annotation.DirtiesContext;
 public class MissionStepTest {
 
     @Test
+    @DisplayName("welcome 페이지로 정상적으로 이동한다.")
     void 일단계() {
         RestAssured.given().log().all()
                 .when().get("/")

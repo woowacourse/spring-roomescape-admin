@@ -9,4 +9,4 @@
 - [x] `GET`|`/admin/reservation` : 예약 관리 페이지 요청
   - [x] 파일 경로: `templates/admin/reservation-legacy.html`
 
-- [ ] `GET`|`/admin/reservations` : 예약 정보 요청
+- [x] `GET`|`/admin/reservations` : 예약 정보 요청

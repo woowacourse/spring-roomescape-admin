@@ -14,9 +14,8 @@ public class MissionStepTest {
     @DisplayName("welcome 페이지로 정상적으로 이동한다.")
     void 일단계() {
         RestAssured.given().log().all()
-                .when().get("/")
+                .when().get("/admin")
                 .then().log().all()
                 .statusCode(200);
     }
-
 }

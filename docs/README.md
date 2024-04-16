@@ -2,5 +2,5 @@
 
 ## 1단계
 
-[ ] 웹 관련 의존성 추가
-[ ] welcome page 응답
+- [x] 웹 관련 의존성 추가
+- [x] welcome page 응답

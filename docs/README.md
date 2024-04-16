@@ -8,4 +8,6 @@
 ### 예약 관리 페이지
 
 - `/admin/reservation` 요청 시 예약 관리 페이지 응답
-- `/reservations` 요청 시 예약 목록 데이터 JSON 응답
+- `/reservations` GET 요청 시 예약 목록 응답
+- `/reservations` POST 요청 시 예약 생성
+- `/reservations/{id}` DELETE 요청 시 예약 삭제

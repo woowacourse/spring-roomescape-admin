@@ -9,10 +9,10 @@ public class Reservation {
     private final String name;
     private final LocalDateTime time;
 
-    public Reservation(final Long id, final String name) {
+    public Reservation(final Long id, final String name, final LocalDateTime time) {
         this.id = id;
         this.name = name;
-        this.time = LocalDateTime.now();
+        this.time = time;
     }
 
     public Long getId() {

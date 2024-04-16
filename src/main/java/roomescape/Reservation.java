@@ -34,4 +34,14 @@ public class Reservation {
     public LocalTime getTime() {
         return time;
     }
+
+    @Override
+    public String toString() {
+        return "Reservation{" +
+                "id=" + id +
+                ", name='" + name + '\'' +
+                ", date=" + date +
+                ", time=" + time +
+                '}';
+    }
 }

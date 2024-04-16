@@ -9,7 +9,7 @@
 
 - [x] `/admin/reservation` 요청 시 예약 관리 페이지를 응답한다.
     - `templates/admin/reservation-legacy.html`
-- [ ] 예약 관리 페이지 로드 시 `예약 목록 조회 API`를 호출한다.
+- [x] 예약 관리 페이지 로드 시 `예약 목록 조회 API`를 호출한다.
 
 # API 명세
 

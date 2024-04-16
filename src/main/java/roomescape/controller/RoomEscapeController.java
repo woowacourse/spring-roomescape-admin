@@ -8,7 +8,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import roomescape.domain.Reservation;
-import roomescape.dto.ReservationDto;
+import roomescape.dto.ReservationResponse;
 import roomescape.dto.ReservationSaveRequest;
 
 import java.util.ArrayList;
@@ -36,7 +36,7 @@ public class RoomEscapeController {
     }
 
     @GetMapping("/reservations")
-    public ResponseEntity<List<ReservationDto>> getReservations() {
+    public ResponseEntity<List<ReservationResponse>> getReservations() {
         var reservationDtos = reservations.stream()
                 .map(Reservation::toDto)
                 .toList();
@@ -44,7 +44,7 @@ public class RoomEscapeController {
     }
 
     @PostMapping("/reservations")
-    public ResponseEntity<ReservationDto> createReservation(@RequestBody ReservationSaveRequest request) {
+    public ResponseEntity<ReservationResponse> createReservation(@RequestBody ReservationSaveRequest request) {
         Reservation reservation = request.toReservation(index.getAndIncrement());
         reservations.add(reservation);
         return ResponseEntity.ok(reservation.toDto());

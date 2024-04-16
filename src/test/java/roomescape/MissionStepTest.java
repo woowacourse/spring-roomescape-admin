@@ -19,7 +19,7 @@ public class MissionStepTest {
     @Test
     void 일단계() {
         RestAssured.given().log().all()
-                .when().get("/")
+                .when().get("/admin")
                 .then().log().all()
                 .statusCode(200);
     }

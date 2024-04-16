@@ -17,3 +17,9 @@
   - `/admin/reservations`으로 요쳥하면 전체 예약 내역을 반환한다.
 - [x] 예약 도메인 추가
   - 이름, 날짜, 시간을 가진다. 
+
+## 3단계 예약 추가 / 취소
+- [x] 예약 추가 API를 구현한다.
+  - POST `/reservations`
+- [ ] 예약 삭제 API를 구현한다.
+  - DELETE `/reservations/{id}`

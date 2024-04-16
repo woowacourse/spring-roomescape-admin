@@ -10,7 +10,7 @@ import java.time.LocalTime;
 import java.util.ArrayList;
 import java.util.List;
 
-@RestController()
+@RestController
 @RequestMapping("/reservations")
 public class ReservationController {
     private List<Reservation> reservations = new ArrayList<>();

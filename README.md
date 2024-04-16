@@ -8,7 +8,7 @@
   - 예약 조회 페이지(`templates/admin/reservation-legacy.html`)를 응답한다.
 - [x] 예약 목록 조회
 - [x] 예약 추가
-- [ ] 예약 취소
+- [x] 예약 취소
 
 ## API 명세
 

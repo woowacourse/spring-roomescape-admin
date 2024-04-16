@@ -55,9 +55,9 @@ class MissionStepTest {
     @Nested
     class 삼단계 {
 
-        @DisplayName("예약 추가")
+        @DisplayName("예약 추가 및 삭제 테스트")
         @Test
-        void createReservation() {
+        void createAndDeleteReservation() {
             Map<String, String> params = new HashMap<>();
             params.put("name", "브라운");
             params.put("date", "2023-08-05");
@@ -76,6 +76,17 @@ class MissionStepTest {
                     .then().log().all()
                     .statusCode(200)
                     .body("size()", is(1));
+
+            RestAssured.given().log().all()
+                    .when().delete("/reservations/1")
+                    .then().log().all()
+                    .statusCode(200);
+
+            RestAssured.given().log().all()
+                    .when().get("/reservations")
+                    .then().log().all()
+                    .statusCode(200)
+                    .body("size()", is(0));
         }
     }
 }

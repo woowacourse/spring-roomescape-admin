@@ -18,4 +18,22 @@ public class MissionStepTest {
                 .then().log().all()
                 .statusCode(200);
     }
+
+    @Test
+    @DisplayName("예약 관리 페이지를 요청하면 200 OK를 반환한다.")
+    void reservationPageTest() {
+        RestAssured.given().log().all()
+                .when().get("/admin/reservation")
+                .then().log().all()
+                .statusCode(200);
+    }
+
+    @Test
+    void getAllReservationsTest() {
+        RestAssured.given().log().all()
+                .when().get("/admin/reservations")
+                .then().log().all()
+                .statusCode(200)
+                .body("size()", hasSize(0));
+    }
 }

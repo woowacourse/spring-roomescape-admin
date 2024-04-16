@@ -10,7 +10,7 @@
 - [x] API 명세를 따라 예약 추가 API를 구현한다.
 - [x] API 명세를 따라 예약 삭제 API를 구현한다.
   - Spring MVC가 제공하는 Annotation을 활용한다.
-- [ ] 예약 정보의 식별자를 생성할 때 AtomicLong을 활용한다. 
+- [x] 예약 정보의 식별자를 생성할 때 AtomicLong을 활용한다. 
 
 ## 커밋 컨밴션
 - feat, docs, fix, refactor, test, style, chore

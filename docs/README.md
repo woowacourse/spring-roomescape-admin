@@ -11,6 +11,6 @@
 
 - [x] `GET`|`/reservations` : 예약 정보 요청
 
-- [ ] `POST`|`/reservations` : 예약 추가
+- [x] `POST`|`/reservations` : 예약 추가
 
 - [ ] `DELETE`|`/reservations/{id}` : 예약 취소

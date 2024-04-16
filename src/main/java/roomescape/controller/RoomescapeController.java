@@ -22,12 +22,12 @@ public class RoomescapeController {
     private final AtomicLong index = new AtomicLong(1);
 
     @GetMapping("/admin")
-    public String admin() {
+    public String adminPage() {
         return "admin/index";
     }
 
     @GetMapping("/admin/reservation")
-    public String reservation() {
+    public String adminReservationPage() {
         return "admin/reservation-legacy";
     }
 

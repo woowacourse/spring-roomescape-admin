@@ -1,20 +1,19 @@
 package roomescape;
 
 import java.time.LocalDateTime;
-import java.util.concurrent.atomic.AtomicLong;
 
 public class Reservation {
-    private final AtomicLong id;
+    private final long id;
     private final String name;
     private final LocalDateTime dateTime;
 
-    public Reservation(final AtomicLong id, final String name, final LocalDateTime dateTime) {
+    public Reservation(final long id, final String name, final LocalDateTime dateTime) {
         this.id = id;
         this.name = name;
         this.dateTime = dateTime;
     }
 
-    public AtomicLong getId() {
+    public long getId() {
         return id;
     }
 

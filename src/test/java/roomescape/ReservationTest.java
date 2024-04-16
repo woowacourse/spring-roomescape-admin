@@ -14,16 +14,7 @@ import static org.hamcrest.Matchers.is;
 
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.DEFINED_PORT)
 @DirtiesContext(classMode = DirtiesContext.ClassMode.BEFORE_EACH_TEST_METHOD)
-public class MissionStepTest {
-
-    @Test
-    @DisplayName("홈 화면을 요청하면 200 OK을 응답한다.")
-    void adminPageTest() {
-        RestAssured.given().log().all()
-                .when().get("/admin")
-                .then().log().all()
-                .statusCode(200);
-    }
+public class ReservationTest {
 
     @Test
     @DisplayName("예약 관리 페이지를 요청하면 200 OK를 반환한다.")
@@ -35,6 +26,7 @@ public class MissionStepTest {
     }
 
     @Test
+    @DisplayName("전체 예약을 조회한다.")
     void getAllReservationsTest() {
         RestAssured.given().log().all()
                 .when().get("/reservations")
@@ -44,6 +36,7 @@ public class MissionStepTest {
     }
 
     @Test
+    @DisplayName("예약을 성공적으로 추가한다.")
     void addReservationTest() {
         Map<String, String> params = new HashMap<>();
         params.put("name", "브라운");
@@ -66,6 +59,7 @@ public class MissionStepTest {
     }
 
     @Test
+    @DisplayName("예약을 성공적으로 삭제한다.")
     void deleteReservationTest() {
         Map<String, String> params = new HashMap<>();
         params.put("name", "브라운");

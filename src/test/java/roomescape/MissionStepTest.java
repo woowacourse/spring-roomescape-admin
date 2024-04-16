@@ -16,7 +16,7 @@ class MissionStepTest {
     @Test
     void 일단계_get_welcomePage() {
         RestAssured.given().log().all()
-                .when().get("/")
+                .when().get("/admin")
                 .then().log().all()
                 .statusCode(200);
     }
@@ -24,7 +24,7 @@ class MissionStepTest {
     @Test
     void 이단계_get_reservationPage() {
         RestAssured.given().log().all()
-                .when().get("/reservation")
+                .when().get("/admin/reservation")
                 .then().log().all()
                 .statusCode(200);
     }

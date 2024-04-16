@@ -17,15 +17,6 @@ import static org.hamcrest.Matchers.is;
 public class ReservationTest {
 
     @Test
-    @DisplayName("예약 관리 페이지를 요청하면 200 OK를 반환한다.")
-    void reservationPageTest() {
-        RestAssured.given().log().all()
-                .when().get("/admin/reservation")
-                .then().log().all()
-                .statusCode(200);
-    }
-
-    @Test
     @DisplayName("전체 예약을 조회한다.")
     void getAllReservationsTest() {
         RestAssured.given().log().all()

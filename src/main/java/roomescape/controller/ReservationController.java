@@ -7,6 +7,7 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
 import roomescape.domain.Reservation;
 import roomescape.dto.ReservationResponse;
 import roomescape.dto.ReservationRequest;
@@ -16,28 +17,14 @@ import java.util.List;
 import java.util.Objects;
 import java.util.concurrent.atomic.AtomicLong;
 
+@RequestMapping("/reservations")
 @Controller
-public class RoomEscapeController {
+public class ReservationController {
 
     private final List<Reservation> reservations = new ArrayList<>();
     private final AtomicLong index = new AtomicLong(1);
 
-    @GetMapping("/")
-    public String index() {
-        return "redirect:/admin";
-    }
-
-    @GetMapping("/admin")
-    public String admin() {
-        return "admin/index";
-    }
-
-    @GetMapping("/admin/reservation")
-    public String reservation() {
-        return "admin/reservation-legacy";
-    }
-
-    @GetMapping("/reservations")
+    @GetMapping
     public ResponseEntity<List<ReservationResponse>> reservations() {
         List<ReservationResponse> reservationResponses = reservations.stream()
                 .map(ReservationResponse::from)
@@ -47,7 +34,7 @@ public class RoomEscapeController {
                 .body(reservationResponses);
     }
 
-    @PostMapping("/reservations")
+    @PostMapping
     public ResponseEntity<ReservationResponse> create(@RequestBody ReservationRequest reservationRequest) {
         Reservation reservation = reservationRequest.toReservation(index.getAndIncrement());
         reservations.add(reservation);
@@ -56,7 +43,7 @@ public class RoomEscapeController {
                 .body(ReservationResponse.from(reservation));
     }
 
-    @DeleteMapping("/reservations/{id}")
+    @DeleteMapping("/{id}")
     public ResponseEntity<Void> delete(@PathVariable Long id) {
         Reservation findedReservation = reservations.stream()
                 .filter(reservation -> Objects.equals(reservation.getId(), id))

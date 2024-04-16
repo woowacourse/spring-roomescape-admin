@@ -20,7 +20,7 @@ public class ReservationTest {
     @DisplayName("예약 관리 페이지를 요청하면 200 OK를 반환한다.")
     void reservationPageTest() {
         RestAssured.given().log().all()
-                .when().get("/reservation")
+                .when().get("/admin/reservation")
                 .then().log().all()
                 .statusCode(200);
     }

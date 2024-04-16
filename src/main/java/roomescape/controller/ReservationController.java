@@ -18,7 +18,7 @@ public class ReservationController {
     private final AtomicLong idCount = new AtomicLong(1);
     private final Map<Long, Reservation> reservations = new HashMap<>();
 
-    @GetMapping("/reservation")
+    @GetMapping("/admin/reservation")
     public String land() {
         return "admin/reservation-legacy";
     }

@@ -4,15 +4,15 @@ import roomescape.domain.Reservation;
 
 import java.time.format.DateTimeFormatter;
 
-public record ReservationDto(
+public record ReservationResponse(
         Long id,
         String name,
         String date,
         String time
 ) {
 
-    public static ReservationDto from(Reservation reservation) {
-        return new ReservationDto(
+    public static ReservationResponse from(Reservation reservation) {
+        return new ReservationResponse(
                 reservation.getId(),
                 reservation.getName(),
                 reservation.getDateTime().format(DateTimeFormatter.ofPattern("yyyy-MM-dd")),

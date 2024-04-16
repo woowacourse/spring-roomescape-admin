@@ -26,12 +26,12 @@ public class MissionStepTest {
     @Test
     void 이단계() {
         RestAssured.given().log().all()
-                .when().get("/admin/reservation")
+                .when().get("/reservation")
                 .then().log().all()
                 .statusCode(200);
 
         RestAssured.given().log().all()
-                .when().get("/admin/reservations")
+                .when().get("/reservations")
                 .then().log().all()
                 .statusCode(200)
                 .body("size()", is(0));
@@ -47,24 +47,24 @@ public class MissionStepTest {
         RestAssured.given().log().all()
                 .contentType(ContentType.JSON)
                 .body(params)
-                .when().post("/admin/reservations")
+                .when().post("/reservations")
                 .then().log().all()
                 .statusCode(200)
                 .body("id", is(1));
 
         RestAssured.given().log().all()
-                .when().get("/admin/reservations")
+                .when().get("/reservations")
                 .then().log().all()
                 .statusCode(200)
                 .body("size()", is(1));
 
         RestAssured.given().log().all()
-                .when().delete("/admin/reservations/1")
+                .when().delete("/reservations/1")
                 .then().log().all()
                 .statusCode(200);
 
         RestAssured.given().log().all()
-                .when().get("/admin/reservations")
+                .when().get("/reservations")
                 .then().log().all()
                 .statusCode(200)
                 .body("size()", is(0));

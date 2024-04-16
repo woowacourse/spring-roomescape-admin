@@ -28,10 +28,10 @@ public class RoomEscapeController {
 
     @GetMapping("/reservations")
     public ResponseEntity<List<ReservationResponse>> getReservations() {
-        var reservationDtos = reservations.stream()
+        var reservationResponses = reservations.stream()
                 .map(Reservation::toDto)
                 .toList();
-        return ResponseEntity.ok(reservationDtos);
+        return ResponseEntity.ok(reservationResponses);
     }
 
     @PostMapping("/reservations")

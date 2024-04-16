@@ -13,12 +13,13 @@ import java.util.Map;
 import java.util.concurrent.atomic.AtomicLong;
 
 @Controller
+@RequestMapping("/reservations")
 public class ReservationController {
 
     private final AtomicLong idCount = new AtomicLong(1);
     private final Map<Long, Reservation> reservations = new HashMap<>();
 
-    @GetMapping("/reservations")
+    @GetMapping
     @ResponseBody
     public ResponseEntity<List<Reservation>> getAll() {
         List<Reservation> totalReservations = reservations.values()
@@ -27,7 +28,7 @@ public class ReservationController {
         return ResponseEntity.ok(totalReservations);
     }
 
-    @PostMapping("/reservations")
+    @PostMapping
     @ResponseBody
     public ResponseEntity<Reservation> create(@RequestBody ReservationDto reservationDto) {
         Reservation reservation = reservationDto.toEntity(idCount.getAndIncrement());
@@ -36,7 +37,7 @@ public class ReservationController {
                 .body(reservation);
     }
 
-    @DeleteMapping("/reservations/{id}")
+    @DeleteMapping("/{id}")
     public ResponseEntity<Void> delete(@PathVariable Long id) {
         if (!reservations.containsKey(id)) {
             throw new IllegalArgumentException("id에 해당하는 예약을 찾을 수 없습니다.");

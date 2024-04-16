@@ -3,19 +3,21 @@ package roomescape.controller;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import roomescape.domain.Reservation;
 import roomescape.dto.ReservationDto;
+import roomescape.dto.ReservationRequest;
 
-import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.concurrent.atomic.AtomicLong;
 
 @Controller
 public class RoomEscapeController {
 
-    private List<Reservation> reservations = new ArrayList<>(List.of(
-            new Reservation(1L, "브라운", LocalDateTime.now()),
-            new Reservation(2L, "솔라", LocalDateTime.now())));
+    private final List<Reservation> reservations = new ArrayList<>();
+    private final AtomicLong index = new AtomicLong(1);
 
     @GetMapping("/")
     public String index() {
@@ -39,5 +41,14 @@ public class RoomEscapeController {
                 .toList();
 
         return ResponseEntity.ok().body(reservationDtos);
+    }
+
+    @PostMapping("/reservations")
+    public ResponseEntity<ReservationDto> create(@RequestBody ReservationRequest reservationRequest) {
+        Reservation reservation = reservationRequest.toReservation(index.getAndIncrement());
+        reservations.add(reservation);
+
+        return ResponseEntity.ok()
+                .body(ReservationDto.from(reservation));
     }
 }

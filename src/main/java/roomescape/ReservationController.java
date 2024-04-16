@@ -1,9 +1,9 @@
 package roomescape;
 
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.List;
 import java.util.Objects;
+import java.util.concurrent.atomic.AtomicLong;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -17,7 +17,8 @@ import org.springframework.web.bind.annotation.RequestMapping;
 @RequestMapping("/reservations")
 public class ReservationController {
 
-    private final List<Reservation> reservations = Collections.synchronizedList(new ArrayList<>());
+    private final List<Reservation> reservations = new ArrayList<>();
+    private final AtomicLong id = new AtomicLong(0);
 
     @GetMapping
     public ResponseEntity<List<Reservation>> reservations() {
@@ -27,7 +28,7 @@ public class ReservationController {
     @PostMapping
     public ResponseEntity<Reservation> reserve(@RequestBody CreateReservationRequest request) {
         Reservation newReservation = new Reservation(
-                reservations.size() + 1L,
+                id.incrementAndGet(),
                 request.getName(),
                 request.getDate(),
                 request.getTime());

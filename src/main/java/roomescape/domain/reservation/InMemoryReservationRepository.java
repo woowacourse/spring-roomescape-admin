@@ -10,14 +10,14 @@ import org.springframework.stereotype.Repository;
 
 @Repository
 public class InMemoryReservationRepository implements ReservationRepository {
-    private AtomicLong index = new AtomicLong(1L);
     private final Map<Long, Reservation> reservations = new HashMap<>();
+    private AtomicLong index = new AtomicLong(1L);
 
     @Override
     public Reservation save(Reservation reservation) {
-        Reservation newReservation = new Reservation(index.getAndIncrement(), reservation);
-        reservations.put(newReservation.getId(), newReservation);
-        return newReservation;
+        reservation.setId(index.getAndIncrement());
+        reservations.put(reservation.getId(), reservation);
+        return reservation;
     }
 
     @Override

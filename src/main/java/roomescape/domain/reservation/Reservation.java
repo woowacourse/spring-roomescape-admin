@@ -16,10 +16,6 @@ public class Reservation {
         this.time = time;
     }
 
-    public Reservation(Long id, Reservation reservation) {
-        this(id, reservation.name, reservation.date, reservation.time);
-    }
-
     public Long getId() {
         return id;
     }
@@ -34,5 +30,9 @@ public class Reservation {
 
     public String getTime() {
         return time;
+    }
+
+    public void setId(Long id) {
+        this.id = id;
     }
 }

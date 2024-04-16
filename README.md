@@ -6,7 +6,7 @@
   - 어드민 메인 페이지(`templates/admin/index.html`)를 응답한다.
 - [x] 예약 조회 화면 구현
   - 예약 조회 페이지(`templates/admin/reservation-legacy.html`)를 응답한다.
-- [ ] 예약 목록 조회
+- [x] 예약 목록 조회
 - [ ] 예약 추가
 - [ ] 예약 취소
 

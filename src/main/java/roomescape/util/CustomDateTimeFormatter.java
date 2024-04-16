@@ -1,4 +1,4 @@
-package roomescape;
+package roomescape.util;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;

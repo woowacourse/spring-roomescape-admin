@@ -1,6 +1,7 @@
-package roomescape;
+package roomescape.controller;
 
 import java.time.format.DateTimeFormatter;
+import roomescape.domain.Reservation;
 
 public record FindReservationResponse(Long id, String name, String date, String time) {
 

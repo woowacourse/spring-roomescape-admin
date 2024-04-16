@@ -6,6 +6,11 @@ import org.springframework.web.bind.annotation.GetMapping;
 @Controller
 public class RoomEscapeController {
 
+    @GetMapping("/")
+    public String index() {
+        return "redirect:/admin";
+    }
+
     @GetMapping("/admin")
     public String admin() {
         return "admin/index";

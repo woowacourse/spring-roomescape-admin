@@ -18,7 +18,7 @@ public class MissionStepTest {
 
     @Test
     @DisplayName("어드민 메인 페이지로 정상적으로 이동한다.")
-    void 일단계() {
+    void moveToAdminMainPage_Success() {
         RestAssured.given().log().all()
                 .when().get("/admin")
                 .then().log().all()
@@ -26,13 +26,17 @@ public class MissionStepTest {
     }
 
     @Test
-    @DisplayName("예약 페이지 요청과 예약 목록 조회 요청이 정상석으로 수행된다.")
-    void 이단계() {
+    @DisplayName("예약 페이지 요청이 정상적으로 수행된다.")
+    void moveToReservationPage_Success() {
         RestAssured.given().log().all()
                 .when().get("/admin/reservation")
                 .then().log().all()
                 .statusCode(200);
+    }
 
+    @Test
+    @DisplayName("예약 목록 조회 요청이 정상석으로 수행된다.")
+    void selectReservationListRequest_Success() {
         RestAssured.given().log().all()
                 .when().get("/reservations")
                 .then().log().all()
@@ -41,8 +45,8 @@ public class MissionStepTest {
     }
 
     @Test
-    @DisplayName("예약 추가와 취소를 정상적으로 수행한다.")
-    void 삼단계() {
+    @DisplayName("예약 추가를 정상적으로 수행한다.")
+    void addReservation_Success() {
         Map<String, String> params = new HashMap<>();
         params.put("name", "브라운");
         params.put("date", "2023-08-05");
@@ -61,6 +65,20 @@ public class MissionStepTest {
                 .then().log().all()
                 .statusCode(200)
                 .body("size()", is(1));
+    }
+
+    @Test
+    @DisplayName("예약 취소를 정상적으로 수행한다.")
+    void deleteReservation_Success() {
+        Map<String, String> params = new HashMap<>();
+        params.put("name", "브라운");
+        params.put("date", "2023-08-05");
+        params.put("time", "15:40");
+
+        RestAssured.given().log().all()
+                .contentType(ContentType.JSON)
+                .body(params)
+                .when().post("/reservations");
 
         RestAssured.given().log().all()
                 .when().delete("/reservations/1")

@@ -31,16 +31,14 @@ public class ReservationController {
     @PostMapping
     public ResponseEntity<Reservation> create(@RequestBody ReservationRequest request) {
         long id = index.incrementAndGet();
-        Reservation reservation = new Reservation(id, request.getName(),
-                request.getDate(), request.getTime());
+        Reservation reservation = ReservationRequest.of(id, request);
         reservations.put(id, reservation);
         return ResponseEntity.ok(reservation);
     }
 
     @DeleteMapping("{id}")
-    public ResponseEntity<Void> delete(@PathVariable Long id, Model model) {
+    public ResponseEntity<Void> delete(@PathVariable Long id) {
         reservations.remove(id);
-        model.addAttribute(id);
         return ResponseEntity.ok().build();
     }
 }

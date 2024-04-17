@@ -3,7 +3,7 @@ package roomescape.controller;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import roomescape.domain.Reservation;
-import roomescape.domain.ReservationCreateRequest;
+import roomescape.controller.dto.ReservationCreateRequest;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -17,13 +17,13 @@ public class ReservationController {
     private final List<Reservation> reservations = new ArrayList<>();
 
     @GetMapping()
-    public ResponseEntity<List<Reservation>> reservations() {
+    public ResponseEntity<List<Reservation>> readReservations() {
         return ResponseEntity.ok(reservations);
     }
 
     @PostMapping()
     public ResponseEntity<Reservation> createReservation(@RequestBody ReservationCreateRequest request) {
-        Reservation reservation = request.toEntity(atomicInteger.getAndIncrement());
+        Reservation reservation = request.toReservation(atomicInteger.getAndIncrement());
         reservations.add(reservation);
         return ResponseEntity.ok(reservation);
     }

@@ -10,10 +10,17 @@ class AdminControllerTest {
 
     @DisplayName("홈 화면 조회")
     @Test
-    void home() {
+    void responseHome() {
         RestAssured.given().log().all()
                 .when().get("/admin")
-                .then().log().all()
-                .statusCode(200);
+                .then().statusCode(200);
+    }
+
+    @DisplayName("어드민 화면 조회")
+    @Test
+    void responseAdmin() {
+        RestAssured.given().log().all()
+                .when().get("/admin/reservation")
+                .then().statusCode(200);
     }
 }

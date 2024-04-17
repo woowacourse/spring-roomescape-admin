@@ -2,17 +2,14 @@ package roomescape.repository;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.concurrent.atomic.AtomicLong;
 import roomescape.domain.Reservation;
 
 public class ReservationRepository {
 
     private final List<Reservation> reservations;
-    private final AtomicLong index;
 
     public ReservationRepository() {
         this.reservations = new ArrayList<>();
-        this.index = new AtomicLong(1);
     }
 
 
@@ -31,9 +28,5 @@ public class ReservationRepository {
                 .orElseThrow(IllegalArgumentException::new);
 
         reservations.remove(reservation);
-    }
-
-    public AtomicLong getIndex() {
-        return index;
     }
 }

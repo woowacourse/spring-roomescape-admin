@@ -4,39 +4,28 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 import java.util.concurrent.atomic.AtomicLong;
-import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
 import roomescape.domain.Reservation;
 
-@Controller
-public class RoomescapeController {
+@RestController
+@RequestMapping("/reservations")
+public class ReservationController {
 
     private final AtomicLong index = new AtomicLong(1);
     private final List<Reservation> reservations = new ArrayList<>();
 
-    @GetMapping("/admin")
-    public String mainPage() {
-        return "admin/index";
-    }
-
-    @GetMapping("/admin/reservation")
-    public String reservationPage() {
-        return "admin/reservation-legacy";
-    }
-
-    @GetMapping("/reservations")
-    @ResponseBody
+    @GetMapping("")
     public List<Reservation> readReservations() {
         return reservations;
     }
 
-    @PostMapping("/reservations")
-    @ResponseBody
+    @PostMapping("")
     public Reservation createReservation(@RequestBody ReservationRequestDto request) {
         Reservation newReservation = new Reservation(
             index.getAndIncrement(), request.name(), request.date(), request.time());
@@ -44,8 +33,7 @@ public class RoomescapeController {
         return newReservation;
     }
 
-    @DeleteMapping("/reservations/{id}")
-    @ResponseBody
+    @DeleteMapping("/{id}")
     public void deleteReservation(@PathVariable Long id) {
         Reservation reservation = reservations.stream()
             .filter(it -> Objects.equals(it.getId(), id))

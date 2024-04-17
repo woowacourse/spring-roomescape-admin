@@ -17,7 +17,7 @@ import static org.hamcrest.Matchers.is;
 public class MissionStepTest {
 
     @Test
-    @DisplayName("welcome 페이지로 정상적으로 이동한다.")
+    @DisplayName("어드민 메인 페이지로 정상적으로 이동한다.")
     void 일단계() {
         RestAssured.given().log().all()
                 .when().get("/admin")

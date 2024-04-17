@@ -34,6 +34,9 @@ public class InMemoryReservationRepository implements ReservationRepository {
 
     @Override
     public void deleteById(Long id) {
+        if (!reservations.containsKey(id)) {
+            throw new IllegalArgumentException("존재하지 않은 id입니다.");
+        }
         reservations.remove(id);
     }
 }

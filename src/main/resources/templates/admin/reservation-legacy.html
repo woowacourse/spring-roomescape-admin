@@ -49,11 +49,11 @@
     </tr>
     </thead>
     <tbody id="table-body">
-      <tr th:each="reservation : ${reservationResponses}">
-        <td th:text="${reservation.id}"></td>
-        <td th:text="${reservation.name}"></td>
-        <td th:text="${reservation.date}"></td>
-        <td th:text="${reservation.time}"></td>
+      <tr th:each="reservationResponse : ${reservationResponses}">
+        <td th:text="${reservationResponse.id}"></td>
+        <td th:text="${reservationResponse.name}"></td>
+        <td th:text="${reservationResponse.date}"></td>
+        <td th:text="${reservationResponse.time}"></td>
       </tr>
     </tbody>
   </table>

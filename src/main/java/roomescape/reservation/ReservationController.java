@@ -1,8 +1,7 @@
-package roomescape;
+package roomescape.reservation;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Optional;
 import java.util.concurrent.atomic.AtomicLong;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
@@ -23,9 +22,8 @@ public class ReservationController {
     @GetMapping
     @ResponseBody
     public ResponseEntity<List<Reservation>> reservations() {
-        return ResponseEntity.of(Optional.of(reservations));
+        return ResponseEntity.ok(reservations);
     }
-
 
     @PostMapping
     @ResponseBody
@@ -42,7 +40,7 @@ public class ReservationController {
 
     @DeleteMapping("/{id}")
     public ResponseEntity<Void> delete(@PathVariable("id") long id) {
-        reservations.removeIf((reservation -> reservation.getId() == id));
+        reservations.removeIf(reservation -> reservation.getId() == id);
         return ResponseEntity.ok().build();
     }
 }

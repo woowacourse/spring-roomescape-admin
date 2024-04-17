@@ -44,7 +44,9 @@ public class AdminController {
 
     @DeleteMapping("/reservations/{id}")
     public ResponseEntity<Void> deleteReservation(@PathVariable Long id) {
-        reservationRepository.deleteById(id);
+        var reservation = reservationRepository.findById(id)
+                .orElseThrow(() -> new IllegalArgumentException("해당 ID의 예약이 없습니다."));
+        reservationRepository.deleteById(reservation.getId());
         return ResponseEntity.ok().build();
     }
 }

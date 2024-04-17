@@ -2,7 +2,6 @@ package roomescape.dto;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
 import java.time.LocalDate;
-import java.time.LocalDateTime;
 import java.time.LocalTime;
 import roomescape.domain.Reservation;
 
@@ -17,6 +16,6 @@ public record ReservationRequest(
 ) {
 
     public Reservation toReservation(Long id) {
-        return new Reservation(id, name, LocalDateTime.of(date, time));
+        return new Reservation(id, name, date, time);
     }
 }

@@ -16,22 +16,27 @@ import org.springframework.web.bind.annotation.RestController;
 import roomescape.domain.Reservation;
 import roomescape.dto.ReservationRequest;
 import roomescape.dto.ReservationResponse;
+import roomescape.repository.ReservationDao;
 
 @RequestMapping("/reservations")
 @RestController
 public class ReservationController {
 
-    private final List<Reservation> reservations = new ArrayList<>();
-    private final AtomicLong index = new AtomicLong(1);
+    private ReservationDao reservationDao;
+
+    public ReservationController(ReservationDao reservationDao) {
+        this.reservationDao = reservationDao;
+    }
 
     @GetMapping
     public ResponseEntity<List<ReservationResponse>> read() {
-        List<ReservationResponse> reservationResponses = reservations.stream()
+        List<Reservation> reservations = reservationDao.findAll();
+        List<ReservationResponse> responses = reservations.stream()
                 .map(ReservationResponse::from)
                 .toList();
 
         return ResponseEntity.ok()
-                .body(reservationResponses);
+                .body(responses);
     }
 
     @PostMapping

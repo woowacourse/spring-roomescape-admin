@@ -30,7 +30,7 @@ public class ReservationController {
         List<ReservationFindAllResponse> response = reservations.stream()
                 .map(ReservationFindAllResponse::from)
                 .toList();
-        return ResponseEntity.ok().body(response);
+        return ResponseEntity.ok(response);
     }
 
     @PostMapping

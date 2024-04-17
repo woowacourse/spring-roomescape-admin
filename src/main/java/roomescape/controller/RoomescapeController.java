@@ -20,18 +20,18 @@ public class RoomescapeController {
     private final List<Reservation> reservations = new ArrayList<>();
 
     @GetMapping("/admin")
-    public String index() {
+    public String mainPage() {
         return "admin/index";
     }
 
     @GetMapping("/admin/reservation")
-    public String reservation() {
+    public String reservationPage() {
         return "admin/reservation-legacy";
     }
 
     @GetMapping("/reservations")
     @ResponseBody
-    public List<Reservation> reservations() {
+    public List<Reservation> readReservations() {
         return reservations;
     }
 

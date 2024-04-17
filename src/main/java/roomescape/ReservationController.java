@@ -18,7 +18,7 @@ public class ReservationController {
     private List<Reservation> reservations = new ArrayList<>();
 
     @GetMapping("/admin/reservation")
-    public String reservationPage(Model model) {
+    public String reservationPage() {
         return "admin/reservation-legacy";
     }
 

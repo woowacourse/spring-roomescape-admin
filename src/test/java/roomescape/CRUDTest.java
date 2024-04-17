@@ -2,8 +2,10 @@ package roomescape;
 
 import io.restassured.RestAssured;
 import io.restassured.http.ContentType;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.boot.test.web.server.LocalServerPort;
 import org.springframework.test.annotation.DirtiesContext;
 
 import java.util.HashMap;
@@ -11,9 +13,18 @@ import java.util.Map;
 
 import static org.hamcrest.Matchers.is;
 
-@SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.DEFINED_PORT)
+@SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 @DirtiesContext(classMode = DirtiesContext.ClassMode.BEFORE_EACH_TEST_METHOD)
 public class CRUDTest {
+
+    @LocalServerPort
+    int port;
+
+    @BeforeEach
+    public void beforeEach() {
+        RestAssured.port = port;
+        System.out.println("port = " + port);
+    }
 
     @Test
     void 예약자를_추가한다() {

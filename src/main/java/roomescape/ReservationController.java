@@ -20,12 +20,12 @@ public class ReservationController {
     private final List<Reservation> reservations = new ArrayList<>();
 
     @GetMapping
-    public ResponseEntity<List<Reservation>> getReservations() {
+    public ResponseEntity<List<Reservation>> findAllReservation() {
         return ResponseEntity.ok().body(reservations);
     }
 
     @PostMapping
-    public ResponseEntity<Reservation> createReservation(@RequestBody ReservationCreateRequest request) {
+    public ResponseEntity<Reservation> saveReservation(@RequestBody ReservationCreateRequest request) {
         Reservation reservation = request.toEntity(counter.incrementAndGet());
         reservations.add(reservation);
         return ResponseEntity.ok(reservation);

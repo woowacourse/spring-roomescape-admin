@@ -38,7 +38,7 @@ public class ReservationController {
         Reservation reservation = request.toEntity(counter.incrementAndGet());
         reservationDao.save(reservation);
         ReservationFindResponse response = ReservationFindResponse.from(reservation);
-        return ResponseEntity.ok(response);
+        return ResponseEntity.ok().body(response);
     }
 
     @DeleteMapping("/{reservation_id}")

@@ -18,7 +18,7 @@ import roomescape.domain.Reservation;
 public class ReservationController {
 
     private List<Reservation> reservations = new ArrayList<>();
-    private AtomicLong index = new AtomicLong(1);
+    private final AtomicLong index = new AtomicLong(1);
 
     @GetMapping
     public ResponseEntity<List<FindReservationResponse>> getReservation() {

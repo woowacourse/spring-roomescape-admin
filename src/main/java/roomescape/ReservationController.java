@@ -10,26 +10,28 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
 
+@RequestMapping("/reservations")
 @Controller
 public class ReservationController {
 
     private final AtomicLong counter = new AtomicLong();
     private final List<Reservation> reservations = new ArrayList<>();
 
-    @GetMapping("/reservations")
+    @GetMapping
     public ResponseEntity<List<Reservation>> getReservations() {
         return ResponseEntity.ok().body(reservations);
     }
 
-    @PostMapping("/reservations")
+    @PostMapping
     public ResponseEntity<Reservation> createReservation(@RequestBody ReservationCreateRequest request) {
         Reservation reservation = request.toEntity(counter.incrementAndGet());
         reservations.add(reservation);
         return ResponseEntity.ok(reservation);
     }
 
-    @DeleteMapping("/reservations/{reservation_id}")
+    @DeleteMapping("/{reservation_id}")
     public ResponseEntity<Void> deleteReservation(@PathVariable(value = "reservation_id") Long id) {
         Reservation reservation = findReservationById(id);
         reservations.remove(reservation);

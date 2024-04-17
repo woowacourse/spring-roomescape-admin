@@ -31,7 +31,7 @@ public class ReservationController {
     }
 
     @GetMapping("/reservations")
-    public ResponseEntity<List<Reservation>> reservations() {
+    public ResponseEntity<List<Reservation>> findAllReservations() {
         return ResponseEntity.ok(reservations);
     }
 

@@ -23,9 +23,8 @@ public class MissionStepTest {
     int port;
 
     @BeforeEach
-    public void setUp() {
+    public void beforeEach() {
         RestAssured.port = port;
-        System.out.println("port = " + port);
     }
 
     @Test

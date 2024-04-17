@@ -52,8 +52,8 @@
       <tr th:each="reservation : ${reservationDtos}">
         <td th:text="${reservation.id}"></td>
         <td th:text="${reservation.name}"></td>
-        <td th:text="${reservation.localDate}"></td>
-        <td th:text="${reservation.localTime}"></td>
+        <td th:text="${reservation.date}"></td>
+        <td th:text="${reservation.time}"></td>
       </tr>
     </tbody>
   </table>

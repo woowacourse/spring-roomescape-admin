@@ -49,7 +49,7 @@
     </tr>
     </thead>
     <tbody id="table-body">
-      <tr th:each="reservation : ${reservationDtos}">
+      <tr th:each="reservation : ${reservationResponses}">
         <td th:text="${reservation.id}"></td>
         <td th:text="${reservation.name}"></td>
         <td th:text="${reservation.date}"></td>

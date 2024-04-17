@@ -1,4 +1,4 @@
-package roomescape;
+package roomescape.controller;
 
 import static org.hamcrest.Matchers.is;
 
@@ -6,28 +6,15 @@ import io.restassured.RestAssured;
 import io.restassured.http.ContentType;
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.boot.test.context.SpringBootTest.WebEnvironment;
 import org.springframework.test.annotation.DirtiesContext;
 import roomescape.dto.ReservationCreateDto;
 
-@SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.DEFINED_PORT)
+@SpringBootTest(webEnvironment = WebEnvironment.DEFINED_PORT)
 @DirtiesContext(classMode = DirtiesContext.ClassMode.BEFORE_EACH_TEST_METHOD)
-class MissionStepTest {
-
+class ReservationControllerTest {
     @Test
-    void 일단계() {
-        RestAssured.given().log().all()
-                .when().get("/admin")
-                .then().log().all()
-                .statusCode(200);
-    }
-
-    @Test
-    void 이단계() {
-        RestAssured.given().log().all()
-                .when().get("/admin/reservation")
-                .then().log().all()
-                .statusCode(200);
-
+    void readReservations() {
         RestAssured.given().log().all()
                 .when().get("/reservations")
                 .then().log().all()
@@ -36,7 +23,7 @@ class MissionStepTest {
     }
 
     @Test
-    void 삼단계() {
+    void createReservation() {
         ReservationCreateDto createDto = new ReservationCreateDto("브라운", "2023-08-05", "15:40");
 
         RestAssured.given().log().all()
@@ -46,12 +33,19 @@ class MissionStepTest {
                 .then().log().all()
                 .statusCode(201)
                 .body("id", is(1));
+    }
+
+    @Test
+    void deleteReservation() {
+        ReservationCreateDto createDto = new ReservationCreateDto("브라운", "2023-08-05", "15:40");
 
         RestAssured.given().log().all()
-                .when().get("/reservations")
+                .contentType(ContentType.JSON)
+                .body(createDto)
+                .when().post("/reservations")
                 .then().log().all()
-                .statusCode(200)
-                .body("size()", is(1));
+                .statusCode(201)
+                .body("id", is(1));
 
         RestAssured.given().log().all()
                 .when().delete("/reservations/1")

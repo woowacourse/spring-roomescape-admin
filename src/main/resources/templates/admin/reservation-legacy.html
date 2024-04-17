@@ -46,12 +46,6 @@
             <th>시간</th>
             <th></th>
         </tr>
-        <tr th:each="reservation : ${reservations}">
-            <td th:text="${reservation.id}"></td>
-            <td th:text="${reservation.name}"></td>
-            <td th:text="${reservation.date}"></td>
-            <td th:text="${reservation.time}"></td>
-        </tr>
         </thead>
         <tbody id="table-body">
         </tbody>

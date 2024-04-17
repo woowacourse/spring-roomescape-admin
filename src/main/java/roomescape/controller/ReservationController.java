@@ -1,8 +1,6 @@
 package roomescape.controller;
 
-import java.util.ArrayList;
 import java.util.List;
-import java.util.concurrent.atomic.AtomicLong;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -13,36 +11,32 @@ import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 import roomescape.domain.Reservation;
 import roomescape.dto.ReservationRequest;
+import roomescape.service.ReservationService;
 
 @RestController
-public class ReservationsController {
+public class ReservationController {
 
-    private final List<Reservation> reservations = new ArrayList<>();
-    private final AtomicLong index = new AtomicLong(1);
+    private final ReservationService reservationService;    // TODO: 이 컨트롤러는 언제 생성될까? 필드 초기화는 어디서 해야할까?
+
+    public ReservationController() {
+        this.reservationService = new ReservationService();
+    }
 
     @GetMapping("/reservations")
     @ResponseStatus(HttpStatus.OK)
     public List<Reservation> read() {
-        return reservations;
+        return reservationService.read();
     }
 
     @PostMapping("/reservations")
     @ResponseStatus(HttpStatus.OK)
     public Reservation add(@RequestBody final ReservationRequest reservationRequest) {
-        Long id = index.getAndIncrement();
-        Reservation reservation = reservationRequest.toReservation(id);
-        reservations.add(reservation);
-        return reservation;
+        return reservationService.add(reservationRequest);
     }
 
     @DeleteMapping("/reservations/{id}")
     @ResponseStatus(HttpStatus.OK)
     public void delete(@PathVariable(name = "id") final Long id) {
-        Reservation reservation = reservations.stream()
-                .filter(it -> it.getId().equals(id))
-                .findFirst()
-                .orElseThrow(IllegalArgumentException::new);
-
-        reservations.remove(reservation);
+        reservationService.remove(id);
     }
 }

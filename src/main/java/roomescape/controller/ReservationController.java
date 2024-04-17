@@ -7,33 +7,30 @@ import java.util.List;
 import java.util.NoSuchElementException;
 import java.util.concurrent.atomic.AtomicLong;
 import org.springframework.http.ResponseEntity;
-import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.bind.annotation.RestController;
 import roomescape.controller.dto.ReservationDto;
 import roomescape.entity.Reservation;
 
 @RequestMapping("/reservations")
-@Controller
+@RestController
 public class ReservationController {
 
     private List<Reservation> reservations = new ArrayList<>();
     private final AtomicLong index = new AtomicLong(1);
 
     @GetMapping("")
-    @ResponseBody
-    public List<Reservation> readAllReservations() {
-        return reservations;
+    public ResponseEntity<List<Reservation>> readAllReservations() {
+        return ResponseEntity.ok().body(reservations);
     }
 
     @PostMapping("")
-    @ResponseBody
-    public Reservation createReservation(@RequestBody ReservationDto reservationDto) {
+    public ResponseEntity<Reservation> createReservation(@RequestBody ReservationDto reservationDto) {
         long id = index.getAndIncrement();
         String name = reservationDto.getName();
         LocalDate date = reservationDto.getDate();
@@ -41,7 +38,7 @@ public class ReservationController {
 
         Reservation newReservation = new Reservation(id, name, date, time);
         reservations.add(newReservation);
-        return newReservation;
+        return ResponseEntity.ok().body(newReservation);
     }
 
     @DeleteMapping("/{id}")

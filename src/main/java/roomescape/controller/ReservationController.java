@@ -29,16 +29,18 @@ public class ReservationController {
 
     @PostMapping("")
     public ResponseEntity<Void> createReservation(@RequestBody ReservationRequest reservationRequest) {
-        Reservation reservation = new Reservation(reservationRequest.name(), reservationRequest.date(), reservationRequest.time());
-        Reservation newReservation = Reservation.toEntity(index.getAndIncrement(), reservation);
-        reservations.add(newReservation);
-        return ResponseEntity.created(URI.create("/reservations/" + newReservation.getId())).build();
+        Reservation reservation = new Reservation(index.getAndIncrement(),
+                reservationRequest.name(),
+                reservationRequest.date(),
+                reservationRequest.time());
+        reservations.add(reservation);
+        return ResponseEntity.created(URI.create("/reservations/" + reservation.getId())).build();
     }
 
     @DeleteMapping("/{id}")
     public ResponseEntity<Void> deleteReservation(@PathVariable("id") long id) {
         boolean isRemoved = reservations.removeIf(reservation -> reservation.getId() == id);
-        if(isRemoved) {
+        if (isRemoved) {
             return ResponseEntity.ok().build();
         }
         return ResponseEntity.notFound().build();

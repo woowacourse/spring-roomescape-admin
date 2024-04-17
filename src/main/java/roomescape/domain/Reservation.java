@@ -7,16 +7,22 @@ import java.time.LocalTime;
 import java.util.Objects;
 
 public class Reservation {
-    private final Long id;
+    private Long id;
     private final String name;
     private final LocalDate date;
     private final LocalTime time;
 
-    public Reservation(Long id, String name, LocalDate date, LocalTime time) {
-        this.id = id;
+    public Reservation(String name, LocalDate date, LocalTime time) {
         this.name = name;
         this.date = date;
         this.time = time;
+    }
+
+    public void initializeId(Long id) {
+        if (this.id != null) {
+            throw new IllegalStateException("예약 ID를 변경할 수 없습니다.");
+        }
+        this.id = id;
     }
 
     public ReservationResponse toDto() {
@@ -29,6 +35,10 @@ public class Reservation {
 
     public Long getId() {
         return id;
+    }
+
+    public String getName() {
+        return name;
     }
 
     @Override

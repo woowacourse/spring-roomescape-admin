@@ -10,7 +10,7 @@ public record ReservationSaveRequest(
         LocalDate date,
         LocalTime time) {
 
-    public Reservation toReservation(Long id) {
-        return new Reservation(id, name, date, time);
+    public Reservation toReservation() {
+        return new Reservation(name, date, time);
     }
 }

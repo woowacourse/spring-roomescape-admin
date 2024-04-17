@@ -4,11 +4,14 @@ import roomescape.domain.Reservation;
 
 import java.util.*;
 import java.util.concurrent.ConcurrentHashMap;
+import java.util.concurrent.atomic.AtomicLong;
 
 public class ReservationRepository {
     private final Map<Long, Reservation> reservations = new ConcurrentHashMap<>();
+    private final AtomicLong index = new AtomicLong(1);
 
     public void save(Reservation reservation) {
+        reservation.initializeId(index.getAndIncrement());
         reservations.put(reservation.getId(), reservation);
     }
 
@@ -21,7 +24,6 @@ public class ReservationRepository {
     }
 
     public void deleteById(Long id) {
-        Reservation target = reservations.get(id);
-        reservations.remove(target);
+        reservations.remove(id);
     }
 }

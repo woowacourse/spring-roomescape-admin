@@ -9,12 +9,10 @@ import roomescape.dto.ReservationSaveRequest;
 import roomescape.repository.ReservationRepository;
 
 import java.util.List;
-import java.util.concurrent.atomic.AtomicLong;
 
 @Controller
 public class AdminController {
     private final ReservationRepository reservationRepository = new ReservationRepository();
-    private final AtomicLong index = new AtomicLong(1);
 
     @GetMapping("/admin")
     public String adminPage() {
@@ -37,7 +35,7 @@ public class AdminController {
 
     @PostMapping("/reservations")
     public ResponseEntity<ReservationResponse> createReservation(@RequestBody ReservationSaveRequest request) {
-        var reservation = request.toReservation(index.getAndIncrement());
+        var reservation = request.toReservation();
         reservationRepository.save(reservation);
         return ResponseEntity.ok(reservation.toDto());
     }

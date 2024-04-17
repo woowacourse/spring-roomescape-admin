@@ -1,8 +1,8 @@
-package roomescape.dto;
+package roomescape.web.dto;
 
 import java.time.LocalDate;
 import java.time.LocalTime;
-import roomescape.Reservation;
+import roomescape.dao.Reservation;
 
 public record ReservationFindAllResponse(Long id, String name, LocalDate date, LocalTime time) {
     public static ReservationFindAllResponse from(Reservation reservation) {

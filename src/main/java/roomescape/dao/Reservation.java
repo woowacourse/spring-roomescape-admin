@@ -1,4 +1,4 @@
-package roomescape;
+package roomescape.dao;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
 import java.time.LocalDate;

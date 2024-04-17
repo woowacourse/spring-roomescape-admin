@@ -4,7 +4,7 @@ import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.LocalTime;
 
-public class Reservation {
+public class Reservation implements Comparable<Reservation> {
     private final long id;
     private final String name;
     private final LocalDateTime dateTime;
@@ -13,6 +13,11 @@ public class Reservation {
         this.id = id;
         this.name = name;
         this.dateTime = dateTime;
+    }
+
+    @Override
+    public int compareTo(Reservation other) {
+        return dateTime.compareTo(other.dateTime);
     }
 
     public long getId() {

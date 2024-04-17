@@ -54,6 +54,7 @@ public class ReservationController {
     @GetMapping("/reservations")
     public List<ReservationResponse> findAllReservations() {
         return reservations.stream()
+                .sorted()
                 .map(this::toResponse)
                 .toList();
     }

@@ -9,7 +9,6 @@ import org.springframework.web.bind.annotation.*;
 import roomescape.domain.Reservation;
 import roomescape.domain.Reservations;
 import roomescape.dto.request.ReservationCreateRequest;
-
 import java.util.ArrayList;
 import roomescape.dto.response.ReservationResponse;
 

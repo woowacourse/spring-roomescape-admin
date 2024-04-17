@@ -7,7 +7,6 @@ import org.springframework.stereotype.Repository;
 
 @Repository
 public class ReservationMemoryDao implements ReservationDao {
-
     private final List<Reservation> reservations = new ArrayList<>();
 
     @Override

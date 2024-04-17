@@ -6,9 +6,6 @@ public class Reservation {
     private String date;
     private String time;
 
-    public Reservation() {
-    }
-
     public Reservation(Long id, String name, String date, String time) {
         this.id = id;
         this.name = name;
@@ -16,10 +13,12 @@ public class Reservation {
         this.time = time;
     }
 
+    public Reservation() {
+        this(null, null, null, null);
+    }
+
     public Reservation(String name, String date, String time) {
-        this.name = name;
-        this.date = date;
-        this.time = time;
+        this(null, name, date, time);
     }
 
     public static Reservation toEntity(Long id, Reservation reservation) {

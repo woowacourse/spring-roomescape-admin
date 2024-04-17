@@ -4,7 +4,9 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.atomic.AtomicLong;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
@@ -20,10 +22,20 @@ public class ReservationController {
     }
 
     @PostMapping("/reservations")
-    public Reservation reserve(@RequestBody ReservationDto reservationDto) {
+    public ResponseEntity<Reservation> reserve(@RequestBody ReservationDto reservationDto) {
         Reservation reservation = new Reservation(reservationIndex.incrementAndGet(), reservationDto.getName(), reservationDto.getDate(), reservationDto.getTime());
         reservations.add(reservation);
-        return reservation;
+        return ResponseEntity.ok(reservation);
+    }
+
+    @DeleteMapping("/reservations/{id}")
+    public ResponseEntity<Void> delete(@PathVariable("id") long id) {
+        Reservation reservation = reservations.stream()
+                .filter(it -> it.getId() == id)
+                .findAny()
+                .orElseThrow();
+        reservations.remove(reservation);
+        return ResponseEntity.ok().build();
     }
 }
 

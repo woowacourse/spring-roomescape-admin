@@ -1,12 +1,18 @@
 package roomescape.domain;
 
+import java.time.LocalDate;
+import java.time.LocalTime;
+import java.time.format.DateTimeFormatter;
+
 public class Reservation {
+    private static final String TIME_FORMAT = "HH:mm";
+
     private long id;
     private final String name;
-    private final String date;
-    private final String time;
+    private final LocalDate date;
+    private final LocalTime time;
 
-    private Reservation(long id, String name, String date, String time) {
+    private Reservation(long id, String name, LocalDate date, LocalTime time) {
         this.id = id;
         this.name = name;
         this.date = date;
@@ -15,8 +21,8 @@ public class Reservation {
 
     public Reservation(String name, String date, String time) {
         this.name = name;
-        this.date = date;
-        this.time = time;
+        this.date = LocalDate.parse(date);
+        this.time = LocalTime.parse(time);
     }
 
     public static Reservation toEntity(long id, Reservation reservation) {
@@ -32,10 +38,10 @@ public class Reservation {
     }
 
     public String getDate() {
-        return date;
+        return date.format(DateTimeFormatter.ISO_DATE);
     }
 
     public String getTime() {
-        return time;
+        return time.format(DateTimeFormatter.ofPattern(TIME_FORMAT));
     }
 }

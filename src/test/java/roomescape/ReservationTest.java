@@ -9,7 +9,7 @@ import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.annotation.DirtiesContext;
-import roomescape.domain.ReservationDto;
+import roomescape.dto.ReservationDto;
 
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.DEFINED_PORT)
 @DirtiesContext(classMode = DirtiesContext.ClassMode.BEFORE_EACH_TEST_METHOD)
@@ -22,7 +22,7 @@ class ReservationTest {
         String name = "브라운";
         String date = "2023-08-05";
         String time = "15:40";
-        reservationDto = new ReservationDto(null, name, date, time);
+        reservationDto = ReservationDto.of(null, name, date, time);
     }
 
     @Test

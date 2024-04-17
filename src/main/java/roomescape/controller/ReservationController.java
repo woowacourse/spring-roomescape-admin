@@ -7,6 +7,7 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 import roomescape.dto.ReservationRequest;
@@ -14,6 +15,7 @@ import roomescape.dto.ReservationResponse;
 import roomescape.service.ReservationService;
 
 @RestController
+@RequestMapping("/reservations")
 public class ReservationController {
 
     private final ReservationService reservationService;    // TODO: 이 컨트롤러는 언제 생성될까? 필드 초기화는 어디서 해야할까?
@@ -22,19 +24,19 @@ public class ReservationController {
         this.reservationService = new ReservationService();
     }
 
-    @GetMapping("/reservations")
+    @GetMapping
     @ResponseStatus(HttpStatus.OK)
     public List<ReservationResponse> read() {
         return reservationService.read();
     }
 
-    @PostMapping("/reservations")
+    @PostMapping
     @ResponseStatus(HttpStatus.OK)
     public ReservationResponse add(@RequestBody final ReservationRequest reservationRequest) {
         return reservationService.add(reservationRequest);
     }
 
-    @DeleteMapping("/reservations/{id}")
+    @DeleteMapping("/{id}")
     @ResponseStatus(HttpStatus.OK)
     public void delete(@PathVariable(name = "id") final Long id) {
         reservationService.remove(id);

@@ -88,15 +88,8 @@ content-type: application/json
 #### Response
 
 ```
-HTTP/1.1 200 
-Content-Type: application/json
-
-{
-    "id": 1,
-    "name": "브라운",
-    "date": "2023-08-05",
-    "time": "15:40"
-}
+HTTP/1.1 201
+Location: /reservation/{id}
 ```
 
 ### 예약 취소
@@ -104,11 +97,11 @@ Content-Type: application/json
 #### Request
 
 ```http request
-DELETE /reservations/1 HTTP/1.1
+DELETE /reservations/{id} HTTP/1.1
 ```
 
 #### Response
 
 ```
-HTTP/1.1 200
+HTTP/1.1 204
 ```

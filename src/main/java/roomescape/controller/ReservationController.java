@@ -20,7 +20,7 @@ import roomescape.model.Reservation;
 @RequestMapping("/reservations")
 public class ReservationController {
 
-    private final AtomicLong reservationId = new AtomicLong(1); //TODO: 이름 변경하기
+    private final AtomicLong id = new AtomicLong(1);
     private final List<Reservation> reservations = new ArrayList<>();
 
     @GetMapping
@@ -33,7 +33,7 @@ public class ReservationController {
     @PostMapping
     public ResponseEntity<ReservationResponseDto> saveReservation(
             @RequestBody final ReservationRequestDto reservationRequestDto) {
-        final Reservation reservation = reservationRequestDto.toEntity(reservationId.getAndIncrement());
+        final Reservation reservation = reservationRequestDto.toEntity(id.getAndIncrement());
         final ReservationResponseDto reservationResponseDto = ReservationResponseDto.from(reservation);
         reservations.add(reservation);
         return ResponseEntity.ok().body(reservationResponseDto);

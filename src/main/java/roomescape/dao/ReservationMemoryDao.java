@@ -5,6 +5,7 @@ import java.util.List;
 import java.util.Optional;
 import java.util.concurrent.atomic.AtomicLong;
 import org.springframework.stereotype.Repository;
+import roomescape.dao.entity.Reservation;
 
 @Repository
 public class ReservationMemoryDao implements ReservationDao {

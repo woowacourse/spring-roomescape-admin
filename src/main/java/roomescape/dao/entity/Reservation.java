@@ -1,4 +1,4 @@
-package roomescape.dao;
+package roomescape.dao.entity;
 
 import java.time.LocalDate;
 import java.time.LocalTime;

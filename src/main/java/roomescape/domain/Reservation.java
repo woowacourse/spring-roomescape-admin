@@ -5,17 +5,17 @@ import java.time.LocalDateTime;
 import java.time.LocalTime;
 
 public class Reservation {
-    private final Long id;
-    private String name;
-    private LocalDateTime dateTime;
+    private final long id;
+    private final String name;
+    private final LocalDateTime dateTime;
 
-    public Reservation(Long id, String name, LocalDateTime dateTime) {
+    public Reservation(long id, String name, LocalDateTime dateTime) {
         this.id = id;
         this.name = name;
         this.dateTime = dateTime;
     }
 
-    public Long getId() {
+    public long getId() {
         return id;
     }
 

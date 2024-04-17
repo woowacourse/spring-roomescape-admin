@@ -11,23 +11,19 @@ import java.util.Objects;
 import java.util.concurrent.atomic.AtomicLong;
 
 @Controller
+@RequestMapping("reservations")
 public class ReservationController {
 
     private final List<Reservation> reservations = new ArrayList<>();
     private final AtomicLong index = new AtomicLong(1);
 
-    @GetMapping("admin/reservation")
-    public String showReservationPage() {
-        return "admin/reservation-legacy";
-    }
-
-    @GetMapping("reservations")
+    @GetMapping("")
     public ResponseEntity<List<Reservation>> reservations() {
         return ResponseEntity.ok()
                              .body(reservations);
     }
 
-    @PostMapping("reservations")
+    @PostMapping("")
     public ResponseEntity<Reservation> createReservation(@RequestBody final ReservationDto reservationDto) {
         Reservation reservation = Reservation.toEntity(index.getAndIncrement(), reservationDto);
         reservations.add(reservation);
@@ -35,7 +31,7 @@ public class ReservationController {
                              .body(reservation);
     }
 
-    @DeleteMapping("reservations/{id}")
+    @DeleteMapping("/{id}")
     public ResponseEntity<Void> deleteReservation(@PathVariable final Long id) {
         final Reservation reservation = reservations.stream()
                                                     .filter(it -> Objects.equals(it.getId(), id))

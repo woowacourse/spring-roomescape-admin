@@ -32,7 +32,7 @@ public class MissionStepTest {
     }
 
     @Test
-    void shouldReadReservationSuccessfullyWithHeaders() {
+    void shouldReadInitialReservationSuccessfully() {
         RestAssured.given().log().all()
                 .when().get("/reservations")
                 .then().log().all()
@@ -41,7 +41,7 @@ public class MissionStepTest {
     }
 
     @Test
-    void shouldCreateAndDeleteReservationSuccessfully() {
+    void shouldCreateAndReadAndDeleteReservationSuccessfully() {
         Map<String, String> params = new HashMap<>();
         params.put("name", "브라운");
         params.put("date", "2023-08-05");

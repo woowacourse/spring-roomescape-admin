@@ -18,7 +18,7 @@ public class ReservationRepository {
 
     public void deleteById(Long id) {
         Reservation target = reservations.stream()
-                .filter(reservation -> reservation.isSameId(id))
+                .filter(reservation -> reservation.hasSameId(id))
                 .findFirst()
                 .orElseThrow(() -> new IllegalArgumentException("해당 ID의 예약이 없습니다."));
         reservations.remove(target);

@@ -11,7 +11,7 @@ public class ReservationRequestDto {
     public ReservationRequestDto() {
     }
 
-    public Reservation toEntity(Long id) {
+    public Reservation toEntity(long id) {
         return new Reservation(id, name, date, time);
     }
 

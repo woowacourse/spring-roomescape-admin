@@ -1,5 +1,6 @@
 package roomescape.controller;
 
+import java.net.URI;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
@@ -34,13 +35,12 @@ public class ReservationController {
             @RequestBody CreateReservationRequest createReservationRequest) {
         Reservation newReservation = createReservationRequest.to(index.getAndIncrement());
         reservations.add(newReservation);
-        return ResponseEntity.ok()
-                .body(CreateReservationResponse.of(newReservation));
+        return ResponseEntity.created(URI.create("/reservations/" + newReservation.getId())).build();
     }
 
     @DeleteMapping("/{id}")
     public ResponseEntity<Void> deleteReservation(@PathVariable Long id) {
         reservations.removeIf(reservation -> Objects.equals(reservation.getId(), id));
-        return ResponseEntity.ok().build();
+        return ResponseEntity.noContent().build();
     }
 }

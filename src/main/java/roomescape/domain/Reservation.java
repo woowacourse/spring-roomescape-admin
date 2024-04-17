@@ -17,6 +17,10 @@ public class Reservation {
         this.time = time;
     }
 
+    public ReservationDto convertDto() {
+        return new ReservationDto(id, name, date.toString(), time.toString());
+    }
+
     public Long getId() {
         return id;
     }

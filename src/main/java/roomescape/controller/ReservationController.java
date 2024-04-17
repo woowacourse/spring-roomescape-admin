@@ -25,19 +25,20 @@ public class ReservationController {
 
     @GetMapping
     @ResponseBody
-    public ResponseEntity<List<Reservation>> getAll() {
-        List<Reservation> totalReservations = reservations.values()
+    public ResponseEntity<List<ReservationDto>> getAll() {
+        List<ReservationDto> totalReservations = reservations.values()
                 .stream()
+                .map(Reservation::convertDto)
                 .toList();
         return ResponseEntity.ok(totalReservations);
     }
 
     @PostMapping
     @ResponseBody
-    public ResponseEntity<Reservation> create(@RequestBody ReservationDto reservationDto) {
+    public ResponseEntity<ReservationDto> create(@RequestBody ReservationDto reservationDto) {
         Reservation reservation = reservationDto.toEntity(idCount.getAndIncrement());
         reservations.put(reservation.getId(), reservation);
-        return ResponseEntity.ok(reservation);
+        return ResponseEntity.ok(reservation.convertDto());
     }
 
     @DeleteMapping("/{id}")

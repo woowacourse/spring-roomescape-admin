@@ -13,6 +13,7 @@ import java.time.LocalTime;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 import java.util.concurrent.atomic.AtomicLong;
 
 @RestController
@@ -41,7 +42,13 @@ public class ReservationController {
 
     @DeleteMapping("/reservations/{id}")
     public ResponseEntity<Void> delete(@PathVariable final Long id) {
-        reservations.removeIf(it -> it.getId().equals(id));
-        return new ResponseEntity<>(HttpStatus.OK);
+        Optional<Reservation> reservation = reservations.stream()
+                                                        .filter(it -> it.getId().equals(id))
+                                                        .findFirst();
+        if(reservation.isPresent()){
+            reservations.remove(reservation.get());
+            return ResponseEntity.ok().build();
+        }
+        return ResponseEntity.noContent().build();
     }
 }

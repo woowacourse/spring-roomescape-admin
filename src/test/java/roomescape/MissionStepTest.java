@@ -63,6 +63,11 @@ class MissionStepTest {
                 .statusCode(200);
 
         RestAssured.given().log().all()
+                   .when().delete("/reservations/1")
+                   .then().log().all()
+                   .statusCode(204);
+
+        RestAssured.given().log().all()
                 .when().get("/reservations")
                 .then().log().all()
                 .statusCode(200)

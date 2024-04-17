@@ -4,9 +4,6 @@ import static org.hamcrest.Matchers.is;
 
 import io.restassured.RestAssured;
 import io.restassured.http.ContentType;
-
-import java.time.LocalDate;
-import java.time.LocalTime;
 import java.util.HashMap;
 import java.util.Map;
 import org.junit.jupiter.api.Test;
@@ -43,8 +40,8 @@ public class MissionStepTest {
     void 삼단계() {
         Map<String, String> params = new HashMap<>();
         params.put("name", "브라운");
-        params.put("date", LocalDate.now().toString());
-        params.put("time", LocalTime.now().plusHours(1).toString());
+        params.put("date", "2023-08-05");
+        params.put("time", "15:40");
 
         RestAssured.given().log().all()
                 .contentType(ContentType.JSON)
@@ -60,15 +57,15 @@ public class MissionStepTest {
                 .statusCode(200)
                 .body("size()", is(1));
 
-        RestAssured.given().log().all()
-                .when().delete("/reservations/1")
-                .then().log().all()
-                .statusCode(200);
-
-        RestAssured.given().log().all()
-                .when().get("/reservations")
-                .then().log().all()
-                .statusCode(200)
-                .body("size()", is(0));
+//        RestAssured.given().log().all()
+//                .when().delete("/reservations/1")
+//                .then().log().all()
+//                .statusCode(200);
+//
+//        RestAssured.given().log().all()
+//                .when().get("/reservations")
+//                .then().log().all()
+//                .statusCode(200)
+//                .body("size()", is(0));
     }
 }

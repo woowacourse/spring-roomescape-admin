@@ -1,10 +1,26 @@
 package roomescape.controller;
 
+import java.util.List;
+import java.util.concurrent.atomic.AtomicLong;
 import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.ResponseBody;
+import roomescape.domain.Reservation;
+import roomescape.domain.ReservationDto;
+import roomescape.service.AdminService;
 
 @Controller
 public class AdminController {
+
+    private final AdminService adminService;
+    private final AtomicLong index = new AtomicLong(1);
+
+    public AdminController() {
+        this.adminService = new AdminService();
+    }
 
     @GetMapping("admin")
     public String welcome() {
@@ -12,7 +28,22 @@ public class AdminController {
     }
 
     @GetMapping("admin/reservation")
-    public String reservation() {
+    public String reservation(Model model) {
+        model.addAttribute("reservations", adminService.getAllReservations());
         return "admin/reservation-legacy";
+    }
+
+    @GetMapping("reservations")
+    @ResponseBody
+    public List<Reservation> reservations() {
+        return adminService.getAllReservations();
+    }
+
+    @PostMapping("reservations")
+    @ResponseBody
+    public Reservation reserve(@RequestBody ReservationDto reservationDto) {
+        Reservation reservation = new Reservation(index.getAndIncrement(), reservationDto);
+        adminService.addReservation(reservation);
+        return adminService.findReservation(reservation.getId());
     }
 }

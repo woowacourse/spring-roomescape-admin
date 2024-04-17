@@ -15,6 +15,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import roomescape.controller.dto.ReservationRequestDto;
+import roomescape.controller.dto.ReservationResponseDto;
 import roomescape.entity.Reservation;
 
 @RequestMapping("/reservations")
@@ -25,12 +26,16 @@ public class ReservationController {
     private final AtomicLong index = new AtomicLong(1);
 
     @GetMapping()
-    public ResponseEntity<List<Reservation>> readAllReservations() {
-        return ResponseEntity.ok().body(reservations);
+    public ResponseEntity<List<ReservationResponseDto>> readAllReservations() {
+        List<ReservationResponseDto> reservationResponses = reservations.stream()
+                .map(ReservationResponseDto::from)
+                .toList();
+        return ResponseEntity.ok().body(reservationResponses);
     }
 
     @PostMapping()
-    public ResponseEntity<Reservation> createReservation(@RequestBody ReservationRequestDto reservationRequestDto) {
+    public ResponseEntity<ReservationResponseDto> createReservation(
+            @RequestBody ReservationRequestDto reservationRequestDto) {
         long id = index.getAndIncrement();
         String name = reservationRequestDto.getName();
         LocalDate date = reservationRequestDto.getDate();
@@ -38,7 +43,7 @@ public class ReservationController {
 
         Reservation newReservation = new Reservation(id, name, date, time);
         reservations.add(newReservation);
-        return ResponseEntity.ok().body(newReservation);
+        return ResponseEntity.ok().body(ReservationResponseDto.from(newReservation));
     }
 
     @DeleteMapping("/{id}")

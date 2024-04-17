@@ -3,6 +3,7 @@ package roomescape.controller;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Objects;
 import java.util.concurrent.atomic.AtomicLong;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -41,6 +42,9 @@ public class ReservationController {
 
     @DeleteMapping("/{id}")
     public ResponseEntity<Void> delete(@PathVariable Long id) {
+        if (Objects.isNull(id)) {
+            throw new IllegalArgumentException("id는 null일 수 없습니다.");
+        }
         if (!reservations.containsKey(id)) {
             throw new IllegalArgumentException("id에 해당하는 예약을 찾을 수 없습니다.");
         }

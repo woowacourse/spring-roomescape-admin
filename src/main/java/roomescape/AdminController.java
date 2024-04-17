@@ -1,6 +1,6 @@
 package roomescape;
 
-import java.util.Map;
+import java.util.List;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
@@ -26,18 +26,22 @@ public class AdminController {
         return "/admin/reservation-legacy";
     }
 
-    @GetMapping("/admin/reservations")
-    public ResponseEntity<Map<Long, Reservation>> getReservations() {
-        return ResponseEntity.ok(adminRepository.getReservations());
+    @GetMapping("/reservations")
+    public ResponseEntity<List<Reservation>> getReservations() {
+        List<Reservation> reservations = adminRepository.getReservations()
+                .values()
+                .stream()
+                .toList();
+        return ResponseEntity.ok(reservations);
     }
 
-    @PostMapping("/admin/reservations")
+    @PostMapping("/reservations")
     public ResponseEntity<Reservation> addReservation(@RequestBody ReservationRequest request) {
         Reservation reservation = adminRepository.saveReservation(request);
-        return new ResponseEntity(reservation, HttpStatus.CREATED);
+        return new ResponseEntity(reservation, HttpStatus.OK);
     }
 
-    @DeleteMapping("/admin/reservations/{id}")
+    @DeleteMapping("/reservations/{id}")
     public ResponseEntity<Void> deleteReservation(@PathVariable("id") long id) {
         adminRepository.deleteReservation(id);
         return ResponseEntity.ok().build();

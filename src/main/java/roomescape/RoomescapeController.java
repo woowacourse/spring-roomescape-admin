@@ -8,7 +8,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 @RequestMapping("admin")
 public class RoomescapeController {
 
-    @GetMapping("")
+    @GetMapping
     public String welcome() {
         return "admin/index";
     }

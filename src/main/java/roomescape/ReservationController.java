@@ -15,23 +15,21 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.bind.annotation.RestController;
 
-@Controller
+@RestController
 @RequestMapping("reservations")
 public class ReservationController {
 
     private Map<Long, Reservation> reservations = new HashMap<>();
     private AtomicLong index = new AtomicLong();
 
-    @GetMapping("")
-    @ResponseBody
+    @GetMapping
     public List<Reservation> findAll() {
         return reservations.values().stream().toList();
     }
 
-    @PostMapping("")
-    @ResponseBody
+    @PostMapping
     public ResponseEntity<Reservation> create(@RequestBody ReservationRequest request) {
         long id = index.incrementAndGet();
         Reservation reservation = new Reservation(id, request.getName(),

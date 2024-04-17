@@ -50,4 +50,9 @@ public class ReservationStorage {
                 .findAny()
                 .ifPresent(reservations::remove);
     }
+
+    public void removeAll() {
+        atomicLong.set(0);
+        reservations.clear();
+    }
 }

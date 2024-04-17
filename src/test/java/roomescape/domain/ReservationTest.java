@@ -6,7 +6,6 @@ import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 
 class ReservationTest {
-
     @Test
     @DisplayName("날짜를 기준으로 비교를 잘 하는지 확인.")
     void compareTo() {

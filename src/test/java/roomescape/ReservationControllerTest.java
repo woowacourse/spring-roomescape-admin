@@ -59,13 +59,16 @@ public class ReservationControllerTest {
         );
     }
 
-    @DisplayName("예약 취소 테스트")
+    @DisplayName("예약 취소 성공 테스트")
     @Test
-    void deleteReservation() {
+    void deleteReservationSuccess() {
         createReservation();
 
+        var id = RestAssured.given().log().all()
+                .when().get("/reservations")
+                .then().log().all().extract().response().jsonPath().getList("id").get(0);
         Response deleteResponse = RestAssured.given().log().all()
-                .when().delete("/reservations/1")
+                .when().delete("/reservations/" + id)
                 .then().log().all().extract().response();
         Response getResponse = RestAssured.given().log().all()
                 .when().get("/reservations")
@@ -75,5 +78,15 @@ public class ReservationControllerTest {
                 () -> assertThat(deleteResponse.getStatusCode()).isEqualTo(HttpStatus.OK.value()),
                 () -> assertThat(getResponse.jsonPath().getList("", ReservationResponse.class)).hasSize(0)
         );
+    }
+
+    @DisplayName("예약 취소 실패 테스트")
+    @Test
+    void deleteReservationFail() {
+        Response response = RestAssured.given().log().all()
+                .when().delete("/reservations/0")
+                .then().log().all().extract().response();
+
+        assertThat(response.getStatusCode()).isEqualTo(HttpStatus.NOT_FOUND.value());
     }
 }

@@ -6,5 +6,5 @@
 - [X] localhost:8080/admin 에 접속하면 어드민 메인 페이지를 띄운다
 
 ## 2단계 - 예약 조회
-- [ ] localhost:8080/admin/reservation 에 접속하면 예약 관리 페이지를 띄운다.
+- [x] localhost:8080/admin/reservation 에 접속하면 예약 관리 페이지를 띄운다.
 - [ ] 예약 관리 페이지 로드 시 호출되는 예약 목록 조회 API 를 구현한다.

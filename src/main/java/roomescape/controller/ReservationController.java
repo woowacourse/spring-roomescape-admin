@@ -1,5 +1,6 @@
 package roomescape.controller;
 
+import java.net.URI;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
@@ -36,21 +37,23 @@ public class ReservationController {
     @PostMapping
     public ResponseEntity<ReservationResponse> create(@RequestBody ReservationRequest reservationRequest) {
         Reservation reservation = reservationRequest.toReservation(index.getAndIncrement());
+
         reservations.add(reservation);
 
-        return ResponseEntity.ok()
+        return ResponseEntity.created(URI.create("/reservations/" + reservation.getId()))
                 .body(ReservationResponse.from(reservation));
     }
 
     @DeleteMapping("/{id}")
-    public ResponseEntity<Void> delete(@PathVariable Long id) {
+    public ResponseEntity<Void> delete(@PathVariable("id") Long id) {
         Reservation findedReservation = reservations.stream()
                 .filter(reservation -> Objects.equals(reservation.getId(), id))
                 .findAny()
                 .orElseThrow(() -> new IllegalArgumentException("존재하지 않는 예약입니다."));
+
         reservations.remove(findedReservation);
 
-        return ResponseEntity.ok()
+        return ResponseEntity.noContent()
                 .build();
     }
 }

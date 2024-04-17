@@ -29,6 +29,11 @@ public class RoomEscapeController {
         return "/admin/reservation-legacy";
     }
 
+    @GetMapping
+    public String getAdminPageByRedirect() {
+        return "redirect:/admin";
+    }
+
     @GetMapping("/reservations")
     public ResponseEntity<List<ReservationResponse>> getReservations() {
         var reservationResponses = reservationRepository.findAll()

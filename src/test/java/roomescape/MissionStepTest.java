@@ -68,4 +68,12 @@ public class MissionStepTest {
                 .statusCode(HttpStatus.SC_OK)
                 .body("size()", is(0));
     }
+
+    @Test
+    void 리다이렉트() {
+        RestAssured.given().log().all()
+                .when().get("/")
+                .then().log().all()
+                .statusCode(HttpStatus.SC_OK);
+    }
 }

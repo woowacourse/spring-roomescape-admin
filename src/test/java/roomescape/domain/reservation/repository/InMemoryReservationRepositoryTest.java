@@ -1,4 +1,4 @@
-package roomescape.domain.reservation;
+package roomescape.domain.reservation.repository;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertAll;
@@ -9,6 +9,9 @@ import java.util.List;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
+import roomescape.domain.reservation.Reservation;
+import roomescape.domain.reservation.repository.InMemoryReservationRepository;
+import roomescape.domain.reservation.repository.ReservationRepository;
 import roomescape.dto.ReservationDto;
 
 class InMemoryReservationRepositoryTest {

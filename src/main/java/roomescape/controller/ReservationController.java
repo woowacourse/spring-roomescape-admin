@@ -1,5 +1,6 @@
 package roomescape.controller;
 
+import java.net.URI;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -37,7 +38,8 @@ public class ReservationController {
         long id = idCount.getAndIncrement();
         Reservation reservation = reservationDto.toEntity(id);
         reservations.put(id, reservation);
-        return ResponseEntity.ok(ReservationDto.from(reservation));
+        return ResponseEntity.created(URI.create("/reservations"))
+                .body(ReservationDto.from(reservation));
     }
 
     @DeleteMapping("/{id}")
@@ -49,6 +51,6 @@ public class ReservationController {
             throw new IllegalArgumentException("id에 해당하는 예약을 찾을 수 없습니다.");
         }
         reservations.remove(id);
-        return ResponseEntity.ok().build();
+        return ResponseEntity.noContent().build();
     }
 }

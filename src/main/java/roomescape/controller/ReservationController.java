@@ -24,12 +24,12 @@ public class ReservationController {
     private List<Reservation> reservations = new ArrayList<>();
     private final AtomicLong index = new AtomicLong(1);
 
-    @GetMapping("")
+    @GetMapping()
     public ResponseEntity<List<Reservation>> readAllReservations() {
         return ResponseEntity.ok().body(reservations);
     }
 
-    @PostMapping("")
+    @PostMapping()
     public ResponseEntity<Reservation> createReservation(@RequestBody ReservationDto reservationDto) {
         long id = index.getAndIncrement();
         String name = reservationDto.getName();

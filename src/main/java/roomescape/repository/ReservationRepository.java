@@ -8,6 +8,7 @@ import java.time.LocalTime;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
+import java.util.NoSuchElementException;
 import java.util.concurrent.atomic.AtomicLong;
 
 @Repository
@@ -27,5 +28,17 @@ public class ReservationRepository {
         Reservation reservation = Reservation.toEntity(index.getAndIncrement(), requestReservation.getName(), requestReservation.getDate(), requestReservation.getTime());
         reservations.add(reservation);
         return reservation;
+    }
+
+    public void deleteById(Long id) {
+        Reservation reservation = findById(id);
+        reservations.remove(reservation);
+    }
+
+    private Reservation findById(Long id) {
+        return reservations.stream()
+                .filter(e -> e.getId().equals(id))
+                .findAny()
+                .orElseThrow(() -> new NoSuchElementException("존재하지 않는 아아디입니다."));
     }
 }

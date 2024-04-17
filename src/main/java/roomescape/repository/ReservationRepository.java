@@ -16,18 +16,18 @@ public class ReservationRepository {
 
     private final AtomicLong index = new AtomicLong(1);
     private final List<Reservation> reservations = new ArrayList<>(List.of(
-            Reservation.toEntity(index.getAndIncrement(), "브라운", LocalDate.of(2023, 1, 1), LocalTime.of(10, 0)),
-            Reservation.toEntity(index.getAndIncrement(), "브라운", LocalDate.of(2023, 1, 2), LocalTime.of(11, 0))
+            new Reservation(index.getAndIncrement(), "브라운", LocalDate.of(2023, 1, 1), LocalTime.of(10, 0)),
+            new Reservation(index.getAndIncrement(), "브라운", LocalDate.of(2023, 1, 2), LocalTime.of(11, 0))
     ));
 
     public List<Reservation> findAll() {
         return Collections.unmodifiableList(reservations);
     }
 
-    public Reservation save(Reservation requestReservation) {
-        Reservation reservation = Reservation.toEntity(index.getAndIncrement(), requestReservation.getName(), requestReservation.getDate(), requestReservation.getTime());
-        reservations.add(reservation);
-        return reservation;
+    public Reservation save(Reservation reservation) {
+        Reservation savedReservation = new Reservation(index.getAndIncrement(), reservation.getName(), reservation.getDate(), reservation.getTime());
+        reservations.add(savedReservation);
+        return savedReservation;
     }
 
     public void deleteById(Long id) {

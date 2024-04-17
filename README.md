@@ -139,5 +139,5 @@ HTTP/1.1 200
 ## 레이어 분리해준 이유
 
 - Web : request/responseDTO로 web과 상호작용
-- Domain : request/responseDTO를 entity에 매핑해 web과 database 사이를 연결
+- Service : request/responseDTO를 entity에 매핑해 web과 database 사이를 연결
 - Dao : entity로 database와 상호작용

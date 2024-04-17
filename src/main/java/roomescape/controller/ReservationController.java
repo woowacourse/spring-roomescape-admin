@@ -19,7 +19,7 @@ import roomescape.repository.ReservationDao;
 @RestController
 public class ReservationController {
 
-    private ReservationDao reservationDao;
+    private final ReservationDao reservationDao;
 
     public ReservationController(ReservationDao reservationDao) {
         this.reservationDao = reservationDao;

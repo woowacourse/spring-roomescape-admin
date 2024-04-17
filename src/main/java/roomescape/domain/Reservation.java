@@ -10,7 +10,7 @@ public class Reservation {
     private LocalDate date;
     private LocalTime time;
 
-    public Reservation() {
+    protected Reservation() {
     }
 
     public Reservation(String name, LocalDate date, LocalTime time) {

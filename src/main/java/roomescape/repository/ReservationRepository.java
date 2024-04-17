@@ -5,6 +5,7 @@ import java.time.LocalDate;
 import java.time.LocalTime;
 import java.time.format.DateTimeFormatter;
 import java.util.List;
+import java.util.Objects;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.support.GeneratedKeyHolder;
 import org.springframework.jdbc.support.KeyHolder;
@@ -22,6 +23,7 @@ public class ReservationRepository {
     public Long save(final Reservation reservation) {
         final String query = "INSERT INTO reservation(name, date, time) VALUES (?, ?, ?)";
         final KeyHolder keyHolder = new GeneratedKeyHolder();
+
         jdbcTemplate.update(connection -> {
             final PreparedStatement preparedStatement = connection.prepareStatement(query, new String[]{"id"});
             preparedStatement.setString(1, reservation.getName());
@@ -29,24 +31,25 @@ public class ReservationRepository {
             preparedStatement.setString(3, reservation.getTime());
             return preparedStatement;
         }, keyHolder);
-        
-        return keyHolder.getKey().longValue();
+
+        return Objects.requireNonNull(keyHolder.getKey()).longValue();
     }
 
     public List<Reservation> findAll() {
+        final DateTimeFormatter dateFormatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
+        final DateTimeFormatter timeFormatter = DateTimeFormatter.ofPattern("HH:mm");
+
         return jdbcTemplate.query("SELECT id, name, date, time FROM reservation", (resultSet, rowNum) -> {
             final Long id = resultSet.getLong("id");
             final String name = resultSet.getString("name");
-            final LocalDate date = LocalDate.parse(resultSet.getString("date"),
-                    DateTimeFormatter.ofPattern("yyyy-MM-dd"));
-            final LocalTime time = LocalTime.parse(resultSet.getString("time"),
-                    DateTimeFormatter.ofPattern("HH:mm"));
+            final LocalDate date = LocalDate.parse(resultSet.getString("date"), dateFormatter);
+            final LocalTime time = LocalTime.parse(resultSet.getString("time"), timeFormatter);
 
             return new Reservation(id, name, date, time);
         });
     }
 
-    public int deleteById(final Long id) {
-        return jdbcTemplate.update("DELETE FROM reservation WHERE id = ?", id);
+    public void deleteById(final Long id) {
+        jdbcTemplate.update("DELETE FROM reservation WHERE id = ?", id);
     }
 }

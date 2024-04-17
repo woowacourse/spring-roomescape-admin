@@ -3,6 +3,7 @@ package roomescape;
 import static org.hamcrest.Matchers.is;
 
 import io.restassured.RestAssured;
+import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.annotation.DirtiesContext;
@@ -11,21 +12,27 @@ import org.springframework.test.annotation.DirtiesContext;
 @DirtiesContext(classMode = DirtiesContext.ClassMode.BEFORE_EACH_TEST_METHOD)
 public class MissionStepTest {
 
+    @DisplayName("/admin 요청 시 응답할 수 있다")
     @Test
-    void 일단계() {
+    void should_response_200_when_request_admin_page() {
         RestAssured.given().log().all()
                 .when().get("/admin")
                 .then().log().all()
                 .statusCode(200);
     }
 
+    @DisplayName("/admin/reservation 요청 시 응답할 수 있다")
     @Test
-    void 이단계() {
+    void should_response_200_when_request_reservation_page() {
         RestAssured.given().log().all()
                 .when().get("/admin/reservation")
                 .then().log().all()
                 .statusCode(200);
+    }
 
+    @DisplayName("/reservations 요청 시 예약 목록을 응답할 수 있다")
+    @Test
+    void should_response_reservation_list_request_reservations() {
         RestAssured.given().log().all()
                 .when().get("/reservations")
                 .then().log().all()

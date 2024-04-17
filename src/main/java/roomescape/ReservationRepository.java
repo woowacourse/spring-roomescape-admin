@@ -8,7 +8,7 @@ import org.springframework.stereotype.Repository;
 @Repository
 public class ReservationRepository {
 
-    private List<Reservation> reservations = new ArrayList<>();
+    private final List<Reservation> reservations = new ArrayList<>();
     private final AtomicLong autoIncreaseId = new AtomicLong(1);
 
     public List<Reservation> readReservations() {

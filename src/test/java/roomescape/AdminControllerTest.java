@@ -13,7 +13,6 @@ import static org.assertj.core.api.Assertions.assertThat;
 
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 public class AdminControllerTest {
-
     @LocalServerPort
     private int port;
 

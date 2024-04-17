@@ -1,7 +1,5 @@
 package roomescape.controller;
 
-import static org.junit.jupiter.api.Assertions.assertAll;
-
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.LocalTime;
@@ -11,8 +9,6 @@ import java.util.Objects;
 import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
-import org.springframework.http.HttpStatusCode;
-import org.springframework.http.ResponseEntity;
 import roomescape.domain.Reservation;
 import roomescape.dto.ReservationRequest;
 import roomescape.dto.ReservationResponse;
@@ -25,33 +21,24 @@ class ReservationControllerTest {
         LocalDate date = LocalDate.now();
         LocalTime time = LocalTime.now();
 
-        ResponseEntity<ReservationResponse> saveResponse = reservationController.saveReservation(
+        ReservationResponse saveResponse = reservationController.saveReservation(
                 new ReservationRequest(date, "폴라", time));
 
-        assertAll(
-                () -> Assertions.assertThat(saveResponse.getStatusCode())
-                        .isEqualTo(HttpStatusCode.valueOf(200)),
-                () -> {
-                    ReservationResponse body = saveResponse.getBody();
-                    long id = Objects.requireNonNull(body).id();
-                    Assertions.assertThat(body)
-                            .isEqualTo(new ReservationResponse(id, "폴라", date, time));
-                }
-        );
+        long id = Objects.requireNonNull(saveResponse).id();
+        ReservationResponse expected = new ReservationResponse(id, "폴라", date, time);
+
+        Assertions.assertThat(saveResponse)
+                .isEqualTo(expected);
     }
 
     @Test
     @DisplayName("예약 정보를 잘 불러오는지 확인한다.")
     void findAllReservations() {
         ReservationController reservationController = new ReservationController();
-        ResponseEntity<List<ReservationResponse>> allReservations = reservationController.findAllReservations();
+        List<ReservationResponse> allReservations = reservationController.findAllReservations();
 
-        assertAll(
-                () -> Assertions.assertThat(allReservations.getBody())
-                        .isEmpty(),
-                () -> Assertions.assertThat(allReservations.getStatusCode())
-                        .isEqualTo(HttpStatusCode.valueOf(200))
-        );
+        Assertions.assertThat(allReservations)
+                .isEmpty();
     }
 
     @Test
@@ -59,13 +46,11 @@ class ReservationControllerTest {
     void delete() {
         List<Reservation> reservations = List.of(new Reservation(1, "폴라", LocalDateTime.now()));
         ReservationController reservationController = new ReservationController(new ArrayList<>(reservations));
-        ResponseEntity<Void> delete = reservationController.delete(1L);
-        List<ReservationResponse> body = reservationController.findAllReservations().getBody();
-        assertAll(
-                () -> Assertions.assertThat(delete.getStatusCode())
-                        .isEqualTo(HttpStatusCode.valueOf(200)),
-                () -> Assertions.assertThat(body)
-                        .isEmpty()
-        );
+        reservationController.delete(1L);
+
+        List<ReservationResponse> reservationResponses = reservationController.findAllReservations();
+
+        Assertions.assertThat(reservationResponses)
+                .isEmpty();
     }
 }

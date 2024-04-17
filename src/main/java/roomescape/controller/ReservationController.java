@@ -6,19 +6,17 @@ import java.time.LocalTime;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.atomic.AtomicLong;
-import org.springframework.http.ResponseEntity;
-import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.bind.annotation.RestController;
 import roomescape.domain.Reservation;
 import roomescape.dto.ReservationRequest;
 import roomescape.dto.ReservationResponse;
 
-@Controller
+@RestController
 public class ReservationController {
     private final List<Reservation> reservations;
     private final AtomicLong atomicLong = new AtomicLong(0);
@@ -32,11 +30,10 @@ public class ReservationController {
     }
 
     @PostMapping("/reservations")
-    @ResponseBody
-    public ResponseEntity<ReservationResponse> saveReservation(@RequestBody ReservationRequest reservationRequest) {
+    public ReservationResponse saveReservation(@RequestBody ReservationRequest reservationRequest) {
         Reservation reservation = fromRequest(reservationRequest);
         reservations.add(reservation);
-        return ResponseEntity.ok(toResponse(reservation));
+        return toResponse(reservation);
     }
 
     private Reservation fromRequest(ReservationRequest reservationRequest) {
@@ -55,20 +52,16 @@ public class ReservationController {
     }
 
     @GetMapping("/reservations")
-    @ResponseBody
-    public ResponseEntity<List<ReservationResponse>> findAllReservations() {
-        List<ReservationResponse> reservationResponses = reservations.stream()
+    public List<ReservationResponse> findAllReservations() {
+        return reservations.stream()
                 .map(this::toResponse)
                 .toList();
-        return ResponseEntity.ok().body(reservationResponses);
     }
 
     @DeleteMapping("/reservations/{reservationId}")
-    @ResponseBody
-    public ResponseEntity<Void> delete(@PathVariable Long reservationId) {
+    public void delete(@PathVariable Long reservationId) {
         reservations.stream().filter(reservation -> reservation.getId() == reservationId)
                 .findAny()
                 .ifPresent(reservations::remove);
-        return ResponseEntity.ok().build();
     }
 }

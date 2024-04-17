@@ -11,3 +11,8 @@
 - `/reservations` GET 요청 시 예약 목록 응답
 - `/reservations` POST 요청 시 예약 생성
 - `/reservations/{id}` DELETE 요청 시 예약 삭제
+
+### 시간 관리 페이지
+- `/times` POST 요청 시 시간 추가
+- `/times` GET 요청 시 시간 목록 응답
+- `/times/{id}` DELETE 요청 시 시간 삭제

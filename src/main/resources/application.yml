@@ -5,3 +5,10 @@ spring:
       path: /h2-console
   datasource:
     url: jdbc:h2:mem:database
+  devtools:
+    livereload:
+      enabled: true
+    thymeleaf:
+      cache: false
+    restart:
+      enabled: true

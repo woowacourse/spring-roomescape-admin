@@ -69,7 +69,7 @@ class MissionStepTest {
                 .when().post("/reservations")
                 .then().log().all()
                 .statusCode(201)
-                .body("id", is(1));
+                .header("Location", "/reservations/1");
 
         RestAssured.given().log().all()
                 .when().get("/reservations")
@@ -107,11 +107,38 @@ class MissionStepTest {
         List<Reservation> reservations = RestAssured.given().log().all()
                 .when().get("/reservations")
                 .then().log().all()
-                .statusCode(201).extract()
+                .statusCode(200).extract()
                 .jsonPath().getList(".", Reservation.class);
 
         Integer count = jdbcTemplate.queryForObject("SELECT count(1) from reservation", Integer.class);
 
         assertThat(reservations.size()).isEqualTo(count);
+    }
+
+    @Test
+    void 육단계() {
+        Map<String, String> params = Map.of(
+                "name", "브라운",
+                "date", "2023-08-05",
+                "time", "15:00");
+
+        RestAssured.given().log().all()
+                .contentType(ContentType.JSON)
+                .body(params)
+                .when().post("/reservations")
+                .then().log().all()
+                .statusCode(201)
+                .header("Location", "/reservations/1");
+
+        Integer count = jdbcTemplate.queryForObject("SELECT count(1) from reservation", Integer.class);
+        assertThat(count).isEqualTo(1);
+
+        RestAssured.given().log().all()
+                .when().delete("/reservations/1")
+                .then().log().all()
+                .statusCode(204);
+
+        Integer countAfterDelete = jdbcTemplate.queryForObject("SELECT count(1) from reservation", Integer.class);
+        assertThat(countAfterDelete).isEqualTo(0);
     }
 }

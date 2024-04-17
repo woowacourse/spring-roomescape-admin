@@ -4,33 +4,41 @@ import java.time.LocalDateTime;
 import java.time.Month;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.concurrent.atomic.AtomicLong;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.ResponseBody;
+import roomescape.dto.ReservationRequest;
 import roomescape.dto.ReservationResponse;
 import roomescape.model.Reservation;
 
 @Controller
-public class MainController {
+public class ReservationController {
 
+    private final AtomicLong id = new AtomicLong(1);
     private final List<Reservation> reservations = new ArrayList<>();
-
-    @GetMapping
-    public String readMainPage() {
-        return "index";
-    }
 
     @GetMapping("/reservations")
     @ResponseBody
     public ResponseEntity<List<ReservationResponse>> readReservations() {
-        reservations.add(new Reservation(1L, "브라운", LocalDateTime.of(2023, Month.JANUARY, 1, 10, 0)));
-        reservations.add(new Reservation(2L, "브라운", LocalDateTime.of(2023, Month.JANUARY, 2, 11, 0)));
-
         List<ReservationResponse> list = reservations.stream()
                 .map(ReservationResponse::from)
                 .toList();
 
         return ResponseEntity.ok(list);
+    }
+
+    @PostMapping("/reservations")
+    @ResponseBody
+    public ResponseEntity<ReservationResponse> createReservation(@RequestBody ReservationRequest reservationRequest) {
+        Reservation reservation = reservationRequest.toReservation(id.getAndIncrement());
+        reservations.add(reservation);
+
+        return ResponseEntity.ok(ReservationResponse.from(reservation));
     }
 }

@@ -3,6 +3,7 @@ package roomescape;
 import io.restassured.RestAssured;
 import io.restassured.http.ContentType;
 import io.restassured.response.Response;
+import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -28,9 +29,12 @@ public class ReservationControllerTest {
     private ReservationDao reservationDao;
 
     @BeforeEach
-    void init() {
+    void initPort() {
         RestAssured.port = port;
+    }
 
+    @AfterEach
+    void initData() {
         for (ReservationEntity reservationEntity : reservationDao.findAll()) {
             reservationDao.deleteById(reservationEntity.getId());
         }

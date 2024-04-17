@@ -27,6 +27,10 @@ public class Reservations {
                 .orElseThrow(IllegalArgumentException::new);
     }
 
+    public boolean delete(Long id) {
+        return reservations.remove(find(id));
+    }
+
     public List<Reservation> getReservations() {
         return List.copyOf(reservations);
     }

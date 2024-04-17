@@ -18,7 +18,7 @@
 ## 3단계 기능 요구사항
 
 - [x] `POST /reservations` 요청 시, 예약을 추가한다.
-- [ ] `DELETE /reservations/{id}` 요청 시, 예약을 취소한다.
+- [x] `DELETE /reservations/{id}` 요청 시, 예약을 취소한다.
 
 ---
 

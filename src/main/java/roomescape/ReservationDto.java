@@ -8,9 +8,10 @@ public class ReservationDto {
     private String name;
     private LocalTime time;
 
-    public ReservationDto(){
+    public ReservationDto() {
 
     }
+
     public ReservationDto(LocalDate date, String name, LocalTime time) {
         this.date = date;
         this.name = name;

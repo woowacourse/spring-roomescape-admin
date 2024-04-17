@@ -12,7 +12,6 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import roomescape.dao.Reservation;
 import roomescape.dao.ReservationDao;
-import roomescape.dao.ReservationMemoryDao;
 import roomescape.web.dto.ReservationFindAllResponse;
 import roomescape.web.dto.ReservationFindResponse;
 import roomescape.web.dto.ReservationSaveRequest;
@@ -20,9 +19,12 @@ import roomescape.web.dto.ReservationSaveRequest;
 @RequestMapping("/reservations")
 @Controller
 public class ReservationController {
-
-    private final ReservationDao reservationDao = new ReservationMemoryDao();
     private final AtomicLong counter = new AtomicLong();
+    private final ReservationDao reservationDao;
+
+    public ReservationController(ReservationDao reservationDao) {
+        this.reservationDao = reservationDao;
+    }
 
     @GetMapping
     public ResponseEntity<List<ReservationFindAllResponse>> findAllReservation() {

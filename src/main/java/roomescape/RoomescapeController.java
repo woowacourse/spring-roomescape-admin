@@ -46,7 +46,15 @@ public class RoomescapeController {
 
     @DeleteMapping("/reservations/{id}")
     public ResponseEntity<Void> deleteReservation(@PathVariable("id") long id) {
-        reservations.removeIf(reservation -> reservation.getId() == id);
-        return ResponseEntity.ok().build();
+        try {
+            Reservation reservation = reservations.stream()
+                    .filter(it -> it.getId() == id)
+                    .findFirst()
+                    .orElseThrow(IllegalArgumentException::new);
+            reservations.remove(reservation);
+            return ResponseEntity.ok().build();
+        } catch (IllegalArgumentException e) {
+            return ResponseEntity.notFound().build();
+        }
     }
 }

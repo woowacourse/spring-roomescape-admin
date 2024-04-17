@@ -68,4 +68,12 @@ public class MissionStepTest {
                 .statusCode(200)
                 .body("size()", is(0));
     }
+
+    @Test
+    void 삼단계_존재하지_않는_예약을_삭제하는_경우_예외_발생() {
+        RestAssured.given().log().all()
+                .when().delete("/reservations/1")
+                .then().log().all()
+                .statusCode(404);
+    }
 }

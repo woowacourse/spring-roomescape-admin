@@ -16,7 +16,7 @@ import roomescape.dto.response.ReservationResponse;
 @Controller
 public class ReservationController {
 
-    private final AtomicLong index = new AtomicLong(0);
+    private final AtomicLong id = new AtomicLong(0);
 
     private final Reservations reservations = new Reservations(new ArrayList<>());
 
@@ -27,7 +27,8 @@ public class ReservationController {
 
     @GetMapping("/admin/reservation")
     public String getReservationPage(Model model) {
-        List<ReservationResponse> reservationResponses = reservations.getReservations().stream()
+        List<ReservationResponse> reservationResponses = reservations.getReservations()
+                .stream()
                 .map(ReservationResponse::fromEntity).toList();
         model.addAttribute("reservationResponses", reservationResponses);
         return "/admin/reservation-legacy";
@@ -35,14 +36,15 @@ public class ReservationController {
 
     @GetMapping("/reservations")
     public ResponseEntity<List<ReservationResponse>> getReservations() {
-        List<ReservationResponse> reservationResponses = reservations.getReservations().stream()
+        List<ReservationResponse> reservationResponses = reservations.getReservations()
+                .stream()
                 .map(ReservationResponse::fromEntity).toList();
         return ResponseEntity.ok(reservationResponses);
     }
 
     @PostMapping("/reservations")
     public ResponseEntity<ReservationResponse> createReservations(@RequestBody ReservationCreateRequest reservationCreateRequest) {
-        Reservation reservation = reservationCreateRequest.toEntity(index.incrementAndGet());
+        Reservation reservation = reservationCreateRequest.toEntity(id.incrementAndGet());
         reservations.add(reservation);
 
         ReservationResponse reservationResponse = ReservationResponse.fromEntity(reservation);

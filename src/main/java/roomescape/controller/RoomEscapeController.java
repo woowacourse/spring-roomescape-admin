@@ -8,6 +8,7 @@ import roomescape.dto.ReservationResponse;
 import roomescape.dto.ReservationSaveRequest;
 import roomescape.repository.ReservationRepository;
 
+import java.net.URI;
 import java.util.List;
 import java.util.concurrent.atomic.AtomicLong;
 
@@ -37,14 +38,15 @@ public class RoomEscapeController {
 
     @PostMapping("/reservations")
     public ResponseEntity<ReservationResponse> createReservation(@RequestBody ReservationSaveRequest request) {
-        Reservation reservation = request.toReservation(index.getAndIncrement());
+        long id = index.getAndIncrement();
+        Reservation reservation = request.toReservation(id);
         reservationRepository.save(reservation);
-        return ResponseEntity.ok(reservation.toDto());
+        return ResponseEntity.created(URI.create("/reservations/" + id)).body(reservation.toDto());
     }
 
     @DeleteMapping("/reservations/{id}")
     public ResponseEntity<Void> deleteReservation(@PathVariable Long id) {
         reservationRepository.deleteById(id);
-        return ResponseEntity.ok().build();
+        return ResponseEntity.noContent().build();
     }
 }

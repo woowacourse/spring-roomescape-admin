@@ -9,12 +9,12 @@ import org.springframework.web.bind.annotation.RequestMapping;
 public class AdminController {
 
     @GetMapping
-    public String index() {
+    public String getIndexPage() {
         return "admin/index";
     }
 
     @GetMapping("/reservation")
-    public String reservation() {
+    public String getReservationPage() {
         return "admin/reservation-legacy";
     }
 }

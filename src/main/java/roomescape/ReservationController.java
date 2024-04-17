@@ -16,11 +16,6 @@ public class ReservationController {
     private final List<Reservation> reservations = new ArrayList<>();
     private final AtomicLong id = new AtomicLong(0);
 
-    @GetMapping
-    public ResponseEntity<List<Reservation>> reservations() {
-        return ResponseEntity.ok(reservations);
-    }
-
     @PostMapping
     public ResponseEntity<Reservation> reserve(@RequestBody CreateReservationRequest request) {
         Reservation newReservation = new Reservation(
@@ -33,7 +28,7 @@ public class ReservationController {
     }
 
     @DeleteMapping("/{id}")
-    public ResponseEntity<Void> delete(@PathVariable Long id) {
+    public ResponseEntity<Void> deleteBy(@PathVariable Long id) {
         Reservation found = reservations.stream()
                 .filter(it -> Objects.equals(it.getId(), id))
                 .findFirst()
@@ -41,5 +36,10 @@ public class ReservationController {
         reservations.remove(found);
 
         return ResponseEntity.ok().build();
+    }
+
+    @GetMapping
+    public ResponseEntity<List<Reservation>> getReservations() {
+        return ResponseEntity.ok(reservations);
     }
 }

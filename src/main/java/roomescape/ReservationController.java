@@ -23,7 +23,12 @@ public class ReservationController {
 
     @PostMapping("/reservations")
     public ResponseEntity<Reservation> reserve(@RequestBody ReservationDto reservationDto) {
-        Reservation reservation = new Reservation(reservationIndex.incrementAndGet(), reservationDto.getName(), reservationDto.getDate(), reservationDto.getTime());
+        Reservation reservation = new Reservation.Builder().id(reservationIndex.incrementAndGet())
+                .name(reservationDto.getName())
+                .date(reservationDto.getDate())
+                .time(reservationDto.getTime())
+                .build();
+
         reservations.add(reservation);
         return ResponseEntity.ok(reservation);
     }
@@ -38,4 +43,3 @@ public class ReservationController {
         return ResponseEntity.ok().build();
     }
 }
-

@@ -4,13 +4,23 @@ import static org.hamcrest.Matchers.is;
 
 import io.restassured.RestAssured;
 import io.restassured.http.ContentType;
+import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
-import org.springframework.test.annotation.DirtiesContext;
+import org.springframework.beans.factory.annotation.Autowired;
+import roomescape.dao.ReservationDao;
 import roomescape.dto.ReservationRequest;
+import roomescape.dto.ReservationResponse;
 
-@DirtiesContext(classMode = DirtiesContext.ClassMode.BEFORE_EACH_TEST_METHOD)
 class ReservationTest extends AcceptanceTest {
+
+    @Autowired
+    private ReservationDao reservationDao;
+
+    @AfterEach
+    void tearDown() {
+        reservationDao.deleteAll();
+    }
 
     @Test
     @DisplayName("전체 예약을 조회한다.")
@@ -46,17 +56,19 @@ class ReservationTest extends AcceptanceTest {
     @DisplayName("예약을 성공적으로 삭제한다.")
     void deleteReservationTest() {
         ReservationRequest request = new ReservationRequest("브라운", "2023-08-05", "15:40");
-
-        RestAssured.given().log().all()
+        ReservationResponse reservationResponse = RestAssured.given().log().all()
                 .contentType(ContentType.JSON)
                 .body(request)
                 .when().post("/reservations")
                 .then().log().all()
                 .statusCode(200)
-                .body("id", is(1));
+                .extract()
+                .as(ReservationResponse.class);
+
+        Long reservationId = reservationResponse.id();
 
         RestAssured.given().log().all()
-                .when().delete("/reservations/1")
+                .when().delete("/reservations/" + reservationId)
                 .then().log().all()
                 .statusCode(200);
 

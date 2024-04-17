@@ -1,8 +1,7 @@
-package roomescape;
+package roomescape.domain;
 
 import java.time.LocalDate;
 import java.time.LocalTime;
-import java.util.Date;
 
 public class Reservation {
 

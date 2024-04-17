@@ -3,7 +3,7 @@ package roomescape.service;
 import java.util.List;
 import org.springframework.stereotype.Service;
 import roomescape.dao.ReservationDao;
-import roomescape.dao.entity.Reservation;
+import roomescape.domain.Reservation;
 import roomescape.web.dto.ReservationFindAllResponse;
 import roomescape.web.dto.ReservationFindResponse;
 import roomescape.web.dto.ReservationSaveRequest;

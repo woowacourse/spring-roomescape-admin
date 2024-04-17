@@ -2,7 +2,7 @@ package roomescape.dao;
 
 import java.util.List;
 import java.util.Optional;
-import roomescape.dao.entity.Reservation;
+import roomescape.domain.Reservation;
 
 public interface ReservationDao {
     List<Reservation> findAll();

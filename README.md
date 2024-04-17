@@ -1,10 +1,28 @@
-# 방탈출 예약 관리 기능 목록
+# 🗝️방탈출 예약 관리🗝️
 
-## step1
+## 기능 명세서
 
-- `localhost:8080/admin` 요청 시 어드민 메인 페이지로 응답한다.
-    - 어드민 메인 페이지는 `templates/admin/index.html` 파일을 이용한다.
-- `/admin/reservation` 요청 시 예약 관리 페이지로 응답한다.
-    - 예약 관리 페이지에서 예약 목록을 조회할 수 있다.
-    - 관리 페이지에서 예약 추가와 삭제를 할 수 있다.
-    - 페이지는 `templates/admin/reservation-legacy.html` 파일을 이용한다.
+### 관리자 메인 페이지
+
+- `/admin` 으로 접속할 수 있다.
+- 관리자 페이지를 볼 수 있다.
+- 네비게이션 바의 Reservation을 누르면 관리자 예약 페이지로 이동한다.
+
+### 예약 관리 페이지
+
+- `/admin/reservation` 으로 접속할 수 있다.
+- 예약 목록을 볼 수 있다.
+    - 예약 번호, 이름, 날짜, 시간을 볼 수 있다.
+- 예약을 추가할 수 있다.
+    - 이름, 날짜, 시간을 입력하여 추가한다.
+- 예약을 삭제할 수 있다.
+
+## API 명세서
+
+| HTTP Method | URI                  | Description |
+|-------------|----------------------|-------------|
+| GET         | `/admin`             | 관리자 메인 페이지  | 
+| GET         | `/admin/reservation` | 예약 관리 페이지   |
+| GET         | `/reservations`      | 예약 목록 조회    |
+| POST        | `/reservations`      | 예약 추가       | 
+| DELETE      | `/reservations/{id}` | 예약 삭제       | 

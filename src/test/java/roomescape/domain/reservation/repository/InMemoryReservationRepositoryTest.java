@@ -10,8 +10,6 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import roomescape.domain.reservation.Reservation;
-import roomescape.domain.reservation.repository.InMemoryReservationRepository;
-import roomescape.domain.reservation.repository.ReservationRepository;
 import roomescape.dto.ReservationDto;
 
 class InMemoryReservationRepositoryTest {

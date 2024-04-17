@@ -10,11 +10,11 @@ import org.springframework.web.bind.annotation.RestController;
 
 @RestController
 public class ReservationController {
-    private final List<ReservationDto> reservations = new ArrayList<>();
+    private final List<Reservation> reservations = new ArrayList<>();
 
     @GetMapping("/reservations")
-    public ResponseEntity<List<ReservationDto>> reservations() {
-        reservations.add(new ReservationDto(0L, "fram", LocalDate.now(), LocalTime.now()));
+    public ResponseEntity<List<Reservation>> reservations() {
+        reservations.add(new Reservation( 1,"fram", LocalDate.now(), LocalTime.now()));
         return ResponseEntity.ok(reservations);
     }
 }

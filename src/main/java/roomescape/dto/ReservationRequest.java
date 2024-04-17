@@ -1,36 +1,34 @@
 package roomescape.dto;
 
-import java.time.LocalDateTime;
-import java.time.format.DateTimeFormatter;
+import java.time.LocalDate;
+import java.time.LocalTime;
 import roomescape.model.Reservation;
 
 public class ReservationRequest {
 
     private final String name;
-    private final String date;
-    private final String time;
+    private final LocalDate date;
+    private final LocalTime time;
 
-    public ReservationRequest(String name, String date, String time) {
+    public ReservationRequest(String name, LocalDate date, LocalTime time) {
         this.name = name;
         this.date = date;
         this.time = time;
     }
 
     public Reservation toReservation(Long id) {
-        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-ddHH:mm");
-        LocalDateTime datetime = LocalDateTime.parse(this.date + this.time, formatter);
-        return new Reservation(id, this.name, datetime);
+        return new Reservation(id, this.name, this.date, this.time);
     }
 
     public String getName() {
         return name;
     }
 
-    public String getDate() {
+    public LocalDate getDate() {
         return date;
     }
 
-    public String getTime() {
+    public LocalTime getTime() {
         return time;
     }
 }

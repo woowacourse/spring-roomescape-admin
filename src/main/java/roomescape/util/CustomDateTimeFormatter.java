@@ -12,18 +12,19 @@ public class CustomDateTimeFormatter {
     private CustomDateTimeFormatter() {
     }
 
-    public static LocalDateTime getLocalDateTime(final String date, final String time) {
-        LocalDate localDate = LocalDate.parse(date, ISO_LOCAL_DATE_FORMATTER);
-        LocalTime localTime = LocalTime.parse(time, TIME_WITHOUT_SECOND_FORMATTER);
-
-        return LocalDateTime.of(localDate, localTime);
+    public static LocalDate getLocalDate(final String date) {
+        return LocalDate.parse(date, ISO_LOCAL_DATE_FORMATTER);
     }
 
-    public static String getFormattedDate(final LocalDateTime dateTime) {
-        return dateTime.format(ISO_LOCAL_DATE_FORMATTER);
+    public static LocalTime getLocalTime(final String time) {
+        return LocalTime.parse(time, TIME_WITHOUT_SECOND_FORMATTER);
     }
 
-    public static String getFormattedTime(final LocalDateTime dateTime) {
-        return dateTime.format(TIME_WITHOUT_SECOND_FORMATTER);
+    public static String getFormattedDate(final LocalDate date) {
+        return date.format(ISO_LOCAL_DATE_FORMATTER);
+    }
+
+    public static String getFormattedTime(final LocalTime time) {
+        return time.format(TIME_WITHOUT_SECOND_FORMATTER);
     }
 }

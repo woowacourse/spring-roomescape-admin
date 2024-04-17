@@ -9,8 +9,8 @@ public record CreateReservationResponse(Long id, String name, String date, Strin
         return new CreateReservationResponse(
                 reservation.getId(),
                 reservation.getName(),
-                CustomDateTimeFormatter.getFormattedDate(reservation.getDateTime()),
-                CustomDateTimeFormatter.getFormattedTime(reservation.getDateTime())
+                CustomDateTimeFormatter.getFormattedDate(reservation.getDate()),
+                CustomDateTimeFormatter.getFormattedTime(reservation.getTime())
         );
     }
 }

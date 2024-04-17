@@ -2,31 +2,39 @@ package roomescape;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
-import java.time.LocalDateTime;
+import java.time.LocalDate;
+import java.time.LocalTime;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import roomescape.util.CustomDateTimeFormatter;
 
 class CustomDateTimeFormatterTest {
 
-    @DisplayName("날짜와 시간 문자열 값을 받아 LocalDateTime 객체를 반환한다.")
+    @DisplayName("날짜 문자열 값을 받아 LocalDate 객체를 반환한다.")
     @Test
-    void getLocalDateTimeTest() {
-        LocalDateTime localDateTime = CustomDateTimeFormatter.getLocalDateTime("2023-08-05", "15:40");
-        assertThat(localDateTime).isEqualTo(LocalDateTime.of(2023, 8, 5, 15, 40));
+    void getLocalDateTest() {
+        LocalDate localDate = CustomDateTimeFormatter.getLocalDate("2023-08-05");
+        assertThat(localDate).isEqualTo(LocalDate.of(2023, 8, 5));
     }
 
-    @DisplayName("LocalDateTime 객체로부터 날짜 문자열 값을 반환한다.")
+    @DisplayName("시간 문자열 값을 받아 LocalTime 객체를 반환한다.")
+    @Test
+    void getLocalTimeTest() {
+        LocalTime localTime = CustomDateTimeFormatter.getLocalTime("15:40");
+        assertThat(localTime).isEqualTo(LocalTime.of(15, 40));
+    }
+
+    @DisplayName("LocalDate 객체로부터 날짜 문자열 값을 반환한다.")
     @Test
     void getFormattedDateTest() {
-        String formattedDate = CustomDateTimeFormatter.getFormattedDate(LocalDateTime.of(2023, 8, 5, 15, 40));
+        String formattedDate = CustomDateTimeFormatter.getFormattedDate(LocalDate.of(2023, 8, 5));
         assertThat(formattedDate).isEqualTo("2023-08-05");
     }
 
-    @DisplayName("LocalDateTime 객체로부터 시간 문자열 값을 반환한다.")
+    @DisplayName("LocalTime 객체로부터 시간 문자열 값을 반환한다.")
     @Test
     void getFormattedTimeTest() {
-        String formattedDate = CustomDateTimeFormatter.getFormattedTime(LocalDateTime.of(2023, 8, 5, 15, 40));
-        assertThat(formattedDate).isEqualTo("15:40");
+        String formattedTime = CustomDateTimeFormatter.getFormattedTime(LocalTime.of(15, 40));
+        assertThat(formattedTime).isEqualTo("15:40");
     }
 }

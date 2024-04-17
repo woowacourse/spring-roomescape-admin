@@ -31,12 +31,12 @@ public class ReservationController {
     }
 
     @PostMapping
-    public ResponseEntity<ReservationResponseDto> saveReservation(
+    public ReservationResponseDto saveReservation(
             @RequestBody final ReservationRequestDto reservationRequestDto) {
         final Reservation reservation = reservationRequestDto.toEntity(id.getAndIncrement());
         final ReservationResponseDto reservationResponseDto = ReservationResponseDto.from(reservation);
         reservations.add(reservation);
-        return ResponseEntity.ok().body(reservationResponseDto);
+        return reservationResponseDto;
     }
 
     @DeleteMapping("/{id}")

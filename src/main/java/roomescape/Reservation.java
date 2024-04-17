@@ -9,4 +9,5 @@ public record Reservation(
     public Reservation toEntity(Long id) {
         return new Reservation(id, this.name, this.date, this.time);
     }
+
 }

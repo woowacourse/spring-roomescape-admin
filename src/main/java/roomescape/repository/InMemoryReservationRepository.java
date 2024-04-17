@@ -24,7 +24,7 @@ public class InMemoryReservationRepository implements ReservationRepository {
         Reservation reservation = reservations.stream()
                 .filter(it -> it.getId().equals(id))
                 .findFirst()
-                .orElseThrow(IllegalArgumentException::new);
+                .orElseThrow(() -> new IllegalArgumentException("[ERROR] 존재하지 않는 예약 id입니다."));
 
         reservations.remove(reservation);
     }

@@ -1,10 +1,7 @@
 package roomescape.controller;
 
 import java.net.URI;
-import java.util.ArrayList;
 import java.util.List;
-import java.util.Objects;
-import java.util.concurrent.atomic.AtomicLong;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -41,22 +38,15 @@ public class ReservationController {
 
     @PostMapping
     public ResponseEntity<ReservationResponse> create(@RequestBody ReservationRequest reservationRequest) {
-        Reservation reservation = reservationRequest.toReservation(index.getAndIncrement());
+        Long id = reservationDao.insert(reservationRequest.toReservation());
 
-        reservations.add(reservation);
-
-        return ResponseEntity.created(URI.create("/reservations/" + reservation.getId()))
-                .body(ReservationResponse.from(reservation));
+        return ResponseEntity.created(URI.create("/reservations/" + id))
+                .build();
     }
 
     @DeleteMapping("/{id}")
     public ResponseEntity<Void> delete(@PathVariable("id") Long id) {
-        Reservation findedReservation = reservations.stream()
-                .filter(reservation -> Objects.equals(reservation.getId(), id))
-                .findAny()
-                .orElseThrow(() -> new IllegalArgumentException("존재하지 않는 예약입니다."));
-
-        reservations.remove(findedReservation);
+        reservationDao.deleteById(id);
 
         return ResponseEntity.noContent()
                 .build();

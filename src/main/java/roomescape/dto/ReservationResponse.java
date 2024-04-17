@@ -20,8 +20,8 @@ public record ReservationResponse(
         return new ReservationResponse(
                 reservation.getId(),
                 reservation.getName(),
-                reservation.getDateTime().toLocalDate(),
-                reservation.getDateTime().toLocalTime()
+                reservation.getDate(),
+                reservation.getTime()
         );
     }
 }

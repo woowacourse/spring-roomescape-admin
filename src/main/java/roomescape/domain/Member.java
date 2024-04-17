@@ -1,11 +1,8 @@
 package roomescape.domain;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
-import org.springframework.format.annotation.DateTimeFormat;
-
 import java.time.LocalDate;
 import java.time.LocalTime;
-import java.util.regex.Pattern;
 
 public class Member {
     private final Long id;
@@ -20,6 +17,10 @@ public class Member {
         this.name = name;
         this.date = date;
         this.time = time;
+    }
+
+    public static Member toEntity(long id, Member member) {
+        return new Member(id, member.getName(), member.getDate(), member.getTime());
     }
 
     public Long getId() {

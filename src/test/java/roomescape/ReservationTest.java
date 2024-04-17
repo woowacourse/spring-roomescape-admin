@@ -1,5 +1,6 @@
 package roomescape;
 
+import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import static org.hamcrest.Matchers.is;
 
 import io.restassured.RestAssured;
@@ -9,6 +10,7 @@ import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.annotation.DirtiesContext;
+import roomescape.controller.ReservationController;
 import roomescape.dto.ReservationDto;
 
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.DEFINED_PORT)
@@ -74,5 +76,25 @@ class ReservationTest {
                 .then().log().all()
                 .statusCode(200)
                 .body("size()", is(0));
+    }
+
+    @Test
+    @DisplayName("예약을 삭제시 경로 변수가 null이면 예외가 발생한다.")
+    void deleteNullId() {
+        Long id = null;
+        ReservationController reservationController = new ReservationController();
+
+        assertThatThrownBy(() -> reservationController.delete(id))
+                .isInstanceOf(IllegalArgumentException.class);
+    }
+
+    @Test
+    @DisplayName("예약을 삭제시 id에 해당하는 예약이 없다면 예외가 발생한다.")
+    void deleteNotContainsId() {
+        Long id = 3L;
+        ReservationController reservationController = new ReservationController();
+
+        assertThatThrownBy(() -> reservationController.delete(id))
+                .isInstanceOf(IllegalArgumentException.class);
     }
 }

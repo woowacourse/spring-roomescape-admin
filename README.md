@@ -116,6 +116,8 @@ HTTP/1.1 200
 
 # 논의 및 학습한 점
 
+## DTO 사용
+
 - API의 응답값으로 도메인을 사용할지, DTO를 사용할지? API마다 서로 다른 DTO를 사용할지, 하나의 DTO를 사용할지?
     - 결론: API마다 서로 다른 DTO를 사용하자
     - 이유:
@@ -124,10 +126,12 @@ HTTP/1.1 200
             - 마찬가지로 여러 API들이 응답값으로 하나의 DTO를 사용할 경우, 도메인을 사용한 경우와 똑같은 사이드 이펙트가 발생한다.
         - 따라서, 각 API들은 응답값으로 서로 다른 DTO를 사용하는 편이 인터페이스(API)의 변경을 최소화할 수 있다.
 
-# 직렬화 역직렬화
+## `@JsonFormat` 사용
 
 - 직렬화 : 객체 -> JSON (response) -> JsonFormat (Jackson)
 - 역직렬화 : JSON -> 객체 (request) -> DateTimeFormat, JsonFormat (Spring)
 
 직렬화 할 땐 Jackson 라이브러리만 사용해서 DateTimeFormat은 사용 불가함
 역직렬화 할 땐 Spring이 기본 JSON 컨버터로 Jackson 을 가져 JsonFormat과 DateTimeFormat 둘다 사용 가능함
+
+[참고](https://jojoldu.tistory.com/361)

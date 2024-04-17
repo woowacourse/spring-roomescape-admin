@@ -3,9 +3,10 @@ package roomescape.repository;
 import roomescape.domain.Reservation;
 
 import java.util.*;
+import java.util.concurrent.ConcurrentHashMap;
 
 public class ReservationRepository {
-    private final Map<Long, Reservation> reservations = new HashMap<>();
+    private final Map<Long, Reservation> reservations = new ConcurrentHashMap<>();
 
     public void save(Reservation reservation) {
         reservations.put(reservation.getId(), reservation);

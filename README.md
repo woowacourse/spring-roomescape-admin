@@ -128,10 +128,10 @@ HTTP/1.1 200
 
 ## `@JsonFormat` 사용
 
-- 직렬화 : 객체 -> JSON (response) -> JsonFormat (Jackson)
-- 역직렬화 : JSON -> 객체 (request) -> DateTimeFormat, JsonFormat (Spring)
+- 직렬화 : 객체 -> JSON (response) -> JsonFormat(Jackson) 사용 가능
+- 역직렬화 : JSON -> 객체 (request) -> DateTimeFormat(Spring), JsonFormat (Jackson) 사용 가느
 
-직렬화 할 땐 Jackson 라이브러리만 사용해서 DateTimeFormat은 사용 불가함
-역직렬화 할 땐 Spring이 기본 JSON 컨버터로 Jackson 을 가져 JsonFormat과 DateTimeFormat 둘다 사용 가능함
+직렬화 할 땐 Jackson 라이브러리만 사용해서 DateTimeFormat은 사용 불가하다.
+역직렬화 할 땐 Spring이 기본 JSON 컨버터로 Jackson 을 가져 JsonFormat과 DateTimeFormat 둘다 사용 가능하다.
 
 [참고](https://jojoldu.tistory.com/361)

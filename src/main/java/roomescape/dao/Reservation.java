@@ -12,8 +12,7 @@ public class Reservation {
     public Reservation() {
     }
 
-    public Reservation(Long id, String name, LocalDate date, LocalTime time) {
-        this.id = id;
+    public Reservation(String name, LocalDate date, LocalTime time) {
         this.name = name;
         this.date = date;
         this.time = time;
@@ -33,5 +32,9 @@ public class Reservation {
 
     public LocalTime getTime() {
         return time;
+    }
+
+    public void setId(Long id) {
+        this.id = id;
     }
 }

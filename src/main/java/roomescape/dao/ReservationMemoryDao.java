@@ -3,11 +3,13 @@ package roomescape.dao;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
+import java.util.concurrent.atomic.AtomicLong;
 import org.springframework.stereotype.Repository;
 
 @Repository
 public class ReservationMemoryDao implements ReservationDao {
     private final List<Reservation> reservations = new ArrayList<>();
+    private final AtomicLong counter = new AtomicLong();
 
     @Override
     public List<Reservation> findAll() {
@@ -23,6 +25,7 @@ public class ReservationMemoryDao implements ReservationDao {
 
     @Override
     public void save(Reservation reservation) {
+        reservation.setId(counter.incrementAndGet());
         reservations.add(reservation);
     }
 

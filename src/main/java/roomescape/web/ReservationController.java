@@ -1,7 +1,6 @@
 package roomescape.web;
 
 import java.util.List;
-import java.util.concurrent.atomic.AtomicLong;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -19,7 +18,6 @@ import roomescape.web.dto.ReservationSaveRequest;
 @RequestMapping("/reservations")
 @Controller
 public class ReservationController {
-    private final AtomicLong counter = new AtomicLong();
     private final ReservationDao reservationDao;
 
     public ReservationController(ReservationDao reservationDao) {
@@ -37,7 +35,7 @@ public class ReservationController {
 
     @PostMapping
     public ResponseEntity<ReservationFindResponse> saveReservation(@RequestBody ReservationSaveRequest request) {
-        Reservation reservation = request.toEntity(counter.incrementAndGet());
+        Reservation reservation = request.toEntity();
         reservationDao.save(reservation);
         ReservationFindResponse response = ReservationFindResponse.from(reservation);
         return ResponseEntity.ok().body(response);

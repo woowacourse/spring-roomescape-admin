@@ -20,11 +20,11 @@ public class ReservationRepository {
             Reservation.toEntity(index.getAndIncrement(), "브라운", LocalDate.of(2023, 1, 2), LocalTime.of(11, 0))
     ));
 
-    public List<Reservation> getReservations() {
+    public List<Reservation> findAll() {
         return Collections.unmodifiableList(reservations);
     }
 
-    public Reservation addReservation(Reservation requestReservation) {
+    public Reservation save(Reservation requestReservation) {
         Reservation reservation = Reservation.toEntity(index.getAndIncrement(), requestReservation.getName(), requestReservation.getDate(), requestReservation.getTime());
         reservations.add(reservation);
         return reservation;

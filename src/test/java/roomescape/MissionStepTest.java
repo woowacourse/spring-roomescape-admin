@@ -37,7 +37,7 @@ class MissionStepTest {
     @DisplayName("예약 페이지 응답")
     @Test
     void moveToReservationPage() {
-        List<Reservation> reservations = reservationRepository.getReservations();
+        List<Reservation> reservations = reservationRepository.findAll();
         int reservationSize = reservations.size();
 
         RestAssured.given().log().all()
@@ -52,10 +52,10 @@ class MissionStepTest {
                 .body("size()", is(reservationSize));
     }
 
-    @DisplayName("예약 추가")
+    @DisplayName("예약 추가 후 삭제")
     @Test
-    void addReservation() {
-        List<Reservation> reservations = reservationRepository.getReservations();
+    void addAndRemoveReservation() {
+        List<Reservation> reservations = reservationRepository.findAll();
         int reservationSize = reservations.size();
         int lastIndex = Math.toIntExact(reservations.get(reservationSize - 1)
                 .getId());

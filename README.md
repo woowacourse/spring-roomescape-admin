@@ -114,7 +114,7 @@ HTTP/1.1 200
     - 자원 - 조회 - 이름으로 : UserFindByNameResponse
     - 자원 - 조회 - 여러건 - 이름으로 : UserFindAllByNameResponse
 
-# 논의한 점
+# 논의 및 학습한 점
 
 - API의 응답값으로 도메인을 사용할지, DTO를 사용할지? API마다 서로 다른 DTO를 사용할지, 하나의 DTO를 사용할지?
     - 결론: API마다 서로 다른 DTO를 사용하자
@@ -123,3 +123,11 @@ HTTP/1.1 200
             - 만일 도메인의 필드가 하나라도 변경되면, 클라이언트한테 제공하는 인터페이스인 API들이 일파만파 영향을 받게 된다.
             - 마찬가지로 여러 API들이 응답값으로 하나의 DTO를 사용할 경우, 도메인을 사용한 경우와 똑같은 사이드 이펙트가 발생한다.
         - 따라서, 각 API들은 응답값으로 서로 다른 DTO를 사용하는 편이 인터페이스(API)의 변경을 최소화할 수 있다.
+
+# 직렬화 역직렬화
+
+- 직렬화 : 객체 -> JSON (response) -> JsonFormat (Jackson)
+- 역직렬화 : JSON -> 객체 (request) -> DateTimeFormat, JsonFormat (Spring)
+
+직렬화 할 땐 Jackson 라이브러리만 사용해서 DateTimeFormat은 사용 불가함
+역직렬화 할 땐 Spring이 기본 JSON 컨버터로 Jackson 을 가져 JsonFormat과 DateTimeFormat 둘다 사용 가능함

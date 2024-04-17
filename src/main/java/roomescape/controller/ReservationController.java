@@ -16,7 +16,6 @@ import roomescape.dto.response.ReservationResponse;
 public class ReservationController {
 
     private final AtomicLong id = new AtomicLong(0);
-
     private final Reservations reservations = new Reservations(new ArrayList<>());
 
     @GetMapping("/admin")

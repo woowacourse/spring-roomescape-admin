@@ -1,11 +1,8 @@
 package roomescape.dto;
 
-import java.time.format.DateTimeFormatter;
 import roomescape.domain.Reservation;
 
 public class ReservationResponseDto {
-    private static final DateTimeFormatter formatter = DateTimeFormatter.ofPattern("HH:mm");
-
     private final Long id;
     private final String name;
     private final String date;
@@ -14,8 +11,15 @@ public class ReservationResponseDto {
     public ReservationResponseDto(final Reservation reservation) {
         this.id = reservation.getId();
         this.name = reservation.getName();
-        this.date = reservation.getDate().toString();
-        this.time = reservation.getTime().format(formatter);
+        this.date = reservation.getDate();
+        this.time = reservation.getTime();
+    }
+
+    public ReservationResponseDto(final Long id, final Reservation reservation) {
+        this.id = id;
+        this.name = reservation.getName();
+        this.date = reservation.getDate();
+        this.time = reservation.getTime();
     }
 
     public Long getId() {

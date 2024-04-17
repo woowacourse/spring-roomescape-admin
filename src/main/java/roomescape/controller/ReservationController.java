@@ -1,13 +1,10 @@
 package roomescape.controller;
 
+import java.net.URI;
 import java.time.LocalDate;
-import java.time.LocalDateTime;
 import java.time.LocalTime;
 import java.time.format.DateTimeFormatter;
-import java.util.ArrayList;
 import java.util.List;
-import java.util.concurrent.atomic.AtomicLong;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -18,34 +15,39 @@ import org.springframework.web.bind.annotation.RestController;
 import roomescape.domain.Reservation;
 import roomescape.dto.ReservationRequestDto;
 import roomescape.dto.ReservationResponseDto;
+import roomescape.repository.ReservationRepository;
 
 @RestController
 public class ReservationController {
-    private final List<Reservation> reservations = new ArrayList<>();
-    private final AtomicLong index = new AtomicLong(1);
+    private final ReservationRepository reservationRepository;
+
+    public ReservationController(final ReservationRepository reservationRepository) {
+        this.reservationRepository = reservationRepository;
+    }
 
     @GetMapping("/reservations")
-    public List<ReservationResponseDto> reservations() {
-        return reservations.stream()
+    public List<ReservationResponseDto> find() {
+        return reservationRepository.findAll()
+                .stream()
                 .map(ReservationResponseDto::new)
                 .toList();
     }
 
     @PostMapping("/reservations")
-    public ReservationResponseDto create(@RequestBody final ReservationRequestDto request) {
-        final LocalTime time = LocalTime.parse(request.getTime(), DateTimeFormatter.ofPattern("HH:mm"));
+    public ResponseEntity<ReservationResponseDto> create(@RequestBody final ReservationRequestDto request) {
         final LocalDate date = LocalDate.parse(request.getDate(), DateTimeFormatter.ofPattern("yyyy-MM-dd"));
-        final LocalDateTime dateTime = LocalDateTime.of(date, time);
+        final LocalTime time = LocalTime.parse(request.getTime(), DateTimeFormatter.ofPattern("HH:mm"));
 
-        final Reservation reservation = new Reservation(index.getAndIncrement(), request.getName(), dateTime);
-        reservations.add(reservation);
+        final Reservation reservation = new Reservation(request.getName(), date, time);
+        final Long id = reservationRepository.save(reservation);
 
-        return new ReservationResponseDto(reservation);
+        return ResponseEntity.created(URI.create("/reservations/" + id))
+                .body(new ReservationResponseDto(id, reservation));
     }
 
     @DeleteMapping("/reservations/{id}")
     public ResponseEntity<Void> delete(@PathVariable("id") final Long id) {
-        reservations.removeIf(it -> it.getId().equals(id));
-        return new ResponseEntity<>(HttpStatus.OK);
+        reservationRepository.deleteById(id);
+        return ResponseEntity.noContent().build();
     }
 }

@@ -6,14 +6,10 @@ import java.time.format.DateTimeFormatter;
 import java.time.format.DateTimeParseException;
 
 public class Reservation {
-    private Long id;
-    private String name;
-    private LocalDate date;
-    private LocalTime time;
-
-    public Reservation(String name, String date, String time) {
-        this(null, name, date, time);
-    }
+    private final Long id;
+    private final String name;
+    private final LocalDate date;
+    private final LocalTime time;
 
     public Reservation(Long id, String name, String date, String time) {
         this.id = id;
@@ -40,10 +36,6 @@ public class Reservation {
 
     public Long getId() {
         return id;
-    }
-
-    public void setId(Long id) {
-        this.id = id;
     }
 
     public String getName() {

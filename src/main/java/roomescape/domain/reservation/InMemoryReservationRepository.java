@@ -7,6 +7,8 @@ import java.util.concurrent.atomic.AtomicLong;
 
 import org.springframework.stereotype.Repository;
 
+import roomescape.dto.ReservationDto;
+
 @Repository
 public class InMemoryReservationRepository implements ReservationRepository {
     private static final long INITIAL_VALUE = 1L;
@@ -20,8 +22,8 @@ public class InMemoryReservationRepository implements ReservationRepository {
     }
 
     @Override
-    public Reservation save(Reservation reservation) {
-        reservation.setId(index.getAndIncrement());
+    public Reservation save(ReservationDto reservationDto) {
+        Reservation reservation = reservationDto.toReservation(index.getAndIncrement());
         reservations.put(reservation.getId(), reservation);
         return reservation;
     }

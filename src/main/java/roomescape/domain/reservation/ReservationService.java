@@ -17,8 +17,7 @@ public class ReservationService {
     }
 
     public Reservation create(ReservationDto reservationDto) {
-        Reservation reservation = new Reservation(reservationDto.name(), reservationDto.date(), reservationDto.time());
-        return reservationRepository.save(reservation);
+        return reservationRepository.save(reservationDto);
     }
 
     public List<Reservation> findReservations() {

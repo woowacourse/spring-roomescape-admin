@@ -25,6 +25,7 @@ public class ReservationController {
                 request.date(),
                 request.time());
         reservations.add(newReservation);
+        
         return ResponseEntity.ok(newReservation);
     }
 

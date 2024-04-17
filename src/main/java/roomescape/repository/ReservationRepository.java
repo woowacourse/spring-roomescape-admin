@@ -21,7 +21,7 @@ public class ReservationRepository {
     }
 
     public Long save(final Reservation reservation) {
-        final String query = "INSERT INTO reservation(name, date, time) VALUES (?, ?, ?)";
+        final String query = "INSERT INTO reservation (name, date, time) VALUES (?, ?, ?)";
         final KeyHolder keyHolder = new GeneratedKeyHolder();
 
         jdbcTemplate.update(connection -> {

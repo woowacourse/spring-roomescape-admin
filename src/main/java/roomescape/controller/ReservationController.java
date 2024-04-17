@@ -1,5 +1,6 @@
 package roomescape.controller;
 
+import java.util.List;
 import java.util.concurrent.atomic.AtomicLong;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
@@ -11,7 +12,6 @@ import roomescape.dto.request.ReservationCreateRequest;
 
 import java.util.ArrayList;
 import roomescape.dto.response.ReservationResponse;
-import roomescape.dto.response.ReservationResponses;
 
 @Controller
 public class ReservationController {
@@ -27,14 +27,16 @@ public class ReservationController {
 
     @GetMapping("/admin/reservation")
     public String getReservationPage(Model model) {
-        ReservationResponses reservationResponses = ReservationResponses.fromEntity(reservations);
+        List<ReservationResponse> reservationResponses = reservations.getReservations().stream()
+                .map(ReservationResponse::fromEntity).toList();
         model.addAttribute("reservationResponses", reservationResponses);
         return "/admin/reservation-legacy";
     }
 
     @GetMapping("/reservations")
-    public ResponseEntity<ReservationResponses> getReservations() {
-        ReservationResponses reservationResponses = ReservationResponses.fromEntity(reservations);
+    public ResponseEntity<List<ReservationResponse>> getReservations() {
+        List<ReservationResponse> reservationResponses = reservations.getReservations().stream()
+                .map(ReservationResponse::fromEntity).toList();
         return ResponseEntity.ok(reservationResponses);
     }
 

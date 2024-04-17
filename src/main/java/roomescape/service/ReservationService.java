@@ -24,7 +24,7 @@ public class ReservationService {
     }
 
     public ReservationFindResponse saveReservation(ReservationSaveRequest request) {
-        Reservation reservation = request.toEntity();
+        Reservation reservation = request.toDomain();
         reservationDao.save(reservation);
         return ReservationFindResponse.from(reservation);
     }

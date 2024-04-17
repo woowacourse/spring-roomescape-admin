@@ -12,12 +12,14 @@ import org.junit.jupiter.api.Test;
 import roomescape.domain.Reservation;
 import roomescape.dto.ReservationRequest;
 import roomescape.dto.ReservationResponse;
+import roomescape.storage.ReservationStorage;
 
 class ReservationControllerTest {
     @Test
     @DisplayName("예약 정보를 잘 저장하는지 확인한다.")
     void saveReservation() {
-        ReservationController reservationController = new ReservationController();
+        ReservationStorage reservationStorage = new ReservationStorage();
+        ReservationController reservationController = new ReservationController(reservationStorage);
         LocalDate date = LocalDate.now();
         LocalTime time = LocalTime.now();
 
@@ -34,7 +36,8 @@ class ReservationControllerTest {
     @Test
     @DisplayName("예약 정보를 잘 불러오는지 확인한다.")
     void findAllReservations() {
-        ReservationController reservationController = new ReservationController();
+        ReservationStorage reservationStorage = new ReservationStorage();
+        ReservationController reservationController = new ReservationController(reservationStorage);
         List<ReservationResponse> allReservations = reservationController.findAllReservations();
 
         Assertions.assertThat(allReservations)
@@ -45,9 +48,10 @@ class ReservationControllerTest {
     @DisplayName("예약 정보를 잘 지우는지 확인한다.")
     void delete() {
         List<Reservation> reservations = List.of(new Reservation(1, "폴라", LocalDateTime.now()));
-        ReservationController reservationController = new ReservationController(new ArrayList<>(reservations));
-        reservationController.delete(1L);
+        ReservationStorage reservationStorage = new ReservationStorage(new ArrayList<>(reservations));
+        ReservationController reservationController = new ReservationController(reservationStorage);
 
+        reservationController.delete(1L);
         List<ReservationResponse> reservationResponses = reservationController.findAllReservations();
 
         Assertions.assertThat(reservationResponses)

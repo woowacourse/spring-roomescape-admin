@@ -1,11 +1,6 @@
 package roomescape.controller;
 
-import java.time.LocalDate;
-import java.time.LocalDateTime;
-import java.time.LocalTime;
-import java.util.ArrayList;
 import java.util.List;
-import java.util.concurrent.atomic.AtomicLong;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -15,35 +10,21 @@ import org.springframework.web.bind.annotation.RestController;
 import roomescape.domain.Reservation;
 import roomescape.dto.ReservationRequest;
 import roomescape.dto.ReservationResponse;
+import roomescape.storage.ReservationStorage;
 
 @RestController
 public class ReservationController {
-    private final List<Reservation> reservations;
-    private final AtomicLong atomicLong = new AtomicLong(0);
 
-    public ReservationController() {
-        this(new ArrayList<>());
-    }
+    private final ReservationStorage reservationStorage;
 
-    public ReservationController(List<Reservation> reservations) {
-        this.reservations = reservations;
+    public ReservationController(ReservationStorage reservationStorage) {
+        this.reservationStorage = reservationStorage;
     }
 
     @PostMapping("/reservations")
     public ReservationResponse saveReservation(@RequestBody ReservationRequest reservationRequest) {
-        Reservation reservation = fromRequest(reservationRequest);
-        reservations.add(reservation);
+        Reservation reservation = reservationStorage.save(reservationRequest);
         return toResponse(reservation);
-    }
-
-    private Reservation fromRequest(ReservationRequest reservationRequest) {
-        long id = atomicLong.incrementAndGet();
-
-        String name = reservationRequest.name();
-        LocalDate date = reservationRequest.date();
-        LocalTime time = reservationRequest.time();
-        LocalDateTime dateTime = LocalDateTime.of(date, time);
-        return new Reservation(id, name, dateTime);
     }
 
     private ReservationResponse toResponse(Reservation reservation) {
@@ -53,16 +34,14 @@ public class ReservationController {
 
     @GetMapping("/reservations")
     public List<ReservationResponse> findAllReservations() {
-        return reservations.stream()
-                .sorted()
+        return reservationStorage.findAllReservations()
+                .stream()
                 .map(this::toResponse)
                 .toList();
     }
 
     @DeleteMapping("/reservations/{reservationId}")
     public void delete(@PathVariable Long reservationId) {
-        reservations.stream().filter(reservation -> reservation.getId() == reservationId)
-                .findAny()
-                .ifPresent(reservations::remove);
+        reservationStorage.delete(reservationId);
     }
 }

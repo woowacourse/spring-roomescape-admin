@@ -1,7 +1,7 @@
-package roomescape.repository;
+package roomescape.db.repository;
 
 import java.util.List;
-import roomescape.domain.Reservation;
+import roomescape.db.domain.Reservation;
 
 public interface ReservationRepository {
 
@@ -9,5 +9,7 @@ public interface ReservationRepository {
 
     void save(final Reservation reservation);
 
-    void delete(final Long id);
+    void delete(final long id);
+
+    long getCurrentId();
 }

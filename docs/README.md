@@ -12,8 +12,8 @@
 
 - [x] "/admin/reservation" 으로 GET 요청 시 templates/admin/reservation-legacy.html 파일을 반환한다.
 - [x] "/reservations" 으로 GET 요청 시 모든 예약 목록을 반환한다.
-- [ ] "/reservations" 으로 POST 요청 시 예약을 추가한다.
-- [ ] "/reservations/{id}" 으로 DELETE 요청 시 예약을 취소한다.
+- [x] "/reservations" 으로 POST 요청 시 예약을 추가한다.
+- [x] "/reservations/{id}" 으로 DELETE 요청 시 예약을 취소한다.
 
 # API 명세
 

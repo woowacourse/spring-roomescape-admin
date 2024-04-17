@@ -11,7 +11,6 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.ResponseBody;
 
 @Controller
 @RequestMapping("/reservations")
@@ -20,13 +19,11 @@ public class ReservationController {
     private final AtomicLong atomicLong = new AtomicLong();
 
     @GetMapping
-    @ResponseBody
     public ResponseEntity<List<Reservation>> reservations() {
         return ResponseEntity.ok(reservations);
     }
 
     @PostMapping
-    @ResponseBody
     public ResponseEntity<Reservation> create(@RequestBody ReservationRequest reservationRequest) {
         Reservation reservation = new Reservation(
                 atomicLong.incrementAndGet(),

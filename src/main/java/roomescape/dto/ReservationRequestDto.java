@@ -3,15 +3,15 @@ package roomescape.dto;
 public class ReservationRequestDto {
     private String date;
     private String name;
-    private String time;
+    private Long timeId;
 
     public ReservationRequestDto() {
     }
 
-    public ReservationRequestDto(final String date, final String name, final String time) {
+    public ReservationRequestDto(final String date, final String name, final Long timeId) {
         this.date = date;
         this.name = name;
-        this.time = time;
+        this.timeId = timeId;
     }
 
     public String getDate() {
@@ -22,7 +22,7 @@ public class ReservationRequestDto {
         return name;
     }
 
-    public String getTime() {
-        return time;
+    public Long getTimeId() {
+        return timeId;
     }
 }

@@ -1,49 +1,61 @@
 package roomescape.repository;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
 import java.sql.PreparedStatement;
 import java.time.LocalDate;
 import java.time.LocalTime;
 import java.time.format.DateTimeFormatter;
 import java.util.List;
 import java.util.Objects;
+import javax.sql.DataSource;
 import org.springframework.jdbc.core.JdbcTemplate;
+import org.springframework.jdbc.core.namedparam.BeanPropertySqlParameterSource;
+import org.springframework.jdbc.core.namedparam.SqlParameterSource;
+import org.springframework.jdbc.core.simple.SimpleJdbcInsert;
 import org.springframework.jdbc.support.GeneratedKeyHolder;
 import org.springframework.jdbc.support.KeyHolder;
 import org.springframework.stereotype.Repository;
 import roomescape.domain.Reservation;
+import roomescape.domain.ReservationTime;
+import roomescape.dto.ReservationRequestDto;
 
 @Repository
 public class ReservationRepository {
     private final JdbcTemplate jdbcTemplate;
+    private final SimpleJdbcInsert jdbcInsert;
 
-    public ReservationRepository(final JdbcTemplate jdbcTemplate) {
+    public ReservationRepository(final JdbcTemplate jdbcTemplate, final DataSource dataSource) {
         this.jdbcTemplate = jdbcTemplate;
+        this.jdbcInsert = new SimpleJdbcInsert(dataSource)
+                .withTableName("reservation")
+                .usingGeneratedKeyColumns("id");
     }
 
     public Long save(final Reservation reservation) {
-        final String query = "INSERT INTO reservation (name, date, time) VALUES (?, ?, ?)";
-        final KeyHolder keyHolder = new GeneratedKeyHolder();
-
-        jdbcTemplate.update(connection -> {
-            final PreparedStatement preparedStatement = connection.prepareStatement(query, new String[]{"id"});
-            preparedStatement.setString(1, reservation.getName());
-            preparedStatement.setString(2, reservation.getDate());
-            preparedStatement.setString(3, reservation.getTime());
-            return preparedStatement;
-        }, keyHolder);
-
-        return Objects.requireNonNull(keyHolder.getKey()).longValue();
+        SqlParameterSource parameters = new BeanPropertySqlParameterSource(reservation);
+        return jdbcInsert.executeAndReturnKey(parameters).longValue();
     }
 
     public List<Reservation> findAll() {
-        final DateTimeFormatter dateFormatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
-        final DateTimeFormatter timeFormatter = DateTimeFormatter.ofPattern("HH:mm");
+        final String query = """
+                SELECT
+                    r.id as reservation_id,
+                    r.name,
+                    r.date,
+                    t.id as time_id,
+                    t.start_at as time_value
+                FROM reservation as r
+                inner join reservation_time as t
+                on r.time_id = t.id
+                """;
 
-        return jdbcTemplate.query("SELECT id, name, date, time FROM reservation", (resultSet, rowNum) -> {
+        return jdbcTemplate.query(query, (resultSet, rowNum) -> {
             final Long id = resultSet.getLong("id");
             final String name = resultSet.getString("name");
-            final LocalDate date = LocalDate.parse(resultSet.getString("date"), dateFormatter);
-            final LocalTime time = LocalTime.parse(resultSet.getString("time"), timeFormatter);
+            final String date = resultSet.getString("date");
+            final Long timeId = resultSet.getLong("time_id");
+            final String timeValue = resultSet.getString("time_value");
+            final ReservationTime time = new ReservationTime(timeId, timeValue);
 
             return new Reservation(id, name, date, time);
         });

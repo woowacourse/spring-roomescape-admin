@@ -13,16 +13,20 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
 import roomescape.domain.Reservation;
+import roomescape.domain.ReservationTime;
 import roomescape.dto.ReservationRequestDto;
 import roomescape.dto.ReservationResponseDto;
 import roomescape.repository.ReservationRepository;
+import roomescape.repository.ReservationTimeRepository;
 
 @RestController
 public class ReservationController {
     private final ReservationRepository reservationRepository;
+    private final ReservationTimeRepository reservationTimeRepository;
 
-    public ReservationController(final ReservationRepository reservationRepository) {
+    public ReservationController(final ReservationRepository reservationRepository, final ReservationTimeRepository reservationTimeRepository) {
         this.reservationRepository = reservationRepository;
+        this.reservationTimeRepository = reservationTimeRepository;
     }
 
     @GetMapping("/reservations")
@@ -35,10 +39,8 @@ public class ReservationController {
 
     @PostMapping("/reservations")
     public ResponseEntity<ReservationResponseDto> create(@RequestBody final ReservationRequestDto request) {
-        final LocalDate date = LocalDate.parse(request.getDate(), DateTimeFormatter.ofPattern("yyyy-MM-dd"));
-        final LocalTime time = LocalTime.parse(request.getTime(), DateTimeFormatter.ofPattern("HH:mm"));
-
-        final Reservation reservation = new Reservation(request.getName(), date, time);
+        final ReservationTime reservationTime = reservationTimeRepository.findById(request.getTimeId());
+        final Reservation reservation = new Reservation(request.getName(), request.getDate(), reservationTime);
         final Long id = reservationRepository.save(reservation);
 
         return ResponseEntity.created(URI.create("/reservations/" + id))

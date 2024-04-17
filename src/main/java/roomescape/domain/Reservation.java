@@ -6,19 +6,19 @@ import java.time.LocalTime;
 public class Reservation {
     private Long id;
     private String name;
-    private LocalDate date;
-    private LocalTime time;
+    private String date;
+    private ReservationTime time;
 
     public Reservation() {
     }
 
-    public Reservation(final String name, final LocalDate date, final LocalTime time) {
+    public Reservation(final String name, final String date, final ReservationTime time) {
         this.name = name;
         this.date = date;
         this.time = time;
     }
 
-    public Reservation(final Long id, final String name, final LocalDate date, final LocalTime time) {
+    public Reservation(final Long id, final String name, final String date, final ReservationTime time) {
         this.id = id;
         this.name = name;
         this.date = date;
@@ -34,10 +34,14 @@ public class Reservation {
     }
 
     public String getDate() {
-        return date.toString();
+        return date;
     }
 
-    public String getTime() {
-        return time.toString();
+    public ReservationTime getReservationTime() {
+        return time;
+    }
+
+    public Long getTimeId() {
+        return time.getId();
     }
 }

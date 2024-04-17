@@ -3,6 +3,7 @@ package roomescape;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
+import roomescape.dto.ReservationInfoDto;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -32,8 +33,8 @@ public class RoomescapeController {
 
     @PostMapping("/reservations")
     @ResponseBody
-    public ResponseEntity<ReservationInfo> addReservationInfo(@RequestBody ReservationInfo reservationInfo) {
-        ReservationInfo newReservationInfo = ReservationInfo.toEntity(reservationInfo, counter.incrementAndGet());
+    public ResponseEntity<ReservationInfo> addReservationInfo(@RequestBody ReservationInfoDto reservationInfoDto) {
+        ReservationInfo newReservationInfo = reservationInfoDto.toEntity(counter.incrementAndGet());
         reservationInfos.add(newReservationInfo);
         return ResponseEntity.ok(newReservationInfo);
     }

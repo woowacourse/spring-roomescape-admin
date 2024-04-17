@@ -17,16 +17,6 @@ public class ReservationInfo {
         this.time = time;
     }
 
-    public ReservationInfo(String name, String date, String time) {
-        this.name = name;
-        this.date = date;
-        this.time = time;
-    }
-
-    public static ReservationInfo toEntity(ReservationInfo reservationInfo, Long id) {
-        return new ReservationInfo(id, reservationInfo.name, reservationInfo.date, reservationInfo.time);
-    }
-
     public Long getId() {
         return id;
     }

@@ -11,7 +11,7 @@ public record ReservationRequest(
         LocalTime time
 ) {
 
-    public Reservation toReservation(long id) {
+    public Reservation toReservation(Long id) {
         return new Reservation(id, name, LocalDateTime.of(date, time));
     }
 }

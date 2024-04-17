@@ -17,7 +17,7 @@ public class Reservations {
 
     public Reservation findBy(Long id) {
         return reservations.stream()
-                .filter(reservation -> Objects.equals(reservation.getId(), id))
+                .filter(reservation -> reservation.hasSameId(id))
                 .findFirst()
                 .orElseThrow(() -> new IllegalArgumentException(id + "는 존재하지 않습니다."));
     }

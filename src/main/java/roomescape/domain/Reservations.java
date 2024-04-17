@@ -2,6 +2,7 @@ package roomescape.domain;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 
 public class Reservations {
 
@@ -13,6 +14,17 @@ public class Reservations {
 
     public Reservations() {
         this(new ArrayList<>());
+    }
+
+    public void add(Reservation reservation) {
+        reservations.add(reservation);
+    }
+
+    public Reservation find(Long id) {
+        return reservations.stream()
+                .filter(reservation -> Objects.equals(reservation.getId(), id))
+                .findAny()
+                .orElseThrow(IllegalArgumentException::new);
     }
 
     public List<Reservation> getReservations() {

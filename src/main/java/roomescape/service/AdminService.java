@@ -19,4 +19,12 @@ public class AdminService {
     public List<Reservation> getAllReservations() {
         return reservations.getReservations();
     }
+
+    public void addReservation(Reservation reservation) {
+        reservations.add(reservation);
+    }
+
+    public Reservation findReservation(Long id) {
+        return reservations.find(id);
+    }
 }

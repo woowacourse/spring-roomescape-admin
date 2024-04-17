@@ -40,10 +40,7 @@ public class ReservationController {
 
     @DeleteMapping("/{id}")
     public ResponseEntity<Void> deleteReservation(@PathVariable long id) {
-        reservations.stream()
-                .filter(reservation -> reservation.getId() == id)
-                .findFirst()
-                .ifPresent(reservations::remove);
+        reservations.removeIf(reservation -> reservation.getId() == id);
         return ResponseEntity.ok().build();
     }
 }

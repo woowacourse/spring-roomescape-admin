@@ -11,10 +11,12 @@ import org.springframework.web.bind.annotation.RequestBody;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.concurrent.atomic.AtomicLong;
 
 @Controller
 public class ReservationController {
 
+    private AtomicLong index = new AtomicLong(1);
     private List<Reservation> reservations = new ArrayList<>();
 
     @GetMapping("/admin/reservation")
@@ -29,8 +31,9 @@ public class ReservationController {
 
     @PostMapping("/reservations")
     public ResponseEntity<Reservation> addReservation(@RequestBody Reservation reservation) {
-        reservations.add(reservation);
-        return ResponseEntity.ok(reservation);
+        Reservation newReservation = Reservation.toEntity(index.getAndIncrement(), reservation);
+        reservations.add(newReservation);
+        return ResponseEntity.ok(newReservation);
     }
 
     @DeleteMapping("/reservations/{id}")

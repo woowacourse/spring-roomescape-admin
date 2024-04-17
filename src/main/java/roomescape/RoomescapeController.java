@@ -2,7 +2,7 @@ package roomescape;
 
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.*;
 import roomescape.domain.Reservation;
 import roomescape.domain.ReservationDto;
 
@@ -13,7 +13,6 @@ import java.util.concurrent.atomic.AtomicLong;
 
 @Controller
 public class RoomescapeController {
-    private List<Reservation> reservations = List.of(new Reservation((long) 1,"a", LocalDate.now(),LocalTime.now()));
     private List<Reservation> reservations = new ArrayList<>();
     private AtomicLong id = new AtomicLong(1);
 
@@ -39,4 +38,14 @@ public class RoomescapeController {
         return ResponseEntity.ok().body(newReservation);
     }
 
+    @DeleteMapping("/reservations/{id}")
+    public ResponseEntity<Void> delete(@PathVariable Long id) {
+        Reservation reservation = reservations.stream()
+                .filter(target -> Objects.equals(target.getId(), id))
+                .findFirst()
+                .orElseThrow(RuntimeException::new);
+
+        reservations.remove(reservation);
+        return ResponseEntity.ok().build();
+    }
 }

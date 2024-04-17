@@ -39,21 +39,9 @@ public class RoomescapeController {
     @PostMapping("/reservations")
     @ResponseBody
     public ResponseEntity<ReservationDto> addReservation(@RequestBody ReservationDto reservationDto) {
-        Reservation reservation = new Reservation(
-                index.incrementAndGet(),
-                reservationDto.getName(),
-                reservationDto.getDate(),
-                reservationDto.getTime()
-        );
+        Reservation reservation = reservationDto.toEntity(index.incrementAndGet());
         reservations.add(reservation);
-        return ResponseEntity.ok(
-                new ReservationDto(
-                        reservation.getId(),
-                        reservation.getName(),
-                        reservation.getDate(),
-                        reservation.getTime()
-                )
-        );
+        return ResponseEntity.ok(ReservationDto.from(reservation));
     }
 
     @DeleteMapping("/reservations/{id}")

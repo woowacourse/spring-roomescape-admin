@@ -90,3 +90,26 @@ Response
 ```
 HTTP/1.1 200
 ```
+
+# 팀 컨벤션
+
+## 네이밍 컨벤션
+
+- 조작행위 : save(저장) / update(수정) / delete(삭제) / find(조회)
+- 컨트롤러 메서드명 : (조작 행위) - [여러 건] - (자원) - [조건]
+    - 저장 - 자원 : saveUser()
+    - 수정 - 자원 : updateUser()
+    - 삭제 - 자원 : deleteUser()
+    - 조회 - 자원 : findUser()
+    - 조회 - 여러건 - 자원 : findAllUser()
+    - 조회 - 자원 - 이름으로 : findUserByName()
+    - 조회 - 여러건 - 자원 - 이름으로 : findAllUserByName()
+- 요청 DTO : (자원) - (조작 행위)
+    - 자원 - 저장 : UserSaveRequest
+    - 자원 - 수정 : UserUpdateRequest
+    - 자원 - 삭제 : UserDeleteRequest
+- 응답 DTO : (자원) - (조작 행위) - [여러 건] - [조건] (단건은 생략)
+    - 자원 - 조회 : UserFindResponse
+    - 자원 - 조회 - 여러건 : UserFindAllResponse
+    - 자원 - 조회 - 이름으로 : UserFindByNameResponse
+    - 자원 - 조회 - 여러건 - 이름으로 : UserFindAllByNameResponse

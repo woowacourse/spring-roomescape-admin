@@ -13,4 +13,13 @@ class AdminControllerTest {
         Assertions.assertThat(mainPage)
                 .isEqualTo("admin/index");
     }
+
+    @Test
+    @DisplayName("관리자 예약 정보 페이지 경로를 정해진 경로로 매핑한다.")
+    void reservationPage() {
+        AdminController adminController = new AdminController();
+        String reservationPage = adminController.reservationPage();
+        Assertions.assertThat(reservationPage)
+                .isEqualTo("admin/reservation-legacy");
+    }
 }

@@ -20,4 +20,20 @@ public class ReservationResponseDto {
                 reservation.getId(), reservation.getName(), reservation.getDate(), reservation.getTime()
         );
     }
+
+    public long getId() {
+        return id;
+    }
+
+    public String getName() {
+        return name;
+    }
+
+    public String getDate() {
+        return date;
+    }
+
+    public String getTime() {
+        return time;
+    }
 }

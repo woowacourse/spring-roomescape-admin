@@ -27,4 +27,8 @@ public class AdminService {
     public Reservation findReservation(Long id) {
         return reservations.find(id);
     }
+
+    public void deleteReservation(Long id) {
+        System.out.println(reservations.delete(id));
+    }
 }

@@ -1,5 +1,6 @@
 package roomescape;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
 import java.time.LocalDate;
 import java.time.LocalTime;
 import java.time.format.DateTimeFormatter;
@@ -35,7 +36,8 @@ public class ReservationDto {
         return date;
     }
 
-    public String getTime() {
-        return time.format(DateTimeFormatter.ofPattern("HH:mm"));
+    @JsonFormat(pattern = "HH:mm")
+    public LocalTime getTime() {
+        return time;
     }
 }

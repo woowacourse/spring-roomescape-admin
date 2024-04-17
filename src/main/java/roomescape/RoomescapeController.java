@@ -13,8 +13,8 @@ import java.util.concurrent.atomic.AtomicLong;
 
 @Controller
 public class RoomescapeController {
-    private List<Reservation> reservations = new ArrayList<>();
-    private AtomicLong id = new AtomicLong(1);
+    private final List<Reservation> reservations = new ArrayList<>();
+    private final AtomicLong id = new AtomicLong(1);
 
     @GetMapping("admin")
     public String admin() {

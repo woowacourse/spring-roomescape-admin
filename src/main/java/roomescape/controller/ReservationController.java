@@ -40,7 +40,7 @@ public class ReservationController {
     }
 
     @DeleteMapping("/{id}")
-    public ResponseEntity<Void> delete(final @PathVariable("id") Long id) {
+    public ResponseEntity<Void> delete(@PathVariable("id") final Long id) {
         final Optional<Reservation> findReservation = reservations.stream()
                 .filter(reservation -> reservation.getId().equals(id))
                 .findAny();

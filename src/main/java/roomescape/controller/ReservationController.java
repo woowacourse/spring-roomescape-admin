@@ -10,6 +10,9 @@ import roomescape.repository.ReservationRepository;
 
 import java.util.List;
 
+import static java.util.stream.Collectors.collectingAndThen;
+import static java.util.stream.Collectors.toList;
+
 @Controller
 @RequestMapping("/reservations")
 public class ReservationController {
@@ -22,11 +25,10 @@ public class ReservationController {
 
     @GetMapping
     public ResponseEntity<List<ReservationResponse>> getReservations() {
-        List<ReservationResponse> reservations = reservationRepository.findAll()
+        return reservationRepository.findAll()
                 .stream()
                 .map(ReservationResponse::from)
-                .toList();
-        return ResponseEntity.ok(reservations);
+                .collect(collectingAndThen(toList(), ResponseEntity::ok));
     }
 
     @PostMapping
@@ -40,6 +42,7 @@ public class ReservationController {
     @DeleteMapping("/{id}")
     public ResponseEntity<Void> deleteReservation(@PathVariable Long id) {
         reservationRepository.deleteById(id);
-        return ResponseEntity.ok().build();
+        return ResponseEntity.ok()
+                .build();
     }
 }

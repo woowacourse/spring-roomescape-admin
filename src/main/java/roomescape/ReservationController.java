@@ -3,6 +3,7 @@ package roomescape;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
+import roomescape.domain.Reservation;
 
 import java.util.ArrayList;
 import java.util.List;

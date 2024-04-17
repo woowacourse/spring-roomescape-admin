@@ -34,9 +34,8 @@ public class ReservationController {
     public ReservationResponseDto saveReservation(
             @RequestBody final ReservationRequestDto reservationRequestDto) {
         final Reservation reservation = reservationRequestDto.toEntity(id.getAndIncrement());
-        final ReservationResponseDto reservationResponseDto = ReservationResponseDto.from(reservation);
         reservations.add(reservation);
-        return reservationResponseDto;
+        return ReservationResponseDto.from(reservation);
     }
 
     @DeleteMapping("/{id}")

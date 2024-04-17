@@ -23,7 +23,7 @@ public class ReservationController {
     private final List<Reservation> reservations = new ArrayList<>();
     private final AtomicLong index = new AtomicLong(1);
 
-    @GetMapping("")
+    @GetMapping
     public ResponseEntity<List<ReservationResponse>> read() {
         List<ReservationResponse> reservationResponses = reservations.stream()
                 .map(ReservationResponse::from)
@@ -33,7 +33,7 @@ public class ReservationController {
                 .body(reservationResponses);
     }
 
-    @PostMapping("")
+    @PostMapping
     public ResponseEntity<ReservationResponse> create(@RequestBody ReservationRequest reservationRequest) {
         Reservation reservation = reservationRequest.toReservation(index.getAndIncrement());
         reservations.add(reservation);

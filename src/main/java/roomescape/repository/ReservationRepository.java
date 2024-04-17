@@ -3,24 +3,23 @@ package roomescape.repository;
 import roomescape.domain.Reservation;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 public class ReservationRepository {
-    private final List<Reservation> reservations = new ArrayList<>();
+    private final Map<Long, Reservation> reservations = new HashMap<>();
 
     public void save(Reservation reservation) {
-        reservations.add(reservation);
+        reservations.put(reservation.getId(), reservation);
     }
 
     public List<Reservation> findAll() {
-        return new ArrayList<>(reservations);
+        return new ArrayList<>(reservations.values());
     }
 
     public void deleteById(Long id) {
-        Reservation target = reservations.stream()
-                .filter(reservation -> reservation.isSameId(id))
-                .findFirst()
-                .orElseThrow(() -> new IllegalArgumentException("해당 ID의 예약이 없습니다."));
+        Reservation target = reservations.get(id);
         reservations.remove(target);
     }
 }

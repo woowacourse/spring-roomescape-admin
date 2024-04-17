@@ -3,20 +3,34 @@ package roomescape;
 import io.restassured.RestAssured;
 import io.restassured.http.ContentType;
 import io.restassured.response.Response;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.boot.test.web.server.LocalServerPort;
 import org.springframework.http.HttpStatus;
-import org.springframework.test.annotation.DirtiesContext;
 import roomescape.dto.ReservationRequest;
 import roomescape.dto.ReservationResponse;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertAll;
 
-@SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.DEFINED_PORT)
-@DirtiesContext(classMode = DirtiesContext.ClassMode.BEFORE_EACH_TEST_METHOD)
+@SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 public class ReservationControllerTest {
+
+    @LocalServerPort
+    private int port;
+
+    @BeforeEach
+    void init() {
+        RestAssured.port = port;
+
+        RestAssured.given().log().all()
+                .when().get("/reservations")
+                .then().log().all().extract().response().jsonPath().getList("id")
+                .forEach(id -> RestAssured.given().log().all()
+                        .when().delete("/reservations/" + id));
+    }
 
     @DisplayName("예약 추가 테스트")
     @Test
@@ -50,10 +64,16 @@ public class ReservationControllerTest {
     void deleteReservation() {
         createReservation();
 
-        Response response = RestAssured.given().log().all()
+        Response deleteResponse = RestAssured.given().log().all()
                 .when().delete("/reservations/1")
                 .then().log().all().extract().response();
+        Response getResponse = RestAssured.given().log().all()
+                .when().get("/reservations")
+                .then().log().all().extract().response();
 
-        assertThat(response.getStatusCode()).isEqualTo(HttpStatus.OK.value());
+        assertAll(
+                () -> assertThat(deleteResponse.getStatusCode()).isEqualTo(HttpStatus.OK.value()),
+                () -> assertThat(getResponse.jsonPath().getList("", ReservationResponse.class)).hasSize(0)
+        );
     }
 }

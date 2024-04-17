@@ -31,8 +31,7 @@ public class ReservationController {
     }
 
     @PostMapping
-    public ReservationResponse saveReservation(
-            @RequestBody final ReservationRequest reservationRequest) {
+    public ReservationResponse save(@RequestBody final ReservationRequest reservationRequest) {
         final Reservation reservation = reservationRequest.toEntity(id.getAndIncrement());
         reservations.add(reservation);
         return ReservationResponse.from(reservation);

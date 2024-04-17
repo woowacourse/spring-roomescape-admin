@@ -1,22 +1,17 @@
 package roomescape.controller;
 
+import org.springframework.http.ResponseEntity;
+import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.*;
+import roomescape.controller.dto.ReservationDto;
+import roomescape.entity.Reservation;
+
 import java.time.LocalDate;
 import java.time.LocalTime;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.NoSuchElementException;
 import java.util.concurrent.atomic.AtomicLong;
-import org.springframework.http.ResponseEntity;
-import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.DeleteMapping;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.ResponseBody;
-import roomescape.controller.dto.ReservationDto;
-import roomescape.entity.Reservation;
 
 @RequestMapping("/reservations")
 @Controller
@@ -35,9 +30,9 @@ public class ReservationController {
     @ResponseBody
     public Reservation createReservation(@RequestBody ReservationDto reservationDto) {
         long id = index.getAndIncrement();
-        String name = reservationDto.getName();
-        LocalDate date = reservationDto.getDate();
-        LocalTime time = reservationDto.getTime();
+        String name = reservationDto.name();
+        LocalDate date = reservationDto.date();
+        LocalTime time = reservationDto.time();
 
         Reservation newReservation = new Reservation(id, name, date, time);
         reservations.add(newReservation);

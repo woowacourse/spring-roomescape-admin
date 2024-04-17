@@ -34,6 +34,10 @@ public class Reservation {
         return date;
     }
 
+    public Long getTimeId() {
+        return time.getId();
+    }
+
     public ReservationTime getReservationTime() {
         return time;
     }

@@ -3,8 +3,11 @@ package roomescape.dto;
 import roomescape.domain.ReservationTime;
 
 public class ReservationTimeResponseDto {
-    private final Long id;
-    private final String startAt;
+    private Long id;
+    private String startAt;
+
+    public ReservationTimeResponseDto() {
+    }
 
     public ReservationTimeResponseDto(final ReservationTime reservationTime) {
         this.id = reservationTime.getId();

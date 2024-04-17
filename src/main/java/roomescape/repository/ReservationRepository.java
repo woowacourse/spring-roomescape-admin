@@ -3,7 +3,7 @@ package roomescape.repository;
 import java.util.List;
 import javax.sql.DataSource;
 import org.springframework.jdbc.core.JdbcTemplate;
-import org.springframework.jdbc.core.namedparam.BeanPropertySqlParameterSource;
+import org.springframework.jdbc.core.namedparam.MapSqlParameterSource;
 import org.springframework.jdbc.core.namedparam.SqlParameterSource;
 import org.springframework.jdbc.core.simple.SimpleJdbcInsert;
 import org.springframework.stereotype.Repository;
@@ -23,7 +23,10 @@ public class ReservationRepository {
     }
 
     public Long save(final Reservation reservation) {
-        SqlParameterSource parameters = new BeanPropertySqlParameterSource(reservation);
+        SqlParameterSource parameters = new MapSqlParameterSource()
+                .addValue("name", reservation.getName())
+                .addValue("date", reservation.getDate())
+                .addValue("time_id", reservation.getTimeId());
         return jdbcInsert.executeAndReturnKey(parameters).longValue();
     }
 

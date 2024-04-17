@@ -1,6 +1,5 @@
 package roomescape;
 
-import static org.hamcrest.Matchers.equalTo;
 import static org.hamcrest.Matchers.is;
 
 import io.restassured.RestAssured;
@@ -29,10 +28,7 @@ public class MissionStepTest {
                 .when().get("/admin/reservation")
                 .then().log().all()
                 .statusCode(200);
-    }
 
-    @Test
-    void 이단계_api() {
         RestAssured.given().log().all()
                 .when().get("/reservations")
                 .then().log().all()
@@ -42,14 +38,14 @@ public class MissionStepTest {
 
     @Test
     void 삼단계() {
-        Map<String, String> params = new HashMap<>();
-        params.put("name", "브라운");
-        params.put("date", "2023-08-05");
-        params.put("time", "15:40");
+        Map<String, String> param = new HashMap<>();
+        param.put("name", "브라운");
+        param.put("date", "2023-08-05");
+        param.put("time", "15:40");
 
         RestAssured.given().log().all()
                 .contentType(ContentType.JSON)
-                .body(params)
+                .body(param)
                 .when().post("/reservations")
                 .then().log().all()
                 .statusCode(200)

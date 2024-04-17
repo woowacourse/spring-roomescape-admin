@@ -2,7 +2,6 @@ package roomescape;
 
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
-import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -20,7 +19,7 @@ public class ReservationController {
     private List<Reservation> reservations = new ArrayList<>();
 
     @GetMapping("/admin/reservation")
-    public String reservationPage(Model model) {
+    public String reservationPage() {
         return "admin/reservation-legacy";
     }
 

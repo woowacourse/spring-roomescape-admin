@@ -6,6 +6,7 @@ import org.springframework.web.bind.annotation.*;
 import roomescape.domain.Reservation;
 import roomescape.dto.ReservationResponse;
 import roomescape.dto.ReservationSaveRequest;
+import roomescape.mapper.ReservationMapper;
 import roomescape.repository.ReservationRepository;
 
 import java.net.URI;
@@ -15,6 +16,7 @@ import java.util.concurrent.atomic.AtomicLong;
 @Controller
 public class RoomEscapeController {
     private final ReservationRepository reservationRepository = new ReservationRepository();
+    private final ReservationMapper reservationMapper = new ReservationMapper();
     private final AtomicLong index = new AtomicLong(1);
 
     @GetMapping("/admin")
@@ -31,7 +33,7 @@ public class RoomEscapeController {
     public ResponseEntity<List<ReservationResponse>> getReservations() {
         var reservationResponses = reservationRepository.findAll()
                 .stream()
-                .map(Reservation::toDto)
+                .map(reservationMapper::mapToResponse)
                 .toList();
         return ResponseEntity.ok(reservationResponses);
     }
@@ -39,9 +41,11 @@ public class RoomEscapeController {
     @PostMapping("/reservations")
     public ResponseEntity<ReservationResponse> createReservation(@RequestBody ReservationSaveRequest request) {
         long id = index.getAndIncrement();
-        Reservation reservation = request.toReservation(id);
+        Reservation reservation = reservationMapper.mapToReservation(id, request);
         reservationRepository.save(reservation);
-        return ResponseEntity.created(URI.create("/reservations/" + id)).body(reservation.toDto());
+
+        ReservationResponse response = reservationMapper.mapToResponse(reservation);
+        return ResponseEntity.created(URI.create("/reservations/" + id)).body(response);
     }
 
     @DeleteMapping("/reservations/{id}")

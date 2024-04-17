@@ -4,5 +4,5 @@
 - [x] repository로 atomic 등 이동
 - [x] response도 dto로 변환해서 보내기 (Q. 변환하는게 왜 좋지?)
 - [x] 공통되는 url requestMapping으로 빼기 (Q. 이렇게 쓰는 게 맞나?)
-- [ ] repository의 db 경우 고려 interface 분리
+- [x] repository의 db 경우 고려 interface 분리
 - [ ] TODO 제거

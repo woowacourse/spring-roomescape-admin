@@ -5,6 +5,7 @@ import java.util.concurrent.atomic.AtomicLong;
 import roomescape.domain.Reservation;
 import roomescape.dto.ReservationRequest;
 import roomescape.dto.ReservationResponse;
+import roomescape.repository.InMemoryReservationRepository;
 import roomescape.repository.ReservationRepository;
 
 public class ReservationService {
@@ -13,7 +14,7 @@ public class ReservationService {
     private final AtomicLong index;
 
     public ReservationService() {
-        this.reservationRepository = new ReservationRepository();
+        this.reservationRepository = new InMemoryReservationRepository();
         this.index = new AtomicLong(1);
     }
 

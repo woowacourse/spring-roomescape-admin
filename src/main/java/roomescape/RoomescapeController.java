@@ -15,7 +15,7 @@ import org.springframework.web.bind.annotation.ResponseBody;
 @Controller
 public class RoomescapeController {
 
-    private AtomicLong index = new AtomicLong(0);
+    private final AtomicLong index = new AtomicLong(1);
     private final List<Reservation> reservations = new ArrayList<>();
 
     @GetMapping("/admin")
@@ -39,7 +39,7 @@ public class RoomescapeController {
     @PostMapping("/reservations")
     @ResponseBody
     public ResponseEntity<ReservationDto> addReservation(@RequestBody ReservationDto reservationDto) {
-        Reservation reservation = reservationDto.toEntity(index.incrementAndGet());
+        Reservation reservation = reservationDto.toEntity(index.getAndIncrement());
         reservations.add(reservation);
         return ResponseEntity.ok(ReservationDto.from(reservation));
     }

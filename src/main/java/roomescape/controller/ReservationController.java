@@ -1,5 +1,12 @@
 package roomescape.controller;
 
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.*;
+import roomescape.domain.Reservation;
+import roomescape.dto.ReservationRequestDto;
+import roomescape.dto.ReservationResponseDto;
+
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.LocalTime;
@@ -7,17 +14,6 @@ import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.atomic.AtomicLong;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.DeleteMapping;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RestController;
-import roomescape.domain.Reservation;
-import roomescape.dto.ReservationRequestDto;
-import roomescape.dto.ReservationResponseDto;
 
 @RestController
 public class ReservationController {
@@ -27,8 +23,8 @@ public class ReservationController {
     @GetMapping("/reservations")
     public List<ReservationResponseDto> reservations() {
         return reservations.stream()
-                .map(ReservationResponseDto::new)
-                .toList();
+                           .map(ReservationResponseDto::new)
+                           .toList();
     }
 
     @PostMapping("/reservations")
@@ -44,7 +40,7 @@ public class ReservationController {
     }
 
     @DeleteMapping("/reservations/{id}")
-    public ResponseEntity<Void> delete(@PathVariable("id") final Long id) {
+    public ResponseEntity<Void> delete(@PathVariable final Long id) {
         reservations.removeIf(it -> it.getId().equals(id));
         return new ResponseEntity<>(HttpStatus.OK);
     }

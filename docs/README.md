@@ -40,7 +40,7 @@ Content-Type: application/json
 - request
 ```
 POST /reservations HTTP/1.1
-Content-type: application/json
+content-type: application/json
 
 {
     "date": "2023-08-05",
@@ -50,9 +50,15 @@ Content-type: application/json
 ```
 - response
 ```
-HTTP/1.1 201
-Location: /reservations/{id} 
+HTTP/1.1 200 
 Content-Type: application/json
+
+{
+    "id": 1,
+    "name": "브라운",
+    "date": "2023-08-05",
+    "time": "15:40"
+}
 ```
 
 ### 예약 삭제

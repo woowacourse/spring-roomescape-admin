@@ -8,7 +8,7 @@ import java.util.List;
 public interface ReservationDao {
     List<ReservationEntity> findAll();
 
-    long save(Reservation reservation);
+    ReservationEntity save(Reservation reservation);
 
     boolean existsById(long id);
 

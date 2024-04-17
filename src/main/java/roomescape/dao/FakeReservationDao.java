@@ -22,10 +22,10 @@ public class FakeReservationDao implements ReservationDao {
     }
 
     @Override
-    public long save(Reservation reservation) {
+    public ReservationEntity save(Reservation reservation) {
         long id = index.getAndIncrement();
         reservations.put(id, reservation);
-        return id;
+        return new ReservationEntity(id, reservation);
     }
 
     @Override

@@ -47,7 +47,10 @@ public class ReservationControllerTest {
                 .then().log().all().extract().response();
 
         //then
-        assertThat(response.getStatusCode()).isEqualTo(HttpStatus.CREATED.value());
+        assertAll(
+                () -> assertThat(response.getStatusCode()).isEqualTo(HttpStatus.OK.value()),
+                () -> assertThat(reservationDao.findAll()).hasSize(1)
+        );
     }
 
     @DisplayName("모든 예약 내역 조회 테스트")
@@ -74,7 +77,7 @@ public class ReservationControllerTest {
     void deleteReservationSuccess() {
         //given
         Reservation reservation = new Reservation("브라운", "2023-08-05", "15:40");
-        long id = reservationDao.save(reservation);
+        long id = reservationDao.save(reservation).getId();
 
         //when
         Response deleteResponse = RestAssured.given().log().all()

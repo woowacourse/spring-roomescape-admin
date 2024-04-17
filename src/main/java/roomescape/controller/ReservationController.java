@@ -10,7 +10,6 @@ import roomescape.dto.ReservationRequest;
 import roomescape.dto.ReservationResponse;
 import roomescape.entity.ReservationEntity;
 
-import java.net.URI;
 import java.util.List;
 
 @Controller
@@ -32,14 +31,15 @@ public class ReservationController {
                 .toList();
     }
 
+    @ResponseBody
     @PostMapping("")
-    public ResponseEntity<Void> createReservation(@RequestBody ReservationRequest reservationRequest) {
+    public ReservationResponse createReservation(@RequestBody ReservationRequest reservationRequest) {
         Reservation reservation = new Reservation(
                 reservationRequest.name(),
                 reservationRequest.date(),
                 reservationRequest.time());
-        long id = reservationDao.save(reservation);
-        return ResponseEntity.created(URI.create("/reservations/" + id)).build();
+        ReservationEntity reservationEntity = reservationDao.save(reservation);
+        return new ReservationResponse(reservationEntity);
     }
 
     @DeleteMapping("/{id}")

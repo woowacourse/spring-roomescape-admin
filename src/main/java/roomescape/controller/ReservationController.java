@@ -27,7 +27,7 @@ public class ReservationController {
     public String getReservationPage(Model model) {
         List<ReservationResponse> reservationResponses = reservations.getReservations()
                 .stream()
-                .map(ReservationResponse::fromEntity).toList();
+                .map(ReservationResponse::fromReservation).toList();
         model.addAttribute("reservationResponses", reservationResponses);
         return "/admin/reservation-legacy";
     }
@@ -36,16 +36,16 @@ public class ReservationController {
     public ResponseEntity<List<ReservationResponse>> getReservations() {
         List<ReservationResponse> reservationResponses = reservations.getReservations()
                 .stream()
-                .map(ReservationResponse::fromEntity).toList();
+                .map(ReservationResponse::fromReservation).toList();
         return ResponseEntity.ok(reservationResponses);
     }
 
     @PostMapping("/reservations")
     public ResponseEntity<ReservationResponse> createReservations(@RequestBody ReservationCreateRequest reservationCreateRequest) {
-        Reservation reservation = reservationCreateRequest.toEntity(id.incrementAndGet());
+        Reservation reservation = reservationCreateRequest.toReservation(id.incrementAndGet());
         reservations.add(reservation);
 
-        ReservationResponse reservationResponse = ReservationResponse.fromEntity(reservation);
+        ReservationResponse reservationResponse = ReservationResponse.fromReservation(reservation);
         return ResponseEntity.ok(reservationResponse);
     }
 

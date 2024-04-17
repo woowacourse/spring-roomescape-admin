@@ -6,7 +6,7 @@ import roomescape.domain.Reservation;
 
 public record ReservationCreateRequest(String name, LocalDate date, LocalTime time) {
 
-    public Reservation toEntity(Long index) {
-        return new Reservation(index, name, date, time);
+    public Reservation toReservation(Long id) {
+        return new Reservation(id, name, date, time);
     }
 }

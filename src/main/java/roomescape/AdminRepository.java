@@ -27,7 +27,12 @@ public class AdminRepository {
         reservations.remove(id);
     }
 
+    public void deleteAll() {
+        reservations.clear();
+    }
+
     public Map<Long, Reservation> getReservations() {
         return reservations;
     }
+
 }

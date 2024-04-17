@@ -46,4 +46,9 @@ public class AdminController {
         adminRepository.deleteReservation(id);
         return ResponseEntity.ok().build();
     }
+
+    @DeleteMapping("/reservations")
+    public void deleteAllReservations() {
+        adminRepository.deleteAll();
+    }
 }

@@ -44,7 +44,10 @@ public class ReservationController {
         final Optional<Reservation> findReservation = reservations.stream()
                 .filter(reservation -> reservation.getId().equals(id))
                 .findAny();
-        findReservation.ifPresent(reservations::remove);
+        if (findReservation.isEmpty()) {
+            return ResponseEntity.notFound().build();
+        }
+        reservations.remove(findReservation.get());
         return ResponseEntity.ok().build();
     }
 }

@@ -135,3 +135,9 @@ HTTP/1.1 200
 역직렬화 할 땐 Spring이 기본 JSON 컨버터로 Jackson 을 가져 JsonFormat과 DateTimeFormat 둘다 사용 가능하다.
 
 [참고](https://jojoldu.tistory.com/361)
+
+## 레이어 분리해준 이유
+
+- Web : request/responseDTO로 web과 상호작용
+- Domain : request/responseDTO를 entity에 매핑해 web과 database 사이를 연결
+- Dao : entity로 database와 상호작용

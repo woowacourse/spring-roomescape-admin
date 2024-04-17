@@ -43,6 +43,6 @@ public class ReservationController {
                 .orElseThrow(() -> new IllegalArgumentException("해당 id(%d)의 예약이 존재하지 않습니다.".formatted(id)));
 
         reservations.remove(findReservation);
-        return ResponseEntity.ok().build();
+        return ResponseEntity.noContent().build();
     }
 }

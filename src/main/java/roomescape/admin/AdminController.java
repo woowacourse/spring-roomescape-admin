@@ -22,7 +22,7 @@ public class AdminController {
 
     @GetMapping
     public String admin() {
-        return "index";
+        return "admin/index";
     }
 
     @GetMapping("/reservation")

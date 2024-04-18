@@ -1,17 +1,21 @@
 package roomescape.controller;
 
+import java.net.URI;
+import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.DeleteMapping;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
 import roomescape.dao.ReservationDao;
 import roomescape.domain.Reservation;
 import roomescape.dto.ReservationRequest;
 import roomescape.dto.ReservationResponse;
 import roomescape.entity.ReservationEntity;
-
-import java.net.URI;
-import java.util.List;
 
 @Controller
 @RequestMapping("/reservations")
@@ -23,17 +27,17 @@ public class ReservationController {
         this.reservationDao = reservationDao;
     }
 
-    @ResponseBody
     @GetMapping()
-    public List<ReservationResponse> findAllReservations() {
+    public ResponseEntity<List<ReservationResponse>> findAllReservations() {
         List<ReservationEntity> reservations = reservationDao.findAll();
-        return reservations.stream()
+        return ResponseEntity.ok(reservations.stream()
                 .map(ReservationResponse::new)
-                .toList();
+                .toList());
     }
 
     @PostMapping()
-    public ResponseEntity<Void> createReservation(@RequestBody ReservationRequest reservationRequest) {
+    public ResponseEntity<Void> createReservation(
+            @RequestBody ReservationRequest reservationRequest) {
         Reservation reservation = new Reservation(
                 reservationRequest.name(),
                 reservationRequest.date(),

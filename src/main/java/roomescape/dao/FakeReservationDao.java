@@ -1,13 +1,12 @@
 package roomescape.dao;
 
-import org.springframework.stereotype.Component;
-import roomescape.domain.Reservation;
-import roomescape.entity.ReservationEntity;
-
 import java.util.List;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.atomic.AtomicLong;
+import org.springframework.stereotype.Component;
+import roomescape.domain.Reservation;
+import roomescape.entity.ReservationEntity;
 
 @Component
 public class FakeReservationDao implements ReservationDao {
@@ -29,12 +28,12 @@ public class FakeReservationDao implements ReservationDao {
     }
 
     @Override
-    public boolean existsById(final long id) {
+    public boolean existsById(long id) {
         return reservations.keySet().stream().anyMatch(key -> key == id);
     }
 
     @Override
-    public void deleteById(final long id) {
+    public void deleteById(long id) {
         reservations.remove(id);
     }
 }

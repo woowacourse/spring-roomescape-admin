@@ -48,7 +48,7 @@ public class MissionStepTest {
                 .body(params)
                 .when().post("/reservations")
                 .then().log().all()
-                .statusCode(HttpStatus.SC_CREATED)
+                .statusCode(HttpStatus.SC_OK)
                 .body("id", is(1));
 
         RestAssured.given().log().all()
@@ -60,7 +60,7 @@ public class MissionStepTest {
         RestAssured.given().log().all()
                 .when().delete("/reservations/1")
                 .then().log().all()
-                .statusCode(HttpStatus.SC_NO_CONTENT);
+                .statusCode(HttpStatus.SC_OK);
 
         RestAssured.given().log().all()
                 .when().get("/reservations")

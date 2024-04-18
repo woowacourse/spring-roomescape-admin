@@ -14,7 +14,6 @@ import roomescape.storage.ReservationStorage;
 
 @RestController
 public class ReservationController {
-
     private final ReservationStorage reservationStorage;
 
     public ReservationController(ReservationStorage reservationStorage) {

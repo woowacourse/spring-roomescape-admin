@@ -33,7 +33,7 @@ public class ReservationApiController {
     public List<ReservationResponseDto> getReservations() {
         List<Reservation> reservations = reservationDao.findReservations();
         return reservations.stream()
-                .map(ReservationResponseDto::new)
+                .map(ReservationResponseDto::from)
                 .toList();
     }
 
@@ -45,7 +45,7 @@ public class ReservationApiController {
                 .buildAndExpand(reservation.getId())
                 .toUri();
 
-        return ResponseEntity.created(location).body(new ReservationResponseDto(reservation));
+        return ResponseEntity.created(location).body(ReservationResponseDto.from(reservation));
     }
 
     @DeleteMapping("/{id}")

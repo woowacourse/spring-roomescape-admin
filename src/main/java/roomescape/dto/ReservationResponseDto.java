@@ -9,11 +9,19 @@ public class ReservationResponseDto {
     private final String date;
     private final String time;
 
-    public ReservationResponseDto(Reservation reservation) {
-        this.id = reservation.getId();
-        this.name = reservation.getName();
-        this.date = reservation.getDate().toString();
-        this.time = reservation.getTime().toString();
+    private ReservationResponseDto(Long id, String name, String date, String time) {
+        this.id = id;
+        this.name = name;
+        this.date = date;
+        this.time = time;
+    }
+
+    public static ReservationResponseDto from(Reservation reservation) {
+        return new ReservationResponseDto(reservation.getId(),
+                reservation.getName(),
+                reservation.getDate().toString(),
+                reservation.getTime().toString()
+        );
     }
 
     public Long getId() {

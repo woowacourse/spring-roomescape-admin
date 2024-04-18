@@ -38,7 +38,7 @@ public class ReservationController {
     @DeleteMapping("/reservations/{id}")
     public ResponseEntity<Void> deleteReservation(@PathVariable Long id) {
         Reservation reservationToDeleted = reservations.stream()
-                .filter(reservation -> reservation.getId().equals(id))
+                .filter(reservation -> reservation.isSameReservation(id))
                 .findFirst()
                 .orElseThrow(() -> new IllegalArgumentException("존재하지 않는 예약 아이디 입니다."));
 

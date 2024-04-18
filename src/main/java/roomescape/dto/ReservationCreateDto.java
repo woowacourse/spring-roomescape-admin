@@ -1,5 +1,7 @@
 package roomescape.dto;
 
+import roomescape.domain.Reservation;
+
 public class ReservationCreateDto {
     private String name;
     private String date;
@@ -12,6 +14,10 @@ public class ReservationCreateDto {
         this.name = name;
         this.date = date;
         this.time = time;
+    }
+
+    public Reservation createReservation(long id) {
+        return new Reservation(id, name, date, time);
     }
 
     public String getName() {

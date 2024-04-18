@@ -1,3 +1,6 @@
+### 웰컴 페이지
+GET localhost:8080/
+
 ### 예약 정보 요청
 GET localhost:8080/reservations
 

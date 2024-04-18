@@ -16,12 +16,13 @@ public class ReservationTimeRepository {
     @Autowired
     private JdbcTemplate jdbcTemplate;
 
-    public Long add(ReservationTimeDto reservationTimeDto) {
+    public ReservationTimeDto add(ReservationTimeDto reservationTimeDto) {
         SimpleJdbcInsert simpleJdbcInsert = new SimpleJdbcInsert(jdbcTemplate)
                 .withTableName("reservation_time")
                 .usingGeneratedKeyColumns("id");
         SqlParameterSource sqlParameterSource = new BeanPropertySqlParameterSource(reservationTimeDto);
-        return simpleJdbcInsert.executeAndReturnKey(sqlParameterSource).longValue();
+        Long id = simpleJdbcInsert.executeAndReturnKey(sqlParameterSource).longValue();
+        return new ReservationTimeDto(id, reservationTimeDto.startAt());
     }
 
     public ReservationTimeDto findById(Long id) {

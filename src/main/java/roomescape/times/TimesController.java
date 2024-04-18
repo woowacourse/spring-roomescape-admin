@@ -32,8 +32,7 @@ public class TimesController {
     @ResponseBody
     public ResponseTimes addTimes(@RequestBody RequestTimes requestTimes) {
         ReservationTimeDto reservationTimeDto = new ReservationTimeDto(null, requestTimes.startAt());
-        Long id = reservationTimeRepository.add(reservationTimeDto);
-        ReservationTimeDto newReservationTimeDto = new ReservationTimeDto(id, reservationTimeDto.startAt());
+        ReservationTimeDto newReservationTimeDto = reservationTimeRepository.add(reservationTimeDto);
         ReservationTime newReservationTime = newReservationTimeDto.toDomain();
         return new ResponseTimes(newReservationTime);
     }

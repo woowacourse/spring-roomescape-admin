@@ -10,6 +10,6 @@ public record ReservationSaveRequest(
         String name,
         @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "HH:mm") LocalTime time) {
     public Reservation toDomain() {
-        return new Reservation(this.name(), this.date(), this.time());
+        return new Reservation(name, date, time);
     }
 }

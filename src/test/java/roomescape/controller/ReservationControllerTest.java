@@ -1,4 +1,4 @@
-package roomescape;
+package roomescape.controller;
 
 import io.restassured.RestAssured;
 import io.restassured.http.ContentType;
@@ -13,16 +13,7 @@ import static org.hamcrest.Matchers.is;
 
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.DEFINED_PORT)
 @DirtiesContext(classMode = DirtiesContext.ClassMode.BEFORE_EACH_TEST_METHOD)
-public class MissionStepTest {
-
-    @Test
-    @DisplayName("어드민 메인 페이지로 정상적으로 이동한다.")
-    void moveToAdminMainPage_Success() {
-        RestAssured.given().log().all()
-                .when().get("/admin")
-                .then().log().all()
-                .statusCode(200);
-    }
+public class ReservationControllerTest {
 
     @Test
     @DisplayName("예약 페이지 요청이 정상적으로 수행된다.")

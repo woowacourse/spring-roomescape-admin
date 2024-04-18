@@ -5,12 +5,6 @@ public class ReservationRequestDto {
     private final String name;
     private final String time;
 
-    public ReservationRequestDto() {
-        this.date = null;
-        this.name = null;
-        this.time = null;
-    }
-
     public ReservationRequestDto(final String date, final String name, final String time) {
         this.date = date;
         this.name = name;

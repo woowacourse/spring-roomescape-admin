@@ -1,20 +1,20 @@
 package roomescape.controller;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.concurrent.atomic.AtomicLong;
-import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
-import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RestController;
 import roomescape.domain.Reservation;
 import roomescape.dto.ReservationDto;
 
-@Controller
+import java.util.ArrayList;
+import java.util.List;
+import java.util.concurrent.atomic.AtomicLong;
+
+@RestController
 public class ReservationController {
     private final List<Reservation> reservations = new ArrayList<>();
     private final AtomicLong index = new AtomicLong(0);
@@ -25,9 +25,7 @@ public class ReservationController {
                 .map(ReservationDto::from)
                 .toList();
 
-        return ResponseEntity.ok()
-                .contentType(MediaType.APPLICATION_JSON)
-                .body(reservationDtos);
+        return ResponseEntity.ok(reservationDtos);
     }
 
     @PostMapping("/reservations")
@@ -36,9 +34,7 @@ public class ReservationController {
                 reservation.getDate(), reservation.getTime());
         reservations.add(newReservation);
 
-        return ResponseEntity.ok()
-                .contentType(MediaType.APPLICATION_JSON)
-                .body(ReservationDto.from(newReservation));
+        return ResponseEntity.ok(ReservationDto.from(newReservation));
     }
 
     @DeleteMapping("/reservations/{id}")

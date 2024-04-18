@@ -4,7 +4,7 @@ import java.time.LocalDate;
 import java.time.LocalTime;
 import java.util.concurrent.atomic.AtomicLong;
 
-public class ReservationEntity {
+public class Reservation {
 
     private static final AtomicLong INDEX = new AtomicLong(1);
 
@@ -13,7 +13,7 @@ public class ReservationEntity {
     private final LocalDate date;
     private final LocalTime time;
 
-    public ReservationEntity(String name, LocalDate date, LocalTime time) {
+    public Reservation(String name, LocalDate date, LocalTime time) {
         this.id = INDEX.getAndIncrement();
         this.name = name;
         this.date = date;

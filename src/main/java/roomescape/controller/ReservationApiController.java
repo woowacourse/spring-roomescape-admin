@@ -9,16 +9,16 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import roomescape.dto.ReservationRequestDto;
 import roomescape.dto.ReservationResponseDto;
-import roomescape.entity.ReservationEntity;
+import roomescape.entity.Reservation;
 import java.util.List;
 
 @RestController
 @RequestMapping("/reservations")
 public class ReservationApiController {
 
-    private final List<ReservationEntity> reservationEntities;
+    private final List<Reservation> reservationEntities;
 
-    public ReservationApiController(List<ReservationEntity> reservationEntities) {
+    public ReservationApiController(List<Reservation> reservationEntities) {
         this.reservationEntities = reservationEntities;
     }
 
@@ -33,13 +33,13 @@ public class ReservationApiController {
     public ReservationResponseDto createReservation(
             @RequestBody ReservationRequestDto reservationRequestDto) {
 
-        ReservationEntity reservation = reservationRequestDto.toEntity();
+        Reservation reservation = reservationRequestDto.toEntity();
         reservationEntities.add(reservation);
         return new ReservationResponseDto(reservation);
     }
 
     @DeleteMapping("/{id}")
     public void deleteReservation(@PathVariable Long id) {
-        reservationEntities.removeIf(reservationEntity -> reservationEntity.getId().equals(id));
+        reservationEntities.removeIf(reservation -> reservation.getId().equals(id));
     }
 }

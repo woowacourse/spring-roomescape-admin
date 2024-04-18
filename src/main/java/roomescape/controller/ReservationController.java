@@ -20,12 +20,12 @@ public class ReservationController {
     private final AtomicLong index = new AtomicLong(1);
     private final List<Reservation> reservations = new ArrayList<>();
 
-    @GetMapping("")
+    @GetMapping
     public List<Reservation> readReservations() {
         return reservations;
     }
 
-    @PostMapping("")
+    @PostMapping
     public Reservation createReservation(@RequestBody ReservationRequestDto request) {
         Reservation newReservation = new Reservation(
             index.getAndIncrement(), request.name(), request.date(), request.time());

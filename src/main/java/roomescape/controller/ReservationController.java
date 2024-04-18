@@ -26,7 +26,7 @@ public class ReservationController {
     }
 
     @PostMapping
-    public Reservation createReservation(@RequestBody ReservationRequestDto request) {
+    public Reservation createReservation(@RequestBody CreateReservationRequest request) {
         Reservation newReservation = new Reservation(
             index.getAndIncrement(), request.name(), request.date(), request.time());
         reservations.add(newReservation);

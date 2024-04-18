@@ -4,7 +4,6 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 import java.util.concurrent.atomic.AtomicLong;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
@@ -35,10 +34,8 @@ public class RoomescapeController {
     }
 
     @GetMapping("/reservations")
-    @ResponseBody
-    @ResponseStatus(HttpStatus.OK)
-    public List<Member> readReservations() {
-        return members;
+    public ResponseEntity<List<Member>> readReservations() {
+        return ResponseEntity.ok(members);
     }
 
     @DeleteMapping("/reservations/{id}")

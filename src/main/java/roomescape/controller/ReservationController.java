@@ -30,7 +30,7 @@ public class ReservationController {
 
     @GetMapping
     @ResponseStatus(HttpStatus.OK)
-    public List<ReservationResponse> read() {
+    public List<ReservationResponse> findAll() {
         return ReservationResponse.fromReservations(reservations);
     }
 

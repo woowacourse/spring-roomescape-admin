@@ -31,10 +31,10 @@ public class ReservationApiController {
     }
 
     @DeleteMapping("/reservations/{id}")
-    public ResponseEntity<Void> delete(@PathVariable Long id) {
+    public ResponseEntity<Void> delete(@PathVariable("id") Long id) {
         Reservation findReservation = reservations.stream()
                 .filter(reservation -> reservation.getId().equals(id))
-                .findFirst()
+                .findAny()
                 .orElseThrow(() -> new IllegalArgumentException("일치하는 예약이 없습니다."));
         reservations.remove(findReservation);
         return ResponseEntity.ok().build();

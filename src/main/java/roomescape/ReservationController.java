@@ -24,15 +24,15 @@ public class ReservationController {
     }
 
     @GetMapping("/reservations")
-    public ResponseEntity<List<Reservation>> getReservations() {
-        return ResponseEntity.ok(reservations);
+    public ResponseEntity<List<ReservationResponse>> getReservations() {
+        return ResponseEntity.ok(ReservationResponse.listOf(reservations));
     }
 
     @PostMapping("/reservations")
-    public ResponseEntity<Reservation> addReservation(@RequestBody Reservation reservation) {
-        Reservation newReservation = Reservation.toEntity(index.getAndIncrement(), reservation);
+    public ResponseEntity<ReservationResponse> addReservation(@RequestBody SaveReservationRequest request) {
+        Reservation newReservation = SaveReservationRequest.toEntity(index.getAndIncrement(), request);
         reservations.add(newReservation);
-        return ResponseEntity.ok(newReservation);
+        return ResponseEntity.ok(ReservationResponse.of(newReservation));
     }
 
     @DeleteMapping("/reservations/{id}")

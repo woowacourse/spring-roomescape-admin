@@ -2,15 +2,15 @@ package roomescape.dto;
 
 import roomescape.domain.Reservation;
 
-public class ReservationCreateDto {
+public class ReservationCreateRequest {
     private String name;
     private String date;
     private String time;
 
-    public ReservationCreateDto() {
+    public ReservationCreateRequest() {
     }
 
-    public ReservationCreateDto(String name, String date, String time) {
+    public ReservationCreateRequest(String name, String date, String time) {
         this.name = name;
         this.date = date;
         this.time = time;

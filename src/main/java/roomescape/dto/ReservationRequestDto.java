@@ -17,6 +17,6 @@ public class ReservationRequestDto {
     }
 
     public Reservation toEntity() {
-        return new Reservation(name, date, time);
+        return new Reservation(null, name, date, time);
     }
 }

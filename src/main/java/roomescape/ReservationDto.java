@@ -6,10 +6,10 @@ import java.time.LocalTime;
 
 public class ReservationDto {
 
-    private final Long id;
-    private final String name;
-    private final LocalDate date;
-    private final LocalTime time;
+    private Long id;
+    private String name;
+    private LocalDate date;
+    private LocalTime time;
 
     public ReservationDto(Long id, String name, LocalDate date, LocalTime time) {
         this.id = id;
@@ -18,13 +18,14 @@ public class ReservationDto {
         this.time = time;
     }
 
-    public static ReservationDto from(Reservation reservation) {
-        return new ReservationDto(reservation.getId(), reservation.getName(), reservation.getDate(),
-                reservation.getTime());
+    public ReservationDto(Long id, ReservationDto reservationDto) {
+        this.id = id;
+        this.name = reservationDto.name;
+        this.date = reservationDto.date;
+        this.time = reservationDto.time;
     }
 
-    public Reservation toEntity(long id) {
-        return new Reservation(id, name, date, time);
+    private ReservationDto() {
     }
 
     public Long getId() {

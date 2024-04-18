@@ -58,4 +58,30 @@ public class ReservationRepository {
     public void deleteById(final long id) {
         jdbcTemplate.update("DELETE FROM reservation WHERE id = ?", id);
     }
+
+    public List<Reservation> findByTimeId(final long id) {
+        final String query = """
+                SELECT
+                    r.id as reservation_id,
+                    r.name,
+                    r.date,
+                    t.id as time_id,
+                    t.start_at as time_value
+                FROM reservation as r
+                inner join reservation_time as t
+                on r.time_id = t.id
+                WHERE t.id = ?
+                """;
+
+        return jdbcTemplate.query(query, (resultSet, rowNum) -> {
+            final Long reservationId = resultSet.getLong("reservation_id");
+            final String name = resultSet.getString("name");
+            final String date = resultSet.getString("date");
+            final Long timeId = resultSet.getLong("time_id");
+            final String timeValue = resultSet.getString("time_value");
+            final ReservationTime time = new ReservationTime(timeId, timeValue);
+
+            return new Reservation(reservationId, name, date, time);
+        }, id);
+    }
 }

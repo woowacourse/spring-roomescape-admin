@@ -2,18 +2,22 @@ package roomescape.service;
 
 import java.util.List;
 import org.springframework.stereotype.Service;
-import org.springframework.web.bind.annotation.PathVariable;
+import roomescape.domain.Reservation;
 import roomescape.domain.ReservationTime;
 import roomescape.dto.ReservationTimeRequestDto;
 import roomescape.dto.ReservationTimeResponseDto;
+import roomescape.repository.ReservationRepository;
 import roomescape.repository.ReservationTimeRepository;
 
 @Service
 public class ReservationTimeService {
     private final ReservationTimeRepository reservationTimeRepository;
+    private final ReservationRepository reservationRepository;
 
-    public ReservationTimeService(final ReservationTimeRepository reservationTimeRepository) {
+    public ReservationTimeService(final ReservationTimeRepository reservationTimeRepository,
+                                  final ReservationRepository reservationRepository) {
         this.reservationTimeRepository = reservationTimeRepository;
+        this.reservationRepository = reservationRepository;
     }
 
     public ReservationTimeResponseDto create(final ReservationTimeRequestDto request) {
@@ -28,7 +32,11 @@ public class ReservationTimeService {
                 .toList();
     }
 
-    public void delete(@PathVariable("id") final long id) {
+    public void delete(final long id) {
+        final List<Reservation> reservations = reservationRepository.findByTimeId(id);
+        for (Reservation reservation : reservations) {
+            reservationRepository.deleteById(reservation.getId());
+        }
         reservationTimeRepository.deleteById(id);
     }
 }

@@ -1,14 +1,15 @@
 package roomescape.storage;
 
-import java.time.LocalDate;
-import java.time.LocalDateTime;
-import java.time.LocalTime;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.concurrent.atomic.AtomicLong;
 import org.springframework.stereotype.Component;
 import roomescape.domain.Reservation;
 import roomescape.dto.ReservationRequest;
+
+import java.time.LocalDate;
+import java.time.LocalDateTime;
+import java.time.LocalTime;
+import java.util.List;
+import java.util.concurrent.CopyOnWriteArrayList;
+import java.util.concurrent.atomic.AtomicLong;
 
 @Component
 public class ReservationStorage {
@@ -16,7 +17,7 @@ public class ReservationStorage {
     private final AtomicLong atomicLong;
 
     public ReservationStorage() {
-        this(new ArrayList<>());
+        this((new CopyOnWriteArrayList<>()));
     }
 
     public ReservationStorage(List<Reservation> reservations) {

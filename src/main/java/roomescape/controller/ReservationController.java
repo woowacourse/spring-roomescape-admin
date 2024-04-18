@@ -26,7 +26,7 @@ public class ReservationController {
     public ResponseEntity<List<ReservationResponse>> readReservations() {
         return ResponseEntity.ok(
                 reservations.stream()
-                .map(reservation -> ReservationResponse.of(reservation))
+                .map(reservation -> ReservationResponse.from(reservation))
                 .toList());
     }
 
@@ -35,7 +35,7 @@ public class ReservationController {
         Reservation reservation = reservationRequest.toReservation(id.getAndIncrement());
         reservations.add(reservation);
 
-        return ResponseEntity.ok(ReservationResponse.of(reservation));
+        return ResponseEntity.ok(ReservationResponse.from(reservation));
     }
 
     @DeleteMapping("/{id}")

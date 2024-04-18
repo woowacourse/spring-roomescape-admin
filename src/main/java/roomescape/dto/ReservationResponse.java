@@ -23,7 +23,7 @@ public class ReservationResponse {
         this.time = reservation.getTime();
     }
 
-    public static ReservationResponse of(Reservation reservation) {
+    public static ReservationResponse from(Reservation reservation) {
         return new ReservationResponse(reservation);
     }
 

@@ -29,7 +29,7 @@ public class FakeReservationDao implements ReservationDao {
 
     @Override
     public boolean existsById(long id) {
-        return reservations.keySet().stream().anyMatch(key -> key == id);
+        return reservations.containsKey(id);
     }
 
     @Override

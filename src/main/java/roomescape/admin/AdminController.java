@@ -1,8 +1,10 @@
 package roomescape.admin;
 
-import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
+import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.atomic.AtomicLong;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -17,7 +19,7 @@ import roomescape.admin.reservation.ResponseReservation;
 @Controller
 public class AdminController {
 
-    private final List<Reservation> reservations = new ArrayList<>();
+    private final Map<Long, Reservation> reservations = new ConcurrentHashMap<>();
     private final AtomicLong atomicLong = new AtomicLong(1);
 
     @GetMapping("/")
@@ -38,10 +40,11 @@ public class AdminController {
 
     @GetMapping("/reservations")
     public ResponseEntity<List<ResponseReservation>> findAll() {
-        List<ResponseReservation> responseReservations = reservations.stream()
+        List<ResponseReservation> responseReservations = reservations.values().stream()
                 .map(reservation -> new ResponseReservation(reservation.getId(), reservation.getName(),
                         reservation.getDate(), reservation.getTime()))
                 .toList();
+
 
         return ResponseEntity.ok(responseReservations);
     }
@@ -50,7 +53,7 @@ public class AdminController {
     public ResponseEntity<ResponseReservation> create(@RequestBody RequestReservation requestReservation) {
         Reservation reservation = new Reservation(atomicLong.getAndIncrement(), requestReservation.name(),
                 requestReservation.date(), requestReservation.time());
-        reservations.add(reservation);
+        reservations.put(reservation.getId(), reservation);
 
         return ResponseEntity.ok(
                 new ResponseReservation(reservation.getId(), reservation.getName(), reservation.getDate(),
@@ -58,12 +61,12 @@ public class AdminController {
     }
 
     @DeleteMapping("/reservations/{id}")
-    public ResponseEntity<Void> delete(@PathVariable("id") Long id) {
-
-        reservations.stream()
-                .filter(reservation -> reservation.getId().equals(id))
-                .findFirst()
-                .ifPresent(reservations::remove);
+    public ResponseEntity<?> delete(@PathVariable("id") Long id) {
+        Reservation reservation = reservations.get(id);
+        if (reservation == null) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body("삭제할 예약이 존재하지 않습니다.");
+        }
+        reservations.remove(id);
 
         return ResponseEntity.ok().build();
     }

@@ -1,6 +1,7 @@
 package roomescape.admin;
 
 import static org.hamcrest.Matchers.contains;
+import static org.hamcrest.Matchers.equalTo;
 import static org.hamcrest.Matchers.is;
 
 import io.restassured.RestAssured;
@@ -108,5 +109,15 @@ public class AdminControllerTest {
                             .body("size()", is(0));
                 })
         );
+    }
+
+    @Test
+    @DisplayName("삭제할 번호가 없으면 실패 메시지를 준다.")
+    void deleteReservationWhenNotMatchedId() {
+        RestAssured.given().log().all()
+                .when().delete("/reservations/1")
+                .then().log().all()
+                .statusCode(404)
+                .body(equalTo("삭제할 예약이 존재하지 않습니다."));
     }
 }

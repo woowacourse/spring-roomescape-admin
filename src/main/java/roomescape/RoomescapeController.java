@@ -10,7 +10,6 @@ import java.util.concurrent.atomic.AtomicLong;
 
 @Controller
 public class RoomescapeController {
-
     private List<ReservationInfo> reservationInfos = new ArrayList<>();
     private AtomicLong counter = new AtomicLong();
 

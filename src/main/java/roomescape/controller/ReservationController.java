@@ -6,6 +6,7 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import roomescape.domain.Reservation;
 import roomescape.dto.ReservationRequest;
@@ -13,6 +14,7 @@ import roomescape.dto.ReservationResponse;
 import roomescape.storage.ReservationStorage;
 
 @RestController
+@RequestMapping("/reservations")
 public class ReservationController {
     private final ReservationStorage reservationStorage;
 
@@ -20,7 +22,7 @@ public class ReservationController {
         this.reservationStorage = reservationStorage;
     }
 
-    @PostMapping("/reservations")
+    @PostMapping
     public ReservationResponse saveReservation(@RequestBody ReservationRequest reservationRequest) {
         Reservation reservation = reservationStorage.save(reservationRequest);
         return toResponse(reservation);
@@ -31,7 +33,7 @@ public class ReservationController {
                 reservation.getName(), reservation.getDate(), reservation.getTime());
     }
 
-    @GetMapping("/reservations")
+    @GetMapping
     public List<ReservationResponse> findAllReservations() {
         return reservationStorage.findAllReservations()
                 .stream()
@@ -39,7 +41,7 @@ public class ReservationController {
                 .toList();
     }
 
-    @DeleteMapping("/reservations/{reservationId}")
+    @DeleteMapping("/{reservationId}")
     public void delete(@PathVariable long reservationId) {
         reservationStorage.delete(reservationId);
     }

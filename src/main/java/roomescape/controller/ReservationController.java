@@ -6,6 +6,7 @@ import roomescape.domain.Reservation;
 import roomescape.controller.dto.ReservationCreateRequest;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 import java.util.concurrent.atomic.AtomicInteger;
 
@@ -14,7 +15,7 @@ import java.util.concurrent.atomic.AtomicInteger;
 public class ReservationController {
 
     private final AtomicInteger atomicInteger = new AtomicInteger(1);
-    private final List<Reservation> reservations = new ArrayList<>();
+    private final List<Reservation> reservations = Collections.synchronizedList(new ArrayList<>());
 
     @GetMapping()
     public ResponseEntity<List<Reservation>> readReservations() {

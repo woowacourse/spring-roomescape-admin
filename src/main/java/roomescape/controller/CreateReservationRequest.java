@@ -6,7 +6,7 @@ import roomescape.domain.Reservation;
 
 public record CreateReservationRequest(LocalDate date, String name, LocalTime time) {
 
-    public Reservation to(final Long id) {
+    public Reservation toDomain(final Long id) {
         return new Reservation(
                 id,
                 this.name,

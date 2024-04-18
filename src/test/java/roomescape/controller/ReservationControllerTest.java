@@ -75,4 +75,13 @@ class ReservationControllerTest {
             .statusCode(200)
             .body("size()", is(0));
     }
+
+    @Test
+    @DisplayName("존재하지 않는 id의 예약 삭제하면 400 코드 받는다.")
+    void deleteReservation_NotExistId() {
+        RestAssured.given().log().all()
+            .when().delete("/reservations/1")
+            .then().log().all()
+            .statusCode(400);
+    }
 }

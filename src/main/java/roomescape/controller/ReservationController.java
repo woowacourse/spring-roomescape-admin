@@ -12,7 +12,7 @@ import roomescape.dto.ReservationRequest;
 
 
 @Controller
-public class RoomescapeController {
+public class ReservationController {
     private List<Reservation> reservations = new ArrayList<>();
     private AtomicLong index = new AtomicLong(0);
 

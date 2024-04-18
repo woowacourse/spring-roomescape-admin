@@ -2,9 +2,9 @@ package roomescape.service;
 
 import java.util.List;
 import java.util.concurrent.atomic.AtomicLong;
-import roomescape.controller.ReservationResponseDto;
+import roomescape.dto.ReservationResponseDto;
 import roomescape.domain.Reservation;
-import roomescape.domain.ReservationRequestDto;
+import roomescape.dto.ReservationRequestDto;
 import roomescape.domain.Reservations;
 
 public class AdminService {

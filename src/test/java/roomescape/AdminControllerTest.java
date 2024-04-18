@@ -1,15 +1,12 @@
 package roomescape;
 
 import io.restassured.RestAssured;
-import io.restassured.response.Response;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.web.server.LocalServerPort;
 import org.springframework.http.HttpStatus;
-
-import static org.assertj.core.api.Assertions.assertThat;
 
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 public class AdminControllerTest {
@@ -24,20 +21,16 @@ public class AdminControllerTest {
     @DisplayName("Admin Page 홈화면 접근 성공 테스트")
     @Test
     void responseAdminPage() {
-        Response response = RestAssured.given().log().all()
+        RestAssured.given().log().all()
                 .when().get("/admin")
-                .then().log().all().extract().response();
-
-        assertThat(response.getStatusCode()).isEqualTo(HttpStatus.OK.value());
+                .then().log().all().assertThat().statusCode(HttpStatus.OK.value());
     }
 
     @DisplayName("Admin Reservation Page 접근 성공 테스트")
     @Test
     void responseAdminReservationPage() {
-        Response response = RestAssured.given().log().all()
+        RestAssured.given().log().all()
                 .when().get("/admin/reservation")
-                .then().log().all().extract().response();
-
-        assertThat(response.getStatusCode()).isEqualTo(HttpStatus.OK.value());
+                .then().log().all().assertThat().statusCode(HttpStatus.OK.value());
     }
 }

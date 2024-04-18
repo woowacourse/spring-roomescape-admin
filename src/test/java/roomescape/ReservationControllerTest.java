@@ -1,5 +1,8 @@
 package roomescape;
 
+import static org.assertj.core.api.Assertions.assertThat;
+import static org.junit.jupiter.api.Assertions.assertAll;
+
 import io.restassured.RestAssured;
 import io.restassured.http.ContentType;
 import io.restassured.response.Response;
@@ -13,11 +16,7 @@ import org.springframework.http.HttpStatus;
 import roomescape.dao.ReservationDao;
 import roomescape.domain.Reservation;
 import roomescape.dto.ReservationRequest;
-import roomescape.dto.ReservationResponse;
 import roomescape.entity.ReservationEntity;
-
-import static org.assertj.core.api.Assertions.assertThat;
-import static org.junit.jupiter.api.Assertions.assertAll;
 
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 public class ReservationControllerTest {
@@ -39,15 +38,11 @@ public class ReservationControllerTest {
     @DisplayName("예약 추가 테스트")
     @Test
     void createReservation() {
-        //when
-        Response response = RestAssured.given().log().all()
+        RestAssured.given().log().all()
                 .contentType(ContentType.JSON)
                 .body(new ReservationRequest("브라운", "2023-08-05", "15:40"))
                 .when().post("/reservations")
-                .then().log().all().extract().response();
-
-        //then
-        assertThat(response.getStatusCode()).isEqualTo(HttpStatus.CREATED.value());
+                .then().log().all().assertThat().statusCode(HttpStatus.CREATED.value());
     }
 
     @DisplayName("모든 예약 내역 조회 테스트")
@@ -65,7 +60,7 @@ public class ReservationControllerTest {
         //then
         assertAll(
                 () -> assertThat(response.getStatusCode()).isEqualTo(HttpStatus.OK.value()),
-                () -> assertThat(response.jsonPath().getList("", ReservationResponse.class)).hasSize(1)
+                () -> assertThat(reservationDao.findAll()).hasSize(1)
         );
     }
 
@@ -77,13 +72,13 @@ public class ReservationControllerTest {
         long id = reservationDao.save(reservation);
 
         //when
-        Response deleteResponse = RestAssured.given().log().all()
+        Response response = RestAssured.given().log().all()
                 .when().delete("/reservations/" + id)
                 .then().log().all().extract().response();
 
         //then
         assertAll(
-                () -> assertThat(deleteResponse.getStatusCode()).isEqualTo(HttpStatus.OK.value()),
+                () -> assertThat(response.getStatusCode()).isEqualTo(HttpStatus.OK.value()),
                 () -> assertThat(reservationDao.findAll()).hasSize(0)
         );
     }
@@ -94,12 +89,9 @@ public class ReservationControllerTest {
         //given
         long invalidId = 0;
 
-        //when
-        Response response = RestAssured.given().log().all()
-                .when().delete("/reservations/" + invalidId)
-                .then().log().all().extract().response();
-
         //then
-        assertThat(response.getStatusCode()).isEqualTo(HttpStatus.NOT_FOUND.value());
+        RestAssured.given().log().all()
+                .when().delete("/reservations/" + invalidId)
+                .then().log().all().assertThat().statusCode(HttpStatus.NOT_FOUND.value());
     }
 }

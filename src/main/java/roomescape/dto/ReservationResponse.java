@@ -8,6 +8,9 @@ public record ReservationResponse(
         String date,
         String time) {
     public ReservationResponse(ReservationEntity reservationEntity) {
-        this(reservationEntity.getId(), reservationEntity.getName(), reservationEntity.getDate(), reservationEntity.getTime());
+        this(reservationEntity.getId(),
+                reservationEntity.getName(),
+                reservationEntity.getDate(),
+                reservationEntity.getTime());
     }
 }

@@ -2,7 +2,6 @@ package roomescape.dto;
 
 import java.time.LocalDate;
 import java.time.LocalTime;
-import roomescape.model.Reservation;
 
 public class ReservationRequest {
     private final String name;

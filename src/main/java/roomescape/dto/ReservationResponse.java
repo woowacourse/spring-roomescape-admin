@@ -23,7 +23,8 @@ public class ReservationResponse {
     }
 
     public static ReservationResponse of(Reservation reservation) {
-        return new ReservationResponse(reservation.getId(), reservation.getName(), reservation.getDate(), reservation.getTime());
+        return new ReservationResponse(reservation.getId(), reservation.getName(), reservation.getDate(),
+                reservation.getTime());
     }
 
     public Long getId() {

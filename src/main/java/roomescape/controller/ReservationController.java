@@ -1,8 +1,6 @@
 package roomescape.controller;
 
-import java.util.ArrayList;
 import java.util.List;
-import java.util.concurrent.atomic.AtomicLong;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -12,15 +10,14 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import roomescape.domain.Reservation;
-import roomescape.domain.Reservations;
 import roomescape.dto.request.ReservationCreateRequest;
 import roomescape.dto.response.ReservationResponse;
+import roomescape.repository.ReservationRepository;
 
 @Controller
 public class ReservationController {
 
-    private final AtomicLong id = new AtomicLong(0);
-    private final Reservations reservations = new Reservations(new ArrayList<>());
+    private final ReservationRepository reservationRepository = new ReservationRepository();
 
     @GetMapping("/admin")
     public String getAdminPage() {
@@ -29,34 +26,38 @@ public class ReservationController {
 
     @GetMapping("/admin/reservation")
     public String getReservationPage(Model model) {
-        List<ReservationResponse> reservationResponses = reservations.getReservations()
+        List<ReservationResponse> reservationResponses = reservationRepository.findAllWithId()
+                .entrySet()
                 .stream()
-                .map(ReservationResponse::fromEntity).toList();
+                .map(e -> ReservationResponse.of(e.getKey(), e.getValue()))
+                .toList();
         model.addAttribute("reservationResponses", reservationResponses);
         return "/admin/reservation-legacy";
     }
 
     @GetMapping("/reservations")
     public ResponseEntity<List<ReservationResponse>> getReservations() {
-        List<ReservationResponse> reservationResponses = reservations.getReservations()
+        List<ReservationResponse> reservationResponses = reservationRepository.findAllWithId()
+                .entrySet()
                 .stream()
-                .map(ReservationResponse::fromEntity).toList();
+                .map(e -> ReservationResponse.of(e.getKey(), e.getValue()))
+                .toList();
         return ResponseEntity.ok(reservationResponses);
     }
 
     @PostMapping("/reservations")
     public ResponseEntity<ReservationResponse> createReservations(
             @RequestBody ReservationCreateRequest reservationCreateRequest) {
-        Reservation reservation = reservationCreateRequest.toEntity(id.incrementAndGet());
-        reservations.add(reservation);
+        Reservation reservation = reservationCreateRequest.toEntity();
+        Long id = reservationRepository.add(reservation);
 
-        ReservationResponse reservationResponse = ReservationResponse.fromEntity(reservation);
+        ReservationResponse reservationResponse = ReservationResponse.of(id, reservation);
         return ResponseEntity.ok(reservationResponse);
     }
 
     @DeleteMapping("/reservations/{id}")
     public ResponseEntity<Void> deleteReservation(@PathVariable("id") Long id) {
-        reservations.remove(id);
+        reservationRepository.remove(id);
         return ResponseEntity.ok().build();
     }
 }

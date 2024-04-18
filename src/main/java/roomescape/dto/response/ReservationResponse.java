@@ -5,9 +5,9 @@ import roomescape.domain.Reservation;
 
 public record ReservationResponse(Long id, String name, String date, String time) {
 
-    public static ReservationResponse fromEntity(Reservation reservation) {
+    public static ReservationResponse of(Long id, Reservation reservation) {
         return new ReservationResponse(
-                reservation.getId(),
+                id,
                 reservation.getName(),
                 reservation.getDate().format(DateTimeFormatter.ISO_DATE),
                 reservation.getTime().format(DateTimeFormatter.ofPattern("HH:mm"))

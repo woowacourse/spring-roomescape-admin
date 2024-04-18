@@ -7,6 +7,7 @@ import io.restassured.RestAssured;
 import io.restassured.http.ContentType;
 import java.sql.Connection;
 import java.sql.SQLException;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import org.junit.jupiter.api.BeforeEach;
@@ -140,5 +141,29 @@ class MissionStepTest {
 
         Integer countAfterDelete = jdbcTemplate.queryForObject("SELECT count(1) from reservation", Integer.class);
         assertThat(countAfterDelete).isEqualTo(0);
+    }
+
+    @Test
+    void 칠단계() {
+        Map<String, String> params = new HashMap<>();
+        params.put("startAt", "10:00");
+
+        RestAssured.given().log().all()
+                .contentType(ContentType.JSON)
+                .body(params)
+                .when().post("/times")
+                .then().log().all()
+                .statusCode(201);
+//
+//        RestAssured.given().log().all()
+//                .when().get("/times")
+//                .then().log().all()
+//                .statusCode(200)
+//                .body("size()", is(1));
+//
+//        RestAssured.given().log().all()
+//                .when().delete("/times/1")
+//                .then().log().all()
+//                .statusCode(204);
     }
 }

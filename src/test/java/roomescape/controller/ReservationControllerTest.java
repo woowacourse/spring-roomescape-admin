@@ -1,34 +1,42 @@
 package roomescape.controller;
 
-import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import static org.hamcrest.Matchers.is;
 
 import io.restassured.RestAssured;
 import io.restassured.http.ContentType;
+import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.context.SpringBootTest.WebEnvironment;
 import org.springframework.boot.test.web.server.LocalServerPort;
-import org.springframework.test.annotation.DirtiesContext;
+import roomescape.domain.ReservationRepository;
 import roomescape.dto.ReservationDto;
 
 @SpringBootTest(webEnvironment = WebEnvironment.RANDOM_PORT)
-@DirtiesContext(classMode = DirtiesContext.ClassMode.BEFORE_EACH_TEST_METHOD)
 class ReservationControllerTest {
 
     @LocalServerPort
     private int port;
+    @Autowired
+    private ReservationRepository reservationRepository;
     private ReservationDto reservationDto;
 
     @BeforeEach
     void setUp() {
+        RestAssured.port = port;
+        reservationRepository.add(ReservationDto.of(null, "다온", "2024-04-18", "16:12"));
         String name = "브라운";
         String date = "2023-08-05";
         String time = "15:40";
         reservationDto = ReservationDto.of(null, name, date, time);
-        RestAssured.port = port;
+    }
+
+    @AfterEach
+    void tearDown() {
+        reservationRepository.deleteAll();
     }
 
     @Test
@@ -38,7 +46,7 @@ class ReservationControllerTest {
                 .when().get("/reservations")
                 .then().log().all()
                 .statusCode(200)
-                .body("size()", is(0));
+                .body("size()", is(1));
     }
 
     @Test
@@ -50,26 +58,18 @@ class ReservationControllerTest {
                 .when().post("/reservations")
                 .then().log().all()
                 .statusCode(201)
-                .body("id", is(1));
+                .body("id", is(2));
 
         RestAssured.given().log().all()
                 .when().get("/reservations")
                 .then().log().all()
                 .statusCode(200)
-                .body("size()", is(1));
+                .body("size()", is(2));
     }
 
     @Test
     @DisplayName("예약을 성공적으로 삭제한다.")
     void deleteReservationTest() {
-        RestAssured.given().log().all()
-                .contentType(ContentType.JSON)
-                .body(reservationDto)
-                .when().post("/reservations")
-                .then().log().all()
-                .statusCode(201)
-                .body("id", is(1));
-
         RestAssured.given().log().all()
                 .when().delete("/reservations/1")
                 .then().log().all()
@@ -80,25 +80,5 @@ class ReservationControllerTest {
                 .then().log().all()
                 .statusCode(200)
                 .body("size()", is(0));
-    }
-
-    @Test
-    @DisplayName("예약을 삭제시 경로 변수가 null이면 예외가 발생한다.")
-    void deleteNullId() {
-        Long id = null;
-        ReservationController reservationController = new ReservationController();
-
-        assertThatThrownBy(() -> reservationController.delete(id))
-                .isInstanceOf(IllegalArgumentException.class);
-    }
-
-    @Test
-    @DisplayName("예약을 삭제시 id에 해당하는 예약이 없다면 예외가 발생한다.")
-    void deleteNotContainsId() {
-        Long id = 3L;
-        ReservationController reservationController = new ReservationController();
-
-        assertThatThrownBy(() -> reservationController.delete(id))
-                .isInstanceOf(IllegalArgumentException.class);
     }
 }

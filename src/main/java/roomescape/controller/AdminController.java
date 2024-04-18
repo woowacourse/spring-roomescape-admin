@@ -10,7 +10,11 @@ import roomescape.repository.ReservationRepository;
 @Controller
 public class AdminController {
 
-    private final ReservationRepository reservationRepository = ReservationRepository.getInstance();
+    private final ReservationRepository reservationRepository;
+
+    public AdminController(ReservationRepository reservationRepository) {
+        this.reservationRepository = reservationRepository;
+    }
 
     @GetMapping("/admin")
     public String getAdminPage() {

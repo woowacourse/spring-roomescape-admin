@@ -18,7 +18,11 @@ import roomescape.repository.ReservationRepository;
 @RequestMapping("/reservations")
 public class ReservationController {
 
-    private final ReservationRepository reservationRepository = ReservationRepository.getInstance();
+    private final ReservationRepository reservationRepository;
+
+    public ReservationController(ReservationRepository reservationRepository) {
+        this.reservationRepository = reservationRepository;
+    }
 
     @GetMapping
     public ResponseEntity<List<ReservationResponse>> getReservations() {

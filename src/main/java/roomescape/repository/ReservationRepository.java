@@ -7,8 +7,17 @@ import roomescape.domain.Reservation;
 
 public class ReservationRepository {
 
+    private static final ReservationRepository instance = new ReservationRepository();
+
     private final AtomicLong id = new AtomicLong(0);
     private final Map<Long, Reservation> reservations = new HashMap<>();
+
+    private ReservationRepository() {
+    }
+
+    public static ReservationRepository getInstance() {
+        return instance;
+    }
 
     public Long add(Reservation reservation) {
         reservations.put(id.incrementAndGet(), reservation);

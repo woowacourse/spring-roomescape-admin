@@ -3,7 +3,6 @@ package roomescape.controller;
 import java.util.List;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
-import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -17,23 +16,7 @@ import roomescape.repository.ReservationRepository;
 @Controller
 public class ReservationController {
 
-    private final ReservationRepository reservationRepository = new ReservationRepository();
-
-    @GetMapping("/admin")
-    public String getAdminPage() {
-        return "/admin/index";
-    }
-
-    @GetMapping("/admin/reservation")
-    public String getReservationPage(Model model) {
-        List<ReservationResponse> reservationResponses = reservationRepository.findAllWithId()
-                .entrySet()
-                .stream()
-                .map(e -> ReservationResponse.of(e.getKey(), e.getValue()))
-                .toList();
-        model.addAttribute("reservationResponses", reservationResponses);
-        return "/admin/reservation-legacy";
-    }
+    private final ReservationRepository reservationRepository = ReservationRepository.getInstance();
 
     @GetMapping("/reservations")
     public ResponseEntity<List<ReservationResponse>> getReservations() {

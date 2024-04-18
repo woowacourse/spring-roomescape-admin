@@ -20,6 +20,10 @@ public class Reservation implements Comparable<Reservation> {
         return dateTime.compareTo(other.dateTime);
     }
 
+    public boolean hasSameId(long id) {
+        return this.id == id;
+    }
+
     public long getId() {
         return id;
     }

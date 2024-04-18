@@ -50,8 +50,9 @@ public class ReservationStorage {
                 .toList();
     }
 
-    public void delete(Long reservationId) {
-        reservations.stream().filter(reservation -> reservation.getId() == reservationId)
+    public void delete(long reservationId) {
+        reservations.stream()
+                .filter(reservation -> reservation.hasSameId(reservationId))
                 .findAny()
                 .ifPresent(reservations::remove);
     }

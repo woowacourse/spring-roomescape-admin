@@ -19,21 +19,25 @@ public class ReservationController {
     private final AtomicLong index = new AtomicLong(1);
 
     @GetMapping("/reservations")
-    public ResponseEntity<List<Reservation>> getReservationDatum() {
-        return ResponseEntity.ok(reservations);
+    public ResponseEntity<List<ReservationResponse>> getReservationDatum() {
+        List<ReservationResponse> responses = reservations.stream()
+                .map(ReservationResponse::of)
+                .toList();
+        return ResponseEntity.ok(responses);
     }
 
     @PostMapping("/reservations")
-    public ResponseEntity<Reservation> addReservationData(@RequestBody Reservation request) {
-        Reservation reservation = new Reservation(index.getAndIncrement(), request);
+    public ResponseEntity<ReservationResponse> addReservationData(@RequestBody ReservationRequest request) {
+        Reservation reservation = request.toDomain(index.getAndIncrement());
         reservations.add(reservation);
 
-        return ResponseEntity.ok(reservation);
+        ReservationResponse response = ReservationResponse.of(reservation);
+        return ResponseEntity.ok(response);
     }
 
     @DeleteMapping("/reservations/{id}")
     public ResponseEntity<Void> deleteReservationsData(@PathVariable long id) {
-        boolean isRemoved = reservations.removeIf(reservation -> reservation.getId().equals(id));
+        boolean isRemoved = reservations.removeIf(reservation -> reservation.id().equals(id));
         if (isRemoved) {
             return ResponseEntity.ok().build();
         }

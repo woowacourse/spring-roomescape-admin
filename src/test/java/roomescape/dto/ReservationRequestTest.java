@@ -19,6 +19,6 @@ class ReservationRequestTest {
 
         final Reservation reservation = new Reservation(id, name, date, time);
 
-        assertThat(reservationRequest.toEntity(id)).isEqualTo(reservation);
+        assertThat(reservationRequest.toReservation(id)).isEqualTo(reservation);
     }
 }

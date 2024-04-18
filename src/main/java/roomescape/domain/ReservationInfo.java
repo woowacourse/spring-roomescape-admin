@@ -1,44 +1,47 @@
-package roomescape;
+package roomescape.domain;
+
+import java.time.LocalDate;
+import java.time.LocalTime;
 
 public class ReservationInfo {
-    private Long id;
-    private String name;
-    private String date;
-    private String time;
+    private Id id;
+    private Name name;
+    private LocalDate date;
+    private LocalTime time;
 
     public ReservationInfo() {
     }
 
-    public ReservationInfo(Long id, String name, String date, String time) {
+    public ReservationInfo(Id id, Name name, LocalDate date, LocalTime time) {
         this.id = id;
         this.name = name;
         this.date = date;
         this.time = time;
     }
 
-    public ReservationInfo(String name, String date, String time) {
+    public ReservationInfo(Name name, LocalDate date, LocalTime time) {
         this.name = name;
         this.date = date;
         this.time = time;
     }
 
     public static ReservationInfo toEntity(ReservationInfo reservationInfo, Long id) {
-        return new ReservationInfo(id, reservationInfo.name, reservationInfo.date, reservationInfo.time);
+        return new ReservationInfo(new Id(id), reservationInfo.name, reservationInfo.date, reservationInfo.time);
     }
 
-    public Long getId() {
+    public Id getId() {
         return id;
     }
 
-    public String getName() {
+    public Name getName() {
         return name;
     }
 
-    public String getDate() {
+    public LocalDate getDate() {
         return date;
     }
 
-    public String getTime() {
+    public LocalTime getTime() {
         return time;
     }
 

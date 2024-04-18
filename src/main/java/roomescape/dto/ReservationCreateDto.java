@@ -5,6 +5,9 @@ public class ReservationCreateDto {
     private String date;
     private String time;
 
+    public ReservationCreateDto() {
+    }
+
     public ReservationCreateDto(String name, String date, String time) {
         this.name = name;
         this.date = date;

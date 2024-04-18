@@ -36,14 +36,14 @@ public class RoomEscapeController {
 
     @ResponseBody
     @PostMapping("/reservations")
-    public Reservation createReservation(@RequestBody ReservationCreateDto dto) {
+    public ResponseEntity<Reservation> createReservation(@RequestBody ReservationCreateDto dto) {
         Reservation reservation = new Reservation(index.getAndIncrement(), dto.getName(), dto.getDate(), dto.getTime());
         reservations.add(reservation);
-        return reservation;
+        return ResponseEntity.ok(reservation);
     }
 
     @DeleteMapping("/reservations/{id}")
-    public ResponseEntity<Void> deleteReservation(@PathVariable long id) {
+    public ResponseEntity<Void> deleteReservation(@PathVariable(name = "id") long id) {
         Reservation findReservation = reservations.stream()
                 .filter(reservation -> reservation.getId() == id)
                 .findAny()

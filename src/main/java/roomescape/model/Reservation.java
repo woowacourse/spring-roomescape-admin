@@ -10,15 +10,15 @@ public class Reservation {
     private final LocalDate date;
     private final LocalTime time;
 
-    public Reservation(final Long id, final String name, final String date, final String time) {
-        this(id, name, LocalDate.parse(date), LocalTime.parse(time));
-    }
-
     public Reservation(final Long id, final String name, final LocalDate date, final LocalTime time) {
         this.id = id;
         this.name = name;
         this.date = date;
         this.time = time;
+    }
+
+    public Reservation(final Long id, final String name, final String date, final String time) {
+        this(id, name, LocalDate.parse(date), LocalTime.parse(time));
     }
 
     public Long getId() {

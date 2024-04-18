@@ -43,7 +43,7 @@ public class RoomescapeController {
         Member findMember = members.stream()
                 .filter(member -> Objects.equals(member.getId(), id))
                 .findFirst()
-                .orElseThrow(RuntimeException::new);
+                .orElseThrow(() -> new IllegalArgumentException("해당 예약을 찾을 수 없습니다."));
 
         members.remove(findMember);
 

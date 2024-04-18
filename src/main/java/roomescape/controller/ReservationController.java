@@ -44,6 +44,6 @@ public class ReservationController {
             return ResponseEntity.ok().build();
         }
 
-        return ResponseEntity.badRequest().build();
+        return ResponseEntity.notFound().build();
     }
 }

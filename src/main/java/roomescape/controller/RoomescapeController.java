@@ -1,18 +1,17 @@
 package roomescape.controller;
 
-import java.util.ArrayList;
 import java.util.List;
-import java.util.Objects;
 import java.util.concurrent.atomic.AtomicLong;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import roomescape.domain.Reservation;
 import roomescape.domain.ReservationDto;
+import roomescape.domain.ReservationStore;
 
 @RestController
 public class RoomescapeController {
-    private List<Reservation> reservations = new ArrayList<>();
+    private final ReservationStore reservationStore = new ReservationStore();
     private AtomicLong index = new AtomicLong(0);
 
     @GetMapping("/admin")
@@ -28,7 +27,7 @@ public class RoomescapeController {
     @PostMapping("/reservations")
     public ResponseEntity<Reservation> createReservation(@RequestBody ReservationDto reservationDto) {
         Reservation newReservation = Reservation.toEntity(index.incrementAndGet(), reservationDto);
-        reservations.add(newReservation);
+        reservationStore.save(newReservation);
 
         return ResponseEntity.ok(newReservation);
     }
@@ -36,17 +35,12 @@ public class RoomescapeController {
     @GetMapping("/reservations")
     @ResponseStatus(HttpStatus.OK)
     public List<Reservation> readReservations() {
-        return reservations;
+        return reservationStore.getAll();
     }
 
     @DeleteMapping("/reservations/{id}")
     public ResponseEntity<Void> deleteReservation(@PathVariable Long id) {
-        Reservation findReservation = reservations.stream()
-                .filter(reservation -> Objects.equals(reservation.getId(), id))
-                .findFirst()
-                .orElseThrow(RuntimeException::new);
-
-        reservations.remove(findReservation);
+        reservationStore.delete(id);
 
         return ResponseEntity.ok().build();
     }

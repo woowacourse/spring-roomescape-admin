@@ -33,8 +33,9 @@ public class ReservationController {
     @DeleteMapping("/{id}")
     public ResponseEntity<Void> deleteBy(@PathVariable Long id) {
         Reservation found = reservations.stream()
-                .filter(it -> it.hasSameId(id)).findFirst()
-                .orElseThrow(RuntimeException::new);
+                .filter(it -> it.hasSameId(id))
+                .findFirst()
+                .orElseThrow(() -> new RuntimeException("해당 예약 번호의 예약은 없습니다."));
         reservations.remove(found);
 
         return ResponseEntity.ok().build();

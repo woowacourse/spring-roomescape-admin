@@ -9,6 +9,7 @@ import java.util.List;
 import java.util.Optional;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import static roomescape.TestFixture.*;
 
 class ReservationServiceTest {
@@ -59,5 +60,16 @@ class ReservationServiceTest {
         // then
         Optional<Reservation> deleted = reservationRepository.findById(1L);
         assertThat(deleted).isEmpty();
+    }
+
+    @Test
+    @DisplayName("존재하지 않는 예약 Id로 삭제할 수 없다.")
+    void deleteReservationNotExistingId() {
+        // given
+        Long notExistingId = 1L;
+
+        // when & then
+        assertThatThrownBy(() -> reservationService.deleteReservation(notExistingId))
+                .isInstanceOf(IllegalArgumentException.class);
     }
 }

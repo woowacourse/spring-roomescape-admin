@@ -1,7 +1,6 @@
 package roomescape.admin;
 
 import java.util.List;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -15,7 +14,6 @@ import roomescape.reservation.ReservationController;
 public class AdminController {
     private final ReservationController reservationController;
 
-    @Autowired
     public AdminController(ReservationController reservationController) {
         this.reservationController = reservationController;
     }

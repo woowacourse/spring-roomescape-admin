@@ -25,24 +25,24 @@ public class AdminController {
         this.adminService = new AdminService();
     }
 
-    @GetMapping("admin")
+    @GetMapping("/admin")
     public String welcome() {
         return "admin/index";
     }
 
-    @GetMapping("admin/reservation")
+    @GetMapping("/admin/reservation")
     public String reservation(Model model) {
         model.addAttribute("reservations", adminService.getAllReservations());
         return "admin/reservation-legacy";
     }
 
-    @GetMapping("reservations")
+    @GetMapping("/reservations")
     @ResponseBody
     public List<Reservation> reservations() {
         return adminService.getAllReservations();
     }
 
-    @PostMapping("reservations")
+    @PostMapping("/reservations")
     @ResponseBody
     public Reservation reserve(@RequestBody ReservationDto reservationDto) {
         Reservation reservation = new Reservation(index.getAndIncrement(), reservationDto);
@@ -50,7 +50,7 @@ public class AdminController {
         return adminService.findReservation(reservation.getId());
     }
 
-    @DeleteMapping("reservations/{id}")
+    @DeleteMapping("/reservations/{id}")
     public ResponseEntity<Void> cancel(@PathVariable("id") Long id){
         adminService.deleteReservation(id);
         return ResponseEntity.ok().build();

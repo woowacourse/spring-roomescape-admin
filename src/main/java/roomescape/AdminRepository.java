@@ -9,7 +9,7 @@ import roomescape.dto.ReservationRequest;
 public class AdminRepository {
     private static final Map<Long, Reservation> reservations = new HashMap<>();
 
-    private static final AtomicLong index = new AtomicLong(0);
+    private final AtomicLong index = new AtomicLong(0);
 
     public Reservation saveReservation(final ReservationRequest reservationRequest) {
         long id = index.incrementAndGet();

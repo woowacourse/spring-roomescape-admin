@@ -20,8 +20,8 @@ class ReservationTest {
 
     @ParameterizedTest
     @NullSource
-    @ValueSource(strings = {"123", ""})
-    @DisplayName("예약자 이름은 null이거나 숫자로만 구성될 수 없다.")
+    @ValueSource(strings = {"123", "", " "})
+    @DisplayName("예약자 이름은 빈칸이거나 숫자로만 구성될 수 없다.")
     void validateName(String invalidName) {
         // when & then
         assertThatThrownBy(() -> new Reservation(invalidName, MIA_RESERVATION_DATE, MIA_RESERVATION_TIME))

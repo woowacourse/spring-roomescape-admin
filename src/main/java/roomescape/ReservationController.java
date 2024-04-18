@@ -2,7 +2,6 @@ package roomescape;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Objects;
 import java.util.concurrent.atomic.AtomicLong;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -23,10 +22,7 @@ public class ReservationController {
 
     @PostMapping
     public ResponseEntity<Reservation> reserve(@RequestBody CreateReservationRequest request) {
-        Reservation newReservation = new Reservation(
-                id.incrementAndGet(),
-                request.name(),
-                request.date(),
+        Reservation newReservation = new Reservation(id.incrementAndGet(), request.name(), request.date(),
                 request.time());
         reservations.add(newReservation);
 
@@ -36,8 +32,7 @@ public class ReservationController {
     @DeleteMapping("/{id}")
     public ResponseEntity<Void> deleteBy(@PathVariable Long id) {
         Reservation found = reservations.stream()
-                .filter(it -> Objects.equals(it.getId(), id))
-                .findFirst()
+                .filter(it -> it.hasSameId(id)).findFirst()
                 .orElseThrow(RuntimeException::new);
         reservations.remove(found);
 

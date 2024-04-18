@@ -1,8 +1,9 @@
 package roomescape.domain;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
 import java.time.LocalDate;
 import java.time.LocalTime;
-import com.fasterxml.jackson.annotation.JsonFormat;
+import java.util.Objects;
 
 public class Reservation {
 
@@ -17,6 +18,10 @@ public class Reservation {
         this.name = name;
         this.date = date;
         this.time = time;
+    }
+
+    public boolean hasSameId(final Long id) {
+        return Objects.equals(this.id, id);
     }
 
     public Long getId() {

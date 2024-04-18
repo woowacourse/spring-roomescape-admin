@@ -5,6 +5,8 @@ import java.util.List;
 import java.util.Map;
 import java.util.concurrent.atomic.AtomicLong;
 import org.springframework.stereotype.Service;
+import roomescape.reservation.dto.ReservationRequest;
+import roomescape.reservation.dto.ReservationResponse;
 
 @Service
 public class ReservationService {
@@ -13,12 +15,13 @@ public class ReservationService {
 
     private final Map<Long, Reservation> reservations = new HashMap<>();
 
-    public List<Reservation> findAllReservations() {
+    public List<ReservationResponse> findAllReservations() {
         return reservations.values().stream()
+                .map(ReservationResponse::from)
                 .toList();
     }
 
-    public Reservation create(ReservationRequest reservationRequest) {
+    public ReservationResponse create(ReservationRequest reservationRequest) {
         long incrementId = atomicLong.incrementAndGet();
 
         Reservation reservation = new Reservation(
@@ -28,7 +31,7 @@ public class ReservationService {
                 reservationRequest.time()
         );
         reservations.put(incrementId, reservation);
-        return reservation;
+        return ReservationResponse.from(reservation);
     }
 
     public boolean delete(long reservationId) {

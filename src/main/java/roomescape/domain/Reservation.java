@@ -40,7 +40,7 @@ public class Reservation {
     }
 
     private void validateTime(LocalTime time) {
-        if (date == null || time == null) {
+        if (time == null) {
             throw new IllegalArgumentException("예약 시간은 null일 수 없습니다.");
         }
     }

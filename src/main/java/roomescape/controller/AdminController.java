@@ -6,13 +6,17 @@ import org.springframework.web.bind.annotation.*;
 import roomescape.domain.Reservation;
 import roomescape.dto.ReservationResponse;
 import roomescape.dto.ReservationSaveRequest;
-import roomescape.repository.ReservationRepository;
+import roomescape.service.ReservationService;
 
 import java.util.List;
 
 @Controller
 public class AdminController {
-    private final ReservationRepository reservationRepository = new ReservationRepository();
+    private final ReservationService reservationService;
+
+    public AdminController(ReservationService reservationService) {
+        this.reservationService = reservationService;
+    }
 
     @GetMapping("/admin")
     public String adminPage() {
@@ -26,7 +30,7 @@ public class AdminController {
 
     @GetMapping("/reservations")
     public ResponseEntity<List<ReservationResponse>> getReservations() {
-        var reservationResponses = reservationRepository.findAll()
+        var reservationResponses = reservationService.getReservations()
                 .stream()
                 .map(Reservation::toDto)
                 .toList();
@@ -36,15 +40,13 @@ public class AdminController {
     @PostMapping("/reservations")
     public ResponseEntity<ReservationResponse> createReservation(@RequestBody ReservationSaveRequest request) {
         var reservation = request.toReservation();
-        reservationRepository.save(reservation);
-        return ResponseEntity.ok(reservation.toDto());
+        var savedReservation = reservationService.createReservation(reservation);
+        return ResponseEntity.ok(savedReservation.toDto());
     }
 
     @DeleteMapping("/reservations/{id}")
     public ResponseEntity<Void> deleteReservation(@PathVariable Long id) {
-        var reservation = reservationRepository.findById(id)
-                .orElseThrow(() -> new IllegalArgumentException("해당 ID의 예약이 없습니다."));
-        reservationRepository.deleteById(reservation.getId());
+        reservationService.deleteReservation(id);
         return ResponseEntity.ok().build();
     }
 }

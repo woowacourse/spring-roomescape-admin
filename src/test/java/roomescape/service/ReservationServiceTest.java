@@ -1,8 +1,9 @@
-package roomescape.repository;
+package roomescape.service;
 
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import roomescape.domain.Reservation;
+import roomescape.repository.ReservationRepository;
 
 import java.time.LocalDate;
 import java.time.LocalTime;
@@ -10,19 +11,19 @@ import java.util.List;
 import java.util.Optional;
 
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.junit.jupiter.api.Assertions.assertAll;
 
-class ReservationRepositoryTest {
+class ReservationServiceTest {
     private final ReservationRepository reservationRepository = new ReservationRepository();
+    private final ReservationService reservationService = new ReservationService(reservationRepository);
 
     @Test
-    @DisplayName("예약을 저장한다.")
-    void save() {
+    @DisplayName("예약을 생성한다.")
+    void createReservation() {
         // given
         Reservation reservation = new Reservation("미아", LocalDate.now(), LocalTime.now());
 
         // when
-        Reservation savedReservation = reservationRepository.save(reservation);
+        Reservation savedReservation = reservationService.createReservation(reservation);
 
         // then
         assertThat(savedReservation).isNotNull();
@@ -30,7 +31,7 @@ class ReservationRepositoryTest {
 
     @Test
     @DisplayName("모든 예약 목록을 조회한다.")
-    void findAll() {
+    void getReservations() {
         // given
         Reservation miaReservation = new Reservation("미아", LocalDate.now(), LocalTime.now());
         Reservation tommyReservation = new Reservation("토미", LocalDate.now(), LocalTime.now());
@@ -38,7 +39,7 @@ class ReservationRepositoryTest {
         reservationRepository.save(tommyReservation);
 
         // when
-        List<Reservation> reservations = reservationRepository.findAll();
+        List<Reservation> reservations = reservationService.getReservations();
 
         // then
         assertThat(reservations).hasSize(2)
@@ -47,31 +48,14 @@ class ReservationRepositoryTest {
     }
 
     @Test
-    @DisplayName("Id로 예약을 조회한다.")
-    void findById() {
+    @DisplayName("예약을 삭제한다.")
+    void deleteReservation() {
         // given
         Reservation miaReservation = new Reservation("미아", LocalDate.now(), LocalTime.now());
         reservationRepository.save(miaReservation);
 
         // when
-        Optional<Reservation> actualReservation = reservationRepository.findById(1L);
-
-        // then
-        assertAll(
-                () -> assertThat(actualReservation).isPresent(),
-                () -> assertThat(actualReservation.get().getName()).isEqualTo("미아")
-        );
-    }
-
-    @Test
-    @DisplayName("Id로 예약을 삭제한다.")
-    void deleteById() {
-        // given
-        Reservation miaReservation = new Reservation("미아", LocalDate.now(), LocalTime.now());
-        reservationRepository.save(miaReservation);
-
-        // when
-        reservationRepository.deleteById(1L);
+        reservationService.deleteReservation(1L);
 
         // then
         Optional<Reservation> deleted = reservationRepository.findById(1L);

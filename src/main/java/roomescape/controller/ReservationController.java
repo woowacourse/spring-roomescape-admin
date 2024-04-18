@@ -22,12 +22,12 @@ public class ReservationController {
     private final List<Reservation> reservations = new ArrayList<>();
 
     @GetMapping("")
-    public List<Reservation> readReservations() {
+    public List<Reservation> readAll() {
         return reservations;
     }
 
     @PostMapping("")
-    public Reservation createReservation(@RequestBody ReservationRequestDto request) {
+    public Reservation add(@RequestBody ReservationRequestDto request) {
         Reservation newReservation = new Reservation(
             index.getAndIncrement(), request.name(), request.date(), request.time());
         reservations.add(newReservation);
@@ -35,7 +35,7 @@ public class ReservationController {
     }
 
     @DeleteMapping("/{id}")
-    public void deleteReservation(@PathVariable Long id) {
+    public void remove(@PathVariable Long id) {
         Reservation reservation = reservations.stream()
             .filter(it -> Objects.equals(it.getId(), id))
             .findFirst()

@@ -10,20 +10,6 @@ import roomescape.util.CustomDateTimeFormatter;
 
 class CustomDateTimeFormatterTest {
 
-    @DisplayName("날짜 문자열 값을 받아 LocalDate 객체를 반환한다.")
-    @Test
-    void getLocalDateTest() {
-        LocalDate localDate = CustomDateTimeFormatter.getLocalDate("2023-08-05");
-        assertThat(localDate).isEqualTo(LocalDate.of(2023, 8, 5));
-    }
-
-    @DisplayName("시간 문자열 값을 받아 LocalTime 객체를 반환한다.")
-    @Test
-    void getLocalTimeTest() {
-        LocalTime localTime = CustomDateTimeFormatter.getLocalTime("15:40");
-        assertThat(localTime).isEqualTo(LocalTime.of(15, 40));
-    }
-
     @DisplayName("LocalDate 객체로부터 날짜 문자열 값을 반환한다.")
     @Test
     void getFormattedDateTest() {

@@ -1,16 +1,17 @@
 package roomescape.controller;
 
+import java.time.LocalDate;
+import java.time.LocalTime;
 import roomescape.domain.Reservation;
-import roomescape.util.CustomDateTimeFormatter;
 
-public record CreateReservationRequest(String date, String name, String time) {
+public record CreateReservationRequest(LocalDate date, String name, LocalTime time) {
 
     public Reservation to(final Long id) {
         return new Reservation(
                 id,
                 this.name,
-                CustomDateTimeFormatter.getLocalDate(this.date),
-                CustomDateTimeFormatter.getLocalTime(this.time)
+                this.date,
+                this.time
         );
     }
 }

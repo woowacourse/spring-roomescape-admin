@@ -27,7 +27,7 @@ public class ReservationApiController {
     public ResponseEntity<Reservation> create(@RequestBody ReservationRequest reservationRequest) {
         Reservation newReservation = reservationRequest.toVo(index.getAndIncrement());
         reservations.add(newReservation);
-        return ResponseEntity.ok().body(newReservation);
+        return ResponseEntity.ok(newReservation);
     }
 
     @DeleteMapping("/reservations/{id}")

@@ -10,9 +10,7 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import roomescape.domain.reservation.Reservation;
-import roomescape.domain.reservation.repository.InMemoryReservationRepository;
-import roomescape.domain.reservation.repository.ReservationRepository;
-import roomescape.dto.ReservationDto;
+import roomescape.dto.ReservationRequest;
 
 class InMemoryReservationRepositoryTest {
     private ReservationRepository reservationRepository;
@@ -25,7 +23,7 @@ class InMemoryReservationRepositoryTest {
     @Test
     @DisplayName("예약을 저장한다")
     void save() {
-        ReservationDto reservation = new ReservationDto("user1", LocalDate.now(), LocalTime.now());
+        ReservationRequest reservation = new ReservationRequest("user1", LocalDate.now(), LocalTime.now());
 
         reservationRepository.save(reservation);
 
@@ -39,8 +37,8 @@ class InMemoryReservationRepositoryTest {
     @Test
     @DisplayName("예약을 조회한다")
     void findAll() {
-        ReservationDto reservation1 = new ReservationDto("user1", LocalDate.now(), LocalTime.now());
-        ReservationDto reservation2 = new ReservationDto("user2", LocalDate.now(), LocalTime.now());
+        ReservationRequest reservation1 = new ReservationRequest("user1", LocalDate.now(), LocalTime.now());
+        ReservationRequest reservation2 = new ReservationRequest("user2", LocalDate.now(), LocalTime.now());
 
         reservationRepository.save(reservation1);
         reservationRepository.save(reservation2);
@@ -56,7 +54,7 @@ class InMemoryReservationRepositoryTest {
     @Test
     @DisplayName("예약을 삭제한다")
     void deleteById() {
-        ReservationDto reservation = new ReservationDto("user1", LocalDate.now(), LocalTime.now());
+        ReservationRequest reservation = new ReservationRequest("user1", LocalDate.now(), LocalTime.now());
 
         reservationRepository.save(reservation);
 

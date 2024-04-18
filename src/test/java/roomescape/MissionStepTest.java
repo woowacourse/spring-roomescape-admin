@@ -15,7 +15,7 @@ import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.TestFactory;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.annotation.DirtiesContext;
-import roomescape.dto.ReservationDto;
+import roomescape.dto.ReservationRequest;
 
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.DEFINED_PORT)
 @DirtiesContext(classMode = DirtiesContext.ClassMode.BEFORE_EACH_TEST_METHOD)
@@ -52,7 +52,7 @@ class MissionStepTest {
     @TestFactory
     @DisplayName("예약을 생성하고 삭제한다.")
     Collection<DynamicTest> createReservationAndDelete() {
-        ReservationDto params = new ReservationDto(
+        ReservationRequest params = new ReservationRequest(
                 "브라운", LocalDate.of(2023, 8, 5), LocalTime.of(15, 40)
         );
 

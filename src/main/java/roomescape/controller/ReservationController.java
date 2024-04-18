@@ -4,7 +4,6 @@ import java.util.List;
 import java.util.concurrent.atomic.AtomicLong;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
-import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 import roomescape.domain.Reservation;
 import roomescape.domain.Reservations;
@@ -24,11 +23,7 @@ public class ReservationController {
     }
 
     @GetMapping("/admin/reservation")
-    public String getReservationPage(Model model) {
-        List<ReservationResponse> reservationResponses = reservations.getReservations()
-                .stream()
-                .map(ReservationResponse::fromReservation).toList();
-        model.addAttribute("reservationResponses", reservationResponses);
+    public String getReservationPage() {
         return "/admin/reservation-legacy";
     }
 

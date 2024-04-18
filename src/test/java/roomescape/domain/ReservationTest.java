@@ -12,6 +12,7 @@ import java.time.LocalTime;
 import java.util.stream.Stream;
 
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
+import static roomescape.TestFixture.*;
 
 class ReservationTest {
 
@@ -21,7 +22,7 @@ class ReservationTest {
     @DisplayName("예약자 이름은 null이거나 숫자로만 구성될 수 없다.")
     void validateName(String invalidName) {
         // when & then
-        assertThatThrownBy(() -> new Reservation(invalidName, LocalDate.now(), LocalTime.now()))
+        assertThatThrownBy(() -> new Reservation(invalidName, MIA_RESERVATION_DATE, MIA_RESERVATION_TIME))
                 .isInstanceOf(IllegalArgumentException.class);
     }
 
@@ -30,7 +31,7 @@ class ReservationTest {
     @DisplayName("예약 날짜는 null이거나 현재 날짜 이전일 수 없다.")
     void validateDate(LocalDate invalidDate) {
         // when & then
-        assertThatThrownBy(() -> new Reservation("미아", invalidDate, LocalTime.now()))
+        assertThatThrownBy(() -> new Reservation(USER_MIA, invalidDate, MIA_RESERVATION_TIME))
                 .isInstanceOf(IllegalArgumentException.class);
     }
 
@@ -45,7 +46,7 @@ class ReservationTest {
         LocalTime invalidTime = null;
 
         // when & then
-        assertThatThrownBy(() -> new Reservation("미아", LocalDate.now(), invalidTime))
+        assertThatThrownBy(() -> new Reservation(USER_MIA, MIA_RESERVATION_DATE, invalidTime))
                 .isInstanceOf(IllegalArgumentException.class);
     }
 
@@ -53,7 +54,7 @@ class ReservationTest {
     @DisplayName("이미 초기화된 예약 ID를 초기화(수정)할 경우 예외가 발생한다.")
     void initializeId() {
         // given
-        Reservation reservation = new Reservation("미아", LocalDate.now(), LocalTime.now());
+        Reservation reservation = new Reservation(USER_MIA, MIA_RESERVATION_DATE, MIA_RESERVATION_TIME);
         reservation.initializeId(1L);
 
         // when & then

@@ -9,8 +9,6 @@ import org.springframework.http.MediaType;
 import roomescape.domain.Reservation;
 import roomescape.dto.ReservationSaveRequest;
 
-import java.time.LocalDate;
-import java.time.LocalTime;
 import java.util.List;
 
 import static org.mockito.ArgumentMatchers.any;
@@ -19,6 +17,7 @@ import static org.springframework.test.web.servlet.request.MockMvcRequestBuilder
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
+import static roomescape.TestFixture.*;
 
 class ReservationControllerTest extends ControllerTest {
     @Autowired
@@ -29,21 +28,21 @@ class ReservationControllerTest extends ControllerTest {
     void getReservations() throws Exception {
         // given
         BDDMockito.given(reservationService.getReservations())
-                .willReturn(List.of(new Reservation("미아", LocalDate.now(), LocalTime.now())));
+                .willReturn(List.of(new Reservation(USER_MIA, MIA_RESERVATION_DATE, MIA_RESERVATION_TIME)));
 
         // when & then
         mockMvc.perform(get("/reservations").contentType(MediaType.APPLICATION_JSON))
                 .andDo(print())
                 .andExpect(status().isOk())
-                .andExpect(jsonPath("$[0].name").value("미아"))
-                .andExpect(jsonPath("$[0].date").value(LocalDate.now().toString()));
+                .andExpect(jsonPath("$[0].name").value(USER_MIA))
+                .andExpect(jsonPath("$[0].date").value(MIA_RESERVATION_DATE.toString()));
     }
 
     @Test
     @DisplayName("예약 POST 요청 시 상태코드 200을 반환한다.")
     void createReservation() throws Exception {
         // given
-        ReservationSaveRequest request = new ReservationSaveRequest("미아", LocalDate.now(), LocalTime.now());
+        ReservationSaveRequest request = new ReservationSaveRequest(USER_MIA, MIA_RESERVATION_DATE, MIA_RESERVATION_TIME);
         Reservation expectedReservation = request.toReservation();
 
         BDDMockito.given(reservationService.createReservation(any()))

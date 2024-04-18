@@ -4,13 +4,12 @@ import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import roomescape.domain.Reservation;
 
-import java.time.LocalDate;
-import java.time.LocalTime;
 import java.util.List;
 import java.util.Optional;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertAll;
+import static roomescape.TestFixture.*;
 
 class ReservationRepositoryTest {
     private final ReservationRepository reservationRepository = new ReservationRepository();
@@ -19,7 +18,7 @@ class ReservationRepositoryTest {
     @DisplayName("예약을 저장한다.")
     void save() {
         // given
-        Reservation reservation = new Reservation("미아", LocalDate.now(), LocalTime.now());
+        Reservation reservation = new Reservation(USER_MIA, MIA_RESERVATION_DATE, MIA_RESERVATION_TIME);
 
         // when
         Reservation savedReservation = reservationRepository.save(reservation);
@@ -32,8 +31,8 @@ class ReservationRepositoryTest {
     @DisplayName("모든 예약 목록을 조회한다.")
     void findAll() {
         // given
-        Reservation miaReservation = new Reservation("미아", LocalDate.now(), LocalTime.now());
-        Reservation tommyReservation = new Reservation("토미", LocalDate.now(), LocalTime.now());
+        Reservation miaReservation = new Reservation(USER_MIA, MIA_RESERVATION_DATE, MIA_RESERVATION_TIME);
+        Reservation tommyReservation = new Reservation(USER_TOMMY, TOMMY_RESERVATION_DATE, TOMMY_RESERVATION_TIME);
         reservationRepository.save(miaReservation);
         reservationRepository.save(tommyReservation);
 
@@ -43,14 +42,14 @@ class ReservationRepositoryTest {
         // then
         assertThat(reservations).hasSize(2)
                 .extracting(Reservation::getName)
-                .containsExactly("미아", "토미");
+                .containsExactly(USER_MIA, USER_TOMMY);
     }
 
     @Test
     @DisplayName("Id로 예약을 조회한다.")
     void findById() {
         // given
-        Reservation miaReservation = new Reservation("미아", LocalDate.now(), LocalTime.now());
+        Reservation miaReservation = new Reservation(USER_MIA, MIA_RESERVATION_DATE, MIA_RESERVATION_TIME);
         reservationRepository.save(miaReservation);
 
         // when
@@ -59,7 +58,7 @@ class ReservationRepositoryTest {
         // then
         assertAll(
                 () -> assertThat(actualReservation).isPresent(),
-                () -> assertThat(actualReservation.get().getName()).isEqualTo("미아")
+                () -> assertThat(actualReservation.get().getName()).isEqualTo(USER_MIA)
         );
     }
 
@@ -67,7 +66,7 @@ class ReservationRepositoryTest {
     @DisplayName("Id로 예약을 삭제한다.")
     void deleteById() {
         // given
-        Reservation miaReservation = new Reservation("미아", LocalDate.now(), LocalTime.now());
+        Reservation miaReservation = new Reservation(USER_MIA, MIA_RESERVATION_DATE, MIA_RESERVATION_TIME);
         reservationRepository.save(miaReservation);
 
         // when

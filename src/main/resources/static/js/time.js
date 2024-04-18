@@ -2,6 +2,7 @@ let isEditing = false;
 const API_ENDPOINT = '/times';
 const cellFields = ['id', 'startAt'];
 const createCellFields = ['', createInput()];
+
 function createBody(inputs) {
   return {
     startAt: inputs[0].value,
@@ -11,8 +12,8 @@ function createBody(inputs) {
 document.addEventListener('DOMContentLoaded', () => {
   document.getElementById('add-button').addEventListener('click', addRow);
   requestRead()
-      .then(render)
-      .catch(error => console.error('Error fetching times:', error));
+    .then(render)
+    .catch(error => console.error('Error fetching times:', error));
 });
 
 function render(data) {
@@ -80,10 +81,10 @@ function saveRow(event) {
   const body = createBody(inputs);
 
   requestCreate(body)
-      .then(() => {
-        location.reload();
-      })
-      .catch(error => console.error('Error:', error));
+    .then(() => {
+      location.reload();
+    })
+    .catch(error => console.error('Error:', error));
 
   isEditing = false;  // isEditing 값을 false로 설정
 }
@@ -93,8 +94,8 @@ function deleteRow(event) {
   const id = row.cells[0].textContent;
 
   requestDelete(id)
-      .then(() => row.remove())
-      .catch(error => console.error('Error:', error));
+    .then(() => row.remove())
+    .catch(error => console.error('Error:', error));
 }
 
 
@@ -108,18 +109,18 @@ function requestCreate(data) {
   };
 
   return fetch(API_ENDPOINT, requestOptions)
-      .then(response => {
-        if (response.status === 200) return response.json();
-        throw new Error('Create failed');
-      });
+    .then(response => {
+      if (response.status === 200) return response.json();
+      throw new Error('Create failed');
+    });
 }
 
 function requestRead() {
   return fetch(API_ENDPOINT)
-      .then(response => {
-        if (response.status === 200) return response.json();
-        throw new Error('Read failed');
-      });
+    .then(response => {
+      if (response.status === 200) return response.json();
+      throw new Error('Read failed');
+    });
 }
 
 function requestDelete(id) {
@@ -128,7 +129,7 @@ function requestDelete(id) {
   };
 
   return fetch(`${API_ENDPOINT}/${id}`, requestOptions)
-      .then(response => {
-        if (response.status !== 200) throw new Error('Delete failed');
-      });
+    .then(response => {
+      if (response.status !== 204) throw new Error('Delete failed');
+    });
 }

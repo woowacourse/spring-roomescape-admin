@@ -55,10 +55,4 @@ public class ReservationStorage {
                 .findAny()
                 .ifPresent(reservations::remove);
     }
-
-    //Todo 메서드 제거하고, 외부에서 내부 요소를 주입받을 수 있게 하는 것은 어떤가? TestConfig 에서 하면 될 듯
-    public void removeAll() {
-        atomicLong.set(0);
-        reservations.clear();
-    }
 }

@@ -8,7 +8,7 @@ import java.time.LocalDateTime;
 import java.time.LocalTime;
 
 public record SaveReservationRequest(LocalDate date, String name, LocalTime time) {
-    public Reservation toEntity() {
+    public Reservation toReservation() {
         return new Reservation(
                 new ClientName(name),
                 LocalDateTime.of(date, time)

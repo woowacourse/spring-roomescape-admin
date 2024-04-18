@@ -34,7 +34,7 @@ public class AdminApiController {
 
     @PostMapping("/reservations")
     public ResponseEntity<ReservationDto> saveReservation(@RequestBody final SaveReservationRequest request) {
-        Reservation reservation = request.toEntity();
+        Reservation reservation = request.toReservation();
         Reservation savedReservation = reservationRepository.save(reservation);
 
         return ResponseEntity.ok(ReservationDto.from(savedReservation));

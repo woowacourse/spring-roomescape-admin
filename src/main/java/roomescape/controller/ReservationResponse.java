@@ -6,7 +6,7 @@ import java.time.format.DateTimeFormatter;
 
 public record ReservationResponse(Long id, String name, String date, String time) {
 
-    public static ReservationResponse of(Reservation reservation) {
+    public static ReservationResponse of(final Reservation reservation) {
         return new ReservationResponse(
                 reservation.id(),
                 reservation.name(),

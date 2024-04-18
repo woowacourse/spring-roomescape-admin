@@ -29,7 +29,7 @@ public class ReservationController {
     }
 
     @PostMapping
-    public ResponseEntity<ReservationResponse> addReservationData(@RequestBody ReservationRequest request) {
+    public ResponseEntity<ReservationResponse> addReservationData(@RequestBody final ReservationRequest request) {
         Reservation reservation = request.toDomain(index.getAndIncrement());
         reservations.add(reservation);
 
@@ -38,7 +38,7 @@ public class ReservationController {
     }
 
     @DeleteMapping("/{id}")
-    public ResponseEntity<Void> deleteReservationsData(@PathVariable Long id) {
+    public ResponseEntity<Void> deleteReservationsData(@PathVariable final Long id) {
         boolean isRemoved = reservations.removeIf(reservation -> reservation.id().equals(id));
         if (isRemoved) {
             return ResponseEntity.noContent().build();

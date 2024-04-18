@@ -7,7 +7,7 @@ import java.time.LocalTime;
 
 public record ReservationRequest(String name, LocalDate date, LocalTime time) {
 
-    public Reservation toDomain(Long id) {
+    public Reservation toDomain(final Long id) {
         return new Reservation(id, name, date.atTime(time));
     }
 }

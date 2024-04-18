@@ -10,7 +10,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.ResponseBody;
 import roomescape.domain.Reservation;
-import roomescape.domain.ReservationDto;
+import roomescape.domain.ReservationRequestDto;
 import roomescape.service.AdminService;
 
 @Controller
@@ -40,8 +40,8 @@ public class AdminController {
 
     @PostMapping("/reservations")
     @ResponseBody
-    public Reservation reserve(@RequestBody ReservationDto reservationDto) {
-        return adminService.addReservation(reservationDto);
+    public ReservationResponseDto reserve(@RequestBody ReservationRequestDto reservationRequestDto) {
+        return adminService.addReservation(reservationRequestDto);
     }
 
     @DeleteMapping("/reservations/{id}")

@@ -27,8 +27,8 @@ public class Reservations {
                 .orElseThrow(IllegalArgumentException::new);
     }
 
-    public boolean delete(Long id) {
-        return reservations.remove(find(id));
+    public void delete(Long id) {
+        reservations.remove(find(id));
     }
 
     public List<Reservation> getReservations() {

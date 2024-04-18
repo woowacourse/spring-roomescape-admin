@@ -40,7 +40,7 @@ public class ReservationController {
         Reservation reservationToDeleted = reservations.stream()
                 .filter(reservation -> reservation.getId().equals(id))
                 .findFirst()
-                .orElseThrow(RuntimeException::new);
+                .orElseThrow(() -> new IllegalArgumentException("존재하지 않는 예약 아이디 입니다."));
 
         reservations.remove(reservationToDeleted);
 

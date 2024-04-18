@@ -18,7 +18,7 @@ import org.springframework.boot.test.context.SpringBootTest.WebEnvironment;
 import org.springframework.boot.test.web.server.LocalServerPort;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.test.annotation.DirtiesContext;
-import roomescape.domain.Reservation;
+import roomescape.dto.ReservationResponse;
 
 @SpringBootTest(webEnvironment = WebEnvironment.RANDOM_PORT)
 @DirtiesContext(classMode = DirtiesContext.ClassMode.BEFORE_EACH_TEST_METHOD)
@@ -33,6 +33,15 @@ class MissionStepTest {
     @BeforeEach
     void before() {
         RestAssured.port = port;
+
+        Map<String, String> startAt = Map.of("startAt", "10:11");
+
+        RestAssured.given().log().all()
+                .contentType(ContentType.JSON)
+                .body(startAt)
+                .when().post("/times")
+                .then().log().all()
+                .statusCode(201);
     }
 
     @Test
@@ -59,10 +68,10 @@ class MissionStepTest {
 
     @Test
     void 삼단계() {
-        Map<String, String> params = Map.of(
+        Map<String, Object> params = Map.of(
                 "name", "브라운",
                 "date", "2023-08-05",
-                "time", "15:40");
+                "timeId", 1);
 
         RestAssured.given().log().all()
                 .contentType(ContentType.JSON)
@@ -103,13 +112,14 @@ class MissionStepTest {
 
     @Test
     void 오단계() {
-        jdbcTemplate.update("INSERT INTO reservation (name, date, time) VALUES (?, ?, ?)", "브라운", "2023-08-05", "15:40");
+        jdbcTemplate.update("INSERT INTO reservation (name, date, time_id) VALUES (?, ?, ?)", "브라운", "2023-08-05",
+                1);
 
-        List<Reservation> reservations = RestAssured.given().log().all()
+        List<ReservationResponse> reservations = RestAssured.given().log().all()
                 .when().get("/reservations")
                 .then().log().all()
                 .statusCode(200).extract()
-                .jsonPath().getList(".", Reservation.class);
+                .jsonPath().getList(".", ReservationResponse.class);
 
         Integer count = jdbcTemplate.queryForObject("SELECT count(1) from reservation", Integer.class);
 
@@ -118,10 +128,10 @@ class MissionStepTest {
 
     @Test
     void 육단계() {
-        Map<String, String> params = Map.of(
+        Map<String, Object> params = Map.of(
                 "name", "브라운",
                 "date", "2023-08-05",
-                "time", "15:00");
+                "timeId", 1);
 
         RestAssured.given().log().all()
                 .contentType(ContentType.JSON)
@@ -159,11 +169,34 @@ class MissionStepTest {
                 .when().get("/times")
                 .then().log().all()
                 .statusCode(200)
-                .body("size()", is(1));
+                .body("size()", is(2));
 
         RestAssured.given().log().all()
-                .when().delete("/times/1")
+                .when().delete("/times/2")
                 .then().log().all()
                 .statusCode(204);
+    }
+
+    @Test
+    void 팔단계() {
+        Map<String, Object> reservation = Map.of(
+                "name", "브라운",
+                "date", "2023-08-05",
+                "timeId", 1
+        );
+
+        RestAssured.given().log().all()
+                .contentType(ContentType.JSON)
+                .body(reservation)
+                .when().post("/reservations")
+                .then().log().all()
+                .statusCode(201)
+                .header("Location", "/reservations/1");;
+
+        RestAssured.given().log().all()
+                .when().get("/reservations")
+                .then().log().all()
+                .statusCode(200)
+                .body("size()", is(1));
     }
 }

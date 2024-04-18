@@ -22,12 +22,13 @@ public class ReservationTimeDao {
         KeyHolder keyHolder = new GeneratedKeyHolder();
 
         jdbcTemplate.update(connection -> {
-            PreparedStatement ps = connection.prepareStatement(
-                    "insert into reservation_time(start_at) values (?)",
-                    new String[]{"id"});
-            ps.setString(1, reservationTime.getStartAt().toString());
-            return ps;
-        }, keyHolder);
+                    PreparedStatement ps = connection.prepareStatement(
+                            "insert into reservation_time(start_at) values (?)",
+                            new String[]{"id"});
+                    ps.setString(1, reservationTime.getStartAt().toString());
+                    return ps;
+                }, keyHolder
+        );
 
         return keyHolder.getKey().longValue();
     }
@@ -43,5 +44,14 @@ public class ReservationTimeDao {
 
     public void deleteById(Long id) {
         jdbcTemplate.update("delete from reservation_time where id = ?", id);
+    }
+
+    public ReservationTime findById(Long id) {
+        return jdbcTemplate.queryForObject("select * from reservation_time where id = ?",
+                (resultSet, rowNum) -> new ReservationTime(
+                        resultSet.getLong("id"),
+                        LocalTime.parse(resultSet.getString("start_at"))
+                ), id
+        );
     }
 }

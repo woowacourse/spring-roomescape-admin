@@ -6,27 +6,28 @@ import static org.hamcrest.Matchers.is;
 import io.restassured.RestAssured;
 import io.restassured.http.ContentType;
 import java.util.Collection;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.DynamicTest;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.TestFactory;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.boot.test.context.SpringBootTest.WebEnvironment;
+import org.springframework.boot.test.web.server.LocalServerPort;
 import org.springframework.test.annotation.DirtiesContext;
 
-@SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.DEFINED_PORT)
+@SpringBootTest(webEnvironment = WebEnvironment.RANDOM_PORT)
 @DirtiesContext(classMode = DirtiesContext.ClassMode.BEFORE_EACH_TEST_METHOD)
-class ReservationControllerTest {
+class ReservationApiControllerTest {
 
-    @Test
-    @DisplayName("/admin/reservation 를 요청하면 reservation-legacy.html 를 반환한다.")
-    void requestAdminReservation() {
-        RestAssured.given().log().all()
-                .when().get("/admin/reservation")
-                .then().log().all()
-                .statusCode(200);
+    @LocalServerPort
+    private int port;
+
+    @BeforeEach
+    void beforeEach() {
+        RestAssured.port = port;
     }
 
     @Test
@@ -43,10 +44,10 @@ class ReservationControllerTest {
     @DisplayName("예약을 추가하고 삭제합니다.")
     Collection<DynamicTest> createAndDeleteReservation() {
 
-        Map<String, String> params = new HashMap<>();
-        params.put("name", "브라운");
-        params.put("date", "2023-08-05");
-        params.put("time", "15:40");
+        Map<String, String> params = Map.of(
+                "name", "브라운",
+                "date", "2023-08-05",
+                "time", "15:40");
 
         return List.of(
                 DynamicTest.dynamicTest("예약을 추가한다.", () -> {

@@ -1,6 +1,7 @@
 package roomescape.controller;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 import java.util.concurrent.atomic.AtomicLong;
 import org.springframework.http.HttpStatus;
@@ -20,17 +21,18 @@ import roomescape.dto.ReservationResponse;
 @RequestMapping("/reservations")
 public class ReservationController {
 
-    private final List<Reservation> reservations;// TODO: 이 컨트롤러는 언제 생성될까? 필드 초기화는 어디서 해야할까?
+    private final List<Reservation> reservations;
     private final AtomicLong index;
 
     public ReservationController() {
-        this.reservations = new ArrayList<>();
+        this.reservations = Collections.synchronizedList(new ArrayList<>());
         this.index = new AtomicLong(1);
     }
 
     @GetMapping
     @ResponseStatus(HttpStatus.OK)
     public List<ReservationResponse> findAll() {
+        Collections.synchronizedList(reservations);
         return ReservationResponse.fromReservations(reservations);
     }
 

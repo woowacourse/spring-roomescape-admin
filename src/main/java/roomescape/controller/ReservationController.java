@@ -31,7 +31,7 @@ public class ReservationController {
     }
 
     @PostMapping
-    public ResponseEntity<CreateReservationResponse> createReservation(
+    public ResponseEntity<Void> createReservation(
             @RequestBody CreateReservationRequest createReservationRequest) {
         Reservation newReservation = createReservationRequest.to(index.getAndIncrement());
         reservations.add(newReservation);

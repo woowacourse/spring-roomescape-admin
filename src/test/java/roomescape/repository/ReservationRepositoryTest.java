@@ -8,6 +8,7 @@ import java.util.List;
 import java.util.Optional;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import static org.junit.jupiter.api.Assertions.assertAll;
 import static roomescape.TestFixture.*;
 
@@ -25,6 +26,26 @@ class ReservationRepositoryTest {
 
         // then
         assertThat(savedReservation).isNotNull();
+    }
+
+    @Test
+    @DisplayName("동일시간대에 최대 4팀까지 예약이 가능하다.")
+    void saveLimitedReservations() {
+        // given
+        Reservation miaReservation1 = new Reservation(USER_MIA, MIA_RESERVATION_DATE, MIA_RESERVATION_TIME);
+        Reservation miaReservation2 = new Reservation(USER_MIA, MIA_RESERVATION_DATE, MIA_RESERVATION_TIME);
+        Reservation miaReservation3 = new Reservation(USER_MIA, MIA_RESERVATION_DATE, MIA_RESERVATION_TIME);
+        Reservation miaReservation4 = new Reservation(USER_MIA, MIA_RESERVATION_DATE, MIA_RESERVATION_TIME);
+        reservationRepository.save(miaReservation1);
+        reservationRepository.save(miaReservation2);
+        reservationRepository.save(miaReservation3);
+        reservationRepository.save(miaReservation4);
+
+        Reservation newReservation = new Reservation(USER_TOMMY, MIA_RESERVATION_DATE, MIA_RESERVATION_TIME);
+
+        // when & then
+        assertThatThrownBy(() -> reservationRepository.save(newReservation))
+                .isInstanceOf(IllegalArgumentException.class);
     }
 
     @Test

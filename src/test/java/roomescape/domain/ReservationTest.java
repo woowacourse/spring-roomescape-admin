@@ -3,6 +3,7 @@ package roomescape.domain;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
+import org.junit.jupiter.params.provider.Arguments;
 import org.junit.jupiter.params.provider.MethodSource;
 import org.junit.jupiter.params.provider.NullSource;
 import org.junit.jupiter.params.provider.ValueSource;
@@ -11,6 +12,7 @@ import java.time.LocalDate;
 import java.time.LocalTime;
 import java.util.stream.Stream;
 
+import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import static roomescape.TestFixture.*;
 
@@ -62,5 +64,31 @@ class ReservationTest {
         // when & then
         assertThatThrownBy(() -> reservation.initializeId(2L))
                 .isInstanceOf(IllegalStateException.class);
+    }
+
+    @ParameterizedTest
+    @MethodSource("reservationsAndExpectedResult")
+    @DisplayName("두 예약이 같은 날짜와 시간인지 확인한다.")
+    void hasSameDateTime(Reservation miaReservation, Reservation tommyReservation, boolean expectedResult) {
+        // when
+        boolean actualResult = miaReservation.hasSameDateTime(tommyReservation);
+
+        // then
+        assertThat(actualResult).isEqualTo(expectedResult);
+    }
+
+    private static Stream<Arguments> reservationsAndExpectedResult() {
+        return Stream.of(
+                Arguments.of(
+                        new Reservation(USER_MIA, MIA_RESERVATION_DATE, MIA_RESERVATION_TIME),
+                        new Reservation(USER_TOMMY, TOMMY_RESERVATION_DATE, TOMMY_RESERVATION_TIME),
+                        false
+                ),
+                Arguments.of(
+                        new Reservation(USER_MIA, MIA_RESERVATION_DATE, MIA_RESERVATION_TIME),
+                        new Reservation(USER_TOMMY, MIA_RESERVATION_DATE, MIA_RESERVATION_TIME),
+                        true
+                )
+        );
     }
 }

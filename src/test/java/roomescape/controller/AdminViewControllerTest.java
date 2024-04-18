@@ -1,23 +1,23 @@
 package roomescape.controller;
 
+import static org.assertj.core.api.Assertions.assertThat;
+
 import io.restassured.RestAssured;
-import org.junit.jupiter.api.Test;
+import io.restassured.response.Response;
+import org.junit.jupiter.params.ParameterizedTest;
+import org.junit.jupiter.params.provider.ValueSource;
+import org.springframework.http.HttpStatus;
 
 class AdminViewControllerTest extends BaseControllerTest {
 
-    @Test
-    void adminPage() {
-        RestAssured.given().log().all()
-                .when().get("/admin")
-                .then().log().all()
-                .statusCode(200);
-    }
+    @ParameterizedTest
+    @ValueSource(strings = {"/admin", "/admin/reservation"})
+    void adminPage(String path) {
+        // given & when
+        Response response = RestAssured.given().log().all()
+                .when().get(path);
 
-    @Test
-    void adminReservationPage() {
-        RestAssured.given().log().all()
-                .when().get("/admin/reservation")
-                .then().log().all()
-                .statusCode(200);
+        // then
+        assertThat(response.getStatusCode()).isEqualTo(HttpStatus.OK.value());
     }
 }

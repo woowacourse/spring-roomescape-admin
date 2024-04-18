@@ -37,7 +37,7 @@ class MissionStepTest {
         HttpRestTestTemplate.assertGetOk("/reservations", "size()", reservationSize);
     }
 
-    @DisplayName("예약_추가_삭제_시나리오")
+    @DisplayName("예약 추가 삭제 시나리오")
     @TestFactory
     Collection<DynamicTest> addAndRemoveReservation() {
         List<Reservation> reservations = reservationRepository.findAll();

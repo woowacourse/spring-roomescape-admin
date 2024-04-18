@@ -2,9 +2,7 @@ package roomescape.repository;
 
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
-import org.junit.jupiter.api.MethodOrderer;
 import org.junit.jupiter.api.Test;
-import org.junit.jupiter.api.TestMethodOrder;
 import roomescape.domain.ClientName;
 import roomescape.domain.Reservation;
 
@@ -15,7 +13,6 @@ import java.util.NoSuchElementException;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 
-@TestMethodOrder(MethodOrderer.OrderAnnotation.class)
 class MemoryReservationRepositoryTest {
     private MemoryReservationRepository memoryReservationRepository;
 

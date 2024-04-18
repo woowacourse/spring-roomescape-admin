@@ -47,4 +47,13 @@ class ReservationControllerTest {
                 .statusCode(200)
                 .body("size()", is(0));
     }
+
+    @DisplayName("존재하지 않은 예약 삭제 시 예외가 발생한다.")
+    @Test
+    void reservationNotFound() {
+        RestAssured.given().log().all()
+                .when().delete("/reservations/1")
+                .then().log().all()
+                .statusCode(404);
+    }
 }

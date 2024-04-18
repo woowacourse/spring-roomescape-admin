@@ -30,10 +30,11 @@ public class ReservationService {
         return reservation;
     }
 
-    public void delete(long reservationId) {
+    public boolean delete(long reservationId) {
         if (!reservations.containsKey(reservationId)) {
-            throw new IllegalArgumentException("해당 예약을 찾을 수 없습니다. 유효한 에약을 입력해 주세요.");
+            return false;
         }
         reservations.remove(reservationId);
+        return true;
     }
 }

@@ -6,13 +6,24 @@ import io.restassured.RestAssured;
 import io.restassured.http.ContentType;
 import java.util.HashMap;
 import java.util.Map;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.boot.test.context.SpringBootTest.WebEnvironment;
+import org.springframework.boot.test.web.server.LocalServerPort;
 import org.springframework.test.annotation.DirtiesContext;
 
-@SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.DEFINED_PORT)
+@SpringBootTest(webEnvironment = WebEnvironment.RANDOM_PORT)
 @DirtiesContext(classMode = DirtiesContext.ClassMode.BEFORE_EACH_TEST_METHOD)
 public class MissionStepTest {
+
+    @LocalServerPort
+    private int port;
+
+    @BeforeEach
+    void init() {
+        RestAssured.port = port;
+    }
 
     @Test
     void 일단계() {
@@ -25,7 +36,7 @@ public class MissionStepTest {
     @Test
     void 이단계() {
         RestAssured.given().log().all()
-                .when().get("/admin/reservation")
+                .when().get("/reservation")
                 .then().log().all()
                 .statusCode(200);
 

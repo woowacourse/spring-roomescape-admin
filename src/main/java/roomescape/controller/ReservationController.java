@@ -11,13 +11,14 @@ import org.springframework.web.bind.annotation.RestController;
 import roomescape.domain.Reservation;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 import java.util.concurrent.atomic.AtomicLong;
 
 @RestController
 @RequestMapping("/reservations")
 public class ReservationController {
-    private final List<Reservation> reservations = new ArrayList<>();
+    private final List<Reservation> reservations = Collections.synchronizedList(new ArrayList<>());
     private final AtomicLong index = new AtomicLong(1);
 
     @GetMapping

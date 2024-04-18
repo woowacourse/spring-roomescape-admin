@@ -13,6 +13,17 @@
 ***
 
 # API 명세
+### 예약 관리 페이지 호출
+**Request<br>**
+```http request
+GET /admin/reservation HTTP/1.1
+```
+
+**Response<br>**
+```
+templates/admin/reservation-legacy.html
+```
+
 ### 예약 조회 API
 **Request<br>**
 ```

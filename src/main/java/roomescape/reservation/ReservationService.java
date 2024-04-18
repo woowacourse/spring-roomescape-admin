@@ -8,7 +8,8 @@ import org.springframework.stereotype.Service;
 
 @Service
 public class ReservationService {
-    private static final AtomicLong atomicLong = new AtomicLong();
+    private static final long START_ID = 0;
+    private static final AtomicLong atomicLong = new AtomicLong(START_ID);
 
     private final Map<Long, Reservation> reservations = new HashMap<>();
 

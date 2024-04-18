@@ -1,12 +1,16 @@
 package roomescape;
 
 import static org.hamcrest.Matchers.is;
+import static org.junit.jupiter.api.DynamicTest.dynamicTest;
 
 import io.restassured.RestAssured;
 import io.restassured.http.ContentType;
 import java.time.LocalDate;
 import java.time.LocalTime;
+import java.util.Collection;
+import java.util.List;
 import org.junit.jupiter.api.DisplayName;
+import org.junit.jupiter.api.DynamicTest;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.TestFactory;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -45,36 +49,42 @@ class MissionStepTest {
                 .body("size()", is(0));
     }
 
-    @Test
+    @TestFactory
     @DisplayName("예약을 생성하고 삭제한다.")
-    void createReservationAndDelete() {
+    Collection<DynamicTest> createReservationAndDelete() {
         ReservationDto params = new ReservationDto(
                 "브라운", LocalDate.of(2023, 8, 5), LocalTime.of(15, 40)
         );
 
-        RestAssured.given().log().all()
-                .contentType(ContentType.JSON)
-                .body(params)
-                .when().post("/reservations")
-                .then().log().all()
-                .statusCode(200)
-                .body("id", is(1));
-
-        RestAssured.given().log().all()
-                .when().get("/reservations")
-                .then().log().all()
-                .statusCode(200)
-                .body("size()", is(1));
-
-        RestAssured.given().log().all()
-                .when().delete("/reservations/1")
-                .then().log().all()
-                .statusCode(200);
-
-        RestAssured.given().log().all()
-                .when().get("/reservations")
-                .then().log().all()
-                .statusCode(200)
-                .body("size()", is(0));
+        return List.of(
+                dynamicTest("예약을 생성한다.", () -> {
+                    RestAssured.given().log().all()
+                            .contentType(ContentType.JSON)
+                            .body(params)
+                            .when().post("/reservations")
+                            .then().log().all()
+                            .statusCode(200)
+                            .body("id", is(1));
+                }),
+                dynamicTest("생성된 예약은 전체 예약 목록에서 확인할 수 있다.", () -> {
+                    RestAssured.given().log().all()
+                            .when().get("/reservations")
+                            .then().log().all()
+                            .statusCode(200)
+                            .body("size()", is(1));
+                }),
+                dynamicTest("예약을 삭제한다.", () -> {
+                    RestAssured.given().log().all()
+                            .when().delete("/reservations/1")
+                            .then().log().all()
+                            .statusCode(200);
+                }),
+                dynamicTest("삭제된 예약은 전체 예약 목록에서도 지워진다.", () -> {
+                    RestAssured.given().log().all()
+                            .when().get("/reservations")
+                            .then().log().all()
+                            .statusCode(200)
+                            .body("size()", is(0));
+                }));
     }
 }

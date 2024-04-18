@@ -6,6 +6,7 @@ import roomescape.domain.Reservation;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.NoSuchElementException;
 import java.util.concurrent.atomic.AtomicLong;
 
 @Repository
@@ -32,6 +33,10 @@ public class MemoryReservationRepository implements ReservationRepository {
 
     @Override
     public void deleteById(final Long reservationId) {
+        if (!reservations.containsKey(reservationId)) {
+            throw new NoSuchElementException("존재하지 않는 예약입니다.");
+        }
+
         reservations.remove(reservationId);
     }
 }

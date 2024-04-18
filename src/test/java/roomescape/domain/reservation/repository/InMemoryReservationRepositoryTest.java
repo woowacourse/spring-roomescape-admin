@@ -25,7 +25,7 @@ class InMemoryReservationRepositoryTest {
     void save() {
         ReservationRequest reservation = new ReservationRequest("user1", LocalDate.now(), LocalTime.now());
 
-        reservationRepository.save(reservation);
+        reservationRepository.save(reservation.toReservation());
 
         List<Reservation> reservations = reservationRepository.findAll();
         assertAll(
@@ -40,8 +40,8 @@ class InMemoryReservationRepositoryTest {
         ReservationRequest reservation1 = new ReservationRequest("user1", LocalDate.now(), LocalTime.now());
         ReservationRequest reservation2 = new ReservationRequest("user2", LocalDate.now(), LocalTime.now());
 
-        reservationRepository.save(reservation1);
-        reservationRepository.save(reservation2);
+        reservationRepository.save(reservation1.toReservation());
+        reservationRepository.save(reservation2.toReservation());
 
         List<Reservation> reservations = reservationRepository.findAll();
         assertAll(
@@ -56,7 +56,7 @@ class InMemoryReservationRepositoryTest {
     void deleteById() {
         ReservationRequest reservation = new ReservationRequest("user1", LocalDate.now(), LocalTime.now());
 
-        reservationRepository.save(reservation);
+        reservationRepository.save(reservation.toReservation());
 
         reservationRepository.deleteById(1L);
 

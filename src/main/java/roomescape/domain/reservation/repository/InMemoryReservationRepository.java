@@ -6,7 +6,6 @@ import java.util.concurrent.ConcurrentSkipListMap;
 import java.util.concurrent.atomic.AtomicLong;
 import org.springframework.stereotype.Repository;
 import roomescape.domain.reservation.Reservation;
-import roomescape.dto.ReservationRequest;
 
 @Repository
 public class InMemoryReservationRepository implements ReservationRepository {
@@ -21,10 +20,10 @@ public class InMemoryReservationRepository implements ReservationRepository {
     }
 
     @Override
-    public Reservation save(ReservationRequest reservationRequest) {
-        Reservation reservation = reservationRequest.toReservation(index.getAndIncrement());
-        reservations.put(reservation.getId(), reservation);
-        return reservation;
+    public Reservation save(Reservation reservationRequest) {
+        Reservation newReservation = new Reservation(index.getAndIncrement(), reservationRequest);
+        reservations.put(newReservation.getId(), newReservation);
+        return newReservation;
     }
 
     @Override

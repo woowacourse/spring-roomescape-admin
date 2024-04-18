@@ -3,6 +3,7 @@ package roomescape.domain;
 import com.fasterxml.jackson.annotation.JsonFormat;
 import java.time.LocalDate;
 import java.time.LocalTime;
+import roomescape.dto.ReservationRequest;
 
 public class Reservation {
     private final Long id;
@@ -19,8 +20,8 @@ public class Reservation {
         this.time = time;
     }
 
-    public static Reservation toEntity(long id, Reservation reservation) {
-        return new Reservation(id, reservation.getName(), reservation.getDate(), reservation.getTime());
+    public static Reservation toEntity(long id, ReservationRequest reservationRequest) {
+        return new Reservation(id, reservationRequest.name(), reservationRequest.date(), reservationRequest.time());
     }
 
     public Long getId() {

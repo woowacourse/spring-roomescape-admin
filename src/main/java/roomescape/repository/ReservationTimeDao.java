@@ -2,10 +2,12 @@ package roomescape.repository;
 
 import java.sql.PreparedStatement;
 import java.time.LocalTime;
+import java.util.List;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.support.GeneratedKeyHolder;
 import org.springframework.jdbc.support.KeyHolder;
 import org.springframework.stereotype.Repository;
+import roomescape.domain.ReservationTime;
 
 @Repository
 public class ReservationTimeDao {
@@ -16,17 +18,26 @@ public class ReservationTimeDao {
         this.jdbcTemplate = jdbcTemplate;
     }
 
-    public Long insert(LocalTime localTime) {
+    public Long insert(ReservationTime reservationTime) {
         KeyHolder keyHolder = new GeneratedKeyHolder();
 
         jdbcTemplate.update(connection -> {
             PreparedStatement ps = connection.prepareStatement(
                     "insert into reservation_time(start_at) values (?)",
                     new String[]{"id"});
-            ps.setString(1, localTime.toString());
+            ps.setString(1, reservationTime.getStartAt().toString());
             return ps;
         }, keyHolder);
 
         return keyHolder.getKey().longValue();
+    }
+
+    public List<ReservationTime> findAll() {
+        return jdbcTemplate.query("select * from reservation_time",
+                (resultSet, rowNum) -> new ReservationTime(
+                        resultSet.getLong("id"),
+                        LocalTime.parse(resultSet.getString("start_at"))
+                )
+        );
     }
 }

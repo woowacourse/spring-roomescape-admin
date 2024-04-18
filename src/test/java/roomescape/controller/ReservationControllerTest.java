@@ -5,6 +5,7 @@ import io.restassured.http.ContentType;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.boot.test.web.server.LocalServerPort;
 import org.springframework.test.annotation.DirtiesContext;
 
 import java.util.Map;
@@ -15,10 +16,14 @@ import static org.hamcrest.CoreMatchers.is;
 @DirtiesContext(classMode = DirtiesContext.ClassMode.BEFORE_EACH_TEST_METHOD)
 class ReservationControllerTest {
 
+    @LocalServerPort
+    int randomServerPort;
+
     @DisplayName("예약 정보 조회 테스트")
     @Test
     void reservationReadTest() {
         RestAssured.given().log().all()
+                .port(randomServerPort)
                 .when().get("/reservations")
                 .then().log().all()
                 .statusCode(200)
@@ -36,6 +41,7 @@ class ReservationControllerTest {
 
         RestAssured.given().log().all()
                 .contentType(ContentType.JSON)
+                .port(randomServerPort)
                 .body(params)
                 .when().post("/reservations")
                 .then().log().all()
@@ -43,11 +49,13 @@ class ReservationControllerTest {
                 .body("id", is(1));
 
         RestAssured.given().log().all()
+                .port(randomServerPort)
                 .when().delete("/reservations/1")
                 .then().log().all()
                 .statusCode(200);
 
         RestAssured.given().log().all()
+                .port(randomServerPort)
                 .when().delete("/reservations/1")
                 .then().log().all()
                 .statusCode(404);
@@ -63,6 +71,7 @@ class ReservationControllerTest {
         );
 
         RestAssured.given().log().all()
+                .port(randomServerPort)
                 .contentType(ContentType.JSON)
                 .body(params)
                 .when().post("/reservations")

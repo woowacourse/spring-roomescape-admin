@@ -7,10 +7,10 @@ import roomescape.service.ReservationService;
 
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 
-class AdminControllerTest {
+class ReservationControllerTest {
     private final ReservationRepository reservationRepository = new ReservationRepository();
     private final ReservationService reservationService = new ReservationService(reservationRepository);
-    private final AdminController adminController = new AdminController(reservationService);
+    private final ReservationController reservationController = new ReservationController(reservationService);
 
     @Test
     @DisplayName("존재하지 않는 예약 ID로 삭제를 요청할 경우 예외가 발생한다.")
@@ -19,7 +19,7 @@ class AdminControllerTest {
         Long reservationId = 1L;
 
         // when & then
-        assertThatThrownBy(() -> adminController.deleteReservation(reservationId))
+        assertThatThrownBy(() -> reservationController.deleteReservation(reservationId))
                 .isInstanceOf(IllegalArgumentException.class);
     }
 }

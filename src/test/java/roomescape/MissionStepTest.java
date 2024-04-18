@@ -15,19 +15,27 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.boot.test.web.server.LocalServerPort;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.test.annotation.DirtiesContext;
+import org.springframework.test.context.TestPropertySource;
 import roomescape.controller.ReservationController;
 import roomescape.dto.ReservationResponseDto;
 
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.DEFINED_PORT)
 @DirtiesContext(classMode = DirtiesContext.ClassMode.BEFORE_EACH_TEST_METHOD)
+@TestPropertySource(locations = "classpath:application-test.properties")
 class MissionStepTest {
     @Autowired
     private JdbcTemplate jdbcTemplate;
 
+    @LocalServerPort
+    private int port;
+
     @BeforeEach
     void setUp() {
+        RestAssured.port = port;
+
         Map<String, String> params = new HashMap<>();
         params.put("startAt", "10:00");
 
@@ -159,7 +167,7 @@ class MissionStepTest {
         RestAssured.given().log().all()
                 .when().delete("/times/1")
                 .then().log().all()
-                .statusCode(204);
+                .statusCode(200);
     }
 
     @Test

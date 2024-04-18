@@ -5,22 +5,27 @@ import static org.hamcrest.Matchers.is;
 import io.restassured.RestAssured;
 import io.restassured.http.ContentType;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
+import java.util.concurrent.atomic.AtomicLong;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
-import roomescape.storage.ReservationStorage;
+import roomescape.domain.Reservation;
 
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.DEFINED_PORT)
 public class AdminIntegrationTest {
     @Autowired
-    private ReservationStorage reservationStorage;
+    private List<Reservation> reservations;
+    @Autowired
+    private AtomicLong atomicLong;
 
     @BeforeEach
     void init() {
-        reservationStorage.removeAll();
+        reservations.clear();
+        atomicLong.set(0);
     }
 
     @Test

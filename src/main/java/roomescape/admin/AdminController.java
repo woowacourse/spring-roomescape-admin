@@ -10,7 +10,6 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.ResponseBody;
 import roomescape.admin.reservation.RequestReservation;
 import roomescape.admin.reservation.Reservation;
 import roomescape.admin.reservation.ResponseReservation;
@@ -19,7 +18,7 @@ import roomescape.admin.reservation.ResponseReservation;
 public class AdminController {
 
     private final List<Reservation> reservations = new ArrayList<>();
-    private final AtomicLong atomicLong = new AtomicLong();
+    private final AtomicLong atomicLong = new AtomicLong(1);
 
     @GetMapping("/")
     public String welcomePage() {
@@ -49,7 +48,7 @@ public class AdminController {
 
     @PostMapping("/reservations")
     public ResponseEntity<ResponseReservation> create(@RequestBody RequestReservation requestReservation) {
-        Reservation reservation = new Reservation(atomicLong.incrementAndGet(), requestReservation.name(),
+        Reservation reservation = new Reservation(atomicLong.getAndIncrement(), requestReservation.name(),
                 requestReservation.date(), requestReservation.time());
         reservations.add(reservation);
 

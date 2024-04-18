@@ -35,7 +35,7 @@ public class ReservationController {
                 reservationRequest.time());
 
         reservations.add(reservation);
-        return ResponseEntity.ok().body(reservation);
+        return ResponseEntity.ok(reservation);
     }
 
     @DeleteMapping("/{id}")

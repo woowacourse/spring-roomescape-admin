@@ -19,8 +19,8 @@ public class Reservation {
         this.time = time;
     }
 
-    public static Reservation toEntity(long id, Reservation reservation) {
-        return new Reservation(id, reservation.getName(), reservation.getDate(), reservation.getTime());
+    public static Reservation toEntity(long id, ReservationDto reservationDto) {
+        return new Reservation(id, reservationDto.name(), reservationDto.date(), reservationDto.time());
     }
 
     public Long getId() {

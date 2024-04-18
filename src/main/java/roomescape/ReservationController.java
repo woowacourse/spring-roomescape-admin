@@ -18,21 +18,6 @@ public class ReservationController {
     private final List<Reservation> reservations = new ArrayList<>();
     private final AtomicLong index = new AtomicLong(1);
 
-    @GetMapping("/")
-    public String wellComePage() {
-        return "admin/index";
-    }
-
-    @GetMapping("/admin")
-    public String adminPage() {
-        return "admin/index";
-    }
-
-    @GetMapping("/admin/reservation")
-    public String reservationPage() {
-        return "admin/reservation-legacy";
-    }
-
     @GetMapping("/reservations")
     public ResponseEntity<List<Reservation>> reservationList() {
         return ResponseEntity.ok(reservations);

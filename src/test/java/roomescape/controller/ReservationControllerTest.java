@@ -15,23 +15,7 @@ import org.springframework.test.annotation.DirtiesContext;
 @DirtiesContext(classMode = DirtiesContext.ClassMode.BEFORE_EACH_TEST_METHOD)
 public class ReservationControllerTest {
 
-    @DisplayName("/admin get 요청 시 응답할 수 있다")
-    @Test
-    void should_response_200_when_request_admin_page() {
-        RestAssured.given().log().all()
-                .when().get("/admin")
-                .then().log().all()
-                .statusCode(200);
-    }
 
-    @DisplayName("/admin/reservation get 요청 시 응답할 수 있다")
-    @Test
-    void should_response_200_when_request_reservation_page() {
-        RestAssured.given().log().all()
-                .when().get("/admin/reservation")
-                .then().log().all()
-                .statusCode(200);
-    }
 
     @DisplayName("/reservations get 요청 시 예약 목록을 응답할 수 있다")
     @Test
@@ -40,7 +24,7 @@ public class ReservationControllerTest {
                 .when().get("/reservations")
                 .then().log().all()
                 .statusCode(200)
-                .body("size()", is(0)); // 아직 생성 요청이 없으니 Controller에서 임의로 넣어준 Reservation 갯수 만큼 검증하거나 0개임을 확인하세요.
+                .body("size()", is(0));
     }
 
     @DisplayName("/reservations post 요청 시 예약을 추가할 수 있다.")

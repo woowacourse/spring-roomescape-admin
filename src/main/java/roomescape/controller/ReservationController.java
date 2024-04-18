@@ -1,33 +1,18 @@
 package roomescape.controller;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.concurrent.atomic.AtomicLong;
 import org.springframework.http.ResponseEntity;
-import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.DeleteMapping;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.bind.annotation.*;
 import roomescape.domain.Reservation;
 import roomescape.dto.ReservationCreateDto;
 
-@Controller
-public class RoomEscapeController {
+import java.util.ArrayList;
+import java.util.List;
+import java.util.concurrent.atomic.AtomicLong;
+
+@RestController
+public class ReservationController {
     private List<Reservation> reservations = new ArrayList<>();
     private AtomicLong index = new AtomicLong(1);
-
-    @GetMapping("/admin")
-    public String openAdminPage() {
-        return "/admin/index";
-    }
-
-    @GetMapping("/admin/reservation")
-    public String openReservationPage() {
-        return "/admin/reservation-legacy";
-    }
 
     @GetMapping("/reservations")
     public ResponseEntity<List<Reservation>> readReservations() {

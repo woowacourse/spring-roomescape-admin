@@ -16,12 +16,12 @@ public class ReservationController {
     private final AtomicInteger atomicInteger = new AtomicInteger(1);
     private final List<Reservation> reservations = new ArrayList<>();
 
-    @GetMapping()
+    @GetMapping
     public ResponseEntity<List<Reservation>> readReservations() {
         return ResponseEntity.ok(reservations);
     }
 
-    @PostMapping()
+    @PostMapping
     public ResponseEntity<Reservation> createReservation(@RequestBody ReservationCreateRequest request) {
         Reservation reservation = request.toReservation(atomicInteger.getAndIncrement());
         reservations.add(reservation);

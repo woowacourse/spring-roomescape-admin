@@ -5,7 +5,6 @@ import java.time.LocalTime;
 import roomescape.model.Reservation;
 
 public class ReservationRequest {
-
     private final String name;
     private final LocalDate date;
     private final LocalTime time;
@@ -14,10 +13,6 @@ public class ReservationRequest {
         this.name = name;
         this.date = date;
         this.time = time;
-    }
-
-    public Reservation toReservation(Long id) {
-        return new Reservation(id, this.name, this.date, this.time);
     }
 
     public String getName() {

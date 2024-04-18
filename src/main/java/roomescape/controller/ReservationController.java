@@ -42,6 +42,6 @@ public class ReservationController {
     @DeleteMapping("/{id}")
     @ResponseStatus(value = HttpStatus.OK)
     public void deleteReservation(@PathVariable Long id) {
-        reservations.removeIf(reservation -> Objects.equals(reservation.getId(), id));
+        reservations.removeIf(reservation -> reservation.isIdOf(id));
     }
 }

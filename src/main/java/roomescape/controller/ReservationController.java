@@ -11,6 +11,7 @@ import roomescape.domain.Reservation;
 import roomescape.dto.ReservationRequestDto;
 import roomescape.dto.ReservationResponseDto;
 
+import java.net.URI;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.atomic.AtomicLong;
@@ -39,7 +40,8 @@ public class ReservationController {
         );
         reservations.add(newReservation);
 
-        return ResponseEntity.ok(ReservationResponseDto.from(newReservation));
+        return ResponseEntity.created(URI.create("/reservations/" + newReservation.getId()))
+                .body(ReservationResponseDto.from(newReservation));
     }
 
     @DeleteMapping("/reservations/{id}")
@@ -49,6 +51,6 @@ public class ReservationController {
                 .findFirst()
                 .ifPresent(reservations::remove);
 
-        return ResponseEntity.ok().build();
+        return ResponseEntity.noContent().build();
     }
 }

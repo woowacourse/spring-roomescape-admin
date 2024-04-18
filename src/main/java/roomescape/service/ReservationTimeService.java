@@ -28,7 +28,7 @@ public class ReservationTimeService {
                 .toList();
     }
 
-    public void delete(@PathVariable("id") final Long id) {
+    public void delete(@PathVariable("id") final long id) {
         reservationTimeRepository.deleteById(id);
     }
 }

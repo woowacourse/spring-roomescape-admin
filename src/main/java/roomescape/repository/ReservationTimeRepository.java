@@ -35,7 +35,7 @@ public class ReservationTimeRepository {
         });
     }
 
-    public ReservationTime findById(final Long id) {
+    public ReservationTime findById(final long id) {
         return jdbcTemplate.queryForObject("SELECT id, start_at FROM reservation_time WHERE id = ?",
                 (resultSet, rowNum) -> {
                     final Long timeId = resultSet.getLong("id");
@@ -45,7 +45,7 @@ public class ReservationTimeRepository {
                 }, id);
     }
 
-    public void deleteById(final Long id) {
+    public void deleteById(final long id) {
         jdbcTemplate.update("DELETE FROM reservation_time WHERE id = ?", id);
     }
 }

@@ -35,7 +35,7 @@ public class ReservationService {
         return new ReservationResponseDto(id, reservation);
     }
 
-    public void delete(final Long id) {
+    public void delete(final long id) {
         reservationRepository.deleteById(id);
     }
 }

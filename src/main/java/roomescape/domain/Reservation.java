@@ -7,8 +7,8 @@ public class Reservation {
     private final ClientName clientName;
     private final LocalDateTime time;
 
-    public static Reservation of(final ClientName clientName, final LocalDateTime time) {
-        return new Reservation(0L, clientName, time);
+    public Reservation(final ClientName clientName, final LocalDateTime time) {
+        this(0L, clientName, time);
     }
 
     private Reservation(final Long id, final ClientName clientName, final LocalDateTime time) {

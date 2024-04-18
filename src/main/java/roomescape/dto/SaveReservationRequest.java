@@ -9,7 +9,7 @@ import java.time.LocalTime;
 
 public record SaveReservationRequest(LocalDate date, String name, LocalTime time) {
     public Reservation toEntity() {
-        return Reservation.of(
+        return new Reservation(
                 new ClientName(name),
                 LocalDateTime.of(date, time)
         );

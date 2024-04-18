@@ -8,7 +8,8 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
 import roomescape.domain.Reservation;
-import roomescape.dto.ReservationDto;
+import roomescape.dto.ReservationRequestDto;
+import roomescape.dto.ReservationResponseDto;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -20,21 +21,25 @@ public class ReservationController {
     private final AtomicLong index = new AtomicLong(0);
 
     @GetMapping("/reservations")
-    public ResponseEntity<List<ReservationDto>> findAll() {
-        List<ReservationDto> reservationDtos = reservations.stream()
-                .map(ReservationDto::from)
+    public ResponseEntity<List<ReservationResponseDto>> findAll() {
+        List<ReservationResponseDto> reservationResponseDtos = reservations.stream()
+                .map(ReservationResponseDto::from)
                 .toList();
 
-        return ResponseEntity.ok(reservationDtos);
+        return ResponseEntity.ok(reservationResponseDtos);
     }
 
     @PostMapping("/reservations")
-    public ResponseEntity<ReservationDto> add(@RequestBody Reservation reservation) {
-        Reservation newReservation = new Reservation(index.incrementAndGet(), reservation.getName(),
-                reservation.getDate(), reservation.getTime());
+    public ResponseEntity<ReservationResponseDto> add(@RequestBody ReservationRequestDto reservationRequestDto) {
+        Reservation newReservation = new Reservation(
+                index.incrementAndGet(),
+                reservationRequestDto.name(),
+                reservationRequestDto.date(),
+                reservationRequestDto.time()
+        );
         reservations.add(newReservation);
 
-        return ResponseEntity.ok(ReservationDto.from(newReservation));
+        return ResponseEntity.ok(ReservationResponseDto.from(newReservation));
     }
 
     @DeleteMapping("/reservations/{id}")

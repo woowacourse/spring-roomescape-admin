@@ -8,12 +8,12 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
-import roomescape.domain.Member;
+import roomescape.domain.Reservation;
 
 
 @Controller
 public class RoomescapeController {
-    private List<Member> members = new ArrayList<>();
+    private List<Reservation> reservations = new ArrayList<>();
     private AtomicLong index = new AtomicLong(0);
 
     @GetMapping("/admin")
@@ -27,28 +27,28 @@ public class RoomescapeController {
     }
 
     @PostMapping("/reservations")
-    public ResponseEntity<Member> createReservation(@RequestBody Member member) {
-        Member newMember = Member.toEntity(index.incrementAndGet(), member);
-        members.add(newMember);
+    public ResponseEntity<Reservation> createReservation(@RequestBody Reservation reservation) {
+        Reservation newReservation = Reservation.toEntity(index.incrementAndGet(), reservation);
+        reservations.add(newReservation);
 
-        return ResponseEntity.ok(newMember);
+        return ResponseEntity.ok(newReservation);
     }
 
     @GetMapping("/reservations")
     @ResponseBody
     @ResponseStatus(HttpStatus.OK)
-    public List<Member> readReservations() {
-        return members;
+    public List<Reservation> readReservations() {
+        return reservations;
     }
 
     @DeleteMapping("/reservations/{id}")
     public ResponseEntity<Void> deleteReservation(@PathVariable Long id) {
-        Member findMember = members.stream()
-                .filter(member -> Objects.equals(member.getId(), id))
+        Reservation findReservation = reservations.stream()
+                .filter(reservation -> Objects.equals(reservation.getId(), id))
                 .findFirst()
                 .orElseThrow(RuntimeException::new);
 
-        members.remove(findMember);
+        reservations.remove(findReservation);
 
         return ResponseEntity.ok().build();
     }

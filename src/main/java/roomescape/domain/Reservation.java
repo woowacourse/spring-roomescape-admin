@@ -57,6 +57,10 @@ public class Reservation {
         return this.time.equals(time) && this.date.equals(date);
     }
 
+    public boolean hasSameName(Reservation reservation) {
+        return this.name.equals(reservation.name);
+    }
+
     public Long getId() {
         return id;
     }

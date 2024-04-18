@@ -22,6 +22,11 @@ public class ReservationService {
 
     public Reservation createReservation(Reservation reservation) {
         List<Reservation> reservationsInSameDateTime = reservationRepository.findAllByDateAndTime(reservation.getDate(), reservation.getTime());
+        boolean existingSameUser = reservationsInSameDateTime.stream()
+                .anyMatch(existingReservation -> existingReservation.hasSameName(reservation));
+        if (existingSameUser) {
+            throw new IllegalArgumentException("동일한 시간에 같은 사용자가 예약할 수 없습니다.");
+        }
         if (reservationsInSameDateTime.size() >= MAX_RESERVATION_PER_TIME) {
             throw new IllegalArgumentException("해당 시간대에 예약이 모두 찼습니다. (최대 4팀)");
         }

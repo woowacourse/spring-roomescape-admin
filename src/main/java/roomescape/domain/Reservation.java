@@ -13,6 +13,10 @@ public class Reservation {
         this.reserveTime = new ReserveTime(date, time);
     }
 
+    public Reservation(String name, String date, String time) {
+        this(name, LocalDate.parse(date), LocalTime.parse(time));
+    }
+
     public Name getName() {
         return name;
     }

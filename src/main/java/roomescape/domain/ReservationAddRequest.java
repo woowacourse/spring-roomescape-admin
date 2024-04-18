@@ -3,16 +3,16 @@ package roomescape.domain;
 import java.time.LocalDate;
 import java.time.LocalTime;
 
-public class ReservationDto {
+public class ReservationAddRequest {
     private LocalDate date;
     private String name;
     private LocalTime time;
 
-    public ReservationDto() {
+    public ReservationAddRequest() {
 
     }
 
-    public ReservationDto(LocalDate date, String name, LocalTime time) {
+    public ReservationAddRequest(LocalDate date, String name, LocalTime time) {
         this.date = date;
         this.name = name;
         this.time = time;

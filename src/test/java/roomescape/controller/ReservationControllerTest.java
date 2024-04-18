@@ -8,7 +8,7 @@ import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.annotation.DirtiesContext;
-import roomescape.controller.dto.ReservationRequestDto;
+import roomescape.controller.dto.CreateReservationRequest;
 
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.DEFINED_PORT)
 @DirtiesContext(classMode = DirtiesContext.ClassMode.BEFORE_EACH_TEST_METHOD)
@@ -29,7 +29,7 @@ class ReservationControllerTest {
     void createReservation() {
         RestAssured.given().log().all()
             .contentType(ContentType.JSON)
-            .body(new ReservationRequestDto("브라운", "2023-08-05", "15:40"))
+            .body(new CreateReservationRequest("브라운", "2023-08-05", "15:40"))
             .when().post("/reservations")
             .then().log().all()
             .statusCode(200)
@@ -47,7 +47,7 @@ class ReservationControllerTest {
     void deleteReservation() {
         RestAssured.given().log().all()
             .contentType(ContentType.JSON)
-            .body(new ReservationRequestDto("브라운", "2023-08-05", "15:40"))
+            .body(new CreateReservationRequest("브라운", "2023-08-05", "15:40"))
             .when().post("/reservations")
             .then().log().all()
             .statusCode(200)

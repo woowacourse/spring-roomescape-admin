@@ -70,8 +70,10 @@ class ReservationControllerTest {
     @Test
     @DisplayName("예약을 성공적으로 삭제한다.")
     void deleteReservationTest() {
-        RestAssured.given().log().all()
-                .when().delete("/reservations/1")
+        RestAssured.given()
+                .pathParam("id", 1L)
+                .log().all()
+                .when().delete("/reservations/{id}")
                 .then().log().all()
                 .statusCode(204);
 

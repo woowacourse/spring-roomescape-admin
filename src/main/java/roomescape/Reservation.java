@@ -33,7 +33,6 @@ public class Reservation {
         return time;
     }
 
-
     public static class Builder {
         private long id;
         private String name;
@@ -63,5 +62,9 @@ public class Reservation {
         public Reservation build() {
             return new Reservation(id, name, date, time);
         }
+    }
+
+    public boolean isSameId(final long id) {
+        return this.id == id;
     }
 }

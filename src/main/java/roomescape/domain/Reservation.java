@@ -16,22 +16,32 @@ public class Reservation {
 
     public Reservation(String name, LocalDate date, LocalTime time) {
         validateName(name);
-        validateDateTime(date, time);
+        validateDate(date);
+        validateTime(time);
         this.name = name;
         this.date = date;
         this.time = time;
     }
 
     private void validateName(String name) {
+        if (name == null || name.isBlank()) {
+            throw new IllegalArgumentException("예약자 이름은 비어있을 수 없습니다.");
+        }
         Matcher matcher = NAME_PATTERN.matcher(name);
         if (matcher.matches()) {
             throw new IllegalArgumentException("예약자 이름은 숫자로만 구성될 수 없습니다.");
         }
     }
 
-    private void validateDateTime(LocalDate date, LocalTime time) {
+    private void validateDate(LocalDate date) {
+        if (date == null || date.isBefore(LocalDate.now())) {
+            throw new IllegalArgumentException("유효하지 않은 예약 날짜입니다.");
+        }
+    }
+
+    private void validateTime(LocalTime time) {
         if (date == null || time == null) {
-            throw new IllegalArgumentException("예약은 시간과 날짜가 null일 수 없습니다.");
+            throw new IllegalArgumentException("예약 시간은 null일 수 없습니다.");
         }
     }
 

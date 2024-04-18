@@ -1,10 +1,13 @@
 package roomescape;
 
-import java.util.ArrayList;
+import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.sql.SQLException;
 import java.util.List;
-import java.util.concurrent.atomic.AtomicLong;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;
+import org.springframework.jdbc.support.GeneratedKeyHolder;
+import org.springframework.jdbc.support.KeyHolder;
 import org.springframework.stereotype.Repository;
 
 @Repository
@@ -17,8 +20,6 @@ public class ReservationRepository {
             resultSet.getString("date"),
             resultSet.getString("time"));
 
-    private final List<Reservation> reservations = new ArrayList<>();
-    private final AtomicLong autoIncreaseId = new AtomicLong(1);
     private final JdbcTemplate jdbcTemplate;
 
     public ReservationRepository(JdbcTemplate jdbcTemplate) {
@@ -30,19 +31,30 @@ public class ReservationRepository {
     }
 
     public Reservation create(Reservation reservation) {
-        Reservation createdReservation = reservation.toEntity(autoIncreaseId.getAndIncrement());
-        reservations.add(createdReservation);
-        return createdReservation;
+        KeyHolder keyHolder = new GeneratedKeyHolder();
+        jdbcTemplate.update(connection -> insertQuery(connection, reservation), keyHolder);
+
+        Long id = keyHolder.getKey().longValue();
+        return reservation.toEntity(id);
+    }
+
+    private PreparedStatement insertQuery(Connection connection, Reservation reservation) throws SQLException {
+        PreparedStatement preparedStatement = connection.prepareStatement(
+                "INSERT INTO %s (name, date, time) VALUES (?, ?, ?)".formatted(TABLE_NAME), new String[]{"id"});
+        preparedStatement.setString(1, reservation.name());
+        preparedStatement.setString(2, reservation.date());
+        preparedStatement.setString(3, reservation.time());
+        return preparedStatement;
     }
 
     public void deleteById(Long id) {
-        Reservation searchedReservation = findById(id);
-        reservations.remove(searchedReservation);
+        Reservation foundReservation = findById(id);
+        jdbcTemplate.update("DELETE FROM %s WHERE id = ?".formatted(TABLE_NAME), foundReservation.id());
     }
 
     private Reservation findById(Long id) {
-        Reservation reservation = jdbcTemplate.queryForObject("SELECT id, name, date, time FROM %s WHERE id = ?",
-                ROW_MAPPER, id);
+        Reservation reservation = jdbcTemplate.queryForObject(
+                "SELECT id, name, date, time FROM %s WHERE id = ?".formatted(TABLE_NAME), ROW_MAPPER, id);
 
         if (reservation == null) {
             throw new IllegalStateException("해당 예약이 없습니다.");

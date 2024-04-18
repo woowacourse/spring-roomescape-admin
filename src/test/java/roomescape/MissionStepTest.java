@@ -63,7 +63,7 @@ class MissionStepTest {
                             .body(params)
                             .when().post("/reservations")
                             .then().log().all()
-                            .statusCode(200)
+                            .statusCode(201)
                             .body("id", is(1));
                 }),
                 dynamicTest("생성된 예약은 전체 예약 목록에서 확인할 수 있다.", () -> {
@@ -77,7 +77,7 @@ class MissionStepTest {
                     RestAssured.given().log().all()
                             .when().delete("/reservations/1")
                             .then().log().all()
-                            .statusCode(200);
+                            .statusCode(204);
                 }),
                 dynamicTest("삭제된 예약은 전체 예약 목록에서도 지워진다.", () -> {
                     RestAssured.given().log().all()

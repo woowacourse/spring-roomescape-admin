@@ -1,5 +1,7 @@
 package roomescape;
 
+import static org.hamcrest.Matchers.is;
+
 import io.restassured.RestAssured;
 import io.restassured.http.ContentType;
 import java.time.LocalDate;
@@ -9,8 +11,6 @@ import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.annotation.DirtiesContext;
 import roomescape.dto.ReservationRequest;
-
-import static org.hamcrest.Matchers.is;
 
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.DEFINED_PORT)
 @DirtiesContext(classMode = DirtiesContext.ClassMode.BEFORE_EACH_TEST_METHOD)
@@ -43,7 +43,8 @@ class ReservationTest {
     @DisplayName("예약 추가 API 테스트")
     @Test
     void createReservation() {
-        ReservationRequest reservationRequest = new ReservationRequest("브라운", LocalDate.of(2023, 8, 5), LocalTime.of(15, 40));
+        ReservationRequest reservationRequest = new ReservationRequest("브라운", LocalDate.of(2023, 8, 5),
+                LocalTime.of(15, 40));
 
         RestAssured.given().log().all()
                 .contentType(ContentType.JSON)
@@ -63,7 +64,8 @@ class ReservationTest {
     @DisplayName("예약 취소 API 테스트")
     @Test
     void deleteReservation() {
-        ReservationRequest reservationRequest = new ReservationRequest("브라운", LocalDate.of(2023, 8, 5), LocalTime.of(15, 40));
+        ReservationRequest reservationRequest = new ReservationRequest("브라운", LocalDate.of(2023, 8, 5),
+                LocalTime.of(15, 40));
 
         RestAssured.given().log().all()
                 .contentType(ContentType.JSON)

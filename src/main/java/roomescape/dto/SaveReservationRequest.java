@@ -1,15 +1,15 @@
 package roomescape.dto;
 
 import roomescape.domain.ClientName;
-import roomescape.entity.ReservationEntity;
+import roomescape.domain.Reservation;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.LocalTime;
 
 public record SaveReservationRequest(LocalDate date, String name, LocalTime time) {
-    public ReservationEntity toEntity() {
-        return ReservationEntity.of(
+    public Reservation toEntity() {
+        return Reservation.of(
                 new ClientName(name),
                 LocalDateTime.of(date, time)
         );

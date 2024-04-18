@@ -1,6 +1,5 @@
 package roomescape.controller;
 
-import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -10,7 +9,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
 import roomescape.dto.ReservationDto;
 import roomescape.dto.SaveReservationRequest;
-import roomescape.entity.ReservationEntity;
+import roomescape.domain.Reservation;
 import roomescape.repository.ReservationRepository;
 
 import java.util.List;
@@ -35,8 +34,8 @@ public class AdminApiController {
 
     @PostMapping("/reservations")
     public ResponseEntity<ReservationDto> saveReservation(@RequestBody final SaveReservationRequest request) {
-        ReservationEntity reservationEntity = request.toEntity();
-        ReservationEntity savedReservation = reservationRepository.save(reservationEntity);
+        Reservation reservation = request.toEntity();
+        Reservation savedReservation = reservationRepository.save(reservation);
 
         return ResponseEntity.ok(ReservationDto.from(savedReservation));
     }
@@ -45,6 +44,6 @@ public class AdminApiController {
     public ResponseEntity<Void> deleteReservation(@PathVariable("reservation-id") final Long reservationId) {
         reservationRepository.deleteById(reservationId);
 
-        return new ResponseEntity<>(HttpStatus.OK);
+        return ResponseEntity.ok().build();
     }
 }

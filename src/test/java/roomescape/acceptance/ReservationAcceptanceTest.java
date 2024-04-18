@@ -1,36 +1,32 @@
-package roomescape;
+package roomescape.acceptance;
 
 import static org.hamcrest.Matchers.is;
 
 import io.restassured.RestAssured;
 import io.restassured.http.ContentType;
-import java.util.Map;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.boot.test.web.server.LocalServerPort;
 import org.springframework.test.annotation.DirtiesContext;
+import roomescape.Reservation;
 
-@SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.DEFINED_PORT)
+@SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 @DirtiesContext(classMode = DirtiesContext.ClassMode.BEFORE_EACH_TEST_METHOD)
-class MissionStepTest {
+class ReservationAcceptanceTest {
 
-    @Test
-    void 일단계_get_welcomePage() {
-        RestAssured.given().log().all()
-                .when().get("/admin")
-                .then().log().all()
-                .statusCode(200);
+    @LocalServerPort
+    int port;
+
+    @BeforeEach
+    public void setUp() {
+        RestAssured.port = port;
     }
 
+    @DisplayName("전체 예약 조회")
     @Test
-    void 이단계_get_reservationPage() {
-        RestAssured.given().log().all()
-                .when().get("/admin/reservation")
-                .then().log().all()
-                .statusCode(200);
-    }
-
-    @Test
-    void 이단계_get_reservations() {
+    void get_reservations() {
         RestAssured.given().log().all()
                 .when().get("/reservations")
                 .then().log().all()
@@ -38,17 +34,14 @@ class MissionStepTest {
                 .body("size()", is(0));
     }
 
+    @DisplayName("예약 추가")
     @Test
-    void 삼단계_post_reservation() {
-        Map<String, String> params = Map.of(
-                "name", "브라운",
-                "date", "2023-08-05",
-                "time", "15:40"
-        );
+    void post_reservation() {
+        Reservation reservation = new Reservation(null, "브라운", "2013-08-05", "15:40");
 
         RestAssured.given().log().all()
                 .contentType(ContentType.JSON)
-                .body(params)
+                .body(reservation)
                 .when().post("/reservations")
                 .then().log().all()
                 .statusCode(200)
@@ -61,17 +54,14 @@ class MissionStepTest {
                 .body("size()", is(1));
     }
 
+    @DisplayName("예약 삭제")
     @Test
-    void 삼단계_delete_reservation() {
-        Map<String, String> params = Map.of(
-                "name", "브라운",
-                "date", "2023-08-05",
-                "time", "15:40"
-        );
+    void delete_reservation() {
+        Reservation reservation = new Reservation(null, "브라운", "2013-08-05", "15:40");
 
         RestAssured.given().log().all()
                 .contentType(ContentType.JSON)
-                .body(params)
+                .body(reservation)
                 .when().post("/reservations")
                 .then().log().all()
                 .statusCode(200)

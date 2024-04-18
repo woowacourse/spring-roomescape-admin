@@ -1,9 +1,6 @@
 package roomescape.reservation;
 
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
-import java.util.concurrent.atomic.AtomicLong;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -16,36 +13,26 @@ import org.springframework.web.bind.annotation.RequestMapping;
 @Controller
 @RequestMapping("/reservations")
 public class ReservationController {
-    private final Map<Long, Reservation> reservations = new HashMap<>();
-    private final AtomicLong atomicLong = new AtomicLong();
+
+    private final ReservationService reservationService;
+
+    public ReservationController(final ReservationService reservationService) {
+        this.reservationService = reservationService;
+    }
 
     @GetMapping
     public ResponseEntity<List<Reservation>> reservations() {
-        return ResponseEntity.ok(reservations.values()
-                .stream()
-                .toList()
-        );
+        return ResponseEntity.ok(reservationService.findAllReservations());
     }
 
     @PostMapping
     public ResponseEntity<Reservation> create(@RequestBody ReservationRequest reservationRequest) {
-        long incrementId = atomicLong.incrementAndGet();
-        Reservation reservation = new Reservation(
-                incrementId,
-                reservationRequest.name(),
-                reservationRequest.date(),
-                reservationRequest.time());
-
-        reservations.put(incrementId, reservation);
-        return ResponseEntity.ok().body(reservation);
+        return ResponseEntity.ok().body(reservationService.create(reservationRequest));
     }
 
     @DeleteMapping("/{id}")
-    public ResponseEntity<Void> delete(@PathVariable("id") long id) {
-        if (!reservations.containsKey(id)) {
-            throw new IllegalArgumentException("해당 예약을 찾을 수 없습니다. 유효한 에약을 입력해 주세요.");
-        }
-        reservations.remove(id);
+    public ResponseEntity<Void> delete(@PathVariable("id") long reservationId) {
+        reservationService.delete(reservationId);
         return ResponseEntity.ok().build();
     }
 }

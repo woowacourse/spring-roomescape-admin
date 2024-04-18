@@ -1,21 +1,18 @@
 package roomescape.admin;
 
-import java.util.List;
-import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
-import roomescape.reservation.Reservation;
-import roomescape.reservation.ReservationController;
+import roomescape.reservation.ReservationService;
 
 @Controller
 @RequestMapping("/admin")
 public class AdminController {
-    private final ReservationController reservationController;
+    private final ReservationService reservationService;
 
-    public AdminController(ReservationController reservationController) {
-        this.reservationController = reservationController;
+    public AdminController(ReservationService reservationService) {
+        this.reservationService = reservationService;
     }
 
     @GetMapping
@@ -25,8 +22,7 @@ public class AdminController {
 
     @GetMapping("/reservation")
     public String reservation(Model model) {
-        ResponseEntity<List<Reservation>> reservations = reservationController.reservations();
-        model.addAttribute("reservations", reservations.getBody());
+        model.addAttribute("reservations", reservationService.findAllReservations());
         return "admin/reservation-legacy";
     }
 }

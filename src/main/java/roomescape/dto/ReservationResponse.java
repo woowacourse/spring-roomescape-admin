@@ -5,9 +5,9 @@ import roomescape.domain.Reservation;
 import java.time.LocalDate;
 import java.time.LocalTime;
 
-public record ReservationDto(Long id, String name, LocalDate date, LocalTime time) {
-    public static ReservationDto from(final Reservation reservation) {
-        return new ReservationDto(
+public record ReservationResponse(Long id, String name, LocalDate date, LocalTime time) {
+    public static ReservationResponse from(final Reservation reservation) {
+        return new ReservationResponse(
                 reservation.getId(),
                 reservation.getClientName().getValue(),
                 reservation.getTime().toLocalDate(),

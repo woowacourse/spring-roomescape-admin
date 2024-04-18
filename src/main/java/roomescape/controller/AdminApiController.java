@@ -7,7 +7,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
 import roomescape.domain.Reservation;
-import roomescape.dto.ReservationDto;
+import roomescape.dto.ReservationResponse;
 import roomescape.dto.SaveReservationRequest;
 import roomescape.repository.ReservationRepository;
 
@@ -22,21 +22,21 @@ public class AdminApiController {
     }
 
     @GetMapping("/reservations")
-    public List<ReservationDto> getReservations() {
-        List<ReservationDto> reservations = reservationRepository.findAll()
+    public List<ReservationResponse> getReservations() {
+        List<ReservationResponse> reservations = reservationRepository.findAll()
                 .stream()
-                .map(ReservationDto::from)
+                .map(ReservationResponse::from)
                 .toList();
 
         return reservations;
     }
 
     @PostMapping("/reservations")
-    public ReservationDto saveReservation(@RequestBody final SaveReservationRequest request) {
+    public ReservationResponse saveReservation(@RequestBody final SaveReservationRequest request) {
         Reservation reservation = request.toReservation();
         Reservation savedReservation = reservationRepository.save(reservation);
 
-        return ReservationDto.from(savedReservation);
+        return ReservationResponse.from(savedReservation);
     }
 
     @DeleteMapping("/reservations/{reservation-id}")

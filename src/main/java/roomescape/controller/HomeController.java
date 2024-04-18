@@ -6,7 +6,7 @@ import org.springframework.web.bind.annotation.GetMapping;
 @Controller
 public class HomeController {
 
-    @GetMapping
+    @GetMapping(value = {"/", "/static"})
     public String home() {
         return "redirect:/admin";
     }

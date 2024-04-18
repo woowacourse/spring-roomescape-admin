@@ -3,7 +3,6 @@ package roomescape.controller;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
-import roomescape.domain.Reservation;
 import roomescape.dto.ReservationResponse;
 import roomescape.dto.ReservationSaveRequest;
 import roomescape.service.ReservationService;
@@ -32,7 +31,7 @@ public class AdminController {
     public ResponseEntity<List<ReservationResponse>> getReservations() {
         var reservationResponses = reservationService.getReservations()
                 .stream()
-                .map(Reservation::toDto)
+                .map(ReservationResponse::from)
                 .toList();
         return ResponseEntity.ok(reservationResponses);
     }
@@ -41,7 +40,7 @@ public class AdminController {
     public ResponseEntity<ReservationResponse> createReservation(@RequestBody ReservationSaveRequest request) {
         var reservation = request.toReservation();
         var savedReservation = reservationService.createReservation(reservation);
-        return ResponseEntity.ok(savedReservation.toDto());
+        return ResponseEntity.ok(ReservationResponse.from(savedReservation));
     }
 
     @DeleteMapping("/reservations/{id}")

@@ -16,16 +16,6 @@ public class ReservationController {
     private List<Reservation> reservations = new ArrayList<>();
     private AtomicLong index = new AtomicLong(0);
 
-    @GetMapping("/admin")
-    public String adminPage() {
-        return "admin/index";
-    }
-
-    @GetMapping("/admin/reservation")
-    public String reservationPage() {
-        return "admin/reservation-legacy";
-    }
-
     @PostMapping("/reservations")
     public ResponseEntity<Reservation> createReservation(@RequestBody ReservationRequest reservationRequest) {
         Reservation newReservation = Reservation.toEntity(index.incrementAndGet(), reservationRequest);

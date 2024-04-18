@@ -1,4 +1,4 @@
-package roomescape;
+package roomescape.controller;
 
 import java.util.ArrayList;
 import java.util.List;

@@ -8,7 +8,6 @@ import java.util.List;
 import java.util.Optional;
 
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import static org.junit.jupiter.api.Assertions.assertAll;
 import static roomescape.TestFixture.*;
 
@@ -29,23 +28,22 @@ class ReservationRepositoryTest {
     }
 
     @Test
-    @DisplayName("동일시간대에 최대 4팀까지 예약이 가능하다.")
+    @DisplayName("동일시간대의 예약 목록을 조회한다.")
     void saveLimitedReservations() {
         // given
-        Reservation miaReservation1 = new Reservation(USER_MIA, MIA_RESERVATION_DATE, MIA_RESERVATION_TIME);
-        Reservation miaReservation2 = new Reservation(USER_MIA, MIA_RESERVATION_DATE, MIA_RESERVATION_TIME);
-        Reservation miaReservation3 = new Reservation(USER_MIA, MIA_RESERVATION_DATE, MIA_RESERVATION_TIME);
-        Reservation miaReservation4 = new Reservation(USER_MIA, MIA_RESERVATION_DATE, MIA_RESERVATION_TIME);
-        reservationRepository.save(miaReservation1);
-        reservationRepository.save(miaReservation2);
-        reservationRepository.save(miaReservation3);
-        reservationRepository.save(miaReservation4);
+        Reservation miaReservation = new Reservation(USER_MIA, MIA_RESERVATION_DATE, MIA_RESERVATION_TIME);
+        Reservation wonnyReservation = new Reservation("wonny", MIA_RESERVATION_DATE, MIA_RESERVATION_TIME);
+        Reservation tommyReservation = new Reservation(USER_TOMMY, TOMMY_RESERVATION_DATE, TOMMY_RESERVATION_TIME);
+        reservationRepository.save(miaReservation);
+        reservationRepository.save(tommyReservation);
+        reservationRepository.save(wonnyReservation);
 
-        Reservation newReservation = new Reservation(USER_TOMMY, MIA_RESERVATION_DATE, MIA_RESERVATION_TIME);
+        // when
+        List<Reservation> reservations = reservationRepository.findAllByDateAndTime(MIA_RESERVATION_DATE, MIA_RESERVATION_TIME);
 
-        // when & then
-        assertThatThrownBy(() -> reservationRepository.save(newReservation))
-                .isInstanceOf(IllegalArgumentException.class);
+        // then
+        assertThat(reservations).hasSize(2)
+                .containsExactly(miaReservation, wonnyReservation);
     }
 
     @Test

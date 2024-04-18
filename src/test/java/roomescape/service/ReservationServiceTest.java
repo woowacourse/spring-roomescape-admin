@@ -30,6 +30,26 @@ class ReservationServiceTest {
     }
 
     @Test
+    @DisplayName("동일한 시간대에 최대 4팀이 예약할 수 있다. 초과되면 예외가 발생한다.")
+    void createLimitedReservations() {
+        // given
+        Reservation miaReservation = new Reservation(USER_MIA, MIA_RESERVATION_DATE, MIA_RESERVATION_TIME);
+        Reservation tommyReservation = new Reservation(USER_TOMMY, MIA_RESERVATION_DATE, MIA_RESERVATION_TIME);
+        Reservation wonnyReservation = new Reservation("wonny", MIA_RESERVATION_DATE, MIA_RESERVATION_TIME);
+        Reservation neoReservation = new Reservation("neo", MIA_RESERVATION_DATE, MIA_RESERVATION_TIME);
+        reservationRepository.save(miaReservation);
+        reservationRepository.save(tommyReservation);
+        reservationRepository.save(wonnyReservation);
+        reservationRepository.save(neoReservation);
+
+        Reservation newReservation = new Reservation("new", MIA_RESERVATION_DATE, MIA_RESERVATION_TIME);
+
+        // when & then
+        assertThatThrownBy(() -> reservationService.createReservation(newReservation))
+                .isInstanceOf(IllegalArgumentException.class);
+    }
+
+    @Test
     @DisplayName("모든 예약 목록을 조회한다.")
     void getReservations() {
         // given

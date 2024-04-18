@@ -53,8 +53,8 @@ public class Reservation {
         this.id = id;
     }
 
-    public boolean hasSameDateTime(Reservation reservation) {
-        return this.time.equals(reservation.time) && this.date.equals(reservation.date);
+    public boolean hasSameDateTime(LocalDate date, LocalTime time) {
+        return this.time.equals(time) && this.date.equals(date);
     }
 
     public Long getId() {

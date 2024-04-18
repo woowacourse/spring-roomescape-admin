@@ -8,6 +8,8 @@ import java.util.List;
 
 @Service
 public class ReservationService {
+    private static final int MAX_RESERVATION_PER_TIME = 4;
+
     private final ReservationRepository reservationRepository;
 
     public ReservationService(ReservationRepository reservationRepository) {
@@ -19,6 +21,10 @@ public class ReservationService {
     }
 
     public Reservation createReservation(Reservation reservation) {
+        List<Reservation> reservationsInSameDateTime = reservationRepository.findAllByDateAndTime(reservation.getDate(), reservation.getTime());
+        if (reservationsInSameDateTime.size() >= MAX_RESERVATION_PER_TIME) {
+            throw new IllegalArgumentException("해당 시간대에 예약이 모두 찼습니다. (최대 4팀)");
+        }
         return reservationRepository.save(reservation);
     }
 

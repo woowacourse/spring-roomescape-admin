@@ -68,10 +68,13 @@ class ReservationTest {
 
     @ParameterizedTest
     @MethodSource("reservationsAndExpectedResult")
-    @DisplayName("두 예약이 같은 날짜와 시간인지 확인한다.")
-    void hasSameDateTime(Reservation miaReservation, Reservation tommyReservation, boolean expectedResult) {
+    @DisplayName("예약이 동일한 예약 시간을 갖는지 확인한다.")
+    void hasSameDateTime(LocalDate date, LocalTime time, boolean expectedResult) {
+        // given
+        Reservation reservation = new Reservation(USER_MIA, MIA_RESERVATION_DATE, MIA_RESERVATION_TIME);
+
         // when
-        boolean actualResult = miaReservation.hasSameDateTime(tommyReservation);
+        boolean actualResult = reservation.hasSameDateTime(date, time);
 
         // then
         assertThat(actualResult).isEqualTo(expectedResult);
@@ -79,16 +82,8 @@ class ReservationTest {
 
     private static Stream<Arguments> reservationsAndExpectedResult() {
         return Stream.of(
-                Arguments.of(
-                        new Reservation(USER_MIA, MIA_RESERVATION_DATE, MIA_RESERVATION_TIME),
-                        new Reservation(USER_TOMMY, TOMMY_RESERVATION_DATE, TOMMY_RESERVATION_TIME),
-                        false
-                ),
-                Arguments.of(
-                        new Reservation(USER_MIA, MIA_RESERVATION_DATE, MIA_RESERVATION_TIME),
-                        new Reservation(USER_TOMMY, MIA_RESERVATION_DATE, MIA_RESERVATION_TIME),
-                        true
-                )
+                Arguments.of(MIA_RESERVATION_DATE, MIA_RESERVATION_TIME, true),
+                Arguments.of(TOMMY_RESERVATION_DATE, TOMMY_RESERVATION_TIME, false)
         );
     }
 }

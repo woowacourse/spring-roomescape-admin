@@ -13,15 +13,10 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 @Controller
-public class ReservationController {
+public class ReservationApiController {
 
     private final List<Reservation> reservations = new ArrayList<>();
     private final AtomicLong atomicLong = new AtomicLong();
-
-    @GetMapping("/admin/reservation")
-    public String reservationPage() {
-        return "admin/reservation-legacy";
-    }
 
     @ResponseBody
     @GetMapping("/reservations")
@@ -50,7 +45,7 @@ public class ReservationController {
     public ResponseEntity<Void> delete(@PathVariable("id") Long id) {
 
         reservations.stream()
-                .filter(reservation -> reservation.getId().equals(id))
+                .filter(reservation -> reservation.isSameId(id))
                 .findFirst()
                 .ifPresent(reservations::remove);
 

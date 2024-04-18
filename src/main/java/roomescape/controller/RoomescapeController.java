@@ -6,13 +6,11 @@ import java.util.Objects;
 import java.util.concurrent.atomic.AtomicLong;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 import roomescape.domain.Reservation;
 import roomescape.domain.ReservationDto;
 
-
-@Controller
+@RestController
 public class RoomescapeController {
     private List<Reservation> reservations = new ArrayList<>();
     private AtomicLong index = new AtomicLong(0);
@@ -36,7 +34,6 @@ public class RoomescapeController {
     }
 
     @GetMapping("/reservations")
-    @ResponseBody
     @ResponseStatus(HttpStatus.OK)
     public List<Reservation> readReservations() {
         return reservations;

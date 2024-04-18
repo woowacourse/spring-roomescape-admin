@@ -7,7 +7,6 @@ public class ReservationInfo {
     private String time;
 
     public ReservationInfo() {
-
     }
 
     public ReservationInfo(Long id, String name, String date, String time) {

@@ -7,16 +7,16 @@ import roomescape.domain.Reservation;
 import roomescape.dto.ReservationRequestDto;
 import roomescape.domain.Reservations;
 
-public class AdminService {
+public class ReservationService {
 
     private final Reservations reservations;
     private final AtomicLong index = new AtomicLong(1);
 
-    public AdminService(Reservations reservations) {
+    public ReservationService(Reservations reservations) {
         this.reservations = reservations;
     }
 
-    public AdminService() {
+    public ReservationService() {
         this(new Reservations());
     }
 

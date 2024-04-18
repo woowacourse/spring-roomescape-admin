@@ -28,7 +28,8 @@ public class Reservations {
     }
 
     public void delete(Long id) {
-        reservations.remove(find(id));
+        Reservation reservation = find(id);
+        reservations.remove(reservation);
     }
 
     public List<Reservation> getReservations() {

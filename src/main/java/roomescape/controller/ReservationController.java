@@ -11,30 +11,30 @@ import org.springframework.web.bind.annotation.RestController;
 import roomescape.domain.Reservation;
 import roomescape.dto.ReservationRequestDto;
 import roomescape.dto.ReservationResponseDto;
-import roomescape.service.AdminService;
+import roomescape.service.ReservationService;
 
 @RestController
 @RequestMapping("/reservations")
 public class ReservationController {
 
-    private final AdminService adminService;
+    private final ReservationService reservationService;
 
     public ReservationController() {
-        this.adminService = new AdminService();
+        this.reservationService = new ReservationService();
     }
 
     @GetMapping()
     public List<Reservation> findAll() {
-        return adminService.getAllReservations();
+        return reservationService.getAllReservations();
     }
 
     @PostMapping()
     public ReservationResponseDto create(@RequestBody ReservationRequestDto reservationRequestDto) {
-        return adminService.addReservation(reservationRequestDto);
+        return reservationService.addReservation(reservationRequestDto);
     }
 
     @DeleteMapping("/{id}")
     public void delete(@PathVariable("id") Long id){
-        adminService.deleteReservation(id);
+        reservationService.deleteReservation(id);
     }
 }

@@ -1,19 +1,14 @@
 package roomescape.controller;
 
-import java.util.List;
-import java.util.concurrent.atomic.AtomicLong;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
-import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.DeleteMapping;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.bind.annotation.*;
 import roomescape.domain.Reservation;
 import roomescape.domain.ReservationDto;
 import roomescape.service.AdminService;
+
+import java.util.List;
+import java.util.concurrent.atomic.AtomicLong;
 
 @Controller
 public class AdminController {
@@ -31,8 +26,7 @@ public class AdminController {
     }
 
     @GetMapping("admin/reservation")
-    public String reservation(Model model) {
-        model.addAttribute("reservations", adminService.getAllReservations());
+    public String reservation() {
         return "admin/reservation-legacy";
     }
 
@@ -51,7 +45,7 @@ public class AdminController {
     }
 
     @DeleteMapping("reservations/{id}")
-    public ResponseEntity<Void> cancel(@PathVariable("id") Long id){
+    public ResponseEntity<Void> cancel(@PathVariable("id") Long id) {
         adminService.deleteReservation(id);
         return ResponseEntity.ok().build();
     }

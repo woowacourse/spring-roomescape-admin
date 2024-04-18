@@ -4,18 +4,23 @@ import io.restassured.RestAssured;
 import io.restassured.http.ContentType;
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.boot.test.web.server.LocalServerPort;
 import org.springframework.test.annotation.DirtiesContext;
 
 import java.util.Map;
 
 import static org.hamcrest.CoreMatchers.is;
 
-@SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.DEFINED_PORT)
+@SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 @DirtiesContext(classMode = DirtiesContext.ClassMode.BEFORE_EACH_TEST_METHOD)
 public class MissionStepTest {
 
+    @LocalServerPort
+    private int port;
+
     @Test
     void 일단계() {
+        RestAssured.port = port;
         RestAssured.given().log().all()
                 .when().get("/admin")
                 .then().log().all()
@@ -24,6 +29,7 @@ public class MissionStepTest {
 
     @Test
     void 이단계() {
+        RestAssured.port = port;
         RestAssured.given().log().all()
                 .when().get("/admin/reservation")
                 .then().log().all()
@@ -38,6 +44,7 @@ public class MissionStepTest {
 
     @Test
     void 삼단계() {
+        RestAssured.port = port;
         Map<String, String> params = Map.of(
                 "name", "새양",
                 "date", "1998-02-24",

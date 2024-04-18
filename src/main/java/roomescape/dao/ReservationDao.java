@@ -1,9 +1,8 @@
 package roomescape.dao;
 
+import java.util.List;
 import roomescape.domain.Reservation;
 import roomescape.entity.ReservationEntity;
-
-import java.util.List;
 
 public interface ReservationDao {
     List<ReservationEntity> findAll();

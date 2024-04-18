@@ -1,10 +1,9 @@
 package roomescape.entity;
 
-import roomescape.domain.Reservation;
-
 import java.time.LocalDate;
 import java.time.LocalTime;
 import java.time.format.DateTimeFormatter;
+import roomescape.domain.Reservation;
 
 public class ReservationEntity {
     private static final String TIME_FORMAT = "HH:mm";

@@ -20,8 +20,10 @@ public class ReservationService {
         this(new Reservations());
     }
 
-    public List<Reservation> getAllReservations() {
-        return reservations.getReservations();
+    public List<ReservationResponseDto> getAllReservations() {
+        return reservations.getReservations().stream()
+                .map(ReservationResponseDto::new)
+                .toList();
     }
 
     public ReservationResponseDto addReservation(ReservationRequestDto reservationRequestDto) {

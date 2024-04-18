@@ -5,13 +5,9 @@ import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.mockito.BDDMockito;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
-import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.http.MediaType;
-import org.springframework.test.web.servlet.MockMvc;
 import roomescape.domain.Reservation;
 import roomescape.dto.ReservationSaveRequest;
-import roomescape.service.ReservationService;
 
 import java.time.LocalDate;
 import java.time.LocalTime;
@@ -24,16 +20,9 @@ import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
-@WebMvcTest
-class ReservationControllerTest {
-    @Autowired
-    private MockMvc mockMvc;
-
+class ReservationControllerTest extends ControllerTest {
     @Autowired
     private ObjectMapper objectMapper;
-
-    @MockBean
-    private ReservationService reservationService;
 
     @Test
     @DisplayName("예약 목록 GET 요청 시 상태코드 200을 반환한다.")

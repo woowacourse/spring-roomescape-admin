@@ -24,7 +24,7 @@ public class ReservationController {
     }
 
     @ResponseBody
-    @GetMapping("")
+    @GetMapping()
     public List<ReservationResponse> findAllReservations() {
         List<ReservationEntity> reservations = reservationDao.findAll();
         return reservations.stream()
@@ -32,7 +32,7 @@ public class ReservationController {
                 .toList();
     }
 
-    @PostMapping("")
+    @PostMapping()
     public ResponseEntity<Void> createReservation(@RequestBody ReservationRequest reservationRequest) {
         Reservation reservation = new Reservation(
                 reservationRequest.name(),

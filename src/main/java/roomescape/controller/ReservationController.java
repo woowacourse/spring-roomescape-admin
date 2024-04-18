@@ -43,9 +43,11 @@ public class ReservationController {
                 .filter(reservation -> reservation.getId().equals(id))
                 .findAny();
         if (findReservation.isEmpty()) {
-            return ResponseEntity.notFound().build();
+            return ResponseEntity.notFound()
+                    .build();
         }
         reservations.remove(findReservation.get());
-        return ResponseEntity.ok().build();
+        return ResponseEntity.ok()
+                .build();
     }
 }

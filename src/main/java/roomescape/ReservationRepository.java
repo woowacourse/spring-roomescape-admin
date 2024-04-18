@@ -30,7 +30,7 @@ public class ReservationRepository {
         return reservations.stream()
                 .filter(reservation -> reservation.id().equals(id))
                 .findFirst()
-                .orElseThrow(RuntimeException::new);
+                .orElseThrow(() -> new IllegalStateException("해당 예약이 저장되어 있지 않습니다."));
     }
 
 }

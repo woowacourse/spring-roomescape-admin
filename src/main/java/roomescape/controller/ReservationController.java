@@ -20,13 +20,13 @@ public class ReservationController {
     private List<Reservation> reservations = new ArrayList<>();
     private final AtomicLong index = new AtomicLong(1);
 
-    @GetMapping()
+    @GetMapping
     @ResponseBody
     public List<Reservation> readAllReservations() {
         return reservations;
     }
 
-    @PostMapping()
+    @PostMapping
     @ResponseBody
     public Reservation createReservation(@RequestBody ReservationDto reservationDto) {
         long id = index.getAndIncrement();

@@ -11,8 +11,14 @@ import java.util.concurrent.atomic.AtomicLong;
 
 @Repository
 public class MemoryReservationRepository implements ReservationRepository {
-    private static AtomicLong index = new AtomicLong(0);
-    private static final Map<Long, Reservation> reservations = new HashMap<>();
+    private final Map<Long, Reservation> reservations;
+
+    private AtomicLong index;
+
+    public MemoryReservationRepository() {
+        this.reservations = new HashMap<>();
+        this.index = new AtomicLong(0);
+    }
 
     @Override
     public List<Reservation> findAll() {

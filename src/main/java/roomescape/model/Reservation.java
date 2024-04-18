@@ -2,6 +2,7 @@ package roomescape.model;
 
 import java.time.LocalDate;
 import java.time.LocalTime;
+import java.util.Objects;
 
 public class Reservation {
 
@@ -35,5 +36,24 @@ public class Reservation {
 
     public LocalTime getTime() {
         return time;
+    }
+
+    @Override
+    public boolean equals(final Object target) {
+        if (this == target) {
+            return true;
+        }
+        if (target == null || getClass() != target.getClass()) {
+            return false;
+        }
+        final Reservation reservation = (Reservation) target;
+        return Objects.equals(getId(), reservation.getId()) && Objects.equals(getName(), reservation.getName())
+                && Objects.equals(getDate(), reservation.getDate()) && Objects.equals(getTime(),
+                reservation.getTime());
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(getId(), getName(), getDate(), getTime());
     }
 }

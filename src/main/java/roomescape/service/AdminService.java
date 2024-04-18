@@ -23,10 +23,12 @@ public class AdminService {
         return reservations.getReservations();
     }
 
-    public Long addReservation(ReservationDto reservationDto) {
-        Reservation reservation = new Reservation(index.getAndIncrement(), reservationDto);
+    public Reservation addReservation(ReservationDto reservationDto) {
+        Reservation reservation = new Reservation(
+                index.getAndIncrement(), reservationDto.name(), reservationDto.date(), reservationDto.time()
+        );
         reservations.add(reservation);
-        return reservation.getId();
+        return reservation;
     }
 
     public void deleteReservation(Long id) {

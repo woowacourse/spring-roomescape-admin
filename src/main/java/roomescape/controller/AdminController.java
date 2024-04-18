@@ -41,8 +41,7 @@ public class AdminController {
     @PostMapping("/reservations")
     @ResponseBody
     public Reservation reserve(@RequestBody ReservationDto reservationDto) {
-        Long id = adminService.addReservation(reservationDto);
-        return new Reservation(id, reservationDto);
+        return adminService.addReservation(reservationDto);
     }
 
     @DeleteMapping("/reservations/{id}")

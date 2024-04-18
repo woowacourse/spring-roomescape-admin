@@ -8,6 +8,7 @@ import java.util.regex.Pattern;
 
 public class Reservation {
     private static final Pattern NAME_PATTERN = Pattern.compile("^\\d+$");
+    private static final int TIME_UNIT = 10;
 
     private Long id;
     private final String name;
@@ -40,8 +41,8 @@ public class Reservation {
     }
 
     private void validateTime(LocalTime time) {
-        if (time == null) {
-            throw new IllegalArgumentException("예약 시간은 null일 수 없습니다.");
+        if (time == null || time.getMinute() % TIME_UNIT != 0) {
+            throw new IllegalArgumentException("유효하지 않은 예약 시간입니다.");
         }
     }
 

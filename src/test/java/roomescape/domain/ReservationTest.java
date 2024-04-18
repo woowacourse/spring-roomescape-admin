@@ -28,7 +28,7 @@ class ReservationTest {
 
     @ParameterizedTest
     @MethodSource(value = "invalidDates")
-    @DisplayName("예약 날짜는 null이거나 현재 날짜 이전일 수 없다.")
+    @DisplayName("예약 날짜는 null이 아니며, 현재 날짜 이후이다.")
     void validateDate(LocalDate invalidDate) {
         // when & then
         assertThatThrownBy(() -> new Reservation(USER_MIA, invalidDate, MIA_RESERVATION_TIME))
@@ -39,15 +39,17 @@ class ReservationTest {
         return Stream.of(null, LocalDate.now().minusDays(2L));
     }
 
-    @Test
-    @DisplayName("예약 시간은 null일 수 없다.")
-    void validateTime() {
-        // given
-        LocalTime invalidTime = null;
-
+    @ParameterizedTest
+    @MethodSource(value = "invalidTimes")
+    @DisplayName("예약 시간은 null이 아니며, 10분 단위이다.")
+    void validateTime(LocalTime invalidTime) {
         // when & then
         assertThatThrownBy(() -> new Reservation(USER_MIA, MIA_RESERVATION_DATE, invalidTime))
                 .isInstanceOf(IllegalArgumentException.class);
+    }
+
+    private static Stream<LocalTime> invalidTimes() {
+        return Stream.of(null, LocalTime.of(1, 23));
     }
 
     @Test

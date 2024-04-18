@@ -23,7 +23,7 @@ public class MissionStepTest {
     int port;
 
     @BeforeEach
-    public void beforeEach() {
+    void beforeEach() {
         RestAssured.port = port;
     }
 

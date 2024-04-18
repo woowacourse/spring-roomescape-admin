@@ -15,15 +15,14 @@ import static org.hamcrest.Matchers.is;
 
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 @DirtiesContext(classMode = DirtiesContext.ClassMode.BEFORE_EACH_TEST_METHOD)
-public class CRUDTest {
+public class CrudTest {
 
     @LocalServerPort
     int port;
 
     @BeforeEach
-    public void beforeEach() {
+    void beforeEach() {
         RestAssured.port = port;
-        System.out.println("port = " + port);
     }
 
     @Test

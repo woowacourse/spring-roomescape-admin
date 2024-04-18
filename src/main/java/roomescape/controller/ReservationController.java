@@ -1,20 +1,19 @@
 package roomescape.controller;
 
 import java.util.List;
-import org.springframework.http.ResponseEntity;
-import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
 import roomescape.domain.Reservation;
 import roomescape.dto.request.ReservationCreateRequest;
 import roomescape.dto.response.ReservationResponse;
 import roomescape.repository.ReservationRepository;
 
-@Controller
+@RestController
 @RequestMapping("/reservations")
 public class ReservationController {
 
@@ -25,28 +24,25 @@ public class ReservationController {
     }
 
     @GetMapping
-    public ResponseEntity<List<ReservationResponse>> getReservations() {
-        List<ReservationResponse> reservationResponses = reservationRepository.findAllWithId()
+    public List<ReservationResponse> getReservations() {
+        return reservationRepository.findAllWithId()
                 .entrySet()
                 .stream()
                 .map(e -> ReservationResponse.of(e.getKey(), e.getValue()))
                 .toList();
-        return ResponseEntity.ok(reservationResponses);
     }
 
     @PostMapping
-    public ResponseEntity<ReservationResponse> createReservations(
+    public ReservationResponse createReservations(
             @RequestBody ReservationCreateRequest reservationCreateRequest) {
         Reservation reservation = reservationCreateRequest.toReservation();
         Long id = reservationRepository.add(reservation);
 
-        ReservationResponse reservationResponse = ReservationResponse.of(id, reservation);
-        return ResponseEntity.ok(reservationResponse);
+        return ReservationResponse.of(id, reservation);
     }
 
     @DeleteMapping("/{id}")
-    public ResponseEntity<Void> deleteReservation(@PathVariable("id") Long id) {
+    public void deleteReservation(@PathVariable("id") Long id) {
         reservationRepository.remove(id);
-        return ResponseEntity.ok().build();
     }
 }

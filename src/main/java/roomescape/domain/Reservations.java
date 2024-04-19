@@ -21,7 +21,7 @@ public class Reservations {
     }
 
     public void add(Long id, Reservation reservation) {
-        if(hasDuplicatedId(id)){
+        if (hasDuplicatedId(id)) {
             throw new IllegalArgumentException("예약 객체의 중복된 키가 존재합니다");
         }
 
@@ -44,7 +44,7 @@ public class Reservations {
         return Set.copyOf(reservations.values());
     }
 
-    private boolean hasDuplicatedId(Long otherId){
+    private boolean hasDuplicatedId(Long otherId) {
         return reservations.keySet()
                 .stream()
                 .anyMatch(id -> id.equals(otherId));

@@ -21,8 +21,8 @@ public class ReservationResponseDto {
         return new ReservationResponseDto(
                 reservation.getId(),
                 reservation.getName(),
-                reservation.getDate(),
-                reservation.getTime());
+                reservation.getStartDate(),
+                reservation.getStartTime());
     }
 
     public long getId() {

@@ -6,7 +6,6 @@ import java.util.Objects;
 import java.util.Set;
 
 public class Reservations {
-    // TODO 이전 날짜를 요청한 경우 검증
     // TODO 모든 데이터가 전부 들어왔는지
     // TODO 현재 날짜 기준 이전 날짜를 들어온 경우
 
@@ -37,7 +36,7 @@ public class Reservations {
     }
 
     public void delete(Long id) {
-        reservations.remove(id, find(id));
+        reservations.remove(id);
     }
 
     public Set<Reservation> getReservations() {

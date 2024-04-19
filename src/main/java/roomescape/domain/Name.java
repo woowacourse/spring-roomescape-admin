@@ -20,4 +20,8 @@ public class Name {
         }
         throw new IllegalArgumentException("이름은 " + MIN_NAME_LENGTH + "글자 이상의 영/한글이어야 합니다");
     }
+
+    public String getName() {
+        return name;
+    }
 }

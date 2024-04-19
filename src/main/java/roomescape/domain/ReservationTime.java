@@ -5,14 +5,28 @@ import java.util.Objects;
 
 public class ReservationTime {
 
+    private final Long id;
     private final LocalTime time;
 
-    public ReservationTime(LocalTime time) {
+    public ReservationTime(Long id, LocalTime time) {
+        this.id = id;
         this.time = time;
     }
 
+    public ReservationTime(Long id, String time) {
+        this(id, LocalTime.parse(time));
+    }
+
+    public ReservationTime(LocalTime time) {
+        this(null, time);
+    }
+
     public ReservationTime(String time) {
-        this(LocalTime.parse(time));
+        this(null, time);
+    }
+
+    public Long getId() {
+        return id;
     }
 
     public LocalTime getTime() {

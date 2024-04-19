@@ -10,7 +10,7 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
-import roomescape.TimeDto;
+import roomescape.dto.ReservationTimeDto;
 import roomescape.entity.ReservationTime;
 import roomescape.repository.ReservationTimeRepository;
 
@@ -21,18 +21,18 @@ public class ReservationTimeController {
     private ReservationTimeRepository reservationTimeRepository;
 
     @GetMapping("/times")
-    public ResponseEntity<List<TimeDto>> times() {
+    public ResponseEntity<List<ReservationTimeDto>> times() {
         List<ReservationTime> times = reservationTimeRepository.findAllReservationTimes();
-        List<TimeDto> responseBody = times.stream()
-                .map(TimeDto::from)
+        List<ReservationTimeDto> responseBody = times.stream()
+                .map(ReservationTimeDto::from)
                 .toList();
         return ResponseEntity.ok(responseBody);
     }
 
     @PostMapping("/times")
-    public ResponseEntity<TimeDto> addTime(@RequestBody TimeDto timeDto) {
-        long id = reservationTimeRepository.save(timeDto.toEntity());
-        TimeDto responseBody = new TimeDto(id, timeDto.getStartAt());
+    public ResponseEntity<ReservationTimeDto> addTime(@RequestBody ReservationTimeDto reservationTimeDto) {
+        long id = reservationTimeRepository.save(reservationTimeDto.toEntity());
+        ReservationTimeDto responseBody = new ReservationTimeDto(id, reservationTimeDto.getStartAt());
         return ResponseEntity
                 .created(URI.create("/time/" + id))
                 .body(responseBody);

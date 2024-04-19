@@ -12,10 +12,11 @@ import roomescape.domain.Reservation;
 
 class ReservationRepositoryTest {
 
+    private final ReservationRepository reservationRepository = new ReservationRepository();
+
     @Test
     @DisplayName("예약을 추가한다.")
     void add() {
-        ReservationRepository reservationRepository = new ReservationRepository();
         Reservation reservation = new Reservation("brown",
                 LocalDate.of(2024, 4, 1),
                 LocalTime.of(14, 30));
@@ -29,7 +30,6 @@ class ReservationRepositoryTest {
     @DisplayName("id와 매칭되는 예약을 삭제한다.")
     void remove() {
         //given
-        ReservationRepository reservationRepository = new ReservationRepository();
         Reservation reservation1 = new Reservation("brown",
                 LocalDate.of(2024, 4, 1),
                 LocalTime.of(14, 30));
@@ -60,7 +60,6 @@ class ReservationRepositoryTest {
     @DisplayName("모든 예약을 id와 매칭해서 반환한다.")
     void findAllWithId() {
         //given
-        ReservationRepository reservationRepository = new ReservationRepository();
         Reservation reservation1 = new Reservation("brown",
                 LocalDate.of(2024, 4, 1),
                 LocalTime.of(14, 30));

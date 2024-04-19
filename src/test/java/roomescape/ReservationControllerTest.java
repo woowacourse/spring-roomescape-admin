@@ -14,7 +14,7 @@ import org.springframework.test.annotation.DirtiesContext;
 @DirtiesContext(classMode = DirtiesContext.ClassMode.BEFORE_EACH_TEST_METHOD)
 public class ReservationControllerTest {
 
-    private final Map<String, String> PARAMS = Map.of(
+    private final Map<String, String> params = Map.of(
             "name", "썬",
             "date", "2024-04-18",
             "time", "17:00"
@@ -25,7 +25,7 @@ public class ReservationControllerTest {
     void firstPost() {
         RestAssured.given().log().all()
                 .contentType(ContentType.JSON)
-                .body(PARAMS)
+                .body(params)
                 .when().post("/reservations")
                 .then().log().all()
                 .statusCode(200)
@@ -47,7 +47,7 @@ public class ReservationControllerTest {
     void readReservationsSizeAfterFirstPost() {
         RestAssured.given().log().all()
                 .contentType(ContentType.JSON)
-                .body(PARAMS)
+                .body(params)
                 .when().post("/reservations")
                 .then().log().all()
                 .statusCode(200)
@@ -74,7 +74,7 @@ public class ReservationControllerTest {
     void readReservationsSizeAfterPostAndDelete() {
         RestAssured.given().log().all()
                 .contentType(ContentType.JSON)
-                .body(PARAMS)
+                .body(params)
                 .when().post("/reservations")
                 .then().log().all()
                 .statusCode(200)

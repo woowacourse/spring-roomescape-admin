@@ -26,8 +26,9 @@ public class FakeReservationDao implements ReservationDao {
         Reservation reservation = new Reservation(id, reservationRequest);
         if (id == reservation.getId()) {
             reservations.put(id, reservation);
+            return id;
         }
-        return id;
+        throw new IllegalArgumentException("key and value id mismatch occurred");
     }
 
     @Override

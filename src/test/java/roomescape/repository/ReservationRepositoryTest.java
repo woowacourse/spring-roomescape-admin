@@ -17,9 +17,9 @@ class ReservationRepositoryTest {
     @Test
     @DisplayName("예약을 추가한다.")
     void add() {
-        Reservation reservation = new Reservation("brown",
+        Reservation reservation = new Reservation("kargo",
                 LocalDate.of(2024, 4, 1),
-                LocalTime.of(14, 30));
+                LocalTime.of(14, 40));
 
         reservationRepository.add(reservation);
 
@@ -79,6 +79,7 @@ class ReservationRepositoryTest {
 
         //then
         assertAll(
+                () -> assertThat(reservations.size()).isEqualTo(3),
                 () -> assertThat(reservations.get(1L)).isEqualTo(reservation1),
                 () -> assertThat(reservations.get(2L)).isEqualTo(reservation2),
                 () -> assertThat(reservations.get(3L)).isEqualTo(reservation3)

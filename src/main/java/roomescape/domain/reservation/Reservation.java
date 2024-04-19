@@ -2,12 +2,9 @@ package roomescape.domain.reservation;
 
 import java.time.LocalDate;
 import java.time.LocalTime;
-import java.time.format.DateTimeFormatter;
 import roomescape.domain.user.UserName;
 
 public class Reservation {
-    private static final DateTimeFormatter DATE_TIME_FORMATTER = DateTimeFormatter.ofPattern("HH:mm");
-
     private final Long id;
     private final UserName name;
     private final LocalDate date;
@@ -46,7 +43,7 @@ public class Reservation {
         return date;
     }
 
-    public String getTime() { // todo response로 이동
-        return time.format(DATE_TIME_FORMATTER);
+    public LocalTime getTime() {
+        return time;
     }
 }

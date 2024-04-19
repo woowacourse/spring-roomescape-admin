@@ -1,0 +1,7 @@
+package roomescape.domain;
+
+import java.time.LocalDate;
+import java.time.LocalTime;
+
+public record Reservation(String name, LocalDate date, LocalTime time) {
+}

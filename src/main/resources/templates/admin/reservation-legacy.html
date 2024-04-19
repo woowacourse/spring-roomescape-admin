@@ -1,4 +1,5 @@
 <!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
 <html lang="ko">
 <head>
   <meta charset="UTF-8">
@@ -22,10 +23,10 @@
   <div class="collapse navbar-collapse" id="navbarSupportedContent">
     <ul class="navbar-nav ml-auto">
       <li class="nav-item">
-        <a class="nav-link" href="/reservation">Reservation</a>
+        <a class="nav-link" href="/admin/reservation">Reservation</a>
       </li>
       <li class="nav-item">
-        <a class="nav-link" href="/time">Time</a>
+        <a class="nav-link" href="/admin/time">Time</a>
       </li>
     </ul>
   </div>
@@ -48,6 +49,12 @@
     </tr>
     </thead>
     <tbody id="table-body">
+      <tr th:each="reservationResponse : ${reservationResponses}">
+        <td th:text="${reservationResponse.id}"></td>
+        <td th:text="${reservationResponse.name}"></td>
+        <td th:text="${reservationResponse.date}"></td>
+        <td th:text="${reservationResponse.time}"></td>
+      </tr>
     </tbody>
   </table>
 </div>

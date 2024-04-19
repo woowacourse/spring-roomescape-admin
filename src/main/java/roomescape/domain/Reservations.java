@@ -33,9 +33,8 @@ public class Reservations {
                 .orElseThrow(IllegalArgumentException::new);
     }
 
-    //TODO 출력문 제거
-    public boolean delete(Long id) {
-        return reservations.remove(id, find(id));
+    public void delete(Long id) {
+        reservations.remove(id, find(id));
     }
 
     public Set<Reservation> getReservations() {

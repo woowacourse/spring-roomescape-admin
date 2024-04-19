@@ -1,17 +1,18 @@
 package roomescape.idgenerator;
 
+import java.util.concurrent.atomic.AtomicLong;
 import org.springframework.stereotype.Component;
 
 @Component
 public class AutoIncrementIdGenerator implements IdGenerator {
-    public static final int INITIAL_ID = 1;
-    private long id;
+    public static final long INITIAL_ID = 1;
+    private final AtomicLong id;
 
     public AutoIncrementIdGenerator() {
-        this.id = INITIAL_ID;
+        this.id = new AtomicLong(INITIAL_ID);
     }
 
     public long generateNewId() {
-        return id++;
+        return id.getAndIncrement();
     }
 }

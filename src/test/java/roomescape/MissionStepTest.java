@@ -43,9 +43,8 @@ public class MissionStepTest {
                 .body("size()", is(0));
     }
 
-
     @Test
-    void createDeleteReservationTest() {
+    void createAndDeleteTest() {
         Map<String, String> params = new HashMap<>();
         params.put("name", "브라운");
         params.put("date", "2023-08-05");
@@ -92,7 +91,7 @@ public class MissionStepTest {
     }
 
     @Test
-    void 오단계() {
+    void insertTestWithJdbcTemplate() {
         jdbcTemplate.update("INSERT INTO reservations (name, date, time) VALUES (?, ?, ?)", "브라운", "2023-08-05", "15:40");
 
         List<Reservation> reservations = RestAssured.given().log().all()
@@ -107,7 +106,7 @@ public class MissionStepTest {
     }
 
     @Test
-    void 육단계() {
+    void createDeleteTestWithJdbcTemplate() {
         Map<String, String> params = new HashMap<>();
         params.put("name", "브라운");
         params.put("date", "2023-08-05");

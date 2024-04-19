@@ -9,10 +9,14 @@ public class Reservation {
     private final Name name;
     private final ReservationTime time;
 
-    public Reservation(long id, String name, LocalDate date, LocalTime time) {
+    public Reservation(Long id, String name, LocalDate reservationStartDate, LocalTime reservationStartTime) {
         this.id = id;
         this.name = new Name(name);
-        this.time = new ReservationTime(LocalDateTime.of(date, time));
+        this.time = new ReservationTime(LocalDateTime.of(reservationStartDate, reservationStartTime));
+    }
+
+    public Reservation(String name, LocalDate reservationStartDate, LocalTime reservationStartTime) {
+        this(null, name, reservationStartDate, reservationStartTime);
     }
 
     public boolean isReservationTimeConflictWith(Reservation other) {

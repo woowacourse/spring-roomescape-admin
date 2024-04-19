@@ -14,8 +14,8 @@ class ReservationTest {
         LocalDateTime time1 = LocalDateTime.of(2024, 4, 20, 12, 30);
         LocalDateTime time2 = LocalDateTime.of(2024, 4, 20, 13, 30);
 
-        Reservation reservation1 = new Reservation(1, "리비", time1.toLocalDate(), time1.toLocalTime());
-        Reservation reservation2 = new Reservation(2, "웨지", time2.toLocalDate(), time2.toLocalTime());
+        Reservation reservation1 = new Reservation(1L, "리비", time1.toLocalDate(), time1.toLocalTime());
+        Reservation reservation2 = new Reservation(2L, "웨지", time2.toLocalDate(), time2.toLocalTime());
 
         assertThat(reservation1.isReservationTimeConflictWith(reservation2)).isTrue();
     }
@@ -26,8 +26,8 @@ class ReservationTest {
         LocalDateTime time1 = LocalDateTime.of(2024, 4, 20, 12, 30);
         LocalDateTime time2 = LocalDateTime.of(2024, 4, 20, 13, 31);
 
-        Reservation reservation1 = new Reservation(1, "리비", time1.toLocalDate(), time1.toLocalTime());
-        Reservation reservation2 = new Reservation(2, "웨지", time2.toLocalDate(), time2.toLocalTime());
+        Reservation reservation1 = new Reservation(1L, "리비", time1.toLocalDate(), time1.toLocalTime());
+        Reservation reservation2 = new Reservation(2L, "웨지", time2.toLocalDate(), time2.toLocalTime());
 
         assertThat(reservation1.isReservationTimeConflictWith(reservation2)).isFalse();
     }

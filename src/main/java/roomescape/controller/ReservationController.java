@@ -9,7 +9,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import roomescape.domain.Reservation;
-import roomescape.dto.request.ReservationCreateRequest;
+import roomescape.dto.request.ReservationAddRequest;
 import roomescape.dto.response.ReservationResponse;
 import roomescape.repository.ReservationRepository;
 
@@ -33,9 +33,9 @@ public class ReservationController {
     }
 
     @PostMapping
-    public ReservationResponse createReservations(
-            @RequestBody ReservationCreateRequest reservationCreateRequest) {
-        Reservation reservation = reservationCreateRequest.toReservation();
+    public ReservationResponse addReservation(
+            @RequestBody ReservationAddRequest reservationAddRequest) {
+        Reservation reservation = reservationAddRequest.toReservation();
         Long id = reservationRepository.add(reservation);
 
         return ReservationResponse.of(id, reservation);

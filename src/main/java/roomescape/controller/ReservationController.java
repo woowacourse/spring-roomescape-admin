@@ -34,8 +34,8 @@ public class ReservationController {
     public ResponseEntity<ReservationResponseDto> saveReservation(
             @RequestBody final ReservationRequestDto reservationRequestDto) {
         final Reservation reservation = reservationRequestDto.toEntity(id.getAndIncrement());
-        final ReservationResponseDto reservationResponseDto = ReservationResponseDto.from(reservation);
         reservations.add(reservation);
+        final ReservationResponseDto reservationResponseDto = ReservationResponseDto.from(reservation);
         return ResponseEntity.ok().body(reservationResponseDto);
     }
 

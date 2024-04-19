@@ -5,13 +5,13 @@ import java.time.LocalTime;
 
 public class ReservationRequest {
     private String name;
-    private LocalDate date;
-    private LocalTime time;
+    private String date;
+    private String time;
 
     public ReservationRequest() {
     }
 
-    public ReservationRequest(final String name, final LocalDate date, final LocalTime time) {
+    public ReservationRequest(final String name, final String date, final String time) {
         this.name = name;
         this.date = date;
         this.time = time;
@@ -25,11 +25,11 @@ public class ReservationRequest {
         return name;
     }
 
-    public LocalDate getDate() {
+    public String getDate() {
         return date;
     }
 
-    public LocalTime getTime() {
+    public String getTime() {
         return time;
     }
 }

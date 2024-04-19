@@ -2,7 +2,6 @@ package roomescape.domain;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
 import java.time.LocalTime;
-import roomescape.dto.ReservationRequest;
 import roomescape.dto.ReservationTimeRequest;
 
 public class ReservationTime {
@@ -17,10 +16,6 @@ public class ReservationTime {
 
     public static ReservationTime of(Long id, ReservationTimeRequest reservationTimeRequest) {
         return new ReservationTime(id, reservationTimeRequest.startAt());
-    }
-
-    public static ReservationTime of(long id, ReservationRequest reservationRequest) {
-        return new ReservationTime(id, reservationRequest.time());
     }
 
     public Long getId() {

@@ -24,10 +24,11 @@ public class ReservationController {
 
     @GetMapping
     public ResponseEntity<List<ReservationResponse>> readReservations() {
-        return ResponseEntity.ok(
-                reservations.stream()
+        List<ReservationResponse> reservationResponses = reservations.stream()
                 .map(reservation -> ReservationResponse.from(reservation))
-                .toList());
+                .toList();
+        
+        return ResponseEntity.ok(reservationResponses);
     }
 
     @PostMapping

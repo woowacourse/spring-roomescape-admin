@@ -15,6 +15,10 @@ public class Reservation {
         this.time = new ReservationTime(LocalDateTime.of(date, time));
     }
 
+    public boolean isReservationTimeConflictWith(Reservation other) {
+        return time.isConflictWith(other.time);
+    }
+
     public long getId() {
         return id;
     }

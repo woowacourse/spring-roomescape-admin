@@ -15,6 +15,9 @@ import roomescape.dao.ReservationDao;
 import roomescape.dto.ReservationRequest;
 import roomescape.dto.ReservationResponse;
 
+import java.time.LocalDate;
+import java.time.LocalTime;
+
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertAll;
 
@@ -26,9 +29,14 @@ public class ReservationControllerTest {
     @Autowired
     private ReservationDao reservationDao;
 
+    private String date;
+    private String time;
+
     @BeforeEach
     void initPort() {
         RestAssured.port = port;
+        date = LocalDate.now().plusDays(1).toString();
+        time = LocalTime.now().toString();
     }
 
     @AfterEach
@@ -44,7 +52,7 @@ public class ReservationControllerTest {
         //when
         Response response = RestAssured.given().log().all()
                 .contentType(ContentType.JSON)
-                .body(new ReservationRequest("브라운", "2023-08-05", "15:40"))
+                .body(new ReservationRequest("브라운", date, time))
                 .when().post("/reservations")
                 .then().log().all().extract().response();
 
@@ -59,7 +67,7 @@ public class ReservationControllerTest {
     @Test
     void findAllReservations() {
         //given
-        RestAssured.given().contentType(ContentType.JSON).body(new ReservationRequest("브라운", "2023-08-05", "15:40"))
+        RestAssured.given().contentType(ContentType.JSON).body(new ReservationRequest("브라운", date, time))
                 .when().post("/reservations");
 
         //when
@@ -78,7 +86,7 @@ public class ReservationControllerTest {
     @Test
     void deleteReservationSuccess() {
         //given
-        var id = RestAssured.given().contentType(ContentType.JSON).body(new ReservationRequest("브라운", "2023-08-05", "15:40"))
+        var id = RestAssured.given().contentType(ContentType.JSON).body(new ReservationRequest("브라운", date, time))
                 .when().post("/reservations")
                 .then().extract().body().jsonPath().get("id");
 

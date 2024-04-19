@@ -24,8 +24,8 @@ class ReservationControllerTest {
 
     @BeforeEach
     void setUp() {
-        reservationRepository.removeAll();
         RestAssured.port = port;
+        reservationRepository.removeAll();
     }
 
     @Test

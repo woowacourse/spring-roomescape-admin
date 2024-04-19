@@ -4,26 +4,15 @@ import java.util.List;
 import java.util.concurrent.atomic.AtomicLong;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 import roomescape.domain.Reservation;
 import roomescape.domain.ReservationDto;
 import roomescape.domain.ReservationStore;
 
-@Controller
+@RestController
 public class RoomescapeController {
     private final ReservationStore reservationStore = new ReservationStore();
     private AtomicLong index = new AtomicLong(0);
-
-    @GetMapping("/admin")
-    public String adminPage() {
-        return "admin/index";
-    }
-
-    @GetMapping("/admin/reservation")
-    public String reservationPage() {
-        return "admin/reservation-legacy";
-    }
 
     @PostMapping("/reservations")
     public ResponseEntity<Reservation> createReservation(@RequestBody ReservationDto reservationDto) {
@@ -35,7 +24,6 @@ public class RoomescapeController {
 
     @GetMapping("/reservations")
     @ResponseStatus(HttpStatus.OK)
-    @ResponseBody
     public List<Reservation> readReservations() {
         return reservationStore.getAll();
     }

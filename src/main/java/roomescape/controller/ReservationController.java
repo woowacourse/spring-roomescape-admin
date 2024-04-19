@@ -19,7 +19,6 @@ public class ReservationController {
         return ResponseEntity.ok(reservations);
     }
 
-    @ResponseBody
     @PostMapping("/reservations")
     public ResponseEntity<Reservation> createReservation(@RequestBody ReservationCreateRequest dto) {
         Reservation reservation = dto.createReservation(index.getAndIncrement());

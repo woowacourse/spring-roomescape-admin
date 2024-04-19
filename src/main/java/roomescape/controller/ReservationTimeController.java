@@ -29,6 +29,7 @@ public class ReservationTimeController {
     @GetMapping
     public ResponseEntity<List<ReservationTimeResponse>> read() {
         List<ReservationTimeServiceResponse> reservationTimeServiceResponses = reservationTimeService.findAll();
+
         List<ReservationTimeResponse> reservationTimeResponses = reservationTimeServiceResponses.stream()
                 .map(ReservationTimeResponse::from)
                 .toList();
@@ -41,6 +42,7 @@ public class ReservationTimeController {
     public ResponseEntity<ReservationTimeResponse> create(@RequestBody ReservationTimeRequest reservationTimeRequest) {
         ReservationTimeServiceRequest reservationTimeServiceRequest = reservationTimeRequest.toReservationTimeServiceRequest();
         ReservationTimeServiceResponse reservationTimeServiceResponse = reservationTimeService.create(reservationTimeServiceRequest);
+
         ReservationTimeResponse reservationTimeResponse = ReservationTimeResponse.from(reservationTimeServiceResponse);
 
         return ResponseEntity.created(URI.create("/times/" + reservationTimeResponse.id()))
@@ -48,7 +50,7 @@ public class ReservationTimeController {
     }
 
     @DeleteMapping("/{id}")
-    public ResponseEntity<Void> delete(@PathVariable("id") Long id) {
+    public ResponseEntity<Void> delete(@PathVariable("id") long id) {
         reservationTimeService.delete(id);
 
         return ResponseEntity.noContent()

@@ -35,7 +35,7 @@ public class ReservationTimeDao {
                 LocalTime.parse(resultSet.getString("start_at"))));
     }
 
-    public ReservationTime findById(Long id) {
+    public ReservationTime findById(long id) {
         String sql = """
                 SELECT * FROM reservation_time
                 WHERE id = ?""";
@@ -43,7 +43,7 @@ public class ReservationTimeDao {
                 LocalTime.parse(resultSet.getString("start_at"))), id);
     }
 
-    public void deleteById(Long id) {
+    public void deleteById(long id) {
         String sql = "DELETE FROM reservation_time WHERE id = ?";
         jdbcTemplate.update(sql, id);
     }

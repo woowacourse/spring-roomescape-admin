@@ -33,7 +33,7 @@ public class ReservationTimeService {
                 .toList();
     }
 
-    public void delete(Long id) {
+    public void delete(long id) {
         reservationDao.deleteByTimeId(id);
         reservationTimeDao.deleteById(id);
     }

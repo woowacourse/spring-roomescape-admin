@@ -47,12 +47,12 @@ public class ReservationDao {
         reservation.setId(key.longValue());
     }
 
-    public void deleteById(Long id) {
+    public void deleteById(long id) {
         String sql = "DELETE FROM reservation WHERE id = ?";
         jdbcTemplate.update(sql, id);
     }
 
-    public void deleteByTimeId(Long timeId) {
+    public void deleteByTimeId(long timeId) {
         String sql = "DELETE FROM reservation WHERE time_id = ?";
         jdbcTemplate.update(sql, timeId);
     }

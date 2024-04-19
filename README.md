@@ -141,3 +141,27 @@ HTTP/1.1 200
 - Web : request/responseDTO로 웹과 상호작용
 - Service : request/responseDTO를 domain으로 매핑해 웹과 데이터저장공간 사이를 연결
 - Dao : domain으로 데이터저장공간과 상호작용
+
+## Dao라는 이름이 이상한걸까? -> No
+
+- 고민한 부분
+    - ReservationMemoryDao 클래스를 ReservationMemoryRepository 로 이름을 변경할지 고민했다.
+    - 그 이유는 Dao는 영속성과 관련되고, Repository는 도메인과 관련된다고 알고 있었는데 ReservationMemoryDao는 영속성을 가진 저장소에 접근하고 있지 않았기 때문이다.
+- 결론
+    - 공식문서를 찾아보며 Dao가 꼭 영속성과 관련될 필욘 없단 점을 깨달아, 해당 클래스를 표현할 때 Dao와 Repository 중엔 Dao가 더 적합한 네이밍이란 결론을 내렸다.
+
+### Dao에 대한 오해
+
+어떤 사람들은 Dao는 영속성 메커니즘에 접근해 CRUD를 처리하는 패턴이라 정의내리기도 한다.
+Data Access Object라는 이름 자체가 persistence를 나타낸다고 하는 블로그 글도 보았는데 공감하기 어려웠다.
+그래서 최대한 공식문서에서 말하는 Dao에 대해 찾아보게 되었다.
+
+### Oracle이 설명하는 Dao
+
+[관련 문서](https://www.oracle.com/java/technologies/data-access-object.html)
+> A data access object can represent data that is not stored in a database.
+> The sample application uses the DAO pattern to represent XML data sources as objects.
+> Sample application screens are defined in an XML file which is interpreted by the class ScreenDefinitionDAO.
+
+위 문장을 보면 Dao에서 접근할 데이터 저장소가 꼭 영속성을 가진 대상일 필요는 없음을 알 수 있다.
+ReservationMemoryDao 가 저장소로 바라보고 있는 List<Reservation>가 Dao의 데이터 저장소로 손색없다는 뜻이다.

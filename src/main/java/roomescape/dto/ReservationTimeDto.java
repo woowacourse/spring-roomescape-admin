@@ -27,6 +27,7 @@ public class ReservationTimeDto {
         return id;
     }
 
+    @JsonFormat(pattern = "HH:mm")
     public LocalTime getStartAt() {
         return startAt;
     }

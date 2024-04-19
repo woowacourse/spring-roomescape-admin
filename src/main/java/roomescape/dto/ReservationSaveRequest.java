@@ -10,7 +10,7 @@ public record ReservationSaveRequest(
         LocalDate date,
         LocalTime time) {
 
-    public Reservation toReservation() {
+    public Reservation toModel() {
         return new Reservation(name, date, time);
     }
 }

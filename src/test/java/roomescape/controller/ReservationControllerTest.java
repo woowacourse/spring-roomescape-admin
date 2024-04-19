@@ -43,7 +43,7 @@ class ReservationControllerTest extends ControllerTest {
     void createReservation() throws Exception {
         // given
         ReservationSaveRequest request = new ReservationSaveRequest(USER_MIA, MIA_RESERVATION_DATE, MIA_RESERVATION_TIME);
-        Reservation expectedReservation = request.toReservation();
+        Reservation expectedReservation = request.toModel();
 
         BDDMockito.given(reservationService.createReservation(any()))
                 .willReturn(expectedReservation);

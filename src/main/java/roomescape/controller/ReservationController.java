@@ -2,7 +2,6 @@ package roomescape.controller;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.concurrent.atomic.AtomicLong;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -12,16 +11,21 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
 import roomescape.domain.Reservation;
+import roomescape.domain.ReservationRepository;
 import roomescape.dto.ReservationCreateDto;
 import roomescape.dto.ReservationResponseDto;
 
 @RestController
 public class ReservationController {
-    private List<Reservation> reservations = new ArrayList<>();
-    private AtomicLong index = new AtomicLong(1);
+    private final ReservationRepository reservationRepository;
+
+    public ReservationController(ReservationRepository reservationRepository) {
+        this.reservationRepository = reservationRepository;
+    }
 
     @GetMapping("/reservations")
     public ResponseEntity<List<ReservationResponseDto>> readReservations() {
+        List<Reservation> reservations = reservationRepository.findAll();
         List<ReservationResponseDto> responseDtos = new ArrayList<>();
         reservations.forEach(reservation -> responseDtos.add(ReservationResponseDto.from(reservation)));
         return ResponseEntity.ok(responseDtos);
@@ -29,22 +33,16 @@ public class ReservationController {
 
     @PostMapping("/reservations")
     public ResponseEntity<ReservationResponseDto> createReservation(@RequestBody ReservationCreateDto createDto) {
-        Reservation reservation = new Reservation(
-                index.getAndIncrement(), createDto.getName(), createDto.getDate(), createDto.getTime()
-        );
-        reservations.add(reservation);
-        ReservationResponseDto responseDto = ReservationResponseDto.from(reservation);
+        Reservation reservation = new Reservation(0L, createDto.getName(), createDto.getDate(), createDto.getTime());
+        Reservation createdReservation = reservationRepository.create(reservation);
+        ReservationResponseDto responseDto = ReservationResponseDto.from(createdReservation);
         return new ResponseEntity<>(responseDto, HttpStatus.CREATED);
     }
 
     @DeleteMapping("/reservations/{id}")
     public ResponseEntity<Void> deleteReservation(@PathVariable long id) {
-        Reservation findReservation = reservations.stream()
-                .filter(reservation -> reservation.getId() == id)
-                .findAny()
-                .orElseThrow(() -> new IllegalArgumentException("해당 id(%d)의 예약이 존재하지 않습니다.".formatted(id)));
-
-        reservations.remove(findReservation);
+        Reservation findReservation = reservationRepository.findById(id);
+        reservationRepository.remove(findReservation);
         return ResponseEntity.noContent().build();
     }
 }

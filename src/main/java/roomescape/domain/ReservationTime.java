@@ -13,11 +13,11 @@ public class ReservationTime {
         this.time = time;
     }
 
-    public static LocalTime startTime(){
+    public static LocalTime startTime() {
         return START_TIME;
     }
 
-    public static LocalTime endTime(){
+    public static LocalTime endTime() {
         return END_TIME;
     }
 

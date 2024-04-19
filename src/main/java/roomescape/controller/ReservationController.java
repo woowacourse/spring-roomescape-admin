@@ -32,7 +32,6 @@ public class ReservationController {
     @GetMapping
     @ResponseStatus(HttpStatus.OK)
     public List<ReservationResponse> findAll() {
-        Collections.synchronizedList(reservations);
         return ReservationResponse.fromReservations(reservations);
     }
 
@@ -51,7 +50,7 @@ public class ReservationController {
         Reservation reservation = reservations.stream()
                 .filter(it -> it.getId() == id)
                 .findFirst()
-                .orElseThrow(IllegalArgumentException::new);
+                .orElseThrow(() -> new IllegalArgumentException("[ERROR] 유효하지 않은 예약 번호입니다."));
 
         reservations.remove(reservation);
     }

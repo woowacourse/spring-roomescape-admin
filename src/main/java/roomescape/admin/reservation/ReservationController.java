@@ -24,10 +24,8 @@ public class ReservationController {
     @GetMapping
     public ResponseEntity<List<ResponseReservation>> findAll() {
         List<ResponseReservation> responseReservations = reservations.values().stream()
-                .map(reservation -> new ResponseReservation(reservation.getId(), reservation.getName(),
-                        reservation.getDate(), reservation.getTime()))
+                .map(ResponseReservation::from)
                 .toList();
-
 
         return ResponseEntity.ok(responseReservations);
     }
@@ -38,9 +36,7 @@ public class ReservationController {
                 requestReservation.date(), requestReservation.time());
         reservations.put(reservation.getId(), reservation);
 
-        return ResponseEntity.ok(
-                new ResponseReservation(reservation.getId(), reservation.getName(), reservation.getDate(),
-                        reservation.getTime()));
+        return ResponseEntity.ok(ResponseReservation.from(reservation));
     }
 
     @DeleteMapping("/{id}")

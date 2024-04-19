@@ -14,20 +14,20 @@ import java.util.*;
 
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.DEFINED_PORT)
 @DirtiesContext(classMode = DirtiesContext.ClassMode.BEFORE_EACH_TEST_METHOD)
-class MissionStepTest {
+class AdminEndpointTest {
 
     @Autowired
     private ReservationRepository reservationRepository;
 
     @DisplayName("관리자 메인 페이지 응답")
     @Test
-    void moveToAdminPage() {
+    void adminPageLoadTest() {
         HttpRestTestTemplate.assertGetOk("/admin");
     }
 
     @DisplayName("예약 페이지 응답")
     @Test
-    void moveToReservationPage() {
+    void reservationPageLoadTest() {
         List<Reservation> reservations = reservationRepository.findAll();
         int reservationSize = reservations.size();
 
@@ -35,9 +35,9 @@ class MissionStepTest {
         HttpRestTestTemplate.assertGetOk("/reservations", "size()", reservationSize);
     }
 
-    @DisplayName("예약_추가_삭제_시나리오")
+    @DisplayName("예약 추가 삭제 시나리오")
     @TestFactory
-    Collection<DynamicTest> addAndRemoveReservation() {
+    Collection<DynamicTest> reservationAddAndRemoveScenarioTest() {
         List<Reservation> reservations = reservationRepository.findAll();
         int reservationSize = reservations.size();
         int lastIndex = Math.toIntExact(reservations.get(reservationSize - 1)

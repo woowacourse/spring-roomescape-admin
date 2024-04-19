@@ -30,7 +30,7 @@ public class ReservationController {
     }
 
     @PostMapping
-    public ResponseEntity<Reservation> createReservation(@RequestBody final ReservationCreateRequest reservationCreateRequest) {
+    public ResponseEntity<Reservation> createReservation(@RequestBody ReservationCreateRequest reservationCreateRequest) {
         Reservation reservation = Reservation.toEntity(
                 index.getAndIncrement(),
                 reservationCreateRequest.name(),
@@ -43,8 +43,8 @@ public class ReservationController {
     }
 
     @DeleteMapping("/{id}")
-    public ResponseEntity<String> deleteReservation(@PathVariable final Long id) {
-        final Reservation reservation;
+    public ResponseEntity<String> deleteReservation(@PathVariable Long id) {
+        Reservation reservation;
         try {
             reservation = reservations.stream()
                     .filter(it -> Objects.equals(it.getId(), id))

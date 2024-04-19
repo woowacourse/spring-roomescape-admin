@@ -1,6 +1,7 @@
 package roomescape.domain;
 
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.time.LocalTime;
 import java.time.format.DateTimeFormatter;
 
@@ -10,22 +11,20 @@ public class Reservation {
 
     private final long id;
     private final String name;
-    private final LocalDate date;
-    private final LocalTime time;
+    private final LocalDateTime dateTime;
 
-    public Reservation(long id, String name, LocalDate date, LocalTime time) {
+    public Reservation(long id, String name, LocalDateTime dateTime) {
         this.id = id;
         this.name = name;
-        this.date = date;
-        this.time = time;
+        this.dateTime = dateTime;
     }
 
     public Reservation(long id, Reservation reservation) {
-        this(id, reservation.name, reservation.date, reservation.time);
+        this(id, reservation.name, reservation.dateTime);
     }
 
     public Reservation(String name, String date, String time) {
-        this(NO_ID, name, LocalDate.parse(date), LocalTime.parse(time));
+        this(NO_ID, name, LocalDateTime.of(LocalDate.parse(date), LocalTime.parse(time)));
     }
 
     public long getId() {
@@ -37,10 +36,10 @@ public class Reservation {
     }
 
     public String getDate() {
-        return date.format(DateTimeFormatter.ISO_DATE);
+        return dateTime.format(DateTimeFormatter.ISO_DATE);
     }
 
     public String getTime() {
-        return time.format(DateTimeFormatter.ofPattern(TIME_FORMAT));
+        return dateTime.format(DateTimeFormatter.ofPattern(TIME_FORMAT));
     }
 }

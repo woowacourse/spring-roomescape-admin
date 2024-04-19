@@ -22,12 +22,12 @@ public class ReservationController {
         this.reservationService = new ReservationService();
     }
 
-    @GetMapping()
+    @GetMapping
     public List<ReservationResponseDto> findAll() {
         return reservationService.getAllReservations();
     }
 
-    @PostMapping()
+    @PostMapping
     public ReservationResponseDto create(@RequestBody ReservationRequestDto reservationRequestDto) {
         return reservationService.addReservation(reservationRequestDto);
     }

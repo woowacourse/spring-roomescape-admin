@@ -24,17 +24,28 @@ public class ReservationTimeController {
 
     @PostMapping
     public ResponseEntity<ReservationTimeResponseDto> create(@RequestBody final ReservationTimeRequestDto request) {
+        validateRequest(request);
         return ResponseEntity.ok(reservationTimeService.create(request));
     }
 
     @GetMapping
-    public List<ReservationTimeResponseDto> find() {
-        return reservationTimeService.find();
+    public List<ReservationTimeResponseDto> findAll() {
+        return reservationTimeService.findAll();
     }
 
     @DeleteMapping("/{id}")
     public ResponseEntity<Void> delete(@PathVariable("id") final long id) {
         reservationTimeService.delete(id);
         return ResponseEntity.noContent().build();
+    }
+
+    public void validateRequest(final ReservationTimeRequestDto request) {
+        validateStartAtValue(request.getStartAt());
+    }
+
+    private void validateStartAtValue(final String startAt) {
+        if (startAt == null || startAt.isBlank()) {
+            throw new IllegalArgumentException("StartAt cannot be null or empty");
+        }
     }
 }

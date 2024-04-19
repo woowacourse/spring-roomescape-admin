@@ -25,6 +25,7 @@ public class ReservationController {
 
     @PostMapping
     public ResponseEntity<ReservationResponseDto> create(@RequestBody final ReservationRequestDto request) {
+        validateRequest(request);
         final ReservationResponseDto result = reservationService.create(request);
         return ResponseEntity.created(URI.create("/reservations/" + result.getId()))
                 .body(result);
@@ -39,5 +40,29 @@ public class ReservationController {
     public ResponseEntity<Void> delete(@PathVariable("id") final long id) {
         reservationService.delete(id);
         return ResponseEntity.noContent().build();
+    }
+
+    public void validateRequest(final ReservationRequestDto request) {
+        validateDateValue(request.getDate());
+        validateNameValue(request.getName());
+        validateTimeIdValue(request.getTimeId());
+    }
+
+    private void validateDateValue(final String date) {
+        if (date == null || date.isBlank()) {
+            throw new IllegalArgumentException("Date cannot be null or empty");
+        }
+    }
+
+    private void validateNameValue(final String name) {
+        if (name == null || name.isBlank()) {
+            throw new IllegalArgumentException("Name cannot be null or empty");
+        }
+    }
+
+    private void validateTimeIdValue(final Long timeId) {
+        if (timeId == null) {
+            throw new IllegalArgumentException("Time ID cannot be null");
+        }
     }
 }

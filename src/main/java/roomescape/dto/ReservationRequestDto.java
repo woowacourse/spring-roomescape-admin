@@ -16,7 +16,7 @@ public class ReservationRequestDto {
         this.time = time;
     }
 
-    public Reservation toEntity() {
-        return new Reservation(name, date, time);
+    public Reservation toReservation() {
+        return new Reservation(null, name, date, time);
     }
 }

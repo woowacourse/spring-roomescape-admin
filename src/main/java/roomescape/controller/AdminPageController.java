@@ -4,7 +4,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
 
 @Controller
-public class RoomEscapeController {
+public class AdminPageController {
 
     @GetMapping("/admin")
     public String getIndexPage() {
@@ -14,5 +14,10 @@ public class RoomEscapeController {
     @GetMapping("/admin/reservation")
     public String getReservationPage() {
         return "admin/reservation-legacy";
+    }
+
+    @GetMapping("/admin/time")
+    public String getTimePage() {
+        return "admin/time";
     }
 }

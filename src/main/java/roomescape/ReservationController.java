@@ -1,6 +1,5 @@
 package roomescape;
 
-import java.util.ArrayList;
 import java.util.List;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
@@ -13,28 +12,24 @@ import org.springframework.web.bind.annotation.RequestBody;
 @Controller
 public class ReservationController {
 
-    private List<Reservation> reservations = new ArrayList<>();
+    private final ReservationRepository reservationRepository = ReservationRepository.getInstance();
 
     @GetMapping("/reservations")
     public ResponseEntity<List<Reservation>> getReservations() {
+        List<Reservation> reservations = reservationRepository.findAll();
         return ResponseEntity.ok(reservations);
     }
 
     @PostMapping("/reservations")
     public ResponseEntity<Reservation> addReservation(@RequestBody Reservation reservation) {
-        reservations.add(reservation);
-        return ResponseEntity.ok(reservation);
+        reservationRepository.save(reservation);
+        Reservation savedReservation = reservationRepository.findById(reservation.getId());
+        return ResponseEntity.ok(savedReservation);
     }
 
     @DeleteMapping("/reservations/{id}")
     public ResponseEntity<Void> deleteReservation(@PathVariable Long id) {
-        Reservation reservationToDeleted = reservations.stream()
-                .filter(reservation -> reservation.getId().equals(id))
-                .findFirst()
-                .orElseThrow(RuntimeException::new);
-
-        reservations.remove(reservationToDeleted);
-
+        reservationRepository.delete(id);
         return ResponseEntity.ok().build();
     }
 }

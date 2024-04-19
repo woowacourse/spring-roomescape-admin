@@ -1,8 +1,10 @@
 package roomescape;
 
-import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.concurrent.atomic.AtomicLong;
+import java.util.stream.Collectors;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -14,28 +16,27 @@ import org.springframework.web.bind.annotation.RequestBody;
 @Controller
 public class ReservationController {
 
-    private List<Reservation> reservations = new ArrayList<>();
-    private AtomicLong index = new AtomicLong(0);
+    private Map<Integer, Reservation> reservations = new HashMap<>();
+    private AtomicLong index = new AtomicLong(1);
 
     @GetMapping("/reservations")
-    public ResponseEntity<List<Reservation>> reservations() {
-        return ResponseEntity.ok(reservations);
+    public ResponseEntity<List<ReservationResponse>> reservations() {
+        List<ReservationResponse> reservationResponses = reservations.keySet().stream()
+                .map(i -> ReservationResponse.of(i, reservations.get(i)))
+                .collect(Collectors.toList());
+        return ResponseEntity.ok(reservationResponses);
     }
 
     @PostMapping("/reservations")
-    public ResponseEntity<Reservation> create(@RequestBody ReservationDto reservationDto) {
-        Reservation reservation = reservationDto.toEntity(index.incrementAndGet());
-        reservations.add(reservation);
+    public ResponseEntity<Reservation> create(@RequestBody ReservationRequest reservationRequest) {
+        Reservation reservation = reservationRequest.toEntity();
+        reservations.put((int) index.getAndIncrement(), reservation);
         return ResponseEntity.ok(reservation);
     }
 
     @DeleteMapping("/reservations/{id}")
     public ResponseEntity<Void> delete(@PathVariable long id) {
-        Reservation delReservation = reservations.stream()
-                .filter(reservation -> reservation.getId() == id)
-                .findFirst()
-                .orElseThrow();
-        reservations.remove(delReservation);
+        reservations.remove((int) id);
         return ResponseEntity.ok().build();
     }
 }

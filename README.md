@@ -19,8 +19,8 @@
 
 - [x] `POST /reservations` 요청 시, 예약을 추가한다.
 - [x] `DELETE /reservations/{id}` 요청 시, 예약을 취소한다.
-- [ ] 방탈출 예약을 추가한다
-  - [ ] 사용자는 이름, 예약날짜, 예약 시간을 입력한다.
+- [x] 방탈출 예약을 추가한다
+  - [x] 사용자는 이름, 예약날짜, 예약 시간을 입력한다.
     - [x] 이름은 1글자 이상의 영/한글로 구성된다.
     - [x] 예약 날짜는 현재 날짜 이후의 날짜이다.
     - [x] 예약 시간은 운영시간(오전 9시 - 오후 10시) 사이의 시간만 가능하다. 
@@ -97,3 +97,19 @@ DELETE /reservations/1 HTTP/1.1
 ```
 HTTP/1.1 200
 ```
+---
+
+## 1단계 1차 리뷰 반영 사안
+
+- Controller의 분리
+  - ReservationController : RestController
+  - AdminController : 뷰 반환 컨트롤러
+- RestController 반환값 통일 -> ResponseEntity
+- 값 객체 포장을 통한 검증 기능 추가
+  - 이름은 1글자 이상의 영/한글로 구성된다.
+  - 예약 날짜는 현재 날짜 이후의 날짜이다.
+  - 예약 시간은 운영시간(오전 9시 - 오후 10시) 사이의 시간만 가능하다.
+
+- Reservation 초기화 시 null 체크 : by Objects.requireNonNull
+- Dto 분리 : ReservationRequestDto/ReservationResponseDto
+- Reservations 내 자료구조 변경 : List > Map

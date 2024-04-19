@@ -14,4 +14,5 @@ public class AdminController {
     public String reservationPage() {
         return "admin/reservation-legacy";
     }
+
 }

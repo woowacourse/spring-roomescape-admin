@@ -35,7 +35,7 @@ public class ReservationDao {
         });
     }
 
-    public Long insert(Reservation reservation) {
+    public Reservation save(Reservation reservation) {
         String sql = "INSERT INTO reservation(name, date, time_id) VALUES (?, ?, ?)";
         KeyHolder keyHolder = new GeneratedKeyHolder();
 
@@ -47,7 +47,8 @@ public class ReservationDao {
             return ps;
         }, keyHolder);
 
-        return keyHolder.getKey().longValue();
+        long id = keyHolder.getKey().longValue();
+        return reservation.createWithId(id);
     }
 
     public void deleteById(Long id) {

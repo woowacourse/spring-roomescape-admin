@@ -19,9 +19,11 @@ public class ReservationTimeService {
         this.reservationDao = reservationDao;
     }
 
-    public Long create(ReservationTimeServiceRequest reservationTimeServiceRequest) {
+    public ReservationTimeServiceResponse create(ReservationTimeServiceRequest reservationTimeServiceRequest) {
         ReservationTime reservationTime = reservationTimeServiceRequest.toReservationTime();
-        return reservationTimeDao.insert(reservationTime);
+        ReservationTime savedReservationTime = reservationTimeDao.save(reservationTime);
+
+        return ReservationTimeServiceResponse.from(savedReservationTime);
     }
 
     public List<ReservationTimeServiceResponse> findAll() {

@@ -20,11 +20,13 @@ public class ReservationService {
         this.reservationTimeDao = reservationTimeDao;
     }
 
-    public Long create(ReservationServiceRequest reservationServiceRequest) {
+    public ReservationServiceResponse create(ReservationServiceRequest reservationServiceRequest) {
         ReservationTime reservationTime = reservationTimeDao.findById(reservationServiceRequest.timeId());
         Reservation reservation = reservationServiceRequest.toReservation(reservationTime);
 
-        return reservationDao.insert(reservation);
+        Reservation savedReservation = reservationDao.save(reservation);
+
+        return ReservationServiceResponse.from(savedReservation);
     }
 
     public List<ReservationServiceResponse> findAll() {

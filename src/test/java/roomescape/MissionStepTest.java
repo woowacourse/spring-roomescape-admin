@@ -145,7 +145,8 @@ class MissionStepTest {
                 .when().post("/reservations")
                 .then().log().all()
                 .statusCode(201)
-                .header("Location", "/reservations/1");
+                .header("Location", "/reservations/1")
+                .body("id", is(1));
 
         Integer count = jdbcTemplate.queryForObject("SELECT count(1) from reservation", Integer.class);
         assertThat(count).isEqualTo(1);
@@ -169,7 +170,8 @@ class MissionStepTest {
                 .body(params)
                 .when().post("/times")
                 .then().log().all()
-                .statusCode(201);
+                .statusCode(201)
+                .body("id", is(2));
 
         RestAssured.given().log().all()
                 .when().get("/times")
@@ -197,7 +199,8 @@ class MissionStepTest {
                 .when().post("/reservations")
                 .then().log().all()
                 .statusCode(201)
-                .header("Location", "/reservations/1");;
+                .header("Location", "/reservations/1")
+                .body("id", is(1));
 
         RestAssured.given().log().all()
                 .when().get("/reservations")

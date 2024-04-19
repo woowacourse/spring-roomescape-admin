@@ -25,6 +25,10 @@ public class Reservation {
         this.reservationTime = reservationTime;
     }
 
+    public Reservation createWithId(Long id) {
+        return new Reservation(id, name, date, reservationTime);
+    }
+
     public Long getId() {
         return id;
     }

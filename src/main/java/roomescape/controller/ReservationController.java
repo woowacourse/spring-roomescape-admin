@@ -40,10 +40,10 @@ public class ReservationController {
     @PostMapping
     public ResponseEntity<ReservationResponse> create(@RequestBody ReservationRequest reservationRequest) {
         ReservationServiceRequest reservationServiceRequest = reservationRequest.toReservationServiceRequest();
-        Long id = reservationService.create(reservationServiceRequest);
+        ReservationServiceResponse reservationServiceResponse = reservationService.create(reservationServiceRequest);
 
-        return ResponseEntity.created(URI.create("/reservations/" + id))
-                .build();
+        return ResponseEntity.created(URI.create("/reservations/" + reservationServiceResponse.id()))
+                .body(ReservationResponse.from(reservationServiceResponse));
     }
 
     @DeleteMapping("/{id}")

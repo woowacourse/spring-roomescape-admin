@@ -38,12 +38,13 @@ public class ReservationTimeController {
     }
 
     @PostMapping
-    public ResponseEntity<Void> create(@RequestBody ReservationTimeRequest reservationTimeRequest) {
+    public ResponseEntity<ReservationTimeResponse> create(@RequestBody ReservationTimeRequest reservationTimeRequest) {
         ReservationTimeServiceRequest reservationTimeServiceRequest = reservationTimeRequest.toReservationTimeServiceRequest();
-        Long id = reservationTimeService.create(reservationTimeServiceRequest);
+        ReservationTimeServiceResponse reservationTimeServiceResponse = reservationTimeService.create(reservationTimeServiceRequest);
+        ReservationTimeResponse reservationTimeResponse = ReservationTimeResponse.from(reservationTimeServiceResponse);
 
-        return ResponseEntity.created(URI.create("/times/" + id))
-                .build();
+        return ResponseEntity.created(URI.create("/times/" + reservationTimeResponse.id()))
+                .body(reservationTimeResponse);
     }
 
     @DeleteMapping("/{id}")

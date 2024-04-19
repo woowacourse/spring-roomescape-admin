@@ -18,7 +18,7 @@ public class ReservationTimeDao {
         this.jdbcTemplate = jdbcTemplate;
     }
 
-    public Long insert(ReservationTime reservationTime) {
+    public ReservationTime save(ReservationTime reservationTime) {
         String sql = "INSERT INTO reservation_time(start_at) VALUES (?)";
         KeyHolder keyHolder = new GeneratedKeyHolder();
 
@@ -28,7 +28,8 @@ public class ReservationTimeDao {
             return ps;
         }, keyHolder);
 
-        return keyHolder.getKey().longValue();
+        long id = keyHolder.getKey().longValue();
+        return reservationTime.createWithId(id);
     }
 
     public List<ReservationTime> findAll() {

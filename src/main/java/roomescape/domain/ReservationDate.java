@@ -16,4 +16,8 @@ public class ReservationDate {
             throw new IllegalArgumentException("예약은 현재 이후 날짜만 가능합니다.");
         }
     }
+
+    public LocalDate getDate() {
+        return date;
+    }
 }

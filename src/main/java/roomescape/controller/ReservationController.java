@@ -32,7 +32,7 @@ public class ReservationController {
 
     @PostMapping
     public ResponseEntity<ReservationResponse> addReservations(@RequestBody ReservationRequest reservationRequest) {
-        Reservation reservation = ReservationRequest.from(reservationRequest);
+        Reservation reservation = ReservationRequest.toEntity(reservationRequest);
         Reservation savedReservation = reservationRepository.save(reservation);
         ReservationResponse reservationResponse = ReservationResponse.from(savedReservation);
 

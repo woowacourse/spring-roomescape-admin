@@ -11,20 +11,20 @@ public class ReservationTest {
     @DisplayName("정상 생성 테스트")
     @Test
     void validCreate() {
-        assertDoesNotThrow(() -> new Reservation("aa", "2023-10-10", "10:00"));
+        assertDoesNotThrow(() -> new Reservation(1, "aa", "2023-10-10", "10:00"));
     }
 
     @DisplayName("비정상 날짜 생성 불가 테스트")
     @Test
     void invalidDateInvalidCreate() {
-        assertThatThrownBy(() -> new Reservation("aa", "20222-10-10", "10:10"))
+        assertThatThrownBy(() -> new Reservation(1, "aa", "20222-10-10", "10:10"))
                 .isInstanceOf(DateTimeParseException.class);
     }
 
     @DisplayName("비정상 시간 생성 불가 테스트")
     @Test
     void invalidTimeInvalidCreate() {
-        assertThatThrownBy(() -> new Reservation("aa", "2023-10-10", "25:00"))
+        assertThatThrownBy(() -> new Reservation(1, "aa", "2023-10-10", "25:00"))
                 .isInstanceOf(DateTimeParseException.class);
     }
 }

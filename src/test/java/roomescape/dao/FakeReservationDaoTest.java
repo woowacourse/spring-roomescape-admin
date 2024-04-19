@@ -5,7 +5,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
-import roomescape.domain.Reservation;
+import roomescape.dto.ReservationRequest;
 
 public class FakeReservationDaoTest {
     private ReservationDao fakeReservationDao;
@@ -25,9 +25,9 @@ public class FakeReservationDaoTest {
     @Test
     void save() {
         //given
-        Reservation reservation = new Reservation("aa", "2023-10-10", "10:00");
+        ReservationRequest reservationRequest = new ReservationRequest("aa", "2023-10-10", "10:00");
         //when
-        fakeReservationDao.save(reservation);
+        fakeReservationDao.save(reservationRequest);
         //then
         assertThat(fakeReservationDao.findAll()).hasSize(1);
     }
@@ -36,9 +36,9 @@ public class FakeReservationDaoTest {
     @Test
     void existsById() {
         //given
-        Reservation reservation = new Reservation("aa", "2023-10-10", "10:00");
+        ReservationRequest reservationRequest = new ReservationRequest("aa", "2023-10-10", "10:00");
         //when
-        fakeReservationDao.save(reservation);
+        fakeReservationDao.save(reservationRequest);
         //then
         assertThat(fakeReservationDao.existsById(1)).isTrue();
     }
@@ -47,8 +47,8 @@ public class FakeReservationDaoTest {
     @Test
     void deleteById() {
         //given
-        Reservation reservation = new Reservation("aa", "2023-10-10", "10:00");
-        fakeReservationDao.save(reservation);
+        ReservationRequest reservationRequest = new ReservationRequest("aa", "2023-10-10", "10:00");
+        fakeReservationDao.save(reservationRequest);
         //when
         fakeReservationDao.deleteById(1);
         //then

@@ -6,7 +6,7 @@ import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.atomic.AtomicLong;
 import org.springframework.stereotype.Component;
 import roomescape.domain.Reservation;
-import roomescape.entity.ReservationEntity;
+import roomescape.dto.ReservationRequest;
 
 @Component
 public class FakeReservationDao implements ReservationDao {
@@ -14,16 +14,19 @@ public class FakeReservationDao implements ReservationDao {
     private final AtomicLong index = new AtomicLong(1);
 
     @Override
-    public List<ReservationEntity> findAll() {
-        return reservations.entrySet().stream()
-                .map(entry -> new ReservationEntity(entry.getKey(), entry.getValue()))
+    public List<Reservation> findAll() {
+        return reservations.values()
+                .stream()
                 .toList();
     }
 
     @Override
-    public long save(Reservation reservation) {
+    public long save(ReservationRequest reservationRequest) {
         long id = index.getAndIncrement();
-        reservations.put(id, reservation);
+        Reservation reservation = new Reservation(id, reservationRequest);
+        if (id == reservation.getId()) {
+            reservations.put(id, reservation);
+        }
         return id;
     }
 

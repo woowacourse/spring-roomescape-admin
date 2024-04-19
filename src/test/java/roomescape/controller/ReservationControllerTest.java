@@ -16,7 +16,6 @@ import org.springframework.http.HttpStatus;
 import roomescape.dao.ReservationDao;
 import roomescape.domain.Reservation;
 import roomescape.dto.ReservationRequest;
-import roomescape.entity.ReservationEntity;
 
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 class ReservationControllerTest {
@@ -30,8 +29,8 @@ class ReservationControllerTest {
     void init() {
         RestAssured.port = port;
 
-        for (ReservationEntity reservationEntity : reservationDao.findAll()) {
-            reservationDao.deleteById(reservationEntity.getId());
+        for (Reservation reservation : reservationDao.findAll()) {
+            reservationDao.deleteById(reservation.getId());
         }
     }
 
@@ -49,8 +48,9 @@ class ReservationControllerTest {
     @Test
     void findAllReservations() {
         //given
-        Reservation reservation = new Reservation("브라운", "2023-08-05", "15:40");
-        reservationDao.save(reservation);
+        ReservationRequest reservationRequest
+                = new ReservationRequest("브라운", "2023-08-05", "15:40");
+        reservationDao.save(reservationRequest);
 
         //when
         Response response = RestAssured.given().log().all()
@@ -68,8 +68,9 @@ class ReservationControllerTest {
     @Test
     void deleteReservationSuccess() {
         //given
-        Reservation reservation = new Reservation("브라운", "2023-08-05", "15:40");
-        long id = reservationDao.save(reservation);
+        ReservationRequest reservationRequest
+                = new ReservationRequest("브라운", "2023-08-05", "15:40");
+        long id = reservationDao.save(reservationRequest);
 
         //when
         Response response = RestAssured.given().log().all()

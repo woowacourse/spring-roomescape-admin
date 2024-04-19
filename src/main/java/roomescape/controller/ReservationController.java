@@ -14,7 +14,6 @@ import roomescape.dao.ReservationDao;
 import roomescape.domain.Reservation;
 import roomescape.dto.ReservationRequest;
 import roomescape.dto.ReservationResponse;
-import roomescape.entity.ReservationEntity;
 
 @RestController
 @RequestMapping("/reservations")
@@ -27,7 +26,7 @@ public class ReservationController {
 
     @GetMapping
     public ResponseEntity<List<ReservationResponse>> findAllReservations() {
-        List<ReservationEntity> reservations = reservationDao.findAll();
+        List<Reservation> reservations = reservationDao.findAll();
         return ResponseEntity.ok(reservations.stream()
                 .map(ReservationResponse::new)
                 .toList());
@@ -36,11 +35,7 @@ public class ReservationController {
     @PostMapping
     public ResponseEntity<Void> createReservation(
             @RequestBody ReservationRequest reservationRequest) {
-        Reservation reservation = new Reservation(
-                reservationRequest.name(),
-                reservationRequest.date(),
-                reservationRequest.time());
-        long id = reservationDao.save(reservation);
+        long id = reservationDao.save(reservationRequest);
         return ResponseEntity.created(URI.create("/reservations/" + id)).build();
     }
 

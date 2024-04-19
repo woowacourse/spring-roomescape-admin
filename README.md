@@ -25,3 +25,13 @@
     - POST `/reservations`
 - [x] 예약 삭제 API를 구현한다.
     - DELETE `/reservations/{id}`
+
+## 4단계 데이터베이스 적용하기
+
+- [ ] Gradle 의존성 추가
+- [ ] 테이블 스키마 정의
+  - `resources/schema.sql` 파일을 생성
+  - 예약 테이블 쿼리 작성
+- [ ] 데이터 베이스 설정
+  - h2의 console 기능 활성화
+  - Database url 지정 `jdbc:h2:mem:database`

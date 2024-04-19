@@ -28,17 +28,13 @@ public class ReservationController {
     @PostMapping("/reservations")
     public ResponseEntity<Reservation> create(@RequestBody ReservationCreateRequestDto reservationCreateRequestDto) {
         Reservation reservation = reservationCreateRequestDto.createReservation(index.incrementAndGet());
-        reservations.getReservations().add(reservation);
+        reservations.add(reservation);
         return ResponseEntity.ok(reservation);
     }
 
     @DeleteMapping("/reservations/{id}")
-    public ResponseEntity<Void> delete(@PathVariable Long id) {
-        Reservation delReservation = reservations.getReservations().stream()
-                .filter(reservation -> reservation.getId() == id)
-                .findFirst()
-                .orElseThrow();
-        reservations.getReservations().remove(delReservation);
+    public ResponseEntity<Void> delete(@PathVariable long id) {
+        reservations.delete(id);
         return ResponseEntity.ok().build();
     }
 }

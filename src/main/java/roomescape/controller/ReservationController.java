@@ -1,4 +1,4 @@
-package roomescape;
+package roomescape.controller;
 
 import java.net.URI;
 import java.sql.Date;
@@ -17,22 +17,13 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
+import roomescape.ReservationDto;
 
 @Controller
-public class RoomescapeController {
+public class ReservationController {
 
     @Autowired
     private JdbcTemplate jdbcTemplate;
-
-    @GetMapping("/admin")
-    public String admin() {
-        return "admin/index";
-    }
-
-    @GetMapping("/admin/reservation")
-    public String adminReservation() {
-        return "admin/reservation-legacy";
-    }
 
     @GetMapping("/reservations")
     public ResponseEntity<List<ReservationDto>> reservations() {

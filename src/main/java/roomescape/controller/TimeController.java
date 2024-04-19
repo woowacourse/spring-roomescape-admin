@@ -1,4 +1,4 @@
-package roomescape;
+package roomescape.controller;
 
 import java.net.URI;
 import java.sql.PreparedStatement;
@@ -16,17 +16,13 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
+import roomescape.TimeDto;
 
 @Controller
 public class TimeController {
 
     @Autowired
     private JdbcTemplate jdbcTemplate;
-
-    @GetMapping("/admin/time")
-    public String adminTime() {
-        return "admin/time";
-    }
 
     @GetMapping("/times")
     public ResponseEntity<List<TimeDto>> times() {

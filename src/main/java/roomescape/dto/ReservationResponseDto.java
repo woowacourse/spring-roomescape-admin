@@ -17,7 +17,8 @@ public class ReservationResponseDto {
     }
 
     public static ReservationResponseDto from(Reservation reservation) {
-        return new ReservationResponseDto(reservation.getId(),
+        return new ReservationResponseDto(
+                reservation.getId(),
                 reservation.getName(),
                 reservation.getDate().toString(),
                 reservation.getTime().toString()

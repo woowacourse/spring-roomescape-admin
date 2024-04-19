@@ -30,12 +30,13 @@ public class ReservationController {
 
     @PostMapping
     public ResponseEntity<Reservation> createReservation(@RequestBody ReservationDto reservationDto) {
-        Reservation newReservation = reservationRepository.save(reservationDto);
-        return ResponseEntity.ok(newReservation);
+        Reservation reservation = reservationDto.toReservation();
+        Reservation savedReservation = reservationRepository.save(reservation);
+        return ResponseEntity.ok(savedReservation);
     }
 
     @DeleteMapping("/{id}")
-    public ResponseEntity<Void> deleteReservation(@PathVariable Long id) {
+    public ResponseEntity<Void> deleteReservation(@PathVariable Long id) { // todo long 변경 null 가능성 없음
         reservationRepository.deleteById(id);
         return ResponseEntity.noContent().build();
     }

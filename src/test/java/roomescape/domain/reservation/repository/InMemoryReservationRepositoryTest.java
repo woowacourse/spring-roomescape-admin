@@ -7,10 +7,8 @@ import java.time.LocalDate;
 import java.time.LocalTime;
 import java.util.List;
 import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import roomescape.domain.reservation.Reservation;
-import roomescape.dto.ReservationDto;
 
 class InMemoryReservationRepositoryTest {
     private ReservationRepository reservationRepository;
@@ -21,24 +19,22 @@ class InMemoryReservationRepositoryTest {
     }
 
     @Test
-    @DisplayName("예약을 저장한다")
-    void save() {
-        ReservationDto reservation = new ReservationDto("user1", LocalDate.now(), LocalTime.now());
+    void 예약을_저장한다() { // todo now() 제거, 시간 검증
+        Reservation reservation = new Reservation("prin", LocalDate.now(), LocalTime.now());
 
         reservationRepository.save(reservation);
 
         List<Reservation> reservations = reservationRepository.findAll();
         assertAll(
                 () -> assertThat(reservations).hasSize(1),
-                () -> assertThat(reservations.get(0).getName()).isEqualTo("user1")
+                () -> assertThat(reservations.get(0).getName()).isEqualTo("prin")
         );
     }
 
     @Test
-    @DisplayName("예약을 조회한다")
-    void findAll() {
-        ReservationDto reservation1 = new ReservationDto("user1", LocalDate.now(), LocalTime.now());
-        ReservationDto reservation2 = new ReservationDto("user2", LocalDate.now(), LocalTime.now());
+    void 예약을_조회한다() {
+        Reservation reservation1 = new Reservation("prin", LocalDate.now(), LocalTime.now());
+        Reservation reservation2 = new Reservation("liv", LocalDate.now(), LocalTime.now());
 
         reservationRepository.save(reservation1);
         reservationRepository.save(reservation2);
@@ -46,16 +42,14 @@ class InMemoryReservationRepositoryTest {
         List<Reservation> reservations = reservationRepository.findAll();
         assertAll(
                 () -> assertThat(reservations).hasSize(2),
-                () -> assertThat(reservations.get(0).getName()).isEqualTo("user1"),
-                () -> assertThat(reservations.get(1).getName()).isEqualTo("user2")
+                () -> assertThat(reservations.get(0).getName()).isEqualTo("prin"),
+                () -> assertThat(reservations.get(1).getName()).isEqualTo("liv")
         );
     }
 
     @Test
-    @DisplayName("예약을 삭제한다")
-    void deleteById() {
-        ReservationDto reservation = new ReservationDto("user1", LocalDate.now(), LocalTime.now());
-
+    void 예약을_삭제한다() {
+        Reservation reservation = new Reservation("prin", LocalDate.now(), LocalTime.now());
         reservationRepository.save(reservation);
 
         reservationRepository.deleteById(1L);

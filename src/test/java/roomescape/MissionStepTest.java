@@ -1,24 +1,24 @@
 package roomescape;
 
+import static org.hamcrest.Matchers.is;
+
 import io.restassured.RestAssured;
 import io.restassured.http.ContentType;
-import org.junit.jupiter.api.DisplayName;
+import java.util.HashMap;
+import java.util.Map;
+import org.junit.jupiter.api.DisplayNameGeneration;
+import org.junit.jupiter.api.DisplayNameGenerator;
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.annotation.DirtiesContext;
 
-import java.util.HashMap;
-import java.util.Map;
-
-import static org.hamcrest.Matchers.is;
-
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.DEFINED_PORT)
 @DirtiesContext(classMode = DirtiesContext.ClassMode.BEFORE_EACH_TEST_METHOD)
+@DisplayNameGeneration(DisplayNameGenerator.ReplaceUnderscores.class)
 public class MissionStepTest {
 
     @Test
-    @DisplayName("welcome 페이지로 정상적으로 이동한다.")
-    void 일단계() {
+    void 메인_페이지_이동() {
         RestAssured.given().log().all()
                 .when().get("/admin")
                 .then().log().all()
@@ -26,13 +26,15 @@ public class MissionStepTest {
     }
 
     @Test
-    @DisplayName("예약 페이지 요청과 예약 목록 조회 요청이 정상석으로 수행된다.")
-    void 이단계() {
+    void 예약_페이지_이동() {
         RestAssured.given().log().all()
                 .when().get("/admin/reservation")
                 .then().log().all()
                 .statusCode(200);
+    }
 
+    @Test
+    void 예약_페이지에서_예약_목록_조회() {
         RestAssured.given().log().all()
                 .when().get("/reservations")
                 .then().log().all()
@@ -41,8 +43,7 @@ public class MissionStepTest {
     }
 
     @Test
-    @DisplayName("예약 추가와 취소를 정상적으로 수행한다.")
-    void 삼단계() {
+    void 예약_페이지에서_예약_추가_및_삭제() {
         Map<String, String> params = new HashMap<>();
         params.put("name", "브라운");
         params.put("date", "2023-08-05");

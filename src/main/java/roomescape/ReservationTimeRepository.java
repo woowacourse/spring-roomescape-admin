@@ -42,4 +42,18 @@ public class ReservationTimeRepository {
         return preparedStatement;
     }
 
+    public void deleteById(Long id) {
+        ReservationTime foundReservationTime = findById(id);
+        jdbcTemplate.update("DELETE FROM %s WHERE id = ?".formatted(TABLE_NAME), foundReservationTime.id());
+    }
+
+    private ReservationTime findById(Long id) {
+        ReservationTime reservationTime = jdbcTemplate.queryForObject(
+                "SELECT id, start_at FROM %s WHERE id = ?".formatted(TABLE_NAME), ROW_MAPPER, id);
+
+        if (reservationTime == null) {
+            throw new IllegalStateException("해당 예약 시간이 없습니다.");
+        }
+        return reservationTime;
+    }
 }

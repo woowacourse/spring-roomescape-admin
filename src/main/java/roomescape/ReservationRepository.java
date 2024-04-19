@@ -35,4 +35,8 @@ public class ReservationRepository {
         Reservation reservationToDelete = findById(id);
         reservations.remove(reservationToDelete);
     }
+
+    public void clear() {
+        reservations.clear();
+    }
 }

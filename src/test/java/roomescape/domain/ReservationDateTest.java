@@ -2,7 +2,6 @@ package roomescape.domain;
 
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
-import roomescape.domain.reservation.ReservationDate;
 
 import java.time.LocalDate;
 
@@ -25,5 +24,6 @@ class ReservationDateTest {
     void should_CreateReservationDate_When_GiveEarlierDateThanNow() {
         LocalDate laterDate = LocalDate.now().plusDays(1);
         assertThatCode(() -> new ReservationDate(laterDate)).doesNotThrowAnyException();
+
     }
 }

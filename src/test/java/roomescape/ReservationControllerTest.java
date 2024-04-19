@@ -4,7 +4,6 @@ import static org.hamcrest.Matchers.is;
 
 import io.restassured.RestAssured;
 import io.restassured.http.ContentType;
-import java.util.HashMap;
 import java.util.Map;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -15,13 +14,11 @@ import org.springframework.test.annotation.DirtiesContext;
 @DirtiesContext(classMode = DirtiesContext.ClassMode.BEFORE_EACH_TEST_METHOD)
 public class ReservationControllerTest {
 
-    private static final Map<String, String> PARAMS = new HashMap<>();
-
-    static {
-        PARAMS.put("name", "썬");
-        PARAMS.put("date", "2024-04-18");
-        PARAMS.put("time", "17:00");
-    }
+    private final Map<String, String> PARAMS = Map.of(
+            "name", "썬",
+            "date", "2024-04-18",
+            "time", "17:00"
+    );
 
     @Test
     @DisplayName("처음으로 등록하는 예약의 id는 1이다.")

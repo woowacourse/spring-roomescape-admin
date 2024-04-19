@@ -24,7 +24,8 @@ public class Name {
 
     private void validateLength(String name) {
         if (MAX_LENGTH < name.length() || name.length() < MIN_LENGTH) {
-            throw new IllegalArgumentException("예약자 이름은 " + MIN_LENGTH + "자 이상, " + MAX_LENGTH + "자 미만이어야 합니다");
+            throw new IllegalArgumentException(
+                    "예약자 이름은 " + MIN_LENGTH + "자 이상, " + MAX_LENGTH + "자 미만이어야 합니다: " + name);
         }
     }
 

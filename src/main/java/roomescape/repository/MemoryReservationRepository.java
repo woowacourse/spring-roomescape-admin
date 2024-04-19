@@ -40,7 +40,7 @@ public class MemoryReservationRepository implements ReservationRepository {
     public void deleteById(long id) {
         Optional<Reservation> found = findById(id);
         if (found.isEmpty()) {
-            throw new NoSuchElementException("해당하는 아이디를 찾을 수 없습니다");
+            throw new NoSuchElementException("해당하는 아이디를 찾을 수 없습니다: " + id);
         }
         reservations.remove(found.get());
     }

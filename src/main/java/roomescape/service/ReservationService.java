@@ -19,7 +19,8 @@ public class ReservationService {
 
     public Reservation saveReservation(Reservation reservation) {
         if (reservationRepository.isAnyReservationConflictWith(reservation)) {
-            throw new IllegalStateException("해당 예약 시간에 예약이 이미 존재합니다");
+            throw new IllegalStateException(
+                    "해당 예약 시간에 예약이 이미 존재합니다: " + reservation.getStartDate() + " " + reservation.getStartTime());
         }
         return reservationRepository.save(reservation);
     }

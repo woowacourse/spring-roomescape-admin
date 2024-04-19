@@ -1,12 +1,17 @@
 package roomescape.service;
 
-import java.util.List;
 import roomescape.domain.Reservation;
+import roomescape.domain.ReservationDto;
 import roomescape.domain.Reservations;
+
+import java.util.Set;
+import java.util.concurrent.atomic.AtomicLong;
 
 public class AdminService {
 
     private final Reservations reservations;
+    private final AtomicLong index = new AtomicLong(1);
+
 
     public AdminService(Reservations reservations) {
         this.reservations = reservations;
@@ -16,12 +21,14 @@ public class AdminService {
         this(new Reservations());
     }
 
-    public List<Reservation> getAllReservations() {
+    public Set<Reservation> getAllReservations() {
         return reservations.getReservations();
     }
 
-    public void addReservation(Reservation reservation) {
-        reservations.add(reservation);
+    public Reservation reserve(ReservationDto reservationDto) {
+        Reservation reservation = createReservation(reservationDto);
+        addReservation(reservation);
+        return reservation;
     }
 
     public Reservation findReservation(Long id) {
@@ -29,6 +36,15 @@ public class AdminService {
     }
 
     public void deleteReservation(Long id) {
-        System.out.println(reservations.delete(id));
+        reservations.delete(id);
     }
+
+    private void addReservation(Reservation reservation) {
+        reservations.add(reservation.getId(), reservation);
+    }
+
+    private Reservation createReservation(ReservationDto reservatonDto) {
+        return new Reservation(index.getAndIncrement(), reservatonDto);
+    }
+
 }

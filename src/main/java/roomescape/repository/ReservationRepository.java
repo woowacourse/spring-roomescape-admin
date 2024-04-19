@@ -1,16 +1,18 @@
 package roomescape.repository;
 
-import java.util.HashMap;
-import java.util.Map;
-import java.util.concurrent.atomic.AtomicLong;
+import java.util.List;
+import org.springframework.stereotype.Repository;
 import roomescape.dto.Reservation;
-import roomescape.dto.ReservationRequest;
 
+@Repository
 public class ReservationRepository {
-    private static final Map<Long, Reservation> reservations = new HashMap<>();
+    private final ReservationDao reservationDao;
 
-    private final AtomicLong index = new AtomicLong(0);
+    public ReservationRepository(final ReservationDao reservationDao) {
+        this.reservationDao = reservationDao;
+    }
 
+    /*
     public Reservation saveReservation(final ReservationRequest reservationRequest) {
         long id = index.incrementAndGet();
         Reservation reservation = new Reservation(
@@ -29,10 +31,9 @@ public class ReservationRepository {
 
     public void deleteAll() {
         reservations.clear();
-    }
+    }*/
 
-    public Map<Long, Reservation> getReservations() {
-        return reservations;
+    public List<Reservation> getAllReservations() {
+        return reservationDao.getReservations();
     }
-
 }

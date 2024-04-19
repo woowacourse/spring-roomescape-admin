@@ -1,21 +1,19 @@
 package roomescape.controller;
 
 import java.util.List;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
 import roomescape.dto.Reservation;
-import roomescape.dto.ReservationRequest;
 import roomescape.repository.ReservationRepository;
 
 @Controller
 public class ReservationController {
-    private final ReservationRepository reservationRepository = new ReservationRepository();
+    private final ReservationRepository reservationRepository;
+
+    public ReservationController(final ReservationRepository reservationRepository) {
+        this.reservationRepository = reservationRepository;
+    }
 
     @GetMapping("/admin")
     public String getAdminPage() {
@@ -29,13 +27,11 @@ public class ReservationController {
 
     @GetMapping("/reservations")
     public ResponseEntity<List<Reservation>> getReservations() {
-        List<Reservation> reservations = reservationRepository.getReservations()
-                .values()
-                .stream()
-                .toList();
+        List<Reservation> reservations = reservationRepository.getAllReservations();
         return ResponseEntity.ok(reservations);
     }
 
+    /*
     @PostMapping("/reservations")
     public ResponseEntity<Reservation> addReservation(@RequestBody ReservationRequest request) {
         Reservation reservation = reservationRepository.saveReservation(request);
@@ -51,5 +47,5 @@ public class ReservationController {
     @DeleteMapping("/reservations")
     public void deleteAllReservations() {
         reservationRepository.deleteAll();
-    }
+    }*/
 }

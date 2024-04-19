@@ -2,10 +2,12 @@ package roomescape.domain.reservation.repository;
 
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 import java.util.concurrent.ConcurrentSkipListMap;
 import java.util.concurrent.atomic.AtomicLong;
 import org.springframework.stereotype.Repository;
 import roomescape.domain.reservation.Reservation;
+import roomescape.domain.reservation.ReservationDateTime;
 
 @Repository
 public class InMemoryReservationRepository implements ReservationRepository {
@@ -21,18 +23,18 @@ public class InMemoryReservationRepository implements ReservationRepository {
 
     @Override
     public Reservation save(Reservation reservation) {
-        validateReservationDateTimeExists(reservation);
         Reservation updatedReservation = reservation.updateId(index.getAndIncrement());
         reservations.put(updatedReservation.getId(), updatedReservation);
         return updatedReservation;
     }
 
-    private void validateReservationDateTimeExists(Reservation reservation) {
-        boolean existsDateTime = reservations.values().stream()
-                .anyMatch(r -> r.isSameReservationDateTime(reservation));
-        if (existsDateTime) {
-            throw new IllegalArgumentException("이미 예약된 날짜, 시간입니다.");
-        }
+    public boolean existsByReservationDateTime(ReservationDateTime reservationDateTime) {
+        return reservations.values().stream()
+                .anyMatch(r -> r.isSameReservationDateTime(reservationDateTime));
+    }
+
+    public Optional<Reservation> findById(long id) {
+        return Optional.ofNullable(reservations.get(id));
     }
 
     @Override
@@ -41,10 +43,7 @@ public class InMemoryReservationRepository implements ReservationRepository {
     }
 
     @Override
-    public void deleteById(Long id) {
-        if (!reservations.containsKey(id)) {
-            throw new IllegalArgumentException("존재하지 않은 id입니다.");
-        }
-        reservations.remove(id);
+    public void deleteById(long id) {
+        findById(id).ifPresent(r -> reservations.remove(id));
     }
 }

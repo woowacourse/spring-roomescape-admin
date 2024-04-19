@@ -4,14 +4,13 @@ import static org.assertj.core.api.Assertions.assertThatCode;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 
 import java.time.Clock;
-import java.time.Instant;
 import java.time.LocalDate;
 import java.time.LocalTime;
-import java.time.ZoneId;
 import org.junit.jupiter.api.Test;
+import roomescape.fixture.ClockFixture;
 
 class ReservationDateTimeTest {
-    private final Clock clock = Clock.fixed(Instant.parse("2024-04-18T00:00:00Z"), ZoneId.of("UTC"));
+    private final Clock clock = ClockFixture.fixedClock(LocalDate.of(2024, 4, 18));
 
     @Test
     void 예약을_생성할_때_예약_날짜가_null이면_예외가_발생한다() {

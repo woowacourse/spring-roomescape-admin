@@ -1,34 +1,26 @@
 package roomescape.domain.reservation;
 
 import java.time.LocalDate;
-import java.time.LocalDateTime;
 import java.time.LocalTime;
 import roomescape.domain.user.UserName;
 
 public class Reservation {
     private final Long id;
     private final UserName name;
-    private final LocalDateTime reservationDateTime;
+    private final ReservationDateTime reservationDateTime;
 
-    public Reservation(String name, LocalDateTime dateTime) {
+    public Reservation(String name, ReservationDateTime dateTime) {
         this(null, name, dateTime);
     }
 
-    private Reservation(Long id, String name, LocalDateTime dateTime) {
+    private Reservation(Long id, String name, ReservationDateTime dateTime) {
         this(id, new UserName(name), dateTime);
     }
 
-    private Reservation(Long id, UserName name, LocalDateTime dateTime) {
-        validateDateTime(dateTime);
+    private Reservation(Long id, UserName name, ReservationDateTime dateTime) {
         this.id = id;
         this.name = name;
         this.reservationDateTime = dateTime;
-    }
-
-    private void validateDateTime(LocalDateTime dateTime) {
-        if (LocalDateTime.now().isAfter(dateTime)) {
-            throw new IllegalArgumentException("현재 시간 이후로 예약해야 합니다.");
-        }
     }
 
     public Reservation updateId(Long id) {
@@ -51,7 +43,7 @@ public class Reservation {
         return reservationDateTime.toLocalTime();
     }
 
-    public boolean isSameReservationDateTime(Reservation other) {
-        return this.reservationDateTime.equals(other.reservationDateTime);
+    public boolean isSameReservationDateTime(ReservationDateTime reservationDateTime) {
+        return this.reservationDateTime.equals(reservationDateTime);
     }
 }

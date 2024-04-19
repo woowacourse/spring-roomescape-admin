@@ -2,7 +2,7 @@ package roomescape.dto;
 
 import java.time.LocalDate;
 import java.time.LocalTime;
-import roomescape.entity.ReservationEntity;
+import roomescape.domain.Reservation;
 
 public class ReservationRequestDto {
 
@@ -16,7 +16,7 @@ public class ReservationRequestDto {
         this.time = time;
     }
 
-    public ReservationEntity toEntity() {
-        return new ReservationEntity(name, date, time);
+    public Reservation toEntity() {
+        return new Reservation(name, date, time);
     }
 }

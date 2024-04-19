@@ -1,6 +1,6 @@
 package roomescape.dto;
 
-import roomescape.entity.ReservationEntity;
+import roomescape.domain.Reservation;
 
 public class ReservationResponseDto {
 
@@ -9,7 +9,7 @@ public class ReservationResponseDto {
     private final String date;
     private final String time;
 
-    public ReservationResponseDto(ReservationEntity reservation) {
+    public ReservationResponseDto(Reservation reservation) {
         this.id = reservation.getId();
         this.name = reservation.getName();
         this.date = reservation.getDate().toString();

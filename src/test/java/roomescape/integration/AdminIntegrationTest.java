@@ -21,8 +21,10 @@ import static org.hamcrest.Matchers.is;
 public class AdminIntegrationTest {
     @Autowired
     private List<Reservation> reservations;
+
     @Autowired
     private AtomicLong atomicLong;
+
     @LocalServerPort
     private int port;
 

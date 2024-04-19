@@ -4,10 +4,8 @@ import java.util.List;
 import org.springframework.stereotype.Service;
 import roomescape.domain.Reservation;
 import roomescape.domain.ReservationTime;
-import roomescape.dto.ReservationRequest;
-import roomescape.dto.ReservationResponse;
-import roomescape.dto.ReservationTimeRequest;
-import roomescape.dto.ReservationTimeResponse;
+import roomescape.controller.dto.ReservationRequest;
+import roomescape.controller.dto.ReservationResponse;
 import roomescape.repository.ReservationDao;
 import roomescape.repository.ReservationTimeDao;
 
@@ -22,14 +20,14 @@ public class ReservationService {
         this.reservationTimeDao = reservationTimeDao;
     }
 
-    public List<ReservationResponse> findAllReservationResponse() {
+    public List<ReservationResponse> findAll() {
         List<Reservation> reservations = reservationDao.findAll();
         return reservations.stream()
                 .map(ReservationResponse::from)
                 .toList();
     }
 
-    public Long createReservation(ReservationRequest reservationRequest) {
+    public Long create(ReservationRequest reservationRequest) {
         ReservationTime reservationTime = reservationTimeDao.findById(reservationRequest.timeId());
 
         Reservation reservation = reservationRequest.toReservation(reservationTime);
@@ -37,23 +35,7 @@ public class ReservationService {
         return reservationDao.insert(reservation);
     }
 
-    public void deleteReservationById(Long id) {
+    public void delete(Long id) {
         reservationDao.deleteById(id);
-    }
-
-    public List<ReservationTimeResponse> findAllReservationTime() {
-        List<ReservationTime> reservationTimes = reservationTimeDao.findAll();
-        return reservationTimes.stream()
-                .map(ReservationTimeResponse::from)
-                .toList();
-    }
-
-    public Long createReservationTime(ReservationTimeRequest reservationTimeRequest) {
-        return reservationTimeDao.insert(reservationTimeRequest.toReservationTime());
-    }
-
-    public void deleteReservationTimeById(Long id) {
-        reservationDao.deleteByTimeId(id);
-        reservationTimeDao.deleteById(id);
     }
 }

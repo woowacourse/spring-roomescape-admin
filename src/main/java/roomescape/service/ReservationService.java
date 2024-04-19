@@ -1,8 +1,8 @@
 package roomescape.service;
 
 import org.springframework.stereotype.Service;
-import roomescape.domain.Reservation;
-import roomescape.domain.Reservations;
+import roomescape.domain.reservation.Reservation;
+import roomescape.domain.reservation.Reservations;
 import roomescape.dto.ReservationRequestDto;
 import roomescape.dto.ReservationResponseDto;
 

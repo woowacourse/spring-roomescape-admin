@@ -11,8 +11,8 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
-import roomescape.controller.dto.ReservationRequestDto;
-import roomescape.controller.dto.ReservationResponseDto;
+import roomescape.controller.dto.ReservationRequest;
+import roomescape.controller.dto.ReservationResponse;
 import roomescape.entity.Reservation;
 import roomescape.service.ReservationService;
 
@@ -27,24 +27,24 @@ public class ReservationController {
     }
 
     @GetMapping()
-    public ResponseEntity<List<ReservationResponseDto>> readAllReservations() {
-        List<ReservationResponseDto> reservations = reservationService.readAll().stream()
-                .map(ReservationResponseDto::from)
+    public ResponseEntity<List<ReservationResponse>> readAllReservations() {
+        List<ReservationResponse> reservations = reservationService.readAll().stream()
+                .map(ReservationResponse::from)
                 .toList();
         return ResponseEntity.ok().body(reservations);
     }
 
     @PostMapping()
-    public ResponseEntity<ReservationResponseDto> createReservation(
-            @RequestBody ReservationRequestDto reservationRequestDto) {
+    public ResponseEntity<ReservationResponse> createReservation(
+            @RequestBody ReservationRequest reservationRequest) {
 
-        String name = reservationRequestDto.getName();
-        LocalDate date = reservationRequestDto.getDate();
-        LocalTime time = reservationRequestDto.getTime();
+        String name = reservationRequest.getName();
+        LocalDate date = reservationRequest.getDate();
+        LocalTime time = reservationRequest.getTime();
 
         Reservation newReservation = new Reservation(name, date, time);
         Reservation savedReservation = reservationService.saveReservation(newReservation);
-        return ResponseEntity.ok().body(ReservationResponseDto.from(savedReservation));
+        return ResponseEntity.ok().body(ReservationResponse.from(savedReservation));
     }
 
     @DeleteMapping("/{id}")

@@ -19,10 +19,6 @@ public class ReservationTimeDto {
         return new ReservationTimeDto(time.getId(), time.getStartAt());
     }
 
-    public ReservationTime toEntity() {
-        return new ReservationTime(id, startAt);
-    }
-
     public Long getId() {
         return id;
     }

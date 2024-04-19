@@ -10,6 +10,7 @@ import org.springframework.jdbc.core.RowMapper;
 import org.springframework.jdbc.support.GeneratedKeyHolder;
 import org.springframework.jdbc.support.KeyHolder;
 import org.springframework.stereotype.Repository;
+import roomescape.dto.ReservationTimeDto;
 import roomescape.entity.ReservationTime;
 
 @Repository
@@ -27,12 +28,12 @@ public class ReservationTimeRepository {
         return jdbcTemplate.query(sql, rowMapper);
     }
 
-    public long save(ReservationTime time) {
+    public long save(ReservationTimeDto reservationTimeDto) {
         String sql = "INSERT INTO reservation_time(start_at) VALUES (?)";
         KeyHolder keyHolder = new GeneratedKeyHolder();
         jdbcTemplate.update(connection -> {
             PreparedStatement ps = connection.prepareStatement(sql, new String[]{"id"});
-            ps.setTime(1, Time.valueOf(time.getStartAt()));
+            ps.setTime(1, Time.valueOf(reservationTimeDto.getStartAt()));
             return ps;
         }, keyHolder);
         return Objects.requireNonNull(keyHolder.getKey()).longValue();

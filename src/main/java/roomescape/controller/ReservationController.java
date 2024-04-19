@@ -31,7 +31,7 @@ public class ReservationController {
 
     @PostMapping("/reservations")
     public ResponseEntity<ReservationDto> addReservation(@RequestBody ReservationDto reservationDto) {
-        long id = reservationRepository.save(reservationDto.toEntity());
+        long id = reservationRepository.save(reservationDto);
         ReservationDto responseBody = new ReservationDto(
                 id,
                 reservationDto.getName(),

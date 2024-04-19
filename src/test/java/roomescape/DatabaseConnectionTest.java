@@ -19,7 +19,7 @@ class DatabaseConnectionTest {
 
     @Test
     void connection() {
-        try (Connection connection = jdbcTemplate.getDataSource().getConnection();) {
+        try (Connection connection = jdbcTemplate.getDataSource().getConnection()) {
             assertThat(connection).isNotNull();
         } catch (SQLException exception) {
             throw new RuntimeException("connection을 찾을 수 없습니다.");
@@ -29,7 +29,7 @@ class DatabaseConnectionTest {
 
     @Test
     void databaseName() {
-        try (Connection connection = jdbcTemplate.getDataSource().getConnection();) {
+        try (Connection connection = jdbcTemplate.getDataSource().getConnection()) {
             assertThat(connection.getCatalog()).isEqualTo("DATABASE");
         } catch (SQLException exception) {
             throw new RuntimeException("database를 찾을 수 없습니다.");
@@ -39,7 +39,7 @@ class DatabaseConnectionTest {
 
     @Test
     void tableName() {
-        try (Connection connection = jdbcTemplate.getDataSource().getConnection();) {
+        try (Connection connection = jdbcTemplate.getDataSource().getConnection()) {
             assertThat(connection.getMetaData().getTables(null, null, "RESERVATION", null).next()).isTrue();
         } catch (SQLException exception) {
             throw new RuntimeException("table을 찾을 수 없습니다.");

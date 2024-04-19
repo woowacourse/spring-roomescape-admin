@@ -3,6 +3,8 @@ package roomescape.domain.reservation;
 import roomescape.dto.ReservationRequestDto;
 import roomescape.dto.ReservationResponseDto;
 
+import java.util.Objects;
+
 public class Reservation {
 
     private final Long id;
@@ -11,10 +13,10 @@ public class Reservation {
     private final ReservationTime time;
 
     public Reservation(Long id, Name name, ReservationDate date, ReservationTime time) {
-        this.id = id;
-        this.name = name;
-        this.date = date;
-        this.time = time;
+        this.id = Objects.requireNonNull(id);
+        this.name = Objects.requireNonNull(name);
+        this.date = Objects.requireNonNull(date);
+        this.time = Objects.requireNonNull(time);
     }
 
     public Reservation(Long id, ReservationRequestDto reservationRequestDto) {

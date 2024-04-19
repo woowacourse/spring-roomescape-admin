@@ -1,13 +1,13 @@
 package roomescape.dto;
 
-import roomescape.entity.ReservationEntity;
+import roomescape.domain.Reservation;
 
 public record ReservationResponse(
         long id,
         String name,
         String date,
         String time) {
-    public ReservationResponse(ReservationEntity reservationEntity) {
+    public ReservationResponse(Reservation reservationEntity) {
         this(reservationEntity.getId(), reservationEntity.getName(), reservationEntity.getDate(), reservationEntity.getTime());
     }
 }

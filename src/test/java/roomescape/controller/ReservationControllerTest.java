@@ -1,21 +1,16 @@
-package roomescape;
+package roomescape.controller;
 
 import io.restassured.RestAssured;
 import io.restassured.http.ContentType;
 import io.restassured.response.Response;
-import org.junit.jupiter.api.AfterEach;
-import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.DisplayName;
-import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.web.server.LocalServerPort;
 import org.springframework.http.HttpStatus;
 import roomescape.dao.ReservationDao;
-import roomescape.domain.Reservation;
 import roomescape.dto.ReservationRequest;
 import roomescape.dto.ReservationResponse;
-import roomescape.entity.ReservationEntity;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertAll;
@@ -35,9 +30,9 @@ public class ReservationControllerTest {
 
     @AfterEach
     void initData() {
-        for (ReservationEntity reservationEntity : reservationDao.findAll()) {
-            reservationDao.deleteById(reservationEntity.getId());
-        }
+        RestAssured.get("/reservations")
+                .then().extract().body().jsonPath().getList("id")
+                .forEach(id -> RestAssured.delete("/reservations/" + id));
     }
 
     @DisplayName("예약 추가 테스트")
@@ -61,8 +56,8 @@ public class ReservationControllerTest {
     @Test
     void findAllReservations() {
         //given
-        Reservation reservation = new Reservation("브라운", "2023-08-05", "15:40");
-        reservationDao.save(reservation);
+        RestAssured.given().contentType(ContentType.JSON).body(new ReservationRequest("브라운", "2023-08-05", "15:40"))
+                .when().post("/reservations");
 
         //when
         Response response = RestAssured.given().log().all()
@@ -80,8 +75,9 @@ public class ReservationControllerTest {
     @Test
     void deleteReservationSuccess() {
         //given
-        Reservation reservation = new Reservation("브라운", "2023-08-05", "15:40");
-        long id = reservationDao.save(reservation).getId();
+        var id = RestAssured.given().contentType(ContentType.JSON).body(new ReservationRequest("브라운", "2023-08-05", "15:40"))
+                .when().post("/reservations")
+                .then().extract().body().jsonPath().get("id");
 
         //when
         Response deleteResponse = RestAssured.given().log().all()

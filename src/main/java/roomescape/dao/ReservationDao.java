@@ -1,14 +1,13 @@
 package roomescape.dao;
 
 import roomescape.domain.Reservation;
-import roomescape.entity.ReservationEntity;
 
 import java.util.List;
 
 public interface ReservationDao {
-    List<ReservationEntity> findAll();
+    List<Reservation> findAll();
 
-    ReservationEntity save(Reservation reservation);
+    Reservation save(Reservation reservation);
 
     boolean existsById(long id);
 

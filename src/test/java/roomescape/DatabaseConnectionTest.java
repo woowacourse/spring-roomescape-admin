@@ -4,6 +4,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 
 import java.sql.Connection;
 import java.sql.SQLException;
+import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -17,6 +18,7 @@ class DatabaseConnectionTest {
     @Autowired
     private JdbcTemplate jdbcTemplate;
 
+    @DisplayName("DB connection 연결 테스트")
     @Test
     void connection() {
         try (Connection connection = jdbcTemplate.getDataSource().getConnection()) {
@@ -24,9 +26,9 @@ class DatabaseConnectionTest {
         } catch (SQLException exception) {
             throw new RuntimeException("connection을 찾을 수 없습니다.");
         }
-
     }
 
+    @DisplayName("DB 조회 테스트")
     @Test
     void databaseName() {
         try (Connection connection = jdbcTemplate.getDataSource().getConnection()) {
@@ -37,6 +39,7 @@ class DatabaseConnectionTest {
 
     }
 
+    @DisplayName("Table 조회 테스트")
     @Test
     void tableName() {
         try (Connection connection = jdbcTemplate.getDataSource().getConnection()) {

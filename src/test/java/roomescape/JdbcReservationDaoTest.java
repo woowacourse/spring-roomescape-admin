@@ -7,6 +7,7 @@ import io.restassured.http.ContentType;
 import java.time.LocalDate;
 import java.time.LocalTime;
 import java.util.List;
+import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -22,6 +23,7 @@ class JdbcReservationDaoTest {
     @Autowired
     private JdbcTemplate jdbcTemplate;
 
+    @DisplayName("DB에서 모든 예약 조회 테스트")
     @Test
     void findAllReservations() {
         jdbcTemplate.update("INSERT INTO reservation (name, date, time) VALUES (?, ?, ?)", "브라운", "2023-08-05", "15:40");
@@ -37,8 +39,9 @@ class JdbcReservationDaoTest {
         assertThat(reservations).hasSize(count);
     }
 
+    @DisplayName("DB에 예약 추가 테스트")
     @Test
-    void 칠단계() {
+    void insert() {
         ReservationRequest reservationRequest = new ReservationRequest("브라운", LocalDate.of(2023, 8, 5),
                 LocalTime.of(10, 0));
 
@@ -52,6 +55,16 @@ class JdbcReservationDaoTest {
 
         Integer count = jdbcTemplate.queryForObject("SELECT count(1) from reservation", Integer.class);
         assertThat(count).isEqualTo(1);
+    }
+
+    @DisplayName("DB에 예약 삭제 테스트")
+    @Test
+    void delete() {
+        String sql = "INSERT INTO reservation (name, date, time) VALUES(?, ?, ?)";
+        ReservationRequest reservationRequest = new ReservationRequest("브라운", LocalDate.of(2023, 8, 5),
+                LocalTime.of(10, 0));
+
+        jdbcTemplate.update(sql, reservationRequest.name(), reservationRequest.date(), reservationRequest.time());
 
         RestAssured.given().log().all()
                 .when().delete("/reservations/1")

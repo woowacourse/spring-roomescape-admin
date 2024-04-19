@@ -22,9 +22,9 @@ public class ReservationDao {
 
     public List<Reservation> findAll() {
         String sql = """
-                select a.id as reservation_id, a.name as name, a.date as date, t.id as time_id, t.start_at as start_at
-                from reservation as a
-                left join reservation_time as t on a.time_id = t.id""";
+                SELECT a.id AS reservation_id, a.name AS name, a.date AS date, t.id AS time_id, t.start_at AS start_at
+                FROM reservation AS a
+                LEFT JOIN reservation_time AS t ON a.time_id = t.id""";
 
         return jdbcTemplate.query(sql, (resultSet, rowNum) -> {
             ReservationTime reservationTime = new ReservationTime(resultSet.getLong("time_id"),
@@ -36,7 +36,7 @@ public class ReservationDao {
     }
 
     public Long insert(Reservation reservation) {
-        String sql = "insert into reservation(name, date, time_id) values (?, ?, ?)";
+        String sql = "INSERT INTO reservation(name, date, time_id) VALUES (?, ?, ?)";
         KeyHolder keyHolder = new GeneratedKeyHolder();
 
         jdbcTemplate.update(connection -> {
@@ -51,12 +51,12 @@ public class ReservationDao {
     }
 
     public void deleteById(Long id) {
-        String sql = "delete from reservation where reservation_id = ?";
+        String sql = "DELETE FROM reservation WHERE reservation_id = ?";
         jdbcTemplate.update(sql, id);
     }
 
     public void deleteByTimeId(Long timeId) {
-        String sql = "delete from reservation where time_id = ?";
+        String sql = "DELETE FROM reservation WHERE time_id = ?";
         jdbcTemplate.update(sql, timeId);
     }
 }

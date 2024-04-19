@@ -1,7 +1,7 @@
 package roomescape.service;
 
 import roomescape.domain.Reservation;
-import roomescape.domain.ReservationDto;
+import roomescape.domain.ReservationRequestDto;
 import roomescape.domain.Reservations;
 
 import java.util.Set;
@@ -25,8 +25,8 @@ public class AdminService {
         return reservations.getReservations();
     }
 
-    public Reservation reserve(ReservationDto reservationDto) {
-        Reservation reservation = createReservation(reservationDto);
+    public Reservation reserve(ReservationRequestDto reservationRequestDto) {
+        Reservation reservation = createReservation(reservationRequestDto);
         addReservation(reservation);
         return reservation;
     }
@@ -43,8 +43,8 @@ public class AdminService {
         reservations.add(reservation.getId(), reservation);
     }
 
-    private Reservation createReservation(ReservationDto reservationDto) {
-        return new Reservation(index.getAndIncrement(), reservationDto);
+    private Reservation createReservation(ReservationRequestDto reservationRequestDto) {
+        return new Reservation(index.getAndIncrement(), reservationRequestDto);
     }
 
 }

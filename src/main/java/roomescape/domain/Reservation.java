@@ -14,8 +14,8 @@ public class Reservation {
         this.time = time;
     }
 
-    public Reservation(Long id, ReservationDto reservationDto) {
-        this(id, new Name(reservationDto.name()), new ReservationDate(reservationDto.date()), new ReservationTime(reservationDto.time()));
+    public Reservation(Long id, ReservationRequestDto reservationRequestDto) {
+        this(id, new Name(reservationRequestDto.name()), new ReservationDate(reservationRequestDto.date()), new ReservationTime(reservationRequestDto.time()));
     }
 
     public Long getId() {

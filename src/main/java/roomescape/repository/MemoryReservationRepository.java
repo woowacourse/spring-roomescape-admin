@@ -2,6 +2,7 @@ package roomescape.repository;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.NoSuchElementException;
 import java.util.Optional;
 import java.util.concurrent.atomic.AtomicLong;
 import org.springframework.stereotype.Repository;
@@ -39,7 +40,7 @@ public class MemoryReservationRepository implements ReservationRepository {
     public void deleteById(long id) {
         Optional<Reservation> found = findById(id);
         if (found.isEmpty()) {
-            throw new IllegalArgumentException("해당하는 아이디를 찾을 수 없습니다");
+            throw new NoSuchElementException("해당하는 아이디를 찾을 수 없습니다");
         }
         reservations.remove(found.get());
     }

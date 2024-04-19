@@ -43,8 +43,8 @@ public class AdminService {
         reservations.add(reservation.getId(), reservation);
     }
 
-    private Reservation createReservation(ReservationDto reservatonDto) {
-        return new Reservation(index.getAndIncrement(), reservatonDto);
+    private Reservation createReservation(ReservationDto reservationDto) {
+        return new Reservation(index.getAndIncrement(), reservationDto);
     }
 
 }

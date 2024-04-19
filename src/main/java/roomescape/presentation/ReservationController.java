@@ -1,10 +1,10 @@
-package roomescape.controller;
+package roomescape.presentation;
 
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import roomescape.dto.ReservationResponse;
 import roomescape.dto.ReservationSaveRequest;
-import roomescape.service.ReservationService;
+import roomescape.business.ReservationService;
 
 import java.util.List;
 

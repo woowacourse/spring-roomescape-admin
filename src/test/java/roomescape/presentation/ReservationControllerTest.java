@@ -1,4 +1,4 @@
-package roomescape.controller;
+package roomescape.presentation;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.junit.jupiter.api.DisplayName;

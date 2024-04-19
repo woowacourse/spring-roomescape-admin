@@ -1,4 +1,4 @@
-package roomescape.service;
+package roomescape.business;
 
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;

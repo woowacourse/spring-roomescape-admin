@@ -1,4 +1,4 @@
-package roomescape.service;
+package roomescape.business;
 
 import org.springframework.stereotype.Service;
 import roomescape.domain.Reservation;

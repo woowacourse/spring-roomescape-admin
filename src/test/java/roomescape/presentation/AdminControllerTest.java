@@ -1,4 +1,4 @@
-package roomescape.controller;
+package roomescape.presentation;
 
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;

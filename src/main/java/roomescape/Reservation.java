@@ -1,21 +1,25 @@
 package roomescape;
 
-public class ReservationInfo {
+public class Reservation {
 
     private Long id;
     private String name;
     private String date;
     private String time;
 
-    public ReservationInfo() {
+    public Reservation() {
 
     }
 
-    public ReservationInfo(Long id, String name, String date, String time) {
+    public Reservation(Long id, String name, String date, String time) {
         this.id = id;
         this.name = name;
         this.date = date;
         this.time = time;
+    }
+
+    public Reservation(Reservation reservation, Long id) {
+        this(id, reservation.getName(), reservation.getDate(), reservation.getTime());
     }
 
     public Long getId() {

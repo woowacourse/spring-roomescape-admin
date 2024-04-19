@@ -1,19 +1,21 @@
 package roomescape;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.*;
-import roomescape.dto.ReservationInfoDto;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.ResponseBody;
+import roomescape.dto.RequestReservation;
 
-import java.util.ArrayList;
 import java.util.List;
-import java.util.concurrent.atomic.AtomicLong;
 
 @Controller
 public class RoomescapeController {
 
-    private List<ReservationInfo> reservationInfos = new ArrayList<>();
-    private AtomicLong counter = new AtomicLong();
+    @Autowired
+    private ReservationRepository reservationRepository;
 
     @GetMapping("/admin")
     public String index() {
@@ -27,21 +29,21 @@ public class RoomescapeController {
 
     @GetMapping("/reservations")
     @ResponseBody
-    public List<ReservationInfo> reservations() {
-        return reservationInfos;
+    public List<Reservation> reservations() {
+        return reservationRepository.findAll();
     }
 
     @PostMapping("/reservations")
     @ResponseBody
-    public ResponseEntity<ReservationInfo> addReservationInfo(@RequestBody ReservationInfoDto reservationInfoDto) {
-        ReservationInfo newReservationInfo = reservationInfoDto.toEntity(counter.incrementAndGet());
-        reservationInfos.add(newReservationInfo);
-        return ResponseEntity.ok(newReservationInfo);
+    public ResponseEntity<Reservation> addReservationInfo(@RequestBody RequestReservation requestReservation) {
+        Long id = reservationRepository.add(requestReservation);
+        Reservation newReservation = requestReservation.toEntity(id);
+        return ResponseEntity.ok(newReservation);
     }
-
-    @DeleteMapping("/reservations/{id}")
-    public ResponseEntity<Void> deleteReservationInfo(@PathVariable Long id) {
-        reservationInfos.removeIf(reservationInfo -> reservationInfo.getId().equals(id));
-        return ResponseEntity.ok().build();
-    }
+//
+//    @DeleteMapping("/reservations/{id}")
+//    public ResponseEntity<Void> deleteReservationInfo(@PathVariable Long id) {
+//        reservationInfos.removeIf(reservationInfo -> reservationInfo.getId().equals(id));
+//        return ResponseEntity.ok().build();
+//    }
 }

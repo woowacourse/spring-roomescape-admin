@@ -6,7 +6,7 @@ import java.util.concurrent.atomic.AtomicLong;
 import roomescape.dto.Reservation;
 import roomescape.dto.ReservationRequest;
 
-public class AdminRepository {
+public class ReservationRepository {
     private static final Map<Long, Reservation> reservations = new HashMap<>();
 
     private final AtomicLong index = new AtomicLong(0);

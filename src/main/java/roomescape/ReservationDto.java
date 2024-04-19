@@ -5,7 +5,7 @@ import java.time.LocalTime;
 
 public record ReservationDto(String name, LocalDate date, LocalTime time) {
 
-    public Reservation toEntity(long index) {
+    public Reservation createReservation(long index) {
         return new Reservation(index, name, date, time);
     }
 }

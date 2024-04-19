@@ -7,14 +7,15 @@ import roomescape.domain.Reservation;
 import roomescape.domain.ReservationDto;
 import roomescape.service.AdminService;
 
-import java.util.List;
-import java.util.concurrent.atomic.AtomicLong;
+import java.util.Set;
 
+// TODO 응답형태에 따른 Controller 분리
+// jason -> RestController
+// view
 @Controller
 public class AdminController {
-
+    // TODO id 생성 Long 캡슐화
     private final AdminService adminService;
-    private final AtomicLong index = new AtomicLong(1);
 
     public AdminController() {
         this.adminService = new AdminService();
@@ -32,20 +33,18 @@ public class AdminController {
 
     @GetMapping("reservations")
     @ResponseBody
-    public List<Reservation> reservations() {
+    public Set<Reservation> reservations() {
         return adminService.getAllReservations();
     }
 
     @PostMapping("reservations")
     @ResponseBody
     public Reservation reserve(@RequestBody ReservationDto reservationDto) {
-        Reservation reservation = new Reservation(index.getAndIncrement(), reservationDto);
-        adminService.addReservation(reservation);
-        return adminService.findReservation(reservation.getId());
+        return adminService.reserve(reservationDto);
     }
 
     @DeleteMapping("reservations/{id}")
-    public ResponseEntity<Void> cancel(@PathVariable("id") Long id) {
+    public ResponseEntity<Void> cancel(@PathVariable Long id) {
         adminService.deleteReservation(id);
         return ResponseEntity.ok().build();
     }

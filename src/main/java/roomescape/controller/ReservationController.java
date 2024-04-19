@@ -42,15 +42,12 @@ public class ReservationController {
 
     @DeleteMapping("/{id}")
     public ResponseEntity<Void> delete(@PathVariable("id") final Long id) {
-        final List<Reservation> reservations = reservationService.findAll();
-        final Optional<Reservation> findReservation = reservations.stream()
-                .filter(reservation -> reservation.getId().equals(id))
-                .findAny();
+        final Optional<Reservation> findReservation = reservationService.findById(id);
         if (findReservation.isEmpty()) {
             return ResponseEntity.notFound()
                     .build();
         }
-        reservations.remove(findReservation.get());
+        reservationService.remove(id);
         return ResponseEntity.ok()
                 .build();
     }

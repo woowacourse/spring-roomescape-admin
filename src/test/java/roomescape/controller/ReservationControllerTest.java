@@ -34,7 +34,7 @@ class ReservationControllerTest {
 
 
     @DisplayName("예약 삭제")
-//    @Test
+    @Test
     void deleteReservation() {
         //given
         final ReservationRequest reservation = new ReservationRequest("레디", "2024-04-17", "13:00");
@@ -49,9 +49,9 @@ class ReservationControllerTest {
     }
 
     @DisplayName("존재하지 않는 예약 삭제시 404 반환")
-//    @Test
+    @Test
     void deleteNonExistentReservation() {
-        final ResponseEntity<Void> response = controller.delete(1L);
+        final ResponseEntity<Void> response = controller.delete(100L);
 
         assertThat(response.getStatusCode()).isEqualTo(HttpStatus.NOT_FOUND);
     }

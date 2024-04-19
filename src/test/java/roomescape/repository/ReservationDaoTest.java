@@ -32,4 +32,20 @@ class ReservationDaoTest {
                 () -> assertThat(beforeSaving).isEmpty(),
                 () -> assertThat(afterSaving).hasSize(1));
     }
+
+    @DisplayName("예약 삭제")
+    @Test
+    void removeReservation() {
+        final List<Reservation> beforeSaving = reservationDao.findAll();
+        final ReservationRequest reservation = new ReservationRequest("레디", "2024-02-03", "15:00");
+        reservationDao.save(reservation);
+        final List<Reservation> afterSaving = reservationDao.findAll();
+        reservationDao.remove(1L);
+        final List<Reservation> afterRemoving = reservationDao.findAll();
+
+        assertAll(
+                () -> assertThat(beforeSaving).isEmpty(),
+                () -> assertThat(afterSaving).hasSize(1),
+                () -> assertThat(afterRemoving).isEmpty());
+    }
 }

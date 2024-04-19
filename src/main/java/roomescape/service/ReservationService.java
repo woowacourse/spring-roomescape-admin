@@ -1,6 +1,7 @@
 package roomescape.service;
 
 import java.util.List;
+import java.util.Optional;
 import org.springframework.stereotype.Service;
 import roomescape.dto.ReservationRequest;
 import roomescape.model.Reservation;
@@ -21,5 +22,17 @@ public class ReservationService {
 
     public List<Reservation> findAll() {
         return reservationDao.findAll();
+    }
+
+    public Optional<Reservation> findById(final Long id) {
+        return reservationDao.findById(id);
+    }
+
+    public void remove(final Long id) {
+        final Optional<Reservation> findReservation = reservationDao.findById(id);
+        if (findReservation.isEmpty()) {
+            return;
+        }
+        reservationDao.remove(id);
     }
 }

@@ -1,6 +1,7 @@
 package roomescape.service;
 
 import java.util.List;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Service;
 import roomescape.controller.dto.ReservationRequest;
 import roomescape.controller.dto.ReservationResponse;
@@ -12,7 +13,7 @@ public class ReservationService {
 
     private final ReservationRepository reservationRepository;
 
-    public ReservationService(ReservationRepository reservationRepository) {
+    public ReservationService(@Qualifier("JdbcRepository") ReservationRepository reservationRepository) {
         this.reservationRepository = reservationRepository;
     }
 

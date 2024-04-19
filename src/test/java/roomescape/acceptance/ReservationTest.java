@@ -8,13 +8,15 @@ import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
-import roomescape.dao.ReservationRepository;
+import org.springframework.beans.factory.annotation.Qualifier;
 import roomescape.controller.dto.ReservationRequest;
-import roomescape.controller.dto.ReservationResponse;
+import roomescape.dao.ReservationRepository;
+import roomescape.domain.Reservation;
 
 class ReservationTest extends AcceptanceTest {
 
     @Autowired
+    @Qualifier("JdbcRepository")
     private ReservationRepository reservationRepository;
 
     @AfterEach
@@ -55,20 +57,10 @@ class ReservationTest extends AcceptanceTest {
     @Test
     @DisplayName("예약을 성공적으로 삭제한다.")
     void deleteReservationTest() {
-        ReservationRequest request = new ReservationRequest("브라운", "2023-08-05", "15:40");
-        ReservationResponse reservationResponse = RestAssured.given().log().all()
-                .contentType(ContentType.JSON)
-                .body(request)
-                .when().post("/reservations")
-                .then().log().all()
-                .statusCode(200)
-                .extract()
-                .as(ReservationResponse.class);
-
-        Long reservationId = reservationResponse.id();
+        Reservation reservation = reservationRepository.addReservation(new Reservation("웨지", "2024-04-19", "10:00"));
 
         RestAssured.given().log().all()
-                .when().delete("/reservations/" + reservationId)
+                .when().delete("/reservations/" + reservation.getId())
                 .then().log().all()
                 .statusCode(200);
 

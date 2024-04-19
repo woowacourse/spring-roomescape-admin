@@ -2,9 +2,13 @@ package roomescape.domain;
 
 import java.time.LocalDate;
 import java.time.LocalTime;
+import java.time.format.DateTimeFormatter;
 import java.util.Objects;
 
 public class ReserveTime {
+
+    private static final DateTimeFormatter DATE_FORMATTER = DateTimeFormatter.ofPattern("yyyy-MM-dd");
+    private static final DateTimeFormatter TIME_FORMATTER = DateTimeFormatter.ofPattern("hh:mm");
 
     private final LocalDate date;
     private final LocalTime time;
@@ -24,6 +28,14 @@ public class ReserveTime {
 
     public LocalTime getTime() {
         return time;
+    }
+
+    public String getDateAsText() {
+        return DATE_FORMATTER.format(date);
+    }
+
+    public String getTimeAsText() {
+        return TIME_FORMATTER.format(time);
     }
 
     @Override

@@ -1,11 +1,12 @@
-package roomescape.dao;
+package roomescape.repository;
 
 import java.util.List;
 import roomescape.domain.Reservation;
+import roomescape.service.dto.ReservationDto;
 
 public interface ReservationRepository {
 
-    Reservation addReservation(Reservation reservation);
+    Reservation addReservation(ReservationDto reservationDto);
 
     List<Reservation> findAll();
 

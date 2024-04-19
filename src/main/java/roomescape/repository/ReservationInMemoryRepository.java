@@ -1,4 +1,4 @@
-package roomescape.dao;
+package roomescape.repository;
 
 import java.util.List;
 import java.util.Map;
@@ -6,6 +6,7 @@ import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.atomic.AtomicLong;
 import org.springframework.stereotype.Repository;
 import roomescape.domain.Reservation;
+import roomescape.service.dto.ReservationDto;
 
 @Repository
 public class ReservationInMemoryRepository implements ReservationRepository {
@@ -19,8 +20,8 @@ public class ReservationInMemoryRepository implements ReservationRepository {
     }
 
     @Override
-    public Reservation addReservation(Reservation reservation) {
-        Reservation newReservation = new Reservation(idCount.getAndIncrement(), reservation);
+    public Reservation addReservation(ReservationDto reservationDto) {
+        Reservation newReservation = reservationDto.toEntity(idCount.getAndIncrement());
         reservations.put(newReservation.getId(), newReservation);
         return newReservation;
     }

@@ -1,4 +1,4 @@
-package roomescape.dao;
+package roomescape.repository;
 
 import java.util.List;
 import java.util.Map;
@@ -6,9 +6,8 @@ import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;
 import org.springframework.jdbc.core.simple.SimpleJdbcInsert;
 import org.springframework.stereotype.Repository;
-import roomescape.domain.Name;
 import roomescape.domain.Reservation;
-import roomescape.domain.ReserveTime;
+import roomescape.service.dto.ReservationDto;
 
 @Repository("JdbcRepository")
 public class ReservationJdbcRepository implements ReservationRepository {
@@ -33,16 +32,14 @@ public class ReservationJdbcRepository implements ReservationRepository {
     }
 
     @Override
-    public Reservation addReservation(Reservation reservation) {
-        Name name = reservation.getName();
-        ReserveTime reserveTime = reservation.getReserveTime();
+    public Reservation addReservation(ReservationDto reservationDto) {
         Map<String, String> parameters = Map.of(
-                "name", name.asText(),
-                "date", reserveTime.getDateAsText(),
-                "time", reserveTime.getTimeAsText()
+                "name", reservationDto.getName(),
+                "date", reservationDto.getDate(),
+                "time", reservationDto.getTime()
         );
         Number key = jdbcInsert.executeAndReturnKey(parameters);
-        return new Reservation(key.longValue(), reservation);
+        return reservationDto.toEntity(key.longValue());
     }
 
     @Override

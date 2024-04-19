@@ -10,8 +10,9 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import roomescape.controller.dto.ReservationRequest;
-import roomescape.dao.ReservationRepository;
+import roomescape.repository.ReservationRepository;
 import roomescape.domain.Reservation;
+import roomescape.service.dto.ReservationDto;
 
 class ReservationTest extends AcceptanceTest {
 
@@ -57,7 +58,8 @@ class ReservationTest extends AcceptanceTest {
     @Test
     @DisplayName("예약을 성공적으로 삭제한다.")
     void deleteReservationTest() {
-        Reservation reservation = reservationRepository.addReservation(new Reservation("웨지", "2024-04-19", "10:00"));
+        ReservationDto reservationDto = new ReservationDto(null, "웨지", "2024-04-19", "10:00");
+        Reservation reservation = reservationRepository.addReservation(reservationDto);
 
         RestAssured.given().log().all()
                 .when().delete("/reservations/" + reservation.getId())

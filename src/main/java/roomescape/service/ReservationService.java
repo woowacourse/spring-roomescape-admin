@@ -5,8 +5,9 @@ import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Service;
 import roomescape.controller.dto.ReservationRequest;
 import roomescape.controller.dto.ReservationResponse;
-import roomescape.dao.ReservationRepository;
 import roomescape.domain.Reservation;
+import roomescape.repository.ReservationRepository;
+import roomescape.service.dto.ReservationDto;
 
 @Service
 public class ReservationService {
@@ -25,8 +26,8 @@ public class ReservationService {
     }
 
     public ReservationResponse scheduleReservation(ReservationRequest request) {
-        Reservation reservation = request.toInstance();
-        Reservation savedReservation = reservationRepository.addReservation(reservation);
+        ReservationDto reservationDto = ReservationDto.from(request.toInstance());
+        Reservation savedReservation = reservationRepository.addReservation(reservationDto);
         return ReservationResponse.from(savedReservation);
     }
 

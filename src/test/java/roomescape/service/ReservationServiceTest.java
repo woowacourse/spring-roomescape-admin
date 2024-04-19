@@ -9,9 +9,10 @@ import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import roomescape.controller.dto.ReservationRequest;
 import roomescape.controller.dto.ReservationResponse;
-import roomescape.dao.ReservationInMemoryRepository;
-import roomescape.dao.ReservationRepository;
+import roomescape.repository.ReservationInMemoryRepository;
+import roomescape.repository.ReservationRepository;
 import roomescape.domain.Reservation;
+import roomescape.service.dto.ReservationDto;
 
 class ReservationServiceTest {
 
@@ -39,10 +40,10 @@ class ReservationServiceTest {
     @DisplayName("모든 예약을 조회한다.")
     void getAllReservationsTest() {
         // given
-        List<Reservation> reservations = List.of(
-                new Reservation("웨지", "2024-04-17", "15:00"),
-                new Reservation("아루", "2023-04-18", "13:00"),
-                new Reservation("브리", "2023-04-19", "16:00")
+        List<ReservationDto> reservations = List.of(
+                new ReservationDto("웨지", "2024-04-17", "15:00"),
+                new ReservationDto("아루", "2023-04-18", "13:00"),
+                new ReservationDto("브리", "2023-04-19", "16:00")
         );
         reservations.forEach(reservationRepository::addReservation);
         // when
@@ -56,7 +57,7 @@ class ReservationServiceTest {
     void cancelReservationTest() {
         // given
         Reservation reservation = reservationRepository.addReservation(
-                new Reservation("웨지", "2024-04-17", "15:00"));
+                new ReservationDto("웨지", "2024-04-17", "15:00"));
         // when
         reservationService.cancelReservation(reservation.getId());
         List<Reservation> actual = reservationRepository.findAll();
@@ -76,9 +77,9 @@ class ReservationServiceTest {
     @DisplayName("모든 예약을 취소한다.")
     void cancelAllReservationsTest() {
         // given
-        List<Reservation> reservations = List.of(
-                new Reservation("웨지", "2024-04-17", "15:00"),
-                new Reservation("아루", "2023-04-18", "13:00")
+        List<ReservationDto> reservations = List.of(
+                new ReservationDto("웨지", "2024-04-17", "15:00"),
+                new ReservationDto("아루", "2023-04-18", "13:00")
         );
         reservations.forEach(reservationRepository::addReservation);
         // when

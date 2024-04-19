@@ -8,16 +8,20 @@ import java.util.HashMap;
 import java.util.Map;
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.boot.test.web.server.LocalServerPort;
 import org.springframework.test.annotation.DirtiesContext;
 
-@SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.DEFINED_PORT)
+@SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 @DirtiesContext(classMode = DirtiesContext.ClassMode.BEFORE_EACH_TEST_METHOD)
 public class MissionStepTest {
+
+    @LocalServerPort
+    int port;
 
     @Test
     void 일단계() {
         RestAssured.given().log().all()
-                .when().get("/")
+                .when().get("http://localhost:" + port + "/")
                 .then().log().all()
                 .statusCode(200);
     }
@@ -25,15 +29,15 @@ public class MissionStepTest {
     @Test
     void 이단계() {
         RestAssured.given().log().all()
-                .when().get("/admin/reservation")
+                .when().get("http://localhost:" + port + "/admin/reservation")
                 .then().log().all()
                 .statusCode(200);
 
         RestAssured.given().log().all()
-                .when().get("/reservations")
+                .when().get("http://localhost:" + port + "/reservations")
                 .then().log().all()
                 .statusCode(200)
-                .body("size()", is(0)); // 아직 생성 요청이 없으니 Controller에서 임의로 넣어준 Reservation 갯수 만큼 검증하거나 0개임을 확인하세요.
+                .body("size()", is(0));
     }
 
     @Test
@@ -46,24 +50,24 @@ public class MissionStepTest {
         RestAssured.given().log().all()
                 .contentType(ContentType.JSON)
                 .body(params)
-                .when().post("/reservations")
+                .when().post("http://localhost:" + port + "/reservations")
                 .then().log().all()
                 .statusCode(200)
                 .body("id", is(1));
 
         RestAssured.given().log().all()
-                .when().get("/reservations")
+                .when().get("http://localhost:" + port + "/reservations")
                 .then().log().all()
                 .statusCode(200)
                 .body("size()", is(1));
 
         RestAssured.given().log().all()
-                .when().delete("/reservations/1")
+                .when().delete("http://localhost:" + port + "/reservations/1")
                 .then().log().all()
                 .statusCode(200);
 
         RestAssured.given().log().all()
-                .when().get("/reservations")
+                .when().get("http://localhost:" + port + "/reservations")
                 .then().log().all()
                 .statusCode(200)
                 .body("size()", is(0));

@@ -22,7 +22,7 @@ public class ReservationController {
 
     @GetMapping
     public ResponseEntity<List<Reservation>> listReservations() {
-        return ResponseEntity.ok(reservationRepository.readReservations());
+        return ResponseEntity.ok(reservationRepository.findAllReservations());
     }
 
     @PostMapping

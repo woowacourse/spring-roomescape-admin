@@ -14,7 +14,6 @@ import java.util.Set;
 // view
 @Controller
 public class AdminController {
-    // TODO id 생성 Long 캡슐화
     private final AdminService adminService;
 
     public AdminController() {

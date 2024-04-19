@@ -19,7 +19,7 @@ import org.springframework.test.annotation.DirtiesContext;
 
 @SpringBootTest(webEnvironment = WebEnvironment.RANDOM_PORT)
 @DirtiesContext(classMode = DirtiesContext.ClassMode.BEFORE_EACH_TEST_METHOD)
-class MissionStepTest {
+class ReservationControllerTest {
 
     @LocalServerPort
     int serverPort;
@@ -27,24 +27,6 @@ class MissionStepTest {
     @BeforeEach
     public void beforeEach() {
         RestAssured.port = serverPort;
-    }
-
-    @Test
-    @DisplayName("방탈출 어드민 메인 페이지 조회를 확인한다")
-    void showAdminMainPage() {
-        RestAssured.given().log().all()
-                .when().get("/admin")
-                .then().log().all()
-                .statusCode(200);
-    }
-
-    @Test
-    @DisplayName("방탈출 예약 관리 페이지 조회를 확인한다")
-    void showReservationPage() {
-        RestAssured.given().log().all()
-                .when().get("/admin/reservation")
-                .then().log().all()
-                .statusCode(200);
     }
 
     @Test

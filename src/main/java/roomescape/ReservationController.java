@@ -15,11 +15,6 @@ public class ReservationController {
 
     private List<Reservation> reservations = new ArrayList<>();
 
-    @GetMapping("/admin/reservation")
-    public String reservationPage() {
-        return "admin/reservation-legacy";
-    }
-
     @GetMapping("/reservations")
     public ResponseEntity<List<Reservation>> getReservations() {
         return ResponseEntity.ok(reservations);

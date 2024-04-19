@@ -33,8 +33,7 @@ public class ReservationController {
     }
 
     @PostMapping
-    public ReservationResponse addReservation(
-            @RequestBody ReservationAddRequest reservationAddRequest) {
+    public ReservationResponse addReservation(@RequestBody ReservationAddRequest reservationAddRequest) {
         Reservation reservation = reservationAddRequest.toReservation();
         Long id = reservationRepository.add(reservation);
 

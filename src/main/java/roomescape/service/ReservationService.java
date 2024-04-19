@@ -2,26 +2,27 @@ package roomescape.service;
 
 import java.util.List;
 import java.util.concurrent.atomic.AtomicLong;
+import org.springframework.stereotype.Service;
+import roomescape.dao.ReservationDao;
 import roomescape.dto.ReservationResponseDto;
 import roomescape.domain.Reservation;
 import roomescape.dto.ReservationRequestDto;
 import roomescape.domain.Reservations;
 
+@Service
 public class ReservationService {
 
-    private final Reservations reservations;
+    private Reservations reservations;
+    private final ReservationDao reservationDao;
     private final AtomicLong index = new AtomicLong(1);
 
-    public ReservationService(Reservations reservations) {
-        this.reservations = reservations;
-    }
-
-    public ReservationService() {
-        this(new Reservations());
+    public ReservationService(ReservationDao reservationDao) {
+        this.reservationDao = reservationDao;
     }
 
     public List<ReservationResponseDto> getAllReservations() {
-        return reservations.getReservations().stream()
+        List<Reservation> reservations = reservationDao.getAll();
+        return reservations.stream()
                 .map(ReservationResponseDto::new)
                 .toList();
     }

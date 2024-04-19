@@ -1,6 +1,5 @@
 package roomescape.domain;
 
-import java.util.ArrayList;
 import java.util.List;
 
 public class Reservations {
@@ -9,10 +8,6 @@ public class Reservations {
 
     public Reservations(List<Reservation> reservations) {
         this.reservations = reservations;
-    }
-
-    public Reservations() {
-        this(new ArrayList<>());
     }
 
     public void add(Reservation reservation) {

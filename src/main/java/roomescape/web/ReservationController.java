@@ -13,7 +13,6 @@ import org.springframework.web.bind.annotation.RestController;
 import roomescape.dao.Reservation;
 import roomescape.dao.ReservationDao;
 import roomescape.dao.ReservationMemoryDao;
-import roomescape.web.dto.ReservationFindAllResponse;
 import roomescape.web.dto.ReservationFindResponse;
 import roomescape.web.dto.ReservationSaveRequest;
 
@@ -25,10 +24,10 @@ public class ReservationController {
     private final AtomicLong counter = new AtomicLong();
 
     @GetMapping
-    public List<ReservationFindAllResponse> findAllReservation() {
+    public List<ReservationFindResponse> findAllReservation() {
         List<Reservation> reservations = reservationDao.findAll();
         return reservations.stream()
-                .map(ReservationFindAllResponse::from)
+                .map(ReservationFindResponse::from)
                 .toList();
     }
 

@@ -21,28 +21,26 @@ public class ReservationDao {
     }
 
     public List<Reservation> findAll() {
-        return jdbcTemplate.query("select a.id as reservation_id, a.name as name, a.date as date, t.id as time_id, t.start_at as start_at "
-                        + "from reservation as a "
-                        + "left join reservation_time as t on a.time_id = t.id",
-                (resultSet, rowNum) -> new Reservation(
-                        resultSet.getLong("reservation_id"),
-                        resultSet.getString("name"),
-                        LocalDate.parse(resultSet.getString("date")),
-                        new ReservationTime(
-                                resultSet.getLong("time_id"),
-                                LocalTime.parse(resultSet.getString("start_at"))
-                        )
-                )
-        );
+        String sql = """
+                select a.id as reservation_id, a.name as name, a.date as date, t.id as time_id, t.start_at as start_at
+                from reservation as a
+                left join reservation_time as t on a.time_id = t.id""";
+
+        return jdbcTemplate.query(sql, (resultSet, rowNum) -> {
+            ReservationTime reservationTime = new ReservationTime(resultSet.getLong("time_id"),
+                    LocalTime.parse(resultSet.getString("start_at")));
+
+            return new Reservation(resultSet.getLong("reservation_id"), resultSet.getString("name"),
+                    LocalDate.parse(resultSet.getString("date")), reservationTime);
+        });
     }
 
     public Long insert(Reservation reservation) {
+        String sql = "insert into reservation(name, date, time_id) values (?, ?, ?)";
         KeyHolder keyHolder = new GeneratedKeyHolder();
 
         jdbcTemplate.update(connection -> {
-            PreparedStatement ps = connection.prepareStatement(
-                    "insert into reservation(name, date, time_id) values (?, ?, ?)",
-                    new String[]{"id"});
+            PreparedStatement ps = connection.prepareStatement(sql, new String[]{"id"});
             ps.setString(1, reservation.getName());
             ps.setString(2, reservation.getDate().toString());
             ps.setLong(3, reservation.getTimeId());
@@ -53,10 +51,12 @@ public class ReservationDao {
     }
 
     public void deleteById(Long id) {
-        jdbcTemplate.update("delete from reservation where id = ?", id);
+        String sql = "delete from reservation where reservation_id = ?";
+        jdbcTemplate.update(sql, id);
     }
 
     public void deleteByTimeId(Long timeId) {
-        jdbcTemplate.update("delete from reservation where time_id = ?", timeId);
+        String sql = "delete from reservation where time_id = ?";
+        jdbcTemplate.update(sql, timeId);
     }
 }

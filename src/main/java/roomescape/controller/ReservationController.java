@@ -5,22 +5,22 @@ import org.springframework.web.bind.annotation.*;
 import roomescape.domain.Reservation;
 import roomescape.dto.ReservationRequestDto;
 import roomescape.dto.ReservationResponseDto;
-import roomescape.service.AdminService;
+import roomescape.service.ReservationService;
 
 import java.util.Set;
 import java.util.stream.Collectors;
 
 @RestController
 public class ReservationController {
-    private final AdminService adminService;
+    private final ReservationService reservationService;
 
-    public ReservationController(AdminService adminService) {
-        this.adminService = adminService;
+    public ReservationController(ReservationService reservationService) {
+        this.reservationService = reservationService;
     }
 
     @GetMapping("reservations")
     public ResponseEntity<Set<ReservationResponseDto>> reservations() {
-        Set<ReservationResponseDto> reservations = adminService.getAllReservations()
+        Set<ReservationResponseDto> reservations = reservationService.getAllReservations()
                 .stream()
                 .map(Reservation::toResponseDto)
                 .collect(Collectors.toSet());
@@ -30,12 +30,12 @@ public class ReservationController {
 
     @PostMapping("reservations")
     public ResponseEntity<ReservationResponseDto> reserve(@RequestBody ReservationRequestDto reservationRequestDto) {
-        return ResponseEntity.ok(adminService.reserve(reservationRequestDto));
+        return ResponseEntity.ok(reservationService.reserve(reservationRequestDto));
     }
 
     @DeleteMapping("reservations/{id}")
     public ResponseEntity<Void> cancel(@PathVariable Long id) {
-        adminService.deleteReservation(id);
+        reservationService.deleteReservation(id);
         return ResponseEntity.ok().build();
     }
 }

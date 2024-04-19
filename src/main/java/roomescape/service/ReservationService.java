@@ -2,25 +2,25 @@ package roomescape.service;
 
 import org.springframework.stereotype.Service;
 import roomescape.domain.Reservation;
+import roomescape.domain.Reservations;
 import roomescape.dto.ReservationRequestDto;
 import roomescape.dto.ReservationResponseDto;
-import roomescape.domain.Reservations;
 
 import java.util.Set;
 import java.util.concurrent.atomic.AtomicLong;
 
 @Service
-public class AdminService {
+public class ReservationService {
 
     private final Reservations reservations;
     private final AtomicLong index = new AtomicLong(1);
 
 
-    public AdminService(Reservations reservations) {
+    public ReservationService(Reservations reservations) {
         this.reservations = reservations;
     }
 
-    public AdminService() {
+    public ReservationService() {
         this(new Reservations());
     }
 

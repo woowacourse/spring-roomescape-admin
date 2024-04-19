@@ -1,5 +1,6 @@
 package roomescape;
 
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -23,6 +24,9 @@ public class ReservationController {
     @PostMapping
     public ResponseEntity<Reservation> create(@RequestBody Reservation request) {
         long id = index.getAndIncrement();
+        if (reservations.containsKey(id)) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
+        }
         Reservation reservation = Reservation.toEntity(id, request);
         reservations.put(id, reservation);
         return ResponseEntity.ok(reservation);

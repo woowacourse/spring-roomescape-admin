@@ -10,7 +10,11 @@ public class ReservationMapper {
         return new ReservationResponse(reservation.getId(), reservation.getName(), reservation.getDate(), reservation.getTime());
     }
 
-    public Reservation mapToReservation(Long id, ReservationSaveRequest request) {
-        return new Reservation(id, request.name(), request.date(), request.time());
+    public ReservationResponse mapToResponse(Long id, Reservation reservation) {
+        return new ReservationResponse(id, reservation.getName(), reservation.getDate(), reservation.getTime());
+    }
+
+    public Reservation mapToReservation(ReservationSaveRequest request) {
+        return new Reservation(request.id(), request.name(), request.date(), request.time());
     }
 }

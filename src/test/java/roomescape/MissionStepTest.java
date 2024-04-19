@@ -114,8 +114,36 @@ public class MissionStepTest {
                 .statusCode(HttpStatus.SC_OK).extract()
                 .jsonPath().getList(".", Reservation.class);
 
-        Integer count = jdbcTemplate.queryForObject("SELECT count(1) from reservation", Integer.class);
+        Integer count = jdbcTemplate.queryForObject("SELECT count(*) from reservation", Integer.class);
 
         assertThat(reservations.size()).isEqualTo(count);
+    }
+
+    @Test
+    void 육단계() {
+        Map<String, String> params = Map.of(
+                "name", "브라운",
+                "date", "2023-08-05",
+                "time", "10:00"
+        );
+
+        Reservation reservation = RestAssured.given().log().all()
+                .contentType(ContentType.JSON)
+                .body(params)
+                .when().post("/reservations")
+                .then().log().all()
+                .statusCode(HttpStatus.SC_OK).extract()
+                .jsonPath().getObject(".", Reservation.class);
+
+        Integer count = jdbcTemplate.queryForObject("SELECT count(*) from reservation", Integer.class);
+        assertThat(count).isEqualTo(1);
+
+        RestAssured.given().log().all()
+                .when().delete("/reservations/" + reservation.getId())
+                .then().log().all()
+                .statusCode(HttpStatus.SC_OK);
+
+        Integer countAfterDelete = jdbcTemplate.queryForObject("SELECT count(*) from reservation", Integer.class);
+        assertThat(countAfterDelete).isEqualTo(0);
     }
 }

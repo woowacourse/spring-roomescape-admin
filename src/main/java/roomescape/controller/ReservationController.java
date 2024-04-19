@@ -1,34 +1,26 @@
 package roomescape.controller;
 
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
-import org.springframework.jdbc.core.JdbcTemplate;
-import org.springframework.jdbc.core.RowMapper;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 import roomescape.domain.Reservation;
 import roomescape.dto.ReservationResponse;
 import roomescape.dto.ReservationSaveRequest;
 import roomescape.mapper.ReservationMapper;
+import roomescape.repository.ReservationRepository;
 
-import java.time.LocalDate;
-import java.time.LocalTime;
 import java.util.List;
-import java.util.concurrent.atomic.AtomicLong;
 
 @Controller
 public class ReservationController {
 
     private final ReservationMapper reservationMapper = new ReservationMapper();
-    private final AtomicLong index = new AtomicLong(1);
-    private final RowMapper<Reservation> reservationRowMapper = (resultSet, rowNum) -> new Reservation(
-            resultSet.getLong("id"),
-            resultSet.getString("name"),
-            LocalDate.parse(resultSet.getString("date")),
-            LocalTime.parse(resultSet.getString("time"))
-    );
-    @Autowired
-    private JdbcTemplate jdbcTemplate;
+
+    private final ReservationRepository reservationRepository;
+
+    public ReservationController(ReservationRepository reservationRepository) {
+        this.reservationRepository = reservationRepository;
+    }
 
     @GetMapping("/reservation")
     public String getAdminReservations() {
@@ -37,7 +29,7 @@ public class ReservationController {
 
     @GetMapping("/reservations")
     public ResponseEntity<List<ReservationResponse>> getReservations() {
-        List<Reservation> reservations = jdbcTemplate.query("SELECT * FROM reservation", reservationRowMapper);
+        List<Reservation> reservations = reservationRepository.findAll();
         List<ReservationResponse> responses = reservations.stream()
                 .map(reservationMapper::mapToResponse)
                 .toList();
@@ -46,17 +38,16 @@ public class ReservationController {
 
     @PostMapping("/reservations")
     public ResponseEntity<ReservationResponse> createReservation(@RequestBody ReservationSaveRequest request) {
-        long id = index.getAndIncrement();
-        Reservation reservation = reservationMapper.mapToReservation(id, request);
-        jdbcTemplate.update("INSERT INTO reservation (id, name, date, time) VALUES (?, ?, ?, ?)", id, request.name(), request.date(), request.time());
+        Reservation reservation = reservationMapper.mapToReservation(request);
+        long saveId = reservationRepository.save(reservation);
 
-        ReservationResponse response = reservationMapper.mapToResponse(reservation);
+        ReservationResponse response = reservationMapper.mapToResponse(saveId, reservation);
         return ResponseEntity.ok(response);
     }
 
     @DeleteMapping("/reservations/{id}")
     public ResponseEntity<Void> deleteReservation(@PathVariable Long id) {
-        jdbcTemplate.update("DELETE FROM reservation WHERE id = ?", id);
+        reservationRepository.deleteById(id);
 
         return ResponseEntity.ok().build();
     }

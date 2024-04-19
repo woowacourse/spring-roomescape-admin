@@ -4,7 +4,7 @@ import java.util.List;
 import roomescape.domain.Reservation;
 import roomescape.entity.ReservationEntity;
 
-public interface ReservationDao {
+public interface ReservationRepository {
 
     ReservationEntity addReservation(Reservation reservation);
 

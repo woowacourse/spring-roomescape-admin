@@ -4,17 +4,17 @@ import java.util.List;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.atomic.AtomicLong;
-import org.springframework.stereotype.Component;
+import org.springframework.stereotype.Repository;
 import roomescape.domain.Reservation;
 import roomescape.entity.ReservationEntity;
 
-@Component
-public class ReservationInMemoryDao implements ReservationDao {
+@Repository
+public class ReservationInMemoryRepository implements ReservationRepository {
 
     private final Map<Long, Reservation> reservations;
     private final AtomicLong idCount;
 
-    public ReservationInMemoryDao() {
+    public ReservationInMemoryRepository() {
         this.reservations = new ConcurrentHashMap<>();
         idCount = new AtomicLong(1L);
     }

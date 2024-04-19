@@ -1,24 +1,24 @@
-package roomescape.scheduler;
+package roomescape.service;
 
 import java.util.List;
-import org.springframework.stereotype.Component;
-import roomescape.dao.ReservationDao;
+import org.springframework.stereotype.Service;
+import roomescape.dao.ReservationRepository;
 import roomescape.domain.Reservation;
 import roomescape.dto.ReservationRequest;
 import roomescape.dto.ReservationResponse;
 import roomescape.entity.ReservationEntity;
 
-@Component
-public class ReservationScheduler {
+@Service
+public class ReservationService {
 
-    private final ReservationDao reservationDao;
+    private final ReservationRepository reservationRepository;
 
-    public ReservationScheduler(ReservationDao reservationDao) {
-        this.reservationDao = reservationDao;
+    public ReservationService(ReservationRepository reservationRepository) {
+        this.reservationRepository = reservationRepository;
     }
 
     public List<ReservationResponse> getAllReservations() {
-        return reservationDao.findAll()
+        return reservationRepository.findAll()
                 .stream()
                 .map(ReservationResponse::from)
                 .toList();
@@ -26,18 +26,18 @@ public class ReservationScheduler {
 
     public ReservationResponse scheduleReservation(ReservationRequest request) {
         Reservation reservation = request.toInstance();
-        ReservationEntity entity = reservationDao.addReservation(reservation);
+        ReservationEntity entity = reservationRepository.addReservation(reservation);
         return ReservationResponse.from(entity);
     }
 
     public void cancelReservation(Long id) {
-        if (!reservationDao.existsById(id)) {
+        if (!reservationRepository.existsById(id)) {
             throw new IllegalArgumentException("id에 해당하는 예약을 찾을 수 없습니다.");
         }
-        reservationDao.deleteById(id);
+        reservationRepository.deleteById(id);
     }
 
     public void cancelAllReservations() {
-        reservationDao.deleteAll();
+        reservationRepository.deleteAll();
     }
 }

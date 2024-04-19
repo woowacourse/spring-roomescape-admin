@@ -8,18 +8,18 @@ import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
-import roomescape.dao.ReservationDao;
+import roomescape.dao.ReservationRepository;
 import roomescape.dto.ReservationRequest;
 import roomescape.dto.ReservationResponse;
 
 class ReservationTest extends AcceptanceTest {
 
     @Autowired
-    private ReservationDao reservationDao;
+    private ReservationRepository reservationRepository;
 
     @AfterEach
     void tearDown() {
-        reservationDao.deleteAll();
+        reservationRepository.deleteAll();
     }
 
     @Test

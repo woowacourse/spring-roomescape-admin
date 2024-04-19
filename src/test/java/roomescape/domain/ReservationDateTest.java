@@ -24,6 +24,5 @@ class ReservationDateTest {
     void should_CreateReservationDate_When_GiveEarlierDateThanNow() {
         LocalDate laterDate = LocalDate.now().plusDays(1);
         assertThatCode(() -> new ReservationDate(laterDate)).doesNotThrowAnyException();
-
     }
 }

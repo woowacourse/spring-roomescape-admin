@@ -24,9 +24,9 @@ public class ReservationService {
         ReservationTime reservationTime = reservationTimeDao.findById(reservationServiceRequest.timeId());
         Reservation reservation = reservationServiceRequest.toReservation(reservationTime);
 
-        Reservation savedReservation = reservationDao.save(reservation);
+        reservationDao.save(reservation);
 
-        return ReservationServiceResponse.from(savedReservation);
+        return ReservationServiceResponse.from(reservation);
     }
 
     public List<ReservationServiceResponse> findAll() {

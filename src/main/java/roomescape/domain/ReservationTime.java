@@ -7,9 +7,6 @@ public class ReservationTime {
     private Long id;
     private LocalTime startAt;
 
-    protected ReservationTime() {
-    }
-
     public ReservationTime(LocalTime startAt) {
         this.startAt = startAt;
     }
@@ -19,15 +16,15 @@ public class ReservationTime {
         this.startAt = startAt;
     }
 
-    public ReservationTime createWithId(long id) {
-        return new ReservationTime(id, startAt);
-    }
-
     public Long getId() {
         return id;
     }
 
     public LocalTime getStartAt() {
         return startAt;
+    }
+
+    public void setId(Long id) {
+        this.id = id;
     }
 }

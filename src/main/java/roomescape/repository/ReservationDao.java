@@ -1,12 +1,12 @@
 package roomescape.repository;
 
-import java.sql.PreparedStatement;
 import java.time.LocalDate;
 import java.time.LocalTime;
 import java.util.List;
+import javax.sql.DataSource;
 import org.springframework.jdbc.core.JdbcTemplate;
-import org.springframework.jdbc.support.GeneratedKeyHolder;
-import org.springframework.jdbc.support.KeyHolder;
+import org.springframework.jdbc.core.namedparam.BeanPropertySqlParameterSource;
+import org.springframework.jdbc.core.simple.SimpleJdbcInsert;
 import org.springframework.stereotype.Repository;
 import roomescape.domain.Reservation;
 import roomescape.domain.ReservationTime;
@@ -16,8 +16,13 @@ public class ReservationDao {
 
     private final JdbcTemplate jdbcTemplate;
 
-    public ReservationDao(JdbcTemplate jdbcTemplate) {
+    private final SimpleJdbcInsert jdbcInsert;
+
+    public ReservationDao(JdbcTemplate jdbcTemplate, DataSource dataSource) {
         this.jdbcTemplate = jdbcTemplate;
+        this.jdbcInsert = new SimpleJdbcInsert(dataSource)
+                .withTableName("reservation")
+                .usingGeneratedKeyColumns("id");
     }
 
     public List<Reservation> findAll() {
@@ -35,20 +40,11 @@ public class ReservationDao {
         });
     }
 
-    public Reservation save(Reservation reservation) {
-        String sql = "INSERT INTO reservation(name, date, time_id) VALUES (?, ?, ?)";
-        KeyHolder keyHolder = new GeneratedKeyHolder();
+    public void save(Reservation reservation) {
+        BeanPropertySqlParameterSource parameterSource = new BeanPropertySqlParameterSource(reservation);
+        Number key = jdbcInsert.executeAndReturnKey(parameterSource);
 
-        jdbcTemplate.update(connection -> {
-            PreparedStatement ps = connection.prepareStatement(sql, new String[]{"id"});
-            ps.setString(1, reservation.getName());
-            ps.setString(2, reservation.getDate().toString());
-            ps.setLong(3, reservation.getTimeId());
-            return ps;
-        }, keyHolder);
-
-        long id = keyHolder.getKey().longValue();
-        return reservation.createWithId(id);
+        reservation.setId(key.longValue());
     }
 
     public void deleteById(Long id) {

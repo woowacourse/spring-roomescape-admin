@@ -9,9 +9,6 @@ public class Reservation {
     private LocalDate date;
     private ReservationTime reservationTime;
 
-    protected Reservation() {
-    }
-
     public Reservation(String name, LocalDate date, ReservationTime reservationTime) {
         this.name = name;
         this.date = date;
@@ -23,10 +20,6 @@ public class Reservation {
         this.name = name;
         this.date = date;
         this.reservationTime = reservationTime;
-    }
-
-    public Reservation createWithId(Long id) {
-        return new Reservation(id, name, date, reservationTime);
     }
 
     public Long getId() {
@@ -47,6 +40,10 @@ public class Reservation {
 
     public Long getTimeId() {
         return reservationTime.getId();
+    }
+
+    public void setId(Long id) {
+        this.id = id;
     }
 }
 

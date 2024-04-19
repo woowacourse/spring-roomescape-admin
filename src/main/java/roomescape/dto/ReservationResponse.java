@@ -16,4 +16,3 @@ public record ReservationResponse(long id, String name, LocalDate date, String t
         );
     }
 }
-// todo controller 하위 디렉토리

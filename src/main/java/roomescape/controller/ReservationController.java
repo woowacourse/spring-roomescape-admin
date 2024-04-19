@@ -19,8 +19,8 @@ import roomescape.dto.ReservationResponse;
 @RestController
 public class ReservationController {
 
-    private Map<Integer, Reservation> reservations = new HashMap<>();
-    private AtomicLong index = new AtomicLong(1);
+    private final Map<Integer, Reservation> reservations = new HashMap<>();
+    private final AtomicLong index = new AtomicLong(1);
 
     @GetMapping("/reservations")
     public ResponseEntity<List<ReservationResponse>> reservations() {

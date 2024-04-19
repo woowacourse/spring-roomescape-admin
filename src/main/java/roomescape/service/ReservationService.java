@@ -4,8 +4,8 @@ import java.util.List;
 import org.springframework.stereotype.Service;
 import roomescape.dao.ReservationRepository;
 import roomescape.domain.Reservation;
-import roomescape.dto.ReservationRequest;
-import roomescape.dto.ReservationResponse;
+import roomescape.controller.dto.ReservationRequest;
+import roomescape.controller.dto.ReservationResponse;
 import roomescape.entity.ReservationEntity;
 
 @Service

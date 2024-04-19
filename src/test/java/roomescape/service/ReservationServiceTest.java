@@ -12,8 +12,8 @@ import org.junit.jupiter.api.Test;
 import roomescape.dao.ReservationRepository;
 import roomescape.dao.ReservationInMemoryRepository;
 import roomescape.domain.Reservation;
-import roomescape.dto.ReservationRequest;
-import roomescape.dto.ReservationResponse;
+import roomescape.controller.dto.ReservationRequest;
+import roomescape.controller.dto.ReservationResponse;
 import roomescape.entity.ReservationEntity;
 
 class ReservationServiceTest {

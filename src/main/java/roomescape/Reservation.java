@@ -6,7 +6,7 @@ import java.time.LocalTime;
 
 public class Reservation {
 
-    private final long id;
+    private final Long id;
     private final String name;
     @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd")
     private final LocalDate date;
@@ -26,5 +26,13 @@ public class Reservation {
 
     public String getName() {
         return name;
+    }
+
+    public LocalDate getDate() {
+        return date;
+    }
+
+    public LocalTime getTime() {
+        return time;
     }
 }

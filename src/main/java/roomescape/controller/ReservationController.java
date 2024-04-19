@@ -39,6 +39,9 @@ public class ReservationController {
 
     @DeleteMapping("/reservations/{id}")
     public ResponseEntity<Void> delete(@PathVariable long id) {
+        if (!reservations.containsKey((int) id)) {
+            throw new IllegalArgumentException("해당 예약은 존재하지 않습니다.");
+        }
         reservations.remove((int) id);
         return ResponseEntity.ok().build();
     }

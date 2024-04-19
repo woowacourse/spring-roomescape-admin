@@ -33,11 +33,11 @@ public class ReservationController {
     }
 
     @DeleteMapping("/{id}")
-    public ResponseEntity<String> delete(@PathVariable("id") long reservationId) {
+    public ResponseEntity<Void> delete(@PathVariable("id") long reservationId) {
         boolean deleted = reservationService.delete(reservationId);
         if (!deleted) {
-            return ResponseEntity.ok(String.format("%d 예약 삭제 실패했습니다.", reservationId));
+            return ResponseEntity.notFound().build();
         }
-        return ResponseEntity.ok(String.format("%d 예약 삭제했습니다.", reservationId));
+        return ResponseEntity.ok().build();
     }
 }

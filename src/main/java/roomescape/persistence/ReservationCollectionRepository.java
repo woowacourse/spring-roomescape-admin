@@ -1,4 +1,4 @@
-package roomescape.repository;
+package roomescape.persistence;
 
 import org.springframework.stereotype.Repository;
 import roomescape.domain.Reservation;
@@ -13,7 +13,7 @@ import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.atomic.AtomicLong;
 
 @Repository
-public class ReservationRepository {
+public class ReservationCollectionRepository implements ReservationRepository {
     private final Map<Long, Reservation> reservations = new ConcurrentHashMap<>();
     private final AtomicLong index = new AtomicLong(1);
 

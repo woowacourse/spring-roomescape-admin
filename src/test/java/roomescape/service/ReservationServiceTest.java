@@ -3,7 +3,8 @@ package roomescape.service;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import roomescape.domain.Reservation;
-import roomescape.repository.ReservationRepository;
+import roomescape.persistence.ReservationCollectionRepository;
+import roomescape.persistence.ReservationRepository;
 
 import java.util.List;
 import java.util.Optional;
@@ -13,7 +14,7 @@ import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import static roomescape.TestFixture.*;
 
 class ReservationServiceTest {
-    private final ReservationRepository reservationRepository = new ReservationRepository();
+    private final ReservationRepository reservationRepository = new ReservationCollectionRepository();
     private final ReservationService reservationService = new ReservationService(reservationRepository);
 
     @Test

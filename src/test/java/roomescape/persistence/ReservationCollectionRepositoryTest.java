@@ -1,4 +1,4 @@
-package roomescape.repository;
+package roomescape.persistence;
 
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -11,8 +11,8 @@ import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertAll;
 import static roomescape.TestFixture.*;
 
-class ReservationRepositoryTest {
-    private final ReservationRepository reservationRepository = new ReservationRepository();
+class ReservationCollectionRepositoryTest {
+    private final ReservationRepository reservationRepository = new ReservationCollectionRepository();
 
     @Test
     @DisplayName("예약을 저장한다.")

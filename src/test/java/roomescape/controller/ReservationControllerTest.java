@@ -4,6 +4,7 @@ import static org.hamcrest.Matchers.is;
 
 import io.restassured.RestAssured;
 import io.restassured.http.ContentType;
+import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.context.SpringBootTest.WebEnvironment;
@@ -14,6 +15,7 @@ import roomescape.dto.ReservationCreateDto;
 @DirtiesContext(classMode = DirtiesContext.ClassMode.BEFORE_EACH_TEST_METHOD)
 class ReservationControllerTest {
     @Test
+    @DisplayName("전체 예약 목록을 조회한다.")
     void readReservations() {
         RestAssured.given().log().all()
                 .when().get("/reservations")
@@ -23,6 +25,7 @@ class ReservationControllerTest {
     }
 
     @Test
+    @DisplayName("예약을 생성한다.")
     void createReservation() {
         ReservationCreateDto createDto = new ReservationCreateDto("브라운", "2023-08-05", "15:40");
 
@@ -36,6 +39,7 @@ class ReservationControllerTest {
     }
 
     @Test
+    @DisplayName("예약을 삭제한다.")
     void deleteReservation() {
         ReservationCreateDto createDto = new ReservationCreateDto("브라운", "2023-08-05", "15:40");
 

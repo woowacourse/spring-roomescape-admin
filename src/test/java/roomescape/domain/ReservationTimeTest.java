@@ -27,5 +27,4 @@ class ReservationTimeTest {
 
         assertThatCode(() -> new ReservationTime(openTime)).doesNotThrowAnyException();
     }
-
 }

@@ -6,7 +6,6 @@ import java.util.Objects;
 import java.util.Set;
 
 public class Reservations {
-    // TODO map 형태로 자료 변경
     // TODO 이전 날짜를 요청한 경우 검증
     // TODO 모든 데이터가 전부 들어왔는지
     // TODO 현재 날짜 기준 이전 날짜를 들어온 경우
@@ -22,6 +21,10 @@ public class Reservations {
     }
 
     public void add(Long id, Reservation reservation) {
+        if(hasDuplicatedId(id)){
+            throw new IllegalArgumentException("예약 객체의 중복된 키가 존재합니다");
+        }
+
         reservations.put(id, reservation);
     }
 
@@ -39,5 +42,11 @@ public class Reservations {
 
     public Set<Reservation> getReservations() {
         return Set.copyOf(reservations.values());
+    }
+
+    private boolean hasDuplicatedId(Long otherId){
+        return reservations.keySet()
+                .stream()
+                .anyMatch(id -> id.equals(otherId));
     }
 }

@@ -19,7 +19,7 @@ import roomescape.dto.ReservationRequest;
 import roomescape.entity.ReservationEntity;
 
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
-public class ReservationControllerTest {
+class ReservationControllerTest {
     @LocalServerPort
     private int port;
 

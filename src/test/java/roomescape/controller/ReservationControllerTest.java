@@ -48,9 +48,9 @@ class ReservationControllerTest {
     @Test
     void findAllReservations() {
         //given
-        ReservationRequest reservationRequest
-                = new ReservationRequest("브라운", "2023-08-05", "15:40");
-        reservationDao.save(reservationRequest);
+        Reservation reservation
+                = new Reservation(1, "브라운", "2023-08-05", "15:40");
+        reservationDao.save(reservation);
 
         //when
         Response response = RestAssured.given().log().all()
@@ -68,9 +68,10 @@ class ReservationControllerTest {
     @Test
     void deleteReservationSuccess() {
         //given
-        ReservationRequest reservationRequest
-                = new ReservationRequest("브라운", "2023-08-05", "15:40");
-        long id = reservationDao.save(reservationRequest);
+        long id = 1;
+        Reservation reservation
+                = new Reservation(id, "브라운", "2023-08-05", "15:40");
+        reservationDao.save(reservation);
 
         //when
         Response response = RestAssured.given().log().all()

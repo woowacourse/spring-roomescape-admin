@@ -2,7 +2,6 @@ package roomescape.controller;
 
 import java.net.URI;
 import java.util.List;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -22,12 +21,11 @@ import roomescape.entity.ReservationEntity;
 public class ReservationController {
     private final ReservationDao reservationDao;
 
-    @Autowired
     public ReservationController(ReservationDao reservationDao) {
         this.reservationDao = reservationDao;
     }
 
-    @GetMapping()
+    @GetMapping
     public ResponseEntity<List<ReservationResponse>> findAllReservations() {
         List<ReservationEntity> reservations = reservationDao.findAll();
         return ResponseEntity.ok(reservations.stream()
@@ -35,7 +33,7 @@ public class ReservationController {
                 .toList());
     }
 
-    @PostMapping()
+    @PostMapping
     public ResponseEntity<Void> createReservation(
             @RequestBody ReservationRequest reservationRequest) {
         Reservation reservation = new Reservation(

@@ -1,14 +1,13 @@
 package roomescape;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.bind.annotation.*;
 import roomescape.dto.RequestReservation;
 
+import java.net.URI;
 import java.util.List;
 
 @Controller
@@ -34,16 +33,15 @@ public class RoomescapeController {
     }
 
     @PostMapping("/reservations")
-    @ResponseBody
     public ResponseEntity<Reservation> addReservationInfo(@RequestBody RequestReservation requestReservation) {
         Long id = reservationRepository.add(requestReservation);
-        Reservation newReservation = requestReservation.toEntity(id);
-        return ResponseEntity.ok(newReservation);
+        return ResponseEntity.created(URI.create("/reservations/" + id))
+                .build();
     }
-//
-//    @DeleteMapping("/reservations/{id}")
-//    public ResponseEntity<Void> deleteReservationInfo(@PathVariable Long id) {
-//        reservationInfos.removeIf(reservationInfo -> reservationInfo.getId().equals(id));
-//        return ResponseEntity.ok().build();
-//    }
+
+    @DeleteMapping("/reservations/{id}")
+    @ResponseStatus(HttpStatus.NO_CONTENT)
+    public void deleteReservationInfo(@PathVariable Long id) {
+        reservationRepository.remove(id);
+    }
 }

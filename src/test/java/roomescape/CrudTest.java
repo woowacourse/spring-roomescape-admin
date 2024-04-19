@@ -56,7 +56,7 @@ public class CrudTest {
         RestAssured.given().log().all()
                 .when().delete("/reservations/1")
                 .then().log().all()
-                .statusCode(200);
+                .statusCode(204);
 
         RestAssured.given().log().all()
                 .when().get("/reservations")
@@ -76,6 +76,6 @@ public class CrudTest {
                 .body(params)
                 .when().post("/reservations")
                 .then().log().all()
-                .statusCode(200);
+                .statusCode(201);
     }
 }

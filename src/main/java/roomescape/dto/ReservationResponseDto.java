@@ -9,4 +9,8 @@ public record ReservationResponseDto(long id, String name, LocalDate date, Local
     public ReservationResponseDto(Reservation reservation) {
         this(reservation.getId(), reservation.getName(), reservation.getDate(), reservation.getTime());
     }
+
+    public ReservationResponseDto(long id, ReservationRequestDto reservationRequestDto) {
+        this(id, reservationRequestDto.name(), reservationRequestDto.date(), reservationRequestDto.time());
+    }
 }

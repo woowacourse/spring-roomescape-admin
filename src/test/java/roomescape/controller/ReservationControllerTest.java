@@ -10,17 +10,22 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.context.SpringBootTest.WebEnvironment;
+import org.springframework.boot.test.web.server.LocalServerPort;
 import roomescape.domain.ReservationRepository;
 import roomescape.dto.ReservationCreateDto;
 
-@SpringBootTest(webEnvironment = WebEnvironment.DEFINED_PORT)
+@SpringBootTest(webEnvironment = WebEnvironment.RANDOM_PORT)
 class ReservationControllerTest {
     @Autowired
     private ReservationRepository reservationRepository;
 
+    @LocalServerPort
+    private int port;
+
     @BeforeEach
     void setUp() {
         reservationRepository.removeAll();
+        RestAssured.port = port;
     }
 
     @Test

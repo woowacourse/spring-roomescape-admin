@@ -18,13 +18,8 @@ public class ReservationController {
     private final List<Reservation> reservations = new ArrayList<>();
     private final AtomicLong index = new AtomicLong(1);
 
-    @GetMapping("/")
+    @GetMapping(path = {"/", "/admin"})
     public String wellComePage() {
-        return "admin/index";
-    }
-
-    @GetMapping("/admin")
-    public String adminPage() {
         return "admin/index";
     }
 

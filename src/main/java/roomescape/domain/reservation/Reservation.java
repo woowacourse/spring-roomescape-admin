@@ -1,34 +1,38 @@
 package roomescape.domain.reservation;
 
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.time.LocalTime;
 import roomescape.domain.user.UserName;
 
 public class Reservation {
     private final Long id;
     private final UserName name;
-    private final LocalDate date;
-    private final LocalTime time;
+    private final LocalDateTime reservationDateTime;
 
-    public Reservation(String name, LocalDate date, LocalTime time) {
-        this(null, name, date, time);
+    public Reservation(String name, LocalDateTime dateTime) {
+        this(null, name, dateTime);
     }
 
-    private Reservation(Long id, String name, LocalDate date, LocalTime time) {
-        this(id, new UserName(name), date, time);
+    private Reservation(Long id, String name, LocalDateTime dateTime) {
+        this(id, new UserName(name), dateTime);
     }
 
-    private Reservation(Long id, UserName name, LocalDate date, LocalTime time) {
-        // todo 검증 :  date, time이 현재 시간 이후인지, null
-        // 아니면 date, time을 합칠까? 분리해서 받는건 view 영역이고 도메인까지 분리해서 저장할 필요를 못느끼겠음
+    private Reservation(Long id, UserName name, LocalDateTime dateTime) {
+        validateDateTime(dateTime);
         this.id = id;
         this.name = name;
-        this.date = date;
-        this.time = time;
+        this.reservationDateTime = dateTime;
+    }
+
+    private void validateDateTime(LocalDateTime dateTime) {
+        if (LocalDateTime.now().isAfter(dateTime)) {
+            throw new IllegalArgumentException("현재 시간 이후로 예약해야 합니다.");
+        }
     }
 
     public Reservation updateId(Long id) {
-        return new Reservation(id, name, date, time);
+        return new Reservation(id, name, reservationDateTime);
     }
 
     public Long getId() {
@@ -39,11 +43,11 @@ public class Reservation {
         return name.getValue();
     }
 
-    public LocalDate getDate() {
-        return date;
+    public LocalDate getReservationDate() {
+        return reservationDateTime.toLocalDate();
     }
 
-    public LocalTime getTime() {
-        return time;
+    public LocalTime getReservationTime() {
+        return reservationDateTime.toLocalTime();
     }
 }

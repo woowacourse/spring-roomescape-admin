@@ -3,8 +3,7 @@ package roomescape.domain.reservation.repository;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertAll;
 
-import java.time.LocalDate;
-import java.time.LocalTime;
+import java.time.LocalDateTime;
 import java.util.List;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -20,7 +19,7 @@ class InMemoryReservationRepositoryTest {
 
     @Test
     void 예약을_저장한다() { // todo now() 제거, 시간 검증
-        Reservation reservation = new Reservation("prin", LocalDate.now(), LocalTime.now());
+        Reservation reservation = new Reservation("prin", LocalDateTime.now());
 
         reservationRepository.save(reservation);
 
@@ -33,8 +32,8 @@ class InMemoryReservationRepositoryTest {
 
     @Test
     void 예약을_조회한다() {
-        Reservation reservation1 = new Reservation("prin", LocalDate.now(), LocalTime.now());
-        Reservation reservation2 = new Reservation("liv", LocalDate.now(), LocalTime.now());
+        Reservation reservation1 = new Reservation("prin", LocalDateTime.now());
+        Reservation reservation2 = new Reservation("liv", LocalDateTime.now());
 
         reservationRepository.save(reservation1);
         reservationRepository.save(reservation2);
@@ -49,7 +48,7 @@ class InMemoryReservationRepositoryTest {
 
     @Test
     void 예약을_삭제한다() {
-        Reservation reservation = new Reservation("prin", LocalDate.now(), LocalTime.now());
+        Reservation reservation = new Reservation("prin", LocalDateTime.now());
         reservationRepository.save(reservation);
 
         reservationRepository.deleteById(1L);

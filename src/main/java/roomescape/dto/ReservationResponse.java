@@ -11,8 +11,8 @@ public record ReservationResponse(long id, String name, LocalDate date, String t
         return new ReservationResponse(
                 reservation.getId(),
                 reservation.getName(),
-                reservation.getDate(),
-                reservation.getTime().format(DATE_TIME_FORMATTER)
+                reservation.getReservationDate(),
+                reservation.getReservationTime().format(DATE_TIME_FORMATTER)
         );
     }
 }

@@ -4,19 +4,19 @@ import java.time.LocalDate;
 import java.time.LocalTime;
 
 public class Reservation {
-    private final Id id;
+    private final Long id;
     private final Name name;
     private LocalDate date;
     private LocalTime time;
 
-    public Reservation(Id id, Name name, LocalDate date, LocalTime time) {
+    public Reservation(Long id, Name name, LocalDate date, LocalTime time) {
         this.id = id;
         this.name = name;
         this.date = date;
         this.time = time;
     }
 
-    public Id getId() {
+    public Long getId() {
         return id;
     }
 

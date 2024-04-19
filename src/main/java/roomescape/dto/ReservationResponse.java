@@ -11,7 +11,7 @@ public class ReservationResponse {
     private LocalTime time;
 
     public ReservationResponse(Reservation reservation) {
-        this.id = reservation.getId().getId();
+        this.id = reservation.getId();
         this.name = reservation.getName().getName();
         this.date = reservation.getDate();
         this.time = reservation.getTime();

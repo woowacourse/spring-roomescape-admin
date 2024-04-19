@@ -34,6 +34,6 @@ public class RoomescapeRestController {
 
     @DeleteMapping("/reservations/{id}")
     public void deleteReservationInfo(@PathVariable Long id) {
-        reservations.removeIf(reservation -> reservation.getId().getId().equals(id));
+        reservations.removeIf(reservation -> reservation.getId().equals(id));
     }
 }

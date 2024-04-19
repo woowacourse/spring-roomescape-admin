@@ -10,6 +10,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.context.SpringBootTest.WebEnvironment;
 import org.springframework.test.annotation.DirtiesContext;
+import roomescape.dto.ReservationRequest;
 import roomescape.model.Reservation;
 
 @SpringBootTest(webEnvironment = WebEnvironment.RANDOM_PORT)
@@ -23,7 +24,8 @@ class ReservationDaoTest {
     @Test
     void saveReservation() {
         final List<Reservation> beforeSaving = reservationDao.findAll();
-        reservationDao.save("레디", "2024-02-03", "15:00");
+        final ReservationRequest reservation = new ReservationRequest("레디", "2024-02-03", "15:00");
+        reservationDao.save(reservation);
         final List<Reservation> afterSaving = reservationDao.findAll();
 
         assertAll(

@@ -4,29 +4,16 @@ import java.time.LocalDate;
 import java.time.LocalTime;
 
 public class Reservation {
-    private Id id;
-    private Name name;
+    private final Id id;
+    private final Name name;
     private LocalDate date;
     private LocalTime time;
-
-    public Reservation() {
-    }
 
     public Reservation(Id id, Name name, LocalDate date, LocalTime time) {
         this.id = id;
         this.name = name;
         this.date = date;
         this.time = time;
-    }
-
-    public Reservation(Name name, LocalDate date, LocalTime time) {
-        this.name = name;
-        this.date = date;
-        this.time = time;
-    }
-
-    public static Reservation toEntity(Reservation reservation, Long id) {
-        return new Reservation(new Id(id), reservation.name, reservation.date, reservation.time);
     }
 
     public Id getId() {

@@ -51,4 +51,13 @@ class ReservationTimeDaoTest {
                 .statusCode(200)
                 .body("size()", is(1));
     }
+
+    @DisplayName("시간 삭제 API 테스트")
+    @Test
+    void delete() {
+        RestAssured.given().log().all()
+                .when().delete("/times/1")
+                .then().log().all()
+                .statusCode(200);
+    }
 }

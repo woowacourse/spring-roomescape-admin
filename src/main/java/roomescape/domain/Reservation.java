@@ -18,6 +18,10 @@ public class Reservation {
         this(id, new Name(reservationRequestDto.name()), new ReservationDate(reservationRequestDto.date()), new ReservationTime(reservationRequestDto.time()));
     }
 
+    public ReservationResponseDto toResponseDto(){
+        return new ReservationResponseDto(id, name.getName(), date.getDate(), time.getTime());
+    }
+
     public Long getId() {
         return id;
     }

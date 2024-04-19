@@ -26,4 +26,8 @@ public class ReservationTime {
             throw new IllegalArgumentException("예약 가능 시간은 " + START_TIME + "부터 " + END_TIME + "까지입니다.");
         }
     }
+
+    public LocalTime getTime() {
+        return time;
+    }
 }

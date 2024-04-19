@@ -6,6 +6,9 @@ import roomescape.dto.ReservationRequest;
 import roomescape.dto.ReservationResponse;
 import roomescape.storage.ReservationStorage;
 
+import java.time.LocalDate;
+import java.time.LocalDateTime;
+import java.time.LocalTime;
 import java.util.List;
 
 @RestController
@@ -19,8 +22,17 @@ public class ReservationController {
 
     @PostMapping
     public ReservationResponse saveReservation(@RequestBody ReservationRequest reservationRequest) {
-        Reservation reservation = reservationStorage.save(reservationRequest);
-        return toResponse(reservation);
+        Reservation reservation = fromRequest(reservationRequest);
+        Reservation savedReservation = reservationStorage.save(reservation);
+        return toResponse(savedReservation);
+    }
+
+    private Reservation fromRequest(ReservationRequest reservationRequest) {
+        String name = reservationRequest.name();
+        LocalDate date = reservationRequest.date();
+        LocalTime time = reservationRequest.time();
+        LocalDateTime dateTime = LocalDateTime.of(date, time);
+        return new Reservation(name, dateTime);
     }
 
     private ReservationResponse toResponse(Reservation reservation) {

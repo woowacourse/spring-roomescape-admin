@@ -5,9 +5,13 @@ import java.time.LocalDateTime;
 import java.time.LocalTime;
 
 public class Reservation implements Comparable<Reservation> {
-    private final long id;
+    private long id;
     private final String name;
     private final LocalDateTime dateTime;
+
+    public Reservation(String name, LocalDateTime dateTime) {
+        this(0, name, dateTime);
+    }
 
     public Reservation(long id, String name, LocalDateTime dateTime) {
         this.id = id;
@@ -38,5 +42,9 @@ public class Reservation implements Comparable<Reservation> {
 
     public LocalTime getTime() {
         return dateTime.toLocalTime();
+    }
+
+    public void setId(long id) {
+        this.id = id;
     }
 }

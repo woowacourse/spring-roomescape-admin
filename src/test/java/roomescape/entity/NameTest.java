@@ -24,7 +24,7 @@ class NameTest {
                 .isInstanceOf(IllegalArgumentException.class);
     }
 
-    @DisplayName("조건에 맞는 이름을 생성할 경우 예외가 발생하지 않는다.")
+    @DisplayName("조건에 맞는 이름을 생성할 경우 예외가 발생하지 않는다")
     @ParameterizedTest
     @ValueSource(strings = {"1", "12", "123", "1234", "12345"})
     void validNameCreationTest(String name) {

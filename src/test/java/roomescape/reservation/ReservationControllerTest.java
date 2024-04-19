@@ -51,9 +51,14 @@ class ReservationControllerTest {
     @DisplayName("존재하지 않은 예약 삭제 시 예외가 발생한다.")
     @Test
     void reservationNotFound() {
+        //given
+        long id = 1;
+
+        //when & then
         RestAssured.given().log().all()
-                .when().delete("/reservations/1")
+                .when().delete(String.format("/reservations/%d", id))
                 .then().log().all()
-                .statusCode(404);
+                .statusCode(200)
+                .body(is(String.format("%d 예약 삭제 실패했습니다.", id)));
     }
 }

@@ -43,4 +43,10 @@ public class MemoryReservationRepository implements ReservationRepository {
         }
         reservations.remove(found.get());
     }
+
+    @Override
+    public boolean isAnyReservationConflictWith(Reservation reservation) {
+        return reservations.stream()
+                .anyMatch(savedReservation -> savedReservation.isReservationTimeConflictWith(reservation));
+    }
 }

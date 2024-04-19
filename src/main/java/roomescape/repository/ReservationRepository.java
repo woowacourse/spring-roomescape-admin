@@ -12,4 +12,6 @@ public interface ReservationRepository {
     Optional<Reservation> findById(long id);
 
     void deleteById(long id);
+
+    boolean isAnyReservationConflictWith(Reservation reservation);
 }

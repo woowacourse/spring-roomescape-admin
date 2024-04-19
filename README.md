@@ -1,8 +1,54 @@
 ## 요구사항 명세
 
-- [x] localhost:8080/admin 요청 시 index.html 페이지가 응답한다.
-- [x] /admin/reservation 요청 시 reservation-legacy.html 응답한다.
-- [x] /reservations 요청 시 예약 목록을 응답한다.
-- [x] 예약 페이지 요청 시 예약 목록을 조회하여 보여준다.
-- [x] 예약을 추가한다.
-- [x] 예약을 삭제한다.
+### 메인 페이지
+- Method: GET
+- API(URL) : /admin
+- Response
+  - Status Code : 200
+  - Content-Type : text/html
+  - Body : index.html
+
+### 예약 관리 페이지
+- Method : GET
+- API(URL) : /admin/reservation
+- Response
+  - Status Code : 200
+  - Content-Type : text/html
+  - Body : reservation-legacy.html
+
+### 예약 조회
+- Method : GET
+- API(URL) : /reservations
+- Response
+  - Status Code : 200
+  - Content-Type : application/json
+  - Response Parameters
+    - id
+    - name
+    - date
+    - time
+
+### 예약 등록
+- Method : POST
+- API(URL) : /reservations
+- Request
+  - Content-Type : application/json
+  - Request Parameters
+    - name
+    - date
+    - time
+- Response
+  - Status Code : 200
+  - Content-Type : application/json
+  - Response Parameters
+    - id
+    - name
+    - date
+    - time
+
+### 예약 취소
+- Method : DELETE
+- API(URL) : /reservations
+- Path Variable : id
+- Response
+  - Status Code : 200

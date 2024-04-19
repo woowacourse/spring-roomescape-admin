@@ -24,7 +24,7 @@ import roomescape.dto.ReservationResponseDto;
 
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.DEFINED_PORT)
 @DirtiesContext(classMode = DirtiesContext.ClassMode.BEFORE_EACH_TEST_METHOD)
-@TestPropertySource(locations = "classpath:application-test.properties")
+@TestPropertySource(properties = {"spring.config.location = classpath:application-test.yml"})
 class MissionStepTest {
     @Autowired
     private JdbcTemplate jdbcTemplate;

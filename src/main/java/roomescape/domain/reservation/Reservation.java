@@ -50,4 +50,8 @@ public class Reservation {
     public LocalTime getReservationTime() {
         return reservationDateTime.toLocalTime();
     }
+
+    public boolean isSameReservationDateTime(Reservation other) {
+        return this.reservationDateTime.equals(other.reservationDateTime);
+    }
 }

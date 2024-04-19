@@ -20,10 +20,19 @@ public class InMemoryReservationRepository implements ReservationRepository {
     }
 
     @Override
-    public Reservation save(Reservation reservation) { // todo 예약 중복 확인 (날짜)
+    public Reservation save(Reservation reservation) {
+        validateReservationDateTimeExists(reservation);
         Reservation updatedReservation = reservation.updateId(index.getAndIncrement());
         reservations.put(updatedReservation.getId(), updatedReservation);
         return updatedReservation;
+    }
+
+    private void validateReservationDateTimeExists(Reservation reservation) {
+        boolean existsDateTime = reservations.values().stream()
+                .anyMatch(r -> r.isSameReservationDateTime(reservation));
+        if (existsDateTime) {
+            throw new IllegalArgumentException("이미 예약된 날짜, 시간입니다.");
+        }
     }
 
     @Override

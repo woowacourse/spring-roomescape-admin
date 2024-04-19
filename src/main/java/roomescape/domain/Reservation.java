@@ -3,7 +3,6 @@ package roomescape.domain;
 import java.time.LocalDate;
 import java.time.LocalTime;
 import java.time.format.DateTimeFormatter;
-import roomescape.dto.ReservationRequest;
 
 public class Reservation {
     private static final String TIME_FORMAT = "HH:mm";
@@ -12,10 +11,6 @@ public class Reservation {
     private final String name;
     private final LocalDate date;
     private final LocalTime time;
-
-    public Reservation(long id, ReservationRequest reservationRequest) {
-        this(id, reservationRequest.name(), reservationRequest.date(), reservationRequest.time());
-    }
 
     public Reservation(long id, String name, String date, String time) {
         this.id = id;

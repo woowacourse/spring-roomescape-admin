@@ -33,7 +33,7 @@ public class ReservationStorage {
 
     public List<Reservation> findAllReservations() {
         return reservations.stream()
-                .sorted()
+                .sorted(Reservation::compareDatetime)
                 .toList();
     }
 

@@ -14,7 +14,7 @@ class ReservationTest {
     void compareTo() {
         Reservation first = new Reservation(1L, "폴라", LocalDateTime.of(1999, 12, 1, 16, 30));
         Reservation second = new Reservation(2L, "로빈", LocalDateTime.of(1998, 1, 8, 10, 30));
-        int compareTo = first.compareTo(second);
+        int compareTo = first.compareDatetime(second);
 
         Assertions.assertThat(compareTo)
                 .isGreaterThan(0);

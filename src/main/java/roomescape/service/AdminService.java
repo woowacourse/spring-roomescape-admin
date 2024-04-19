@@ -34,10 +34,6 @@ public class AdminService {
         return reservation.toResponseDto();
     }
 
-    public Reservation findReservation(Long id) {
-        return reservations.find(id);
-    }
-
     public void deleteReservation(Long id) {
         reservations.delete(id);
     }
@@ -49,5 +45,4 @@ public class AdminService {
     private Reservation createReservation(ReservationRequestDto reservationRequestDto) {
         return new Reservation(index.getAndIncrement(), reservationRequestDto);
     }
-
 }

@@ -6,7 +6,6 @@ import roomescape.service.dto.ReservationTimeServiceResponse;
 
 public record ReservationTimeResponse(
         Long id,
-
         @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "HH:mm", timezone = "Asia/Seoul")
         LocalTime startAt
 ) {

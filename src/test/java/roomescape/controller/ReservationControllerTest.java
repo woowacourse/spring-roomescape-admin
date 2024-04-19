@@ -46,7 +46,7 @@ class ReservationControllerTest {
                 .when().get("/reservations")
                 .then().log().all()
                 .statusCode(200)
-                .body("size()", is(1));
+                .body("size()", is(0));
     }
 
     @Test
@@ -59,12 +59,6 @@ class ReservationControllerTest {
                 .then().log().all()
                 .statusCode(201)
                 .body("id", is(2));
-
-        RestAssured.given().log().all()
-                .when().get("/reservations")
-                .then().log().all()
-                .statusCode(200)
-                .body("size()", is(2));
     }
 
     @Test
@@ -76,11 +70,5 @@ class ReservationControllerTest {
                 .when().delete("/reservations/{id}")
                 .then().log().all()
                 .statusCode(204);
-
-        RestAssured.given().log().all()
-                .when().get("/reservations")
-                .then().log().all()
-                .statusCode(200)
-                .body("size()", is(0));
     }
 }

@@ -11,12 +11,13 @@ import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertAll;
 import static roomescape.TestFixture.*;
 
-class ReservationCollectionRepositoryTest {
+class ReservationCollectionRepositoryTest implements ReservationRepositoryTest {
     private final ReservationRepository reservationRepository = new ReservationCollectionRepository();
 
+    @Override
     @Test
     @DisplayName("예약을 저장한다.")
-    void save() {
+    public void save() {
         // given
         Reservation reservation = MIA_RESERVATION();
 
@@ -27,9 +28,10 @@ class ReservationCollectionRepositoryTest {
         assertThat(savedReservation).isNotNull();
     }
 
+    @Override
     @Test
     @DisplayName("동일시간대의 예약 목록을 조회한다.")
-    void saveLimitedReservations() {
+    public void findAllByDateAndTime() {
         // given
         Reservation miaReservation = MIA_RESERVATION();
         Reservation wonnyReservation = new Reservation("wonny", MIA_RESERVATION_DATE, MIA_RESERVATION_TIME);
@@ -46,9 +48,10 @@ class ReservationCollectionRepositoryTest {
                 .containsExactly(miaReservation, wonnyReservation);
     }
 
+    @Override
     @Test
     @DisplayName("모든 예약 목록을 조회한다.")
-    void findAll() {
+    public void findAll() {
         // given
         Reservation miaReservation = MIA_RESERVATION();
         Reservation tommyReservation = TOMMY_RESERVATION();
@@ -64,9 +67,10 @@ class ReservationCollectionRepositoryTest {
                 .containsExactly(USER_MIA, USER_TOMMY);
     }
 
+    @Override
     @Test
     @DisplayName("Id로 예약을 조회한다.")
-    void findById() {
+    public void findById() {
         // given
         Reservation miaReservation = MIA_RESERVATION();
         reservationRepository.save(miaReservation);
@@ -81,9 +85,10 @@ class ReservationCollectionRepositoryTest {
         );
     }
 
+    @Override
     @Test
     @DisplayName("Id로 예약을 삭제한다.")
-    void deleteById() {
+    public void deleteById() {
         // given
         Reservation miaReservation = MIA_RESERVATION();
         reservationRepository.save(miaReservation);

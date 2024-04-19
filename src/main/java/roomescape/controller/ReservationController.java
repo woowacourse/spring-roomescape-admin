@@ -9,6 +9,7 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
+import roomescape.dao.JdbcReservationDao;
 import roomescape.dao.ReservationDao;
 import roomescape.domain.Reservation;
 import roomescape.dto.ReservationRequest;
@@ -18,13 +19,13 @@ import roomescape.dto.ReservationRequest;
 public class ReservationController {
     private final ReservationDao reservationDao;
 
-    public ReservationController(ReservationDao reservationDao) {
+    public ReservationController(JdbcReservationDao reservationDao) {
         this.reservationDao = reservationDao;
     }
 
     @PostMapping("/reservations")
     public ResponseEntity<Reservation> createReservation(@RequestBody ReservationRequest reservationRequest) {
-        Long id = reservationDao.insertWithKeyHolder(reservationRequest);
+        Long id = reservationDao.insert(reservationRequest);
         return ResponseEntity.created(URI.create("/reservations/" + id))
                 .body((Reservation.toEntity(id, reservationRequest)));
     }
@@ -37,7 +38,7 @@ public class ReservationController {
     @DeleteMapping("/reservations/{id}")
     public ResponseEntity<Void> deleteReservation(@PathVariable Long id) {
         reservationDao.delete(id);
-        return ResponseEntity.status(204)
+        return ResponseEntity.noContent()
                 .build();
     }
 }

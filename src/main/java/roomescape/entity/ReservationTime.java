@@ -3,6 +3,7 @@ package roomescape.entity;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.LocalTime;
+import java.util.Objects;
 
 public class ReservationTime {
     private static final int RESERVATION_DURATION_HOUR = 1;
@@ -10,6 +11,7 @@ public class ReservationTime {
     private final LocalDateTime reservationStartDateTime;
 
     public ReservationTime(LocalDateTime reservationStartDateTime) {
+        Objects.requireNonNull(reservationStartDateTime);
         this.reservationStartDateTime = reservationStartDateTime;
     }
 

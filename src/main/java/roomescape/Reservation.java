@@ -6,7 +6,7 @@ public record Reservation(
         String date,
         String time) {
 
-    public Reservation toEntity(Long id) {
+    public Reservation toIdAssigned(Long id) {
         return new Reservation(id, this.name, this.date, this.time);
     }
 

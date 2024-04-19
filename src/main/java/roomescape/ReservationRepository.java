@@ -16,7 +16,7 @@ public class ReservationRepository {
     }
 
     public Reservation createReservation(Reservation reservation) {
-        Reservation createdReservation = reservation.toEntity(autoIncreaseId.getAndIncrement());
+        Reservation createdReservation = reservation.toIdAssigned(autoIncreaseId.getAndIncrement());
         reservations.add(createdReservation);
         return createdReservation;
     }

@@ -18,12 +18,12 @@ public class ReservationDbRepository implements ReservationRepository {
 
     @Override
     public Reservation save(Reservation reservation) {
-        return null;
+        return reservationDao.insert(reservation);
     }
 
     @Override
     public List<Reservation> findAllByDateAndTime(LocalDate date, LocalTime time) {
-        return null;
+        return reservationDao.selectAllByDateAndTime(date, time);
     }
 
     @Override

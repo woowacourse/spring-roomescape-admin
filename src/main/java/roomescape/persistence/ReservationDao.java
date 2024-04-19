@@ -1,12 +1,16 @@
 package roomescape.persistence;
 
 import org.springframework.jdbc.core.JdbcTemplate;
+import org.springframework.jdbc.support.GeneratedKeyHolder;
+import org.springframework.jdbc.support.KeyHolder;
 import org.springframework.stereotype.Component;
 import roomescape.domain.Reservation;
 
-import java.sql.ResultSet;
-import java.sql.SQLException;
+import java.sql.*;
+import java.time.LocalDate;
+import java.time.LocalTime;
 import java.util.List;
+import java.util.Objects;
 
 @Component
 public class ReservationDao {
@@ -19,6 +23,26 @@ public class ReservationDao {
     public List<Reservation> selectAll() {
         String sql = "select id, name, date, time from reservation";
         return jdbcTemplate.query(sql, this::rowMapper);
+    }
+
+    public List<Reservation> selectAllByDateAndTime(LocalDate date, LocalTime time) {
+        String sql = "select id, name, date, time from reservation where date = ? and time = ?";
+        return jdbcTemplate.query(sql, this::rowMapper, date.toString(), time.toString());
+    }
+
+    public Reservation insert(Reservation reservation) {
+        String sql = "insert into reservation (name, date, time) values (?, ?, ?)";
+        KeyHolder keyHolder = new GeneratedKeyHolder();
+        jdbcTemplate.update(connection -> {
+            PreparedStatement ps = connection.prepareStatement(sql, new String[]{"id"});
+            ps.setString(1, reservation.getName());
+            ps.setDate(2, Date.valueOf(reservation.getDate()));
+            ps.setTime(3, Time.valueOf(reservation.getTime()));
+            return ps;
+        }, keyHolder);
+        Long id = Objects.requireNonNull(keyHolder.getKey()).longValue();
+        reservation.initializeId(id);
+        return reservation;
     }
 
     private Reservation rowMapper(ResultSet resultSet, int rowNumber) throws SQLException {

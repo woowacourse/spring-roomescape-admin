@@ -1,9 +1,8 @@
-package roomescape.dto;
+package roomescape.controller.dto;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
 import java.time.LocalDate;
-import roomescape.domain.Reservation;
-import roomescape.domain.ReservationTime;
+import roomescape.service.dto.ReservationServiceRequest;
 
 public record ReservationRequest(
         String name,
@@ -14,7 +13,7 @@ public record ReservationRequest(
         Long timeId
 ) {
 
-        public Reservation toReservation(ReservationTime reservationTime) {
-                return new Reservation(name, date, reservationTime);
+        public ReservationServiceRequest toReservationServiceRequest() {
+                return new ReservationServiceRequest(name, date, timeId);
         }
 }

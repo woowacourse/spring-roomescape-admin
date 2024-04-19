@@ -2,18 +2,13 @@ package roomescape.controller;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Optional;
 import java.util.concurrent.atomic.AtomicLong;
-import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.DeleteMapping;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
-import roomescape.dto.ReservationRequestDto;
-import roomescape.dto.ReservationResponseDto;
+
+import org.springframework.http.HttpStatus;
+import org.springframework.web.bind.annotation.*;
+import org.springframework.web.server.ResponseStatusException;
+import roomescape.dto.ReservationSaveRequest;
+import roomescape.dto.ReservationResponse;
 import roomescape.model.Reservation;
 
 @RestController
@@ -24,30 +19,28 @@ public class ReservationController {
     private final List<Reservation> reservations = new ArrayList<>();
 
     @GetMapping
-    public List<ReservationResponseDto> getReservations() {
+    public List<ReservationResponse> getReservations() {
         return reservations.stream()
-                .map(ReservationResponseDto::from)
+                .map(ReservationResponse::from)
                 .toList();
     }
 
     @PostMapping
-    public ResponseEntity<ReservationResponseDto> saveReservation(
-            @RequestBody final ReservationRequestDto reservationRequestDto) {
-        final Reservation reservation = reservationRequestDto.toEntity(id.getAndIncrement());
+    @ResponseStatus(HttpStatus.CREATED)
+    public ReservationResponse saveReservation(
+            @RequestBody final ReservationSaveRequest reservationSaveRequest) {
+        final Reservation reservation = reservationSaveRequest.toReservation(id.getAndIncrement());
         reservations.add(reservation);
-        final ReservationResponseDto reservationResponseDto = ReservationResponseDto.from(reservation);
-        return ResponseEntity.ok().body(reservationResponseDto);
+        return ReservationResponse.from(reservation);
     }
 
     @DeleteMapping("/{id}")
-    public ResponseEntity<Void> delete(final @PathVariable("id") Long id) {
-        final Optional<Reservation> findReservation = reservations.stream()
+    @ResponseStatus(HttpStatus.NO_CONTENT)
+    public void deleteReservation(final @PathVariable("id") Long id) {
+        final Reservation findReservation = reservations.stream()
                 .filter(reservation -> reservation.getId().equals(id))
-                .findAny();
-        if (findReservation.isEmpty()) {
-            return ResponseEntity.notFound().build();
-        }
-        reservations.remove(findReservation.get());
-        return ResponseEntity.ok().build();
+                .findAny()
+                .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "존재하지 않는 예약입니다."));
+        reservations.remove(findReservation);
     }
 }

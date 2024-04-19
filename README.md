@@ -63,3 +63,17 @@ DELETE /reservations/1 HTTP/1.1
 Response
 HTTP/1.1 200
 ```
+
+## DB 스키마
+### Reservation
+
+```sql
+CREATE TABLE reservation
+(
+    id      BIGINT       NOT NULL AUTO_INCREMENT,
+    name    VARCHAR(255) NOT NULL,
+    date    VARCHAR(255) NOT NULL,
+    time    VARCHAR(255) NOT NULL,
+    PRIMARY KEY (id)
+);
+```

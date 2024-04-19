@@ -28,7 +28,7 @@ class ReservationControllerTest extends ControllerTest {
     void getReservations() throws Exception {
         // given
         BDDMockito.given(reservationService.getReservations())
-                .willReturn(List.of(new Reservation(USER_MIA, MIA_RESERVATION_DATE, MIA_RESERVATION_TIME)));
+                .willReturn(List.of(MIA_RESERVATION()));
 
         // when & then
         mockMvc.perform(get("/reservations").contentType(MediaType.APPLICATION_JSON))

@@ -18,7 +18,7 @@ class ReservationRepositoryTest {
     @DisplayName("예약을 저장한다.")
     void save() {
         // given
-        Reservation reservation = new Reservation(USER_MIA, MIA_RESERVATION_DATE, MIA_RESERVATION_TIME);
+        Reservation reservation = MIA_RESERVATION();
 
         // when
         Reservation savedReservation = reservationRepository.save(reservation);
@@ -31,9 +31,9 @@ class ReservationRepositoryTest {
     @DisplayName("동일시간대의 예약 목록을 조회한다.")
     void saveLimitedReservations() {
         // given
-        Reservation miaReservation = new Reservation(USER_MIA, MIA_RESERVATION_DATE, MIA_RESERVATION_TIME);
+        Reservation miaReservation = MIA_RESERVATION();
         Reservation wonnyReservation = new Reservation("wonny", MIA_RESERVATION_DATE, MIA_RESERVATION_TIME);
-        Reservation tommyReservation = new Reservation(USER_TOMMY, TOMMY_RESERVATION_DATE, TOMMY_RESERVATION_TIME);
+        Reservation tommyReservation = TOMMY_RESERVATION();
         reservationRepository.save(miaReservation);
         reservationRepository.save(tommyReservation);
         reservationRepository.save(wonnyReservation);
@@ -50,8 +50,8 @@ class ReservationRepositoryTest {
     @DisplayName("모든 예약 목록을 조회한다.")
     void findAll() {
         // given
-        Reservation miaReservation = new Reservation(USER_MIA, MIA_RESERVATION_DATE, MIA_RESERVATION_TIME);
-        Reservation tommyReservation = new Reservation(USER_TOMMY, TOMMY_RESERVATION_DATE, TOMMY_RESERVATION_TIME);
+        Reservation miaReservation = MIA_RESERVATION();
+        Reservation tommyReservation = TOMMY_RESERVATION();
         reservationRepository.save(miaReservation);
         reservationRepository.save(tommyReservation);
 
@@ -68,7 +68,7 @@ class ReservationRepositoryTest {
     @DisplayName("Id로 예약을 조회한다.")
     void findById() {
         // given
-        Reservation miaReservation = new Reservation(USER_MIA, MIA_RESERVATION_DATE, MIA_RESERVATION_TIME);
+        Reservation miaReservation = MIA_RESERVATION();
         reservationRepository.save(miaReservation);
 
         // when
@@ -85,7 +85,7 @@ class ReservationRepositoryTest {
     @DisplayName("Id로 예약을 삭제한다.")
     void deleteById() {
         // given
-        Reservation miaReservation = new Reservation(USER_MIA, MIA_RESERVATION_DATE, MIA_RESERVATION_TIME);
+        Reservation miaReservation = MIA_RESERVATION();
         reservationRepository.save(miaReservation);
 
         // when

@@ -58,7 +58,7 @@ class ReservationTest {
     @DisplayName("이미 초기화된 예약 ID를 초기화(수정)할 경우 예외가 발생한다.")
     void initializeId() {
         // given
-        Reservation reservation = new Reservation(USER_MIA, MIA_RESERVATION_DATE, MIA_RESERVATION_TIME);
+        Reservation reservation = MIA_RESERVATION();
         reservation.initializeId(1L);
 
         // when & then
@@ -71,7 +71,7 @@ class ReservationTest {
     @DisplayName("예약이 동일한 예약 시간을 갖는지 확인한다.")
     void hasSameDateTime(LocalDate date, LocalTime time, boolean expectedResult) {
         // given
-        Reservation reservation = new Reservation(USER_MIA, MIA_RESERVATION_DATE, MIA_RESERVATION_TIME);
+        Reservation reservation = MIA_RESERVATION();
 
         // when
         boolean actualResult = reservation.hasSameDateTime(date, time);

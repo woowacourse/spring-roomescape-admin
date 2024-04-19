@@ -20,7 +20,7 @@ class ReservationServiceTest {
     @DisplayName("예약을 생성한다.")
     void createReservation() {
         // given
-        Reservation reservation = new Reservation(USER_MIA, MIA_RESERVATION_DATE, MIA_RESERVATION_TIME);
+        Reservation reservation = MIA_RESERVATION();
 
         // when
         Reservation savedReservation = reservationService.createReservation(reservation);
@@ -33,10 +33,10 @@ class ReservationServiceTest {
     @DisplayName("동일한 시간에 같은 사용자가 예약할 수 없다.")
     void createSameReservation() {
         // given
-        Reservation miaReservation = new Reservation(USER_MIA, MIA_RESERVATION_DATE, MIA_RESERVATION_TIME);
+        Reservation miaReservation = MIA_RESERVATION();
         reservationRepository.save(miaReservation);
 
-        Reservation newReservation = new Reservation(USER_MIA, MIA_RESERVATION_DATE, MIA_RESERVATION_TIME);
+        Reservation newReservation = MIA_RESERVATION();
 
         // when & then
         assertThatThrownBy(() -> reservationService.createReservation(newReservation))
@@ -47,7 +47,7 @@ class ReservationServiceTest {
     @DisplayName("동일한 시간대에 최대 4팀이 예약할 수 있다. 초과되면 예외가 발생한다.")
     void createLimitedReservations() {
         // given
-        Reservation miaReservation = new Reservation(USER_MIA, MIA_RESERVATION_DATE, MIA_RESERVATION_TIME);
+        Reservation miaReservation = MIA_RESERVATION();
         Reservation tommyReservation = new Reservation(USER_TOMMY, MIA_RESERVATION_DATE, MIA_RESERVATION_TIME);
         Reservation wonnyReservation = new Reservation("wonny", MIA_RESERVATION_DATE, MIA_RESERVATION_TIME);
         Reservation neoReservation = new Reservation("neo", MIA_RESERVATION_DATE, MIA_RESERVATION_TIME);
@@ -67,8 +67,8 @@ class ReservationServiceTest {
     @DisplayName("모든 예약 목록을 조회한다.")
     void getReservations() {
         // given
-        Reservation miaReservation = new Reservation(USER_MIA, MIA_RESERVATION_DATE, MIA_RESERVATION_TIME);
-        Reservation tommyReservation = new Reservation(USER_TOMMY, TOMMY_RESERVATION_DATE, TOMMY_RESERVATION_TIME);
+        Reservation miaReservation = MIA_RESERVATION();
+        Reservation tommyReservation = TOMMY_RESERVATION();
         reservationRepository.save(miaReservation);
         reservationRepository.save(tommyReservation);
 
@@ -85,7 +85,7 @@ class ReservationServiceTest {
     @DisplayName("예약을 삭제한다.")
     void deleteReservation() {
         // given
-        Reservation miaReservation = new Reservation(USER_MIA, MIA_RESERVATION_DATE, MIA_RESERVATION_TIME);
+        Reservation miaReservation = MIA_RESERVATION();
         reservationRepository.save(miaReservation);
 
         // when

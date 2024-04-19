@@ -6,7 +6,7 @@ import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.context.SpringBootTest;
 
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.DEFINED_PORT)
-class AdminControllerTest {
+class AdminViewControllerTest {
 
     @DisplayName("어드민 메인 페이지 요청 테스트")
     @Test

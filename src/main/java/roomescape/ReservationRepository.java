@@ -22,16 +22,16 @@ public class ReservationRepository {
     }
 
     public void deleteReservation(Long id) {
-        Reservation searchedReservation = readReservation(id);
+        Reservation searchedReservation = findReservationById(id);
 
         reservations.remove(searchedReservation);
     }
 
-    private Reservation readReservation(Long id) {
+    private Reservation findReservationById(Long id) {
         return reservations.stream()
                 .filter(reservation -> reservation.id().equals(id))
                 .findFirst()
-                .orElseThrow(RuntimeException::new);
+                .orElseThrow(() -> new RuntimeException("요청된 예약 id가 존재하지 않습니다."));
     }
 
 }

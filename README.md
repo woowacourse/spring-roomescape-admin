@@ -25,3 +25,13 @@
     - POST `/reservations`
 - [x] 예약 삭제 API를 구현한다.
     - DELETE `/reservations/{id}`
+
+## 7단계 시간 관리 기능
+
+- [x] `/admin/time`으로 요청하면 `/admin/time.html`을 응답한다.
+- [ ] 시간 추가 API를 구현한다.
+    - POST `/times`
+- [ ] 전체 시간 조회 API를 구현한다.
+    - GET `/times`
+- [ ] 시간 삭제 API를 구현한다.
+    - DELETE `/times/{id}`

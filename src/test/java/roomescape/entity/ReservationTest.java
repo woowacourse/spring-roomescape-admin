@@ -7,7 +7,6 @@ import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 
 class ReservationTest {
-
     @DisplayName("두 예약을 비교, 예약 시간이 겹치는 경우를 알 수 있다")
     @Test
     void reservationTimeConflictCheckTest() {
@@ -17,7 +16,7 @@ class ReservationTest {
         Reservation reservation1 = new Reservation(1L, "리비", time1.toLocalDate(), time1.toLocalTime());
         Reservation reservation2 = new Reservation(2L, "웨지", time2.toLocalDate(), time2.toLocalTime());
 
-        assertThat(reservation1.isReservationTimeConflictWith(reservation2)).isTrue();
+        assertThat(reservation1.isConflictWith(reservation2)).isTrue();
     }
 
     @DisplayName("두 예약을 비교, 예약 시간이 겹치지 않는 경우를 알 수 있다")
@@ -29,6 +28,6 @@ class ReservationTest {
         Reservation reservation1 = new Reservation(1L, "리비", time1.toLocalDate(), time1.toLocalTime());
         Reservation reservation2 = new Reservation(2L, "웨지", time2.toLocalDate(), time2.toLocalTime());
 
-        assertThat(reservation1.isReservationTimeConflictWith(reservation2)).isFalse();
+        assertThat(reservation1.isConflictWith(reservation2)).isFalse();
     }
 }

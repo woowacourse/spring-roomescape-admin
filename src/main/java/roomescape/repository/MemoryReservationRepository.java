@@ -47,6 +47,6 @@ public class MemoryReservationRepository implements ReservationRepository {
     @Override
     public boolean isAnyReservationConflictWith(Reservation reservation) {
         return reservations.stream()
-                .anyMatch(savedReservation -> savedReservation.isReservationTimeConflictWith(reservation));
+                .anyMatch(savedReservation -> savedReservation.isConflictWith(reservation));
     }
 }

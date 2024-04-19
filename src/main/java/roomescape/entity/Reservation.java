@@ -9,17 +9,17 @@ public class Reservation {
     private final Name name;
     private final ReservationTime time;
 
-    public Reservation(Long id, String name, LocalDate reservationStartDate, LocalTime reservationStartTime) {
+    public Reservation(Long id, String name, LocalDate reservationDate, LocalTime reservationStartTime) {
         this.id = id;
         this.name = new Name(name);
-        this.time = new ReservationTime(LocalDateTime.of(reservationStartDate, reservationStartTime));
+        this.time = new ReservationTime(LocalDateTime.of(reservationDate, reservationStartTime));
     }
 
-    public Reservation(String name, LocalDate reservationStartDate, LocalTime reservationStartTime) {
-        this(null, name, reservationStartDate, reservationStartTime);
+    public Reservation(String name, LocalDate reservationDate, LocalTime reservationStartTime) {
+        this(null, name, reservationDate, reservationStartTime);
     }
 
-    public boolean isReservationTimeConflictWith(Reservation other) {
+    public boolean isConflictWith(Reservation other) {
         return time.isConflictWith(other.time);
     }
 

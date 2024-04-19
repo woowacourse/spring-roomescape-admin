@@ -7,25 +7,26 @@ import java.time.LocalTime;
 public class ReservationTime {
     private static final int RESERVATION_DURATION_HOUR = 1;
 
-    private final LocalDateTime startDateTime;
+    private final LocalDateTime reservationStartDateTime;
 
-    public ReservationTime(LocalDateTime startDateTime) {
-        this.startDateTime = startDateTime;
+    public ReservationTime(LocalDateTime reservationStartDateTime) {
+        this.reservationStartDateTime = reservationStartDateTime;
     }
 
     public boolean isConflictWith(ReservationTime other) {
-        return !(endTime().isBefore(other.startDateTime) || startDateTime.isAfter(other.endTime()));
+        return !(endTime().isBefore(other.reservationStartDateTime) || reservationStartDateTime.isAfter(
+                other.endTime()));
     }
 
     private LocalDateTime endTime() {
-        return startDateTime.plusHours(RESERVATION_DURATION_HOUR);
+        return reservationStartDateTime.plusHours(RESERVATION_DURATION_HOUR);
     }
 
     public LocalDate getStartDate() {
-        return startDateTime.toLocalDate();
+        return reservationStartDateTime.toLocalDate();
     }
 
     public LocalTime getStartTime() {
-        return startDateTime.toLocalTime();
+        return reservationStartDateTime.toLocalTime();
     }
 }

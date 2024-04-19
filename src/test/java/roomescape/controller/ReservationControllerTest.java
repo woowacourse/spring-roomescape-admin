@@ -12,7 +12,6 @@ import org.springframework.boot.test.context.SpringBootTest;
 
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.DEFINED_PORT)
 class ReservationControllerTest {
-
     @DisplayName("전체 예약 정보 요청 테스트")
     @Test
     void reservationsTest() {

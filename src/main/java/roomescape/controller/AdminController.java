@@ -1,4 +1,4 @@
-package roomescape;
+package roomescape.controller;
 
 import java.util.List;
 import org.springframework.http.HttpStatus;
@@ -11,6 +11,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import roomescape.dto.Reservation;
 import roomescape.dto.ReservationRequest;
+import roomescape.repository.AdminRepository;
 
 @Controller
 public class AdminController {

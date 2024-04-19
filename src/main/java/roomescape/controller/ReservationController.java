@@ -26,7 +26,8 @@ public class ReservationController {
                 .map(ReservationResponse::from)
                 .toList();
 
-        return ResponseEntity.ok(list);
+        return ResponseEntity.ok()
+                .body(list);
     }
 
     @PostMapping
@@ -35,7 +36,8 @@ public class ReservationController {
         Reservation savedReservation = reservationRepository.save(reservation);
         ReservationResponse reservationResponse = ReservationResponse.from(savedReservation);
 
-        return ResponseEntity.ok(reservationResponse);
+        return ResponseEntity.ok()
+                .body(reservationResponse);
     }
 
     @DeleteMapping("/{id}")

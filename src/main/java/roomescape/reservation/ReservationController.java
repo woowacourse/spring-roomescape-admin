@@ -8,17 +8,16 @@ import java.util.List;
 import java.util.concurrent.atomic.AtomicLong;
 
 @RestController
-@RequestMapping("/reservations")
 public class ReservationController {
     private final List<Reservation> reservations = new ArrayList<>();
     private final AtomicLong atomicLong = new AtomicLong();
 
-    @GetMapping
+    @GetMapping("/reservations")
     public ResponseEntity<List<Reservation>> reservations() {
         return ResponseEntity.ok(reservations);
     }
 
-    @PostMapping
+    @PostMapping("/reservations")
     public ResponseEntity<Reservation> create(@RequestBody ReservationRequest reservationRequest) {
         Reservation reservation = new Reservation(
                 atomicLong.incrementAndGet(),
@@ -30,7 +29,7 @@ public class ReservationController {
         return ResponseEntity.ok(reservation);
     }
 
-    @DeleteMapping("/{id}")
+    @DeleteMapping("/reservations/{id}")
     public ResponseEntity<Void> delete(@PathVariable("id") long id) {
         reservations.removeIf(reservation -> reservation.getId() == id);
         return ResponseEntity.ok().build();

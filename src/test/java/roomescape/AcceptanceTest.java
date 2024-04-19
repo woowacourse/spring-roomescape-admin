@@ -18,7 +18,7 @@ import static org.junit.jupiter.api.DynamicTest.dynamicTest;
 
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.DEFINED_PORT)
 @DirtiesContext(classMode = DirtiesContext.ClassMode.BEFORE_EACH_TEST_METHOD)
-public class MissionStepTest {
+public class AcceptanceTest {
 
     @Test
     @DisplayName("[Step1] 어드민 메인 페이지를 조회한다.")

@@ -24,6 +24,10 @@ public class Reservation {
         this.time = LocalTime.parse(time);
     }
 
+    public boolean hasSameId(long id) {
+        return this.id == id;
+    }
+
     public long getId() {
         return id;
     }

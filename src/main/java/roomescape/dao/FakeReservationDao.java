@@ -24,7 +24,7 @@ public class FakeReservationDao implements ReservationDao {
     public long save(ReservationRequest reservationRequest) {
         long id = index.getAndIncrement();
         Reservation reservation = new Reservation(id, reservationRequest);
-        if (id == reservation.getId()) {
+        if (reservation.hasSameId(id)) {
             reservations.put(id, reservation);
             return id;
         }

@@ -37,7 +37,7 @@ public class ReservationRepositoryImpl implements ReservationRepository {
 
     public Reservation findById(Long id) {
         return reservations.stream()
-                .filter(reservation -> reservation.getId().equals(id))
+                .filter(reservation -> reservation.isSameId(id))
                 .findAny()
                 .orElseThrow(() -> new NoSuchElementException("존재하지 않는 아아디입니다."));
     }

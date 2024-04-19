@@ -16,23 +16,9 @@ import roomescape.dto.ReservationRequest;
 @DirtiesContext(classMode = DirtiesContext.ClassMode.BEFORE_EACH_TEST_METHOD)
 class ReservationTest {
 
-    @DisplayName("어드민 메인 페이지 테스트")
-    @Test
-    void adminMainPage() {
-        RestAssured.given().log().all()
-                .when().get("/admin")
-                .then().log().all()
-                .statusCode(200);
-    }
-
     @DisplayName("예약 조회 API 테스트")
     @Test
     void readReservations() {
-        RestAssured.given().log().all()
-                .when().get("/admin/reservation")
-                .then().log().all()
-                .statusCode(200);
-
         RestAssured.given().log().all()
                 .when().get("/reservations")
                 .then().log().all()

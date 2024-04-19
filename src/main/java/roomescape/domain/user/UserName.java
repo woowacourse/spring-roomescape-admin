@@ -9,9 +9,16 @@ public class UserName {
     private final String name;
 
     public UserName(String name) {
+        validateBlank(name);
         validateLength(name);
         validatePattern(name);
         this.name = name;
+    }
+
+    private void validateBlank(String name) {
+        if (name == null || name.isBlank()) {
+            throw new IllegalArgumentException("이름이 비어있습니다.");
+        }
     }
 
     private void validateLength(String name) {

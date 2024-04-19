@@ -17,9 +17,9 @@ public record ReservationResponse(
     public static ReservationResponse of(Long id, Reservation reservation) {
         return new ReservationResponse(
                 id,
-                reservation.getName(),
-                reservation.getDate(),
-                reservation.getTime()
+                reservation.name(),
+                reservation.date(),
+                reservation.time()
         );
     }
 }

@@ -2,6 +2,7 @@ package roomescape.controller.dto;
 
 import java.time.LocalDate;
 import java.time.LocalTime;
+import roomescape.entity.Reservation;
 
 public class ReservationRequest {
     private String name;
@@ -15,6 +16,10 @@ public class ReservationRequest {
         this.name = name;
         this.date = date;
         this.time = time;
+    }
+
+    public Reservation toEntity() {
+        return new Reservation(name, date, time);
     }
 
     public String getName() {

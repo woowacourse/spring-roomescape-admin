@@ -1,7 +1,5 @@
 package roomescape.controller;
 
-import java.time.LocalDate;
-import java.time.LocalTime;
 import java.util.List;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -28,22 +26,16 @@ public class ReservationController {
 
     @GetMapping()
     public ResponseEntity<List<ReservationResponse>> readAllReservations() {
-        List<ReservationResponse> reservations = reservationService.readAll().stream()
+        List<ReservationResponse> reservations = reservationService.readAll()
+                .stream()
                 .map(ReservationResponse::from)
                 .toList();
         return ResponseEntity.ok().body(reservations);
     }
 
     @PostMapping()
-    public ResponseEntity<ReservationResponse> createReservation(
-            @RequestBody ReservationRequest reservationRequest) {
-
-        String name = reservationRequest.getName();
-        LocalDate date = reservationRequest.getDate();
-        LocalTime time = reservationRequest.getTime();
-
-        Reservation newReservation = new Reservation(name, date, time);
-        Reservation savedReservation = reservationService.saveReservation(newReservation);
+    public ResponseEntity<ReservationResponse> createReservation(@RequestBody ReservationRequest reservationRequest) {
+        Reservation savedReservation = reservationService.saveReservation(reservationRequest.toEntity());
         return ResponseEntity.ok().body(ReservationResponse.from(savedReservation));
     }
 

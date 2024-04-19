@@ -7,7 +7,14 @@ public class Name {
     private final String name;
 
     public Name(String name) {
+        validateNotEmpty(name);
         this.name = name;
+    }
+
+    private void validateNotEmpty(String name) {
+        if (name == null || name.isBlank()) {
+            throw new IllegalArgumentException("이름은 공백일 수 없습니다.");
+        }
     }
 
     public String asText() {

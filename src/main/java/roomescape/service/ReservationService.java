@@ -2,11 +2,10 @@ package roomescape.service;
 
 import java.util.List;
 import org.springframework.stereotype.Service;
-import roomescape.dao.ReservationRepository;
-import roomescape.domain.Reservation;
 import roomescape.controller.dto.ReservationRequest;
 import roomescape.controller.dto.ReservationResponse;
-import roomescape.entity.ReservationEntity;
+import roomescape.dao.ReservationRepository;
+import roomescape.domain.Reservation;
 
 @Service
 public class ReservationService {
@@ -26,8 +25,8 @@ public class ReservationService {
 
     public ReservationResponse scheduleReservation(ReservationRequest request) {
         Reservation reservation = request.toInstance();
-        ReservationEntity entity = reservationRepository.addReservation(reservation);
-        return ReservationResponse.from(entity);
+        Reservation savedReservation = reservationRepository.addReservation(reservation);
+        return ReservationResponse.from(savedReservation);
     }
 
     public void cancelReservation(Long id) {

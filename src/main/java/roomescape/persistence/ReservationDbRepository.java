@@ -28,7 +28,7 @@ public class ReservationDbRepository implements ReservationRepository {
 
     @Override
     public List<Reservation> findAll() {
-        return null;
+        return reservationDao.selectAll();
     }
 
     @Override

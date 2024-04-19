@@ -2,7 +2,7 @@ package roomescape.dto;
 
 import java.time.LocalDate;
 import java.time.LocalTime;
-import roomescape.domain.ReservationInfo;
+import roomescape.domain.Reservation;
 
 public class ReservationResponse {
     private Long id;
@@ -10,11 +10,11 @@ public class ReservationResponse {
     private LocalDate date;
     private LocalTime time;
 
-    public ReservationResponse(ReservationInfo reservationInfo) {
-        this.id = reservationInfo.getId().getId();
-        this.name = reservationInfo.getName().getName();
-        this.date = reservationInfo.getDate();
-        this.time = reservationInfo.getTime();
+    public ReservationResponse(Reservation reservation) {
+        this.id = reservation.getId().getId();
+        this.name = reservation.getName().getName();
+        this.date = reservation.getDate();
+        this.time = reservation.getTime();
     }
 
     public Long getId() {

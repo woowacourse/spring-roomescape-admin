@@ -9,30 +9,30 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
-import roomescape.domain.ReservationInfo;
+import roomescape.domain.Reservation;
 import roomescape.dto.ReservationResponse;
 
 @RestController
 public class RoomescapeRestController {
-    private final List<ReservationInfo> reservationInfos = new ArrayList<>();
+    private final List<Reservation> reservations = new ArrayList<>();
     private final AtomicLong counter = new AtomicLong();
 
     @GetMapping("/reservations")
     public List<ReservationResponse> reservations() {
-        return reservationInfos.stream()
+        return reservations.stream()
                 .map(ReservationResponse::new)
                 .toList();
     }
 
     @PostMapping("/reservations")
-    public ReservationResponse addReservationInfo(@RequestBody ReservationInfo reservationInfo) {
-        ReservationInfo newReservationInfo = ReservationInfo.toEntity(reservationInfo, counter.incrementAndGet());
-        reservationInfos.add(newReservationInfo);
-        return new ReservationResponse(newReservationInfo);
+    public ReservationResponse addReservationInfo(@RequestBody Reservation reservation) {
+        Reservation newReservation = Reservation.toEntity(reservation, counter.incrementAndGet());
+        reservations.add(newReservation);
+        return new ReservationResponse(newReservation);
     }
 
     @DeleteMapping("/reservations/{id}")
     public void deleteReservationInfo(@PathVariable Long id) {
-        reservationInfos.removeIf(reservationInfo -> reservationInfo.getId().getId().equals(id));
+        reservations.removeIf(reservation -> reservation.getId().getId().equals(id));
     }
 }

@@ -64,7 +64,7 @@ public class MissionStepTest {
                 .body(params)
                 .when().post("/reservations")
                 .then().log().all()
-                .statusCode(HttpStatus.SC_OK)
+                .statusCode(HttpStatus.SC_CREATED)
                 .body("id", is(1));
 
         RestAssured.given().log().all()
@@ -76,7 +76,7 @@ public class MissionStepTest {
         RestAssured.given().log().all()
                 .when().delete("/reservations/1")
                 .then().log().all()
-                .statusCode(HttpStatus.SC_OK);
+                .statusCode(HttpStatus.SC_NO_CONTENT);
 
         RestAssured.given().log().all()
                 .when().get("/reservations")
@@ -127,21 +127,22 @@ public class MissionStepTest {
                 "time", "10:00"
         );
 
-        Reservation reservation = RestAssured.given().log().all()
+        String location = RestAssured.given().log().all()
                 .contentType(ContentType.JSON)
                 .body(params)
                 .when().post("/reservations")
                 .then().log().all()
-                .statusCode(HttpStatus.SC_OK).extract()
-                .jsonPath().getObject(".", Reservation.class);
+                .statusCode(HttpStatus.SC_CREATED)
+                .extract()
+                .header("Location");
 
         Integer count = jdbcTemplate.queryForObject("SELECT count(*) from reservation", Integer.class);
         assertThat(count).isEqualTo(1);
 
         RestAssured.given().log().all()
-                .when().delete("/reservations/" + reservation.getId())
+                .when().delete(location)
                 .then().log().all()
-                .statusCode(HttpStatus.SC_OK);
+                .statusCode(HttpStatus.SC_NO_CONTENT);
 
         Integer countAfterDelete = jdbcTemplate.queryForObject("SELECT count(*) from reservation", Integer.class);
         assertThat(countAfterDelete).isEqualTo(0);

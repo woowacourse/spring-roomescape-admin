@@ -9,6 +9,7 @@ import roomescape.dto.ReservationSaveRequest;
 import roomescape.mapper.ReservationMapper;
 import roomescape.repository.ReservationRepository;
 
+import java.net.URI;
 import java.util.List;
 
 @Controller
@@ -42,13 +43,14 @@ public class ReservationController {
         long saveId = reservationRepository.save(reservation);
 
         ReservationResponse response = reservationMapper.mapToResponse(saveId, reservation);
-        return ResponseEntity.ok(response);
+        URI location = URI.create("/reservations/" + saveId);
+        return ResponseEntity.created(location).body(response);
     }
 
     @DeleteMapping("/reservations/{id}")
     public ResponseEntity<Void> deleteReservation(@PathVariable Long id) {
         reservationRepository.deleteById(id);
 
-        return ResponseEntity.ok().build();
+        return ResponseEntity.noContent().build();
     }
 }

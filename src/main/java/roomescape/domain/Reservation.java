@@ -10,10 +10,10 @@ public class Reservation {
     private static final long NO_ID = 0;
 
     private final long id;
-    private final String name;
+    private final Name name;
     private final LocalDateTime dateTime;
 
-    public Reservation(long id, String name, LocalDateTime dateTime) {
+    public Reservation(long id, Name name, LocalDateTime dateTime) {
         this.id = id;
         this.name = name;
         this.dateTime = dateTime;
@@ -24,7 +24,7 @@ public class Reservation {
     }
 
     public Reservation(String name, String date, String time) {
-        this(NO_ID, name, LocalDateTime.of(LocalDate.parse(date), LocalTime.parse(time)));
+        this(NO_ID, new Name(name), LocalDateTime.of(LocalDate.parse(date), LocalTime.parse(time)));
     }
 
     public long getId() {
@@ -32,7 +32,7 @@ public class Reservation {
     }
 
     public String getName() {
-        return name;
+        return name.getValue();
     }
 
     public String getDate() {

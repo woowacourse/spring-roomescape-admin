@@ -1,12 +1,10 @@
 package roomescape.service.dto;
 
 import java.time.LocalTime;
-import java.time.format.DateTimeFormatter;
 import roomescape.domain.ReservationTime;
+import roomescape.utils.TimeFormatter;
 
 public class ReservationTimeDto {
-
-    private static final DateTimeFormatter TIME_FORMATTER = DateTimeFormatter.ofPattern("HH:mm");
 
     private final Long id;
     private final String time;
@@ -17,7 +15,7 @@ public class ReservationTimeDto {
     }
 
     public ReservationTimeDto(Long id, LocalTime time) {
-        this(id, TIME_FORMATTER.format(time));
+        this(id, TimeFormatter.format(time));
     }
 
     public ReservationTimeDto(LocalTime time) {

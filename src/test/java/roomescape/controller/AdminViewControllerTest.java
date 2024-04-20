@@ -11,7 +11,7 @@ import org.springframework.http.HttpStatus;
 class AdminViewControllerTest extends BaseControllerTest {
 
     @ParameterizedTest
-    @ValueSource(strings = {"/admin", "/admin/reservation"})
+    @ValueSource(strings = {"/admin", "/admin/reservation", "/admin/time"})
     void adminPage(String path) {
         // given & when
         Response response = RestAssured.given().log().all()

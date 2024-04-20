@@ -10,6 +10,7 @@ import org.springframework.jdbc.core.namedparam.MapSqlParameterSource;
 import org.springframework.jdbc.core.simple.SimpleJdbcInsert;
 import org.springframework.stereotype.Repository;
 import roomescape.domain.Reservation;
+import roomescape.domain.ReservationTime;
 
 @Repository
 public class H2ReservationRepository implements ReservationRepository {
@@ -20,7 +21,11 @@ public class H2ReservationRepository implements ReservationRepository {
         Long id = rs.getLong("id");
         String name = rs.getString("name");
         LocalDate date = rs.getObject("date", LocalDate.class);
-        LocalTime time = rs.getObject("time", LocalTime.class);
+
+        ReservationTime time = new ReservationTime(
+                rs.getLong("time_id"),
+                rs.getObject("start_at", LocalTime.class)
+        );
 
         return new Reservation(id, name, date, time);
     };
@@ -34,7 +39,17 @@ public class H2ReservationRepository implements ReservationRepository {
 
     @Override
     public List<Reservation> findAll() {
-        String sql = "SELECT * FROM reservation";
+        String sql = """
+                    SELECT
+                        r.id as reservation_id,
+                        r.name,
+                        r.date,
+                        t.id as time_id,
+                        t.start_at as time_value
+                    FROM reservation as r
+                    inner join reservation_time as t
+                    on r.time_id = t.id
+                """;
 
         return jdbcTemplate.query(sql, rowMapper);
     }
@@ -44,7 +59,7 @@ public class H2ReservationRepository implements ReservationRepository {
         MapSqlParameterSource params = new MapSqlParameterSource()
                 .addValue("name", reservation.getName())
                 .addValue("date", reservation.getDate())
-                .addValue("time", reservation.getTime());
+                .addValue("time_id", reservation.getTimeId());
 
         Long id = simpleJdbcInsert.executeAndReturnKey(params).longValue();
 

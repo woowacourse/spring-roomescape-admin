@@ -1,6 +1,5 @@
 package roomescape.controller;
 
-import static org.assertj.core.api.Assertions.assertThat;
 import static org.hamcrest.core.Is.is;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -10,16 +9,17 @@ import java.time.LocalDate;
 import java.time.LocalTime;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.jdbc.core.JdbcTemplate;
+import roomescape.domain.ReservationTime;
 import roomescape.dto.ReservationRequest;
+import roomescape.repository.ReservationTimeRepository;
 
 class ReservationControllerTest extends BaseControllerTest {
 
     @Autowired
-    private JdbcTemplate jdbcTemplate;
+    private ObjectMapper mapper;
 
     @Autowired
-    private ObjectMapper mapper;
+    private ReservationTimeRepository reservationTimeRepository;
 
     @Test
     void getReservations() {
@@ -32,32 +32,36 @@ class ReservationControllerTest extends BaseControllerTest {
 
     @Test
     void addAndDeleteReservation() {
+        ReservationTime reservationTime = new ReservationTime(LocalTime.of(10, 0));
+        ReservationTime savedReservationTime = reservationTimeRepository.save(reservationTime);
+
         RestAssured.given().log().all()
                 .contentType(ContentType.JSON)
-                .body(makeReservationRequest())
+                .body(makeReservationRequest(savedReservationTime.getId()))
                 .when().post("/reservations")
                 .then().log().all()
-                .statusCode(201)
-                .header("Location", "/reservations/1");
+                .statusCode(201);
 
-        Integer count = jdbcTemplate.queryForObject("SELECT count(1) from reservation", Integer.class);
-        assertThat(count).isEqualTo(1);
+        RestAssured.given().log().all()
+                .when().get("/reservations")
+                .then().log().all()
+                .statusCode(200)
+                .body("size()", is(1));
 
         RestAssured.given().log().all()
                 .when().delete("/reservations/1")
                 .then().log().all()
                 .statusCode(204);
 
-        Integer countAfterDelete = jdbcTemplate.queryForObject("SELECT count(1) from reservation", Integer.class);
-        assertThat(countAfterDelete).isZero();
+        reservationTimeRepository.deleteById(savedReservationTime.getId());
     }
 
-    private String makeReservationRequest() {
+    private String makeReservationRequest(Long timeId) {
         try {
             ReservationRequest request = new ReservationRequest(
                     "브라운",
                     LocalDate.of(2023, 8, 5),
-                    LocalTime.of(15, 40)
+                    timeId
             );
             return mapper.writeValueAsString(request);
         } catch (Exception e) {

@@ -2,6 +2,7 @@ package roomescape.repository;
 
 import java.time.LocalTime;
 import java.util.List;
+import java.util.Optional;
 import javax.sql.DataSource;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;
@@ -34,6 +35,13 @@ public class H2ReservationTimeRepository implements ReservationTimeRepository {
         String sql = "SELECT * FROM reservation_time";
 
         return jdbcTemplate.query(sql, rowMapper);
+    }
+
+    @Override
+    public Optional<ReservationTime> findById(Long id) {
+        String sql = "SELECT * FROM reservation_time WHERE id = ?";
+
+        return jdbcTemplate.query(sql, rowMapper, id).stream().findAny();
     }
 
     @Override

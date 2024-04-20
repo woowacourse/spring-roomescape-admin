@@ -4,18 +4,23 @@ import java.util.List;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import roomescape.domain.Reservation;
+import roomescape.domain.ReservationTime;
 import roomescape.dto.ReservationRequest;
 import roomescape.dto.ReservationResponse;
 import roomescape.repository.ReservationRepository;
+import roomescape.repository.ReservationTimeRepository;
 
 @Service
 @Transactional(readOnly = true)
 public class ReservationService {
 
     private final ReservationRepository reservationRepository;
+    private final ReservationTimeRepository reservationTimeRepository;
 
-    public ReservationService(ReservationRepository reservationRepository) {
+    public ReservationService(ReservationRepository reservationRepository,
+                              ReservationTimeRepository reservationTimeRepository) {
         this.reservationRepository = reservationRepository;
+        this.reservationTimeRepository = reservationTimeRepository;
     }
 
     public List<ReservationResponse> getAllReservations() {
@@ -28,7 +33,10 @@ public class ReservationService {
 
     @Transactional
     public ReservationResponse addReservation(ReservationRequest reservationRequest) {
-        Reservation reservation = reservationRequest.toReservation();
+        ReservationTime reservationTime = reservationTimeRepository.findById(reservationRequest.timeId())
+                .orElseThrow(() -> new IllegalArgumentException("존재하지 않는 시간입니다."));
+
+        Reservation reservation = reservationRequest.toReservation(reservationTime);
         Reservation savedReservation = reservationRepository.save(reservation);
 
         return ReservationResponse.from(savedReservation);

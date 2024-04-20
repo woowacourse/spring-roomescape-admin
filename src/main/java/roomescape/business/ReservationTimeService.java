@@ -5,6 +5,8 @@ import roomescape.domain.ReservationTime;
 import roomescape.dto.ReservationTimeResponse;
 import roomescape.persistence.ReservationTimeRepository;
 
+import java.util.List;
+
 @Service
 public class ReservationTimeService {
     private final ReservationTimeRepository reservationTimeRepository;
@@ -16,5 +18,9 @@ public class ReservationTimeService {
     public ReservationTimeResponse create(ReservationTime reservationTime) {
         var savedReservationTime = reservationTimeRepository.save(reservationTime);
         return ReservationTimeResponse.from(savedReservationTime);
+    }
+
+    public List<ReservationTimeResponse> getReservationTimes() {
+        return null;
     }
 }

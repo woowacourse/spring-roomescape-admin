@@ -20,7 +20,7 @@ class AdminPageAcceptanceTest {
 
     @DisplayName("어드민 메인 페이지 조회")
     @Test
-    void get_welcomePage() {
+    void get_adminMainPage() {
         RestAssured.given().log().all()
                 .when().get("/admin")
                 .then().log().all()

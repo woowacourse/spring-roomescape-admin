@@ -43,7 +43,7 @@ class ReservationAcceptanceTest {
                 .body("size()", is(1));
     }
 
-    @DisplayName("예약 추가")
+    @DisplayName("예약 생성")
     @Test
     void post_reservation() {
         jdbcTemplate.update("INSERT INTO reservation_time (start_at) VALUES ?", "15:00");

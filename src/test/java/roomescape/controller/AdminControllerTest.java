@@ -38,4 +38,13 @@ class AdminControllerTest {
                 .then().log().all()
                 .statusCode(200);
     }
+
+    @DisplayName("시간 화면 조회")
+    @Test
+    void time() {
+        RestAssured.given().log().all()
+                .when().get("/admin/time")
+                .then().log().all()
+                .statusCode(200);
+    }
 }

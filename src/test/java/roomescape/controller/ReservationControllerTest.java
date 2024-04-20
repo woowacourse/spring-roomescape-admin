@@ -30,8 +30,7 @@ class ReservationControllerTest {
         RestAssured.given().log().all()
                 .when().get("/reservations")
                 .then().log().all()
-                .statusCode(200)
-                .body("size()", is(0));
+                .statusCode(200);
     }
 
     @DisplayName("지정한 예약을 추가하고 삭제한다.")

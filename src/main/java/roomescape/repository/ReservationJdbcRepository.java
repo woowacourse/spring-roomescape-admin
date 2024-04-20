@@ -1,5 +1,6 @@
 package roomescape.repository;
 
+import java.io.Serializable;
 import java.util.List;
 import java.util.Map;
 import org.springframework.jdbc.core.JdbcTemplate;
@@ -7,9 +8,10 @@ import org.springframework.jdbc.core.RowMapper;
 import org.springframework.jdbc.core.simple.SimpleJdbcInsert;
 import org.springframework.stereotype.Repository;
 import roomescape.domain.Reservation;
+import roomescape.domain.ReservationTime;
 import roomescape.service.dto.ReservationDto;
 
-@Repository("JdbcRepository")
+@Repository
 public class ReservationJdbcRepository implements ReservationRepository {
 
     private static final RowMapper<Reservation> ROW_MAPPER = (resultSet, rowNum) ->
@@ -17,7 +19,10 @@ public class ReservationJdbcRepository implements ReservationRepository {
                     Long.valueOf(resultSet.getString("id")),
                     resultSet.getString("name"),
                     resultSet.getString("date"),
-                    resultSet.getString("time")
+                    new ReservationTime(
+                            resultSet.getLong("time_id"),
+                            resultSet.getString("start_at")
+                    )
             );
 
     private final JdbcTemplate jdbcTemplate;
@@ -27,16 +32,16 @@ public class ReservationJdbcRepository implements ReservationRepository {
         this.jdbcTemplate = jdbcTemplate;
         this.jdbcInsert = new SimpleJdbcInsert(jdbcTemplate)
                 .withTableName("reservation")
-                .usingColumns("name", "date", "time")
+                .usingColumns("name", "date", "time_id")
                 .usingGeneratedKeyColumns("id");
     }
 
     @Override
     public Reservation addReservation(ReservationDto reservationDto) {
-        Map<String, String> parameters = Map.of(
+        Map<String, ? extends Serializable> parameters = Map.of(
                 "name", reservationDto.getName(),
                 "date", reservationDto.getDate(),
-                "time", reservationDto.getTime()
+                "time_id", reservationDto.getTime().getId()
         );
         Number key = jdbcInsert.executeAndReturnKey(parameters);
         return reservationDto.toEntity(key.longValue());
@@ -44,7 +49,11 @@ public class ReservationJdbcRepository implements ReservationRepository {
 
     @Override
     public List<Reservation> findAll() {
-        String sql = "select id, name, date, time from reservation";
+        String sql = """
+                select reservation.id as id, name, date, time_id, start_at \s
+                from reservation left join reservation_time \s
+                on time_id = reservation_time.id
+                """;
         return jdbcTemplate.query(sql, ROW_MAPPER);
     }
 

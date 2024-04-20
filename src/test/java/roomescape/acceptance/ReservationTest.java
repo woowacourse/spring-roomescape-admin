@@ -4,21 +4,26 @@ import static org.hamcrest.Matchers.is;
 
 import io.restassured.RestAssured;
 import io.restassured.http.ContentType;
+import java.time.LocalTime;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Qualifier;
 import roomescape.controller.dto.ReservationRequest;
 import roomescape.domain.Reservation;
+import roomescape.domain.ReservationTime;
 import roomescape.repository.ReservationRepository;
+import roomescape.repository.ReservationTimeRepository;
 import roomescape.service.dto.ReservationDto;
+import roomescape.service.dto.ReservationTimeDto;
 
 class ReservationTest extends AcceptanceTest {
 
     @Autowired
-    @Qualifier("JdbcRepository")
     private ReservationRepository reservationRepository;
+
+    @Autowired
+    private ReservationTimeRepository reservationTimeRepository;
 
     @AfterEach
     void tearDown() {
@@ -38,7 +43,9 @@ class ReservationTest extends AcceptanceTest {
     @Test
     @DisplayName("예약을 성공적으로 추가한다.")
     void addReservationTest() {
-        ReservationRequest request = new ReservationRequest("브라운", "2023-08-05", "15:40");
+        ReservationTimeDto timeCreationDto = new ReservationTimeDto(LocalTime.parse("12:00"));
+        ReservationTime reservationTime = reservationTimeRepository.create(timeCreationDto);
+        ReservationRequest request = new ReservationRequest("브라운", "2023-08-05", reservationTime.getId());
 
         RestAssured.given().log().all()
                 .contentType(ContentType.JSON)
@@ -58,7 +65,11 @@ class ReservationTest extends AcceptanceTest {
     @Test
     @DisplayName("예약을 성공적으로 삭제한다.")
     void deleteReservationTest() {
-        ReservationDto reservationDto = new ReservationDto(null, "웨지", "2024-04-19", "10:00");
+        ReservationTimeDto timeCreationDto = new ReservationTimeDto(LocalTime.parse("12:00"));
+        ReservationTime reservationTime = reservationTimeRepository.create(timeCreationDto);
+        ReservationDto reservationDto = new ReservationDto(
+                "웨지", "2024-04-20", ReservationTimeDto.from(reservationTime)
+        );
         Reservation reservation = reservationRepository.addReservation(reservationDto);
 
         RestAssured.given().log().all()

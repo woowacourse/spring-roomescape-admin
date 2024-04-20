@@ -6,7 +6,7 @@ import roomescape.domain.ReservationTime;
 
 public class ReservationTimeDto {
 
-    private static final DateTimeFormatter TIME_FORMATTER = DateTimeFormatter.ofPattern("hh:mm");
+    private static final DateTimeFormatter TIME_FORMATTER = DateTimeFormatter.ofPattern("HH:mm");
 
     private final Long id;
     private final String time;
@@ -30,6 +30,13 @@ public class ReservationTimeDto {
 
     public ReservationTime toEntity(Long id) {
         return new ReservationTime(id, time);
+    }
+
+    public ReservationTime toEntity() {
+        if (id == null) {
+            throw new IllegalStateException("ID가 존재하지 않습니다.");
+        }
+        return toEntity(id);
     }
 
     public Long getId() {

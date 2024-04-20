@@ -1,21 +1,25 @@
 package roomescape.service;
 
 import java.util.List;
-import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Service;
 import roomescape.controller.dto.ReservationRequest;
 import roomescape.controller.dto.ReservationResponse;
 import roomescape.domain.Reservation;
+import roomescape.domain.ReservationTime;
 import roomescape.repository.ReservationRepository;
+import roomescape.repository.ReservationTimeRepository;
 import roomescape.service.dto.ReservationDto;
 
 @Service
 public class ReservationService {
 
     private final ReservationRepository reservationRepository;
+    private final ReservationTimeRepository reservationTimeRepository;
 
-    public ReservationService(@Qualifier("JdbcRepository") ReservationRepository reservationRepository) {
+    public ReservationService(ReservationRepository reservationRepository,
+                              ReservationTimeRepository reservationTimeRepository) {
         this.reservationRepository = reservationRepository;
+        this.reservationTimeRepository = reservationTimeRepository;
     }
 
     public List<ReservationResponse> getAllReservations() {
@@ -26,8 +30,10 @@ public class ReservationService {
     }
 
     public ReservationResponse scheduleReservation(ReservationRequest request) {
-        ReservationDto reservationDto = ReservationDto.from(request.toInstance());
-        Reservation savedReservation = reservationRepository.addReservation(reservationDto);
+        ReservationTime reservationTime = reservationTimeRepository.findById(request.timeId());
+        Reservation reservation = request.toInstance(reservationTime);
+        ReservationDto dto = ReservationDto.from(reservation);
+        Reservation savedReservation = reservationRepository.addReservation(dto);
         return ReservationResponse.from(savedReservation);
     }
 

@@ -11,6 +11,7 @@ import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import roomescape.controller.dto.ReservationTimeRequest;
+import roomescape.controller.dto.ReservationTimeResponse;
 import roomescape.domain.ReservationTime;
 import roomescape.repository.ReservationTimeRepository;
 import roomescape.service.dto.ReservationTimeDto;
@@ -29,13 +30,16 @@ public class ReservationTimeTest extends AcceptanceTest {
     @DisplayName("시각을 추가한다.")
     void createTimeTest() {
         ReservationTimeRequest request = new ReservationTimeRequest("13:00");
-        RestAssured.given().log().all()
+        ReservationTimeResponse response = RestAssured.given().log().all()
                 .contentType(ContentType.JSON)
                 .body(request)
                 .when().post("/times")
                 .then().log().all()
                 .statusCode(200)
-                .body("id", is(1));
+                .extract()
+                .as(ReservationTimeResponse.class);
+
+        assertThat(response.startAt()).isEqualTo("13:00");
     }
 
     @Test

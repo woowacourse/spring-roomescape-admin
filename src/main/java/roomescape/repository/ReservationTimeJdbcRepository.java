@@ -45,6 +45,12 @@ public class ReservationTimeJdbcRepository implements ReservationTimeRepository 
     }
 
     @Override
+    public ReservationTime findById(Long id) {
+        String sql = "select id, start_at from reservation_time where id = ?";
+        return jdbcTemplate.queryForObject(sql, ROW_MAPPER, id);
+    }
+
+    @Override
     public void deleteById(Long id) {
         String sql = "delete from reservation_time where id = ?";
         jdbcTemplate.update(sql, id);

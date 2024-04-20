@@ -9,22 +9,21 @@ import roomescape.domain.ReservationTime;
 public class ReservationDto {
 
     private static final DateTimeFormatter DATE_FORMATTER = DateTimeFormatter.ofPattern("yyyy-MM-dd");
-    private static final DateTimeFormatter TIME_FORMATTER = DateTimeFormatter.ofPattern("hh:mm");
 
     private final Long id;
     private final String name;
     private final String date;
-    private final String time;
+    private final ReservationTimeDto time;
 
-    public ReservationDto(Long id, String name, String date, String time) {
+    public ReservationDto(Long id, String name, String date, ReservationTimeDto reservationTimeDto) {
         this.id = id;
         this.name = name;
         this.date = date;
-        this.time = time;
+        this.time = reservationTimeDto;
     }
 
-    public ReservationDto(String name, String date, String time) {
-        this(null, name, date, time);
+    public ReservationDto(String name, String date, ReservationTimeDto reservationTimeDto) {
+        this(null, name, date, reservationTimeDto);
     }
 
     public static ReservationDto from(Reservation reservation) {
@@ -36,12 +35,12 @@ public class ReservationDto {
                 reservation.getId(),
                 name.asText(),
                 DATE_FORMATTER.format(date.getDate()),
-                TIME_FORMATTER.format(time.getTime())
+                ReservationTimeDto.from(time)
         );
     }
 
     public Reservation toEntity(Long id) {
-        return new Reservation(id, name, date, time);
+        return new Reservation(id, name, date, time.toEntity());
     }
 
     public Long getId() {
@@ -56,7 +55,7 @@ public class ReservationDto {
         return date;
     }
 
-    public String getTime() {
+    public ReservationTimeDto getTime() {
         return time;
     }
 }

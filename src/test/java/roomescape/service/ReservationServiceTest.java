@@ -4,36 +4,46 @@ import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 
 import java.util.List;
+import java.util.Map;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import roomescape.controller.dto.ReservationRequest;
 import roomescape.controller.dto.ReservationResponse;
 import roomescape.domain.Reservation;
-import roomescape.repository.ReservationInMemoryRepository;
+import roomescape.domain.ReservationTime;
+import roomescape.repository.InMemoryReservationRepository;
+import roomescape.repository.InMemoryReservationTimeRepository;
 import roomescape.repository.ReservationRepository;
+import roomescape.repository.ReservationTimeRepository;
 import roomescape.service.dto.ReservationDto;
+import roomescape.service.dto.ReservationTimeDto;
 
 class ReservationServiceTest {
 
-    private final ReservationRepository reservationRepository = new ReservationInMemoryRepository();
-    private final ReservationService reservationService = new ReservationService(reservationRepository);
+    private ReservationRepository reservationRepository;
+    private ReservationTimeRepository reservationTimeRepository;
+    private ReservationService reservationService;
 
     @BeforeEach
     void setUp() {
-        reservationRepository.deleteAll();
+        reservationRepository = new InMemoryReservationRepository();
+        reservationTimeRepository = new InMemoryReservationTimeRepository(
+                Map.of(1L, new ReservationTime(1L, "13:00"))
+        );
+        reservationService = new ReservationService(reservationRepository, reservationTimeRepository);
     }
 
     @Test
     @DisplayName("예약을 추가한다.")
     void scheduleReservationTest() {
         // given
-        ReservationRequest request = new ReservationRequest("브라운", "2023-08-05", "15:40");
+        ReservationRequest request = new ReservationRequest("브라운", "2023-08-05", 1L);
         // when
-        reservationService.scheduleReservation(request);
-        List<Reservation> actual = reservationRepository.findAll();
+        ReservationResponse response = reservationService.scheduleReservation(request);
         // then
-        assertThat(actual).hasSize(1);
+        List<Reservation> reservations = reservationRepository.findAll();
+        assertThat(response.id()).isEqualTo(reservations.get(0).getId());
     }
 
     @Test
@@ -41,9 +51,9 @@ class ReservationServiceTest {
     void getAllReservationsTest() {
         // given
         List<ReservationDto> reservations = List.of(
-                new ReservationDto("웨지", "2024-04-17", "15:00"),
-                new ReservationDto("아루", "2023-04-18", "13:00"),
-                new ReservationDto("브리", "2023-04-19", "16:00")
+                new ReservationDto("웨지", "2024-04-17", new ReservationTimeDto(1L, "13:00")),
+                new ReservationDto("아루", "2023-04-18", new ReservationTimeDto(1L, "13:00")),
+                new ReservationDto("브리", "2023-04-19", new ReservationTimeDto(1L, "13:00"))
         );
         reservations.forEach(reservationRepository::addReservation);
         // when
@@ -57,7 +67,7 @@ class ReservationServiceTest {
     void cancelReservationTest() {
         // given
         Reservation reservation = reservationRepository.addReservation(
-                new ReservationDto("웨지", "2024-04-17", "15:00"));
+                new ReservationDto("웨지", "2024-04-17", new ReservationTimeDto(1L, "13:00")));
         // when
         reservationService.cancelReservation(reservation.getId());
         List<Reservation> actual = reservationRepository.findAll();

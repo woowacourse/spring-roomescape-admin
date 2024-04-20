@@ -25,8 +25,9 @@ public class ReservationTimeService {
     }
 
     public ReservationTimeResponse addTime(ReservationTimeRequest request) {
-        ReservationTimeDto reservationTimeDto = ReservationTimeDto.from(request.toInstance());
-        ReservationTime newReservationTime = reservationTimeRepository.create(reservationTimeDto);
+        ReservationTime reservationTime = request.toInstance();
+        ReservationTimeDto dto = ReservationTimeDto.from(reservationTime);
+        ReservationTime newReservationTime = reservationTimeRepository.create(dto);
         return ReservationTimeResponse.from(newReservationTime);
     }
 

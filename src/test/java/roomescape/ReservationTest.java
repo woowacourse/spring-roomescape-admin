@@ -8,13 +8,18 @@ import java.time.LocalDate;
 import java.time.LocalTime;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.test.annotation.DirtiesContext;
 import roomescape.dto.ReservationRequest;
 
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.DEFINED_PORT)
 @DirtiesContext(classMode = DirtiesContext.ClassMode.BEFORE_EACH_TEST_METHOD)
 class ReservationTest {
+
+    @Autowired
+    private JdbcTemplate jdbcTemplate;
 
     @DisplayName("예약 조회 API 테스트")
     @Test
@@ -29,8 +34,9 @@ class ReservationTest {
     @DisplayName("예약 추가 API 테스트")
     @Test
     void createReservation() {
-        ReservationRequest reservationRequest = new ReservationRequest("브라운", LocalDate.of(2023, 8, 5),
-                LocalTime.of(15, 40));
+        jdbcTemplate.update("INSERT INTO reservation_time (start_at) VALUES(?)", LocalTime.of(10, 0));
+
+        ReservationRequest reservationRequest = new ReservationRequest("브라운", LocalDate.of(2023, 8, 5), 1L);
 
         RestAssured.given().log().all()
                 .contentType(ContentType.JSON)
@@ -50,8 +56,8 @@ class ReservationTest {
     @DisplayName("예약 취소 API 테스트")
     @Test
     void deleteReservation() {
-        ReservationRequest reservationRequest = new ReservationRequest("브라운", LocalDate.of(2023, 8, 5),
-                LocalTime.of(15, 40));
+        jdbcTemplate.update("INSERT INTO reservation_time (start_at) VALUES(?)", LocalTime.of(10, 0));
+        ReservationRequest reservationRequest = new ReservationRequest("브라운", LocalDate.of(2023, 8, 5), 1L);
 
         RestAssured.given().log().all()
                 .contentType(ContentType.JSON)

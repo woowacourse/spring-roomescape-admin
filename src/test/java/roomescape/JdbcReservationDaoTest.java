@@ -1,6 +1,7 @@
 package roomescape;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.hamcrest.Matchers.is;
 
 import io.restassured.RestAssured;
 import io.restassured.http.ContentType;
@@ -26,7 +27,8 @@ class JdbcReservationDaoTest {
     @DisplayName("DB에서 모든 예약 조회 테스트")
     @Test
     void findAllReservations() {
-        jdbcTemplate.update("INSERT INTO reservation (name, date, time) VALUES (?, ?, ?)", "브라운", "2023-08-05", "15:40");
+        jdbcTemplate.update("INSERT INTO reservation_time (start_at) VALUES(?)", LocalTime.of(10, 0));
+        jdbcTemplate.update("INSERT INTO reservation (name, date, time_id) VALUES (?, ?, ?)", "브라운", LocalDate.of(2023, 8, 5), 1L);
 
         List<Reservation> reservations = RestAssured.given().log().all()
                 .when().get("/reservations")
@@ -42,8 +44,8 @@ class JdbcReservationDaoTest {
     @DisplayName("DB에 예약 추가 테스트")
     @Test
     void insert() {
-        ReservationRequest reservationRequest = new ReservationRequest("브라운", LocalDate.of(2023, 8, 5),
-                LocalTime.of(10, 0));
+        jdbcTemplate.update("INSERT INTO reservation_time (start_at) VALUES(?)", LocalTime.of(10, 0));
+        ReservationRequest reservationRequest = new ReservationRequest("브라운", LocalDate.of(2023, 8, 5), 1L);
 
         RestAssured.given().log().all()
                 .contentType(ContentType.JSON)
@@ -60,11 +62,11 @@ class JdbcReservationDaoTest {
     @DisplayName("DB에 예약 삭제 테스트")
     @Test
     void delete() {
-        String sql = "INSERT INTO reservation (name, date, time) VALUES(?, ?, ?)";
-        ReservationRequest reservationRequest = new ReservationRequest("브라운", LocalDate.of(2023, 8, 5),
-                LocalTime.of(10, 0));
+        jdbcTemplate.update("INSERT INTO reservation_time (start_at) VALUES(?)", LocalTime.of(10, 0));
+        String sql = "INSERT INTO reservation (name, date, time_id) VALUES(?, ?, ?)";
+        ReservationRequest reservationRequest = new ReservationRequest("브라운", LocalDate.of(2023, 8, 5), 1L);
 
-        jdbcTemplate.update(sql, reservationRequest.name(), reservationRequest.date(), reservationRequest.time());
+        jdbcTemplate.update(sql, reservationRequest.name(), reservationRequest.date(), reservationRequest.timeId());
 
         RestAssured.given().log().all()
                 .when().delete("/reservations/1")
@@ -74,4 +76,25 @@ class JdbcReservationDaoTest {
         Integer countAfterDelete = jdbcTemplate.queryForObject("SELECT count(1) from reservation", Integer.class);
         assertThat(countAfterDelete).isZero();
     }
+
+    @Test
+    void 팔단계() {
+        jdbcTemplate.update("INSERT INTO reservation_time (start_at) VALUES(?)", LocalTime.of(10, 0));
+        ReservationRequest reservationRequest = new ReservationRequest("브라운", LocalDate.of(2023, 8, 5), 1L);
+
+        RestAssured.given().log().all()
+                .contentType(ContentType.JSON)
+                .body(reservationRequest)
+                .when().post("/reservations")
+                .then().log().all()
+                .statusCode(201);
+
+
+        RestAssured.given().log().all()
+                .when().get("/reservations")
+                .then().log().all()
+                .statusCode(200)
+                .body("size()", is(1));
+    }
+
 }

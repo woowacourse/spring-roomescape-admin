@@ -42,7 +42,7 @@ class ReservationTimeDaoTest {
                 .statusCode(200);
     }
 
-    @DisplayName("시간 조회 API 테스트")
+    @DisplayName("모든 시간 조회 API 테스트")
     @Test
     void findAllReservationTimes() {
         RestAssured.given().log().all()

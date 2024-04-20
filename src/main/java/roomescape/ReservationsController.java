@@ -11,35 +11,26 @@ import java.net.URI;
 import java.util.List;
 
 @Controller
-public class RoomescapeController {
+@RequestMapping("/reservations")
+public class ReservationsController {
 
     @Autowired
     private ReservationRepository reservationRepository;
 
-    @GetMapping("/admin")
-    public String index() {
-        return "admin/index";
-    }
-
-    @GetMapping("/admin/reservation")
-    public String reservation() {
-        return "admin/reservation-legacy";
-    }
-
-    @GetMapping("/reservations")
+    @GetMapping
     @ResponseBody
     public List<Reservation> reservations() {
         return reservationRepository.findAll();
     }
 
-    @PostMapping("/reservations")
+    @PostMapping
     public ResponseEntity<Reservation> addReservationInfo(@RequestBody RequestReservation requestReservation) {
         Long id = reservationRepository.add(requestReservation);
         return ResponseEntity.created(URI.create("/reservations/" + id))
                 .build();
     }
 
-    @DeleteMapping("/reservations/{id}")
+    @DeleteMapping("/{id}")
     @ResponseStatus(HttpStatus.NO_CONTENT)
     public void deleteReservationInfo(@PathVariable Long id) {
         reservationRepository.remove(id);

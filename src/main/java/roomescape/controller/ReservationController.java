@@ -1,13 +1,16 @@
 package roomescape.controller;
 
+import java.net.URI;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
 import java.util.concurrent.atomic.AtomicLong;
 
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.jdbc.core.JdbcTemplate;
+import org.springframework.jdbc.core.simple.SimpleJdbcInsert;
 import org.springframework.web.bind.annotation.*;
 import roomescape.dto.ReservationSaveRequest;
 import roomescape.dto.ReservationResponse;
@@ -18,11 +21,15 @@ import roomescape.model.Reservation;
 public class ReservationController {
 
     private final JdbcTemplate jdbcTemplate;
+    private final SimpleJdbcInsert reservationInsert;
     private final AtomicLong id = new AtomicLong(1);
     private final List<Reservation> reservations = new ArrayList<>();
 
     public ReservationController(final JdbcTemplate jdbcTemplate) {
         this.jdbcTemplate = jdbcTemplate;
+        this.reservationInsert = new SimpleJdbcInsert(jdbcTemplate)
+                .withTableName("reservations")
+                .usingGeneratedKeyColumns("id");
     }
 
     @GetMapping
@@ -42,13 +49,16 @@ public class ReservationController {
     }
 
     @PostMapping
-    @ResponseStatus(HttpStatus.CREATED)
     public ResponseEntity<ReservationResponse> saveReservation(
             @RequestBody final ReservationSaveRequest reservationSaveRequest) {
-        final Reservation reservation = reservationSaveRequest.toReservation(id.getAndIncrement());
-        reservations.add(reservation);
-        ReservationResponse reservationResponse = ReservationResponse.from(reservation);
-        return ResponseEntity.status(HttpStatus.CREATED)
+        final Map<String, String> reservationParameters = Map.of(
+                "name", reservationSaveRequest.name(),
+                "date", reservationSaveRequest.date(),
+                "time", reservationSaveRequest.time());
+        final Long savedReservationId = reservationInsert.executeAndReturnKey(reservationParameters).longValue();
+        final Reservation reservation = reservationSaveRequest.toReservation(savedReservationId);
+        final ReservationResponse reservationResponse = ReservationResponse.from(reservation);
+        return ResponseEntity.created(URI.create("/reservations/" + savedReservationId))
                 .body(reservationResponse);
     }
 

@@ -26,7 +26,8 @@ public class ReservationServiceTest {
         // given
         Long id = 1L;
 
-        doReturn(Optional.empty()).when(reservationRepository).findById(id);
+        doReturn(Optional.empty()).when(reservationRepository)
+                .findById(id);
 
         // when & then
         assertThatThrownBy(() -> reservationService.findById(id))

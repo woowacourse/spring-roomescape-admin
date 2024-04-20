@@ -5,25 +5,29 @@ import static org.assertj.core.api.Assertions.assertThat;
 import java.time.LocalTime;
 import java.util.List;
 import java.util.stream.Stream;
-import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.test.context.SpringBootTest;
 import roomescape.controller.dto.ReservationTimeRequest;
 import roomescape.controller.dto.ReservationTimeResponse;
 import roomescape.domain.ReservationTime;
-import roomescape.repository.InMemoryReservationTimeRepository;
 import roomescape.repository.ReservationTimeRepository;
 import roomescape.service.dto.ReservationTimeDto;
 
+@SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.NONE)
 class ReservationTimeServiceTest {
 
+    @Autowired
     private ReservationTimeRepository reservationTimeRepository;
+
+    @Autowired
     private ReservationTimeService reservationTimeService;
 
-    @BeforeEach
-    void setUp() {
-        reservationTimeRepository = new InMemoryReservationTimeRepository();
-        reservationTimeService = new ReservationTimeService(reservationTimeRepository);
+    @AfterEach
+    void tearDown() {
+        reservationTimeRepository.deleteAll();
     }
 
     @Test

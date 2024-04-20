@@ -5,6 +5,8 @@ import java.util.Collections;
 import java.util.List;
 import java.util.concurrent.atomic.AtomicLong;
 import org.springframework.http.HttpStatus;
+import org.springframework.jdbc.core.JdbcTemplate;
+import org.springframework.jdbc.core.RowMapper;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -24,7 +26,17 @@ public class ReservationController {
     private final List<Reservation> reservations;
     private final AtomicLong index;
 
-    public ReservationController() {
+    private final JdbcTemplate jdbcTemplate;
+    private final RowMapper<Reservation> actorRowMapper = (rs, rowNum) ->
+            new Reservation(
+                    rs.getLong("id"),
+                    rs.getString("name"),
+                    rs.getDate("date").toLocalDate(),
+                    rs.getTime("time").toLocalTime()
+            );
+
+    public ReservationController(JdbcTemplate jdbcTemplate) {
+        this.jdbcTemplate = jdbcTemplate;
         this.reservations = Collections.synchronizedList(new ArrayList<>());
         this.index = new AtomicLong(1);
     }
@@ -32,7 +44,10 @@ public class ReservationController {
     @GetMapping
     @ResponseStatus(HttpStatus.OK)
     public List<ReservationResponse> findAll() {
+        String sql = "SELECT * FROM reservation";
+        List<Reservation> reservations = jdbcTemplate.query(sql, actorRowMapper);
         return ReservationResponse.fromReservations(reservations);
+
     }
 
     @PostMapping

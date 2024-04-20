@@ -17,7 +17,7 @@ public class Reservation {
         this.time = time;
     }
 
-    public Reservation( final String name, final LocalDate date, final LocalTime time) {
+    public Reservation(final String name, final LocalDate date, final LocalTime time) {
         this.name = name;
         this.date = date;
         this.time = time;

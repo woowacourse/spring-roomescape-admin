@@ -31,6 +31,7 @@ class ReservationControllerTest {
     @BeforeEach
     void initPort() {
         RestAssured.port = port;
+        jdbcTemplate.update("INSERT INTO reservation_times (start_at) VALUES ('10:00')");
     }
 
     @DisplayName("존재하지 않는 예약 삭제")
@@ -55,7 +56,7 @@ class ReservationControllerTest {
     @DisplayName("데이터 삽입 후 예약 목록 조회")
     @Test
     void getReservationsAfterInsert() {
-        jdbcTemplate.update("INSERT INTO reservations (name, date, time) VALUES (?, ?, ?)", "브라운", "2023-08-05", "15:40");
+        jdbcTemplate.update("INSERT INTO reservations (name, date, time_id) VALUES (?, ?, ?)", "브라운", "2023-08-05", 1L);
 
         final List<ReservationResponse> reservations = RestAssured.given().log().all()
                 .when().get("/reservations")
@@ -70,10 +71,10 @@ class ReservationControllerTest {
     @DisplayName("예약 추가 및 삭제")
     @Test
     void saveAndDeleteReservation() {
-        final Map<String, String> params = Map.of(
+        final Map<String, Object> params = Map.of(
                 "name", "브라운",
                 "date", "2023-08-05",
-                "time", "15:40");
+                "timeId", 1L);
 
         RestAssured.given().log().all()
                 .contentType(ContentType.JSON)
@@ -93,5 +94,21 @@ class ReservationControllerTest {
 
         final Integer countAfterDelete = jdbcTemplate.queryForObject("SELECT count(1) from reservations", Integer.class);
         assertThat(countAfterDelete).isEqualTo(0);
+    }
+
+    @DisplayName("존재하지 않는 시간으로 예약 추가")
+    @Test
+    void reservationTimeForSaveNotFound() {
+        final Map<String, Object> params = Map.of(
+                "name", "브라운",
+                "date", "2023-08-05",
+                "timeId", 100L);
+
+        RestAssured.given().log().all()
+                .contentType(ContentType.JSON)
+                .body(params)
+                .when().post("/reservations")
+                .then().log().all()
+                .statusCode(404);
     }
 }

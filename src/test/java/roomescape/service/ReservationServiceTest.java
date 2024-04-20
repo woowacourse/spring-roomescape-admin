@@ -72,20 +72,4 @@ class ReservationServiceTest {
                 .isInstanceOf(IllegalArgumentException.class)
                 .hasMessage("id에 해당하는 예약을 찾을 수 없습니다.");
     }
-
-    @Test
-    @DisplayName("모든 예약을 취소한다.")
-    void cancelAllReservationsTest() {
-        // given
-        List<ReservationDto> reservations = List.of(
-                new ReservationDto("웨지", "2024-04-17", "15:00"),
-                new ReservationDto("아루", "2023-04-18", "13:00")
-        );
-        reservations.forEach(reservationRepository::addReservation);
-        // when
-        reservationService.cancelAllReservations();
-        List<Reservation> actual = reservationRepository.findAll();
-        // then
-        assertThat(actual).isEmpty();
-    }
 }

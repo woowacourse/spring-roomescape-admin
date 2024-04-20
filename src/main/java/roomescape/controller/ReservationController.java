@@ -11,6 +11,7 @@ import org.springframework.web.bind.annotation.RestController;
 import roomescape.domain.Reservation;
 import roomescape.dto.ReservationRequestDto;
 import roomescape.dto.ReservationResponseDto;
+import roomescape.repository.ReservationRepository;
 
 import java.net.URI;
 import java.util.ArrayList;
@@ -23,8 +24,15 @@ public class ReservationController {
     private final List<Reservation> reservations = new ArrayList<>();
     private final AtomicLong index = new AtomicLong(0);
 
+    private final ReservationRepository reservationRepository;
+
+    public ReservationController(ReservationRepository reservationRepository) {
+        this.reservationRepository = reservationRepository;
+    }
+
     @GetMapping
     public ResponseEntity<List<ReservationResponseDto>> findAll() {
+        List<Reservation> reservations = reservationRepository.findAll();
         List<ReservationResponseDto> reservationResponseDtos = reservations.stream()
                 .map(ReservationResponseDto::from)
                 .toList();
@@ -40,18 +48,15 @@ public class ReservationController {
                 reservationRequestDto.date(),
                 reservationRequestDto.time()
         );
-        reservations.add(newReservation);
+        Reservation savedReservation = reservationRepository.save(newReservation);
 
-        return ResponseEntity.created(URI.create("/reservations/" + newReservation.getId()))
-                .body(ReservationResponseDto.from(newReservation));
+        return ResponseEntity.created(URI.create("/reservations/" + savedReservation.getId()))
+                .body(ReservationResponseDto.from(savedReservation));
     }
 
     @DeleteMapping("/{id}")
     public ResponseEntity<Void> delete(@PathVariable long id) {
-        reservations.stream()
-                .filter(reservation -> reservation.hasId(id))
-                .findFirst()
-                .ifPresent(reservations::remove);
+        reservationRepository.deleteById(id);
 
         return ResponseEntity.noContent().build();
     }

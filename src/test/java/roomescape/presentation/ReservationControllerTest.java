@@ -7,6 +7,7 @@ import org.mockito.BDDMockito;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
 import roomescape.domain.Reservation;
+import roomescape.dto.ReservationResponse;
 import roomescape.dto.ReservationSaveRequest;
 
 import java.util.List;
@@ -27,7 +28,7 @@ class ReservationControllerTest extends ControllerTest {
     void getReservations() throws Exception {
         // given
         BDDMockito.given(reservationService.getReservations())
-                .willReturn(List.of(MIA_RESERVATION()));
+                .willReturn(List.of(ReservationResponse.from(MIA_RESERVATION())));
 
         // when & then
         mockMvc.perform(get("/reservations").contentType(MediaType.APPLICATION_JSON))
@@ -42,10 +43,10 @@ class ReservationControllerTest extends ControllerTest {
     void createReservation() throws Exception {
         // given
         ReservationSaveRequest request = new ReservationSaveRequest(USER_MIA, MIA_RESERVATION_DATE, MIA_RESERVATION_TIME);
-        Reservation expectedReservation = new Reservation(1L, request.toModel());
+        ReservationResponse expectedReservationResponse = ReservationResponse.from(new Reservation(1L, request.toModel()));
 
         BDDMockito.given(reservationService.createReservation(any()))
-                .willReturn(expectedReservation);
+                .willReturn(expectedReservationResponse);
 
         // when & then
         mockMvc.perform(post("/reservations")

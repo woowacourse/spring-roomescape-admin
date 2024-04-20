@@ -2,6 +2,7 @@ package roomescape.business;
 
 import org.springframework.stereotype.Service;
 import roomescape.domain.Reservation;
+import roomescape.dto.ReservationResponse;
 import roomescape.persistence.ReservationRepository;
 
 import java.util.List;
@@ -16,15 +17,19 @@ public class ReservationService {
         this.reservationRepository = reservationRepository;
     }
 
-    public List<Reservation> getReservations() {
-        return reservationRepository.findAll();
+    public List<ReservationResponse> getReservations() {
+        var reservations =  reservationRepository.findAll();
+        return reservations.stream()
+                .map(ReservationResponse::from)
+                .toList();
     }
 
-    public Reservation createReservation(Reservation reservation) {
+    public ReservationResponse createReservation(Reservation reservation) {
         List<Reservation> reservationsInSameDateTime = reservationRepository.findAllByDateAndTime(reservation.getDate(), reservation.getTime());
         validateDuplicatedReservation(reservationsInSameDateTime, reservation);
         validateMaxReservationsPerTime(reservationsInSameDateTime);
-        return reservationRepository.save(reservation);
+        Reservation savedReservation = reservationRepository.save(reservation);
+        return ReservationResponse.from(savedReservation);
     }
 
     private void validateDuplicatedReservation(List<Reservation> reservationsInSameDateTime, Reservation reservation) {

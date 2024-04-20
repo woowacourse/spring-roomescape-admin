@@ -3,6 +3,7 @@ package roomescape.business;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import roomescape.domain.Reservation;
+import roomescape.dto.ReservationResponse;
 import roomescape.persistence.ReservationCollectionRepository;
 import roomescape.persistence.ReservationRepository;
 
@@ -24,10 +25,10 @@ class ReservationServiceTest {
         Reservation reservation = MIA_RESERVATION();
 
         // when
-        Reservation savedReservation = reservationService.createReservation(reservation);
+        ReservationResponse savedReservation = reservationService.createReservation(reservation);
 
         // then
-        assertThat(savedReservation).isNotNull();
+        assertThat(savedReservation.id()).isNotNull();
     }
 
     @Test
@@ -74,11 +75,11 @@ class ReservationServiceTest {
         reservationRepository.save(tommyReservation);
 
         // when
-        List<Reservation> reservations = reservationService.getReservations();
+        List<ReservationResponse> reservations = reservationService.getReservations();
 
         // then
         assertThat(reservations).hasSize(2)
-                .extracting(Reservation::getName)
+                .extracting(ReservationResponse::name)
                 .containsExactly(USER_MIA, USER_TOMMY);
     }
 

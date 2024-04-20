@@ -20,18 +20,14 @@ public class ReservationController {
 
     @GetMapping
     public ResponseEntity<List<ReservationResponse>> getReservations() {
-        var reservationResponses = reservationService.getReservations()
-                .stream()
-                .map(ReservationResponse::from)
-                .toList();
-        return ResponseEntity.ok(reservationResponses);
+        return ResponseEntity.ok(reservationService.getReservations());
     }
 
     @PostMapping
     public ResponseEntity<Void> createReservation(@RequestBody ReservationSaveRequest request) {
         var reservation = request.toModel();
-        var savedReservation = reservationService.createReservation(reservation);
-        return ResponseEntity.created(URI.create("/reservations/" + savedReservation.getId())).build();
+        var reservationResponse = reservationService.createReservation(reservation);
+        return ResponseEntity.created(URI.create("/reservations/" + reservationResponse.id())).build();
     }
 
     @DeleteMapping("/{id}")

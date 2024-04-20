@@ -47,7 +47,7 @@ class ReservationJdbcRepositoryTest {
         ReservationCreationDto dto = new ReservationCreationDto("브라운", "2023-08-05",
                 new ReservationTimeDto(timeId, "12:00"));
         // when
-        Reservation reservation = reservationRepository.addReservation(dto);
+        reservationRepository.addReservation(dto);
         // then
         assertThat(databaseRowCount()).isEqualTo(1);
     }

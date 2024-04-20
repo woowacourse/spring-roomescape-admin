@@ -14,7 +14,8 @@ import org.springframework.test.annotation.DirtiesContext;
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.DEFINED_PORT)
 @DirtiesContext(classMode = DirtiesContext.ClassMode.BEFORE_EACH_TEST_METHOD)
 class ReservationControllerTest {
-    @DisplayName("예약 CRUD에 성공한다.")
+
+    @DisplayName("예약 생성 시 201을 반환한다.")
     @Test
     void reservation() {
         Map<String, String> params = new HashMap<>();
@@ -48,7 +49,7 @@ class ReservationControllerTest {
                 .body("size()", is(0));
     }
 
-    @DisplayName("존재하지 않은 예약 삭제 시 예외가 발생한다.")
+    @DisplayName("존재하지 않은 예약 삭제 시 404를 반환한다.")
     @Test
     void reservationNotFound() {
         RestAssured.given().log().all()

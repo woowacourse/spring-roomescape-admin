@@ -21,9 +21,18 @@ class AdminControllerTest {
 
     @DisplayName("어드민 메인 페이지를 응답한다.")
     @Test
-    void homeTest() {
+    void homePageTest() {
         RestAssured.given().log().all()
                 .when().get("/admin")
+                .then().log().all()
+                .statusCode(200);
+    }
+
+    @DisplayName("어드민 예약 관리 페이지를 응답한다.")
+    @Test
+    void reservationPageTest() {
+        RestAssured.given().log().all()
+                .when().get("/admin/reservation")
                 .then().log().all()
                 .statusCode(200);
     }

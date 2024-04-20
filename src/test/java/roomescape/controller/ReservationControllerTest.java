@@ -28,11 +28,6 @@ class ReservationControllerTest {
     @Test
     void reservationsTest() {
         RestAssured.given().log().all()
-                .when().get("/admin/reservation")
-                .then().log().all()
-                .statusCode(200);
-
-        RestAssured.given().log().all()
                 .when().get("/reservations")
                 .then().log().all()
                 .statusCode(200)

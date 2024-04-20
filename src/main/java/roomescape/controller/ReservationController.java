@@ -36,13 +36,15 @@ public class ReservationController {
     }
 
     @PostMapping
-    public ResponseEntity<Void> save(@RequestBody final ReservationRequest reservationRequest) {
+    public ResponseEntity<ReservationResponse> save(@RequestBody final ReservationRequest reservationRequest) {
         final long id = reservationService.save(reservationRequest);
+        final Reservation reservation = reservationRequest.toReservation(id);
+        final ReservationResponse reservationResponse = ReservationResponse.from(reservation);
         final HttpHeaders responseHeaders = new HttpHeaders();
         responseHeaders.add(HttpHeaders.LOCATION, String.format("/reservations/%s", id));
         return ResponseEntity.status(HttpStatus.CREATED)
                 .headers(responseHeaders)
-                .build();
+                .body(reservationResponse);
     }
 
     @DeleteMapping("/{id}")

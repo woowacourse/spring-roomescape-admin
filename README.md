@@ -1,12 +1,15 @@
-## 방탈출
+# 방탈출 API 명세
 
-### 예약 조회
+## 예약 조회
 
-- HTTP Method: GET
-- API Path: /reservations
-- Status Code: 200 OK
+### Request
 
-### ResponseBody
+- GET /reservations
+
+### Response
+
+- 200 OK
+- content-ype: application/json
 
 ``` json
 [
@@ -27,13 +30,12 @@
 
 ---
 
-### 예약 추가
+## 예약 추가
 
-- HTTP Method: POST
-- API Path: /reservations
-- Status Code: 200 OK
+### Request
 
-### RequestBody
+- POST /reservations
+- content-type: application/json
 
 ```json
 {
@@ -43,7 +45,10 @@
 }
 ```
 
-### ResponseBody
+### Response
+
+- 201 Created
+- content-type: application/json
 
 ```json
 {
@@ -56,14 +61,75 @@
 
 ---
 
-### 예약 삭제
+## 예약 삭제
 
-- HTTP Method: DELETE
-- API Path: /reservations/{id}
-- Status Code: 200 OK
+### Request
 
-### PathVariable
+- DELETE /reservations/{reservationId}
+- Path Variables : Long
 
-Type: Long
+### Response
+
+- 204 No Content
 
 ---
+
+## 시간 추가
+
+### Request
+
+- POST /times
+- content-type: application/json
+
+```json
+{
+  "startAt": "10:00"
+}
+```
+
+### Response
+
+- 200 OK
+- content-type: application/json
+
+```json
+{
+  "id": 1,
+  "startAt": "10:00"
+}
+```
+
+---
+
+## 시간 조회
+
+### Request
+
+- GET /times
+
+### Response
+
+- 200 OK
+- content-type: application/json
+
+```json
+[
+  {
+    "id": 1,
+    "startAt": "10:00"
+  }
+]
+```
+
+---
+
+## 시간 삭제
+
+### Request
+
+- DELETE /times/{timeId}
+- PathVariable : Long
+
+### Response
+
+- 200 OK

@@ -11,6 +11,7 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 
+@DisplayName("예약 서비스")
 @ExtendWith(MockitoExtension.class)
 public class ReservationServiceTest {
     @Mock

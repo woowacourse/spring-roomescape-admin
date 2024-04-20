@@ -9,6 +9,7 @@ import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
+import roomescape.config.TestConfig;
 import roomescape.controller.dto.ReservationRequest;
 import roomescape.controller.dto.ReservationResponse;
 import roomescape.domain.Reservation;
@@ -17,7 +18,11 @@ import roomescape.repository.ReservationTimeRepository;
 import roomescape.service.dto.ReservationCreationDto;
 import roomescape.service.dto.ReservationTimeDto;
 
-@SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.NONE)
+@SpringBootTest(
+        classes = TestConfig.class,
+        webEnvironment = SpringBootTest.WebEnvironment.NONE,
+        properties = "spring.main.allow-bean-definition-overriding=true"
+)
 class ReservationServiceTest {
 
     @Autowired
@@ -57,8 +62,20 @@ class ReservationServiceTest {
         assertThatThrownBy(() -> reservationService.scheduleReservation(request))
                 .isInstanceOf(IllegalArgumentException.class)
                 .hasMessage("예약 시간이 존재하지 않습니다.");
-
     }
+
+    @Test
+    @DisplayName("과거의 시간을 예약하는 경우, 예외를 발생한다.")
+    void createPastReservationTest() {
+        // given
+        Long timeId = createTimeAndReturnId();
+        ReservationRequest request = new ReservationRequest("아루", "1999-05-04", timeId);
+        // when, then
+        assertThatThrownBy(() -> reservationService.scheduleReservation(request))
+                .isInstanceOf(IllegalArgumentException.class)
+                .hasMessage("과거의 시간을 예약할 수 없습니다.");
+    }
+
 
     @Test
     @DisplayName("모든 예약을 조회한다.")

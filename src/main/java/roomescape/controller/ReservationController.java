@@ -7,6 +7,7 @@ import java.util.Map;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.jdbc.core.JdbcTemplate;
+import org.springframework.jdbc.core.RowMapper;
 import org.springframework.jdbc.core.simple.SimpleJdbcInsert;
 import org.springframework.web.bind.annotation.*;
 import roomescape.dto.ReservationSaveRequest;
@@ -19,6 +20,14 @@ public class ReservationController {
 
     private final JdbcTemplate jdbcTemplate;
     private final SimpleJdbcInsert reservationInsert;
+    private final RowMapper<Reservation> reservationConvertor = (selectedReservation, RowNum) -> {
+        return new Reservation(
+                selectedReservation.getLong("id"),
+                selectedReservation.getString("name"),
+                selectedReservation.getString("date"),
+                selectedReservation.getString("time")
+        );
+    };
 
     public ReservationController(final JdbcTemplate jdbcTemplate) {
         this.jdbcTemplate = jdbcTemplate;
@@ -30,16 +39,10 @@ public class ReservationController {
     @GetMapping
     public ResponseEntity<List<ReservationResponse>> getReservations() {
         final String selectQuery = "SELECT id, name, date, time FROM reservations";
-        final List<ReservationResponse> reservationResponses = jdbcTemplate.query(
-                selectQuery, (selectedReservation, rowNum) -> {
-                    final Reservation reservation = new Reservation(
-                            selectedReservation.getLong("id"),
-                            selectedReservation.getString("name"),
-                            selectedReservation.getString("date"),
-                            selectedReservation.getString("time")
-                    );
-                    return ReservationResponse.from(reservation);
-                });
+        final List<ReservationResponse> reservationResponses = jdbcTemplate.query(selectQuery, reservationConvertor)
+                .stream()
+                .map(ReservationResponse::from)
+                .toList();
         return ResponseEntity.ok(reservationResponses);
     }
 

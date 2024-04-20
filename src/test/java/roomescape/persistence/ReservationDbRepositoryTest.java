@@ -53,7 +53,7 @@ class ReservationDbRepositoryTest implements ReservationRepositoryTest {
     @DisplayName("동일시간대의 예약 목록을 조회한다.")
     public void findAllByDateAndTime() {
         // given
-        String insertSql = "INSERT INTO reservation (name, date, time) VALUES (?, ?, ?), (?, ?, ?), (?, ?, ?)";
+        String insertSql = "INSERT INTO reservation (name, date, time) VALUES (?, ?, ?), (?, ?, ?)";
         jdbcTemplate.update(
                 insertSql,
                 USER_MIA, MIA_RESERVATION_DATE.toString(), MIA_RESERVATION_TIME.toString(),

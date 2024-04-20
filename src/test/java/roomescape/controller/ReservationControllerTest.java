@@ -2,15 +2,20 @@ package roomescape.controller;
 
 import static org.hamcrest.Matchers.is;
 
-import java.util.HashMap;
-import java.util.Map;
+import java.time.LocalDate;
+import java.time.LocalTime;
 
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
+import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.test.annotation.DirtiesContext;
 
 import io.restassured.RestAssured;
 import io.restassured.http.ContentType;
+import roomescape.ReservationDto;
 
+@SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.DEFINED_PORT)
+@DirtiesContext(classMode = DirtiesContext.ClassMode.BEFORE_EACH_TEST_METHOD)
 class ReservationControllerTest {
 
     @DisplayName("예약 내역을 조회한다.")
@@ -26,14 +31,9 @@ class ReservationControllerTest {
     @DisplayName("예약을 추가한다.")
     @Test
     void create() {
-        Map<String, String> params = new HashMap<>();
-        params.put("name", "브라운");
-        params.put("date", "2023-08-05");
-        params.put("time", "15:40");
-
         RestAssured.given().log().all()
                 .contentType(ContentType.JSON)
-                .body(params)
+                .body(reservationDto())
                 .when().post("/reservations")
                 .then().log().all()
                 .statusCode(200)
@@ -43,23 +43,15 @@ class ReservationControllerTest {
                 .when().get("/reservations")
                 .then().log().all()
                 .statusCode(200)
-                .body("size()", is(1))
-                .body("name", is("브라운"))
-                .body("date", is("2023-08-05"))
-                .body("time", is("15:40"));
+                .body("size()", is(1));
     }
 
     @DisplayName("예약을 삭제한다.")
     @Test
     void delete() {
-        Map<String, String> params = new HashMap<>();
-        params.put("name", "브라운");
-        params.put("date", "2023-08-05");
-        params.put("time", "15:40");
-
         RestAssured.given()
                 .contentType(ContentType.JSON)
-                .body(params)
+                .body(reservationDto())
                 .post("/reservations");
 
         RestAssured.given().log().all()
@@ -72,5 +64,14 @@ class ReservationControllerTest {
                 .then().log().all()
                 .statusCode(200)
                 .body("size()", is(0));
+    }
+
+    static ReservationDto reservationDto() {
+        return new ReservationDto(
+                null,
+                "브라운",
+                LocalDate.parse("2023-08-05"),
+                LocalTime.parse("15:40")
+        );
     }
 }

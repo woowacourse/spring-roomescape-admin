@@ -8,7 +8,7 @@ public class ReservationRequest {
     private String name;
     private LocalTime time;
 
-    public ReservationRequest() {
+    private ReservationRequest() {
 
     }
 

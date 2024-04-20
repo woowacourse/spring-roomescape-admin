@@ -23,7 +23,7 @@ import org.springframework.dao.DataAccessResourceFailureException;
 import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
 
-@DisplayName("예약 컨트롤러")
+@DisplayName("예약 API 컨트롤러")
 @WebMvcTest(ReservationApiController.class)
 class ReservationApiControllerTest {
     @Autowired

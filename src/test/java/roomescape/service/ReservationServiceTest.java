@@ -27,9 +27,9 @@ class ReservationServiceTest {
     void init() {
         final ReservationTimeDao reservationTimeDao = new ReservationTimeMemoryDao();
         final ReservationDao reservationDao = new ReservationMemoryDao();
-        reservationService = new ReservationService(reservationDao, reservationTimeDao);
         reservationTimeDao.save(new ReservationTimeSaveDto("10:00"));
         reservationDao.save(new ReservationSaveDto("감자", "2024-05-13", new ReservationTime(1L, "10:00")));
+        reservationService = new ReservationService(reservationDao, reservationTimeDao);
     }
 
     @DisplayName("예약 목록 조회")

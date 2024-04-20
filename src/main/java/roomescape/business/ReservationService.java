@@ -25,10 +25,10 @@ public class ReservationService {
     }
 
     public ReservationResponse createReservation(Reservation reservation) {
-        List<Reservation> reservationsInSameDateTime = reservationRepository.findAllByDateAndTime(reservation.getDate(), reservation.getTime());
+        var reservationsInSameDateTime = reservationRepository.findAllByDateAndTime(reservation.getDate(), reservation.getTime());
         validateDuplicatedReservation(reservationsInSameDateTime, reservation);
         validateMaxReservationsPerTime(reservationsInSameDateTime);
-        Reservation savedReservation = reservationRepository.save(reservation);
+        var savedReservation = reservationRepository.save(reservation);
         return ReservationResponse.from(savedReservation);
     }
 

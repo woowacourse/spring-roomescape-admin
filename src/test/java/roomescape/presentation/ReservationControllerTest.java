@@ -31,6 +31,7 @@ class ReservationControllerTest extends ControllerTest {
                 .andDo(print())
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$[0].name").value(USER_MIA))
+                .andExpect(jsonPath("$[0].time").value(MIA_RESERVATION_TIME.toString()))
                 .andExpect(jsonPath("$[0].date").value(MIA_RESERVATION_DATE.toString()));
     }
 

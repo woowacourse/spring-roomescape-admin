@@ -19,22 +19,22 @@ public class ReservationController {
     private final AtomicLong index = new AtomicLong(1);
 
     @GetMapping(path = {"/", "/admin"})
-    public String wellComePage() {
+    public String getAdminPage() {
         return "admin/index";
     }
 
     @GetMapping("/admin/reservation")
-    public String reservationPage() {
+    public String getReservationPage() {
         return "admin/reservation-legacy";
     }
 
     @GetMapping("/reservations")
-    public ResponseEntity<List<Reservation>> reservationList() {
+    public ResponseEntity<List<Reservation>> getReservations() {
         return ResponseEntity.ok(reservations);
     }
 
     @PostMapping("/reservations")
-    public ResponseEntity<Reservation> reservationAdd(@RequestBody ReservationDto reservationDto) {
+    public ResponseEntity<Reservation> addReservation(@RequestBody ReservationDto reservationDto) {
         Reservation reservation = new Reservation(index.getAndIncrement(), reservationDto.getName(),
                 reservationDto.getDate(), reservationDto.getTime());
         reservations.add(reservation);
@@ -42,7 +42,7 @@ public class ReservationController {
     }
 
     @DeleteMapping("/reservations/{id}")
-    public ResponseEntity<Void> reservationRemove(@PathVariable("id") long id) {
+    public ResponseEntity<Void> removeReservation(@PathVariable("id") long id) {
         Optional<Reservation> reservationOptional = reservations.stream()
                 .filter(it -> it.getId() == id)
                 .findFirst();

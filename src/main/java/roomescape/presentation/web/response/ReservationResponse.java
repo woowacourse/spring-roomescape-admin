@@ -1,4 +1,4 @@
-package roomescape.controller.response;
+package roomescape.presentation.web.response;
 
 import java.time.LocalDate;
 

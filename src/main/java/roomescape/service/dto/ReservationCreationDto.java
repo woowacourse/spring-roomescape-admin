@@ -6,7 +6,7 @@ import roomescape.domain.Reservation;
 import roomescape.domain.ReservationDate;
 import roomescape.domain.ReservationTime;
 
-public class ReservationDto {
+public class ReservationCreationDto {
 
     private static final DateTimeFormatter DATE_FORMATTER = DateTimeFormatter.ofPattern("yyyy-MM-dd");
 
@@ -14,18 +14,18 @@ public class ReservationDto {
     private final String date;
     private final ReservationTimeDto time;
 
-    public ReservationDto(String name, String date, ReservationTimeDto reservationTimeDto) {
+    public ReservationCreationDto(String name, String date, ReservationTimeDto reservationTimeDto) {
         this.name = name;
         this.date = date;
         this.time = reservationTimeDto;
     }
 
-    public static ReservationDto from(Reservation reservation) {
+    public static ReservationCreationDto from(Reservation reservation) {
         Name name = reservation.getName();
         ReservationDate date = reservation.getReservationDate();
         ReservationTime time = reservation.getReservationTime();
 
-        return new ReservationDto(
+        return new ReservationCreationDto(
                 name.asText(),
                 DATE_FORMATTER.format(date.getDate()),
                 ReservationTimeDto.from(time)

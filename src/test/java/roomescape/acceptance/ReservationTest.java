@@ -14,7 +14,7 @@ import roomescape.domain.Reservation;
 import roomescape.domain.ReservationTime;
 import roomescape.repository.ReservationRepository;
 import roomescape.repository.ReservationTimeRepository;
-import roomescape.service.dto.ReservationDto;
+import roomescape.service.dto.ReservationCreationDto;
 import roomescape.service.dto.ReservationTimeDto;
 
 class ReservationTest extends AcceptanceTest {
@@ -67,10 +67,10 @@ class ReservationTest extends AcceptanceTest {
     void deleteReservationTest() {
         ReservationTimeDto timeCreationDto = new ReservationTimeDto(LocalTime.parse("12:00"));
         ReservationTime reservationTime = reservationTimeRepository.create(timeCreationDto);
-        ReservationDto reservationDto = new ReservationDto(
+        ReservationCreationDto reservationCreationDto = new ReservationCreationDto(
                 "웨지", "2024-04-20", ReservationTimeDto.from(reservationTime)
         );
-        Reservation reservation = reservationRepository.addReservation(reservationDto);
+        Reservation reservation = reservationRepository.addReservation(reservationCreationDto);
 
         RestAssured.given().log().all()
                 .when().delete("/reservations/" + reservation.getId())

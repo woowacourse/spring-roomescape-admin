@@ -9,7 +9,7 @@ import org.springframework.jdbc.core.simple.SimpleJdbcInsert;
 import org.springframework.stereotype.Repository;
 import roomescape.domain.Reservation;
 import roomescape.domain.ReservationTime;
-import roomescape.service.dto.ReservationDto;
+import roomescape.service.dto.ReservationCreationDto;
 
 @Repository
 public class ReservationJdbcRepository implements ReservationRepository {
@@ -37,14 +37,14 @@ public class ReservationJdbcRepository implements ReservationRepository {
     }
 
     @Override
-    public Reservation addReservation(ReservationDto reservationDto) {
+    public Reservation addReservation(ReservationCreationDto reservationCreationDto) {
         Map<String, ? extends Serializable> parameters = Map.of(
-                "name", reservationDto.getName(),
-                "date", reservationDto.getDate(),
-                "time_id", reservationDto.getTimeId()
+                "name", reservationCreationDto.getName(),
+                "date", reservationCreationDto.getDate(),
+                "time_id", reservationCreationDto.getTimeId()
         );
         Number key = jdbcInsert.executeAndReturnKey(parameters);
-        return reservationDto.toEntity(key.longValue());
+        return reservationCreationDto.toEntity(key.longValue());
     }
 
     @Override

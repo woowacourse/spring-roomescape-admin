@@ -5,7 +5,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.concurrent.atomic.AtomicLong;
 import roomescape.domain.Reservation;
-import roomescape.service.dto.ReservationDto;
+import roomescape.service.dto.ReservationCreationDto;
 
 public class InMemoryReservationRepository implements ReservationRepository {
 
@@ -21,8 +21,8 @@ public class InMemoryReservationRepository implements ReservationRepository {
     }
 
     @Override
-    public Reservation addReservation(ReservationDto reservationDto) {
-        Reservation entity = reservationDto.toEntity(idCount.getAndIncrement());
+    public Reservation addReservation(ReservationCreationDto reservationCreationDto) {
+        Reservation entity = reservationCreationDto.toEntity(idCount.getAndIncrement());
         database.put(entity.getId(), entity);
         return entity;
     }

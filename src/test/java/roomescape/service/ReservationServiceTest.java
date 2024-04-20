@@ -15,7 +15,7 @@ import roomescape.repository.InMemoryReservationRepository;
 import roomescape.repository.InMemoryReservationTimeRepository;
 import roomescape.repository.ReservationRepository;
 import roomescape.repository.ReservationTimeRepository;
-import roomescape.service.dto.ReservationDto;
+import roomescape.service.dto.ReservationCreationDto;
 import roomescape.service.dto.ReservationTimeDto;
 
 class ReservationServiceTest {
@@ -49,10 +49,10 @@ class ReservationServiceTest {
     @DisplayName("모든 예약을 조회한다.")
     void getAllReservationsTest() {
         // given
-        List<ReservationDto> reservations = List.of(
-                new ReservationDto("웨지", "2024-04-17", new ReservationTimeDto(1L, "13:00")),
-                new ReservationDto("아루", "2023-04-18", new ReservationTimeDto(1L, "13:00")),
-                new ReservationDto("브리", "2023-04-19", new ReservationTimeDto(1L, "13:00"))
+        List<ReservationCreationDto> reservations = List.of(
+                new ReservationCreationDto("웨지", "2024-04-17", new ReservationTimeDto(1L, "13:00")),
+                new ReservationCreationDto("아루", "2023-04-18", new ReservationTimeDto(1L, "13:00")),
+                new ReservationCreationDto("브리", "2023-04-19", new ReservationTimeDto(1L, "13:00"))
         );
         reservations.forEach(reservationRepository::addReservation);
         // when
@@ -66,7 +66,7 @@ class ReservationServiceTest {
     void cancelReservationTest() {
         // given
         Reservation reservation = reservationRepository.addReservation(
-                new ReservationDto("웨지", "2024-04-17", new ReservationTimeDto(1L, "13:00")));
+                new ReservationCreationDto("웨지", "2024-04-17", new ReservationTimeDto(1L, "13:00")));
         // when
         reservationService.cancelReservation(reservation.getId());
         List<Reservation> actual = reservationRepository.findAll();

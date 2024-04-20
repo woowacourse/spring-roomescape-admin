@@ -8,7 +8,7 @@ import roomescape.domain.Reservation;
 import roomescape.domain.ReservationTime;
 import roomescape.repository.ReservationRepository;
 import roomescape.repository.ReservationTimeRepository;
-import roomescape.service.dto.ReservationDto;
+import roomescape.service.dto.ReservationCreationDto;
 
 @Service
 public class ReservationService {
@@ -32,8 +32,8 @@ public class ReservationService {
     public ReservationResponse scheduleReservation(ReservationRequest request) {
         ReservationTime reservationTime = reservationTimeRepository.findById(request.timeId());
         Reservation reservation = request.toInstance(reservationTime);
-        ReservationDto dto = ReservationDto.from(reservation);
-        Reservation savedReservation = reservationRepository.addReservation(dto);
+        ReservationCreationDto creationDto = ReservationCreationDto.from(reservation);
+        Reservation savedReservation = reservationRepository.addReservation(creationDto);
         return ReservationResponse.from(savedReservation);
     }
 

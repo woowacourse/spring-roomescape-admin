@@ -37,8 +37,18 @@ public class ReservationTimeDao {
         return jdbcTemplate.query(sql, this::rowMapper);
     }
 
+    public ReservationTime selectById(Long id) {
+        String sql = "select id, start_at from reservation_time where id = ?";
+        return jdbcTemplate.queryForObject(sql, this::rowMapper, id);
+    }
+
     private ReservationTime rowMapper(ResultSet resultSet, int rowNumber) throws SQLException {
         var reservationTime = new ReservationTime(resultSet.getTime("start_at").toLocalTime());
         return new ReservationTime(resultSet.getLong("id"), reservationTime);
+    }
+
+    public void deleteById(Long id) {
+        String sql = "delete from reservation_time where id = ?";
+        jdbcTemplate.update(sql, id);
     }
 }

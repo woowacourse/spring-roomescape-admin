@@ -27,11 +27,11 @@ public class ReservationTimeDbRepository implements ReservationTimeRepository {
 
     @Override
     public void deleteById(Long id) {
-
+        reservationTimeDao.deleteById(id);
     }
 
     @Override
     public Optional<ReservationTime> findById(Long id) {
-        return Optional.empty();
+        return Optional.ofNullable(reservationTimeDao.selectById(id));
     }
 }

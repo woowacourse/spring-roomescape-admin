@@ -9,8 +9,6 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import roomescape.dto.ReservationSaveRequest;
 import roomescape.dto.ReservationResponse;
-import roomescape.repository.ReservationDao;
-import roomescape.repository.ReservationTimeDao;
 import roomescape.service.ReservationService;
 
 @RestController
@@ -20,7 +18,7 @@ public class ReservationController {
     private final Logger logger = LoggerFactory.getLogger(getClass());
     private final ReservationService reservationService;
 
-    public ReservationController(final ReservationService reservationService, final ReservationDao reservationDao, final ReservationTimeDao reservationTimeDao) {
+    public ReservationController(final ReservationService reservationService) {
         this.reservationService = reservationService;
     }
 

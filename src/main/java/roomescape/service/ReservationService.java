@@ -32,6 +32,7 @@ public class ReservationService {
     public ReservationResponse scheduleReservation(ReservationRequest request) {
         ReservationTime reservationTime = reservationTimeRepository.findById(request.timeId());
         Reservation reservation = request.toInstance(reservationTime);
+        Reservation reservation = request.toEntity(reservationTime);
         ReservationCreationDto creationDto = ReservationCreationDto.from(reservation);
         Reservation savedReservation = reservationRepository.addReservation(creationDto);
         return ReservationResponse.from(savedReservation);

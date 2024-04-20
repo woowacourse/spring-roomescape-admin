@@ -4,7 +4,7 @@ import roomescape.domain.ReservationTime;
 
 public record ReservationTimeRequest(String startAt) {
 
-    public ReservationTime toInstance() {
+    public ReservationTime toEntity() {
         return new ReservationTime(startAt);
     }
 }

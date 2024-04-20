@@ -26,10 +26,35 @@ public class ReservationAcceptanceTest implements AcceptanceTest {
                 .body("size()", is(0));
     }
 
-    @DisplayName("[Step3, Step6] 예약을 추가하고 삭제한다.")
+    @Test
+    @DisplayName("[Step7] 예약 시간을 생성한다.")
+    void createReservationTime() {
+        Map<String, String> params = new HashMap<>();
+        params.put("startAt", "10:00");
+
+        RestAssured.given().log().all()
+                .contentType(ContentType.JSON)
+                .body(params)
+                .when().post("/times")
+                .then().log().all()
+                .statusCode(201)
+                .header("Location", "/times/1");
+    }
+
     @TestFactory
+    @DisplayName("[Step3, Step6] 예약을 추가한다.")
+    Stream<DynamicTest> createReservation() {
+        return Stream.of(
+                dynamicTest("예약 시간을 생성한다.", this::createReservationTime),
+                dynamicTest("예약을 하나 생성한다.", this::createOneReservation)
+        );
+    }
+
+    @TestFactory
+    @DisplayName("[Step3, Step6] 예약을 추가하고 삭제한다.")
     Stream<DynamicTest> createThenDeleteReservation() {
         return Stream.of(
+                dynamicTest("예약 시간을 생성한다.", this::createReservationTime),
                 dynamicTest("예약을 하나 생성한다.", this::createOneReservation),
                 dynamicTest("예약이 하나 생성된 예약 목록을 조회한다.", this::getReservationsWithSizeOne),
                 dynamicTest("예약을 하나 삭제한다.", this::deleteOneReservation),
@@ -41,7 +66,7 @@ public class ReservationAcceptanceTest implements AcceptanceTest {
         Map<String, String> params = new HashMap<>();
         params.put("name", "브라운");
         params.put("date", "2030-08-05");
-        params.put("time", "15:40");
+        params.put("timeId", "1");
 
         RestAssured.given().log().all()
                 .contentType(ContentType.JSON)

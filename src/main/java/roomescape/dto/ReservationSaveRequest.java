@@ -4,14 +4,13 @@ import roomescape.domain.Reservation;
 import roomescape.domain.ReservationTime;
 
 import java.time.LocalDate;
-import java.time.LocalTime;
 
 public record ReservationSaveRequest(
         String name,
         LocalDate date,
-        LocalTime time) {
+        Long timeId) {
 
     public Reservation toModel() {
-        return new Reservation(name, date, new ReservationTime(time));
+        return new Reservation(name, date, new ReservationTime(timeId));
     }
 }

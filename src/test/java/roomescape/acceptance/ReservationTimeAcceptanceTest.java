@@ -13,7 +13,8 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.web.server.LocalServerPort;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.test.context.jdbc.Sql;
-import roomescape.domain.ReservationTime;
+import roomescape.controller.dto.ReservationTimeRequest;
+import roomescape.controller.dto.ReservationTimeResponse;
 
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 @Sql(scripts = "/truncate.sql", executionPhase = Sql.ExecutionPhase.BEFORE_TEST_METHOD)
@@ -42,19 +43,19 @@ class ReservationTimeAcceptanceTest {
     @DisplayName("예약 시간 생성")
     @Test
     void post_reservationTime() {
-        ReservationTime reservationTime = new ReservationTime(null, "10:00");
-        ReservationTime expectedCreatedTime = new ReservationTime(1L, "10:00");
+        ReservationTimeRequest request = new ReservationTimeRequest("10:00");
+        ReservationTimeResponse expectedResponse = new ReservationTimeResponse(1L, "10:00");
 
-        ReservationTime createdTime = RestAssured.given().log().all()
+        ReservationTimeResponse actualResponse = RestAssured.given().log().all()
                 .contentType(ContentType.JSON)
-                .body(reservationTime)
+                .body(request)
                 .when().post("/times")
                 .then().log().all()
                 .statusCode(201)
                 .header("Location", "/times/1")
-                .extract().as(ReservationTime.class);
+                .extract().as(ReservationTimeResponse.class);
 
-        assertThat(createdTime).isEqualTo(expectedCreatedTime);
+        assertThat(actualResponse).isEqualTo(expectedResponse);
         assertThat(countReservationTimes()).isEqualTo(1);
     }
 

@@ -2,6 +2,8 @@ package roomescape.domain;
 
 import java.util.List;
 import org.springframework.stereotype.Service;
+import roomescape.controller.dto.ReservationTimeRequest;
+import roomescape.controller.dto.ReservationTimeResponse;
 
 @Service
 public class ReservationTimeService {
@@ -12,12 +14,16 @@ public class ReservationTimeService {
         this.reservationTimeRepository = reservationTimeRepository;
     }
 
-    public List<ReservationTime> getAllReservationTimes() {
-        return reservationTimeRepository.findAll();
+    public List<ReservationTimeResponse> getAllReservationTimes() {
+        return reservationTimeRepository.findAll().stream()
+                .map(ReservationTimeResponse::from)
+                .toList();
     }
 
-    public ReservationTime createReservationTime(ReservationTime reservationTime) {
-        return reservationTimeRepository.create(reservationTime);
+    public ReservationTimeResponse createReservationTime(ReservationTimeRequest request) {
+        ReservationTime time = request.toDomain();
+        ReservationTime createdTime = reservationTimeRepository.create(time);
+        return ReservationTimeResponse.from(createdTime);
     }
 
     public void deleteReservationTime(Long id) {

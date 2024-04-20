@@ -14,8 +14,8 @@ import org.springframework.boot.test.web.server.LocalServerPort;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.test.context.jdbc.Sql;
 import roomescape.controller.dto.ReservationRequest;
-import roomescape.domain.Reservation;
-import roomescape.domain.ReservationTime;
+import roomescape.controller.dto.ReservationResponse;
+import roomescape.controller.dto.ReservationTimeResponse;
 
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 @Sql(scripts = "/truncate.sql", executionPhase = Sql.ExecutionPhase.BEFORE_TEST_METHOD)
@@ -48,18 +48,18 @@ class ReservationAcceptanceTest {
     void post_reservation() {
         jdbcTemplate.update("INSERT INTO reservation_time (start_at) VALUES ?", "15:00");
         ReservationRequest request = new ReservationRequest("2023-08-05", "브라운", 1L);
-        Reservation expectedReservation = new Reservation(1L, "브라운", "2023-08-05",
-                new ReservationTime(1L, "15:00"));
+        ReservationResponse expectedResponse = new ReservationResponse(1L, "브라운", "2023-08-05",
+                new ReservationTimeResponse(1L, "15:00"));
 
-        Reservation createdReservation = RestAssured.given().log().all()
+        ReservationResponse actualResponse = RestAssured.given().log().all()
                 .contentType(ContentType.JSON).body(request)
                 .when().post("/reservations")
                 .then().log().all()
                 .statusCode(201)
                 .header("Location", "/reservations/1")
-                .extract().as(Reservation.class);
+                .extract().as(ReservationResponse.class);
 
-        assertThat(createdReservation).isEqualTo(expectedReservation);
+        assertThat(actualResponse).isEqualTo(expectedResponse);
         assertThat(countReservation()).isEqualTo(1);
     }
 

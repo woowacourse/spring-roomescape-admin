@@ -3,12 +3,16 @@ package roomescape.acceptance;
 import io.restassured.RestAssured;
 import io.restassured.http.ContentType;
 import org.junit.jupiter.api.DisplayName;
+import org.junit.jupiter.api.DynamicTest;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.TestFactory;
 
 import java.util.HashMap;
 import java.util.Map;
+import java.util.stream.Stream;
 
 import static org.hamcrest.Matchers.is;
+import static org.junit.jupiter.api.DynamicTest.dynamicTest;
 
 public class ReservationTimeAcceptanceTest implements AcceptanceTest {
 
@@ -35,5 +39,32 @@ public class ReservationTimeAcceptanceTest implements AcceptanceTest {
                 .then().log().all()
                 .statusCode(200)
                 .body("size()", is(0));
+    }
+
+
+    @TestFactory
+    @DisplayName("[Step7] 예약을 추가하고 삭제한다.")
+    Stream<DynamicTest> createThenDeleteReservationTime() {
+        return Stream.of(
+                dynamicTest("예약을 하나 생성한다.", this::createReservationTime),
+                dynamicTest("예약이 하나 생성된 예약 목록을 조회한다.", this::getReservationTimesWithSizeOne),
+                dynamicTest("예약을 하나 삭제한다.", this::deleteOneReservationTime),
+                dynamicTest("예약 목록을 조회한다.", this::getReservationTimes)
+        );
+    }
+
+    void getReservationTimesWithSizeOne() {
+        RestAssured.given().log().all()
+                .when().get("/times")
+                .then().log().all()
+                .statusCode(200)
+                .body("size()", is(1));
+    }
+
+    void deleteOneReservationTime() {
+        RestAssured.given().log().all()
+                .when().delete("/times/1")
+                .then().log().all()
+                .statusCode(204);
     }
 }

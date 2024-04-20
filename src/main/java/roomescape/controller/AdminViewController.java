@@ -13,7 +13,7 @@ public class AdminViewController {
 
     @GetMapping("/admin/reservation")
     public String adminReservationPage() {
-        return "admin/reservation-legacy";
+        return "admin/reservation";
     }
 
     @GetMapping("/admin/time")

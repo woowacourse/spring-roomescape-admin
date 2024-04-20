@@ -8,6 +8,8 @@ import org.junit.jupiter.api.Test;
 import java.util.HashMap;
 import java.util.Map;
 
+import static org.hamcrest.Matchers.is;
+
 public class ReservationTimeAcceptanceTest implements AcceptanceTest {
 
     @Test
@@ -23,5 +25,15 @@ public class ReservationTimeAcceptanceTest implements AcceptanceTest {
                 .then().log().all()
                 .statusCode(201)
                 .header("Location", "/times/1");
+    }
+
+    @Test
+    @DisplayName("[Step7] 예약 시간 목록을 조회한다.")
+    void getReservationTimes() {
+        RestAssured.given().log().all()
+                .when().get("/times")
+                .then().log().all()
+                .statusCode(200)
+                .body("size()", is(0));
     }
 }

@@ -16,6 +16,7 @@ import java.util.List;
 import java.util.Map;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.hamcrest.Matchers.is;
 
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 @DirtiesContext(classMode = DirtiesContext.ClassMode.AFTER_EACH_TEST_METHOD)
@@ -41,9 +42,19 @@ class ReservationControllerTest {
                 .statusCode(404);
     }
 
-    @DisplayName("예약 목록 조회")
+    @DisplayName("비어 있는 예약 목록 조회")
     @Test
-    void getReservations() {
+    void getReservationsWhenEmpty() {
+        RestAssured.given().log().all()
+                .when().get("/reservations")
+                .then().log().all()
+                .statusCode(200)
+                .body("size()", is(0));
+    }
+
+    @DisplayName("데이터 삽입 후 예약 목록 조회")
+    @Test
+    void getReservationsAfterInsert() {
         jdbcTemplate.update("INSERT INTO reservations (name, date, time) VALUES (?, ?, ?)", "브라운", "2023-08-05", "15:40");
 
         final List<ReservationResponse> reservations = RestAssured.given().log().all()

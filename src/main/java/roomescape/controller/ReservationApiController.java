@@ -1,10 +1,14 @@
 package roomescape.controller;
 
+import java.net.URI;
+import java.sql.PreparedStatement;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.concurrent.atomic.AtomicLong;
+import org.springframework.http.ResponseEntity;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;
+import org.springframework.jdbc.support.GeneratedKeyHolder;
+import org.springframework.jdbc.support.KeyHolder;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -21,12 +25,10 @@ public class ReservationApiController {
 
     private final JdbcTemplate jdbcTemplate;
     private final List<Reservation> reservations;
-    private final AtomicLong index;
 
     public ReservationApiController(JdbcTemplate jdbcTemplate) {
         this.jdbcTemplate = jdbcTemplate;
         reservations = new ArrayList<>();
-        index = new AtomicLong(1);
     }
 
     @GetMapping
@@ -37,15 +39,31 @@ public class ReservationApiController {
     }
 
     @PostMapping
-    public Reservation addReservation(@RequestBody ReservationRequestDto reservationRequestDto) {
-        Reservation reservation = reservationRequestDto.toEntity(index.getAndIncrement());
-        reservations.add(reservation);
-        return reservation;
+    public ResponseEntity<Reservation> addReservation(@RequestBody ReservationRequestDto reservationRequestDto) {
+        String sql = "insert into reservation(name, date, time) values(?, ?, ?)";
+        KeyHolder keyHolder = new GeneratedKeyHolder();
+
+        jdbcTemplate.update(connection -> {
+            PreparedStatement ps = connection.prepareStatement(sql, new String[]{"id"});
+            ps.setString(1, reservationRequestDto.getName());
+            ps.setString(2, reservationRequestDto.getDate());
+            ps.setString(3, reservationRequestDto.getTime());
+
+            return ps;
+        }, keyHolder);
+
+        long id = keyHolder.getKey().longValue();
+        Reservation reservation = reservationRequestDto.toEntity(id);
+
+        return ResponseEntity.created(URI.create("/reservations/" + id)).body(reservation);
     }
 
     @DeleteMapping("/{id}")
-    public void deleteReservation(@PathVariable long id) {
-        reservations.removeIf(reservation -> reservation.getId() == id);
+    public ResponseEntity<Void> deleteReservation(@PathVariable long id) {
+        String sql = "delete from reservation where id = ?";
+        jdbcTemplate.update(sql, id);
+
+        return ResponseEntity.noContent().build();
     }
 
     private RowMapper<Reservation> reservationRowMapper() {

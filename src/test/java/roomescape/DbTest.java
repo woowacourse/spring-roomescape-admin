@@ -40,6 +40,4 @@ public class DbTest {
             throw new RuntimeException(e);
         }
     }
-
 }
-

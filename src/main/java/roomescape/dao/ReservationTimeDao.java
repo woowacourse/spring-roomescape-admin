@@ -13,6 +13,7 @@ import java.util.List;
 
 @Component
 public class ReservationTimeDao {
+
     @Autowired
     private final JdbcTemplate jdbcTemplate;
 

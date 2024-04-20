@@ -99,5 +99,4 @@ public class ReservationTimeControllerTest {
                 .then().log().all()
                 .statusCode(200);
     }
-
 }

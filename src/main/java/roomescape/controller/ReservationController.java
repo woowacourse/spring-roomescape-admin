@@ -15,7 +15,6 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
-import roomescape.domain.Reservation;
 
 @RestController
 @RequestMapping("/reservations")
@@ -32,11 +31,11 @@ class ReservationController {
     }
 
     @PostMapping
-    public ResponseEntity<Reservation> reserve(@RequestBody CreateReservationRequest request) {
+    public ResponseEntity<ReservationResponse> reserve(@RequestBody CreateReservationRequest request) {
         BeanPropertySqlParameterSource parameterSource = new BeanPropertySqlParameterSource(request);
         Number key = simpleInsert.executeAndReturnKey(parameterSource);
         return ResponseEntity.created(URI.create("/reservations/" + key))
-                .body(new Reservation(
+                .body(new ReservationResponse(
                         key.longValue(),
                         request.name(),
                         request.date(),
@@ -52,9 +51,9 @@ class ReservationController {
     }
 
     @GetMapping
-    public ResponseEntity<List<Reservation>> getReservations() {
+    public ResponseEntity<List<ReservationResponse>> getReservations() {
         String sql = "select * from reservation";
-        List<Reservation> reservations = jdbcTemplate.query(sql, (rs, rowNum) -> new Reservation(
+        List<ReservationResponse> reservations = jdbcTemplate.query(sql, (rs, rowNum) -> new ReservationResponse(
                 rs.getLong("id"),
                 rs.getString("name"),
                 LocalDate.parse(rs.getString("date")),

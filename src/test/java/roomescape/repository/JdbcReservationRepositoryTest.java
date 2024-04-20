@@ -7,7 +7,7 @@ import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.autoconfigure.data.jdbc.DataJdbcTest;
 import org.springframework.boot.test.autoconfigure.jdbc.JdbcTest;
 
-class H2ReservationRepositoryTest {
+class JdbcReservationRepositoryTest {
 
     @Test
     void findAll() {

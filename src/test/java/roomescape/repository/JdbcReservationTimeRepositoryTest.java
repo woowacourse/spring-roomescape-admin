@@ -5,7 +5,7 @@ import static org.assertj.core.api.Assertions.*;
 
 import org.junit.jupiter.api.Test;
 
-class H2ReservationTimeRepositoryTest {
+class JdbcReservationTimeRepositoryTest {
 
     @Test
     void findAll() {

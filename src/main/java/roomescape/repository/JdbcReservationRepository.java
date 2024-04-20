@@ -13,7 +13,7 @@ import roomescape.domain.Reservation;
 import roomescape.domain.ReservationTime;
 
 @Repository
-public class H2ReservationRepository implements ReservationRepository {
+public class JdbcReservationRepository implements ReservationRepository {
 
     private final JdbcTemplate jdbcTemplate;
     private final SimpleJdbcInsert simpleJdbcInsert;
@@ -30,7 +30,7 @@ public class H2ReservationRepository implements ReservationRepository {
         return new Reservation(id, name, date, time);
     };
 
-    public H2ReservationRepository(DataSource dataSource) {
+    public JdbcReservationRepository(DataSource dataSource) {
         this.jdbcTemplate = new JdbcTemplate(dataSource);
         this.simpleJdbcInsert = new SimpleJdbcInsert(jdbcTemplate)
                 .withTableName("reservation")

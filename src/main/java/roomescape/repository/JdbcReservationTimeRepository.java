@@ -13,7 +13,7 @@ import org.springframework.stereotype.Repository;
 import roomescape.domain.ReservationTime;
 
 @Repository
-public class H2ReservationTimeRepository implements ReservationTimeRepository {
+public class JdbcReservationTimeRepository implements ReservationTimeRepository {
 
     private final JdbcTemplate jdbcTemplate;
     private final SimpleJdbcInsert simpleJdbcInsert;
@@ -24,7 +24,7 @@ public class H2ReservationTimeRepository implements ReservationTimeRepository {
         return new ReservationTime(id, startAt);
     };
 
-    public H2ReservationTimeRepository(DataSource dataSource) {
+    public JdbcReservationTimeRepository(DataSource dataSource) {
         this.jdbcTemplate = new JdbcTemplate(dataSource);
         this.simpleJdbcInsert = new SimpleJdbcInsert(jdbcTemplate)
                 .withTableName("reservation_time")

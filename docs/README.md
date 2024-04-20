@@ -1,4 +1,5 @@
 ## 🏃 방탈출 예약 관리
+
 방탈출을 예약하고 조회 및 삭제하는 웹 어플리케이션 입니다.
 `Spring Boot` 프레임워크와 데이터베이스를 사용하여 개발되었습니다.
 
@@ -15,6 +16,7 @@
 | `DELETE` | `/reservations/{id}` | 예약 취소        |                                           |
 
 ## 🗃️ Database
+
 ```sql
 CREATE TABLE reservation
 (
@@ -24,6 +26,7 @@ CREATE TABLE reservation
     time VARCHAR(255) NOT NULL
 );
 ```
+
 ``` mermaid
 erDiagram
     reservation {
@@ -33,3 +36,11 @@ erDiagram
         time VARCHAR(255)
     }
 ```
+
+## 🧐 고민했던 부분
+
+### `entity` `repository` `service` Layer
+
+### Get generated id at inserting data to db
+
+https://docs.spring.io/spring-framework/docs/3.0.x/reference/jdbc.html#jdbc-auto-genereted-keys

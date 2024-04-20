@@ -54,8 +54,8 @@ public class ReservationController {
                 "date", reservationSaveRequest.date(),
                 "time", reservationSaveRequest.time());
         final Long savedReservationId = reservationInsert.executeAndReturnKey(reservationParameters).longValue();
-        final Reservation reservation = reservationSaveRequest.toReservation(savedReservationId);
-        final ReservationResponse reservationResponse = ReservationResponse.from(reservation);
+        final ReservationResponse reservationResponse = new ReservationResponse(savedReservationId,
+                reservationSaveRequest.name(), reservationSaveRequest.date(), reservationSaveRequest.time());
         return ResponseEntity.created(URI.create("/reservations/" + savedReservationId))
                 .body(reservationResponse);
     }

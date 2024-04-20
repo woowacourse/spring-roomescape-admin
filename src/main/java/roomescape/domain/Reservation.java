@@ -15,6 +15,7 @@ public class Reservation {
         this.reservationDate = reservationDate;
         this.reservationTime = reservationTime;
     }
+
     public Reservation(Long id, String name, String date, ReservationTime reservationTime) {
         this(id, new Name(name), new ReservationDate(date), reservationTime);
     }

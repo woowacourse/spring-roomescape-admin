@@ -1,4 +1,4 @@
 package roomescape.dto;
 
-public record TimeRequestDto(String start_at) {
+public record TimeRequestDto(String startAt) {
 }

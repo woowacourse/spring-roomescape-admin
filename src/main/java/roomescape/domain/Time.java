@@ -2,11 +2,11 @@ package roomescape.domain;
 
 public class Time {
     private Long id;
-    private String start_at;
+    private String startAt;
 
-    public Time(Long id, String start_at) {
+    public Time(Long id, String startAt) {
         this.id = id;
-        this.start_at = start_at;
+        this.startAt = startAt;
     }
 
     public Time() {
@@ -17,7 +17,7 @@ public class Time {
         return id;
     }
 
-    public String getStart_at() {
-        return start_at;
+    public String getStartAt() {
+        return startAt;
     }
 }

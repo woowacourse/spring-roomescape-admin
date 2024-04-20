@@ -13,6 +13,7 @@ import org.springframework.test.annotation.DirtiesContext;
 import roomescape.domain.Time;
 
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 import static org.assertj.core.api.Assertions.assertThat;
@@ -57,6 +58,20 @@ public class TimeControllerTest {
 
         assertThat(response.statusCode()).isEqualTo(HttpStatus.OK.value());
         assertThat(response.as(Time.class).getId()).isEqualTo(1L);
-        assertThat(response.as(Time.class).getStart_at()).isEqualTo("10:00");
+        assertThat(response.as(Time.class).getStartAt()).isEqualTo("10:00");
+    }
+
+    @Test
+    void findAllTest() {
+        List<Time> times = RestAssured.given().log().all()
+                .contentType(ContentType.JSON)
+                .when().get("/times")
+                .then().log().all()
+                .statusCode(200).extract()
+                .jsonPath().getList(".", Time.class);
+
+        Integer count = jdbcTemplate.queryForObject("SELECT count(1) from reservation_time", Integer.class);
+
+        assertThat(times.size()).isEqualTo(count);
     }
 }

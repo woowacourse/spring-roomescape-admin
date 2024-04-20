@@ -43,10 +43,6 @@ public class ReservationDto {
         return new Reservation(id, name, date, time.toEntity());
     }
 
-    public Long getId() {
-        return id;
-    }
-
     public String getName() {
         return name;
     }
@@ -55,7 +51,7 @@ public class ReservationDto {
         return date;
     }
 
-    public ReservationTimeDto getTime() {
-        return time;
+    public Long getTimeId() {
+        return time.getId();
     }
 }

@@ -41,7 +41,7 @@ public class ReservationJdbcRepository implements ReservationRepository {
         Map<String, ? extends Serializable> parameters = Map.of(
                 "name", reservationDto.getName(),
                 "date", reservationDto.getDate(),
-                "time_id", reservationDto.getTime().getId()
+                "time_id", reservationDto.getTimeId()
         );
         Number key = jdbcInsert.executeAndReturnKey(parameters);
         return reservationDto.toEntity(key.longValue());

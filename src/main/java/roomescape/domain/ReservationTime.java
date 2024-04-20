@@ -17,10 +17,6 @@ public class ReservationTime {
         this(id, LocalTime.parse(time));
     }
 
-    public ReservationTime(LocalTime time) {
-        this(null, time);
-    }
-
     public ReservationTime(String time) {
         this(null, time);
     }

@@ -1,6 +1,7 @@
 package roomescape;
 
 import roomescape.domain.Reservation;
+import roomescape.domain.ReservationTime;
 
 import java.time.LocalDate;
 import java.time.LocalTime;
@@ -15,11 +16,11 @@ public class TestFixture {
     public static final LocalDate TOMMY_RESERVATION_DATE = LocalDate.of(2030, Month.MAY, 19);
     public static final LocalTime TOMMY_RESERVATION_TIME = LocalTime.of(15, 0);
 
-    public static Reservation MIA_RESERVATION() {
-        return new Reservation(USER_MIA, MIA_RESERVATION_DATE, MIA_RESERVATION_TIME);
+    public static Reservation MIA_RESERVATION(ReservationTime time) {
+        return new Reservation(USER_MIA, MIA_RESERVATION_DATE, time);
     }
 
     public static Reservation TOMMY_RESERVATION() {
-        return new Reservation(USER_TOMMY, TOMMY_RESERVATION_DATE, TOMMY_RESERVATION_TIME);
+        return new Reservation(USER_TOMMY, TOMMY_RESERVATION_DATE, new ReservationTime(TOMMY_RESERVATION_TIME));
     }
 }

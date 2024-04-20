@@ -1,6 +1,7 @@
 package roomescape.persistence;
 
 import roomescape.domain.Reservation;
+import roomescape.domain.ReservationTime;
 
 import java.time.LocalDate;
 import java.time.LocalTime;
@@ -23,7 +24,7 @@ public class ReservationCollectionRepository implements ReservationRepository {
     }
 
     @Override
-    public List<Reservation> findAllByDateAndTime(LocalDate date, LocalTime time) {
+    public List<Reservation> findAllByDateAndTime(LocalDate date, ReservationTime time) {
         return reservations.values()
                 .stream()
                 .filter(reservation -> reservation.hasSameDateTime(date, time))

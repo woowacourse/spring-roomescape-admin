@@ -2,9 +2,9 @@ package roomescape.persistence;
 
 import org.springframework.stereotype.Repository;
 import roomescape.domain.Reservation;
+import roomescape.domain.ReservationTime;
 
 import java.time.LocalDate;
-import java.time.LocalTime;
 import java.util.List;
 import java.util.Optional;
 
@@ -23,7 +23,7 @@ public class ReservationDbRepository implements ReservationRepository {
     }
 
     @Override
-    public List<Reservation> findAllByDateAndTime(LocalDate date, LocalTime time) {
+    public List<Reservation> findAllByDateAndTime(LocalDate date, ReservationTime time) {
         return reservationDao.selectAllByDateAndTime(date, time);
     }
 

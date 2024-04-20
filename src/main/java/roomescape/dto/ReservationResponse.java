@@ -15,7 +15,7 @@ public record ReservationResponse(
     private static final DateTimeFormatter FORMATTER = DateTimeFormatter.ofPattern("HH:mm");
 
     public static ReservationResponse from(Reservation reservation) {
-        String time = reservation.getTime().format(FORMATTER);
+        String time = reservation.getTime().getStartAt().format(FORMATTER);
         return new ReservationResponse(reservation.getId(), reservation.getName(), reservation.getDate(), time);
     }
 }

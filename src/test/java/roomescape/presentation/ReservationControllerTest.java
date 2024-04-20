@@ -5,6 +5,7 @@ import org.junit.jupiter.api.Test;
 import org.mockito.BDDMockito;
 import org.springframework.http.MediaType;
 import roomescape.domain.Reservation;
+import roomescape.domain.ReservationTime;
 import roomescape.dto.ReservationResponse;
 import roomescape.dto.ReservationSaveRequest;
 
@@ -24,7 +25,7 @@ class ReservationControllerTest extends ControllerTest {
     void getReservations() throws Exception {
         // given
         BDDMockito.given(reservationService.getReservations())
-                .willReturn(List.of(ReservationResponse.from(MIA_RESERVATION())));
+                .willReturn(List.of(ReservationResponse.from(MIA_RESERVATION(new ReservationTime(MIA_RESERVATION_TIME)))));
 
         // when & then
         mockMvc.perform(get("/reservations").contentType(MediaType.APPLICATION_JSON))

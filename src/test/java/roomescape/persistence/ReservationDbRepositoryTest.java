@@ -10,6 +10,7 @@ import org.springframework.jdbc.support.GeneratedKeyHolder;
 import org.springframework.jdbc.support.KeyHolder;
 import org.springframework.test.annotation.DirtiesContext;
 import roomescape.domain.Reservation;
+import roomescape.domain.ReservationTime;
 
 import java.sql.Date;
 import java.sql.PreparedStatement;
@@ -32,6 +33,8 @@ class ReservationDbRepositoryTest implements ReservationRepositoryTest {
     @BeforeEach
     void setUp() {
         jdbcTemplate.execute("TRUNCATE TABLE reservation");
+        String insertTimeSql = "INSERT INTO reservation_time (start_at) VALUES (?)";
+        jdbcTemplate.update(insertTimeSql, Time.valueOf(MIA_RESERVATION_TIME));
     }
 
     @Override
@@ -39,7 +42,8 @@ class ReservationDbRepositoryTest implements ReservationRepositoryTest {
     @DisplayName("예약을 저장한다.")
     public void save() {
         // given
-        Reservation reservation = MIA_RESERVATION();
+        Long timeId = 1L;
+        Reservation reservation = MIA_RESERVATION(new ReservationTime(timeId, MIA_RESERVATION_TIME));
 
         // when
         Reservation savedReservation = reservationRepository.save(reservation);
@@ -53,15 +57,16 @@ class ReservationDbRepositoryTest implements ReservationRepositoryTest {
     @DisplayName("동일시간대의 예약 목록을 조회한다.")
     public void findAllByDateAndTime() {
         // given
-        String insertSql = "INSERT INTO reservation (name, date, time) VALUES (?, ?, ?), (?, ?, ?)";
+        Long timeId = 1L;
+        String insertSql = "INSERT INTO reservation (name, date, time_id) VALUES (?, ?, ?), (?, ?, ?)";
         jdbcTemplate.update(
                 insertSql,
-                USER_MIA, MIA_RESERVATION_DATE.toString(), MIA_RESERVATION_TIME.toString(),
-                USER_TOMMY, MIA_RESERVATION_DATE.toString(), MIA_RESERVATION_TIME.toString()
+                USER_MIA, Date.valueOf(MIA_RESERVATION_DATE), timeId,
+                USER_TOMMY, Date.valueOf(MIA_RESERVATION_DATE), timeId
         );
 
         // when
-        List<Reservation> reservations = reservationRepository.findAllByDateAndTime(MIA_RESERVATION_DATE, MIA_RESERVATION_TIME);
+        List<Reservation> reservations = reservationRepository.findAllByDateAndTime(MIA_RESERVATION_DATE, new ReservationTime(MIA_RESERVATION_TIME));
 
         // then
         assertThat(reservations).hasSize(2)
@@ -74,8 +79,9 @@ class ReservationDbRepositoryTest implements ReservationRepositoryTest {
     @DisplayName("모든 예약 목록을 조회한다.")
     public void findAll() {
         // given
-        String insertSql = "INSERT INTO reservation (name, date, time) VALUES (?, ?, ?)";
-        jdbcTemplate.update(insertSql, USER_MIA, MIA_RESERVATION_DATE, MIA_RESERVATION_TIME);
+        Long timeId = 1L;
+        String insertSql = "INSERT INTO reservation (name, date, time_id) VALUES (?, ?, ?)";
+        jdbcTemplate.update(insertSql, USER_MIA, MIA_RESERVATION_DATE, timeId);
 
         // when
         List<Reservation> reservations = reservationRepository.findAll();
@@ -90,13 +96,14 @@ class ReservationDbRepositoryTest implements ReservationRepositoryTest {
     @DisplayName("Id로 예약을 조회한다.")
     public void findById() {
         // given
-        String insertSql = "INSERT INTO reservation (name, date, time) VALUES (?, ?, ?)";
+        long timeId = 1L;
+        String insertSql = "INSERT INTO reservation (name, date, time_id) VALUES (?, ?, ?)";
         KeyHolder keyHolder = new GeneratedKeyHolder();
         jdbcTemplate.update(connection -> {
             PreparedStatement ps = connection.prepareStatement(insertSql, new String[]{"id"});
             ps.setString(1, USER_MIA);
             ps.setDate(2, Date.valueOf(MIA_RESERVATION_DATE));
-            ps.setTime(3, Time.valueOf(MIA_RESERVATION_TIME));
+            ps.setLong(3, timeId);
             return ps;
         }, keyHolder);
         Long id = keyHolder.getKey().longValue();
@@ -113,13 +120,14 @@ class ReservationDbRepositoryTest implements ReservationRepositoryTest {
     @DisplayName("Id로 예약을 삭제한다.")
     public void deleteById() {
         // given
-        String insertSql = "INSERT INTO reservation (name, date, time) VALUES (?, ?, ?)";
+        long timeId = 1L;
+        String insertSql = "INSERT INTO reservation (name, date, time_id) VALUES (?, ?, ?)";
         KeyHolder keyHolder = new GeneratedKeyHolder();
         jdbcTemplate.update(connection -> {
             PreparedStatement ps = connection.prepareStatement(insertSql, new String[]{"id"});
             ps.setString(1, USER_MIA);
             ps.setDate(2, Date.valueOf(MIA_RESERVATION_DATE));
-            ps.setTime(3, Time.valueOf(MIA_RESERVATION_TIME));
+            ps.setLong(3, timeId);
             return ps;
         }, keyHolder);
         Long id = keyHolder.getKey().longValue();

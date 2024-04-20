@@ -4,7 +4,6 @@ import java.util.List;
 import java.util.concurrent.atomic.AtomicLong;
 import org.springframework.web.bind.annotation.*;
 import roomescape.domain.Reservation;
-import roomescape.domain.Reservations;
 import roomescape.dto.request.ReservationCreateRequest;
 import java.util.ArrayList;
 import roomescape.dto.response.ReservationResponse;
@@ -13,12 +12,11 @@ import roomescape.dto.response.ReservationResponse;
 public class ReservationController {
 
     private final AtomicLong id = new AtomicLong(0);
-    private final Reservations reservations = new Reservations(new ArrayList<>());
+    private final List<Reservation> reservations = new ArrayList<>();
 
     @GetMapping("/reservations")
     public List<ReservationResponse> getReservations() {
-        return reservations.getReservations()
-                .stream()
+        return reservations.stream()
                 .map(ReservationResponse::fromReservation)
                 .toList();
     }
@@ -33,6 +31,13 @@ public class ReservationController {
 
     @DeleteMapping("/reservations/{id}")
     public void deleteReservation(@PathVariable("id") Long id) {
-        reservations.remove(id);
+        reservations.remove(findBy(id));
+    }
+
+    public Reservation findBy(Long id) {
+        return reservations.stream()
+                .filter(reservation -> reservation.hasSameId(id))
+                .findFirst()
+                .orElseThrow(() -> new IllegalArgumentException(id + "는 존재하지 않습니다."));
     }
 }

@@ -1,5 +1,7 @@
 package roomescape.controller;
 
+import static org.springframework.http.HttpStatus.NOT_FOUND;
+
 import java.util.List;
 import java.util.concurrent.atomic.AtomicLong;
 import org.springframework.http.ResponseEntity;
@@ -9,6 +11,7 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.server.ResponseStatusException;
 import roomescape.model.Reservation;
 import roomescape.model.Reservations;
 import roomescape.dto.ReservationCreateRequestDto;
@@ -37,7 +40,11 @@ public class ReservationController {
 
     @DeleteMapping("/reservations/{id}")
     public ResponseEntity<Void> delete(@PathVariable long id) {
-        reservations.delete(id);
+        try {
+            reservations.delete(id);
+        } catch (Exception e) {
+            throw new ResponseStatusException(NOT_FOUND, "Unable to find resource");
+        }
         return ResponseEntity.ok().build();
     }
 }

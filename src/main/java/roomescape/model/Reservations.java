@@ -1,10 +1,7 @@
 package roomescape.model;
 
-import static org.springframework.http.HttpStatus.NOT_FOUND;
-
 import java.util.ArrayList;
 import java.util.List;
-import org.springframework.web.server.ResponseStatusException;
 
 public class Reservations {
 
@@ -21,7 +18,7 @@ public class Reservations {
         Reservation delReservation = reservations.stream()
                 .filter(reservation -> reservation.isSameReservationId(id))
                 .findFirst()
-                .orElseThrow(() -> new ResponseStatusException(NOT_FOUND, "Unable to find resource"));
+                .orElseThrow();
         reservations.remove(delReservation);
     }
 

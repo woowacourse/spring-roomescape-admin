@@ -4,6 +4,7 @@ import java.time.LocalTime;
 import java.util.List;
 import javax.sql.DataSource;
 import org.springframework.jdbc.core.JdbcTemplate;
+import org.springframework.jdbc.core.RowMapper;
 import org.springframework.jdbc.core.namedparam.BeanPropertySqlParameterSource;
 import org.springframework.jdbc.core.simple.SimpleJdbcInsert;
 import org.springframework.stereotype.Repository;
@@ -22,29 +23,32 @@ public class ReservationTimeDao {
                 .usingGeneratedKeyColumns("id");
     }
 
-    public void save(ReservationTime reservationTime) {
+    public ReservationTime save(ReservationTime reservationTime) {
         BeanPropertySqlParameterSource parameterSource = new BeanPropertySqlParameterSource(reservationTime);
         Number key = jdbcInsert.executeAndReturnKey(parameterSource);
 
-        reservationTime.setId(key.longValue());
+        return new ReservationTime(key.longValue(), reservationTime.getStartAt());
     }
 
     public List<ReservationTime> findAll() {
         String sql = "SELECT * FROM reservation_time";
-        return jdbcTemplate.query(sql, (resultSet, rowNum) -> new ReservationTime(resultSet.getLong("id"),
-                LocalTime.parse(resultSet.getString("start_at"))));
+        return jdbcTemplate.query(sql, getReservationTimeRowMapper());
     }
 
     public ReservationTime findById(long id) {
         String sql = """
                 SELECT * FROM reservation_time
                 WHERE id = ?""";
-        return jdbcTemplate.queryForObject(sql, (resultSet, rowNum) -> new ReservationTime(resultSet.getLong("id"),
-                LocalTime.parse(resultSet.getString("start_at"))), id);
+        return jdbcTemplate.queryForObject(sql, getReservationTimeRowMapper(), id);
     }
 
     public void deleteById(long id) {
         String sql = "DELETE FROM reservation_time WHERE id = ?";
         jdbcTemplate.update(sql, id);
+    }
+
+    private RowMapper<ReservationTime> getReservationTimeRowMapper() {
+        return (resultSet, rowNum) -> new ReservationTime(resultSet.getLong("id"),
+                LocalTime.parse(resultSet.getString("start_at")));
     }
 }

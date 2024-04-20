@@ -1,11 +1,15 @@
 package roomescape.domain;
 
 import java.time.LocalTime;
+import java.util.Objects;
 
 public class ReservationTime {
 
     private Long id;
     private LocalTime startAt;
+
+    protected ReservationTime() {
+    }
 
     public ReservationTime(LocalTime startAt) {
         this.startAt = startAt;
@@ -24,7 +28,20 @@ public class ReservationTime {
         return startAt;
     }
 
-    public void setId(long id) {
-        this.id = id;
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) {
+            return true;
+        }
+        if (o == null || getClass() != o.getClass()) {
+            return false;
+        }
+        ReservationTime that = (ReservationTime) o;
+        return Objects.equals(id, that.id);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hashCode(id);
     }
 }

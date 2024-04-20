@@ -40,11 +40,11 @@ public class ReservationDao {
         });
     }
 
-    public void save(Reservation reservation) {
+    public Reservation save(Reservation reservation) {
         BeanPropertySqlParameterSource parameterSource = new BeanPropertySqlParameterSource(reservation);
         Number key = jdbcInsert.executeAndReturnKey(parameterSource);
 
-        reservation.setId(key.longValue());
+        return new Reservation(key.longValue(), reservation.getName(), reservation.getDate(), reservation.getTime());
     }
 
     public void deleteById(long id) {

@@ -21,9 +21,9 @@ public class ReservationTimeService {
 
     public ReservationTimeServiceResponse create(ReservationTimeServiceRequest reservationTimeServiceRequest) {
         ReservationTime reservationTime = reservationTimeServiceRequest.toReservationTime();
-        reservationTimeDao.save(reservationTime);
+        ReservationTime savedReservationTime = reservationTimeDao.save(reservationTime);
 
-        return ReservationTimeServiceResponse.from(reservationTime);
+        return ReservationTimeServiceResponse.from(savedReservationTime);
     }
 
     public List<ReservationTimeServiceResponse> findAll() {

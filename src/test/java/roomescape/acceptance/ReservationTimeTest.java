@@ -16,7 +16,7 @@ import roomescape.domain.ReservationTime;
 import roomescape.repository.ReservationTimeRepository;
 import roomescape.service.dto.ReservationTimeDto;
 
-public class ReservationTimeTest extends AcceptanceTest {
+class ReservationTimeTest extends AcceptanceTest {
 
     @Autowired
     private ReservationTimeRepository reservationTimeRepository;

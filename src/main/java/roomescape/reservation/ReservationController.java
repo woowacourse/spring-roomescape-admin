@@ -8,6 +8,6 @@ public class ReservationController {
 
     @GetMapping("/reservation")
     public String home() {
-        return "admin/reservation-legacy";
+        return "admin/reservation";
     }
 }

@@ -60,22 +60,21 @@ class ReservationServiceTest {
         assertThat(reservations.get(0).time()).isEqualTo(time);
     }
 
-    @DisplayName("삭제에 성공한다.")
+    @DisplayName("예약 삭제에 성공한다.")
     @Test
     void delete() {
         //given
+        long id = 1;
         String name = "choco";
         LocalDate date = LocalDate.of(2024, 4, 18);
         LocalTime time = LocalTime.of(19, 55, 18);
-        ReservationRequest reservationRequest = new ReservationRequest(name, date, time);
-        reservationService.create(reservationRequest);
-        ReservationResponse reservationResponse = reservationService.findAllReservations().get(0);
+        reservationRepository.save(new Reservation(id, name, date, time));
 
         //when
-        boolean deleted = reservationService.delete(reservationResponse.id());
+        boolean deleted = reservationService.delete(id);
 
         //then
         assertThat(deleted).isTrue();
-        assertThat(reservationService.findAllReservations()).hasSize(0);
+        assertThat(reservationRepository.findAll()).hasSize(0);
     }
 }

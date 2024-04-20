@@ -5,6 +5,7 @@ import java.sql.PreparedStatement;
 import java.sql.Statement;
 import java.sql.Time;
 import java.util.List;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.support.GeneratedKeyHolder;
 import org.springframework.jdbc.support.KeyHolder;
@@ -45,5 +46,12 @@ public class ReservationDao implements ReservationRepository {
                     );
                 }
         );
+    }
+
+    @Override
+    public boolean delete(final long reservationId) {
+        String sql = "DELETE FROM reservation WHERE id = ?";
+        int updateId = jdbcTemplate.update(sql, reservationId);
+        return updateId != 0;
     }
 }

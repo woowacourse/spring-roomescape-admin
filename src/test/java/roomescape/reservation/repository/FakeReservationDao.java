@@ -20,4 +20,13 @@ public class FakeReservationDao implements ReservationRepository {
                 .stream()
                 .toList();
     }
+
+    @Override
+    public boolean delete(final long reservationId) {
+        if (!reservations.containsKey(reservationId)) {
+            return false;
+        }
+        reservations.remove(reservationId);
+        return true;
+    }
 }

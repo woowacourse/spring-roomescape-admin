@@ -1,8 +1,6 @@
 package roomescape.reservation;
 
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 import org.springframework.stereotype.Service;
 import roomescape.reservation.dto.ReservationRequest;
 import roomescape.reservation.dto.ReservationResponse;
@@ -15,8 +13,6 @@ public class ReservationService {
     public ReservationService(final ReservationRepository reservationRepository) {
         this.reservationRepository = reservationRepository;
     }
-
-    private final Map<Long, Reservation> reservations = new HashMap<>();
 
     public List<ReservationResponse> findAllReservations() {
         return reservationRepository.findAll()
@@ -35,10 +31,6 @@ public class ReservationService {
     }
 
     public boolean delete(long reservationId) {
-        if (!reservations.containsKey(reservationId)) {
-            return false;
-        }
-        reservations.remove(reservationId);
-        return true;
+        return reservationRepository.delete(reservationId);
     }
 }

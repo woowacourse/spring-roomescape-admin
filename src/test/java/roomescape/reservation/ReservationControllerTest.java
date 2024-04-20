@@ -8,14 +8,15 @@ import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.annotation.DirtiesContext;
+import roomescape.reservation.repository.ReservationRepository;
 
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.DEFINED_PORT)
 @DirtiesContext(classMode = DirtiesContext.ClassMode.BEFORE_EACH_TEST_METHOD)
 class ReservationControllerTest {
 
-    @DisplayName("예약 생성 시 201을 반환한다.")
+    @DisplayName("예약 생성, 삭제 시 200을 반환한다.")
     @Test
-    void create() {
+    void createAndDelete() {
         Map<String, String> params = new HashMap<>();
         params.put("name", "브라운");
         params.put("date", "2023-08-05");
@@ -25,6 +26,11 @@ class ReservationControllerTest {
                 .contentType(ContentType.JSON)
                 .body(params)
                 .when().post("/reservations")
+                .then().log().all()
+                .statusCode(200);
+
+        RestAssured.given().log().all()
+                .when().delete("/reservations/1")
                 .then().log().all()
                 .statusCode(200);
     }
@@ -48,7 +54,7 @@ class ReservationControllerTest {
     @Test
     void reservationNotFound() {
         RestAssured.given().log().all()
-                .when().delete("/reservations/1")
+                .when().delete("/reservations/6")
                 .then().log().all()
                 .statusCode(404);
     }

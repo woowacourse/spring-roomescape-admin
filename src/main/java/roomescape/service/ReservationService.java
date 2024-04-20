@@ -8,19 +8,18 @@ import roomescape.domain.ReservationTime;
 import roomescape.dto.ReservationRequest;
 import roomescape.dto.ReservationResponse;
 import roomescape.repository.ReservationRepository;
-import roomescape.repository.ReservationTimeRepository;
 
 @Service
 @Transactional(readOnly = true)
 public class ReservationService {
 
     private final ReservationRepository reservationRepository;
-    private final ReservationTimeRepository reservationTimeRepository;
+    private final ReservationTimeService reservationTimeService;
 
     public ReservationService(ReservationRepository reservationRepository,
-                              ReservationTimeRepository reservationTimeRepository) {
+                              ReservationTimeService reservationTimeService) {
         this.reservationRepository = reservationRepository;
-        this.reservationTimeRepository = reservationTimeRepository;
+        this.reservationTimeService = reservationTimeService;
     }
 
     public List<ReservationResponse> getAllReservations() {
@@ -33,8 +32,9 @@ public class ReservationService {
 
     @Transactional
     public ReservationResponse addReservation(ReservationRequest reservationRequest) {
-        ReservationTime reservationTime = reservationTimeRepository.findById(reservationRequest.timeId())
-                .orElseThrow(() -> new IllegalArgumentException("존재하지 않는 시간입니다."));
+        ReservationTime reservationTime = reservationTimeService.getReservationTimeByIdOrElseThrow(
+                reservationRequest.timeId()
+        );
 
         Reservation reservation = reservationRequest.toReservation(reservationTime);
         Reservation savedReservation = reservationRepository.save(reservation);

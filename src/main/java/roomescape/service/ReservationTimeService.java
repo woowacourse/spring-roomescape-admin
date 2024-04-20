@@ -26,6 +26,11 @@ public class ReservationTimeService {
                 .toList();
     }
 
+    public ReservationTime getReservationTimeByIdOrElseThrow(Long id) {
+        return reservationTimeRepository.findById(id)
+                .orElseThrow(() -> new IllegalArgumentException("해당 id의 예약 시간이 존재하지 않습니다."));
+    }
+
     @Transactional
     public ReservationTimeResponse addReservationTime(ReservationTimeRequest reservationTimeRequest) {
         ReservationTime reservationTime = reservationTimeRequest.toReservationTime();

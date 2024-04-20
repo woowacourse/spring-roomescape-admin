@@ -2,6 +2,7 @@ package roomescape.presentation.web.response;
 
 import java.time.LocalTime;
 import com.fasterxml.jackson.annotation.JsonFormat;
+import roomescape.domain.ReservationTime;
 
 public record ReservationTimeResponse(
 
@@ -10,4 +11,8 @@ public record ReservationTimeResponse(
         @JsonFormat(pattern = "HH:mm")
         LocalTime startAt
 ) {
+
+    public ReservationTimeResponse(ReservationTime time) {
+        this(time.getId(), time.getStartAt());
+    }
 }

@@ -28,9 +28,10 @@ class ReservationTimeController {
     @PostMapping
     public ResponseEntity<ReservationTimeResponse> add(@RequestBody CreateReservationTimeRequest request) {
         ReservationTime newReservationTime = reservationTimeService.addTime(request);
+        ReservationTimeResponse response = new ReservationTimeResponse(newReservationTime);
 
         return ResponseEntity.created(URI.create("/times/" + newReservationTime.getId()))
-                .body(toDto(newReservationTime));
+                .body(response);
     }
 
     @DeleteMapping("/{id}")
@@ -44,13 +45,9 @@ class ReservationTimeController {
     public ResponseEntity<List<ReservationTimeResponse>> getTimes() {
         List<ReservationTime> times = reservationTimeService.findTimes();
         List<ReservationTimeResponse> responses = times.stream()
-                .map(this::toDto)
+                .map(ReservationTimeResponse::new)
                 .toList();
 
         return ResponseEntity.ok(responses);
-    }
-
-    private ReservationTimeResponse toDto(ReservationTime newReservationTime) {
-        return new ReservationTimeResponse(newReservationTime.getId(), newReservationTime.getStartAt());
     }
 }

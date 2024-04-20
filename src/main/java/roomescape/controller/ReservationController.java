@@ -24,7 +24,7 @@ public class ReservationController {
 
     @GetMapping("/admin/reservation")
     public String getReservation() {
-        return "admin/reservation-legacy";
+        return "admin/reservation";
     }
 
     @ResponseBody

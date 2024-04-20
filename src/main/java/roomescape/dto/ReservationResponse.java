@@ -18,10 +18,14 @@ public class ReservationResponse {
     private final LocalTime time;
 
     private ReservationResponse(Reservation reservation) {
-        this.id = reservation.getId();
-        this.name = reservation.getName();
-        this.date = reservation.getDate();
-        this.time = reservation.getTime();
+        this(reservation.getId(), reservation.getName(), reservation.getDate(), reservation.getTime());
+    }
+
+    private ReservationResponse(Long id, String name, LocalDate date, LocalTime time) {
+        this.id = id;
+        this.name = name;
+        this.date = date;
+        this.time = time;
     }
 
     public static ReservationResponse from(Reservation reservation) {

@@ -1,44 +1,35 @@
 package roomescape.application;
 
 import java.util.List;
-import org.springframework.jdbc.core.JdbcTemplate;
-import org.springframework.jdbc.core.namedparam.BeanPropertySqlParameterSource;
-import org.springframework.jdbc.core.simple.SimpleJdbcInsert;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import roomescape.application.request.CreateReservationTimeRequest;
 import roomescape.domain.ReservationTime;
+import roomescape.domain.ReservationTimeRepository;
 
 @Service
+@Transactional(readOnly = true)
 public class ReservationTimeService {
 
-    private final JdbcTemplate jdbcTemplate;
-    private final SimpleJdbcInsert simpleInsert;
+    private final ReservationTimeRepository reservationTimeRepository;
 
-    public ReservationTimeService(JdbcTemplate jdbcTemplate) {
-        this.jdbcTemplate = jdbcTemplate;
-        this.simpleInsert = new SimpleJdbcInsert(jdbcTemplate.getDataSource())
-                .withTableName("reservation_time")
-                .usingGeneratedKeyColumns("id");
+    public ReservationTimeService(ReservationTimeRepository reservationTimeRepository) {
+        this.reservationTimeRepository = reservationTimeRepository;
     }
 
+    @Transactional
     public ReservationTime addTime(CreateReservationTimeRequest request) {
-        BeanPropertySqlParameterSource parameterSource = new BeanPropertySqlParameterSource(request);
-        Number key = simpleInsert.executeAndReturnKey(parameterSource);
+        ReservationTime reservationTime = new ReservationTime(request.startAt());
 
-        return new ReservationTime(key.longValue(), request.startAt());
+        return reservationTimeRepository.saveOne(reservationTime);
     }
 
+    @Transactional
     public void deleteBy(Long id) {
-        String sql = "delete from reservation_time where id = ?";
-        jdbcTemplate.update(sql, id);
+        reservationTimeRepository.deleteBy(id);
     }
 
     public List<ReservationTime> findTimes() {
-        String sql = "select * from reservation_time";
-
-        return jdbcTemplate.query(sql, (rs, rowNum) -> new ReservationTime(
-                rs.getLong("id"),
-                rs.getTime("start_at").toLocalTime()
-        ));
+        return reservationTimeRepository.findAll();
     }
 }

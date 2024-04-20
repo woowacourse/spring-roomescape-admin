@@ -12,11 +12,13 @@ import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.test.annotation.DirtiesContext;
 import roomescape.dto.ReservationTimeResponse;
 
+import java.lang.reflect.Field;
 import java.util.List;
 import java.util.Map;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.hamcrest.Matchers.is;
+import static org.junit.jupiter.api.Assertions.assertFalse;
 
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 @DirtiesContext(classMode = DirtiesContext.ClassMode.AFTER_EACH_TEST_METHOD)
@@ -27,6 +29,9 @@ class ReservationTimeControllerTest {
 
     @Autowired
     private JdbcTemplate jdbcTemplate;
+
+    @Autowired
+    private ReservationTimeController reservationTimeController;
 
     @BeforeEach
     void initPort() {
@@ -80,5 +85,20 @@ class ReservationTimeControllerTest {
 
         final Integer countAfterDelete = jdbcTemplate.queryForObject("SELECT count(1) from reservation_times", Integer.class);
         assertThat(countAfterDelete).isEqualTo(0);
+    }
+
+    @DisplayName("컨트롤러에서 jdbcTemplate 필드 제거")
+    @Test
+    void jdbcTemplateNotInjected() {
+        boolean isJdbcTemplateInjected = false;
+
+        for (Field field : reservationTimeController.getClass().getDeclaredFields()) {
+            if (field.getType().equals(JdbcTemplate.class)) {
+                isJdbcTemplateInjected = true;
+                break;
+            }
+        }
+
+        assertFalse(isJdbcTemplateInjected);
     }
 }

@@ -20,7 +20,7 @@ class ReservationCollectionRepositoryTest implements ReservationRepositoryTest {
     @DisplayName("예약을 저장한다.")
     public void save() {
         // given
-        Reservation reservation = MIA_RESERVATION(new ReservationTime(MIA_RESERVATION_TIME));
+        Reservation reservation = MIA_RESERVATION();
 
         // when
         Reservation savedReservation = reservationRepository.save(reservation);
@@ -34,7 +34,7 @@ class ReservationCollectionRepositoryTest implements ReservationRepositoryTest {
     @DisplayName("동일시간대의 예약 목록을 조회한다.")
     public void findAllByDateAndTime() {
         // given
-        Reservation miaReservation = MIA_RESERVATION(new ReservationTime(MIA_RESERVATION_TIME));
+        Reservation miaReservation = MIA_RESERVATION();
         Reservation wonnyReservation = new Reservation("wonny", MIA_RESERVATION_DATE, new ReservationTime(MIA_RESERVATION_TIME));
         Reservation tommyReservation = TOMMY_RESERVATION();
         reservationRepository.save(miaReservation);
@@ -55,7 +55,7 @@ class ReservationCollectionRepositoryTest implements ReservationRepositoryTest {
     @DisplayName("모든 예약 목록을 조회한다.")
     public void findAll() {
         // given
-        Reservation miaReservation = MIA_RESERVATION(new ReservationTime(MIA_RESERVATION_TIME));
+        Reservation miaReservation = MIA_RESERVATION();
         Reservation tommyReservation = TOMMY_RESERVATION();
         reservationRepository.save(miaReservation);
         reservationRepository.save(tommyReservation);
@@ -74,7 +74,7 @@ class ReservationCollectionRepositoryTest implements ReservationRepositoryTest {
     @DisplayName("Id로 예약을 조회한다.")
     public void findById() {
         // given
-        Reservation miaReservation = MIA_RESERVATION(new ReservationTime(MIA_RESERVATION_TIME));
+        Reservation miaReservation = MIA_RESERVATION();
         reservationRepository.save(miaReservation);
 
         // when
@@ -92,7 +92,7 @@ class ReservationCollectionRepositoryTest implements ReservationRepositoryTest {
     @DisplayName("Id로 예약을 삭제한다.")
     public void deleteById() {
         // given
-        Reservation miaReservation = MIA_RESERVATION(new ReservationTime(MIA_RESERVATION_TIME));
+        Reservation miaReservation = MIA_RESERVATION();
         reservationRepository.save(miaReservation);
 
         // when

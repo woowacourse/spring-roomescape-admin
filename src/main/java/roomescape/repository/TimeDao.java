@@ -7,37 +7,37 @@ import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.support.GeneratedKeyHolder;
 import org.springframework.jdbc.support.KeyHolder;
 import org.springframework.stereotype.Repository;
-import roomescape.dto.Time;
-import roomescape.dto.TimeRequest;
+import roomescape.dto.ReservationTime;
+import roomescape.dto.ReservationTimeRequest;
 
 @Repository
 public class TimeDao {
     @Autowired
     private JdbcTemplate jdbcTemplate;
 
-    public Time save(final TimeRequest timeRequest) {
+    public ReservationTime save(final ReservationTimeRequest reservationTimeRequest) {
         KeyHolder keyHolder = new GeneratedKeyHolder();
         jdbcTemplate.update(connection -> {
                     PreparedStatement ps = connection.prepareStatement(
                             "insert into reservation_time (start_at) values (?)",
                             new String[]{"id"}
                     );
-                    ps.setString(1, timeRequest.startAt().toString());
+                    ps.setString(1, reservationTimeRequest.startAt().toString());
                     return ps;
                 }, keyHolder
         );
 
         long id = keyHolder.getKey().longValue();
-        return new Time(
+        return new ReservationTime(
                 id,
-                timeRequest.startAt()
+                reservationTimeRequest.startAt()
         );
     }
 
-    public List<Time> getAll() {
+    public List<ReservationTime> getAll() {
         return jdbcTemplate.query(
                 "select id, start_at from reservation_time",
-                (resultSet, rowNum) -> Time.of(
+                (resultSet, rowNum) -> ReservationTime.of(
                         resultSet.getLong("id"),
                         resultSet.getString("start_at")
                 )

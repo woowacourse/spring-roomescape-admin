@@ -21,16 +21,16 @@ public class ReservationController {
     private final AtomicLong index = new AtomicLong(1);
 
     @GetMapping("/reservations")
-    public ResponseEntity<List<Reservation>> getReservations() {
-        return ResponseEntity.ok(reservations);
+    public List<Reservation> getReservations() {
+        return reservations;
     }
 
     @PostMapping("/reservations")
-    public ResponseEntity<Reservation> addReservation(@RequestBody ReservationDto reservationDto) {
+    public Reservation addReservation(@RequestBody ReservationDto reservationDto) {
         Reservation reservation = new Reservation(index.getAndIncrement(), reservationDto.getName(),
                 reservationDto.getDate(), reservationDto.getTime());
         reservations.add(reservation);
-        return ResponseEntity.ok(reservation);
+        return reservation;
     }
 
     @DeleteMapping("/reservations/{id}")

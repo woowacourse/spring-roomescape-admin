@@ -4,9 +4,9 @@ public class Reservation {
     private Long id;
     private String name;
     private String date;
-    private String time;
+    private ReservationTime time;
 
-    public Reservation(Long id, String name, String date, String time) {
+    public Reservation(Long id, String name, String date, ReservationTime time) {
         this.id = id;
         this.name = name;
         this.date = date;
@@ -28,7 +28,7 @@ public class Reservation {
         return date;
     }
 
-    public String getTime() {
+    public ReservationTime getTime() {
         return time;
     }
 

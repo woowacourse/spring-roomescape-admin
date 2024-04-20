@@ -9,7 +9,6 @@ import roomescape.ReservationDao;
 import roomescape.domain.Reservation;
 import roomescape.dto.ReservationRequestDto;
 
-import java.net.URI;
 import java.util.List;
 
 @Controller
@@ -33,10 +32,15 @@ public class ReservationController {
         return reservationDao.findAll();
     }
 
+    @ResponseBody
     @PostMapping("/reservations")
-    public ResponseEntity<Void> createReservation(@RequestBody ReservationRequestDto reservationRequestDto) {
-        long reservationId = reservationDao.insert(reservationRequestDto);
-        return ResponseEntity.created(URI.create("/reservations/" + reservationId)).build();
+    public Reservation createReservation(@RequestBody ReservationRequestDto reservationRequestDto) {
+        long id = reservationDao.insert(reservationRequestDto);
+        return getReservationById(id);
+    }
+
+    private Reservation getReservationById(Long id) {
+        return reservationDao.findById(id);
     }
 
     @DeleteMapping("/reservations/{id}")

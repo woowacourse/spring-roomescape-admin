@@ -35,6 +35,7 @@ public class ReservationControllerTest {
     @BeforeEach
     void setUp() {
         RestAssured.port = port;
+        jdbcTemplate.update("INSERT INTO reservation_time(id, start_at) VALUES (?, ?)", 1, "10:00");
     }
 
     @Test
@@ -53,7 +54,7 @@ public class ReservationControllerTest {
 
     @Test
     void reservationsTest() {
-        jdbcTemplate.update("INSERT INTO reservation (name, date, time) VALUES (?, ?, ?)", "브라운", "2023-08-05", "15:40");
+        jdbcTemplate.update("INSERT INTO reservation (name, date, time_id) VALUES (?, ?, ?)", "브라운", "2023-08-05", 1);
 
         List<Reservation> reservations = RestAssured.given().log().all()
                 .when().get("/reservations")
@@ -68,34 +69,32 @@ public class ReservationControllerTest {
 
     @Test
     void insertTest() {
-        Map<String, String> params = new HashMap<>();
+        Map<String, Object> params = new HashMap<>();
         params.put("name", "브라운");
         params.put("date", "2023-08-05");
-        params.put("time", "10:00");
+        params.put("timeId", 1);
 
         RestAssured.given().log().all()
                 .contentType(ContentType.JSON)
                 .body(params)
                 .when().post("/reservations")
                 .then().log().all()
-                .statusCode(201)
-                .header("Location", "/reservations/1");
+                .statusCode(200);
     }
 
     @Test
     void deleteByIdTest() {
-        Map<String, String> params = new HashMap<>();
+        Map<String, Object> params = new HashMap<>();
         params.put("name", "브라운");
         params.put("date", "2023-08-05");
-        params.put("time", "10:00");
+        params.put("timeId", 1);
 
         RestAssured.given().log().all()
                 .contentType(ContentType.JSON)
                 .body(params)
                 .when().post("/reservations")
                 .then().log().all()
-                .statusCode(201)
-                .header("Location", "/reservations/1");
+                .statusCode(200);
 
         Integer count = jdbcTemplate.queryForObject("SELECT count(1) from reservation", Integer.class);
         assertThat(count).isEqualTo(1);

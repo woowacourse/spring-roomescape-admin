@@ -15,7 +15,7 @@ import org.springframework.test.annotation.DirtiesContext;
 class MissionStepTest {
 
     @Test
-    @DisplayName("메인 페이지 조회")
+    @DisplayName("메인 페이지를 조회할 수 있다.")
     void getMainPageTest() {
         RestAssured.given().log().all()
                 .when().get("/admin")
@@ -24,7 +24,7 @@ class MissionStepTest {
     }
 
     @Test
-    @DisplayName("예약 페이지 조회")
+    @DisplayName("예약 페이지를 조회할 수 있다.")
     void getReservationPageTest() {
         RestAssured.given().log().all()
                 .when().get("/admin/reservation")
@@ -33,7 +33,7 @@ class MissionStepTest {
     }
 
     @Test
-    @DisplayName("예약 목록 조회")
+    @DisplayName("예약 목록을 조회할 수 있다.")
     void getReservationsTest() {
         RestAssured.given().log().all()
                 .when().get("/reservations")
@@ -42,7 +42,7 @@ class MissionStepTest {
                 .body("size()", is(0));
     }
 
-    @DisplayName("예약 추가 및 삭제 테스트")
+    @DisplayName("예약을 추가, 삭제할 수 있다.")
     @Test
     void createAndDeleteReservation() {
         Map<String, String> params = Map.of(

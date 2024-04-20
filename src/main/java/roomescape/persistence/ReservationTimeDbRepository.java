@@ -21,6 +21,6 @@ public class ReservationTimeDbRepository implements ReservationTimeRepository {
 
     @Override
     public List<ReservationTime> findAll() {
-        return null;
+        return reservationTimeDao.selectAll();
     }
 }

@@ -7,7 +7,10 @@ import org.springframework.stereotype.Repository;
 import roomescape.domain.ReservationTime;
 
 import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
 import java.sql.Time;
+import java.util.List;
 import java.util.Objects;
 
 @Repository
@@ -27,5 +30,15 @@ public class ReservationTimeDao {
             return ps;
         }, keyHolder);
         return Objects.requireNonNull(keyHolder.getKey()).longValue();
+    }
+
+    public List<ReservationTime> selectAll() {
+        String sql = "select id, start_at from reservation_time";
+        return jdbcTemplate.query(sql, this::rowMapper);
+    }
+
+    private ReservationTime rowMapper(ResultSet resultSet, int rowNumber) throws SQLException {
+        var reservationTime = new ReservationTime(resultSet.getTime("start_at").toLocalTime());
+        return new ReservationTime(resultSet.getLong("id"), reservationTime);
     }
 }

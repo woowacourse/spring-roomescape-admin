@@ -17,10 +17,6 @@ public class ReservationResponse {
     @JsonFormat(pattern = "HH:mm")
     private final LocalTime time;
 
-    private ReservationResponse(Reservation reservation) {
-        this(reservation.getId(), reservation.getName(), reservation.getDate(), reservation.getTime());
-    }
-
     private ReservationResponse(Long id, String name, LocalDate date, LocalTime time) {
         this.id = id;
         this.name = name;
@@ -29,7 +25,8 @@ public class ReservationResponse {
     }
 
     public static ReservationResponse from(Reservation reservation) {
-        return new ReservationResponse(reservation);
+        return new ReservationResponse(reservation.getId(), reservation.getName(),
+                reservation.getDate(), reservation.getTime());
     }
 
     public Long getId() {

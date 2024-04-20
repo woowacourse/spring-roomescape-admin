@@ -29,15 +29,10 @@ class ReservationRepositoryTest {
                     ReservationRequest reservationRequest = new ReservationRequest("브라운", "2024-08-05", "10:00");
 
                     // when
-                    Reservation reservation = reservationRepository.save(reservationRequest);
+                    Long id = reservationRepository.save(reservationRequest);
 
                     // then
-                    assertAll(
-                            () -> assertThat(reservation.getId()).isEqualTo(1L),
-                            () -> assertThat(reservation.getName()).isEqualTo("브라운"),
-                            () -> assertThat(reservation.getDate()).isEqualTo("2024-08-05"),
-                            () -> assertThat(reservation.getTime()).isEqualTo("10:00")
-                    );
+                    assertThat(id).isEqualTo(1L);
                 }),
                 DynamicTest.dynamicTest("id로 예약 정보를 조회한다.", () -> {
                     // given

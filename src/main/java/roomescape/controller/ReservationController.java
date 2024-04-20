@@ -1,48 +1,39 @@
 package roomescape.controller;
 
+import java.net.URI;
 import java.util.List;
-import java.util.concurrent.atomic.AtomicLong;
-import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import roomescape.dao.ReservationDao;
-import roomescape.domain.Reservation;
 import roomescape.dto.request.ReservationCreateRequest;
-import java.util.ArrayList;
 import roomescape.dto.response.ReservationResponse;
 
 @RestController
 public class ReservationController {
 
-    private final AtomicLong id = new AtomicLong(0);
     private final ReservationDao reservationDao;
-    private final List<Reservation> reservations = new ArrayList<>();
 
     public ReservationController(ReservationDao reservationDao) {
         this.reservationDao = reservationDao;
     }
 
     @GetMapping("/reservations")
-    public List<ReservationResponse> getReservations() {
-        return reservationDao.findAll();
+    public ResponseEntity<List<ReservationResponse>> getReservations() {
+        List<ReservationResponse> reservationResponses = reservationDao.findAll().stream()
+                .map(ReservationResponse::fromReservation)
+                .toList();
+        return ResponseEntity.ok(reservationResponses);
     }
 
     @PostMapping("/reservations")
-    public ReservationResponse createReservations(@RequestBody ReservationCreateRequest reservationCreateRequest) {
-        Reservation reservation = reservationCreateRequest.toReservation(id.incrementAndGet());
-        reservations.add(reservation);
-
-        return ReservationResponse.fromReservation(reservation);
+    public ResponseEntity<Long> createReservation(@RequestBody ReservationCreateRequest reservationCreateRequest) {
+        Long savedId = reservationDao.save(reservationCreateRequest);
+        return ResponseEntity.created(URI.create("/reservations/" + savedId)).build();
     }
 
     @DeleteMapping("/reservations/{id}")
-    public void deleteReservation(@PathVariable("id") Long id) {
-        reservations.remove(findBy(id));
-    }
-
-    public Reservation findBy(Long id) {
-        return reservations.stream()
-                .filter(reservation -> reservation.hasSameId(id))
-                .findFirst()
-                .orElseThrow(() -> new IllegalArgumentException(id + "는 존재하지 않습니다."));
+    public ResponseEntity<Void> deleteReservation(@PathVariable("id") Long reservationId) {
+        reservationDao.delete(reservationId);
+        return ResponseEntity.noContent().build();
     }
 }

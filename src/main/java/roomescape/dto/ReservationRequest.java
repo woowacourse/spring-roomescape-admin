@@ -1,8 +1,9 @@
 package roomescape.dto;
 
+import roomescape.domain.Reservation;
+
 import java.time.LocalDate;
 import java.time.LocalTime;
-import roomescape.model.Reservation;
 
 public class ReservationRequest {
 

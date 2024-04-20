@@ -39,7 +39,7 @@ public class ReservationTimeRepository {
         jdbcTemplate.update(connection -> insertQuery(connection, reservationTime), keyHolder);
 
         Long id = keyHolder.getKey().longValue();
-        return reservationTime.toEntity(id);
+        return new ReservationTime(id, reservationTime.startAt());
     }
 
     private PreparedStatement insertQuery(Connection connection, ReservationTime reservationTime) throws SQLException {

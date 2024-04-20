@@ -1,4 +1,4 @@
-package roomescape.presentation.web.request;
+package roomescape.application.request;
 
 import java.time.LocalDate;
 

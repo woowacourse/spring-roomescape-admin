@@ -4,6 +4,7 @@ import org.springframework.stereotype.Repository;
 import roomescape.domain.ReservationTime;
 
 import java.util.List;
+import java.util.Optional;
 
 @Repository
 public class ReservationTimeDbRepository implements ReservationTimeRepository {
@@ -22,5 +23,15 @@ public class ReservationTimeDbRepository implements ReservationTimeRepository {
     @Override
     public List<ReservationTime> findAll() {
         return reservationTimeDao.selectAll();
+    }
+
+    @Override
+    public void deleteById(Long id) {
+
+    }
+
+    @Override
+    public Optional<ReservationTime> findById(Long id) {
+        return Optional.empty();
     }
 }

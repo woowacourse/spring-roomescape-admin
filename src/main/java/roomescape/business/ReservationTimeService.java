@@ -28,5 +28,8 @@ public class ReservationTimeService {
     }
 
     public void deleteReservationTime(Long id) {
+        var reservationTime = reservationTimeRepository.findById(id)
+                .orElseThrow(() -> new IllegalArgumentException("해당 ID의 예약 시간이 없습니다."));
+        reservationTimeRepository.deleteById(reservationTime.getId());
     }
 }

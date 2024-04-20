@@ -11,10 +11,13 @@ import roomescape.dto.ReservationTimeResponse;
 import roomescape.persistence.ReservationTimeRepository;
 
 import java.util.List;
+import java.util.Optional;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.assertThatCode;
 import static org.junit.jupiter.api.Assertions.assertAll;
 import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.ArgumentMatchers.anyLong;
 import static org.mockito.Mockito.when;
 import static roomescape.TestFixture.MIA_RESERVATION_TIME;
 
@@ -62,5 +65,19 @@ class ReservationTimeServiceTest {
         assertThat(responses).hasSize(1)
                 .extracting(ReservationTimeResponse::startAt)
                 .contains(MIA_RESERVATION_TIME.toString());
+    }
+
+    @Test
+    @DisplayName("예약을 삭제한다.")
+    void deleteReservationTime() {
+        // given
+        ReservationTime reservationTime = new ReservationTime(MIA_RESERVATION_TIME);
+
+        when(reservationTimeRepository.findById(anyLong()))
+                .thenReturn(Optional.of(reservationTime));
+
+        // when & then
+        assertThatCode(() -> reservationTimeService.deleteReservationTime(1L))
+                .doesNotThrowAnyException();
     }
 }

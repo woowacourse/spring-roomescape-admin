@@ -1,4 +1,4 @@
-package roomescape.reservation;
+package roomescape.time;
 
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
@@ -10,16 +10,16 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.test.web.servlet.MockMvc;
 
-@DisplayName("예약 view 컨트롤러")
-@WebMvcTest(ReservationController.class)
-class ReservationControllerTest {
+@DisplayName("시간 view 컨트롤러")
+@WebMvcTest(TimeController.class)
+class TimeControllerTest {
     @Autowired
     private MockMvc mockMvc;
 
     @Test
-    void homeViewTest() throws Exception {
-        mockMvc.perform(get("/reservation"))
+    void timeViewTest() throws Exception {
+        mockMvc.perform(get("/time"))
                 .andExpect(status().isOk())
-                .andExpect(view().name("admin/reservation-legacy"));
+                .andExpect(view().name("admin/time"));
     }
 }

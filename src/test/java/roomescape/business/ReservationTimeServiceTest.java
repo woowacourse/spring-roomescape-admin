@@ -10,6 +10,8 @@ import roomescape.domain.ReservationTime;
 import roomescape.dto.ReservationTimeResponse;
 import roomescape.persistence.ReservationTimeRepository;
 
+import java.util.List;
+
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertAll;
 import static org.mockito.ArgumentMatchers.any;
@@ -42,5 +44,23 @@ class ReservationTimeServiceTest {
                 () -> assertThat(response.id()).isEqualTo(expectedReservationTime.getId()),
                 () -> assertThat(response.startAt()).isEqualTo(expectedReservationTime.getStartAt())
         );
+    }
+
+    @Test
+    @DisplayName("예약 시간 목록을 조회한다.")
+    void getReservationTimes() {
+        // given
+        ReservationTime reservationTime = new ReservationTime(MIA_RESERVATION_TIME);
+
+        when(reservationTimeRepository.findAll())
+                .thenReturn(List.of(reservationTime));
+
+        // when
+        List<ReservationTimeResponse> responses = reservationTimeService.getReservationTimes();
+
+        // then
+        assertThat(responses).hasSize(1)
+                .extracting(ReservationTimeResponse::startAt)
+                .contains(MIA_RESERVATION_TIME.toString());
     }
 }

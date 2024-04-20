@@ -15,8 +15,11 @@ public class ReservationStore {
         this.store = new HashMap<>();
     }
 
-    public void save(Reservation reservation) {
-        store.put(index.incrementAndGet(), reservation);
+    public long save(Reservation reservation) {
+        long id = index.incrementAndGet();
+        store.put(id, reservation);
+
+        return id;
     }
 
     public Map<Long, Reservation> getAll() {

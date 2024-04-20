@@ -20,32 +20,26 @@ public class ReservationController {
     public ResponseEntity<ReservationResponse> createReservation(@RequestBody ReservationRequest reservationRequest) {
         Reservation newReservation = new Reservation(reservationRequest.name(), reservationRequest.date(), reservationRequest.time());
 
-        reservationStore.save(newReservation);
+        long id = reservationStore.save(newReservation);
 
-        return ResponseEntity.ok(new ReservationResponse(1, newReservation.getName(), newReservation.getDate(), newReservation.getTime()));
+        return ResponseEntity.ok(new ReservationResponse(id, newReservation.getName(), newReservation.getDate(), newReservation.getTime()));
     }
 
     @GetMapping("/reservations")
     @ResponseStatus(HttpStatus.OK)
     public List<ReservationResponse> readReservations() {
-        List<ReservationResponse> reservationInfo = new ArrayList<>();
 
-        System.out.println("뭐지");
-        for(Map.Entry<Long, Reservation> reservationEntry : reservationStore.getAll().entrySet()) {
-            Reservation reservation = reservationEntry.getValue();
-            reservationInfo.add(new ReservationResponse(
-                    reservationEntry.getKey(),
-                    reservation.getName(),
-                    reservation.getDate(),
-                    reservation.getTime())
-            );
-        }
-
-        for (ReservationResponse responseDto : reservationInfo) {
-            System.out.println("테스트: " +  responseDto.getTime());
-        }
-
-        return reservationInfo;
+        return reservationStore.getAll().entrySet().stream()
+                .map(entry -> {
+                    Reservation reservation = entry.getValue();
+                    return new ReservationResponse(
+                            entry.getKey(),
+                            reservation.getName(),
+                            reservation.getDate(),
+                            reservation.getTime()
+                    );
+                })
+                .toList();
     }
 
     @DeleteMapping("/reservations/{id}")

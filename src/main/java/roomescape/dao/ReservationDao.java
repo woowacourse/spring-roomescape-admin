@@ -15,11 +15,7 @@ import java.util.List;
 public class ReservationDao {
 
     @Autowired
-    private final JdbcTemplate jdbcTemplate;
-
-    public @Autowired ReservationDao(JdbcTemplate jdbcTemplate) {
-        this.jdbcTemplate = jdbcTemplate;
-    }
+    private JdbcTemplate jdbcTemplate;
 
     public List<Reservation> findAll() {
         String findAllSql = "SELECT r.id as reservation_id, r.name, r.date, t.id as time_id, t.start_at as time_value " +

@@ -6,7 +6,6 @@ import org.springframework.jdbc.support.GeneratedKeyHolder;
 import org.springframework.jdbc.support.KeyHolder;
 import org.springframework.stereotype.Repository;
 import roomescape.domain.ReservationTime;
-import roomescape.dto.ReservationTimeRequestDto;
 
 import java.sql.PreparedStatement;
 import java.util.List;
@@ -15,11 +14,7 @@ import java.util.List;
 public class ReservationTimeDao {
 
     @Autowired
-    private final JdbcTemplate jdbcTemplate;
-
-    public @Autowired ReservationTimeDao(JdbcTemplate jdbcTemplate) {
-        this.jdbcTemplate = jdbcTemplate;
-    }
+    private JdbcTemplate jdbcTemplate;
 
     public Long insert(String startAt) {
         String insertSql = "INSERT INTO reservation_time(start_at) VALUES ?";

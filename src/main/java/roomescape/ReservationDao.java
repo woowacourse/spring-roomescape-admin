@@ -1,18 +1,22 @@
 package roomescape;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.support.GeneratedKeyHolder;
 import org.springframework.jdbc.support.KeyHolder;
+import org.springframework.stereotype.Component;
 import roomescape.domain.Reservation;
 import roomescape.dto.ReservationRequestDto;
 
 import java.sql.PreparedStatement;
 import java.util.List;
 
+@Component
 public class ReservationDao {
+    @Autowired
     private final JdbcTemplate jdbcTemplate;
 
-    public ReservationDao(JdbcTemplate jdbcTemplate) {
+    public @Autowired ReservationDao(JdbcTemplate jdbcTemplate) {
         this.jdbcTemplate = jdbcTemplate;
     }
 

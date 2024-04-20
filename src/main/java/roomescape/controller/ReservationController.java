@@ -16,11 +16,9 @@ import java.util.List;
 public class ReservationController {
 
     @Autowired
-    private final JdbcTemplate jdbcTemplate;
     private final ReservationDao reservationDao;
 
-    public ReservationController(JdbcTemplate jdbcTemplate) {
-        this.jdbcTemplate = jdbcTemplate;
+    public @Autowired ReservationController(JdbcTemplate jdbcTemplate) {
         this.reservationDao = new ReservationDao(jdbcTemplate);
     }
 
@@ -37,8 +35,8 @@ public class ReservationController {
 
     @PostMapping("/reservations")
     public ResponseEntity<Void> createReservation(@RequestBody ReservationRequestDto reservationRequestDto) {
-        long insertedRow = reservationDao.insert(reservationRequestDto);
-        return ResponseEntity.created(URI.create("/reservations/" + insertedRow)).build();
+        long reservationId = reservationDao.insert(reservationRequestDto);
+        return ResponseEntity.created(URI.create("/reservations/" + reservationId)).build();
     }
 
     @DeleteMapping("/reservations/{id}")

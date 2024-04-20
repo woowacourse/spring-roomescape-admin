@@ -7,6 +7,7 @@ import java.util.concurrent.atomic.AtomicLong;
 
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.web.bind.annotation.*;
 import roomescape.dto.ReservationSaveRequest;
 import roomescape.dto.ReservationResponse;
@@ -16,14 +17,27 @@ import roomescape.model.Reservation;
 @RequestMapping("/reservations")
 public class ReservationController {
 
+    private final JdbcTemplate jdbcTemplate;
     private final AtomicLong id = new AtomicLong(1);
     private final List<Reservation> reservations = new ArrayList<>();
 
+    public ReservationController(final JdbcTemplate jdbcTemplate) {
+        this.jdbcTemplate = jdbcTemplate;
+    }
+
     @GetMapping
     public ResponseEntity<List<ReservationResponse>> getReservations() {
-        List<ReservationResponse> reservationResponses = reservations.stream()
-                .map(ReservationResponse::from)
-                .toList();
+        final String selectQuery = "SELECT id, name, date, time FROM reservations";
+        final List<ReservationResponse> reservationResponses = jdbcTemplate.query(
+                selectQuery, (selectedReservation, rowNum) -> {
+                    final Reservation reservation = new Reservation(
+                            selectedReservation.getLong("id"),
+                            selectedReservation.getString("name"),
+                            selectedReservation.getString("date"),
+                            selectedReservation.getString("time")
+                    );
+                    return ReservationResponse.from(reservation);
+                });
         return ResponseEntity.ok(reservationResponses);
     }
 

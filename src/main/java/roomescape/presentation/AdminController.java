@@ -6,7 +6,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 
 @Controller
 @RequestMapping("admin")
-public class RoomescapeController {
+public class AdminController {
 
     @GetMapping
     public String welcome() {

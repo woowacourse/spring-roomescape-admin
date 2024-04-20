@@ -42,7 +42,7 @@ class ReservationTimeServiceTest {
         // then
         assertAll(
                 () -> assertThat(response.id()).isEqualTo(expectedReservationTime.getId()),
-                () -> assertThat(response.startAt()).isEqualTo(expectedReservationTime.getStartAt())
+                () -> assertThat(response.startAt()).isEqualTo(expectedReservationTime.getStartAt().toString())
         );
     }
 

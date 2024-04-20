@@ -1,4 +1,4 @@
-package roomescape.repository;
+package roomescape.domain;
 
 import java.util.HashMap;
 import java.util.List;
@@ -6,10 +6,9 @@ import java.util.Map;
 import java.util.Optional;
 import java.util.concurrent.atomic.AtomicLong;
 import org.springframework.stereotype.Repository;
-import roomescape.domain.Reservation;
 
 @Repository
-public class InMemoryReservationRepositoryImpl implements ReservationRepository {
+public class InMemoryReservationRepository implements ReservationRepository {
     private final Map<Long, Reservation> repository = new HashMap<>();
     private final AtomicLong index = new AtomicLong();
 
@@ -34,6 +33,10 @@ public class InMemoryReservationRepositoryImpl implements ReservationRepository 
 
     @Override
     public void deleteById(Long id) {
-        findById(id).ifPresent(reservation -> repository.remove(id));
+        Optional<Reservation> findReservation = findById(id);
+        if (findReservation.isEmpty()) {
+            throw new IllegalArgumentException("존재하지 않는 예약입니다.");
+        }
+        repository.remove(id);
     }
 }

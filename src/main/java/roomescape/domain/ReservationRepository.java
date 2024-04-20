@@ -4,6 +4,7 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.SQLException;
 import java.util.List;
+import java.util.Optional;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;
 import org.springframework.jdbc.support.GeneratedKeyHolder;
@@ -26,6 +27,22 @@ public class ReservationRepository {
         this.jdbcTemplate = jdbcTemplate;
     }
 
+    public Optional<Reservation> findById(Long id) {
+        Reservation reservation = jdbcTemplate.queryForObject("""
+                SELECT
+                    r.id AS id,
+                    name,
+                    date,
+                    t.id AS time_id,
+                    start_at
+                FROM reservation AS r
+                INNER JOIN reservation_time AS t
+                on r.time_id = t.id
+                WHERE r.id = ?""".formatted(TABLE_NAME), ROW_MAPPER, id);
+
+        return Optional.ofNullable(reservation);
+    }
+
     public List<Reservation> findAll() {
         return jdbcTemplate.query("""
                 SELECT
@@ -44,7 +61,7 @@ public class ReservationRepository {
         jdbcTemplate.update(connection -> insertQuery(connection, reservation), keyHolder);
 
         Long id = keyHolder.getKey().longValue();
-        return findById(id);
+        return findById(id).orElseThrow(IllegalStateException::new);
     }
 
     private PreparedStatement insertQuery(Connection connection, Reservation reservation) throws SQLException {
@@ -56,28 +73,8 @@ public class ReservationRepository {
         return preparedStatement;
     }
 
-    private Reservation findById(Long id) {
-        Reservation reservation = jdbcTemplate.queryForObject("""
-                SELECT
-                    r.id AS id,
-                    name,
-                    date,
-                    t.id AS time_id,
-                    start_at
-                FROM reservation AS r
-                INNER JOIN reservation_time AS t
-                on r.time_id = t.id
-                WHERE r.id = ?""".formatted(TABLE_NAME), ROW_MAPPER, id);
-
-        if (reservation == null) {
-            throw new IllegalStateException("해당 예약이 없습니다.");
-        }
-        return reservation;
-    }
-
     public void deleteById(Long id) {
-        Reservation foundReservation = findById(id);
-        jdbcTemplate.update("DELETE FROM %s WHERE id = ?".formatted(TABLE_NAME), foundReservation.id());
+        jdbcTemplate.update("DELETE FROM %s WHERE id = ?".formatted(TABLE_NAME), id);
     }
 
 }

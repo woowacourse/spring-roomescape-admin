@@ -8,7 +8,7 @@ public record ReservationRequest(
         String name,
         Long timeId) {
 
-    public Reservation toEntity() {
+    public Reservation toDomain() {
         return new Reservation(null, date, name, new ReservationTime(timeId, null));
     }
 }

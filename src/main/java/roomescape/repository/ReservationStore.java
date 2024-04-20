@@ -1,4 +1,6 @@
-package roomescape.domain;
+package roomescape.repository;
+
+import roomescape.domain.Reservation;
 
 import java.util.HashMap;
 import java.util.List;
@@ -17,8 +19,8 @@ public class ReservationStore {
         store.put(index.incrementAndGet(), reservation);
     }
 
-    public List<Reservation> getAll() {
-        return store.values().stream().toList();
+    public Map<Long, Reservation> getAll() {
+        return store;
     }
 
     public Reservation delete(long id) {

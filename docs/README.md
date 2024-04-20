@@ -25,9 +25,9 @@ CREATE TABLE reservation
 ``` mermaid
 erDiagram
     reservation {
-        BIGINT id
-        VARCHAR(255) name
-        VARCHAR(255) date
-        VARCHAR(255) time
+        id BIGINT
+        name VARCHAR(255)
+        date VARCHAR(255)
+        time VARCHAR(255)
     }
 ```

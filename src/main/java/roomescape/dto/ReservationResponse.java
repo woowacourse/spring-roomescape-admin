@@ -7,7 +7,7 @@ public record ReservationResponse(
         String name,
         String date,
         String time) {
-    public ReservationResponse(Reservation reservationEntity) {
-        this(reservationEntity.getId(), reservationEntity.getName(), reservationEntity.getDate(), reservationEntity.getTime());
+    public ReservationResponse(Reservation reservation) {
+        this(reservation.getId(), reservation.getName(), reservation.getDate(), reservation.getTime());
     }
 }

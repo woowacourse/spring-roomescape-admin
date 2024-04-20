@@ -49,17 +49,37 @@ content-type: application/json
 }
 ```
 - response
-```
-HTTP/1.1 200 
-Content-Type: application/json
-
-{
-    "id": 1,
-    "name": "브라운",
-    "date": "2023-08-05",
-    "time": "15:40"
-}
-```
+  - 추가 성공
+  ```
+  HTTP/1.1 200 
+  Content-Type: application/json
+  
+  {
+      "id": 1,
+      "name": "브라운",
+      "date": "2023-08-05",
+      "time": "15:40"
+  }
+  ```
+  - 추가 실패 : 이름 길이 오류
+  ```
+  HTTP/1.1 400 
+  Content-Type: application/json
+  
+  {
+      "message": "이름은 1자 이상, 5자 이하여야 합니다.";
+  }
+  ```
+  - 추가 실패 : 일정 오류
+  ```
+  HTTP/1.1 400 
+  Content-Type: application/json
+  
+  {
+      "message": "현재보다 이전으로 일정을 설정할 수 없습니다.";
+  }
+  ```
+  
 
 ### 예약 삭제
 - http method: DELETE

@@ -1,5 +1,7 @@
 package roomescape.domain;
 
+import roomescape.exception.InvalidReservationException;
+
 import java.util.Objects;
 
 public class Name {
@@ -18,7 +20,7 @@ public class Name {
 
     private void validateName(String name) {
         if (name.length() < MINIMUM_NAME_LENGTH || name.length() > MAXIMUM_NAME_LENGTH) {
-            throw new IllegalArgumentException(INVALID_NAME_LENGTH);
+            throw new InvalidReservationException(INVALID_NAME_LENGTH);
         }
     }
 

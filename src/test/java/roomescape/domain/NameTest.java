@@ -3,6 +3,7 @@ package roomescape.domain;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.ValueSource;
+import roomescape.exception.InvalidReservationException;
 
 import static org.assertj.core.api.AssertionsForClassTypes.assertThatThrownBy;
 
@@ -17,7 +18,7 @@ class NameTest {
 
         //when&then
         assertThatThrownBy(() -> new Reservation(name, date, time))
-                .isInstanceOf(IllegalArgumentException.class)
+                .isInstanceOf(InvalidReservationException.class)
                 .hasMessage("이름은 1자 이상, 5자 이하여야 합니다.");
     }
 }

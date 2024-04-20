@@ -1,5 +1,7 @@
 package roomescape.domain;
 
+import roomescape.exception.InvalidReservationException;
+
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.LocalTime;
@@ -19,15 +21,15 @@ public class Schedule {
 
     private void validate(final LocalDateTime value) {
         if (value.isBefore(LocalDateTime.now())) {
-            throw new IllegalArgumentException(INVALID_SCHEDULE);
+            throw new InvalidReservationException(INVALID_SCHEDULE);
         }
     }
 
     public String getDate() {
-        return value.format(DateTimeFormatter.ISO_DATE);
+        return value.toLocalDate().format(DateTimeFormatter.ISO_DATE);
     }
 
     public String getTime() {
-        return value.format(DateTimeFormatter.ofPattern(TIME_FORMAT));
+        return value.toLocalTime().format(DateTimeFormatter.ofPattern(TIME_FORMAT));
     }
 }

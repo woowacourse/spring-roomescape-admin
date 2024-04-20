@@ -10,8 +10,8 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import roomescape.controller.dto.ReservationRequest;
-import roomescape.repository.ReservationRepository;
 import roomescape.domain.Reservation;
+import roomescape.repository.ReservationRepository;
 import roomescape.service.dto.ReservationDto;
 
 class ReservationTest extends AcceptanceTest {

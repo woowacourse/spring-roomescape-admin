@@ -9,9 +9,9 @@ import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import roomescape.controller.dto.ReservationRequest;
 import roomescape.controller.dto.ReservationResponse;
+import roomescape.domain.Reservation;
 import roomescape.repository.ReservationInMemoryRepository;
 import roomescape.repository.ReservationRepository;
-import roomescape.domain.Reservation;
 import roomescape.service.dto.ReservationDto;
 
 class ReservationServiceTest {

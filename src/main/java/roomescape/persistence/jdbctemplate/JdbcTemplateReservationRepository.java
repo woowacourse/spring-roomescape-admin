@@ -38,7 +38,7 @@ class JdbcTemplateReservationRepository implements ReservationRepository {
 
         return new Reservation(
                 savedId,
-                new Name(reservation.getName()),
+                reservation.getName(),
                 reservation.getDate(),
                 time
         );

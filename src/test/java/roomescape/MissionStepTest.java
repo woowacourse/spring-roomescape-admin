@@ -4,12 +4,13 @@ import static org.hamcrest.Matchers.is;
 
 import io.restassured.RestAssured;
 import io.restassured.http.ContentType;
-import java.util.HashMap;
-import java.util.Map;
+import java.time.LocalDate;
+import java.time.LocalTime;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.annotation.DirtiesContext;
+import roomescape.controller.request.ReservationRequest;
 
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.DEFINED_PORT)
 @DirtiesContext(classMode = DirtiesContext.ClassMode.BEFORE_EACH_TEST_METHOD)
@@ -46,14 +47,14 @@ public class MissionStepTest {
     @DisplayName("예약을 추가할 수 있다.")
     @Test
     void should_add_reservation_when_post_request_reservations() {
-        Map<String, String> params = new HashMap<>();
-        params.put("name", "브라운");
-        params.put("date", "2023-08-05");
-        params.put("time", "15:40");
+        ReservationRequest requestBody = new ReservationRequest(
+                LocalDate.of(2023, 8, 5),
+                "브라운",
+                LocalTime.of(15, 40));
 
         RestAssured.given().log().all()
                 .contentType(ContentType.JSON)
-                .body(params)
+                .body(requestBody)
                 .when().post("/reservations")
                 .then().log().all()
                 .statusCode(200)
@@ -69,14 +70,14 @@ public class MissionStepTest {
     @DisplayName("예약을 삭제할 수 있다.")
     @Test
     void should_remove_reservation_when_delete_request_reservations_id() {
-        Map<String, String> params = new HashMap<>();
-        params.put("name", "브라운");
-        params.put("date", "2023-08-05");
-        params.put("time", "15:40");
+        ReservationRequest requestBody = new ReservationRequest(
+                LocalDate.of(2023, 8, 5),
+                "브라운",
+                LocalTime.of(15, 40));
 
         RestAssured.given().log().all()
                 .contentType(ContentType.JSON)
-                .body(params)
+                .body(requestBody)
                 .when().post("/reservations")
                 .then().log().all()
                 .statusCode(200)

@@ -49,7 +49,7 @@ public class TimeControllerTest {
     @Test
     void insertTest() {
         Map<String, String> params = new HashMap<>();
-        params.put("start_at", "10:00");
+        params.put("startAt", "10:00");
 
         var response = RestAssured.given().log().all()
                 .contentType(ContentType.JSON)

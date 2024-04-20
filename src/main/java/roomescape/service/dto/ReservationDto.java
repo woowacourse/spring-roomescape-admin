@@ -10,20 +10,14 @@ public class ReservationDto {
 
     private static final DateTimeFormatter DATE_FORMATTER = DateTimeFormatter.ofPattern("yyyy-MM-dd");
 
-    private final Long id;
     private final String name;
     private final String date;
     private final ReservationTimeDto time;
 
-    public ReservationDto(Long id, String name, String date, ReservationTimeDto reservationTimeDto) {
-        this.id = id;
+    public ReservationDto(String name, String date, ReservationTimeDto reservationTimeDto) {
         this.name = name;
         this.date = date;
         this.time = reservationTimeDto;
-    }
-
-    public ReservationDto(String name, String date, ReservationTimeDto reservationTimeDto) {
-        this(null, name, date, reservationTimeDto);
     }
 
     public static ReservationDto from(Reservation reservation) {
@@ -32,7 +26,6 @@ public class ReservationDto {
         ReservationTime time = reservation.getReservationTime();
 
         return new ReservationDto(
-                reservation.getId(),
                 name.asText(),
                 DATE_FORMATTER.format(date.getDate()),
                 ReservationTimeDto.from(time)

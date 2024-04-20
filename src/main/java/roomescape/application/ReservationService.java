@@ -1,79 +1,43 @@
 package roomescape.application;
 
 
+import java.time.LocalDate;
 import java.util.List;
-import org.springframework.jdbc.core.JdbcTemplate;
-import org.springframework.jdbc.core.namedparam.BeanPropertySqlParameterSource;
-import org.springframework.jdbc.core.simple.SimpleJdbcInsert;
+import java.util.ListResourceBundle;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import roomescape.application.request.CreateReservationRequest;
 import roomescape.domain.Name;
 import roomescape.domain.Reservation;
+import roomescape.domain.ReservationRepository;
 import roomescape.domain.ReservationTime;
 
 @Service
+@Transactional(readOnly = true)
 public class ReservationService {
 
-    private final JdbcTemplate jdbcTemplate;
-    private final SimpleJdbcInsert simpleInsert;
+    private final ReservationRepository reservationRepository;
 
-    public ReservationService(JdbcTemplate jdbcTemplate) {
-        this.jdbcTemplate = jdbcTemplate;
-        this.simpleInsert = new SimpleJdbcInsert(jdbcTemplate.getDataSource())
-                .withTableName("reservation")
-                .usingGeneratedKeyColumns("id");
+    public ReservationService(ReservationRepository reservationRepository) {
+        this.reservationRepository = reservationRepository;
     }
 
+    @Transactional
     public Reservation reserve(CreateReservationRequest request) {
-        BeanPropertySqlParameterSource parameterSource = new BeanPropertySqlParameterSource(request);
-        Number key = simpleInsert.executeAndReturnKey(parameterSource);
+        Name name = new Name(request.name());
+        LocalDate date = request.date();
+        ReservationTime time = new ReservationTime(request.timeId());
+        Reservation reservation = new Reservation(name, date, time);
 
-        return new Reservation(
-                key.longValue(),
-                new Name(request.name()),
-                request.date(),
-                resolveTime(request.timeId())
-        );
+        return reservationRepository.saveOne(reservation);
     }
 
-    private ReservationTime resolveTime(Long timeId) {
-        String sql = "select * from reservation_time where id = ?";
-        ReservationTime reservationTime = jdbcTemplate.queryForObject(sql, (rs, rowNum) -> new ReservationTime(
-                rs.getLong("id"),
-                rs.getTime("start_at").toLocalTime()
-        ), timeId);
-
-        return reservationTime;
-    }
-
+    @Transactional
     public void deleteBy(Long id) {
-        String sql = "delete from reservation where id = ?";
-        jdbcTemplate.update(sql, id);
+        reservationRepository.deleteBy(id);
     }
 
     public List<Reservation> findReservations() {
-        String sql = """
-                    select 
-                        r.id as reservation_id,
-                        r.name as reservation_name,
-                        r.date as reservation_date,
-                        t.id as time_id,
-                        t.start_at as time_value
-                    from reservation as r
-                    inner join reservation_time as t
-                    on r.time_id = t.id
-                """;
-
-        return jdbcTemplate.query(sql, (rs, rowNum) ->
-                new Reservation(
-                        rs.getLong("reservation_id"),
-                        new Name(rs.getString("reservation_name")),
-                        rs.getDate("reservation_date").toLocalDate(),
-                        new ReservationTime(
-                                rs.getLong("time_id"),
-                                rs.getTime("time_value").toLocalTime()
-                        )
-                )
-        );
+        return reservationRepository.findAll();
     }
 }

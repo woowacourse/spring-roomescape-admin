@@ -36,4 +36,13 @@ class AdminPageAcceptanceTest {
                 .statusCode(200);
     }
 
+    @DisplayName("어드민 예약 시간 관리 페이지 조회")
+    @Test
+    void get_timePage() {
+        RestAssured.given().log().all()
+                .when().get("/admin/time")
+                .then().log().all()
+                .statusCode(200);
+    }
+
 }

@@ -39,7 +39,7 @@ public class AcceptanceTest {
     }
 
     @Test
-    @DisplayName("[Step2] 예약 목록을 조회한다.")
+    @DisplayName("[Step2, Step5] 예약 목록을 조회한다.")
     void getReservations() {
         RestAssured.given().log().all()
                 .when().get("/reservations")
@@ -48,7 +48,7 @@ public class AcceptanceTest {
                 .body("size()", is(0));
     }
 
-    @DisplayName("[Step3] 예약을 추가하고 삭제한다.")
+    @DisplayName("[Step3, Step6] 예약을 추가하고 삭제한다.")
     @TestFactory
     Stream<DynamicTest> createThenDeleteReservation() {
         return Stream.of(
@@ -70,8 +70,8 @@ public class AcceptanceTest {
                 .body(params)
                 .when().post("/reservations")
                 .then().log().all()
-                .statusCode(200)
-                .body("id", is(1));
+                .statusCode(201)
+                .header("Location", "/reservations/1");
     }
 
     private void getReservationsWithSizeOne() {

@@ -15,8 +15,7 @@ import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyLong;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 import static roomescape.TestFixture.*;
 
 class ReservationControllerTest extends ControllerTest {
@@ -39,11 +38,11 @@ class ReservationControllerTest extends ControllerTest {
     }
 
     @Test
-    @DisplayName("예약 POST 요청 시 상태코드 200을 반환한다.")
+    @DisplayName("예약 POST 요청 시 상태코드 201을 반환한다.")
     void createReservation() throws Exception {
         // given
         ReservationSaveRequest request = new ReservationSaveRequest(USER_MIA, MIA_RESERVATION_DATE, MIA_RESERVATION_TIME);
-        Reservation expectedReservation = request.toModel();
+        Reservation expectedReservation = new Reservation(1L, request.toModel());
 
         BDDMockito.given(reservationService.createReservation(any()))
                 .willReturn(expectedReservation);
@@ -53,9 +52,8 @@ class ReservationControllerTest extends ControllerTest {
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(objectMapper.writeValueAsBytes(request)))
                 .andDo(print())
-                .andExpect(status().isOk())
-                .andExpect(jsonPath("$.name").value(expectedReservation.getName()))
-                .andExpect(jsonPath("$.date").value(expectedReservation.getDate().toString()));
+                .andExpect(status().isCreated())
+                .andExpect(header().string("Location", "/reservations/1"));
     }
 
     @Test

@@ -19,6 +19,7 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
+import org.springframework.dao.DataAccessException;
 import org.springframework.dao.DataAccessResourceFailureException;
 import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
@@ -64,7 +65,8 @@ class ReservationApiControllerTest {
             Long id = 1L;
 
             // when
-            doReturn(id).when(reservationService).save(any(ReservationRequest.class));
+            doReturn(id).when(reservationService)
+                    .save(any(ReservationRequest.class));
 
             // then
             mockMvc.perform(post("/reservations")
@@ -82,7 +84,8 @@ class ReservationApiControllerTest {
             ReservationRequest reservationRequest = new ReservationRequest("브라운", null, null);
 
             // when
-            doThrow(DataAccessResourceFailureException.class).when(reservationService).save(any(ReservationRequest.class));
+            doThrow(new DataAccessException("데이터 접근 예외") {}).when(reservationService)
+                    .save(any(ReservationRequest.class));
 
             // then
             mockMvc.perform(post("/reservations")
@@ -100,7 +103,8 @@ class ReservationApiControllerTest {
         @Test
         public void deleteByIdSuccessTest() throws Exception {
             // given && when
-            doThrow(IllegalArgumentException.class).when(reservationService).deleteById(2L);
+            doThrow(IllegalArgumentException.class).when(reservationService)
+                    .deleteById(2L);
 
             // then
             mockMvc.perform(delete("/reservations/{id}", 1L)
@@ -115,7 +119,8 @@ class ReservationApiControllerTest {
             Long id = 1L;
 
             // when
-            doThrow(IllegalArgumentException.class).when(reservationService).deleteById(id);
+            doThrow(IllegalArgumentException.class).when(reservationService)
+                    .deleteById(id);
 
             // then
             mockMvc.perform(delete("/reservations/{id}", id)

@@ -1,6 +1,8 @@
-## 방탈출 요구사항
+## 🏃 방탈출 예약 관리
 
-## API Docs
+## 💡 기능 요구사항
+
+## 🎫 API Docs
 
 | Method   | Endpoint             | Description  | File Path                                 |
 |----------|----------------------|--------------|-------------------------------------------| 
@@ -9,3 +11,23 @@
 | `GET`    | `/reservations`      | 예약 정보 요청     |                                           |
 | `POST`   | `/reservations`      | 예약 추가        |                                           |
 | `DELETE` | `/reservations/{id}` | 예약 취소        |                                           |
+
+## 🗃️ Database
+```sql
+CREATE TABLE reservation
+(
+    id   BIGINT       NOT NULL AUTO_INCREMENT PRIMARY KEY,
+    name VARCHAR(255) NOT NULL,
+    date VARCHAR(255) NOT NULL,
+    time VARCHAR(255) NOT NULL
+);
+```
+``` mermaid
+erDiagram
+    reservation {
+        BIGINT id
+        VARCHAR(255) name
+        VARCHAR(255) date
+        VARCHAR(255) time
+    }
+```

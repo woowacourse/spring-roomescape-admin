@@ -1,6 +1,9 @@
 package roomescape.controller;
 
+import org.apache.coyote.Response;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.HttpStatusCode;
 import org.springframework.http.ResponseEntity;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Controller;
@@ -9,6 +12,7 @@ import roomescape.ReservationDao;
 import roomescape.domain.Reservation;
 import roomescape.dto.ReservationRequestDto;
 
+import java.net.URI;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
@@ -41,10 +45,9 @@ public class ReservationController {
     }
 
     @PostMapping("/reservations")
-    public ResponseEntity<Reservation> createReservation(@RequestBody ReservationRequestDto reservationRequestDto) {
-        Reservation reservation = new Reservation(index.getAndIncrement(), reservationRequestDto.name(), reservationRequestDto.date(), reservationRequestDto.time());
-        reservations.add(reservation);
-        return ResponseEntity.ok().body(reservation);
+    public ResponseEntity<Void> createReservation(@RequestBody ReservationRequestDto reservationRequestDto) {
+        long insertedRow = reservationDao.insert(reservationRequestDto);
+        return ResponseEntity.created(URI.create("/reservations/" + insertedRow)).build();
     }
 
     @DeleteMapping("/reservations/{id}")

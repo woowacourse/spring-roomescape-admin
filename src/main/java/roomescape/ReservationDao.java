@@ -1,8 +1,12 @@
 package roomescape;
 
 import org.springframework.jdbc.core.JdbcTemplate;
+import org.springframework.jdbc.support.GeneratedKeyHolder;
+import org.springframework.jdbc.support.KeyHolder;
 import roomescape.domain.Reservation;
+import roomescape.dto.ReservationRequestDto;
 
+import java.sql.PreparedStatement;
 import java.util.List;
 
 public class ReservationDao {
@@ -22,5 +26,21 @@ public class ReservationDao {
                         resultSet.getString("time")
                 )
         );
+    }
+
+    public long insert(ReservationRequestDto reservationRequestDto) {
+        String insertSql = "INSERT INTO reservation(name, date, time) VALUES (?, ?, ?)";
+        KeyHolder keyHolder = new GeneratedKeyHolder();
+        jdbcTemplate.update(connection -> {
+            PreparedStatement ps = connection.prepareStatement(
+                    insertSql,
+                    new String[]{"id"});
+            ps.setString(1, reservationRequestDto.name());
+            ps.setString(2, reservationRequestDto.date());
+            ps.setString(3, reservationRequestDto.time());
+            return ps;
+        }, keyHolder);
+
+        return keyHolder.getKey().longValue();
     }
 }

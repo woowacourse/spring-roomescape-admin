@@ -6,3 +6,10 @@ spring:
     console:
       enabled: true
       path: /h2-console
+  devtools:
+    livereload:
+      enabled: true
+    thymeleaf:
+      cache: false
+    restart:
+      enabled: true

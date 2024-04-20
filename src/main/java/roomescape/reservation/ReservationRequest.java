@@ -1,8 +1,5 @@
 package roomescape.reservation;
 
-import java.time.LocalDate;
-import java.time.LocalTime;
-
 public class ReservationRequest {
     private String name;
     private String date;
@@ -15,10 +12,6 @@ public class ReservationRequest {
         this.name = name;
         this.date = date;
         this.time = time;
-    }
-
-    public Reservation toVo(final Long id) {
-        return new Reservation(id, name, date, time);
     }
 
     public String getName() {

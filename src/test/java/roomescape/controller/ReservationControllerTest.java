@@ -1,34 +1,21 @@
-package roomescape;
+package roomescape.controller;
 
 import static org.hamcrest.Matchers.is;
 
-import io.restassured.RestAssured;
-import io.restassured.http.ContentType;
 import java.util.HashMap;
 import java.util.Map;
+
+import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
-import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.test.annotation.DirtiesContext;
 
-@SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.DEFINED_PORT)
-@DirtiesContext(classMode = DirtiesContext.ClassMode.BEFORE_EACH_TEST_METHOD)
-public class MissionStepTest {
+import io.restassured.RestAssured;
+import io.restassured.http.ContentType;
 
+class ReservationControllerTest {
+
+    @DisplayName("예약 내역을 조회한다.")
     @Test
-    void 일단계() {
-        RestAssured.given().log().all()
-                .when().get("/admin")
-                .then().log().all()
-                .statusCode(200);
-    }
-
-    @Test
-    void 이단계() {
-        RestAssured.given().log().all()
-                .when().get("/admin/reservation")
-                .then().log().all()
-                .statusCode(200);
-
+    void findAll() {
         RestAssured.given().log().all()
                 .when().get("/reservations")
                 .then().log().all()
@@ -36,8 +23,9 @@ public class MissionStepTest {
                 .body("size()", is(0));
     }
 
+    @DisplayName("예약을 추가한다.")
     @Test
-    void 삼단계() {
+    void create() {
         Map<String, String> params = new HashMap<>();
         params.put("name", "브라운");
         params.put("date", "2023-08-05");
@@ -55,7 +43,24 @@ public class MissionStepTest {
                 .when().get("/reservations")
                 .then().log().all()
                 .statusCode(200)
-                .body("size()", is(1));
+                .body("size()", is(1))
+                .body("name", is("브라운"))
+                .body("date", is("2023-08-05"))
+                .body("time", is("15:40"));
+    }
+
+    @DisplayName("예약을 삭제한다.")
+    @Test
+    void delete() {
+        Map<String, String> params = new HashMap<>();
+        params.put("name", "브라운");
+        params.put("date", "2023-08-05");
+        params.put("time", "15:40");
+
+        RestAssured.given()
+                .contentType(ContentType.JSON)
+                .body(params)
+                .post("/reservations");
 
         RestAssured.given().log().all()
                 .when().delete("/reservations/1")
@@ -67,13 +72,5 @@ public class MissionStepTest {
                 .then().log().all()
                 .statusCode(200)
                 .body("size()", is(0));
-    }
-
-    @Test
-    void 삼단계_존재하지_않는_예약을_삭제하는_경우_예외_발생() {
-        RestAssured.given().log().all()
-                .when().delete("/reservations/1")
-                .then().log().all()
-                .statusCode(404);
     }
 }

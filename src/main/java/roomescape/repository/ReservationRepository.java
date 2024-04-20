@@ -17,11 +17,11 @@ public class ReservationRepository {
         return reservationDao.save(reservationRequest);
     }
 
-    public void deleteReservation(final long id) {
-        reservationDao.delete(id);
-    }
-
     public List<Reservation> getAllReservations() {
         return reservationDao.getAll();
+    }
+
+    public void deleteReservation(final long id) {
+        reservationDao.delete(id);
     }
 }

@@ -24,7 +24,7 @@ class ReservationController {
 
     private final ReservationService reservationService;
 
-    public ReservationController(JdbcTemplate jdbcTemplate, ReservationService reservationService) {
+    public ReservationController(ReservationService reservationService) {
         this.reservationService = reservationService;
     }
 

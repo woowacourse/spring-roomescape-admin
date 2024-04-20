@@ -22,7 +22,7 @@ import roomescape.dto.ReservationResponseDto;
 public class MissionStepTest {
 
     @Autowired
-    JdbcTemplate jdbcTemplate;
+    private JdbcTemplate jdbcTemplate;
 
     @Test
     void 일단계() {
@@ -48,10 +48,21 @@ public class MissionStepTest {
 
     @Test
     void 삼단계() {
-        Map<String, String> params = new HashMap<>();
+        Map<String, Object> time = new HashMap<>();
+        time.put("id", 1);
+        time.put("startAt", "10:00");
+
+        RestAssured.given().log().all()
+                .contentType(ContentType.JSON)
+                .body(time)
+                .when().post("/times")
+                .then().log().all()
+                .statusCode(201);
+
+        Map<String, Object> params = new HashMap<>();
         params.put("name", "브라운");
         params.put("date", "2023-08-05");
-        params.put("time", "15:40");
+        params.put("timeId", 1);
 
         RestAssured.given().log().all()
                 .contentType(ContentType.JSON)
@@ -92,8 +103,11 @@ public class MissionStepTest {
 
     @Test
     void 오단계() {
-        String sql = "INSERT INTO reservation (name, date, time) VALUES (?, ?, ?)";
-        jdbcTemplate.update(sql, "브라운", "2023-08-05", "15:40");
+        String insertTime = "INSERT INTO reservation_time (start_at) VALUES (?)";
+        jdbcTemplate.update(insertTime, "10:00");
+
+        String insertReservation = "INSERT INTO reservation (name, date, time_id) VALUES (?, ?, ?)";
+        jdbcTemplate.update(insertReservation, "브라운", "2023-08-05", 1);
 
         List<ReservationResponseDto> reservations = RestAssured.given().log().all()
                 .when().get("/reservations")
@@ -108,10 +122,21 @@ public class MissionStepTest {
 
     @Test
     void 육단계() {
-        Map<String, String> params = new HashMap<>();
+        Map<String, Object> time = new HashMap<>();
+        time.put("id", 1);
+        time.put("startAt", "10:00");
+
+        RestAssured.given().log().all()
+                .contentType(ContentType.JSON)
+                .body(time)
+                .when().post("/times")
+                .then().log().all()
+                .statusCode(201);
+
+        Map<String, Object> params = new HashMap<>();
         params.put("name", "브라운");
         params.put("date", "2023-08-05");
-        params.put("time", "10:00");
+        params.put("timeId", 1);
 
         RestAssured.given().log().all()
                 .contentType(ContentType.JSON)

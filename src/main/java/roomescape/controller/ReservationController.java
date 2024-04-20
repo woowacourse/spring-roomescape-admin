@@ -1,9 +1,6 @@
 package roomescape.controller;
 
-import org.apache.coyote.Response;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.HttpStatusCode;
 import org.springframework.http.ResponseEntity;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Controller;
@@ -13,19 +10,13 @@ import roomescape.domain.Reservation;
 import roomescape.dto.ReservationRequestDto;
 
 import java.net.URI;
-import java.util.ArrayList;
-import java.util.Collections;
 import java.util.List;
-import java.util.concurrent.atomic.AtomicLong;
 
 @Controller
 public class ReservationController {
 
     @Autowired
     private final JdbcTemplate jdbcTemplate;
-
-    private final List<Reservation> reservations = Collections.synchronizedList(new ArrayList<>());
-    private final AtomicLong index = new AtomicLong(1);
     private final ReservationDao reservationDao;
 
     public ReservationController(JdbcTemplate jdbcTemplate) {

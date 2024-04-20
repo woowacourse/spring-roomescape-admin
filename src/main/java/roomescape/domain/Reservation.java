@@ -17,6 +17,10 @@ public class Reservation {
         this.time = time;
     }
 
+    public boolean isIdOf(Long id) {
+        return Objects.equals(this.id, id);
+    }
+
     public Long getId() {
         return id;
     }
@@ -31,9 +35,5 @@ public class Reservation {
 
     public LocalTime getTime() {
         return time;
-    }
-
-    public boolean isIdOf(Long id) {
-        return Objects.equals(this.id, id);
     }
 }

@@ -43,25 +43,17 @@ public class ReservationController {
     }
 
     public void validateRequest(final ReservationRequestDto request) {
-        validateDateValue(request.getDate());
-        validateNameValue(request.getName());
-        validateTimeIdValue(request.getTimeId());
-    }
-
-    private void validateDateValue(final String date) {
+        final String date = request.getDate();
         if (date == null || date.isBlank()) {
             throw new IllegalArgumentException("Date cannot be null or empty");
         }
-    }
 
-    private void validateNameValue(final String name) {
+        final String name = request.getName();
         if (name == null || name.isBlank()) {
             throw new IllegalArgumentException("Name cannot be null or empty");
         }
-    }
-
-    private void validateTimeIdValue(final Long timeId) {
-        if (timeId == null) {
+        
+        if (request.getTimeId() == null) {
             throw new IllegalArgumentException("Time ID cannot be null");
         }
     }

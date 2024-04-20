@@ -40,10 +40,7 @@ public class ReservationTimeController {
     }
 
     public void validateRequest(final ReservationTimeRequestDto request) {
-        validateStartAtValue(request.getStartAt());
-    }
-
-    private void validateStartAtValue(final String startAt) {
+        final String startAt = request.getStartAt();
         if (startAt == null || startAt.isBlank()) {
             throw new IllegalArgumentException("StartAt cannot be null or empty");
         }

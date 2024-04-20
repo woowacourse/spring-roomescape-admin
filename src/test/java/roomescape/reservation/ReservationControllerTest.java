@@ -20,6 +20,6 @@ class ReservationControllerTest {
     void homeViewTest() throws Exception {
         mockMvc.perform(get("/reservation"))
                 .andExpect(status().isOk())
-                .andExpect(view().name("admin/reservation-legacy"));
+                .andExpect(view().name("admin/reservation"));
     }
 }

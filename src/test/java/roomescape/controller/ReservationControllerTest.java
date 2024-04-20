@@ -1,20 +1,19 @@
 package roomescape.controller;
 
-import static org.hamcrest.Matchers.is;
+import static org.assertj.core.api.Assertions.assertThat;
 
 import io.restassured.RestAssured;
 import io.restassured.http.ContentType;
+import java.util.List;
 import java.util.Map;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.web.server.LocalServerPort;
-import org.springframework.test.annotation.DirtiesContext;
 import roomescape.dto.ReservationDto;
 
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
-@DirtiesContext(classMode = DirtiesContext.ClassMode.BEFORE_EACH_TEST_METHOD)
 class ReservationControllerTest {
     @LocalServerPort
     int port;
@@ -33,6 +32,14 @@ class ReservationControllerTest {
                 .statusCode(200);
     }
 
+    int getTotalReservationsCount() {
+        List<ReservationDto> reservations = RestAssured.given().port(port)
+                .when().get("/reservations")
+                .then().extract().body()
+                .jsonPath().getList("", ReservationDto.class);
+        return reservations.size();
+    }
+
     @DisplayName("예약을 추가한다.")
     @Test
     void addReservationTest() {
@@ -42,13 +49,15 @@ class ReservationControllerTest {
                 "time", "15:40"
         );
 
+        int initialReservationsCount = getTotalReservationsCount();
         RestAssured.given().log().all()
                 .contentType(ContentType.JSON)
                 .body(params)
                 .when().post("/reservations")
                 .then().log().all()
-                .statusCode(200)
-                .body("id", is(1));
+                .statusCode(200);
+
+        assertThat(getTotalReservationsCount()).isEqualTo(initialReservationsCount + 1);
     }
 
 
@@ -70,16 +79,13 @@ class ReservationControllerTest {
                 .extract().as(ReservationDto.class);
 
         Long newReservationId = reservationResponse.id();
+        int initialReservationsCount = getTotalReservationsCount();
 
         RestAssured.given().log().all()
                 .when().delete("/reservations/" + newReservationId)
                 .then().log().all()
                 .statusCode(200);
 
-        RestAssured.given().log().all()
-                .when().get("/reservations")
-                .then().log().all()
-                .statusCode(200)
-                .body("size()", is(0));
+        assertThat(getTotalReservationsCount()).isEqualTo(initialReservationsCount - 1);
     }
 }

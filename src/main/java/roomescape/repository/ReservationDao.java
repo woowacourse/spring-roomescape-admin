@@ -5,14 +5,14 @@ import org.springframework.jdbc.core.RowMapper;
 import org.springframework.jdbc.core.namedparam.MapSqlParameterSource;
 import org.springframework.jdbc.core.namedparam.SqlParameterSource;
 import org.springframework.jdbc.core.simple.SimpleJdbcInsert;
-import org.springframework.stereotype.Component;
+import org.springframework.stereotype.Repository;
 import roomescape.model.Reservation;
 import roomescape.model.ReservationTime;
 import roomescape.repository.dto.ReservationSaveDto;
 
 import java.util.List;
 
-@Component
+@Repository
 public class ReservationDao {
 
     private final JdbcTemplate jdbcTemplate;

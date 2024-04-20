@@ -10,7 +10,9 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
-import roomescape.dto.ReservationDto;
+import roomescape.dto.ReservationRequestDto;
+import roomescape.dto.ReservationResponseDto;
+import roomescape.dto.ReservationTimeDto;
 import roomescape.entity.Reservation;
 import roomescape.repository.ReservationRepository;
 
@@ -21,22 +23,23 @@ public class ReservationController {
     private ReservationRepository reservationRepository;
 
     @GetMapping("/reservations")
-    public ResponseEntity<List<ReservationDto>> reservations() {
+    public ResponseEntity<List<ReservationResponseDto>> reservations() {
         List<Reservation> reservations = reservationRepository.findAllReservations();
-        List<ReservationDto> responseBody = reservations.stream()
-                .map(ReservationDto::from)
+        List<ReservationResponseDto> responseBody = reservations.stream()
+                .map(ReservationResponseDto::from)
                 .toList();
         return ResponseEntity.ok(responseBody);
     }
 
     @PostMapping("/reservations")
-    public ResponseEntity<ReservationDto> addReservation(@RequestBody ReservationDto reservationDto) {
+    public ResponseEntity<ReservationResponseDto> addReservation(@RequestBody ReservationRequestDto reservationDto) {
         long id = reservationRepository.save(reservationDto);
-        ReservationDto responseBody = new ReservationDto(
+        Reservation reservation = reservationRepository.findById(id); // TODO: save + findById ???
+        ReservationResponseDto responseBody = new ReservationResponseDto(
                 id,
-                reservationDto.getName(),
-                reservationDto.getDate(),
-                reservationDto.getTime()
+                reservation.getName(),
+                reservation.getDate(),
+                ReservationTimeDto.from(reservation.getTime())
         );
         return ResponseEntity
                 .created(URI.create("/reservations/" + id))

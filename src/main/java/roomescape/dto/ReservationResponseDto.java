@@ -1,30 +1,28 @@
 package roomescape.dto;
 
-import com.fasterxml.jackson.annotation.JsonFormat;
 import java.time.LocalDate;
-import java.time.LocalTime;
 import roomescape.entity.Reservation;
 
-public class ReservationDto {
+public class ReservationResponseDto {
 
     private final Long id;
     private final String name;
     private final LocalDate date;
-    private final LocalTime time;
+    private final ReservationTimeDto time;
 
-    public ReservationDto(Long id, String name, LocalDate date, LocalTime time) {
+    public ReservationResponseDto(Long id, String name, LocalDate date, ReservationTimeDto time) {
         this.id = id;
         this.name = name;
         this.date = date;
         this.time = time;
     }
 
-    public static ReservationDto from(Reservation reservation) {
-        return new ReservationDto(
+    public static ReservationResponseDto from(Reservation reservation) {
+        return new ReservationResponseDto(
                 reservation.getId(),
                 reservation.getName(),
                 reservation.getDate(),
-                reservation.getTime()
+                ReservationTimeDto.from(reservation.getTime())
         );
     }
 
@@ -40,8 +38,7 @@ public class ReservationDto {
         return date;
     }
 
-    @JsonFormat(pattern = "HH:mm")
-    public LocalTime getTime() {
+    public ReservationTimeDto getTime() {
         return time;
     }
 }

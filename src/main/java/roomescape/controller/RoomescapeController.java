@@ -6,7 +6,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import roomescape.domain.Reservation;
-import roomescape.domain.ReservationRequestDto;
+import roomescape.controller.dto.ReservationRequestDto;
 import roomescape.domain.ReservationStore;
 
 @RestController

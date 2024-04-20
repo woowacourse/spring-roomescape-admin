@@ -57,7 +57,7 @@ class ReservationControllerTest extends ControllerTest {
     }
 
     @Test
-    @DisplayName("예약 DELETE 요청 시 상태코드 200을 반환한다.")
+    @DisplayName("예약 DELETE 요청 시 상태코드 204을 반환한다.")
     void deleteReservation() throws Exception {
         // given
         BDDMockito.willDoNothing()
@@ -68,6 +68,6 @@ class ReservationControllerTest extends ControllerTest {
         mockMvc.perform(delete("/reservations/{id}", anyLong())
                         .contentType(MediaType.APPLICATION_JSON))
                 .andDo(print())
-                .andExpect(status().isOk());
+                .andExpect(status().isNoContent());
     }
 }

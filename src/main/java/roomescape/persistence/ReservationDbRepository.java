@@ -33,11 +33,11 @@ public class ReservationDbRepository implements ReservationRepository {
 
     @Override
     public Optional<Reservation> findById(Long id) {
-        return Optional.empty();
+        return Optional.ofNullable(reservationDao.selectById(id));
     }
 
     @Override
     public void deleteById(Long id) {
-
+        reservationDao.deleteById(id);
     }
 }

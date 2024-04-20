@@ -1,14 +1,21 @@
 package roomescape.persistence;
 
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.jdbc.core.JdbcTemplate;
+import org.springframework.jdbc.support.GeneratedKeyHolder;
+import org.springframework.jdbc.support.KeyHolder;
 import org.springframework.test.annotation.DirtiesContext;
 import roomescape.domain.Reservation;
 
+import java.sql.Date;
+import java.sql.PreparedStatement;
+import java.sql.Time;
 import java.util.List;
+import java.util.Optional;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static roomescape.TestFixture.*;
@@ -21,6 +28,11 @@ class ReservationDbRepositoryTest implements ReservationRepositoryTest {
 
     @Autowired
     private ReservationRepository reservationRepository;
+
+    @BeforeEach
+    void setUp() {
+        jdbcTemplate.execute("TRUNCATE TABLE reservation");
+    }
 
     @Override
     @Test
@@ -75,12 +87,49 @@ class ReservationDbRepositoryTest implements ReservationRepositoryTest {
     }
 
     @Override
+    @Test
+    @DisplayName("Id로 예약을 조회한다.")
     public void findById() {
+        // given
+        String insertSql = "INSERT INTO reservation (name, date, time) VALUES (?, ?, ?)";
+        KeyHolder keyHolder = new GeneratedKeyHolder();
+        jdbcTemplate.update(connection -> {
+            PreparedStatement ps = connection.prepareStatement(insertSql, new String[]{"id"});
+            ps.setString(1, USER_MIA);
+            ps.setDate(2, Date.valueOf(MIA_RESERVATION_DATE));
+            ps.setTime(3, Time.valueOf(MIA_RESERVATION_TIME));
+            return ps;
+        }, keyHolder);
+        Long id = keyHolder.getKey().longValue();
 
+        // when
+        Optional<Reservation> reservation = reservationRepository.findById(id);
+
+        // then
+        assertThat(reservation).isPresent();
     }
 
     @Override
+    @Test
+    @DisplayName("Id로 예약을 삭제한다.")
     public void deleteById() {
+        // given
+        String insertSql = "INSERT INTO reservation (name, date, time) VALUES (?, ?, ?)";
+        KeyHolder keyHolder = new GeneratedKeyHolder();
+        jdbcTemplate.update(connection -> {
+            PreparedStatement ps = connection.prepareStatement(insertSql, new String[]{"id"});
+            ps.setString(1, USER_MIA);
+            ps.setDate(2, Date.valueOf(MIA_RESERVATION_DATE));
+            ps.setTime(3, Time.valueOf(MIA_RESERVATION_TIME));
+            return ps;
+        }, keyHolder);
+        Long id = keyHolder.getKey().longValue();
 
+        // when
+        reservationRepository.deleteById(id);
+
+        // then
+        Integer count = jdbcTemplate.queryForObject("SELECT count(1) from reservation where id = ?", Integer.class, id);
+        assertThat(count).isEqualTo(0);
     }
 }

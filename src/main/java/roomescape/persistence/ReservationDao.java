@@ -45,6 +45,16 @@ public class ReservationDao {
         return reservation;
     }
 
+    public Reservation selectById(Long id) {
+        String sql = "select id, name, date, time from reservation where id = ?";
+        return jdbcTemplate.queryForObject(sql, this::rowMapper, id);
+    }
+
+    public void deleteById(Long id) {
+        String sql = "delete from reservation where id = ?";
+        jdbcTemplate.update(sql, id);
+    }
+
     private Reservation rowMapper(ResultSet resultSet, int rowNumber) throws SQLException {
         Reservation reservation = new Reservation(
                 resultSet.getString("name"),

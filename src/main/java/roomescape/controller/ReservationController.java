@@ -2,6 +2,8 @@ package roomescape.controller;
 
 import java.util.List;
 import java.util.Optional;
+import org.springframework.http.HttpHeaders;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -34,10 +36,11 @@ public class ReservationController {
     }
 
     @PostMapping
-    public ReservationResponse save(@RequestBody final ReservationRequest reservationRequest) {
+    public ResponseEntity<Void> save(@RequestBody final ReservationRequest reservationRequest) {
         final long id = reservationService.save(reservationRequest);
-        return new ReservationResponse(id, reservationRequest.name(),
-                reservationRequest.date(), reservationRequest.time());
+        final HttpHeaders httpHeaders = new HttpHeaders();
+        httpHeaders.add("Location", String.format("/reservations/%s", id));
+        return new ResponseEntity<>(httpHeaders, HttpStatus.CREATED);
     }
 
     @DeleteMapping("/{id}")
@@ -48,7 +51,7 @@ public class ReservationController {
                     .build();
         }
         reservationService.remove(id);
-        return ResponseEntity.ok()
+        return ResponseEntity.noContent()
                 .build();
     }
 }

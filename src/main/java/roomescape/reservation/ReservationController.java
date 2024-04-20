@@ -30,7 +30,7 @@ public class ReservationController {
 
     @PostMapping
     public ResponseEntity<Long> create(@RequestBody ReservationRequest reservationRequest) {
-        return ResponseEntity.status(HttpStatus.CREATED).body(reservationService.create(reservationRequest));
+        return ResponseEntity.ok().body(reservationService.create(reservationRequest));
     }
 
     @DeleteMapping("/{id}")

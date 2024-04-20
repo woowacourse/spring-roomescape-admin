@@ -13,4 +13,11 @@ public class FakeReservationDao implements ReservationRepository {
         reservations.put((long) reservations.size() + 1, reservation);
         return reservations.size();
     }
+
+    @Override
+    public List<Reservation> findAll() {
+        return reservations.values()
+                .stream()
+                .toList();
+    }
 }

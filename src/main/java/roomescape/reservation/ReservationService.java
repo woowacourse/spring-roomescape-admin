@@ -1,12 +1,8 @@
 package roomescape.reservation;
 
-import java.time.LocalDate;
-import java.time.LocalTime;
-import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.concurrent.atomic.AtomicLong;
 import org.springframework.stereotype.Service;
 import roomescape.reservation.dto.ReservationRequest;
 import roomescape.reservation.dto.ReservationResponse;
@@ -23,7 +19,8 @@ public class ReservationService {
     private final Map<Long, Reservation> reservations = new HashMap<>();
 
     public List<ReservationResponse> findAllReservations() {
-        return reservations.values().stream()
+        return reservationRepository.findAll()
+                .stream()
                 .map(ReservationResponse::from)
                 .toList();
     }

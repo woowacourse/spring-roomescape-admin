@@ -4,6 +4,7 @@ import java.sql.Date;
 import java.sql.PreparedStatement;
 import java.sql.Statement;
 import java.sql.Time;
+import java.util.List;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.support.GeneratedKeyHolder;
 import org.springframework.jdbc.support.KeyHolder;
@@ -30,5 +31,19 @@ public class ReservationDao implements ReservationRepository {
             return preparedStatement;
         }, keyHolder);
         return keyHolder.getKey().longValue();
+    }
+
+    @Override
+    public List<Reservation> findAll() {
+        return jdbcTemplate.query("SELECT id, name, date, time FROM reservation",
+                (resultSet, rowNum) -> {
+                    return new Reservation(
+                            resultSet.getLong("id"),
+                            resultSet.getString("name"),
+                            resultSet.getDate("date").toLocalDate(),
+                            resultSet.getTime("time").toLocalTime()
+                    );
+                }
+        );
     }
 }

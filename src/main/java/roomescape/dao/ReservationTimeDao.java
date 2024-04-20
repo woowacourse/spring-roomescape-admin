@@ -21,14 +21,14 @@ public class ReservationTimeDao {
         this.jdbcTemplate = jdbcTemplate;
     }
 
-    public long insert(ReservationTimeRequestDto reservationTimeRequestDto) {
+    public Long insert(String startAt) {
         String insertSql = "INSERT INTO reservation_time(start_at) VALUES ?";
         KeyHolder keyHolder = new GeneratedKeyHolder();
         jdbcTemplate.update(connection -> {
             PreparedStatement ps = connection.prepareStatement(
                     insertSql,
                     new String[]{"id"});
-            ps.setString(1, reservationTimeRequestDto.startAt());
+            ps.setString(1, startAt);
             return ps;
         }, keyHolder);
 

@@ -20,14 +20,11 @@ public class ReservationController {
 
     private final JdbcTemplate jdbcTemplate;
     private final SimpleJdbcInsert reservationInsert;
-    private final RowMapper<Reservation> reservationConvertor = (selectedReservation, RowNum) -> {
-        return new Reservation(
-                selectedReservation.getLong("id"),
-                selectedReservation.getString("name"),
-                selectedReservation.getString("date"),
-                selectedReservation.getString("time")
-        );
-    };
+    private final RowMapper<Reservation> reservationConvertor = (selectedReservation, RowNum) -> new Reservation(
+            selectedReservation.getLong("id"),
+            selectedReservation.getString("name"),
+            selectedReservation.getString("date"),
+            selectedReservation.getString("time"));
 
     public ReservationController(final JdbcTemplate jdbcTemplate) {
         this.jdbcTemplate = jdbcTemplate;

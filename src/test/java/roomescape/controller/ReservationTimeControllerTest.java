@@ -73,6 +73,12 @@ class ReservationTimeControllerTest {
         final Integer count = jdbcTemplate.queryForObject("SELECT count(1) from reservation_times", Integer.class);
         assertThat(count).isEqualTo(1);
 
-        // TODO: 예약 삭제 테스트 추가
+        RestAssured.given().log().all()
+                .when().delete("/times/1")
+                .then().log().all()
+                .statusCode(204);
+
+        final Integer countAfterDelete = jdbcTemplate.queryForObject("SELECT count(1) from reservation_times", Integer.class);
+        assertThat(countAfterDelete).isEqualTo(0);
     }
 }

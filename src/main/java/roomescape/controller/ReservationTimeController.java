@@ -47,4 +47,13 @@ public class ReservationTimeController {
         return ResponseEntity.status(HttpStatus.CREATED)
                 .body(timeResponse);
     }
+
+    @DeleteMapping("/{id}")
+    public ResponseEntity<Void> deleteTime(final @PathVariable("id") Long id) {
+        int affectedRowCount = jdbcTemplate.update("DELETE FROM reservation_times WHERE id = ?", id);
+        if (affectedRowCount == 0) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
+        }
+        return ResponseEntity.noContent().build();
+    }
 }

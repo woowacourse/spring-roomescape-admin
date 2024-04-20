@@ -1,6 +1,6 @@
 package roomescape.controller;
 
-import roomescape.domain.Reservation;
+import roomescape.entity.Reservation;
 
 import java.time.format.DateTimeFormatter;
 

@@ -15,7 +15,7 @@ class ReservationTest {
         Long id = 1L;
         LocalDate date = LocalDate.now();
         LocalTime time = LocalTime.now();
-        String name = "아톰";
+        Name name = new Name("아톰");
 
         assertThatCode(() -> new Reservation(id, name, date, time))
                 .doesNotThrowAnyException();

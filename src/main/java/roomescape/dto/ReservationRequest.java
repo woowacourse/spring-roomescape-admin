@@ -4,8 +4,8 @@ import java.time.LocalDate;
 import java.time.LocalTime;
 
 public record ReservationRequest(
-        LocalDate date,
         String name,
+        LocalDate date,
         LocalTime time
 ) {
 }

@@ -3,6 +3,7 @@ package roomescape.repository;
 import java.util.List;
 import org.springframework.stereotype.Repository;
 import roomescape.dto.Reservation;
+import roomescape.dto.ReservationRequest;
 
 @Repository
 public class ReservationRepository {
@@ -12,19 +13,11 @@ public class ReservationRepository {
         this.reservationDao = reservationDao;
     }
 
-    /*
     public Reservation saveReservation(final ReservationRequest reservationRequest) {
-        long id = index.incrementAndGet();
-        Reservation reservation = new Reservation(
-                id,
-                reservationRequest.name(),
-                reservationRequest.date(),
-                reservationRequest.time()
-        );
-        reservations.put(id, reservation);
-        return reservation;
+        return reservationDao.save(reservationRequest);
     }
 
+    /*
     public void deleteReservation(final long id) {
         reservations.remove(id);
     }
@@ -34,6 +27,6 @@ public class ReservationRepository {
     }*/
 
     public List<Reservation> getAllReservations() {
-        return reservationDao.getReservations();
+        return reservationDao.getAll();
     }
 }

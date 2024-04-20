@@ -58,12 +58,14 @@ public class JdbcReservationDao implements ReservationDao {
         return jdbcTemplate.query(sql, reservationMapper);
     }
 
+    @Override
     public Long insert(ReservationRequest reservationRequest) {
         SqlParameterSource parameterSource = new BeanPropertySqlParameterSource(reservationRequest);
         Number id = reservationInsert.executeAndReturnKey(parameterSource);
         return id.longValue();
     }
 
+    @Override
     public void delete(Long id) {
         String sql = "DELETE FROM reservation WHERE id = ?";
 

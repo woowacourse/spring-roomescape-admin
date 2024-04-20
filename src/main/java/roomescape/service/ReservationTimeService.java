@@ -39,7 +39,7 @@ public class ReservationTimeService {
     public void delete(final long id) {
         final List<Reservation> reservations = reservationRepository.findByTimeId(id);
         if (!reservations.isEmpty()) {
-            throw new IllegalArgumentException("Reservation exists with this time");
+            throw new IllegalArgumentException("Reservation time that have reservations cannot be deleted.");
         }
         reservationTimeRepository.deleteById(id);
     }

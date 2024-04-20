@@ -2,7 +2,6 @@ package roomescape.repository;
 
 import java.util.List;
 import javax.sql.DataSource;
-import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;
 import org.springframework.jdbc.core.namedparam.MapSqlParameterSource;
@@ -45,11 +44,7 @@ public class ReservationRepository {
                 on r.time_id = t.id
                 """;
 
-        try {
-            return jdbcTemplate.query(query, getReservationRowMapper());
-        } catch (EmptyResultDataAccessException e) {
-            return List.of();
-        }
+        return jdbcTemplate.query(query, getReservationRowMapper());
     }
 
     public List<Reservation> findByTimeId(final long timeId) {
@@ -65,12 +60,8 @@ public class ReservationRepository {
                 on r.time_id = t.id
                 WHERE t.id = ?
                 """;
-        
-        try {
-            return jdbcTemplate.query(query, getReservationRowMapper(), timeId);
-        } catch (EmptyResultDataAccessException e) {
-            return List.of();
-        }
+
+        return jdbcTemplate.query(query, getReservationRowMapper(), timeId);
     }
 
     private RowMapper<Reservation> getReservationRowMapper() {

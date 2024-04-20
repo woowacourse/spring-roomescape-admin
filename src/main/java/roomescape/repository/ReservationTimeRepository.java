@@ -2,7 +2,7 @@ package roomescape.repository;
 
 import java.util.List;
 import javax.sql.DataSource;
-import org.springframework.dao.EmptyResultDataAccessException;
+import org.springframework.dao.DataAccessException;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;
 import org.springframework.jdbc.core.namedparam.BeanPropertySqlParameterSource;
@@ -29,18 +29,14 @@ public class ReservationTimeRepository {
     }
 
     public List<ReservationTime> findAll() {
-        try {
-            return jdbcTemplate.query("SELECT id, start_at FROM reservation_time", getReservationTimeRowMapper());
-        } catch (EmptyResultDataAccessException e) {
-            return List.of();
-        }
+        return jdbcTemplate.query("SELECT id, start_at FROM reservation_time", getReservationTimeRowMapper());
     }
 
     public ReservationTime findById(final long id) {
         try {
             final String query = "SELECT id, start_at FROM reservation_time WHERE id = ?";
             return jdbcTemplate.queryForObject(query, getReservationTimeRowMapper(), id);
-        } catch (RuntimeException e) {
+        } catch (DataAccessException e) {
             throw new IllegalArgumentException("Reservation time not found");
         }
     }

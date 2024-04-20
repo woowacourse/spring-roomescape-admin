@@ -26,4 +26,7 @@ public class ReservationTimeService {
                 .map(ReservationTimeResponse::from)
                 .toList();
     }
+
+    public void deleteReservationTime(Long id) {
+    }
 }

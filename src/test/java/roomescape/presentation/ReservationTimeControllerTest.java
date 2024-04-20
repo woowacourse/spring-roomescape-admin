@@ -11,8 +11,8 @@ import roomescape.dto.ReservationTimeSaveRequest;
 import java.util.List;
 
 import static org.mockito.ArgumentMatchers.any;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
+import static org.mockito.ArgumentMatchers.anyLong;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 import static roomescape.TestFixture.MIA_RESERVATION_TIME;
@@ -50,5 +50,20 @@ class ReservationTimeControllerTest extends ControllerTest {
                 .andDo(print())
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$[0].startAt").value(MIA_RESERVATION_TIME.toString()));
+    }
+
+    @Test
+    @DisplayName("예약 시간 DELETE 요청 시 상태코드 204를 반환한다.")
+    void deleteReservationTime() throws Exception {
+        // given
+        BDDMockito.willDoNothing()
+                .given(reservationTimeService)
+                .deleteReservationTime(anyLong());
+
+        // when & then
+        mockMvc.perform(delete("/times/{id}", anyLong())
+                        .contentType(MediaType.APPLICATION_JSON))
+                .andDo(print())
+                .andExpect(status().isNoContent());
     }
 }

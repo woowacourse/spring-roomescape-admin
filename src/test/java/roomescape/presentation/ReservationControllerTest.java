@@ -1,10 +1,8 @@
 package roomescape.presentation;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.mockito.BDDMockito;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
 import roomescape.domain.Reservation;
 import roomescape.dto.ReservationResponse;
@@ -20,8 +18,6 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 import static roomescape.TestFixture.*;
 
 class ReservationControllerTest extends ControllerTest {
-    @Autowired
-    private ObjectMapper objectMapper;
 
     @Test
     @DisplayName("예약 목록 GET 요청 시 상태코드 200을 반환한다.")

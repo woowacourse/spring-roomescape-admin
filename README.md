@@ -11,6 +11,11 @@
 - [x] API 명세를 따라 예약 삭제 API를 구현한다.
   - Spring MVC가 제공하는 Annotation을 활용한다.
 - [x] 예약 정보의 식별자를 생성할 때 AtomicLong을 활용한다. 
+- [ ] h2 데이터베이스를 연동한다.
+- [ ] 데이터베이스의 예약 스키마를 추가한다.
+- [ ] 예약 조회를 구현한다.
+- [ ] 에약 추가를 구현한다.
+- [ ] 에약 삭제를 구현한다.
 
 ## 커밋 컨밴션
 - feat, docs, fix, refactor, test, style, chore

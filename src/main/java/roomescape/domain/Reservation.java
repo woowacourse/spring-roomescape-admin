@@ -24,6 +24,13 @@ public class Reservation {
         this.time = time;
     }
 
+    public Reservation(Long id, Reservation reservation) {
+        this.id = id;
+        this.name = reservation.name;
+        this.date = reservation.date;
+        this.time = reservation.time;
+    }
+
     private void validateName(String name) {
         if (name == null || name.isBlank()) {
             throw new IllegalArgumentException("예약자 이름은 비어있을 수 없습니다.");
@@ -44,13 +51,6 @@ public class Reservation {
         if (time == null || time.getMinute() % TIME_UNIT != 0) {
             throw new IllegalArgumentException("유효하지 않은 예약 시간입니다.");
         }
-    }
-
-    public void initializeId(Long id) {
-        if (this.id != null) {
-            throw new IllegalStateException("예약 ID를 변경할 수 없습니다.");
-        }
-        this.id = id;
     }
 
     public boolean hasSameDateTime(LocalDate date, LocalTime time) {

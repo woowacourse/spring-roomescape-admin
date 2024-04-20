@@ -1,6 +1,5 @@
 package roomescape.persistence;
 
-import org.springframework.stereotype.Repository;
 import roomescape.domain.Reservation;
 
 import java.time.LocalDate;
@@ -18,9 +17,9 @@ public class ReservationCollectionRepository implements ReservationRepository {
 
     @Override
     public Reservation save(Reservation reservation) {
-        reservation.initializeId(index.getAndIncrement());
-        reservations.put(reservation.getId(), reservation);
-        return reservations.get(reservation.getId());
+        Reservation newReservation = new Reservation(index.getAndIncrement(), reservation);
+        reservations.put(newReservation.getId(), newReservation);
+        return reservations.get(newReservation.getId());
     }
 
     @Override

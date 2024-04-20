@@ -45,7 +45,8 @@ class ReservationCollectionRepositoryTest implements ReservationRepositoryTest {
 
         // then
         assertThat(reservations).hasSize(2)
-                .containsExactly(miaReservation, wonnyReservation);
+                .extracting(Reservation::getName)
+                .containsExactly(USER_MIA, "wonny");
     }
 
     @Override

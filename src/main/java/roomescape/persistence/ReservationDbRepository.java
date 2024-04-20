@@ -18,7 +18,8 @@ public class ReservationDbRepository implements ReservationRepository {
 
     @Override
     public Reservation save(Reservation reservation) {
-        return reservationDao.insert(reservation);
+        Long id = reservationDao.insert(reservation);
+        return new Reservation(id, reservation);
     }
 
     @Override

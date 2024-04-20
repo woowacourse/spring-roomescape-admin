@@ -30,7 +30,7 @@ public class ReservationDao {
         return jdbcTemplate.query(sql, this::rowMapper, date.toString(), time.toString());
     }
 
-    public Reservation insert(Reservation reservation) {
+    public Long insert(Reservation reservation) {
         String sql = "insert into reservation (name, date, time) values (?, ?, ?)";
         KeyHolder keyHolder = new GeneratedKeyHolder();
         jdbcTemplate.update(connection -> {
@@ -40,9 +40,7 @@ public class ReservationDao {
             ps.setTime(3, Time.valueOf(reservation.getTime()));
             return ps;
         }, keyHolder);
-        Long id = Objects.requireNonNull(keyHolder.getKey()).longValue();
-        reservation.initializeId(id);
-        return reservation;
+        return Objects.requireNonNull(keyHolder.getKey()).longValue();
     }
 
     public Reservation selectById(Long id) {
@@ -61,7 +59,6 @@ public class ReservationDao {
                 resultSet.getDate("date").toLocalDate(),
                 resultSet.getTime("time").toLocalTime()
         );
-        reservation.initializeId(resultSet.getLong("id"));
-        return reservation;
+        return new Reservation(resultSet.getLong("id"), reservation);
     }
 }

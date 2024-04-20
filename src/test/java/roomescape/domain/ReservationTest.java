@@ -1,7 +1,6 @@
 package roomescape.domain;
 
 import org.junit.jupiter.api.DisplayName;
-import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.Arguments;
 import org.junit.jupiter.params.provider.MethodSource;
@@ -52,18 +51,6 @@ class ReservationTest {
 
     private static Stream<LocalTime> invalidTimes() {
         return Stream.of(null, LocalTime.of(1, 23));
-    }
-
-    @Test
-    @DisplayName("이미 초기화된 예약 ID를 초기화(수정)할 경우 예외가 발생한다.")
-    void initializeId() {
-        // given
-        Reservation reservation = MIA_RESERVATION();
-        reservation.initializeId(1L);
-
-        // when & then
-        assertThatThrownBy(() -> reservation.initializeId(2L))
-                .isInstanceOf(IllegalStateException.class);
     }
 
     @ParameterizedTest

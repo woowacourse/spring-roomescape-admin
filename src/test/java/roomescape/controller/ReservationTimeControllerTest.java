@@ -87,6 +87,15 @@ class ReservationTimeControllerTest {
         assertThat(countAfterDelete).isEqualTo(0);
     }
 
+    @DisplayName("존재하지 않는 예약 시간 삭제")
+    @Test
+    void deleteReservationTimeNotFound() {
+        RestAssured.given().log().all()
+                .when().delete("/times/1")
+                .then().log().all()
+                .statusCode(404);
+    }
+
     @DisplayName("컨트롤러에서 jdbcTemplate 필드 제거")
     @Test
     void jdbcTemplateNotInjected() {

@@ -20,6 +20,6 @@ public class ExceptionApiController {
     @ExceptionHandler(DataAccessException.class)
     public ErrorResult dataAccessExHandler(final DataAccessException exception) {
         System.out.println("데이터 접근 예외 발생 :" + exception.getMessage());
-        return new ErrorResult("BAD_INPUT", exception.getMessage());
+        return new ErrorResult("BAD_INPUT", "잘못된 데이터 요청입니다.");
     }
 }

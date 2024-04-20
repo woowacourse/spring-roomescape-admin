@@ -2,59 +2,55 @@ package roomescape.controller;
 
 import java.net.URI;
 import java.util.List;
-import java.util.Optional;
 
-import org.springframework.http.HttpStatus;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import roomescape.dto.ReservationSaveRequest;
 import roomescape.dto.ReservationResponse;
-import roomescape.model.Reservation;
-import roomescape.model.ReservationTime;
 import roomescape.repository.ReservationDao;
 import roomescape.repository.ReservationTimeDao;
-import roomescape.repository.dto.ReservationSaveDto;
+import roomescape.service.ReservationService;
 
 @RestController
 @RequestMapping("/reservations")
 public class ReservationController {
 
-    private final ReservationDao reservationDao;
-    private final ReservationTimeDao reservationTimeDao;
+    private final Logger logger = LoggerFactory.getLogger(getClass());
+    private final ReservationService reservationService;
 
-    public ReservationController(final ReservationDao reservationDao, final ReservationTimeDao reservationTimeDao) {
-        this.reservationDao = reservationDao;
-        this.reservationTimeDao = reservationTimeDao;
+    public ReservationController(final ReservationService reservationService, final ReservationDao reservationDao, final ReservationTimeDao reservationTimeDao) {
+        this.reservationService = reservationService;
     }
 
     @GetMapping
     public ResponseEntity<List<ReservationResponse>> getReservations() {
-        final List<ReservationResponse> reservationResponses = reservationDao.findAll()
-                .stream()
-                .map(ReservationResponse::from)
-                .toList();
+        final List<ReservationResponse> reservationResponses = reservationService.getReservations();
         return ResponseEntity.ok(reservationResponses);
     }
 
     @PostMapping
     public ResponseEntity<ReservationResponse> saveReservation(
             @RequestBody final ReservationSaveRequest reservationSaveRequest) {
-        final Optional<ReservationTime> reservationTime = reservationTimeDao.findById(reservationSaveRequest.timeId());
-        if (reservationTime.isEmpty()) {
+        try {
+            final ReservationResponse reservationResponse = reservationService.saveReservation(reservationSaveRequest);
+            return ResponseEntity.created(URI.create("/reservations/" + reservationResponse.id()))
+                    .body(reservationResponse);
+        } catch (RuntimeException e) {
+            logger.error("예약 저장 실패", e);
             return ResponseEntity.notFound().build();
         }
-        ReservationSaveDto reservationSaveDto = ReservationSaveDto.of(reservationSaveRequest, reservationTime.get());
-        final Reservation savedReservation = reservationDao.save(reservationSaveDto);
-        return ResponseEntity.created(URI.create("/reservations/" + savedReservation.getId()))
-                .body(ReservationResponse.from(savedReservation));
     }
 
     @DeleteMapping("/{id}")
     public ResponseEntity<Void> deleteReservation(final @PathVariable("id") Long id) {
-        final boolean isDeleted = reservationDao.deleteById(id);
-        if (isDeleted) {
+        try {
+            reservationService.deleteReservation(id);
             return ResponseEntity.noContent().build();
+        } catch (RuntimeException e) {
+            logger.error("예약 삭제 실패", e);
+            return ResponseEntity.notFound().build();
         }
-        return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
     }
 }

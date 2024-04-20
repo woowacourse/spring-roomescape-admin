@@ -10,9 +10,4 @@ public class ReservationController {
     public String home() {
         return "admin/reservation-legacy";
     }
-
-    @GetMapping("/time")
-    public String time() {
-        return "admin/time";
-    }
 }

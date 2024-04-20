@@ -13,6 +13,8 @@ import roomescape.domain.ReservationTime;
 @Repository
 public class ReservationTimeDao {
 
+    private static final RowMapper<ReservationTime> RESERVATION_TIME_ROW_MAPPER = getReservationTimeRowMapper();
+
     private final JdbcTemplate jdbcTemplate;
     private final SimpleJdbcInsert jdbcInsert;
 
@@ -21,6 +23,11 @@ public class ReservationTimeDao {
         this.jdbcInsert = new SimpleJdbcInsert(dataSource)
                 .withTableName("reservation_time")
                 .usingGeneratedKeyColumns("id");
+    }
+
+    private static RowMapper<ReservationTime> getReservationTimeRowMapper() {
+        return (resultSet, rowNum) -> new ReservationTime(resultSet.getLong("id"),
+                LocalTime.parse(resultSet.getString("start_at")));
     }
 
     public ReservationTime save(ReservationTime reservationTime) {
@@ -32,23 +39,18 @@ public class ReservationTimeDao {
 
     public List<ReservationTime> findAll() {
         String sql = "SELECT * FROM reservation_time";
-        return jdbcTemplate.query(sql, getReservationTimeRowMapper());
+        return jdbcTemplate.query(sql, RESERVATION_TIME_ROW_MAPPER);
     }
 
     public ReservationTime findById(long id) {
         String sql = """
                 SELECT * FROM reservation_time
                 WHERE id = ?""";
-        return jdbcTemplate.queryForObject(sql, getReservationTimeRowMapper(), id);
+        return jdbcTemplate.queryForObject(sql, RESERVATION_TIME_ROW_MAPPER, id);
     }
 
     public void deleteById(long id) {
         String sql = "DELETE FROM reservation_time WHERE id = ?";
         jdbcTemplate.update(sql, id);
-    }
-
-    private RowMapper<ReservationTime> getReservationTimeRowMapper() {
-        return (resultSet, rowNum) -> new ReservationTime(resultSet.getLong("id"),
-                LocalTime.parse(resultSet.getString("start_at")));
     }
 }

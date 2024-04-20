@@ -4,6 +4,7 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.SQLException;
 import java.util.List;
+import java.util.Optional;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;
 import org.springframework.jdbc.support.GeneratedKeyHolder;
@@ -21,6 +22,12 @@ public class ReservationTimeRepository {
 
     public ReservationTimeRepository(JdbcTemplate jdbcTemplate) {
         this.jdbcTemplate = jdbcTemplate;
+    }
+
+    public Optional<ReservationTime> findById(Long id) {
+        ReservationTime reservationTime = jdbcTemplate.queryForObject(
+                "SELECT id, start_at FROM %s WHERE id = ?".formatted(TABLE_NAME), ROW_MAPPER, id);
+        return Optional.ofNullable(reservationTime);
     }
 
     public List<ReservationTime> findAll() {
@@ -43,17 +50,6 @@ public class ReservationTimeRepository {
     }
 
     public void deleteById(Long id) {
-        ReservationTime foundReservationTime = findById(id);
-        jdbcTemplate.update("DELETE FROM %s WHERE id = ?".formatted(TABLE_NAME), foundReservationTime.id());
-    }
-
-    private ReservationTime findById(Long id) {
-        ReservationTime reservationTime = jdbcTemplate.queryForObject(
-                "SELECT id, start_at FROM %s WHERE id = ?".formatted(TABLE_NAME), ROW_MAPPER, id);
-
-        if (reservationTime == null) {
-            throw new IllegalStateException("해당 예약 시간이 없습니다.");
-        }
-        return reservationTime;
+        jdbcTemplate.update("DELETE FROM %s WHERE id = ?".formatted(TABLE_NAME), id);
     }
 }

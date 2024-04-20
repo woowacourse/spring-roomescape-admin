@@ -4,10 +4,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.bind.annotation.*;
 import roomescape.TimeDao;
 import roomescape.domain.Time;
 import roomescape.dto.TimeRequestDto;
@@ -39,5 +36,11 @@ public class TimeController {
     @GetMapping("/times")
     public List<Time> getTimes() {
         return timeDao.findAll();
+    }
+
+    @DeleteMapping("/times/{id}")
+    public ResponseEntity<Void> deleteTime(@PathVariable Long id) {
+        timeDao.deleteById(id);
+        return ResponseEntity.ok().build();
     }
 }

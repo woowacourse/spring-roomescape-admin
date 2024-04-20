@@ -42,4 +42,9 @@ public class TimeDao {
                         resultSet.getString("start_at")
                 ));
     }
+
+    public void deleteById(Long id) {
+        String deleteSql = "DELETE FROM reservation_time WHERE id = ?";
+        jdbcTemplate.update(deleteSql, id);
+    }
 }

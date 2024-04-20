@@ -1,8 +1,6 @@
 package roomescape.controller;
 
-import java.util.ArrayList;
 import java.util.List;
-import java.util.concurrent.atomic.AtomicLong;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
@@ -12,17 +10,22 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import roomescape.dao.ReservationDao;
 import roomescape.domain.Reservation;
 import roomescape.dto.ReservationDto;
 
 @Controller
 @RequestMapping("/reservations")
 public class ReservationController {
-    private final List<Reservation> reservations = new ArrayList<>();
-    private final AtomicLong index = new AtomicLong(0);
+    ReservationDao reservationDao;
+
+    public ReservationController(ReservationDao reservationDao) {
+        this.reservationDao = reservationDao;
+    }
 
     @GetMapping
     public ResponseEntity<List<ReservationDto>> findAll() {
+        List<Reservation> reservations = reservationDao.findAll();
         List<ReservationDto> reservationDtos = reservations.stream()
                 .map(ReservationDto::from)
                 .toList();
@@ -34,9 +37,7 @@ public class ReservationController {
 
     @PostMapping
     public ResponseEntity<ReservationDto> add(@RequestBody Reservation reservation) {
-        Reservation newReservation = new Reservation(index.incrementAndGet(), reservation.getName(),
-                reservation.getDate(), reservation.getTime());
-        reservations.add(newReservation);
+        Reservation newReservation = reservationDao.add(reservation);
 
         return ResponseEntity.ok()
                 .contentType(MediaType.APPLICATION_JSON)
@@ -45,11 +46,7 @@ public class ReservationController {
 
     @DeleteMapping("/{id}")
     public ResponseEntity<Void> delete(@PathVariable Long id) {
-        reservations.stream()
-                .filter(reservation -> reservation.hasId(id))
-                .findFirst()
-                .ifPresent(reservations::remove);
-
+        reservationDao.delete(id);
         return ResponseEntity.ok().build();
     }
 }

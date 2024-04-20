@@ -17,14 +17,9 @@ public class ReservationRepository {
         return reservationDao.save(reservationRequest);
     }
 
-    /*
     public void deleteReservation(final long id) {
-        reservations.remove(id);
+        reservationDao.delete(id);
     }
-
-    public void deleteAll() {
-        reservations.clear();
-    }*/
 
     public List<Reservation> getAllReservations() {
         return reservationDao.getAll();

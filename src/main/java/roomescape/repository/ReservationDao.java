@@ -22,7 +22,7 @@ public class ReservationDao {
         jdbcTemplate.update(connection -> {
                     PreparedStatement ps = connection.prepareStatement(
                             "insert into reservation (name, date, time) values (?, ?, ?)",
-                            new String[]{"iddd"}
+                            new String[]{"id"}
                     );
                     ps.setString(1, reservationRequest.name());
                     ps.setString(2, reservationRequest.date().toString());
@@ -50,5 +50,9 @@ public class ReservationDao {
                         resultSet.getString("time")
                 )
         );
+    }
+
+    public void delete(final long id) {
+        jdbcTemplate.update("delete from reservation where id = ?", Long.valueOf(id));
     }
 }

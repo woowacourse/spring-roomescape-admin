@@ -26,3 +26,18 @@
 | GET         | `/reservations`      | 예약 목록 조회    |
 | POST        | `/reservations`      | 예약 추가       | 
 | DELETE      | `/reservations/{id}` | 예약 삭제       | 
+
+## DB 연동
+
+### 스키마
+
+```mysql
+CREATE TABLE reservation
+(
+    id   BIGINT       NOT NULL AUTO_INCREMENT,
+    name VARCHAR(255) NOT NULL,
+    date VARCHAR(255) NOT NULL,
+    time VARCHAR(255) NOT NULL,
+    PRIMARY KEY (id)
+);
+```

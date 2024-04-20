@@ -1,5 +1,8 @@
 package roomescape.reservation;
 
+import java.time.LocalDate;
+import java.time.LocalTime;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -7,11 +10,15 @@ import java.util.concurrent.atomic.AtomicLong;
 import org.springframework.stereotype.Service;
 import roomescape.reservation.dto.ReservationRequest;
 import roomescape.reservation.dto.ReservationResponse;
+import roomescape.reservation.repository.ReservationRepository;
 
 @Service
 public class ReservationService {
-    private static final long START_ID = 0;
-    private static final AtomicLong atomicLong = new AtomicLong(START_ID);
+    private final ReservationRepository reservationRepository;
+
+    public ReservationService(final ReservationRepository reservationRepository) {
+        this.reservationRepository = reservationRepository;
+    }
 
     private final Map<Long, Reservation> reservations = new HashMap<>();
 
@@ -21,17 +28,13 @@ public class ReservationService {
                 .toList();
     }
 
-    public ReservationResponse create(ReservationRequest reservationRequest) {
-        long incrementId = atomicLong.incrementAndGet();
-
+    public long create(ReservationRequest reservationRequest) {
         Reservation reservation = new Reservation(
-                incrementId,
                 reservationRequest.name(),
                 reservationRequest.date(),
                 reservationRequest.time()
         );
-        reservations.put(incrementId, reservation);
-        return ReservationResponse.from(reservation);
+        return reservationRepository.save(reservation);
     }
 
     public boolean delete(long reservationId) {

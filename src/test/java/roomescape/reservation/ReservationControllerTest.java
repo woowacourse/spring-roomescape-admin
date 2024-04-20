@@ -28,7 +28,7 @@ class ReservationControllerTest {
                 .when().post("/reservations")
                 .then().log().all()
                 .statusCode(200)
-                .body("name", is("브라운"));
+                .body(is("1"));
 
         RestAssured.given().log().all()
                 .when().get("/reservations")

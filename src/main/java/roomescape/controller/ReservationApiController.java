@@ -3,6 +3,8 @@ package roomescape.controller;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.atomic.AtomicLong;
+import org.springframework.jdbc.core.JdbcTemplate;
+import org.springframework.jdbc.core.RowMapper;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -17,12 +19,21 @@ import roomescape.entity.Reservation;
 @RequestMapping("/reservations")
 public class ReservationApiController {
 
-    private final List<Reservation> reservations = new ArrayList<>();
-    private final AtomicLong index = new AtomicLong(1);
+    private final JdbcTemplate jdbcTemplate;
+    private final List<Reservation> reservations;
+    private final AtomicLong index;
+
+    public ReservationApiController(JdbcTemplate jdbcTemplate) {
+        this.jdbcTemplate = jdbcTemplate;
+        reservations = new ArrayList<>();
+        index = new AtomicLong(1);
+    }
 
     @GetMapping
     public List<Reservation> findAllReservations() {
-        return reservations;
+        String sql = "SELECT * FROM reservation";
+
+        return jdbcTemplate.query(sql, reservationRowMapper());
     }
 
     @PostMapping
@@ -35,5 +46,14 @@ public class ReservationApiController {
     @DeleteMapping("/{id}")
     public void deleteReservation(@PathVariable long id) {
         reservations.removeIf(reservation -> reservation.getId() == id);
+    }
+
+    private RowMapper<Reservation> reservationRowMapper() {
+        return (resultSet, rowNum) -> new Reservation(
+                resultSet.getLong("id"),
+                resultSet.getString("name"),
+                resultSet.getString("date"),
+                resultSet.getString("time")
+        );
     }
 }

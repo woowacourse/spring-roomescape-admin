@@ -1,8 +1,6 @@
 package roomescape.controller.response;
 
 import java.time.LocalDate;
-import java.time.LocalTime;
-import com.fasterxml.jackson.annotation.JsonFormat;
 
 public record ReservationResponse(
 
@@ -12,7 +10,6 @@ public record ReservationResponse(
 
         LocalDate date,
 
-        @JsonFormat(pattern = "HH:mm")
-        LocalTime time
+        ReservationTimeResponse time
 ) {
 }

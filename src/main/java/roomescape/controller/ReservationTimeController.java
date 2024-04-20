@@ -1,7 +1,6 @@
 package roomescape.controller;
 
 import java.net.URI;
-import java.time.LocalTime;
 import java.util.List;
 import org.springframework.http.ResponseEntity;
 import org.springframework.jdbc.core.JdbcTemplate;
@@ -16,6 +15,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import roomescape.controller.request.CreateReservationTimeRequest;
 import roomescape.controller.response.ReservationTimeResponse;
+import roomescape.domain.ReservationTime;
 
 @RestController
 @RequestMapping("/times")
@@ -35,11 +35,12 @@ class ReservationTimeController {
     public ResponseEntity<ReservationTimeResponse> add(@RequestBody CreateReservationTimeRequest request) {
         BeanPropertySqlParameterSource parameterSource = new BeanPropertySqlParameterSource(request);
         Number key = simpleInsert.executeAndReturnKey(parameterSource);
+
+        // create new time
+        ReservationTime newReservationTime = new ReservationTime(key.longValue(), request.startAt());
+
         return ResponseEntity.created(URI.create("/times/" + key))
-                .body(new ReservationTimeResponse(
-                        key.longValue(),
-                        request.startAt()
-                ));
+                .body(toDto(newReservationTime));
     }
 
     @DeleteMapping("/{id}")
@@ -52,11 +53,15 @@ class ReservationTimeController {
     @GetMapping
     public ResponseEntity<List<ReservationTimeResponse>> getReservations() {
         String sql = "select * from reservation_time";
-        List<ReservationTimeResponse> times = jdbcTemplate.query(sql, (rs, rowNum) -> new ReservationTimeResponse(
+        List<ReservationTime> times = jdbcTemplate.query(sql, (rs, rowNum) -> new ReservationTime(
                 rs.getLong("id"),
-                LocalTime.parse(rs.getString("start_at"))
+                rs.getTime("start_at").toLocalTime()
         ));
 
-        return ResponseEntity.ok(times);
+        return ResponseEntity.ok(times.stream().map(this::toDto).toList());
+    }
+
+    private ReservationTimeResponse toDto(ReservationTime newReservationTime) {
+        return new ReservationTimeResponse(newReservationTime.getId(), newReservationTime.getStartAt());
     }
 }

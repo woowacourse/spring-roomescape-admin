@@ -1,6 +1,7 @@
 package roomescape.controller;
 
 import io.restassured.RestAssured;
+import io.restassured.http.ContentType;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -12,6 +13,7 @@ import org.springframework.test.annotation.DirtiesContext;
 import roomescape.dto.ReservationTimeResponse;
 
 import java.util.List;
+import java.util.Map;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.hamcrest.Matchers.is;
@@ -54,5 +56,23 @@ class ReservationTimeControllerTest {
 
         final Integer count = jdbcTemplate.queryForObject("SELECT count(1) from reservation_times", Integer.class);
         assertThat(reservationTimeResponses.size()).isEqualTo(count);
+    }
+
+    @DisplayName("예약 시간 추가 및 삭제")
+    @Test
+    void saveAndDeleteReservationTime() {
+        final Map<String, String> params = Map.of("startAt", "10:00");
+
+        RestAssured.given().log().all()
+                .contentType(ContentType.JSON)
+                .body(params)
+                .when().post("/times")
+                .then().log().all()
+                .statusCode(201);
+
+        final Integer count = jdbcTemplate.queryForObject("SELECT count(1) from reservation_times", Integer.class);
+        assertThat(count).isEqualTo(1);
+
+        // TODO: 예약 삭제 테스트 추가
     }
 }

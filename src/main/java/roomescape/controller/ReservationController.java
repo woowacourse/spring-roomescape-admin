@@ -52,11 +52,7 @@ public class ReservationController {
 
     @DeleteMapping("/reservations/{id}")
     public ResponseEntity<Void> deleteReservation(@PathVariable Long id) {
-        Reservation deleteReservation = reservations.stream()
-                .filter(reservation -> reservation.getId().equals(id))
-                .findFirst()
-                .orElseThrow(IllegalArgumentException::new);
-        reservations.remove(deleteReservation);
-        return ResponseEntity.ok().build();
+        reservationDao.deleteById(id);
+        return ResponseEntity.noContent().build();
     }
 }

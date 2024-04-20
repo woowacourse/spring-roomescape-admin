@@ -1,4 +1,4 @@
-package roomescape.repository;
+package roomescape.dao;
 
 import java.sql.Date;
 import java.sql.PreparedStatement;
@@ -15,7 +15,7 @@ import roomescape.entity.Reservation;
 import roomescape.entity.ReservationTime;
 
 @Repository
-public class ReservationRepository {
+public class ReservationDao {
 
     @Autowired
     private JdbcTemplate jdbcTemplate;

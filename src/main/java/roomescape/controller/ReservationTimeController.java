@@ -12,17 +12,17 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import roomescape.dto.ReservationTimeDto;
 import roomescape.entity.ReservationTime;
-import roomescape.repository.ReservationTimeRepository;
+import roomescape.dao.ReservationTimeDao;
 
 @Controller
 public class ReservationTimeController {
 
     @Autowired
-    private ReservationTimeRepository reservationTimeRepository;
+    private ReservationTimeDao reservationTimeDao;
 
     @GetMapping("/times")
     public ResponseEntity<List<ReservationTimeDto>> times() {
-        List<ReservationTime> times = reservationTimeRepository.findAllReservationTimes();
+        List<ReservationTime> times = reservationTimeDao.findAllReservationTimes();
         List<ReservationTimeDto> responseBody = times.stream()
                 .map(ReservationTimeDto::from)
                 .toList();
@@ -31,8 +31,9 @@ public class ReservationTimeController {
 
     @PostMapping("/times")
     public ResponseEntity<ReservationTimeDto> addTime(@RequestBody ReservationTimeDto reservationTimeDto) {
-        long id = reservationTimeRepository.save(reservationTimeDto);
+        long id = reservationTimeDao.save(reservationTimeDto);
         ReservationTimeDto responseBody = new ReservationTimeDto(id, reservationTimeDto.getStartAt());
+        // TODO: dto를 그대로 응답하는 것 괜찮을까?
         return ResponseEntity
                 .created(URI.create("/time/" + id))
                 .body(responseBody);
@@ -40,7 +41,7 @@ public class ReservationTimeController {
 
     @DeleteMapping("/times/{id}")
     public ResponseEntity<Void> deleteTime(@PathVariable("id") long id) {
-        reservationTimeRepository.delete(id);
+        reservationTimeDao.delete(id);
         return ResponseEntity.noContent().build();
     }
 }

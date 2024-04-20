@@ -14,17 +14,17 @@ import roomescape.dto.ReservationRequestDto;
 import roomescape.dto.ReservationResponseDto;
 import roomescape.dto.ReservationTimeDto;
 import roomescape.entity.Reservation;
-import roomescape.repository.ReservationRepository;
+import roomescape.dao.ReservationDao;
 
 @Controller
 public class ReservationController {
 
     @Autowired
-    private ReservationRepository reservationRepository;
+    private ReservationDao reservationDao;
 
     @GetMapping("/reservations")
     public ResponseEntity<List<ReservationResponseDto>> reservations() {
-        List<Reservation> reservations = reservationRepository.findAllReservations();
+        List<Reservation> reservations = reservationDao.findAllReservations();
         List<ReservationResponseDto> responseBody = reservations.stream()
                 .map(ReservationResponseDto::from)
                 .toList();
@@ -33,8 +33,8 @@ public class ReservationController {
 
     @PostMapping("/reservations")
     public ResponseEntity<ReservationResponseDto> addReservation(@RequestBody ReservationRequestDto reservationDto) {
-        long id = reservationRepository.save(reservationDto);
-        Reservation reservation = reservationRepository.findById(id); // TODO: save + findById ???
+        long id = reservationDao.save(reservationDto);
+        Reservation reservation = reservationDao.findById(id); // TODO: save + findById ???
         ReservationResponseDto responseBody = new ReservationResponseDto(
                 id,
                 reservation.getName(),
@@ -48,7 +48,7 @@ public class ReservationController {
 
     @DeleteMapping("/reservations/{id}")
     public ResponseEntity<Void> deleteReservation(@PathVariable("id") long id) {
-        reservationRepository.delete(id);
+        reservationDao.delete(id);
         return ResponseEntity.noContent().build();
     }
 }

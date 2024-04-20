@@ -16,7 +16,7 @@ class DBConnectionTest {
     private JdbcTemplate jdbcTemplate;
 
     @Test
-    void 사단계() {
+    void connection() {
         try (Connection connection = jdbcTemplate.getDataSource().getConnection()) {
             assertThat(connection).isNotNull();
             assertThat(connection.getCatalog()).isEqualTo("DATABASE");

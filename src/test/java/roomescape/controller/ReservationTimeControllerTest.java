@@ -10,7 +10,7 @@ import org.springframework.boot.test.web.server.LocalServerPort;
 import org.springframework.http.HttpStatus;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.test.annotation.DirtiesContext;
-import roomescape.domain.Time;
+import roomescape.domain.ReservationTime;
 
 import java.util.HashMap;
 import java.util.List;
@@ -21,12 +21,12 @@ import static org.hamcrest.Matchers.is;
 
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 @DirtiesContext(classMode = DirtiesContext.ClassMode.BEFORE_EACH_TEST_METHOD)
-public class TimeControllerTest {
+public class ReservationTimeControllerTest {
 
     @Autowired
     private final JdbcTemplate jdbcTemplate;
 
-    public @Autowired TimeControllerTest(JdbcTemplate jdbcTemplate) {
+    public @Autowired ReservationTimeControllerTest(JdbcTemplate jdbcTemplate) {
         this.jdbcTemplate = jdbcTemplate;
     }
 
@@ -58,22 +58,22 @@ public class TimeControllerTest {
                 .then().log().all().extract();
 
         assertThat(response.statusCode()).isEqualTo(HttpStatus.OK.value());
-        assertThat(response.as(Time.class).getId()).isEqualTo(1L);
-        assertThat(response.as(Time.class).getStartAt()).isEqualTo("10:00");
+        assertThat(response.as(ReservationTime.class).getId()).isEqualTo(1L);
+        assertThat(response.as(ReservationTime.class).getStartAt()).isEqualTo("10:00");
     }
 
     @Test
     void findAllTest() {
-        List<Time> times = RestAssured.given().log().all()
+        List<ReservationTime> reservationTimes = RestAssured.given().log().all()
                 .contentType(ContentType.JSON)
                 .when().get("/times")
                 .then().log().all()
                 .statusCode(200).extract()
-                .jsonPath().getList(".", Time.class);
+                .jsonPath().getList(".", ReservationTime.class);
 
         Integer count = jdbcTemplate.queryForObject("SELECT count(1) from reservation_time", Integer.class);
 
-        assertThat(times.size()).isEqualTo(count);
+        assertThat(reservationTimes.size()).isEqualTo(count);
     }
 
     @Test

@@ -2,7 +2,9 @@ package roomescape.repository;
 
 import java.util.List;
 import javax.sql.DataSource;
+import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.jdbc.core.JdbcTemplate;
+import org.springframework.jdbc.core.RowMapper;
 import org.springframework.jdbc.core.namedparam.BeanPropertySqlParameterSource;
 import org.springframework.jdbc.core.namedparam.SqlParameterSource;
 import org.springframework.jdbc.core.simple.SimpleJdbcInsert;
@@ -27,22 +29,29 @@ public class ReservationTimeRepository {
     }
 
     public List<ReservationTime> findAll() {
-        return jdbcTemplate.query("SELECT id, start_at FROM reservation_time", (resultSet, rowNum) -> {
-            final Long id = resultSet.getLong("id");
-            final String startAt = resultSet.getString("start_at");
-
-            return new ReservationTime(id, startAt);
-        });
+        try {
+            return jdbcTemplate.query("SELECT id, start_at FROM reservation_time", getReservationTimeRowMapper());
+        } catch (EmptyResultDataAccessException e) {
+            return List.of();
+        }
     }
 
     public ReservationTime findById(final long id) {
-        return jdbcTemplate.queryForObject("SELECT id, start_at FROM reservation_time WHERE id = ?",
-                (resultSet, rowNum) -> {
-                    final Long timeId = resultSet.getLong("id");
-                    final String timeValue = resultSet.getString("start_at");
+        try {
+            final String query = "SELECT id, start_at FROM reservation_time WHERE id = ?";
+            return jdbcTemplate.queryForObject(query, getReservationTimeRowMapper(), id);
+        } catch (RuntimeException e) {
+            throw new IllegalArgumentException("Reservation time not found");
+        }
+    }
 
-                    return new ReservationTime(timeId, timeValue);
-                }, id);
+    private RowMapper<ReservationTime> getReservationTimeRowMapper() {
+        return (resultSet, rowNum) -> {
+            final Long timeId = resultSet.getLong("id");
+            final String timeValue = resultSet.getString("start_at");
+
+            return new ReservationTime(timeId, timeValue);
+        };
     }
 
     public void deleteById(final long id) {

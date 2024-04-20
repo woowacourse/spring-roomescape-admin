@@ -3,6 +3,7 @@ package roomescape.repository;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 import java.util.concurrent.atomic.AtomicLong;
 import roomescape.domain.ReservationTime;
 import roomescape.service.dto.ReservationTimeDto;
@@ -37,8 +38,8 @@ public class InMemoryReservationTimeRepository implements ReservationTimeReposit
     }
 
     @Override
-    public ReservationTime findById(Long id) {
-        return database.get(id);
+    public Optional<ReservationTime> findById(Long id) {
+        return Optional.ofNullable(database.get(id));
     }
 
     @Override

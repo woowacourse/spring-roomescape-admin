@@ -2,6 +2,7 @@ package roomescape.repository;
 
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;
 import org.springframework.jdbc.core.simple.SimpleJdbcInsert;
@@ -45,9 +46,9 @@ public class ReservationTimeJdbcRepository implements ReservationTimeRepository 
     }
 
     @Override
-    public ReservationTime findById(Long id) {
+    public Optional<ReservationTime> findById(Long id) {
         String sql = "select id, start_at from reservation_time where id = ?";
-        return jdbcTemplate.queryForObject(sql, ROW_MAPPER, id);
+        return Optional.ofNullable(jdbcTemplate.queryForObject(sql, ROW_MAPPER, id));
     }
 
     @Override

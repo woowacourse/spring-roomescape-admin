@@ -1,6 +1,7 @@
 package roomescape.repository;
 
 import java.util.List;
+import java.util.Optional;
 import roomescape.domain.ReservationTime;
 import roomescape.service.dto.ReservationTimeDto;
 
@@ -10,7 +11,7 @@ public interface ReservationTimeRepository {
 
     List<ReservationTime> findAll();
 
-    ReservationTime findById(Long id);
+    Optional<ReservationTime> findById(Long id);
 
     void deleteById(Long id);
 

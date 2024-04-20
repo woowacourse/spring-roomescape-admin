@@ -38,12 +38,12 @@ public class ReservationTime {
             return false;
         }
         ReservationTime that = (ReservationTime) o;
-        return Objects.equals(time, that.time);
+        return Objects.equals(id, that.id);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(time);
+        return Objects.hash(id);
     }
 
     @Override

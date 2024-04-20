@@ -72,6 +72,14 @@ class ReservationTimeJdbcRepositoryTest {
     }
 
     @Test
+    @DisplayName("존재하지 않는 ID를 조회하는 경우, 빈 Optional을 반환한다.")
+    void emptyOnNonExistingId() {
+        Optional<ReservationTime> actual = reservationTimeRepository.findById(999L);
+        assertThat(actual).isEmpty();
+    }
+
+
+    @Test
     @DisplayName("ID를 통해 시간을 삭제한다.")
     void deleteByIdTest() {
         // given

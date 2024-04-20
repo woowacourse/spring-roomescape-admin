@@ -1,6 +1,7 @@
 package roomescape.service;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.assertThatThrownBy;
 
 import java.util.List;
 import org.junit.jupiter.api.AfterEach;
@@ -48,6 +49,18 @@ class ReservationServiceTest {
     }
 
     @Test
+    @DisplayName("예약을 추가할 때, 시간이 존재하지 않는다면 예외를 발생한다.")
+    void cancelReservationNotFoundTest() {
+        // given
+        ReservationRequest request = new ReservationRequest("브라운", "2023-08-05", 999L);
+        // when, then
+        assertThatThrownBy(() -> reservationService.scheduleReservation(request))
+                .isInstanceOf(IllegalArgumentException.class)
+                .hasMessage("예약 시간이 존재하지 않습니다.");
+
+    }
+
+    @Test
     @DisplayName("모든 예약을 조회한다.")
     void getAllReservationsTest() {
         // given
@@ -77,6 +90,7 @@ class ReservationServiceTest {
         // then
         assertThat(actual).isEmpty();
     }
+
 
     private Long createTimeAndReturnId() {
         ReservationTimeDto dto = new ReservationTimeDto(1L, "13:00");

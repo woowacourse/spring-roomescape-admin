@@ -1,4 +1,4 @@
-package roomescape;
+package roomescape.controller;
 
 import io.restassured.RestAssured;
 import io.restassured.http.ContentType;
@@ -15,7 +15,7 @@ import static org.hamcrest.Matchers.is;
 
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 @DirtiesContext(classMode = DirtiesContext.ClassMode.BEFORE_EACH_TEST_METHOD)
-public class MissionStepTest {
+public class ReservationControllerTest {
 
     @LocalServerPort
     int port;
@@ -23,22 +23,6 @@ public class MissionStepTest {
     @BeforeEach
     void setUp() {
         RestAssured.port = port;
-    }
-
-    @Test
-    void welcomePageTest() {
-        RestAssured.given().log().all()
-                .when().get("/")
-                .then().log().all()
-                .statusCode(200);
-    }
-
-    @Test
-    void adminPageTest() {
-        RestAssured.given().log().all()
-                .when().get("/admin")
-                .then().log().all()
-                .statusCode(200);
     }
 
     @Test

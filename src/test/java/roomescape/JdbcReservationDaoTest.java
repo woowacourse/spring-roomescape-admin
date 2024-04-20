@@ -41,6 +41,21 @@ class JdbcReservationDaoTest {
         assertThat(reservations).hasSize(count);
     }
 
+    @Test
+    void 오단계() {
+        jdbcTemplate.update("INSERT INTO reservation_time (start_at) VALUES(?)", LocalTime.of(10, 0));
+        jdbcTemplate.update("INSERT INTO reservation (name, date, time_id) VALUES (?, ?, ?)", "브라운", LocalDate.of(2023, 8, 5), 1L);
+
+        List<Reservation> reservations = RestAssured.given().log().all()
+                .when().get("/reservations")
+                .then().log().all()
+                .statusCode(200).extract()
+                .jsonPath().getList(".", Reservation.class);
+
+        Integer count = jdbcTemplate.queryForObject("SELECT count(1) from reservation", Integer.class);
+
+        assertThat(reservations.size()).isEqualTo(count);
+    }
     @DisplayName("DB에 예약 추가 테스트")
     @Test
     void insert() {

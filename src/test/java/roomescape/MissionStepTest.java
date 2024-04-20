@@ -11,6 +11,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Objects;
 import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -35,16 +36,18 @@ class MissionStepTest {
         RestAssured.port = port;
     }
 
+    @DisplayName("어드민 화면 조회")
     @Test
-    void 일단계() {
+    void step1() {
         RestAssured.given().log().all()
                 .when().get("/admin")
                 .then().log().all()
                 .statusCode(200);
     }
 
+    @DisplayName("예약 화면 조회")
     @Test
-    void 이단계() {
+    void step2() {
         RestAssured.given().log().all()
                 .when().get("/admin/reservation")
                 .then().log().all()
@@ -57,8 +60,9 @@ class MissionStepTest {
                 .body("size()", is(0));
     }
 
+    @DisplayName("예약 저장 및 예약 삭제")
     @Test
-    void 삼단계() {
+    void step3() {
         final Map<String, String> params = Map.of(
                 "name", "브라운",
                 "date", "2023-08-05",
@@ -90,8 +94,9 @@ class MissionStepTest {
                 .body("size()", is(0));
     }
 
+    @DisplayName("db 연결 확인")
     @Test
-    void 사단계() {
+    void step4() {
         try (final Connection connection = Objects.requireNonNull(jdbcTemplate.getDataSource()).getConnection()) {
             assertThat(connection).isNotNull();
             assertThat(connection.getCatalog()).isEqualTo("DATABASE");
@@ -101,8 +106,9 @@ class MissionStepTest {
         }
     }
 
+    @DisplayName("데이터 조회")
     @Test
-    void 오단계() {
+    void step5() {
         jdbcTemplate.update("INSERT INTO reservation (name, date, time) VALUES (?, ?, ?)",
                 "브라운", "2023-08-05", "15:40");
 
@@ -117,8 +123,9 @@ class MissionStepTest {
         assertThat(reservations).hasSize(count);
     }
 
+    @DisplayName("데이터 추가 및 삭제")
     @Test
-    void 육단계() {
+    void step6() {
         final Map<String, String> params = Map.of(
                 "name", "브라운",
                 "date", "2023-08-05",

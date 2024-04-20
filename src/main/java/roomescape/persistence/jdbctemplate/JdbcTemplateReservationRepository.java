@@ -28,7 +28,7 @@ class JdbcTemplateReservationRepository implements ReservationRepository {
     public Reservation saveOne(Reservation reservation) {
         ReservationTime time = resolveTime(reservation.getTime());
         Map<String, Object> saveParam = Map.of(
-                "name", reservation.getName(),
+                "name", reservation.getName().value(),
                 "date", reservation.getDate(),
                 "time_id", time.getId()
         );

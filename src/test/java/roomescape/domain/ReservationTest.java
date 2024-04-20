@@ -9,6 +9,19 @@ import org.junit.jupiter.api.Test;
 class ReservationTest {
 
     @Test
+    @DisplayName("같은 ID를 가진다면, 서로 동등하다.")
+    void equalsOnSameIdTest() {
+        Reservation reservation = new Reservation("웨지", "2024-04-20", "11:30");
+        Reservation expectedSameReservation = new Reservation("웨지", "2024-04-21", "12:00");
+
+        Reservation entity = new Reservation(1L, reservation);
+        Reservation expectedSameEntity = new Reservation(1L, expectedSameReservation);
+
+        assertThat(entity).isEqualTo(expectedSameEntity);
+    }
+
+
+    @Test
     @DisplayName("문자열을 통해 예약을 생성한다.")
     void ReservationCreation() {
         // given

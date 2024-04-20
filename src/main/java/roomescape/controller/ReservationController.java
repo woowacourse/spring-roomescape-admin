@@ -1,51 +1,60 @@
 package roomescape.controller;
 
-import java.time.LocalDate;
-import java.time.LocalDateTime;
-import java.time.LocalTime;
-import java.time.format.DateTimeFormatter;
-import java.util.ArrayList;
+import java.net.URI;
 import java.util.List;
-import java.util.concurrent.atomic.AtomicLong;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
-import roomescape.domain.Reservation;
 import roomescape.dto.ReservationRequestDto;
 import roomescape.dto.ReservationResponseDto;
+import roomescape.service.ReservationService;
 
 @RestController
+@RequestMapping("/reservations")
 public class ReservationController {
-    private final List<Reservation> reservations = new ArrayList<>();
-    private final AtomicLong index = new AtomicLong(1);
+    private final ReservationService reservationService;
 
-    @GetMapping("/reservations")
-    public List<ReservationResponseDto> reservations() {
-        return reservations.stream()
-                .map(ReservationResponseDto::new)
-                .toList();
+    public ReservationController(final ReservationService reservationService) {
+        this.reservationService = reservationService;
     }
 
-    @PostMapping("/reservations")
-    public ReservationResponseDto create(@RequestBody final ReservationRequestDto request) {
-        final LocalTime time = LocalTime.parse(request.getTime(), DateTimeFormatter.ofPattern("HH:mm"));
-        final LocalDate date = LocalDate.parse(request.getDate(), DateTimeFormatter.ofPattern("yyyy-MM-dd"));
-        final LocalDateTime dateTime = LocalDateTime.of(date, time);
-
-        final Reservation reservation = new Reservation(index.getAndIncrement(), request.getName(), dateTime);
-        reservations.add(reservation);
-
-        return new ReservationResponseDto(reservation);
+    @PostMapping
+    public ResponseEntity<ReservationResponseDto> create(@RequestBody final ReservationRequestDto request) {
+        validateRequest(request);
+        final ReservationResponseDto result = reservationService.create(request);
+        return ResponseEntity.created(URI.create("/reservations/" + result.getId()))
+                .body(result);
     }
 
-    @DeleteMapping("/reservations/{id}")
-    public ResponseEntity<Void> delete(@PathVariable("id") final Long id) {
-        reservations.removeIf(it -> it.getId().equals(id));
-        return new ResponseEntity<>(HttpStatus.OK);
+    @GetMapping
+    public ResponseEntity<List<ReservationResponseDto>> findAll() {
+        return ResponseEntity.ok(reservationService.findAll());
+    }
+
+    @DeleteMapping("/{id}")
+    public ResponseEntity<Void> delete(@PathVariable("id") final long id) {
+        reservationService.delete(id);
+        return ResponseEntity.noContent().build();
+    }
+
+    public void validateRequest(final ReservationRequestDto request) {
+        final String date = request.getDate();
+        if (date == null || date.isBlank()) {
+            throw new IllegalArgumentException("Date cannot be null or empty");
+        }
+
+        final String name = request.getName();
+        if (name == null || name.isBlank()) {
+            throw new IllegalArgumentException("Name cannot be null or empty");
+        }
+        
+        if (request.getTimeId() == null) {
+            throw new IllegalArgumentException("Time ID cannot be null");
+        }
     }
 }

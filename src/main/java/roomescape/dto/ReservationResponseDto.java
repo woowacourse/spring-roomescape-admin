@@ -1,21 +1,25 @@
 package roomescape.dto;
 
-import java.time.format.DateTimeFormatter;
 import roomescape.domain.Reservation;
 
 public class ReservationResponseDto {
-    private static final DateTimeFormatter formatter = DateTimeFormatter.ofPattern("HH:mm");
+    private Long id;
+    private String name;
+    private String date;
+    private ReservationTimeResponseDto time;
 
-    private final Long id;
-    private final String name;
-    private final String date;
-    private final String time;
+    public ReservationResponseDto() {
+    }
+
+    public ReservationResponseDto(final Long id, final Reservation reservation) {
+        this.id = id;
+        this.name = reservation.getName();
+        this.date = reservation.getDate();
+        this.time = new ReservationTimeResponseDto(reservation.getReservationTime());
+    }
 
     public ReservationResponseDto(final Reservation reservation) {
-        this.id = reservation.getId();
-        this.name = reservation.getName();
-        this.date = reservation.getDate().toString();
-        this.time = reservation.getTime().format(formatter);
+        this(reservation.getId(), reservation);
     }
 
     public Long getId() {
@@ -30,7 +34,7 @@ public class ReservationResponseDto {
         return date;
     }
 
-    public String getTime() {
+    public ReservationTimeResponseDto getTime() {
         return time;
     }
 }

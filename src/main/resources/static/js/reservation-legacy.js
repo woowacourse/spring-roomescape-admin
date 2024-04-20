@@ -5,8 +5,8 @@ document.addEventListener('DOMContentLoaded', () => {
   document.getElementById('add-button').addEventListener('click', addInputRow);
 
   requestRead(RESERVATION_API_ENDPOINT)
-      .then(render)
-      .catch(error => console.error('Error fetching reservations:', error));
+    .then(render)
+    .catch(error => console.error('Error fetching reservations:', error));
 });
 
 function render(data) {
@@ -82,7 +82,7 @@ function createActionButton(label, className, eventListener) {
 function saveRow(event) {
   // 이벤트 전파를 막는다
   event.stopPropagation();
-
+    
   const row = event.target.parentNode.parentNode;
   const nameInput = row.querySelector('input[type="text"]');
   const dateInput = row.querySelector('input[type="date"]');
@@ -95,10 +95,10 @@ function saveRow(event) {
   };
 
   requestCreate(reservation)
-      .then(() => {
-        location.reload();
-      })
-      .catch(error => console.error('Error:', error));
+    .then(() => {
+      location.reload();
+    })
+    .catch(error => console.error('Error:', error));
 
   isEditing = false;  // isEditing 값을 false로 설정
 }
@@ -108,8 +108,8 @@ function deleteRow(event) {
   const reservationId = row.cells[0].textContent;
 
   requestDelete(reservationId)
-      .then(() => row.remove())
-      .catch(error => console.error('Error:', error));
+    .then(() => row.remove())
+    .catch(error => console.error('Error:', error));
 }
 
 function requestCreate(reservation) {
@@ -120,10 +120,10 @@ function requestCreate(reservation) {
   };
 
   return fetch(RESERVATION_API_ENDPOINT, requestOptions)
-      .then(response => {
-        if (response.status === 200) return response.json();
-        throw new Error('Create failed');
-      });
+    .then(response => {
+      if (response.status === 201) return response.json();
+      throw new Error('Create failed');
+    });
 }
 
 function requestDelete(id) {
@@ -132,15 +132,15 @@ function requestDelete(id) {
   };
 
   return fetch(`${RESERVATION_API_ENDPOINT}/${id}`, requestOptions)
-      .then(response => {
-        if (response.status !== 200) throw new Error('Delete failed');
-      });
+    .then(response => {
+      if (response.status !== 204) throw new Error('Delete failed');
+    });
 }
 
 function requestRead(endpoint) {
   return fetch(endpoint)
-      .then(response => {
-        if (response.status === 200) return response.json();
-        throw new Error('Read failed');
-      });
+    .then(response => {
+      if (response.status === 200) return response.json();
+      throw new Error('Read failed');
+    });
 }

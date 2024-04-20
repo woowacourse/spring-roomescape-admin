@@ -6,6 +6,7 @@ import java.time.LocalDate;
 import java.time.LocalTime;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
+import roomescape.reservation.domain.Reservation;
 
 class ReservationTest {
     @DisplayName("동일한 id는 같은 예약이다.")

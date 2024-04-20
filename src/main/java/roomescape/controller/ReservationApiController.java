@@ -2,7 +2,6 @@ package roomescape.controller;
 
 import java.net.URI;
 import java.sql.PreparedStatement;
-import java.util.ArrayList;
 import java.util.List;
 import org.springframework.http.ResponseEntity;
 import org.springframework.jdbc.core.JdbcTemplate;
@@ -24,11 +23,9 @@ import roomescape.entity.Reservation;
 public class ReservationApiController {
 
     private final JdbcTemplate jdbcTemplate;
-    private final List<Reservation> reservations;
 
     public ReservationApiController(JdbcTemplate jdbcTemplate) {
         this.jdbcTemplate = jdbcTemplate;
-        reservations = new ArrayList<>();
     }
 
     @GetMapping

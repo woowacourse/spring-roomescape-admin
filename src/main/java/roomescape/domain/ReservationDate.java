@@ -35,4 +35,11 @@ public class ReservationDate {
     public int hashCode() {
         return Objects.hash(date);
     }
+
+    @Override
+    public String toString() {
+        return "ReservationDate{" +
+                "date=" + date +
+                '}';
+    }
 }

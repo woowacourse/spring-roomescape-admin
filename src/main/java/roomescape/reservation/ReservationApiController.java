@@ -1,8 +1,8 @@
 package roomescape.reservation;
 
-import java.util.ArrayList;
+import java.net.URI;
 import java.util.List;
-import java.util.concurrent.atomic.AtomicLong;
+import java.util.Map;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -13,30 +13,26 @@ import org.springframework.web.bind.annotation.RestController;
 
 @RestController
 public class ReservationApiController {
-    private static final int START_INDEX = 1;
+    private final ReservationService reservationService;
 
-    private List<Reservation> reservations = new ArrayList<>();
-    private AtomicLong index = new AtomicLong(START_INDEX);
+    public ReservationApiController(final ReservationService reservationService) {
+        this.reservationService = reservationService;
+    }
 
     @GetMapping("/reservations")
     public List<Reservation> findAll() {
-        return reservations;
+        return reservationService.findAll();
     }
 
     @PostMapping("/reservations")
-    public ResponseEntity<Reservation> create(@RequestBody ReservationRequest reservationRequest) {
-        Reservation newReservation = reservationRequest.toVo(index.getAndIncrement());
-        reservations.add(newReservation);
-        return ResponseEntity.ok(newReservation);
+    public ResponseEntity<Map<String, Long>> create(@RequestBody ReservationRequest reservationRequest) {
+        Long id = reservationService.save(reservationRequest);
+        return ResponseEntity.created(URI.create("/reservations/" + id)).body(Map.of("id", id));
     }
 
     @DeleteMapping("/reservations/{id}")
     public ResponseEntity<Void> delete(@PathVariable("id") Long id) {
-        Reservation findReservation = reservations.stream()
-                .filter(reservation -> reservation.getId().equals(id))
-                .findAny()
-                .orElseThrow(() -> new IllegalArgumentException("일치하는 예약이 없습니다."));
-        reservations.remove(findReservation);
-        return ResponseEntity.ok().build();
+        reservationService.deleteById(id);
+        return ResponseEntity.noContent().build();
     }
 }

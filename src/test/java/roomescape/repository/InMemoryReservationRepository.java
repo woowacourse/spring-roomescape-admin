@@ -40,11 +40,6 @@ public class InMemoryReservationRepository implements ReservationRepository {
     }
 
     @Override
-    public boolean existsById(Long id) {
-        return database.containsKey(id);
-    }
-
-    @Override
     public void deleteAll() {
         database.clear();
     }

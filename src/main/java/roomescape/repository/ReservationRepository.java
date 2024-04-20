@@ -12,7 +12,5 @@ public interface ReservationRepository {
 
     void deleteById(Long id);
 
-    boolean existsById(Long id);
-
     void deleteAll();
 }

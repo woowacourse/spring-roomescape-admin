@@ -4,10 +4,8 @@ import static org.springframework.http.HttpStatus.NOT_FOUND;
 
 import java.util.ArrayList;
 import java.util.List;
-import org.springframework.stereotype.Repository;
 import org.springframework.web.server.ResponseStatusException;
 
-@Repository
 public class Reservations {
 
     private final List<Reservation> reservations = new ArrayList<>();

@@ -19,8 +19,8 @@ public class ReservationController {
     private final Reservations reservations;
     private final AtomicLong index = new AtomicLong(0);
 
-    public ReservationController(Reservations reservations) {
-        this.reservations = reservations;
+    public ReservationController() {
+        this.reservations = new Reservations();
     }
 
     @GetMapping("/reservations")

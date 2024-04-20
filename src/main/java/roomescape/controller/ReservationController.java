@@ -1,11 +1,8 @@
 package roomescape.controller;
 
 import java.net.URI;
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
-import java.util.Optional;
-import java.util.concurrent.atomic.AtomicLong;
 
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -22,8 +19,6 @@ public class ReservationController {
 
     private final JdbcTemplate jdbcTemplate;
     private final SimpleJdbcInsert reservationInsert;
-    private final AtomicLong id = new AtomicLong(1);
-    private final List<Reservation> reservations = new ArrayList<>();
 
     public ReservationController(final JdbcTemplate jdbcTemplate) {
         this.jdbcTemplate = jdbcTemplate;
@@ -64,13 +59,10 @@ public class ReservationController {
 
     @DeleteMapping("/{id}")
     public ResponseEntity<Void> deleteReservation(final @PathVariable("id") Long id) {
-        final Optional<Reservation> findReservation = reservations.stream()
-                .filter(reservation -> reservation.getId().equals(id))
-                .findAny();
-        if (findReservation.isEmpty()) {
+        int affectedRowCount = jdbcTemplate.update("DELETE FROM reservations WHERE id = ?", id);
+        if (affectedRowCount == 0) {
             return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
         }
-        reservations.remove(findReservation.get());
         return ResponseEntity.noContent().build();
     }
 }

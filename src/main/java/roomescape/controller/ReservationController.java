@@ -9,6 +9,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import roomescape.entity.Reservation;
+import roomescape.service.ReservationMapper;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -24,17 +25,18 @@ public class ReservationController {
     @GetMapping
     public ResponseEntity<List<ReservationResponse>> getReservationDatum() {
         List<ReservationResponse> responses = reservations.stream()
-                .map(ReservationResponse::of)
+                .map(ReservationMapper::map)
                 .toList();
         return ResponseEntity.ok(responses);
     }
 
     @PostMapping
     public ResponseEntity<ReservationResponse> addReservationData(@RequestBody final ReservationRequest request) {
-        Reservation reservation = request.toDomain(index.getAndIncrement());
+        long id = index.getAndIncrement();
+        Reservation reservation = ReservationMapper.map(request).assignId(id);
         reservations.add(reservation);
 
-        ReservationResponse response = ReservationResponse.of(reservation);
+        ReservationResponse response = ReservationMapper.map(reservation);
         return ResponseEntity.ok(response);
     }
 

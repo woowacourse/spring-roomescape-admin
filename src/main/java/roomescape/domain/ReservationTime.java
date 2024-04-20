@@ -7,13 +7,13 @@ public class ReservationTime {
     public ReservationTime() {
     }
 
-    public ReservationTime(final String startAt) {
-        this.startAt = startAt;
-    }
-
     public ReservationTime(final Long id, final String startAt) {
         this.id = id;
         this.startAt = startAt;
+    }
+
+    public ReservationTime(final String startAt) {
+        this(null, startAt);
     }
 
     public Long getId() {

@@ -11,18 +11,15 @@ public class ReservationResponseDto {
     public ReservationResponseDto() {
     }
 
-    public ReservationResponseDto(final Reservation reservation) {
-        this.id = reservation.getId();
-        this.name = reservation.getName();
-        this.date = reservation.getDate();
-        this.time = new ReservationTimeResponseDto(reservation.getReservationTime());
-    }
-
     public ReservationResponseDto(final Long id, final Reservation reservation) {
         this.id = id;
         this.name = reservation.getName();
         this.date = reservation.getDate();
         this.time = new ReservationTimeResponseDto(reservation.getReservationTime());
+    }
+
+    public ReservationResponseDto(final Reservation reservation) {
+        this(reservation.getId(), reservation);
     }
 
     public Long getId() {

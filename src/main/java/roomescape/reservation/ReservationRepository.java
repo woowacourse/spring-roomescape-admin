@@ -17,7 +17,7 @@ public class ReservationRepository {
         this.jdbcTemplate = jdbcTemplate;
     }
 
-    public Reservation save(final ReservationRequest reservationRequest) {
+    public Long save(final ReservationRequest reservationRequest) {
         KeyHolder keyHolder = new GeneratedKeyHolder();
         jdbcTemplate.update(connection -> {
             PreparedStatement ps = connection.prepareStatement(
@@ -28,9 +28,7 @@ public class ReservationRepository {
             return ps;
         }, keyHolder);
 
-        Long id = keyHolder.getKey().longValue();
-        return new Reservation(id, reservationRequest.getName(), reservationRequest.getDate(),
-                reservationRequest.getTime());
+        return keyHolder.getKey().longValue();
     }
 
     public Optional<Reservation> findById(final Long id) {

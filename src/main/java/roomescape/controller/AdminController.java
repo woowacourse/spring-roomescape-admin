@@ -10,4 +10,9 @@ public class AdminController {
     public String admin() {
         return "/admin/index";
     }
+
+    @GetMapping("/")
+    public String welcome() {
+        return "redirect:/admin";
+    }
 }

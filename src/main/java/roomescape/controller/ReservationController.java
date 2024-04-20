@@ -14,16 +14,11 @@ import roomescape.dto.ReservationResponseDto;
 import roomescape.repository.ReservationRepository;
 
 import java.net.URI;
-import java.util.ArrayList;
 import java.util.List;
-import java.util.concurrent.atomic.AtomicLong;
 
 @RestController
 @RequestMapping("/reservations")
 public class ReservationController {
-    private final List<Reservation> reservations = new ArrayList<>();
-    private final AtomicLong index = new AtomicLong(0);
-
     private final ReservationRepository reservationRepository;
 
     public ReservationController(ReservationRepository reservationRepository) {
@@ -42,13 +37,11 @@ public class ReservationController {
 
     @PostMapping
     public ResponseEntity<ReservationResponseDto> add(@RequestBody ReservationRequestDto reservationRequestDto) {
-        Reservation newReservation = new Reservation(
-                index.incrementAndGet(),
+        Reservation savedReservation = reservationRepository.save(new Reservation(
                 reservationRequestDto.name(),
                 reservationRequestDto.date(),
                 reservationRequestDto.time()
-        );
-        Reservation savedReservation = reservationRepository.save(newReservation);
+        ));
 
         return ResponseEntity.created(URI.create("/reservations/" + savedReservation.getId()))
                 .body(ReservationResponseDto.from(savedReservation));

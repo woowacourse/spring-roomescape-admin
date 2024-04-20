@@ -1,18 +1,24 @@
 package roomescape.repository;
 
 import org.springframework.jdbc.core.JdbcTemplate;
+import org.springframework.jdbc.core.simple.SimpleJdbcInsert;
 import org.springframework.stereotype.Repository;
 import roomescape.domain.Reservation;
 
+import javax.sql.DataSource;
 import java.util.List;
+import java.util.Map;
 
 @Repository
 public class H2ReservationRepositoryImpl implements ReservationRepository {
-
     private final JdbcTemplate jdbcTemplate;
+    private final SimpleJdbcInsert jdbcInsert;
 
-    public H2ReservationRepositoryImpl(JdbcTemplate jdbcTemplate) {
+    public H2ReservationRepositoryImpl(JdbcTemplate jdbcTemplate, DataSource dataSource) {
         this.jdbcTemplate = jdbcTemplate;
+        this.jdbcInsert = new SimpleJdbcInsert(dataSource)
+                .withTableName("reservation")
+                .usingGeneratedKeyColumns("id");
     }
 
     @Override
@@ -29,12 +35,13 @@ public class H2ReservationRepositoryImpl implements ReservationRepository {
 
     @Override
     public Reservation save(Reservation reservation) {
-        String sql = "insert into reservation values (?, ?, ?, ?)";
+        long id = jdbcInsert.executeAndReturnKey(Map.of(
+                "name", reservation.getName(),
+                "date", reservation.getDate(),
+                "time", reservation.getTime()
+        )).longValue();
 
-        jdbcTemplate.update(sql, reservation.getId(), reservation.getName(),
-                reservation.getDate(), reservation.getTime());
-
-        return reservation;
+        return new Reservation(id, reservation.getName(), reservation.getDate(), reservation.getTime());
     }
 
     @Override

@@ -1,7 +1,6 @@
 package roomescape.service;
 
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.assertj.core.api.Assertions.assertThatThrownBy;
 
 import java.util.List;
 import java.util.Map;
@@ -73,13 +72,5 @@ class ReservationServiceTest {
         List<Reservation> actual = reservationRepository.findAll();
         // then
         assertThat(actual).isEmpty();
-    }
-
-    @Test
-    @DisplayName("취소할 때, id에 해당하는 예약이 존재하지 않는다면 예외를 발생한다.")
-    void cancelReservationNotFoundTest() {
-        assertThatThrownBy(() -> reservationService.cancelReservation(1L))
-                .isInstanceOf(IllegalArgumentException.class)
-                .hasMessage("id에 해당하는 예약을 찾을 수 없습니다.");
     }
 }

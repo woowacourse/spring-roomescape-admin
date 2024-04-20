@@ -44,11 +44,10 @@ class ReservationControllerTest extends ControllerTest {
     @DisplayName("예약 POST 요청 시 상태코드 201을 반환한다.")
     void createReservation() throws Exception {
         // given
-        ReservationSaveRequest request = new ReservationSaveRequest(USER_MIA, MIA_RESERVATION_DATE, MIA_RESERVATION_TIME);
-        ReservationResponse expectedReservationResponse = ReservationResponse.from(new Reservation(1L, request.toModel()));
+        ReservationSaveRequest request = new ReservationSaveRequest(USER_MIA, MIA_RESERVATION_DATE, 1L);
 
         BDDMockito.given(reservationService.createReservation(any()))
-                .willReturn(expectedReservationResponse);
+                .willReturn(1L);
 
         // when & then
         mockMvc.perform(post("/reservations")

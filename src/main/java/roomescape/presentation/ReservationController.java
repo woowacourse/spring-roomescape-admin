@@ -2,9 +2,9 @@ package roomescape.presentation;
 
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import roomescape.business.ReservationService;
 import roomescape.dto.ReservationResponse;
 import roomescape.dto.ReservationSaveRequest;
-import roomescape.business.ReservationService;
 
 import java.net.URI;
 import java.util.List;
@@ -26,8 +26,8 @@ public class ReservationController {
     @PostMapping
     public ResponseEntity<Void> createReservation(@RequestBody ReservationSaveRequest request) {
         var reservation = request.toModel();
-        var reservationResponse = reservationService.createReservation(reservation);
-        return ResponseEntity.created(URI.create("/reservations/" + reservationResponse.id())).build();
+        var reservationId = reservationService.createReservation(reservation);
+        return ResponseEntity.created(URI.create("/reservations/" + reservationId)).build();
     }
 
     @DeleteMapping("/{id}")

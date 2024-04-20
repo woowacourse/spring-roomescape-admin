@@ -37,10 +37,10 @@ class ReservationServiceTest {
                 .thenReturn(new Reservation(1L, reservation));
 
         // when
-        ReservationResponse savedReservation = reservationService.createReservation(reservation);
+        Long savedId = reservationService.createReservation(reservation);
 
         // then
-        assertThat(savedReservation.id()).isNotNull();
+        assertThat(savedId).isNotNull();
     }
 
     @Test

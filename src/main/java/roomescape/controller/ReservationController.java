@@ -25,8 +25,8 @@ public class ReservationController {
     }
 
     @GetMapping
-    public ResponseEntity<List<ReservationResponse>> getReservations() {
-        List<ReservationResponse> reservationResponses = reservationService.getReservations();
+    public ResponseEntity<List<ReservationResponse>> getAllReservations() {
+        List<ReservationResponse> reservationResponses = reservationService.getAllReservations();
 
         return ResponseEntity.ok(reservationResponses);
     }
@@ -42,8 +42,8 @@ public class ReservationController {
     }
 
     @DeleteMapping("/{id}")
-    public ResponseEntity<Void> deleteReservation(@PathVariable Long id) {
-        reservationService.deleteReservation(id);
+    public ResponseEntity<Void> deleteReservationById(@PathVariable Long id) {
+        reservationService.deleteReservationById(id);
 
         return ResponseEntity.noContent().build();
     }

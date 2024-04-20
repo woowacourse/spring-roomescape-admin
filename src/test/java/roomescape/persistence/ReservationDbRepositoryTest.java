@@ -56,18 +56,17 @@ class ReservationDbRepositoryTest implements ReservationRepositoryTest {
         String insertSql = "INSERT INTO reservation (name, date, time) VALUES (?, ?, ?), (?, ?, ?), (?, ?, ?)";
         jdbcTemplate.update(
                 insertSql,
-                "브라운", MIA_RESERVATION_DATE.toString(), MIA_RESERVATION_TIME.toString(),
-                "미아", MIA_RESERVATION_DATE.toString(), MIA_RESERVATION_TIME.toString(),
-                "토미", MIA_RESERVATION_DATE.toString(), MIA_RESERVATION_TIME.toString()
+                USER_MIA, MIA_RESERVATION_DATE.toString(), MIA_RESERVATION_TIME.toString(),
+                USER_TOMMY, MIA_RESERVATION_DATE.toString(), MIA_RESERVATION_TIME.toString()
         );
 
         // when
         List<Reservation> reservations = reservationRepository.findAllByDateAndTime(MIA_RESERVATION_DATE, MIA_RESERVATION_TIME);
 
         // then
-        assertThat(reservations).hasSize(3)
+        assertThat(reservations).hasSize(2)
                 .extracting(Reservation::getName)
-                .containsExactly("브라운", "미아", "토미");
+                .containsExactly(USER_MIA, USER_TOMMY);
     }
 
     @Override
@@ -76,7 +75,7 @@ class ReservationDbRepositoryTest implements ReservationRepositoryTest {
     public void findAll() {
         // given
         String insertSql = "INSERT INTO reservation (name, date, time) VALUES (?, ?, ?)";
-        jdbcTemplate.update(insertSql, "브라운", "2030-08-05", "15:40");
+        jdbcTemplate.update(insertSql, USER_MIA, MIA_RESERVATION_DATE, MIA_RESERVATION_TIME);
 
         // when
         List<Reservation> reservations = reservationRepository.findAll();

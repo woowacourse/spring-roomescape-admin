@@ -109,7 +109,7 @@ public class MissionStepTest {
         }
     }
 
-    @DisplayName("DB 데이터 추가와 /reservations 경로에 GET 요청을 보내 조회된 결과 수를 확인한다.")
+    @DisplayName("에약 테이블에 데이터 추가와 /reservations 경로에 GET 요청을 보내 조회된 결과 수를 확인한다.")
     @Test
     void 오단계() {
         jdbcTemplate.update("INSERT INTO reservation (name, date, time) VALUES (?, ?, ?)", "브라운", "2023-08-05", "15:40");
@@ -125,7 +125,7 @@ public class MissionStepTest {
         assertThat(reservations.size()).isEqualTo(count);
     }
 
-    @DisplayName("POST 요청에 대한 응답 헤더를 확인하고 DELETE 요청으로 데이터가 제거되었는지 확인한다.")
+    @DisplayName("예약 테이블에 POST 요청에 대한 응답 헤더를 확인하고 DELETE 요청으로 데이터가 제거되었는지 확인한다.")
     @Test
     void 육단계() {
         Map<String, String> params = new HashMap<>();
@@ -151,5 +151,30 @@ public class MissionStepTest {
 
         Integer countAfterDelete = jdbcTemplate.queryForObject("SELECT count(1) from reservation", Integer.class);
         assertThat(countAfterDelete).isEqualTo(0);
+    }
+
+    @DisplayName("시간 테이블에 POST, GET, DELETE 요청 시 200응답 코드를 반환하는지 확인한다.")
+    @Test
+    void 칠단계() {
+        Map<String, String> params = new HashMap<>();
+        params.put("startAt", "10:00");
+
+        RestAssured.given().log().all()
+                .contentType(ContentType.JSON)
+                .body(params)
+                .when().post("/times")
+                .then().log().all()
+                .statusCode(200);
+
+        RestAssured.given().log().all()
+                .when().get("/times")
+                .then().log().all()
+                .statusCode(200)
+                .body("size()", is(1));
+
+        RestAssured.given().log().all()
+                .when().delete("/times/1")
+                .then().log().all()
+                .statusCode(200);
     }
 }

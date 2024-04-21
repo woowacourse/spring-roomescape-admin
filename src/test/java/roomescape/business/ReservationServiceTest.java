@@ -10,6 +10,7 @@ import roomescape.domain.Reservation;
 import roomescape.domain.ReservationTime;
 import roomescape.dto.ReservationResponse;
 import roomescape.persistence.ReservationRepository;
+import roomescape.persistence.ReservationTimeRepository;
 
 import java.util.List;
 import java.util.Optional;
@@ -24,6 +25,9 @@ class ReservationServiceTest {
     @Mock
     private ReservationRepository reservationRepository;
 
+    @Mock
+    private ReservationTimeRepository reservationTimeRepository;
+
     @InjectMocks
     private ReservationService reservationService;
 
@@ -33,14 +37,16 @@ class ReservationServiceTest {
         // given
         Reservation reservation = MIA_RESERVATION();
 
+        when(reservationTimeRepository.findById(any()))
+                .thenReturn(Optional.of(new ReservationTime(MIA_RESERVATION_TIME)));
         when(reservationRepository.save(reservation))
                 .thenReturn(new Reservation(1L, reservation));
 
         // when
-        Long savedId = reservationService.createReservation(reservation);
+        ReservationResponse response = reservationService.createReservation(reservation);
 
         // then
-        assertThat(savedId).isNotNull();
+        assertThat(response).isNotNull();
     }
 
     @Test
@@ -49,6 +55,8 @@ class ReservationServiceTest {
         // given
         Reservation miaReservation = MIA_RESERVATION();
 
+        when(reservationTimeRepository.findById(any()))
+                .thenReturn(Optional.of(new ReservationTime(MIA_RESERVATION_TIME)));
         when(reservationRepository.findAllByDateAndTime(any(), any()))
                 .thenReturn(List.of(miaReservation));
 
@@ -66,6 +74,8 @@ class ReservationServiceTest {
         Reservation wonnyReservation = new Reservation("wonny", MIA_RESERVATION_DATE, new ReservationTime(MIA_RESERVATION_TIME));
         Reservation neoReservation = new Reservation("neo", MIA_RESERVATION_DATE, new ReservationTime(MIA_RESERVATION_TIME));
 
+        when(reservationTimeRepository.findById(any()))
+                .thenReturn(Optional.of(new ReservationTime(MIA_RESERVATION_TIME)));
         when(reservationRepository.findAllByDateAndTime(any(), any()))
                 .thenReturn(List.of(miaReservation, tommyReservation, wonnyReservation, neoReservation));
 

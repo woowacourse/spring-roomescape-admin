@@ -17,7 +17,7 @@ public class TestFixture {
     public static final LocalTime TOMMY_RESERVATION_TIME = LocalTime.of(15, 0);
 
     public static Reservation MIA_RESERVATION() {
-        return new Reservation(USER_MIA, MIA_RESERVATION_DATE, new ReservationTime(MIA_RESERVATION_TIME));
+        return MIA_RESERVATION(new ReservationTime(MIA_RESERVATION_TIME));
     }
 
     public static Reservation MIA_RESERVATION(ReservationTime time) {

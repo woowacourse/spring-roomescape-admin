@@ -110,8 +110,7 @@ public class ApiAcceptanceTest implements AcceptanceTest {
                 .body(params)
                 .when().post("/reservations")
                 .then().log().all()
-                .statusCode(201)
-                .header("Location", "/reservations/1");
+                .statusCode(200);
     }
 
     void getReservationsWithSizeOne() {

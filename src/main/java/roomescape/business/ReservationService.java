@@ -29,7 +29,7 @@ public class ReservationService {
                 .toList();
     }
 
-    public Long createReservation(Reservation reservation) {
+    public ReservationResponse createReservation(Reservation reservation) {
         var reservationTime = reservationTimeRepository.findById(reservation.getReservationTimeId())
                 .orElseThrow(() -> new IllegalArgumentException("해당 ID의 예약 시간이 없습니다."));
         var reservationsInSameDateTime = reservationRepository.findAllByDateAndTime(reservation.getDate(), reservationTime);
@@ -38,7 +38,7 @@ public class ReservationService {
         validateMaxReservationsPerTime(reservationsInSameDateTime);
 
         var savedReservation = reservationRepository.save(reservation);
-        return savedReservation.getId();
+        return ReservationResponse.of(savedReservation, reservationTime);
     }
 
     private void validateDuplicatedReservation(List<Reservation> reservationsInSameDateTime, Reservation reservation) {

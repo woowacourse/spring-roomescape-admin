@@ -41,21 +41,26 @@ class ReservationControllerTest extends ControllerTest {
     }
 
     @Test
-    @DisplayName("예약 POST 요청 시 상태코드 201을 반환한다.")
+    @DisplayName("예약 POST 요청 시 상태코드 200을 반환한다.")
     void createReservation() throws Exception {
         // given
         ReservationSaveRequest request = new ReservationSaveRequest(USER_MIA, MIA_RESERVATION_DATE, 1L);
+        ReservationTime expectedTime = new ReservationTime(1L, MIA_RESERVATION_TIME);
+        ReservationResponse expectedResponse = ReservationResponse.of(MIA_RESERVATION(), expectedTime);
 
         BDDMockito.given(reservationService.createReservation(any()))
-                .willReturn(1L);
+                .willReturn(expectedResponse);
 
         // when & then
         mockMvc.perform(post("/reservations")
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(objectMapper.writeValueAsBytes(request)))
                 .andDo(print())
-                .andExpect(status().isCreated())
-                .andExpect(header().string("Location", "/reservations/1"));
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.name").value(USER_MIA))
+                .andExpect(jsonPath("$.time.id").value(1L))
+                .andExpect(jsonPath("$.time.startAt").value(MIA_RESERVATION_TIME.toString()))
+                .andExpect(jsonPath("$.date").value(MIA_RESERVATION_DATE.toString()));
     }
 
     @Test

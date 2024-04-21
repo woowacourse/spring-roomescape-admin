@@ -24,10 +24,9 @@ public class ReservationController {
     }
 
     @PostMapping
-    public ResponseEntity<Void> createReservation(@RequestBody ReservationSaveRequest request) {
+    public ResponseEntity<ReservationResponse> createReservation(@RequestBody ReservationSaveRequest request) {
         var reservation = request.toModel();
-        var reservationId = reservationService.createReservation(reservation);
-        return ResponseEntity.created(URI.create("/reservations/" + reservationId)).build();
+        return ResponseEntity.ok(reservationService.createReservation(reservation));
     }
 
     @DeleteMapping("/{id}")

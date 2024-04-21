@@ -7,7 +7,8 @@ import java.time.LocalTime;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
-import roomescape.domain.Reservation;
+import roomescape.domain.ReservationCreationRequest;
+import roomescape.service.dto.ReservationCreationDto;
 
 class MemoryReservationDaoTest {
     private final ReservationDao reservationDao = new MemoryReservationDao();
@@ -15,11 +16,10 @@ class MemoryReservationDaoTest {
     @BeforeEach
     void setUp() {
         reservationDao.deleteAll();
-        Reservation defaultReservation = new Reservation(
-                null, "브라운",
-                LocalDate.now(), LocalTime.now()
+        ReservationCreationRequest defaultReservation = new ReservationCreationRequest(
+                "브라운", LocalDate.MAX, LocalTime.now()
         );
-        reservationDao.add(defaultReservation);
+        reservationDao.add(ReservationCreationDto.from(defaultReservation));
     }
 
     @DisplayName("모든 예약을 조회한다.")
@@ -31,11 +31,10 @@ class MemoryReservationDaoTest {
     @DisplayName("예약을 추가한다.")
     @Test
     void addTest() {
-        Reservation reservation = new Reservation(
-                null, "페드로",
-                LocalDate.now(), LocalTime.now()
+        ReservationCreationRequest request = new ReservationCreationRequest(
+                "페드로", LocalDate.MAX, LocalTime.now()
         );
-        reservationDao.add(reservation);
+        reservationDao.add(ReservationCreationDto.from(request));
 
         assertThat(reservationDao.isExist(2L)).isTrue();
     }

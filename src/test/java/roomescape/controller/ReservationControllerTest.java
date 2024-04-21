@@ -49,7 +49,7 @@ class ReservationControllerTest {
     void addReservationTest() {
         Map<String, String> params = Map.of(
                 "name", "브라운",
-                "date", "2023-08-05",
+                "date", "2024-08-05",
                 "time", "15:40"
         );
 
@@ -69,7 +69,7 @@ class ReservationControllerTest {
     void addReservationWithBlankNameTest() {
         Map<String, String> params = Map.of(
                 "name", "   ",
-                "date", "2023-08-05",
+                "date", "2024-08-05",
                 "time", "15:40"
         );
 
@@ -113,11 +113,32 @@ class ReservationControllerTest {
                 Arguments.of(
                         Map.of(
                                 "name", "웨지",
-                                "date", "2023-08-05",
+                                "date", "2024-08-05",
                                 "time", "26:99"
                         )
                 )
         );
+    }
+
+    @DisplayName("과거의 시간을 예약하는 경우 400 상태 코드와 함께 오류 메시지를 응답한다.")
+    @Test
+    void addReservationWithPastTime() {
+        Map<String, String> params = Map.of(
+                "name", "페드로",
+                "date", "2023-08-05",
+                "time", "15:40"
+        );
+
+        String message = RestAssured.given().log().all()
+                .contentType(ContentType.JSON)
+                .body(params)
+                .when().post("/reservations")
+                .then().log().all()
+                .statusCode(400)
+                .extract().body().jsonPath()
+                .get("message");
+
+        assertThat(message).isEqualTo("과거의 시각은 예약할 수 없습니다.");
     }
 
     @DisplayName("지정한 예약을 삭제한다.")
@@ -125,7 +146,7 @@ class ReservationControllerTest {
     void removeReservationTest() {
         Map<String, String> params = Map.of(
                 "name", "브라운",
-                "date", "2023-08-05",
+                "date", "2024-08-05",
                 "time", "15:40"
         );
 

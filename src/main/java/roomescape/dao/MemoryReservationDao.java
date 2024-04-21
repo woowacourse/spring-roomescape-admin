@@ -6,6 +6,7 @@ import java.util.List;
 import java.util.concurrent.atomic.AtomicLong;
 import org.springframework.stereotype.Component;
 import roomescape.domain.Reservation;
+import roomescape.service.dto.ReservationCreationDto;
 
 @Component
 public class MemoryReservationDao implements ReservationDao {
@@ -23,9 +24,9 @@ public class MemoryReservationDao implements ReservationDao {
     }
 
     @Override
-    public Reservation add(Reservation reservation) {
-        Reservation newReservation = new Reservation(index.incrementAndGet(), reservation.getName(),
-                reservation.getDate(), reservation.getTime());
+    public Reservation add(ReservationCreationDto request) {
+        Reservation newReservation = new Reservation(index.incrementAndGet(), request.name(),
+                request.date(), request.time());
         reservations.add(newReservation);
         return newReservation;
     }

@@ -8,37 +8,32 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
-import roomescape.domain.Reservation;
-import roomescape.dto.reservation.ReservationRequestDto;
-import roomescape.dto.reservation.ReservationResponseDto;
-import roomescape.repository.reservation.JdbcReservationRepository;
+import roomescape.service.reservation.ReservationService;
+import roomescape.service.reservation.dto.ReservationRequestDto;
+import roomescape.service.reservation.dto.ReservationResponseDto;
 
 @RestController
 @RequestMapping("/reservations")
 public class ReservationApiController {
 
-    private final JdbcReservationRepository jdbcReservationRepository;
+    private final ReservationService reservationService;
 
-    public ReservationApiController(JdbcReservationRepository jdbcReservationRepository) {
-        this.jdbcReservationRepository = jdbcReservationRepository;
+    public ReservationApiController(ReservationService reservationService) {
+        this.reservationService = reservationService;
     }
 
     @GetMapping
-    public List<ReservationResponseDto> getReservations() {
-        return jdbcReservationRepository.findAllReservations()
-                .stream()
-                .map(ReservationResponseDto::new)
-                .toList();
+    public List<ReservationResponseDto> findReservations() {
+        return reservationService.findAllReservations();
     }
 
     @PostMapping
     public ReservationResponseDto createReservation(@RequestBody ReservationRequestDto requestDto) {
-        Reservation reservation = jdbcReservationRepository.insertReservation(requestDto.toReservation());
-        return new ReservationResponseDto(reservation);
+        return reservationService.createReservation(requestDto);
     }
 
     @DeleteMapping("/{id}")
     public void deleteReservation(@PathVariable long id) {
-        jdbcReservationRepository.deleteReservationById(id);
+        reservationService.deleteReservation(id);
     }
 }

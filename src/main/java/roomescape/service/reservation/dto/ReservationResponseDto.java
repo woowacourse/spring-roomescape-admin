@@ -1,7 +1,7 @@
-package roomescape.dto.reservation;
+package roomescape.service.reservation.dto;
 
 import roomescape.domain.Reservation;
-import roomescape.dto.time.ReservationTimeResponseDto;
+import roomescape.service.time.dto.ReservationTimeResponseDto;
 
 public class ReservationResponseDto {
 

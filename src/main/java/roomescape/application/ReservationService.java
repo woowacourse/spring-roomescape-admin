@@ -1,6 +1,7 @@
 package roomescape.application;
 
 import java.util.List;
+import java.util.Optional;
 import java.util.stream.Collectors;
 import org.springframework.stereotype.Service;
 import roomescape.domain.Reservation;
@@ -24,7 +25,7 @@ public class ReservationService {
         return convertToReservationResponses(reservations);
     }
 
-    private static List<ReservationResponse> convertToReservationResponses(List<Reservation> reservations) {
+    private List<ReservationResponse> convertToReservationResponses(List<Reservation> reservations) {
         return reservations.stream()
                 .map(ReservationResponse::from)
                 .collect(Collectors.toList());
@@ -36,6 +37,10 @@ public class ReservationService {
     }
 
     public void deleteById(Long id) {
+        Optional<Reservation> findReservation = repository.findById(id);
+        if (findReservation.isEmpty()) {
+            throw new IllegalArgumentException("존재하지 않는 예약 입니다.");
+        }
         repository.deleteById(id);
     }
 }

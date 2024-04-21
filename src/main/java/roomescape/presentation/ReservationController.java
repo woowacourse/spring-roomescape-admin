@@ -34,7 +34,7 @@ public class ReservationController {
         return ResponseEntity.created(URI.create("/reservations/" + response.id())).body(response);
     }
 
-    @DeleteMapping("{id}")
+    @DeleteMapping("/{id}")
     public ResponseEntity<Void> delete(@PathVariable Long id) {
         service.deleteById(id);
         return ResponseEntity.noContent().build();

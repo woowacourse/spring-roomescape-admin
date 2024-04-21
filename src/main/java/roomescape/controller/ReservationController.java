@@ -14,6 +14,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import roomescape.domain.Reservation;
 import roomescape.dto.CreateReservationRequest;
+import roomescape.dto.ReservationResponse;
 
 @RestController
 @RequestMapping("/reservations")
@@ -23,12 +24,20 @@ public class ReservationController {
     private final AtomicLong id = new AtomicLong(0);
 
     @PostMapping
-    public ResponseEntity<Reservation> reserve(@RequestBody CreateReservationRequest request) {
-        Reservation newReservation = new Reservation(id.incrementAndGet(), request.name(), request.date(),
+    public ResponseEntity<ReservationResponse> reserve(@RequestBody CreateReservationRequest request) {
+        Reservation newReservation = new Reservation(
+                id.incrementAndGet(),
+                request.name(),
+                request.date(),
                 request.time());
         reservations.add(newReservation);
 
-        return ResponseEntity.ok(newReservation);
+        return ResponseEntity.ok(
+                new ReservationResponse(
+                        id.get(),
+                        newReservation.getName(),
+                        newReservation.getDate(),
+                        newReservation.getTime()));
     }
 
     @DeleteMapping("/{id}")
@@ -47,7 +56,15 @@ public class ReservationController {
     }
 
     @GetMapping
-    public ResponseEntity<List<Reservation>> getReservations() {
-        return ResponseEntity.ok(reservations);
+    public ResponseEntity<List<ReservationResponse>> getReservations() {
+        List<ReservationResponse> reservationResponses = reservations.stream()
+                .map(it -> new ReservationResponse(
+                        id.get(),
+                        it.getName(),
+                        it.getDate(),
+                        it.getTime()))
+                .toList();
+
+        return ResponseEntity.ok(reservationResponses);
     }
 }

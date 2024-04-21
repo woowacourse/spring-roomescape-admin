@@ -8,7 +8,7 @@ public class Reservation {
     private final Long id;
     private final LocalDate date;
     private final LocalTime time;
-    private String name;
+    private final String name;
 
     public Reservation(final Long id, final String name, final LocalDate date, final LocalTime time) {
         this.id = id;

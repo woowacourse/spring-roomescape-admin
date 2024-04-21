@@ -21,14 +21,14 @@ public class ReservationApiController {
     }
 
     @PostMapping("/reservations")
-    public ResponseEntity<Reservation> create(@RequestBody ReservationDto reservationDto) {
+    public ResponseEntity<Reservation> create(@RequestBody final ReservationDto reservationDto) {
         Reservation newReservation = reservationDto.toVo(index.getAndIncrement());
         reservations.add(newReservation);
         return ResponseEntity.ok().body(newReservation);
     }
 
     @DeleteMapping("/reservations/{id}")
-    public ResponseEntity<Void> delete(@PathVariable Long id) {
+    public ResponseEntity<Void> delete(@PathVariable final Long id) {
         Reservation findReservation = reservations.stream()
                 .filter(reservation -> reservation.getId().equals(id))
                 .findFirst()

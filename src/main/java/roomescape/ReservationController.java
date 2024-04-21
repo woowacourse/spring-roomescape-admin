@@ -15,16 +15,22 @@ public class ReservationController {
     private final ReservationRepository reservationRepository = ReservationRepository.getInstance();
 
     @GetMapping("/reservations")
-    public ResponseEntity<List<Reservation>> getReservations() {
+    public ResponseEntity<List<ReservationDto>> getReservations() {
         List<Reservation> reservations = reservationRepository.findAll();
-        return ResponseEntity.ok(reservations);
+        List<ReservationDto> reservationResponse = reservations.stream()
+                .map(ReservationDto::toDto)
+                .toList();
+
+        return ResponseEntity.ok(reservationResponse);
     }
 
     @PostMapping("/reservations")
-    public ResponseEntity<Reservation> addReservation(@RequestBody Reservation reservation) {
-        reservationRepository.save(reservation);
-        Reservation savedReservation = reservationRepository.findById(reservation.getId());
-        return ResponseEntity.ok(savedReservation);
+    public ResponseEntity<ReservationDto> addReservation(@RequestBody ReservationDto reservationDto) {
+        Long savedId = reservationRepository.save(reservationDto.toEntity());
+        Reservation savedReservation = reservationRepository.findById(savedId);
+        ReservationDto reservationResponse = ReservationDto.toDto(savedReservation);
+
+        return ResponseEntity.ok(reservationResponse);
     }
 
     @DeleteMapping("/reservations/{id}")

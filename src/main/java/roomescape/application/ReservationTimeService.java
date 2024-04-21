@@ -4,12 +4,14 @@ import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import roomescape.domain.ReservationTime;
 import roomescape.domain.ReservationTimeRepository;
 import roomescape.dto.ReservationTimeRequest;
 import roomescape.dto.ReservationTimeResponse;
 
 @Service
+@Transactional
 public class ReservationTimeService {
     private final ReservationTimeRepository repository;
 
@@ -22,6 +24,7 @@ public class ReservationTimeService {
         return ReservationTimeResponse.from(reservationTime);
     }
 
+    @Transactional(readOnly = true)
     public List<ReservationTimeResponse> findAll() {
         List<ReservationTime> reservationTimes = repository.findAll();
         return convertToReservationTimeResponses(reservationTimes);

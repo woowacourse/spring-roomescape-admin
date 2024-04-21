@@ -1,22 +1,23 @@
 package roomescape.repository;
 
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.assertj.core.api.Assertions.assertThatThrownBy;
 
 import java.time.LocalTime;
 import java.util.List;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.test.autoconfigure.jdbc.AutoConfigureTestDatabase;
 import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.jdbc.core.JdbcTemplate;
+import org.springframework.test.jdbc.JdbcTestUtils;
 import org.springframework.transaction.annotation.Transactional;
 import roomescape.domain.ReservationTime;
 import roomescape.domain.ReservationTimeRepository;
 
 @SpringBootTest
 @Transactional
+@AutoConfigureTestDatabase
 class JdbcTemplateReservationTimeRepositoryTest {
 
     @Autowired
@@ -45,8 +46,8 @@ class JdbcTemplateReservationTimeRepositoryTest {
 
         repository.deleteBy(1L);
 
-        assertThatThrownBy(() -> findById(1L))
-                .isInstanceOf(EmptyResultDataAccessException.class);
+        int rowCount = JdbcTestUtils.countRowsInTable(jdbcTemplate, "reservation_time");
+        assertThat(rowCount).isZero();
     }
 
     @DisplayName("모든 예약 시간을 불러올 수 있다.")

@@ -2,15 +2,15 @@ package roomescape.entity;
 
 public class ReservationTime {
 
-    private final long id;
+    private final Long id;
     private final String startAt;
 
-    public ReservationTime(long id, String startAt) {
+    public ReservationTime(Long id, String startAt) {
         this.id = id;
         this.startAt = startAt;
     }
 
-    public long getId() {
+    public Long getId() {
         return id;
     }
 

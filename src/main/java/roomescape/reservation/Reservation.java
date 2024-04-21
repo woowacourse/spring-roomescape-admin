@@ -1,18 +1,17 @@
 package roomescape.reservation;
 
-import java.time.LocalDate;
-import java.time.LocalTime;
+import roomescape.time.Time;
 
 public class Reservation {
     private Long id;
     private String name;
     private String date;
-    private String time;
+    private Time time;
 
     public Reservation() {
     }
 
-    public Reservation(final Long id, final String name, final String date, final String time) {
+    public Reservation(final Long id, final String name, final String date, final Time time) {
         this.id = id;
         this.name = name;
         this.date = date;
@@ -31,7 +30,7 @@ public class Reservation {
         return date;
     }
 
-    public String getTime() {
+    public Time getTime() {
         return time;
     }
 }

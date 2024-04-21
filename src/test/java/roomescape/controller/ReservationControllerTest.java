@@ -24,6 +24,23 @@ class ReservationControllerTest {
     private JdbcTemplate jdbcTemplate;
 
     @Test
+    @DisplayName("예약을 추가한다.")
+    void createReservation() {
+        final Map<String, String> params = createReservations();
+
+        RestAssured.given().log().all()
+                .contentType(ContentType.JSON)
+                .body(params)
+                .when().post("/reservations")
+                .then().log().all()
+                .statusCode(201)
+                .header("Location", "/reservations/1");
+
+        final Integer count = jdbcTemplate.queryForObject("SELECT count(1) from reservation", Integer.class);
+        assertThat(count).isEqualTo(1);
+    }
+
+    @Test
     @DisplayName("예약 목록을 조회한다.")
     void readReservations() {
         jdbcTemplate.update("INSERT INTO reservation (name, date, time) VALUES (?, ?, ?)",
@@ -38,16 +55,6 @@ class ReservationControllerTest {
         final Integer count = jdbcTemplate.queryForObject("SELECT count(1) from reservation", Integer.class);
 
         assertThat(reservations.size()).isEqualTo(count);
-    }
-
-    @Test
-    @DisplayName("예약을 추가한다.")
-    void createReservation() {
-        final Map<String, String> params = createReservations();
-
-        assertPostRequestStatusCodeOKAndId(params, "/reservations", 1);
-
-        assertGetRequestStatusCodeOKAndSize("/reservations", 1);
     }
 
     @Disabled

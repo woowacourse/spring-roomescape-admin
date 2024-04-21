@@ -1,13 +1,14 @@
 package roomescape.repository;
 
 import org.springframework.jdbc.core.JdbcTemplate;
+import org.springframework.jdbc.core.namedparam.BeanPropertySqlParameterSource;
+import org.springframework.jdbc.core.namedparam.SqlParameterSource;
 import org.springframework.jdbc.core.simple.SimpleJdbcInsert;
 import org.springframework.stereotype.Repository;
 import roomescape.domain.Reservation;
 
 import javax.sql.DataSource;
 import java.util.List;
-import java.util.Map;
 
 @Repository
 public class H2ReservationRepositoryImpl implements ReservationRepository {
@@ -35,13 +36,15 @@ public class H2ReservationRepositoryImpl implements ReservationRepository {
 
     @Override
     public Reservation save(Reservation reservation) {
-        long id = jdbcInsert.executeAndReturnKey(Map.of(
-                "name", reservation.getName(),
-                "date", reservation.getDate(),
-                "time", reservation.getTime()
-        )).longValue();
+        SqlParameterSource source = new BeanPropertySqlParameterSource(reservation);
+        long reservationId = jdbcInsert.executeAndReturnKey(source).longValue();
 
-        return new Reservation(id, reservation.getName(), reservation.getDate(), reservation.getTime());
+        return new Reservation(
+                reservationId,
+                reservation.getName(),
+                reservation.getDate(),
+                reservation.getTime()
+        );
     }
 
     @Override

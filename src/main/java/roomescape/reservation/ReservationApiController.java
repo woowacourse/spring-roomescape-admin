@@ -12,8 +12,8 @@ public class ReservationApiController {
 
     private static final int START_INDEX = 1;
 
-    private List<Reservation> reservations = new ArrayList<>();
-    private AtomicLong index = new AtomicLong(START_INDEX);
+    private final List<Reservation> reservations = new ArrayList<>();
+    private final AtomicLong index = new AtomicLong(START_INDEX);
 
     @GetMapping("/reservations")
     public ResponseEntity<List<Reservation>> findAll() {

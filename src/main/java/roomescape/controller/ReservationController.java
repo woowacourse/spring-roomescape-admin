@@ -16,7 +16,6 @@ import java.util.List;
 public class ReservationController {
 
     private final ReservationMapper reservationMapper = new ReservationMapper();
-
     private final ReservationRepository reservationRepository;
 
     public ReservationController(ReservationRepository reservationRepository) {

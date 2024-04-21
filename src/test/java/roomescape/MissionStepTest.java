@@ -147,4 +147,24 @@ public class MissionStepTest {
         Integer countAfterDelete = jdbcTemplate.queryForObject("SELECT count(*) from reservation", Integer.class);
         assertThat(countAfterDelete).isEqualTo(0);
     }
+
+    @Test
+    void 칠단계() {
+        Map<String, String> params = Map.of(
+                "startAt", "10:00"
+        );
+
+        RestAssured.given().log().all()
+                .contentType(ContentType.JSON)
+                .body(params)
+                .when().post("/times")
+                .then().log().all()
+                .statusCode(HttpStatus.SC_CREATED);
+
+        RestAssured.given().log().all()
+                .when().get("/times")
+                .then().log().all()
+                .statusCode(HttpStatus.SC_OK)
+                .body("size()", is(1));
+    }
 }

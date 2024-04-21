@@ -8,7 +8,7 @@ import org.springframework.boot.test.context.SpringBootTest.WebEnvironment;
 import org.springframework.boot.test.web.server.LocalServerPort;
 
 @SpringBootTest(webEnvironment = WebEnvironment.RANDOM_PORT)
-public class AdminAcceptanceTest {
+class AdminAcceptanceTest {
     private static final String PATH = "/admin";
 
     @LocalServerPort

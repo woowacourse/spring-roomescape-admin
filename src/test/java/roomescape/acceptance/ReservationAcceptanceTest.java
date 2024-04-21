@@ -20,7 +20,7 @@ import org.springframework.boot.test.web.server.LocalServerPort;
 
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 @TestMethodOrder(MethodOrderer.OrderAnnotation.class)
-public class ReservationAcceptanceTest {
+class ReservationAcceptanceTest {
     private static final String PATH = "/reservations";
 
     @SpyBean

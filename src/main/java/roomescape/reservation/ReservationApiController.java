@@ -18,6 +18,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 @RestController
 public class ReservationApiController {
+
     private static final int START_INDEX = 1;
 
     private List<Reservation> reservations = new ArrayList<>();

@@ -60,6 +60,26 @@ class ReservationControllerTest {
         assertThat(getTotalReservationsCount()).isEqualTo(initialReservationsCount + 1);
     }
 
+    @DisplayName("예약자명이 공백일 경우 400 상태 코드와 함께 오류 메시지를 응답한다.")
+    @Test
+    void addReservationWithBlankNameTest() {
+        Map<String, String> params = Map.of(
+                "name", "   ",
+                "date", "2023-08-05",
+                "time", "15:40"
+        );
+
+        String message = RestAssured.given().log().all()
+                .contentType(ContentType.JSON)
+                .body(params)
+                .when().post("/reservations")
+                .then().log().all()
+                .statusCode(400)
+                .extract().body().jsonPath()
+                .get("message");
+
+        assertThat(message).isEqualTo("이름은 공백일 수 없습니다.");
+    }
 
     @DisplayName("지정한 예약을 삭제한다.")
     @Test

@@ -36,7 +36,6 @@ public class ReservationController {
     @PostMapping
     public ResponseEntity<ReservationDto> add(@RequestBody Reservation reservation) {
         Reservation newReservation = reservationDao.add(reservation);
-
         return ResponseEntity.ok()
                 .body(ReservationDto.from(newReservation));
     }

@@ -1,21 +1,27 @@
 package roomescape.repository;
 
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;
-import org.springframework.jdbc.support.GeneratedKeyHolder;
-import org.springframework.jdbc.support.KeyHolder;
+import org.springframework.jdbc.core.namedparam.BeanPropertySqlParameterSource;
+import org.springframework.jdbc.core.namedparam.SqlParameterSource;
+import org.springframework.jdbc.core.simple.SimpleJdbcInsert;
 import org.springframework.stereotype.Repository;
 import roomescape.domain.Reservation;
 
-import java.sql.Connection;
-import java.sql.PreparedStatement;
+import javax.sql.DataSource;
 import java.util.List;
 
 @Repository
 public class JdbcTemplateReservationRepository implements ReservationRepository {
-    @Autowired
-    private JdbcTemplate jdbcTemplate;
+    private final JdbcTemplate jdbcTemplate;
+    private final SimpleJdbcInsert jdbcInsert;
+
+    public JdbcTemplateReservationRepository(final JdbcTemplate jdbcTemplate, final DataSource dataSource) {
+        this.jdbcTemplate = jdbcTemplate;
+        this.jdbcInsert = new SimpleJdbcInsert(dataSource)
+                .withTableName("reservation")
+                .usingGeneratedKeyColumns("id");
+    }
 
     private final RowMapper<Reservation> reservationRowMapper = (rs, rowNum) -> {
         Reservation reservation = new Reservation(
@@ -29,19 +35,9 @@ public class JdbcTemplateReservationRepository implements ReservationRepository 
 
     @Override
     public Reservation insert(final Reservation reservation) {
-        String sql = "INSERT INTO reservation (name, date, time) VALUES (?,?,?)";
-        KeyHolder keyHolder = new GeneratedKeyHolder();
+        SqlParameterSource param = new BeanPropertySqlParameterSource(reservation);
+        long id = jdbcInsert.executeAndReturnKey(param).longValue();
 
-        jdbcTemplate.update((Connection con) -> {
-            PreparedStatement preparedStatement = con.prepareStatement(sql, PreparedStatement.RETURN_GENERATED_KEYS);
-            preparedStatement.setString(1, reservation.getName());
-            preparedStatement.setString(2, reservation.getDate());
-            preparedStatement.setString(3, reservation.getTime());
-
-            return preparedStatement;
-        }, keyHolder);
-
-        Long id = keyHolder.getKey().longValue();
         return new Reservation(id, reservation);
     }
 

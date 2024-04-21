@@ -14,7 +14,11 @@ import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.DynamicTest;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.TestFactory;
+import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.test.annotation.DirtiesContext;
 
+@SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.DEFINED_PORT)
+@DirtiesContext(classMode = DirtiesContext.ClassMode.BEFORE_EACH_TEST_METHOD)
 class ReservationControllerTest {
 
     @Test
@@ -43,8 +47,7 @@ class ReservationControllerTest {
                             .body(params)
                             .when().post("/reservations")
                             .then().log().all()
-                            .statusCode(200)
-                            .body("id", is(1));
+                            .statusCode(201);
                 }),
 
                 DynamicTest.dynamicTest("예약을 조회했을 때 하나이다.", () -> {
@@ -67,7 +70,7 @@ class ReservationControllerTest {
                     RestAssured.given().log().all()
                             .when().delete("/reservations/1")
                             .then().log().all()
-                            .statusCode(200);
+                            .statusCode(204);
                 }),
 
                 DynamicTest.dynamicTest("예약을 삭제한 후 조회 했을 때 갯수가 0이다.", () -> {

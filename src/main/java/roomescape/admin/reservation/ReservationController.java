@@ -1,5 +1,6 @@
 package roomescape.admin.reservation;
 
+import java.net.URI;
 import java.util.List;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
@@ -39,22 +40,20 @@ public class ReservationController {
     }
 
     @PostMapping
-    public ResponseEntity<ResponseReservation> create(@RequestBody RequestReservation requestReservation) {
-        Reservation reservation = new Reservation(atomicLong.getAndIncrement(), requestReservation.name(),
-                requestReservation.date(), requestReservation.time());
-        reservations.put(reservation.getId(), reservation);
-
-        return ResponseEntity.ok(ResponseReservation.from(reservation));
+    public ResponseEntity<Void> create(@RequestBody RequestReservation requestReservation) {
+        Reservation reservation = new Reservation(null, requestReservation.name(), requestReservation.date(),
+                requestReservation.time());
+        Reservation saveReservation = reservationRepository.save(reservation);
+        return ResponseEntity.created(URI.create("/reservations/" + saveReservation.getId())).build();
     }
 
     @DeleteMapping("/{id}")
     public ResponseEntity<?> delete(@PathVariable("id") Long id) {
-        Reservation reservation = reservations.get(id);
-        if (reservation == null) {
+        int deleteCount = reservationRepository.delete(id);
+        if (deleteCount == 0) {
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body("삭제할 예약이 존재하지 않습니다.");
         }
-        reservations.remove(id);
 
-        return ResponseEntity.ok().build();
+        return ResponseEntity.noContent().build();
     }
 }

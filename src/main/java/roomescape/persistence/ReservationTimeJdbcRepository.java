@@ -7,10 +7,10 @@ import java.util.List;
 import java.util.Optional;
 
 @Repository
-public class ReservationTimeDbRepository implements ReservationTimeRepository {
+public class ReservationTimeJdbcRepository implements ReservationTimeRepository {
     private final ReservationTimeDao reservationTimeDao;
 
-    public ReservationTimeDbRepository(ReservationTimeDao reservationTimeDao) {
+    public ReservationTimeJdbcRepository(ReservationTimeDao reservationTimeDao) {
         this.reservationTimeDao = reservationTimeDao;
     }
 

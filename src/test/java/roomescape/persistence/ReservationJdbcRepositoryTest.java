@@ -23,7 +23,7 @@ import static roomescape.TestFixture.*;
 
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.DEFINED_PORT)
 @DirtiesContext(classMode = DirtiesContext.ClassMode.BEFORE_EACH_TEST_METHOD)
-class ReservationDbRepositoryTest implements ReservationRepositoryTest {
+class ReservationJdbcRepositoryTest implements ReservationRepositoryTest {
     @Autowired
     private JdbcTemplate jdbcTemplate;
 

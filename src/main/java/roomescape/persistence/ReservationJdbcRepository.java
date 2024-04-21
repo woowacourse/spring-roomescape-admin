@@ -9,10 +9,10 @@ import java.util.List;
 import java.util.Optional;
 
 @Repository
-public class ReservationDbRepository implements ReservationRepository {
+public class ReservationJdbcRepository implements ReservationRepository {
     private final ReservationDao reservationDao;
 
-    public ReservationDbRepository(ReservationDao reservationDao) {
+    public ReservationJdbcRepository(ReservationDao reservationDao) {
         this.reservationDao = reservationDao;
     }
 

@@ -1,20 +1,25 @@
 package roomescape.dao;
 
 import org.springframework.jdbc.core.JdbcTemplate;
-import org.springframework.jdbc.support.GeneratedKeyHolder;
-import org.springframework.jdbc.support.KeyHolder;
+import org.springframework.jdbc.core.simple.SimpleJdbcInsert;
 import org.springframework.stereotype.Repository;
 import roomescape.domain.Reservation;
 
-import java.sql.PreparedStatement;
 import java.util.List;
+import java.util.Map;
 
 @Repository
 public class ReservationJDBCRepository implements ReservationRepository {
+    private static final String TABLE_NAME = "reservation";
+
     private final JdbcTemplate jdbcTemplate;
+    private final SimpleJdbcInsert simpleJdbcInsert;
 
     public ReservationJDBCRepository(JdbcTemplate jdbcTemplate) {
         this.jdbcTemplate = jdbcTemplate;
+        this.simpleJdbcInsert = new SimpleJdbcInsert(jdbcTemplate)
+                .withTableName(TABLE_NAME)
+                .usingGeneratedKeyColumns("id");
     }
 
     @Override
@@ -36,15 +41,11 @@ public class ReservationJDBCRepository implements ReservationRepository {
     @Override
     public Reservation save(final Reservation reservation) {
         String sql = "INSERT INTO Reservation (name, date, time) VALUES (?,?,?)";
-        KeyHolder keyHolder = new GeneratedKeyHolder();
-        jdbcTemplate.update(connection -> {
-            PreparedStatement statement = connection.prepareStatement(sql, new String[]{"id"});
-            statement.setString(1, reservation.getName());
-            statement.setString(2, reservation.getDate());
-            statement.setString(3, reservation.getTime());
-            return statement;
-        }, keyHolder);
-        long id = keyHolder.getKey().longValue();
+        Map<String, String> params = Map.of(
+                "name", reservation.getName(),
+                "date", reservation.getDate(),
+                "time", reservation.getTime());
+        long id = simpleJdbcInsert.executeAndReturnKey(params).longValue();
         return new Reservation(id, reservation);
     }
 

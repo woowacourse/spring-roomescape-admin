@@ -33,9 +33,8 @@ public class ReservationTimeApiController {
 
     @PostMapping
     public ReservationTimeResponseDto createReservationTime(@RequestBody ReservationTimeRequestDto requestDto) {
-        ReservationTime reservationTime = requestDto.toReservationTime();
-        Long id = jdbcReservationTimeRepository.insertReservationTime(reservationTime);
-        return new ReservationTimeResponseDto(id, reservationTime.getStartAt());
+        ReservationTime time = jdbcReservationTimeRepository.insertReservationTime(requestDto.toReservationTime());
+        return new ReservationTimeResponseDto(time);
     }
 
     @DeleteMapping("/{id}")

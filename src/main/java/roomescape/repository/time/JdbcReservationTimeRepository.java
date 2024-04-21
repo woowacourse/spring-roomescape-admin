@@ -29,10 +29,23 @@ public class JdbcReservationTimeRepository {
         return jdbcTemplate.query(sql, reservationTimeRowMapper());
     }
 
-    public Long insertReservationTime(ReservationTime reservationTime) {
+    public ReservationTime insertReservationTime(ReservationTime reservationTime) {
         SqlParameterSource parameterSource = new MapSqlParameterSource()
                 .addValue("start_at", reservationTime.getStartAt());
-        return jdbcInsert.executeAndReturnKey(parameterSource).longValue();
+        Long savedId = jdbcInsert.executeAndReturnKey(parameterSource).longValue();
+        return findReservationTimeById(savedId);
+    }
+
+    private ReservationTime findReservationTimeById(Long savedId) {
+        String sql = """
+                SELECT 
+                t.id, 
+                start_at 
+                FROM reservation_time as t 
+                WHERE t.id = :savedId;
+                """;
+        SqlParameterSource paramMap = new MapSqlParameterSource().addValue("savedId", savedId);
+        return jdbcTemplate.query(sql, paramMap, reservationTimeRowMapper()).get(0);
     }
 
     public void deleteReservationTimeById(Long id) {

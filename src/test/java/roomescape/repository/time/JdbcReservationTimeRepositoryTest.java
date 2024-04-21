@@ -49,9 +49,9 @@ class JdbcReservationTimeRepositoryTest {
     @DisplayName("예약 시간을 저장한다.")
     @Test
     void save_reservation_time() {
-        Long savedId = jdbcReservationTimeRepository.insertReservationTime(time1);
+        ReservationTime time = jdbcReservationTimeRepository.insertReservationTime(time1);
 
-        assertThat(savedId).isEqualTo(1L);
+        assertThat(time.getId()).isEqualTo(1L);
     }
 
     @Test

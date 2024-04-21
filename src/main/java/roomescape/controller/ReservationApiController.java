@@ -23,7 +23,12 @@ public class ReservationApiController {
 
     @PostMapping
     public Reservation createReservation(@RequestBody final ReservationRequest reservationRequest) {
-        Reservation reservation = Reservation.toEntity(index.getAndIncrement(), reservationRequest);
+        Reservation reservation = Reservation.builder()
+                                             .id(index.getAndIncrement())
+                                             .name(reservationRequest.name())
+                                             .date(reservationRequest.date())
+                                             .time(reservationRequest.time())
+                                             .build();
         reservations.add(reservation);
         return reservation;
     }

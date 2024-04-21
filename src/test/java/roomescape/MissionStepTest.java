@@ -28,10 +28,8 @@ class MissionStepTest {
 
     @LocalServerPort
     int port;
-
     @Autowired
     private JdbcTemplate jdbcTemplate;
-
     @Autowired
     private ReservationController reservationController;
 

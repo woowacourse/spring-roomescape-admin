@@ -20,7 +20,6 @@ public class ReservationDao {
     private static final RowMapper<Reservation> RESERVATION_ROW_MAPPER = getReservationRowMapper();
 
     private final JdbcTemplate jdbcTemplate;
-
     private final SimpleJdbcInsert jdbcInsert;
 
     public ReservationDao(JdbcTemplate jdbcTemplate, DataSource dataSource) {

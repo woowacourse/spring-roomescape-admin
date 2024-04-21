@@ -21,10 +21,8 @@ class ReservationServiceTest {
 
     @Autowired
     private ReservationService reservationService;
-
     @Autowired
     private ReservationDao reservationDao;
-
     @Autowired
     private ReservationTimeDao reservationTimeDao;
 

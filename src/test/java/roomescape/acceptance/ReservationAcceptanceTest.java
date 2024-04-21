@@ -1,4 +1,4 @@
-package roomescape.controller;
+package roomescape.acceptance;
 
 import io.restassured.RestAssured;
 import io.restassured.http.ContentType;
@@ -14,7 +14,7 @@ import java.util.Map;
 import static org.hamcrest.Matchers.is;
 
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
-class ReservationControllerTest {
+class ReservationAcceptanceTest {
     @LocalServerPort
     private int port;
 

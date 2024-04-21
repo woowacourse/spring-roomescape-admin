@@ -16,6 +16,9 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
+import roomescape.controller.dto.ReservationCreateRequest;
+import roomescape.controller.dto.ReservationCreateResponse;
+import roomescape.controller.dto.ReservationFindResponse;
 import roomescape.domain.Reservation;
 import roomescape.util.CustomDateTimeFormatter;
 
@@ -36,25 +39,25 @@ public class ReservationController {
 
     @GetMapping
     @ResponseStatus(value = HttpStatus.OK)
-    public List<FindReservationResponse> getReservation() {
+    public List<ReservationFindResponse> getReservation() {
         List<Reservation> reservations = jdbcTemplate.query("SELECT * FROM reservation", reservationRowMapper);
         return reservations.stream()
-                .map(FindReservationResponse::of)
+                .map(ReservationFindResponse::of)
                 .toList();
     }
 
     @PostMapping
     @ResponseStatus(value = HttpStatus.CREATED)
     //TODO : 헤더 조작을 위해 ResponseEntity를 반환할 필요성이 생겼다. 다른 메서드도 동일하게 변경해 주어야 할까?
-    public ResponseEntity<CreateReservationResponse> createReservation(
-            @RequestBody CreateReservationRequest createReservationRequest) {
+    public ResponseEntity<ReservationCreateResponse> createReservation(
+            @RequestBody ReservationCreateRequest reservationCreateRequest) {
         SimpleJdbcInsert simpleJdbcInsert = new SimpleJdbcInsert(jdbcTemplate)
                 .withTableName("reservation")
                 .usingGeneratedKeyColumns("id");
         Long createdReservationId = simpleJdbcInsert.executeAndReturnKey(Map.of(
-                "name", createReservationRequest.name(),
-                "date", createReservationRequest.date(),
-                "time", createReservationRequest.time()
+                "name", reservationCreateRequest.name(),
+                "date", reservationCreateRequest.date(),
+                "time", reservationCreateRequest.time()
         )).longValue();
 
         //TODO : 이렇게 조회를 하는 것이 좋을지, Request의 데이터를 사용하는 것이 좋을지 고민해보기
@@ -64,7 +67,7 @@ public class ReservationController {
 
         return ResponseEntity.status(HttpStatus.CREATED)
                 .header("Location", "/reservations/" + createdReservationId)
-                .body(CreateReservationResponse.of(createdReservation));
+                .body(ReservationCreateResponse.of(createdReservation));
     }
 
     @DeleteMapping("/{id}")

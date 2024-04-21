@@ -11,6 +11,9 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
+import roomescape.controller.dto.ReservationTimeCreateRequest;
+import roomescape.controller.dto.ReservationTimeCreateResponse;
+import roomescape.controller.dto.ReservationTimeFindResponse;
 import roomescape.domain.ReservationTime;
 import roomescape.util.CustomDateTimeFormatter;
 
@@ -25,7 +28,7 @@ public class ReservationTimeController {
     }
 
     @GetMapping
-    public List<FindReservationTimeResponse> getReservationTimes() {
+    public List<ReservationTimeFindResponse> getReservationTimes() {
         List<ReservationTime> reservationTimes = jdbcTemplate.query(
                 "SELECT * FROM reservation_time"
                 , (rs, rowNum) -> new ReservationTime(
@@ -35,17 +38,17 @@ public class ReservationTimeController {
         );
 
         return reservationTimes.stream()
-                .map(FindReservationTimeResponse::of)
+                .map(ReservationTimeFindResponse::of)
                 .toList();
     }
 
     @PostMapping
-    public CreateReservationTimeResponse createReservationTime(
-            @RequestBody CreateReservationTimeRequest createReservationTimeRequest) {
+    public ReservationTimeCreateResponse createReservationTime(
+            @RequestBody ReservationTimeCreateRequest reservationTimeCreateRequest) {
         SimpleJdbcInsert simpleJdbcInsert = new SimpleJdbcInsert(jdbcTemplate).withTableName("reservation_time")
                 .usingGeneratedKeyColumns("id");
         long createdReservationTimeId = simpleJdbcInsert.executeAndReturnKey(Map.of(
-                "start_at", createReservationTimeRequest.startAt()
+                "start_at", reservationTimeCreateRequest.startAt()
         )).longValue();
 
         ReservationTime createdReservationTime = jdbcTemplate.queryForObject(
@@ -56,7 +59,7 @@ public class ReservationTimeController {
                         )),
                 createdReservationTimeId);
 
-        return CreateReservationTimeResponse.of(createdReservationTime);
+        return ReservationTimeCreateResponse.of(createdReservationTime);
     }
 
     @DeleteMapping("/{id}")

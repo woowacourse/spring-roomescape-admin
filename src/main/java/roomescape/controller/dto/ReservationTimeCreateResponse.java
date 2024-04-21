@@ -1,11 +1,11 @@
-package roomescape.controller;
+package roomescape.controller.dto;
 
 import roomescape.domain.ReservationTime;
 import roomescape.util.CustomDateTimeFormatter;
 
-public record CreateReservationTimeResponse(Long id, String startAt) {
-    public static CreateReservationTimeResponse of(ReservationTime createdReservationTime) {
-        return new CreateReservationTimeResponse(
+public record ReservationTimeCreateResponse(Long id, String startAt) {
+    public static ReservationTimeCreateResponse of(ReservationTime createdReservationTime) {
+        return new ReservationTimeCreateResponse(
                 createdReservationTime.getId(),
                 CustomDateTimeFormatter.getFormattedTime(createdReservationTime.getStartAt())
         );

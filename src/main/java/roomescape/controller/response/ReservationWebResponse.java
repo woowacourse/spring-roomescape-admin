@@ -1,4 +1,4 @@
-package roomescape.presentation.web.response;
+package roomescape.controller.response;
 
 import java.time.LocalDate;
 import roomescape.domain.Reservation;

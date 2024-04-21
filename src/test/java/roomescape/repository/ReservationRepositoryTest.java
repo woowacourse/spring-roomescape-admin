@@ -32,7 +32,6 @@ class ReservationRepositoryTest {
     @DisplayName("예약 정보 삭제 테스트")
     @Test
     void deleteTest() {
-        long dummyId = 0;
         Reservation insert = reservationRepository.insert(new Reservation(null, "name", "2000-09-07", "10:00"));
         int deleteCount = reservationRepository.deleteById(insert.getId());
         int findSize = reservationRepository.findAll().size();

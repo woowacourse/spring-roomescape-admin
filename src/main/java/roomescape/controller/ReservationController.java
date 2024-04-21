@@ -5,7 +5,6 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Optional;
 import java.util.concurrent.atomic.AtomicLong;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
@@ -66,15 +65,9 @@ public class ReservationController {
 
     @DeleteMapping("/reservations/{id}")
     public ResponseEntity<Void> removeReservation(@PathVariable("id") Long id) {
-        Optional<Reservation> reservationOptional = reservations.stream()
-                .filter(it -> it.equalId(id))
-                .findFirst();
-
-        if (reservationOptional.isPresent()) {
-            reservations.remove(reservationOptional.get());
-            return ResponseEntity.ok().build();
+        if (jdbcTemplate.update("delete from reservation where id = ?", id) > 0) {
+            return ResponseEntity.noContent().build();
         }
-
         return ResponseEntity.notFound().build();
     }
 }

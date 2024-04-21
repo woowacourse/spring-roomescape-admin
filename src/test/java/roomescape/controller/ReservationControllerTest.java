@@ -109,9 +109,9 @@ public class ReservationControllerTest {
         assertThat(reservations.size()).isEqualTo(count);
     }
 
-    @DisplayName("db 테이블에 예약정보를 추가할 수 있습니다.")
+    @DisplayName("db 테이블에 예약정보를 추가하고 삭제할 수 있습니다.")
     @Test
-    void should_add_reservation_to_db() {
+    void should_add_and_remove_reservation() {
         Map<String, String> params = new HashMap<>();
         params.put("name", "브라운");
         params.put("date", "2023-08-05");
@@ -127,5 +127,13 @@ public class ReservationControllerTest {
 
         Integer count = jdbcTemplate.queryForObject("SELECT count(1) from reservation", Integer.class);
         assertThat(count).isEqualTo(1);
+
+        RestAssured.given().log().all()
+                .when().delete("/reservations/1")
+                .then().log().all()
+                .statusCode(204);
+
+        Integer countAfterDelete = jdbcTemplate.queryForObject("SELECT count(1) from reservation", Integer.class);
+        assertThat(countAfterDelete).isEqualTo(0);
     }
 }

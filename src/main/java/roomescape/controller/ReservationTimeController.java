@@ -10,30 +10,30 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import roomescape.controller.dto.CreateReservationTimeRequest;
 import roomescape.domain.ReservationTime;
-import roomescape.repository.ReservationTimeRepository;
+import roomescape.service.ReservationTimeService;
 
 @RestController
 @RequestMapping("/times")
 public class ReservationTimeController {
 
-    private final ReservationTimeRepository repository;
+    private final ReservationTimeService service;
 
-    public ReservationTimeController(ReservationTimeRepository repository) {
-        this.repository = repository;
+    public ReservationTimeController(ReservationTimeService service) {
+        this.service = service;
     }
 
     @PostMapping
     public ReservationTime save(@RequestBody CreateReservationTimeRequest request) {
-        return repository.save(request);
+        return service.save(request);
     }
 
     @GetMapping
     public List<ReservationTime> readAll() {
-        return repository.findAll();
+        return service.findAll();
     }
 
     @DeleteMapping("/{id}")
     public void remove(@PathVariable Long id) {
-        repository.delete(id);
+        service.delete(id);
     }
 }

@@ -19,7 +19,24 @@ public class ReservationRepository {
         this.jdbcTemplate = jdbcTemplate;
     }
 
-    public Reservation findById(Long id) {
+    public Reservation save(CreateReservationRequest reservation) {
+        KeyHolder keyHolder = new GeneratedKeyHolder();
+
+        jdbcTemplate.update(connection -> {
+            PreparedStatement ps = connection.prepareStatement(
+                "insert into reservation (name, date, time_id) values (?, ?, ?)"
+                , new String[]{"id"}
+            );
+            ps.setString(1, reservation.name());
+            ps.setString(2, reservation.date());
+            ps.setLong(3, reservation.timeId());
+            return ps;
+        }, keyHolder);
+
+        return findById(keyHolder.getKey().longValue());
+    }
+
+    private Reservation findById(Long id) {
         return jdbcTemplate.queryForObject(
             """
                 SELECT
@@ -62,23 +79,6 @@ public class ReservationRepository {
                 new ReservationTime(resultSet.getLong("time_id"), resultSet.getString("time_value"))
             )
         );
-    }
-
-    public Reservation save(CreateReservationRequest reservation) {
-        KeyHolder keyHolder = new GeneratedKeyHolder();
-
-        jdbcTemplate.update(connection -> {
-            PreparedStatement ps = connection.prepareStatement(
-                "insert into reservation (name, date, time_id) values (?, ?, ?)"
-                , new String[]{"id"}
-            );
-            ps.setString(1, reservation.name());
-            ps.setString(2, reservation.date());
-            ps.setLong(3, reservation.timeId());
-            return ps;
-        }, keyHolder);
-
-        return findById(keyHolder.getKey().longValue());
     }
 
     public void delete(Long id) {

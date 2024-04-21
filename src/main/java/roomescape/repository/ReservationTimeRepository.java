@@ -18,16 +18,6 @@ public class ReservationTimeRepository {
         this.jdbcTemplate = jdbcTemplate;
     }
 
-    public List<ReservationTime> findAll() {
-        return jdbcTemplate.query(
-            "select id, start_at from reservation_time",
-            (resultSet, rowNum) -> new ReservationTime(
-                resultSet.getLong("id"),
-                resultSet.getString("start_at")
-            )
-        );
-    }
-
     public ReservationTime save(CreateReservationTimeRequest request) {
         KeyHolder keyHolder = new GeneratedKeyHolder();
 
@@ -43,6 +33,16 @@ public class ReservationTimeRepository {
         Long id = keyHolder.getKey().longValue();
 
         return new ReservationTime(id, request.startAt());
+    }
+
+    public List<ReservationTime> findAll() {
+        return jdbcTemplate.query(
+            "select id, start_at from reservation_time",
+            (resultSet, rowNum) -> new ReservationTime(
+                resultSet.getLong("id"),
+                resultSet.getString("start_at")
+            )
+        );
     }
 
     public void delete(Long id) {

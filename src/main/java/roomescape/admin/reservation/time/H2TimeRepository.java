@@ -25,7 +25,7 @@ public class H2TimeRepository implements TimeRepository {
 
     @Override
     public List<Time> findAll() {
-        String query = "SELECT id, start_a t FROM reservation_time";
+        String query = "SELECT id, start_at FROM reservation_time";
         RowMapper<Time> timeRowMapper = (rs, rowNum) -> new Time(
                 rs.getLong("id"),
                 rs.getTime("start_at").toLocalTime()

@@ -1,16 +1,17 @@
 package roomescape.controller;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.http.ResponseEntity;
+import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.*;
+import roomescape.dto.ReservationDto;
 import roomescape.entity.Reservation;
 import roomescape.service.ReservationService;
 
+import java.net.URI;
 import java.util.List;
 
-@RequestMapping("/reservations")
-@RestController
+@Controller
 public class ReservationController {
     private final ReservationService reservationService;
 
@@ -19,22 +20,29 @@ public class ReservationController {
         this.reservationService = reservationService;
     }
 
-    @GetMapping
-    public List<Reservation> getAllReservations() {
-        return reservationService.getAllReservations();
+    @PostMapping("/reservations")
+    public ResponseEntity<Reservation> createReservation(@RequestBody ReservationDto reservationDto) {
+        long id = reservationService.addReservation(reservationDto);
+        Reservation reservation = makeReservation(reservationDto, id);
+
+        return ResponseEntity.created(URI.create("/reservations/" + id)).body(reservation);
     }
 
-//    @PostMapping
-//    public void createReservation(@RequestBody ReservationDto reservationDto) {
-//        reservationService.addReservation(reservationDto);
-//    }
+    private Reservation makeReservation(ReservationDto reservationDto, long id) {
+        String name = reservationDto.name();
+        String date = reservationDto.date();
+        String time = reservationDto.time();
+        return new Reservation(id, name, date, time);
+    }
 
-//    @DeleteMapping("/{id}")
-//    public void deleteReservationById(@PathVariable("id") long id) {
-//        Reservation findReservation = reservations.stream()
-//                .filter(reservation -> reservation.getId() == id)
-//                .findAny()
-//                .orElseThrow(() -> new NoSuchElementException("id에 해당하는 예약을 찾을 수 없습니다: " + id));
-//        reservations.remove(findReservation);
-//    }
+    @GetMapping("/reservations")
+    public ResponseEntity<List<Reservation>> getAllReservations() {
+        return ResponseEntity.ok(reservationService.getAllReservations());
+    }
+
+    @DeleteMapping("/reservations/{id}")
+    public ResponseEntity<Void> deleteReservationById(@PathVariable("id") long id) {
+        reservationService.deleteReservationWithId(id);
+        return ResponseEntity.noContent().build();
+    }
 }

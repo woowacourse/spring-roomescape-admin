@@ -17,15 +17,15 @@ public class ReservationService {
         this.reservationRepository = reservationRepository;
     }
 
-    public void addReservation(ReservationDto reservationDto) {
-        reservationRepository.insert(reservationDto);
-    }
-
-    public Integer countReservations() {
-        return reservationRepository.count();
+    public long addReservation(ReservationDto reservationDto) {
+        return reservationRepository.insert(reservationDto);
     }
 
     public List<Reservation> getAllReservations() {
         return reservationRepository.readAll();
+    }
+
+    public void deleteReservationWithId(long id) {
+        reservationRepository.delete(id);
     }
 }

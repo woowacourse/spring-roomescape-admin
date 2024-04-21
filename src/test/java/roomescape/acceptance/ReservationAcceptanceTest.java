@@ -8,6 +8,7 @@ import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.web.server.LocalServerPort;
 
+import java.time.LocalDate;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -23,7 +24,7 @@ class ReservationAcceptanceTest {
         RestAssured.port = port;
     }
 
-    @DisplayName("저장된 예약 리스트를 조회한다.")
+    @DisplayName("저장된 예약 리스트를 조회한다")
     @Test
     void reservationsTest() {
         RestAssured.given().log().all()
@@ -38,7 +39,7 @@ class ReservationAcceptanceTest {
                 .body("size()", is(0));
     }
 
-    @DisplayName("지정한 예약을 추가하고 삭제한다.")
+    @DisplayName("예약을 추가하고 삭제한다")
     @Test
     void reservationAddRemoveTest() {
         Map<String, String> params = new HashMap<>();

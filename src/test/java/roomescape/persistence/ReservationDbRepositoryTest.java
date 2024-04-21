@@ -32,7 +32,6 @@ class ReservationDbRepositoryTest implements ReservationRepositoryTest {
 
     @BeforeEach
     void setUp() {
-        jdbcTemplate.execute("TRUNCATE TABLE reservation");
         String insertTimeSql = "INSERT INTO reservation_time (start_at) VALUES (?)";
         jdbcTemplate.update(insertTimeSql, Time.valueOf(MIA_RESERVATION_TIME));
     }

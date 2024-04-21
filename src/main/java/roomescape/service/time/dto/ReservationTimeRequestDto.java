@@ -2,15 +2,14 @@ package roomescape.service.time.dto;
 
 import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonCreator.Mode;
-import java.time.LocalTime;
 import roomescape.domain.ReservationTime;
 
 public class ReservationTimeRequestDto {
 
-    private final LocalTime startAt;
+    private final String startAt;
 
     @JsonCreator(mode = Mode.PROPERTIES)
-    public ReservationTimeRequestDto(LocalTime startAt) {
+    public ReservationTimeRequestDto(String startAt) {
         this.startAt = startAt;
     }
 

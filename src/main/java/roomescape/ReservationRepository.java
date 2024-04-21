@@ -16,7 +16,7 @@ public class ReservationRepository {
     @Autowired
     private JdbcTemplate jdbcTemplate;
 
-    public Long add(RequestReservation requestReservation) {
+    public Long add(RequestReservation requestReservation) { //  TODO DTO 를 Repository 까지 보내는게 맞을까??
         SimpleJdbcInsert simpleJdbcInsert = new SimpleJdbcInsert(jdbcTemplate)
                 .withTableName("RESERVATION")
                 .usingGeneratedKeyColumns("id");

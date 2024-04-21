@@ -1,6 +1,6 @@
 package roomescape;
 
-public class Reservation {
+public class Reservation { // TODO final 적용
 
     private Long id;
     private String name;

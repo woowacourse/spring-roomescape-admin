@@ -1,4 +1,4 @@
-package roomescape;
+package roomescape.times;
 
 import io.restassured.RestAssured;
 import io.restassured.http.ContentType;
@@ -15,7 +15,7 @@ import static org.hamcrest.Matchers.is;
 
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 @DirtiesContext(classMode = DirtiesContext.ClassMode.BEFORE_EACH_TEST_METHOD)
-public class CrudTest {
+public class ApiTest {
 
     @LocalServerPort
     int port;
@@ -26,56 +26,45 @@ public class CrudTest {
     }
 
     @Test
-    void 예약자를_추가한다() {
+    void 시간을_추가한다() {
+        addTime();
         RestAssured.given().log().all()
-                .when().get("/reservations")
-                .then().log().all()
-                .statusCode(200)
-                .body("size()", is(0));
-
-        addReservation();
-
-        RestAssured.given().log().all()
-                .when().get("/reservations")
+                .when().get("/times")
                 .then().log().all()
                 .statusCode(200)
                 .body("size()", is(1));
     }
 
     @Test
-    void 예약자를_삭제한다() {
-        addReservation();
-
+    void 시간을_삭제한다() {
+        addTime();
         RestAssured.given().log().all()
-                .when().get("/reservations")
+                .when().get("/times")
                 .then().log().all()
                 .statusCode(200)
                 .body("size()", is(1));
 
-
         RestAssured.given().log().all()
-                .when().delete("/reservations/1")
+                .when().delete("/times/1")
                 .then().log().all()
-                .statusCode(204);
+                .statusCode(200);
 
         RestAssured.given().log().all()
-                .when().get("/reservations")
+                .when().get("/times")
                 .then().log().all()
                 .statusCode(200)
                 .body("size()", is(0));
     }
 
-    private void addReservation() {
+    private static void addTime() {
         Map<String, String> params = new HashMap<>();
-        params.put("name", "브라운");
-        params.put("date", "2023-08-05");
-        params.put("time", "15:40");
+        params.put("startAt", "10:00");
 
         RestAssured.given().log().all()
                 .contentType(ContentType.JSON)
                 .body(params)
-                .when().post("/reservations")
+                .when().post("/times")
                 .then().log().all()
-                .statusCode(201);
+                .statusCode(200);
     }
 }

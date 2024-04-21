@@ -1,24 +1,12 @@
 package roomescape.acceptance;
 
 import io.restassured.RestAssured;
-import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
-import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.boot.test.context.SpringBootTest.WebEnvironment;
-import org.springframework.boot.test.web.server.LocalServerPort;
+import roomescape.support.AcceptanceTest;
 
-@SpringBootTest(webEnvironment = WebEnvironment.RANDOM_PORT)
-class AdminAcceptanceTest {
+class AdminAcceptanceTest extends AcceptanceTest {
     private static final String PATH = "/admin";
-
-    @LocalServerPort
-    private int port;
-
-    @BeforeEach
-    void setUp() {
-        RestAssured.port = port;
-    }
 
     @DisplayName("[1단계 - 홈 화면] 관리자 메인 페이지를 응답한다")
     @Test

@@ -12,20 +12,17 @@ import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Map;
-import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.mock.mockito.SpyBean;
-import org.springframework.boot.test.web.server.LocalServerPort;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.test.annotation.DirtiesContext;
 import roomescape.dto.ReservationResponse;
+import roomescape.support.AcceptanceTest;
 
-@SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 @DirtiesContext(classMode = DirtiesContext.ClassMode.BEFORE_EACH_TEST_METHOD)
-class ReservationAcceptanceTest { // todo dynamic test
+class ReservationAcceptanceTest extends AcceptanceTest { // todo dynamic test
     private static final String PATH = "/reservations";
 
     @Autowired
@@ -33,15 +30,6 @@ class ReservationAcceptanceTest { // todo dynamic test
 
     @SpyBean
     private Clock clock;
-
-    @LocalServerPort
-    private int port;
-
-    @BeforeEach
-    void setUp() {
-        RestAssured.port = port;
-    }
-
 
     @DisplayName("[2단계 - 예약 조회]")
     @Test

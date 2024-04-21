@@ -23,7 +23,8 @@ public class ReservationTimeService {
 
     public ReservationTimeResponseDto addTime(ReservationTimeRequestDto reservationTimeDto) {
         long id = reservationTimeDao.save(reservationTimeDto);
-        return new ReservationTimeResponseDto(id, reservationTimeDto.getStartAt());
+        ReservationTime reservationTime = reservationTimeDao.findById(id);
+        return ReservationTimeResponseDto.from(reservationTime);
     }
 
     public void deleteTime(long id) {

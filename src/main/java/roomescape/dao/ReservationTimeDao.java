@@ -28,6 +28,15 @@ public class ReservationTimeDao {
         return jdbcTemplate.query(sql, rowMapper);
     }
 
+    public ReservationTime findById(long id) {
+        String sql = "SELECT id, start_at FROM reservation_time WHERE id = ?";
+        RowMapper<ReservationTime> rowMapper = (resultSet, rowNum) -> new ReservationTime(
+                resultSet.getInt("id"),
+                resultSet.getTime("start_at").toLocalTime()
+        );
+        return jdbcTemplate.queryForObject(sql, rowMapper, id);
+    }
+
     public long save(ReservationTimeRequestDto reservationTimeDto) {
         String sql = "INSERT INTO reservation_time(start_at) VALUES (?)";
         KeyHolder keyHolder = new GeneratedKeyHolder();

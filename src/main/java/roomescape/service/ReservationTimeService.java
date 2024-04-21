@@ -1,11 +1,11 @@
-package roomescape.application.service;
+package roomescape.service;
 
 import java.util.List;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import roomescape.application.request.CreateReservationTimeRequest;
 import roomescape.domain.ReservationTime;
 import roomescape.domain.ReservationTimeRepository;
+import roomescape.service.request.CreateReservationTimeRequest;
 
 @Service
 @Transactional(readOnly = true)

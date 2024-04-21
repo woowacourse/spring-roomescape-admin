@@ -2,7 +2,7 @@ package roomescape.controller.request;
 
 import java.time.LocalTime;
 import jakarta.validation.constraints.NotNull;
-import roomescape.application.request.CreateReservationTimeRequest;
+import roomescape.service.request.CreateReservationTimeRequest;
 
 public record CreateReservationTimeWebRequest(
 

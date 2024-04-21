@@ -1,9 +1,13 @@
 package roomescape.controller;
 
 import java.sql.Time;
+import java.util.List;
 import org.springframework.http.HttpStatus;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;
+import org.springframework.web.bind.annotation.DeleteMapping;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -17,7 +21,7 @@ import roomescape.dto.TimeRequest;
 public class TimeController {
 
     private final JdbcTemplate jdbcTemplate;
-    private final RowMapper<ReservationTime> rowMapper = (rs, rowNum) ->
+    private final RowMapper<ReservationTime> actorRowMapper = (rs, rowNum) ->
             new ReservationTime(
                     rs.getLong("id"),
                     rs.getTime("start_at").toLocalTime());
@@ -31,5 +35,12 @@ public class TimeController {
     public void add(@RequestBody final TimeRequest timeRequest) {
         String sql = "INSERT INTO reservation_time (start_at) VALUES (?)";
         jdbcTemplate.update(sql, Time.valueOf(timeRequest.startAt()));
+    }
+
+    @GetMapping
+    @ResponseStatus(HttpStatus.OK)
+    public List<ReservationTime> findAll() {
+        String sql = "SELECT * FROM reservation_time";
+        return jdbcTemplate.query(sql, actorRowMapper);
     }
 }

@@ -24,8 +24,8 @@ public class ReservationApiController {
     private AtomicLong index = new AtomicLong(START_INDEX);
 
     @GetMapping("/reservations")
-    public List<Reservation> findAll() {
-        return reservations;
+    public ResponseEntity<List<Reservation>> findAll() {
+        return ResponseEntity.ok().body(reservations);
     }
 
     @PostMapping("/reservations")

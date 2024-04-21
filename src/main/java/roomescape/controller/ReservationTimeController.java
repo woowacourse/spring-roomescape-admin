@@ -11,37 +11,32 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import roomescape.dto.ReservationTimeDto;
-import roomescape.entity.ReservationTime;
-import roomescape.dao.ReservationTimeDao;
+import roomescape.service.ReservationTimeService;
 
 @Controller
 public class ReservationTimeController {
 
     @Autowired
-    private ReservationTimeDao reservationTimeDao;
+    private ReservationTimeService reservationTimeService;
 
     @GetMapping("/times")
     public ResponseEntity<List<ReservationTimeDto>> times() {
-        List<ReservationTime> times = reservationTimeDao.findAllReservationTimes();
-        List<ReservationTimeDto> responseBody = times.stream()
-                .map(ReservationTimeDto::from)
-                .toList();
+        List<ReservationTimeDto> responseBody = reservationTimeService.findTimes();
         return ResponseEntity.ok(responseBody);
     }
 
     @PostMapping("/times")
     public ResponseEntity<ReservationTimeDto> addTime(@RequestBody ReservationTimeDto reservationTimeDto) {
-        long id = reservationTimeDao.save(reservationTimeDto);
-        ReservationTimeDto responseBody = new ReservationTimeDto(id, reservationTimeDto.getStartAt());
+        ReservationTimeDto responseBody = reservationTimeService.addTime(reservationTimeDto);
         // TODO: dto를 그대로 응답하는 것 괜찮을까?
         return ResponseEntity
-                .created(URI.create("/time/" + id))
+                .created(URI.create("/time/" + responseBody.getId()))
                 .body(responseBody);
     }
 
     @DeleteMapping("/times/{id}")
     public ResponseEntity<Void> deleteTime(@PathVariable("id") long id) {
-        reservationTimeDao.delete(id);
+        reservationTimeService.deleteTime(id);
         return ResponseEntity.noContent().build();
     }
 }

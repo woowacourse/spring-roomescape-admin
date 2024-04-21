@@ -1,5 +1,7 @@
 package roomescape.controller;
 
+import java.util.List;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -19,7 +21,12 @@ public class TimeController {
     }
 
     @PostMapping
-    public TimeResponse create(@RequestBody TimeRequest timeRequest) {
+    public TimeResponse createTime(@RequestBody TimeRequest timeRequest) {
         return timeService.createTime(timeRequest);
+    }
+
+    @GetMapping
+    public List<TimeResponse> getAllTimes() {
+        return timeService.getAllTimes();
     }
 }

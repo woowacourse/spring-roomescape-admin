@@ -4,6 +4,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;
+import org.springframework.jdbc.support.GeneratedKeyHolder;
+import org.springframework.jdbc.support.KeyHolder;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -12,16 +14,13 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
 import roomescape.domain.Reservation;
 
-import java.sql.ResultSet;
-import java.util.ArrayList;
-import java.util.Collections;
+import java.net.URI;
+import java.sql.Connection;
+import java.sql.PreparedStatement;
 import java.util.List;
-import java.util.concurrent.atomic.AtomicLong;
 
 @RestController
 public class ReservationController {
-    private final List<Reservation> reservations = Collections.synchronizedList(new ArrayList<>());
-    private final AtomicLong index = new AtomicLong(1);
     @Autowired
     private JdbcTemplate jdbcTemplate;
 
@@ -35,7 +34,6 @@ public class ReservationController {
         return reservation;
     };
 
-
     @GetMapping("/reservations")
     public ResponseEntity<List<Reservation>> getReservationDatum() {
         List<Reservation> reservations = jdbcTemplate.query("SELECT * FROM reservation", reservationRowMapper);
@@ -45,18 +43,33 @@ public class ReservationController {
 
     @PostMapping("/reservations")
     public ResponseEntity<Reservation> addReservationData(@RequestBody final Reservation request) {
-        Reservation reservation = new Reservation(index.getAndIncrement(), request);
-        reservations.add(reservation);
+        String sql = "INSERT INTO reservation (name, date, time) VALUES (?,?,?)";
+        KeyHolder keyHolder = new GeneratedKeyHolder();
 
-        return ResponseEntity.ok(reservation);
+        jdbcTemplate.update((Connection con) -> {
+            PreparedStatement preparedStatement = con.prepareStatement(sql, PreparedStatement.RETURN_GENERATED_KEYS);
+            preparedStatement.setString(1, request.getName());
+            preparedStatement.setString(2, request.getDate());
+            preparedStatement.setString(3, request.getTime());
+
+            return preparedStatement;
+        }, keyHolder);
+
+        Long id = keyHolder.getKey().longValue();
+        return ResponseEntity.created(URI.create("/reservations/" + id))
+                .body(new Reservation(id, request));
+
+
     }
 
     @DeleteMapping("/reservations/{id}")
     public ResponseEntity<Void> deleteReservationsData(@PathVariable final Long id) {
-        boolean isRemoved = reservations.removeIf(reservation -> reservation.getId().equals(id));
-        if (isRemoved) {
-            return ResponseEntity.ok().build();
+        String sql = "DELETE FROM reservation WHERE id = (?)";
+        int updateCount = jdbcTemplate.update(sql, id);
+
+        if (updateCount == 0) {
+            return ResponseEntity.notFound().build();
         }
-        return ResponseEntity.notFound().build();
+        return ResponseEntity.noContent().build();
     }
 }

@@ -22,4 +22,16 @@ public class ReservationRequestDto {
         return new Reservation(null, new Name(name), new ReservationDate(date), new ReservationTime(timeId,
                 (LocalTime) null));
     }
+
+    public String getName() {
+        return name;
+    }
+
+    public String getDate() {
+        return date;
+    }
+
+    public long getTimeId() {
+        return timeId;
+    }
 }

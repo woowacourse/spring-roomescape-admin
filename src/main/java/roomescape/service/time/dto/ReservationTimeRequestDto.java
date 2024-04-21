@@ -16,4 +16,8 @@ public class ReservationTimeRequestDto {
     public ReservationTime toReservationTime() {
         return new ReservationTime(null, startAt);
     }
+
+    public String getStartAt() {
+        return startAt;
+    }
 }

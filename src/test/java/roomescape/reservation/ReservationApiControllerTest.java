@@ -20,9 +20,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.dao.DataAccessException;
-import org.springframework.dao.DataAccessResourceFailureException;
 import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
+import roomescape.time.Time;
 
 @DisplayName("예약 API 컨트롤러")
 @WebMvcTest(ReservationApiController.class)
@@ -37,8 +37,9 @@ class ReservationApiControllerTest {
     @Test
     public void findAllTest() throws Exception {
         // given
-        Reservation reservation1 = new Reservation(1L, "브라운", "2024-08-05", "10:00");
-        Reservation reservation2 = new Reservation(2L, "솔라", "2024-08-05", "10:00");
+        Time time = new Time(1L, "10:00");
+        Reservation reservation1 = new Reservation(1L, "브라운", "2024-08-05", time);
+        Reservation reservation2 = new Reservation(2L, "솔라", "2024-08-05", time);
         List<Reservation> reservations = List.of(reservation1, reservation2);
 
         // when
@@ -57,24 +58,30 @@ class ReservationApiControllerTest {
         @Autowired
         private ObjectMapper objectMapper;
 
-        @DisplayName("예약 정보를 저장 성공 시 201 응답을 받고 Location 응답 헤더를 받는다.")
+        @DisplayName("예약 정보를 저장 성공 시 200 응답을 받고 Location 응답 헤더를 받는다.")
         @Test
         public void createSuccessTest() throws Exception {
             // given
-            ReservationRequest reservationRequest = new ReservationRequest("브라운", "2024-08-05", "10:00");
-            Long id = 1L;
+            Time time = new Time(5L, "10:00");
+            ReservationRequest reservationRequest = new ReservationRequest("브라운", "2024-08-05", time.getId());
+            Reservation reservation = new Reservation(1L, reservationRequest.getName(), reservationRequest.getDate(),
+                    time);
 
             // when
-            doReturn(id).when(reservationService)
+            doReturn(reservation).when(reservationService)
                     .save(any(ReservationRequest.class));
 
             // then
             mockMvc.perform(post("/reservations")
                             .contentType(MediaType.APPLICATION_JSON)
                             .content(objectMapper.writeValueAsString(reservationRequest)))
-                    .andExpect(status().isCreated())
+                    .andExpect(status().isOk())
                     .andExpect(header().string("Location", "/reservations/1"))
-                    .andExpect(jsonPath("$.id").value(id));
+                    .andExpect(jsonPath("$.id").value(reservation.getId()))
+                    .andExpect(jsonPath("$.name").value(reservation.getName()))
+                    .andExpect(jsonPath("$.date").value(reservation.getDate()))
+                    .andExpect(jsonPath("$.time.id").value(time.getId()))
+                    .andExpect(jsonPath("$.time.startAt").value(time.getStartAt()));
         }
 
         @DisplayName("예약 정보를 저장 실패 시 400 응답을 받는다.")
@@ -99,7 +106,7 @@ class ReservationApiControllerTest {
     @Nested
     class deleteTest {
 
-        @DisplayName("예약 정보 삭제 성공시 204 응답을 받는다.")
+        @DisplayName("예약 정보 삭제 성공시 200 응답을 받는다.")
         @Test
         public void deleteByIdSuccessTest() throws Exception {
             // given && when
@@ -109,7 +116,7 @@ class ReservationApiControllerTest {
             // then
             mockMvc.perform(delete("/reservations/{id}", 1L)
                             .contentType(MediaType.APPLICATION_JSON))
-                    .andExpect(status().isNoContent());
+                    .andExpect(status().isOk());
         }
 
         @DisplayName("예약 정보 삭제 실패시 400 응답을 받는다.")

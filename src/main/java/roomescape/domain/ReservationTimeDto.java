@@ -2,12 +2,12 @@ package roomescape.domain;
 
 import java.util.Objects;
 
-public class Times {
+public class ReservationTimeDto {
 
     private final Long id;
     private final String startAt;
 
-    public Times(Long id, String startAt) {
+    public ReservationTimeDto(Long id, String startAt) {
         this.id = id;
         this.startAt = startAt;
     }
@@ -24,8 +24,8 @@ public class Times {
     public boolean equals(Object o) {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
-        Times times = (Times) o;
-        return Objects.equals(id, times.id) && Objects.equals(startAt, times.startAt);
+        ReservationTimeDto reservationTimeDto = (ReservationTimeDto) o;
+        return Objects.equals(id, reservationTimeDto.id) && Objects.equals(startAt, reservationTimeDto.startAt);
     }
 
     @Override

@@ -5,21 +5,21 @@ public class Reservation { // TODO final 적용
     private Long id;
     private String name;
     private String date;
-    private String time;
+    private ReservationTimeDto reservationTimeDto;
 
     public Reservation() {
 
     }
 
-    public Reservation(Long id, String name, String date, String time) {
+    public Reservation(Long id, String name, String date, ReservationTimeDto reservationTimeDto) {
         this.id = id;
         this.name = name;
         this.date = date;
-        this.time = time;
+        this.reservationTimeDto = reservationTimeDto;
     }
 
     public Reservation(Reservation reservation, Long id) {
-        this(id, reservation.getName(), reservation.getDate(), reservation.getTime());
+        this(id, reservation.getName(), reservation.getDate(), reservation.getReservationTime());
     }
 
     public Long getId() {
@@ -34,17 +34,17 @@ public class Reservation { // TODO final 적용
         return date;
     }
 
-    public String getTime() {
-        return time;
+    public ReservationTimeDto getReservationTime() {
+        return reservationTimeDto;
     }
 
     @Override
     public String toString() {
-        return "ReservationInfo{" +
+        return "Reservation{" +
                 "id=" + id +
                 ", name='" + name + '\'' +
                 ", date='" + date + '\'' +
-                ", time='" + time + '\'' +
+                ", reservationTime=" + reservationTimeDto +
                 '}';
     }
 }

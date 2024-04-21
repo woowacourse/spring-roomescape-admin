@@ -30,10 +30,10 @@
   - [X] : 응답으로 200 코드를 반환한다.
 
 ## step8
-- [ ] : 예약 기능에서 시간을 시간 테이블에 저장된 값만 선택할 수 있도록 수정한다.
-- [ ] : 변경된 API 명세 반영한다.
+- [X] : 예약 기능에서 시간을 시간 테이블에 저장된 값만 선택할 수 있도록 수정한다.
+- [X] : 변경된 API 명세 반영한다.
 - [X] : 예약 페이지 파일을 변경한다. reservation-legacy.html -> reservation.html  
-- [ ] : 외래키 지정을 통해 reservation 테이블과 reservation_time 테이블의 관계를 설정한다.
-- [ ] : 예약 클래스 시간 타입을 String 에서 ReservationTime으로 변경한다.
-- [ ] : 예약 추가 시, 시간을 문자열(ex. "10:00") 형태로 입력하던 부분을 ReservationTime의 식별자(ex. 1)로 수정한다.
-- [ ] : 예약 조회 시, ReservationTime 정보도 함께 조회하도록 수정한다.
+- [X] : 외래키 지정을 통해 reservation 테이블과 reservation_time 테이블의 관계를 설정한다.
+- [X] : 예약 클래스 시간 타입을 String 에서 ReservationTime으로 변경한다.
+- [X] : 예약 추가 시, 시간을 문자열(ex. "10:00") 형태로 입력하던 부분을 ReservationTime의 식별자(ex. 1)로 수정한다.
+- [X] : 예약 조회 시, ReservationTime 정보도 함께 조회하도록 수정한다.

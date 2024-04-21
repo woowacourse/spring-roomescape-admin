@@ -1,10 +1,10 @@
 package roomescape.dto;
 
-import roomescape.domain.Times;
+import roomescape.domain.ReservationTimeDto;
 
 public record ResponseTimes(Long id, String startAt) {
 
-    public ResponseTimes(Times times) {
-        this(times.getId(), times.getStartAt());
+    public ResponseTimes(ReservationTimeDto reservationTimeDto) {
+        this(reservationTimeDto.getId(), reservationTimeDto.getStartAt());
     }
 }

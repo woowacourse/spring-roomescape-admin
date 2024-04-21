@@ -53,7 +53,12 @@ public class MissionStepTest {
         Map<String, String> params = new HashMap<>();
         params.put("name", "브라운");
         params.put("date", "2023-08-05");
-        params.put("time", "15:40");
+        params.put("timeId", "1");
+
+        RestAssured.given().log().all() // 추가한 부분
+                .contentType(ContentType.JSON)
+                .body(Map.of("startAt", "15:40"))
+                .when().post("/times");
 
         RestAssured.given().log().all()
                 .contentType(ContentType.JSON)
@@ -94,8 +99,13 @@ public class MissionStepTest {
 
     @Test
     void 오단계() {
-        jdbcTemplate.update("INSERT INTO reservation (name, date, time) VALUES (?, ?, ?)", "브라운", "2023-08-05",
-                "15:40");
+        RestAssured.given().log().all() // 추가한 부분
+                .contentType(ContentType.JSON)
+                .body(Map.of("startAt", "15:40"))
+                .when().post("/times");
+
+        jdbcTemplate.update("INSERT INTO reservation (name, date, time_id) VALUES (?, ?, ?)", "브라운", "2023-08-05",
+                "1");
 
         List<Reservation> reservations = RestAssured.given().log().all()
                 .when().get("/reservations")
@@ -113,7 +123,12 @@ public class MissionStepTest {
         Map<String, String> params = new HashMap<>();
         params.put("name", "브라운");
         params.put("date", "2023-08-05");
-        params.put("time", "10:00");
+        params.put("timeId", "1");
+
+        RestAssured.given().log().all() // 추가한 부분
+                .contentType(ContentType.JSON)
+                .body(Map.of("startAt", "15:40"))
+                .when().post("/times");
 
         RestAssured.given().log().all()
                 .contentType(ContentType.JSON)
@@ -172,12 +187,17 @@ public class MissionStepTest {
         reservation.put("date", "2023-08-05");
         reservation.put("timeId", 1);
 
+        RestAssured.given().log().all() // 추가한 부분
+                .contentType(ContentType.JSON)
+                .body(Map.of("startAt", "15:40"))
+                .when().post("/times");
+
         RestAssured.given().log().all()
                 .contentType(ContentType.JSON)
                 .body(reservation)
                 .when().post("/reservations")
                 .then().log().all()
-                .statusCode(200);
+                .statusCode(201); // 요구사항 200 OK -> 201 Created 변경하였음.
 
         RestAssured.given().log().all()
                 .when().get("/reservations")

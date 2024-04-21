@@ -5,6 +5,7 @@ import java.util.List;
 import java.util.Objects;
 import java.util.Optional;
 import java.util.concurrent.atomic.AtomicLong;
+import java.util.stream.Collectors;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -16,6 +17,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import roomescape.domain.Reservation;
 import roomescape.dto.ReservationCreateRequest;
+import roomescape.dto.ReservationResponse;
 
 @RestController
 @RequestMapping("reservations")
@@ -25,13 +27,17 @@ public class ReservationController {
     private final AtomicLong index = new AtomicLong(1);
 
     @GetMapping
-    public ResponseEntity<List<Reservation>> reservations() {
+    public ResponseEntity<List<ReservationResponse>> reservations() {
+        List<ReservationResponse> reservationResponses = reservations.stream()
+                .map(ReservationResponse::toResponse)
+                .collect(Collectors.toList());
+
         return ResponseEntity.ok()
-                .body(reservations);
+                .body(reservationResponses);
     }
 
     @PostMapping
-    public ResponseEntity<Reservation> createReservation(@RequestBody ReservationCreateRequest reservationCreateRequest) {
+    public ResponseEntity<ReservationResponse> createReservation(@RequestBody ReservationCreateRequest reservationCreateRequest) {
         Reservation reservation = new Reservation(
                 index.getAndIncrement(),
                 reservationCreateRequest.name(),
@@ -40,7 +46,7 @@ public class ReservationController {
 
         reservations.add(reservation);
         return ResponseEntity.ok()
-                .body(reservation);
+                .body(ReservationResponse.toResponse(reservation));
     }
 
     @DeleteMapping("/{id}")

@@ -1,8 +1,11 @@
 package roomescape.domain;
 
 import java.time.LocalTime;
+import java.time.format.DateTimeFormatter;
 
 public class Time {
+
+    private static final DateTimeFormatter TIME_FORMATTER = DateTimeFormatter.ofPattern("HH:mm");
 
     private final Long id;
     private final LocalTime startAt;
@@ -12,11 +15,11 @@ public class Time {
         this.startAt = startAt;
     }
 
-    public Long getId() {
-        return id;
+    public String toStringStartAt() {
+        return startAt.format(TIME_FORMATTER);
     }
 
-    public LocalTime getStartAt() {
-        return startAt;
+    public Long getId() {
+        return id;
     }
 }

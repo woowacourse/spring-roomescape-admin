@@ -16,7 +16,7 @@ public class TimeDto {
     public static TimeDto from(Time time) {
         return new TimeDto(
                 time.getId(),
-                time.getStartAt().toString()
+                time.toStringStartAt()
         );
     }
 

@@ -25,8 +25,8 @@ public class ReservationDto {
         return new ReservationDto(
                 reservation.getId(),
                 reservation.getName(),
-                reservation.getDate().toString(),
-                reservation.getTime().toString()
+                reservation.toStringDate(),
+                reservation.toStringTime()
         );
     }
 

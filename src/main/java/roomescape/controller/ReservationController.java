@@ -3,6 +3,7 @@ package roomescape.controller;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
+import java.util.Optional;
 import java.util.concurrent.atomic.AtomicLong;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -44,18 +45,16 @@ public class ReservationController {
 
     @DeleteMapping("/{id}")
     public ResponseEntity<String> deleteReservation(@PathVariable Long id) {
-        Reservation reservation;
-        try {
-            reservation = reservations.stream()
-                    .filter(it -> Objects.equals(it.getId(), id))
-                    .findFirst()
-                    .orElseThrow(() ->
-                            new RuntimeException("삭제할 예약이 존재하지 않습니다.")
-                    );
+        Optional<Reservation> foundReservation = reservations.stream()
+                .filter(it -> Objects.equals(it.getId(), id))
+                .findFirst();
+
+        if (foundReservation.isEmpty()) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND)
+                    .body("삭제할 예약이 존재하지 않습니다.");
         }
-        catch (RuntimeException e) {
-            return ResponseEntity.status(HttpStatus.NOT_FOUND).body("삭제할 예약이 존재하지 않습니다.");
-        }
+
+        Reservation reservation = foundReservation.get();
         reservations.remove(reservation);
         return ResponseEntity.ok()
                 .build();

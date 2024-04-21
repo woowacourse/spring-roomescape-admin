@@ -27,7 +27,7 @@ class TimeControllerTest {
     void setUp() {
         RestAssured.port = port;
         String startAt = "15:40";
-        timeDto = new TimeDto(null, startAt);
+        timeDto = TimeDto.of(null, startAt);
     }
 
     @Test

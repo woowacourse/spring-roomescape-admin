@@ -1,12 +1,14 @@
 package roomescape.dao;
 
 import java.sql.PreparedStatement;
+import java.time.LocalTime;
 import java.util.List;
 import java.util.Objects;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.support.GeneratedKeyHolder;
 import org.springframework.jdbc.support.KeyHolder;
 import org.springframework.stereotype.Component;
+import roomescape.domain.Time;
 import roomescape.dto.TimeDto;
 
 @Component
@@ -18,21 +20,24 @@ public class TimeDao {
         this.jdbcTemplate = jdbcTemplate;
     }
 
-    public List<TimeDto> findAll() {
+    public List<Time> findAll() {
         String sql = "SELECT id, start_at FROM reservation_time";
-        return jdbcTemplate.query(sql, (resultSet, rowNum) -> new TimeDto(
-                resultSet.getLong("id"),
-                resultSet.getString("start_at")
-        ));
+        return jdbcTemplate.query(
+                sql,
+                (resultSet, rowNum) -> new Time(
+                        resultSet.getLong("id"),
+                        LocalTime.parse(resultSet.getString("start_at"))
+                )
+        );
     }
 
-    public TimeDto findById(long id) {
+    public Time findById(long id) {
         String sql = "SELECT id, start_at FROM reservation_time WHERE id = ?";
         return jdbcTemplate.queryForObject(
                 sql,
-                (resultSet, rowNum) -> new TimeDto(
+                (resultSet, rowNum) -> new Time(
                         resultSet.getLong("id"),
-                        resultSet.getString("start_at")
+                        LocalTime.parse(resultSet.getString("start_at"))
                 ),
                 id);
     }

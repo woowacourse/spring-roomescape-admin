@@ -1,15 +1,27 @@
 package roomescape.dto;
 
 import java.util.Objects;
+import roomescape.domain.Time;
 
 public class TimeDto {
 
     private final Long id;
     private final String startAt;
 
-    public TimeDto(Long id, String startAt) {
+    private TimeDto(Long id, String startAt) {
         this.id = id;
         this.startAt = startAt;
+    }
+
+    public static TimeDto from(Time time) {
+        return new TimeDto(
+                time.getId(),
+                time.getStartAt().toString()
+        );
+    }
+
+    public static TimeDto of(Long id, String startAt) {
+        return new TimeDto(id, startAt);
     }
 
     public Long getId() {

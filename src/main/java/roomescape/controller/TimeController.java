@@ -11,6 +11,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import roomescape.dao.TimeDao;
+import roomescape.domain.Time;
 import roomescape.dto.TimeDto;
 
 @RestController
@@ -25,15 +26,20 @@ public class TimeController {
 
     @GetMapping
     public ResponseEntity<List<TimeDto>> findAll() {
-        List<TimeDto> results = timeDao.findAll();
+        List<Time> allTimes = timeDao.findAll();
+        List<TimeDto> results = allTimes.stream()
+                .map(TimeDto::from)
+                .toList();
         return ResponseEntity.ok(results);
     }
 
     @PostMapping
     public ResponseEntity<TimeDto> create(@RequestBody TimeDto timeDto) {
         long id = timeDao.add(timeDto);
+        Time time = timeDao.findById(id);
+        TimeDto result = TimeDto.from(time);
         return ResponseEntity.created(URI.create("/times/" + id))
-                .body(timeDao.findById(id));
+                .body(result);
     }
 
     @DeleteMapping("/{id}")

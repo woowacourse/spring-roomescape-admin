@@ -3,9 +3,9 @@ package roomescape.service;
 import java.util.List;
 import org.springframework.stereotype.Service;
 import roomescape.dao.ReservationDao;
-import roomescape.dto.ReservationResponseDto;
+import roomescape.dto.ReservationResponse;
 import roomescape.domain.Reservation;
-import roomescape.dto.ReservationRequestDto;
+import roomescape.dto.ReservationRequest;
 
 @Service
 public class ReservationService {
@@ -16,16 +16,15 @@ public class ReservationService {
         this.reservationDao = reservationDao;
     }
 
-    public List<ReservationResponseDto> getAllReservations() {
-        List<Reservation> reservations = reservationDao.getAll();
-        return reservations.stream()
-                .map(ReservationResponseDto::new)
-                .toList();
+    public ReservationResponse createReservation(ReservationRequest reservationRequest) {
+        Reservation reservation = reservationRequest.toReservation();
+        long id = reservationDao.create(reservation);
+        return ReservationResponse.toResponse(id, reservationRequest);
     }
 
-    public ReservationResponseDto addReservation(ReservationRequestDto reservationRequestDto) {
-        long id = reservationDao.add(reservationRequestDto);
-        return new ReservationResponseDto(id, reservationRequestDto);
+    public List<ReservationResponse> getAllReservations() {
+        List<Reservation> reservations = reservationDao.getAll();
+        return ReservationResponse.toResponses(reservations);
     }
 
     public void deleteReservation(long id) {

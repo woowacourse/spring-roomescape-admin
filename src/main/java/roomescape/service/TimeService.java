@@ -17,16 +17,14 @@ public class TimeService {
     }
 
     public TimeResponse createTime(TimeRequest timeRequest) {
-        Time time = new Time(timeRequest);
+        Time time = timeRequest.toTime();
         long id = timeDao.create(time);
-        return new TimeResponse(id, timeRequest);
+        return TimeResponse.toResponse(id, timeRequest);
     }
 
     public List<TimeResponse> getAllTimes() {
         List<Time> times = timeDao.getAll();
-        return times.stream()
-                .map(TimeResponse::new)
-                .toList();
+        return TimeResponse.toResponses(times);
     }
 
     public void deleteTime(long id) {

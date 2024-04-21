@@ -21,7 +21,7 @@ public class ReservationMapper {
                 null,
                 requestDto.getName(),
                 requestDto.getDate(),
-                reservationTime.getStartAt()
+                reservationTime
         );
     }
 }

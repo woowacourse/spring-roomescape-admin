@@ -38,7 +38,7 @@
 - [x] `GET /admin/time` 요청 시, 시간 관리 페이지를 응답한다.
 - [x] `POST /times` 요청 시, 시간을 추가한다.
 - [x] `GET /times` 요청 시, 시간을 조회한다.
-- [ ] `DELETE /times/{id}` 요청 시, 시간을 삭제한다.
+- [x] `DELETE /times/{id}` 요청 시, 시간을 삭제한다.
 
 ---
 

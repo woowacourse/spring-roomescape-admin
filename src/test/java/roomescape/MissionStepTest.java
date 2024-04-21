@@ -150,9 +150,9 @@ public class MissionStepTest {
                 .statusCode(200)
                 .body("size()", is(1));
 
-//        RestAssured.given().log().all()
-//                .when().delete("/times/1")
-//                .then().log().all()
-//                .statusCode(200);
+        RestAssured.given().log().all()
+                .when().delete("/times/1")
+                .then().log().all()
+                .statusCode(200);
     }
 }

@@ -28,4 +28,8 @@ public class TimeService {
                 .map(TimeResponse::new)
                 .toList();
     }
+
+    public void deleteTime(long id) {
+        timeDao.delete(id);
+    }
 }

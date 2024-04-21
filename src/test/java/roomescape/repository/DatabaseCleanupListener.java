@@ -15,18 +15,18 @@ public class DatabaseCleanupListener extends AbstractTestExecutionListener {
 
     @Override
     public void beforeTestMethod(TestContext testContext) throws Exception {
-        JdbcTemplate jdbc = getJdbcTemplateBean(testContext);
-        List<String> queries = jdbc.queryForList(sql, String.class);
-        execute(queries, jdbc);
+        JdbcTemplate jdbcTemplate = getJdbcTemplateBean(testContext);
+        List<String> queries = jdbcTemplate.queryForList(sql, String.class);
+        execute(queries, jdbcTemplate);
     }
 
     private JdbcTemplate getJdbcTemplateBean(TestContext testContext) {
         return testContext.getApplicationContext().getBean(JdbcTemplate.class);
     }
 
-    private static void execute(List<String> queries, JdbcTemplate jdbc) {
-        for (String query : queries) {
-            jdbc.execute(query);
-        }
+    private static void execute(List<String> queries, JdbcTemplate jdbcTemplate) {
+        jdbcTemplate.execute("SET REFERENTIAL_INTEGRITY FALSE;");
+        queries.forEach(jdbcTemplate::execute);
+        jdbcTemplate.execute("SET REFERENTIAL_INTEGRITY TRUE;");
     }
 }

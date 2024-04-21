@@ -7,7 +7,6 @@ import java.time.LocalDate;
 import java.time.LocalTime;
 import java.util.List;
 import javax.sql.DataSource;
-import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -18,6 +17,8 @@ import org.springframework.test.context.support.DependencyInjectionTestExecution
 import roomescape.domain.Reservation;
 import roomescape.domain.ReservationTime;
 import roomescape.repository.DatabaseCleanupListener;
+import roomescape.repository.time.JdbcReservationTimeRepository;
+import roomescape.repository.time.ReservationTimeRepository;
 
 @TestExecutionListeners(value = {
         DatabaseCleanupListener.class,
@@ -28,25 +29,34 @@ class JdbcReservationRepositoryTest {
 
     @Autowired
     private DataSource dataSource;
-    private JdbcReservationRepository jdbcReservationRepository;
+    private ReservationRepository reservationRepository;
+    private ReservationTimeRepository reservationTimeRepository;
 
-    private final Reservation reservation1 = new Reservation(null, "안돌", LocalDate.now(),
-            new ReservationTime(1L, LocalTime.now()));
-    private final Reservation reservation2 = new Reservation(null, "재즈", LocalDate.now(),
-            new ReservationTime(2L, LocalTime.now()));
+    private final ReservationTime time1 = new ReservationTime(1L, LocalTime.now());
+    private final ReservationTime time2 = new ReservationTime(2L, LocalTime.now());
+
+    private final Reservation reservation1 = new Reservation(null, "안돌", LocalDate.now(), time1);
+    private final Reservation reservation2 = new Reservation(null, "재즈", LocalDate.now(), time2);
 
     @BeforeEach
     void setUp() {
-        jdbcReservationRepository = new JdbcReservationRepository(dataSource);
+        reservationRepository = new JdbcReservationRepository(dataSource);
+        reservationTimeRepository = new JdbcReservationTimeRepository(dataSource);
+        initializeTimesData();
+    }
+
+    private void initializeTimesData() {
+        reservationTimeRepository.insertReservationTime(time1);
+        reservationTimeRepository.insertReservationTime(time2);
     }
 
     @Test
     @DisplayName("저장된 모든 예약 정보를 가져온다")
     void find_all_reservations() {
-        jdbcReservationRepository.insertReservation(reservation1);
-        jdbcReservationRepository.insertReservation(reservation2);
+        reservationRepository.insertReservation(reservation1);
+        reservationRepository.insertReservation(reservation2);
 
-        List<Reservation> allReservations = jdbcReservationRepository.findAllReservations();
+        List<Reservation> allReservations = reservationRepository.findAllReservations();
 
         assertThat(allReservations.size()).isEqualTo(2);
     }
@@ -54,7 +64,7 @@ class JdbcReservationRepositoryTest {
     @Test
     @DisplayName("예약을 저장한다.")
     void save_reservation() {
-        Reservation reservation = jdbcReservationRepository.insertReservation(reservation1);
+        Reservation reservation = reservationRepository.insertReservation(reservation1);
 
         assertThat(reservation.getId()).isEqualTo(1L);
     }
@@ -62,15 +72,15 @@ class JdbcReservationRepositoryTest {
     @Test
     @DisplayName("예약을 id로 삭제한다.")
     void delete_reservation_by_id() {
-        jdbcReservationRepository.insertReservation(reservation1);
-        int beforeSize = jdbcReservationRepository.findAllReservations().size();
+        reservationRepository.insertReservation(reservation1);
+        int beforeSize = reservationRepository.findAllReservations().size();
 
-        jdbcReservationRepository.deleteReservationById(1L);
-        int afterSize = jdbcReservationRepository.findAllReservations().size();
+        reservationRepository.deleteReservationById(1L);
+        int afterSize = reservationRepository.findAllReservations().size();
 
         assertAll(
-                () -> Assertions.assertThat(beforeSize).isEqualTo(1),
-                () -> Assertions.assertThat(afterSize).isEqualTo(0)
+                () -> assertThat(beforeSize).isEqualTo(1),
+                () -> assertThat(afterSize).isEqualTo(0)
         );
     }
 }

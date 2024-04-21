@@ -29,14 +29,6 @@ public class ReservationApiController {
         this.reservationMapper = reservationMapper;
     }
 
-    @GetMapping
-    public List<ReservationResponseDto> getReservations() {
-        List<Reservation> reservations = reservationService.findReservations();
-        return reservations.stream()
-                .map(ReservationResponseDto::from)
-                .toList();
-    }
-
     @PostMapping
     public ResponseEntity<ReservationResponseDto> postReservation(@RequestBody ReservationRequestDto reservationRequestDto) {
         Reservation requestedReservation = reservationMapper.toReservation(reservationRequestDto);
@@ -47,6 +39,14 @@ public class ReservationApiController {
                 .toUri();
 
         return ResponseEntity.created(location).body(ReservationResponseDto.from(reservation));
+    }
+
+    @GetMapping
+    public List<ReservationResponseDto> getReservations() {
+        List<Reservation> reservations = reservationService.findReservations();
+        return reservations.stream()
+                .map(ReservationResponseDto::from)
+                .toList();
     }
 
     @DeleteMapping("/{id}")

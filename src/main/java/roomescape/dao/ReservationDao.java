@@ -24,11 +24,6 @@ public class ReservationDao {
                 .usingGeneratedKeyColumns("id");
     }
 
-    public List<Reservation> findReservations() {
-        String sql = "SELECT r.id as r_id, r.name as r_name, r.date as r_date, t.id as t_id, t.start_at as t_start_at FROM reservations as r INNER JOIN reservation_times as t ON r.time_id = t.id";
-        return jdbcTemplate.query(sql, rowMapper());
-    }
-
     public Reservation createReservation(Reservation reservation) {
         SqlParameterSource params = new MapSqlParameterSource()
                 .addValue("name", reservation.getName())
@@ -36,6 +31,11 @@ public class ReservationDao {
                 .addValue("time_id", reservation.getReservationTime().getId());
         long id = simpleJdbcInsert.executeAndReturnKey(params).longValue();
         return new Reservation(id, reservation.getName(), reservation.getDate(), reservation.getReservationTime());
+    }
+
+    public List<Reservation> findReservations() {
+        String sql = "SELECT r.id as r_id, r.name as r_name, r.date as r_date, t.id as t_id, t.start_at as t_start_at FROM reservations as r INNER JOIN reservation_times as t ON r.time_id = t.id";
+        return jdbcTemplate.query(sql, rowMapper());
     }
 
     public void removeReservation(Long id) {

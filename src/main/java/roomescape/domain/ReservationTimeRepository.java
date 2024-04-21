@@ -36,13 +36,14 @@ public class ReservationTimeRepository {
 
     public ReservationTime create(ReservationTime reservationTime) {
         KeyHolder keyHolder = new GeneratedKeyHolder();
-        jdbcTemplate.update(connection -> insertQuery(connection, reservationTime), keyHolder);
+        jdbcTemplate.update(connection -> createPreparedStatementForUpdate(connection, reservationTime), keyHolder);
 
         Long id = keyHolder.getKey().longValue();
         return new ReservationTime(id, reservationTime.startAt());
     }
 
-    private PreparedStatement insertQuery(Connection connection, ReservationTime reservationTime) throws SQLException {
+    private PreparedStatement createPreparedStatementForUpdate(Connection connection, ReservationTime reservationTime)
+            throws SQLException {
         PreparedStatement preparedStatement = connection.prepareStatement(
                 "INSERT INTO %s (start_at) VALUES (?)".formatted(TABLE_NAME), new String[]{"id"});
         preparedStatement.setString(1, reservationTime.startAt());

@@ -13,3 +13,6 @@
 - [x] DataSource 객체를 이용하여 Connection 확인하기
 - [x] Connection 객체를 이용하여 데이터베이스 이름 검증
 - [x] Connection 객체를 이용하여 테이블 이름 검증
+
+# 5단계 요구사항
+- [x] db의 reservation을 조회 할 수 있다.

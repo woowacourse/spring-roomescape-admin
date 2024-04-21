@@ -90,4 +90,10 @@ public class H2ReservationRepository implements ReservationRepository {
         String sql = "delete from reservation where id = ?";
         jdbcTemplate.update(sql, id);
     }
+
+    @Override
+    public Long findReservationCountByTimeId(Long timeId) {
+        String sql = "select count(*) from reservation where time_id = ?";
+        return jdbcTemplate.queryForObject(sql, Long.class, timeId);
+    }
 }

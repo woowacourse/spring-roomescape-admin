@@ -39,4 +39,11 @@ public class InMemoryReservationRepository implements ReservationRepository {
         }
         repository.remove(id);
     }
+
+    @Override
+    public Long findReservationCountByTimeId(Long timeId) {
+        return repository.values().stream()
+                .filter(reservation -> reservation.getTime().getId().equals(timeId))
+                .count();
+    }
 }

@@ -12,4 +12,6 @@ public interface ReservationRepository {
     Reservation save(Reservation reservation);
 
     void deleteById(Long id);
+
+    Long findReservationCountByTimeId(Long timeId);
 }

@@ -14,7 +14,7 @@ import roomescape.domain.Reservation;
 import roomescape.domain.ReservationTime;
 
 @Repository
-public class JdbcReservationRepository {
+public class JdbcReservationRepository implements ReservationRepository {
 
     private final NamedParameterJdbcTemplate jdbcTemplate;
     private final SimpleJdbcInsert jdbcInsert;
@@ -26,6 +26,7 @@ public class JdbcReservationRepository {
                 .usingGeneratedKeyColumns("id");
     }
 
+    @Override
     public List<Reservation> findAllReservations() {
         String sql = """
                 SELECT 
@@ -40,6 +41,7 @@ public class JdbcReservationRepository {
         return jdbcTemplate.query(sql, reservationRowMapper());
     }
 
+    @Override
     public Reservation insertReservation(Reservation reservation) {
         SqlParameterSource parameterSource = new MapSqlParameterSource()
                 .addValue("name", reservation.getName())
@@ -49,6 +51,7 @@ public class JdbcReservationRepository {
         return findReservationById(savedId);
     }
 
+    @Override
     public void deleteReservationById(Long id) {
         String sql = "DELETE FROM reservation where id = :id";
         SqlParameterSource parameterSource = new MapSqlParameterSource()

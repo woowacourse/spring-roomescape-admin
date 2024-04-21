@@ -12,7 +12,7 @@ import org.springframework.stereotype.Repository;
 import roomescape.domain.ReservationTime;
 
 @Repository
-public class JdbcReservationTimeRepository {
+public class JdbcReservationTimeRepository implements ReservationTimeRepository{
 
     private final NamedParameterJdbcTemplate jdbcTemplate;
     private final SimpleJdbcInsert jdbcInsert;
@@ -24,16 +24,26 @@ public class JdbcReservationTimeRepository {
                 .usingGeneratedKeyColumns("id");
     }
 
+    @Override
     public List<ReservationTime> findAllReservationTimes() {
         String sql = "SELECT * FROM reservation_time";
         return jdbcTemplate.query(sql, reservationTimeRowMapper());
     }
 
+    @Override
     public ReservationTime insertReservationTime(ReservationTime reservationTime) {
         SqlParameterSource parameterSource = new MapSqlParameterSource()
                 .addValue("start_at", reservationTime.getStartAt());
         Long savedId = jdbcInsert.executeAndReturnKey(parameterSource).longValue();
         return findReservationTimeById(savedId);
+    }
+
+    @Override
+    public void deleteReservationTimeById(Long id) {
+        String sql = "DELETE FROM reservation_time where id = :id";
+        SqlParameterSource parameterSource = new MapSqlParameterSource()
+                .addValue("id", id);
+        jdbcTemplate.update(sql, parameterSource);
     }
 
     private ReservationTime findReservationTimeById(Long savedId) {
@@ -46,13 +56,6 @@ public class JdbcReservationTimeRepository {
                 """;
         SqlParameterSource paramMap = new MapSqlParameterSource().addValue("savedId", savedId);
         return jdbcTemplate.query(sql, paramMap, reservationTimeRowMapper()).get(0);
-    }
-
-    public void deleteReservationTimeById(Long id) {
-        String sql = "DELETE FROM reservation_time where id = :id";
-        SqlParameterSource parameterSource = new MapSqlParameterSource()
-                .addValue("id", id);
-        jdbcTemplate.update(sql, parameterSource);
     }
 
     private RowMapper<ReservationTime> reservationTimeRowMapper() {

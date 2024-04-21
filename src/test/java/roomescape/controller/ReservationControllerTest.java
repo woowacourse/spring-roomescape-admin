@@ -53,15 +53,69 @@ class ReservationControllerTest {
                 .andExpect(status().isCreated());
     }
 
+    @DisplayName("[400] POST /reservations")
+    @Test
+    void add_dateOutOfRange() throws Exception {
+        String reservation = objectMapper.writeValueAsString(new Reservation(
+                "비밥",
+                LocalDate.now().minusDays(1),
+                LocalTime.of(9, 0)));
+
+        this.mvc.perform(post("/reservations")
+                        .content(reservation)
+                        .contentType(MediaType.APPLICATION_JSON))
+                .andExpect(status().isBadRequest());
+    }
+
+    @DisplayName("[400] POST /reservations")
+    @Test
+    void add_timeBeforeMin() throws Exception {
+        String reservation = objectMapper.writeValueAsString(new Reservation(
+                "비밥",
+                LocalDate.now().plusDays(1),
+                LocalTime.of(8, 59)));
+
+        this.mvc.perform(post("/reservations")
+                        .content(reservation)
+                        .contentType(MediaType.APPLICATION_JSON))
+                .andExpect(status().isBadRequest());
+    }
+
+    @DisplayName("[400] POST /reservations")
+    @Test
+    void add_timeAfterMax() throws Exception {
+        String reservation = objectMapper.writeValueAsString(new Reservation(
+                "비밥",
+                LocalDate.now().plusDays(1),
+                LocalTime.of(20, 1)));
+
+        this.mvc.perform(post("/reservations")
+                        .content(reservation)
+                        .contentType(MediaType.APPLICATION_JSON))
+                .andExpect(status().isBadRequest());
+    }
+
     @DisplayName("[204] DELETE /reservations/{id}")
     @Test
-    void deleteTest() throws Exception {
+    void delete_() throws Exception {
         Reservation savedReservation = reservationRepository.save(new Reservation(
                 "비밥",
                 LocalDate.now().plusDays(1),
                 LocalTime.of(9, 0)));
 
         this.mvc.perform(delete("/reservations/" + savedReservation.getId()))
+                .andExpect(status().isNoContent());
+    }
+
+    @DisplayName("[204] DELETE /reservations/{id}")
+    @Test
+    void delete_notExist() throws Exception {
+        Reservation savedReservation = reservationRepository.save(new Reservation(
+                "비밥",
+                LocalDate.now().plusDays(1),
+                LocalTime.of(9, 0)));
+
+        this.mvc.perform(delete("/reservations/" + (1 + savedReservation.getId())))
                 .andExpect(status().isNoContent());
     }
 }

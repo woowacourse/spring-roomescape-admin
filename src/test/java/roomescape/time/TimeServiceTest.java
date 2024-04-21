@@ -10,6 +10,7 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
+import roomescape.error.ReferDataDeleteException;
 
 @DisplayName("시간 서비스")
 @ExtendWith(MockitoExtension.class)
@@ -32,5 +33,23 @@ class TimeServiceTest {
         // when & then
         assertThatThrownBy(() -> timeService.findById(id))
                 .isInstanceOf(IllegalArgumentException.class);
+    }
+
+    @DisplayName("time id를 참조하고 있는 reservation이 있을 때, 해당 time을 삭제하면 ReferDataDeleteException 예외가 발생한다.")
+    @Test
+    void deleteByIdExceptionTest() {
+        // given
+        Long id = 1L;
+        Time time = new Time(id, "10:00");
+
+        doReturn(Optional.of(time)).when(timeRepository)
+                .findById(id);
+
+        doReturn(Optional.of(time)).when(timeRepository)
+                .findBySameReferId(id);
+
+        // when & then
+        assertThatThrownBy(() -> timeService.deleteById(id))
+                .isInstanceOf(ReferDataDeleteException.class);
     }
 }

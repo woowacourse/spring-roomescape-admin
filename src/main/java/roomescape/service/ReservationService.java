@@ -21,7 +21,9 @@ public class ReservationService {
     }
 
     public ReservationServiceResponse create(ReservationServiceRequest reservationServiceRequest) {
-        ReservationTime reservationTime = reservationTimeDao.findById(reservationServiceRequest.timeId());
+        ReservationTime reservationTime = reservationTimeDao.findById(reservationServiceRequest.timeId())
+                .orElseThrow(() -> new IllegalArgumentException("Time not found"));
+
         Reservation reservation = reservationServiceRequest.toReservation(reservationTime);
 
         Reservation savedReservation = reservationDao.save(reservation);

@@ -46,7 +46,6 @@ public class ReservationController {
         String sql = "SELECT * FROM reservation";
         List<Reservation> reservations = jdbcTemplate.query(sql, actorRowMapper);
         return ReservationResponse.fromReservations(reservations);
-
     }
 
     private Reservation findById(final long id) {

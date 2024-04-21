@@ -2,7 +2,6 @@ package roomescape.repository;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
-import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -26,14 +25,6 @@ class ReservationJdbcRepositoryTest {
         this.jdbcTemplate = jdbcTemplate;
     }
 
-    @BeforeEach
-    void setUp() {
-        jdbcTemplate.update("insert into reservation(name, date, time) values(?, ?, ?)",
-                "냥인", "2024-04-21", "15:40");
-        jdbcTemplate.update("insert into reservation(name, date, time) values(?, ?, ?)",
-                "조앤", "2024-04-22", "15:40");
-    }
-
     @Test
     @DisplayName("예약을 추가한다.")
     void saveReservation() {
@@ -42,14 +33,21 @@ class ReservationJdbcRepositoryTest {
 
         final Long id = reservationRepository.save(createRequest);
 
-        assertThat(id).isEqualTo(3);
+        assertThat(id).isEqualTo(1);
     }
 
     @Test
     @DisplayName("예약 목록을 조회한다.")
     void findAllReservations() {
+        createReservations();
+
         final List<Reservation> reservations = reservationRepository.findAll();
 
-        assertThat(reservations).hasSize(2);
+        assertThat(reservations).hasSize(1);
+    }
+
+    private void createReservations() {
+        jdbcTemplate.update("insert into reservation(name, date, time) values(?, ?, ?)",
+                "냥인", "2024-04-21", "15:40");
     }
 }

@@ -6,7 +6,6 @@ import roomescape.business.ReservationService;
 import roomescape.dto.ReservationResponse;
 import roomescape.dto.ReservationSaveRequest;
 
-import java.net.URI;
 import java.util.List;
 
 @RestController
@@ -32,6 +31,6 @@ public class ReservationController {
     @DeleteMapping("/{id}")
     public ResponseEntity<Void> deleteReservation(@PathVariable Long id) {
         reservationService.deleteReservation(id);
-        return ResponseEntity.noContent().build();
+        return ResponseEntity.ok().build();
     }
 }

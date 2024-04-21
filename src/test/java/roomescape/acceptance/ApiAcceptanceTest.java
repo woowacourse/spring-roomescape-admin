@@ -65,7 +65,7 @@ public class ApiAcceptanceTest implements AcceptanceTest {
         RestAssured.given().log().all()
                 .when().delete("/times/1")
                 .then().log().all()
-                .statusCode(204);
+                .statusCode(200);
     }
 
     @Test
@@ -125,6 +125,6 @@ public class ApiAcceptanceTest implements AcceptanceTest {
         RestAssured.given().log().all()
                 .when().delete("/reservations/1")
                 .then().log().all()
-                .statusCode(204);
+                .statusCode(200);
     }
 }

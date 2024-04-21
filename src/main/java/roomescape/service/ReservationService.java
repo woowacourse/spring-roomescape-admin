@@ -10,8 +10,8 @@ import roomescape.repository.ReservationTimeDao;
 import roomescape.service.dto.ReservationServiceRequest;
 import roomescape.service.dto.ReservationServiceResponse;
 
-@Transactional(readOnly = true)
 @Service
+@Transactional(readOnly = true)
 public class ReservationService {
 
     private final ReservationDao reservationDao;

@@ -1,26 +1,37 @@
 package roomescape.dao;
 
 import java.util.List;
+import java.util.Map;
+import java.util.concurrent.ConcurrentHashMap;
 import org.springframework.stereotype.Component;
-import roomescape.db.FakeReservationsDb;
 import roomescape.domain.Reservation;
 
 @Component
 public class FakeReservationDao implements ReservationDao {
-    private final FakeReservationsDb fakeReservationsDb = new FakeReservationsDb();
+    private final Map<Long, Reservation> reservations = new ConcurrentHashMap<>();
 
     @Override
     public List<Reservation> findAll() {
-        return fakeReservationsDb.readAll();
+        return reservations.values()
+                .stream()
+                .toList();
     }
 
     @Override
     public void save(Reservation reservation) {
-        fakeReservationsDb.create(reservation);
+        final long id = reservation.getId();
+        if (reservations.containsKey(id)) {
+            throw new IllegalArgumentException("duplicated key exists.");
+        }
+        reservations.put(id, reservation);
     }
 
     @Override
     public boolean deleteById(long id) {
-        return fakeReservationsDb.delete(id);
+        boolean exists = reservations.containsKey(id);
+        if (exists) {
+            reservations.remove(id);
+        }
+        return exists;
     }
 }

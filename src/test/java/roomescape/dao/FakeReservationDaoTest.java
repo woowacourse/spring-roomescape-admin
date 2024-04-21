@@ -37,8 +37,9 @@ public class FakeReservationDaoTest {
     @Test
     void invalidSave() {
         //given
-        Reservation reservation1 = new Reservation(1, "aa", "2023-10-10", "10:00");
-        Reservation reservation2 = new Reservation(1, "bb", "2023-10-20", "11:00");
+        long id = 1;
+        Reservation reservation1 = new Reservation(id, "aa", "2023-10-10", "10:00");
+        Reservation reservation2 = new Reservation(id, "bb", "2023-10-20", "11:00");
         //when
         fakeReservationDao.save(reservation1);
         //then
@@ -52,7 +53,7 @@ public class FakeReservationDaoTest {
     void deleteById() {
         //given
         long id = 1;
-        Reservation reservation = new Reservation(1, "aa", "2023-10-10", "10:00");
+        Reservation reservation = new Reservation(id, "aa", "2023-10-10", "10:00");
         fakeReservationDao.save(reservation);
         //when
         fakeReservationDao.deleteById(id);

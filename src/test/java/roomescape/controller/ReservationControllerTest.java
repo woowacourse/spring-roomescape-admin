@@ -16,7 +16,7 @@ import roomescape.dto.ReservationDto;
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 class ReservationControllerTest {
     @LocalServerPort
-    int port;
+    private int port;
 
     @BeforeEach
     public void setUpTestPort() {
@@ -32,7 +32,7 @@ class ReservationControllerTest {
                 .statusCode(200);
     }
 
-    int getTotalReservationsCount() {
+    private int getTotalReservationsCount() {
         List<ReservationDto> reservations = RestAssured.given().port(port)
                 .when().get("/reservations")
                 .then().extract().body()

@@ -6,9 +6,13 @@ import io.restassured.RestAssured;
 import io.restassured.http.ContentType;
 import java.util.List;
 import java.util.Map;
+import java.util.stream.Stream;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.params.ParameterizedTest;
+import org.junit.jupiter.params.provider.Arguments;
+import org.junit.jupiter.params.provider.MethodSource;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.web.server.LocalServerPort;
 import roomescape.dto.ReservationDto;
@@ -79,6 +83,41 @@ class ReservationControllerTest {
                 .get("message");
 
         assertThat(message).isEqualTo("이름은 공백일 수 없습니다.");
+    }
+
+    @DisplayName("예약 날짜와 시각 정보를 잘못된 형식으로 요청할 경우 400 상태 코드와 함께 오류 메시지를 응답한다.")
+    @ParameterizedTest
+    @MethodSource("inValidDateTime")
+    void addReservationWithInValidDateTimeTest(Map<String, String> params) {
+        String message = RestAssured.given().log().all()
+                .contentType(ContentType.JSON)
+                .body(params)
+                .when().post("/reservations")
+                .then().log().all()
+                .statusCode(400)
+                .extract().body().jsonPath()
+                .get("message");
+
+        assertThat(message).isEqualTo("날짜/시간 포맷이 잘못되었습니다.");
+    }
+
+    static Stream<Arguments> inValidDateTime() {
+        return Stream.of(
+                Arguments.of(
+                        Map.of(
+                                "name", "브라운",
+                                "date", "1234-111-22",
+                                "time", "15:40"
+                        )
+                ),
+                Arguments.of(
+                        Map.of(
+                                "name", "웨지",
+                                "date", "2023-08-05",
+                                "time", "26:99"
+                        )
+                )
+        );
     }
 
     @DisplayName("지정한 예약을 삭제한다.")

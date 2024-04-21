@@ -9,7 +9,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
 import roomescape.domain.Reservation;
-import roomescape.repository.ReservationRepository;
+import roomescape.repository.reservation.ReservationRepository;
 
 import java.net.URI;
 import java.util.List;
@@ -19,21 +19,18 @@ public class ReservationController {
     @Autowired
     private ReservationRepository reservationRepository;
 
-
     @GetMapping("/reservations")
     public ResponseEntity<List<Reservation>> getReservationDatum() {
         List<Reservation> reservations = reservationRepository.findAll();
         return ResponseEntity.ok(reservations);
     }
 
-
     @PostMapping("/reservations")
     public ResponseEntity<Reservation> addReservationData(@RequestBody final Reservation request) {
         Reservation reservation = reservationRepository.insert(request);
+
         return ResponseEntity.created(URI.create("/reservations/" + reservation.getId()))
                 .body(reservation);
-
-
     }
 
     @DeleteMapping("/reservations/{id}")

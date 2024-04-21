@@ -22,4 +22,10 @@ public class ExceptionApiController {
         System.out.println("데이터 접근 예외 발생 :" + exception.getMessage());
         return new ErrorResult("BAD_INPUT", "잘못된 데이터 요청입니다.");
     }
+
+    @ResponseStatus(HttpStatus.NOT_ACCEPTABLE)
+    @ExceptionHandler(ReferDataDeleteException.class)
+    public ErrorResult referDataDeleteExHandler(final ReferDataDeleteException exception) {
+        return new ErrorResult("NOT_ACCEPTABLE", exception.getMessage());
+    }
 }

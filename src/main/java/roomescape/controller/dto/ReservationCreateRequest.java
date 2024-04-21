@@ -7,7 +7,7 @@ import java.time.LocalTime;
 
 public record ReservationCreateRequest(String name, LocalDate date, LocalTime time) {
 
-    public Reservation toReservation(int id) {
-        return new Reservation(id, name, date, time);
+    public Reservation toReservation() {
+        return new Reservation(name, date, time);
     }
 }

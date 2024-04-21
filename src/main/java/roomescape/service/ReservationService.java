@@ -2,6 +2,7 @@ package roomescape.service;
 
 import java.util.List;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import roomescape.domain.Reservation;
 import roomescape.domain.ReservationTime;
 import roomescape.repository.ReservationDao;
@@ -9,6 +10,7 @@ import roomescape.repository.ReservationTimeDao;
 import roomescape.service.dto.ReservationServiceRequest;
 import roomescape.service.dto.ReservationServiceResponse;
 
+@Transactional(readOnly = true)
 @Service
 public class ReservationService {
 
@@ -20,6 +22,7 @@ public class ReservationService {
         this.reservationTimeDao = reservationTimeDao;
     }
 
+    @Transactional
     public ReservationServiceResponse create(ReservationServiceRequest reservationServiceRequest) {
         ReservationTime reservationTime = reservationTimeDao.findById(reservationServiceRequest.timeId())
                 .orElseThrow(() -> new IllegalArgumentException("Time not found"));
@@ -39,6 +42,7 @@ public class ReservationService {
                 .toList();
     }
 
+    @Transactional
     public void delete(long id) {
         Reservation reservation = reservationDao.findById(id)
                 .orElseThrow(() -> new IllegalArgumentException("Reservation not found"));

@@ -35,11 +35,11 @@ public class TimeController {
 
     @PostMapping
     public ResponseEntity<TimeDto> create(@RequestBody TimeDto timeDto) {
-        long id = timeDao.add(timeDto);
-        Time time = timeDao.findById(id);
-        TimeDto result = TimeDto.from(time);
+        Time time = timeDto.toDomain();
+        long id = timeDao.add(TimeDto.from(time));
+        Time result = timeDao.findById(id);
         return ResponseEntity.created(URI.create("/times/" + id))
-                .body(result);
+                .body(TimeDto.from(result));
     }
 
     @DeleteMapping("/{id}")

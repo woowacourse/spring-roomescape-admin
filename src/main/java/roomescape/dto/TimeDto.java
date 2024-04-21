@@ -1,5 +1,6 @@
 package roomescape.dto;
 
+import java.time.LocalTime;
 import java.util.Objects;
 import roomescape.domain.Time;
 
@@ -22,6 +23,13 @@ public class TimeDto {
 
     public static TimeDto of(Long id, String startAt) {
         return new TimeDto(id, startAt);
+    }
+
+    public Time toDomain() {
+        return new Time(
+                id,
+                LocalTime.parse(startAt)
+        );
     }
 
     public Long getId() {

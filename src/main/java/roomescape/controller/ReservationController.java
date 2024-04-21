@@ -35,10 +35,11 @@ public class ReservationController {
 
     @PostMapping
     public ResponseEntity<ReservationDto> create(@RequestBody ReservationDto reservationDto) {
-        long id = reservationDao.add(reservationDto);
-        Reservation reservation = reservationDao.findById(id);
+        Reservation reservation = reservationDto.toDomain();
+        long id = reservationDao.add(ReservationDto.from(reservation));
+        Reservation result = reservationDao.findById(id);
         return ResponseEntity.created(URI.create("/reservations"))
-                .body(ReservationDto.from(reservation));
+                .body(ReservationDto.from(result));
     }
 
     @DeleteMapping("/{id}")

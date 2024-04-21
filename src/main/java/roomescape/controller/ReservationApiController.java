@@ -1,12 +1,10 @@
 package roomescape.controller;
 
-import java.net.URI;
 import java.util.List;
 import javax.sql.DataSource;
-import org.springframework.http.ResponseEntity;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;
-import org.springframework.jdbc.core.namedparam.BeanPropertySqlParameterSource;
+import org.springframework.jdbc.core.namedparam.MapSqlParameterSource;
 import org.springframework.jdbc.core.namedparam.SqlParameterSource;
 import org.springframework.jdbc.core.simple.SimpleJdbcInsert;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -18,6 +16,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import roomescape.dto.ReservationRequest;
 import roomescape.entity.Reservation;
+import roomescape.entity.ReservationTime;
 
 @RestController
 @RequestMapping("/reservations")
@@ -25,37 +24,45 @@ public class ReservationApiController {
 
     private final JdbcTemplate jdbcTemplate;
     private final SimpleJdbcInsert insertActor;
+    private final ReservationTimeApiController timeApiController;
 
-    public ReservationApiController(JdbcTemplate jdbcTemplate, DataSource dataSource) {
+    public ReservationApiController(JdbcTemplate jdbcTemplate, DataSource dataSource,
+                                    ReservationTimeApiController timeApiController) {
         this.jdbcTemplate = jdbcTemplate;
         this.insertActor = new SimpleJdbcInsert(dataSource)
                 .withTableName("reservation")
                 .usingGeneratedKeyColumns("id");
-
+        this.timeApiController = timeApiController;
     }
 
     @GetMapping
     public List<Reservation> findAllReservations() {
-        String sql = "SELECT * FROM reservation";
+        String sql = "SELECT r.id as reservation_id, r.name, r.date, t.id as time_id, t.start_at as time_value"
+                + " FROM reservation as r"
+                + " INNER JOIN reservation_time as t"
+                + " ON r.time_id = t.id";
 
         return jdbcTemplate.query(sql, reservationRowMapper());
     }
 
     @PostMapping
-    public ResponseEntity<Reservation> addReservation(@RequestBody ReservationRequest reservationRequest) {
-        SqlParameterSource parameters = new BeanPropertySqlParameterSource(reservationRequest);
+    public Reservation addReservation(@RequestBody ReservationRequest reservationRequest) {
+        SqlParameterSource parameters = new MapSqlParameterSource()
+                .addValue("name", reservationRequest.name())
+                .addValue("date", reservationRequest.date())
+                .addValue("time_id", reservationRequest.timeId());
+
         long newId = insertActor.executeAndReturnKey(parameters).longValue();
 
-        Reservation newReservation = reservationRequest.toEntity(newId);
-        return ResponseEntity.created(URI.create("/reservations/" + newId)).body(newReservation);
+        ReservationTime reservationTime = timeApiController.findByTimeId(reservationRequest.timeId());
+
+        return reservationRequest.toEntity(newId, reservationTime);
     }
 
     @DeleteMapping("/{id}")
-    public ResponseEntity<Void> deleteReservation(@PathVariable long id) {
+    public void deleteReservation(@PathVariable long id) {
         String sql = "DELETE FROM reservation WHERE id = ?";
         jdbcTemplate.update(sql, id);
-
-        return ResponseEntity.noContent().build();
     }
 
     private RowMapper<Reservation> reservationRowMapper() {
@@ -63,7 +70,7 @@ public class ReservationApiController {
                 resultSet.getLong("id"),
                 resultSet.getString("name"),
                 resultSet.getString("date"),
-                resultSet.getString("time")
+                timeApiController.findByTimeId(resultSet.getLong("time_id"))
         );
     }
 }

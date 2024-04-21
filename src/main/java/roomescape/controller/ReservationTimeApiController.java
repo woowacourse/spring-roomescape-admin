@@ -52,6 +52,12 @@ public class ReservationTimeApiController {
         jdbcTemplate.update(sql, id);
     }
 
+    public ReservationTime findByTimeId(long timeId) {
+        String sql = "select * from reservation_time where id = ?";
+
+        return jdbcTemplate.queryForObject(sql, reservationTimeRowMapper(), timeId);
+    }
+
     private RowMapper<ReservationTime> reservationTimeRowMapper() {
         return (resultSet, rowNum) -> new ReservationTime(
                 resultSet.getLong("id"),

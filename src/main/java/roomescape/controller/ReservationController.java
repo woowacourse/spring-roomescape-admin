@@ -1,12 +1,16 @@
 package roomescape.controller;
 
-import java.util.ArrayList;
-import java.util.Collections;
+import java.net.URI;
+import java.sql.Date;
+import java.sql.PreparedStatement;
+import java.sql.Time;
 import java.util.List;
-import java.util.concurrent.atomic.AtomicLong;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;
+import org.springframework.jdbc.support.GeneratedKeyHolder;
+import org.springframework.jdbc.support.KeyHolder;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -23,9 +27,6 @@ import roomescape.dto.ReservationResponse;
 @RequestMapping("/reservations")
 public class ReservationController {
 
-    private final List<Reservation> reservations;
-    private final AtomicLong index;
-
     private final JdbcTemplate jdbcTemplate;
     private final RowMapper<Reservation> actorRowMapper = (rs, rowNum) ->
             new Reservation(
@@ -37,8 +38,6 @@ public class ReservationController {
 
     public ReservationController(JdbcTemplate jdbcTemplate) {
         this.jdbcTemplate = jdbcTemplate;
-        this.reservations = Collections.synchronizedList(new ArrayList<>());
-        this.index = new AtomicLong(1);
     }
 
     @GetMapping
@@ -50,23 +49,35 @@ public class ReservationController {
 
     }
 
+    private Reservation findById(final long id) {
+        String sql = "SELECT * FROM reservation WHERE id = ?";
+        Reservation reservation = jdbcTemplate.queryForObject(sql, actorRowMapper, id);
+        return reservation;
+    }
+
     @PostMapping
-    @ResponseStatus(HttpStatus.OK)
-    public ReservationResponse add(@RequestBody final ReservationRequest reservationRequest) {
-        long id = index.getAndIncrement();
-        Reservation reservation = reservationRequest.toReservation(id);
-        reservations.add(reservation);
-        return ReservationResponse.from(reservation);
+    public ResponseEntity<ReservationResponse> add(@RequestBody final ReservationRequest reservationRequest) {
+        String sql = "INSERT INTO reservation (name, date, time) VALUES (?, ?, ?)";
+        KeyHolder keyHolder = new GeneratedKeyHolder();
+
+        jdbcTemplate.update(connection -> {
+            PreparedStatement ps = connection.prepareStatement(sql, new String[]{"id"});
+            ps.setString(1, reservationRequest.name());
+            ps.setDate(2, Date.valueOf(reservationRequest.date()));
+            ps.setTime(3, Time.valueOf(reservationRequest.time()));
+            return ps;
+        }, keyHolder);
+
+        long id = keyHolder.getKey().longValue();
+        Reservation reservation = findById(id);
+        ReservationResponse reservationResponse = ReservationResponse.from(reservation);
+        return ResponseEntity.created(URI.create("/reservations/" + id)).body(reservationResponse);
     }
 
     @DeleteMapping("/{id}")
-    @ResponseStatus(HttpStatus.OK)
-    public void delete(@PathVariable(name = "id") final long id) {
-        Reservation reservation = reservations.stream()
-                .filter(it -> it.getId() == id)
-                .findFirst()
-                .orElseThrow(() -> new IllegalArgumentException("[ERROR] 유효하지 않은 예약 번호입니다."));
-
-        reservations.remove(reservation);
+    @ResponseStatus(HttpStatus.NO_CONTENT)
+    public int delete(@PathVariable(name = "id") final long id) {
+        String sql = "DELETE FROM reservation WHERE id = ?"; // TODO: 만약 찾을 수 없는 아이디면?
+        return jdbcTemplate.update(sql, id);
     }
 }

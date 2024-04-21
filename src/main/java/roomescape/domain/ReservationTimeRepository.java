@@ -53,4 +53,5 @@ public class ReservationTimeRepository {
     public void deleteById(Long id) {
         jdbcTemplate.update("DELETE FROM %s WHERE id = ?".formatted(TABLE_NAME), id);
     }
+
 }

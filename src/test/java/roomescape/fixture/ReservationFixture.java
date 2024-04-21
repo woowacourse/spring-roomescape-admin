@@ -2,9 +2,12 @@ package roomescape.fixture;
 
 import io.restassured.RestAssured;
 import io.restassured.http.ContentType;
+import roomescape.domain.Reservation;
 import roomescape.dto.ReservationRequest;
+import roomescape.dto.ReservationsResponse;
 
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 public class ReservationFixture {
@@ -21,4 +24,29 @@ public class ReservationFixture {
                    .then()
                    .statusCode(201);
     }
+
+    public static List<Reservation> 예약_조회() {
+        return RestAssured.given()
+                          .contentType(ContentType.JSON)
+                          .when()
+                          .get("/reservations")
+                          .then()
+                          .statusCode(200)
+                          .extract()
+                          .as(ReservationsResponse.class)
+                          .reservations();
+    }
+
+    public static void 예약_삭제() {
+        RestAssured.given()
+                   .log()
+                   .all()
+                   .when()
+                   .delete("/reservations/1")
+                   .then()
+                   .log()
+                   .all()
+                   .statusCode(204);
+    }
+
 }

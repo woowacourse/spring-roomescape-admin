@@ -21,7 +21,7 @@ public class ReservationTimeService {
     public ReservationTime addTime(CreateReservationTimeRequest request) {
         ReservationTime reservationTime = new ReservationTime(request.startAt());
 
-        return reservationTimeRepository.saveOne(reservationTime);
+        return reservationTimeRepository.save(reservationTime);
     }
 
     @Transactional

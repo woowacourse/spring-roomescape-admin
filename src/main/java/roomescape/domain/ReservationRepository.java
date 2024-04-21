@@ -4,7 +4,7 @@ import java.util.List;
 
 public interface ReservationRepository {
 
-    Reservation saveOne(Reservation reservation);
+    Reservation save(Reservation reservation);
 
     void deleteBy(long id);
 

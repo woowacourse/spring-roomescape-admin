@@ -23,7 +23,7 @@ class JdbcTemplateReservationTimeRepository implements ReservationTimeRepository
     }
 
     @Override
-    public ReservationTime saveOne(ReservationTime reservationTime) {
+    public ReservationTime save(ReservationTime reservationTime) {
         Map<String, Object> saveParam = Map.of(
                 "start_at", reservationTime.getStartAt()
         );

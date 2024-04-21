@@ -25,7 +25,7 @@ class JdbcTemplateReservationRepository implements ReservationRepository {
     }
 
     @Override
-    public Reservation saveOne(Reservation reservation) {
+    public Reservation save(Reservation reservation) {
         ReservationTime time = resolveTime(reservation.getTime());
         Map<String, Object> saveParam = Map.of(
                 "name", reservation.getName().value(),

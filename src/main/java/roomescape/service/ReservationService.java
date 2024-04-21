@@ -27,7 +27,7 @@ public class ReservationService {
         ReservationTime time = new ReservationTime(request.timeId());
         Reservation reservation = new Reservation(name, date, time);
 
-        return reservationRepository.saveOne(reservation);
+        return reservationRepository.save(reservation);
     }
 
     @Transactional

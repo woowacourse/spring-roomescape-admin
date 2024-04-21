@@ -17,10 +17,10 @@
 
 ## timePage
 
-- [ ] "/admin/time" 으로 GET 요청 시 templates/admin/time.html 파일을 반환한다.
-- [ ] "/times" 으로 GET 요청 시 모든 시간을 반환한다.
-- [ ] "/times" 으로 POST 요청 시 시간을 추가한다.
-- [ ] "/times/{id}" 으로 DELETE 요청 시 시간을 삭제한다.
+- [x] "/admin/time" 으로 GET 요청 시 templates/admin/time.html 파일을 반환한다.
+- [x] "/times" 으로 GET 요청 시 모든 시간을 반환한다.
+- [x] "/times" 으로 POST 요청 시 시간을 추가한다.
+- [x] "/times/{id}" 으로 DELETE 요청 시 시간을 삭제한다.
 
 # API 명세
 

@@ -5,10 +5,10 @@ import static org.junit.jupiter.api.Assertions.assertAll;
 import static org.mockito.Mockito.when;
 
 import java.util.List;
-import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
+import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 import roomescape.domain.Reservation;
@@ -21,12 +21,9 @@ class ReservationServiceTest {
 
     @Mock
     private ReservationRepository reservationRepository;
-    private ReservationService reservationService;
 
-    @BeforeEach
-    void setUp() {
-        reservationService = new ReservationService(reservationRepository);
-    }
+    @InjectMocks
+    private ReservationService reservationService;
 
     @DisplayName("모든 예약 정보를 dto 리스트로 반환한다.")
     @Test
@@ -50,7 +47,6 @@ class ReservationServiceTest {
                 () -> assertThat(results.size()).isEqualTo(responseDtos.size()),
                 () -> assertThat(results.get(0).getId()).isEqualTo(responseDtos.get(0).getId())
         );
-
     }
 
     @DisplayName("예약을 저장하고 예약 응답 dto를 반환한다.")

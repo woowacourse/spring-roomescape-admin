@@ -5,10 +5,10 @@ import static org.junit.jupiter.api.Assertions.assertAll;
 import static org.mockito.Mockito.when;
 
 import java.util.List;
-import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
+import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 import roomescape.domain.ReservationTime;
@@ -21,12 +21,9 @@ class ReservationTimeServiceTest {
 
     @Mock
     private ReservationTimeRepository reservationTimeRepository;
-    private ReservationTimeService reservationTimeService;
 
-    @BeforeEach
-    void setUp() {
-        reservationTimeService = new ReservationTimeService(reservationTimeRepository);
-    }
+    @InjectMocks
+    private ReservationTimeService reservationTimeService;
 
     @DisplayName("모든 예약 시간 정보를 응답 dto로 반환한다.")
     @Test

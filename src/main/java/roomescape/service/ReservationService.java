@@ -6,7 +6,7 @@ import org.springframework.stereotype.Service;
 import roomescape.dao.ReservationDao;
 import roomescape.dto.ReservationRequestDto;
 import roomescape.dto.ReservationResponseDto;
-import roomescape.dto.ReservationTimeDto;
+import roomescape.dto.ReservationTimeResponseDto;
 import roomescape.entity.Reservation;
 
 @Service
@@ -29,8 +29,8 @@ public class ReservationService {
                 id,
                 reservation.getName(),
                 reservation.getDate(),
-                ReservationTimeDto.from(reservation.getTime())
-        );
+                ReservationTimeResponseDto.from(reservation.getTime())
+        ); // TODO: 서비스 계층에서 DTO의 이름을 통해 요청과 응답임을 암시해도 괜찮을까?
     }
 
     public void deleteReservation(long id) {

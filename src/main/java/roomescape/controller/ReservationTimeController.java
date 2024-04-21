@@ -10,7 +10,8 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
-import roomescape.dto.ReservationTimeDto;
+import roomescape.dto.ReservationTimeResponseDto;
+import roomescape.dto.ReservationTimeRequestDto;
 import roomescape.service.ReservationTimeService;
 
 @Controller
@@ -20,14 +21,14 @@ public class ReservationTimeController {
     private ReservationTimeService reservationTimeService;
 
     @GetMapping("/times")
-    public ResponseEntity<List<ReservationTimeDto>> times() {
-        List<ReservationTimeDto> responseBody = reservationTimeService.findTimes();
+    public ResponseEntity<List<ReservationTimeResponseDto>> times() {
+        List<ReservationTimeResponseDto> responseBody = reservationTimeService.findTimes();
         return ResponseEntity.ok(responseBody);
     }
 
     @PostMapping("/times")
-    public ResponseEntity<ReservationTimeDto> addTime(@RequestBody ReservationTimeDto reservationTimeDto) {
-        ReservationTimeDto responseBody = reservationTimeService.addTime(reservationTimeDto);
+    public ResponseEntity<ReservationTimeResponseDto> addTime(@RequestBody ReservationTimeRequestDto requestBody) {
+        ReservationTimeResponseDto responseBody = reservationTimeService.addTime(requestBody);
         // TODO: dto를 그대로 응답하는 것 괜찮을까?
         return ResponseEntity
                 .created(URI.create("/time/" + responseBody.getId()))

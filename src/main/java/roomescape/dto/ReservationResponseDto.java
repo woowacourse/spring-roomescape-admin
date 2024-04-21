@@ -8,9 +8,9 @@ public class ReservationResponseDto {
     private final Long id;
     private final String name;
     private final LocalDate date;
-    private final ReservationTimeDto time;
+    private final ReservationTimeResponseDto time;
 
-    public ReservationResponseDto(Long id, String name, LocalDate date, ReservationTimeDto time) {
+    public ReservationResponseDto(Long id, String name, LocalDate date, ReservationTimeResponseDto time) {
         this.id = id;
         this.name = name;
         this.date = date;
@@ -22,7 +22,7 @@ public class ReservationResponseDto {
                 reservation.getId(),
                 reservation.getName(),
                 reservation.getDate(),
-                ReservationTimeDto.from(reservation.getTime())
+                ReservationTimeResponseDto.from(reservation.getTime())
         );
     }
 
@@ -38,7 +38,7 @@ public class ReservationResponseDto {
         return date;
     }
 
-    public ReservationTimeDto getTime() {
+    public ReservationTimeResponseDto getTime() {
         return time;
     }
 }

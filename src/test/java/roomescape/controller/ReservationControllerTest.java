@@ -15,7 +15,7 @@ import org.junit.jupiter.params.provider.Arguments;
 import org.junit.jupiter.params.provider.MethodSource;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.web.server.LocalServerPort;
-import roomescape.dto.ReservationDto;
+import roomescape.controller.dto.ReservationResponse;
 
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 class ReservationControllerTest {
@@ -37,10 +37,10 @@ class ReservationControllerTest {
     }
 
     private int getTotalReservationsCount() {
-        List<ReservationDto> reservations = RestAssured.given().port(port)
+        List<ReservationResponse> reservations = RestAssured.given().port(port)
                 .when().get("/reservations")
                 .then().extract().body()
-                .jsonPath().getList("", ReservationDto.class);
+                .jsonPath().getList("", ReservationResponse.class);
         return reservations.size();
     }
 
@@ -129,13 +129,13 @@ class ReservationControllerTest {
                 "time", "15:40"
         );
 
-        ReservationDto reservationResponse = RestAssured.given().log().all()
+        ReservationResponse reservationResponse = RestAssured.given().log().all()
                 .contentType(ContentType.JSON)
                 .body(params)
                 .when().post("/reservations")
                 .then().log().all()
                 .statusCode(200)
-                .extract().as(ReservationDto.class);
+                .extract().as(ReservationResponse.class);
 
         Long newReservationId = reservationResponse.id();
         int initialReservationsCount = getTotalReservationsCount();

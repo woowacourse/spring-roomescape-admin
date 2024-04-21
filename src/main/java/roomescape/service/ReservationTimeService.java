@@ -25,7 +25,7 @@ public class ReservationTimeService {
     }
 
     @Transactional
-    public void deleteBy(Long id) {
+    public void deleteBy(long id) {
         reservationTimeRepository.deleteBy(id);
     }
 

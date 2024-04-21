@@ -5,12 +5,9 @@ import roomescape.domain.Reservation;
 
 public record ReservationWebResponse(
 
-        Long id,
-
+        long id,
         String name,
-
         LocalDate date,
-
         ReservationTimeWebResponse time
 ) {
 

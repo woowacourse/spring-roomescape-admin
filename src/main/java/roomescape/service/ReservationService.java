@@ -31,7 +31,7 @@ public class ReservationService {
     }
 
     @Transactional
-    public void deleteBy(Long id) {
+    public void deleteBy(long id) {
         reservationRepository.deleteBy(id);
     }
 

@@ -5,23 +5,27 @@ import org.springframework.stereotype.Service;
 import roomescape.dao.ReservationTimeDao;
 import roomescape.domain.ReservationTime;
 import roomescape.dto.ReservationTimeRequest;
+import roomescape.dto.ReservationTimeResponse;
 
 @Service
 public class ReservationTimeService {
-
     private final ReservationTimeDao reservationTimeDao;
 
     public ReservationTimeService(ReservationTimeDao reservationTimeDao) {
         this.reservationTimeDao = reservationTimeDao;
     }
 
-    public ReservationTime addReservationTime(ReservationTimeRequest reservationTimeRequest) {
+    public ReservationTimeResponse addReservationTime(ReservationTimeRequest reservationTimeRequest) {
         Long id = reservationTimeDao.insert(reservationTimeRequest);
-        return ReservationTime.of(id, reservationTimeRequest);
+        ReservationTime reservationTime = ReservationTime.of(id, reservationTimeRequest);
+        return ReservationTimeResponse.from(reservationTime);
     }
 
-    public List<ReservationTime> findAllReservationTimes() {
-        return reservationTimeDao.findAllReservationTimes();
+    public List<ReservationTimeResponse> findAllReservationTimes() {
+        List<ReservationTime> reservationTimes = reservationTimeDao.findAllReservationTimes();
+        return reservationTimes.stream()
+                .map(ReservationTimeResponse::from)
+                .toList();
     }
 
     public void removeReservationTime(Long id) {

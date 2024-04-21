@@ -10,6 +10,7 @@ import java.sql.Connection;
 import java.sql.SQLException;
 import java.util.HashMap;
 import java.util.Map;
+import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -21,33 +22,34 @@ import roomescape.controller.ReservationApiController;
 @DirtiesContext(classMode = DirtiesContext.ClassMode.BEFORE_EACH_TEST_METHOD)
 public class MissionStepTest {
 
+    @Autowired
+    private JdbcTemplate jdbcTemplate;
+
+    @Autowired
+    private ReservationApiController reservationApiController;
+
+    @DisplayName("HTML 호출 테스트")
     @Test
-    void 일단계() {
+    void html_test() {
         RestAssured.given().log().all()
                 .when().get("/admin")
                 .then().log().all()
                 .statusCode(200);
-    }
 
-    @Test
-    void 이단계() {
         RestAssured.given().log().all()
                 .when().get("/admin/reservation")
                 .then().log().all()
                 .statusCode(200);
 
         RestAssured.given().log().all()
-                .when().get("/reservations")
+                .when().get("/admin/time")
                 .then().log().all()
-                .statusCode(200)
-                .body("size()", is(0));
+                .statusCode(200);
     }
 
-    @Autowired
-    private JdbcTemplate jdbcTemplate;
-
+    @DisplayName("테이터베이스 연결 테스트")
     @Test
-    void 사단계() {
+    void database_connect_test() {
         try (Connection connection = jdbcTemplate.getDataSource().getConnection()) {
             assertThat(connection).isNotNull();
             assertThat(connection.getCatalog()).isEqualTo("DATABASE");
@@ -57,8 +59,9 @@ public class MissionStepTest {
         }
     }
 
+    @DisplayName("예약 시간에 대한 CRD 테스트")
     @Test
-    void 칠단계() {
+    void reservation_time_create_read_update_test() {
         Map<String, String> params = new HashMap<>();
         params.put("startAt", "10:00");
 
@@ -81,17 +84,10 @@ public class MissionStepTest {
                 .statusCode(200);
     }
 
+    @DisplayName("예약에 대한 CRD 테스트")
     @Test
-    void 팔단계() {
-        Map<String, String> params = new HashMap<>();
-        params.put("startAt", "10:00");
-
-        RestAssured.given().log().all()
-                .contentType(ContentType.JSON)
-                .body(params)
-                .when().post("/times")
-                .then().log().all()
-                .statusCode(200);
+    void reservation_create_read_update_test() {
+        initializeTimesData();
 
         Map<String, Object> reservation = new HashMap<>();
         reservation.put("name", "브라운");
@@ -110,13 +106,28 @@ public class MissionStepTest {
                 .then().log().all()
                 .statusCode(200)
                 .body("size()", is(1));
+
+        RestAssured.given().log().all()
+                .when().delete("/reservations/1")
+                .then().log().all()
+                .statusCode(200);
     }
 
-    @Autowired
-    private ReservationApiController reservationApiController;
+    private static void initializeTimesData() {
+        Map<String, String> params = new HashMap<>();
+        params.put("startAt", "10:00");
 
+        RestAssured.given().log().all()
+                .contentType(ContentType.JSON)
+                .body(params)
+                .when().post("/times")
+                .then().log().all()
+                .statusCode(200);
+    }
+
+    @DisplayName("컨트롤러에서 영속 계층 의존성이 제거되었는지 테스트")
     @Test
-    void 구단계() {
+    void layered_architecture_controller_test() {
         boolean isJdbcTemplateInjected = false;
 
         for (Field field : reservationApiController.getClass().getDeclaredFields()) {

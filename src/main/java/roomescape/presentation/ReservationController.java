@@ -17,20 +17,20 @@ public class ReservationController {
         this.reservationService = reservationService;
     }
 
-    @GetMapping
-    public ResponseEntity<List<ReservationResponse>> getReservations() {
-        return ResponseEntity.ok(reservationService.getReservations());
-    }
-
     @PostMapping
     public ResponseEntity<ReservationResponse> createReservation(@RequestBody ReservationSaveRequest request) {
         var reservation = request.toModel();
-        return ResponseEntity.ok(reservationService.createReservation(reservation));
+        return ResponseEntity.ok(reservationService.create(reservation));
+    }
+
+    @GetMapping
+    public ResponseEntity<List<ReservationResponse>> getReservations() {
+        return ResponseEntity.ok(reservationService.getAll());
     }
 
     @DeleteMapping("/{id}")
     public ResponseEntity<Void> deleteReservation(@PathVariable Long id) {
-        reservationService.deleteReservation(id);
+        reservationService.delete(id);
         return ResponseEntity.ok().build();
     }
 }

@@ -27,7 +27,7 @@ class ReservationControllerTest extends ControllerTest {
         ReservationTime expectedTime = new ReservationTime(1L, MIA_RESERVATION_TIME);
         Reservation expectedReservation = MIA_RESERVATION(expectedTime);
 
-        BDDMockito.given(reservationService.getReservations())
+        BDDMockito.given(reservationService.getAll())
                 .willReturn(List.of(ReservationResponse.from(expectedReservation)));
 
         // when & then
@@ -48,7 +48,7 @@ class ReservationControllerTest extends ControllerTest {
         ReservationTime expectedTime = new ReservationTime(1L, MIA_RESERVATION_TIME);
         ReservationResponse expectedResponse = ReservationResponse.of(MIA_RESERVATION(), expectedTime);
 
-        BDDMockito.given(reservationService.createReservation(any()))
+        BDDMockito.given(reservationService.create(any()))
                 .willReturn(expectedResponse);
 
         // when & then
@@ -69,7 +69,7 @@ class ReservationControllerTest extends ControllerTest {
         // given
         BDDMockito.willDoNothing()
                 .given(reservationService)
-                .deleteReservation(anyLong());
+                .delete(anyLong());
 
         // when & then
         mockMvc.perform(delete("/reservations/{id}", anyLong())

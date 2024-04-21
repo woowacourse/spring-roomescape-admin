@@ -51,7 +51,7 @@ class ReservationTimeServiceTest {
 
     @Test
     @DisplayName("예약 시간 목록을 조회한다.")
-    void getReservationTimes() {
+    void getAll() {
         // given
         ReservationTime reservationTime = new ReservationTime(MIA_RESERVATION_TIME);
 
@@ -59,7 +59,7 @@ class ReservationTimeServiceTest {
                 .thenReturn(List.of(reservationTime));
 
         // when
-        List<ReservationTimeResponse> responses = reservationTimeService.getReservationTimes();
+        List<ReservationTimeResponse> responses = reservationTimeService.getAll();
 
         // then
         assertThat(responses).hasSize(1)
@@ -69,7 +69,7 @@ class ReservationTimeServiceTest {
 
     @Test
     @DisplayName("예약을 삭제한다.")
-    void deleteReservationTime() {
+    void delete() {
         // given
         ReservationTime reservationTime = new ReservationTime(MIA_RESERVATION_TIME);
 
@@ -77,7 +77,7 @@ class ReservationTimeServiceTest {
                 .thenReturn(Optional.of(reservationTime));
 
         // when & then
-        assertThatCode(() -> reservationTimeService.deleteReservationTime(1L))
+        assertThatCode(() -> reservationTimeService.delete(1L))
                 .doesNotThrowAnyException();
     }
 }

@@ -44,7 +44,7 @@ class ReservationTimeControllerTest extends ControllerTest {
     @DisplayName("예약 시간 목록 GET 요청 시 상태코드 200을 반환한다.")
     void getReservationTimes() throws Exception {
         // given
-        BDDMockito.given(reservationTimeService.getReservationTimes())
+        BDDMockito.given(reservationTimeService.getAll())
                 .willReturn(List.of(ReservationTimeResponse.from(new ReservationTime(MIA_RESERVATION_TIME))));
 
         // when & then
@@ -60,7 +60,7 @@ class ReservationTimeControllerTest extends ControllerTest {
         // given
         BDDMockito.willDoNothing()
                 .given(reservationTimeService)
-                .deleteReservationTime(anyLong());
+                .delete(anyLong());
 
         // when & then
         mockMvc.perform(delete("/times/{id}", anyLong())

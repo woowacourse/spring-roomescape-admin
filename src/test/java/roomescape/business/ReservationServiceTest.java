@@ -33,7 +33,7 @@ class ReservationServiceTest {
 
     @Test
     @DisplayName("예약을 생성한다.")
-    void createReservation() {
+    void create() {
         // given
         Reservation reservation = MIA_RESERVATION();
 
@@ -43,7 +43,7 @@ class ReservationServiceTest {
                 .thenReturn(new Reservation(1L, reservation));
 
         // when
-        ReservationResponse response = reservationService.createReservation(reservation);
+        ReservationResponse response = reservationService.create(reservation);
 
         // then
         assertThat(response).isNotNull();
@@ -61,7 +61,7 @@ class ReservationServiceTest {
                 .thenReturn(List.of(miaReservation));
 
         // when & then
-        assertThatThrownBy(() -> reservationService.createReservation(miaReservation))
+        assertThatThrownBy(() -> reservationService.create(miaReservation))
                 .isInstanceOf(IllegalArgumentException.class);
     }
 
@@ -82,13 +82,13 @@ class ReservationServiceTest {
         Reservation newReservation = new Reservation("new", MIA_RESERVATION_DATE, new ReservationTime(MIA_RESERVATION_TIME));
 
         // when & then
-        assertThatThrownBy(() -> reservationService.createReservation(newReservation))
+        assertThatThrownBy(() -> reservationService.create(newReservation))
                 .isInstanceOf(IllegalArgumentException.class);
     }
 
     @Test
     @DisplayName("모든 예약 목록을 조회한다.")
-    void getReservations() {
+    void getAll() {
         // given
         Reservation miaReservation = MIA_RESERVATION();
         Reservation tommyReservation = TOMMY_RESERVATION();
@@ -97,7 +97,7 @@ class ReservationServiceTest {
                 .thenReturn(List.of(miaReservation, tommyReservation));
 
         // when
-        List<ReservationResponse> reservations = reservationService.getReservations();
+        List<ReservationResponse> reservations = reservationService.getAll();
 
         // then
         assertThat(reservations).hasSize(2)
@@ -107,7 +107,7 @@ class ReservationServiceTest {
 
     @Test
     @DisplayName("예약을 삭제한다.")
-    void deleteReservation() {
+    void delete() {
         // given
         Reservation miaReservation = MIA_RESERVATION();
 
@@ -115,13 +115,13 @@ class ReservationServiceTest {
                 .thenReturn(Optional.of(miaReservation));
 
         // when & then
-        assertThatCode(() -> reservationService.deleteReservation(1L))
+        assertThatCode(() -> reservationService.delete(1L))
                 .doesNotThrowAnyException();
     }
 
     @Test
     @DisplayName("존재하지 않는 예약 Id로 삭제할 수 없다.")
-    void deleteReservationNotExistingId() {
+    void deleteNotExistingId() {
         // given
         Long notExistingId = 1L;
 
@@ -129,7 +129,7 @@ class ReservationServiceTest {
                 .thenReturn(Optional.empty());
 
         // when & then
-        assertThatThrownBy(() -> reservationService.deleteReservation(notExistingId))
+        assertThatThrownBy(() -> reservationService.delete(notExistingId))
                 .isInstanceOf(IllegalArgumentException.class);
     }
 }

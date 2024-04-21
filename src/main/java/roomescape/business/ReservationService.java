@@ -22,14 +22,7 @@ public class ReservationService {
         this.reservationTimeRepository = reservationTimeRepository;
     }
 
-    public List<ReservationResponse> getReservations() {
-        var reservations = reservationRepository.findAll();
-        return reservations.stream()
-                .map(ReservationResponse::from)
-                .toList();
-    }
-
-    public ReservationResponse createReservation(Reservation reservation) {
+    public ReservationResponse create(Reservation reservation) {
         var reservationTime = reservationTimeRepository.findById(reservation.getReservationTimeId())
                 .orElseThrow(() -> new IllegalArgumentException("해당 ID의 예약 시간이 없습니다."));
         var reservationsInSameDateTime = reservationRepository.findAllByDateAndTime(reservation.getDate(), reservationTime);
@@ -55,7 +48,14 @@ public class ReservationService {
         }
     }
 
-    public void deleteReservation(Long id) {
+    public List<ReservationResponse> getAll() {
+        var reservations = reservationRepository.findAll();
+        return reservations.stream()
+                .map(ReservationResponse::from)
+                .toList();
+    }
+
+    public void delete(Long id) {
         var reservation = reservationRepository.findById(id)
                 .orElseThrow(() -> new IllegalArgumentException("해당 ID의 예약이 없습니다."));
         reservationRepository.deleteById(reservation.getId());

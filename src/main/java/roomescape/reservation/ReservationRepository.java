@@ -8,6 +8,7 @@ import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.support.GeneratedKeyHolder;
 import org.springframework.jdbc.support.KeyHolder;
 import org.springframework.stereotype.Repository;
+import roomescape.time.Time;
 
 @Repository
 public class ReservationRepository {
@@ -17,29 +18,47 @@ public class ReservationRepository {
         this.jdbcTemplate = jdbcTemplate;
     }
 
-    public Long save(final ReservationRequest reservationRequest) {
+    public Reservation save(final ReservationRequest reservationRequest, final Time time) {
+        String name = reservationRequest.getName();
+        String date = reservationRequest.getDate();
+
         KeyHolder keyHolder = new GeneratedKeyHolder();
         jdbcTemplate.update(connection -> {
             PreparedStatement ps = connection.prepareStatement(
-                    "insert into reservation(name, date, time) values (?, ? ,?)", new String[]{"id"});
+                    "insert into reservation(name, date, time_id) values (?, ? ,?)", new String[]{"id"});
             ps.setString(1, reservationRequest.getName());
             ps.setString(2, reservationRequest.getDate());
-            ps.setString(3, reservationRequest.getTime());
+            ps.setLong(3, time.getId());
             return ps;
         }, keyHolder);
+        long reservationId = keyHolder.getKey().longValue();
 
-        return keyHolder.getKey().longValue();
+        return new Reservation(reservationId, name, date, time);
     }
 
     public Optional<Reservation> findById(final Long id) {
         try {
-            return Optional.ofNullable(jdbcTemplate.queryForObject("select * from reservation where id = ?",
+            return Optional.ofNullable(jdbcTemplate.queryForObject("""
+                            SELECT
+                            r.id,
+                            r.name,
+                            r.date,
+                            t.id as time_id,
+                            t.start_at
+                            from reservation as r
+                            inner join reservation_time as t
+                            on r.time_id = t.id
+                            where r.id = ?
+                            """,
                     (resultSet, rowNum) -> {
                         Reservation reservation = new Reservation(
                                 resultSet.getLong("id"),
                                 resultSet.getString("name"),
                                 resultSet.getString("date"),
-                                resultSet.getString("time")
+                                new Time(
+                                        resultSet.getLong("time_id"),
+                                        resultSet.getString("start_at")
+                                )
                         );
                         return reservation;
                     }, id));
@@ -49,13 +68,26 @@ public class ReservationRepository {
     }
 
     public List<Reservation> findAll() {
-        return jdbcTemplate.query("select * from reservation",
+        return jdbcTemplate.query("""
+                        SELECT
+                        r.id,
+                        r.name,
+                        r.date,
+                        t.id as time_id,
+                        t.start_at
+                        from reservation as r
+                        inner join reservation_time as t
+                        on r.time_id = t.id
+                        """,
                 (resultSet, rowNum) -> {
                     Reservation reservation = new Reservation(
                             resultSet.getLong("id"),
                             resultSet.getString("name"),
                             resultSet.getString("date"),
-                            resultSet.getString("time")
+                            new Time(
+                                    resultSet.getLong("time_id"),
+                                    resultSet.getString("start_at")
+                            )
                     );
                     return reservation;
                 });

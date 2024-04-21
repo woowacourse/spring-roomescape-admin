@@ -29,7 +29,6 @@ public class ReservationTimeController {
     @PostMapping("/times")
     public ResponseEntity<ReservationTimeResponseDto> addTime(@RequestBody ReservationTimeRequestDto requestBody) {
         ReservationTimeResponseDto responseBody = reservationTimeService.addTime(requestBody);
-        // TODO: dto를 그대로 응답하는 것 괜찮을까?
         return ResponseEntity
                 .created(URI.create("/time/" + responseBody.getId()))
                 .body(responseBody);

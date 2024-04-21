@@ -24,13 +24,13 @@ public class ReservationService {
 
     public ReservationResponseDto addReservation(ReservationRequestDto reservationDto) {
         long id = reservationDao.save(reservationDto);
-        Reservation reservation = reservationDao.findById(id); // TODO: save + findById ???
+        Reservation reservation = reservationDao.findById(id);
         return new ReservationResponseDto(
                 id,
                 reservation.getName(),
                 reservation.getDate(),
                 ReservationTimeResponseDto.from(reservation.getTime())
-        ); // TODO: 서비스 계층에서 DTO의 이름을 통해 요청과 응답임을 암시해도 괜찮을까?
+        );
     }
 
     public void deleteReservation(long id) {

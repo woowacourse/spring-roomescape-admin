@@ -15,7 +15,6 @@ public class ReservationTimeResponseDto {
     }
 
     public static ReservationTimeResponseDto from(ReservationTime time) {
-        // TODO: entity에서 dto로 변환하는 게 나을까?
         return new ReservationTimeResponseDto(time.getId(), time.getStartAt());
     }
 

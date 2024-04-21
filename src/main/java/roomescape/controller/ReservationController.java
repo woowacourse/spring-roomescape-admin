@@ -9,23 +9,22 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.bind.annotation.RestController;
 import roomescape.Repository.ReservationRepository;
 import roomescape.dto.ReservationRequest;
 import roomescape.dto.ReservationResponse;
 
-@Controller
+@RestController
 public class ReservationController {
 
     private final ReservationRepository reservationRepository = new ReservationRepository();
 
     @GetMapping("/reservations")
-    @ResponseBody
     public ResponseEntity<List<ReservationResponse>> readReservations() {
         return ResponseEntity.ok(reservationRepository.readReservations());
     }
 
     @PostMapping("/reservations")
-    @ResponseBody
     public ResponseEntity<ReservationResponse> createReservation(@RequestBody ReservationRequest reservationRequest) {
         return ResponseEntity.ok(reservationRepository.createReservation(reservationRequest));
     }

@@ -1,25 +1,31 @@
 package roomescape;
 
+import static io.restassured.RestAssured.given;
 import static org.hamcrest.Matchers.is;
+import static roomescape.ReservationTestSetting.createReservationDto;
 
-import io.restassured.RestAssured;
 import io.restassured.http.ContentType;
-import java.util.HashMap;
-import java.util.Map;
+import io.restassured.response.Response;
 import org.junit.jupiter.api.DisplayNameGeneration;
 import org.junit.jupiter.api.DisplayNameGenerator;
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.boot.test.context.SpringBootTest.WebEnvironment;
+import org.springframework.boot.test.web.server.LocalServerPort;
 import org.springframework.test.annotation.DirtiesContext;
 
-@SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.DEFINED_PORT)
+@SpringBootTest(webEnvironment = WebEnvironment.RANDOM_PORT)
 @DirtiesContext(classMode = DirtiesContext.ClassMode.BEFORE_EACH_TEST_METHOD)
 @DisplayNameGeneration(DisplayNameGenerator.ReplaceUnderscores.class)
 public class MissionStepTest {
 
+    @LocalServerPort
+    int port;
+
     @Test
     void 메인_페이지_이동() {
-        RestAssured.given().log().all()
+        given().log().all()
+                .port(port)
                 .when().get("/admin")
                 .then().log().all()
                 .statusCode(200);
@@ -27,7 +33,8 @@ public class MissionStepTest {
 
     @Test
     void 예약_페이지_이동() {
-        RestAssured.given().log().all()
+        given().log().all()
+                .port(port)
                 .when().get("/admin/reservation")
                 .then().log().all()
                 .statusCode(200);
@@ -35,7 +42,8 @@ public class MissionStepTest {
 
     @Test
     void 예약_페이지에서_예약_목록_조회() {
-        RestAssured.given().log().all()
+        given().log().all()
+                .port(port)
                 .when().get("/reservations")
                 .then().log().all()
                 .statusCode(200)
@@ -44,31 +52,34 @@ public class MissionStepTest {
 
     @Test
     void 예약_페이지에서_예약_추가_및_삭제() {
-        Map<String, String> params = new HashMap<>();
-        params.put("name", "브라운");
-        params.put("date", "2023-08-05");
-        params.put("time", "15:40");
+        ReservationDto reservationRequest = createReservationDto();
 
-        RestAssured.given().log().all()
+        Response response = given().log().all()
+                .port(port)
                 .contentType(ContentType.JSON)
-                .body(params)
+                .body(reservationRequest)
                 .when().post("/reservations")
                 .then().log().all()
                 .statusCode(200)
-                .body("id", is(1));
+                .extract().response();
 
-        RestAssured.given().log().all()
+        Integer savedId = response.path("id");
+
+        given().log().all()
+                .port(port)
                 .when().get("/reservations")
                 .then().log().all()
                 .statusCode(200)
                 .body("size()", is(1));
 
-        RestAssured.given().log().all()
-                .when().delete("/reservations/1")
+        given().log().all()
+                .port(port)
+                .when().delete("/reservations/" + savedId)
                 .then().log().all()
                 .statusCode(200);
 
-        RestAssured.given().log().all()
+        given().log().all()
+                .port(port)
                 .when().get("/reservations")
                 .then().log().all()
                 .statusCode(200)

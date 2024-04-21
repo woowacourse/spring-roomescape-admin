@@ -7,12 +7,12 @@ import java.time.LocalTime;
 public class Reservation {
     private final Long id;
     private final String name;
-    private final LocalDateTime time;
+    private final LocalDateTime dateTime;
 
-    public Reservation(final Long id, final String name, final LocalDateTime time) {
+    public Reservation(final Long id, final String name, final LocalDateTime dateTime) {
         this.id = id;
         this.name = name;
-        this.time = time;
+        this.dateTime = dateTime;
     }
 
     public Long getId() {
@@ -24,10 +24,10 @@ public class Reservation {
     }
 
     public LocalDate getDate() {
-        return time.toLocalDate();
+        return dateTime.toLocalDate();
     }
 
     public LocalTime getTime() {
-        return time.toLocalTime();
+        return dateTime.toLocalTime();
     }
 }

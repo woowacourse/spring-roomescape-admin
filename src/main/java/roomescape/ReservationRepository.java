@@ -2,12 +2,14 @@ package roomescape;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.concurrent.atomic.AtomicLong;
 
 public class ReservationRepository {
 
     private static final ReservationRepository INSTANCE = new ReservationRepository();
 
     private final List<Reservation> reservations = new ArrayList<>();
+    private final static AtomicLong index = new AtomicLong(1);
 
     private ReservationRepository() {
     }
@@ -16,8 +18,12 @@ public class ReservationRepository {
         return INSTANCE;
     }
 
-    public void save(Reservation reservation) {
-        reservations.add(reservation);
+    public Long save(Reservation reservation) {
+        Long reservationId = index.getAndIncrement();
+        Reservation reservationToSave = new Reservation(reservationId, reservation);
+        reservations.add(reservationToSave);
+
+        return reservationId;
     }
 
     public List<Reservation> findAll() {
@@ -34,9 +40,5 @@ public class ReservationRepository {
     public void delete(Long id) {
         Reservation reservationToDelete = findById(id);
         reservations.remove(reservationToDelete);
-    }
-
-    public void clear() {
-        reservations.clear();
     }
 }

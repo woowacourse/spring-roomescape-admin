@@ -11,6 +11,7 @@ import org.springframework.jdbc.core.namedparam.SqlParameterSource;
 import org.springframework.jdbc.core.simple.SimpleJdbcInsert;
 import org.springframework.stereotype.Repository;
 import roomescape.domain.Reservation;
+import roomescape.domain.ReservationTime;
 
 @Repository
 public class JdbcReservationRepository {
@@ -26,16 +27,26 @@ public class JdbcReservationRepository {
     }
 
     public List<Reservation> findAllReservations() {
-        String sql = "SELECT * FROM reservation";
+        String sql = """
+                SELECT 
+                r.id as reservation_id, 
+                r.name, 
+                r.date, 
+                t.id as time_id, 
+                t.start_at as time_value 
+                FROM reservation as r 
+                inner join reservation_time as t on r.time_id = t.id;
+                """;
         return jdbcTemplate.query(sql, reservationRowMapper());
     }
 
-    public Long insertReservation(Reservation reservation) {
+    public Reservation insertReservation(Reservation reservation) {
         SqlParameterSource parameterSource = new MapSqlParameterSource()
                 .addValue("name", reservation.getName())
                 .addValue("date", reservation.getDate())
-                .addValue("time", reservation.getTime());
-        return jdbcInsert.executeAndReturnKey(parameterSource).longValue();
+                .addValue("time_id", reservation.getTime().getId());
+        Long savedId = jdbcInsert.executeAndReturnKey(parameterSource).longValue();
+        return findReservationById(savedId);
     }
 
     public void deleteReservationById(Long id) {
@@ -45,13 +56,30 @@ public class JdbcReservationRepository {
         jdbcTemplate.update(sql, parameterSource);
     }
 
+    private Reservation findReservationById(Long savedId) {
+        String sql = """
+                SELECT 
+                r.id as reservation_id, 
+                r.name, 
+                r.date, 
+                t.id as time_id, 
+                t.start_at as time_value 
+                FROM reservation as r 
+                inner join reservation_time as t on r.time_id = t.id 
+                WHERE r.id = :savedId;
+                """;
+        SqlParameterSource paramMap = new MapSqlParameterSource().addValue("savedId", savedId);
+        return jdbcTemplate.query(sql, paramMap, reservationRowMapper()).get(0);
+    }
 
     private RowMapper<Reservation> reservationRowMapper() {
         return (resultSet, rowNum) -> new Reservation(
-                resultSet.getLong("id"),
+                resultSet.getLong("reservation_id"),
                 resultSet.getString("name"),
                 LocalDate.parse(resultSet.getString("date")),
-                LocalTime.parse(resultSet.getString("time"))
-        );
+                new ReservationTime(
+                        resultSet.getLong("time_id"),
+                        LocalTime.parse(resultSet.getString("time_value"))
+                ));
     }
 }

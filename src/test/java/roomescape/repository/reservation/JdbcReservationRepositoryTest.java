@@ -16,6 +16,7 @@ import org.springframework.boot.test.autoconfigure.jdbc.JdbcTest;
 import org.springframework.test.context.TestExecutionListeners;
 import org.springframework.test.context.support.DependencyInjectionTestExecutionListener;
 import roomescape.domain.Reservation;
+import roomescape.domain.ReservationTime;
 import roomescape.repository.DatabaseCleanupListener;
 
 @TestExecutionListeners(value = {
@@ -29,8 +30,10 @@ class JdbcReservationRepositoryTest {
     private DataSource dataSource;
     private JdbcReservationRepository jdbcReservationRepository;
 
-    private final Reservation reservation1 = new Reservation(null, "안돌", LocalDate.now(), LocalTime.now());
-    private final Reservation reservation2 = new Reservation(null, "재즈", LocalDate.now(), LocalTime.now());
+    private final Reservation reservation1 = new Reservation(null, "안돌", LocalDate.now(),
+            new ReservationTime(1L, LocalTime.now()));
+    private final Reservation reservation2 = new Reservation(null, "재즈", LocalDate.now(),
+            new ReservationTime(2L, LocalTime.now()));
 
     @BeforeEach
     void setUp() {
@@ -51,9 +54,9 @@ class JdbcReservationRepositoryTest {
     @Test
     @DisplayName("예약을 저장한다.")
     void save_reservation() {
-        Long savedId = jdbcReservationRepository.insertReservation(reservation1);
+        Reservation reservation = jdbcReservationRepository.insertReservation(reservation1);
 
-        assertThat(savedId).isEqualTo(1L);
+        assertThat(reservation.getId()).isEqualTo(1L);
     }
 
     @Test

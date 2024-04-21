@@ -26,6 +26,9 @@ public class MissionStepTest {
     @LocalServerPort
     int port;
 
+    @Autowired
+    private JdbcTemplate jdbcTemplate;
+
     @BeforeEach
     public void setPort() {
         RestAssured.port = port;
@@ -62,19 +65,28 @@ public class MissionStepTest {
     }
 
     @Test
-    void createAndDeleteTest() {
-        Map<String, String> params = new HashMap<>();
-        params.put("name", "브라운");
-        params.put("date", "2023-08-05");
-        params.put("time", "15:40");
+    void createAndDeleteTestWithTimeId() {
+        Map<String, Object> time = new HashMap<>();
+        time.put("startAt", "11:00");
 
         RestAssured.given().log().all()
                 .contentType(ContentType.JSON)
-                .body(params)
+                .body(time)
+                .when().post("/times")
+                .then().log().all()
+                .statusCode(201);
+
+        Map<String, Object> reservation = new HashMap<>();
+        reservation.put("name", "브라운");
+        reservation.put("date", "2023-08-05");
+        reservation.put("timeId", 1);
+
+        RestAssured.given().log().all()
+                .contentType(ContentType.JSON)
+                .body(reservation)
                 .when().post("/reservations")
                 .then().log().all()
-                .statusCode(201)
-                .body("id", is(1));
+                .statusCode(201);
 
         RestAssured.given().log().all()
                 .when().get("/reservations")
@@ -93,9 +105,6 @@ public class MissionStepTest {
                 .statusCode(200)
                 .body("size()", is(0));
     }
-
-    @Autowired
-    private JdbcTemplate jdbcTemplate;
 
     @Test
     void jdbcTemplateTest() {
@@ -121,33 +130,6 @@ public class MissionStepTest {
         Integer count = jdbcTemplate.queryForObject("SELECT count(*) from reservations", Integer.class);
 
         assertThat(reservations.size()).isEqualTo(count);
-    }
-
-    @Test
-    void createDeleteTestWithJdbcTemplate() {
-        Map<String, String> params = new HashMap<>();
-        params.put("name", "브라운");
-        params.put("date", "2023-08-05");
-        params.put("time", "10:00");
-
-        RestAssured.given().log().all()
-                .contentType(ContentType.JSON)
-                .body(params)
-                .when().post("/reservations")
-                .then().log().all()
-                .statusCode(201)
-                .header("Location", "/reservations/1");
-
-        Integer count = jdbcTemplate.queryForObject("SELECT count(*) from reservations", Integer.class);
-        assertThat(count).isEqualTo(1);
-
-        RestAssured.given().log().all()
-                .when().delete("/reservations/1")
-                .then().log().all()
-                .statusCode(204);
-
-        Integer countAfterDelete = jdbcTemplate.queryForObject("SELECT count(*) from reservations", Integer.class);
-        assertThat(countAfterDelete).isEqualTo(0);
     }
 
     @Test

@@ -1,45 +1,41 @@
 package roomescape.controller;
 
+import jakarta.servlet.http.HttpServletResponse;
+import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 import roomescape.dto.ReservationRequest;
-import roomescape.domain.Reservation;
+import roomescape.dto.ReservationCreateResponse;
+import roomescape.dto.ReservationsResponse;
+import roomescape.service.ReservationService;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Objects;
-import java.util.concurrent.atomic.AtomicLong;
 
 @RestController
 @RequestMapping("reservations")
 public class ReservationApiController {
 
-    private final List<Reservation> reservations = new ArrayList<>();
-    private final AtomicLong index = new AtomicLong(1);
+    private final ReservationService reservationService;
+
+    public ReservationApiController(final ReservationService reservationService) {
+        this.reservationService = reservationService;
+    }
 
     @GetMapping
-    public List<Reservation> reservations() {
-        return reservations;
+    public ReservationsResponse reservations() {
+        return new ReservationsResponse(reservationService.getReservations());
     }
 
     @PostMapping
-    public Reservation createReservation(@RequestBody final ReservationRequest reservationRequest) {
-        Reservation reservation = Reservation.builder()
-                                             .id(index.getAndIncrement())
-                                             .name(reservationRequest.name())
-                                             .date(reservationRequest.date())
-                                             .time(reservationRequest.time())
-                                             .build();
-        reservations.add(reservation);
-        return reservation;
+    @ResponseStatus(value = HttpStatus.CREATED)
+    public ReservationCreateResponse createReservation(@RequestBody final ReservationRequest reservationRequest,
+                                                       final HttpServletResponse response) {
+        final ReservationCreateResponse reservationCreateResponse = reservationService.createReservation(reservationRequest);
+        response.setHeader("Location", reservationCreateResponse.getLocationHeaderValue());
+        return reservationCreateResponse;
     }
 
     @DeleteMapping("/{id}")
+    @ResponseStatus(value = HttpStatus.NO_CONTENT)
     public void deleteReservation(@PathVariable final Long id) {
-        final Reservation reservation = reservations.stream()
-                                                    .filter(it -> Objects.equals(it.getId(), id))
-                                                    .findFirst()
-                                                    .orElseThrow(RuntimeException::new);
-
-        reservations.remove(reservation);
+        reservationService.deleteReservation(id);
     }
 }

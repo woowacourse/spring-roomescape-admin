@@ -11,6 +11,7 @@ import java.time.LocalDate;
 import java.time.LocalTime;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.assertThatCode;
 import static org.assertj.core.api.SoftAssertions.assertSoftly;
 
 @Transactional
@@ -67,5 +68,12 @@ class H2ReservationRepositoryImplTest {
 
         assertThat(reservationRepository.findAll().size())
                 .isEqualTo(0);
+    }
+
+    @DisplayName("삭제할 예약이 존재하지 않는다")
+    @Test
+    void deleteById_reservationDoesNotExist() {
+        assertThatCode(() -> reservationRepository.deleteById(1))
+                .doesNotThrowAnyException();
     }
 }

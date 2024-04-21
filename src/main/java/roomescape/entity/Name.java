@@ -1,7 +1,5 @@
 package roomescape.entity;
 
-import java.util.Objects;
-
 public class Name {
     private static final int MIN_LENGTH = 1;
     private static final int MAX_LENGTH = 5;
@@ -19,7 +17,9 @@ public class Name {
     }
 
     private void validateNonNull(String name) {
-        Objects.requireNonNull(name);
+        if (name == null) {
+            throw new NullPointerException("예약자 이름은 Null이 될 수 없습니다");
+        }
     }
 
     private void validateLength(String name) {

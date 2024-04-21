@@ -3,7 +3,6 @@ package roomescape.entity;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.LocalTime;
-import java.util.Objects;
 
 public class ReservationTime {
     private static final int RESERVATION_DURATION_HOUR = 1;
@@ -11,8 +10,14 @@ public class ReservationTime {
     private final LocalDateTime startTime;
 
     public ReservationTime(LocalDateTime startTime) {
-        Objects.requireNonNull(startTime);
+        validateNonNull(startTime);
         this.startTime = startTime;
+    }
+
+    private void validateNonNull(LocalDateTime startTime) {
+        if (startTime == null) {
+            throw new NullPointerException("예약 시간은 Null이 될 수 없습니다");
+        }
     }
 
     public boolean isConflictWith(ReservationTime other) {

@@ -1,7 +1,5 @@
 package roomescape.repository.reservation;
 
-import java.time.LocalDate;
-import java.time.LocalTime;
 import java.util.List;
 import javax.sql.DataSource;
 import org.springframework.jdbc.core.RowMapper;
@@ -11,7 +9,6 @@ import org.springframework.jdbc.core.namedparam.SqlParameterSource;
 import org.springframework.jdbc.core.simple.SimpleJdbcInsert;
 import org.springframework.stereotype.Repository;
 import roomescape.domain.Reservation;
-import roomescape.domain.ReservationTime;
 
 @Repository
 public class JdbcReservationRepository implements ReservationRepository {
@@ -79,10 +76,9 @@ public class JdbcReservationRepository implements ReservationRepository {
         return (resultSet, rowNum) -> new Reservation(
                 resultSet.getLong("reservation_id"),
                 resultSet.getString("name"),
-                LocalDate.parse(resultSet.getString("date")),
-                new ReservationTime(
-                        resultSet.getLong("time_id"),
-                        LocalTime.parse(resultSet.getString("time_value"))
-                ));
+                resultSet.getString("date"),
+                resultSet.getLong("time_id"),
+                resultSet.getString("time_value")
+        );
     }
 }

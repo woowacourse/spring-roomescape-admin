@@ -3,8 +3,6 @@ package roomescape.repository.reservation;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertAll;
 
-import java.time.LocalDate;
-import java.time.LocalTime;
 import java.util.List;
 import javax.sql.DataSource;
 import org.junit.jupiter.api.BeforeEach;
@@ -32,11 +30,11 @@ class JdbcReservationRepositoryTest {
     private ReservationRepository reservationRepository;
     private ReservationTimeRepository reservationTimeRepository;
 
-    private final ReservationTime time1 = new ReservationTime(1L, LocalTime.now());
-    private final ReservationTime time2 = new ReservationTime(2L, LocalTime.now());
+    private final ReservationTime time1 = new ReservationTime(1L, "00:00");
+    private final ReservationTime time2 = new ReservationTime(2L, "12:00");
 
-    private final Reservation reservation1 = new Reservation(null, "안돌", LocalDate.now(), time1);
-    private final Reservation reservation2 = new Reservation(null, "재즈", LocalDate.now(), time2);
+    private final Reservation reservation1 = new Reservation(null, "안돌", "2024-09-08", 1L, "00:00");
+    private final Reservation reservation2 = new Reservation(null, "재즈", "2024-11-30", 2L, "12:00");
 
     @BeforeEach
     void setUp() {

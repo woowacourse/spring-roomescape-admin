@@ -17,8 +17,8 @@ public class Reservation {
         this.time = time;
     }
 
-    public Reservation(Long id, String name, LocalDate date, ReservationTime time) {
-        this(id, new Name(name), new ReservationDate(date), time);
+    public Reservation(Long id, String name, String date, Long timeId, String time) {
+        this(id, new Name(name), new ReservationDate(date), new ReservationTime(timeId, time));
     }
 
     public Long getId() {

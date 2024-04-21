@@ -1,8 +1,7 @@
 package roomescape.dto;
 
-import java.time.LocalTime;
 import java.util.Objects;
-import roomescape.domain.Time;
+import roomescape.domain.time.Time;
 
 public class TimeDto {
 
@@ -17,7 +16,7 @@ public class TimeDto {
     public static TimeDto from(Time time) {
         return new TimeDto(
                 time.getId(),
-                time.toStringStartAt()
+                time.getStartAt().toStringTime()
         );
     }
 
@@ -26,10 +25,7 @@ public class TimeDto {
     }
 
     public Time toDomain() {
-        return new Time(
-                id,
-                LocalTime.parse(startAt)
-        );
+        return Time.of(id, startAt);
     }
 
     public Long getId() {

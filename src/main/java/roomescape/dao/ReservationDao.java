@@ -1,15 +1,13 @@
 package roomescape.dao;
 
 import java.sql.PreparedStatement;
-import java.time.LocalDate;
-import java.time.LocalTime;
 import java.util.List;
 import java.util.Objects;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.support.GeneratedKeyHolder;
 import org.springframework.jdbc.support.KeyHolder;
 import org.springframework.stereotype.Component;
-import roomescape.domain.Reservation;
+import roomescape.domain.reservation.Reservation;
 import roomescape.dto.ReservationDto;
 
 @Component
@@ -25,11 +23,11 @@ public class ReservationDao {
         String sql = "SELECT id, name, `date`, `time` FROM reservation";
         return jdbcTemplate.query(
                 sql,
-                (resultSet, rowNum) -> new Reservation(
+                (resultSet, rowNum) -> Reservation.of(
                         resultSet.getLong("id"),
                         resultSet.getString("name"),
-                        LocalDate.parse(resultSet.getString("date")),
-                        LocalTime.parse(resultSet.getString("time"))
+                        resultSet.getString("date"),
+                        resultSet.getString("time")
                 )
         );
     }
@@ -38,11 +36,11 @@ public class ReservationDao {
         String sql = "SELECT id, name, `date`, `time` FROM reservation WHERE id = ?";
         return jdbcTemplate.queryForObject(
                 sql,
-                (resultSet, rowNum) -> new Reservation(
+                (resultSet, rowNum) -> Reservation.of(
                         resultSet.getLong("id"),
                         resultSet.getString("name"),
-                        LocalDate.parse(resultSet.getString("date")),
-                        LocalTime.parse(resultSet.getString("time"))
+                        resultSet.getString("date"),
+                        resultSet.getString("time")
                 ),
                 id
         );

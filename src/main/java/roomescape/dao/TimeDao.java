@@ -1,14 +1,13 @@
 package roomescape.dao;
 
 import java.sql.PreparedStatement;
-import java.time.LocalTime;
 import java.util.List;
 import java.util.Objects;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.support.GeneratedKeyHolder;
 import org.springframework.jdbc.support.KeyHolder;
 import org.springframework.stereotype.Component;
-import roomescape.domain.Time;
+import roomescape.domain.time.Time;
 import roomescape.dto.TimeDto;
 
 @Component
@@ -24,9 +23,9 @@ public class TimeDao {
         String sql = "SELECT id, start_at FROM reservation_time";
         return jdbcTemplate.query(
                 sql,
-                (resultSet, rowNum) -> new Time(
+                (resultSet, rowNum) -> Time.of(
                         resultSet.getLong("id"),
-                        LocalTime.parse(resultSet.getString("start_at"))
+                        resultSet.getString("start_at")
                 )
         );
     }
@@ -35,9 +34,9 @@ public class TimeDao {
         String sql = "SELECT id, start_at FROM reservation_time WHERE id = ?";
         return jdbcTemplate.queryForObject(
                 sql,
-                (resultSet, rowNum) -> new Time(
+                (resultSet, rowNum) -> Time.of(
                         resultSet.getLong("id"),
-                        LocalTime.parse(resultSet.getString("start_at"))
+                        resultSet.getString("start_at")
                 ),
                 id);
     }

@@ -17,7 +17,7 @@ public class TimeRepository {
         this.jdbcTemplate = jdbcTemplate;
     }
 
-    public Long save(final TimeRequest timeRequest) {
+    public Time save(final TimeRequest timeRequest) {
         KeyHolder keyHolder = new GeneratedKeyHolder();
         jdbcTemplate.update(connection -> {
             PreparedStatement ps = connection.prepareStatement(
@@ -25,13 +25,34 @@ public class TimeRepository {
             ps.setString(1, timeRequest.getStartAt());
             return ps;
         }, keyHolder);
+        long id = keyHolder.getKey().longValue();
 
-        return keyHolder.getKey().longValue();
+        return new Time(id, timeRequest.getStartAt());
     }
 
     public Optional<Time> findById(final Long id) {
         try {
             return Optional.ofNullable(jdbcTemplate.queryForObject("select * from reservation_time where id = ?",
+                    (resultSet, rowNum) -> {
+                        Time time = new Time(
+                                resultSet.getLong("id"),
+                                resultSet.getString("start_at")
+                        );
+                        return time;
+                    }, id));
+        } catch (EmptyResultDataAccessException exception) {
+            return Optional.empty();
+        }
+    }
+
+    public Optional<Time> findBySameReferId(final Long id) {
+        try {
+            return Optional.ofNullable(jdbcTemplate.queryForObject("""
+                            select t.id, t.start_at from reservation_time t
+                            inner join reservation r
+                            on t.id = r.time_id 
+                            where t.id = ?;
+                            """,
                     (resultSet, rowNum) -> {
                         Time time = new Time(
                                 resultSet.getLong("id"),

@@ -1,8 +1,6 @@
 package roomescape.reservation.dao;
 
 import java.util.List;
-import javax.sql.DataSource;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;
 import org.springframework.jdbc.core.namedparam.BeanPropertySqlParameterSource;
@@ -14,23 +12,18 @@ import roomescape.reservation.domain.ReservationTime;
 @Repository
 public class JdbcReservationTimeDao implements ReservationTimeDao{
 
-    private final JdbcTemplate jdbcTemplate;
-    private final RowMapper<ReservationTime> reservationTimeMapper = (resultSet, row) ->
+    private static final RowMapper<ReservationTime> RESERVATION_TIME_MAPPER = (resultSet, row) ->
             new ReservationTime(
                     resultSet.getLong("id"),
                     resultSet.getTime("start_at").toLocalTime()
             );
-    private SimpleJdbcInsert reservationInsert;
+
+    private final JdbcTemplate jdbcTemplate;
+    private final SimpleJdbcInsert reservationInsert;
 
     public JdbcReservationTimeDao(JdbcTemplate jdbcTemplate) {
         this.jdbcTemplate = jdbcTemplate;
-    }
-
-    @Autowired
-    public void setDataSource(DataSource dataSource) {
-        this.reservationInsert = new SimpleJdbcInsert(dataSource)
-                .withTableName("reservation_time")
-                .usingGeneratedKeyColumns("id");
+        this.reservationInsert = new SimpleJdbcInsert(jdbcTemplate);
     }
 
     @Override
@@ -43,13 +36,13 @@ public class JdbcReservationTimeDao implements ReservationTimeDao{
     @Override
     public List<ReservationTime> findAllReservationTimes() {
         String sql = "SELECT * FROM reservation_time";
-        return jdbcTemplate.query(sql, reservationTimeMapper);
+        return jdbcTemplate.query(sql, RESERVATION_TIME_MAPPER);
     }
 
     @Override
     public ReservationTime findById(Long id) {
         String sql = "SELECT id, start_at FROM reservation_time WHERE id = ?";
-        return jdbcTemplate.queryForObject(sql, reservationTimeMapper, id);
+        return jdbcTemplate.queryForObject(sql, RESERVATION_TIME_MAPPER, id);
     }
 
     @Override

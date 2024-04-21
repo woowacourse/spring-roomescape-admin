@@ -3,8 +3,6 @@ package roomescape.reservation.dao;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import javax.sql.DataSource;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;
 import org.springframework.jdbc.core.simple.SimpleJdbcInsert;
@@ -15,8 +13,7 @@ import roomescape.reservation.domain.ReservationTime;
 @Repository
 public class JdbcReservationDao implements ReservationDao {
 
-    private final JdbcTemplate jdbcTemplate;
-    private final RowMapper<Reservation> reservationMapper = (resultSet, row) ->
+    private static final RowMapper<Reservation> RESERVATION_MAPPER = (resultSet, row) ->
             new Reservation(
                     resultSet.getLong("reservation_id"),
                     resultSet.getString("name"),
@@ -26,17 +23,13 @@ public class JdbcReservationDao implements ReservationDao {
                             resultSet.getTime("time_value").toLocalTime()
                     )
             );
-    private SimpleJdbcInsert reservationInsert;
+
+    private final JdbcTemplate jdbcTemplate;
+    private final SimpleJdbcInsert reservationInsert;
 
     public JdbcReservationDao(JdbcTemplate jdbcTemplate) {
         this.jdbcTemplate = jdbcTemplate;
-    }
-
-    @Autowired
-    public void setDataSource(DataSource dataSource) {
-        this.reservationInsert = new SimpleJdbcInsert(dataSource)
-                .withTableName("reservation")
-                .usingGeneratedKeyColumns("id");
+        this.reservationInsert = new SimpleJdbcInsert(jdbcTemplate);
     }
 
     @Override
@@ -54,7 +47,7 @@ public class JdbcReservationDao implements ReservationDao {
                 on r.time_id = t.id
                 """;
 
-        return jdbcTemplate.query(sql, reservationMapper);
+        return jdbcTemplate.query(sql, RESERVATION_MAPPER);
     }
 
     @Override

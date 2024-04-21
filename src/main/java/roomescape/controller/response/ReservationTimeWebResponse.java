@@ -7,9 +7,7 @@ import roomescape.domain.ReservationTime;
 public record ReservationTimeWebResponse(
 
         Long id,
-
-        @JsonFormat(pattern = "HH:mm")
-        LocalTime startAt
+        @JsonFormat(pattern = "HH:mm") LocalTime startAt
 ) {
 
     public ReservationTimeWebResponse(ReservationTime time) {

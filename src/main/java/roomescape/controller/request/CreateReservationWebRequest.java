@@ -7,15 +7,9 @@ import roomescape.service.request.CreateReservationRequest;
 
 public record CreateReservationWebRequest(
 
-        @NotNull
-        LocalDate date,
-
-        @NotNull
-        String name,
-
-        @Positive
-        @NotNull
-        Long timeId
+        @NotNull LocalDate date,
+        @NotNull String name,
+        @Positive @NotNull Long timeId
 ) {
 
     public CreateReservationRequest toServiceRequest() {

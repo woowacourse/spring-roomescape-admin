@@ -13,22 +13,22 @@ import org.springframework.stereotype.Repository;
 
 @Primary
 @Repository
-public class H2DatabaseReservationRepository implements ReservationRepository {
+public class H2ReservationRepository implements ReservationRepository {
     private final JdbcTemplate jdbcTemplate;
 
-    public H2DatabaseReservationRepository(JdbcTemplate jdbcTemplate) {
+    public H2ReservationRepository(JdbcTemplate jdbcTemplate) {
         this.jdbcTemplate = jdbcTemplate;
     }
 
     @Override
     public Optional<Reservation> findById(Long id) {
-        String sql = "select id, name, date, time from reservation where id = ?";
+        String sql = "select id, name, date, time_id from reservation where id = ?";
         try {
             Reservation reservation = jdbcTemplate.queryForObject(sql, (resultSet, rowNum) -> new Reservation(
                     resultSet.getLong("id"),
                     resultSet.getString("name"),
                     resultSet.getDate("date").toLocalDate(),
-                    resultSet.getTime("time").toLocalTime()
+                    getReservationTime(resultSet.getLong("time_id"))
             ), id);
             return Optional.ofNullable(reservation);
         } catch (EmptyResultDataAccessException e) {
@@ -36,27 +36,45 @@ public class H2DatabaseReservationRepository implements ReservationRepository {
         }
     }
 
+    private ReservationTime getReservationTime(long timeId) {
+        return jdbcTemplate.queryForObject("select id, start_at from reservation_time where id = ?",
+                (resultSet, rowNum) -> new ReservationTime(resultSet.getLong("id"),
+                        resultSet.getTime("start_at").toLocalTime()), timeId
+        );
+    }
+
     @Override
     public List<Reservation> findAll() {
-        String sql = "select id, name, date, time from reservation";
+        String sql = "SELECT \n"
+                + "    r.id as reservation_id, \n"
+                + "    r.name, \n"
+                + "    r.date, \n"
+                + "    t.id as time_id, \n"
+                + "    t.start_at as time_value \n"
+                + "FROM reservation as r \n"
+                + "inner join reservation_time as t \n"
+                + "on r.time_id = t.id";
         return jdbcTemplate.query(sql, (resultSet, rowNum) -> new Reservation(
-                resultSet.getLong("id"),
+                resultSet.getLong("reservation_id"),
                 resultSet.getString("name"),
                 resultSet.getDate("date").toLocalDate(),
-                resultSet.getTime("time").toLocalTime()
-        ));
+                new ReservationTime(
+                        resultSet.getLong("time_id"),
+                        resultSet.getTime("time_value").toLocalTime()
+                ))
+        );
     }
 
     @Override
     public Reservation save(Reservation reservation) {
         KeyHolder keyHolder = new GeneratedKeyHolder();
-        String sql = "insert into reservation (name, date, time) values (?, ?, ?)";
+        String sql = "insert into reservation (name, date, time_id) values (?, ?, ?)";
         try {
             jdbcTemplate.update(connection -> {
                 PreparedStatement ps = connection.prepareStatement(sql, new String[]{"id"});
                 ps.setString(1, reservation.getName());
                 ps.setDate(2, java.sql.Date.valueOf(reservation.getDate()));
-                ps.setTime(3, java.sql.Time.valueOf(reservation.getTime()));
+                ps.setLong(3, reservation.getTime().getId());
                 return ps;
             }, keyHolder);
 

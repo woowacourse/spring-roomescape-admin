@@ -1,14 +1,12 @@
 package roomescape.time;
 
 import static org.hamcrest.Matchers.hasSize;
-import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.doReturn;
 import static org.mockito.Mockito.doThrow;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.delete;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.header;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
@@ -23,8 +21,6 @@ import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.dao.DataAccessException;
 import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
-import roomescape.reservation.Reservation;
-import roomescape.reservation.ReservationRequest;
 
 @DisplayName("시간 API 컨트롤러")
 @WebMvcTest(TimeApiController.class)
@@ -64,17 +60,19 @@ class TimeApiControllerTest {
         public void createSuccessTest() throws Exception {
             // given
             TimeRequest timeRequest = new TimeRequest("10:00");
-            Long id = 1L;
+            Time time = new Time(1L, timeRequest.getStartAt());
 
             // when
-            doReturn(id).when(timeService)
+            doReturn(time).when(timeService)
                     .save(any(TimeRequest.class));
 
             // then
             mockMvc.perform(post("/times")
                             .contentType(MediaType.APPLICATION_JSON)
                             .content(objectMapper.writeValueAsString(timeRequest)))
-                    .andExpect(status().isOk());
+                    .andExpect(status().isOk())
+                    .andExpect(jsonPath("$.id").value(time.getId()))
+                    .andExpect(jsonPath("$.startAt").value(time.getStartAt()));
         }
 
         @DisplayName("시간 저장 실패 시 400 응답을 받는다.")

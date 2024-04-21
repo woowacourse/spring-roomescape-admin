@@ -30,9 +30,9 @@ class ReservationTimeController {
     public ResponseEntity<ReservationTimeWebResponse> add(@RequestBody @Valid CreateReservationTimeWebRequest request) {
         ReservationTime newReservationTime = reservationTimeService.addTime(request.toServiceRequest());
         ReservationTimeWebResponse response = new ReservationTimeWebResponse(newReservationTime);
+        URI uri = URI.create("/times/" + newReservationTime.getId());
 
-        return ResponseEntity.created(URI.create("/times/" + newReservationTime.getId()))
-                .body(response);
+        return ResponseEntity.created(uri).body(response);
     }
 
     @DeleteMapping("/{id}")

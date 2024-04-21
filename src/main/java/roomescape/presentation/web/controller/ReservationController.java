@@ -30,9 +30,9 @@ class ReservationController {
     public ResponseEntity<ReservationWebResponse> reserve(@RequestBody @Valid CreateReservationWebRequest request) {
         Reservation newReservation = reservationService.reserve(request.toServiceRequest());
         ReservationWebResponse response = new ReservationWebResponse(newReservation);
+        URI uri = URI.create("/reservations/" + newReservation.getId());
 
-        return ResponseEntity.created(URI.create("/reservations/" + newReservation.getId()))
-                .body(response);
+        return ResponseEntity.created(uri).body(response);
     }
 
     @DeleteMapping("/{id}")

@@ -34,4 +34,13 @@ class AdminAcceptanceTest {
                 .then().log().all()
                 .statusCode(200);
     }
+
+    @DisplayName("어드민 예약 시간 페이지를 응답한다")
+    @Test
+    void timeTest() {
+        RestAssured.given().log().all()
+                .when().get("/admin/time")
+                .then().log().all()
+                .statusCode(200);
+    }
 }

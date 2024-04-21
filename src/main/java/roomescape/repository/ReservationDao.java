@@ -19,8 +19,8 @@ public class ReservationDao {
     private final RowMapper<Reservation> reservationRowMapper = (resultSet, rowNum) -> new Reservation(
             resultSet.getLong("id"),
             resultSet.getString("name"),
-            LocalDate.parse(resultSet.getString("date")),
-            new ReservationTime(resultSet.getLong("time_id"), LocalTime.parse(resultSet.getString("start_at")))
+            resultSet.getObject("date", LocalDate.class),
+            new ReservationTime(resultSet.getLong("time_id"), resultSet.getObject("start_at", LocalTime.class))
     );
 
     private final JdbcTemplate jdbcTemplate;
@@ -37,7 +37,7 @@ public class ReservationDao {
                     new String[]{"id"});
             ps.setString(1, reservation.getName());
             ps.setString(2, reservation.getDate().toString());
-            ps.setString(3, reservation.getTime().getId().toString());
+            ps.setLong(3, reservation.getTime().getId());
             return ps;
         }, keyHolder);
 

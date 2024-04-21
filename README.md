@@ -88,9 +88,9 @@ content-type: application/json
 #### Response
 
 ```
-HTTP/1.1 200 
+HTTP/1.1 201 
 Content-Type: application/json
-
+Location : /reservations/${created-reservation-id}
 {
     "id": 1,
     "name": "브라운",
@@ -110,5 +110,5 @@ DELETE /reservations/1 HTTP/1.1
 #### Response
 
 ```
-HTTP/1.1 200
+HTTP/1.1 204
 ```

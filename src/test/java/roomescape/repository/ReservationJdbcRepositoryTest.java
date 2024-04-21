@@ -26,14 +26,14 @@ class ReservationJdbcRepositoryTest {
     }
 
     @Test
-    @DisplayName("예약을 추가한다.")
+    @DisplayName("예약을 추가한다.") //TODO: 디스플레이명 변경
     void saveReservation() {
         final ReservationCreateRequest createRequest = new ReservationCreateRequest(
                 "냥인", "2024-04-23", "10:09");
 
         final Long id = reservationRepository.save(createRequest);
 
-        assertThat(id).isEqualTo(1);
+        assertThat(id).isEqualTo(1); // TODO: 1L
     }
 
     @Test

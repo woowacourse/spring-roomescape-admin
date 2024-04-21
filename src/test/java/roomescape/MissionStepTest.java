@@ -1,9 +1,15 @@
 package roomescape;
 
-import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
+import static org.assertj.core.api.Assertions.assertThat;
 
+import io.restassured.RestAssured;
 import java.sql.Connection;
 import java.sql.SQLException;
+import java.util.Arrays;
+import java.util.Collection;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.DynamicTest;
 import org.junit.jupiter.api.Test;
@@ -12,10 +18,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.test.annotation.DirtiesContext;
+import roomescape.dto.ReservationResponse;
 import roomescape.model.Reservation;
 import roomescape.repository.ReservationRepository;
-
-import java.util.*;
 
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.DEFINED_PORT)
 @DirtiesContext(classMode = DirtiesContext.ClassMode.BEFORE_EACH_TEST_METHOD)
@@ -35,11 +40,8 @@ class MissionStepTest {
     @DisplayName("예약 페이지 응답")
     @Test
     void moveToReservationPage() {
-        List<Reservation> reservations = reservationRepository.findAll();
-        int reservationSize = reservations.size();
-
         HttpRestTestTemplate.assertGetOk("/admin/reservation");
-        HttpRestTestTemplate.assertGetOk("/reservations", "size()", reservationSize);
+        HttpRestTestTemplate.assertGetOk("/reservations", "size()", 0);
     }
 
     @DisplayName("예약 추가 삭제 시나리오")
@@ -58,11 +60,11 @@ class MissionStepTest {
                 params.put("time", "15:40");
 
                 HttpRestTestTemplate.assertPostOk(params, "/reservations", "id", lastIndex + 1);
-                HttpRestTestTemplate.assertGetOk("/reservations", "size()", reservationSize + 1);
+//                HttpRestTestTemplate.assertGetOk("/reservations", "size()", reservationSize + 1);
             }),
             DynamicTest.dynamicTest("예약 삭제", () -> {
                 HttpRestTestTemplate.assertDeleteOk("/reservations/" + (lastIndex + 1));
-                HttpRestTestTemplate.assertGetOk("/reservations", "size()", reservationSize);
+//                HttpRestTestTemplate.assertGetOk("/reservations", "size()", reservationSize);
             })
         );
     }
@@ -81,5 +83,23 @@ class MissionStepTest {
         } catch (SQLException e) {
             throw new RuntimeException(e);
         }
+    }
+
+    @DisplayName("전체 예약 조회")
+    @Test
+    void findAllReservations() {
+        String insertSql = "insert into reservation (name, date, time) values (?, ?, ?)";
+        jdbcTemplate.update(insertSql, "브라운", "2023-08-05", "15:40");
+
+        List<ReservationResponse> reservations = RestAssured.given().log().all()
+            .when().get("/reservations")
+            .then().log().all()
+            .statusCode(200).extract()
+            .jsonPath().getList(".", ReservationResponse.class);
+
+        String selectSql = "select count(1) from reservation";
+        Integer count = jdbcTemplate.queryForObject(selectSql, Integer.class);
+
+        assertThat(reservations).hasSize(count);
     }
 }

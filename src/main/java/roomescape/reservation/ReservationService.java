@@ -3,18 +3,25 @@ package roomescape.reservation;
 import java.util.List;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import roomescape.time.Time;
+import roomescape.time.TimeRepository;
 
 @Transactional
 @Service
 public class ReservationService {
     private final ReservationRepository reservationRepository;
+    private final TimeRepository timeRepository;
 
-    public ReservationService(final ReservationRepository reservationRepository) {
+    public ReservationService(final ReservationRepository reservationRepository, final TimeRepository timeRepository) {
         this.reservationRepository = reservationRepository;
+        this.timeRepository = timeRepository;
     }
 
-    public Long save(final ReservationRequest reservationRequest) {
-        return reservationRepository.save(reservationRequest);
+    public Reservation save(final ReservationRequest reservationRequest) {
+        Time time = timeRepository.findById(reservationRequest.getTimeId())
+                .orElseThrow(() -> new IllegalArgumentException("일치하는 시간이 없습니다."));
+
+        return reservationRepository.save(reservationRequest, time);
     }
 
     @Transactional(readOnly = true)

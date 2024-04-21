@@ -9,10 +9,11 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.util.UriComponentsBuilder;
-import roomescape.dao.ReservationDao;
 import roomescape.dto.ReservationRequestDto;
 import roomescape.dto.ReservationResponseDto;
 import roomescape.entity.Reservation;
+import roomescape.mapper.ReservationMapper;
+import roomescape.service.ReservationService;
 import java.net.URI;
 import java.util.List;
 
@@ -20,15 +21,17 @@ import java.util.List;
 @RequestMapping("/reservations")
 public class ReservationApiController {
 
-    private final ReservationDao reservationDao;
+    private final ReservationService reservationService;
+    private final ReservationMapper reservationMapper;
 
-    public ReservationApiController(ReservationDao reservationDao) {
-        this.reservationDao = reservationDao;
+    public ReservationApiController(ReservationService reservationService, ReservationMapper reservationMapper) {
+        this.reservationService = reservationService;
+        this.reservationMapper = reservationMapper;
     }
 
     @GetMapping
     public List<ReservationResponseDto> getReservations() {
-        List<Reservation> reservations = reservationDao.findReservations();
+        List<Reservation> reservations = reservationService.findReservations();
         return reservations.stream()
                 .map(ReservationResponseDto::from)
                 .toList();
@@ -36,7 +39,8 @@ public class ReservationApiController {
 
     @PostMapping
     public ResponseEntity<ReservationResponseDto> postReservation(@RequestBody ReservationRequestDto reservationRequestDto) {
-        Reservation reservation = reservationDao.createReservation(reservationRequestDto.toEntity());
+        Reservation requestedReservation = reservationMapper.toReservation(reservationRequestDto);
+        Reservation reservation = reservationService.createReservation(requestedReservation);
         URI location = UriComponentsBuilder.newInstance()
                 .path("/reservations/{id}")
                 .buildAndExpand(reservation.getId())
@@ -47,7 +51,7 @@ public class ReservationApiController {
 
     @DeleteMapping("/{id}")
     public ResponseEntity<Void> deleteReservation(@PathVariable Long id) {
-        reservationDao.removeReservation(id);
+        reservationService.removeReservation(id);
         return ResponseEntity.noContent().build();
     }
 }

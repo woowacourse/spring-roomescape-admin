@@ -104,14 +104,6 @@ function createInput(type) {
   return input;
 }
 
-function createActionButton(label, className, eventListener) {
-  const button = document.createElement('button');
-  button.textContent = label;
-  button.classList.add('btn', className, 'mr-2');
-  button.addEventListener('click', eventListener);
-  return button;
-}
-
 function saveRow(event) {
   // 이벤트 전파를 막는다
   event.stopPropagation();
@@ -154,7 +146,7 @@ function requestCreate(reservation) {
 
   return fetch(RESERVATION_API_ENDPOINT, requestOptions)
       .then(response => {
-        if (response.status === 200) return response.json();
+        if (response.status === 201) return response.json();
         throw new Error('Create failed');
       });
 }
@@ -166,7 +158,7 @@ function requestDelete(id) {
 
   return fetch(`${RESERVATION_API_ENDPOINT}/${id}`, requestOptions)
       .then(response => {
-        if (response.status !== 200) throw new Error('Delete failed');
+        if (response.status !== 204) throw new Error('Delete failed');
       });
 }
 

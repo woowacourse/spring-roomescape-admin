@@ -22,6 +22,13 @@ public class ReservationTimeDao {
                 .usingGeneratedKeyColumns("id");
     }
 
+    public ReservationTime findReservationTime(Long id) {
+        String sql = "SELECT id, start_at FROM reservation_times WHERE id = ?";
+        return jdbcTemplate.queryForObject(sql, (rs, rowNum) -> new ReservationTime(
+                rs.getLong("id"),
+                rs.getTime("start_at").toLocalTime()), id);
+    }
+
     public List<ReservationTime> findReservationTimes() {
         String sql = "SELECT id, start_at FROM reservation_times";
         return jdbcTemplate.query(sql, (rs, rowNum) -> new ReservationTime(

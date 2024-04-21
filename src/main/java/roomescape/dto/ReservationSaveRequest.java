@@ -1,15 +1,14 @@
 package roomescape.dto;
 
 import java.time.LocalDate;
-import java.time.LocalTime;
 
 public record ReservationSaveRequest(
         long id,
         String name,
         LocalDate date,
-        LocalTime time
+        long timeId
 ) {
-    public ReservationSaveRequest(String name, LocalDate date, LocalTime time) {
-        this(0L, name, date, time);
+    public ReservationSaveRequest(String name, LocalDate date, long timeId) {
+        this(0L, name, date, timeId);
     }
 }

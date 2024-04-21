@@ -1,13 +1,16 @@
 package roomescape.controller;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 import roomescape.domain.Reservation;
+import roomescape.domain.ReservationTime;
 import roomescape.dto.ReservationResponse;
 import roomescape.dto.ReservationSaveRequest;
 import roomescape.mapper.ReservationMapper;
 import roomescape.repository.ReservationDao;
+import roomescape.repository.TimeDao;
 
 import java.net.URI;
 import java.util.List;
@@ -16,10 +19,16 @@ import java.util.List;
 public class ReservationController {
 
     private final ReservationMapper reservationMapper = new ReservationMapper();
+
+    @Autowired
     private final ReservationDao reservationDao;
 
-    public ReservationController(ReservationDao reservationDao) {
+    @Autowired
+    private final TimeDao timeDao;
+
+    public ReservationController(ReservationDao reservationDao, TimeDao timeDao) {
         this.reservationDao = reservationDao;
+        this.timeDao = timeDao;
     }
 
     @GetMapping("/reservation")
@@ -38,7 +47,8 @@ public class ReservationController {
 
     @PostMapping("/reservations")
     public ResponseEntity<ReservationResponse> createReservation(@RequestBody ReservationSaveRequest request) {
-        Reservation reservation = reservationMapper.mapToReservation(request);
+        ReservationTime time = timeDao.findById(request.timeId());
+        Reservation reservation = reservationMapper.mapToReservation(request, time);
         long saveId = reservationDao.save(reservation);
 
         ReservationResponse response = reservationMapper.mapToResponse(saveId, reservation);

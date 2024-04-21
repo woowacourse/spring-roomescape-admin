@@ -3,7 +3,7 @@ package roomescape.controller;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
-import roomescape.domain.Time;
+import roomescape.domain.ReservationTime;
 import roomescape.dto.TimeResponse;
 import roomescape.dto.TimeSaveRequest;
 import roomescape.mapper.TimeMapper;
@@ -29,8 +29,8 @@ public class TimeController {
 
     @GetMapping("/times")
     public ResponseEntity<List<TimeResponse>> getReservations() {
-        List<Time> times = timeDao.findAll();
-        List<TimeResponse> responses = times.stream()
+        List<ReservationTime> reservationTimes = timeDao.findAll();
+        List<TimeResponse> responses = reservationTimes.stream()
                 .map(timeMapper::mapToResponse)
                 .toList();
         return ResponseEntity.ok(responses);
@@ -38,11 +38,11 @@ public class TimeController {
 
     @PostMapping("/times")
     public ResponseEntity<TimeResponse> createReservation(@RequestBody TimeSaveRequest request) {
-        Time time = timeMapper.mapToTime(request);
-        long saveId = timeDao.save(time);
+        ReservationTime reservationTime = timeMapper.mapToTime(request);
+        long saveId = timeDao.save(reservationTime);
 
-        TimeResponse response = timeMapper.mapToResponse(saveId, time);
-        URI location = URI.create("/time/" + saveId);
+        TimeResponse response = timeMapper.mapToResponse(saveId, reservationTime);
+        URI location = URI.create("/times/" + saveId);
         return ResponseEntity.created(location).body(response);
     }
 

@@ -8,9 +8,12 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.jdbc.core.JdbcTemplate;
+import org.springframework.jdbc.support.GeneratedKeyHolder;
+import org.springframework.jdbc.support.KeyHolder;
 import roomescape.domain.Reservation;
 
 import java.sql.Connection;
+import java.sql.PreparedStatement;
 import java.sql.SQLException;
 import java.util.List;
 import java.util.Map;
@@ -27,6 +30,19 @@ public class MissionStepTest {
     @BeforeEach
     void setUp() {
         jdbcTemplate.update("DELETE FROM reservation");
+        jdbcTemplate.update("DELETE FROM reservation_time");
+    }
+
+    public String createReservationTime() {
+        KeyHolder keyHolder = new GeneratedKeyHolder();
+        jdbcTemplate.update(connection -> {
+            PreparedStatement ps = connection.prepareStatement(
+                    "INSERT INTO reservation_time (start_at) VALUES (?)",
+                    new String[]{"id"});
+            ps.setString(1, "15:40");
+            return ps;
+        }, keyHolder);
+        return keyHolder.getKey().toString();
     }
 
     @Test
@@ -53,10 +69,12 @@ public class MissionStepTest {
 
     @Test
     void 삼단계() {
+        String reservationTimeId = createReservationTime();
+
         Map<String, String> params = Map.of(
                 "name", "브라운",
                 "date", "2023-08-05",
-                "time", "15:40"
+                "timeId", reservationTimeId
         );
 
         RestAssured.given().log().all()
@@ -106,7 +124,8 @@ public class MissionStepTest {
 
     @Test
     void 오단계() {
-        jdbcTemplate.update("INSERT INTO reservation (name, date, time) VALUES (?, ?, ?)", "브라운", "2023-08-05", "15:40");
+        String reservationTimeId = createReservationTime();
+        jdbcTemplate.update("INSERT INTO reservation (name, date, time_id) VALUES (?, ?, ?)", "브라운", "2023-08-05", reservationTimeId);
 
         List<Reservation> reservations = RestAssured.given().log().all()
                 .when().get("/reservations")
@@ -121,10 +140,12 @@ public class MissionStepTest {
 
     @Test
     void 육단계() {
+        String reservationTimeId = createReservationTime();
+
         Map<String, String> params = Map.of(
                 "name", "브라운",
                 "date", "2023-08-05",
-                "time", "10:00"
+                "timeId", reservationTimeId
         );
 
         String location = RestAssured.given().log().all()
@@ -154,12 +175,14 @@ public class MissionStepTest {
                 "startAt", "10:00"
         );
 
-        RestAssured.given().log().all()
+        String location = RestAssured.given().log().all()
                 .contentType(ContentType.JSON)
                 .body(params)
                 .when().post("/times")
                 .then().log().all()
-                .statusCode(HttpStatus.SC_CREATED);
+                .statusCode(HttpStatus.SC_CREATED)
+                .extract()
+                .header("Location");
 
         RestAssured.given().log().all()
                 .when().get("/times")
@@ -168,8 +191,33 @@ public class MissionStepTest {
                 .body("size()", is(1));
 
         RestAssured.given().log().all()
-                .when().delete("/times/1")
+                .when().delete(location)
                 .then().log().all()
                 .statusCode(HttpStatus.SC_NO_CONTENT);
+    }
+
+    @Test
+    void 팔단계() {
+        String reservationTimeId = createReservationTime();
+
+        Map<String, Object> reservation = Map.of(
+                "name", "브라운",
+                "date", "2023-08-05",
+                "timeId", reservationTimeId
+        );
+
+        RestAssured.given().log().all()
+                .contentType(ContentType.JSON)
+                .body(reservation)
+                .when().post("/reservations")
+                .then().log().all()
+                .statusCode(HttpStatus.SC_CREATED);
+
+
+        RestAssured.given().log().all()
+                .when().get("/reservations")
+                .then().log().all()
+                .statusCode(HttpStatus.SC_OK)
+                .body("size()", is(1));
     }
 }

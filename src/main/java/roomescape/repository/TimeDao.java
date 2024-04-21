@@ -5,7 +5,7 @@ import org.springframework.jdbc.core.RowMapper;
 import org.springframework.jdbc.support.GeneratedKeyHolder;
 import org.springframework.jdbc.support.KeyHolder;
 import org.springframework.stereotype.Repository;
-import roomescape.domain.Time;
+import roomescape.domain.ReservationTime;
 
 import java.sql.PreparedStatement;
 import java.time.LocalTime;
@@ -16,7 +16,7 @@ import java.util.List;
 public class TimeDao {
 
     private final JdbcTemplate jdbcTemplate;
-    private final RowMapper<Time> timeRowMapper = (resultSet, rowNum) -> new Time(
+    private final RowMapper<ReservationTime> timeRowMapper = (resultSet, rowNum) -> new ReservationTime(
             resultSet.getLong("id"),
             LocalTime.parse(resultSet.getString("start_at"))
     );
@@ -25,25 +25,29 @@ public class TimeDao {
         this.jdbcTemplate = jdbcTemplate;
     }
 
-    public long save(Time time) {
+    public long save(ReservationTime reservationTime) {
         KeyHolder keyHolder = new GeneratedKeyHolder();
         jdbcTemplate.update(connection -> {
             PreparedStatement ps = connection.prepareStatement(
-                    "INSERT INTO time (start_at) VALUES (?)",
+                    "INSERT INTO reservation_time (start_at) VALUES (?)",
                     new String[]{"id"});
-            ps.setString(1, time.getStartAt().toString());
+            ps.setString(1, reservationTime.getStartAt().toString());
             return ps;
         }, keyHolder);
 
         return keyHolder.getKey().longValue();
     }
 
-    public List<Time> findAll() {
-        List<Time> times = jdbcTemplate.query("SELECT * FROM time", timeRowMapper);
-        return new ArrayList<>(times);
+    public ReservationTime findById(long id) {
+        return jdbcTemplate.queryForObject("SELECT * FROM reservation_time WHERE id = ?", timeRowMapper, id);
+    }
+
+    public List<ReservationTime> findAll() {
+        List<ReservationTime> reservationTimes = jdbcTemplate.query("SELECT * FROM reservation_time", timeRowMapper);
+        return new ArrayList<>(reservationTimes);
     }
 
     public void deleteById(Long id) {
-        jdbcTemplate.update("DELETE FROM time WHERE id = ?", id);
+        jdbcTemplate.update("DELETE FROM reservation_time WHERE id = ?", id);
     }
 }

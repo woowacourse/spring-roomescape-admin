@@ -1,7 +1,7 @@
 package roomescape.dao;
 
 import org.springframework.jdbc.core.JdbcTemplate;
-import org.springframework.jdbc.core.namedparam.BeanPropertySqlParameterSource;
+import org.springframework.jdbc.core.namedparam.MapSqlParameterSource;
 import org.springframework.jdbc.core.namedparam.SqlParameterSource;
 import org.springframework.jdbc.core.simple.SimpleJdbcInsert;
 import org.springframework.stereotype.Repository;
@@ -22,6 +22,14 @@ public class ReservationTimeDao {
                 .usingGeneratedKeyColumns("id");
     }
 
+    public ReservationTime createReservationTime(ReservationTime reservationTime) {
+        SqlParameterSource params = new MapSqlParameterSource()
+                .addValue("start_at", reservationTime.getStartAt());
+        Long id = simpleJdbcInsert.executeAndReturnKey(params).longValue();
+
+        return new ReservationTime(id, reservationTime.getStartAt());
+    }
+
     public ReservationTime findReservationTime(Long id) {
         String sql = "SELECT id, start_at FROM reservation_times WHERE id = ?";
         return jdbcTemplate.queryForObject(sql, (rs, rowNum) -> new ReservationTime(
@@ -34,13 +42,6 @@ public class ReservationTimeDao {
         return jdbcTemplate.query(sql, (rs, rowNum) -> new ReservationTime(
                 rs.getLong("id"),
                 rs.getTime("start_at").toLocalTime()));
-    }
-
-    public ReservationTime createReservationTime(ReservationTime reservationTime) {
-        SqlParameterSource params = new BeanPropertySqlParameterSource(reservationTime);
-        Long id = simpleJdbcInsert.executeAndReturnKey(params).longValue();
-
-        return new ReservationTime(id, reservationTime.getStartAt());
     }
 
     public void removeReservationTime(Long id) {

@@ -1,10 +1,16 @@
 package roomescape.controller;
 
+import java.net.URI;
+import java.sql.PreparedStatement;
 import java.sql.Time;
 import java.util.List;
+import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;
+import org.springframework.jdbc.support.GeneratedKeyHolder;
+import org.springframework.jdbc.support.KeyHolder;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -14,6 +20,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 import roomescape.domain.ReservationTime;
+import roomescape.dto.ReservationTimeResponse;
 import roomescape.dto.TimeRequest;
 
 @RestController
@@ -31,17 +38,28 @@ public class TimeController {
     }
 
     @PostMapping
-    @ResponseStatus(HttpStatus.OK)
-    public void add(@RequestBody final TimeRequest timeRequest) {
+    public ResponseEntity<Long> add(@RequestBody final TimeRequest timeRequest) {
         String sql = "INSERT INTO reservation_time (start_at) VALUES (?)";
-        jdbcTemplate.update(sql, Time.valueOf(timeRequest.startAt()));
+
+        KeyHolder keyHolder = new GeneratedKeyHolder();
+        jdbcTemplate.update(connection -> {
+            PreparedStatement ps = connection.prepareStatement(sql, new String[]{"id"});
+            ps.setTime(1, Time.valueOf(timeRequest.startAt()));
+            return ps;
+        }, keyHolder);
+        long id = keyHolder.getKey().longValue();
+
+        HttpHeaders httpHeaders = new HttpHeaders();
+        httpHeaders.setLocation(URI.create("/times/" + id));
+       return ResponseEntity.ok().headers(httpHeaders).body(id); // TODO: create로 바꾸기
     }
 
     @GetMapping
     @ResponseStatus(HttpStatus.OK)
-    public List<ReservationTime> findAll() {
+    public List<ReservationTimeResponse> findAll() {
         String sql = "SELECT * FROM reservation_time";
-        return jdbcTemplate.query(sql, actorRowMapper);
+        List<ReservationTime> reservationTimes = jdbcTemplate.query(sql, actorRowMapper);
+        return ReservationTimeResponse.fromReservationTimes(reservationTimes);
     }
 
     @DeleteMapping("/{id}")

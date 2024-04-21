@@ -24,13 +24,17 @@ public class ReservationDateTime {
         }
     }
 
-    private void validateAfterBaseDateTime(LocalDateTime dateTime, Clock clock) {
+    private void validateAfterBaseDateTime(LocalDateTime dateTime, Clock clock) { // todo 비교 로직 service로 이동하고 clock 제거
         LocalDateTime baseDateTIme = LocalDateTime.now(clock).plusDays(IN_ADVANCE_RESERVATION_DAYS);
         if (dateTime.isBefore(baseDateTIme)) {
             throw new IllegalArgumentException(
                     String.format("최소 %d일 전 예약해야 합니다.", IN_ADVANCE_RESERVATION_DAYS)
             );
         }
+    }
+
+    public LocalDateTime getDateTime() {
+        return dateTime;
     }
 
     protected LocalDate toLocalDate() {

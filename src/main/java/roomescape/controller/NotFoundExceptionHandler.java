@@ -9,7 +9,7 @@ public class NotFoundExceptionHandler {
 
     @ExceptionHandler(IllegalArgumentException.class)
     protected ResponseEntity<String> handleIllegalArgumentException(IllegalArgumentException ex) {
-        return ResponseEntity.ok()
+        return ResponseEntity.badRequest()
                 .body(ex.getMessage());
     }
 }

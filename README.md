@@ -89,8 +89,9 @@ content-type: application/json
 
 - Response
 ```
-HTTP/1.1 200
+HTTP/1.1 201
 Content-Type: application/json
+Location: /reservations/1
 
 {
     "id": 1,
@@ -112,7 +113,7 @@ DELETE /reservations/1 HTTP/1.1
 
 - Response
 ```
-HTTP/1.1 200
+HTTP/1.1 204
 ```
 
 ### 시간 추가 API
@@ -123,7 +124,7 @@ POST /times HTTP/1.1
 content-type: application/json
 
 {
-    "startAt": "10:00"
+    "startAt": "10:00"
 }
 ```
 

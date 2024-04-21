@@ -35,8 +35,19 @@ public class JdbcReservationDao implements ReservationDao {
     }
 
     @Override
-    public List<Reservation> findAllReservations() {
+    public Reservation insert(Reservation reservation) {
+        Map<String, Object> parameters = new HashMap<>(3);
+        parameters.put("name", reservation.getName());
+        parameters.put("date", reservation.getDate());
+        parameters.put("time_id", reservation.getTimeId());
 
+        Number id = reservationInsert.executeAndReturnKey(parameters);
+
+        return new Reservation(id.longValue(), reservation.getName(), reservation.getDate(), reservation.getTime());
+    }
+
+    @Override
+    public List<Reservation> findAllReservations() {
         String sql = """       
                 SELECT
                     r.id as reservation_id,
@@ -50,17 +61,6 @@ public class JdbcReservationDao implements ReservationDao {
                 """;
 
         return jdbcTemplate.query(sql, RESERVATION_MAPPER);
-    }
-
-    @Override
-    public Reservation insert(Reservation reservation) {
-        Map<String, Object> parameters = new HashMap<>(3);
-        parameters.put("name", reservation.getName());
-        parameters.put("date", reservation.getDate());
-        parameters.put("time_id", reservation.getTimeId());
-
-        Number id = reservationInsert.executeAndReturnKey(parameters);
-        return new Reservation(id.longValue(), reservation.getName(), reservation.getDate(), reservation.getTime());
     }
 
     @Override

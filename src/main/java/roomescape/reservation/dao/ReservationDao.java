@@ -4,9 +4,10 @@ import java.util.List;
 import roomescape.reservation.domain.Reservation;
 
 public interface ReservationDao {
-    List<Reservation> findAllReservations();
 
-    Reservation insert (Reservation reservation);
+    Reservation insert(Reservation reservation);
+
+    List<Reservation> findAllReservations();
 
     void delete(Long id);
 }

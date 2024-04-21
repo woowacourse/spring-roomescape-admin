@@ -21,16 +21,6 @@ class ReservationTest {
     @Autowired
     private JdbcTemplate jdbcTemplate;
 
-    @DisplayName("예약 조회 API 테스트")
-    @Test
-    void readReservations() {
-        RestAssured.given().log().all()
-                .when().get("/reservations")
-                .then().log().all()
-                .statusCode(200)
-                .body("size()", is(0));
-    }
-
     @DisplayName("예약 추가 API 테스트")
     @Test
     void createReservation() {
@@ -51,6 +41,16 @@ class ReservationTest {
                 .then().log().all()
                 .statusCode(200)
                 .body("size()", is(1));
+    }
+
+    @DisplayName("예약 조회 API 테스트")
+    @Test
+    void readReservations() {
+        RestAssured.given().log().all()
+                .when().get("/reservations")
+                .then().log().all()
+                .statusCode(200)
+                .body("size()", is(0));
     }
 
     @DisplayName("예약 취소 API 테스트")

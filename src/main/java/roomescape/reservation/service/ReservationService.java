@@ -1,7 +1,6 @@
 package roomescape.reservation.service;
 
 import java.util.List;
-import java.util.Optional;
 import org.springframework.stereotype.Service;
 import roomescape.reservation.dao.ReservationDao;
 import roomescape.reservation.dao.ReservationTimeDao;
@@ -12,6 +11,7 @@ import roomescape.reservation.dto.response.ReservationResponse;
 
 @Service
 public class ReservationService {
+
     private final ReservationDao reservationDao;
     private final ReservationTimeDao reservationTimeDao;
 
@@ -23,8 +23,7 @@ public class ReservationService {
     public ReservationResponse addReservation(ReservationRequest reservationRequest) {
         ReservationTime reservationTime = reservationTimeDao.findById(reservationRequest.timeId())
                 .orElseThrow(() -> new IllegalArgumentException("예약 시간을 찾을 수 없습니다."));
-
-        Reservation reservation = Reservation.from(reservationRequest, reservationTime);
+        Reservation reservation = Reservation.of(reservationRequest, reservationTime);
 
         Reservation savedReservation = reservationDao.insert(reservation);
         return ReservationResponse.from(savedReservation);

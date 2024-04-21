@@ -4,6 +4,7 @@ import java.time.LocalDate;
 import roomescape.reservation.dto.request.ReservationRequest;
 
 public class Reservation {
+
     private final Long id;
     private final String name;
     private final LocalDate date;
@@ -16,7 +17,7 @@ public class Reservation {
         this.time = time;
     }
 
-    public static Reservation from(ReservationRequest reservationRequest, ReservationTime reservationTime) {
+    public static Reservation of(ReservationRequest reservationRequest, ReservationTime reservationTime) {
         return new Reservation(null, reservationRequest.name(), reservationRequest.date(), reservationTime);
     }
 

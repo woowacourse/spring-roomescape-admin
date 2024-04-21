@@ -33,4 +33,9 @@ public class TimesRepository {
             return times;
         });
     }
+
+    public void remove(Long id) {
+        String SQL = "DELETE FROM reservation_time WHERE id = ?";
+        jdbcTemplate.update(SQL, id);
+    }
 }

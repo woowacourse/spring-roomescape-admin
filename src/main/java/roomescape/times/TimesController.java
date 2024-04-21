@@ -32,4 +32,10 @@ public class TimesController {
         Times newTimes = new Times(id, requestTimesWithoutId.getStartAt());
         return new ResponseTimes(newTimes);
     }
+
+    @DeleteMapping("/{id}")
+    @ResponseBody
+    public void deleteTimes(@PathVariable Long id) {
+        timesRepository.remove(id);
+    }
 }

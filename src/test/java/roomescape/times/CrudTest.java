@@ -11,9 +11,8 @@ import org.springframework.test.annotation.DirtiesContext;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
-
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
-@DirtiesContext(classMode = DirtiesContext.ClassMode.BEFORE_EACH_TEST_METHOD)
+@DirtiesContext(classMode = DirtiesContext.ClassMode.BEFORE_EACH_TEST_METHOD) // TODO 테스트에서 너무 많은 Context를 만드는건 아닐까?
 public class CrudTest {
 
     @Autowired
@@ -51,5 +50,19 @@ public class CrudTest {
 
         //then
         assertThat(timesRepository.findAll()).hasSize(2);
+    }
+
+    @Test
+    void 시간을_삭제한다() {
+        //given
+        Long id = 1L;
+        Times times = new Times(id, "00:00");
+
+        //when
+        timesRepository.add(times);
+        timesRepository.remove(id);
+
+        //then
+        assertThat(timesRepository.findAll()).doesNotContain(times);
     }
 }

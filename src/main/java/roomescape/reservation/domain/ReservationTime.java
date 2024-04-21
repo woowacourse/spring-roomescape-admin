@@ -12,8 +12,8 @@ public class ReservationTime {
         this.startAt = startAt;
     }
 
-    public static ReservationTime from(Long id, ReservationTimeRequest reservationTimeRequest) {
-        return new ReservationTime(id, reservationTimeRequest.startAt());
+    public static ReservationTime from(ReservationTimeRequest reservationTimeRequest) {
+        return new ReservationTime(null, reservationTimeRequest.startAt());
     }
 
     public Long getId() {

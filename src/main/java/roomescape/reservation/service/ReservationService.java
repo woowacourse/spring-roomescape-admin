@@ -21,10 +21,10 @@ public class ReservationService {
 
     public ReservationResponse addReservation(ReservationRequest reservationRequest) {
         ReservationTime reservationTime = reservationTimeDao.findById(reservationRequest.timeId());
-
         Reservation reservation = Reservation.from(reservationRequest, reservationTime);
-        Long id = reservationDao.insert(reservation);
-        return ReservationResponse.of(id, reservation, reservationTime);
+
+        Reservation savedReservation = reservationDao.insert(reservation);
+        return ReservationResponse.from(savedReservation);
     }
 
     public List<ReservationResponse> findAllReservations() {

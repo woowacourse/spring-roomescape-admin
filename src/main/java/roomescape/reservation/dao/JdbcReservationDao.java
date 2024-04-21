@@ -58,14 +58,14 @@ public class JdbcReservationDao implements ReservationDao {
     }
 
     @Override
-    public Long insert(Reservation reservation) {
+    public Reservation insert(Reservation reservation) {
         Map<String, Object> parameters = new HashMap<>(3);
         parameters.put("name", reservation.getName());
         parameters.put("date", reservation.getDate());
         parameters.put("time_id", reservation.getTimeId());
 
         Number id = reservationInsert.executeAndReturnKey(parameters);
-        return id.longValue();
+        return new Reservation(id.longValue(), reservation.getName(), reservation.getDate(), reservation.getTime());
     }
 
     @Override

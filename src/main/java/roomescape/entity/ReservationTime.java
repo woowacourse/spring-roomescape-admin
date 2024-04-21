@@ -8,27 +8,27 @@ import java.util.Objects;
 public class ReservationTime {
     private static final int RESERVATION_DURATION_HOUR = 1;
 
-    private final LocalDateTime reservationStartDateTime;
+    private final LocalDateTime startTime;
 
-    public ReservationTime(LocalDateTime reservationStartDateTime) {
-        Objects.requireNonNull(reservationStartDateTime);
-        this.reservationStartDateTime = reservationStartDateTime;
+    public ReservationTime(LocalDateTime startTime) {
+        Objects.requireNonNull(startTime);
+        this.startTime = startTime;
     }
 
     public boolean isConflictWith(ReservationTime other) {
-        return !(endTime().isBefore(other.reservationStartDateTime) || reservationStartDateTime.isAfter(
-                other.endTime()));
+        boolean noConflict = endTime().isBefore(other.startTime) || startTime.isAfter(other.endTime());
+        return !noConflict;
     }
 
     private LocalDateTime endTime() {
-        return reservationStartDateTime.plusHours(RESERVATION_DURATION_HOUR);
+        return startTime.plusHours(RESERVATION_DURATION_HOUR);
     }
 
     public LocalDate getStartDate() {
-        return reservationStartDateTime.toLocalDate();
+        return startTime.toLocalDate();
     }
 
     public LocalTime getStartTime() {
-        return reservationStartDateTime.toLocalTime();
+        return startTime.toLocalTime();
     }
 }

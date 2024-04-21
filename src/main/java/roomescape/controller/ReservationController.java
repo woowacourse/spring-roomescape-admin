@@ -1,12 +1,13 @@
 package roomescape.controller;
 
-import java.util.ArrayList;
 import java.util.List;
-import java.util.concurrent.atomic.AtomicLong;
+import java.util.Map;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;
+import org.springframework.jdbc.core.simple.SimpleJdbcInsert;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -24,8 +25,6 @@ public class ReservationController {
 
     @Autowired
     private JdbcTemplate jdbcTemplate;
-    private final List<Reservation> reservations = new ArrayList<>();
-    private final AtomicLong index = new AtomicLong(1);
 
     private final RowMapper<Reservation> reservationRowMapper = (rs, rowNum) ->
             new Reservation(
@@ -45,17 +44,32 @@ public class ReservationController {
     }
 
     @PostMapping
-    @ResponseStatus(value = HttpStatus.OK)
-    public CreateReservationResponse createReservation(
+    @ResponseStatus(value = HttpStatus.CREATED)
+    //TODO : 헤더 조작을 위해 ResponseEntity를 반환할 필요성이 생겼다. 다른 메서드도 동일하게 변경해 주어야 할까?
+    public ResponseEntity<CreateReservationResponse> createReservation(
             @RequestBody CreateReservationRequest createReservationRequest) {
-        Reservation newReservation = createReservationRequest.to(index.getAndIncrement());
-        reservations.add(newReservation);
-        return CreateReservationResponse.of(newReservation);
+        SimpleJdbcInsert simpleJdbcInsert = new SimpleJdbcInsert(jdbcTemplate)
+                .withTableName("reservation")
+                .usingGeneratedKeyColumns("id");
+        Long createdReservationId = simpleJdbcInsert.executeAndReturnKey(Map.of(
+                "name", createReservationRequest.name(),
+                "date", createReservationRequest.date(),
+                "time", createReservationRequest.time()
+        )).longValue();
+
+        //TODO : 이렇게 조회를 하는 것이 좋을지, Request의 데이터를 사용하는 것이 좋을지 고민해보기
+        Reservation createdReservation = jdbcTemplate.queryForObject("SELECT * FROM reservation WHERE id = ?",
+                reservationRowMapper,
+                createdReservationId);
+
+        return ResponseEntity.status(HttpStatus.CREATED)
+                .header("Location", "/reservations/" + createdReservationId)
+                .body(CreateReservationResponse.of(createdReservation));
     }
 
     @DeleteMapping("/{id}")
-    @ResponseStatus(value = HttpStatus.OK)
+    @ResponseStatus(value = HttpStatus.NO_CONTENT)
     public void deleteReservation(@PathVariable Long id) {
-        reservations.removeIf(reservation -> reservation.isIdOf(id));
+        jdbcTemplate.update("DELETE FROM reservation WHERE id = ?", id);
     }
 }

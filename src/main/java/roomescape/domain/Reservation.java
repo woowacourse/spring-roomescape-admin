@@ -2,7 +2,6 @@ package roomescape.domain;
 
 import java.time.LocalDate;
 import java.time.LocalTime;
-import java.util.Objects;
 
 public class Reservation {
     private final Long id;
@@ -15,10 +14,6 @@ public class Reservation {
         this.name = name;
         this.date = date;
         this.time = time;
-    }
-
-    public boolean isIdOf(Long id) {
-        return Objects.equals(this.id, id);
     }
 
     public Long getId() {

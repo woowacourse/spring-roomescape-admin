@@ -46,7 +46,7 @@ public class MissionStepTest {
                 .body("size()", is(0));
     }
 
-    @DisplayName("미션 3단계 - 예약 추가 및 삭제 요청이 성공하면 상태 코드 200을 응답한다.")
+    @DisplayName("미션 3단계 - 예약 추가 및 삭제 요청을 할 수 있다.")
     @Test
     void 삼단계() {
         Map<String, String> params = new HashMap<>();
@@ -138,5 +138,30 @@ public class MissionStepTest {
 
         Integer countAfterDelete = jdbcTemplate.queryForObject("SELECT count(1) from reservation", Integer.class);
         assertThat(countAfterDelete).isEqualTo(0);
+    }
+
+    @DisplayName("미션 7단계 - 시간 관리 페이지를 만들어 관리한다.")
+    @Test
+    void 칠단계() {
+        Map<String, String> params = new HashMap<>();
+        params.put("startAt", "10:00");
+
+        RestAssured.given().log().all()
+                .contentType(ContentType.JSON)
+                .body(params)
+                .when().post("/times")
+                .then().log().all()
+                .statusCode(201);
+
+        RestAssured.given().log().all()
+                .when().get("/times")
+                .then().log().all()
+                .statusCode(200)
+                .body("size()", is(1));
+
+        RestAssured.given().log().all()
+                .when().delete("/times/1")
+                .then().log().all()
+                .statusCode(204);
     }
 }

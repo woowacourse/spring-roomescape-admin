@@ -166,5 +166,10 @@ public class MissionStepTest {
                 .then().log().all()
                 .statusCode(HttpStatus.SC_OK)
                 .body("size()", is(1));
+
+        RestAssured.given().log().all()
+                .when().delete("/times/1")
+                .then().log().all()
+                .statusCode(HttpStatus.SC_NO_CONTENT);
     }
 }

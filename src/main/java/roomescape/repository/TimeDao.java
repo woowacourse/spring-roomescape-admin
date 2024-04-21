@@ -42,4 +42,8 @@ public class TimeDao {
         List<Time> times = jdbcTemplate.query("SELECT * FROM time", timeRowMapper);
         return new ArrayList<>(times);
     }
+
+    public void deleteById(Long id) {
+        jdbcTemplate.update("DELETE FROM time WHERE id = ?", id);
+    }
 }

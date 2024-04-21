@@ -1,15 +1,16 @@
 package roomescape.controller;
 
 import java.net.URI;
+import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.util.ArrayList;
 import java.util.List;
-import java.util.concurrent.atomic.AtomicLong;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;
+import org.springframework.jdbc.support.GeneratedKeyHolder;
+import org.springframework.jdbc.support.KeyHolder;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -41,11 +42,20 @@ public class ReservationController {
 
     @PostMapping("/reservations")
     public ResponseEntity<Reservation> addReservation(@RequestBody ReservationAddRequest reservationAddRequest) {
-        jdbcTemplate.update("insert into reservation (name, date, time) values (?,?,?)",
-                reservationAddRequest.getName(), reservationAddRequest.getDate(), reservationAddRequest.getTime());
-        Long id = jdbcTemplate.queryForObject(
-                "select id from reservation order by id desc limit 1", Long.class);
-        String sql ="select * from reservation where id = ?";
+        KeyHolder keyHolder = new GeneratedKeyHolder();
+        jdbcTemplate.update(connection -> {
+            PreparedStatement ps = connection.prepareStatement(
+                    "insert into reservation (name, date, time) values (?,?,?)",
+                    new String[]{"id"}
+            );
+            ps.setString(1, reservationAddRequest.getName());
+            ps.setString(2, reservationAddRequest.getDate().toString());
+            ps.setString(3, reservationAddRequest.getTime().toString());
+            return ps;
+        }, keyHolder);
+        Long id = keyHolder.getKey().longValue();
+
+        String sql = "select * from reservation where id = ?";
         Reservation reservation = jdbcTemplate.queryForObject(sql, new RowMapper<Reservation>() {
             @Override
             public Reservation mapRow(ResultSet rs, int rowNum) throws SQLException {
@@ -56,7 +66,7 @@ public class ReservationController {
                         rs.getTime("time").toLocalTime()
                 );
             }
-        },id);
+        }, id);
         return ResponseEntity.created(URI.create("/reservations/" + id)).body(reservation);
     }
 

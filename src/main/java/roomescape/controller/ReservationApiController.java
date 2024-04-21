@@ -13,23 +13,23 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 import roomescape.domain.Reservation;
-import roomescape.dto.ReservationRequestDto;
-import roomescape.dto.ReservationResponseDto;
-import roomescape.repository.JdbcTemplateReservationRepository;
+import roomescape.dto.reservation.ReservationRequestDto;
+import roomescape.dto.reservation.ReservationResponseDto;
+import roomescape.repository.reservation.JdbcReservationRepository;
 
 @RestController
 @RequestMapping("/reservations")
 public class ReservationApiController {
 
-    private final JdbcTemplateReservationRepository jdbcTemplateReservationRepository;
+    private final JdbcReservationRepository jdbcReservationRepository;
 
-    public ReservationApiController(JdbcTemplateReservationRepository jdbcTemplateReservationRepository) {
-        this.jdbcTemplateReservationRepository = jdbcTemplateReservationRepository;
+    public ReservationApiController(JdbcReservationRepository jdbcReservationRepository) {
+        this.jdbcReservationRepository = jdbcReservationRepository;
     }
 
     @GetMapping
     public List<ReservationResponseDto> getReservations() {
-        return jdbcTemplateReservationRepository.findAllReservations()
+        return jdbcReservationRepository.findAllReservations()
                 .stream()
                 .map(ReservationResponseDto::new)
                 .toList();
@@ -38,7 +38,7 @@ public class ReservationApiController {
     @PostMapping
     public ResponseEntity<ReservationResponseDto> createReservation(@RequestBody ReservationRequestDto requestDto) {
         Reservation reservation = requestDto.toReservation();
-        Long id = jdbcTemplateReservationRepository.insertReservation(reservation);
+        Long id = jdbcReservationRepository.insertReservation(reservation);
 
         ReservationResponseDto responseDto =
                 new ReservationResponseDto(id, reservation.getName(), reservation.getDate(), reservation.getTime());
@@ -50,6 +50,6 @@ public class ReservationApiController {
     @ResponseStatus(HttpStatus.NO_CONTENT)
     @DeleteMapping("/{id}")
     public void deleteReservation(@PathVariable long id) {
-        jdbcTemplateReservationRepository.deleteReservationById(id);
+        jdbcReservationRepository.deleteReservationById(id);
     }
 }

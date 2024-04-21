@@ -1,4 +1,4 @@
-package roomescape.repository;
+package roomescape.repository.reservation;
 
 import java.time.LocalDate;
 import java.time.LocalTime;
@@ -13,12 +13,12 @@ import org.springframework.stereotype.Repository;
 import roomescape.domain.Reservation;
 
 @Repository
-public class JdbcTemplateReservationRepository {
+public class JdbcReservationRepository {
 
     private final NamedParameterJdbcTemplate jdbcTemplate;
     private final SimpleJdbcInsert jdbcInsert;
 
-    public JdbcTemplateReservationRepository(DataSource dataSource) {
+    public JdbcReservationRepository(DataSource dataSource) {
         this.jdbcTemplate = new NamedParameterJdbcTemplate(dataSource);
         this.jdbcInsert = new SimpleJdbcInsert(dataSource)
                 .withTableName("reservation")
@@ -27,7 +27,7 @@ public class JdbcTemplateReservationRepository {
 
     public List<Reservation> findAllReservations() {
         String sql = "SELECT * FROM reservation";
-        return jdbcTemplate.query(sql, reservationEntityRowMapper());
+        return jdbcTemplate.query(sql, reservationRowMapper());
     }
 
     public Long insertReservation(Reservation reservation) {
@@ -46,7 +46,7 @@ public class JdbcTemplateReservationRepository {
     }
 
 
-    private RowMapper<Reservation> reservationEntityRowMapper() {
+    private RowMapper<Reservation> reservationRowMapper() {
         return (resultSet, rowNum) -> new Reservation(
                 resultSet.getLong("id"),
                 resultSet.getString("name"),

@@ -10,6 +10,7 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
+import roomescape.time.TimeRepository;
 
 @DisplayName("예약 서비스")
 @ExtendWith(MockitoExtension.class)
@@ -17,20 +18,38 @@ public class ReservationServiceTest {
     @Mock
     private ReservationRepository reservationRepository;
 
+    @Mock
+    private TimeRepository timeRepository;
+
     @InjectMocks
     private ReservationService reservationService;
 
-    @DisplayName("존재하지 않는 id일 경우 예외가 발생한다.")
+    @DisplayName("존재하지 않는 reservation id일 경우 예외가 발생한다.")
     @Test
-    void findByIdExceptionTest() {
+    void findByIdExceptionByNotExistReservationIdTest() {
         // given
-        Long id = 1L;
+        Long reservationId = 1L;
 
         doReturn(Optional.empty()).when(reservationRepository)
-                .findById(id);
+                .findById(reservationId);
 
         // when & then
-        assertThatThrownBy(() -> reservationService.findById(id))
+        assertThatThrownBy(() -> reservationService.findById(reservationId))
+                .isInstanceOf(IllegalArgumentException.class);
+    }
+
+    @DisplayName("존재하지 않는 time id일 경우 예외가 발생한다.")
+    @Test
+    void findByIdExceptionByNotExistTimeIdTest() {
+        // given
+        Long timeId = 1L;
+        ReservationRequest reservationRequest = new ReservationRequest("브라운", "2024-08-05", timeId);
+
+        doReturn(Optional.empty()).when(timeRepository)
+                .findById(timeId);
+
+        // when & then
+        assertThatThrownBy(() -> reservationService.save(reservationRequest))
                 .isInstanceOf(IllegalArgumentException.class);
     }
 }

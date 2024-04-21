@@ -2,6 +2,7 @@ package roomescape.acceptance;
 
 import io.restassured.RestAssured;
 import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.context.SpringBootTest.WebEnvironment;
@@ -19,16 +20,18 @@ class AdminAcceptanceTest {
         RestAssured.port = port;
     }
 
+    @DisplayName("[1단계 - 홈 화면] 관리자 메인 페이지를 응답한다")
     @Test
-    void 일단계_관리자_메인_페이지를_응답한다() {
+    void step1() {
         RestAssured.given().log().all()
                 .when().get(PATH)
                 .then().log().all()
                 .statusCode(200);
     }
 
+    @DisplayName("[2단계 - 예약 조회] 관리자의 예약 관리 페이지를 응답한다")
     @Test
-    void 이단계_관리자의_예약_관리_페이지를_응답한다() {
+    void step2() {
         RestAssured.given().log().all()
                 .when().get(PATH + "/reservation")
                 .then().log().all()

@@ -1,4 +1,4 @@
-package roomescape.dto.time;
+package roomescape.service.time.dto;
 
 import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonCreator.Mode;

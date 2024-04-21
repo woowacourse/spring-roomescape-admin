@@ -42,14 +42,25 @@ class ReservationAcceptanceTest {
     @DisplayName("예약을 추가하고 삭제한다")
     @Test
     void reservationAddRemoveTest() {
-        Map<String, String> params = new HashMap<>();
-        params.put("name", "브라운");
-        params.put("date", String.valueOf(LocalDate.now().plusDays(1)));
-        params.put("time", "15:40");
+        Map<String, String> paramsA = Map.of("startAt", "10:00");
+
+        int reservationTimeId = RestAssured.given().log().all()
+                .contentType(ContentType.JSON)
+                .body(paramsA)
+                .when().post("/times")
+                .then().log().all()
+                .statusCode(200)
+                .extract()
+                .path("id");
+
+        Map<String, String> paramsB = Map.ofEntries(
+                Map.entry("name", "브라운"),
+                Map.entry("date", String.valueOf(LocalDate.now().plusDays(1))),
+                Map.entry("timeId", String.valueOf(reservationTimeId)));
 
         int reservationId = RestAssured.given().log().all()
                 .contentType(ContentType.JSON)
-                .body(params)
+                .body(paramsB)
                 .when().post("/reservations")
                 .then().log().all()
                 .statusCode(201)
@@ -72,5 +83,10 @@ class ReservationAcceptanceTest {
                 .then().log().all()
                 .statusCode(200)
                 .body("size()", is(0));
+
+        RestAssured.given().log().all()
+                .when().delete("/times/" + reservationTimeId)
+                .then().log().all()
+                .statusCode(204);
     }
 }

@@ -1,6 +1,8 @@
 package roomescape.controller;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import org.junit.jupiter.api.BeforeAll;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -9,8 +11,12 @@ import org.springframework.context.annotation.Import;
 import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
 import roomescape.domain.Reservation;
+import roomescape.domain.ReservationTime;
+import roomescape.dto.ReservationRequest;
 import roomescape.repository.InMemoryReservationRepositoryImpl;
+import roomescape.repository.InMemoryReservationTimeRepositoryImpl;
 import roomescape.repository.ReservationRepository;
+import roomescape.repository.ReservationTimeRepository;
 
 import java.time.LocalDate;
 import java.time.LocalTime;
@@ -20,7 +26,8 @@ import static org.springframework.test.web.servlet.request.MockMvcRequestBuilder
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
-@Import(InMemoryReservationRepositoryImpl.class)
+@Import(value = {InMemoryReservationRepositoryImpl.class,
+        InMemoryReservationTimeRepositoryImpl.class})
 @WebMvcTest(ReservationController.class)
 class ReservationControllerTest {
     @Autowired
@@ -28,6 +35,9 @@ class ReservationControllerTest {
 
     @Autowired
     private ReservationRepository reservationRepository;
+
+    @Autowired
+    private ReservationTimeRepository reservationTimeRepository;
 
     @Autowired
     private ObjectMapper objectMapper;
@@ -42,10 +52,10 @@ class ReservationControllerTest {
     @DisplayName("[201] POST /reservations")
     @Test
     void add() throws Exception {
-        String reservation = objectMapper.writeValueAsString(new Reservation(
+        String reservation = objectMapper.writeValueAsString(new ReservationRequest(
                 "비밥",
                 LocalDate.now().plusDays(1),
-                LocalTime.of(9, 0)));
+                1L));
 
         this.mvc.perform(post("/reservations")
                         .content(reservation)
@@ -56,38 +66,10 @@ class ReservationControllerTest {
     @DisplayName("[400] POST /reservations")
     @Test
     void add_dateOutOfRange() throws Exception {
-        String reservation = objectMapper.writeValueAsString(new Reservation(
-                "비밥",
-                LocalDate.now().minusDays(1),
+        ReservationTime savedReservationTime = reservationTimeRepository.save(new ReservationTime(
                 LocalTime.of(9, 0)));
 
-        this.mvc.perform(post("/reservations")
-                        .content(reservation)
-                        .contentType(MediaType.APPLICATION_JSON))
-                .andExpect(status().isBadRequest());
-    }
-
-    @DisplayName("[400] POST /reservations")
-    @Test
-    void add_timeBeforeMin() throws Exception {
-        String reservation = objectMapper.writeValueAsString(new Reservation(
-                "비밥",
-                LocalDate.now().plusDays(1),
-                LocalTime.of(8, 59)));
-
-        this.mvc.perform(post("/reservations")
-                        .content(reservation)
-                        .contentType(MediaType.APPLICATION_JSON))
-                .andExpect(status().isBadRequest());
-    }
-
-    @DisplayName("[400] POST /reservations")
-    @Test
-    void add_timeAfterMax() throws Exception {
-        String reservation = objectMapper.writeValueAsString(new Reservation(
-                "비밥",
-                LocalDate.now().plusDays(1),
-                LocalTime.of(20, 1)));
+        String reservation = "{\"name\":\"비밥\",\"date\":\"2022-04-23\",\"timeId\":1}";
 
         this.mvc.perform(post("/reservations")
                         .content(reservation)

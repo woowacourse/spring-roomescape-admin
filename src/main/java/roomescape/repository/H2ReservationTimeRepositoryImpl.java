@@ -1,5 +1,6 @@
 package roomescape.repository;
 
+import org.springframework.context.annotation.Primary;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.simple.SimpleJdbcInsert;
 import org.springframework.stereotype.Repository;
@@ -8,7 +9,9 @@ import roomescape.domain.ReservationTime;
 import javax.sql.DataSource;
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 
+@Primary
 @Repository
 public class H2ReservationTimeRepositoryImpl implements ReservationTimeRepository {
     private final JdbcTemplate jdbcTemplate;
@@ -21,6 +24,15 @@ public class H2ReservationTimeRepositoryImpl implements ReservationTimeRepositor
                 .usingGeneratedKeyColumns("id");
     }
 
+    public ReservationTime save(final ReservationTime reservationTime) {
+        long reservationTimeId = jdbcInsert.executeAndReturnKey(Map.of("start_at", reservationTime.getStartAt()))
+                .longValue();
+
+        return new ReservationTime(
+                reservationTimeId,
+                reservationTime.getStartAt());
+    }
+
     public List<ReservationTime> findAll() {
         String sql = "select * from reservation_time";
 
@@ -29,13 +41,14 @@ public class H2ReservationTimeRepositoryImpl implements ReservationTimeRepositor
                 resultSet.getTime("start_at").toLocalTime()));
     }
 
-    public ReservationTime save(final ReservationTime reservationTime) {
-        long reservationTimeId = jdbcInsert.executeAndReturnKey(Map.of("start_at", reservationTime.getStartAt()))
-                .longValue();
+    @Override
+    public Optional<ReservationTime> findById(final Long id) {
+        String sql = "select * from reservation_time where id = ?";
+        List<ReservationTime> reservationTimes = jdbcTemplate.query(sql, (resultSet, rowNum) -> new ReservationTime(
+                resultSet.getLong("id"),
+                resultSet.getTime("start_at").toLocalTime()), id);
 
-        return new ReservationTime(
-                reservationTimeId,
-                reservationTime.getStartAt());
+        return reservationTimes.stream().findFirst();
     }
 
     @Override

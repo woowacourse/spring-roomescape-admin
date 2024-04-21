@@ -6,6 +6,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.transaction.annotation.Transactional;
 import roomescape.domain.Reservation;
+import roomescape.domain.ReservationTime;
 
 import java.time.LocalDate;
 import java.time.LocalTime;
@@ -20,37 +21,44 @@ class H2ReservationRepositoryImplTest {
     @Autowired
     private H2ReservationRepositoryImpl reservationRepository;
 
+    @Autowired
+    private H2ReservationTimeRepositoryImpl reservationTimeRepository;
+
     @DisplayName("예약을 저장한다")
     @Test
     void save() {
-        Reservation reservation = new Reservation(
+        ReservationTime savedReservationTime = reservationTimeRepository.save(new ReservationTime(
+                LocalTime.of(12, 12, 12)));
+        Reservation savedReservation = reservationRepository.save(new Reservation(
                 "비밥",
                 LocalDate.of(2024, 4, 20),
-                LocalTime.of(12, 12, 12));
-
-        Reservation savedReservation = reservationRepository.save(reservation);
+                savedReservationTime));
 
         assertSoftly(softly -> {
             assertThat(savedReservation.getName())
                     .isEqualTo("비밥");
             assertThat(savedReservation.getDate())
                     .isEqualTo(LocalDate.of(2024, 4, 20));
-            assertThat(savedReservation.getTime())
+            assertThat(savedReservation.getTime().getStartAt())
                     .isEqualTo(LocalTime.of(12, 12, 12));
+            assertThat(savedReservation.getTime().getId())
+                    .isEqualTo(savedReservationTime.getId());
         });
     }
 
     @DisplayName("저장된 예약을 조회한다")
     @Test
     void findAll() {
-        reservationRepository.save(new Reservation(
-                "비밥",
-                LocalDate.of(2024, 4, 20),
+        ReservationTime savedReservationTime = reservationTimeRepository.save(new ReservationTime(
                 LocalTime.of(12, 12, 12)));
         reservationRepository.save(new Reservation(
+                "비밥",
+                LocalDate.now().plusDays(1),
+                savedReservationTime));
+        reservationRepository.save(new Reservation(
                 "망쵸",
-                LocalDate.of(2024, 4, 20),
-                LocalTime.of(11, 11, 11)));
+                LocalDate.now().plusDays(1),
+                savedReservationTime));
 
         assertThat(reservationRepository.findAll().size())
                 .isEqualTo(2);
@@ -59,10 +67,12 @@ class H2ReservationRepositoryImplTest {
     @DisplayName("저장된 예약을 삭제한다")
     @Test
     void deleteById() {
+        ReservationTime savedReservationTime = reservationTimeRepository.save(new ReservationTime(
+                LocalTime.of(12, 12, 12)));
         Reservation savedReservation = reservationRepository.save(new Reservation(
                 "비밥",
-                LocalDate.of(2024, 4, 20),
-                LocalTime.of(12, 12, 12)));
+                LocalDate.now().plusDays(1),
+                savedReservationTime));
 
         reservationRepository.deleteById(savedReservation.getId());
 

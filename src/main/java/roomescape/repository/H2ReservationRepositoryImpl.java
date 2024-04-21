@@ -2,14 +2,14 @@ package roomescape.repository;
 
 import org.springframework.context.annotation.Primary;
 import org.springframework.jdbc.core.JdbcTemplate;
-import org.springframework.jdbc.core.namedparam.BeanPropertySqlParameterSource;
-import org.springframework.jdbc.core.namedparam.SqlParameterSource;
 import org.springframework.jdbc.core.simple.SimpleJdbcInsert;
 import org.springframework.stereotype.Repository;
 import roomescape.domain.Reservation;
+import roomescape.domain.ReservationTime;
 
 import javax.sql.DataSource;
 import java.util.List;
+import java.util.Map;
 
 @Primary
 @Repository
@@ -26,20 +26,26 @@ public class H2ReservationRepositoryImpl implements ReservationRepository {
 
     @Override
     public List<Reservation> findAll() {
-        String sql = "select * from reservation";
+        String sql = "SELECT r.id as reservation_id, r.name, r.date, t.id as time_id, t.start_at as time_value " +
+                "FROM reservation as r inner join reservation_time as t on r.time_id = t.id";
 
         return jdbcTemplate.query(sql, (resultSet, rowNum) -> new Reservation(
-                resultSet.getLong("id"),
+                resultSet.getLong("reservation_id"),
                 resultSet.getString("name"),
                 resultSet.getDate("date").toLocalDate(),
-                resultSet.getTime("time").toLocalTime()
+                new ReservationTime(
+                        resultSet.getLong("time_id"),
+                        resultSet.getTime("time_value").toLocalTime())
         ));
     }
 
     @Override
     public Reservation save(Reservation reservation) {
-        SqlParameterSource source = new BeanPropertySqlParameterSource(reservation);
-        long reservationId = jdbcInsert.executeAndReturnKey(source).longValue();
+        long reservationId = jdbcInsert.executeAndReturnKey(Map.of(
+                        "name", reservation.getName(),
+                        "date", reservation.getDate(),
+                        "time_id", reservation.getTime().getId()))
+                .longValue();
 
         return new Reservation(
                 reservationId,

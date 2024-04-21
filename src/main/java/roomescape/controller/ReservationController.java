@@ -9,9 +9,11 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import roomescape.domain.Reservation;
+import roomescape.domain.ReservationTime;
 import roomescape.dto.ReservationRequest;
 import roomescape.dto.ReservationResponse;
 import roomescape.repository.ReservationRepository;
+import roomescape.repository.ReservationTimeRepository;
 
 import java.net.URI;
 import java.util.List;
@@ -20,9 +22,11 @@ import java.util.List;
 @RequestMapping("/reservations")
 public class ReservationController {
     private final ReservationRepository reservationRepository;
+    private final ReservationTimeRepository reservationTimeRepository;
 
-    public ReservationController(ReservationRepository reservationRepository) {
+    public ReservationController(ReservationRepository reservationRepository, final ReservationTimeRepository reservationTimeRepository) {
         this.reservationRepository = reservationRepository;
+        this.reservationTimeRepository = reservationTimeRepository;
     }
 
     @GetMapping
@@ -37,10 +41,13 @@ public class ReservationController {
 
     @PostMapping
     public ResponseEntity<ReservationResponse> add(@RequestBody ReservationRequest reservationRequest) {
+        ReservationTime reservationTime = reservationTimeRepository.findById(reservationRequest.timeId())
+                .orElseThrow(() -> new IllegalArgumentException("예약 시간이 존재하지 않습니다."));
+
         Reservation savedReservation = reservationRepository.save(new Reservation(
                 reservationRequest.name(),
                 reservationRequest.date(),
-                reservationRequest.time()
+                reservationTime
         ));
 
         return ResponseEntity.created(URI.create("/reservations/" + savedReservation.getId()))

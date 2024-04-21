@@ -1,25 +1,20 @@
 package roomescape.dto;
 
 import java.time.LocalDate;
-import java.time.LocalDateTime;
-import java.time.LocalTime;
 import java.util.Objects;
 
 public record ReservationRequest(
         String name,
         LocalDate date,
-        LocalTime time
+        Long timeId
 ) {
     private static final int NAME_LENGTH_MIN = 2;
     private static final int NAME_LENGTH_MAX = 10;
-    private static final int RESERVATION_TIME_MIN = 9;
-    private static final int RESERVATION_TIME_MAX = 20;
 
     public ReservationRequest {
         validateName(name);
         validateDate(date);
-        validateTime(time);
-        validateDateTime(date, time);
+        validateTimeId(timeId);
     }
 
     public static void validateName(String name) {
@@ -36,18 +31,7 @@ public record ReservationRequest(
         }
     }
 
-    private void validateTime(LocalTime time) {
-        Objects.requireNonNull(time);
-        if (time.isBefore(LocalTime.of(RESERVATION_TIME_MIN, 0))
-                || time.isAfter(LocalTime.of(RESERVATION_TIME_MAX, 0))) {
-            throw new IllegalArgumentException();
-        }
-    }
-
-    private void validateDateTime(LocalDate date, LocalTime time) {
-        LocalDateTime localDateTime = LocalDateTime.of(date, time);
-        if (localDateTime.isBefore(LocalDateTime.now())) {
-            throw new IllegalArgumentException();
-        }
+    private void validateTimeId(Long timeId) {
+        Objects.requireNonNull(timeId);
     }
 }

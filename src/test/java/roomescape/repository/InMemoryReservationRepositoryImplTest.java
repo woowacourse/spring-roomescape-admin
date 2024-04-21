@@ -39,7 +39,7 @@ class InMemoryReservationRepositoryImplTest {
                     .isEqualTo("비밥");
             assertThat(savedReservation.getDate())
                     .isEqualTo(LocalDate.of(2024, 4, 20));
-            assertThat(savedReservation.getTime())
+            assertThat(savedReservation.getTime().getStartAt())
                     .isEqualTo(LocalTime.of(12, 12, 12));
         });
     }

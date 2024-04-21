@@ -1,7 +1,7 @@
-package roomescape.domain;
+package roomescape.reservation.domain;
 
 import java.time.LocalTime;
-import roomescape.dto.ReservationTimeRequest;
+import roomescape.reservation.dto.request.ReservationTimeRequest;
 
 public class ReservationTime {
     private final Long id;
@@ -12,7 +12,7 @@ public class ReservationTime {
         this.startAt = startAt;
     }
 
-    public static ReservationTime of(Long id, ReservationTimeRequest reservationTimeRequest) {
+    public static ReservationTime from(Long id, ReservationTimeRequest reservationTimeRequest) {
         return new ReservationTime(id, reservationTimeRequest.startAt());
     }
 

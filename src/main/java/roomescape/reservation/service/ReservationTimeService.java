@@ -1,11 +1,11 @@
-package roomescape.service;
+package roomescape.reservation.service;
 
 import java.util.List;
 import org.springframework.stereotype.Service;
-import roomescape.dao.ReservationTimeDao;
-import roomescape.domain.ReservationTime;
-import roomescape.dto.ReservationTimeRequest;
-import roomescape.dto.ReservationTimeResponse;
+import roomescape.reservation.dao.ReservationTimeDao;
+import roomescape.reservation.domain.ReservationTime;
+import roomescape.reservation.dto.request.ReservationTimeRequest;
+import roomescape.reservation.dto.response.ReservationTimeResponse;
 
 @Service
 public class ReservationTimeService {
@@ -17,7 +17,7 @@ public class ReservationTimeService {
 
     public ReservationTimeResponse addReservationTime(ReservationTimeRequest reservationTimeRequest) {
         Long id = reservationTimeDao.insert(reservationTimeRequest);
-        ReservationTime reservationTime = ReservationTime.of(id, reservationTimeRequest);
+        ReservationTime reservationTime = ReservationTime.from(id, reservationTimeRequest);
         return ReservationTimeResponse.from(reservationTime);
     }
 

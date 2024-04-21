@@ -1,7 +1,7 @@
-package roomescape.domain;
+package roomescape.reservation.domain;
 
 import java.time.LocalDate;
-import roomescape.dto.ReservationRequest;
+import roomescape.reservation.dto.request.ReservationRequest;
 
 public class Reservation {
     private final Long id;
@@ -16,7 +16,7 @@ public class Reservation {
         this.time = time;
     }
 
-    public static Reservation of(ReservationRequest reservationRequest, ReservationTime reservationTime) {
+    public static Reservation from(ReservationRequest reservationRequest, ReservationTime reservationTime) {
         return new Reservation(null, reservationRequest.name(), reservationRequest.date(), reservationTime);
     }
 

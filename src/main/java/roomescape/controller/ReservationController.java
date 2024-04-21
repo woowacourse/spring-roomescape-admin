@@ -1,5 +1,6 @@
 package roomescape.controller;
 
+import java.net.URI;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
@@ -40,12 +41,13 @@ public class ReservationController {
     }
 
     @PostMapping("/reservations")
-    public Reservation addReservation(@RequestBody ReservationAddRequest reservationAddRequest) {
-        Reservation reservation = new Reservation(index.getAndIncrement(), reservationAddRequest.getName(),
-                reservationAddRequest.getDate(), reservationAddRequest.getTime());
+    public ResponseEntity<Reservation> addReservation(@RequestBody ReservationAddRequest reservationAddRequest) {
+        jdbcTemplate.update("insert into reservation (name, date, time) values (?,?,?)",
+                reservationAddRequest.getName(), reservationAddRequest.getDate(), reservationAddRequest.getTime());
+        Long id = jdbcTemplate.queryForObject(
+                "select id from reservation order by id desc limit 1", Long.class);
 
-        reservations.add(reservation);
-        return reservation;
+        return ResponseEntity.created(URI.create("/reservations/" + id)).build();
     }
 
     @DeleteMapping("/reservations/{id}")

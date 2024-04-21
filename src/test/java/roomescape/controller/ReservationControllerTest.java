@@ -83,7 +83,7 @@ class ReservationControllerTest {
 
     @DisplayName("지정한 예약을 삭제한다.")
     @Test
-    void reservationAddRemoveTest() {
+    void removeReservationTest() {
         Map<String, String> params = Map.of(
                 "name", "브라운",
                 "date", "2023-08-05",
@@ -107,5 +107,15 @@ class ReservationControllerTest {
                 .statusCode(200);
 
         assertThat(getTotalReservationsCount()).isEqualTo(initialReservationsCount - 1);
+    }
+
+    @DisplayName("삭제할 id에 해당하는 예약이 없는 경우 204 를 응답한다.")
+    @Test
+    void removeNotExistReservationTest() {
+        int neverExistId = 0;
+        RestAssured.given().log().all()
+                .when().delete("/reservations/" + neverExistId)
+                .then().log().all()
+                .statusCode(204);
     }
 }

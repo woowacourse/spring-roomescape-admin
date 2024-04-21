@@ -1,9 +1,7 @@
 package roomescape.controller;
 
 import java.net.URI;
-import java.util.ArrayList;
 import java.util.List;
-import java.util.Objects;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -21,7 +19,6 @@ import roomescape.service.ReservationService;
 public class ReservationController {
 
     private final ReservationService reservationService;
-    private final List<Reservation> reservations = new ArrayList<>();
 
     public ReservationController(final ReservationService reservationService) {
         this.reservationService = reservationService;
@@ -34,16 +31,14 @@ public class ReservationController {
     }
 
     @GetMapping
+    //TODO ResponseEntity<> 사용하기 (통일성)
     public List<Reservation> readReservations() {
         return reservationService.readAllReservations();
     }
 
     @DeleteMapping("/{id}")
-    public void deleteReservation(@PathVariable final Long id) {
-        Reservation reservation = reservations.stream()
-            .filter(it -> Objects.equals(it.getId(), id))
-            .findFirst()
-            .orElseThrow(() -> new RuntimeException("[ERROR] 예약 번호가 잘못되었습니다."));
-        reservations.remove(reservation);
+    public ResponseEntity<Void> deleteReservation(@PathVariable final Long id) {
+        reservationService.cancelReservation(id);
+        return ResponseEntity.noContent().build();
     }
 }

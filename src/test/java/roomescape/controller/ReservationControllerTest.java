@@ -1,13 +1,11 @@
 package roomescape.controller;
 
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.hamcrest.Matchers.is;
 
 import io.restassured.RestAssured;
 import io.restassured.http.ContentType;
 import java.util.List;
 import java.util.Map;
-import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -53,23 +51,28 @@ class ReservationControllerTest {
                 .jsonPath().getList(".", Reservation.class);
 
         final Integer count = jdbcTemplate.queryForObject("SELECT count(1) from reservation", Integer.class);
-
         assertThat(reservations.size()).isEqualTo(count);
     }
 
-    @Disabled
     @Test
     @DisplayName("예약을 삭제한다.")
     void deleteReservation() {
         final Map<String, String> params = createReservations();
-        assertPostRequestStatusCodeOKAndId(params, "/reservations", 1);
+        RestAssured.given().log().all()
+                .contentType(ContentType.JSON)
+                .body(params)
+                .when().post("/reservations")
+                .then().log().all()
+                .statusCode(201)
+                .header("Location", "/reservations/1");
 
         RestAssured.given().log().all()
-            .when().delete("/reservations/1")
-            .then().log().all()
-            .statusCode(200);
+                .when().delete("/reservations/1")
+                .then().log().all()
+                .statusCode(204);
 
-        assertGetRequestStatusCodeOKAndSize("/reservations", 0);
+        final Integer countAfterDelete = jdbcTemplate.queryForObject("SELECT count(1) from reservation", Integer.class);
+        assertThat(countAfterDelete).isEqualTo(0);
     }
 
     private Map<String, String> createReservations() {
@@ -79,23 +82,5 @@ class ReservationControllerTest {
                 "time", "15:40"
         );
         return reservations;
-    }
-
-    private void assertGetRequestStatusCodeOKAndSize(final String path, final int size) {
-        RestAssured.given().log().all()
-                .when().get(path)
-                .then().log().all()
-                .statusCode(200)
-                .body("size()", is(size));
-    }
-
-    private void assertPostRequestStatusCodeOKAndId(final Map<String, String> params, final String path, final int id) {
-        RestAssured.given().log().all()
-                .contentType(ContentType.JSON)
-                .body(params)
-                .when().post(path)
-                .then().log().all()
-                .statusCode(200)
-                .body("id", is(id));
     }
 }

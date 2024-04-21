@@ -34,7 +34,6 @@ public class ReservationJdbcRepository implements ReservationRepository {
 
     @Override
     public Long save(final ReservationCreateRequest createRequest) {
-        final String sql = "insert into reservation (name, date, time) values (?, ?, ?)";
         final SqlParameterSource params = new BeanPropertySqlParameterSource(createRequest);
         return jdbcInsert.executeAndReturnKey(params).longValue();
     }
@@ -43,5 +42,11 @@ public class ReservationJdbcRepository implements ReservationRepository {
     public List<Reservation> findAll() {
         final String sql = "select * from reservation";
         return jdbcTemplate.query(sql, rowMapper);
+    }
+
+    @Override
+    public void deleteById(final Long id) {
+        final String sql = "delete from reservation where id = ?";
+        jdbcTemplate.update(sql, Long.valueOf(id));
     }
 }

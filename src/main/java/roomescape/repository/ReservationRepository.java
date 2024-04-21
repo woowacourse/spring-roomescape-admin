@@ -9,4 +9,6 @@ public interface ReservationRepository {
     Long save(final ReservationCreateRequest createRequest);
 
     List<Reservation> findAll();
+
+    void deleteById(final Long id);
 }

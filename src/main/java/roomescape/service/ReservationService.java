@@ -23,4 +23,8 @@ public class ReservationService {
     public List<Reservation> readAllReservations() {
         return reservationRepository.findAll();
     }
+
+    public void cancelReservation(final Long id) {
+        reservationRepository.deleteById(id);
+    }
 }

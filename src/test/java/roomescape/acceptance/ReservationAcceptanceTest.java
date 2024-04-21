@@ -44,7 +44,7 @@ class ReservationAcceptanceTest {
     void reservationAddRemoveTest() {
         Map<String, String> params = new HashMap<>();
         params.put("name", "브라운");
-        params.put("date", "2023-08-05");
+        params.put("date", String.valueOf(LocalDate.now().plusDays(1)));
         params.put("time", "15:40");
 
         RestAssured.given().log().all()

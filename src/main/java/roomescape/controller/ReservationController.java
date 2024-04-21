@@ -46,39 +46,11 @@ public class ReservationController {
                         request.time()
                 ));
     }
-    /* 쿼리 + keyHolder로 insert
-    @PostMapping
-    public ResponseEntity<ReservationResponse> reserve(@RequestBody CreateReservationRequest request) {
-    String sql = "INSERT INTO reservation(name, date, time) VALUES(?,?,?)";
-        KeyHolder keyHolder = new GeneratedKeyHolder();
-
-        jdbcTemplate.update(connection -> {
-            var ps = connection.prepareStatement(sql, new String[]{"id"});
-            ps.setString(1, request.name());
-            ps.setString(2, request.date().toString());
-            ps.setString(3, request.time().toString());
-            return ps;
-        }, keyHolder);
-        Long id = keyHolder.getKey().longValue();
-
-        return ResponseEntity.created(URI.create("/reservations/" + id))
-                .body(new ReservationResponse(
-                        id,
-                        request.name(),
-                        request.date(),
-                        request.time()
-                ));
-    }
-     */
 
     @DeleteMapping("/{id}")
     public ResponseEntity<Void> deleteBy(@PathVariable Long id) {
         String sql = "DELETE FROM reservation WHERE id = ?";
-        int removedId = jdbcTemplate.update(sql, id);
-
-        if (removedId == 0) {
-            return ResponseEntity.notFound().build();
-        }
+        jdbcTemplate.update(sql, id);
 
         return ResponseEntity.noContent().build();
     }

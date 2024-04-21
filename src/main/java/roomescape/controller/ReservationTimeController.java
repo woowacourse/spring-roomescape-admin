@@ -47,11 +47,7 @@ public class ReservationTimeController {
     @DeleteMapping("/{id}")
     public ResponseEntity<Void> deleteBy(@PathVariable Long id) {
         String sql = "delete from reservation_time where id = ?";
-        int removedId = jdbcTemplate.update(sql, id);
-
-        if (removedId == 0) {
-            return ResponseEntity.notFound().build();
-        }
+        jdbcTemplate.update(sql, id);
 
         return ResponseEntity.noContent().build();
     }

@@ -21,7 +21,7 @@ import roomescape.domain.ReservationAddRequest;
 
 @RestController
 public class ReservationController {
-    
+
     @Autowired
     private JdbcTemplate jdbcTemplate;
 

@@ -3,10 +3,8 @@ package roomescape.dao;
 import java.util.List;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
-import org.springframework.stereotype.Component;
 import roomescape.domain.Reservation;
 
-@Component
 public class FakeReservationDao implements ReservationDao {
     private final Map<Long, Reservation> reservations = new ConcurrentHashMap<>();
 
@@ -21,7 +19,7 @@ public class FakeReservationDao implements ReservationDao {
     public void save(Reservation reservation) {
         final long id = reservation.getId();
         if (reservations.containsKey(id)) {
-            throw new IllegalArgumentException("duplicated key exists.");
+            throw new IllegalArgumentException("duplicated id exists.");
         }
         reservations.put(id, reservation);
     }

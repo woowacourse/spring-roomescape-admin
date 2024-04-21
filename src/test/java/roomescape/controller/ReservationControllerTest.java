@@ -13,8 +13,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.web.server.LocalServerPort;
 import org.springframework.http.HttpStatus;
-import roomescape.dao.ReservationDao;
-import roomescape.domain.Reservation;
+import org.springframework.jdbc.core.JdbcTemplate;
 import roomescape.dto.ReservationRequest;
 
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
@@ -23,15 +22,12 @@ class ReservationControllerTest {
     private int port;
 
     @Autowired
-    private ReservationDao reservationDao;
+    private JdbcTemplate jdbcTemplate;
 
     @BeforeEach
     void init() {
         RestAssured.port = port;
-
-        for (Reservation reservation : reservationDao.findAll()) {
-            reservationDao.deleteById(reservation.getId());
-        }
+        jdbcTemplate.update("delete from reservation");
     }
 
     @DisplayName("예약 추가 테스트")
@@ -47,20 +43,14 @@ class ReservationControllerTest {
     @DisplayName("모든 예약 내역 조회 테스트")
     @Test
     void findAllReservations() {
-        //given
-        Reservation reservation
-                = new Reservation(1, "브라운", "2023-08-05", "15:40");
-        reservationDao.save(reservation);
-
         //when
         Response response = RestAssured.given().log().all()
                 .when().get("/reservations")
                 .then().log().all().extract().response();
-
         //then
         assertAll(
                 () -> assertThat(response.getStatusCode()).isEqualTo(HttpStatus.OK.value()),
-                () -> assertThat(reservationDao.findAll()).hasSize(1)
+                () -> assertThat(response.jsonPath().getList(".")).isEmpty()
         );
     }
 
@@ -68,21 +58,15 @@ class ReservationControllerTest {
     @Test
     void deleteReservationSuccess() {
         //given
-        long id = 1;
-        Reservation reservation
-                = new Reservation(id, "브라운", "2023-08-05", "15:40");
-        reservationDao.save(reservation);
-
-        //when
-        Response response = RestAssured.given().log().all()
-                .when().delete("/reservations/" + id)
-                .then().log().all().extract().response();
-
+        createReservation();
+        long id = RestAssured.given().log().all()
+                .when().get("/reservations")
+                .then().log().all().extract()
+                .jsonPath().getList("id", Long.class).get(0);
         //then
-        assertAll(
-                () -> assertThat(response.getStatusCode()).isEqualTo(HttpStatus.OK.value()),
-                () -> assertThat(reservationDao.findAll()).hasSize(0)
-        );
+        RestAssured.given().log().all()
+                .when().delete("/reservations/" + id)
+                .then().log().all().assertThat().statusCode(HttpStatus.OK.value());
     }
 
     @DisplayName("예약 취소 실패 테스트")
@@ -90,7 +74,6 @@ class ReservationControllerTest {
     void deleteReservationFail() {
         //given
         long invalidId = 0;
-
         //then
         RestAssured.given().log().all()
                 .when().delete("/reservations/" + invalidId)

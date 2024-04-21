@@ -6,20 +6,28 @@ import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.jdbc.core.JdbcTemplate;
 import roomescape.domain.Reservation;
 
-public class FakeReservationDaoTest {
-    private ReservationDao fakeReservationDao;
+@SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
+class ReservationDaoImplTest {
+    private ReservationDao reservationDaoImpl;
+
+    @Autowired
+    JdbcTemplate jdbcTemplate;
 
     @BeforeEach
     void init() {
-        fakeReservationDao = new FakeReservationDao();
+        reservationDaoImpl = new ReservationDaoImpl(jdbcTemplate);
+        jdbcTemplate.update("delete from reservation");
     }
 
     @DisplayName("존재하는 모든 엔티티를 보여준다.")
     @Test
     void findAll() {
-        assertThat(fakeReservationDao.findAll()).isEmpty();
+        assertThat(reservationDaoImpl.findAll()).isEmpty();
     }
 
     @DisplayName("도메인을 저장한다.")
@@ -28,9 +36,9 @@ public class FakeReservationDaoTest {
         //given
         Reservation reservation = new Reservation(1, "aa", "2023-10-10", "10:00");
         //when
-        fakeReservationDao.save(reservation);
+        reservationDaoImpl.save(reservation);
         //then
-        assertThat(fakeReservationDao.findAll()).hasSize(1);
+        assertThat(reservationDaoImpl.findAll()).hasSize(1);
     }
 
     @DisplayName("중복되는 id의 도메인을 저장하면 오류가 발생한다.")
@@ -41,9 +49,9 @@ public class FakeReservationDaoTest {
         Reservation reservation1 = new Reservation(id, "aa", "2023-10-10", "10:00");
         Reservation reservation2 = new Reservation(id, "bb", "2023-10-20", "11:00");
         //when
-        fakeReservationDao.save(reservation1);
+        reservationDaoImpl.save(reservation1);
         //then
-        assertThatThrownBy(() -> fakeReservationDao.save(reservation2))
+        assertThatThrownBy(() -> reservationDaoImpl.save(reservation2))
                 .isInstanceOf(IllegalArgumentException.class)
                 .hasMessage("duplicated id exists.");
     }
@@ -54,10 +62,10 @@ public class FakeReservationDaoTest {
         //given
         long id = 1;
         Reservation reservation = new Reservation(id, "aa", "2023-10-10", "10:00");
-        fakeReservationDao.save(reservation);
+        reservationDaoImpl.save(reservation);
         //when
-        fakeReservationDao.deleteById(id);
+        reservationDaoImpl.deleteById(id);
         //then
-        assertThat(fakeReservationDao.findAll()).hasSize(0);
+        assertThat(reservationDaoImpl.findAll()).hasSize(0);
     }
 }

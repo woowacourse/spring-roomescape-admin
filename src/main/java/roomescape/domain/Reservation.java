@@ -28,8 +28,4 @@ public class Reservation {
     public String getTime() {
         return time;
     }
-
-    public static Reservation toEntity(Long id, String name, String date, String time) {
-        return new Reservation(id, name, date, time);
-    }
 }

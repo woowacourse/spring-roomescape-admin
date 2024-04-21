@@ -4,6 +4,7 @@ import java.net.URI;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.atomic.AtomicLong;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -29,14 +30,16 @@ public class ReservationController {
     }
 
     @PostMapping("/reservations")
-    public ResponseEntity<Void> reserve(@RequestBody ReservationDto reservationDto) {
-        Long id = reservationDao.save(reservationDto);
-        return ResponseEntity.created(URI.create("/reservations/" + id)).build();
+    public ResponseEntity<Reservation> reserve(@RequestBody ReservationDto reservationDto) {
+        Reservation reservation = reservationDao.save(reservationDto);
+        return ResponseEntity.ok()
+                .header("Location", "/reservations/" + reservation.getId())
+                .body(reservation);
     }
 
     @DeleteMapping("/reservations/{id}")
     public ResponseEntity<Void> delete(@PathVariable("id") long id) {
         reservationDao.delete(id);
-        return ResponseEntity.noContent().build();
+        return ResponseEntity.ok().build();
     }
 }

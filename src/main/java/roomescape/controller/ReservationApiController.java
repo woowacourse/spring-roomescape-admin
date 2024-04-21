@@ -1,13 +1,14 @@
 package roomescape.controller;
 
 import java.net.URI;
-import java.sql.PreparedStatement;
 import java.util.List;
+import javax.sql.DataSource;
 import org.springframework.http.ResponseEntity;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;
-import org.springframework.jdbc.support.GeneratedKeyHolder;
-import org.springframework.jdbc.support.KeyHolder;
+import org.springframework.jdbc.core.namedparam.BeanPropertySqlParameterSource;
+import org.springframework.jdbc.core.namedparam.SqlParameterSource;
+import org.springframework.jdbc.core.simple.SimpleJdbcInsert;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -15,7 +16,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
-import roomescape.dto.ReservationRequestDto;
+import roomescape.dto.ReservationRequest;
 import roomescape.entity.Reservation;
 
 @RestController
@@ -23,9 +24,14 @@ import roomescape.entity.Reservation;
 public class ReservationApiController {
 
     private final JdbcTemplate jdbcTemplate;
+    private final SimpleJdbcInsert insertActor;
 
-    public ReservationApiController(JdbcTemplate jdbcTemplate) {
+    public ReservationApiController(JdbcTemplate jdbcTemplate, DataSource dataSource) {
         this.jdbcTemplate = jdbcTemplate;
+        this.insertActor = new SimpleJdbcInsert(dataSource)
+                .withTableName("reservation")
+                .usingGeneratedKeyColumns("id");
+
     }
 
     @GetMapping
@@ -36,23 +42,12 @@ public class ReservationApiController {
     }
 
     @PostMapping
-    public ResponseEntity<Reservation> addReservation(@RequestBody ReservationRequestDto reservationRequestDto) {
-        String sql = "INSERT INTO reservation(name, date, time) VALUES (?, ?, ?)";
-        KeyHolder keyHolder = new GeneratedKeyHolder();
+    public ResponseEntity<Reservation> addReservation(@RequestBody ReservationRequest reservationRequest) {
+        SqlParameterSource parameters = new BeanPropertySqlParameterSource(reservationRequest);
+        long newId = insertActor.executeAndReturnKey(parameters).longValue();
 
-        jdbcTemplate.update(connection -> {
-            PreparedStatement ps = connection.prepareStatement(sql, new String[]{"id"});
-            ps.setString(1, reservationRequestDto.getName());
-            ps.setString(2, reservationRequestDto.getDate());
-            ps.setString(3, reservationRequestDto.getTime());
-
-            return ps;
-        }, keyHolder);
-
-        long id = keyHolder.getKey().longValue();
-        Reservation reservation = reservationRequestDto.toEntity(id);
-
-        return ResponseEntity.created(URI.create("/reservations/" + id)).body(reservation);
+        Reservation newReservation = reservationRequest.toEntity(newId);
+        return ResponseEntity.created(URI.create("/reservations/" + newId)).body(newReservation);
     }
 
     @DeleteMapping("/{id}")

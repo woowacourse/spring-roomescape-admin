@@ -4,6 +4,7 @@ import java.time.LocalTime;
 import roomescape.reservation.dto.request.ReservationTimeRequest;
 
 public class ReservationTime {
+
     private final Long id;
     private final LocalTime startAt;
 

@@ -1,15 +1,23 @@
-# 방탈출 예약 관리 
+# 방탈출 예약 관리
+
+## 응답 페이지
+
+- `/` : 웰컴 페이지
+- `/admin` : 어드민 메인 페이지
+- `/admin/reservation` : 예약 관리 페이지
 
 ## API 명세
 
 ### 예약 목록 조회 API
 
 - Request
+
 ```
 GET /reservations HTTP/1.1
 ```
 
 - Response
+
 ```
 HTTP/1.1 200 
 Content-Type: application/json
@@ -32,8 +40,8 @@ Content-Type: application/json
 
 ### 예약 추가 API
 
-
 - Request
+
 ```
 POST /reservations HTTP/1.1
 content-type: application/json
@@ -46,6 +54,7 @@ content-type: application/json
 ```
 
 - Response
+
 ```
 HTTP/1.1 200 
 Content-Type: application/json
@@ -60,13 +69,14 @@ Content-Type: application/json
 
 ### 예약 취소 API
 
-
 - Request
+
 ```
 DELETE /reservations/1 HTTP/1.1
 ```
 
 - Response
+
 ```
 HTTP/1.1 200
 ```

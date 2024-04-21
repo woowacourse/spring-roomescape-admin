@@ -4,7 +4,7 @@ import io.restassured.RestAssured;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 
-public class AdminAcceptanceTest implements AcceptanceTest {
+public class ViewAcceptanceTest implements AcceptanceTest {
 
     @Test
     @DisplayName("[Step1] 어드민 메인 페이지를 조회한다.")

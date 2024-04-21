@@ -4,7 +4,7 @@ import java.time.LocalTime;
 import com.fasterxml.jackson.annotation.JsonFormat;
 import roomescape.domain.ReservationTime;
 
-public record ReservationTimeResponse(
+public record ReservationTimeWebResponse(
 
         Long id,
 
@@ -12,7 +12,7 @@ public record ReservationTimeResponse(
         LocalTime startAt
 ) {
 
-    public ReservationTimeResponse(ReservationTime time) {
+    public ReservationTimeWebResponse(ReservationTime time) {
         this(time.getId(), time.getStartAt());
     }
 }

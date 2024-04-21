@@ -14,7 +14,7 @@ import org.springframework.web.bind.annotation.RestController;
 import roomescape.application.ReservationService;
 import roomescape.domain.Reservation;
 import roomescape.presentation.web.request.CreateReservationWebRequest;
-import roomescape.presentation.web.response.ReservationResponse;
+import roomescape.presentation.web.response.ReservationWebResponse;
 
 @RestController
 @RequestMapping("/reservations")
@@ -27,9 +27,9 @@ class ReservationController {
     }
 
     @PostMapping
-    public ResponseEntity<ReservationResponse> reserve(@RequestBody @Valid CreateReservationWebRequest request) {
+    public ResponseEntity<ReservationWebResponse> reserve(@RequestBody @Valid CreateReservationWebRequest request) {
         Reservation newReservation = reservationService.reserve(request.toServiceRequest());
-        ReservationResponse response = new ReservationResponse(newReservation);
+        ReservationWebResponse response = new ReservationWebResponse(newReservation);
 
         return ResponseEntity.created(URI.create("/reservations/" + newReservation.getId()))
                 .body(response);
@@ -43,10 +43,10 @@ class ReservationController {
     }
 
     @GetMapping
-    public ResponseEntity<List<ReservationResponse>> getReservations() {
+    public ResponseEntity<List<ReservationWebResponse>> getReservations() {
         List<Reservation> reservations = reservationService.findReservations();
-        List<ReservationResponse> responses = reservations.stream()
-                .map(ReservationResponse::new)
+        List<ReservationWebResponse> responses = reservations.stream()
+                .map(ReservationWebResponse::new)
                 .toList();
 
         return ResponseEntity.ok(responses);

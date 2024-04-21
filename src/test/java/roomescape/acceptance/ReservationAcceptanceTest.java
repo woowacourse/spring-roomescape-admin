@@ -59,7 +59,7 @@ class ReservationAcceptanceTest {
                 .body(params)
                 .when().post(PATH)
                 .then().log().all()
-                .statusCode(200)
+                .statusCode(201)
                 .body("id", is(1));
     }
 

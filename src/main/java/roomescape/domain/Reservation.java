@@ -21,6 +21,10 @@ public class Reservation {
         this(NO_ID, new Name(name), new Schedule(date, time));
     }
 
+    public Reservation(final long id, final String name, final String date, final String time) {
+        this(id, new Name(name), new Schedule(date, time));
+    }
+
     public long getId() {
         return id;
     }

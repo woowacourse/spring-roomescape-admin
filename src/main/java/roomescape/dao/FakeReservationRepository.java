@@ -1,21 +1,18 @@
 package roomescape.dao;
 
-import org.springframework.stereotype.Component;
 import roomescape.domain.Reservation;
 
-import java.util.ArrayList;
-import java.util.Collections;
 import java.util.List;
+import java.util.concurrent.CopyOnWriteArrayList;
 import java.util.concurrent.atomic.AtomicLong;
 
-@Component
-public class FakeReservationDao implements ReservationDao {
-    private final List<Reservation> reservations = new ArrayList<>();
+public class FakeReservationRepository implements ReservationRepository {
+    private final List<Reservation> reservations = new CopyOnWriteArrayList<>();
     private final AtomicLong index = new AtomicLong(1);
 
     @Override
     public List<Reservation> findAll() {
-        return Collections.synchronizedList(reservations);
+        return reservations;
     }
 
     @Override

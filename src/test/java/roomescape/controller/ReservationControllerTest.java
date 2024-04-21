@@ -119,6 +119,6 @@ public class ReservationControllerTest {
         RestAssured.given().log().all()
                 .when().delete("/reservations/" + invalidId)
                 .then().log().all()
-                .assertThat().statusCode(404);
+                .assertThat().statusCode(400).body(is("존재하지 않는 id입니다. id: " + invalidId));
     }
 }

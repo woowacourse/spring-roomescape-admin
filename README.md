@@ -91,9 +91,11 @@ content-type: application/json
   ```
   HTTP/1.1 200
   ```
-  - 존재하지 않는 id로 삭제 요청
+  - 존재하지 않는 id(0)로 삭제 요청
   ```
-  HTTP/1.1 404
+  HTTP/1.1 400
+  
+  "존재하지 않는 id입니다. id: 0"
   ```
 
 ## 기능 명세서

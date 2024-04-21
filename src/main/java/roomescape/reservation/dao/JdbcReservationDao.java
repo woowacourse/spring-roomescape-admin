@@ -29,7 +29,9 @@ public class JdbcReservationDao implements ReservationDao {
 
     public JdbcReservationDao(JdbcTemplate jdbcTemplate) {
         this.jdbcTemplate = jdbcTemplate;
-        this.reservationInsert = new SimpleJdbcInsert(jdbcTemplate);
+        this.reservationInsert = new SimpleJdbcInsert(jdbcTemplate)
+                .withTableName("reservation")
+                .usingGeneratedKeyColumns("id");
     }
 
     @Override

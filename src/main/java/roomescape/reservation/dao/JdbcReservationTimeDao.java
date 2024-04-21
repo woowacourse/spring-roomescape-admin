@@ -24,7 +24,9 @@ public class JdbcReservationTimeDao implements ReservationTimeDao{
 
     public JdbcReservationTimeDao(JdbcTemplate jdbcTemplate) {
         this.jdbcTemplate = jdbcTemplate;
-        this.reservationInsert = new SimpleJdbcInsert(jdbcTemplate);
+        this.reservationInsert = new SimpleJdbcInsert(jdbcTemplate)
+                .withTableName("reservation_time")
+                .usingGeneratedKeyColumns("id");
     }
 
     @Override

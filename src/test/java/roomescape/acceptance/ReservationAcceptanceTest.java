@@ -47,13 +47,14 @@ class ReservationAcceptanceTest {
         params.put("date", String.valueOf(LocalDate.now().plusDays(1)));
         params.put("time", "15:40");
 
-        RestAssured.given().log().all()
+        int reservationId = RestAssured.given().log().all()
                 .contentType(ContentType.JSON)
                 .body(params)
                 .when().post("/reservations")
                 .then().log().all()
                 .statusCode(201)
-                .body("id", is(1));
+                .extract()
+                .path("id");
 
         RestAssured.given().log().all()
                 .when().get("/reservations")
@@ -62,7 +63,7 @@ class ReservationAcceptanceTest {
                 .body("size()", is(1));
 
         RestAssured.given().log().all()
-                .when().delete("/reservations/1")
+                .when().delete("/reservations/" + reservationId)
                 .then().log().all()
                 .statusCode(204);
 

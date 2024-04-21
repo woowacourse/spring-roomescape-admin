@@ -8,5 +8,3 @@ CREATE TABLE reservation
     time VARCHAR(255) NOT NULL,
     PRIMARY KEY (id)
 );
-
-ALTER TABLE reservation ALTER COLUMN id START WITH 1;

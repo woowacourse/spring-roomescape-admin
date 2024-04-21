@@ -1,11 +1,10 @@
 package roomescape.controller;
 
+import java.net.URI;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.atomic.AtomicLong;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
-import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -18,8 +17,6 @@ import roomescape.domain.Reservation;
 
 @RestController
 public class ReservationController {
-    private final List<Reservation> reservations = new ArrayList<>();
-    private final AtomicLong reservationIndex = new AtomicLong(0);
     private final ReservationDao reservationDao;
 
     public ReservationController(ReservationDao reservationDao) {
@@ -32,24 +29,14 @@ public class ReservationController {
     }
 
     @PostMapping("/reservations")
-    public ResponseEntity<Reservation> reserve(@RequestBody ReservationDto reservationDto) {
-        Reservation reservation = new Reservation.Builder().id(reservationIndex.incrementAndGet())
-                .name(reservationDto.name())
-                .date(reservationDto.date())
-                .time(reservationDto.time())
-                .build();
-
-        reservations.add(reservation);
-        return ResponseEntity.ok(reservation);
+    public ResponseEntity<Void> reserve(@RequestBody ReservationDto reservationDto) {
+        Long id = reservationDao.save(reservationDto);
+        return ResponseEntity.created(URI.create("/reservations/" + id)).build();
     }
 
     @DeleteMapping("/reservations/{id}")
     public ResponseEntity<Void> delete(@PathVariable("id") long id) {
-        Reservation reservation = reservations.stream()
-                .filter(it -> it.getId() == id)
-                .findAny()
-                .orElseThrow();
-        reservations.remove(reservation);
-        return ResponseEntity.ok().build();
+        reservationDao.delete(id);
+        return ResponseEntity.noContent().build();
     }
 }

@@ -21,12 +21,9 @@ import roomescape.domain.ReservationAddRequest;
 
 @RestController
 public class ReservationController {
-
-    private final List<Reservation> reservations = new ArrayList<>();
-
+    
     @Autowired
     private JdbcTemplate jdbcTemplate;
-    private final AtomicLong index = new AtomicLong(1);
 
     @GetMapping("/reservations")
     public List<Reservation> getReservationList() {

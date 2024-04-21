@@ -43,7 +43,10 @@ class ReservationControllerTest {
     @DisplayName("예약을 추가할 수 있다.")
     @Test
     void should_insert_reservation() {
-        ReservationRequest request = new ReservationRequest(LocalDate.of(2023, 8, 5), "브라운", LocalTime.of(10, 0));
+        ReservationRequest request = new ReservationRequest(
+                LocalDate.of(2023, 8, 5),
+                "브라운",
+                LocalTime.of(10, 0));
 
         RestAssured.given().log().all()
                 .contentType(ContentType.JSON)
@@ -57,4 +60,18 @@ class ReservationControllerTest {
         assertThat(count).isEqualTo(1);
     }
 
+    @DisplayName("존재하는 예약이라면 예약을 삭제할 수 있다.")
+    @Test
+    void should_delete_reservation_when_reservation_exist() {
+        jdbcTemplate.update("INSERT INTO reservation (name, date, time) VALUES (?, ?, ?)",
+                "브라운", "2023-08-05", "15:40");
+
+        RestAssured.given().log().all()
+                .when().delete("/reservations/1")
+                .then().log().all()
+                .statusCode(204);
+
+        Integer countAfterDelete = jdbcTemplate.queryForObject("SELECT count(1) from reservation", Integer.class);
+        assertThat(countAfterDelete).isZero();
+    }
 }

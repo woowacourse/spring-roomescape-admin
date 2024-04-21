@@ -1,9 +1,7 @@
 package roomescape.controller;
 
 import java.net.URI;
-import java.util.ArrayList;
 import java.util.List;
-import java.util.Optional;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -17,8 +15,6 @@ import roomescape.model.Reservation;
 
 @RestController
 public class ReservationController {
-
-    private final List<Reservation> reservations = new ArrayList<>();
     private final ReservationDAO reservationDAO;
 
     public ReservationController(ReservationDAO reservationDAO) {
@@ -40,15 +36,7 @@ public class ReservationController {
 
     @DeleteMapping("/reservations/{id}")
     public ResponseEntity<Void> removeReservation(@PathVariable("id") long id) {
-        Optional<Reservation> reservationOptional = reservations.stream()
-                .filter(it -> it.getId() == id)
-                .findFirst();
-
-        if (reservationOptional.isPresent()) {
-            reservations.remove(reservationOptional.get());
-            return ResponseEntity.ok().build();
-        }
-
-        return ResponseEntity.badRequest().build();
+        reservationDAO.delete(id);
+        return ResponseEntity.noContent().build();
     }
 }

@@ -3,23 +3,28 @@ package roomescape.controller;
 import org.springframework.http.ResponseEntity;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;
+import org.springframework.jdbc.core.namedparam.MapSqlParameterSource;
+import org.springframework.jdbc.core.namedparam.SqlParameterSource;
+import org.springframework.jdbc.core.simple.SimpleJdbcInsert;
 import org.springframework.web.bind.annotation.*;
 import roomescape.domain.Reservation;
 import roomescape.dto.ReservationRequestDto;
 import roomescape.dto.ReservationResponseDto;
 
+import javax.sql.DataSource;
+import java.net.URI;
 import java.util.List;
-import java.util.concurrent.ConcurrentHashMap;
-import java.util.concurrent.atomic.AtomicLong;
 
 @RestController
 public class ReservationController {
-    private final ConcurrentHashMap<Long, Reservation> reservations = new ConcurrentHashMap<>();
-    private final AtomicLong index = new AtomicLong(1);
     private final JdbcTemplate jdbcTemplate;
+    private final SimpleJdbcInsert simpleJdbcInsert;
 
-    ReservationController(final JdbcTemplate jdbcTemplate) {
+    ReservationController(final JdbcTemplate jdbcTemplate, final DataSource dataSource) {
         this.jdbcTemplate = jdbcTemplate;
+        this.simpleJdbcInsert = new SimpleJdbcInsert(dataSource)
+                .withTableName("RESERVATION")
+                .usingGeneratedKeyColumns("id");
     }
 
     @GetMapping("/reservations")
@@ -39,22 +44,23 @@ public class ReservationController {
     }
 
     @PostMapping("/reservations")
-    public ReservationResponseDto create(@RequestBody final ReservationRequestDto request) {
-        final Long id = index.getAndIncrement();
-        final Reservation reservation = new Reservation(id, request.getName(), request.getDate(), request.getTime());
-        reservations.put(id, reservation);
-        return ReservationResponseDto.from(reservation);
+    public ResponseEntity<ReservationResponseDto> create(@RequestBody final ReservationRequestDto request) {
+        SqlParameterSource params = new MapSqlParameterSource()
+                .addValue("name", request.getName())
+                .addValue("date", request.getDate())
+                .addValue("time", request.getTime());
+        Long id = simpleJdbcInsert.executeAndReturnKey(params).longValue();
+        return ResponseEntity.created(URI.create("/reservations/" + id)).build();
     }
 
     @DeleteMapping("/reservations/{id}")
     public ResponseEntity<Void> delete(@PathVariable final Long id) {
-        if (reservations.containsKey(id)) {
-            reservations.remove(id);
-            return ResponseEntity.noContent()
-                                 .build();
+        String sql = "delete from reservation where id = ?";
+        int rowCount = jdbcTemplate.update(sql, Long.valueOf(id));
+        if (rowCount > 0) {
+            return ResponseEntity.noContent().build();
         }
-        return ResponseEntity.notFound()
-                             .build();
+        return ResponseEntity.notFound().build();
     }
 
     private final RowMapper<Reservation> reservationRowMapper = (resultSet, rowNum) -> {

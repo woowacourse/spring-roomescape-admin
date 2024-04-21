@@ -17,8 +17,8 @@ public class ReservationRepository {
     private static final String TABLE_NAME = "reservation";
     private static final RowMapper<Reservation> ROW_MAPPER = (resultSet, rowNum) -> new Reservation(
             resultSet.getLong("id"),
-            resultSet.getString("date"),
             resultSet.getString("name"),
+            resultSet.getString("date"),
             new ReservationTime(resultSet.getLong("time_id"), resultSet.getString("start_at")));
 
     private final JdbcTemplate jdbcTemplate;

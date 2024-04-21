@@ -1,6 +1,9 @@
 package roomescape;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.junit.jupiter.api.Assertions.assertAll;
+import static roomescape.ReservationTestSetting.createReservation;
+import static roomescape.ReservationTestSetting.isEqualsReservation;
 
 import java.util.List;
 import org.junit.jupiter.api.AfterEach;
@@ -15,48 +18,62 @@ class ReservationRepositoryTest {
 
     @AfterEach
     void afterEach() {
-        reservationRepository.clear();
+        List<Reservation> reservations = reservationRepository.findAll();
+        if (!reservations.isEmpty()) {
+            List<Long> reservationIds = reservations.stream()
+                    .map(Reservation::getId)
+                    .toList();
+            reservationIds.forEach(id -> reservationRepository.delete(id));
+        }
     }
 
     @Test
     void 예약_저장() {
         //given
-        Reservation reservation = new Reservation("ted", "2024-01-01", "00:00");
+        Reservation reservation = createReservation();
 
         //when
-        reservationRepository.save(reservation);
-        Reservation savedReservation = reservationRepository.findById(reservation.getId());
+        Long savedId = reservationRepository.save(reservation);
+        Reservation savedReservation = reservationRepository.findById(savedId);
 
         //then
-        assertThat(savedReservation).isEqualTo(reservation);
+        Reservation reservationToCompare = new Reservation(savedId, reservation);
+        assertThat(isEqualsReservation(reservationToCompare, savedReservation)).isTrue();
     }
 
     @Test
     void 전체_예약_조회() {
         //given
-        Reservation reservation1 = new Reservation("ted", "2024-01-01", "00:00");
-        Reservation reservation2 = new Reservation("ted", "2024-01-02", "00:00");
-        reservationRepository.save(reservation1);
-        reservationRepository.save(reservation2);
+        Reservation reservation1 = createReservation();
+        Reservation reservation2 = createReservation();
+        Long savedReservation1Id = reservationRepository.save(reservation1);
+        Long savedReservation2Id = reservationRepository.save(reservation2);
 
         //when
         List<Reservation> reservations = reservationRepository.findAll();
 
         //then
-        assertThat(reservations).containsExactlyInAnyOrder(reservation1, reservation2);
+        Reservation reservationToCompare1 = new Reservation(savedReservation1Id, reservation1);
+        Reservation reservationToCompare2 = new Reservation(savedReservation2Id, reservation2);
+        assertAll(
+                () -> assertThat(reservations).hasSize(2),
+                () -> assertThat(isEqualsReservation(reservationToCompare1, reservations.get(0))).isTrue(),
+                () -> assertThat(isEqualsReservation(reservationToCompare2, reservations.get(1))).isTrue()
+        );
     }
 
     @Test
     void 예약_삭제() {
         //given
-        Reservation reservation = new Reservation("ted", "2024-01-01", "00:00");
-        reservationRepository.save(reservation);
+        Reservation reservation = createReservation();
+        Long savedId = reservationRepository.save(reservation);
+        Reservation reservationToDelete = reservationRepository.findById(savedId);
 
         //when
-        reservationRepository.delete(reservation.getId());
-        List<Reservation> reservations = reservationRepository.findAll();
+        reservationRepository.delete(savedId);
 
         //then
-        assertThat(reservations).doesNotContain(reservation);
+        List<Reservation> reservations = reservationRepository.findAll();
+        assertThat(reservations).doesNotContain(reservationToDelete);
     }
 }

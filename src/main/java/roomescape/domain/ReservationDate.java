@@ -7,8 +7,8 @@ public class ReservationDate {
 
     private final LocalDate date;
 
-    public ReservationDate(LocalDate date) {
-        this.date = date;
+    public ReservationDate(String date) {
+        this.date = LocalDate.parse(date);
     }
 
     public LocalDate getDate() {

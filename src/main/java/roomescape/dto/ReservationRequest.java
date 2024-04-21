@@ -5,7 +5,7 @@ import java.time.LocalDateTime;
 import java.time.LocalTime;
 import java.util.Objects;
 
-public record ReservationRequestDto(
+public record ReservationRequest(
         String name,
         LocalDate date,
         LocalTime time
@@ -15,7 +15,7 @@ public record ReservationRequestDto(
     private static final int RESERVATION_TIME_MIN = 9;
     private static final int RESERVATION_TIME_MAX = 20;
 
-    public ReservationRequestDto {
+    public ReservationRequest {
         validateName(name);
         validateDate(date);
         validateTime(time);

@@ -21,11 +21,14 @@ import roomescape.controller.dto.ReservationCreateResponse;
 import roomescape.controller.dto.ReservationFindResponse;
 import roomescape.domain.Reservation;
 import roomescape.domain.ReservationTime;
+import roomescape.service.ReservationService;
 import roomescape.util.CustomDateTimeFormatter;
 
 @RestController
 @RequestMapping("/reservations")
 public class ReservationController {
+
+    private final ReservationService reservationService;
 
     @Autowired
     private JdbcTemplate jdbcTemplate;
@@ -50,11 +53,14 @@ public class ReservationController {
                     )
             );
 
+    public ReservationController(ReservationService reservationService) {
+        this.reservationService = reservationService;
+    }
+
     @GetMapping
     @ResponseStatus(value = HttpStatus.OK)
     public List<ReservationFindResponse> getReservation() {
-
-        List<Reservation> reservations = jdbcTemplate.query(findQuery, reservationRowMapper);
+        List<Reservation> reservations = reservationService.findReservations();
         return reservations.stream()
                 .map(ReservationFindResponse::of)
                 .toList();

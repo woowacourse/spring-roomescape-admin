@@ -7,9 +7,9 @@ CREATE TABLE reservation
     PRIMARY KEY (id)
 );
 
-CREATE TABLE customers
+CREATE TABLE time
 (
-    id         SERIAL,
-    first_name VARCHAR(255),
-    last_name  VARCHAR(255)
+    id       BIGINT       NOT NULL AUTO_INCREMENT,
+    start_at VARCHAR(255) NOT NULL,
+    PRIMARY KEY (id)
 );

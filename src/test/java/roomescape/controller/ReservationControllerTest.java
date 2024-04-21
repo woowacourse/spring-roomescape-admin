@@ -3,14 +3,17 @@ package roomescape.controller;
 import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
 
 import io.restassured.RestAssured;
+import io.restassured.http.ContentType;
+import java.time.LocalDate;
+import java.time.LocalTime;
 import java.util.List;
-import javax.sql.DataSource;
+import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.test.annotation.DirtiesContext;
-import roomescape.dao.ReservationDAO;
+import roomescape.controller.request.ReservationRequest;
 import roomescape.model.Reservation;
 
 
@@ -36,4 +39,22 @@ class ReservationControllerTest {
 
         assertThat(reservations.size()).isEqualTo(count);
     }
+
+    @DisplayName("예약을 추가할 수 있다.")
+    @Test
+    void should_insert_reservation() {
+        ReservationRequest request = new ReservationRequest(LocalDate.of(2023, 8, 5), "브라운", LocalTime.of(10, 0));
+
+        RestAssured.given().log().all()
+                .contentType(ContentType.JSON)
+                .body(request)
+                .when().post("/reservations")
+                .then().log().all()
+                .statusCode(201)
+                .header("Location", "/reservations/1");
+
+        Integer count = jdbcTemplate.queryForObject("SELECT count(1) from reservation", Integer.class);
+        assertThat(count).isEqualTo(1);
+    }
+
 }

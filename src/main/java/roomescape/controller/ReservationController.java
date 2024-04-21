@@ -1,12 +1,10 @@
 package roomescape.controller;
 
+import java.net.URI;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
-import java.util.concurrent.atomic.AtomicLong;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
-import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -22,7 +20,6 @@ public class ReservationController {
 
     private final List<Reservation> reservations = new ArrayList<>();
     private final ReservationDAO reservationDAO;
-    private final AtomicLong index = new AtomicLong(1);
 
     public ReservationController(ReservationDAO reservationDAO) {
         this.reservationDAO = reservationDAO;
@@ -35,10 +32,10 @@ public class ReservationController {
 
     @PostMapping("/reservations")
     public ResponseEntity<Reservation> addReservation(@RequestBody ReservationRequest reservationDto) {
-        Reservation reservation = new Reservation(index.getAndIncrement(), reservationDto.name(),
-                reservationDto.date(), reservationDto.time());
-        reservations.add(reservation);
-        return ResponseEntity.ok(reservation);
+        Reservation reservation =
+                new Reservation(reservationDto.name(), reservationDto.date(), reservationDto.time());
+        long id = reservationDAO.add(reservation);
+        return ResponseEntity.created(URI.create("/reservations/" + id)).body(reservation);
     }
 
     @DeleteMapping("/reservations/{id}")

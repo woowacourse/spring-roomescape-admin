@@ -43,4 +43,11 @@ public class TimeController {
         String sql = "SELECT * FROM reservation_time";
         return jdbcTemplate.query(sql, actorRowMapper);
     }
+
+    @DeleteMapping("/{id}")
+    @ResponseStatus(HttpStatus.OK)
+    public int delete(@PathVariable(name = "id") final long id) {
+        String sql = "DELETE FROM reservation_time WHERE id = ?";
+        return jdbcTemplate.update(sql, id);
+    }
 }

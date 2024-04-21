@@ -22,7 +22,7 @@ public class ReservationTimeDao {
     }
 
     public Long insert(ReservationTime reservationTime) {
-        String sql = "insert into reservation_time (start_at) values (?)";
+        String sql = "INSERT INTO reservation_time (start_at) VALUES (?)";
         KeyHolder keyHolder = new GeneratedKeyHolder();
         jdbcTemplate.update(connection -> {
             PreparedStatement ps = connection.prepareStatement(sql, new String[]{"id"});
@@ -33,12 +33,12 @@ public class ReservationTimeDao {
     }
 
     public List<ReservationTime> selectAll() {
-        String sql = "select id, start_at from reservation_time";
+        String sql = "SELECT id, start_at FROM reservation_time";
         return jdbcTemplate.query(sql, this::rowMapper);
     }
 
     public ReservationTime selectById(Long id) {
-        String sql = "select id, start_at from reservation_time where id = ?";
+        String sql = "SELECT id, start_at FROM reservation_time WHERE id = ?";
         return jdbcTemplate.queryForObject(sql, this::rowMapper, id);
     }
 
@@ -48,7 +48,7 @@ public class ReservationTimeDao {
     }
 
     public void deleteById(Long id) {
-        String sql = "delete from reservation_time where id = ?";
+        String sql = "DELETE FROM reservation_time WHERE id = ?";
         jdbcTemplate.update(sql, id);
     }
 }

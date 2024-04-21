@@ -1,4 +1,4 @@
-package roomescape;
+package roomescape.reservations;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;

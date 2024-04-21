@@ -1,4 +1,4 @@
-package roomescape;
+package roomescape.reservations;
 
 import io.restassured.RestAssured;
 import io.restassured.http.ContentType;
@@ -9,6 +9,7 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.web.server.LocalServerPort;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.test.annotation.DirtiesContext;
+import roomescape.domain.Reservation;
 
 import java.sql.Connection;
 import java.sql.SQLException;
@@ -20,7 +21,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 @DirtiesContext(classMode = DirtiesContext.ClassMode.BEFORE_CLASS)
-public class CrudWithDbTest {
+public class CrudTest {
 
     @LocalServerPort
     int port;

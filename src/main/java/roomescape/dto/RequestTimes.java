@@ -1,6 +1,6 @@
 package roomescape.dto;
 
-import roomescape.times.Times;
+import roomescape.domain.Times;
 
 public record RequestTimes(String startAt) {
 

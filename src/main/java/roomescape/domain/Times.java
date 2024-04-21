@@ -1,4 +1,4 @@
-package roomescape.times;
+package roomescape.domain;
 
 import java.util.Objects;
 

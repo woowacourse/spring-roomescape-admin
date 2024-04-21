@@ -1,21 +1,27 @@
 package roomescape;
 
-import java.util.concurrent.atomic.AtomicLong;
+import java.time.LocalDate;
+import java.time.LocalTime;
 
 public class Reservation {
 
-    private final static AtomicLong index = new AtomicLong(1);
-
     private final Long id;
     private final String name;
-    private final String date;
-    private final String time;
+    private final LocalDate date;
+    private final LocalTime time;
 
-    public Reservation(String name, String date, String time) {
-        this.id = index.getAndIncrement();
+    public Reservation(Long id, String name, LocalDate date, LocalTime time) {
+        this.id = id;
         this.name = name;
         this.date = date;
         this.time = time;
+    }
+
+    public Reservation(Long id, Reservation reservation) {
+        this.id = id;
+        this.name = reservation.name;
+        this.date = reservation.date;
+        this.time = reservation.time;
     }
 
     public Long getId() {
@@ -26,11 +32,11 @@ public class Reservation {
         return name;
     }
 
-    public String getDate() {
+    public LocalDate getDate() {
         return date;
     }
 
-    public String getTime() {
+    public LocalTime getTime() {
         return time;
     }
 }

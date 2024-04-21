@@ -1,6 +1,7 @@
 package roomescape.controller;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.hamcrest.Matchers.is;
 
 import io.restassured.RestAssured;
 import io.restassured.http.ContentType;
@@ -26,8 +27,13 @@ class ReservationControllerTest {
     @DisplayName("예약 목록을 조회한다.")
     void readReservations() {
         jdbcTemplate.update(
-            "INSERT INTO reservation (name, date, time) VALUES (?, ?, ?)",
-            "브라운", "2023-08-05", "15:40"
+            "INSERT INTO reservation_time (start_at) VALUES (?)",
+            "10:00"
+        );
+
+        jdbcTemplate.update(
+            "INSERT INTO reservation (name, date, time_id) VALUES (?, ?, ?)",
+            "브라운", "2023-08-05", 1L
         );
 
         List<Reservation> reservations = RestAssured.given().log().all()
@@ -44,10 +50,15 @@ class ReservationControllerTest {
     @Test
     @DisplayName("예약을 추가한다.")
     void createReservation() {
+        jdbcTemplate.update(
+            "INSERT INTO reservation_time (start_at) VALUES (?)",
+            "10:00"
+        );
+
         Map<String, String> params = new HashMap<>();
         params.put("name", "브라운");
         params.put("date", "2023-08-05");
-        params.put("time", "10:00");
+        params.put("timeId", "1");
 
         RestAssured.given().log().all()
             .contentType(ContentType.JSON)
@@ -61,10 +72,15 @@ class ReservationControllerTest {
     @Test
     @DisplayName("예약을 삭제한다.")
     void deleteReservation() {
+        jdbcTemplate.update(
+            "INSERT INTO reservation_time (start_at) VALUES (?)",
+            "10:00"
+        );
+
         Map<String, String> params = new HashMap<>();
         params.put("name", "브라운");
         params.put("date", "2023-08-05");
-        params.put("time", "10:00");
+        params.put("timeId", "1");
 
         // TODO: 테스트 검증 하나로 줄이기
         RestAssured.given().log().all()

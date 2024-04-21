@@ -13,3 +13,4 @@ spring:
       cache: false
     restart:
       enabled: true
+

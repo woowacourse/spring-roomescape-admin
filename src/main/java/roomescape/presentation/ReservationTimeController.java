@@ -6,7 +6,6 @@ import roomescape.business.ReservationTimeService;
 import roomescape.dto.ReservationTimeResponse;
 import roomescape.dto.ReservationTimeSaveRequest;
 
-import java.net.URI;
 import java.util.List;
 
 @RestController
@@ -19,10 +18,9 @@ public class ReservationTimeController {
     }
 
     @PostMapping
-    public ResponseEntity<Void> createReservationTime(@RequestBody ReservationTimeSaveRequest request) {
+    public ResponseEntity<ReservationTimeResponse> createReservationTime(@RequestBody ReservationTimeSaveRequest request) {
         var reservationTime = request.toModel();
-        var savedReservationTimeResponse = reservationTimeService.create(reservationTime);
-        return ResponseEntity.created(URI.create("/times/" + savedReservationTimeResponse.id())).build();
+        return ResponseEntity.ok(reservationTimeService.create(reservationTime));
     }
 
     @GetMapping

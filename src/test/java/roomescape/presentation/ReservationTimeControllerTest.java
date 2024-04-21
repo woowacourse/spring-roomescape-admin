@@ -14,13 +14,14 @@ import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyLong;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 import static roomescape.TestFixture.MIA_RESERVATION_TIME;
 
 class ReservationTimeControllerTest extends ControllerTest {
 
     @Test
-    @DisplayName("예약 시간 POST 요청 시 상태코드 201을 반환한다.")
+    @DisplayName("예약 시간 POST 요청 시 상태코드 200을 반환한다.")
     void createReservationTime() throws Exception {
         // given
         ReservationTimeSaveRequest request = new ReservationTimeSaveRequest(MIA_RESERVATION_TIME);
@@ -34,8 +35,9 @@ class ReservationTimeControllerTest extends ControllerTest {
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(objectMapper.writeValueAsBytes(request)))
                 .andDo(print())
-                .andExpect(status().isCreated())
-                .andExpect(header().string("Location", "/times/1"));
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.id").value(1L))
+                .andExpect(jsonPath("$.startAt").value(MIA_RESERVATION_TIME.toString()));
     }
 
     @Test

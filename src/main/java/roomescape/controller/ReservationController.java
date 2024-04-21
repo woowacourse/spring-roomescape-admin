@@ -2,6 +2,7 @@ package roomescape.controller;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 import java.util.concurrent.atomic.AtomicLong;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -32,12 +33,16 @@ public class ReservationController {
 
     @DeleteMapping("/{id}")
     public ResponseEntity<Void> deleteBy(@PathVariable Long id) {
-        Reservation found = reservations.stream()
-                .filter(it -> it.hasSameId(id))
-                .findFirst()
-                .orElseThrow(() -> new RuntimeException("해당 예약 번호의 예약은 없습니다."));
-        reservations.remove(found);
 
+        Optional<Reservation> foundReservation = reservations.stream()
+                .filter(it -> it.hasSameId(id))
+                .findFirst();
+
+        if (foundReservation.isEmpty()) {
+            return ResponseEntity.notFound().build();
+        }
+
+        reservations.remove(foundReservation.get());
         return ResponseEntity.ok().build();
     }
 

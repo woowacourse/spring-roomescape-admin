@@ -27,17 +27,14 @@ public class ReservationController {
         this.reservationService = reservationService;
     }
 
-    @GetMapping
-    public List<Reservation> readReservations() {
-        return reservations;
-    }
-
     @PostMapping
     public Reservation createReservation(@RequestBody final ReservationCreateRequest request) {
-        Reservation newReservation = new Reservation(
-            index.getAndIncrement(), request.name(), request.date(), request.time());
-        reservations.add(newReservation);
-        return newReservation;
+        return reservationService.createReservation(request);
+    }
+
+    @GetMapping
+    public List<Reservation> readReservations() {
+        return reservationService.readAllReservations();
     }
 
     @DeleteMapping("/{id}")

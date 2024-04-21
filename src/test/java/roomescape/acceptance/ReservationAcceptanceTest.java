@@ -29,13 +29,18 @@ class ReservationAcceptanceTest {
     @BeforeEach
     public void setUp() {
         RestAssured.port = port;
+        insertDefaultData();
+    }
+
+    private void insertDefaultData() {
+        jdbcTemplate.update("INSERT INTO reservation_time (start_at) VALUES ?", "15:00");
+        jdbcTemplate.update("INSERT INTO reservation (name, date, time_id) VALUES (?, ?, ?)",
+                "브라운", "2023-08-05", 1L);
     }
 
     @DisplayName("전체 예약 조회")
     @Test
     void get_reservations() {
-        insertDefaultData();
-
         RestAssured.given().log().all()
                 .when().get("/reservations")
                 .then().log().all()
@@ -46,9 +51,8 @@ class ReservationAcceptanceTest {
     @DisplayName("예약 생성")
     @Test
     void post_reservation() {
-        jdbcTemplate.update("INSERT INTO reservation_time (start_at) VALUES ?", "15:00");
-        ReservationRequest request = new ReservationRequest("2023-08-05", "브라운", 1L);
-        ReservationResponse expectedResponse = new ReservationResponse(1L, "브라운", "2023-08-05",
+        ReservationRequest request = new ReservationRequest("2023-08-10", "브리", 1L);
+        ReservationResponse expectedResponse = new ReservationResponse(2L, "브리", "2023-08-10",
                 new ReservationTimeResponse(1L, "15:00"));
 
         ReservationResponse actualResponse = RestAssured.given().log().all()
@@ -56,18 +60,16 @@ class ReservationAcceptanceTest {
                 .when().post("/reservations")
                 .then().log().all()
                 .statusCode(201)
-                .header("Location", "/reservations/1")
+                .header("Location", "/reservations/2")
                 .extract().as(ReservationResponse.class);
 
         assertThat(actualResponse).isEqualTo(expectedResponse);
-        assertThat(countReservation()).isEqualTo(1);
+        assertThat(countReservation()).isEqualTo(2);
     }
 
     @DisplayName("예약 삭제")
     @Test
     void delete_reservation() {
-        insertDefaultData();
-
         RestAssured.given().log().all()
                 .when().delete("/reservations/1")
                 .then().log().all()
@@ -75,12 +77,6 @@ class ReservationAcceptanceTest {
 
         Integer countAfterDelete = countReservation();
         assertThat(countAfterDelete).isZero();
-    }
-
-    private void insertDefaultData() {
-        jdbcTemplate.update("INSERT INTO reservation_time (start_at) VALUES ?", "15:00");
-        jdbcTemplate.update("INSERT INTO reservation (name, date, time_id) VALUES (?, ?, ?)",
-                "브라운", "2023-08-05", 1L);
     }
 
     private Integer countReservation() {

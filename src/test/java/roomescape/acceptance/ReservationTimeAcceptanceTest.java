@@ -28,6 +28,11 @@ class ReservationTimeAcceptanceTest {
     @BeforeEach
     public void setUp() {
         RestAssured.port = port;
+        insertDefaultData();
+    }
+
+    private void insertDefaultData() {
+        jdbcTemplate.update("INSERT INTO reservation_time (start_at) VALUES (?)", "09:30");
     }
 
     @DisplayName("예약 시간 전체 조회")
@@ -37,14 +42,14 @@ class ReservationTimeAcceptanceTest {
                 .when().get("/times")
                 .then().log().all()
                 .statusCode(200)
-                .body("size()", is(0));
+                .body("size()", is(1));
     }
 
     @DisplayName("예약 시간 생성")
     @Test
     void post_reservationTime() {
         ReservationTimeRequest request = new ReservationTimeRequest("10:00");
-        ReservationTimeResponse expectedResponse = new ReservationTimeResponse(1L, "10:00");
+        ReservationTimeResponse expectedResponse = new ReservationTimeResponse(2L, "10:00");
 
         ReservationTimeResponse actualResponse = RestAssured.given().log().all()
                 .contentType(ContentType.JSON)
@@ -52,28 +57,22 @@ class ReservationTimeAcceptanceTest {
                 .when().post("/times")
                 .then().log().all()
                 .statusCode(201)
-                .header("Location", "/times/1")
+                .header("Location", "/times/2")
                 .extract().as(ReservationTimeResponse.class);
 
         assertThat(actualResponse).isEqualTo(expectedResponse);
-        assertThat(countReservationTimes()).isEqualTo(1);
+        assertThat(countReservationTimes()).isEqualTo(2);
     }
 
     @DisplayName("예약 시간 삭제")
     @Test
     void delete_reservationTime() {
-        insertDefaultData();
-
         RestAssured.given().log().all()
                 .when().delete("/times/1")
                 .then().log().all()
                 .statusCode(204);
 
         assertThat(countReservationTimes()).isZero();
-    }
-
-    private void insertDefaultData() {
-        jdbcTemplate.update("INSERT INTO reservation_time (start_at) VALUES (?)", "10:00");
     }
 
     private Integer countReservationTimes() {

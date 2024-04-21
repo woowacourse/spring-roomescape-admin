@@ -37,4 +37,10 @@ public class H2ReservationTimeRepositoryImpl implements ReservationTimeRepositor
                 reservationTimeId,
                 reservationTime.getStartAt());
     }
+
+    @Override
+    public void deleteById(final long id) {
+        String sql = "delete from reservation_time where id = ?";
+        jdbcTemplate.update(sql, id);
+    }
 }

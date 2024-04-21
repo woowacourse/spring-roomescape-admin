@@ -12,14 +12,20 @@ class AdminControllerTest {
 
     @Test
     @DisplayName("어드민 메인 페이지를 응답한다.")
-    void mainPage() {
+    void RespondMainPage() {
         assertGetRequestStatusCodeOK("/admin");
     }
 
     @Test
     @DisplayName("예약 관리 페이지를 응답한다.")
-    void reservationPage() {
+    void RespondReservationPage() {
         assertGetRequestStatusCodeOK("/admin/reservation");
+    }
+    
+    @Test
+    @DisplayName("예약 시간 관리 페이지를 응답한다.")
+    void RespondReservationTimePage() {
+        assertGetRequestStatusCodeOK("/admin/time");
     }
 
     private void assertGetRequestStatusCodeOK(final String path) {

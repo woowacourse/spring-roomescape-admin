@@ -1,5 +1,6 @@
 package roomescape.repository;
 
+import org.springframework.context.annotation.Primary;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.namedparam.BeanPropertySqlParameterSource;
 import org.springframework.jdbc.core.namedparam.SqlParameterSource;
@@ -10,6 +11,7 @@ import roomescape.domain.Reservation;
 import javax.sql.DataSource;
 import java.util.List;
 
+@Primary
 @Repository
 public class H2ReservationRepositoryImpl implements ReservationRepository {
     private final JdbcTemplate jdbcTemplate;

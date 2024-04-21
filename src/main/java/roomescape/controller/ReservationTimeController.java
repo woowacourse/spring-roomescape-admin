@@ -26,9 +26,9 @@ public class ReservationTimeController {
     }
 
     @PostMapping("/times")
-    public ResponseEntity<Void> createReservationTime(@RequestBody ReservationTimeDto reservationTimeDto) {
-        reservationTimeDao.save(reservationTimeDto);
-        return ResponseEntity.ok().build();
+    public ResponseEntity<ReservationTime> createReservationTime(@RequestBody ReservationTimeDto reservationTimeDto) {
+        ReservationTime reservationTime = reservationTimeDao.save(reservationTimeDto);
+        return ResponseEntity.ok().body(reservationTime);
     }
 
     @DeleteMapping("/times/{id}")

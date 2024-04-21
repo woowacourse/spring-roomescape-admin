@@ -2,42 +2,67 @@ package roomescape.acceptance;
 
 import io.restassured.RestAssured;
 import io.restassured.http.ContentType;
+import io.restassured.response.ExtractableResponse;
+import io.restassured.response.Response;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.DynamicTest;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.TestFactory;
+import org.springframework.http.HttpStatus;
+import roomescape.dto.ReservationResponse;
+import roomescape.dto.ReservationSaveRequest;
+import roomescape.dto.ReservationTimeResponse;
+import roomescape.dto.ReservationTimeSaveRequest;
 
-import java.util.HashMap;
-import java.util.Map;
+import java.util.Arrays;
+import java.util.List;
 import java.util.stream.Stream;
 
-import static org.hamcrest.Matchers.is;
+import static org.assertj.core.api.Assertions.assertThat;
+import static org.junit.jupiter.api.Assertions.assertAll;
 import static org.junit.jupiter.api.DynamicTest.dynamicTest;
+import static roomescape.TestFixture.*;
 
 public class ApiAcceptanceTest implements AcceptanceTest {
 
     @Test
     @DisplayName("[Step7] 예약 시간을 생성한다.")
     void createReservationTime() {
-        Map<String, String> params = new HashMap<>();
-        params.put("startAt", "10:00");
+        // given & when
+        ReservationTimeSaveRequest request = new ReservationTimeSaveRequest(MIA_RESERVATION_TIME);
 
-        RestAssured.given().log().all()
+        ExtractableResponse<Response> response = RestAssured.given().log().all()
                 .contentType(ContentType.JSON)
-                .body(params)
+                .body(request)
                 .when().post("/times")
                 .then().log().all()
-                .statusCode(200);
+                .extract();
+        ReservationTimeResponse reservationTimeResponse = response.as(ReservationTimeResponse.class);
+
+        // then
+        assertAll(() -> {
+            checkHttpStatusOk(response);
+            assertThat(reservationTimeResponse.id()).isNotNull();
+            assertThat(reservationTimeResponse.startAt()).isEqualTo(MIA_RESERVATION_TIME.toString());
+        });
     }
 
     @Test
     @DisplayName("[Step7] 예약 시간 목록을 조회한다.")
     void getReservationTimes() {
-        RestAssured.given().log().all()
+        // given & when
+        ExtractableResponse<Response> response = RestAssured.given().log().all()
                 .when().get("/times")
                 .then().log().all()
-                .statusCode(200)
-                .body("size()", is(0));
+                .extract();
+        List<ReservationTimeResponse> reservationTimeResponse = Arrays.stream(response.as(ReservationTimeResponse[].class))
+                .toList();
+
+        // then
+        assertAll(() -> {
+            checkHttpStatusOk(response);
+            assertThat(reservationTimeResponse).hasSize(0);
+        });
     }
 
 
@@ -53,28 +78,50 @@ public class ApiAcceptanceTest implements AcceptanceTest {
     }
 
     void getReservationTimesWithSizeOne() {
-        RestAssured.given().log().all()
+        // given & when
+        ExtractableResponse<Response> response = RestAssured.given().log().all()
                 .when().get("/times")
                 .then().log().all()
-                .statusCode(200)
-                .body("size()", is(1));
+                .extract();
+        List<ReservationTimeResponse> reservationTimeResponses = Arrays.stream(response.as(ReservationTimeResponse[].class))
+                .toList();
+
+        // then
+        assertAll(() -> {
+            checkHttpStatusOk(response);
+            assertThat(reservationTimeResponses).hasSize(1)
+                    .extracting(ReservationTimeResponse::id)
+                    .contains(1L);
+        });
     }
 
     void deleteOneReservationTime() {
-        RestAssured.given().log().all()
+        // given & when
+        ExtractableResponse<Response> response = RestAssured.given().log().all()
                 .when().delete("/times/1")
                 .then().log().all()
-                .statusCode(200);
+                .extract();
+
+        // then
+        checkHttpStatusOk(response);
     }
 
     @Test
     @DisplayName("[Step2, Step5] 예약 목록을 조회한다.")
     void getReservations() {
-        RestAssured.given().log().all()
+        // given & when
+        ExtractableResponse<Response> response = RestAssured.given().log().all()
                 .when().get("/reservations")
                 .then().log().all()
-                .statusCode(200)
-                .body("size()", is(0));
+                .extract();
+        List<ReservationResponse> reservationResponses = Arrays.stream(response.as(ReservationResponse[].class))
+                .toList();
+
+        // then
+        assertAll(() -> {
+            checkHttpStatusOk(response);
+            assertThat(reservationResponses).hasSize(0);
+        });
     }
 
     @TestFactory
@@ -99,31 +146,54 @@ public class ApiAcceptanceTest implements AcceptanceTest {
     }
 
     void createOneReservation() {
-        Map<String, String> params = new HashMap<>();
-        params.put("name", "브라운");
-        params.put("date", "2030-08-05");
-        params.put("timeId", "1");
-
-        RestAssured.given().log().all()
+        // given & when
+        ReservationSaveRequest request = new ReservationSaveRequest(USER_MIA, MIA_RESERVATION_DATE, 1L);
+        ExtractableResponse<Response> response = RestAssured.given().log().all()
                 .contentType(ContentType.JSON)
-                .body(params)
+                .body(request)
                 .when().post("/reservations")
                 .then().log().all()
-                .statusCode(200);
+                .extract();
+        ReservationResponse reservationResponse = response.as(ReservationResponse.class);
+
+        // then
+        assertAll(() -> {
+            checkHttpStatusOk(response);
+            assertThat(reservationResponse.id()).isNotNull();
+            assertThat(reservationResponse.name()).isEqualTo(USER_MIA);
+        });
     }
 
     void getReservationsWithSizeOne() {
-        RestAssured.given().log().all()
+        // given & when
+        ExtractableResponse<Response> response = RestAssured.given().log().all()
                 .when().get("/reservations")
                 .then().log().all()
-                .statusCode(200)
-                .body("size()", is(1));
+                .extract();
+        List<ReservationResponse> reservationResponses = Arrays.stream(response.as(ReservationResponse[].class))
+                .toList();
+
+        // then
+        assertAll(() -> {
+            checkHttpStatusOk(response);
+            assertThat(reservationResponses).hasSize(1)
+                    .extracting(ReservationResponse::id)
+                    .contains(1L);
+        });
     }
 
     void deleteOneReservation() {
-        RestAssured.given().log().all()
+        // given & when
+        ExtractableResponse<Response> response = RestAssured.given().log().all()
                 .when().delete("/reservations/1")
                 .then().log().all()
-                .statusCode(200);
+                .extract();
+
+        // then
+        checkHttpStatusOk(response);
+    }
+
+    void checkHttpStatusOk(ExtractableResponse<Response> response) {
+        assertThat(response.statusCode()).isEqualTo(HttpStatus.OK.value());
     }
 }

@@ -34,7 +34,10 @@ public class ReservationTimeService {
     }
 
     public void delete(long id) {
-        reservationDao.deleteByTimeId(id);
-        reservationTimeDao.deleteById(id);
+        ReservationTime reservationTime = reservationTimeDao.findById(id)
+                .orElseThrow(() -> new IllegalArgumentException("Time not found"));
+
+        reservationDao.deleteByTimeId(reservationTime.getId());
+        reservationTimeDao.delete(reservationTime);
     }
 }

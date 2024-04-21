@@ -3,7 +3,9 @@ package roomescape.repository;
 import java.time.LocalDate;
 import java.time.LocalTime;
 import java.util.List;
+import java.util.Optional;
 import javax.sql.DataSource;
+import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;
 import org.springframework.jdbc.core.namedparam.BeanPropertySqlParameterSource;
@@ -38,6 +40,20 @@ public class ReservationDao {
         };
     }
 
+    public Optional<Reservation> findById(long id) {
+        String sql = """
+                SELECT a.id AS reservation_id, a.name AS name, a.date AS date, t.id AS time_id, t.start_at AS start_at
+                FROM reservation AS a
+                LEFT JOIN reservation_time AS t ON a.time_id = t.id
+                WHERE a.id = ?""";
+
+        try {
+            return Optional.ofNullable(jdbcTemplate.queryForObject(sql, RESERVATION_ROW_MAPPER, id));
+        } catch (EmptyResultDataAccessException e) {
+            return Optional.empty();
+        }
+    }
+
     public List<Reservation> findAll() {
         String sql = """
                 SELECT a.id AS reservation_id, a.name AS name, a.date AS date, t.id AS time_id, t.start_at AS start_at
@@ -54,13 +70,18 @@ public class ReservationDao {
         return new Reservation(key.longValue(), reservation.getName(), reservation.getDate(), reservation.getTime());
     }
 
-    public void deleteById(long id) {
+    public void delete(Reservation reservation) {
         String sql = "DELETE FROM reservation WHERE id = ?";
-        jdbcTemplate.update(sql, id);
+        jdbcTemplate.update(sql, reservation.getId());
     }
 
     public void deleteByTimeId(long timeId) {
         String sql = "DELETE FROM reservation WHERE time_id = ?";
         jdbcTemplate.update(sql, timeId);
+    }
+
+    public void deleteAll() {
+        String sql = "DELETE FROM reservation";
+        jdbcTemplate.update(sql);
     }
 }

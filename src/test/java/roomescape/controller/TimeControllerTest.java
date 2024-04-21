@@ -59,6 +59,32 @@ class TimeControllerTest {
                 .body("size()", is(count + 1));
     }
 
+    @Test
+    @DisplayName("예약 시간을 성공적으로 삭제한다.")
+    void deleteReservationTest() {
+        RestAssured.given().log().all()
+                .contentType(ContentType.JSON)
+                .body(timeDto)
+                .when().post("/times")
+                .then().log().all()
+                .statusCode(201);
+
+        int count = getCount();
+
+        RestAssured.given()
+                .pathParam("id", 1L)
+                .log().all()
+                .when().delete("/times/{id}")
+                .then().log().all()
+                .statusCode(204);
+
+        RestAssured.given().log().all()
+                .when().get("/times")
+                .then().log().all()
+                .statusCode(200)
+                .body("size()", is(count - 1));
+    }
+
     private int getCount() {
         String sql = "SELECT COUNT(*) FROM reservation_time";
         return jdbcTemplate.queryForObject(sql, Integer.class);

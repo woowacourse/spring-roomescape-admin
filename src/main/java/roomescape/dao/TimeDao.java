@@ -38,7 +38,7 @@ public class TimeDao {
     }
 
     public long add(TimeDto timeDto) {
-        String sql = "INSERT INTO reservation_time (start_at) VALUES(?)";
+        String sql = "INSERT INTO reservation_time (start_at) VALUES (?)";
         KeyHolder keyHolder = new GeneratedKeyHolder();
         jdbcTemplate.update(
                 connection -> {
@@ -50,5 +50,10 @@ public class TimeDao {
                 keyHolder
         );
         return Objects.requireNonNull(keyHolder.getKey()).longValue();
+    }
+
+    public void delete(long id) {
+        String sql = "DELETE FROM reservation_time WHERE id = ?";
+        jdbcTemplate.update(sql, id);
     }
 }

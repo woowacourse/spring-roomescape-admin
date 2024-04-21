@@ -1,12 +1,15 @@
 package roomescape.dao;
 
 import java.sql.PreparedStatement;
+import java.time.LocalDate;
+import java.time.LocalTime;
 import java.util.List;
 import java.util.Objects;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.support.GeneratedKeyHolder;
 import org.springframework.jdbc.support.KeyHolder;
 import org.springframework.stereotype.Component;
+import roomescape.domain.Reservation;
 import roomescape.dto.ReservationDto;
 
 @Component
@@ -18,29 +21,28 @@ public class ReservationDao {
         this.jdbcTemplate = jdbcTemplate;
     }
 
-
-    public List<ReservationDto> findAll() {
+    public List<Reservation> findAll() {
         String sql = "SELECT id, name, `date`, `time` FROM reservation";
         return jdbcTemplate.query(
                 sql,
-                (resultSet, rowNum) -> ReservationDto.of(
+                (resultSet, rowNum) -> new Reservation(
                         resultSet.getLong("id"),
                         resultSet.getString("name"),
-                        resultSet.getString("date"),
-                        resultSet.getString("time")
+                        LocalDate.parse(resultSet.getString("date")),
+                        LocalTime.parse(resultSet.getString("time"))
                 )
         );
     }
 
-    public ReservationDto findById(long id) {
+    public Reservation findById(long id) {
         String sql = "SELECT id, name, `date`, `time` FROM reservation WHERE id = ?";
         return jdbcTemplate.queryForObject(
                 sql,
-                (resultSet, rowNum) -> ReservationDto.of(
+                (resultSet, rowNum) -> new Reservation(
                         resultSet.getLong("id"),
                         resultSet.getString("name"),
-                        resultSet.getString("date"),
-                        resultSet.getString("time")
+                        LocalDate.parse(resultSet.getString("date")),
+                        LocalTime.parse(resultSet.getString("time"))
                 ),
                 id
         );

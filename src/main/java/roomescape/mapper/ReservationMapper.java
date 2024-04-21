@@ -15,12 +15,12 @@ public class ReservationMapper {
         this.reservationTimeService = reservationTimeService;
     }
 
-    public Reservation toReservation(ReservationRequestDto requestDto) {
-        ReservationTime reservationTime = reservationTimeService.findReservationTime(requestDto.getTimeId());
+    public Reservation toReservation(ReservationRequestDto reservationRequestDto) {
+        ReservationTime reservationTime = reservationTimeService.findReservationTime(reservationRequestDto.getTimeId());
         return new Reservation(
                 null,
-                requestDto.getName(),
-                requestDto.getDate(),
+                reservationRequestDto.getName(),
+                reservationRequestDto.getDate(),
                 reservationTime
         );
     }

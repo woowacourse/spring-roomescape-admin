@@ -13,35 +13,35 @@ import org.springframework.web.bind.annotation.RestController;
 
 @RequestMapping("/times")
 @RestController
-public class TimeController {
+public class ReservationTimeController {
 
-    private final TimeRepository timeRepository;
+    private final ReservationTimeRepository reservationTimeRepository;
 
     @Autowired
-    public TimeController(TimeRepository timeRepository) {
-        this.timeRepository = timeRepository;
+    public ReservationTimeController(ReservationTimeRepository reservationTimeRepository) {
+        this.reservationTimeRepository = reservationTimeRepository;
     }
 
     @PostMapping
-    public ResponseEntity<Time> create(@RequestBody TimeRequest timeRequest) {
-        Time time = new Time(null, timeRequest.startAt());
-        Time saveTime = timeRepository.save(time);
+    public ResponseEntity<ReservationTime> create(@RequestBody ReservationTimeRequest reservationTimeRequest) {
+        ReservationTime time = new ReservationTime(null, reservationTimeRequest.startAt());
+        ReservationTime saveTime = reservationTimeRepository.save(time);
         return ResponseEntity.ok(saveTime);
     }
 
     @GetMapping
-    public ResponseEntity<List<TimeResponse>> findAll() {
-        List<Time> times = timeRepository.findAll();
-        List<TimeResponse> timeResponses = times.stream()
-                .map(TimeResponse::from)
+    public ResponseEntity<List<ReservationTimeResponse>> findAll() {
+        List<ReservationTime> reservationTimes = reservationTimeRepository.findAll();
+        List<ReservationTimeResponse> reservationTimeRespons = reservationTimes.stream()
+                .map(ReservationTimeResponse::from)
                 .toList();
 
-        return ResponseEntity.ok(timeResponses);
+        return ResponseEntity.ok(reservationTimeRespons);
     }
 
     @DeleteMapping("/{id}")
     public ResponseEntity<?> delete(@PathVariable("id") Long id) {
-        int deleteCount = timeRepository.delete(id);
+        int deleteCount = reservationTimeRepository.delete(id);
         if (deleteCount == 0) {
             return ResponseEntity.ok("삭제할 시간이 존재하지 않습니다.");
         }

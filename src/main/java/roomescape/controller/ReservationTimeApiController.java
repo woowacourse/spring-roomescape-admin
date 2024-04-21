@@ -26,13 +26,6 @@ public class ReservationTimeApiController {
         this.reservationTimeService = reservationTimeService;
     }
 
-    @GetMapping
-    public List<ReservationTimeResponseDto> getReservationTimes() {
-        return reservationTimeService.findReservationTimes().stream()
-                .map(ReservationTimeResponseDto::from)
-                .toList();
-    }
-
     @PostMapping
     public ResponseEntity<ReservationTimeResponseDto> postReservationTime(@RequestBody ReservationTimeRequestDto requestDto) {
         ReservationTime reservationTime = reservationTimeService.createReservationTime(requestDto.toEntity());
@@ -42,6 +35,13 @@ public class ReservationTimeApiController {
                 .toUri();
 
         return ResponseEntity.created(location).body(ReservationTimeResponseDto.from(reservationTime));
+    }
+
+    @GetMapping
+    public List<ReservationTimeResponseDto> getReservationTimes() {
+        return reservationTimeService.findReservationTimes().stream()
+                .map(ReservationTimeResponseDto::from)
+                .toList();
     }
 
     @DeleteMapping("/{id}")

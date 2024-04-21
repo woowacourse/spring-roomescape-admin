@@ -24,9 +24,9 @@ public class TimeApiController {
     }
 
     @PostMapping("/times")
-    public ResponseEntity<Map<String, String>> create(@RequestBody TimeRequest timeRequest) {
-        timeService.save(timeRequest);
-        return ResponseEntity.ok().body(Map.of("status", "success"));
+    public ResponseEntity<Time> create(@RequestBody TimeRequest timeRequest) {
+        Time time = timeService.save(timeRequest);
+        return ResponseEntity.ok(time);
     }
 
     @DeleteMapping("/times/{id}")

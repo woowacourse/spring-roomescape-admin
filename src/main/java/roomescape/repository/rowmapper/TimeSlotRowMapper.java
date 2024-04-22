@@ -12,15 +12,15 @@ public class TimeSlotRowMapper implements RowMapper<TimeSlot> {
     private TimeSlotRowMapper() {
     }
 
+    public static TimeSlotRowMapper getInstance() {
+        return INSTANCE;
+    }
+
     @Override
     public TimeSlot mapRow(ResultSet rs, int rowNum) throws SQLException {
         return new TimeSlot(
                 rs.getLong("id"),
                 rs.getString("start_at")
         );
-    }
-
-    public static TimeSlotRowMapper getInstance() {
-        return INSTANCE;
     }
 }

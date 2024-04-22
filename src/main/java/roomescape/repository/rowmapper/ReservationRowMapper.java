@@ -12,6 +12,10 @@ public class ReservationRowMapper implements RowMapper<Reservation> {
     private ReservationRowMapper() {
     }
 
+    public static ReservationRowMapper getInstance() {
+        return INSTANCE;
+    }
+
     @Override
     public Reservation mapRow(ResultSet rs, int rowNum) throws SQLException {
         return new Reservation(
@@ -20,9 +24,5 @@ public class ReservationRowMapper implements RowMapper<Reservation> {
                 rs.getString("date"),
                 TimeSlotRowMapper.getInstance().mapRow(rs, rowNum)
         );
-    }
-
-    public static ReservationRowMapper getInstance() {
-        return INSTANCE;
     }
 }

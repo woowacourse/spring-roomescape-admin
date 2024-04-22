@@ -75,7 +75,6 @@ class ReservationServiceTest {
                 .hasMessage("과거의 시간을 예약할 수 없습니다.");
     }
 
-
     @Test
     @DisplayName("모든 예약을 조회한다.")
     void getAllReservationsTest() {
@@ -99,7 +98,7 @@ class ReservationServiceTest {
         // given
         TimeSlot timeSlot = createTimeSlot();
         Reservation reservation = reservationRepository.addReservation(
-            new Reservation("웨지", "2024-04-22", timeSlot)
+                new Reservation("웨지", "2024-04-22", timeSlot)
         );
         // when
         reservationService.cancelReservation(reservation.getId());

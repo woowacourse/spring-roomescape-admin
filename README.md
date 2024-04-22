@@ -6,7 +6,7 @@
 - [x] `localhost:8080/admin/reservation` 요청 시 예약 관리 페이지가 응답한다.
     - 예약 관리 페이지 - `templates/admin/reservation-legacy.html`
 
-- [ ] `localhost:8080/admin/time` 요청 시 시간 관리 페이지가 응답한다.
+- [x] `localhost:8080/admin/time` 요청 시 시간 관리 페이지가 응답한다.
     - 예약 관리 페이지 - `templates/admin/time.html`
 
 

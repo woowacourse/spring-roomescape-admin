@@ -6,14 +6,19 @@ import org.springframework.web.bind.annotation.RequestMapping;
 
 @Controller
 @RequestMapping("/admin")
-public class LoadPageController {
+public class LoadController {
     @GetMapping
-    public String openAdminPage() {
+    public String loadAdminPage() {
         return "/admin/index";
     }
 
     @GetMapping("/reservation")
-    public String openReservationPage() {
+    public String loadReservationPage() {
         return "/admin/reservation-legacy";
+    }
+
+    @GetMapping("/time")
+    public String loadTimePage() {
+        return "admin/time";
     }
 }

@@ -1,7 +1,6 @@
 package roomescape.controller;
 
 import org.springframework.http.ResponseEntity;
-import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 import roomescape.domain.Reservation;
 import roomescape.domain.ReservationDto;
@@ -11,7 +10,7 @@ import java.util.List;
 import java.util.Objects;
 import java.util.concurrent.atomic.AtomicLong;
 
-@Controller
+@RestController
 @RequestMapping("/reservations")
 public class ReservationController {
     private final List<Reservation> reservations = new ArrayList<>();

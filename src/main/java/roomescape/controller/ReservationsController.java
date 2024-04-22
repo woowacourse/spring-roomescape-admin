@@ -3,7 +3,8 @@ package roomescape.controller;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import roomescape.domain.Reservation;
-import roomescape.domain.ReservationDto;
+import roomescape.domain.ReservationRequestDto;
+import roomescape.domain.ReservationResponseDto;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -16,15 +17,18 @@ public class ReservationsController {
     private final AtomicLong id = new AtomicLong(1);
 
     @GetMapping("reservations")
-    public ResponseEntity<List<Reservation>> read() {
-        return ResponseEntity.ok().body(reservations);
+    public ResponseEntity<List<ReservationResponseDto>> read() {
+        List<ReservationResponseDto> dtos = reservations.stream()
+                .map(ReservationResponseDto::toDto)
+                .toList();
+        return ResponseEntity.ok().body(dtos);
     }
 
     @PostMapping("reservations")
-    public ResponseEntity<Reservation> create(@RequestBody ReservationDto reservationDto) {
-        Reservation newReservation = reservationDto.toEntity(id.getAndIncrement());
+    public ResponseEntity<ReservationResponseDto> create(@RequestBody ReservationRequestDto reservationRequestDto) {
+        Reservation newReservation = reservationRequestDto.toEntity(id.getAndIncrement());
         reservations.add(newReservation);
-        return ResponseEntity.ok().body(newReservation);
+        return ResponseEntity.ok().body(ReservationResponseDto.toDto(newReservation));
     }
 
     @DeleteMapping("/reservations/{id}")

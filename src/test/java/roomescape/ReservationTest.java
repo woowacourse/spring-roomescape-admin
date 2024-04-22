@@ -9,7 +9,7 @@ import java.time.LocalTime;
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.annotation.DirtiesContext;
-import roomescape.dto.ReservationRequest;
+import roomescape.dto.ReservationRequestLegacy;
 
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.DEFINED_PORT)
 @DirtiesContext(classMode = DirtiesContext.ClassMode.BEFORE_EACH_TEST_METHOD)
@@ -26,11 +26,11 @@ public class ReservationTest {
 
     @Test
     void add() {
-        ReservationRequest reservationRequest = new ReservationRequest("브라운", LocalDate.of(2023, 8, 5), LocalTime.of(15, 40));
+        ReservationRequestLegacy reservationRequestLegacy = new ReservationRequestLegacy("브라운", LocalDate.of(2023, 8, 5), LocalTime.of(15, 40));
 
         RestAssured.given().log().all()
                 .contentType(ContentType.JSON)
-                .body(reservationRequest)
+                .body(reservationRequestLegacy)
                 .when().post("/reservations")
                 .then().log().all()
                 .statusCode(201)
@@ -45,11 +45,11 @@ public class ReservationTest {
 
     @Test
     void delete() {
-        ReservationRequest reservationRequest = new ReservationRequest("브라운", LocalDate.of(2023, 8, 5), LocalTime.of(15, 40));
+        ReservationRequestLegacy reservationRequestLegacy = new ReservationRequestLegacy("브라운", LocalDate.of(2023, 8, 5), LocalTime.of(15, 40));
 
         RestAssured.given().log().all()
                 .contentType(ContentType.JSON)
-                .body(reservationRequest)
+                .body(reservationRequestLegacy)
                 .when().post("/reservations")
                 .then().log().all()
                 .statusCode(201)

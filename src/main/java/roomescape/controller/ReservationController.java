@@ -3,7 +3,6 @@ package roomescape.controller;
 import java.net.URI;
 import java.sql.Date;
 import java.sql.PreparedStatement;
-import java.sql.Time;
 import java.util.List;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -20,6 +19,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 import roomescape.domain.Reservation;
+import roomescape.domain.ReservationTime;
 import roomescape.dto.ReservationRequest;
 import roomescape.dto.ReservationResponse;
 
@@ -55,15 +55,16 @@ public class ReservationController {
     }
 
     @PostMapping
-    public ResponseEntity<ReservationResponse> add(@RequestBody final ReservationRequest reservationRequest) {
-        String sql = "INSERT INTO reservation (name, date, time) VALUES (?, ?, ?)";
+    public ResponseEntity<ReservationResponse> add(
+            @RequestBody final ReservationRequest reservationRequest) {
+        String sql = "INSERT INTO reservation (name, date, time_id) VALUES (?, ?, ?)";
         KeyHolder keyHolder = new GeneratedKeyHolder();
 
         jdbcTemplate.update(connection -> {
             PreparedStatement ps = connection.prepareStatement(sql, new String[]{"id"});
             ps.setString(1, reservationRequest.name());
             ps.setDate(2, Date.valueOf(reservationRequest.date()));
-            ps.setTime(3, Time.valueOf(reservationRequest.time()));
+            ps.setLong(3, reservationRequest.timeId());
             return ps;
         }, keyHolder);
 

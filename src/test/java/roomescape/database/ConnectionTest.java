@@ -29,6 +29,11 @@ class ConnectionTest {
                     .getTables(null, null, "RESERVATION", null)
                     .next()
             ).isTrue();
+            assertThat(
+                connection.getMetaData()
+                    .getTables(null, null, "RESERVATION_TIME", null)
+                    .next()
+            ).isTrue();
         } catch (SQLException e) {
             throw new RuntimeException(e);
         }

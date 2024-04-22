@@ -10,7 +10,7 @@ class TimeSlotTest {
     @Test
     @DisplayName("동등성을 비교한다.")
     void equalsTest() {
-        TimeSlot timeSlot = new TimeSlot("15:30");
-        assertThat(timeSlot).isEqualTo(new TimeSlot("15:30"));
+        TimeSlot timeSlot = new TimeSlot(1L, "15:30");
+        assertThat(timeSlot).isEqualTo(new TimeSlot(1L, "16:30"));
     }
 }

@@ -47,6 +47,6 @@ public class TimeController {
         if (timeRepository.deleteById(id) == 0) {
             return ResponseEntity.notFound().build();
         }
-        return ResponseEntity.noContent().build();
+        return ResponseEntity.ok().build();
     }
 }

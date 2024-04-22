@@ -136,7 +136,7 @@ public class MissionStepTest {
         Integer countAfterDelete = jdbcTemplate.queryForObject("SELECT count(1) from reservation", Integer.class);
         assertThat(countAfterDelete).isEqualTo(0);
     }
-    
+
     @Test
     void 칠단계() {
         Map<String, String> params = new HashMap<>();
@@ -160,5 +160,4 @@ public class MissionStepTest {
                 .then().log().all()
                 .statusCode(200);
     }
-
 }

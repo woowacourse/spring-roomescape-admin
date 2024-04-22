@@ -5,7 +5,7 @@ import static org.hamcrest.Matchers.is;
 import io.restassured.RestAssured;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
-import roomescape.ControllerTest;
+import roomescape.util.ControllerTest;
 
 class AdminControllerTest extends ControllerTest {
     @DisplayName("관리자 메인 페이지 조회에 성공한다.")

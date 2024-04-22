@@ -8,7 +8,7 @@ import java.util.HashMap;
 import java.util.Map;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
-import roomescape.ControllerTest;
+import roomescape.util.ControllerTest;
 
 class ReservationTimeControllerTest extends ControllerTest {
     @DisplayName("시간 생성 시, 200을 반환한다.")

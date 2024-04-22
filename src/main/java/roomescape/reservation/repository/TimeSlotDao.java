@@ -3,6 +3,7 @@ package roomescape.reservation.repository;
 import java.sql.PreparedStatement;
 import java.sql.Statement;
 import java.sql.Time;
+import java.util.List;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.support.GeneratedKeyHolder;
 import org.springframework.jdbc.support.KeyHolder;
@@ -27,5 +28,16 @@ public class TimeSlotDao implements TimeSlotRepository {
             return preparedStatement;
         }, keyHolder);
         return new TimeSlot(keyHolder.getKey().longValue(), timeSlot.getStartAt());
+    }
+
+    @Override
+    public List<TimeSlot> findAll() {
+        String sql = "SELECT id, start_at FROM reservation_time";
+        return jdbcTemplate.query(sql, (resultSet, rowNum) -> {
+            return new TimeSlot(
+                    resultSet.getLong("id"),
+                    resultSet.getTime("start_at").toLocalTime()
+            );
+        });
     }
 }

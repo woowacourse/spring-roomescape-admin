@@ -1,6 +1,7 @@
 package roomescape.dao;
 
 import org.springframework.jdbc.core.JdbcTemplate;
+import org.springframework.jdbc.core.RowMapper;
 import org.springframework.stereotype.Component;
 import roomescape.controller.dto.CreateReservationRequest;
 import roomescape.domain.Reservation;
@@ -25,45 +26,35 @@ public class ReservationDao {
     }
 
     public Reservation read(int id) {
-        String sql = "SELECT r.id, r.name, r.date, t.id AS time_id, t.start_at " +
-                "FROM reservation r " +
-                "JOIN reservation_time t ON r.time_id = t.id " +
-                "WHERE r.id = ?";
-
-        return jdbcTemplate.queryForObject(sql,
-                (resultSet, rowNum) -> {
-                    Reservation reservation = new Reservation();
-                    reservation.setId(resultSet.getInt("id"));
-                    reservation.setName(resultSet.getString("name"));
-                    reservation.setDate(resultSet.getDate("date").toLocalDate());
-
-                    ReservationTime time = new ReservationTime();
-                    time.setId(resultSet.getInt("time_id"));
-                    time.setStartAt(resultSet.getTime("start_at").toLocalTime());
-                    reservation.setTime(time);
-
-                    return reservation;
-                }, id);
+        return jdbcTemplate.queryForObject("SELECT r.id, r.name, r.date, t.id AS time_id, t.start_at " +
+                        "FROM reservation r " +
+                        "JOIN reservation_time t ON r.time_id = t.id " +
+                        "WHERE r.id = ?",
+                getReservationRowMapper(), id);
     }
 
     public List<Reservation> readAll() {
         return jdbcTemplate.query("SELECT r.id as reservation_id, r.name, r.date, t.id as time_id, t.start_at as time_value " +
                         "FROM reservation as r " +
                         "inner join reservation_time as t on r.time_id = t.id",
-                (resultSet, rowNum) -> {
-                    Reservation reservation = new Reservation();
-                    reservation.setId(resultSet.getInt("id"));
-                    reservation.setName(resultSet.getString("name"));
-                    reservation.setDate(resultSet.getDate("date").toLocalDate());
-
-                    ReservationTime time = new ReservationTime();
-                    time.setId(resultSet.getInt("time_id"));
-                    time.setStartAt(resultSet.getTime("start_at").toLocalTime());
-                    reservation.setTime(time);
-
-                    return reservation;
-                }
+                getReservationRowMapper()
         );
+    }
+
+    private RowMapper<Reservation> getReservationRowMapper() {
+        return (resultSet, rowNum) -> {
+            Reservation reservation = new Reservation();
+            reservation.setId(resultSet.getInt("id"));
+            reservation.setName(resultSet.getString("name"));
+            reservation.setDate(resultSet.getDate("date").toLocalDate());
+
+            ReservationTime time = new ReservationTime();
+            time.setId(resultSet.getInt("time_id"));
+            time.setStartAt(resultSet.getTime("start_at").toLocalTime());
+            reservation.setTime(time);
+
+            return reservation;
+        };
     }
 
     public void delete(int id) {

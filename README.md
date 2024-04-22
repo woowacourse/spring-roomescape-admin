@@ -19,6 +19,7 @@
 - [x] 시간 추가를 구현한다.
 - [x] 시간 조회를 구현한다.
 - [x] 시간 삭제를 구현한다.
+- [x] 시간 관리 페이지를 구현한다.
 
 ## 커밋 컨밴션
 - feat, docs, fix, refactor, test, style, chore

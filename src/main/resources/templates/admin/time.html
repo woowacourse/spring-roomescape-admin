@@ -46,6 +46,10 @@
     </tr>
     </thead>
     <tbody id="table-body">
+    <tr th:each="timeSlot : ${timeSlots}">
+      <td><span th:text="${timeSlot.id}"></span></td>
+      <td><span th:text="${timeSlot.startAt}"></span></td>
+    </tr>
     </tbody>
   </table>
 </div>

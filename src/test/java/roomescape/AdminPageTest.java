@@ -24,4 +24,13 @@ class AdminPageTest {
                    .statusCode(200);
     }
 
+    @Test
+    void path_admin_time_offer_page() {
+        RestAssured.given()
+                   .when()
+                   .get("/admin/time")
+                   .then()
+                   .statusCode(200);
+    }
+
 }

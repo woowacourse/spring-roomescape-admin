@@ -3,8 +3,8 @@ package roomescape.fixture;
 import io.restassured.RestAssured;
 import io.restassured.http.ContentType;
 import roomescape.domain.Reservation;
-import roomescape.dto.ReservationRequest;
-import roomescape.dto.ReservationsResponse;
+import roomescape.dto.request.ReservationRequest;
+import roomescape.dto.response.ReservationsResponse;
 
 import java.util.HashMap;
 import java.util.List;

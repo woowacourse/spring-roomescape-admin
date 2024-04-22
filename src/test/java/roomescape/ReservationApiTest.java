@@ -5,7 +5,7 @@ import io.restassured.http.ContentType;
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.annotation.DirtiesContext;
-import roomescape.dto.ReservationRequest;
+import roomescape.dto.request.ReservationRequest;
 import roomescape.fixture.ReservationFixture;
 
 import java.util.HashMap;

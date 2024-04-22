@@ -5,9 +5,11 @@ import java.util.List;
 import java.util.Objects;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.simple.SimpleJdbcInsert;
+import org.springframework.stereotype.Repository;
 import roomescape.domain.ReservationTime;
 import roomescape.domain.ReservationTimeRepository;
 
+@Repository
 public class JdbcReservationTimeRepositoryImpl implements ReservationTimeRepository {
 
     private final JdbcTemplate jdbcTemplate;

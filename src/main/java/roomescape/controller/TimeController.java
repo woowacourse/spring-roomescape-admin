@@ -3,11 +3,13 @@ package roomescape.controller;
 import org.springframework.http.ResponseEntity;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.jdbc.support.GeneratedKeyHolder;
+import org.springframework.jdbc.support.KeyHolder;
+import org.springframework.web.bind.annotation.*;
 import roomescape.domain.Time;
+import roomescape.dto.TimeCreateRequest;
 
+import java.sql.PreparedStatement;
 import java.util.List;
 
 @RestController
@@ -28,6 +30,20 @@ public class TimeController {
     public ResponseEntity<List<Time>> readTimes() {
         String sql = "SELECT id, start_at FROM reservation_time";
         return ResponseEntity.ok(jdbcTemplate.query(sql, rowMapper));
+    }
+
+    @PostMapping
+    public ResponseEntity<Time> createTime(@RequestBody TimeCreateRequest dto) {
+        KeyHolder keyHolder = new GeneratedKeyHolder();
+        String sql = "INSERT INTO reservation_time(start_at) VALUES (?)";
+
+        long id = jdbcTemplate.update((connection) -> {
+            PreparedStatement preparedStatement = connection.prepareStatement(sql, new String[]{"id"});
+            preparedStatement.setString(1, dto.startAt());
+            return preparedStatement;
+        }, keyHolder);
+
+        return ResponseEntity.ok(dto.createTime(id));
     }
 }
 

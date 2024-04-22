@@ -1,12 +1,14 @@
 package roomescape.controller;
 
 import io.restassured.RestAssured;
+import io.restassured.http.ContentType;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.test.annotation.DirtiesContext;
+import roomescape.dto.TimeCreateRequest;
 
 import static org.hamcrest.core.Is.is;
 
@@ -26,5 +28,19 @@ class TimeControllerTest {
                 .then().log().all()
                 .statusCode(200)
                 .body("size()", is(1));
+    }
+
+
+    @DisplayName("시간을 DB에 추가할 수 있다.")
+    @Test
+    void createTime() {
+        TimeCreateRequest params = new TimeCreateRequest("10:00");
+
+        RestAssured.given().log().all()
+                .contentType(ContentType.JSON)
+                .body(params)
+                .when().post("/times")
+                .then().log().all()
+                .statusCode(200);
     }
 }

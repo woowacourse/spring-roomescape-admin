@@ -5,7 +5,7 @@ import io.restassured.http.ContentType;
 
 import static org.hamcrest.Matchers.is;
 
-public class HttpRestTestTemplate {
+class HttpRestTestTemplate {
 
     private HttpRestTestTemplate() {
     }

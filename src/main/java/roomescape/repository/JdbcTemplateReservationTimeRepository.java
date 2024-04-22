@@ -2,12 +2,14 @@ package roomescape.repository;
 
 import java.util.List;
 import java.util.Map;
+import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;
 import org.springframework.jdbc.core.simple.SimpleJdbcInsert;
 import org.springframework.stereotype.Repository;
 import roomescape.domain.ReservationTime;
 import roomescape.domain.ReservationTimeRepository;
+import roomescape.domain.exception.EntityNotFoundException;
 
 @Repository
 class JdbcTemplateReservationTimeRepository implements ReservationTimeRepository {
@@ -46,6 +48,21 @@ class JdbcTemplateReservationTimeRepository implements ReservationTimeRepository
         String sql = "select * from reservation_time";
 
         return jdbcTemplate.query(sql, getReservationTimeRowMapper());
+    }
+
+    @Override
+    public ReservationTime findById(long id) {
+        try {
+            return tryFindById(id);
+        } catch (EmptyResultDataAccessException exception) {
+            throw new EntityNotFoundException("존재하지 않는 예약 시간입니다.");
+        }
+    }
+
+    private ReservationTime tryFindById(long id) {
+        String sql = "select * from reservation_time where id = ?";
+
+        return jdbcTemplate.queryForObject(sql, getReservationTimeRowMapper(), id);
     }
 
     private RowMapper<ReservationTime> getReservationTimeRowMapper() {

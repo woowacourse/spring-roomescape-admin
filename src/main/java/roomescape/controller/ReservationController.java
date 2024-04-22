@@ -10,42 +10,38 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
-import roomescape.domain.reservation.Reservation;
 import roomescape.dto.ReservationDto;
 import roomescape.dto.ReservationRequest;
-import roomescape.repository.ReservationRepository;
+import roomescape.service.ReservationService;
 
 @RestController
 @RequestMapping("/reservations")
 public class ReservationController {
-    private final ReservationRepository reservationRepository;
+    private final ReservationService reservationService;
 
-    public ReservationController(ReservationRepository reservationRepository) {
-        this.reservationRepository = reservationRepository;
+    public ReservationController(ReservationService reservationService) {
+        this.reservationService = reservationService;
     }
 
     @GetMapping
     public ResponseEntity<List<ReservationDto>> findReservations() {
-        List<ReservationDto> reservations = reservationRepository.findAll().stream()
-                .map(ReservationDto::from)
-                .toList();
+        List<ReservationDto> reservations = reservationService.findReservations();
         return ResponseEntity.ok(reservations);
     }
 
     @PostMapping
     public ResponseEntity<ReservationDto> createReservation(@RequestBody ReservationRequest reservationRequest) {
-        Reservation newReservation = reservationRepository.save(reservationRequest.toReservation());
-        return ResponseEntity.created(URI.create("/reservations/" + newReservation.getId()))
-                .body(ReservationDto.from(newReservation));
+        ReservationDto newReservation = reservationService.createReservation(reservationRequest);
+        return ResponseEntity.created(URI.create("/reservations/" + newReservation.id()))
+                .body(newReservation);
     }
 
     @DeleteMapping("/{id}")
     public ResponseEntity<Void> deleteReservation(@PathVariable(value = "id") Long id) {
-        try {
-            reservationRepository.deleteById(id);
-        } catch (IllegalArgumentException e) {
-            return ResponseEntity.notFound().build();
+        boolean isDeleted = reservationService.deleteReservation(id);
+        if (isDeleted) {
+            return ResponseEntity.noContent().build();
         }
-        return ResponseEntity.noContent().build();
+        return ResponseEntity.notFound().build();
     }
 }

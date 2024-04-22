@@ -13,12 +13,6 @@ public class Reservation {
     private Reservation() {
     }
 
-    public Reservation(LocalDate date, String name, LocalTime time) {
-        this.date = date;
-        this.name = name;
-        this.time = time;
-    }
-
     public Reservation(Long id, String name, LocalDate date, LocalTime time) {
         this.id = id;
         this.name = name;
@@ -26,12 +20,12 @@ public class Reservation {
         this.time = time;
     }
 
-    public static Reservation toEntity(long id, Reservation reservation) {
-        return new Reservation(id, reservation.getName(), reservation.getDate(), reservation.getTime());
+    public Reservation(LocalDate date, String name, LocalTime time) {
+        this(null, name, date, time);
     }
 
-    public Long getId() {
-        return id;
+    public static Reservation toEntity(long id, Reservation reservation) {
+        return new Reservation(id, reservation.getName(), reservation.getDate(), reservation.getTime());
     }
 
     public String getName() {

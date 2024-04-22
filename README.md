@@ -1,17 +1,13 @@
 
 ## 구현 기능 목록
 
-#### 레벨 1
-
 - [x] `localhost:8080/admin` 요청 시 어드민 메인 페이지가 응답한다.
     - 어드민 메인 페이지 - `templates/admin/index.html`
-
-#### 레벨 2
 
 - [x] `localhost:8080/admin/reservation` 요청 시 예약 관리 페이지가 응답한다.
     - 예약 관리 페이지 - `templates/admin/reservation-legacy.html`
 
-- [x] 예약 목록을 읽을 수 있다. (예약 조회)
+- [x] DB에서 예약 목록을 읽어 올 수 있다. (예약 조회)
     - request
       ```
        GET /reservations HTTP/1.1
@@ -36,7 +32,6 @@
         ]
       ```
 
-#### 레벨 3
 - [x] 예약 추가시 id는 자동 증가 된다.
 - [x] data, name, time을 받아서 예약을 추가 할 수 있다.
     - request

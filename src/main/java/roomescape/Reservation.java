@@ -10,11 +10,25 @@ public class Reservation {
     private final LocalDate date;
     private final LocalTime time;
 
+    private Reservation() {
+        this.id = 0;
+        this.name = "";
+        this.date = LocalDate.now();
+        this.time = LocalTime.now();
+    }
+
     private Reservation(final long id, final String name, final LocalDate date, final LocalTime time) {
         this.id = id;
         this.name = name;
         this.date = date;
         this.time = time;
+    }
+
+    public Reservation(final long id, final Reservation reservation) {
+        this.id = id;
+        this.name = reservation.name;
+        this.date = reservation.date;
+        this.time = reservation.time;
     }
 
     public long getId() {

@@ -5,7 +5,6 @@ import static org.springframework.http.HttpStatus.NO_CONTENT;
 
 import java.net.URI;
 import java.util.List;
-import java.util.concurrent.atomic.AtomicLong;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -20,7 +19,6 @@ import roomescape.repository.ReservationRepository;
 
 @RestController
 public class ReservationController {
-    private final AtomicLong reservationIndex = new AtomicLong(0);
 
     private final ReservationRepository reservationRepository;
 
@@ -35,7 +33,7 @@ public class ReservationController {
 
     @PostMapping("/reservations")
     public ResponseEntity<Reservation> reserve(@RequestBody final ReservationDto reservationDto) {
-        Reservation reservation = new Reservation.Builder().id(reservationIndex.incrementAndGet())
+        Reservation reservation = new Reservation.Builder()
                 .name(reservationDto.getName())
                 .date(reservationDto.getDate())
                 .time(reservationDto.getTime())
@@ -48,7 +46,7 @@ public class ReservationController {
 
         return ResponseEntity.status(CREATED)
                 .headers(httpHeaders)
-                .body(reservation);
+                .body(new Reservation(savedId, reservation));
     }
 
     @DeleteMapping("/reservations/{id}")

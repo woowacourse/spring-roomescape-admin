@@ -32,6 +32,7 @@ public class ReservationController {
     }
 
     @GetMapping
+    //TODO List<ReservationResponse> 리턴하도록 변경
     public ResponseEntity<List<Reservation>> readReservations() {
         return ResponseEntity.ok(reservationService.readAllReservations());
     }

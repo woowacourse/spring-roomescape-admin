@@ -5,7 +5,6 @@ import roomescape.controller.dto.ReservationTimeCreateRequest;
 import roomescape.controller.dto.ReservationTimeResponse;
 import roomescape.domain.ReservationTime;
 import roomescape.repository.ReservationTimeRepository;
-
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -19,9 +18,9 @@ public class ReservationTimeService {
     }
 
     public ReservationTimeResponse createReservationTime(final ReservationTimeCreateRequest request) {
-        final Long id = reservationTimeRepository.save(request);
-        final ReservationTime reservationTime = request.toReservationTime(id);
-        return new ReservationTimeResponse(reservationTime);
+        final ReservationTime reservationTime = request.toReservationTime();
+        final Long id = reservationTimeRepository.save(reservationTime);
+        return new ReservationTimeResponse(id, reservationTime.getStartAt());
     }
 
     public List<ReservationTimeResponse> getAllReservationTimes() {

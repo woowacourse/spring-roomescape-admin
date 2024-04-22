@@ -10,8 +10,11 @@ import org.springframework.test.annotation.DirtiesContext;
 import roomescape.controller.dto.ReservationCreateRequest;
 import roomescape.controller.dto.ReservationResponse;
 import roomescape.domain.Reservation;
+import roomescape.domain.ReservationTime;
 import roomescape.repository.ReservationRepository;
+import roomescape.repository.ReservationTimeRepository;
 
+import java.time.LocalTime;
 import java.util.List;
 
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.DEFINED_PORT)
@@ -24,11 +27,15 @@ class ReservationServiceTest {
     @Autowired
     private ReservationRepository reservationRepository;
 
+    @Autowired
+    private ReservationTimeRepository reservationTimeRepository;
+
     @Test
     @DisplayName("예약을 추가한다.")
     void createReservation() {
+        reservationTimeRepository.save(new ReservationTime(LocalTime.parse("10:00")));
         final ReservationCreateRequest request = new ReservationCreateRequest(
-                "냥인", "2024-04-21", "10:25");
+                "냥인", "2024-04-21", 1L);
 
         final ReservationResponse actual = reservationService.createReservation(request);
 
@@ -40,9 +47,9 @@ class ReservationServiceTest {
     void readAllReservations() {
         getIdAfterCreateReservation();
 
-        final List<Reservation> reservations = reservationService.readAllReservations();
+        final List<Reservation> actual = reservationService.readAllReservations();
 
-        assertThat(reservations).hasSize(1);
+        assertThat(actual).hasSize(1);
     }
     
     @Test
@@ -51,14 +58,17 @@ class ReservationServiceTest {
         final Long id = getIdAfterCreateReservation();
 
         reservationService.cancelReservation(id);
-        final List<Reservation> reservations = reservationRepository.findAll();
+        final List<Reservation> actual = reservationRepository.findAll();
 
-        assertThat(reservations).hasSize(0);
+        assertThat(actual).hasSize(0);
     }
 
     private Long getIdAfterCreateReservation() {
+        reservationTimeRepository.save(new ReservationTime(LocalTime.parse("10:00")));
         final ReservationCreateRequest request = new ReservationCreateRequest(
-                "냥인", "2024-04-21", "10:25");
-        return reservationRepository.save(request);
+                "냥인", "2024-04-21", 1L);
+        final ReservationTime reservationTime = reservationTimeRepository.findById(request.timeId());
+        final Reservation reservation = request.toReservation(reservationTime);
+        return reservationRepository.save(reservation);
     }
 }

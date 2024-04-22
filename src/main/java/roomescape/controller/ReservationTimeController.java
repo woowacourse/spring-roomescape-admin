@@ -7,6 +7,7 @@ import roomescape.controller.dto.ReservationTimeResponse;
 import roomescape.service.ReservationTimeService;
 import java.util.List;
 
+// TODO 공통 엔드포인트
 @RestController
 public class ReservationTimeController {
 

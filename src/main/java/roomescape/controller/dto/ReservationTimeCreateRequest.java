@@ -6,7 +6,7 @@ import java.time.LocalTime;
 
 public record ReservationTimeCreateRequest(LocalTime startAt) {
 
-    public ReservationTime toReservationTime(final Long id) {
-        return new ReservationTime(id, startAt);
+    public ReservationTime toReservationTime() {
+        return new ReservationTime(startAt);
     }
 }

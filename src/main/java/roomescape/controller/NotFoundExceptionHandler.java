@@ -12,4 +12,10 @@ public class NotFoundExceptionHandler {
         return ResponseEntity.badRequest()
                 .body(ex.getMessage());
     }
+
+    @ExceptionHandler(Exception.class)
+    protected ResponseEntity<String> handleException(Exception ex) {
+        return ResponseEntity.internalServerError()
+                .body("알수 없는 오류입니다.");
+    }
 }

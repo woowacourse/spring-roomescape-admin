@@ -32,7 +32,7 @@
         ]
       ```
 
-- [ ] data, name, time을 받아서 DB에 예약을 추가 할 수 있다.
+- [x] data, name, time을 받아서 DB에 예약을 추가 할 수 있다.
     - request
       ```
         POST /reservations HTTP/1.1

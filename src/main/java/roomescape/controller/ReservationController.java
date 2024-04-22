@@ -10,7 +10,6 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
-import roomescape.Reservation;
 import roomescape.dto.ReservationRequest;
 import roomescape.dto.ReservationResponse;
 
@@ -24,10 +23,10 @@ public class ReservationController {
     }
 
     @GetMapping("/reservations")
-    public ResponseEntity<List<Reservation>> reservations() {
+    public ResponseEntity<List<ReservationResponse>> reservations() {
         String sql = "SELECT id, name, date, time FROM reservation";
-        List<Reservation> reservations = jdbcTemplate.query(sql,
-                (rs, rowNum) -> new Reservation(rs.getLong("id"), rs.getString("name"),
+        List<ReservationResponse> reservations = jdbcTemplate.query(sql,
+                (rs, rowNum) -> new ReservationResponse(rs.getLong("id"), rs.getString("name"),
                         rs.getDate("date").toLocalDate(),
                         rs.getTime("time").toLocalTime()));
         return ResponseEntity.ok(reservations);
@@ -37,7 +36,7 @@ public class ReservationController {
     public ResponseEntity<ReservationResponse> create(@RequestBody ReservationRequest reservationRequest) {
         String sql = "INSERT INTO reservation (name, date, time) values (?, ?, ?)";
         int index = jdbcTemplate.update(sql, reservationRequest.name(), reservationRequest.date(), reservationRequest.time());
-        return ResponseEntity.created(URI.create("/reservations/" + index)).build();
+        return ResponseEntity.created(URI.create("/reservations/" + index)).body(ReservationResponse.of(index, reservationRequest.toReservation()));
     }
 
     @DeleteMapping("/reservations/{id}")

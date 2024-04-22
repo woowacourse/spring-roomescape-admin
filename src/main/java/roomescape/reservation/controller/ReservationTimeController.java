@@ -9,32 +9,32 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
-import roomescape.reservation.dto.TimeSlotRequest;
-import roomescape.reservation.dto.TimeSlotResponse;
-import roomescape.reservation.service.TimeSlotService;
+import roomescape.reservation.dto.ReservationTimeRequest;
+import roomescape.reservation.dto.ReservationTimeResponse;
+import roomescape.reservation.service.ReservationTimeService;
 
 @RestController
 @RequestMapping("/times")
-public class TimeSlotController {
-    private final TimeSlotService timeSlotService;
+public class ReservationTimeController {
+    private final ReservationTimeService reservationTimeService;
 
-    public TimeSlotController(final TimeSlotService timeSlotService) {
-        this.timeSlotService = timeSlotService;
+    public ReservationTimeController(final ReservationTimeService reservationTimeService) {
+        this.reservationTimeService = reservationTimeService;
     }
 
     @PostMapping
-    public ResponseEntity<TimeSlotResponse> create(@RequestBody TimeSlotRequest timeSlotRequest) {
-        return ResponseEntity.ok(timeSlotService.create(timeSlotRequest));
+    public ResponseEntity<ReservationTimeResponse> create(@RequestBody ReservationTimeRequest reservationTimeRequest) {
+        return ResponseEntity.ok(reservationTimeService.create(reservationTimeRequest));
     }
 
     @GetMapping
-    public ResponseEntity<List<TimeSlotResponse>> findAll() {
-        return ResponseEntity.ok(timeSlotService.findAll());
+    public ResponseEntity<List<ReservationTimeResponse>> findAll() {
+        return ResponseEntity.ok(reservationTimeService.findAll());
     }
 
     @DeleteMapping("/{id}")
     public ResponseEntity<Void> delete(@PathVariable("id") long timeId) {
-        boolean deleted = timeSlotService.delete(timeId);
+        boolean deleted = reservationTimeService.delete(timeId);
         if (!deleted) {
             return ResponseEntity.notFound().build();
         }

@@ -14,7 +14,7 @@ import org.springframework.test.annotation.DirtiesContext;
 
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.DEFINED_PORT)
 @DirtiesContext(classMode = DirtiesContext.ClassMode.BEFORE_EACH_TEST_METHOD)
-class TimeSlotControllerTest {
+class ReservationTimeControllerTest {
     @DisplayName("시간 생성 시, 200을 반환한다.")
     @Test
     void create() {

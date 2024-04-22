@@ -6,7 +6,7 @@ import java.time.LocalTime;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 
-class TimeSlotTest {
+class ReservationTimeTest {
     @DisplayName("동일한 id는 같은 예약 시간이다.")
     @Test
     void equals() {
@@ -16,10 +16,10 @@ class TimeSlotTest {
         LocalTime localTime2 = LocalTime.MIDNIGHT;
 
         //when
-        TimeSlot timeSlot1 = new TimeSlot(id1, localTime1);
-        TimeSlot timeSlot2 = new TimeSlot(id1, localTime2);
+        ReservationTime reservationTime1 = new ReservationTime(id1, localTime1);
+        ReservationTime reservationTime2 = new ReservationTime(id1, localTime2);
 
         //then
-        assertThat(timeSlot1).isEqualTo(timeSlot2);
+        assertThat(reservationTime1).isEqualTo(reservationTime2);
     }
 }

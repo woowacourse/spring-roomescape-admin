@@ -3,16 +3,16 @@ package roomescape.reservation.domain;
 import java.time.LocalTime;
 import java.util.Objects;
 
-public class TimeSlot {
+public class ReservationTime {
     private Long id;
     private LocalTime startAt;
 
-    public TimeSlot(final Long id, final LocalTime startAt) {
+    public ReservationTime(final Long id, final LocalTime startAt) {
         this.id = id;
         this.startAt = startAt;
     }
 
-    public TimeSlot(final LocalTime startAt) {
+    public ReservationTime(final LocalTime startAt) {
         this.startAt = startAt;
     }
 
@@ -32,8 +32,8 @@ public class TimeSlot {
         if (o == null || getClass() != o.getClass()) {
             return false;
         }
-        TimeSlot timeSlot = (TimeSlot) o;
-        return Objects.equals(id, timeSlot.id);
+        ReservationTime reservationTime = (ReservationTime) o;
+        return Objects.equals(id, reservationTime.id);
     }
 
     @Override
@@ -43,7 +43,7 @@ public class TimeSlot {
 
     @Override
     public String toString() {
-        return "TimeSlot{" +
+        return "ReservationTime{" +
                 "id=" + id +
                 ", startAt=" + startAt +
                 '}';

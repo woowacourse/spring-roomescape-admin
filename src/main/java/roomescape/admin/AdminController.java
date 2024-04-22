@@ -5,17 +5,17 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import roomescape.reservation.service.ReservationService;
-import roomescape.reservation.service.TimeSlotService;
+import roomescape.reservation.service.ReservationTimeService;
 
 @Controller
 @RequestMapping("/admin")
 public class AdminController {
     private final ReservationService reservationService;
-    private final TimeSlotService timeSlotService;
+    private final ReservationTimeService reservationTimeService;
 
-    public AdminController(final ReservationService reservationService, final TimeSlotService timeSlotService) {
+    public AdminController(final ReservationService reservationService, final ReservationTimeService reservationTimeService) {
         this.reservationService = reservationService;
-        this.timeSlotService = timeSlotService;
+        this.reservationTimeService = reservationTimeService;
     }
 
     @GetMapping
@@ -31,7 +31,7 @@ public class AdminController {
 
     @GetMapping("/time")
     public String time(Model model) {
-        model.addAttribute("timeSlots", timeSlotService.findAll());
+        model.addAttribute("reservationTimes", reservationTimeService.findAll());
         return "admin/time";
     }
 }

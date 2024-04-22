@@ -3,6 +3,7 @@ package roomescape.domain;
 import static org.assertj.core.api.Assertions.assertThat;
 
 import io.restassured.RestAssured;
+import io.restassured.http.ContentType;
 import java.sql.Connection;
 import java.sql.SQLException;
 import java.util.List;
@@ -16,7 +17,15 @@ import org.springframework.boot.test.web.server.LocalServerPort;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.test.context.jdbc.Sql;
 import org.springframework.test.context.jdbc.Sql.ExecutionPhase;
+import roomescape.dto.ReservationCreateDto;
 
+
+/*
+ * 테스트 데이터베이스 초기 데이터
+ * {ID=1, NAME=브라운, DATE=2024-05-04, TIME=16:00}
+ * {ID=2, NAME=엘라, DATE=2024-05-04, TIME=17:00}
+ * {ID=3, NAME=릴리, DATE=2023-08-05, TIME=15:40}
+ */
 @SpringBootTest(webEnvironment = WebEnvironment.RANDOM_PORT)
 @Sql(scripts = "/ResetTestData.sql", executionPhase = ExecutionPhase.BEFORE_TEST_CLASS)
 class ReservationRepositoryTest {
@@ -61,10 +70,26 @@ class ReservationRepositoryTest {
     }
 
     @Test
-    @DisplayName("데이터베이스에서 특정 예약 id의 데이터를 조회한다.")
+    @DisplayName("특정 예약 id의 데이터를 조회한다.")
     void findReservationById() {
         Reservation findReservations = reservationRepository.findById(2);
 
         assertThat(findReservations.getName()).isEqualTo("엘라");
+    }
+
+    @Test
+    void createReservation() {
+        ReservationCreateDto createDto = new ReservationCreateDto("브라운", "2023-08-05", "10:00");
+
+        RestAssured.given().log().all()
+                .contentType(ContentType.JSON)
+                .body(createDto)
+                .when().post("/reservations")
+                .then().log().all()
+                .statusCode(201)
+                .header("Location", "/reservations/4");
+
+        Integer count = jdbcTemplate.queryForObject("SELECT count(1) from reservation", Integer.class);
+        assertThat(count).isEqualTo(4);
     }
 }

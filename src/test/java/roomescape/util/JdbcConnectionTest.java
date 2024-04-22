@@ -11,7 +11,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.JdbcTemplate;
 import roomescape.reservation.acceptance.ReservationController;
 
-@DisplayName("JDBC 테스트")
 public class JdbcConnectionTest extends AcceptanceTest {
     @Autowired
     private JdbcTemplate jdbcTemplate;
@@ -31,7 +30,6 @@ public class JdbcConnectionTest extends AcceptanceTest {
         }
     }
 
-    @DisplayName("ReservationController에 있던 데이터베이스 관련 로직을 분리한 것을 검증한다.")
     @Test
     void injectionTest() {
         boolean isJdbcTemplateInjected = false;

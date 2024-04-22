@@ -7,7 +7,6 @@ import java.time.LocalTime;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 
-@DisplayName("예약 도메인 테스트")
 class ReservationTest {
     @DisplayName("동일한 id는 같은 예약이다.")
     @Test

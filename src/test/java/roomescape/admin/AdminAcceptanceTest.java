@@ -7,7 +7,6 @@ import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import roomescape.util.AcceptanceTest;
 
-@DisplayName("관리자 페이지 인수 테스트")
 class AdminAcceptanceTest extends AcceptanceTest {
     @DisplayName("관리자 메인 페이지 조회에 성공한다.")
     @Test

@@ -39,7 +39,7 @@ public class ReservationTimeController {
         Long createdReservationTimeId = reservationTimeService.createReservationTime(reservationTimeCreateRequest);
 
         ReservationTime createdReservationTime = reservationTimeService.findReservationTimeById(
-                createdReservationTimeId);
+                createdReservationTimeId).get();
         return ReservationTimeCreateResponse.of(createdReservationTime);
     }
 

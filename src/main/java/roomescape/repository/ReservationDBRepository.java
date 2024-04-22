@@ -2,6 +2,7 @@ package roomescape.repository;
 
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;
 import org.springframework.jdbc.core.simple.SimpleJdbcInsert;
@@ -46,10 +47,12 @@ public class ReservationDBRepository implements ReservationRepository {
         return jdbcTemplate.query(findAllReservationQuery, reservationRowMapper);
     }
 
-    public Reservation findReservationById(Long createdReservationId) {
-        return jdbcTemplate.queryForObject(findAllReservationQuery + " WHERE r.id = ?",
-                reservationRowMapper,
-                createdReservationId);
+    public Optional<Reservation> findReservationById(Long createdReservationId) {
+        return Optional.ofNullable(
+                jdbcTemplate.queryForObject(findAllReservationQuery + " WHERE r.id = ?",
+                        reservationRowMapper,
+                        createdReservationId)
+        );
     }
 
     public Long createReservation(ReservationCreateRequest reservationCreateRequest) {

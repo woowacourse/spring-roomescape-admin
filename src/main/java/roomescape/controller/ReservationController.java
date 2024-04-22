@@ -44,7 +44,7 @@ public class ReservationController {
         Long createdReservationId = reservationService.createReservation(reservationCreateRequest);
 
         //TODO : 이렇게 조회를 하는 것이 좋을지, Request의 데이터를 사용하는 것이 좋을지 고민해보기
-        Reservation createdReservation = reservationService.findReservationById(createdReservationId);
+        Reservation createdReservation = reservationService.findReservationById(createdReservationId).get();
 
         return ResponseEntity.status(HttpStatus.OK)
                 //.header("Location", "/reservations/" + createdReservationId)

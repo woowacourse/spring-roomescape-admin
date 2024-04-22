@@ -1,6 +1,7 @@
 package roomescape.service;
 
 import java.util.List;
+import java.util.Optional;
 import org.springframework.stereotype.Service;
 import roomescape.controller.dto.ReservationCreateRequest;
 import roomescape.domain.Reservation;
@@ -19,7 +20,7 @@ public class ReservationService {
         return reservationRepository.findReservations();
     }
 
-    public Reservation findReservationById(Long id) {
+    public Optional<Reservation> findReservationById(Long id) {
         return reservationRepository.findReservationById(id);
     }
 

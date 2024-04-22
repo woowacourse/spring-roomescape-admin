@@ -2,6 +2,7 @@ package roomescape.repository;
 
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.simple.SimpleJdbcInsert;
 import org.springframework.stereotype.Repository;
@@ -36,15 +37,14 @@ public class ReservationTimeRepository {
         )).longValue();
     }
 
-    public ReservationTime findReservationTimeById(Long createdReservationTimeId) {
-        return jdbcTemplate.queryForObject(
+    public Optional<ReservationTime> findReservationTimeById(Long createdReservationTimeId) {
+        return Optional.ofNullable(jdbcTemplate.queryForObject(
                 "SELECT * FROM reservation_time WHERE id = ?",
                 (rs, rowNum) -> new ReservationTime(
                         rs.getLong("id"),
                         CustomDateTimeFormatter.getLocalTime(rs.getString("start_at")
                         )),
-                createdReservationTimeId);
-
+                createdReservationTimeId));
     }
 
     public void deleteReservationTimeById(Long id) {

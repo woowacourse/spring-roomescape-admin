@@ -34,25 +34,25 @@ class ReservationTimeJdbcRepositoryTest {
         final ReservationTimeCreateRequest request = new ReservationTimeCreateRequest(LocalTime.parse("07:09"));
         final ReservationTime reservationTime = request.toReservationTime();
 
-        final Long id = reservationTimeRepository.save(reservationTime);
+        final Long actual = reservationTimeRepository.save(reservationTime);
 
-        assertThat(id).isEqualTo(1L);
+        assertThat(actual).isEqualTo(1L);
     }
 
     @Test
     @DisplayName("예약 시간 전체를 조회한다.")
     void findAllReservationTimes() {
-        jdbcTemplate.update("insert into reservation_time(start_at) values(?)", "15:40");
+        createInitialReservationTime();
 
-        final List<ReservationTime> reservationTimes = reservationTimeRepository.findAll();
+        final List<ReservationTime> actual = reservationTimeRepository.findAll();
 
-        assertThat(reservationTimes).hasSize(1);
+        assertThat(actual).hasSize(1);
     }
 
     @Test
     @DisplayName("id에 해당하는 예약 시간 정보를 조회한다.")
     void findReservationTimeById() {
-        jdbcTemplate.update("insert into reservation_time(start_at) values(?)", "15:40");
+        createInitialReservationTime();
 
         final ReservationTime actual = reservationTimeRepository.findById(1L);
 
@@ -65,11 +65,15 @@ class ReservationTimeJdbcRepositoryTest {
     @Test
     @DisplayName("id에 해당하는 예약 시간 정보를 삭제한다.")
     void deleteReservationTimeById() {
-        jdbcTemplate.update("insert into reservation_time(start_at) values(?)", "15:40");
+        createInitialReservationTime();
 
         reservationTimeRepository.deleteById(1L);
 
-        final Integer count = jdbcTemplate.queryForObject("SELECT count(*) from reservation_time", Integer.class);
-        assertThat(count).isZero();
+        final Integer actual = jdbcTemplate.queryForObject("SELECT count(*) from reservation_time", Integer.class);
+        assertThat(actual).isZero();
+    }
+
+    private void createInitialReservationTime() {
+        jdbcTemplate.update("insert into reservation_time(start_at) values(?)", "15:40");
     }
 }

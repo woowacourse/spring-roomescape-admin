@@ -23,7 +23,7 @@ class ReservationControllerTest {
     @Test
     @DisplayName("예약을 추가한다.")
     void createReservation() {
-        jdbcTemplate.update("INSERT INTO reservation_time (start_at) VALUES (?)", "15:40");
+        createInitialReservationTime();
         final Map<String, Object> params = createReservationParam();
 
         RestAssured.given().log().all()
@@ -33,16 +33,15 @@ class ReservationControllerTest {
                 .then().log().all()
                 .statusCode(200);
 
-        final Integer count = jdbcTemplate.queryForObject("SELECT count(1) from reservation", Integer.class);
-        assertThat(count).isEqualTo(1);
+        final Integer actual = jdbcTemplate.queryForObject("SELECT count(1) from reservation", Integer.class);
+        assertThat(actual).isEqualTo(1);
     }
 
     @Test
     @DisplayName("예약 목록을 조회한다.")
     void readReservations() {
-        jdbcTemplate.update("INSERT INTO reservation_time (start_at) VALUES (?)", "15:40");
-        jdbcTemplate.update("INSERT INTO reservation (name, date, time_id) VALUES (?, ?, ?)",
-                "냥인", "2024-04-21", 1L);
+        createInitialReservationTime();
+        createInitialReservation();
 
         RestAssured.given().log().all()
                 .when().get("/reservations")
@@ -54,22 +53,25 @@ class ReservationControllerTest {
     @Test
     @DisplayName("예약을 삭제한다.")
     void deleteReservation() {
-        jdbcTemplate.update("INSERT INTO reservation_time (start_at) VALUES (?)", "15:40");
-        final Map<String, Object> params = createReservationParam();
-        RestAssured.given().log().all()
-                .contentType(ContentType.JSON)
-                .body(params)
-                .when().post("/reservations")
-                .then().log().all()
-                .statusCode(200);
+        createInitialReservationTime();
+        createInitialReservation();
 
         RestAssured.given().log().all()
                 .when().delete("/reservations/1")
                 .then().log().all()
                 .statusCode(204);
 
-        final Integer countAfterDelete = jdbcTemplate.queryForObject("SELECT count(1) from reservation", Integer.class);
-        assertThat(countAfterDelete).isEqualTo(0);
+        final Integer actual = jdbcTemplate.queryForObject("SELECT count(1) from reservation", Integer.class);
+        assertThat(actual).isEqualTo(0);
+    }
+
+    private void createInitialReservationTime() {
+        jdbcTemplate.update("INSERT INTO reservation_time (start_at) VALUES (?)", "15:40");
+    }
+
+    private void createInitialReservation() {
+        jdbcTemplate.update("INSERT INTO reservation (name, date, time_id) VALUES (?, ?, ?)",
+                "냥인", "2024-04-21", 1L);
     }
 
     private Map<String, Object> createReservationParam() {

@@ -41,9 +41,7 @@ class ReservationTimeServiceTest {
     @Test
     @DisplayName("예약 시간 목록을 조회한다.")
     void getAllReservationTimes() {
-        final ReservationTimeCreateRequest request = new ReservationTimeCreateRequest(LocalTime.parse("10:09"));
-        final ReservationTime reservationTime = request.toReservationTime();
-        reservationTimeRepository.save(reservationTime);
+        createInitialReservationTime();
 
         final List<ReservationTimeResponse> actual = reservationTimeService.getAllReservationTimes();
 
@@ -53,13 +51,17 @@ class ReservationTimeServiceTest {
     @Test
     @DisplayName("예약 시간을 취소한다.")
     void cancelReservationTime() {
-        final ReservationTimeCreateRequest request = new ReservationTimeCreateRequest(LocalTime.parse("10:09"));
-        final ReservationTime reservationTime = request.toReservationTime();
-        final Long id = reservationTimeRepository.save(reservationTime);
+        final Long id = createInitialReservationTime();
 
         reservationTimeService.cancelReservationTime(id);
         final List<ReservationTime> actual = reservationTimeRepository.findAll();
 
         assertThat(actual).hasSize(0);
+    }
+
+    private Long createInitialReservationTime() {
+        final ReservationTimeCreateRequest request = new ReservationTimeCreateRequest(LocalTime.parse("10:09"));
+        final ReservationTime reservationTime = request.toReservationTime();
+        return reservationTimeRepository.save(reservationTime);
     }
 }

@@ -12,7 +12,6 @@ import roomescape.controller.dto.ReservationCreateRequest;
 import roomescape.domain.Reservation;
 import roomescape.domain.ReservationTime;
 
-import java.time.LocalTime;
 import java.util.List;
 
 @JdbcTest
@@ -33,40 +32,44 @@ class ReservationJdbcRepositoryTest {
     @Test
     @DisplayName("예약을 저장한다.")
     void saveReservation() {
-        final Long timeId = reservationTimeRepository.save(new ReservationTime(LocalTime.parse("10:00")));
-        final ReservationCreateRequest request = new ReservationCreateRequest("냥인", "2024-04-23", timeId);
-        final ReservationTime reservationTime = reservationTimeRepository.findById(timeId);
+        createInitialReservationTime();
+        final ReservationCreateRequest request = new ReservationCreateRequest("냥인", "2024-04-23", 1L);
+        final ReservationTime reservationTime = reservationTimeRepository.findById(1L);
         final Reservation reservation = request.toReservation(reservationTime);
 
-        final Long id = reservationRepository.save(reservation);
+        final Long actual = reservationRepository.save(reservation);
 
-        assertThat(id).isEqualTo(1L);
+        assertThat(actual).isEqualTo(1L);
     }
 
     @Test
     @DisplayName("예약 목록을 조회한다.")
     void findAllReservations() {
-        createReservations();
+        createInitialReservationTime();
+        createInitialReservations();
 
-        final List<Reservation> reservations = reservationRepository.findAll();
+        final List<Reservation> actual = reservationRepository.findAll();
 
-        assertThat(reservations).hasSize(1);
+        assertThat(actual).hasSize(1);
     }
 
     @Test
-    @DisplayName("Id에 해당하는 예약 정보를 삭제한다.")
+    @DisplayName("id에 해당하는 예약 정보를 삭제한다.")
     void deleteReservationById() {
-        createReservations();
+        createInitialReservationTime();
+        createInitialReservations();
 
         reservationRepository.deleteById(1L);
 
-        final Integer count = jdbcTemplate.queryForObject("SELECT count(*) from reservation", Integer.class);
-        assertThat(count).isZero();
+        final Integer actual = jdbcTemplate.queryForObject("SELECT count(*) from reservation", Integer.class);
+        assertThat(actual).isZero();
     }
 
-    private void createReservations() {
-        jdbcTemplate.update("insert into reservation_time(start_at) values(?)",
-                "10:00");
+    private void createInitialReservationTime() {
+        jdbcTemplate.update("insert into reservation_time(start_at) values(?)", "10:00");
+    }
+
+    private void createInitialReservations() {
         jdbcTemplate.update("insert into reservation(name, date, time_id) values(?, ?, ?)",
                 "냥인", "2024-04-21", 1L);
     }

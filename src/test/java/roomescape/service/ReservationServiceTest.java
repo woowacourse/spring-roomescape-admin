@@ -1,6 +1,7 @@
 package roomescape.service;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.junit.jupiter.api.Assertions.assertAll;
 
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -39,7 +40,12 @@ class ReservationServiceTest {
 
         final ReservationResponse actual = reservationService.createReservation(request);
 
-        assertThat(actual.getId()).isEqualTo(1L);
+        assertAll(
+                () -> assertThat(actual.getId()).isEqualTo(1L),
+                () -> assertThat(actual.getName()).isEqualTo("냥인"),
+                () -> assertThat(actual.getDate()).isEqualTo("2024-04-21"),
+                () -> assertThat(actual.getTime().getId()).isEqualTo(1L)
+        );
     }
 
     @Test

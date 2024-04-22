@@ -26,7 +26,7 @@ class TimeControllerTest {
     }
 
     @Test
-    void 칠단계() {
+    void 예약시간_추가_및_삭제를_수행한다() {
         Map<String, String> params = new HashMap<>();
         params.put("startAt", "10:00");
 

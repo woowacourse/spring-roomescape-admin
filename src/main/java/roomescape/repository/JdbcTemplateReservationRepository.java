@@ -9,6 +9,7 @@ import org.springframework.jdbc.core.RowMapper;
 import org.springframework.jdbc.core.simple.SimpleJdbcInsert;
 import org.springframework.stereotype.Repository;
 import roomescape.domain.reservation.Reservation;
+import roomescape.domain.time.ReservationTime;
 
 @Repository
 public class JdbcTemplateReservationRepository implements ReservationRepository {
@@ -23,10 +24,10 @@ public class JdbcTemplateReservationRepository implements ReservationRepository 
     }
 
     private final RowMapper<Reservation> reservationRowMapper = (resultSet, rowNum) -> new Reservation(
-            resultSet.getLong("id"),
+            resultSet.getLong("reservation_id"),
             resultSet.getString("name"),
             resultSet.getDate("date").toLocalDate(),
-            resultSet.getTime("time").toLocalTime()
+            new ReservationTime(resultSet.getLong("time_id"), resultSet.getTime("time_value").toLocalTime())
     );
 
     @Override
@@ -34,9 +35,25 @@ public class JdbcTemplateReservationRepository implements ReservationRepository 
         Map<String, Object> params = new HashMap<>();
         params.put("name", reservationRequest.getName());
         params.put("date", reservationRequest.getDate());
-        params.put("time", reservationRequest.getTime());
+        params.put("time_id", reservationRequest.getTimeId());
         Long id = jdbcInsert.executeAndReturnKey(params).longValue();
-        return new Reservation(id, reservationRequest);
+        return findById(id);
+    }
+
+    private Reservation findById(Long id) {
+        return jdbcTemplate.queryForObject(
+                """
+                        SELECT
+                            r.id as reservation_id,
+                            r.name,
+                            r.date,
+                            t.id as time_id,
+                            t.start_at as time_value
+                        FROM reservation as r
+                        INNER JOIN reservation_time as t
+                        ON r.id = ?
+                        """, reservationRowMapper, id
+        );
     }
 
     @Override

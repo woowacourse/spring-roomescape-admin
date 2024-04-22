@@ -74,9 +74,10 @@ class ReservationControllerTest {
     @TestFactory
     @DisplayName("예약을 생성하고 삭제한다.")
     Collection<DynamicTest> saveReservationAndDelete() {
+        jdbcTemplate.update(
+                "INSERT INTO reservation_time (start_at) VALUES (?)", "15:40");
         ReservationRequest params = new ReservationRequest(
-                "브라운", LocalDate.of(2023, 8, 5), LocalTime.of(10, 00)
-        );
+                "브라운", LocalDate.of(2023, 8, 5), 1L);
 
         return List.of(
                 dynamicTest("예약을 생성한다.", () -> {

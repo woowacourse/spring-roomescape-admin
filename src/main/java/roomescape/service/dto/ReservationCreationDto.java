@@ -1,14 +1,12 @@
 package roomescape.service.dto;
 
-import java.time.format.DateTimeFormatter;
 import roomescape.domain.Name;
 import roomescape.domain.Reservation;
 import roomescape.domain.ReservationDate;
 import roomescape.domain.TimeSlot;
+import roomescape.utils.TimeFormatter;
 
 public class ReservationCreationDto {
-
-    private static final DateTimeFormatter DATE_FORMATTER = DateTimeFormatter.ofPattern("yyyy-MM-dd");
 
     private final String name;
     private final String date;
@@ -27,7 +25,7 @@ public class ReservationCreationDto {
 
         return new ReservationCreationDto(
                 name.asText(),
-                DATE_FORMATTER.format(date.getDate()),
+                TimeFormatter.format(date.getDate()),
                 TimeSlotDto.from(time)
         );
     }

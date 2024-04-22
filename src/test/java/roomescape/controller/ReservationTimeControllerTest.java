@@ -1,5 +1,7 @@
 package roomescape.controller;
 
+import static org.hamcrest.Matchers.is;
+
 import io.restassured.RestAssured;
 import io.restassured.http.ContentType;
 import java.util.HashMap;
@@ -13,7 +15,7 @@ import org.springframework.test.annotation.DirtiesContext;
 @DirtiesContext(classMode = DirtiesContext.ClassMode.BEFORE_EACH_TEST_METHOD)
 class ReservationTimeControllerTest {
 
-    @DisplayName("시간 추가")
+    @DisplayName("시간 추가, 조회")
     @Test
     void insertAndSearchAndRemoveTime() {
         Map<String, String> params = new HashMap<>();
@@ -25,5 +27,11 @@ class ReservationTimeControllerTest {
             .when().post("/times")
             .then().log().all()
             .statusCode(200);
+
+        RestAssured.given().log().all()
+            .when().get("/times")
+            .then().log().all()
+            .statusCode(200)
+            .body("size()", is(1));
     }
 }

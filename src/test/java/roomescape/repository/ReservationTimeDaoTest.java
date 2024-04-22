@@ -2,6 +2,7 @@ package roomescape.repository;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
+import java.util.List;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -26,5 +27,16 @@ class ReservationTimeDaoTest {
         ReservationTime savedTime = reservationTimeDao.save(time);
 
         assertThat(savedTime.getId()).isEqualTo(1);
+    }
+
+    @DisplayName("전체 시간 조회")
+    @Test
+    void findAllReservationTimes() {
+        reservationTimeDao.save(new ReservationTime(null, "08:00"));
+        reservationTimeDao.save(new ReservationTime(null, "15:00"));
+
+        List<ReservationTime> times = reservationTimeDao.findAll();
+
+        assertThat(times).hasSize(2);
     }
 }

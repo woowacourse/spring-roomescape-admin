@@ -2,13 +2,14 @@ package roomescape.repository;
 
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.PreparedStatementCreator;
-import org.springframework.jdbc.core.RowMapper;
 import org.springframework.jdbc.support.GeneratedKeyHolder;
 import org.springframework.jdbc.support.KeyHolder;
 import org.springframework.stereotype.Repository;
 import roomescape.entity.ReservationTime;
 
 import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
 import java.time.LocalTime;
 import java.time.format.DateTimeFormatter;
 import java.util.List;
@@ -22,16 +23,25 @@ public class MemoryReservationTimeRepository implements ReservationTimeRepositor
         this.jdbcTemplate = jdbcTemplate;
     }
 
+    private ReservationTime mapRowTime(ResultSet rs, int rowNum) throws SQLException {
+        return new ReservationTime(
+                rs.getLong("id"),
+                LocalTime.parse(rs.getString("start_at"))
+        );
+    }
+
     @Override
     public List<ReservationTime> findAll() {
         String sql = "SELECT * FROM reservation_time";
-        RowMapper<ReservationTime> mapper = (rs, rowNum) ->
-                new ReservationTime(
-                        rs.getLong("id"),
-                        LocalTime.parse(rs.getString("start_at"))
-                );
 
-        return jdbcTemplate.query(sql, mapper);
+        return jdbcTemplate.query(sql, this::mapRowTime);
+    }
+
+    @Override
+    public ReservationTime findById(Long id) {
+        String sql = "SELECT * FROM reservation_time WHERE id = ?";
+
+        return jdbcTemplate.queryForObject(sql, this::mapRowTime, id);
     }
 
     @Override

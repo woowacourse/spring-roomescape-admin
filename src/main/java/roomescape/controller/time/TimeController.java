@@ -19,15 +19,17 @@ import java.util.List;
 public class TimeController {
 
     private final ReservationTimeRepository timeRepository;
+    private final ReservationTimeMapper timeMapper;
 
-    public TimeController(ReservationTimeRepository timeRepository) {
+    public TimeController(ReservationTimeRepository timeRepository, ReservationTimeMapper timeMapper) {
         this.timeRepository = timeRepository;
+        this.timeMapper = timeMapper;
     }
 
     @GetMapping
     public ResponseEntity<List<TimeResponse>> getTimes() {
         List<TimeResponse> responses = timeRepository.findAll().stream()
-                .map(ReservationTimeMapper::map)
+                .map(timeMapper::map)
                 .toList();
 
         return ResponseEntity.ok(responses);
@@ -35,9 +37,9 @@ public class TimeController {
 
     @PostMapping
     public ResponseEntity<TimeResponse> addTime(@RequestBody final TimeRequest timeRequest) {
-        ReservationTime time = ReservationTimeMapper.map(timeRequest);
+        ReservationTime time = timeMapper.map(timeRequest);
         ReservationTime savedTime = timeRepository.save(time);
-        TimeResponse response = ReservationTimeMapper.map(savedTime);
+        TimeResponse response = timeMapper.map(savedTime);
 
         return ResponseEntity.ok(response);
     }

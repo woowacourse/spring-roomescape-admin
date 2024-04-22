@@ -8,6 +8,7 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.test.annotation.DirtiesContext;
 import roomescape.entity.Reservation;
+import roomescape.entity.ReservationTime;
 
 import java.time.LocalDate;
 import java.time.LocalTime;
@@ -18,7 +19,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 @DirtiesContext(classMode = DirtiesContext.ClassMode.BEFORE_EACH_TEST_METHOD)
-class MemoryReservationRepositoryTest {
+class ReservationRepositoryTest {
 
     @Autowired
     private JdbcTemplate jdbcTemplate;
@@ -27,31 +28,49 @@ class MemoryReservationRepositoryTest {
 
     @BeforeEach
     void setUp() {
-        String sql = "INSERT INTO reservation(name, date, time) VALUES (?, ?, ?)";
+        setUpReservationTimes();
+        setUpReservations();
+    }
+
+    void setUpReservationTimes() {
+        String sql = "INSERT INTO reservation_time (start_at) VALUES (?)";
+        List<ReservationTime> times = List.of(
+                new ReservationTime(null, LocalTime.of(10, 15)),
+                new ReservationTime(null, LocalTime.of(11, 20)),
+                new ReservationTime(null, LocalTime.of(12, 25))
+        );
+        List<Object[]> batchArgs = times.stream().map(time -> new Object[]{
+                time.startAt().format(DateTimeFormatter.ISO_LOCAL_TIME)
+        }).toList();
+        jdbcTemplate.batchUpdate(sql, batchArgs);
+    }
+
+    void setUpReservations() {
+        String sql = "INSERT INTO reservation(name, date, time_id) VALUES (?, ?, ?)";
         List<Reservation> reservations = List.of(
                 new Reservation(
                         null,
                         "seyang",
                         LocalDate.of(2024, 1, 20),
-                        LocalTime.of(10, 15)
+                        new ReservationTime(1L, null)
                 ),
                 new Reservation(
                         null,
                         "hana",
                         LocalDate.of(2024, 2, 19),
-                        LocalTime.of(11, 20)
+                        new ReservationTime(2L, null)
                 ),
                 new Reservation(
                         null,
                         "mura",
                         LocalDate.of(2024, 3, 18),
-                        LocalTime.of(12, 25)
+                        new ReservationTime(3L, null)
                 )
         );
         final List<Object[]> batchArgs = reservations.stream().map(reservation -> new Object[]{
                 reservation.name(),
                 reservation.date().format(DateTimeFormatter.ISO_LOCAL_DATE),
-                reservation.time().format(DateTimeFormatter.ISO_LOCAL_TIME)
+                reservation.time().id()
         }).toList();
         jdbcTemplate.batchUpdate(sql, batchArgs);
     }
@@ -68,19 +87,19 @@ class MemoryReservationRepositoryTest {
                         1L,
                         "seyang",
                         LocalDate.of(2024, 1, 20),
-                        LocalTime.of(10, 15)
+                        new ReservationTime(1L, LocalTime.of(10, 15))
                 ),
                 new Reservation(
                         2L,
                         "hana",
                         LocalDate.of(2024, 2, 19),
-                        LocalTime.of(11, 20)
+                        new ReservationTime(2L, LocalTime.of(11, 20))
                 ),
                 new Reservation(
                         3L,
                         "mura",
                         LocalDate.of(2024, 3, 18),
-                        LocalTime.of(12, 25)
+                        new ReservationTime(3L, LocalTime.of(12, 25))
                 )
         );
     }
@@ -96,7 +115,7 @@ class MemoryReservationRepositoryTest {
                 2L,
                 "hana",
                 LocalDate.of(2024, 2, 19),
-                LocalTime.of(11, 20)
+                new ReservationTime(2L, LocalTime.of(11, 20))
         ));
     }
 
@@ -108,7 +127,7 @@ class MemoryReservationRepositoryTest {
                 null,
                 "gana",
                 LocalDate.of(2024, 3, 1),
-                LocalTime.of(12, 25)
+                new ReservationTime(2L, LocalTime.of(12, 25))
         ));
 
         // when & then

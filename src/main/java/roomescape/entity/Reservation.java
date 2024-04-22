@@ -1,11 +1,10 @@
 package roomescape.entity;
 
 import java.time.LocalDate;
-import java.time.LocalTime;
 
-public record Reservation(Long id, String name, LocalDate date, LocalTime time) {
+public record Reservation(Long id, String name, LocalDate date, ReservationTime time) {
 
-    public Reservation assignId(Long id) {
+    public Reservation assign(Long id, ReservationTime time) {
         return new Reservation(id, name, date, time);
     }
 }

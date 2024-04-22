@@ -20,15 +20,17 @@ import java.util.List;
 public class ReservationController {
 
     private final ReservationRepository reservationRepository;
+    private final ReservationMapper reservationMapper;
 
-    public ReservationController(ReservationRepository reservationRepository) {
+    public ReservationController(ReservationRepository reservationRepository, ReservationMapper reservationMapper) {
         this.reservationRepository = reservationRepository;
+        this.reservationMapper = reservationMapper;
     }
 
     @GetMapping
     public ResponseEntity<List<ReservationResponse>> getReservations() {
         List<ReservationResponse> responses = reservationRepository.findAll().stream()
-                .map(ReservationMapper::map)
+                .map(reservationMapper::map)
                 .toList();
 
         return ResponseEntity.ok(responses);
@@ -36,8 +38,8 @@ public class ReservationController {
 
     @PostMapping
     public ResponseEntity<ReservationResponse> addReservation(@RequestBody final ReservationRequest request) {
-        Reservation savedReservation = reservationRepository.save(ReservationMapper.map(request));
-        ReservationResponse response = ReservationMapper.map(savedReservation);
+        Reservation savedReservation = reservationRepository.save(reservationMapper.map(request));
+        ReservationResponse response = reservationMapper.map(savedReservation);
 
         return ResponseEntity
                 .created(URI.create("/reservations/" + response.id()))

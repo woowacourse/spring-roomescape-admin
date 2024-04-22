@@ -84,7 +84,7 @@ class ReservationControllerTest {
                     RestAssured.given().log().all()
                             .when().delete("/reservations/1")
                             .then().log().all()
-                            .statusCode(204);
+                            .statusCode(200);
                 }),
 
                 DynamicTest.dynamicTest("예약을 삭제한 후 조회 했을 때 갯수가 0이다.", () -> {
@@ -117,7 +117,7 @@ class ReservationControllerTest {
         RestAssured.given().log().all()
                 .when().delete("/reservations/1")
                 .then().log().all()
-                .statusCode(404)
+                .statusCode(200)
                 .body(equalTo("삭제할 예약이 존재하지 않습니다."));
     }
 

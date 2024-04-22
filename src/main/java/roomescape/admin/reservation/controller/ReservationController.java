@@ -2,7 +2,6 @@ package roomescape.admin.reservation.controller;
 
 import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -46,9 +45,9 @@ public class ReservationController {
     public ResponseEntity<?> delete(@PathVariable("id") Long id) {
         int deleteCount = reservationService.delete(id);
         if (deleteCount == 0) {
-            return ResponseEntity.status(HttpStatus.NOT_FOUND).body("삭제할 예약이 존재하지 않습니다.");
+            return ResponseEntity.ok().body("삭제할 예약이 존재하지 않습니다.");
         }
 
-        return ResponseEntity.noContent().build();
+        return ResponseEntity.ok().build();
     }
 }

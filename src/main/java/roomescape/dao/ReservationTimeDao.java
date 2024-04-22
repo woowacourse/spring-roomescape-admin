@@ -1,7 +1,6 @@
 package roomescape.dao;
 
 import java.sql.PreparedStatement;
-import java.time.LocalTime;
 import java.util.List;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.PreparedStatementCreator;
@@ -9,22 +8,22 @@ import org.springframework.jdbc.core.RowMapper;
 import org.springframework.jdbc.support.GeneratedKeyHolder;
 import org.springframework.jdbc.support.KeyHolder;
 import org.springframework.stereotype.Repository;
-import roomescape.domain.Time;
+import roomescape.domain.ReservationTime;
 
 @Repository
-public class TimeDao {
+public class ReservationTimeDao {
 
     private final JdbcTemplate jdbcTemplate;
 
-    public TimeDao(JdbcTemplate jdbcTemplate) {
+    public ReservationTimeDao(JdbcTemplate jdbcTemplate) {
         this.jdbcTemplate = jdbcTemplate;
     }
 
-    public long create(Time time) {
+    public long create(ReservationTime reservationTime) {
         String sql = "INSERT INTO reservation_time(start_at) VALUES (?)";
         PreparedStatementCreator preparedStatementCreator = connection -> {
             PreparedStatement ps = connection.prepareStatement(sql, new String[]{"id"});
-            ps.setString(1, time.getStartAt().toString());
+            ps.setString(1, reservationTime.getStartAt());
             return ps;
         };
         KeyHolder keyHolder = new GeneratedKeyHolder();
@@ -32,11 +31,20 @@ public class TimeDao {
         return keyHolder.getKey().longValue();
     }
 
-    public List<Time> getAll() {
-        String sql = "SELECT id, start_at FROM reservation_time";
-        RowMapper<Time> rowMapper = (resultSet, rowNum) -> new Time(
+    public ReservationTime find(Long id) {
+        String sql = "SELECT id, start_at FROM reservation_time where id = ?";
+        RowMapper<ReservationTime> rowMapper = (resultSet, rowNum) -> new ReservationTime(
                 resultSet.getLong("id"),
-                LocalTime.parse(resultSet.getString("start_at"))
+                resultSet.getString("start_at")
+        );
+        return jdbcTemplate.queryForObject(sql, rowMapper, id);
+    }
+
+    public List<ReservationTime> getAll() {
+        String sql = "SELECT id, start_at FROM reservation_time";
+        RowMapper<ReservationTime> rowMapper = (resultSet, rowNum) -> new ReservationTime(
+                resultSet.getLong("id"),
+                resultSet.getString("start_at")
         );
         return jdbcTemplate.query(sql, rowMapper);
     }

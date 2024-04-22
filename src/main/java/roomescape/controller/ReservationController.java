@@ -1,6 +1,7 @@
 package roomescape.controller;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 import java.util.Objects;
 import java.util.Optional;
@@ -15,6 +16,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
+import roomescape.dao.ReservationDao;
 import roomescape.domain.Reservation;
 import roomescape.dto.ReservationCreateRequest;
 import roomescape.dto.ReservationResponse;
@@ -26,9 +28,16 @@ public class ReservationController {
     private final List<Reservation> reservations = new ArrayList<>();
     private final AtomicLong index = new AtomicLong(1);
 
+    private ReservationDao reservationDao;
+
+    public ReservationController(ReservationDao reservationDao) {
+        this.reservationDao = reservationDao;
+    }
+
     @GetMapping
-    public ResponseEntity<List<ReservationResponse>> reservations() {
-        List<ReservationResponse> reservationResponses = reservations.stream()
+    public ResponseEntity<List<ReservationResponse>> findAllReservations() {
+        List<ReservationResponse> reservationResponses = reservationDao.findAll()
+                .stream()
                 .map(ReservationResponse::toResponse)
                 .collect(Collectors.toList());
 

@@ -31,9 +31,8 @@ public class ReservationController {
     }
 
     @GetMapping
-    //TODO ResponseEntity<> 사용하기 (통일성)
-    public List<Reservation> readReservations() {
-        return reservationService.readAllReservations();
+    public ResponseEntity<List<Reservation>> readReservations() {
+        return ResponseEntity.ok(reservationService.readAllReservations());
     }
 
     @DeleteMapping("/{id}")

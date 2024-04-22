@@ -1,8 +1,10 @@
 package roomescape.domain.reservation;
 
 import java.time.LocalTime;
+import java.time.format.DateTimeFormatter;
 
 public class ReservationTime {
+    private static final DateTimeFormatter TIME_FORMATTER = DateTimeFormatter.ofPattern("HH:mm");
     private static final LocalTime START_TIME = LocalTime.of(9, 0);
     private static final LocalTime END_TIME = LocalTime.of(22, 0);
 
@@ -11,6 +13,14 @@ public class ReservationTime {
     public ReservationTime(LocalTime time) {
         validateTime(time);
         this.time = time;
+    }
+
+    public ReservationTime(String time){
+        this(LocalTime.parse(time, TIME_FORMATTER));
+    }
+
+    public static String formattedTime(LocalTime otherTime) {
+        return otherTime.format(TIME_FORMATTER);
     }
 
     public static LocalTime startTime() {
@@ -22,7 +32,7 @@ public class ReservationTime {
     }
 
     private void validateTime(LocalTime time) {
-        if(time ==null){
+        if (time == null) {
             throw new IllegalArgumentException("time is null");
         }
 

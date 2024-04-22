@@ -21,11 +21,17 @@ import java.util.Objects;
 
 @Repository
 public class ReservationDao {
-    private static final DateTimeFormatter DATE_FORMMATER = DateTimeFormatter.ofPattern("yyyy-MM-dd");
-    private static final DateTimeFormatter Time_FORMMATER = DateTimeFormatter.ofPattern("HH:mm");
 
     @Autowired
     private JdbcTemplate jdbcTemplate;
+
+    private final RowMapper<Reservation> reservationRowMapper = ((rs, rowNum) -> {
+        Long id = rs.getLong("id");
+        String name = rs.getString("name");
+        ReservationDate date = new ReservationDate(rs.getString("date"));
+        ReservationTime time = new ReservationTime(rs.getString("time"));
+        return new Reservation(id, new Name(name), date, time);
+    });
 
     public ReservationDao() {
     }
@@ -35,36 +41,28 @@ public class ReservationDao {
         return jdbcTemplate.query(sql, reservationRowMapper);
     }
 
-    public Long insertReservation(ReservationRequestDto reservationRequestDto) {
+    public Reservation findById(Long id) {
+        String sql = "SELECT id, name, date, time FROM reservation WHERE id = ?";
+        return jdbcTemplate.queryForObject(sql, reservationRowMapper, id);
+    }
+
+    public Long addReservation(ReservationRequestDto reservationRequestDto) {
         KeyHolder keyHolder = new GeneratedKeyHolder();
         jdbcTemplate.update(connection -> {
             PreparedStatement ps = connection.prepareStatement(
                     "insert into reservation (name, date, time) values (?, ?, ?)",
                     new String[]{"id"});
             ps.setString(1, reservationRequestDto.name());
-            ps.setString(2, reservationRequestDto.date().format(DATE_FORMMATER));
-            ps.setString(3, reservationRequestDto.time().format(Time_FORMMATER));
+            ps.setString(2, ReservationDate.formattedDate(reservationRequestDto.date()));
+            ps.setString(3, ReservationTime.formattedTime(reservationRequestDto.time()));
             return ps;
         }, keyHolder);
 
         return Objects.requireNonNull(keyHolder.getKey()).longValue();
     }
 
-    public Reservation findById(Long id) {
-        String sql = "SELECT id, name, date, time FROM reservation WHERE id = ?";
-        return jdbcTemplate.queryForObject(sql, reservationRowMapper, id);
-    }
-
     public void deleteReservation(Long id) {
         String sql = "DELETE FROM reservation WHERE id = ?";
         jdbcTemplate.update(sql, id);
     }
-
-    private final RowMapper<Reservation> reservationRowMapper = ((rs, rowNum) -> {
-        Long id = rs.getLong("id");
-        String name = rs.getString("name");
-        LocalDate date = LocalDate.parse(rs.getString("date"), DATE_FORMMATER);
-        LocalTime time = LocalTime.parse(rs.getString("time"), Time_FORMMATER);
-        return new Reservation(id, new Name(name), new ReservationDate(date), new ReservationTime(time));
-    });
 }

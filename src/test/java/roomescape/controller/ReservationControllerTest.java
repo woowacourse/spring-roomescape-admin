@@ -150,4 +150,24 @@ public class ReservationControllerTest {
                 .then().log().all()
                 .statusCode(200);
     }
+
+    @DisplayName("예약 시간을 조회할 수 있습니다.")
+    @Test
+    void should_get_reservation_time_list_in_db() {
+        Map<String, String> params = new HashMap<>();
+        params.put("startAt", "10:00");
+
+        RestAssured.given().log().all()
+                .contentType(ContentType.JSON)
+                .body(params)
+                .when().post("/times")
+                .then().log().all()
+                .statusCode(200);
+
+        RestAssured.given().log().all()
+                .when().get("/times")
+                .then().log().all()
+                .statusCode(200)
+                .body("size()", is(1));
+    }
 }

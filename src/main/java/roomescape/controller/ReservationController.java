@@ -105,4 +105,16 @@ public class ReservationController {
         }, id);
         return ResponseEntity.ok(reservationTime);
     }
+
+    @GetMapping("/times")
+    public List<ReservationTime> getReservationTimeList() {
+        return jdbcTemplate.query("select * from reservation_time",
+                (resultSet, rowNum) -> {
+                    ReservationTime reservationTime = new ReservationTime(
+                            resultSet.getLong("id"),
+                            resultSet.getTime("start_at").toLocalTime()
+                    );
+                    return reservationTime;
+                });
+    }
 }

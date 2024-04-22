@@ -12,22 +12,22 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.context.SpringBootTest.WebEnvironment;
 import org.springframework.boot.test.web.server.LocalServerPort;
 import org.springframework.jdbc.core.JdbcTemplate;
-import roomescape.dto.TimeDto;
+import roomescape.dto.ReservationTimeDto;
 
 @SpringBootTest(webEnvironment = WebEnvironment.RANDOM_PORT)
-class TimeControllerTest {
+class ReservationTimeControllerTest {
 
     @LocalServerPort
     private int port;
     @Autowired
     private JdbcTemplate jdbcTemplate;
-    private TimeDto timeDto;
+    private ReservationTimeDto reservationTimeDto;
 
     @BeforeEach
     void setUp() {
         RestAssured.port = port;
         String startAt = "15:40";
-        timeDto = TimeDto.of(null, startAt);
+        reservationTimeDto = ReservationTimeDto.of(null, startAt);
     }
 
     @Test
@@ -47,7 +47,7 @@ class TimeControllerTest {
         int count = getCount();
         RestAssured.given().log().all()
                 .contentType(ContentType.JSON)
-                .body(timeDto)
+                .body(reservationTimeDto)
                 .when().post("/times")
                 .then().log().all()
                 .statusCode(201);
@@ -64,7 +64,7 @@ class TimeControllerTest {
     void deleteReservationTest() {
         RestAssured.given().log().all()
                 .contentType(ContentType.JSON)
-                .body(timeDto)
+                .body(reservationTimeDto)
                 .when().post("/times")
                 .then().log().all()
                 .statusCode(201);

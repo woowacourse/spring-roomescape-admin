@@ -7,13 +7,12 @@ public record ReservationResponse(
         long id,
         String name,
         String date,
-        String time) {
-    private static final String TIME_FORMAT = "HH:mm";
+        ReservationTimeResponse time) {
 
     public ReservationResponse(Reservation reservation) {
         this(reservation.getId(),
                 reservation.getName(),
                 reservation.getDate().format(DateTimeFormatter.ISO_DATE),
-                reservation.getTime().format(DateTimeFormatter.ofPattern(TIME_FORMAT)));
+                new ReservationTimeResponse(reservation.getTime()));
     }
 }

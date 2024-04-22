@@ -1,16 +1,21 @@
 package roomescape.domain;
 
+import java.sql.Time;
 import java.time.LocalTime;
 
-public class Time {
+public class ReservationTime {
     private final long id;
     private final LocalTime startAt;
 
-    public Time(long id, String startAt) {
+    public ReservationTime(long id, String startAt) {
         this(id, LocalTime.parse(startAt));
     }
 
-    public Time(long id, LocalTime startAt) {
+    public ReservationTime(long id, Time time) {
+        this(id, time.toLocalTime());
+    }
+
+    public ReservationTime(long id, LocalTime startAt) {
         this.id = id;
         this.startAt = startAt;
     }

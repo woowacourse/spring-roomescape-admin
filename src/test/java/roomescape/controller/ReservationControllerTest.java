@@ -28,15 +28,17 @@ class ReservationControllerTest {
     void init() {
         RestAssured.port = port;
         jdbcTemplate.update("delete from reservation");
+        jdbcTemplate.update("delete from reservation_time");
     }
 
     @DisplayName("예약 추가 테스트")
     @Test
     void createReservation() {
         //given
+        jdbcTemplate.update("INSERT INTO reservation_time VALUES (1, '10:00:00')");
         Response response = RestAssured.given().log().all()
                 .contentType(ContentType.JSON)
-                .body(new ReservationRequest("브라운", "2023-08-05", "15:40"))
+                .body(new ReservationRequest("브라운", "2023-08-05", 1))
                 .when().post("/reservations")
                 .then().log().all().extract().response();
         //then
@@ -45,7 +47,7 @@ class ReservationControllerTest {
                 () -> assertThat(response.jsonPath().getLong("id")).isNotNull(),
                 () -> assertThat(response.jsonPath().getString("name")).isEqualTo("브라운"),
                 () -> assertThat(response.jsonPath().getString("date")).isEqualTo("2023-08-05"),
-                () -> assertThat(response.jsonPath().getString("startAt")).isEqualTo("15:40")
+                () -> assertThat(response.jsonPath().getString("time.startAt")).isEqualTo("10:00")
         );
     }
 
@@ -67,7 +69,8 @@ class ReservationControllerTest {
     @Test
     void deleteReservationSuccess() {
         //given
-        createReservation();
+        jdbcTemplate.update("INSERT INTO reservation_time VALUES (1, '10:00:00')");
+        jdbcTemplate.update("INSERT INTO reservation VALUES (1, 'brown', '2024-11-15', 1)");
         long id = RestAssured.given().log().all()
                 .when().get("/reservations")
                 .then().log().all().extract()

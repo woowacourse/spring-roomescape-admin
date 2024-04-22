@@ -10,6 +10,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.jdbc.core.JdbcTemplate;
 import roomescape.domain.Reservation;
+import roomescape.domain.ReservationTime;
 
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 class ReservationDaoImplTest {
@@ -34,7 +35,8 @@ class ReservationDaoImplTest {
     @Test
     void save() {
         //given
-        Reservation reservation = new Reservation(1, "aa", "2023-10-10", "10:00");
+        Reservation reservation = new Reservation(1, "aa", "2023-10-10",
+                new ReservationTime(1, "10:00"));
         //when
         reservationDaoImpl.save(reservation);
         //then
@@ -46,8 +48,10 @@ class ReservationDaoImplTest {
     void invalidSave() {
         //given
         long id = 1;
-        Reservation reservation1 = new Reservation(id, "aa", "2023-10-10", "10:00");
-        Reservation reservation2 = new Reservation(id, "bb", "2023-10-20", "11:00");
+        Reservation reservation1 = new Reservation(id, "aa", "2023-10-10",
+                new ReservationTime(1, "10:00"));
+        Reservation reservation2 = new Reservation(id, "bb", "2023-10-20",
+                new ReservationTime(2, "11:00"));
         //when
         reservationDaoImpl.save(reservation1);
         //then
@@ -61,7 +65,8 @@ class ReservationDaoImplTest {
     void deleteById() {
         //given
         long id = 1;
-        Reservation reservation = new Reservation(id, "aa", "2023-10-10", "10:00");
+        Reservation reservation = new Reservation(id, "aa", "2023-10-10",
+                new ReservationTime(1, "10:00"));
         reservationDaoImpl.save(reservation);
         //when
         reservationDaoImpl.deleteById(id);

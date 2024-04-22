@@ -1,11 +1,11 @@
 package roomescape.dao;
 
 import java.sql.Date;
-import java.sql.Time;
 import java.util.List;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Repository;
 import roomescape.domain.Reservation;
+import roomescape.domain.ReservationTime;
 
 @Repository
 public class ReservationDaoImpl implements ReservationDao {
@@ -17,12 +17,19 @@ public class ReservationDaoImpl implements ReservationDao {
 
     @Override
     public List<Reservation> findAll() {
-        return jdbcTemplate.query("SELECT * FROM reservation", (rs, rowNum) -> new Reservation(
-                rs.getLong("id"),
-                rs.getString("name"),
-                rs.getDate("date"),
-                rs.getTime("startAt")
-        ));
+        return jdbcTemplate.query("""
+                        SELECT r.id as reservation_id, r.name, r.date,
+                            t.id as time_id, t.start_at as time_value
+                        FROM reservation as r
+                        inner join reservation_time as t
+                        on r.time_id = t.id""",
+                (rs, rowNum) -> new Reservation(
+                        rs.getLong("reservation_id"),
+                        rs.getString("name"),
+                        rs.getDate("date").toLocalDate(),
+                        new ReservationTime(rs.getLong("time_id"),
+                                rs.getTime("time_value"))
+                ));
     }
 
     @Override
@@ -30,11 +37,11 @@ public class ReservationDaoImpl implements ReservationDao {
         if (existsById(reservation.getId())) {
             throw new IllegalArgumentException("duplicated id exists.");
         }
-        jdbcTemplate.update("INSERT INTO reservation(id, name, date, time) VALUES(?,?,?,?)",
+        jdbcTemplate.update("INSERT INTO reservation(id, name, date, time_id) VALUES(?,?,?,?)",
                 reservation.getId(),
                 reservation.getName(),
                 Date.valueOf(reservation.getDate()),
-                Time.valueOf(reservation.getTime()));
+                reservation.getTime().getId());
     }
 
     @Override

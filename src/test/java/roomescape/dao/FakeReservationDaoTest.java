@@ -7,6 +7,7 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import roomescape.domain.Reservation;
+import roomescape.domain.ReservationTime;
 
 public class FakeReservationDaoTest {
     private ReservationDao fakeReservationDao;
@@ -26,7 +27,8 @@ public class FakeReservationDaoTest {
     @Test
     void save() {
         //given
-        Reservation reservation = new Reservation(1, "aa", "2023-10-10", "10:00");
+        Reservation reservation = new Reservation(1, "aa", "2023-10-10",
+                new ReservationTime(1, "10:00"));
         //when
         fakeReservationDao.save(reservation);
         //then
@@ -38,8 +40,10 @@ public class FakeReservationDaoTest {
     void invalidSave() {
         //given
         long id = 1;
-        Reservation reservation1 = new Reservation(id, "aa", "2023-10-10", "10:00");
-        Reservation reservation2 = new Reservation(id, "bb", "2023-10-20", "11:00");
+        Reservation reservation1 = new Reservation(id, "aa", "2023-10-10",
+                new ReservationTime(1, "10:00"));
+        Reservation reservation2 = new Reservation(id, "bb", "2023-10-20",
+                new ReservationTime(2, "11:00"));
         //when
         fakeReservationDao.save(reservation1);
         //then
@@ -53,7 +57,8 @@ public class FakeReservationDaoTest {
     void deleteById() {
         //given
         long id = 1;
-        Reservation reservation = new Reservation(id, "aa", "2023-10-10", "10:00");
+        Reservation reservation = new Reservation(id, "aa", "2023-10-10",
+                new ReservationTime(1, "10:00"));
         fakeReservationDao.save(reservation);
         //when
         fakeReservationDao.deleteById(id);

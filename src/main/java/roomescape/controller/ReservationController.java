@@ -9,42 +9,34 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
-import roomescape.dao.ReservationDao;
-import roomescape.domain.Reservation;
 import roomescape.dto.ReservationRequest;
 import roomescape.dto.ReservationResponse;
-import roomescape.idgenerator.AutoIncrementIdGenerator;
-import roomescape.idgenerator.IdGenerator;
+import roomescape.service.ReservationService;
 
 @RestController
 @RequestMapping("/reservations")
 public class ReservationController {
-    private final ReservationDao reservationDao;
-    private final IdGenerator idGenerator = new AutoIncrementIdGenerator();
+    private final ReservationService reservationService;
 
-    public ReservationController(ReservationDao reservationDao) {
-        this.reservationDao = reservationDao;
+    public ReservationController(ReservationService reservationService) {
+        this.reservationService = reservationService;
     }
+
 
     @GetMapping
     public ResponseEntity<List<ReservationResponse>> findAllReservations() {
-        List<Reservation> reservations = reservationDao.findAll();
-        return ResponseEntity.ok(reservations.stream()
-                .map(ReservationResponse::new)
-                .toList());
+        return ResponseEntity.ok(reservationService.findAll());
     }
 
     @PostMapping
     public ResponseEntity<ReservationResponse> createReservation(
             @RequestBody ReservationRequest reservationRequest) {
-        Reservation reservation = reservationRequest.toDomain(idGenerator.generateNewId());
-        reservationDao.save(reservation);
-        return ResponseEntity.ok(new ReservationResponse(reservation));
+        return ResponseEntity.ok(reservationService.save(reservationRequest));
     }
 
     @DeleteMapping("/{id}")
     public ResponseEntity<Void> deleteReservation(@PathVariable long id) {
-        boolean isDeleted = reservationDao.deleteById(id);
+        boolean isDeleted = reservationService.deleteById(id);
         if (isDeleted) {
             return ResponseEntity.ok().build();
         }

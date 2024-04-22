@@ -7,9 +7,10 @@ CREATE TABLE IF NOT EXISTS reservation_time
 
 CREATE TABLE IF NOT EXISTS reservation
 (
-    id   BIGINT       NOT NULL,
-    name VARCHAR(255) NOT NULL,
-    date DATE         NOT NULL,
-    time TIME         NOT NULL,
-    PRIMARY KEY (id)
+    id      BIGINT       NOT NULL,
+    name    VARCHAR(255) NOT NULL,
+    date    DATE         NOT NULL,
+    time_id BIGINT       NOT NULL,
+    PRIMARY KEY (id),
+    FOREIGN KEY (time_id) REFERENCES reservation_time (id)
 );

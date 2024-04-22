@@ -29,7 +29,7 @@ public class ReservationService {
     public Reservation reserve(CreateReservationRequest request) {
         Name name = new Name(request.name());
         LocalDate date = request.date();
-        ReservationTime time = timeRepository.findById(request.timeId());
+        ReservationTime time = timeRepository.findBy(request.timeId());
         Reservation newReservation = new Reservation(name, date, time);
 
         return reservationRepository.save(newReservation);

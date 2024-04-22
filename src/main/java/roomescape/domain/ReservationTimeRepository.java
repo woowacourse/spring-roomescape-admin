@@ -10,5 +10,5 @@ public interface ReservationTimeRepository {
 
     List<ReservationTime> findAll();
 
-    ReservationTime findById(long id);
+    ReservationTime findBy(long id);
 }

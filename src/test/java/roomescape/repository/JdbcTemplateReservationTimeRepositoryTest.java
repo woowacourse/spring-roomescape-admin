@@ -64,7 +64,7 @@ class JdbcTemplateReservationTimeRepositoryTest extends IntegrationTestSupport {
     void findById() {
         ReservationTime savedTime = target.save(createReservationTime());
 
-        ReservationTime found = target.findById(savedTime.getId());
+        ReservationTime found = target.findBy(savedTime.getId());
 
         assertThat(found.getId()).isEqualTo(savedTime.getId());
     }
@@ -72,7 +72,7 @@ class JdbcTemplateReservationTimeRepositoryTest extends IntegrationTestSupport {
     @DisplayName("아이디에 해당되는 예약 시간이 존재하지 않으면, 불러올 수 없다.")
     @Test
     void entityNotFound() {
-        assertThatThrownBy(() -> target.findById(-1))
+        assertThatThrownBy(() -> target.findBy(-1))
                 .isInstanceOf(EntityNotFoundException.class)
                 .hasMessage("존재하지 않는 예약 시간입니다.");
     }

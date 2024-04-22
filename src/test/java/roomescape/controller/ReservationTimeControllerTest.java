@@ -10,21 +10,13 @@ import org.assertj.core.api.SoftAssertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.boot.test.web.server.LocalServerPort;
-import org.springframework.test.context.jdbc.Sql;
 import roomescape.domain.ReservationTime;
 import roomescape.dto.ReservationTimeRequest;
 import roomescape.dto.ReservationTimeResponse;
 import roomescape.fixture.Fixture;
 import roomescape.repository.ReservationTimeRepository;
 
-@SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
-@Sql(scripts = "classpath:truncate.sql", executionPhase = Sql.ExecutionPhase.BEFORE_TEST_METHOD)
-class ReservationTimeControllerTest {
-
-    @LocalServerPort
-    private int port;
+class ReservationTimeControllerTest extends BaseControllerTest {
 
     @Autowired
     private ObjectMapper mapper;
@@ -36,7 +28,6 @@ class ReservationTimeControllerTest {
 
     @BeforeEach
     void setUp() {
-        RestAssured.port = port;
         reservationTime1 = reservationTimeRepository.save(Fixture.RESERVATION_TIME_1);
         reservationTime2 = reservationTimeRepository.save(Fixture.RESERVATION_TIME_2);
     }

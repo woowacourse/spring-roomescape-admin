@@ -3,7 +3,8 @@ package roomescape.controller;
 import static io.restassured.RestAssured.given;
 
 import io.restassured.RestAssured;
-import io.restassured.specification.RequestSpecification;
+import io.restassured.http.ContentType;
+import io.restassured.response.Response;
 import org.junit.jupiter.api.BeforeEach;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.web.server.LocalServerPort;
@@ -19,13 +20,7 @@ public abstract class BaseControllerTest extends BaseTest {
     private int port;
 
     @BeforeEach
-    void setUp() {
+    void environmentSetUp() {
         RestAssured.port = port;
-    }
-
-    protected RequestSpecification customGiven() {
-        RequestSpecification customGiven = given().log().all();
-
-        return customGiven;
     }
 }

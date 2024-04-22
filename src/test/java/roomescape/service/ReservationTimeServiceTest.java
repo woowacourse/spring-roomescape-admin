@@ -1,6 +1,7 @@
 package roomescape.service;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
@@ -55,7 +56,7 @@ class ReservationTimeServiceTest extends BaseServiceTest {
     void addReservationTime() {
         // given
         ReservationTime reservationTime = Fixture.reservationTime(1L, 10, 30);
-        when(reservationTimeRepository.save(reservationTime)).thenReturn(reservationTime);
+        when(reservationTimeRepository.save(any())).thenReturn(reservationTime);
 
         // when
         ReservationTimeResponse reservationTimeResponse = reservationTimeService.addReservationTime(

@@ -24,12 +24,7 @@ import roomescape.fixture.Fixture;
 import roomescape.repository.ReservationRepository;
 import roomescape.repository.ReservationTimeRepository;
 
-@Sql(scripts = "classpath:truncate.sql", executionPhase = ExecutionPhase.BEFORE_TEST_METHOD)
-@SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
-class ReservationControllerTest {
-
-    @LocalServerPort
-    private int port;
+class ReservationControllerTest extends BaseControllerTest {
 
     @Autowired
     private ObjectMapper mapper;
@@ -45,8 +40,6 @@ class ReservationControllerTest {
 
     @BeforeEach
     void setUp() {
-        RestAssured.port = port;
-
         reservationTime = reservationTimeRepository.save(Fixture.RESERVATION_TIME_1);
         reservation1 = reservationRepository.save(Fixture.reservation("브라운", 2024, 4, 22, reservationTime));
         reservation2 = reservationRepository.save(Fixture.reservation("구름", 2024, 4, 23, reservationTime));

@@ -7,6 +7,7 @@ import roomescape.dto.ReservationResponse;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.NoSuchElementException;
 import java.util.Objects;
 import java.util.concurrent.atomic.AtomicLong;
 
@@ -34,7 +35,7 @@ public class ReservationsController {
         Reservation reservation = reservations.stream()
                 .filter(target -> Objects.equals(target.getId(), id))
                 .findFirst()
-                .orElseThrow(RuntimeException::new);
+                .orElseThrow(NoSuchElementException::new);
 
         reservations.remove(reservation);
     }

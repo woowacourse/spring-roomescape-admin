@@ -15,12 +15,12 @@ public class ReservationService {
         this.repository = repository;
     }
 
-    public List<Reservation> findAll() {
-        return repository.findAll();
-    }
-
     public Reservation save(CreateReservationRequest request) {
         return repository.save(request);
+    }
+
+    public List<Reservation> findAll() {
+        return repository.findAll();
     }
 
     public void delete(Long id) {

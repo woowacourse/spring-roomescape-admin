@@ -11,35 +11,48 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import roomescape.dao.ReservationDao;
+import roomescape.dao.ReservationTimeDao;
 import roomescape.domain.reservation.Reservation;
-import roomescape.dto.ReservationDto;
+import roomescape.domain.reservationtime.ReservationTime;
+import roomescape.dto.ReservationCreateRequestDto;
+import roomescape.dto.ReservationResponseDto;
+import roomescape.dto.ReservationTimeResponseDto;
 
 @RestController
 @RequestMapping("/reservations")
 public class ReservationController {
 
     private final ReservationDao reservationDao;
+    private final ReservationTimeDao reservationTimeDao;
 
-    public ReservationController(ReservationDao reservationDao) {
+    public ReservationController(ReservationDao reservationDao, ReservationTimeDao reservationTimeDao) {
         this.reservationDao = reservationDao;
+        this.reservationTimeDao = reservationTimeDao;
     }
 
     @GetMapping
-    public ResponseEntity<List<ReservationDto>> getAll() {
+    public ResponseEntity<List<ReservationResponseDto>> getAll() {
         List<Reservation> reservations = reservationDao.findAll();
-        List<ReservationDto> results = reservations.stream()
-                .map(ReservationDto::from)
+        List<ReservationResponseDto> results = reservations.stream()
+                .map(reservation -> {
+                    ReservationTime reservationTime = reservation.getReservationTime();
+                    ReservationTimeResponseDto timeResponseDto = ReservationTimeResponseDto.from(reservationTime);
+                    return ReservationResponseDto.of(reservation, timeResponseDto);
+                })
                 .toList();
         return ResponseEntity.ok(results);
     }
 
     @PostMapping
-    public ResponseEntity<ReservationDto> create(@RequestBody ReservationDto reservationDto) {
-        Reservation reservation = reservationDto.toDomain();
-        long id = reservationDao.add(ReservationDto.from(reservation));
+    public ResponseEntity<ReservationCreateRequestDto> create(@RequestBody ReservationCreateRequestDto requestDto) {
+        ReservationTime reservationTime = reservationTimeDao.findById(requestDto.getTimeId());
+        Reservation reservation = requestDto.toDomain(reservationTime);
+        ReservationCreateRequestDto createRequestDto = ReservationCreateRequestDto.of(reservation,
+                reservationTime);
+        long id = reservationDao.add(createRequestDto);
         Reservation result = reservationDao.findById(id);
         return ResponseEntity.created(URI.create("/reservations"))
-                .body(ReservationDto.from(result));
+                .body(ReservationCreateRequestDto.of(result, reservationTime));
     }
 
     @DeleteMapping("/{id}")

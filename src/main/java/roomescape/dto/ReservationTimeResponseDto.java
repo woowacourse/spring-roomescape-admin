@@ -1,33 +1,23 @@
 package roomescape.dto;
 
-import com.fasterxml.jackson.annotation.JsonCreator;
 import java.util.Objects;
 import roomescape.domain.reservationtime.ReservationTime;
 
-public class ReservationTimeDto {
+public class ReservationTimeResponseDto {
 
     private final Long id;
     private final String startAt;
 
-    @JsonCreator
-    private ReservationTimeDto(Long id, String startAt) {
+    private ReservationTimeResponseDto(Long id, String startAt) {
         this.id = id;
         this.startAt = startAt;
     }
 
-    public static ReservationTimeDto from(ReservationTime reservationTime) {
-        return new ReservationTimeDto(
-                reservationTime.getId(),
-                reservationTime.getStartAt().toStringTime()
+    public static ReservationTimeResponseDto from(ReservationTime time) {
+        return new ReservationTimeResponseDto(
+                time.getId(),
+                time.getStartAt().toStringTime()
         );
-    }
-
-    public static ReservationTimeDto of(Long id, String startAt) {
-        return new ReservationTimeDto(id, startAt);
-    }
-
-    public ReservationTime toDomain() {
-        return ReservationTime.of(id, startAt);
     }
 
     public Long getId() {
@@ -46,7 +36,7 @@ public class ReservationTimeDto {
         if (o == null || getClass() != o.getClass()) {
             return false;
         }
-        ReservationTimeDto other = (ReservationTimeDto) o;
+        ReservationTimeResponseDto other = (ReservationTimeResponseDto) o;
         return Objects.equals(this.id, other.id)
                 && Objects.equals(this.startAt, other.startAt);
     }

@@ -70,9 +70,9 @@
   - `templates/admin/reservation-legacy.html` 대신 `templates/admin/reservation.html` 활용한다.
 - [x] 테이블 스키마 재정의
   - 외래키 지정을 통해 reservation 테이블과 reservation_time 테이블의 관계를 설정
-- [ ] 예약 클래스 수정
+- [x] 예약 클래스 수정
   - String에서 ReservationTime 객체로 수정
-- [ ] 예약 추가 쿼리 수정
+- [x] 예약 추가 쿼리 수정
   - 예약 추가 시, 시간을 문자열(ex. "10:00") 형태로 입력하던 부분을 ReservationTime의 식별자(ex. 1)로 수정
-- [ ] 예약 조회 쿼리 수정
+- [x] 예약 조회 쿼리 수정
   - 조회 시 ReservationTime 정보도 함께 조회하기 위해 아래와 같이 쿼리를 수정

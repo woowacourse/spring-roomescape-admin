@@ -12,7 +12,7 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.context.SpringBootTest.WebEnvironment;
 import org.springframework.boot.test.web.server.LocalServerPort;
 import org.springframework.jdbc.core.JdbcTemplate;
-import roomescape.dto.ReservationDto;
+import roomescape.dto.ReservationCreateRequestDto;
 
 @SpringBootTest(webEnvironment = WebEnvironment.RANDOM_PORT)
 class ReservationControllerTest {
@@ -21,15 +21,19 @@ class ReservationControllerTest {
     private int port;
     @Autowired
     private JdbcTemplate jdbcTemplate;
-    private ReservationDto reservationDto;
+    private ReservationCreateRequestDto requestDto;
 
     @BeforeEach
     void setUp() {
         RestAssured.port = port;
         String name = "브라운";
         String date = "2023-08-05";
-        String time = "15:40";
-        reservationDto = ReservationDto.of(null, name, date, time);
+        Long timeId = 1L;
+        requestDto = ReservationCreateRequestDto.of(name, date, timeId);
+
+        jdbcTemplate.update("INSERT INTO reservation_time (start_at) VALUES (?)", "12:40");
+        jdbcTemplate.update("INSERT INTO reservation (name, `date`, time_id) VALUES (?, ?, ?)",
+                "daon", "2022-02-02", 1L);
     }
 
     @Test
@@ -49,7 +53,7 @@ class ReservationControllerTest {
         int count = getCount();
         RestAssured.given().log().all()
                 .contentType(ContentType.JSON)
-                .body(reservationDto)
+                .body(requestDto)
                 .when().post("/reservations")
                 .then().log().all()
                 .statusCode(201);
@@ -64,13 +68,6 @@ class ReservationControllerTest {
     @Test
     @DisplayName("예약을 성공적으로 삭제한다.")
     void deleteReservationTest() {
-        RestAssured.given().log().all()
-                .contentType(ContentType.JSON)
-                .body(reservationDto)
-                .when().post("/reservations")
-                .then().log().all()
-                .statusCode(201);
-
         int count = getCount();
 
         RestAssured.given()

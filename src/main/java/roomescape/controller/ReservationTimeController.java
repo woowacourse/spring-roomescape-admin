@@ -12,7 +12,8 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import roomescape.dao.ReservationTimeDao;
 import roomescape.domain.reservationtime.ReservationTime;
-import roomescape.dto.ReservationTimeDto;
+import roomescape.dto.ReservationTimeCreateRequestDto;
+import roomescape.dto.ReservationTimeResponseDto;
 
 @RestController
 @RequestMapping("/times")
@@ -25,21 +26,21 @@ public class ReservationTimeController {
     }
 
     @GetMapping
-    public ResponseEntity<List<ReservationTimeDto>> findAll() {
+    public ResponseEntity<List<ReservationTimeResponseDto>> findAll() {
         List<ReservationTime> allReservationTimes = reservationTimeDao.findAll();
-        List<ReservationTimeDto> results = allReservationTimes.stream()
-                .map(ReservationTimeDto::from)
+        List<ReservationTimeResponseDto> results = allReservationTimes.stream()
+                .map(ReservationTimeResponseDto::from)
                 .toList();
         return ResponseEntity.ok(results);
     }
 
     @PostMapping
-    public ResponseEntity<ReservationTimeDto> create(@RequestBody ReservationTimeDto reservationTimeDto) {
-        ReservationTime reservationTime = reservationTimeDto.toDomain();
-        long id = reservationTimeDao.add(ReservationTimeDto.from(reservationTime));
+    public ResponseEntity<ReservationTimeResponseDto> create(@RequestBody ReservationTimeCreateRequestDto requestDto) {
+        ReservationTime reservationTime = requestDto.toDomain();
+        long id = reservationTimeDao.add(ReservationTimeCreateRequestDto.from(reservationTime));
         ReservationTime result = reservationTimeDao.findById(id);
         return ResponseEntity.created(URI.create("/times/" + id))
-                .body(ReservationTimeDto.from(result));
+                .body(ReservationTimeResponseDto.from(result));
     }
 
     @DeleteMapping("/{id}")

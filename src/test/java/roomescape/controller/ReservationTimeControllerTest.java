@@ -4,6 +4,7 @@ import static org.hamcrest.Matchers.is;
 
 import io.restassured.RestAssured;
 import io.restassured.http.ContentType;
+import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -12,7 +13,7 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.context.SpringBootTest.WebEnvironment;
 import org.springframework.boot.test.web.server.LocalServerPort;
 import org.springframework.jdbc.core.JdbcTemplate;
-import roomescape.dto.ReservationTimeDto;
+import roomescape.dto.ReservationTimeCreateRequestDto;
 
 @SpringBootTest(webEnvironment = WebEnvironment.RANDOM_PORT)
 class ReservationTimeControllerTest {
@@ -21,13 +22,18 @@ class ReservationTimeControllerTest {
     private int port;
     @Autowired
     private JdbcTemplate jdbcTemplate;
-    private ReservationTimeDto reservationTimeDto;
+    private ReservationTimeCreateRequestDto reservationTimeCreateRequestDto;
 
     @BeforeEach
     void setUp() {
         RestAssured.port = port;
         String startAt = "15:40";
-        reservationTimeDto = ReservationTimeDto.of(null, startAt);
+        reservationTimeCreateRequestDto = ReservationTimeCreateRequestDto.from(startAt);
+    }
+
+    @AfterEach
+    void tearDown() {
+        jdbcTemplate.update("DELETE FROM reservation");
     }
 
     @Test
@@ -47,7 +53,7 @@ class ReservationTimeControllerTest {
         int count = getCount();
         RestAssured.given().log().all()
                 .contentType(ContentType.JSON)
-                .body(reservationTimeDto)
+                .body(reservationTimeCreateRequestDto)
                 .when().post("/times")
                 .then().log().all()
                 .statusCode(201);
@@ -64,7 +70,7 @@ class ReservationTimeControllerTest {
     void deleteReservationTest() {
         RestAssured.given().log().all()
                 .contentType(ContentType.JSON)
-                .body(reservationTimeDto)
+                .body(reservationTimeCreateRequestDto)
                 .when().post("/times")
                 .then().log().all()
                 .statusCode(201);

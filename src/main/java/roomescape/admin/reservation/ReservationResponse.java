@@ -3,9 +3,9 @@ package roomescape.admin.reservation;
 import java.time.LocalDate;
 import java.time.LocalTime;
 
-public record ResponseReservation(Long id, String name, LocalDate date, LocalTime time) {
-    public static ResponseReservation from(Reservation reservation) {
-        return new ResponseReservation(
+public record ReservationResponse(Long id, String name, LocalDate date, LocalTime time) {
+    public static ReservationResponse from(Reservation reservation) {
+        return new ReservationResponse(
                 reservation.getId(),
                 reservation.getName(),
                 reservation.getDate(),

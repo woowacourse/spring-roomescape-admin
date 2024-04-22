@@ -3,5 +3,5 @@ package roomescape.admin.reservation;
 import java.time.LocalDate;
 import java.time.LocalTime;
 
-public record RequestReservation(String name, LocalDate date, LocalTime time) {
+public record ReservationRequest(String name, LocalDate date, LocalTime time) {
 }

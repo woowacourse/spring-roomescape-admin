@@ -30,19 +30,19 @@ public class ReservationController {
     }
 
     @GetMapping
-    public ResponseEntity<List<ResponseReservation>> findAll() {
+    public ResponseEntity<List<ReservationResponse>> findAll() {
         List<Reservation> reservations = reservationRepository.findAll();
-        List<ResponseReservation> responseReservations = reservations.stream()
-                .map(ResponseReservation::from)
+        List<ReservationResponse> reservationResponses = reservations.stream()
+                .map(ReservationResponse::from)
                 .toList();
 
-        return ResponseEntity.ok(responseReservations);
+        return ResponseEntity.ok(reservationResponses);
     }
 
     @PostMapping
-    public ResponseEntity<Void> create(@RequestBody RequestReservation requestReservation) {
-        Reservation reservation = new Reservation(null, requestReservation.name(), requestReservation.date(),
-                requestReservation.time());
+    public ResponseEntity<Void> create(@RequestBody ReservationRequest reservationRequest) {
+        Reservation reservation = new Reservation(null, reservationRequest.name(), reservationRequest.date(),
+                reservationRequest.time());
         Reservation saveReservation = reservationRepository.save(reservation);
         return ResponseEntity.created(URI.create("/reservations/" + saveReservation.getId())).build();
     }

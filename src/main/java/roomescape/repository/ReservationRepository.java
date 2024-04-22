@@ -1,6 +1,5 @@
-package roomescape.Repository;
+package roomescape.repository;
 
-import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.atomic.AtomicLong;
 import org.springframework.jdbc.core.JdbcTemplate;
@@ -13,8 +12,6 @@ import roomescape.model.Reservation;
 @Repository
 public class ReservationRepository {
     private final AtomicLong id = new AtomicLong(1);
-    private final List<Reservation> reservations = new ArrayList<>();
-
     private final JdbcTemplate jdbcTemplate;
 
     private final RowMapper<Reservation> actorRowMapper = (resultSet, rowNum) -> {
@@ -47,6 +44,7 @@ public class ReservationRepository {
     }
 
     public boolean deleteReservation(Long id) {
-        return reservations.removeIf(reservation -> reservation.equalId(id));
+        String sql = "delete from reservation where id = ?";
+        return jdbcTemplate.update(sql, id) == id;
     }
 }

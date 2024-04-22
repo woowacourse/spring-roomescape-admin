@@ -20,7 +20,7 @@ class DataBaseConnectionTest {
     private JdbcTemplate jdbcTemplate;
 
     @Test
-    void dataBaseConnectionTest() {
+    void dataBaseConnection() {
         try (Connection connection = jdbcTemplate.getDataSource().getConnection()) {
             Assertions.assertAll(
                     () -> assertThat(connection).isNotNull(),

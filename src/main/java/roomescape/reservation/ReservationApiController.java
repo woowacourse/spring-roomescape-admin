@@ -7,6 +7,7 @@ import org.springframework.jdbc.support.GeneratedKeyHolder;
 import org.springframework.jdbc.support.KeyHolder;
 import org.springframework.web.bind.annotation.*;
 
+import java.net.URI;
 import java.sql.PreparedStatement;
 import java.time.LocalDate;
 import java.time.LocalTime;
@@ -34,7 +35,6 @@ public class ReservationApiController {
     public ResponseEntity<Reservation> create(@RequestBody final ReservationDto reservationDto) {
         String sql = "INSERT INTO reservation(name,date,time) VALUES (?, ?, ?)";
         KeyHolder keyHolder = new GeneratedKeyHolder();
-        jdbcTemplate.update(sql, reservationDto.getName(), reservationDto.getDate(), reservationDto.getTime());
         jdbcTemplate.update(connection -> {
             PreparedStatement ps = connection.prepareStatement(sql, new String[]{"id"});
             ps.setString(1, reservationDto.getName());
@@ -43,14 +43,13 @@ public class ReservationApiController {
             return ps;
         }, keyHolder);
         Long id = keyHolder.getKey().longValue();
-        Reservation newReservation = reservationDto.toVo(id);
-        return ResponseEntity.ok().body(newReservation);
+        return ResponseEntity.created(URI.create("/reservations/" + id)).build();
     }
 
     @DeleteMapping("/reservations/{id}")
     public ResponseEntity<Void> delete(@PathVariable final Long id) {
         String sql = "DELETE FROM reservation WHERE id = ?";
         jdbcTemplate.update(sql, id);
-        return ResponseEntity.ok().build();
+        return ResponseEntity.noContent().build();
     }
 }

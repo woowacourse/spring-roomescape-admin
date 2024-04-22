@@ -10,6 +10,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.web.server.LocalServerPort;
 import org.springframework.jdbc.core.JdbcTemplate;
+import org.springframework.test.annotation.DirtiesContext;
 import roomescape.reservation.Reservation;
 
 import java.sql.Connection;
@@ -24,6 +25,7 @@ import static org.hamcrest.Matchers.is;
 import static org.junit.jupiter.api.DynamicTest.dynamicTest;
 
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
+@DirtiesContext(classMode = DirtiesContext.ClassMode.BEFORE_EACH_TEST_METHOD)
 public class MissionStepTest {
 
     @LocalServerPort
@@ -59,45 +61,6 @@ public class MissionStepTest {
                 .body("size()", is(0));
     }
 
-    @TestFactory
-    Stream<DynamicTest> 삼단계() {
-        Map<String, String> param = new HashMap<>();
-        param.put("name", "브라운");
-        param.put("date", "2023-08-05");
-        param.put("time", "15:40");
-        return Stream.of(
-                dynamicTest("예약이 없는 상태에서 예약 1개를 등록한다.", () -> {
-                    RestAssured.given().log().all()
-                            .contentType(ContentType.JSON)
-                            .body(param)
-                            .when().post("/reservations")
-                            .then().log().all()
-                            .statusCode(200)
-                            .body("id", is(1));
-                }),
-                dynamicTest("예약 1개가 등록되었는지 확인한다.", () -> {
-                    RestAssured.given().log().all()
-                            .when().get("/reservations")
-                            .then().log().all()
-                            .statusCode(200)
-                            .body("size()", is(1));
-                }),
-                dynamicTest("예약 id 1을 삭제한다.", () -> {
-                    RestAssured.given().log().all()
-                            .when().delete("/reservations/1")
-                            .then().log().all()
-                            .statusCode(200);
-                }),
-                dynamicTest("예약이 제거되었는지 확인한다.", () -> {
-                    RestAssured.given().log().all()
-                            .when().get("/reservations")
-                            .then().log().all()
-                            .statusCode(200)
-                            .body("size()", is(0));
-                })
-        );
-    }
-
     @Test
     void 사단계() {
         try (Connection connection = jdbcTemplate.getDataSource().getConnection()) {
@@ -122,5 +85,39 @@ public class MissionStepTest {
         Integer count = jdbcTemplate.queryForObject("SELECT count(1) from reservation", Integer.class);
 
         assertThat(reservations.size()).isEqualTo(count);
+    }
+
+    @TestFactory
+    Stream<DynamicTest> 육단계() {
+        Map<String, String> params = new HashMap<>();
+        params.put("name", "브라운");
+        params.put("date", "2023-08-05");
+        params.put("time", "10:00");
+
+        return Stream.of(
+                dynamicTest("예약 1개를 추가한다.", () -> {
+                    RestAssured.given().log().all()
+                            .contentType(ContentType.JSON)
+                            .body(params)
+                            .when().post("/reservations")
+                            .then().log().all()
+                            .statusCode(201)
+                            .header("Location", "/reservations/1");
+                }),
+                dynamicTest("예약 1개가 추가되었는지 확인한다.", () -> {
+                    Integer count = jdbcTemplate.queryForObject("SELECT count(1) from reservation", Integer.class);
+                    assertThat(count).isEqualTo(1);
+                }),
+                dynamicTest("등록한 예약을 삭제한다.", () -> {
+                    RestAssured.given().log().all()
+                            .when().delete("/reservations/1")
+                            .then().log().all()
+                            .statusCode(204);
+                }),
+                dynamicTest("예약이 제거되었는지 확인한다.", () -> {
+                    Integer countAfterDelete = jdbcTemplate.queryForObject("SELECT count(1) from reservation", Integer.class);
+                    assertThat(countAfterDelete).isEqualTo(0);
+                })
+        );
     }
 }

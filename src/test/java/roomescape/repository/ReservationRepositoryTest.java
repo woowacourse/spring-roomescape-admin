@@ -1,11 +1,10 @@
 package roomescape.repository;
 
-import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.boot.test.autoconfigure.jdbc.JdbcTest;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.test.annotation.DirtiesContext;
 import roomescape.entity.Reservation;
@@ -18,25 +17,25 @@ import java.util.List;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
-@SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
+@JdbcTest
 @DirtiesContext(classMode = DirtiesContext.ClassMode.BEFORE_CLASS)
 class ReservationRepositoryTest {
 
+    private final JdbcTemplate jdbcTemplate;
+    private final ReservationRepository reservationRepository;
+
     @Autowired
-    private JdbcTemplate jdbcTemplate;
-    @Autowired
-    private ReservationRepository reservationRepository;
+    ReservationRepositoryTest(JdbcTemplate jdbcTemplate) {
+        this.jdbcTemplate = jdbcTemplate;
+        this.reservationRepository = new MemoryReservationRepository(
+                jdbcTemplate,
+                new MemoryReservationTimeRepository(jdbcTemplate));
+    }
 
     @BeforeEach
     void setUp() {
         setUpReservationTimes();
         setUpReservations();
-    }
-
-    @AfterEach
-    void tearDown() {
-        jdbcTemplate.update("DELETE FROM reservation");
-        jdbcTemplate.update("DELETE FROM reservation_time");
     }
 
     void setUpReservationTimes() {

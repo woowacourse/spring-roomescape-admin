@@ -16,7 +16,6 @@ public abstract class ControllerTest {
     @MockBean
     protected ReservationService reservationService;
 
-
     @MockBean
     protected ReservationTimeService reservationTimeService;
 

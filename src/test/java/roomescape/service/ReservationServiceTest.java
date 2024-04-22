@@ -3,6 +3,7 @@ package roomescape.service;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
+import org.mockito.BDDMockito;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
@@ -17,7 +18,6 @@ import java.util.Optional;
 
 import static org.assertj.core.api.Assertions.*;
 import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.Mockito.when;
 import static roomescape.TestFixture.*;
 
 @ExtendWith(MockitoExtension.class)
@@ -37,10 +37,10 @@ class ReservationServiceTest {
         // given
         Reservation reservation = MIA_RESERVATION();
 
-        when(reservationTimeRepository.findById(any()))
-                .thenReturn(Optional.of(new ReservationTime(MIA_RESERVATION_TIME)));
-        when(reservationRepository.save(reservation))
-                .thenReturn(new Reservation(1L, reservation));
+        BDDMockito.given(reservationTimeRepository.findById(any()))
+                .willReturn(Optional.of(new ReservationTime(MIA_RESERVATION_TIME)));
+        BDDMockito.given(reservationRepository.save(reservation))
+                .willReturn(new Reservation(1L, reservation));
 
         // when
         ReservationResponse response = reservationService.create(reservation);
@@ -55,10 +55,10 @@ class ReservationServiceTest {
         // given
         Reservation miaReservation = MIA_RESERVATION();
 
-        when(reservationTimeRepository.findById(any()))
-                .thenReturn(Optional.of(new ReservationTime(MIA_RESERVATION_TIME)));
-        when(reservationRepository.findAllByDateAndTime(any(), any()))
-                .thenReturn(List.of(miaReservation));
+        BDDMockito.given(reservationTimeRepository.findById(any()))
+                .willReturn(Optional.of(new ReservationTime(MIA_RESERVATION_TIME)));
+        BDDMockito.given(reservationRepository.findAllByDateAndTime(any(), any()))
+                .willReturn(List.of(miaReservation));
 
         // when & then
         assertThatThrownBy(() -> reservationService.create(miaReservation))
@@ -74,10 +74,10 @@ class ReservationServiceTest {
         Reservation wonnyReservation = new Reservation("wonny", MIA_RESERVATION_DATE, new ReservationTime(MIA_RESERVATION_TIME));
         Reservation neoReservation = new Reservation("neo", MIA_RESERVATION_DATE, new ReservationTime(MIA_RESERVATION_TIME));
 
-        when(reservationTimeRepository.findById(any()))
-                .thenReturn(Optional.of(new ReservationTime(MIA_RESERVATION_TIME)));
-        when(reservationRepository.findAllByDateAndTime(any(), any()))
-                .thenReturn(List.of(miaReservation, tommyReservation, wonnyReservation, neoReservation));
+        BDDMockito.given(reservationTimeRepository.findById(any()))
+                .willReturn(Optional.of(new ReservationTime(MIA_RESERVATION_TIME)));
+        BDDMockito.given(reservationRepository.findAllByDateAndTime(any(), any()))
+                .willReturn(List.of(miaReservation, tommyReservation, wonnyReservation, neoReservation));
 
         Reservation newReservation = new Reservation("new", MIA_RESERVATION_DATE, new ReservationTime(MIA_RESERVATION_TIME));
 
@@ -93,8 +93,8 @@ class ReservationServiceTest {
         Reservation miaReservation = MIA_RESERVATION();
         Reservation tommyReservation = TOMMY_RESERVATION();
 
-        when(reservationRepository.findAll())
-                .thenReturn(List.of(miaReservation, tommyReservation));
+        BDDMockito.given(reservationRepository.findAll())
+                .willReturn(List.of(miaReservation, tommyReservation));
 
         // when
         List<ReservationResponse> reservations = reservationService.getAll();
@@ -111,8 +111,8 @@ class ReservationServiceTest {
         // given
         Reservation miaReservation = MIA_RESERVATION();
 
-        when(reservationRepository.findById(1L))
-                .thenReturn(Optional.of(miaReservation));
+        BDDMockito.given(reservationRepository.findById(1L))
+                .willReturn(Optional.of(miaReservation));
 
         // when & then
         assertThatCode(() -> reservationService.delete(1L))
@@ -125,8 +125,8 @@ class ReservationServiceTest {
         // given
         Long notExistingId = 1L;
 
-        when(reservationRepository.findById(notExistingId))
-                .thenReturn(Optional.empty());
+        BDDMockito.given(reservationRepository.findById(notExistingId))
+                .willReturn(Optional.empty());
 
         // when & then
         assertThatThrownBy(() -> reservationService.delete(notExistingId))

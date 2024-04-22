@@ -3,6 +3,7 @@ package roomescape.service;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
+import org.mockito.BDDMockito;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
@@ -18,7 +19,6 @@ import static org.assertj.core.api.Assertions.assertThatCode;
 import static org.junit.jupiter.api.Assertions.assertAll;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyLong;
-import static org.mockito.Mockito.when;
 import static roomescape.TestFixture.MIA_RESERVATION_TIME;
 
 @ExtendWith(MockitoExtension.class)
@@ -36,8 +36,8 @@ class ReservationTimeServiceTest {
         ReservationTime reservationTime = new ReservationTime(MIA_RESERVATION_TIME);
         ReservationTime expectedReservationTime = new ReservationTime(1L, reservationTime);
 
-        when(reservationTimeRepository.save(any()))
-                .thenReturn(expectedReservationTime);
+        BDDMockito.given(reservationTimeRepository.save(any()))
+                .willReturn(expectedReservationTime);
 
         // when
         ReservationTimeResponse response = reservationTimeService.create(reservationTime);
@@ -55,8 +55,8 @@ class ReservationTimeServiceTest {
         // given
         ReservationTime reservationTime = new ReservationTime(MIA_RESERVATION_TIME);
 
-        when(reservationTimeRepository.findAll())
-                .thenReturn(List.of(reservationTime));
+        BDDMockito.given(reservationTimeRepository.findAll())
+                .willReturn(List.of(reservationTime));
 
         // when
         List<ReservationTimeResponse> responses = reservationTimeService.getAll();
@@ -73,8 +73,8 @@ class ReservationTimeServiceTest {
         // given
         ReservationTime reservationTime = new ReservationTime(MIA_RESERVATION_TIME);
 
-        when(reservationTimeRepository.findById(anyLong()))
-                .thenReturn(Optional.of(reservationTime));
+        BDDMockito.given(reservationTimeRepository.findById(anyLong()))
+                .willReturn(Optional.of(reservationTime));
 
         // when & then
         assertThatCode(() -> reservationTimeService.delete(1L))

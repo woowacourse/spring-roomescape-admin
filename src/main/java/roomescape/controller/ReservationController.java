@@ -1,6 +1,7 @@
 package roomescape.controller;
 
 import java.net.URI;
+import java.time.LocalTime;
 import java.util.List;
 import org.springframework.http.ResponseEntity;
 import org.springframework.jdbc.core.JdbcTemplate;
@@ -10,6 +11,7 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
+import roomescape.ReservationTime;
 import roomescape.dto.ReservationRequest;
 import roomescape.dto.ReservationResponse;
 
@@ -24,19 +26,31 @@ public class ReservationController {
 
     @GetMapping("/reservations")
     public ResponseEntity<List<ReservationResponse>> reservations() {
-        String sql = "SELECT id, name, date, time FROM reservation";
+        String sql = "SELECT "
+                + "r.id as reservation_id, "
+                + "r.name, "
+                + "r.date, "
+                + "t.id as time_id, "
+                + "t.start_at as time_value "
+                + "FROM reservation as r "
+                + "inner join reservation_time as t "
+                + "on r.time_id = t.id\n";
+        String sql1 = "SELECT start_at FROM reservation_time WHERE id = ?";
         List<ReservationResponse> reservations = jdbcTemplate.query(sql,
                 (rs, rowNum) -> new ReservationResponse(rs.getLong("id"), rs.getString("name"),
                         rs.getDate("date").toLocalDate(),
-                        rs.getTime("startAt").toLocalTime()));
+                        new ReservationTime(LocalTime.parse(jdbcTemplate.queryForObject(sql1, String.class, rs.getInt("time_id"))))));
         return ResponseEntity.ok(reservations);
     }
 
     @PostMapping("/reservations")
     public ResponseEntity<ReservationResponse> create(@RequestBody ReservationRequest reservationRequest) {
-        String sql = "INSERT INTO reservation (name, date, time) values (?, ?, ?)";
-        int index = jdbcTemplate.update(sql, reservationRequest.name(), reservationRequest.date(), reservationRequest.time());
-        return ResponseEntity.created(URI.create("/reservations/" + index)).body(ReservationResponse.of(index, reservationRequest.toReservation()));
+        String sql = "INSERT INTO reservation (name, date, time_id) values (?, ?, ?)";
+        String sql1 = "SELECT start_at FROM reservation_time WHERE id = ?";
+        long id = reservationRequest.timeId();
+        int index = jdbcTemplate.update(sql, reservationRequest.name(), reservationRequest.date(), id);
+        LocalTime time = LocalTime.parse(jdbcTemplate.queryForObject(sql1, String.class, id));
+        return ResponseEntity.created(URI.create("/reservations/" + index)).body(ReservationResponse.of(index, reservationRequest.toReservation(time)));
     }
 
     @DeleteMapping("/reservations/{id}")

@@ -14,6 +14,19 @@ import java.util.List;
 @Repository
 public class ReservationDao {
 
+    private static final RowMapper<Reservation> rowMapper;
+
+    static {
+        rowMapper = (rs, rowNum) -> new Reservation(
+                rs.getLong("r_id"),
+                rs.getString("r_name"),
+                rs.getDate("r_date").toLocalDate(),
+                new ReservationTime(
+                        rs.getLong("t_id"),
+                        rs.getTime("t_start_at").toLocalTime())
+        );
+    }
+
     private final JdbcTemplate jdbcTemplate;
     private final SimpleJdbcInsert simpleJdbcInsert;
 
@@ -35,21 +48,10 @@ public class ReservationDao {
 
     public List<Reservation> findReservations() {
         String sql = "SELECT r.id as r_id, r.name as r_name, r.date as r_date, t.id as t_id, t.start_at as t_start_at FROM reservations as r INNER JOIN reservation_times as t ON r.time_id = t.id";
-        return jdbcTemplate.query(sql, rowMapper());
+        return jdbcTemplate.query(sql, rowMapper);
     }
 
     public void removeReservation(Long id) {
         jdbcTemplate.update("DELETE reservations WHERE id = ?", id);
-    }
-
-    private RowMapper<Reservation> rowMapper() {
-        return (rs, rowNum) -> new Reservation(
-                rs.getLong("r_id"),
-                rs.getString("r_name"),
-                rs.getDate("r_date").toLocalDate(),
-                new ReservationTime(
-                        rs.getLong("t_id"),
-                        rs.getTime("t_start_at").toLocalTime())
-                );
     }
 }

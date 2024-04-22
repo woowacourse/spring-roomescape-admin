@@ -40,12 +40,12 @@ public class ReservationTimeService {
                 .collect(Collectors.toList());
     }
 
-    public void deleteById(Long id) {
+    public void deleteById(long id) {
         Optional<ReservationTime> findReservationTime = reservationTimeRepository.findById(id);
         if (findReservationTime.isEmpty()) {
             throw new IllegalArgumentException("존재하지 않는 예약 시간 입니다.");
         }
-        Long reservedCount = reservationRepository.findReservationCountByTimeId(id);
+        long reservedCount = reservationRepository.findReservationCountByTimeId(id);
         if (reservedCount > 0) {
             throw new IllegalStateException(String.format("해당 예약 시간에 연관된 예약이 존재하여 삭제할 수 없습니다. 삭제 요청한 시간:%s",
                     findReservationTime.get().getStartAt()));

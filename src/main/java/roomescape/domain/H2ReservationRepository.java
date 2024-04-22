@@ -2,6 +2,7 @@ package roomescape.domain;
 
 import java.sql.PreparedStatement;
 import java.util.List;
+import java.util.Objects;
 import java.util.Optional;
 import org.springframework.context.annotation.Primary;
 import org.springframework.dao.DuplicateKeyException;
@@ -21,26 +22,30 @@ public class H2ReservationRepository implements ReservationRepository {
     }
 
     @Override
-    public Optional<Reservation> findById(Long id) {
+    public Optional<Reservation> findById(long id) {
         String sql = "select id, name, date, time_id from reservation where id = ?";
         try {
-            Reservation reservation = jdbcTemplate.queryForObject(sql, (resultSet, rowNum) -> new Reservation(
-                    resultSet.getLong("id"),
-                    resultSet.getString("name"),
-                    resultSet.getDate("date").toLocalDate(),
-                    getReservationTime(resultSet.getLong("time_id"))
-            ), id);
-            return Optional.ofNullable(reservation);
+            Reservation reservation = jdbcTemplate.queryForObject(sql,
+                    (resultSet, rowNum) -> new Reservation(
+                            resultSet.getLong("id"),
+                            resultSet.getString("name"),
+                            resultSet.getDate("date").toLocalDate(),
+                            getReservationTime(resultSet.getLong("time_id"))
+                    ), id);
+            return Optional.of(Objects.requireNonNull(reservation));
         } catch (EmptyResultDataAccessException e) {
             return Optional.empty();
         }
     }
 
     private ReservationTime getReservationTime(long timeId) {
-        return jdbcTemplate.queryForObject("select id, start_at from reservation_time where id = ?",
-                (resultSet, rowNum) -> new ReservationTime(resultSet.getLong("id"),
-                        resultSet.getTime("start_at").toLocalTime()), timeId
-        );
+        try {
+            return jdbcTemplate.queryForObject("select id, start_at from reservation_time where id = ?",
+                    (resultSet, rowNum) -> new ReservationTime(resultSet.getLong("id"),
+                            resultSet.getTime("start_at").toLocalTime()), timeId);
+        } catch (EmptyResultDataAccessException e) {
+            throw new IllegalArgumentException("존재하지 않는 예약 시간 입니다.");
+        }
     }
 
     @Override
@@ -86,13 +91,13 @@ public class H2ReservationRepository implements ReservationRepository {
     }
 
     @Override
-    public void deleteById(Long id) {
+    public void deleteById(long id) {
         String sql = "delete from reservation where id = ?";
         jdbcTemplate.update(sql, id);
     }
 
     @Override
-    public Long findReservationCountByTimeId(Long timeId) {
+    public long findReservationCountByTimeId(long timeId) {
         String sql = "select count(*) from reservation where time_id = ?";
         return jdbcTemplate.queryForObject(sql, Long.class, timeId);
     }

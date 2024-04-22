@@ -13,7 +13,7 @@ public class InMemoryReservationRepository implements ReservationRepository {
     private final AtomicLong index = new AtomicLong();
 
     @Override
-    public Optional<Reservation> findById(Long id) {
+    public Optional<Reservation> findById(long id) {
         return Optional.ofNullable(repository.get(id));
     }
 
@@ -32,7 +32,7 @@ public class InMemoryReservationRepository implements ReservationRepository {
     }
 
     @Override
-    public void deleteById(Long id) {
+    public void deleteById(long id) {
         Optional<Reservation> findReservation = findById(id);
         if (findReservation.isEmpty()) {
             throw new IllegalArgumentException("존재하지 않는 예약입니다.");
@@ -41,7 +41,7 @@ public class InMemoryReservationRepository implements ReservationRepository {
     }
 
     @Override
-    public Long findReservationCountByTimeId(Long timeId) {
+    public long findReservationCountByTimeId(long timeId) {
         return repository.values().stream()
                 .filter(reservation -> reservation.getTime().getId().equals(timeId))
                 .count();

@@ -40,14 +40,13 @@ public class ReservationService {
     }
 
     public ReservationResponse create(ReservationRequest request) {
-        Optional<ReservationTime> findReservationTime = reservationTimeRepository.findById(request.timeId());
-        ReservationTime reservationTime = findReservationTime.orElseThrow(
-                () -> new IllegalArgumentException("존재하지 않는 예약 시간 입니다."));
+        ReservationTime reservationTime = reservationTimeRepository.findById(request.timeId())
+                .orElseThrow(() -> new IllegalArgumentException("존재하지 않는 예약 시간 입니다."));
         Reservation reservation = reservationRepository.save(request.from(reservationTime, strategy));
         return ReservationResponse.from(reservation);
     }
 
-    public void deleteById(Long id) {
+    public void deleteById(long id) {
         Optional<Reservation> findReservation = reservationRepository.findById(id);
         if (findReservation.isEmpty()) {
             throw new IllegalArgumentException("존재하지 않는 예약 입니다.");

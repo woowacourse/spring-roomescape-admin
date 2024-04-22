@@ -10,6 +10,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import roomescape.domain.Reservation;
 import roomescape.dto.ReservationResponse;
 import roomescape.dto.SaveReservationRequest;
+import roomescape.service.ReservationFindService;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -20,6 +21,11 @@ public class ReservationController {
 
     private final AtomicLong index = new AtomicLong(1);
     private final List<Reservation> reservations = new ArrayList<>();
+    private final ReservationFindService reservationFindService;
+
+    public ReservationController(ReservationFindService reservationFindService) {
+        this.reservationFindService = reservationFindService;
+    }
 
     @GetMapping("/admin/reservation")
     public String reservationPage() {
@@ -28,6 +34,7 @@ public class ReservationController {
 
     @GetMapping("/reservations")
     public ResponseEntity<List<ReservationResponse>> getReservations() {
+        List<Reservation> reservations = reservationFindService.findReservations();
         return ResponseEntity.ok(ReservationResponse.listOf(reservations));
     }
 

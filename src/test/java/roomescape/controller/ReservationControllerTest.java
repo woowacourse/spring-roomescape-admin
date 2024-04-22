@@ -69,6 +69,7 @@ public class ReservationControllerTest {
     }
 
     @Test
+    @Disabled
     @DisplayName("예약 취소를 정상적으로 수행한다.")
     void deleteReservation_Success() {
         Map<String, String> params = Map.of("name", "브라운",
@@ -127,5 +128,33 @@ public class ReservationControllerTest {
 
         Integer count = jdbcTemplate.queryForObject("SELECT count(1) from reservation", Integer.class);
         assertThat(count).isEqualTo(1);
+    }
+
+    @Test
+    @DisplayName("DB에 저장된 예약을 정상적으로 삭제한다.")
+    void deleteReservation_InDatabase_Success() {
+        Map<String, String> params = new HashMap<>();
+        params.put("name", "브라운");
+        params.put("date", "2023-08-05");
+        params.put("time", "10:00");
+
+        RestAssured.given().log().all()
+                .contentType(ContentType.JSON)
+                .body(params)
+                .when().post("/reservations")
+                .then().log().all()
+                .statusCode(201)
+                .header("Location", "/reservations/1");
+
+        Integer count = jdbcTemplate.queryForObject("SELECT count(1) from reservation", Integer.class);
+        assertThat(count).isEqualTo(1);
+
+        RestAssured.given().log().all()
+                .when().delete("/reservations/1")
+                .then().log().all()
+                .statusCode(204);
+
+        Integer countAfterDelete = jdbcTemplate.queryForObject("SELECT count(1) from reservation", Integer.class);
+        assertThat(countAfterDelete).isEqualTo(0);
     }
 }

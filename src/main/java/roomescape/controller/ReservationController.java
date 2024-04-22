@@ -2,13 +2,16 @@ package roomescape.controller;
 
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import roomescape.domain.Reservation;
 import roomescape.dto.ReservationResponse;
 import roomescape.dto.SaveReservationRequest;
 import roomescape.service.ReservationCreateService;
+import roomescape.service.ReservationDeleteService;
 import roomescape.service.ReservationFindService;
 
 import java.net.URI;
@@ -19,10 +22,14 @@ public class ReservationController {
 
     private final ReservationFindService reservationFindService;
     private final ReservationCreateService reservationCreateService;
+    private final ReservationDeleteService reservationDeleteService;
 
-    public ReservationController(ReservationFindService reservationFindService, ReservationCreateService reservationCreateService) {
+    public ReservationController(ReservationFindService reservationFindService,
+                                 ReservationCreateService reservationCreateService,
+                                 ReservationDeleteService reservationDeleteService) {
         this.reservationFindService = reservationFindService;
         this.reservationCreateService = reservationCreateService;
+        this.reservationDeleteService = reservationDeleteService;
     }
 
     @GetMapping("/admin/reservation")
@@ -41,5 +48,18 @@ public class ReservationController {
         Reservation newReservation = reservationCreateService.createReservation(request);
         return ResponseEntity.created(URI.create("/reservations/" + newReservation.getId()))
                 .body(ReservationResponse.of(newReservation));
+    }
+
+    @DeleteMapping("/reservations/{id}")
+    public ResponseEntity<Void> deleteReservation(@PathVariable Long id) {
+        reservationFindService.findReservations()
+                .stream()
+                .filter(reservation -> reservation.isSameReservation(id))
+                .findFirst()
+                .orElseThrow(() -> new IllegalArgumentException("존재하지 않는 예약 아이디 입니다."));
+
+        reservationDeleteService.deleteReservation(id);
+
+        return ResponseEntity.noContent().build();
     }
 }

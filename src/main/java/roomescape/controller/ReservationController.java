@@ -37,13 +37,11 @@ public class ReservationController {
     }
 
     @PostMapping
-    //TODO : 헤더 조작을 위해 ResponseEntity를 반환할 필요성이 생겼다. 다른 메서드도 동일하게 변경해 주어야 할까?
     public ResponseEntity<ReservationCreateResponse> createReservation(
             @RequestBody ReservationCreateRequest reservationCreateRequest) {
 
         Long createdReservationId = reservationService.createReservation(reservationCreateRequest);
 
-        //TODO : 이렇게 조회를 하는 것이 좋을지, Request의 데이터를 사용하는 것이 좋을지 고민해보기
         Reservation createdReservation = reservationService.findReservationById(createdReservationId).get();
 
         return ResponseEntity.status(HttpStatus.OK)

@@ -56,7 +56,7 @@ class ReservationControllerTest {
         assertThat(count).isEqualTo(1);
     }
 
-    @DisplayName("예약을 삭제할 수 있다.")
+    @DisplayName("삭제할 id를 받아서 DB에서 해당 예약을 삭제 할 수 있다.")
     @Test
     void deleteReservation() {
         jdbcTemplate.update("INSERT INTO reservation (name, date, time) VALUES (?, ?, ?)"

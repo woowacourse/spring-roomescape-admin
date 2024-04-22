@@ -55,13 +55,8 @@ public class ReservationController {
 
     @DeleteMapping("/reservations/{id}")
     public ResponseEntity<Void> deleteReservation(@PathVariable(name = "id") long id) {
-        /*Reservation findReservation = reservations.stream()
-                .filter(reservation -> reservation.checkSameId(id))
-                .findAny()
-                .orElseThrow(() -> new IllegalArgumentException("해당 id(%d)의 예약이 존재하지 않습니다.".formatted(id)));
-
-        reservations.remove(findReservation);
-        */
-        return ResponseEntity.ok().build();
+        String sql = "DELETE FROM reservation WHERE id = ?";
+        jdbcTemplate.update(sql, id);
+        return ResponseEntity.status(HttpStatus.NO_CONTENT).build();
     }
 }

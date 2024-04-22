@@ -43,12 +43,9 @@ public class ReservationController {
     public ResponseEntity<ReservationResponse> add(@RequestBody ReservationRequest reservationRequest) {
         ReservationTime reservationTime = reservationTimeRepository.findById(reservationRequest.timeId())
                 .orElseThrow(() -> new IllegalArgumentException("예약 시간이 존재하지 않습니다."));
+        Reservation reservation = reservationRequest.toEntity(reservationTime);
 
-        Reservation savedReservation = reservationRepository.save(new Reservation(
-                reservationRequest.name(),
-                reservationRequest.date(),
-                reservationTime
-        ));
+        Reservation savedReservation = reservationRepository.save(reservation);
 
         return ResponseEntity.created(URI.create("/reservations/" + savedReservation.getId()))
                 .body(ReservationResponse.from(savedReservation));

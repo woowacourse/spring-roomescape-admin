@@ -36,8 +36,9 @@ public class ReservationTimeController {
 
     @PostMapping
     public ResponseEntity<ReservationTimeResponse> save(@RequestBody ReservationTimeRequest reservationTimeRequest) {
-        ReservationTime savedReservationTime = reservationTimeRepository.save(new ReservationTime(
-                reservationTimeRequest.startAt()));
+        ReservationTime reservationTime = reservationTimeRequest.toEntity();
+
+        ReservationTime savedReservationTime = reservationTimeRepository.save(reservationTime);
 
         return ResponseEntity.ok(ReservationTimeResponse.from(savedReservationTime));
     }

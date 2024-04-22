@@ -47,4 +47,14 @@ public class JdbcTest {
             throw new RuntimeException(e);
         }
     }
+
+    @DisplayName("reservation_time테이블이 존재합니다.")
+    @Test
+    void should_exist_reservation_time_table() {
+        try (Connection connection = jdbcTemplate.getDataSource().getConnection()) {
+            assertThat(connection.getMetaData().getTables(null, null, "RESERVATION_TIME", null).next()).isTrue();
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        }
+    }
 }

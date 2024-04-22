@@ -26,11 +26,10 @@ class JdbcTemplateReservationRepository implements ReservationRepository {
 
     @Override
     public Reservation save(Reservation reservation) {
-        ReservationTime time = resolveTime(reservation.getTime());
         Map<String, Object> saveParam = Map.of(
                 "name", reservation.getName().value(),
                 "date", reservation.getDate(),
-                "time_id", time.getId()
+                "time_id", reservation.getTime().getId()
         );
         Long savedId = simpleInsert
                 .executeAndReturnKey(saveParam)
@@ -40,18 +39,8 @@ class JdbcTemplateReservationRepository implements ReservationRepository {
                 savedId,
                 reservation.getName(),
                 reservation.getDate(),
-                time
+                reservation.getTime()
         );
-    }
-
-    private ReservationTime resolveTime(ReservationTime time) {
-        String sql = "select * from reservation_time where id = ?";
-        ReservationTime reservationTime = jdbcTemplate.queryForObject(sql, (rs, rowNum) -> new ReservationTime(
-                rs.getLong("id"),
-                rs.getTime("start_at").toLocalTime()
-        ), time.getId());
-
-        return reservationTime;
     }
 
     @Override

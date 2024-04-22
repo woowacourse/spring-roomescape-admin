@@ -8,6 +8,7 @@ import roomescape.domain.Name;
 import roomescape.domain.Reservation;
 import roomescape.domain.ReservationRepository;
 import roomescape.domain.ReservationTime;
+import roomescape.domain.ReservationTimeRepository;
 import roomescape.service.request.CreateReservationRequest;
 
 @Service
@@ -15,19 +16,23 @@ import roomescape.service.request.CreateReservationRequest;
 public class ReservationService {
 
     private final ReservationRepository reservationRepository;
+    private final ReservationTimeRepository timeRepository;
 
-    public ReservationService(ReservationRepository reservationRepository) {
+    public ReservationService(
+            ReservationRepository reservationRepository,
+            ReservationTimeRepository timeRepository) {
         this.reservationRepository = reservationRepository;
+        this.timeRepository = timeRepository;
     }
 
     @Transactional
     public Reservation reserve(CreateReservationRequest request) {
         Name name = new Name(request.name());
         LocalDate date = request.date();
-        ReservationTime time = new ReservationTime(request.timeId());
-        Reservation reservation = new Reservation(name, date, time);
+        ReservationTime time = timeRepository.findById(request.timeId());
+        Reservation newReservation = new Reservation(name, date, time);
 
-        return reservationRepository.save(reservation);
+        return reservationRepository.save(newReservation);
     }
 
     @Transactional

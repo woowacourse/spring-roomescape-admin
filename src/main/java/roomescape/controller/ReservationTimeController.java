@@ -34,7 +34,7 @@ public class ReservationTimeController {
     }
 
     @PostMapping
-    public ResponseEntity<ReservationTimeResponse> post(@RequestBody ReservationTimeRequest request) {
+    public ResponseEntity<ReservationTimeResponse> create(@RequestBody ReservationTimeRequest request) {
         BeanPropertySqlParameterSource parameterSource = new BeanPropertySqlParameterSource(request);
         Number key = simpleJdbcInsert.executeAndReturnKey(parameterSource);
         return ResponseEntity.created(URI.create("/times/" + key))

@@ -31,9 +31,10 @@ public class ReservationRepository {
     }
 
     public ReservationResponse createReservation(ReservationRequest reservationRequest) {
+        String sql = "insert into reservation (id, name, date, time) values (?, ?, ?, ?)";
         Reservation reservation = new Reservation(id.getAndIncrement(), reservationRequest.getName(),
                 reservationRequest.getDate(), reservationRequest.getTime());
-        reservations.add(reservation);
+        jdbcTemplate.update(sql, reservation.getId(), reservation.getName(), reservation.getDate(), reservation.getTime());
         return ReservationResponse.of(reservation);
     }
 

@@ -19,11 +19,20 @@ class AdminControllerTest {
             .statusCode(200);
     }
 
-    @DisplayName("예약 페이지 응답")
+    @DisplayName("예약 관리 페이지 응답")
     @Test
     void moveToReservationPage() {
         RestAssured.given().log().all()
             .when().get("/admin/reservation")
+            .then().log().all()
+            .statusCode(200);
+    }
+
+    @DisplayName("시간 관리 페이지 응답")
+    @Test
+    void moveToTimePage() {
+        RestAssured.given().log().all()
+            .when().get("/admin/time")
             .then().log().all()
             .statusCode(200);
     }

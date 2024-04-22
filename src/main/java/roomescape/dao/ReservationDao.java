@@ -27,7 +27,7 @@ public class ReservationDao {
                 + "t.start_at as time_value "
                 + "FROM reservation as r "
                 + "inner join reservation_time as t "
-                + "on r.time_id = t.id\n";
+                + "on r.time_id = t.id";
         return jdbcTemplate.query(sql,
                 (rs, rowNum) -> new Reservation(rs.getLong("reservation_id"), rs.getString("name"),
                         rs.getDate("date").toLocalDate(),

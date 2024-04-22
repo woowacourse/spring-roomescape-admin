@@ -1,5 +1,7 @@
 package roomescape.controller.dto;
 
+import com.fasterxml.jackson.annotation.JsonCreator;
+import com.fasterxml.jackson.annotation.JsonProperty;
 import java.time.LocalDate;
 import java.time.LocalTime;
 import roomescape.entity.Reservation;
@@ -10,7 +12,11 @@ public class ReservationResponse {
     private final LocalDate date;
     private final LocalTime time;
 
-    private ReservationResponse(long id, String name, LocalDate date, LocalTime time) {
+    @JsonCreator
+    public ReservationResponse(@JsonProperty("id") long id,
+                               @JsonProperty("name") String name,
+                               @JsonProperty("date") LocalDate date,
+                               @JsonProperty("time") LocalTime time) {
         this.id = id;
         this.name = name;
         this.date = date;

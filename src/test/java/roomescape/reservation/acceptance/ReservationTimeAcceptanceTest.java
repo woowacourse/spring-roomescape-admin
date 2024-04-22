@@ -1,4 +1,4 @@
-package roomescape.reservation.controller;
+package roomescape.reservation.acceptance;
 
 import static org.hamcrest.Matchers.is;
 
@@ -6,15 +6,20 @@ import io.restassured.RestAssured;
 import io.restassured.http.ContentType;
 import java.util.HashMap;
 import java.util.Map;
-import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
-import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.test.annotation.DirtiesContext;
+import org.springframework.beans.factory.annotation.Autowired;
+import roomescape.reservation.repository.ReservationRepository;
+import roomescape.reservation.repository.ReservationTimeRepository;
+import roomescape.util.AcceptanceTest;
 
-@SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.DEFINED_PORT)
-@DirtiesContext(classMode = DirtiesContext.ClassMode.BEFORE_EACH_TEST_METHOD)
-class ReservationTimeControllerTest {
+class ReservationTimeAcceptanceTest extends AcceptanceTest {
+    @Autowired
+    ReservationTimeRepository reservationTimeRepository;
+
+    @Autowired
+    ReservationRepository reservationRepository;
+
     @DisplayName("시간 생성 시, 200을 반환한다.")
     @Test
     void create() {
@@ -66,7 +71,6 @@ class ReservationTimeControllerTest {
                 .when().post("/times")
                 .then().log().all()
                 .statusCode(200);
-
 
         //when & then
         RestAssured.given().log().all()

@@ -45,5 +45,13 @@ public class TimeController {
 
         return ResponseEntity.ok(dto.createTime(id));
     }
+
+    @DeleteMapping("/{id}")
+    public ResponseEntity<Void> deleteTime(@PathVariable long id) {
+        String sql = "DELETE FROM reservation_time WHERE id = ?";
+        jdbcTemplate.update(sql, id);
+
+        return ResponseEntity.ok().build();
+    }
 }
 

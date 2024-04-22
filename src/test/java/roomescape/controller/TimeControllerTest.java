@@ -43,4 +43,15 @@ class TimeControllerTest {
                 .then().log().all()
                 .statusCode(200);
     }
+
+    @DisplayName("삭제할 id를 받아서 DB에서 해당 시간을 삭제 할 수 있다.")
+    @Test
+    void deleteTime() {
+        jdbcTemplate.update("INSERT INTO reservation_time (start_at) VALUES (?)", "10:00");
+
+        RestAssured.given().log().all()
+                .when().delete("/times/1")
+                .then().log().all()
+                .statusCode(200);
+    }
 }

@@ -14,6 +14,7 @@ import java.sql.PreparedStatement;
 import java.util.List;
 
 @RestController
+@RequestMapping("/reservations")
 public class ReservationController {
     private final JdbcTemplate jdbcTemplate;
     private final RowMapper<Reservation> rowMapper;
@@ -28,13 +29,13 @@ public class ReservationController {
         );
     }
 
-    @GetMapping("/reservations")
+    @GetMapping
     public ResponseEntity<List<Reservation>> readReservations() {
         String sql = "SELECT id, name, date, time FROM reservation";
         return ResponseEntity.ok(jdbcTemplate.query(sql, rowMapper));
     }
 
-    @PostMapping("/reservations")
+    @PostMapping
     public ResponseEntity<Reservation> createReservation(@RequestBody ReservationCreateRequest dto) {
         KeyHolder keyHolder = new GeneratedKeyHolder();
         String sql = "INSERT INTO reservation (name, date, time) values (?, ?, ?)";
@@ -53,7 +54,7 @@ public class ReservationController {
                 .body(dto.createReservation(id));
     }
 
-    @DeleteMapping("/reservations/{id}")
+    @DeleteMapping("/{id}")
     public ResponseEntity<Void> deleteReservation(@PathVariable(name = "id") long id) {
         String sql = "DELETE FROM reservation WHERE id = ?";
         jdbcTemplate.update(sql, id);

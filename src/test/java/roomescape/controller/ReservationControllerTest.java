@@ -9,6 +9,7 @@ import java.lang.reflect.Field;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -25,25 +26,8 @@ class ReservationControllerTest {
     @Autowired
     ReservationController reservationController;
 
-    @Test
-    void getReservationsTest() {
-        jdbcTemplate.update("INSERT INTO reservation (name, date, time) VALUES (?, ?, ?)", "브라운", "2023-08-05",
-                "15:40");
-
-        List<Reservation> reservations = RestAssured.given().log().all()
-                .when().get("/reservations")
-                .then().log().all()
-                .statusCode(200).extract()
-                .jsonPath().getList(".", Reservation.class);
-
-        Integer count = jdbcTemplate.queryForObject("SELECT count(1) from reservation", Integer.class);
-
-        assertThat(reservations).hasSize(count);
-    }
-
-    @Test
-    void saveReservationTest() {
-        // given
+    @BeforeEach
+    void setUp() {
         Map<String, String> params = new HashMap<>();
         params.put("startAt", "10:00");
 
@@ -51,7 +35,28 @@ class ReservationControllerTest {
                 .contentType(ContentType.JSON)
                 .body(params)
                 .when().post("/times");
+    }
 
+    @Test
+    void getReservationsTest() {
+        // given
+        jdbcTemplate.update("INSERT INTO reservation (name, date, time_id) VALUES (?, ?, ?)", "브라운", "2023-08-05",
+                1);
+
+        // when & then
+        List<Reservation> reservations = RestAssured.given().log().all()
+                .when().get("/reservations")
+                .then().log().all()
+                .statusCode(200).extract()
+                .jsonPath().getList(".", Reservation.class);
+
+        Integer count = jdbcTemplate.queryForObject("SELECT count(1) from reservation", Integer.class);
+        assertThat(reservations).hasSize(count);
+    }
+
+    @Test
+    void saveReservationTest() {
+        // given
         Map<String, Object> reservation = new HashMap<>();
         reservation.put("name", "브라운");
         reservation.put("date", "2023-08-05");
@@ -76,10 +81,10 @@ class ReservationControllerTest {
     @Test
     void deleteReservationTest() {
         // given
-        Map<String, String> params = new HashMap<>();
+        Map<String, Object> params = new HashMap<>();
         params.put("name", "브라운");
         params.put("date", "2023-08-05");
-        params.put("time", "10:00");
+        params.put("timeId", 1);
 
         RestAssured.given().log().all()
                 .contentType(ContentType.JSON)

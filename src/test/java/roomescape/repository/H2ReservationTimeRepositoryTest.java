@@ -14,9 +14,9 @@ import static org.assertj.core.api.Assertions.assertThat;
 
 @Transactional
 @SpringBootTest
-class H2ReservationTimeRepositoryImplTest {
+class H2ReservationTimeRepositoryTest {
     @Autowired
-    private H2ReservationTimeRepositoryImpl reservationTimeRepository;
+    private H2ReservationTimeRepository reservationTimeRepository;
 
     @DisplayName("예약 시간을 저장한다")
     @Test

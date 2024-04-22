@@ -13,11 +13,11 @@ import java.util.Optional;
 
 @Primary
 @Repository
-public class H2ReservationTimeRepositoryImpl implements ReservationTimeRepository {
+public class H2ReservationTimeRepository implements ReservationTimeRepository {
     private final JdbcTemplate jdbcTemplate;
     private final SimpleJdbcInsert jdbcInsert;
 
-    public H2ReservationTimeRepositoryImpl(JdbcTemplate jdbcTemplate, DataSource dataSource) {
+    public H2ReservationTimeRepository(JdbcTemplate jdbcTemplate, DataSource dataSource) {
         this.jdbcTemplate = jdbcTemplate;
         this.jdbcInsert = new SimpleJdbcInsert(dataSource)
                 .withTableName("reservation_time")

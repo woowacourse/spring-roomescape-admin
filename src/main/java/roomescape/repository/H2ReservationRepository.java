@@ -13,11 +13,11 @@ import java.util.Map;
 
 @Primary
 @Repository
-public class H2ReservationRepositoryImpl implements ReservationRepository {
+public class H2ReservationRepository implements ReservationRepository {
     private final JdbcTemplate jdbcTemplate;
     private final SimpleJdbcInsert jdbcInsert;
 
-    public H2ReservationRepositoryImpl(JdbcTemplate jdbcTemplate, DataSource dataSource) {
+    public H2ReservationRepository(JdbcTemplate jdbcTemplate, DataSource dataSource) {
         this.jdbcTemplate = jdbcTemplate;
         this.jdbcInsert = new SimpleJdbcInsert(dataSource)
                 .withTableName("reservation")
@@ -29,13 +29,13 @@ public class H2ReservationRepositoryImpl implements ReservationRepository {
         String sql = "SELECT r.id as reservation_id, r.name, r.date, t.id as time_id, t.start_at as time_value " +
                 "FROM reservation as r inner join reservation_time as t on r.time_id = t.id";
 
-        return jdbcTemplate.query(sql, (resultSet, rowNum) -> new Reservation(
-                resultSet.getLong("reservation_id"),
-                resultSet.getString("name"),
-                resultSet.getDate("date").toLocalDate(),
+        return jdbcTemplate.query(sql, (rs, rowNum) -> new Reservation(
+                rs.getLong("reservation_id"),
+                rs.getString("name"),
+                rs.getDate("date").toLocalDate(),
                 new ReservationTime(
-                        resultSet.getLong("time_id"),
-                        resultSet.getTime("time_value").toLocalTime())));
+                        rs.getLong("time_id"),
+                        rs.getTime("time_value").toLocalTime())));
     }
 
     @Override
@@ -56,7 +56,6 @@ public class H2ReservationRepositoryImpl implements ReservationRepository {
     @Override
     public void deleteById(long id) {
         String sql = "delete from reservation where id = ?";
-
         jdbcTemplate.update(sql, id);
     }
 }

@@ -11,8 +11,8 @@ import org.springframework.test.web.servlet.MockMvc;
 import roomescape.domain.Reservation;
 import roomescape.domain.ReservationTime;
 import roomescape.dto.ReservationRequest;
-import roomescape.repository.InMemoryReservationRepositoryImpl;
-import roomescape.repository.InMemoryReservationTimeRepositoryImpl;
+import roomescape.repository.InMemoryReservationRepository;
+import roomescape.repository.InMemoryReservationTimeRepository;
 import roomescape.repository.ReservationRepository;
 import roomescape.repository.ReservationTimeRepository;
 
@@ -24,8 +24,8 @@ import static org.springframework.test.web.servlet.request.MockMvcRequestBuilder
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
-@Import(value = {InMemoryReservationRepositoryImpl.class,
-        InMemoryReservationTimeRepositoryImpl.class})
+@Import(value = {InMemoryReservationRepository.class,
+        InMemoryReservationTimeRepository.class})
 @WebMvcTest(ReservationController.class)
 class ReservationControllerTest {
     @Autowired

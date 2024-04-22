@@ -10,7 +10,7 @@ import java.util.Optional;
 import java.util.concurrent.atomic.AtomicLong;
 
 @Repository
-public class InMemoryReservationTimeRepositoryImpl implements ReservationTimeRepository {
+public class InMemoryReservationTimeRepository implements ReservationTimeRepository {
     private final List<ReservationTime> reservationTimes = Collections.synchronizedList(new ArrayList<>());
     private final AtomicLong index = new AtomicLong(0);
 
@@ -38,9 +38,5 @@ public class InMemoryReservationTimeRepositoryImpl implements ReservationTimeRep
                 .filter(reservationTime -> reservationTime.hasId(id))
                 .findFirst()
                 .ifPresent(reservationTimes::remove);
-    }
-
-    public void deleteAll() {
-        reservationTimes.clear();
     }
 }

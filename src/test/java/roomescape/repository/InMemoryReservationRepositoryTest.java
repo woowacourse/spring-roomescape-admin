@@ -15,9 +15,9 @@ import static org.assertj.core.api.Assertions.assertThatCode;
 import static org.assertj.core.api.SoftAssertions.assertSoftly;
 
 @SpringBootTest
-class InMemoryReservationRepositoryImplTest {
+class InMemoryReservationRepositoryTest {
     @Autowired
-    private InMemoryReservationRepositoryImpl reservationRepository;
+    private InMemoryReservationRepository reservationRepository;
 
     @BeforeEach
     void setUp() {

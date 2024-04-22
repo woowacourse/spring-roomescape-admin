@@ -17,12 +17,12 @@ import static org.assertj.core.api.SoftAssertions.assertSoftly;
 
 @Transactional
 @SpringBootTest
-class H2ReservationRepositoryImplTest {
+class H2ReservationRepositoryTest {
     @Autowired
-    private H2ReservationRepositoryImpl reservationRepository;
+    private H2ReservationRepository reservationRepository;
 
     @Autowired
-    private H2ReservationTimeRepositoryImpl reservationTimeRepository;
+    private H2ReservationTimeRepository reservationTimeRepository;
 
     @DisplayName("예약을 저장한다")
     @Test

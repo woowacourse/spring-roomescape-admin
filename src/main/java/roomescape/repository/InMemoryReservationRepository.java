@@ -9,7 +9,7 @@ import java.util.List;
 import java.util.concurrent.atomic.AtomicLong;
 
 @Repository
-public class InMemoryReservationRepositoryImpl implements ReservationRepository {
+public class InMemoryReservationRepository implements ReservationRepository {
     private final List<Reservation> reservations = Collections.synchronizedList(new ArrayList<>());
     private final AtomicLong index = new AtomicLong(0);
 

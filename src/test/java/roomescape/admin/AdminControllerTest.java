@@ -5,12 +5,9 @@ import static org.hamcrest.Matchers.is;
 import io.restassured.RestAssured;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
-import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.test.annotation.DirtiesContext;
+import roomescape.ControllerTest;
 
-@SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.DEFINED_PORT)
-@DirtiesContext(classMode = DirtiesContext.ClassMode.BEFORE_EACH_TEST_METHOD)
-class AdminControllerTest {
+class AdminControllerTest extends ControllerTest {
     @DisplayName("관리자 메인 페이지 조회에 성공한다.")
     @Test
     void adminMainPage() {

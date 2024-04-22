@@ -53,7 +53,8 @@ class ReservationControllerTest {
                             .contentType(ContentType.JSON).body(params)
                             .when().post("/reservations")
                             .then().log().all()
-                            .statusCode(200).body("id", is(1));
+                            .statusCode(201)
+                            .header("Location", "/reservations/1");
                 }),
 
                 dynamicTest("예약이 정상적으로 추가되었는지 확인한다", () -> {
@@ -67,7 +68,7 @@ class ReservationControllerTest {
                     RestAssured.given().log().all()
                             .when().delete("/reservations/1")
                             .then().log().all()
-                            .statusCode(200);
+                            .statusCode(204);
                 }),
 
                 dynamicTest("예약이 정상적으로 삭제되었는지 확인한다", () -> {

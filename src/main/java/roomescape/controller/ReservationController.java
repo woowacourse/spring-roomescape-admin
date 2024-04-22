@@ -1,14 +1,8 @@
 package roomescape.controller;
 
 import java.net.URI;
-import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
-import java.util.Objects;
-import java.util.Optional;
-import java.util.concurrent.atomic.AtomicLong;
 import java.util.stream.Collectors;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -18,7 +12,6 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import roomescape.dao.ReservationDao;
-import roomescape.domain.Reservation;
 import roomescape.dto.ReservationCreateRequest;
 import roomescape.dto.ReservationResponse;
 
@@ -26,10 +19,7 @@ import roomescape.dto.ReservationResponse;
 @RequestMapping("/reservations")
 public class ReservationController {
 
-    private final List<Reservation> reservations = new ArrayList<>();
-    private final AtomicLong index = new AtomicLong(1);
-
-    private ReservationDao reservationDao;
+    private final ReservationDao reservationDao;
 
     public ReservationController(ReservationDao reservationDao) {
         this.reservationDao = reservationDao;
@@ -54,19 +44,13 @@ public class ReservationController {
     }
 
     @DeleteMapping("/{id}")
-    public ResponseEntity<String> deleteReservation(@PathVariable Long id) {
-        Optional<Reservation> foundReservation = reservations.stream()
-                .filter(it -> Objects.equals(it.getId(), id))
-                .findFirst();
-
-        if (foundReservation.isEmpty()) {
-            return ResponseEntity.status(HttpStatus.NOT_FOUND)
-                    .body("삭제할 예약이 존재하지 않습니다.");
+    public ResponseEntity<Void> deleteReservation(@PathVariable Long id) {
+        int deletedRowCount = reservationDao.deleteById(id);
+        if (deletedRowCount == 0) {
+            return ResponseEntity.notFound()
+                    .build();
         }
-
-        Reservation reservation = foundReservation.get();
-        reservations.remove(reservation);
-        return ResponseEntity.ok()
+        return ResponseEntity.noContent()
                 .build();
     }
 }

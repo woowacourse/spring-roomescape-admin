@@ -1,6 +1,7 @@
 package roomescape.service;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.assertThatThrownBy;
 
 import java.time.LocalTime;
 import java.util.List;
@@ -53,6 +54,19 @@ class TimeSlotServiceTest {
         TimeSlotCreationResponse response = timeSlotService.addTime(request);
         // then
         assertThat(response.startAt()).isEqualTo("13:00");
+    }
+
+    @Test
+    @DisplayName("이미 시간이 존재하는 경우, 추가할 때 예외가 발생한다.")
+    void duplicatedTimeSlotTest() {
+        // given
+        TimeSlotDto dto = new TimeSlotDto(LocalTime.parse("13:00"));
+        timeSlotRepository.create(dto);
+        TimeSlotCreationRequest request = new TimeSlotCreationRequest("13:00");
+        // when, then
+        assertThatThrownBy(() -> timeSlotService.addTime(request))
+                .isInstanceOf(IllegalArgumentException.class)
+                .hasMessage("시간을 중복하여 등록할 수 없습니다.");
     }
 
     @Test

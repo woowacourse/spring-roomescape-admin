@@ -1,5 +1,7 @@
 package roomescape.repository;
 
+import java.io.Serializable;
+import java.time.LocalTime;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
@@ -54,6 +56,12 @@ public class TimeSlotJdbcRepository implements TimeSlotRepository {
     public void deleteById(Long id) {
         String sql = "delete from time_slot where id = ?";
         jdbcTemplate.update(sql, id);
+    }
+
+    @Override
+    public boolean existsByTime(LocalTime time) {
+        String sql = "select count(*) from time_slot where start_at = ?";
+        return jdbcTemplate.queryForObject(sql, Integer.class, time) > 0;
     }
 
     @Override

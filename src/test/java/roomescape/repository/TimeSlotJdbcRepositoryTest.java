@@ -78,6 +78,19 @@ class TimeSlotJdbcRepositoryTest {
         assertThat(actual).isEmpty();
     }
 
+    @Test
+    @DisplayName("시간이 존재하는지 확인한다.")
+    void existsByTimeTest() {
+        // given
+        jdbcInsert.executeAndReturnKey(Map.of(
+                "start_at", LocalTime.parse("11:00")
+        ));
+        // when
+        boolean actual = timeSlotRepository.existsByTime(LocalTime.parse("11:00"));
+        // then
+        assertThat(actual).isTrue();
+    }
+
 
     @Test
     @DisplayName("ID를 통해 시간을 삭제한다.")

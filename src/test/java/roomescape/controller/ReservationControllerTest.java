@@ -14,6 +14,7 @@ import roomescape.controller.dto.CreateReservationRequest;
 
 import java.time.LocalDate;
 
+import static org.assertj.core.api.Assertions.assertThat;
 import static org.hamcrest.CoreMatchers.is;
 
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
@@ -25,6 +26,9 @@ public class ReservationControllerTest {
 
     @Autowired
     JdbcTemplate jdbcTemplate;
+
+    @Autowired
+    private ReservationController reservationController;
 
     CreateReservationRequest request;
 
@@ -64,6 +68,20 @@ public class ReservationControllerTest {
                 .statusCode(204);
 
         testResponseBodyDataSize("/reservations", 200, 0);
+    }
+
+    @Test
+    void 서비스_및_데이터베이스_접근_객체_분리_테스트() {
+        boolean isJdbcTemplateInjected = false;
+
+        for (var field : reservationController.getClass().getDeclaredFields()) {
+            if (field.getType().equals(JdbcTemplate.class)) {
+                isJdbcTemplateInjected = true;
+                break;
+            }
+        }
+
+        assertThat(isJdbcTemplateInjected).isFalse();
     }
 
     private void testResponseBodyDataSize(String path, int expectedStatusCode, int size) {

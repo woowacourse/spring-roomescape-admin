@@ -14,20 +14,20 @@ public class ReservationService {
     @Autowired
     private ReservationDao reservationDao;
 
-//    public ReservationService(ReservationDao reservationDao) {
-//        this.reservationDao = reservationDao;
-//    }
-//
-//    public ReservationService() {
-//        this(new ReservationDao());
-//    }
+    public ReservationService(ReservationDao reservationDao) {
+        this.reservationDao = reservationDao;
+    }
+
+    public ReservationService() {
+        this(new ReservationDao());
+    }
 
     public List<Reservation> getAllReservations() {
         return reservationDao.findAllReservation();
     }
 
     public ReservationResponseDto reserve(ReservationRequestDto reservationRequestDto) {
-        Long insertReservationId = reservationDao.insertReservation(reservationRequestDto);
+        Long insertReservationId = reservationDao.addReservation(reservationRequestDto);
         Reservation insertReservation = reservationDao.findById(insertReservationId);
         return insertReservation.toResponseDto();
     }

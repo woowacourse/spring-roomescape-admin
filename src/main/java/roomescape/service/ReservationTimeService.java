@@ -10,7 +10,7 @@ import roomescape.service.dto.ReservationTimeServiceRequest;
 import roomescape.service.dto.ReservationTimeServiceResponse;
 
 @Service
-@Transactional(readOnly = true)
+@Transactional
 public class ReservationTimeService {
 
     private final ReservationTimeDao reservationTimeDao;
@@ -21,7 +21,6 @@ public class ReservationTimeService {
         this.reservationDao = reservationDao;
     }
 
-    @Transactional
     public ReservationTimeServiceResponse create(ReservationTimeServiceRequest reservationTimeServiceRequest) {
         ReservationTime reservationTime = reservationTimeServiceRequest.toReservationTime();
         ReservationTime savedReservationTime = reservationTimeDao.save(reservationTime);
@@ -29,6 +28,7 @@ public class ReservationTimeService {
         return ReservationTimeServiceResponse.from(savedReservationTime);
     }
 
+    @Transactional(readOnly = true)
     public List<ReservationTimeServiceResponse> findAll() {
         List<ReservationTime> reservationTimes = reservationTimeDao.findAll();
         return reservationTimes.stream()
@@ -36,7 +36,6 @@ public class ReservationTimeService {
                 .toList();
     }
 
-    @Transactional
     public void delete(long id) {
         ReservationTime reservationTime = reservationTimeDao.findById(id)
                 .orElseThrow(() -> new IllegalArgumentException("Time not found"));

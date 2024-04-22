@@ -65,10 +65,12 @@ class ReservationControllerTest extends BaseControllerTest {
                 .body(makeReservationRequest(reservationTime.getId()))
                 .when().post("/reservations");
 
+        ReservationResponse reservationResponse = getReservationResponse(response);
+
         SoftAssertions.assertSoftly(softly -> {
             softly.assertThat(response.getStatusCode()).isEqualTo(201);
             softly.assertThat(response.getHeader("Location"))
-                    .isEqualTo("/reservations/" + response.jsonPath().getLong("id"));
+                    .isEqualTo("/reservations/" + reservationResponse.id());
         });
     }
 
@@ -93,6 +95,10 @@ class ReservationControllerTest extends BaseControllerTest {
         } catch (Exception e) {
             throw new RuntimeException(e);
         }
+    }
+
+    private ReservationResponse getReservationResponse(Response response) {
+        return response.jsonPath().getObject(".", ReservationResponse.class);
     }
 
     private List<ReservationResponse> getReservationResponses(Response response) {

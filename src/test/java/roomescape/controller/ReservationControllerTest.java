@@ -40,7 +40,7 @@ public class ReservationControllerTest {
 
     @Test
     void 예약_목록을_요청하면_200_코드와_데이터를_반환한다() {
-        testResponseBodyDataSize("/reservations", 200, 0);
+        validateResponseBodyDataSize("/reservations", 200, 0);
     }
 
     @Test
@@ -54,7 +54,7 @@ public class ReservationControllerTest {
                 .then().log().all()
                 .statusCode(200);
 
-        testResponseBodyDataSize("/reservations", 200, 1);
+        validateResponseBodyDataSize("/reservations", 200, 1);
     }
 
     @Test
@@ -67,7 +67,7 @@ public class ReservationControllerTest {
                 .then().log().all()
                 .statusCode(204);
 
-        testResponseBodyDataSize("/reservations", 200, 0);
+        validateResponseBodyDataSize("/reservations", 200, 0);
     }
 
     @Test
@@ -84,12 +84,12 @@ public class ReservationControllerTest {
         assertThat(isJdbcTemplateInjected).isFalse();
     }
 
-    private void testResponseBodyDataSize(String path, int expectedStatusCode, int size) {
-        testPageStatus(path, expectedStatusCode)
+    private void validateResponseBodyDataSize(String path, int expectedStatusCode, int size) {
+        validatePageStatus(path, expectedStatusCode)
                 .body("size()", is(size));
     }
 
-    private ValidatableResponse testPageStatus(String path, int expectedStatusCode) {
+    private ValidatableResponse validatePageStatus(String path, int expectedStatusCode) {
         return RestAssured.given().log().all()
                 .when().get(path)
                 .then().log().all()

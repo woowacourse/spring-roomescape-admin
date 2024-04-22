@@ -7,9 +7,11 @@ import org.springframework.jdbc.support.GeneratedKeyHolder;
 import org.springframework.jdbc.support.KeyHolder;
 import org.springframework.stereotype.Repository;
 import roomescape.domain.Reservation;
+import roomescape.domain.ReservationTime;
 
 import java.sql.PreparedStatement;
 import java.sql.Statement;
+import java.time.LocalTime;
 import java.util.List;
 import java.util.Objects;
 
@@ -21,8 +23,10 @@ public class ReservationSqlRepository implements ReservationRepository {
                     resultset.getLong("id"),
                     resultset.getString("name"),
                     resultset.getString("date"),
-                    resultset.getString("time")
-            );
+                    new ReservationTime(
+                            resultset.getLong("time_id"),
+                            LocalTime.parse(resultset.getString("time_value"))
+                    ));
     private final JdbcTemplate jdbcTemplate;
 
     public ReservationSqlRepository(final JdbcTemplate jdbcTemplate) {
@@ -30,16 +34,26 @@ public class ReservationSqlRepository implements ReservationRepository {
     }
 
     public List<Reservation> findAll() {
-        return jdbcTemplate.query("select * from reservation", mapper);
+        return jdbcTemplate.query("""
+                SELECT
+                    r.id as reservation_id,
+                    r.name,
+                    r.date,
+                    t.id as time_id,
+                    t.start_at as time_value
+                FROM reservation as r
+                inner join reservation_time as t
+                on r.time_id = t.id
+                """, mapper);
     }
 
-    public long create(Reservation reservation) {
+    public long create(Reservation reservation, final long reservationTimeId) {
         try {
             jdbcTemplate.update(con -> {
-                PreparedStatement ps = con.prepareStatement("insert into reservation (name, date, time) values (?, ?, ?)", Statement.RETURN_GENERATED_KEYS);
+                PreparedStatement ps = con.prepareStatement("insert into reservation (name, date, time_id) values (?, ?, ?)", Statement.RETURN_GENERATED_KEYS);
                 ps.setString(1, reservation.getName());
                 ps.setString(2, reservation.getDate());
-                ps.setString(3, reservation.getTime());
+                ps.setLong(3, reservationTimeId);
                 return ps;
             }, keyHolder);
             return Objects.requireNonNull(keyHolder.getKey())

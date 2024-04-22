@@ -23,12 +23,10 @@ public class AdminApiController {
 
     @GetMapping("/reservations")
     public List<ReservationResponse> getReservations() {
-        List<ReservationResponse> reservations = reservationRepository.findAll()
+        return reservationRepository.findAll()
                 .stream()
                 .map(ReservationResponse::from)
                 .toList();
-
-        return reservations;
     }
 
     @PostMapping("/reservations")

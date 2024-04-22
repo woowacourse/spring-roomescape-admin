@@ -2,13 +2,12 @@ package roomescape.reservations;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 import roomescape.domain.Reservation;
-import roomescape.dto.request.RequestReservation;
 import roomescape.dto.ReservationRepositoryDto;
 import roomescape.dto.ReservationTimeDto;
+import roomescape.dto.request.RequestReservation;
 import roomescape.dto.response.ResponseReservation;
 import roomescape.times.ReservationTimeRepository;
 
@@ -34,11 +33,12 @@ public class ReservationsController {
     }
 
     @PostMapping
-    public ResponseEntity<ResponseReservation> addReservationInfo(@RequestBody RequestReservation requestReservation) {
+    @ResponseBody
+    public ResponseReservation addReservationInfo(@RequestBody RequestReservation requestReservation) {
         ReservationRepositoryDto requestReservationDto = new ReservationRepositoryDto(null, requestReservation.name(), requestReservation.date(), requestReservation.timeId());
         ReservationRepositoryDto newReservationDto = reservationRepository.add(requestReservationDto);
         Reservation newReservation = reservationRepositoryDtoToReservation(newReservationDto);
-        return ResponseEntity.ok(new ResponseReservation(newReservation));
+        return new ResponseReservation(newReservation);
     }
 
     private Reservation reservationRepositoryDtoToReservation(ReservationRepositoryDto reservationRepositoryDto) {

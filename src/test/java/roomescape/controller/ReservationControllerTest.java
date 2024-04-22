@@ -10,13 +10,10 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.web.server.LocalServerPort;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.test.annotation.DirtiesContext;
-import roomescape.domain.Reservation;
 
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 
-import static org.assertj.core.api.Assertions.assertThat;
 import static org.hamcrest.CoreMatchers.is;
 
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
@@ -40,13 +37,13 @@ public class ReservationControllerTest {
     }
 
     @Test
-    void 팔단계() {
+    void 예약추가_및_조회를_수행한다() {
         Map<String, Object> reservation = new HashMap<>();
         reservation.put("name", "브라운");
         reservation.put("date", "2023-08-05");
         reservation.put("timeId", 1);
 
-        jdbcTemplate.update("insert into reservation_time (start_at) values ('10:00:00')");
+        jdbcTemplate.update("insert into reservation_time (start_at) values ('10:00')");
 
         RestAssured.given().log().all()
                 .contentType(ContentType.JSON)
@@ -56,11 +53,25 @@ public class ReservationControllerTest {
                 .statusCode(200);
 
 
+        testResponseBodyDataSize("/reservations", 200, 1);
+    }
+
+    @Test
+    void 예약삭제_및_조회를_수행한다() {
+        Map<String, Object> reservation = new HashMap<>();
+        reservation.put("name", "브라운");
+        reservation.put("date", "2023-08-05");
+        reservation.put("timeId", 1);
+
+        jdbcTemplate.update("insert into reservation_time (start_at) values ('10:00')");
+
         RestAssured.given().log().all()
-                .when().get("/reservations")
+                .contentType(ContentType.JSON)
+                .when().delete("/times/1")
                 .then().log().all()
-                .statusCode(200)
-                .body("size()", is(1));
+                .statusCode(204);
+
+        testResponseBodyDataSize("/reservations", 200, 0);
     }
 
     private void testResponseBodyDataSize(String path, int expectedStatusCode, int size) {

@@ -4,7 +4,7 @@ const cellFields = ['id', 'startAt'];
 const createCellFields = ['', createInput()];
 function createBody(inputs) {
   return {
-    startAt: inputs[0].value,
+    startAt: inputs[0].value.slice(0, 5),
   };
 }
 
@@ -129,6 +129,6 @@ function requestDelete(id) {
 
   return fetch(`${API_ENDPOINT}/${id}`, requestOptions)
       .then(response => {
-        if (response.status !== 200) throw new Error('Delete failed');
+        if (response.status !== 204) throw new Error('Delete failed');
       });
 }

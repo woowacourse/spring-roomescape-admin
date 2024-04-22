@@ -65,7 +65,7 @@ class TimeSlotTest extends AcceptanceTest {
         RestAssured.given().log().all()
                 .when().delete("/times/" + id)
                 .then().log().all()
-                .statusCode(200);
+                .statusCode(204);
 
         List<TimeSlot> actual = timeSlotRepository.findAll();
         assertThat(actual).isEmpty();

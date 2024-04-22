@@ -75,7 +75,7 @@ class ReservationTest extends AcceptanceTest {
         RestAssured.given().log().all()
                 .when().delete("/reservations/" + reservation.getId())
                 .then().log().all()
-                .statusCode(200);
+                .statusCode(204);
 
         RestAssured.given().log().all()
                 .when().get("/reservations")

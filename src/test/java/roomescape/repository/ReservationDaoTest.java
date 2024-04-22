@@ -12,7 +12,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.context.SpringBootTest.WebEnvironment;
 import org.springframework.test.annotation.DirtiesContext;
-import roomescape.dto.ReservationRequest;
 import roomescape.model.Reservation;
 
 @SpringBootTest(webEnvironment = WebEnvironment.RANDOM_PORT)
@@ -26,7 +25,7 @@ class ReservationDaoTest {
     @Test
     void saveReservation() {
         final List<Reservation> beforeSaving = reservationDao.findAll();
-        final ReservationRequest reservation = new ReservationRequest("레디", "2024-02-03", "15:00");
+        final Reservation reservation = Reservation.create("레디", "2024-02-03", "15:00");
         reservationDao.save(reservation);
         final List<Reservation> afterSaving = reservationDao.findAll();
 
@@ -39,7 +38,7 @@ class ReservationDaoTest {
     @Test
     void removeReservation() {
         final List<Reservation> beforeSaving = reservationDao.findAll();
-        final ReservationRequest reservation = new ReservationRequest("레디", "2024-02-03", "15:00");
+        final Reservation reservation = Reservation.create("레디", "2024-02-03", "15:00");
         reservationDao.save(reservation);
         final List<Reservation> afterSaving = reservationDao.findAll();
         reservationDao.remove(1L);
@@ -55,17 +54,17 @@ class ReservationDaoTest {
     @Test
     void findById() {
         //given
-        final ReservationRequest reservation1 = new ReservationRequest("레디", "2024-02-03", "12:00");
-        final ReservationRequest reservation2 = new ReservationRequest("감자", "2024-02-03", "13:00");
-        final ReservationRequest reservation3 = new ReservationRequest("오리", "2024-02-03", "14:00");
+        final Reservation reservation1 = Reservation.create("레디", "2024-02-03", "12:00");
+        final Reservation reservation2 = Reservation.create("감자", "2024-02-03", "13:00");
+        final Reservation reservation3 = Reservation.create("오리", "2024-02-03", "14:00");
 
-        final Reservation expected1 = reservation1.toReservation(1L);
-        final Reservation expected2 = reservation2.toReservation(2L);
-        final Reservation expected3 = reservation3.toReservation(3L);
+        final Reservation expected1 = reservation1.toEntity(1L);
+        final Reservation expected2 = reservation2.toEntity(2L);
+        final Reservation expected3 = reservation3.toEntity(3L);
 
-        final List<ReservationRequest> reservations = List.of(reservation1, reservation2, reservation3);
+        final List<Reservation> reservations = List.of(reservation1, reservation2, reservation3);
 
-        for (final ReservationRequest reservation : reservations) {
+        for (final Reservation reservation : reservations) {
             reservationDao.save(reservation);
         }
 
@@ -86,19 +85,19 @@ class ReservationDaoTest {
     @Test
     void findAll() {
         //given
-        final ReservationRequest reservation1 = new ReservationRequest("레디", "2024-02-03", "12:00");
-        final ReservationRequest reservation2 = new ReservationRequest("감자", "2024-02-03", "13:00");
-        final ReservationRequest reservation3 = new ReservationRequest("오리", "2024-02-03", "14:00");
+        final Reservation reservation1 = Reservation.create("레디", "2024-02-03", "12:00");
+        final Reservation reservation2 = Reservation.create("감자", "2024-02-03", "13:00");
+        final Reservation reservation3 = Reservation.create("오리", "2024-02-03", "14:00");
 
-        final List<ReservationRequest> reservations = List.of(reservation1, reservation2, reservation3);
+        final List<Reservation> reservations = List.of(reservation1, reservation2, reservation3);
 
-        for (final ReservationRequest reservation : reservations) {
+        for (final Reservation reservation : reservations) {
             reservationDao.save(reservation);
         }
 
         final List<Reservation> expected = new ArrayList<>();
         for (long i = 1; i <= 3; i++) {
-            expected.add(reservations.get((int) (i - 1)).toReservation(i));
+            expected.add(reservations.get((int) (i - 1)).toEntity(i));
         }
 
         //when

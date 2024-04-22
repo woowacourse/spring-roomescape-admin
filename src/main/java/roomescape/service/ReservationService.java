@@ -4,6 +4,7 @@ import java.util.List;
 import java.util.Optional;
 import org.springframework.stereotype.Service;
 import roomescape.dto.ReservationRequest;
+import roomescape.dto.ReservationResponse;
 import roomescape.model.Reservation;
 import roomescape.repository.ReservationDao;
 
@@ -16,8 +17,10 @@ public class ReservationService {
         this.reservationDao = reservationDao;
     }
 
-    public long save(final ReservationRequest reservationRequest) {
-        return reservationDao.save(reservationRequest);
+    public ReservationResponse save(final ReservationRequest request) {
+        final Reservation created = Reservation.create(request.name(), request.date(), request.time());
+        final Reservation saved = reservationDao.save(created);
+        return ReservationResponse.from(saved);
     }
 
     public List<Reservation> findAll() {

@@ -1,6 +1,8 @@
 package roomescape.repository;
 
+import java.sql.Date;
 import java.sql.PreparedStatement;
+import java.sql.Time;
 import java.util.List;
 import java.util.Objects;
 import java.util.Optional;
@@ -10,7 +12,6 @@ import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.support.GeneratedKeyHolder;
 import org.springframework.jdbc.support.KeyHolder;
 import org.springframework.stereotype.Repository;
-import roomescape.dto.ReservationRequest;
 import roomescape.model.Reservation;
 
 @Repository
@@ -22,19 +23,20 @@ public class ReservationDao {
         this.jdbcTemplate = new JdbcTemplate(dataSource);
     }
 
-    public long save(final ReservationRequest reservation) {
+    public Reservation save(final Reservation reservation) {
         final String sql = "INSERT INTO reservation (name, date, time) VALUES (?, ?, ?)";
         final KeyHolder keyHolder = new GeneratedKeyHolder();
 
         jdbcTemplate.update(connection -> {
-            final PreparedStatement preparedStatement = connection.prepareStatement(
-                    sql, new String[]{"id"});
-            preparedStatement.setString(1, reservation.name());
-            preparedStatement.setString(2, reservation.date());
-            preparedStatement.setString(3, reservation.time());
+            final PreparedStatement preparedStatement = connection.prepareStatement(sql, new String[]{"id"});
+            preparedStatement.setString(1, reservation.getName());
+            preparedStatement.setDate(2, Date.valueOf(reservation.getDate()));
+            preparedStatement.setTime(3, Time.valueOf(reservation.getTime()));
             return preparedStatement;
         }, keyHolder);
-        return Objects.requireNonNull(keyHolder.getKey()).longValue();
+
+        final long id = Objects.requireNonNull(keyHolder.getKey()).longValue();
+        return new Reservation(id, reservation.getName(), reservation.getDate(), reservation.getTime());
     }
 
     public Optional<Reservation> findById(final Long id) {

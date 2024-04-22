@@ -22,6 +22,14 @@ public class Reservation {
         this(id, name, LocalDate.parse(date), LocalTime.parse(time));
     }
 
+    public static Reservation create(final String name, final String date, final String time) {
+        return new Reservation(null, name, date, time);
+    }
+
+    public Reservation toEntity(final long id) {
+        return new Reservation(id, name, date, time);
+    }
+
     public Long getId() {
         return id;
     }

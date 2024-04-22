@@ -36,11 +36,9 @@ public class ReservationController {
 
     @PostMapping
     public ResponseEntity<ReservationResponse> save(@RequestBody final ReservationRequest reservationRequest) {
-        final long id = reservationService.save(reservationRequest);
-        final Reservation reservation = reservationRequest.toReservation(id);
-        final ReservationResponse reservationResponse = ReservationResponse.from(reservation);
+        final ReservationResponse reservationResponse = reservationService.save(reservationRequest);
         final URI uri = UriComponentsBuilder.fromPath("/reservations/{id}")
-                .buildAndExpand(id)
+                .buildAndExpand(reservationResponse.id())
                 .toUri();
         return ResponseEntity.created(uri)
                 .body(reservationResponse);

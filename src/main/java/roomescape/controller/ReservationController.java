@@ -7,6 +7,7 @@ import roomescape.controller.dto.ReservationCreateRequest;
 import roomescape.domain.Reservation;
 import roomescape.service.ReservationService;
 
+import java.net.URI;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
@@ -28,20 +29,24 @@ public class ReservationController {
     @GetMapping
     public ResponseEntity<List<Reservation>> readReservations() {
         List<Reservation> data = reservationService.readReservations();
-        System.out.println("data" + data);
+        return ResponseEntity.ok(data);
+    }
+
+    @GetMapping("/{id}")
+    public ResponseEntity<Reservation> readReservation(@PathVariable Long id) {
+        Reservation data = reservationService.readReservation(id);
         return ResponseEntity.ok(data);
     }
 
     @PostMapping
     public ResponseEntity<Reservation> createReservation(@RequestBody ReservationCreateRequest request) {
-        Reservation reservation = request.toReservation(atomicInteger.getAndIncrement());
-        reservations.add(reservation);
-        return ResponseEntity.ok(reservation);
+        Reservation data = reservationService.createReservation(request);
+        return ResponseEntity.created(URI.create("/reservations/" + data.getId())).build();
     }
 
     @DeleteMapping("/{id}")
-    public ResponseEntity<Void> deleteReservation(@PathVariable int id) {
-        reservations.removeIf((reservation) -> reservation.getId() == id);
-        return ResponseEntity.ok().build();
+    public ResponseEntity<Void> deleteReservation(@PathVariable Long id) {
+        reservationService.deleteReservation(id);
+        return ResponseEntity.noContent().build();
     }
 }

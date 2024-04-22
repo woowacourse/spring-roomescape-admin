@@ -1,5 +1,6 @@
 package roomescape.repository;
 
+import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -18,7 +19,7 @@ import java.util.List;
 import static org.assertj.core.api.Assertions.assertThat;
 
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
-@DirtiesContext(classMode = DirtiesContext.ClassMode.BEFORE_EACH_TEST_METHOD)
+@DirtiesContext(classMode = DirtiesContext.ClassMode.BEFORE_CLASS)
 class ReservationRepositoryTest {
 
     @Autowired
@@ -32,42 +33,50 @@ class ReservationRepositoryTest {
         setUpReservations();
     }
 
+    @AfterEach
+    void tearDown() {
+        jdbcTemplate.update("DELETE FROM reservation");
+        jdbcTemplate.update("DELETE FROM reservation_time");
+    }
+
     void setUpReservationTimes() {
-        String sql = "INSERT INTO reservation_time (start_at) VALUES (?)";
+        String sql = "INSERT INTO reservation_time (id, start_at) VALUES (?, ?)";
         List<ReservationTime> times = List.of(
-                new ReservationTime(null, LocalTime.of(10, 15)),
-                new ReservationTime(null, LocalTime.of(11, 20)),
-                new ReservationTime(null, LocalTime.of(12, 25))
+                new ReservationTime(11L, LocalTime.of(10, 15)),
+                new ReservationTime(12L, LocalTime.of(11, 20)),
+                new ReservationTime(13L, LocalTime.of(12, 25))
         );
         List<Object[]> batchArgs = times.stream().map(time -> new Object[]{
+                time.id(),
                 time.startAt().format(DateTimeFormatter.ISO_LOCAL_TIME)
         }).toList();
         jdbcTemplate.batchUpdate(sql, batchArgs);
     }
 
     void setUpReservations() {
-        String sql = "INSERT INTO reservation(name, date, time_id) VALUES (?, ?, ?)";
+        String sql = "INSERT INTO reservation(id, name, date, time_id) VALUES (?, ?, ?, ?)";
         List<Reservation> reservations = List.of(
                 new Reservation(
-                        null,
+                        11L,
                         "seyang",
                         LocalDate.of(2024, 1, 20),
-                        new ReservationTime(1L, null)
+                        new ReservationTime(11L, null)
                 ),
                 new Reservation(
-                        null,
+                        12L,
                         "hana",
                         LocalDate.of(2024, 2, 19),
-                        new ReservationTime(2L, null)
+                        new ReservationTime(12L, null)
                 ),
                 new Reservation(
-                        null,
+                        13L,
                         "mura",
                         LocalDate.of(2024, 3, 18),
-                        new ReservationTime(3L, null)
+                        new ReservationTime(13L, null)
                 )
         );
         final List<Object[]> batchArgs = reservations.stream().map(reservation -> new Object[]{
+                reservation.id(),
                 reservation.name(),
                 reservation.date().format(DateTimeFormatter.ISO_LOCAL_DATE),
                 reservation.time().id()
@@ -79,44 +88,50 @@ class ReservationRepositoryTest {
     @DisplayName("모든 예약 목록을 조회한다.")
     void findAll() {
         // given
-        final List<Reservation> reservations = reservationRepository.findAll();
-
-        // when & then
-        assertThat(reservations).containsExactlyInAnyOrder(
+        final List<Reservation> expected = List.of(
                 new Reservation(
-                        1L,
+                        11L,
                         "seyang",
                         LocalDate.of(2024, 1, 20),
-                        new ReservationTime(1L, LocalTime.of(10, 15))
+                        new ReservationTime(11L, LocalTime.of(10, 15))
                 ),
                 new Reservation(
-                        2L,
+                        12L,
                         "hana",
                         LocalDate.of(2024, 2, 19),
-                        new ReservationTime(2L, LocalTime.of(11, 20))
+                        new ReservationTime(12L, LocalTime.of(11, 20))
                 ),
                 new Reservation(
-                        3L,
+                        13L,
                         "mura",
                         LocalDate.of(2024, 3, 18),
-                        new ReservationTime(3L, LocalTime.of(12, 25))
+                        new ReservationTime(13L, LocalTime.of(12, 25))
                 )
         );
+
+        // when
+        final List<Reservation> reservations = reservationRepository.findAll();
+
+        // then
+        assertThat(reservations).containsExactlyInAnyOrderElementsOf(expected);
     }
 
     @Test
     @DisplayName("특정 id를 통해 예약을 조회한다.")
     void findById() {
         // given
-        final Reservation reservation = reservationRepository.findById(2L);
-
-        // when & then
-        assertThat(reservation).isEqualTo(new Reservation(
-                2L,
+        final Reservation expected = new Reservation(
+                12L,
                 "hana",
                 LocalDate.of(2024, 2, 19),
-                new ReservationTime(2L, LocalTime.of(11, 20))
-        ));
+                new ReservationTime(12L, LocalTime.of(11, 20))
+        );
+
+        // when
+        final Reservation reservation = reservationRepository.findById(12L);
+
+        // then
+        assertThat(reservation).isEqualTo(expected);
     }
 
     @Test
@@ -127,18 +142,18 @@ class ReservationRepositoryTest {
                 null,
                 "gana",
                 LocalDate.of(2024, 3, 1),
-                new ReservationTime(2L, LocalTime.of(12, 25))
+                new ReservationTime(12L, LocalTime.of(12, 25))
         ));
 
         // when & then
-        assertThat(reservation.id()).isEqualTo(4L);
+        assertThat(reservation.id()).isEqualTo(1L);
     }
 
     @Test
     @DisplayName("등록된 예약 번호로 삭제한다.")
     void deleteAssignedId() {
         // given
-        final int deleteCount = reservationRepository.deleteById(3L);
+        final int deleteCount = reservationRepository.deleteById(13L);
 
         // when & then
         assertThat(deleteCount).isNotZero();
@@ -148,7 +163,7 @@ class ReservationRepositoryTest {
     @DisplayName("없는 예약 번호로 삭제할 경우 아무런 영향이 없다.")
     void deleteNotExistId() {
         // given
-        final int deleteCount = reservationRepository.deleteById(4L);
+        final int deleteCount = reservationRepository.deleteById(14L);
 
         // when & then
         assertThat(deleteCount).isZero();

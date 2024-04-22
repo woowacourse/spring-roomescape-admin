@@ -2,6 +2,7 @@ package roomescape.dao;
 
 import roomescape.domain.Reservation;
 
+import java.util.Collections;
 import java.util.List;
 import java.util.concurrent.CopyOnWriteArrayList;
 import java.util.concurrent.atomic.AtomicLong;
@@ -12,7 +13,7 @@ public class FakeReservationRepository implements ReservationRepository {
 
     @Override
     public List<Reservation> findAll() {
-        return reservations;
+        return Collections.unmodifiableList(reservations);
     }
 
     @Override

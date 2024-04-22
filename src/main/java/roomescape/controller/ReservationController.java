@@ -2,29 +2,27 @@ package roomescape.controller;
 
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import roomescape.domain.Reservation;
 import roomescape.dto.ReservationResponse;
 import roomescape.dto.SaveReservationRequest;
+import roomescape.service.ReservationCreateService;
 import roomescape.service.ReservationFindService;
 
-import java.util.ArrayList;
+import java.net.URI;
 import java.util.List;
-import java.util.concurrent.atomic.AtomicLong;
 
 @Controller
 public class ReservationController {
 
-    private final AtomicLong index = new AtomicLong(1);
-    private final List<Reservation> reservations = new ArrayList<>();
     private final ReservationFindService reservationFindService;
+    private final ReservationCreateService reservationCreateService;
 
-    public ReservationController(ReservationFindService reservationFindService) {
+    public ReservationController(ReservationFindService reservationFindService, ReservationCreateService reservationCreateService) {
         this.reservationFindService = reservationFindService;
+        this.reservationCreateService = reservationCreateService;
     }
 
     @GetMapping("/admin/reservation")
@@ -40,20 +38,8 @@ public class ReservationController {
 
     @PostMapping("/reservations")
     public ResponseEntity<ReservationResponse> addReservation(@RequestBody SaveReservationRequest request) {
-        Reservation newReservation = SaveReservationRequest.toEntity(index.getAndIncrement(), request);
-        reservations.add(newReservation);
-        return ResponseEntity.ok(ReservationResponse.of(newReservation));
-    }
-
-    @DeleteMapping("/reservations/{id}")
-    public ResponseEntity<Void> deleteReservation(@PathVariable Long id) {
-        Reservation reservationToDeleted = reservations.stream()
-                .filter(reservation -> reservation.isSameReservation(id))
-                .findFirst()
-                .orElseThrow(() -> new IllegalArgumentException("존재하지 않는 예약 아이디 입니다."));
-
-        reservations.remove(reservationToDeleted);
-
-        return ResponseEntity.ok().build();
+        Reservation newReservation = reservationCreateService.createReservation(request);
+        return ResponseEntity.created(URI.create("/reservations/" + newReservation.getId()))
+                .body(ReservationResponse.of(newReservation));
     }
 }

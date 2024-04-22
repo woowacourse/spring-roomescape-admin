@@ -4,7 +4,7 @@ import roomescape.domain.Reservation;
 
 public record SaveReservationRequest(String name, String date, String time) {
 
-    public static Reservation toEntity(Long id, SaveReservationRequest request) {
-        return new Reservation(id, request.name(), request.date(), request.time());
+    public static Reservation toEntity(SaveReservationRequest request) {
+        return new Reservation(request.name(), request.date(), request.time());
     }
 }

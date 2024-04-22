@@ -17,27 +17,24 @@ import roomescape.entity.ReservationTime;
 public class ReservationTimeDao {
 
     private final JdbcTemplate jdbcTemplate;
+    private final RowMapper<ReservationTime> rowMapper;
 
     @Autowired
     public ReservationTimeDao(JdbcTemplate jdbcTemplate) {
         this.jdbcTemplate = jdbcTemplate;
+        this.rowMapper = (resultSet, rowNum) -> new ReservationTime(
+                resultSet.getLong("id"),
+                resultSet.getTime("start_at").toLocalTime()
+        );
     }
 
     public List<ReservationTime> findAllReservationTimes() {
         String sql = "SELECT id, start_at FROM reservation_time";
-        RowMapper<ReservationTime> rowMapper = (resultSet, rowNum) -> new ReservationTime(
-                resultSet.getLong("id"),
-                resultSet.getTime("start_at").toLocalTime()
-        );
         return jdbcTemplate.query(sql, rowMapper);
     }
 
     public ReservationTime findById(long id) {
         String sql = "SELECT id, start_at FROM reservation_time WHERE id = ?";
-        RowMapper<ReservationTime> rowMapper = (resultSet, rowNum) -> new ReservationTime(
-                resultSet.getInt("id"),
-                resultSet.getTime("start_at").toLocalTime()
-        );
         return jdbcTemplate.queryForObject(sql, rowMapper, id);
     }
 

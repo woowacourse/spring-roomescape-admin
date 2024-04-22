@@ -10,7 +10,8 @@ public class Reservation {
     private LocalDate date;
     private LocalTime time;
 
-    public Reservation() {}
+    public Reservation() {
+    }
 
     public Reservation(long id, String name, LocalDate date, LocalTime time) {
         this.id = id;

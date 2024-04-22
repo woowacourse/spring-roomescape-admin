@@ -11,10 +11,11 @@ import roomescape.controller.dto.ReservationRequest;
 import roomescape.repository.ReservationStore;
 
 @RestController
+@RequestMapping("/reservations")
 public class ReservationController {
     private final ReservationStore reservationStore = new ReservationStore();
 
-    @PostMapping("/reservations")
+    @PostMapping
     public ResponseEntity<ReservationResponse> createReservation(@RequestBody ReservationRequest reservationRequest) {
         Reservation newReservation = new Reservation(reservationRequest.name(), reservationRequest.date(), reservationRequest.time());
 
@@ -23,7 +24,7 @@ public class ReservationController {
         return ResponseEntity.ok(new ReservationResponse(id, newReservation.getName(), newReservation.getDate(), newReservation.getTime()));
     }
 
-    @GetMapping("/reservations")
+    @GetMapping
     @ResponseStatus(HttpStatus.OK)
     public List<ReservationResponse> readReservations() {
 
@@ -40,7 +41,7 @@ public class ReservationController {
                 .toList();
     }
 
-    @DeleteMapping("/reservations/{id}")
+    @DeleteMapping("/{id}")
     public ResponseEntity<Void> deleteReservation(@PathVariable Long id) {
         reservationStore.delete(id);
 

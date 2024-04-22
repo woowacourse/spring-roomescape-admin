@@ -35,8 +35,7 @@ public class H2ReservationRepositoryImpl implements ReservationRepository {
                 resultSet.getDate("date").toLocalDate(),
                 new ReservationTime(
                         resultSet.getLong("time_id"),
-                        resultSet.getTime("time_value").toLocalTime())
-        ));
+                        resultSet.getTime("time_value").toLocalTime())));
     }
 
     @Override
@@ -51,8 +50,7 @@ public class H2ReservationRepositoryImpl implements ReservationRepository {
                 reservationId,
                 reservation.getName(),
                 reservation.getDate(),
-                reservation.getTime()
-        );
+                reservation.getTime());
     }
 
     @Override

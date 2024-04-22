@@ -1,31 +1,34 @@
 package roomescape.service;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import roomescape.dao.ReservationDao;
 import roomescape.domain.reservation.Reservation;
 import roomescape.domain.reservation.Reservations;
 import roomescape.dto.ReservationRequestDto;
 import roomescape.dto.ReservationResponseDto;
 
-import java.util.Set;
+import java.util.List;
 import java.util.concurrent.atomic.AtomicLong;
 
 @Service
 public class ReservationService {
-
+    @Autowired
+    private final ReservationDao reservationDao;
     private final Reservations reservations;
     private final AtomicLong index = new AtomicLong(1);
 
-
-    public ReservationService(Reservations reservations) {
+    public ReservationService(Reservations reservations, ReservationDao reservationDao) {
         this.reservations = reservations;
+        this.reservationDao = reservationDao;
     }
 
     public ReservationService() {
-        this(new Reservations());
+        this(new Reservations(), new ReservationDao());
     }
 
-    public Set<Reservation> getAllReservations() {
-        return reservations.getReservations();
+    public List<Reservation> getAllReservations() {
+        return reservationDao.findAllReservation();
     }
 
     public ReservationResponseDto reserve(ReservationRequestDto reservationRequestDto) {

@@ -14,15 +14,15 @@ import roomescape.dto.ReservationRequest;
 
 
 @Repository
-public class ReservationRepository {
+public class ReservationDao {
 
     @Autowired
     JdbcTemplate jdbcTemplate;
 
     @Autowired
-    ReservationTimeRepository reservationTimeRepository;
+    ReservationTimeDao reservationTimeDao;
 
-    public ReservationRepository(DataSource dataSource) {
+    public ReservationDao(DataSource dataSource) {
         this.jdbcTemplate = new JdbcTemplate(dataSource);
     }
 
@@ -56,7 +56,7 @@ public class ReservationRepository {
                         resultSet.getLong("id"),
                         resultSet.getString("name"),
                         LocalDate.parse(resultSet.getString("date")),
-                        reservationTimeRepository.findById(resultSet.getLong("time_id"))
+                        reservationTimeDao.findById(resultSet.getLong("time_id"))
                 ));
     }
 
@@ -66,7 +66,7 @@ public class ReservationRepository {
                         resultSet.getLong("id"),
                         resultSet.getString("name"),
                         LocalDate.parse(resultSet.getString("date")),
-                        reservationTimeRepository.findById(resultSet.getLong("time_id"))
+                        reservationTimeDao.findById(resultSet.getLong("time_id"))
                 ), id);
     }
 

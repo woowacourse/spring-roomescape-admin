@@ -30,4 +30,8 @@ public class Reservation {
     public ReservationTime getTime() {
         return time;
     }
+
+    public long getReservationTimeId() {
+        return time.getId();
+    }
 }

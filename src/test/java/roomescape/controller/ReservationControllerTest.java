@@ -33,11 +33,19 @@ class ReservationControllerTest {
     @DisplayName("예약 추가 테스트")
     @Test
     void createReservation() {
-        RestAssured.given().log().all()
+        Response response = RestAssured.given().log().all()
                 .contentType(ContentType.JSON)
                 .body(new ReservationRequest("브라운", "2023-08-05", "15:40"))
                 .when().post("/reservations")
-                .then().log().all().assertThat().statusCode(HttpStatus.CREATED.value());
+                .then().log().all().extract().response();
+
+        assertAll(
+                () -> assertThat(response.getStatusCode()).isEqualTo(HttpStatus.OK.value()),
+                () -> assertThat(response.jsonPath().getLong("id")).isNotNull(),
+                () -> assertThat(response.jsonPath().getString("name")).isEqualTo("브라운"),
+                () -> assertThat(response.jsonPath().getString("date")).isEqualTo("2023-08-05"),
+                () -> assertThat(response.jsonPath().getString("time")).isEqualTo("15:40")
+        );
     }
 
     @DisplayName("모든 예약 내역 조회 테스트")

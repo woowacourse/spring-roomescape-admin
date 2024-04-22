@@ -25,7 +25,7 @@ class ReservationControllerTest {
     JdbcTemplate jdbcTemplate;
 
     @Test
-    void 오단계() {
+    void should_get_reservations() {
         jdbcTemplate.update("INSERT INTO reservation (name, date, time) VALUES (?, ?, ?)",
                 "브라운", "2023-08-05", "15:40");
 

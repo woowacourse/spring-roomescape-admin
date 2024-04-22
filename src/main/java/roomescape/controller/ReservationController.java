@@ -11,9 +11,9 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
-import roomescape.ReservationTime;
 import roomescape.dto.ReservationRequest;
 import roomescape.dto.ReservationResponse;
+import roomescape.dto.ReservationTimeResponse;
 
 @RestController
 public class ReservationController {
@@ -39,7 +39,7 @@ public class ReservationController {
         List<ReservationResponse> reservations = jdbcTemplate.query(sql,
                 (rs, rowNum) -> new ReservationResponse(rs.getLong("id"), rs.getString("name"),
                         rs.getDate("date").toLocalDate(),
-                        new ReservationTime(LocalTime.parse(jdbcTemplate.queryForObject(sql1, String.class, rs.getInt("time_id"))))));
+                        new ReservationTimeResponse(rs.getLong("id"), LocalTime.parse(jdbcTemplate.queryForObject(sql1, String.class, rs.getInt("time_id"))))));
         return ResponseEntity.ok(reservations);
     }
 

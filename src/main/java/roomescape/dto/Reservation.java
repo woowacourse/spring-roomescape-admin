@@ -2,6 +2,7 @@ package roomescape.dto;
 
 import java.time.LocalDate;
 import java.time.LocalTime;
+import java.util.Objects;
 
 public class Reservation {
 
@@ -42,5 +43,19 @@ public class Reservation {
 
     public LocalTime getTime() {
         return time;
+    }
+
+    @Override
+    public boolean equals(Object obj) {
+        if (!(obj instanceof Reservation)) {
+            return false;
+        }
+        Reservation other = (Reservation) obj;
+        return id.equals(other.getId());
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(id);
     }
 }

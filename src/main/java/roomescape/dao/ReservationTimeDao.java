@@ -20,6 +20,18 @@ public class ReservationTimeDao {
     }
 
 
+    public ReservationTime findById(Long timeId) {
+        String sql = "select id, start_at from reservation_time where id = ?";
+        return jdbcTemplate.queryForObject(
+                sql,
+                (resultSet, rowNum) -> {
+                    ReservationTime reservationTime = new ReservationTime(
+                            resultSet.getLong("id"),
+                            resultSet.getTime("start_at").toLocalTime());
+                    return reservationTime;
+                }, timeId);
+    }
+
     public List<ReservationTime> findAll() {
         String sql = "select id, start_at from reservation_time";
         return jdbcTemplate.query(

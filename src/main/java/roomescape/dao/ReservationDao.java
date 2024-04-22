@@ -11,6 +11,7 @@ import org.springframework.jdbc.support.GeneratedKeyHolder;
 import org.springframework.jdbc.support.KeyHolder;
 import org.springframework.stereotype.Repository;
 import roomescape.domain.Reservation;
+import roomescape.domain.ReservationTime;
 import roomescape.dto.ReservationDto;
 
 @Repository
@@ -23,25 +24,38 @@ public class ReservationDao {
     }
 
     public List<Reservation> findAll() {
-        String sql = "select id, name, date, time from reservation";
+        String sql = """
+                select  
+                    r.id as reservation_id,  
+                    r.name, 
+                    r.date, 
+                    t.id as time_id, 
+                    t.start_at as time_value 
+                from reservation as r 
+                inner join reservation_time as t 
+                on r.time_id = t.id
+                """;
         return jdbcTemplate.query(
                 sql,
                 (resultSet, rowNum) -> {
+                    ReservationTime reservationTime = new ReservationTime(
+                            resultSet.getLong("time_id"),
+                            resultSet.getTime("time_value").toLocalTime());
                     Reservation reservation = new Reservation.Builder()
                             .id(resultSet.getLong("id"))
                             .name(resultSet.getString("name"))
                             .date(resultSet.getDate("date").toLocalDate())
-                            .time(resultSet.getTime("time").toLocalTime())
+                            .time(reservationTime)
                             .build();
                     return reservation;
                 });
     }
 
-    public Reservation save(ReservationDto reservationDto) {
-        String name = reservationDto.name();;
+    public Long save(ReservationDto reservationDto) {
+        String name = reservationDto.name();
         LocalDate date = reservationDto.date();
-        LocalTime time = reservationDto.time();
-        String sql = "insert into reservation (name, date, time) values (?, ?, ?)";
+        Long timeId = reservationDto.timeId();
+        String sql = "insert into reservation (name, date, time_id) values (?, ?, ?)";
         KeyHolder keyHolder = new GeneratedKeyHolder();
 
         jdbcTemplate.update(connection -> {
@@ -50,18 +64,12 @@ public class ReservationDao {
                     new String[]{"id"});
             ps.setString(1, name);
             ps.setDate(2, Date.valueOf(date));
-            ps.setTime(3, Time.valueOf(time));
+            ps.setLong(3, timeId);
             return ps;
         }, keyHolder);
 
-        Long id = keyHolder.getKey().longValue();
-
-        return new Reservation.Builder()
-                .id(id)
-                .name(name)
-                .date(date)
-                .time(time)
-                .build();
+        return keyHolder.getKey()
+                .longValue();
     }
 
     public void delete(Long id) {

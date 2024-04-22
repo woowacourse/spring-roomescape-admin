@@ -136,4 +136,18 @@ public class ReservationControllerTest {
         Integer countAfterDelete = jdbcTemplate.queryForObject("SELECT count(1) from reservation", Integer.class);
         assertThat(countAfterDelete).isEqualTo(0);
     }
+
+    @DisplayName("db 테이블에 예약 시간을 추가할 수 있습니다.")
+    @Test
+    void should_add_reservation_time_to_db() {
+        Map<String, String> params = new HashMap<>();
+        params.put("startAt", "10:00");
+
+        RestAssured.given().log().all()
+                .contentType(ContentType.JSON)
+                .body(params)
+                .when().post("/times")
+                .then().log().all()
+                .statusCode(200);
+    }
 }

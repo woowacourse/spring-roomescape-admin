@@ -18,7 +18,9 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
 import roomescape.domain.Reservation;
-import roomescape.domain.ReservationAddRequest;
+import roomescape.domain.ReservationTime;
+import roomescape.dto.ReservationAddRequest;
+import roomescape.dto.ReservationTimeAddRequest;
 
 @RestController
 public class ReservationController {
@@ -76,5 +78,31 @@ public class ReservationController {
             return ResponseEntity.noContent().build();
         }
         return ResponseEntity.notFound().build();
+    }
+
+    @PostMapping("/times")
+    public ResponseEntity<ReservationTime> addReservationTime(
+            @RequestBody ReservationTimeAddRequest reservationTimeAddRequest) {
+        KeyHolder keyHolder = new GeneratedKeyHolder();
+        jdbcTemplate.update(connection -> {
+            PreparedStatement ps = connection.prepareStatement(
+                    "insert into reservation_time (start_at) values (?)",
+                    new String[]{"id"}
+            );
+            ps.setString(1, reservationTimeAddRequest.getStartAt().toString());
+            return ps;
+        }, keyHolder);
+        Long id = keyHolder.getKey().longValue();
+        String sql = "select * from reservation_time where id = ?";
+        ReservationTime reservationTime = jdbcTemplate.queryForObject(sql, new RowMapper<ReservationTime>() {
+            @Override
+            public ReservationTime mapRow(ResultSet rs, int rowNum) throws SQLException {
+                return new ReservationTime(
+                        rs.getLong("id"),
+                        rs.getTime("start_at").toLocalTime()
+                );
+            }
+        }, id);
+        return ResponseEntity.ok(reservationTime);
     }
 }

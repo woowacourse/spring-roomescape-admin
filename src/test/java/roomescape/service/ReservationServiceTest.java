@@ -20,11 +20,11 @@ import roomescape.util.CustomDateTimeFormatter;
 
 class ReservationServiceTest {
 
-    private static final ReservationTime DEFAULT_RESERVATION_TIME = new ReservationTime(1l, LocalTime.of(10, 0));
+    private static final ReservationTime DEFAULT_RESERVATION_TIME = new ReservationTime(1L, LocalTime.of(10, 0));
     private static final ReservationCreateRequest DEFAULT_RESERVATION_REQUEST = new ReservationCreateRequest(
             "2024-11-26",
             "미르",
-            1l
+            1L
     );
     private final ReservationMemoryRepository reservationRepository = new ReservationMemoryRepository(
             new ArrayList<>(),

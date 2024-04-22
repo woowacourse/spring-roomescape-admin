@@ -15,7 +15,7 @@ import roomescape.controller.dto.TimeSlotCreationResponse;
 import roomescape.domain.TimeSlot;
 import roomescape.repository.TimeSlotRepository;
 
-class TimeSlotTest extends AcceptanceTest {
+class TimeSlotAcceptanceTest extends AcceptanceTest {
 
     @Autowired
     private TimeSlotRepository timeSlotRepository;

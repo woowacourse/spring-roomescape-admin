@@ -14,7 +14,7 @@ import roomescape.domain.TimeSlot;
 import roomescape.repository.ReservationRepository;
 import roomescape.repository.TimeSlotRepository;
 
-class ReservationTest extends AcceptanceTest {
+class ReservationAcceptanceTest extends AcceptanceTest {
 
     @Autowired
     private ReservationRepository reservationRepository;

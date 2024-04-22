@@ -9,7 +9,7 @@ public interface TimeSlotRepository {
 
     TimeSlot create(TimeSlot timeSlot);
 
-    List<TimeSlot> findAll();
+    List<TimeSlot> findAllOrderByTimeAscending();
 
     Optional<TimeSlot> findById(Long id);
 

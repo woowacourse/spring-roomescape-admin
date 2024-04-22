@@ -65,7 +65,7 @@ class TimeSlotAcceptanceTest extends AcceptanceTest {
                 .then().log().all()
                 .statusCode(204);
 
-        List<TimeSlot> actual = timeSlotRepository.findAll();
+        List<TimeSlot> actual = timeSlotRepository.findAllOrderByTimeAscending();
         assertThat(actual).isEmpty();
     }
 }

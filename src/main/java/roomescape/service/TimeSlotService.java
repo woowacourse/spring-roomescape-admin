@@ -18,7 +18,7 @@ public class TimeSlotService {
     }
 
     public List<TimeSlotCreationResponse> getAllTimes() {
-        return timeSlotRepository.findAll()
+        return timeSlotRepository.findAllOrderByTimeAscending()
                 .stream()
                 .map(TimeSlotCreationResponse::from)
                 .toList();

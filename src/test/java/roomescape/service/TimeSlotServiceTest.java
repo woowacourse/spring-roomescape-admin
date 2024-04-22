@@ -3,6 +3,7 @@ package roomescape.service;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 
+import java.time.LocalTime;
 import java.util.List;
 import java.util.stream.Stream;
 import org.junit.jupiter.api.AfterEach;
@@ -30,16 +31,23 @@ class TimeSlotServiceTest {
     }
 
     @Test
-    @DisplayName("모든 시간을 조회한다.")
+    @DisplayName("모든 시간을 시간 순서대로 정렬하여 조회한다.")
     void getAllTimesTest() {
         // given
-        Stream.of("13:00", "14:00", "15:00")
+        Stream.of("13:00", "15:00", "14:00")
                 .map(TimeSlot::new)
                 .forEach(timeSlotRepository::create);
         // when
-        List<TimeSlotCreationResponse> actual = timeSlotService.getAllTimes();
+        List<LocalTime> actual = timeSlotService.getAllTimes()
+                .stream()
+                .map(TimeSlotCreationResponse::startAt)
+                .toList();
         // then
-        assertThat(actual).hasSize(3);
+        assertThat(actual).contains(
+                LocalTime.parse("13:00"),
+                LocalTime.parse("14:00"),
+                LocalTime.parse("15:00")
+        );
     }
 
     @Test
@@ -72,7 +80,7 @@ class TimeSlotServiceTest {
         TimeSlot time = timeSlotRepository.create(new TimeSlot("13:00"));
         // when
         timeSlotService.removeTime(time.getId());
-        List<TimeSlot> actual = timeSlotRepository.findAll();
+        List<TimeSlot> actual = timeSlotRepository.findAllOrderByTimeAscending();
         // then
         assertThat(actual).isEmpty();
     }

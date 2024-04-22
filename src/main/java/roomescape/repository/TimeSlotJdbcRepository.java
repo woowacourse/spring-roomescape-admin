@@ -36,8 +36,8 @@ public class TimeSlotJdbcRepository implements TimeSlotRepository {
     }
 
     @Override
-    public List<TimeSlot> findAll() {
-        String sql = "select id, start_at from time_slot";
+    public List<TimeSlot> findAllOrderByTimeAscending() {
+        String sql = "select id, start_at from time_slot order by start_at asc";
         return jdbcTemplate.query(sql, TimeSlotRowMapper.getInstance());
     }
 

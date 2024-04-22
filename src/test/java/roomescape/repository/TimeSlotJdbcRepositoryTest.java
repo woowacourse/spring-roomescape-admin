@@ -43,25 +43,30 @@ class TimeSlotJdbcRepositoryTest {
     }
 
     @Test
-    @DisplayName("DB에 저장된 시간을 올바르게 불러온다.")
+    @DisplayName("DB에 저장된 시간을 시간이 증가하도록 모두 불러온다.")
     void findAllTest() {
         // given
-        jdbcInsert.execute(Map.of(
-                "start_at", LocalTime.parse("11:00")
-        ));
+        createTimeSlot("12:00");
+        createTimeSlot("08:00");
+        createTimeSlot("10:00");
         // when
-        List<TimeSlot> times = timeSlotRepository.findAll();
+        List<LocalTime> times = timeSlotRepository.findAllOrderByTimeAscending()
+                .stream()
+                .map(TimeSlot::getTime)
+                .toList();
         // then
-        assertThat(times).hasSize(1);
+        assertThat(times).containsExactly(
+                LocalTime.parse("08:00"),
+                LocalTime.parse("10:00"),
+                LocalTime.parse("12:00")
+        );
     }
 
     @Test
     @DisplayName("ID를 통해 시간을 불러온다.")
     void findByIdTest() {
         // given
-        long id = jdbcInsert.executeAndReturnKey(Map.of(
-                "start_at", LocalTime.parse("11:00")
-        )).longValue();
+        long id = createTimeSlot("11:00");
         // when
         Optional<TimeSlot> actual = timeSlotRepository.findById(id);
         // then
@@ -81,9 +86,7 @@ class TimeSlotJdbcRepositoryTest {
     @DisplayName("시간이 존재하는지 확인한다.")
     void existsByTimeTest() {
         // given
-        jdbcInsert.executeAndReturnKey(Map.of(
-                "start_at", LocalTime.parse("11:00")
-        ));
+        createTimeSlot("11:00");
         // when
         boolean actual = timeSlotRepository.existsByTime(LocalTime.parse("11:00"));
         // then
@@ -95,9 +98,7 @@ class TimeSlotJdbcRepositoryTest {
     @DisplayName("ID를 통해 시간을 삭제한다.")
     void deleteByIdTest() {
         // given
-        long id = jdbcInsert.executeAndReturnKey(Map.of(
-                "start_at", LocalTime.parse("11:00")
-        )).longValue();
+        long id = createTimeSlot("11:00");
         // when
         timeSlotRepository.deleteById(id);
         // then
@@ -107,5 +108,11 @@ class TimeSlotJdbcRepositoryTest {
     private int databaseRowCount() {
         String sql = "select count(*) from time_slot";
         return jdbcTemplate.queryForObject(sql, Integer.class);
+    }
+
+    private long createTimeSlot(String time) {
+        return jdbcInsert.executeAndReturnKey(Map.of(
+                "start_at", LocalTime.parse(time)
+        )).longValue();
     }
 }

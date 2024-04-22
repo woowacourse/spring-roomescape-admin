@@ -4,6 +4,7 @@ import java.net.URI;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.atomic.AtomicLong;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -17,37 +18,26 @@ import roomescape.dao.ReservationTimeDao;
 import roomescape.domain.ReservationTime;
 import roomescape.dto.ReservationDto;
 import roomescape.domain.Reservation;
+import roomescape.service.ReservationService;
 
 @RestController
 public class ReservationController {
-    private final ReservationDao reservationDao;
-    private final ReservationTimeDao reservationTimeDao;
-
-    public ReservationController(ReservationDao reservationDao, ReservationTimeDao reservationTimeDao) {
-        this.reservationDao = reservationDao;
-        this.reservationTimeDao = reservationTimeDao;
-    }
+    @Autowired
+    private ReservationService reservationService;
 
     @GetMapping("/reservations")
     public ResponseEntity<List<Reservation>> reservations() {
-        return ResponseEntity.ok(reservationDao.findAll());
+        return ResponseEntity.ok(reservationService.findAll());
     }
 
     @PostMapping("/reservations")
     public ResponseEntity<Reservation> reserve(@RequestBody ReservationDto reservationDto) {
-        ReservationTime reservationTime = reservationTimeDao.findById(reservationDto.timeId());
-        Long id = reservationDao.save(reservationDto);
-        return ResponseEntity.ok(new Reservation.Builder()
-                .id(id)
-                .name(reservationDto.name())
-                .date(reservationDto.date())
-                .time(reservationTime)
-                .build());
+        return ResponseEntity.ok(reservationService.save(reservationDto));
     }
 
     @DeleteMapping("/reservations/{id}")
     public ResponseEntity<Void> delete(@PathVariable("id") long id) {
-        reservationDao.delete(id);
+        reservationService.delete(id);
         return ResponseEntity.ok().build();
     }
 }

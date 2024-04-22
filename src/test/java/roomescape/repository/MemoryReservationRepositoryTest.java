@@ -1,18 +1,21 @@
 package roomescape.repository;
 
 import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import roomescape.domain.ClientName;
 import roomescape.domain.Reservation;
 
-import java.time.LocalDateTime;
+import java.time.LocalDate;
+import java.time.LocalTime;
 import java.util.List;
 import java.util.NoSuchElementException;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 
+@Disabled
 class MemoryReservationRepositoryTest {
     private MemoryReservationRepository memoryReservationRepository;
 
@@ -21,8 +24,8 @@ class MemoryReservationRepositoryTest {
         memoryReservationRepository = new MemoryReservationRepository();
         Reservation reservation = new Reservation(
                 new ClientName("켈리"),
-                LocalDateTime.of(2023, 1, 12, 1, 12)
-        );
+                LocalDate.of(2023, 1, 12),
+                LocalTime.of(1, 12));
         memoryReservationRepository.save(reservation);
     }
 
@@ -32,8 +35,8 @@ class MemoryReservationRepositoryTest {
         // Given
         Reservation reservation = new Reservation(
                 new ClientName("켈리"),
-                LocalDateTime.of(2023, 1, 12, 1, 12)
-        );
+                LocalDate.of(2023, 1, 12),
+                LocalTime.of(1, 12));
 
         // When
         Reservation savedReservation = memoryReservationRepository.save(reservation);

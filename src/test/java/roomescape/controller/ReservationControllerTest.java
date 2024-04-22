@@ -1,11 +1,9 @@
-package roomescape;
+package roomescape.controller;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
 import io.restassured.RestAssured;
 import io.restassured.http.ContentType;
-import java.sql.Connection;
-import java.sql.SQLException;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -19,39 +17,10 @@ import roomescape.dto.ReservationResponse;
 
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.DEFINED_PORT)
 @DirtiesContext(classMode = DirtiesContext.ClassMode.BEFORE_EACH_TEST_METHOD)
-class MissionStepTest {
+class ReservationControllerTest {
 
     @Autowired
     private JdbcTemplate jdbcTemplate;
-
-    @DisplayName("관리자 메인 페이지 응답")
-    @Test
-    void moveToAdminPage() {
-        HttpRestTestTemplate.assertGetOk("/admin");
-    }
-
-    @DisplayName("예약 페이지 응답")
-    @Test
-    void moveToReservationPage() {
-        HttpRestTestTemplate.assertGetOk("/admin/reservation");
-        HttpRestTestTemplate.assertGetOk("/reservations", "size()", 0);
-    }
-
-    @DisplayName("Database 연결")
-    @Test
-    void connectDatabase() {
-        try (Connection connection = jdbcTemplate.getDataSource().getConnection()) {
-            assertThat(connection).isNotNull();
-            assertThat(connection.getCatalog()).isEqualTo("DATABASE");
-            assertThat(
-                connection.getMetaData()
-                    .getTables(null, null, "RESERVATION", null)
-                    .next()
-            ).isTrue();
-        } catch (SQLException e) {
-            throw new RuntimeException(e);
-        }
-    }
 
     @DisplayName("전체 예약 조회")
     @Test
@@ -65,9 +34,7 @@ class MissionStepTest {
             .statusCode(200).extract()
             .jsonPath().getList(".", ReservationResponse.class);
 
-        String selectSql = "select count(1) from reservation";
-        Integer count = jdbcTemplate.queryForObject(selectSql, Integer.class);
-
+        Integer count = countReservations();
         assertThat(reservations).hasSize(count);
     }
 
@@ -87,8 +54,7 @@ class MissionStepTest {
             .statusCode(201)
             .header("Location", "/reservations/1");
 
-        Integer count = jdbcTemplate.queryForObject("SELECT count(1) from reservation",
-            Integer.class);
+        Integer count = countReservations();
         assertThat(count).isEqualTo(1);
 
         RestAssured.given().log().all()
@@ -96,8 +62,12 @@ class MissionStepTest {
             .then().log().all()
             .statusCode(204);
 
-        Integer countAfterDelete = jdbcTemplate.queryForObject("SELECT count(1) from reservation",
-            Integer.class);
+        Integer countAfterDelete = countReservations();
         assertThat(countAfterDelete).isZero();
+    }
+
+    private Integer countReservations() {
+        String selectSql = "SELECT count(1) from reservation";
+        return jdbcTemplate.queryForObject(selectSql, Integer.class);
     }
 }

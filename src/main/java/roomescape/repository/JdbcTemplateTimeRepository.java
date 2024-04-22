@@ -8,7 +8,7 @@ import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;
 import org.springframework.jdbc.core.simple.SimpleJdbcInsert;
 import org.springframework.stereotype.Repository;
-import roomescape.domain.time.Time;
+import roomescape.domain.time.ReservationTime;
 
 @Repository
 public class JdbcTemplateTimeRepository implements TimeRepository {
@@ -23,16 +23,16 @@ public class JdbcTemplateTimeRepository implements TimeRepository {
     }
 
     @Override
-    public Time save(Time timeRequest) {
+    public ReservationTime save(ReservationTime reservationTimeRequest) {
         Map<String, Object> params = new HashMap<>();
-        params.put("start_at", timeRequest.getStartAt());
+        params.put("start_at", reservationTimeRequest.getStartAt());
         Long id = jdbcInsert.executeAndReturnKey(params).longValue();
-        return new Time(id, timeRequest.getStartAt());
+        return new ReservationTime(id, reservationTimeRequest.getStartAt());
     }
 
     @Override
-    public List<Time> findAll() {
-        RowMapper<Time> timeRowMapper = (resultSet, rowNum) -> new Time(
+    public List<ReservationTime> findAll() {
+        RowMapper<ReservationTime> timeRowMapper = (resultSet, rowNum) -> new ReservationTime(
                 resultSet.getLong("id"),
                 resultSet.getTime("start_at").toLocalTime()
         );

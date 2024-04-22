@@ -10,9 +10,8 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
-import roomescape.domain.time.Time;
-import roomescape.dto.TimeDto;
-import roomescape.dto.TimeRequest;
+import roomescape.domain.time.ReservationTime;
+import roomescape.dto.ReservationTimeRequest;
 import roomescape.repository.TimeRepository;
 
 @RestController
@@ -25,18 +24,18 @@ public class TimeController {
     }
 
     @GetMapping
-    public ResponseEntity<List<TimeDto>> findTimes() {
-        List<TimeDto> times = timeRepository.findAll().stream()
-                .map(TimeDto::from)
+    public ResponseEntity<List<roomescape.dto.ReservationTimeDto>> findTimes() {
+        List<roomescape.dto.ReservationTimeDto> times = timeRepository.findAll().stream()
+                .map(roomescape.dto.ReservationTimeDto::from)
                 .toList();
         return ResponseEntity.ok(times);
     }
 
     @PostMapping
-    public ResponseEntity<TimeDto> createTime(@RequestBody TimeRequest timeRequest) {
-        Time newTime = timeRepository.save(timeRequest.toTime());
-        return ResponseEntity.created(URI.create("/times/" + newTime.getId()))
-                .body(TimeDto.from(newTime));
+    public ResponseEntity<roomescape.dto.ReservationTimeDto> createTime(@RequestBody ReservationTimeRequest reservationTimeRequest) {
+        ReservationTime newReservationTime = timeRepository.save(reservationTimeRequest.toTime());
+        return ResponseEntity.created(URI.create("/times/" + newReservationTime.getId()))
+                .body(roomescape.dto.ReservationTimeDto.from(newReservationTime));
     }
 
     @DeleteMapping("/{id}")

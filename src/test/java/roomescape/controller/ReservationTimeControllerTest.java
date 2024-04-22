@@ -1,6 +1,5 @@
 package roomescape.controller;
 
-import static org.assertj.core.api.Assertions.as;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.DynamicTest.dynamicTest;
 
@@ -9,7 +8,6 @@ import io.restassured.http.ContentType;
 import java.time.LocalTime;
 import java.util.Collection;
 import java.util.List;
-import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.DynamicTest;
@@ -21,12 +19,12 @@ import org.springframework.boot.test.context.SpringBootTest.WebEnvironment;
 import org.springframework.boot.test.web.server.LocalServerPort;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.test.annotation.DirtiesContext;
-import roomescape.domain.time.Time;
-import roomescape.dto.TimeRequest;
+import roomescape.domain.time.ReservationTime;
+import roomescape.dto.ReservationTimeRequest;
 
 @SpringBootTest(webEnvironment = WebEnvironment.RANDOM_PORT)
 @DirtiesContext(classMode = DirtiesContext.ClassMode.BEFORE_EACH_TEST_METHOD)
-class TimeControllerTest {
+class ReservationTimeControllerTest {
 
     @Autowired
     private JdbcTemplate jdbcTemplate;
@@ -46,20 +44,20 @@ class TimeControllerTest {
                 "INSERT INTO reservation_time (start_at) VALUES (?)", "10:00"
         );
 
-        List<Time> times = RestAssured.given().log().all()
+        List<ReservationTime> reservationTimes = RestAssured.given().log().all()
                 .when().get("/times")
                 .then().log().all()
                 .statusCode(200).extract()
-                .jsonPath().getList(".", Time.class);
+                .jsonPath().getList(".", ReservationTime.class);
 
         Integer count = jdbcTemplate.queryForObject("SELECT COUNT(1) from reservation_time", Integer.class);
-        assertThat(times.size()).isEqualTo(count);
+        assertThat(reservationTimes.size()).isEqualTo(count);
     }
 
     @TestFactory
     @DisplayName("시간을 생성하고 삭제한다")
     Collection<DynamicTest> saveTimeAndDelete() {
-        TimeRequest params = new TimeRequest(LocalTime.of(10, 0));
+        ReservationTimeRequest params = new ReservationTimeRequest(LocalTime.of(10, 0));
 
         return List.of(
                 dynamicTest("시간을 생성한다.", () -> {

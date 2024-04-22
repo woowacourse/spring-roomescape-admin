@@ -2,7 +2,9 @@ package roomescape.dao;
 
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Component;
+import roomescape.controller.dto.CreateReservationRequest;
 import roomescape.domain.Reservation;
+import roomescape.domain.ReservationTime;
 
 import java.util.List;
 
@@ -15,21 +17,53 @@ public class ReservationDao {
         this.jdbcTemplate = jdbcTemplate;
     }
 
-    public int create(Reservation reservation) {
-        return jdbcTemplate.update("insert into reservation (name, date, time) values (?, ?, ?)",
-                reservation.getName(),
-                reservation.getDate(),
-                reservation.getTime());
+    public int create(CreateReservationRequest request) {
+        return jdbcTemplate.update("insert into reservation (name, date, time_id) values (?, ?, ?)",
+                request.name(),
+                request.date(),
+                request.timeId());
+    }
+
+    public Reservation read(int id) {
+        String sql = "SELECT r.id, r.name, r.date, t.id AS time_id, t.start_at " +
+                "FROM reservation r " +
+                "JOIN reservation_time t ON r.time_id = t.id " +
+                "WHERE r.id = ?";
+
+        return jdbcTemplate.queryForObject(sql,
+                (resultSet, rowNum) -> {
+                    Reservation reservation = new Reservation();
+                    reservation.setId(resultSet.getInt("id"));
+                    reservation.setName(resultSet.getString("name"));
+                    reservation.setDate(resultSet.getDate("date").toLocalDate());
+
+                    ReservationTime time = new ReservationTime();
+                    time.setId(resultSet.getInt("time_id"));
+                    time.setStartAt(resultSet.getTime("start_at").toLocalTime());
+                    reservation.setTime(time);
+
+                    return reservation;
+                }, id);
     }
 
     public List<Reservation> readAll() {
-        return jdbcTemplate.query("select * from reservation",
-                (resultSet, rowNum) -> new Reservation(
-                        resultSet.getInt("id"),
-                        resultSet.getString("name"),
-                        resultSet.getDate("date").toLocalDate(),
-                        resultSet.getTime("time").toLocalTime()
-                ));
+        return jdbcTemplate.query("SELECT r.id as reservation_id, r.name, r.date, t.id as time_id, t.start_at as time_value " +
+                        "FROM reservation as r " +
+                        "inner join reservation_time as t on r.time_id = t.id",
+                (resultSet, rowNum) -> {
+                    Reservation reservation = new Reservation();
+                    reservation.setId(resultSet.getInt("id"));
+                    reservation.setName(resultSet.getString("name"));
+                    reservation.setDate(resultSet.getDate("date").toLocalDate());
+
+                    ReservationTime time = new ReservationTime();
+                    time.setId(resultSet.getInt("time_id"));
+                    time.setStartAt(resultSet.getTime("start_at").toLocalTime());
+                    reservation.setTime(time);
+
+                    return reservation;
+                }
+        );
     }
 
     public void delete(int id) {

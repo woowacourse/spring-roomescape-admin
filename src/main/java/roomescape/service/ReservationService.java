@@ -1,7 +1,8 @@
 package roomescape.service;
 
 import org.springframework.stereotype.Service;
-import roomescape.controller.dto.ReservationCreateRequest;
+import roomescape.controller.dto.CreateReservationRequest;
+import roomescape.controller.dto.CreateReservationResponse;
 import roomescape.dao.ReservationDao;
 import roomescape.domain.Reservation;
 
@@ -20,8 +21,10 @@ public class ReservationService {
         return reservationDao.readAll();
     }
 
-    public int createReservation(ReservationCreateRequest request) {
-        return reservationDao.create(request.toReservation());
+    public CreateReservationResponse createReservation(CreateReservationRequest request) {
+        int createdId = reservationDao.create(request);
+        Reservation reservation = reservationDao.read(createdId);
+        return CreateReservationResponse.from(reservation);
     }
 
     public void delete(int id) {

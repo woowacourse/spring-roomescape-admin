@@ -2,6 +2,7 @@ package roomescape.dao;
 
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Component;
+import roomescape.controller.dto.CreateReservationTimeRequest;
 import roomescape.domain.ReservationTime;
 
 import java.util.List;
@@ -15,9 +16,9 @@ public class ReservationTimeDao {
         this.jdbcTemplate = jdbcTemplate;
     }
 
-    public int create(ReservationTime reservationTime) {
+    public int create(CreateReservationTimeRequest request) {
         return jdbcTemplate.update("insert into reservation_time (start_at) values (?)",
-                reservationTime.getStartAt());
+                request.startAt());
     }
 
     public List<ReservationTime> readAll() {
@@ -28,7 +29,7 @@ public class ReservationTimeDao {
                 ));
     }
 
-    public int delete(int id) {
-        return jdbcTemplate.update("delete from reservation_time where id = ?", id);
+    public void delete(int id) {
+        jdbcTemplate.update("delete from reservation_time where id = ?", id);
     }
 }

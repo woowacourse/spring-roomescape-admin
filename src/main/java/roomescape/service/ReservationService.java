@@ -12,8 +12,12 @@ import roomescape.entity.Reservation;
 @Service
 public class ReservationService {
 
+    private final ReservationDao reservationDao;
+
     @Autowired
-    private ReservationDao reservationDao;
+    public ReservationService(ReservationDao reservationDao) {
+        this.reservationDao = reservationDao;
+    }
 
     public List<ReservationResponseDto> findReservations() {
         List<Reservation> reservations = reservationDao.findAllReservations();

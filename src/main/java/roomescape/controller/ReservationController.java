@@ -16,6 +16,7 @@ import java.net.URI;
 import java.util.List;
 
 @RestController
+@RequestMapping("/reservations")
 public class ReservationController {
     private final JdbcTemplate jdbcTemplate;
     private final SimpleJdbcInsert simpleJdbcInsert;
@@ -27,7 +28,7 @@ public class ReservationController {
                 .usingGeneratedKeyColumns("id");
     }
 
-    @GetMapping("/reservations")
+    @GetMapping
     public List<ReservationResponseDto> reservations() {
         final String sql = "select id, name, date, time from reservation";
         final List<Reservation> reservationList = jdbcTemplate.query(sql, reservationRowMapper);
@@ -36,14 +37,14 @@ public class ReservationController {
                               .toList();
     }
 
-    @GetMapping("/reservations/{id}")
+    @GetMapping("/{id}")
     public ReservationResponseDto reservation(@PathVariable final Long id) {
         final String sql = "select id, name, date, time from reservation where id = ?";
         final Reservation reservation = jdbcTemplate.queryForObject(sql, reservationRowMapper, id);
         return ReservationResponseDto.from(reservation);
     }
 
-    @PostMapping("/reservations")
+    @PostMapping
     public ResponseEntity<ReservationResponseDto> create(@RequestBody final ReservationRequestDto request) {
         SqlParameterSource params = new MapSqlParameterSource()
                 .addValue("name", request.getName())
@@ -53,7 +54,7 @@ public class ReservationController {
         return ResponseEntity.created(URI.create("/reservations/" + id)).build();
     }
 
-    @DeleteMapping("/reservations/{id}")
+    @DeleteMapping("/{id}")
     public ResponseEntity<Void> delete(@PathVariable final Long id) {
         String sql = "delete from reservation where id = ?";
         int rowCount = jdbcTemplate.update(sql, Long.valueOf(id));

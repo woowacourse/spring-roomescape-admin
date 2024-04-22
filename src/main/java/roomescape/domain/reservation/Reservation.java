@@ -13,10 +13,10 @@ public class Reservation {
     private final ReservationTime time;
 
     public Reservation(Long id, Name name, ReservationDate date, ReservationTime time) {
-        this.id = Objects.requireNonNull(id);
-        this.name = Objects.requireNonNull(name);
-        this.date = Objects.requireNonNull(date);
-        this.time = Objects.requireNonNull(time);
+        this.id = id;
+        this.name = name;
+        this.date = date;
+        this.time = time;
     }
 
     public Reservation(Long id, ReservationRequestDto reservationRequestDto) {

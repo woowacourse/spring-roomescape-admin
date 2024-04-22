@@ -11,8 +11,11 @@ public class ReservationDate {
     }
 
     private void validateDate(LocalDate date) {
-        LocalDate nowDate = LocalDate.now();
-        if (nowDate.isAfter(date)) {
+        if(date ==null){
+            throw new IllegalArgumentException("date is null");
+        }
+
+        if (LocalDate.now().isAfter(date)) {
             throw new IllegalArgumentException("예약은 현재 이후 날짜만 가능합니다.");
         }
     }

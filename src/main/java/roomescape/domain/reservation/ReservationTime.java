@@ -22,6 +22,10 @@ public class ReservationTime {
     }
 
     private void validateTime(LocalTime time) {
+        if(time ==null){
+            throw new IllegalArgumentException("time is null");
+        }
+
         if (time.isBefore(START_TIME) || time.isAfter(END_TIME)) {
             throw new IllegalArgumentException("예약 가능 시간은 " + START_TIME + "부터 " + END_TIME + "까지입니다.");
         }

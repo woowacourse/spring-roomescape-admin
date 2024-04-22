@@ -8,6 +8,14 @@ function createBody(inputs) {
   };
 }
 
+function convertTime(time) {
+  const date = new Date('1970-01-01T' + time);
+  return date.toLocaleTimeString(
+      'ko-KR',
+      {hour: '2-digit', minute: '2-digit'}
+  );
+}
+
 document.addEventListener('DOMContentLoaded', () => {
   document.getElementById('add-button').addEventListener('click', addRow);
   requestRead()
@@ -21,11 +29,8 @@ function render(data) {
 
   data.forEach(item => {
     const row = tableBody.insertRow();
-
-    cellFields.forEach((field, index) => {
-      row.insertCell(index).textContent = item[field];
-    });
-
+    row.insertCell(0).textContent = item.id;
+    row.insertCell(1).textContent = convertTime(item.startAt);
     const actionCell = row.insertCell(row.cells.length);
     actionCell.appendChild(createActionButton('삭제', 'btn-danger', deleteRow));
   });

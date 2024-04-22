@@ -1,5 +1,6 @@
 package roomescape.domain.time.repository;
 
+import java.time.LocalTime;
 import java.util.List;
 import java.util.Optional;
 import org.springframework.dao.DataAccessException;
@@ -34,6 +35,13 @@ public class JdbcReservationTimeRepository implements ReservationTimeRepository 
                 .addValue("start_at", reservationTime.getStartAt());
         long id = jdbcInsert.executeAndReturnKey(params).longValue();
         return reservationTime.updateId(id);
+    }
+
+    @Override
+    public boolean existsByStartAt(LocalTime localTime) {
+        String sql = "select count(*) from reservation_time where start_at = ?";
+        Integer count = jdbcTemplate.queryForObject(sql, Integer.class, localTime);
+        return count != null && count > 0;
     }
 
     @Override

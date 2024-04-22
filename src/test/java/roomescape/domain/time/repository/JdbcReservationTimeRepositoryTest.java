@@ -35,6 +35,28 @@ class JdbcReservationTimeRepositoryTest {
     }
 
     @Test
+    void 예약_시간이_이미_존재하는지_true를_반환한다() {
+        LocalTime startAt = LocalTime.of(13, 0);
+        ReservationTime reservationTime = new ReservationTime(startAt);
+        reservationTimeRepository.save(reservationTime);
+
+        boolean exists = reservationTimeRepository.existsByStartAt(startAt);
+
+        assertThat(exists).isTrue();
+    }
+
+    @Test
+    void 예약_시간이_존재하지_않으면_false를_반환한다() {
+        LocalTime startAt = LocalTime.of(13, 0);
+        ReservationTime reservationTime = new ReservationTime(startAt);
+        reservationTimeRepository.save(reservationTime);
+
+        boolean exists = reservationTimeRepository.existsByStartAt(LocalTime.of(14, 0));
+
+        assertThat(exists).isFalse();
+    }
+
+    @Test
     void 모든_예약_시간을_조회한다() {
         ReservationTime reservationTime1 = new ReservationTime(LocalTime.of(13, 0));
         ReservationTime reservationTime2 = new ReservationTime(LocalTime.of(14, 0));

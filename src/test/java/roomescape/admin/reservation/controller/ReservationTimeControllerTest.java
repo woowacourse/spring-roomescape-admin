@@ -1,4 +1,4 @@
-package roomescape.admin.reservation.time;
+package roomescape.admin.reservation.controller;
 
 import static org.hamcrest.Matchers.is;
 

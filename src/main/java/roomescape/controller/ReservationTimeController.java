@@ -26,7 +26,7 @@ public class ReservationTimeController {
     }
 
     @GetMapping
-    public ResponseEntity<List<ReservationTimeResponseDto>> findAll() {
+    public ResponseEntity<List<ReservationTimeResponseDto>> readAll() {
         List<ReservationTime> allReservationTimes = reservationTimeDao.findAll();
         List<ReservationTimeResponseDto> results = allReservationTimes.stream()
                 .map(ReservationTimeResponseDto::from)

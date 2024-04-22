@@ -31,7 +31,7 @@ public class ReservationController {
     }
 
     @GetMapping
-    public ResponseEntity<List<ReservationResponseDto>> getAll() {
+    public ResponseEntity<List<ReservationResponseDto>> readAll() {
         List<Reservation> reservations = reservationDao.findAll();
         List<ReservationResponseDto> results = reservations.stream()
                 .map(reservation -> {

@@ -1,8 +1,12 @@
 package roomescape.repository;
 
+import java.sql.Date;
+import java.sql.PreparedStatement;
+import java.sql.Time;
 import java.util.List;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;
+import org.springframework.jdbc.support.GeneratedKeyHolder;
 import org.springframework.stereotype.Repository;
 import roomescape.Reservation;
 
@@ -16,9 +20,19 @@ public class ReservationRepositoryImpl implements ReservationRepository {
     }
 
     @Override
-    public void save(Reservation reservation) {
+    public long save(Reservation reservation) {
         final var sql = "INSERT INTO reservation(name, date, time) VALUES(?,?,?)";
-        jdbcTemplate.update(sql, reservation.getName(), reservation.getDate(), reservation.getTime());
+        final var keyHolder = new GeneratedKeyHolder();
+
+        jdbcTemplate.update(con -> {
+            PreparedStatement pstmt = con.prepareStatement(sql, new String[]{"id"});
+            pstmt.setString(1, reservation.getName());
+            pstmt.setDate(2, Date.valueOf(reservation.getDate()));
+            pstmt.setTime(3, Time.valueOf(reservation.getTime()));
+            return pstmt;
+        }, keyHolder);
+
+        return keyHolder.getKey().longValue();
     }
 
     @Override

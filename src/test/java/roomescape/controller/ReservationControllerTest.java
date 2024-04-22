@@ -1,4 +1,4 @@
-package roomescape;
+package roomescape.controller;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.DynamicTest.dynamicTest;
@@ -27,7 +27,7 @@ import roomescape.dto.ReservationRequest;
 
 @SpringBootTest(webEnvironment = WebEnvironment.RANDOM_PORT)
 @DirtiesContext(classMode = DirtiesContext.ClassMode.BEFORE_EACH_TEST_METHOD)
-class MissionStepTest {
+class ReservationControllerTest {
 
     @Autowired
     private JdbcTemplate jdbcTemplate;
@@ -38,24 +38,6 @@ class MissionStepTest {
     @BeforeEach
     void setUp() {
         RestAssured.port = port;
-    }
-
-    @Test
-    @DisplayName("'/admin'으로 접속하면 관리자 페이지를 보여준다.")
-    void printAdminView() {
-        RestAssured.given().log().all()
-                .when().get("/admin")
-                .then().log().all()
-                .statusCode(200);
-    }
-
-    @Test
-    @DisplayName("'/admin/reservation'으로 접속하면 예약 페이지를 보여준다.")
-    void printReservationView() {
-        RestAssured.given().log().all()
-                .when().get("/admin/reservation")
-                .then().log().all()
-                .statusCode(200);
     }
 
     @Test

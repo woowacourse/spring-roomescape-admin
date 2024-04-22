@@ -13,7 +13,6 @@ import org.springframework.web.bind.annotation.RestController;
 import roomescape.admin.reservation.controller.dto.request.ReservationTimeRequest;
 import roomescape.admin.reservation.controller.dto.response.ReservationTimeResponse;
 import roomescape.admin.reservation.entity.ReservationTime;
-import roomescape.admin.reservation.repository.ReservationTimeRepository;
 import roomescape.admin.reservation.service.ReservationTimeService;
 
 @RequestMapping("/times")
@@ -21,13 +20,10 @@ import roomescape.admin.reservation.service.ReservationTimeService;
 public class ReservationTimeController {
 
     private final ReservationTimeService reservationTimeService;
-    private final ReservationTimeRepository reservationTimeRepository;
 
     @Autowired
-    public ReservationTimeController(ReservationTimeService reservationTimeService,
-                                     ReservationTimeRepository reservationTimeRepository) {
+    public ReservationTimeController(ReservationTimeService reservationTimeService) {
         this.reservationTimeService = reservationTimeService;
-        this.reservationTimeRepository = reservationTimeRepository;
     }
 
     @GetMapping

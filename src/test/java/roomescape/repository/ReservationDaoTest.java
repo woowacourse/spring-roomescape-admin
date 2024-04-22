@@ -85,9 +85,9 @@ class ReservationDaoTest {
     @Test
     void findAll() {
         //given
-        final Reservation reservation1 = Reservation.create("레디", "2024-02-03", "12:00");
-        final Reservation reservation2 = Reservation.create("감자", "2024-02-03", "13:00");
-        final Reservation reservation3 = Reservation.create("오리", "2024-02-03", "14:00");
+        final Reservation reservation1 = Reservation.create("레디", "2024-02-04", "12:00");
+        final Reservation reservation2 = Reservation.create("감자", "2024-02-04", "13:00");
+        final Reservation reservation3 = Reservation.create("오리", "2024-02-04", "14:00");
 
         final List<Reservation> reservations = List.of(reservation1, reservation2, reservation3);
 

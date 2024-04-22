@@ -7,9 +7,9 @@ import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.web.server.LocalServerPort;
 import org.springframework.test.annotation.DirtiesContext;
+import roomescape.controller.dto.CreateReservationTimeRequest;
 
-import java.util.HashMap;
-import java.util.Map;
+import java.time.LocalTime;
 
 import static org.hamcrest.Matchers.is;
 
@@ -20,19 +20,19 @@ class TimeControllerTest {
     @LocalServerPort
     int port;
 
+    CreateReservationTimeRequest request;
+
     @BeforeEach
     void setUp() {
         RestAssured.port = port;
+        request = new CreateReservationTimeRequest(LocalTime.of(10, 0));
     }
 
     @Test
     void 예약시간_추가_및_삭제를_수행한다() {
-        Map<String, String> params = new HashMap<>();
-        params.put("startAt", "10:00");
-
         RestAssured.given().log().all()
                 .contentType(ContentType.JSON)
-                .body(params)
+                .body(request)
                 .when().post("/times")
                 .then().log().all()
                 .statusCode(200);
@@ -46,6 +46,6 @@ class TimeControllerTest {
         RestAssured.given().log().all()
                 .when().delete("/times/1")
                 .then().log().all()
-                .statusCode(200);
+                .statusCode(204);
     }
 }

@@ -10,9 +10,9 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.web.server.LocalServerPort;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.test.annotation.DirtiesContext;
+import roomescape.controller.dto.CreateReservationRequest;
 
-import java.util.HashMap;
-import java.util.Map;
+import java.time.LocalDate;
 
 import static org.hamcrest.CoreMatchers.is;
 
@@ -26,9 +26,12 @@ public class ReservationControllerTest {
     @Autowired
     JdbcTemplate jdbcTemplate;
 
+    CreateReservationRequest request;
+
     @BeforeEach
     void setUp() {
         RestAssured.port = port;
+        request = new CreateReservationRequest("브라운", LocalDate.of(2023, 8, 5), 1);
     }
 
     @Test
@@ -38,30 +41,20 @@ public class ReservationControllerTest {
 
     @Test
     void 예약추가_및_조회를_수행한다() {
-        Map<String, Object> reservation = new HashMap<>();
-        reservation.put("name", "브라운");
-        reservation.put("date", "2023-08-05");
-        reservation.put("timeId", 1);
-
         jdbcTemplate.update("insert into reservation_time (start_at) values ('10:00')");
 
         RestAssured.given().log().all()
                 .contentType(ContentType.JSON)
-                .body(reservation)
+                .body(request)
                 .when().post("/reservations")
                 .then().log().all()
                 .statusCode(200);
-
 
         testResponseBodyDataSize("/reservations", 200, 1);
     }
 
     @Test
     void 예약삭제_및_조회를_수행한다() {
-        Map<String, Object> reservation = new HashMap<>();
-        reservation.put("name", "브라운");
-        reservation.put("date", "2023-08-05");
-        reservation.put("timeId", 1);
 
         jdbcTemplate.update("insert into reservation_time (start_at) values ('10:00')");
 

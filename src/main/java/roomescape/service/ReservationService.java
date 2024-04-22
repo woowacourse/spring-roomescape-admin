@@ -37,7 +37,7 @@ public class ReservationService {
     }
 
     public ReservationResponse scheduleReservation(ReservationRequest request) {
-        TimeSlot timeSlot = timeSlotRepository.findById(request.timeId())
+        TimeSlot timeSlot = timeSlotRepository.findById(request.timeSlotId())
                 .orElseThrow(() -> new IllegalArgumentException("예약 시간이 존재하지 않습니다."));
         validateRequestDateAfterCurrentTime(LocalDate.parse(request.date()), timeSlot.getTime());
 

@@ -24,13 +24,15 @@ public class ReservationTimeController {
     }
 
     @PostMapping("/times")
-    public ResponseEntity<ReservationTime> createReservationTime(@RequestBody ReservationTimeDto reservationTimeDto) {
+    public ResponseEntity<ReservationTime> createReservationTime(
+            @RequestBody ReservationTimeDto reservationTimeDto) {
         return ResponseEntity.ok(reservationTimeService.save(reservationTimeDto));
     }
 
     @DeleteMapping("/times/{id}")
     public ResponseEntity<Void> delete(@PathVariable("id") long id) {
         reservationTimeService.delete(id);
-        return ResponseEntity.ok().build();
+        return ResponseEntity.ok()
+                .build();
     }
 }

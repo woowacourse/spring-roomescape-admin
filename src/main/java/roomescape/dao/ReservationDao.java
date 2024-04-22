@@ -2,9 +2,7 @@ package roomescape.dao;
 
 import java.sql.Date;
 import java.sql.PreparedStatement;
-import java.sql.Time;
 import java.time.LocalDate;
-import java.time.LocalTime;
 import java.util.List;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.support.GeneratedKeyHolder;
@@ -40,11 +38,13 @@ public class ReservationDao {
                 (resultSet, rowNum) -> {
                     ReservationTime reservationTime = new ReservationTime(
                             resultSet.getLong("time_id"),
-                            resultSet.getTime("time_value").toLocalTime());
+                            resultSet.getTime("time_value")
+                                    .toLocalTime());
                     Reservation reservation = new Reservation.Builder()
                             .id(resultSet.getLong("id"))
                             .name(resultSet.getString("name"))
-                            .date(resultSet.getDate("date").toLocalDate())
+                            .date(resultSet.getDate("date")
+                                    .toLocalDate())
                             .time(reservationTime)
                             .build();
                     return reservation;

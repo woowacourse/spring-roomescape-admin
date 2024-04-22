@@ -27,7 +27,8 @@ public class ReservationTimeDao {
                 (resultSet, rowNum) -> {
                     ReservationTime reservationTime = new ReservationTime(
                             resultSet.getLong("id"),
-                            resultSet.getTime("start_at").toLocalTime());
+                            resultSet.getTime("start_at")
+                                    .toLocalTime());
                     return reservationTime;
                 }, timeId);
     }
@@ -39,7 +40,8 @@ public class ReservationTimeDao {
                 (resultSet, rowNum) -> {
                     ReservationTime reservationTime = new ReservationTime(
                             resultSet.getLong("id"),
-                            resultSet.getTime("start_at").toLocalTime()
+                            resultSet.getTime("start_at")
+                                    .toLocalTime()
                     );
                     return reservationTime;
                 });
@@ -58,7 +60,8 @@ public class ReservationTimeDao {
             return ps;
         }, keyHolder);
 
-        Long id = keyHolder.getKey().longValue();
+        Long id = keyHolder.getKey()
+                .longValue();
 
         return new ReservationTime(id, startAt);
     }

@@ -9,7 +9,6 @@ import roomescape.domain.Reservation;
 
 @Repository
 public class ReservationDaoImpl implements ReservationDao {
-
     private final JdbcTemplate jdbcTemplate;
 
     public ReservationDaoImpl(JdbcTemplate jdbcTemplate) {
@@ -22,7 +21,7 @@ public class ReservationDaoImpl implements ReservationDao {
                 rs.getLong("id"),
                 rs.getString("name"),
                 rs.getDate("date"),
-                rs.getTime("time")
+                rs.getTime("startAt")
         ));
     }
 

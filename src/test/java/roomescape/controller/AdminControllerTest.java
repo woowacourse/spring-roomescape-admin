@@ -33,4 +33,12 @@ class AdminControllerTest {
                 .when().get("/admin/reservation")
                 .then().log().all().assertThat().statusCode(HttpStatus.OK.value());
     }
+
+    @DisplayName("Admin Time Page 접근 성공 테스트")
+    @Test
+    void responseAdminTImePage() {
+        RestAssured.given().log().all()
+                .when().get("/admin/time")
+                .then().log().all().assertThat().statusCode(HttpStatus.OK.value());
+    }
 }

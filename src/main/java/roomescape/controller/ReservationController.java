@@ -13,17 +13,17 @@ import roomescape.dao.ReservationDao;
 import roomescape.domain.Reservation;
 import roomescape.dto.ReservationRequest;
 import roomescape.dto.ReservationResponse;
+import roomescape.idgenerator.AutoIncrementIdGenerator;
 import roomescape.idgenerator.IdGenerator;
 
 @RestController
 @RequestMapping("/reservations")
 public class ReservationController {
     private final ReservationDao reservationDao;
-    private final IdGenerator idGenerator;
+    private final IdGenerator idGenerator = new AutoIncrementIdGenerator();
 
-    public ReservationController(ReservationDao reservationDao, IdGenerator idGenerator) {
+    public ReservationController(ReservationDao reservationDao) {
         this.reservationDao = reservationDao;
-        this.idGenerator = idGenerator;
     }
 
     @GetMapping
@@ -37,15 +37,13 @@ public class ReservationController {
     @PostMapping
     public ResponseEntity<ReservationResponse> createReservation(
             @RequestBody ReservationRequest reservationRequest) {
-        long id = idGenerator.generateNewId();
-        Reservation reservation = reservationRequest.toDomain(id);
+        Reservation reservation = reservationRequest.toDomain(idGenerator.generateNewId());
         reservationDao.save(reservation);
-        ReservationResponse reservationResponse = new ReservationResponse(reservation);
-        return ResponseEntity.ok(reservationResponse);
+        return ResponseEntity.ok(new ReservationResponse(reservation));
     }
 
     @DeleteMapping("/{id}")
-    public ResponseEntity<Void> deleteReservation(@PathVariable("id") long id) {
+    public ResponseEntity<Void> deleteReservation(@PathVariable long id) {
         boolean isDeleted = reservationDao.deleteById(id);
         if (isDeleted) {
             return ResponseEntity.ok().build();

@@ -16,3 +16,6 @@
 |        | 200 OK        |                    |               |                                | {id, startAt}          |
 | POST   |               | /times             | 시간 추가         |                                | startAt                |
 |        | 200 OK        |                    |               |                                | id, startAt            |
+| DELETE |               | /times/{id}        | 시간 삭제         |                                |                        |
+|        | 200 OK        |                    | 시간 삭제 성공      |                                |                        |
+|        | 404 NOT FOUND |                    | 시간 삭제 실패      |                                |                        |

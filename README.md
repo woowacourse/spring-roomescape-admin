@@ -97,6 +97,62 @@ content-type: application/json
   
   "존재하지 않는 id입니다. id: 0"
   ```
+  
+### 시간 추가
+- http method: POST
+- uri: /times
+- request
+```
+POST /times HTTP/1.1
+Content-Type: application/json
+ 
+{
+    "startAt": "10:00"
+}
+```
+- response
+  - 추가 성공
+  ```
+  HTTP/1.1 200 
+  Content-Type: application/json
+  
+  {
+      "id": 1,
+      "startAt": "10:00"
+  }
+  ```
+
+### 시간 조회
+- http method: GET
+- uri: /times
+- response
+   ```
+  HTTP/1.1 200 
+  Content-Type: application/json
+  [
+   {
+        "id": 1,
+        "startAt": "10:00"
+    }
+  ]
+  ```
+
+### 시간 삭제
+- http method: DELETE
+- uri: /times/{id}
+  - path variable
+    - id: 시간 정보 식별자
+- response
+  - 존재하는 id로 삭제 요청
+  ```
+  HTTP/1.1 200
+  ```
+  - 존재하지 않는 id(0)로 삭제 요청
+  ```
+  HTTP/1.1 400
+  
+  "존재하지 않는 id입니다. id: 0"
+  ```
 
 ## 기능 명세서
 

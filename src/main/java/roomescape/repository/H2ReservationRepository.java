@@ -24,8 +24,7 @@ public class H2ReservationRepository implements ReservationRepository {
     public List<Reservation> findAll() {
         String sql = "SELECT id, name, date, time FROM reservation";
 
-        List<Reservation> reservations = template.query(sql, itemRowMapper());
-        return reservations;
+        return template.query(sql, itemRowMapper());
     }
 
     private RowMapper<Reservation> itemRowMapper() {

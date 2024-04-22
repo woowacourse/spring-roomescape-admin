@@ -20,7 +20,7 @@ public class ReservationRepositoryImpl implements ReservationRepository {
     }
 
     @Override
-    public long save(Reservation reservation) {
+    public long save(final Reservation reservation) {
         final var sql = "INSERT INTO reservation(name, date, time) VALUES(?,?,?)";
         final var keyHolder = new GeneratedKeyHolder();
 

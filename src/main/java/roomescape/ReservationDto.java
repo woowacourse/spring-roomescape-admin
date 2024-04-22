@@ -8,7 +8,7 @@ public class ReservationDto {
     private final LocalDate date;
     private final LocalTime time;
 
-    public ReservationDto(String name, LocalDate date, LocalTime time) {
+    public ReservationDto(final String name, final LocalDate date, final LocalTime time) {
         this.name = name;
         this.date = date;
         this.time = time;

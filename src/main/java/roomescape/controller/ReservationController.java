@@ -34,7 +34,7 @@ public class ReservationController {
     }
 
     @PostMapping("/reservations")
-    public ResponseEntity<Reservation> reserve(@RequestBody ReservationDto reservationDto) {
+    public ResponseEntity<Reservation> reserve(@RequestBody final ReservationDto reservationDto) {
         Reservation reservation = new Reservation.Builder().id(reservationIndex.incrementAndGet())
                 .name(reservationDto.getName())
                 .date(reservationDto.getDate())
@@ -52,7 +52,7 @@ public class ReservationController {
     }
 
     @DeleteMapping("/reservations/{id}")
-    public ResponseEntity<Void> delete(@PathVariable("id") long id) {
+    public ResponseEntity<Void> delete(@PathVariable("id") final long id) {
         reservationRepository.delete(id);
 
         return ResponseEntity.status(NO_CONTENT).build();

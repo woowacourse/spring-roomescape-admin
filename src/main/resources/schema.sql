@@ -15,3 +15,6 @@ CREATE TABLE reservation
     FOREIGN KEY (time_id) REFERENCES reservation_time (id)
 );
 
+INSERT INTO reservation_time (start_at) VALUES ('10:00');
+INSERT INTO reservation_time (start_at) VALUES ('11:00');
+

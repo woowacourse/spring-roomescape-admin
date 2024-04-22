@@ -22,6 +22,13 @@ public class ReservationTimeResponseDto {
         );
     }
 
+    public static ReservationTimeResponseDto of(Long id, String startAt) {
+        return new ReservationTimeResponseDto(
+                id,
+                startAt
+        );
+    }
+
     public Long getId() {
         return id;
     }

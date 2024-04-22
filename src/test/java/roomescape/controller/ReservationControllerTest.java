@@ -1,91 +1,104 @@
 package roomescape.controller;
 
+import static org.hamcrest.Matchers.hasSize;
 import static org.hamcrest.Matchers.is;
+import static org.mockito.BDDMockito.given;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.delete;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
+import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
-import io.restassured.RestAssured;
-import io.restassured.http.ContentType;
-import org.junit.jupiter.api.BeforeEach;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import java.util.List;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.boot.test.context.SpringBootTest.WebEnvironment;
-import org.springframework.boot.test.web.server.LocalServerPort;
-import org.springframework.jdbc.core.JdbcTemplate;
+import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
+import org.springframework.boot.test.mock.mockito.MockBean;
+import org.springframework.http.MediaType;
+import org.springframework.test.web.servlet.MockMvc;
 import roomescape.dto.ReservationCreateRequestDto;
+import roomescape.dto.ReservationResponseDto;
+import roomescape.dto.ReservationTimeResponseDto;
+import roomescape.service.ReservationService;
 
-@SpringBootTest(webEnvironment = WebEnvironment.RANDOM_PORT)
+@WebMvcTest(ReservationController.class)
 class ReservationControllerTest {
 
-    @LocalServerPort
-    private int port;
     @Autowired
-    private JdbcTemplate jdbcTemplate;
-    private ReservationCreateRequestDto requestDto;
+    private ObjectMapper objectMapper;
+    @Autowired
+    private MockMvc mockMvc;
+    @MockBean
+    private ReservationService reservationService;
 
-    @BeforeEach
-    void setUp() {
-        RestAssured.port = port;
-        String name = "브라운";
-        String date = "2023-08-05";
-        Long timeId = 1L;
-        requestDto = ReservationCreateRequestDto.of(name, date, timeId);
-
-        jdbcTemplate.update("INSERT INTO reservation_time (start_at) VALUES (?)", "12:40");
-        jdbcTemplate.update("INSERT INTO reservation (name, `date`, time_id) VALUES (?, ?, ?)",
-                "daon", "2022-02-02", 1L);
-    }
 
     @Test
     @DisplayName("전체 예약을 조회한다.")
-    void getAllReservationsTest() {
-        int count = getCount();
-        RestAssured.given().log().all()
-                .when().get("/reservations")
-                .then().log().all()
-                .statusCode(200)
-                .body("size()", is(count));
+    void getAllReservationsTest() throws Exception {
+        //given
+        List<ReservationResponseDto> responseDtos = List.of(
+                getReservationResponseDto(1L, "daon", "2022-02-23", 1L, "12:12"),
+                getReservationResponseDto(2L, "ikjo", "2022-02-05", 2L, "23:22")
+        );
+        given(reservationService.findAll()).willReturn(responseDtos);
+
+        //when //then
+        mockMvc.perform(get("/reservations"))
+                .andDo(print())
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$", hasSize(2)))
+                .andExpect(jsonPath("$[0].id", is(1)))
+                .andExpect(jsonPath("$[0].name", is("daon")))
+                .andExpect(jsonPath("$[1].date", is("2022-02-05")))
+                .andExpect(jsonPath("$[1].time.startAt", is("23:22")));
     }
 
     @Test
     @DisplayName("예약을 성공적으로 추가한다.")
-    void addReservationTest() {
-        int count = getCount();
-        RestAssured.given().log().all()
-                .contentType(ContentType.JSON)
-                .body(requestDto)
-                .when().post("/reservations")
-                .then().log().all()
-                .statusCode(201);
+    void addReservationTest() throws Exception {
+        //given
+        String expectedName = "daon";
+        String expectedDate = "2024-11-29";
+        String expectedStartAt = "00:01";
+        ReservationCreateRequestDto requestDto = ReservationCreateRequestDto.of(expectedName, expectedDate, 1L);
+        ReservationResponseDto responseDto
+                = getReservationResponseDto(1L, expectedName, expectedDate, 1L, expectedStartAt);
+        given(reservationService.add(requestDto)).willReturn(responseDto);
+        String requestBody = objectMapper.writeValueAsString(requestDto);
 
-        RestAssured.given().log().all()
-                .when().get("/reservations")
-                .then().log().all()
-                .statusCode(200)
-                .body("size()", is(count + 1));
+        //when //then
+        mockMvc.perform(post("/reservations")
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(requestBody))
+                .andDo(print())
+                .andExpect(status().isCreated())
+                .andExpect(jsonPath("$.name", is(expectedName)))
+                .andExpect(jsonPath("$.date", is(expectedDate)))
+                .andExpect(jsonPath("$.time.startAt", is(expectedStartAt)));
     }
 
     @Test
     @DisplayName("예약을 성공적으로 삭제한다.")
-    void deleteReservationTest() {
-        int count = getCount();
-
-        RestAssured.given()
-                .pathParam("id", 1L)
-                .log().all()
-                .when().delete("/reservations/{id}")
-                .then().log().all()
-                .statusCode(204);
-
-        RestAssured.given().log().all()
-                .when().get("/reservations")
-                .then().log().all()
-                .statusCode(200)
-                .body("size()", is(count - 1));
+    void deleteReservationTest() throws Exception {
+        //when //then
+        mockMvc.perform(delete("/reservations/{id}", 1))
+                .andDo(print())
+                .andExpect(status().isNoContent());
     }
 
-    private int getCount() {
-        String sql = "SELECT COUNT(*) FROM reservation";
-        return jdbcTemplate.queryForObject(sql, Integer.class);
+    private ReservationResponseDto getReservationResponseDto(long id,
+                                                             String name,
+                                                             String date,
+                                                             long timeId,
+                                                             String startAt) {
+        return ReservationResponseDto.of(
+                id,
+                name,
+                date,
+                ReservationTimeResponseDto.of(timeId, startAt)
+        );
     }
 }

@@ -23,13 +23,25 @@ public class ReservationResponseDto {
         this.reservationTimeResponseDto = reservationTimeResponseDto;
     }
 
-    public static ReservationResponseDto of(Reservation reservation) {
+    public static ReservationResponseDto from(Reservation reservation) {
         Date date = reservation.getDate();
         return new ReservationResponseDto(
                 reservation.getId(),
                 reservation.getName(),
                 date.toStringDate(),
                 ReservationTimeResponseDto.from(reservation.getReservationTime())
+        );
+    }
+
+    public static ReservationResponseDto of(Long id,
+                                            String name,
+                                            String date,
+                                            ReservationTimeResponseDto timeResponseDto) {
+        return new ReservationResponseDto(
+                id,
+                name,
+                date,
+                timeResponseDto
         );
     }
 

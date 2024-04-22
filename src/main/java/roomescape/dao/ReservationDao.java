@@ -4,19 +4,28 @@ import java.time.LocalDate;
 import java.time.LocalTime;
 import java.util.ArrayList;
 import java.util.List;
+import javax.sql.DataSource;
 import org.springframework.jdbc.core.JdbcTemplate;
+import org.springframework.jdbc.core.namedparam.MapSqlParameterSource;
+import org.springframework.jdbc.core.namedparam.SqlParameterSource;
+import org.springframework.jdbc.core.simple.SimpleJdbcInsert;
 import org.springframework.stereotype.Repository;
 import roomescape.domain.Reservation;
+import roomescape.dto.ReservationCreateRequest;
 
 @Repository
 public class ReservationDao {
 
     private static final String DATABASE = "reservation";
 
-    private JdbcTemplate jdbcTemplate;
+    private final JdbcTemplate jdbcTemplate;
+    private final SimpleJdbcInsert simpleJdbcInsert;
 
-    public ReservationDao(JdbcTemplate jdbcTemplate) {
+    public ReservationDao(JdbcTemplate jdbcTemplate, DataSource dataSource) {
         this.jdbcTemplate = jdbcTemplate;
+        this.simpleJdbcInsert = new SimpleJdbcInsert(dataSource)
+                .withTableName("reservation")
+                .usingGeneratedKeyColumns("id");
     }
 
     public List<Reservation> findAll() {
@@ -36,5 +45,13 @@ public class ReservationDao {
                     return reservation;
                 }
         );
+    }
+
+    public Long addReservation(ReservationCreateRequest reservationCreateRequest) {
+        SqlParameterSource parameterSource = new MapSqlParameterSource()
+                .addValue("name", reservationCreateRequest.name())
+                .addValue("date", reservationCreateRequest.date())
+                .addValue("time", reservationCreateRequest.time());
+        return simpleJdbcInsert.executeAndReturnKey(parameterSource).longValue();
     }
 }

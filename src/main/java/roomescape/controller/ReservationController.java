@@ -1,5 +1,6 @@
 package roomescape.controller;
 
+import java.net.URI;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
@@ -22,7 +23,7 @@ import roomescape.dto.ReservationCreateRequest;
 import roomescape.dto.ReservationResponse;
 
 @RestController
-@RequestMapping("reservations")
+@RequestMapping("/reservations")
 public class ReservationController {
 
     private final List<Reservation> reservations = new ArrayList<>();
@@ -47,15 +48,9 @@ public class ReservationController {
 
     @PostMapping
     public ResponseEntity<ReservationResponse> createReservation(@RequestBody ReservationCreateRequest reservationCreateRequest) {
-        Reservation reservation = new Reservation(
-                index.getAndIncrement(),
-                reservationCreateRequest.name(),
-                reservationCreateRequest.date(),
-                reservationCreateRequest.time());
-
-        reservations.add(reservation);
-        return ResponseEntity.ok()
-                .body(ReservationResponse.toResponse(reservation));
+        Long id = reservationDao.addReservation(reservationCreateRequest);
+        return ResponseEntity.created(URI.create("/reservations/" + id))
+                .build();
     }
 
     @DeleteMapping("/{id}")

@@ -30,8 +30,8 @@ public class ReservationController {
     }
 
     @GetMapping
-    public ResponseEntity<List<ReservationResponse>> readReservations() {
-        List<ReservationResponse> reservationResponses = reservationService.readAllReservations()
+    public ResponseEntity<List<ReservationResponse>> getReservations() {
+        List<ReservationResponse> reservationResponses = reservationService.getAllReservations()
                                                             .stream()
                                                             .map(ReservationResponse::new)
                                                             .toList();

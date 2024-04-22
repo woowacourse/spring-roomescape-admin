@@ -29,7 +29,7 @@ public class ReservationService {
         return new ReservationResponse(id, reservation.getName(), reservation.getDate(), reservationTime);
     }
 
-    public List<Reservation> readAllReservations() {
+    public List<Reservation> getAllReservations() {
         return reservationRepository.findAll();
     }
 

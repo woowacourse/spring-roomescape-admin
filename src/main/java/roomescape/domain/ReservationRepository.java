@@ -2,7 +2,6 @@ package roomescape.domain;
 
 import java.sql.PreparedStatement;
 import java.util.List;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;
 import org.springframework.jdbc.support.GeneratedKeyHolder;
@@ -11,8 +10,11 @@ import org.springframework.stereotype.Repository;
 
 @Repository
 public class ReservationRepository {
-    @Autowired
     private JdbcTemplate jdbcTemplate;
+
+    public ReservationRepository(JdbcTemplate jdbcTemplate) {
+        this.jdbcTemplate = jdbcTemplate;
+    }
 
     public List<Reservation> findAll() {
         return jdbcTemplate.query("SELECT id, name, date, time FROM reservation", reservationRowMapper());

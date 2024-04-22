@@ -1,23 +1,18 @@
 package roomescape.domain;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.assertThatThrownBy;
 
-import io.restassured.RestAssured;
-import io.restassured.http.ContentType;
-import java.sql.Connection;
-import java.sql.SQLException;
 import java.util.List;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.boot.test.context.SpringBootTest.WebEnvironment;
-import org.springframework.boot.test.web.server.LocalServerPort;
+import org.springframework.boot.test.autoconfigure.jdbc.JdbcTest;
+import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.test.context.jdbc.Sql;
 import org.springframework.test.context.jdbc.Sql.ExecutionPhase;
-import roomescape.dto.ReservationCreateDto;
 
 
 /*
@@ -26,82 +21,64 @@ import roomescape.dto.ReservationCreateDto;
  * {ID=2, NAME=엘라, DATE=2024-05-04, TIME=17:00}
  * {ID=3, NAME=릴리, DATE=2023-08-05, TIME=15:40}
  */
-@SpringBootTest(webEnvironment = WebEnvironment.RANDOM_PORT)
-@Sql(scripts = "/ResetTestData.sql", executionPhase = ExecutionPhase.BEFORE_TEST_METHOD)
+@JdbcTest
+@Sql(scripts = "/reset_test_data.sql", executionPhase = ExecutionPhase.BEFORE_TEST_METHOD)
 class ReservationRepositoryTest {
+    private ReservationRepository reservationRepository;
+
     @Autowired
     private JdbcTemplate jdbcTemplate;
 
-    @Autowired
-    private ReservationRepository reservationRepository;
-
-    @LocalServerPort
-    private int port;
-
     @BeforeEach
     void setUp() {
-        RestAssured.port = port;
+        reservationRepository = new ReservationRepository(jdbcTemplate);
     }
 
     @Test
-    @DisplayName("H2 데이터베이스에 연결한다.")
-    void connectH2Database() {
-        try (Connection connection = jdbcTemplate.getDataSource().getConnection()) {
-            assertThat(connection).isNotNull();
-            assertThat(connection.getCatalog()).isEqualTo("DATABASE");
-            assertThat(connection.getMetaData().getTables(null, null, "RESERVATION", null).next()).isTrue();
-        } catch (SQLException e) {
-            throw new RuntimeException(e);
-        }
-    }
+    @DisplayName("모든 예약 데이터를 가져온다.")
+    void findAll() {
+        // when
+        List<Reservation> reservations = reservationRepository.findAll();
 
-    @Test
-    @DisplayName("예약 조회 시 데이터베이스에서 데이터를 가져온다.")
-    void findAllReservations() {
-        List<Reservation> reservations = RestAssured.given().log().all()
-                .when().get("/reservations")
-                .then().log().all()
-                .statusCode(200).extract()
-                .jsonPath().getList(".", Reservation.class);
-
-        Integer count = jdbcTemplate.queryForObject("SELECT count(1) from reservation", Integer.class);
-
-        assertThat(reservations.size()).isEqualTo(count);
+        // then
+        assertThat(reservations).hasSize(3);
     }
 
     @Test
     @DisplayName("특정 예약 id의 데이터를 조회한다.")
-    void findReservationById() {
+    void findById() {
+        // when
         Reservation findReservations = reservationRepository.findById(2);
 
+        // then
         assertThat(findReservations.getName()).isEqualTo("엘라");
     }
 
     @Test
-    void createReservation() {
-        ReservationCreateDto createDto = new ReservationCreateDto("브라운", "2023-08-05", "10:00");
+    @DisplayName("새로운 예약을 생성한다.")
+    void create() {
+        // given
+        Reservation createReservation = new Reservation(0L, "브라운", "2023-08-05", "10:00");
 
-        RestAssured.given().log().all()
-                .contentType(ContentType.JSON)
-                .body(createDto)
-                .when().post("/reservations")
-                .then().log().all()
-                .statusCode(201)
-                .header("Location", "/reservations/4");
+        // when
+        reservationRepository.create(createReservation);
+        List<Reservation> reservations = reservationRepository.findAll();
 
-        Integer count = jdbcTemplate.queryForObject("SELECT count(1) from reservation", Integer.class);
-        assertThat(count).isEqualTo(4);
+        // then
+        assertThat(reservations).hasSize(4);
     }
 
     @Test
-    @DisplayName("데이터베이스에서 예약을 삭제한다")
-    void deleteReservation() {
-        RestAssured.given().log().all()
-                .when().delete("/reservations/3")
-                .then().log().all()
-                .statusCode(204);
+    @DisplayName("특정 id를 가진 예약을 삭제한다")
+    void remove() {
+        // given
+        long id = 2;
+        Reservation reservation = reservationRepository.findById(id);
 
-        Integer countAfterDelete = jdbcTemplate.queryForObject("SELECT count(1) from reservation", Integer.class);
-        assertThat(countAfterDelete).isEqualTo(2);
+        // when
+        reservationRepository.remove(reservation);
+
+        // then
+        assertThatThrownBy(() -> reservationRepository.findById(id)).isInstanceOf(EmptyResultDataAccessException.class);
     }
 }

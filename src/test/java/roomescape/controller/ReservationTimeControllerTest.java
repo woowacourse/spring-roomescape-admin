@@ -35,7 +35,7 @@ class ReservationTimeControllerTest {
 
         Integer count = jdbcTemplate.queryForObject("SELECT count(1) from reservation_time", Integer.class);
 
-        assertThat(reservationTimes).isEqualTo(count);
+        assertThat(reservationTimes.size()).isEqualTo(count);
     }
 
     @DisplayName("예약 시간을 추가한다")

@@ -5,7 +5,7 @@ import java.util.Optional;
 import org.springframework.stereotype.Service;
 import roomescape.domain.time.ReservationTime;
 import roomescape.domain.time.repository.ReservationTimeRepository;
-import roomescape.dto.ReservationTimeRequest;
+import roomescape.dto.reservationtime.ReservationTimeRequest;
 
 @Service
 public class ReservationTimeService {

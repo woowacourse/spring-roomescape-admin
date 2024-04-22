@@ -8,7 +8,7 @@ import java.util.Optional;
 import org.junit.jupiter.api.Test;
 import roomescape.domain.time.ReservationTime;
 import roomescape.domain.time.repository.ReservationTimeRepository;
-import roomescape.dto.ReservationTimeRequest;
+import roomescape.dto.reservationtime.ReservationTimeRequest;
 import roomescape.support.FakeReservationTimeRepository;
 
 class ReservationTimeServiceTest {

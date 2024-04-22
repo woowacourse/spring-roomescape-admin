@@ -9,7 +9,7 @@ import java.time.LocalTime;
 import org.junit.jupiter.api.Test;
 import roomescape.domain.reservation.Reservation;
 import roomescape.domain.reservation.repository.ReservationRepository;
-import roomescape.dto.ReservationRequest;
+import roomescape.dto.reservation.ReservationRequest;
 import roomescape.fixture.ClockFixture;
 import roomescape.support.FakeReservationRepository;
 

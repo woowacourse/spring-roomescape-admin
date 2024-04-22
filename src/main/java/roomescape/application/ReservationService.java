@@ -9,7 +9,7 @@ import org.springframework.stereotype.Service;
 import roomescape.domain.reservation.Reservation;
 import roomescape.domain.reservation.ReservationDateTime;
 import roomescape.domain.reservation.repository.ReservationRepository;
-import roomescape.dto.ReservationRequest;
+import roomescape.dto.reservation.ReservationRequest;
 
 @Service
 public class ReservationService {

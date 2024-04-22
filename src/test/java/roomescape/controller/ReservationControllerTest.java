@@ -36,14 +36,22 @@ class ReservationControllerTest {
                 .body(reservationDto())
                 .when().post("/reservations")
                 .then().log().all()
-                .statusCode(200)
-                .body("id", is(1));
+                .statusCode(201)
+                .header("Location", "/reservations/1");
+
+        RestAssured.given().log().all()
+                .contentType(ContentType.JSON)
+                .body(reservationDto())
+                .when().post("/reservations")
+                .then().log().all()
+                .statusCode(201)
+                .header("Location", "/reservations/2");
 
         RestAssured.given().log().all()
                 .when().get("/reservations")
                 .then().log().all()
                 .statusCode(200)
-                .body("size()", is(1));
+                .body("size()", is(2));
     }
 
     @DisplayName("예약을 삭제한다.")

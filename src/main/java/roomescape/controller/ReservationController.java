@@ -1,11 +1,14 @@
 package roomescape.controller;
 
-import java.util.ArrayList;
+import java.net.URI;
 import java.util.List;
-import java.util.concurrent.atomic.AtomicLong;
 
+import org.springframework.http.ResponseEntity;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;
+import org.springframework.jdbc.core.namedparam.BeanPropertySqlParameterSource;
+import org.springframework.jdbc.core.namedparam.SqlParameterSource;
+import org.springframework.jdbc.core.simple.SimpleJdbcInsert;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -21,9 +24,6 @@ import roomescape.ReservationDto;
 @RequestMapping("/reservations")
 public class ReservationController {
 
-    private final AtomicLong index = new AtomicLong(1);
-    private final List<Reservation> reservations = new ArrayList<>();
-
     private final RowMapper<Reservation> reservationRowMapper = (resultSet, rowNum) -> new Reservation(
             resultSet.getLong("id"),
             resultSet.getString("name"),
@@ -32,9 +32,13 @@ public class ReservationController {
     );
 
     private final JdbcTemplate jdbcTemplate;
+    private final SimpleJdbcInsert jdbcInsert;
 
     public ReservationController(final JdbcTemplate jdbcTemplate) {
         this.jdbcTemplate = jdbcTemplate;
+        this.jdbcInsert = new SimpleJdbcInsert(jdbcTemplate)
+                .withTableName("reservation")
+                .usingGeneratedKeyColumns("id");
     }
 
     @GetMapping
@@ -46,14 +50,14 @@ public class ReservationController {
     }
 
     @PostMapping
-    public ReservationDto create(@RequestBody ReservationDto reservationDto) {
-        Reservation reservation = reservationDto.toEntity(index.getAndIncrement());
-        reservations.add(reservation);
-        return ReservationDto.from(reservation);
+    public ResponseEntity<Void> create(@RequestBody ReservationDto reservationDto) {
+        SqlParameterSource params = new BeanPropertySqlParameterSource(reservationDto);
+        long id = jdbcInsert.executeAndReturnKey(params).longValue();
+        return ResponseEntity.created(URI.create("/reservations/" + id)).build();
     }
 
     @DeleteMapping("/{id}")
     public void delete(@PathVariable long id) {
-        reservations.removeIf(reservation -> reservation.getId() == id);
+        jdbcTemplate.update("DELETE FROM reservation WHERE id = ?", id);
     }
 }

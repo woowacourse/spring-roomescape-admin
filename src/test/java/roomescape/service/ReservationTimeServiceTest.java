@@ -26,14 +26,28 @@ class ReservationTimeServiceTest {
 
     @BeforeEach
     void setUp() {
+        jdbcTemplate.execute("DROP TABLE reservation IF EXISTS");
         jdbcTemplate.execute("DROP TABLE reservation_time IF EXISTS");
-        jdbcTemplate.execute(
-                "CREATE TABLE reservation_time"
-                        + "("
-                        + "    id   BIGINT       NOT NULL AUTO_INCREMENT,"
-                        + "    start_at VARCHAR(255) NOT NULL,"
-                        + "    PRIMARY KEY (id)"
-                        + ");"
+        jdbcTemplate.execute("""
+                        CREATE TABLE reservation_time
+                        (
+                            id   BIGINT       NOT NULL AUTO_INCREMENT,
+                            start_at VARCHAR(255) NOT NULL,
+                            PRIMARY KEY (id)
+                        );
+                        """
+        );
+        jdbcTemplate.execute("""
+                CREATE TABLE reservation
+                (
+                    id   BIGINT       NOT NULL AUTO_INCREMENT,
+                    name VARCHAR(255) NOT NULL,
+                    date VARCHAR(255) NOT NULL,
+                    time_id BIGINT,
+                    PRIMARY KEY (id),
+                    FOREIGN KEY (time_id) REFERENCES reservation_time (id)
+                );
+                """
         );
         jdbcTemplate.update("INSERT INTO reservation_time (start_at) values (?)", "10:00");
         jdbcTemplate.update("INSERT INTO reservation_time (start_at) values (?)", "11:00");

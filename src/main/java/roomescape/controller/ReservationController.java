@@ -11,16 +11,21 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
 import roomescape.controller.request.ReservationRequest;
 import roomescape.model.Reservation;
+import roomescape.model.ReservationTime;
 import roomescape.service.ReservationService;
+import roomescape.service.ReservationTimeService;
 
 @RestController
 public class ReservationController {
 
     private final ReservationService reservationService;
+    private final ReservationTimeService reservationTimeService;
 
-    public ReservationController(ReservationService reservationService) {
+    public ReservationController(ReservationService reservationService, ReservationTimeService reservationTimeService) {
         this.reservationService = reservationService;
+        this.reservationTimeService = reservationTimeService;
     }
+
 
     @GetMapping("/reservations")
     public ResponseEntity<List<Reservation>> getReservations() {
@@ -29,7 +34,8 @@ public class ReservationController {
 
     @PostMapping("/reservations")
     public ResponseEntity<Reservation> addReservation(@RequestBody ReservationRequest request) {
-        Reservation reservation = new Reservation(request.name(), request.date(), request.time());
+        ReservationTime reservationTime = reservationTimeService.getReservationTime(request.timeId());
+        Reservation reservation = new Reservation(request.name(), request.date(), reservationTime);
         long id = reservationService.addReservations(reservation);
         return ResponseEntity.created(URI.create("/reservations/" + id)).body(reservation);
     }

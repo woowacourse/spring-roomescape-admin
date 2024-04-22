@@ -3,7 +3,7 @@ package roomescape.controller.request;
 import java.time.LocalDate;
 import java.time.LocalTime;
 
-public record ReservationRequest(LocalDate date, String name, LocalTime time) {
+public record ReservationRequest(LocalDate date, String name, long timeId) {
 
     @Override
     public LocalDate date() {
@@ -16,7 +16,7 @@ public record ReservationRequest(LocalDate date, String name, LocalTime time) {
     }
 
     @Override
-    public LocalTime time() {
-        return time;
+    public long timeId() {
+        return timeId;
     }
 }

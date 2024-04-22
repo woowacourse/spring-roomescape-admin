@@ -8,6 +8,8 @@ import roomescape.controller.dto.TimeCreateRequest;
 import roomescape.domain.ReservationTime;
 import roomescape.service.TimeService;
 
+import java.util.List;
+
 @Controller
 @RequestMapping("/times")
 public class TimeController {
@@ -17,6 +19,12 @@ public class TimeController {
     @Autowired
     public TimeController(TimeService timeService) {
         this.timeService = timeService;
+    }
+
+    @GetMapping
+    public ResponseEntity<List<ReservationTime>> readTimes() {
+        List<ReservationTime> data = timeService.readReservationTimes();
+        return ResponseEntity.ok(data);
     }
 
     @GetMapping("{id}")
@@ -29,5 +37,11 @@ public class TimeController {
     public ResponseEntity<ReservationTime> createTime(@RequestBody TimeCreateRequest request) {
         ReservationTime data = timeService.createTime(request);
         return ResponseEntity.ok(data);
+    }
+
+    @DeleteMapping("/{id}")
+    public ResponseEntity<Void> deleteTime(@PathVariable Long id) {
+        timeService.deleteTime(id);
+        return ResponseEntity.ok().build();
     }
 }

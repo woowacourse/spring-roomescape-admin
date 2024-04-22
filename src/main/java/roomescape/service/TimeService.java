@@ -12,6 +12,7 @@ import roomescape.domain.ReservationTime;
 
 import java.sql.PreparedStatement;
 import java.sql.Statement;
+import java.util.List;
 
 @Service
 public class TimeService {
@@ -48,5 +49,15 @@ public class TimeService {
         );
 
         return rowMapper;
+    }
+
+    public List<ReservationTime> readReservationTimes() {
+        String sql = "SELECT * FROM reservation_time";
+        return jdbcTemplate.query(sql, getReservationTimeRowMapper());
+    }
+
+    public void deleteTime(Long id) {
+        String sql = "DELETE FROM reservation_time WHERE id = ?";
+        jdbcTemplate.update(sql, id);
     }
 }

@@ -6,10 +6,10 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 import roomescape.domain.Reservation;
-import roomescape.dto.RequestReservation;
+import roomescape.dto.request.RequestReservation;
 import roomescape.dto.ReservationRepositoryDto;
 import roomescape.dto.ReservationTimeDto;
-import roomescape.dto.ResponseReservation;
+import roomescape.dto.response.ResponseReservation;
 import roomescape.times.ReservationTimeRepository;
 
 import java.util.List;

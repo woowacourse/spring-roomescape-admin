@@ -58,7 +58,18 @@ public class JdbcTemplateReservationRepository implements ReservationRepository 
 
     @Override
     public List<Reservation> findAll() {
-        return jdbcTemplate.query("SELECT id, name, date, time FROM reservation", reservationRowMapper);
+        return jdbcTemplate.query(
+                """
+                        SELECT
+                            r.id as reservation_id,
+                            r.name,
+                            r.date,
+                            t.id as time_id,
+                            t.start_at as time_value
+                        FROM reservation as r
+                        INNER JOIN reservation_time as t
+                        ON r.time_id = t.id
+                        """, reservationRowMapper);
     }
 
     @Override

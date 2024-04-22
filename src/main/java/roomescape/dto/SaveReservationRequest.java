@@ -11,7 +11,8 @@ public record SaveReservationRequest(LocalDate date, String name, LocalTime time
     public Reservation toReservation() {
         return new Reservation(
                 new ClientName(name),
-                LocalDateTime.of(date, time)
+                date,
+                time
         );
     }
 }

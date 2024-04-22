@@ -30,13 +30,22 @@ public class ReservationController {
 
     @GetMapping("/reservations")
     public List<Reservation> getReservationList() {
-        return jdbcTemplate.query("select * from reservation",
+        String sql = "SELECT"
+                + "    r.id as reservation_id,"
+                + "    r.name,"
+                + "    r.date,"
+                + "    t.id as time_id,"
+                + "    t.start_at as time_value "
+                + "FROM reservation as r "
+                + "INNER JOIN reservation_time as t "
+                + "ON r.time_id = t.id ";
+        return jdbcTemplate.query(sql,
                 (resultSet, rowNum) -> {
                     Reservation reservation = new Reservation(
                             resultSet.getLong("id"),
                             resultSet.getString("name"),
                             resultSet.getDate("date").toLocalDate(),
-                            resultSet.getTime("time").toLocalTime()
+                            new ReservationTime(resultSet.getLong(4),resultSet.getTime(5).toLocalTime())
                     );
                     return reservation;
                 });
@@ -47,25 +56,34 @@ public class ReservationController {
         KeyHolder keyHolder = new GeneratedKeyHolder();
         jdbcTemplate.update(connection -> {
             PreparedStatement ps = connection.prepareStatement(
-                    "insert into reservation (name, date, time) values (?,?,?)",
+                    "insert into reservation (name, date, time_id) values (?,?,?)",
                     new String[]{"id"}
             );
             ps.setString(1, reservationAddRequest.getName());
             ps.setString(2, reservationAddRequest.getDate().toString());
-            ps.setString(3, reservationAddRequest.getTime().toString());
+            ps.setLong(3, reservationAddRequest.getTimeId());
             return ps;
         }, keyHolder);
         Long id = keyHolder.getKey().longValue();
 
-        String sql = "select * from reservation where id = ?";
+        String sql = "SELECT"
+                + "    r.id as reservation_id,"
+                + "    r.name,"
+                + "    r.date,"
+                + "    t.id as time_id,"
+                + "    t.start_at as time_value "
+                + "FROM reservation as r "
+                + "INNER JOIN reservation_time as t "
+                + "ON r.time_id = t.id "
+                + "WHERE r.id = ?";
         Reservation reservation = jdbcTemplate.queryForObject(sql, new RowMapper<Reservation>() {
             @Override
             public Reservation mapRow(ResultSet rs, int rowNum) throws SQLException {
                 return new Reservation(
-                        rs.getLong("id"),
-                        rs.getString("name"),
-                        rs.getDate("date").toLocalDate(),
-                        rs.getTime("time").toLocalTime()
+                        rs.getLong(1),
+                        rs.getString(2),
+                        rs.getDate(3).toLocalDate(),
+                        new ReservationTime(rs.getLong(4),rs.getTime(5).toLocalTime())
                 );
             }
         }, id);

@@ -36,7 +36,7 @@ public class ReservationController {
 
     @PostMapping
     public ResponseEntity<ReservationResponse> add(@RequestBody final ReservationRequest reservationRequest) {
-        Reservation reservation = reservationService.add(reservationRequest);
+        Reservation reservation = reservationService.add(reservationRequest); // TODO: dto 변환 여기서하게 수정
         ReservationResponse reservationResponse = ReservationResponse.from(reservation);
         return ResponseEntity.created(URI.create("/reservations/" + reservation.getId())).body(reservationResponse);
     }

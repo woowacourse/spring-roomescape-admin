@@ -21,7 +21,7 @@ import roomescape.domain.Reservation;
 
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.DEFINED_PORT)
 @DirtiesContext(classMode = DirtiesContext.ClassMode.BEFORE_EACH_TEST_METHOD)
-public class ReservatinDbTest {
+public class ReservatinTest {
 
     @Autowired
     private JdbcTemplate jdbcTemplate;
@@ -91,6 +91,7 @@ public class ReservatinDbTest {
         reservation.put("name", "브라운");
         reservation.put("date", "2023-08-05");
         reservation.put("timeId", 1);
+//        ReservationRequest reservationRequest = new ReservationRequest("브라운", LocalDate.of(2023, 8, 5), LocalTime.of(15, 40));
 
         RestAssured.given().log().all()
                 .contentType(ContentType.JSON)

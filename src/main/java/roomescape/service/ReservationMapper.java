@@ -1,7 +1,7 @@
 package roomescape.service;
 
-import roomescape.controller.ReservationRequest;
-import roomescape.controller.ReservationResponse;
+import roomescape.controller.reservation.ReservationRequest;
+import roomescape.controller.reservation.ReservationResponse;
 import roomescape.entity.Reservation;
 
 import java.time.format.DateTimeFormatter;
@@ -17,6 +17,7 @@ public class ReservationMapper {
                 reservation.id(),
                 reservation.name(),
                 reservation.date().format(DateTimeFormatter.ISO_LOCAL_DATE),
-                reservation.time().format(DateTimeFormatter.ofPattern("HH:mm")));
+                reservation.time().format(DateTimeFormatter.ofPattern("HH:mm"))
+        );
     }
 }

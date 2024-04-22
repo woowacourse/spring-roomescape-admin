@@ -4,6 +4,8 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.atomic.AtomicLong;
 
+import org.springframework.jdbc.core.JdbcTemplate;
+import org.springframework.jdbc.core.RowMapper;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -20,12 +22,25 @@ import roomescape.ReservationDto;
 public class ReservationController {
 
     private final AtomicLong index = new AtomicLong(1);
-
     private final List<Reservation> reservations = new ArrayList<>();
+
+    private final RowMapper<Reservation> reservationRowMapper = (resultSet, rowNum) -> new Reservation(
+            resultSet.getLong("id"),
+            resultSet.getString("name"),
+            resultSet.getDate("date").toLocalDate(),
+            resultSet.getTime("time").toLocalTime()
+    );
+
+    private final JdbcTemplate jdbcTemplate;
+
+    public ReservationController(final JdbcTemplate jdbcTemplate) {
+        this.jdbcTemplate = jdbcTemplate;
+    }
 
     @GetMapping
     public List<ReservationDto> findAll() {
-        return reservations.stream()
+        return jdbcTemplate.query("SELECT * FROM reservation", reservationRowMapper)
+                .stream()
                 .map(ReservationDto::from)
                 .toList();
     }

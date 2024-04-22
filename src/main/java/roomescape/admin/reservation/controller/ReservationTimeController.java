@@ -14,38 +14,40 @@ import roomescape.admin.reservation.dto.request.ReservationTimeRequest;
 import roomescape.admin.reservation.dto.response.ReservationTimeResponse;
 import roomescape.admin.reservation.entity.ReservationTime;
 import roomescape.admin.reservation.repository.ReservationTimeRepository;
+import roomescape.admin.reservation.service.ReservationTimeService;
 
 @RequestMapping("/times")
 @RestController
 public class ReservationTimeController {
 
+    private final ReservationTimeService reservationTimeService;
     private final ReservationTimeRepository reservationTimeRepository;
 
     @Autowired
-    public ReservationTimeController(ReservationTimeRepository reservationTimeRepository) {
+    public ReservationTimeController(ReservationTimeService reservationTimeService,
+                                     ReservationTimeRepository reservationTimeRepository) {
+        this.reservationTimeService = reservationTimeService;
         this.reservationTimeRepository = reservationTimeRepository;
-    }
-
-    @PostMapping
-    public ResponseEntity<ReservationTime> create(@RequestBody ReservationTimeRequest reservationTimeRequest) {
-        ReservationTime time = new ReservationTime(null, reservationTimeRequest.startAt());
-        ReservationTime saveTime = reservationTimeRepository.save(time);
-        return ResponseEntity.ok(saveTime);
     }
 
     @GetMapping
     public ResponseEntity<List<ReservationTimeResponse>> findAll() {
-        List<ReservationTime> reservationTimes = reservationTimeRepository.findAll();
-        List<ReservationTimeResponse> reservationTimeRespons = reservationTimes.stream()
+        List<ReservationTimeResponse> reservationTimeResponse = reservationTimeService.findAll().stream()
                 .map(ReservationTimeResponse::from)
                 .toList();
 
-        return ResponseEntity.ok(reservationTimeRespons);
+        return ResponseEntity.ok(reservationTimeResponse);
+    }
+
+    @PostMapping
+    public ResponseEntity<ReservationTime> create(@RequestBody ReservationTimeRequest reservationTimeRequest) {
+        ReservationTime reservationTime = reservationTimeService.create(reservationTimeRequest);
+        return ResponseEntity.ok(reservationTime);
     }
 
     @DeleteMapping("/{id}")
     public ResponseEntity<?> delete(@PathVariable("id") Long id) {
-        int deleteCount = reservationTimeRepository.delete(id);
+        int deleteCount = reservationTimeService.delete(id);
         if (deleteCount == 0) {
             return ResponseEntity.ok("삭제할 시간이 존재하지 않습니다.");
         }

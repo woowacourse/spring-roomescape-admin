@@ -11,9 +11,9 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import roomescape.domain.reservation.Reservation;
-import roomescape.repository.ReservationRepository;
 import roomescape.dto.ReservationDto;
 import roomescape.dto.ReservationRequest;
+import roomescape.repository.ReservationRepository;
 
 @RestController
 @RequestMapping("/reservations")
@@ -41,7 +41,11 @@ public class ReservationController {
 
     @DeleteMapping("/{id}")
     public ResponseEntity<Void> deleteReservation(@PathVariable(value = "id") Long id) {
-        reservationRepository.deleteById(id);
+        try {
+            reservationRepository.deleteById(id);
+        } catch (IllegalArgumentException e) {
+            return ResponseEntity.notFound().build();
+        }
         return ResponseEntity.noContent().build();
     }
 }

@@ -1,7 +1,6 @@
 package roomescape;
 
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.hamcrest.Matchers.is;
 import static org.junit.jupiter.api.DynamicTest.dynamicTest;
 
 import io.restassured.RestAssured;
@@ -60,55 +59,6 @@ class MissionStepTest {
     }
 
     @Test
-    @DisplayName("현재 존재하는 모든 예약을 반환한다.")
-    void findAllReservations() {
-        RestAssured.given().log().all()
-                .when().get("/reservations")
-                .then().log().all()
-                .statusCode(200)
-                .body("size()", is(0));
-    }
-
-    @TestFactory
-    @DisplayName("예약을 생성하고 삭제한다.")
-    Collection<DynamicTest> createReservationAndDelete() {
-        ReservationRequest params = new ReservationRequest(
-                "브라운", LocalDate.of(2023, 8, 5), LocalTime.of(15, 40)
-        );
-
-        return List.of(
-                dynamicTest("예약을 생성한다.", () -> {
-                    RestAssured.given().log().all()
-                            .contentType(ContentType.JSON)
-                            .body(params)
-                            .when().post("/reservations")
-                            .then().log().all()
-                            .statusCode(201)
-                            .body("id", is(1));
-                }),
-                dynamicTest("생성된 예약은 전체 예약 목록에서 확인할 수 있다.", () -> {
-                    RestAssured.given().log().all()
-                            .when().get("/reservations")
-                            .then().log().all()
-                            .statusCode(200)
-                            .body("size()", is(1));
-                }),
-                dynamicTest("예약을 삭제한다.", () -> {
-                    RestAssured.given().log().all()
-                            .when().delete("/reservations/1")
-                            .then().log().all()
-                            .statusCode(204);
-                }),
-                dynamicTest("삭제된 예약은 전체 예약 목록에서도 지워진다.", () -> {
-                    RestAssured.given().log().all()
-                            .when().get("/reservations")
-                            .then().log().all()
-                            .statusCode(200)
-                            .body("size()", is(0));
-                }));
-    }
-
-    @Test
     @DisplayName("데이터 베이스에 'reservation' 테이블이 생성된다.")
     void createReservationTable() {
         try (Connection connection = jdbcTemplate.getDataSource().getConnection()) {
@@ -139,22 +89,45 @@ class MissionStepTest {
         assertThat(reservations.size()).isEqualTo(count);
     }
 
-    @Test
-    @DisplayName("데이터를 저장한다.")
-    void saveReservation() {
+    @TestFactory
+    @DisplayName("예약을 생성하고 삭제한다.")
+    Collection<DynamicTest> saveReservationAndDelete() {
         ReservationRequest params = new ReservationRequest(
                 "브라운", LocalDate.of(2023, 8, 5), LocalTime.of(10, 00)
         );
 
-        RestAssured.given().log().all()
-                .contentType(ContentType.JSON)
-                .body(params)
-                .when().post("/reservations")
-                .then().log().all()
-                .statusCode(201)
-                .header("Location", "/reservations/1");
+        return List.of(
+                dynamicTest("예약을 생성한다.", () -> {
+                    RestAssured.given().log().all()
+                            .contentType(ContentType.JSON)
+                            .body(params)
+                            .when().post("/reservations")
+                            .then().log().all()
+                            .statusCode(201)
+                            .header("Location", "/reservations/1");
 
-        Integer count = jdbcTemplate.queryForObject("SELECT count(1) from reservation", Integer.class);
-        assertThat(count).isEqualTo(1);
+                    Integer count = jdbcTemplate.queryForObject("SELECT count(1) from reservation", Integer.class);
+                    assertThat(count).isEqualTo(1);
+                }),
+                dynamicTest("예약을 삭제한다.", () -> {
+                    RestAssured.given().log().all()
+                            .when().delete("/reservations/1")
+                            .then().log().all()
+                            .statusCode(204);
+
+                    Integer countAfterDelete = jdbcTemplate.queryForObject("SELECT count(1) from reservation",
+                            Integer.class);
+                    assertThat(countAfterDelete).isEqualTo(0);
+                })
+        );
+    }
+
+    @Test
+    @DisplayName("존재하지 않는 예약을 삭제하려고 시도하면 404 status를 반환한다.")
+    void deleteReservationByNotExistId() {
+        RestAssured.given().log().all()
+                .when().delete("/reservations/1")
+                .then().log().all()
+                .statusCode(404);
     }
 }

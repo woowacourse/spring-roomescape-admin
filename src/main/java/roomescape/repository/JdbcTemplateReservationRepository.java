@@ -51,5 +51,9 @@ public class JdbcTemplateReservationRepository implements ReservationRepository 
 
     @Override
     public void deleteById(Long id) {
+        int rowCount = jdbcTemplate.update("DELETE FROM reservation WHERE id = ?", id);
+        if (rowCount == 0) {
+            throw new IllegalArgumentException("존재하지 않는 예약입니다.");
+        }
     }
 }

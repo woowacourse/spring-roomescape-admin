@@ -14,24 +14,22 @@ import org.springframework.web.bind.annotation.RestController;
 import roomescape.admin.reservation.dto.request.ReservationRequest;
 import roomescape.admin.reservation.dto.response.ReservationResponse;
 import roomescape.admin.reservation.entity.Reservation;
-import roomescape.admin.reservation.entity.ReservationTime;
-import roomescape.admin.reservation.repository.ReservationRepository;
+import roomescape.admin.reservation.service.ReservationService;
 
 @RequestMapping("/reservations")
 @RestController
 public class ReservationController {
 
-    private final ReservationRepository reservationRepository;
+    private final ReservationService reservationService;
 
     @Autowired
-    public ReservationController(ReservationRepository reservationRepository) {
-        this.reservationRepository = reservationRepository;
+    public ReservationController(ReservationService reservationService) {
+        this.reservationService = reservationService;
     }
 
     @GetMapping
     public ResponseEntity<List<ReservationResponse>> findAll() {
-        List<Reservation> reservations = reservationRepository.findAll();
-        List<ReservationResponse> reservationResponses = reservations.stream()
+        List<ReservationResponse> reservationResponses = reservationService.findAll().stream()
                 .map(ReservationResponse::from)
                 .toList();
 
@@ -40,15 +38,13 @@ public class ReservationController {
 
     @PostMapping
     public ResponseEntity<ReservationResponse> create(@RequestBody ReservationRequest reservationRequest) {
-        Reservation reservation = new Reservation(null, reservationRequest.name(), reservationRequest.date(),
-                new ReservationTime(reservationRequest.timeId(), null));
-        Reservation saveReservation = reservationRepository.save(reservation);
-        return ResponseEntity.ok(ReservationResponse.from(saveReservation));
+        Reservation reservation = reservationService.create(reservationRequest);
+        return ResponseEntity.ok(ReservationResponse.from(reservation));
     }
 
     @DeleteMapping("/{id}")
     public ResponseEntity<?> delete(@PathVariable("id") Long id) {
-        int deleteCount = reservationRepository.delete(id);
+        int deleteCount = reservationService.delete(id);
         if (deleteCount == 0) {
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body("삭제할 예약이 존재하지 않습니다.");
         }

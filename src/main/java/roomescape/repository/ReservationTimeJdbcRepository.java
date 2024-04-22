@@ -14,13 +14,9 @@ public class ReservationTimeJdbcRepository implements ReservationTimeRepository 
 
     private final JdbcTemplate jdbcTemplate;
     private final SimpleJdbcInsert jdbcInsert;
-    private final RowMapper<ReservationTime> rowMapper = (resultSet, rowNum) -> {
-        final ReservationTime reservationTime = new ReservationTime(
-                resultSet.getLong("id"),
-                LocalTime.parse(resultSet.getString("start_at"))
-        );
-        return reservationTime;
-    };
+    private final RowMapper<ReservationTime> rowMapper = (resultSet, rowNum) -> new ReservationTime(
+            resultSet.getLong("id"),
+            LocalTime.parse(resultSet.getString("start_at")));
 
     public ReservationTimeJdbcRepository(final JdbcTemplate jdbcTemplate) {
         this.jdbcTemplate = jdbcTemplate;

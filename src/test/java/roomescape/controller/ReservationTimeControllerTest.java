@@ -1,55 +1,88 @@
 package roomescape.controller;
 
-import static org.assertj.core.api.Assertions.assertThat;
-import static org.hamcrest.core.Is.is;
-
 import com.fasterxml.jackson.databind.ObjectMapper;
 import io.restassured.RestAssured;
 import io.restassured.http.ContentType;
+import io.restassured.response.Response;
 import java.time.LocalTime;
+import java.util.List;
+import org.assertj.core.api.SoftAssertions;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.jdbc.core.JdbcTemplate;
-import org.springframework.transaction.annotation.Transactional;
+import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.boot.test.web.server.LocalServerPort;
+import org.springframework.test.context.jdbc.Sql;
+import roomescape.domain.ReservationTime;
 import roomescape.dto.ReservationTimeRequest;
+import roomescape.dto.ReservationTimeResponse;
+import roomescape.fixture.Fixture;
+import roomescape.repository.ReservationTimeRepository;
 
-class ReservationTimeControllerTest extends BaseControllerTest {
+@SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
+@Sql(scripts = "classpath:truncate.sql", executionPhase = Sql.ExecutionPhase.BEFORE_TEST_METHOD)
+class ReservationTimeControllerTest {
 
-    @Autowired
-    private JdbcTemplate jdbcTemplate;
+    @LocalServerPort
+    private int port;
 
     @Autowired
     private ObjectMapper mapper;
 
-    @Test
-    void getAllReservationTimes() {
-        RestAssured.given().log().all()
-                .when().get("/times")
-                .then().log().all()
-                .statusCode(200)
-                .body("size()", is(0));
+    @Autowired
+    private ReservationTimeRepository reservationTimeRepository;
+
+    private ReservationTime reservationTime1, reservationTime2;
+
+    @BeforeEach
+    void setUp() {
+        RestAssured.port = port;
+        reservationTime1 = reservationTimeRepository.save(Fixture.RESERVATION_TIME_1);
+        reservationTime2 = reservationTimeRepository.save(Fixture.RESERVATION_TIME_2);
     }
 
     @Test
-    void addAndDeleteReservationTime() {
-        RestAssured.given().log().all()
+    void getAllReservationTimes() {
+        Response response = RestAssured.given().log().all()
+                .when().get("/times");
+
+        List<ReservationTimeResponse> reservationTimeResponses = getReservationTimeResponses(response);
+
+        SoftAssertions.assertSoftly(softly -> {
+            softly.assertThat(response.getStatusCode()).isEqualTo(200);
+            softly.assertThat(reservationTimeResponses).hasSize(2);
+            softly.assertThat(reservationTimeResponses).containsExactly(
+                    ReservationTimeResponse.from(reservationTime1),
+                    ReservationTimeResponse.from(reservationTime2)
+            );
+        });
+    }
+
+    @Test
+    void addReservationTime() {
+        Response response = RestAssured.given().log().all()
                 .contentType(ContentType.JSON)
                 .body(makeReservationTimeRequest())
-                .when().post("/times")
-                .then().log().all()
-                .statusCode(201)
-                .header("Location", "/times/1");
+                .when().post("/times");
 
-        Integer count = jdbcTemplate.queryForObject("SELECT count(1) from reservation_time", Integer.class);
-        assertThat(count).isEqualTo(1);
+        SoftAssertions.assertSoftly(softly -> {
 
-        RestAssured.given().log().all()
-                .when().delete("/times/1")
-                .then().log().all()
-                .statusCode(204);
+            softly.assertThat(response.getStatusCode()).isEqualTo(201);
+            softly.assertThat(response.getHeader("Location"))
+                    .isEqualTo("/times/" + response.jsonPath().getLong("id"));
+        });
+    }
 
-        Integer countAfterDelete = jdbcTemplate.queryForObject("SELECT count(1) from reservation_time", Integer.class);
-        assertThat(countAfterDelete).isZero();
+    @Test
+    void deleteReservationTime() {
+        ReservationTime reservationTime = reservationTimeRepository.save(Fixture.RESERVATION_TIME_1);
+
+        Response response = RestAssured.given().log().all()
+                .when().delete("/times/" + reservationTime.getId());
+
+        SoftAssertions.assertSoftly(softly -> {
+            softly.assertThat(response.getStatusCode()).isEqualTo(204);
+        });
     }
 
     private String makeReservationTimeRequest() {
@@ -61,5 +94,9 @@ class ReservationTimeControllerTest extends BaseControllerTest {
         } catch (Exception e) {
             throw new RuntimeException(e);
         }
+    }
+
+    private List<ReservationTimeResponse> getReservationTimeResponses(Response response) {
+        return response.jsonPath().getList(".", ReservationTimeResponse.class);
     }
 }

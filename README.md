@@ -153,29 +153,6 @@ Content-Type: application/json
 </details>
 
 <details>
-<summary>GET <code>/times/{id}</code> 예약 시간 조회 API</summary>
-
-#### Request
-
-```http
-GET /times/1 HTTP/1.1
-```
-
-#### Response
-
-```http
-HTTP/1.1 200 
-Content-Type: application/json
-
-{
-    "id": 1,
-    "startAt": "10:00"
-}
-```
-
-</details>
-
-<details>
 <summary>DELETE <code>/times/{id}</code> 예약 시간 삭제 API</summary>
 
 #### Request

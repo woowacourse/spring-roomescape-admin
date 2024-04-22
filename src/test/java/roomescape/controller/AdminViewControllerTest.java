@@ -13,11 +13,9 @@ class AdminViewControllerTest extends BaseControllerTest {
     @ParameterizedTest
     @ValueSource(strings = {"/admin", "/admin/reservation", "/admin/time"})
     void adminPage(String path) {
-        // given & when
-        Response response = RestAssured.given().log().all()
+        Response response = RestAssured.given()
                 .when().get(path);
 
-        // then
         assertThat(response.getStatusCode()).isEqualTo(HttpStatus.OK.value());
     }
 }

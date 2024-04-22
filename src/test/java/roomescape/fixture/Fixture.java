@@ -14,9 +14,19 @@ public class Fixture {
         return new ReservationTime(LocalTime.of(hour, minute));
     }
 
+    public static ReservationTime reservationTime(Long id, int hour, int minute) {
+        return new ReservationTime(id, LocalTime.of(hour, minute));
+    }
+
     public static Reservation reservation(String name, int year, int month, int day, ReservationTime time) {
         LocalDate date = LocalDate.of(year, month, day);
 
         return new Reservation(name, date, time);
+    }
+
+    public static Reservation reservation(Long id, String name, int year, int month, int day, ReservationTime time) {
+        LocalDate date = LocalDate.of(year, month, day);
+
+        return new Reservation(id, name, date, time);
     }
 }

@@ -8,6 +8,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.annotation.DirtiesContext;
 import roomescape.controller.dto.ReservationCreateRequest;
+import roomescape.controller.dto.ReservationResponse;
 import roomescape.domain.Reservation;
 import roomescape.repository.ReservationRepository;
 
@@ -29,9 +30,9 @@ class ReservationServiceTest {
         final ReservationCreateRequest request = new ReservationCreateRequest(
                 "냥인", "2024-04-21", "10:25");
 
-        final Reservation reservation = reservationService.createReservation(request);
+        final ReservationResponse actual = reservationService.createReservation(request);
 
-        assertThat(reservation.getId()).isEqualTo(1L);
+        assertThat(actual.getId()).isEqualTo(1L);
     }
 
     @Test

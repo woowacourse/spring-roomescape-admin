@@ -2,6 +2,7 @@ package roomescape.service;
 
 import org.springframework.stereotype.Service;
 import roomescape.controller.dto.ReservationCreateRequest;
+import roomescape.controller.dto.ReservationResponse;
 import roomescape.domain.Reservation;
 import roomescape.repository.ReservationRepository;
 import java.util.List;
@@ -15,10 +16,10 @@ public class ReservationService {
         this.reservationRepository = reservationRepository;
     }
 
-    //TODO DTO 리턴하도록 변경
-    public Reservation createReservation(final ReservationCreateRequest request) {
+    public ReservationResponse createReservation(final ReservationCreateRequest request) {
         final Long id = reservationRepository.save(request);
-        return request.toReservation(id);
+        final Reservation reservation = request.toReservation(id);
+        return new ReservationResponse(reservation);
     }
 
     public List<Reservation> readAllReservations() {

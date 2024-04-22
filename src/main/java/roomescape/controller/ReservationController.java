@@ -21,10 +21,10 @@ public class ReservationController {
 
     @PostMapping("/reservations")
     public ResponseEntity<Reservation> createReservation(@RequestBody ReservationDto reservationDto) {
-        long id = reservationService.addReservation(reservationDto);
-        Reservation reservation = makeReservation(reservationDto, id);
+        long reservationId = reservationService.addReservation(reservationDto);
+        Reservation reservation = reservationService.getReservationById(reservationId);
 
-        return ResponseEntity.created(URI.create("/reservations/" + id)).body(reservation);
+        return ResponseEntity.created(URI.create("/reservations/" + reservationId)).body(reservation);
     }
 
     @GetMapping("/reservations")
@@ -33,15 +33,8 @@ public class ReservationController {
     }
 
     @DeleteMapping("/reservations/{id}")
-    public ResponseEntity<Void> deleteReservationById(@PathVariable("id") long id) {
-        reservationService.deleteReservationWithId(id);
+    public ResponseEntity<Void> deleteReservationById(@PathVariable("id") long reservationId) {
+        reservationService.deleteReservationById(reservationId);
         return ResponseEntity.noContent().build();
-    }
-
-    private Reservation makeReservation(ReservationDto reservationDto, long id) {
-        String name = reservationDto.name();
-        String date = reservationDto.date();
-        String time = reservationDto.time();
-        return new Reservation(id, name, date, time);
     }
 }

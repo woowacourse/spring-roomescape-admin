@@ -21,11 +21,15 @@ public class ReservationService {
         return reservationRepository.insert(reservationDto);
     }
 
+    public Reservation getReservationById(long reservationId) {
+        return reservationRepository.readById(reservationId);
+    }
+
     public List<Reservation> getAllReservations() {
         return reservationRepository.readAll();
     }
 
-    public void deleteReservationWithId(long id) {
-        reservationRepository.delete(id);
+    public void deleteReservationById(long reservationId) {
+        reservationRepository.delete(reservationId);
     }
 }

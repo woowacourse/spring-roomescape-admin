@@ -4,26 +4,14 @@ import java.io.Serializable;
 import java.util.List;
 import java.util.Map;
 import org.springframework.jdbc.core.JdbcTemplate;
-import org.springframework.jdbc.core.RowMapper;
 import org.springframework.jdbc.core.simple.SimpleJdbcInsert;
 import org.springframework.stereotype.Repository;
 import roomescape.domain.Reservation;
-import roomescape.domain.TimeSlot;
+import roomescape.repository.rowmapper.ReservationRowMapper;
 import roomescape.service.dto.ReservationCreationDto;
 
 @Repository
 public class ReservationJdbcRepository implements ReservationRepository {
-
-    private static final RowMapper<Reservation> ROW_MAPPER = (resultSet, rowNum) ->
-            new Reservation(
-                    Long.valueOf(resultSet.getString("id")),
-                    resultSet.getString("name"),
-                    resultSet.getString("date"),
-                    new TimeSlot(
-                            resultSet.getLong("time_slot_id"),
-                            resultSet.getString("start_at")
-                    )
-            );
 
     private final JdbcTemplate jdbcTemplate;
     private final SimpleJdbcInsert jdbcInsert;
@@ -54,7 +42,7 @@ public class ReservationJdbcRepository implements ReservationRepository {
                 from reservation left join time_slot \s
                 on time_slot_id = time_slot.id
                 """;
-        return jdbcTemplate.query(sql, ROW_MAPPER);
+        return jdbcTemplate.query(sql, ReservationRowMapper.getInstance());
     }
 
     @Override

@@ -5,20 +5,14 @@ import java.util.Map;
 import java.util.Optional;
 import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.jdbc.core.JdbcTemplate;
-import org.springframework.jdbc.core.RowMapper;
 import org.springframework.jdbc.core.simple.SimpleJdbcInsert;
 import org.springframework.stereotype.Repository;
 import roomescape.domain.TimeSlot;
+import roomescape.repository.rowmapper.TimeSlotRowMapper;
 import roomescape.service.dto.TimeSlotDto;
 
 @Repository
 public class TimeSlotJdbcRepository implements TimeSlotRepository {
-
-    private static final RowMapper<TimeSlot> ROW_MAPPER = (resultSet, rowNum) ->
-            new TimeSlot(
-                    Long.valueOf(resultSet.getString("id")),
-                    resultSet.getString("start_at")
-            );
 
     private final JdbcTemplate jdbcTemplate;
     private final SimpleJdbcInsert jdbcInsert;
@@ -43,14 +37,14 @@ public class TimeSlotJdbcRepository implements TimeSlotRepository {
     @Override
     public List<TimeSlot> findAll() {
         String sql = "select id, start_at from time_slot";
-        return jdbcTemplate.query(sql, ROW_MAPPER);
+        return jdbcTemplate.query(sql, TimeSlotRowMapper.getInstance());
     }
 
     @Override
     public Optional<TimeSlot> findById(Long id) {
         String sql = "select id, start_at from time_slot where id = ?";
         try {
-            return Optional.ofNullable(jdbcTemplate.queryForObject(sql, ROW_MAPPER, id));
+            return Optional.ofNullable(jdbcTemplate.queryForObject(sql, TimeSlotRowMapper.getInstance(), id));
         } catch (EmptyResultDataAccessException e) {
             return Optional.empty();
         }

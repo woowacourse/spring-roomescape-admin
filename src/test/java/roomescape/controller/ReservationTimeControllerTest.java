@@ -35,7 +35,7 @@ class ReservationTimeControllerTest {
 
         Integer count = jdbcTemplate.queryForObject("SELECT count(1) from reservation_time", Integer.class);
 
-        assertThat(reservationTimes.size()).isEqualTo(count);
+        assertThat(reservationTimes).isEqualTo(count);
     }
 
     @DisplayName("예약 시간을 추가한다")
@@ -50,6 +50,21 @@ class ReservationTimeControllerTest {
                 .then().log().all()
                 .statusCode(201)
                 .header("Location", "/times/1");
+
+        Integer count = jdbcTemplate.queryForObject("SELECT count(1) from reservation_time", Integer.class);
+        assertThat(count).isEqualTo(1);
+    }
+
+    @DisplayName("예약 시간을 삭제한다")
+    @Test
+    void should_remove_reservation_time() {
+        jdbcTemplate.update("INSERT INTO reservation_time (start_at) values (?)", "10:00");
+        jdbcTemplate.update("INSERT INTO reservation_time (start_at) values (?)", "11:00");
+
+        RestAssured.given().log().all()
+                .when().delete("/times/1")
+                .then().log().all()
+                .statusCode(200);
 
         Integer count = jdbcTemplate.queryForObject("SELECT count(1) from reservation_time", Integer.class);
         assertThat(count).isEqualTo(1);

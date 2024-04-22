@@ -45,4 +45,10 @@ public class ReservationTimeDAO {
         }, keyHolder);
         return keyHolder.getKey().longValue();
     }
+
+    public void deleteReservationTime(long id) {
+        String sql = "delete from reservation_time where id = ?";
+        jdbcTemplate.update(sql, id);
+
+    }
 }

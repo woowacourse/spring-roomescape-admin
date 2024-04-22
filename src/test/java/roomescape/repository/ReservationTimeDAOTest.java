@@ -61,9 +61,17 @@ class ReservationTimeDAOTest {
 
     @DisplayName("예약 시간을 추가한다")
     @Test
-    void should_add_reservation() {
+    void should_add_reservation_time() {
         long id = reservationTimeDAO.addReservationTime(new ReservationTime(LocalTime.of(12, 0)));
         Integer count = jdbcTemplate.queryForObject("SELECT count(1) from reservation_time", Integer.class);
         assertThat(count).isEqualTo(3);
+    }
+
+    @DisplayName("예약 시간을 삭제한다")
+    @Test
+    void should_delete_reservation_time() {
+        reservationTimeDAO.deleteReservationTime(1);
+        Integer count = jdbcTemplate.queryForObject("SELECT count(1) from reservation_time", Integer.class);
+        assertThat(count).isEqualTo(1);
     }
 }

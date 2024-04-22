@@ -25,4 +25,8 @@ public class ReservationTimeService {
     public ReservationTime getReservationTime(long id) {
         return reservationTimeDAO.findReservationTime(id);
     }
+
+    public void removeReservationTime(long id) {
+        reservationTimeDAO.deleteReservationTime(id);
+    }
 }

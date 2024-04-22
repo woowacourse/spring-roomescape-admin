@@ -59,4 +59,12 @@ class ReservationTimeServiceTest {
         long id = reservationTimeService.addReservationTime(new ReservationTime(LocalTime.of(10, 0)));
         assertThat(id).isEqualTo(3);
     }
+
+    @DisplayName("예약 시간을 삭제한다")
+    @Test
+    void should_remove_reservation_times() {
+        reservationTimeService.removeReservationTime(1);
+        Integer count = jdbcTemplate.queryForObject("SELECT count(1) from reservation_time", Integer.class);
+        assertThat(count).isEqualTo(1);
+    }
 }

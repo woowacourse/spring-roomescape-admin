@@ -1,13 +1,9 @@
 package roomescape.controller;
 
 import java.net.URI;
-import java.time.LocalTime;
 import java.util.List;
-import java.util.Objects;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
-import org.springframework.jdbc.core.JdbcTemplate;
-import org.springframework.jdbc.core.namedparam.BeanPropertySqlParameterSource;
-import org.springframework.jdbc.core.simple.SimpleJdbcInsert;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -15,53 +11,50 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
-import roomescape.dto.ReservationTimeRequest;
-import roomescape.dto.ReservationTimeResponse;
+import roomescape.domain.ReservationTime;
+import roomescape.dto.app.ReservationTimeAppRequest;
+import roomescape.dto.web.ReservationTimeWebRequest;
+import roomescape.dto.web.ReservationTimeWebResponse;
+import roomescape.service.ReservationTimeService;
 
 @RestController
 @RequestMapping("/times")
 public class ReservationTimeController {
+    @Autowired
+    private final ReservationTimeService reservationTimeService;
 
-    private final JdbcTemplate jdbcTemplate;
-    private final SimpleJdbcInsert simpleJdbcInsert;
-
-    public ReservationTimeController(JdbcTemplate jdbcTemplate) {
-        this.jdbcTemplate = jdbcTemplate;
-        this.simpleJdbcInsert = new SimpleJdbcInsert(
-                Objects.requireNonNull(jdbcTemplate.getDataSource()))
-                .withTableName("reservation_time")
-                .usingGeneratedKeyColumns("id");
+    public ReservationTimeController(final ReservationTimeService reservationTimeService) {
+        this.reservationTimeService = reservationTimeService;
     }
 
     @PostMapping
-    public ResponseEntity<ReservationTimeResponse> create(@RequestBody ReservationTimeRequest request) {
-        BeanPropertySqlParameterSource parameterSource = new BeanPropertySqlParameterSource(request);
-        Number key = simpleJdbcInsert.executeAndReturnKey(parameterSource);
-        return ResponseEntity.created(URI.create("/times/" + key))
-                .body(new ReservationTimeResponse(
-                        key.longValue(),
+    public ResponseEntity<ReservationTimeWebResponse> create(@RequestBody ReservationTimeWebRequest request) {
+        ReservationTime newReservationTime = reservationTimeService.save(
+                new ReservationTimeAppRequest(request.startAt()));
+        Long id = newReservationTime.getId();
+
+        return ResponseEntity.created(URI.create("/times/" + id))
+                .body(new ReservationTimeWebResponse(
+                        id,
                         request.startAt()
                 ));
     }
 
     @DeleteMapping("/{id}")
     public ResponseEntity<Void> deleteBy(@PathVariable Long id) {
-        String sql = "delete from reservation_time where id = ?";
-        jdbcTemplate.update(sql, id);
+        reservationTimeService.delete(id);
 
         return ResponseEntity.noContent().build();
     }
 
     @GetMapping
-    public ResponseEntity<List<ReservationTimeResponse>> getReservationTime() {
-        String sql = "select * from reservation_time";
-        List<ReservationTimeResponse> times = jdbcTemplate.query(
-                sql,
-                (rs, rowNum) -> new ReservationTimeResponse(
-                        rs.getLong("id"),
-                        LocalTime.parse(rs.getString("start_at"))
-                ));
+    public ResponseEntity<List<ReservationTimeWebResponse>> getReservationTimes() {
+        List<ReservationTime> reservationTimes = reservationTimeService.findAll();
+        List<ReservationTimeWebResponse> reservationTimeWebResponses = reservationTimes.stream()
+                .map(reservationTime -> new ReservationTimeWebResponse(reservationTime.getId(),
+                        reservationTime.getStartAt()))
+                .toList();
 
-        return ResponseEntity.ok(times);
+        return ResponseEntity.ok(reservationTimeWebResponses);
     }
 }

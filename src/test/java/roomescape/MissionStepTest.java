@@ -8,7 +8,7 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.web.server.LocalServerPort;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.test.annotation.DirtiesContext;
-import roomescape.domain.Reservation;
+import roomescape.dto.reservation.response.ReservationResponseDto;
 
 import java.sql.Connection;
 import java.sql.SQLException;
@@ -51,7 +51,7 @@ public class MissionStepTest {
                 .when().get("/reservations")
                 .then().log().all()
                 .statusCode(200)
-                .body("size()", is(0));
+                .body("reservations.size()", is(0));
     }
 
     @Test
@@ -76,17 +76,11 @@ public class MissionStepTest {
                 .when().delete("/reservations/1")
                 .then().log().all()
                 .statusCode(204);
-
-        RestAssured.given().log().all()
-                .port(randomServerPort)
-                .when().delete("/reservations/1")
-                .then().log().all()
-                .statusCode(404);
     }
 
     @Test
     void 사단계() {
-        try(Connection conn = jdbcTemplate.getDataSource().getConnection()) {
+        try (Connection conn = jdbcTemplate.getDataSource().getConnection()) {
             assertThat(conn).isNotNull();
             assertThat(conn.getCatalog()).isEqualTo("DATABASE");
             assertThat(conn.getMetaData().getTables(null, null, "RESERVATION", null).next()).isTrue();
@@ -100,16 +94,16 @@ public class MissionStepTest {
     void 오단계() {
         jdbcTemplate.update("INSERT INTO reservation (name, date, time) VALUES (?, ?, ?)", "브라운", "2023-08-05", "15:40");
 
-        List<Reservation> reservations = RestAssured.given().log().all()
+        List<ReservationResponseDto> response = RestAssured.given().log().all()
                 .port(randomServerPort)
                 .when().get("/reservations")
                 .then().log().all()
                 .statusCode(200).extract()
-                .jsonPath().getList(".", Reservation.class);
+                .jsonPath().getList("reservations");
 
         Integer count = jdbcTemplate.queryForObject("SELECT count(1) from reservation", Integer.class);
 
-        assertThat(reservations.size()).isEqualTo(count);
+        assertThat(response.size()).isEqualTo(count);
     }
 
     @Test

@@ -27,7 +27,7 @@ class ReservationControllerTest {
                 .when().get("/reservations")
                 .then().log().all()
                 .statusCode(200)
-                .body("size()", is(0));
+                .body("reservations.size()", is(0));
     }
 
     @DisplayName("예약 삭제 테스트")
@@ -53,12 +53,6 @@ class ReservationControllerTest {
                 .when().delete("/reservations/1")
                 .then().log().all()
                 .statusCode(204);
-
-        RestAssured.given().log().all()
-                .port(randomServerPort)
-                .when().delete("/reservations/1")
-                .then().log().all()
-                .statusCode(404);
     }
 
     @DisplayName("예약 등록 테스트")

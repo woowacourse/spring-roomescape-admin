@@ -31,7 +31,7 @@ public class ReservationTimeRepository {
     public Long createReservationTime(ReservationTimeCreateRequest reservationTimeCreateRequest) {
         SimpleJdbcInsert simpleJdbcInsert = new SimpleJdbcInsert(jdbcTemplate).withTableName("reservation_time")
                 .usingGeneratedKeyColumns("id");
-         return simpleJdbcInsert.executeAndReturnKey(Map.of(
+        return simpleJdbcInsert.executeAndReturnKey(Map.of(
                 "start_at", reservationTimeCreateRequest.startAt()
         )).longValue();
     }

@@ -2,7 +2,6 @@ package roomescape.repository;
 
 import java.util.List;
 import java.util.Map;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;
 import org.springframework.jdbc.core.simple.SimpleJdbcInsert;
@@ -15,9 +14,6 @@ import roomescape.util.CustomDateTimeFormatter;
 @Repository
 public class ReservationRepository {
 
-
-    @Autowired
-    private JdbcTemplate jdbcTemplate;
     private final String findAllReservationQuery = """
             SELECT
                 r.id as reservation_id,
@@ -40,16 +36,17 @@ public class ReservationRepository {
                     )
             );
 
+    private final JdbcTemplate jdbcTemplate;
+
+    public ReservationRepository(JdbcTemplate jdbcTemplate) {
+        this.jdbcTemplate = jdbcTemplate;
+    }
+
     public List<Reservation> findReservations() {
         return jdbcTemplate.query(findAllReservationQuery, reservationRowMapper);
     }
 
     public Reservation findReservationById(Long createdReservationId) {
-        System.out.println(createdReservationId);
-        List<Reservation> reservations = findReservations();
-        for (Reservation reservation : reservations) {
-            System.out.println(reservation);
-        }
         return jdbcTemplate.queryForObject(findAllReservationQuery + " WHERE r.id = ?",
                 reservationRowMapper,
                 createdReservationId);

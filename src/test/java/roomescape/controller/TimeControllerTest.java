@@ -8,8 +8,13 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.test.annotation.DirtiesContext;
+import roomescape.domain.Reservation;
+import roomescape.domain.Time;
 import roomescape.dto.TimeCreateRequest;
 
+import java.util.List;
+
+import static org.assertj.core.api.Assertions.assertThat;
 import static org.hamcrest.core.Is.is;
 
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.DEFINED_PORT)
@@ -23,13 +28,17 @@ class TimeControllerTest {
     void readTimes() {
         jdbcTemplate.update("INSERT INTO reservation_time (start_at) VALUES (?)", "10:00");
 
-        RestAssured.given().log().all()
+        List<Time> times = RestAssured.given().log().all()
                 .when().get("/times")
                 .then().log().all()
-                .statusCode(200)
-                .body("size()", is(1));
-    }
+                .statusCode(200).extract()
+                .jsonPath().getList(".", Time.class);
 
+
+        Integer count = jdbcTemplate.queryForObject("SELECT count(1) from reservation_time", Integer.class);
+
+        assertThat(times.size()).isEqualTo(count);
+    }
 
     @DisplayName("시간을 DB에 추가할 수 있다.")
     @Test
@@ -42,6 +51,9 @@ class TimeControllerTest {
                 .when().post("/times")
                 .then().log().all()
                 .statusCode(200);
+
+        Integer count = jdbcTemplate.queryForObject("SELECT count(1) from reservation_time", Integer.class);
+        assertThat(count).isEqualTo(1);
     }
 
     @DisplayName("삭제할 id를 받아서 DB에서 해당 시간을 삭제 할 수 있다.")
@@ -53,5 +65,8 @@ class TimeControllerTest {
                 .when().delete("/times/1")
                 .then().log().all()
                 .statusCode(200);
+
+        Integer countAfterDelete = jdbcTemplate.queryForObject("SELECT count(1) from reservation_time", Integer.class);
+        assertThat(countAfterDelete).isEqualTo(0);
     }
 }

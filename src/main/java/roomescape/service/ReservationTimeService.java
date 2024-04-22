@@ -11,6 +11,8 @@ import java.util.List;
 @Service
 public class ReservationTimeService {
 
+    private static final String RESERVATION_TIME_NOT_FOUND = "존재하지 않는 예약 시간입니다.";
+
     private final ReservationTimeDao reservationTimeDao;
 
     @Autowired
@@ -24,7 +26,8 @@ public class ReservationTimeService {
     }
 
     public ReservationTime readReservationTime(Long id) {
-        return reservationTimeDao.findById(id);
+        return reservationTimeDao.findById(id)
+                .orElseThrow(() -> new IllegalArgumentException(RESERVATION_TIME_NOT_FOUND));
     }
 
     public List<ReservationTime> readReservationTimes() {

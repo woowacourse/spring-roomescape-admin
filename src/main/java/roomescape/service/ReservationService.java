@@ -6,20 +6,21 @@ import roomescape.controller.dto.ReservationCreateRequest;
 import roomescape.domain.Reservation;
 import roomescape.domain.ReservationTime;
 import roomescape.repository.ReservationDao;
-import roomescape.repository.ReservationTimeDao;
 
 import java.util.List;
 
 @Service
 public class ReservationService {
 
+    private static final String RESERVATION_NOT_FOUND = "존재하지 않는 예약입니다.";
+
     private final ReservationDao reservationDao;
-    private final ReservationTimeDao reservationTimeDao;
+    private final ReservationTimeService reservationTimeService;
 
     @Autowired
-    public ReservationService(ReservationDao reservationDao, ReservationTimeDao reservationTimeDao) {
+    public ReservationService(ReservationDao reservationDao, ReservationTimeService reservationTimeService) {
         this.reservationDao = reservationDao;
-        this.reservationTimeDao = reservationTimeDao;
+        this.reservationTimeService = reservationTimeService;
     }
 
     public List<Reservation> readReservations() {
@@ -27,11 +28,12 @@ public class ReservationService {
     }
 
     public Reservation readReservation(Long id) {
-        return reservationDao.findById(id);
+        return reservationDao.findById(id)
+                .orElseThrow(() -> new IllegalArgumentException(RESERVATION_NOT_FOUND));
     }
 
     public Reservation createReservation(ReservationCreateRequest request) {
-        ReservationTime reservationTime = reservationTimeDao.findById(request.timeId());
+        ReservationTime reservationTime = reservationTimeService.readReservationTime(request.timeId());
         Reservation reservation = request.toReservation(reservationTime);
 
         return reservationDao.save(reservation);

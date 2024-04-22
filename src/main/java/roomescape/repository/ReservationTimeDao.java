@@ -12,6 +12,7 @@ import roomescape.domain.ReservationTime;
 import java.sql.PreparedStatement;
 import java.sql.Statement;
 import java.util.List;
+import java.util.Optional;
 
 @Repository
 public class ReservationTimeDao {
@@ -34,12 +35,22 @@ public class ReservationTimeDao {
         KeyHolder keyHolder = new GeneratedKeyHolder();
         jdbcTemplate.update(preparedStatementCreator, keyHolder);
 
-        return findById(keyHolder.getKey().longValue());
+        return new ReservationTime(keyHolder.getKey().longValue(), reservationTime.getStartAt());
     }
 
-    public ReservationTime findById(Long id) {
+    public Optional<ReservationTime> findById(Long id) {
+        if (!existsById(id)) {
+            return Optional.empty();
+        }
+
         String sql = "SELECT * FROM reservation_time WHERE id = ?";
-        return jdbcTemplate.queryForObject(sql, getReservationTimeRowMapper(), id);
+        ReservationTime reservationTime = jdbcTemplate.queryForObject(sql, getReservationTimeRowMapper(), id);
+        return Optional.ofNullable(reservationTime);
+    }
+
+    private Boolean existsById(Long id) {
+        String sql = "SELECT EXISTS (SELECT * FROM reservation_time WHERE id = ?)";
+        return jdbcTemplate.queryForObject(sql, Boolean.class, id);
     }
 
     public List<ReservationTime> findAll() {

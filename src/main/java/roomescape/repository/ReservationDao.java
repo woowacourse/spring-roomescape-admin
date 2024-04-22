@@ -13,6 +13,7 @@ import roomescape.domain.ReservationTime;
 import java.sql.PreparedStatement;
 import java.sql.Statement;
 import java.util.List;
+import java.util.Optional;
 
 @Repository
 public class ReservationDao {
@@ -38,13 +39,25 @@ public class ReservationDao {
         KeyHolder keyHolder = new GeneratedKeyHolder();
         jdbcTemplate.update(preparedStatementCreator, keyHolder);
 
-        return findById(keyHolder.getKey().longValue());
+        return new Reservation(keyHolder.getKey().longValue(), reservation.getName(),
+                reservation.getDate(), reservation.getTime());
     }
 
-    public Reservation findById(Long id) {
+    public Optional<Reservation> findById(Long id) {
+        if (!existsById(id)) {
+            return Optional.empty();
+        }
+
         String sql = "SELECT r.id AS reservation_id, r.name, r.date, t.id AS time_id, t.start_at AS start_at " +
                 "FROM reservation AS r INNER JOIN reservation_time as t on r.time_id = t.id WHERE r.id = ?";
-        return jdbcTemplate.queryForObject(sql, getReservationRowMapper(), id);
+
+        Reservation reservation = jdbcTemplate.queryForObject(sql, getReservationRowMapper(), id);
+        return Optional.ofNullable(reservation);
+    }
+
+    private Boolean existsById(Long id) {
+        String sql = "SELECT EXISTS (SELECT * FROM reservation WHERE id = ?)";
+        return jdbcTemplate.queryForObject(sql, Boolean.class, id);
     }
 
     public List<Reservation> findAll() {
@@ -54,11 +67,14 @@ public class ReservationDao {
     }
 
     private RowMapper<Reservation> getReservationRowMapper() {
-        return (resultSet, rowNum) -> new Reservation(resultSet.getLong("id"),
+        return (resultSet, rowNum) -> new Reservation(
+                resultSet.getLong("id"),
                 resultSet.getString("name"),
                 resultSet.getString("date"),
-                new ReservationTime(resultSet.getLong("time_id"),
-                        resultSet.getString("start_at"))
+                new ReservationTime(
+                        resultSet.getLong("time_id"),
+                        resultSet.getString("start_at")
+                )
         );
     }
 

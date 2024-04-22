@@ -16,7 +16,7 @@ import roomescape.domain.reservation.ReservationDateTime;
 import roomescape.fixture.ReservationFixture;
 
 @JdbcTest
-class JdbcReservationRepositoryTest { // todo InMemoryReservationRepositoryTest 통합
+class JdbcReservationRepositoryTest {
     @Autowired
     private JdbcTemplate jdbcTemplate;
     private ReservationRepository reservationRepository;
@@ -80,6 +80,6 @@ class JdbcReservationRepositoryTest { // todo InMemoryReservationRepositoryTest 
         reservationRepository.deleteById(1L);
 
         List<Reservation> reservations = reservationRepository.findAll();
-        assertThat(reservations).hasSize(0);
+        assertThat(reservations).isEmpty();
     }
 }

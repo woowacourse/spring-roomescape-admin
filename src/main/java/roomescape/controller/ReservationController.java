@@ -1,4 +1,4 @@
-package roomescape;
+package roomescape.controller;
 
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
@@ -12,33 +12,24 @@ import java.util.Objects;
 import java.util.concurrent.atomic.AtomicLong;
 
 @Controller
-public class RoomescapeController {
+@RequestMapping("/reservations")
+public class ReservationController {
     private final List<Reservation> reservations = new ArrayList<>();
     private final AtomicLong id = new AtomicLong(1);
 
-    @GetMapping("admin")
-    public String admin() {
-        return "/admin/index";
-    }
-
-    @GetMapping("admin/reservation")
-    public String reservation() {
-        return "/admin/reservation-legacy";
-    }
-
-    @GetMapping("reservations")
+    @GetMapping()
     public ResponseEntity<List<Reservation>> read() {
         return ResponseEntity.ok().body(reservations);
     }
 
-    @PostMapping("reservations")
+    @PostMapping()
     public ResponseEntity<Reservation> create(@RequestBody ReservationDto reservationDto) {
         Reservation newReservation = reservationDto.toEntity(id.getAndIncrement());
         reservations.add(newReservation);
         return ResponseEntity.ok().body(newReservation);
     }
 
-    @DeleteMapping("/reservations/{id}")
+    @DeleteMapping("/{id}")
     public ResponseEntity<Void> delete(@PathVariable Long id) {
         Reservation reservation = reservations.stream()
                 .filter(target -> Objects.equals(target.getId(), id))

@@ -10,42 +10,39 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
-import roomescape.domain.time.ReservationTime;
 import roomescape.dto.ReservationTimeDto;
 import roomescape.dto.ReservationTimeRequest;
-import roomescape.repository.ReservationTimeRepository;
+import roomescape.service.ReservationTimeService;
 
 @RestController
 @RequestMapping("/times")
 public class ReservationTimeController {
-    private final ReservationTimeRepository reservationTimeRepository;
+    private final ReservationTimeService reservationTimeService;
 
-    public ReservationTimeController(ReservationTimeRepository reservationTimeRepository) {
-        this.reservationTimeRepository = reservationTimeRepository;
+    public ReservationTimeController(ReservationTimeService reservationTimeService) {
+        this.reservationTimeService = reservationTimeService;
     }
 
     @GetMapping
     public ResponseEntity<List<ReservationTimeDto>> findReservationTimes() {
-        List<ReservationTimeDto> times = reservationTimeRepository.findAll().stream()
-                .map(ReservationTimeDto::from)
-                .toList();
-        return ResponseEntity.ok(times);
+        List<ReservationTimeDto> reservationTimes = reservationTimeService.findReservationTimes();
+        return ResponseEntity.ok(reservationTimes);
     }
 
     @PostMapping
-    public ResponseEntity<ReservationTimeDto> createReservationTime(@RequestBody ReservationTimeRequest reservationTimeRequest) {
-        ReservationTime newReservationTime = reservationTimeRepository.save(reservationTimeRequest.toTime());
-        return ResponseEntity.created(URI.create("/times/" + newReservationTime.getId()))
-                .body(ReservationTimeDto.from(newReservationTime));
+    public ResponseEntity<ReservationTimeDto> createReservationTime(
+            @RequestBody ReservationTimeRequest reservationTimeRequest) {
+        ReservationTimeDto newReservationTime = reservationTimeService.createReservationTime(reservationTimeRequest);
+        return ResponseEntity.created(URI.create("/times/" + newReservationTime.id()))
+                .body(newReservationTime);
     }
 
     @DeleteMapping("/{id}")
     public ResponseEntity<Void> deleteReservationTime(@PathVariable(value = "id") Long id) {
-        try {
-            reservationTimeRepository.deleteById(id);
-        } catch (IllegalArgumentException e) {
-            return ResponseEntity.notFound().build();
+        boolean isDeleted = reservationTimeService.deleteReservationTime(id);
+        if (isDeleted) {
+            return ResponseEntity.noContent().build();
         }
-        return ResponseEntity.noContent().build();
+        return ResponseEntity.notFound().build();
     }
 }

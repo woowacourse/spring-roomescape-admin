@@ -17,7 +17,10 @@
         "id": long,
         "name": String,
         "date": String,
-        "time": String
+        "time": {
+            "id: : long,
+            "startAt" : String
+        }
     },
     {
         ...
@@ -38,7 +41,7 @@
 {
     "name" : String,
     "date" : String,
-    "time" : String
+    "timeId" : long
 }
 ```
 
@@ -49,7 +52,10 @@
     "id": long,
     "name": String,
     "date": String,
-    "time": String
+    "time": {
+        "id: : long,
+        "startAt" : String
+    }
 }
 ```
 

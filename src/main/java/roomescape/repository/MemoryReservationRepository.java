@@ -1,6 +1,8 @@
 package roomescape.repository;
 
 import org.springframework.jdbc.core.JdbcTemplate;
+import org.springframework.jdbc.core.PreparedStatementCreator;
+import org.springframework.jdbc.core.RowMapper;
 import org.springframework.jdbc.support.GeneratedKeyHolder;
 import org.springframework.jdbc.support.KeyHolder;
 import org.springframework.stereotype.Repository;
@@ -25,29 +27,28 @@ public class MemoryReservationRepository implements ReservationRepository {
     public List<Reservation> findAll() {
         String sql = "SELECT * FROM reservation";
 
-        return jdbcTemplate.query(sql, (rs, rowNum) ->
+        RowMapper<Reservation> mapper = (rs, rowNum) ->
                 new Reservation(
                         rs.getLong("id"),
                         rs.getString("name"),
                         LocalDate.parse(rs.getString("date")),
                         LocalTime.parse(rs.getString("time"))
-                )
-        );
+                );
+
+        return jdbcTemplate.query(sql, mapper);
     }
 
     @Override
     public Reservation findById(Long id) {
         String sql = "SELECT * FROM reservation WHERE id = ?";
 
-        return jdbcTemplate.queryForObject(
-                sql,
-                (rs, rowNum) -> new Reservation(
-                        rs.getLong("id"),
-                        rs.getString("name"),
-                        LocalDate.parse(rs.getString("date")),
-                        LocalTime.parse(rs.getString("time"))
-                ),
-                id);
+        RowMapper<Reservation> mapper = (rs, rowNum) -> new Reservation(
+                rs.getLong("id"),
+                rs.getString("name"),
+                LocalDate.parse(rs.getString("date")),
+                LocalTime.parse(rs.getString("time"))
+        );
+        return jdbcTemplate.queryForObject(sql, mapper, id);
     }
 
     @Override
@@ -55,15 +56,14 @@ public class MemoryReservationRepository implements ReservationRepository {
         String sql = "INSERT INTO reservation (name, date, time) VALUES (?, ?, ?)";
 
         KeyHolder keyHolder = new GeneratedKeyHolder();
-        jdbcTemplate.update(
-                con -> {
-                    PreparedStatement ps = con.prepareStatement(sql, new String[]{"id"});
-                    ps.setString(1, reservation.name());
-                    ps.setString(2, reservation.date().format(DateTimeFormatter.ISO_LOCAL_DATE));
-                    ps.setString(3, reservation.time().format(DateTimeFormatter.ISO_LOCAL_TIME));
-                    return ps;
-                },
-                keyHolder);
+        PreparedStatementCreator creator = con -> {
+            PreparedStatement ps = con.prepareStatement(sql, new String[]{"id"});
+            ps.setString(1, reservation.name());
+            ps.setString(2, reservation.date().format(DateTimeFormatter.ISO_LOCAL_DATE));
+            ps.setString(3, reservation.time().format(DateTimeFormatter.ISO_LOCAL_TIME));
+            return ps;
+        };
+        jdbcTemplate.update(creator, keyHolder);
 
         return reservation.assignId(keyHolder.getKeyAs(Long.class));
     }

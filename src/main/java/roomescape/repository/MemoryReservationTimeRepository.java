@@ -1,9 +1,16 @@
 package roomescape.repository;
 
 import org.springframework.jdbc.core.JdbcTemplate;
+import org.springframework.jdbc.core.PreparedStatementCreator;
+import org.springframework.jdbc.core.RowMapper;
+import org.springframework.jdbc.support.GeneratedKeyHolder;
+import org.springframework.jdbc.support.KeyHolder;
 import org.springframework.stereotype.Repository;
 import roomescape.entity.ReservationTime;
 
+import java.sql.PreparedStatement;
+import java.time.LocalTime;
+import java.time.format.DateTimeFormatter;
 import java.util.List;
 
 @Repository
@@ -17,16 +24,35 @@ public class MemoryReservationTimeRepository implements ReservationTimeRepositor
 
     @Override
     public List<ReservationTime> findAll() {
-        return List.of();
+        String sql = "SELECT * FROM reservation_time";
+        RowMapper<ReservationTime> mapper = (rs, rowNum) ->
+                new ReservationTime(
+                        rs.getLong("id"),
+                        LocalTime.parse(rs.getString("start_at"))
+                );
+
+        return jdbcTemplate.query(sql, mapper);
     }
 
     @Override
-    public ReservationTime save(ReservationTime reservationTime) {
-        return null;
+    public ReservationTime save(ReservationTime time) {
+        String sql = "INSERT INTO reservation_time (start_at) VALUES (?);";
+
+        KeyHolder keyHolder = new GeneratedKeyHolder();
+        PreparedStatementCreator creator = con -> {
+            PreparedStatement ps = con.prepareStatement(sql, new String[]{"id"});
+            ps.setString(1, time.startAt().format(DateTimeFormatter.ISO_LOCAL_TIME));
+            return ps;
+        };
+        jdbcTemplate.update(creator, keyHolder);
+
+        return time.assignId(keyHolder.getKeyAs(Long.class));
     }
 
     @Override
     public int deleteById(Long id) {
-        return 0;
+        String sql = "DELETE FROM reservation_time WHERE id = ?";
+
+        return jdbcTemplate.update(sql, id);
     }
 }

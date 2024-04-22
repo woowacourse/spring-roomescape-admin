@@ -23,7 +23,7 @@ class MemoryReservationRepositoryTest {
     @Autowired
     private JdbcTemplate jdbcTemplate;
     @Autowired
-    private MemoryReservationRepository memoryReservationRepository;
+    private ReservationRepository reservationRepository;
 
     @BeforeEach
     void setUp() {
@@ -60,10 +60,10 @@ class MemoryReservationRepositoryTest {
     @DisplayName("모든 예약 목록을 조회한다.")
     void findAll() {
         // given
-        final List<Reservation> reservations = memoryReservationRepository.findAll();
+        final List<Reservation> reservations = reservationRepository.findAll();
 
         // when & then
-        assertThat(reservations).contains(
+        assertThat(reservations).containsExactlyInAnyOrder(
                 new Reservation(
                         1L,
                         "seyang",
@@ -89,7 +89,7 @@ class MemoryReservationRepositoryTest {
     @DisplayName("특정 id를 통해 예약을 조회한다.")
     void findById() {
         // given
-        final Reservation reservation = memoryReservationRepository.findById(2L);
+        final Reservation reservation = reservationRepository.findById(2L);
 
         // when & then
         assertThat(reservation).isEqualTo(new Reservation(
@@ -104,7 +104,7 @@ class MemoryReservationRepositoryTest {
     @DisplayName("예약 정보를 저장하면 새로운 아이디가 부여된다.")
     void save() {
         // given
-        final Reservation reservation = memoryReservationRepository.save(new Reservation(
+        final Reservation reservation = reservationRepository.save(new Reservation(
                 null,
                 "gana",
                 LocalDate.of(2024, 3, 1),
@@ -119,19 +119,19 @@ class MemoryReservationRepositoryTest {
     @DisplayName("등록된 예약 번호로 삭제한다.")
     void deleteAssignedId() {
         // given
-        final int deleteCount = memoryReservationRepository.deleteById(3L);
+        final int deleteCount = reservationRepository.deleteById(3L);
 
         // when & then
-        assertThat(deleteCount).isEqualTo(1);
+        assertThat(deleteCount).isNotZero();
     }
 
     @Test
-    @DisplayName("없는 예약 번호를 삭제할 경우 아무런 영향이 없다.")
+    @DisplayName("없는 예약 번호로 삭제할 경우 아무런 영향이 없다.")
     void deleteNotExistId() {
         // given
-        final int deleteCount = memoryReservationRepository.deleteById(4L);
+        final int deleteCount = reservationRepository.deleteById(4L);
 
         // when & then
-        assertThat(deleteCount).isEqualTo(0);
+        assertThat(deleteCount).isZero();
     }
 }

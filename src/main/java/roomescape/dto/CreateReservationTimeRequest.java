@@ -1,4 +1,4 @@
-package roomescape.controller.dto;
+package roomescape.dto;
 
 public record CreateReservationTimeRequest(String startAt) {
 

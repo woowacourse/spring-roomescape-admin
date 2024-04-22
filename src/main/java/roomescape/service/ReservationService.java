@@ -1,20 +1,22 @@
-package roomescape.repository;
+package roomescape.service;
 
 import java.util.List;
 import org.springframework.stereotype.Repository;
-import roomescape.dto.Reservation;
+import roomescape.domain.Reservation;
 import roomescape.dto.ReservationRequest;
+import roomescape.repository.ReservationDao;
 
 @Repository
-public class ReservationRepository {
+public class ReservationService {
     private final ReservationDao reservationDao;
 
-    public ReservationRepository(final ReservationDao reservationDao) {
+    public ReservationService(final ReservationDao reservationDao) {
         this.reservationDao = reservationDao;
     }
 
     public Reservation saveReservation(final ReservationRequest reservationRequest) {
-        return reservationDao.save(reservationRequest);
+        long reservationId = reservationDao.save(reservationRequest);
+        return reservationDao.get(reservationId);
     }
 
     public List<Reservation> getAllReservations() {

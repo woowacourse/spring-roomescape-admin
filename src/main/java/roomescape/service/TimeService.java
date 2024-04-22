@@ -1,15 +1,16 @@
-package roomescape.repository;
+package roomescape.service;
 
 import java.util.List;
 import org.springframework.stereotype.Repository;
 import roomescape.dto.ReservationTime;
 import roomescape.dto.ReservationTimeRequest;
+import roomescape.repository.TimeDao;
 
 @Repository
-public class TimeRepository {
+public class TimeService {
     private final TimeDao timeDao;
 
-    public TimeRepository(final TimeDao timeDao) {
+    public TimeService(final TimeDao timeDao) {
         this.timeDao = timeDao;
     }
 

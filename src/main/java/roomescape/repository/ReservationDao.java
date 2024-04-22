@@ -7,7 +7,7 @@ import org.springframework.jdbc.core.RowMapper;
 import org.springframework.jdbc.support.GeneratedKeyHolder;
 import org.springframework.jdbc.support.KeyHolder;
 import org.springframework.stereotype.Repository;
-import roomescape.dto.Reservation;
+import roomescape.domain.Reservation;
 import roomescape.dto.ReservationRequest;
 
 @Repository
@@ -18,7 +18,7 @@ public class ReservationDao {
         this.jdbcTemplate = jdbcTemplate;
     }
 
-    public Reservation save(final ReservationRequest reservationRequest) {
+    public long save(final ReservationRequest reservationRequest) {
         KeyHolder keyHolder = new GeneratedKeyHolder();
         jdbcTemplate.update(connection -> {
                     PreparedStatement ps = connection.prepareStatement(
@@ -32,11 +32,10 @@ public class ReservationDao {
                 }, keyHolder
         );
 
-        long reservationId = keyHolder.getKey().longValue();
-        return get(reservationId);
+        return keyHolder.getKey().longValue();
     }
 
-    private Reservation get(long id) {
+    public Reservation get(long id) {
         String sql = "SELECT r.id as reservation_id, r.name, r.date, t.id as time_id, t.start_at as time_value "
                 + "FROM reservation as r "
                 + "INNER JOIN reservation_time as t "

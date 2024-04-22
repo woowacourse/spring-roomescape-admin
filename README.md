@@ -28,13 +28,19 @@ Content-Type: application/json
         "id": 1,
         "name": "브라운",
         "date": "2023-01-01",
-        "time": "10:00"
+        "time" : {
+          "id": 1.
+          "startAt": "10:00"
+        }
     },
     {
         "id": 2,
         "name": "브라운",
         "date": "2023-01-02",
-        "time": "11:00"
+        "time" : {
+          "id": 1.
+          "startAt": "10:00"
+        }
     }
 ]
 ```
@@ -50,7 +56,7 @@ content-type: application/json
 {
     "date": "2023-08-05",
     "name": "브라운",
-    "time": "15:40"
+    "timeId": 1
 }
 ```
 - response
@@ -63,7 +69,10 @@ content-type: application/json
       "id": 1,
       "name": "브라운",
       "date": "2023-08-05",
-      "time": "15:40"
+      "time" : {
+          "id": 1.
+          "startAt": "10:00"
+      }
   }
   ```
   - 추가 실패 : 이름 길이 오류
@@ -71,18 +80,16 @@ content-type: application/json
   HTTP/1.1 400 
   Content-Type: application/json
   
-  {
-      "message": "이름은 1자 이상, 5자 이하여야 합니다.";
-  }
+  "이름은 1자 이상, 5자 이하여야 합니다.";
+
   ```
   - 추가 실패 : 일정 오류
   ```
   HTTP/1.1 400 
   Content-Type: application/json
   
-  {
-      "message": "현재보다 이전으로 일정을 설정할 수 없습니다.";
-  }
+  "현재보다 이전으로 일정을 설정할 수 없습니다.";
+
   ```
   
 
@@ -164,6 +171,9 @@ Content-Type: application/json
 ### 예약
 - [x] 예약 정보는 식별자, 이름, 일정으로 이뤄져있다.
   - [x] 이름은 1자 이상, 5자 이하여야 한다.
+
+### 일정
+- [x] 일정은 날짜, 예약 시간으로 이뤄져있다.
   - [x] 일정은 현재 이후여야 한다.
 
 ### 시간

@@ -138,4 +138,23 @@ class MissionStepTest {
 
         assertThat(reservations.size()).isEqualTo(count);
     }
+
+    @Test
+    @DisplayName("데이터를 저장한다.")
+    void saveReservation() {
+        ReservationRequest params = new ReservationRequest(
+                "브라운", LocalDate.of(2023, 8, 5), LocalTime.of(10, 00)
+        );
+
+        RestAssured.given().log().all()
+                .contentType(ContentType.JSON)
+                .body(params)
+                .when().post("/reservations")
+                .then().log().all()
+                .statusCode(201)
+                .header("Location", "/reservations/1");
+
+        Integer count = jdbcTemplate.queryForObject("SELECT count(1) from reservation", Integer.class);
+        assertThat(count).isEqualTo(1);
+    }
 }

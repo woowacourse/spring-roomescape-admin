@@ -17,4 +17,12 @@ public class ReservationTimeService {
     public List<ReservationTime> getReservations() {
         return reservationTimeDAO.findAllReservations();
     }
+
+    public long addReservationTime(ReservationTime reservationTime) {
+        return reservationTimeDAO.addReservationTime(reservationTime);
+    }
+
+    public ReservationTime getReservationTime(long id) {
+        return reservationTimeDAO.findReservationTime(id);
+    }
 }

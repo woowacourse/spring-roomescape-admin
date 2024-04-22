@@ -1,7 +1,6 @@
 package roomescape.domain;
 
 import java.time.LocalDate;
-import java.time.LocalDateTime;
 import java.util.Objects;
 
 public class Reservation {
@@ -44,10 +43,6 @@ public class Reservation {
 
     public TimeSlot getTimeSlot() {
         return timeSlot;
-    }
-
-    public LocalDateTime getReservationDateTime() {
-        return LocalDateTime.of(reservationDate.getDate(), timeSlot.getTime());
     }
 
     public Reservation withId(long id) {

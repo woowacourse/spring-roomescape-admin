@@ -1,39 +1,56 @@
 package roomescape.reservation;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
+import org.springframework.jdbc.core.JdbcTemplate;
+import org.springframework.jdbc.support.GeneratedKeyHolder;
+import org.springframework.jdbc.support.KeyHolder;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.ArrayList;
+import java.sql.PreparedStatement;
+import java.time.LocalDate;
+import java.time.LocalTime;
 import java.util.List;
-import java.util.concurrent.atomic.AtomicLong;
 
 @RestController
 public class ReservationApiController {
 
-    private static final int START_INDEX = 1;
-
-    private final List<Reservation> reservations = new ArrayList<>();
-    private final AtomicLong index = new AtomicLong(START_INDEX);
+    @Autowired
+    private JdbcTemplate jdbcTemplate;
 
     @GetMapping("/reservations")
     public ResponseEntity<List<Reservation>> findAll() {
+        String sql = "SELECT id, name, date, time FROM reservation";
+        final List<Reservation> reservations = jdbcTemplate.query(sql, (resultSet, rowNumber) ->
+                new Reservation(
+                        resultSet.getLong("id"),
+                        resultSet.getString("name"),
+                        LocalDate.parse(resultSet.getString("date")),
+                        LocalTime.parse(resultSet.getString("time"))));
         return ResponseEntity.ok().body(reservations);
     }
 
     @PostMapping("/reservations")
     public ResponseEntity<Reservation> create(@RequestBody final ReservationDto reservationDto) {
-        Reservation newReservation = reservationDto.toVo(index.getAndIncrement());
-        reservations.add(newReservation);
+        String sql = "INSERT INTO reservation(name,date,time) VALUES (?, ?, ?)";
+        KeyHolder keyHolder = new GeneratedKeyHolder();
+        jdbcTemplate.update(sql, reservationDto.getName(), reservationDto.getDate(), reservationDto.getTime());
+        jdbcTemplate.update(connection -> {
+            PreparedStatement ps = connection.prepareStatement(sql, new String[]{"id"});
+            ps.setString(1, reservationDto.getName());
+            ps.setString(2, String.valueOf(reservationDto.getDate()));
+            ps.setString(3, String.valueOf(reservationDto.getTime()));
+            return ps;
+        }, keyHolder);
+        Long id = keyHolder.getKey().longValue();
+        Reservation newReservation = reservationDto.toVo(id);
         return ResponseEntity.ok().body(newReservation);
     }
 
     @DeleteMapping("/reservations/{id}")
     public ResponseEntity<Void> delete(@PathVariable final Long id) {
-        Reservation findReservation = reservations.stream()
-                .filter(reservation -> reservation.getId().equals(id))
-                .findFirst()
-                .orElseThrow(() -> new IllegalArgumentException("일치하는 예약이 없습니다."));
-        reservations.remove(findReservation);
+        String sql = "DELETE FROM reservation WHERE id = ?";
+        jdbcTemplate.update(sql, id);
         return ResponseEntity.ok().build();
     }
 }

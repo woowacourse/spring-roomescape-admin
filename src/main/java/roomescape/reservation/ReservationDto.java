@@ -15,6 +15,18 @@ public class ReservationDto {
         this.time = time;
     }
 
+    public String getName() {
+        return name;
+    }
+
+    public LocalDate getDate() {
+        return date;
+    }
+
+    public LocalTime getTime() {
+        return time;
+    }
+
     public Reservation toVo(final Long id) {
         return new Reservation(id, name, date, time);
     }

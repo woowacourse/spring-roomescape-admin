@@ -1,4 +1,4 @@
-package roomescape;
+package roomescape.acceptance;
 
 import io.restassured.RestAssured;
 import io.restassured.http.ContentType;
@@ -54,13 +54,10 @@ class ReservationApiTest {
         ReservationFixture.예약_생성(new ReservationRequest("조이썬", "2023-08-30", "10:30"));
 
         RestAssured.given()
-                   .log()
-                   .all()
                    .when()
-                   .delete("/reservations/1")
+                   .delete("/times/1")
                    .then()
-                   .log()
-                   .all()
                    .statusCode(204);
     }
+
 }

@@ -30,25 +30,18 @@ public class ReservationRepository {
     }
 
     public List<ReservationRepositoryDto> findAll() {
-        String SQL = "SELECT \n" +
-                "    r.id as reservation_id, \n" +
-                "    r.name, \n" +
-                "    r.date, \n" +
-                "    t.id as time_id, \n" +
-                "    t.start_at as time_value \n" +
-                "FROM reservation as r \n" +
-                "inner join reservation_time as t \n" +
-                "on r.time_id = t.id";
+        String SQL = "SELECT r.id, r.name, r.date, t.id AS time_id, t.start_at  " +
+                "FROM reservation AS r " +
+                "INNER JOIN reservation_time AS t " +
+                "ON r.time_id = t.id";
 
-        return jdbcTemplate.query(SQL, (rs, rowNum) -> {
-            ReservationRepositoryDto reservationRepositoryDto = new ReservationRepositoryDto(
+        return jdbcTemplate.query(SQL, (rs, rowNum) -> new ReservationRepositoryDto(
                     rs.getLong("id"),
                     rs.getString("name"),
                     rs.getString("date"),
                     rs.getLong("time_id")
-            );
-            return reservationRepositoryDto;
-        });
+            )
+        );
     }
 
     public void remove(Long id) {

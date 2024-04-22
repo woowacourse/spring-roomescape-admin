@@ -7,9 +7,7 @@ public class Reservation { // TODO final 적용
     private String date;
     private ReservationTimeDto reservationTimeDto;
 
-    public Reservation() {
-
-    }
+    public Reservation() {}
 
     public Reservation(Long id, String name, String date, ReservationTimeDto reservationTimeDto) {
         this.id = id;

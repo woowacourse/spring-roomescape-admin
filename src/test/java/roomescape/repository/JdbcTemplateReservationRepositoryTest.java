@@ -8,30 +8,20 @@ import java.util.List;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.autoconfigure.jdbc.AutoConfigureTestDatabase;
-import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.jdbc.core.JdbcTemplate;
-import org.springframework.test.jdbc.JdbcTestUtils;
-import org.springframework.transaction.annotation.Transactional;
 import roomescape.domain.Name;
 import roomescape.domain.Reservation;
 import roomescape.domain.ReservationRepository;
 import roomescape.domain.ReservationTime;
 import roomescape.domain.ReservationTimeRepository;
+import roomescape.support.IntegrationTestSupport;
 
-@SpringBootTest
-@Transactional
-@AutoConfigureTestDatabase
-class JdbcTemplateReservationRepositoryTest {
+class JdbcTemplateReservationRepositoryTest extends IntegrationTestSupport {
 
     @Autowired
     private ReservationTimeRepository reservationTimeRepository;
 
     @Autowired
-    private ReservationRepository reservationRepository;
-
-    @Autowired
-    private JdbcTemplate jdbcTemplate;
+    private ReservationRepository target;
 
     @DisplayName("신규 예약을 저장할 수 있다.")
     @Test
@@ -39,9 +29,9 @@ class JdbcTemplateReservationRepositoryTest {
         ReservationTime savedTime = reservationTimeRepository.save(createReservationTime());
         Reservation reservation = createReservation(savedTime);
 
-        Reservation savedReservation = reservationRepository.save(reservation);
+        Reservation savedReservation = target.save(reservation);
 
-        int rowCount = JdbcTestUtils.countRowsInTableWhere(jdbcTemplate, "reservation", "id = " + savedReservation.getId());
+        int rowCount = countRowWhere("reservation", "id = " + savedReservation.getId());
         assertThat(rowCount).isEqualTo(1);
     }
 
@@ -49,11 +39,11 @@ class JdbcTemplateReservationRepositoryTest {
     @Test
     void delete() {
         ReservationTime savedTime = reservationTimeRepository.save(createReservationTime());
-        Reservation savedReservation = reservationRepository.save(createReservation(savedTime));
+        Reservation savedReservation = target.save(createReservation(savedTime));
 
-        reservationRepository.deleteBy(savedReservation.getId());
+        target.deleteBy(savedReservation.getId());
 
-        int rowCount = JdbcTestUtils.countRowsInTable(jdbcTemplate, "reservation");
+        int rowCount = countRow("reservation");
         assertThat(rowCount).isZero();
     }
 
@@ -61,10 +51,10 @@ class JdbcTemplateReservationRepositoryTest {
     @Test
     void findAll() {
         ReservationTime savedTime = reservationTimeRepository.save(createReservationTime());
-        reservationRepository.save(createReservation(savedTime));
-        reservationRepository.save(createReservation(savedTime));
+        target.save(createReservation(savedTime));
+        target.save(createReservation(savedTime));
 
-        List<Reservation> reservations = reservationRepository.findAll();
+        List<Reservation> reservations = target.findAll();
 
         assertThat(reservations).hasSize(2);
     }
@@ -72,7 +62,7 @@ class JdbcTemplateReservationRepositoryTest {
     @DisplayName("예약이 존재하지 않으면 빈 리스트를 반환한다.")
     @Test
     void findAllWhenEmpty() {
-        List<Reservation> reservations = reservationRepository.findAll();
+        List<Reservation> reservations = target.findAll();
 
         assertThat(reservations).isEmpty();
     }

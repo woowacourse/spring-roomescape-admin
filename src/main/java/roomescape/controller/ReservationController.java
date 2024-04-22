@@ -1,6 +1,5 @@
 package roomescape.controller;
 
-import java.net.URI;
 import java.util.List;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -12,7 +11,6 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import roomescape.controller.dto.ReservationCreateRequest;
 import roomescape.controller.dto.ReservationResponse;
-import roomescape.domain.Reservation;
 import roomescape.service.ReservationService;
 
 @RestController
@@ -32,9 +30,12 @@ public class ReservationController {
     }
 
     @GetMapping
-    //TODO List<ReservationResponse> 리턴하도록 변경
-    public ResponseEntity<List<Reservation>> readReservations() {
-        return ResponseEntity.ok(reservationService.readAllReservations());
+    public ResponseEntity<List<ReservationResponse>> readReservations() {
+        List<ReservationResponse> reservationResponses = reservationService.readAllReservations()
+                                                            .stream()
+                                                            .map(ReservationResponse::new)
+                                                            .toList();
+        return ResponseEntity.ok(reservationResponses);
     }
 
     @DeleteMapping("/{id}")

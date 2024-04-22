@@ -6,8 +6,8 @@ import java.time.LocalTime;
 import roomescape.dao.Reservation;
 
 public record ReservationSaveRequest(
-        LocalDate date,
         String name,
+        LocalDate date,
         @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "HH:mm")
         LocalTime time) {
 

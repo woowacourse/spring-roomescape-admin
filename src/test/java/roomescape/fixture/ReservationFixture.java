@@ -15,7 +15,7 @@ public class ReservationFixture {
         Map<String, String> params = new HashMap<>();
         params.put("name", reservationRequest.name());
         params.put("date", reservationRequest.date());
-        params.put("time", reservationRequest.time());
+        params.put("timeId", reservationRequest.timeId() + "");
         RestAssured.given()
                    .contentType(ContentType.JSON)
                    .body(params)

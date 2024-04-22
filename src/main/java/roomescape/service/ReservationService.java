@@ -4,10 +4,9 @@ import org.springframework.stereotype.Service;
 import roomescape.domain.Reservation;
 import roomescape.dto.request.ReservationRequest;
 import roomescape.dto.response.ReservationCreateResponse;
+import roomescape.dto.response.ReservationsResponse;
 import roomescape.repository.ReservationRepository;
 import roomescape.repository.ReservationSqlRepository;
-
-import java.util.List;
 
 @Service
 public class ReservationService {
@@ -17,8 +16,8 @@ public class ReservationService {
         this.reservationRepository = reservationRepository;
     }
 
-    public List<Reservation> getReservations() {
-        return reservationRepository.findAll();
+    public ReservationsResponse getReservations() {
+        return new ReservationsResponse(reservationRepository.findAll());
     }
 
     public void deleteReservation(final long reservationId) {
@@ -29,9 +28,8 @@ public class ReservationService {
         final Reservation reservation = Reservation.builder()
                                                    .name(reservationRequest.name())
                                                    .date(reservationRequest.date())
-                                                   .time(reservationRequest.time())
                                                    .build();
-        final long reservationId = reservationRepository.create(reservation);
+        final long reservationId = reservationRepository.create(reservation, reservationRequest.timeId());
         return ReservationCreateResponse.from(reservationId, reservation);
     }
 }

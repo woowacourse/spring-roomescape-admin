@@ -10,6 +10,6 @@ public record ReservationCreateResponse(long id, String name, String date, Strin
     }
 
     public static ReservationCreateResponse from(long id, Reservation reservation) {
-        return new ReservationCreateResponse(id, reservation.getName(), reservation.getDate(), reservation.getTime());
+        return new ReservationCreateResponse(id, reservation.getName(), reservation.getDate(), reservation.getTimeAsString());
     }
 }

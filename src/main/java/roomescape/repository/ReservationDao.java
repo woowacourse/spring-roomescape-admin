@@ -2,6 +2,8 @@ package roomescape.repository;
 
 import java.sql.PreparedStatement;
 import java.util.List;
+import java.util.Optional;
+import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;
 import org.springframework.jdbc.support.GeneratedKeyHolder;
@@ -35,13 +37,17 @@ public class ReservationDao {
         return keyHolder.getKey().longValue();
     }
 
-    public Reservation get(long id) {
-        String sql = "SELECT r.id as reservation_id, r.name, r.date, t.id as time_id, t.start_at as time_value "
-                + "FROM reservation as r "
-                + "INNER JOIN reservation_time as t "
-                + "ON r.time_id = t.id "
-                + "WHERE r.id = ?";
-        return jdbcTemplate.queryForObject(sql, reservationRowMapper, id);
+    public Optional<Reservation> findById(long id) {
+        try {
+            String sql = "SELECT r.id as reservation_id, r.name, r.date, t.id as time_id, t.start_at as time_value "
+                    + "FROM reservation as r "
+                    + "INNER JOIN reservation_time as t "
+                    + "ON r.time_id = t.id "
+                    + "WHERE r.id = ?";
+            return Optional.of(jdbcTemplate.queryForObject(sql, reservationRowMapper, id));
+        } catch (EmptyResultDataAccessException exception) {
+            return Optional.empty();
+        }
     }
 
     private final RowMapper<Reservation> reservationRowMapper = (resultSet, rowNum) -> {

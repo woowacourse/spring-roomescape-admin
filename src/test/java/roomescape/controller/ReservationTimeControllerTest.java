@@ -59,7 +59,6 @@ class ReservationTimeControllerTest extends BaseControllerTest {
         ReservationTimeResponse reservationTimeResponse = getReservationTimeResponse(response);
 
         SoftAssertions.assertSoftly(softly -> {
-
             softly.assertThat(response.getStatusCode()).isEqualTo(201);
             softly.assertThat(response.getHeader("Location"))
                     .isEqualTo("/times/" + reservationTimeResponse.id());

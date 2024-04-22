@@ -16,7 +16,7 @@ public class ViewController {
         return "admin/reservation-legacy";
     }
 
-    @GetMapping("/time")
+    @GetMapping("admin/time")
     public String reservationTimePage() {
         return "admin/time.html";
     }

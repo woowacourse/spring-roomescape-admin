@@ -5,7 +5,7 @@ import java.time.LocalTime;
 
 public class Reservation {
 
-    private Long id;
+    private final Long id;
     private final String name;
     private final LocalDate date;
     private final LocalTime time;
@@ -15,10 +15,6 @@ public class Reservation {
         this.name = name;
         this.date = date;
         this.time = time;
-    }
-
-    public boolean equalId(Long id) {
-        return this.id.equals(id);
     }
 
     public Long getId() {

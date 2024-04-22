@@ -1,5 +1,6 @@
 package roomescape;
 
+import static org.apache.http.HttpStatus.SC_OK;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.hamcrest.Matchers.is;
 
@@ -7,6 +8,7 @@ import io.restassured.RestAssured;
 import io.restassured.http.ContentType;
 import java.sql.Connection;
 import java.sql.SQLException;
+import java.util.List;
 import java.util.Map;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -15,7 +17,6 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.context.SpringBootTest.WebEnvironment;
 import org.springframework.boot.test.web.server.LocalServerPort;
 import org.springframework.jdbc.core.JdbcTemplate;
-import org.springframework.test.annotation.DirtiesContext;
 
 @SpringBootTest(webEnvironment = WebEnvironment.RANDOM_PORT)
 class MissionStepTest {
@@ -37,7 +38,7 @@ class MissionStepTest {
         RestAssured.given().log().all()
                 .when().get("/admin")
                 .then().log().all()
-                .statusCode(200);
+                .statusCode(SC_OK);
     }
 
     @Test
@@ -45,12 +46,12 @@ class MissionStepTest {
         RestAssured.given().log().all()
                 .when().get("/admin/reservation")
                 .then().log().all()
-                .statusCode(200);
+                .statusCode(SC_OK);
 
         RestAssured.given().log().all()
                 .when().get("/reservations")
                 .then().log().all()
-                .statusCode(200)
+                .statusCode(SC_OK)
                 .body("size()", is(0)); // 아직 생성 요청이 없으니 Controller에서 임의로 넣어준 Reservation 갯수 만큼 검증하거나 0개임을 확인하세요.
     }
 
@@ -63,24 +64,24 @@ class MissionStepTest {
                 .body(params)
                 .when().post("/reservations")
                 .then().log().all()
-                .statusCode(200)
+                .statusCode(SC_OK)
                 .body("id", is(1));
 
         RestAssured.given().log().all()
                 .when().get("/reservations")
                 .then().log().all()
-                .statusCode(200)
+                .statusCode(SC_OK)
                 .body("size()", is(1));
 
         RestAssured.given().log().all()
                 .when().delete("/reservations/1")
                 .then().log().all()
-                .statusCode(200);
+                .statusCode(SC_OK);
 
         RestAssured.given().log().all()
                 .when().get("/reservations")
                 .then().log().all()
-                .statusCode(200)
+                .statusCode(SC_OK)
                 .body("size()", is(0));
     }
 
@@ -93,5 +94,21 @@ class MissionStepTest {
         } catch (SQLException e) {
             throw new RuntimeException(e);
         }
+    }
+
+    @Test
+    void 오단계() {
+        String sql = "INSERT INTO reservation(name, date, time) VALUES (?,?,?)";
+        jdbcTemplate.update(sql, "브라운", "2023-08-05", "15:40");
+
+        List<Reservation> reservations = RestAssured.given().log().all()
+                .when().get("/reservations")
+                .then().log().all()
+                .statusCode(SC_OK).extract()
+                .jsonPath().getList(".", Reservation.class);
+
+        Integer count = jdbcTemplate.queryForObject("SELECT COUNT(1) FROM reservation", Integer.class);
+
+        assertThat(reservations.size()).isEqualTo(count);
     }
 }

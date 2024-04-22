@@ -4,13 +4,15 @@ import java.time.LocalDate;
 import java.time.LocalTime;
 
 public class Reservation {
+    private static final Long DEFAULT_ID_VALUE = 0L;
+
     private final Long id;
     private final ClientName clientName;
     private final LocalDate date;
     private final LocalTime time;
 
     public Reservation(final ClientName clientName, final LocalDate date, final LocalTime time) {
-        this(0L, clientName, date, time);
+        this(DEFAULT_ID_VALUE, clientName, date, time);
     }
 
     public Reservation(final Long id, final ClientName clientName, final LocalDate date, final LocalTime time) {

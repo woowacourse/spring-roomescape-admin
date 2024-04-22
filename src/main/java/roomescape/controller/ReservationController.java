@@ -9,43 +9,43 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import roomescape.entity.Reservation;
+import roomescape.repository.MemoryReservationRepository;
 import roomescape.service.ReservationMapper;
 
-import java.util.ArrayList;
-import java.util.Collections;
 import java.util.List;
-import java.util.concurrent.atomic.AtomicLong;
 
 @RestController
 @RequestMapping("/reservations")
 public class ReservationController {
-    private final List<Reservation> reservations = Collections.synchronizedList(new ArrayList<>());
-    private final AtomicLong index = new AtomicLong(1);
+
+    private final MemoryReservationRepository memoryReservationRepository;
+
+    public ReservationController(MemoryReservationRepository memoryReservationRepository) {
+        this.memoryReservationRepository = memoryReservationRepository;
+    }
 
     @GetMapping
-    public ResponseEntity<List<ReservationResponse>> getReservationDatum() {
-        List<ReservationResponse> responses = reservations.stream()
+    public ResponseEntity<List<ReservationResponse>> getReservations() {
+        List<ReservationResponse> responses = memoryReservationRepository.findAll().stream()
                 .map(ReservationMapper::map)
                 .toList();
+
         return ResponseEntity.ok(responses);
     }
 
     @PostMapping
-    public ResponseEntity<ReservationResponse> addReservationData(@RequestBody final ReservationRequest request) {
-        long id = index.getAndIncrement();
-        Reservation reservation = ReservationMapper.map(request).assignId(id);
-        reservations.add(reservation);
+    public ResponseEntity<ReservationResponse> addReservation(@RequestBody final ReservationRequest request) {
+        Reservation savedReservation = memoryReservationRepository.save(ReservationMapper.map(request));
+        ReservationResponse response = ReservationMapper.map(savedReservation);
 
-        ReservationResponse response = ReservationMapper.map(reservation);
         return ResponseEntity.ok(response);
     }
 
     @DeleteMapping("/{id}")
     public ResponseEntity<Void> deleteReservationsData(@PathVariable final Long id) {
-        boolean isRemoved = reservations.removeIf(reservation -> reservation.id().equals(id));
-        if (isRemoved) {
-            return ResponseEntity.noContent().build();
+        if (memoryReservationRepository.deleteById(id) == 0) {
+            return ResponseEntity.notFound().build();
         }
-        return ResponseEntity.notFound().build();
+        return ResponseEntity.noContent().build();
     }
 }

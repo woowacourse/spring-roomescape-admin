@@ -5,6 +5,7 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.transaction.annotation.Transactional;
+import roomescape.domain.Name;
 import roomescape.domain.Reservation;
 import roomescape.domain.ReservationTime;
 
@@ -36,7 +37,7 @@ class H2ReservationRepositoryTest {
 
         assertSoftly(softly -> {
             assertThat(savedReservation.getName())
-                    .isEqualTo("비밥");
+                    .isEqualTo(new Name("비밥"));
             assertThat(savedReservation.getDate())
                     .isEqualTo(LocalDate.of(2024, 4, 20));
             assertThat(savedReservation.getTime().getStartAt())

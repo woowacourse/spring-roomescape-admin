@@ -4,6 +4,7 @@ import org.springframework.context.annotation.Primary;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.simple.SimpleJdbcInsert;
 import org.springframework.stereotype.Repository;
+import roomescape.domain.Name;
 import roomescape.domain.Reservation;
 import roomescape.domain.ReservationTime;
 
@@ -31,7 +32,7 @@ public class H2ReservationRepository implements ReservationRepository {
 
         return jdbcTemplate.query(sql, (rs, rowNum) -> new Reservation(
                 rs.getLong("reservation_id"),
-                rs.getString("name"),
+                new Name(rs.getString("name")),
                 rs.getDate("date").toLocalDate(),
                 new ReservationTime(
                         rs.getLong("time_id"),
@@ -41,7 +42,7 @@ public class H2ReservationRepository implements ReservationRepository {
     @Override
     public Reservation save(Reservation reservation) {
         long reservationId = jdbcInsert.executeAndReturnKey(Map.of(
-                        "name", reservation.getName(),
+                        "name", reservation.getName().value(),
                         "date", reservation.getDate(),
                         "time_id", reservation.getTime().getId()))
                 .longValue();

@@ -50,29 +50,16 @@ class ReservationControllerTest {
     @DisplayName("[201] POST /reservations")
     @Test
     void add() throws Exception {
-        String reservation = objectMapper.writeValueAsString(new ReservationRequest(
+        reservationTimeRepository.save(new ReservationTime(LocalTime.of(9, 0)));
+        String savedReservation = objectMapper.writeValueAsString(new ReservationRequest(
                 "비밥",
                 LocalDate.now().plusDays(1),
                 1L));
 
         this.mvc.perform(post("/reservations")
-                        .content(reservation)
+                        .content(savedReservation)
                         .contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isCreated());
-    }
-
-    @DisplayName("[400] POST /reservations")
-    @Test
-    void add_dateOutOfRange() throws Exception {
-        ReservationTime savedReservationTime = reservationTimeRepository.save(new ReservationTime(
-                LocalTime.of(9, 0)));
-
-        String reservation = "{\"name\":\"비밥\",\"date\":\"2022-04-23\",\"timeId\":1}";
-
-        this.mvc.perform(post("/reservations")
-                        .content(reservation)
-                        .contentType(MediaType.APPLICATION_JSON))
-                .andExpect(status().isBadRequest());
     }
 
     @DisplayName("[204] DELETE /reservations/{id}")

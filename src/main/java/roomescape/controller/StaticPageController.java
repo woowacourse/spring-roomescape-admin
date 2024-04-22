@@ -14,4 +14,9 @@ public class StaticPageController {
     public String getReservationPage() {
         return "admin/reservation-legacy";
     }
+
+    @GetMapping("/admin/time")
+    public String getReservationTimePage() {
+        return "admin/time";
+    }
 }

@@ -27,12 +27,13 @@ class ReservationTimeDAOTest {
     void setUp() {
         jdbcTemplate.execute("DROP TABLE reservation_time IF EXISTS");
         jdbcTemplate.execute(
-                "CREATE TABLE reservation_time"
-                        + "("
-                        + "    id   BIGINT       NOT NULL AUTO_INCREMENT,"
-                        + "    start_at VARCHAR(255) NOT NULL,"
-                        + "    PRIMARY KEY (id)"
-                        + ");"
+                        """
+                        CREATE TABLE reservation_time(
+                             id BIGINT  NOT NULL AUTO_INCREMENT,
+                             start_at VARCHAR(255) NOT NULL,
+                             PRIMARY KEY (id)
+                        );
+                        """
         );
         jdbcTemplate.update("INSERT INTO reservation_time (start_at) values (?)", "10:00");
         jdbcTemplate.update("INSERT INTO reservation_time (start_at) values (?)", "11:00");
@@ -42,9 +43,6 @@ class ReservationTimeDAOTest {
     @Test
     void should_get_reservation_times() {
         List<ReservationTime> reservationTimes = reservationTimeDAO.findAllReservations();
-        for (ReservationTime reservationTime : reservationTimes) {
-            System.out.println("reservationTime.getId() = " + reservationTime.getId());
-        }
         assertThat(reservationTimes).hasSize(2);
     }
 
@@ -52,9 +50,6 @@ class ReservationTimeDAOTest {
     @Test
     void should_get_reservation_time() {
         List<ReservationTime> reservationTimes = reservationTimeDAO.findAllReservations();
-        for (ReservationTime reservationTime : reservationTimes) {
-            System.out.println("reservationTime.getId() = " + reservationTime.getId());
-        }
         ReservationTime reservationTime = reservationTimeDAO.findReservationTime(1);
         assertThat(reservationTime.getStartAt()).isEqualTo(LocalTime.of(10, 0));
     }

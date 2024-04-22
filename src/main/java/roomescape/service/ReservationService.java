@@ -1,28 +1,28 @@
 package roomescape.service;
 
 import org.springframework.stereotype.Service;
-import roomescape.dao.ReservationDao;
+import roomescape.dao.ReservationRepository;
 import roomescape.entity.Reservation;
 import java.util.List;
 
 @Service
 public class ReservationService {
 
-    private final ReservationDao reservationDao;
+    private final ReservationRepository reservationRepository;
 
-    public ReservationService(ReservationDao reservationDao) {
-        this.reservationDao = reservationDao;
+    public ReservationService(ReservationRepository reservationRepository) {
+        this.reservationRepository = reservationRepository;
     }
 
     public Reservation createReservation(Reservation reservation) {
-        return reservationDao.createReservation(reservation);
+        return reservationRepository.createReservation(reservation);
     }
 
     public List<Reservation> findReservations() {
-        return reservationDao.findReservations();
+        return reservationRepository.findReservations();
     }
 
     public void removeReservation(Long id) {
-        reservationDao.removeReservation(id);
+        reservationRepository.removeReservation(id);
     }
 }

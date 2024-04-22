@@ -20,4 +20,13 @@ public class FakeTimeSlotDao implements TimeSlotRepository {
                 .stream()
                 .toList();
     }
+
+    @Override
+    public boolean delete(final long timeId) {
+        if (!timeSlots.containsKey(timeId)) {
+            return false;
+        }
+        timeSlots.remove(timeId);
+        return true;
+    }
 }

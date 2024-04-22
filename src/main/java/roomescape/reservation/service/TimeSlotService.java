@@ -27,4 +27,8 @@ public class TimeSlotService {
                 .map(TimeSlotResponse::from)
                 .toList();
     }
+
+    public boolean delete(long timeId) {
+        return timeSlotRepository.delete(timeId);
+    }
 }

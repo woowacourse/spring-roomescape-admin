@@ -54,4 +54,20 @@ class TimeSlotServiceTest {
         //then
         assertThat(timeSlots).hasSize(1);
     }
+
+    @DisplayName("예약 시간 삭제에 성공한다.")
+    @Test
+    void delete() {
+        //given
+        long id = 1L;
+        LocalTime localTime = LocalTime.MIDNIGHT;
+        timeSlotRepository.save(new TimeSlot(id, localTime));
+
+        //when
+        boolean deleted = timeSlotService.delete(id);
+
+        //then
+        assertThat(deleted).isTrue();
+        assertThat(timeSlotRepository.findAll()).hasSize(0);
+    }
 }

@@ -52,4 +52,26 @@ class TimeSlotControllerTest {
                 .statusCode(200)
                 .body("size()", is(1));
     }
+
+    @DisplayName("시간 삭제 시, 200을 반환한다.")
+    @Test
+    void delete() {
+        //given
+        Map<String, String> params = new HashMap<>();
+        params.put("startAt", "10:00");
+
+        RestAssured.given().log().all()
+                .contentType(ContentType.JSON)
+                .body(params)
+                .when().post("/times")
+                .then().log().all()
+                .statusCode(200);
+
+
+        //when & then
+        RestAssured.given().log().all()
+                .when().delete("/times/1")
+                .then().log().all()
+                .statusCode(200);
+    }
 }

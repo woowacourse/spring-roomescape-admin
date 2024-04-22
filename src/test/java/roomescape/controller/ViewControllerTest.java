@@ -36,4 +36,13 @@ public class ViewControllerTest {
                 .then().log().all()
                 .statusCode(200);
     }
+
+    @DisplayName("/admin/time get 요청 시 응답할 수 있다")
+    @Test
+    void should_response_200_when_request_time_page() {
+        RestAssured.given().log().all()
+                .when().get("/admin/time")
+                .then().log().all()
+                .statusCode(200);
+    }
 }

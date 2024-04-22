@@ -3,6 +3,7 @@ package roomescape.repository;
 import static org.assertj.core.api.Assertions.assertThat;
 
 import java.util.List;
+import java.util.stream.Stream;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -19,6 +20,17 @@ class ReservationTimeDaoTest {
     @Autowired
     private ReservationTimeDao reservationTimeDao;
 
+    @DisplayName("전체 시간 조회")
+    @Test
+    void findAllReservationTimes() {
+        reservationTimeDao.save(new ReservationTime(null, "08:00"));
+        reservationTimeDao.save(new ReservationTime(null, "15:00"));
+
+        List<ReservationTime> times = reservationTimeDao.findAll();
+
+        assertThat(times).hasSize(2);
+    }
+
     @DisplayName("시간 추가")
     @Test
     void saveReservationTime() {
@@ -29,14 +41,18 @@ class ReservationTimeDaoTest {
         assertThat(savedTime.getId()).isEqualTo(1);
     }
 
-    @DisplayName("전체 시간 조회")
+    @DisplayName("시간 삭제")
     @Test
-    void findAllReservationTimes() {
-        reservationTimeDao.save(new ReservationTime(null, "08:00"));
-        reservationTimeDao.save(new ReservationTime(null, "15:00"));
+    void deleteReservationTime() {
+        ReservationTime time = new ReservationTime(null, "14:00");
+        Long savedId = reservationTimeDao.save(time)
+            .getId();
 
-        List<ReservationTime> times = reservationTimeDao.findAll();
+        reservationTimeDao.deleteById(savedId);
 
-        assertThat(times).hasSize(2);
+        Stream<Long> savedIndexes = reservationTimeDao.findAll()
+            .stream()
+            .map(ReservationTime::getId);
+        assertThat(savedIndexes).isNotIn(savedId);
     }
 }

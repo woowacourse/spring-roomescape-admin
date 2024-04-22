@@ -15,7 +15,7 @@ import org.springframework.test.annotation.DirtiesContext;
 @DirtiesContext(classMode = DirtiesContext.ClassMode.BEFORE_EACH_TEST_METHOD)
 class ReservationTimeControllerTest {
 
-    @DisplayName("시간 추가, 조회")
+    @DisplayName("시간 추가, 조회, 삭제")
     @Test
     void insertAndSearchAndRemoveTime() {
         Map<String, String> params = new HashMap<>();
@@ -33,5 +33,10 @@ class ReservationTimeControllerTest {
             .then().log().all()
             .statusCode(200)
             .body("size()", is(1));
+
+        RestAssured.given().log().all()
+            .when().delete("/times/1")
+            .then().log().all()
+            .statusCode(200);
     }
 }

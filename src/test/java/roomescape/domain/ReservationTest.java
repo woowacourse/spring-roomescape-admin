@@ -3,7 +3,8 @@ package roomescape.domain;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 
-import java.time.LocalDateTime;
+import java.time.LocalDate;
+import java.time.LocalTime;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
@@ -13,9 +14,11 @@ class ReservationTest {
     @Test
     void initializeIndex() {
         // Given
-        Reservation reservation = new Reservation
-                (new ClientName("켈리"),
-                        LocalDateTime.of(2023, 1, 12, 10, 12));
+        Reservation reservation = new Reservation(
+                new ClientName("켈리"),
+                LocalDate.of(2023, 1, 12),
+                LocalTime.of(1, 12));
+
         Long initialIndex = 3L;
 
         // When

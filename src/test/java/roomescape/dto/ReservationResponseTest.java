@@ -5,7 +5,8 @@ import org.junit.jupiter.api.Test;
 import roomescape.domain.ClientName;
 import roomescape.domain.Reservation;
 
-import java.time.LocalDateTime;
+import java.time.LocalDate;
+import java.time.LocalTime;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
@@ -17,7 +18,8 @@ class ReservationResponseTest {
         // Given
         Reservation reservation = new Reservation(
                 new ClientName("켈리"),
-                LocalDateTime.of(2023, 1, 12, 1, 12)
+                LocalDate.of(2023, 1, 12),
+                LocalTime.of(1, 12)
         );
 
         // When

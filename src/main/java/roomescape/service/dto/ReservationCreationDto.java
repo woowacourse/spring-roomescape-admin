@@ -1,21 +1,25 @@
 package roomescape.service.dto;
 
+import java.time.LocalDate;
 import roomescape.domain.Name;
 import roomescape.domain.Reservation;
 import roomescape.domain.ReservationDate;
 import roomescape.domain.TimeSlot;
-import roomescape.utils.TimeFormatter;
 
 public class ReservationCreationDto {
 
     private final String name;
-    private final String date;
+    private final LocalDate date;
     private final TimeSlotDto time;
 
-    public ReservationCreationDto(String name, String date, TimeSlotDto timeSlotDto) {
+    public ReservationCreationDto(String name, LocalDate date, TimeSlotDto timeSlotDto) {
         this.name = name;
         this.date = date;
         this.time = timeSlotDto;
+    }
+
+    public ReservationCreationDto(String name, String date, TimeSlotDto timeSlotDto) {
+        this(name, LocalDate.parse(date), timeSlotDto);
     }
 
     public static ReservationCreationDto from(Reservation reservation) {
@@ -25,7 +29,7 @@ public class ReservationCreationDto {
 
         return new ReservationCreationDto(
                 name.asText(),
-                TimeFormatter.format(date.getDate()),
+                date.getDate(),
                 TimeSlotDto.from(time)
         );
     }
@@ -38,7 +42,7 @@ public class ReservationCreationDto {
         return name;
     }
 
-    public String getDate() {
+    public LocalDate getDate() {
         return date;
     }
 

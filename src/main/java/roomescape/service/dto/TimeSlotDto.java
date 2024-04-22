@@ -2,20 +2,19 @@ package roomescape.service.dto;
 
 import java.time.LocalTime;
 import roomescape.domain.TimeSlot;
-import roomescape.utils.TimeFormatter;
 
 public class TimeSlotDto {
 
     private final Long id;
-    private final String time;
+    private final LocalTime time;
 
-    public TimeSlotDto(Long id, String time) {
+    public TimeSlotDto(Long id, LocalTime time) {
         this.id = id;
         this.time = time;
     }
 
-    public TimeSlotDto(Long id, LocalTime time) {
-        this(id, TimeFormatter.format(time));
+    public TimeSlotDto(Long id, String time) {
+        this(id, LocalTime.parse(time));
     }
 
     public TimeSlotDto(LocalTime time) {
@@ -41,7 +40,7 @@ public class TimeSlotDto {
         return id;
     }
 
-    public String getTime() {
+    public LocalTime getTime() {
         return time;
     }
 }

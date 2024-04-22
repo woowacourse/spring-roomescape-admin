@@ -27,7 +27,7 @@ public class TimeSlotJdbcRepository implements TimeSlotRepository {
 
     @Override
     public TimeSlot create(TimeSlotDto timeSlotDto) {
-        Map<String, String> parameters = Map.of(
+        Map<String, ? extends Serializable> parameters = Map.of(
                 "start_at", timeSlotDto.getTime()
         );
         Number key = jdbcInsert.executeAndReturnKey(parameters);

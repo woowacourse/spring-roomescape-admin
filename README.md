@@ -28,5 +28,5 @@
 - [x] 예약 시간 삭제를 할 수 있다.
 
 # 8단계 요구사항
-- [ ] reservation-legacy 대신 reservation.html로 변경
+- [x] 예약 페이지를 reservation.html로 변경
 - [ ] 방탈출 예약 시 정해진 시간만을 예약 가능합니다.

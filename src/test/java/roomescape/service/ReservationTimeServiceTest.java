@@ -1,4 +1,4 @@
-package roomescape.business;
+package roomescape.service;
 
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -8,7 +8,7 @@ import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 import roomescape.domain.ReservationTime;
 import roomescape.dto.ReservationTimeResponse;
-import roomescape.persistence.ReservationTimeRepository;
+import roomescape.repository.ReservationTimeRepository;
 
 import java.util.List;
 import java.util.Optional;

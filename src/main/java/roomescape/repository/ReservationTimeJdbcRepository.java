@@ -1,6 +1,7 @@
-package roomescape.persistence;
+package roomescape.repository;
 
 import org.springframework.stereotype.Repository;
+import roomescape.dao.ReservationTimeDao;
 import roomescape.domain.ReservationTime;
 
 import java.util.List;

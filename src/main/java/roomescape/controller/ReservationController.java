@@ -30,10 +30,10 @@ public class ReservationController {
     private final JdbcTemplate jdbcTemplate;
     private final RowMapper<Reservation> actorRowMapper = (rs, rowNum) ->
             new Reservation(
-                    rs.getLong("id"),
+                    rs.getLong("reservation_id"),
                     rs.getString("name"),
                     rs.getDate("date").toLocalDate(),
-                    rs.getTime("time").toLocalTime()
+                    new ReservationTime(rs.getLong("time_id"), rs.getTime("time_value").toLocalTime())
             );
 
     public ReservationController(JdbcTemplate jdbcTemplate) {
@@ -43,13 +43,33 @@ public class ReservationController {
     @GetMapping
     @ResponseStatus(HttpStatus.OK)
     public List<ReservationResponse> findAll() {
-        String sql = "SELECT * FROM reservation";
+        String sql = """
+            SELECT 
+                r.id AS reservation_id,
+                r.name,
+                r.date,
+                t.id AS time_id,
+                t.start_at AS time_value
+            FROM reservation AS r
+            INNER JOIN reservation_time AS t
+            ON r.time_id = t.id""";  // time_value 이건 왜필요하지?
         List<Reservation> reservations = jdbcTemplate.query(sql, actorRowMapper);
         return ReservationResponse.fromReservations(reservations);
     }
 
     private Reservation findById(final long id) {
-        String sql = "SELECT * FROM reservation WHERE id = ?";
+        String sql = """
+            SELECT 
+                r.id AS reservation_id,
+                r.name,
+                r.date,
+                t.id AS time_id,
+                t.start_at AS time_value
+            FROM reservation AS r
+            INNER JOIN reservation_time AS t
+            ON r.time_id = t.id
+            WHERE r.id = ?
+            """;
         Reservation reservation = jdbcTemplate.queryForObject(sql, actorRowMapper, id);
         return reservation;
     }

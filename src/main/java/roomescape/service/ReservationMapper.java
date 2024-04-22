@@ -17,6 +17,6 @@ public class ReservationMapper {
                 reservation.id(),
                 reservation.name(),
                 reservation.date().format(DateTimeFormatter.ISO_LOCAL_DATE),
-                reservation.time().format(DateTimeFormatter.ISO_LOCAL_TIME));
+                reservation.time().format(DateTimeFormatter.ofPattern("HH:mm")));
     }
 }

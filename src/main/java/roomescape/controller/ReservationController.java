@@ -12,6 +12,7 @@ import roomescape.entity.Reservation;
 import roomescape.repository.MemoryReservationRepository;
 import roomescape.service.ReservationMapper;
 
+import java.net.URI;
 import java.util.List;
 
 @RestController
@@ -38,7 +39,9 @@ public class ReservationController {
         Reservation savedReservation = memoryReservationRepository.save(ReservationMapper.map(request));
         ReservationResponse response = ReservationMapper.map(savedReservation);
 
-        return ResponseEntity.ok(response);
+        return ResponseEntity
+                .created(URI.create("/reservations/" + response.id()))
+                .body(response);
     }
 
     @DeleteMapping("/{id}")

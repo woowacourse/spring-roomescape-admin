@@ -32,8 +32,7 @@
         ]
       ```
 
-- [x] 예약 추가시 id는 자동 증가 된다.
-- [x] data, name, time을 받아서 예약을 추가 할 수 있다.
+- [ ] data, name, time을 받아서 DB에 예약을 추가 할 수 있다.
     - request
       ```
         POST /reservations HTTP/1.1
@@ -58,7 +57,7 @@
         }
       ```
 
-- [x] 삭제할 예약의 id를 받아서 예약을 삭제 할 수 있다.
+- [ ] 삭제할 예약의 id를 받아서 DB에 예약을 삭제 할 수 있다.
     - request
       ```
       DELETE /reservations/1 HTTP/1.1

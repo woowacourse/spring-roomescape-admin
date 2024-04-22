@@ -28,7 +28,7 @@ public class ReservationController {
         List<ReservationResponse> reservations = jdbcTemplate.query(sql,
                 (rs, rowNum) -> new ReservationResponse(rs.getLong("id"), rs.getString("name"),
                         rs.getDate("date").toLocalDate(),
-                        rs.getTime("time").toLocalTime()));
+                        rs.getTime("startAt").toLocalTime()));
         return ResponseEntity.ok(reservations);
     }
 

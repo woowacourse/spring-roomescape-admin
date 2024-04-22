@@ -27,6 +27,12 @@ public class ReservationRepositoryImpl implements ReservationRepository {
         return jdbcTemplate.query(sql, actorRowMapper());
     }
 
+    @Override
+    public void delete(final long id) {
+        final var sql = "DELETE FROM reservation WHERE id = ?";
+        jdbcTemplate.update(sql, id);
+    }
+
     private RowMapper<Reservation> actorRowMapper() {
         return (resultSet, rowNum) -> new Reservation.Builder()
                 .id(resultSet.getLong("id"))

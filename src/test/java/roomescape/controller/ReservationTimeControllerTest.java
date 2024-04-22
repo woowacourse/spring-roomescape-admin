@@ -49,18 +49,15 @@ class ReservationTimeControllerTest {
                 .when().post("/times")
                 .then().log().all()
                 .statusCode(201)
-                .header("Location", "/times/1");
+                .header("Location", "/times/3");
 
         Integer count = jdbcTemplate.queryForObject("SELECT count(1) from reservation_time", Integer.class);
-        assertThat(count).isEqualTo(1);
+        assertThat(count).isEqualTo(3);
     }
 
     @DisplayName("예약 시간을 삭제한다")
     @Test
     void should_remove_reservation_time() {
-        jdbcTemplate.update("INSERT INTO reservation_time (start_at) values (?)", "10:00");
-        jdbcTemplate.update("INSERT INTO reservation_time (start_at) values (?)", "11:00");
-
         RestAssured.given().log().all()
                 .when().delete("/times/1")
                 .then().log().all()

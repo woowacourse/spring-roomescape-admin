@@ -1,16 +1,9 @@
-## 1단계 - 홈 화면
-
-- [x] localhost:8080/admin 요청 시 어드민 메인 페이지가 응답
-  - 어드민 메인 페이지는 templates/admin/index.html 파일을 이용하세요.
-- [x] welcome page 응답
-
-## 2단계 - 예약 조회
-
-- [x] /admin/reservation 요청 시 예약 관리 페이지가 응답 
-  - 페이지는 templates/admin/reservation-legacy.html 파일을 이용하세요.
-- [x] API 명세를 따라 예약 관리 페이지 로드 시 호출되는 예약 목록 조회 API 구현
-
-## 3단계 - 예약 추가 / 취소
-
-- [x] 예약 추가 API 구현
-- [x] 삭제 API 구현
+- `/admin` GET 요청시 `admin/index.html` 방탈출 어드민 페이지 반환
+- `/admin/reservation` GET 요청 시 `admin/reservation.html` 방탈출 예약 페이지 반환
+- `/admin/time` GET 요청 시 `admin/time.html` 시간 관리 페이지 반환
+- `/reservations` GET 요청 시 모든 예약 응답
+- `/reservations` POST 요청 시 예약 생성
+- `/reservations/{id}` DELETE 요청 시 해당 id인 예약 삭제
+- `/times` GET 요청 시 모든 예약 시간 응답
+- `/times` POST 요청 시 예약 시간 생성
+- `/times/{id}` DELETE 요청 시 해당 id인 예약 시간 삭제

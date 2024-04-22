@@ -1,9 +1,7 @@
 package roomescape.domain;
 
 import java.sql.PreparedStatement;
-import java.util.ArrayList;
 import java.util.List;
-import java.util.concurrent.atomic.AtomicLong;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;
@@ -13,16 +11,8 @@ import org.springframework.stereotype.Repository;
 
 @Repository
 public class ReservationRepository {
-    private final List<Reservation> reservations;
-    private final AtomicLong index;
     @Autowired
     private JdbcTemplate jdbcTemplate;
-
-    public ReservationRepository() {
-        reservations = new ArrayList<>();
-        index = new AtomicLong(1L);
-    }
-
 
     public List<Reservation> findAll() {
         return jdbcTemplate.query("SELECT id, name, date, time FROM reservation", reservationRowMapper());
@@ -50,12 +40,7 @@ public class ReservationRepository {
     }
 
     public void remove(Reservation reservation) {
-        reservations.remove(reservation);
-    }
-
-    public void removeAll() {
-        reservations.clear();
-        index.set(1L);
+        jdbcTemplate.update("DELETE FROM reservation WHERE id = ?", reservation.getId());
     }
 
     private RowMapper<Reservation> reservationRowMapper() {

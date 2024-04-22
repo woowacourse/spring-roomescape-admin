@@ -27,7 +27,7 @@ import roomescape.dto.ReservationCreateDto;
  * {ID=3, NAME=릴리, DATE=2023-08-05, TIME=15:40}
  */
 @SpringBootTest(webEnvironment = WebEnvironment.RANDOM_PORT)
-@Sql(scripts = "/ResetTestData.sql", executionPhase = ExecutionPhase.BEFORE_TEST_CLASS)
+@Sql(scripts = "/ResetTestData.sql", executionPhase = ExecutionPhase.BEFORE_TEST_METHOD)
 class ReservationRepositoryTest {
     @Autowired
     private JdbcTemplate jdbcTemplate;
@@ -91,5 +91,17 @@ class ReservationRepositoryTest {
 
         Integer count = jdbcTemplate.queryForObject("SELECT count(1) from reservation", Integer.class);
         assertThat(count).isEqualTo(4);
+    }
+
+    @Test
+    @DisplayName("데이터베이스에서 예약을 삭제한다")
+    void deleteReservation() {
+        RestAssured.given().log().all()
+                .when().delete("/reservations/3")
+                .then().log().all()
+                .statusCode(204);
+
+        Integer countAfterDelete = jdbcTemplate.queryForObject("SELECT count(1) from reservation", Integer.class);
+        assertThat(countAfterDelete).isEqualTo(2);
     }
 }

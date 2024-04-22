@@ -24,7 +24,7 @@ import roomescape.dto.ReservationTimeRequest;
 
 @SpringBootTest(webEnvironment = WebEnvironment.RANDOM_PORT)
 @DirtiesContext(classMode = DirtiesContext.ClassMode.BEFORE_EACH_TEST_METHOD)
-class ReservationTimeControllerTest {
+class ReservationReservationTimeControllerTest {
 
     @Autowired
     private JdbcTemplate jdbcTemplate;

@@ -26,6 +26,9 @@ import roomescape.admin.reservation.controller.ReservationController;
 @DirtiesContext(classMode = DirtiesContext.ClassMode.BEFORE_EACH_TEST_METHOD)
 class ReservationControllerTest {
 
+    @Autowired
+    private ReservationController reservationController;
+
     @Test
     @DisplayName("예약 목록을 조회한다.")
     void findAllTest() {
@@ -38,21 +41,27 @@ class ReservationControllerTest {
 
     @TestFactory
     @DisplayName("예약을 추가하고 삭제합니다.")
-    Collection<DynamicTest> createAndDeleteReservation() {
-
-        Map<String, String> params = new HashMap<>();
-        params.put("name", "브라운");
-        params.put("date", "2023-08-05");
-        params.put("time_id", "15:40");
+    Collection<DynamicTest> testReservationCRD() {
+        Map<String, Object> reservation = getReservationParameter();
+        Map<String, String> time = getTimeParameter();
 
         return List.of(
+                DynamicTest.dynamicTest("예약 시간을 추가한다.", () -> {
+                    RestAssured.given().log().all()
+                            .contentType(ContentType.JSON)
+                            .body(time)
+                            .when().post("/times")
+                            .then().log().all()
+                            .statusCode(200);
+                }),
+
                 DynamicTest.dynamicTest("예약을 추가한다.", () -> {
                     RestAssured.given().log().all()
                             .contentType(ContentType.JSON)
-                            .body(params)
+                            .body(reservation)
                             .when().post("/reservations")
                             .then().log().all()
-                            .statusCode(201);
+                            .statusCode(200);
                 }),
 
                 DynamicTest.dynamicTest("예약을 조회했을 때 하나이다.", () -> {
@@ -88,6 +97,20 @@ class ReservationControllerTest {
         );
     }
 
+    private Map<String, Object> getReservationParameter() {
+        Map<String, Object> reservation = new HashMap<>();
+        reservation.put("name", "브라운");
+        reservation.put("date", "2023-08-05");
+        reservation.put("timeId", 1);
+        return reservation;
+    }
+
+    private Map<String, String> getTimeParameter() {
+        Map<String, String> time = new HashMap<>();
+        time.put("startAt", "10:00");
+        return time;
+    }
+
     @Test
     @DisplayName("삭제할 번호가 없으면 실패 메시지를 준다.")
     void deleteReservationWhenNotMatchedId() {
@@ -99,41 +122,8 @@ class ReservationControllerTest {
     }
 
     @Test
-    void 팔단계() {
-        Map<String, Object> reservation = new HashMap<>();
-        reservation.put("name", "브라운");
-        reservation.put("date", "2023-08-05");
-        reservation.put("timeId", 1);
-
-        Map<String, String> params = new HashMap<>();
-        params.put("startAt", "10:00");
-
-        RestAssured.given().log().all()
-                .contentType(ContentType.JSON)
-                .body(params)
-                .when().post("/times")
-                .then().log().all()
-                .statusCode(200);
-
-        RestAssured.given().log().all()
-                .contentType(ContentType.JSON)
-                .body(reservation)
-                .when().post("/reservations")
-                .then().log().all()
-                .statusCode(200);
-
-        RestAssured.given().log().all()
-                .when().get("/reservations")
-                .then().log().all()
-                .statusCode(200)
-                .body("size()", is(1));
-    }
-
-    @Autowired
-    private ReservationController reservationController;
-
-    @Test
-    void 구단계() {
+    @DisplayName("ReservationController에 JdbcTemplate 필드가 없다.")
+    void checkNoJdbcTemplateInReservationController() {
         boolean isJdbcTemplateInjected = false;
 
         for (Field field : reservationController.getClass().getDeclaredFields()) {

@@ -14,7 +14,7 @@ import org.springframework.test.annotation.DirtiesContext;
 @DirtiesContext(classMode = DirtiesContext.ClassMode.BEFORE_EACH_TEST_METHOD)
 class ReservationTimeControllerTest {
     @Test
-    void 칠단계() {
+    void testReservationTimeCRD() {
         Map<String, String> params = new HashMap<>();
         params.put("startAt", "10:00");
 

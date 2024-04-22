@@ -39,7 +39,7 @@ public class JdbcReservationTimeRepository implements ReservationTimeRepository 
 
     @Override
     public void deleteReservationTimeById(Long id) {
-        String sql = "DELETE FROM reservation_time where id = :id";
+        String sql = "DELETE FROM reservation_time WHERE id = :id";
         SqlParameterSource parameterSource = new MapSqlParameterSource()
                 .addValue("id", id);
         jdbcTemplate.update(sql, parameterSource);
@@ -50,7 +50,7 @@ public class JdbcReservationTimeRepository implements ReservationTimeRepository 
                 SELECT 
                 t.id, 
                 start_at 
-                FROM reservation_time as t 
+                FROM reservation_time AS t 
                 WHERE t.id = :savedId;
                 """;
         SqlParameterSource paramMap = new MapSqlParameterSource().addValue("savedId", savedId);

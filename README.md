@@ -37,3 +37,6 @@
 - [X] : 예약 클래스 시간 타입을 String 에서 ReservationTime으로 변경한다.
 - [X] : 예약 추가 시, 시간을 문자열(ex. "10:00") 형태로 입력하던 부분을 ReservationTime의 식별자(ex. 1)로 수정한다.
 - [X] : 예약 조회 시, ReservationTime 정보도 함께 조회하도록 수정한다.
+
+## step9
+- [ ] : ReservationsController 가 JdbcTemplate 를 모르도록 한다.

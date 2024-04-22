@@ -38,4 +38,12 @@ public class JdbcTemplateTimeRepository implements TimeRepository {
         );
         return jdbcTemplate.query("SELECT id, start_at FROM reservation_time", timeRowMapper);
     }
+
+    @Override
+    public void deleteById(Long id) {
+        int rowCount = jdbcTemplate.update("DELETE FROM reservation_time WHERE id = ?", id);
+        if (rowCount == 0) {
+            throw new IllegalArgumentException("존재하지 않는 시간입니다.");
+        }
+    }
 }

@@ -1,13 +1,20 @@
 package roomescape.controller;
 
+import static org.assertj.core.api.Assertions.as;
+import static org.assertj.core.api.Assertions.assertThat;
+import static org.junit.jupiter.api.DynamicTest.dynamicTest;
+
 import io.restassured.RestAssured;
 import io.restassured.http.ContentType;
 import java.time.LocalTime;
+import java.util.Collection;
 import java.util.List;
 import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
+import org.junit.jupiter.api.DynamicTest;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.TestFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.context.SpringBootTest.WebEnvironment;
@@ -46,21 +53,36 @@ class TimeControllerTest {
                 .jsonPath().getList(".", Time.class);
 
         Integer count = jdbcTemplate.queryForObject("SELECT COUNT(1) from reservation_time", Integer.class);
-
-        Assertions.assertThat(times.size()).isEqualTo(count);
+        assertThat(times.size()).isEqualTo(count);
     }
 
-    @Test
-    @DisplayName("시간을 생성한다.")
-    void createTime() {
+    @TestFactory
+    @DisplayName("시간을 생성하고 삭제한다")
+    Collection<DynamicTest> saveTimeAndDelete() {
         TimeRequest params = new TimeRequest(LocalTime.of(10, 0));
 
-        RestAssured.given().log().all()
-                .contentType(ContentType.JSON)
-                .body(params)
-                .when().post("/times")
-                .then().log().all()
-                .statusCode(201)
-                .header("Location", "/times/1");
+        return List.of(
+                dynamicTest("시간을 생성한다.", () -> {
+                    RestAssured.given().log().all()
+                            .contentType(ContentType.JSON)
+                            .body(params)
+                            .when().post("/times")
+                            .then().log().all()
+                            .statusCode(201)
+                            .header("Location", "/times/1");
+
+                    Integer count = jdbcTemplate.queryForObject("SELECT COUNT(1) from reservation_time", Integer.class);
+                    assertThat(count).isEqualTo(1);
+                }),
+                dynamicTest("시간을 삭제한다.", () -> {
+                    RestAssured.given().log().all()
+                            .when().delete("/times/1")
+                            .then().log().all()
+                            .statusCode(204);
+
+                    Integer countAfterDelete = jdbcTemplate.queryForObject("SELECT COUNT(1) from reservation_time", Integer.class);
+                    assertThat(countAfterDelete).isEqualTo(0);
+                })
+        );
     }
 }

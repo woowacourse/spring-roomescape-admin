@@ -38,4 +38,13 @@ class AdminControllerTest {
                 .then().log().all()
                 .statusCode(200);
     }
+
+    @Test
+    @DisplayName("'/admin/time'으로 접속하면 시간 관리 페이지를 보여준다.")
+    void printTimeView() {
+        RestAssured.given().log().all()
+                .when().get("/admin/time")
+                .then().log().all()
+                .statusCode(200);
+    }
 }

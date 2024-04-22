@@ -3,7 +3,7 @@ package roomescape.controller.dto;
 import roomescape.domain.Reservation;
 import roomescape.util.CustomDateTimeFormatter;
 
-public record ReservationFindResponse(Long id, String name, String date, ReservationTimeFindResponse time_id) {
+public record ReservationFindResponse(Long id, String name, String date, ReservationTimeFindResponse time) {
 
     public static ReservationFindResponse of(final Reservation reservation) {
         return new ReservationFindResponse(

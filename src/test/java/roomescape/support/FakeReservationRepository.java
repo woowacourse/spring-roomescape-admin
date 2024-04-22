@@ -1,29 +1,20 @@
-package roomescape.domain.reservation.repository;
+package roomescape.support;
 
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
-import java.util.concurrent.ConcurrentSkipListMap;
-import java.util.concurrent.atomic.AtomicLong;
-import org.springframework.stereotype.Repository;
 import roomescape.domain.reservation.Reservation;
 import roomescape.domain.reservation.ReservationDateTime;
+import roomescape.domain.reservation.repository.ReservationRepository;
 
-@Repository
-public class InMemoryReservationRepository implements ReservationRepository {
-    private static final long INITIAL_VALUE = 1L;
-
-    private final Map<Long, Reservation> reservations;
-    private final AtomicLong index;
-
-    public InMemoryReservationRepository() {
-        this.reservations = new ConcurrentSkipListMap<>();
-        this.index = new AtomicLong(INITIAL_VALUE);
-    }
+public class FakeReservationRepository implements ReservationRepository {
+    private final Map<Long, Reservation> reservations = new HashMap<>();
+    private long id = 1;
 
     @Override
     public Reservation save(Reservation reservation) {
-        Reservation updatedReservation = reservation.updateId(index.getAndIncrement());
+        Reservation updatedReservation = reservation.updateId(id++);
         reservations.put(updatedReservation.getId(), updatedReservation);
         return updatedReservation;
     }

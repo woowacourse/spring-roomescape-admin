@@ -8,14 +8,14 @@ import java.time.LocalDate;
 import java.time.LocalTime;
 import org.junit.jupiter.api.Test;
 import roomescape.domain.reservation.Reservation;
-import roomescape.domain.reservation.repository.InMemoryReservationRepository;
 import roomescape.domain.reservation.repository.ReservationRepository;
 import roomescape.dto.ReservationRequest;
 import roomescape.fixture.ClockFixture;
+import roomescape.support.FakeReservationRepository;
 
 class ReservationServiceTest {
     private final Clock clock = ClockFixture.fixedClock(LocalDate.of(2024, 4, 20));
-    private final ReservationRepository reservationRepository = new InMemoryReservationRepository();
+    private final ReservationRepository reservationRepository = new FakeReservationRepository();
     private final ReservationService reservationService = new ReservationService(clock, reservationRepository);
 
     @Test

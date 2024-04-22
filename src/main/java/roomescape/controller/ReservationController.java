@@ -13,7 +13,6 @@ import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.util.UriComponentsBuilder;
 import roomescape.dto.ReservationRequest;
 import roomescape.dto.ReservationResponse;
-import roomescape.model.Reservation;
 import roomescape.service.ReservationService;
 
 @RestController
@@ -28,10 +27,7 @@ public class ReservationController {
 
     @GetMapping
     public List<ReservationResponse> getReservations() {
-        final List<Reservation> reservations = reservationService.findAll();
-        return reservations.stream()
-                .map(ReservationResponse::from)
-                .toList();
+        return reservationService.findAll();
     }
 
     @PostMapping

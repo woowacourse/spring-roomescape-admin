@@ -23,8 +23,11 @@ public class ReservationService {
         return ReservationResponse.from(saved);
     }
 
-    public List<Reservation> findAll() {
-        return reservationDao.findAll();
+    public List<ReservationResponse> findAll() {
+        final List<Reservation> reservations = reservationDao.findAll();
+        return reservations.stream()
+                .map(ReservationResponse::from)
+                .toList();
     }
 
     public Optional<Reservation> findById(final Long id) {

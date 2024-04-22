@@ -12,7 +12,6 @@ public class ReservationMemoryRepository implements ReservationRepository {
 
     private final List<Reservation> reservations;
     private final List<ReservationTime> reservationTimes;
-
     private final AtomicLong reservationIndex;
 
     public ReservationMemoryRepository(List<Reservation> reservations, List<ReservationTime> reservationTimes,

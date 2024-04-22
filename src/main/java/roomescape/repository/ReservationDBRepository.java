@@ -43,10 +43,12 @@ public class ReservationDBRepository implements ReservationRepository {
         this.jdbcTemplate = jdbcTemplate;
     }
 
+    @Override
     public List<Reservation> findReservations() {
         return jdbcTemplate.query(findAllReservationQuery, reservationRowMapper);
     }
 
+    @Override
     public Optional<Reservation> findReservationById(Long createdReservationId) {
         return Optional.ofNullable(
                 jdbcTemplate.queryForObject(findAllReservationQuery + " WHERE r.id = ?",
@@ -55,6 +57,7 @@ public class ReservationDBRepository implements ReservationRepository {
         );
     }
 
+    @Override
     public Long createReservation(ReservationCreateRequest reservationCreateRequest) {
         SimpleJdbcInsert simpleJdbcInsert = new SimpleJdbcInsert(jdbcTemplate)
                 .withTableName("reservation")
@@ -66,6 +69,7 @@ public class ReservationDBRepository implements ReservationRepository {
         )).longValue();
     }
 
+    @Override
     public void deleteReservationById(Long id) {
         jdbcTemplate.update("DELETE FROM reservation WHERE id = ?", id);
     }

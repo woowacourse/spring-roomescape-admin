@@ -20,12 +20,12 @@ public class ReservationTimeService {
         return reservationTimeRepository.findReservationTimes();
     }
 
-    public Long createReservationTime(ReservationTimeCreateRequest reservationTimeCreateRequest) {
-        return reservationTimeRepository.createReservationTime(reservationTimeCreateRequest);
-    }
-
     public Optional<ReservationTime> findReservationTimeById(Long createdReservationTimeId) {
         return reservationTimeRepository.findReservationTimeById(createdReservationTimeId);
+    }
+
+    public Long createReservationTime(ReservationTimeCreateRequest reservationTimeCreateRequest) {
+        return reservationTimeRepository.createReservationTime(reservationTimeCreateRequest);
     }
 
     public void deleteReservationTimeById(Long id) {

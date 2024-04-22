@@ -31,23 +31,23 @@ public class ReservationTimeDBRepository implements ReservationTimeRepository {
     }
 
     @Override
-    public Long createReservationTime(ReservationTimeCreateRequest reservationTimeCreateRequest) {
-        SimpleJdbcInsert simpleJdbcInsert = new SimpleJdbcInsert(jdbcTemplate).withTableName("reservation_time")
-                .usingGeneratedKeyColumns("id");
-        return simpleJdbcInsert.executeAndReturnKey(Map.of(
-                "start_at", reservationTimeCreateRequest.startAt()
-        )).longValue();
-    }
-
-    @Override
-    public Optional<ReservationTime> findReservationTimeById(Long createdReservationTimeId) {
+    public Optional<ReservationTime> findReservationTimeById(Long id) {
         return Optional.ofNullable(jdbcTemplate.queryForObject(
                 "SELECT * FROM reservation_time WHERE id = ?",
                 (rs, rowNum) -> new ReservationTime(
                         rs.getLong("id"),
                         CustomDateTimeFormatter.getLocalTime(rs.getString("start_at")
                         )),
-                createdReservationTimeId));
+                id));
+    }
+
+    @Override
+    public Long createReservationTime(ReservationTimeCreateRequest reservationTimeCreateRequest) {
+        SimpleJdbcInsert simpleJdbcInsert = new SimpleJdbcInsert(jdbcTemplate).withTableName("reservation_time")
+                .usingGeneratedKeyColumns("id");
+        return simpleJdbcInsert.executeAndReturnKey(Map.of(
+                "start_at", reservationTimeCreateRequest.startAt()
+        )).longValue();
     }
 
     @Override

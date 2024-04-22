@@ -31,8 +31,8 @@ public class ReservationDaoTest {
     private JdbcTemplate jdbcTemplate;
 
     @Test
-    @DisplayName("오단계테스트")
-    void 오단계() {
+    @DisplayName("DB에서 예약 내역 조회 API 작동을 확인한다")
+    void checkAllReservations() {
         jdbcTemplate.update("INSERT INTO reservation (name, date, time) VALUES (?, ?, ?)", "브라운", "2023-08-05", "15:40");
 
         List<Reservation> reservations = RestAssured.given().log().all()

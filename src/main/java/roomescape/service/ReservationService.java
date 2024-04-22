@@ -29,9 +29,9 @@ public class ReservationService {
     }
 
     public void remove(final Long id) {
-        final Optional<Reservation> findReservation = reservationDao.findById(id);
+        final Optional<Reservation> findReservation = findById(id);
         if (findReservation.isEmpty()) {
-            return;
+            throw new IllegalArgumentException(String.format("id: %s는 존재하지 않는 id 입니다.", id));
         }
         reservationDao.remove(id);
     }

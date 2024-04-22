@@ -2,7 +2,6 @@ package roomescape.controller;
 
 import java.net.URI;
 import java.util.List;
-import java.util.Optional;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -49,13 +48,13 @@ public class ReservationController {
 
     @DeleteMapping("/{id}")
     public ResponseEntity<Void> delete(@PathVariable("id") final Long id) {
-        final Optional<Reservation> findReservation = reservationService.findById(id);
-        if (findReservation.isEmpty()) {
+        try {
+            reservationService.remove(id);
+            return ResponseEntity.noContent()
+                    .build();
+        } catch (final IllegalArgumentException exception) {
             return ResponseEntity.notFound()
                     .build();
         }
-        reservationService.remove(id);
-        return ResponseEntity.noContent()
-                .build();
     }
 }

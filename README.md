@@ -66,9 +66,9 @@
 
 ## 8단계 예약과 시간 관리
 
-- [ ] 예약 페이지 수정
+- [x] 예약 페이지 수정
   - `templates/admin/reservation-legacy.html` 대신 `templates/admin/reservation.html` 활용한다.
-- [ ] 테이블 스키마 재정의
+- [x] 테이블 스키마 재정의
   - 외래키 지정을 통해 reservation 테이블과 reservation_time 테이블의 관계를 설정
 - [ ] 예약 클래스 수정
   - String에서 ReservationTime 객체로 수정

@@ -9,9 +9,14 @@ public class FakeReservationDao implements ReservationRepository {
     private final Map<Long, Reservation> reservations = new HashMap<>();
 
     @Override
-    public long save(final Reservation reservation) {
+    public Reservation save(final Reservation reservation) {
         reservations.put((long) reservations.size() + 1, reservation);
-        return reservations.size();
+        return new Reservation(
+                (long) reservations.size(),
+                reservation.getName(),
+                reservation.getDate(),
+                reservation.getTime()
+        );
     }
 
     @Override

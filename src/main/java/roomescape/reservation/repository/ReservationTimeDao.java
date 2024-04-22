@@ -4,6 +4,7 @@ import java.sql.PreparedStatement;
 import java.sql.Statement;
 import java.sql.Time;
 import java.util.List;
+import java.util.Optional;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.support.GeneratedKeyHolder;
 import org.springframework.jdbc.support.KeyHolder;
@@ -40,6 +41,23 @@ public class ReservationTimeDao implements ReservationTimeRepository {
             );
         });
     }
+
+    @Override
+    public Optional<ReservationTime> findById(long timeId) {
+        String sql = "SELECT id, start_at FROM reservation_time WHERE id = ?";
+        return jdbcTemplate.query(sql, resultSet -> {
+            if (resultSet.next()) {
+                ReservationTime reservationTime = new ReservationTime(
+                        resultSet.getLong("id"),
+                        resultSet.getTime("start_at").toLocalTime()
+                );
+                return Optional.of(reservationTime);
+            } else {
+                return Optional.empty();
+            }
+        }, timeId);
+    }
+
 
     @Override
     public boolean delete(final long timeId) {

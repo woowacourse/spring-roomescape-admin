@@ -6,7 +6,6 @@ import java.time.LocalDate;
 import java.time.LocalTime;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
-import roomescape.reservation.domain.Reservation;
 
 class ReservationTest {
     @DisplayName("동일한 id는 같은 예약이다.")
@@ -16,7 +15,9 @@ class ReservationTest {
         long id = 1L;
         String name1 = "choco";
         LocalDate date1 = LocalDate.of(2024, 4, 19);
-        LocalTime time1 = LocalTime.of(12, 23, 0);
+        long timeId = 1;
+        LocalTime localTime = LocalTime.of(12, 23, 0);
+        ReservationTime time1 = new ReservationTime(timeId, localTime);
 
         String name2 = "pororo";
         LocalDate date2 = LocalDate.of(2022, 4, 19);
@@ -24,7 +25,7 @@ class ReservationTest {
 
         //when
         Reservation reservation1 = new Reservation(id, name1, date1, time1);
-        Reservation reservation2 = new Reservation(id, name2, date2, time2);
+        Reservation reservation2 = new Reservation(id, name2, date2, time1);
 
         //then
         assertThat(reservation1).isEqualTo(reservation2);

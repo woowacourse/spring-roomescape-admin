@@ -27,7 +27,7 @@ public class AdminController {
     @GetMapping("/reservation")
     public String reservation(Model model) {
         model.addAttribute("reservations", reservationService.findAllReservations());
-        return "admin/reservation-legacy";
+        return "admin/reservation";
     }
 
     @GetMapping("/time")

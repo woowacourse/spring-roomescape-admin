@@ -3,6 +3,7 @@ package roomescape.reservation.repository;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 import roomescape.reservation.domain.ReservationTime;
 
 public class FakeReservationTimeDao implements ReservationTimeRepository {
@@ -19,6 +20,11 @@ public class FakeReservationTimeDao implements ReservationTimeRepository {
         return reservationTimes.values()
                 .stream()
                 .toList();
+    }
+
+    @Override
+    public Optional<ReservationTime> findById(final long timeId) {
+        return Optional.of(reservationTimes.get(timeId));
     }
 
     @Override

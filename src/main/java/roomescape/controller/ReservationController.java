@@ -23,11 +23,6 @@ public class ReservationController {
         this.service = service;
     }
 
-    @GetMapping
-    public List<Reservation> readAll() {
-        return service.findAll();
-    }
-
     @PostMapping
     public ResponseEntity<Reservation> add(@RequestBody CreateReservationRequest request) {
         Reservation savedReservation = service.save(request);
@@ -36,8 +31,13 @@ public class ReservationController {
             .body(savedReservation);
     }
 
+    @GetMapping
+    public List<Reservation> readAll() {
+        return service.findAll();
+    }
+
     @DeleteMapping("/{id}")
-    public void remove(@PathVariable Long id) {
+    public void delete(@PathVariable Long id) {
         service.delete(id);
     }
 }

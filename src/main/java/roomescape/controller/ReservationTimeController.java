@@ -23,7 +23,7 @@ public class ReservationTimeController {
     }
 
     @PostMapping
-    public ReservationTime save(@RequestBody CreateReservationTimeRequest request) {
+    public ReservationTime add(@RequestBody CreateReservationTimeRequest request) {
         return service.save(request);
     }
 
@@ -33,7 +33,7 @@ public class ReservationTimeController {
     }
 
     @DeleteMapping("/{id}")
-    public void remove(@PathVariable Long id) {
+    public void delete(@PathVariable Long id) {
         service.delete(id);
     }
 }

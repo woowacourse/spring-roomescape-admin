@@ -39,4 +39,4 @@
 - [X] : 예약 조회 시, ReservationTime 정보도 함께 조회하도록 수정한다.
 
 ## step9
-- [ ] : ReservationsController 가 JdbcTemplate 를 모르도록 한다.
+- [X] : ReservationsController 가 JdbcTemplate 를 모르도록 한다.

@@ -23,16 +23,6 @@ public class JdbcTemplateReservationRepository implements ReservationRepository 
                 .usingGeneratedKeyColumns("id");
     }
 
-    private final RowMapper<Reservation> reservationRowMapper = (rs, rowNum) -> {
-        Reservation reservation = new Reservation(
-                rs.getLong("id"),
-                rs.getString("name"),
-                rs.getString("date"),
-                rs.getString("time")
-        );
-        return reservation;
-    };
-
     @Override
     public Reservation insert(final Reservation reservation) {
         SqlParameterSource param = new BeanPropertySqlParameterSource(reservation);
@@ -53,4 +43,14 @@ public class JdbcTemplateReservationRepository implements ReservationRepository 
 
         return updateCount;
     }
+
+    private final RowMapper<Reservation> reservationRowMapper = (rs, rowNum) -> {
+        Reservation reservation = new Reservation(
+                rs.getLong("id"),
+                rs.getString("name"),
+                rs.getString("date"),
+                rs.getString("time")
+        );
+        return reservation;
+    };
 }

@@ -1,10 +1,6 @@
 package roomescape.admin.reservation.controller;
 
-import java.net.URI;
 import java.util.List;
-import java.util.Map;
-import java.util.concurrent.ConcurrentHashMap;
-import java.util.concurrent.atomic.AtomicLong;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -18,6 +14,7 @@ import org.springframework.web.bind.annotation.RestController;
 import roomescape.admin.reservation.dto.request.ReservationRequest;
 import roomescape.admin.reservation.dto.response.ReservationResponse;
 import roomescape.admin.reservation.entity.Reservation;
+import roomescape.admin.reservation.entity.ReservationTime;
 import roomescape.admin.reservation.repository.ReservationRepository;
 
 @RequestMapping("/reservations")
@@ -25,8 +22,6 @@ import roomescape.admin.reservation.repository.ReservationRepository;
 public class ReservationController {
 
     private final ReservationRepository reservationRepository;
-    private final Map<Long, Reservation> reservations = new ConcurrentHashMap<>();
-    private final AtomicLong atomicLong = new AtomicLong(1);
 
     @Autowired
     public ReservationController(ReservationRepository reservationRepository) {
@@ -44,11 +39,11 @@ public class ReservationController {
     }
 
     @PostMapping
-    public ResponseEntity<Void> create(@RequestBody ReservationRequest reservationRequest) {
+    public ResponseEntity<ReservationResponse> create(@RequestBody ReservationRequest reservationRequest) {
         Reservation reservation = new Reservation(null, reservationRequest.name(), reservationRequest.date(),
-                reservationRequest.time());
+                new ReservationTime(reservationRequest.timeId(), null));
         Reservation saveReservation = reservationRepository.save(reservation);
-        return ResponseEntity.created(URI.create("/reservations/" + saveReservation.getId())).build();
+        return ResponseEntity.ok(ReservationResponse.from(saveReservation));
     }
 
     @DeleteMapping("/{id}")

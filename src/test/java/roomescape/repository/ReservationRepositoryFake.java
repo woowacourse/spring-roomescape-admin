@@ -27,11 +27,10 @@ public class ReservationRepositoryFake implements ReservationRepository {
 
     @Override
     public int deleteById(final Long id) {
-        try {
+        if (repository.containsKey(id)) {
             repository.remove(id);
-        } catch (Exception e) {
-            return 0;
+            return 1;
         }
-        return 1;
+        return 0;
     }
 }

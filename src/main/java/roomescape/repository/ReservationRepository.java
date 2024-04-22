@@ -1,17 +1,22 @@
 package roomescape.repository;
 
+import java.sql.Date;
+import java.sql.PreparedStatement;
+import java.sql.Time;
 import java.util.List;
 import java.util.concurrent.atomic.AtomicLong;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;
+import org.springframework.jdbc.support.GeneratedKeyHolder;
+import org.springframework.jdbc.support.KeyHolder;
 import org.springframework.stereotype.Repository;
+import roomescape.dao.ReservationDao;
 import roomescape.dto.ReservationRequest;
 import roomescape.dto.ReservationResponse;
 import roomescape.model.Reservation;
 
 @Repository
 public class ReservationRepository {
-    private final AtomicLong id = new AtomicLong(1);
     private final JdbcTemplate jdbcTemplate;
 
     private final RowMapper<Reservation> actorRowMapper = (resultSet, rowNum) -> {
@@ -27,24 +32,28 @@ public class ReservationRepository {
         this.jdbcTemplate = jdbcTemplate;
     }
 
-    public ReservationResponse createReservation(ReservationRequest reservationRequest) {
-        String sql = "insert into reservation (id, name, date, time) values (?, ?, ?, ?)";
-        Reservation reservation = new Reservation(id.getAndIncrement(), reservationRequest.getName(),
-                reservationRequest.getDate(), reservationRequest.getTime());
-        jdbcTemplate.update(sql, reservation.getId(), reservation.getName(), reservation.getDate(), reservation.getTime());
-        return ReservationResponse.of(reservation);
+    public Long createReservation(ReservationDao reservationDao) {
+        String sql = "insert into reservation (name, date, time) values (?, ?, ?)";
+
+        KeyHolder keyHolder = new GeneratedKeyHolder();
+        jdbcTemplate.update(connection -> {
+            PreparedStatement ps = connection.prepareStatement(sql, new String[]{"id"});
+            ps.setString(1, reservationDao.getName());
+            ps.setDate(2, Date.valueOf(reservationDao.getDate()));
+            ps.setTime(3, Time.valueOf(reservationDao.getTime()));
+            return ps;
+        }, keyHolder);
+
+        return keyHolder.getKey().longValue();
     }
 
-    public List<ReservationResponse> readReservations() {
+    public List<Reservation> readReservations() {
         String sql = "select id, name, date, time from reservation";
-        List<Reservation> reservations = jdbcTemplate.query(sql, actorRowMapper);
-        return reservations.stream()
-                .map(ReservationResponse::of)
-                .toList();
+        return jdbcTemplate.query(sql, actorRowMapper);
     }
 
-    public boolean deleteReservation(Long id) {
+    public int deleteReservation(Long id) {
         String sql = "delete from reservation where id = ?";
-        return jdbcTemplate.update(sql, id) == id;
+        return jdbcTemplate.update(sql, id);
     }
 }

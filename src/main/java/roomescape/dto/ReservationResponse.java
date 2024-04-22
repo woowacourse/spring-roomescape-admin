@@ -12,6 +12,7 @@ public class ReservationResponse {
     @JsonFormat(pattern = "yyyy-MM-dd")
     private final LocalDate date;
 
+
     @JsonFormat(pattern = "HH:mm")
     private final LocalTime time;
 

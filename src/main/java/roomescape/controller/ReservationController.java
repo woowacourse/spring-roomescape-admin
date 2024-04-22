@@ -13,25 +13,26 @@ import org.springframework.web.bind.annotation.RestController;
 import roomescape.repository.ReservationRepository;
 import roomescape.dto.ReservationRequest;
 import roomescape.dto.ReservationResponse;
+import roomescape.service.ReservationService;
 
 @RestController
 @RequestMapping("/reservations")
 public class ReservationController {
 
-    private final ReservationRepository reservationRepository;
+    private final ReservationService reservationService;
 
-    public ReservationController(ReservationRepository reservationRepository) {
-        this.reservationRepository = reservationRepository;
+    public ReservationController(ReservationService reservationService) {
+        this.reservationService = reservationService;
     }
 
     @GetMapping
     public ResponseEntity<List<ReservationResponse>> readReservations() {
-        return ResponseEntity.ok(reservationRepository.readReservations());
+        return ResponseEntity.ok(reservationService.readReservations());
     }
 
     @PostMapping
     public ResponseEntity<ReservationResponse> createReservation(@RequestBody ReservationRequest reservationRequest) {
-        ReservationResponse reservationResponse = reservationRepository.createReservation(reservationRequest);
+        ReservationResponse reservationResponse = reservationService.createReservation(reservationRequest);
         return ResponseEntity
                 .created(URI.create("/reservations/" + reservationResponse.getId()))
                 .body(reservationResponse);
@@ -39,7 +40,7 @@ public class ReservationController {
 
     @DeleteMapping("/{id}")
     public ResponseEntity<Void> deleteReservation(@PathVariable Long id) {
-        if (reservationRepository.deleteReservation(id)) {
+        if (reservationService.deleteReservation(id)) {
             return ResponseEntity.noContent().build();
         }
         return ResponseEntity.notFound().build();

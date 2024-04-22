@@ -1,6 +1,7 @@
 package roomescape.reservation;
 
 import java.sql.PreparedStatement;
+import java.time.LocalDate;
 import java.util.List;
 import java.util.Optional;
 import org.springframework.dao.EmptyResultDataAccessException;
@@ -20,14 +21,14 @@ public class ReservationRepository {
 
     public Reservation save(final ReservationRequest reservationRequest, final Time time) {
         String name = reservationRequest.getName();
-        String date = reservationRequest.getDate();
+        LocalDate date = reservationRequest.getDate();
 
         KeyHolder keyHolder = new GeneratedKeyHolder();
         jdbcTemplate.update(connection -> {
             PreparedStatement ps = connection.prepareStatement(
                     "insert into reservation(name, date, time_id) values (?, ? ,?)", new String[]{"id"});
-            ps.setString(1, reservationRequest.getName());
-            ps.setString(2, reservationRequest.getDate());
+            ps.setString(1, name);
+            ps.setString(2, date.toString());
             ps.setLong(3, time.getId());
             return ps;
         }, keyHolder);
@@ -54,7 +55,7 @@ public class ReservationRepository {
                         Reservation reservation = new Reservation(
                                 resultSet.getLong("id"),
                                 resultSet.getString("name"),
-                                resultSet.getString("date"),
+                                resultSet.getDate("date").toLocalDate(),
                                 new Time(
                                         resultSet.getLong("time_id"),
                                         resultSet.getString("start_at")
@@ -83,7 +84,7 @@ public class ReservationRepository {
                     Reservation reservation = new Reservation(
                             resultSet.getLong("id"),
                             resultSet.getString("name"),
-                            resultSet.getString("date"),
+                            resultSet.getDate("date").toLocalDate(),
                             new Time(
                                     resultSet.getLong("time_id"),
                                     resultSet.getString("start_at")

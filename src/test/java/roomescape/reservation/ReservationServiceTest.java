@@ -3,6 +3,7 @@ package roomescape.reservation;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import static org.mockito.Mockito.doReturn;
 
+import java.time.LocalDate;
 import java.util.Optional;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -43,7 +44,7 @@ public class ReservationServiceTest {
     void findByIdExceptionByNotExistTimeIdTest() {
         // given
         Long timeId = 1L;
-        ReservationRequest reservationRequest = new ReservationRequest("브라운", "2024-08-05", timeId);
+        ReservationRequest reservationRequest = new ReservationRequest("브라운", LocalDate.parse("2024-08-05"), timeId);
 
         doReturn(Optional.empty()).when(timeRepository)
                 .findById(timeId);

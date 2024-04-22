@@ -12,6 +12,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import java.time.LocalDate;
 import java.util.List;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Nested;
@@ -38,8 +39,8 @@ class ReservationApiControllerTest {
     public void findAllTest() throws Exception {
         // given
         Time time = new Time(1L, "10:00");
-        Reservation reservation1 = new Reservation(1L, "브라운", "2024-08-05", time);
-        Reservation reservation2 = new Reservation(2L, "솔라", "2024-08-05", time);
+        Reservation reservation1 = new Reservation(1L, "브라운", LocalDate.parse("2024-08-05"), time);
+        Reservation reservation2 = new Reservation(2L, "솔라", LocalDate.parse("2024-08-05"), time);
         List<Reservation> reservations = List.of(reservation1, reservation2);
 
         // when
@@ -63,7 +64,7 @@ class ReservationApiControllerTest {
         public void createSuccessTest() throws Exception {
             // given
             Time time = new Time(5L, "10:00");
-            ReservationRequest reservationRequest = new ReservationRequest("브라운", "2024-08-05", time.getId());
+            ReservationRequest reservationRequest = new ReservationRequest("브라운", LocalDate.parse("2024-08-05"), time.getId());
             Reservation reservation = new Reservation(1L, reservationRequest.getName(), reservationRequest.getDate(),
                     time);
 
@@ -79,7 +80,7 @@ class ReservationApiControllerTest {
                     .andExpect(header().string("Location", "/reservations/1"))
                     .andExpect(jsonPath("$.id").value(reservation.getId()))
                     .andExpect(jsonPath("$.name").value(reservation.getName()))
-                    .andExpect(jsonPath("$.date").value(reservation.getDate()))
+                    .andExpect(jsonPath("$.date").value(reservation.getDate().toString()))
                     .andExpect(jsonPath("$.time.id").value(time.getId()))
                     .andExpect(jsonPath("$.time.startAt").value(time.getStartAt()));
         }

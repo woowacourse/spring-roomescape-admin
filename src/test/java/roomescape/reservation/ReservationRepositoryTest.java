@@ -3,6 +3,7 @@ package roomescape.reservation;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertAll;
 
+import java.time.LocalDate;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Stream;
@@ -29,7 +30,7 @@ class ReservationRepositoryTest {
         return Stream.of(
                 DynamicTest.dynamicTest("예약 정보를 저장한다.", () -> {
                     // given
-                    ReservationRequest reservationRequest = new ReservationRequest("브라운", "2024-08-05", 1L);
+                    ReservationRequest reservationRequest = new ReservationRequest("브라운", LocalDate.parse("2024-08-05"), 1L);
 
                     // when
                     Reservation reservation = reservationRepository.save(reservationRequest, new Time(1L, "10:00"));

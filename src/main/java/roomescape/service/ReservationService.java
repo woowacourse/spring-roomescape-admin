@@ -9,23 +9,23 @@ import org.springframework.stereotype.Service;
 import roomescape.controller.dto.ReservationRequest;
 import roomescape.controller.dto.ReservationResponse;
 import roomescape.domain.Reservation;
-import roomescape.domain.ReservationTime;
+import roomescape.domain.TimeSlot;
 import roomescape.repository.ReservationRepository;
-import roomescape.repository.ReservationTimeRepository;
+import roomescape.repository.TimeSlotRepository;
 import roomescape.service.dto.ReservationCreationDto;
 
 @Service
 public class ReservationService {
 
     private final ReservationRepository reservationRepository;
-    private final ReservationTimeRepository reservationTimeRepository;
+    private final TimeSlotRepository timeSlotRepository;
     private final Clock clock;
 
     public ReservationService(ReservationRepository reservationRepository,
-                              ReservationTimeRepository reservationTimeRepository,
+                              TimeSlotRepository timeSlotRepository,
                               Clock clock) {
         this.reservationRepository = reservationRepository;
-        this.reservationTimeRepository = reservationTimeRepository;
+        this.timeSlotRepository = timeSlotRepository;
         this.clock = clock;
     }
 
@@ -37,11 +37,11 @@ public class ReservationService {
     }
 
     public ReservationResponse scheduleReservation(ReservationRequest request) {
-        ReservationTime reservationTime = reservationTimeRepository.findById(request.timeId())
+        TimeSlot timeSlot = timeSlotRepository.findById(request.timeId())
                 .orElseThrow(() -> new IllegalArgumentException("예약 시간이 존재하지 않습니다."));
-        validateRequestDateAfterCurrentTime(LocalDate.parse(request.date()), reservationTime.getTime());
+        validateRequestDateAfterCurrentTime(LocalDate.parse(request.date()), timeSlot.getTime());
 
-        Reservation reservation = request.toEntity(reservationTime);
+        Reservation reservation = request.toEntity(timeSlot);
         ReservationCreationDto creationDto = ReservationCreationDto.from(reservation);
         Reservation savedReservation = reservationRepository.addReservation(creationDto);
         return ReservationResponse.from(savedReservation);

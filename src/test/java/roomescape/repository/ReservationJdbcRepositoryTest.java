@@ -13,7 +13,7 @@ import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.simple.SimpleJdbcInsert;
 import roomescape.domain.Reservation;
 import roomescape.service.dto.ReservationCreationDto;
-import roomescape.service.dto.ReservationTimeDto;
+import roomescape.service.dto.TimeSlotDto;
 
 @JdbcTest
 class ReservationJdbcRepositoryTest {
@@ -21,17 +21,17 @@ class ReservationJdbcRepositoryTest {
     private final ReservationRepository reservationRepository;
     private final JdbcTemplate jdbcTemplate;
     private final SimpleJdbcInsert reservationJdbcInsert;
-    private final SimpleJdbcInsert reservationTimeJdbcInsert;
+    private final SimpleJdbcInsert timeSlotJdbcInsert;
 
     @Autowired
     public ReservationJdbcRepositoryTest(JdbcTemplate jdbcTemplate) {
         this.jdbcTemplate = jdbcTemplate;
         this.reservationJdbcInsert = new SimpleJdbcInsert(jdbcTemplate)
                 .withTableName("reservation")
-                .usingColumns("name", "date", "time_id")
+                .usingColumns("name", "date", "time_slot_id")
                 .usingGeneratedKeyColumns("id");
-        this.reservationTimeJdbcInsert = new SimpleJdbcInsert(jdbcTemplate)
-                .withTableName("reservation_time")
+        this.timeSlotJdbcInsert = new SimpleJdbcInsert(jdbcTemplate)
+                .withTableName("time_slot")
                 .usingColumns("start_at")
                 .usingGeneratedKeyColumns("id");
         this.reservationRepository = new ReservationJdbcRepository(jdbcTemplate);
@@ -41,11 +41,11 @@ class ReservationJdbcRepositoryTest {
     @DisplayName("예약 추가가 DB에 올바르게 반영된다.")
     void addReservationTest() {
         // given
-        long timeId = reservationTimeJdbcInsert.executeAndReturnKey(Map.of(
+        long timeId = timeSlotJdbcInsert.executeAndReturnKey(Map.of(
                 "start_at", LocalTime.parse("12:00")
         )).longValue();
         ReservationCreationDto dto = new ReservationCreationDto("브라운", "2023-08-05",
-                new ReservationTimeDto(timeId, "12:00"));
+                new TimeSlotDto(timeId, "12:00"));
         // when
         reservationRepository.addReservation(dto);
         // then
@@ -75,13 +75,13 @@ class ReservationJdbcRepositoryTest {
     }
 
     private Long createReservationAndReturnId() {
-        long timeId = reservationTimeJdbcInsert.executeAndReturnKey(Map.of(
+        long timeId = timeSlotJdbcInsert.executeAndReturnKey(Map.of(
                 "start_at", LocalTime.parse("12:00")
         )).longValue();
         return reservationJdbcInsert.executeAndReturnKey(Map.of(
                 "name", "웨지",
                 "date", "2024-04-21",
-                "time_id", timeId
+                "time_slot_id", timeId
         )).longValue();
     }
 

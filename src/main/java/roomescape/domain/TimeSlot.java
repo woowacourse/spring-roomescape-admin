@@ -3,21 +3,21 @@ package roomescape.domain;
 import java.time.LocalTime;
 import java.util.Objects;
 
-public class ReservationTime {
+public class TimeSlot {
 
     private final Long id;
     private final LocalTime time;
 
-    public ReservationTime(Long id, LocalTime time) {
+    public TimeSlot(Long id, LocalTime time) {
         this.id = id;
         this.time = time;
     }
 
-    public ReservationTime(Long id, String time) {
+    public TimeSlot(Long id, String time) {
         this(id, LocalTime.parse(time));
     }
 
-    public ReservationTime(String time) {
+    public TimeSlot(String time) {
         this(null, time);
     }
 
@@ -37,7 +37,7 @@ public class ReservationTime {
         if (o == null || getClass() != o.getClass()) {
             return false;
         }
-        ReservationTime that = (ReservationTime) o;
+        TimeSlot that = (TimeSlot) o;
         return Objects.equals(id, that.id);
     }
 

@@ -14,9 +14,9 @@ import roomescape.controller.dto.ReservationRequest;
 import roomescape.controller.dto.ReservationResponse;
 import roomescape.domain.Reservation;
 import roomescape.repository.ReservationRepository;
-import roomescape.repository.ReservationTimeRepository;
+import roomescape.repository.TimeSlotRepository;
 import roomescape.service.dto.ReservationCreationDto;
-import roomescape.service.dto.ReservationTimeDto;
+import roomescape.service.dto.TimeSlotDto;
 
 @SpringBootTest(
         classes = TestConfig.class,
@@ -29,7 +29,7 @@ class ReservationServiceTest {
     private ReservationRepository reservationRepository;
 
     @Autowired
-    private ReservationTimeRepository reservationTimeRepository;
+    private TimeSlotRepository timeSlotRepository;
 
     @Autowired
     private ReservationService reservationService;
@@ -37,7 +37,7 @@ class ReservationServiceTest {
     @AfterEach
     void tearDown() {
         reservationRepository.deleteAll();
-        reservationTimeRepository.deleteAll();
+        timeSlotRepository.deleteAll();
     }
 
     @Test
@@ -83,9 +83,9 @@ class ReservationServiceTest {
         // given
         Long timeId = createTimeAndReturnId();
         List<ReservationCreationDto> reservations = List.of(
-                new ReservationCreationDto("웨지", "2024-04-17", new ReservationTimeDto(timeId, "13:00")),
-                new ReservationCreationDto("아루", "2023-04-18", new ReservationTimeDto(timeId, "13:00")),
-                new ReservationCreationDto("브리", "2023-04-19", new ReservationTimeDto(timeId, "13:00"))
+                new ReservationCreationDto("웨지", "2024-04-17", new TimeSlotDto(timeId, "13:00")),
+                new ReservationCreationDto("아루", "2023-04-18", new TimeSlotDto(timeId, "13:00")),
+                new ReservationCreationDto("브리", "2023-04-19", new TimeSlotDto(timeId, "13:00"))
         );
         reservations.forEach(reservationRepository::addReservation);
         // when
@@ -100,7 +100,7 @@ class ReservationServiceTest {
         // given
         Long timeId = createTimeAndReturnId();
         Reservation reservation = reservationRepository.addReservation(
-                new ReservationCreationDto("웨지", "2024-04-17", new ReservationTimeDto(timeId, "13:00")));
+                new ReservationCreationDto("웨지", "2024-04-17", new TimeSlotDto(timeId, "13:00")));
         // when
         reservationService.cancelReservation(reservation.getId());
         List<Reservation> actual = reservationRepository.findAll();
@@ -110,8 +110,8 @@ class ReservationServiceTest {
 
 
     private Long createTimeAndReturnId() {
-        ReservationTimeDto dto = new ReservationTimeDto(1L, "13:00");
-        return reservationTimeRepository.create(dto)
+        TimeSlotDto dto = new TimeSlotDto(1L, "13:00");
+        return timeSlotRepository.create(dto)
                 .getId();
     }
 }

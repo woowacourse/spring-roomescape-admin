@@ -12,33 +12,33 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.jdbc.JdbcTest;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.simple.SimpleJdbcInsert;
-import roomescape.domain.ReservationTime;
-import roomescape.service.dto.ReservationTimeDto;
+import roomescape.domain.TimeSlot;
+import roomescape.service.dto.TimeSlotDto;
 
 @JdbcTest
-class ReservationTimeJdbcRepositoryTest {
+class TimeSlotJdbcRepositoryTest {
 
-    private final ReservationTimeRepository reservationTimeRepository;
+    private final TimeSlotRepository timeSlotRepository;
     private final JdbcTemplate jdbcTemplate;
     private final SimpleJdbcInsert jdbcInsert;
 
     @Autowired
-    public ReservationTimeJdbcRepositoryTest(JdbcTemplate jdbcTemplate) {
+    public TimeSlotJdbcRepositoryTest(JdbcTemplate jdbcTemplate) {
         this.jdbcTemplate = jdbcTemplate;
         this.jdbcInsert = new SimpleJdbcInsert(jdbcTemplate)
-                .withTableName("reservation_time")
+                .withTableName("time_slot")
                 .usingColumns("start_at")
                 .usingGeneratedKeyColumns("id");
-        this.reservationTimeRepository = new ReservationTimeJdbcRepository(jdbcTemplate);
+        this.timeSlotRepository = new TimeSlotJdbcRepository(jdbcTemplate);
     }
 
     @Test
     @DisplayName("시간 등록이 DB에 반영된다.")
     void createTest() {
         // given
-        ReservationTimeDto dto = new ReservationTimeDto(LocalTime.parse("13:00"));
+        TimeSlotDto dto = new TimeSlotDto(LocalTime.parse("13:00"));
         // when
-        reservationTimeRepository.create(dto);
+        timeSlotRepository.create(dto);
         // then
         assertThat(databaseRowCount()).isEqualTo(1);
     }
@@ -51,7 +51,7 @@ class ReservationTimeJdbcRepositoryTest {
                 "start_at", LocalTime.parse("11:00")
         ));
         // when
-        List<ReservationTime> times = reservationTimeRepository.findAll();
+        List<TimeSlot> times = timeSlotRepository.findAll();
         // then
         assertThat(times).hasSize(1);
     }
@@ -64,17 +64,17 @@ class ReservationTimeJdbcRepositoryTest {
                 "start_at", LocalTime.parse("11:00")
         )).longValue();
         // when
-        Optional<ReservationTime> actual = reservationTimeRepository.findById(id);
+        Optional<TimeSlot> actual = timeSlotRepository.findById(id);
         // then
         assertThat(actual).isPresent()
                 .get()
-                .isEqualTo(new ReservationTime(id, LocalTime.parse("11:00")));
+                .isEqualTo(new TimeSlot(id, LocalTime.parse("11:00")));
     }
 
     @Test
     @DisplayName("존재하지 않는 ID를 조회하는 경우, 빈 Optional을 반환한다.")
     void emptyOnNonExistingId() {
-        Optional<ReservationTime> actual = reservationTimeRepository.findById(999L);
+        Optional<TimeSlot> actual = timeSlotRepository.findById(999L);
         assertThat(actual).isEmpty();
     }
 
@@ -87,13 +87,13 @@ class ReservationTimeJdbcRepositoryTest {
                 "start_at", LocalTime.parse("11:00")
         )).longValue();
         // when
-        reservationTimeRepository.deleteById(id);
+        timeSlotRepository.deleteById(id);
         // then
         assertThat(databaseRowCount()).isZero();
     }
 
     private int databaseRowCount() {
-        String sql = "select count(*) from reservation_time";
+        String sql = "select count(*) from time_slot";
         return jdbcTemplate.queryForObject(sql, Integer.class);
     }
 }

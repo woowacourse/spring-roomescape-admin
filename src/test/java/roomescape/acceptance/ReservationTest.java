@@ -11,11 +11,11 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import roomescape.controller.dto.ReservationRequest;
 import roomescape.domain.Reservation;
-import roomescape.domain.ReservationTime;
+import roomescape.domain.TimeSlot;
 import roomescape.repository.ReservationRepository;
-import roomescape.repository.ReservationTimeRepository;
+import roomescape.repository.TimeSlotRepository;
 import roomescape.service.dto.ReservationCreationDto;
-import roomescape.service.dto.ReservationTimeDto;
+import roomescape.service.dto.TimeSlotDto;
 
 class ReservationTest extends AcceptanceTest {
 
@@ -23,7 +23,7 @@ class ReservationTest extends AcceptanceTest {
     private ReservationRepository reservationRepository;
 
     @Autowired
-    private ReservationTimeRepository reservationTimeRepository;
+    private TimeSlotRepository timeSlotRepository;
 
     @AfterEach
     void tearDown() {
@@ -43,9 +43,9 @@ class ReservationTest extends AcceptanceTest {
     @Test
     @DisplayName("예약을 성공적으로 추가한다.")
     void addReservationTest() {
-        ReservationTimeDto timeCreationDto = new ReservationTimeDto(LocalTime.parse("12:00"));
-        ReservationTime reservationTime = reservationTimeRepository.create(timeCreationDto);
-        ReservationRequest request = new ReservationRequest("브라운", "2023-08-05", reservationTime.getId());
+        TimeSlotDto timeCreationDto = new TimeSlotDto(LocalTime.parse("12:00"));
+        TimeSlot timeSlot = timeSlotRepository.create(timeCreationDto);
+        ReservationRequest request = new ReservationRequest("브라운", "2023-08-05", timeSlot.getId());
 
         RestAssured.given().log().all()
                 .contentType(ContentType.JSON)
@@ -65,10 +65,10 @@ class ReservationTest extends AcceptanceTest {
     @Test
     @DisplayName("예약을 성공적으로 삭제한다.")
     void deleteReservationTest() {
-        ReservationTimeDto timeCreationDto = new ReservationTimeDto(LocalTime.parse("12:00"));
-        ReservationTime reservationTime = reservationTimeRepository.create(timeCreationDto);
+        TimeSlotDto timeCreationDto = new TimeSlotDto(LocalTime.parse("12:00"));
+        TimeSlot timeSlot = timeSlotRepository.create(timeCreationDto);
         ReservationCreationDto reservationCreationDto = new ReservationCreationDto(
-                "웨지", "2024-04-20", ReservationTimeDto.from(reservationTime)
+                "웨지", "2024-04-20", TimeSlotDto.from(timeSlot)
         );
         Reservation reservation = reservationRepository.addReservation(reservationCreationDto);
 

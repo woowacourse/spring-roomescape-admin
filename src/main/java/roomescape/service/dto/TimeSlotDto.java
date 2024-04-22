@@ -1,36 +1,36 @@
 package roomescape.service.dto;
 
 import java.time.LocalTime;
-import roomescape.domain.ReservationTime;
+import roomescape.domain.TimeSlot;
 import roomescape.utils.TimeFormatter;
 
-public class ReservationTimeDto {
+public class TimeSlotDto {
 
     private final Long id;
     private final String time;
 
-    public ReservationTimeDto(Long id, String time) {
+    public TimeSlotDto(Long id, String time) {
         this.id = id;
         this.time = time;
     }
 
-    public ReservationTimeDto(Long id, LocalTime time) {
+    public TimeSlotDto(Long id, LocalTime time) {
         this(id, TimeFormatter.format(time));
     }
 
-    public ReservationTimeDto(LocalTime time) {
+    public TimeSlotDto(LocalTime time) {
         this(null, time);
     }
 
-    public static ReservationTimeDto from(ReservationTime reservationTime) {
-        return new ReservationTimeDto(reservationTime.getId(), reservationTime.getTime());
+    public static TimeSlotDto from(TimeSlot timeSlot) {
+        return new TimeSlotDto(timeSlot.getId(), timeSlot.getTime());
     }
 
-    public ReservationTime toEntity(Long id) {
-        return new ReservationTime(id, time);
+    public TimeSlot toEntity(Long id) {
+        return new TimeSlot(id, time);
     }
 
-    public ReservationTime toEntity() {
+    public TimeSlot toEntity() {
         if (id == null) {
             throw new IllegalStateException("ID가 존재하지 않습니다.");
         }

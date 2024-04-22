@@ -9,35 +9,35 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
-import roomescape.controller.dto.ReservationTimeRequest;
-import roomescape.controller.dto.ReservationTimeResponse;
-import roomescape.service.ReservationTimeService;
+import roomescape.controller.dto.TimeSlotCreationRequest;
+import roomescape.controller.dto.TimeSlotCreationResponse;
+import roomescape.service.TimeSlotService;
 
 @RestController
 @RequestMapping("/times")
-public class ReservationTimeController {
+public class TimeSlotController {
 
-    private final ReservationTimeService reservationTimeService;
+    private final TimeSlotService timeSlotService;
 
-    public ReservationTimeController(ReservationTimeService reservationTimeService) {
-        this.reservationTimeService = reservationTimeService;
+    public TimeSlotController(TimeSlotService timeSlotService) {
+        this.timeSlotService = timeSlotService;
     }
 
     @GetMapping
-    public ResponseEntity<List<ReservationTimeResponse>> getAll() {
-        List<ReservationTimeResponse> responses = reservationTimeService.getAllTimes();
+    public ResponseEntity<List<TimeSlotCreationResponse>> getAll() {
+        List<TimeSlotCreationResponse> responses = timeSlotService.getAllTimes();
         return ResponseEntity.ok(responses);
     }
 
     @PostMapping
-    public ResponseEntity<ReservationTimeResponse> create(@RequestBody ReservationTimeRequest request) {
-        ReservationTimeResponse response = reservationTimeService.addTime(request);
+    public ResponseEntity<TimeSlotCreationResponse> create(@RequestBody TimeSlotCreationRequest request) {
+        TimeSlotCreationResponse response = timeSlotService.addTime(request);
         return ResponseEntity.ok(response);
     }
 
     @DeleteMapping("/{id}")
     public ResponseEntity<Void> delete(@PathVariable Long id) {
-        reservationTimeService.removeTime(id);
+        timeSlotService.removeTime(id);
         return ResponseEntity.ok().build();
     }
 }

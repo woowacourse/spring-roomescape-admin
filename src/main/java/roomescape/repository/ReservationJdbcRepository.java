@@ -8,7 +8,7 @@ import org.springframework.jdbc.core.RowMapper;
 import org.springframework.jdbc.core.simple.SimpleJdbcInsert;
 import org.springframework.stereotype.Repository;
 import roomescape.domain.Reservation;
-import roomescape.domain.ReservationTime;
+import roomescape.domain.TimeSlot;
 import roomescape.service.dto.ReservationCreationDto;
 
 @Repository
@@ -19,8 +19,8 @@ public class ReservationJdbcRepository implements ReservationRepository {
                     Long.valueOf(resultSet.getString("id")),
                     resultSet.getString("name"),
                     resultSet.getString("date"),
-                    new ReservationTime(
-                            resultSet.getLong("time_id"),
+                    new TimeSlot(
+                            resultSet.getLong("time_slot_id"),
                             resultSet.getString("start_at")
                     )
             );
@@ -32,7 +32,7 @@ public class ReservationJdbcRepository implements ReservationRepository {
         this.jdbcTemplate = jdbcTemplate;
         this.jdbcInsert = new SimpleJdbcInsert(jdbcTemplate)
                 .withTableName("reservation")
-                .usingColumns("name", "date", "time_id")
+                .usingColumns("name", "date", "time_slot_id")
                 .usingGeneratedKeyColumns("id");
     }
 
@@ -41,7 +41,7 @@ public class ReservationJdbcRepository implements ReservationRepository {
         Map<String, ? extends Serializable> parameters = Map.of(
                 "name", reservationCreationDto.getName(),
                 "date", reservationCreationDto.getDate(),
-                "time_id", reservationCreationDto.getTimeId()
+                "time_slot_id", reservationCreationDto.getTimeId()
         );
         Number key = jdbcInsert.executeAndReturnKey(parameters);
         return reservationCreationDto.toEntity(key.longValue());
@@ -50,9 +50,9 @@ public class ReservationJdbcRepository implements ReservationRepository {
     @Override
     public List<Reservation> findAll() {
         String sql = """
-                select reservation.id as id, name, date, time_id, start_at \s
-                from reservation left join reservation_time \s
-                on time_id = reservation_time.id
+                select reservation.id as id, name, date, time_slot_id, start_at \s
+                from reservation left join time_slot \s
+                on time_slot_id = time_slot.id
                 """;
         return jdbcTemplate.query(sql, ROW_MAPPER);
     }

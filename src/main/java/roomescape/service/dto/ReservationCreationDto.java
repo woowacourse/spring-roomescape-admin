@@ -4,7 +4,7 @@ import java.time.format.DateTimeFormatter;
 import roomescape.domain.Name;
 import roomescape.domain.Reservation;
 import roomescape.domain.ReservationDate;
-import roomescape.domain.ReservationTime;
+import roomescape.domain.TimeSlot;
 
 public class ReservationCreationDto {
 
@@ -12,23 +12,23 @@ public class ReservationCreationDto {
 
     private final String name;
     private final String date;
-    private final ReservationTimeDto time;
+    private final TimeSlotDto time;
 
-    public ReservationCreationDto(String name, String date, ReservationTimeDto reservationTimeDto) {
+    public ReservationCreationDto(String name, String date, TimeSlotDto timeSlotDto) {
         this.name = name;
         this.date = date;
-        this.time = reservationTimeDto;
+        this.time = timeSlotDto;
     }
 
     public static ReservationCreationDto from(Reservation reservation) {
         Name name = reservation.getName();
         ReservationDate date = reservation.getReservationDate();
-        ReservationTime time = reservation.getReservationTime();
+        TimeSlot time = reservation.getReservationTime();
 
         return new ReservationCreationDto(
                 name.asText(),
                 DATE_FORMATTER.format(date.getDate()),
-                ReservationTimeDto.from(time)
+                TimeSlotDto.from(time)
         );
     }
 

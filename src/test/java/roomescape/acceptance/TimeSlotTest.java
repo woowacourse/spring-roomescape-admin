@@ -10,34 +10,34 @@ import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
-import roomescape.controller.dto.ReservationTimeRequest;
-import roomescape.controller.dto.ReservationTimeResponse;
-import roomescape.domain.ReservationTime;
-import roomescape.repository.ReservationTimeRepository;
-import roomescape.service.dto.ReservationTimeDto;
+import roomescape.controller.dto.TimeSlotCreationRequest;
+import roomescape.controller.dto.TimeSlotCreationResponse;
+import roomescape.domain.TimeSlot;
+import roomescape.repository.TimeSlotRepository;
+import roomescape.service.dto.TimeSlotDto;
 
-class ReservationTimeTest extends AcceptanceTest {
+class TimeSlotTest extends AcceptanceTest {
 
     @Autowired
-    private ReservationTimeRepository reservationTimeRepository;
+    private TimeSlotRepository timeSlotRepository;
 
     @AfterEach
     void tearDown() {
-        reservationTimeRepository.deleteAll();
+        timeSlotRepository.deleteAll();
     }
 
     @Test
     @DisplayName("시각을 추가한다.")
     void createTimeTest() {
-        ReservationTimeRequest request = new ReservationTimeRequest("13:00");
-        ReservationTimeResponse response = RestAssured.given().log().all()
+        TimeSlotCreationRequest request = new TimeSlotCreationRequest("13:00");
+        TimeSlotCreationResponse response = RestAssured.given().log().all()
                 .contentType(ContentType.JSON)
                 .body(request)
                 .when().post("/times")
                 .then().log().all()
                 .statusCode(200)
                 .extract()
-                .as(ReservationTimeResponse.class);
+                .as(TimeSlotCreationResponse.class);
 
         assertThat(response.startAt()).isEqualTo("13:00");
     }
@@ -46,9 +46,9 @@ class ReservationTimeTest extends AcceptanceTest {
     @DisplayName("등록된 모든 시각을 조회한다.")
     void getAllTimeTest() {
         List.of(
-                new ReservationTimeDto(1L, "13:00"),
-                new ReservationTimeDto(2L, "14:00")
-        ).forEach(reservationTimeRepository::create);
+                new TimeSlotDto(1L, "13:00"),
+                new TimeSlotDto(2L, "14:00")
+        ).forEach(timeSlotRepository::create);
 
         RestAssured.given().log().all()
                 .when().get("/times")
@@ -59,15 +59,15 @@ class ReservationTimeTest extends AcceptanceTest {
     @Test
     @DisplayName("id를 사용해 시각을 삭제한다.")
     void deleteByIdTest() {
-        ReservationTimeDto reservationTimeDto = new ReservationTimeDto(1L, "13:00");
-        Long id = reservationTimeRepository.create(reservationTimeDto).getId();
+        TimeSlotDto timeSlotDto = new TimeSlotDto(1L, "13:00");
+        Long id = timeSlotRepository.create(timeSlotDto).getId();
 
         RestAssured.given().log().all()
                 .when().delete("/times/" + id)
                 .then().log().all()
                 .statusCode(200);
 
-        List<ReservationTime> actual = reservationTimeRepository.findAll();
+        List<TimeSlot> actual = timeSlotRepository.findAll();
         assertThat(actual).isEmpty();
     }
 }

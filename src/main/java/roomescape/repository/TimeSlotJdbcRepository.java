@@ -8,14 +8,14 @@ import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;
 import org.springframework.jdbc.core.simple.SimpleJdbcInsert;
 import org.springframework.stereotype.Repository;
-import roomescape.domain.ReservationTime;
-import roomescape.service.dto.ReservationTimeDto;
+import roomescape.domain.TimeSlot;
+import roomescape.service.dto.TimeSlotDto;
 
 @Repository
-public class ReservationTimeJdbcRepository implements ReservationTimeRepository {
+public class TimeSlotJdbcRepository implements TimeSlotRepository {
 
-    private static final RowMapper<ReservationTime> ROW_MAPPER = (resultSet, rowNum) ->
-            new ReservationTime(
+    private static final RowMapper<TimeSlot> ROW_MAPPER = (resultSet, rowNum) ->
+            new TimeSlot(
                     Long.valueOf(resultSet.getString("id")),
                     resultSet.getString("start_at")
             );
@@ -23,32 +23,32 @@ public class ReservationTimeJdbcRepository implements ReservationTimeRepository 
     private final JdbcTemplate jdbcTemplate;
     private final SimpleJdbcInsert jdbcInsert;
 
-    public ReservationTimeJdbcRepository(JdbcTemplate jdbcTemplate) {
+    public TimeSlotJdbcRepository(JdbcTemplate jdbcTemplate) {
         this.jdbcTemplate = jdbcTemplate;
         this.jdbcInsert = new SimpleJdbcInsert(jdbcTemplate)
-                .withTableName("reservation_time")
+                .withTableName("time_slot")
                 .usingColumns("start_at")
                 .usingGeneratedKeyColumns("id");
     }
 
     @Override
-    public ReservationTime create(ReservationTimeDto reservationTimeDto) {
+    public TimeSlot create(TimeSlotDto timeSlotDto) {
         Map<String, String> parameters = Map.of(
-                "start_at", reservationTimeDto.getTime()
+                "start_at", timeSlotDto.getTime()
         );
         Number key = jdbcInsert.executeAndReturnKey(parameters);
-        return reservationTimeDto.toEntity(key.longValue());
+        return timeSlotDto.toEntity(key.longValue());
     }
 
     @Override
-    public List<ReservationTime> findAll() {
-        String sql = "select id, start_at from reservation_time";
+    public List<TimeSlot> findAll() {
+        String sql = "select id, start_at from time_slot";
         return jdbcTemplate.query(sql, ROW_MAPPER);
     }
 
     @Override
-    public Optional<ReservationTime> findById(Long id) {
-        String sql = "select id, start_at from reservation_time where id = ?";
+    public Optional<TimeSlot> findById(Long id) {
+        String sql = "select id, start_at from time_slot where id = ?";
         try {
             return Optional.ofNullable(jdbcTemplate.queryForObject(sql, ROW_MAPPER, id));
         } catch (EmptyResultDataAccessException e) {
@@ -58,13 +58,13 @@ public class ReservationTimeJdbcRepository implements ReservationTimeRepository 
 
     @Override
     public void deleteById(Long id) {
-        String sql = "delete from reservation_time where id = ?";
+        String sql = "delete from time_slot where id = ?";
         jdbcTemplate.update(sql, id);
     }
 
     @Override
     public void deleteAll() {
-        String sql = "delete from reservation_time";
+        String sql = "delete from time_slot";
         jdbcTemplate.update(sql);
     }
 }

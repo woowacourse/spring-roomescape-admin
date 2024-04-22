@@ -7,21 +7,21 @@ public class Reservation {
     private final Long id;
     private final Name name;
     private final ReservationDate reservationDate;
-    private final ReservationTime reservationTime;
+    private final TimeSlot timeSlot;
 
-    private Reservation(Long id, Name name, ReservationDate reservationDate, ReservationTime reservationTime) {
+    private Reservation(Long id, Name name, ReservationDate reservationDate, TimeSlot timeSlot) {
         this.id = id;
         this.name = name;
         this.reservationDate = reservationDate;
-        this.reservationTime = reservationTime;
+        this.timeSlot = timeSlot;
     }
 
-    public Reservation(Long id, String name, String date, ReservationTime reservationTime) {
-        this(id, new Name(name), new ReservationDate(date), reservationTime);
+    public Reservation(Long id, String name, String date, TimeSlot timeSlot) {
+        this(id, new Name(name), new ReservationDate(date), timeSlot);
     }
 
-    public Reservation(String name, String date, ReservationTime reservationTime) {
-        this(null, name, date, reservationTime);
+    public Reservation(String name, String date, TimeSlot timeSlot) {
+        this(null, name, date, timeSlot);
     }
 
     public Long getId() {
@@ -36,8 +36,8 @@ public class Reservation {
         return reservationDate;
     }
 
-    public ReservationTime getReservationTime() {
-        return reservationTime;
+    public TimeSlot getReservationTime() {
+        return timeSlot;
     }
 
     @Override
@@ -63,7 +63,7 @@ public class Reservation {
                 "id=" + id +
                 ", name=" + name +
                 ", reservationDate=" + reservationDate +
-                ", reservationTime=" + reservationTime +
+                ", reservationTime=" + timeSlot +
                 '}';
     }
 }

@@ -24,7 +24,7 @@ public class ReservationController {
     private final ReservationRepository reservationRepository;
     private final ReservationTimeRepository reservationTimeRepository;
 
-    public ReservationController(ReservationRepository reservationRepository, final ReservationTimeRepository reservationTimeRepository) {
+    public ReservationController(ReservationRepository reservationRepository, ReservationTimeRepository reservationTimeRepository) {
         this.reservationRepository = reservationRepository;
         this.reservationTimeRepository = reservationTimeRepository;
     }

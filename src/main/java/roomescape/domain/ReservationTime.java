@@ -23,7 +23,7 @@ public class ReservationTime {
         return startAt;
     }
 
-    public boolean hasId(final Long id) {
+    public boolean hasId(Long id) {
         return this.id == id;
     }
 }

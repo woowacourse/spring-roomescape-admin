@@ -19,7 +19,7 @@ public class InMemoryReservationRepository implements ReservationRepository {
     }
 
     @Override
-    public Reservation save(final Reservation reservation) {
+    public Reservation save(Reservation reservation) {
         Reservation newReservation = new Reservation(index.incrementAndGet(), reservation.getName(),
                 reservation.getDate(), reservation.getTime());
         reservations.add(newReservation);
@@ -28,7 +28,7 @@ public class InMemoryReservationRepository implements ReservationRepository {
     }
 
     @Override
-    public void deleteById(final long id) {
+    public void deleteById(long id) {
         reservations.stream()
                 .filter(reservation -> reservation.hasId(id))
                 .findFirst()

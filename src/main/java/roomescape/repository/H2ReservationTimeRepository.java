@@ -24,7 +24,7 @@ public class H2ReservationTimeRepository implements ReservationTimeRepository {
                 .usingGeneratedKeyColumns("id");
     }
 
-    public ReservationTime save(final ReservationTime reservationTime) {
+    public ReservationTime save(ReservationTime reservationTime) {
         long reservationTimeId = jdbcInsert.executeAndReturnKey(Map.of("start_at", reservationTime.getStartAt()))
                 .longValue();
 
@@ -42,7 +42,7 @@ public class H2ReservationTimeRepository implements ReservationTimeRepository {
     }
 
     @Override
-    public Optional<ReservationTime> findById(final Long id) {
+    public Optional<ReservationTime> findById(Long id) {
         String sql = "select * from reservation_time where id = ?";
         List<ReservationTime> reservationTimes = jdbcTemplate.query(sql, (resultSet, rowNum) -> new ReservationTime(
                 resultSet.getLong("id"),
@@ -52,7 +52,7 @@ public class H2ReservationTimeRepository implements ReservationTimeRepository {
     }
 
     @Override
-    public void deleteById(final long id) {
+    public void deleteById(long id) {
         String sql = "delete from reservation_time where id = ?";
         jdbcTemplate.update(sql, id);
     }

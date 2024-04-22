@@ -14,7 +14,7 @@ public class InMemoryReservationTimeRepository implements ReservationTimeReposit
     private final List<ReservationTime> reservationTimes = Collections.synchronizedList(new ArrayList<>());
     private final AtomicLong index = new AtomicLong(0);
 
-    public ReservationTime save(final ReservationTime reservationTime) {
+    public ReservationTime save(ReservationTime reservationTime) {
         ReservationTime newReservationTime = new ReservationTime(
                 index.incrementAndGet(),
                 reservationTime.getStartAt());
@@ -27,13 +27,13 @@ public class InMemoryReservationTimeRepository implements ReservationTimeReposit
         return Collections.unmodifiableList(reservationTimes);
     }
 
-    public Optional<ReservationTime> findById(final Long id) {
+    public Optional<ReservationTime> findById(Long id) {
         return reservationTimes.stream()
                 .filter(reservationTime -> reservationTime.hasId(id))
                 .findFirst();
     }
 
-    public void deleteById(final long id) {
+    public void deleteById(long id) {
         reservationTimes.stream()
                 .filter(reservationTime -> reservationTime.hasId(id))
                 .findFirst()

@@ -1,6 +1,7 @@
 package roomescape.times;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 import roomescape.domain.ReservationTimeDto;
@@ -37,6 +38,7 @@ public class TimesController {
 
     @DeleteMapping("/{id}")
     @ResponseBody
+    @ResponseStatus(HttpStatus.OK)
     public void deleteTimes(@PathVariable Long id) {
         reservationTimeRepository.remove(id);
     }

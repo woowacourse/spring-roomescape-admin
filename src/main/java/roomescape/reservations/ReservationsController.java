@@ -8,11 +8,10 @@ import org.springframework.web.bind.annotation.*;
 import roomescape.domain.Reservation;
 import roomescape.dto.RequestReservation;
 import roomescape.dto.ReservationRepositoryDto;
-import roomescape.dto.ResponseReservation;
 import roomescape.dto.ReservationTimeDto;
+import roomescape.dto.ResponseReservation;
 import roomescape.times.ReservationTimeRepository;
 
-import java.net.URI;
 import java.util.List;
 
 @Controller
@@ -39,8 +38,7 @@ public class ReservationsController {
         ReservationRepositoryDto requestReservationDto = new ReservationRepositoryDto(null, requestReservation.name(), requestReservation.date(), requestReservation.timeId());
         ReservationRepositoryDto newReservationDto = reservationRepository.add(requestReservationDto);
         Reservation newReservation = reservationRepositoryDtoToReservation(newReservationDto);
-        return ResponseEntity.created(URI.create("/reservations/" + newReservationDto.id()))
-                .body(new ResponseReservation(newReservation));
+        return ResponseEntity.ok(new ResponseReservation(newReservation));
     }
 
     private Reservation reservationRepositoryDtoToReservation(ReservationRepositoryDto reservationRepositoryDto) {
@@ -49,7 +47,7 @@ public class ReservationsController {
     }
 
     @DeleteMapping("/{id}")
-    @ResponseStatus(HttpStatus.NO_CONTENT)
+    @ResponseStatus(HttpStatus.OK)
     public void deleteReservationInfo(@PathVariable Long id) {
         reservationRepository.remove(id);
     }

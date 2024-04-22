@@ -52,7 +52,7 @@ class ReservationTimeRepositoryTest {
 
     @Test
     @DisplayName("예약 시간 정보를 저장하면 새로운 아이디가 부여된다.")
-    void save() throws Exception {
+    void save() {
         // given
         ReservationTime time = timeRepository.save(
                 new ReservationTime(null, LocalTime.of(12, 0))
@@ -64,7 +64,7 @@ class ReservationTimeRepositoryTest {
 
     @Test
     @DisplayName("등록된 예약 시간 번호로 삭제한다.")
-    void deleteAssignedId() throws Exception {
+    void deleteAssignedId() {
         // given
         int deletedCount = timeRepository.deleteById(2L);
 
@@ -74,7 +74,7 @@ class ReservationTimeRepositoryTest {
 
     @Test
     @DisplayName("없는 예약 시간 번호로 삭제할 경우 아무런 영향이 없다.")
-    void deleteNotExistId() throws Exception {
+    void deleteNotExistId() {
         // given
         int deletedCount = timeRepository.deleteById(3L);
 

@@ -28,6 +28,10 @@ public class Reservation {
         return new Reservation(id, reservation.getName(), reservation.getDate(), reservation.getTime());
     }
 
+    public Long getId() {
+        return id;
+    }
+
     public String getName() {
         return name;
     }

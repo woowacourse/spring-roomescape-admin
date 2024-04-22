@@ -1,8 +1,8 @@
 package roomescape.util;
 
-import java.time.LocalDate;
-import java.time.LocalTime;
 import java.time.format.DateTimeFormatter;
+import roomescape.domain.ReservationDate;
+import roomescape.domain.ReservationTime;
 
 public class CustomDateTimeFormatter {
 
@@ -11,11 +11,11 @@ public class CustomDateTimeFormatter {
     private CustomDateTimeFormatter() {
     }
 
-    public static String getFormattedDate(final LocalDate date) {
-        return date.format(DateTimeFormatter.ISO_LOCAL_DATE);
+    public static String getFormattedDate(final ReservationDate date) {
+        return date.getValue().format(DateTimeFormatter.ISO_LOCAL_DATE);
     }
 
-    public static String getFormattedTime(final LocalTime time) {
-        return time.format(DateTimeFormatter.ofPattern(TIME_FORMAT_WITHOUT_SECOND));
+    public static String getFormattedTime(final ReservationTime time) {
+        return time.getValue().format(DateTimeFormatter.ofPattern(TIME_FORMAT_WITHOUT_SECOND));
     }
 }

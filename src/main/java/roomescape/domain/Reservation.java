@@ -6,34 +6,34 @@ import java.util.Objects;
 
 public class Reservation {
     private final Long id;
-    private final String name;
-    private final LocalDate date;
-    private final LocalTime time;
+    private final ReservationName name;
+    private final ReservationDate date;
+    private final ReservationTime time;
 
     public Reservation(final Long id, final String name, final LocalDate date, final LocalTime time) {
         this.id = id;
-        this.name = name;
-        this.date = date;
-        this.time = time;
+        this.name = new ReservationName(name);
+        this.date = new ReservationDate(date);
+        this.time = new ReservationTime(time);
+    }
+
+    public boolean isSameId(final Long id) {
+        return Objects.equals(this.id, id);
     }
 
     public Long getId() {
         return id;
     }
 
-    public String getName() {
+    public ReservationName getName() {
         return name;
     }
 
-    public LocalDate getDate() {
+    public ReservationDate getDate() {
         return date;
     }
 
-    public LocalTime getTime() {
+    public ReservationTime getTime() {
         return time;
-    }
-
-    public boolean isSameId(final Long id) {
-        return Objects.equals(this.id, id);
     }
 }

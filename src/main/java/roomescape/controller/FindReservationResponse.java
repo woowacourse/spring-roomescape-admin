@@ -8,7 +8,7 @@ public record FindReservationResponse(Long id, String name, String date, String 
     public static FindReservationResponse of(final Reservation reservation) {
         return new FindReservationResponse(
                 reservation.getId(),
-                reservation.getName(),
+                reservation.getName().getValue(),
                 CustomDateTimeFormatter.getFormattedDate(reservation.getDate()),
                 CustomDateTimeFormatter.getFormattedTime(reservation.getTime())
         );

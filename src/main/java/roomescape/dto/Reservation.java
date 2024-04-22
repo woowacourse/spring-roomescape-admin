@@ -1,6 +1,7 @@
 package roomescape.dto;
 
 import java.time.LocalDate;
+import java.time.LocalTime;
 
 public record Reservation(
         long id,
@@ -8,10 +9,10 @@ public record Reservation(
         LocalDate date,
         ReservationTime time
 ) {
-    public static Reservation of(long id, String name, String date, String time) {
+    public static Reservation of(long id, String name, String date, long timeId, String time) {
         LocalDate parsedDate = LocalDate.parse(date);
-        ReservationTime parsedTime = ReservationTime.parse(time);
+        LocalTime parsedTime = LocalTime.parse(time);
 
-        return new Reservation(id, name, parsedDate, parsedTime);
+        return new Reservation(id, name, parsedDate, new ReservationTime(timeId, parsedTime));
     }
 }

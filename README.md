@@ -1,10 +1,10 @@
 # 요구사항
 
 - [x] localhost:8080/admin 요청 시 `templates/admin/index.html`가 응답한다.
-- [x] /admin/reservation 요청 시 `templates/admin/reservation-legacy.html`가 응답한다.
+- [x] /admin/reservation 요청 시 `templates/admin/reservation.html`가 응답한다.
 - [x] 예약 API를 작성한다.
-- [ ] /admin/time 요청 시 `templates/admin/time.html`가 응답한다.
-- [ ] 시간 API를 작성한다.
+- [x] /admin/time 요청 시 `templates/admin/time.html`가 응답한다.
+- [x] 시간 API를 작성한다.
 
 # API 명세
 
@@ -116,18 +116,6 @@ HTTP/1.1 200
 ```
 
 ## DB 스키마
-### Reservation
-```sql
-CREATE TABLE reservation
-(
-    id      BIGINT       NOT NULL AUTO_INCREMENT,
-    name    VARCHAR(255) NOT NULL,
-    date    VARCHAR(255) NOT NULL,
-    time    VARCHAR(255) NOT NULL,
-    PRIMARY KEY (id)
-);
-```
-
 ### Time
 ```sql
 CREATE TABLE reservation_time
@@ -135,6 +123,19 @@ CREATE TABLE reservation_time
     id   BIGINT       NOT NULL AUTO_INCREMENT,
     start_at VARCHAR(255) NOT NULL,
     PRIMARY KEY (id)
+);
+```
+
+### Reservation
+```sql
+CREATE TABLE reservation
+(
+    id      BIGINT       NOT NULL AUTO_INCREMENT,
+    name    VARCHAR(255) NOT NULL,
+    date    VARCHAR(255) NOT NULL,
+    time_id BIGINT       NOT NULL,
+    PRIMARY KEY (id),
+    FOREIGN KEY (time_id) REFERENCES reservation_time (id)
 );
 ```
 

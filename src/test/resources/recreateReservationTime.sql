@@ -1,3 +1,5 @@
+DROP TABLE IF EXISTS reservation;
+
 DROP TABLE reservation_time;
 
 CREATE TABLE reservation_time

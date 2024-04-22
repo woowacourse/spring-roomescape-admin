@@ -15,12 +15,12 @@ import java.sql.Statement;
 import java.util.List;
 
 @Service
-public class TimeService {
+public class ReservationTimeService {
 
     private final JdbcTemplate jdbcTemplate;
 
     @Autowired
-    public TimeService(JdbcTemplate jdbcTemplate) {
+    public ReservationTimeService(JdbcTemplate jdbcTemplate) {
         this.jdbcTemplate = jdbcTemplate;
     }
 
@@ -45,7 +45,7 @@ public class TimeService {
     private RowMapper<ReservationTime> getReservationTimeRowMapper() {
         RowMapper<ReservationTime> rowMapper = (resultSet, rowNum) -> new ReservationTime(
                 resultSet.getLong("id"),
-                resultSet.getTime("start_at").toLocalTime()
+                resultSet.getString("start_at")
         );
 
         return rowMapper;

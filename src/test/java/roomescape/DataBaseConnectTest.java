@@ -14,12 +14,13 @@ import static org.assertj.core.api.Assertions.assertThat;
 
 @JdbcTest
 @AutoConfigureTestDatabase(replace = AutoConfigureTestDatabase.Replace.NONE)
-public class DataBaseTest {
+@DisplayName("데이터베이스")
+public class DataBaseConnectTest {
 
     private final JdbcTemplate jdbcTemplate;
 
     @Autowired
-    public DataBaseTest(JdbcTemplate jdbcTemplate) {
+    public DataBaseConnectTest(JdbcTemplate jdbcTemplate) {
         this.jdbcTemplate = jdbcTemplate;
     }
 

@@ -7,19 +7,13 @@ import roomescape.controller.dto.ReservationCreateRequest;
 import roomescape.domain.Reservation;
 import roomescape.service.ReservationService;
 
-import java.net.URI;
-import java.util.ArrayList;
-import java.util.Collections;
 import java.util.List;
-import java.util.concurrent.atomic.AtomicLong;
 
 @RestController
 @RequestMapping("/reservations")
 public class ReservationController {
 
     private final ReservationService reservationService;
-    private final AtomicLong atomicInteger = new AtomicLong(1);
-    private final List<Reservation> reservations = Collections.synchronizedList(new ArrayList<>());
 
     @Autowired
     public ReservationController(ReservationService reservationService) {
@@ -41,7 +35,7 @@ public class ReservationController {
     @PostMapping
     public ResponseEntity<Reservation> createReservation(@RequestBody ReservationCreateRequest request) {
         Reservation data = reservationService.createReservation(request);
-        return ResponseEntity.created(URI.create("/reservations/" + data.getId())).build();
+        return ResponseEntity.ok(data);
     }
 
     @DeleteMapping("/{id}")

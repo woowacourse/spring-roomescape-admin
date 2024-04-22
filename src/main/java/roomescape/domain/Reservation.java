@@ -1,23 +1,17 @@
 package roomescape.domain;
 
-public class Reservation { // TODO final 적용
+public class Reservation {
 
-    private Long id;
-    private String name;
-    private String date;
-    private ReservationTimeDto reservationTimeDto;
+    private final Long id;
+    private final String name;
+    private final String date;
+    private final ReservationTime reservationTime;
 
-    public Reservation() {}
-
-    public Reservation(Long id, String name, String date, ReservationTimeDto reservationTimeDto) {
+    public Reservation(Long id, String name, String date, ReservationTime reservationTime) {
         this.id = id;
         this.name = name;
         this.date = date;
-        this.reservationTimeDto = reservationTimeDto;
-    }
-
-    public Reservation(Reservation reservation, Long id) {
-        this(id, reservation.getName(), reservation.getDate(), reservation.getReservationTime());
+        this.reservationTime = reservationTime;
     }
 
     public Long getId() {
@@ -32,8 +26,8 @@ public class Reservation { // TODO final 적용
         return date;
     }
 
-    public ReservationTimeDto getReservationTime() {
-        return reservationTimeDto;
+    public ReservationTime getReservationTime() {
+        return reservationTime;
     }
 
     @Override
@@ -42,7 +36,7 @@ public class Reservation { // TODO final 적용
                 "id=" + id +
                 ", name='" + name + '\'' +
                 ", date='" + date + '\'' +
-                ", reservationTime=" + reservationTimeDto +
+                ", reservationTime=" + reservationTime +
                 '}';
     }
 }

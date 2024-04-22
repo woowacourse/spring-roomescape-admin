@@ -1,8 +1,10 @@
 package roomescape.dto;
 
+import roomescape.domain.ReservationTime;
+
 public record ReservationTimeDto(Long id, String startAt) {
 
-    public roomescape.domain.ReservationTimeDto toDomain() {
-        return new roomescape.domain.ReservationTimeDto(id, startAt);
+    public ReservationTime toDomain() {
+        return new ReservationTime(id, startAt);
     }
 }

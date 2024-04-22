@@ -10,6 +10,11 @@
 - uri: /admin/reservation
 - file path: templates/admin/reservation-legacy.html
 
+### 어드민 시간 페이지 접근
+- http method: GET
+- uri: /admin/time
+- file path: templates/admin/time.html
+
 ### 모든 예약 조회
 - http method: GET
 - uri: /reservations
@@ -160,3 +165,6 @@ Content-Type: application/json
 - [x] 예약 정보는 식별자, 이름, 일정으로 이뤄져있다.
   - [x] 이름은 1자 이상, 5자 이하여야 한다.
   - [x] 일정은 현재 이후여야 한다.
+
+### 시간
+- [ ] 시간 정보는 식별자, 시작하는 시간으로 이뤄져있다.

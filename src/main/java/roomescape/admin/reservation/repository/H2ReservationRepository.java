@@ -27,7 +27,7 @@ public class H2ReservationRepository implements ReservationRepository {
 
     @Override
     public List<Reservation> findAll() {
-        String query = """
+        String sql = """
                 SELECT
                     r.id as reservation_id,
                     r.name,
@@ -38,22 +38,22 @@ public class H2ReservationRepository implements ReservationRepository {
                 inner join reservation_time as t
                 on r.time_id = t.id""";
 
-        RowMapper<Reservation> reservationRowMapper = (rs, rowNum) -> new Reservation(
+        RowMapper<Reservation> reservationRowMapper = (rs, rn) -> new Reservation(
                 rs.getLong("id"),
                 rs.getString("name"),
                 rs.getDate("date").toLocalDate(),
                 new ReservationTime(rs.getLong("time_id"), rs.getTime("time_value").toLocalTime())
         );
-        return jdbcTemplate.query(query, reservationRowMapper);
+        return jdbcTemplate.query(sql, reservationRowMapper);
     }
 
     @Override
     public Reservation save(Reservation reservation) {
-        SqlParameterSource params = new MapSqlParameterSource()
+        SqlParameterSource reservationParameter = new MapSqlParameterSource()
                 .addValue("name", reservation.getName())
                 .addValue("date", reservation.getDate())
                 .addValue("time_id", reservation.getTime().getId());
-        Long id = jdbcInsert.executeAndReturnKey(params).longValue();
+        Long id = jdbcInsert.executeAndReturnKey(reservationParameter).longValue();
 
         Reservation findReservation = getFindReservation(id);
 
@@ -61,7 +61,7 @@ public class H2ReservationRepository implements ReservationRepository {
     }
 
     private Reservation getFindReservation(Long id) {
-        String query = """
+        String sql = """
                 SELECT
                     r.id as reservation_id,
                     r.name,
@@ -73,14 +73,14 @@ public class H2ReservationRepository implements ReservationRepository {
                 on r.time_id = t.id
                 WHERE r.id = ?""";
 
-        RowMapper<Reservation> reservationRowMapper = (rs, rowNum) -> new Reservation(
+        RowMapper<Reservation> reservationRowMapper = (rs, rn) -> new Reservation(
                 rs.getLong("reservation_id"),
                 rs.getString("name"),
                 rs.getDate("date").toLocalDate(),
                 new ReservationTime(rs.getLong("time_id"), rs.getTime("time_value").toLocalTime())
         );
 
-        return jdbcTemplate.queryForObject(query, reservationRowMapper, id);
+        return jdbcTemplate.queryForObject(sql, reservationRowMapper, id);
     }
 
     @Override

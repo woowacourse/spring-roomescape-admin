@@ -26,18 +26,18 @@ public class H2ReservationTimeRepository implements ReservationTimeRepository {
 
     @Override
     public List<ReservationTime> findAll() {
-        String query = "SELECT id, start_at FROM reservation_time";
-        RowMapper<ReservationTime> timeRowMapper = (rs, rowNum) -> new ReservationTime(
+        String sql = "SELECT id, start_at FROM reservation_time";
+        RowMapper<ReservationTime> timeRowMapper = (rs, rn) -> new ReservationTime(
                 rs.getLong("id"),
                 rs.getTime("start_at").toLocalTime()
         );
-        return jdbcTemplate.query(query, timeRowMapper);
+        return jdbcTemplate.query(sql, timeRowMapper);
     }
 
     @Override
     public ReservationTime save(ReservationTime reservation) {
-        SqlParameterSource params = new BeanPropertySqlParameterSource(reservation);
-        Long id = jdbcInsert.executeAndReturnKey(params).longValue();
+        SqlParameterSource reservationParamerterSource = new BeanPropertySqlParameterSource(reservation);
+        Long id = jdbcInsert.executeAndReturnKey(reservationParamerterSource).longValue();
 
         return new ReservationTime(id, reservation.getStartAt());
     }

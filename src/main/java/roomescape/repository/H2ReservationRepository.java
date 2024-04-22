@@ -10,7 +10,6 @@ import roomescape.domain.ClientName;
 import roomescape.domain.Reservation;
 
 import java.util.List;
-import java.util.Map;
 
 @Repository
 public class H2ReservationRepository implements ReservationRepository {
@@ -54,8 +53,8 @@ public class H2ReservationRepository implements ReservationRepository {
     @Override
     public void deleteById(final Long reservationId) {
         String sql = "DELETE FROM reservation WHERE id = :id";
-        Map<String, Long> param = Map.of("id", reservationId);
-
+        MapSqlParameterSource param = new MapSqlParameterSource()
+                .addValue("id", reservationId);
         template.update(sql, param);
     }
 }

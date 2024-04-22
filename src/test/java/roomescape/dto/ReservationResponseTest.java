@@ -17,6 +17,7 @@ class ReservationResponseTest {
     void convertDtoTest() {
         // Given
         Reservation reservation = new Reservation(
+                1L,
                 new ClientName("켈리"),
                 LocalDate.of(2023, 1, 12),
                 LocalTime.of(1, 12)
@@ -27,5 +28,9 @@ class ReservationResponseTest {
 
         // Then
         assertThat(reservationResponse).isNotNull();
+        assertThat(reservationResponse.id()).isEqualTo(reservation.getId());
+        assertThat(reservationResponse.name()).isEqualTo(reservation.getClientName().getValue());
+        assertThat(reservationResponse.date()).isEqualTo(reservation.getDate());
+        assertThat(reservationResponse.time()).isEqualTo(reservation.getTime());
     }
 }

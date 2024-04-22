@@ -6,7 +6,7 @@ import java.util.List;
 
 public interface ReservationRepository {
 
-    Long save(final ReservationCreateRequest createRequest);
+    Long save(final ReservationCreateRequest request);
 
     List<Reservation> findAll();
 

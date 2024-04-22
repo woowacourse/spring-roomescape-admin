@@ -30,4 +30,8 @@ public class ReservationTimeService {
                 .map(ReservationTimeResponse::new)
                 .collect(Collectors.toList());
     }
+
+    public void cancelReservationTime(final Long id) {
+        reservationTimeRepository.deleteById(id);
+    }
 }

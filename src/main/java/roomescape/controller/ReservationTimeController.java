@@ -25,4 +25,10 @@ public class ReservationTimeController {
     public ResponseEntity<List<ReservationTimeResponse>> getReservationTimes() {
         return ResponseEntity.ok(reservationTimeService.getAllReservationTimes());
     }
+
+    @DeleteMapping("/times/{id}")
+    public ResponseEntity<Void> deleteReservationTime(@PathVariable final Long id) {
+        reservationTimeService.cancelReservationTime(id);
+        return ResponseEntity.ok().build();
+    }
 }

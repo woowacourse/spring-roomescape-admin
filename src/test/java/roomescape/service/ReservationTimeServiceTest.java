@@ -10,6 +10,7 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.annotation.DirtiesContext;
 import roomescape.controller.dto.ReservationTimeCreateRequest;
 import roomescape.controller.dto.ReservationTimeResponse;
+import roomescape.domain.ReservationTime;
 import roomescape.repository.ReservationTimeRepository;
 import java.time.LocalTime;
 import java.util.List;
@@ -27,9 +28,9 @@ class ReservationTimeServiceTest {
     @Test
     @DisplayName("예약 시간을 추가한다.")
     void createReservationTime() {
-        final ReservationTimeCreateRequest createRequest = new ReservationTimeCreateRequest(LocalTime.parse("10:09"));
+        final ReservationTimeCreateRequest request = new ReservationTimeCreateRequest(LocalTime.parse("10:09"));
 
-        final ReservationTimeResponse actual = reservationTimeService.createReservationTime(createRequest);
+        final ReservationTimeResponse actual = reservationTimeService.createReservationTime(request);
 
         assertAll(
                 () -> assertThat(actual.getId()).isEqualTo(1L),
@@ -40,11 +41,23 @@ class ReservationTimeServiceTest {
     @Test
     @DisplayName("예약 시간 목록을 조회한다.")
     void getAllReservationTimes() {
-        final ReservationTimeCreateRequest createRequest = new ReservationTimeCreateRequest(LocalTime.parse("10:09"));
-        reservationTimeRepository.save(createRequest);
+        final ReservationTimeCreateRequest request = new ReservationTimeCreateRequest(LocalTime.parse("10:09"));
+        reservationTimeRepository.save(request);
 
         final List<ReservationTimeResponse> actual = reservationTimeService.getAllReservationTimes();
 
         assertThat(actual).hasSize(1);
+    }
+
+    @Test
+    @DisplayName("예약 시간을 취소한다.")
+    void cancelReservationTime() {
+        final ReservationTimeCreateRequest request = new ReservationTimeCreateRequest(LocalTime.parse("10:09"));
+        final Long id = reservationTimeRepository.save(request);
+
+        reservationTimeService.cancelReservationTime(id);
+        final List<ReservationTime> actual = reservationTimeRepository.findAll();
+
+        assertThat(actual).hasSize(0);
     }
 }

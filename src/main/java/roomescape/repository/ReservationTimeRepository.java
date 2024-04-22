@@ -6,7 +6,9 @@ import java.util.List;
 
 public interface ReservationTimeRepository {
 
-    Long save(final ReservationTimeCreateRequest createRequest);
+    Long save(final ReservationTimeCreateRequest request);
 
     List<ReservationTime> findAll();
+
+    void deleteById(final Long id);
 }

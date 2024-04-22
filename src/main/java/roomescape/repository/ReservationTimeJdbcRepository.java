@@ -42,4 +42,10 @@ public class ReservationTimeJdbcRepository implements ReservationTimeRepository 
         final String sql = "select * from reservation_time";
         return jdbcTemplate.query(sql, rowMapper);
     }
+
+    @Override
+    public void deleteById(final Long id) {
+        final String sql = "delete from reservation_time where id = ?";
+        jdbcTemplate.update(sql, Long.valueOf(id));
+    }
 }

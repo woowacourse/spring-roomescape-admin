@@ -47,4 +47,15 @@ class ReservationTimeJdbcRepositoryTest {
 
         assertThat(reservationTimes).hasSize(1);
     }
+
+    @Test
+    @DisplayName("id에 해당하는 예약 시간 정보를 삭제한다.")
+    void deleteReservationTimeById() {
+        jdbcTemplate.update("insert into reservation_time(start_at) values(?)", "15:40");
+
+        reservationTimeRepository.deleteById(1L);
+
+        final Integer count = jdbcTemplate.queryForObject("SELECT count(*) from reservation_time", Integer.class);
+        assertThat(count).isZero();
+    }
 }

@@ -46,4 +46,15 @@ class ReservationTimeControllerTest {
                 .statusCode(200)
                 .body("size()", is(1));
     }
+
+    @Test
+    @DisplayName("예약 시간을 삭제한다.")
+    void deleteReservationTime() {
+        jdbcTemplate.update("insert into reservation_time(start_at) values(?)", "10:00");
+
+        RestAssured.given().log().all()
+                .when().delete("/times/1")
+                .then().log().all()
+                .statusCode(200);
+    }
 }

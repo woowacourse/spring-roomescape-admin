@@ -4,6 +4,8 @@ import java.time.LocalTime;
 import java.util.List;
 import java.util.Objects;
 import org.springframework.jdbc.core.JdbcTemplate;
+import org.springframework.jdbc.core.namedparam.BeanPropertySqlParameterSource;
+import org.springframework.jdbc.core.namedparam.SqlParameterSource;
 import org.springframework.jdbc.core.simple.SimpleJdbcInsert;
 import org.springframework.stereotype.Repository;
 import roomescape.domain.ReservationTime;
@@ -21,6 +23,14 @@ public class JdbcReservationTimeRepositoryImpl implements ReservationTimeReposit
                 Objects.requireNonNull(jdbcTemplate.getDataSource()))
                 .withTableName("reservation_time")
                 .usingGeneratedKeyColumns("id");
+    }
+
+    @Override
+    public ReservationTime save(ReservationTime reservationTime) {
+        SqlParameterSource parameterSource = new BeanPropertySqlParameterSource(reservationTime);
+        Number id = simpleJdbcInsert.executeAndReturnKey(parameterSource);
+
+        return new ReservationTime(id.longValue(), reservationTime.getStartAt());
     }
 
     @Override

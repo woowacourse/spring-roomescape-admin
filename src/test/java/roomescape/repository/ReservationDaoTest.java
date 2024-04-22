@@ -47,7 +47,8 @@ class ReservationDaoTest {
         assertAll(
                 () -> assertThat(beforeSaving).isEmpty(),
                 () -> assertThat(afterSaving).hasSize(1),
-                () -> assertThat(afterRemoving).isEmpty());
+                () -> assertThat(afterRemoving).isEmpty()
+        );
     }
 
     @DisplayName("단건 조회")

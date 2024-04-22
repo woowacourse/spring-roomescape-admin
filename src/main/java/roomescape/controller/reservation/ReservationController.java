@@ -1,4 +1,4 @@
-package roomescape.controller;
+package roomescape.controller.reservation;
 
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -9,7 +9,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import roomescape.entity.Reservation;
-import roomescape.repository.MemoryReservationRepository;
+import roomescape.repository.ReservationRepository;
 import roomescape.service.ReservationMapper;
 
 import java.net.URI;
@@ -19,15 +19,15 @@ import java.util.List;
 @RequestMapping("/reservations")
 public class ReservationController {
 
-    private final MemoryReservationRepository memoryReservationRepository;
+    private final ReservationRepository reservationRepository;
 
-    public ReservationController(MemoryReservationRepository memoryReservationRepository) {
-        this.memoryReservationRepository = memoryReservationRepository;
+    public ReservationController(ReservationRepository reservationRepository) {
+        this.reservationRepository = reservationRepository;
     }
 
     @GetMapping
     public ResponseEntity<List<ReservationResponse>> getReservations() {
-        List<ReservationResponse> responses = memoryReservationRepository.findAll().stream()
+        List<ReservationResponse> responses = reservationRepository.findAll().stream()
                 .map(ReservationMapper::map)
                 .toList();
 
@@ -36,7 +36,7 @@ public class ReservationController {
 
     @PostMapping
     public ResponseEntity<ReservationResponse> addReservation(@RequestBody final ReservationRequest request) {
-        Reservation savedReservation = memoryReservationRepository.save(ReservationMapper.map(request));
+        Reservation savedReservation = reservationRepository.save(ReservationMapper.map(request));
         ReservationResponse response = ReservationMapper.map(savedReservation);
 
         return ResponseEntity
@@ -46,7 +46,7 @@ public class ReservationController {
 
     @DeleteMapping("/{id}")
     public ResponseEntity<Void> deleteReservationsData(@PathVariable final Long id) {
-        if (memoryReservationRepository.deleteById(id) == 0) {
+        if (reservationRepository.deleteById(id) == 0) {
             return ResponseEntity.notFound().build();
         }
         return ResponseEntity.noContent().build();

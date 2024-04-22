@@ -13,7 +13,7 @@ import roomescape.dto.ReservationTimeDto;
 import static org.assertj.core.api.Assertions.assertThat;
 
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
-@DirtiesContext(classMode = DirtiesContext.ClassMode.BEFORE_EACH_TEST_METHOD) // TODO 테스트에서 너무 많은 Context를 만드는건 아닐까?
+@DirtiesContext(classMode = DirtiesContext.ClassMode.AFTER_EACH_TEST_METHOD)
 public class CrudTest {
 
     @Autowired

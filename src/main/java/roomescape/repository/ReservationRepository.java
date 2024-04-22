@@ -4,15 +4,12 @@ import java.sql.Date;
 import java.sql.PreparedStatement;
 import java.sql.Time;
 import java.util.List;
-import java.util.concurrent.atomic.AtomicLong;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;
 import org.springframework.jdbc.support.GeneratedKeyHolder;
 import org.springframework.jdbc.support.KeyHolder;
 import org.springframework.stereotype.Repository;
 import roomescape.dao.ReservationDao;
-import roomescape.dto.ReservationRequest;
-import roomescape.dto.ReservationResponse;
 import roomescape.model.Reservation;
 
 @Repository
@@ -52,8 +49,8 @@ public class ReservationRepository {
         return jdbcTemplate.query(sql, actorRowMapper);
     }
 
-    public int deleteReservation(Long id) {
+    public Long deleteReservation(Long id) {
         String sql = "delete from reservation where id = ?";
-        return jdbcTemplate.update(sql, id);
+        return (long) jdbcTemplate.update(sql, id);
     }
 }

@@ -7,9 +7,6 @@ public class ReservationCreateRequest {
     private String date;
     private String time;
 
-    public ReservationCreateRequest() {
-    }
-
     public ReservationCreateRequest(String name, String date, String time) {
         this.name = name;
         this.date = date;

@@ -1,23 +1,25 @@
 package roomescape.repository;
 
-import java.sql.Date;
-import java.sql.PreparedStatement;
-import java.sql.Statement;
-import java.sql.Time;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
+import javax.sql.DataSource;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;
-import org.springframework.jdbc.support.GeneratedKeyHolder;
-import org.springframework.jdbc.support.KeyHolder;
+import org.springframework.jdbc.core.simple.SimpleJdbcInsert;
 import org.springframework.stereotype.Repository;
 import roomescape.domain.reservation.Reservation;
 
 @Repository
 public class JdbcTemplateReservationRepository implements ReservationRepository {
     private final JdbcTemplate jdbcTemplate;
+    private final SimpleJdbcInsert jdbcInsert;
 
-    public JdbcTemplateReservationRepository(JdbcTemplate jdbcTemplate) {
+    public JdbcTemplateReservationRepository(JdbcTemplate jdbcTemplate, DataSource source) {
         this.jdbcTemplate = jdbcTemplate;
+        this.jdbcInsert = new SimpleJdbcInsert(source)
+                .withTableName("reservation")
+                .usingGeneratedKeyColumns("id");
     }
 
     private final RowMapper<Reservation> reservationRowMapper = (resultSet, rowNum) -> new Reservation(
@@ -29,18 +31,11 @@ public class JdbcTemplateReservationRepository implements ReservationRepository 
 
     @Override
     public Reservation save(Reservation reservationRequest) {
-        KeyHolder keyHolder = new GeneratedKeyHolder();
-
-        jdbcTemplate.update(connection -> {
-            PreparedStatement ps = connection.prepareStatement(
-                    "INSERT INTO reservation (name, date, time) VALUES (?, ?, ?)", Statement.RETURN_GENERATED_KEYS);
-            ps.setString(1, reservationRequest.getName());
-            ps.setDate(2, Date.valueOf(reservationRequest.getDate()));
-            ps.setTime(3, Time.valueOf(reservationRequest.getTime()));
-            return ps;
-        }, keyHolder);
-
-        Long id = keyHolder.getKey().longValue();
+        Map<String, Object> params = new HashMap<>();
+        params.put("name", reservationRequest.getName());
+        params.put("date", reservationRequest.getDate());
+        params.put("time", reservationRequest.getTime());
+        Long id = jdbcInsert.executeAndReturnKey(params).longValue();
         return new Reservation(id, reservationRequest);
     }
 

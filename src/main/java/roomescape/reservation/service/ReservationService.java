@@ -39,6 +39,6 @@ public class ReservationService {
     }
 
     public boolean delete(long reservationId) {
-        return reservationRepository.delete(reservationId);
+        return reservationRepository.deleteById(reservationId);
     }
 }

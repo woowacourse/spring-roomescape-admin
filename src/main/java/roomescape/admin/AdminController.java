@@ -13,8 +13,7 @@ public class AdminController {
     private final ReservationService reservationService;
     private final ReservationTimeService reservationTimeService;
 
-    public AdminController(final ReservationService reservationService,
-                           final ReservationTimeService reservationTimeService) {
+    public AdminController(ReservationService reservationService, ReservationTimeService reservationTimeService) {
         this.reservationService = reservationService;
         this.reservationTimeService = reservationTimeService;
     }

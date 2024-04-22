@@ -9,7 +9,6 @@ import roomescape.reservation.repository.ReservationTimeRepository;
 
 @Service
 public class ReservationTimeService {
-
     private final ReservationTimeRepository reservationTimeRepository;
 
     public ReservationTimeService(final ReservationTimeRepository reservationTimeRepository) {
@@ -29,6 +28,6 @@ public class ReservationTimeService {
     }
 
     public boolean delete(long timeId) {
-        return reservationTimeRepository.delete(timeId);
+        return reservationTimeRepository.deleteById(timeId);
     }
 }

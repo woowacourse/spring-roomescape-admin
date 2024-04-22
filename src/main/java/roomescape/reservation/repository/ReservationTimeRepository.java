@@ -13,5 +13,5 @@ public interface ReservationTimeRepository {
 
     Optional<ReservationTime> findById(long timeId);
 
-    boolean delete(long timeId);
+    boolean deleteById(long timeId);
 }

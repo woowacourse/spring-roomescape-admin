@@ -60,7 +60,7 @@ public class ReservationTimeDao implements ReservationTimeRepository {
 
 
     @Override
-    public boolean delete(final long timeId) {
+    public boolean deleteById(final long timeId) {
         String sql = "DELETE FROM reservation_time WHERE id = ?";
         int deleteId = jdbcTemplate.update(sql, timeId);
         return deleteId != 0;

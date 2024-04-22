@@ -1,4 +1,4 @@
-package roomescape.admin.reservation.time;
+package roomescape.admin.reservation.repository;
 
 import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -8,42 +8,45 @@ import org.springframework.jdbc.core.namedparam.BeanPropertySqlParameterSource;
 import org.springframework.jdbc.core.namedparam.SqlParameterSource;
 import org.springframework.jdbc.core.simple.SimpleJdbcInsert;
 import org.springframework.stereotype.Repository;
+import roomescape.admin.reservation.entity.Reservation;
 
 @Repository
-public class H2ReservationTimeRepository implements ReservationTimeRepository {
+public class H2ReservationRepository implements ReservationRepository {
 
     private final JdbcTemplate jdbcTemplate;
     private final SimpleJdbcInsert jdbcInsert;
 
     @Autowired
-    public H2ReservationTimeRepository(JdbcTemplate jdbcTemplate) {
+    public H2ReservationRepository(JdbcTemplate jdbcTemplate) {
         this.jdbcTemplate = jdbcTemplate;
         this.jdbcInsert = new SimpleJdbcInsert(jdbcTemplate)
-                .withTableName("reservation_time")
+                .withTableName("reservation")
                 .usingGeneratedKeyColumns("id");
     }
 
     @Override
-    public List<ReservationTime> findAll() {
-        String query = "SELECT id, start_at FROM reservation_time";
-        RowMapper<ReservationTime> timeRowMapper = (rs, rowNum) -> new ReservationTime(
+    public List<Reservation> findAll() {
+        String query = "SELECT id, name, date, time FROM reservation";
+        RowMapper<Reservation> reservationRowMapper = (rs, rowNum) -> new Reservation(
                 rs.getLong("id"),
-                rs.getTime("start_at").toLocalTime()
+                rs.getString("name"),
+                rs.getDate("date").toLocalDate(),
+                rs.getTime("time").toLocalTime()
         );
-        return jdbcTemplate.query(query, timeRowMapper);
+        return jdbcTemplate.query(query, reservationRowMapper);
     }
 
     @Override
-    public ReservationTime save(ReservationTime reservation) {
+    public Reservation save(Reservation reservation) {
         SqlParameterSource params = new BeanPropertySqlParameterSource(reservation);
         Long id = jdbcInsert.executeAndReturnKey(params).longValue();
 
-        return new ReservationTime(id, reservation.getStartAt());
+        return new Reservation(id, reservation.getName(), reservation.getDate(), reservation.getTime());
     }
 
     @Override
     public int delete(Long id) {
-        String sql = "DELETE FROM reservation_time WHERE id = ?";
+        String sql = "DELETE FROM reservation WHERE id = ?";
         return jdbcTemplate.update(sql, id);
     }
 }

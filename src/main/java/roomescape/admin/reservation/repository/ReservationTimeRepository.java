@@ -1,6 +1,7 @@
-package roomescape.admin.reservation.time;
+package roomescape.admin.reservation.repository;
 
 import java.util.List;
+import roomescape.admin.reservation.entity.ReservationTime;
 
 public interface ReservationTimeRepository {
 

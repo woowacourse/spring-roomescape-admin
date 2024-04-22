@@ -1,4 +1,4 @@
-package roomescape.admin.reservation.time;
+package roomescape.admin.reservation.controller;
 
 import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -10,6 +10,10 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
+import roomescape.admin.reservation.dto.request.ReservationTimeRequest;
+import roomescape.admin.reservation.dto.response.ReservationTimeResponse;
+import roomescape.admin.reservation.entity.ReservationTime;
+import roomescape.admin.reservation.repository.ReservationTimeRepository;
 
 @RequestMapping("/times")
 @RestController

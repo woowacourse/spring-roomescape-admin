@@ -13,6 +13,7 @@ import roomescape.reservation.dto.ReservationTimeResponse;
 import roomescape.reservation.repository.FakeReservationTimeDao;
 import roomescape.reservation.repository.ReservationTimeRepository;
 
+@DisplayName("예약 시간 로직 테스트")
 class ReservationTimeServiceTest {
 
     ReservationTimeRepository reservationTimeRepository;

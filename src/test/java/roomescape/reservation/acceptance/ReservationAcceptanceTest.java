@@ -13,6 +13,7 @@ import roomescape.reservation.repository.ReservationRepository;
 import roomescape.reservation.repository.ReservationTimeRepository;
 import roomescape.util.AcceptanceTest;
 
+@DisplayName("예약 인수 테스트")
 class ReservationAcceptanceTest extends AcceptanceTest {
     @Autowired
     ReservationTimeRepository reservationTimeRepository;

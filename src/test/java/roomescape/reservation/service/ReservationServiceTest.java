@@ -18,6 +18,7 @@ import roomescape.reservation.repository.FakeReservationTimeDao;
 import roomescape.reservation.repository.ReservationRepository;
 import roomescape.reservation.repository.ReservationTimeRepository;
 
+@DisplayName("예약 로직 테스트")
 class ReservationServiceTest {
 
     ReservationRepository reservationRepository;

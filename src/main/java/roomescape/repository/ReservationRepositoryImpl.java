@@ -2,16 +2,17 @@ package roomescape.repository;
 
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;
+import org.springframework.jdbc.support.GeneratedKeyHolder;
+import org.springframework.jdbc.support.KeyHolder;
 import org.springframework.stereotype.Repository;
 import roomescape.model.Reservation;
 
+import java.sql.PreparedStatement;
 import java.time.LocalDate;
 import java.time.LocalTime;
-import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 import java.util.NoSuchElementException;
-import java.util.concurrent.atomic.AtomicLong;
 
 @Repository
 public class ReservationRepositoryImpl implements ReservationRepository {
@@ -29,12 +30,7 @@ public class ReservationRepositoryImpl implements ReservationRepository {
         this.jdbcTemplate = jdbcTemplate;
     }
 
-    private final AtomicLong index = new AtomicLong(1);
-    private final List<Reservation> reservations = new ArrayList<>(List.of(
-            new Reservation(index.getAndIncrement(), "브라운", LocalDate.parse("2023-01-01"), LocalTime.parse("10:00")),
-            new Reservation(index.getAndIncrement(), "브라운", LocalDate.parse("2023-01-02"), LocalTime.parse("11:00"))
-    ));
-
+    @Override
     public List<Reservation> findAll() {
         String sql = "select * from reservation";
         List<Reservation> reservations = jdbcTemplate.query(sql, reservationRowMapper);
@@ -42,21 +38,37 @@ public class ReservationRepositoryImpl implements ReservationRepository {
         return Collections.unmodifiableList(reservations);
     }
 
+    @Override
     public Reservation save(Reservation reservation) {
-        Reservation savedReservation = new Reservation(index.getAndIncrement(), reservation.getName(), reservation.getDate(), reservation.getTime());
-        reservations.add(savedReservation);
-        return savedReservation;
+        KeyHolder keyHolder = new GeneratedKeyHolder();
+        jdbcTemplate.update(connection -> {
+            PreparedStatement ps = connection.prepareStatement(
+                    "insert into reservation (name, date, time) values(?, ?, ?)",
+                    new String[]{"id"});
+            ps.setString(1, reservation.getName());
+            ps.setString(2, reservation.getDate().toString());
+            ps.setString(3, reservation.getTime().toString());
+            return ps;
+        }, keyHolder);
+        long id = keyHolder.getKey().longValue();
+
+        return new Reservation(id, reservation.getName(), reservation.getDate(), reservation.getTime());
     }
 
+    @Override
     public void deleteById(Long id) {
-        Reservation reservation = findById(id);
-        reservations.remove(reservation);
+        String sql = "delete from reservation where id = ?";
+        jdbcTemplate.update(sql, id);
     }
 
+    @Override
     public Reservation findById(Long id) {
-        return reservations.stream()
-                .filter(reservation -> reservation.isSameId(id))
-                .findAny()
-                .orElseThrow(() -> new NoSuchElementException("존재하지 않는 아아디입니다."));
+        String sql = "select id, name, date, time from reservation where id = ?";
+        Reservation reservation = jdbcTemplate.queryForObject(sql, reservationRowMapper, id);
+        if (reservation == null) {
+            throw new NoSuchElementException("존재하지 않는 아아디입니다.");
+        }
+
+        return reservation;
     }
 }

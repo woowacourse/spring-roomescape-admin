@@ -1,10 +1,8 @@
 package roomescape.controller;
 
 import java.util.List;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -24,9 +22,6 @@ import roomescape.service.ReservationService;
 public class ReservationController {
 
     private final ReservationService reservationService;
-
-    @Autowired
-    private JdbcTemplate jdbcTemplate;
 
     public ReservationController(ReservationService reservationService) {
         this.reservationService = reservationService;
@@ -59,6 +54,6 @@ public class ReservationController {
     @DeleteMapping("/{id}")
     @ResponseStatus(value = HttpStatus.NO_CONTENT)
     public void deleteReservation(@PathVariable Long id) {
-        jdbcTemplate.update("DELETE FROM reservation WHERE id = ?", id);
+        reservationService.deleteReservationById(id);
     }
 }

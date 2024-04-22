@@ -27,4 +27,8 @@ public class ReservationService {
     public Long createReservation(ReservationCreateRequest reservationCreateRequest) {
         return reservationRepository.createReservation(reservationCreateRequest);
     }
+
+    public void deleteReservationById(Long id) {
+        reservationRepository.deleteReservationById(id);
+    }
 }

@@ -65,4 +65,8 @@ public class ReservationRepository {
                 "time_id", reservationCreateRequest.timeId()
         )).longValue();
     }
+
+    public void deleteReservationById(Long id) {
+        jdbcTemplate.update("DELETE FROM reservation WHERE id = ?", id);
+    }
 }

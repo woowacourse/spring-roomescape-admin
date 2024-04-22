@@ -8,7 +8,6 @@ import roomescape.domain.reservation.Reservation;
 import roomescape.domain.reservationtime.ReservationTime;
 import roomescape.dto.ReservationCreateRequestDto;
 import roomescape.dto.ReservationResponseDto;
-import roomescape.dto.ReservationTimeResponseDto;
 
 @Service
 public class ReservationService {
@@ -24,29 +23,24 @@ public class ReservationService {
     public List<ReservationResponseDto> findAll() {
         List<Reservation> reservations = reservationDao.findAll();
         return reservations.stream()
-                .map(this::convertResponseDto)
+                .map(ReservationResponseDto::of)
                 .toList();
     }
 
     public ReservationResponseDto add(ReservationCreateRequestDto requestDto) {
-        ReservationTime reservationTime = reservationTimeDao.findById(requestDto.getTimeId());
-        ReservationTimeResponseDto timeResponseDto = ReservationTimeResponseDto.from(reservationTime);
-        Reservation reservation = requestDto.toDomain(reservationTime);
-        ReservationCreateRequestDto validatedRequestDto
-                = ReservationCreateRequestDto.of(reservation, reservationTime);
+        ReservationCreateRequestDto validatedRequestDto = getValidatedRequestDto(requestDto);
         long id = reservationDao.add(validatedRequestDto);
         Reservation result = reservationDao.findById(id);
-        return ReservationResponseDto.of(result, timeResponseDto);
+        return ReservationResponseDto.of(result);
     }
 
     public void delete(Long id) {
         reservationDao.delete(id);
     }
 
-    private ReservationResponseDto convertResponseDto(Reservation reservation) {
-        ReservationTime reservationTime = reservation.getReservationTime();
-        ReservationTimeResponseDto timeResponseDto = ReservationTimeResponseDto.from(reservationTime);
-        return ReservationResponseDto.of(reservation, timeResponseDto);
+    private ReservationCreateRequestDto getValidatedRequestDto(ReservationCreateRequestDto requestDto) {
+        ReservationTime reservationTime = reservationTimeDao.findById(requestDto.getTimeId());
+        Reservation reservation = requestDto.toDomain(reservationTime);
+        return ReservationCreateRequestDto.of(reservation, reservationTime);
     }
-
 }

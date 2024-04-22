@@ -24,13 +24,18 @@ public class ReservationTimeService {
     }
 
     public ReservationTimeResponseDto add(ReservationTimeCreateRequestDto requestDto) {
-        ReservationTime reservationTime = requestDto.toDomain();
-        long id = reservationTimeDao.add(ReservationTimeCreateRequestDto.from(reservationTime));
+        ReservationTimeCreateRequestDto validatedRequestDto = getValidatedRequestDto(requestDto);
+        long id = reservationTimeDao.add(validatedRequestDto);
         ReservationTime result = reservationTimeDao.findById(id);
         return ReservationTimeResponseDto.from(result);
     }
 
     public void delete(Long id) {
         reservationTimeDao.delete(id);
+    }
+
+    private ReservationTimeCreateRequestDto getValidatedRequestDto(ReservationTimeCreateRequestDto requestDto) {
+        ReservationTime reservationTime = requestDto.toDomain();
+        return ReservationTimeCreateRequestDto.from(reservationTime);
     }
 }

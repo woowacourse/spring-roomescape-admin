@@ -12,21 +12,22 @@ public class ReservationResponseDto {
     @JsonProperty("time")
     private final ReservationTimeResponseDto reservationTimeResponseDto;
 
-    private ReservationResponseDto(Long id, String name, String date,
-                                  ReservationTimeResponseDto reservationTimeResponseDto) {
+    private ReservationResponseDto(Long id,
+                                   String name,
+                                   String date,
+                                   ReservationTimeResponseDto timeResponseDto) {
         this.id = id;
         this.name = name;
         this.date = date;
-        this.reservationTimeResponseDto = reservationTimeResponseDto;
+        this.reservationTimeResponseDto = timeResponseDto;
     }
 
-    public static ReservationResponseDto of(Reservation reservation,
-                                            ReservationTimeResponseDto reservationTimeResponseDto) {
+    public static ReservationResponseDto of(Reservation reservation) {
         return new ReservationResponseDto(
                 reservation.getId(),
                 reservation.getName(),
                 reservation.getDate().toStringDate(),
-                reservationTimeResponseDto
+                ReservationTimeResponseDto.from(reservation.getReservationTime())
         );
     }
 

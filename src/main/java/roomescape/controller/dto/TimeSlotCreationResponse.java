@@ -1,14 +1,14 @@
 package roomescape.controller.dto;
 
+import java.time.LocalTime;
 import roomescape.domain.TimeSlot;
-import roomescape.utils.TimeFormatter;
 
-public record TimeSlotCreationResponse(Long id, String startAt) {
+public record TimeSlotCreationResponse(Long id, LocalTime startAt) {
 
     public static TimeSlotCreationResponse from(TimeSlot timeSlot) {
         return new TimeSlotCreationResponse(
                 timeSlot.getId(),
-                TimeFormatter.format(timeSlot.getTime())
+                timeSlot.getTime()
         );
     }
 }

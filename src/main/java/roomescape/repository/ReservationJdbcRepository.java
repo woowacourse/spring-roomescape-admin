@@ -6,7 +6,10 @@ import java.util.Map;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.simple.SimpleJdbcInsert;
 import org.springframework.stereotype.Repository;
+import roomescape.domain.Name;
 import roomescape.domain.Reservation;
+import roomescape.domain.ReservationDate;
+import roomescape.domain.TimeSlot;
 import roomescape.repository.rowmapper.ReservationRowMapper;
 
 @Repository
@@ -25,10 +28,14 @@ public class ReservationJdbcRepository implements ReservationRepository {
 
     @Override
     public Reservation addReservation(Reservation reservation) {
+        Name name = reservation.getName();
+        ReservationDate reservationDate = reservation.getReservationDate();
+        TimeSlot timeSlot = reservation.getTimeSlot();
+
         Map<String, ? extends Serializable> parameters = Map.of(
-                "name", reservation.getName().asText(),
-                "date", reservation.getReservationDate().getDate(),
-                "time_slot_id", reservation.getTimeSlot().getId()
+                "name", name.asText(),
+                "date", reservationDate.getDate(),
+                "time_slot_id", timeSlot.getId()
         );
         Number key = jdbcInsert.executeAndReturnKey(parameters);
         return reservation.withId(key.longValue());

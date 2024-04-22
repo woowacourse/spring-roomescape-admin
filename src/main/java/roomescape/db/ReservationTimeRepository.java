@@ -2,8 +2,6 @@ package roomescape.db;
 
 
 import java.sql.PreparedStatement;
-import java.time.LocalDate;
-import java.time.LocalDateTime;
 import java.time.LocalTime;
 import java.util.List;
 import javax.sql.DataSource;
@@ -12,11 +10,8 @@ import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.support.GeneratedKeyHolder;
 import org.springframework.jdbc.support.KeyHolder;
 import org.springframework.stereotype.Repository;
-import org.springframework.web.bind.annotation.RequestBody;
-import roomescape.domain.Reservation;
 import roomescape.domain.ReservationTime;
 import roomescape.dto.ReservationTimeRequest;
-import roomescape.dto.ReservationTimeResponse;
 
 @Repository
 public class ReservationTimeRepository {
@@ -27,7 +22,7 @@ public class ReservationTimeRepository {
         this.jdbcTemplate = new JdbcTemplate(dataSource);
     }
 
-    public Long createReservationTime(ReservationTimeRequest reservationTimeRequest) {
+    public Long create(ReservationTimeRequest reservationTimeRequest) {
         KeyHolder keyHolder = new GeneratedKeyHolder();
         jdbcTemplate.update(connection -> {
             PreparedStatement ps = connection.prepareStatement(
@@ -39,20 +34,20 @@ public class ReservationTimeRepository {
         return keyHolder.getKey().longValue();
     }
 
+    public List<ReservationTime> findAll() {
+        return jdbcTemplate.query("select id, start_at from reservation_time",
+                (resultSet, rowNum) -> new ReservationTime(
+                        resultSet.getLong("id"),
+                        LocalTime.parse(resultSet.getString("start_at")
+                        )));
+    }
+
     public ReservationTime findById(final Long id) {
         return jdbcTemplate.queryForObject("select id, start_at from reservation_time where id=?",
                 (resultSet, rowNum) -> new ReservationTime(
                         resultSet.getLong("id"),
                         LocalTime.parse(resultSet.getString("start_at"))
                 ), id);
-    }
-
-    public List<ReservationTime> getReservationTimes() {
-        return jdbcTemplate.query("select id, start_at from reservation_time",
-                (resultSet, rowNum) -> new ReservationTime(
-                        resultSet.getLong("id"),
-                        LocalTime.parse(resultSet.getString("start_at")
-                        )));
     }
 
 

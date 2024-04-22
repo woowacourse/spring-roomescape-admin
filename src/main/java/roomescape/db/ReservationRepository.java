@@ -2,8 +2,6 @@ package roomescape.db;
 
 import java.sql.PreparedStatement;
 import java.time.LocalDate;
-import java.time.LocalDateTime;
-import java.time.LocalTime;
 import java.util.List;
 import javax.sql.DataSource;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -12,7 +10,6 @@ import org.springframework.jdbc.support.GeneratedKeyHolder;
 import org.springframework.jdbc.support.KeyHolder;
 import org.springframework.stereotype.Repository;
 import roomescape.domain.Reservation;
-import roomescape.domain.ReservationTime;
 import roomescape.dto.ReservationRequest;
 
 
@@ -43,6 +40,26 @@ public class ReservationRepository {
         return keyHolder.getKey().longValue();
     }
 
+    public List<Reservation> findAll() {
+        return jdbcTemplate.query("""
+                        SELECT
+                            r.id as reservation_id,
+                            r.name,
+                            r.date,
+                            t.id as time_id,
+                            t.start_at as time_value
+                        FROM reservation as r
+                        inner join reservation_time as t
+                        on r.time_id = t.id
+                        """,
+                (resultSet, rowNum) -> new Reservation(
+                        resultSet.getLong("id"),
+                        resultSet.getString("name"),
+                        LocalDate.parse(resultSet.getString("date")),
+                        reservationTimeRepository.findById(resultSet.getLong("time_id"))
+                ));
+    }
+
     public Reservation findById(final Long id) {
         return jdbcTemplate.queryForObject("select id, name, date, time_id from reservation where id=?",
                 (resultSet, rowNum) -> new Reservation(
@@ -51,24 +68,6 @@ public class ReservationRepository {
                         LocalDate.parse(resultSet.getString("date")),
                         reservationTimeRepository.findById(resultSet.getLong("time_id"))
                 ), id);
-    }
-
-    public List<Reservation> getReservations() {
-        return jdbcTemplate.query("SELECT \n"
-                        + "    r.id as reservation_id, \n"
-                        + "    r.name, \n"
-                        + "    r.date, \n"
-                        + "    t.id as time_id, \n"
-                        + "    t.start_at as time_value \n"
-                        + "FROM reservation as r \n"
-                        + "inner join reservation_time as t \n"
-                        + "on r.time_id = t.id\n",
-                (resultSet, rowNum) -> new Reservation(
-                        resultSet.getLong("id"),
-                        resultSet.getString("name"),
-                        LocalDate.parse(resultSet.getString("date")),
-                        reservationTimeRepository.findById(resultSet.getLong("time_id"))
-                ));
     }
 
     public void deleteById(final long id) {

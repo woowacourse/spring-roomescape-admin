@@ -31,11 +31,25 @@ public class ReservationTimeService {
     }
 
     public void delete(Long id) {
+        validateNull(id);
+        validateExist(id);
         reservationTimeDao.delete(id);
     }
 
     private ReservationTimeCreateRequestDto getValidatedRequestDto(ReservationTimeCreateRequestDto requestDto) {
         ReservationTime reservationTime = requestDto.toDomain();
         return ReservationTimeCreateRequestDto.from(reservationTime);
+    }
+
+    private void validateNull(Long id) {
+        if (id == null) {
+            throw new IllegalArgumentException("예약 시간 아이디는 비어있을 수 없습니다.");
+        }
+    }
+
+    private void validateExist(Long id) {
+        if (!reservationTimeDao.exist(id)) {
+            throw new IllegalArgumentException("해당 아이디를 가진 예약 시간이 존재하지 않습니다.");
+        }
     }
 }

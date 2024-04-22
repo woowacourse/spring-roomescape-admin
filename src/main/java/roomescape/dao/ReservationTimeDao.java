@@ -49,6 +49,11 @@ public class ReservationTimeDao {
         return Objects.requireNonNull(keyHolder.getKey()).longValue();
     }
 
+    public boolean exist(long id) {
+        String sql = "SELECT CASE WHEN EXISTS (SELECT 1 FROM reservation_time WHERE id = ?) THEN TRUE ELSE FALSE END";
+        return jdbcTemplate.queryForObject(sql, Boolean.class, id);
+    }
+
     public void delete(long id) {
         String sql = "DELETE FROM reservation_time WHERE id = ?";
         jdbcTemplate.update(sql, id);

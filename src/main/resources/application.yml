@@ -10,3 +10,10 @@ spring:
       enabled: true
     restart:
       enabled: true
+
+logging:
+  level:
+    org:
+      springframework:
+        jdbc:
+          core: TRACE

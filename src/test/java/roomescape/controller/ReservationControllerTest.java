@@ -32,13 +32,13 @@ class ReservationControllerTest {
     private MockMvc mvc;
 
     @Autowired
+    private ObjectMapper objectMapper;
+
+    @Autowired
     private ReservationRepository reservationRepository;
 
     @Autowired
     private ReservationTimeRepository reservationTimeRepository;
-
-    @Autowired
-    private ObjectMapper objectMapper;
 
     @DisplayName("[200] GET /reservations")
     @Test
@@ -51,13 +51,14 @@ class ReservationControllerTest {
     @Test
     void add() throws Exception {
         reservationTimeRepository.save(new ReservationTime(LocalTime.of(9, 0)));
-        String savedReservation = objectMapper.writeValueAsString(new ReservationRequest(
+
+        String requestBody = objectMapper.writeValueAsString(new ReservationRequest(
                 "비밥",
                 LocalDate.now().plusDays(1),
                 1L));
 
         this.mvc.perform(post("/reservations")
-                        .content(savedReservation)
+                        .content(requestBody)
                         .contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isCreated());
     }

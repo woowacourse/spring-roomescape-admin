@@ -8,12 +8,14 @@ import org.springframework.cglib.core.Local;
 public class Reservation {
     private final Long id;
     private final String name;
-    private final LocalDateTime time;
+    private final LocalDate date;
+    private final ReservationTime reservationTime;
 
-    public Reservation(Long id, String name, LocalDateTime time) {
+    public Reservation(final Long id, final String name, final LocalDate date, final ReservationTime reservationTime) {
         this.id = id;
         this.name = name;
-        this.time = time;
+        this.date = date;
+        this.reservationTime = reservationTime;
     }
 
     public Long getId() {
@@ -24,11 +26,11 @@ public class Reservation {
         return name;
     }
 
-    public LocalDate getDate(){
-        return time.toLocalDate();
+    public LocalDate getDate() {
+        return date;
     }
 
-    public LocalTime getTime() {
-        return time.toLocalTime();
+    public ReservationTime getReservationTime() {
+        return reservationTime;
     }
 }

@@ -1,4 +1,4 @@
-package roomescape;
+package roomescape.controller;
 
 import java.sql.PreparedStatement;
 import java.time.LocalDate;

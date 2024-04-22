@@ -15,6 +15,7 @@ public class ReservationService {
         this.reservationRepository = reservationRepository;
     }
 
+    //TODO DTO 리턴하도록 변경
     public Reservation createReservation(final ReservationCreateRequest request) {
         final Long id = reservationRepository.save(request);
         return request.toReservation(id);

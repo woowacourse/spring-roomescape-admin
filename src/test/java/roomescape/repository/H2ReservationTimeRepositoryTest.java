@@ -31,10 +31,13 @@ class H2ReservationTimeRepositoryTest {
     @DisplayName("저장된 예약 시간을 조회한다")
     @Test
     void findAll() {
+        reservationTimeRepository.save(new ReservationTime(LocalTime.of(12, 0)));
+        reservationTimeRepository.save(new ReservationTime(LocalTime.of(13, 0)));
+
         List<ReservationTime> reservationTimes = reservationTimeRepository.findAll();
 
         assertThat(reservationTimes.size())
-                .isEqualTo(0);
+                .isEqualTo(2);
     }
 
     @DisplayName("저장된 예약 시간을 삭제한다")

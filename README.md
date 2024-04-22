@@ -8,6 +8,10 @@
 - [x] API 명세를 따라 예약 추가 API 와 삭제 API를 구현한다.
 - [x] 예약 추가와 취소가 잘 동작한다.
 
+### 데이터베이스
+
+- [x] h2 데이터베이스에 데이터를 저장하기 위해 연동한다.
+
 # API 명세
 
 ## 예약 조회 API
@@ -79,3 +83,20 @@
 ### Response
 
 > HTTP/1.1 200
+
+<br>
+
+## 데이터베이스
+
+### 예약
+
+```mysql
+CREATE TABLE reservation
+(
+    id   BIGINT       NOT NULL AUTO_INCREMENT,
+    name VARCHAR(255) NOT NULL,
+    date VARCHAR(255) NOT NULL,
+    time VARCHAR(255) NOT NULL,
+    PRIMARY KEY (id)
+);
+```

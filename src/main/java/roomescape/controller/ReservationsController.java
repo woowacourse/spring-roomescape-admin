@@ -1,6 +1,5 @@
 package roomescape.controller;
 
-import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import roomescape.domain.Reservation;
 import roomescape.domain.ReservationRequestDto;
@@ -17,28 +16,26 @@ public class ReservationsController {
     private final AtomicLong id = new AtomicLong(1);
 
     @GetMapping("reservations")
-    public ResponseEntity<List<ReservationResponseDto>> read() {
-        List<ReservationResponseDto> dtos = reservations.stream()
+    public List<ReservationResponseDto> read() {
+        return reservations.stream()
                 .map(ReservationResponseDto::toDto)
                 .toList();
-        return ResponseEntity.ok().body(dtos);
     }
 
     @PostMapping("reservations")
-    public ResponseEntity<ReservationResponseDto> create(@RequestBody ReservationRequestDto reservationRequestDto) {
+    public ReservationResponseDto create(@RequestBody ReservationRequestDto reservationRequestDto) {
         Reservation newReservation = reservationRequestDto.toReservation(id.getAndIncrement());
         reservations.add(newReservation);
-        return ResponseEntity.ok().body(ReservationResponseDto.toDto(newReservation));
+        return ReservationResponseDto.toDto(newReservation);
     }
 
     @DeleteMapping("/reservations/{id}")
-    public ResponseEntity<Void> delete(@PathVariable Long id) {
+    public void delete(@PathVariable Long id) {
         Reservation reservation = reservations.stream()
                 .filter(target -> Objects.equals(target.getId(), id))
                 .findFirst()
                 .orElseThrow(RuntimeException::new);
 
         reservations.remove(reservation);
-        return ResponseEntity.ok().build();
     }
 }

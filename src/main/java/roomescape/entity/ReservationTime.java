@@ -5,13 +5,13 @@ import java.time.LocalDateTime;
 import java.time.LocalTime;
 
 public class ReservationTime {
-    private static final int RESERVATION_DURATION_HOUR = 1;
+    public static final int RESERVATION_DURATION_HOUR = 1;
 
-    private final LocalDateTime startTime;
+    private final LocalDateTime start;
 
-    public ReservationTime(LocalDateTime startTime) {
-        validateNonNull(startTime);
-        this.startTime = startTime;
+    public ReservationTime(LocalDateTime start) {
+        validateNonNull(start);
+        this.start = start;
     }
 
     private void validateNonNull(LocalDateTime startTime) {
@@ -21,19 +21,23 @@ public class ReservationTime {
     }
 
     public boolean isConflictWith(ReservationTime other) {
-        boolean noConflict = endTime().isBefore(other.startTime) || startTime.isAfter(other.endTime());
+        boolean noConflict = getEndDateTime().isBefore(other.start) || start.isAfter(other.getEndDateTime());
         return !noConflict;
     }
 
-    private LocalDateTime endTime() {
-        return startTime.plusHours(RESERVATION_DURATION_HOUR);
+    public LocalDateTime getStartDateTime() {
+        return start;
+    }
+
+    public LocalDateTime getEndDateTime() {
+        return start.plusHours(RESERVATION_DURATION_HOUR);
     }
 
     public LocalDate getStartDate() {
-        return startTime.toLocalDate();
+        return start.toLocalDate();
     }
 
-    public LocalTime getStartTime() {
-        return startTime.toLocalTime();
+    public LocalTime getStart() {
+        return start.toLocalTime();
     }
 }

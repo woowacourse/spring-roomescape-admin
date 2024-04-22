@@ -170,4 +170,23 @@ public class ReservationControllerTest {
                 .statusCode(200)
                 .body("size()", is(1));
     }
+
+    @DisplayName("예약 시간을 삭제할 수 있습니다.")
+    @Test
+    void should_remove_reservation_time_list_in_db() {
+        Map<String, String> params = new HashMap<>();
+        params.put("startAt", "10:00");
+
+        RestAssured.given().log().all()
+                .contentType(ContentType.JSON)
+                .body(params)
+                .when().post("/times")
+                .then().log().all()
+                .statusCode(200);
+
+        RestAssured.given().log().all()
+                .when().delete("/times/1")
+                .then().log().all()
+                .statusCode(200);
+    }
 }

@@ -117,4 +117,12 @@ public class ReservationController {
                     return reservationTime;
                 });
     }
+
+    @DeleteMapping("/times/{id}")
+    public ResponseEntity<Void> deleteReservationTime(@PathVariable("id") Long id) {
+        if (jdbcTemplate.update("delete from reservation_time where id = ?", id) > 0) {
+            return ResponseEntity.ok().build();
+        }
+        return ResponseEntity.notFound().build();
+    }
 }

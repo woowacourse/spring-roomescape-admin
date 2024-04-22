@@ -10,12 +10,12 @@ public class ReservationCreationDto {
 
     private final String name;
     private final LocalDate date;
-    private final TimeSlotDto time;
+    private final TimeSlotDto timeSlotDto;
 
     public ReservationCreationDto(String name, LocalDate date, TimeSlotDto timeSlotDto) {
         this.name = name;
         this.date = date;
-        this.time = timeSlotDto;
+        this.timeSlotDto = timeSlotDto;
     }
 
     public ReservationCreationDto(String name, String date, TimeSlotDto timeSlotDto) {
@@ -25,17 +25,17 @@ public class ReservationCreationDto {
     public static ReservationCreationDto from(Reservation reservation) {
         Name name = reservation.getName();
         ReservationDate date = reservation.getReservationDate();
-        TimeSlot time = reservation.getReservationTime();
+        TimeSlot timeSlot = reservation.getTimeSlot();
 
         return new ReservationCreationDto(
                 name.asText(),
                 date.getDate(),
-                TimeSlotDto.from(time)
+                TimeSlotDto.from(timeSlot)
         );
     }
 
     public Reservation toEntity(Long id) {
-        return new Reservation(id, name, date, time.toEntity());
+        return new Reservation(id, name, date, timeSlotDto.toEntity());
     }
 
     public String getName() {
@@ -47,6 +47,6 @@ public class ReservationCreationDto {
     }
 
     public Long getTimeId() {
-        return time.getId();
+        return timeSlotDto.getId();
     }
 }

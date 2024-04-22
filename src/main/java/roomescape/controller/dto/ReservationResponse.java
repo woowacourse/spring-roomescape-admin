@@ -11,7 +11,7 @@ public record ReservationResponse(Long id, String name, LocalDate date, TimeSlot
     public static ReservationResponse from(Reservation reservation) {
         Name name = reservation.getName();
         ReservationDate reservationDate = reservation.getReservationDate();
-        TimeSlot timeSlot = reservation.getReservationTime();
+        TimeSlot timeSlot = reservation.getTimeSlot();
         return new ReservationResponse(
                 reservation.getId(),
                 name.asText(),

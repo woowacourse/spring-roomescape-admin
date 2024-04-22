@@ -19,30 +19,32 @@ import roomescape.db.ReservationRepository;
 import roomescape.domain.Reservation;
 import roomescape.dto.ReservationRequest;
 import roomescape.dto.ReservationResponse;
+import roomescape.service.ReservationService;
 
-@Controller
+@RestController
+@RequestMapping("/reservations")
 public class ReservationController {
 
     @Autowired
-    ReservationRepository reservationRepository;
+    ReservationService reservationService;
 
-    @GetMapping("/reservations")
+    @GetMapping
     public ResponseEntity<List<ReservationResponse>> getReservations() {
-        List<Reservation> reservations = reservationRepository.getReservations();
+        List<Reservation> reservations = reservationService.getReservations();
         return ResponseEntity.ok().body(reservations.stream().map(ReservationResponse::from).toList());
     }
 
-    @PostMapping("/reservations")
+    @PostMapping
     public ResponseEntity<ReservationResponse> createReservation(@RequestBody ReservationRequest reservationRequest) {
-        Long id = reservationRepository.createReservation(reservationRequest);
+        Long id = reservationService.createReservation(reservationRequest);
         return ResponseEntity.status(201)
                 .header("Location", "/reservations/" + id)
-                .body(ReservationResponse.from(reservationRepository.findById(id)));
+                .body(ReservationResponse.from(reservationService.findById(id)));
     }
 
-    @DeleteMapping("/reservations/{id}")
+    @DeleteMapping("/{id}")
     public ResponseEntity<Void> deleteReservation(@PathVariable long id) {
-        reservationRepository.deleteById(id);
+        reservationService.deleteById(id);
         return ResponseEntity.status(204).header("Location", "/reservations/" + id).build();
     }
 }

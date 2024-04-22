@@ -6,6 +6,7 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
 import roomescape.domain.ReservationTime;
 import roomescape.dto.ReservationTimeResponse;
 
@@ -26,16 +27,5 @@ public class AdminController {
     @GetMapping("/time")
     public String getTime() {
         return "admin/time";
-    }
-
-
-    @PostMapping("/times")
-    public ResponseEntity<Void> createTime() {
-        return ResponseEntity.ok().build();
-    }
-
-    @GetMapping("/times")
-    public ResponseEntity<ReservationTimeResponse> getTimes() {
-        return null;
     }
 }

@@ -9,10 +9,11 @@ document.addEventListener('DOMContentLoaded', () => {
       .catch(error => console.error('Error fetching reservations:', error));
 });
 
-function render(data) {
+// ReservationResponseDto 파싱 작업
+function render(target) {
+  const data = target.reservations;
   const tableBody = document.getElementById('table-body');
   tableBody.innerHTML = '';
-
   data.forEach(item => {
     const row = tableBody.insertRow();
 

@@ -47,7 +47,7 @@ public class ReservationController {
         Reservation createdReservation = reservationService.findReservationById(createdReservationId).get();
 
         return ResponseEntity.status(HttpStatus.OK)
-                //.header("Location", "/reservations/" + createdReservationId)
+                .header("Location", "/reservations/" + createdReservationId)
                 .body(ReservationCreateResponse.of(createdReservation));
     }
 

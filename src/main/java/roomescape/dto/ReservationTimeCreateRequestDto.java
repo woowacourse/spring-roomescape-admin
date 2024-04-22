@@ -3,6 +3,7 @@ package roomescape.dto;
 import com.fasterxml.jackson.annotation.JsonCreator;
 import java.util.Objects;
 import roomescape.domain.reservationtime.ReservationTime;
+import roomescape.domain.reservationtime.StartAt;
 
 public class ReservationTimeCreateRequestDto {
 
@@ -18,9 +19,8 @@ public class ReservationTimeCreateRequestDto {
     }
 
     public static ReservationTimeCreateRequestDto from(ReservationTime reservationTime) {
-        return new ReservationTimeCreateRequestDto(
-                reservationTime.getStartAt().toStringTime()
-        );
+        StartAt startAt = reservationTime.getStartAt();
+        return new ReservationTimeCreateRequestDto(startAt.toStringTime());
     }
 
     public ReservationTime toDomain() {

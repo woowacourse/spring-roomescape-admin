@@ -1,6 +1,9 @@
 package roomescape.dao;
 
+import java.sql.Connection;
 import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
 import java.util.List;
 import java.util.Objects;
 import org.springframework.jdbc.core.JdbcTemplate;
@@ -23,10 +26,7 @@ public class ReservationTimeDao {
         String sql = "SELECT id, start_at FROM reservation_time";
         return jdbcTemplate.query(
                 sql,
-                (resultSet, rowNum) -> ReservationTime.of(
-                        resultSet.getLong("id"),
-                        resultSet.getString("start_at")
-                )
+                (resultSet, rowNum) -> getReservationTime(resultSet)
         );
     }
 
@@ -34,23 +34,16 @@ public class ReservationTimeDao {
         String sql = "SELECT id, start_at FROM reservation_time WHERE id = ?";
         return jdbcTemplate.queryForObject(
                 sql,
-                (resultSet, rowNum) -> ReservationTime.of(
-                        resultSet.getLong("id"),
-                        resultSet.getString("start_at")
-                ),
-                id);
+                (resultSet, rowNum) -> getReservationTime(resultSet),
+                id
+        );
     }
 
     public long add(ReservationTimeCreateRequestDto requestDto) {
         String sql = "INSERT INTO reservation_time (start_at) VALUES (?)";
         KeyHolder keyHolder = new GeneratedKeyHolder();
         jdbcTemplate.update(
-                connection -> {
-                    PreparedStatement preparedStatement
-                            = connection.prepareStatement(sql, new String[]{"id"});
-                    preparedStatement.setString(1, requestDto.getStartAt());
-                    return preparedStatement;
-                },
+                connection -> getPreparedStatement(requestDto, connection, sql),
                 keyHolder
         );
         return Objects.requireNonNull(keyHolder.getKey()).longValue();
@@ -59,5 +52,20 @@ public class ReservationTimeDao {
     public void delete(long id) {
         String sql = "DELETE FROM reservation_time WHERE id = ?";
         jdbcTemplate.update(sql, id);
+    }
+
+    private ReservationTime getReservationTime(ResultSet resultSet) throws SQLException {
+        return ReservationTime.of(
+                resultSet.getLong("id"),
+                resultSet.getString("start_at")
+        );
+    }
+
+    private PreparedStatement getPreparedStatement(ReservationTimeCreateRequestDto requestDto,
+                                                   Connection connection,
+                                                   String sql) throws SQLException {
+        PreparedStatement preparedStatement = connection.prepareStatement(sql, new String[]{"id"});
+        preparedStatement.setString(1, requestDto.getStartAt());
+        return preparedStatement;
     }
 }

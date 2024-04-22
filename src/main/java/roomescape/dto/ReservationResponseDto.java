@@ -2,6 +2,7 @@ package roomescape.dto;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 import java.util.Objects;
+import roomescape.domain.reservation.Date;
 import roomescape.domain.reservation.Reservation;
 
 public class ReservationResponseDto {
@@ -15,18 +16,19 @@ public class ReservationResponseDto {
     private ReservationResponseDto(Long id,
                                    String name,
                                    String date,
-                                   ReservationTimeResponseDto timeResponseDto) {
+                                   ReservationTimeResponseDto reservationTimeResponseDto) {
         this.id = id;
         this.name = name;
         this.date = date;
-        this.reservationTimeResponseDto = timeResponseDto;
+        this.reservationTimeResponseDto = reservationTimeResponseDto;
     }
 
     public static ReservationResponseDto of(Reservation reservation) {
+        Date date = reservation.getDate();
         return new ReservationResponseDto(
                 reservation.getId(),
                 reservation.getName(),
-                reservation.getDate().toStringDate(),
+                date.toStringDate(),
                 ReservationTimeResponseDto.from(reservation.getReservationTime())
         );
     }

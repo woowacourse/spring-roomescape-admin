@@ -2,6 +2,7 @@ package roomescape.dto;
 
 import java.util.Objects;
 import roomescape.domain.reservationtime.ReservationTime;
+import roomescape.domain.reservationtime.StartAt;
 
 public class ReservationTimeResponseDto {
 
@@ -14,9 +15,10 @@ public class ReservationTimeResponseDto {
     }
 
     public static ReservationTimeResponseDto from(ReservationTime time) {
+        StartAt startAt = time.getStartAt();
         return new ReservationTimeResponseDto(
                 time.getId(),
-                time.getStartAt().toStringTime()
+                startAt.toStringTime()
         );
     }
 

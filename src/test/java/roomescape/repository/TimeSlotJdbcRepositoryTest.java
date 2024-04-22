@@ -13,7 +13,6 @@ import org.springframework.boot.test.autoconfigure.jdbc.JdbcTest;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.simple.SimpleJdbcInsert;
 import roomescape.domain.TimeSlot;
-import roomescape.service.dto.TimeSlotDto;
 
 @JdbcTest
 class TimeSlotJdbcRepositoryTest {
@@ -36,9 +35,9 @@ class TimeSlotJdbcRepositoryTest {
     @DisplayName("시간 등록이 DB에 반영된다.")
     void createTest() {
         // given
-        TimeSlotDto dto = new TimeSlotDto(LocalTime.parse("13:00"));
+        TimeSlot timeSlot = new TimeSlot("11:00");
         // when
-        timeSlotRepository.create(dto);
+        timeSlotRepository.create(timeSlot);
         // then
         assertThat(databaseRowCount()).isEqualTo(1);
     }

@@ -29,6 +29,10 @@ public class TimeSlot {
         return time;
     }
 
+    public TimeSlot withId(long id) {
+        return new TimeSlot(id, time);
+    }
+
     @Override
     public boolean equals(Object o) {
         if (this == o) {

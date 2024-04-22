@@ -11,7 +11,6 @@ import org.springframework.jdbc.core.simple.SimpleJdbcInsert;
 import org.springframework.stereotype.Repository;
 import roomescape.domain.TimeSlot;
 import roomescape.repository.rowmapper.TimeSlotRowMapper;
-import roomescape.service.dto.TimeSlotDto;
 
 @Repository
 public class TimeSlotJdbcRepository implements TimeSlotRepository {
@@ -28,12 +27,12 @@ public class TimeSlotJdbcRepository implements TimeSlotRepository {
     }
 
     @Override
-    public TimeSlot create(TimeSlotDto timeSlotDto) {
+    public TimeSlot create(TimeSlot timeSlot) {
         Map<String, ? extends Serializable> parameters = Map.of(
-                "start_at", timeSlotDto.getTime()
+                "start_at", timeSlot.getTime()
         );
         Number key = jdbcInsert.executeAndReturnKey(parameters);
-        return timeSlotDto.toEntity(key.longValue());
+        return timeSlot.withId(key.longValue());
     }
 
     @Override

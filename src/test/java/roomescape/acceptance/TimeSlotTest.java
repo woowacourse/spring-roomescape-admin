@@ -14,7 +14,6 @@ import roomescape.controller.dto.TimeSlotCreationRequest;
 import roomescape.controller.dto.TimeSlotCreationResponse;
 import roomescape.domain.TimeSlot;
 import roomescape.repository.TimeSlotRepository;
-import roomescape.service.dto.TimeSlotDto;
 
 class TimeSlotTest extends AcceptanceTest {
 
@@ -46,8 +45,8 @@ class TimeSlotTest extends AcceptanceTest {
     @DisplayName("등록된 모든 시각을 조회한다.")
     void getAllTimeTest() {
         List.of(
-                new TimeSlotDto(1L, "13:00"),
-                new TimeSlotDto(2L, "14:00")
+                new TimeSlot("13:00"),
+                new TimeSlot("14:00")
         ).forEach(timeSlotRepository::create);
 
         RestAssured.given().log().all()
@@ -59,11 +58,10 @@ class TimeSlotTest extends AcceptanceTest {
     @Test
     @DisplayName("id를 사용해 시각을 삭제한다.")
     void deleteByIdTest() {
-        TimeSlotDto timeSlotDto = new TimeSlotDto(1L, "13:00");
-        Long id = timeSlotRepository.create(timeSlotDto).getId();
+        TimeSlot timeSlot = timeSlotRepository.create(new TimeSlot("13:00"));
 
         RestAssured.given().log().all()
-                .when().delete("/times/" + id)
+                .when().delete("/times/" + timeSlot.getId())
                 .then().log().all()
                 .statusCode(204);
 

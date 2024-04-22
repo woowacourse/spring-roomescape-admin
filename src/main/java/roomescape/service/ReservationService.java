@@ -12,7 +12,6 @@ import roomescape.domain.Reservation;
 import roomescape.domain.TimeSlot;
 import roomescape.repository.ReservationRepository;
 import roomescape.repository.TimeSlotRepository;
-import roomescape.service.dto.ReservationCreationDto;
 
 @Service
 public class ReservationService {
@@ -42,8 +41,7 @@ public class ReservationService {
         validateRequestDateAfterCurrentTime(LocalDate.parse(request.date()), timeSlot.getTime());
 
         Reservation reservation = request.toEntity(timeSlot);
-        ReservationCreationDto creationDto = ReservationCreationDto.from(reservation);
-        Reservation savedReservation = reservationRepository.addReservation(creationDto);
+        Reservation savedReservation = reservationRepository.addReservation(reservation);
         return ReservationResponse.from(savedReservation);
     }
 

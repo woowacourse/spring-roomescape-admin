@@ -7,7 +7,6 @@ import roomescape.controller.dto.TimeSlotCreationRequest;
 import roomescape.controller.dto.TimeSlotCreationResponse;
 import roomescape.domain.TimeSlot;
 import roomescape.repository.TimeSlotRepository;
-import roomescape.service.dto.TimeSlotDto;
 
 @Service
 public class TimeSlotService {
@@ -27,9 +26,8 @@ public class TimeSlotService {
 
     public TimeSlotCreationResponse addTime(TimeSlotCreationRequest request) {
         TimeSlot timeSlot = request.toEntity();
-        TimeSlotDto dto = TimeSlotDto.from(timeSlot);
-        validateUniqueTime(dto.getTime());
-        TimeSlot newTimeSlot = timeSlotRepository.create(dto);
+        validateUniqueTime(timeSlot.getTime());
+        TimeSlot newTimeSlot = timeSlotRepository.create(timeSlot);
         return TimeSlotCreationResponse.from(newTimeSlot);
     }
 

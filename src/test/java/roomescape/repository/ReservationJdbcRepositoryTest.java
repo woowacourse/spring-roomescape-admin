@@ -2,7 +2,6 @@ package roomescape.repository;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
-import java.time.LocalTime;
 import java.util.List;
 import java.util.Map;
 import org.junit.jupiter.api.DisplayName;
@@ -12,8 +11,7 @@ import org.springframework.boot.test.autoconfigure.jdbc.JdbcTest;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.simple.SimpleJdbcInsert;
 import roomescape.domain.Reservation;
-import roomescape.service.dto.ReservationCreationDto;
-import roomescape.service.dto.TimeSlotDto;
+import roomescape.domain.TimeSlot;
 
 @JdbcTest
 class ReservationJdbcRepositoryTest {
@@ -38,13 +36,10 @@ class ReservationJdbcRepositoryTest {
     @DisplayName("예약 추가가 DB에 올바르게 반영된다.")
     void addReservationTest() {
         // given
-        TimeSlotDto timeSlotDto = new TimeSlotDto(1L, LocalTime.parse("12:00"));
-        Long timeId = timeSlotRepository.create(timeSlotDto)
-                .getId();
-        ReservationCreationDto dto = new ReservationCreationDto("브라운", "2023-08-05",
-                new TimeSlotDto(timeId, "12:00"));
+        TimeSlot timeSlot = timeSlotRepository.create(new TimeSlot("12:00"));
+        Reservation reservation = new Reservation("웨지", "2024-04-21", timeSlot);
         // when
-        reservationRepository.addReservation(dto);
+        reservationRepository.addReservation(reservation);
         // then
         assertThat(databaseRowCount()).isEqualTo(1);
     }
@@ -72,13 +67,11 @@ class ReservationJdbcRepositoryTest {
     }
 
     private Long createReservationAndReturnId() {
-        TimeSlotDto timeSlotDto = new TimeSlotDto(1L, LocalTime.parse("12:00"));
-        Long timeId = timeSlotRepository.create(timeSlotDto)
-                .getId();
+        TimeSlot timeSlot = timeSlotRepository.create(new TimeSlot("12:00"));
         return reservationJdbcInsert.executeAndReturnKey(Map.of(
                 "name", "웨지",
                 "date", "2024-04-21",
-                "time_slot_id", timeId
+                "time_slot_id", timeSlot.getId()
         )).longValue();
     }
 

@@ -13,10 +13,9 @@ import roomescape.config.TestConfig;
 import roomescape.controller.dto.ReservationRequest;
 import roomescape.controller.dto.ReservationResponse;
 import roomescape.domain.Reservation;
+import roomescape.domain.TimeSlot;
 import roomescape.repository.ReservationRepository;
 import roomescape.repository.TimeSlotRepository;
-import roomescape.service.dto.ReservationCreationDto;
-import roomescape.service.dto.TimeSlotDto;
 
 @SpringBootTest(
         classes = TestConfig.class,
@@ -44,8 +43,8 @@ class ReservationServiceTest {
     @DisplayName("예약을 추가한다.")
     void scheduleReservationTest() {
         // given
-        Long timeId = createTimeAndReturnId();
-        ReservationRequest request = new ReservationRequest("브라운", "2023-08-05", timeId);
+        TimeSlot timeSlot = createTimeSlot();
+        ReservationRequest request = new ReservationRequest("브라운", "2023-08-05", timeSlot.getId());
         // when
         ReservationResponse response = reservationService.scheduleReservation(request);
         // then
@@ -68,8 +67,8 @@ class ReservationServiceTest {
     @DisplayName("과거의 시간을 예약하는 경우, 예외를 발생한다.")
     void createPastReservationTest() {
         // given
-        Long timeId = createTimeAndReturnId();
-        ReservationRequest request = new ReservationRequest("아루", "1999-05-04", timeId);
+        TimeSlot timeSlot = createTimeSlot();
+        ReservationRequest request = new ReservationRequest("아루", "1999-05-04", timeSlot.getId());
         // when, then
         assertThatThrownBy(() -> reservationService.scheduleReservation(request))
                 .isInstanceOf(IllegalArgumentException.class)
@@ -81,11 +80,11 @@ class ReservationServiceTest {
     @DisplayName("모든 예약을 조회한다.")
     void getAllReservationsTest() {
         // given
-        Long timeId = createTimeAndReturnId();
-        List<ReservationCreationDto> reservations = List.of(
-                new ReservationCreationDto("웨지", "2024-04-17", new TimeSlotDto(timeId, "13:00")),
-                new ReservationCreationDto("아루", "2023-04-18", new TimeSlotDto(timeId, "13:00")),
-                new ReservationCreationDto("브리", "2023-04-19", new TimeSlotDto(timeId, "13:00"))
+        TimeSlot timeSlot = createTimeSlot();
+        List<Reservation> reservations = List.of(
+                new Reservation("브라운", "2023-08-05", timeSlot),
+                new Reservation("코니", "2023-08-06", timeSlot),
+                new Reservation("제이지", "2023-08-07", timeSlot)
         );
         reservations.forEach(reservationRepository::addReservation);
         // when
@@ -98,9 +97,10 @@ class ReservationServiceTest {
     @DisplayName("취소할 때, id에 해당하는 예약이 존재한다면 성공적으로 취소한다.")
     void cancelReservationTest() {
         // given
-        Long timeId = createTimeAndReturnId();
+        TimeSlot timeSlot = createTimeSlot();
         Reservation reservation = reservationRepository.addReservation(
-                new ReservationCreationDto("웨지", "2024-04-17", new TimeSlotDto(timeId, "13:00")));
+            new Reservation("웨지", "2024-04-22", timeSlot)
+        );
         // when
         reservationService.cancelReservation(reservation.getId());
         List<Reservation> actual = reservationRepository.findAll();
@@ -108,10 +108,7 @@ class ReservationServiceTest {
         assertThat(actual).isEmpty();
     }
 
-
-    private Long createTimeAndReturnId() {
-        TimeSlotDto dto = new TimeSlotDto(1L, "13:00");
-        return timeSlotRepository.create(dto)
-                .getId();
+    private TimeSlot createTimeSlot() {
+        return timeSlotRepository.create(new TimeSlot("12:00"));
     }
 }

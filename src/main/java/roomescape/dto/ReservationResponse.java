@@ -6,7 +6,7 @@ import java.time.LocalTime;
 import roomescape.Reservation;
 
 public record ReservationResponse(
-        int id,
+        long id,
         String name,
         @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd")
         LocalDate date,

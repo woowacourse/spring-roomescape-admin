@@ -19,7 +19,11 @@ public class ReservationTime {
         this(id, reservationTime.time);
     }
 
-    public ReservationTime(final String time) {
+    public ReservationTime(long id, String time) {
+        this(id, LocalTime.parse(time));
+    }
+
+    public ReservationTime(String time) {
         this(NO_ID, LocalTime.parse(time));
     }
 

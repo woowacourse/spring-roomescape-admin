@@ -1,6 +1,5 @@
 package roomescape.dao;
 
-import org.springframework.stereotype.Repository;
 import roomescape.domain.ReservationTime;
 
 import java.util.Collections;
@@ -8,7 +7,6 @@ import java.util.List;
 import java.util.concurrent.CopyOnWriteArrayList;
 import java.util.concurrent.atomic.AtomicLong;
 
-@Repository
 public class FakeReservationTimeRepository implements ReservationTimeRepository {
     private final AtomicLong id = new AtomicLong(1);
     private final List<ReservationTime> reservationTimes = new CopyOnWriteArrayList<>();

@@ -3,19 +3,19 @@ package roomescape.dao;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.simple.SimpleJdbcInsert;
 import org.springframework.stereotype.Repository;
-import roomescape.domain.Reservation;
+import roomescape.domain.ReservationTime;
 
 import java.util.List;
 import java.util.Map;
 
 @Repository
-public class ReservationJDBCRepository implements ReservationRepository {
-    private static final String TABLE_NAME = "reservation";
+public class ReservationTimeJDBCRepository implements ReservationTimeRepository {
+    private static final String TABLE_NAME = "reservation_time";
 
     private final JdbcTemplate jdbcTemplate;
     private final SimpleJdbcInsert simpleJdbcInsert;
 
-    public ReservationJDBCRepository(JdbcTemplate jdbcTemplate) {
+    public ReservationTimeJDBCRepository(JdbcTemplate jdbcTemplate) {
         this.jdbcTemplate = jdbcTemplate;
         this.simpleJdbcInsert = new SimpleJdbcInsert(jdbcTemplate)
                 .withTableName(TABLE_NAME)
@@ -23,40 +23,36 @@ public class ReservationJDBCRepository implements ReservationRepository {
     }
 
     @Override
-    public List<Reservation> findAll() {
-        String sql = "SELECT * FROM Reservation";
-        List<Reservation> reservations = jdbcTemplate.query(sql,
+    public List<ReservationTime> findAll() {
+        String sql = "SELECT * FROM reservation_time";
+        List<ReservationTime> reservationTimes = jdbcTemplate.query(sql,
                 (resultSet, rowNum) -> {
-                    Reservation reservation = new Reservation(
+                    ReservationTime reservationTime = new ReservationTime(
                             resultSet.getLong("id"),
-                            resultSet.getString("name"),
-                            resultSet.getString("date"),
-                            resultSet.getString("time")
+                            resultSet.getString("start_at")
                     );
-                    return reservation;
+                    return reservationTime;
                 });
-        return reservations;
+        return reservationTimes;
     }
 
     @Override
-    public Reservation save(final Reservation reservation) {
+    public ReservationTime save(final ReservationTime reservationTime) {
         Map<String, String> params = Map.of(
-                "name", reservation.getName(),
-                "date", reservation.getDate(),
-                "time", reservation.getTime());
+                "start_at", reservationTime.getTime());
         long id = simpleJdbcInsert.executeAndReturnKey(params).longValue();
-        return new Reservation(id, reservation);
+        return new ReservationTime(id, reservationTime);
     }
 
     @Override
     public boolean existsById(final long id) {
-        String sql = "SELECT EXISTS(SELECT 1 FROM Reservation WHERE id = ?)";
+        String sql = "SELECT EXISTS(SELECT 1 FROM reservation_time WHERE id = ?)";
         return jdbcTemplate.queryForObject(sql, Boolean.class, id);
     }
 
     @Override
     public void deleteById(final long id) {
-        String sql = "DELETE FROM Reservation WHERE id = ?";
+        String sql = "DELETE FROM reservation_time WHERE id = ?";
         jdbcTemplate.update(sql, id);
     }
 }

@@ -55,7 +55,7 @@ public class ReservationController {
     }
 
     @DeleteMapping("/{id}")
-    public ResponseEntity<Void> deleteReservation(@PathVariable(name = "id") long id) {
+    public ResponseEntity<Void> deleteReservation(@PathVariable long id) {
         String sql = "DELETE FROM reservation WHERE id = ?";
         jdbcTemplate.update(sql, id);
         return ResponseEntity.status(HttpStatus.NO_CONTENT).build();

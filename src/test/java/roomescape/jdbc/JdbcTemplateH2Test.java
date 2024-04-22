@@ -5,6 +5,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 import java.sql.Connection;
 import java.sql.SQLException;
 import java.util.List;
+import java.util.Objects;
 
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -24,7 +25,7 @@ class JdbcTemplateH2Test {
 
     @Test
     void connect() {
-        try (Connection connection = jdbcTemplate.getDataSource().getConnection()) {
+        try (Connection connection = Objects.requireNonNull(jdbcTemplate.getDataSource()).getConnection()) {
             assertThat(connection).isNotNull();
             assertThat(connection.getCatalog()).isEqualTo("DATABASE");
             assertThat(connection.getMetaData().getTables(null, null, "RESERVATION", null).next()).isTrue();

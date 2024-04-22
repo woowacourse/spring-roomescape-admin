@@ -31,11 +31,19 @@ public class Reservation {
         return name.getName();
     }
 
+    public LocalDateTime getStartDateTime() {
+        return time.getStartDateTime();
+    }
+
+    public LocalDateTime getEndDateTime() {
+        return time.getEndDateTime();
+    }
+
     public LocalDate getStartDate() {
         return time.getStartDate();
     }
 
     public LocalTime getStartTime() {
-        return time.getStartTime();
+        return time.getStart();
     }
 }

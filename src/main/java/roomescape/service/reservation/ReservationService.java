@@ -1,6 +1,7 @@
 package roomescape.service.reservation;
 
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import roomescape.domain.Reservation;
 import roomescape.dto.reservation.request.ReservationRequestDto;
 import roomescape.dto.reservation.response.ReservationResponseDto;
@@ -17,6 +18,7 @@ public class ReservationService {
         this.reservationRepository = reservationRepository;
     }
 
+    @Transactional(readOnly = true)
     public ReservationsResponseDto findAllReservation() {
         List<ReservationResponseDto> response = reservationRepository.findAll().stream()
                 .map(r -> new ReservationResponseDto(r.getId(), r.getName(), r.getDate(), r.getTime()))
@@ -25,6 +27,7 @@ public class ReservationService {
         return new ReservationsResponseDto(response);
     }
 
+    @Transactional
     public ReservationResponseDto addReservation(final ReservationRequestDto request) {
         Reservation reservation = reservationRepository.insert(new Reservation(request.name(), request.date(), request.time()));
 
@@ -32,6 +35,7 @@ public class ReservationService {
                 reservation.getId(), reservation.getName(), reservation.getDate(), reservation.getTime());
     }
 
+    @Transactional
     public void deleteReservationById(final Long id) {
         int updateCount = reservationRepository.deleteById(id);
         if (updateCount == 0) {

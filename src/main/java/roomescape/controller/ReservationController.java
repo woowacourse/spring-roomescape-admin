@@ -44,15 +44,17 @@ public class ReservationController {
     }
 
     @PostMapping
-    public ResponseEntity<ReservationCreateRequestDto> create(@RequestBody ReservationCreateRequestDto requestDto) {
+    public ResponseEntity<ReservationResponseDto> create(@RequestBody ReservationCreateRequestDto requestDto) {
         ReservationTime reservationTime = reservationTimeDao.findById(requestDto.getTimeId());
         Reservation reservation = requestDto.toDomain(reservationTime);
-        ReservationCreateRequestDto createRequestDto = ReservationCreateRequestDto.of(reservation,
-                reservationTime);
-        long id = reservationDao.add(createRequestDto);
+        ReservationCreateRequestDto reservationCreateRequestDto
+                = ReservationCreateRequestDto.of(reservation, reservationTime);
+
+        long id = reservationDao.add(reservationCreateRequestDto);
         Reservation result = reservationDao.findById(id);
+        ReservationTimeResponseDto timeResponseDto = ReservationTimeResponseDto.from(reservationTime);
         return ResponseEntity.created(URI.create("/reservations"))
-                .body(ReservationCreateRequestDto.of(result, reservationTime));
+                .body(ReservationResponseDto.of(result, timeResponseDto));
     }
 
     @DeleteMapping("/{id}")

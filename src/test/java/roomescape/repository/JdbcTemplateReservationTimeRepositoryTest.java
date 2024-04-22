@@ -3,17 +3,24 @@ package roomescape.repository;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 
+import java.time.LocalDate;
 import java.time.LocalTime;
 import java.util.List;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
+import roomescape.domain.Name;
+import roomescape.domain.Reservation;
+import roomescape.domain.ReservationRepository;
 import roomescape.domain.ReservationTime;
 import roomescape.domain.ReservationTimeRepository;
 import roomescape.domain.exception.EntityNotFoundException;
 import roomescape.support.IntegrationTestSupport;
 
 class JdbcTemplateReservationTimeRepositoryTest extends IntegrationTestSupport {
+
+    @Autowired
+    private ReservationRepository reservationRepository;
 
     @Autowired
     private ReservationTimeRepository target;
@@ -38,6 +45,17 @@ class JdbcTemplateReservationTimeRepositoryTest extends IntegrationTestSupport {
 
         int rowCount = countRow("reservation_time");
         assertThat(rowCount).isZero();
+    }
+
+    @DisplayName("삭제하려는 예약 시간을 다른 예약에서 사용하고 있다면, 삭제할 수 없다.")
+    @Test
+    void cantDelete() {
+        ReservationTime savedTime = target.save(createReservationTime());
+        reservationRepository.save(createReservation(savedTime));
+
+        assertThatThrownBy(() -> target.deleteBy(savedTime.getId()))
+                .isInstanceOf(IllegalStateException.class)
+                .hasMessage("다른 예약에서 해당 예약 시간을 사용하고 있습니다.");
     }
 
     @DisplayName("모든 예약 시간을 불러올 수 있다.")
@@ -79,5 +97,9 @@ class JdbcTemplateReservationTimeRepositoryTest extends IntegrationTestSupport {
 
     private ReservationTime createReservationTime() {
         return new ReservationTime(LocalTime.now());
+    }
+
+    private Reservation createReservation(ReservationTime reservationTime) {
+        return new Reservation(new Name("아톰"), LocalDate.now(), reservationTime);
     }
 }

@@ -1,0 +1,46 @@
+package roomescape.controller;
+
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.*;
+import roomescape.domain.Reservation;
+import roomescape.dto.ReservationRequest;
+import roomescape.dto.ReservationResponse;
+
+import java.util.ArrayList;
+import java.util.List;
+import java.util.concurrent.atomic.AtomicLong;
+
+@RestController
+@RequestMapping("/reservations")
+public class ReservationController {
+
+    private final AtomicLong id = new AtomicLong(1);
+    private final List<Reservation> reservations = new ArrayList<>();
+
+    @GetMapping
+    public ResponseEntity<List<ReservationResponse>> readReservations() {
+        List<ReservationResponse> reservationResponses = reservations.stream()
+                .map(reservation -> ReservationResponse.from(reservation))
+                .toList();
+
+        return ResponseEntity.ok(reservationResponses);
+    }
+
+    @PostMapping
+    public ResponseEntity<ReservationResponse> createReservation(@RequestBody ReservationRequest reservationRequest) {
+        Reservation reservation = reservationRequest.toReservation(id.getAndIncrement());
+        reservations.add(reservation);
+
+        return ResponseEntity.ok(ReservationResponse.from(reservation));
+    }
+
+    @DeleteMapping("/{id}")
+    public ResponseEntity<Void> deleteReservation(@PathVariable Long id) {
+        boolean isDeleted = reservations.removeIf(reservation -> reservation.getId().equals(id));
+
+        if (isDeleted) {
+            return ResponseEntity.ok().build();
+        }
+        return ResponseEntity.notFound().build();
+    }
+}

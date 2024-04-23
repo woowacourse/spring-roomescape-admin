@@ -16,17 +16,22 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.test.annotation.DirtiesContext;
+import org.springframework.test.annotation.DirtiesContext.ClassMode;
 import roomescape.controller.ReservationController;
 import roomescape.dto.ReservationResponseDto;
 
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.DEFINED_PORT)
-@DirtiesContext(classMode = DirtiesContext.ClassMode.BEFORE_EACH_TEST_METHOD)
+@DirtiesContext(classMode = ClassMode.AFTER_EACH_TEST_METHOD)
 public class MissionStepTest {
 
-    @Autowired
     private JdbcTemplate jdbcTemplate;
-    @Autowired
     private ReservationController reservationController;
+
+    @Autowired
+    public MissionStepTest(JdbcTemplate jdbcTemplate, ReservationController reservationController) {
+        this.jdbcTemplate = jdbcTemplate;
+        this.reservationController = reservationController;
+    }
 
     @Test
     void 일단계() {

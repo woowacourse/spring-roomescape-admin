@@ -2,11 +2,12 @@ package roomescape.domain;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
 import java.time.LocalTime;
+import java.util.Objects;
 
 public class ReservationTime {
 
     private final long id;
-    @JsonFormat(pattern = "HH:mm") // 여기 붙이면 언제 format이 되는거지?
+    @JsonFormat(pattern = "HH:mm") // TODO: 여기 붙이면 언제 format이 되는거지?
     private final LocalTime startAt;
 
     public ReservationTime(final long id, final LocalTime startAt) {
@@ -20,5 +21,22 @@ public class ReservationTime {
 
     public LocalTime getStartAt() {
         return startAt;
+    }
+
+    @Override
+    public boolean equals(final Object o) {
+        if (this == o) {
+            return true;
+        }
+        if (o == null || getClass() != o.getClass()) {
+            return false;
+        }
+        final ReservationTime that = (ReservationTime) o;
+        return id == that.id && Objects.equals(startAt, that.startAt);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(id, startAt);
     }
 }

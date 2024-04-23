@@ -28,7 +28,6 @@ public class ReservatinTest {
     @Autowired
     private ReservationController reservationController;
 
-
     @Test
     void 사단계() {
         try (Connection connection = jdbcTemplate.getDataSource().getConnection()) {

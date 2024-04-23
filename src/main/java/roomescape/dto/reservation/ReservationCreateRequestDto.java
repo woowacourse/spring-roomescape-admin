@@ -10,7 +10,7 @@ public class ReservationCreateRequestDto {
     private final String date;
     private final Long timeId;
 
-    public ReservationCreateRequestDto(String name, String date, Long timeId) {
+    private ReservationCreateRequestDto(String name, String date, Long timeId) {
         this.name = name;
         this.date = date;
         this.timeId = timeId;

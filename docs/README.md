@@ -59,7 +59,7 @@ erDiagram
 
 따라서 현재 상황에서는 컨트롤러에서 리포지토리를 바로 호출하는 것은 괜찮다고 판단하였으며 이것보다 더 중요한 것은 사실 **의존 관계가 한 방향으로만 흐르게 하는 것** 을 집중하려고 합니다.
 
-### 2.Get generated id at inserting data to db
+### 2. Get generated id at inserting data to db
 
 https://docs.spring.io/spring-framework/docs/3.0.x/reference/jdbc.html#jdbc-auto-genereted-keys
 
@@ -121,5 +121,38 @@ public ReservationTime save(ReservationTime time) {
     Long id = simpleJdbcInsert.executeAndReturnKey(params).longValue();
 
     return time.assignId(id);
+}
+```
+
+### 3. DirtiesContext
+
+```java
+
+@DirtiesContext(classMode = DirtiesContext.ClassMode.BEFORE_EACH_TEST_METHOD)
+public class MissionStepTest {
+    // ...
+}
+```
+
+제공된 통합 테스트 `Annotation` 으로 `DirtiesContext` 가 있었습니다.
+
+해당 어노테이션을 통해 각 테스트 메서드를 격리 시킬 수 있었는데 항상 `Spring Context` 를 리로드 한다는 점에서 테스트 메서드 마다 불필요한 리소스를 제거 및 생성을 반복하여 시간도 상당히 오래
+걸렸습니다.
+
+해당 부분이 필요한 점을 보면 데이터베이스 테이블을 지웠다 새로 생성하는 것으로 해결할 수 있겠다 생각이 되었고 `@Sql` 어노테이션을 사용해 보았습니다.
+
+`/test/resources/drop.sql` 에 아래 내용을 담고 있어 테이블을 지우고 이후 `schema.sql` 을 실행시켜 테이블을 재생성 합니다.
+
+```sql
+DROP TABLE IF EXISTS reservation;
+DROP TABLE IF EXISTS reservation_time;
+```
+
+```java
+
+@Sql(scripts = {"/drop.sql", "/schema.sql"},
+        executionPhase = Sql.ExecutionPhase.AFTER_TEST_METHOD)
+public class MissionStepTest {
+    // ...
 }
 ```

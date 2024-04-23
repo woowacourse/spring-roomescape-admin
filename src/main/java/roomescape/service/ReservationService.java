@@ -28,6 +28,7 @@ public class ReservationService {
     }
 
     public ReservationResponseDto add(ReservationCreateRequestDto requestDto) {
+        validateExistReservationTime(requestDto.getTimeId());
         ReservationCreateRequestDto validatedRequestDto = getValidatedRequestDto(requestDto);
         long id = reservationDao.add(validatedRequestDto);
         Reservation result = reservationDao.findById(id);
@@ -36,7 +37,7 @@ public class ReservationService {
 
     public void delete(Long id) {
         validateNull(id);
-        validateExist(id);
+        validateExistReservation(id);
         reservationDao.delete(id);
     }
 
@@ -52,9 +53,15 @@ public class ReservationService {
         }
     }
 
-    private void validateExist(Long id) {
+    private void validateExistReservation(Long id) {
         if (!reservationDao.exist(id)) {
             throw new IllegalArgumentException("해당 아이디를 가진 예약이 존재하지 않습니다.");
+        }
+    }
+
+    private void validateExistReservationTime(Long id) {
+        if (!reservationTimeDao.exist(id)) {
+            throw new IllegalArgumentException("예약 시간 아이디에 해당하는 예약 시간이 존재하지 않습니다.");
         }
     }
 }

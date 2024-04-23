@@ -79,6 +79,20 @@ class ReservationServiceTest {
     }
 
     @Test
+    @DisplayName("존재하지 않는 시간 아이디로 예약 추가시 에외가 발생한다.")
+    void addNotExistTimeId() {
+        //given
+        Long given = -1L;
+        String givenName = "wooteco";
+        String givenDate = "2024-04-23";
+        ReservationCreateRequestDto requestDto = ReservationCreateRequestDto.of(givenName, givenDate, given);
+
+        //when //then
+        assertThatThrownBy(() -> reservationService.add(requestDto))
+                .isInstanceOf(IllegalArgumentException.class);
+    }
+
+    @Test
     @DisplayName("예약을 삭제한다.")
     void delete() {
         //given

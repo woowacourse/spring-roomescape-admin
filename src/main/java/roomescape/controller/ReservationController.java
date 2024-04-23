@@ -1,12 +1,12 @@
 package roomescape.controller;
 
 import org.springframework.http.ResponseEntity;
-import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RestController;
 import roomescape.domain.Reservation;
 import roomescape.service.dto.ReservationResponse;
 import roomescape.service.dto.SaveReservationRequest;
@@ -17,7 +17,7 @@ import roomescape.service.reservation.ReservationFindService;
 import java.net.URI;
 import java.util.List;
 
-@Controller
+@RestController
 public class ReservationController {
 
     private final ReservationFindService reservationFindService;
@@ -30,11 +30,6 @@ public class ReservationController {
         this.reservationFindService = reservationFindService;
         this.reservationCreateService = reservationCreateService;
         this.reservationDeleteService = reservationDeleteService;
-    }
-
-    @GetMapping("/admin/reservation")
-    public String reservationPage() {
-        return "admin/reservation-legacy";
     }
 
     @GetMapping("/reservations")

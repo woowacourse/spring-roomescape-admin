@@ -39,7 +39,7 @@ public class ReservationDao {
         return reservation.toReservation(id);
     }
 
-    public Optional<Reservation> findById(final Long id) {
+    public Optional<Reservation> findById(final long id) {
         try {
             final Reservation reservation = jdbcTemplate.queryForObject(
                     "SELECT id, name, date, time FROM reservation WHERE id = ?",

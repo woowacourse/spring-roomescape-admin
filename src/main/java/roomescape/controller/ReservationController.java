@@ -2,6 +2,7 @@ package roomescape.controller;
 
 import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -30,17 +31,15 @@ public class ReservationController {
     }
 
     @PostMapping("/reservations")
-    public ResponseEntity<ReservationDto> addReservation(@RequestBody ReservationDto reservationDto) {
-        Long savedId = reservationRepository.save(reservationDto.toEntity());
-        Reservation savedReservation = reservationRepository.findById(savedId);
-        ReservationDto reservationResponse = ReservationDto.toDto(savedReservation);
-
-        return ResponseEntity.ok(reservationResponse);
+    public ResponseEntity<Void> addReservation(@RequestBody ReservationDto reservationRequest) {
+        Long savedId = reservationRepository.save(reservationRequest.toEntity());
+        String redirectUrl = "/reservations/" + savedId;
+        return ResponseEntity.status(HttpStatus.CREATED).header("Location", redirectUrl).build();
     }
 
     @DeleteMapping("/reservations/{id}")
     public ResponseEntity<Void> deleteReservation(@PathVariable Long id) {
         reservationRepository.delete(id);
-        return ResponseEntity.ok().build();
+        return ResponseEntity.status(HttpStatus.NO_CONTENT).build();
     }
 }

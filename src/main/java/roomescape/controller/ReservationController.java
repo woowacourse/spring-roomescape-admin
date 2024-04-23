@@ -14,7 +14,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
 import roomescape.data.vo.Reservation;
-import roomescape.data.dto.ReservationRequest;
+import roomescape.data.dto.request.ReservationRequest;
 import roomescape.repository.ReservationRepository;
 
 @RestController
@@ -36,7 +36,7 @@ public class ReservationController {
         Reservation reservation = new Reservation.Builder()
                 .name(reservationRequest.getName())
                 .date(reservationRequest.getDate())
-                .time(reservationRequest.getTime())
+                //.time(reservationRequest.getTime())
                 .build();
 
         final var savedId = reservationRepository.add(reservation);

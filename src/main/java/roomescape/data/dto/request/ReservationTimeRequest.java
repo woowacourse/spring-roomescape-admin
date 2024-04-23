@@ -1,4 +1,4 @@
-package roomescape.data.dto;
+package roomescape.data.dto.request;
 
 import java.time.LocalTime;
 
@@ -9,7 +9,7 @@ public class ReservationTimeRequest {
         startAt = LocalTime.now();
     }
 
-    public ReservationTimeRequest(LocalTime startAt) {
+    public ReservationTimeRequest(final LocalTime startAt) {
         this.startAt = startAt;
     }
 

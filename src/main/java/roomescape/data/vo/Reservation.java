@@ -8,16 +8,16 @@ public class Reservation {
     private final long id;
     private final String name;
     private final LocalDate date;
-    private final LocalTime time;
+    private final ReservationTime time;
 
     private Reservation() {
         this.id = 0;
         this.name = "";
         this.date = LocalDate.now();
-        this.time = LocalTime.now();
+        this.time = new ReservationTime(LocalTime.now());
     }
 
-    private Reservation(final long id, final String name, final LocalDate date, final LocalTime time) {
+    private Reservation(final long id, final String name, final LocalDate date, final ReservationTime time) {
         this.id = id;
         this.name = name;
         this.date = date;
@@ -43,15 +43,19 @@ public class Reservation {
         return date;
     }
 
-    public LocalTime getTime() {
+    public ReservationTime getTime() {
         return time;
+    }
+
+    public long getTimeId() {
+        return this.time.getId();
     }
 
     public static class Builder {
         private long id;
         private String name;
         private LocalDate date;
-        private LocalTime time;
+        private ReservationTime time;
 
         public Builder id(final long id) {
             this.id = id;
@@ -68,7 +72,7 @@ public class Reservation {
             return this;
         }
 
-        public Builder time(final LocalTime time) {
+        public Builder time(final ReservationTime time) {
             this.time = time;
             return this;
         }

@@ -4,7 +4,6 @@ import java.sql.PreparedStatement;
 import java.util.List;
 import java.util.Objects;
 import java.util.Optional;
-import org.springframework.context.annotation.Primary;
 import org.springframework.dao.DuplicateKeyException;
 import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.jdbc.core.JdbcTemplate;
@@ -12,7 +11,6 @@ import org.springframework.jdbc.support.GeneratedKeyHolder;
 import org.springframework.jdbc.support.KeyHolder;
 import org.springframework.stereotype.Repository;
 
-@Primary
 @Repository
 public class H2ReservationRepository implements ReservationRepository {
     private final JdbcTemplate jdbcTemplate;

@@ -1,7 +1,6 @@
 package roomescape.application;
 
 import java.util.List;
-import java.util.Optional;
 import org.springframework.stereotype.Service;
 import roomescape.domain.time.ReservationTime;
 import roomescape.domain.time.repository.ReservationTimeRepository;
@@ -33,10 +32,7 @@ public class ReservationTimeService {
     }
 
     public void delete(long id) {
-        Optional<ReservationTime> reservationTime = reservationTimeRepository.findById(id);
-        if (reservationTime.isEmpty()) {
-            throw new IllegalArgumentException("존재하지 않는 예약 시간입니다.");
-        }
-        reservationTimeRepository.deleteById(id);
+        ReservationTime reservationTime = findReservationTime(id);
+        reservationTimeRepository.deleteById(reservationTime.getId());
     }
 }

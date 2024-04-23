@@ -9,43 +9,33 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
-import roomescape.dao.ReservationTimeDao;
-import roomescape.domain.ReservationTime;
 import roomescape.dto.ReservationTimeRequest;
 import roomescape.dto.ReservationTimeResponse;
-import roomescape.idgenerator.AutoIncrementIdGenerator;
-import roomescape.idgenerator.IdGenerator;
+import roomescape.service.ReservationTimeService;
 
 @RestController
 @RequestMapping("/times")
 public class ReservationTimeController {
-    private final ReservationTimeDao reservationTimeDao;
-    private final IdGenerator idGenerator = new AutoIncrementIdGenerator();
+    private final ReservationTimeService reservationTimeService;
 
-    public ReservationTimeController(ReservationTimeDao reservationTimeDao) {
-        this.reservationTimeDao = reservationTimeDao;
+    public ReservationTimeController(ReservationTimeService reservationTimeService) {
+        this.reservationTimeService = reservationTimeService;
     }
 
     @GetMapping
     public ResponseEntity<List<ReservationTimeResponse>> findAllTimes() {
-        List<ReservationTime> reservationTimes = reservationTimeDao.findAll();
-        return ResponseEntity.ok(reservationTimes.stream()
-                .map(ReservationTimeResponse::new)
-                .toList());
+        return ResponseEntity.ok(reservationTimeService.findAll());
     }
 
     @PostMapping
     public ResponseEntity<ReservationTimeResponse> addTime(
             @RequestBody ReservationTimeRequest reservationTimeRequest) {
-        ReservationTime reservationTime = reservationTimeRequest.toDomain(
-                idGenerator.generateNewId());
-        reservationTimeDao.save(reservationTime);
-        return ResponseEntity.ok(new ReservationTimeResponse(reservationTime));
+        return ResponseEntity.ok(reservationTimeService.save(reservationTimeRequest));
     }
 
     @DeleteMapping("/{id}")
     public ResponseEntity<Void> deleteTime(@PathVariable long id) {
-        boolean isDeleted = reservationTimeDao.deleteById(id);
+        boolean isDeleted = reservationTimeService.deleteById(id);
         if (isDeleted) {
             return ResponseEntity.ok().build();
         }

@@ -3,10 +3,10 @@ package roomescape.dao;
 import java.sql.Time;
 import java.util.List;
 import org.springframework.jdbc.core.JdbcTemplate;
-import org.springframework.stereotype.Component;
+import org.springframework.stereotype.Repository;
 import roomescape.domain.ReservationTime;
 
-@Component
+@Repository
 public class ReservationTimeDaoImpl implements ReservationTimeDao {
     private final JdbcTemplate jdbcTemplate;
 

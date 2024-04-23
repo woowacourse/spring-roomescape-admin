@@ -23,7 +23,11 @@ public class ReservationTimeDao {
     }
 
     public List<ReservationTime> findAll() {
-        String sql = "SELECT id, start_at FROM reservation_time";
+        String sql = """
+                SELECT
+                id, start_at
+                FROM reservation_time
+                """;
         return jdbcTemplate.query(
                 sql,
                 (resultSet, rowNum) -> getReservationTime(resultSet)
@@ -31,7 +35,12 @@ public class ReservationTimeDao {
     }
 
     public ReservationTime findById(long id) {
-        String sql = "SELECT id, start_at FROM reservation_time WHERE id = ?";
+        String sql = """
+                SELECT
+                id, start_at
+                FROM reservation_time
+                WHERE id = ?
+                """;
         return jdbcTemplate.queryForObject(
                 sql,
                 (resultSet, rowNum) -> getReservationTime(resultSet),
@@ -40,7 +49,13 @@ public class ReservationTimeDao {
     }
 
     public long add(ReservationTimeCreateRequestDto requestDto) {
-        String sql = "INSERT INTO reservation_time (start_at) VALUES (?)";
+        String sql = """
+                INSERT
+                INTO reservation_time
+                    (start_at)
+                VALUES
+                    (?)
+                """;
         KeyHolder keyHolder = new GeneratedKeyHolder();
         jdbcTemplate.update(
                 connection -> getPreparedStatement(requestDto, connection, sql),
@@ -50,12 +65,23 @@ public class ReservationTimeDao {
     }
 
     public boolean exist(long id) {
-        String sql = "SELECT CASE WHEN EXISTS (SELECT 1 FROM reservation_time WHERE id = ?) THEN TRUE ELSE FALSE END";
+        String sql = """
+                SELECT
+                CASE
+                    WHEN EXISTS (SELECT 1 FROM reservation_time WHERE id = ?)
+                    THEN TRUE
+                    ELSE FALSE
+                END
+                """;
         return jdbcTemplate.queryForObject(sql, Boolean.class, id);
     }
 
     public void delete(long id) {
-        String sql = "DELETE FROM reservation_time WHERE id = ?";
+        String sql = """
+                DELETE
+                FROM reservation_time
+                WHERE id = ?
+                """;
         jdbcTemplate.update(sql, id);
     }
 

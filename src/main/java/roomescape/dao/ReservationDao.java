@@ -24,41 +24,51 @@ public class ReservationDao {
     }
 
     public List<Reservation> findAll() {
-        String sql = "SELECT "
-                + "r.id AS reservation_id, "
-                + "r.name, "
-                + "r.`date`, "
-                + "t.id AS time_id, "
-                + "t.start_at AS time_value "
-                + "FROM reservation r "
-                + "INNER JOIN reservation_time t "
-                + "ON r.time_id = t.id";
+        String sql = """
+                SELECT
+                    r.id AS reservation_id,
+                    r.name,
+                    r.`date`,
+                    t.id AS time_id,
+                    t.start_at AS time_value
+                FROM reservation r
+                    INNER JOIN reservation_time t
+                    ON r.time_id = t.id;
+                """;
         return jdbcTemplate.query(
                 sql,
-                (resultSet, rowNum) -> getReservation(resultSet)
+                (resultSet, rowNum) -> getReservation(resultSet, getReservationTime(resultSet))
         );
     }
 
     public Reservation findById(long id) {
-        String sql = "SELECT "
-                + "r.id AS reservation_id, "
-                + "r.name, "
-                + "r.`date`, "
-                + "t.id AS time_id, "
-                + "t.start_at AS time_value "
-                + "FROM reservation r "
-                + "INNER JOIN reservation_time t "
-                + "ON r.time_id = t.id "
-                + "WHERE r.id = ?";
+        String sql = """
+                SELECT
+                    r.id AS reservation_id,
+                    r.name,
+                    r.`date`,
+                    t.id AS time_id,
+                    t.start_at AS time_value
+                FROM reservation r
+                    INNER JOIN reservation_time t
+                    ON r.time_id = t.id
+                WHERE r.id = ?
+                """;
         return jdbcTemplate.queryForObject(
                 sql,
-                (resultSet, rowNum) -> getReservation(resultSet),
+                (resultSet, rowNum) -> getReservation(resultSet, getReservationTime(resultSet)),
                 id
         );
     }
 
     public long add(ReservationCreateRequestDto requestDto) {
-        String sql = "INSERT INTO reservation (name, date, time_id) VALUES (?, ?, ?)";
+        String sql = """
+                INSERT
+                INTO reservation
+                    (name, date, time_id)
+                VALUES
+                    (?, ?, ?)
+                """;
         KeyHolder keyHolder = new GeneratedKeyHolder();
         jdbcTemplate.update(
                 connection -> getPreparedStatement(requestDto, connection, sql),
@@ -68,24 +78,39 @@ public class ReservationDao {
     }
 
     public boolean exist(long id) {
-        String sql = "SELECT CASE WHEN EXISTS (SELECT 1 FROM reservation WHERE id = ?) THEN TRUE ELSE FALSE END";
+        String sql = """
+                SELECT
+                CASE
+                    WHEN EXISTS (SELECT 1 FROM reservation WHERE id = ?)
+                    THEN TRUE
+                    ELSE FALSE
+                END
+                """;
         return jdbcTemplate.queryForObject(sql, Boolean.class, id);
     }
 
     public void delete(long id) {
-        String sql = "DELETE FROM reservation WHERE id = ?";
+        String sql = """
+                DELETE
+                FROM reservation
+                WHERE id = ?
+                """;
         jdbcTemplate.update(sql, id);
     }
 
-    private Reservation getReservation(ResultSet resultSet) throws SQLException {
+    private Reservation getReservation(ResultSet resultSet, ReservationTime reservationTime) throws SQLException {
         return Reservation.of(
                 resultSet.getLong("id"),
                 resultSet.getString("name"),
                 resultSet.getString("date"),
-                ReservationTime.of(
-                        resultSet.getLong("time_id"),
-                        resultSet.getString("time_value")
-                )
+                reservationTime
+        );
+    }
+
+    private ReservationTime getReservationTime(ResultSet resultSet) throws SQLException {
+        return ReservationTime.of(
+                resultSet.getLong("time_id"),
+                resultSet.getString("time_value")
         );
     }
 

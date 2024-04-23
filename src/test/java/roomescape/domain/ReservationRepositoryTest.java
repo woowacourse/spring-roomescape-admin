@@ -62,7 +62,7 @@ class ReservationRepositoryTest {
     void create() {
         // given
         ReservationTime reservationTime = new ReservationTime(1, "10:00");
-        Reservation createReservation = new Reservation(0L, "브라운", "2023-08-05", reservationTime);
+        Reservation createReservation = new Reservation(null, "브라운", "2023-08-05", reservationTime);
 
         // when
         reservationRepository.create(createReservation);
@@ -77,10 +77,9 @@ class ReservationRepositoryTest {
     void remove() {
         // given
         long id = 2;
-        Reservation reservation = reservationRepository.findById(id);
 
         // when
-        reservationRepository.remove(reservation);
+        reservationRepository.removeById(id);
 
         // then
         assertThatThrownBy(() -> reservationRepository.findById(id)).isInstanceOf(EmptyResultDataAccessException.class);

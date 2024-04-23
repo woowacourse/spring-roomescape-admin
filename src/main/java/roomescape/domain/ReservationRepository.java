@@ -51,8 +51,8 @@ public class ReservationRepository {
         return findById(id);
     }
 
-    public void remove(Reservation reservation) {
-        jdbcTemplate.update("DELETE FROM reservation WHERE id = ?", reservation.getId());
+    public void removeById(Long id) {
+        jdbcTemplate.update("DELETE FROM reservation WHERE id = ?", id);
     }
 
     private RowMapper<Reservation> reservationRowMapper() {

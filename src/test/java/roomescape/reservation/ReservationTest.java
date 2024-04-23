@@ -33,7 +33,7 @@ public class ReservationTest {
                    .then().log().all()
                    .statusCode(200)
                    .body("size()", is(0));
-        create();
+        save();
         RestAssured.given().log().all()
                    .when().get("/reservations")
                    .then().log().all()
@@ -42,7 +42,7 @@ public class ReservationTest {
     }
 
     @Test
-    void create(){
+    void save(){
         Map<String, String> params = new HashMap<>();
         params.put("startAt", "10:00");
 
@@ -74,7 +74,7 @@ public class ReservationTest {
 
     @Test
     void delete(){
-        create();
+        save();
         RestAssured.given().log().all()
                    .when().delete("/reservations/1")
                    .then().log().all()

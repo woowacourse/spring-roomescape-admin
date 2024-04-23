@@ -19,8 +19,8 @@ public class ReservationTimeController {
     }
 
     @PostMapping
-    public ReservationTimeResponseDto create(@RequestBody final ReservationTimeRequestDto request) {
-        return reservationTimeService.create(request);
+    public ReservationTimeResponseDto save(@RequestBody final ReservationTimeRequestDto request) {
+        return reservationTimeService.save(request);
     }
 
     @GetMapping

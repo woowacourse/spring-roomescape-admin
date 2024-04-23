@@ -27,7 +27,7 @@ public class ReservationTimeTest {
     private ReservationTimeController reservationTimeController;
 
     @Test
-    void create(){
+    void save(){
         Map<String, String> params = new HashMap<>();
         params.put("startAt", "10:00");
 
@@ -41,7 +41,7 @@ public class ReservationTimeTest {
 
     @Test
     void findAll(){
-        create();
+        save();
         RestAssured.given().log().all()
                    .when().get("/times")
                    .then().log().all()
@@ -51,7 +51,7 @@ public class ReservationTimeTest {
 
     @Test
     void delete(){
-        create();
+        save();
         RestAssured.given().log().all()
                    .when().delete("/times/1")
                    .then().log().all()

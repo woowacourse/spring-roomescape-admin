@@ -23,8 +23,8 @@ public class ReservationController {
     }
 
     @PostMapping
-    public ReservationResponseDto create(@RequestBody final ReservationRequestDto request) {
-        return reservationService.create(request);
+    public ReservationResponseDto save(@RequestBody final ReservationRequestDto request) {
+        return reservationService.save(request);
     }
 
     @DeleteMapping("/{id}")

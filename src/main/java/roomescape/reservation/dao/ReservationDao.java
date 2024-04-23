@@ -65,7 +65,7 @@ public class ReservationDao {
         return jdbcTemplate.queryForObject(sql, reservationRowMapper, id);
     }
 
-    public long create(final ReservationRequestDto requestDto) {
+    public long save(final ReservationRequestDto requestDto) {
         final SqlParameterSource params = new MapSqlParameterSource()
                 .addValue("name", requestDto.name())
                 .addValue("date", requestDto.date())

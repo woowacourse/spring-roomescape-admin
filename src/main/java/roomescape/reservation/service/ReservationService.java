@@ -27,8 +27,8 @@ public class ReservationService {
     }
 
     @Transactional
-    public ReservationResponseDto create(final ReservationRequestDto requestDto) {
-        final long reservationId = reservationDao.create(requestDto);
+    public ReservationResponseDto save(final ReservationRequestDto requestDto) {
+        final long reservationId = reservationDao.save(requestDto);
         final Reservation reservation = reservationDao.findById(reservationId);
         return ReservationResponseDto.from(reservation);
     }

@@ -1,4 +1,4 @@
-package roomescape.domain;
+package roomescape.reservation.domain;
 
 import static org.junit.jupiter.api.Assertions.assertTrue;
 

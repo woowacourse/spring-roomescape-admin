@@ -1,8 +1,8 @@
 package roomescape.util;
 
 import java.time.format.DateTimeFormatter;
-import roomescape.domain.ReservationDate;
-import roomescape.domain.ReservationTime;
+import roomescape.reservation.domain.ReservationDate;
+import roomescape.reservation.domain.ReservationTime;
 
 public class CustomDateTimeFormatter {
 

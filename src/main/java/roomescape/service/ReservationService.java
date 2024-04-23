@@ -3,7 +3,6 @@ package roomescape.service;
 import org.springframework.stereotype.Service;
 import roomescape.dao.ReservationDao;
 import roomescape.domain.reservation.Reservation;
-import roomescape.dto.ReservationRequestDto;
 import roomescape.dto.ReservationResponseDto;
 
 import java.util.List;
@@ -20,10 +19,10 @@ public class ReservationService {
         return reservationDao.findAllReservation();
     }
 
-    public ReservationResponseDto reserve(ReservationRequestDto reservationRequestDto) {
-        Long insertReservationId = reservationDao.addReservation(reservationRequestDto);
-        Reservation insertReservation = reservationDao.findById(insertReservationId);
-        return insertReservation.toResponseDto();
+    public ReservationResponseDto reserve(Reservation reservation) {
+        Long savedId = reservationDao.addReservation(reservation);
+        Reservation savedReservation = reservationDao.findById(savedId);
+        return new ReservationResponseDto(savedReservation);
     }
 
     public void deleteReservation(Long id) {

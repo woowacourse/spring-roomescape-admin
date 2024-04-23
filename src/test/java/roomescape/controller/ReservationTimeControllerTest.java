@@ -4,12 +4,9 @@ import io.restassured.RestAssured;
 import io.restassured.http.ContentType;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.test.annotation.DirtiesContext;
 
-import java.util.HashMap;
 import java.util.Map;
 
 import static org.hamcrest.Matchers.is;
@@ -18,18 +15,16 @@ import static org.hamcrest.Matchers.is;
 @DirtiesContext(classMode = DirtiesContext.ClassMode.BEFORE_EACH_TEST_METHOD)
 public class ReservationTimeControllerTest {
 
-    @Autowired
-    private JdbcTemplate jdbcTemplate;
-
     @Test
     @DisplayName("예약 시간 추가, 조회, 삭제를 정상적으로 수행한다.")
     void ReservationTime_CREATE_READ_DELETE_Success() {
-        Map<String, String> params = new HashMap<>();
-        params.put("startAt", "10:00");
+        Map<String, String> time = Map.of(
+                "startAt", "10:00"
+        );
 
         RestAssured.given().log().all()
                 .contentType(ContentType.JSON)
-                .body(params)
+                .body(time)
                 .when().post("/times")
                 .then().log().all()
                 .statusCode(200);

@@ -11,7 +11,6 @@ import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.test.annotation.DirtiesContext;
 import roomescape.domain.Reservation;
 
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -115,10 +114,10 @@ public class ReservationControllerTest {
     @Disabled
     @DisplayName("DB에 예약을 정상적으로 추가한다.")
     void addReservation_InDatabase_Success() {
-        Map<String, String> params = new HashMap<>();
-        params.put("name", "브라운");
-        params.put("date", "2023-08-05");
-        params.put("time", "10:00");
+        Map<String, String> params = Map.of("name", "브라운",
+                "date", "2023-08-05",
+                "time", "15:40"
+        );
 
         RestAssured.given().log().all()
                 .contentType(ContentType.JSON)
@@ -136,10 +135,10 @@ public class ReservationControllerTest {
     @Disabled
     @DisplayName("DB에 저장된 예약을 정상적으로 삭제한다.")
     void deleteReservation_InDatabase_Success() {
-        Map<String, String> params = new HashMap<>();
-        params.put("name", "브라운");
-        params.put("date", "2023-08-05");
-        params.put("time", "10:00");
+        Map<String, String> params = Map.of("name", "브라운",
+                "date", "2023-08-05",
+                "time", "15:40"
+        );
 
         RestAssured.given().log().all()
                 .contentType(ContentType.JSON)
@@ -164,13 +163,14 @@ public class ReservationControllerTest {
     @Test
     @DisplayName("예약 추가, 조회를 정상적으로 수행한다.")
     void ReservationTime_CREATE_READ_Success() {
-        Map<String, Object> reservation = new HashMap<>();
-        reservation.put("name", "브라운");
-        reservation.put("date", "2023-08-05");
-        reservation.put("timeId", 1);
+        Map<String, Object> reservation = Map.of("name", "브라운",
+                "date", "2023-08-05",
+                "timeId", 1
+        );
 
-        Map<String, String> time = new HashMap<>();
-        time.put("startAt", "10:00");
+        Map<String, String> time = Map.of(
+                "startAt", "10:00"
+        );
 
         RestAssured.given().log().all()
                 .contentType(ContentType.JSON)
@@ -184,7 +184,7 @@ public class ReservationControllerTest {
                 .body(reservation)
                 .when().post("/reservations")
                 .then().log().all()
-                .statusCode(201);
+                .statusCode(200);
 
 
         RestAssured.given().log().all()

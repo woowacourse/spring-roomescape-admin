@@ -21,8 +21,10 @@ import org.springframework.boot.test.web.server.LocalServerPort;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.test.annotation.DirtiesContext;
 import org.springframework.test.annotation.DirtiesContext.ClassMode;
+import org.springframework.test.context.ActiveProfiles;
 import roomescape.reservation.domain.Reservation;
 
+@ActiveProfiles("test")
 @SpringBootTest(webEnvironment = WebEnvironment.RANDOM_PORT)
 @DirtiesContext(classMode = ClassMode.AFTER_EACH_TEST_METHOD)
 class MissionStepTest {
@@ -63,16 +65,16 @@ class MissionStepTest {
                 .when().get("/reservations")
                 .then().log().all()
                 .statusCode(200)
-                .body("size()", is(0));
+                .body("size()", is(2));
     }
 
     @DisplayName("예약 추가 및 삭제 테스트")
     @Test
     void 삼단계() {
-        Map<String, String> params = Map.of(
+        Map<String, Object> params = Map.of(
                 "name", "브라운",
                 "date", "2023-08-05",
-                "time", "15:40");
+                "timeId", 1);
 
         RestAssured.given().log().all()
                 .contentType(ContentType.JSON)
@@ -80,7 +82,7 @@ class MissionStepTest {
                 .when().post("/reservations")
                 .then().log().all()
                 .statusCode(201)
-                .header("Location", is("/reservations/1"));
+                .header("Location", is("/reservations/3"));
 
         RestAssured.given().log().all()
                 .when().get("/reservations")
@@ -88,7 +90,8 @@ class MissionStepTest {
                 .statusCode(200)
                 .body("name", hasItems("브라운"))
                 .body("date", hasItems("2023-08-05"))
-                .body("time", hasItems("15:40"));
+                .body("time.id", hasItems(1))
+                .body("time.startAt", hasItems("15:40"));
 
         RestAssured.given().log().all()
                 .when().delete("/reservations/1")
@@ -99,14 +102,14 @@ class MissionStepTest {
                 .when().get("/reservations")
                 .then().log().all()
                 .statusCode(200)
-                .body("size()", is(0));
+                .body("size()", is(2));
     }
 
     @Test
     void 사단계() {
         try (Connection connection = jdbcTemplate.getDataSource().getConnection()) {
             assertThat(connection).isNotNull();
-            assertThat(connection.getCatalog()).isEqualTo("DATABASE");
+            assertThat(connection.getCatalog()).isEqualTo("TEST");
             assertThat(connection.getMetaData().getTables(null, null, "RESERVATION", null).next()).isTrue();
         } catch (SQLException e) {
             throw new RuntimeException(e);
@@ -115,14 +118,13 @@ class MissionStepTest {
 
     @Test
     void 오단계() {
-        jdbcTemplate.update("INSERT INTO reservation (name, date, time) VALUES (?, ?, ?)", "브라운", "2023-08-05",
-                "15:40");
+        jdbcTemplate.update("INSERT INTO reservation (name, date, time_id) VALUES (?, ?, ?)", "브라운", "2023-08-05", 1L);
 
         List<Reservation> reservations = RestAssured.given().log().all()
                 .when().get("/reservations")
                 .then().log().all()
                 .statusCode(200).extract()
-                .jsonPath().getList(".", Reservation.class);
+                .jsonPath().getList(".");
 
         Integer count = jdbcTemplate.queryForObject("SELECT count(1) from reservation", Integer.class);
 
@@ -131,10 +133,10 @@ class MissionStepTest {
 
     @Test
     void 육단계() {
-        Map<String, String> params = new HashMap<>();
+        Map<String, Object> params = new HashMap<>();
         params.put("name", "브라운");
         params.put("date", "2023-08-05");
-        params.put("time", "10:00");
+        params.put("timeId", 1);
 
         RestAssured.given().log().all()
                 .contentType(ContentType.JSON)
@@ -142,10 +144,10 @@ class MissionStepTest {
                 .when().post("/reservations")
                 .then().log().all()
                 .statusCode(201)
-                .header("Location", "/reservations/1");
+                .header("Location", "/reservations/3");
 
         Integer count = jdbcTemplate.queryForObject("SELECT count(1) from reservation", Integer.class);
-        assertThat(count).isEqualTo(1);
+        assertThat(count).isEqualTo(3);
 
         RestAssured.given().log().all()
                 .when().delete("/reservations/1")
@@ -153,7 +155,7 @@ class MissionStepTest {
                 .statusCode(204);
 
         Integer countAfterDelete = jdbcTemplate.queryForObject("SELECT count(1) from reservation", Integer.class);
-        assertThat(countAfterDelete).isEqualTo(0);
+        assertThat(countAfterDelete).isEqualTo(2);
     }
 
     @Test
@@ -167,17 +169,17 @@ class MissionStepTest {
                 .when().post("/times")
                 .then().log().all()
                 .statusCode(201)
-                .header("Location", "/times/1");
+                .header("Location", "/times/4");
 
         RestAssured.given().log().all()
                 .when().get("/times")
                 .then().log().all()
                 .statusCode(200)
-                .body("size()", is(1))
+                .body("size()", is(4))
                 .body("startAt", hasItems("10:00"));
 
         RestAssured.given().log().all()
-                .when().delete("/times/1")
+                .when().delete("/times/3")
                 .then().log().all()
                 .statusCode(204);
     }
@@ -187,20 +189,19 @@ class MissionStepTest {
         Map<String, Object> reservation = new HashMap<>();
         reservation.put("name", "브라운");
         reservation.put("date", "2023-08-05");
-        reservation.put("timeId", 1);
+        reservation.put("timeId", 2);
 
         RestAssured.given().log().all()
                 .contentType(ContentType.JSON)
                 .body(reservation)
                 .when().post("/reservations")
                 .then().log().all()
-                .statusCode(200);
-
+                .statusCode(201);
 
         RestAssured.given().log().all()
                 .when().get("/reservations")
                 .then().log().all()
                 .statusCode(200)
-                .body("size()", is(1));
+                .body("size()", is(3));
     }
 }

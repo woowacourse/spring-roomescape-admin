@@ -11,6 +11,7 @@ import org.springframework.test.annotation.DirtiesContext;
 import roomescape.domain.Reservation;
 import roomescape.dto.ReservationCreateRequest;
 
+import java.lang.reflect.Field;
 import java.util.List;
 
 import static org.assertj.core.api.Assertions.assertThat;
@@ -20,6 +21,8 @@ import static org.assertj.core.api.Assertions.assertThat;
 class ReservationControllerTest {
     @Autowired
     private JdbcTemplate jdbcTemplate;
+    @Autowired
+    private ReservationController reservationController;
 
     @DisplayName("예약 목록을 읽을 수 있다.")
     @Test
@@ -74,4 +77,18 @@ class ReservationControllerTest {
         assertThat(countAfterDelete).isEqualTo(0);
     }
 
+    @DisplayName("계층이 분리되어야 한다.")
+    @Test
+    void checkLayerSeparation() {
+        boolean isJdbcTemplateInjected = false;
+
+        for (Field field : reservationController.getClass().getDeclaredFields()) {
+            if (field.getType().equals(JdbcTemplate.class)) {
+                isJdbcTemplateInjected = true;
+                break;
+            }
+        }
+
+        assertThat(isJdbcTemplateInjected).isFalse();
+    }
 }

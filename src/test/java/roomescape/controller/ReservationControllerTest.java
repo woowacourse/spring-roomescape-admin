@@ -24,8 +24,9 @@ class ReservationControllerTest {
     @DisplayName("예약 목록을 읽을 수 있다.")
     @Test
     void readReservations() {
-        jdbcTemplate.update("INSERT INTO reservation (name, date, time) VALUES (?, ?, ?)"
-                , "브라운", "2023-08-05", "15:40");
+        jdbcTemplate.update("INSERT INTO reservation_time (start_at) VALUES (?)", "10:00");
+        jdbcTemplate.update("INSERT INTO reservation (name, date, time_id) VALUES (?, ?, ?)"
+                , "브라운", "2023-08-05", "1");
 
         List<Reservation> reservations = RestAssured.given().log().all()
                 .when().get("/reservations")
@@ -41,8 +42,9 @@ class ReservationControllerTest {
     @DisplayName("예약을 DB에 추가할 수 있다.")
     @Test
     void createReservation() {
+        jdbcTemplate.update("INSERT INTO reservation_time (start_at) VALUES (?)", "10:00");
         ReservationCreateRequest params
-                = new ReservationCreateRequest("브라운", "2023-08-05", "10:00");
+                = new ReservationCreateRequest("브라운", "2023-08-05",1);
 
         RestAssured.given().log().all()
                 .contentType(ContentType.JSON)
@@ -59,8 +61,10 @@ class ReservationControllerTest {
     @DisplayName("삭제할 id를 받아서 DB에서 해당 예약을 삭제 할 수 있다.")
     @Test
     void deleteReservation() {
-        jdbcTemplate.update("INSERT INTO reservation (name, date, time) VALUES (?, ?, ?)"
-                , "브라운", "2023-08-05", "15:40");
+        jdbcTemplate.update("INSERT INTO reservation_time (start_at) VALUES (?)", "10:00");
+
+        jdbcTemplate.update("INSERT INTO reservation (name, date, time_id) VALUES (?, ?, ?)"
+                , "브라운", "2023-08-05", "1");
 
         RestAssured.given().log().all()
                 .when().delete("/reservations/1")

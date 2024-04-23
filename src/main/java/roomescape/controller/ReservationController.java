@@ -25,26 +25,26 @@ public class ReservationController {
                 resultSet.getLong("id"),
                 resultSet.getString("name"),
                 resultSet.getString("date"),
-                resultSet.getString("time")
+                resultSet.getLong("time_id")
         );
     }
 
     @GetMapping
     public ResponseEntity<List<Reservation>> readReservations() {
-        String sql = "SELECT id, name, date, time FROM reservation";
+        String sql = "SELECT id, name, date, time_id FROM reservation";
         return ResponseEntity.ok(jdbcTemplate.query(sql, rowMapper));
     }
 
     @PostMapping
     public ResponseEntity<Reservation> createReservation(@RequestBody ReservationCreateRequest dto) {
         KeyHolder keyHolder = new GeneratedKeyHolder();
-        String sql = "INSERT INTO reservation (name, date, time) values (?, ?, ?)";
+        String sql = "INSERT INTO reservation (name, date, time_id) values (?, ?, ?)";
 
         long id = jdbcTemplate.update(connection -> {
             PreparedStatement preparedStatement = connection.prepareStatement(sql, new String[]{"id"});
             preparedStatement.setString(1, dto.name());
             preparedStatement.setString(2, dto.date());
-            preparedStatement.setString(3, dto.time());
+            preparedStatement.setLong(3, dto.timeId());
             return preparedStatement;
         }, keyHolder);
 

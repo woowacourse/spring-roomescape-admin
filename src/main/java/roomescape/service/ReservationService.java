@@ -4,10 +4,10 @@ import java.util.List;
 import org.springframework.stereotype.Service;
 import roomescape.dao.ReservationDao;
 import roomescape.dao.ReservationTimeDao;
-import roomescape.domain.Reservation;
 import roomescape.domain.ReservationTime;
 import roomescape.dto.ReservationRequest;
 import roomescape.dto.ReservationResponse;
+import roomescape.dto.ReservationTimeResponse;
 
 @Service
 public class ReservationService {
@@ -21,8 +21,8 @@ public class ReservationService {
     }
 
     public List<ReservationResponse> findAll() {
-        List<Reservation> reservations = reservationDao.findAll();
-        return reservations.stream()
+        return reservationDao.findAll()
+                .stream()
                 .map(ReservationResponse::new)
                 .toList();
     }
@@ -33,8 +33,8 @@ public class ReservationService {
                 reservationRequest.name(),
                 reservationRequest.date(),
                 reservationRequest.timeId());
-        Reservation reservation = reservationRequest.toDomain(id, reservationTime);
-        return new ReservationResponse(reservation);
+        return new ReservationResponse(id, reservationRequest.name(), reservationRequest.date(),
+                new ReservationTimeResponse(reservationTime));
     }
 
     public boolean deleteById(long id) {

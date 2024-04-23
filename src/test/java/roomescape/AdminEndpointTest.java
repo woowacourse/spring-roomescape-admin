@@ -2,20 +2,19 @@ package roomescape;
 
 import io.restassured.RestAssured;
 import org.junit.jupiter.api.DisplayName;
-import org.junit.jupiter.api.DynamicTest;
 import org.junit.jupiter.api.Test;
-import org.junit.jupiter.api.TestFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.test.annotation.DirtiesContext;
 import roomescape.dto.ReservationRequest;
+import roomescape.dto.ReservationTimeRequest;
 import roomescape.model.Reservation;
 import roomescape.repository.ReservationRepository;
 
 import java.time.LocalDate;
 import java.time.LocalTime;
-import java.util.*;
+import java.util.List;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
@@ -45,12 +44,20 @@ class AdminEndpointTest {
         HttpRestTestTemplate.assertGetOk("/reservations", "size()", reservationSize);
     }
 
-    @DisplayName("예약 추가 삭제 시나리오")
+    @DisplayName("예약 시간 추가, 예약 추가, 예약 삭제 시나리오")
     @Test
     void reservationAddAndRemoveScenario() {
-        ReservationRequest reservationRequest = new ReservationRequest("브라운", LocalDate.parse("2023-08-05"), LocalTime.parse("15:40"));
+        ReservationTimeRequest reservationTimeRequest = new ReservationTimeRequest(
+                LocalTime.now()
+        );
+        ReservationRequest reservationRequest = new ReservationRequest(
+                "브라운",
+                LocalDate.parse("2023-08-05"),
+                1L
+        );
         int initialCount = 0;
 
+        HttpRestTestTemplate.assertPostOk(reservationTimeRequest, "/times", "id", 1);
         HttpRestTestTemplate.assertPostCreated(reservationRequest, "/reservations", "id", 1);
         Integer countAfterInsert = jdbcTemplate.queryForObject("SELECT count(1) from reservation", Integer.class);
         assertThat(countAfterInsert).isEqualTo(initialCount + 1);
@@ -63,7 +70,7 @@ class AdminEndpointTest {
     @DisplayName("예약을 추가한 후에도 db의 예약 개수와 api 응답의 예약 개수가 동일")
     @Test
     void apiResponseCountEqualsToDataBaseReservationCount() {
-        jdbcTemplate.update("INSERT INTO reservation (name, date, time) VALUES (?, ?, ?)", "브라운", "2023-08-05", "15:40");
+        jdbcTemplate.update("INSERT INTO reservation (name, date, time_id) VALUES (?, ?, ?)", "브라운", "2023-08-05", "1");
 
         List<Reservation> reservations = RestAssured.given().log().all()
                 .when().get("/reservations")

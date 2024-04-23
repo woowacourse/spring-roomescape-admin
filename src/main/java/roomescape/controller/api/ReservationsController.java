@@ -5,7 +5,9 @@ import org.springframework.web.bind.annotation.*;
 import roomescape.dto.ReservationRequest;
 import roomescape.dto.ReservationResponse;
 import roomescape.model.Reservation;
+import roomescape.model.ReservationTime;
 import roomescape.repository.ReservationRepository;
+import roomescape.repository.ReservationTimeRepository;
 
 import java.net.URI;
 import java.util.List;
@@ -15,16 +17,18 @@ import java.util.List;
 public class ReservationsController {
 
     private final ReservationRepository reservationRepository;
+    private final ReservationTimeRepository reservationTimeRepository;
 
-    public ReservationsController(ReservationRepository reservationRepository) {
+    public ReservationsController(ReservationRepository reservationRepository, ReservationTimeRepository reservationTimeRepository) {
         this.reservationRepository = reservationRepository;
+        this.reservationTimeRepository = reservationTimeRepository;
     }
 
     @GetMapping
     public ResponseEntity<List<ReservationResponse>> getReservations() {
         List<ReservationResponse> list = reservationRepository.findAll()
                 .stream()
-                .map(ReservationResponse::from)
+                .map(reservation -> ReservationResponse.from(reservation, reservation.getTime()))
                 .toList();
 
         return ResponseEntity.ok()
@@ -33,9 +37,10 @@ public class ReservationsController {
 
     @PostMapping
     public ResponseEntity<ReservationResponse> addReservations(@RequestBody ReservationRequest reservationRequest) {
-        Reservation reservation = ReservationRequest.toEntity(reservationRequest);
+        ReservationTime reservationTime = reservationTimeRepository.findById(reservationRequest.reservationTimeId());
+        Reservation reservation = new Reservation(null, reservationRequest.name(), reservationRequest.date(), reservationTime);
         Reservation savedReservation = reservationRepository.save(reservation);
-        ReservationResponse reservationResponse = ReservationResponse.from(savedReservation);
+        ReservationResponse reservationResponse = ReservationResponse.from(savedReservation, reservationTime);
 
         return ResponseEntity.created(URI.create("/reservations/" + savedReservation.getId()))
                 .body(reservationResponse);

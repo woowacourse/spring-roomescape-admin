@@ -6,6 +6,7 @@ import org.springframework.jdbc.support.GeneratedKeyHolder;
 import org.springframework.jdbc.support.KeyHolder;
 import org.springframework.stereotype.Repository;
 import roomescape.model.Reservation;
+import roomescape.model.ReservationTime;
 
 import java.sql.PreparedStatement;
 import java.time.LocalDate;
@@ -20,10 +21,13 @@ public class ReservationRepositoryImpl implements ReservationRepository {
     private final JdbcTemplate jdbcTemplate;
 
     private final RowMapper<Reservation> reservationRowMapper = (resultSet, rowNum) -> new Reservation(
-            resultSet.getLong("id"),
+            resultSet.getLong("reservation_id"),
             resultSet.getString("name"),
             LocalDate.parse(resultSet.getString("date")),
-            LocalTime.parse(resultSet.getString("time"))
+            new ReservationTime(
+                    resultSet.getLong("time_id"),
+                    LocalTime.parse(resultSet.getString("time_value"))
+            )
     );
 
     public ReservationRepositoryImpl(JdbcTemplate jdbcTemplate) {
@@ -32,7 +36,15 @@ public class ReservationRepositoryImpl implements ReservationRepository {
 
     @Override
     public List<Reservation> findAll() {
-        String sql = "select * from reservation";
+        String sql = "SELECT " +
+                "r.id AS reservation_id, " +
+                "r.name, " +
+                "r.date, " +
+                "t.id AS time_id, " +
+                "t.start_at AS time_value " +
+                "FROM reservation AS r " +
+                "INNER JOIN reservation_time AS t " +
+                "ON r.time_id = t.id ";
         List<Reservation> reservations = jdbcTemplate.query(sql, reservationRowMapper);
 
         return Collections.unmodifiableList(reservations);
@@ -43,11 +55,11 @@ public class ReservationRepositoryImpl implements ReservationRepository {
         KeyHolder keyHolder = new GeneratedKeyHolder();
         jdbcTemplate.update(connection -> {
             PreparedStatement ps = connection.prepareStatement(
-                    "insert into reservation (name, date, time) values(?, ?, ?)",
+                    "insert into reservation (name, date, time_id) values(?, ?, ?)",
                     new String[]{"id"});
             ps.setString(1, reservation.getName());
             ps.setString(2, reservation.getDate().toString());
-            ps.setString(3, reservation.getTime().toString());
+            ps.setLong(3, reservation.getTime().getId());
             return ps;
         }, keyHolder);
         long id = keyHolder.getKey().longValue();
@@ -63,7 +75,7 @@ public class ReservationRepositoryImpl implements ReservationRepository {
 
     @Override
     public Reservation findById(Long id) {
-        String sql = "select id, name, date, time from reservation where id = ?";
+        String sql = "select * from reservation where id = ?";
         Reservation reservation = jdbcTemplate.queryForObject(sql, reservationRowMapper, id);
         if (reservation == null) {
             throw new NoSuchElementException("존재하지 않는 아아디입니다.");

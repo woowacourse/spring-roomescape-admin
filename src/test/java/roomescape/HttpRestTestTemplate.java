@@ -35,6 +35,16 @@ class HttpRestTestTemplate {
                 .body(bodyPath, is(expectedValue));
     }
 
+    public static void assertPostOk(Object params, String path, String bodyPath, Integer expectedValue) {
+        RestAssured.given().log().all()
+                .contentType(ContentType.JSON)
+                .body(params)
+                .when().post(path)
+                .then().log().all()
+                .statusCode(200)
+                .body(bodyPath, is(expectedValue));
+    }
+
     public static void assertDeleteNoContent(String path) {
         RestAssured.given().log().all()
                 .when().delete(path)

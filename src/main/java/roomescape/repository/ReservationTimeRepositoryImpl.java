@@ -10,6 +10,7 @@ import roomescape.model.ReservationTime;
 import java.sql.PreparedStatement;
 import java.time.LocalTime;
 import java.util.List;
+import java.util.NoSuchElementException;
 
 @Repository
 public class ReservationTimeRepositoryImpl implements ReservationTimeRepository {
@@ -30,6 +31,17 @@ public class ReservationTimeRepositoryImpl implements ReservationTimeRepository 
         String sql = "select * from reservation_time";
 
         return jdbcTemplate.query(sql, reservationTimeRowMapper);
+    }
+
+    @Override
+    public ReservationTime findById(Long id) {
+        String sql = "select * from reservation_time where id = ?";
+        ReservationTime reservationTime = jdbcTemplate.queryForObject(sql, reservationTimeRowMapper, id);
+        if (reservationTime == null) {
+            throw new NoSuchElementException("존재하지 않는 아아디입니다.");
+        }
+
+        return reservationTime;
     }
 
     @Override

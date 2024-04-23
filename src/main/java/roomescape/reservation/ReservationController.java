@@ -2,22 +2,25 @@ package roomescape.reservation;
 
 import org.springframework.http.ResponseEntity;
 import org.springframework.jdbc.core.JdbcTemplate;
-import org.springframework.jdbc.support.GeneratedKeyHolder;
-import org.springframework.jdbc.support.KeyHolder;
+import org.springframework.jdbc.core.namedparam.MapSqlParameterSource;
+import org.springframework.jdbc.core.namedparam.SqlParameterSource;
+import org.springframework.jdbc.core.simple.SimpleJdbcInsert;
 import org.springframework.web.bind.annotation.*;
 
+import javax.sql.DataSource;
 import java.net.URI;
-import java.sql.Date;
-import java.sql.PreparedStatement;
-import java.sql.Time;
 import java.util.List;
 
 @RestController
 public class ReservationController {
     private final JdbcTemplate jdbcTemplate;
+    private final SimpleJdbcInsert jdbcInsert;
 
-    public ReservationController(final JdbcTemplate jdbcTemplate) {
+    public ReservationController(final JdbcTemplate jdbcTemplate, final DataSource dataSource) {
         this.jdbcTemplate = jdbcTemplate;
+        this.jdbcInsert = new SimpleJdbcInsert(dataSource)
+                .withTableName("reservation")
+                .usingGeneratedKeyColumns("id");
     }
 
     @GetMapping("/reservations")
@@ -35,17 +38,13 @@ public class ReservationController {
 
     @PostMapping("/reservations")
     public ResponseEntity<Reservation> create(@RequestBody ReservationRequest reservationRequest) {
-        final String sql = "INSERT INTO reservation(name, date, time) VALUES(?, ?, ?)";
-        final KeyHolder keyHolder = new GeneratedKeyHolder();
-        jdbcTemplate.update(con -> {
-            final PreparedStatement preparedStatement = con.prepareStatement(sql, new String[]{"id"});
-            preparedStatement.setString(1, reservationRequest.name());
-            preparedStatement.setDate(2, Date.valueOf(reservationRequest.date()));
-            preparedStatement.setTime(3, Time.valueOf(reservationRequest.time()));
-            return preparedStatement;
-        }, keyHolder);
+        SqlParameterSource params = new MapSqlParameterSource()
+                .addValue("name", reservationRequest.name())
+                .addValue("date", reservationRequest.date())
+                .addValue("time", reservationRequest.time());
 
-        final long id = keyHolder.getKey().longValue();
+        final long id = jdbcInsert.executeAndReturnKey(params).longValue();
+
         final Reservation reservation = new Reservation(
                 id,
                 reservationRequest.name(),

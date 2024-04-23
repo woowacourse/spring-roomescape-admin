@@ -36,10 +36,10 @@ public class ReservationTimeController {
     @PostMapping
     public ReservationTimeCreateResponse createReservationTime(
             @RequestBody ReservationTimeCreateRequest reservationTimeCreateRequest) {
-        Long createdReservationTimeId = reservationTimeService.createReservationTime(reservationTimeCreateRequest);
 
-        ReservationTime createdReservationTime = reservationTimeService.findReservationTimeById(
-                createdReservationTimeId).get();
+        ReservationTime createdReservationTime = reservationTimeService.createReservationTime(
+                reservationTimeCreateRequest);
+
         return ReservationTimeCreateResponse.of(createdReservationTime);
     }
 

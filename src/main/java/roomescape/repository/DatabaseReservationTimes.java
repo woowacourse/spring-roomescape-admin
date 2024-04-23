@@ -11,11 +11,11 @@ import roomescape.domain.ReservationTime;
 import roomescape.util.CustomDateTimeFormatter;
 
 @Repository
-public class ReservationTimeDBRepository implements ReservationTimeRepository {
+public class DatabaseReservationTimes implements ReservationTimes {
 
     private final JdbcTemplate jdbcTemplate;
 
-    public ReservationTimeDBRepository(JdbcTemplate jdbcTemplate) {
+    public DatabaseReservationTimes(JdbcTemplate jdbcTemplate) {
         this.jdbcTemplate = jdbcTemplate;
     }
 
@@ -42,12 +42,14 @@ public class ReservationTimeDBRepository implements ReservationTimeRepository {
     }
 
     @Override
-    public Long createReservationTime(ReservationTimeCreateRequest reservationTimeCreateRequest) {
+    public ReservationTime createReservationTime(ReservationTimeCreateRequest reservationTimeCreateRequest) {
         SimpleJdbcInsert simpleJdbcInsert = new SimpleJdbcInsert(jdbcTemplate).withTableName("reservation_time")
                 .usingGeneratedKeyColumns("id");
-        return simpleJdbcInsert.executeAndReturnKey(Map.of(
+        long createdReservationTimeId = simpleJdbcInsert.executeAndReturnKey(Map.of(
                 "start_at", reservationTimeCreateRequest.startAt()
         )).longValue();
+
+        return findReservationTimeById(createdReservationTimeId).get();
     }
 
     @Override

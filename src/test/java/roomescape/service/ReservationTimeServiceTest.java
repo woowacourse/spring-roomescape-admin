@@ -12,11 +12,11 @@ import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
 import roomescape.controller.dto.ReservationTimeCreateRequest;
 import roomescape.domain.ReservationTime;
-import roomescape.repository.ReservationTimeMemoryRepository;
+import roomescape.repository.MemoryReservationTimes;
 
 class ReservationTimeServiceTest {
 
-    private final ReservationTimeMemoryRepository reservationTimeRepository = new ReservationTimeMemoryRepository();
+    private final MemoryReservationTimes reservationTimeRepository = new MemoryReservationTimes();
     private final ReservationTimeService reservationTimeService = new ReservationTimeService(reservationTimeRepository);
 
     @AfterEach
@@ -31,11 +31,11 @@ class ReservationTimeServiceTest {
         @Test
         void findReservationTimesTest() {
             Long createdReservationTimeId1 = reservationTimeRepository.createReservationTime(
-                    new ReservationTimeCreateRequest("10:00"));
+                    new ReservationTimeCreateRequest("10:00")).getId();
             Long createdReservationTimeId2 = reservationTimeRepository.createReservationTime(
-                    new ReservationTimeCreateRequest("11:00"));
+                    new ReservationTimeCreateRequest("11:00")).getId();
             Long createdReservationTimeId3 = reservationTimeRepository.createReservationTime(
-                    new ReservationTimeCreateRequest("12:00"));
+                    new ReservationTimeCreateRequest("12:00")).getId();
 
             List<ReservationTime> reservationTimes = reservationTimeService.findReservationTimes();
             Assertions.assertAll(
@@ -56,7 +56,7 @@ class ReservationTimeServiceTest {
         @Test
         void findReservationTimeTest() {
             Long createdReservationTimeId = reservationTimeRepository.createReservationTime(
-                    new ReservationTimeCreateRequest("10:00"));
+                    new ReservationTimeCreateRequest("10:00")).getId();
 
             Optional<ReservationTime> reservationTimeById = reservationTimeService.findReservationTimeById(
                     createdReservationTimeId);
@@ -75,16 +75,15 @@ class ReservationTimeServiceTest {
         @DisplayName("예약 시간을 정상적으로 생성할 수 있다")
         @Test
         void createReservationTimeTest() {
-            Long createdReservationTimeId = reservationTimeService.createReservationTime(
+            ReservationTime createdReservationTime = reservationTimeService.createReservationTime(
                     new ReservationTimeCreateRequest("10:00"));
 
             Optional<ReservationTime> reservationTimeById = reservationTimeRepository.findReservationTimeById(
-                    createdReservationTimeId);
+                    createdReservationTime.getId());
 
             Assertions.assertAll(
                     () -> assertThat(reservationTimeById.isPresent()).isTrue(),
-                    () -> assertThat(reservationTimeById.get()).isEqualTo(
-                            new ReservationTime(createdReservationTimeId, LocalTime.of(10, 0)))
+                    () -> assertThat(reservationTimeById.get()).isEqualTo(createdReservationTime)
             );
         }
     }
@@ -96,7 +95,7 @@ class ReservationTimeServiceTest {
         @Test
         void deleteReservationTimeTest() {
             Long createdReservationTimeId = reservationTimeRepository.createReservationTime(
-                    new ReservationTimeCreateRequest("10:00"));
+                    new ReservationTimeCreateRequest("10:00")).getId();
 
             assertThat(reservationTimeRepository.findReservationTimes()).hasSize(1);
 

@@ -8,7 +8,7 @@ import roomescape.controller.dto.ReservationTimeCreateRequest;
 import roomescape.domain.ReservationTime;
 import roomescape.util.CustomDateTimeFormatter;
 
-public class ReservationTimeMemoryRepository implements ReservationTimeRepository {
+public class MemoryReservationTimes implements ReservationTimes {
 
     private final List<ReservationTime> reservationTimes = new ArrayList<>();
     private final AtomicLong index = new AtomicLong(1);
@@ -26,13 +26,14 @@ public class ReservationTimeMemoryRepository implements ReservationTimeRepositor
     }
 
     @Override
-    public Long createReservationTime(ReservationTimeCreateRequest reservationTimeCreateRequest) {
+    public ReservationTime createReservationTime(ReservationTimeCreateRequest reservationTimeCreateRequest) {
         Long createdReservationId = index.incrementAndGet();
-        reservationTimes.add(new ReservationTime(
+        ReservationTime createdReservationTime = new ReservationTime(
                 createdReservationId,
                 CustomDateTimeFormatter.getLocalTime(reservationTimeCreateRequest.startAt())
-        ));
-        return createdReservationId;
+        );
+        reservationTimes.add(createdReservationTime);
+        return createdReservationTime;
     }
 
     @Override

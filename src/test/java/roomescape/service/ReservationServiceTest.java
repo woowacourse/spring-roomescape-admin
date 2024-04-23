@@ -96,7 +96,8 @@ class ReservationServiceTest {
         void createReservationTest() {
             Reservation createdReservation = reservationService.createReservation(DEFAULT_RESERVATION_REQUEST);
 
-            Optional<Reservation> findResrevationById = reservationRepository.findReservationById(createdReservation.getId());
+            Optional<Reservation> findResrevationById = reservationRepository.findReservationById(
+                    createdReservation.getId());
             Assertions.assertAll(
                     () -> assertThat(findResrevationById.isPresent()).isTrue(),
                     () -> assertThat(findResrevationById.get())

@@ -3,6 +3,7 @@ package roomescape.controller;
 import static org.hamcrest.Matchers.is;
 
 import io.restassured.RestAssured;
+import io.restassured.http.ContentType;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -10,6 +11,7 @@ import org.springframework.boot.test.context.SpringBootTest.WebEnvironment;
 import org.springframework.boot.test.web.server.LocalServerPort;
 import org.springframework.test.context.jdbc.Sql;
 import org.springframework.test.context.jdbc.Sql.ExecutionPhase;
+import roomescape.dto.ReservationTimeCreateDto;
 
 /*
  * 테스트 데이터베이스 초기 데이터
@@ -34,5 +36,18 @@ class ReservationTimeControllerTest {
                 .then().log().all()
                 .statusCode(200)
                 .body("size()", is(2));
+    }
+
+    @Test
+    void createReservationTime() {
+        ReservationTimeCreateDto createDto = new ReservationTimeCreateDto("13:00");
+
+        RestAssured.given().log().all()
+                .contentType(ContentType.JSON)
+                .body(createDto)
+                .when().post("/times")
+                .then().log().all()
+                .statusCode(201)
+                .header("Location", "/times/3");
     }
 }

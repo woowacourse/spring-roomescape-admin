@@ -1,6 +1,7 @@
 package roomescape.domain;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.junit.jupiter.api.Assertions.assertAll;
 
 import java.util.List;
 import org.junit.jupiter.api.BeforeEach;
@@ -48,5 +49,21 @@ class ReservationTimeRepositoryTest {
 
         // then
         assertThat(findReservationTime.getStartAt()).isEqualTo("11:00");
+    }
+
+    @Test
+    @DisplayName("예약 시간을 생성한다.")
+    void create() {
+        // given
+        ReservationTime inputData = new ReservationTime(0L, "13:00");
+
+        // when
+        ReservationTime createdTime = reservationTimeRepository.create(inputData);
+
+        // then
+        assertAll(
+                () -> assertThat(createdTime.getStartAt()).isEqualTo("13:00"),
+                () -> assertThat(reservationTimeRepository.findAll()).hasSize(3)
+        );
     }
 }

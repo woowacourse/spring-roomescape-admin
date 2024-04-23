@@ -1,18 +1,16 @@
 package roomescape.dto.reservation;
 
 import java.time.LocalDate;
-import java.time.format.DateTimeFormatter;
 import roomescape.domain.reservation.Reservation;
+import roomescape.dto.reservationtime.ReservationTimeResponse;
 
-public record ReservationResponse(long id, String name, LocalDate date, String time) {
-    private static final DateTimeFormatter DATE_TIME_FORMATTER = DateTimeFormatter.ofPattern("HH:mm");
-
-    public static ReservationResponse from(Reservation reservation) {
+public record ReservationResponse(long id, String name, LocalDate date, ReservationTimeResponse time) {
+    public static ReservationResponse from(Reservation reservation) { // todo 도메인 분리
         return new ReservationResponse(
                 reservation.getId(),
                 reservation.getName(),
                 reservation.getDate(),
-                reservation.getTime().format(DATE_TIME_FORMATTER)
+                ReservationTimeResponse.from(reservation.getTimeId(), reservation.getTime())
         );
     }
 }

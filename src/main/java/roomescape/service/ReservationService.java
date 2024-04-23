@@ -42,7 +42,7 @@ public class ReservationService {
                 .toList();
     }
 
-    public void delete(long id) {
+    public void delete(Long id) {
         Reservation reservation = reservationDao.findById(id)
                 .orElseThrow(() -> new IllegalArgumentException("Reservation not found"));
 

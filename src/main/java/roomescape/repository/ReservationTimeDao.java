@@ -44,7 +44,7 @@ public class ReservationTimeDao {
         return jdbcTemplate.query(sql, RESERVATION_TIME_ROW_MAPPER);
     }
 
-    public Optional<ReservationTime> findById(long id) {
+    public Optional<ReservationTime> findById(Long id) {
         String sql = """
                 SELECT * FROM reservation_time
                 WHERE id = ?""";

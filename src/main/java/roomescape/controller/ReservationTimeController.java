@@ -27,7 +27,7 @@ public class ReservationTimeController {
     }
 
     @GetMapping
-    public ResponseEntity<List<ReservationTimeResponse>> read() {
+    public ResponseEntity<List<ReservationTimeResponse>> findAll() {
         List<ReservationTimeServiceResponse> reservationTimeServiceResponses = reservationTimeService.findAll();
 
         List<ReservationTimeResponse> reservationTimeResponses = reservationTimeServiceResponses.stream()
@@ -50,7 +50,7 @@ public class ReservationTimeController {
     }
 
     @DeleteMapping("/{id}")
-    public ResponseEntity<Void> delete(@PathVariable("id") long id) {
+    public ResponseEntity<Void> delete(@PathVariable("id") Long id) {
         reservationTimeService.delete(id);
 
         return ResponseEntity.noContent()

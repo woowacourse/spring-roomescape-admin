@@ -5,7 +5,6 @@ import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.jdbc.core.JdbcTemplate;
 import roomescape.domain.Reservation;
 import roomescape.domain.ReservationTime;
 
@@ -14,14 +13,11 @@ import static org.assertj.core.api.Assertions.assertThat;
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.NONE)
 class ReservationRepositoryTest {
 
-    @Autowired
-    JdbcTemplate jdbcTemplate;
     private long reservationTimeId;
 
     @BeforeEach
     void setup() {
         reservationTimeId = reservationTimeRepository.create(ReservationTime.from("10:00"));
-        jdbcTemplate.update("INSERT INTO reservation_time (start_at) VALUES ('10:00')");
     }
 
     @Autowired

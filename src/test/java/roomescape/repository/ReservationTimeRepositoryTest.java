@@ -1,11 +1,9 @@
 package roomescape.repository;
 
-import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.jdbc.core.JdbcTemplate;
 import roomescape.domain.ReservationTime;
 
 import static org.assertj.core.api.Assertions.assertThat;
@@ -13,16 +11,6 @@ import static org.assertj.core.api.Assertions.assertThatThrownBy;
 
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.NONE)
 class ReservationTimeRepositoryTest {
-
-    @Autowired
-    JdbcTemplate jdbcTemplate;
-
-    @BeforeEach
-    void setup() {
-        jdbcTemplate.update("DELETE from reservation");
-        jdbcTemplate.update("DELETE from reservation_time");
-    }
-
     @Autowired
     private ReservationTimeRepository reservationTimeRepository;
 

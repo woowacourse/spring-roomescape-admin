@@ -59,12 +59,10 @@ public class ReservationTimeDao {
     }
 
     private RowMapper<ReservationTime> getReservationTimeRowMapper() {
-        RowMapper<ReservationTime> rowMapper = (resultSet, rowNum) -> new ReservationTime(
+        return (resultSet, rowNum) -> new ReservationTime(
                 resultSet.getLong("id"),
                 resultSet.getString("start_at")
         );
-
-        return rowMapper;
     }
 
     public void deleteById(Long id) {

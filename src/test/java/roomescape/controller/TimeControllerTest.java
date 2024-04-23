@@ -51,15 +51,7 @@ class TimeControllerTest {
     @DisplayName("시간 컨트롤러는 시간 조회 요청이 들어오면 저장된 시간을 반환한다.")
     @Test
     void readTimes() {
-        Map<String, String> params = new HashMap<>();
-        params.put("startAt", "10:00");
-
-        RestAssured.given()
-                .contentType(ContentType.JSON)
-                .body(params)
-                .when().post("/times")
-                .then()
-                .statusCode(200);
+        createInitReservationTime();
 
         RestAssured.given().log().all()
                 .when().get("/times")
@@ -71,15 +63,7 @@ class TimeControllerTest {
     @DisplayName("시간 컨트롤러는 시간 삭제 요청이 들어오면 삭제 후 200을 반환한다.")
     @Test
     void deleteTime() {
-        Map<String, String> params = new HashMap<>();
-        params.put("startAt", "10:00");
-
-        RestAssured.given()
-                .contentType(ContentType.JSON)
-                .body(params)
-                .when().post("/times")
-                .then()
-                .statusCode(200);
+        createInitReservationTime();
 
         RestAssured.given().log().all()
                 .when().delete("/times/1")
@@ -92,5 +76,17 @@ class TimeControllerTest {
                 .then()
                 .statusCode(200)
                 .body("size()", is(0));
+    }
+
+    private void createInitReservationTime() {
+        Map<String, String> params = new HashMap<>();
+        params.put("startAt", "10:00");
+
+        RestAssured.given()
+                .contentType(ContentType.JSON)
+                .body(params)
+                .when().post("/times")
+                .then()
+                .statusCode(200);
     }
 }

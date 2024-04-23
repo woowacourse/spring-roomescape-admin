@@ -13,16 +13,12 @@ public class ReservationDate {
         this.date = date;
     }
 
-    public ReservationDate(String date){
+    public ReservationDate(String date) {
         this(LocalDate.parse(date, DATE_FORMATTER));
     }
 
-    public static String formattedDate(LocalDate otherDate){
-        return otherDate.format(DATE_FORMATTER);
-    }
-
     private void validateDate(LocalDate date) {
-        if(date ==null){
+        if (date == null) {
             throw new IllegalArgumentException("date is null");
         }
 

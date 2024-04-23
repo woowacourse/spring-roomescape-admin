@@ -15,12 +15,12 @@ public record ReservationResponseDto(Long id, String name, LocalDate date, Reser
         this.time = time;
     }
 
-    public ReservationResponseDto(Reservation reservation){
+    public ReservationResponseDto(Reservation reservation) {
         this(reservation.getId(), reservation.getName().getName(),
                 reservation.getDate().getDate(), reservation.getTime());
     }
 
-    public static List<ReservationResponseDto> listOf(List<Reservation> reservations){
+    public static List<ReservationResponseDto> listOf(List<Reservation> reservations) {
         return reservations.stream()
                 .map(ReservationResponseDto::new)
                 .toList();

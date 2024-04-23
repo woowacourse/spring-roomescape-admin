@@ -17,11 +17,11 @@ public class ReservationTime {
         this.time = time;
     }
 
-    public ReservationTime(LocalTime time){
+    public ReservationTime(LocalTime time) {
         this(null, time);
     }
 
-    public ReservationTime(Long id, String time){
+    public ReservationTime(Long id, String time) {
         this(id, LocalTime.parse(time, TIME_FORMATTER));
     }
 

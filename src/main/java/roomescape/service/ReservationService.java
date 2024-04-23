@@ -33,7 +33,7 @@ public class ReservationService {
         reservationDao.deleteReservation(id);
     }
 
-    private Reservation createReservation(ReservationRequestDto reservationRequestDto){
+    private Reservation createReservation(ReservationRequestDto reservationRequestDto) {
         return new Reservation(new Name(reservationRequestDto.name()), new ReservationDate(reservationRequestDto.date()),
                 reservationTimeDao.findById(reservationRequestDto.timeId()));
     }

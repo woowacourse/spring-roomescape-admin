@@ -7,7 +7,6 @@ import roomescape.dto.ReservationTimeRequestDto;
 import roomescape.dto.ReservationTimeResponseDto;
 import roomescape.service.ReservationTimeService;
 
-import java.net.URI;
 import java.util.List;
 
 @RestController
@@ -20,7 +19,7 @@ public class ReservationTimeController {
 
     @PostMapping("/times")
     public ResponseEntity<ReservationTimeResponseDto> addTime(@RequestBody ReservationTimeRequestDto timeRequestDto) {
-        ReservationTime time  = reservationTimeService.addTime(timeRequestDto.toEntity());
+        ReservationTime time = reservationTimeService.addTime(timeRequestDto.toEntity());
         return ResponseEntity.ok(new ReservationTimeResponseDto(time));
     }
 

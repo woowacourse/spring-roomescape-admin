@@ -20,14 +20,14 @@ public class ReservationTimeDao {
     }
 
     private final RowMapper<ReservationTime> timeRowMapper = ((rs, rowNum) ->
-        new ReservationTime(rs.getLong("id"), rs.getString("start_at")));
+            new ReservationTime(rs.getLong("id"), rs.getString("start_at")));
 
     public Long add(ReservationTime time) {
         KeyHolder keyHolder = new GeneratedKeyHolder();
         jdbcTemplate.update(connection -> {
             PreparedStatement ps = connection.prepareStatement(
                     "INSERT INTO RESERVATION_TIME(start_at) VALUES(?)",
-                    new String []{"id"});
+                    new String[]{"id"});
             ps.setString(1, ReservationTime.formattedTime(time.getTime()));
             return ps;
         }, keyHolder);
@@ -35,7 +35,7 @@ public class ReservationTimeDao {
         return Objects.requireNonNull(keyHolder.getKey()).longValue();
     }
 
-    public ReservationTime findById(Long id){
+    public ReservationTime findById(Long id) {
         String sql = "SELECT * FROM RESERVATION_TIME WHERE id = ?";
         return jdbcTemplate.queryForObject(sql, timeRowMapper, id);
     }

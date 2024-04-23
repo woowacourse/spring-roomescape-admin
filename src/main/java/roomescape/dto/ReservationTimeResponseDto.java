@@ -6,11 +6,11 @@ import java.time.LocalTime;
 import java.util.List;
 
 public record ReservationTimeResponseDto(Long id, LocalTime time) {
-    public ReservationTimeResponseDto(ReservationTime time){
+    public ReservationTimeResponseDto(ReservationTime time) {
         this(time.getId(), time.getTime());
     }
 
-    public static List<ReservationTimeResponseDto> listOf(List<ReservationTime> reservationTimes){
+    public static List<ReservationTimeResponseDto> listOf(List<ReservationTime> reservationTimes) {
         return reservationTimes.stream()
                 .map(ReservationTimeResponseDto::new)
                 .toList();

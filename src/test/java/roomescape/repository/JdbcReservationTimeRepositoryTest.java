@@ -4,6 +4,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 
 import java.util.List;
 import java.util.Optional;
+import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -19,6 +20,7 @@ class JdbcReservationTimeRepositoryTest {
     private ReservationTimeRepository reservationTimeRepository;
 
     @Test
+    @DisplayName("모든 예약 시간들을 조회한다.")
     void findAll() {
         // given
         ReservationTime savedTime1 = reservationTimeRepository.save(Fixture.RESERVATION_TIME_1);
@@ -32,6 +34,7 @@ class JdbcReservationTimeRepositoryTest {
     }
 
     @Test
+    @DisplayName("예약 시간을 조회한다.")
     void findById() {
         // given
         ReservationTime savedTime = reservationTimeRepository.save(Fixture.RESERVATION_TIME_1);
@@ -44,6 +47,7 @@ class JdbcReservationTimeRepositoryTest {
     }
 
     @Test
+    @DisplayName("예약 시간을 추가한다.")
     void save() {
         // when
         ReservationTime savedTime = reservationTimeRepository.save(Fixture.RESERVATION_TIME_1);
@@ -54,6 +58,7 @@ class JdbcReservationTimeRepositoryTest {
     }
 
     @Test
+    @DisplayName("예약 시간을 삭제한다.")
     void deleteById() {
         // given
         ReservationTime savedTime = reservationTimeRepository.save(Fixture.RESERVATION_TIME_1);

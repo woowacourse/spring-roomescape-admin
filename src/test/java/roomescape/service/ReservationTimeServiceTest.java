@@ -3,13 +3,13 @@ package roomescape.service;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.verify;
-import static org.mockito.Mockito.when;
 
-import java.time.LocalTime;
 import java.util.List;
 import java.util.Optional;
+import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
+import org.mockito.BDDMockito;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
@@ -29,9 +29,11 @@ class ReservationTimeServiceTest {
     private ReservationTimeService reservationTimeService;
 
     @Test
+    @DisplayName("모든 예약 시간들을 조회한다.")
     void getAllReservationTimes() {
         // given
-        when(reservationTimeRepository.findAll()).thenReturn(List.of(Fixture.RESERVATION_TIME_1));
+        BDDMockito.given(reservationTimeRepository.findAll())
+                .willReturn(List.of(Fixture.RESERVATION_TIME_1));
 
         // when
         List<ReservationTimeResponse> reservationTimes = reservationTimeService.getAllReservationTimes();
@@ -41,35 +43,39 @@ class ReservationTimeServiceTest {
     }
 
     @Test
+    @DisplayName("예약 시간을 조회한다.")
     void getReservationTimeByIdOrElseThrow() {
         // given
-        Long id = 1L;
-        ReservationTime reservationTime = new ReservationTime(id, LocalTime.of(10, 30));
-        when(reservationTimeRepository.findById(id)).thenReturn(
-                Optional.of(reservationTime));
+        ReservationTime reservationTime = Fixture.RESERVATION_TIME_1;
+        BDDMockito.given(reservationTimeRepository.findById(reservationTime.getId()))
+                .willReturn(Optional.of(reservationTime));
 
         // when
-        ReservationTime savedReservationTime = reservationTimeService.getReservationTimeByIdOrElseThrow(id);
+        ReservationTime savedReservationTime = reservationTimeService.getReservationTimeByIdOrElseThrow(
+                reservationTime.getId());
 
         // then
         assertThat(reservationTime).isEqualTo(savedReservationTime);
     }
 
     @Test
+    @DisplayName("예약 시간을 추가한다.")
     void addReservationTime() {
         // given
-        ReservationTime reservationTime = Fixture.reservationTime(1L, 10, 30);
-        when(reservationTimeRepository.save(any())).thenReturn(reservationTime);
+        ReservationTime reservationTime = Fixture.RESERVATION_TIME_1;
+        BDDMockito.given(reservationTimeRepository.save(any()))
+                .willReturn(reservationTime);
 
         // when
         ReservationTimeResponse reservationTimeResponse = reservationTimeService.addReservationTime(
-                new ReservationTimeRequest(LocalTime.of(10, 30)));
+                new ReservationTimeRequest(reservationTime.getStartAt()));
 
         // then
         assertThat(reservationTimeResponse).isEqualTo(ReservationTimeResponse.from(reservationTime));
     }
 
     @Test
+    @DisplayName("예약 시간을 삭제한다.")
     void deleteReservationTimeById() {
         // given
         Long id = 1L;

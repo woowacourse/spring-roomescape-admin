@@ -11,9 +11,8 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import java.time.LocalDate;
-import java.time.LocalTime;
 import java.util.List;
+import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.mockito.BDDMockito;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -25,6 +24,7 @@ import roomescape.domain.Reservation;
 import roomescape.domain.ReservationTime;
 import roomescape.dto.ReservationRequest;
 import roomescape.dto.ReservationResponse;
+import roomescape.fixture.Fixture;
 import roomescape.service.ReservationService;
 
 @WebMvcTest(ReservationController.class)
@@ -40,9 +40,10 @@ class ReservationControllerTest {
     private ReservationService reservationService;
 
     @Test
+    @DisplayName("모든 예약들을 조회한다.")
     void getAllReservations() throws Exception {
-        ReservationTime reservationTime = new ReservationTime(1L, LocalTime.of(10, 30));
-        Reservation reservation = new Reservation(1L, "구름", LocalDate.of(2024, 10, 25), reservationTime);
+        ReservationTime reservationTime = Fixture.RESERVATION_TIME_1;
+        Reservation reservation = Fixture.getReservation(reservationTime);
 
         BDDMockito.given(reservationService.getAllReservations())
                 .willReturn(List.of(ReservationResponse.from(reservation)));
@@ -58,10 +59,15 @@ class ReservationControllerTest {
     }
 
     @Test
+    @DisplayName("예약을 추가한다.")
     void addReservation() throws Exception {
-        ReservationTime reservationTime = new ReservationTime(1L, LocalTime.of(10, 30));
-        Reservation reservation = new Reservation(1L, "구름", LocalDate.of(2024, 10, 25), reservationTime);
-        ReservationRequest reservationRequest = new ReservationRequest("구름", LocalDate.of(2024, 10, 25), 1L);
+        ReservationTime reservationTime = Fixture.RESERVATION_TIME_1;
+        Reservation reservation = Fixture.getReservation(reservationTime);
+        ReservationRequest reservationRequest = new ReservationRequest(
+                reservation.getName(),
+                reservation.getDate(),
+                reservationTime.getId()
+        );
 
         BDDMockito.given(reservationService.addReservation(any()))
                 .willReturn(ReservationResponse.from(reservation));
@@ -80,6 +86,7 @@ class ReservationControllerTest {
     }
 
     @Test
+    @DisplayName("예약을 삭제한다.")
     void deleteReservationById() throws Exception {
         BDDMockito.willDoNothing()
                 .given(reservationService)

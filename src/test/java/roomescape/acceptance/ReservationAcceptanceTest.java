@@ -11,6 +11,7 @@ import java.time.LocalDate;
 import java.util.List;
 import org.assertj.core.api.SoftAssertions;
 import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -25,7 +26,7 @@ import roomescape.repository.ReservationTimeRepository;
 class ReservationAcceptanceTest extends BaseAcceptanceTest {
 
     @Autowired
-    private ObjectMapper mapper;
+    private ObjectMapper objectMapper;
 
     @Autowired
     private ReservationTimeRepository reservationTimeRepository;
@@ -39,11 +40,12 @@ class ReservationAcceptanceTest extends BaseAcceptanceTest {
     @BeforeEach
     void setUp() {
         reservationTime = reservationTimeRepository.save(Fixture.RESERVATION_TIME_1);
-        reservation1 = reservationRepository.save(Fixture.reservation("브라운", 2024, 4, 22, reservationTime));
-        reservation2 = reservationRepository.save(Fixture.reservation("구름", 2024, 4, 23, reservationTime));
+        reservation1 = reservationRepository.save(Fixture.getReservation(reservationTime));
+        reservation2 = reservationRepository.save(Fixture.getReservation(reservationTime));
     }
 
     @Test
+    @DisplayName("모든 예약들을 조회한다.")
     void getAllReservations() {
         ExtractableResponse<Response> response = RestAssured.given().log().all()
                 .when().get("/reservations")
@@ -63,6 +65,7 @@ class ReservationAcceptanceTest extends BaseAcceptanceTest {
     }
 
     @Test
+    @DisplayName("예약을 추가한다.")
     void addReservation() {
         ExtractableResponse<Response> response = RestAssured.given().log().all()
                 .contentType(ContentType.JSON)
@@ -81,6 +84,7 @@ class ReservationAcceptanceTest extends BaseAcceptanceTest {
     }
 
     @Test
+    @DisplayName("예약을 삭제한다.")
     void deleteReservation() {
         ReservationTime savedReservationTime = reservationTimeRepository.save(Fixture.RESERVATION_TIME_1);
 
@@ -95,11 +99,11 @@ class ReservationAcceptanceTest extends BaseAcceptanceTest {
     private String makeReservationRequest(Long timeId) {
         try {
             ReservationRequest request = new ReservationRequest(
-                    "브라운",
+                    "구름",
                     LocalDate.of(2024, 4, 22),
                     timeId
             );
-            return mapper.writeValueAsString(request);
+            return objectMapper.writeValueAsString(request);
         } catch (Exception e) {
             throw new RuntimeException(e);
         }

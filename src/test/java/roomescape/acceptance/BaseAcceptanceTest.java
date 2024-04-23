@@ -25,7 +25,7 @@ abstract class BaseAcceptanceTest {
 
     @AfterEach
     public void environmentAfterEach() {
-        final List<String> truncateQueries = getTruncateQueries(jdbcTemplate);
+        List<String> truncateQueries = getTruncateQueries(jdbcTemplate);
         truncateTables(jdbcTemplate, truncateQueries);
     }
 

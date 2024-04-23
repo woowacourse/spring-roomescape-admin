@@ -5,15 +5,13 @@ import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
-import java.time.LocalDate;
 import java.util.List;
+import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
-import org.junit.jupiter.api.parallel.Execution;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
-import org.springframework.boot.test.context.SpringBootTest;
 import roomescape.domain.Reservation;
 import roomescape.domain.ReservationTime;
 import roomescape.dto.ReservationRequest;
@@ -34,10 +32,11 @@ class ReservationServiceTest {
     private ReservationService reservationService;
 
     @Test
+    @DisplayName("모든 예약들을 조회한다.")
     void getAllReservations() {
         // given
-        ReservationTime reservationTime = Fixture.reservationTime(1L, 10, 30);
-        Reservation reservation = Fixture.reservation(1L, "구름", 2024, 10, 25, reservationTime);
+        ReservationTime reservationTime = Fixture.RESERVATION_TIME_1;
+        Reservation reservation = Fixture.getReservation(reservationTime);
         when(reservationRepository.findAll()).thenReturn(List.of(reservation));
 
         // when
@@ -48,15 +47,22 @@ class ReservationServiceTest {
     }
 
     @Test
+    @DisplayName("예약을 추가한다.")
     void addReservation() {
         // given
-        ReservationTime reservationTime = Fixture.reservationTime(1L, 10, 30);
-        Reservation reservation = Fixture.reservation(1L, "구름", 2024, 10, 25, reservationTime);
-        when(reservationTimeService.getReservationTimeByIdOrElseThrow(1L)).thenReturn(reservationTime);
-        when(reservationRepository.save(any())).thenReturn(reservation);
+        ReservationTime reservationTime = Fixture.RESERVATION_TIME_1;
+        Reservation reservation = Fixture.getReservation(reservationTime);
+        when(reservationTimeService.getReservationTimeByIdOrElseThrow(reservationTime.getId()))
+                .thenReturn(reservationTime);
+        when(reservationRepository.save(any()))
+                .thenReturn(reservation);
 
         // when
-        ReservationRequest reservationRequest = new ReservationRequest("구름", LocalDate.of(2024, 10, 25), 1L);
+        ReservationRequest reservationRequest = new ReservationRequest(
+                reservation.getName(),
+                reservation.getDate(),
+                reservationTime.getId()
+        );
         ReservationResponse savedReservation = reservationService.addReservation(reservationRequest);
 
         // then
@@ -64,6 +70,7 @@ class ReservationServiceTest {
     }
 
     @Test
+    @DisplayName("예약을 삭제한다.")
     void deleteReservationById() {
         // given
         Long id = 1L;

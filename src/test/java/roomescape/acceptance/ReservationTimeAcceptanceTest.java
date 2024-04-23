@@ -9,6 +9,7 @@ import java.time.LocalTime;
 import java.util.List;
 import org.assertj.core.api.SoftAssertions;
 import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -21,7 +22,7 @@ import roomescape.repository.ReservationTimeRepository;
 class ReservationTimeAcceptanceTest extends BaseAcceptanceTest {
 
     @Autowired
-    private ObjectMapper mapper;
+    private ObjectMapper objectMapper;
 
     @Autowired
     private ReservationTimeRepository reservationTimeRepository;
@@ -35,6 +36,7 @@ class ReservationTimeAcceptanceTest extends BaseAcceptanceTest {
     }
 
     @Test
+    @DisplayName("모든 예약 시간들을 조회한다.")
     void getAllReservationTimes() {
         ExtractableResponse<Response> response = RestAssured.given().log().all()
                 .when().get("/times")
@@ -54,6 +56,7 @@ class ReservationTimeAcceptanceTest extends BaseAcceptanceTest {
     }
 
     @Test
+    @DisplayName("예약 시간을 조회한다.")
     void addReservationTime() {
         ExtractableResponse<Response> response = RestAssured.given().log().all()
                 .contentType(ContentType.JSON)
@@ -72,6 +75,7 @@ class ReservationTimeAcceptanceTest extends BaseAcceptanceTest {
     }
 
     @Test
+    @DisplayName("예약 시간을 삭제한다.")
     void deleteReservationTime() {
         ReservationTime reservationTime = reservationTimeRepository.save(Fixture.RESERVATION_TIME_1);
 
@@ -90,7 +94,7 @@ class ReservationTimeAcceptanceTest extends BaseAcceptanceTest {
             ReservationTimeRequest request = new ReservationTimeRequest(
                     LocalTime.of(15, 40)
             );
-            return mapper.writeValueAsString(request);
+            return objectMapper.writeValueAsString(request);
         } catch (Exception e) {
             throw new RuntimeException(e);
         }

@@ -13,6 +13,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 import com.fasterxml.jackson.databind.ObjectMapper;
 import java.time.LocalTime;
 import java.util.List;
+import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.mockito.BDDMockito;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -22,6 +23,7 @@ import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
 import roomescape.domain.ReservationTime;
 import roomescape.dto.ReservationTimeResponse;
+import roomescape.fixture.Fixture;
 import roomescape.service.ReservationTimeService;
 
 @WebMvcTest(ReservationTimeController.class)
@@ -37,8 +39,9 @@ class ReservationTimeControllerTest {
     private ReservationTimeService reservationTimeService;
 
     @Test
+    @DisplayName("모든 예약 시간들을 조회한다.")
     void getAllReservationTimes() throws Exception {
-        ReservationTime reservationTime = new ReservationTime(1L, LocalTime.of(10, 30));
+        ReservationTime reservationTime = Fixture.RESERVATION_TIME_1;
 
         BDDMockito.given(reservationTimeService.getAllReservationTimes())
                 .willReturn(List.of(ReservationTimeResponse.from(reservationTime)));
@@ -51,8 +54,9 @@ class ReservationTimeControllerTest {
     }
 
     @Test
+    @DisplayName("예약 시간을 추가한다.")
     void addReservationTime() throws Exception {
-        ReservationTime reservationTime = new ReservationTime(1L, LocalTime.of(10, 30));
+        ReservationTime reservationTime = Fixture.RESERVATION_TIME_1;
 
         BDDMockito.given(reservationTimeService.addReservationTime(any()))
                 .willReturn(ReservationTimeResponse.from(reservationTime));
@@ -68,7 +72,8 @@ class ReservationTimeControllerTest {
     }
 
     @Test
-    void deleteReservationTime() throws Exception {
+    @DisplayName("예약 시간을 삭제한다.")
+    void deleteReservationTimeById() throws Exception {
         BDDMockito.willDoNothing()
                 .given(reservationTimeService)
                 .deleteReservationTimeById(anyLong());

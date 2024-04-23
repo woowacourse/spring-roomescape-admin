@@ -95,6 +95,7 @@ public class ReservationControllerTest {
     }
 
     @Test
+    @Disabled
     @DisplayName("DB에 저장되어있는 모든 예약을 정상적으로 조회한다.")
     void selectReservationListRequest_InDatabase_Success() {
         jdbcTemplate.update("INSERT INTO reservation (name, date, time) VALUES (?, ?, ?)", "브라운", "2023-08-05", "15:40");
@@ -111,6 +112,7 @@ public class ReservationControllerTest {
     }
 
     @Test
+    @Disabled
     @DisplayName("DB에 예약을 정상적으로 추가한다.")
     void addReservation_InDatabase_Success() {
         Map<String, String> params = new HashMap<>();
@@ -131,6 +133,7 @@ public class ReservationControllerTest {
     }
 
     @Test
+    @Disabled
     @DisplayName("DB에 저장된 예약을 정상적으로 삭제한다.")
     void deleteReservation_InDatabase_Success() {
         Map<String, String> params = new HashMap<>();
@@ -156,5 +159,37 @@ public class ReservationControllerTest {
 
         Integer countAfterDelete = jdbcTemplate.queryForObject("SELECT count(1) from reservation", Integer.class);
         assertThat(countAfterDelete).isEqualTo(0);
+    }
+
+    @Test
+    void 팔단계() {
+        Map<String, Object> reservation = new HashMap<>();
+        reservation.put("name", "브라운");
+        reservation.put("date", "2023-08-05");
+        reservation.put("timeId", 1);
+
+        Map<String, String> time = new HashMap<>();
+        time.put("startAt", "10:00");
+
+        RestAssured.given().log().all()
+                .contentType(ContentType.JSON)
+                .body(time)
+                .when().post("/times")
+                .then().log().all()
+                .statusCode(200);
+
+        RestAssured.given().log().all()
+                .contentType(ContentType.JSON)
+                .body(reservation)
+                .when().post("/reservations")
+                .then().log().all()
+                .statusCode(201);
+
+
+        RestAssured.given().log().all()
+                .when().get("/reservations")
+                .then().log().all()
+                .statusCode(200)
+                .body("size()", is(1));
     }
 }

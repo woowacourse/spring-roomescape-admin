@@ -8,6 +8,7 @@ import roomescape.domain.ReservationTime;
 
 import java.sql.PreparedStatement;
 import java.util.List;
+import java.util.Optional;
 
 @Repository
 public class ReservationTimeRepository {
@@ -36,6 +37,12 @@ public class ReservationTimeRepository {
             return ps;
         }, keyHolder);
         return new ReservationTime(keyHolder.getKey().longValue(), time.getStartAt());
+    }
+
+    public Optional<ReservationTime> findById(Long id) {
+        String sql = "SELECT id, start_at FROM reservation_time where id = ?";
+        List<ReservationTime> reservationTimes = jdbcTemplate.query(sql, reservationTimeRowMapper, id);
+        return reservationTimes.isEmpty() ? Optional.empty() : Optional.of(reservationTimes.get(0));
     }
 
     public List<ReservationTime> findAll() {

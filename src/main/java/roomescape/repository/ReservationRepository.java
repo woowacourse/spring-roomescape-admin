@@ -5,6 +5,7 @@ import org.springframework.jdbc.core.RowMapper;
 import org.springframework.jdbc.support.GeneratedKeyHolder;
 import org.springframework.stereotype.Repository;
 import roomescape.domain.Reservation;
+import roomescape.domain.ReservationTime;
 
 import java.sql.PreparedStatement;
 import java.util.List;
@@ -18,7 +19,7 @@ public class ReservationRepository {
             resultSet.getLong("id"),
             resultSet.getString("name"),
             resultSet.getString("date"),
-            resultSet.getString("time")
+            new ReservationTime(resultSet.getLong("time_id"), resultSet.getString("time_value"))
     );
 
     public ReservationRepository(JdbcTemplate jdbcTemplate) {
@@ -26,12 +27,20 @@ public class ReservationRepository {
     }
 
     public List<Reservation> findAll() {
-        String sql = "SELECT id, name, date, time FROM reservation";
+        String sql = "SELECT " +
+                "    r.id as reservation_id, " +
+                "    r.name, " +
+                "    r.date, " +
+                "    t.id as time_id, " +
+                "    t.start_at as time_value " +
+                "FROM reservation as r " +
+                "inner join reservation_time as t " +
+                "on r.time_id = t.id";
         return jdbcTemplate.query(sql, reservationRowMapper);
     }
 
     public Reservation save(Reservation reservation) {
-        String sql = "INSERT INTO reservation (name, date, time) values (?, ?, ?)";
+        String sql = "INSERT INTO reservation (name, date, time_id) values (?, ?, ?)";
         GeneratedKeyHolder keyHolder = new GeneratedKeyHolder();
 
         jdbcTemplate.update(con -> {
@@ -40,12 +49,12 @@ public class ReservationRepository {
                     new String[]{"id"});
             ps.setString(1, reservation.getName());
             ps.setString(2, reservation.getDate());
-            ps.setString(3, reservation.getTime());
+            ps.setLong(3, reservation.getReservationTime().getId());
             return ps;
         }, keyHolder);
 
         return new Reservation(keyHolder.getKey().longValue(), reservation.getName(),
-                reservation.getDate(), reservation.getTime());
+                reservation.getDate(), reservation.getReservationTime());
     }
 
     public void deleteById(Long id) {

@@ -5,22 +5,22 @@ public class Reservation {
     private Long id;
     private String name;
     private String date;
-    private String time;
+    private ReservationTime reservationTime;
 
     public Reservation() {
     }
 
-    public Reservation(String name, String date, String time) {
+    public Reservation(String name, String date, ReservationTime reservationTime) {
         this.name = name;
         this.date = date;
-        this.time = time;
+        this.reservationTime = reservationTime;
     }
 
-    public Reservation(Long id, String name, String date, String time) {
+    public Reservation(Long id, String name, String date, ReservationTime reservationTime) {
         this.id = id;
         this.name = name;
         this.date = date;
-        this.time = time;
+        this.reservationTime = reservationTime;
     }
 
     public boolean isSameReservation(Long id) {
@@ -39,7 +39,7 @@ public class Reservation {
         return date;
     }
 
-    public String getTime() {
-        return time;
+    public ReservationTime getReservationTime() {
+        return reservationTime;
     }
 }

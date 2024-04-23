@@ -58,10 +58,6 @@ public class ReservationResponseDto {
         return date;
     }
 
-    public ReservationTimeResponseDto getReservationTimeDto() {
-        return reservationTimeResponseDto;
-    }
-
     @Override
     public boolean equals(Object o) {
         if (this == o) {

@@ -15,10 +15,8 @@ public class InMemoryReservationRepository implements ReservationRepository {
     private final List<Reservation> reservations = new ArrayList<>();
 
     @Override
-    public List<ReservationResponse> findAllReservations() {
-        return reservations.stream()
-                .map(reservation -> ReservationResponse.from(reservation))
-                .toList();
+    public List<Reservation> findAllReservations() {
+        return reservations;
     }
 
     @Override

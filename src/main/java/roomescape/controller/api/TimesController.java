@@ -7,6 +7,7 @@ import roomescape.dto.ReservationTimeResponse;
 import roomescape.model.ReservationTime;
 import roomescape.repository.ReservationTimeRepository;
 
+import java.net.URI;
 import java.util.List;
 
 @RequestMapping("/times")
@@ -36,7 +37,7 @@ public class TimesController {
         ReservationTime savedReservationTime = reservationTimeRepository.save(reservationTime);
         ReservationTimeResponse reservationTimeResponse = ReservationTimeResponse.from(savedReservationTime);
 
-        return ResponseEntity.ok()
+        return ResponseEntity.created(URI.create("/times/" + savedReservationTime.getId()))
                 .body(reservationTimeResponse);
     }
 
@@ -44,7 +45,7 @@ public class TimesController {
     ResponseEntity<Void> deleteTime(@PathVariable("id") Long id) {
         reservationTimeRepository.deleteById(id);
 
-        return ResponseEntity.ok()
+        return ResponseEntity.noContent()
                 .build();
     }
 }

@@ -5,7 +5,7 @@ import roomescape.domain.reservation.ReservationTime;
 import java.time.LocalTime;
 import java.util.List;
 
-public record ReservationTimeResponseDto(Long id, LocalTime time) {
+public record ReservationTimeResponseDto(Long id, LocalTime startAt) {
     public ReservationTimeResponseDto(ReservationTime time) {
         this(time.getId(), time.getTime());
     }

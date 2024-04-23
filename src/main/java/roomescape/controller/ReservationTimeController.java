@@ -19,7 +19,9 @@ public class ReservationTimeController {
 
     @PostMapping("/times")
     public ResponseEntity<ReservationTimeResponseDto> addTime(@RequestBody ReservationTimeRequestDto timeRequestDto) {
+        System.out.println("tag" + timeRequestDto);
         ReservationTime time = reservationTimeService.addTime(timeRequestDto.toEntity());
+        System.out.println(time.getId() + " " + time.getTime());
         return ResponseEntity.ok(new ReservationTimeResponseDto(time));
     }
 

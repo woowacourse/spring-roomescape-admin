@@ -30,7 +30,6 @@ public class MissionStepTest {
 
     @LocalServerPort
     private int port;
-
     @Autowired
     private JdbcTemplate jdbcTemplate;
     @Autowired

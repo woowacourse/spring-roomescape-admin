@@ -1,6 +1,7 @@
 package roomescape.controller;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.assertThatCode;
 
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -17,6 +18,12 @@ class ReservationControllerTest {
 
     @Autowired
     ReservationController controller;
+
+    @Test
+    @DisplayName("예약 조회")
+    void getReservation() {
+        assertThat(controller.getReservations()).isEmpty();
+    }
 
     @DisplayName("예약 추가")
     @Test

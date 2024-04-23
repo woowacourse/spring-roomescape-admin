@@ -29,4 +29,8 @@ public class Reservation {
     public ReservationTime getTime() {
         return time;
     }
+
+    public Long getTimeId() {
+        return time.getId();
+    }
 }

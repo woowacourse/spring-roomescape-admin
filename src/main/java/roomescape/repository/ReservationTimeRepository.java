@@ -35,6 +35,16 @@ public class ReservationTimeRepository {
         return new ReservationTime(id, request.startAt());
     }
 
+    public ReservationTime findById(Long id) {
+        return jdbcTemplate.queryForObject(
+            "select id, start_at from reservation_time where id=?",
+            (resultSet, rowNum) -> new ReservationTime(
+                resultSet.getLong("id"),
+                resultSet.getString("start_at")
+            ), id
+        );
+    }
+
     public List<ReservationTime> findAll() {
         return jdbcTemplate.query(
             "select id, start_at from reservation_time",

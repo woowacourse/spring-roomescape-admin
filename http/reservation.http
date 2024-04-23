@@ -11,7 +11,7 @@ Content-Type: application/json
 {
   "date": "2023-08-05",
   "name": "브라운",
-  "time": "15:40"
+  "timeId": "1"
 }
 
 ### 예약 삭제 요청

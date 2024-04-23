@@ -13,6 +13,7 @@
 - [x] 예약 관리 기능이 정상 동작하도록 기능을 완성하세요.
 - [x] API 명세를 따라 시간 관리 API를 구현하세요.
 - [x] 페이지는 templates/admin/time.html 파일을 이용하세요.
+- [ ] 예약 기능의 시간을 시간 테이블에 저장된 값만 선택할 수 있도록 수정하세요.
 
 
 
@@ -31,14 +32,11 @@ Content-Type: application/json
     {
         "id": 1,
         "name": "브라운",
-        "date": "2023-01-01",
-        "time": "10:00"
-    },
-    {
-        "id": 2,
-        "name": "브라운",
-        "date": "2023-01-02",
-        "time": "11:00"
+        "date": "2023-08-05",
+        "time": {
+            "id": 1,
+            "startAt": "10:00"
+        }
     }
 ]
 
@@ -54,7 +52,7 @@ content-type: application/json
 {
     "date": "2023-08-05",
     "name": "브라운",
-    "time": "15:40"
+    "timeId": 1
 }
 ```
 - 응답 
@@ -167,7 +165,9 @@ HTTP/1.1 200
   - [x] 데이터 베이스에서 시간 정보를 조회한다.
   - [x] 데이터 베이스에서 시간 정보를 삭제한다.
   - [x] 데이터 베이스에서 시간 정보를 등록한다.
-
+- [ ] 데이터 베이스에서 예약 정보와 시간 정보에 연관관계를 추가한다.
+  - [ ] 예약 정보가 예약 시간을 의존한다. 
+  - [ ] 응답 dto 생성2
 
 ### 2-3. HTTP 응답
 - [x] templates/admin/index.html 파일 응답 (관리자 페이지 홈화면 응답)
@@ -179,3 +179,5 @@ HTTP/1.1 200
 - [x] 204(NO CONTENT) 상태 코드 응답 (예약 취소 응답)
 - [x] templates/admin/time.html 파일 응답 (방탈출 시간 관리 페이지 응답)
   - [x] 200(OK) 상태 코드 응답
+- [ ] templates/admin/reservation-legacy.html 대신 templates/admin/reservation.html로 응답한다.
+

@@ -5,18 +5,17 @@ import static org.assertj.core.api.Assertions.assertThat;
 import io.restassured.RestAssured;
 import io.restassured.http.ContentType;
 import java.util.List;
+import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.jdbc.core.JdbcTemplate;
-import org.springframework.test.annotation.DirtiesContext;
-import roomescape.dto.CreateReservationRequest;
 import roomescape.domain.Reservation;
+import roomescape.dto.CreateReservationRequest;
 
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.DEFINED_PORT)
-@DirtiesContext(classMode = DirtiesContext.ClassMode.BEFORE_EACH_TEST_METHOD)
 class ReservationControllerTest {
 
     @Autowired
@@ -33,6 +32,16 @@ class ReservationControllerTest {
             "INSERT INTO reservation (name, date, time_id) VALUES (?, ?, ?)",
             "브라운", "2023-08-05", 1L
         );
+    }
+
+    @AfterEach
+    void deleteAllData() {
+        jdbcTemplate.execute("SET REFERENTIAL_INTEGRITY FALSE");
+        jdbcTemplate.execute("TRUNCATE TABLE reservation");
+        jdbcTemplate.execute("ALTER TABLE reservation ALTER COLUMN id RESTART WITH 1");
+        jdbcTemplate.execute("TRUNCATE TABLE reservation_time");
+        jdbcTemplate.execute("ALTER TABLE reservation_time ALTER COLUMN id RESTART WITH 1");
+        jdbcTemplate.execute("SET REFERENTIAL_INTEGRITY TRUE");
     }
 
     @Test

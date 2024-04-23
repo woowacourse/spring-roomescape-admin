@@ -5,17 +5,16 @@ import static org.hamcrest.Matchers.is;
 
 import io.restassured.RestAssured;
 import io.restassured.http.ContentType;
+import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.jdbc.core.JdbcTemplate;
-import org.springframework.test.annotation.DirtiesContext;
 import roomescape.dto.CreateReservationTimeRequest;
 
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.DEFINED_PORT)
-@DirtiesContext(classMode = DirtiesContext.ClassMode.BEFORE_EACH_TEST_METHOD)
 class ReservationTimeControllerTest {
 
     @Autowired
@@ -27,6 +26,16 @@ class ReservationTimeControllerTest {
             "INSERT INTO reservation_time (start_at) VALUES (?)",
             "10:00"
         );
+    }
+
+    @AfterEach
+    void deleteAllData() {
+        jdbcTemplate.execute("SET REFERENTIAL_INTEGRITY FALSE");
+        jdbcTemplate.execute("TRUNCATE TABLE reservation");
+        jdbcTemplate.execute("ALTER TABLE reservation ALTER COLUMN id RESTART WITH 1");
+        jdbcTemplate.execute("TRUNCATE TABLE reservation_time");
+        jdbcTemplate.execute("ALTER TABLE reservation_time ALTER COLUMN id RESTART WITH 1");
+        jdbcTemplate.execute("SET REFERENTIAL_INTEGRITY TRUE");
     }
 
     @Test

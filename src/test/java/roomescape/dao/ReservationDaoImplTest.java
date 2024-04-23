@@ -23,15 +23,17 @@ class ReservationDaoImplTest {
     void init() {
         reservationDaoImpl = new ReservationDaoImpl(jdbcTemplate);
         jdbcTemplate.update("delete from reservation");
+        jdbcTemplate.update("delete from reservation_time");
+        jdbcTemplate.update("INSERT INTO reservation_time VALUES (1,'10:00')");
     }
 
-    @DisplayName("존재하는 모든 엔티티를 보여준다.")
+    @DisplayName("존재하는 모든 예약을 보여준다.")
     @Test
     void findAll() {
         assertThat(reservationDaoImpl.findAll()).isEmpty();
     }
 
-    @DisplayName("도메인을 저장한다.")
+    @DisplayName("예약을 저장한다.")
     @Test
     void save() {
         //given
@@ -43,10 +45,11 @@ class ReservationDaoImplTest {
         assertThat(reservationDaoImpl.findAll()).hasSize(1);
     }
 
-    @DisplayName("중복되는 id의 도메인을 저장하면 오류가 발생한다.")
+    @DisplayName("중복되는 id의 예약을 저장하면 오류가 발생한다.")
     @Test
     void invalidSave() {
         //given
+        jdbcTemplate.update("INSERT INTO reservation_time VALUES (2,'11:00')");
         long id = 1;
         Reservation reservation1 = new Reservation(id, "aa", "2023-10-10",
                 new ReservationTime(1, "10:00"));
@@ -60,17 +63,26 @@ class ReservationDaoImplTest {
                 .hasMessage("duplicated id exists.");
     }
 
-    @DisplayName("해당 id의 도메인을 삭제한다.")
+    @DisplayName("해당 id의 예약을 삭제한다.")
     @Test
     void deleteById() {
-        //given
-        long id = 1;
-        Reservation reservation = new Reservation(id, "aa", "2023-10-10",
-                new ReservationTime(1, "10:00"));
-        reservationDaoImpl.save(reservation);
-        //when
-        reservationDaoImpl.deleteById(id);
-        //then
-        assertThat(reservationDaoImpl.findAll()).hasSize(0);
+        reservationDaoImpl.deleteById(1);
+
+        assertThat(reservationDaoImpl.findAll()).isEmpty();
+    }
+
+    @DisplayName("id가 존재할 때 삭제를 시도하면, true를 반환한다.")
+    @Test
+    void deleteExistingIdReturnsTrue() {
+        reservationDaoImpl.save(new Reservation(1, "aa", "2023-10-10",
+                new ReservationTime(1, "10:00")));
+
+        assertThat(reservationDaoImpl.deleteById(1)).isTrue();
+    }
+
+    @DisplayName("id가 존재하지 않을 때 삭제를 시도하면, false를 반환한다.")
+    @Test
+    void deleteExistingIdReturnsFalse() {
+        assertThat(reservationDaoImpl.deleteById(1)).isFalse();
     }
 }

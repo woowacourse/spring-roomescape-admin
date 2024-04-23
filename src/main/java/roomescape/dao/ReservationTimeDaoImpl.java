@@ -1,5 +1,6 @@
 package roomescape.dao;
 
+import java.sql.Time;
 import java.util.List;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Component;
@@ -37,10 +38,10 @@ public class ReservationTimeDaoImpl implements ReservationTimeDao {
     @Override
     public void save(ReservationTime reservationTime) {
         if (existsById(reservationTime.getId())) {
-            throw new IllegalArgumentException("duplicate id exists");
+            throw new IllegalArgumentException("duplicated id exists");
         }
         jdbcTemplate.update("INSERT INTO reservation_time (id, start_at) VALUES (?, ?)",
-                reservationTime.getId(), java.sql.Time.valueOf(reservationTime.getStartAt()));
+                reservationTime.getId(), Time.valueOf(reservationTime.getStartAt()));
     }
 
     @Override

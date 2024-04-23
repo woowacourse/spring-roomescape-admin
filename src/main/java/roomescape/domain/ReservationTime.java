@@ -11,8 +11,8 @@ public class ReservationTime {
         this(id, LocalTime.parse(startAt));
     }
 
-    public ReservationTime(long id, Time time) {
-        this(id, time.toLocalTime());
+    public ReservationTime(long id, Time startAt) {
+        this(id, startAt.toLocalTime());
     }
 
     public ReservationTime(long id, LocalTime startAt) {

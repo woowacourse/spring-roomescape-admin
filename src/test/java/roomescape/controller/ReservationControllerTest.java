@@ -35,26 +35,6 @@ class ReservationControllerTest {
         jdbcTemplate.update("delete from reservation_time");
     }
 
-    @DisplayName("예약 추가 테스트")
-    @Test
-    void createReservation() {
-        //given
-        jdbcTemplate.update("INSERT INTO reservation_time VALUES (1, '10:00:00')");
-        Response response = RestAssured.given().log().all()
-                .contentType(ContentType.JSON)
-                .body(new ReservationRequest("브라운", "2023-08-05", 1))
-                .when().post("/reservations")
-                .then().log().all().extract().response();
-        //then
-        assertAll(
-                () -> assertThat(response.getStatusCode()).isEqualTo(HttpStatus.OK.value()),
-                () -> assertThat(response.jsonPath().getLong("id")).isNotNull(),
-                () -> assertThat(response.jsonPath().getString("name")).isEqualTo("브라운"),
-                () -> assertThat(response.jsonPath().getString("date")).isEqualTo("2023-08-05"),
-                () -> assertThat(response.jsonPath().getString("time.startAt")).isEqualTo("10:00")
-        );
-    }
-
     @DisplayName("모든 예약 내역 조회 테스트")
     @Test
     void findAllReservations() {
@@ -69,19 +49,36 @@ class ReservationControllerTest {
         );
     }
 
+    @DisplayName("예약 추가 테스트")
+    @Test
+    void createReservation() {
+        //given
+        jdbcTemplate.update("INSERT INTO reservation_time VALUES (1, '10:00')");
+        Response response = RestAssured.given().log().all()
+                .contentType(ContentType.JSON)
+                .body(new ReservationRequest("브라운", "2023-08-05", 1))
+                .when().post("/reservations")
+                .then().log().all().extract().response();
+        //then
+        assertAll(
+                () -> assertThat(response.getStatusCode()).isEqualTo(HttpStatus.OK.value()),
+                () -> assertThat(response.jsonPath().getLong("id")).isNotNull(),
+                () -> assertThat(response.jsonPath().getString("name")).isEqualTo("브라운"),
+                () -> assertThat(response.jsonPath().getString("date")).isEqualTo("2023-08-05"),
+                () -> assertThat(response.jsonPath().getLong("time.id")).isEqualTo(1),
+                () -> assertThat(response.jsonPath().getString("time.startAt")).isEqualTo("10:00")
+        );
+    }
+
     @DisplayName("예약 취소 성공 테스트")
     @Test
     void deleteReservationSuccess() {
         //given
         jdbcTemplate.update("INSERT INTO reservation_time VALUES (1, '10:00:00')");
         jdbcTemplate.update("INSERT INTO reservation VALUES (1, 'brown', '2024-11-15', 1)");
-        long id = RestAssured.given().log().all()
-                .when().get("/reservations")
-                .then().log().all().extract()
-                .jsonPath().getList("id", Long.class).get(0);
         //then
         RestAssured.given().log().all()
-                .when().delete("/reservations/" + id)
+                .when().delete("/reservations/1")
                 .then().log().all().assertThat().statusCode(HttpStatus.OK.value());
     }
 
@@ -96,8 +93,9 @@ class ReservationControllerTest {
                 .then().log().all().assertThat().statusCode(HttpStatus.NOT_FOUND.value());
     }
 
+    @DisplayName("JDBC 주입 여부 테스트")
     @Test
-    void 구단계() {
+    void jdbcTemplateNotInjected() {
         boolean isJdbcTemplateInjected = false;
 
         for (Field field : reservationController.getClass().getDeclaredFields()) {

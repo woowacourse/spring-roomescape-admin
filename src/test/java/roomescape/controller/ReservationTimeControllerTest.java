@@ -1,17 +1,20 @@
 package roomescape.controller;
 
-import static org.hamcrest.Matchers.is;
+import static org.assertj.core.api.Assertions.assertThat;
+import static org.junit.jupiter.api.Assertions.assertAll;
 
 import io.restassured.RestAssured;
 import io.restassured.http.ContentType;
-import java.util.HashMap;
-import java.util.Map;
+import io.restassured.response.Response;
 import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.web.server.LocalServerPort;
+import org.springframework.http.HttpStatus;
 import org.springframework.jdbc.core.JdbcTemplate;
+import roomescape.dto.ReservationTimeRequest;
 
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 public class ReservationTimeControllerTest {
@@ -24,54 +27,58 @@ public class ReservationTimeControllerTest {
     @BeforeEach
     void init() {
         RestAssured.port = port;
-
+        jdbcTemplate.update("delete from reservation");
         jdbcTemplate.update("delete from reservation_time");
     }
 
+    @DisplayName("예약 시간 추가 테스트")
     @Test
-    void 칠단계() {
-        Map<String, String> params = new HashMap<>();
-        params.put("startAt", "10:00");
-
-        RestAssured.given().log().all()
+    void createReservationTime() {
+        Response response = RestAssured.given().log().all()
                 .contentType(ContentType.JSON)
-                .body(params)
+                .body(new ReservationTimeRequest("10:00"))
                 .when().post("/times")
-                .then().log().all()
-                .statusCode(200);
+                .then().log().all().extract().response();
 
-        RestAssured.given().log().all()
-                .when().get("/times")
-                .then().log().all()
-                .statusCode(200)
-                .body("size()", is(1));
-
-        RestAssured.given().log().all()
-                .when().delete("/times/1")
-                .then().log().all()
-                .statusCode(200);
+        assertAll(
+                () -> assertThat(response.statusCode()).isEqualTo(HttpStatus.OK.value()),
+                () -> assertThat(response.jsonPath().getLong("id")).isNotNull(),
+                () -> assertThat(response.jsonPath().getString("startAt")).isEqualTo("10:00")
+        );
     }
 
+    @DisplayName("모든 예약 시간 조회 테스트")
     @Test
-    void 팔단계() {
-        jdbcTemplate.update("INSERT INTO reservation_time VALUES (1, '10:00:00')");
+    void findAllReservationTime() {
+        Response response = RestAssured.given().log().all()
+                .when().get("/times")
+                .then().log().all().extract().response();
 
-        Map<String, Object> reservation = new HashMap<>();
-        reservation.put("name", "브라운");
-        reservation.put("date", "2023-08-05");
-        reservation.put("timeId", 1);
+        assertAll(
+                () -> assertThat(response.getStatusCode()).isEqualTo(HttpStatus.OK.value()),
+                () -> assertThat(response.jsonPath().getList(".")).isEmpty()
+        );
+    }
 
+    @DisplayName("예약 시간 삭제 성공 테스트")
+    @Test
+    void deleteReservationSuccess() {
+        //given
+        jdbcTemplate.update("INSERT INTO reservation_time VALUES (1, '10:00')");
+        //then
         RestAssured.given().log().all()
-                .contentType(ContentType.JSON)
-                .body(reservation)
-                .when().post("/reservations")
-                .then().log().all()
-                .statusCode(200);
+                .when().delete("/times/1")
+                .then().log().all().assertThat().statusCode(HttpStatus.OK.value());
+    }
 
+    @DisplayName("예약 시간 삭제 실패 테스트")
+    @Test
+    void deleteReservationFail() {
+        //given
+        long invalidId = 0;
+        //then
         RestAssured.given().log().all()
-                .when().get("/reservations")
-                .then().log().all()
-                .statusCode(200)
-                .body("size()", is(1));
+                .when().delete("/reservations/" + invalidId)
+                .then().log().all().assertThat().statusCode(HttpStatus.NOT_FOUND.value());
     }
 }

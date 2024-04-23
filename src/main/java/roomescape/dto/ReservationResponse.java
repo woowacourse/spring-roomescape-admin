@@ -8,7 +8,6 @@ public record ReservationResponse(
         String name,
         String date,
         ReservationTimeResponse time) {
-
     public ReservationResponse(Reservation reservation) {
         this(reservation.getId(),
                 reservation.getName(),

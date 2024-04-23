@@ -2,7 +2,7 @@ package roomescape.repository;
 
 import java.util.List;
 import org.springframework.stereotype.Repository;
-import roomescape.Reservation;
+import roomescape.data.vo.Reservation;
 import roomescape.dao.ReservationDao;
 
 @Repository

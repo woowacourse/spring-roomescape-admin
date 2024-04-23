@@ -8,7 +8,7 @@ import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;
 import org.springframework.jdbc.support.GeneratedKeyHolder;
 import org.springframework.stereotype.Component;
-import roomescape.Reservation;
+import roomescape.data.vo.Reservation;
 
 @Component
 public class ReservationDaoImpl implements ReservationDao{

@@ -1,15 +1,19 @@
 package roomescape.time.domain;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
+import java.time.LocalTime;
 import java.util.Objects;
 
 public class Time {
     private Long id;
-    private String startAt;
+
+    @JsonFormat(pattern = "HH:mm")
+    private LocalTime startAt;
 
     public Time() {
     }
 
-    public Time(final Long id, final String startAt) {
+    public Time(final Long id, final LocalTime startAt) {
         this.id = id;
         this.startAt = startAt;
     }
@@ -18,7 +22,7 @@ public class Time {
         return id;
     }
 
-    public String getStartAt() {
+    public LocalTime getStartAt() {
         return startAt;
     }
 

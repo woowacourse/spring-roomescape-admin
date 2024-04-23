@@ -13,6 +13,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import java.time.LocalDate;
+import java.time.LocalTime;
 import java.util.List;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Nested;
@@ -41,7 +42,7 @@ class ReservationApiControllerTest {
     @Test
     public void findAllTest() throws Exception {
         // given
-        Time time = new Time(1L, "10:00");
+        Time time = new Time(1L, LocalTime.parse("10:00"));
         Reservation reservation1 = new Reservation(1L, "브라운", LocalDate.parse("2024-08-05"), time);
         Reservation reservation2 = new Reservation(2L, "솔라", LocalDate.parse("2024-08-05"), time);
         List<Reservation> reservations = List.of(reservation1, reservation2);
@@ -66,7 +67,7 @@ class ReservationApiControllerTest {
         @Test
         public void createSuccessTest() throws Exception {
             // given
-            Time time = new Time(5L, "10:00");
+            Time time = new Time(5L, LocalTime.parse("10:00"));
             ReservationSaveRequest reservationSaveRequest = new ReservationSaveRequest("브라운", LocalDate.parse("2024-08-05"), time.getId());
             Reservation reservation = new Reservation(1L, reservationSaveRequest.getName(), reservationSaveRequest.getDate(),
                     time);
@@ -85,7 +86,7 @@ class ReservationApiControllerTest {
                     .andExpect(jsonPath("$.name").value(reservation.getName()))
                     .andExpect(jsonPath("$.date").value(reservation.getDate().toString()))
                     .andExpect(jsonPath("$.time.id").value(time.getId()))
-                    .andExpect(jsonPath("$.time.startAt").value(time.getStartAt()));
+                    .andExpect(jsonPath("$.time.startAt").value(time.getStartAt().toString()));
         }
 
         @DisplayName("예약 정보를 저장 실패 시 400 응답을 받는다.")

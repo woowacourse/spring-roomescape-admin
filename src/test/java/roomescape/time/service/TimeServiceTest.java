@@ -3,6 +3,7 @@ package roomescape.time.service;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import static org.mockito.Mockito.doReturn;
 
+import java.time.LocalTime;
 import java.util.Optional;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -43,7 +44,7 @@ class TimeServiceTest {
     void deleteByIdExceptionTest() {
         // given
         Long id = 1L;
-        Time time = new Time(id, "10:00");
+        Time time = new Time(id, LocalTime.parse("10:00"));
 
         doReturn(Optional.of(time)).when(timeRepository)
                 .findById(id);

@@ -81,7 +81,7 @@ public class ReservationRepository {
                         resultSet.getDate("date").toLocalDate(),
                         new Time(
                                 resultSet.getLong("time_id"),
-                                resultSet.getString("start_at")
+                                resultSet.getTime("start_at").toLocalTime()
                         )
                 );
     }

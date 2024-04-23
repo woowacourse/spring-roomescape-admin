@@ -3,6 +3,7 @@ package roomescape.time.repository;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertAll;
 
+import java.time.LocalTime;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Stream;
@@ -30,7 +31,7 @@ class TimeRepositoryTest {
         return Stream.of(
                 DynamicTest.dynamicTest("예약 정보를 저장한다.", () -> {
                     // given
-                    TimeSaveRequest timeSaveRequest = new TimeSaveRequest("10:00");
+                    TimeSaveRequest timeSaveRequest = new TimeSaveRequest(LocalTime.parse("10:00"));
 
                     // when
                     Time time = timeRepository.save(timeSaveRequest);

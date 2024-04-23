@@ -11,6 +11,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import java.time.LocalTime;
 import java.util.List;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Nested;
@@ -38,8 +39,8 @@ class TimeApiControllerTest {
     @Test
     public void findAllTest() throws Exception {
         // given
-        Time time1 = new Time(1L, "10:00");
-        Time time2 = new Time(2L, "10:00");
+        Time time1 = new Time(1L, LocalTime.parse("10:00"));
+        Time time2 = new Time(2L, LocalTime.parse("10:00"));
         List<Time> times = List.of(time1, time2);
 
         // when
@@ -62,7 +63,7 @@ class TimeApiControllerTest {
         @Test
         public void createSuccessTest() throws Exception {
             // given
-            TimeSaveRequest timeSaveRequest = new TimeSaveRequest("10:00");
+            TimeSaveRequest timeSaveRequest = new TimeSaveRequest(LocalTime.parse("10:00"));
             Time time = new Time(1L, timeSaveRequest.getStartAt());
 
             // when

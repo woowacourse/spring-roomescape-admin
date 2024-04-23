@@ -4,6 +4,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertAll;
 
 import java.time.LocalDate;
+import java.time.LocalTime;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Stream;
@@ -35,7 +36,7 @@ class ReservationRepositoryTest {
                     ReservationSaveRequest reservationSaveRequest = new ReservationSaveRequest("브라운", LocalDate.parse("2024-08-05"), 1L);
 
                     // when
-                    Reservation reservation = reservationRepository.save(reservationSaveRequest, new Time(1L, "10:00"));
+                    Reservation reservation = reservationRepository.save(reservationSaveRequest, new Time(1L, LocalTime.parse("10:00")));
 
                     // then
                     assertThat(reservation.getId()).isEqualTo(2L);
@@ -49,7 +50,7 @@ class ReservationRepositoryTest {
                             () -> assertThat(reservation.get().getId()).isEqualTo(1L),
                             () -> assertThat(reservation.get().getName()).isEqualTo("브라운"),
                             () -> assertThat(reservation.get().getDate()).isEqualTo("2024-08-05"),
-                            () -> assertThat(reservation.get().getTime()).isEqualTo(new Time(1L, "10:00"))
+                            () -> assertThat(reservation.get().getTime()).isEqualTo(new Time(1L, LocalTime.parse("10:00")))
                     );
                 }),
                 DynamicTest.dynamicTest("모든 예약 정보를 조회한다.", () -> {

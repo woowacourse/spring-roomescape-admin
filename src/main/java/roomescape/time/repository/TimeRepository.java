@@ -1,6 +1,7 @@
 package roomescape.time.repository;
 
 import java.sql.PreparedStatement;
+import java.time.LocalTime;
 import java.util.List;
 import java.util.Optional;
 import org.springframework.dao.EmptyResultDataAccessException;
@@ -21,16 +22,18 @@ public class TimeRepository {
     }
 
     public Time save(final TimeSaveRequest timeSaveRequest) {
+        LocalTime time = timeSaveRequest.getStartAt();
+
         KeyHolder keyHolder = new GeneratedKeyHolder();
         jdbcTemplate.update(connection -> {
             PreparedStatement ps = connection.prepareStatement(
                     "insert into reservation_time(start_at) values (?)", new String[]{"id"});
-            ps.setString(1, timeSaveRequest.getStartAt());
+            ps.setString(1, time.toString());
             return ps;
         }, keyHolder);
         long id = keyHolder.getKey().longValue();
 
-        return new Time(id, timeSaveRequest.getStartAt());
+        return new Time(id, time);
     }
 
     public Optional<Time> findById(final Long id) {
@@ -62,7 +65,7 @@ public class TimeRepository {
     private RowMapper<Time> createTimeRowMapper() {
         return (resultSet, rowNum) -> new Time(
                 resultSet.getLong("id"),
-                resultSet.getString("start_at")
+                resultSet.getTime("start_at").toLocalTime()
         );
     }
 

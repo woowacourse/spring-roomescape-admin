@@ -15,16 +15,16 @@
 - [x] 예약 관리 페이지 응답
     - `/admin/reservation`으로 요청하면 `/admin/reservation-legacy.html`을 응답한다.
 - [x] 전체 예약 조회 API를 구현한다.
-    - GET `/times`
+    - GET `/reservations`
 - [x] 예약 도메인 추가
     - 이름, 날짜, 시간을 가진다.
 
 ## 3단계 예약 추가 / 취소
 
 - [x] 예약 추가 API를 구현한다.
-    - POST `/times`
+    - POST `/reservations`
 - [x] 예약 삭제 API를 구현한다.
-    - DELETE `/times/{id}`
+    - DELETE `/reservations/{id}`
 
 ## 4단계 데이터베이스 적용하기
 

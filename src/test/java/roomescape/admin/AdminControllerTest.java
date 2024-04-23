@@ -7,6 +7,7 @@ import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import roomescape.util.ControllerTest;
 
+@DisplayName("관리자 페이지 테스트")
 class AdminControllerTest extends ControllerTest {
     @DisplayName("관리자 메인 페이지 조회에 성공한다.")
     @Test

@@ -15,6 +15,7 @@ import roomescape.reservation.dto.ReservationTimeRequest;
 import roomescape.reservation.service.ReservationTimeService;
 import roomescape.util.ControllerTest;
 
+@DisplayName("예약 시간 API 통합 테스트")
 class ReservationTimeControllerTest extends ControllerTest {
     @Autowired
     ReservationTimeService reservationTimeService;

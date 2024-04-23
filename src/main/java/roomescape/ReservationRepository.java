@@ -1,23 +1,24 @@
 package roomescape;
 
-import java.util.ArrayList;
+import java.sql.PreparedStatement;
 import java.util.List;
-import java.util.concurrent.atomic.AtomicLong;
-import org.springframework.beans.factory.annotation.Autowired;
+import java.util.Objects;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;
+import org.springframework.jdbc.support.GeneratedKeyHolder;
+import org.springframework.jdbc.support.KeyHolder;
 import org.springframework.stereotype.Repository;
 
 @Repository
 public class ReservationRepository {
 
-    private final List<Reservation> reservations = new ArrayList<>();
-    private final AtomicLong autoIncreaseId = new AtomicLong(1);
+    private final JdbcTemplate jdbcTemplate;
 
-    @Autowired
-    private JdbcTemplate jdbcTemplate;
+    public ReservationRepository(JdbcTemplate jdbcTemplate) {
+        this.jdbcTemplate = jdbcTemplate;
+    }
 
-    private final RowMapper<Reservation> actorRowMapper = (resultSet, rowNum) ->
+    private final RowMapper<Reservation> reservationRowMapper = (resultSet, rowNum) ->
             new Reservation(
                     resultSet.getLong("id"),
                     resultSet.getString("name"),
@@ -29,26 +30,36 @@ public class ReservationRepository {
         String sqlToFind = "SELECT id, name, date, time FROM reservation";
         return jdbcTemplate.query(
                 sqlToFind,
-                actorRowMapper);
-    }
-
-    public Reservation createReservation(Reservation reservation) {
-        Reservation createdReservation = reservation.toIdAssigned(autoIncreaseId.getAndIncrement());
-        reservations.add(createdReservation);
-        return createdReservation;
-    }
-
-    public void deleteReservation(Long id) {
-        Reservation searchedReservation = findReservationById(id);
-
-        reservations.remove(searchedReservation);
+                reservationRowMapper);
     }
 
     private Reservation findReservationById(Long id) {
-        return reservations.stream()
-                .filter(reservation -> reservation.id().equals(id))
-                .findFirst()
-                .orElseThrow(() -> new RuntimeException("요청된 예약 id가 존재하지 않습니다."));
+        String sqlToFind = "SELECT id, name, date, time FROM reservation WHERE id = ?";
+        return jdbcTemplate.queryForObject(
+                sqlToFind,
+                reservationRowMapper,
+                id);
+    }
+
+    public Reservation createReservation(Reservation reservation) {
+        String sqlToInsert = "INSERT INTO reservation (name, date, time) VALUES (?, ?, ?)";
+        KeyHolder keyHolder = new GeneratedKeyHolder();
+        jdbcTemplate.update(connection -> {
+            PreparedStatement ps = connection.prepareStatement(
+                    sqlToInsert,
+                    new String[]{"id"});
+            ps.setString(1, reservation.name());
+            ps.setString(2, reservation.date());
+            ps.setString(3, reservation.time());
+            return ps;
+        }, keyHolder);
+        return reservation.toIdAssigned(Objects.requireNonNull(keyHolder.getKey())
+                .longValue());
+    }
+
+    public void deleteReservation(Long id) {
+        String sqlToDelete = "DELETE FROM reservation WHERE id = ?";
+        jdbcTemplate.update(sqlToDelete, id);
     }
 
 }

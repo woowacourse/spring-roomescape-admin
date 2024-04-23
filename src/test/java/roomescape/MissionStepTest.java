@@ -7,7 +7,9 @@ import io.restassured.RestAssured;
 import io.restassured.http.ContentType;
 import java.sql.Connection;
 import java.sql.SQLException;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -79,8 +81,7 @@ class MissionStepTest {
                 .body(requestReservation)
                 .when().post("/reservations")
                 .then().log().all()
-                .statusCode(200)
-                .body("id", is(1));
+                .statusCode(201);
 
         RestAssured.given().log().all()
                 .when().get("/reservations")
@@ -99,13 +100,12 @@ class MissionStepTest {
                 .body(requestReservation)
                 .when().post("/reservations")
                 .then().log().all()
-                .statusCode(200)
-                .body("id", is(1));
+                .statusCode(201);
 
         RestAssured.given().log().all()
                 .when().delete("/reservations/1")
                 .then().log().all()
-                .statusCode(200);
+                .statusCode(204);
 
         RestAssured.given().log().all()
                 .when().get("/reservations")
@@ -143,7 +143,7 @@ class MissionStepTest {
     }
 
     @Test
-    @DisplayName("5단계 - 예약 조회 API와 데이터베이스 쿼리를 통해 각각 조회한 예약들이 같아야한다.")
+    @DisplayName("5단계 - 예약 조회 API와 데이터베이스 쿼리를 통해 각각 조회한 모든 예약이 같아야한다.")
     void findAllReservation_ShouldEqualReservations_WhenRequestByQueryAndAPI() {
         jdbcTemplate.update("INSERT INTO reservation (name, date, time) VALUES (?, ?, ?)", "브라운", "2023-08-05", "15:40");
 
@@ -159,6 +159,31 @@ class MissionStepTest {
             );
 
         assertThat(reservationsRequestByAPI).isEqualTo(reservationsRequestByQuery);
+    }
+
+    @Test
+    @DisplayName("6단계 - 특정 Id의 reservation의 삭제 요청을 처리한다.")
+    void 육단계() {
+        Reservation requestReservation = new Reservation(null, "브라운", "2023-08-05", "15:40");
+
+        RestAssured.given().log().all()
+                .contentType(ContentType.JSON)
+                .body(requestReservation)
+                .when().post("/reservations")
+                .then().log().all()
+                .statusCode(201)
+                .header("Location", "/reservations/1");
+
+        Integer count = jdbcTemplate.queryForObject("SELECT count(1) from reservation", Integer.class);
+        assertThat(count).isEqualTo(1);
+
+        RestAssured.given().log().all()
+                .when().delete("/reservations/1")
+                .then().log().all()
+                .statusCode(204);
+
+        Integer countAfterDelete = jdbcTemplate.queryForObject("SELECT count(1) from reservation", Integer.class);
+        assertThat(countAfterDelete).isZero();
     }
 
 }

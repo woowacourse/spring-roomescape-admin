@@ -11,7 +11,7 @@ public class Reservation {
     private final LocalDate date;
     private final LocalTime time;
 
-    public Reservation(final Long id, final String name, final LocalDate date, final LocalTime time) {
+    private Reservation(final Long id, final String name, final LocalDate date, final LocalTime time) {
         this.id = id;
         this.name = name;
         this.date = date;
@@ -20,6 +20,14 @@ public class Reservation {
 
     public Reservation(final Long id, final String name, final String date, final String time) {
         this(id, name, LocalDate.parse(date), LocalTime.parse(time));
+    }
+
+    public static Reservation create(final String name, final String date, final String time) {
+        return new Reservation(null, name, date, time);
+    }
+
+    public Reservation toReservation(final long id) {
+        return new Reservation(id, name, date, time);
     }
 
     public Long getId() {
@@ -55,5 +63,15 @@ public class Reservation {
     @Override
     public int hashCode() {
         return Objects.hash(getId(), getName(), getDate(), getTime());
+    }
+
+    @Override
+    public String toString() {
+        return "Reservation{" +
+                "id=" + id +
+                ", name='" + name + '\'' +
+                ", date=" + date +
+                ", time=" + time +
+                '}';
     }
 }

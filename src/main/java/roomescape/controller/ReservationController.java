@@ -1,9 +1,7 @@
 package roomescape.controller;
 
-import java.util.ArrayList;
+import java.net.URI;
 import java.util.List;
-import java.util.Optional;
-import java.util.concurrent.atomic.AtomicLong;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -12,42 +10,45 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.util.UriComponentsBuilder;
 import roomescape.dto.ReservationRequest;
 import roomescape.dto.ReservationResponse;
-import roomescape.model.Reservation;
+import roomescape.service.ReservationService;
 
 @RestController
 @RequestMapping("/reservations")
 public class ReservationController {
 
-    private final AtomicLong id = new AtomicLong(1);
-    private final List<Reservation> reservations = new ArrayList<>();
+    private final ReservationService reservationService;
+
+    public ReservationController(final ReservationService reservationService) {
+        this.reservationService = reservationService;
+    }
 
     @GetMapping
     public List<ReservationResponse> getReservations() {
-        return reservations.stream()
-                .map(ReservationResponse::from)
-                .toList();
+        return reservationService.findAll();
     }
 
     @PostMapping
-    public ReservationResponse save(@RequestBody final ReservationRequest reservationRequest) {
-        final Reservation reservation = reservationRequest.toReservation(id.getAndIncrement());
-        reservations.add(reservation);
-        return ReservationResponse.from(reservation);
+    public ResponseEntity<ReservationResponse> save(@RequestBody final ReservationRequest reservationRequest) {
+        final ReservationResponse reservationResponse = reservationService.save(reservationRequest);
+        final URI uri = UriComponentsBuilder.fromPath("/reservations/{id}")
+                .buildAndExpand(reservationResponse.id())
+                .toUri();
+        return ResponseEntity.created(uri)
+                .body(reservationResponse);
     }
 
     @DeleteMapping("/{id}")
-    public ResponseEntity<Void> delete(@PathVariable("id") final Long id) {
-        final Optional<Reservation> findReservation = reservations.stream()
-                .filter(reservation -> reservation.getId().equals(id))
-                .findAny();
-        if (findReservation.isEmpty()) {
+    public ResponseEntity<Void> delete(@PathVariable("id") final long id) {
+        try {
+            reservationService.remove(id);
+            return ResponseEntity.noContent()
+                    .build();
+        } catch (final IllegalArgumentException exception) {
             return ResponseEntity.notFound()
                     .build();
         }
-        reservations.remove(findReservation.get());
-        return ResponseEntity.ok()
-                .build();
     }
 }

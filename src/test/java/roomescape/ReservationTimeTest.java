@@ -17,7 +17,7 @@ import org.springframework.boot.test.web.server.LocalServerPort;
 import org.springframework.jdbc.core.JdbcTemplate;
 
 @SpringBootTest(webEnvironment = WebEnvironment.RANDOM_PORT)
-class TimeTest {
+class ReservationTimeTest {
 
     @LocalServerPort
     private int PORT_NUMBER;

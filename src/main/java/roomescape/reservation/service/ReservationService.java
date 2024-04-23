@@ -28,13 +28,13 @@ public class ReservationService {
 
     @Transactional
     public ReservationResponseDto create(final ReservationRequestDto requestDto) {
-        final Long reservationId = reservationDao.create(requestDto);
+        final long reservationId = reservationDao.create(requestDto);
         final Reservation reservation = reservationDao.findById(reservationId);
         return ReservationResponseDto.from(reservation);
     }
 
     @Transactional
-    public boolean deleteById(final Long id) {
+    public boolean deleteById(final long id) {
         if (reservationDao.deleteById(id) > 0) {
             return true;
         }

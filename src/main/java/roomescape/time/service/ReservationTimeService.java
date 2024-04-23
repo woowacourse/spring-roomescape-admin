@@ -28,12 +28,12 @@ public class ReservationTimeService {
 
     @Transactional
     public ReservationTimeResponseDto create(final ReservationTimeRequestDto requestDto) {
-        final Long id = reservationTimeDao.create(requestDto);
+        final long id = reservationTimeDao.create(requestDto);
         return new ReservationTimeResponseDto(id, requestDto.getStartAt());
     }
 
     @Transactional
-    public boolean deleteById(final Long id) {
+    public boolean deleteById(final long id) {
         if (reservationTimeDao.deleteById(id) > 0) {
             return true;
         }

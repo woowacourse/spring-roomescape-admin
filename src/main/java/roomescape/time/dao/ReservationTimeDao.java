@@ -32,7 +32,7 @@ public class ReservationTimeDao {
         return reservationTime;
     };
 
-    public Long create(final ReservationTimeRequestDto requestDto) {
+    public long create(final ReservationTimeRequestDto requestDto) {
         final SqlParameterSource params = new MapSqlParameterSource()
                 .addValue("start_at", requestDto.getStartAt());
         return simpleJdbcInsert.executeAndReturnKey(params)

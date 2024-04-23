@@ -4,12 +4,12 @@ import roomescape.reservation.domain.Reservation;
 import roomescape.time.dto.ReservationTimeResponseDto;
 
 public class ReservationResponseDto {
-    private final Long id;
+    private final long id;
     private final String name;
     private final String date;
     private final ReservationTimeResponseDto time;
 
-    private ReservationResponseDto(final Long id, final String name, final String date, final ReservationTimeResponseDto time) {
+    private ReservationResponseDto(final long id, final String name, final String date, final ReservationTimeResponseDto time) {
         this.id = id;
         this.name = name;
         this.date = date;
@@ -20,7 +20,7 @@ public class ReservationResponseDto {
         return new ReservationResponseDto(reservation.getId(), reservation.getName(), reservation.getDate().toString(), ReservationTimeResponseDto.from(reservation.getTime()));
     }
 
-    public Long getId() {
+    public long getId() {
         return id;
     }
 

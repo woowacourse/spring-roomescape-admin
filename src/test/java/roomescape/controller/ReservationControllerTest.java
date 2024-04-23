@@ -30,13 +30,13 @@ class ReservationControllerTest {
         params.put("date", "2023-08-05");
         params.put("time", "15:40");
 
-        RestAssured.given().log().all()
+        int savedId = RestAssured.given().log().all()
                 .contentType(ContentType.JSON)
                 .body(params)
                 .when().post("/reservations")
                 .then().log().all()
                 .statusCode(200)
-                .body("id", is(1));
+                .extract().path("id");
 
         RestAssured.given().log().all()
                 .when().get("/reservations")
@@ -45,7 +45,7 @@ class ReservationControllerTest {
                 .body("size()", is(1));
 
         RestAssured.given().log().all()
-                .when().delete("/reservations/1")
+                .when().delete("/reservations/" + savedId)
                 .then().log().all()
                 .statusCode(200);
 

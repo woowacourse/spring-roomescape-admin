@@ -22,7 +22,7 @@ public class ReservationTimeController {
     @ResponseBody
     @PostMapping
     public ReservationTimeResponse createReservationTime(@RequestBody ReservationTimeRequest reservationTimeRequest) {
-        ReservationTime reservationTime = reservationTimeService.create(new ReservationTime(reservationTimeRequest.time()));
+        ReservationTime reservationTime = reservationTimeService.create(new ReservationTime(reservationTimeRequest.startAt()));
         return new ReservationTimeResponse(reservationTime);
     }
 

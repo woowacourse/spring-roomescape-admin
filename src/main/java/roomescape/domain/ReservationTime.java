@@ -8,15 +8,15 @@ public class ReservationTime {
     private final static long NO_ID = 0;
 
     private final long id;
-    private final LocalTime time;
+    private final LocalTime startAt;
 
-    public ReservationTime(long id, LocalTime time) {
+    public ReservationTime(long id, LocalTime startAt) {
         this.id = id;
-        this.time = time;
+        this.startAt = startAt;
     }
 
     public ReservationTime(long id, ReservationTime reservationTime) {
-        this(id, reservationTime.time);
+        this(id, reservationTime.startAt);
     }
 
     public ReservationTime(long id, String time) {
@@ -31,7 +31,7 @@ public class ReservationTime {
         return id;
     }
 
-    public String getTime() {
-        return time.format(DateTimeFormatter.ofPattern(TIME_FORMAT));
+    public String getStartAt() {
+        return startAt.format(DateTimeFormatter.ofPattern(TIME_FORMAT));
     }
 }

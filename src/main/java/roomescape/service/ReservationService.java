@@ -30,6 +30,6 @@ public class ReservationService {
             reservationRepository.deleteById(id);
             return;
         }
-        throw new InvalidReservationException("존재하지 않는 id입니다. id: " + id);
+        throw new InvalidReservationException("존재하지 않는 예약 내역입니다. id: " + id);
     }
 }

@@ -1,5 +1,6 @@
 package roomescape.dao;
 
+import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -11,6 +12,7 @@ import roomescape.domain.ReservationTime;
 import java.util.List;
 
 import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
+import static org.junit.jupiter.api.Assertions.assertAll;
 
 @JdbcTest
 class ReservationTimeJDBCRepositoryTest {
@@ -24,9 +26,9 @@ class ReservationTimeJDBCRepositoryTest {
         reservationTimeRepository = new ReservationTimeJDBCRepository(jdbcTemplate);
     }
 
-    @DisplayName("새로운 예약을 저장한다.")
+    @DisplayName("새로운 예약 시간을 저장한다.")
     @Test
-    void saveReservation() {
+    void saveReservationTime() {
         //given
         String startAt = "10:00";
         ReservationTime reservationTime = new ReservationTime(startAt);
@@ -38,9 +40,9 @@ class ReservationTimeJDBCRepositoryTest {
         assertThat(result.getId()).isNotZero();
     }
 
-    @DisplayName("모든 예약 내역을 조회한다.")
+    @DisplayName("모든 예약 시간을 조회한다.")
     @Test
-    void findAllReservationTest() {
+    void findAllReservationTimesTest() {
         //given
         String startAt = "10:00";
         ReservationTime reservationTime = new ReservationTime(startAt);
@@ -54,9 +56,27 @@ class ReservationTimeJDBCRepositoryTest {
         assertThat(reservationTimes.size()).isEqualTo(expectedSize);
     }
 
+    @DisplayName("id로 예약 시간을 조회한다.")
+    @Test
+    void findReservationTimeByIdTest() {
+        //given
+        String startAt = "10:00";
+        ReservationTime reservationTime = new ReservationTime(startAt);
+        ReservationTime target = reservationTimeRepository.save(reservationTime);
+
+        //when
+        ReservationTime result = reservationTimeRepository.findById(target.getId());
+
+        //then
+        assertAll(
+                () -> Assertions.assertThat(result.getId()).isEqualTo(target.getId()),
+                () -> Assertions.assertThat(result.getStartAt()).isEqualTo(startAt)
+        );
+    }
+
     @DisplayName("id로 예약을 삭제한다.")
     @Test
-    void deleteReservationByIdTest() {
+    void deleteReservationTimeByIdTest() {
         //given
         String startAt = "10:00";
         ReservationTime reservationTime = new ReservationTime(startAt);

@@ -32,7 +32,7 @@ class ReservationTimeServiceTest {
         }
     }
 
-    @DisplayName("새로운 예약을 저장한다.")
+    @DisplayName("새로운 예약 시간을 저장한다.")
     @Test
     void create() {
         //given
@@ -45,11 +45,11 @@ class ReservationTimeServiceTest {
         //then
         assertAll(
                 () -> assertThat(result.getId()).isNotZero(),
-                () -> assertThat(result.getTime()).isEqualTo(startAt)
+                () -> assertThat(result.getStartAt()).isEqualTo(startAt)
         );
     }
 
-    @DisplayName("모든 예약 내역을 조회한다.")
+    @DisplayName("모든 예약 시간 내역을 조회한다.")
     @Test
     void findAll() {
         //given
@@ -64,7 +64,37 @@ class ReservationTimeServiceTest {
         assertThat(reservationTimes).hasSize(1);
     }
 
-    @DisplayName("id로 예약을 삭제한다.")
+    @DisplayName("id로 예약 시간을 조회한다.")
+    @Test
+    void findById() {
+        //given
+        String startAt = "10:00";
+        ReservationTime reservationTime = new ReservationTime(startAt);
+        ReservationTime target = reservationTimeService.create(reservationTime);
+
+        //when
+        ReservationTime result = reservationTimeService.findById(target.getId());
+
+        //then
+        assertAll(
+                () -> assertThat(result.getId()).isEqualTo(target.getId()),
+                () -> assertThat(result.getStartAt()).isEqualTo(startAt)
+        );
+    }
+
+    @DisplayName("존재하지 않는 id로 예약 시간 조회를 시도하면 예외를 던진다.")
+    @Test
+    void findByInvalidId() {
+        //given
+        long invalidId = 0;
+
+        //then&then
+        assertThatThrownBy(() -> reservationTimeService.findById(invalidId))
+                .isInstanceOf(InvalidReservationException.class)
+                .hasMessage("존재하지 않는 예약 시간입니다. id: " + invalidId);
+    }
+
+    @DisplayName("id로 예약 시간을 삭제한다.")
     @Test
     void deleteById() {
         //given
@@ -79,7 +109,7 @@ class ReservationTimeServiceTest {
         assertThat(reservationTimeService.findAll()).hasSize(0);
     }
 
-    @DisplayName("존재하지 않는 id로 예약 삭제를 시도하면 예외를 던진다.")
+    @DisplayName("존재하지 않는 id로 예약 시간 삭제를 시도하면 예외를 던진다.")
     @Test
     void deleteFailByInvalidId() {
         //given
@@ -88,6 +118,6 @@ class ReservationTimeServiceTest {
         //when&then
         assertThatThrownBy(() -> reservationTimeService.deleteById(invalidId))
                 .isInstanceOf(InvalidReservationException.class)
-                .hasMessage("존재하지 않는 id입니다. id: " + invalidId);
+                .hasMessage("존재하지 않는 예약 시간입니다. id: " + invalidId);
     }
 }

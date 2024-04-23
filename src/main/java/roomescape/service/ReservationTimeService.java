@@ -28,6 +28,13 @@ public class ReservationTimeService {
             reservationTimeRepository.deleteById(id);
             return;
         }
-        throw new InvalidReservationException("존재하지 않는 id입니다. id: " + id);
+        throw new InvalidReservationException("존재하지 않는 예약 시간입니다. id: " + id);
+    }
+
+    public ReservationTime findById(final long id) {
+        if (reservationTimeRepository.existsById(id)) {
+            return reservationTimeRepository.findById(id);
+        }
+        throw new InvalidReservationException("존재하지 않는 예약 시간입니다. id: " + id);
     }
 }

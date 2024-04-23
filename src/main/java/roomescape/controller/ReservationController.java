@@ -4,9 +4,11 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 import roomescape.domain.Reservation;
-import roomescape.dto.ReservationRequest;
+import roomescape.domain.ReservationTime;
+import roomescape.dto.CreateReservationRequest;
 import roomescape.dto.ReservationResponse;
 import roomescape.service.ReservationService;
+import roomescape.service.ReservationTimeService;
 
 import java.util.List;
 
@@ -14,9 +16,11 @@ import java.util.List;
 @RequestMapping("/reservations")
 public class ReservationController {
     private final ReservationService reservationService;
+    private final ReservationTimeService reservationTimeService;
 
-    public ReservationController(ReservationService reservationService) {
+    public ReservationController(ReservationService reservationService, final ReservationTimeService reservationTimeService) {
         this.reservationService = reservationService;
+        this.reservationTimeService = reservationTimeService;
     }
 
     @ResponseBody
@@ -30,8 +34,9 @@ public class ReservationController {
 
     @ResponseBody
     @PostMapping
-    public ReservationResponse createReservation(@RequestBody ReservationRequest reservationRequest) {
-        Reservation reservation = new Reservation(reservationRequest.name(), reservationRequest.date(), reservationRequest.time());
+    public ReservationResponse createReservation(@RequestBody CreateReservationRequest createReservationRequest) {
+        ReservationTime reservationTime = reservationTimeService.findById(createReservationRequest.timeId());
+        Reservation reservation = new Reservation(createReservationRequest.name(), createReservationRequest.date(), reservationTime);
         Reservation newReservation = reservationService.create(reservation);
         return new ReservationResponse(newReservation);
     }

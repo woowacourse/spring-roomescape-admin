@@ -8,7 +8,8 @@ import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.web.server.LocalServerPort;
-import roomescape.dto.ReservationRequest;
+import roomescape.dto.CreateReservationRequest;
+import roomescape.dto.ReservationTimeRequest;
 
 import java.time.LocalDate;
 import java.time.LocalTime;
@@ -22,13 +23,18 @@ public class ReservationControllerTest {
     private int port;
 
     private String date;
-    private String time;
+    private long timeId;
 
     @BeforeEach
-    void initPort() {
+    void init() {
         RestAssured.port = port;
         date = LocalDate.now().plusDays(1).toString();
-        time = LocalTime.now().toString();
+        String startAt = LocalTime.now().toString();
+        timeId = RestAssured.given()
+                .contentType(ContentType.JSON)
+                .body(new ReservationTimeRequest(startAt))
+                .when().post("/times")
+                .then().extract().jsonPath().getLong("id");
     }
 
     @AfterEach
@@ -36,6 +42,10 @@ public class ReservationControllerTest {
         RestAssured.get("/reservations")
                 .then().extract().body().jsonPath().getList("id")
                 .forEach(id -> RestAssured.delete("/reservations/" + id));
+
+        RestAssured.get("/times")
+                .then().extract().body().jsonPath().getList("id")
+                .forEach(id -> RestAssured.delete("/times/" + id));
     }
 
     @DisplayName("예약 추가 성공 테스트")
@@ -43,7 +53,7 @@ public class ReservationControllerTest {
     void createReservation() {
         RestAssured.given().log().all()
                 .contentType(ContentType.JSON)
-                .body(new ReservationRequest("브라운", date, time))
+                .body(new CreateReservationRequest("브라운", date, timeId))
                 .when().post("/reservations")
                 .then().log().all()
                 .assertThat().statusCode(200).body("id", is(greaterThan(0)));
@@ -54,7 +64,7 @@ public class ReservationControllerTest {
     void createInvalidNameReservation() {
         RestAssured.given().log().all()
                 .contentType(ContentType.JSON)
-                .body(new ReservationRequest("", date, time))
+                .body(new CreateReservationRequest("", date, timeId))
                 .when().post("/reservations")
                 .then().log().all()
                 .assertThat().statusCode(400).body(is("이름은 1자 이상, 5자 이하여야 합니다."));
@@ -69,7 +79,7 @@ public class ReservationControllerTest {
         //when&then
         RestAssured.given().log().all()
                 .contentType(ContentType.JSON)
-                .body(new ReservationRequest("lini", invalidDate, time))
+                .body(new CreateReservationRequest("lini", invalidDate, timeId))
                 .when().post("/reservations")
                 .then().log().all()
                 .assertThat().statusCode(400).body(is("현재보다 이전으로 일정을 설정할 수 없습니다."));
@@ -79,7 +89,7 @@ public class ReservationControllerTest {
     @Test
     void findAllReservations() {
         //given
-        RestAssured.given().contentType(ContentType.JSON).body(new ReservationRequest("브라운", date, time))
+        RestAssured.given().contentType(ContentType.JSON).body(new CreateReservationRequest("브라운", date, timeId))
                 .when().post("/reservations");
 
         //when & then
@@ -93,7 +103,7 @@ public class ReservationControllerTest {
     @Test
     void deleteReservationSuccess() {
         //given
-        var id = RestAssured.given().contentType(ContentType.JSON).body(new ReservationRequest("브라운", date, time))
+        var id = RestAssured.given().contentType(ContentType.JSON).body(new CreateReservationRequest("브라운", date, timeId))
                 .when().post("/reservations")
                 .then().extract().body().jsonPath().get("id");
 
@@ -119,6 +129,6 @@ public class ReservationControllerTest {
         RestAssured.given().log().all()
                 .when().delete("/reservations/" + invalidId)
                 .then().log().all()
-                .assertThat().statusCode(400).body(is("존재하지 않는 id입니다. id: " + invalidId));
+                .assertThat().statusCode(400).body(is("존재하지 않는 예약 내역입니다. id: " + invalidId));
     }
 }

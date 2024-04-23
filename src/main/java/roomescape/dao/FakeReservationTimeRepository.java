@@ -32,4 +32,12 @@ public class FakeReservationTimeRepository implements ReservationTimeRepository 
     public void deleteById(final long id) {
         reservationTimes.removeIf(reservationTime -> reservationTime.getId() == id);
     }
+
+    @Override
+    public ReservationTime findById(final long id) {
+        return reservationTimes.stream()
+                .filter(reservationTime -> reservationTime.getId() == id)
+                .findFirst()
+                .orElseThrow(() -> new IllegalArgumentException("존재하지 않는 id입니다. id: " + id));
+    }
 }

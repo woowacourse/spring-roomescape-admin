@@ -96,6 +96,6 @@ class ReservationServiceTest {
         //when&then
         assertThatThrownBy(() -> reservationService.deleteById(invalidId))
                 .isInstanceOf(InvalidReservationException.class)
-                .hasMessage("존재하지 않는 id입니다. id: " + invalidId);
+                .hasMessage("존재하지 않는 예약 내역입니다. id: " + invalidId);
     }
 }

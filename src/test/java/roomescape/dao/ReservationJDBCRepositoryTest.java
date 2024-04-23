@@ -7,6 +7,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.jdbc.JdbcTest;
 import org.springframework.jdbc.core.JdbcTemplate;
 import roomescape.domain.Reservation;
+import roomescape.domain.ReservationTime;
 
 import java.time.LocalDate;
 import java.time.LocalTime;
@@ -17,6 +18,9 @@ import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
 @JdbcTest
 class ReservationJDBCRepositoryTest {
     private ReservationRepository reservationRepository;
+    private ReservationTimeRepository reservationTimeRepository;
+    private String date;
+    private ReservationTime reservationTime;
 
     @Autowired
     private JdbcTemplate jdbcTemplate;
@@ -24,15 +28,17 @@ class ReservationJDBCRepositoryTest {
     @BeforeEach
     void setUp() {
         reservationRepository = new ReservationJDBCRepository(jdbcTemplate);
+        reservationTimeRepository = new ReservationTimeJDBCRepository(jdbcTemplate);
+        date = LocalDate.now().plusDays(1).toString();
+        String startAt = LocalTime.now().toString();
+        reservationTime = reservationTimeRepository.save(new ReservationTime(startAt));
     }
 
     @DisplayName("새로운 예약을 저장한다.")
     @Test
     void saveReservation() {
         //given
-        String date = LocalDate.now().plusDays(1).toString();
-        String time = LocalTime.now().toString();
-        Reservation reservation = new Reservation("브라운", date, time);
+        Reservation reservation = new Reservation("브라운", date, reservationTime);
 
         //when
         Reservation result = reservationRepository.save(reservation);
@@ -45,9 +51,7 @@ class ReservationJDBCRepositoryTest {
     @Test
     void findAllReservationTest() {
         //given
-        String date = LocalDate.now().plusDays(1).toString();
-        String time = LocalTime.now().toString();
-        Reservation reservation = new Reservation("브라운", date, time);
+        Reservation reservation = new Reservation("브라운", date, reservationTime);
         reservationRepository.save(reservation);
         int expectedSize = 1;
 
@@ -62,9 +66,7 @@ class ReservationJDBCRepositoryTest {
     @Test
     void deleteReservationByIdTest() {
         //given
-        String date = LocalDate.now().plusDays(1).toString();
-        String time = LocalTime.now().toString();
-        Reservation reservation = new Reservation("브라운", date, time);
+        Reservation reservation = new Reservation("브라운", date, reservationTime);
         Reservation target = reservationRepository.save(reservation);
         int expectedSize = 0;
 
@@ -79,9 +81,7 @@ class ReservationJDBCRepositoryTest {
     @Test
     void existsByIdTest() {
         //given
-        String date = LocalDate.now().plusDays(1).toString();
-        String time = LocalTime.now().toString();
-        Reservation reservation = new Reservation("브라운", date, time);
+        Reservation reservation = new Reservation("브라운", date, reservationTime);
         Reservation target = reservationRepository.save(reservation);
         long id = target.getId();
 

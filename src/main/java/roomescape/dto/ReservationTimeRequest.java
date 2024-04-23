@@ -1,4 +1,4 @@
 package roomescape.dto;
 
-public record ReservationTimeRequest(String time) {
+public record ReservationTimeRequest(String startAt) {
 }

@@ -17,12 +17,16 @@ public class Reservation {
         this(id, reservation.name, reservation.schedule);
     }
 
+    public Reservation(long id, String name, String date, ReservationTime reservationTime) {
+        this(id, new Name(name), new Schedule(date, reservationTime));
+    }
+
     public Reservation(String name, String date, String time) {
         this(NO_ID, new Name(name), new Schedule(date, time));
     }
 
-    public Reservation(final long id, final String name, final String date, final String time) {
-        this(id, new Name(name), new Schedule(date, time));
+    public Reservation(String name, String date, ReservationTime reservationTime) {
+        this(NO_ID, new Name(name), new Schedule(date, reservationTime));
     }
 
     public long getId() {
@@ -39,5 +43,9 @@ public class Reservation {
 
     public String getTime() {
         return schedule.getTime();
+    }
+
+    public ReservationTime getReservationTime() {
+        return schedule.getReservationTime();
     }
 }

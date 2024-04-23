@@ -83,6 +83,6 @@ class ReservationTimeControllerTest {
         RestAssured.given().log().all()
                 .when().delete("/times/" + invalidId)
                 .then().log().all()
-                .assertThat().statusCode(400);
+                .assertThat().statusCode(400).body(is("존재하지 않는 예약 시간입니다. id: " + invalidId));
     }
 }

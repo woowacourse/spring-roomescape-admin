@@ -23,6 +23,14 @@ public class ReservationTimeJDBCRepository implements ReservationTimeRepository 
     }
 
     @Override
+    public ReservationTime save(final ReservationTime reservationTime) {
+        Map<String, String> params = Map.of(
+                "start_at", reservationTime.getStartAt());
+        long id = simpleJdbcInsert.executeAndReturnKey(params).longValue();
+        return new ReservationTime(id, reservationTime);
+    }
+
+    @Override
     public List<ReservationTime> findAll() {
         String sql = "SELECT * FROM reservation_time";
         List<ReservationTime> reservationTimes = jdbcTemplate.query(sql,
@@ -37,14 +45,6 @@ public class ReservationTimeJDBCRepository implements ReservationTimeRepository 
     }
 
     @Override
-    public ReservationTime save(final ReservationTime reservationTime) {
-        Map<String, String> params = Map.of(
-                "start_at", reservationTime.getTime());
-        long id = simpleJdbcInsert.executeAndReturnKey(params).longValue();
-        return new ReservationTime(id, reservationTime);
-    }
-
-    @Override
     public boolean existsById(final long id) {
         String sql = "SELECT EXISTS(SELECT 1 FROM reservation_time WHERE id = ?)";
         return jdbcTemplate.queryForObject(sql, Boolean.class, id);
@@ -54,5 +54,18 @@ public class ReservationTimeJDBCRepository implements ReservationTimeRepository 
     public void deleteById(final long id) {
         String sql = "DELETE FROM reservation_time WHERE id = ?";
         jdbcTemplate.update(sql, id);
+    }
+
+    @Override
+    public ReservationTime findById(final long id) {
+        String sql = "SELECT * FROM reservation_time WHERE id = ?";
+        return jdbcTemplate.queryForObject(sql,
+                (resultSet, rowNum) -> {
+                    ReservationTime reservationTime = new ReservationTime(
+                            resultSet.getLong("id"),
+                            resultSet.getString("start_at")
+                    );
+                    return reservationTime;
+                }, id);
     }
 }

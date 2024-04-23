@@ -13,19 +13,24 @@ import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.boot.test.context.SpringBootTest.WebEnvironment;
+import org.springframework.boot.test.web.server.LocalServerPort;
 import roomescape.domain.Reservation;
 
-@SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.DEFINED_PORT)
+@SpringBootTest(webEnvironment = WebEnvironment.RANDOM_PORT)
 public class AdminIntegrationTest {
     @Autowired
     private List<Reservation> reservations;
     @Autowired
     private AtomicLong atomicLong;
+    @LocalServerPort
+    private int port;
 
     @BeforeEach
     void init() {
         reservations.clear();
         atomicLong.set(0);
+        RestAssured.port = port;
     }
 
     @Test

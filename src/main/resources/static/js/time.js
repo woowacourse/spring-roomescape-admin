@@ -4,8 +4,16 @@ const cellFields = ['id', 'startAt'];
 const createCellFields = ['', createInput()];
 function createBody(inputs) {
   return {
-    startAt: inputs[0].value,
+    startAt: inputs[0].value.slice(0, 5),
   };
+}
+
+function convertTime(time) {
+  const date = new Date('1970-01-01T' + time);
+  return date.toLocaleTimeString(
+      'ko-KR',
+      {hour: '2-digit', minute: '2-digit'}
+  );
 }
 
 document.addEventListener('DOMContentLoaded', () => {
@@ -21,11 +29,8 @@ function render(data) {
 
   data.forEach(item => {
     const row = tableBody.insertRow();
-
-    cellFields.forEach((field, index) => {
-      row.insertCell(index).textContent = item[field];
-    });
-
+    row.insertCell(0).textContent = item.id;
+    row.insertCell(1).textContent = convertTime(item.startAt);
     const actionCell = row.insertCell(row.cells.length);
     actionCell.appendChild(createActionButton('삭제', 'btn-danger', deleteRow));
   });
@@ -129,6 +134,6 @@ function requestDelete(id) {
 
   return fetch(`${API_ENDPOINT}/${id}`, requestOptions)
       .then(response => {
-        if (response.status !== 200) throw new Error('Delete failed');
+        if (response.status !== 204) throw new Error('Delete failed');
       });
 }

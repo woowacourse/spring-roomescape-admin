@@ -13,6 +13,14 @@ document.addEventListener('DOMContentLoaded', () => {
   fetchTimes();
 });
 
+function convertTime(time) {
+  const date = new Date('1970-01-01T' + time);
+  return date.toLocaleTimeString(
+      'ko-KR',
+      {hour: '2-digit', minute: '2-digit'}
+  );
+}
+
 function render(data) {
   const tableBody = document.getElementById('table-body');
   tableBody.innerHTML = '';
@@ -23,7 +31,7 @@ function render(data) {
     row.insertCell(0).textContent = item.id;
     row.insertCell(1).textContent = item.name;
     row.insertCell(2).textContent = item.date;
-    row.insertCell(3).textContent = item.time.startAt;
+    row.insertCell(3).textContent = convertTime(item.timeSlot.startAt);
 
     const actionCell = row.insertCell(row.cells.length);
     actionCell.appendChild(createActionButton('삭제', 'btn-danger', deleteRow));
@@ -51,8 +59,9 @@ function createSelect(options, defaultText, selectId, textProperty) {
   // 넘겨받은 옵션을 바탕으로 드롭다운 메뉴 아이템 생성
   options.forEach(optionData => {
     const option = document.createElement('option');
+
     option.value = optionData.id;
-    option.textContent = optionData[textProperty]; // 동적 속성 접근
+    option.textContent = convertTime(optionData[textProperty]) // 동적 속성 접근
     select.appendChild(option);
   });
 
@@ -124,7 +133,7 @@ function saveRow(event) {
   const reservation = {
     name: nameInput.value,
     date: dateInput.value,
-    timeId: timeSelect.value
+    timeSlotId: timeSelect.value
   };
 
   requestCreate(reservation)
@@ -166,7 +175,7 @@ function requestDelete(id) {
 
   return fetch(`${RESERVATION_API_ENDPOINT}/${id}`, requestOptions)
       .then(response => {
-        if (response.status !== 200) throw new Error('Delete failed');
+        if (response.status !== 204) throw new Error('Delete failed');
       });
 }
 

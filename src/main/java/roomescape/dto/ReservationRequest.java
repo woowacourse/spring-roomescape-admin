@@ -1,15 +1,16 @@
 package roomescape.dto;
 
 import roomescape.model.Reservation;
+import roomescape.model.ReservationTime;
 
-public record ReservationRequest(String name, String date, String time) {
+public record ReservationRequest(String name, String date, Long timeId) {
 
-    public static Reservation from(ReservationRequest reservationRequest) {
+    public static Reservation of(ReservationRequest reservationRequest, ReservationTime reservationTime) {
         return new Reservation(
-                null,
-                reservationRequest.name,
-                reservationRequest.date,
-                reservationRequest.time
+            null,
+            reservationRequest.name,
+            reservationRequest.date,
+            reservationTime
         );
     }
 }

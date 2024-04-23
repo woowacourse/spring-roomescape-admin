@@ -14,7 +14,6 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import roomescape.dto.ReservationTimeRequest;
 import roomescape.dto.ReservationTimeResponse;
-import roomescape.model.ReservationTime;
 import roomescape.repository.ReservationTimeDao;
 
 @RestController
@@ -38,9 +37,8 @@ public class ReservationTimeController {
     @PostMapping
     public ResponseEntity<ReservationTimeResponse> addReservationTime(
         @RequestBody ReservationTimeRequest reservationTimeRequest) {
-        ReservationTime time = ReservationTimeRequest.from(reservationTimeRequest);
-        ReservationTime savedTime = reservationTimeDao.save(time);
-        ReservationTimeResponse reservationTimeResponse = ReservationTimeResponse.from(savedTime);
+        Long savedId = reservationTimeDao.save(reservationTimeRequest);
+        ReservationTimeResponse reservationTimeResponse = ReservationTimeResponse.of(savedId, reservationTimeRequest);
         return ResponseEntity.ok()
             .body(reservationTimeResponse);
     }

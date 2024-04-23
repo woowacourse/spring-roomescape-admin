@@ -7,6 +7,7 @@ import org.springframework.jdbc.core.namedparam.BeanPropertySqlParameterSource;
 import org.springframework.jdbc.core.namedparam.SqlParameterSource;
 import org.springframework.jdbc.core.simple.SimpleJdbcInsert;
 import org.springframework.stereotype.Repository;
+import roomescape.dto.ReservationTimeRequest;
 import roomescape.model.ReservationTime;
 
 @Repository
@@ -33,11 +34,22 @@ public class ReservationTimeDao {
         );
     }
 
-    public ReservationTime save(ReservationTime reservationTime) {
-        SqlParameterSource params = new BeanPropertySqlParameterSource(reservationTime);
-        Long id = jdbcInsert.executeAndReturnKey(params)
+    public ReservationTime findById(Long timeId) {
+        String sql = "select id, start_at from reservation_time where id = ?";
+        return jdbcTemplate.queryForObject(
+            sql,
+            (resultSet, rowNum) -> new ReservationTime(
+                resultSet.getLong("id"),
+                resultSet.getString("start_at")
+            ),
+            timeId
+        );
+    }
+
+    public Long save(ReservationTimeRequest reservationTimeRequest) {
+        SqlParameterSource params = new BeanPropertySqlParameterSource(reservationTimeRequest);
+        return jdbcInsert.executeAndReturnKey(params)
             .longValue();
-        return new ReservationTime(id, reservationTime.getStartAt());
     }
 
     public void deleteById(Long id) {

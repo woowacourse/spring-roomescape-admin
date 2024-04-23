@@ -53,3 +53,6 @@
     
     HTTP/1.1 200
     ```
+- [x] h2 데이터베이스 연결
+  - [x] console 기능 활성화
+  - [x] datasource url을 `jdbc:h2:mem:database` 로 설정

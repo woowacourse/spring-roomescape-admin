@@ -28,7 +28,7 @@ public class ReservationController {
 
     @GetMapping("/reservations")
     public ResponseEntity<List<Reservation>> reservations() {
-        return ResponseEntity.ok(reservationRepository.findAll());
+        return ResponseEntity.ok(reservationRepository.getAll());
     }
 
     @PostMapping("/reservations")
@@ -39,7 +39,7 @@ public class ReservationController {
                 .time(reservationDto.getTime())
                 .build();
 
-        final var savedId = reservationRepository.save(reservation);
+        final var savedId = reservationRepository.add(reservation);
 
         final var httpHeaders = new HttpHeaders();
         httpHeaders.setLocation(URI.create("/reservations/" + savedId));
@@ -51,7 +51,7 @@ public class ReservationController {
 
     @DeleteMapping("/reservations/{id}")
     public ResponseEntity<Void> delete(@PathVariable("id") final long id) {
-        reservationRepository.delete(id);
+        reservationRepository.remove(id);
 
         return ResponseEntity.status(NO_CONTENT).build();
     }

@@ -7,6 +7,7 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.annotation.DirtiesContext;
 import roomescape.dto.request.ReservationRequest;
 import roomescape.fixture.ReservationFixture;
+import roomescape.fixture.ReservationTimeFixture;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -18,7 +19,8 @@ import static org.hamcrest.Matchers.is;
 class ReservationApiTest {
     @Test
     void get_reservations() {
-        ReservationFixture.예약_생성(new ReservationRequest("조이썬", "2023-08-30", "10:30"));
+        ReservationTimeFixture.예약_시간_생성("10:30");
+        ReservationFixture.예약_생성(new ReservationRequest("조이썬", "2023-08-30", 1));
 
         RestAssured.given()
                    .log()
@@ -34,10 +36,11 @@ class ReservationApiTest {
 
     @Test
     void create_reservation() {
+        ReservationTimeFixture.예약_시간_생성("10:30");
         Map<String, String> params = new HashMap<>();
         params.put("name", "브라운");
         params.put("date", "2023-08-05");
-        params.put("time", "15:40");
+        params.put("timeId", "1");
 
         RestAssured.given()
                    .contentType(ContentType.JSON)
@@ -51,11 +54,12 @@ class ReservationApiTest {
 
     @Test
     void delete_reservation() {
-        ReservationFixture.예약_생성(new ReservationRequest("조이썬", "2023-08-30", "10:30"));
+        ReservationTimeFixture.예약_시간_생성("10:30");
+        ReservationFixture.예약_생성(new ReservationRequest("조이썬", "2023-08-30", 1));
 
         RestAssured.given()
                    .when()
-                   .delete("/times/1")
+                   .delete("/reservations/1")
                    .then()
                    .statusCode(204);
     }

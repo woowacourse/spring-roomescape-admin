@@ -15,14 +15,14 @@ public class ReservationService {
     @Autowired
     private ReservationTimeRepository reservationTimeRepository;
 
+    public List<Reservation> getReservations() {
+        return reservationRepository.findAll();
+    }
+
     public Reservation saveReservation(final ReservationRequest reservationRequest) {
         Long id = reservationRepository.save(reservationRequest.getName(), reservationRequest.getDate(), reservationRequest.getTimeId());
         ReservationTime reservationTime = reservationTimeRepository.findById(reservationRequest.getTimeId());
         return new Reservation(id, reservationRequest.getName(), reservationRequest.getDate(), reservationTime);
-    }
-
-    public List<Reservation> getReservations() {
-        return reservationRepository.findAll();
     }
 
     public void deleteReservationTime(Long id) {

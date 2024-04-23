@@ -16,6 +16,18 @@ public class ReservationTimeRepository {
     @Autowired
     private JdbcTemplate jdbcTemplate;
 
+    public List<ReservationTime> findAll() {
+        String sql = "SELECT id, start_at FROM reservation_time";
+        return jdbcTemplate.query(sql, (resultSet, rowNumber) ->
+                new ReservationTime(resultSet.getLong("id"), LocalTime.parse(resultSet.getString("start_at"))));
+    }
+
+    public ReservationTime findById(final Long timeId) {
+        String sql = "SELECT start_at FROM reservation_time WHERE id = ?";
+        return jdbcTemplate.queryForObject(sql, (resultSet, rowNumber) ->
+                new ReservationTime(timeId, LocalTime.parse(resultSet.getString("start_at"))), timeId);
+    }
+
     public Long save(final LocalTime startAt) {
         String sql = "INSERT INTO reservation_time (start_at) VALUES (?)";
         KeyHolder keyHolder = new GeneratedKeyHolder();
@@ -27,20 +39,8 @@ public class ReservationTimeRepository {
         return keyHolder.getKey().longValue();
     }
 
-    public List<ReservationTime> findAll() {
-        String sql = "SELECT id, start_at FROM reservation_time";
-        return jdbcTemplate.query(sql, (resultSet, rowNumber) ->
-                new ReservationTime(resultSet.getLong("id"), LocalTime.parse(resultSet.getString("start_at"))));
-    }
-
     public void deleteById(final Long id) {
         String sql = "DELETE FROM reservation_time WHERE id = ?";
         jdbcTemplate.update(sql, id);
-    }
-
-    public ReservationTime findById(final Long timeId) {
-        String sql = "SELECT start_at FROM reservation_time WHERE id = ?";
-        return jdbcTemplate.queryForObject(sql, (resultSet, rowNumber) ->
-                new ReservationTime(timeId, LocalTime.parse(resultSet.getString("start_at"))), timeId);
     }
 }

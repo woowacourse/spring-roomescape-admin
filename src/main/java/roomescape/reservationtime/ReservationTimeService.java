@@ -11,13 +11,13 @@ public class ReservationTimeService {
     @Autowired
     ReservationTimeRepository reservationTimeRepository;
 
+    public List<ReservationTime> getReservationTimes() {
+        return reservationTimeRepository.findAll();
+    }
+
     public ReservationTime saveReservationTime(final ReservationTimeRequest reservationTimeRequest) {
         Long id = reservationTimeRepository.save(reservationTimeRequest.getStartAt());
         return new ReservationTime(id, reservationTimeRequest.getStartAt());
-    }
-
-    public List<ReservationTime> getReservationTimes() {
-        return reservationTimeRepository.findAll();
     }
 
     public void deleteReservationTime(Long id) {

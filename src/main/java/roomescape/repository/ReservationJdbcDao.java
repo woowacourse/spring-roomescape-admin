@@ -15,15 +15,16 @@ import java.util.List;
 @Repository
 public class ReservationJdbcDao implements ReservationDao {
 
-    private final JdbcTemplate jdbcTemplate;
-    private final SimpleJdbcInsert reservationInsert;
-    private final RowMapper<Reservation> reservationConvertor = (selectedReservation, RowNum) -> {
-        ReservationTime time = new ReservationTime(selectedReservation.getLong("time_id"), selectedReservation.getString("start_at"));
+    private static final RowMapper<Reservation> ROW_MAPPER = (selectedReservation, rowNum) -> {
+        final ReservationTime time = new ReservationTime(selectedReservation.getLong("time_id"), selectedReservation.getString("start_at"));
         return new Reservation(
                 selectedReservation.getLong("id"),
                 selectedReservation.getString("name"),
                 selectedReservation.getString("date"), time);
     };
+
+    private final JdbcTemplate jdbcTemplate;
+    private final SimpleJdbcInsert reservationInsert;
 
     public ReservationJdbcDao(final JdbcTemplate jdbcTemplate) {
         this.jdbcTemplate = jdbcTemplate;
@@ -54,7 +55,7 @@ public class ReservationJdbcDao implements ReservationDao {
             INNER JOIN reservation_times as t
             ON r.time_id = t.id
         """;
-        return jdbcTemplate.query(selectQuery, reservationConvertor)
+        return jdbcTemplate.query(selectQuery, ROW_MAPPER)
                 .stream()
                 .toList();
     }

@@ -16,10 +16,11 @@ import java.util.Optional;
 @Repository
 public class ReservationTimeJdbcDao implements ReservationTimeDao {
 
+    private static final RowMapper<ReservationTime> ROW_MAPPER = (selectedTime, rowNum) ->
+            new ReservationTime(selectedTime.getLong("id"), selectedTime.getString("start_at"));
+
     private final JdbcTemplate jdbcTemplate;
     private final SimpleJdbcInsert reservationTimeInsert;
-    private final RowMapper<ReservationTime> reservationTimeConvertor = (selectedTime, rowNum) ->
-            new ReservationTime(selectedTime.getLong("id"), selectedTime.getString("start_at"));
 
     public ReservationTimeJdbcDao(final JdbcTemplate jdbcTemplate) {
         this.jdbcTemplate = jdbcTemplate;
@@ -38,7 +39,7 @@ public class ReservationTimeJdbcDao implements ReservationTimeDao {
     public Optional<ReservationTime> findById(final Long id) {
         final String selectQuery = "SELECT id, start_at FROM reservation_times WHERE id = ?";
         try {
-            final ReservationTime time = jdbcTemplate.queryForObject(selectQuery, reservationTimeConvertor, id);
+            final ReservationTime time = jdbcTemplate.queryForObject(selectQuery, ROW_MAPPER, id);
             return Optional.ofNullable(time);
         } catch (EmptyResultDataAccessException exception) {
             return Optional.empty();
@@ -47,7 +48,7 @@ public class ReservationTimeJdbcDao implements ReservationTimeDao {
 
     public List<ReservationTime> findAll() {
         final String selectQuery = "SELECT id, start_at FROM reservation_times";
-        return jdbcTemplate.query(selectQuery, reservationTimeConvertor)
+        return jdbcTemplate.query(selectQuery, ROW_MAPPER)
                 .stream()
                 .toList();
     }

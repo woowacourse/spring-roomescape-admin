@@ -60,8 +60,13 @@ public class H2ReservationDao implements ReservationDao {
 
     @Override
     public boolean isExist(Long id) {
-        String sql = "SELECT COUNT(*) FROM reservation WHERE id = ?";
-        Integer count = jdbcTemplate.queryForObject(sql, Integer.class, id);
-        return count.intValue() > 0;  // TODO: NPE 해결
+        String sql = "SELECT * FROM reservation WHERE id = ? LIMIT 1";
+        List<Reservation> reservations = jdbcTemplate.query(sql, (rs, rowNum) -> new Reservation(
+                        rs.getLong("id"),
+                        rs.getString("name"),
+                        rs.getString("date"),
+                        rs.getString("time")
+                ), id);
+        return !reservations.isEmpty();
     }
 }

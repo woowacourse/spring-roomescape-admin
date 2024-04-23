@@ -5,6 +5,7 @@ import static org.hamcrest.Matchers.is;
 import io.restassured.RestAssured;
 import io.restassured.http.ContentType;
 import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.context.SpringBootTest.WebEnvironment;
@@ -30,6 +31,7 @@ class ReservationTimeControllerTest {
     }
 
     @Test
+    @DisplayName("전체 시간 목록을 조회한다.")
     void readReservationTimes() {
         RestAssured.given().log().all()
                 .when().get("/times")
@@ -39,6 +41,7 @@ class ReservationTimeControllerTest {
     }
 
     @Test
+    @DisplayName("예약 시간을 생성한다.")
     void createReservationTime() {
         ReservationTimeCreateDto createDto = new ReservationTimeCreateDto("13:00");
 
@@ -49,5 +52,18 @@ class ReservationTimeControllerTest {
                 .then().log().all()
                 .statusCode(201)
                 .header("Location", "/times/3");
+    }
+
+    @Test
+    @DisplayName("적절하지 않은 형태의 시간을 생성하면 예외가 발생한다.")
+    void createIllegalReservationTime() {
+        ReservationTimeCreateDto createDto = new ReservationTimeCreateDto("24:01");
+
+        RestAssured.given().log().all()
+                .contentType(ContentType.JSON)
+                .body(createDto)
+                .when().post("/times")
+                .then().log().all()
+                .statusCode(400);
     }
 }

@@ -13,14 +13,20 @@ import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.Arguments;
 import org.junit.jupiter.params.provider.MethodSource;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.web.server.LocalServerPort;
+import org.springframework.jdbc.core.JdbcTemplate;
 import roomescape.controller.dto.ReservationResponse;
+import roomescape.domain.Reservation;
 
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 class ReservationControllerTest {
     @LocalServerPort
     private int port;
+
+    @Autowired
+    JdbcTemplate jdbcTemplate;
 
     @BeforeEach
     public void setUpTestPort() {
@@ -177,5 +183,22 @@ class ReservationControllerTest {
                 .when().delete("/reservations/" + neverExistId)
                 .then().log().all()
                 .statusCode(204);
+    }
+
+    @DisplayName("DB에서 조회한 예약의 개수와 API를 통해 조회한 값이 같은지 확인한다.")
+    @Test
+    // TODO: 적절한 테스트 클래스로 이동
+    void checkReservationCount() {
+        jdbcTemplate.update("INSERT INTO reservation (name, date, time) VALUES (?, ?, ?)", "브라운", "2099-08-05", "15:40");
+
+        List<Reservation> reservations = RestAssured.given().log().all()
+                .when().get("/reservations")
+                .then().log().all()
+                .statusCode(200).extract()
+                .jsonPath().getList(".", Reservation.class);
+
+        Integer count = jdbcTemplate.queryForObject("SELECT count(1) from reservation", Integer.class);
+
+        assertThat(reservations).hasSize(count);
     }
 }

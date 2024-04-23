@@ -11,7 +11,6 @@ public class GlobalExceptionHandler {
 
     @ExceptionHandler(IllegalArgumentException.class)
     public ResponseEntity<ErrorResponse> handleIllegalArgumentException(IllegalArgumentException exception) {
-        System.out.println("exception cause!");
         ErrorResponse data = new ErrorResponse(HttpStatus.BAD_REQUEST, exception.getMessage());
         return ResponseEntity.badRequest().body(data);
     }

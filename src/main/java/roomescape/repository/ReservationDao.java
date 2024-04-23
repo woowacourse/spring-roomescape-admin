@@ -35,10 +35,9 @@ public class ReservationDao {
 
             return statement;
         };
-
         KeyHolder keyHolder = new GeneratedKeyHolder();
-        jdbcTemplate.update(preparedStatementCreator, keyHolder);
 
+        jdbcTemplate.update(preparedStatementCreator, keyHolder);
         return new Reservation(keyHolder.getKey().longValue(), reservation.getName(),
                 reservation.getDate(), reservation.getTime());
     }
@@ -50,7 +49,6 @@ public class ReservationDao {
 
         String sql = "SELECT r.id AS reservation_id, r.name, r.date, t.id AS time_id, t.start_at AS start_at " +
                 "FROM reservation AS r INNER JOIN reservation_time as t on r.time_id = t.id WHERE r.id = ?";
-
         Reservation reservation = jdbcTemplate.queryForObject(sql, getReservationRowMapper(), id);
         return Optional.ofNullable(reservation);
     }

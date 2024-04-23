@@ -35,7 +35,6 @@ public class ReservationService {
     public Reservation createReservation(ReservationCreateRequest request) {
         ReservationTime reservationTime = reservationTimeService.readReservationTime(request.timeId());
         Reservation reservation = request.toReservation(reservationTime);
-
         return reservationDao.save(reservation);
     }
 

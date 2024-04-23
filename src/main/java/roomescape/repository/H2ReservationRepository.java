@@ -1,7 +1,9 @@
 package roomescape.repository;
 
+import java.sql.Date;
 import java.sql.PreparedStatement;
 import java.sql.Statement;
+import java.sql.Time;
 import java.time.LocalDate;
 import java.time.LocalTime;
 import java.time.format.DateTimeFormatter;
@@ -38,8 +40,8 @@ public class H2ReservationRepository implements ReservationRepository {
         jdbcTemplate.update(connection -> {
             PreparedStatement ps = connection.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS);
             ps.setString(1, reservation.getName());
-            ps.setDate(2, java.sql.Date.valueOf(reservation.getStartDate()));
-            ps.setTime(3, java.sql.Time.valueOf(reservation.getStartTime()));
+            ps.setDate(2, Date.valueOf(reservation.getStartDate()));
+            ps.setTime(3, Time.valueOf(reservation.getStartTime()));
             return ps;
         }, keyHolder);
         long savedId = keyHolder.getKey().longValue();

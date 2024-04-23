@@ -76,6 +76,19 @@ class ReservationTimeRepositoryTest {
     }
 
     @Test
+    @DisplayName("Id에 해당하는 예약 시간이 없다면 빈 Optional을 반환한다.")
+    void findByNotExistingId() {
+        // given
+        Long id = 1L;
+
+        // when
+        Optional<ReservationTime> reservationTime = reservationTimeRepository.findById(id);
+
+        // then
+        assertThat(reservationTime).isEmpty();
+    }
+
+    @Test
     @DisplayName("Id로 예약 시간을 삭제한다.")
     void deleteById() {
         // given

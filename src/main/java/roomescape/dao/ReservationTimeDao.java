@@ -24,7 +24,7 @@ public class ReservationTimeDao {
         this.jdbcTemplate = jdbcTemplate;
     }
 
-    public long add(final ReservationTimeRequest reservationTimeRequest) {
+    public ReservationTime add(final ReservationTimeRequest reservationTimeRequest) {
         String sql = "INSERT INTO reservation_time (start_at) VALUES (?)";
 
         KeyHolder keyHolder = new GeneratedKeyHolder();
@@ -35,7 +35,12 @@ public class ReservationTimeDao {
         }, keyHolder);
 
         long id = keyHolder.getKey().longValue();
-        return id;
+        return findById(id);
+    }
+
+    private ReservationTime findById(final long id) {
+        String sql =  "SELECT * FROM reservation_time WHERE id = ?";
+        return jdbcTemplate.queryForObject(sql, actorRowMapper, id);
     }
 
     public List<ReservationTime> findAll() {

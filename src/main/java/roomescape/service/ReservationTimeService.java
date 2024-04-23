@@ -15,7 +15,7 @@ public class ReservationTimeService {
         this.reservationTimeDao = reservationTimeDao;
     }
 
-    public long add(final ReservationTimeRequest reservationTimeRequest) {
+    public ReservationTime add(final ReservationTimeRequest reservationTimeRequest) {
         return reservationTimeDao.add(reservationTimeRequest);
     }
 

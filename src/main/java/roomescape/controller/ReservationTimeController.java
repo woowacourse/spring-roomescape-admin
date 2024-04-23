@@ -2,7 +2,6 @@ package roomescape.controller;
 
 import java.net.URI;
 import java.util.List;
-import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -14,8 +13,8 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 import roomescape.domain.ReservationTime;
-import roomescape.dto.ReservationTimeResponse;
 import roomescape.dto.ReservationTimeRequest;
+import roomescape.dto.ReservationTimeResponse;
 import roomescape.service.ReservationTimeService;
 
 @RestController
@@ -29,11 +28,9 @@ public class ReservationTimeController {
     }
 
     @PostMapping
-    public ResponseEntity<Long> add(@RequestBody final ReservationTimeRequest reservationTimeRequest) {
-        long id  = reservationTimeService.add(reservationTimeRequest);
-        HttpHeaders httpHeaders = new HttpHeaders();
-        httpHeaders.setLocation(URI.create("/times/" + id));
-        return ResponseEntity.ok().headers(httpHeaders).body(id); // TODO: create, 객체 반환으로 바꾸기
+    public ResponseEntity<ReservationTime> add(@RequestBody final ReservationTimeRequest reservationTimeRequest) {
+        ReservationTime reservationTime  = reservationTimeService.add(reservationTimeRequest);
+        return ResponseEntity.created(URI.create("/times/" + reservationTime.getId())).body(reservationTime);
     }
 
     @GetMapping
@@ -44,7 +41,7 @@ public class ReservationTimeController {
     }
 
     @DeleteMapping("/{id}")
-    @ResponseStatus(HttpStatus.OK)
+    @ResponseStatus(HttpStatus.NO_CONTENT)
     public int delete(@PathVariable(name = "id") final long id) {
         return reservationTimeService.delete(id);
     }

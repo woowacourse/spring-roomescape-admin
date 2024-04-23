@@ -97,7 +97,7 @@ public class ReservationControllerTest {
                 .body(new CreateReservationRequest("lini", invalidDate, timeId))
                 .when().post("/reservations")
                 .then().log().all()
-                .assertThat().statusCode(400).body(is("올바르지 않은 날짜입니다. date: '"+invalidDate+"'"));
+                .assertThat().statusCode(400).body(is("올바르지 않은 날짜입니다. date: '" + invalidDate + "'"));
     }
 
     @DisplayName("모든 예약 내역 조회 테스트")

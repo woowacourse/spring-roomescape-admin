@@ -1,7 +1,10 @@
 package roomescape.domain;
 
+import roomescape.exception.InvalidReservationException;
+
 import java.time.LocalTime;
 import java.time.format.DateTimeFormatter;
+import java.time.format.DateTimeParseException;
 
 public class ReservationTime {
     private final static String TIME_FORMAT = "HH:mm";
@@ -20,11 +23,23 @@ public class ReservationTime {
     }
 
     public ReservationTime(long id, String time) {
-        this(id, LocalTime.parse(time));
+        validate(time);
+        this.id = id;
+        this.startAt = LocalTime.parse(time);
     }
 
     public ReservationTime(String time) {
-        this(NO_ID, LocalTime.parse(time));
+        validate(time);
+        this.id = NO_ID;
+        this.startAt = LocalTime.parse(time);
+    }
+
+    private void validate(String time) {
+        try {
+            LocalTime.parse(time);
+        } catch (DateTimeParseException e) {
+            throw new InvalidReservationException("올바르지 않은 시간입니다. time: '" + time + "'");
+        }
     }
 
     public long getId() {

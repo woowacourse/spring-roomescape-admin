@@ -13,7 +13,9 @@ import roomescape.dto.ReservationResponse;
 import roomescape.dto.ReservationSaveRequest;
 import roomescape.dto.ReservationTimeResponse;
 import roomescape.dto.ReservationTimeSaveRequest;
+import roomescape.exception.ErrorResponse;
 
+import java.time.LocalTime;
 import java.util.Arrays;
 import java.util.List;
 import java.util.stream.Stream;
@@ -26,7 +28,7 @@ import static roomescape.TestFixture.*;
 public class ApiAcceptanceTest implements AcceptanceTest {
 
     @Test
-    @DisplayName("[Step7] 예약 시간을 생성한다.")
+    @DisplayName("[Step7] 예약 시간을 추가한다.")
     void createReservationTime() {
         // given & when
         ReservationTimeSaveRequest request = new ReservationTimeSaveRequest(MIA_RESERVATION_TIME);
@@ -44,6 +46,27 @@ public class ApiAcceptanceTest implements AcceptanceTest {
             checkHttpStatusOk(response);
             assertThat(reservationTimeResponse.id()).isNotNull();
             assertThat(reservationTimeResponse.startAt()).isEqualTo(MIA_RESERVATION_TIME.toString());
+        });
+    }
+
+    @Test
+    @DisplayName("[Step7] 잘못된 형식의 예약 시간을 추가한다.")
+    void createReservationTime2() {
+        // given & when
+        ReservationTimeSaveRequest request = new ReservationTimeSaveRequest(LocalTime.of(15, 3));
+
+        ExtractableResponse<Response> response = RestAssured.given().log().all()
+                .contentType(ContentType.JSON)
+                .body(request)
+                .when().post("/times")
+                .then().log().all()
+                .extract();
+        ErrorResponse errorResponse = response.as(ErrorResponse.class);
+
+        // then
+        assertAll(() -> {
+            checkHttpStatusBadRequest(response);
+            assertThat(errorResponse.message()).isNotNull();
         });
     }
 
@@ -133,6 +156,26 @@ public class ApiAcceptanceTest implements AcceptanceTest {
         );
     }
 
+    @Test
+    @DisplayName("[Step3, Step6, Step8] 잘못된 형식의 예약을 추가한다.")
+    void createInvalidReservation() {
+        // given & when
+        ReservationSaveRequest request = new ReservationSaveRequest(null, MIA_RESERVATION_DATE, 3L);
+        ExtractableResponse<Response> response = RestAssured.given().log().all()
+                .contentType(ContentType.JSON)
+                .body(request)
+                .when().post("/reservations")
+                .then().log().all()
+                .extract();
+        ErrorResponse errorResponse = response.as(ErrorResponse.class);
+
+        // then
+        assertAll(() -> {
+            checkHttpStatusBadRequest(response);
+            assertThat(errorResponse.message()).isNotNull();
+        });
+    }
+
     @TestFactory
     @DisplayName("[Step3, Step6, Step8] 예약을 추가하고 삭제한다.")
     Stream<DynamicTest> createThenDeleteReservation() {
@@ -195,5 +238,9 @@ public class ApiAcceptanceTest implements AcceptanceTest {
 
     void checkHttpStatusOk(ExtractableResponse<Response> response) {
         assertThat(response.statusCode()).isEqualTo(HttpStatus.OK.value());
+    }
+
+    void checkHttpStatusBadRequest(ExtractableResponse<Response> response) {
+        assertThat(response.statusCode()).isEqualTo(HttpStatus.BAD_REQUEST.value());
     }
 }

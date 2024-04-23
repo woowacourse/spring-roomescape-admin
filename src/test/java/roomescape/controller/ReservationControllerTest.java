@@ -2,6 +2,8 @@ package roomescape.controller;
 
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.params.ParameterizedTest;
+import org.junit.jupiter.params.provider.MethodSource;
 import org.mockito.BDDMockito;
 import org.springframework.http.MediaType;
 import roomescape.domain.Reservation;
@@ -10,12 +12,14 @@ import roomescape.dto.ReservationResponse;
 import roomescape.dto.ReservationSaveRequest;
 
 import java.util.List;
+import java.util.stream.Stream;
 
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyLong;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 import static roomescape.TestFixture.*;
 
 class ReservationControllerTest extends ControllerTest {
@@ -61,6 +65,30 @@ class ReservationControllerTest extends ControllerTest {
                 .andExpect(jsonPath("$.time.id").value(1L))
                 .andExpect(jsonPath("$.time.startAt").value(MIA_RESERVATION_TIME.toString()))
                 .andExpect(jsonPath("$.date").value(MIA_RESERVATION_DATE.toString()));
+    }
+
+    @ParameterizedTest
+    @MethodSource(value = "invalidPostRequests")
+    @DisplayName("잘못된 형식의 예약 POST 요청 시 상태코드 400을 반환한다.")
+    void createReservationWithInvalidRequest(ReservationSaveRequest request) throws Exception {
+        // given
+        BDDMockito.given(reservationService.create(any()))
+                .willThrow(IllegalArgumentException.class);
+
+        // when & then
+        mockMvc.perform(post("/reservations")
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(objectMapper.writeValueAsBytes(request)))
+                .andDo(print())
+                .andExpect(status().isBadRequest())
+                .andExpect(jsonPath("$.message").exists());
+    }
+
+    private static Stream<ReservationSaveRequest> invalidPostRequests() {
+        return Stream.of(
+                new ReservationSaveRequest(null, MIA_RESERVATION_DATE, 1L),
+                new ReservationSaveRequest(USER_MIA, null, 1L)
+        );
     }
 
     @Test

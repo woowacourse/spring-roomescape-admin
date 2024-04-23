@@ -8,6 +8,7 @@ import roomescape.domain.ReservationTime;
 import roomescape.dto.ReservationTimeResponse;
 import roomescape.dto.ReservationTimeSaveRequest;
 
+import java.time.LocalTime;
 import java.util.List;
 
 import static org.mockito.ArgumentMatchers.any;
@@ -38,6 +39,24 @@ class ReservationTimeControllerTest extends ControllerTest {
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.id").value(1L))
                 .andExpect(jsonPath("$.startAt").value(MIA_RESERVATION_TIME.toString()));
+    }
+
+    @Test
+    @DisplayName("잘못된 형식의 예약 시간 POST 요청 시 상태코드 400을 반환한다.")
+    void createReservationTimeWithInvalidRequest() throws Exception {
+        // given
+        ReservationTimeSaveRequest request = new ReservationTimeSaveRequest(LocalTime.of(15, 3));
+
+        BDDMockito.given(reservationTimeService.create(any()))
+                .willThrow(IllegalArgumentException.class);
+
+        // when & then
+        mockMvc.perform(post("/times")
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(objectMapper.writeValueAsBytes(request)))
+                .andDo(print())
+                .andExpect(status().isBadRequest())
+                .andExpect(jsonPath("$.message").exists());
     }
 
     @Test

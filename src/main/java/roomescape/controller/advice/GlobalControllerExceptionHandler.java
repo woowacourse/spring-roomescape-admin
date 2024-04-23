@@ -13,13 +13,13 @@ public class GlobalControllerExceptionHandler {
     private final Logger logger = LoggerFactory.getLogger(getClass());
 
     @ExceptionHandler(ResourceNotFoundException.class)
-    public ResponseEntity<Void> resourceNotFound(final ResourceNotFoundException e) {
+    public ResponseEntity<Void> handleResourceNotFound(final ResourceNotFoundException e) {
         logger.error(e.getMessage(), e);
         return ResponseEntity.notFound().build();
     }
 
     @ExceptionHandler(IllegalArgumentException.class)
-    public ResponseEntity<String> illegalArgument(final IllegalArgumentException e) {
+    public ResponseEntity<String> handleIllegalArgument(final IllegalArgumentException e) {
         logger.error(e.getMessage(), e);
         return ResponseEntity.badRequest().body(e.getMessage());
     }

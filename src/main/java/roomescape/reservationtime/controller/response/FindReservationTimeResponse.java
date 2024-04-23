@@ -1,12 +1,12 @@
 package roomescape.reservationtime.controller.response;
 
-import roomescape.reservationtime.domain.NewReservationTime;
+import roomescape.reservationtime.domain.ReservationTime;
 import roomescape.util.CustomDateTimeFormatter;
 
 public record FindReservationTimeResponse(Long id, String startAt) {
-    public static FindReservationTimeResponse of(final NewReservationTime newReservationTime) {
+    public static FindReservationTimeResponse of(final ReservationTime reservationTime) {
         return new FindReservationTimeResponse(
-                newReservationTime.getId(),
-                CustomDateTimeFormatter.getFormattedTime(newReservationTime.getTime()));
+                reservationTime.getId(),
+                CustomDateTimeFormatter.getFormattedTime(reservationTime.getTime()));
     }
 }

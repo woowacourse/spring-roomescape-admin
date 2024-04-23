@@ -9,7 +9,7 @@ import org.springframework.jdbc.core.RowMapper;
 import org.springframework.jdbc.support.GeneratedKeyHolder;
 import org.springframework.jdbc.support.KeyHolder;
 import org.springframework.stereotype.Repository;
-import roomescape.reservationtime.domain.NewReservationTime;
+import roomescape.reservationtime.domain.ReservationTime;
 
 @Repository
 public class ReservationTimeRepositoryImpl implements ReservationTimeRepository {
@@ -20,18 +20,18 @@ public class ReservationTimeRepositoryImpl implements ReservationTimeRepository 
         this.jdbcTemplate = jdbcTemplate;
     }
 
-    private final RowMapper<NewReservationTime> reservationTimeRowMapper =
-            (resultSet, rowNum) -> new NewReservationTime(
+    private final RowMapper<ReservationTime> reservationTimeRowMapper =
+            (resultSet, rowNum) -> new ReservationTime(
                     resultSet.getLong("id"),
                     resultSet.getTime("start_at").toLocalTime()
             );
 
-    public Long save(final NewReservationTime newReservationTime) {
+    public Long save(final ReservationTime reservationTime) {
         String sql = "insert into reservation_time (start_at) values (?)";
         KeyHolder keyHolder = new GeneratedKeyHolder();
         PreparedStatementCreator preparedStatementCreator = connection -> {
             PreparedStatement ps = connection.prepareStatement(sql, new String[]{"id"});
-            ps.setTime(1, Time.valueOf(newReservationTime.getTime()));
+            ps.setTime(1, Time.valueOf(reservationTime.getTime()));
             return ps;
         };
 
@@ -40,7 +40,7 @@ public class ReservationTimeRepositoryImpl implements ReservationTimeRepository 
     }
 
     @Override
-    public List<NewReservationTime> findAll() {
+    public List<ReservationTime> findAll() {
         String sql = "select id, start_at from reservation_time";
         return jdbcTemplate.query(sql, reservationTimeRowMapper);
     }
@@ -52,7 +52,7 @@ public class ReservationTimeRepositoryImpl implements ReservationTimeRepository 
     }
 
     @Override
-    public NewReservationTime findById(final Long timeId) {
+    public ReservationTime findById(final Long timeId) {
         String sql = "select id, start_at from reservation_time where id = ?";
         return jdbcTemplate.queryForObject(sql, reservationTimeRowMapper, timeId);
     }

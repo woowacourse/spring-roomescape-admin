@@ -2,11 +2,11 @@ package roomescape.reservationtime.domain;
 
 import java.time.LocalTime;
 
-public class NewReservationTime {
+public class ReservationTime {
     private final Long id;
     private final LocalTime time;
 
-    public NewReservationTime(final Long id, final LocalTime time) {
+    public ReservationTime(final Long id, final LocalTime time) {
         this.id = id;
         this.time = time;
     }

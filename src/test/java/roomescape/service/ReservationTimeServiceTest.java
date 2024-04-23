@@ -11,13 +11,15 @@ import java.util.Optional;
 import org.junit.jupiter.api.Test;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
+import org.springframework.boot.test.context.SpringBootTest;
 import roomescape.domain.ReservationTime;
 import roomescape.dto.ReservationTimeRequest;
 import roomescape.dto.ReservationTimeResponse;
 import roomescape.fixture.Fixture;
 import roomescape.repository.ReservationTimeRepository;
 
-class ReservationTimeServiceTest extends BaseServiceTest {
+@SpringBootTest
+class ReservationTimeServiceTest {
 
     @Mock
     private ReservationTimeRepository reservationTimeRepository;

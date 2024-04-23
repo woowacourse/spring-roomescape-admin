@@ -6,10 +6,14 @@ import java.util.List;
 import java.util.Optional;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.transaction.annotation.Transactional;
 import roomescape.domain.ReservationTime;
 import roomescape.fixture.Fixture;
 
-class JdbcReservationTimeRepositoryTest extends BaseRepositoryTest {
+@SpringBootTest
+@Transactional
+class JdbcReservationTimeRepositoryTest {
 
     @Autowired
     private ReservationTimeRepository reservationTimeRepository;

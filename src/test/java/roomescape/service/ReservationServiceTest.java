@@ -10,6 +10,7 @@ import java.util.List;
 import org.junit.jupiter.api.Test;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
+import org.springframework.boot.test.context.SpringBootTest;
 import roomescape.domain.Reservation;
 import roomescape.domain.ReservationTime;
 import roomescape.dto.ReservationRequest;
@@ -17,7 +18,8 @@ import roomescape.dto.ReservationResponse;
 import roomescape.fixture.Fixture;
 import roomescape.repository.ReservationRepository;
 
-class ReservationServiceTest extends BaseServiceTest {
+@SpringBootTest
+class ReservationServiceTest {
 
     @Mock
     private ReservationRepository reservationRepository;

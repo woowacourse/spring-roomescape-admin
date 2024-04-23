@@ -19,10 +19,6 @@ public class Schedule {
         this.time = time;
     }
 
-    public Schedule(final String date, String time) {
-        this(LocalDate.parse(date), new ReservationTime(time));
-    }
-
     public Schedule(final String date, final ReservationTime reservationTime) {
         this(LocalDate.parse(date), reservationTime);
     }

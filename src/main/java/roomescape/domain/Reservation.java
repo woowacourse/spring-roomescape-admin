@@ -21,10 +21,6 @@ public class Reservation {
         this(id, new Name(name), new Schedule(date, reservationTime));
     }
 
-    public Reservation(String name, String date, String time) {
-        this(NO_ID, new Name(name), new Schedule(date, time));
-    }
-
     public Reservation(String name, String date, ReservationTime reservationTime) {
         this(NO_ID, new Name(name), new Schedule(date, reservationTime));
     }

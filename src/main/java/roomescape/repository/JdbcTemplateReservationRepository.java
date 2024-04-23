@@ -2,7 +2,6 @@ package roomescape.repository;
 
 import java.sql.Date;
 import java.sql.PreparedStatement;
-import java.sql.Time;
 import java.time.LocalDate;
 import java.time.LocalTime;
 import java.util.List;
@@ -11,6 +10,7 @@ import org.springframework.jdbc.support.GeneratedKeyHolder;
 import org.springframework.jdbc.support.KeyHolder;
 import org.springframework.stereotype.Repository;
 import roomescape.domain.Reservation;
+import roomescape.domain.ReservationTime;
 import roomescape.dto.ReservationRequest;
 
 @Repository
@@ -21,42 +21,55 @@ public class JdbcTemplateReservationRepository implements ReservationRepository 
         this.jdbcTemplate = jdbcTemplate;
     }
 
+
     @Override
     public Reservation save(ReservationRequest reservationRequest) {
+        String reservationTimeSelectSql = "select * from reservation_time where id = ?";
+        ReservationTime reservationTime = jdbcTemplate.queryForObject(reservationTimeSelectSql, (rs, rowNum) -> {
+            long id = rs.getLong(1);
+            LocalTime startAt = rs.getTime(2).toLocalTime();
+            return new ReservationTime(id, startAt);
+        }, reservationRequest.timeId());
+        Reservation reservation = new Reservation(null, reservationRequest.name(), reservationRequest.date(),
+                reservationTime);
         KeyHolder keyHolder = new GeneratedKeyHolder();
-        Reservation reservation = fromRequest(reservationRequest);
         jdbcTemplate.update(con -> {
-            PreparedStatement preparedStatement = con.prepareStatement(
-                    "insert into reservation (name, date,time) values ( ?,?,? )", new String[]{"id"});
+            String sql = "insert into reservation(name,date,time_id) values ( ?,?,? )";
+            PreparedStatement preparedStatement = con.prepareStatement(sql, new String[]{"id"});
             preparedStatement.setString(1, reservation.getName());
             preparedStatement.setDate(2, Date.valueOf(reservation.getDate()));
-            preparedStatement.setTime(3, Time.valueOf(reservation.getTime()));
+            preparedStatement.setLong(3, reservation.getReservationTime().getId());
             return preparedStatement;
         }, keyHolder);
-        return new Reservation(keyHolder.getKey().longValue(), reservation);
+        long id = keyHolder.getKey().longValue();
+        return new Reservation(id, reservation);
     }
 
     @Override
     public List<Reservation> findAll() {
-        return jdbcTemplate.query("select * from reservation", (rs, rowNum) -> {
-            long id = rs.getLong("id");
-            String name = rs.getString("name");
-            LocalDate date = rs.getDate("date").toLocalDate();
-            LocalTime time = rs.getTime("time").toLocalTime();
-            return new Reservation(id, name, date, time);
-        });
+        String query = "SELECT "
+                + "    r.id as reservation_id,"
+                + "    r.name,"
+                + "    r.date,"
+                + "    t.id as time_id,"
+                + "    t.start_at as time_value"
+                + " FROM reservation as r"
+                + " inner join reservation_time as t"
+                + " on r.time_id = t.id";
+        return jdbcTemplate.query(query,
+                (rs, rowNum) -> {
+                    long id = rs.getLong(1);
+                    String name = rs.getString(2);
+                    LocalDate date = rs.getDate(3).toLocalDate();
+                    long timeId = rs.getLong(4);
+                    LocalTime startAt = rs.getTime(5).toLocalTime();
+                    ReservationTime reservationTime = new ReservationTime(timeId, startAt);
+                    return new Reservation(id, name, date, reservationTime);
+                });
     }
 
     @Override
     public void delete(long reservationId) {
         jdbcTemplate.update("delete from reservation where id = ?", reservationId);
-    }
-
-    private Reservation fromRequest(ReservationRequest reservationRequest) {
-        long id = 1L;
-        String name = reservationRequest.name();
-        LocalDate date = reservationRequest.date();
-        LocalTime time = reservationRequest.time();
-        return new Reservation(id, name, date, time);
     }
 }

@@ -1,29 +1,33 @@
 package roomescape.repository;
 
 import java.time.LocalDate;
-import java.time.LocalDateTime;
-import java.time.LocalTime;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.atomic.AtomicLong;
+import java.util.function.Predicate;
 import roomescape.domain.Reservation;
+import roomescape.domain.ReservationTime;
 import roomescape.dto.ReservationRequest;
 
 public class CollectionReservationRepository implements ReservationRepository {
     private final List<Reservation> reservations;
     private final AtomicLong atomicLong;
+    private final CollectionReservationTimeRepository timeRepository;
 
-    public CollectionReservationRepository() {
-        this(new ArrayList<>());
+    public CollectionReservationRepository(CollectionReservationTimeRepository timeRepository) {
+        this(new ArrayList<>(), new AtomicLong(0), timeRepository);
     }
 
-    public CollectionReservationRepository(List<Reservation> reservations) {
-        this(reservations, new AtomicLong(0));
-    }
-
-    public CollectionReservationRepository(List<Reservation> reservations, AtomicLong atomicLong) {
+    public CollectionReservationRepository(List<Reservation> reservations, AtomicLong atomicLong,
+                                           CollectionReservationTimeRepository timeRepository) {
         this.reservations = reservations;
         this.atomicLong = atomicLong;
+        this.timeRepository = timeRepository;
+    }
+
+    public CollectionReservationRepository(List<Reservation> reservations,
+                                           CollectionReservationTimeRepository timeRepository) {
+        this(reservations, new AtomicLong(0), timeRepository);
     }
 
     @Override
@@ -38,9 +42,15 @@ public class CollectionReservationRepository implements ReservationRepository {
 
         String name = reservationRequest.name();
         LocalDate date = reservationRequest.date();
-        LocalTime time = reservationRequest.time();
-        LocalDateTime dateTime = LocalDateTime.of(date, time);
-        return new Reservation(id, name, dateTime);
+        ReservationTime reservationTime = timeRepository.findAll().stream()
+                .filter(sameId(reservationRequest))
+                .findAny()
+                .orElseThrow();
+        return new Reservation(id, name, date, reservationTime);
+    }
+
+    private static Predicate<ReservationTime> sameId(ReservationRequest reservationRequest) {
+        return reservationTime -> reservationTime.getId() == reservationRequest.timeId();
     }
 
     @Override

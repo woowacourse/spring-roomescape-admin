@@ -27,6 +27,9 @@ public class AdminIntegrationTest {
     void init() {
         jdbcTemplate.update("delete from reservation");
         jdbcTemplate.update("ALTER TABLE reservation alter column id restart with 1");
+        jdbcTemplate.update("delete from reservation_time");
+        jdbcTemplate.update("ALTER TABLE reservation_time alter column id restart with 1");
+        jdbcTemplate.update("insert into reservation_time(start_at) values('11:56')");
         RestAssured.port = port;
     }
 
@@ -57,10 +60,13 @@ public class AdminIntegrationTest {
     @Test
     @DisplayName("관리자 예약 페이지가 잘 동작한다.")
     void adminReservationPageWork() {
-        Map<String, String> params = new HashMap<>();
+        Integer integer = jdbcTemplate.queryForObject("select id from reservation_time",
+                Integer.class);
+        System.out.println(integer);
+        Map<String, Object> params = new HashMap<>();
         params.put("name", "브라운");
         params.put("date", "2023-08-05");
-        params.put("time", "15:40");
+        params.put("timeId", 1);
 
         RestAssured.given().log().all()
                 .contentType(ContentType.JSON)
@@ -91,10 +97,10 @@ public class AdminIntegrationTest {
     @Test
     @DisplayName("관리자 예약 페이지가 DB와 함께 잘 동작한다.")
     void adminReservationPageWorkWithDB() {
-        Map<String, String> params = new HashMap<>();
+        Map<String, Object> params = new HashMap<>();
         params.put("name", "브라운");
         params.put("date", "2023-08-05");
-        params.put("time", "10:00");
+        params.put("timeId", 1);
 
         RestAssured.given().log().all()
                 .contentType(ContentType.JSON)
@@ -132,10 +138,10 @@ public class AdminIntegrationTest {
                 .when().get("/times")
                 .then().log().all()
                 .statusCode(200)
-                .body("size()", is(1));
+                .body("size()", is(2));
 
         RestAssured.given().log().all()
-                .when().delete("/times/1")
+                .when().delete("/times/2")
                 .then().log().all()
                 .statusCode(200);
     }

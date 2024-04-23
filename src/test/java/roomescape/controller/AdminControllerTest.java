@@ -20,7 +20,7 @@ class AdminControllerTest {
         AdminController adminController = new AdminController();
         String reservationPage = adminController.reservationPage();
         Assertions.assertThat(reservationPage)
-                .isEqualTo("admin/reservation-legacy");
+                .isEqualTo("admin/reservation");
     }
 
     @Test

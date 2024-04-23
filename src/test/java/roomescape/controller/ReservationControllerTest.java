@@ -10,24 +10,35 @@ import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import roomescape.domain.Reservation;
+import roomescape.domain.ReservationTime;
 import roomescape.dto.ReservationRequest;
 import roomescape.dto.ReservationResponse;
+import roomescape.dto.ReservationTimeResponse;
 import roomescape.repository.CollectionReservationRepository;
+import roomescape.repository.CollectionReservationTimeRepository;
 
 class ReservationControllerTest {
+    static final long timeId = 1L;
+    static final LocalTime time = LocalTime.now();
+    private final CollectionReservationTimeRepository timeRepository = new CollectionReservationTimeRepository(
+            new ArrayList<>(List.of(new ReservationTime(timeId, time)))
+    );
+    ;
+
     @Test
     @DisplayName("예약 정보를 잘 저장하는지 확인한다.")
     void saveReservation() {
-        CollectionReservationRepository collectionReservationRepository = new CollectionReservationRepository();
+        CollectionReservationRepository collectionReservationRepository = new CollectionReservationRepository(
+                timeRepository);
         ReservationController reservationController = new ReservationController(collectionReservationRepository);
         LocalDate date = LocalDate.now();
-        LocalTime time = LocalTime.now();
 
         ReservationResponse saveResponse = reservationController.saveReservation(
-                new ReservationRequest(date, "폴라", time));
+                new ReservationRequest(date, "폴라", timeId));
 
         long id = Objects.requireNonNull(saveResponse).id();
-        ReservationResponse expected = new ReservationResponse(id, "폴라", date, time);
+        ReservationResponse expected = new ReservationResponse(id, "폴라", date,
+                new ReservationTimeResponse(timeId, time));
 
         Assertions.assertThat(saveResponse)
                 .isEqualTo(expected);
@@ -36,7 +47,8 @@ class ReservationControllerTest {
     @Test
     @DisplayName("예약 정보를 잘 불러오는지 확인한다.")
     void findAllReservations() {
-        CollectionReservationRepository collectionReservationRepository = new CollectionReservationRepository();
+        CollectionReservationRepository collectionReservationRepository = new CollectionReservationRepository(
+                timeRepository);
         ReservationController reservationController = new ReservationController(collectionReservationRepository);
         List<ReservationResponse> allReservations = reservationController.findAllReservations();
 
@@ -49,7 +61,7 @@ class ReservationControllerTest {
     void delete() {
         List<Reservation> reservations = List.of(new Reservation(1, "폴라", LocalDateTime.now()));
         CollectionReservationRepository collectionReservationRepository = new CollectionReservationRepository(
-                new ArrayList<>(reservations));
+                new ArrayList<>(reservations), timeRepository);
         ReservationController reservationController = new ReservationController(collectionReservationRepository);
 
         reservationController.delete(1L);

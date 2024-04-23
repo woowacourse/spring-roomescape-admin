@@ -30,7 +30,7 @@ public class ReservationTimeDao {
     }
 
     private RowMapper<ReservationTime> mappingReservationTime() {
-        return (resultSet, rowNum) -> new ReservationTime(
+        return (resultSet, rowNum) -> ReservationTime.of(
             resultSet.getLong("id"),
             resultSet.getString("start_at")
         );

@@ -41,11 +41,11 @@ public class ReservationDao {
     }
 
     private RowMapper<Reservation> mappingReservation() {
-        return (resultSet, rowNum) -> new Reservation(
+        return (resultSet, rowNum) -> Reservation.of(
             resultSet.getLong("id"),
             resultSet.getString("name"),
             resultSet.getString("date"),
-            new ReservationTime(
+            ReservationTime.of(
                 resultSet.getLong("time_id"),
                 resultSet.getString("time_value")
             )

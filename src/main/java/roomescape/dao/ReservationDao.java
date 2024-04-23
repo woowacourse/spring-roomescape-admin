@@ -1,5 +1,6 @@
 package roomescape.dao;
 
+import java.sql.PreparedStatement;
 import java.util.List;
 import javax.sql.DataSource;
 import org.springframework.jdbc.core.JdbcTemplate;
@@ -47,7 +48,14 @@ public class ReservationDao {
     public long save(ReservationRequest reservationRequest) {
         String sql = "INSERT INTO reservation (name, date, time_id) values (?, ?, ?)";
         KeyHolder keyHolder = new GeneratedKeyHolder();
-        jdbcTemplate.update(sql, reservationRequest.name(), reservationRequest.date(), reservationRequest.timeId(), keyHolder);
+        jdbcTemplate.update(connection -> {
+            PreparedStatement ps = connection.prepareStatement(
+                    sql, new String[]{"id"});
+            ps.setString(1, reservationRequest.name());
+            ps.setString(2, String.valueOf(reservationRequest.date()));
+            ps.setString(3, String.valueOf(reservationRequest.timeId()));
+            return ps;
+        }, keyHolder);
         return keyHolder.getKey().longValue();
     }
 

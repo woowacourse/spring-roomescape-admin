@@ -3,12 +3,10 @@ package roomescape.domain.repository;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.atomic.AtomicLong;
-import org.springframework.context.annotation.Primary;
 import org.springframework.stereotype.Repository;
 import roomescape.domain.Reservation;
 
 @Repository
-@Primary
 public class InMemoryReservationRepository implements ReservationRepository {
 
     private final AtomicLong id = new AtomicLong(1);

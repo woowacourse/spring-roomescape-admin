@@ -20,6 +20,11 @@ public class ReservationTimeRepositoryImpl implements ReservationTimeRepository 
     }
 
     @Override
+    public ReservationTime get(long id) {
+        return this.reservationTimeDao.findOne(id);
+    }
+
+    @Override
     public long add(ReservationTime time) {
         return reservationTimeDao.save(time);
     }

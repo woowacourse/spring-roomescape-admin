@@ -18,4 +18,4 @@ Content-Type: application/json
 DELETE localhost:8080/reservations/1
 
 ### 예약 정보 요청 By id
-GET localhost:8080/reservations/2
+GET localhost:8080/reservations/3

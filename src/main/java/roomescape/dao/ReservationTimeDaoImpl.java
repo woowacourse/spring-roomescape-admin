@@ -40,4 +40,10 @@ public class ReservationTimeDaoImpl implements ReservationTimeDao {
         final var sql = "DELETE FROM reservation_time WHERE id = ?";
         jdbcTemplate.update(sql, id);
     }
+
+    @Override
+    public ReservationTime findOne(final long id) {
+        final var sql = "SELECT id, start_at FROM reservation_time WHERE id = ?";
+        return jdbcTemplate.queryForObject(sql, actorRowMapper(), id);
+    }
 }

@@ -10,4 +10,4 @@ Content-Type: application/json
 GET localhost:8080/times
 
 ### 예약 시간 삭제 요청
-DELETE localhost:8080/times/1
+DELETE localhost:8080/times/2

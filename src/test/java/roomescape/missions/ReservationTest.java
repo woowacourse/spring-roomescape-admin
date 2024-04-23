@@ -1,4 +1,4 @@
-package roomescape;
+package roomescape.missions;
 
 import static org.apache.http.HttpStatus.SC_CREATED;
 import static org.apache.http.HttpStatus.SC_NO_CONTENT;
@@ -62,7 +62,7 @@ class ReservationTest {
     }
     @Test
     void 삼단계() {
-        Map<String, String> params = Map.of("name", "브라운", "date", "2023-08-05", "time", "15:40");
+        Map<String, String> params = Map.of("name", "브라운", "date", "2023-08-05", "timeId", "1");
 
         RestAssured.given().log().all()
                 .contentType(ContentType.JSON)
@@ -101,25 +101,10 @@ class ReservationTest {
         }
     }
 
-    @Test
-    void 오단계() {
-        String sql = "INSERT INTO reservation(name, date, time) VALUES (?,?,?)";
-        jdbcTemplate.update(sql, "브라운", "2023-08-05", "15:40");
-
-        List<Reservation> reservations = RestAssured.given().log().all()
-                .when().get("/reservations")
-                .then().log().all()
-                .statusCode(SC_OK).extract()
-                .jsonPath().getList(".", Reservation.class);
-
-        Integer count = jdbcTemplate.queryForObject("SELECT COUNT(1) FROM reservation", Integer.class);
-
-        assertThat(reservations).hasSize(count);
-    }
 
     @Test
     void 육단계() {
-        Map<String, String> params = Map.of("name", "브라운", "date", "2023-08-05", "time", "10:00");
+        Map<String, String> params = Map.of("name", "브라운", "date", "2023-08-05", "timeId", "1");
 
         RestAssured.given().log().all()
                 .contentType(ContentType.JSON)

@@ -1,17 +1,17 @@
 package roomescape.data.dto.request;
 
 import java.time.LocalDate;
-import java.time.LocalTime;
+import java.util.Objects;
 
 public class ReservationRequest {
     private final String name;
     private final LocalDate date;
-    private final LocalTime time;
+    private final long timeId;
 
-    public ReservationRequest(final String name, final LocalDate date, final LocalTime time) {
+    public ReservationRequest(final String name, final LocalDate date, final long timeId) {
         this.name = name;
         this.date = date;
-        this.time = time;
+        this.timeId = timeId;
     }
 
     public String getName() {
@@ -22,7 +22,25 @@ public class ReservationRequest {
         return date;
     }
 
-    public LocalTime getTime() {
-        return time;
+    public long getTimeId() {
+        return timeId;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) {
+            return true;
+        }
+        if (o == null || getClass() != o.getClass()) {
+            return false;
+        }
+        ReservationRequest that = (ReservationRequest) o;
+        return timeId == that.timeId && Objects.equals(name, that.name) && Objects.equals(date,
+                that.date);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(name, date, timeId);
     }
 }

@@ -13,46 +13,43 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
+import roomescape.data.dto.response.ReservationResponse;
 import roomescape.data.vo.Reservation;
 import roomescape.data.dto.request.ReservationRequest;
-import roomescape.repository.ReservationRepository;
+import roomescape.service.ReservationService;
 
 @RestController
 public class ReservationController {
 
-    private final ReservationRepository reservationRepository;
+    private final ReservationService reservationService;
 
-    public ReservationController(ReservationRepository reservationRepository) {
-        this.reservationRepository = reservationRepository;
+    public ReservationController(ReservationService reservationService) {
+        this.reservationService = reservationService;
     }
 
     @GetMapping("/reservations")
     public ResponseEntity<List<Reservation>> getReservations() {
-        return ResponseEntity.ok(reservationRepository.getAll());
+        return ResponseEntity.ok(reservationService.getAllReservationQuery());
     }
 
     @PostMapping("/reservations")
-    public ResponseEntity<Reservation> createReservation(@RequestBody final ReservationRequest reservationRequest) {
-        Reservation reservation = new Reservation.Builder()
-                .name(reservationRequest.getName())
-                .date(reservationRequest.getDate())
-                //.time(reservationRequest.getTime())
-                .build();
-
-        final var savedId = reservationRepository.add(reservation);
+    public ResponseEntity<ReservationResponse> createReservation(@RequestBody final ReservationRequest reservationRequest) {
+        final var savedId = reservationService.createReservationCommand(reservationRequest);
 
         final var httpHeaders = new HttpHeaders();
         httpHeaders.setLocation(URI.create("/reservations/" + savedId));
 
+        final var response = reservationService.getReservationQuery(savedId);
         return ResponseEntity.status(CREATED)
                 .headers(httpHeaders)
-                .body(new Reservation(savedId, reservation));
+                .body(response);
     }
 
     @DeleteMapping("/reservations/{id}")
     public ResponseEntity<Void> deleteReservation(@PathVariable("id") final long id) {
-        reservationRepository.remove(id);
+        reservationService.deleteReservationCommand(id);
 
         return ResponseEntity.status(NO_CONTENT).build();
+
     }
 }

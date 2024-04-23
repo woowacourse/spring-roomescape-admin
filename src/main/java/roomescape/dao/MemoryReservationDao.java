@@ -4,11 +4,11 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 import java.util.concurrent.atomic.AtomicLong;
-import org.springframework.stereotype.Component;
+import org.springframework.stereotype.Repository;
 import roomescape.domain.Reservation;
 import roomescape.service.dto.ReservationCreationDto;
 
-@Component
+@Repository
 public class MemoryReservationDao implements ReservationDao {
     private final List<Reservation> reservations;
     private final AtomicLong index;

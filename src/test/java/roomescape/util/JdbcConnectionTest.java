@@ -22,8 +22,10 @@ import roomescape.reservation.controller.ReservationController;
 public class JdbcConnectionTest {
     @LocalServerPort
     int port;
+
     @Autowired
     private JdbcTemplate jdbcTemplate;
+
     @Autowired
     private ReservationController reservationController;
 
@@ -37,7 +39,6 @@ public class JdbcConnectionTest {
     void connectionTest() {
         try (Connection connection = jdbcTemplate.getDataSource().getConnection()) {
             assertThat(connection).isNotNull();
-//            assertThat(connection.getCatalog()).isEqualTo("DATABASE");
             assertThat(connection.getMetaData().getTables(null, null, "RESERVATION", null).next()).isTrue();
         } catch (SQLException e) {
             throw new RuntimeException(e);

@@ -4,9 +4,13 @@ import java.sql.PreparedStatement;
 import java.sql.Time;
 import java.util.List;
 import java.util.Objects;
+import javax.sql.DataSource;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;
+import org.springframework.jdbc.core.namedparam.BeanPropertySqlParameterSource;
+import org.springframework.jdbc.core.simple.SimpleJdbcInsert;
+import org.springframework.jdbc.datasource.DriverManagerDataSource;
 import org.springframework.jdbc.support.GeneratedKeyHolder;
 import org.springframework.jdbc.support.KeyHolder;
 import org.springframework.stereotype.Repository;
@@ -18,6 +22,7 @@ public class ReservationTimeDao {
 
     private final JdbcTemplate jdbcTemplate;
     private final RowMapper<ReservationTime> rowMapper;
+    private final SimpleJdbcInsert simpleJdbcInsert;
 
     @Autowired
     public ReservationTimeDao(JdbcTemplate jdbcTemplate) {
@@ -26,6 +31,9 @@ public class ReservationTimeDao {
                 resultSet.getLong("id"),
                 resultSet.getTime("start_at").toLocalTime()
         );
+        this.simpleJdbcInsert = new SimpleJdbcInsert(jdbcTemplate)
+                .withTableName("reservation_time")
+                .usingGeneratedKeyColumns("id");
     }
 
     public List<ReservationTime> findAllReservationTimes() {
@@ -39,14 +47,9 @@ public class ReservationTimeDao {
     }
 
     public long save(ReservationTimeRequestDto reservationTimeDto) {
-        String sql = "INSERT INTO reservation_time(start_at) VALUES (?)";
-        KeyHolder keyHolder = new GeneratedKeyHolder();
-        jdbcTemplate.update(connection -> {
-            PreparedStatement ps = connection.prepareStatement(sql, new String[]{"id"});
-            ps.setTime(1, Time.valueOf(reservationTimeDto.getStartAt()));
-            return ps;
-        }, keyHolder);
-        return Objects.requireNonNull(keyHolder.getKey()).longValue();
+        return simpleJdbcInsert
+                .executeAndReturnKey(new BeanPropertySqlParameterSource(reservationTimeDto))
+                .longValue();
     }
 
     public void delete(long id) {

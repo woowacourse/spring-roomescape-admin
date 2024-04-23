@@ -7,6 +7,8 @@ import java.util.Objects;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;
+import org.springframework.jdbc.core.namedparam.BeanPropertySqlParameterSource;
+import org.springframework.jdbc.core.simple.SimpleJdbcInsert;
 import org.springframework.jdbc.support.GeneratedKeyHolder;
 import org.springframework.jdbc.support.KeyHolder;
 import org.springframework.stereotype.Repository;
@@ -19,6 +21,7 @@ public class ReservationDao {
 
     private final JdbcTemplate jdbcTemplate;
     private final RowMapper<Reservation> rowMapper;
+    private final SimpleJdbcInsert simpleJdbcInsert;
 
     @Autowired
     public ReservationDao(JdbcTemplate jdbcTemplate) {
@@ -32,6 +35,9 @@ public class ReservationDao {
                         resultSet.getTime("time_value").toLocalTime()
                 )
         );
+        this.simpleJdbcInsert = new SimpleJdbcInsert(jdbcTemplate)
+                .withTableName("reservation")
+                .usingGeneratedKeyColumns("id");
     }
 
     public List<Reservation> findAllReservations() {
@@ -48,17 +54,9 @@ public class ReservationDao {
     }
 
     public long save(ReservationRequestDto reservationDto) {
-        String sql = "INSERT INTO reservation(name, date, time_id) VALUES (?, ?, ?)";
-        KeyHolder keyHolder = new GeneratedKeyHolder();
-        jdbcTemplate.update(connection -> {
-            PreparedStatement ps = connection.prepareStatement(sql, new String[]{"id"});
-            ps.setString(1, reservationDto.getName());
-            ps.setDate(2, Date.valueOf(reservationDto.getDate()));
-            ps.setLong(3, reservationDto.getTimeId());
-            return ps;
-        }, keyHolder);
-
-        return Objects.requireNonNull(keyHolder.getKey()).longValue();
+        return simpleJdbcInsert
+                .executeAndReturnKey(new BeanPropertySqlParameterSource(reservationDto))
+                .longValue();
     }
 
     public void delete(long id) {

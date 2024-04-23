@@ -39,7 +39,7 @@ public class ReservationRepository {
                     start_at
                 FROM reservation AS r
                 INNER JOIN reservation_time AS t
-                on r.time_id = t.id
+                ON r.time_id = t.id
                 WHERE r.id = ?""", ROW_MAPPER, id);
 
         return Optional.ofNullable(reservation);
@@ -55,7 +55,7 @@ public class ReservationRepository {
                     start_at
                 FROM reservation AS r
                 INNER JOIN reservation_time AS t
-                on r.time_id = t.id""", ROW_MAPPER);
+                ON r.time_id = t.id""", ROW_MAPPER);
     }
 
     public Reservation create(Reservation reservation) {

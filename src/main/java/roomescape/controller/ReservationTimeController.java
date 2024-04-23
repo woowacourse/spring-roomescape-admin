@@ -36,7 +36,7 @@ public class ReservationTimeController {
     }
 
     @PostMapping
-    public ResponseEntity<ReservationTimeResponse> addReservationTime(
+    public ResponseEntity<ReservationTimeResponse> postReservationTime(
         @RequestBody ReservationTimeRequest reservationTimeRequest) {
         Long savedId = reservationTimeDao.save(reservationTimeRequest);
         ReservationTimeResponse reservationTimeResponse = ReservationTimeResponse.of(savedId, reservationTimeRequest);

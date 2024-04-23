@@ -40,7 +40,7 @@ public class ReservationController {
     }
 
     @PostMapping
-    public ResponseEntity<ReservationResponse> addReservation(@RequestBody ReservationRequest reservationRequest) {
+    public ResponseEntity<ReservationResponse> postReservation(@RequestBody ReservationRequest reservationRequest) {
         ReservationTime reservationTime = reservationTimeDao.findById(reservationRequest.timeId());
         Long savedId = reservationDao.save(reservationRequest);
         ReservationResponse reservationResponse = ReservationResponse.of(savedId, reservationRequest, reservationTime);

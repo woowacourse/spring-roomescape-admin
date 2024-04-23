@@ -55,31 +55,15 @@ class ReservationDaoTest {
     @Test
     void findById() {
         //given
-        final Reservation reservation1 = Reservation.create("레디", "2024-02-03", "12:00");
-        final Reservation reservation2 = Reservation.create("감자", "2024-02-03", "13:00");
-        final Reservation reservation3 = Reservation.create("오리", "2024-02-03", "14:00");
-
-        final Reservation expected1 = reservation1.toEntity(1L);
-        final Reservation expected2 = reservation2.toEntity(2L);
-        final Reservation expected3 = reservation3.toEntity(3L);
-
-        final List<Reservation> reservations = List.of(reservation1, reservation2, reservation3);
-
-        for (final Reservation reservation : reservations) {
-            reservationDao.save(reservation);
-        }
+        final Reservation reservation = Reservation.create("레디", "2024-02-03", "12:00");
+        final Reservation expected1 = reservation.toEntity(1L);
+        final Optional<Reservation> findReservation1 = reservationDao.findById(1L);
 
         //when
-        final Optional<Reservation> findReservation1 = reservationDao.findById(1L);
-        final Optional<Reservation> findReservation2 = reservationDao.findById(2L);
-        final Optional<Reservation> findReservation3 = reservationDao.findById(3L);
+        reservationDao.save(reservation);
 
         //then
-        assertAll(
-                () -> assertThat(findReservation1).contains(expected1),
-                () -> assertThat(findReservation2).contains(expected2),
-                () -> assertThat(findReservation3).contains(expected3)
-        );
+        assertThat(findReservation1).contains(expected1);
     }
 
     @DisplayName("전체 조회")

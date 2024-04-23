@@ -3,6 +3,7 @@ package roomescape.controller;
 import static java.util.stream.Collectors.collectingAndThen;
 import static java.util.stream.Collectors.toList;
 
+import java.net.URI;
 import java.util.List;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -39,14 +40,14 @@ public class ReservationTimeController {
         @RequestBody ReservationTimeRequest reservationTimeRequest) {
         Long savedId = reservationTimeDao.save(reservationTimeRequest);
         ReservationTimeResponse reservationTimeResponse = ReservationTimeResponse.of(savedId, reservationTimeRequest);
-        return ResponseEntity.ok()
+        return ResponseEntity.created(URI.create("/times/" + reservationTimeResponse.id()))
             .body(reservationTimeResponse);
     }
 
     @DeleteMapping("/{id}")
     public ResponseEntity<Void> deleteReservationTime(@PathVariable("id") Long id) {
         reservationTimeDao.deleteById(id);
-        return ResponseEntity.ok()
+        return ResponseEntity.noContent()
             .build();
     }
 }

@@ -3,7 +3,6 @@ package roomescape.domain.reservation.repository;
 import java.time.LocalDate;
 import java.util.List;
 import java.util.Optional;
-import org.springframework.context.annotation.Primary;
 import org.springframework.dao.DataAccessException;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;
@@ -15,7 +14,6 @@ import org.springframework.stereotype.Repository;
 import roomescape.domain.reservation.Reservation;
 import roomescape.domain.time.ReservationTime;
 
-@Primary
 @Repository // todo DAO 분리
 public class JdbcReservationRepository implements ReservationRepository {
     private final JdbcTemplate jdbcTemplate;
@@ -39,7 +37,7 @@ public class JdbcReservationRepository implements ReservationRepository {
         SqlParameterSource params = new MapSqlParameterSource()
                 .addValue("name", reservation.getName())
                 .addValue("date", reservation.getDate())
-                .addValue("time_id", reservation.getDate());
+                .addValue("time_id", reservation.getTimeId());
         long id = jdbcInsert.executeAndReturnKey(params).longValue();
         return reservation.updateId(id);
     }

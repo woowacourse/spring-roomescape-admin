@@ -2,7 +2,6 @@ package roomescape.controller;
 
 import java.net.URI;
 import java.util.List;
-import java.util.stream.Collectors;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -30,7 +29,7 @@ public class ReservationController {
         List<ReservationResponse> reservationResponses = reservationDao.findAll()
                 .stream()
                 .map(ReservationResponse::toResponse)
-                .collect(Collectors.toList());
+                .toList();
 
         return ResponseEntity.ok()
                 .body(reservationResponses);

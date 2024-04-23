@@ -2,7 +2,6 @@ package roomescape.dao;
 
 import java.time.LocalDate;
 import java.time.LocalTime;
-import java.util.ArrayList;
 import java.util.List;
 import javax.sql.DataSource;
 import org.springframework.jdbc.core.JdbcTemplate;
@@ -29,7 +28,6 @@ public class ReservationDao {
     }
 
     public List<Reservation> findAll() {
-        List<Reservation> reservationResponses = new ArrayList<>();
         String sql = "SELECT id, name, date, time FROM " + DATABASE;
 
         return jdbcTemplate.query(

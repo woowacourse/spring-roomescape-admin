@@ -53,7 +53,7 @@
 
 #### 8단계
 
-- [ ] `/admin/reservation` GET 요청 시 예약 관리 페이지(reservation.html)를 응답한다
+- [x] `/admin/reservation` GET 요청 시 예약 관리 페이지(reservation.html)를 응답한다
 - [ ] reservation 테이블과 reservation_time의 관계를 설정한다
 - [ ] 예약의 시간 타입을 String에서 ReservationTime 객체로 수정한다
 - [ ] 예약 시 시간 테이블에 저장된 시간만 선택할 수 있도록 한다

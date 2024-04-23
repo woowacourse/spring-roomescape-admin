@@ -10,8 +10,11 @@ import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.support.GeneratedKeyHolder;
 import org.springframework.jdbc.support.KeyHolder;
 import org.springframework.stereotype.Component;
+import roomescape.domain.reservation.Date;
+import roomescape.domain.reservation.Name;
 import roomescape.domain.reservation.Reservation;
 import roomescape.domain.reservationtime.ReservationTime;
+import roomescape.domain.reservationtime.StartAt;
 import roomescape.dto.reservation.ReservationCreateRequestDto;
 
 @Component
@@ -99,18 +102,18 @@ public class ReservationDao {
     }
 
     private Reservation getReservation(ResultSet resultSet, ReservationTime reservationTime) throws SQLException {
-        return Reservation.of(
+        return new Reservation(
                 resultSet.getLong("id"),
-                resultSet.getString("name"),
-                resultSet.getString("date"),
+                new Name(resultSet.getString("name")),
+                Date.from(resultSet.getString("date")),
                 reservationTime
         );
     }
 
     private ReservationTime getReservationTime(ResultSet resultSet) throws SQLException {
-        return ReservationTime.of(
+        return new ReservationTime(
                 resultSet.getLong("time_id"),
-                resultSet.getString("time_value")
+                StartAt.from(resultSet.getString("time_value"))
         );
     }
 

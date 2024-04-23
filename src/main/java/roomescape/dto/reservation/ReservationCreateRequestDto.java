@@ -1,6 +1,8 @@
 package roomescape.dto.reservation;
 
 import java.util.Objects;
+import roomescape.domain.reservation.Date;
+import roomescape.domain.reservation.Name;
 import roomescape.domain.reservation.Reservation;
 import roomescape.domain.reservationtime.ReservationTime;
 
@@ -35,7 +37,11 @@ public class ReservationCreateRequestDto {
     }
 
     public Reservation toDomain(ReservationTime reservationTime) {
-        return Reservation.of(null, name, date, reservationTime);
+        return new Reservation(
+                null,
+                new Name(name),
+                Date.from(date),
+                reservationTime);
     }
 
     public String getName() {

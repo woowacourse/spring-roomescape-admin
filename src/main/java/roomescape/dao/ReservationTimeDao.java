@@ -11,6 +11,7 @@ import org.springframework.jdbc.support.GeneratedKeyHolder;
 import org.springframework.jdbc.support.KeyHolder;
 import org.springframework.stereotype.Component;
 import roomescape.domain.reservationtime.ReservationTime;
+import roomescape.domain.reservationtime.StartAt;
 import roomescape.dto.reservationtime.ReservationTimeCreateRequestDto;
 
 @Component
@@ -86,9 +87,9 @@ public class ReservationTimeDao {
     }
 
     private ReservationTime getReservationTime(ResultSet resultSet) throws SQLException {
-        return ReservationTime.of(
+        return new ReservationTime(
                 resultSet.getLong("id"),
-                resultSet.getString("start_at")
+                StartAt.from(resultSet.getString("start_at"))
         );
     }
 

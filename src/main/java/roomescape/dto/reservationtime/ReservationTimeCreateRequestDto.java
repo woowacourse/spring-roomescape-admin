@@ -24,7 +24,10 @@ public class ReservationTimeCreateRequestDto {
     }
 
     public ReservationTime toDomain() {
-        return ReservationTime.of(null, startAt);
+        return new ReservationTime(
+                null,
+                StartAt.from(startAt)
+        );
     }
 
     public String getStartAt() {

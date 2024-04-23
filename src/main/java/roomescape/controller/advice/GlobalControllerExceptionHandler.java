@@ -17,4 +17,10 @@ public class GlobalControllerExceptionHandler {
         logger.error(e.getMessage(), e);
         return ResponseEntity.notFound().build();
     }
+
+    @ExceptionHandler(IllegalArgumentException.class)
+    public ResponseEntity<String> illegalArgument(final IllegalArgumentException e) {
+        logger.error(e.getMessage(), e);
+        return ResponseEntity.badRequest().body(e.getMessage());
+    }
 }

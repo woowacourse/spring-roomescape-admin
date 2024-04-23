@@ -2,8 +2,10 @@ package roomescape.acceptance;
 
 import io.restassured.RestAssured;
 import io.restassured.http.ContentType;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.boot.test.web.server.LocalServerPort;
 import org.springframework.test.annotation.DirtiesContext;
 import roomescape.dto.request.ReservationRequest;
 import roomescape.fixture.ReservationFixture;
@@ -14,9 +16,16 @@ import java.util.Map;
 
 import static org.hamcrest.Matchers.is;
 
-@SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.DEFINED_PORT)
+@SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 @DirtiesContext(classMode = DirtiesContext.ClassMode.BEFORE_EACH_TEST_METHOD)
 class ReservationApiTest {
+    @LocalServerPort
+    private int port;
+
+    @BeforeEach
+    void setup() {
+        RestAssured.port = port;
+    }
     @Test
     void get_reservations() {
         ReservationTimeFixture.예약_시간_생성("10:30");

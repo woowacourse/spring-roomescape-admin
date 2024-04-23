@@ -1,11 +1,21 @@
 package roomescape;
 
 import io.restassured.RestAssured;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.boot.test.web.server.LocalServerPort;
 
-@SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.DEFINED_PORT)
+@SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 class AdminPageTest {
+    @LocalServerPort
+    private int port;
+
+    @BeforeEach
+    void setup() {
+        RestAssured.port = port;
+    }
+
     @Test
     void path_admin_offer_page() {
         RestAssured.given()

@@ -1,5 +1,7 @@
 package roomescape.controller.dto;
 
-public record FindReservationTimeResponse(Long id, String startAt) {
+import java.time.LocalTime;
+
+public record FindReservationTimeResponse(Long id, LocalTime startAt) {
 
 }

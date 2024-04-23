@@ -1,5 +1,6 @@
 package roomescape.repository;
 
+import java.time.LocalTime;
 import java.util.List;
 import javax.sql.DataSource;
 import org.springframework.jdbc.core.JdbcTemplate;
@@ -50,7 +51,10 @@ public class ReservationRepository {
                 resultSet.getLong("reservation_id"),
                 resultSet.getString("reservation_name"),
                 resultSet.getString("reservation_date"),
-                new ReservationTime(resultSet.getLong("time_id"), resultSet.getString("time_value"))
+                new ReservationTime(
+                    resultSet.getLong("time_id"),
+                    LocalTime.parse(resultSet.getString("time_value"))
+                )
             ), id
         );
     }
@@ -72,7 +76,10 @@ public class ReservationRepository {
                 resultSet.getLong("reservation_id"),
                 resultSet.getString("name"),
                 resultSet.getString("date"),
-                new ReservationTime(resultSet.getLong("time_id"), resultSet.getString("time_value"))
+                new ReservationTime(
+                    resultSet.getLong("time_id"),
+                    LocalTime.parse(resultSet.getString("time_value"))
+                )
             )
         );
     }

@@ -17,7 +17,7 @@ import static org.hamcrest.Matchers.is;
 @Sql(value = {"/recreateReservationTime.sql"}, executionPhase = Sql.ExecutionPhase.BEFORE_TEST_METHOD)
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 @DisplayName("시간 컨트롤러")
-class TimeControllerTest {
+class ReservationTimeControllerTest {
 
     @LocalServerPort
     private int port;

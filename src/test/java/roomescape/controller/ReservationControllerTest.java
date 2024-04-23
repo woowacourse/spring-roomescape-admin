@@ -5,16 +5,13 @@ import io.restassured.http.ContentType;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.web.server.LocalServerPort;
-import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.test.context.jdbc.Sql;
 
 import java.util.HashMap;
 import java.util.Map;
 
-import static org.assertj.core.api.Assertions.assertThat;
 import static org.hamcrest.Matchers.is;
 
 @Sql(value = {"/recreateReservation.sql"}, executionPhase = Sql.ExecutionPhase.BEFORE_TEST_METHOD)
@@ -24,13 +21,6 @@ class ReservationControllerTest {
 
     @LocalServerPort
     private int port;
-
-    private final JdbcTemplate jdbcTemplate;
-
-    @Autowired
-    public ReservationControllerTest(JdbcTemplate jdbcTemplate) {
-        this.jdbcTemplate = jdbcTemplate;
-    }
 
     @BeforeEach
     void setUp() {
@@ -64,8 +54,12 @@ class ReservationControllerTest {
                 .then().log().all()
                 .statusCode(200);
 
-        Integer count = jdbcTemplate.queryForObject("SELECT count(1) from reservation", Integer.class);
-        assertThat(count).isEqualTo(1);
+        RestAssured.given()
+                .contentType(ContentType.JSON)
+                .when().get("/reservations")
+                .then()
+                .statusCode(200)
+                .body("size()", is(1));
     }
 
     @DisplayName("예약 컨트롤러는 id 값에 따라 예약을 삭제한다.")
@@ -73,16 +67,16 @@ class ReservationControllerTest {
     void deleteReservation() {
         createIntiReservation();
 
-        Integer count = jdbcTemplate.queryForObject("SELECT count(1) from reservation", Integer.class);
-        assertThat(count).isEqualTo(1);
-
         RestAssured.given().log().all()
                 .when().delete("/reservations/1")
                 .then().log().all()
                 .statusCode(200);
 
-        Integer countAfterDelete = jdbcTemplate.queryForObject("SELECT count(1) from reservation", Integer.class);
-        assertThat(countAfterDelete).isEqualTo(0);
+        RestAssured.given()
+                .when().get("/reservations")
+                .then()
+                .statusCode(200)
+                .body("size()", is(0));
     }
 
     private void createIntiReservation() {

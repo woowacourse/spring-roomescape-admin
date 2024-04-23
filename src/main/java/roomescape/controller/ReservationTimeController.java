@@ -12,12 +12,12 @@ import java.util.List;
 
 @Controller
 @RequestMapping("/times")
-public class TimeController {
+public class ReservationTimeController {
 
     private final ReservationTimeService reservationTimeService;
 
     @Autowired
-    public TimeController(ReservationTimeService reservationTimeService) {
+    public ReservationTimeController(ReservationTimeService reservationTimeService) {
         this.reservationTimeService = reservationTimeService;
     }
 

@@ -73,7 +73,8 @@ class ReservationTimeControllerTest {
                 .body(params)
                 .when().post("/times")
                 .then().log().all()
-                .statusCode(201);
+                .statusCode(201)
+                .header("Location", "/times/1");
 
         final Integer count = jdbcTemplate.queryForObject("SELECT count(1) from reservation_times", Integer.class);
         assertThat(count).isEqualTo(1);

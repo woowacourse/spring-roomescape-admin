@@ -1,5 +1,6 @@
 package roomescape.repository;
 
+import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.PreparedStatementCreator;
 import org.springframework.jdbc.support.GeneratedKeyHolder;
@@ -45,7 +46,11 @@ public class MemoryReservationRepository implements ReservationRepository {
     public Reservation findById(Long id) {
         String sql = "SELECT * FROM reservation WHERE id = ?";
 
-        return jdbcTemplate.queryForObject(sql, this::mapRowReservation, id);
+        try {
+            return jdbcTemplate.queryForObject(sql, this::mapRowReservation, id);
+        } catch (EmptyResultDataAccessException e) {
+            return null;
+        }
     }
 
     @Override

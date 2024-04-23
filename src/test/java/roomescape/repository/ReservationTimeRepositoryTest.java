@@ -58,31 +58,35 @@ class ReservationTimeRepositoryTest {
     @DisplayName("예약 시간 정보를 저장하면 새로운 아이디가 부여된다.")
     void save() {
         // given
-        ReservationTime time = timeRepository.save(
-                new ReservationTime(null, LocalTime.of(12, 0))
-        );
+        ReservationTime reservationTime = new ReservationTime(null, LocalTime.of(12, 0));
+        ReservationTime expected = new ReservationTime(1L, LocalTime.of(12, 0));
 
-        // when & then
-        assertThat(time.id()).isEqualTo(1L);
+        // when
+        ReservationTime actual = timeRepository.save(reservationTime);
+
+        // then
+        assertThat(actual).isEqualTo(expected);
     }
 
     @Test
     @DisplayName("등록된 예약 시간 번호로 삭제한다.")
     void deleteAssignedId() {
         // given
-        int deletedCount = timeRepository.deleteById(12L);
+        Long id = 12L;
 
         // when & then
-        assertThat(deletedCount).isNotZero();
+        assertThat(timeRepository.findById(id)).isNotNull();
+        assertThat(timeRepository.deleteById(id)).isNotZero();
     }
 
     @Test
     @DisplayName("없는 예약 시간 번호로 삭제할 경우 아무런 영향이 없다.")
     void deleteNotExistId() {
         // given
-        int deletedCount = timeRepository.deleteById(13L);
+        Long id = 13L;
 
         // when & then
-        assertThat(deletedCount).isZero();
+        assertThat(timeRepository.findById(id)).isNull();
+        assertThat(timeRepository.deleteById(id)).isZero();
     }
 }

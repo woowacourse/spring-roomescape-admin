@@ -159,19 +159,21 @@ class ReservationRepositoryTest {
     @DisplayName("등록된 예약 번호로 삭제한다.")
     void deleteAssignedId() {
         // given
-        final int deleteCount = reservationRepository.deleteById(13L);
+        Long id = 13L;
 
         // when & then
-        assertThat(deleteCount).isNotZero();
+        assertThat(reservationRepository.findById(id)).isNotNull();
+        assertThat(reservationRepository.deleteById(id)).isNotZero();
     }
 
     @Test
     @DisplayName("없는 예약 번호로 삭제할 경우 아무런 영향이 없다.")
     void deleteNotExistId() {
         // given
-        final int deleteCount = reservationRepository.deleteById(14L);
+        Long id = 14L;
 
         // when & then
-        assertThat(deleteCount).isZero();
+        assertThat(reservationRepository.findById(id)).isNull();
+        assertThat(reservationRepository.deleteById(id)).isZero();
     }
 }

@@ -31,7 +31,7 @@ class ReservationServiceTest {
 
     @DisplayName("예약을 추가하고 저장된 예약을 반환합니다.")
     @Test
-    void addReservation() {
+    void should_add_reservation() {
         ReservationService reservationService = new ReservationService(new FakeReservationDao());
         Reservation expectedReservation = new Reservation(1L, "dodo", LocalDate.of(2020, 12, 12),
                 new ReservationTime(1L, LocalTime.of(10, 0)));
@@ -44,7 +44,7 @@ class ReservationServiceTest {
 
     @DisplayName("원하는 id의 예약을 삭제하면 true를 반환합니다.")
     @Test
-    void removeReservation() {
+    void should_true_when_remove_reservation_with_exist_id() {
         ReservationService reservationService = new ReservationService(new FakeReservationDao(
                 Arrays.asList(
                         new Reservation(1L, "dodo", LocalDate.of(2020, 12, 12),
@@ -52,5 +52,13 @@ class ReservationServiceTest {
         ));
 
         assertThat(reservationService.removeReservation(1L)).isTrue();
+    }
+
+    @DisplayName("없는 id의 예약을 삭제시도하면 false를 반환합니다.")
+    @Test
+    void should_false_when_remove_reservation_with_non_exist_id() {
+        ReservationService reservationService = new ReservationService(new FakeReservationDao());
+
+        assertThat(reservationService.removeReservation(1L)).isFalse();
     }
 }

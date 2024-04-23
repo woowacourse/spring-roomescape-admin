@@ -1,31 +1,35 @@
 package roomescape.domain.reservation;
 
 import java.time.LocalDate;
-import java.time.LocalDateTime;
 import java.time.LocalTime;
+import java.util.Objects;
+import roomescape.domain.time.ReservationTime;
 import roomescape.domain.user.UserName;
 
 public class Reservation {
     private final Long id;
     private final UserName name;
-    private final ReservationDateTime reservationDateTime;
+    private final LocalDate date;
+    private final ReservationTime time;
 
-    public Reservation(String name, ReservationDateTime dateTime) {
-        this(null, name, dateTime);
+    public Reservation(String name, LocalDate date, ReservationTime time) {
+        this(null, name, date, time);
     }
 
-    public Reservation(Long id, String name, ReservationDateTime dateTime) {
-        this(id, new UserName(name), dateTime);
+    public Reservation(Long id, String name, LocalDate date, ReservationTime time) {
+        this(id, new UserName(name), date, time);
     }
 
-    private Reservation(Long id, UserName name, ReservationDateTime dateTime) {
+    private Reservation(Long id, UserName name, LocalDate date, ReservationTime time) {
+        Objects.requireNonNull(date, "예약 날짜는 필수입니다.");
         this.id = id;
         this.name = name;
-        this.reservationDateTime = dateTime;
+        this.date = date;
+        this.time = time;
     }
 
     public Reservation updateId(Long id) {
-        return new Reservation(id, name, reservationDateTime);
+        return new Reservation(id, name, date, time);
     }
 
     public Long getId() {
@@ -36,19 +40,15 @@ public class Reservation {
         return name.getValue();
     }
 
-    public LocalDateTime getReservationDateTime() {
-        return reservationDateTime.getDateTime();
+    public LocalDate getDate() {
+        return date;
     }
 
-    public LocalDate getReservationDate() {
-        return reservationDateTime.toLocalDate();
+    public LocalTime getTime() {
+        return time.getStartAt();
     }
 
-    public LocalTime getReservationTime() {
-        return reservationDateTime.toLocalTime();
-    }
-
-    public boolean isSameReservationDateTime(ReservationDateTime reservationDateTime) {
-        return this.reservationDateTime.equals(reservationDateTime);
+    public Long getTimeId() {
+        return time.getId();
     }
 }

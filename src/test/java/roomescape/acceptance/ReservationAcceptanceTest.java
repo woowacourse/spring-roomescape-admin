@@ -9,7 +9,7 @@ import io.restassured.RestAssured;
 import io.restassured.http.ContentType;
 import java.time.Clock;
 import java.time.LocalDate;
-import java.time.LocalDateTime;
+import java.time.LocalTime;
 import java.util.List;
 import java.util.Map;
 import org.junit.jupiter.api.DisplayName;
@@ -18,7 +18,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.mock.mockito.SpyBean;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.test.annotation.DirtiesContext;
+import roomescape.domain.time.ReservationTime;
 import roomescape.dto.reservation.ReservationResponse;
+import roomescape.fixture.ReservationFixture;
 import roomescape.support.AcceptanceTest;
 
 @DirtiesContext(classMode = DirtiesContext.ClassMode.BEFORE_EACH_TEST_METHOD)
@@ -87,9 +89,11 @@ class ReservationAcceptanceTest extends AcceptanceTest { // todo dynamic test
         // 데이터 삽입 후 조회 API와 쿼리 결과를 비교한다.
         when(clock.instant()).thenReturn(fixedClock(LocalDate.of(2023, 8, 4)).instant());
         String name = "브라운";
-        LocalDateTime reservationDateTime = LocalDateTime.of(2023, 8, 5, 15, 40);
-        jdbcTemplate.update("INSERT INTO reservation (name, reservation_date_time) VALUES (?, ?)", name,
-                reservationDateTime);
+        LocalDate date = LocalDate.of(2023, 8, 5);
+        ReservationTime time = ReservationFixture.reservationTime(LocalTime.of(15, 40));
+        jdbcTemplate.update("INSERT INTO reservation_time (start_at) VALUES (?)", time.getStartAt()); // todo 수정
+        jdbcTemplate.update("INSERT INTO reservation (name, date, time_id) VALUES (?, ?, ?)", name,
+                date, time.getId());
 
         List<ReservationResponse> reservations = RestAssured.given().log().all()
                 .when().get(PATH)

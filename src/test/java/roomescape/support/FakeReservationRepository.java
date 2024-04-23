@@ -1,11 +1,11 @@
 package roomescape.support;
 
+import java.time.LocalDate;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 import roomescape.domain.reservation.Reservation;
-import roomescape.domain.reservation.ReservationDateTime;
 import roomescape.domain.reservation.repository.ReservationRepository;
 
 public class FakeReservationRepository implements ReservationRepository {
@@ -19,11 +19,13 @@ public class FakeReservationRepository implements ReservationRepository {
         return updatedReservation;
     }
 
-    public boolean existsByReservationDateTime(ReservationDateTime reservationDateTime) {
+    @Override
+    public boolean existsByReservationDateTime(LocalDate date, long timeId) {
         return reservations.values().stream()
-                .anyMatch(r -> r.isSameReservationDateTime(reservationDateTime));
+                .anyMatch(r -> r.getDate().equals(date) && r.getTimeId() == timeId);
     }
 
+    @Override
     public Optional<Reservation> findById(long id) {
         return Optional.ofNullable(reservations.get(id));
     }

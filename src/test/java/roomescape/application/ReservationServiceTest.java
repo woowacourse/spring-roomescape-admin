@@ -30,8 +30,8 @@ class ReservationServiceTest {
 
         // then
         assertThat(reservation.getName()).isEqualTo("prin");
-        assertThat(reservation.getReservationDate()).isEqualTo(date);
-        assertThat(reservation.getReservationTime()).isEqualTo(time);
+        assertThat(reservation.getDate()).isEqualTo(date);
+        assertThat(reservation.getTime()).isEqualTo(time);
     }
 
     @Test

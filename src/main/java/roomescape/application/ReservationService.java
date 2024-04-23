@@ -2,17 +2,18 @@ package roomescape.application;
 
 import java.time.Clock;
 import java.time.LocalDate;
-import java.time.LocalTime;
 import java.util.List;
 import java.util.Optional;
 import org.springframework.stereotype.Service;
 import roomescape.domain.reservation.Reservation;
-import roomescape.domain.reservation.ReservationDateTime;
 import roomescape.domain.reservation.repository.ReservationRepository;
+import roomescape.domain.time.ReservationTime;
 import roomescape.dto.reservation.ReservationRequest;
 
 @Service
 public class ReservationService {
+    private static final int IN_ADVANCE_RESERVATION_DAYS = 1;
+
     private final Clock clock;
     private final ReservationRepository reservationRepository;
 
@@ -22,18 +23,14 @@ public class ReservationService {
     }
 
     public Reservation reserve(ReservationRequest reservationRequest) {
-        ReservationDateTime reservationDateTime = createReservationDateTime(reservationRequest);
-        if (reservationRepository.existsByReservationDateTime(reservationDateTime)) {
+        LocalDate date = reservationRequest.date();
+        // todo date, time -> clock 검증
+        ReservationTime time = new ReservationTime(reservationRequest.time()); // todo request의 time으로 timeservice 호출
+        if (reservationRepository.existsByReservationDateTime(date, time.getId())) {
             throw new IllegalArgumentException("이미 예약된 날짜, 시간입니다.");
         }
-        Reservation reservation = new Reservation(reservationRequest.name(), reservationDateTime);
+        Reservation reservation = new Reservation(reservationRequest.name(), date, time);
         return reservationRepository.save(reservation);
-    }
-
-    private ReservationDateTime createReservationDateTime(ReservationRequest reservationRequest) {
-        LocalDate date = reservationRequest.date();
-        LocalTime time = reservationRequest.time();
-        return new ReservationDateTime(date, time, clock);
     }
 
     public List<Reservation> findReservations() {

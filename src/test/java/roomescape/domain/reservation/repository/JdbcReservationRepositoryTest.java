@@ -12,7 +12,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.jdbc.JdbcTest;
 import org.springframework.jdbc.core.JdbcTemplate;
 import roomescape.domain.reservation.Reservation;
-import roomescape.domain.reservation.ReservationDateTime;
 import roomescape.fixture.ReservationFixture;
 
 @JdbcTest
@@ -38,8 +37,8 @@ class JdbcReservationRepositoryTest {
         Reservation savedReservation = reservationRepository.findById(reservation.getId()).get();
         assertAll(
                 () -> assertThat(savedReservation.getName()).isEqualTo(name),
-                () -> assertThat(savedReservation.getReservationDate()).isEqualTo(date),
-                () -> assertThat(savedReservation.getReservationTime()).isEqualTo(time)
+                () -> assertThat(savedReservation.getDate()).isEqualTo(date),
+                () -> assertThat(savedReservation.getTime()).isEqualTo(time)
         );
     }
 
@@ -66,8 +65,7 @@ class JdbcReservationRepositoryTest {
         Reservation reservation = ReservationFixture.reservation("prin", date, time);
         reservationRepository.save(reservation);
 
-        ReservationDateTime reservationDateTime = ReservationFixture.reservationDateTime(date, time);
-        boolean exists = reservationRepository.existsByReservationDateTime(reservationDateTime);
+        boolean exists = reservationRepository.existsByReservationDateTime(date, 1); // todo 수정
 
         assertThat(exists).isTrue();
     }

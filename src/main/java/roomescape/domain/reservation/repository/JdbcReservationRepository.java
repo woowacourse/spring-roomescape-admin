@@ -1,6 +1,6 @@
 package roomescape.domain.reservation.repository;
 
-import java.time.Clock;
+import java.time.LocalDate;
 import java.util.List;
 import java.util.Optional;
 import org.springframework.context.annotation.Primary;
@@ -13,7 +13,7 @@ import org.springframework.jdbc.core.simple.SimpleJdbcInsert;
 import org.springframework.jdbc.core.simple.SimpleJdbcInsertOperations;
 import org.springframework.stereotype.Repository;
 import roomescape.domain.reservation.Reservation;
-import roomescape.domain.reservation.ReservationDateTime;
+import roomescape.domain.time.ReservationTime;
 
 @Primary
 @Repository // todo DAO 분리
@@ -23,11 +23,8 @@ public class JdbcReservationRepository implements ReservationRepository {
     private final RowMapper<Reservation> rowMapper = (rs, rowNum) -> new Reservation(
             rs.getLong("id"),
             rs.getString("name"),
-            new ReservationDateTime(
-                    rs.getDate("reservation_date_time").toLocalDate(),
-                    rs.getTime("reservation_date_time").toLocalTime(),
-                    Clock.systemUTC() // todo 삭제
-            )
+            rs.getDate("date").toLocalDate(),
+            new ReservationTime(rs.getLong("time_id"), rs.getTime("start_at").toLocalTime())
     );
 
     public JdbcReservationRepository(JdbcTemplate jdbcTemplate) {
@@ -41,21 +38,22 @@ public class JdbcReservationRepository implements ReservationRepository {
     public Reservation save(Reservation reservation) {
         SqlParameterSource params = new MapSqlParameterSource()
                 .addValue("name", reservation.getName())
-                .addValue("reservation_date_time", reservation.getReservationDateTime());
+                .addValue("date", reservation.getDate())
+                .addValue("time_id", reservation.getDate());
         long id = jdbcInsert.executeAndReturnKey(params).longValue();
         return reservation.updateId(id);
     }
 
     @Override
-    public boolean existsByReservationDateTime(ReservationDateTime reservationDateTime) {
-        String sql = "select count(*) from reservation where reservation_date_time = ?";
-        Integer count = jdbcTemplate.queryForObject(sql, Integer.class, reservationDateTime.getDateTime());
+    public boolean existsByReservationDateTime(LocalDate date, long timeId) {
+        String sql = "select count(*) from reservation where date = ? and time_id = ?";
+        Integer count = jdbcTemplate.queryForObject(sql, Integer.class, date, timeId);
         return count != null && count > 0;
     }
 
     @Override
     public Optional<Reservation> findById(long id) {
-        String sql = "select * from reservation where id = ?";
+        String sql = "select * from reservation as r join reservation_time as t on r.time_id = t.id where r.id = ?";
         try {
             return Optional.ofNullable(jdbcTemplate.queryForObject(sql, rowMapper, id));
         } catch (DataAccessException e) {
@@ -65,7 +63,7 @@ public class JdbcReservationRepository implements ReservationRepository {
 
     @Override
     public List<Reservation> findAll() {
-        String sql = "select * from reservation";
+        String sql = "select * from reservation as r join reservation_time as t on r.time_id = t.id";
         return jdbcTemplate.query(sql, rowMapper);
     }
 

@@ -1,8 +1,8 @@
 package roomescape.util;
 
+import java.time.LocalDate;
 import java.time.LocalTime;
 import java.time.format.DateTimeFormatter;
-import roomescape.reservation.domain.ReservationDate;
 
 public class CustomDateTimeFormatter {
 
@@ -11,9 +11,8 @@ public class CustomDateTimeFormatter {
     private CustomDateTimeFormatter() {
     }
 
-    // TODO: 도메인이 아니라 LocalDate로 변경하기
-    public static String getFormattedDate(final ReservationDate date) {
-        return date.getValue().format(DateTimeFormatter.ISO_LOCAL_DATE);
+    public static String getFormattedDate(final LocalDate date) {
+        return date.format(DateTimeFormatter.ISO_LOCAL_DATE);
     }
 
     public static String getFormattedTime(final LocalTime time) {

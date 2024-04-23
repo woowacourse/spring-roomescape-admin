@@ -6,14 +6,13 @@ import java.time.LocalDate;
 import java.time.LocalTime;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
-import roomescape.reservation.domain.ReservationDate;
 
 class CustomDateTimeFormatterTest {
 
     @DisplayName("LocalDate 객체로부터 날짜 문자열 값을 반환한다.")
     @Test
     void getFormattedDateTest() {
-        String formattedDate = CustomDateTimeFormatter.getFormattedDate(new ReservationDate(LocalDate.of(2023, 8, 5)));
+        String formattedDate = CustomDateTimeFormatter.getFormattedDate(LocalDate.of(2023, 8, 5));
         assertThat(formattedDate).isEqualTo("2023-08-05");
     }
 

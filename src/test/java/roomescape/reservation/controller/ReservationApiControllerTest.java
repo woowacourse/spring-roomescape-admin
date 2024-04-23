@@ -1,4 +1,4 @@
-package roomescape.reservation;
+package roomescape.reservation.controller;
 
 import static org.hamcrest.Matchers.hasSize;
 import static org.mockito.ArgumentMatchers.any;
@@ -23,7 +23,11 @@ import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.dao.DataAccessException;
 import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
-import roomescape.time.Time;
+import roomescape.reservation.controller.ReservationApiController;
+import roomescape.reservation.domain.Reservation;
+import roomescape.reservation.dto.ReservationRequest;
+import roomescape.reservation.service.ReservationService;
+import roomescape.time.domain.Time;
 
 @DisplayName("예약 API 컨트롤러")
 @WebMvcTest(ReservationApiController.class)

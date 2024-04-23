@@ -1,4 +1,4 @@
-package roomescape.time;
+package roomescape.time.controller;
 
 import static org.hamcrest.Matchers.hasSize;
 import static org.mockito.ArgumentMatchers.any;
@@ -21,6 +21,10 @@ import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.dao.DataAccessException;
 import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
+import roomescape.time.controller.TimeApiController;
+import roomescape.time.domain.Time;
+import roomescape.time.dto.TimeRequest;
+import roomescape.time.service.TimeService;
 
 @DisplayName("시간 API 컨트롤러")
 @WebMvcTest(TimeApiController.class)

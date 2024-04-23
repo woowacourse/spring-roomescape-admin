@@ -1,4 +1,4 @@
-package roomescape.reservation;
+package roomescape.reservation.service;
 
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import static org.mockito.Mockito.doReturn;
@@ -11,7 +11,10 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
-import roomescape.time.TimeRepository;
+import roomescape.reservation.dto.ReservationRequest;
+import roomescape.reservation.repository.ReservationRepository;
+import roomescape.reservation.service.ReservationService;
+import roomescape.time.repository.TimeRepository;
 
 @DisplayName("예약 서비스")
 @ExtendWith(MockitoExtension.class)

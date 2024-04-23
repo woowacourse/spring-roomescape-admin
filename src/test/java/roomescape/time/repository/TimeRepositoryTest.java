@@ -1,4 +1,4 @@
-package roomescape.time;
+package roomescape.time.repository;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertAll;
@@ -13,6 +13,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.jdbc.JdbcTest;
 import org.springframework.context.annotation.Import;
 import org.springframework.test.context.jdbc.Sql;
+import roomescape.time.domain.Time;
+import roomescape.time.dto.TimeRequest;
+import roomescape.time.repository.TimeRepository;
 
 @DisplayName("시간 레포지토리")
 @JdbcTest

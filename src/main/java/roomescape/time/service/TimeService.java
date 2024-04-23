@@ -1,9 +1,12 @@
-package roomescape.time;
+package roomescape.time.service;
 
 import java.util.List;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import roomescape.error.ReferDataDeleteException;
+import roomescape.time.domain.Time;
+import roomescape.time.dto.TimeRequest;
+import roomescape.time.repository.TimeRepository;
 
 @Transactional
 @Service

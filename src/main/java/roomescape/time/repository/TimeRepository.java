@@ -1,4 +1,4 @@
-package roomescape.time;
+package roomescape.time.repository;
 
 import java.sql.PreparedStatement;
 import java.util.List;
@@ -9,6 +9,8 @@ import org.springframework.jdbc.core.RowMapper;
 import org.springframework.jdbc.support.GeneratedKeyHolder;
 import org.springframework.jdbc.support.KeyHolder;
 import org.springframework.stereotype.Repository;
+import roomescape.time.domain.Time;
+import roomescape.time.dto.TimeRequest;
 
 @Repository
 public class TimeRepository {

@@ -1,4 +1,4 @@
-package roomescape.time;
+package roomescape.time.service;
 
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import static org.mockito.Mockito.doReturn;
@@ -11,6 +11,9 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 import roomescape.error.ReferDataDeleteException;
+import roomescape.time.domain.Time;
+import roomescape.time.repository.TimeRepository;
+import roomescape.time.service.TimeService;
 
 @DisplayName("시간 서비스")
 @ExtendWith(MockitoExtension.class)

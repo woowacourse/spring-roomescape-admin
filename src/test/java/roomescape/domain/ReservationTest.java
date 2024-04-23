@@ -7,6 +7,7 @@ import java.time.LocalDate;
 import java.time.LocalTime;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.assertThatThrownBy;
 
 class ReservationTest {
 
@@ -17,7 +18,7 @@ class ReservationTest {
         ReservationTime reservationTime = new ReservationTime(1L, LocalTime.of(2, 22));
         Reservation reservation = new Reservation(
                 new ClientName("켈리"),
-                LocalDate.of(2023, 1, 12),
+                LocalDate.now().plusDays(1),
                 reservationTime);
 
         Long initialIndex = 3L;
@@ -27,5 +28,19 @@ class ReservationTest {
 
         // Then
         assertThat(initIndexReservation.getId()).isEqualTo(initialIndex);
+    }
+
+    @DisplayName("현재 날짜/시간보다 이전의 예약 정보를 입력하면 예외가 발생한다.")
+    @Test
+    void throwExceptionWithReservationDateTimeBeforeNow() {
+        // Given
+        ReservationTime reservationTime = new ReservationTime(LocalTime.now());
+        ClientName clientName = new ClientName("켈리");
+        LocalDate dateBeforeNow = LocalDate.now().minusDays(1);
+
+        // When & Then
+        assertThatThrownBy(() -> new Reservation(clientName, dateBeforeNow, reservationTime))
+                .isInstanceOf(IllegalArgumentException.class)
+                .hasMessage("현재 날짜보다 이전 날짜를 예약할 수 없습니다.");
     }
 }

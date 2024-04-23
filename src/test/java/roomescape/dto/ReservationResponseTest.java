@@ -21,7 +21,7 @@ class ReservationResponseTest {
         Reservation reservation = new Reservation(
                 1L,
                 new ClientName("켈리"),
-                LocalDate.of(2023, 1, 12),
+                LocalDate.now().plusDays(1),
                 reservationTime
         );
 

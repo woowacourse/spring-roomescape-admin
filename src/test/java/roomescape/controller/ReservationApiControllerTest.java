@@ -10,6 +10,7 @@ import org.springframework.boot.test.web.server.LocalServerPort;
 import org.springframework.test.annotation.DirtiesContext;
 import roomescape.dto.ReservationResponse;
 
+import java.time.LocalDate;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -35,7 +36,7 @@ class ReservationApiControllerTest {
 
         Map<String, String> params = new HashMap<>();
         params.put("name", "브라운");
-        params.put("date", "2023-08-05");
+        params.put("date", LocalDate.now().plusDays(1).toString());
         params.put("timeId", "1");
 
         RestAssured.given().log().all()
@@ -59,7 +60,7 @@ class ReservationApiControllerTest {
     void saveReservationTest() {
         Map<String, String> params = new HashMap<>();
         params.put("name", "브라운");
-        params.put("date", "2023-08-05");
+        params.put("date", LocalDate.now().plusDays(1).toString());
         params.put("timeId", "1");
 
         RestAssured.given().log().all()
@@ -136,5 +137,56 @@ class ReservationApiControllerTest {
                 .jsonPath().getList(".", ReservationResponse.class);
 
         assertThat(reservations.size()).isEqualTo(0);
+    }
+
+    @DisplayName("유효하지 않은 사용자 이름을 포함한 예약 저장 요청을 하면 400코드가 응답된다.")
+    @Test
+    void saveReservationWithInvalidName() {
+        Map<String, String> params = new HashMap<>();
+        params.put("name", "브라운운운운운운운운우눙누우웅ㅇ");
+        params.put("date", "2023-08-05");
+        params.put("timeId", "1");
+
+        RestAssured.given().log().all()
+                .contentType(ContentType.JSON)
+                .body(params)
+                .when().post("/reservations")
+                .then().log().all()
+                .statusCode(400)
+                .body("message", is("예약자 이름은 1글자 이상 5글자 이하여야 합니다."));
+    }
+
+    @DisplayName("존재하지 않는 예약 시간을 포함한 예약 저장 요청을 하면 400코드가 응답된다.")
+    @Test
+    void saveReservationWithNoExistReservationTime() {
+        Map<String, String> params = new HashMap<>();
+        params.put("name", "브라운");
+        params.put("date", "2023-08-05");
+        params.put("timeId", "4");
+
+        RestAssured.given().log().all()
+                .contentType(ContentType.JSON)
+                .body(params)
+                .when().post("/reservations")
+                .then().log().all()
+                .statusCode(400)
+                .body("message", is("해당 id의 예약 시간이 존재하지 않습니다."));
+    }
+
+    @DisplayName("현재 날짜보다 이전 날짜의 예약을 저장하려고 요청하면 400코드가 응답된다.")
+    @Test
+    void saveReservationWithReservationDateAndTimeBeforeNow() {
+        Map<String, String> params = new HashMap<>();
+        params.put("name", "브라운");
+        params.put("date", LocalDate.now().minusDays(1).toString());
+        params.put("timeId", "1");
+
+        RestAssured.given().log().all()
+                .contentType(ContentType.JSON)
+                .body(params)
+                .when().post("/reservations")
+                .then().log().all()
+                .statusCode(400)
+                .body("message", is("현재 날짜보다 이전 날짜를 예약할 수 없습니다."));
     }
 }

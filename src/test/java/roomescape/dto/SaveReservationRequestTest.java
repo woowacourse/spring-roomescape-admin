@@ -18,7 +18,7 @@ class SaveReservationRequestTest {
         // Given
         ReservationTime reservationTime = new ReservationTime(1L, LocalTime.of(2, 22));
         SaveReservationRequest request = new SaveReservationRequest(
-                LocalDate.of(2023, 12, 1),
+                LocalDate.now().plusDays(1),
                 "켈리",
                 1L
         );

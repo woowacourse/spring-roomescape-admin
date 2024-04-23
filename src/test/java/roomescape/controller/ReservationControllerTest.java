@@ -38,8 +38,9 @@ class ReservationControllerTest {
                 .body(params)
                 .when().post("/reservations")
                 .then().log().all()
-                .statusCode(200)
-                .body("id", is(1));
+                .statusCode(201)
+                .body("id", is(1))
+                .header("Location", "/reservations/1");
     }
 
     @Test
@@ -60,7 +61,7 @@ class ReservationControllerTest {
         RestAssured.given().log().all()
                 .when().delete("/reservations/1")
                 .then().log().all()
-                .statusCode(200);
+                .statusCode(204);
 
         //then
         RestAssured.given().log().all()

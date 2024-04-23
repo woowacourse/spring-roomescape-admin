@@ -20,7 +20,7 @@ public class ReservationTimeRepository {
         return jdbcTemplate.query("SELECT id, start_at FROM reservation_time", reservationTimeRowMapper());
     }
 
-    public ReservationTime findById(long id) {
+    public ReservationTime findById(Long id) {
         return jdbcTemplate.queryForObject("SELECT id, start_at FROM reservation_time WHERE id = ?",
                 reservationTimeRowMapper(), id);
     }
@@ -49,7 +49,7 @@ public class ReservationTimeRepository {
         };
     }
 
-    public void remove(ReservationTime reservationTime) {
-        jdbcTemplate.update("DELETE FROM reservation_time WHERE id = ?", reservationTime.getId());
+    public void removeById(Long id) {
+        jdbcTemplate.update("DELETE FROM reservation_time WHERE id = ?", id);
     }
 }

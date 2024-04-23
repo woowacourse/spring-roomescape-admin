@@ -47,7 +47,7 @@ class ReservationTimeRepositoryTest {
     @DisplayName("특정 예약 시간 id의 데이터를 조회한다.")
     void findById() {
         // when
-        ReservationTime findReservationTime = reservationTimeRepository.findById(2);
+        ReservationTime findReservationTime = reservationTimeRepository.findById(2L);
 
         // then
         assertThat(findReservationTime.getStartAt()).isEqualTo("11:00");
@@ -57,7 +57,7 @@ class ReservationTimeRepositoryTest {
     @DisplayName("예약 시간을 생성한다.")
     void create() {
         // given
-        ReservationTime inputData = new ReservationTime(0L, "13:00");
+        ReservationTime inputData = new ReservationTime(null, "13:00");
 
         // when
         ReservationTime createdTime = reservationTimeRepository.create(inputData);
@@ -73,14 +73,14 @@ class ReservationTimeRepositoryTest {
     @DisplayName("예약 시간을 삭제한다.")
     void delete() {
         // given
-        ReservationTime time = new ReservationTime(1, "10:00");
+        Long id = 1L;
 
         // when
-        reservationTimeRepository.remove(time);
+        reservationTimeRepository.removeById(id);
 
         // then
         assertAll(
-                () -> assertThatThrownBy(() -> reservationTimeRepository.findById(time.getId()))
+                () -> assertThatThrownBy(() -> reservationTimeRepository.findById(id))
                         .isInstanceOf(EmptyResultDataAccessException.class),
                 () -> assertThat(reservationTimeRepository.findAll()).hasSize(1)
         );

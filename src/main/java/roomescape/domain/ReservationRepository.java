@@ -25,7 +25,7 @@ public class ReservationRepository {
                 reservationRowMapper());
     }
 
-    public Reservation findById(long id) {
+    public Reservation findById(Long id) {
         return jdbcTemplate.queryForObject(
                 """
                         SELECT r.id AS reservation_id, r.name, r.date, t.id AS time_id, t.start_at AS time_value

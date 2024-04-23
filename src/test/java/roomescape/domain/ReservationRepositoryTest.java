@@ -51,7 +51,7 @@ class ReservationRepositoryTest {
     @DisplayName("특정 예약 id의 데이터를 조회한다.")
     void findById() {
         // when
-        Reservation findReservations = reservationRepository.findById(2);
+        Reservation findReservations = reservationRepository.findById(2L);
 
         // then
         assertThat(findReservations.getName()).isEqualTo("엘라");
@@ -61,7 +61,7 @@ class ReservationRepositoryTest {
     @DisplayName("새로운 예약을 생성한다.")
     void create() {
         // given
-        ReservationTime reservationTime = new ReservationTime(1, "10:00");
+        ReservationTime reservationTime = new ReservationTime(1L, "10:00");
         Reservation createReservation = new Reservation(null, "브라운", "2023-08-05", reservationTime);
 
         // when
@@ -76,7 +76,7 @@ class ReservationRepositoryTest {
     @DisplayName("특정 id를 가진 예약을 삭제한다")
     void remove() {
         // given
-        long id = 2;
+        Long id = 2L;
 
         // when
         reservationRepository.removeById(id);

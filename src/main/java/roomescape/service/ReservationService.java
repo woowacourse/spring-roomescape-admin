@@ -3,11 +3,10 @@ package roomescape.service;
 import java.util.List;
 import org.springframework.stereotype.Service;
 import roomescape.Reservation;
-import roomescape.ReservationTime;
 import roomescape.dao.ReservationDao;
 import roomescape.dao.ReservationTimeDao;
-import roomescape.dto.ReservationDto;
 import roomescape.dto.ReservationRequest;
+import roomescape.dto.ReservationResponse;
 
 @Service
 public class ReservationService {
@@ -20,14 +19,16 @@ public class ReservationService {
         this.reservationTimeDao = reservationTimeDao;
     }
 
-    public List<Reservation> findAll() {
-        return reservationDao.findAll();
+    public List<ReservationResponse> findAll() {
+        List<Reservation> reservations = reservationDao.findAll();
+        return reservations.stream()
+                .map(ReservationResponse::of)
+                .toList();
     }
 
-    public Reservation findById(long id) {
-        ReservationDto reservationDto = reservationDao.findById(id);
-        ReservationTime reservationTime = reservationTimeDao.findById(reservationDto.timeId());
-        return new Reservation(reservationDto.id(), reservationDto.name(), reservationDto.date(), reservationTime);
+    public ReservationResponse findById(long id) {
+        Reservation reservation = reservationDao.findById(id);
+        return ReservationResponse.of(reservation);
     }
 
     public long save(ReservationRequest reservationRequest) {

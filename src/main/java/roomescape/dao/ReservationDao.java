@@ -9,7 +9,6 @@ import org.springframework.jdbc.support.KeyHolder;
 import org.springframework.stereotype.Repository;
 import roomescape.Reservation;
 import roomescape.ReservationTime;
-import roomescape.dto.ReservationDto;
 import roomescape.dto.ReservationRequest;
 
 @Repository
@@ -37,11 +36,21 @@ public class ReservationDao {
                         new ReservationTime(rs.getLong("time_id"), rs.getTime("time_value").toLocalTime())));
     }
 
-    public ReservationDto findById(long id) {
-        String sql = "SELECT id, name, date, time_id FROM reservation WHERE id = ?";
+    public Reservation findById(long id) {
+        String sql = "SELECT "
+                + "r.id as reservation_id, "
+                + "r.name, "
+                + "r.date, "
+                + "t.id as time_id, "
+                + "t.start_at as time_value "
+                + "FROM reservation as r "
+                + "inner join reservation_time as t "
+                + "on r.time_id = t.id "
+                + "WHERE t.id = ?";
         return jdbcTemplate.queryForObject(sql,
-                (rs, rowNum) -> new ReservationDto(rs.getLong("id"), rs.getString("name"),
-                        rs.getDate("date").toLocalDate(), rs.getLong("time_id")),
+                (rs, rowNum) -> new Reservation(rs.getLong("id"), rs.getString("name"),
+                        rs.getDate("date").toLocalDate(),
+                        new ReservationTime(rs.getLong("time_id"), rs.getTime("time_value").toLocalTime())),
                 id);
     }
 

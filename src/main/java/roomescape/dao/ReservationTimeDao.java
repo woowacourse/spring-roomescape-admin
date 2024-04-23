@@ -4,9 +4,12 @@ import java.time.LocalTime;
 import java.util.List;
 import javax.sql.DataSource;
 import org.springframework.jdbc.core.JdbcTemplate;
+import org.springframework.jdbc.core.namedparam.MapSqlParameterSource;
+import org.springframework.jdbc.core.namedparam.SqlParameterSource;
 import org.springframework.jdbc.core.simple.SimpleJdbcInsert;
 import org.springframework.stereotype.Repository;
 import roomescape.domain.ReservationTime;
+import roomescape.dto.ReservationTimeCreateRequest;
 
 @Repository
 public class ReservationTimeDao {
@@ -32,10 +35,16 @@ public class ReservationTimeDao {
                     ReservationTime reservationTime
                             = new ReservationTime(
                             resultSet.getLong("id"),
-                            LocalTime.parse(resultSet.getString("startAt"))
+                            LocalTime.parse(resultSet.getString("start_at"))
                     );
                     return reservationTime;
                 }
         );
+    }
+
+    public Long addReservationTime(ReservationTimeCreateRequest reservationTimeCreateRequest) {
+        SqlParameterSource parameterSource = new MapSqlParameterSource()
+                .addValue("start_at", reservationTimeCreateRequest.startAt());
+        return simpleJdbcInsert.executeAndReturnKey(parameterSource).longValue();
     }
 }

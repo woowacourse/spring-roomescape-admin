@@ -1,26 +1,26 @@
 package roomescape.repository;
 
-import io.restassured.RestAssured;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.boot.test.web.server.LocalServerPort;
-import org.springframework.test.annotation.DirtiesContext;
+import org.springframework.jdbc.core.JdbcTemplate;
 import roomescape.domain.ReservationTime;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.assertThatThrownBy;
 
-@SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
-@DirtiesContext(classMode = DirtiesContext.ClassMode.BEFORE_EACH_TEST_METHOD)
+@SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.NONE)
 class ReservationTimeRepositoryTest {
-    @LocalServerPort
-    private int port;
+
+    @Autowired
+    JdbcTemplate jdbcTemplate;
 
     @BeforeEach
     void setup() {
-        RestAssured.port = port;
+        jdbcTemplate.update("DELETE from reservation");
+        jdbcTemplate.update("DELETE from reservation_time");
     }
 
     @Autowired
@@ -31,39 +31,44 @@ class ReservationTimeRepositoryTest {
     void create_reservationTime_with_domain() {
         final var reservationTime = ReservationTime.from("10:00");
         final var id = reservationTimeRepository.create(reservationTime);
-        assertThat(id).isOne();
+        assertThat(reservationTime).isEqualTo(reservationTimeRepository.findById(id));
     }
 
     @Test
     @DisplayName("모든 ReservationTime 을 받아온다")
     void find_all_reservationTime() {
         final var reservationTime = ReservationTime.from("10:00");
+        final var prevSize = reservationTimeRepository.findAll()
+                                                      .size();
         reservationTimeRepository.create(reservationTime);
 
-        final var result = reservationTimeRepository.findAll();
+        final var afterSize = reservationTimeRepository.findAll()
+                                                       .size();
 
-        assertThat(result).hasSize(1);
+        assertThat(afterSize).isEqualTo(prevSize + 1);
     }
 
     @Test
     @DisplayName("id를 통해 해당하는 reservationTime 을 삭제한다")
     void delete_reservationTime_with_id() {
         final var reservationTime = ReservationTime.from("10:00");
-        reservationTimeRepository.create(reservationTime);
+        final var id = reservationTimeRepository.create(reservationTime);
 
-        final var result = reservationTimeRepository.deleteById(1);
+        final var result = reservationTimeRepository.deleteById(id);
 
         assertThat(result).isTrue();
-        assertThat(reservationTimeRepository.findAll()).isEmpty();
+        assertThatThrownBy(() -> reservationTimeRepository.findById(id))
+                .isInstanceOf(IllegalArgumentException.class);
+
     }
 
     @Test
     @DisplayName("id를 통해 해당하는 reservationTime 을 찾는다")
     void find_reservationTime_by_id() {
         final var reservationTime = ReservationTime.from("10:00");
-        reservationTimeRepository.create(reservationTime);
+        final var id = reservationTimeRepository.create(reservationTime);
 
-        final var result = reservationTimeRepository.findById(1);
+        final var result = reservationTimeRepository.findById(id);
 
         assertThat(result).isEqualTo(reservationTime);
     }

@@ -7,76 +7,56 @@ import io.restassured.http.ContentType;
 import java.time.LocalDate;
 import java.time.LocalTime;
 import java.util.List;
+import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.test.autoconfigure.jdbc.JdbcTest;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.test.annotation.DirtiesContext;
+import roomescape.reservation.dao.JdbcReservationDao;
+import roomescape.reservation.domain.Reservation;
+import roomescape.reservation.domain.ReservationTime;
 import roomescape.reservation.dto.request.ReservationRequest;
 import roomescape.reservation.dto.response.ReservationResponse;
 
-@SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.DEFINED_PORT)
-@DirtiesContext(classMode = DirtiesContext.ClassMode.BEFORE_EACH_TEST_METHOD)
+@JdbcTest
 class JdbcReservationDaoTest {
 
-    @Autowired
-    private JdbcTemplate jdbcTemplate;
+    private final JdbcTemplate jdbcTemplate;
+    private final JdbcReservationDao jdbcReservationDao;
 
-    @BeforeEach
-    void saveReservationTime() {
-        jdbcTemplate.update("INSERT INTO reservation_time (start_at) VALUES(?)", LocalTime.of(10, 0));
+    @Autowired
+    private JdbcReservationDaoTest(JdbcTemplate jdbcTemplate) {
+        this.jdbcTemplate = jdbcTemplate;
+        this.jdbcReservationDao = new JdbcReservationDao(jdbcTemplate);
     }
 
-    @DisplayName("DB에 예약 추가 테스트")
+    @DisplayName("DB 예약 추가 테스트")
     @Test
     void save() {
-        ReservationRequest reservationRequest = new ReservationRequest("브라운", LocalDate.of(2023, 8, 5), 1L);
+        jdbcTemplate.update("INSERT INTO reservation_time (start_at) VALUES(?)", LocalTime.of(10, 0));
+        ReservationTime reservationTime = new ReservationTime(1L, LocalTime.of(10, 0));
+        Reservation reservation = new Reservation(null, "parang", LocalDate.of(2000, 3, 28), reservationTime);
+        Reservation savedReservation = jdbcReservationDao.save(reservation);
 
-        RestAssured.given().log().all()
-                .contentType(ContentType.JSON)
-                .body(reservationRequest)
-                .when().post("/reservations")
-                .then().log().all()
-                .statusCode(201)
-                .header("Location", "/reservations/1");
-
-        Integer count = jdbcTemplate.queryForObject("SELECT count(1) from reservation", Integer.class);
-        assertThat(count).isEqualTo(1);
+        Assertions.assertThat(savedReservation.getName()).isEqualTo("parang");
     }
 
-    @DisplayName("DB에서 모든 예약 조회 테스트")
+    @DisplayName("DB 모든 예약 조회 테스트")
     @Test
     void findAllReservations() {
-        jdbcTemplate.update("INSERT INTO reservation (name, date, time_id) VALUES (?, ?, ?)", "브라운",
-                LocalDate.of(2023, 8, 5), 1L);
-
-        List<ReservationResponse> reservations = RestAssured.given().log().all()
-                .when().get("/reservations")
-                .then().log().all()
-                .statusCode(200).extract()
-                .jsonPath().getList(".", ReservationResponse.class);
-
-        Integer count = jdbcTemplate.queryForObject("SELECT count(1) from reservation", Integer.class);
-
-        assertThat(reservations).hasSize(count);
+        List<Reservation> reservations = jdbcReservationDao.findAllReservations();
+        assertThat(reservations).isEmpty();
     }
 
-    @DisplayName("DB에 예약 삭제 테스트")
+    @DisplayName("DB 예약 삭제 테스트")
     @Test
     void delete() {
-        String sql = "INSERT INTO reservation (name, date, time_id) VALUES(?, ?, ?)";
-        ReservationRequest reservationRequest = new ReservationRequest("브라운", LocalDate.of(2023, 8, 5), 1L);
-
-        jdbcTemplate.update(sql, reservationRequest.name(), reservationRequest.date(), reservationRequest.timeId());
-
-        RestAssured.given().log().all()
-                .when().delete("/reservations/1")
-                .then().log().all()
-                .statusCode(204);
-
-        Integer countAfterDelete = jdbcTemplate.queryForObject("SELECT count(1) from reservation", Integer.class);
-        assertThat(countAfterDelete).isZero();
+        jdbcReservationDao.delete(1L);
+        List<Reservation> reservations = jdbcReservationDao.findAllReservations();
+        assertThat(reservations).isEmpty();
     }
 }

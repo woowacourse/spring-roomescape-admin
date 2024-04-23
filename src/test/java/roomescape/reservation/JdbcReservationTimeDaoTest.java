@@ -1,63 +1,51 @@
 package roomescape.reservation;
 
-import static org.hamcrest.Matchers.is;
+import static org.assertj.core.api.Assertions.*;
 
-import io.restassured.RestAssured;
-import io.restassured.http.ContentType;
 import java.time.LocalTime;
-import org.junit.jupiter.api.BeforeEach;
+import java.util.List;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.boot.test.autoconfigure.jdbc.JdbcTest;
 import org.springframework.jdbc.core.JdbcTemplate;
-import org.springframework.test.annotation.DirtiesContext;
-import roomescape.reservation.dto.request.ReservationTimeRequest;
+import roomescape.reservation.dao.JdbcReservationTimeDao;
+import roomescape.reservation.domain.ReservationTime;
 
-@SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.DEFINED_PORT)
-@DirtiesContext(classMode = DirtiesContext.ClassMode.BEFORE_EACH_TEST_METHOD)
+@JdbcTest
 class JdbcReservationTimeDaoTest {
 
+    private final JdbcReservationTimeDao jdbcReservationTimeDao;
+
     @Autowired
-    private JdbcTemplate jdbcTemplate;
-
-    @BeforeEach
-    void saveReservationTime() {
-        String sql = "INSERT INTO reservation_time (start_at) VALUES(?)";
-        ReservationTimeRequest reservationRequest = new ReservationTimeRequest(LocalTime.of(10, 0));
-
-        jdbcTemplate.update(sql, reservationRequest.startAt());
+    private JdbcReservationTimeDaoTest(JdbcTemplate jdbcTemplate) {
+        jdbcReservationTimeDao = new JdbcReservationTimeDao(jdbcTemplate);
     }
 
-    @DisplayName("시간 추가 API 테스트")
+
+    @DisplayName("DB 시간 추가 테스트")
     @Test
     void save() {
-        ReservationTimeRequest reservationRequest = new ReservationTimeRequest(LocalTime.of(10, 0));
+        ReservationTime reservationTime = new ReservationTime(null, LocalTime.of(10, 0));
+        ReservationTime savedReservationTime = jdbcReservationTimeDao.save(reservationTime);
 
-        RestAssured.given().log().all()
-                .contentType(ContentType.JSON)
-                .body(reservationRequest)
-                .when().post("/times")
-                .then().log().all()
-                .statusCode(200);
+        assertThat(savedReservationTime.getStartAt()).isEqualTo(LocalTime.of(10, 0));
     }
 
-    @DisplayName("모든 시간 조회 API 테스트")
+    @DisplayName("DB 모든 시간 조회 테스트")
     @Test
     void findAllReservationTimes() {
-        RestAssured.given().log().all()
-                .when().get("/times")
-                .then().log().all()
-                .statusCode(200)
-                .body("size()", is(1));
+        List<ReservationTime> reservationTimes = jdbcReservationTimeDao.findAllReservationTimes();
+
+        assertThat(reservationTimes).isEmpty();
     }
 
-    @DisplayName("시간 삭제 API 테스트")
+    @DisplayName("DB 시간 삭제 테스트")
     @Test
     void delete() {
-        RestAssured.given().log().all()
-                .when().delete("/times/1")
-                .then().log().all()
-                .statusCode(200);
+        jdbcReservationTimeDao.delete(1L);
+        List<ReservationTime> reservationTimes = jdbcReservationTimeDao.findAllReservationTimes();
+
+        assertThat(reservationTimes).isEmpty();
     }
 }

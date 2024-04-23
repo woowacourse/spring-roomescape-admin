@@ -45,7 +45,7 @@ class ReservationTest {
 
     @DisplayName("예약 조회 API 테스트")
     @Test
-    void readReservations() {
+    void getReservations() {
         RestAssured.given().log().all()
                 .when().get("/reservations")
                 .then().log().all()

@@ -37,7 +37,7 @@ public class ReservationsController {
 
     @PostMapping
     public ResponseEntity<ReservationResponse> addReservations(@RequestBody ReservationRequest reservationRequest) {
-        ReservationTime reservationTime = reservationTimeRepository.findById(reservationRequest.reservationTimeId());
+        ReservationTime reservationTime = reservationTimeRepository.findById(reservationRequest.timeId());
         Reservation reservation = new Reservation(null, reservationRequest.name(), reservationRequest.date(), reservationTime);
         Reservation savedReservation = reservationRepository.save(reservation);
         ReservationResponse reservationResponse = ReservationResponse.from(savedReservation, reservationTime);

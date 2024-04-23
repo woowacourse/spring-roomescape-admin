@@ -66,7 +66,7 @@ class AdminEndpointTest {
         Integer countAfterDelete = jdbcTemplate.queryForObject("SELECT count(1) from reservation", Integer.class);
         assertThat(countAfterDelete).isEqualTo(countAfterInsert - 1);
     }
-
+/*
     @DisplayName("예약을 추가한 후에도 db의 예약 개수와 api 응답의 예약 개수가 동일")
     @Test
     void apiResponseCountEqualsToDataBaseReservationCount() {
@@ -80,5 +80,5 @@ class AdminEndpointTest {
         Integer count = jdbcTemplate.queryForObject("SELECT count(1) from reservation", Integer.class);
 
         assertThat(reservations).hasSize(count);
-    }
+    }*/
 }

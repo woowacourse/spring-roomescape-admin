@@ -1,6 +1,7 @@
 package roomescape.controller;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -13,6 +14,7 @@ import roomescape.dto.ReservationRequest;
 import roomescape.dto.ReservationResponse;
 import roomescape.repository.H2ReservationRepository;
 
+import java.net.URI;
 import java.util.List;
 
 @RestController
@@ -34,9 +36,11 @@ public class ReservationController {
     }
 
     @PostMapping
-    public ReservationResponse addReservation(@RequestBody ReservationRequest reservationRequest) {
+    public ResponseEntity<ReservationResponse> addReservation(@RequestBody ReservationRequest reservationRequest) {
         Reservation reservation = repository.save(reservationRequest.toReservation());
-        return ReservationResponse.from(reservation);
+        return ResponseEntity.ok()
+                .location(URI.create("/reservations/" + reservation.getId()))
+                .body(ReservationResponse.from(reservation));
     }
 
     @DeleteMapping("/{id}")

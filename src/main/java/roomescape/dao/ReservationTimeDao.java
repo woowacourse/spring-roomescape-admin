@@ -14,16 +14,15 @@ import roomescape.entity.ReservationTime;
 public class ReservationTimeDao {
 
     private final JdbcTemplate jdbcTemplate;
-    private final RowMapper<ReservationTime> rowMapper;
     private final SimpleJdbcInsert simpleJdbcInsert;
+    private final RowMapper<ReservationTime> rowMapper = (resultSet, rowNum) -> new ReservationTime(
+            resultSet.getLong("id"),
+            resultSet.getTime("start_at").toLocalTime()
+    );
 
     @Autowired
     public ReservationTimeDao(JdbcTemplate jdbcTemplate) {
         this.jdbcTemplate = jdbcTemplate;
-        this.rowMapper = (resultSet, rowNum) -> new ReservationTime(
-                resultSet.getLong("id"),
-                resultSet.getTime("start_at").toLocalTime()
-        );
         this.simpleJdbcInsert = new SimpleJdbcInsert(jdbcTemplate)
                 .withTableName("reservation_time")
                 .usingGeneratedKeyColumns("id");

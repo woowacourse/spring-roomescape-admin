@@ -3,7 +3,6 @@ package roomescape.repository;
 import roomescape.domain.Reservation;
 
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 import java.util.concurrent.atomic.AtomicLong;
 
@@ -15,11 +14,10 @@ public class ReservationStore {
         this.store = new HashMap<>();
     }
 
-    public long save(Reservation reservation) {
+    public void save(Reservation reservation) {
         long id = index.incrementAndGet();
+        reservation.setId(id);
         store.put(id, reservation);
-
-        return id;
     }
 
     public Map<Long, Reservation> getAll() {

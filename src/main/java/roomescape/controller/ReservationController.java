@@ -17,11 +17,11 @@ public class ReservationController {
 
     @PostMapping
     public ResponseEntity<ReservationResponse> createReservation(@RequestBody ReservationRequest reservationRequest) {
-        Reservation newReservation = new Reservation(reservationRequest.name(), reservationRequest.date(), reservationRequest.time());
+        Reservation newReservation = new Reservation(null, reservationRequest.name(), reservationRequest.date(), reservationRequest.time());
 
-        long id = reservationStore.save(newReservation);
+        reservationStore.save(newReservation);
 
-        return ResponseEntity.ok(new ReservationResponse(id, newReservation.getName(), newReservation.getDate(), newReservation.getTime()));
+        return ResponseEntity.ok(new ReservationResponse(newReservation.getId(), newReservation.getName(), newReservation.getDate(), newReservation.getTime()));
     }
 
     @GetMapping

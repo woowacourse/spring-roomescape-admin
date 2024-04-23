@@ -9,7 +9,6 @@ import io.restassured.RestAssured;
 import io.restassured.http.ContentType;
 import java.time.Clock;
 import java.time.LocalDate;
-import java.time.LocalTime;
 import java.util.List;
 import java.util.Map;
 import org.junit.jupiter.api.DisplayName;
@@ -17,13 +16,13 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.mock.mockito.SpyBean;
 import org.springframework.jdbc.core.JdbcTemplate;
-import org.springframework.test.annotation.DirtiesContext;
-import roomescape.domain.time.ReservationTime;
+import org.springframework.test.context.jdbc.Sql;
+import org.springframework.test.context.jdbc.Sql.ExecutionPhase;
 import roomescape.dto.reservation.ReservationResponse;
-import roomescape.fixture.ReservationFixture;
 import roomescape.support.AcceptanceTest;
 
-@DirtiesContext(classMode = DirtiesContext.ClassMode.BEFORE_EACH_TEST_METHOD)
+@Sql(value = "/init.sql", executionPhase = ExecutionPhase.BEFORE_TEST_METHOD)
+@Sql(scripts = {"/truncate.sql"}, executionPhase = ExecutionPhase.AFTER_TEST_METHOD)
 class ReservationAcceptanceTest extends AcceptanceTest { // todo dynamic test
     private static final String PATH = "/reservations";
 
@@ -48,10 +47,10 @@ class ReservationAcceptanceTest extends AcceptanceTest { // todo dynamic test
     void step3() {
         // 예약을 등록한다.
         when(clock.instant()).thenReturn(fixedClock(LocalDate.of(2023, 8, 4)).instant());
-        Map<String, String> params = Map.of(
+        Map<String, Object> params = Map.of(
                 "name", "브라운",
                 "date", "2023-08-05",
-                "time", "15:40"
+                "timeId", 1L
         );
 
         RestAssured.given().log().all()
@@ -90,10 +89,7 @@ class ReservationAcceptanceTest extends AcceptanceTest { // todo dynamic test
         when(clock.instant()).thenReturn(fixedClock(LocalDate.of(2023, 8, 4)).instant());
         String name = "브라운";
         LocalDate date = LocalDate.of(2023, 8, 5);
-        ReservationTime time = ReservationFixture.reservationTime(LocalTime.of(15, 40));
-        jdbcTemplate.update("INSERT INTO reservation_time (start_at) VALUES (?)", time.getStartAt()); // todo 수정
-        jdbcTemplate.update("INSERT INTO reservation (name, date, time_id) VALUES (?, ?, ?)", name,
-                date, time.getId());
+        jdbcTemplate.update("INSERT INTO reservation (name, date, time_id) VALUES (?, ?, ?)", name, date, 1L);
 
         List<ReservationResponse> reservations = RestAssured.given().log().all()
                 .when().get(PATH)
@@ -111,10 +107,10 @@ class ReservationAcceptanceTest extends AcceptanceTest { // todo dynamic test
     void step6() {
         // 예약 등록 후 쿼리로 개수를 조회한다
         when(clock.instant()).thenReturn(fixedClock(LocalDate.of(2023, 8, 4)).instant());
-        Map<String, String> params = Map.of(
+        Map<String, Object> params = Map.of(
                 "name", "브라운",
                 "date", "2023-08-05",
-                "time", "10:00"
+                "timeId", 1L
         );
 
         RestAssured.given().log().all()
@@ -165,5 +161,31 @@ class ReservationAcceptanceTest extends AcceptanceTest { // todo dynamic test
                 .when().delete("/times/1")
                 .then().log().all()
                 .statusCode(204);
+    }
+
+    @DisplayName("[8단계 - 예약과 시간 관리]")
+    @Test
+    void step8() {
+        // 예약을 등록한다
+        when(clock.instant()).thenReturn(fixedClock(LocalDate.of(2023, 8, 4)).instant());
+        Map<String, Object> reservation = Map.of(
+                "name", "브라운",
+                "date", "2023-08-05",
+                "timeId", 1L
+        );
+
+        RestAssured.given().log().all()
+                .contentType(ContentType.JSON)
+                .body(reservation)
+                .when().post(PATH)
+                .then().log().all()
+                .statusCode(201);
+
+        // 등록된 예약을 조회한다.
+        RestAssured.given().log().all()
+                .when().get(PATH)
+                .then().log().all()
+                .statusCode(200)
+                .body("size()", is(1));
     }
 }

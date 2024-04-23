@@ -3,7 +3,6 @@ package roomescape.util;
 import java.time.LocalTime;
 import java.time.format.DateTimeFormatter;
 import roomescape.reservation.domain.ReservationDate;
-import roomescape.reservation.domain.ReservationTime;
 
 public class CustomDateTimeFormatter {
 
@@ -17,11 +16,6 @@ public class CustomDateTimeFormatter {
         return date.getValue().format(DateTimeFormatter.ISO_LOCAL_DATE);
     }
 
-    public static String getFormattedTime(final ReservationTime time) {
-        return time.getValue().format(DateTimeFormatter.ofPattern(TIME_FORMAT_WITHOUT_SECOND));
-    }
-
-    // TODO: 합치면 지우기
     public static String getFormattedTime(final LocalTime time) {
         return time.format(DateTimeFormatter.ofPattern(TIME_FORMAT_WITHOUT_SECOND));
     }

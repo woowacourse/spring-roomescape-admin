@@ -7,7 +7,6 @@ import java.time.LocalTime;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import roomescape.reservation.domain.ReservationDate;
-import roomescape.reservation.domain.ReservationTime;
 
 class CustomDateTimeFormatterTest {
 
@@ -21,7 +20,7 @@ class CustomDateTimeFormatterTest {
     @DisplayName("LocalTime 객체로부터 시간 문자열 값을 반환한다.")
     @Test
     void getFormattedTimeTest() {
-        String formattedTime = CustomDateTimeFormatter.getFormattedTime(new ReservationTime(LocalTime.of(15, 40)));
+        String formattedTime = CustomDateTimeFormatter.getFormattedTime(LocalTime.of(15, 40));
         assertThat(formattedTime).isEqualTo("15:40");
     }
 }

@@ -1,11 +1,10 @@
 package roomescape.dao;
 
-import java.sql.Date;
-import java.sql.PreparedStatement;
 import java.util.List;
 import org.springframework.jdbc.core.JdbcTemplate;
-import org.springframework.jdbc.support.GeneratedKeyHolder;
-import org.springframework.jdbc.support.KeyHolder;
+import org.springframework.jdbc.core.namedparam.MapSqlParameterSource;
+import org.springframework.jdbc.core.namedparam.SqlParameterSource;
+import org.springframework.jdbc.core.simple.SimpleJdbcInsert;
 import org.springframework.stereotype.Repository;
 import roomescape.domain.Reservation;
 import roomescape.domain.ReservationTime;
@@ -13,9 +12,13 @@ import roomescape.domain.ReservationTime;
 @Repository
 public class ReservationDaoImpl implements ReservationDao {
     private final JdbcTemplate jdbcTemplate;
+    private final SimpleJdbcInsert simpleJdbcInsert;
 
     public ReservationDaoImpl(JdbcTemplate jdbcTemplate) {
         this.jdbcTemplate = jdbcTemplate;
+        this.simpleJdbcInsert = new SimpleJdbcInsert(jdbcTemplate)
+                .withTableName("reservation")
+                .usingGeneratedKeyColumns("id");
     }
 
     @Override
@@ -37,16 +40,12 @@ public class ReservationDaoImpl implements ReservationDao {
 
     @Override
     public long save(String name, String date, long timeId) {
-        KeyHolder keyHolder = new GeneratedKeyHolder();
-        String sql = "INSERT INTO reservation(name, date, time_id) VALUES(?, ?, ?)";
-        jdbcTemplate.update(con -> {
-            PreparedStatement preparedStatement = con.prepareStatement(sql, new String[]{"id"});
-            preparedStatement.setString(1, name);
-            preparedStatement.setDate(2, Date.valueOf(date));
-            preparedStatement.setLong(3, timeId);
-            return preparedStatement;
-        }, keyHolder);
-        return keyHolder.getKey().longValue();
+        SqlParameterSource sqlParameterSource = new MapSqlParameterSource()
+                .addValue("name", name)
+                .addValue("date", date)
+                .addValue("time_id", timeId);
+        return simpleJdbcInsert.executeAndReturnKey(sqlParameterSource)
+                .longValue();
     }
 
     @Override

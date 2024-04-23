@@ -24,6 +24,7 @@ public class ReservationSqlRepository implements ReservationRepository {
                             resultset.getLong("time_id"),
                             LocalTime.parse(resultset.getString("time_value"))
                     ));
+
     private final JdbcTemplate jdbcTemplate;
     private final SimpleJdbcInsert jdbcInsert;
 
@@ -74,5 +75,21 @@ public class ReservationSqlRepository implements ReservationRepository {
         } catch (DataAccessException e) {
             return false;
         }
+    }
+
+    @Override
+    public Reservation findById(final long id) {
+        return jdbcTemplate.queryForObject("""
+            SELECT
+                r.id as reservation_id,
+                r.name,
+                r.date,
+                t.id as time_id,
+                t.start_at as time_value
+            FROM reservation as r
+            INNER JOIN reservation_time as t
+            ON r.time_id = t.id
+            WHERE r.id = ?;
+            """, mapper, id);
     }
 }

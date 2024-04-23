@@ -9,14 +9,12 @@ import io.restassured.http.ContentType;
 import java.sql.Connection;
 import java.sql.SQLException;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.test.annotation.DirtiesContext;
-import roomescape.dto.ReservationResponseDto;
 
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.DEFINED_PORT)
 @DirtiesContext(classMode = DirtiesContext.ClassMode.BEFORE_EACH_TEST_METHOD)
@@ -79,7 +77,12 @@ class MissionStepTest {
         RestAssured.given().log().all()
                    .when().delete("/times/1")
                    .then().log().all()
-                   .statusCode(200);
+                   .statusCode(204);
+
+        RestAssured.given().log().all()
+                   .when().delete("/times/1")
+                   .then().log().all()
+                   .statusCode(404);
     }
 
     @Test
@@ -106,7 +109,6 @@ class MissionStepTest {
                    .then().log().all()
                    .statusCode(200);
 
-
         RestAssured.given().log().all()
                    .when().get("/reservations")
                    .then().log().all()
@@ -122,6 +124,7 @@ class MissionStepTest {
                    .when().delete("/reservations/1")
                    .then().log().all()
                    .statusCode(404);
+
         RestAssured.given().log().all()
                    .when().get("/reservations")
                    .then().log().all()

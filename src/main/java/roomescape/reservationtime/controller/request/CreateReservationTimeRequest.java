@@ -1,10 +1,12 @@
 package roomescape.reservationtime.controller.request;
 
 import java.time.LocalTime;
-import roomescape.reservation.domain.ReservationTime;
+import roomescape.reservationtime.domain.NewReservationTime;
 
 public record CreateReservationTimeRequest(LocalTime startAt) {
-    public ReservationTime toDomain() {
-        return new ReservationTime(startAt);
+    public NewReservationTime toDomain() {
+        return new NewReservationTime(
+                null,
+                startAt);
     }
 }

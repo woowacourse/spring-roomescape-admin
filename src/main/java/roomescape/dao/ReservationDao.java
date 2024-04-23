@@ -1,13 +1,18 @@
 package roomescape.dao;
 
 import org.springframework.jdbc.core.JdbcTemplate;
-import org.springframework.jdbc.support.GeneratedKeyHolder;
-import org.springframework.jdbc.support.KeyHolder;
+import org.springframework.jdbc.core.namedparam.MapSqlParameterSource;
+import org.springframework.jdbc.core.namedparam.SqlParameterSource;
+import org.springframework.jdbc.core.simple.SimpleJdbcInsert;
 import org.springframework.stereotype.Repository;
 import roomescape.domain.Reservation;
 import roomescape.domain.ReservationTime;
 
-import java.sql.*;
+import javax.sql.DataSource;
+import java.sql.Date;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.sql.Time;
 import java.time.LocalDate;
 import java.util.List;
 import java.util.Objects;
@@ -15,9 +20,13 @@ import java.util.Objects;
 @Repository
 public class ReservationDao {
     private final JdbcTemplate jdbcTemplate;
+    private final SimpleJdbcInsert jdbcInsert;
 
-    public ReservationDao(JdbcTemplate jdbcTemplate) {
+    public ReservationDao(JdbcTemplate jdbcTemplate, DataSource source) {
         this.jdbcTemplate = jdbcTemplate;
+        this.jdbcInsert = new SimpleJdbcInsert(source)
+                .withTableName("reservation")
+                .usingGeneratedKeyColumns("id");
     }
 
     public List<Reservation> selectAll() {
@@ -59,16 +68,12 @@ public class ReservationDao {
     }
 
     public Long insert(Reservation reservation) {
-        String sql = "INSERT INTO reservation (name, date, time_id) VALUES (?, ?, ?)";
-        KeyHolder keyHolder = new GeneratedKeyHolder();
-        jdbcTemplate.update(connection -> {
-            PreparedStatement ps = connection.prepareStatement(sql, new String[]{"id"});
-            ps.setString(1, reservation.getName());
-            ps.setDate(2, Date.valueOf(reservation.getDate()));
-            ps.setLong(3, reservation.getReservationTimeId());
-            return ps;
-        }, keyHolder);
-        return Objects.requireNonNull(keyHolder.getKey()).longValue();
+        SqlParameterSource params = new MapSqlParameterSource()
+                .addValue("name", reservation.getName())
+                .addValue("date", reservation.getDate())
+                .addValue("time_id", reservation.getReservationTimeId());
+        Long id = jdbcInsert.executeAndReturnKey(params).longValue();
+        return Objects.requireNonNull(id);
     }
 
     public Reservation selectById(Long id) {

@@ -1,11 +1,9 @@
 package roomescape.controller;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
-import org.springframework.web.server.ResponseStatusException;
 import roomescape.controller.dto.TimeCreateRequest;
 import roomescape.domain.ReservationTime;
 import roomescape.service.ReservationTimeService;
@@ -31,12 +29,9 @@ public class TimeController {
 
     @GetMapping("{id}")
     public ResponseEntity<ReservationTime> readTime(@PathVariable Long id) {
-        try {
-            ReservationTime data = reservationTimeService.readReservationTime(id);
-            return ResponseEntity.ok(data);
-        } catch (Exception exception) {
-            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, exception.getMessage());
-        }
+        ReservationTime data = reservationTimeService.readReservationTime(id);
+        return ResponseEntity.ok(data);
+
     }
 
     @PostMapping

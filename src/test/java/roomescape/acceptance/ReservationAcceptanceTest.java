@@ -34,7 +34,8 @@ class ReservationAcceptanceTest {
 
     private void insertDefaultData() {
         jdbcTemplate.update("INSERT INTO reservation_time (start_at) VALUES ?", "15:00");
-        jdbcTemplate.update("INSERT INTO reservation (name, date, time_id) VALUES (?, ?, ?)",
+        jdbcTemplate.update(
+                "INSERT INTO reservation (name, date, time_id) VALUES (?, ?, ?)",
                 "브라운", "2023-08-05", 1L);
     }
 
@@ -52,8 +53,8 @@ class ReservationAcceptanceTest {
     @Test
     void post_reservation() {
         ReservationRequest request = new ReservationRequest("2023-08-10", "브리", 1L);
-        ReservationResponse expectedResponse = new ReservationResponse(2L, "브리", "2023-08-10",
-                new ReservationTimeResponse(1L, "15:00"));
+        ReservationResponse expectedResponse = new ReservationResponse(
+                2L, "브리", "2023-08-10", new ReservationTimeResponse(1L, "15:00"));
 
         ReservationResponse actualResponse = RestAssured.given().log().all()
                 .contentType(ContentType.JSON).body(request)

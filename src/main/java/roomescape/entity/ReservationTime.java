@@ -20,11 +20,6 @@ public class ReservationTime {
         }
     }
 
-    public boolean isConflictWith(ReservationTime other) {
-        boolean noConflict = getEndDateTime().isBefore(other.start) || start.isAfter(other.getEndDateTime());
-        return !noConflict;
-    }
-
     public LocalDateTime getStartDateTime() {
         return start;
     }

@@ -19,10 +19,6 @@ public class Reservation {
         this(null, name, reservationDate, reservationStartTime);
     }
 
-    public boolean isConflictWith(Reservation other) {
-        return time.isConflictWith(other.time);
-    }
-
     public long getId() {
         return id;
     }

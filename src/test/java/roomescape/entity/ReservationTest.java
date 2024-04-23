@@ -1,33 +1,19 @@
 package roomescape.entity;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static roomescape.entity.ReservationTime.RESERVATION_DURATION_HOUR;
 
 import java.time.LocalDateTime;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 
 class ReservationTest {
-    @DisplayName("두 예약을 비교, 예약 시간이 겹치는 경우를 알 수 있다")
+    @DisplayName("예약이 끝나는 시간을 계산할 수 있다")
     @Test
-    void reservationTimeConflictCheckTest() {
-        LocalDateTime time1 = LocalDateTime.of(2024, 4, 20, 12, 30);
-        LocalDateTime time2 = LocalDateTime.of(2024, 4, 20, 13, 30);
+    void calculateReservationEndTimeTest() {
+        LocalDateTime startTime = LocalDateTime.of(2024, 4, 20, 12, 30);
+        Reservation reservation = new Reservation("리비", startTime.toLocalDate(), startTime.toLocalTime());
 
-        Reservation reservation1 = new Reservation(1L, "리비", time1.toLocalDate(), time1.toLocalTime());
-        Reservation reservation2 = new Reservation(2L, "웨지", time2.toLocalDate(), time2.toLocalTime());
-
-        assertThat(reservation1.isConflictWith(reservation2)).isTrue();
-    }
-
-    @DisplayName("두 예약을 비교, 예약 시간이 겹치지 않는 경우를 알 수 있다")
-    @Test
-    void reservationTimeNoConflictCheckTest() {
-        LocalDateTime time1 = LocalDateTime.of(2024, 4, 20, 12, 30);
-        LocalDateTime time2 = LocalDateTime.of(2024, 4, 20, 13, 31);
-
-        Reservation reservation1 = new Reservation(1L, "리비", time1.toLocalDate(), time1.toLocalTime());
-        Reservation reservation2 = new Reservation(2L, "웨지", time2.toLocalDate(), time2.toLocalTime());
-
-        assertThat(reservation1.isConflictWith(reservation2)).isFalse();
+        assertThat(reservation.getEndDateTime()).isEqualTo(startTime.plusHours(RESERVATION_DURATION_HOUR));
     }
 }

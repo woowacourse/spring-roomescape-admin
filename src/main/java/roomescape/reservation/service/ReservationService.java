@@ -2,14 +2,12 @@ package roomescape.reservation.service;
 
 import java.util.List;
 import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
 import roomescape.reservation.domain.Reservation;
 import roomescape.reservation.dto.ReservationRequest;
 import roomescape.reservation.repository.ReservationRepository;
 import roomescape.time.domain.Time;
 import roomescape.time.repository.TimeRepository;
 
-@Transactional
 @Service
 public class ReservationService {
     private final ReservationRepository reservationRepository;
@@ -27,13 +25,11 @@ public class ReservationService {
         return reservationRepository.save(reservationRequest, time);
     }
 
-    @Transactional(readOnly = true)
     public Reservation findById(final Long id) {
         return reservationRepository.findById(id)
                 .orElseThrow(() -> new IllegalArgumentException("일치하는 예약이 없습니다."));
     }
 
-    @Transactional(readOnly = true)
     public List<Reservation> findAll() {
         return reservationRepository.findAll();
     }

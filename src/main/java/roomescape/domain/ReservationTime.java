@@ -3,22 +3,22 @@ package roomescape.domain;
 public class ReservationTime {
 
     private Long id;
-    private String time;
+    private String startAt;
 
-    public ReservationTime(String time) {
-        this.time = time;
+    public ReservationTime(String startAt) {
+        this.startAt = startAt;
     }
 
-    public ReservationTime(Long id, String time) {
+    public ReservationTime(Long id, String startAt) {
         this.id = id;
-        this.time = time;
+        this.startAt = startAt;
     }
 
     public Long getId() {
         return id;
     }
 
-    public String getTime() {
-        return time;
+    public String getStartAt() {
+        return startAt;
     }
 }

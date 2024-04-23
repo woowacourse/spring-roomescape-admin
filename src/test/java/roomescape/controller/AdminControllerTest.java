@@ -35,4 +35,13 @@ class AdminControllerTest {
                 .then().log().all()
                 .statusCode(200);
     }
+
+    @Test
+    @DisplayName("\"/admin/time\"으로 GET 요청을 보낼 수 있다.")
+    void openAdminTimePage() {
+        RestAssured.given().log().all()
+                .when().get("/admin/time")
+                .then().log().all()
+                .statusCode(200);
+    }
 }

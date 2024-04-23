@@ -5,6 +5,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import io.restassured.RestAssured;
 import io.restassured.http.ContentType;
+import io.restassured.response.ExtractableResponse;
 import io.restassured.response.Response;
 import java.time.LocalDate;
 import java.util.List;
@@ -12,6 +13,7 @@ import org.assertj.core.api.SoftAssertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import roomescape.domain.Reservation;
 import roomescape.domain.ReservationTime;
 import roomescape.dto.ReservationRequest;
@@ -43,13 +45,15 @@ class ReservationControllerTest extends BaseControllerTest {
 
     @Test
     void getAllReservations() {
-        Response response = RestAssured.given().log().all()
-                .when().get("/reservations");
+        ExtractableResponse<Response> response = RestAssured.given().log().all()
+                .when().get("/reservations")
+                .then().log().all()
+                .extract();
 
         List<ReservationResponse> reservationResponses = getReservationResponses(response);
 
         SoftAssertions.assertSoftly(softly -> {
-            softly.assertThat(response.getStatusCode()).isEqualTo(200);
+            softly.assertThat(response.statusCode()).isEqualTo(HttpStatus.OK.value());
             softly.assertThat(reservationResponses).hasSize(2);
             softly.assertThat(reservationResponses).containsExactly(
                     ReservationResponse.from(reservation1),
@@ -60,16 +64,18 @@ class ReservationControllerTest extends BaseControllerTest {
 
     @Test
     void addReservation() {
-        Response response = RestAssured.given().log().all()
+        ExtractableResponse<Response> response = RestAssured.given().log().all()
                 .contentType(ContentType.JSON)
                 .body(makeReservationRequest(reservationTime.getId()))
-                .when().post("/reservations");
+                .when().post("/reservations")
+                .then().log().all()
+                .extract();
 
         ReservationResponse reservationResponse = getReservationResponse(response);
 
         SoftAssertions.assertSoftly(softly -> {
-            softly.assertThat(response.getStatusCode()).isEqualTo(201);
-            softly.assertThat(response.getHeader("Location"))
+            softly.assertThat(response.statusCode()).isEqualTo(HttpStatus.CREATED.value());
+            softly.assertThat(response.header("Location"))
                     .isEqualTo("/reservations/" + reservationResponse.id());
         });
     }
@@ -78,10 +84,12 @@ class ReservationControllerTest extends BaseControllerTest {
     void deleteReservation() {
         ReservationTime savedReservationTime = reservationTimeRepository.save(Fixture.RESERVATION_TIME_1);
 
-        Response response = RestAssured.given().log().all()
-                .when().delete("/reservations/" + savedReservationTime.getId());
+        ExtractableResponse<Response> response = RestAssured.given().log().all()
+                .when().delete("/reservations/" + savedReservationTime.getId())
+                .then().log().all()
+                .extract();
 
-        assertThat(response.getStatusCode()).isEqualTo(204);
+        assertThat(response.statusCode()).isEqualTo(HttpStatus.NO_CONTENT.value());
     }
 
     private String makeReservationRequest(Long timeId) {
@@ -97,11 +105,11 @@ class ReservationControllerTest extends BaseControllerTest {
         }
     }
 
-    private ReservationResponse getReservationResponse(Response response) {
+    private ReservationResponse getReservationResponse(ExtractableResponse<Response> response) {
         return response.jsonPath().getObject(".", ReservationResponse.class);
     }
 
-    private List<ReservationResponse> getReservationResponses(Response response) {
+    private List<ReservationResponse> getReservationResponses(ExtractableResponse<Response> response) {
         return response.jsonPath().getList(".", ReservationResponse.class);
     }
 }

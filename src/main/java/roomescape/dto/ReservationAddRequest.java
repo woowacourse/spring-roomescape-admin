@@ -12,7 +12,7 @@ public class ReservationAddRequest {
 
     }
 
-    public ReservationAddRequest(LocalDate date, String name, LocalTime time, Long timeId) {
+    public ReservationAddRequest(LocalDate date, String name, Long timeId) {
         this.date = date;
         this.name = name;
         this.timeId = timeId;

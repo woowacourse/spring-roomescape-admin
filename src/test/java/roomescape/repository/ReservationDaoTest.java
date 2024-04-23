@@ -48,7 +48,7 @@ class ReservationDaoTest {
         final Reservation reservation = reservationDao.save(reservationSaveDto);
         assertAll(
                 () -> assertThat(reservation.getId()).isEqualTo(3L),
-                () -> assertThat(reservation.getName()).isEqualTo("생강"),
+                () -> assertThat(reservation.getName().getValue()).isEqualTo("생강"),
                 () -> assertThat(reservation.getDate()).isEqualTo("2025-01-01"),
                 () -> assertThat(reservation.getTime()).isEqualTo(reservationTime)
         );

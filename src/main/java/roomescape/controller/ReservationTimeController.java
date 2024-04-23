@@ -23,12 +23,12 @@ public class ReservationTimeController {
     }
 
     @PostMapping
-    public ReservationTime add(@RequestBody CreateReservationTimeRequest request) {
+    public ReservationTime save(@RequestBody CreateReservationTimeRequest request) {
         return service.save(request);
     }
 
     @GetMapping
-    public List<ReservationTime> readAll() {
+    public List<ReservationTime> findAll() {
         return service.findAll();
     }
 

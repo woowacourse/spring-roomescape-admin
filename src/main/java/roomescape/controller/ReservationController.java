@@ -24,7 +24,7 @@ public class ReservationController {
     }
 
     @PostMapping
-    public ResponseEntity<Reservation> add(@RequestBody CreateReservationRequest request) {
+    public ResponseEntity<Reservation> save(@RequestBody CreateReservationRequest request) {
         Reservation savedReservation = service.save(request);
         return ResponseEntity.ok()
             .header("Location", String.format("/reservations/%d", savedReservation.getId()))
@@ -32,7 +32,7 @@ public class ReservationController {
     }
 
     @GetMapping
-    public List<Reservation> readAll() {
+    public List<Reservation> findAll() {
         return service.findAll();
     }
 

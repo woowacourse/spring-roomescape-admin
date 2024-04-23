@@ -1,20 +1,13 @@
 package roomescape.dao;
 
-import java.sql.PreparedStatement;
-import java.sql.Time;
 import java.util.List;
-import java.util.Objects;
-import javax.sql.DataSource;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;
 import org.springframework.jdbc.core.namedparam.BeanPropertySqlParameterSource;
 import org.springframework.jdbc.core.simple.SimpleJdbcInsert;
-import org.springframework.jdbc.datasource.DriverManagerDataSource;
-import org.springframework.jdbc.support.GeneratedKeyHolder;
-import org.springframework.jdbc.support.KeyHolder;
 import org.springframework.stereotype.Repository;
-import roomescape.dto.ReservationTimeRequestDto;
+import roomescape.dto.ReservationTimeSaveDto;
 import roomescape.entity.ReservationTime;
 
 @Repository
@@ -46,7 +39,7 @@ public class ReservationTimeDao {
         return jdbcTemplate.queryForObject(sql, rowMapper, id);
     }
 
-    public long save(ReservationTimeRequestDto reservationTimeDto) {
+    public long save(ReservationTimeSaveDto reservationTimeDto) {
         return simpleJdbcInsert
                 .executeAndReturnKey(new BeanPropertySqlParameterSource(reservationTimeDto))
                 .longValue();

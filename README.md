@@ -138,6 +138,12 @@ Content-Type: application/json
       "startAt": "10:00"
   }
   ```
+  - 추가 실패 : 시간 오류
+  ```
+  HTTP/1.1 400
+  
+  "올바르지 않은 시간입니다. date: ''"
+  ```
 
 ### 시간 조회
 - http method: GET

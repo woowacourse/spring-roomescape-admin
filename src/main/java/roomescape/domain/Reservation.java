@@ -20,8 +20,8 @@ public class Reservation {
         this.time = time;
     }
 
-    public Reservation(Long id, Reservation reservation) {
-        this(id, reservation.name, reservation.date, reservation.time);
+    public Reservation(String name, LocalDate date, LocalTime time) {
+        this(null, name, date, time);
     }
 
     public Long getId() {

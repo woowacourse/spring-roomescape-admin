@@ -30,8 +30,7 @@ class JdbcReservationRepositoryTest {
         Reservation savedReservation = jdbcReservationRepository.findById(savedId);
 
         //then
-        Reservation reservationToCompare = new Reservation(savedId, reservation);
-        assertThat(isEqualsReservation(reservationToCompare, savedReservation)).isTrue();
+        assertThat(isEqualsReservation(reservation, savedReservation)).isTrue();
     }
 
     @Test
@@ -46,12 +45,10 @@ class JdbcReservationRepositoryTest {
         List<Reservation> reservations = jdbcReservationRepository.findAll();
 
         //then
-        Reservation reservationToCompare1 = new Reservation(savedReservation1Id, reservation1);
-        Reservation reservationToCompare2 = new Reservation(savedReservation2Id, reservation2);
         assertAll(
                 () -> assertThat(reservations).hasSize(2),
-                () -> assertThat(isEqualsReservation(reservationToCompare1, reservations.get(0))).isTrue(),
-                () -> assertThat(isEqualsReservation(reservationToCompare2, reservations.get(1))).isTrue()
+                () -> assertThat(isEqualsReservation(reservation1, reservations.get(0))).isTrue(),
+                () -> assertThat(isEqualsReservation(reservation2, reservations.get(1))).isTrue()
         );
     }
 
@@ -63,7 +60,7 @@ class JdbcReservationRepositoryTest {
         Reservation reservationToDelete = jdbcReservationRepository.findById(savedId);
 
         //when
-        jdbcReservationRepository.delete(savedId);
+        jdbcReservationRepository.delete(reservationToDelete.getId());
 
         //then
         List<Reservation> reservations = jdbcReservationRepository.findAll();

@@ -21,7 +21,6 @@ public record ReservationDto(
 
     public Reservation toEntity() {
         return new Reservation(
-                null,
                 name,
                 LocalDate.parse(date),
                 LocalTime.parse(time)

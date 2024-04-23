@@ -3,6 +3,7 @@ package roomescape;
 import java.time.LocalDate;
 import java.time.LocalTime;
 import java.util.Objects;
+import roomescape.domain.Reservation;
 
 public class ReservationTestSetting {
 

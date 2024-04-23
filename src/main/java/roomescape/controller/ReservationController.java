@@ -9,8 +9,8 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
-import roomescape.controller.dto.CreateReservationRequest;
-import roomescape.controller.dto.CreateReservationResponse;
+import roomescape.controller.dto.SaveReservationRequest;
+import roomescape.controller.dto.SaveReservationResponse;
 import roomescape.controller.dto.FindReservationResponse;
 import roomescape.domain.Reservation;
 import roomescape.service.ReservationService;
@@ -26,9 +26,9 @@ public class ReservationController {
     }
 
     @PostMapping
-    public CreateReservationResponse save(@RequestBody CreateReservationRequest request) {
+    public SaveReservationResponse save(@RequestBody SaveReservationRequest request) {
         Reservation reservation = service.save(request);
-        return new CreateReservationResponse(
+        return new SaveReservationResponse(
             reservation.getId(),
             reservation.getName(),
             reservation.getDate(),

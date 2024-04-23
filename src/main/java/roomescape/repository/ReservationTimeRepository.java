@@ -6,7 +6,7 @@ import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.support.GeneratedKeyHolder;
 import org.springframework.jdbc.support.KeyHolder;
 import org.springframework.stereotype.Repository;
-import roomescape.controller.dto.CreateReservationTimeRequest;
+import roomescape.controller.dto.SaveReservationTimeRequest;
 import roomescape.domain.ReservationTime;
 
 @Repository
@@ -18,7 +18,7 @@ public class ReservationTimeRepository {
         this.jdbcTemplate = jdbcTemplate;
     }
 
-    public ReservationTime save(CreateReservationTimeRequest request) {
+    public ReservationTime save(SaveReservationTimeRequest request) {
         KeyHolder keyHolder = new GeneratedKeyHolder();
 
         jdbcTemplate.update(connection -> {

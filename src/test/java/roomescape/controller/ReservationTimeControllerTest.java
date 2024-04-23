@@ -12,7 +12,7 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.jdbc.core.JdbcTemplate;
-import roomescape.controller.dto.CreateReservationTimeRequest;
+import roomescape.controller.dto.SaveReservationTimeRequest;
 
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.DEFINED_PORT)
 class ReservationTimeControllerTest {
@@ -43,7 +43,7 @@ class ReservationTimeControllerTest {
     void save() {
         RestAssured.given().log().all()
             .contentType(ContentType.JSON)
-            .body(new CreateReservationTimeRequest("11:00"))
+            .body(new SaveReservationTimeRequest("11:00"))
             .when().post("/times")
             .then().log().all()
             .statusCode(200);

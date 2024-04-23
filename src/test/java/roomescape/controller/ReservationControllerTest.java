@@ -12,7 +12,7 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.jdbc.core.JdbcTemplate;
-import roomescape.controller.dto.CreateReservationRequest;
+import roomescape.controller.dto.SaveReservationRequest;
 import roomescape.domain.Reservation;
 
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.DEFINED_PORT)
@@ -62,7 +62,7 @@ class ReservationControllerTest {
     void createReservation() {
         RestAssured.given().log().all()
             .contentType(ContentType.JSON)
-            .body(new CreateReservationRequest("2023-01-01", "브라운", 1L))
+            .body(new SaveReservationRequest("2023-01-01", "브라운", 1L))
             .when().post("/reservations")
             .then().log().all()
             .statusCode(200);

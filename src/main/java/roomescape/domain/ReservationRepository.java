@@ -25,11 +25,11 @@ public class ReservationRepository {
         return jdbcTemplate.query(
                 """
                         SELECT 
-                        r.id AS reservation_id, 
-                        r.name, 
-                        r.date, 
-                        t.id AS time_id, 
-                        t.start_at AS time_value 
+                            r.id AS reservation_id, 
+                            r.name, 
+                            r.date, 
+                            t.id AS time_id, 
+                            t.start_at AS time_value 
                         FROM reservation AS r 
                         INNER JOIN reservation_time AS t 
                         ON r.time_id = t.id""",
@@ -39,11 +39,12 @@ public class ReservationRepository {
     public Reservation findById(Long id) {
         return jdbcTemplate.queryForObject(
                 """
-                        SELECT r.id AS reservation_id, 
-                        r.name, 
-                        r.date, 
-                        t.id AS time_id, 
-                        t.start_at AS time_value
+                        SELECT 
+                            r.id AS reservation_id, 
+                            r.name, 
+                            r.date, 
+                            t.id AS time_id, 
+                            t.start_at AS time_value
                         FROM reservation AS r 
                         INNER JOIN reservation_time AS t
                         ON r.time_id = t.id

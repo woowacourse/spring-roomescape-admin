@@ -19,6 +19,8 @@
   - [x] 예약 테이블을 생성하는 쿼리를 작성한다.
 - [x] 데이터베이스를 설정한다.
   - [x] datasource url을 `jdbc:h2:mem:database`로 지정한다.
+- [ ] 저장된 예약을 조회한다.
+  - 저장된 예약을 조회할 때 데이터베이스를 활용한다.
 
 ## 커밋 컨밴션
 - feat, docs, fix, refactor, test, style, chore

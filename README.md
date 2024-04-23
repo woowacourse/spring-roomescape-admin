@@ -10,8 +10,8 @@
 - [x] 이상의 요구 사항을 데이터베이스와 연동하도록 한다.
 
 - [ ] 방탈출 시간표에 따라 방탈출 예약 시 시간을 선택하는 방식으로 수정한다.
-- [ ] API 명세를 따라 시간 관리 API를 구현한다.
-- [ ] 페이지는 templates/admin/time.html 파일을 이용한다.
+- [x] API 명세를 따라 시간 관리 API를 구현한다.
+- [x] 페이지는 templates/admin/time.html 파일을 이용한다.
 
 - [ ] 기존에 구현한 예약 기능에서 시간을 시간 테이블에 저장된 값만 선택할 수 있도록 수정한다.
 - [ ] templates/admin/reservation.html 을 사용한다.

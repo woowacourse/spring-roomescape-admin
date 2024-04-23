@@ -22,4 +22,13 @@ class AdminControllerTest {
         Assertions.assertThat(reservationPage)
                 .isEqualTo("admin/reservation-legacy");
     }
+
+    @Test
+    @DisplayName("시간 관리 페이지 경로를 정해진 경로로 매핑한다.")
+    void reservationTimePage() {
+        AdminController adminController = new AdminController();
+        String reservationTimePage = adminController.reservationTimePage();
+        Assertions.assertThat(reservationTimePage)
+                .isEqualTo("admin/time");
+    }
 }

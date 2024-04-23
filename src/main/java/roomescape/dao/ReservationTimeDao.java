@@ -64,7 +64,7 @@ public class ReservationTimeDao {
         return Objects.requireNonNull(keyHolder.getKey()).longValue();
     }
 
-    public boolean exist(long id) {
+    public Boolean exist(long id) {
         String sql = """
                 SELECT
                 CASE

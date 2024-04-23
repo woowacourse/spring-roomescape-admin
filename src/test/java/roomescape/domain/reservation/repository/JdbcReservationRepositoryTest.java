@@ -6,9 +6,8 @@ import static org.junit.jupiter.api.Assertions.assertAll;
 import java.time.LocalDate;
 import java.time.LocalTime;
 import java.util.List;
-import org.junit.jupiter.api.BeforeAll;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import org.junit.jupiter.api.TestInstance;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.jdbc.JdbcTest;
 import org.springframework.jdbc.core.JdbcTemplate;
@@ -17,7 +16,6 @@ import roomescape.domain.time.ReservationTime;
 import roomescape.domain.time.repository.JdbcReservationTimeRepository;
 
 @JdbcTest
-@TestInstance(TestInstance.Lifecycle.PER_CLASS)
 class JdbcReservationRepositoryTest {
     private final JdbcReservationRepository reservationRepository;
     private final JdbcReservationTimeRepository reservationTimeRepository;
@@ -29,9 +27,9 @@ class JdbcReservationRepositoryTest {
         this.reservationTimeRepository = new JdbcReservationTimeRepository(jdbcTemplate);
     }
 
-    @BeforeAll
+    @BeforeEach
     void setUp() {
-        time = reservationTimeRepository.save(new ReservationTime(LocalTime.of(13, 0)));
+        time = reservationTimeRepository.save(new ReservationTime(LocalTime.of(20, 45)));
     }
 
     @Test

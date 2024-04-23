@@ -1,4 +1,4 @@
-package roomescape.controller;
+package roomescape.controller.api;
 
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -12,11 +12,11 @@ import java.util.List;
 
 @RestController
 @RequestMapping("/reservations")
-public class ReservationController {
+public class ReservationsController {
 
     private final ReservationRepository reservationRepository;
 
-    public ReservationController(ReservationRepository reservationRepository) {
+    public ReservationsController(ReservationRepository reservationRepository) {
         this.reservationRepository = reservationRepository;
     }
 

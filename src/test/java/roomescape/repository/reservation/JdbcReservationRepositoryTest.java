@@ -10,7 +10,6 @@ import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.jdbc.JdbcTest;
-import org.springframework.jdbc.core.RowMapper;
 import org.springframework.test.context.TestExecutionListeners;
 import org.springframework.test.context.support.DependencyInjectionTestExecutionListener;
 import roomescape.domain.Reservation;
@@ -18,6 +17,7 @@ import roomescape.domain.ReservationTime;
 import roomescape.repository.DatabaseCleanupListener;
 import roomescape.repository.time.JdbcReservationTimeRepository;
 import roomescape.repository.time.ReservationTimeRepository;
+import roomescape.repository.time.ReservationTimeRowMapper;
 
 @TestExecutionListeners(value = {
         DatabaseCleanupListener.class,
@@ -39,9 +39,8 @@ class JdbcReservationRepositoryTest {
 
     @BeforeEach
     void setUp() {
-        RowMapper<Reservation> rowMapper = new ReservationRowMapper();
-        reservationRepository = new JdbcReservationRepository(dataSource, rowMapper);
-        reservationTimeRepository = new JdbcReservationTimeRepository(dataSource);
+        reservationRepository = new JdbcReservationRepository(dataSource, new ReservationRowMapper());
+        reservationTimeRepository = new JdbcReservationTimeRepository(dataSource, new ReservationTimeRowMapper());
         initializeTimesData();
     }
 

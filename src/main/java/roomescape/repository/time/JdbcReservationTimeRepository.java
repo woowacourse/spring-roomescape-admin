@@ -15,18 +15,20 @@ public class JdbcReservationTimeRepository implements ReservationTimeRepository 
 
     private final NamedParameterJdbcTemplate jdbcTemplate;
     private final SimpleJdbcInsert jdbcInsert;
+    private final RowMapper<ReservationTime> rowMapper;
 
-    public JdbcReservationTimeRepository(DataSource dataSource) {
+    public JdbcReservationTimeRepository(DataSource dataSource, RowMapper<ReservationTime> rowMapper) {
         this.jdbcTemplate = new NamedParameterJdbcTemplate(dataSource);
         this.jdbcInsert = new SimpleJdbcInsert(dataSource)
                 .withTableName("reservation_time")
                 .usingGeneratedKeyColumns("id");
+        this.rowMapper = rowMapper;
     }
 
     @Override
     public List<ReservationTime> findAllReservationTimes() {
         String sql = "SELECT * FROM reservation_time";
-        return jdbcTemplate.query(sql, reservationTimeRowMapper());
+        return jdbcTemplate.query(sql, rowMapper);
     }
 
     @Override
@@ -54,13 +56,6 @@ public class JdbcReservationTimeRepository implements ReservationTimeRepository 
                 WHERE t.id = :savedId;
                 """;
         SqlParameterSource paramMap = new MapSqlParameterSource().addValue("savedId", savedId);
-        return jdbcTemplate.query(sql, paramMap, reservationTimeRowMapper()).get(0);
-    }
-
-    private RowMapper<ReservationTime> reservationTimeRowMapper() {
-        return (resultSet, rowNum) -> new ReservationTime(
-                resultSet.getLong("id"),
-                resultSet.getString("start_at")
-        );
+        return jdbcTemplate.query(sql, paramMap, rowMapper).get(0);
     }
 }

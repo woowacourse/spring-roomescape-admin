@@ -10,6 +10,7 @@ import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.jdbc.JdbcTest;
+import org.springframework.jdbc.core.RowMapper;
 import org.springframework.test.context.TestExecutionListeners;
 import org.springframework.test.context.support.DependencyInjectionTestExecutionListener;
 import roomescape.domain.ReservationTime;
@@ -31,7 +32,8 @@ class JdbcReservationTimeRepositoryTest {
 
     @BeforeEach
     void setUp() {
-        reservationTimeRepository = new JdbcReservationTimeRepository(dataSource);
+        RowMapper<ReservationTime> rowMapper = new ReservationTimeRowMapper();
+        reservationTimeRepository = new JdbcReservationTimeRepository(dataSource, rowMapper);
     }
 
     @DisplayName("저장된 모든 예약 시간 정보를 가져온다.")

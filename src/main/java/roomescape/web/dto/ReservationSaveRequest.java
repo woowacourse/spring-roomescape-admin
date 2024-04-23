@@ -11,7 +11,7 @@ public record ReservationSaveRequest(
         @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "HH:mm")
         LocalTime time) {
 
-    public Reservation toEntity(Long id) {
-        return new Reservation(id, this.name(), this.date(), this.time());
+    public Reservation toEntity() {
+        return new Reservation(null, this.name(), this.date(), this.time());
     }
 }

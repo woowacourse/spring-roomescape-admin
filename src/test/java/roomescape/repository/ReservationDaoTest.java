@@ -3,6 +3,7 @@ package roomescape.repository;
 import static org.assertj.core.api.Assertions.assertThat;
 
 import java.util.List;
+import java.util.stream.Stream;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -44,18 +45,17 @@ class ReservationDaoTest {
         assertThat(savedId).isEqualTo(1);
     }
 
-//    @DisplayName("예약 삭제")
-//    @Test
-//    void deleteReservation() {
-//        Reservation newReservation = new Reservation(null, "조조", "2024-04-22", "14:00");
-//        Long savedId = reservationDao.save(newReservation)
-//            .getId();
-//
-//        reservationDao.deleteById(savedId);
-//
-//        Stream<Long> savedIndexes = reservationDao.findAll()
-//            .stream()
-//            .map(Reservation::getId);
-//        assertThat(savedIndexes).isNotIn(savedId);
-//    }
+    @DisplayName("예약 삭제")
+    @Test
+    void deleteReservation() {
+        Long timeId = reservationTimeDao.save(new ReservationTimeRequest("09:00"));
+        Long savedId = reservationDao.save(new ReservationRequest("조조", "2024-04-21", timeId));
+
+        reservationDao.deleteById(savedId);
+
+        Stream<Long> savedIndexes = reservationDao.findAll()
+            .stream()
+            .map(Reservation::getId);
+        assertThat(savedIndexes).isNotIn(savedId);
+    }
 }

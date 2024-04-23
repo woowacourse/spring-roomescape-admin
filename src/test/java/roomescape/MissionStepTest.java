@@ -11,7 +11,9 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.web.server.LocalServerPort;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.test.annotation.DirtiesContext;
+import roomescape.reservation.ReservationApiController;
 
+import java.lang.reflect.Field;
 import java.sql.Connection;
 import java.sql.SQLException;
 import java.util.HashMap;
@@ -31,6 +33,8 @@ public class MissionStepTest {
 
     @Autowired
     private JdbcTemplate jdbcTemplate;
+    @Autowired
+    private ReservationApiController reservationApiController;
 
     @BeforeEach
     void setUp() {
@@ -130,5 +134,17 @@ public class MissionStepTest {
                             .statusCode(200)
                             .body("size()", is(1));
                 }));
+    }
+
+    @Test
+    void 구단계() {
+        boolean isJdbcTemplateInjected = false;
+        for (Field field : reservationApiController.getClass().getDeclaredFields()) {
+            if (field.getType().equals(JdbcTemplate.class)) {
+                isJdbcTemplateInjected = true;
+                break;
+            }
+        }
+        assertThat(isJdbcTemplateInjected).isFalse();
     }
 }

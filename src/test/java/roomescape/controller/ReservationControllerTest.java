@@ -79,15 +79,6 @@ public class ReservationControllerTest {
     }
 
     @Test
-    @DisplayName("값이 없을 때 예약을 삭제하려 시도하는 경우, 상태 코드는 404이다.")
-    void emptyReservationsDelete() {
-        RestAssured.given().log().all()
-                .when().delete("/reservations/1")
-                .then().log().all()
-                .statusCode(404);
-    }
-
-    @Test
     @DisplayName("하나의 예약만 등록한 경우, 예약 삭제 뒤 예약 목록 조회 결과 개수는 0개이다.")
     void readReservationsSizeAfterPostAndDelete() {
         RestAssured.given().log().all()

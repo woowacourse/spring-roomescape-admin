@@ -30,7 +30,7 @@ public class InMemoryReservationRepository implements ReservationRepository {
     }
 
     @Override
-    public boolean deleteReservation(Long id) {
-        return reservations.removeIf(reservation -> reservation.getId().equals(id));
+    public void deleteReservation(Long id) {
+        reservations.removeIf(reservation -> reservation.getId().equals(id));
     }
 }

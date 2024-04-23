@@ -55,7 +55,8 @@ public class H2ReservationRepository implements ReservationRepository {
     }
 
     @Override
-    public boolean deleteReservation(Long id) {
-        return false;
+    public void deleteReservation(Long id) {
+        String sql = "DELETE FROM reservation WHERE id = ?";
+        jdbcTemplate.update(sql, id);
     }
 }

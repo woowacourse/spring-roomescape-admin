@@ -1,7 +1,6 @@
 package roomescape.service;
 
 import java.util.List;
-import java.util.Optional;
 import org.springframework.stereotype.Repository;
 import roomescape.domain.Reservation;
 import roomescape.dto.ReservationRequest;
@@ -21,11 +20,8 @@ public class ReservationService {
     }
 
     private Reservation getReservation(final long id) {
-        Optional<Reservation> reservation = reservationDao.findById(id);
-        if (reservation.isEmpty()) {
-            throw new IllegalArgumentException("[ERROR] 예약 조회 결과가 없습니다.");
-        }
-        return reservation.get();
+        return reservationDao.findById(id)
+                .orElseThrow(() -> new IllegalArgumentException("[ERROR] 예약 조회 결과가 없습니다."));
     }
 
     public List<Reservation> getAllReservations() {
@@ -33,10 +29,8 @@ public class ReservationService {
     }
 
     public void deleteReservation(final long id) {
-        Optional<Reservation> reservation = reservationDao.findById(id);
-        if (reservation.isEmpty()) {
-            throw new IllegalArgumentException("[ERROR] 삭제할 예약 데이터가 없습니다.");
-        }
+        reservationDao.findById(id)
+                .orElseThrow(() -> new IllegalArgumentException("[ERROR] 삭제할 예약 데이터가 없습니다."));
         reservationDao.delete(id);
     }
 }

@@ -1,0 +1,31 @@
+package roomescape.controller;
+
+import java.util.List;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
+import roomescape.dao.ReservationTimeDao;
+import roomescape.dto.ReservationTimeResponse;
+
+@RestController
+@RequestMapping("/times")
+public class ReservationTimeController {
+
+    private final ReservationTimeDao reservationTimeDao;
+
+    public ReservationTimeController(ReservationTimeDao reservationTimeDao) {
+        this.reservationTimeDao = reservationTimeDao;
+    }
+
+    @GetMapping
+    public ResponseEntity<List<ReservationTimeResponse>> findAllReservationTimes() {
+        List<ReservationTimeResponse> reservationTimeResponses = reservationTimeDao.findAll()
+                .stream()
+                .map(ReservationTimeResponse::toResponse)
+                .toList();
+
+        return ResponseEntity.ok()
+                .body(reservationTimeResponses);
+    }
+}

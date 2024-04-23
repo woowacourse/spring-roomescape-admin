@@ -35,4 +35,9 @@ public class ReservationTimeDaoImpl implements ReservationTimeDao {
         return jdbcTemplate.query(sql, actorRowMapper());
     }
 
+    @Override
+    public void delete(long id) {
+        final var sql = "DELETE FROM reservation_time WHERE id = ?";
+        jdbcTemplate.update(sql, id);
+    }
 }

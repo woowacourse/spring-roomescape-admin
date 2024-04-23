@@ -23,4 +23,9 @@ public class ReservationTimeRepositoryImpl implements ReservationTimeRepository 
     public long add(ReservationTime time) {
         return reservationTimeDao.save(time);
     }
+
+    @Override
+    public void remove(final long id) {
+        reservationTimeDao.delete(id);
+    }
 }

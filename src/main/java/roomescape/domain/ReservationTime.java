@@ -7,7 +7,7 @@ import java.util.Objects;
 public class ReservationTime {
 
     private final long id;
-    @JsonFormat(pattern = "HH:mm") // TODO: 여기 붙이면 언제 format이 되는거지?
+    @JsonFormat(pattern = "HH:mm")
     private final LocalTime startAt;
 
     public ReservationTime(final long id, final LocalTime startAt) {
@@ -38,5 +38,13 @@ public class ReservationTime {
     @Override
     public int hashCode() {
         return Objects.hash(id, startAt);
+    }
+
+    @Override
+    public String toString() {
+        return "ReservationTime{" +
+                "id=" + id +
+                ", startAt=" + startAt +
+                '}';
     }
 }

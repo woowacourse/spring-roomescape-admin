@@ -3,6 +3,7 @@ package roomescape.reservation.repository;
 import java.sql.PreparedStatement;
 import java.time.LocalDate;
 import java.util.List;
+import java.util.Objects;
 import java.util.Optional;
 import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.jdbc.core.JdbcTemplate;
@@ -35,7 +36,7 @@ public class ReservationRepository {
             ps.setLong(3, time.getId());
             return ps;
         }, keyHolder);
-        long reservationId = keyHolder.getKey().longValue();
+        long reservationId = Objects.requireNonNull(keyHolder.getKey()).longValue();
 
         return new Reservation(reservationId, name, date, time);
     }

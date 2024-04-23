@@ -3,6 +3,7 @@ package roomescape.time.repository;
 import java.sql.PreparedStatement;
 import java.time.LocalTime;
 import java.util.List;
+import java.util.Objects;
 import java.util.Optional;
 import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.jdbc.core.JdbcTemplate;
@@ -31,7 +32,7 @@ public class TimeRepository {
             ps.setString(1, time.toString());
             return ps;
         }, keyHolder);
-        long id = keyHolder.getKey().longValue();
+        long id = Objects.requireNonNull(keyHolder.getKey()).longValue();
 
         return new Time(id, time);
     }

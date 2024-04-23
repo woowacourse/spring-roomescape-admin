@@ -17,8 +17,7 @@ import java.util.List;
 import java.util.Optional;
 
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.junit.jupiter.api.Assertions.assertFalse;
-import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.junit.jupiter.api.Assertions.*;
 
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 @DirtiesContext(classMode = DirtiesContext.ClassMode.AFTER_EACH_TEST_METHOD)
@@ -44,16 +43,20 @@ class ReservationTimeDaoTest {
     void save() {
         final ReservationTimeSaveDto reservationTimeSaveDto = new ReservationTimeSaveDto("10:00");
         final ReservationTime savedReservationTime = reservationTimeDao.save(reservationTimeSaveDto);
-        assertThat(savedReservationTime.getId()).isEqualTo(3L);
-        assertThat(savedReservationTime.getStartAt()).isEqualTo(LocalTime.parse("10:00"));
+        assertAll(
+                () -> assertThat(savedReservationTime.getId()).isEqualTo(3L),
+                () -> assertThat(savedReservationTime.getStartAt()).isEqualTo(LocalTime.parse("10:00"))
+        );
     }
 
     @DisplayName("존재하는 예약 시간 조회")
     @Test
     void findExistById() {
         final ReservationTime reservationTime = reservationTimeDao.findById(1L).orElseThrow();
-        assertThat(reservationTime.getId()).isEqualTo(1L);
-        assertThat(reservationTime.getStartAt()).isEqualTo(LocalTime.parse("08:00"));
+        assertAll(
+                () -> assertThat(reservationTime.getId()).isEqualTo(1L),
+                () -> assertThat(reservationTime.getStartAt()).isEqualTo(LocalTime.parse("08:00"))
+        );
     }
 
     @DisplayName("존재하지 않는 예약 시간 조회")

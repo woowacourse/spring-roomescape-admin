@@ -16,8 +16,7 @@ import roomescape.repository.dto.ReservationSaveDto;
 import java.util.List;
 
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.junit.jupiter.api.Assertions.assertFalse;
-import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.junit.jupiter.api.Assertions.*;
 
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 @DirtiesContext(classMode = DirtiesContext.ClassMode.AFTER_EACH_TEST_METHOD)
@@ -47,10 +46,12 @@ class ReservationDaoTest {
         final ReservationTime reservationTime = new ReservationTime(1L, "08:00");
         final ReservationSaveDto reservationSaveDto = new ReservationSaveDto("생강", "2025-01-01", reservationTime);
         final Reservation reservation = reservationDao.save(reservationSaveDto);
-        assertThat(reservation.getId()).isEqualTo(3L);
-        assertThat(reservation.getName()).isEqualTo("생강");
-        assertThat(reservation.getDate()).isEqualTo("2025-01-01");
-        assertThat(reservation.getTime()).isEqualTo(reservationTime);
+        assertAll(
+                () -> assertThat(reservation.getId()).isEqualTo(3L),
+                () -> assertThat(reservation.getName()).isEqualTo("생강"),
+                () -> assertThat(reservation.getDate()).isEqualTo("2025-01-01"),
+                () -> assertThat(reservation.getTime()).isEqualTo(reservationTime)
+        );
     }
 
     @DisplayName("예약 목록 조회")

@@ -13,6 +13,7 @@ import java.sql.Connection;
 import java.sql.SQLException;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.junit.jupiter.api.Assertions.assertAll;
 
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 public class DatabaseTest {
@@ -32,9 +33,11 @@ public class DatabaseTest {
     @Test
     void generateReservationsTable() {
         try (final Connection connection = jdbcTemplate.getDataSource().getConnection()) {
-            assertThat(connection).isNotNull();
-            assertThat(connection.getCatalog()).isEqualTo("DATABASE");
-            assertThat(connection.getMetaData().getTables(null, null, "RESERVATIONS", null).next()).isTrue();
+            assertAll(
+                    () -> assertThat(connection).isNotNull(),
+                    () -> assertThat(connection.getCatalog()).isEqualTo("DATABASE"),
+                    () -> assertThat(connection.getMetaData().getTables(null, null, "RESERVATIONS", null).next()).isTrue()
+            );
         } catch (SQLException e) {
             throw new RuntimeException(e);
         }
@@ -44,9 +47,11 @@ public class DatabaseTest {
     @Test
     void generateReservationTimesTable() {
         try (final Connection connection = jdbcTemplate.getDataSource().getConnection()) {
-            assertThat(connection).isNotNull();
-            assertThat(connection.getCatalog()).isEqualTo("DATABASE");
-            assertThat(connection.getMetaData().getTables(null, null, "RESERVATION_TIMES", null).next()).isTrue();
+            assertAll(
+                    () -> assertThat(connection).isNotNull(),
+                    () -> assertThat(connection.getCatalog()).isEqualTo("DATABASE"),
+                    () -> assertThat(connection.getMetaData().getTables(null, null, "RESERVATION_TIMES", null).next()).isTrue()
+            );
         } catch (SQLException e) {
             throw new RuntimeException(e);
         }

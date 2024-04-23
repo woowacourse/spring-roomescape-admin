@@ -23,7 +23,7 @@ public class ReservationTimeControllerTest {
 
     @Test
     @DisplayName("예약 시간 추가, 조회, 삭제를 정상적으로 수행한다.")
-    void ReservationTime_CRUD_Success() {
+    void ReservationTime_CREATE_READ_DELETE_Success() {
         Map<String, String> params = new HashMap<>();
         params.put("startAt", "10:00");
 

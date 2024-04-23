@@ -162,7 +162,8 @@ public class ReservationControllerTest {
     }
 
     @Test
-    void 팔단계() {
+    @DisplayName("예약 추가, 조회를 정상적으로 수행한다.")
+    void ReservationTime_CREATE_READ_Success() {
         Map<String, Object> reservation = new HashMap<>();
         reservation.put("name", "브라운");
         reservation.put("date", "2023-08-05");

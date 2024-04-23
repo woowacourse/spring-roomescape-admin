@@ -9,7 +9,7 @@ public class ReservationTimeAddRequest {
 
     }
 
-    public ReservationTimeAddRequest(LocalTime startAt){
+    public ReservationTimeAddRequest(LocalTime startAt) {
         this.startAt = startAt;
     }
 

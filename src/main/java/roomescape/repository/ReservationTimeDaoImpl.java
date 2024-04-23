@@ -26,7 +26,6 @@ public class ReservationTimeDaoImpl implements ReservationTimeDao {
         return jdbcTemplate.query("select * from reservation_time", rowMapper);
     }
 
-
     @Override
     public ReservationTime insert(ReservationTimeAddRequest reservationTimeAddRequest) {
         KeyHolder keyHolder = new GeneratedKeyHolder();

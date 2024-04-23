@@ -1,5 +1,6 @@
 package roomescape.service;
 
+import java.time.LocalDate;
 import java.util.List;
 import org.springframework.stereotype.Service;
 import roomescape.domain.Reservation;
@@ -22,7 +23,7 @@ public class ReservationService {
 
     public Reservation save(SaveReservationDto dto) {
         ReservationTime time = reservationTimeRepository.findById(dto.timeId());
-        return reservationRepository.save(new Reservation(null, dto.name(), dto.date(), time));
+        return reservationRepository.save(new Reservation(null, dto.name(), LocalDate.parse(dto.date()), time));
     }
 
     public List<Reservation> findAll() {

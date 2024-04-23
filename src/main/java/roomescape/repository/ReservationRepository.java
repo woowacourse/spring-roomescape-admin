@@ -1,5 +1,6 @@
 package roomescape.repository;
 
+import java.time.LocalDate;
 import java.time.LocalTime;
 import java.util.List;
 import javax.sql.DataSource;
@@ -50,7 +51,7 @@ public class ReservationRepository {
             (resultSet, rowNum) -> new Reservation(
                 resultSet.getLong("reservation_id"),
                 resultSet.getString("reservation_name"),
-                resultSet.getString("reservation_date"),
+                LocalDate.parse(resultSet.getString("reservation_date")),
                 new ReservationTime(
                     resultSet.getLong("time_id"),
                     LocalTime.parse(resultSet.getString("time_value"))
@@ -75,7 +76,7 @@ public class ReservationRepository {
             (resultSet, rowNum) -> new Reservation(
                 resultSet.getLong("reservation_id"),
                 resultSet.getString("name"),
-                resultSet.getString("date"),
+                LocalDate.parse(resultSet.getString("date")),
                 new ReservationTime(
                     resultSet.getLong("time_id"),
                     LocalTime.parse(resultSet.getString("time_value"))

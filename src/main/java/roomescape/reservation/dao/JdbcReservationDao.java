@@ -35,7 +35,7 @@ public class JdbcReservationDao implements ReservationDao {
     }
 
     @Override
-    public Reservation insert(Reservation reservation) {
+    public Reservation save(Reservation reservation) {
         Map<String, Object> parameters = new HashMap<>(3);
         parameters.put("name", reservation.getName());
         parameters.put("date", reservation.getDate());

@@ -22,7 +22,7 @@ class JdbcReservationTimeDaoTest {
     private JdbcTemplate jdbcTemplate;
 
     @BeforeEach
-    void insertReservationTime() {
+    void saveReservationTime() {
         String sql = "INSERT INTO reservation_time (start_at) VALUES(?)";
         ReservationTimeRequest reservationRequest = new ReservationTimeRequest(LocalTime.of(10, 0));
 
@@ -31,7 +31,7 @@ class JdbcReservationTimeDaoTest {
 
     @DisplayName("시간 추가 API 테스트")
     @Test
-    void insert() {
+    void save() {
         ReservationTimeRequest reservationRequest = new ReservationTimeRequest(LocalTime.of(10, 0));
 
         RestAssured.given().log().all()

@@ -6,7 +6,7 @@ import roomescape.reservation.domain.ReservationTime;
 
 public interface ReservationTimeDao {
 
-    ReservationTime insert(ReservationTime reservationTime);
+    ReservationTime save(ReservationTime reservationTime);
 
     List<ReservationTime> findAllReservationTimes();
 

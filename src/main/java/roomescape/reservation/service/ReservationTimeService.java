@@ -15,10 +15,10 @@ public class ReservationTimeService {
         this.reservationTimeDao = reservationTimeDao;
     }
 
-    public ReservationTimeResponse addReservationTime(ReservationTimeRequest reservationTimeRequest) {
+    public ReservationTimeResponse createReservationTime(ReservationTimeRequest reservationTimeRequest) {
         ReservationTime reservationTime = ReservationTime.from(reservationTimeRequest);
 
-        ReservationTime savedReservationTime = reservationTimeDao.insert(reservationTime);
+        ReservationTime savedReservationTime = reservationTimeDao.save(reservationTime);
         return ReservationTimeResponse.from(savedReservationTime);
     }
 

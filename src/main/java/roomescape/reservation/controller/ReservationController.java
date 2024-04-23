@@ -24,14 +24,14 @@ public class ReservationController {
     }
 
     @PostMapping("/reservations")
-    public ResponseEntity<ReservationResponse> createReservation(@RequestBody ReservationRequest reservationRequest) {
-        ReservationResponse reservationResponse = reservationService.addReservation(reservationRequest);
+    public ResponseEntity<ReservationResponse> postReservation(@RequestBody ReservationRequest reservationRequest) {
+        ReservationResponse reservationResponse = reservationService.createReservation(reservationRequest);
         return ResponseEntity.created(URI.create("/reservations/" + reservationResponse.id()))
                 .body(reservationResponse);
     }
 
     @GetMapping("/reservations")
-    public ResponseEntity<List<ReservationResponse>> readReservations() {
+    public ResponseEntity<List<ReservationResponse>> getReservations() {
         return ResponseEntity.ok(reservationService.findAllReservations());
     }
 

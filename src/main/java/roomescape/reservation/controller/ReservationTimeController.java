@@ -22,14 +22,14 @@ public class ReservationTimeController {
     }
 
     @PostMapping("/times")
-    public ResponseEntity<ReservationTimeResponse> createReservationTime(
+    public ResponseEntity<ReservationTimeResponse> postReservationTime(
             @RequestBody ReservationTimeRequest reservationTimeRequest) {
-        ReservationTimeResponse reservationTime = reservationTimeService.addReservationTime(reservationTimeRequest);
+        ReservationTimeResponse reservationTime = reservationTimeService.createReservationTime(reservationTimeRequest);
         return ResponseEntity.ok(reservationTime);
     }
 
     @GetMapping("/times")
-    public ResponseEntity<List<ReservationTimeResponse>> readReservationTimes() {
+    public ResponseEntity<List<ReservationTimeResponse>> getReservationTimes() {
         List<ReservationTimeResponse> reservationTimes = reservationTimeService.findAllReservationTimes();
         return ResponseEntity.ok(reservationTimes);
     }

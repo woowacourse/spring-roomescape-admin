@@ -25,13 +25,13 @@ class JdbcReservationDaoTest {
     private JdbcTemplate jdbcTemplate;
 
     @BeforeEach
-    void insertReservationTime() {
+    void saveReservationTime() {
         jdbcTemplate.update("INSERT INTO reservation_time (start_at) VALUES(?)", LocalTime.of(10, 0));
     }
 
     @DisplayName("DB에 예약 추가 테스트")
     @Test
-    void insert() {
+    void save() {
         ReservationRequest reservationRequest = new ReservationRequest("브라운", LocalDate.of(2023, 8, 5), 1L);
 
         RestAssured.given().log().all()

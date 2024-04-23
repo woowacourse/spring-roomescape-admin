@@ -30,7 +30,7 @@ public class JdbcReservationTimeDao implements ReservationTimeDao {
     }
 
     @Override
-    public ReservationTime insert(ReservationTime reservationTime) {
+    public ReservationTime save(ReservationTime reservationTime) {
         SqlParameterSource parameterSource = new BeanPropertySqlParameterSource(reservationTime);
         Number id = reservationInsert.executeAndReturnKey(parameterSource);
         return new ReservationTime(id.longValue(), reservationTime.getStartAt());

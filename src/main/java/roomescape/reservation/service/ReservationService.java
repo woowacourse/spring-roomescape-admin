@@ -20,12 +20,12 @@ public class ReservationService {
         this.reservationTimeDao = reservationTimeDao;
     }
 
-    public ReservationResponse addReservation(ReservationRequest reservationRequest) {
+    public ReservationResponse createReservation(ReservationRequest reservationRequest) {
         ReservationTime reservationTime = reservationTimeDao.findById(reservationRequest.timeId())
                 .orElseThrow(() -> new IllegalArgumentException("예약 시간을 찾을 수 없습니다."));
         Reservation reservation = Reservation.of(reservationRequest, reservationTime);
 
-        Reservation savedReservation = reservationDao.insert(reservation);
+        Reservation savedReservation = reservationDao.save(reservation);
         return ReservationResponse.from(savedReservation);
     }
 

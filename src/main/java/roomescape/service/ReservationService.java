@@ -36,7 +36,14 @@ public class ReservationService {
     }
 
     public void deleteReservation(final Long reservationId) {
+        checkReservationExist(reservationId);
         reservationRepository.deleteById(reservationId);
+    }
+
+    private void checkReservationExist(final Long reservationId) {
+        if (!reservationRepository.existById(reservationId)) {
+            throw new NoSuchElementException("해당 id의 예약이 존재하지 않습니다.");
+        }
     }
 
     public List<ReservationTime> getReservationTimes() {
@@ -48,6 +55,13 @@ public class ReservationService {
     }
 
     public void deleteReservationTime(final Long reservationTimeId) {
+        checkReservationTimeExist(reservationTimeId);
         reservationTimeRepository.deleteById(reservationTimeId);
+    }
+
+    private void checkReservationTimeExist(final Long reservationTimeId) {
+        if (!reservationTimeRepository.existById(reservationTimeId)) {
+            throw new NoSuchElementException("해당 id의 예약 시간이 존재하지 않습니다.");
+        }
     }
 }

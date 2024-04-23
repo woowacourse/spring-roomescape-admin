@@ -62,4 +62,14 @@ public class H2ReservationRepository implements ReservationRepository {
                 .addValue("id", reservationId);
         template.update(sql, param);
     }
+
+    @Override
+    public boolean existById(final Long reservationId) {
+        String sql = "SELECT count(*) FROM reservation WHERE id = :id";
+        MapSqlParameterSource param = new MapSqlParameterSource()
+                .addValue("id", reservationId);
+        Integer reservationCount = template.queryForObject(sql, param, Integer.class);
+
+        return reservationCount != null && reservationCount > 0;
+    }
 }

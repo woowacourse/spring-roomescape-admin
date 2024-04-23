@@ -3,6 +3,7 @@ package roomescape.dao;
 import java.util.List;
 import java.util.Map;
 import org.springframework.jdbc.core.JdbcTemplate;
+import org.springframework.jdbc.core.RowMapper;
 import org.springframework.jdbc.core.simple.SimpleJdbcInsert;
 import org.springframework.stereotype.Repository;
 import roomescape.domain.Reservation;
@@ -21,15 +22,17 @@ public class H2ReservationDao implements ReservationDao {
                 .usingColumns("name", "date", "time");
     }
 
+    private final RowMapper<Reservation> rowMapper = (rs, rowNum) -> new Reservation(
+            rs.getLong("id"),
+            rs.getString("name"),
+            rs.getString("date"),
+            rs.getString("time")
+    );
+
     @Override
     public List<Reservation> findAll() {
         String sql = "SELECT id, name, `date`, `time` FROM reservation";
-        return jdbcTemplate.query(sql, (rs, rowNum) -> new Reservation(
-                rs.getLong("id"),
-                rs.getString("name"),
-                rs.getString("date"),
-                rs.getString("time")
-        ));
+        return jdbcTemplate.query(sql, rowMapper);
     }
 
     @Override
@@ -61,12 +64,7 @@ public class H2ReservationDao implements ReservationDao {
     @Override
     public boolean isExist(Long id) {
         String sql = "SELECT * FROM reservation WHERE id = ? LIMIT 1";
-        List<Reservation> reservations = jdbcTemplate.query(sql, (rs, rowNum) -> new Reservation(
-                        rs.getLong("id"),
-                        rs.getString("name"),
-                        rs.getString("date"),
-                        rs.getString("time")
-                ), id);
+        List<Reservation> reservations = jdbcTemplate.query(sql, rowMapper, id);
         return !reservations.isEmpty();
     }
 }

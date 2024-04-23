@@ -47,4 +47,9 @@ public class ReservationTimeDao {
                 .addValue("start_at", reservationTimeCreateRequest.startAt());
         return simpleJdbcInsert.executeAndReturnKey(parameterSource).longValue();
     }
+
+    public int deleteById(Long id) {
+        String sql = "delete from " + DATABASE + " where id = ?";
+        return jdbcTemplate.update(sql, id);
+    }
 }

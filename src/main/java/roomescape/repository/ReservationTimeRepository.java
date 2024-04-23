@@ -43,4 +43,9 @@ public class ReservationTimeRepository {
         String sql = "select id, start_at from reservation_time";
         return jdbcTemplate.query(sql, actorRowMapper);
     }
+
+    public Long deleteTime(Long id) {
+        String sql = "delete from reservation_time where id = ?";
+        return (long) jdbcTemplate.update(sql, id);
+    }
 }

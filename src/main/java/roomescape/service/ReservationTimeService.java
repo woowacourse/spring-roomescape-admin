@@ -27,4 +27,8 @@ public class ReservationTimeService {
                 .map(ReservationTimeResponse::of)
                 .toList();
     }
+
+    public boolean deleteTime(Long id) {
+        return id.equals(reservationTimeRepository.deleteTime(id));
+    }
 }

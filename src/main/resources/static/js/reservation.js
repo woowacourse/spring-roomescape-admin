@@ -7,6 +7,7 @@ document.addEventListener('DOMContentLoaded', () => {
     document.getElementById('add-button').addEventListener('click', addInputRow);
 
     requestRead(RESERVATION_API_ENDPOINT)
+        .then(data => data["reservations"])
         .then(render)
         .catch(error => console.error('Error fetching reservations:', error));
 
@@ -32,6 +33,7 @@ function render(data) {
 
 function fetchTimes() {
     requestRead(TIME_API_ENDPOINT)
+        .then(data => data["times"])
         .then(data => {
             timesOptions.push(...data);
         })
@@ -175,6 +177,6 @@ function requestRead(endpoint) {
         .then(response => {
             if (response.status === 200) return response.json();
             throw new Error('Read failed');
-        })
-        .then(data => data["reservations"]);
+        });
 }
+

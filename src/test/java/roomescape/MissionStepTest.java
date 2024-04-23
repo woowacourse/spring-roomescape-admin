@@ -73,7 +73,7 @@ public class MissionStepTest {
         RestAssured.given().log().all()
                 .when().delete("/reservations/1")
                 .then().log().all()
-                .statusCode(200);
+                .statusCode(204);
 
         RestAssured.given().log().all()
                 .when().get("/reservations")
@@ -92,5 +92,32 @@ public class MissionStepTest {
         } catch (SQLException e) {
             throw new RuntimeException(e);
         }
+    }
+
+    @DisplayName("h2 데이터베이스를 활용하여 조회, 추가, 삭제 작업을 수행한다.")
+    @Test
+    void five_sixth_test() {
+        Map<String, String> params = new HashMap<>();
+        params.put("name", "브라운");
+        params.put("date", "2999-12-31");
+        params.put("time", "23:59");
+
+        RestAssured.given().log().all()
+                .contentType(ContentType.JSON)
+                .body(params)
+                .when().post("/reservations")
+                .then().log().all()
+                .statusCode(200);
+
+        Integer count = jdbcTemplate.queryForObject("SELECT count(1) from reservation", Integer.class);
+        assertThat(count).isEqualTo(1);
+
+        RestAssured.given().log().all()
+                .when().delete("/reservations/1")
+                .then().log().all()
+                .statusCode(204);
+
+        Integer countAfterDelete = jdbcTemplate.queryForObject("SELECT count(1) from reservation", Integer.class);
+        assertThat(countAfterDelete).isEqualTo(0);
     }
 }

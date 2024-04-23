@@ -6,6 +6,7 @@ import java.util.List;
 import java.util.Optional;
 import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.jdbc.core.JdbcTemplate;
+import org.springframework.jdbc.core.RowMapper;
 import org.springframework.jdbc.support.GeneratedKeyHolder;
 import org.springframework.jdbc.support.KeyHolder;
 import org.springframework.stereotype.Repository;
@@ -40,29 +41,17 @@ public class ReservationRepository {
     public Optional<Reservation> findById(final Long id) {
         try {
             return Optional.ofNullable(jdbcTemplate.queryForObject("""
-                            SELECT
-                            r.id,
-                            r.name,
-                            r.date,
-                            t.id as time_id,
-                            t.start_at
-                            from reservation as r
-                            inner join reservation_time as t
-                            on r.time_id = t.id
-                            where r.id = ?
-                            """,
-                    (resultSet, rowNum) -> {
-                        Reservation reservation = new Reservation(
-                                resultSet.getLong("id"),
-                                resultSet.getString("name"),
-                                resultSet.getDate("date").toLocalDate(),
-                                new Time(
-                                        resultSet.getLong("time_id"),
-                                        resultSet.getString("start_at")
-                                )
-                        );
-                        return reservation;
-                    }, id));
+                    SELECT
+                    r.id,
+                    r.name,
+                    r.date,
+                    t.id as time_id,
+                    t.start_at
+                    from reservation as r
+                    inner join reservation_time as t
+                    on r.time_id = t.id
+                    where r.id = ?
+                    """, createReservationRowMapper(), id));
         } catch (EmptyResultDataAccessException exception) {
             return Optional.empty();
         }
@@ -70,28 +59,29 @@ public class ReservationRepository {
 
     public List<Reservation> findAll() {
         return jdbcTemplate.query("""
-                        SELECT
-                        r.id,
-                        r.name,
-                        r.date,
-                        t.id as time_id,
-                        t.start_at
-                        from reservation as r
-                        inner join reservation_time as t
-                        on r.time_id = t.id
-                        """,
-                (resultSet, rowNum) -> {
-                    Reservation reservation = new Reservation(
-                            resultSet.getLong("id"),
-                            resultSet.getString("name"),
-                            resultSet.getDate("date").toLocalDate(),
-                            new Time(
-                                    resultSet.getLong("time_id"),
-                                    resultSet.getString("start_at")
-                            )
-                    );
-                    return reservation;
-                });
+                SELECT
+                r.id,
+                r.name,
+                r.date,
+                t.id as time_id,
+                t.start_at
+                from reservation as r
+                inner join reservation_time as t
+                on r.time_id = t.id
+                """, createReservationRowMapper());
+    }
+
+    private RowMapper<Reservation> createReservationRowMapper() {
+        return (resultSet, rowNum) ->
+                new Reservation(
+                        resultSet.getLong("id"),
+                        resultSet.getString("name"),
+                        resultSet.getDate("date").toLocalDate(),
+                        new Time(
+                                resultSet.getLong("time_id"),
+                                resultSet.getString("start_at")
+                        )
+                );
     }
 
     public void deleteById(final Long id) {

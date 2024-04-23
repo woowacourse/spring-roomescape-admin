@@ -65,13 +65,11 @@ public class MemoryReservationRepository implements ReservationRepository {
             ps.setLong(3, reservation.time().id());
             return ps;
         };
-
         jdbcTemplate.update(creator, keyHolder);
-        Reservation assignedReservation = reservation.assign(
+
+        return reservation.assign(
                 keyHolder.getKeyAs(Long.class),
                 timeRepository.findById(reservation.time().id()));
-
-        return assignedReservation;
     }
 
     @Override

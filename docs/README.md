@@ -5,3 +5,4 @@
 - [ ] simpleJdbcInsert 적용해보기 https://hyeon9mak.github.io/easy-insert-with-simplejdbcinsert/
 - [ ] 시간 관리 페이지에서 초 단위 뜨는 오류 수정
 - [ ] 시간 관리에서 초단위 뜨는 오류 수정
+- [ ] findById 만약 찾을 수 없는 아이디면?

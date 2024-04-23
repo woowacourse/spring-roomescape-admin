@@ -76,7 +76,7 @@ public class ReservationDao {
     }
 
     public int delete(final long id) {
-        String sql = "DELETE FROM reservation WHERE id = ?"; // TODO: 만약 찾을 수 없는 아이디면?
+        String sql = "DELETE FROM reservation WHERE id = ?";
         return jdbcTemplate.update(sql, id);
     }
 }

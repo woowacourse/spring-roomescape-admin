@@ -1,7 +1,7 @@
 package roomescape.controller;
 
 import java.util.List;
-import org.springframework.http.ResponseEntity;
+import java.util.stream.Collectors;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -9,8 +9,10 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
-import roomescape.dto.CreateReservationRequest;
 import roomescape.domain.Reservation;
+import roomescape.dto.CreateReservationRequest;
+import roomescape.dto.CreateReservationResponse;
+import roomescape.dto.FindReservationResponse;
 import roomescape.service.ReservationService;
 
 @RestController
@@ -24,16 +26,26 @@ public class ReservationController {
     }
 
     @PostMapping
-    public ResponseEntity<Reservation> save(@RequestBody CreateReservationRequest request) {
-        Reservation savedReservation = service.save(request);
-        return ResponseEntity.ok()
-            .header("Location", String.format("/reservations/%d", savedReservation.getId()))
-            .body(savedReservation);
+    public CreateReservationResponse save(@RequestBody CreateReservationRequest request) {
+        Reservation reservation = service.save(request);
+        return new CreateReservationResponse(
+            reservation.getId(),
+            reservation.getName(),
+            reservation.getDate(),
+            reservation.getTime()
+        );
     }
 
     @GetMapping
-    public List<Reservation> findAll() {
-        return service.findAll();
+    public List<FindReservationResponse> findAll() {
+        return service.findAll()
+            .stream()
+            .map(reservation -> new FindReservationResponse(
+                reservation.getId(),
+                reservation.getName(),
+                reservation.getDate(),
+                reservation.getTime()
+            )).collect(Collectors.toList());
     }
 
     @DeleteMapping("/{id}")

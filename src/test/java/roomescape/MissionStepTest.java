@@ -118,7 +118,7 @@ class MissionStepTest {
                 .statusCode(200).extract()
                 .jsonPath().getList(".", ReservationResponse.class);
 
-        final Integer count = jdbcTemplate.queryForObject("SELECT count(1) from reservation", Integer.class);
+        final Integer count = jdbcTemplate.queryForObject("SELECT COUNT(1) FROM reservation", Integer.class);
 
         assertThat(reservations).hasSize(count);
     }
@@ -139,7 +139,7 @@ class MissionStepTest {
                 .statusCode(201)
                 .header("Location", "/reservations/1");
 
-        final Integer count = jdbcTemplate.queryForObject("SELECT count(1) from reservation", Integer.class);
+        final Integer count = jdbcTemplate.queryForObject("SELECT COUNT(1) FROM reservation", Integer.class);
         assertThat(count).isEqualTo(1);
 
         RestAssured.given().log().all()
@@ -147,7 +147,7 @@ class MissionStepTest {
                 .then().log().all()
                 .statusCode(204);
 
-        final Integer countAfterDelete = jdbcTemplate.queryForObject("SELECT count(1) from reservation", Integer.class);
+        final Integer countAfterDelete = jdbcTemplate.queryForObject("SELECT COUNT(1) FROM reservation", Integer.class);
         assertThat(countAfterDelete).isZero();
     }
 }

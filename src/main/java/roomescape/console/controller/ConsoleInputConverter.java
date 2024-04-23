@@ -19,7 +19,11 @@ public class ConsoleInputConverter {
         return new ReservationTimeServiceRequest(toLocalTime(body.get(0)));
     }
 
-    public long toLong(String input) {
+    public Long toId(List<String> body) {
+        return toLong(body.get(0));
+    }
+
+    private long toLong(String input) {
         try {
             return Long.parseLong(input);
         } catch (NumberFormatException e) {

@@ -27,7 +27,7 @@ public class ReservationController {
     @GetMapping
     public ResponseEntity<List<ReservationResponse>> readReservations() {
         List<Reservation> reservations = reservationRepository.findAllReservations();
-        
+
         List<ReservationResponse> reservationResponses = reservations.stream()
                 .map(reservation -> ReservationResponse.from(reservation))
                 .toList();
@@ -37,9 +37,9 @@ public class ReservationController {
 
     @PostMapping
     public ResponseEntity<ReservationResponse> createReservation(@RequestBody ReservationRequest reservationRequest) {
-        ReservationResponse reservationResponse = reservationRepository.createReservation(reservationRequest);
+        Reservation reservation = reservationRepository.createReservation(reservationRequest);
 
-        return ResponseEntity.ok(reservationResponse);
+        return ResponseEntity.ok(ReservationResponse.from(reservation));
     }
 
     @DeleteMapping("/{id}")

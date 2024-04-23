@@ -7,7 +7,6 @@ import org.springframework.jdbc.core.RowMapper;
 import org.springframework.stereotype.Repository;
 import roomescape.domain.Reservation;
 import roomescape.dto.ReservationRequest;
-import roomescape.dto.ReservationResponse;
 
 @Repository
 @Primary
@@ -36,7 +35,7 @@ public class H2ReservationRepository implements ReservationRepository {
     }
 
     @Override
-    public ReservationResponse createReservation(ReservationRequest reservationRequest) {
+    public Reservation createReservation(ReservationRequest reservationRequest) {
         return null;
     }
 

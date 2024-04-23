@@ -6,7 +6,6 @@ import java.util.concurrent.atomic.AtomicLong;
 import org.springframework.stereotype.Repository;
 import roomescape.domain.Reservation;
 import roomescape.dto.ReservationRequest;
-import roomescape.dto.ReservationResponse;
 
 @Repository
 public class InMemoryReservationRepository implements ReservationRepository {
@@ -20,11 +19,11 @@ public class InMemoryReservationRepository implements ReservationRepository {
     }
 
     @Override
-    public ReservationResponse createReservation(ReservationRequest reservationRequest) {
+    public Reservation createReservation(ReservationRequest reservationRequest) {
         Reservation reservation = reservationRequest.toReservation(id.getAndIncrement());
         reservations.add(reservation);
 
-        return ReservationResponse.from(reservation);
+        return reservation;
     }
 
     @Override

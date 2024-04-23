@@ -5,3 +5,9 @@ CREATE TABLE reservation
     date VARCHAR(255) NOT NULL,
     time VARCHAR(255) NOT NULL
 );
+
+CREATE TABLE reservation_time
+(
+    id BIGINT AUTO_INCREMENT PRIMARY KEY,
+    start_at VARCHAR(255) NOT NULL
+);

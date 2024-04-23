@@ -42,7 +42,7 @@ public class ReservationController {
     @PostMapping
     public ResponseEntity<ReservationResponse> add(@RequestBody ReservationRequest reservationRequest) {
         ReservationTime reservationTime = reservationTimeRepository.findById(reservationRequest.timeId())
-                .orElseThrow(() -> new IllegalArgumentException("예약 시간할 수 없는 시간입니다."));
+                .orElseThrow(() -> new IllegalArgumentException("예약할 수 없는 시간입니다."));
         Reservation reservation = reservationRequest.toEntity(reservationTime);
 
         Reservation savedReservation = reservationRepository.save(reservation);

@@ -32,7 +32,7 @@ public class ReservationController {
     @PostMapping
     public ResponseEntity<ReservationResponseDto> createReservation(@RequestBody ReservationCreateDto createDto) {
         ReservationResponseDto responseDto = reservationService.createReservation(createDto);
-        URI reservationURI = URI.create("/reservations/" + responseDto.getId());
+        URI reservationURI = URI.create("/reservations/" + responseDto.id());
         return ResponseEntity.created(reservationURI).body(responseDto);
     }
 

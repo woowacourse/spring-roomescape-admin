@@ -31,8 +31,8 @@ public class ReservationH2Repository implements ReservationRepository {
                     new String[]{"id"}
             );
             ps.setString(1, reservation.name());
-            ps.setString(2, reservation.date().format(DateTimeFormatter.ISO_DATE));
-            ps.setString(3, reservation.time().format(DateTimeFormatter.ofPattern("HH:mm")));
+            ps.setString(2, reservation.date(DateTimeFormatter.ISO_DATE));
+            ps.setString(3, reservation.time(DateTimeFormatter.ofPattern("HH:mm")));
             return ps;
         }, keyHolder);
 

@@ -8,15 +8,25 @@ public class ReservationTime {
     private static final LocalTime START_TIME = LocalTime.of(9, 0);
     private static final LocalTime END_TIME = LocalTime.of(22, 0);
 
+    private final Long id;
     private final LocalTime time;
 
-    public ReservationTime(LocalTime time) {
+    public ReservationTime(Long id, LocalTime time) {
         validateTime(time);
+        this.id = id;
         this.time = time;
+    }
+
+    public ReservationTime(LocalTime time){
+        this(null, time);
     }
 
     public ReservationTime(String time){
         this(LocalTime.parse(time, TIME_FORMATTER));
+    }
+
+    public ReservationTime(Long id, String time){
+        this(id, LocalTime.parse(time, TIME_FORMATTER));
     }
 
     public static String formattedTime(LocalTime otherTime) {
@@ -43,5 +53,9 @@ public class ReservationTime {
 
     public LocalTime getTime() {
         return time;
+    }
+
+    public Long getId() {
+        return id;
     }
 }

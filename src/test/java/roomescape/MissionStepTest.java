@@ -120,4 +120,41 @@ public class MissionStepTest {
                 })
         );
     }
+
+    @Test
+    void 칠단계_페이지() {
+        RestAssured.given().log().all()
+                .when().get("/admin/time")
+                .then().log().all()
+                .statusCode(200);
+    }
+
+    @TestFactory
+    Stream<DynamicTest> 칠단계() {
+        Map<String, String> params = new HashMap<>();
+        params.put("startAt", "10:00");
+
+        return Stream.of(
+                dynamicTest("예약 시간대 1개를 등록한다.", () -> {
+                    RestAssured.given().log().all()
+                            .contentType(ContentType.JSON)
+                            .body(params)
+                            .when().post("/times")
+                            .then().log().all()
+                            .statusCode(200);
+                }),
+                dynamicTest("등록한 예약 시간대를 조회한다.", () -> {
+                    RestAssured.given().log().all()
+                            .when().get("/times")
+                            .then().log().all()
+                            .statusCode(200)
+                            .body("size()", is(1));
+                }),
+                dynamicTest("등록한 예약을 삭제한다", () -> {
+                    RestAssured.given().log().all()
+                            .when().delete("/times/1")
+                            .then().log().all()
+                            .statusCode(204);
+                }));
+    }
 }

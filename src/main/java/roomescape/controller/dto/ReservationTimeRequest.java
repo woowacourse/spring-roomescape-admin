@@ -6,7 +6,7 @@ public record ReservationTimeRequest(
         String startAt) {
 
     public ReservationTime toDomain() {
-        return new ReservationTime(startAt);
+        return new ReservationTime(startAt());
     }
 
 }

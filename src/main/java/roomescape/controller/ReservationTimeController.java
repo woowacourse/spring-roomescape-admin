@@ -12,23 +12,21 @@ import roomescape.controller.dto.ReservationTimeCreateRequest;
 import roomescape.controller.dto.ReservationTimeCreateResponse;
 import roomescape.controller.dto.ReservationTimeFindResponse;
 import roomescape.domain.ReservationTime;
-import roomescape.service.ReservationTimeService;
+import roomescape.repository.ReservationTimes;
 
 @RestController
 @RequestMapping("/times")
 public class ReservationTimeController {
 
-    private final ReservationTimeService reservationTimeService;
+    private final ReservationTimes reservationTimes;
 
-    public ReservationTimeController(ReservationTimeService reservationTimeService) {
-        this.reservationTimeService = reservationTimeService;
+    public ReservationTimeController(ReservationTimes reservationTimes) {
+        this.reservationTimes = reservationTimes;
     }
 
     @GetMapping
     public List<ReservationTimeFindResponse> getReservationTimes() {
-        List<ReservationTime> reservationTimes = reservationTimeService.findReservationTimes();
-
-        return reservationTimes.stream()
+        return reservationTimes.findReservationTimes().stream()
                 .map(ReservationTimeFindResponse::of)
                 .toList();
     }
@@ -37,7 +35,7 @@ public class ReservationTimeController {
     public ReservationTimeCreateResponse createReservationTime(
             @RequestBody ReservationTimeCreateRequest reservationTimeCreateRequest) {
 
-        ReservationTime createdReservationTime = reservationTimeService.createReservationTime(
+        ReservationTime createdReservationTime = reservationTimes.createReservationTime(
                 reservationTimeCreateRequest);
 
         return ReservationTimeCreateResponse.of(createdReservationTime);
@@ -45,6 +43,6 @@ public class ReservationTimeController {
 
     @DeleteMapping("/{id}")
     public void deleteReservationTime(@PathVariable Long id) {
-        reservationTimeService.deleteReservationTimeById(id);
+        reservationTimes.deleteReservationTimeById(id);
     }
 }

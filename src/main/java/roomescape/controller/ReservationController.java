@@ -15,23 +15,22 @@ import roomescape.controller.dto.ReservationCreateRequest;
 import roomescape.controller.dto.ReservationCreateResponse;
 import roomescape.controller.dto.ReservationFindResponse;
 import roomescape.domain.Reservation;
-import roomescape.service.ReservationService;
+import roomescape.repository.Reservations;
 
 @RestController
 @RequestMapping("/reservations")
 public class ReservationController {
 
-    private final ReservationService reservationService;
+    private final Reservations reservations;
 
-    public ReservationController(ReservationService reservationService) {
-        this.reservationService = reservationService;
+    public ReservationController(Reservations reservations) {
+        this.reservations = reservations;
     }
 
     @GetMapping
     @ResponseStatus(value = HttpStatus.OK)
     public List<ReservationFindResponse> getReservation() {
-        List<Reservation> reservations = reservationService.findReservations();
-        return reservations.stream()
+        return reservations.findReservations().stream()
                 .map(ReservationFindResponse::of)
                 .toList();
     }
@@ -40,7 +39,7 @@ public class ReservationController {
     public ResponseEntity<ReservationCreateResponse> createReservation(
             @RequestBody ReservationCreateRequest reservationCreateRequest) {
 
-        Reservation createdReservation = reservationService.createReservation(reservationCreateRequest);
+        Reservation createdReservation = reservations.createReservation(reservationCreateRequest);
 
         return ResponseEntity.status(HttpStatus.OK)
                 .header("Location", "/reservations/" + createdReservation.getId())
@@ -50,6 +49,6 @@ public class ReservationController {
     @DeleteMapping("/{id}")
     @ResponseStatus(value = HttpStatus.NO_CONTENT)
     public void deleteReservation(@PathVariable Long id) {
-        reservationService.deleteReservationById(id);
+        reservations.deleteReservationById(id);
     }
 }

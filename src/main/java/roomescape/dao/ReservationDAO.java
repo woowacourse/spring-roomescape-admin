@@ -49,4 +49,7 @@ public class ReservationDAO {
                 reservationCreateRequestDto.date(), reservationCreateRequestDto.time());
     }
 
+    public void delete(long id) {
+        jdbcTemplate.update("delete from reservation where id = ?", id);
+    }
 }

@@ -19,10 +19,6 @@ public class Reservation {
         this.time = time;
     }
 
-    public boolean isSameReservationId(long id) {
-        return this.id == id;
-    }
-
     public long getId() {
         return id;
     }

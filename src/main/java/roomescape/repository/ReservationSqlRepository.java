@@ -3,22 +3,19 @@ package roomescape.repository;
 import org.springframework.dao.DataAccessException;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;
-import org.springframework.jdbc.support.GeneratedKeyHolder;
-import org.springframework.jdbc.support.KeyHolder;
+import org.springframework.jdbc.core.simple.SimpleJdbcInsert;
 import org.springframework.stereotype.Repository;
 import roomescape.domain.Reservation;
 import roomescape.domain.ReservationTime;
 
-import java.sql.PreparedStatement;
-import java.sql.Statement;
 import java.time.LocalTime;
+import java.util.HashMap;
 import java.util.List;
-import java.util.Objects;
+import java.util.Map;
 
 @Repository
 public class ReservationSqlRepository implements ReservationRepository {
-    private static final KeyHolder keyHolder = new GeneratedKeyHolder();
-    private final RowMapper<Reservation> mapper = (resultset, rowNum) ->
+    private static final RowMapper<Reservation> mapper = (resultset, rowNum) ->
             new Reservation(
                     resultset.getLong("id"),
                     resultset.getString("name"),
@@ -28,9 +25,14 @@ public class ReservationSqlRepository implements ReservationRepository {
                             LocalTime.parse(resultset.getString("time_value"))
                     ));
     private final JdbcTemplate jdbcTemplate;
+    private final SimpleJdbcInsert jdbcInsert;
 
     public ReservationSqlRepository(final JdbcTemplate jdbcTemplate) {
         this.jdbcTemplate = jdbcTemplate;
+        this.jdbcInsert = new SimpleJdbcInsert(this.jdbcTemplate)
+                .withTableName("reservation")
+                .usingColumns("name", "date", "time_id")
+                .usingGeneratedKeyColumns("id");
     }
 
     public List<Reservation> findAll() {
@@ -47,18 +49,18 @@ public class ReservationSqlRepository implements ReservationRepository {
                 """, mapper);
     }
 
-    public long create(Reservation reservation, final long reservationTimeId) {
+    public long create(final Reservation reservation, final long reservationTimeId) {
         try {
-            jdbcTemplate.update(con -> {
-                PreparedStatement ps = con.prepareStatement("insert into reservation (name, date, time_id) values (?, ?, ?)", Statement.RETURN_GENERATED_KEYS);
-                ps.setString(1, reservation.getName());
-                ps.setString(2, reservation.getDate());
-                ps.setLong(3, reservationTimeId);
-                return ps;
-            }, keyHolder);
-            return Objects.requireNonNull(keyHolder.getKey())
-                          .longValue();
+            Map<String, Object> params = new HashMap<>();
+            params.put("id", null);
+            params.put("name", reservation.getName());
+            params.put("date", reservation.getDate());
+            params.put("time_id", reservationTimeId);
+
+            return jdbcInsert.executeAndReturnKey(params)
+                             .longValue();
         } catch (DataAccessException e) {
+            System.out.println(e.getMessage());
             throw new IllegalArgumentException(e);
         }
     }

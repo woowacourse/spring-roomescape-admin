@@ -1,31 +1,33 @@
 package roomescape.repository;
 
 import org.springframework.dao.DataAccessException;
+import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;
-import org.springframework.jdbc.support.GeneratedKeyHolder;
-import org.springframework.jdbc.support.KeyHolder;
+import org.springframework.jdbc.core.namedparam.BeanPropertySqlParameterSource;
+import org.springframework.jdbc.core.simple.SimpleJdbcInsert;
 import org.springframework.stereotype.Repository;
 import roomescape.domain.ReservationTime;
 
-import java.sql.PreparedStatement;
-import java.sql.Statement;
 import java.time.LocalTime;
 import java.util.List;
-import java.util.Objects;
 
 @Repository
 public class ReservationTimeSqlRepository implements ReservationTimeRepository {
-    private static final KeyHolder keyHolder = new GeneratedKeyHolder();
-    private final RowMapper<ReservationTime> mapper = (resultset, rowNum) ->
+    private static final RowMapper<ReservationTime> mapper = (resultset, rowNum) ->
             new ReservationTime(
                     resultset.getLong("id"),
                     LocalTime.parse(resultset.getString("start_at"))
             );
     private final JdbcTemplate jdbcTemplate;
+    private final SimpleJdbcInsert jdbcInsert;
 
     public ReservationTimeSqlRepository(final JdbcTemplate jdbcTemplate) {
         this.jdbcTemplate = jdbcTemplate;
+        this.jdbcInsert = new SimpleJdbcInsert(jdbcTemplate)
+                .withTableName("reservation_time")
+                .usingColumns("start_at")
+                .usingGeneratedKeyColumns("id");
     }
 
     public List<ReservationTime> findAll() {
@@ -34,14 +36,8 @@ public class ReservationTimeSqlRepository implements ReservationTimeRepository {
 
     public long create(ReservationTime reservationTime) {
         try {
-            jdbcTemplate.update(con -> {
-                PreparedStatement ps = con.prepareStatement("insert into reservation_time (start_at) values (?)", Statement.RETURN_GENERATED_KEYS);
-                ps.setString(1, reservationTime.getStartAt()
-                                               .toString());
-                return ps;
-            }, keyHolder);
-            return Objects.requireNonNull(keyHolder.getKey())
-                          .longValue();
+            return jdbcInsert.executeAndReturnKey(new BeanPropertySqlParameterSource(reservationTime))
+                             .longValue();
         } catch (DataAccessException e) {
             throw new IllegalArgumentException(e);
         }
@@ -58,6 +54,10 @@ public class ReservationTimeSqlRepository implements ReservationTimeRepository {
 
     @Override
     public ReservationTime findById(final long id) {
-        return jdbcTemplate.queryForObject("select * from reservation_time where id=?", mapper, id);
+        try {
+            return jdbcTemplate.queryForObject("select * from reservation_time where id=?", mapper, id);
+        } catch (EmptyResultDataAccessException e) {
+            throw new IllegalArgumentException(String.format("%d 는 없는 id 입니다.", id), e);
+        }
     }
 }

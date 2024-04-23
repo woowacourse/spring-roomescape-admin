@@ -76,7 +76,7 @@ class ReservationDaoTest {
     void findById() {
         //given
         final Reservation reservation = Reservation.create("레디", "2024-02-03", "12:00");
-        final Reservation expected1 = reservation.toEntity(1L);
+        final Reservation expected1 = reservation.toReservation(1L);
         final Optional<Reservation> findReservation1 = reservationDao.findById(1L);
 
         //when
@@ -102,7 +102,7 @@ class ReservationDaoTest {
 
         final List<Reservation> expected = new ArrayList<>();
         for (long i = 1; i <= 3; i++) {
-            expected.add(reservations.get((int) (i - 1)).toEntity(i));
+            expected.add(reservations.get((int) (i - 1)).toReservation(i));
         }
 
         //when

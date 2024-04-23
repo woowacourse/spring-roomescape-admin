@@ -36,7 +36,7 @@ public class ReservationDao {
         }, keyHolder);
 
         final long id = Objects.requireNonNull(keyHolder.getKey()).longValue();
-        return reservation.toEntity(id);
+        return reservation.toReservation(id);
     }
 
     public Optional<Reservation> findById(final Long id) {

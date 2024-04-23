@@ -26,7 +26,7 @@ public class Reservation {
         return new Reservation(null, name, date, time);
     }
 
-    public Reservation toEntity(final long id) {
+    public Reservation toReservation(final long id) {
         return new Reservation(id, name, date, time);
     }
 

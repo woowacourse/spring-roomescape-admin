@@ -75,7 +75,6 @@ DELETE /reservations/1 HTTP/1.1
 HTTP/1.1 200
 ```
 
-
 ### 시간 추가 API
 
 - Request
@@ -102,6 +101,7 @@ Content-Type: application/json
 ```
 
 ### 시간 조회 API
+
 - Request
 
 ```
@@ -122,8 +122,8 @@ Content-Type: application/json
 ]
 ```
 
-
 ### 시간 삭제 API
+
 - Request
 
 ```
@@ -131,6 +131,7 @@ DELETE /times/1 HTTP/1.1
 ```
 
 - Response
+
 ```
 HTTP/1.1 200
 ```

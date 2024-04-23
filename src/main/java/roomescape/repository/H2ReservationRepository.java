@@ -55,4 +55,9 @@ public class H2ReservationRepository {
 
         return keyHolder.getKeyAs(Long.class);
     }
+
+    public void deleteById(long id) {
+        String sql = "DELETE FROM reservation WHERE id = ?";
+        jdbcTemplate.update(sql, id);
+    }
 }

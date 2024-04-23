@@ -5,10 +5,12 @@ import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.jdbc.JdbcTest;
+import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.jdbc.core.JdbcTemplate;
 import roomescape.entity.Reservation;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.assertThatThrownBy;
 
 @JdbcTest
 public class H2ReservationRepositoryTest {
@@ -51,5 +53,16 @@ public class H2ReservationRepositoryTest {
         // then
         assertThat(repository.findById(id))
                 .isEqualTo(new Reservation(id, "solar", "2024-04-23", "11:00"));
+    }
+
+    @DisplayName("예약 삭제 테스트")
+    @Test
+    void deleteTest() {
+        // given & when
+        repository.deleteById(0L);
+
+        // then
+        assertThatThrownBy(() -> repository.findById(0L))
+                .isInstanceOf(EmptyResultDataAccessException.class);
     }
 }

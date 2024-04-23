@@ -26,13 +26,13 @@ public class ReservationTimeController {
         this.reservationTimeService = reservationTimeService;
     }
 
-    @GetMapping("")
+    @GetMapping()
     public ResponseEntity<List<ReservationTimeResponseDto>> times() {
         List<ReservationTimeResponseDto> responseBody = reservationTimeService.findTimes();
         return ResponseEntity.ok(responseBody);
     }
 
-    @PostMapping("")
+    @PostMapping()
     public ResponseEntity<ReservationTimeResponseDto> addTime(@RequestBody ReservationTimeRequestDto requestBody) {
         ReservationTimeResponseDto responseBody = reservationTimeService.addTime(requestBody);
         return ResponseEntity

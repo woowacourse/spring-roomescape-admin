@@ -180,7 +180,8 @@ public class MissionStepTest {
     }
 
     @Test
-    void 구단계() {
+    @DisplayName("구단계")
+    void step9() {
         boolean isJdbcTemplateInjected = false;
 
         for (Field field : reservationController.getClass().getDeclaredFields()) {

@@ -2,8 +2,6 @@ package roomescape.service;
 
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.context.SpringBootTest;
 import roomescape.controller.reservation.ReservationRequest;
 import roomescape.controller.reservation.ReservationResponse;
 import roomescape.controller.time.TimeResponse;
@@ -15,14 +13,13 @@ import java.time.LocalTime;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
-@SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 class ReservationMapperTest {
 
-    @Autowired
-    private ReservationMapper reservationMapper;
+    private final ReservationMapper reservationMapper =
+            new ReservationMapper(new ReservationTimeMapper());
 
     @Test
-    @DisplayName("예약 요청 데이터를 예약 엔티티도 변환한다.")
+    @DisplayName("예약 요청 데이터를 예약 엔티티로 변환한다.")
     void mapRequestToEntity() {
         // given
         ReservationRequest request = new ReservationRequest("seyang", LocalDate.of(2024, 4, 22), 1L);
@@ -34,10 +31,10 @@ class ReservationMapperTest {
         );
 
         // when
-        Reservation reservation = reservationMapper.map(request);
+        Reservation actual = reservationMapper.map(request);
 
         // then
-        assertThat(reservation).isEqualTo(expected);
+        assertThat(actual).isEqualTo(expected);
     }
 
     @Test
@@ -58,9 +55,9 @@ class ReservationMapperTest {
         );
 
         // when
-        ReservationResponse response = reservationMapper.map(reservation);
+        ReservationResponse actual = reservationMapper.map(reservation);
 
         // then
-        assertThat(response).isEqualTo(expected);
+        assertThat(actual).isEqualTo(expected);
     }
 }

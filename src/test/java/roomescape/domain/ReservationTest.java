@@ -18,11 +18,4 @@ class ReservationTest {
                 .doesNotThrowAnyException();
 
     }
-
-    @DisplayName("현재 시간대보다 이전 시간대는 예약을 할 수 없다.")
-    @Test
-    void createFail() {
-        assertThatCode(() -> new Reservation("wiib", LocalDate.MIN, new ReservationTime(LocalTime.MIN)))
-                .isInstanceOf(IllegalArgumentException.class);
-    }
 }

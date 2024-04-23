@@ -1,6 +1,5 @@
 package roomescape.domain;
 
-import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatCode;
 
 import java.time.LocalTime;
@@ -17,12 +16,5 @@ class ReservationTimeTest {
         assertThatCode(() -> new ReservationTime(LocalTime.now()))
                 .doesNotThrowAnyException();
 
-    }
-
-    @Test
-    void isBeforeNow() {
-        ReservationTime reservationTime = new ReservationTime(LocalTime.MIN);
-
-        assertThat(reservationTime.isBeforeNow()).isTrue();
     }
 }

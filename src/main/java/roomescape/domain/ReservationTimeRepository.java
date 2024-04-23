@@ -1,14 +1,12 @@
 package roomescape.domain;
 
-import java.sql.Connection;
-import java.sql.PreparedStatement;
-import java.sql.SQLException;
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
+import javax.sql.DataSource;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;
-import org.springframework.jdbc.support.GeneratedKeyHolder;
-import org.springframework.jdbc.support.KeyHolder;
+import org.springframework.jdbc.core.simple.SimpleJdbcInsert;
 import org.springframework.stereotype.Repository;
 
 @Repository
@@ -19,9 +17,13 @@ public class ReservationTimeRepository {
             resultSet.getLong("id"), resultSet.getString("start_at"));
 
     private final JdbcTemplate jdbcTemplate;
+    private final SimpleJdbcInsert simpleJdbcInsert;
 
-    public ReservationTimeRepository(JdbcTemplate jdbcTemplate) {
+    public ReservationTimeRepository(JdbcTemplate jdbcTemplate, DataSource dataSource) {
         this.jdbcTemplate = jdbcTemplate;
+        this.simpleJdbcInsert = new SimpleJdbcInsert(dataSource)
+                .withTableName(TABLE_NAME)
+                .usingGeneratedKeyColumns("id");
     }
 
     public Optional<ReservationTime> findById(Long id) {
@@ -35,19 +37,10 @@ public class ReservationTimeRepository {
     }
 
     public ReservationTime create(ReservationTime reservationTime) {
-        KeyHolder keyHolder = new GeneratedKeyHolder();
-        jdbcTemplate.update(connection -> createPreparedStatementForUpdate(connection, reservationTime), keyHolder);
+        Map<String, String> params = Map.of("start_at", reservationTime.startAt());
+        Long id = simpleJdbcInsert.executeAndReturnKey(params).longValue();
 
-        Long id = keyHolder.getKey().longValue();
         return new ReservationTime(id, reservationTime.startAt());
-    }
-
-    private PreparedStatement createPreparedStatementForUpdate(Connection connection, ReservationTime reservationTime)
-            throws SQLException {
-        PreparedStatement preparedStatement = connection.prepareStatement(
-                "INSERT INTO %s (start_at) VALUES (?)".formatted(TABLE_NAME), new String[]{"id"});
-        preparedStatement.setString(1, reservationTime.startAt());
-        return preparedStatement;
     }
 
     public void deleteById(Long id) {

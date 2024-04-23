@@ -1,14 +1,12 @@
 package roomescape.domain;
 
-import java.sql.Connection;
-import java.sql.PreparedStatement;
-import java.sql.SQLException;
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
+import javax.sql.DataSource;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;
-import org.springframework.jdbc.support.GeneratedKeyHolder;
-import org.springframework.jdbc.support.KeyHolder;
+import org.springframework.jdbc.core.simple.SimpleJdbcInsert;
 import org.springframework.stereotype.Repository;
 
 @Repository
@@ -24,9 +22,13 @@ public class ReservationRepository {
                     resultSet.getString("start_at")));
 
     private final JdbcTemplate jdbcTemplate;
+    private final SimpleJdbcInsert simpleJdbcInsert;
 
-    public ReservationRepository(JdbcTemplate jdbcTemplate) {
+    public ReservationRepository(JdbcTemplate jdbcTemplate, DataSource dataSource) {
         this.jdbcTemplate = jdbcTemplate;
+        this.simpleJdbcInsert = new SimpleJdbcInsert(dataSource)
+                .withTableName(TABLE_NAME)
+                .usingGeneratedKeyColumns("id");
     }
 
     public Optional<Reservation> findById(Long id) {
@@ -59,21 +61,13 @@ public class ReservationRepository {
     }
 
     public Reservation create(Reservation reservation) {
-        KeyHolder keyHolder = new GeneratedKeyHolder();
-        jdbcTemplate.update(connection -> createPreparedStatementForUpdate(connection, reservation), keyHolder);
+        Map<String, Object> params = Map.of(
+                "name", reservation.name(),
+                "date", reservation.date(),
+                "time_id", reservation.time().id());
+        Long id = simpleJdbcInsert.executeAndReturnKey(params).longValue();
 
-        Long id = keyHolder.getKey().longValue();
         return findById(id).orElseThrow(IllegalStateException::new);
-    }
-
-    private PreparedStatement createPreparedStatementForUpdate(Connection connection, Reservation reservation)
-            throws SQLException {
-        PreparedStatement preparedStatement = connection.prepareStatement(
-                "INSERT INTO %s (name, date, time_id) VALUES (?, ?, ?)".formatted(TABLE_NAME), new String[]{"id"});
-        preparedStatement.setString(1, reservation.name());
-        preparedStatement.setString(2, reservation.date());
-        preparedStatement.setLong(3, reservation.time().id());
-        return preparedStatement;
     }
 
     public void deleteById(Long id) {

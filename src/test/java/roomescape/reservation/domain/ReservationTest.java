@@ -15,6 +15,7 @@ class ReservationTest {
                 sameId,
                 "아서",
                 LocalDate.of(2024, 4, 18),
+                null,
                 LocalTime.of(12, 30));
         assertTrue(reservation.isSameId(sameId));
     }

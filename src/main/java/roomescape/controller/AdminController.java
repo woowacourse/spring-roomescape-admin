@@ -8,22 +8,22 @@ import org.springframework.web.bind.annotation.RequestMapping;
 @RequestMapping("/admin")
 public class AdminController {
     @GetMapping
-    public String welcomePage() {
+    public String getWelcomePage() {
         return "redirect:/admin";
     }
 
     @GetMapping
-    public String adminPage() {
+    public String getAdminPage() {
         return "/admin/index";
     }
 
     @GetMapping("/reservation")
-    public String reservationPage() {
+    public String getReservationPage() {
         return "/admin/reservation-legacy";
     }
 
     @GetMapping("/time")
-    public String timePage() {
+    public String getTimePage() {
         return "/admin/time";
     }
 }

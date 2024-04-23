@@ -27,12 +27,12 @@ public class ReservationController {
     }
 
     @GetMapping("/reservations")
-    public ResponseEntity<List<Reservation>> reservations() {
+    public ResponseEntity<List<Reservation>> getReservations() {
         return ResponseEntity.ok(reservationRepository.getAll());
     }
 
     @PostMapping("/reservations")
-    public ResponseEntity<Reservation> reserve(@RequestBody final ReservationRequest reservationRequest) {
+    public ResponseEntity<Reservation> createReservation(@RequestBody final ReservationRequest reservationRequest) {
         Reservation reservation = new Reservation.Builder()
                 .name(reservationRequest.getName())
                 .date(reservationRequest.getDate())
@@ -50,7 +50,7 @@ public class ReservationController {
     }
 
     @DeleteMapping("/reservations/{id}")
-    public ResponseEntity<Void> delete(@PathVariable("id") final long id) {
+    public ResponseEntity<Void> deleteReservation(@PathVariable("id") final long id) {
         reservationRepository.remove(id);
 
         return ResponseEntity.status(NO_CONTENT).build();

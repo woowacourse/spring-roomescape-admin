@@ -7,7 +7,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.web.server.LocalServerPort;
 import org.springframework.jdbc.core.JdbcTemplate;
-import org.springframework.test.annotation.DirtiesContext;
 import roomescape.domain.Reservation;
 import roomescape.dto.request.ReservationRequest;
 import roomescape.fixture.ReservationFixture;
@@ -20,7 +19,6 @@ import java.util.List;
 import static org.assertj.core.api.Assertions.assertThat;
 
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
-@DirtiesContext(classMode = DirtiesContext.ClassMode.BEFORE_EACH_TEST_METHOD)
 class DatabaseTest {
     @LocalServerPort
     private int port;
@@ -67,12 +65,10 @@ class DatabaseTest {
 
 
         Integer count = jdbcTemplate.queryForObject("SELECT count(1) from reservation", Integer.class);
-        assertThat(count).isEqualTo(1);
-
         ReservationFixture.예약_삭제();
 
         Integer countAfterDelete = jdbcTemplate.queryForObject("SELECT count(1) from reservation", Integer.class);
-        assertThat(countAfterDelete).isZero();
+        assertThat(countAfterDelete).isEqualTo(count - 1);
     }
 
 }

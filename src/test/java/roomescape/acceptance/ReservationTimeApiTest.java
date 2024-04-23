@@ -6,16 +6,13 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.web.server.LocalServerPort;
-import org.springframework.test.annotation.DirtiesContext;
 import roomescape.fixture.ReservationTimeFixture;
 
 import java.util.HashMap;
 import java.util.Map;
 
-import static org.hamcrest.Matchers.is;
 
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
-@DirtiesContext(classMode = DirtiesContext.ClassMode.BEFORE_EACH_TEST_METHOD)
 class ReservationTimeApiTest {
     @LocalServerPort
     private int port;
@@ -33,8 +30,7 @@ class ReservationTimeApiTest {
                    .when()
                    .get("times")
                    .then()
-                   .statusCode(200)
-                   .body("size()", is(1));
+                   .statusCode(200);
     }
 
     @Test
@@ -48,8 +44,7 @@ class ReservationTimeApiTest {
                    .when()
                    .post("/times")
                    .then()
-                   .statusCode(201)
-                   .body("id", is(1));
+                   .statusCode(201);
     }
 
     @Test

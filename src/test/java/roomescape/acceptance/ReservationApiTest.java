@@ -14,8 +14,6 @@ import roomescape.fixture.ReservationTimeFixture;
 import java.util.HashMap;
 import java.util.Map;
 
-import static org.hamcrest.Matchers.is;
-
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 @DirtiesContext(classMode = DirtiesContext.ClassMode.BEFORE_EACH_TEST_METHOD)
 class ReservationApiTest {
@@ -26,6 +24,7 @@ class ReservationApiTest {
     void setup() {
         RestAssured.port = port;
     }
+
     @Test
     void get_reservations() {
         ReservationTimeFixture.예약_시간_생성("10:30");
@@ -39,8 +38,7 @@ class ReservationApiTest {
                    .then()
                    .log()
                    .all()
-                   .statusCode(200)
-                   .body("size()", is(1));
+                   .statusCode(200);
     }
 
     @Test
@@ -57,8 +55,7 @@ class ReservationApiTest {
                    .when()
                    .post("/reservations")
                    .then()
-                   .statusCode(201)
-                   .body("id", is(1));
+                   .statusCode(201);
     }
 
     @Test

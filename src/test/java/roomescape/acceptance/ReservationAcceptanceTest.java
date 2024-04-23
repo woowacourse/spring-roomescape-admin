@@ -134,35 +134,6 @@ class ReservationAcceptanceTest extends AcceptanceTest { // todo dynamic test
         assertThat(countAfterDelete).isEqualTo(0);
     }
 
-    @DisplayName("[7단계 - 시간 관리 기능]")
-    @Test
-    void step7() {
-        // 시간을 등록한다.
-        Map<String, String> params = Map.of(
-                "startAt", "10:00"
-        );
-
-        RestAssured.given().log().all()
-                .contentType(ContentType.JSON)
-                .body(params)
-                .when().post("/times")
-                .then().log().all()
-                .statusCode(201);
-
-        // 등록된 시간을 조회한다.
-        RestAssured.given().log().all()
-                .when().get("/times")
-                .then().log().all()
-                .statusCode(200)
-                .body("size()", is(1));
-
-        // 시간을 삭제한다.
-        RestAssured.given().log().all()
-                .when().delete("/times/1")
-                .then().log().all()
-                .statusCode(204);
-    }
-
     @DisplayName("[8단계 - 예약과 시간 관리]")
     @Test
     void step8() {

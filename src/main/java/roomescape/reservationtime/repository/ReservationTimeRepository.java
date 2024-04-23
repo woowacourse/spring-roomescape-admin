@@ -1,8 +1,11 @@
 package roomescape.reservationtime.repository;
 
-import roomescape.reservation.domain.ReservationTime;
+import java.util.List;
+import roomescape.reservationtime.domain.NewReservationTime;
 
 public interface ReservationTimeRepository {
 
-    Long save(ReservationTime reservation);
+    Long save(NewReservationTime newReservationTime);
+
+    List<NewReservationTime> findAll();
 }

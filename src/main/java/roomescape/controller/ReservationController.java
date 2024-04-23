@@ -14,7 +14,6 @@ import roomescape.service.reservation.ReservationCreateService;
 import roomescape.service.reservation.ReservationDeleteService;
 import roomescape.service.reservation.ReservationFindService;
 
-import java.net.URI;
 import java.util.List;
 
 @RestController
@@ -41,8 +40,7 @@ public class ReservationController {
     @PostMapping("/reservations")
     public ResponseEntity<ReservationResponse> addReservation(@RequestBody SaveReservationRequest request) {
         Reservation newReservation = reservationCreateService.createReservation(request);
-        return ResponseEntity.created(URI.create("/reservations/" + newReservation.getId()))
-                .body(ReservationResponse.of(newReservation));
+        return ResponseEntity.ok(ReservationResponse.of(newReservation));
     }
 
     @DeleteMapping("/reservations/{id}")

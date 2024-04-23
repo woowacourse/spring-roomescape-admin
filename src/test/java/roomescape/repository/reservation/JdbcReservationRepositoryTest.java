@@ -10,6 +10,7 @@ import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.jdbc.JdbcTest;
+import org.springframework.jdbc.core.RowMapper;
 import org.springframework.test.context.TestExecutionListeners;
 import org.springframework.test.context.support.DependencyInjectionTestExecutionListener;
 import roomescape.domain.Reservation;
@@ -38,7 +39,8 @@ class JdbcReservationRepositoryTest {
 
     @BeforeEach
     void setUp() {
-        reservationRepository = new JdbcReservationRepository(dataSource);
+        RowMapper<Reservation> rowMapper = new ReservationRowMapper();
+        reservationRepository = new JdbcReservationRepository(dataSource, rowMapper);
         reservationTimeRepository = new JdbcReservationTimeRepository(dataSource);
         initializeTimesData();
     }

@@ -15,12 +15,14 @@ public class JdbcReservationRepository implements ReservationRepository {
 
     private final NamedParameterJdbcTemplate jdbcTemplate;
     private final SimpleJdbcInsert jdbcInsert;
+    private final RowMapper<Reservation> rowMapper;
 
-    public JdbcReservationRepository(DataSource dataSource) {
+    public JdbcReservationRepository(DataSource dataSource, RowMapper<Reservation> rowMapper) {
         this.jdbcTemplate = new NamedParameterJdbcTemplate(dataSource);
         this.jdbcInsert = new SimpleJdbcInsert(dataSource)
                 .withTableName("reservation")
                 .usingGeneratedKeyColumns("id");
+        this.rowMapper = rowMapper;
     }
 
     @Override
@@ -35,7 +37,7 @@ public class JdbcReservationRepository implements ReservationRepository {
                 FROM reservation AS r 
                 INNER JOIN reservation_time AS t ON r.time_id = t.id;
                 """;
-        return jdbcTemplate.query(sql, reservationRowMapper());
+        return jdbcTemplate.query(sql, rowMapper);
     }
 
     @Override
@@ -69,16 +71,6 @@ public class JdbcReservationRepository implements ReservationRepository {
                 WHERE r.id = :savedId;
                 """;
         SqlParameterSource paramMap = new MapSqlParameterSource().addValue("savedId", savedId);
-        return jdbcTemplate.query(sql, paramMap, reservationRowMapper()).get(0);
-    }
-
-    private RowMapper<Reservation> reservationRowMapper() {
-        return (resultSet, rowNum) -> new Reservation(
-                resultSet.getLong("reservation_id"),
-                resultSet.getString("name"),
-                resultSet.getString("date"),
-                resultSet.getLong("time_id"),
-                resultSet.getString("time_value")
-        );
+        return jdbcTemplate.query(sql, paramMap, rowMapper).get(0);
     }
 }

@@ -48,8 +48,8 @@ class DatabaseTest {
 
     @Test
     void validate_database_and_web_read_is_consistency() {
-        ReservationTimeFixture.예약_시간_생성("10:30");
-        jdbcTemplate.update("INSERT INTO reservation (name, date, time_id) VALUES (?, ?, ?)", "브라운", "2023-08-05", "1");
+        final long reservationTimeId = ReservationTimeFixture.예약_시간_생성("10:30");
+        jdbcTemplate.update("INSERT INTO reservation (name, date, time_id) VALUES (?, ?, ?)", "브라운", "2023-08-05", reservationTimeId);
 
         List<Reservation> reservations = ReservationFixture.예약_조회();
 
@@ -60,9 +60,10 @@ class DatabaseTest {
 
     @Test
     void validate_database_and_web_create_delete_is_consistency() {
-        ReservationTimeFixture.예약_시간_생성("10:30");
-        ReservationFixture.예약_생성(new ReservationRequest("브라운", "2023-08-05", 1));
+        final long reservationTimeId = ReservationTimeFixture.예약_시간_생성("10:30");
+        ReservationFixture.예약_생성(new ReservationRequest("브라운", "2023-08-05", reservationTimeId));
 
+        //결국 외부에 침범된다..
 
         Integer count = jdbcTemplate.queryForObject("SELECT count(1) from reservation", Integer.class);
         ReservationFixture.예약_삭제();
@@ -70,5 +71,4 @@ class DatabaseTest {
         Integer countAfterDelete = jdbcTemplate.queryForObject("SELECT count(1) from reservation", Integer.class);
         assertThat(countAfterDelete).isEqualTo(count - 1);
     }
-
 }

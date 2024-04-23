@@ -6,7 +6,6 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.web.server.LocalServerPort;
-import org.springframework.test.annotation.DirtiesContext;
 import roomescape.dto.request.ReservationRequest;
 import roomescape.fixture.ReservationFixture;
 import roomescape.fixture.ReservationTimeFixture;
@@ -15,7 +14,6 @@ import java.util.HashMap;
 import java.util.Map;
 
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
-@DirtiesContext(classMode = DirtiesContext.ClassMode.BEFORE_EACH_TEST_METHOD)
 class ReservationApiTest {
     @LocalServerPort
     private int port;
@@ -27,8 +25,8 @@ class ReservationApiTest {
 
     @Test
     void get_reservations() {
-        ReservationTimeFixture.예약_시간_생성("10:30");
-        ReservationFixture.예약_생성(new ReservationRequest("조이썬", "2023-08-30", 1));
+        final long reservationTimeId = ReservationTimeFixture.예약_시간_생성("10:30");
+        ReservationFixture.예약_생성(new ReservationRequest("조이썬", "2023-08-30", reservationTimeId));
 
         RestAssured.given()
                    .log()
@@ -43,11 +41,11 @@ class ReservationApiTest {
 
     @Test
     void create_reservation() {
-        ReservationTimeFixture.예약_시간_생성("10:30");
+        final long reservationTimeId = ReservationTimeFixture.예약_시간_생성("10:30");
         Map<String, String> params = new HashMap<>();
         params.put("name", "브라운");
         params.put("date", "2023-08-05");
-        params.put("timeId", "1");
+        params.put("timeId", reservationTimeId + "");
 
         RestAssured.given()
                    .contentType(ContentType.JSON)
@@ -60,8 +58,8 @@ class ReservationApiTest {
 
     @Test
     void delete_reservation() {
-        ReservationTimeFixture.예약_시간_생성("10:30");
-        ReservationFixture.예약_생성(new ReservationRequest("조이썬", "2023-08-30", 1));
+        final long reservationTimeId = ReservationTimeFixture.예약_시간_생성("10:30");
+        ReservationFixture.예약_생성(new ReservationRequest("조이썬", "2023-08-30", reservationTimeId));
 
         RestAssured.given()
                    .when()

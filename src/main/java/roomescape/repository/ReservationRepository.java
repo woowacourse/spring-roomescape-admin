@@ -1,27 +1,13 @@
 package roomescape.repository;
 
-import java.util.HashMap;
 import java.util.Map;
-import java.util.concurrent.atomic.AtomicLong;
-import org.springframework.stereotype.Repository;
 import roomescape.domain.Reservation;
 
-@Repository
-public class ReservationRepository {
+public interface ReservationRepository {
 
-    private final AtomicLong id = new AtomicLong(0);
-    private final Map<Long, Reservation> reservations = new HashMap<>();
+    Long add(Reservation reservation);
 
-    public Long add(Reservation reservation) {
-        reservations.put(id.incrementAndGet(), reservation);
-        return id.get();
-    }
+    void remove(Long id);
 
-    public void remove(Long id) {
-        reservations.remove(id);
-    }
-
-    public Map<Long, Reservation> findAllWithId() {
-        return reservations;
-    }
+    Map<Long, Reservation> findAllWithId();
 }

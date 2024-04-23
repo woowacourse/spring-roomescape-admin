@@ -10,9 +10,9 @@ import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import roomescape.domain.Reservation;
 
-class ReservationRepositoryTest {
+class ReservationMemoryRepositoryTest {
 
-    private final ReservationRepository reservationRepository = new ReservationRepository();
+    private final ReservationMemoryRepository reservationMemoryRepository = new ReservationMemoryRepository();
 
     @Test
     @DisplayName("예약을 추가한다.")
@@ -21,9 +21,9 @@ class ReservationRepositoryTest {
                 LocalDate.of(2024, 4, 1),
                 LocalTime.of(14, 40));
 
-        reservationRepository.add(reservation);
+        reservationMemoryRepository.add(reservation);
 
-        assertThat(reservationRepository.findAllWithId().get(1L)).isEqualTo(reservation);
+        assertThat(reservationMemoryRepository.findAllWithId().get(1L)).isEqualTo(reservation);
     }
 
     @Test
@@ -40,13 +40,13 @@ class ReservationRepositoryTest {
                 LocalDate.of(2024, 4, 15),
                 LocalTime.of(17, 13));
 
-        reservationRepository.add(reservation1);
-        reservationRepository.add(reservation2);
-        reservationRepository.add(reservation3);
+        reservationMemoryRepository.add(reservation1);
+        reservationMemoryRepository.add(reservation2);
+        reservationMemoryRepository.add(reservation3);
 
         //when
-        reservationRepository.remove(2L);
-        Map<Long, Reservation> reservations = reservationRepository.findAllWithId();
+        reservationMemoryRepository.remove(2L);
+        Map<Long, Reservation> reservations = reservationMemoryRepository.findAllWithId();
 
         //then
         assertAll(
@@ -70,12 +70,12 @@ class ReservationRepositoryTest {
                 LocalDate.of(2024, 4, 15),
                 LocalTime.of(17, 13));
 
-        reservationRepository.add(reservation1);
-        reservationRepository.add(reservation2);
-        reservationRepository.add(reservation3);
+        reservationMemoryRepository.add(reservation1);
+        reservationMemoryRepository.add(reservation2);
+        reservationMemoryRepository.add(reservation3);
 
         //when
-        Map<Long, Reservation> reservations = reservationRepository.findAllWithId();
+        Map<Long, Reservation> reservations = reservationMemoryRepository.findAllWithId();
 
         //then
         assertAll(

@@ -4,6 +4,7 @@ import java.sql.PreparedStatement;
 import java.time.LocalTime;
 import java.time.format.DateTimeFormatter;
 import java.util.List;
+import java.util.Optional;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;
 import org.springframework.jdbc.support.GeneratedKeyHolder;
@@ -24,9 +25,11 @@ public class ReservationTimeRepository {
         return jdbcTemplate.query("SELECT id, start_at FROM reservation_time", reservationTimeRowMapper());
     }
 
-    public ReservationTime findById(Long id) {
-        return jdbcTemplate.queryForObject("SELECT id, start_at FROM reservation_time WHERE id = ?",
+    public Optional<ReservationTime> findById(Long id) {
+        ReservationTime reservationTime = jdbcTemplate.queryForObject(
+                "SELECT id, start_at FROM reservation_time WHERE id = ?",
                 reservationTimeRowMapper(), id);
+        return Optional.ofNullable(reservationTime);
     }
 
     public ReservationTime create(ReservationTime reservationTime) {
@@ -39,7 +42,7 @@ public class ReservationTimeRepository {
         }, keyHolder);
 
         long id = keyHolder.getKey().longValue();
-        return findById(id);
+        return findById(id).orElseThrow();
     }
 
     private RowMapper<ReservationTime> reservationTimeRowMapper() {

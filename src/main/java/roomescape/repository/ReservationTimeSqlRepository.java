@@ -55,4 +55,9 @@ public class ReservationTimeSqlRepository implements ReservationTimeRepository {
             throw new IllegalArgumentException(e);
         }
     }
+
+    @Override
+    public ReservationTime findById(final long id) {
+        return jdbcTemplate.queryForObject("select * from reservation_time where id=?", mapper, id);
+    }
 }

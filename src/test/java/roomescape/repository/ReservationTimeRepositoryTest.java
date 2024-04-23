@@ -46,4 +46,15 @@ class ReservationTimeRepositoryTest {
         assertThat(reservationTimeRepository.findAll()).isEmpty();
     }
 
+    @Test
+    @DisplayName("id를 통해 해당하는 reservationTime 을 찾는다")
+    void find_reservationTime_by_id() {
+        final var reservationTime = ReservationTime.from("10:00");
+        reservationTimeRepository.create(reservationTime);
+
+        final var result = reservationTimeRepository.findById(1);
+
+        assertThat(result).isEqualTo(reservationTime);
+    }
+
 }

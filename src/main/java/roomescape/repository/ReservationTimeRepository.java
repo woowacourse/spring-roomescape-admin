@@ -10,4 +10,6 @@ public interface ReservationTimeRepository {
     long create(ReservationTime reservationTime);
 
     boolean deleteById(long id);
+
+    ReservationTime findById(long id);
 }

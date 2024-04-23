@@ -2,13 +2,13 @@ package roomescape.repository;
 
 import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.jdbc.core.JdbcTemplate;
-import org.springframework.jdbc.core.PreparedStatementCreator;
-import org.springframework.jdbc.support.GeneratedKeyHolder;
-import org.springframework.jdbc.support.KeyHolder;
+import org.springframework.jdbc.core.namedparam.MapSqlParameterSource;
+import org.springframework.jdbc.core.namedparam.SqlParameterSource;
+import org.springframework.jdbc.core.simple.SimpleJdbcInsert;
 import org.springframework.stereotype.Repository;
 import roomescape.entity.Reservation;
 
-import java.sql.PreparedStatement;
+import javax.sql.DataSource;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.time.LocalDate;
@@ -19,10 +19,14 @@ import java.util.List;
 public class MemoryReservationRepository implements ReservationRepository {
 
     private final JdbcTemplate jdbcTemplate;
+    private final SimpleJdbcInsert simpleJdbcInsert;
     private final ReservationTimeRepository timeRepository;
 
-    public MemoryReservationRepository(JdbcTemplate jdbcTemplate, ReservationTimeRepository timeRepository) {
+    public MemoryReservationRepository(JdbcTemplate jdbcTemplate, DataSource dataSource, ReservationTimeRepository timeRepository) {
         this.jdbcTemplate = jdbcTemplate;
+        this.simpleJdbcInsert = new SimpleJdbcInsert(dataSource)
+                .withTableName("reservation")
+                .usingGeneratedKeyColumns("id");
         this.timeRepository = timeRepository;
     }
 
@@ -55,21 +59,13 @@ public class MemoryReservationRepository implements ReservationRepository {
 
     @Override
     public Reservation save(Reservation reservation) {
-        String sql = "INSERT INTO reservation (name, date, time_id) VALUES (?, ?, ?)";
+        SqlParameterSource params = new MapSqlParameterSource()
+                .addValue("name", reservation.name())
+                .addValue("date", reservation.date().format(DateTimeFormatter.ISO_LOCAL_DATE))
+                .addValue("time_id", reservation.time().id());
+        Long id = simpleJdbcInsert.executeAndReturnKey(params).longValue();
 
-        KeyHolder keyHolder = new GeneratedKeyHolder();
-        PreparedStatementCreator creator = con -> {
-            PreparedStatement ps = con.prepareStatement(sql, new String[]{"id"});
-            ps.setString(1, reservation.name());
-            ps.setString(2, reservation.date().format(DateTimeFormatter.ISO_LOCAL_DATE));
-            ps.setLong(3, reservation.time().id());
-            return ps;
-        };
-        jdbcTemplate.update(creator, keyHolder);
-
-        return reservation.assign(
-                keyHolder.getKeyAs(Long.class),
-                timeRepository.findById(reservation.time().id()));
+        return reservation.assign(id, timeRepository.findById(reservation.time().id()));
     }
 
     @Override

@@ -28,6 +28,7 @@ class ReservationRepositoryTest {
         this.jdbcTemplate = jdbcTemplate;
         this.reservationRepository = new MemoryReservationRepository(
                 jdbcTemplate,
+                dataSource,
                 new MemoryReservationTimeRepository(jdbcTemplate, dataSource));
     }
 

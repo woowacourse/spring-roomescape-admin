@@ -71,7 +71,10 @@ https://docs.spring.io/spring-framework/docs/3.0.x/reference/jdbc.html#jdbc-auto
 
 처음엔 `Spring` 공식 문서 내용을 보고 `KeyHolder` 를 사용하였으며 이후 `SimpleJdbcInsert` 로 변경도 해보았습니다.
 
-최종적으로 `SqlParameterSource - BeanPropertySqlParameterSourcePermalink` 를 사용함으로써 코드를 간결하게 리팩토링 할 수 있었습니다.
+최종적으로 아래 두 가지를 사용하여 코드를 간결하게 리팩토링 할 수 있었습니다.
+
+- `SimpleJdbcInsert - MapSqlParameterSource`
+- `SimpleJdbcInsert - BeanPropertySqlParameterSourcePermalink`
 
 `KeyHolder`
 
@@ -102,6 +105,19 @@ public ReservationTime save(ReservationTime time) {
     Map<String, String> params = new HashMap<>();
     params.put("start_at", time.startAt().format(DateTimeFormatter.ISO_LOCAL_TIME));
 
+    Long id = simpleJdbcInsert.executeAndReturnKey(params).longValue();
+
+    return time.assignId(id);
+}
+```
+
+`SimpleJdbcInsert with BeanPropertyParameterSource`
+
+```java
+
+@Override
+public ReservationTime save(ReservationTime time) {
+    SqlParameterSource params = new BeanPropertySqlParameterSource(time);
     Long id = simpleJdbcInsert.executeAndReturnKey(params).longValue();
 
     return time.assignId(id);

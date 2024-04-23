@@ -27,8 +27,17 @@ public class H2ReservationRepository implements ReservationRepository {
 
     @Override
     public List<Reservation> findAll() {
-        String sql = "SELECT r.id as reservation_id, r.name, r.date, t.id as time_id, t.start_at as time_value " +
-                "FROM reservation as r inner join reservation_time as t on r.time_id = t.id";
+        String sql = """
+                    select 
+                        r.id as reservation_id,
+                        r.name as reservation_name,
+                        r.date as reservation_date,
+                        t.id as time_id,
+                        t.start_at as time_value
+                    from reservation as r
+                    inner join reservation_time as t
+                    on r.time_id = t.id
+                """;
 
         return jdbcTemplate.query(sql, (rs, rowNum) -> new Reservation(
                 rs.getLong("reservation_id"),

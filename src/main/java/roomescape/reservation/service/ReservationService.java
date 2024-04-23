@@ -28,7 +28,9 @@ public class ReservationService {
 
     public ReservationResponse create(ReservationRequest reservationRequest) {
         ReservationTime reservationTime = reservationTimeRepository.findById(reservationRequest.timeId())
-                .orElseThrow(IllegalAccessError::new);
+                .orElseThrow(() -> new IllegalArgumentException(
+                        String.format("잘못된 예약 시간입니다. id=%d를 확인해주세요.", reservationRequest.timeId())
+                ));
 
         Reservation reservation = new Reservation(
                 reservationRequest.name(),
@@ -38,7 +40,9 @@ public class ReservationService {
         return ReservationResponse.from(reservationRepository.save(reservation));
     }
 
-    public boolean delete(long reservationId) {
-        return reservationRepository.deleteById(reservationId);
+    public void delete(long reservationId) {
+        if (!reservationRepository.deleteById(reservationId)) {
+            throw new IllegalArgumentException(String.format("잘못된 예약입니다. id=%d를 확인해주세요.", reservationId));
+        }
     }
 }

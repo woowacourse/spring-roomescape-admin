@@ -27,7 +27,10 @@ public class ReservationTimeService {
                 .toList();
     }
 
-    public boolean delete(long timeId) {
-        return reservationTimeRepository.deleteById(timeId);
+    public void delete(long timeId) {
+        if (!reservationTimeRepository.deleteById(timeId)) {
+            throw new IllegalArgumentException(
+                    String.format("잘못된 예약 시간입니다. id %d를 확인해주세요.", timeId));
+        }
     }
 }

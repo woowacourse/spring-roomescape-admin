@@ -28,16 +28,21 @@ public class ReservationController {
     }
 
     @PostMapping
-    public ResponseEntity<ReservationResponse> create(@RequestBody ReservationRequest reservationRequest) {
-        return ResponseEntity.ok().body(reservationService.create(reservationRequest));
+    public ResponseEntity<?> create(@RequestBody ReservationRequest reservationRequest) {
+        try {
+            return ResponseEntity.ok().body(reservationService.create(reservationRequest));
+        } catch (IllegalArgumentException e) {
+            return ResponseEntity.badRequest().body(e.getMessage());
+        }
     }
 
     @DeleteMapping("/{id}")
-    public ResponseEntity<Void> delete(@PathVariable("id") long reservationId) {
-        boolean deleted = reservationService.delete(reservationId);
-        if (!deleted) {
-            return ResponseEntity.notFound().build();
+    public ResponseEntity<?> delete(@PathVariable("id") long reservationId) {
+        try {
+            reservationService.delete(reservationId);
+            return ResponseEntity.ok().build();
+        } catch (IllegalArgumentException e) {
+            return ResponseEntity.badRequest().build();
         }
-        return ResponseEntity.ok().build();
     }
 }

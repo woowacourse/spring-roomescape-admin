@@ -89,10 +89,9 @@ class ReservationServiceTest {
         reservationRepository.save(new Reservation(id, name, date, reservationTime));
 
         //when
-        boolean deleted = reservationService.delete(id);
+        reservationService.delete(id);
 
         //then
-        assertThat(deleted).isTrue();
         assertThat(reservationRepository.findAll()).hasSize(0);
     }
 }

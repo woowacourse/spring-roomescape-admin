@@ -59,13 +59,13 @@ class ReservationControllerTest extends ControllerTest {
                 .statusCode(200);
     }
 
-    @DisplayName("존재하지 않은 예약 삭제 시 404를 반환한다.")
+    @DisplayName("존재하지 않은 예약 삭제 시 400를 반환한다.")
     @Test
     void reservationNotFound() {
         //given & when & then
         RestAssured.given().log().all()
                 .when().delete("/reservations/6")
                 .then().log().all()
-                .statusCode(404);
+                .statusCode(400);
     }
 }

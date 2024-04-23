@@ -33,11 +33,12 @@ public class ReservationTimeController {
     }
 
     @DeleteMapping("/{id}")
-    public ResponseEntity<Void> delete(@PathVariable("id") long timeId) {
-        boolean deleted = reservationTimeService.delete(timeId);
-        if (!deleted) {
-            return ResponseEntity.notFound().build();
+    public ResponseEntity<?> delete(@PathVariable("id") long timeId) {
+        try {
+            reservationTimeService.delete(timeId);
+            return ResponseEntity.ok().build();
+        } catch (IllegalArgumentException e) {
+            return ResponseEntity.badRequest().body(e.getMessage());
         }
-        return ResponseEntity.ok().build();
     }
 }

@@ -12,14 +12,14 @@ import org.junit.jupiter.api.Test;
 import roomescape.domain.Reservation;
 import roomescape.dto.ReservationRequest;
 import roomescape.dto.ReservationResponse;
-import roomescape.storage.ReservationStorage;
+import roomescape.repository.CollectionReservationRepository;
 
 class ReservationControllerTest {
     @Test
     @DisplayName("예약 정보를 잘 저장하는지 확인한다.")
     void saveReservation() {
-        ReservationStorage reservationStorage = new ReservationStorage();
-        ReservationController reservationController = new ReservationController(reservationStorage);
+        CollectionReservationRepository collectionReservationRepository = new CollectionReservationRepository();
+        ReservationController reservationController = new ReservationController(collectionReservationRepository);
         LocalDate date = LocalDate.now();
         LocalTime time = LocalTime.now();
 
@@ -36,8 +36,8 @@ class ReservationControllerTest {
     @Test
     @DisplayName("예약 정보를 잘 불러오는지 확인한다.")
     void findAllReservations() {
-        ReservationStorage reservationStorage = new ReservationStorage();
-        ReservationController reservationController = new ReservationController(reservationStorage);
+        CollectionReservationRepository collectionReservationRepository = new CollectionReservationRepository();
+        ReservationController reservationController = new ReservationController(collectionReservationRepository);
         List<ReservationResponse> allReservations = reservationController.findAllReservations();
 
         Assertions.assertThat(allReservations)
@@ -48,8 +48,9 @@ class ReservationControllerTest {
     @DisplayName("예약 정보를 잘 지우는지 확인한다.")
     void delete() {
         List<Reservation> reservations = List.of(new Reservation(1, "폴라", LocalDateTime.now()));
-        ReservationStorage reservationStorage = new ReservationStorage(new ArrayList<>(reservations));
-        ReservationController reservationController = new ReservationController(reservationStorage);
+        CollectionReservationRepository collectionReservationRepository = new CollectionReservationRepository(
+                new ArrayList<>(reservations));
+        ReservationController reservationController = new ReservationController(collectionReservationRepository);
 
         reservationController.delete(1L);
         List<ReservationResponse> reservationResponses = reservationController.findAllReservations();

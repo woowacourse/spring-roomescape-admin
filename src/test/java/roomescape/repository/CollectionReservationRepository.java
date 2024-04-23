@@ -1,4 +1,4 @@
-package roomescape.storage;
+package roomescape.repository;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
@@ -6,28 +6,29 @@ import java.time.LocalTime;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.atomic.AtomicLong;
-import org.springframework.stereotype.Component;
+import org.springframework.stereotype.Repository;
 import roomescape.domain.Reservation;
 import roomescape.dto.ReservationRequest;
 
-@Component
-public class ReservationStorage {
+@Repository
+public class CollectionReservationRepository implements ReservationRepository {
     private final List<Reservation> reservations;
     private final AtomicLong atomicLong;
 
-    public ReservationStorage() {
+    public CollectionReservationRepository() {
         this(new ArrayList<>());
     }
 
-    public ReservationStorage(List<Reservation> reservations) {
+    public CollectionReservationRepository(List<Reservation> reservations) {
         this(reservations, new AtomicLong(0));
     }
 
-    public ReservationStorage(List<Reservation> reservations, AtomicLong atomicLong) {
+    public CollectionReservationRepository(List<Reservation> reservations, AtomicLong atomicLong) {
         this.reservations = reservations;
         this.atomicLong = atomicLong;
     }
 
+    @Override
     public Reservation save(ReservationRequest reservationRequest) {
         Reservation reservation = fromRequest(reservationRequest);
         reservations.add(reservation);
@@ -44,12 +45,14 @@ public class ReservationStorage {
         return new Reservation(id, name, dateTime);
     }
 
-    public List<Reservation> findAllReservations() {
+    @Override
+    public List<Reservation> findAll() {
         return reservations.stream()
                 .sorted()
                 .toList();
     }
 
+    @Override
     public void delete(long reservationId) {
         reservations.stream()
                 .filter(reservation -> reservation.hasSameId(reservationId))

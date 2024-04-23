@@ -1,5 +1,7 @@
 package roomescape.domain;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
 import java.util.Objects;
 
 public class Reservation {
@@ -31,8 +33,10 @@ public class Reservation {
         return time;
     }
 
-    public String getTimeAsString() {
-        return time.toString();
+    @JsonIgnore
+    public String getStartAtAsString() {
+        return time.getStartAt()
+                   .toString();
     }
 
     public static Builder builder() {

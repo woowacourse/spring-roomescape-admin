@@ -21,7 +21,7 @@ public class ReservationApiController {
 
     @GetMapping
     public ReservationsResponse reservations() {
-        return new ReservationsResponse(reservationService.getReservations());
+        return reservationService.getReservations();
     }
 
     @PostMapping

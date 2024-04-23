@@ -41,4 +41,8 @@ public class TimeDAO {
         }, keyHolder);
         return new Time(keyHolder.getKey().longValue(), timeCreateRequestDto.startAt());
     }
+
+    public void delete(long id) {
+        jdbcTemplate.update("DELETE FROM reservation_time WHERE id = ?", id);
+    }
 }

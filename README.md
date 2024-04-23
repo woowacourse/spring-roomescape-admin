@@ -13,8 +13,8 @@
 
 ### 2-1. h2 DB setting
 - [x] gradle 의존성 추가: build.gradle 파일을 이용하여 다음 두 의존성을 추가
-   - `[x] spring-boot-stater-jdbc`
-   - `[x] h2`
+   - [x] `spring-boot-stater-jdbc`
+   - [x] `h2`
 - [x] 테이블 스키마 정의
   - [x] 데이터베이스 테이블 생성을 위해 resources/schema.sql 파일을 생성하고 예약 테이블을 생성하는 쿼리를 작성
 - [x] 데이터베이스 설정
@@ -23,6 +23,6 @@
 
 ### 2-2. DB 적용 기능
 
-- [ ] DB에 존재하는 예약 정보 전건 조회
+- [x] DB에 존재하는 예약 정보 전건 조회
 - [ ] DB에 존재하는 예약 정보 단건 조회
 - [ ] DB에 존재하는 예약 정보 삭제

@@ -3,6 +3,9 @@ package roomescape;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.atomic.AtomicLong;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.jdbc.core.JdbcTemplate;
+import org.springframework.jdbc.core.RowMapper;
 import org.springframework.stereotype.Repository;
 
 @Repository
@@ -11,8 +14,22 @@ public class ReservationRepository {
     private final List<Reservation> reservations = new ArrayList<>();
     private final AtomicLong autoIncreaseId = new AtomicLong(1);
 
+    @Autowired
+    private JdbcTemplate jdbcTemplate;
+
+    private final RowMapper<Reservation> actorRowMapper = (resultSet, rowNum) ->
+            new Reservation(
+                    resultSet.getLong("id"),
+                    resultSet.getString("name"),
+                    resultSet.getString("date"),
+                    resultSet.getString("time")
+            );
+
     public List<Reservation> findAllReservations() {
-        return List.copyOf(reservations);
+        String sqlToFind = "SELECT id, name, date, time FROM reservation";
+        return jdbcTemplate.query(
+                sqlToFind,
+                actorRowMapper);
     }
 
     public Reservation createReservation(Reservation reservation) {

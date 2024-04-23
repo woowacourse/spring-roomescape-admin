@@ -25,4 +25,12 @@ class AdminViewControllerTest {
                 .statusCode(200);
     }
 
+    @DisplayName("어드민 타임 페이지 요청 테스트")
+    @Test
+    void adminTimePageTest() {
+        RestAssured.given().log().all()
+                .when().get("/admin/time")
+                .then().log().all()
+                .statusCode(200);
+    }
 }

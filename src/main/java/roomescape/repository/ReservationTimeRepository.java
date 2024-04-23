@@ -1,10 +1,11 @@
 package roomescape.repository;
 
-import java.sql.PreparedStatement;
 import java.util.List;
+import javax.sql.DataSource;
 import org.springframework.jdbc.core.JdbcTemplate;
-import org.springframework.jdbc.support.GeneratedKeyHolder;
-import org.springframework.jdbc.support.KeyHolder;
+import org.springframework.jdbc.core.namedparam.MapSqlParameterSource;
+import org.springframework.jdbc.core.namedparam.SqlParameterSource;
+import org.springframework.jdbc.core.simple.SimpleJdbcInsert;
 import org.springframework.stereotype.Repository;
 import roomescape.domain.ReservationTime;
 
@@ -12,25 +13,19 @@ import roomescape.domain.ReservationTime;
 public class ReservationTimeRepository {
 
     private final JdbcTemplate jdbcTemplate;
+    private final SimpleJdbcInsert jdbcInsert;
 
-    public ReservationTimeRepository(JdbcTemplate jdbcTemplate) {
+    public ReservationTimeRepository(JdbcTemplate jdbcTemplate, DataSource source) {
         this.jdbcTemplate = jdbcTemplate;
+        this.jdbcInsert = new SimpleJdbcInsert(source)
+            .withTableName("reservation_time")
+            .usingGeneratedKeyColumns("id");
     }
 
     public ReservationTime save(ReservationTime time) {
-        KeyHolder keyHolder = new GeneratedKeyHolder();
-
-        jdbcTemplate.update(connection -> {
-            PreparedStatement ps = connection.prepareStatement(
-                "insert into reservation_time (start_at) values (?)",
-                new String[]{"id"}
-            );
-            ps.setString(1, time.getStartAt());
-            return ps;
-        }, keyHolder);
-
-        Long id = keyHolder.getKey().longValue();
-
+        SqlParameterSource params = new MapSqlParameterSource()
+            .addValue("start_at", time.getStartAt());
+        long id = jdbcInsert.executeAndReturnKey(params).longValue();
         return findById(id);
     }
 

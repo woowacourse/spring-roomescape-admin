@@ -2,12 +2,14 @@ package roomescape.repository;
 
 import java.sql.PreparedStatement;
 import java.sql.Time;
+import java.util.List;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;
 import org.springframework.jdbc.support.GeneratedKeyHolder;
 import org.springframework.jdbc.support.KeyHolder;
 import org.springframework.stereotype.Repository;
 import roomescape.dao.ReservationTimeDao;
+import roomescape.model.Reservation;
 import roomescape.model.ReservationTime;
 
 @Repository
@@ -35,5 +37,10 @@ public class ReservationTimeRepository {
         }, keyHolder);
 
         return keyHolder.getKey().longValue();
+    }
+
+    public List<ReservationTime> readTimes() {
+        String sql = "select id, start_at from reservation_time";
+        return jdbcTemplate.query(sql, actorRowMapper);
     }
 }

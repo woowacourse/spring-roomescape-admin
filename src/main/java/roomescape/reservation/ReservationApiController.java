@@ -19,8 +19,8 @@ public class ReservationApiController {
     }
 
     @PostMapping("/reservations")
-    public ResponseEntity<Reservation> create(@RequestBody final ReservationDto reservationDto) {
-        final Reservation newReservation = reservationService.saveReservation(reservationDto);
+    public ResponseEntity<Reservation> create(@RequestBody final ReservationRequest reservationRequest) {
+        final Reservation newReservation = reservationService.saveReservation(reservationRequest);
         return ResponseEntity.ok().body(newReservation);
     }
 

@@ -2,6 +2,7 @@ package roomescape.controller;
 
 import io.restassured.RestAssured;
 import io.restassured.http.ContentType;
+import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -21,7 +22,8 @@ public class ReservationTimeControllerTest {
     private JdbcTemplate jdbcTemplate;
 
     @Test
-    void 칠단계() {
+    @DisplayName("예약 시간 추가, 조회, 삭제를 정상적으로 수행한다.")
+    void ReservationTime_CRUD_Success() {
         Map<String, String> params = new HashMap<>();
         params.put("startAt", "10:00");
 
@@ -37,5 +39,10 @@ public class ReservationTimeControllerTest {
                 .then().log().all()
                 .statusCode(200)
                 .body("size()", is(1));
+
+        RestAssured.given().log().all()
+                .when().delete("/times/1")
+                .then().log().all()
+                .statusCode(200);
     }
 }

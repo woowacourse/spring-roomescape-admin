@@ -8,6 +8,7 @@ import org.springframework.boot.test.autoconfigure.jdbc.JdbcTest;
 import org.springframework.jdbc.core.JdbcTemplate;
 import roomescape.entity.ReservationTime;
 
+import javax.sql.DataSource;
 import java.time.LocalTime;
 import java.time.format.DateTimeFormatter;
 import java.util.List;
@@ -21,9 +22,9 @@ class ReservationTimeRepositoryTest {
     private final ReservationTimeRepository timeRepository;
 
     @Autowired
-    ReservationTimeRepositoryTest(JdbcTemplate jdbcTemplate) {
+    ReservationTimeRepositoryTest(JdbcTemplate jdbcTemplate, DataSource dataSource) {
         this.jdbcTemplate = jdbcTemplate;
-        this.timeRepository = new MemoryReservationTimeRepository(jdbcTemplate);
+        this.timeRepository = new MemoryReservationTimeRepository(jdbcTemplate, dataSource);
     }
 
 

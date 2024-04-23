@@ -2,26 +2,30 @@ package roomescape.repository;
 
 import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.jdbc.core.JdbcTemplate;
-import org.springframework.jdbc.core.PreparedStatementCreator;
-import org.springframework.jdbc.support.GeneratedKeyHolder;
-import org.springframework.jdbc.support.KeyHolder;
+import org.springframework.jdbc.core.simple.SimpleJdbcInsert;
 import org.springframework.stereotype.Repository;
 import roomescape.entity.ReservationTime;
 
-import java.sql.PreparedStatement;
+import javax.sql.DataSource;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.time.LocalTime;
 import java.time.format.DateTimeFormatter;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 @Repository
 public class MemoryReservationTimeRepository implements ReservationTimeRepository {
 
     private final JdbcTemplate jdbcTemplate;
+    private final SimpleJdbcInsert simpleJdbcInsert;
 
-    public MemoryReservationTimeRepository(JdbcTemplate jdbcTemplate) {
+    public MemoryReservationTimeRepository(JdbcTemplate jdbcTemplate, DataSource dataSource) {
         this.jdbcTemplate = jdbcTemplate;
+        this.simpleJdbcInsert = new SimpleJdbcInsert(dataSource)
+                .withTableName("reservation_time")
+                .usingGeneratedKeyColumns("id");
     }
 
     private ReservationTime mapRowTime(ResultSet rs, int rowNum) throws SQLException {
@@ -49,19 +53,15 @@ public class MemoryReservationTimeRepository implements ReservationTimeRepositor
         }
     }
 
+
     @Override
     public ReservationTime save(ReservationTime time) {
-        String sql = "INSERT INTO reservation_time (start_at) VALUES (?);";
+        Map<String, String> params = new HashMap<>();
+        params.put("start_at", time.startAt().format(DateTimeFormatter.ISO_LOCAL_TIME));
 
-        KeyHolder keyHolder = new GeneratedKeyHolder();
-        PreparedStatementCreator creator = con -> {
-            PreparedStatement ps = con.prepareStatement(sql, new String[]{"id"});
-            ps.setString(1, time.startAt().format(DateTimeFormatter.ISO_LOCAL_TIME));
-            return ps;
-        };
-        jdbcTemplate.update(creator, keyHolder);
+        Long id = simpleJdbcInsert.executeAndReturnKey(params).longValue();
 
-        return time.assignId(keyHolder.getKeyAs(Long.class));
+        return time.assignId(id);
     }
 
     @Override

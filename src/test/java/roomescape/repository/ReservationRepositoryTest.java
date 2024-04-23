@@ -9,6 +9,7 @@ import org.springframework.jdbc.core.JdbcTemplate;
 import roomescape.entity.Reservation;
 import roomescape.entity.ReservationTime;
 
+import javax.sql.DataSource;
 import java.time.LocalDate;
 import java.time.LocalTime;
 import java.time.format.DateTimeFormatter;
@@ -23,11 +24,11 @@ class ReservationRepositoryTest {
     private final ReservationRepository reservationRepository;
 
     @Autowired
-    ReservationRepositoryTest(JdbcTemplate jdbcTemplate) {
+    ReservationRepositoryTest(JdbcTemplate jdbcTemplate, DataSource dataSource) {
         this.jdbcTemplate = jdbcTemplate;
         this.reservationRepository = new MemoryReservationRepository(
                 jdbcTemplate,
-                new MemoryReservationTimeRepository(jdbcTemplate));
+                new MemoryReservationTimeRepository(jdbcTemplate, dataSource));
     }
 
     @BeforeEach

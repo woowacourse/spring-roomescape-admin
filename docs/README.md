@@ -59,7 +59,7 @@ erDiagram
 
 따라서 현재 상황에서는 컨트롤러에서 리포지토리를 바로 호출하는 것은 괜찮다고 판단하였으며 이것보다 더 중요한 것은 사실 **의존 관계가 한 방향으로만 흐르게 하는 것** 을 집중하려고 합니다.
 
-### 2.~~~~ Get generated id at inserting data to db
+### 2.Get generated id at inserting data to db
 
 https://docs.spring.io/spring-framework/docs/3.0.x/reference/jdbc.html#jdbc-auto-genereted-keys
 
@@ -69,4 +69,41 @@ https://docs.spring.io/spring-framework/docs/3.0.x/reference/jdbc.html#jdbc-auto
 이렇게 되면 데이터 추가에 대한 쿼리문에 2번 발생하게 된다는 단점이 있었고 `Spring Jdbc` 의 기능을 찾다가 `KeyHolder`, `SimpleJdbcInsert`
 와 `SqlParameterSource` 를 알게되었습니다.
 
-처음엔 `Spring` 공식 문서 내용을 보고 `KeyHolder` 를 사용하였으며 이후 `SimpleJdbcInsert` 로 변경도 해보았습니다. (지금 하는중)
+처음엔 `Spring` 공식 문서 내용을 보고 `KeyHolder` 를 사용하였으며 이후 `SimpleJdbcInsert` 로 변경도 해보았습니다.
+
+최종적으로 `SqlParameterSource - BeanPropertySqlParameterSourcePermalink` 를 사용함으로써 코드를 간결하게 리팩토링 할 수 있었습니다.
+
+`KeyHolder`
+
+```java
+
+@Override
+public ReservationTime save(ReservationTime time) {
+    String sql = "INSERT INTO reservation_time (start_at) VALUES (?);";
+
+    KeyHolder keyHolder = new GeneratedKeyHolder();
+    PreparedStatementCreator creator = con -> {
+        PreparedStatement ps = con.prepareStatement(sql, new String[]{"id"});
+        ps.setString(1, time.startAt().format(DateTimeFormatter.ISO_LOCAL_TIME));
+        return ps;
+    };
+    jdbcTemplate.update(creator, keyHolder);
+
+    return time.assignId(keyHolder.getKeyAs(Long.class));
+}
+```
+
+`SimpleJdbcInsert`
+
+```java
+
+@Override
+public ReservationTime save(ReservationTime time) {
+    Map<String, String> params = new HashMap<>();
+    params.put("start_at", time.startAt().format(DateTimeFormatter.ISO_LOCAL_TIME));
+
+    Long id = simpleJdbcInsert.executeAndReturnKey(params).longValue();
+
+    return time.assignId(id);
+}
+```

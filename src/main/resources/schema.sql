@@ -1,4 +1,5 @@
 DROP TABLE reservation IF EXISTS;
+DROP TABLE reservation_time IF EXISTS;
 
 CREATE TABLE reservation (
     id BIGINT NOT NULL AUTO_INCREMENT,
@@ -6,4 +7,10 @@ CREATE TABLE reservation (
     date VARCHAR(255) NOT NULL,
     time VARCHAR(255) NOT NULL ,
     PRIMARY KEY (id)
-)
+);
+
+CREATE TABLE reservation_time (
+    id BIGINT NOT NULL AUTO_INCREMENT,
+    start_at varchar(255) NOT NULL,
+    PRIMARY KEY (id)
+);

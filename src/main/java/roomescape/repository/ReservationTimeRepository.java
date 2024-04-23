@@ -1,6 +1,5 @@
 package roomescape.repository;
 
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.namedparam.BeanPropertySqlParameterSource;
 import org.springframework.jdbc.core.namedparam.SqlParameterSource;
@@ -13,13 +12,17 @@ import java.util.List;
 @Repository
 public class ReservationTimeRepository {
 
-    @Autowired
-    private JdbcTemplate jdbcTemplate;
+    private final JdbcTemplate jdbcTemplate;
+    private final SimpleJdbcInsert simpleJdbcInsert;
 
-    public ReservationTimeDto add(ReservationTimeDto reservationTimeDto) {
-        SimpleJdbcInsert simpleJdbcInsert = new SimpleJdbcInsert(jdbcTemplate)
+    public ReservationTimeRepository(JdbcTemplate jdbcTemplate) {
+        this.jdbcTemplate = jdbcTemplate;
+        this.simpleJdbcInsert = new SimpleJdbcInsert(jdbcTemplate)
                 .withTableName("reservation_time")
                 .usingGeneratedKeyColumns("id");
+    }
+
+    public ReservationTimeDto add(ReservationTimeDto reservationTimeDto) {
         SqlParameterSource sqlParameterSource = new BeanPropertySqlParameterSource(reservationTimeDto);
         Long id = simpleJdbcInsert.executeAndReturnKey(sqlParameterSource).longValue();
         return new ReservationTimeDto(id, reservationTimeDto.startAt());

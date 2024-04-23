@@ -1,6 +1,5 @@
 package roomescape.repository;
 
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.simple.SimpleJdbcInsert;
 import org.springframework.stereotype.Repository;
@@ -13,13 +12,17 @@ import java.util.Map;
 @Repository
 public class ReservationRepository {
 
-    @Autowired
-    private JdbcTemplate jdbcTemplate;
+    private final JdbcTemplate jdbcTemplate;
+    private final SimpleJdbcInsert simpleJdbcInsert;
 
-    public ReservationRepositoryDto add(ReservationRepositoryDto reservationRepositoryDto) {
-        SimpleJdbcInsert simpleJdbcInsert = new SimpleJdbcInsert(jdbcTemplate)
+    public ReservationRepository(JdbcTemplate jdbcTemplate) {
+        this.jdbcTemplate = jdbcTemplate;
+        this.simpleJdbcInsert = new SimpleJdbcInsert(jdbcTemplate)
                 .withTableName("RESERVATION")
                 .usingGeneratedKeyColumns("id");
+    }
+
+    public ReservationRepositoryDto add(ReservationRepositoryDto reservationRepositoryDto) {
         Map<String, Object> parameters = new HashMap<>();
         parameters.put("name", reservationRepositoryDto.name());
         parameters.put("date", reservationRepositoryDto.date());

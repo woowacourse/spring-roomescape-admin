@@ -76,8 +76,7 @@ class ReservationAcceptanceTest {
                 .then().log().all()
                 .statusCode(204);
 
-        Integer countAfterDelete = countReservation();
-        assertThat(countAfterDelete).isZero();
+        assertThat(countReservation()).isZero();
     }
 
     @DisplayName("예약 삭제 : 해당 예약이 없을 경우")

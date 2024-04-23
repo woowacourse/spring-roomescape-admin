@@ -4,9 +4,8 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.boot.test.autoconfigure.jdbc.JdbcTest;
 import org.springframework.jdbc.core.JdbcTemplate;
-import org.springframework.test.annotation.DirtiesContext;
 import roomescape.entity.ReservationTime;
 
 import java.time.LocalTime;
@@ -15,23 +14,28 @@ import java.util.List;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
-@SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
-@DirtiesContext(classMode = DirtiesContext.ClassMode.BEFORE_EACH_TEST_METHOD)
+@JdbcTest
 class ReservationTimeRepositoryTest {
 
+    private final JdbcTemplate jdbcTemplate;
+    private final ReservationTimeRepository timeRepository;
+
     @Autowired
-    private JdbcTemplate jdbcTemplate;
-    @Autowired
-    private ReservationTimeRepository timeRepository;
+    ReservationTimeRepositoryTest(JdbcTemplate jdbcTemplate) {
+        this.jdbcTemplate = jdbcTemplate;
+        this.timeRepository = new MemoryReservationTimeRepository(jdbcTemplate);
+    }
+
 
     @BeforeEach
     void setUp() {
-        String sql = "INSERT INTO reservation_time (start_at) VALUES (?)";
+        String sql = "INSERT INTO reservation_time (id, start_at) VALUES (?, ?)";
         List<ReservationTime> times = List.of(
-                new ReservationTime(null, LocalTime.of(10, 0)),
-                new ReservationTime(null, LocalTime.of(11, 0))
+                new ReservationTime(11L, LocalTime.of(10, 0)),
+                new ReservationTime(12L, LocalTime.of(11, 0))
         );
         List<Object[]> batchArgs = times.stream().map(time -> new Object[]{
+                time.id(),
                 time.startAt().format(DateTimeFormatter.ISO_LOCAL_TIME)
         }).toList();
         jdbcTemplate.batchUpdate(sql, batchArgs);
@@ -45,8 +49,8 @@ class ReservationTimeRepositoryTest {
 
         // when & then
         assertThat(times).containsExactlyInAnyOrder(
-                new ReservationTime(1L, LocalTime.of(10, 0)),
-                new ReservationTime(2L, LocalTime.of(11, 0))
+                new ReservationTime(11L, LocalTime.of(10, 0)),
+                new ReservationTime(12L, LocalTime.of(11, 0))
         );
     }
 
@@ -59,14 +63,14 @@ class ReservationTimeRepositoryTest {
         );
 
         // when & then
-        assertThat(time.id()).isEqualTo(3L);
+        assertThat(time.id()).isEqualTo(1L);
     }
 
     @Test
     @DisplayName("등록된 예약 시간 번호로 삭제한다.")
     void deleteAssignedId() {
         // given
-        int deletedCount = timeRepository.deleteById(2L);
+        int deletedCount = timeRepository.deleteById(12L);
 
         // when & then
         assertThat(deletedCount).isNotZero();
@@ -76,7 +80,7 @@ class ReservationTimeRepositoryTest {
     @DisplayName("없는 예약 시간 번호로 삭제할 경우 아무런 영향이 없다.")
     void deleteNotExistId() {
         // given
-        int deletedCount = timeRepository.deleteById(3L);
+        int deletedCount = timeRepository.deleteById(13L);
 
         // when & then
         assertThat(deletedCount).isZero();

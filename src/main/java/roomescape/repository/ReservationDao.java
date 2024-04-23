@@ -81,7 +81,17 @@ public class ReservationDao {
     }
 
     public Boolean existByTimeId(Long timeId) {
-        String sql = "SELECT count(id) FROM reservation WHERE time_id = ?";
+        String sql = """
+                SELECT CASE
+                           WHEN EXISTS (
+                               SELECT 1
+                               FROM reservation
+                               WHERE time_id = ?
+                           )
+                           THEN TRUE
+                           ELSE FALSE
+                       END""";
+
         try {
             long count = Objects.requireNonNull(jdbcTemplate.queryForObject(sql, Long.class, timeId));
             return count > 0L;

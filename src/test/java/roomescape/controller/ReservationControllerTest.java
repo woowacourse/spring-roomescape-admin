@@ -70,7 +70,7 @@ public class ReservationControllerTest {
                 .assertThat().statusCode(400).body(is("이름은 1자 이상, 5자 이하여야 합니다."));
     }
 
-    @DisplayName("예약 추가 실패 테스트 - 일정 길이 오류")
+    @DisplayName("예약 추가 실패 테스트 - 일정 오류")
     @Test
     void createInvalidScheduleReservation() {
         //given
@@ -83,6 +83,21 @@ public class ReservationControllerTest {
                 .when().post("/reservations")
                 .then().log().all()
                 .assertThat().statusCode(400).body(is("현재보다 이전으로 일정을 설정할 수 없습니다."));
+    }
+
+    @DisplayName("예약 추가 실패 테스트 - 일정 날짜 오류")
+    @Test
+    void createInvalidScheduleDateReservation() {
+        //given
+        String invalidDate = "03-04";
+
+        //when&then
+        RestAssured.given().log().all()
+                .contentType(ContentType.JSON)
+                .body(new CreateReservationRequest("lini", invalidDate, timeId))
+                .when().post("/reservations")
+                .then().log().all()
+                .assertThat().statusCode(400).body(is("올바르지 않은 날짜입니다. date: '"+invalidDate+"'"));
     }
 
     @DisplayName("모든 예약 내역 조회 테스트")

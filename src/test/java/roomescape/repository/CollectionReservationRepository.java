@@ -6,11 +6,9 @@ import java.time.LocalTime;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.atomic.AtomicLong;
-import org.springframework.stereotype.Repository;
 import roomescape.domain.Reservation;
 import roomescape.dto.ReservationRequest;
 
-@Repository
 public class CollectionReservationRepository implements ReservationRepository {
     private final List<Reservation> reservations;
     private final AtomicLong atomicLong;

@@ -4,7 +4,10 @@ import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertAll;
 
 import java.sql.Connection;
+import java.sql.Date;
+import java.sql.PreparedStatement;
 import java.sql.SQLException;
+import java.sql.Time;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
@@ -21,6 +24,8 @@ import roomescape.model.Reservation;
 @SpringBootTest(webEnvironment = WebEnvironment.RANDOM_PORT)
 @DirtiesContext(classMode = DirtiesContext.ClassMode.BEFORE_EACH_TEST_METHOD)
 class ReservationDaoTest {
+
+    static final String updateSql = "INSERT INTO reservation (name, date, time) VALUES (?, ?, ?)";
 
     @Autowired
     ReservationDao reservationDao;
@@ -77,10 +82,17 @@ class ReservationDaoTest {
         //given
         final Reservation reservation = Reservation.create("레디", "2024-02-03", "12:00");
         final Reservation expected1 = reservation.toReservation(1L);
-        final Optional<Reservation> findReservation1 = reservationDao.findById(1L);
 
         //when
-        reservationDao.save(reservation);
+        jdbcTemplate.update(connection -> {
+            final PreparedStatement preparedStatement = connection.prepareStatement(updateSql, new String[]{"id"});
+            preparedStatement.setString(1, reservation.getName());
+            preparedStatement.setDate(2, Date.valueOf(reservation.getDate()));
+            preparedStatement.setTime(3, Time.valueOf(reservation.getTime()));
+            return preparedStatement;
+        });
+
+        final Optional<Reservation> findReservation1 = reservationDao.findById(1L);
 
         //then
         assertThat(findReservation1).contains(expected1);
@@ -90,14 +102,20 @@ class ReservationDaoTest {
     @Test
     void findAll() {
         //given
+
         final Reservation reservation1 = Reservation.create("레디", "2024-02-04", "12:00");
         final Reservation reservation2 = Reservation.create("감자", "2024-02-04", "13:00");
         final Reservation reservation3 = Reservation.create("오리", "2024-02-04", "14:00");
-
         final List<Reservation> reservations = List.of(reservation1, reservation2, reservation3);
 
         for (final Reservation reservation : reservations) {
-            reservationDao.save(reservation);
+            jdbcTemplate.update(connection -> {
+                final PreparedStatement preparedStatement = connection.prepareStatement(updateSql, new String[]{"id"});
+                preparedStatement.setString(1, reservation.getName());
+                preparedStatement.setDate(2, Date.valueOf(reservation.getDate()));
+                preparedStatement.setTime(3, Time.valueOf(reservation.getTime()));
+                return preparedStatement;
+            });
         }
 
         final List<Reservation> expected = new ArrayList<>();

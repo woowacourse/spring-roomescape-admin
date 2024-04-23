@@ -41,7 +41,7 @@ public class H2ReservationRepository {
                 ), id);
     }
 
-    public Long save(Reservation reservation) {
+    public Reservation save(Reservation reservation) {
         String sql = "INSERT INTO reservation(name, date, time) VALUES(?, ?, ?)";
         KeyHolder keyHolder = new GeneratedKeyHolder();
 
@@ -53,7 +53,8 @@ public class H2ReservationRepository {
             return ps;
         }, keyHolder);
 
-        return keyHolder.getKeyAs(Long.class);
+        Long id = keyHolder.getKeyAs(Long.class);
+        return new Reservation(id, reservation.getName(), reservation.getDate(), reservation.getTime());
     }
 
     public void deleteById(long id) {

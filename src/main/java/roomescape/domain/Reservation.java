@@ -23,10 +23,6 @@ public class Reservation {
         this(null, name, date, time);
     }
 
-    public static Reservation of(Reservation reservation, Long id) {
-        return new Reservation(id, reservation.name, reservation.date, reservation.time);
-    }
-
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;

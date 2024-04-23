@@ -48,7 +48,8 @@ public class H2ReservationRepositoryTest {
     @Test
     void saveTest() {
         // given & when
-        Long id = repository.save(new Reservation("solar", "2024-04-23", "11:00"));
+        Reservation reservation = repository.save(new Reservation("solar", "2024-04-23", "11:00"));
+        Long id = reservation.getId();
 
         // then
         assertThat(repository.findById(id))

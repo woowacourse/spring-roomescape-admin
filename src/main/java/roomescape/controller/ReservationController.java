@@ -35,9 +35,8 @@ public class ReservationController {
 
     @PostMapping
     public ReservationResponse addReservation(@RequestBody ReservationRequest reservationRequest) {
-        Reservation reservation = reservationRequest.toReservation();
-        Long id = repository.save(reservation);
-        return ReservationResponse.from(Reservation.of(reservation, id));
+        Reservation reservation = repository.save(reservationRequest.toReservation());
+        return ReservationResponse.from(reservation);
     }
 
     @DeleteMapping("/{id}")

@@ -24,4 +24,12 @@ public class AdminTest {
                 .then().log().all()
                 .statusCode(200);
     }
+
+    @Test
+    void readTime() {
+        RestAssured.given().log().all()
+                .when().get("/admin/time")
+                .then().log().all()
+                .statusCode(200);
+    }
 }

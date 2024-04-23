@@ -1,10 +1,10 @@
 package roomescape.service;
 
 import java.util.List;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.web.bind.annotation.RequestBody;
 import roomescape.db.ReservationDao;
+import roomescape.db.ReservationTimeDao;
 import roomescape.domain.Reservation;
 import roomescape.dto.ReservationRequest;
 
@@ -12,19 +12,26 @@ import roomescape.dto.ReservationRequest;
 @Service
 public class ReservationService {
 
-    @Autowired
-    ReservationDao reservationDao;
+    private final ReservationDao reservationDao;
+
+    private final ReservationTimeDao reservationTimeDao;
+
+    public ReservationService(final ReservationDao reservationDao, final ReservationTimeDao reservationTimeDao) {
+        this.reservationDao = reservationDao;
+        this.reservationTimeDao = reservationTimeDao;
+    }
+
+    public Reservation create(ReservationRequest reservationRequest) {
+        Reservation reservation = new Reservation(
+                reservationRequest.name(),
+                reservationRequest.date(),
+                reservationTimeDao.findById(reservationRequest.timeId())
+        );
+        return reservationDao.save(reservation);
+    }
 
     public List<Reservation> findAll() {
         return reservationDao.findAll();
-    }
-
-    public Long create(@RequestBody ReservationRequest reservationRequest) {
-        return reservationDao.createReservation(reservationRequest);
-    }
-
-    public Reservation findById(final Long id) {
-        return reservationDao.findById(id);
     }
 
     public void deleteById(final long id) {

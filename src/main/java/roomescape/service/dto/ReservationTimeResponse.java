@@ -4,7 +4,7 @@ import roomescape.domain.ReservationTime;
 
 import java.util.List;
 
-public record ReservationTimeResponse(Long id, String time) {
+public record ReservationTimeResponse(Long id, String startAt) {
 
     public static ReservationTimeResponse of(ReservationTime reservationTime) {
         return new ReservationTimeResponse(reservationTime.getId(), reservationTime.getStartAt());

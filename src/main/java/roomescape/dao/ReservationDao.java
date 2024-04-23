@@ -1,5 +1,6 @@
 package roomescape.dao;
 
+import org.springframework.dao.support.DataAccessUtils;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.support.GeneratedKeyHolder;
 import org.springframework.jdbc.support.KeyHolder;
@@ -59,7 +60,7 @@ public class ReservationDao {
     public Reservation findById(Long id) {
         String findByIdSql = "SELECT r.id as reservation_id, r.name, r.date, t.id as time_id, t.start_at as time_value " +
                 "FROM reservation as r inner join reservation_time as t on r.time_id = t.id WHERE r.id = ?";
-        return jdbcTemplate.queryForObject(findByIdSql,
+        List<Reservation> reservations = jdbcTemplate.query(findByIdSql,
                 (resultSet, numRow) -> new Reservation(
                         resultSet.getLong("reservation_id"),
                         resultSet.getString("name"),
@@ -69,5 +70,6 @@ public class ReservationDao {
                                 resultSet.getString("time_value")
                         )
                 ), id);
+        return DataAccessUtils.singleResult(reservations);
     }
 }

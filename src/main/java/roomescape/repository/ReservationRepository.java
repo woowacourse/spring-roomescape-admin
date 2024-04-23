@@ -2,14 +2,12 @@ package roomescape.repository;
 
 import java.sql.Date;
 import java.sql.PreparedStatement;
-import java.sql.Time;
 import java.util.List;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;
 import org.springframework.jdbc.support.GeneratedKeyHolder;
 import org.springframework.jdbc.support.KeyHolder;
 import org.springframework.stereotype.Repository;
-import roomescape.dao.ReservationDao;
 import roomescape.model.Reservation;
 import roomescape.model.ReservationTime;
 
@@ -35,15 +33,15 @@ public class ReservationRepository {
         this.jdbcTemplate = jdbcTemplate;
     }
 
-    public Long createReservation(ReservationDao reservationDao) {
+    public Long createReservation(Reservation reservation) {
         String sql = "insert into reservation (name, date, time_id) values (?, ?, ?)";
 
         KeyHolder keyHolder = new GeneratedKeyHolder();
         jdbcTemplate.update(connection -> {
             PreparedStatement ps = connection.prepareStatement(sql, new String[]{"id"});
-            ps.setString(1, reservationDao.getName());
-            ps.setDate(2, Date.valueOf(reservationDao.getDate()));
-            ps.setLong(3, reservationDao.getTimeId());
+            ps.setString(1, reservation.getName());
+            ps.setDate(2, Date.valueOf(reservation.getDate()));
+            ps.setLong(3, reservation.getTime().getId());
             return ps;
         }, keyHolder);
 

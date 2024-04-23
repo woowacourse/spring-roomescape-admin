@@ -3,6 +3,7 @@ package roomescape.controller;
 import static org.hamcrest.Matchers.is;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.BDDMockito.given;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.delete;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
@@ -17,7 +18,6 @@ import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
-import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 import roomescape.domain.Reservation;
 import roomescape.service.reservation.ReservationService;
 import roomescape.service.reservation.dto.ReservationRequestDto;
@@ -76,7 +76,7 @@ class ReservationApiControllerTest {
     @DisplayName("/reservations/{id} DELETE 요청 시 200 상태 코드를 응답한다.")
     @Test
     void return_200_status_code_when_delete_request() throws Exception {
-        mockMvc.perform(MockMvcRequestBuilders.delete("/reservations/{id}", 1))
+        mockMvc.perform(delete("/reservations/{id}", 1))
                 .andExpect(status().isOk());
     }
 }

@@ -5,6 +5,7 @@ import static org.hamcrest.Matchers.is;
 
 import io.restassured.RestAssured;
 import io.restassured.http.ContentType;
+import java.lang.reflect.Field;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -22,6 +23,8 @@ class ReservationControllerTest {
 
     @Autowired
     private JdbcTemplate jdbcTemplate;
+    @Autowired
+    private ReservationController reservationController;
 
     @DisplayName("전체 예약 조회")
     @Test
@@ -99,5 +102,20 @@ class ReservationControllerTest {
     private Integer countReservations() {
         String selectSql = "SELECT count(1) from reservation";
         return jdbcTemplate.queryForObject(selectSql, Integer.class);
+    }
+
+    @DisplayName("데이터베이스 관련 로직 분리")
+    @Test
+    void layeredArchitecture() {
+        boolean isJdbcTemplateInjected = false;
+
+        for (Field field : reservationController.getClass().getDeclaredFields()) {
+            if (field.getType().equals(JdbcTemplate.class)) {
+                isJdbcTemplateInjected = true;
+                break;
+            }
+        }
+
+        assertThat(isJdbcTemplateInjected).isFalse();
     }
 }

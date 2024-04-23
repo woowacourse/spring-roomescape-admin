@@ -7,7 +7,7 @@ import org.springframework.web.bind.annotation.RestController;
 import roomescape.domain.ReservationTime;
 import roomescape.service.dto.ReservationTimeResponse;
 import roomescape.service.dto.SaveReservationTimeRequest;
-import roomescape.service.ReservationTimeCreateService;
+import roomescape.service.reservationTime.ReservationTimeCreateService;
 
 @RestController
 public class ReservationTimeController {

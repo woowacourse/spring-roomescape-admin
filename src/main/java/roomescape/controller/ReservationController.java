@@ -10,9 +10,9 @@ import org.springframework.web.bind.annotation.RequestBody;
 import roomescape.domain.Reservation;
 import roomescape.service.dto.ReservationResponse;
 import roomescape.service.dto.SaveReservationRequest;
-import roomescape.service.ReservationCreateService;
-import roomescape.service.ReservationDeleteService;
-import roomescape.service.ReservationFindService;
+import roomescape.service.reservation.ReservationCreateService;
+import roomescape.service.reservation.ReservationDeleteService;
+import roomescape.service.reservation.ReservationFindService;
 
 import java.net.URI;
 import java.util.List;

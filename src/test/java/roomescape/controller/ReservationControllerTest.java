@@ -52,4 +52,14 @@ public class ReservationControllerTest {
                 .statusCode(200)
                 .body("size()", is(1));
     }
+
+    @Test
+    void deleteReservationTest() {
+        createReservationTest();
+
+        RestAssured.given().log().all()
+                .when().delete("/reservations/1")
+                .then().log().all()
+                .statusCode(204);
+    }
 }

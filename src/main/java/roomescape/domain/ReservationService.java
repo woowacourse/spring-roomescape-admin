@@ -14,7 +14,7 @@ public class ReservationService {
         this.reservationRepository = reservationRepository;
     }
 
-    public List<ReservationResponse> getAllReservation() {
+    public List<ReservationResponse> getAllReservations() {
         return reservationRepository.findAll().stream()
                 .map(ReservationResponse::from)
                 .toList();

@@ -30,7 +30,7 @@ public class ReservationTimeDao {
     }
 
     public ReservationTime find(Long id) {
-        String sql = "SELECT id, start_at FROM reservation_time where id = ?";
+        String sql = "SELECT id, start_at FROM reservation_time WHERE id = ?";
         RowMapper<ReservationTime> rowMapper = (resultSet, rowNum) -> new ReservationTime(
                 resultSet.getLong("id"),
                 resultSet.getString("start_at")

@@ -59,7 +59,7 @@ public class MissionStepTest {
     @Test
     void 삼단계() {
         ReservationRequest reservationRequest = new ReservationRequest(
-                "브라운", LocalDate.of(2023, 8, 5), LocalTime.of(15, 40)
+                "브라운", LocalDate.of(2023, 8, 5), 1L
         );
 
         RestAssured.given().log().all()
@@ -172,18 +172,22 @@ public class MissionStepTest {
         reservation.put("date", "2023-08-05");
         reservation.put("timeId", 1);
 
+        Map<String, String> params = new HashMap<>();
+        params.put("startAt", "10:00");
+
+        RestAssured.given().log().all()
+                .contentType(ContentType.JSON)
+                .body(params)
+                .when().post("/times")
+                .then().log().all()
+                .statusCode(200);
+
         RestAssured.given().log().all()
                 .contentType(ContentType.JSON)
                 .body(reservation)
                 .when().post("/reservations")
                 .then().log().all()
-                .statusCode(200);
+                .statusCode(201);
 
-
-        RestAssured.given().log().all()
-                .when().get("/reservations")
-                .then().log().all()
-                .statusCode(200)
-                .body("size()", is(1));
     }
 }

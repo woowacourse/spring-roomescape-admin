@@ -25,17 +25,17 @@ public class ReservationController {
         this.reservationService = reservationService;
     }
 
-    @GetMapping
-    public ResponseEntity<List<ReservationResponse>> readReservations() {
-        return ResponseEntity.ok(reservationService.readReservations());
-    }
-
     @PostMapping
     public ResponseEntity<ReservationResponse> createReservation(@RequestBody ReservationRequest reservationRequest) {
         ReservationResponse reservationResponse = reservationService.createReservation(reservationRequest);
         return ResponseEntity
                 .created(URI.create("/reservations/" + reservationResponse.getId()))
                 .body(reservationResponse);
+    }
+
+    @GetMapping
+    public ResponseEntity<List<ReservationResponse>> readReservations() {
+        return ResponseEntity.ok(reservationService.readReservations());
     }
 
     @DeleteMapping("/{id}")

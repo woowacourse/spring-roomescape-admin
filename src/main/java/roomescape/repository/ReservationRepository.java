@@ -11,17 +11,23 @@ import org.springframework.jdbc.support.KeyHolder;
 import org.springframework.stereotype.Repository;
 import roomescape.dao.ReservationDao;
 import roomescape.model.Reservation;
+import roomescape.model.ReservationTime;
 
 @Repository
 public class ReservationRepository {
     private final JdbcTemplate jdbcTemplate;
 
     private final RowMapper<Reservation> actorRowMapper = (resultSet, rowNum) -> {
+        ReservationTime time = new ReservationTime(
+                resultSet.getLong("time_id"),
+                resultSet.getTime("time_value").toLocalTime()
+        );
+
         return new Reservation(
-                resultSet.getLong("id"),
+                resultSet.getLong("reservation_id"),
                 resultSet.getString("name"),
                 resultSet.getDate("date").toLocalDate(),
-                resultSet.getTime("time").toLocalTime()
+                time
         );
     };
 
@@ -30,14 +36,14 @@ public class ReservationRepository {
     }
 
     public Long createReservation(ReservationDao reservationDao) {
-        String sql = "insert into reservation (name, date, time) values (?, ?, ?)";
+        String sql = "insert into reservation (name, date, time_id) values (?, ?, ?)";
 
         KeyHolder keyHolder = new GeneratedKeyHolder();
         jdbcTemplate.update(connection -> {
             PreparedStatement ps = connection.prepareStatement(sql, new String[]{"id"});
             ps.setString(1, reservationDao.getName());
             ps.setDate(2, Date.valueOf(reservationDao.getDate()));
-            ps.setTime(3, Time.valueOf(reservationDao.getTime()));
+            ps.setLong(3, reservationDao.getTimeId());
             return ps;
         }, keyHolder);
 
@@ -47,6 +53,14 @@ public class ReservationRepository {
     public List<Reservation> readReservations() {
         String sql = "select id, name, date, time from reservation";
         return jdbcTemplate.query(sql, actorRowMapper);
+    }
+
+    public Reservation readReservationById(Long id) {
+        String sql = "SELECT r.id AS reservation_id, r.name, r.date, t.id AS time_id, t.start_at AS time_value \n"
+                + "FROM reservation AS r\n"
+                + "INNER JOIN reservation_time AS t ON r.time_id = t.id \n"
+                + "WHERE r.id = ?\n";
+        return jdbcTemplate.queryForObject(sql, actorRowMapper, id);
     }
 
     public Long deleteReservation(Long id) {

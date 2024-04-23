@@ -24,10 +24,9 @@ public class ReservationService {
 
     public ReservationResponse createReservation(ReservationRequest reservationRequest) {
         ReservationDao reservationDao = new ReservationDao(reservationRequest.getName(),
-                reservationRequest.getDate(), reservationRequest.getTime());
+                reservationRequest.getDate(), reservationRequest.getTimeId());
         Long id = reservationRepository.createReservation(reservationDao);
-        return new ReservationResponse(id, reservationDao.getName(),
-                reservationDao.getDate(), reservationDao. getTime());
+        return ReservationResponse.of(reservationRepository.readReservationById(id));
     }
 
     public boolean deleteReservation(Long id) {

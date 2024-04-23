@@ -4,6 +4,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import static org.junit.jupiter.api.Assertions.assertAll;
 
+import java.time.LocalTime;
 import java.util.List;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
@@ -57,14 +58,15 @@ class ReservationTimeRepositoryTest {
     @DisplayName("예약 시간을 생성한다.")
     void create() {
         // given
-        ReservationTime inputData = new ReservationTime(null, "13:00");
+        LocalTime startAt = LocalTime.parse("13:00");
+        ReservationTime inputData = new ReservationTime(null, startAt);
 
         // when
         ReservationTime createdTime = reservationTimeRepository.create(inputData);
 
         // then
         assertAll(
-                () -> assertThat(createdTime.getStartAt()).isEqualTo("13:00"),
+                () -> assertThat(createdTime.getStartAt()).isEqualTo(startAt),
                 () -> assertThat(reservationTimeRepository.findAll()).hasSize(3)
         );
     }

@@ -1,6 +1,8 @@
 package roomescape.domain;
 
 import java.sql.PreparedStatement;
+import java.time.LocalTime;
+import java.time.format.DateTimeFormatter;
 import java.util.List;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;
@@ -10,6 +12,8 @@ import org.springframework.stereotype.Repository;
 
 @Repository
 public class ReservationTimeRepository {
+    private static final DateTimeFormatter TIME_FORMATTER = DateTimeFormatter.ofPattern("HH:mm");
+
     private JdbcTemplate jdbcTemplate;
 
     public ReservationTimeRepository(JdbcTemplate jdbcTemplate) {
@@ -29,9 +33,8 @@ public class ReservationTimeRepository {
         KeyHolder keyHolder = new GeneratedKeyHolder();
         jdbcTemplate.update(connection -> {
             PreparedStatement ps = connection.prepareStatement(
-                    "INSERT INTO reservation_time (start_at) VALUES (?)",
-                    new String[]{"id"});
-            ps.setString(1, reservationTime.getStartAt());
+                    "INSERT INTO reservation_time (start_at) VALUES (?)", new String[]{"id"});
+            ps.setString(1, reservationTime.getStartAt().format(TIME_FORMATTER));
             return ps;
         }, keyHolder);
 
@@ -41,10 +44,8 @@ public class ReservationTimeRepository {
 
     private RowMapper<ReservationTime> reservationTimeRowMapper() {
         return (resultSet, rowNum) -> {
-            ReservationTime reservationTime = new ReservationTime(
-                    resultSet.getLong("id"),
-                    resultSet.getString("start_at")
-            );
+            LocalTime startAt = LocalTime.parse(resultSet.getString("start_at"));
+            ReservationTime reservationTime = new ReservationTime(resultSet.getLong("id"), startAt);
             return reservationTime;
         };
     }

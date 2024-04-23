@@ -3,6 +3,8 @@ package roomescape.domain;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 
+import java.time.LocalDate;
+import java.time.LocalTime;
 import java.util.List;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
@@ -54,15 +56,17 @@ class ReservationRepositoryTest {
         Reservation findReservations = reservationRepository.findById(2L);
 
         // then
-        assertThat(findReservations.getName()).isEqualTo("엘라");
+        assertThat(findReservations.getName()).isEqualTo(new Name("엘라"));
     }
 
     @Test
     @DisplayName("새로운 예약을 생성한다.")
     void create() {
         // given
-        ReservationTime reservationTime = new ReservationTime(1L, "10:00");
-        Reservation createReservation = new Reservation(null, "브라운", "2023-08-05", reservationTime);
+        Name name = new Name("브라운");
+        LocalDate date = LocalDate.parse("2023-08-05");
+        ReservationTime reservationTime = new ReservationTime(1L, LocalTime.parse("10:00"));
+        Reservation createReservation = new Reservation(null, name, date, reservationTime);
 
         // when
         reservationRepository.create(createReservation);

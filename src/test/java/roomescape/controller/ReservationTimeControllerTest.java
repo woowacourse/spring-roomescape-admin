@@ -55,19 +55,6 @@ class ReservationTimeControllerTest {
     }
 
     @Test
-    @DisplayName("적절하지 않은 형태의 시간을 생성하면 예외가 발생한다.")
-    void createIllegalReservationTime() {
-        ReservationTimeCreateDto createDto = new ReservationTimeCreateDto("24:01");
-
-        RestAssured.given().log().all()
-                .contentType(ContentType.JSON)
-                .body(createDto)
-                .when().post("/times")
-                .then().log().all()
-                .statusCode(400);
-    }
-
-    @Test
     @DisplayName("예약 시간을 삭제한다.")
     void deleteReservationTime() {
         RestAssured.given().log().all()

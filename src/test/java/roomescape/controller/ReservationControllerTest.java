@@ -68,7 +68,7 @@ class ReservationControllerTest {
     @Test
     @DisplayName("예약을 생성한다.")
     void createReservation() {
-        ReservationCreateDto createDto = new ReservationCreateDto("브라운", "2023-08-05", 1);
+        ReservationCreateDto createDto = new ReservationCreateDto("브라운", "2023-08-05", 1L);
 
         RestAssured.given().log().all()
                 .contentType(ContentType.JSON)

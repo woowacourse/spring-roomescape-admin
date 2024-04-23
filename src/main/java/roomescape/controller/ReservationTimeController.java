@@ -24,7 +24,7 @@ public class ReservationTimeController {
         this.reservationTimeService = reservationTimeService;
     }
 
-    @GetMapping("/times")
+    @GetMapping
     public ResponseEntity<List<ReservationTimeResponseDto>> readReservationTimes() {
         List<ReservationTimeResponseDto> responseDtos = reservationTimeService.getAllReservationTimes();
         return ResponseEntity.ok(responseDtos);

@@ -75,6 +75,16 @@ class ReservationTimeAcceptanceTest {
         assertThat(countReservationTimes()).isZero();
     }
 
+    @DisplayName("예약 시간 삭제 : 해당 예약시 없을 경우")
+    @Test
+    void delete_reservationTime_whenNotExist() {
+        RestAssured.given().log().all()
+                .when().delete("/times/2")
+                .then().log().all()
+                .statusCode(400)
+                .body("message", is("해당 예약 시간을 찾을 수 없습니다."));
+    }
+
     private Integer countReservationTimes() {
         return jdbcTemplate.queryForObject("SELECT count(1) from reservation_time", Integer.class);
     }

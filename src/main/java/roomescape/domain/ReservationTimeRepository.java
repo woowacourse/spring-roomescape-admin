@@ -4,6 +4,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 import javax.sql.DataSource;
+import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;
 import org.springframework.jdbc.core.simple.SimpleJdbcInsert;
@@ -27,9 +28,13 @@ public class ReservationTimeRepository {
     }
 
     public Optional<ReservationTime> findById(Long id) {
-        ReservationTime reservationTime = jdbcTemplate.queryForObject(
-                "SELECT id, start_at FROM %s WHERE id = ?".formatted(TABLE_NAME), ROW_MAPPER, id);
-        return Optional.ofNullable(reservationTime);
+        try {
+            ReservationTime reservationTime = jdbcTemplate.queryForObject(
+                    "SELECT id, start_at FROM %s WHERE id = ?".formatted(TABLE_NAME), ROW_MAPPER, id);
+            return Optional.ofNullable(reservationTime);
+        } catch (EmptyResultDataAccessException exception) {
+            return Optional.empty();
+        }
     }
 
     public List<ReservationTime> findAll() {

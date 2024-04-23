@@ -45,15 +45,16 @@ public class ReservationDao {
     }
 
     public List<Reservation> findAll() {
-        return jdbcTemplate.query("SELECT \n" +
-                "r.id as reservation_id, \n" +
-                "r.name, \n" +
-                "r.date, \n" +
-                "t.id as time_id, \n" +
-                "t.start_at as time_value \n" +
-                "FROM reservation as r \n" +
-                "inner join reservation_time as t \n" +
-                "on r.time_id = t.id\n", reservationRowMapper);
+        return jdbcTemplate.query("""
+                SELECT
+                r.id as reservation_id,
+                r.name,
+                r.date,
+                t.id as time_id,
+                t.start_at as time_value
+                FROM reservation as r
+                inner join reservation_time as t
+                on r.time_id = t.id""", reservationRowMapper);
     }
 
     public void deleteById(Long id) {

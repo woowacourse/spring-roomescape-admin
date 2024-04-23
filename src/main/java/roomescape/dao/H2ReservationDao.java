@@ -1,7 +1,9 @@
 package roomescape.dao;
 
 import java.util.List;
+import java.util.Map;
 import org.springframework.jdbc.core.JdbcTemplate;
+import org.springframework.jdbc.core.simple.SimpleJdbcInsert;
 import org.springframework.stereotype.Repository;
 import roomescape.domain.Reservation;
 import roomescape.service.dto.ReservationCreationDto;
@@ -9,9 +11,14 @@ import roomescape.service.dto.ReservationCreationDto;
 @Repository
 public class H2ReservationDao implements ReservationDao {
     private final JdbcTemplate jdbcTemplate;
+    private final SimpleJdbcInsert simpleJdbcInsert;
 
     public H2ReservationDao(JdbcTemplate jdbcTemplate) {
         this.jdbcTemplate = jdbcTemplate;
+        this.simpleJdbcInsert = new SimpleJdbcInsert(jdbcTemplate)
+                .withTableName("reservation")
+                .usingGeneratedKeyColumns("id")
+                .usingColumns("name", "date", "time");
     }
 
     @Override
@@ -27,17 +34,28 @@ public class H2ReservationDao implements ReservationDao {
 
     @Override
     public Reservation add(ReservationCreationDto request) {
-        return null;
+        Map<String, Object> parameters = Map.of(
+                "name", request.name(),
+                "date", request.date(),
+                "time", request.time()
+        );
+        Number key = simpleJdbcInsert.executeAndReturnKey(parameters);
+        return new Reservation(
+                key.longValue(), request.name(),
+                request.date(), request.time()
+        );
     }
 
     @Override
     public void delete(Long id) {
-
+        String sql = "DELETE FROM reservation WHERE id = ?";
+        jdbcTemplate.update(sql, id);
     }
 
     @Override
     public void deleteAll() {
-
+        String sql = "DELETE FROM reservation";
+        jdbcTemplate.update(sql);
     }
 
     @Override

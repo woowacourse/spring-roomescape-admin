@@ -40,6 +40,21 @@ class ReservationTimeControllerTest {
                 .then().log().all().statusCode(200).body("id", is(greaterThan(0)));
     }
 
+    @DisplayName("시간 추가 실패 테스트")
+    @Test
+    void createInvalidScheduleDateReservation() {
+        //given
+        String invalidTime = "";
+
+        //when&then
+        RestAssured.given().log().all()
+                .contentType(ContentType.JSON)
+                .body(new ReservationTimeRequest(invalidTime))
+                .when().post("/times")
+                .then().log().all()
+                .assertThat().statusCode(400).body(is("올바르지 않은 시간입니다. time: '" + invalidTime + "'"));
+    }
+
     @DisplayName("등록된 시간 내역을 조회한다.")
     @Test
     void findAllReservationTime() {

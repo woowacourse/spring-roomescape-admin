@@ -5,9 +5,9 @@ import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 import roomescape.domain.ReservationTime;
-import roomescape.dto.request.RequestTimes;
+import roomescape.dto.request.TimesRequest;
 import roomescape.dto.ReservationTimeDto;
-import roomescape.dto.response.ResponseTimes;
+import roomescape.dto.response.TimesResponse;
 
 import java.util.List;
 
@@ -20,21 +20,21 @@ public class TimesController {
 
     @GetMapping
     @ResponseBody
-    public List<ResponseTimes> times() {
+    public List<TimesResponse> times() {
         return reservationTimeRepository.findAll()
                 .stream()
                 .map(ReservationTimeDto::toDomain)
-                .map(ResponseTimes::new)
+                .map(TimesResponse::new)
                 .toList();
     }
 
     @PostMapping
     @ResponseBody
-    public ResponseTimes addTimes(@RequestBody RequestTimes requestTimes) {
-        ReservationTimeDto reservationTimeDto = new ReservationTimeDto(null, requestTimes.startAt());
+    public TimesResponse addTimes(@RequestBody TimesRequest timesRequest) {
+        ReservationTimeDto reservationTimeDto = new ReservationTimeDto(null, timesRequest.startAt());
         ReservationTimeDto newReservationTimeDto = reservationTimeRepository.add(reservationTimeDto);
         ReservationTime newReservationTime = newReservationTimeDto.toDomain();
-        return new ResponseTimes(newReservationTime);
+        return new TimesResponse(newReservationTime);
     }
 
     @DeleteMapping("/{id}")

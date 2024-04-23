@@ -7,8 +7,8 @@ import org.springframework.web.bind.annotation.*;
 import roomescape.domain.Reservation;
 import roomescape.dto.ReservationRepositoryDto;
 import roomescape.dto.ReservationTimeDto;
-import roomescape.dto.request.RequestReservation;
-import roomescape.dto.response.ResponseReservation;
+import roomescape.dto.request.ReservationsRequest;
+import roomescape.dto.response.ReservationsResponse;
 import roomescape.times.ReservationTimeRepository;
 
 import java.util.List;
@@ -24,21 +24,21 @@ public class ReservationsController {
 
     @GetMapping
     @ResponseBody
-    public List<ResponseReservation> reservations() {
+    public List<ReservationsResponse> reservations() {
         return reservationRepository.findAll()
                 .stream()
                 .map(this::reservationRepositoryDtoToReservation)
-                .map(ResponseReservation::new)
+                .map(ReservationsResponse::new)
                 .toList();
     }
 
     @PostMapping
     @ResponseBody
-    public ResponseReservation addReservationInfo(@RequestBody RequestReservation requestReservation) {
-        ReservationRepositoryDto requestReservationDto = new ReservationRepositoryDto(null, requestReservation.name(), requestReservation.date(), requestReservation.timeId());
+    public ReservationsResponse addReservationInfo(@RequestBody ReservationsRequest reservationsRequest) {
+        ReservationRepositoryDto requestReservationDto = new ReservationRepositoryDto(null, reservationsRequest.name(), reservationsRequest.date(), reservationsRequest.timeId());
         ReservationRepositoryDto newReservationDto = reservationRepository.add(requestReservationDto);
         Reservation newReservation = reservationRepositoryDtoToReservation(newReservationDto);
-        return new ResponseReservation(newReservation);
+        return new ReservationsResponse(newReservation);
     }
 
     private Reservation reservationRepositoryDtoToReservation(ReservationRepositoryDto reservationRepositoryDto) {

@@ -2,9 +2,9 @@ package roomescape.dto.response;
 
 import roomescape.domain.ReservationTime;
 
-public record ResponseTimes(Long id, String startAt) {
+public record TimesResponse(Long id, String startAt) {
 
-    public ResponseTimes(ReservationTime reservationTime) {
+    public TimesResponse(ReservationTime reservationTime) {
         this(reservationTime.getId(), reservationTime.getStartAt());
     }
 }

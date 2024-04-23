@@ -3,6 +3,7 @@ package roomescape.service;
 import org.springframework.stereotype.Service;
 import roomescape.dto.ReservationResponse;
 import roomescape.dto.ReservationSaveRequest;
+import roomescape.exception.ResourceNotFoundException;
 import roomescape.model.Reservation;
 import roomescape.model.ReservationTime;
 import roomescape.repository.ReservationDao;
@@ -31,7 +32,7 @@ public class ReservationService {
 
     public ReservationResponse saveReservation(final ReservationSaveRequest reservationSaveRequest) {
         final ReservationTime reservationTime = reservationTimeDao.findById(reservationSaveRequest.timeId())
-                .orElseThrow(() -> new IllegalArgumentException("존재하지 않는 예약 시간입니다."));
+                .orElseThrow(() -> new ResourceNotFoundException("존재하지 않는 예약 시간입니다."));
         final ReservationSaveDto reservationSaveDto = ReservationSaveDto.of(reservationSaveRequest, reservationTime);
         final Reservation savedReservation = reservationDao.save(reservationSaveDto);
         return ReservationResponse.from(savedReservation);
@@ -42,6 +43,6 @@ public class ReservationService {
         if (isDeleted) {
             return;
         }
-        throw new IllegalArgumentException("존재하지 않는 예약 시간입니다.");
+        throw new ResourceNotFoundException("존재하지 않는 예약 시간입니다.");
     }
 }

@@ -5,6 +5,7 @@ import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import roomescape.dto.ReservationTimeResponse;
 import roomescape.dto.ReservationTimeSaveRequest;
+import roomescape.exception.ResourceNotFoundException;
 import roomescape.repository.ReservationTimeDao;
 import roomescape.repository.dto.ReservationTimeSaveDto;
 import roomescape.testutil.ReservationTimeMemoryDao;
@@ -52,7 +53,7 @@ class ReservationTimeServiceTest {
     @Test
     void deleteTimeNotFound() {
         assertThatThrownBy(() -> reservationTimeService.deleteTime(3L))
-                .isInstanceOf(IllegalArgumentException.class);
+                .isInstanceOf(ResourceNotFoundException.class);
     }
 }
 

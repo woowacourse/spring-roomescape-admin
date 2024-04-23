@@ -6,6 +6,7 @@ import org.junit.jupiter.api.Test;
 import roomescape.dto.ReservationResponse;
 import roomescape.dto.ReservationSaveRequest;
 import roomescape.dto.ReservationTimeResponse;
+import roomescape.exception.ResourceNotFoundException;
 import roomescape.model.ReservationTime;
 import roomescape.repository.ReservationDao;
 import roomescape.repository.ReservationTimeDao;
@@ -54,7 +55,7 @@ class ReservationServiceTest {
         final ReservationSaveRequest reservationSaveRequest = new ReservationSaveRequest("고구마", "2025-11-11", 2L);
         assertThatThrownBy(() -> {
             reservationService.saveReservation(reservationSaveRequest);
-        }).isInstanceOf(IllegalArgumentException.class);
+        }).isInstanceOf(ResourceNotFoundException.class);
     }
 
     @DisplayName("예약 삭제")
@@ -69,6 +70,6 @@ class ReservationServiceTest {
     void deleteReservationNotFound() {
         assertThatThrownBy(() -> {
             reservationService.deleteReservation(2L);
-        }).isInstanceOf(IllegalArgumentException.class);
+        }).isInstanceOf(ResourceNotFoundException.class);
     }
 }

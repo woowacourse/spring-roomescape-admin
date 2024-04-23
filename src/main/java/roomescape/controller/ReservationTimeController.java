@@ -1,7 +1,5 @@
 package roomescape.controller;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -15,7 +13,6 @@ import java.util.List;
 @RequestMapping("/times")
 public class ReservationTimeController {
 
-    private final Logger logger = LoggerFactory.getLogger(getClass());
     private final ReservationTimeService reservationTimeService;
 
     public ReservationTimeController(final ReservationTimeService reservationTimeService) {
@@ -37,12 +34,7 @@ public class ReservationTimeController {
 
     @DeleteMapping("/{id}")
     public ResponseEntity<Void> deleteTime(final @PathVariable("id") Long id) {
-        try {
-            reservationTimeService.deleteTime(id);
-            return ResponseEntity.noContent().build();
-        } catch (RuntimeException e) {
-            logger.error("예약 시간 삭제 실패", e);
-            return ResponseEntity.notFound().build();
-        }
+        reservationTimeService.deleteTime(id);
+        return ResponseEntity.noContent().build();
     }
 }

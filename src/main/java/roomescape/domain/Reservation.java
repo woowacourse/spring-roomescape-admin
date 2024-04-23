@@ -15,6 +15,10 @@ public class Reservation {
         this.time = time;
     }
 
+    public Reservation(Name name, LocalDate date, ReservationTime time) {
+        this(null, name, date, time);
+    }
+
     public Long getId() {
         return id;
     }

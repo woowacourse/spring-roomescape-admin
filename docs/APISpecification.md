@@ -94,3 +94,52 @@ DELETE /reservations/{id} HTTP/1.1
 ```
 HTTP/1.1 204
 ```
+---
+
+## 7단계
+### 시간 추가
+#### Request
+```http request
+POST /times HTTP/1.1
+content-type: application/json
+
+{
+    "startAt": "10:00"
+}
+```
+
+#### Response
+```http request
+HTTP/1.1 201
+Location: /times/{id}
+```
+
+### 시간 조회
+#### Request
+```http request
+GET /times HTTP/1.1
+```
+#### Response
+
+```http request
+HTTP/1.1 200
+Content-Type: application/json
+
+[
+    {
+        "id": 1,
+        "startAt": "10:00"
+    }
+]
+```
+
+### 시간 삭제
+#### Request
+```http request
+DELETE /times/1 HTTP/1.1
+```
+#### Response
+
+```http request
+HTTP/1.1 204
+```

@@ -9,7 +9,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
 import roomescape.time.domain.Time;
-import roomescape.time.dto.TimeRequest;
+import roomescape.time.dto.TimeSaveRequest;
 import roomescape.time.service.TimeService;
 
 @RestController
@@ -26,8 +26,8 @@ public class TimeApiController {
     }
 
     @PostMapping("/times")
-    public ResponseEntity<Time> create(@RequestBody TimeRequest timeRequest) {
-        Time time = timeService.save(timeRequest);
+    public ResponseEntity<Time> create(@RequestBody TimeSaveRequest timeSaveRequest) {
+        Time time = timeService.save(timeSaveRequest);
         return ResponseEntity.ok(time);
     }
 

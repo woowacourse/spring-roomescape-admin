@@ -14,8 +14,7 @@ import org.springframework.boot.test.autoconfigure.jdbc.JdbcTest;
 import org.springframework.context.annotation.Import;
 import org.springframework.test.context.jdbc.Sql;
 import roomescape.time.domain.Time;
-import roomescape.time.dto.TimeRequest;
-import roomescape.time.repository.TimeRepository;
+import roomescape.time.dto.TimeSaveRequest;
 
 @DisplayName("시간 레포지토리")
 @JdbcTest
@@ -31,10 +30,10 @@ class TimeRepositoryTest {
         return Stream.of(
                 DynamicTest.dynamicTest("예약 정보를 저장한다.", () -> {
                     // given
-                    TimeRequest timeRequest = new TimeRequest("10:00");
+                    TimeSaveRequest timeSaveRequest = new TimeSaveRequest("10:00");
 
                     // when
-                    Time time = timeRepository.save(timeRequest);
+                    Time time = timeRepository.save(timeSaveRequest);
 
                     // then
                     assertThat(time.getId()).isEqualTo(2L);

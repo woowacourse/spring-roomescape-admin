@@ -11,9 +11,8 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
-import roomescape.reservation.dto.ReservationRequest;
+import roomescape.reservation.dto.ReservationSaveRequest;
 import roomescape.reservation.repository.ReservationRepository;
-import roomescape.reservation.service.ReservationService;
 import roomescape.time.repository.TimeRepository;
 
 @DisplayName("예약 서비스")
@@ -47,13 +46,13 @@ public class ReservationServiceTest {
     void findByIdExceptionByNotExistTimeIdTest() {
         // given
         Long timeId = 1L;
-        ReservationRequest reservationRequest = new ReservationRequest("브라운", LocalDate.parse("2024-08-05"), timeId);
+        ReservationSaveRequest reservationSaveRequest = new ReservationSaveRequest("브라운", LocalDate.parse("2024-08-05"), timeId);
 
         doReturn(Optional.empty()).when(timeRepository)
                 .findById(timeId);
 
         // when & then
-        assertThatThrownBy(() -> reservationService.save(reservationRequest))
+        assertThatThrownBy(() -> reservationService.save(reservationSaveRequest))
                 .isInstanceOf(IllegalArgumentException.class);
     }
 }

@@ -3,7 +3,7 @@ package roomescape.reservation.service;
 import java.util.List;
 import org.springframework.stereotype.Service;
 import roomescape.reservation.domain.Reservation;
-import roomescape.reservation.dto.ReservationRequest;
+import roomescape.reservation.dto.ReservationSaveRequest;
 import roomescape.reservation.repository.ReservationRepository;
 import roomescape.time.domain.Time;
 import roomescape.time.repository.TimeRepository;
@@ -18,11 +18,11 @@ public class ReservationService {
         this.timeRepository = timeRepository;
     }
 
-    public Reservation save(final ReservationRequest reservationRequest) {
-        Time time = timeRepository.findById(reservationRequest.getTimeId())
+    public Reservation save(final ReservationSaveRequest reservationSaveRequest) {
+        Time time = timeRepository.findById(reservationSaveRequest.getTimeId())
                 .orElseThrow(() -> new IllegalArgumentException("일치하는 시간이 없습니다."));
 
-        return reservationRepository.save(reservationRequest, time);
+        return reservationRepository.save(reservationSaveRequest, time);
     }
 
     public Reservation findById(final Long id) {

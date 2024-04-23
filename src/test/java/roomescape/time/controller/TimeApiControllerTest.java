@@ -21,9 +21,8 @@ import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.dao.DataAccessException;
 import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
-import roomescape.time.controller.TimeApiController;
 import roomescape.time.domain.Time;
-import roomescape.time.dto.TimeRequest;
+import roomescape.time.dto.TimeSaveRequest;
 import roomescape.time.service.TimeService;
 
 @DisplayName("시간 API 컨트롤러")
@@ -63,17 +62,17 @@ class TimeApiControllerTest {
         @Test
         public void createSuccessTest() throws Exception {
             // given
-            TimeRequest timeRequest = new TimeRequest("10:00");
-            Time time = new Time(1L, timeRequest.getStartAt());
+            TimeSaveRequest timeSaveRequest = new TimeSaveRequest("10:00");
+            Time time = new Time(1L, timeSaveRequest.getStartAt());
 
             // when
             doReturn(time).when(timeService)
-                    .save(any(TimeRequest.class));
+                    .save(any(TimeSaveRequest.class));
 
             // then
             mockMvc.perform(post("/times")
                             .contentType(MediaType.APPLICATION_JSON)
-                            .content(objectMapper.writeValueAsString(timeRequest)))
+                            .content(objectMapper.writeValueAsString(timeSaveRequest)))
                     .andExpect(status().isOk())
                     .andExpect(jsonPath("$.id").value(time.getId()))
                     .andExpect(jsonPath("$.startAt").value(time.getStartAt()));
@@ -83,16 +82,16 @@ class TimeApiControllerTest {
         @Test
         public void createExceptionTest() throws Exception {
             // given
-            TimeRequest timeRequest = new TimeRequest(null);
+            TimeSaveRequest timeSaveRequest = new TimeSaveRequest(null);
 
             // when
             doThrow(new DataAccessException("데이터 접근 예외") {}).when(timeService)
-                    .save(any(TimeRequest.class));
+                    .save(any(TimeSaveRequest.class));
 
             // then
             mockMvc.perform(post("/times")
                             .contentType(MediaType.APPLICATION_JSON)
-                            .content(objectMapper.writeValueAsString(timeRequest)))
+                            .content(objectMapper.writeValueAsString(timeSaveRequest)))
                     .andExpect(status().isBadRequest());
         }
     }

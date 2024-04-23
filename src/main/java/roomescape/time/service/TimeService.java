@@ -4,7 +4,7 @@ import java.util.List;
 import org.springframework.stereotype.Service;
 import roomescape.error.ReferDataDeleteException;
 import roomescape.time.domain.Time;
-import roomescape.time.dto.TimeRequest;
+import roomescape.time.dto.TimeSaveRequest;
 import roomescape.time.repository.TimeRepository;
 
 @Service
@@ -15,8 +15,8 @@ public class TimeService {
         this.timeRepository = timeRepository;
     }
 
-    public Time save(final TimeRequest timeRequest) {
-        return timeRepository.save(timeRequest);
+    public Time save(final TimeSaveRequest timeSaveRequest) {
+        return timeRepository.save(timeSaveRequest);
     }
 
     public Time findById(final Long id) {

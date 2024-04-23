@@ -11,7 +11,7 @@ import org.springframework.jdbc.support.GeneratedKeyHolder;
 import org.springframework.jdbc.support.KeyHolder;
 import org.springframework.stereotype.Repository;
 import roomescape.reservation.domain.Reservation;
-import roomescape.reservation.dto.ReservationRequest;
+import roomescape.reservation.dto.ReservationSaveRequest;
 import roomescape.time.domain.Time;
 
 @Repository
@@ -22,9 +22,9 @@ public class ReservationRepository {
         this.jdbcTemplate = jdbcTemplate;
     }
 
-    public Reservation save(final ReservationRequest reservationRequest, final Time time) {
-        String name = reservationRequest.getName();
-        LocalDate date = reservationRequest.getDate();
+    public Reservation save(final ReservationSaveRequest reservationSaveRequest, final Time time) {
+        String name = reservationSaveRequest.getName();
+        LocalDate date = reservationSaveRequest.getDate();
 
         KeyHolder keyHolder = new GeneratedKeyHolder();
         jdbcTemplate.update(connection -> {

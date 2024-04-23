@@ -23,9 +23,8 @@ import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.dao.DataAccessException;
 import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
-import roomescape.reservation.controller.ReservationApiController;
 import roomescape.reservation.domain.Reservation;
-import roomescape.reservation.dto.ReservationRequest;
+import roomescape.reservation.dto.ReservationSaveRequest;
 import roomescape.reservation.service.ReservationService;
 import roomescape.time.domain.Time;
 
@@ -68,18 +67,18 @@ class ReservationApiControllerTest {
         public void createSuccessTest() throws Exception {
             // given
             Time time = new Time(5L, "10:00");
-            ReservationRequest reservationRequest = new ReservationRequest("브라운", LocalDate.parse("2024-08-05"), time.getId());
-            Reservation reservation = new Reservation(1L, reservationRequest.getName(), reservationRequest.getDate(),
+            ReservationSaveRequest reservationSaveRequest = new ReservationSaveRequest("브라운", LocalDate.parse("2024-08-05"), time.getId());
+            Reservation reservation = new Reservation(1L, reservationSaveRequest.getName(), reservationSaveRequest.getDate(),
                     time);
 
             // when
             doReturn(reservation).when(reservationService)
-                    .save(any(ReservationRequest.class));
+                    .save(any(ReservationSaveRequest.class));
 
             // then
             mockMvc.perform(post("/reservations")
                             .contentType(MediaType.APPLICATION_JSON)
-                            .content(objectMapper.writeValueAsString(reservationRequest)))
+                            .content(objectMapper.writeValueAsString(reservationSaveRequest)))
                     .andExpect(status().isOk())
                     .andExpect(header().string("Location", "/reservations/1"))
                     .andExpect(jsonPath("$.id").value(reservation.getId()))
@@ -93,16 +92,16 @@ class ReservationApiControllerTest {
         @Test
         public void createExceptionTest() throws Exception {
             // given
-            ReservationRequest reservationRequest = new ReservationRequest("브라운", null, null);
+            ReservationSaveRequest reservationSaveRequest = new ReservationSaveRequest("브라운", null, null);
 
             // when
             doThrow(new DataAccessException("데이터 접근 예외") {}).when(reservationService)
-                    .save(any(ReservationRequest.class));
+                    .save(any(ReservationSaveRequest.class));
 
             // then
             mockMvc.perform(post("/reservations")
                             .contentType(MediaType.APPLICATION_JSON)
-                            .content(objectMapper.writeValueAsString(reservationRequest)))
+                            .content(objectMapper.writeValueAsString(reservationSaveRequest)))
                     .andExpect(status().isBadRequest());
         }
     }

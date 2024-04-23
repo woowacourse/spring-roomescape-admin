@@ -1,12 +1,12 @@
 package roomescape.time.dto;
 
-public class TimeRequest {
+public class TimeSaveRequest {
     private String startAt;
 
-    public TimeRequest() {
+    public TimeSaveRequest() {
     }
 
-    public TimeRequest(final String startAt) {
+    public TimeSaveRequest(final String startAt) {
         this.startAt = startAt;
     }
 

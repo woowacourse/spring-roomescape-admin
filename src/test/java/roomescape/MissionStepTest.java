@@ -7,7 +7,6 @@ import static roomescape.ReservationTestSetting.createReservationDto;
 
 import io.restassured.RestAssured;
 import io.restassured.http.ContentType;
-import io.restassured.response.Response;
 import java.sql.Connection;
 import java.sql.SQLException;
 import java.util.List;
@@ -66,16 +65,14 @@ public class MissionStepTest {
     void 예약_페이지에서_예약_추가_및_삭제() {
         ReservationDto reservationRequest = createReservationDto();
 
-        Response response = given().log().all()
+        RestAssured.given().log().all()
                 .port(port)
                 .contentType(ContentType.JSON)
                 .body(reservationRequest)
                 .when().post("/reservations")
                 .then().log().all()
-                .statusCode(200)
-                .extract().response();
-
-        Integer savedId = response.path("id");
+                .statusCode(201)
+                .header("Location", "/reservations/1");
 
         given().log().all()
                 .port(port)
@@ -86,9 +83,9 @@ public class MissionStepTest {
 
         given().log().all()
                 .port(port)
-                .when().delete("/reservations/" + savedId)
+                .when().delete("/reservations/1")
                 .then().log().all()
-                .statusCode(200);
+                .statusCode(204);
 
         given().log().all()
                 .port(port)

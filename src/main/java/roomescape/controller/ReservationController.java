@@ -30,6 +30,13 @@ public class ReservationController {
         return ResponseEntity.ok(reservationResponse);
     }
 
+    @GetMapping("/reservation/{id}")
+    public ResponseEntity<ReservationDto> getReservation(@PathVariable Long id) {
+        Reservation reservation = reservationRepository.findById(id);
+        ReservationDto reservationResponse = ReservationDto.toDto(reservation);
+        return ResponseEntity.ok(reservationResponse);
+    }
+
     @PostMapping("/reservations")
     public ResponseEntity<Void> addReservation(@RequestBody ReservationDto reservationRequest) {
         Long savedId = reservationRepository.save(reservationRequest.toEntity());

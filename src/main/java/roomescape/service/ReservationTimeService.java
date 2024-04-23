@@ -17,9 +17,9 @@ public class ReservationTimeService {
     }
 
     public ReservationTimeResponse createReservationTime(ReservationTimeRequest reservationTimeRequest) {
-        ReservationTime time = reservationTimeRequest.toTime();
-        long id = reservationTimeDao.create(time);
-        return ReservationTimeResponse.toResponse(id, reservationTimeRequest);
+        ReservationTime reservationTime = reservationTimeRequest.toReservationTime();
+        ReservationTime savedReservationTime = reservationTimeDao.create(reservationTime);
+        return ReservationTimeResponse.toResponse(savedReservationTime);
     }
 
     public List<ReservationTimeResponse> getAllReservationTimes() {

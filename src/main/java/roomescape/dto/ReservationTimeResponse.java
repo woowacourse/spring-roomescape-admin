@@ -5,8 +5,8 @@ import roomescape.domain.ReservationTime;
 
 public record ReservationTimeResponse(long id, String startAt) {
 
-    public static ReservationTimeResponse toResponse(long id, ReservationTimeRequest reservationTimeRequest) {
-        return new ReservationTimeResponse(id, reservationTimeRequest.startAt());
+    public static ReservationTimeResponse toResponse(ReservationTime reservationTime) {
+        return new ReservationTimeResponse(reservationTime.getId(), reservationTime.getStartAt());
     }
 
     public static List<ReservationTimeResponse> toResponses(List<ReservationTime> times) {

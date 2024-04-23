@@ -24,12 +24,13 @@ public class ReservationDao {
                 .usingGeneratedKeyColumns("id");
     }
 
-    public long create(Reservation reservation) {
+    public Reservation create(Reservation reservation) {
         SqlParameterSource params = new MapSqlParameterSource()
                 .addValue("name", reservation.getName())
                 .addValue("date", reservation.getDate())
                 .addValue("time_id", reservation.getTime().getId());
-        return jdbcInsert.executeAndReturnKey(params).longValue();
+        long id = jdbcInsert.executeAndReturnKey(params).longValue();
+        return new Reservation(id, reservation.getName(), reservation.getDate(), reservation.getTime());
     }
 
     public List<Reservation> getAll() {

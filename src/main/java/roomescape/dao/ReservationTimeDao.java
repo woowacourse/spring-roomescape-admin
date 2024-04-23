@@ -23,10 +23,11 @@ public class ReservationTimeDao {
                 .usingGeneratedKeyColumns("id");
     }
 
-    public long create(ReservationTime reservationTime) {
+    public ReservationTime create(ReservationTime reservationTime) {
         SqlParameterSource params = new MapSqlParameterSource()
                 .addValue("start_at", reservationTime.getStartAt());
-        return jdbcInsert.executeAndReturnKey(params).longValue();
+        long id = jdbcInsert.executeAndReturnKey(params).longValue();
+        return new ReservationTime(id, reservationTime.getStartAt());
     }
 
     public ReservationTime find(Long id) {

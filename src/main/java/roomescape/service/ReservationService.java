@@ -23,8 +23,8 @@ public class ReservationService {
     public ReservationResponse createReservation(ReservationRequest reservationRequest) {
         ReservationTime time = reservationTimeDao.find(reservationRequest.timeId());
         Reservation reservation = reservationRequest.toReservation(time);
-        long id = reservationDao.create(reservation);
-        return ReservationResponse.toResponse(id, reservation);
+        Reservation savedReservation = reservationDao.create(reservation);
+        return ReservationResponse.toResponse(savedReservation);
     }
 
     public List<ReservationResponse> getAllReservations() {

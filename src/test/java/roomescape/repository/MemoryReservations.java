@@ -8,14 +8,14 @@ import roomescape.domain.Reservation;
 import roomescape.domain.ReservationTime;
 import roomescape.util.CustomDateTimeFormatter;
 
-public class ReservationMemoryRepository implements ReservationRepository {
+public class MemoryReservations implements Reservations {
 
     private final List<Reservation> reservations;
     private final List<ReservationTime> reservationTimes;
     private final AtomicLong reservationIndex;
 
-    public ReservationMemoryRepository(List<Reservation> reservations, List<ReservationTime> reservationTimes,
-                                       AtomicLong reservationIndex) {
+    public MemoryReservations(List<Reservation> reservations, List<ReservationTime> reservationTimes,
+                              AtomicLong reservationIndex) {
         this.reservations = reservations;
         this.reservationTimes = reservationTimes;
         this.reservationIndex = reservationIndex;
@@ -34,16 +34,17 @@ public class ReservationMemoryRepository implements ReservationRepository {
     }
 
     @Override
-    public Long createReservation(ReservationCreateRequest reservationCreateRequest) {
+    public Reservation createReservation(ReservationCreateRequest reservationCreateRequest) {
         Long createdReservationId = reservationIndex.incrementAndGet();
-        reservations.add(new Reservation(
+        Reservation createdReservation = new Reservation(
                 createdReservationId,
                 reservationCreateRequest.name(),
                 CustomDateTimeFormatter.getLocalDate(reservationCreateRequest.date()),
                 findReservationTimeById(reservationCreateRequest.timeId())
-        ));
+        );
+        reservations.add(createdReservation);
 
-        return createdReservationId;
+        return createdReservation;
     }
 
     @Override

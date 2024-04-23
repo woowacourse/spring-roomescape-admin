@@ -5,13 +5,12 @@ import java.util.Optional;
 import roomescape.controller.dto.ReservationCreateRequest;
 import roomescape.domain.Reservation;
 
-public interface ReservationRepository {
+public interface Reservations {
     List<Reservation> findReservations();
 
     Optional<Reservation> findReservationById(Long id);
 
-    Long createReservation(ReservationCreateRequest reservationCreateRequest);
+    Reservation createReservation(ReservationCreateRequest reservationCreateRequest);
 
     void deleteReservationById(Long id);
-
 }

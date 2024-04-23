@@ -5,30 +5,30 @@ import java.util.Optional;
 import org.springframework.stereotype.Service;
 import roomescape.controller.dto.ReservationCreateRequest;
 import roomescape.domain.Reservation;
-import roomescape.repository.ReservationRepository;
+import roomescape.repository.Reservations;
 
 @Service
 public class ReservationService {
 
-    private final ReservationRepository reservationRepository;
+    private final Reservations reservations;
 
-    public ReservationService(ReservationRepository reservationRepository) {
-        this.reservationRepository = reservationRepository;
+    public ReservationService(Reservations reservations) {
+        this.reservations = reservations;
     }
 
     public List<Reservation> findReservations() {
-        return reservationRepository.findReservations();
+        return reservations.findReservations();
     }
 
     public Optional<Reservation> findReservationById(Long id) {
-        return reservationRepository.findReservationById(id);
+        return reservations.findReservationById(id);
     }
 
-    public Long createReservation(ReservationCreateRequest reservationCreateRequest) {
-        return reservationRepository.createReservation(reservationCreateRequest);
+    public Reservation createReservation(ReservationCreateRequest reservationCreateRequest) {
+        return reservations.createReservation(reservationCreateRequest);
     }
 
     public void deleteReservationById(Long id) {
-        reservationRepository.deleteReservationById(id);
+        reservations.deleteReservationById(id);
     }
 }

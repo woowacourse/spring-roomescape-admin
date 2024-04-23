@@ -13,7 +13,7 @@ import roomescape.domain.ReservationTime;
 import roomescape.util.CustomDateTimeFormatter;
 
 @Repository
-public class ReservationDBRepository implements ReservationRepository {
+public class DatabaseReservations implements Reservations {
 
     private final String findAllReservationQuery = """
             SELECT
@@ -39,7 +39,7 @@ public class ReservationDBRepository implements ReservationRepository {
 
     private final JdbcTemplate jdbcTemplate;
 
-    public ReservationDBRepository(JdbcTemplate jdbcTemplate) {
+    public DatabaseReservations(JdbcTemplate jdbcTemplate) {
         this.jdbcTemplate = jdbcTemplate;
     }
 
@@ -58,15 +58,16 @@ public class ReservationDBRepository implements ReservationRepository {
     }
 
     @Override
-    public Long createReservation(ReservationCreateRequest reservationCreateRequest) {
+    public Reservation createReservation(ReservationCreateRequest reservationCreateRequest) {
         SimpleJdbcInsert simpleJdbcInsert = new SimpleJdbcInsert(jdbcTemplate)
                 .withTableName("reservation")
                 .usingGeneratedKeyColumns("id");
-        return simpleJdbcInsert.executeAndReturnKey(Map.of(
+        long createdReservationId = simpleJdbcInsert.executeAndReturnKey(Map.of(
                 "name", reservationCreateRequest.name(),
                 "date", reservationCreateRequest.date(),
                 "time_id", reservationCreateRequest.timeId()
         )).longValue();
+        return findReservationById(createdReservationId).get();
     }
 
     @Override

@@ -40,12 +40,10 @@ public class ReservationController {
     public ResponseEntity<ReservationCreateResponse> createReservation(
             @RequestBody ReservationCreateRequest reservationCreateRequest) {
 
-        Long createdReservationId = reservationService.createReservation(reservationCreateRequest);
-
-        Reservation createdReservation = reservationService.findReservationById(createdReservationId).get();
+        Reservation createdReservation = reservationService.createReservation(reservationCreateRequest);
 
         return ResponseEntity.status(HttpStatus.OK)
-                .header("Location", "/reservations/" + createdReservationId)
+                .header("Location", "/reservations/" + createdReservation.getId())
                 .body(ReservationCreateResponse.of(createdReservation));
     }
 

@@ -8,12 +8,14 @@ import org.springframework.jdbc.core.namedparam.SqlParameterSource;
 import org.springframework.jdbc.core.simple.SimpleJdbcInsert;
 import org.springframework.web.bind.annotation.*;
 import roomescape.domain.Reservation;
+import roomescape.domain.ReservationTime;
 import roomescape.dto.ReservationRequestDto;
 import roomescape.dto.ReservationResponseDto;
+import roomescape.dto.ReservationTimeResponseDto;
 
 import javax.sql.DataSource;
-import java.net.URI;
 import java.util.List;
+import java.util.Objects;
 
 @RestController
 @RequestMapping("/reservations")
@@ -30,34 +32,40 @@ public class ReservationController {
 
     @GetMapping
     public List<ReservationResponseDto> reservations() {
-        final String sql = "select id, name, date, time from reservation";
+        final String sql = "SELECT \n" +
+                "    r.id as reservation_id, \n" +
+                "    r.name, \n" +
+                "    r.date, \n" +
+                "    t.id as time_id, \n" +
+                "    t.start_at as time_value \n" +
+                "FROM reservation as r \n" +
+                "inner join reservation_time as t \n" +
+                "on r.time_id = t.id";
         final List<Reservation> reservationList = jdbcTemplate.query(sql, reservationRowMapper);
         return reservationList.stream()
                               .map(ReservationResponseDto::from)
                               .toList();
     }
 
-    @GetMapping("/{id}")
-    public ReservationResponseDto reservation(@PathVariable final Long id) {
-        final String sql = "select id, name, date, time from reservation where id = ?";
-        final Reservation reservation = jdbcTemplate.queryForObject(sql, reservationRowMapper, id);
-        return ReservationResponseDto.from(reservation);
-    }
-
     @PostMapping
     public ResponseEntity<ReservationResponseDto> create(@RequestBody final ReservationRequestDto request) {
-        SqlParameterSource params = new MapSqlParameterSource()
+        final SqlParameterSource params = new MapSqlParameterSource()
                 .addValue("name", request.getName())
                 .addValue("date", request.getDate())
-                .addValue("time", request.getTime());
-        Long id = simpleJdbcInsert.executeAndReturnKey(params).longValue();
-        return ResponseEntity.created(URI.create("/reservations/" + id)).build();
+                .addValue("time_id", request.getTimeId());
+        final Long id = simpleJdbcInsert.executeAndReturnKey(params).longValue();
+        final String sql = "select * from reservation_time where id = ?";
+        final ReservationTimeResponseDto timeResponseDto = ReservationTimeResponseDto.from(
+                Objects.requireNonNull(jdbcTemplate.queryForObject(sql, reservationTimeRowMapper, request.getTimeId()))
+        );
+
+        return ResponseEntity.ok(new ReservationResponseDto(id, request.getName(), request.getDate(), timeResponseDto));
     }
 
     @DeleteMapping("/{id}")
     public ResponseEntity<Void> delete(@PathVariable final Long id) {
-        String sql = "delete from reservation where id = ?";
-        int rowCount = jdbcTemplate.update(sql, Long.valueOf(id));
+        final String sql = "delete from reservation where id = ?";
+        final int rowCount = jdbcTemplate.update(sql, Long.valueOf(id));
         if (rowCount > 0) {
             return ResponseEntity.noContent().build();
         }
@@ -65,12 +73,18 @@ public class ReservationController {
     }
 
     private final RowMapper<Reservation> reservationRowMapper = (resultSet, rowNum) -> {
-        Reservation reservation = new Reservation(
-                resultSet.getLong("id"),
+        final Reservation reservation = new Reservation(
+                resultSet.getLong("reservation_id"),
                 resultSet.getString("name"),
                 resultSet.getString("date"),
-                resultSet.getString("time")
+                new ReservationTime(
+                        resultSet.getLong("time_id"),
+                        resultSet.getString("time_value")
+                )
         );
         return reservation;
     };
+
+    private final RowMapper<ReservationTime> reservationTimeRowMapper = (resultSet, rowNum)
+            -> new ReservationTime(resultSet.getLong("id"), resultSet.getString("start_at"));
 }

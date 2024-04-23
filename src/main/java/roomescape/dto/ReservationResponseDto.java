@@ -6,9 +6,9 @@ public class ReservationResponseDto {
     private final Long id;
     private final String name;
     private final String date;
-    private final String time;
+    private final ReservationTimeResponseDto time;
 
-    private ReservationResponseDto(final Long id, final String name, final String date, final String time) {
+    public ReservationResponseDto(final Long id, final String name, final String date, final ReservationTimeResponseDto time) {
         this.id = id;
         this.name = name;
         this.date = date;
@@ -16,7 +16,7 @@ public class ReservationResponseDto {
     }
 
     public static ReservationResponseDto from(final Reservation reservation) {
-        return new ReservationResponseDto(reservation.getId(), reservation.getName(), reservation.getDate().toString(), reservation.getTime().toString());
+        return new ReservationResponseDto(reservation.getId(), reservation.getName(), reservation.getDate().toString(), ReservationTimeResponseDto.from(reservation.getTime()));
     }
 
     public Long getId() {
@@ -31,7 +31,7 @@ public class ReservationResponseDto {
         return date;
     }
 
-    public String getTime() {
+    public ReservationTimeResponseDto getTime() {
         return time;
     }
 }

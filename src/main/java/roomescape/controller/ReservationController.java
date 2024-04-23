@@ -8,9 +8,9 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
+import roomescape.domain.Reservation;
 import roomescape.dto.ReservationRequest;
 import roomescape.dto.ReservationResponse;
-import roomescape.entity.Reservation;
 import roomescape.repository.H2ReservationRepository;
 
 import java.util.List;
@@ -35,7 +35,7 @@ public class ReservationController {
 
     @PostMapping
     public ReservationResponse addReservation(@RequestBody ReservationRequest reservationRequest) {
-        Reservation reservation = reservationRequest.toEntity();
+        Reservation reservation = reservationRequest.toReservation();
         Long id = repository.save(reservation);
         return ReservationResponse.from(Reservation.of(reservation, id));
     }

@@ -1,5 +1,6 @@
 package roomescape.controller;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -10,35 +11,37 @@ import org.springframework.web.bind.annotation.RestController;
 import roomescape.dto.ReservationRequest;
 import roomescape.dto.ReservationResponse;
 import roomescape.entity.Reservation;
+import roomescape.repository.H2ReservationRepository;
 
-import java.util.ArrayList;
 import java.util.List;
-import java.util.Objects;
-import java.util.concurrent.atomic.AtomicLong;
 
 @RestController
 @RequestMapping("/reservations")
 public class ReservationController {
 
-    private final List<Reservation> reservations = new ArrayList<>();
-    private final AtomicLong index = new AtomicLong(1);
+    private final H2ReservationRepository repository;
 
-    @GetMapping()
+    @Autowired
+    public ReservationController(H2ReservationRepository repository) {
+        this.repository = repository;
+    }
+
+    @GetMapping
     public List<ReservationResponse> findAllReservations() {
-        return reservations.stream()
+        return repository.findAll().stream()
                 .map(ReservationResponse::from)
                 .toList();
     }
 
-    @PostMapping()
+    @PostMapping
     public ReservationResponse addReservation(@RequestBody ReservationRequest reservationRequest) {
-        Reservation reservation = reservationRequest.toEntity(index.getAndIncrement());
-        reservations.add(reservation);
-        return ReservationResponse.from(reservation);
+        Reservation reservation = reservationRequest.toEntity();
+        Long id = repository.save(reservation);
+        return ReservationResponse.from(Reservation.of(reservation, id));
     }
 
     @DeleteMapping("/{id}")
     public void deleteReservation(@PathVariable Long id) {
-        reservations.removeIf(reservation -> Objects.equals(reservation.getId(), id));
+        repository.deleteById(id);
     }
 }

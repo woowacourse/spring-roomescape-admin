@@ -1,14 +1,14 @@
 package roomescape.repository;
 
-import java.sql.PreparedStatement;
 import java.time.LocalDate;
 import java.time.LocalTime;
-import java.time.format.DateTimeFormatter;
 import java.util.List;
+import javax.sql.DataSource;
 import org.springframework.context.annotation.Primary;
 import org.springframework.jdbc.core.JdbcTemplate;
-import org.springframework.jdbc.support.GeneratedKeyHolder;
-import org.springframework.jdbc.support.KeyHolder;
+import org.springframework.jdbc.core.namedparam.BeanPropertySqlParameterSource;
+import org.springframework.jdbc.core.namedparam.SqlParameterSource;
+import org.springframework.jdbc.core.simple.SimpleJdbcInsert;
 import org.springframework.stereotype.Repository;
 import roomescape.domain.Reservation;
 
@@ -17,26 +17,20 @@ import roomescape.domain.Reservation;
 public class ReservationH2Repository implements ReservationRepository {
 
     private final JdbcTemplate jdbcTemplate;
+    private final SimpleJdbcInsert jdbcInsert;
 
-    public ReservationH2Repository(JdbcTemplate jdbcTemplate) {
+    public ReservationH2Repository(JdbcTemplate jdbcTemplate, DataSource source) {
         this.jdbcTemplate = jdbcTemplate;
+        this.jdbcInsert = new SimpleJdbcInsert(source)
+                .withTableName("RESERVATION")
+                .usingGeneratedKeyColumns("id");
     }
 
     @Override
     public Reservation add(Reservation reservation) {
-        KeyHolder keyHolder = new GeneratedKeyHolder();
-        jdbcTemplate.update(connection -> {
-            PreparedStatement ps = connection.prepareStatement(
-                    "INSERT INTO reservation (name, date, time) VALUES (?, ?, ?)",
-                    new String[]{"id"}
-            );
-            ps.setString(1, reservation.name());
-            ps.setString(2, reservation.date(DateTimeFormatter.ISO_DATE));
-            ps.setString(3, reservation.time(DateTimeFormatter.ofPattern("HH:mm")));
-            return ps;
-        }, keyHolder);
-
-        return Reservation.of(keyHolder.getKey().longValue(), reservation);
+        SqlParameterSource params = new BeanPropertySqlParameterSource(reservation);
+        Long id = jdbcInsert.executeAndReturnKey(params).longValue();
+        return Reservation.of(id, reservation);
     }
 
     @Override

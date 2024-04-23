@@ -14,8 +14,8 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.context.SpringBootTest.WebEnvironment;
 import org.springframework.jdbc.core.JdbcTemplate;
 import roomescape.dao.ReservationTimeDao;
-import roomescape.dto.ReservationTimeCreateRequestDto;
-import roomescape.dto.ReservationTimeResponseDto;
+import roomescape.dto.reservationtime.ReservationTimeCreateRequestDto;
+import roomescape.dto.reservationtime.ReservationTimeResponseDto;
 
 @SpringBootTest(webEnvironment = WebEnvironment.RANDOM_PORT)
 class ReservationTimeServiceTest {

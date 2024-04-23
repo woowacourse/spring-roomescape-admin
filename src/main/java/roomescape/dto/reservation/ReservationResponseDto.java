@@ -1,9 +1,10 @@
-package roomescape.dto;
+package roomescape.dto.reservation;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 import java.util.Objects;
 import roomescape.domain.reservation.Date;
 import roomescape.domain.reservation.Reservation;
+import roomescape.dto.reservationtime.ReservationTimeResponseDto;
 
 public class ReservationResponseDto {
 

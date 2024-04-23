@@ -1,4 +1,4 @@
-package roomescape.dto;
+package roomescape.dto.reservation;
 
 import java.util.Objects;
 import roomescape.domain.reservation.Reservation;

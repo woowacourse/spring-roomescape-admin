@@ -11,7 +11,7 @@ import org.springframework.jdbc.support.GeneratedKeyHolder;
 import org.springframework.jdbc.support.KeyHolder;
 import org.springframework.stereotype.Component;
 import roomescape.domain.reservationtime.ReservationTime;
-import roomescape.dto.ReservationTimeCreateRequestDto;
+import roomescape.dto.reservationtime.ReservationTimeCreateRequestDto;
 
 @Component
 public class ReservationTimeDao {

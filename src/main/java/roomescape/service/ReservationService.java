@@ -1,7 +1,6 @@
 package roomescape.service;
 
 import java.util.List;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import roomescape.domain.Reservation;
 import roomescape.dto.ReservationAddRequest;
@@ -10,8 +9,11 @@ import roomescape.repository.ReservationDao;
 @Service
 public class ReservationService {
 
-    @Autowired
     private ReservationDao reservationDao;
+
+    ReservationService(ReservationDao reservationDao) {
+        this.reservationDao = reservationDao;
+    }
 
     public List<Reservation> findAllReservation() {
         return reservationDao.findAll();

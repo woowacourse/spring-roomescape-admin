@@ -18,12 +18,12 @@ import roomescape.dto.ReservationAddRequest;
 
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.DEFINED_PORT)
 @DirtiesContext(classMode = DirtiesContext.ClassMode.BEFORE_EACH_TEST_METHOD)
-class ReservationDaoTest {
+class ReservationDaoImplTest {
 
     @Autowired
     private JdbcTemplate jdbcTemplate;
     @Autowired
-    private ReservationDao reservationDao;
+    private ReservationDaoImpl reservationDaoImpl;
 
     @BeforeEach
     void setUp() {
@@ -41,7 +41,7 @@ class ReservationDaoTest {
     void should_findAll() {
         int expectedSize = 1;
 
-        int actualSize = reservationDao.findAll().size();
+        int actualSize = reservationDaoImpl.findAll().size();
 
         assertThat(actualSize).isEqualTo(expectedSize);
     }
@@ -52,7 +52,7 @@ class ReservationDaoTest {
         ReservationTime reservationTime = new ReservationTime(1L, LocalTime.of(10, 0));
         Reservation expectedReservation = new Reservation(1L, "브라운", LocalDate.of(2020, 12, 12), reservationTime);
 
-        Reservation actualReservation = reservationDao.findById(1L);
+        Reservation actualReservation = reservationDaoImpl.findById(1L);
 
         assertThat(actualReservation).isEqualTo(expectedReservation);
     }
@@ -63,7 +63,7 @@ class ReservationDaoTest {
         ReservationTime reservationTime = new ReservationTime(1L, LocalTime.of(10, 0));
         Reservation expectedReservation = new Reservation(2L, "도도", LocalDate.of(2020, 11, 11), reservationTime);
 
-        Reservation actualReservation = reservationDao.insert(
+        Reservation actualReservation = reservationDaoImpl.insert(
                 new ReservationAddRequest(LocalDate.of(2020, 11, 11), "도도", 1L));
 
         assertThat(actualReservation).isEqualTo(expectedReservation);
@@ -74,7 +74,7 @@ class ReservationDaoTest {
     void should_deleteById() {
         int expectedResult = 1;
 
-        int actualResult = reservationDao.deleteById(1L);
+        int actualResult = reservationDaoImpl.deleteById(1L);
 
         assertThat(actualResult).isEqualTo(expectedResult);
     }

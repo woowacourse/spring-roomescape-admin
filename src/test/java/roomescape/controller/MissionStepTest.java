@@ -25,7 +25,7 @@ import roomescape.controller.response.ReservationWebResponse;
 class MissionStepTest {
 
     @LocalServerPort
-    int port;
+    private int port;
 
     @Autowired
     private JdbcTemplate jdbcTemplate;

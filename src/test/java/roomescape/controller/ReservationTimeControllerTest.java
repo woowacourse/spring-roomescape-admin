@@ -16,7 +16,7 @@ import static org.hamcrest.Matchers.is;
 public class ReservationTimeControllerTest {
 
     @Test
-    void createAndReadAndDeleteTimeTest() {
+    void createTimeTest() {
         Map<String, String> params = new HashMap<>();
         params.put("startAt", "10:00");
 
@@ -26,12 +26,22 @@ public class ReservationTimeControllerTest {
                 .when().post("/times")
                 .then().log().all()
                 .statusCode(200);
+    }
+
+    @Test
+    void readTimeTest() {
+        createTimeTest();
 
         RestAssured.given().log().all()
                 .when().get("/times")
                 .then().log().all()
                 .statusCode(200)
                 .body("size()", is(1));
+    }
+
+    @Test
+    void deleteTimeTest() {
+        createTimeTest();
 
         RestAssured.given().log().all()
                 .when().delete("/times/1")

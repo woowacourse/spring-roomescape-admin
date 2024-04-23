@@ -13,16 +13,11 @@ import roomescape.domain.reservation.ReservationTime;
 import roomescape.dto.ReservationRequestDto;
 
 import java.sql.PreparedStatement;
-import java.time.LocalDate;
-import java.time.LocalTime;
-import java.time.format.DateTimeFormatter;
 import java.util.List;
 import java.util.Objects;
 
 @Repository
 public class ReservationDao {
-
-    @Autowired
     private JdbcTemplate jdbcTemplate;
 
     private final RowMapper<Reservation> reservationRowMapper = ((rs, rowNum) -> {
@@ -33,7 +28,8 @@ public class ReservationDao {
         return new Reservation(id, new Name(name), date, time);
     });
 
-    public ReservationDao() {
+    public ReservationDao(JdbcTemplate jdbcTemplate) {
+        this.jdbcTemplate = jdbcTemplate;
     }
 
     public List<Reservation> findAllReservation() {

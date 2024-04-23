@@ -15,7 +15,7 @@ public class ReservationTestSetting {
         String name = "ted";
         LocalDate date = LocalDate.parse("2024-01-01");
         LocalTime time = LocalTime.parse("00:00");
-        return new Reservation(null, name, date, time);
+        return new Reservation(name, date, time);
     }
 
     public static ReservationDto createReservationDto() {
@@ -30,9 +30,7 @@ public class ReservationTestSetting {
             return false;
         }
 
-        return Objects.equals(
-                reservation1.getId(), reservation2.getId())
-                && Objects.equals(reservation1.getName(), reservation2.getName())
+        return Objects.equals(reservation1.getName(), reservation2.getName())
                 && Objects.equals(reservation1.getDate(), reservation2.getDate())
                 && Objects.equals(reservation1.getTime(), reservation2.getTime()
         );

@@ -32,6 +32,8 @@
   - [x] 예약 취소 API 처리 시, 저장된 예약 조회 시 데이터베이스를 활용한다.
     - [x] 기존의 List/AtomicLong을 사용하지 않는다
 
+## 7-9 단계 기능 요구사항
+- [ ] 
 
 
 ---
@@ -106,6 +108,61 @@ DELETE /reservations/1 HTTP/1.1
 ```
 HTTP/1.1 200
 ```
+
+### 시간 추가 API
+- Request
+```
+POST /times HTTP/1.1
+content-type: application/json
+
+{
+    "startAt": "10:00"
+}
+```
+
+- Response
+```
+HTTP/1.1 200
+Content-Type: application/json
+
+{
+    "id": 1,
+    "startAt": "10:00"
+}
+```
+
+### 시간 조회 API
+
+- Request
+```
+GET /times HTTP/1.1
+```
+
+- Response
+```
+HTTP/1.1 200 
+Content-Type: application/json
+
+[
+   {
+        "id": 1,
+        "startAt": "10:00"
+    }
+]
+```
+
+### 시간 삭제 API
+- Request
+```
+DELETE /times/1 HTTP/1.1
+```
+
+- Response
+```
+HTTP/1.1 200
+```
+
+
 ---
 
 ## 1단계 1차 리뷰 반영 사안

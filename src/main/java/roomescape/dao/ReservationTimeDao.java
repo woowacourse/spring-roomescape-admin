@@ -8,7 +8,7 @@ public interface ReservationTimeDao {
 
     ReservationTime findById(long id);
 
-    void save(ReservationTime reservationTime);
+    long save(String startAt);
 
     boolean deleteById(long id);
 }

@@ -1,8 +1,11 @@
 package roomescape.dao;
 
+import java.sql.PreparedStatement;
 import java.sql.Time;
 import java.util.List;
 import org.springframework.jdbc.core.JdbcTemplate;
+import org.springframework.jdbc.support.GeneratedKeyHolder;
+import org.springframework.jdbc.support.KeyHolder;
 import org.springframework.stereotype.Repository;
 import roomescape.domain.ReservationTime;
 
@@ -25,35 +28,27 @@ public class ReservationTimeDaoImpl implements ReservationTimeDao {
 
     @Override
     public ReservationTime findById(long id) {
-        if (existsById(id)) {
-            return jdbcTemplate.queryForObject("SELECT * FROM reservation_time WHERE id = ?",
-                    (rs, rowNum) -> new ReservationTime(
-                            rs.getLong("id"),
-                            rs.getTime("start_at")
-                    ), id);
-        }
-        throw new IllegalArgumentException("id doesn't exist");
+        return jdbcTemplate.queryForObject("SELECT * FROM reservation_time WHERE id = ?",
+                (rs, rowNum) -> new ReservationTime(
+                        rs.getLong("id"),
+                        rs.getTime("start_at")
+                ), id);
     }
 
     @Override
-    public void save(ReservationTime reservationTime) {
-        if (existsById(reservationTime.getId())) {
-            throw new IllegalArgumentException("duplicated id exists");
-        }
-        jdbcTemplate.update("INSERT INTO reservation_time (id, start_at) VALUES (?, ?)",
-                reservationTime.getId(), Time.valueOf(reservationTime.getStartAt()));
+    public long save(String startAt) {
+        KeyHolder keyHolder = new GeneratedKeyHolder();
+        String sql = "INSERT INTO reservation_time(start_at) VALUES(?)";
+        jdbcTemplate.update(con -> {
+            PreparedStatement preparedStatement = con.prepareStatement(sql, new String[]{"id"});
+            preparedStatement.setTime(1, Time.valueOf(startAt + ":00"));
+            return preparedStatement;
+        }, keyHolder);
+        return keyHolder.getKey().longValue();
     }
 
     @Override
     public boolean deleteById(long id) {
-        boolean exists = existsById(id);
-        jdbcTemplate.update("DELETE FROM reservation_time WHERE id = ?", id);
-        return exists;
-    }
-
-    private boolean existsById(long id) {
-        long count = jdbcTemplate.queryForObject(
-                "SELECT COUNT(1) FROM reservation_time WHERE id = ?", Long.class, id);
-        return count > 0;
+        return jdbcTemplate.update("DELETE FROM reservation_time WHERE id = ?", id) > 0;
     }
 }

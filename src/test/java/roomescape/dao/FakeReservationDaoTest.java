@@ -1,68 +1,63 @@
 package roomescape.dao;
 
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.assertj.core.api.Assertions.assertThatThrownBy;
 
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
-import roomescape.domain.Reservation;
-import roomescape.domain.ReservationTime;
+import roomescape.dao.fakedao.FakeReservationDao;
 
 public class FakeReservationDaoTest {
-    private ReservationDao fakeReservationDao;
+    private ReservationDao reservationDao;
 
     @BeforeEach
-    void init() {
-        fakeReservationDao = new FakeReservationDao();
+    void setUp() {
+        reservationDao = new FakeReservationDao();
     }
 
-    @DisplayName("존재하는 모든 엔티티를 보여준다.")
+    @DisplayName("존재하는 모든 예약을 보여준다.")
     @Test
     void findAll() {
-        assertThat(fakeReservationDao.findAll()).isEmpty();
+        assertThat(reservationDao.findAll()).isEmpty();
     }
 
-    @DisplayName("도메인을 저장한다.")
+    @DisplayName("예약을 저장한다.")
     @Test
     void save() {
-        //given
-        Reservation reservation = new Reservation(1, "aa", "2023-10-10",
-                new ReservationTime(1, "10:00"));
         //when
-        fakeReservationDao.save(reservation);
+        reservationDao.save("aa", "2023-10-10", 1);
         //then
-        assertThat(fakeReservationDao.findAll()).hasSize(1);
+        assertThat(reservationDao.findAll()).hasSize(1);
     }
 
-    @DisplayName("중복되는 id의 도메인을 저장하면 오류가 발생한다.")
-    @Test
-    void invalidSave() {
-        //given
-        long id = 1;
-        Reservation reservation1 = new Reservation(id, "aa", "2023-10-10",
-                new ReservationTime(1, "10:00"));
-        Reservation reservation2 = new Reservation(id, "bb", "2023-10-20",
-                new ReservationTime(2, "11:00"));
-        //when
-        fakeReservationDao.save(reservation1);
-        //then
-        assertThatThrownBy(() -> fakeReservationDao.save(reservation2))
-                .isInstanceOf(IllegalArgumentException.class)
-                .hasMessage("duplicated id exists.");
-    }
-
-    @DisplayName("해당 id의 도메인을 삭제한다.")
+    @DisplayName("해당 id의 예약을 삭제한다.")
     @Test
     void deleteById() {
         //given
-        long id = 1;
-        Reservation reservation = new Reservation(id, "aa", "2023-10-10",
-                new ReservationTime(1, "10:00"));
-        fakeReservationDao.save(reservation);
+        reservationDao.save("aa", "2023-10-10", 1);
         //when
-        fakeReservationDao.deleteById(id);
+        reservationDao.deleteById(1);
         //then
-        assertThat(fakeReservationDao.findAll()).hasSize(0);
+        assertThat(reservationDao.findAll()).hasSize(0);
+    }
+
+    @DisplayName("삭제 대상이 존재하면 true를 반환한다.")
+    @Test
+    void returnTrueWhenDeleted() {
+        //given
+        reservationDao.save("aa", "2023-10-10", 1);
+        //when
+        boolean deleted = reservationDao.deleteById(1);
+        //then
+        assertThat(deleted).isTrue();
+    }
+
+    @DisplayName("삭제 대상이 존재하지 않으면 false를 반환한다.")
+    @Test
+    void returnFalseWhenNotDeleted() {
+        //when
+        boolean deleted = reservationDao.deleteById(1);
+        //then
+        assertThat(deleted).isFalse();
     }
 }

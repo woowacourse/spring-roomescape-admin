@@ -1,8 +1,11 @@
 package roomescape.dao;
 
 import java.sql.Date;
+import java.sql.PreparedStatement;
 import java.util.List;
 import org.springframework.jdbc.core.JdbcTemplate;
+import org.springframework.jdbc.support.GeneratedKeyHolder;
+import org.springframework.jdbc.support.KeyHolder;
 import org.springframework.stereotype.Repository;
 import roomescape.domain.Reservation;
 import roomescape.domain.ReservationTime;
@@ -33,27 +36,21 @@ public class ReservationDaoImpl implements ReservationDao {
     }
 
     @Override
-    public void save(Reservation reservation) {
-        if (existsById(reservation.getId())) {
-            throw new IllegalArgumentException("duplicated id exists.");
-        }
-        jdbcTemplate.update("INSERT INTO reservation(id, name, date, time_id) VALUES(?,?,?,?)",
-                reservation.getId(),
-                reservation.getName(),
-                Date.valueOf(reservation.getDate()),
-                reservation.getTime().getId());
+    public long save(String name, String date, long timeId) {
+        KeyHolder keyHolder = new GeneratedKeyHolder();
+        String sql = "INSERT INTO reservation(name, date, time_id) VALUES(?, ?, ?)";
+        jdbcTemplate.update(con -> {
+            PreparedStatement preparedStatement = con.prepareStatement(sql, new String[]{"id"});
+            preparedStatement.setString(1, name);
+            preparedStatement.setDate(2, Date.valueOf(date));
+            preparedStatement.setLong(3, timeId);
+            return preparedStatement;
+        }, keyHolder);
+        return keyHolder.getKey().longValue();
     }
 
     @Override
     public boolean deleteById(long id) {
-        boolean exists = existsById(id);
-        jdbcTemplate.update("DELETE FROM reservation WHERE id = ?", id);
-        return exists;
-    }
-
-    private boolean existsById(long id) {
-        long count = jdbcTemplate.queryForObject(
-                "SELECT COUNT(1) FROM reservation WHERE id = ?", Long.class, id);
-        return count > 0;
+        return jdbcTemplate.update("DELETE FROM reservation WHERE id = ?", id) > 0;
     }
 }

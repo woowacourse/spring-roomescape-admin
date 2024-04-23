@@ -8,14 +8,11 @@ import roomescape.domain.Reservation;
 import roomescape.domain.ReservationTime;
 import roomescape.dto.ReservationRequest;
 import roomescape.dto.ReservationResponse;
-import roomescape.idgenerator.AutoIncrementIdGenerator;
-import roomescape.idgenerator.IdGenerator;
 
 @Service
 public class ReservationService {
     private final ReservationDao reservationDao;
     private final ReservationTimeDao reservationTimeDao;
-    private final IdGenerator idGenerator = new AutoIncrementIdGenerator();
 
     public ReservationService(ReservationDao reservationDao,
                               ReservationTimeDao reservationTimeDao) {
@@ -31,10 +28,12 @@ public class ReservationService {
     }
 
     public ReservationResponse save(ReservationRequest reservationRequest) {
-        long timeId = reservationRequest.timeId();
-        ReservationTime time = reservationTimeDao.findById(timeId);
-        Reservation reservation = reservationRequest.toDomain(idGenerator.generateNewId(), time);
-        reservationDao.save(reservation);
+        ReservationTime reservationTime = reservationTimeDao.findById(reservationRequest.timeId());
+        long id = reservationDao.save(
+                reservationRequest.name(),
+                reservationRequest.date(),
+                reservationRequest.timeId());
+        Reservation reservation = reservationRequest.toDomain(id, reservationTime);
         return new ReservationResponse(reservation);
     }
 

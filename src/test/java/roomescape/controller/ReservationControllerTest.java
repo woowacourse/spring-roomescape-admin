@@ -29,7 +29,7 @@ class ReservationControllerTest {
     private ReservationController reservationController;
 
     @BeforeEach
-    void init() {
+    void setUp() {
         RestAssured.port = port;
         jdbcTemplate.update("delete from reservation");
         jdbcTemplate.update("delete from reservation_time");

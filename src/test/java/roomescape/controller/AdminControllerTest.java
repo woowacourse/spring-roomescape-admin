@@ -14,7 +14,7 @@ class AdminControllerTest {
     private int port;
 
     @BeforeEach
-    void init() {
+    void setUp() {
         RestAssured.port = port;
     }
 

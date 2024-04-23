@@ -1,6 +1,5 @@
 package roomescape.service;
 
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import roomescape.domain.Reservation;
 import roomescape.domain.ReservationTime;
@@ -15,11 +14,7 @@ import java.util.List;
 public class ReservationService {
 
     private final ReservationMapper reservationMapper = new ReservationMapper();
-
-    @Autowired
     private final ReservationTimeService reservationTimeService;
-
-    @Autowired
     private final ReservationDao reservationDao;
 
     public ReservationService(ReservationTimeService reservationTimeService, ReservationDao reservationDao) {

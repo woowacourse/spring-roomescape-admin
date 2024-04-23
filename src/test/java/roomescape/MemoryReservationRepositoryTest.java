@@ -11,21 +11,21 @@ import org.junit.jupiter.api.DisplayNameGeneration;
 import org.junit.jupiter.api.DisplayNameGenerator;
 import org.junit.jupiter.api.Test;
 import roomescape.domain.Reservation;
-import roomescape.domain.ReservationRepository;
+import roomescape.domain.MemoryReservationRepository;
 
 @DisplayNameGeneration(DisplayNameGenerator.ReplaceUnderscores.class)
-class ReservationRepositoryTest {
+class MemoryReservationRepositoryTest {
 
-    ReservationRepository reservationRepository = ReservationRepository.getInstance();
+    MemoryReservationRepository memoryReservationRepository = MemoryReservationRepository.getInstance();
 
     @AfterEach
     void afterEach() {
-        List<Reservation> reservations = reservationRepository.findAll();
+        List<Reservation> reservations = memoryReservationRepository.findAll();
         if (!reservations.isEmpty()) {
             List<Long> reservationIds = reservations.stream()
                     .map(Reservation::getId)
                     .toList();
-            reservationIds.forEach(id -> reservationRepository.delete(id));
+            reservationIds.forEach(id -> memoryReservationRepository.delete(id));
         }
     }
 
@@ -35,8 +35,8 @@ class ReservationRepositoryTest {
         Reservation reservation = createReservation();
 
         //when
-        Long savedId = reservationRepository.save(reservation);
-        Reservation savedReservation = reservationRepository.findById(savedId);
+        Long savedId = memoryReservationRepository.save(reservation);
+        Reservation savedReservation = memoryReservationRepository.findById(savedId);
 
         //then
         Reservation reservationToCompare = new Reservation(savedId, reservation);
@@ -48,11 +48,11 @@ class ReservationRepositoryTest {
         //given
         Reservation reservation1 = createReservation();
         Reservation reservation2 = createReservation();
-        Long savedReservation1Id = reservationRepository.save(reservation1);
-        Long savedReservation2Id = reservationRepository.save(reservation2);
+        Long savedReservation1Id = memoryReservationRepository.save(reservation1);
+        Long savedReservation2Id = memoryReservationRepository.save(reservation2);
 
         //when
-        List<Reservation> reservations = reservationRepository.findAll();
+        List<Reservation> reservations = memoryReservationRepository.findAll();
 
         //then
         Reservation reservationToCompare1 = new Reservation(savedReservation1Id, reservation1);
@@ -68,14 +68,14 @@ class ReservationRepositoryTest {
     void 예약_삭제() {
         //given
         Reservation reservation = createReservation();
-        Long savedId = reservationRepository.save(reservation);
-        Reservation reservationToDelete = reservationRepository.findById(savedId);
+        Long savedId = memoryReservationRepository.save(reservation);
+        Reservation reservationToDelete = memoryReservationRepository.findById(savedId);
 
         //when
-        reservationRepository.delete(savedId);
+        memoryReservationRepository.delete(savedId);
 
         //then
-        List<Reservation> reservations = reservationRepository.findAll();
+        List<Reservation> reservations = memoryReservationRepository.findAll();
         assertThat(reservations).doesNotContain(reservationToDelete);
     }
 }

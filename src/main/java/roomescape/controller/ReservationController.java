@@ -10,16 +10,16 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
 import roomescape.domain.Reservation;
 import roomescape.dto.ReservationDto;
-import roomescape.domain.ReservationRepository;
+import roomescape.domain.MemoryReservationRepository;
 
 @RestController
 public class ReservationController {
 
-    private final ReservationRepository reservationRepository = ReservationRepository.getInstance();
+    private final MemoryReservationRepository memoryReservationRepository = MemoryReservationRepository.getInstance();
 
     @GetMapping("/reservations")
     public ResponseEntity<List<ReservationDto>> getReservations() {
-        List<Reservation> reservations = reservationRepository.findAll();
+        List<Reservation> reservations = memoryReservationRepository.findAll();
         List<ReservationDto> reservationResponse = reservations.stream()
                 .map(ReservationDto::toDto)
                 .toList();
@@ -29,8 +29,8 @@ public class ReservationController {
 
     @PostMapping("/reservations")
     public ResponseEntity<ReservationDto> addReservation(@RequestBody ReservationDto reservationDto) {
-        Long savedId = reservationRepository.save(reservationDto.toEntity());
-        Reservation savedReservation = reservationRepository.findById(savedId);
+        Long savedId = memoryReservationRepository.save(reservationDto.toEntity());
+        Reservation savedReservation = memoryReservationRepository.findById(savedId);
         ReservationDto reservationResponse = ReservationDto.toDto(savedReservation);
 
         return ResponseEntity.ok(reservationResponse);
@@ -38,7 +38,7 @@ public class ReservationController {
 
     @DeleteMapping("/reservations/{id}")
     public ResponseEntity<Void> deleteReservation(@PathVariable Long id) {
-        reservationRepository.delete(id);
+        memoryReservationRepository.delete(id);
         return ResponseEntity.ok().build();
     }
 }

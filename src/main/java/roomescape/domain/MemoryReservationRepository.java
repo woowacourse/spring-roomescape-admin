@@ -4,17 +4,17 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.atomic.AtomicLong;
 
-public class ReservationRepository {
+public class MemoryReservationRepository {
 
-    private static final ReservationRepository INSTANCE = new ReservationRepository();
+    private static final MemoryReservationRepository INSTANCE = new MemoryReservationRepository();
 
     private final List<Reservation> reservations = new ArrayList<>();
     private final static AtomicLong index = new AtomicLong(1);
 
-    private ReservationRepository() {
+    private MemoryReservationRepository() {
     }
 
-    public static ReservationRepository getInstance() {
+    public static MemoryReservationRepository getInstance() {
         return INSTANCE;
     }
 

@@ -37,7 +37,7 @@ public class ReservationService {
     public ReservationResponse saveReservation(ReservationSaveRequest request) {
         ReservationTime time = reservationTimeService.findTimeById(request.timeId());
         Reservation reservation = reservationMapper.mapToReservation(request, time);
-        long saveId = reservationDao.save(reservation);
+        Long saveId = reservationDao.save(reservation);
 
         return reservationMapper.mapToResponse(saveId, reservation);
     }

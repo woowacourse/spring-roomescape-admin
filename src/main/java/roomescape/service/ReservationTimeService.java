@@ -32,7 +32,7 @@ public class ReservationTimeService {
 
     public TimeResponse saveTime(TimeSaveRequest request) {
         ReservationTime reservationTime = timeMapper.mapToTime(request);
-        long saveId = timeDao.save(reservationTime);
+        Long saveId = timeDao.save(reservationTime);
 
         return timeMapper.mapToResponse(saveId, reservationTime);
     }

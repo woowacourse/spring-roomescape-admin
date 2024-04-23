@@ -25,7 +25,7 @@ public class TimeDao {
         this.jdbcTemplate = jdbcTemplate;
     }
 
-    public long save(ReservationTime reservationTime) {
+    public Long save(ReservationTime reservationTime) {
         KeyHolder keyHolder = new GeneratedKeyHolder();
         jdbcTemplate.update(connection -> {
             PreparedStatement ps = connection.prepareStatement(

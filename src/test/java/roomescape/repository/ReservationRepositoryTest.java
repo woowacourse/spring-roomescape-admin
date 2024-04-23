@@ -56,4 +56,15 @@ public class ReservationRepositoryTest {
         List<Reservation> reservations = reservationRepository.findAll();
         Assertions.assertThat(reservations.size()).isEqualTo(2);
     }
+
+    @Test
+    @DisplayName("DB 삭제 테스트")
+    void deleteTest() {
+        Reservation reservation = new Reservation(1L, "hogi", LocalDate.now(), LocalTime.now());
+        Long saveId = reservationRepository.save(reservation);
+
+        reservationRepository.delete(saveId);
+        List<Reservation> reservations = reservationRepository.findAll();
+        Assertions.assertThat(reservations.size()).isEqualTo(0);
+    }
 }

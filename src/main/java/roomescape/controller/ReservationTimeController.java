@@ -12,7 +12,7 @@ import roomescape.data.vo.ReservationTime;
 import roomescape.repository.ReservationTimeRepository;
 
 @RestController
-@RequestMapping("/time")
+@RequestMapping("/times")
 public class ReservationTimeController {
     private final ReservationTimeRepository reservationTimeRepository;
 

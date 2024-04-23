@@ -1,5 +1,5 @@
 ### 예약 시간 등록 요청
-POST localhost:8080/time
+POST localhost:8080/times
 Content-Type: application/json
 
 {
@@ -7,4 +7,4 @@ Content-Type: application/json
 }
 
 ### 예약 시간 조회 요청
-GET localhost:8080/time
+GET localhost:8080/times

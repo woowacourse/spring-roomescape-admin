@@ -2,7 +2,7 @@ package roomescape.service;
 
 import java.util.List;
 import org.springframework.stereotype.Service;
-import roomescape.dto.CreateReservationRequest;
+import roomescape.controller.dto.CreateReservationRequest;
 import roomescape.domain.Reservation;
 import roomescape.repository.ReservationRepository;
 

@@ -12,8 +12,8 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.jdbc.core.JdbcTemplate;
+import roomescape.controller.dto.CreateReservationRequest;
 import roomescape.domain.Reservation;
-import roomescape.dto.CreateReservationRequest;
 
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.DEFINED_PORT)
 class ReservationControllerTest {

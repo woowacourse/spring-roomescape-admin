@@ -50,4 +50,10 @@ public class ReservationTimeRepositoryImpl implements ReservationTimeRepository 
         String sql = "delete from reservation_time where id = ?";
         jdbcTemplate.update(sql, id);
     }
+
+    @Override
+    public NewReservationTime findById(final Long timeId) {
+        String sql = "select id, start_at from reservation_time where id = ?";
+        return jdbcTemplate.queryForObject(sql, reservationTimeRowMapper, timeId);
+    }
 }

@@ -10,7 +10,7 @@ import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
 import roomescape.domain.Reservation;
 import roomescape.domain.ReservationTime;
-import roomescape.dto.ReservationRequest;
+import roomescape.controller.request.ReservationRequest;
 import roomescape.repository.InMemoryReservationRepository;
 import roomescape.repository.InMemoryReservationTimeRepository;
 import roomescape.repository.ReservationRepository;

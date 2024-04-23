@@ -7,7 +7,8 @@ import roomescape.dto.ReservationTimeRequestDto;
 import roomescape.dto.ReservationTimeResponseDto;
 import roomescape.service.ReservationTimeService;
 
-import java.util.Set;
+import java.net.URI;
+import java.util.List;
 
 @RestController
 public class ReservationTimeController {
@@ -20,12 +21,13 @@ public class ReservationTimeController {
     @PostMapping("/times")
     public ResponseEntity<ReservationTimeResponseDto> addTime(@RequestBody ReservationTimeRequestDto timeRequestDto) {
         ReservationTime time  = reservationTimeService.addTime(timeRequestDto.toEntity());
-        return ResponseEntity.ok(new ReservationTimeResponseDto(time));
+        URI timeUri = URI.create("/reservations/" + time.getId());
+        return ResponseEntity.created(timeUri).body(new ReservationTimeResponseDto(time));
     }
 
     @GetMapping("/times")
-    public ResponseEntity<Set<ReservationTimeResponseDto>> times() {
-        Set<ReservationTimeResponseDto> reservationTimes = ReservationTimeResponseDto.listOf(reservationTimeService.allReservationTimes());
+    public ResponseEntity<List<ReservationTimeResponseDto>> times() {
+        List<ReservationTimeResponseDto> reservationTimes = ReservationTimeResponseDto.listOf(reservationTimeService.allReservationTimes());
         return ResponseEntity.ok(reservationTimes);
     }
 
@@ -33,6 +35,5 @@ public class ReservationTimeController {
     public ResponseEntity<Void> deleteTime(@PathVariable Long id) {
         reservationTimeService.delete(id);
         return ResponseEntity.ok().build();
-
     }
 }

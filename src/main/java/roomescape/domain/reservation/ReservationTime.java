@@ -21,10 +21,6 @@ public class ReservationTime {
         this(null, time);
     }
 
-    public ReservationTime(String time){
-        this(LocalTime.parse(time, TIME_FORMATTER));
-    }
-
     public ReservationTime(Long id, String time){
         this(id, LocalTime.parse(time, TIME_FORMATTER));
     }

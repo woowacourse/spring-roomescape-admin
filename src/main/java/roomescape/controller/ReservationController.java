@@ -7,6 +7,7 @@ import roomescape.dto.ReservationResponseDto;
 import roomescape.service.ReservationService;
 
 import java.net.URI;
+import java.util.List;
 import java.util.Set;
 import java.util.stream.Collectors;
 
@@ -19,18 +20,14 @@ public class ReservationController {
     }
 
     @GetMapping("reservations")
-    public ResponseEntity<Set<ReservationResponseDto>> reservations() {
-        Set<ReservationResponseDto> reservations = reservationService.getAllReservations()
-                .stream()
-                .map(ReservationResponseDto:: new)
-                .collect(Collectors.toSet());
-
+    public ResponseEntity<List<ReservationResponseDto>> reservations() {
+        List<ReservationResponseDto> reservations = ReservationResponseDto.listOf(reservationService.getAllReservations());
         return ResponseEntity.ok(reservations);
     }
 
     @PostMapping("reservations")
     public ResponseEntity<ReservationResponseDto> reserve(@RequestBody ReservationRequestDto reservationRequestDto) {
-        ReservationResponseDto reservedReservation = reservationService.reserve(reservationRequestDto.toEntity());
+        ReservationResponseDto reservedReservation = reservationService.reserve(reservationRequestDto);
         URI reservationUri = URI.create("/reservations/" + reservedReservation.id());
         return ResponseEntity.created(reservationUri).body(reservedReservation);
     }

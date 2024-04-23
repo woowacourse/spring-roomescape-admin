@@ -17,13 +17,14 @@ import java.util.Objects;
 @Repository
 public class ReservationDao {
     private JdbcTemplate jdbcTemplate;
+    private final StringBuilder stringBuilder = new StringBuilder();
 
     private final RowMapper<Reservation> reservationRowMapper = ((rs, rowNum) -> {
-        Long id = rs.getLong("id");
+        Long reservationId = rs.getLong("reservation_id");
         String name = rs.getString("name");
         ReservationDate date = new ReservationDate(rs.getString("date"));
-        ReservationTime time = new ReservationTime(rs.getString("time"));
-        return new Reservation(id, new Name(name), date, time);
+        ReservationTime time = new ReservationTime(rs.getLong("time_id"), rs.getString("time_value"));
+        return new Reservation(reservationId, new Name(name), date, time);
     });
 
     public ReservationDao(JdbcTemplate jdbcTemplate) {
@@ -31,12 +32,19 @@ public class ReservationDao {
     }
 
     public List<Reservation> findAllReservation() {
-        String sql = "SELECT id, name, date, time FROM reservation";
+        String sql = "SELECT r.id as reservation_id, r.name, r.date, t.id as time_id, t.start_at as time_value"+
+                " FROM reservation as r"+
+                " inner join reservation_time as t" +
+                " on r.time_id = t.id";
         return jdbcTemplate.query(sql, reservationRowMapper);
     }
 
     public Reservation findById(Long id) {
-        String sql = "SELECT id, name, date, time FROM reservation WHERE id = ?";
+        String sql = "SELECT r.id as reservation_id, r.name, r.date, t.id as time_id, t.start_at as time_value"+
+                    " FROM reservation as r"+
+                    " inner join reservation_time as t" +
+                    " on r.time_id = t.id" +
+                    " WHERE r.id = ?";
         return jdbcTemplate.queryForObject(sql, reservationRowMapper, id);
     }
 
@@ -44,11 +52,11 @@ public class ReservationDao {
         KeyHolder keyHolder = new GeneratedKeyHolder();
         jdbcTemplate.update(connection -> {
             PreparedStatement ps = connection.prepareStatement(
-                    "insert into reservation (name, date, time) values (?, ?, ?)",
+                    "insert into reservation (name, date, time_id) values (?, ?, ?)",
                     new String[]{"id"});
             ps.setString(1, reservation.getName().getName());
             ps.setString(2, reservation.getDate().getDate().toString());
-            ps.setString(3, reservation.getTime().getTime().toString());
+            ps.setLong(3, reservation.getTime().getId());
             return ps;
         }, keyHolder);
 

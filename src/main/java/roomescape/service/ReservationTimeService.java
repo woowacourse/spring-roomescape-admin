@@ -27,7 +27,7 @@ public class ReservationTimeService {
     }
 
     public ReservationTimeResponse saveTime(final ReservationTimeSaveRequest reservationTimeSaveRequest) {
-        final ReservationTimeSaveDto reservationTimeSaveDto = ReservationTimeSaveDto.from(reservationTimeSaveRequest);
+        final ReservationTimeSaveDto reservationTimeSaveDto = new ReservationTimeSaveDto(reservationTimeSaveRequest.startAt());
         final ReservationTime savedReservationTime = reservationTimeDao.save(reservationTimeSaveDto);
         return ReservationTimeResponse.from(savedReservationTime);
     }

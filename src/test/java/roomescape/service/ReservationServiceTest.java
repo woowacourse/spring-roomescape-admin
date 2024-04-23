@@ -60,7 +60,7 @@ class ReservationServiceTest {
 
             List<Reservation> reservations = reservationService.findReservations();
 
-            org.junit.jupiter.api.Assertions.assertAll(
+            Assertions.assertAll(
                     () -> assertThat(reservations).hasSize(3),
                     () -> assertThat(reservations).containsExactly(reservation1, reservation2, reservation3)
             );

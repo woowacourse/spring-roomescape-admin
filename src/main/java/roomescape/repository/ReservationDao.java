@@ -3,6 +3,7 @@ package roomescape.repository;
 import java.util.List;
 import javax.sql.DataSource;
 import org.springframework.jdbc.core.JdbcTemplate;
+import org.springframework.jdbc.core.RowMapper;
 import org.springframework.jdbc.core.namedparam.BeanPropertySqlParameterSource;
 import org.springframework.jdbc.core.namedparam.SqlParameterSource;
 import org.springframework.jdbc.core.simple.SimpleJdbcInsert;
@@ -36,16 +37,17 @@ public class ReservationDao {
             inner join reservation_time as t
             on r.time_id = t.id
             """;
-        return jdbcTemplate.query(
-            sql,
-            (resultSet, rowNum) -> new Reservation(
-                resultSet.getLong("id"),
-                resultSet.getString("name"),
-                resultSet.getString("date"),
-                new ReservationTime(
-                    resultSet.getLong("time_id"),
-                    resultSet.getString("time_value")
-                )
+        return jdbcTemplate.query(sql, mappingReservation());
+    }
+
+    private RowMapper<Reservation> mappingReservation() {
+        return (resultSet, rowNum) -> new Reservation(
+            resultSet.getLong("id"),
+            resultSet.getString("name"),
+            resultSet.getString("date"),
+            new ReservationTime(
+                resultSet.getLong("time_id"),
+                resultSet.getString("time_value")
             )
         );
     }

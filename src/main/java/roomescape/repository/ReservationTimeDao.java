@@ -3,6 +3,7 @@ package roomescape.repository;
 import java.util.List;
 import javax.sql.DataSource;
 import org.springframework.jdbc.core.JdbcTemplate;
+import org.springframework.jdbc.core.RowMapper;
 import org.springframework.jdbc.core.namedparam.BeanPropertySqlParameterSource;
 import org.springframework.jdbc.core.namedparam.SqlParameterSource;
 import org.springframework.jdbc.core.simple.SimpleJdbcInsert;
@@ -25,25 +26,19 @@ public class ReservationTimeDao {
 
     public List<ReservationTime> findAll() {
         String sql = "select id, start_at from reservation_time";
-        return jdbcTemplate.query(
-            sql,
-            (resultSet, rowNum) -> new ReservationTime(
-                resultSet.getLong("id"),
-                resultSet.getString("start_at")
-            )
+        return jdbcTemplate.query(sql, mappingReservationTime());
+    }
+
+    private RowMapper<ReservationTime> mappingReservationTime() {
+        return (resultSet, rowNum) -> new ReservationTime(
+            resultSet.getLong("id"),
+            resultSet.getString("start_at")
         );
     }
 
     public ReservationTime findById(Long timeId) {
         String sql = "select id, start_at from reservation_time where id = ?";
-        return jdbcTemplate.queryForObject(
-            sql,
-            (resultSet, rowNum) -> new ReservationTime(
-                resultSet.getLong("id"),
-                resultSet.getString("start_at")
-            ),
-            timeId
-        );
+        return jdbcTemplate.queryForObject(sql, mappingReservationTime(), timeId);
     }
 
     public Long save(ReservationTimeRequest reservationTimeRequest) {

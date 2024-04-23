@@ -1,6 +1,7 @@
 package roomescape.repository;
 
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.concurrent.atomic.AtomicLong;
 import org.springframework.stereotype.Repository;
@@ -13,9 +14,11 @@ public class ReservationMemoryRepository implements ReservationRepository {
     private final Map<Long, Reservation> reservations = new HashMap<>();
 
     @Override
-    public Long add(Reservation reservation) {
-        reservations.put(id.incrementAndGet(), reservation);
-        return id.get();
+    public Reservation add(Reservation reservation) {
+        long newId = id.incrementAndGet();
+        Reservation reservationWithId = Reservation.of(newId, reservation);
+        reservations.put(newId, reservationWithId);
+        return Reservation.of(newId, reservationWithId);
     }
 
     @Override
@@ -24,7 +27,9 @@ public class ReservationMemoryRepository implements ReservationRepository {
     }
 
     @Override
-    public Map<Long, Reservation> findAllWithId() {
-        return reservations;
+    public List<Reservation> findAll() {
+        return reservations.values()
+                .stream()
+                .toList();
     }
 }

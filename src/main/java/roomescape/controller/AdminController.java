@@ -23,10 +23,9 @@ public class AdminController {
 
     @GetMapping("/admin/reservation")
     public String getReservationPage(Model model) {
-        List<ReservationResponse> reservationResponses = reservationRepository.findAllWithId()
-                .entrySet()
+        List<ReservationResponse> reservationResponses = reservationRepository.findAll()
                 .stream()
-                .map(e -> ReservationResponse.of(e.getKey(), e.getValue()))
+                .map(ReservationResponse::from)
                 .toList();
         model.addAttribute("reservationResponses", reservationResponses);
         return "/admin/reservation-legacy";

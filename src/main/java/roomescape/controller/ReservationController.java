@@ -25,19 +25,17 @@ public class ReservationController {
 
     @GetMapping
     public List<ReservationResponse> getReservations() {
-        return reservationRepository.findAllWithId()
-                .entrySet()
+        return reservationRepository.findAll()
                 .stream()
-                .map(e -> ReservationResponse.of(e.getKey(), e.getValue()))
+                .map(ReservationResponse::from)
                 .toList();
     }
 
     @PostMapping
     public ReservationResponse addReservation(@RequestBody ReservationAddRequest reservationAddRequest) {
-        Reservation reservation = reservationAddRequest.toReservation();
-        Long id = reservationRepository.add(reservation);
+        Reservation reservation = reservationRepository.add(reservationAddRequest.toReservation());
 
-        return ReservationResponse.of(id, reservation);
+        return ReservationResponse.from(reservation);
     }
 
     @DeleteMapping("/{id}")

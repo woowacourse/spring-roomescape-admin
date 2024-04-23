@@ -1,13 +1,13 @@
 package roomescape.repository;
 
-import java.util.Map;
+import java.util.List;
 import roomescape.domain.Reservation;
 
 public interface ReservationRepository {
 
-    Long add(Reservation reservation);
+    Reservation add(Reservation reservation);
 
     void remove(Long id);
 
-    Map<Long, Reservation> findAllWithId();
+    List<Reservation> findAll();
 }

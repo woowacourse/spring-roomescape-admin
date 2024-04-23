@@ -13,17 +13,19 @@ class ReservationResponseTest {
     @Test
     @DisplayName("id와 Reservation 객체로 ReservationResponse를 만든다.")
     void createReservationResponse() {
-        Long id = 1L;
-        Reservation reservation = new Reservation("brown",
+        Reservation reservation = new Reservation(
+                1L,
+                "brown",
                 LocalDate.of(2024, 4, 1),
-                LocalTime.of(15, 32));
+                LocalTime.of(15, 32)
+        );
         ReservationResponse expected = new ReservationResponse(
                 1L,
                 "brown",
                 LocalDate.of(2024, 4, 1),
                 LocalTime.of(15, 32));
 
-        ReservationResponse reservationResponse = ReservationResponse.of(id, reservation);
+        ReservationResponse reservationResponse = ReservationResponse.from(reservation);
 
         assertThat(reservationResponse).isEqualTo(expected);
     }

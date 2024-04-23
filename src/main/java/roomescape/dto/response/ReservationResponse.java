@@ -14,9 +14,9 @@ public record ReservationResponse(
         LocalTime time
 ) {
 
-    public static ReservationResponse of(Long id, Reservation reservation) {
+    public static ReservationResponse from(Reservation reservation) {
         return new ReservationResponse(
-                id,
+                reservation.id(),
                 reservation.name(),
                 reservation.date(),
                 reservation.time()

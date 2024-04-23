@@ -77,4 +77,16 @@ public class ReservationTimeControllerTest {
                 .then().log().all()
                 .statusCode(200);
     }
+
+    @Test
+    void invalidTimeTest() {
+        Map<String, String> params = new HashMap<>();
+        params.put("startAt", "1000");
+
+        RestAssured.given().log().all()
+                .contentType(ContentType.JSON)
+                .body(params)
+                .when().post("/times")
+                .then().log().all().statusCode(400);
+    }
 }

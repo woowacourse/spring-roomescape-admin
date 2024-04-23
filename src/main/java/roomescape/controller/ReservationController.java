@@ -14,7 +14,6 @@ import java.util.List;
 public class ReservationController {
 
     @Autowired
-    //private ReservationDao reservationDao;
     private ReservationService reservationService;
 
     @GetMapping

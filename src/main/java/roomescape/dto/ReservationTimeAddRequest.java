@@ -9,6 +9,10 @@ public class ReservationTimeAddRequest {
 
     }
 
+    public ReservationTimeAddRequest(LocalTime startAt){
+        this.startAt = startAt;
+    }
+
     public LocalTime getStartAt() {
         return startAt;
     }

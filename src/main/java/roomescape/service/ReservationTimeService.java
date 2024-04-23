@@ -22,6 +22,6 @@ public class ReservationTimeService {
     }
 
     public boolean removeReservationTime(Long id) {
-        return reservationTimeDao.removeById(id) > 0;
+        return reservationTimeDao.deleteById(id) > 0;
     }
 }

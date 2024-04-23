@@ -14,7 +14,7 @@ import static org.assertj.core.api.AssertionsForClassTypes.assertThatThrownBy;
 class ScheduleTest {
     @DisplayName("일정은 현재 이전으로 설정하면 예외를 던진다.")
     @Test
-    void invalidSchedule() {
+    void invalidTermSchedule() {
         //given
         String name = "lini";
         String dateBeforeCurrent = "2023-10-04";
@@ -25,6 +25,21 @@ class ScheduleTest {
         assertThatThrownBy(() -> new Reservation(name, dateBeforeCurrent, reservationTime))
                 .isInstanceOf(InvalidReservationException.class)
                 .hasMessage("현재보다 이전으로 일정을 설정할 수 없습니다.");
+    }
+
+    @DisplayName("일정은 올바르지 않은 날짜로 설정하면 예외를 던진다.")
+    @Test
+    void invalidDateSchedule() {
+        //given
+        String name = "lini";
+        String invalidDate = "";
+        String time = "10:00";
+        ReservationTime reservationTime = new ReservationTime(1, time);
+
+        //when&then
+        assertThatThrownBy(() -> new Reservation(name, invalidDate, reservationTime))
+                .isInstanceOf(InvalidReservationException.class)
+                .hasMessage("올바르지 않은 날짜입니다. date: '" + invalidDate + "'");
     }
 
     @DisplayName("시간은 `HH:mm` 형식으로 반환한다.")

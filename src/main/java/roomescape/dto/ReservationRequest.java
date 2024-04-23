@@ -1,8 +1,8 @@
 package roomescape.dto;
 
-import com.fasterxml.jackson.annotation.JsonFormat;
 import java.time.LocalDate;
-import java.time.LocalTime;
+import roomescape.model.Reservation;
+import roomescape.model.ReservationTime;
 
 public class ReservationRequest {
     private final String name;
@@ -13,6 +13,11 @@ public class ReservationRequest {
         this.name = name;
         this.date = date;
         this.timeId = timeId;
+    }
+
+    public Reservation toEntity() {
+        return new Reservation(null, name, date,
+                new ReservationTime(timeId, null));
     }
 
     public String getName() {

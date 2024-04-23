@@ -11,8 +11,6 @@ import roomescape.repository.ReservationRepository;
 
 @Service
 public class ReservationService {
-    private static final Long TEMPORARY_ID = null;
-    private static final LocalTime TEMPORARY_START_AT = null;
     private final ReservationRepository reservationRepository;
 
     public ReservationService(ReservationRepository reservationRepository) {
@@ -27,9 +25,7 @@ public class ReservationService {
     }
 
     public ReservationResponse createReservation(ReservationRequest reservationRequest) {
-        Reservation reservation = new Reservation(TEMPORARY_ID, reservationRequest.getName(),
-                reservationRequest.getDate(),
-                new ReservationTime(reservationRequest.getTimeId(), TEMPORARY_START_AT));
+        Reservation reservation = reservationRequest.toEntity();
         Long id = reservationRepository.createReservation(reservation);
         return ReservationResponse.of(reservationRepository.readReservationById(id));
     }

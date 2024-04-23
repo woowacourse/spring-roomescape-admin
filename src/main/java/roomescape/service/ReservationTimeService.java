@@ -18,7 +18,7 @@ public class ReservationTimeService {
     }
 
     public ReservationTimeResponse createTime(ReservationTimeRequest reservationTimeRequest) {
-        ReservationTime reservationTime = new ReservationTime(TEMPORARY_ID, reservationTimeRequest.getStartAt());
+        ReservationTime reservationTime = reservationTimeRequest.toEntity();
         Long id = reservationTimeRepository.createTime(reservationTime);
         return new ReservationTimeResponse(id, reservationTime.getStartAt());
     }

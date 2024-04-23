@@ -2,6 +2,7 @@ package roomescape.controller;
 
 import static org.springframework.http.HttpStatus.NOT_FOUND;
 
+import java.net.URI;
 import java.util.List;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -31,9 +32,8 @@ public class ReservationController {
 
     @PostMapping("/reservations")
     public ResponseEntity<Reservation> create(@RequestBody ReservationCreateRequestDto reservationCreateRequestDto) {
-        Reservation reservation = reservationCreateRequestDto.createReservation(index.incrementAndGet());
-        reservations.add(reservation);
-        return ResponseEntity.ok(reservation);
+        Reservation reservation = reservationDao.insert(reservationCreateRequestDto);
+        return ResponseEntity.created(URI.create("/reservations/" + reservation.getId())).body(reservation);
     }
 
     @DeleteMapping("/reservations/{id}")

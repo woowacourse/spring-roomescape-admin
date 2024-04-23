@@ -9,7 +9,7 @@ import roomescape.domain.ReservationTime;
 
 import java.sql.PreparedStatement;
 import java.time.LocalTime;
-import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 @Repository
@@ -44,7 +44,7 @@ public class TimeDao {
 
     public List<ReservationTime> findAll() {
         List<ReservationTime> reservationTimes = jdbcTemplate.query("SELECT * FROM reservation_time", timeRowMapper);
-        return new ArrayList<>(reservationTimes);
+        return Collections.unmodifiableList(reservationTimes);
     }
 
     public void deleteById(Long id) {

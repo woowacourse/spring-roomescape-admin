@@ -11,6 +11,7 @@ import roomescape.domain.ReservationTime;
 import java.sql.PreparedStatement;
 import java.time.LocalDate;
 import java.time.LocalTime;
+import java.util.Collections;
 import java.util.List;
 
 @Repository
@@ -45,7 +46,7 @@ public class ReservationDao {
     }
 
     public List<Reservation> findAll() {
-        return jdbcTemplate.query("""
+        List<Reservation> reservations = jdbcTemplate.query("""
                 SELECT
                 r.id as reservation_id,
                 r.name,
@@ -55,6 +56,7 @@ public class ReservationDao {
                 FROM reservation as r
                 inner join reservation_time as t
                 on r.time_id = t.id""", reservationRowMapper);
+        return Collections.unmodifiableList(reservations);
     }
 
     public void deleteById(Long id) {

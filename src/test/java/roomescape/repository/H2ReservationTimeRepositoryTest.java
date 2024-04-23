@@ -36,8 +36,8 @@ class H2ReservationTimeRepositoryTest {
 
         List<ReservationTime> reservationTimes = reservationTimeRepository.findAll();
 
-        assertThat(reservationTimes.size())
-                .isEqualTo(2);
+        assertThat(reservationTimes)
+                .hasSize(2);
     }
 
     @DisplayName("저장된 예약 시간을 삭제한다")
@@ -48,7 +48,7 @@ class H2ReservationTimeRepositoryTest {
 
         reservationTimeRepository.deleteById(savedReservation.getId());
 
-        assertThat(reservationTimeRepository.findAll().size())
-                .isEqualTo(0);
+        assertThat(reservationTimeRepository.findAll())
+                .hasSize(0);
     }
 }

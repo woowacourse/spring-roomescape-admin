@@ -57,8 +57,8 @@ class InMemoryReservationRepositoryTest {
                 LocalDate.of(2024, 4, 20),
                 LocalTime.of(11, 11, 11)));
 
-        assertThat(reservationRepository.findAll().size())
-                .isEqualTo(2);
+        assertThat(reservationRepository.findAll())
+                .hasSize(2);
     }
 
     @DisplayName("저장된 예약을 삭제한다")
@@ -71,8 +71,8 @@ class InMemoryReservationRepositoryTest {
 
         reservationRepository.deleteById(savedReservation.getId());
 
-        assertThat(reservationRepository.findAll().size())
-                .isEqualTo(0);
+        assertThat(reservationRepository.findAll())
+                .hasSize(0);
     }
 
     @DisplayName("삭제할 예약이 존재하지 않는다")

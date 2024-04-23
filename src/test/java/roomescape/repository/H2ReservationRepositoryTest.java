@@ -61,8 +61,8 @@ class H2ReservationRepositoryTest {
                 LocalDate.now().plusDays(1),
                 savedReservationTime));
 
-        assertThat(reservationRepository.findAll().size())
-                .isEqualTo(2);
+        assertThat(reservationRepository.findAll())
+                .hasSize(2);
     }
 
     @DisplayName("저장된 예약을 삭제한다")
@@ -77,8 +77,8 @@ class H2ReservationRepositoryTest {
 
         reservationRepository.deleteById(savedReservation.getId());
 
-        assertThat(reservationRepository.findAll().size())
-                .isEqualTo(0);
+        assertThat(reservationRepository.findAll())
+                .hasSize(0);
     }
 
     @DisplayName("삭제할 예약이 존재하지 않는다")

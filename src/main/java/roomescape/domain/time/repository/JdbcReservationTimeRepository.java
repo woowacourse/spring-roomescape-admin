@@ -11,9 +11,11 @@ import org.springframework.jdbc.core.namedparam.SqlParameterSource;
 import org.springframework.jdbc.core.simple.SimpleJdbcInsert;
 import org.springframework.jdbc.core.simple.SimpleJdbcInsertOperations;
 import org.springframework.stereotype.Repository;
+import org.springframework.transaction.annotation.Transactional;
 import roomescape.domain.time.ReservationTime;
 
 @Repository
+@Transactional(readOnly = true)
 public class JdbcReservationTimeRepository implements ReservationTimeRepository {
     private final JdbcTemplate jdbcTemplate;
     private final SimpleJdbcInsertOperations jdbcInsert;
@@ -29,6 +31,7 @@ public class JdbcReservationTimeRepository implements ReservationTimeRepository 
                 .usingGeneratedKeyColumns("id");
     }
 
+    @Transactional
     @Override
     public ReservationTime save(ReservationTime reservationTime) {
         SqlParameterSource params = new MapSqlParameterSource()
@@ -60,6 +63,7 @@ public class JdbcReservationTimeRepository implements ReservationTimeRepository 
         return jdbcTemplate.query(sql, rowMapper);
     }
 
+    @Transactional
     @Override
     public void deleteById(long id) {
         String sql = "delete from reservation_time where id = ?";

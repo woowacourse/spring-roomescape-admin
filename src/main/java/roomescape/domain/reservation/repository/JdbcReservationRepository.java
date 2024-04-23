@@ -11,10 +11,12 @@ import org.springframework.jdbc.core.namedparam.SqlParameterSource;
 import org.springframework.jdbc.core.simple.SimpleJdbcInsert;
 import org.springframework.jdbc.core.simple.SimpleJdbcInsertOperations;
 import org.springframework.stereotype.Repository;
+import org.springframework.transaction.annotation.Transactional;
 import roomescape.domain.reservation.Reservation;
 import roomescape.domain.time.ReservationTime;
 
 @Repository // todo DAO 분리
+@Transactional(readOnly = true)
 public class JdbcReservationRepository implements ReservationRepository {
     private final JdbcTemplate jdbcTemplate;
     private final SimpleJdbcInsertOperations jdbcInsert;
@@ -32,6 +34,7 @@ public class JdbcReservationRepository implements ReservationRepository {
                 .usingGeneratedKeyColumns("id");
     }
 
+    @Transactional
     @Override
     public Reservation save(Reservation reservation) {
         SqlParameterSource params = new MapSqlParameterSource()
@@ -65,6 +68,7 @@ public class JdbcReservationRepository implements ReservationRepository {
         return jdbcTemplate.query(sql, rowMapper);
     }
 
+    @Transactional
     @Override
     public void deleteById(long id) {
         String sql = "delete from reservation where id = ?";

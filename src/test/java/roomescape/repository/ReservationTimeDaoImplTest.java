@@ -17,7 +17,7 @@ import roomescape.dto.ReservationTimeAddRequest;
 
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.DEFINED_PORT)
 @DirtiesContext(classMode = DirtiesContext.ClassMode.BEFORE_EACH_TEST_METHOD)
-class ReservationTimeDaoTest {
+class ReservationTimeDaoImplTest {
 
     @Autowired
     private JdbcTemplate jdbcTemplate;

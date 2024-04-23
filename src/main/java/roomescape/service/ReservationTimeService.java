@@ -1,7 +1,6 @@
 package roomescape.service;
 
 import java.util.List;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import roomescape.domain.ReservationTime;
 import roomescape.dto.ReservationTimeAddRequest;
@@ -10,14 +9,17 @@ import roomescape.repository.ReservationTimeDao;
 @Service
 public class ReservationTimeService {
 
-    @Autowired
     private ReservationTimeDao reservationTimeDao;
+
+    ReservationTimeService(ReservationTimeDao reservationTimeDao){
+        this.reservationTimeDao = reservationTimeDao;
+    }
 
     public List<ReservationTime> findAllReservationTime() {
         return reservationTimeDao.findAll();
     }
 
-    public ReservationTime addReservation(ReservationTimeAddRequest reservationTimeAddRequest) {
+    public ReservationTime addReservationTime(ReservationTimeAddRequest reservationTimeAddRequest) {
         return reservationTimeDao.insert(reservationTimeAddRequest);
     }
 

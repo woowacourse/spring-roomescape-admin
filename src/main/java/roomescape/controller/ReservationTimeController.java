@@ -26,7 +26,7 @@ public class ReservationTimeController {
 
     @PostMapping("/times")
     public ReservationTime addReservationTime(@RequestBody ReservationTimeAddRequest reservationTimeAddRequest) {
-        return reservationTimeService.addReservation(reservationTimeAddRequest);
+        return reservationTimeService.addReservationTime(reservationTimeAddRequest);
     }
 
     @DeleteMapping("/times/{id}")

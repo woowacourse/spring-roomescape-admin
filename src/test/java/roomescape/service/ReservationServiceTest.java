@@ -2,35 +2,28 @@ package roomescape.service;
 
 import static org.assertj.core.api.Assertions.assertThatCode;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
-import static org.mockito.Mockito.when;
 
 import java.time.LocalDate;
 import java.time.LocalTime;
-import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
-import org.mockito.Mock;
-import org.mockito.MockitoAnnotations;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.test.annotation.Rollback;
+import org.springframework.transaction.annotation.Transactional;
 import roomescape.entity.Reservation;
-import roomescape.repository.ReservationRepository;
 
+@SpringBootTest
+@Transactional
+@Rollback
 class ReservationServiceTest {
-    @Mock
-    private ReservationRepository reservationRepository;
-
+    @Autowired
     private ReservationService reservationService;
-
-    @BeforeEach
-    void setUp() {
-        MockitoAnnotations.openMocks(this);
-        reservationService = new ReservationService(reservationRepository);
-    }
 
     @DisplayName("시간이 겹치는 예약이 존재하지 않는 경우 예약에 성공한다")
     @Test
     void reservationSaveSuccessTest() {
         Reservation reservation = new Reservation("리비", LocalDate.of(2024, 4, 20), LocalTime.of(3, 57));
-        when(reservationRepository.isAnyReservationConflictWith(reservation)).thenReturn(false);
 
         assertThatCode(() -> reservationService.saveReservation(reservation))
                 .doesNotThrowAnyException();
@@ -40,9 +33,10 @@ class ReservationServiceTest {
     @Test
     void reservationSaveFailByTimeConflictTest() {
         Reservation reservation = new Reservation("리비", LocalDate.of(2024, 4, 20), LocalTime.of(3, 57));
-        when(reservationRepository.isAnyReservationConflictWith(reservation)).thenReturn(true);
+        Reservation conflictReservation = new Reservation("웨지", LocalDate.of(2024, 4, 20), LocalTime.of(3, 30));
+        reservationService.saveReservation(reservation);
 
-        assertThatThrownBy(() -> reservationService.saveReservation(reservation))
+        assertThatThrownBy(() -> reservationService.saveReservation(conflictReservation))
                 .isInstanceOf(IllegalStateException.class);
     }
 }

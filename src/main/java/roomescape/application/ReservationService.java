@@ -15,18 +15,18 @@ import roomescape.dto.ReservationResponse;
 @Service
 @Transactional
 public class ReservationService {
-    private final ReservationRepository reservationRepository;
-    private final ReservationTimeRepository reservationTimeRepository;
+    private final ReservationRepository reservations;
+    private final ReservationTimeRepository reservationTimes;
 
-    public ReservationService(ReservationRepository reservationRepository,
-                              ReservationTimeRepository reservationTimeRepository) {
-        this.reservationRepository = reservationRepository;
-        this.reservationTimeRepository = reservationTimeRepository;
+    public ReservationService(ReservationRepository reservations,
+                              ReservationTimeRepository reservationTimes) {
+        this.reservations = reservations;
+        this.reservationTimes = reservationTimes;
     }
 
     @Transactional(readOnly = true)
     public List<ReservationResponse> findAll() {
-        List<Reservation> reservations = reservationRepository.findAll();
+        List<Reservation> reservations = this.reservations.findAll();
         return convertToReservationResponses(reservations);
     }
 
@@ -37,17 +37,17 @@ public class ReservationService {
     }
 
     public ReservationResponse create(ReservationRequest request) {
-        ReservationTime reservationTime = reservationTimeRepository.findById(request.timeId())
+        ReservationTime reservationTime = reservationTimes.findById(request.timeId())
                 .orElseThrow(() -> new IllegalArgumentException("존재하지 않는 예약 시간 입니다."));
-        Reservation reservation = reservationRepository.save(request.from(reservationTime));
+        Reservation reservation = reservations.save(request.from(reservationTime));
         return ReservationResponse.from(reservation);
     }
 
     public void deleteById(long id) {
-        Optional<Reservation> findReservation = reservationRepository.findById(id);
+        Optional<Reservation> findReservation = reservations.findById(id);
         if (findReservation.isEmpty()) {
             throw new IllegalArgumentException("존재하지 않는 예약 입니다.");
         }
-        reservationRepository.deleteById(id);
+        reservations.deleteById(id);
     }
 }

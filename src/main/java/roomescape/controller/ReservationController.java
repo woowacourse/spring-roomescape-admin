@@ -2,7 +2,6 @@ package roomescape.controller;
 
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-import roomescape.domain.reservation.Reservation;
 import roomescape.dto.ReservationRequestDto;
 import roomescape.dto.ReservationResponseDto;
 import roomescape.service.ReservationService;
@@ -23,7 +22,7 @@ public class ReservationController {
     public ResponseEntity<Set<ReservationResponseDto>> reservations() {
         Set<ReservationResponseDto> reservations = reservationService.getAllReservations()
                 .stream()
-                .map(Reservation::toResponseDto)
+                .map(ReservationResponseDto:: new)
                 .collect(Collectors.toSet());
 
         return ResponseEntity.ok(reservations);
@@ -31,7 +30,7 @@ public class ReservationController {
 
     @PostMapping("reservations")
     public ResponseEntity<ReservationResponseDto> reserve(@RequestBody ReservationRequestDto reservationRequestDto) {
-        ReservationResponseDto reservedReservation = reservationService.reserve(reservationRequestDto);
+        ReservationResponseDto reservedReservation = reservationService.reserve(reservationRequestDto.toEntity());
         URI reservationUri = URI.create("/reservations/" + reservedReservation.id());
         return ResponseEntity.created(reservationUri).body(reservedReservation);
     }

@@ -1,6 +1,5 @@
 package roomescape.dao;
 
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;
 import org.springframework.jdbc.support.GeneratedKeyHolder;
@@ -10,7 +9,6 @@ import roomescape.domain.reservation.Name;
 import roomescape.domain.reservation.Reservation;
 import roomescape.domain.reservation.ReservationDate;
 import roomescape.domain.reservation.ReservationTime;
-import roomescape.dto.ReservationRequestDto;
 
 import java.sql.PreparedStatement;
 import java.util.List;
@@ -42,15 +40,15 @@ public class ReservationDao {
         return jdbcTemplate.queryForObject(sql, reservationRowMapper, id);
     }
 
-    public Long addReservation(ReservationRequestDto reservationRequestDto) {
+    public Long addReservation(Reservation reservation) {
         KeyHolder keyHolder = new GeneratedKeyHolder();
         jdbcTemplate.update(connection -> {
             PreparedStatement ps = connection.prepareStatement(
                     "insert into reservation (name, date, time) values (?, ?, ?)",
                     new String[]{"id"});
-            ps.setString(1, reservationRequestDto.name());
-            ps.setString(2, ReservationDate.formattedDate(reservationRequestDto.date()));
-            ps.setString(3, ReservationTime.formattedTime(reservationRequestDto.time()));
+            ps.setString(1, reservation.getName().getName());
+            ps.setString(2, reservation.getDate().getDate().toString());
+            ps.setString(3, reservation.getTime().getTime().toString());
             return ps;
         }, keyHolder);
 

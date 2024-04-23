@@ -28,9 +28,11 @@ public class ReservationTimeRepository {
     }
 
     public Optional<ReservationTime> findById(Long id) {
+        String findSql = "SELECT id, start_at FROM %s WHERE id = ?";
+
         try {
             ReservationTime reservationTime = jdbcTemplate.queryForObject(
-                    "SELECT id, start_at FROM %s WHERE id = ?".formatted(TABLE_NAME), ROW_MAPPER, id);
+                    findSql.formatted(TABLE_NAME), ROW_MAPPER, id);
             return Optional.ofNullable(reservationTime);
         } catch (EmptyResultDataAccessException exception) {
             return Optional.empty();

@@ -33,18 +33,20 @@ public class ReservationRepository {
     }
 
     public Optional<Reservation> findById(Long id) {
+        String findSql = """
+                    SELECT
+                        r.id AS id,
+                        name,
+                        date,
+                        t.id AS time_id,
+                        start_at
+                    FROM reservation AS r
+                    INNER JOIN reservation_time AS t
+                    ON r.time_id = t.id
+                    WHERE r.id = ?""";
+
         try {
-            Reservation reservation = jdbcTemplate.queryForObject("""
-                SELECT
-                    r.id AS id,
-                    name,
-                    date,
-                    t.id AS time_id,
-                    start_at
-                FROM reservation AS r
-                INNER JOIN reservation_time AS t
-                ON r.time_id = t.id
-                WHERE r.id = ?""", ROW_MAPPER, id);
+            Reservation reservation = jdbcTemplate.queryForObject(findSql, ROW_MAPPER, id);
             return Optional.ofNullable(reservation);
         } catch (EmptyResultDataAccessException exception) {
             return Optional.empty();

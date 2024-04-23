@@ -36,11 +36,21 @@ public class ReservationTimeService {
                 .toList();
     }
 
-    public void delete(long id) {
+    public void delete(Long id) {
         ReservationTime reservationTime = reservationTimeDao.findById(id)
                 .orElseThrow(() -> new IllegalArgumentException("Time not found"));
 
-        reservationDao.deleteByTimeId(reservationTime.getId());
+        validateExistReservation(id);
+
         reservationTimeDao.delete(reservationTime);
+    }
+
+    private void validateExistReservation(Long timeId) {
+        boolean existByTimeId = reservationDao.existByTimeId(timeId);
+
+        if (existByTimeId) {
+            throw new IllegalArgumentException("Reservation already exists in time_id = "
+                    + timeId +  " , can't delete reservation time");
+        }
     }
 }

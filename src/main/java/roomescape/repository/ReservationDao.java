@@ -3,6 +3,7 @@ package roomescape.repository;
 import java.time.LocalDate;
 import java.time.LocalTime;
 import java.util.List;
+import java.util.Objects;
 import java.util.Optional;
 import javax.sql.DataSource;
 import org.springframework.dao.EmptyResultDataAccessException;
@@ -39,7 +40,7 @@ public class ReservationDao {
         };
     }
 
-    public Optional<Reservation> findById(long id) {
+    public Optional<Reservation> findById(Long id) {
         String sql = """
                 SELECT a.id AS reservation_id, a.name AS name, a.date AS date, t.id AS time_id, t.start_at AS start_at
                 FROM reservation AS a
@@ -74,13 +75,18 @@ public class ReservationDao {
         jdbcTemplate.update(sql, reservation.getId());
     }
 
-    public void deleteByTimeId(long timeId) {
-        String sql = "DELETE FROM reservation WHERE time_id = ?";
-        jdbcTemplate.update(sql, timeId);
-    }
-
     public void deleteAll() {
         String sql = "DELETE FROM reservation";
         jdbcTemplate.update(sql);
+    }
+
+    public Boolean existByTimeId(Long timeId) {
+        String sql = "SELECT count(id) FROM reservation WHERE time_id = ?";
+        try {
+            long count = Objects.requireNonNull(jdbcTemplate.queryForObject(sql, Long.class, timeId));
+            return count > 0L;
+        } catch (EmptyResultDataAccessException e) {
+            return false;
+        }
     }
 }

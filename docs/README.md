@@ -124,7 +124,7 @@ public ReservationTime save(ReservationTime time) {
 }
 ```
 
-### 3. DirtiesContext
+### 3. @DirtiesContext
 
 ```java
 
@@ -156,3 +156,15 @@ public class MissionStepTest {
     // ...
 }
 ```
+
+### 4. @JdbcTest
+
+`DAO` 인 리포지토리를 테스트하기 위해 기존 `@SpringBootTest` 을 사용하였지만 모든 기본 `Bean` 을 전부 컨테이너로 올려 리소스 낭비가 생기기도 하였습니다.
+
+따라서 필요한 `JdbcTemplate` 만 올리며 굳이 스프링 웹을 실행하지 않고 테스트를 진행하기 위해 알아본 결과 `@Transactional` 어노테이션과 `@AutoConfigureTestDatabase`
+등 데이터베이스 테스트에 필요한 여러 기본 어노테이션이 모여있는 것읇 볼 수 있었습니다.
+
+따라서 `@SpringBootTest` 대신 `@JdbcTest` 을 사용함으로써 테스트 성능으 향상 시킬 수 있었습니다.
+
+여기서 `@Repository` 어노테이션으로 만들어진 리포지토리 빈은 `@SpringBootTest` 를 사용할 때만 `@Autowired` 로 가져올 수 있었지만 `@JdbcTest` 를 사용함으로써 가져올 수
+없기 때문에 생성자 호출 시점에서 직접 객체를 생성하도록 하였습니다.

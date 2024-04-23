@@ -4,16 +4,16 @@ import java.time.LocalTime;
 
 public class ReservationAvailableTime {
     private final Long id;
-    private final LocalTime time;
+    private final LocalTime startAt;
 
-    public ReservationAvailableTime(Long id, LocalTime time) {
-        validate(time);
+    public ReservationAvailableTime(Long id, LocalTime startAt) {
+        validate(startAt);
         this.id = id;
-        this.time = time;
+        this.startAt = startAt;
     }
 
-    public ReservationAvailableTime(LocalTime time) {
-        this(null, time);
+    public ReservationAvailableTime(LocalTime startAt) {
+        this(null, startAt);
     }
 
     private void validate(LocalTime time) {
@@ -31,5 +31,13 @@ public class ReservationAvailableTime {
         if (time.getMinute() != 0) {
             throw new IllegalStateException("예약 가능 시각은 정각 단위여야 합니다: " + time);
         }
+    }
+
+    public Long getId() {
+        return id;
+    }
+
+    public LocalTime getStartAt() {
+        return startAt;
     }
 }

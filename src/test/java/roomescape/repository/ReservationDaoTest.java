@@ -4,31 +4,27 @@ import static org.assertj.core.api.Assertions.assertThat;
 
 import java.time.LocalDate;
 import java.time.LocalTime;
-import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.boot.test.context.SpringBootTest.WebEnvironment;
+import org.springframework.boot.test.autoconfigure.jdbc.JdbcTest;
+import org.springframework.jdbc.core.JdbcTemplate;
 import roomescape.domain.Reservation;
 import roomescape.domain.ReservationTime;
 
-@SpringBootTest(webEnvironment = WebEnvironment.NONE)
+@JdbcTest
 class ReservationDaoTest {
 
-    @Autowired
-    private ReservationDao reservationDao;
+    private final ReservationDao reservationDao;
+    private final ReservationTimeDao reservationTimeDao;
 
     @Autowired
-    private ReservationTimeDao reservationTimeDao;
-
-    @AfterEach
-    void after() {
-        reservationDao.deleteAll();
-        reservationTimeDao.deleteAll();
+    public ReservationDaoTest(JdbcTemplate jdbcTemplate) {
+        this.reservationDao = new ReservationDao(jdbcTemplate);
+        this.reservationTimeDao = new ReservationTimeDao(jdbcTemplate);
     }
 
-    @DisplayName("예약 시간이 존재하는지 확인한다.")
+    @DisplayName("예약 시간이 존재하지 않는지 확인한다.")
     @Test
     void existFalse() {
         Boolean result = reservationDao.existByTimeId(1L);

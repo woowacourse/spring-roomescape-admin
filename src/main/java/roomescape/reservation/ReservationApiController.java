@@ -13,8 +13,8 @@ public class ReservationApiController {
     private ReservationService reservationService;
 
     @GetMapping("/reservations")
-    public ResponseEntity<List<Reservation>> getReservations() {
-        List<Reservation> reservations = reservationService.getReservationTimes();
+    public ResponseEntity<List<Reservation>> getAll() {
+        List<Reservation> reservations = reservationService.getReservations();
         return ResponseEntity.ok().body(reservations);
     }
 

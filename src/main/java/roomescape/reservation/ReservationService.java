@@ -21,7 +21,7 @@ public class ReservationService {
         return new Reservation(id, reservationRequest.getName(), reservationRequest.getDate(), reservationTime);
     }
 
-    public List<Reservation> getReservationTimes() {
+    public List<Reservation> getReservations() {
         return reservationRepository.findAll();
     }
 

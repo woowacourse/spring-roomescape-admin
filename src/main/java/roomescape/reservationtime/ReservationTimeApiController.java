@@ -12,16 +12,16 @@ public class ReservationTimeApiController {
     @Autowired
     private ReservationTimeService reservationTimeService;
 
+    @GetMapping("/times")
+    ResponseEntity<List<ReservationTime>> getAll() {
+        List<ReservationTime> reservationTimes = reservationTimeService.getReservationTimes();
+        return ResponseEntity.ok().body(reservationTimes);
+    }
+
     @PostMapping("/times")
     ResponseEntity<ReservationTime> create(@RequestBody final ReservationTimeRequest reservationTimeRequest) {
         ReservationTime newReservationTime = reservationTimeService.saveReservationTime(reservationTimeRequest);
         return ResponseEntity.ok().body(newReservationTime);
-    }
-
-    @GetMapping("/times")
-    ResponseEntity<List<ReservationTime>> getReservationTimes() {
-        List<ReservationTime> reservationTimes = reservationTimeService.getReservationTimes();
-        return ResponseEntity.ok().body(reservationTimes);
     }
 
     @DeleteMapping("/times/{id}")

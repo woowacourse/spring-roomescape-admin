@@ -54,8 +54,10 @@ public class ReservationController {
             return ps;
         }, keyHolder);
         Long id = keyHolder.getKey().longValue();
+        ReservationResponse reservationResponse = new ReservationResponse(id, reservationRequest.name(),
+                reservationRequest.date().toString(), reservationRequest.time().toString());
 
-        return ResponseEntity.created(URI.create("/reservations/" + id)).build();
+        return ResponseEntity.created(URI.create("/reservations/" + id)).body(reservationResponse);
     }
 
     @DeleteMapping("/{id}")

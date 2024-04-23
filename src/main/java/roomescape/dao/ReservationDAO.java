@@ -1,19 +1,17 @@
 package roomescape.dao;
 
 import java.sql.PreparedStatement;
-import java.time.LocalDate;
-import java.time.LocalTime;
 import java.util.List;
 import javax.sql.DataSource;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.support.GeneratedKeyHolder;
 import org.springframework.jdbc.support.KeyHolder;
-import org.springframework.stereotype.Component;
+import org.springframework.stereotype.Repository;
 import roomescape.dto.ReservationCreateRequestDto;
 import roomescape.model.Reservation;
 
-@Component
+@Repository
 public class ReservationDAO {
 
     private final JdbcTemplate jdbcTemplate;
@@ -29,8 +27,8 @@ public class ReservationDAO {
                 (resultSet, rowNum) -> new Reservation(
                         resultSet.getLong("id"),
                         resultSet.getString("name"),
-                        LocalDate.parse(resultSet.getString("date")),
-                        LocalTime.parse(resultSet.getString("time"))
+                        resultSet.getString("date"),
+                        resultSet.getString("time")
                 ));
     }
 

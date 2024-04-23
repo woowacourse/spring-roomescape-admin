@@ -12,11 +12,11 @@ public class Reservation {
     @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "HH:mm")
     private final LocalTime time;
 
-    public Reservation(long id, String name, LocalDate date, LocalTime time) {
+    public Reservation(long id, String name, String date, String time) {
         this.id = id;
         this.name = name;
-        this.date = date;
-        this.time = time;
+        this.date = LocalDate.parse(date);
+        this.time = LocalTime.parse(time);
     }
 
     public long getId() {

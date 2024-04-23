@@ -1,5 +1,6 @@
 package roomescape.support.extension;
 
+import java.util.List;
 import org.junit.jupiter.api.extension.AfterEachCallback;
 import org.junit.jupiter.api.extension.ExtensionContext;
 import org.springframework.jdbc.core.JdbcTemplate;
@@ -11,9 +12,10 @@ public class TableTruncateExtension implements AfterEachCallback {
         JdbcTemplate jdbcTemplate = SpringExtension.getApplicationContext(context).getBean(JdbcTemplate.class);
 
         jdbcTemplate.execute("SET REFERENTIAL_INTEGRITY FALSE");
-        jdbcTemplate.queryForList("SHOW TABLES").stream()
-                .map(table -> table.get("TABLE_NAME").toString())
-                .forEach(tableName -> jdbcTemplate.execute("TRUNCATE TABLE " + tableName + " RESTART IDENTITY"));
+        List<String> tables = jdbcTemplate.query("SHOW TABLES", (rs, rowNum) -> rs.getString(1));
+        for (String table : tables) {
+            jdbcTemplate.execute("TRUNCATE TABLE " + table + " RESTART IDENTITY");
+        }
         jdbcTemplate.execute("SET REFERENTIAL_INTEGRITY TRUE");
     }
 }

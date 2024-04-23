@@ -1,5 +1,6 @@
 package roomescape.repository;
 
+import java.util.List;
 import org.springframework.stereotype.Component;
 import roomescape.dao.ReservationTimeDao;
 import roomescape.data.vo.ReservationTime;
@@ -11,6 +12,11 @@ public class ReservationTimeRepositoryImpl implements ReservationTimeRepository 
 
     public ReservationTimeRepositoryImpl(ReservationTimeDao reservationTimeDao) {
         this.reservationTimeDao = reservationTimeDao;
+    }
+
+    @Override
+    public List<ReservationTime> getAll() {
+        return this.reservationTimeDao.findAll();
     }
 
     @Override

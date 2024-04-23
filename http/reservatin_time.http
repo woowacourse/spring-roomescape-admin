@@ -5,3 +5,6 @@ Content-Type: application/json
 {
   "startAt": "10:00"
 }
+
+### 예약 시간 조회 요청
+GET localhost:8080/time

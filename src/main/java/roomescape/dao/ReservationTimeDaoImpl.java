@@ -1,6 +1,7 @@
 package roomescape.dao;
 
 import java.sql.PreparedStatement;
+import java.util.List;
 import java.util.Objects;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.support.GeneratedKeyHolder;
@@ -26,6 +27,12 @@ public class ReservationTimeDaoImpl implements ReservationTimeDao {
             return pstmt;
         }, keyHolder);
         return Objects.requireNonNull(keyHolder.getKey()).longValue();
+    }
+
+    @Override
+    public List<ReservationTime> findAll() {
+        final var sql = "SELECT id, start_at FROM reservation_time";
+        return jdbcTemplate.query(sql, actorRowMapper());
     }
 
 }

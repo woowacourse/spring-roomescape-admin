@@ -1,6 +1,8 @@
 package roomescape.controller;
 
+import java.util.List;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -18,8 +20,13 @@ public class ReservationTimeController {
         this.reservationTimeRepository = reservationTimeRepository;
     }
 
+    @GetMapping
+    public ResponseEntity<List<ReservationTime>> getReservationTimes() {
+        return ResponseEntity.ok(reservationTimeRepository.getAll());
+    }
+
     @PostMapping
-    public ResponseEntity<ReservationTime> createTime(@RequestBody final ReservationTimeRequest dto) {
+    public ResponseEntity<ReservationTime> createReservationTime(@RequestBody final ReservationTimeRequest dto) {
         long savedId = reservationTimeRepository.add(new ReservationTime(dto.getStartAt()));
 
         return ResponseEntity.ok(new ReservationTime(savedId, dto.getStartAt()));

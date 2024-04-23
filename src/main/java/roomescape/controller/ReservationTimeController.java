@@ -21,8 +21,7 @@ public class ReservationTimeController {
     @PostMapping("/times")
     public ResponseEntity<ReservationTimeResponseDto> addTime(@RequestBody ReservationTimeRequestDto timeRequestDto) {
         ReservationTime time  = reservationTimeService.addTime(timeRequestDto.toEntity());
-        URI timeUri = URI.create("/reservations/" + time.getId());
-        return ResponseEntity.created(timeUri).body(new ReservationTimeResponseDto(time));
+        return ResponseEntity.ok(new ReservationTimeResponseDto(time));
     }
 
     @GetMapping("/times")

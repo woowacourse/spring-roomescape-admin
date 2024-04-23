@@ -3,9 +3,29 @@ package roomescape.domain;
 import com.fasterxml.jackson.annotation.JsonFormat;
 import java.time.LocalTime;
 import java.util.Objects;
+import org.springframework.cglib.core.Local;
 
-public record ReservationTime(Long id,
-                              @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "HH:mm", timezone = "Asia/Seoul") LocalTime startAt) {
+public class ReservationTime {
+    private Long id;
+    private final LocalTime startAt;
+
+    public ReservationTime(final LocalTime startAt) {
+        this.startAt = startAt;
+    }
+
+    public ReservationTime(Long id, LocalTime startAt) {
+        this.id = id;
+        this.startAt = startAt;
+    }
+
+    public Long getId() {
+        return id;
+    }
+
+    public LocalTime getStartAt() {
+        return startAt;
+    }
+
     @Override
     public boolean equals(final Object o) {
         if (this == o) {

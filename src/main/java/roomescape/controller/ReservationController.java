@@ -9,19 +9,21 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import roomescape.domain.Reservation;
 import roomescape.domain.repository.ReservationRepository;
 import roomescape.dto.ReservationDto;
 
 @RestController
+@RequestMapping("/reservations")
 public class ReservationController {
 
     @Autowired
     private ReservationRepository reservationRepository;
 
-    @GetMapping("/reservations")
-    public ResponseEntity<List<ReservationDto>> getReservations() {
+    @GetMapping
+    public ResponseEntity<List<ReservationDto>> getAllReservations() {
         List<Reservation> reservations = reservationRepository.findAll();
         List<ReservationDto> reservationResponse = reservations.stream()
                 .map(ReservationDto::toDto)
@@ -30,21 +32,21 @@ public class ReservationController {
         return ResponseEntity.ok(reservationResponse);
     }
 
-    @GetMapping("/reservations/{id}")
+    @GetMapping("/{id}")
     public ResponseEntity<ReservationDto> getReservation(@PathVariable Long id) {
         Reservation reservation = reservationRepository.findById(id);
         ReservationDto reservationResponse = ReservationDto.toDto(reservation);
         return ResponseEntity.ok(reservationResponse);
     }
 
-    @PostMapping("/reservations")
+    @PostMapping
     public ResponseEntity<Void> addReservation(@RequestBody ReservationDto reservationRequest) {
         Long savedId = reservationRepository.save(reservationRequest.toEntity());
         String redirectUrl = "/reservations/" + savedId;
         return ResponseEntity.status(HttpStatus.CREATED).header("Location", redirectUrl).build();
     }
 
-    @DeleteMapping("/reservations/{id}")
+    @DeleteMapping("/{id}")
     public ResponseEntity<Void> deleteReservation(@PathVariable Long id) {
         reservationRepository.delete(id);
         return ResponseEntity.status(HttpStatus.NO_CONTENT).build();

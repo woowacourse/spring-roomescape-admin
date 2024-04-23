@@ -18,7 +18,7 @@ public class ReservationCreateRequestDto {
 
     public static ReservationCreateRequestDto of(Reservation reservation, ReservationTime reservationTime) {
         return new ReservationCreateRequestDto(
-                reservation.getName(),
+                reservation.getName().getValue(),
                 reservation.getDate().toStringDate(),
                 reservationTime.getId()
         );

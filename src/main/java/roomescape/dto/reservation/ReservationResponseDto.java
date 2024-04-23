@@ -28,7 +28,7 @@ public class ReservationResponseDto {
         Date date = reservation.getDate();
         return new ReservationResponseDto(
                 reservation.getId(),
-                reservation.getName(),
+                reservation.getName().getValue(),
                 date.toStringDate(),
                 ReservationTimeResponseDto.from(reservation.getReservationTime())
         );

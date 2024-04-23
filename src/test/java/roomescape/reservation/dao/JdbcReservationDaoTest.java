@@ -1,26 +1,18 @@
-package roomescape.reservation;
+package roomescape.reservation.dao;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
-import io.restassured.RestAssured;
-import io.restassured.http.ContentType;
 import java.time.LocalDate;
 import java.time.LocalTime;
 import java.util.List;
 import org.assertj.core.api.Assertions;
-import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.jdbc.JdbcTest;
-import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.jdbc.core.JdbcTemplate;
-import org.springframework.test.annotation.DirtiesContext;
-import roomescape.reservation.dao.JdbcReservationDao;
 import roomescape.reservation.domain.Reservation;
 import roomescape.reservation.domain.ReservationTime;
-import roomescape.reservation.dto.request.ReservationRequest;
-import roomescape.reservation.dto.response.ReservationResponse;
 
 @JdbcTest
 class JdbcReservationDaoTest {

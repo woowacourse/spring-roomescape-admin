@@ -26,6 +26,12 @@ public class TimeController {
         );
     }
 
+    @GetMapping("/{id}")
+    public ResponseEntity<ReservationTime> readTimeById(@PathVariable long id) {
+        String sql = "SELECT id, start_at FROM reservation_time WHERE id = ?";
+        return ResponseEntity.ok(jdbcTemplate.queryForObject(sql, rowMapper, id));
+    }
+
     @GetMapping
     public ResponseEntity<List<ReservationTime>> readTimes() {
         String sql = "SELECT id, start_at FROM reservation_time";

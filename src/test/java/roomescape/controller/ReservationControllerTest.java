@@ -43,8 +43,8 @@ class ReservationControllerTest {
     @Test
     void createReservation() {
         jdbcTemplate.update("INSERT INTO reservation_time (start_at) VALUES (?)", "10:00");
-        ReservationCreateRequest params
-                = new ReservationCreateRequest("브라운", "2023-08-05",1);
+        ReservationCreateRequest params = new ReservationCreateRequest
+                ("브라운", "2023-08-05", 1);
 
         RestAssured.given().log().all()
                 .contentType(ContentType.JSON)
@@ -62,7 +62,6 @@ class ReservationControllerTest {
     @Test
     void deleteReservation() {
         jdbcTemplate.update("INSERT INTO reservation_time (start_at) VALUES (?)", "10:00");
-
         jdbcTemplate.update("INSERT INTO reservation (name, date, time_id) VALUES (?, ?, ?)"
                 , "브라운", "2023-08-05", "1");
 

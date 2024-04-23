@@ -8,6 +8,7 @@ import org.springframework.jdbc.support.GeneratedKeyHolder;
 import org.springframework.jdbc.support.KeyHolder;
 import org.springframework.web.bind.annotation.*;
 import roomescape.domain.Reservation;
+import roomescape.domain.ReservationTime;
 import roomescape.dto.ReservationCreateRequest;
 
 import java.sql.PreparedStatement;
@@ -25,18 +26,24 @@ public class ReservationController {
                 resultSet.getLong("id"),
                 resultSet.getString("name"),
                 resultSet.getString("date"),
-                resultSet.getLong("time_id")
+                new ReservationTime(
+                        resultSet.getLong("time_id"),
+                        resultSet.getString("start_at"))
         );
     }
 
     @GetMapping
     public ResponseEntity<List<Reservation>> readReservations() {
-        String sql = "SELECT id, name, date, time_id FROM reservation";
+        String sql = """
+                SELECT reservation.id, reservation.name, reservation.date, reservation.time_id, reservation_time.start_at
+                FROM reservation
+                JOIN reservation_time ON reservation.time_id = reservation_time.id;
+                """;
         return ResponseEntity.ok(jdbcTemplate.query(sql, rowMapper));
     }
 
     @PostMapping
-    public ResponseEntity<Reservation> createReservation(@RequestBody ReservationCreateRequest dto) {
+    public ResponseEntity<Void> createReservation(@RequestBody ReservationCreateRequest dto) {
         KeyHolder keyHolder = new GeneratedKeyHolder();
         String sql = "INSERT INTO reservation (name, date, time_id) values (?, ?, ?)";
 
@@ -51,7 +58,7 @@ public class ReservationController {
         return ResponseEntity
                 .status(HttpStatus.CREATED)
                 .header("Location", "/reservations/" + id)
-                .body(dto.createReservation(id));
+                .build();
     }
 
     @DeleteMapping("/{id}")

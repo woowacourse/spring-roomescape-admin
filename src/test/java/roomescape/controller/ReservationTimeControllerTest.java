@@ -32,7 +32,6 @@ class ReservationTimeControllerTest {
                 .statusCode(200).extract()
                 .jsonPath().getList(".", ReservationTime.class);
 
-
         Integer count = jdbcTemplate.queryForObject("SELECT count(1) from reservation_time", Integer.class);
 
         assertThat(times.size()).isEqualTo(count);

@@ -7,14 +7,10 @@ import io.restassured.http.ContentType;
 import java.util.Map;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
-import org.springframework.test.context.jdbc.Sql;
-import org.springframework.test.context.jdbc.Sql.ExecutionPhase;
 import roomescape.support.AcceptanceTest;
 
-@Sql(scripts = {"/truncate.sql"}, executionPhase = ExecutionPhase.AFTER_TEST_METHOD)
 class ReservationTimeAcceptanceTest extends AcceptanceTest {
     private static final String PATH = "/times";
-
 
     @DisplayName("[7단계 - 시간 관리 기능]")
     @Test

@@ -17,12 +17,10 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.mock.mockito.SpyBean;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.test.context.jdbc.Sql;
-import org.springframework.test.context.jdbc.Sql.ExecutionPhase;
 import roomescape.dto.reservation.ReservationResponse;
 import roomescape.support.AcceptanceTest;
 
-@Sql(value = "/init.sql", executionPhase = ExecutionPhase.BEFORE_TEST_METHOD)
-@Sql(scripts = {"/truncate.sql"}, executionPhase = ExecutionPhase.AFTER_TEST_METHOD)
+@Sql("/init.sql")
 class ReservationAcceptanceTest extends AcceptanceTest { // todo dynamic test
     private static final String PATH = "/reservations";
 

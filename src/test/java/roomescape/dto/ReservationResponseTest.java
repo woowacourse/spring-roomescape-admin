@@ -4,6 +4,7 @@ import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import roomescape.domain.ClientName;
 import roomescape.domain.Reservation;
+import roomescape.domain.ReservationTime;
 
 import java.time.LocalDate;
 import java.time.LocalTime;
@@ -16,11 +17,12 @@ class ReservationResponseTest {
     @Test
     void convertDtoTest() {
         // Given
+        ReservationTime reservationTime = new ReservationTime(1L, LocalTime.of(2, 22));
         Reservation reservation = new Reservation(
                 1L,
                 new ClientName("켈리"),
                 LocalDate.of(2023, 1, 12),
-                LocalTime.of(1, 12)
+                reservationTime
         );
 
         // When
@@ -31,6 +33,6 @@ class ReservationResponseTest {
         assertThat(reservationResponse.id()).isEqualTo(reservation.getId());
         assertThat(reservationResponse.name()).isEqualTo(reservation.getClientName().getValue());
         assertThat(reservationResponse.date()).isEqualTo(reservation.getDate());
-        assertThat(reservationResponse.time()).isEqualTo(reservation.getTime());
+        assertThat(reservationResponse.time().startAt()).isEqualTo(reservation.getTime().getStartAt());
     }
 }

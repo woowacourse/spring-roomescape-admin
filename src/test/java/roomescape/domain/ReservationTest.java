@@ -14,10 +14,11 @@ class ReservationTest {
     @Test
     void initializeIndex() {
         // Given
+        ReservationTime reservationTime = new ReservationTime(1L, LocalTime.of(2, 22));
         Reservation reservation = new Reservation(
                 new ClientName("켈리"),
                 LocalDate.of(2023, 1, 12),
-                LocalTime.of(1, 12));
+                reservationTime);
 
         Long initialIndex = 3L;
 

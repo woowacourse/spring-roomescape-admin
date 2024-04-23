@@ -8,6 +8,7 @@ import org.springframework.jdbc.support.KeyHolder;
 import org.springframework.stereotype.Repository;
 import roomescape.domain.ClientName;
 import roomescape.domain.Reservation;
+import roomescape.domain.ReservationTime;
 
 import java.util.List;
 
@@ -21,27 +22,31 @@ public class H2ReservationRepository implements ReservationRepository {
 
     @Override
     public List<Reservation> findAll() {
-        String sql = "SELECT id, name, date, time FROM reservation";
+        String sql = "SELECT "
+                + "r.id as reservation_id, r.name as name, r.date as date, t.id as time_id, t.start_at as time_value "
+                + "FROM reservation as r "
+                + "inner join reservation_time as t "
+                + "on r.time_id = t.id";
 
         return template.query(sql, itemRowMapper());
     }
 
     private RowMapper<Reservation> itemRowMapper() {
         return ((rs, rowNum) -> new Reservation(
-                rs.getLong("id"),
+                rs.getLong("reservation_id"),
                 new ClientName(rs.getString("name")),
                 rs.getDate("date").toLocalDate(),
-                rs.getTime("time").toLocalTime()
+                new ReservationTime(rs.getLong("time_id"), rs.getTime("time_value").toLocalTime())
         ));
     }
 
     @Override
     public Reservation save(final Reservation reservation) {
-        String sql = "INSERT INTO reservation(name, date, time) VALUES (:name, :date, :time)";
+        String sql = "INSERT INTO reservation(name, date, time_id) VALUES (:name, :date, :timeId)";
         MapSqlParameterSource param = new MapSqlParameterSource()
                 .addValue("name", reservation.getClientName().getValue())
                 .addValue("date", reservation.getDate())
-                .addValue("time", reservation.getTime());
+                .addValue("timeId", reservation.getTime().getId());
         KeyHolder keyHolder = new GeneratedKeyHolder();
         template.update(sql, param, keyHolder);
 

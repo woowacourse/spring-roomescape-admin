@@ -12,24 +12,21 @@ import roomescape.dto.ReservationResponse;
 import roomescape.dto.ReservationTimeResponse;
 import roomescape.dto.SaveReservationRequest;
 import roomescape.dto.SaveReservationTimeRequest;
-import roomescape.repository.ReservationRepository;
-import roomescape.repository.ReservationTimeRepository;
+import roomescape.service.ReservationService;
 
 import java.util.List;
 
 @RestController
 public class ReservationApiController {
-    private final ReservationRepository reservationRepository;
-    private final ReservationTimeRepository reservationTimeRepository;
+    private final ReservationService reservationService;
 
-    public ReservationApiController(final ReservationRepository reservationRepository, final ReservationTimeRepository reservationTimeRepository) {
-        this.reservationRepository = reservationRepository;
-        this.reservationTimeRepository = reservationTimeRepository;
+    public ReservationApiController(final ReservationService reservationService) {
+        this.reservationService = reservationService;
     }
 
     @GetMapping("/reservations")
     public List<ReservationResponse> getReservations() {
-        return reservationRepository.findAll()
+        return reservationService.getReservations()
                 .stream()
                 .map(ReservationResponse::from)
                 .toList();
@@ -37,20 +34,19 @@ public class ReservationApiController {
 
     @PostMapping("/reservations")
     public ReservationResponse saveReservation(@RequestBody final SaveReservationRequest request) {
-        Reservation reservation = request.toReservation();
-        Reservation savedReservation = reservationRepository.save(reservation);
+        Reservation savedReservation = reservationService.saveReservation(request);
 
         return ReservationResponse.from(savedReservation);
     }
 
     @DeleteMapping("/reservations/{reservation-id}")
     public void deleteReservation(@PathVariable("reservation-id") final Long reservationId) {
-        reservationRepository.deleteById(reservationId);
+        reservationService.deleteReservation(reservationId);
     }
 
     @GetMapping("/times")
     public List<ReservationTimeResponse> getReservationTimes() {
-        return reservationTimeRepository.findAll()
+        return reservationService.getReservationTimes()
                 .stream()
                 .map(ReservationTimeResponse::from)
                 .toList();
@@ -58,14 +54,13 @@ public class ReservationApiController {
 
     @PostMapping("/times")
     public ReservationTimeResponse saveReservationTime(@RequestBody final SaveReservationTimeRequest request) {
-        ReservationTime reservationTime = request.toReservationTime();
-        ReservationTime savedReservationTime = reservationTimeRepository.save(reservationTime);
+        ReservationTime savedReservationTime = reservationService.saveReservationTime(request);
 
         return ReservationTimeResponse.from(savedReservationTime);
     }
 
     @DeleteMapping("/times/{reservation-time-id}")
     public void deleteReservationTime(@PathVariable("reservation-time-id") final Long reservationTimeId) {
-        reservationTimeRepository.deleteById(reservationTimeId);
+        reservationService.deleteReservationTime(reservationTimeId);
     }
 }

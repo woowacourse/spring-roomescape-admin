@@ -40,14 +40,14 @@ class ReservationControllerTest {
     @Autowired
     private ReservationTimeRepository reservationTimeRepository;
 
-    @DisplayName("[200] 예약 관리 페이지에 접속한다")
+    @DisplayName("예약 목록 조회 요청 시, 200 OK를 응답한다")
     @Test
     void findAll() throws Exception {
         this.mvc.perform(get("/reservations"))
                 .andExpect(status().isOk());
     }
 
-    @DisplayName("[201] 예약을 추가한다")
+    @DisplayName("예약 추가 요청 시, 201 Created를 응답한다")
     @Test
     void add() throws Exception {
         reservationTimeRepository.save(new ReservationTime(LocalTime.of(9, 0)));
@@ -63,7 +63,7 @@ class ReservationControllerTest {
                 .andExpect(status().isCreated());
     }
 
-    @DisplayName("[204] 예약을 삭제한다")
+    @DisplayName("존재하는 예약에 대한 삭제 요청 시, 204 No Content를 응답한다")
     @Test
     void delete_() throws Exception {
         Reservation savedReservation = reservationRepository.save(new Reservation(
@@ -75,7 +75,7 @@ class ReservationControllerTest {
                 .andExpect(status().isNoContent());
     }
 
-    @DisplayName("[204] 예약이 존재하지 않는 경우에 삭제를 시도한다")
+    @DisplayName("존재하지 않는 예약에 대한 삭제 요청 시, 204 No Content를 응답한다")
     @Test
     void delete_notExist() throws Exception {
         Reservation savedReservation = reservationRepository.save(new Reservation(

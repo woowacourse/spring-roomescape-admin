@@ -10,7 +10,15 @@
 - [x] API 명세를 따라 예약 추가 API를 구현한다.
 - [x] API 명세를 따라 예약 삭제 API를 구현한다.
   - Spring MVC가 제공하는 Annotation을 활용한다.
-- [x] 예약 정보의 식별자를 생성할 때 AtomicLong을 활용한다. 
+- [x] 예약 정보의 식별자를 생성할 때 AtomicLong을 활용한다.
+- [ ] 데이터베이스를 연동한다.
+  - [ ] build.gradle 파일에 `spring-boot-stater-jdbc` 의존성을 추가한다.
+  - [ ] build.gradle 파일에 `h2` 의존성을 추가한다.
+- [ ] 테이블 스키마를 정의한다.
+  - [ ] 테이블 생성을 위해 `resources/schema.sql` 파일을 생성한다.
+  - [ ] 예약 테이블을 생성하는 쿼리를 작성한다.
+- [ ] 데이터베이스를 설정한다.
+  - [ ] datasource url을 `jdbc:h2:mem:database`로 지정한다.
 
 ## 커밋 컨밴션
 - feat, docs, fix, refactor, test, style, chore

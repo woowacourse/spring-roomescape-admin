@@ -1,4 +1,4 @@
-package roomescape.reservations;
+package roomescape.controller;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -9,7 +9,8 @@ import roomescape.dto.ReservationRepositoryDto;
 import roomescape.dto.ReservationTimeDto;
 import roomescape.dto.request.ReservationsRequest;
 import roomescape.dto.response.ReservationsResponse;
-import roomescape.times.ReservationTimeRepository;
+import roomescape.repository.ReservationRepository;
+import roomescape.repository.ReservationTimeRepository;
 
 import java.util.List;
 

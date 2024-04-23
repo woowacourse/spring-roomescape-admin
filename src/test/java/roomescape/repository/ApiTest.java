@@ -1,4 +1,4 @@
-package roomescape.times;
+package roomescape.repository;
 
 import io.restassured.RestAssured;
 import io.restassured.http.ContentType;

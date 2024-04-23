@@ -17,7 +17,7 @@ public class Reservation {
     }
 
     public boolean isIdOf(Long id) {
-        return id == id;
+        return this.id.equals(id);
     }
 
     public Long getId() {

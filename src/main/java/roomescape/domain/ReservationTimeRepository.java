@@ -48,4 +48,8 @@ public class ReservationTimeRepository {
             return reservationTime;
         };
     }
+
+    public void remove(ReservationTime reservationTime) {
+        jdbcTemplate.update("DELETE FROM reservation_time WHERE id = ?", reservationTime.getId());
+    }
 }

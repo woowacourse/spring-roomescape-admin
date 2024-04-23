@@ -66,4 +66,13 @@ class ReservationTimeControllerTest {
                 .then().log().all()
                 .statusCode(400);
     }
+
+    @Test
+    @DisplayName("예약 시간을 삭제한다.")
+    void deleteReservationTime() {
+        RestAssured.given().log().all()
+                .when().delete("/times/1")
+                .then().log().all()
+                .statusCode(204);
+    }
 }

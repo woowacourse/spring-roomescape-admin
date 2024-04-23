@@ -1,6 +1,7 @@
 package roomescape.domain;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import static org.junit.jupiter.api.Assertions.assertAll;
 
 import java.util.List;
@@ -9,6 +10,7 @@ import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.jdbc.JdbcTest;
+import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.test.context.jdbc.Sql;
 import org.springframework.test.context.jdbc.Sql.ExecutionPhase;
@@ -64,6 +66,23 @@ class ReservationTimeRepositoryTest {
         assertAll(
                 () -> assertThat(createdTime.getStartAt()).isEqualTo("13:00"),
                 () -> assertThat(reservationTimeRepository.findAll()).hasSize(3)
+        );
+    }
+
+    @Test
+    @DisplayName("예약 시간을 삭제한다.")
+    void delete() {
+        // given
+        ReservationTime time = new ReservationTime(1, "10:00");
+
+        // when
+        reservationTimeRepository.remove(time);
+
+        // then
+        assertAll(
+                () -> assertThatThrownBy(() -> reservationTimeRepository.findById(time.getId()))
+                        .isInstanceOf(EmptyResultDataAccessException.class),
+                () -> assertThat(reservationTimeRepository.findAll()).hasSize(1)
         );
     }
 }

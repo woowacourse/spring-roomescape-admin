@@ -1,6 +1,7 @@
 package roomescape.reservation;
 
 import org.springframework.http.ResponseEntity;
+import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.ArrayList;
@@ -11,9 +12,22 @@ import java.util.concurrent.atomic.AtomicLong;
 public class ReservationController {
     private final List<Reservation> reservations = new ArrayList<>();
     private final AtomicLong atomicLong = new AtomicLong();
+    private final JdbcTemplate jdbcTemplate;
+
+    public ReservationController(final JdbcTemplate jdbcTemplate) {
+        this.jdbcTemplate = jdbcTemplate;
+    }
 
     @GetMapping("/reservations")
     public ResponseEntity<List<Reservation>> reservations() {
+        final String sql = "SELECT * FROM reservation";
+        final List<Reservation> reservations = jdbcTemplate.query(sql, (resultSet, rowNum) -> new Reservation(
+                resultSet.getLong("id"),
+                resultSet.getString("name"),
+                resultSet.getDate("date").toLocalDate(),
+                resultSet.getTime("time").toLocalTime()
+        ));
+
         return ResponseEntity.ok(reservations);
     }
 

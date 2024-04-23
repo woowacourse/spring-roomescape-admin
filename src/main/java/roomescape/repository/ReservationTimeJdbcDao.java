@@ -39,7 +39,7 @@ public class ReservationTimeJdbcDao implements ReservationTimeDao {
         final String selectQuery = "SELECT id, start_at FROM reservation_times WHERE id = ?";
         try {
             final ReservationTime time = jdbcTemplate.queryForObject(selectQuery, reservationTimeConvertor, id);
-            return Optional.of(time);
+            return Optional.ofNullable(time);
         } catch (EmptyResultDataAccessException exception) {
             return Optional.empty();
         }

@@ -40,7 +40,7 @@ public class ReservationService {
         LocalDateTime reservationDateTime = LocalDateTime.of(date, time.getStartAt());
         LocalDateTime baseDateTime = LocalDateTime.now(clock).plusDays(IN_ADVANCE_RESERVATION_DAYS);
         if (reservationDateTime.isBefore(baseDateTime)) {
-            throw new IllegalArgumentException(String.format("예약은 %d일 전까지 가능합니다.", IN_ADVANCE_RESERVATION_DAYS));
+            throw new IllegalArgumentException(String.format("예약은 최소 %d일 전에 해야합니다.", IN_ADVANCE_RESERVATION_DAYS));
         }
     }
 

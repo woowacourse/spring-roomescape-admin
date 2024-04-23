@@ -60,7 +60,7 @@ class ReservationServiceTest {
 
         assertThatThrownBy(() -> reservationService.reserve(reservationRequest))
                 .isExactlyInstanceOf(IllegalArgumentException.class)
-                .hasMessageContaining("예약은 1일 전까지 가능합니다.");
+                .hasMessageContaining("예약은 최소 1일 전에 해야합니다.");
     }
 
     @Test

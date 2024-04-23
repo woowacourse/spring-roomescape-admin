@@ -30,7 +30,7 @@ public class ReservationController {
         return ResponseEntity.ok(reservationResponse);
     }
 
-    @GetMapping("/reservation/{id}")
+    @GetMapping("/reservations/{id}")
     public ResponseEntity<ReservationDto> getReservation(@PathVariable Long id) {
         Reservation reservation = reservationRepository.findById(id);
         ReservationDto reservationResponse = ReservationDto.toDto(reservation);

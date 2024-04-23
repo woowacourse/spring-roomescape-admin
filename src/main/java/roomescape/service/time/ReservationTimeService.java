@@ -28,7 +28,7 @@ public class ReservationTimeService {
         return new ReservationTimeResponseDto(time);
     }
 
-    public void deleteReservationTime(Long id) {
+    public void deleteReservationTime(long id) {
         reservationTimeRepository.deleteReservationTimeById(id);
     }
 }

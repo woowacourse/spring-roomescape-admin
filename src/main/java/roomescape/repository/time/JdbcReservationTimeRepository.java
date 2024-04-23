@@ -33,19 +33,19 @@ public class JdbcReservationTimeRepository implements ReservationTimeRepository 
     public ReservationTime insertReservationTime(ReservationTime reservationTime) {
         SqlParameterSource parameterSource = new MapSqlParameterSource()
                 .addValue("start_at", reservationTime.getStartAt());
-        Long savedId = jdbcInsert.executeAndReturnKey(parameterSource).longValue();
+        long savedId = jdbcInsert.executeAndReturnKey(parameterSource).longValue();
         return findReservationTimeById(savedId);
     }
 
     @Override
-    public void deleteReservationTimeById(Long id) {
+    public void deleteReservationTimeById(long id) {
         String sql = "DELETE FROM reservation_time WHERE id = :id";
         SqlParameterSource parameterSource = new MapSqlParameterSource()
                 .addValue("id", id);
         jdbcTemplate.update(sql, parameterSource);
     }
 
-    private ReservationTime findReservationTimeById(Long savedId) {
+    private ReservationTime findReservationTimeById(long savedId) {
         String sql = """
                 SELECT 
                 t.id, 

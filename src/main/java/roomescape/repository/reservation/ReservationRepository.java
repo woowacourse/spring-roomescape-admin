@@ -9,5 +9,5 @@ public interface ReservationRepository {
 
     Reservation insertReservation(Reservation reservation);
 
-    void deleteReservationById(Long id);
+    void deleteReservationById(long id);
 }

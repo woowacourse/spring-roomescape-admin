@@ -2,9 +2,9 @@ package roomescape.service;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import roomescape.controller.dto.TimeCreateRequest;
+import roomescape.controller.dto.ReservationTimeCreateRequest;
 import roomescape.domain.ReservationTime;
-import roomescape.repository.ReservationTimeDao;
+import roomescape.repository.reservationTime.ReservationTimeRepository;
 
 import java.util.List;
 
@@ -13,28 +13,28 @@ public class ReservationTimeService {
 
     private static final String RESERVATION_TIME_NOT_FOUND = "존재하지 않는 예약 시간입니다.";
 
-    private final ReservationTimeDao reservationTimeDao;
+    private final ReservationTimeRepository reservationTimeRepository;
 
     @Autowired
-    public ReservationTimeService(ReservationTimeDao reservationTimeDao) {
-        this.reservationTimeDao = reservationTimeDao;
+    public ReservationTimeService(ReservationTimeRepository reservationTimeRepository) {
+        this.reservationTimeRepository = reservationTimeRepository;
     }
 
-    public ReservationTime createTime(TimeCreateRequest request) {
+    public ReservationTime createTime(ReservationTimeCreateRequest request) {
         ReservationTime reservationTime = request.toReservationTime();
-        return reservationTimeDao.save(reservationTime);
+        return reservationTimeRepository.save(reservationTime);
     }
 
     public ReservationTime readReservationTime(Long id) {
-        return reservationTimeDao.findById(id)
+        return reservationTimeRepository.findById(id)
                 .orElseThrow(() -> new IllegalArgumentException(RESERVATION_TIME_NOT_FOUND));
     }
 
     public List<ReservationTime> readReservationTimes() {
-        return reservationTimeDao.findAll();
+        return reservationTimeRepository.findAll();
     }
 
     public void deleteTime(Long id) {
-        reservationTimeDao.deleteById(id);
+        reservationTimeRepository.deleteById(id);
     }
 }

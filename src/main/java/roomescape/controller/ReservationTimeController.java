@@ -4,7 +4,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
-import roomescape.controller.dto.TimeCreateRequest;
+import roomescape.controller.dto.ReservationTimeCreateRequest;
 import roomescape.domain.ReservationTime;
 import roomescape.service.ReservationTimeService;
 
@@ -35,7 +35,7 @@ public class ReservationTimeController {
     }
 
     @PostMapping
-    public ResponseEntity<ReservationTime> createTime(@RequestBody TimeCreateRequest request) {
+    public ResponseEntity<ReservationTime> createTime(@RequestBody ReservationTimeCreateRequest request) {
         ReservationTime data = reservationTimeService.createTime(request);
         return ResponseEntity.ok(data);
     }

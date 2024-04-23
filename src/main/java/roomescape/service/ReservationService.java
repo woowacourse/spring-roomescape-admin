@@ -5,7 +5,7 @@ import org.springframework.stereotype.Service;
 import roomescape.controller.dto.ReservationCreateRequest;
 import roomescape.domain.Reservation;
 import roomescape.domain.ReservationTime;
-import roomescape.repository.ReservationDao;
+import roomescape.repository.reservation.ReservationRepository;
 
 import java.util.List;
 
@@ -14,31 +14,31 @@ public class ReservationService {
 
     private static final String RESERVATION_NOT_FOUND = "존재하지 않는 예약입니다.";
 
-    private final ReservationDao reservationDao;
+    private final ReservationRepository reservationRepository;
     private final ReservationTimeService reservationTimeService;
 
     @Autowired
-    public ReservationService(ReservationDao reservationDao, ReservationTimeService reservationTimeService) {
-        this.reservationDao = reservationDao;
+    public ReservationService(ReservationRepository reservationRepository, ReservationTimeService reservationTimeService) {
+        this.reservationRepository = reservationRepository;
         this.reservationTimeService = reservationTimeService;
     }
 
     public List<Reservation> readReservations() {
-        return reservationDao.findAll();
+        return reservationRepository.findAll();
     }
 
     public Reservation readReservation(Long id) {
-        return reservationDao.findById(id)
+        return reservationRepository.findById(id)
                 .orElseThrow(() -> new IllegalArgumentException(RESERVATION_NOT_FOUND));
     }
 
     public Reservation createReservation(ReservationCreateRequest request) {
         ReservationTime reservationTime = reservationTimeService.readReservationTime(request.timeId());
         Reservation reservation = request.toReservation(reservationTime);
-        return reservationDao.save(reservation);
+        return reservationRepository.save(reservation);
     }
 
     public void deleteReservation(Long id) {
-        reservationDao.deleteById(id);
+        reservationRepository.deleteById(id);
     }
 }

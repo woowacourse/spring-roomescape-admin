@@ -1,4 +1,4 @@
-package roomescape.repository;
+package roomescape.repository.reservation;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.JdbcTemplate;
@@ -16,7 +16,7 @@ import java.util.List;
 import java.util.Optional;
 
 @Repository
-public class ReservationDao {
+public class ReservationDao implements ReservationRepository {
 
     private final JdbcTemplate jdbcTemplate;
 

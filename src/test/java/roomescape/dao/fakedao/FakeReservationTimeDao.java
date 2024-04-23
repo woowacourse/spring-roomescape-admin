@@ -4,6 +4,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.atomic.AtomicLong;
+import org.springframework.dao.EmptyResultDataAccessException;
 import roomescape.dao.ReservationTimeDao;
 import roomescape.domain.ReservationTime;
 
@@ -21,7 +22,10 @@ public class FakeReservationTimeDao implements ReservationTimeDao {
 
     @Override
     public ReservationTime findById(long id) {
-        return reservationTimes.get(id);
+        if (reservationTimes.containsKey(id)) {
+            return reservationTimes.get(id);
+        }
+        throw new EmptyResultDataAccessException(1);
     }
 
     @Override

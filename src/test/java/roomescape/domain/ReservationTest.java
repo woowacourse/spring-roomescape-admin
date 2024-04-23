@@ -7,7 +7,7 @@ import java.time.format.DateTimeParseException;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 
-public class ReservationTest {
+class ReservationTest {
     @DisplayName("정상 생성 테스트")
     @Test
     void validCreate() {

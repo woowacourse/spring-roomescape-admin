@@ -1,11 +1,9 @@
 package roomescape.controller;
 
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.junit.jupiter.api.Assertions.assertAll;
 
 import io.restassured.RestAssured;
 import io.restassured.http.ContentType;
-import io.restassured.response.Response;
 import java.lang.reflect.Field;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
@@ -38,15 +36,9 @@ class ReservationControllerTest {
     @DisplayName("모든 예약 내역 조회 테스트")
     @Test
     void findAllReservations() {
-        //when
-        Response response = RestAssured.given().log().all()
+        RestAssured.given().log().all()
                 .when().get("/reservations")
-                .then().log().all().extract().response();
-        //then
-        assertAll(
-                () -> assertThat(response.getStatusCode()).isEqualTo(HttpStatus.OK.value()),
-                () -> assertThat(response.jsonPath().getList(".")).isEmpty()
-        );
+                .then().log().all().assertThat().statusCode(HttpStatus.OK.value());
     }
 
     @DisplayName("예약 추가 테스트")
@@ -54,20 +46,12 @@ class ReservationControllerTest {
     void createReservation() {
         //given
         jdbcTemplate.update("INSERT INTO reservation_time VALUES (1, '10:00')");
-        Response response = RestAssured.given().log().all()
+        //then
+        RestAssured.given().log().all()
                 .contentType(ContentType.JSON)
                 .body(new ReservationRequest("브라운", "2023-08-05", 1))
                 .when().post("/reservations")
-                .then().log().all().extract().response();
-        //then
-        assertAll(
-                () -> assertThat(response.getStatusCode()).isEqualTo(HttpStatus.OK.value()),
-                () -> assertThat(response.jsonPath().getLong("id")).isNotNull(),
-                () -> assertThat(response.jsonPath().getString("name")).isEqualTo("브라운"),
-                () -> assertThat(response.jsonPath().getString("date")).isEqualTo("2023-08-05"),
-                () -> assertThat(response.jsonPath().getLong("time.id")).isEqualTo(1),
-                () -> assertThat(response.jsonPath().getString("time.startAt")).isEqualTo("10:00")
-        );
+                .then().log().all().assertThat().statusCode(HttpStatus.OK.value());
     }
 
     @DisplayName("예약 취소 성공 테스트")

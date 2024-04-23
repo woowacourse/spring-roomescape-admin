@@ -7,7 +7,7 @@ import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import roomescape.dao.fakedao.FakeReservationDao;
 
-public class FakeReservationDaoTest {
+class FakeReservationDaoTest {
     private ReservationDao reservationDao;
 
     @BeforeEach

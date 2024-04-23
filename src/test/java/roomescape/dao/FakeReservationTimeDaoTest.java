@@ -1,10 +1,12 @@
 package roomescape.dao;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.assertThatThrownBy;
 
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
+import org.springframework.dao.EmptyResultDataAccessException;
 import roomescape.dao.fakedao.FakeReservationTimeDao;
 
 class FakeReservationTimeDaoTest {
@@ -37,6 +39,13 @@ class FakeReservationTimeDaoTest {
         reservationTimeDao.save("10:00");
         //then
         assertThat(reservationTimeDao.findById(1).getStartAt()).isEqualTo("10:00");
+    }
+
+    @DisplayName("해당 id의 예약 시간이 없는 경우, 예외가 발생한다.")
+    @Test
+    void findByNotExistingId() {
+        assertThatThrownBy(() -> reservationTimeDao.findById(1))
+                .isInstanceOf(EmptyResultDataAccessException.class);
     }
 
     @DisplayName("해당 id의 예약 시간을 삭제한다.")

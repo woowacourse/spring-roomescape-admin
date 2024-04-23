@@ -25,11 +25,11 @@ public class JdbcReservationDao implements ReservationDao {
             );
 
     private final JdbcTemplate jdbcTemplate;
-    private final SimpleJdbcInsert reservationInsert;
+    private final SimpleJdbcInsert jdbcInsert;
 
     public JdbcReservationDao(JdbcTemplate jdbcTemplate) {
         this.jdbcTemplate = jdbcTemplate;
-        this.reservationInsert = new SimpleJdbcInsert(jdbcTemplate)
+        this.jdbcInsert = new SimpleJdbcInsert(jdbcTemplate)
                 .withTableName("reservation")
                 .usingGeneratedKeyColumns("id");
     }
@@ -37,7 +37,7 @@ public class JdbcReservationDao implements ReservationDao {
     @Override
     public Reservation save(Reservation reservation) {
         SqlParameterSource parameterSource = new BeanPropertySqlParameterSource(reservation);
-        Number id = reservationInsert.executeAndReturnKey(parameterSource);
+        Number id = jdbcInsert.executeAndReturnKey(parameterSource);
         return new Reservation(id.longValue(), reservation.getName(), reservation.getDate(), reservation.getTime());
     }
 

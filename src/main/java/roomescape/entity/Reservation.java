@@ -16,6 +16,10 @@ public class Reservation {
         this.time = time;
     }
 
+    public Reservation(String name, String date, String time) {
+        this(null, name, date, time);
+    }
+
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;

@@ -13,14 +13,13 @@ import static org.assertj.core.api.Assertions.assertThat;
 @JdbcTest
 public class H2ReservationRepositoryTest {
 
-    @Autowired
     private final JdbcTemplate jdbcTemplate;
     private final H2ReservationRepository repository;
 
     @BeforeEach
     void setup() {
         jdbcTemplate.update("TRUNCATE TABLE reservation");
-        jdbcTemplate.update("INSERT INTO reservation VALUES (1, 'nak', '2024-03-02', '23:22')");
+        jdbcTemplate.update("INSERT INTO reservation VALUES (0, 'nak', '2024-03-02', '23:22')");
     }
 
     @Autowired
@@ -39,7 +38,18 @@ public class H2ReservationRepositoryTest {
     @DisplayName("id를 통해 예약 조회 테스트")
     @Test
     void findByIdTest() {
-        assertThat(repository.findById(1L))
-                .isEqualTo(new Reservation(1L, "nak", "2024-03-02", "23:22"));
+        assertThat(repository.findById(0L))
+                .isEqualTo(new Reservation(0L, "nak", "2024-03-02", "23:22"));
+    }
+
+    @DisplayName("예약 저장 테스트")
+    @Test
+    void saveTest() {
+        // given & when
+        Long id = repository.save(new Reservation("solar", "2024-04-23", "11:00"));
+
+        // then
+        assertThat(repository.findById(id))
+                .isEqualTo(new Reservation(id, "solar", "2024-04-23", "11:00"));
     }
 }

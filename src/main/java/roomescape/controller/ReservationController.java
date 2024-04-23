@@ -30,7 +30,7 @@ public class ReservationController {
 
     @PostMapping("/reservations")
     public ResponseEntity<Reservation> save(@RequestBody ReservationRequest reservationRequest) {
-        int index = reservationService.save(reservationRequest);
+        long index = reservationService.save(reservationRequest);
         Reservation reservation = reservationService.findById(index);
         return ResponseEntity.created(URI.create("/reservations/" + index)).body(reservation);
     }

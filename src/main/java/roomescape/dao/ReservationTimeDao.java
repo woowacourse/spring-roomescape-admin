@@ -3,6 +3,8 @@ package roomescape.dao;
 import java.util.List;
 import javax.sql.DataSource;
 import org.springframework.jdbc.core.JdbcTemplate;
+import org.springframework.jdbc.support.GeneratedKeyHolder;
+import org.springframework.jdbc.support.KeyHolder;
 import org.springframework.stereotype.Repository;
 import roomescape.ReservationTime;
 import roomescape.dto.ReservationTimeRequest;
@@ -30,9 +32,11 @@ public class ReservationTimeDao {
                 id);
     }
 
-    public int save(ReservationTimeRequest reservationTimeRequest) {
+    public long save(ReservationTimeRequest reservationTimeRequest) {
         String sql = "INSERT INTO reservation_time (start_at) values (?)";
-        return jdbcTemplate.update(sql, reservationTimeRequest.startAt());
+        KeyHolder keyHolder = new GeneratedKeyHolder();
+        jdbcTemplate.update(sql, reservationTimeRequest.startAt(), keyHolder);
+        return keyHolder.getKey().longValue();
     }
 
     public void deleteById(long id) {

@@ -30,7 +30,7 @@ public class ReservationService {
         return new Reservation(reservationDto.id(), reservationDto.name(), reservationDto.date(), reservationTime);
     }
 
-    public int save(ReservationRequest reservationRequest) {
+    public long save(ReservationRequest reservationRequest) {
         return reservationDao.save(reservationRequest);
     }
 

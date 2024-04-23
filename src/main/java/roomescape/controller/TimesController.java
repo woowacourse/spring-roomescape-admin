@@ -31,7 +31,7 @@ public class TimesController {
 
     @PostMapping("/times")
     public ResponseEntity<ReservationTimeResponse> save(@RequestBody ReservationTimeRequest reservationTimeRequest) {
-        int index = reservationTimeService.save(reservationTimeRequest);
+        long index = reservationTimeService.save(reservationTimeRequest);
         return ResponseEntity.created(URI.create("/times/" + index)).body(ReservationTimeResponse.of(index, reservationTimeRequest));
     }
 

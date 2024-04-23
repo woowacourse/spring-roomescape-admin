@@ -23,7 +23,7 @@ public class ReservationTimeService {
         return reservationTimeDao.findById(id);
     }
 
-    public int save(ReservationTimeRequest reservationTimeRequest) {
+    public long save(ReservationTimeRequest reservationTimeRequest) {
         return reservationTimeDao.save(reservationTimeRequest);
     }
 

@@ -8,7 +8,7 @@ public record ReservationTimeResponse (
         long id,
         @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "HH:mm")
         LocalTime startAt) {
-    public static ReservationTimeResponse of(int index, ReservationTimeRequest reservationTimeRequest) {
+    public static ReservationTimeResponse of(long index, ReservationTimeRequest reservationTimeRequest) {
         return new ReservationTimeResponse(index, reservationTimeRequest.startAt());
     }
 }

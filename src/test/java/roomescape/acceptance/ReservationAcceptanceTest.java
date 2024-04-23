@@ -80,6 +80,16 @@ class ReservationAcceptanceTest {
         assertThat(countAfterDelete).isZero();
     }
 
+    @DisplayName("예약 삭제 : 해당 예약이 없을 경우")
+    @Test
+    void delete_reservation_whenNotExist() {
+        RestAssured.given().log().all()
+                .when().delete("/reservations/2")
+                .then().log().all()
+                .statusCode(400)
+                .body("message", is("해당 예약을 찾을 수 없습니다."));
+    }
+
     private Integer countReservation() {
         return jdbcTemplate.queryForObject("SELECT count(1) from reservation", Integer.class);
     }

@@ -11,7 +11,6 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.annotation.DirtiesContext;
 import roomescape.dao.ReservationDao;
 import roomescape.domain.Reservation;
-import roomescape.dto.request.ReservationCreateRequest;
 
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.DEFINED_PORT)
 @DirtiesContext(classMode = DirtiesContext.ClassMode.BEFORE_EACH_TEST_METHOD)
@@ -20,7 +19,8 @@ class ReservationDaoTest {
     @Autowired
     private ReservationDao reservationDao;
 
-    private final ReservationCreateRequest request = new ReservationCreateRequest(
+    private final Reservation request = new Reservation(
+            null,
             "브라운",
             LocalDate.of(2023, 8, 5),
             LocalTime.of(10, 0));

@@ -12,6 +12,7 @@ import org.springframework.web.bind.annotation.RestController;
 import roomescape.dao.ReservationDao;
 import roomescape.dto.request.ReservationCreateRequest;
 import roomescape.dto.response.ReservationResponse;
+import roomescape.domain.Reservation;
 
 @RestController
 public class ReservationController {
@@ -32,7 +33,8 @@ public class ReservationController {
 
     @PostMapping("/reservations")
     public ResponseEntity<Void> createReservation(@RequestBody ReservationCreateRequest reservationCreateRequest) {
-        Long savedId = reservationDao.save(reservationCreateRequest);
+        Reservation reservation = reservationCreateRequest.toReservation();
+        Long savedId = reservationDao.save(reservation);
         return ResponseEntity.created(URI.create("/reservations/" + savedId)).build();
     }
 

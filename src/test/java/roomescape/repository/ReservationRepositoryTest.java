@@ -139,11 +139,20 @@ class ReservationRepositoryTest {
                 null,
                 "gana",
                 LocalDate.of(2024, 3, 1),
-                new ReservationTime(12L, LocalTime.of(12, 25))
+                new ReservationTime(12L, null)
         ));
+        Reservation expected = new Reservation(
+                1L,
+                "gana",
+                LocalDate.of(2024, 3, 1),
+                new ReservationTime(12L, LocalTime.of(11, 20))
+        );
 
-        // when & then
-        assertThat(reservation.id()).isEqualTo(1L);
+        // when
+        Reservation actual = reservationRepository.findById(1L);
+
+        // then
+        assertThat(actual).isEqualTo(expected);
     }
 
     @Test

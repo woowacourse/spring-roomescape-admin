@@ -4,7 +4,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.support.GeneratedKeyHolder;
 import org.springframework.jdbc.support.KeyHolder;
-import org.springframework.stereotype.Component;
+import org.springframework.stereotype.Repository;
 import roomescape.domain.Reservation;
 
 import java.sql.PreparedStatement;
@@ -12,13 +12,13 @@ import java.time.LocalDate;
 import java.time.LocalTime;
 import java.util.List;
 
-@Component
+@Repository
 public class ReservationDao {
 
     @Autowired
     private JdbcTemplate jdbcTemplate;
 
-    public Reservation save(Reservation reservation) {
+    public Long save(Reservation reservation) {
         String query = "INSERT into reservation(name, date, time) VALUES(?, ?, ?)";
         KeyHolder keyHolder = new GeneratedKeyHolder();
 
@@ -32,8 +32,7 @@ public class ReservationDao {
             return ps;
         }, keyHolder);
 
-        Long id = keyHolder.getKey().longValue();
-        return Reservation.toEntity(id, reservation);
+        return keyHolder.getKey().longValue();
     }
 
     public List<Reservation> readAll() {

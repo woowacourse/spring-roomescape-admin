@@ -8,7 +8,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.test.annotation.DirtiesContext;
-import roomescape.domain.Time;
+import roomescape.domain.ReservationTime;
 import roomescape.dto.TimeCreateRequest;
 
 import java.util.List;
@@ -17,7 +17,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.DEFINED_PORT)
 @DirtiesContext(classMode = DirtiesContext.ClassMode.BEFORE_EACH_TEST_METHOD)
-class TimeControllerTest {
+class ReservationTimeControllerTest {
     @Autowired
     private JdbcTemplate jdbcTemplate;
 
@@ -26,11 +26,11 @@ class TimeControllerTest {
     void readTimes() {
         jdbcTemplate.update("INSERT INTO reservation_time (start_at) VALUES (?)", "10:00");
 
-        List<Time> times = RestAssured.given().log().all()
+        List<ReservationTime> times = RestAssured.given().log().all()
                 .when().get("/times")
                 .then().log().all()
                 .statusCode(200).extract()
-                .jsonPath().getList(".", Time.class);
+                .jsonPath().getList(".", ReservationTime.class);
 
 
         Integer count = jdbcTemplate.queryForObject("SELECT count(1) from reservation_time", Integer.class);

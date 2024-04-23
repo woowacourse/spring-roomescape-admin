@@ -6,7 +6,7 @@ import org.springframework.jdbc.core.RowMapper;
 import org.springframework.jdbc.support.GeneratedKeyHolder;
 import org.springframework.jdbc.support.KeyHolder;
 import org.springframework.web.bind.annotation.*;
-import roomescape.domain.Time;
+import roomescape.domain.ReservationTime;
 import roomescape.dto.TimeCreateRequest;
 
 import java.sql.PreparedStatement;
@@ -16,24 +16,24 @@ import java.util.List;
 @RequestMapping("/times")
 public class TimeController {
     private final JdbcTemplate jdbcTemplate;
-    private final RowMapper<Time> rowMapper;
+    private final RowMapper<ReservationTime> rowMapper;
 
     public TimeController(JdbcTemplate jdbcTemplate) {
         this.jdbcTemplate = jdbcTemplate;
-        this.rowMapper = (resultSet, rowNum) -> new Time(
+        this.rowMapper = (resultSet, rowNum) -> new ReservationTime(
                 resultSet.getLong("id"),
                 resultSet.getString("start_at")
         );
     }
 
     @GetMapping
-    public ResponseEntity<List<Time>> readTimes() {
+    public ResponseEntity<List<ReservationTime>> readTimes() {
         String sql = "SELECT id, start_at FROM reservation_time";
         return ResponseEntity.ok(jdbcTemplate.query(sql, rowMapper));
     }
 
     @PostMapping
-    public ResponseEntity<Time> createTime(@RequestBody TimeCreateRequest dto) {
+    public ResponseEntity<ReservationTime> createTime(@RequestBody TimeCreateRequest dto) {
         KeyHolder keyHolder = new GeneratedKeyHolder();
         String sql = "INSERT INTO reservation_time(start_at) VALUES (?)";
 

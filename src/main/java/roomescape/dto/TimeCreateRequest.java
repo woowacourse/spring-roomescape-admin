@@ -1,9 +1,9 @@
 package roomescape.dto;
 
-import roomescape.domain.Time;
+import roomescape.domain.ReservationTime;
 
 public record TimeCreateRequest(String startAt) {
-    public Time createTime(long id) {
-        return new Time(id, startAt);
+    public ReservationTime createTime(long id) {
+        return new ReservationTime(id, startAt);
     }
 }

@@ -33,7 +33,7 @@ class ReservationDaoTest {
     void checkConnection() {
         try (final Connection connection = Objects.requireNonNull(jdbcTemplate.getDataSource()).getConnection()) {
             assertThat(connection).isNotNull();
-            assertThat(connection.getCatalog()).isEqualTo("DATABASE_TEST");
+            assertThat(connection.getCatalog()).isEqualTo("DATABASE");
             assertThat(connection.getMetaData().getTables(null, null, "RESERVATION", null).next()).isTrue();
         } catch (final SQLException e) {
             throw new IllegalStateException(e);
@@ -77,10 +77,10 @@ class ReservationDaoTest {
         //given
         final Reservation reservation = Reservation.create("레디", "2024-02-03", "12:00");
         final Reservation expected1 = reservation.toReservation(1L);
-        final Optional<Reservation> findReservation1 = reservationDao.findById(1L);
 
         //when
         reservationDao.save(reservation);
+        final Optional<Reservation> findReservation1 = reservationDao.findById(1L);
 
         //then
         assertThat(findReservation1).contains(expected1);

@@ -17,11 +17,21 @@ public class ReservationRepository {
     }
 
     public List<Reservation> findAll() {
-        return jdbcTemplate.query("SELECT id, name, date, time FROM reservation", reservationRowMapper());
+        return jdbcTemplate.query(
+                """
+                        SELECT r.id AS reservation_id, r.name, r.date, t.id AS time_id, t.start_at AS time_value 
+                        FROM reservation AS r INNER JOIN reservation_time AS t 
+                        ON r.time_id = t.id""",
+                reservationRowMapper());
     }
 
     public Reservation findById(long id) {
-        return jdbcTemplate.queryForObject("SELECT id, name, date, time FROM reservation WHERE id = ?",
+        return jdbcTemplate.queryForObject(
+                """
+                        SELECT r.id AS reservation_id, r.name, r.date, t.id AS time_id, t.start_at AS time_value
+                        FROM reservation AS r INNER JOIN reservation_time AS t
+                        ON r.time_id = t.id
+                        WHERE r.id = ?""",
                 reservationRowMapper(), id);
     }
 
@@ -29,11 +39,11 @@ public class ReservationRepository {
         KeyHolder keyHolder = new GeneratedKeyHolder();
         jdbcTemplate.update(connection -> {
             PreparedStatement ps = connection.prepareStatement(
-                    "INSERT INTO reservation (name, date, time) VALUES (?, ?, ?)",
+                    "INSERT INTO reservation (name, date, time_id) VALUES (?, ?, ?)",
                     new String[]{"id"});
             ps.setString(1, reservation.getName());
             ps.setString(2, reservation.getDate());
-            ps.setString(3, reservation.getTime());
+            ps.setLong(3, reservation.getTime().getId());
             return ps;
         }, keyHolder);
 
@@ -48,10 +58,10 @@ public class ReservationRepository {
     private RowMapper<Reservation> reservationRowMapper() {
         return (resultSet, rowNum) -> {
             Reservation reservation = new Reservation(
-                    resultSet.getLong("id"),
+                    resultSet.getLong("reservation_id"),
                     resultSet.getString("name"),
                     resultSet.getString("date"),
-                    resultSet.getString("time")
+                    new ReservationTime(resultSet.getLong("time_id"), resultSet.getString("start_at"))
             );
             return reservation;
         };

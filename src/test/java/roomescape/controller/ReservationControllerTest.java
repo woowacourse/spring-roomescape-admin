@@ -21,9 +21,9 @@ import roomescape.dto.ReservationCreateDto;
 
 /*
  * 테스트 데이터베이스 초기 데이터
- * {ID=1, NAME=브라운, DATE=2024-05-04, TIME=16:00}
- * {ID=2, NAME=엘라, DATE=2024-05-04, TIME=17:00}
- * {ID=3, NAME=릴리, DATE=2023-08-05, TIME=15:40}
+ * {ID=1, NAME=브라운, DATE=2024-05-04, TIME={ID=1, START_AT="10:00"}}
+ * {ID=2, NAME=엘라, DATE=2024-05-04, TIME={ID=2, START_AT="11:00"}}
+ * {ID=3, NAME=릴리, DATE=2023-08-05, TIME={ID=2, START_AT="11:00"}}
  */
 @SpringBootTest(webEnvironment = WebEnvironment.RANDOM_PORT)
 @Sql(scripts = "/reset_test_data.sql", executionPhase = ExecutionPhase.BEFORE_TEST_METHOD)
@@ -64,7 +64,7 @@ class ReservationControllerTest {
     @Test
     @DisplayName("예약을 생성한다.")
     void createReservation() {
-        ReservationCreateDto createDto = new ReservationCreateDto("브라운", "2023-08-05", "15:40");
+        ReservationCreateDto createDto = new ReservationCreateDto("브라운", "2023-08-05", 1);
 
         RestAssured.given().log().all()
                 .contentType(ContentType.JSON)

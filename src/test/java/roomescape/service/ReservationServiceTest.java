@@ -8,8 +8,11 @@ import static org.mockito.Mockito.when;
 import java.time.LocalDate;
 import java.util.List;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
+import org.junit.jupiter.api.parallel.Execution;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
+import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.boot.test.context.SpringBootTest;
 import roomescape.domain.Reservation;
 import roomescape.domain.ReservationTime;
@@ -18,7 +21,7 @@ import roomescape.dto.ReservationResponse;
 import roomescape.fixture.Fixture;
 import roomescape.repository.ReservationRepository;
 
-@SpringBootTest
+@ExtendWith(MockitoExtension.class)
 class ReservationServiceTest {
 
     @Mock

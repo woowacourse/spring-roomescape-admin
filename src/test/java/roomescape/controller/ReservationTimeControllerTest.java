@@ -1,106 +1,80 @@
 package roomescape.controller;
 
+import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.ArgumentMatchers.anyLong;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.delete;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
+import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.header;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
+
 import com.fasterxml.jackson.databind.ObjectMapper;
-import io.restassured.RestAssured;
-import io.restassured.http.ContentType;
-import io.restassured.response.ExtractableResponse;
-import io.restassured.response.Response;
 import java.time.LocalTime;
 import java.util.List;
-import org.assertj.core.api.SoftAssertions;
-import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import org.mockito.BDDMockito;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpStatus;
+import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
+import org.springframework.boot.test.mock.mockito.MockBean;
+import org.springframework.http.MediaType;
+import org.springframework.test.web.servlet.MockMvc;
 import roomescape.domain.ReservationTime;
-import roomescape.dto.ReservationTimeRequest;
 import roomescape.dto.ReservationTimeResponse;
-import roomescape.fixture.Fixture;
-import roomescape.repository.ReservationTimeRepository;
+import roomescape.service.ReservationTimeService;
 
-class ReservationTimeControllerTest extends BaseControllerTest {
-
-    @Autowired
-    private ObjectMapper mapper;
+@WebMvcTest(ReservationTimeController.class)
+class ReservationTimeControllerTest {
 
     @Autowired
-    private ReservationTimeRepository reservationTimeRepository;
+    private ObjectMapper objectMapper;
 
-    private ReservationTime reservationTime1, reservationTime2;
+    @Autowired
+    private MockMvc mockMvc;
 
-    @BeforeEach
-    void setUp() {
-        reservationTime1 = reservationTimeRepository.save(Fixture.RESERVATION_TIME_1);
-        reservationTime2 = reservationTimeRepository.save(Fixture.RESERVATION_TIME_2);
+    @MockBean
+    private ReservationTimeService reservationTimeService;
+
+    @Test
+    void getAllReservationTimes() throws Exception {
+        ReservationTime reservationTime = new ReservationTime(1L, LocalTime.of(10, 30));
+
+        BDDMockito.given(reservationTimeService.getAllReservationTimes())
+                .willReturn(List.of(ReservationTimeResponse.from(reservationTime)));
+
+        mockMvc.perform(get("/times"))
+                .andDo(print())
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$[0].id").value(reservationTime.getId()))
+                .andExpect(jsonPath("$[0].startAt").value(reservationTime.getStartAt().toString()));
     }
 
     @Test
-    void getAllReservationTimes() {
-        ExtractableResponse<Response> response = RestAssured.given().log().all()
-                .when().get("/times")
-                .then().log().all()
-                .extract();
+    void addReservationTime() throws Exception {
+        ReservationTime reservationTime = new ReservationTime(1L, LocalTime.of(10, 30));
 
-        List<ReservationTimeResponse> reservationTimeResponses = getReservationTimeResponses(response);
+        BDDMockito.given(reservationTimeService.addReservationTime(any()))
+                .willReturn(ReservationTimeResponse.from(reservationTime));
 
-        SoftAssertions.assertSoftly(softly -> {
-            softly.assertThat(response.statusCode()).isEqualTo(HttpStatus.OK.value());
-            softly.assertThat(reservationTimeResponses).hasSize(2);
-            softly.assertThat(reservationTimeResponses).containsExactly(
-                    ReservationTimeResponse.from(reservationTime1),
-                    ReservationTimeResponse.from(reservationTime2)
-            );
-        });
+        mockMvc.perform(post("/times")
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(objectMapper.writeValueAsString(reservationTime)))
+                .andDo(print())
+                .andExpect(status().isCreated())
+                .andExpect(header().string("Location", "/times/" + reservationTime.getId()))
+                .andExpect(jsonPath("$.id").value(reservationTime.getId()))
+                .andExpect(jsonPath("$.startAt").value(reservationTime.getStartAt().toString()));
     }
 
     @Test
-    void addReservationTime() {
-        ExtractableResponse<Response> response = RestAssured.given().log().all()
-                .contentType(ContentType.JSON)
-                .body(makeReservationTimeRequest())
-                .when().post("/times")
-                .then().log().all()
-                .extract();
+    void deleteReservationTime() throws Exception {
+        BDDMockito.willDoNothing()
+                .given(reservationTimeService)
+                .deleteReservationTimeById(anyLong());
 
-        ReservationTimeResponse reservationTimeResponse = getReservationTimeResponse(response);
-
-        SoftAssertions.assertSoftly(softly -> {
-            softly.assertThat(response.statusCode()).isEqualTo(HttpStatus.CREATED.value());
-            softly.assertThat(response.header("Location"))
-                    .isEqualTo("/times/" + reservationTimeResponse.id());
-        });
-    }
-
-    @Test
-    void deleteReservationTime() {
-        ReservationTime reservationTime = reservationTimeRepository.save(Fixture.RESERVATION_TIME_1);
-
-        ExtractableResponse<Response> response = RestAssured.given().log().all()
-                .when().delete("/times/" + reservationTime.getId())
-                .then().log().all()
-                .extract();
-
-        SoftAssertions.assertSoftly(softly -> {
-            softly.assertThat(response.statusCode()).isEqualTo(HttpStatus.NO_CONTENT.value());
-        });
-    }
-
-    private String makeReservationTimeRequest() {
-        try {
-            ReservationTimeRequest request = new ReservationTimeRequest(
-                    LocalTime.of(15, 40)
-            );
-            return mapper.writeValueAsString(request);
-        } catch (Exception e) {
-            throw new RuntimeException(e);
-        }
-    }
-
-    private ReservationTimeResponse getReservationTimeResponse(ExtractableResponse<Response> response) {
-        return response.jsonPath().getObject(".", ReservationTimeResponse.class);
-    }
-
-    private List<ReservationTimeResponse> getReservationTimeResponses(ExtractableResponse<Response> response) {
-        return response.jsonPath().getList(".", ReservationTimeResponse.class);
+        mockMvc.perform(delete("/times/{id}", anyLong()))
+                .andDo(print())
+                .andExpect(status().isNoContent());
     }
 }

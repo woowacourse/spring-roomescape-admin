@@ -1,115 +1,92 @@
 package roomescape.controller;
 
-import static org.assertj.core.api.Assertions.assertThat;
+import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.ArgumentMatchers.anyLong;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.delete;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
+import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.header;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import io.restassured.RestAssured;
-import io.restassured.http.ContentType;
-import io.restassured.response.ExtractableResponse;
-import io.restassured.response.Response;
 import java.time.LocalDate;
+import java.time.LocalTime;
 import java.util.List;
-import org.assertj.core.api.SoftAssertions;
-import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import org.mockito.BDDMockito;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpStatus;
+import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
+import org.springframework.boot.test.mock.mockito.MockBean;
+import org.springframework.http.MediaType;
+import org.springframework.test.web.servlet.MockMvc;
 import roomescape.domain.Reservation;
 import roomescape.domain.ReservationTime;
 import roomescape.dto.ReservationRequest;
 import roomescape.dto.ReservationResponse;
-import roomescape.fixture.Fixture;
-import roomescape.repository.ReservationRepository;
-import roomescape.repository.ReservationTimeRepository;
+import roomescape.service.ReservationService;
 
-class ReservationControllerTest extends BaseControllerTest {
-
-    @Autowired
-    private ObjectMapper mapper;
+@WebMvcTest(ReservationController.class)
+class ReservationControllerTest {
 
     @Autowired
-    private ReservationTimeRepository reservationTimeRepository;
+    private ObjectMapper objectMapper;
 
     @Autowired
-    private ReservationRepository reservationRepository;
+    private MockMvc mockMvc;
 
-    private ReservationTime reservationTime;
-    private Reservation reservation1, reservation2;
+    @MockBean
+    private ReservationService reservationService;
 
-    @BeforeEach
-    void setUp() {
-        reservationTime = reservationTimeRepository.save(Fixture.RESERVATION_TIME_1);
-        reservation1 = reservationRepository.save(Fixture.reservation("브라운", 2024, 4, 22, reservationTime));
-        reservation2 = reservationRepository.save(Fixture.reservation("구름", 2024, 4, 23, reservationTime));
+    @Test
+    void getAllReservations() throws Exception {
+        ReservationTime reservationTime = new ReservationTime(1L, LocalTime.of(10, 30));
+        Reservation reservation = new Reservation(1L, "구름", LocalDate.of(2024, 10, 25), reservationTime);
+
+        BDDMockito.given(reservationService.getAllReservations())
+                .willReturn(List.of(ReservationResponse.from(reservation)));
+
+        mockMvc.perform(get("/reservations"))
+                .andDo(print())
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$[0].id").value(reservation.getId()))
+                .andExpect(jsonPath("$[0].name").value(reservation.getName()))
+                .andExpect(jsonPath("$[0].date").value(reservation.getDate().toString()))
+                .andExpect(jsonPath("$[0].time.id").value(reservationTime.getId()))
+                .andExpect(jsonPath("$[0].time.startAt").value(reservationTime.getStartAt().toString()));
     }
 
     @Test
-    void getAllReservations() {
-        ExtractableResponse<Response> response = RestAssured.given().log().all()
-                .when().get("/reservations")
-                .then().log().all()
-                .extract();
+    void addReservation() throws Exception {
+        ReservationTime reservationTime = new ReservationTime(1L, LocalTime.of(10, 30));
+        Reservation reservation = new Reservation(1L, "구름", LocalDate.of(2024, 10, 25), reservationTime);
+        ReservationRequest reservationRequest = new ReservationRequest("구름", LocalDate.of(2024, 10, 25), 1L);
 
-        List<ReservationResponse> reservationResponses = getReservationResponses(response);
+        BDDMockito.given(reservationService.addReservation(any()))
+                .willReturn(ReservationResponse.from(reservation));
 
-        SoftAssertions.assertSoftly(softly -> {
-            softly.assertThat(response.statusCode()).isEqualTo(HttpStatus.OK.value());
-            softly.assertThat(reservationResponses).hasSize(2);
-            softly.assertThat(reservationResponses).containsExactly(
-                    ReservationResponse.from(reservation1),
-                    ReservationResponse.from(reservation2)
-            );
-        });
+        mockMvc.perform(post("/reservations")
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(objectMapper.writeValueAsString(reservationRequest)))
+                .andDo(print())
+                .andExpect(status().isCreated())
+                .andExpect(header().string("Location", "/reservations/" + reservation.getId()))
+                .andExpect(jsonPath("$.id").value(reservation.getId()))
+                .andExpect(jsonPath("$.name").value(reservation.getName()))
+                .andExpect(jsonPath("$.date").value(reservation.getDate().toString()))
+                .andExpect(jsonPath("$.time.id").value(reservationTime.getId()))
+                .andExpect(jsonPath("$.time.startAt").value(reservationTime.getStartAt().toString()));
     }
 
     @Test
-    void addReservation() {
-        ExtractableResponse<Response> response = RestAssured.given().log().all()
-                .contentType(ContentType.JSON)
-                .body(makeReservationRequest(reservationTime.getId()))
-                .when().post("/reservations")
-                .then().log().all()
-                .extract();
+    void deleteReservationById() throws Exception {
+        BDDMockito.willDoNothing()
+                .given(reservationService)
+                .deleteReservationById(anyLong());
 
-        ReservationResponse reservationResponse = getReservationResponse(response);
-
-        SoftAssertions.assertSoftly(softly -> {
-            softly.assertThat(response.statusCode()).isEqualTo(HttpStatus.CREATED.value());
-            softly.assertThat(response.header("Location"))
-                    .isEqualTo("/reservations/" + reservationResponse.id());
-        });
-    }
-
-    @Test
-    void deleteReservation() {
-        ReservationTime savedReservationTime = reservationTimeRepository.save(Fixture.RESERVATION_TIME_1);
-
-        ExtractableResponse<Response> response = RestAssured.given().log().all()
-                .when().delete("/reservations/" + savedReservationTime.getId())
-                .then().log().all()
-                .extract();
-
-        assertThat(response.statusCode()).isEqualTo(HttpStatus.NO_CONTENT.value());
-    }
-
-    private String makeReservationRequest(Long timeId) {
-        try {
-            ReservationRequest request = new ReservationRequest(
-                    "브라운",
-                    LocalDate.of(2024, 4, 22),
-                    timeId
-            );
-            return mapper.writeValueAsString(request);
-        } catch (Exception e) {
-            throw new RuntimeException(e);
-        }
-    }
-
-    private ReservationResponse getReservationResponse(ExtractableResponse<Response> response) {
-        return response.jsonPath().getObject(".", ReservationResponse.class);
-    }
-
-    private List<ReservationResponse> getReservationResponses(ExtractableResponse<Response> response) {
-        return response.jsonPath().getList(".", ReservationResponse.class);
+        mockMvc.perform(delete("/reservations/{id}", anyLong()))
+                .andDo(print())
+                .andExpect(status().isNoContent());
     }
 }

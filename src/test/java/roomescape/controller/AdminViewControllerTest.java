@@ -1,24 +1,26 @@
 package roomescape.controller;
 
-import static org.assertj.core.api.Assertions.assertThat;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
+import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
-import io.restassured.RestAssured;
-import io.restassured.response.ExtractableResponse;
-import io.restassured.response.Response;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.ValueSource;
-import org.springframework.http.HttpStatus;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
+import org.springframework.test.web.servlet.MockMvc;
 
-class AdminViewControllerTest extends BaseControllerTest {
+@WebMvcTest(AdminViewController.class)
+class AdminViewControllerTest {
+
+    @Autowired
+    private MockMvc mockMvc;
 
     @ParameterizedTest
     @ValueSource(strings = {"/admin", "/admin/reservation", "/admin/time"})
-    void adminPage(String path) {
-        ExtractableResponse<Response> response = RestAssured.given().log().all()
-                .when().get(path)
-                .then().log().all()
-                .extract();
-
-        assertThat(response.statusCode()).isEqualTo(HttpStatus.OK.value());
+    void adminPage(String path) throws Exception {
+        mockMvc.perform(get(path))
+                .andDo(print())
+                .andExpect(status().isOk());
     }
 }

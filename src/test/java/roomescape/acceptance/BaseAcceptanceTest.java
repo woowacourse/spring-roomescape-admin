@@ -1,4 +1,4 @@
-package roomescape.controller;
+package roomescape.acceptance;
 
 import io.restassured.RestAssured;
 import java.util.List;
@@ -10,7 +10,7 @@ import org.springframework.boot.test.web.server.LocalServerPort;
 import org.springframework.jdbc.core.JdbcTemplate;
 
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
-abstract class BaseControllerTest {
+abstract class BaseAcceptanceTest {
 
     @LocalServerPort
     private int port;

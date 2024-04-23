@@ -8,7 +8,7 @@ public record ReservationResponse(
         String name,
         String date,
         @JsonProperty("time") ReservationTimeResponse time) {
-    public ReservationResponse(Reservation reservation) {
+    public ReservationResponse(final Reservation reservation) {
         this(reservation.getId(), reservation.getName(), reservation.getDate(), new ReservationTimeResponse(reservation.getReservationTime()));
     }
 }

@@ -8,7 +8,7 @@ import roomescape.exception.InvalidReservationException;
 @ControllerAdvice
 public class ReservationExceptionHandler {
     @ExceptionHandler
-    protected ResponseEntity<String> handleInvalidReservationException(InvalidReservationException exception) {
+    protected ResponseEntity<String> handleInvalidReservationException(final InvalidReservationException exception) {
         return ResponseEntity.badRequest().body(exception.getMessage());
     }
 }

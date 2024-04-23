@@ -13,28 +13,28 @@ public class ReservationTime {
     private final long id;
     private final LocalTime startAt;
 
-    public ReservationTime(long id, LocalTime startAt) {
+    public ReservationTime(final long id, final LocalTime startAt) {
         this.id = id;
         this.startAt = startAt;
     }
 
-    public ReservationTime(long id, ReservationTime reservationTime) {
+    public ReservationTime(final long id, final ReservationTime reservationTime) {
         this(id, reservationTime.startAt);
     }
 
-    public ReservationTime(long id, String time) {
+    public ReservationTime(final long id, final String time) {
         validate(time);
         this.id = id;
         this.startAt = LocalTime.parse(time);
     }
 
-    public ReservationTime(String time) {
+    public ReservationTime(final String time) {
         validate(time);
         this.id = NO_ID;
         this.startAt = LocalTime.parse(time);
     }
 
-    private void validate(String time) {
+    private void validate(final String time) {
         try {
             LocalTime.parse(time);
         } catch (DateTimeParseException e) {

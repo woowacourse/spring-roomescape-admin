@@ -7,21 +7,21 @@ public class Reservation {
     private final Name name;
     private final Schedule schedule;
 
-    public Reservation(long id, Name name, Schedule schedule) {
+    public Reservation(final long id, final Name name, final Schedule schedule) {
         this.id = id;
         this.name = name;
         this.schedule = schedule;
     }
 
-    public Reservation(long id, Reservation reservation) {
+    public Reservation(final long id, final Reservation reservation) {
         this(id, reservation.name, reservation.schedule);
     }
 
-    public Reservation(long id, String name, String date, ReservationTime reservationTime) {
+    public Reservation(final long id, final String name, final String date, final ReservationTime reservationTime) {
         this(id, new Name(name), new Schedule(date, reservationTime));
     }
 
-    public Reservation(String name, String date, ReservationTime reservationTime) {
+    public Reservation(final String name, final String date, final ReservationTime reservationTime) {
         this(NO_ID, new Name(name), new Schedule(date, reservationTime));
     }
 

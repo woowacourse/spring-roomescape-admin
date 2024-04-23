@@ -20,7 +20,7 @@ public class Schedule {
         this.time = time;
     }
 
-    private void validate(final String date, ReservationTime time) {
+    private void validate(final String date, final ReservationTime time) {
         validateIfInvalidDate(date);
         validateIfBeforeCurrent(date, time);
     }

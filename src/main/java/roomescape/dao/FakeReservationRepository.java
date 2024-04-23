@@ -17,19 +17,19 @@ public class FakeReservationRepository implements ReservationRepository {
     }
 
     @Override
-    public Reservation save(Reservation reservation) {
+    public Reservation save(final Reservation reservation) {
         Reservation newReservation = new Reservation(index.getAndIncrement(), reservation);
         reservations.add(newReservation);
         return newReservation;
     }
 
     @Override
-    public boolean existsById(long id) {
+    public boolean existsById(final long id) {
         return reservations.stream().anyMatch(reservation -> reservation.getId() == id);
     }
 
     @Override
-    public void deleteById(long id) {
+    public void deleteById(final long id) {
         reservations.removeIf(reservation -> reservation.getId() == id);
     }
 }

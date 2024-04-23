@@ -1,15 +1,13 @@
 package roomescape.domain.repository;
 
 import java.util.List;
-import org.springframework.context.annotation.Primary;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;
 import org.springframework.stereotype.Repository;
 import roomescape.domain.Reservation;
-import roomescape.dto.ReservationRequest;
 
 @Repository
-@Primary
+//@Primary
 public class H2ReservationRepository implements ReservationRepository {
 
     private final JdbcTemplate jdbcTemplate;
@@ -35,7 +33,7 @@ public class H2ReservationRepository implements ReservationRepository {
     }
 
     @Override
-    public Reservation createReservation(ReservationRequest reservationRequest) {
+    public Reservation createReservation(Reservation reservation) {
         return null;
     }
 

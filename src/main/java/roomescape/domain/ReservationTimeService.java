@@ -31,4 +31,5 @@ public class ReservationTimeService {
                 .orElseThrow(() -> new IllegalStateException("해당 예약 시간을 찾을 수 없습니다."));
         reservationTimeRepository.deleteById(foundReservationTime.id());
     }
+
 }

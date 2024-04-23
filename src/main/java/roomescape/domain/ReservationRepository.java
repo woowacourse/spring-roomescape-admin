@@ -17,9 +17,11 @@ public class ReservationRepository {
     private static final String TABLE_NAME = "reservation";
     private static final RowMapper<Reservation> ROW_MAPPER = (resultSet, rowNum) -> new Reservation(
             resultSet.getLong("id"),
-            resultSet.getString("date"),
             resultSet.getString("name"),
-            new ReservationTime(resultSet.getLong("time_id"), resultSet.getString("start_at")));
+            resultSet.getString("date"),
+            new ReservationTime(
+                    resultSet.getLong("time_id"),
+                    resultSet.getString("start_at")));
 
     private final JdbcTemplate jdbcTemplate;
 
@@ -38,7 +40,7 @@ public class ReservationRepository {
                 FROM reservation AS r
                 INNER JOIN reservation_time AS t
                 on r.time_id = t.id
-                WHERE r.id = ?""".formatted(TABLE_NAME), ROW_MAPPER, id);
+                WHERE r.id = ?""", ROW_MAPPER, id);
 
         return Optional.ofNullable(reservation);
     }
@@ -53,18 +55,19 @@ public class ReservationRepository {
                     start_at
                 FROM reservation AS r
                 INNER JOIN reservation_time AS t
-                on r.time_id = t.id""".formatted(TABLE_NAME), ROW_MAPPER);
+                on r.time_id = t.id""", ROW_MAPPER);
     }
 
     public Reservation create(Reservation reservation) {
         KeyHolder keyHolder = new GeneratedKeyHolder();
-        jdbcTemplate.update(connection -> insertQuery(connection, reservation), keyHolder);
+        jdbcTemplate.update(connection -> createPreparedStatementForUpdate(connection, reservation), keyHolder);
 
         Long id = keyHolder.getKey().longValue();
         return findById(id).orElseThrow(IllegalStateException::new);
     }
 
-    private PreparedStatement insertQuery(Connection connection, Reservation reservation) throws SQLException {
+    private PreparedStatement createPreparedStatementForUpdate(Connection connection, Reservation reservation)
+            throws SQLException {
         PreparedStatement preparedStatement = connection.prepareStatement(
                 "INSERT INTO %s (name, date, time_id) VALUES (?, ?, ?)".formatted(TABLE_NAME), new String[]{"id"});
         preparedStatement.setString(1, reservation.name());

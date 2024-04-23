@@ -31,4 +31,5 @@ public class ReservationService {
                 .orElseThrow(() -> new IllegalStateException("해당 예약을 찾을 수 없습니다."));
         reservationRepository.deleteById(foundReservation.id());
     }
+
 }

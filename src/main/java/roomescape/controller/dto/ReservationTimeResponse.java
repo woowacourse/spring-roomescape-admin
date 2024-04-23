@@ -9,4 +9,5 @@ public record ReservationTimeResponse(
     public static ReservationTimeResponse from(ReservationTime time) {
         return new ReservationTimeResponse(time.id(), time.startAt());
     }
+
 }

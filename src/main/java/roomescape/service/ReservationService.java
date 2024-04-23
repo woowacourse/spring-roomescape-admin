@@ -29,7 +29,7 @@ public class ReservationService {
         return reservationRepository.findAll();
     }
 
-    public void delete(Long id) {
+    public void delete(long id) {
         reservationRepository.delete(id);
     }
 }

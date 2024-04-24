@@ -11,8 +11,8 @@ import org.springframework.jdbc.core.RowMapper;
 import org.springframework.jdbc.support.GeneratedKeyHolder;
 import org.springframework.jdbc.support.KeyHolder;
 import org.springframework.stereotype.Repository;
+import roomescape.reservation.domain.Name;
 import roomescape.reservation.domain.Reservation;
-import roomescape.reservation.dto.ReservationSaveRequest;
 import roomescape.time.domain.Time;
 
 @Repository
@@ -39,7 +39,7 @@ public class ReservationRepository {
         }, keyHolder);
         long reservationId = Objects.requireNonNull(keyHolder.getKey()).longValue();
 
-        return new Reservation(reservationId, name, date, time);
+        return new Reservation(reservationId, new Name(name), date, time);
     }
 
     public Optional<Reservation> findById(final Long id) {
@@ -79,7 +79,7 @@ public class ReservationRepository {
         return (resultSet, rowNum) ->
                 new Reservation(
                         resultSet.getLong("id"),
-                        resultSet.getString("name"),
+                        new Name(resultSet.getString("name")),
                         resultSet.getDate("date").toLocalDate(),
                         new Time(
                                 resultSet.getLong("time_id"),

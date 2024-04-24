@@ -5,21 +5,21 @@ import roomescape.time.domain.Time;
 
 public class Reservation {
     private Long id;
-    private String name;
+    private Name name;
     private LocalDate date;
     private Time time;
 
     public Reservation() {
     }
 
-    public Reservation(final Long id, final String name, final LocalDate date, final Time time) {
+    public Reservation(final Long id, final Name name, final LocalDate date, final Time time) {
         this.id = id;
         this.name = name;
         this.date = date;
         this.time = time;
     }
 
-    public Reservation(final String name, final LocalDate date, final Time time) {
+    public Reservation(final Name name, final LocalDate date, final Time time) {
         this.name = name;
         this.date = date;
         this.time = time;
@@ -30,7 +30,7 @@ public class Reservation {
     }
 
     public String getName() {
-        return name;
+        return name.getName();
     }
 
     public LocalDate getDate() {

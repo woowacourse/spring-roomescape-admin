@@ -25,13 +25,13 @@ import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.dao.DataAccessException;
 import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
+import roomescape.reservation.domain.Name;
 import roomescape.reservation.domain.Reservation;
 import roomescape.reservation.dto.ReservationResponse;
 import roomescape.reservation.dto.ReservationSaveRequest;
 import roomescape.reservation.service.ReservationService;
 import roomescape.time.domain.Time;
 import roomescape.time.dto.TimeResponse;
-import roomescape.time.dto.TimeSaveRequest;
 
 @DisplayName("예약 API 컨트롤러")
 @WebMvcTest(ReservationApiController.class)
@@ -47,8 +47,8 @@ class ReservationApiControllerTest {
     public void findAllTest() throws Exception {
         // given
         Time time = new Time(1L, LocalTime.parse("10:00"));
-        Reservation reservation1 = new Reservation(1L, "브라운", LocalDate.parse("2024-08-05"), time);
-        Reservation reservation2 = new Reservation(2L, "솔라", LocalDate.parse("2024-08-05"), time);
+        Reservation reservation1 = new Reservation(1L, new Name("브라운"), LocalDate.parse("2024-08-05"), time);
+        Reservation reservation2 = new Reservation(2L, new Name("솔라"), LocalDate.parse("2024-08-05"), time);
         List<Reservation> reservations = List.of(reservation1, reservation2);
 
         // when

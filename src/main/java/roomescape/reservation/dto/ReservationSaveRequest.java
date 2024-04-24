@@ -1,6 +1,7 @@
 package roomescape.reservation.dto;
 
 import java.time.LocalDate;
+import roomescape.reservation.domain.Name;
 import roomescape.reservation.domain.Reservation;
 import roomescape.time.domain.Time;
 
@@ -19,7 +20,7 @@ public class ReservationSaveRequest {
     }
 
     public Reservation toReservation(final Time time) {
-        return new Reservation(name, date, time);
+        return new Reservation(new Name(name), date, time);
     }
 
     public String getName() {

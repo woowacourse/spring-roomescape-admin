@@ -49,11 +49,10 @@ public class H2ReservationRepositoryTest {
     void saveTest() {
         // given & when
         Reservation reservation = repository.save(new Reservation("solar", "2024-04-23", "11:00"));
-        Long id = reservation.getId();
 
         // then
-        assertThat(repository.findById(id))
-                .isEqualTo(new Reservation(id, "solar", "2024-04-23", "11:00"));
+        assertThat(repository.findById(reservation.getId()))
+                .isEqualTo(reservation);
     }
 
     @DisplayName("예약 삭제 테스트")

@@ -9,7 +9,6 @@ import org.springframework.jdbc.core.namedparam.SqlParameterSource;
 import org.springframework.jdbc.core.simple.SimpleJdbcInsert;
 import org.springframework.stereotype.Repository;
 import roomescape.ReservationTime;
-import roomescape.dto.ReservationTimeRequest;
 
 @Repository
 public class ReservationTimeDao {
@@ -37,9 +36,9 @@ public class ReservationTimeDao {
         return jdbcTemplate.queryForObject(sql, rowMapper, id);
     }
 
-    public long save(ReservationTimeRequest reservationTimeRequest) {
+    public long save(ReservationTime reservationTime) {
         SqlParameterSource parameterSource = new MapSqlParameterSource()
-                .addValue("start_at", reservationTimeRequest.startAt());
+                .addValue("start_at", reservationTime.getStartAt());
         return jdbcInsert.executeAndReturnKey(parameterSource).longValue();
     }
 

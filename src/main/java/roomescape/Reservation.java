@@ -5,7 +5,7 @@ import java.util.Objects;
 
 public class Reservation {
 
-    private long id;
+    private Long id;
     private String name;
     private LocalDate date;
     private ReservationTime time;
@@ -13,11 +13,15 @@ public class Reservation {
     public Reservation() {
     }
 
-    public Reservation(long id, String name, LocalDate date, ReservationTime time) {
+    public Reservation(Long id, String name, LocalDate date, ReservationTime time) {
         this.id = id;
         this.name = name;
         this.date = date;
         this.time = time;
+    }
+
+    public Reservation(String name, LocalDate date, ReservationTime time) {
+        this(null, name, date, time);
     }
 
     public long getId() {

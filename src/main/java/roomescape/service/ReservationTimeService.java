@@ -19,18 +19,19 @@ public class ReservationTimeService {
     public List<ReservationTimeResponse> findAll() {
         List<ReservationTime> reservationTimes = reservationTimeDao.findAll();
         return reservationTimes.stream()
-                .map(reservationTime -> new ReservationTimeResponse(reservationTime.getId(), reservationTime.getStartAt()))
+                .map(ReservationTimeResponse::of)
                 .toList();
     }
 
     public ReservationTimeResponse save(ReservationTimeRequest reservationTimeRequest) {
-        long id = reservationTimeDao.save(reservationTimeRequest);
+        ReservationTime reservationTime = reservationTimeRequest.toReservationTime();
+        long id = reservationTimeDao.save(reservationTime);
         return findById(id);
     }
 
     private ReservationTimeResponse findById(long id) {
         ReservationTime reservationTime = reservationTimeDao.findById(id);
-        return new ReservationTimeResponse(reservationTime.getId(), reservationTime.getStartAt());
+        return ReservationTimeResponse.of(reservationTime);
     }
 
     public void deleteById(long id) {

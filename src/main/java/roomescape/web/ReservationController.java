@@ -12,8 +12,8 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import roomescape.service.ReservationService;
 import roomescape.web.dto.ReservationFindAllResponse;
-import roomescape.web.dto.ReservationFindResponse;
 import roomescape.web.dto.ReservationSaveRequest;
+import roomescape.web.dto.ReservationSaveResponse;
 
 @RequestMapping("/reservations")
 @RestController
@@ -31,8 +31,8 @@ public class ReservationController {
     }
 
     @PostMapping
-    public ResponseEntity<ReservationFindResponse> saveReservation(@RequestBody ReservationSaveRequest request) {
-        ReservationFindResponse response = reservationService.saveReservation(request);
+    public ResponseEntity<ReservationSaveResponse> saveReservation(@RequestBody ReservationSaveRequest request) {
+        ReservationSaveResponse response = reservationService.saveReservation(request);
         return ResponseEntity.created(URI.create("/reservations/" + response.id())).body(response);
     }
 

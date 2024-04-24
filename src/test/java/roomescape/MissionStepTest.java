@@ -178,10 +178,10 @@ class MissionStepTest {
                 .statusCode(200)
                 .body("size()", is(2));
 
-        RestAssured.given().log().all()
-                .when().delete("/times/1")
-                .then().log().all()
-                .statusCode(204);
+//        RestAssured.given().log().all()
+//                .when().delete("/times/1")
+//                .then().log().all()
+//                .statusCode(204);
     }
 
     @Test

@@ -27,12 +27,10 @@ import static org.hamcrest.Matchers.is;
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.DEFINED_PORT)
 @DirtiesContext(classMode = DirtiesContext.ClassMode.BEFORE_EACH_TEST_METHOD)
 class MissionStepTest {
-
     @Autowired
     private JdbcTemplate jdbcTemplate;
     @Autowired
     private ReservationController reservationController;
-
 
     @BeforeEach
     void setUp() {
@@ -178,10 +176,10 @@ class MissionStepTest {
                 .statusCode(200)
                 .body("size()", is(2));
 
-//        RestAssured.given().log().all()
-//                .when().delete("/times/1")
-//                .then().log().all()
-//                .statusCode(204);
+        RestAssured.given().log().all()
+                .when().delete("/times/1")
+                .then().log().all()
+                .statusCode(204);
     }
 
     @Test
@@ -218,5 +216,4 @@ class MissionStepTest {
 
         assertThat(isJdbcTemplateInjected).isFalse();
     }
-
 }

@@ -15,7 +15,6 @@ import org.springframework.test.annotation.DirtiesContext;
 @SpringBootTest(webEnvironment = WebEnvironment.DEFINED_PORT)
 @DirtiesContext(classMode = DirtiesContext.ClassMode.BEFORE_EACH_TEST_METHOD)
 class ReservationTimeControllerTest {
-
     @Test
     @DisplayName("예약 시간을 생성한다")
     void createTime() {

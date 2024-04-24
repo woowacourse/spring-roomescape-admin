@@ -14,7 +14,6 @@ import roomescape.domain.ReservationTime;
 
 @JdbcTest
 class ReservationDaoTest {
-
     @Autowired
     JdbcTemplate jdbcTemplate;
     ReservationTimeDao reservationTimeDao;

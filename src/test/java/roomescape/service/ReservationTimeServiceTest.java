@@ -19,7 +19,6 @@ import roomescape.domain.ReservationTime;
 @SpringBootTest(webEnvironment = WebEnvironment.DEFINED_PORT)
 @DirtiesContext(classMode = ClassMode.BEFORE_EACH_TEST_METHOD)
 class ReservationTimeServiceTest {
-
     @Autowired
     JdbcTemplate jdbcTemplate;
 
@@ -50,5 +49,4 @@ class ReservationTimeServiceTest {
                 .isInstanceOf(IllegalArgumentException.class)
                 .hasMessage("null이 될 수 없습니다.");
     }
-
 }

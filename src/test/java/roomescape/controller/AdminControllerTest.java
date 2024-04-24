@@ -10,7 +10,6 @@ import org.springframework.test.annotation.DirtiesContext;
 @SpringBootTest(webEnvironment = WebEnvironment.DEFINED_PORT)
 @DirtiesContext(classMode = DirtiesContext.ClassMode.BEFORE_EACH_TEST_METHOD)
 class AdminControllerTest {
-
     @Test
     @DisplayName("admin에 get 요청을 하면 ok를 반환한다")
     void admin() {

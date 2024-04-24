@@ -14,11 +14,12 @@ import roomescape.dto.ReservationTimeRequest;
 @Repository
 public class ReservationTimeDao {
 
-    private final JdbcTemplate jdbcTemplate;
-    private final RowMapper<ReservationTime> actorRowMapper = (rs, rowNum) ->
+    private static final RowMapper<ReservationTime> ACTOR_ROW_MAPPER = (rs, rowNum) ->
             new ReservationTime(
                     rs.getLong("id"),
                     rs.getTime("start_at").toLocalTime());
+
+    private final JdbcTemplate jdbcTemplate;
 
     public ReservationTimeDao(final JdbcTemplate jdbcTemplate) {
         this.jdbcTemplate = jdbcTemplate;
@@ -40,12 +41,12 @@ public class ReservationTimeDao {
 
     private ReservationTime findById(final long id) {
         String sql =  "SELECT * FROM reservation_time WHERE id = ?";
-        return jdbcTemplate.queryForObject(sql, actorRowMapper, id);
+        return jdbcTemplate.queryForObject(sql, ACTOR_ROW_MAPPER, id);
     }
 
     public List<ReservationTime> findAll() {
         String sql = "SELECT * FROM reservation_time";
-        return jdbcTemplate.query(sql, actorRowMapper);
+        return jdbcTemplate.query(sql, ACTOR_ROW_MAPPER);
     }
 
     public void delete(final long id) {

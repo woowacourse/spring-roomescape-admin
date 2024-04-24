@@ -15,14 +15,15 @@ import roomescape.dto.ReservationRequest;
 @Repository
 public class ReservationDao {
 
-    private final JdbcTemplate jdbcTemplate;
-    private final RowMapper<Reservation> actorRowMapper = (rs, rowNum) ->
+    private static final RowMapper<Reservation> ACTOR_ROW_MAPPER = (rs, rowNum) ->
             new Reservation(
                     rs.getLong("reservation_id"),
                     rs.getString("name"),
                     rs.getDate("date").toLocalDate(),
                     new ReservationTime(rs.getLong("time_id"), rs.getTime("time_value").toLocalTime())
             );
+
+    private final JdbcTemplate jdbcTemplate;
 
     public ReservationDao(final JdbcTemplate jdbcTemplate) {
         this.jdbcTemplate = jdbcTemplate;
@@ -39,7 +40,7 @@ public class ReservationDao {
                 FROM reservation AS r
                 INNER JOIN reservation_time AS t
                 ON r.time_id = t.id""";  // time_value 이건 왜필요하지?
-        return jdbcTemplate.query(sql, actorRowMapper);
+        return jdbcTemplate.query(sql, ACTOR_ROW_MAPPER);
     }
 
     public Reservation add(final ReservationRequest reservationRequest) {
@@ -71,7 +72,7 @@ public class ReservationDao {
                 ON r.time_id = t.id
                 WHERE r.id = ?
                 """;
-        Reservation reservation = jdbcTemplate.queryForObject(sql, actorRowMapper, id);
+        Reservation reservation = jdbcTemplate.queryForObject(sql, ACTOR_ROW_MAPPER, id);
         return reservation;
     }
 

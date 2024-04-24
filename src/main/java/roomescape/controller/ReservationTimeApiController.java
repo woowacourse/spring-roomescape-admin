@@ -35,8 +35,7 @@ public class ReservationTimeApiController {
 
     @PostMapping
     public ReservationTimeResponse addReservationTime(@RequestBody ReservationTimeRequest reservationTimeRequest) {
-        ReservationTime reservationTime = mapper.mapReservationTimeRequestToEntity(reservationTimeRequest);
-        ReservationTime newReservationTime = timeService.addReservationTime(reservationTime);
+        ReservationTime newReservationTime = timeService.addReservationTime(reservationTimeRequest);
 
         return mapper.mapReservationTimeToResponse(newReservationTime);
     }

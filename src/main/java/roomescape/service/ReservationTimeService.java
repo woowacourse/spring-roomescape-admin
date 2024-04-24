@@ -2,8 +2,10 @@ package roomescape.service;
 
 import java.util.List;
 import org.springframework.stereotype.Service;
+import roomescape.dto.ReservationTimeRequest;
 import roomescape.entity.ReservationTime;
 import roomescape.repository.ReservationTimeDao;
+import roomescape.repository.ReservationTimeRegisterDetail;
 
 @Service
 public class ReservationTimeService {
@@ -14,8 +16,10 @@ public class ReservationTimeService {
         this.timeDao = timeDao;
     }
 
-    public ReservationTime addReservationTime(ReservationTime reservationTime) {
-        return timeDao.add(reservationTime);
+    public ReservationTime addReservationTime(ReservationTimeRequest request) {
+        ReservationTimeRegisterDetail registerDetail = new ReservationTimeRegisterDetail(request);
+
+        return timeDao.save(registerDetail);
     }
 
     public List<ReservationTime> findAllReservationTimes() {

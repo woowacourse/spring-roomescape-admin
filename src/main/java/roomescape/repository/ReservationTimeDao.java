@@ -22,13 +22,12 @@ public class ReservationTimeDao {
                 .usingGeneratedKeyColumns("id");
     }
 
-    public ReservationTime add(ReservationTime reservationTime) {
+    public ReservationTime save(ReservationTimeRegisterDetail registerDetail) {
         MapSqlParameterSource parameters = new MapSqlParameterSource()
-                .addValue("start_at", reservationTime.getStartAt());
+                .addValue("start_at", registerDetail.startAt());
+        Long savedTimeId = insertActor.executeAndReturnKey(parameters).longValue();
 
-        Long newId = insertActor.executeAndReturnKey(parameters).longValue();
-
-        return new ReservationTime(newId, reservationTime.getStartAt());
+        return registerDetail.toEntity(savedTimeId);
     }
 
     public List<ReservationTime> findAll() {

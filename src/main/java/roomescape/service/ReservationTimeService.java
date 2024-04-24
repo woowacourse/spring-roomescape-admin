@@ -8,11 +8,11 @@ import roomescape.domain.ReservationTime;
 import java.util.List;
 
 @Service
-public class TimeService {
+public class ReservationTimeService {
 
     private final ReservationTimeDao reservationTimeDao;
 
-    public TimeService(ReservationTimeDao reservationTimeDao) {
+    public ReservationTimeService(ReservationTimeDao reservationTimeDao) {
         this.reservationTimeDao = reservationTimeDao;
     }
 

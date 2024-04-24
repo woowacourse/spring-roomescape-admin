@@ -22,6 +22,9 @@ public class GameTimeService {
     }
 
     public GameTime save(GameTime gameTime) {
+        if (gameTimeRepository.existByStartAt(gameTime)) {
+            throw new IllegalStateException("해당 게임 시간은 이미 등록되어 있습니다: " + gameTime.getStartAt());
+        }
         return gameTimeRepository.save(gameTime);
     }
 

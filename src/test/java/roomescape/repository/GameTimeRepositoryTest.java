@@ -61,4 +61,11 @@ class GameTimeRepositoryTest {
         assertThatThrownBy(() -> gameTimeRepository.findById(saved.getId()))
                 .isInstanceOf(EmptyResultDataAccessException.class);
     }
+
+    @DisplayName("같은 예약 가능 시간이 이미 존재하는 경우를 알 수 있다")
+    @Test
+    void existByStartAtTest() {
+        GameTime saved = gameTimeRepository.save(GAME_TIME_WITH_NO_ID_0300);
+        assertThat(gameTimeRepository.existByStartAt(GAME_TIME_WITH_NO_ID_0300)).isTrue();
+    }
 }

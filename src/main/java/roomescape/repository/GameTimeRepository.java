@@ -48,6 +48,12 @@ public class GameTimeRepository {
         jdbcTemplate.update(sql, id);
     }
 
+    public boolean existByStartAt(GameTime gameTime) {
+        String sql = "SELECT COUNT(*) FROM reservation_time WHERE start_at = ?";
+        int count = jdbcTemplate.queryForObject(sql, Integer.class, gameTime.getStartAt());
+        return count > 0;
+    }
+
     public RowMapper<GameTime> reservationAvailableTimeRowMapper() {
         return ((rs, rowNum) -> {
             long id = rs.getLong("id");

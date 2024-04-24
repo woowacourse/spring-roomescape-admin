@@ -25,7 +25,7 @@ public class ReservationDAO {
                     r.name,
                     r.date,
                     t.id as time_id,
-                    t.start_at as time_value
+                    t.start_at as time_start_at
                 from reservation as r
                 inner join reservation_time as t
                 on r.time_id = t.id
@@ -37,7 +37,7 @@ public class ReservationDAO {
                         resultSet.getDate("date").toLocalDate(),
                         new ReservationTime(
                                 resultSet.getLong("time_id"),
-                                resultSet.getTime("time_value").toLocalTime()
+                                resultSet.getTime("time_start_at").toLocalTime()
                         )
                 ));
     }

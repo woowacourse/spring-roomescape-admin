@@ -9,7 +9,6 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 import roomescape.controller.dto.ReservationCreateRequest;
 import roomescape.controller.dto.ReservationCreateResponse;
@@ -28,11 +27,12 @@ public class ReservationController {
     }
 
     @GetMapping
-    @ResponseStatus(value = HttpStatus.OK)
-    public List<ReservationFindResponse> getReservation() {
-        return reservationRepository.findReservations().stream()
+    public ResponseEntity<List<ReservationFindResponse>> getReservation() {
+        List<ReservationFindResponse> reservationResponses = reservationRepository.findReservations().stream()
                 .map(ReservationFindResponse::of)
                 .toList();
+
+        return ResponseEntity.ok(reservationResponses);
     }
 
     @PostMapping
@@ -47,8 +47,9 @@ public class ReservationController {
     }
 
     @DeleteMapping("/{id}")
-    @ResponseStatus(value = HttpStatus.NO_CONTENT)
-    public void deleteReservation(@PathVariable Long id) {
+    public ResponseEntity<Void> deleteReservation(@PathVariable Long id) {
         reservationRepository.deleteReservationById(id);
+
+        return ResponseEntity.noContent().build();
     }
 }

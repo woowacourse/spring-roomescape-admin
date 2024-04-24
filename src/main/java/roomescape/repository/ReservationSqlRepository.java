@@ -61,7 +61,6 @@ public class ReservationSqlRepository implements ReservationRepository {
             return jdbcInsert.executeAndReturnKey(params)
                              .longValue();
         } catch (DataAccessException e) {
-            System.out.println(e.getMessage());
             throw new IllegalArgumentException(e);
         }
     }

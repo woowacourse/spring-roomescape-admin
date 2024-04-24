@@ -7,19 +7,26 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.NoSuchBeanDefinitionException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.boot.test.context.SpringBootTest.WebEnvironment;
 import org.springframework.context.ApplicationContext;
+import roomescape.controller.console.ReservationConsoleController;
 
-@SpringBootTest(webEnvironment = WebEnvironment.NONE)
-class RoomescapeConsoleApplicationTest {
+@SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.NONE)
+class RoomescapeApplicationTest {
 
     @Autowired
     private ApplicationContext context;
 
     @Test
-    @DisplayName("프로필이 존재하지 않는다면, ConsoleApplication은 instantiate되지 않는다.")
-    void consoleConfigurationTest() {
+    @DisplayName("WebApplication이 동작하면 ConsoleApplication은 생성되지 않는다.")
+    void consoleNotFoundTest() {
         assertThatThrownBy(() -> context.getBean(RoomescapeConsoleApplication.class))
+                .isInstanceOf(NoSuchBeanDefinitionException.class);
+    }
+
+    @Test
+    @DisplayName("WebApplication이 동작하면 콘솔 기반 컨트롤러는 생성되지 않는다.")
+    void consoleControllerNotFoundTest() {
+        assertThatThrownBy(() -> context.getBean(ReservationConsoleController.class))
                 .isInstanceOf(NoSuchBeanDefinitionException.class);
     }
 }

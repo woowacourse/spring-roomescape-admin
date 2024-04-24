@@ -5,6 +5,7 @@ import roomescape.domain.Reservation;
 import roomescape.domain.ReservationTime;
 import roomescape.dto.response.ReservationCreateResponse;
 import roomescape.dto.response.ReservationsResponse;
+import roomescape.exception.reservation.time.NotExistReservationTimeException;
 import roomescape.repository.ReservationRepository;
 import roomescape.repository.ReservationSqlRepository;
 import roomescape.repository.ReservationTimeRepository;
@@ -28,7 +29,8 @@ public class ReservationService {
     }
 
     public ReservationCreateResponse createReservation(final String name, final String date, final long timeId) {
-        final ReservationTime reservationTime = reservationTimeRepository.findById(timeId);
+        final ReservationTime reservationTime = reservationTimeRepository.findById(timeId)
+                                                                         .orElseThrow(() -> new NotExistReservationTimeException(timeId));
         final Reservation reservation = Reservation.builder()
                                                    .name(name)
                                                    .date(date)

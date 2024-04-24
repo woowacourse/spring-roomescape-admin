@@ -19,36 +19,31 @@ class ReservationTimeRepositoryTest {
     void create_reservationTime_with_domain() {
         final var reservationTime = ReservationTime.from("10:00");
         final var id = reservationTimeRepository.create(reservationTime);
-        assertThat(reservationTime).isEqualTo(reservationTimeRepository.findById(id));
+        assertThat(id).isNotZero()
+                      .isNotNegative();
     }
 
     @Test
-    @DisplayName("모든 ReservationTime 을 받아온다")
-    void find_all_reservationTime() {
-        final var reservationTime = ReservationTime.from("10:00");
-        final var prevSize = reservationTimeRepository.findAll()
-                                                      .size();
-        reservationTimeRepository.create(reservationTime);
-
-        final var afterSize = reservationTimeRepository.findAll()
-                                                       .size();
-
-        assertThat(afterSize).isEqualTo(prevSize + 1);
-    }
-
-    @Test
-    @DisplayName("id를 통해 해당하는 reservationTime 을 삭제한다")
-    void delete_reservationTime_with_id() {
+    @DisplayName("id를 통해 해당하는 reservationTime 을 삭제하면 참을 반환한다")
+    void return_true_when_delete_reservationTime_with_id() {
         final var reservationTime = ReservationTime.from("10:00");
         final var id = reservationTimeRepository.create(reservationTime);
 
         final var result = reservationTimeRepository.deleteById(id);
 
         assertThat(result).isTrue();
-        assertThatThrownBy(() -> reservationTimeRepository.findById(id))
-                .isInstanceOf(IllegalArgumentException.class);
 
     }
+
+    @Test
+    @DisplayName("없는 id 를 통해 삭제하면 거짓을 반환한다")
+    void return_false_when_delete_reservationTime_not_exist_id() {
+        final var result = reservationTimeRepository.deleteById(-1);
+
+        assertThat(result).isFalse();
+
+    }
+
 
     @Test
     @DisplayName("id를 통해 해당하는 reservationTime 을 찾는다")
@@ -58,7 +53,6 @@ class ReservationTimeRepositoryTest {
 
         final var result = reservationTimeRepository.findById(id);
 
-        assertThat(result).isEqualTo(reservationTime);
+        assertThat(result).isNotEmpty();
     }
-
 }

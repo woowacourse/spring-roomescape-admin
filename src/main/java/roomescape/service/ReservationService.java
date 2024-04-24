@@ -29,10 +29,10 @@ public class ReservationService {
     }
 
     public Reservation saveReservation(final SaveReservationRequest request) {
-        return reservationTimeRepository.findById(request.timeId())
-                .map(request::toReservation)
-                .map(reservationRepository::save)
+        ReservationTime reservationTime = reservationTimeRepository.findById(request.timeId())
                 .orElseThrow(() -> new NoSuchElementException("해당 id의 예약 시간이 존재하지 않습니다."));
+
+        return reservationRepository.save(request.toReservation(reservationTime));
     }
 
     public void deleteReservation(final Long reservationId) {

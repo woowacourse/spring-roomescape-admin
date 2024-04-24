@@ -48,8 +48,8 @@ public class ReservationTimeDao {
         return jdbcTemplate.query(sql, actorRowMapper);
     }
 
-    public int delete(final long id) {
+    public void delete(final long id) {
         String sql = "DELETE FROM reservation_time WHERE id = ?";
-        return jdbcTemplate.update(sql, id);
+        jdbcTemplate.update(sql, id);
     }
 }

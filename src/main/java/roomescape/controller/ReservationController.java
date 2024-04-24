@@ -43,7 +43,7 @@ public class ReservationController {
 
     @DeleteMapping("/{id}")
     @ResponseStatus(HttpStatus.NO_CONTENT)
-    public int delete(@PathVariable(name = "id") final long id) {
-        return reservationService.delete(id);
+    public void delete(@PathVariable(name = "id") final long id) {
+        reservationService.delete(id);
     }
 }

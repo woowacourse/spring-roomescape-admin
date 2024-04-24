@@ -19,8 +19,8 @@ public class ReservationService {
         return reservationDao.findAll();
     }
 
-    public int delete(final long id) {
-        return reservationDao.delete(id);
+    public void delete(final long id) {
+        reservationDao.delete(id);
     }
 
     public Reservation add(final ReservationRequest reservationRequest) {

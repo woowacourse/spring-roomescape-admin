@@ -1,7 +1,5 @@
 package roomescape.controller;
 
-import static org.junit.jupiter.api.Assertions.*;
-
 import io.restassured.RestAssured;
 import io.restassured.http.ContentType;
 import java.util.HashMap;
@@ -41,7 +39,7 @@ class ReservationControllerTest {
     @Test
     @DisplayName("예약 읽기를 요청하면 200 OK를 응답한다.")
     void getReservationTest() {
-    RestAssured.given().log().all()
+        RestAssured.given().log().all()
                 .contentType(ContentType.JSON)
                 .when().get("/reservations")
                 .then().log().all()

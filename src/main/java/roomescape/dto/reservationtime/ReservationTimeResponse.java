@@ -1,8 +1,8 @@
 package roomescape.dto.reservationtime;
 
 import java.util.Objects;
+import roomescape.domain.reservationtime.ReservationStartAt;
 import roomescape.domain.reservationtime.ReservationTime;
-import roomescape.domain.reservationtime.StartAt;
 
 public class ReservationTimeResponse {
 
@@ -15,18 +15,15 @@ public class ReservationTimeResponse {
     }
 
     public static ReservationTimeResponse from(ReservationTime time) {
-        StartAt startAt = time.getStartAt();
+        ReservationStartAt reservationStartAt = time.getStartAt();
         return new ReservationTimeResponse(
                 time.getId(),
-                startAt.toStringTime()
+                reservationStartAt.toStringTime()
         );
     }
 
     public static ReservationTimeResponse of(Long id, String startAt) {
-        return new ReservationTimeResponse(
-                id,
-                startAt
-        );
+        return new ReservationTimeResponse(id, startAt);
     }
 
     public Long getId() {

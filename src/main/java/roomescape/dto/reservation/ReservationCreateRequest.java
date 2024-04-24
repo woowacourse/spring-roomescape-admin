@@ -1,8 +1,8 @@
 package roomescape.dto.reservation;
 
 import java.util.Objects;
-import roomescape.domain.reservation.Date;
-import roomescape.domain.reservation.Name;
+import roomescape.domain.reservation.ReservationDate;
+import roomescape.domain.reservation.ReservationName;
 import roomescape.domain.reservation.Reservation;
 import roomescape.domain.reservationtime.ReservationTime;
 
@@ -26,21 +26,15 @@ public class ReservationCreateRequest {
         );
     }
 
-    public static ReservationCreateRequest of(String name,
-                                              String date,
-                                              Long timeId) {
-        return new ReservationCreateRequest(
-                name,
-                date,
-                timeId
-        );
+    public static ReservationCreateRequest of(String name, String date, Long timeId) {
+        return new ReservationCreateRequest(name, date, timeId);
     }
 
     public Reservation toDomain(ReservationTime reservationTime) {
         return new Reservation(
                 null,
-                new Name(name),
-                Date.from(date),
+                new ReservationName(name),
+                ReservationDate.from(date),
                 reservationTime);
     }
 

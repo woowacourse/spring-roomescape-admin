@@ -3,18 +3,18 @@ package roomescape.domain.reservationtime;
 public class ReservationTime {
 
     private final Long id;
-    private final StartAt startAt;
+    private final ReservationStartAt reservationStartAt;
 
-    public ReservationTime(Long id, StartAt startAt) {
+    public ReservationTime(Long id, ReservationStartAt reservationStartAt) {
         this.id = id;
-        this.startAt = startAt;
+        this.reservationStartAt = reservationStartAt;
     }
 
     public Long getId() {
         return id;
     }
 
-    public StartAt getStartAt() {
-        return startAt;
+    public ReservationStartAt getStartAt() {
+        return reservationStartAt;
     }
 }

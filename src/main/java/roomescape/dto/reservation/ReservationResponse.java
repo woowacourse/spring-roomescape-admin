@@ -2,8 +2,8 @@ package roomescape.dto.reservation;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 import java.util.Objects;
-import roomescape.domain.reservation.Date;
 import roomescape.domain.reservation.Reservation;
+import roomescape.domain.reservation.ReservationDate;
 import roomescape.dto.reservationtime.ReservationTimeResponse;
 
 public class ReservationResponse {
@@ -25,25 +25,17 @@ public class ReservationResponse {
     }
 
     public static ReservationResponse from(Reservation reservation) {
-        Date date = reservation.getDate();
+        ReservationDate reservationDate = reservation.getDate();
         return new ReservationResponse(
                 reservation.getId(),
                 reservation.getName().getValue(),
-                date.toStringDate(),
+                reservationDate.toStringDate(),
                 ReservationTimeResponse.from(reservation.getReservationTime())
         );
     }
 
-    public static ReservationResponse of(Long id,
-                                         String name,
-                                         String date,
-                                         ReservationTimeResponse timeResponseDto) {
-        return new ReservationResponse(
-                id,
-                name,
-                date,
-                timeResponseDto
-        );
+    public static ReservationResponse of(Long id, String name, String date, ReservationTimeResponse timeResponseDto) {
+        return new ReservationResponse(id, name, date, timeResponseDto);
     }
 
     public Long getId() {

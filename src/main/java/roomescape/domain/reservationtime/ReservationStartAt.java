@@ -4,19 +4,19 @@ import java.time.LocalTime;
 import java.time.format.DateTimeFormatter;
 import java.time.format.DateTimeParseException;
 
-public class StartAt {
+public class ReservationStartAt {
 
     private static final DateTimeFormatter TIME_FORMATTER = DateTimeFormatter.ofPattern("HH:mm");
 
     private final LocalTime value;
 
-    private StartAt(LocalTime value) {
+    private ReservationStartAt(LocalTime value) {
         this.value = value;
     }
 
-    public static StartAt from(String value) {
+    public static ReservationStartAt from(String value) {
         validateValue(value);
-        return new StartAt(convertLocalDate(value));
+        return new ReservationStartAt(convertLocalDate(value));
     }
 
     private static LocalTime convertLocalDate(String value) {

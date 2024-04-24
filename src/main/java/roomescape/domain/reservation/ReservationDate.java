@@ -3,17 +3,17 @@ package roomescape.domain.reservation;
 import java.time.LocalDate;
 import java.time.format.DateTimeParseException;
 
-public class Date {
+public class ReservationDate {
 
     private final LocalDate value;
 
-    private Date(LocalDate value) {
+    private ReservationDate(LocalDate value) {
         this.value = value;
     }
 
-    public static Date from(String value) {
+    public static ReservationDate from(String value) {
         validateValue(value);
-        return new Date(convertLocalDate(value));
+        return new ReservationDate(convertLocalDate(value));
     }
 
     private static LocalDate convertLocalDate(String value) {

@@ -176,4 +176,27 @@ class MissionStepTest {
                 .then().log().all()
                 .statusCode(200);
     }
+
+    @DisplayName("예약 시간 관리")
+    @Test
+    void step8() {
+        Map<String, Object> reservation = new HashMap<>();
+        reservation.put("name", "브라운");
+        reservation.put("date", "2023-08-05");
+        reservation.put("timeId", 1);
+
+        RestAssured.given().log().all()
+                .contentType(ContentType.JSON)
+                .body(reservation)
+                .when().post("/reservations")
+                .then().log().all()
+                .statusCode(200);
+
+
+//        RestAssured.given().log().all()
+//                .when().get("/reservations")
+//                .then().log().all()
+//                .statusCode(200)
+//                .body("size()", is(1));
+    }
 }

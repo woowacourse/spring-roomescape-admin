@@ -12,7 +12,9 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.util.UriComponentsBuilder;
 import roomescape.dto.ReservationRequest;
+import roomescape.dto.ReservationRequestV2;
 import roomescape.dto.ReservationResponse;
+import roomescape.dto.ReservationResponseV2;
 import roomescape.service.ReservationService;
 
 @RestController
@@ -30,14 +32,20 @@ public class ReservationController {
         return reservationService.findAll();
     }
 
+//    @PostMapping
+//    public ResponseEntity<ReservationResponse> save(@RequestBody final ReservationRequest reservationRequest) {
+//        final ReservationResponse reservationResponse = reservationService.save(reservationRequest);
+//        final URI uri = UriComponentsBuilder.fromPath("/reservations/{timeId}")
+//                .buildAndExpand(reservationResponse.id())
+//                .toUri();
+//        return ResponseEntity.created(uri)
+//                .body(reservationResponse);
+//    }
+
     @PostMapping
-    public ResponseEntity<ReservationResponse> save(@RequestBody final ReservationRequest reservationRequest) {
-        final ReservationResponse reservationResponse = reservationService.save(reservationRequest);
-        final URI uri = UriComponentsBuilder.fromPath("/reservations/{id}")
-                .buildAndExpand(reservationResponse.id())
-                .toUri();
-        return ResponseEntity.created(uri)
-                .body(reservationResponse);
+    public ResponseEntity<ReservationResponseV2> saveV2(@RequestBody final ReservationRequestV2 reservationRequestV2) {
+        final ReservationResponseV2 reservationResponse = reservationService.saveV2(reservationRequestV2);
+        return ResponseEntity.ok(reservationResponse);
     }
 
     @DeleteMapping("/{id}")

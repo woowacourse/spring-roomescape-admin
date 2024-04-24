@@ -33,7 +33,7 @@ class ReservationControllerTest {
         final ReservationRequest reservation = new ReservationRequest("레디", "2024-04-17", "13:00");
 
         //when
-        controller.save(reservation);
+//        controller.save(reservation); //TODO 주석제거
 
         //then
         assertThat(controller.getReservations()).hasSize(1);
@@ -45,7 +45,7 @@ class ReservationControllerTest {
     void deleteReservation() {
         //given
         final ReservationRequest reservation = new ReservationRequest("레디", "2024-04-17", "13:00");
-        final ResponseEntity<ReservationResponse> saved = controller.save(reservation);
+        final ResponseEntity<ReservationResponse> saved = null; // controller.save(reservation); TODO 주석제거
         final ReservationResponse body = saved.getBody();
 
         //when

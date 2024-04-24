@@ -25,21 +25,20 @@ public class GameTimeController {
 
     @GetMapping()
     public ResponseEntity<List<GameTimeCreateResponse>> readAllTimes() {
-        List<GameTimeCreateResponse> availableTimes = gameTimeService.readAll().stream()
+        List<GameTimeCreateResponse> gameTimes = gameTimeService.readAll().stream()
                 .map(GameTimeCreateResponse::from)
                 .toList();
-        return ResponseEntity.ok().body(availableTimes);
+        return ResponseEntity.ok().body(gameTimes);
     }
 
     @PostMapping()
-    public ResponseEntity<GameTimeCreateResponse> createAvailableTime(
-            @RequestBody GameTimeCreateRequest request) {
+    public ResponseEntity<GameTimeCreateResponse> createGameTime(@RequestBody GameTimeCreateRequest request) {
         GameTime saved = gameTimeService.save(request.toEntity());
         return ResponseEntity.ok().body(GameTimeCreateResponse.from(saved));
     }
 
     @DeleteMapping("/{id}")
-    public ResponseEntity<Void> deleteAvailableTime(@PathVariable("id") long id) {
+    public ResponseEntity<Void> deleteGameTime(@PathVariable("id") long id) {
         gameTimeService.deleteById(id);
         return ResponseEntity.ok().build();
     }

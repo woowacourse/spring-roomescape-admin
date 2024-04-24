@@ -40,11 +40,11 @@ public class ReservationRepository {
             PreparedStatement ps = connection.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS);
             ps.setString(1, reservation.getName());
             ps.setDate(2, Date.valueOf(reservation.getStartDate()));
-            ps.setLong(3, reservation.getReservationTimeId());
+            ps.setLong(3, reservation.getGameTimeId());
             return ps;
         }, keyHolder);
         long savedId = keyHolder.getKey().longValue();
-        GameTime time = new GameTime(reservation.getReservationTimeId(), reservation.getStartTime());
+        GameTime time = new GameTime(reservation.getGameTimeId(), reservation.getStartTime());
         return new Reservation(savedId, reservation.getName(), reservation.getStartDate(), time);
     }
 

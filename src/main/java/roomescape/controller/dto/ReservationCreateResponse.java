@@ -40,7 +40,7 @@ public class ReservationCreateResponse {
                 reservation.getId(),
                 reservation.getName(),
                 reservation.getStartDate(),
-                reservation.getReservationTimeId(),
+                reservation.getGameTimeId(),
                 reservation.getStartTime());
     }
 

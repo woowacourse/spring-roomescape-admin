@@ -36,7 +36,7 @@ public class Reservation {
         return id;
     }
 
-    public long getReservationTimeId() {
+    public long getGameTimeId() {
         return gameTime.getId();
     }
 

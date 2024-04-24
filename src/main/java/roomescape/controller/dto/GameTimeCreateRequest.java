@@ -4,7 +4,7 @@ import java.time.LocalTime;
 import roomescape.entity.GameTime;
 
 public class GameTimeCreateRequest {
-    LocalTime startAt;
+    private LocalTime startAt;
 
     public GameTimeCreateRequest() {
     }

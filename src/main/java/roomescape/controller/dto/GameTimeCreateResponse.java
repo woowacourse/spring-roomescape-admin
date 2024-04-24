@@ -4,8 +4,8 @@ import java.time.LocalTime;
 import roomescape.entity.GameTime;
 
 public class GameTimeCreateResponse {
-    Long id;
-    LocalTime startAt;
+    private final Long id;
+    private final LocalTime startAt;
 
     public GameTimeCreateResponse(Long id, LocalTime startAt) {
         this.id = id;

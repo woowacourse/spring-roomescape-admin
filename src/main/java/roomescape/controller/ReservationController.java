@@ -37,7 +37,7 @@ public class ReservationController {
 
         ReservationWebResponse reservationWebResponse = new ReservationWebResponse(id, newReservation.getName(),
                 newReservation.getDate(),
-                convertReservationTimeResponse(newReservation));
+                ReservationTimeWebResponse.from(newReservation));
 
         return ResponseEntity.created(URI.create("/reservations/" + id))
                 .body(reservationWebResponse);
@@ -53,14 +53,11 @@ public class ReservationController {
     @GetMapping
     public ResponseEntity<List<ReservationWebResponse>> getReservations() {
         List<Reservation> reservations = reservationService.findAll();
-        List<ReservationWebResponse> reservationWebRespons = reservations.stream().
+        List<ReservationWebResponse> reservationWebResponse = reservations.stream().
                 map(reservation -> new ReservationWebResponse(reservation.getId(), reservation.getName(),
-                        reservation.getDate(), convertReservationTimeResponse(reservation)))
+                        reservation.getDate(), ReservationTimeWebResponse.from(reservation)))
                 .toList();
-        return ResponseEntity.ok(reservationWebRespons);
-    }
 
-    private ReservationTimeWebResponse convertReservationTimeResponse(Reservation newReservation) {
-        return new ReservationTimeWebResponse(newReservation.getTime().getId(), newReservation.getTime().getStartAt());
+        return ResponseEntity.ok(reservationWebResponse);
     }
 }

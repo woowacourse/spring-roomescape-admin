@@ -4,11 +4,11 @@ import com.fasterxml.jackson.annotation.JsonFormat;
 import java.time.LocalTime;
 import roomescape.domain.Time;
 
-public record TimeSaveResponse(
+public record TimeResponse(
         Long id,
         @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "HH:mm") LocalTime startAt) {
-    public static TimeSaveResponse from(Time time) {
-        return new TimeSaveResponse(
+    public static TimeResponse from(Time time) {
+        return new TimeResponse(
                 time.getId(),
                 time.getStartAt()
         );

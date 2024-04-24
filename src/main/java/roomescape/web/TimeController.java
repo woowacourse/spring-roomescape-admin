@@ -11,9 +11,8 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import roomescape.service.TimeService;
-import roomescape.web.dto.TimeFindAllResponse;
-import roomescape.web.dto.TimeSaveRequest;
-import roomescape.web.dto.TimeSaveResponse;
+import roomescape.web.dto.TimeRequest;
+import roomescape.web.dto.TimeResponse;
 
 @RequestMapping("/times")
 @RestController
@@ -25,14 +24,14 @@ public class TimeController {
     }
 
     @GetMapping
-    public ResponseEntity<List<TimeFindAllResponse>> findAllTime() {
-        List<TimeFindAllResponse> response = timeService.findAllTime();
+    public ResponseEntity<List<TimeResponse>> findAllTime() {
+        List<TimeResponse> response = timeService.findAllTime();
         return ResponseEntity.ok().body(response);
     }
 
     @PostMapping
-    public ResponseEntity<TimeSaveResponse> saveTime(@RequestBody TimeSaveRequest request) {
-        TimeSaveResponse response = timeService.saveTime(request);
+    public ResponseEntity<TimeResponse> saveTime(@RequestBody TimeRequest request) {
+        TimeResponse response = timeService.saveTime(request);
         return ResponseEntity.created(URI.create("/times/" + response.id())).body(response);
     }
 

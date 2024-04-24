@@ -4,7 +4,7 @@ import java.time.LocalDate;
 import roomescape.domain.Reservation;
 import roomescape.domain.Time;
 
-public record ReservationSaveRequest(
+public record ReservationRequest(
         LocalDate date,
         String name,
         Long timeId) {

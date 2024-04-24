@@ -32,7 +32,7 @@ public class ReservationTimeService {
 
     public void delete(Long id) {
         validateNull(id);
-        validateExist(id);
+        validateNotExist(id);
         reservationTimeDao.delete(id);
     }
 
@@ -47,7 +47,7 @@ public class ReservationTimeService {
         }
     }
 
-    private void validateExist(Long id) {
+    private void validateNotExist(Long id) {
         if (!reservationTimeDao.exist(id)) {
             throw new IllegalArgumentException("해당 아이디를 가진 예약 시간이 존재하지 않습니다.");
         }

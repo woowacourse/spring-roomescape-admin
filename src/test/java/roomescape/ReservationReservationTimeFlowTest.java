@@ -1,4 +1,4 @@
-package roomescape.controller;
+package roomescape;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.DynamicTest.dynamicTest;
@@ -24,7 +24,7 @@ import roomescape.dto.ReservationTimeRequest;
 
 @SpringBootTest(webEnvironment = WebEnvironment.RANDOM_PORT)
 @DirtiesContext(classMode = DirtiesContext.ClassMode.BEFORE_EACH_TEST_METHOD)
-class ReservationReservationTimeControllerTest {
+class ReservationReservationTimeFlowTest {
 
     @Autowired
     private JdbcTemplate jdbcTemplate;

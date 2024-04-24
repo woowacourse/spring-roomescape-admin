@@ -72,7 +72,7 @@ class ReservationControllerTest {
                 .then().log().all()
                 .statusCode(204);
 
-        Integer countAfterDelete = jdbcTemplate.queryForObject("SELECT count(1) from reservation", Integer.class);
+        Integer countAfterDelete = jdbcTemplate.queryForObject("SELECT count(*) from reservation", Integer.class);
         assertThat(countAfterDelete).isEqualTo(0);
     }
 

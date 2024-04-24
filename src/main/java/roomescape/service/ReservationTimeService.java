@@ -10,7 +10,7 @@ import roomescape.dto.ReservationTimeResponse;
 @Service
 public class ReservationTimeService {
 
-    private ReservationTimeDao reservationTimeDao;
+    private final ReservationTimeDao reservationTimeDao;
 
     public ReservationTimeService(ReservationTimeDao reservationTimeDao) {
         this.reservationTimeDao = reservationTimeDao;

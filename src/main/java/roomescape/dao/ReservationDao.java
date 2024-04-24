@@ -14,7 +14,7 @@ import roomescape.dto.ReservationRequest;
 @Repository
 public class ReservationDao {
 
-    private JdbcTemplate jdbcTemplate;
+    private final JdbcTemplate jdbcTemplate;
 
     public ReservationDao(DataSource dataSource) {
         this.jdbcTemplate = new JdbcTemplate(dataSource);

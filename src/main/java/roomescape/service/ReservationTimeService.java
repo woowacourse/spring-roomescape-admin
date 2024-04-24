@@ -19,11 +19,11 @@ public class ReservationTimeService {
         return new ReservationTimesResponse(this.reservationTimeRepository.findAll());
     }
 
-    public void deleteReservation(final long reservationId) {
-        reservationTimeRepository.deleteById(reservationId);
+    public void deleteReservationTime(final long reservationTimeId) {
+        reservationTimeRepository.deleteById(reservationTimeId);
     }
 
-    public ReservationTimeCreateResponse createReservation(final ReservationTimeCreateRequest reservationTimeCreateRequest) {
+    public ReservationTimeCreateResponse createReservationTime(final ReservationTimeCreateRequest reservationTimeCreateRequest) {
         final String startAt = reservationTimeCreateRequest.startAt();
         final long reservationId = reservationTimeRepository.create(ReservationTime.from(startAt));
         return new ReservationTimeCreateResponse(reservationId, startAt);

@@ -24,12 +24,12 @@ public class ReservationTimeApiController {
     @PostMapping
     @ResponseStatus(value = HttpStatus.CREATED)
     public ReservationTimeCreateResponse createTime(@RequestBody ReservationTimeCreateRequest reservationTimeCreateRequest) {
-        return this.reservationTimeService.createReservation(reservationTimeCreateRequest);
+        return this.reservationTimeService.createReservationTime(reservationTimeCreateRequest);
     }
 
     @DeleteMapping("/{id}")
     @ResponseStatus(value = HttpStatus.NO_CONTENT)
     public void deleteReservation(@PathVariable final Long id) {
-        reservationTimeService.deleteReservation(id);
+        reservationTimeService.deleteReservationTime(id);
     }
 }

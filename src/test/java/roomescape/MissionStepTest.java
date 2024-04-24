@@ -81,13 +81,14 @@ public class MissionStepTest {
                 "timeId", reservationTimeId
         );
 
-        RestAssured.given().log().all()
+        String location = RestAssured.given().log().all()
                 .contentType(ContentType.JSON)
                 .body(params)
                 .when().post("/reservations")
                 .then().log().all()
                 .statusCode(HttpStatus.SC_CREATED)
-                .body("id", is(1));
+                .extract()
+                .header("Location");
 
         RestAssured.given().log().all()
                 .when().get("/reservations")
@@ -96,7 +97,7 @@ public class MissionStepTest {
                 .body("size()", is(1));
 
         RestAssured.given().log().all()
-                .when().delete("/reservations/1")
+                .when().delete(location)
                 .then().log().all()
                 .statusCode(HttpStatus.SC_NO_CONTENT);
 

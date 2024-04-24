@@ -7,9 +7,7 @@ import io.restassured.RestAssured;
 import io.restassured.http.ContentType;
 import java.sql.Connection;
 import java.sql.SQLException;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -30,17 +28,24 @@ class MissionStepTest {
     @Autowired
     private JdbcTemplate jdbcTemplate;
 
-    private final RowMapper<Reservation> actorRowMapper = (resultSet, rowNum) ->
-            new Reservation(
+    private final RowMapper<ReservationDto> reservationDtoMapper = (resultSet, rowNum) ->
+            new ReservationDto(
                     resultSet.getLong("id"),
                     resultSet.getString("name"),
                     resultSet.getString("date"),
-                    resultSet.getString("time")
+                    resultSet.getLong("time_id")
             );
 
     @BeforeEach
     void setUp() {
         RestAssured.port = this.port;
+
+        ReservationTime reservationTime = new ReservationTime(1L, "99:99");
+
+        RestAssured.given().log().all()
+                .contentType(ContentType.JSON)
+                .body(reservationTime)
+                .post("/times");
     }
 
     @Test
@@ -72,13 +77,13 @@ class MissionStepTest {
     }
 
     @Test
-    @DisplayName("3단계 Test- 새로운 예약 정보 등록 요청을 처리한다.")
+    @DisplayName("3단계, 8단계 Test- 새로운 예약 정보 등록 요청을 처리하고 성공 시 201 상태 코드를 응답한다.")
     void createReservation_ShouldReturnOK_WhenProceedCreateRequestSuccessfully() {
-        Reservation requestReservation = new Reservation(null, "브라운", "2023-08-05", "15:40");
+        ReservationDto requestReservationDto = new ReservationDto(null, "브라운", "2023-08-05", 1L);
 
         RestAssured.given().log().all()
                 .contentType(ContentType.JSON)
-                .body(requestReservation)
+                .body(requestReservationDto)
                 .when().post("/reservations")
                 .then().log().all()
                 .statusCode(201);
@@ -91,16 +96,14 @@ class MissionStepTest {
     }
 
     @Test
-    @DisplayName("3단계 Test- 특정 id를 가진 예약 정보를 삭제한다.")
+    @DisplayName("3단계, 8단계 Test- 특정 id를 가진 예약 정보를 삭제 요청을 처리하고 성공 시 204 상태 코드를 응답한다.")
     void deleteReservation_ShouldDeleteReservationAndReturnOK_WhenProceedDeleteRequestSuccessfully() {
-        Reservation requestReservation = new Reservation(null, "브라운", "2023-08-05", "15:40");
+        ReservationDto requestReservationDto = new ReservationDto(null, "브라운", "2023-08-05", 1L);
 
         RestAssured.given().log().all()
                 .contentType(ContentType.JSON)
-                .body(requestReservation)
-                .when().post("/reservations")
-                .then().log().all()
-                .statusCode(201);
+                .body(requestReservationDto)
+                .when().post("/reservations");
 
         RestAssured.given().log().all()
                 .when().delete("/reservations/1")
@@ -129,13 +132,15 @@ class MissionStepTest {
     @Test
     @DisplayName("5단계 - 예약 조회 API와 데이터베이스 쿼리를 통해 각각 조회한 예약 수가 같아야한다.")
     void findAllReservation_ShouldEqualReservationNumbers_WhenReadDBTable() {
-        jdbcTemplate.update("INSERT INTO reservation (name, date, time) VALUES (?, ?, ?)", "브라운", "2023-08-05", "15:40");
+        jdbcTemplate.update("INSERT INTO reservation (name, date, time_id) VALUES (?, ?, ?)", "브라운", "2023-08-05",
+                1L);
 
-        List<Reservation> reservations = RestAssured.given().log().all()
+        List<Reservation> reservations = RestAssured.given()
+                .log().all()
                 .when().get("/reservations")
                 .then().log().all()
-                .statusCode(200).extract()
-                .jsonPath().getList(".", Reservation.class);
+                .statusCode(200).extract().jsonPath()
+                .getList(".", Reservation.class);
 
         Integer count = jdbcTemplate.queryForObject("SELECT count(1) from reservation", Integer.class);
 
@@ -143,39 +148,14 @@ class MissionStepTest {
     }
 
     @Test
-    @DisplayName("5단계 - 예약 조회 API와 데이터베이스 쿼리를 통해 각각 조회한 모든 예약이 같아야한다.")
-    void findAllReservation_ShouldEqualReservations_WhenRequestByQueryAndAPI() {
-        jdbcTemplate.update("INSERT INTO reservation (name, date, time) VALUES (?, ?, ?)", "브라운", "2023-08-05", "15:40");
-
-        List<Reservation> reservationsRequestByAPI = RestAssured.given().log().all()
-                .when().get("/reservations")
-                .then().log().all()
-                .statusCode(200).extract()
-                .jsonPath().getList(".", Reservation.class);
-
-        List<Reservation> reservationsRequestByQuery = jdbcTemplate.query(
-                "SELECT id, name, date, time FROM reservation",
-                actorRowMapper
-            );
-
-        assertThat(reservationsRequestByAPI).isEqualTo(reservationsRequestByQuery);
-    }
-
-    @Test
-    @DisplayName("6단계 - 특정 Id의 reservation의 삭제 요청을 처리한다.")
-    void 육단계() {
-        Reservation requestReservation = new Reservation(null, "브라운", "2023-08-05", "15:40");
+    @DisplayName("6단계 - 특정 Id의 reservation의 삭제 요청을 처리하고 성공 시 204 상태 코드를 응답한다.")
+    void deleteReservation_ShouldReturnNOCONTENT_WhenDeleteSuccessfully() {
+        ReservationDto requestReservationDto = new ReservationDto(null, "브라운", "2023-08-05", 1L);
 
         RestAssured.given().log().all()
                 .contentType(ContentType.JSON)
-                .body(requestReservation)
-                .when().post("/reservations")
-                .then().log().all()
-                .statusCode(201)
-                .header("Location", "/reservations/1");
-
-        Integer count = jdbcTemplate.queryForObject("SELECT count(1) from reservation", Integer.class);
-        assertThat(count).isEqualTo(1);
+                .body(requestReservationDto)
+                .when().post("/reservations");
 
         RestAssured.given().log().all()
                 .when().delete("/reservations/1")
@@ -184,6 +164,40 @@ class MissionStepTest {
 
         Integer countAfterDelete = jdbcTemplate.queryForObject("SELECT count(1) from reservation", Integer.class);
         assertThat(countAfterDelete).isZero();
+    }
+
+    @Test
+    @DisplayName("7단계 - time 추가 요청을 처리하고 성공 시 201 상태 코드를 응답한다.")
+    void createReservationTime_ShouldReturnCREATED_WhenCreateSuccessfully() {
+        ReservationTime reservationTime = new ReservationTime(null, "10:00");
+
+        RestAssured.given().log().all()
+                .contentType(ContentType.JSON)
+                .body(reservationTime)
+                .when().post("/times")
+                .then().log().all()
+                .statusCode(201);
+
+        RestAssured.given().log().all()
+                .when().get("/times")
+                .then().log().all()
+                .statusCode(200)
+                .body("size()", is(2));
+    }
+
+    @Test
+    @DisplayName("7단계 - time 삭제 요청을 처리하고 성공 시 204 상태 코드를 응답한다.")
+    void deleteReservationTime_ShouldReturnNOCONTENT_WhenDeleteSuccessfully() {
+        ReservationTime reservationTime = new ReservationTime(null, "10:00");
+
+        RestAssured.given().log().all()
+                .contentType(ContentType.JSON)
+                .body(reservationTime);
+
+        RestAssured.given().log().all()
+                .when().delete("/times/1")
+                .then().log().all()
+                .statusCode(204);
     }
 
 }

@@ -1,10 +1,10 @@
 package roomescape.controller;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.hamcrest.Matchers.is;
 
 import io.restassured.RestAssured;
 import io.restassured.http.ContentType;
-import java.util.List;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
@@ -12,25 +12,19 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.jdbc.core.JdbcTemplate;
-import roomescape.controller.dto.SaveReservationRequest;
-import roomescape.domain.Reservation;
+import roomescape.controller.dto.SaveReservationTimeRequest;
 
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.DEFINED_PORT)
-class ReservationControllerTest {
+class ReservationTimeControllerTest {
 
     @Autowired
-    private JdbcTemplate jdbcTemplate;
+    JdbcTemplate jdbcTemplate;
 
     @BeforeEach
     void addInitialData() {
         jdbcTemplate.update(
             "INSERT INTO reservation_time (start_at) VALUES (?)",
             "10:00"
-        );
-
-        jdbcTemplate.update(
-            "INSERT INTO reservation (name, date, time_id) VALUES (?, ?, ?)",
-            "브라운", "2023-08-05", 1L
         );
     }
 
@@ -45,41 +39,38 @@ class ReservationControllerTest {
     }
 
     @Test
-    @DisplayName("예약 목록을 조회한다.")
-    void readReservations() {
-        List<Reservation> reservations = RestAssured.given().log().all()
-            .when().get("/reservations")
-            .then().log().all()
-            .statusCode(200).extract()
-            .jsonPath().getList(".", Reservation.class);
-
-        Integer count = jdbcTemplate.queryForObject("SELECT count(1) from reservation", Integer.class);
-        assertThat(reservations.size()).isEqualTo(count);
-    }
-
-    @Test
-    @DisplayName("예약을 추가한다.")
-    void createReservation() {
+    @DisplayName("시간을 추가한다.")
+    void save() {
         RestAssured.given().log().all()
             .contentType(ContentType.JSON)
-            .body(new SaveReservationRequest("2023-01-01", "브라운", 1L))
-            .when().post("/reservations")
+            .body(new SaveReservationTimeRequest("11:00"))
+            .when().post("/times")
             .then().log().all()
             .statusCode(200);
 
-        Integer count = jdbcTemplate.queryForObject("SELECT count(1) from reservation", Integer.class);
+        Integer count = jdbcTemplate.queryForObject("SELECT count(1) from reservation_time", Integer.class);
         assertThat(count).isEqualTo(2);
     }
 
     @Test
-    @DisplayName("예약을 삭제한다.")
-    void deleteReservation() {
+    @DisplayName("전체 시간을 조회한다.")
+    void readAll() {
         RestAssured.given().log().all()
-            .when().delete("/reservations/1")
+            .when().get("/times")
+            .then().log().all()
+            .statusCode(200)
+            .body("size()", is(1));
+    }
+
+    @Test
+    @DisplayName("시간을 삭제한다.")
+    void remove() {
+        RestAssured.given().log().all()
+            .when().delete("/times/1")
             .then().log().all()
             .statusCode(200);
 
-        Integer countAfterDelete = jdbcTemplate.queryForObject("SELECT count(1) from reservation", Integer.class);
-        assertThat(countAfterDelete).isEqualTo(0);
+        Integer count = jdbcTemplate.queryForObject("SELECT count(1) from reservation_time", Integer.class);
+        assertThat(count).isEqualTo(0);
     }
 }

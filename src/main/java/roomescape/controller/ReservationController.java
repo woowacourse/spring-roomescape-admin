@@ -1,11 +1,7 @@
 package roomescape.controller;
 
-import java.util.ArrayList;
 import java.util.List;
-import java.util.Objects;
-import java.util.Optional;
-import java.util.concurrent.atomic.AtomicLong;
-import org.springframework.http.ResponseEntity;
+import java.util.stream.Collectors;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -13,40 +9,49 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
-import roomescape.controller.dto.CreateReservationRequest;
+import roomescape.controller.dto.FindReservationResponse;
+import roomescape.controller.dto.SaveReservationRequest;
+import roomescape.controller.dto.SaveReservationResponse;
 import roomescape.domain.Reservation;
+import roomescape.service.ReservationService;
+import roomescape.service.dto.SaveReservationDto;
 
 @RestController
 @RequestMapping("/reservations")
 public class ReservationController {
 
-    private final AtomicLong index = new AtomicLong(1);
-    private final List<Reservation> reservations = new ArrayList<>();
+    private final ReservationService service;
 
-    @GetMapping
-    public List<Reservation> readAll() {
-        return reservations;
+    public ReservationController(ReservationService service) {
+        this.service = service;
     }
 
     @PostMapping
-    public Reservation add(@RequestBody CreateReservationRequest request) {
-        Reservation newReservation = new Reservation(
-            index.getAndIncrement(), request.name(), request.date(), request.time());
-        reservations.add(newReservation);
-        return newReservation;
+    public SaveReservationResponse save(@RequestBody SaveReservationRequest request) {
+        Reservation reservation = service.save(
+            new SaveReservationDto(request.date(), request.name(), request.timeId()));
+        return new SaveReservationResponse(
+            reservation.getId(),
+            reservation.getName(),
+            reservation.getDate(),
+            reservation.getTime()
+        );
+    }
+
+    @GetMapping
+    public List<FindReservationResponse> findAll() {
+        return service.findAll()
+            .stream()
+            .map(reservation -> new FindReservationResponse(
+                reservation.getId(),
+                reservation.getName(),
+                reservation.getDate(),
+                reservation.getTime()
+            )).collect(Collectors.toList());
     }
 
     @DeleteMapping("/{id}")
-    public ResponseEntity<Void> remove(@PathVariable Long id) {
-        Optional<Reservation> reservation = reservations.stream()
-            .filter(it -> Objects.equals(it.getId(), id))
-            .findFirst();
-
-        if (reservation.isPresent()) {
-            reservations.remove(reservation.get());
-            return ResponseEntity.ok().build();
-        }
-
-        return ResponseEntity.badRequest().build();
+    public void delete(@PathVariable long id) {
+        service.delete(id);
     }
 }

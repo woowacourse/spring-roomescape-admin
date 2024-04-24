@@ -20,6 +20,10 @@ public class LogicalCondition {
         conditions.add(condition);
     }
 
+    public boolean isEmpty() {
+        return conditions.isEmpty();
+    }
+
     public String build() {
         return String.join(operator, buildConditions());
     }

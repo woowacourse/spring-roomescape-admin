@@ -7,7 +7,7 @@ import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.web.server.LocalServerPort;
 import org.springframework.test.annotation.DirtiesContext;
-import roomescape.controller.dto.CreateReservationTimeRequest;
+import roomescape.dto.CreateReservationTimeRequest;
 
 import java.time.LocalTime;
 

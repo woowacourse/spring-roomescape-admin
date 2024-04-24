@@ -2,8 +2,8 @@ package roomescape.dao;
 
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Component;
-import roomescape.controller.dto.CreateReservationTimeRequest;
 import roomescape.domain.ReservationTime;
+import roomescape.dto.CreateReservationTimeRequest;
 
 import java.util.List;
 

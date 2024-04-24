@@ -5,6 +5,7 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.jdbc.core.JdbcTemplate;
+import roomescape.core.exception.DeleteReservationTimeException;
 
 @SpringBootTest
 class ReservationTimeServiceTest {
@@ -20,6 +21,7 @@ class ReservationTimeServiceTest {
         jdbcTemplate.update("insert into reservation (name, date, time_id) values ('조앤', '2023-10-23', 1)");
 
         Assertions.assertThatCode(() -> reservationTimeService.deleteTime(1))
-                .isInstanceOf(IllegalArgumentException.class);
+                .isInstanceOf(DeleteReservationTimeException.class)
+                .hasMessage("해당 예약시간에 예약이 등록되어 있습니다.");
     }
 }

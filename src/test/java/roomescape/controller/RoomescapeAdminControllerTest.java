@@ -34,4 +34,13 @@ public class RoomescapeAdminControllerTest {
                 .then().log().all()
                 .statusCode(200);
     }
+
+    @DisplayName("시간 관리 페이지 응답 성공 테스트")
+    @Test
+    void adminTime() {
+        RestAssured.given().log().all()
+                .when().get("/admin/time")
+                .then().log().all()
+                .statusCode(200);
+    }
 }

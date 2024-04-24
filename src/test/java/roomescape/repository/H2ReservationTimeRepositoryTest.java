@@ -40,4 +40,15 @@ public class H2ReservationTimeRepositoryTest {
         assertThat(repository.findById(0L))
                 .isEqualTo(new ReservationTime(0L, "11:00"));
     }
+
+    @DisplayName("시간 저장 테스트")
+    @Test
+    void saveTest() {
+        // given & when
+        ReservationTime reservationTime = repository.save(new ReservationTime("12:00"));
+
+        // then
+        assertThat(repository.findById(reservationTime.getId()))
+                .isEqualTo(reservationTime);
+    }
 }

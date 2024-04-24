@@ -82,3 +82,31 @@ DELETE /reservations/1 HTTP/1.1
 ```
 HTTP/1.1 204
 ```
+
+<br>
+
+### 시간 추가 API
+
+**Request**
+
+```http request
+POST /times HTTP/1.1
+content-type: application/json
+
+{
+    "startAt": "10:00"
+}
+```
+
+**Response**
+
+```
+HTTP/1.1 200
+Content-Type: application/json
+
+{
+    "id": 1,
+    "startAt": "10:00"
+}
+```
+

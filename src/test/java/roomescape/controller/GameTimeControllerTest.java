@@ -12,7 +12,7 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.context.SpringBootTest.WebEnvironment;
 
 @SpringBootTest(webEnvironment = WebEnvironment.DEFINED_PORT)
-class GameTimeDtoControllerTest {
+class GameTimeControllerTest {
     @DisplayName("전체 예약 가능 시각 조회 테스트")
     @Test
     void timesTest() {

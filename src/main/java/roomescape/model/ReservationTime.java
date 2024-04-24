@@ -1,4 +1,4 @@
-package roomescape;
+package roomescape.model;
 
 public record ReservationTime(
         Long id,

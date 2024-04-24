@@ -1,7 +1,11 @@
-package roomescape;
+package roomescape.service;
 
 import java.util.List;
 import org.springframework.stereotype.Service;
+import roomescape.model.ReservationDto;
+import roomescape.repository.ReservationRepository;
+import roomescape.repository.ReservationTimeRepository;
+import roomescape.model.Reservation;
 
 @Service
 public class ReservationService {

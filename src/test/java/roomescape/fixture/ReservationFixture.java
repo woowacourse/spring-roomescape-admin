@@ -11,6 +11,10 @@ public class ReservationFixture {
     }
 
     public static ReservationTime reservationTime() {
-        return new ReservationTime(1L, LocalTime.of(22, 11));
+        return reservationTime(1L);
+    }
+
+    public static ReservationTime reservationTime(long id) {
+        return new ReservationTime(id, LocalTime.of(22, 11));
     }
 }

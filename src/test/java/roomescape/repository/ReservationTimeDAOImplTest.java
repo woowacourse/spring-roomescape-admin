@@ -19,7 +19,7 @@ import roomescape.model.ReservationTime;
 
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.DEFINED_PORT)
 @DirtiesContext(classMode = DirtiesContext.ClassMode.BEFORE_EACH_TEST_METHOD)
-class ReservationTimeDAOTest {
+class ReservationTimeDAOImplTest {
 
     @Autowired
     JdbcTemplate jdbcTemplate;
@@ -28,7 +28,7 @@ class ReservationTimeDAOTest {
     DataSource dataSource;
 
     @Autowired
-    ReservationTimeDAO reservationTimeDAO;
+    ReservationTimeDAOImpl reservationTimeDAOImpl;
 
     SimpleJdbcInsert insertActor;
 
@@ -74,14 +74,14 @@ class ReservationTimeDAOTest {
     @DisplayName("모든 예약 시간을 조회한다")
     @Test
     void should_get_reservation_times() {
-        List<ReservationTime> reservationTimes = reservationTimeDAO.selectAllReservationTimes();
+        List<ReservationTime> reservationTimes = reservationTimeDAOImpl.selectAllReservationTimes();
         assertThat(reservationTimes).hasSize(2);
     }
 
     @DisplayName("예약 시간을 추가한다")
     @Test
     void should_add_reservation_time() {
-        reservationTimeDAO.insertReservationTime(new ReservationTime(LocalTime.of(12, 0)));
+        reservationTimeDAOImpl.insertReservationTime(new ReservationTime(LocalTime.of(12, 0)));
         Integer count = jdbcTemplate.queryForObject("select count(1) from reservation_time", Integer.class);
         assertThat(count).isEqualTo(3);
     }
@@ -89,7 +89,7 @@ class ReservationTimeDAOTest {
     @DisplayName("예약 시간을 삭제한다")
     @Test
     void should_delete_reservation_time() {
-        reservationTimeDAO.deleteReservationTime(1);
+        reservationTimeDAOImpl.deleteReservationTime(1);
         Integer count = jdbcTemplate.queryForObject("select count(1) from reservation_time", Integer.class);
         assertThat(count).isEqualTo(1);
     }

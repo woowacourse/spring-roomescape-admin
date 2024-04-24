@@ -1,6 +1,7 @@
 package roomescape.controller.console;
 
 import java.util.List;
+import org.springframework.context.annotation.Profile;
 import org.springframework.stereotype.Controller;
 import roomescape.controller.dto.TimeSlotCreationRequest;
 import roomescape.controller.dto.TimeSlotCreationResponse;
@@ -9,6 +10,7 @@ import roomescape.view.InputView;
 import roomescape.view.OutputView;
 
 @Controller
+@Profile("console")
 public class TimeSlotConsoleController extends ManagementController {
 
     private final TimeSlotService timeSlotService;

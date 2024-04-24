@@ -7,13 +7,24 @@ public class ReservationDate {
     private final LocalDate date;
 
     public ReservationDate(LocalDate date) {
-        validateNonNull(date);
+        validate(date);
         this.date = date;
+    }
+
+    private void validate(LocalDate date) {
+        validateNonNull(date);
+        validateNonPassedDate(date);
     }
 
     private void validateNonNull(LocalDate date) {
         if (date == null) {
             throw new NullPointerException("예약 날짜는 Null일 수 없습니다");
+        }
+    }
+
+    private void validateNonPassedDate(LocalDate date) {
+        if (date.isBefore(LocalDate.now())) {
+            throw new IllegalStateException("예약 날짜는 현재 날짜보다 이전일 수 없습니다 예약날짜: " + date);
         }
     }
 

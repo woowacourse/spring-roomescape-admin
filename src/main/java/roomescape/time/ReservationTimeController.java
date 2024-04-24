@@ -4,12 +4,14 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.support.GeneratedKeyHolder;
 import org.springframework.jdbc.support.KeyHolder;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
 
 import java.sql.PreparedStatement;
 import java.sql.Time;
+import java.util.List;
 
 @RestController
 public class ReservationTimeController {
@@ -17,6 +19,18 @@ public class ReservationTimeController {
 
     public ReservationTimeController(final JdbcTemplate jdbcTemplate) {
         this.jdbcTemplate = jdbcTemplate;
+    }
+
+    @GetMapping("/times")
+    public ResponseEntity<List<ReservationTime>> times() {
+        final String sql = "SELECT * FROM reservation_time";
+        final List<ReservationTime> times = jdbcTemplate.query(sql, (resultSet, rowNum) -> new ReservationTime(
+                        resultSet.getLong("id"),
+                        resultSet.getTime("start_at").toLocalTime()
+                )
+        );
+
+        return ResponseEntity.ok(times);
     }
 
     @PostMapping("/times")

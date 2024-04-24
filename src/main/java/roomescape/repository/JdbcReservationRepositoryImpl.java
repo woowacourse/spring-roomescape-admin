@@ -34,11 +34,11 @@ public class JdbcReservationRepositoryImpl implements ReservationRepository {
                 Map.entry("date", reservation.getDate()),
                 Map.entry("time_id", reservation.getTime().getId())
         );
-        Long id = simpleJdbcInsert
+        long id = simpleJdbcInsert
                 .executeAndReturnKey(saveSource)
                 .longValue();
 
-        return new Reservation(id.longValue(), reservation.getName(), reservation.getDate(), reservation.getTime());
+        return new Reservation(id, reservation.getName(), reservation.getDate(), reservation.getTime());
     }
 
     @Override

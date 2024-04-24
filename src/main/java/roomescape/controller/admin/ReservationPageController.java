@@ -1,4 +1,4 @@
-package roomescape.controller;
+package roomescape.controller.admin;
 
 import java.util.List;
 import org.springframework.stereotype.Controller;
@@ -8,11 +8,11 @@ import roomescape.dto.response.ReservationResponse;
 import roomescape.repository.ReservationRepository;
 
 @Controller
-public class AdminController {
+public class ReservationPageController {
 
     private final ReservationRepository reservationRepository;
 
-    public AdminController(ReservationRepository reservationRepository) {
+    public ReservationPageController(ReservationRepository reservationRepository) {
         this.reservationRepository = reservationRepository;
     }
 

@@ -13,11 +13,10 @@ import roomescape.dto.app.ReservationAppRequest;
 @Transactional
 public class ReservationService {
 
-    @Autowired
     private final ReservationRepository reservationRepository;
-    @Autowired
     private final ReservationTimeRepository reservationTimeRepository;
 
+    @Autowired
     public ReservationService(ReservationRepository reservationRepository,
                               ReservationTimeRepository reservationTimeRepository) {
         this.reservationRepository = reservationRepository;

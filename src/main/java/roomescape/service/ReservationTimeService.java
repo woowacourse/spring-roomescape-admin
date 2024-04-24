@@ -9,9 +9,9 @@ import roomescape.dto.app.ReservationTimeAppRequest;
 
 @Service
 public class ReservationTimeService {
-    @Autowired
     private final ReservationTimeRepository reservationTimeRepository;
 
+    @Autowired
     public ReservationTimeService(ReservationTimeRepository reservationTimeRepository) {
         this.reservationTimeRepository = reservationTimeRepository;
     }

@@ -20,9 +20,10 @@ import roomescape.service.ReservationTimeService;
 @RestController
 @RequestMapping("/times")
 public class ReservationTimeController {
-    @Autowired
+    
     private final ReservationTimeService reservationTimeService;
 
+    @Autowired
     public ReservationTimeController(ReservationTimeService reservationTimeService) {
         this.reservationTimeService = reservationTimeService;
     }

@@ -8,13 +8,31 @@ public class ReservationCreateResponse {
     private final Long id;
     private final String name;
     private final LocalDate date;
-    private final LocalTime time;
+    private final GameTimeDto time;
 
-    public ReservationCreateResponse(long id, String name, LocalDate date, LocalTime time) {
+    private class GameTimeDto {
+        private final long id;
+        private final LocalTime startAt;
+
+        public GameTimeDto(long id, LocalTime startAt) {
+            this.id = id;
+            this.startAt = startAt;
+        }
+
+        public long getId() {
+            return id;
+        }
+
+        public LocalTime getStartAt() {
+            return startAt;
+        }
+    }
+
+    public ReservationCreateResponse(long id, String name, LocalDate date, long timeId, LocalTime time) {
         this.id = id;
         this.name = name;
         this.date = date;
-        this.time = time;
+        this.time = new GameTimeDto(timeId, time);
     }
 
     public static ReservationCreateResponse from(Reservation reservation) {
@@ -22,6 +40,7 @@ public class ReservationCreateResponse {
                 reservation.getId(),
                 reservation.getName(),
                 reservation.getStartDate(),
+                reservation.getReservationTimeId(),
                 reservation.getStartTime());
     }
 
@@ -37,7 +56,7 @@ public class ReservationCreateResponse {
         return date;
     }
 
-    public LocalTime getTime() {
+    public GameTimeDto getTime() {
         return time;
     }
 }

@@ -15,7 +15,7 @@ import roomescape.entity.GameTime;
 @SpringBootTest
 @Transactional
 @Rollback
-class GameTimeRepositoryTest {
+class GameTimeDtoRepositoryTest {
 
     @Autowired
     private GameTimeRepository gameTimeRepository;

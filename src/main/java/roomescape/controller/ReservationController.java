@@ -3,7 +3,6 @@ package roomescape.controller;
 import java.net.URI;
 import java.util.List;
 
-import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;
@@ -16,7 +15,6 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 
 import roomescape.Reservation;
@@ -26,7 +24,7 @@ import roomescape.ReservationDto;
 @RequestMapping("/reservations")
 public class ReservationController {
 
-    private final RowMapper<Reservation> reservationRowMapper = (resultSet, rowNum) -> new Reservation(
+    private final RowMapper<Reservation> reservationRowMapper = (resultSet, __) -> new Reservation(
             resultSet.getLong("id"),
             resultSet.getString("name"),
             resultSet.getDate("date").toLocalDate(),
@@ -44,11 +42,11 @@ public class ReservationController {
     }
 
     @GetMapping
-    public List<ReservationDto> findAll() {
-        return jdbcTemplate.query("SELECT * FROM reservation", reservationRowMapper)
+    public ResponseEntity<List<ReservationDto>> findAll() {
+        return ResponseEntity.ok(jdbcTemplate.query("SELECT * FROM reservation", reservationRowMapper)
                 .stream()
                 .map(ReservationDto::from)
-                .toList();
+                .toList());
     }
 
     @PostMapping
@@ -59,8 +57,8 @@ public class ReservationController {
     }
 
     @DeleteMapping("/{id}")
-    @ResponseStatus(HttpStatus.NO_CONTENT)
-    public void delete(@PathVariable long id) {
+    public ResponseEntity<Void> delete(@PathVariable long id) {
         jdbcTemplate.update("DELETE FROM reservation WHERE id = ?", id);
+        return ResponseEntity.noContent().build();
     }
 }

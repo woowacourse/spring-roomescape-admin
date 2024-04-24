@@ -70,7 +70,7 @@ class ReservationTimeDAOTest {
     @DisplayName("예약 시간을 추가한다")
     @Test
     void should_add_reservation_time() {
-        long id = reservationTimeDAO.addReservationTime(new ReservationTime(LocalTime.of(12, 0)));
+        ReservationTime reservationTime = reservationTimeDAO.addReservationTime(new ReservationTime(LocalTime.of(12, 0)));
         Integer count = jdbcTemplate.queryForObject("SELECT count(1) from reservation_time", Integer.class);
         assertThat(count).isEqualTo(3);
     }

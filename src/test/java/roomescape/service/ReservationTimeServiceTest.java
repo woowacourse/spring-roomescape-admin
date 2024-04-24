@@ -70,8 +70,9 @@ class ReservationTimeServiceTest {
     @DisplayName("예약 시간을 추가한다")
     @Test
     void should_add_reservation_times() {
-        long id = reservationTimeService.addReservationTime(new ReservationTime(LocalTime.of(10, 0)));
-        assertThat(id).isEqualTo(3);
+        ReservationTime reservationTime
+                = reservationTimeService.addReservationTime(new ReservationTime(LocalTime.of(10, 0)));
+        assertThat(reservationTime.getId()).isEqualTo(3);
     }
 
     @DisplayName("예약 시간을 삭제한다")

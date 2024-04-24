@@ -35,7 +35,7 @@ public class ReservationTimeDAO {
                 ), id);
     }
 
-    public long addReservationTime(ReservationTime reservationTime) {
+    public ReservationTime addReservationTime(ReservationTime reservationTime) {
         String sql = "insert into reservation_time (start_at) values (?)";
         KeyHolder keyHolder = new GeneratedKeyHolder();
         jdbcTemplate.update(connection -> {
@@ -43,7 +43,8 @@ public class ReservationTimeDAO {
             ps.setString(1, reservationTime.getStartAt().toString());
             return ps;
         }, keyHolder);
-        return keyHolder.getKey().longValue();
+        reservationTime.setId(keyHolder.getKey().longValue());
+        return reservationTime;
     }
 
     public void deleteReservationTime(long id) {

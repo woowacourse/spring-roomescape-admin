@@ -20,4 +20,13 @@ public class H2ReservationTimeRepository {
                         rs.getString("start_at")
                 ));
     }
+
+    public ReservationTime findById(long id) {
+        String sql = "SELECT id, start_at FROM reservation_time WHERE id = ?";
+        return jdbcTemplate.queryForObject(sql,
+                (rs, rowNum) -> new ReservationTime(
+                        rs.getLong("id"),
+                        rs.getString("start_at")
+                ), id);
+    }
 }

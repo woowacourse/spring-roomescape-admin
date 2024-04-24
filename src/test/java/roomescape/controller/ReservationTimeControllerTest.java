@@ -72,6 +72,6 @@ class ReservationTimeControllerTest {
         RestAssured.given()
                 .when().delete("/times/1")
                 .then()
-                .statusCode(500);
+                .statusCode(400);
     }
 }

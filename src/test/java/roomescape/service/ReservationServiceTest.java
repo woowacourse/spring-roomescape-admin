@@ -1,12 +1,13 @@
 package roomescape.service;
 
+import org.assertj.core.api.SoftAssertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
-import roomescape.dto.ReservationCreateRequest;
-import roomescape.dto.ReservationTimeCreateRequest;
 import roomescape.domain.Reservation;
 import roomescape.domain.ReservationTime;
+import roomescape.dto.ReservationCreateRequest;
+import roomescape.dto.ReservationTimeCreateRequest;
 import roomescape.repository.ReservationFakeDao;
 import roomescape.repository.ReservationTimeFakeDao;
 
@@ -16,7 +17,6 @@ import java.util.List;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatCode;
-import static org.junit.jupiter.api.Assertions.assertAll;
 
 @DisplayName("예약 서비스")
 class ReservationServiceTest {
@@ -58,10 +58,10 @@ class ReservationServiceTest {
         Reservation reservation = reservationService.readReservation(id);
 
         // then
-        assertAll(
-                () -> assertThat(reservation.getDate()).isEqualTo(date),
-                () -> assertThat(reservation.getName()).isEqualTo("클로버")
-        );
+        SoftAssertions softAssertions = new SoftAssertions();
+        softAssertions.assertThat(reservation.getDate()).isEqualTo(date);
+        softAssertions.assertThat(reservation.getName()).isEqualTo("클로버");
+        softAssertions.assertAll();
     }
 
     @DisplayName("예약 서비스는 예약을 생성한다.")
@@ -77,11 +77,11 @@ class ReservationServiceTest {
         Reservation reservation = reservationService.createReservation(request);
 
         // then
-        assertAll(
-                () -> assertThat(reservation.getDate()).isEqualTo(date),
-                () -> assertThat(reservation.getName()).isEqualTo("클로버"),
-                () -> assertThat(reservation.getTime().getStartAt()).isEqualTo(reservationTime.getStartAt())
-        );
+        SoftAssertions softAssertions = new SoftAssertions();
+        softAssertions.assertThat(reservation.getDate()).isEqualTo(date);
+        softAssertions.assertThat(reservation.getName()).isEqualTo("클로버");
+        softAssertions.assertThat(reservation.getTime().getStartAt()).isEqualTo(reservationTime.getStartAt());
+        softAssertions.assertAll();
     }
 
     @DisplayName("예약 서비스는 id에 맞는 예약을 삭제한다.")

@@ -6,10 +6,11 @@ import java.util.Objects;
 import roomescape.domain.Reservation;
 import roomescape.domain.ReservationTime;
 import roomescape.dto.ReservationRequest;
+import roomescape.dto.ReservationTimeRequest;
 
-public class ReservationTestSetting {
+public class TestSetting {
 
-    private ReservationTestSetting() {
+    private TestSetting() {
     }
 
     public static Reservation createReservation() {
@@ -25,6 +26,10 @@ public class ReservationTestSetting {
 
     public static ReservationRequest createReservationRequest() {
         return new ReservationRequest("ted", "2024-01-01", 1L);
+    }
+
+    public static ReservationTimeRequest createReservationTimeRequest() {
+        return new ReservationTimeRequest("10:00");
     }
 
     public static boolean isEqualsReservation(Reservation reservation1, Reservation reservation2) {

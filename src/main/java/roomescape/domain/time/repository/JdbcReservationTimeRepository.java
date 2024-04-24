@@ -39,14 +39,14 @@ public class JdbcReservationTimeRepository implements ReservationTimeRepository 
 
     @Override
     public boolean existsByStartAt(LocalTime localTime) {
-        String sql = "select count(*) from reservation_time where start_at = ?";
+        String sql = "SELECT COUNT(*) FROM reservation_time WHERE start_at = ?";
         Integer count = jdbcTemplate.queryForObject(sql, Integer.class, localTime);
         return count != null && count > 0;
     }
 
     @Override
     public Optional<ReservationTime> findById(long id) {
-        String sql = "select * from reservation_time where id = ?";
+        String sql = "SELECT * FROM reservation_time WHERE id = ?";
         try {
             return Optional.ofNullable(jdbcTemplate.queryForObject(sql, rowMapper, id));
         } catch (DataAccessException e) {
@@ -56,13 +56,13 @@ public class JdbcReservationTimeRepository implements ReservationTimeRepository 
 
     @Override
     public List<ReservationTime> findAll() {
-        String sql = "select * from reservation_time";
+        String sql = "SELECT * FROM reservation_time";
         return jdbcTemplate.query(sql, rowMapper);
     }
 
     @Override
     public void deleteById(long id) {
-        String sql = "delete from reservation_time where id = ?";
+        String sql = "DELETE FROM reservation_time WHERE id = ?";
         jdbcTemplate.update(sql, id);
     }
 }

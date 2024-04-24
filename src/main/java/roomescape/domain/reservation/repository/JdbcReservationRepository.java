@@ -14,7 +14,7 @@ import org.springframework.stereotype.Repository;
 import roomescape.domain.reservation.Reservation;
 import roomescape.domain.time.ReservationTime;
 
-@Repository // todo DAO 분리
+@Repository
 public class JdbcReservationRepository implements ReservationRepository {
     private final JdbcTemplate jdbcTemplate;
     private final SimpleJdbcInsertOperations jdbcInsert;
@@ -44,14 +44,14 @@ public class JdbcReservationRepository implements ReservationRepository {
 
     @Override
     public boolean existsByReservationDateTime(LocalDate date, long timeId) {
-        String sql = "select count(*) from reservation where date = ? and time_id = ?";
+        String sql = "SELECT COUNT(*) FROM reservation WHERE date = ? AND time_id = ?";
         Integer count = jdbcTemplate.queryForObject(sql, Integer.class, date, timeId);
         return count != null && count > 0;
     }
 
     @Override
     public Optional<Reservation> findById(long id) {
-        String sql = "select * from reservation as r join reservation_time as t on r.time_id = t.id where r.id = ?";
+        String sql = "SELECT * FROM reservation AS r JOIN reservation_time AS t ON r.time_id = t.id WHERE r.id = ?";
         try {
             return Optional.ofNullable(jdbcTemplate.queryForObject(sql, rowMapper, id));
         } catch (DataAccessException e) {
@@ -61,13 +61,13 @@ public class JdbcReservationRepository implements ReservationRepository {
 
     @Override
     public List<Reservation> findAll() {
-        String sql = "select * from reservation as r join reservation_time as t on r.time_id = t.id";
+        String sql = "SELECT * FROM reservation AS r JOIN reservation_time AS t ON r.time_id = t.id";
         return jdbcTemplate.query(sql, rowMapper);
     }
 
     @Override
     public void deleteById(long id) {
-        String sql = "delete from reservation where id = ?";
+        String sql = "DELETE FROM reservation WHERE id = ?";
         jdbcTemplate.update(sql, id);
     }
 }

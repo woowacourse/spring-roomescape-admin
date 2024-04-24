@@ -1,8 +1,9 @@
 package roomescape.controller.console;
 
 import java.util.List;
-import org.springframework.context.annotation.Profile;
+import org.springframework.boot.autoconfigure.condition.ConditionalOnBean;
 import org.springframework.stereotype.Controller;
+import roomescape.RoomescapeConsoleApplication;
 import roomescape.controller.dto.ReservationRequest;
 import roomescape.controller.dto.ReservationResponse;
 import roomescape.service.ReservationService;
@@ -10,7 +11,7 @@ import roomescape.view.InputView;
 import roomescape.view.OutputView;
 
 @Controller
-@Profile("console")
+@ConditionalOnBean(RoomescapeConsoleApplication.class)
 public class ReservationConsoleController extends ManagementController {
 
     private final ReservationService reservationService;

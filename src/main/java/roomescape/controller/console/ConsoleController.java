@@ -5,7 +5,6 @@ import java.util.Map;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnBean;
 import org.springframework.context.annotation.Bean;
-import org.springframework.context.annotation.Profile;
 import org.springframework.stereotype.Controller;
 import roomescape.RoomescapeConsoleApplication;
 import roomescape.view.InputView;
@@ -13,7 +12,7 @@ import roomescape.view.OutputView;
 import roomescape.view.command.AdminCommand;
 
 @Controller
-@Profile("console")
+@ConditionalOnBean(RoomescapeConsoleApplication.class)
 public class ConsoleController {
 
     private final ReservationConsoleController reservationController;
@@ -46,7 +45,6 @@ public class ConsoleController {
     }
 
     @Bean
-    @ConditionalOnBean(RoomescapeConsoleApplication.class)
     public CommandLineRunner executeOnStartUp() {
         return args -> this.run();
     }

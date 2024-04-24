@@ -23,12 +23,16 @@ public class ConsoleRunner implements CommandLineRunner {
     @Override
     public void run(String... args) {
         while (true) {
-            try {
-                ConsoleCommand consoleCommand = inputView.readCommand();
-                dispatcherConsole.doDispatch(consoleCommand);
-            } catch (IllegalArgumentException e) {
-                outputView.printError(e.getMessage());
-            }
+            handleException();
+        }
+    }
+
+    private void handleException() {
+        try {
+            ConsoleCommand consoleCommand = inputView.readCommand();
+            dispatcherConsole.doDispatch(consoleCommand);
+        } catch (IllegalArgumentException e) {
+            outputView.printError(e.getMessage());
         }
     }
 }

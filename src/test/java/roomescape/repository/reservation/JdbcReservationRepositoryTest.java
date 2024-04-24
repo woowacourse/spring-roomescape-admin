@@ -63,9 +63,14 @@ class JdbcReservationRepositoryTest {
     @Test
     @DisplayName("예약을 저장한다.")
     void save_reservation() {
-        Reservation reservation = reservationRepository.insertReservation(reservation1);
+        Reservation reservation = reservationRepository.insertReservation(reservation2);
 
-        assertThat(reservation.getId()).isEqualTo(1L);
+        assertAll(
+                () -> assertThat(reservation.getName()).isEqualTo("재즈"),
+                () -> assertThat(reservation.getDate()).isEqualTo("2024-11-30"),
+                () -> assertThat(reservation.getTimeId()).isEqualTo(2),
+                () -> assertThat(reservation.getTimeStartAt()).isEqualTo("12:00")
+        );
     }
 
     @Test

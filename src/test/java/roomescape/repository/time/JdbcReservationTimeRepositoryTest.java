@@ -52,7 +52,10 @@ class JdbcReservationTimeRepositoryTest {
     void save_reservation_time() {
         ReservationTime time = reservationTimeRepository.insertReservationTime(time1);
 
-        assertThat(time.getId()).isEqualTo(1L);
+        assertAll(
+                () -> assertThat(time.getId()).isEqualTo(1),
+                () -> assertThat(time.getStartAt()).isEqualTo("20:20")
+        );
     }
 
     @Test

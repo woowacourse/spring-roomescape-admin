@@ -11,7 +11,6 @@ CREATE TABLE if not exists reservation
     name    VARCHAR(255) NOT NULL,
     date    VARCHAR(255) NOT NULL,
     time_id BIGINT,
-    PRIMARY KEY (id),
-    FOREIGN KEY (time_id) REFERENCES reservation_time (id)
+    PRIMARY KEY (id)
 );
 

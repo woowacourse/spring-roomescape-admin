@@ -10,6 +10,7 @@ import roomescape.repository.TimeDao;
 
 import java.util.List;
 import java.util.NoSuchElementException;
+import java.util.Optional;
 
 @Service
 public class ReservationTimeService {
@@ -29,7 +30,11 @@ public class ReservationTimeService {
     }
 
     public ReservationTime findTimeById(Long id) {
-        return timeDao.findById(id);
+        Optional<ReservationTime> optionalReservationTime = timeDao.findById(id);
+        if (optionalReservationTime.isEmpty()) {
+            throw new NoSuchElementException("[ERROR] 해당 예약 시간을 찾을 수 없습니다");
+        }
+        return optionalReservationTime.get();
     }
 
     public TimeResponse saveTime(TimeSaveRequest request) {

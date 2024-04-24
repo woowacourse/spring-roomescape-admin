@@ -10,6 +10,7 @@ import roomescape.domain.Reservation;
 import roomescape.domain.ReservationTime;
 import roomescape.dto.ReservationResponse;
 import roomescape.dto.ReservationSaveRequest;
+import roomescape.exception.NotFoundException;
 
 import java.util.List;
 import java.util.stream.Stream;
@@ -92,6 +93,26 @@ class ReservationControllerTest extends ControllerTest {
     }
 
     @Test
+    @DisplayName("존재하지 않는 예약 시간의 예약 POST 요청 시 상태코드 404를 반환한다.")
+    void createReservationWithNotExistTime() throws Exception {
+        // given
+        Long notExistingId = 1L;
+        ReservationSaveRequest request = new ReservationSaveRequest(USER_MIA, MIA_RESERVATION_DATE, notExistingId);
+
+        BDDMockito.willThrow(NotFoundException.class)
+                .given(reservationService)
+                .create(any());
+
+        // when & then
+        mockMvc.perform(post("/reservations")
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(objectMapper.writeValueAsBytes(request)))
+                .andDo(print())
+                .andExpect(status().isNotFound())
+                .andExpect(jsonPath("$.message").exists());
+    }
+
+    @Test
     @DisplayName("예약 DELETE 요청 시 상태코드 200을 반환한다.")
     void deleteReservation() throws Exception {
         // given
@@ -104,5 +125,21 @@ class ReservationControllerTest extends ControllerTest {
                         .contentType(MediaType.APPLICATION_JSON))
                 .andDo(print())
                 .andExpect(status().isOk());
+    }
+
+    @Test
+    @DisplayName("존재하지 않는 예약 DELETE 요청 시 상태코드 404를 반환한다.")
+    void deleteNotExistingReservation() throws Exception {
+        // given
+        BDDMockito.willThrow(NotFoundException.class)
+                .given(reservationService)
+                .delete(anyLong());
+
+        // when & then
+        mockMvc.perform(delete("/reservations/{id}", anyLong())
+                        .contentType(MediaType.APPLICATION_JSON))
+                .andDo(print())
+                .andExpect(status().isNotFound())
+                .andExpect(jsonPath("$.message").exists());
     }
 }

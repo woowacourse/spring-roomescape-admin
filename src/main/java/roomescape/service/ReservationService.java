@@ -3,6 +3,7 @@ package roomescape.service;
 import org.springframework.stereotype.Service;
 import roomescape.domain.Reservation;
 import roomescape.dto.ReservationResponse;
+import roomescape.exception.NotFoundException;
 import roomescape.repository.ReservationRepository;
 import roomescape.repository.ReservationTimeRepository;
 
@@ -24,7 +25,7 @@ public class ReservationService {
 
     public ReservationResponse create(Reservation reservation) {
         var reservationTime = reservationTimeRepository.findById(reservation.getReservationTimeId())
-                .orElseThrow(() -> new IllegalArgumentException("해당 ID의 예약 시간이 없습니다."));
+                .orElseThrow(() -> new NotFoundException("해당 ID의 예약 시간이 없습니다."));
         var reservationsInSameDateTime = reservationRepository.findAllByDateAndTime(reservation.getDate(), reservationTime);
 
         validateDuplicatedReservation(reservationsInSameDateTime, reservation);
@@ -57,7 +58,7 @@ public class ReservationService {
 
     public void delete(Long id) {
         var reservation = reservationRepository.findById(id)
-                .orElseThrow(() -> new IllegalArgumentException("해당 ID의 예약이 없습니다."));
+                .orElseThrow(() -> new NotFoundException("해당 ID의 예약이 없습니다."));
         reservationRepository.deleteById(reservation.getId());
     }
 }

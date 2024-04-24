@@ -7,6 +7,7 @@ import org.springframework.http.MediaType;
 import roomescape.domain.ReservationTime;
 import roomescape.dto.ReservationTimeResponse;
 import roomescape.dto.ReservationTimeSaveRequest;
+import roomescape.exception.NotFoundException;
 
 import java.time.LocalTime;
 import java.util.List;
@@ -86,5 +87,21 @@ class ReservationTimeControllerTest extends ControllerTest {
                         .contentType(MediaType.APPLICATION_JSON))
                 .andDo(print())
                 .andExpect(status().isOk());
+    }
+
+    @Test
+    @DisplayName("존재하지 않는 예약 시간 DELETE 요청 시 상태코드 404를 반환한다.")
+    void deleteNotExistingReservationTime() throws Exception {
+        // given
+        BDDMockito.willThrow(NotFoundException.class)
+                .given(reservationTimeService)
+                .delete(anyLong());
+
+        // when & then
+        mockMvc.perform(delete("/times/{id}", anyLong())
+                        .contentType(MediaType.APPLICATION_JSON))
+                .andDo(print())
+                .andExpect(status().isNotFound())
+                .andExpect(jsonPath("$.message").exists());
     }
 }

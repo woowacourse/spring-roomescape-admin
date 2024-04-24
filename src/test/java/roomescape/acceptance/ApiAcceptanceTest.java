@@ -100,6 +100,23 @@ public class ApiAcceptanceTest implements AcceptanceTest {
         );
     }
 
+    @Test
+    @DisplayName("[Step7] 존재하지 않는 예약 시간을 삭제한다.")
+    void deleteNotExistingReservationTime() {
+        // given & when
+        ExtractableResponse<Response> response = RestAssured.given().log().all()
+                .when().delete("/times/1")
+                .then().log().all()
+                .extract();
+        ErrorResponse errorResponse = response.as(ErrorResponse.class);
+
+        // then
+        assertAll(() -> {
+            checkHttpStatusNotFound(response);
+            assertThat(errorResponse.message()).isNotNull();
+        });
+    }
+
     void getReservationTimesWithSizeOne() {
         // given & when
         ExtractableResponse<Response> response = RestAssured.given().log().all()
@@ -160,7 +177,7 @@ public class ApiAcceptanceTest implements AcceptanceTest {
     @DisplayName("[Step3, Step6, Step8] 잘못된 형식의 예약을 추가한다.")
     void createInvalidReservation() {
         // given & when
-        ReservationSaveRequest request = new ReservationSaveRequest(null, MIA_RESERVATION_DATE, 3L);
+        ReservationSaveRequest request = new ReservationSaveRequest(null, MIA_RESERVATION_DATE, 1L);
         ExtractableResponse<Response> response = RestAssured.given().log().all()
                 .contentType(ContentType.JSON)
                 .body(request)
@@ -176,6 +193,26 @@ public class ApiAcceptanceTest implements AcceptanceTest {
         });
     }
 
+    @Test
+    @DisplayName("[Step3, Step6, Step8] 존재하지 않는 예약 시간에 예약을 추가한다.")
+    void createReservationWithNotExistingTime() {
+        // given & when
+        ReservationSaveRequest request = new ReservationSaveRequest(USER_MIA, MIA_RESERVATION_DATE, 1L);
+        ExtractableResponse<Response> response = RestAssured.given().log().all()
+                .contentType(ContentType.JSON)
+                .body(request)
+                .when().post("/reservations")
+                .then().log().all()
+                .extract();
+        ErrorResponse errorResponse = response.as(ErrorResponse.class);
+
+        // then
+        assertAll(() -> {
+            checkHttpStatusNotFound(response);
+            assertThat(errorResponse.message()).isNotNull();
+        });
+    }
+
     @TestFactory
     @DisplayName("[Step3, Step6, Step8] 예약을 추가하고 삭제한다.")
     Stream<DynamicTest> createThenDeleteReservation() {
@@ -186,6 +223,23 @@ public class ApiAcceptanceTest implements AcceptanceTest {
                 dynamicTest("예약을 하나 삭제한다.", this::deleteOneReservation),
                 dynamicTest("예약 목록을 조회한다.", this::getReservations)
         );
+    }
+
+    @Test
+    @DisplayName("[Step3, Step6, Step8] 존재하지 않는 예약을 삭제한다.")
+    void deleteNotExistingReservation() {
+        // given & when
+        ExtractableResponse<Response> response = RestAssured.given().log().all()
+                .when().delete("/reservations/1")
+                .then().log().all()
+                .extract();
+        ErrorResponse errorResponse = response.as(ErrorResponse.class);
+
+        // then
+        assertAll(() -> {
+            checkHttpStatusNotFound(response);
+            assertThat(errorResponse.message()).isNotNull();
+        });
     }
 
     void createOneReservation() {
@@ -242,5 +296,9 @@ public class ApiAcceptanceTest implements AcceptanceTest {
 
     void checkHttpStatusBadRequest(ExtractableResponse<Response> response) {
         assertThat(response.statusCode()).isEqualTo(HttpStatus.BAD_REQUEST.value());
+    }
+
+    void checkHttpStatusNotFound(ExtractableResponse<Response> response) {
+        assertThat(response.statusCode()).isEqualTo(HttpStatus.NOT_FOUND.value());
     }
 }

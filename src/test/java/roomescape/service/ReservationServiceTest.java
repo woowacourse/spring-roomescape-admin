@@ -10,6 +10,7 @@ import org.mockito.junit.jupiter.MockitoExtension;
 import roomescape.domain.Reservation;
 import roomescape.domain.ReservationTime;
 import roomescape.dto.ReservationResponse;
+import roomescape.exception.NotFoundException;
 import roomescape.repository.ReservationRepository;
 import roomescape.repository.ReservationTimeRepository;
 
@@ -130,6 +131,6 @@ class ReservationServiceTest {
 
         // when & then
         assertThatThrownBy(() -> reservationService.delete(notExistingId))
-                .isInstanceOf(IllegalArgumentException.class);
+                .isInstanceOf(NotFoundException.class);
     }
 }

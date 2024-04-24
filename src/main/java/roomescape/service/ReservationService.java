@@ -6,39 +6,39 @@ import roomescape.dto.ReservationSaveRequest;
 import roomescape.exception.ResourceNotFoundException;
 import roomescape.model.Reservation;
 import roomescape.model.ReservationTime;
-import roomescape.repository.ReservationDao;
-import roomescape.repository.ReservationTimeDao;
+import roomescape.repository.ReservationRepository;
+import roomescape.repository.ReservationTimeRepository;
 
 import java.util.List;
 
 @Service
 public class ReservationService {
 
-    private final ReservationDao reservationDao;
-    private final ReservationTimeDao reservationTimeDao;
+    private final ReservationRepository reservationRepository;
+    private final ReservationTimeRepository reservationTimeRepository;
 
-    public ReservationService(final ReservationDao reservationDao, final ReservationTimeDao reservationTimeDao) {
-        this.reservationDao = reservationDao;
-        this.reservationTimeDao = reservationTimeDao;
+    public ReservationService(final ReservationRepository reservationRepository, final ReservationTimeRepository reservationTimeRepository) {
+        this.reservationRepository = reservationRepository;
+        this.reservationTimeRepository = reservationTimeRepository;
     }
 
     public List<ReservationResponse> getReservations() {
-        return reservationDao.findAll()
+        return reservationRepository.findAll()
                 .stream()
                 .map(ReservationResponse::from)
                 .toList();
     }
 
     public ReservationResponse saveReservation(final ReservationSaveRequest reservationSaveRequest) {
-        final ReservationTime time = reservationTimeDao.findById(reservationSaveRequest.timeId())
+        final ReservationTime time = reservationTimeRepository.findById(reservationSaveRequest.timeId())
                 .orElseThrow(() -> new ResourceNotFoundException("존재하지 않는 예약 시간입니다."));
         final Reservation reservation = new Reservation(reservationSaveRequest.name(), reservationSaveRequest.date(), time);
-        final Reservation savedReservation = reservationDao.save(reservation);
+        final Reservation savedReservation = reservationRepository.save(reservation);
         return ReservationResponse.from(savedReservation);
     }
 
     public void deleteReservation(final Long id) {
-        final boolean isDeleted = reservationDao.deleteById(id);
+        final boolean isDeleted = reservationRepository.deleteById(id);
         if (isDeleted) {
             return;
         }

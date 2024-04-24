@@ -20,7 +20,7 @@ import static org.junit.jupiter.api.Assertions.*;
 
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 @DirtiesContext(classMode = DirtiesContext.ClassMode.AFTER_EACH_TEST_METHOD)
-class ReservationTimeDaoTest {
+class ReservationTimeRepositoryTest {
 
     @LocalServerPort
     int port;
@@ -29,7 +29,7 @@ class ReservationTimeDaoTest {
     private JdbcTemplate jdbcTemplate;
 
     @Autowired
-    private ReservationTimeDao reservationTimeDao;
+    private ReservationTimeRepository reservationTimeRepository;
 
     @BeforeEach
     void init() {
@@ -41,7 +41,7 @@ class ReservationTimeDaoTest {
     @Test
     void save() {
         final ReservationTime reservationTime = new ReservationTime("10:00");
-        final ReservationTime savedReservationTime = reservationTimeDao.save(reservationTime);
+        final ReservationTime savedReservationTime = reservationTimeRepository.save(reservationTime);
         assertAll(
                 () -> assertThat(savedReservationTime.getId()).isEqualTo(3L),
                 () -> assertThat(savedReservationTime.getStartAt()).isEqualTo(LocalTime.parse("10:00"))
@@ -51,7 +51,7 @@ class ReservationTimeDaoTest {
     @DisplayName("존재하는 예약 시간 조회")
     @Test
     void findExistById() {
-        final ReservationTime reservationTime = reservationTimeDao.findById(1L).orElseThrow();
+        final ReservationTime reservationTime = reservationTimeRepository.findById(1L).orElseThrow();
         assertAll(
                 () -> assertThat(reservationTime.getId()).isEqualTo(1L),
                 () -> assertThat(reservationTime.getStartAt()).isEqualTo(LocalTime.parse("08:00"))
@@ -61,28 +61,28 @@ class ReservationTimeDaoTest {
     @DisplayName("존재하지 않는 예약 시간 조회")
     @Test
     void findEmptyById() {
-        final Optional<ReservationTime> reservationTime = reservationTimeDao.findById(4L);
+        final Optional<ReservationTime> reservationTime = reservationTimeRepository.findById(4L);
         assertTrue(reservationTime.isEmpty());
     }
 
     @DisplayName("예약 시간 목록 조회")
     @Test
     void findAll() {
-        final List<ReservationTime> reservationTimes = reservationTimeDao.findAll();
+        final List<ReservationTime> reservationTimes = reservationTimeRepository.findAll();
         assertThat(reservationTimes.size()).isEqualTo(2);
     }
 
     @DisplayName("존재하는 예약 시간 삭제")
     @Test
     void deleteExistById() {
-        final boolean isDeleted = reservationTimeDao.deleteById(1L);
+        final boolean isDeleted = reservationTimeRepository.deleteById(1L);
         assertTrue(isDeleted);
     }
 
     @DisplayName("존재하지 않는 예약 시간 삭제")
     @Test
     void deleteEmptyById() {
-        final boolean isDeleted = reservationTimeDao.deleteById(100L);
+        final boolean isDeleted = reservationTimeRepository.deleteById(100L);
         assertFalse(isDeleted);
     }
 }

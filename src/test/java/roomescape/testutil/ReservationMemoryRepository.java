@@ -1,7 +1,7 @@
 package roomescape.testutil;
 
 import roomescape.model.Reservation;
-import roomescape.repository.ReservationDao;
+import roomescape.repository.ReservationRepository;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -9,7 +9,7 @@ import java.util.List;
 import java.util.Optional;
 import java.util.concurrent.atomic.AtomicLong;
 
-public class ReservationMemoryDao implements ReservationDao {
+public class ReservationMemoryRepository implements ReservationRepository {
 
     private final AtomicLong reservationId = new AtomicLong(1);
     private final List<Reservation> reservations = new ArrayList<>();

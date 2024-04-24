@@ -7,8 +7,8 @@ import roomescape.dto.ReservationTimeResponse;
 import roomescape.dto.ReservationTimeSaveRequest;
 import roomescape.exception.ResourceNotFoundException;
 import roomescape.model.ReservationTime;
-import roomescape.repository.ReservationTimeDao;
-import roomescape.testutil.ReservationTimeMemoryDao;
+import roomescape.repository.ReservationTimeRepository;
+import roomescape.testutil.ReservationTimeMemoryRepository;
 
 import java.util.List;
 
@@ -21,10 +21,10 @@ class ReservationTimeServiceTest {
 
     @BeforeEach
     void init() {
-        final ReservationTimeDao reservationTimeDao = new ReservationTimeMemoryDao();
-        reservationTimeDao.save(new ReservationTime("11:00"));
-        reservationTimeDao.save(new ReservationTime("12:00"));
-        reservationTimeService = new ReservationTimeService(reservationTimeDao);
+        final ReservationTimeRepository reservationTimeRepository = new ReservationTimeMemoryRepository();
+        reservationTimeRepository.save(new ReservationTime("11:00"));
+        reservationTimeRepository.save(new ReservationTime("12:00"));
+        reservationTimeService = new ReservationTimeService(reservationTimeRepository);
     }
 
     @DisplayName("예약 시간 목록 조회")

@@ -13,7 +13,7 @@ import java.util.List;
 import java.util.Optional;
 
 @Repository
-public class ReservationTimeJdbcDao implements ReservationTimeDao {
+public class ReservationTimeJdbcRepository implements ReservationTimeRepository {
 
     private static final RowMapper<ReservationTime> ROW_MAPPER = (selectedTime, rowNum) ->
             new ReservationTime(selectedTime.getLong("id"), selectedTime.getString("start_at"));
@@ -21,7 +21,7 @@ public class ReservationTimeJdbcDao implements ReservationTimeDao {
     private final JdbcTemplate jdbcTemplate;
     private final SimpleJdbcInsert reservationTimeInsert;
 
-    public ReservationTimeJdbcDao(final JdbcTemplate jdbcTemplate) {
+    public ReservationTimeJdbcRepository(final JdbcTemplate jdbcTemplate) {
         this.jdbcTemplate = jdbcTemplate;
         this.reservationTimeInsert = new SimpleJdbcInsert(jdbcTemplate)
                 .withTableName("reservation_times")

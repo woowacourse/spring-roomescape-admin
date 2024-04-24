@@ -19,7 +19,7 @@ import static org.junit.jupiter.api.Assertions.*;
 
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 @DirtiesContext(classMode = DirtiesContext.ClassMode.AFTER_EACH_TEST_METHOD)
-class ReservationDaoTest {
+class ReservationRepositoryTest {
 
     @LocalServerPort
     int port;
@@ -28,7 +28,7 @@ class ReservationDaoTest {
     private JdbcTemplate jdbcTemplate;
 
     @Autowired
-    private ReservationDao reservationDao;
+    private ReservationRepository reservationRepository;
 
     @BeforeEach
     void init() {
@@ -44,7 +44,7 @@ class ReservationDaoTest {
     void save() {
         final ReservationTime reservationTime = new ReservationTime(1L, "08:00");
         final Reservation reservation = new Reservation("생강", "2025-01-01", reservationTime);
-        final Reservation savedReservation = reservationDao.save(reservation);
+        final Reservation savedReservation = reservationRepository.save(reservation);
         assertAll(
                 () -> assertThat(savedReservation.getId()).isEqualTo(3L),
                 () -> assertThat(savedReservation.getName().getValue()).isEqualTo("생강"),
@@ -56,21 +56,21 @@ class ReservationDaoTest {
     @DisplayName("예약 목록 조회")
     @Test
     void findAll() {
-        final List<Reservation> reservations = reservationDao.findAll();
+        final List<Reservation> reservations = reservationRepository.findAll();
         assertThat(reservations.size()).isEqualTo(2);
     }
 
     @DisplayName("존재하는 예약 삭제")
     @Test
     void deleteExistById() {
-        final boolean isDeleted = reservationDao.deleteById(1L);
+        final boolean isDeleted = reservationRepository.deleteById(1L);
         assertTrue(isDeleted);
     }
 
     @DisplayName("존재하지 않는 예약 삭제")
     @Test
     void deleteEmptyById() {
-        final boolean isDeleted = reservationDao.deleteById(3L);
+        final boolean isDeleted = reservationRepository.deleteById(3L);
         assertFalse(isDeleted);
     }
 }

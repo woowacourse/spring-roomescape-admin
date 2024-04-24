@@ -12,7 +12,7 @@ import roomescape.model.ReservationTime;
 import java.util.List;
 
 @Repository
-public class ReservationJdbcDao implements ReservationDao {
+public class ReservationJdbcRepository implements ReservationRepository {
 
     private static final RowMapper<Reservation> ROW_MAPPER = (selectedReservation, rowNum) -> {
         final ReservationTime time = new ReservationTime(selectedReservation.getLong("time_id"), selectedReservation.getString("start_at"));
@@ -25,7 +25,7 @@ public class ReservationJdbcDao implements ReservationDao {
     private final JdbcTemplate jdbcTemplate;
     private final SimpleJdbcInsert reservationInsert;
 
-    public ReservationJdbcDao(final JdbcTemplate jdbcTemplate) {
+    public ReservationJdbcRepository(final JdbcTemplate jdbcTemplate) {
         this.jdbcTemplate = jdbcTemplate;
         this.reservationInsert = new SimpleJdbcInsert(jdbcTemplate)
                 .withTableName("reservations")

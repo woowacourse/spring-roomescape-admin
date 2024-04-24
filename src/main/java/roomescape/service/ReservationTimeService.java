@@ -5,21 +5,21 @@ import roomescape.dto.ReservationTimeResponse;
 import roomescape.dto.ReservationTimeSaveRequest;
 import roomescape.exception.ResourceNotFoundException;
 import roomescape.model.ReservationTime;
-import roomescape.repository.ReservationTimeDao;
+import roomescape.repository.ReservationTimeRepository;
 
 import java.util.List;
 
 @Service
 public class ReservationTimeService {
 
-    private final ReservationTimeDao reservationTimeDao;
+    private final ReservationTimeRepository reservationTimeRepository;
 
-    public ReservationTimeService(final ReservationTimeDao reservationTimeDao) {
-        this.reservationTimeDao = reservationTimeDao;
+    public ReservationTimeService(final ReservationTimeRepository reservationTimeRepository) {
+        this.reservationTimeRepository = reservationTimeRepository;
     }
 
     public List<ReservationTimeResponse> getTimes() {
-        return reservationTimeDao.findAll()
+        return reservationTimeRepository.findAll()
                 .stream()
                 .map(ReservationTimeResponse::from)
                 .toList();
@@ -27,12 +27,12 @@ public class ReservationTimeService {
 
     public ReservationTimeResponse saveTime(final ReservationTimeSaveRequest reservationTimeSaveRequest) {
         final ReservationTime reservationTime = new ReservationTime(reservationTimeSaveRequest.startAt());
-        final ReservationTime savedReservationTime = reservationTimeDao.save(reservationTime);
+        final ReservationTime savedReservationTime = reservationTimeRepository.save(reservationTime);
         return ReservationTimeResponse.from(savedReservationTime);
     }
 
     public void deleteTime(final Long id) {
-        boolean isDeleted = reservationTimeDao.deleteById(id);
+        boolean isDeleted = reservationTimeRepository.deleteById(id);
         if (isDeleted) {
             return;
         }

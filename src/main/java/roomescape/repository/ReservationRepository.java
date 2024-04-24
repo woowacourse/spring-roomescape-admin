@@ -4,7 +4,7 @@ import roomescape.model.Reservation;
 
 import java.util.List;
 
-public interface ReservationDao {
+public interface ReservationRepository {
 
     Reservation save(final Reservation reservation);
 

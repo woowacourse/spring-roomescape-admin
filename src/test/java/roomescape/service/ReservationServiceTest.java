@@ -9,10 +9,10 @@ import roomescape.dto.ReservationTimeResponse;
 import roomescape.exception.ResourceNotFoundException;
 import roomescape.model.Reservation;
 import roomescape.model.ReservationTime;
-import roomescape.repository.ReservationDao;
-import roomescape.repository.ReservationTimeDao;
-import roomescape.testutil.ReservationMemoryDao;
-import roomescape.testutil.ReservationTimeMemoryDao;
+import roomescape.repository.ReservationRepository;
+import roomescape.repository.ReservationTimeRepository;
+import roomescape.testutil.ReservationMemoryRepository;
+import roomescape.testutil.ReservationTimeMemoryRepository;
 
 import java.util.List;
 
@@ -25,11 +25,11 @@ class ReservationServiceTest {
 
     @BeforeEach
     void init() {
-        final ReservationTimeDao reservationTimeDao = new ReservationTimeMemoryDao();
-        final ReservationDao reservationDao = new ReservationMemoryDao();
-        reservationTimeDao.save(new ReservationTime("10:00"));
-        reservationDao.save(new Reservation("감자", "2024-05-13", new ReservationTime(1L, "10:00")));
-        reservationService = new ReservationService(reservationDao, reservationTimeDao);
+        final ReservationTimeRepository reservationTimeRepository = new ReservationTimeMemoryRepository();
+        final ReservationRepository reservationRepository = new ReservationMemoryRepository();
+        reservationTimeRepository.save(new ReservationTime("10:00"));
+        reservationRepository.save(new Reservation("감자", "2024-05-13", new ReservationTime(1L, "10:00")));
+        reservationService = new ReservationService(reservationRepository, reservationTimeRepository);
     }
 
     @DisplayName("예약 목록 조회")

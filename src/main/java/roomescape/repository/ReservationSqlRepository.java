@@ -93,4 +93,10 @@ public class ReservationSqlRepository implements ReservationRepository {
                 WHERE r.id = ?;
                 """, mapper, id);
     }
+
+    @Override
+    public boolean isExistByReservationTimeId(final long reservationTimeId) {
+        String sqlQuery = "SELECT EXISTS (SELECT 1 FROM reservation WHERE time_id = ?)";
+        return Boolean.TRUE.equals(jdbcTemplate.queryForObject(sqlQuery, Boolean.class, reservationTimeId));
+    }
 }

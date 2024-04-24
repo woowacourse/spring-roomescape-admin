@@ -1,6 +1,5 @@
 package roomescape;
 
-import io.restassured.RestAssured;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -10,7 +9,9 @@ import org.springframework.test.annotation.DirtiesContext;
 import roomescape.dto.ReservationRequest;
 import roomescape.dto.ReservationTimeRequest;
 import roomescape.model.Reservation;
+import roomescape.model.ReservationTime;
 import roomescape.repository.ReservationRepository;
+import roomescape.repository.ReservationTimeRepository;
 
 import java.time.LocalDate;
 import java.time.LocalTime;
@@ -24,6 +25,9 @@ class AdminEndpointTest {
 
     @Autowired
     private ReservationRepository reservationRepository;
+
+    @Autowired
+    private ReservationTimeRepository reservationTimeRepository;
 
     @Autowired
     private JdbcTemplate jdbcTemplate;
@@ -42,6 +46,16 @@ class AdminEndpointTest {
 
         HttpRestTestTemplate.assertGetOk("/admin/reservation");
         HttpRestTestTemplate.assertGetOk("/reservations", "size()", reservationSize);
+    }
+
+    @DisplayName("시간 페이지 응답")
+    @Test
+    void timePageLoad() {
+        List<ReservationTime> reservationTimes = reservationTimeRepository.findAll();
+        int reservationTimeSize = reservationTimes.size();
+
+        HttpRestTestTemplate.assertGetOk("/time");
+        HttpRestTestTemplate.assertGetOk("/times", "size()", reservationTimeSize);
     }
 
     @DisplayName("예약 시간 추가, 예약 추가, 예약 삭제 시나리오")

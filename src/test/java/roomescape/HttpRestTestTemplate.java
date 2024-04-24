@@ -41,4 +41,11 @@ class HttpRestTestTemplate {
                 .then().log().all()
                 .statusCode(200);
     }
+
+    public static void assertDeleteInitialServerError(String path) {
+        RestAssured.given().log().all()
+                .when().delete(path)
+                .then().log().all()
+                .statusCode(500);
+    }
 }

@@ -3,14 +3,9 @@ package roomescape.db;
 import java.time.LocalDate;
 import java.time.LocalTime;
 import java.util.List;
-import java.util.NoSuchElementException;
-import java.util.Optional;
-import javax.sql.DataSource;
-import org.springframework.dao.DataAccessException;
-import org.springframework.dao.EmptyResultDataAccessException;
+import java.util.Objects;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;
-import org.springframework.jdbc.core.namedparam.BeanPropertySqlParameterSource;
 import org.springframework.jdbc.core.namedparam.MapSqlParameterSource;
 import org.springframework.jdbc.core.simple.SimpleJdbcInsert;
 import org.springframework.stereotype.Repository;
@@ -30,7 +25,7 @@ public class ReservationDao {
     }
 
     public Reservation save(final Reservation reservation) {
-        final MapSqlParameterSource source = new MapSqlParameterSource().addValue("id", reservation.getId())
+        final MapSqlParameterSource source = new MapSqlParameterSource()
                 .addValue("name", reservation.getName())
                 .addValue("date", reservation.getDate())
                 .addValue("time_id", reservation.getReservationTime().getId());
@@ -38,13 +33,19 @@ public class ReservationDao {
         return new Reservation(id, reservation.getName(), reservation.getDate(), reservation.getReservationTime());
     }
 
-    public Optional<Reservation> findTimeId(final long id) {
-        final String sql = "select * from reservation where time_id=?";
-        try {
-            return Optional.ofNullable(jdbcTemplate.queryForObject(sql, Reservation.class, id));
-        } catch (final DataAccessException e) {
-            return Optional.empty();
-        }
+    public boolean anyMatchByTimeId(final long id) {
+        final String sql = """
+                SELECT CASE
+                           WHEN EXISTS (
+                               SELECT 1
+                               FROM reservation
+                               WHERE time_id = ?
+                           )
+                           THEN TRUE
+                           ELSE FALSE
+                       END""";
+        Long count = Objects.requireNonNull(jdbcTemplate.queryForObject(sql, Long.class, id));
+        return count > 0;
     }
 
     public List<Reservation> findAll() {
@@ -61,13 +62,15 @@ public class ReservationDao {
                 """, getReservationRowMapper());
     }
 
-    public boolean deleteById(final long id) {
-        return jdbcTemplate.update("delete from reservation where id=?", id) > 0;
+    public void deleteById(final long id) {
+        jdbcTemplate.update("delete from reservation where id=?", id);
     }
 
     private RowMapper<Reservation> getReservationRowMapper() {
-        return (resultSet, rowNum) -> new Reservation(resultSet.getLong("id"), resultSet.getString("name"),
+        return (resultSet, rowNum) -> new Reservation(resultSet.getLong("id"),
+                resultSet.getString("name"),
                 LocalDate.parse(resultSet.getString("date")),
-                new ReservationTime(resultSet.getLong("time_id"), LocalTime.parse(resultSet.getString("start_at"))));
+                new ReservationTime(resultSet.getLong("time_id"),
+                        LocalTime.parse(resultSet.getString("start_at"))));
     }
 }

@@ -1,9 +1,7 @@
 package roomescape.domain;
 
-import com.fasterxml.jackson.annotation.JsonFormat;
 import java.time.LocalTime;
 import java.util.Objects;
-import org.springframework.cglib.core.Local;
 
 public class ReservationTime {
     private Long id;

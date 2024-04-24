@@ -36,9 +36,9 @@ class ReservationTimeDaoTest {
     @DisplayName("예약시간을 삭제할 수 있다")
     void delete() {
         final ReservationTimeDao reservationTimeDao = new ReservationTimeDao(jdbcTemplate);
-        reservationTimeDao.save(new ReservationTime(LocalTime.now()));
+        ReservationTime saved = reservationTimeDao.save(new ReservationTime(LocalTime.now()));
 
-        reservationTimeDao.deleteById(1);
+        reservationTimeDao.deleteById(saved.getId());
 
         Assertions.assertThat(reservationTimeDao.findAll()).isEmpty();
     }

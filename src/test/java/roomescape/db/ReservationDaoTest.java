@@ -18,12 +18,13 @@ class ReservationDaoTest {
     @Autowired
     JdbcTemplate jdbcTemplate;
     ReservationTimeDao reservationTimeDao;
+    ReservationTime saved;
 
     @BeforeEach
     void setUp() {
         reservationTimeDao = new ReservationTimeDao(jdbcTemplate);
         final ReservationTime reservationTime = new ReservationTime(LocalTime.now());
-        reservationTimeDao.save(reservationTime);
+        saved = reservationTimeDao.save(reservationTime);
     }
 
 
@@ -40,7 +41,7 @@ class ReservationDaoTest {
     void save() {
         final ReservationDao reservationDao = new ReservationDao(jdbcTemplate);
 
-        reservationDao.save(new Reservation("qwe", LocalDate.now(), reservationTimeDao.findAll().get(0)));
+        reservationDao.save(new Reservation("qwe", LocalDate.now(), reservationTimeDao.findById(saved.getId()).get()));
         Assertions.assertThat(reservationDao.findAll()).hasSize(1);
     }
 
@@ -48,9 +49,9 @@ class ReservationDaoTest {
     @DisplayName("예약을 삭제할 수 있다")
     void delete() {
         final ReservationDao reservationDao = new ReservationDao(jdbcTemplate);
-        reservationDao.save(new Reservation("qwe", LocalDate.now(), reservationTimeDao.findById(1L).get()));
+        reservationDao.save(new Reservation("qwe", LocalDate.now(), reservationTimeDao.findById(saved.getId()).get()));
 
-        reservationDao.deleteById(1);
+        reservationDao.deleteById(saved.getId());
 
         Assertions.assertThat(reservationDao.findAll()).isEmpty();
     }

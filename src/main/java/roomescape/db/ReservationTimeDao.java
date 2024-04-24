@@ -6,7 +6,7 @@ import java.util.List;
 import java.util.Optional;
 import org.springframework.dao.DataAccessException;
 import org.springframework.jdbc.core.JdbcTemplate;
-import org.springframework.jdbc.core.namedparam.BeanPropertySqlParameterSource;
+import org.springframework.jdbc.core.namedparam.MapSqlParameterSource;
 import org.springframework.jdbc.core.simple.SimpleJdbcInsert;
 import org.springframework.stereotype.Repository;
 import roomescape.domain.ReservationTime;
@@ -22,9 +22,10 @@ public class ReservationTimeDao {
                 .usingGeneratedKeyColumns("id");
     }
 
-    public ReservationTime save(ReservationTime reservationTime) {
-        BeanPropertySqlParameterSource param = new BeanPropertySqlParameterSource(reservationTime);
-        long id = jdbcInsert.executeAndReturnKey(param).longValue();
+    public ReservationTime save(final ReservationTime reservationTime) {
+        final MapSqlParameterSource source = new MapSqlParameterSource()
+                .addValue("start_at", reservationTime.getStartAt());
+        final long id = jdbcInsert.executeAndReturnKey(source).longValue();
         return new ReservationTime(id, reservationTime.getStartAt());
     }
 
@@ -36,16 +37,16 @@ public class ReservationTimeDao {
 
     public Optional<ReservationTime> findById(final Long id) {
         try {
-            String sql = "select id, start_at from reservation_time where id=?";
-            return Optional.ofNullable(jdbcTemplate.queryForObject(sql,
+            final String sql = "select id, start_at from reservation_time where id=?";
+            return Optional.of(jdbcTemplate.queryForObject(sql,
                     (resultSet, rowNum) -> new ReservationTime(resultSet.getLong("id"),
                             LocalTime.parse(resultSet.getString("start_at"))), id));
-        } catch (DataAccessException e) {
+        } catch (final DataAccessException e) {
             return Optional.empty();
         }
     }
 
-    public boolean deleteById(final long id) {
-        return jdbcTemplate.update("delete from reservation_time where id=?", id) > 0;
+    public void deleteById(final long id) {
+        jdbcTemplate.update("delete from reservation_time where id=?", id);
     }
 }

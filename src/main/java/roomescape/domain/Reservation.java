@@ -22,10 +22,7 @@ public class Reservation implements Comparable<Reservation> {
     }
 
     public Reservation(long id, String name, LocalDateTime dateTime) {
-        this.id = id;
-        this.name = name;
-        this.date = dateTime.toLocalDate();
-        this.time = new ReservationTime(dateTime.toLocalTime());
+        this(id, name, dateTime.toLocalDate(), new ReservationTime(dateTime.toLocalTime()));
     }
 
     @Override

@@ -1,4 +1,4 @@
-package roomescape.acceptance;
+package roomescape.integration;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.hamcrest.Matchers.is;
@@ -18,7 +18,7 @@ import roomescape.controller.dto.ReservationTimeResponse;
 
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 @Sql(scripts = "/truncate.sql", executionPhase = Sql.ExecutionPhase.BEFORE_TEST_METHOD)
-class ReservationTimeAcceptanceTest {
+class ReservationTimeIntegrationTest {
 
     @LocalServerPort
     private int port;

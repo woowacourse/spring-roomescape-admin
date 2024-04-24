@@ -32,12 +32,12 @@ class ReservationTimeControllerTest extends ControllerTest {
 
         ResultActions result = SimpleMockMvc.post(mockMvc, "/times", content);
 
-        result.andExpect(status().isCreated())
-                .andDo(print())
-                .andExpectAll(
+        result.andExpectAll(
+                        status().isCreated(),
                         jsonPath("$.id").value(reservationTime.getId()),
                         jsonPath("$.startAt").value(reservationTime.getStartAt().toString())
-                );
+                )
+                .andDo(print());
     }
 
     @Test
@@ -49,13 +49,13 @@ class ReservationTimeControllerTest extends ControllerTest {
 
         ResultActions result = SimpleMockMvc.get(mockMvc, "/times");
 
-        result.andExpect(status().isOk())
-                .andDo(print())
-                .andExpectAll(
+        result.andExpectAll(
+                        status().isOk(),
                         jsonPath("$[0].id").value(reservationTimes.get(0).getId()),
                         jsonPath("$[1].id").value(reservationTimes.get(1).getId()),
                         jsonPath("$[2].id").value(reservationTimes.get(2).getId())
-                );
+                )
+                .andDo(print());
     }
 
     @Test

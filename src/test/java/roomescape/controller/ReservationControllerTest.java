@@ -33,15 +33,15 @@ class ReservationControllerTest extends ControllerTest {
 
         ResultActions result = SimpleMockMvc.post(mockMvc, "/reservations", content);
 
-        result.andExpect(status().isCreated())
-                .andDo(print())
-                .andExpectAll(
+        result.andExpectAll(
+                        status().isCreated(),
                         jsonPath("$.id").value(reservation.getId()),
                         jsonPath("$.name").value(reservation.getName()),
                         jsonPath("$.date").value(reservation.getDate().toString()),
                         jsonPath("$.time.id").value(reservation.getTimeId()),
                         jsonPath("$.time.startAt").value(reservation.getTime().toString())
-                );
+                )
+                .andDo(print());
     }
 
     @Test
@@ -53,13 +53,13 @@ class ReservationControllerTest extends ControllerTest {
 
         ResultActions result = SimpleMockMvc.get(mockMvc, "/reservations");
 
-        result.andExpect(status().isOk())
-                .andDo(print())
-                .andExpectAll(
-                        jsonPath("$[0].name").value(reservations.get(0).getName()),
-                        jsonPath("$[1].name").value(reservations.get(1).getName()),
-                        jsonPath("$[2].name").value(reservations.get(2).getName())
-                );
+        result.andExpectAll(
+                        status().isOk(),
+                        jsonPath("$[0].id").value(reservations.get(0).getId()),
+                        jsonPath("$[1].id").value(reservations.get(1).getId()),
+                        jsonPath("$[2].id").value(reservations.get(2).getId())
+                )
+                .andDo(print());
     }
 
     @Test

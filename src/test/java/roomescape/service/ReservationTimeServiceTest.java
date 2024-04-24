@@ -2,14 +2,13 @@ package roomescape.service;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatCode;
-import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyLong;
 import static roomescape.util.Fixture.GAMJA_RESERVATION_TIME;
-import static roomescape.util.Fixture.GAMJA_TIME;
-import static roomescape.util.Fixture.JOJO_RESERVATION_TIME_REQUEST;
+import static roomescape.util.Fixture.GAMJA_RESERVATION_TIME_RESPONSE;
 import static roomescape.util.Fixture.JOJO_RESERVATION_TIME;
-import static roomescape.util.Fixture.JOJO_TIME;
+import static roomescape.util.Fixture.JOJO_RESERVATION_TIME_REQUEST;
+import static roomescape.util.Fixture.JOJO_RESERVATION_TIME_RESPONSE;
 
 import java.util.List;
 import org.junit.jupiter.api.DisplayName;
@@ -39,9 +38,10 @@ class ReservationTimeServiceTest {
 
         List<ReservationTimeResponse> reservationTimes = reservationTimeService.findAll();
 
-        assertThat(reservationTimes).hasSize(2)
-            .extracting(ReservationTimeResponse::startAt)
-            .containsExactly(JOJO_TIME, GAMJA_TIME);
+        assertThat(reservationTimes).containsExactly(
+            JOJO_RESERVATION_TIME_RESPONSE,
+            GAMJA_RESERVATION_TIME_RESPONSE
+        );
     }
 
     @DisplayName("시간 추가")
@@ -50,13 +50,10 @@ class ReservationTimeServiceTest {
         BDDMockito.given(reservationTimeDao.save(any()))
             .willReturn(1L);
 
-        ReservationTimeResponse reservationTimeResponses = reservationTimeService.create(
+        ReservationTimeResponse reservationTimeResponse = reservationTimeService.create(
             JOJO_RESERVATION_TIME_REQUEST);
 
-        assertAll(
-            () -> assertThat(reservationTimeResponses.id()).isEqualTo(1L),
-            () -> assertThat(reservationTimeResponses.startAt()).isEqualTo(JOJO_TIME)
-        );
+        assertThat(reservationTimeResponse).isEqualTo(JOJO_RESERVATION_TIME_RESPONSE);
     }
 
     @DisplayName("시간 삭제")

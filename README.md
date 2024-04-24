@@ -75,18 +75,24 @@ HTTP/1.1 200
 Content-Type: application/json
 
 [
-  {
-      "id" : 1,
-      "name": "ted",
-      "date" : "2024-04-01",
-      "time" : "10:00"
-  },
     {
-      "id" : 2,
-      "name": "ted",
-      "date" : "2024-04-01",
-      "time" : "11:00"
-  }
+        "id": 1,
+        "name": "ted",
+        "date": "2024-04-01",
+        "time": {
+            "id": 1,
+            "startAt": "10:00"
+        }
+    },
+    {
+        "id": 2,
+        "name": "ted",
+        "date": "2024-04-01",
+        "time": {
+            "id": 1,
+            "startAt": "10:00"
+        }
+    }
 ]
 ```
 
@@ -107,10 +113,13 @@ HTTP/1.1 200
 Content-Type: application/json
 
 {
-    "id" : 1,
-    "name": "ted",
-    "date": "2024-04-01",
-    "time": "10:00"
+    "id": 1,
+    "name": "tesd",
+    "date": "2023-04-01",
+    "time" : {
+        "id": 1,
+        "startAt" : "10:00"
+    }
 }
 ```
 
@@ -127,7 +136,7 @@ Content-type: application/json
 {
     "name": "ted",
     "date": "2024-04-01",
-    "time": "10:00"
+    "time_id": "1"
 }
 ```
 
@@ -136,7 +145,7 @@ Content-type: application/json
 ```http
 HTTP/1.1 201
 Content-Type: application/json
-Location : /reservations/1
+Location: /reservations/1
 ```
 
 ---
@@ -173,18 +182,14 @@ Content-type: application/json
 #### Response
 
 ```http
-HTTP/1.1 200
+HTTP/1.1 201
 Content-Type: application/json
-
-{
-    "id": 1,
-    "startAt": "10:00"
-}
+Location: /times/1
 ```
 
 ---
 
-### 예약 시간 조회
+### 예약 시간 조회(전체)
 
 #### Request
 
@@ -208,6 +213,27 @@ Content-Type: application/json
 
 ---
 
+### 예약 시간 조회(단일)
+
+#### Request
+
+```http
+GET /times/1 HTTP/1.1
+```
+
+#### Response
+
+```http
+HTTP/1.1 200
+Content-Type: application/json
+
+{
+    "id": 1,
+    "startAt": "10:00"
+}
+```
+---
+
 ### 예약 시간 삭제
 
 #### Request
@@ -219,7 +245,7 @@ DELETE /times/1 HTTP/1.1
 #### Response
 
 ```http
-HTTP/1.1 200
+HTTP/1.1 204
 ```
 
 

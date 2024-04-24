@@ -12,7 +12,7 @@ import org.springframework.web.bind.annotation.RestController;
 import roomescape.domain.ReservationTime;
 import roomescape.dto.ReservationTimeRequest;
 import roomescape.dto.ReservationTimeResponse;
-import roomescape.repository.H2ReservationTimeDao;
+import roomescape.service.ReservationTimeService;
 
 import java.net.URI;
 import java.util.List;
@@ -21,23 +21,23 @@ import java.util.List;
 @RequestMapping("/times")
 public class ReservationTimeController {
 
-    private final H2ReservationTimeDao repository;
+    private final ReservationTimeService service;
 
     @Autowired
-    public ReservationTimeController(H2ReservationTimeDao repository) {
-        this.repository = repository;
+    public ReservationTimeController(ReservationTimeService service) {
+        this.service = service;
     }
 
     @GetMapping
     public List<ReservationTimeResponse> findAllTime() {
-        return repository.findAll().stream()
+        return service.findAll().stream()
                 .map(ReservationTimeResponse::from)
                 .toList();
     }
 
     @PostMapping
     public ResponseEntity<ReservationTimeResponse> addReservationTime(@RequestBody ReservationTimeRequest reservationTimeRequest) {
-        ReservationTime reservationTime = repository.save(reservationTimeRequest.toReservationTime());
+        ReservationTime reservationTime = service.save(reservationTimeRequest);
         return ResponseEntity.ok()
                 .location(URI.create("/times/" + reservationTime.getId()))
                 .body(ReservationTimeResponse.from(reservationTime));
@@ -45,6 +45,6 @@ public class ReservationTimeController {
 
     @DeleteMapping("/{id}")
     public void deleteReservationTime(@PathVariable Long id) {
-        repository.deleteById(id);
+        service.deleteById(id);
     }
 }

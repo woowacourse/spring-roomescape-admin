@@ -58,8 +58,8 @@ public class ReservationDao {
             .longValue();
     }
 
-    public void deleteById(Long id) {
+    public boolean deleteById(Long id) {
         String sql = "delete from reservation where id = ?";
-        jdbcTemplate.update(sql, id);
+        return jdbcTemplate.update(sql, id) > 0;
     }
 }

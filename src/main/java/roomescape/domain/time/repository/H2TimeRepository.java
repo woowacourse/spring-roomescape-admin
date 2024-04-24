@@ -48,6 +48,7 @@ public class H2TimeRepository implements TimeRepository {
 
     @Override
     public void deleteTime(Long id) {
-
+        String sql = "DELETE FROM reservation_time WHERE id = ?";
+        jdbcTemplate.update(sql, id);
     }
 }

@@ -36,8 +36,8 @@ public class ReservationController {
     public ResponseEntity<Reservation> addReservation(@RequestBody ReservationRequest request) {
         ReservationTime reservationTime = reservationTimeService.getReservationTime(request.timeId());
         Reservation reservation = new Reservation(request.name(), request.date(), reservationTime);
-        long id = reservationService.addReservations(reservation);
-        return ResponseEntity.created(URI.create("/reservations/" + id)).body(reservation);
+        Reservation storedReservation = reservationService.addReservations(reservation);
+        return ResponseEntity.created(URI.create("/reservations/" + storedReservation.getId())).body(reservation);
     }
 
     @DeleteMapping("/reservations/{id}")

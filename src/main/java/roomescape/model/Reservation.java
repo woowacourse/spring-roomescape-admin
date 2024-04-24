@@ -40,4 +40,8 @@ public class Reservation {
     public ReservationTime getTime() {
         return time;
     }
+
+    public void setId(long id) {
+        this.id = id;
+    }
 }

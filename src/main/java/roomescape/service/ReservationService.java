@@ -18,7 +18,7 @@ public class ReservationService {
         return reservationDAO.findAllReservations();
     }
 
-    public long addReservations(Reservation reservation) {
+    public Reservation addReservations(Reservation reservation) {
         return reservationDAO.add(reservation);
     }
 

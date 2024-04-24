@@ -5,7 +5,12 @@ import io.restassured.http.ContentType;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.DynamicTest;
 import org.junit.jupiter.api.TestFactory;
+import org.springframework.beans.factory.annotation.Autowired;
+import roomescape.domain.ReservationTime;
+import roomescape.repository.ReservationTimeRepository;
 
+import java.time.LocalTime;
+import java.util.List;
 import java.util.Map;
 import java.util.stream.Stream;
 
@@ -13,6 +18,9 @@ import static org.hamcrest.Matchers.is;
 import static org.junit.jupiter.api.DynamicTest.dynamicTest;
 
 public class ReservationTimeAcceptanceTest extends BasicAcceptanceTest {
+    @Autowired
+    private ReservationTimeRepository reservationTimeRepository;
+
     @DisplayName("예약 시간을 저장했다가 삭제한다")
     @TestFactory
     Stream<DynamicTest> saveReservationTime_and_delete() {
@@ -20,7 +28,7 @@ public class ReservationTimeAcceptanceTest extends BasicAcceptanceTest {
                 dynamicTest("예약 시간 관리 페이지에 접속한다", this::accessReservationTimePage),
                 dynamicTest("예약 시간을 저장한다", this::addReservationTime),
                 dynamicTest("예약 시간을 모두 조회한다 (총 1개)", () -> checkReservationCount(1)),
-                dynamicTest("예약 시간을 삭제한다", () -> deleteReservationTime(1)),
+                dynamicTest("예약 시간을 삭제한다", this::deleteReservationTime),
                 dynamicTest("예약 시간을 모두 조회한다 (총 0개)", () -> checkReservationCount(0))
         );
     }
@@ -33,7 +41,7 @@ public class ReservationTimeAcceptanceTest extends BasicAcceptanceTest {
     }
 
     private void addReservationTime() {
-        Map<String, String> params = Map.of("startAt", "10:00");
+        Map<?, ?> params = Map.of("startAt", LocalTime.of(10, 0));
 
         RestAssured.given().log().all()
                 .contentType(ContentType.JSON)
@@ -51,9 +59,12 @@ public class ReservationTimeAcceptanceTest extends BasicAcceptanceTest {
                 .body("size()", is(expectedCount));
     }
 
-    private void deleteReservationTime(final int reservationId) {
+    private void deleteReservationTime() {
+        List<ReservationTime> reservationTimes = reservationTimeRepository.findAll();
+        long reservationTimeId = reservationTimes.get(0).getId();
+
         RestAssured.given().log().all()
-                .when().delete("/times/" + reservationId)
+                .when().delete("/times/" + reservationTimeId)
                 .then().log().all()
                 .statusCode(204);
     }

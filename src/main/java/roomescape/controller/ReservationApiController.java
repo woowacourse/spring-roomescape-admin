@@ -8,36 +8,32 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
-import roomescape.dto.ReservationRequestDto;
-import roomescape.dto.ReservationResponseDto;
-import roomescape.entity.ReservationEntity;
+import roomescape.service.reservation.ReservationService;
+import roomescape.service.reservation.dto.ReservationRequestDto;
+import roomescape.service.reservation.dto.ReservationResponseDto;
 
 @RestController
 @RequestMapping("/reservations")
 public class ReservationApiController {
 
-    private final List<ReservationEntity> reservationEntities;
+    private final ReservationService reservationService;
 
-    public ReservationApiController(List<ReservationEntity> reservationEntities) {
-        this.reservationEntities = reservationEntities;
+    public ReservationApiController(ReservationService reservationService) {
+        this.reservationService = reservationService;
     }
 
     @GetMapping
-    public List<ReservationResponseDto> getReservations() {
-        return reservationEntities.stream()
-                .map(ReservationResponseDto::new)
-                .toList();
+    public List<ReservationResponseDto> findReservations() {
+        return reservationService.findAllReservations();
     }
 
     @PostMapping
-    public ReservationResponseDto createReservation(@RequestBody ReservationRequestDto reservationRequestDto) {
-        ReservationEntity reservation = reservationRequestDto.toEntity();
-        reservationEntities.add(reservation);
-        return new ReservationResponseDto(reservation);
+    public ReservationResponseDto createReservation(@RequestBody ReservationRequestDto requestDto) {
+        return reservationService.createReservation(requestDto);
     }
 
     @DeleteMapping("/{id}")
-    public void deleteReservation(@PathVariable Long id) {
-        reservationEntities.removeIf(reservationEntity -> reservationEntity.getId().equals(id));
+    public void deleteReservation(@PathVariable long id) {
+        reservationService.deleteReservation(id);
     }
 }

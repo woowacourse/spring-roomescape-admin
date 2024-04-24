@@ -38,7 +38,7 @@ public class TimesController {
     ResponseEntity<Void> deleteTime(@PathVariable("id") Long id) {
         reservationTimeService.deleteReservationTimeById(id);
 
-        return ResponseEntity.noContent()
+        return ResponseEntity.ok()
                 .build();
     }
 }

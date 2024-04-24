@@ -57,28 +57,13 @@ class AdminEndpointTest {
         );
         int initialCount = 0;
 
-        HttpRestTestTemplate.assertPostCreated(reservationTimeRequest, "/times", "id", 1);
-        HttpRestTestTemplate.assertPostCreated(reservationRequest, "/reservations", "id", 1);
+        HttpRestTestTemplate.assertPostOk(reservationTimeRequest, "/times", "id", 1);
+        HttpRestTestTemplate.assertPostOk(reservationRequest, "/reservations", "id", 1);
         Integer countAfterInsert = jdbcTemplate.queryForObject("SELECT count(1) from reservation", Integer.class);
         assertThat(countAfterInsert).isEqualTo(initialCount + 1);
 
-        HttpRestTestTemplate.assertDeleteNoContent("/reservations/1");
+        HttpRestTestTemplate.assertDeleteOk("/reservations/1");
         Integer countAfterDelete = jdbcTemplate.queryForObject("SELECT count(1) from reservation", Integer.class);
         assertThat(countAfterDelete).isEqualTo(countAfterInsert - 1);
     }
-/*
-    @DisplayName("예약을 추가한 후에도 db의 예약 개수와 api 응답의 예약 개수가 동일")
-    @Test
-    void apiResponseCountEqualsToDataBaseReservationCount() {
-        jdbcTemplate.update("INSERT INTO reservation (name, date, time_id) VALUES (?, ?, ?)", "브라운", "2023-08-05", "1");
-
-        List<Reservation> reservations = RestAssured.given().log().all()
-                .when().get("/reservations")
-                .then().log().all()
-                .statusCode(200).extract()
-                .jsonPath().getList(".", Reservation.class);
-        Integer count = jdbcTemplate.queryForObject("SELECT count(1) from reservation", Integer.class);
-
-        assertThat(reservations).hasSize(count);
-    }*/
 }

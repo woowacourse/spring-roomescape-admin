@@ -5,6 +5,7 @@ import java.sql.Time;
 import java.util.List;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;
+import org.springframework.jdbc.core.simple.SimpleJdbcInsert;
 import org.springframework.jdbc.support.GeneratedKeyHolder;
 import org.springframework.jdbc.support.KeyHolder;
 import org.springframework.stereotype.Repository;
@@ -12,13 +13,13 @@ import roomescape.model.ReservationTime;
 
 @Repository
 public class ReservationTimeRepository {
-    private final JdbcTemplate jdbcTemplate;
-    private final RowMapper<ReservationTime> actorRowMapper = (resultSet, rowNum) -> {
+    private static final RowMapper<ReservationTime> actorRowMapper = (resultSet, rowNum) -> {
         return new ReservationTime(
                 resultSet.getLong("id"),
                 resultSet.getTime("start_at").toLocalTime()
         );
     };
+    private final JdbcTemplate jdbcTemplate;
 
     public ReservationTimeRepository(JdbcTemplate jdbcTemplate) {
         this.jdbcTemplate = jdbcTemplate;

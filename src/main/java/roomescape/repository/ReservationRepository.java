@@ -13,9 +13,7 @@ import roomescape.model.ReservationTime;
 
 @Repository
 public class ReservationRepository {
-    private final JdbcTemplate jdbcTemplate;
-
-    private final RowMapper<Reservation> actorRowMapper = (resultSet, rowNum) -> {
+    private static final RowMapper<Reservation> actorRowMapper = (resultSet, rowNum) -> {
         ReservationTime time = new ReservationTime(
                 resultSet.getLong("time_id"),
                 resultSet.getTime("time_value").toLocalTime()
@@ -28,6 +26,7 @@ public class ReservationRepository {
                 time
         );
     };
+    private final JdbcTemplate jdbcTemplate;
 
     public ReservationRepository(JdbcTemplate jdbcTemplate) {
         this.jdbcTemplate = jdbcTemplate;
@@ -49,17 +48,19 @@ public class ReservationRepository {
     }
 
     public List<Reservation> readReservations() {
-        String sql = "SELECT r.id AS reservation_id, r.name, r.date, t.id AS time_id, t.start_at AS time_value \n"
-                + "FROM reservation AS r\n"
-                + "INNER JOIN reservation_time AS t ON r.time_id = t.id \n";
+        String sql = """
+                SELECT r.id AS reservation_id, r.name, r.date, t.id AS time_id, t.start_at AS time_value
+                FROM reservation AS r
+                INNER JOIN reservation_time AS t ON r.time_id = t.id""";
         return jdbcTemplate.query(sql, actorRowMapper);
     }
 
     public Reservation readReservationById(Long id) {
-        String sql = "SELECT r.id AS reservation_id, r.name, r.date, t.id AS time_id, t.start_at AS time_value \n"
-                + "FROM reservation AS r\n"
-                + "INNER JOIN reservation_time AS t ON r.time_id = t.id \n"
-                + "WHERE r.id = ?\n";
+        String sql = """
+                SELECT r.id AS reservation_id, r.name, r.date, t.id AS time_id, t.start_at AS time_value
+                FROM reservation AS r
+                INNER JOIN reservation_time AS t ON r.time_id = t.id
+                WHERE r.id = ?""";
         return jdbcTemplate.queryForObject(sql, actorRowMapper, id);
     }
 

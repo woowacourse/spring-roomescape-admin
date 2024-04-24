@@ -23,6 +23,8 @@ public class MissionStepTest {
 
     @Autowired
     private JdbcTemplate jdbcTemplate;
+    @Autowired
+    private ReservationController reservationController;
 
     @Test
     void 일단계() {
@@ -110,16 +112,12 @@ public class MissionStepTest {
                 .then().log().all()
                 .statusCode(201);
 
-
         RestAssured.given().log().all()
                 .when().get("/reservations")
                 .then().log().all()
                 .statusCode(200)
                 .body("size()", is(1));
     }
-
-    @Autowired
-    private ReservationController reservationController;
 
     @Test
     void 구단계() {

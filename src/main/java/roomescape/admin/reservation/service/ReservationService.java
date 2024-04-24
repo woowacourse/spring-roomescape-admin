@@ -23,7 +23,7 @@ public class ReservationService {
     }
 
     public Reservation create(ReservationRequest reservationRequest) {
-        Reservation reservation = new Reservation(null, reservationRequest.name(), reservationRequest.date(),
+        Reservation reservation = new Reservation(reservationRequest.name(), reservationRequest.date(),
                 new ReservationTime(reservationRequest.timeId(), null));
         return reservationRepository.save(reservation);
     }

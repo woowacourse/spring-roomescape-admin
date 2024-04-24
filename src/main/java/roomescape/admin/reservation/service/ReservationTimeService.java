@@ -22,7 +22,7 @@ public class ReservationTimeService {
     }
 
     public ReservationTime create(ReservationTimeRequest reservationTimeRequest) {
-        return reservationTimeRepository.save(new ReservationTime(null, reservationTimeRequest.startAt()));
+        return reservationTimeRepository.save(new ReservationTime(reservationTimeRequest.startAt()));
     }
 
     public int delete(Long id) {

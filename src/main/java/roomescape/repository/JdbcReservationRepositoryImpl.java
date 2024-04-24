@@ -15,6 +15,7 @@ import roomescape.domain.ReservationTime;
 
 @Repository
 public class JdbcReservationRepositoryImpl implements ReservationRepository {
+
     private final JdbcTemplate jdbcTemplate;
     private final SimpleJdbcInsert simpleJdbcInsert;
 

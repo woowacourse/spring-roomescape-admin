@@ -36,7 +36,6 @@ public class JdbcReservationTimeRepositoryImpl implements ReservationTimeReposit
     }
 
     @Override
-
     public ReservationTime findById(Long id) {
         String sql = "SELECT * FROM reservation_time WHERE id = ?";
 

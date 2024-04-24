@@ -1,7 +1,7 @@
 package roomescape.reservationtime.controller.request;
 
 import java.time.LocalTime;
-import roomescape.reservationtime.domain.ReservationTime;
+import roomescape.reservationtime.model.ReservationTime;
 
 public record CreateReservationTimeRequest(LocalTime startAt) {
     public ReservationTime toReservationTime() {

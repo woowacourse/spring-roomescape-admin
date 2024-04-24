@@ -9,7 +9,7 @@ import org.springframework.jdbc.core.RowMapper;
 import org.springframework.jdbc.support.GeneratedKeyHolder;
 import org.springframework.jdbc.support.KeyHolder;
 import org.springframework.stereotype.Repository;
-import roomescape.reservationtime.domain.ReservationTime;
+import roomescape.reservationtime.model.ReservationTime;
 
 @Repository
 public class JdbcReservationTimeRepository implements ReservationTimeRepository {

@@ -9,7 +9,7 @@ import org.springframework.jdbc.core.RowMapper;
 import org.springframework.jdbc.support.GeneratedKeyHolder;
 import org.springframework.jdbc.support.KeyHolder;
 import org.springframework.stereotype.Repository;
-import roomescape.reservation.domain.Reservation;
+import roomescape.reservation.model.Reservation;
 
 @Repository
 public class JdbcReservationRepository implements ReservationRepository {

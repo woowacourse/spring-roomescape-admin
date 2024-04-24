@@ -1,6 +1,6 @@
 package roomescape.reservationtime.controller.response;
 
-import roomescape.reservationtime.domain.ReservationTime;
+import roomescape.reservationtime.model.ReservationTime;
 import roomescape.util.CustomDateTimeFormatter;
 
 public record FindReservationTimeResponse(Long id, String startAt) {

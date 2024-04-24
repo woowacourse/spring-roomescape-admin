@@ -1,8 +1,8 @@
-package roomescape.reservation.domain;
+package roomescape.reservation.model;
 
 import java.time.LocalDate;
 import java.time.LocalTime;
-import roomescape.reservationtime.domain.ReservationTime;
+import roomescape.reservationtime.model.ReservationTime;
 
 public class Reservation {
     private final Long id;

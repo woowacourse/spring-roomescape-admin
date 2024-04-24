@@ -5,7 +5,7 @@ import org.springframework.stereotype.Service;
 import roomescape.reservation.controller.request.CreateReservationRequest;
 import roomescape.reservation.controller.response.FindReservationResponse;
 import roomescape.reservation.repository.ReservationRepository;
-import roomescape.reservationtime.domain.ReservationTime;
+import roomescape.reservationtime.model.ReservationTime;
 import roomescape.reservationtime.repository.ReservationTimeRepository;
 
 @Service

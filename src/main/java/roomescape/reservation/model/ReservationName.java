@@ -1,4 +1,4 @@
-package roomescape.reservation.domain;
+package roomescape.reservation.model;
 
 public class ReservationName {
     private final String value;

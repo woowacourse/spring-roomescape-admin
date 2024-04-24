@@ -10,7 +10,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.annotation.Rollback;
 import org.springframework.transaction.annotation.Transactional;
-import roomescape.entity.ReservationAvailableTime;
+import roomescape.entity.ReservationTime;
 
 @SpringBootTest
 @Transactional
@@ -25,13 +25,13 @@ class TimeRepositoryTest {
     void readAllTest() {
         LocalTime time1 = LocalTime.of(1, 0);
         LocalTime time2 = LocalTime.of(2, 0);
-        ReservationAvailableTime reservationAvailableTime1 = new ReservationAvailableTime(time1);
-        ReservationAvailableTime reservationAvailableTime2 = new ReservationAvailableTime(time2);
+        ReservationTime reservationTime1 = new ReservationTime(time1);
+        ReservationTime reservationTime2 = new ReservationTime(time2);
 
-        timeRepository.save(reservationAvailableTime1);
-        timeRepository.save(reservationAvailableTime2);
+        timeRepository.save(reservationTime1);
+        timeRepository.save(reservationTime2);
 
-        List<ReservationAvailableTime> all = timeRepository.readAll();
+        List<ReservationTime> all = timeRepository.readAll();
 
         assertThat(all)
                 .extracting("startAt")
@@ -42,8 +42,8 @@ class TimeRepositoryTest {
     @Test
     void saveTest() {
         LocalTime time = LocalTime.of(1, 0);
-        ReservationAvailableTime reservationAvailableTime = new ReservationAvailableTime(time);
-        ReservationAvailableTime saved = timeRepository.save(reservationAvailableTime);
+        ReservationTime reservationTime = new ReservationTime(time);
+        ReservationTime saved = timeRepository.save(reservationTime);
 
         assertThat(saved.getStartAt()).isEqualTo(time);
     }

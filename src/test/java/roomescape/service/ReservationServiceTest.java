@@ -23,7 +23,7 @@ class ReservationServiceTest {
     @DisplayName("시간이 겹치는 예약이 존재하지 않는 경우 예약에 성공한다")
     @Test
     void reservationSaveSuccessTest() {
-        Reservation reservation = new Reservation("리비", LocalDate.of(2024, 4, 20), LocalTime.of(3, 57));
+        Reservation reservation = new Reservation("리비", LocalDate.of(2024, 4, 20), LocalTime.of(3, 0));
 
         assertThatCode(() -> reservationService.saveReservation(reservation))
                 .doesNotThrowAnyException();
@@ -32,8 +32,8 @@ class ReservationServiceTest {
     @DisplayName("시간이 겹치는 예약이 존재할 경우 예약에 실패한다")
     @Test
     void reservationSaveFailByTimeConflictTest() {
-        Reservation reservation = new Reservation("리비", LocalDate.of(2024, 4, 20), LocalTime.of(3, 57));
-        Reservation conflictReservation = new Reservation("웨지", LocalDate.of(2024, 4, 20), LocalTime.of(3, 30));
+        Reservation reservation = new Reservation("리비", LocalDate.of(2024, 4, 20), LocalTime.of(3, 0));
+        Reservation conflictReservation = new Reservation("웨지", LocalDate.of(2024, 4, 20), LocalTime.of(3, 0));
         reservationService.saveReservation(reservation);
 
         assertThatThrownBy(() -> reservationService.saveReservation(conflictReservation))

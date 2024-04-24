@@ -16,7 +16,6 @@ import org.springframework.jdbc.support.GeneratedKeyHolder;
 import org.springframework.jdbc.support.KeyHolder;
 import org.springframework.stereotype.Repository;
 import roomescape.entity.Reservation;
-import roomescape.entity.ReservationTime;
 
 @Repository
 public class ReservationRepository {
@@ -72,8 +71,8 @@ public class ReservationRepository {
                 "    or ? between (date || ' ' || time) and dateadd('HOUR', ?, (date || ' ' || time)) " +
                 ") as exists_overlap;";
 
-        boolean conflict = jdbcTemplate.queryForObject(sql, Boolean.class, endDateTime,
-                ReservationTime.RESERVATION_DURATION_HOUR, startDateTime, ReservationTime.RESERVATION_DURATION_HOUR);
+        boolean conflict = jdbcTemplate.queryForObject(sql, Boolean.class, endDateTime, Reservation.TIME_DURATION,
+                startDateTime, Reservation.TIME_DURATION);
         return conflict;
     }
 

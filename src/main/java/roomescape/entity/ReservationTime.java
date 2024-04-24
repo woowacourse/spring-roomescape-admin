@@ -1,38 +1,43 @@
 package roomescape.entity;
 
-import java.time.LocalDate;
-import java.time.LocalDateTime;
 import java.time.LocalTime;
 
 public class ReservationTime {
-    public static final int RESERVATION_DURATION_HOUR = 1;
+    private final Long id;
+    private final LocalTime startAt;
 
-    private final LocalDateTime start;
-
-    public ReservationTime(LocalDateTime start) {
-        validateNonNull(start);
-        this.start = start;
+    public ReservationTime(Long id, LocalTime startAt) {
+        validate(startAt);
+        this.id = id;
+        this.startAt = startAt;
     }
 
-    private void validateNonNull(LocalDateTime startTime) {
-        if (startTime == null) {
-            throw new NullPointerException("예약 시간은 Null이 될 수 없습니다");
+    public ReservationTime(LocalTime startAt) {
+        this(null, startAt);
+    }
+
+    private void validate(LocalTime time) {
+        validateNonNull(time);
+        validateHourlyUnit(time);
+    }
+
+    private void validateNonNull(LocalTime time) {
+        if (time == null) {
+            throw new NullPointerException("예약 가능한 시간은 null일 수 없습니다");
         }
     }
 
-    public LocalDateTime getStartDateTime() {
-        return start;
+    private void validateHourlyUnit(LocalTime time) {
+        if (time.getMinute() != 0) {
+            throw new IllegalStateException("예약 가능 시각은 정각 단위여야 합니다: " + time);
+        }
     }
 
-    public LocalDateTime getEndDateTime() {
-        return start.plusHours(RESERVATION_DURATION_HOUR);
+    public Long getId() {
+        return id;
     }
 
-    public LocalDate getStartDate() {
-        return start.toLocalDate();
-    }
-
-    public LocalTime getStart() {
-        return start.toLocalTime();
+    public LocalTime getStartAt() {
+        return startAt;
     }
 }

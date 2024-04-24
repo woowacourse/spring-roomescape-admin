@@ -5,7 +5,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import roomescape.dto.response.ReservationResponse;
-import roomescape.repository.ReservationRepository;
+import roomescape.repository.reservation.ReservationRepository;
 
 @Controller
 public class ReservationPageController {

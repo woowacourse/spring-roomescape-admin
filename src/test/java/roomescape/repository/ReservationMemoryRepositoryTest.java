@@ -9,6 +9,7 @@ import java.util.List;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import roomescape.domain.Reservation;
+import roomescape.repository.reservation.ReservationMemoryRepository;
 
 class ReservationMemoryRepositoryTest {
 

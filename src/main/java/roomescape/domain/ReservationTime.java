@@ -5,7 +5,7 @@ import java.time.format.DateTimeFormatter;
 
 public record ReservationTime(Long id, LocalTime startAt) {
 
-    public ReservationTime of(Long id, ReservationTime reservationTime) {
+    public static ReservationTime of(Long id, ReservationTime reservationTime) {
         return new ReservationTime(id, reservationTime.startAt);
     }
 

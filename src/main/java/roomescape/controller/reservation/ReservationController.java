@@ -13,7 +13,7 @@ import org.springframework.web.bind.annotation.RestController;
 import roomescape.domain.Reservation;
 import roomescape.dto.request.ReservationAddRequest;
 import roomescape.dto.response.ReservationResponse;
-import roomescape.repository.ReservationRepository;
+import roomescape.repository.reservation.ReservationRepository;
 
 @RestController
 @RequestMapping("/reservations")

@@ -9,9 +9,9 @@ public class ReservationResponse {
     private String name;
     private LocalDate date;
     private LocalTime time;
-    
-    public ReservationResponse(Reservation reservation) {
-        this(reservation.getId(), reservation.getName().getName(), reservation.getDate(), reservation.getTime());
+
+    public ReservationResponse(Reservation reservation, Long id) {
+        this(id, reservation.getName().getName(), reservation.getDate(), reservation.getTime());
     }
 
     public ReservationResponse(Long id, String name, LocalDate date, LocalTime time) {

@@ -30,7 +30,8 @@ public class ReservationDaoTest {
     @Autowired
     private final ReservationDao reservationDao;
 
-    public @Autowired ReservationDaoTest(JdbcTemplate jdbcTemplate, ReservationDao reservationDao) {
+    @Autowired
+    public ReservationDaoTest(JdbcTemplate jdbcTemplate, ReservationDao reservationDao) {
         this.jdbcTemplate = jdbcTemplate;
         this.reservationDao = reservationDao;
     }

@@ -15,7 +15,7 @@ public class ReservationTimeService {
         this.reservationTimeRepository = reservationTimeRepository;
     }
 
-    public long addTime(ReservationTimeDto reservationTimeDto) {
+    public long createTime(ReservationTimeDto reservationTimeDto) {
         return reservationTimeRepository.create(reservationTimeDto);
     }
 

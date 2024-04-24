@@ -20,7 +20,7 @@ public class ReservationTimeController {
 
     @PostMapping("/times")
     public ResponseEntity<ReservationTime> createTime(@RequestBody ReservationTimeDto reservationTimeDto) {
-        long timeId = reservationTimeService.addTime(reservationTimeDto);
+        long timeId = reservationTimeService.createTime(reservationTimeDto);
         ReservationTime reservationTime = makeTimeObject(reservationTimeDto, timeId);
 
         return ResponseEntity.status(HttpStatus.CREATED).body(reservationTime);

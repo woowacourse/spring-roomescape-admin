@@ -1,16 +1,15 @@
 package roomescape.repository.reservation;
 
 import org.springframework.jdbc.core.JdbcTemplate;
-import org.springframework.jdbc.core.PreparedStatementCreator;
 import org.springframework.jdbc.core.RowMapper;
-import org.springframework.jdbc.support.GeneratedKeyHolder;
-import org.springframework.jdbc.support.KeyHolder;
+import org.springframework.jdbc.core.namedparam.MapSqlParameterSource;
+import org.springframework.jdbc.core.namedparam.SqlParameterSource;
+import org.springframework.jdbc.core.simple.SimpleJdbcInsert;
 import org.springframework.stereotype.Repository;
 import roomescape.domain.Reservation;
 import roomescape.domain.ReservationTime;
 
-import java.sql.PreparedStatement;
-import java.sql.Statement;
+import javax.sql.DataSource;
 import java.util.List;
 import java.util.Optional;
 
@@ -18,26 +17,24 @@ import java.util.Optional;
 public class ReservationDao implements ReservationRepository {
 
     private final JdbcTemplate jdbcTemplate;
+    private final SimpleJdbcInsert simpleJdbcInsert;
 
-    public ReservationDao(JdbcTemplate jdbcTemplate) {
+    public ReservationDao(JdbcTemplate jdbcTemplate, DataSource dataSource) {
         this.jdbcTemplate = jdbcTemplate;
+        this.simpleJdbcInsert = new SimpleJdbcInsert(dataSource)
+                .withTableName("reservation")
+                .usingGeneratedKeyColumns("id");
     }
 
     public Reservation save(Reservation reservation) {
-        String sql = "INSERT INTO reservation (name, date, time_id) VALUES (?, ?, ?)";
-        PreparedStatementCreator preparedStatementCreator = (connect) -> {
-            PreparedStatement statement = connect.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS);
-            statement.setString(1, reservation.getName());
-            statement.setString(2, reservation.getDate().toString());
-            statement.setLong(3, reservation.getTime().getId());
+        SqlParameterSource sqlParameterSource = new MapSqlParameterSource()
+                .addValue("name", reservation.getName())
+                .addValue("date", reservation.getDate())
+                .addValue("time_id", reservation.getTime().getId());
 
-            return statement;
-        };
-        KeyHolder keyHolder = new GeneratedKeyHolder();
+        Long id = simpleJdbcInsert.executeAndReturnKey(sqlParameterSource).longValue();
 
-        jdbcTemplate.update(preparedStatementCreator, keyHolder);
-        return new Reservation(keyHolder.getKey().longValue(), reservation.getName(),
-                reservation.getDate(), reservation.getTime());
+        return new Reservation(id, reservation);
     }
 
     public Optional<Reservation> findById(Long id) {

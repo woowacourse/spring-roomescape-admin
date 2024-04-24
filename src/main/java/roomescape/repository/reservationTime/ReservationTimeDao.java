@@ -1,15 +1,14 @@
 package roomescape.repository.reservationTime;
 
 import org.springframework.jdbc.core.JdbcTemplate;
-import org.springframework.jdbc.core.PreparedStatementCreator;
 import org.springframework.jdbc.core.RowMapper;
-import org.springframework.jdbc.support.GeneratedKeyHolder;
-import org.springframework.jdbc.support.KeyHolder;
+import org.springframework.jdbc.core.namedparam.MapSqlParameterSource;
+import org.springframework.jdbc.core.namedparam.SqlParameterSource;
+import org.springframework.jdbc.core.simple.SimpleJdbcInsert;
 import org.springframework.stereotype.Repository;
 import roomescape.domain.ReservationTime;
 
-import java.sql.PreparedStatement;
-import java.sql.Statement;
+import javax.sql.DataSource;
 import java.util.List;
 import java.util.Optional;
 
@@ -17,23 +16,21 @@ import java.util.Optional;
 public class ReservationTimeDao implements ReservationTimeRepository {
 
     private final JdbcTemplate jdbcTemplate;
+    private final SimpleJdbcInsert simpleJdbcInsert;
 
-    public ReservationTimeDao(JdbcTemplate jdbcTemplate) {
+    public ReservationTimeDao(JdbcTemplate jdbcTemplate, DataSource dataSource) {
         this.jdbcTemplate = jdbcTemplate;
+        this.simpleJdbcInsert = new SimpleJdbcInsert(dataSource)
+                .withTableName("reservation_time")
+                .usingGeneratedKeyColumns("id");
     }
 
     public ReservationTime save(ReservationTime reservationTime) {
-        String sql = "INSERT INTO reservation_time (start_at) VALUES (?)";
-        PreparedStatementCreator preparedStatementCreator = (connect) -> {
-            PreparedStatement statement = connect.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS);
-            statement.setString(1, reservationTime.getStartAt().toString());
-            return statement;
-        };
+        SqlParameterSource sqlParameterSource = new MapSqlParameterSource()
+                .addValue("start_at", reservationTime.getStartAt());
+        Long id = simpleJdbcInsert.executeAndReturnKey(sqlParameterSource).longValue();
 
-        KeyHolder keyHolder = new GeneratedKeyHolder();
-        jdbcTemplate.update(preparedStatementCreator, keyHolder);
-
-        return new ReservationTime(keyHolder.getKey().longValue(), reservationTime.getStartAt());
+        return new ReservationTime(id, reservationTime.getStartAt());
     }
 
     public Optional<ReservationTime> findById(Long id) {

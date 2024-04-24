@@ -8,7 +8,6 @@ import org.springframework.jdbc.core.simple.SimpleJdbcInsert;
 import org.springframework.stereotype.Repository;
 import roomescape.reservation.domain.Reservation;
 import roomescape.reservation.dto.ReservationRequestDto;
-import roomescape.time.domain.ReservationTime;
 
 import javax.sql.DataSource;
 import java.util.List;
@@ -18,26 +17,15 @@ public class ReservationDao {
 
     private final JdbcTemplate jdbcTemplate;
     private final SimpleJdbcInsert simpleJdbcInsert;
+    private final RowMapper<Reservation> rowMapper;
 
-    public ReservationDao(final JdbcTemplate jdbcTemplate, final DataSource dataSource) {
+    public ReservationDao(final JdbcTemplate jdbcTemplate, final DataSource dataSource, final RowMapper<Reservation> rowMapper) {
         this.jdbcTemplate = jdbcTemplate;
         this.simpleJdbcInsert = new SimpleJdbcInsert(dataSource)
                 .withTableName("RESERVATION")
                 .usingGeneratedKeyColumns("id");
+        this.rowMapper = rowMapper;
     }
-
-    private final RowMapper<Reservation> reservationRowMapper = (resultSet, rowNum) -> {
-        final Reservation reservation = new Reservation(
-                resultSet.getLong("reservation_id"),
-                resultSet.getString("name"),
-                resultSet.getString("date"),
-                new ReservationTime(
-                        resultSet.getLong("time_id"),
-                        resultSet.getString("time_value")
-                )
-        );
-        return reservation;
-    };
 
     public List<Reservation> findAll() {
         final String sql = "SELECT \n" +
@@ -49,7 +37,7 @@ public class ReservationDao {
                 "FROM reservation as r \n" +
                 "inner join reservation_time as t \n" +
                 "on r.time_id = t.id";
-        return jdbcTemplate.query(sql, reservationRowMapper);
+        return jdbcTemplate.query(sql, (resultSet, rowNum) -> rowMapper.mapRow(resultSet, rowNum));
     }
 
     public Reservation findById(final Long id) {
@@ -62,7 +50,7 @@ public class ReservationDao {
                 "FROM reservation as r \n" +
                 "inner join reservation_time as t \n" +
                 "on r.time_id = t.id and r.id = ?";
-        return jdbcTemplate.queryForObject(sql, reservationRowMapper, id);
+        return jdbcTemplate.queryForObject(sql, (resultSet, rowNum) -> rowMapper.mapRow(resultSet, rowNum), id);
     }
 
     public long save(final ReservationRequestDto requestDto) {

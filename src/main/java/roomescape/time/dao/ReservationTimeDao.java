@@ -16,21 +16,15 @@ import java.util.List;
 public class ReservationTimeDao {
     private final JdbcTemplate jdbcTemplate;
     private final SimpleJdbcInsert simpleJdbcInsert;
+    private final RowMapper<ReservationTime> rowMapper;
 
-    public ReservationTimeDao(JdbcTemplate jdbcTemplate, DataSource dataSource) {
+    public ReservationTimeDao(final JdbcTemplate jdbcTemplate, final DataSource dataSource, final RowMapper<ReservationTime> rowMapper) {
         this.jdbcTemplate = jdbcTemplate;
         this.simpleJdbcInsert = new SimpleJdbcInsert(dataSource)
                 .withTableName("RESERVATION_TIME")
                 .usingGeneratedKeyColumns("id");
+        this.rowMapper = rowMapper;
     }
-
-    private final RowMapper<ReservationTime> timeRowMapper = (resultSet, rowNum) -> {
-        final ReservationTime reservationTime = new ReservationTime(
-                resultSet.getLong("id"),
-                resultSet.getString("start_at")
-        );
-        return reservationTime;
-    };
 
     public long save(final ReservationTimeRequestDto requestDto) {
         final SqlParameterSource params = new MapSqlParameterSource()
@@ -41,7 +35,7 @@ public class ReservationTimeDao {
 
     public List<ReservationTime> findAll() {
         final String sql = "select * from reservation_time";
-        return jdbcTemplate.query(sql, timeRowMapper);
+        return jdbcTemplate.query(sql, (resultSet, rowNum) -> rowMapper.mapRow(resultSet, rowNum));
     }
 
     public int deleteById(final Long id) {

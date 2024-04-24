@@ -35,6 +35,10 @@ public class Reservation {
         return time;
     }
 
+    public Long getTimeId() {
+        return time.getId();
+    }
+
 
     public static class Builder {
         private long id;

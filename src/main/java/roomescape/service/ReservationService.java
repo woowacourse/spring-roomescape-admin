@@ -19,22 +19,20 @@ public class ReservationService {
         this.reservationTimeDao = reservationTimeDao;
     }
 
+    public Reservation findById(Long id) {
+        return reservationDao.findById(id);
+    }
+
     public List<Reservation> findAll() {
         return reservationDao.findAll();
     }
 
-    public Reservation save(ReservationDto reservationDto) {
+    public Long save(ReservationDto reservationDto) {
         ReservationTime reservationTime = reservationTimeDao.findById(reservationDto.timeId());
-        Long id = reservationDao.save(reservationDto);
-        return new Reservation.Builder()
-                .id(id)
-                .name(reservationDto.name())
-                .date(reservationDto.date())
-                .time(reservationTime)
-                .build();
+        return reservationDao.save(reservationDto.toEntity(reservationTime));
     }
 
-    public void delete(long id) {
+    public void delete(Long id) {
         reservationDao.delete(id);
     }
 }

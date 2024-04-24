@@ -21,6 +21,37 @@ public class ReservationDao {
         this.jdbcTemplate = jdbcTemplate;
     }
 
+    public Reservation findById(Long id) {
+        String sql = """
+                select  
+                    r.id as reservation_id,  
+                    r.name, 
+                    r.date, 
+                    t.id as time_id, 
+                    t.start_at as time_value 
+                from reservation as r 
+                inner join reservation_time as t 
+                on r.time_id = t.id
+                where r.id = ?
+                """;
+        return jdbcTemplate.queryForObject(
+                sql,
+                (resultSet, rowNum) -> {
+                    ReservationTime reservationTime = new ReservationTime(
+                            resultSet.getLong("time_id"),
+                            resultSet.getTime("time_value")
+                                    .toLocalTime());
+                    Reservation reservation = new Reservation.Builder()
+                            .id(resultSet.getLong("id"))
+                            .name(resultSet.getString("name"))
+                            .date(resultSet.getDate("date")
+                                    .toLocalDate())
+                            .time(reservationTime)
+                            .build();
+                    return reservation;
+                }, id);
+    }
+
     public List<Reservation> findAll() {
         String sql = """
                 select  
@@ -51,10 +82,10 @@ public class ReservationDao {
                 });
     }
 
-    public Long save(ReservationDto reservationDto) {
-        String name = reservationDto.name();
-        LocalDate date = reservationDto.date();
-        Long timeId = reservationDto.timeId();
+    public Long save(Reservation reservation) {
+        String name = reservation.getName();
+        LocalDate date = reservation.getDate();
+        Long timeId = reservation.getTimeId();
         String sql = "insert into reservation (name, date, time_id) values (?, ?, ?)";
         KeyHolder keyHolder = new GeneratedKeyHolder();
 

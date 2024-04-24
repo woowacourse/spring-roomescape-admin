@@ -14,6 +14,13 @@ import roomescape.admin.reservation.entity.ReservationTime;
 @Repository
 public class H2ReservationRepository implements ReservationRepository {
 
+    private final static RowMapper<Reservation> reservationRowMapper = (rs, rn) -> new Reservation(
+            rs.getLong("id"),
+            rs.getString("name"),
+            rs.getDate("date").toLocalDate(),
+            new ReservationTime(rs.getLong("time_id"), rs.getTime("time_value").toLocalTime())
+    );
+
     private final JdbcTemplate jdbcTemplate;
     private final SimpleJdbcInsert jdbcInsert;
 
@@ -38,12 +45,6 @@ public class H2ReservationRepository implements ReservationRepository {
                 inner join reservation_time as t
                 on r.time_id = t.id""";
 
-        RowMapper<Reservation> reservationRowMapper = (rs, rn) -> new Reservation(
-                rs.getLong("id"),
-                rs.getString("name"),
-                rs.getDate("date").toLocalDate(),
-                new ReservationTime(rs.getLong("time_id"), rs.getTime("time_value").toLocalTime())
-        );
         return jdbcTemplate.query(sql, reservationRowMapper);
     }
 
@@ -72,13 +73,6 @@ public class H2ReservationRepository implements ReservationRepository {
                 inner join reservation_time as t
                 on r.time_id = t.id
                 WHERE r.id = ?""";
-
-        RowMapper<Reservation> reservationRowMapper = (rs, rn) -> new Reservation(
-                rs.getLong("reservation_id"),
-                rs.getString("name"),
-                rs.getDate("date").toLocalDate(),
-                new ReservationTime(rs.getLong("time_id"), rs.getTime("time_value").toLocalTime())
-        );
 
         return jdbcTemplate.queryForObject(sql, reservationRowMapper, id);
     }

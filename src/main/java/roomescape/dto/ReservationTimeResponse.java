@@ -11,8 +11,4 @@ public record ReservationTimeResponse(Long id, String startAt) {
             reservationTime.getStartAt().format(DateTimeFormatter.ofPattern("HH:mm"))
         );
     }
-
-    public static ReservationTimeResponse of(Long id, ReservationTimeRequest reservationTimeRequest) {
-        return new ReservationTimeResponse(id, reservationTimeRequest.startAt());
-    }
 }

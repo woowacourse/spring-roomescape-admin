@@ -1,6 +1,7 @@
 package roomescape.controller;
 
 import jakarta.servlet.http.HttpServletResponse;
+import jakarta.validation.Valid;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 import roomescape.dto.request.ReservationRequest;
@@ -26,7 +27,7 @@ public class ReservationApiController {
 
     @PostMapping
     @ResponseStatus(value = HttpStatus.CREATED)
-    public ReservationCreateResponse createReservation(@RequestBody final ReservationRequest reservationRequest,
+    public ReservationCreateResponse createReservation(@Valid  @RequestBody final ReservationRequest reservationRequest,
                                                        final HttpServletResponse response) {
         final ReservationCreateResponse reservationCreateResponse = reservationService.createReservation(reservationRequest);
         response.setHeader("Location", reservationCreateResponse.getLocationHeaderValue());

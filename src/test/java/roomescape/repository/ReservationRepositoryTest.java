@@ -10,5 +10,7 @@ interface ReservationRepositoryTest {
 
     void findById();
 
+    void findByNotExistingId();
+
     void deleteById();
 }

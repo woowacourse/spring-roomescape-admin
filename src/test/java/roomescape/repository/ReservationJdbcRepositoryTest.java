@@ -116,6 +116,20 @@ class ReservationJdbcRepositoryTest implements ReservationRepositoryTest {
 
     @Override
     @Test
+    @DisplayName("Id에 해당하는 예약이 없다면 빈 Optional을 반환한다.")
+    public void findByNotExistingId() {
+        // given
+        Long id = 1L;
+
+        // when
+        Optional<Reservation> actualReservation = reservationRepository.findById(id);
+
+        // then
+        assertThat(actualReservation).isEmpty();
+    }
+
+    @Override
+    @Test
     @DisplayName("Id로 예약을 삭제한다.")
     public void deleteById() {
         // given

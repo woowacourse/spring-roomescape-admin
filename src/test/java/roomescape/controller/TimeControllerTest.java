@@ -46,8 +46,9 @@ public class TimeControllerTest {
                 .body(params)
                 .when().post("/times")
                 .then().log().all()
-                .statusCode(200)
-                .body("id", is(1));
+                .statusCode(201)
+                .body("id", is(1))
+                .header("Location", "/times/1");
     }
 
     @Test
@@ -68,8 +69,9 @@ public class TimeControllerTest {
                 .body(params)
                 .when().post("/times")
                 .then().log().all()
-                .statusCode(200)
-                .body("id", is(1));
+                .statusCode(201)
+                .body("id", is(1))
+                .header("Location", "/times/1");
 
         RestAssured.given().log().all()
                 .when().get("/times")
@@ -86,13 +88,14 @@ public class TimeControllerTest {
                 .body(params)
                 .when().post("/times")
                 .then().log().all()
-                .statusCode(200)
-                .body("id", is(1));
+                .statusCode(201)
+                .body("id", is(1))
+                .header("Location", "/times/1");
 
         RestAssured.given().log().all()
                 .when().delete("/times/1")
                 .then().log().all()
-                .statusCode(200);
+                .statusCode(204);
 
         RestAssured.given().log().all()
                 .when().get("/times")
@@ -109,7 +112,8 @@ public class TimeControllerTest {
                 .body(params)
                 .when().post("/times")
                 .then().log().all()
-                .statusCode(200);
+                .statusCode(201)
+                .header("Location", "/times/1");
 
         List<TimeResponse> times = RestAssured.given().log().all()
                 .when().get("/times")
@@ -130,7 +134,8 @@ public class TimeControllerTest {
                 .body(params)
                 .when().post("/times")
                 .then().log().all()
-                .statusCode(200);
+                .statusCode(201)
+                .header("Location", "/times/1");
 
         Integer count = jdbcTemplate.queryForObject("SELECT count(1) from reservation_time", Integer.class);
         assertThat(count).isEqualTo(1);
@@ -144,12 +149,13 @@ public class TimeControllerTest {
                 .body(params)
                 .when().post("/times")
                 .then().log().all()
-                .statusCode(200);
+                .statusCode(201)
+                .header("Location", "/times/1");
 
         RestAssured.given().log().all()
                 .when().delete("/times/1")
                 .then().log().all()
-                .statusCode(200);
+                .statusCode(204);
 
         Integer countAfterDelete = jdbcTemplate.queryForObject("SELECT count(1) from reservation_time", Integer.class);
         assertThat(countAfterDelete).isEqualTo(0);

@@ -40,7 +40,6 @@ public class ReservationController {
     public ResponseEntity<ReservationResponse> createReservation(@RequestBody ReservationRequest reservationRequest) {
         Reservation requestReservation = reservationRequest.toReservation();
         Reservation responseReservation = reservationRepository.createReservation(requestReservation);
-
         ReservationResponse reservationResponse = ReservationResponse.from(responseReservation);
 
         return ResponseEntity.created(URI.create("/reservations/" + reservationResponse.getId()))

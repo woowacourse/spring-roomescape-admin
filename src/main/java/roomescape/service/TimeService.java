@@ -1,5 +1,6 @@
 package roomescape.service;
 
+import java.util.List;
 import org.springframework.stereotype.Service;
 import roomescape.controller.dto.ReservationTimeAddRequest;
 import roomescape.dao.TimeDao;
@@ -22,5 +23,9 @@ public class TimeService {
 
     private boolean isDuplicateTimeRegistered(ReservationTimeAddRequest time) {
         return timeDao.isExist(time.startTime());
+    }
+
+    public List<ReservationTime> findAllReservationTimes() {
+        return timeDao.findAll();
     }
 }

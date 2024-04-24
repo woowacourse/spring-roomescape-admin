@@ -12,8 +12,9 @@ import roomescape.domain.ReservationTime;
 
 @Repository
 public class H2TimeDao implements TimeDao {
-    public static final String ID_COLUMN_NAME = "id";
-    public static final String START_TIME_COLUMN_NAME = "start_at";
+    private static final String TABLE_NAME = "reservation_time";
+    private static final String ID_COLUMN_NAME = "id";
+    private static final String START_TIME_COLUMN_NAME = "start_at";
 
     private final JdbcTemplate jdbcTemplate;
     private final SimpleJdbcInsert simpleJdbcInsert;
@@ -21,7 +22,7 @@ public class H2TimeDao implements TimeDao {
     public H2TimeDao(JdbcTemplate jdbcTemplate) {
         this.jdbcTemplate = jdbcTemplate;
         this.simpleJdbcInsert = new SimpleJdbcInsert(jdbcTemplate)
-                .withTableName("reservation_time")
+                .withTableName(TABLE_NAME)
                 .usingGeneratedKeyColumns(ID_COLUMN_NAME)
                 .usingColumns(START_TIME_COLUMN_NAME);
     }
@@ -41,8 +42,31 @@ public class H2TimeDao implements TimeDao {
     }
 
     @Override
+    public List<ReservationTime> findAll() {
+        String sql = "SELECT * FROM " + TABLE_NAME + " ORDER BY " + START_TIME_COLUMN_NAME + " ASC";
+        return jdbcTemplate.query(sql, rowMapper);
+    }
+
+    @Override
+    public void delete(Long id) {
+    }
+
+    @Override
+    public void deleteAll() {
+        String sql = "DELETE FROM " + TABLE_NAME;
+        jdbcTemplate.update(sql);
+    }
+
+    @Override
+    public boolean isExist(Long id) {
+        String sql = "SELECT * FROM " + TABLE_NAME + " WHERE " + ID_COLUMN_NAME + " = ? LIMIT 1";
+        List<ReservationTime> reservationTime = jdbcTemplate.query(sql, rowMapper, id);
+        return !reservationTime.isEmpty();
+    }
+
+    @Override
     public boolean isExist(LocalTime time) {
-        String sql = "SELECT * FROM reservation_time WHERE " + START_TIME_COLUMN_NAME + " = ? LIMIT 1";
+        String sql = "SELECT * FROM " + TABLE_NAME + " WHERE " + START_TIME_COLUMN_NAME + " = ? LIMIT 1";
         List<ReservationTime> reservationTime = jdbcTemplate.query(sql, rowMapper, time);
         return !reservationTime.isEmpty();
     }

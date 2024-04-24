@@ -17,6 +17,11 @@ import roomescape.service.dto.ReservationCreationDto;
 class H2ReservationDaoTest {
     private final ReservationDao reservationDao;
 
+    @Autowired
+    public H2ReservationDaoTest(JdbcTemplate jdbcTemplate) {
+        this.reservationDao = new H2ReservationDao(jdbcTemplate);
+    }
+
     @BeforeEach
     void setUp() {
         reservationDao.deleteAll();
@@ -24,11 +29,6 @@ class H2ReservationDaoTest {
                 "브라운", LocalDate.MAX, LocalTime.now()
         );
         reservationDao.add(ReservationCreationDto.from(defaultReservation));
-    }
-
-    @Autowired
-    public H2ReservationDaoTest(JdbcTemplate jdbcTemplate) {
-        this.reservationDao = new H2ReservationDao(jdbcTemplate);
     }
 
     @DisplayName("DB의 모든 예약을 조회한다.")

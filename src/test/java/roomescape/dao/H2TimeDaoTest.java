@@ -1,9 +1,15 @@
 package roomescape.dao;
 
+import static org.assertj.core.api.Assertions.assertThat;
+
+import java.time.LocalTime;
 import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.DisplayName;
+import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.jdbc.JdbcTest;
 import org.springframework.jdbc.core.JdbcTemplate;
+import roomescape.controller.dto.ReservationTimeAddRequest;
 
 @JdbcTest
 class H2TimeDaoTest {
@@ -16,6 +22,24 @@ class H2TimeDaoTest {
 
     @BeforeEach
     void SetUp() {
-//        timeDao
+        timeDao.deleteAll();
+        LocalTime time = LocalTime.of(13, 0);
+        ReservationTimeAddRequest defaultTime = new ReservationTimeAddRequest(time);
+        timeDao.add(defaultTime);
+    }
+
+    @DisplayName("모든 등록된 예약 가능 시간을 조회한다.")
+    @Test
+    void findAllTest() {
+        assertThat(timeDao.findAll()).hasSize(1);
+    }
+
+    @DisplayName("예약 가능 시간을 DB에 저장할 수 있다.")
+    @Test
+    void addTest() {
+        LocalTime time = LocalTime.of(11, 0);
+        ReservationTimeAddRequest request = new ReservationTimeAddRequest(time);
+        timeDao.add(request);
+        assertThat(timeDao.isExist(2L)).isTrue();
     }
 }

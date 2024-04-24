@@ -3,6 +3,7 @@ package roomescape.controller;
 import jakarta.servlet.http.HttpServletResponse;
 import jakarta.validation.Valid;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import roomescape.dto.request.ReservationRequest;
 import roomescape.dto.response.ReservationCreateResponse;
@@ -27,11 +28,11 @@ public class ReservationApiController {
 
     @PostMapping
     @ResponseStatus(value = HttpStatus.CREATED)
-    public ReservationCreateResponse createReservation(@Valid  @RequestBody final ReservationRequest reservationRequest,
-                                                       final HttpServletResponse response) {
+    public ResponseEntity<ReservationCreateResponse> createReservation(
+            @Valid @RequestBody final ReservationRequest reservationRequest) {
         final ReservationCreateResponse reservationCreateResponse = reservationService.createReservation(reservationRequest);
-        response.setHeader("Location", reservationCreateResponse.getLocationHeaderValue());
-        return reservationCreateResponse;
+        return ResponseEntity.created(reservationCreateResponse.getLocationHeaderValue())
+                             .body(reservationCreateResponse);
     }
 
     @DeleteMapping("/{id}")

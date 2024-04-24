@@ -56,14 +56,14 @@ class ReservationTimeServiceTest {
     @DisplayName("모든 예약 시간을 반환한다")
     @Test
     void should_return_all_reservation_times() {
-        List<ReservationTime> reservationTimes = reservationTimeService.getReservations();
+        List<ReservationTime> reservationTimes = reservationTimeService.findAllReservationTimes();
         assertThat(reservationTimes).hasSize(2);
     }
 
     @DisplayName("아이디에 해당하는 예약 시간을 반환한다.")
     @Test
     void should_get_reservation_time() {
-        ReservationTime reservationTime = reservationTimeService.getReservationTime(2);
+        ReservationTime reservationTime = reservationTimeService.findReservationTime(2);
         assertThat(reservationTime.getStartAt()).isEqualTo(LocalTime.of(11, 0));
     }
 

@@ -18,7 +18,7 @@ public class ReservationDAO {
         this.jdbcTemplate = jdbcTemplate;
     }
 
-    public List<Reservation> findAllReservations() {
+    public List<Reservation> selectAllReservations() {
         String sql = """
                 select
                     r.id as reservation_id,
@@ -42,7 +42,7 @@ public class ReservationDAO {
                 ));
     }
 
-    public Reservation add(Reservation reservation) {
+    public Reservation insertReservation(Reservation reservation) {
         String sql = "insert into reservation (name, date, time_id) values (?, ?, ?)";
         KeyHolder keyHolder = new GeneratedKeyHolder();
         jdbcTemplate.update(connection -> {
@@ -56,7 +56,7 @@ public class ReservationDAO {
         return reservation;
     }
 
-    public long delete(long id) {
+    public long deleteReservation(long id) {
         String sql = "delete from reservation where id = ?";
         return jdbcTemplate.update(sql, id);
     }

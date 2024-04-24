@@ -17,7 +17,7 @@ public class ReservationTimeDAO {
         this.jdbcTemplate = jdbcTemplate;
     }
 
-    public List<ReservationTime> findAllReservations() {
+    public List<ReservationTime> selectAllReservationTimes() {
         String sql = "select id, start_at from reservation_time";
         return jdbcTemplate.query(sql, (resultSet, rowNum) ->
                 new ReservationTime(
@@ -26,7 +26,7 @@ public class ReservationTimeDAO {
                 ));
     }
 
-    public ReservationTime findReservationTime(long id) {
+    public ReservationTime selectReservationById(long id) {
         String sql = "select * from reservation_time where id = ?";
         return jdbcTemplate.queryForObject(sql, (resultSet, rowNum) ->
                 new ReservationTime(
@@ -35,7 +35,7 @@ public class ReservationTimeDAO {
                 ), id);
     }
 
-    public ReservationTime addReservationTime(ReservationTime reservationTime) {
+    public ReservationTime insertReservationTime(ReservationTime reservationTime) {
         String sql = "insert into reservation_time (start_at) values (?)";
         KeyHolder keyHolder = new GeneratedKeyHolder();
         jdbcTemplate.update(connection -> {

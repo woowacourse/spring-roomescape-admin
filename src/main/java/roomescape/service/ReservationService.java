@@ -14,15 +14,15 @@ public class ReservationService {
         this.reservationDAO = reservationDAO;
     }
 
-    public List<Reservation> getReservations() {
-        return reservationDAO.findAllReservations();
+    public List<Reservation> findAllReservations() {
+        return reservationDAO.selectAllReservations();
     }
 
-    public Reservation addReservations(Reservation reservation) {
-        return reservationDAO.add(reservation);
+    public Reservation addReservation(Reservation reservation) {
+        return reservationDAO.insertReservation(reservation);
     }
 
-    public void deleteReservation(long id) {
-        reservationDAO.delete(id);
+    public void removeReservation(long id) {
+        reservationDAO.deleteReservation(id);
     }
 }

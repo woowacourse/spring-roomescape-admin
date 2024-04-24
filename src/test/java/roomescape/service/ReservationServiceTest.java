@@ -60,7 +60,7 @@ class ReservationServiceTest {
     @DisplayName("모든 예약 시간을 반환한다")
     @Test
     void should_return_all_reservation_times() {
-        List<Reservation> reservations = reservationService.getReservations();
+        List<Reservation> reservations = reservationService.findAllReservations();
         assertThat(reservations).hasSize(2);
     }
 
@@ -68,7 +68,7 @@ class ReservationServiceTest {
     @Test
     void should_add_reservation_times() {
         ReservationTime reservationTime = new ReservationTime(1, LocalTime.of(10, 0));
-        Reservation reservations = reservationService.addReservations(
+        Reservation reservations = reservationService.addReservation(
                 new Reservation("네오", LocalDate.of(2024, 9, 1), reservationTime));
         assertThat(reservations.getId()).isEqualTo(3);
     }
@@ -76,7 +76,7 @@ class ReservationServiceTest {
     @DisplayName("예약 시간을 삭제한다")
     @Test
     void should_remove_reservation_times() {
-        reservationService.deleteReservation(1);
+        reservationService.removeReservation(1);
         Integer count = jdbcTemplate.queryForObject("SELECT count(1) from reservation", Integer.class);
         assertThat(count).isEqualTo(1);
     }

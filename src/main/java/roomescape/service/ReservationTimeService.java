@@ -14,16 +14,16 @@ public class ReservationTimeService {
         this.reservationTimeDAO = reservationTimeDAO;
     }
 
-    public List<ReservationTime> getReservations() {
-        return reservationTimeDAO.findAllReservations();
+    public List<ReservationTime> findAllReservationTimes() {
+        return reservationTimeDAO.selectAllReservationTimes();
     }
 
     public ReservationTime addReservationTime(ReservationTime reservationTime) {
-        return reservationTimeDAO.addReservationTime(reservationTime);
+        return reservationTimeDAO.insertReservationTime(reservationTime);
     }
 
-    public ReservationTime getReservationTime(long id) {
-        return reservationTimeDAO.findReservationTime(id);
+    public ReservationTime findReservationTime(long id) {
+        return reservationTimeDAO.selectReservationById(id);
     }
 
     public void removeReservationTime(long id) {

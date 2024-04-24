@@ -9,7 +9,10 @@ public class Reservation {
     private final ReservationDate reservationDate;
     private final ReservationTime reservationTime;
 
-    public Reservation(Long id, ReservationName reservationName, ReservationDate reservationDate, ReservationTime reservationTime) {
+    public Reservation(Long id,
+                       ReservationName reservationName,
+                       ReservationDate reservationDate,
+                       ReservationTime reservationTime) {
         this.id = id;
         this.reservationName = reservationName;
         this.reservationDate = reservationDate;

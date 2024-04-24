@@ -12,4 +12,6 @@ public interface ReservationTimeRepository {
     boolean deleteById(long id);
 
     ReservationTime findById(long id);
+    boolean isExistById(long id);
+
 }

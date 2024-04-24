@@ -60,4 +60,11 @@ public class ReservationTimeSqlRepository implements ReservationTimeRepository {
             throw new IllegalArgumentException(String.format("%d 는 없는 id 입니다.", id), e);
         }
     }
+
+
+    @Override
+    public boolean isExistById(final long id) {
+        String sqlQuery = "SELECT EXISTS (SELECT 1 FROM reservation_time WHERE id=?)";
+        return Boolean.TRUE.equals(jdbcTemplate.queryForObject(sqlQuery, Boolean.class,id));
+    }
 }

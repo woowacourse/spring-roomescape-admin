@@ -30,9 +30,21 @@
 - [x] `예약 추가 API` 호출 시 데이터베이스에 예약을 저장한다.
 - [x] `예약 삭제 API` 호출 시 데이터베이스에서 예약을 삭제한다.
 
+## 7단계 - 시간 관리 기능
+
+- [ ] 시간 관리 페이지 로드 시 `시간 목록 조회 API`를 호출한다.
+- [ ] 시간 추가 페이지를 누르면 `시간 추가 API`를 호출한다.
+- [ ] 삭제 버튼을 누르면 `시간 삭제 API`를 호출한다.
+
+## 8단계 - 예약과 시간 관리
+
+## 9단계 - 계층화 리팩터링
+
 # API 명세
 
-## 예약 목록 조회 API
+## 예약
+
+### 예약 목록 조회 API
 
 Request
 
@@ -62,7 +74,7 @@ Content-Type: application/json
 ]
 ```
 
-## 예약 추가 API
+### 예약 추가 API
 
 Request
 
@@ -80,7 +92,7 @@ content-type: application/json
 Response
 
 ```
-HTTP/1.1 200
+HTTP/1.1 201
 Content-Type: application/json
 
 {
@@ -91,7 +103,7 @@ Content-Type: application/json
 }
 ```
 
-## 예약 삭제 API
+### 예약 삭제 API
 
 Request
 
@@ -102,7 +114,70 @@ DELETE /reservations/1 HTTP/1.1
 Response
 
 ```
-HTTP/1.1 200
+HTTP/1.1 204
+```
+
+## 시간
+
+### 시간 목록 조회 API
+
+Request
+
+```
+GET /times HTTP/1.1
+```
+
+Response
+
+```
+HTTP/1.1 200 
+Content-Type: application/json
+
+[
+   {
+        "id": 1,
+        "startAt": "10:00"
+    }
+]
+```
+
+### 시간 추가 API
+
+Request
+
+```
+POST /times HTTP/1.1
+content-type: application/json
+
+{
+    "startAt": "10:00"
+}
+```
+
+Response
+
+```
+HTTP/1.1 201
+Content-Type: application/json
+
+{
+    "id": 1,
+    "startAt": "10:00"
+}
+```
+
+### 시간 삭제 API
+
+Request
+
+```
+DELETE /times/1 HTTP/1.1
+```
+
+Response
+
+```
+HTTP/1.1 204
 ```
 
 # 팀 컨벤션

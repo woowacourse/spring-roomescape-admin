@@ -39,7 +39,7 @@ public class ReservationService {
     public ReservationResponse create(ReservationRequest request) {
         ReservationTime reservationTime = reservationTimes.findById(request.timeId())
                 .orElseThrow(() -> new IllegalArgumentException("존재하지 않는 예약 시간 입니다."));
-        Reservation reservation = reservations.save(request.from(reservationTime));
+        Reservation reservation = reservations.save(request.toReservation(reservationTime));
         return ReservationResponse.from(reservation);
     }
 

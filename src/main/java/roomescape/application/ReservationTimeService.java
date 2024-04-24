@@ -24,7 +24,7 @@ public class ReservationTimeService {
     }
 
     public ReservationTimeResponse create(ReservationTimeRequest request) {
-        ReservationTime reservationTime = reservationTimes.create(request.from());
+        ReservationTime reservationTime = reservationTimes.create(request.toReservationTime());
         return ReservationTimeResponse.from(reservationTime);
     }
 

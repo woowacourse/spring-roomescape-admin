@@ -6,7 +6,6 @@ import jakarta.validation.constraints.Positive;
 import roomescape.service.request.CreateReservationRequest;
 
 public record CreateReservationWebRequest(
-
         @NotNull LocalDate date,
         @NotNull String name,
         @Positive @NotNull Long timeId

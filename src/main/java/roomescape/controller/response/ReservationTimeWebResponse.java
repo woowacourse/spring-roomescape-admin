@@ -5,7 +5,6 @@ import com.fasterxml.jackson.annotation.JsonFormat;
 import roomescape.domain.ReservationTime;
 
 public record ReservationTimeWebResponse(
-
         long id,
         @JsonFormat(pattern = "HH:mm") LocalTime startAt
 ) {

@@ -42,4 +42,11 @@ class H2TimeDaoTest {
         timeDao.add(request);
         assertThat(timeDao.isExist(2L)).isTrue();
     }
+
+    @DisplayName("특정 ID에 해당하는 예약 가능 시간을 삭제할 수 있다.")
+    @Test
+    void deleteTest() {
+        timeDao.delete(1L);
+        assertThat(timeDao.isExist(1L)).isFalse();
+    }
 }

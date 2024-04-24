@@ -103,4 +103,39 @@ class TimeControllerTest {
                 .statusCode(400)
                 .body(containsString("날짜/시간 포맷이 잘못되었습니다."));
     }
+
+    @DisplayName("특정 ID에 해당하는 예약 시간을 삭제한다.")
+    @Test
+    void removeReservationTimeTest() {
+        Map<String, String> params = Map.of(
+                "startAt", "12:34"
+        );
+
+        ReservationTimeResponse reservationTimeResponse = RestAssured.given().log().all()
+                .contentType(ContentType.JSON).body(params)
+                .when().post("/times")
+                .then().log().all()
+                .statusCode(200)
+                .extract().as(ReservationTimeResponse.class);
+
+        Long newReservationTimeResponseId = reservationTimeResponse.id();
+        int initialReservationTimesCount = getTotalReservationsCount();
+
+        RestAssured.given().log().all()
+                .when().delete("/times/" + newReservationTimeResponseId)
+                .then().log().all()
+                .statusCode(200);
+
+        assertThat(getTotalReservationsCount()).isEqualTo(initialReservationTimesCount - 1);
+    }
+
+    @DisplayName("삭제한 ID에 해당하는 예약 시간이 없을 경우 204를 응답한다.")
+    @Test
+    void removeNotExistReservationTimeTest() {
+        int neverExistId = 0;
+        RestAssured.given().log().all()
+                .when().delete("/times/" + neverExistId)
+                .then().log().all()
+                .statusCode(204);
+    }
 }

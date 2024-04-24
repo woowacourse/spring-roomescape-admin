@@ -28,4 +28,12 @@ public class TimeService {
     public List<ReservationTime> findAllReservationTimes() {
         return timeDao.findAll();
     }
+
+    public void removeReservationTime(Long id) {
+        timeDao.delete(id);
+    }
+
+    public boolean checkReservationTimeExist(Long id) {
+        return timeDao.isExist(id);
+    }
 }

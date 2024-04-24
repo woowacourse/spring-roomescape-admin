@@ -49,6 +49,8 @@ public class H2TimeDao implements TimeDao {
 
     @Override
     public void delete(Long id) {
+        String sql = "DELETE FROM " + TABLE_NAME + " WHERE " + ID_COLUMN_NAME + " = ?";
+        jdbcTemplate.update(sql, id);
     }
 
     @Override

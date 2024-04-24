@@ -9,7 +9,7 @@ public record ReservationTimeRegisterDetail(String startAt) {
         this(request.startAt());
     }
 
-    public ReservationTime toEntity(Long timeId) {
+    public ReservationTime toEntity(long timeId) {
         return new ReservationTime(timeId, startAt);
     }
 }

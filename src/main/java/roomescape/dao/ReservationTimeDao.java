@@ -28,7 +28,7 @@ public class ReservationTimeDao {
                 .usingGeneratedKeyColumns("id");
     }
 
-    public List<ReservationTime> findAllReservationTimes() {
+    public List<ReservationTime> findAll() {
         String sql = "SELECT id, start_at FROM reservation_time";
         return jdbcTemplate.query(sql, rowMapper);
     }

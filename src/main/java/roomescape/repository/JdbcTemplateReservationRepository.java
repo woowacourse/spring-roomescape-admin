@@ -44,13 +44,13 @@ public class JdbcTemplateReservationRepository implements ReservationRepository 
         return jdbcTemplate.queryForObject(
                 """
                         SELECT
-                            r.id as reservation_id,
+                            r.id AS reservation_id,
                             r.name,
                             r.date,
-                            t.id as time_id,
-                            t.start_at as time_value
-                        FROM reservation as r
-                        INNER JOIN reservation_time as t
+                            t.id AS time_id,
+                            t.start_at AS time_value
+                        FROM reservation AS r
+                        INNER JOIN reservation_time AS t
                         ON r.id = ?
                         """, reservationRowMapper, id
         );
@@ -61,13 +61,13 @@ public class JdbcTemplateReservationRepository implements ReservationRepository 
         return jdbcTemplate.query(
                 """
                         SELECT
-                            r.id as reservation_id,
+                            r.id AS reservation_id,
                             r.name,
                             r.date,
-                            t.id as time_id,
-                            t.start_at as time_value
-                        FROM reservation as r
-                        INNER JOIN reservation_time as t
+                            t.id AS time_id,
+                            t.start_at AS time_value
+                        FROM reservation AS r
+                        INNER JOIN reservation_time AS t
                         ON r.time_id = t.id
                         """, reservationRowMapper);
     }

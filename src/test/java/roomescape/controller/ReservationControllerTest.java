@@ -19,9 +19,9 @@ import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
-import roomescape.dto.reservation.ReservationCreateRequestDto;
-import roomescape.dto.reservation.ReservationResponseDto;
-import roomescape.dto.reservationtime.ReservationTimeResponseDto;
+import roomescape.dto.reservation.ReservationCreateRequest;
+import roomescape.dto.reservation.ReservationResponse;
+import roomescape.dto.reservationtime.ReservationTimeResponse;
 import roomescape.service.ReservationService;
 
 @WebMvcTest(ReservationController.class)
@@ -33,17 +33,16 @@ class ReservationControllerTest {
     private MockMvc mockMvc;
     @MockBean
     private ReservationService reservationService;
-
-
+    
     @Test
     @DisplayName("전체 예약을 조회한다.")
     void getAllReservationsTest() throws Exception {
         //given
-        List<ReservationResponseDto> responseDtos = List.of(
-                getReservationResponseDto(1L, "daon", "2022-02-23", 1L, "12:12"),
-                getReservationResponseDto(2L, "ikjo", "2022-02-05", 2L, "23:22")
+        List<ReservationResponse> expectedResponses = List.of(
+                getReservationResponse(1L, "daon", "2022-02-23", 1L, "12:12"),
+                getReservationResponse(2L, "ikjo", "2022-02-05", 2L, "23:22")
         );
-        given(reservationService.findAll()).willReturn(responseDtos);
+        given(reservationService.findAll()).willReturn(expectedResponses);
 
         //when //then
         mockMvc.perform(get("/reservations"))
@@ -63,16 +62,16 @@ class ReservationControllerTest {
         String expectedName = "daon";
         String expectedDate = "2024-11-29";
         String expectedStartAt = "00:01";
-        ReservationCreateRequestDto requestDto = ReservationCreateRequestDto.of(expectedName, expectedDate, 1L);
-        ReservationResponseDto responseDto
-                = getReservationResponseDto(1L, expectedName, expectedDate, 1L, expectedStartAt);
-        given(reservationService.add(requestDto)).willReturn(responseDto);
-        String requestBody = objectMapper.writeValueAsString(requestDto);
+        ReservationCreateRequest givenRequest = ReservationCreateRequest.of(expectedName, expectedDate, 1L);
+        ReservationResponse response
+                = getReservationResponse(1L, expectedName, expectedDate, 1L, expectedStartAt);
+        given(reservationService.add(givenRequest)).willReturn(response);
+        String givenJsonRequest = objectMapper.writeValueAsString(givenRequest);
 
         //when //then
         mockMvc.perform(post("/reservations")
                         .contentType(MediaType.APPLICATION_JSON)
-                        .content(requestBody))
+                        .content(givenJsonRequest))
                 .andDo(print())
                 .andExpect(status().isCreated())
                 .andExpect(jsonPath("$.name", is(expectedName)))
@@ -89,16 +88,16 @@ class ReservationControllerTest {
                 .andExpect(status().isNoContent());
     }
 
-    private ReservationResponseDto getReservationResponseDto(long id,
-                                                             String name,
-                                                             String date,
-                                                             long timeId,
-                                                             String startAt) {
-        return ReservationResponseDto.of(
+    private ReservationResponse getReservationResponse(long id,
+                                                       String name,
+                                                       String date,
+                                                       long timeId,
+                                                       String startAt) {
+        return ReservationResponse.of(
                 id,
                 name,
                 date,
-                ReservationTimeResponseDto.of(timeId, startAt)
+                ReservationTimeResponse.of(timeId, startAt)
         );
     }
 }

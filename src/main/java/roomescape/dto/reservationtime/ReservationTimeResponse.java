@@ -4,26 +4,26 @@ import java.util.Objects;
 import roomescape.domain.reservationtime.ReservationTime;
 import roomescape.domain.reservationtime.StartAt;
 
-public class ReservationTimeResponseDto {
+public class ReservationTimeResponse {
 
     private final Long id;
     private final String startAt;
 
-    private ReservationTimeResponseDto(Long id, String startAt) {
+    private ReservationTimeResponse(Long id, String startAt) {
         this.id = id;
         this.startAt = startAt;
     }
 
-    public static ReservationTimeResponseDto from(ReservationTime time) {
+    public static ReservationTimeResponse from(ReservationTime time) {
         StartAt startAt = time.getStartAt();
-        return new ReservationTimeResponseDto(
+        return new ReservationTimeResponse(
                 time.getId(),
                 startAt.toStringTime()
         );
     }
 
-    public static ReservationTimeResponseDto of(Long id, String startAt) {
-        return new ReservationTimeResponseDto(
+    public static ReservationTimeResponse of(Long id, String startAt) {
+        return new ReservationTimeResponse(
                 id,
                 startAt
         );
@@ -45,7 +45,7 @@ public class ReservationTimeResponseDto {
         if (o == null || getClass() != o.getClass()) {
             return false;
         }
-        ReservationTimeResponseDto other = (ReservationTimeResponseDto) o;
+        ReservationTimeResponse other = (ReservationTimeResponse) o;
         return Objects.equals(this.id, other.id)
                 && Objects.equals(this.startAt, other.startAt);
     }

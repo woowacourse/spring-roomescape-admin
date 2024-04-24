@@ -4,41 +4,41 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 import java.util.Objects;
 import roomescape.domain.reservation.Date;
 import roomescape.domain.reservation.Reservation;
-import roomescape.dto.reservationtime.ReservationTimeResponseDto;
+import roomescape.dto.reservationtime.ReservationTimeResponse;
 
-public class ReservationResponseDto {
+public class ReservationResponse {
 
     private final Long id;
     private final String name;
     private final String date;
     @JsonProperty("time")
-    private final ReservationTimeResponseDto reservationTimeResponseDto;
+    private final ReservationTimeResponse reservationTimeResponse;
 
-    private ReservationResponseDto(Long id,
-                                   String name,
-                                   String date,
-                                   ReservationTimeResponseDto reservationTimeResponseDto) {
+    private ReservationResponse(Long id,
+                                String name,
+                                String date,
+                                ReservationTimeResponse reservationTimeResponse) {
         this.id = id;
         this.name = name;
         this.date = date;
-        this.reservationTimeResponseDto = reservationTimeResponseDto;
+        this.reservationTimeResponse = reservationTimeResponse;
     }
 
-    public static ReservationResponseDto from(Reservation reservation) {
+    public static ReservationResponse from(Reservation reservation) {
         Date date = reservation.getDate();
-        return new ReservationResponseDto(
+        return new ReservationResponse(
                 reservation.getId(),
                 reservation.getName().getValue(),
                 date.toStringDate(),
-                ReservationTimeResponseDto.from(reservation.getReservationTime())
+                ReservationTimeResponse.from(reservation.getReservationTime())
         );
     }
 
-    public static ReservationResponseDto of(Long id,
-                                            String name,
-                                            String date,
-                                            ReservationTimeResponseDto timeResponseDto) {
-        return new ReservationResponseDto(
+    public static ReservationResponse of(Long id,
+                                         String name,
+                                         String date,
+                                         ReservationTimeResponse timeResponseDto) {
+        return new ReservationResponse(
                 id,
                 name,
                 date,
@@ -66,16 +66,16 @@ public class ReservationResponseDto {
         if (o == null || getClass() != o.getClass()) {
             return false;
         }
-        ReservationResponseDto other = (ReservationResponseDto) o;
+        ReservationResponse other = (ReservationResponse) o;
         return Objects.equals(this.id, other.id)
                 && Objects.equals(this.name, other.name)
                 && Objects.equals(this.date, other.date)
-                && Objects.equals(this.reservationTimeResponseDto, other.reservationTimeResponseDto);
+                && Objects.equals(this.reservationTimeResponse, other.reservationTimeResponse);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(id, name, date, reservationTimeResponseDto);
+        return Objects.hash(id, name, date, reservationTimeResponse);
     }
 
     @Override
@@ -84,7 +84,7 @@ public class ReservationResponseDto {
                 "id=" + id +
                 ", name='" + name + '\'' +
                 ", date='" + date + '\'' +
-                ", reservationTimeDto=" + reservationTimeResponseDto +
+                ", reservationTimeDto=" + reservationTimeResponse +
                 '}';
     }
 }

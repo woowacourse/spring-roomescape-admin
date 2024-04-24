@@ -5,22 +5,22 @@ import java.util.Objects;
 import roomescape.domain.reservationtime.ReservationTime;
 import roomescape.domain.reservationtime.StartAt;
 
-public class ReservationTimeCreateRequestDto {
+public class ReservationTimeCreateRequest {
 
     private final String startAt;
 
     @JsonCreator
-    private ReservationTimeCreateRequestDto(String startAt) {
+    private ReservationTimeCreateRequest(String startAt) {
         this.startAt = startAt;
     }
 
-    public static ReservationTimeCreateRequestDto from(String startAt) {
-        return new ReservationTimeCreateRequestDto(startAt);
+    public static ReservationTimeCreateRequest from(String startAt) {
+        return new ReservationTimeCreateRequest(startAt);
     }
 
-    public static ReservationTimeCreateRequestDto from(ReservationTime reservationTime) {
+    public static ReservationTimeCreateRequest from(ReservationTime reservationTime) {
         StartAt startAt = reservationTime.getStartAt();
-        return new ReservationTimeCreateRequestDto(startAt.toStringTime());
+        return new ReservationTimeCreateRequest(startAt.toStringTime());
     }
 
     public ReservationTime toDomain() {
@@ -42,7 +42,7 @@ public class ReservationTimeCreateRequestDto {
         if (o == null || getClass() != o.getClass()) {
             return false;
         }
-        ReservationTimeCreateRequestDto other = (ReservationTimeCreateRequestDto) o;
+        ReservationTimeCreateRequest other = (ReservationTimeCreateRequest) o;
         return Objects.equals(this.startAt, other.startAt);
     }
 

@@ -10,14 +10,16 @@ import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.support.GeneratedKeyHolder;
 import org.springframework.jdbc.support.KeyHolder;
 import org.springframework.stereotype.Component;
+import org.springframework.stereotype.Repository;
 import roomescape.domain.reservation.Date;
 import roomescape.domain.reservation.Name;
 import roomescape.domain.reservation.Reservation;
 import roomescape.domain.reservationtime.ReservationTime;
 import roomescape.domain.reservationtime.StartAt;
-import roomescape.dto.reservation.ReservationCreateRequestDto;
+import roomescape.dto.reservation.ReservationCreateRequest;
 
 @Component
+@Repository
 public class ReservationDao {
 
     private final JdbcTemplate jdbcTemplate;
@@ -64,7 +66,7 @@ public class ReservationDao {
         );
     }
 
-    public long add(ReservationCreateRequestDto requestDto) {
+    public long add(ReservationCreateRequest request) {
         String sql = """
                 INSERT
                 INTO reservation
@@ -74,7 +76,7 @@ public class ReservationDao {
                 """;
         KeyHolder keyHolder = new GeneratedKeyHolder();
         jdbcTemplate.update(
-                connection -> getPreparedStatement(requestDto, connection, sql),
+                connection -> getPreparedStatement(request, connection, sql),
                 keyHolder
         );
         return Objects.requireNonNull(keyHolder.getKey()).longValue();
@@ -117,13 +119,13 @@ public class ReservationDao {
         );
     }
 
-    private PreparedStatement getPreparedStatement(ReservationCreateRequestDto requestDto,
+    private PreparedStatement getPreparedStatement(ReservationCreateRequest request,
                                                    Connection connection,
                                                    String sql) throws SQLException {
         PreparedStatement preparedStatement = connection.prepareStatement(sql, new String[]{"id"});
-        preparedStatement.setString(1, requestDto.getName());
-        preparedStatement.setString(2, requestDto.getDate());
-        preparedStatement.setLong(3, requestDto.getTimeId());
+        preparedStatement.setString(1, request.getName());
+        preparedStatement.setString(2, request.getDate());
+        preparedStatement.setLong(3, request.getTimeId());
         return preparedStatement;
     }
 }

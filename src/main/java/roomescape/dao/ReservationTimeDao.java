@@ -12,7 +12,7 @@ import org.springframework.jdbc.support.KeyHolder;
 import org.springframework.stereotype.Component;
 import roomescape.domain.reservationtime.ReservationTime;
 import roomescape.domain.reservationtime.StartAt;
-import roomescape.dto.reservationtime.ReservationTimeCreateRequestDto;
+import roomescape.dto.reservationtime.ReservationTimeCreateRequest;
 
 @Component
 public class ReservationTimeDao {
@@ -49,7 +49,7 @@ public class ReservationTimeDao {
         );
     }
 
-    public long add(ReservationTimeCreateRequestDto requestDto) {
+    public long add(ReservationTimeCreateRequest request) {
         String sql = """
                 INSERT
                 INTO reservation_time
@@ -59,7 +59,7 @@ public class ReservationTimeDao {
                 """;
         KeyHolder keyHolder = new GeneratedKeyHolder();
         jdbcTemplate.update(
-                connection -> getPreparedStatement(requestDto, connection, sql),
+                connection -> getPreparedStatement(request, connection, sql),
                 keyHolder
         );
         return Objects.requireNonNull(keyHolder.getKey()).longValue();
@@ -93,11 +93,11 @@ public class ReservationTimeDao {
         );
     }
 
-    private PreparedStatement getPreparedStatement(ReservationTimeCreateRequestDto requestDto,
+    private PreparedStatement getPreparedStatement(ReservationTimeCreateRequest request,
                                                    Connection connection,
                                                    String sql) throws SQLException {
         PreparedStatement preparedStatement = connection.prepareStatement(sql, new String[]{"id"});
-        preparedStatement.setString(1, requestDto.getStartAt());
+        preparedStatement.setString(1, request.getStartAt());
         return preparedStatement;
     }
 }

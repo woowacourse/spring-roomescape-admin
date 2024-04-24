@@ -19,8 +19,8 @@ import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
-import roomescape.dto.reservationtime.ReservationTimeCreateRequestDto;
-import roomescape.dto.reservationtime.ReservationTimeResponseDto;
+import roomescape.dto.reservationtime.ReservationTimeCreateRequest;
+import roomescape.dto.reservationtime.ReservationTimeResponse;
 import roomescape.service.ReservationTimeService;
 
 @WebMvcTest(ReservationTimeController.class)
@@ -39,12 +39,12 @@ class ReservationTimeControllerTest {
         //given
         String firstStartAt = "12:40";
         String secondStartAt = "23:25";
-        List<ReservationTimeResponseDto> responseDtos = List.of(
-                getReservationTimeResponseDto(1L, firstStartAt),
-                getReservationTimeResponseDto(2L, secondStartAt)
+        List<ReservationTimeResponse> responses = List.of(
+                getReservationTimeResponse(1L, firstStartAt),
+                getReservationTimeResponse(2L, secondStartAt)
         );
         given(reservationTimeService.findAll())
-                .willReturn(responseDtos);
+                .willReturn(responses);
 
         //when //then
         mockMvc.perform(get("/times"))
@@ -61,11 +61,11 @@ class ReservationTimeControllerTest {
     void create() throws Exception {
         //given
         String startAt = "22:04";
-        ReservationTimeCreateRequestDto givenRequestDto = ReservationTimeCreateRequestDto.from(startAt);
-        ReservationTimeResponseDto responseDto = getReservationTimeResponseDto(2L, startAt);
-        given(reservationTimeService.add(givenRequestDto))
-                .willReturn(responseDto);
-        String requestBody = objectMapper.writeValueAsString(givenRequestDto);
+        ReservationTimeCreateRequest givenRequest = ReservationTimeCreateRequest.from(startAt);
+        ReservationTimeResponse expectedResponse = getReservationTimeResponse(2L, startAt);
+        given(reservationTimeService.add(givenRequest))
+                .willReturn(expectedResponse);
+        String requestBody = objectMapper.writeValueAsString(givenRequest);
 
         //when //then
         mockMvc.perform(post("/times")
@@ -89,7 +89,7 @@ class ReservationTimeControllerTest {
     }
 
 
-    private ReservationTimeResponseDto getReservationTimeResponseDto(long id, String startAt) {
-        return ReservationTimeResponseDto.of(id, startAt);
+    private ReservationTimeResponse getReservationTimeResponse(long id, String startAt) {
+        return ReservationTimeResponse.of(id, startAt);
     }
 }

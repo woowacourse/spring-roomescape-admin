@@ -4,8 +4,8 @@ import java.util.List;
 import org.springframework.stereotype.Service;
 import roomescape.dao.ReservationTimeDao;
 import roomescape.domain.reservationtime.ReservationTime;
-import roomescape.dto.reservationtime.ReservationTimeCreateRequestDto;
-import roomescape.dto.reservationtime.ReservationTimeResponseDto;
+import roomescape.dto.reservationtime.ReservationTimeCreateRequest;
+import roomescape.dto.reservationtime.ReservationTimeResponse;
 
 @Service
 public class ReservationTimeService {
@@ -16,18 +16,18 @@ public class ReservationTimeService {
         this.reservationTimeDao = reservationTimeDao;
     }
 
-    public List<ReservationTimeResponseDto> findAll() {
+    public List<ReservationTimeResponse> findAll() {
         List<ReservationTime> allReservationTimes = reservationTimeDao.findAll();
         return allReservationTimes.stream()
-                .map(ReservationTimeResponseDto::from)
+                .map(ReservationTimeResponse::from)
                 .toList();
     }
 
-    public ReservationTimeResponseDto add(ReservationTimeCreateRequestDto requestDto) {
-        ReservationTimeCreateRequestDto validatedRequestDto = getValidatedRequestDto(requestDto);
+    public ReservationTimeResponse add(ReservationTimeCreateRequest request) {
+        ReservationTimeCreateRequest validatedRequestDto = getValidatedRequestDto(request);
         long id = reservationTimeDao.add(validatedRequestDto);
         ReservationTime result = reservationTimeDao.findById(id);
-        return ReservationTimeResponseDto.from(result);
+        return ReservationTimeResponse.from(result);
     }
 
     public void delete(Long id) {
@@ -36,9 +36,9 @@ public class ReservationTimeService {
         reservationTimeDao.delete(id);
     }
 
-    private ReservationTimeCreateRequestDto getValidatedRequestDto(ReservationTimeCreateRequestDto requestDto) {
-        ReservationTime reservationTime = requestDto.toDomain();
-        return ReservationTimeCreateRequestDto.from(reservationTime);
+    private ReservationTimeCreateRequest getValidatedRequestDto(ReservationTimeCreateRequest request) {
+        ReservationTime reservationTime = request.toDomain();
+        return ReservationTimeCreateRequest.from(reservationTime);
     }
 
     private void validateNull(Long id) {

@@ -6,30 +6,30 @@ import roomescape.domain.reservation.Name;
 import roomescape.domain.reservation.Reservation;
 import roomescape.domain.reservationtime.ReservationTime;
 
-public class ReservationCreateRequestDto {
+public class ReservationCreateRequest {
 
     private final String name;
     private final String date;
     private final Long timeId;
 
-    private ReservationCreateRequestDto(String name, String date, Long timeId) {
+    private ReservationCreateRequest(String name, String date, Long timeId) {
         this.name = name;
         this.date = date;
         this.timeId = timeId;
     }
 
-    public static ReservationCreateRequestDto of(Reservation reservation, ReservationTime reservationTime) {
-        return new ReservationCreateRequestDto(
+    public static ReservationCreateRequest of(Reservation reservation, ReservationTime reservationTime) {
+        return new ReservationCreateRequest(
                 reservation.getName().getValue(),
                 reservation.getDate().toStringDate(),
                 reservationTime.getId()
         );
     }
 
-    public static ReservationCreateRequestDto of(String name,
-                                                 String date,
-                                                 Long timeId) {
-        return new ReservationCreateRequestDto(
+    public static ReservationCreateRequest of(String name,
+                                              String date,
+                                              Long timeId) {
+        return new ReservationCreateRequest(
                 name,
                 date,
                 timeId
@@ -64,7 +64,7 @@ public class ReservationCreateRequestDto {
         if (o == null || getClass() != o.getClass()) {
             return false;
         }
-        ReservationCreateRequestDto other = (ReservationCreateRequestDto) o;
+        ReservationCreateRequest other = (ReservationCreateRequest) o;
         return Objects.equals(this.name, other.name)
                 && Objects.equals(this.date, other.date)
                 && Objects.equals(this.timeId, other.timeId);

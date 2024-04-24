@@ -16,7 +16,7 @@ public class ReservationTime {
         return id;
     }
 
-    public LocalTime getTime() {
+    public LocalTime getStartAt() {
         return startAt;
     }
 }

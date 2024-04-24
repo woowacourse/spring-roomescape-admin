@@ -22,7 +22,7 @@ public class ReservationTimeService {
         return timeDao.findAll();
     }
 
-    public void deleteReservationTimeById(Long id) {
+    public void deleteReservationTimeById(long id) {
         timeDao.deleteById(id);
     }
 }

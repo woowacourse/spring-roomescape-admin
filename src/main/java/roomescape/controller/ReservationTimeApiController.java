@@ -42,7 +42,7 @@ public class ReservationTimeApiController {
     }
 
     @DeleteMapping("/{id}")
-    public void deleteReservationTime(@PathVariable Long id) {
+    public void deleteReservationTime(@PathVariable long id) {
         timeService.deleteReservationTimeById(id);
     }
 }

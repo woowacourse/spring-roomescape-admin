@@ -50,7 +50,7 @@ public class ReservationDao {
         return jdbcTemplate.query(sql, reservationRowMapper());
     }
 
-    public void deleteById(Long reservationId) {
+    public void deleteById(long reservationId) {
         String sql = "DELETE FROM reservation WHERE id = ?";
 
         jdbcTemplate.update(sql, reservationId);

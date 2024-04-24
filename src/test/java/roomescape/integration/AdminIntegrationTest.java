@@ -19,4 +19,12 @@ public class AdminIntegrationTest extends IntegrationTest {
                 .then().log().all()
                 .statusCode(200);
     }
+
+    @Test
+    void 시간_관리_페이지를_응답할_수_있다() {
+        RestAssured.given().log().all()
+                .when().get("/admin/time")
+                .then().log().all()
+                .statusCode(200);
+    }
 }

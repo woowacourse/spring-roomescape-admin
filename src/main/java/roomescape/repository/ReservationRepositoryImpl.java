@@ -49,6 +49,13 @@ public class ReservationRepositoryImpl implements ReservationRepository {
     }
 
     @Override
+    public List<Reservation> findAllByReservationTimeId(Long id) {
+        String sql = "select * from reservation where time_id = ?";
+
+        return jdbcTemplate.query(sql, reservationRowMapper, id);
+    }
+
+    @Override
     public Reservation findById(Long id) {
         String sql = "select * from reservation where id = ?";
         Reservation reservation = jdbcTemplate.queryForObject(sql, reservationRowMapper, id);

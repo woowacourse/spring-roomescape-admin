@@ -72,6 +72,7 @@ class AdminEndpointTest {
         int initialCount = 0;
 
         HttpRestTestTemplate.assertPostOk(reservationTimeRequest, "/times", "id", 1);
+
         HttpRestTestTemplate.assertPostOk(reservationRequest, "/reservations", "id", 1);
         Integer countAfterInsert = jdbcTemplate.queryForObject("SELECT count(1) from reservation", Integer.class);
         assertThat(countAfterInsert).isEqualTo(initialCount + 1);

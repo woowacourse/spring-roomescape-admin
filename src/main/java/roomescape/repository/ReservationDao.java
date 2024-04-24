@@ -1,7 +1,6 @@
 package roomescape.repository;
 
 import java.util.List;
-import javax.sql.DataSource;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;
 import org.springframework.jdbc.core.namedparam.MapSqlParameterSource;
@@ -17,9 +16,9 @@ public class ReservationDao {
     private final JdbcTemplate jdbcTemplate;
     private final SimpleJdbcInsert insertActor;
 
-    public ReservationDao(DataSource dataSource) {
-        this.jdbcTemplate = new JdbcTemplate(dataSource);
-        this.insertActor = new SimpleJdbcInsert(dataSource)
+    public ReservationDao(JdbcTemplate jdbcTemplate) {
+        this.jdbcTemplate = jdbcTemplate;
+        this.insertActor = new SimpleJdbcInsert(jdbcTemplate)
                 .withTableName("reservation")
                 .usingGeneratedKeyColumns("id");
     }

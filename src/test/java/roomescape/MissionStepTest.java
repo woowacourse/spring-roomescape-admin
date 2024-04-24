@@ -19,8 +19,8 @@ import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;
 import org.springframework.test.annotation.DirtiesContext;
 import roomescape.controller.ReservationController;
-import roomescape.model.Reservation;
 import roomescape.model.ReservationInfo;
+import roomescape.model.Reservation;
 import roomescape.model.ReservationTime;
 
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
@@ -36,8 +36,8 @@ class MissionStepTest {
     @Autowired
     private ReservationController reservationController;
 
-    private final RowMapper<ReservationInfo> reservationDtoMapper = (resultSet, rowNum) ->
-            new ReservationInfo(
+    private final RowMapper<Reservation> reservationDtoMapper = (resultSet, rowNum) ->
+            new Reservation(
                     resultSet.getLong("id"),
                     resultSet.getString("name"),
                     resultSet.getString("date"),
@@ -87,11 +87,11 @@ class MissionStepTest {
     @Test
     @DisplayName("3단계, 8단계 Test- 새로운 예약 정보 등록 요청을 처리하고 성공 시 201 상태 코드를 응답한다.")
     void createReservation_ShouldReturnOK_WhenProceedCreateRequestSuccessfully() {
-        ReservationInfo requestReservationInfo = new ReservationInfo(null, "브라운", "2023-08-05", 1L);
+        Reservation requestReservation = new Reservation(null, "브라운", "2023-08-05", 1L);
 
         RestAssured.given().log().all()
                 .contentType(ContentType.JSON)
-                .body(requestReservationInfo)
+                .body(requestReservation)
                 .when().post("/reservations")
                 .then().log().all()
                 .statusCode(201);
@@ -106,11 +106,11 @@ class MissionStepTest {
     @Test
     @DisplayName("3단계, 8단계 Test- 특정 id를 가진 예약 정보를 삭제 요청을 처리하고 성공 시 204 상태 코드를 응답한다.")
     void deleteReservation_ShouldDeleteReservationAndReturnOK_WhenProceedDeleteRequestSuccessfully() {
-        ReservationInfo requestReservationInfo = new ReservationInfo(null, "브라운", "2023-08-05", 1L);
+        Reservation requestReservation = new Reservation(null, "브라운", "2023-08-05", 1L);
 
         RestAssured.given().log().all()
                 .contentType(ContentType.JSON)
-                .body(requestReservationInfo)
+                .body(requestReservation)
                 .when().post("/reservations");
 
         RestAssured.given().log().all()
@@ -143,16 +143,16 @@ class MissionStepTest {
         jdbcTemplate.update("INSERT INTO reservation (name, date, time_id) VALUES (?, ?, ?)", "브라운", "2023-08-05",
                 1L);
 
-        List<Reservation> reservations = RestAssured.given()
+        List<ReservationInfo> reservationInfos = RestAssured.given()
                 .log().all()
                 .when().get("/reservations")
                 .then().log().all()
                 .statusCode(200).extract().jsonPath()
-                .getList(".", Reservation.class);
+                .getList(".", ReservationInfo.class);
 
         Integer count = jdbcTemplate.queryForObject("SELECT count(1) from reservation", Integer.class);
 
-        assertThat(reservations.size()).isEqualTo(count);
+        assertThat(reservationInfos.size()).isEqualTo(count);
     }
 
     @Test

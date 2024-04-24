@@ -24,7 +24,7 @@ public class ReservationTimeRepository {
             resultSet.getString("start_at")
     );
 
-    public long insert(ReservationTimeDto reservationTimeDto) {
+    public long create(ReservationTimeDto reservationTimeDto) {
         String sql = "INSERT INTO reservation_time (start_at) VALUES(?)";
         KeyHolder keyHolder = new GeneratedKeyHolder();
 

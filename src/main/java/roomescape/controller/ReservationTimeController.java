@@ -20,14 +20,14 @@ public class ReservationTimeController {
     @PostMapping("/times")
     public ResponseEntity<ReservationTime> createTime(@RequestBody ReservationTimeDto reservationTimeDto) {
         long timeId = reservationTimeService.addTime(reservationTimeDto);
-        ReservationTime reservationTime = makeTime(reservationTimeDto, timeId);
+        ReservationTime reservationTime = makeTimeObject(reservationTimeDto, timeId);
 
         return ResponseEntity.status(HttpStatus.CREATED).body(reservationTime);
     }
 
     @GetMapping("/times")
-    public ResponseEntity<List<ReservationTime>> getAllTimes() {
-        return ResponseEntity.ok(reservationTimeService.getAllTimes());
+    public ResponseEntity<List<ReservationTime>> readAllTime() {
+        return ResponseEntity.ok(reservationTimeService.readAllTime());
     }
 
     @DeleteMapping("/times/{id}")
@@ -36,7 +36,7 @@ public class ReservationTimeController {
         return ResponseEntity.noContent().build();
     }
 
-    private ReservationTime makeTime(ReservationTimeDto reservationTimeDto, long timeId) {
+    private ReservationTime makeTimeObject(ReservationTimeDto reservationTimeDto, long timeId) {
         String startAt = reservationTimeDto.startAt();
         return new ReservationTime(timeId, startAt);
     }

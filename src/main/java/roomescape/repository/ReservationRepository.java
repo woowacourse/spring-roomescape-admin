@@ -24,14 +24,10 @@ public class ReservationRepository {
             resultSet.getLong("reservation_id"),
             resultSet.getString("name"),
             resultSet.getString("date"),
-            makeReservationTime(resultSet.getLong("time_id"), resultSet.getString("time_value"))
+            new ReservationTime(resultSet.getLong("time_id"), resultSet.getString("time_value"))
     );
 
-    private ReservationTime makeReservationTime(long timeId, String startAt) {
-        return new ReservationTime(timeId, startAt);
-    }
-
-    public long insert(ReservationDto reservationDto) {
+    public long create(ReservationDto reservationDto) {
         String sql = "INSERT INTO reservation (name, date, time_id) VALUES(?, ?, ?)";
         KeyHolder keyHolder = new GeneratedKeyHolder();
 
@@ -46,7 +42,7 @@ public class ReservationRepository {
         return keyHolder.getKey().longValue();
     }
 
-    public Reservation readById(long reservationId) {
+    public Reservation read(long reservationId) {
         String sql = "SELECT r.id AS reservation_id, " +
                 "r.name, " +
                 "r.date, " +

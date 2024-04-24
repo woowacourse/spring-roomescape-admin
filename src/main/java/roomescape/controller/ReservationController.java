@@ -21,15 +21,15 @@ public class ReservationController {
 
     @PostMapping("/reservations")
     public ResponseEntity<Reservation> createReservation(@RequestBody ReservationDto reservationDto) {
-        long reservationId = reservationService.addReservation(reservationDto);
-        Reservation reservation = reservationService.getReservationById(reservationId);
+        long reservationId = reservationService.createReservation(reservationDto);
+        Reservation reservation = reservationService.readReservation(reservationId);
 
         return ResponseEntity.created(URI.create("/reservations/" + reservationId)).body(reservation);
     }
 
     @GetMapping("/reservations")
-    public ResponseEntity<List<Reservation>> getAllReservations() {
-        return ResponseEntity.ok(reservationService.getAllReservations());
+    public ResponseEntity<List<Reservation>> readAllReservations() {
+        return ResponseEntity.ok(reservationService.readAllReservation());
     }
 
     @DeleteMapping("/reservations/{id}")

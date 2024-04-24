@@ -16,10 +16,10 @@ public class ReservationTimeService {
     }
 
     public long addTime(ReservationTimeDto reservationTimeDto) {
-        return reservationTimeRepository.insert(reservationTimeDto);
+        return reservationTimeRepository.create(reservationTimeDto);
     }
 
-    public List<ReservationTime> getAllTimes() {
+    public List<ReservationTime> readAllTime() {
         return reservationTimeRepository.readAll();
     }
 

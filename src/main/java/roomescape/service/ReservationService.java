@@ -17,15 +17,15 @@ public class ReservationService {
         this.reservationRepository = reservationRepository;
     }
 
-    public long addReservation(ReservationDto reservationDto) {
-        return reservationRepository.insert(reservationDto);
+    public long createReservation(ReservationDto reservationDto) {
+        return reservationRepository.create(reservationDto);
     }
 
-    public Reservation getReservationById(long reservationId) {
-        return reservationRepository.readById(reservationId);
+    public Reservation readReservation(long reservationId) {
+        return reservationRepository.read(reservationId);
     }
 
-    public List<Reservation> getAllReservations() {
+    public List<Reservation> readAllReservation() {
         return reservationRepository.readAll();
     }
 

@@ -2,8 +2,8 @@ package roomescape.repository;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
-import static roomescape.fixture.DateTimeFixture.DATE_2024_04_20;
-import static roomescape.fixture.DateTimeFixture.TIME_03_00_WITH_ID;
+import static roomescape.fixture.DateTimeFixture.DAY_AFTER_TOMORROW;
+import static roomescape.fixture.DateTimeFixture.GAME_TIME_WITH_ID_0300;
 
 import java.util.List;
 import org.junit.jupiter.api.BeforeEach;
@@ -26,18 +26,18 @@ class ReservationRepositoryTest {
     private ReservationRepository reservationRepository;
     @Autowired
     private GameTimeRepository gameTimeRepository;
-    private GameTime saved_time_03_00;
+    private GameTime savedTime0300;
 
     @BeforeEach
     void setUp() {
-        saved_time_03_00 = gameTimeRepository.save(TIME_03_00_WITH_ID);
+        savedTime0300 = gameTimeRepository.save(GAME_TIME_WITH_ID_0300);
     }
 
     @DisplayName("전체 예약을 조회할 수 있다")
     @Test
     void readAllTest() {
-        Reservation reservation1 = new Reservation(null, "리비", DATE_2024_04_20, saved_time_03_00);
-        Reservation reservation2 = new Reservation(null, "웨지", DATE_2024_04_20, saved_time_03_00);
+        Reservation reservation1 = new Reservation(null, "리비", DAY_AFTER_TOMORROW, savedTime0300);
+        Reservation reservation2 = new Reservation(null, "웨지", DAY_AFTER_TOMORROW, savedTime0300);
 
         reservationRepository.save(reservation1);
         reservationRepository.save(reservation2);
@@ -52,7 +52,7 @@ class ReservationRepositoryTest {
     @DisplayName("예약 단건을 저장할 수 있다")
     @Test
     void saveTest() {
-        Reservation reservation = new Reservation("폭포", DATE_2024_04_20, saved_time_03_00);
+        Reservation reservation = new Reservation("폭포", DAY_AFTER_TOMORROW, savedTime0300);
         Reservation saved = reservationRepository.save(reservation);
 
         assertThat(saved).isEqualTo(new Reservation(saved.getId(), reservation));
@@ -61,7 +61,7 @@ class ReservationRepositoryTest {
     @DisplayName("예약 단건을 조회할 수 있다")
     @Test
     void findByIdTest() {
-        Reservation reservation = new Reservation(null, "리비", DATE_2024_04_20, saved_time_03_00);
+        Reservation reservation = new Reservation(null, "리비", DAY_AFTER_TOMORROW, savedTime0300);
         Reservation saved = reservationRepository.save(reservation);
 
         assertThat(saved.getName()).isEqualTo("리비");
@@ -70,7 +70,7 @@ class ReservationRepositoryTest {
     @DisplayName("예약 단건을 삭제할 수 있다")
     @Test
     void deleteByIdTest() {
-        Reservation reservation = new Reservation(null, "리비", DATE_2024_04_20, saved_time_03_00);
+        Reservation reservation = new Reservation(null, "리비", DAY_AFTER_TOMORROW, savedTime0300);
 
         Reservation saved = reservationRepository.save(reservation);
         reservationRepository.deleteById(saved.getId());
@@ -82,10 +82,10 @@ class ReservationRepositoryTest {
     @DisplayName("특정 예약이 저장된 예약들과 시간이 겹치는 경우가 있는지 확인할 수 있다")
     @Test
     void isAnyReservationConflictWithTest() {
-        Reservation reservation = new Reservation(null, "리비", DATE_2024_04_20, saved_time_03_00);
+        Reservation reservation = new Reservation(null, "리비", DAY_AFTER_TOMORROW, savedTime0300);
         reservationRepository.save(reservation);
 
-        Reservation conflictReservation = new Reservation(3L, "폭포", DATE_2024_04_20, saved_time_03_00);
+        Reservation conflictReservation = new Reservation(3L, "폭포", DAY_AFTER_TOMORROW, savedTime0300);
 
         assertThat(reservationRepository.isAnyReservationConflictWith(conflictReservation)).isTrue();
     }

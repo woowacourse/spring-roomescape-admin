@@ -1,6 +1,7 @@
 package roomescape.controller;
 
 import static org.hamcrest.Matchers.is;
+import static roomescape.fixture.DateTimeFixture.DAY_AFTER_TOMORROW;
 
 import io.restassured.RestAssured;
 import io.restassured.http.ContentType;
@@ -53,7 +54,7 @@ class ReservationControllerTest {
     void reservationCreationAndDeleteTest() {
         Map<String, String> params = new HashMap<>();
         params.put("name", "브라운");
-        params.put("date", "2023-08-05");
+        params.put("date", DAY_AFTER_TOMORROW.toString());
         params.put("timeId", String.valueOf(time_id));
 
         int savedId = RestAssured.given().log().all()

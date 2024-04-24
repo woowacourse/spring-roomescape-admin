@@ -17,8 +17,10 @@ public class ReservationService {
         this.reservationRepository = reservationRepository;
     }
 
-    public long createReservation(ReservationDto reservationDto) {
-        return reservationRepository.create(reservationDto);
+    public Reservation createReservation(ReservationDto reservationDto) {
+        long reservationId = reservationRepository.create(reservationDto);
+
+        return readReservation(reservationId);
     }
 
     public Reservation readReservation(long reservationId) {

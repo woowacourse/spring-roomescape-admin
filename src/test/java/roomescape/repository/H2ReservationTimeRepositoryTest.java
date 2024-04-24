@@ -51,4 +51,14 @@ public class H2ReservationTimeRepositoryTest {
         assertThat(repository.findById(reservationTime.getId()))
                 .isEqualTo(reservationTime);
     }
+
+    @DisplayName("시간 삭제 테스트")
+    @Test
+    void deleteByIdTest() {
+        // given & when
+        repository.deleteById(0L);
+
+        // then
+        assertThat(repository.findAll()).isEmpty();
+    }
 }

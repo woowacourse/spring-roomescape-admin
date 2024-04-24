@@ -45,4 +45,9 @@ public class H2ReservationTimeRepository {
 
         return new ReservationTime(keyHolder.getKeyAs(Long.class), reservationTime.getStartAt());
     }
+
+    public void deleteById(long id) {
+        String sql = "DELETE FROM reservation_time WHERE id = ?";
+        jdbcTemplate.update(sql, id);
+    }
 }

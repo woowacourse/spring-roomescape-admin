@@ -12,16 +12,20 @@ import org.springframework.jdbc.core.RowMapper;
 import org.springframework.jdbc.core.simple.SimpleJdbcInsert;
 import org.springframework.stereotype.Repository;
 import roomescape.domain.Reservation;
+import roomescape.domain.Time;
 
 @Repository
 public class ReservationDaoImpl implements ReservationDao {
     private final JdbcTemplate jdbcTemplate;
     private final SimpleJdbcInsert jdbcInsert;
     private final RowMapper<Reservation> reservationRowMapper = (resultSet, rowNum) -> new Reservation(
-            resultSet.getLong("id"),
+            resultSet.getLong("reservation_id"),
             resultSet.getString("name"),
             LocalDate.parse(resultSet.getString("date")),
-            LocalTime.parse(resultSet.getString("time"))
+            new Time(
+                    resultSet.getLong("time_id"),
+                    LocalTime.parse(resultSet.getString("time_value"))
+            )
     );
 
     public ReservationDaoImpl(JdbcTemplate jdbcTemplate, DataSource dataSource) {
@@ -33,13 +37,15 @@ public class ReservationDaoImpl implements ReservationDao {
 
     @Override
     public List<Reservation> findAll() {
-        String sql = "SELECT * FROM reservation";
+        String sql = "SELECT r.id AS reservation_id, r.name, r.date, t.id AS time_id, t.start_at AS time_value "
+                + "FROM reservation AS r INNER JOIN reservation_time AS t ON r.time_id = t.id";
         return jdbcTemplate.query(sql, reservationRowMapper);
     }
 
     @Override
     public Optional<Reservation> findById(Long id) {
-        String sql = "SELECT * FROM reservation WHERE id = ?";
+        String sql = "SELECT r.id AS reservation_id, r.name, r.date, t.id AS time_id, t.start_at AS time_value "
+                + "FROM reservation AS r INNER JOIN reservation_time AS t ON r.time_id = t.id WHERE r.id = ?";
         Reservation reservation = jdbcTemplate.queryForObject(sql, reservationRowMapper, id);
         return Optional.ofNullable(reservation);
     }
@@ -49,7 +55,7 @@ public class ReservationDaoImpl implements ReservationDao {
         Map<String, Object> parameters = new HashMap<>();
         parameters.put("name", reservation.getName());
         parameters.put("date", reservation.getDate());
-        parameters.put("time", reservation.getTime());
+        parameters.put("time_id", reservation.getTime().getId());
         Long id = (Long) jdbcInsert.executeAndReturnKey(parameters);
         reservation.setId(id);
     }

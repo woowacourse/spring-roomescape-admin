@@ -1,5 +1,6 @@
 package roomescape.domain;
 
+import java.time.LocalTime;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
@@ -15,7 +16,8 @@ public class ReservationTimeRepository {
 
     private static final String TABLE_NAME = "reservation_time";
     private static final RowMapper<ReservationTime> ROW_MAPPER = (resultSet, rowNum) -> new ReservationTime(
-            resultSet.getLong("id"), resultSet.getString("start_at"));
+            resultSet.getLong("id"),
+            resultSet.getObject("start_at", LocalTime.class));
 
     private final JdbcTemplate jdbcTemplate;
     private final SimpleJdbcInsert simpleJdbcInsert;
@@ -44,7 +46,7 @@ public class ReservationTimeRepository {
     }
 
     public ReservationTime create(ReservationTime reservationTime) {
-        Map<String, String> params = Map.of("start_at", reservationTime.startAt());
+        Map<String, Object> params = Map.of("start_at", reservationTime.startAt());
         Long id = simpleJdbcInsert.executeAndReturnKey(params).longValue();
 
         return new ReservationTime(id, reservationTime.startAt());

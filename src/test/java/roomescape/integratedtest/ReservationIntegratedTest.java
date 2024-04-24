@@ -5,6 +5,8 @@ import static org.hamcrest.Matchers.is;
 
 import io.restassured.RestAssured;
 import io.restassured.http.ContentType;
+import java.time.LocalDate;
+import java.time.LocalTime;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -52,9 +54,9 @@ class ReservationIntegratedTest {
     @DisplayName("예약 생성")
     @Test
     void post_reservation() {
-        ReservationRequest request = new ReservationRequest("2023-08-10", "브리", 1L);
+        ReservationRequest request = new ReservationRequest(LocalDate.of(2023, 8, 10), "브리", 1L);
         ReservationResponse expectedResponse = new ReservationResponse(
-                2L, "브리", "2023-08-10", new ReservationTimeResponse(1L, "15:00"));
+                2L, "브리", LocalDate.of(2023, 8, 10), new ReservationTimeResponse(1L, LocalTime.of(15, 00)));
 
         ReservationResponse actualResponse = RestAssured.given().log().all()
                 .contentType(ContentType.JSON).body(request)

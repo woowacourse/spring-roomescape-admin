@@ -1,5 +1,7 @@
 package roomescape.domain;
 
+import java.time.LocalDate;
+import java.time.LocalTime;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
@@ -17,10 +19,10 @@ public class ReservationRepository {
     private static final RowMapper<Reservation> ROW_MAPPER = (resultSet, rowNum) -> new Reservation(
             resultSet.getLong("id"),
             resultSet.getString("name"),
-            resultSet.getString("date"),
+            resultSet.getObject("date", LocalDate.class),
             new ReservationTime(
                     resultSet.getLong("time_id"),
-                    resultSet.getString("start_at")));
+                    resultSet.getObject("start_at", LocalTime.class)));
 
     private final JdbcTemplate jdbcTemplate;
     private final SimpleJdbcInsert simpleJdbcInsert;
@@ -34,16 +36,16 @@ public class ReservationRepository {
 
     public Optional<Reservation> findById(Long id) {
         String findSql = """
-                    SELECT
-                        r.id AS id,
-                        name,
-                        date,
-                        t.id AS time_id,
-                        start_at
-                    FROM reservation AS r
-                    INNER JOIN reservation_time AS t
-                    ON r.time_id = t.id
-                    WHERE r.id = ?""";
+                SELECT
+                    r.id AS id,
+                    name,
+                    date,
+                    t.id AS time_id,
+                    start_at
+                FROM reservation AS r
+                INNER JOIN reservation_time AS t
+                ON r.time_id = t.id
+                WHERE r.id = ?""";
 
         try {
             Reservation reservation = jdbcTemplate.queryForObject(findSql, ROW_MAPPER, id);

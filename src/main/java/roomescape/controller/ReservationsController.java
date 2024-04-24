@@ -35,7 +35,7 @@ public class ReservationsController {
 
     @PostMapping
     @ResponseBody
-    public ReservationsResponse addReservationInfo(@RequestBody ReservationsRequest reservationsRequest) {
+    public ReservationsResponse addReservation(@RequestBody ReservationsRequest reservationsRequest) {
         ReservationRepositoryDto requestReservationDto = new ReservationRepositoryDto(null, reservationsRequest.name(), reservationsRequest.date(), reservationsRequest.timeId());
         ReservationRepositoryDto newReservationDto = reservationRepository.add(requestReservationDto);
         Reservation newReservation = reservationRepositoryDtoToReservation(newReservationDto);
@@ -49,7 +49,7 @@ public class ReservationsController {
 
     @DeleteMapping("/{id}")
     @ResponseStatus(HttpStatus.OK)
-    public void deleteReservationInfo(@PathVariable Long id) {
-        reservationRepository.remove(id);
+    public int deleteReservation(@PathVariable Long id) {
+        return reservationRepository.remove(id);
     }
 }

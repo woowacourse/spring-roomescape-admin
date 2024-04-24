@@ -41,7 +41,7 @@ public class TimesController {
     @DeleteMapping("/{id}")
     @ResponseBody
     @ResponseStatus(HttpStatus.OK)
-    public void deleteTimes(@PathVariable Long id) {
-        reservationTimeRepository.remove(id);
+    public int deleteTimes(@PathVariable Long id) {
+        return reservationTimeRepository.remove(id);
     }
 }

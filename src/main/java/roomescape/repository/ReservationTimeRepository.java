@@ -50,8 +50,8 @@ public class ReservationTimeRepository {
         });
     }
 
-    public void remove(Long id) {
+    public int remove(Long id) {
         String SQL = "DELETE FROM reservation_time WHERE id = ?";
-        jdbcTemplate.update(SQL, id);
+        return jdbcTemplate.update(SQL, id);
     }
 }

@@ -46,7 +46,6 @@ public class H2ReservationTimeRepository implements ReservationTimeRepository {
         } catch (EmptyResultDataAccessException e) {
             return Optional.empty();
         }
-
     }
 
     @Override

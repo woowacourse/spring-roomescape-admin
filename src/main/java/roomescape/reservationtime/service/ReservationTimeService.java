@@ -14,14 +14,18 @@ public class ReservationTimeService {
         this.reservationTimeRepository = reservationTimeRepository;
     }
 
-    public Long createReservationTime(final CreateReservationTimeRequest createReservationTimeRequest) {
-        return reservationTimeRepository.save(createReservationTimeRequest.toReservationTime());
-    }
-
     public List<FindReservationTimeResponse> getReservationTimes() {
         return reservationTimeRepository.findAll().stream()
                 .map(FindReservationTimeResponse::of)
                 .toList();
+    }
+
+    public FindReservationTimeResponse getReservationTime(final Long id) {
+        return FindReservationTimeResponse.of(reservationTimeRepository.findById(id));
+    }
+
+    public Long createReservationTime(final CreateReservationTimeRequest createReservationTimeRequest) {
+        return reservationTimeRepository.save(createReservationTimeRequest.toReservationTime());
     }
 
     public void deleteById(final Long id) {

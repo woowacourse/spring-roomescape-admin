@@ -2,26 +2,25 @@ package roomescape.repository;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertTrue;
-import static roomescape.ReservationTestSetting.createReservation;
-import static roomescape.ReservationTestSetting.createReservationTime;
-import static roomescape.ReservationTestSetting.isEqualsReservation;
+import static roomescape.TestSetting.createReservation;
+import static roomescape.TestSetting.createReservationTime;
+import static roomescape.TestSetting.isEqualsReservation;
 
 import java.util.List;
-import org.junit.jupiter.api.BeforeAll;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayNameGeneration;
 import org.junit.jupiter.api.DisplayNameGenerator;
 import org.junit.jupiter.api.Test;
-import org.junit.jupiter.api.TestInstance;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.boot.test.context.SpringBootTest.WebEnvironment;
 import org.springframework.test.annotation.DirtiesContext;
 import org.springframework.transaction.annotation.Transactional;
 import roomescape.domain.Reservation;
 import roomescape.domain.ReservationTime;
 
-@SpringBootTest
-@DirtiesContext
-@TestInstance(TestInstance.Lifecycle.PER_CLASS)
+@SpringBootTest(webEnvironment = WebEnvironment.RANDOM_PORT)
+@DirtiesContext(classMode = DirtiesContext.ClassMode.BEFORE_EACH_TEST_METHOD)
 @DisplayNameGeneration(DisplayNameGenerator.ReplaceUnderscores.class)
 class JdbcReservationRepositoryTest {
 
@@ -31,8 +30,8 @@ class JdbcReservationRepositoryTest {
     @Autowired
     JdbcReservationTimeRepository jdbcReservationTimeRepository;
 
-    @BeforeAll
-    void beforeAll() {
+    @BeforeEach
+    void beforeEach() {
         ReservationTime reservationTime = createReservationTime();
         jdbcReservationTimeRepository.save(reservationTime);
     }

@@ -3,6 +3,7 @@ package roomescape.admin.reservation.controller;
 import java.util.List;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
+import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -13,6 +14,7 @@ import roomescape.admin.reservation.controller.dto.request.ReservationTimeReques
 import roomescape.admin.reservation.controller.dto.response.ReservationTimeResponse;
 import roomescape.admin.reservation.entity.ReservationTime;
 import roomescape.admin.reservation.service.ReservationTimeService;
+import roomescape.admin.reservation.service.exception.NoSuchDeleteIdException;
 
 @RequestMapping("/times")
 @RestController
@@ -27,8 +29,7 @@ public class ReservationTimeController {
     @GetMapping
     public ResponseEntity<List<ReservationTimeResponse>> findAll() {
         List<ReservationTimeResponse> reservationTimeResponse = reservationTimeService.findAll().stream()
-                .map(ReservationTimeResponse::from)
-                .toList();
+                .map(ReservationTimeResponse::from).toList();
 
         return ResponseEntity.ok(reservationTimeResponse);
     }
@@ -41,11 +42,14 @@ public class ReservationTimeController {
     }
 
     @DeleteMapping("/{id}")
-    public ResponseEntity<?> delete(@PathVariable("id") Long id) {
-        int deleteCount = reservationTimeService.delete(id);
-        if (deleteCount == 0) {
-            return ResponseEntity.ok("삭제할 시간이 존재하지 않습니다.");
-        }
+    public ResponseEntity<Void> delete(@PathVariable("id") Long id) {
+        reservationTimeService.delete(id);
+
         return ResponseEntity.ok().build();
+    }
+
+    @ExceptionHandler
+    private ResponseEntity<String> handleNoSuchDeleteIdException(NoSuchDeleteIdException e) {
+        return ResponseEntity.ok(e.getMessage());
     }
 }

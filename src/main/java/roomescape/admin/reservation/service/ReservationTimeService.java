@@ -4,6 +4,7 @@ import java.util.List;
 import org.springframework.stereotype.Service;
 import roomescape.admin.reservation.entity.ReservationTime;
 import roomescape.admin.reservation.repository.ReservationTimeRepository;
+import roomescape.admin.reservation.service.exception.NoSuchDeleteIdException;
 
 @Service
 public class ReservationTimeService {
@@ -22,7 +23,10 @@ public class ReservationTimeService {
         return reservationTimeRepository.save(new ReservationTime(reservationTime.getStartAt()));
     }
 
-    public int delete(Long id) {
-        return reservationTimeRepository.delete(id);
+    public void delete(Long id) {
+        int rowCount = reservationTimeRepository.delete(id);
+        if (rowCount == 0) {
+            throw new NoSuchDeleteIdException();
+        }
     }
 }

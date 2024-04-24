@@ -17,6 +17,10 @@ public class TimeService {
         return timeRepository.readAll();
     }
 
+    public ReservationTime findById(long id) {
+        return timeRepository.findById(id);
+    }
+
     public ReservationTime save(ReservationTime reservationTime) {
         return timeRepository.save(reservationTime);
     }

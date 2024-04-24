@@ -22,6 +22,12 @@ public class ConsoleRunner implements CommandLineRunner {
 
     @Override
     public void run(String... args) {
+        Thread thread = new Thread(this::runConsoleReservation);
+        thread.setDaemon(false);
+        thread.start();
+    }
+
+    private void runConsoleReservation() {
         while (true) {
             handleException();
         }
@@ -33,6 +39,8 @@ public class ConsoleRunner implements CommandLineRunner {
             dispatcherConsole.doDispatch(consoleCommand);
         } catch (IllegalArgumentException e) {
             outputView.printError(e.getMessage());
+        } catch (Exception e) {
+            outputView.printError("서버 오류입니다.");
         }
     }
 }

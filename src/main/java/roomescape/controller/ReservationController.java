@@ -28,19 +28,9 @@ public class ReservationController {
     }
 
     @GetMapping
-    public List<ReservationResponse> getReservations() {
-        return reservationService.findAll();
+    public List<ReservationResponseV2> getReservations2() {
+        return reservationService.findAll2();
     }
-
-//    @PostMapping
-//    public ResponseEntity<ReservationResponse> save(@RequestBody final ReservationRequest reservationRequest) {
-//        final ReservationResponse reservationResponse = reservationService.save(reservationRequest);
-//        final URI uri = UriComponentsBuilder.fromPath("/reservations/{timeId}")
-//                .buildAndExpand(reservationResponse.id())
-//                .toUri();
-//        return ResponseEntity.created(uri)
-//                .body(reservationResponse);
-//    }
 
     @PostMapping
     public ResponseEntity<ReservationResponseV2> saveV2(@RequestBody final ReservationRequestV2 reservationRequestV2) {

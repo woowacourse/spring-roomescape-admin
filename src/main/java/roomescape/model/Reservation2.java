@@ -1,6 +1,7 @@
 package roomescape.model;
 
 import java.time.LocalDate;
+import java.time.LocalTime;
 
 public class Reservation2 {
 
@@ -14,6 +15,13 @@ public class Reservation2 {
         this.name = name;
         this.date = date;
         this.time = time;
+    }
+
+    public Reservation2(final Long id, final String name, final String date, final Long timeId, final String startAt) {
+        this.id = id;
+        this.name = name;
+        this.date = LocalDate.parse(date);
+        this.time = new ReservationTime(timeId, LocalTime.parse(startAt));
     }
 
     public static Reservation2 create(final String name, final String date, final ReservationTime time) {

@@ -83,6 +83,29 @@ public class ReservationDao {
                 ));
     }
 
+    public List<Reservation2> findAll2() {
+        final String sql = """
+                SELECT
+                    r.id as reservation_id,
+                    r.name,
+                    r.date,
+                    t.id as time_id,
+                    t.start_at as time_value
+                FROM reservation as r
+                inner join reservation_time as t
+                on r.time_id = t.id""";
+
+        return jdbcTemplate.query(
+                sql,
+                (resultSet, rowNum) -> new Reservation2(
+                        resultSet.getLong("id"),
+                        resultSet.getString("name"),
+                        resultSet.getString("date"),
+                        resultSet.getLong("time_id"),
+                        resultSet.getString("time_value")
+                ));
+    }
+
     public void remove(final long id) {
         final String sql = "DELETE FROM reservation WHERE id = ?";
         jdbcTemplate.update(sql, id);

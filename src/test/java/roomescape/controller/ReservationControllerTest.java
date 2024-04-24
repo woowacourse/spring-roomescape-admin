@@ -1,65 +1,89 @@
 package roomescape.controller;
 
-import static org.hamcrest.Matchers.is;
-
-import io.restassured.RestAssured;
-import io.restassured.http.ContentType;
-import java.util.HashMap;
-import java.util.Map;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
-import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.test.annotation.DirtiesContext;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
+import org.springframework.context.annotation.Import;
+import org.springframework.http.MediaType;
+import org.springframework.test.web.servlet.MockMvc;
+import roomescape.controller.request.ReservationRequest;
+import roomescape.domain.Reservation;
+import roomescape.domain.ReservationTime;
+import roomescape.fake.InMemoryReservationRepository;
+import roomescape.fake.InMemoryReservationTimeRepository;
+import roomescape.repository.ReservationRepository;
+import roomescape.repository.ReservationTimeRepository;
 
-@SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.DEFINED_PORT)
-@DirtiesContext(classMode = DirtiesContext.ClassMode.BEFORE_EACH_TEST_METHOD)
+import java.time.LocalDate;
+import java.time.LocalTime;
+
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.delete;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
+
+@Import(value = {InMemoryReservationRepository.class,
+        InMemoryReservationTimeRepository.class})
+@WebMvcTest(ReservationController.class)
 class ReservationControllerTest {
-    @DisplayName("저장된 예약 리스트를 조회한다.")
-    @Test
-    void reservationsTest() {
-        RestAssured.given().log().all()
-                .when().get("/admin/reservation")
-                .then().log().all()
-                .statusCode(200);
+    @Autowired
+    private MockMvc mvc;
 
-        RestAssured.given().log().all()
-                .when().get("/reservations")
-                .then().log().all()
-                .statusCode(200)
-                .body("size()", is(0));
+    @Autowired
+    private ObjectMapper objectMapper;
+
+    @Autowired
+    private ReservationRepository reservationRepository;
+
+    @Autowired
+    private ReservationTimeRepository reservationTimeRepository;
+
+    @DisplayName("예약 목록 조회 요청 시, 200 OK를 응답한다")
+    @Test
+    void findAll() throws Exception {
+        this.mvc.perform(get("/reservations"))
+                .andExpect(status().isOk());
     }
 
-    @DisplayName("지정한 예약을 추가하고 삭제한다.")
+    @DisplayName("예약 추가 요청 시, 201 Created를 응답한다")
     @Test
-    void reservationAddRemoveTest() {
-        Map<String, String> params = new HashMap<>();
-        params.put("name", "브라운");
-        params.put("date", "2023-08-05");
-        params.put("time", "15:40");
+    void add() throws Exception {
+        reservationTimeRepository.save(new ReservationTime(LocalTime.of(9, 0)));
 
-        RestAssured.given().log().all()
-                .contentType(ContentType.JSON)
-                .body(params)
-                .when().post("/reservations")
-                .then().log().all()
-                .statusCode(200)
-                .body("id", is(1));
+        String requestBody = objectMapper.writeValueAsString(new ReservationRequest(
+                "비밥",
+                LocalDate.now().plusDays(1),
+                1L));
 
-        RestAssured.given().log().all()
-                .when().get("/reservations")
-                .then().log().all()
-                .statusCode(200)
-                .body("size()", is(1));
+        this.mvc.perform(post("/reservations")
+                        .content(requestBody)
+                        .contentType(MediaType.APPLICATION_JSON))
+                .andExpect(status().isCreated());
+    }
 
-        RestAssured.given().log().all()
-                .when().delete("/reservations/1")
-                .then().log().all()
-                .statusCode(200);
+    @DisplayName("존재하는 예약에 대한 삭제 요청 시, 204 No Content를 응답한다")
+    @Test
+    void delete_() throws Exception {
+        Reservation savedReservation = reservationRepository.save(new Reservation(
+                "비밥",
+                LocalDate.now().plusDays(1),
+                LocalTime.of(9, 0)));
 
-        RestAssured.given().log().all()
-                .when().get("/reservations")
-                .then().log().all()
-                .statusCode(200)
-                .body("size()", is(0));
+        this.mvc.perform(delete("/reservations/" + savedReservation.getId()))
+                .andExpect(status().isNoContent());
+    }
+
+    @DisplayName("존재하지 않는 예약에 대한 삭제 요청 시, 204 No Content를 응답한다")
+    @Test
+    void delete_notExist() throws Exception {
+        Reservation savedReservation = reservationRepository.save(new Reservation(
+                "비밥",
+                LocalDate.now().plusDays(1),
+                LocalTime.of(9, 0)));
+
+        this.mvc.perform(delete("/reservations/" + (1 + savedReservation.getId())))
+                .andExpect(status().isNoContent());
     }
 }

@@ -4,13 +4,17 @@ import static org.assertj.core.api.Assertions.assertThat;
 
 import java.time.LocalDate;
 import java.time.LocalTime;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
+import javax.sql.DataSource;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.jdbc.core.JdbcTemplate;
+import org.springframework.jdbc.core.simple.SimpleJdbcInsert;
 import org.springframework.test.annotation.DirtiesContext;
 import roomescape.model.Reservation;
 import roomescape.model.ReservationTime;
@@ -24,6 +28,13 @@ class ReservationDAOTest {
 
     @Autowired
     ReservationDAO reservationDAO;
+
+    @Autowired
+    DataSource dataSource;
+
+    SimpleJdbcInsert reservationTimeInsertActor;
+
+    SimpleJdbcInsert reservationInsertActor;
 
     @BeforeEach
     void setUp() {
@@ -50,10 +61,32 @@ class ReservationDAOTest {
                 );
                 """
         );
-        jdbcTemplate.update("insert into reservation_time (start_at) values (?)", "10:00");
-        jdbcTemplate.update("insert into reservation_time (start_at) values (?)", "11:00");
-        jdbcTemplate.update("insert into reservation (name, date, time_id) values (?, ?, ?)", "브라운", "2023-08-05", "1");
-        jdbcTemplate.update("insert into reservation (name, date, time_id) values (?, ?, ?)", "리사", "2023-08-01", "2");
+
+        reservationTimeInsertActor = new SimpleJdbcInsert(dataSource)
+                .withTableName("reservation_time")
+                .usingGeneratedKeyColumns("id");
+        reservationInsertActor = new SimpleJdbcInsert(dataSource)
+                .withTableName("reservation")
+                .usingGeneratedKeyColumns("id");
+
+        insertReservationTime("10:00");
+        insertReservationTime("11:00");
+        insertToReservation("브라운", "2023-08-05", "1");
+        insertToReservation("리사", "2023-08-01", "2");
+    }
+
+    private void insertReservationTime(String startAt) {
+        Map<String, Object> parameters = new HashMap<>(1);
+        parameters.put("start_at", startAt);
+        reservationTimeInsertActor.execute(parameters);
+    }
+
+    private void insertToReservation(String name, String date, String timeId) {
+        Map<String, Object> parameters = new HashMap<>(3);
+        parameters.put("name", name);
+        parameters.put("date", date);
+        parameters.put("time_id", timeId);
+        reservationInsertActor.execute(parameters);
     }
 
     @DisplayName("모든 예약을 조회한다")

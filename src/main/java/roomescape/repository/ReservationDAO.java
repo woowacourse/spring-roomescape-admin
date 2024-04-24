@@ -1,10 +1,11 @@
 package roomescape.repository;
 
-import java.sql.PreparedStatement;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
+import javax.sql.DataSource;
 import org.springframework.jdbc.core.JdbcTemplate;
-import org.springframework.jdbc.support.GeneratedKeyHolder;
-import org.springframework.jdbc.support.KeyHolder;
+import org.springframework.jdbc.core.simple.SimpleJdbcInsert;
 import org.springframework.stereotype.Repository;
 import roomescape.model.Reservation;
 import roomescape.model.ReservationTime;
@@ -14,8 +15,13 @@ public class ReservationDAO {
 
     private final JdbcTemplate jdbcTemplate;
 
-    public ReservationDAO(JdbcTemplate jdbcTemplate) {
+    private SimpleJdbcInsert insertActor;
+
+    public ReservationDAO(JdbcTemplate jdbcTemplate, DataSource dataSource) {
         this.jdbcTemplate = jdbcTemplate;
+        this.insertActor = new SimpleJdbcInsert(dataSource)
+                .withTableName("reservation")
+                .usingGeneratedKeyColumns("id");
     }
 
     public List<Reservation> selectAllReservations() {
@@ -43,16 +49,12 @@ public class ReservationDAO {
     }
 
     public Reservation insertReservation(Reservation reservation) {
-        String sql = "insert into reservation (name, date, time_id) values (?, ?, ?)";
-        KeyHolder keyHolder = new GeneratedKeyHolder();
-        jdbcTemplate.update(connection -> {
-            PreparedStatement ps = connection.prepareStatement(sql, new String[]{"id"});
-            ps.setString(1, reservation.getName());
-            ps.setString(2, reservation.getDate().toString());
-            ps.setString(3, String.valueOf(reservation.getTime().getId()));
-            return ps;
-        }, keyHolder);
-        reservation.setId(keyHolder.getKey().longValue());
+        Map<String, Object> parameters = new HashMap<>(3);
+        parameters.put("name", reservation.getName());
+        parameters.put("date", reservation.getDate());
+        parameters.put("time_id", reservation.getTime().getId());
+        Number newId = insertActor.executeAndReturnKey(parameters);
+        reservation.setId(newId.longValue());
         return reservation;
     }
 

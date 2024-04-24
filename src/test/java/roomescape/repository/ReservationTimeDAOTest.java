@@ -3,13 +3,17 @@ package roomescape.repository;
 import static org.assertj.core.api.Assertions.assertThat;
 
 import java.time.LocalTime;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
+import javax.sql.DataSource;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.jdbc.core.JdbcTemplate;
+import org.springframework.jdbc.core.simple.SimpleJdbcInsert;
 import org.springframework.test.annotation.DirtiesContext;
 import roomescape.model.ReservationTime;
 
@@ -21,7 +25,12 @@ class ReservationTimeDAOTest {
     JdbcTemplate jdbcTemplate;
 
     @Autowired
+    DataSource dataSource;
+
+    @Autowired
     ReservationTimeDAO reservationTimeDAO;
+
+    SimpleJdbcInsert insertActor;
 
     @BeforeEach
     void setUp() {
@@ -48,8 +57,18 @@ class ReservationTimeDAOTest {
                 );
                 """
         );
-        jdbcTemplate.update("insert into reservation_time (start_at) values (?)", "10:00");
-        jdbcTemplate.update("insert into reservation_time (start_at) values (?)", "11:00");
+
+        insertActor = new SimpleJdbcInsert(dataSource)
+                .withTableName("reservation_time")
+                .usingGeneratedKeyColumns("id");
+        insertToReservationTime("10:00");
+        insertToReservationTime("11:00");
+    }
+
+    private void insertToReservationTime(String startAt) {
+        Map<String, Object> parameters = new HashMap<>(1);
+        parameters.put("start_at", startAt);
+        insertActor.execute(parameters);
     }
 
     @DisplayName("모든 예약 시간을 조회한다")
@@ -81,4 +100,6 @@ class ReservationTimeDAOTest {
         Integer count = jdbcTemplate.queryForObject("select count(1) from reservation_time", Integer.class);
         assertThat(count).isEqualTo(1);
     }
+
+
 }

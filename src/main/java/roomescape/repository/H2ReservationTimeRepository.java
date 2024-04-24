@@ -1,5 +1,6 @@
 package roomescape.repository;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.support.GeneratedKeyHolder;
 import org.springframework.jdbc.support.KeyHolder;
@@ -13,6 +14,7 @@ import java.util.List;
 public class H2ReservationTimeRepository {
     private final JdbcTemplate jdbcTemplate;
 
+    @Autowired
     public H2ReservationTimeRepository(JdbcTemplate jdbcTemplate) {
         this.jdbcTemplate = jdbcTemplate;
     }

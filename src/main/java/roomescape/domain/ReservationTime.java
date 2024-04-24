@@ -5,6 +5,7 @@ import com.fasterxml.jackson.annotation.JsonCreator;
 import java.util.Objects;
 
 public class ReservationTime {
+
     private final Long id;
     private final String startAt;
 

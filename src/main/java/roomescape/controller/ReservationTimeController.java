@@ -20,6 +20,7 @@ import java.util.List;
 @RestController
 @RequestMapping("/times")
 public class ReservationTimeController {
+
     private final H2ReservationTimeRepository repository;
 
     @Autowired

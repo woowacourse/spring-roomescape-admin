@@ -10,9 +10,11 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import roomescape.domain.Reservation;
+import roomescape.domain.ReservationTime;
 import roomescape.dto.ReservationRequest;
 import roomescape.dto.ReservationResponse;
 import roomescape.repository.H2ReservationRepository;
+import roomescape.repository.H2ReservationTimeRepository;
 
 import java.net.URI;
 import java.util.List;
@@ -21,23 +23,26 @@ import java.util.List;
 @RequestMapping("/reservations")
 public class ReservationController {
 
-    private final H2ReservationRepository repository;
+    private final H2ReservationRepository reservationRepository;
+    private final H2ReservationTimeRepository reservationTimeRepository;
 
     @Autowired
-    public ReservationController(H2ReservationRepository repository) {
-        this.repository = repository;
+    public ReservationController(H2ReservationRepository reservationRepository, H2ReservationTimeRepository reservationTimeRepository) {
+        this.reservationRepository = reservationRepository;
+        this.reservationTimeRepository = reservationTimeRepository;
     }
 
     @GetMapping
     public List<ReservationResponse> findAllReservations() {
-        return repository.findAll().stream()
+        return reservationRepository.findAll().stream()
                 .map(ReservationResponse::from)
                 .toList();
     }
 
     @PostMapping
     public ResponseEntity<ReservationResponse> addReservation(@RequestBody ReservationRequest reservationRequest) {
-        Reservation reservation = repository.save(reservationRequest.toReservation());
+        ReservationTime time = reservationTimeRepository.findById(reservationRequest.timeId());
+        Reservation reservation = reservationRepository.save(reservationRequest.toReservation(time));
         return ResponseEntity.ok()
                 .location(URI.create("/reservations/" + reservation.getId()))
                 .body(ReservationResponse.from(reservation));
@@ -45,6 +50,6 @@ public class ReservationController {
 
     @DeleteMapping("/{id}")
     public void deleteReservation(@PathVariable Long id) {
-        repository.deleteById(id);
+        reservationRepository.deleteById(id);
     }
 }

@@ -1,10 +1,12 @@
 package roomescape.repository;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.support.GeneratedKeyHolder;
 import org.springframework.jdbc.support.KeyHolder;
 import org.springframework.stereotype.Repository;
 import roomescape.domain.Reservation;
+import roomescape.domain.ReservationTime;
 
 import java.sql.PreparedStatement;
 import java.util.List;
@@ -14,42 +16,51 @@ public class H2ReservationRepository {
 
     private final JdbcTemplate jdbcTemplate;
 
+    @Autowired
     public H2ReservationRepository(JdbcTemplate jdbcTemplate) {
         this.jdbcTemplate = jdbcTemplate;
     }
 
     public List<Reservation> findAll() {
-        String sql = "SELECT id, name, date, time FROM reservation";
+        String sql = "SELECT r.id AS reservation_id, r.name, r.date, t.id AS time_id, t.start_at AS time_value " +
+                "FROM reservation AS r " +
+                "INNER JOIN reservation_time AS t " +
+                "ON r.time_id = t.id";
+
         return jdbcTemplate.query(sql,
                 (rs, rowNum) -> new Reservation(
-                        rs.getLong("id"),
+                        rs.getLong("reservation_id"),
                         rs.getString("name"),
                         rs.getString("date"),
-                        rs.getString("time")
+                        new ReservationTime(rs.getLong("time_id"), rs.getString("time_value"))
                 ));
     }
 
-    public Reservation findById(long id) {
-        String sql = "SELECT id, name, date, time FROM reservation where id = ?";
+    public Reservation findById(long reservationId) {
+        String sql = "SELECT r.id AS reservation_id, r.name, r.date, t.id AS time_id, t.start_at AS time_value " +
+                "FROM reservation AS r " +
+                "INNER JOIN reservation_time AS t " +
+                "ON r.time_id = t.id " +
+                "WHERE r.id = ?";
 
         return jdbcTemplate.queryForObject(sql,
                 (rs, rowNum) -> new Reservation(
                         rs.getLong("id"),
                         rs.getString("name"),
                         rs.getString("date"),
-                        rs.getString("time")
-                ), id);
+                        new ReservationTime(rs.getLong("time_id"), rs.getString("time_value"))
+                ), reservationId);
     }
 
     public Reservation save(Reservation reservation) {
-        String sql = "INSERT INTO reservation(name, date, time) VALUES(?, ?, ?)";
+        String sql = "INSERT INTO reservation(name, date, time_id) VALUES(?, ?, ?)";
         KeyHolder keyHolder = new GeneratedKeyHolder();
 
         jdbcTemplate.update(con -> {
             PreparedStatement ps = con.prepareStatement(sql, new String[]{"id"});
             ps.setString(1, reservation.getName());
             ps.setString(2, reservation.getDate());
-            ps.setString(3, reservation.getTime());
+            ps.setLong(3, reservation.getTime().getId());
             return ps;
         }, keyHolder);
 
@@ -57,8 +68,8 @@ public class H2ReservationRepository {
         return new Reservation(id, reservation.getName(), reservation.getDate(), reservation.getTime());
     }
 
-    public void deleteById(long id) {
+    public void deleteById(long reservationId) {
         String sql = "DELETE FROM reservation WHERE id = ?";
-        jdbcTemplate.update(sql, id);
+        jdbcTemplate.update(sql, reservationId);
     }
 }

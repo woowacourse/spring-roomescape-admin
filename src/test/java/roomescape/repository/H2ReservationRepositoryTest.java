@@ -8,6 +8,7 @@ import org.springframework.boot.test.autoconfigure.jdbc.JdbcTest;
 import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.jdbc.core.JdbcTemplate;
 import roomescape.domain.Reservation;
+import roomescape.domain.ReservationTime;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
@@ -18,16 +19,18 @@ public class H2ReservationRepositoryTest {
     private final JdbcTemplate jdbcTemplate;
     private final H2ReservationRepository repository;
 
-    @BeforeEach
-    void setup() {
-        jdbcTemplate.update("TRUNCATE TABLE reservation");
-        jdbcTemplate.update("INSERT INTO reservation VALUES (0, 'nak', '2024-03-02', '23:22')");
-    }
-
     @Autowired
     public H2ReservationRepositoryTest(JdbcTemplate jdbcTemplate) {
         this.jdbcTemplate = jdbcTemplate;
         this.repository = new H2ReservationRepository(jdbcTemplate);
+    }
+
+    @BeforeEach
+    void setup() {
+        jdbcTemplate.update("TRUNCATE TABLE reservation");
+        jdbcTemplate.update("DELETE FROM reservation_time");
+        jdbcTemplate.update("INSERT INTO reservation_time VALUES (0, '23:00')");
+        jdbcTemplate.update("INSERT INTO reservation VALUES (0, 'nak', '2024-03-02', 0)");
     }
 
     @DisplayName("모든 예약 조회 테스트")
@@ -41,14 +44,15 @@ public class H2ReservationRepositoryTest {
     @Test
     void findByIdTest() {
         assertThat(repository.findById(0L))
-                .isEqualTo(new Reservation(0L, "nak", "2024-03-02", "23:22"));
+                .isEqualTo(new Reservation(0L, "nak", "2024-03-02", new ReservationTime(0L, "23:00")));
     }
 
     @DisplayName("예약 저장 테스트")
     @Test
     void saveTest() {
         // given & when
-        Reservation reservation = repository.save(new Reservation("solar", "2024-04-23", "11:00"));
+        Reservation reservation =
+                repository.save(new Reservation("solar", "2024-04-23", new ReservationTime(0L, "23:00")));
 
         // then
         assertThat(repository.findById(reservation.getId()))

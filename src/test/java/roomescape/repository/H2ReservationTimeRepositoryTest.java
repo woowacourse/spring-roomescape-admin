@@ -12,6 +12,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 
 @JdbcTest
 public class H2ReservationTimeRepositoryTest {
+
     private final JdbcTemplate jdbcTemplate;
     private final H2ReservationTimeRepository repository;
 
@@ -23,7 +24,7 @@ public class H2ReservationTimeRepositoryTest {
 
     @BeforeEach
     void setup() {
-        jdbcTemplate.update("TRUNCATE TABLE reservation_time");
+        jdbcTemplate.update("DELETE FROM reservation_time");
         jdbcTemplate.update("INSERT INTO reservation_time VALUES (0, '11:00')");
     }
 

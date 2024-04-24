@@ -24,6 +24,7 @@ import static org.hamcrest.Matchers.is;
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 @DirtiesContext(classMode = DirtiesContext.ClassMode.BEFORE_EACH_TEST_METHOD)
 public class MissionStepTest {
+
     @LocalServerPort
     int port;
 
@@ -59,14 +60,16 @@ public class MissionStepTest {
 
     @Test
     void 삼단계() {
-        Map<String, String> params = new HashMap<>();
-        params.put("name", "브라운");
-        params.put("date", "2023-08-05");
-        params.put("time", "15:40");
+        jdbcTemplate.update("INSERT INTO reservation_time VALUES (0, '23:00')");
+
+        Map<String, String> reservationParams = new HashMap<>();
+        reservationParams.put("name", "브라운");
+        reservationParams.put("date", "2023-08-05");
+        reservationParams.put("timeId", "0");
 
         RestAssured.given().log().all()
                 .contentType(ContentType.JSON)
-                .body(params)
+                .body(reservationParams)
                 .when().post("/reservations")
                 .then().log().all()
                 .statusCode(200)
@@ -103,7 +106,8 @@ public class MissionStepTest {
 
     @Test
     void 오단계() {
-        jdbcTemplate.update("INSERT INTO reservation (name, date, time) VALUES (?, ?, ?)", "브라운", "2023-08-05", "15:40");
+        jdbcTemplate.update("INSERT INTO reservation_time VALUES (0, '23:00')");
+        jdbcTemplate.update("INSERT INTO reservation (name, date, time_id) VALUES (?, ?, ?)", "브라운", "2023-08-05", "0");
 
         List<Reservation> reservations = RestAssured.given().log().all()
                 .when().get("/reservations")
@@ -118,10 +122,11 @@ public class MissionStepTest {
 
     @Test
     void 육단계() {
+        jdbcTemplate.update("INSERT INTO reservation_time VALUES (0, '23:00')");
         Map<String, String> params = new HashMap<>();
         params.put("name", "브라운");
         params.put("date", "2023-08-05");
-        params.put("time", "10:00");
+        params.put("timeId", "0");
 
         RestAssured.given().log().all()
                 .contentType(ContentType.JSON)
@@ -165,5 +170,28 @@ public class MissionStepTest {
                 .when().delete("/times/1")
                 .then().log().all()
                 .statusCode(200);
+    }
+
+    @Test
+    void 팔단계() {
+        jdbcTemplate.update("INSERT INTO reservation_time VALUES (1, '23:00')");
+        Map<String, Object> reservation = new HashMap<>();
+        reservation.put("name", "브라운");
+        reservation.put("date", "2023-08-05");
+        reservation.put("timeId", 1);
+
+        RestAssured.given().log().all()
+                .contentType(ContentType.JSON)
+                .body(reservation)
+                .when().post("/reservations")
+                .then().log().all()
+                .statusCode(200);
+
+
+        RestAssured.given().log().all()
+                .when().get("/reservations")
+                .then().log().all()
+                .statusCode(200)
+                .body("size()", is(1));
     }
 }

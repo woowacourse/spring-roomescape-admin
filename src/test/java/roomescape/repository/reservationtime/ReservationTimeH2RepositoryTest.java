@@ -5,7 +5,8 @@ import org.springframework.test.annotation.DirtiesContext;
 
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.DEFINED_PORT)
 @DirtiesContext(classMode = DirtiesContext.ClassMode.BEFORE_EACH_TEST_METHOD)
-class ReservationTimeRepositoryTest {
+// TODO: main에 있는 코드들처럼 의존성을 주입 받는 방법?
+class ReservationTimeH2RepositoryTest {
 //
 //    private final ReservationTimeRepository timeRepository;
 //

@@ -16,13 +16,16 @@ public class ReservationService {
 
     private final ReservationTimeDao reservationTimeDao;
 
-    public ReservationService(final ReservationDao reservationDao, final ReservationTimeDao reservationTimeDao) {
+    public ReservationService(
+            final ReservationDao reservationDao,
+            final ReservationTimeDao reservationTimeDao
+    ) {
         this.reservationDao = reservationDao;
         this.reservationTimeDao = reservationTimeDao;
     }
 
-    public Reservation create(ReservationRequest reservationRequest) {
-        Reservation reservation = new Reservation(
+    public Reservation create(final ReservationRequest reservationRequest) {
+        final Reservation reservation = new Reservation(
                 reservationRequest.name(),
                 reservationRequest.date(),
                 reservationTimeDao.findById(reservationRequest.timeId())

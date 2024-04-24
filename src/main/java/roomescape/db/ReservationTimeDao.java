@@ -39,8 +39,7 @@ public class ReservationTimeDao {
                         LocalTime.parse(resultSet.getString("start_at"))), id);
     }
 
-
-    public void deleteById(final long id) {
-        jdbcTemplate.update("delete from reservation_time where id=?", id);
+    public boolean deleteById(final long id) {
+        return jdbcTemplate.update("delete from reservation_time where id=?", id) > 0;
     }
 }

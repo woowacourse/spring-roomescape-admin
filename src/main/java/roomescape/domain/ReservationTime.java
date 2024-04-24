@@ -13,7 +13,7 @@ public class ReservationTime {
         this.startAt = startAt;
     }
 
-    public ReservationTime(Long id, LocalTime startAt) {
+    public ReservationTime(final Long id, final LocalTime startAt) {
         this.id = id;
         this.startAt = startAt;
     }

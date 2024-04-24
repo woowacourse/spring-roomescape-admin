@@ -1,12 +1,12 @@
 package roomescape.repository;
 
-import java.sql.Date;
-import java.sql.PreparedStatement;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
+import javax.sql.DataSource;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;
-import org.springframework.jdbc.support.GeneratedKeyHolder;
-import org.springframework.jdbc.support.KeyHolder;
+import org.springframework.jdbc.core.simple.SimpleJdbcInsert;
 import org.springframework.stereotype.Repository;
 import roomescape.model.Reservation;
 import roomescape.model.ReservationTime;
@@ -27,24 +27,22 @@ public class ReservationRepository {
         );
     };
     private final JdbcTemplate jdbcTemplate;
+    private final SimpleJdbcInsert jdbcInsert;
 
-    public ReservationRepository(JdbcTemplate jdbcTemplate) {
+    public ReservationRepository(JdbcTemplate jdbcTemplate, DataSource dataSource) {
         this.jdbcTemplate = jdbcTemplate;
+        this.jdbcInsert = new SimpleJdbcInsert(dataSource)
+                .withTableName("RESERVATION")
+                .usingGeneratedKeyColumns("id");
     }
 
     public Long createReservation(Reservation reservation) {
-        String sql = "insert into reservation (name, date, time_id) values (?, ?, ?)";
+        Map<String, String> params = new HashMap<>();
+        params.put("name", reservation.getName());
+        params.put("date", reservation.getDate().toString());
+        params.put("time_id", reservation.getTime().getId().toString());
 
-        KeyHolder keyHolder = new GeneratedKeyHolder();
-        jdbcTemplate.update(connection -> {
-            PreparedStatement ps = connection.prepareStatement(sql, new String[]{"id"});
-            ps.setString(1, reservation.getName());
-            ps.setDate(2, Date.valueOf(reservation.getDate()));
-            ps.setLong(3, reservation.getTime().getId());
-            return ps;
-        }, keyHolder);
-
-        return keyHolder.getKey().longValue();
+        return jdbcInsert.executeAndReturnKey(params).longValue();
     }
 
     public List<Reservation> readReservations() {

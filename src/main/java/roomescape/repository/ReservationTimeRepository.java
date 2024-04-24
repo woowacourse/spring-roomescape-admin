@@ -1,12 +1,12 @@
 package roomescape.repository;
 
-import java.sql.PreparedStatement;
-import java.sql.Time;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
+import javax.sql.DataSource;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;
-import org.springframework.jdbc.support.GeneratedKeyHolder;
-import org.springframework.jdbc.support.KeyHolder;
+import org.springframework.jdbc.core.simple.SimpleJdbcInsert;
 import org.springframework.stereotype.Repository;
 import roomescape.model.ReservationTime;
 
@@ -19,22 +19,20 @@ public class ReservationTimeRepository {
         );
     };
     private final JdbcTemplate jdbcTemplate;
+    private final SimpleJdbcInsert jdbcInsert;
 
-    public ReservationTimeRepository(JdbcTemplate jdbcTemplate) {
+    public ReservationTimeRepository(JdbcTemplate jdbcTemplate, DataSource dataSource) {
         this.jdbcTemplate = jdbcTemplate;
+        this.jdbcInsert = new SimpleJdbcInsert(dataSource)
+                .withTableName("RESERVATION_TIME")
+                .usingGeneratedKeyColumns("id");
     }
 
     public Long createTime(ReservationTime reservationTime) {
-        String sql = "insert into reservation_time (start_at) values (?)";
+        Map<String, String> params = new HashMap<>();
+        params.put("start_at", reservationTime.getStartAt().toString());
 
-        KeyHolder keyHolder = new GeneratedKeyHolder();
-        jdbcTemplate.update(connection -> {
-            PreparedStatement ps = connection.prepareStatement(sql, new String[]{"id"});
-            ps.setTime(1, Time.valueOf(reservationTime.getStartAt()));
-            return ps;
-        }, keyHolder);
-
-        return keyHolder.getKey().longValue();
+        return jdbcInsert.executeAndReturnKey(params).longValue();
     }
 
     public List<ReservationTime> readTimes() {

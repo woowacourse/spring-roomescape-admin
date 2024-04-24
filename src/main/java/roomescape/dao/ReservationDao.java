@@ -38,6 +38,16 @@ public class ReservationDao {
         return jdbcTemplate.query(sql, rowMapper);
     }
 
+    public Reservation readReservationById(long id) {
+        String sql = """
+                SELECT reservation.id, reservation.name, reservation.date, reservation.time_id, reservation_time.start_at
+                FROM reservation
+                JOIN reservation_time ON reservation.time_id = reservation_time.id
+                WHERE reservation.id = ?;
+                """;
+        return jdbcTemplate.queryForObject(sql, rowMapper, id);
+    }
+
     public long createReservation(ReservationCreateRequest dto) {
         KeyHolder keyHolder = new GeneratedKeyHolder();
         String sql = "INSERT INTO reservation (name, date, time_id) values (?, ?, ?)";

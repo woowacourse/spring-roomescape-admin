@@ -24,11 +24,12 @@ public class ReservationController {
     }
 
     @PostMapping
-    public ResponseEntity<Void> createReservation(@RequestBody ReservationCreateRequest dto) {
+    public ResponseEntity<Reservation> createReservation(@RequestBody ReservationCreateRequest dto) {
+        Reservation reservation = service.createReservation(dto);
         return ResponseEntity
                 .status(HttpStatus.CREATED)
-                .header("Location", "/reservations/" + service.createReservation(dto))
-                .build();
+                .header("Location", "/reservations/" + reservation.id())
+                .body(reservation);
     }
 
     @DeleteMapping("/{id}")

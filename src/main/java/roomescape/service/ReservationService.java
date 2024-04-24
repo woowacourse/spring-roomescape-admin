@@ -19,8 +19,9 @@ public class ReservationService {
         return dao.readReservations();
     }
 
-    public long createReservation(ReservationCreateRequest dto) {
-        return dao.createReservation(dto);
+    public Reservation createReservation(ReservationCreateRequest dto) {
+        long id = dao.createReservation(dto);
+        return dao.readReservationById(id);
     }
 
     public void deleteReservation(long id) {

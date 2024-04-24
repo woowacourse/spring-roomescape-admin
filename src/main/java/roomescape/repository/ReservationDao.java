@@ -56,15 +56,28 @@ public class ReservationDao {
         return reservation.toReservation(id);
     }
 
-    public Optional<Reservation> findById(final long id) {
+    public Optional<Reservation2> findById(final long id) {
+        final String sql = """
+                SELECT
+                    r.id as reservation_id,
+                    r.name,
+                    r.date,
+                    t.id as time_id,
+                    t.start_at as time_value
+                FROM reservation as r
+                inner join reservation_time as t
+                on r.time_id = t.id
+                where r.id = ?
+                """;
+
         try {
-            final Reservation reservation = jdbcTemplate.queryForObject(
-                    "SELECT id, name, date, time FROM reservation WHERE id = ?",
-                    (resultSet, rowNum) -> new Reservation(
+            final Reservation2 reservation = jdbcTemplate.queryForObject(
+                    sql, (resultSet, rowNum) -> new Reservation2(
                             resultSet.getLong("id"),
                             resultSet.getString("name"),
                             resultSet.getString("date"),
-                            resultSet.getString("time")
+                            resultSet.getLong("time_id"),
+                            resultSet.getString("time_value")
                     ), id);
             return Optional.ofNullable(reservation);
         } catch (final EmptyResultDataAccessException exception) {

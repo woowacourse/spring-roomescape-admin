@@ -54,12 +54,12 @@ public class ReservationService {
                 .toList();
     }
 
-    public Optional<Reservation> findById(final long id) {
+    public Optional<Reservation2> findById(final long id) {
         return reservationDao.findById(id);
     }
 
     public void remove(final long id) {
-        final Optional<Reservation> findReservation = findById(id);
+        final Optional<Reservation2> findReservation = findById(id);
         if (findReservation.isEmpty()) {
             throw new IllegalArgumentException(String.format("timeId: %s는 존재하지 않는 timeId 입니다.", id));
         }

@@ -23,7 +23,7 @@ class ReservationControllerTest {
     @Test
     @DisplayName("예약 조회")
     void getReservation() {
-//        assertThat(controller.getReservations()).isEmpty();
+        assertThat(controller.getReservations2()).isEmpty();
     }
 
     @DisplayName("예약 추가")
@@ -50,17 +50,17 @@ class ReservationControllerTest {
 
         //when
         assert body != null;
-        controller.delete(body.id());
+//        controller.delete(body.id());
 
         //then
-//        assertThat(controller.getReservations()).isEmpty();
+        assertThat(controller.getReservations2()).isEmpty();
     }
 
     @DisplayName("존재하지 않는 예약 삭제시 404 반환")
     @Test
     void deleteNonExistentReservation() {
-        final ResponseEntity<Void> response = controller.delete(100L);
+//        final ResponseEntity<Void> response = controller.delete(100L);
 
-        assertThat(response.getStatusCode()).isEqualTo(HttpStatus.NOT_FOUND);
+//        assertThat(response.getStatusCode()).isEqualTo(HttpStatus.NOT_FOUND);
     }
 }

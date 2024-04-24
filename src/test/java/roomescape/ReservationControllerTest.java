@@ -5,11 +5,9 @@ import io.restassured.http.ContentType;
 import java.util.HashMap;
 import java.util.Map;
 import org.junit.jupiter.api.BeforeAll;
-import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.context.SpringBootTest.WebEnvironment;
-import org.springframework.boot.test.web.server.LocalServerPort;
 import org.springframework.test.annotation.DirtiesContext;
 
 import static org.hamcrest.Matchers.is;
@@ -19,13 +17,6 @@ import static org.hamcrest.Matchers.is;
 class ReservationControllerTest {
 
     private static Map<String, String> params;
-//    @LocalServerPort
-//    int port;
-//
-//    @BeforeEach
-//    void beforeEach() {
-//        RestAssured.port = port;
-//    }
 
     @BeforeAll
     static void setUp() {

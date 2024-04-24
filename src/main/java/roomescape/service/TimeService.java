@@ -28,4 +28,14 @@ public class TimeService {
         timeDao.save(time);
         return TimeSaveResponse.from(time);
     }
+
+    public void deleteTime(Long id) {
+        Time time = findTimeById(id);
+        timeDao.delete(time);
+    }
+
+    private Time findTimeById(Long id) {
+        return timeDao.findById(id)
+                .orElseThrow();
+    }
 }

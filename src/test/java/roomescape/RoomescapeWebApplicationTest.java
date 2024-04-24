@@ -8,10 +8,15 @@ import org.springframework.beans.factory.NoSuchBeanDefinitionException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.context.ApplicationContext;
+import roomescape.config.WebConfig;
 import roomescape.controller.console.ReservationConsoleController;
 
-@SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.NONE)
-class RoomescapeApplicationTest {
+@SpringBootTest(
+        classes = WebConfig.class,
+        webEnvironment = SpringBootTest.WebEnvironment.NONE,
+        properties = "spring.main.allow-bean-definition-overriding=true"
+)
+class RoomescapeWebApplicationTest {
 
     @Autowired
     private ApplicationContext context;

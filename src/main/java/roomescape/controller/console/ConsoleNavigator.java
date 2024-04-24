@@ -5,22 +5,22 @@ import java.util.Map;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnBean;
 import org.springframework.context.annotation.Bean;
-import org.springframework.stereotype.Controller;
+import org.springframework.stereotype.Component;
 import roomescape.RoomescapeConsoleApplication;
 import roomescape.view.InputView;
 import roomescape.view.OutputView;
 import roomescape.view.command.AdminCommand;
 
-@Controller
+@Component
 @ConditionalOnBean(RoomescapeConsoleApplication.class)
-public class ConsoleController {
+public class ConsoleNavigator {
 
     private final ReservationConsoleController reservationController;
     private final TimeSlotConsoleController timeSlotController;
     private final Map<AdminCommand, CommandExecutor> commandExecutors;
 
-    public ConsoleController(ReservationConsoleController reservationController,
-                             TimeSlotConsoleController timeSlotController) {
+    public ConsoleNavigator(ReservationConsoleController reservationController,
+                            TimeSlotConsoleController timeSlotController) {
         this.reservationController = reservationController;
         this.timeSlotController = timeSlotController;
         this.commandExecutors = new EnumMap<>(AdminCommand.class);

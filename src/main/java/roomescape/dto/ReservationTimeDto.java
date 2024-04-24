@@ -1,7 +1,7 @@
 package roomescape.dto;
 
 import java.time.format.DateTimeFormatter;
-import roomescape.domain.time.ReservationTime;
+import roomescape.domain.ReservationTime;
 
 public record ReservationTimeDto(Long id, String startAt) {
     private static final DateTimeFormatter DATE_TIME_FORMATTER = DateTimeFormatter.ofPattern("HH:mm");

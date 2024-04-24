@@ -5,6 +5,7 @@ import static org.hamcrest.Matchers.is;
 
 import java.time.LocalDate;
 import java.time.LocalTime;
+import java.util.Map;
 
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -38,7 +39,7 @@ class ReservationControllerTest {
     void create() {
         RestAssured.given().log().all()
                 .contentType(ContentType.JSON)
-                .body(reservationDto())
+                .body(reservationParams())
                 .when().post("/reservations")
                 .then().log().all()
                 .statusCode(201)
@@ -46,7 +47,7 @@ class ReservationControllerTest {
 
         RestAssured.given().log().all()
                 .contentType(ContentType.JSON)
-                .body(reservationDto())
+                .body(reservationParams())
                 .when().post("/reservations")
                 .then().log().all()
                 .statusCode(201)
@@ -76,12 +77,11 @@ class ReservationControllerTest {
         assertThat(countAfterDelete).isEqualTo(0);
     }
 
-    static ReservationDto reservationDto() {
-        return new ReservationDto(
-                null,
-                "브라운",
-                LocalDate.parse("2023-08-05"),
-                LocalTime.parse("15:40")
+    static Map<String, String> reservationParams() {
+        return Map.of(
+                "name", "브라운",
+                "date", "2023-08-05",
+                "time", "15:40"
         );
     }
 }

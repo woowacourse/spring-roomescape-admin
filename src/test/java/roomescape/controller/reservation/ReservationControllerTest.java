@@ -28,14 +28,23 @@ class ReservationControllerTest {
     @Test
     @DisplayName("Reservation을 추가한다.")
     void addReservation() {
-        Map<String, String> params = new HashMap<>();
-        params.put("name", "브라운");
-        params.put("date", "2023-08-05");
-        params.put("time", "15:40");
-
+        //given
+        Map<String, String> timeParams = new HashMap<>();
+        timeParams.put("startAt", "10:00");
         RestAssured.given().log().all()
                 .contentType(ContentType.JSON)
-                .body(params)
+                .body(timeParams)
+                .when().post("/times");
+
+        Map<String, String> reservationParams = new HashMap<>();
+        reservationParams.put("name", "브라운");
+        reservationParams.put("date", "2023-08-05");
+        reservationParams.put("timeId", "1");
+
+        //when & then
+        RestAssured.given().log().all()
+                .contentType(ContentType.JSON)
+                .body(reservationParams)
                 .when().post("/reservations")
                 .then().log().all()
                 .statusCode(201)
@@ -47,14 +56,20 @@ class ReservationControllerTest {
     @DisplayName("Reservation을 삭제한다.")
     void deleteReservation() {
         //given
-        Map<String, String> params = new HashMap<>();
-        params.put("name", "브라운");
-        params.put("date", "2023-08-05");
-        params.put("time", "15:40");
-
+        Map<String, String> timeParams = new HashMap<>();
+        timeParams.put("startAt", "10:00");
         RestAssured.given().log().all()
                 .contentType(ContentType.JSON)
-                .body(params)
+                .body(timeParams)
+                .when().post("/times");
+
+        Map<String, String> reservationParams = new HashMap<>();
+        reservationParams.put("name", "브라운");
+        reservationParams.put("date", "2023-08-05");
+        reservationParams.put("timeId", "1");
+        RestAssured.given().log().all()
+                .contentType(ContentType.JSON)
+                .body(reservationParams)
                 .when().post("/reservations");
 
         //when

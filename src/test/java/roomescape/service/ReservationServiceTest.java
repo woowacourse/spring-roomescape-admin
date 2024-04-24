@@ -60,10 +60,10 @@ class ReservationServiceTest {
     
     @Test
     @DisplayName("예약을 취소한다.")
-    void cancelReservation() {
+    void deleteReservation() {
         final Long id = getIdAfterCreateReservation();
 
-        reservationService.cancelReservation(id);
+        reservationService.deleteReservation(id);
         final List<Reservation> actual = reservationRepository.findAll();
 
         assertThat(actual).hasSize(0);

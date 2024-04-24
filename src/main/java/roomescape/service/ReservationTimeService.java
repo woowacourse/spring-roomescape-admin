@@ -30,7 +30,7 @@ public class ReservationTimeService {
                 .collect(Collectors.toList());
     }
 
-    public void cancelReservationTime(final Long id) {
+    public void deleteReservationTime(final Long id) {
         reservationTimeRepository.deleteById(id);
     }
 }

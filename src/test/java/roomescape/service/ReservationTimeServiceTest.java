@@ -50,10 +50,10 @@ class ReservationTimeServiceTest {
 
     @Test
     @DisplayName("예약 시간을 취소한다.")
-    void cancelReservationTime() {
+    void deleteReservationTime() {
         final Long id = createInitialReservationTime();
 
-        reservationTimeService.cancelReservationTime(id);
+        reservationTimeService.deleteReservationTime(id);
         final List<ReservationTime> actual = reservationTimeRepository.findAll();
 
         assertThat(actual).hasSize(0);

@@ -56,7 +56,7 @@ public class RoomescapeRestController {
         Long id = jdbcInsert.executeAndReturnKey(params).longValue();
         Reservation reservation = reservationRequest.toReservation(id);
         return ResponseEntity.created(URI.create("/reservations/" + id))
-                .body(new ReservationResponse(reservation, id));
+                .body(new ReservationResponse(reservation));
     }
 
     @DeleteMapping("/reservations/{id}")

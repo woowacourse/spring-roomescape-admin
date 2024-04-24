@@ -5,7 +5,9 @@ import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;
 import org.springframework.jdbc.core.simple.SimpleJdbcInsert;
 import org.springframework.stereotype.Repository;
+import roomescape.domain.Name;
 import roomescape.domain.Reservation;
+import roomescape.domain.ReservationDate;
 import roomescape.domain.ReservationTime;
 
 import java.time.LocalTime;
@@ -18,8 +20,8 @@ public class ReservationSqlRepository implements ReservationRepository {
     private static final RowMapper<Reservation> mapper = (resultset, rowNum) ->
             new Reservation(
                     resultset.getLong("id"),
-                    resultset.getString("name"),
-                    resultset.getString("date"),
+                    new Name(resultset.getString("name")),
+                    ReservationDate.from(resultset.getString("date")),
                     new ReservationTime(
                             resultset.getLong("time_id"),
                             LocalTime.parse(resultset.getString("time_value"))
@@ -54,8 +56,8 @@ public class ReservationSqlRepository implements ReservationRepository {
         try {
             Map<String, Object> params = new HashMap<>();
             params.put("id", null);
-            params.put("name", reservation.getName());
-            params.put("date", reservation.getDate());
+            params.put("name", reservation.getNameAsString());
+            params.put("date", reservation.getDateAsString());
             params.put("time_id", reservationTimeId);
 
             return jdbcInsert.executeAndReturnKey(params)
@@ -79,16 +81,16 @@ public class ReservationSqlRepository implements ReservationRepository {
     @Override
     public Reservation findById(final long id) {
         return jdbcTemplate.queryForObject("""
-            SELECT
-                r.id as reservation_id,
-                r.name,
-                r.date,
-                t.id as time_id,
-                t.start_at as time_value
-            FROM reservation as r
-            INNER JOIN reservation_time as t
-            ON r.time_id = t.id
-            WHERE r.id = ?;
-            """, mapper, id);
+                SELECT
+                    r.id as reservation_id,
+                    r.name,
+                    r.date,
+                    t.id as time_id,
+                    t.start_at as time_value
+                FROM reservation as r
+                INNER JOIN reservation_time as t
+                ON r.time_id = t.id
+                WHERE r.id = ?;
+                """, mapper, id);
     }
 }

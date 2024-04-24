@@ -2,8 +2,8 @@ package roomescape.domain;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
 
+import java.time.DateTimeException;
 import java.time.LocalTime;
-import java.time.format.DateTimeParseException;
 import java.util.Objects;
 
 public class ReservationTime {
@@ -17,9 +17,13 @@ public class ReservationTime {
     }
 
     public static ReservationTime from(final String startAt) {
+        return ReservationTime.from(null, startAt);
+    }
+
+    public static ReservationTime from(final Long id, final String startAt) {
         try {
-            return new ReservationTime(null, LocalTime.parse(startAt));
-        } catch (DateTimeParseException e) {
+            return new ReservationTime(id, LocalTime.parse(startAt));
+        } catch (DateTimeException e) {
             throw new IllegalArgumentException(String.format("%s는 정해진 형식이 아닙니다.", startAt), e);
         }
     }

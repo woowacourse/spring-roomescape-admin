@@ -6,27 +6,42 @@ import java.util.Objects;
 
 public class Reservation {
     private final Long id;
-    private final String name;
-    private final String date;
+    private final Name name;
+    private final ReservationDate date;
     private final ReservationTime time;
 
-    public Reservation(final Long id, final String name, final String date, final ReservationTime time) {
+    public Reservation(final Long id, final Name name, final ReservationDate date, final ReservationTime time) {
+        validate(name, date, time);
         this.id = id;
         this.name = name;
         this.date = date;
         this.time = time;
     }
 
+    public static Reservation from(final Long id, final String name, final String date, final ReservationTime time) {
+        return new Reservation(id, new Name(name), ReservationDate.from(date), time);
+    }
+
+    private void validate(final Name name, final ReservationDate date, final ReservationTime time) {
+        try {
+            Objects.requireNonNull(name, "이름이 공백입니다");
+            Objects.requireNonNull(date, "날짜가 공백입니다");
+            Objects.requireNonNull(time, "시간이 공백입니다");
+        } catch (NullPointerException e) {
+            throw new IllegalArgumentException(e);
+        }
+    }
+
     public Long getId() {
         return id;
     }
 
-    public String getName() {
-        return name;
+    public String getNameAsString() {
+        return name.value();
     }
 
-    public String getDate() {
-        return date;
+    public String getDateAsString() {
+        return date.valueAsString();
     }
 
     public ReservationTime getTime() {
@@ -73,7 +88,7 @@ public class Reservation {
         }
 
         public Reservation build() {
-            return new Reservation(id, name, date, time);
+            return Reservation.from(id, name, date, time);
         }
     }
 
@@ -93,8 +108,8 @@ public class Reservation {
     public String toString() {
         return "Reservation{" +
                 "id=" + id +
-                ", name='" + name + '\'' +
-                ", date='" + date + '\'' +
+                ", name='" + name.value() + '\'' +
+                ", date='" + +'\'' +
                 ", time='" + time + '\'' +
                 '}';
     }

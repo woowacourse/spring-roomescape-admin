@@ -27,6 +27,8 @@ public class TimeIntegrationTest extends IntegrationTest {
 
     @Test
     void 시간을_삭제할_수_있다() {
+        jdbcTemplate.update("DELETE FROM reservation WHERE id = ?", 1);
+
         RestAssured.given().log().all()
                 .when().delete("/times/1")
                 .then().log().all()

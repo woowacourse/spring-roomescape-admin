@@ -40,8 +40,12 @@ class ReservationControllerTest {
     @Test
     void getReservationsTest() {
         // given
-        jdbcTemplate.update("INSERT INTO reservation (name, date, time_id) VALUES (?, ?, ?)", "브라운", "2023-08-05",
-                1);
+        jdbcTemplate.update(
+                "INSERT INTO reservation (name, date, time_id) VALUES (?, ?, ?)",
+                "브라운",
+                "2023-08-05",
+                1
+        );
 
         // when & then
         List<Reservation> reservations = RestAssured.given().log().all()

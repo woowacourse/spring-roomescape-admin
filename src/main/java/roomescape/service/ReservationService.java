@@ -4,6 +4,7 @@ import java.util.List;
 import org.springframework.stereotype.Repository;
 import roomescape.domain.Reservation;
 import roomescape.dto.ReservationRequest;
+import roomescape.dto.ReservationResponse;
 import roomescape.repository.ReservationDao;
 
 @Repository
@@ -15,7 +16,8 @@ public class ReservationService {
     }
 
     public Reservation saveReservation(final ReservationRequest reservationRequest) {
-        long reservationId = reservationDao.save(reservationRequest);
+        Reservation reservation = reservationRequest.toEntity();
+        long reservationId = reservationDao.save(reservation);
         return getReservation(reservationId);
     }
 
@@ -24,8 +26,11 @@ public class ReservationService {
                 .orElseThrow(() -> new IllegalArgumentException("[ERROR] 예약 조회 결과가 없습니다."));
     }
 
-    public List<Reservation> getAllReservations() {
-        return reservationDao.getAll();
+    public List<ReservationResponse> getAllReservations() {
+        return reservationDao.getAll()
+                .stream()
+                .map(reservation -> ReservationResponse.from(reservation))
+                .toList();
     }
 
     public void deleteReservation(final long id) {

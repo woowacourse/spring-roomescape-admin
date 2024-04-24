@@ -12,6 +12,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import roomescape.domain.Reservation;
 import roomescape.dto.ReservationRequest;
+import roomescape.dto.ReservationResponse;
 import roomescape.service.ReservationService;
 
 @Controller
@@ -31,9 +32,9 @@ public class ReservationController {
     }
 
     @GetMapping
-    public ResponseEntity<List<Reservation>> getReservations() {
-        List<Reservation> reservations = reservationService.getAllReservations();
-        return ResponseEntity.ok(reservations);
+    public ResponseEntity<List<ReservationResponse>> getReservations() {
+        List<ReservationResponse> reservationResponses = reservationService.getAllReservations();
+        return ResponseEntity.ok(reservationResponses);
     }
 
     @DeleteMapping("/{id}")

@@ -13,9 +13,7 @@
 - [x] 예약 관리 기능이 정상 동작하도록 기능을 완성하세요.
 - [x] API 명세를 따라 시간 관리 API를 구현하세요.
 - [x] 페이지는 templates/admin/time.html 파일을 이용하세요.
-- [ ] 예약 기능의 시간을 시간 테이블에 저장된 값만 선택할 수 있도록 수정하세요.
-
-
+- [x] 예약 기능의 시간을 시간 테이블에 저장된 값만 선택할 수 있도록 수정하세요.
 
 ## 1-1. API 명세 
 **예약 조회 API**
@@ -179,5 +177,5 @@ HTTP/1.1 200
 - [x] 204(NO CONTENT) 상태 코드 응답 (예약 취소 응답)
 - [x] templates/admin/time.html 파일 응답 (방탈출 시간 관리 페이지 응답)
   - [x] 200(OK) 상태 코드 응답
-- [ ] templates/admin/reservation-legacy.html 대신 templates/admin/reservation.html로 응답한다.
+- [x] templates/admin/reservation-legacy.html 대신 templates/admin/reservation.html로 응답한다.
 

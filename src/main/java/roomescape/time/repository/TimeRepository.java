@@ -12,7 +12,6 @@ import org.springframework.jdbc.support.GeneratedKeyHolder;
 import org.springframework.jdbc.support.KeyHolder;
 import org.springframework.stereotype.Repository;
 import roomescape.time.domain.Time;
-import roomescape.time.dto.TimeSaveRequest;
 
 @Repository
 public class TimeRepository {
@@ -40,7 +39,7 @@ public class TimeRepository {
     public Optional<Time> findById(final Long id) {
         try {
             return Optional.ofNullable(jdbcTemplate.queryForObject("select * from reservation_time where id = ?",
-                            createTimeRowMapper(), id));
+                    createTimeRowMapper(), id));
         } catch (EmptyResultDataAccessException exception) {
             return Optional.empty();
         }

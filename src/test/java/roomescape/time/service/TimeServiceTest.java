@@ -14,7 +14,6 @@ import org.mockito.junit.jupiter.MockitoExtension;
 import roomescape.error.ReferDataDeleteException;
 import roomescape.time.domain.Time;
 import roomescape.time.repository.TimeRepository;
-import roomescape.time.service.TimeService;
 
 @DisplayName("시간 서비스")
 @ExtendWith(MockitoExtension.class)

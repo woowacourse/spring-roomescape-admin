@@ -46,7 +46,10 @@ public class ReservationServiceTest {
     void findByIdExceptionByNotExistTimeIdTest() {
         // given
         Long timeId = 1L;
-        ReservationSaveRequest reservationSaveRequest = new ReservationSaveRequest("브라운", LocalDate.parse("2024-08-05"), timeId);
+        ReservationSaveRequest reservationSaveRequest = new ReservationSaveRequest(
+                "브라운", LocalDate.parse("2024-08-05"),
+                timeId
+        );
 
         doReturn(Optional.empty()).when(timeRepository)
                 .findById(timeId);

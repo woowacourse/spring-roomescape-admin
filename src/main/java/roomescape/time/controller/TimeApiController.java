@@ -9,7 +9,6 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
-import roomescape.time.domain.Time;
 import roomescape.time.dto.TimeResponse;
 import roomescape.time.dto.TimeSaveRequest;
 import roomescape.time.service.TimeService;

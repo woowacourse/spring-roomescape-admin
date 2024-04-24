@@ -23,8 +23,6 @@ import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.support.GeneratedKeyHolder;
 import org.springframework.jdbc.support.KeyHolder;
 import org.springframework.test.annotation.DirtiesContext;
-import org.springframework.test.context.jdbc.Sql;
-import roomescape.reservation.domain.Reservation;
 import roomescape.reservation.controller.ReservationController;
 import roomescape.reservation.dto.ReservationResponse;
 

@@ -1,7 +1,6 @@
 package roomescape.reservation.service;
 
 import java.util.List;
-import java.util.stream.Collectors;
 import org.springframework.stereotype.Service;
 import roomescape.reservation.domain.Reservation;
 import roomescape.reservation.dto.ReservationResponse;

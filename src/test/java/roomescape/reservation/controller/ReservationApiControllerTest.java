@@ -14,7 +14,6 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 import com.fasterxml.jackson.databind.ObjectMapper;
 import java.time.LocalDate;
 import java.time.LocalTime;
-import java.time.format.DateTimeFormatter;
 import java.util.List;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Nested;
@@ -72,8 +71,10 @@ class ReservationApiControllerTest {
         public void createSuccessTest() throws Exception {
             // given
             TimeResponse time = new TimeResponse(5L, LocalTime.parse("10:00"));
-            ReservationSaveRequest reservationSaveRequest = new ReservationSaveRequest("브라운", LocalDate.parse("2024-08-05"), time.getId());
-            ReservationResponse reservation = new ReservationResponse(1L, reservationSaveRequest.getName(), reservationSaveRequest.getDate(), time);
+            ReservationSaveRequest reservationSaveRequest = new ReservationSaveRequest("브라운",
+                    LocalDate.parse("2024-08-05"), time.getId());
+            ReservationResponse reservation = new ReservationResponse(1L, reservationSaveRequest.getName(),
+                    reservationSaveRequest.getDate(), time);
 
             // when
             doReturn(reservation).when(reservationService)
@@ -99,7 +100,8 @@ class ReservationApiControllerTest {
             ReservationSaveRequest reservationSaveRequest = new ReservationSaveRequest("브라운", null, null);
 
             // when
-            doThrow(new DataAccessException("데이터 접근 예외") {}).when(reservationService)
+            doThrow(new DataAccessException("데이터 접근 예외") {
+            }).when(reservationService)
                     .save(any(ReservationSaveRequest.class));
 
             // then

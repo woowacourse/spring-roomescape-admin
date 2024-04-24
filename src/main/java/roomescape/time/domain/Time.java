@@ -1,7 +1,6 @@
 package roomescape.time.domain;
 
 import java.time.LocalTime;
-import java.util.Objects;
 
 public class Time {
     private final Long id;

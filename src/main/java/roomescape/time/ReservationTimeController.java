@@ -2,20 +2,24 @@ package roomescape.time;
 
 import org.springframework.http.ResponseEntity;
 import org.springframework.jdbc.core.JdbcTemplate;
-import org.springframework.jdbc.support.GeneratedKeyHolder;
-import org.springframework.jdbc.support.KeyHolder;
+import org.springframework.jdbc.core.namedparam.MapSqlParameterSource;
+import org.springframework.jdbc.core.namedparam.SqlParameterSource;
+import org.springframework.jdbc.core.simple.SimpleJdbcInsert;
 import org.springframework.web.bind.annotation.*;
 
-import java.sql.PreparedStatement;
-import java.sql.Time;
+import javax.sql.DataSource;
 import java.util.List;
 
 @RestController
 public class ReservationTimeController {
     private final JdbcTemplate jdbcTemplate;
+    private final SimpleJdbcInsert jdbcInsert;
 
-    public ReservationTimeController(final JdbcTemplate jdbcTemplate) {
+    public ReservationTimeController(final JdbcTemplate jdbcTemplate, final DataSource dataSource) {
         this.jdbcTemplate = jdbcTemplate;
+        this.jdbcInsert = new SimpleJdbcInsert(dataSource)
+                .withTableName("reservation_time")
+                .usingGeneratedKeyColumns("id");
     }
 
     @GetMapping("/times")
@@ -32,15 +36,10 @@ public class ReservationTimeController {
 
     @PostMapping("/times")
     public ResponseEntity<ReservationTime> create(@RequestBody ReservationTimeRequest reservationTimeRequest) {
-        final String sql = "INSERT INTO reservation_time(start_at) VALUES(?)";
-        final KeyHolder keyHolder = new GeneratedKeyHolder();
-        jdbcTemplate.update(con -> {
-            final PreparedStatement preparedStatement = con.prepareStatement(sql, new String[]{"id"});
-            preparedStatement.setTime(1, Time.valueOf(reservationTimeRequest.startAt()));
-            return preparedStatement;
-        }, keyHolder);
+        final SqlParameterSource parameterSource = new MapSqlParameterSource()
+                .addValue("start_at", reservationTimeRequest.startAt());
 
-        final long id = keyHolder.getKey().longValue();
+        final long id = jdbcInsert.executeAndReturnKey(parameterSource).longValue();
         final ReservationTime reservationTime = new ReservationTime(id, reservationTimeRequest.startAt());
 
         return ResponseEntity.ok(reservationTime);

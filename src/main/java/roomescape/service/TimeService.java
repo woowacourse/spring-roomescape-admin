@@ -4,6 +4,7 @@ import java.util.List;
 import org.springframework.stereotype.Repository;
 import roomescape.domain.ReservationTime;
 import roomescape.dto.ReservationTimeRequest;
+import roomescape.dto.ReservationTimeResponse;
 import roomescape.repository.TimeDao;
 
 @Repository
@@ -14,8 +15,9 @@ public class TimeService {
         this.timeDao = timeDao;
     }
 
-    public ReservationTime saveTime(final ReservationTimeRequest reservationTimeRequest) {
-        return timeDao.save(reservationTimeRequest);
+    public ReservationTimeResponse saveTime(final ReservationTimeRequest reservationTimeRequest) {
+        ReservationTime reservationTime = timeDao.save(reservationTimeRequest);
+        return ReservationTimeResponse.from(reservationTime);
     }
 
     public List<ReservationTime> getTimes() {

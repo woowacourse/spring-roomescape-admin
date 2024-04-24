@@ -84,14 +84,14 @@ public class Reservation {
     }
 
     @Override
-    public boolean equals(Object o) {
+    public boolean equals(final Object o) {
         if (this == o) {
             return true;
         }
         if (o == null || getClass() != o.getClass()) {
             return false;
         }
-        Reservation that = (Reservation) o;
+        final var that = (Reservation) o;
         return id == that.id && Objects.equals(name, that.name) && Objects.equals(date, that.date)
                 && Objects.equals(time, that.time);
     }

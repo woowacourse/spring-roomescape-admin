@@ -14,11 +14,11 @@ public class ReservationTimeDao {
 
     private final JdbcTemplate jdbcTemplate;
 
-    public ReservationTimeDao(JdbcTemplate jdbcTemplate) {
+    public ReservationTimeDao(final JdbcTemplate jdbcTemplate) {
         this.jdbcTemplate = jdbcTemplate;
     }
 
-    public long save(ReservationTime reservationTime) {
+    public long save(final ReservationTime reservationTime) {
         final var sql = "INSERT INTO reservation_time(start_at) values (?)";
         final var keyHolder = new GeneratedKeyHolder();
         jdbcTemplate.update(con -> {
@@ -34,7 +34,7 @@ public class ReservationTimeDao {
         return jdbcTemplate.query(sql, actorRowMapper());
     }
 
-    public void delete(long id) {
+    public void delete(final long id) {
         final var sql = "DELETE FROM reservation_time WHERE id = ?";
         jdbcTemplate.update(sql, id);
     }

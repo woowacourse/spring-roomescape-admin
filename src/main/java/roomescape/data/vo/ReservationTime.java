@@ -28,14 +28,14 @@ public class ReservationTime {
     }
 
     @Override
-    public boolean equals(Object o) {
+    public boolean equals(final Object o) {
         if (this == o) {
             return true;
         }
         if (o == null || getClass() != o.getClass()) {
             return false;
         }
-        ReservationTime that = (ReservationTime) o;
+        final var that = (ReservationTime) o;
         return id == that.id && Objects.equals(startAt, that.startAt);
     }
 

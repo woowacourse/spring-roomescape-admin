@@ -18,7 +18,7 @@ public class ReservationRepositoryImpl implements ReservationRepository {
     }
 
     @Override
-    public long add(Reservation reservation) {
+    public long add(final Reservation reservation) {
         final var reservationTime = reservationTimeDao.findOne(reservation.getTimeId());
         final var saveReservation = new Builder()
                 .time(reservationTime)

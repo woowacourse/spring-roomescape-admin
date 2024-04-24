@@ -15,5 +15,4 @@ public class HomeController {
     public String getReservationPage(@PathVariable final String id) {
         return "redirect:/admin/reservation";
     }
-
 }

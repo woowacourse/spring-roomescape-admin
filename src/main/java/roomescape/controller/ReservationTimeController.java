@@ -18,7 +18,7 @@ import roomescape.repository.ReservationTimeRepository;
 public class ReservationTimeController {
     private final ReservationTimeRepository reservationTimeRepository;
 
-    public ReservationTimeController(ReservationTimeRepository reservationTimeRepository) {
+    public ReservationTimeController(final ReservationTimeRepository reservationTimeRepository) {
         this.reservationTimeRepository = reservationTimeRepository;
     }
 
@@ -29,7 +29,7 @@ public class ReservationTimeController {
 
     @PostMapping
     public ResponseEntity<ReservationTime> createReservationTime(@RequestBody final ReservationTimeRequest dto) {
-        long savedId = reservationTimeRepository.add(new ReservationTime(dto.getStartAt()));
+        final var savedId = reservationTimeRepository.add(new ReservationTime(dto.getStartAt()));
 
         return ResponseEntity.ok(new ReservationTime(savedId, dto.getStartAt()));
     }

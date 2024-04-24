@@ -52,7 +52,7 @@ public class ReservationDao {
         jdbcTemplate.update(sql, id);
     }
 
-    public Reservation findOne(long id) {
+    public Reservation findOne(final long id) {
         final var sql = "SELECT "
                 + "r.id as reservation_id, "
                 + "r.name,"

@@ -10,7 +10,7 @@ public class ReservationTimeRepositoryImpl implements ReservationTimeRepository 
 
     private final ReservationTimeDao reservationTimeDao;
 
-    public ReservationTimeRepositoryImpl(ReservationTimeDao reservationTimeDao) {
+    public ReservationTimeRepositoryImpl(final ReservationTimeDao reservationTimeDao) {
         this.reservationTimeDao = reservationTimeDao;
     }
 
@@ -20,12 +20,12 @@ public class ReservationTimeRepositoryImpl implements ReservationTimeRepository 
     }
 
     @Override
-    public ReservationTime get(long id) {
+    public ReservationTime get(final long id) {
         return this.reservationTimeDao.findOne(id);
     }
 
     @Override
-    public long add(ReservationTime time) {
+    public long add(final ReservationTime time) {
         return reservationTimeDao.save(time);
     }
 

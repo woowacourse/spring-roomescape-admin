@@ -20,10 +20,9 @@ import roomescape.service.ReservationService;
 
 @RestController
 public class ReservationController {
-
     private final ReservationService reservationService;
 
-    public ReservationController(ReservationService reservationService) {
+    public ReservationController(final ReservationService reservationService) {
         this.reservationService = reservationService;
     }
 
@@ -50,6 +49,5 @@ public class ReservationController {
         reservationService.deleteReservationCommand(id);
 
         return ResponseEntity.status(NO_CONTENT).build();
-
     }
 }

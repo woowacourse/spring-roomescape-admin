@@ -31,22 +31,22 @@ class TimeRepositoryTest {
         return Stream.of(
                 DynamicTest.dynamicTest("예약 정보를 저장한다.", () -> {
                     // given
-                    TimeSaveRequest timeSaveRequest = new TimeSaveRequest(LocalTime.parse("10:00"));
+                    Time time = new Time(LocalTime.parse("10:00"));
 
                     // when
-                    Time time = timeRepository.save(timeSaveRequest);
+                    Time savedTime = timeRepository.save(time);
 
                     // then
-                    assertThat(time.getId()).isEqualTo(2L);
+                    assertThat(savedTime.getId()).isEqualTo(2L);
                 }),
                 DynamicTest.dynamicTest("id로 시간 정보를 조회한다.", () -> {
-                    // given
-                    Optional<Time> reservation = timeRepository.findById(2L);
+                    // given & when
+                    Optional<Time> time = timeRepository.findById(2L);
 
                     // then
                     assertAll(
-                            () -> assertThat(reservation.get().getId()).isEqualTo(2L),
-                            () -> assertThat(reservation.get().getStartAt()).isEqualTo("10:00")
+                            () -> assertThat(time.get().getId()).isEqualTo(2L),
+                            () -> assertThat(time.get().getStartAt()).isEqualTo("10:00")
                     );
                 }),
                 DynamicTest.dynamicTest("모든 시간 정보를 조회한다.", () -> {

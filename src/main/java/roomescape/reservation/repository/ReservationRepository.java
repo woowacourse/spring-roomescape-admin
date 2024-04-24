@@ -23,9 +23,10 @@ public class ReservationRepository {
         this.jdbcTemplate = jdbcTemplate;
     }
 
-    public Reservation save(final ReservationSaveRequest reservationSaveRequest, final Time time) {
-        String name = reservationSaveRequest.getName();
-        LocalDate date = reservationSaveRequest.getDate();
+    public Reservation save(final Reservation reservation) {
+        String name = reservation.getName();
+        LocalDate date = reservation.getDate();
+        Time time = reservation.getTime();
 
         KeyHolder keyHolder = new GeneratedKeyHolder();
         jdbcTemplate.update(connection -> {

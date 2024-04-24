@@ -23,6 +23,7 @@ import org.springframework.dao.DataAccessException;
 import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
 import roomescape.time.domain.Time;
+import roomescape.time.dto.TimeResponse;
 import roomescape.time.dto.TimeSaveRequest;
 import roomescape.time.service.TimeService;
 
@@ -64,7 +65,7 @@ class TimeApiControllerTest {
         public void createSuccessTest() throws Exception {
             // given
             TimeSaveRequest timeSaveRequest = new TimeSaveRequest(LocalTime.parse("10:00"));
-            Time time = new Time(1L, timeSaveRequest.getStartAt());
+            TimeResponse time = new TimeResponse(1L, timeSaveRequest.getStartAt());
 
             // when
             doReturn(time).when(timeService)

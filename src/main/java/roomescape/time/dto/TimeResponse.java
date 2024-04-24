@@ -1,22 +1,26 @@
-package roomescape.time.domain;
+package roomescape.time.dto;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
 import java.time.LocalTime;
 import java.util.Objects;
+import roomescape.time.domain.Time;
 
-public class Time {
+public class TimeResponse {
     private Long id;
+
+    @JsonFormat(pattern = "HH:mm")
     private LocalTime startAt;
 
-    public Time() {
+    public TimeResponse() {
     }
 
-    public Time(final Long id, final LocalTime startAt) {
+    public TimeResponse(final Long id, final LocalTime startAt) {
         this.id = id;
         this.startAt = startAt;
     }
 
-    public Time(final LocalTime startAt) {
-        this.startAt = startAt;
+    public static TimeResponse toResponse(final Time time) {
+        return new TimeResponse(time.getId(), time.getStartAt());
     }
 
     public Long getId() {
@@ -35,8 +39,8 @@ public class Time {
         if (o == null || getClass() != o.getClass()) {
             return false;
         }
-        Time time = (Time) o;
-        return Objects.equals(id, time.id) && Objects.equals(startAt, time.startAt);
+        TimeResponse timeResponse = (TimeResponse) o;
+        return Objects.equals(id, timeResponse.id) && Objects.equals(startAt, timeResponse.startAt);
     }
 
     @Override

@@ -16,6 +16,7 @@ import org.springframework.boot.test.autoconfigure.jdbc.JdbcTest;
 import org.springframework.context.annotation.Import;
 import org.springframework.test.context.jdbc.Sql;
 import roomescape.reservation.domain.Reservation;
+import roomescape.reservation.dto.ReservationResponse;
 import roomescape.reservation.dto.ReservationSaveRequest;
 import roomescape.time.domain.Time;
 
@@ -33,13 +34,13 @@ class ReservationRepositoryTest {
         return Stream.of(
                 DynamicTest.dynamicTest("예약 정보를 저장한다.", () -> {
                     // given
-                    ReservationSaveRequest reservationSaveRequest = new ReservationSaveRequest("브라운", LocalDate.parse("2024-08-05"), 1L);
+                    Reservation reservation = new Reservation("브라운", LocalDate.parse("2024-08-05"), new Time(1L, LocalTime.parse("10:00")));
 
                     // when
-                    Reservation reservation = reservationRepository.save(reservationSaveRequest, new Time(1L, LocalTime.parse("10:00")));
+                    Reservation savedReservation = reservationRepository.save(reservation);
 
                     // then
-                    assertThat(reservation.getId()).isEqualTo(2L);
+                    assertThat(savedReservation.getId()).isEqualTo(2L);
                 }),
                 DynamicTest.dynamicTest("id로 예약 정보를 조회한다.", () -> {
                     // given

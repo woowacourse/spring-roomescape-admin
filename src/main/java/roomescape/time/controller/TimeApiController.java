@@ -10,6 +10,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
 import roomescape.time.domain.Time;
+import roomescape.time.dto.TimeResponse;
 import roomescape.time.dto.TimeSaveRequest;
 import roomescape.time.service.TimeService;
 
@@ -22,14 +23,15 @@ public class TimeApiController {
     }
 
     @GetMapping("/times")
-    public List<Time> findAll() {
+    public List<TimeResponse> findAll() {
         return timeService.findAll();
     }
 
     @PostMapping("/times")
-    public ResponseEntity<Time> create(@RequestBody TimeSaveRequest timeSaveRequest) {
-        Time time = timeService.save(timeSaveRequest);
-        return ResponseEntity.created(URI.create("/times/" + time.getId())).body(time);
+    public ResponseEntity<TimeResponse> create(@RequestBody TimeSaveRequest timeSaveRequest) {
+        TimeResponse response = timeService.save(timeSaveRequest);
+        return ResponseEntity.created(URI.create("/times/" + response.getId()))
+                .body(response);
     }
 
     @DeleteMapping("/times/{id}")

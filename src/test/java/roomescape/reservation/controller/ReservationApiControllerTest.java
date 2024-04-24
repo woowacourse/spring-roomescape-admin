@@ -14,6 +14,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 import com.fasterxml.jackson.databind.ObjectMapper;
 import java.time.LocalDate;
 import java.time.LocalTime;
+import java.time.format.DateTimeFormatter;
 import java.util.List;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Nested;
@@ -25,9 +26,12 @@ import org.springframework.dao.DataAccessException;
 import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
 import roomescape.reservation.domain.Reservation;
+import roomescape.reservation.dto.ReservationResponse;
 import roomescape.reservation.dto.ReservationSaveRequest;
 import roomescape.reservation.service.ReservationService;
 import roomescape.time.domain.Time;
+import roomescape.time.dto.TimeResponse;
+import roomescape.time.dto.TimeSaveRequest;
 
 @DisplayName("예약 API 컨트롤러")
 @WebMvcTest(ReservationApiController.class)
@@ -67,10 +71,9 @@ class ReservationApiControllerTest {
         @Test
         public void createSuccessTest() throws Exception {
             // given
-            Time time = new Time(5L, LocalTime.parse("10:00"));
+            TimeResponse time = new TimeResponse(5L, LocalTime.parse("10:00"));
             ReservationSaveRequest reservationSaveRequest = new ReservationSaveRequest("브라운", LocalDate.parse("2024-08-05"), time.getId());
-            Reservation reservation = new Reservation(1L, reservationSaveRequest.getName(), reservationSaveRequest.getDate(),
-                    time);
+            ReservationResponse reservation = new ReservationResponse(1L, reservationSaveRequest.getName(), reservationSaveRequest.getDate(), time);
 
             // when
             doReturn(reservation).when(reservationService)

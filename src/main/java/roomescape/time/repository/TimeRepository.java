@@ -22,25 +22,25 @@ public class TimeRepository {
         this.jdbcTemplate = jdbcTemplate;
     }
 
-    public Time save(final TimeSaveRequest timeSaveRequest) {
-        LocalTime time = timeSaveRequest.getStartAt();
+    public Time save(final Time time) {
+        LocalTime startAt = time.getStartAt();
 
         KeyHolder keyHolder = new GeneratedKeyHolder();
         jdbcTemplate.update(connection -> {
             PreparedStatement ps = connection.prepareStatement(
                     "insert into reservation_time(start_at) values (?)", new String[]{"id"});
-            ps.setString(1, time.toString());
+            ps.setString(1, startAt.toString());
             return ps;
         }, keyHolder);
         long id = Objects.requireNonNull(keyHolder.getKey()).longValue();
 
-        return new Time(id, time);
+        return new Time(id, startAt);
     }
 
     public Optional<Time> findById(final Long id) {
         try {
             return Optional.ofNullable(jdbcTemplate.queryForObject("select * from reservation_time where id = ?",
-                    createTimeRowMapper(), id));
+                            createTimeRowMapper(), id));
         } catch (EmptyResultDataAccessException exception) {
             return Optional.empty();
         }

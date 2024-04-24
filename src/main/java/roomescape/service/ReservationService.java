@@ -1,6 +1,7 @@
 package roomescape.service;
 
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import roomescape.domain.Reservation;
 import roomescape.dto.ReservationResponse;
 import roomescape.exception.NotFoundException;
@@ -10,6 +11,7 @@ import roomescape.repository.ReservationTimeRepository;
 import java.util.List;
 
 @Service
+@Transactional(readOnly = true)
 public class ReservationService {
     private static final int MAX_RESERVATIONS_PER_TIME = 4;
 
@@ -23,6 +25,7 @@ public class ReservationService {
         this.reservationTimeRepository = reservationTimeRepository;
     }
 
+    @Transactional
     public ReservationResponse create(Reservation reservation) {
         var reservationTime = reservationTimeRepository.findById(reservation.getReservationTimeId())
                 .orElseThrow(() -> new NotFoundException("해당 ID의 예약 시간이 없습니다."));
@@ -56,6 +59,7 @@ public class ReservationService {
                 .toList();
     }
 
+    @Transactional
     public void delete(Long id) {
         var reservation = reservationRepository.findById(id)
                 .orElseThrow(() -> new NotFoundException("해당 ID의 예약이 없습니다."));

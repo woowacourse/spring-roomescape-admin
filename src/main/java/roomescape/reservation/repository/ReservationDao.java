@@ -1,12 +1,11 @@
 package roomescape.reservation.repository;
 
-import java.sql.Date;
-import java.sql.PreparedStatement;
-import java.sql.Statement;
 import java.util.List;
+import javax.sql.DataSource;
 import org.springframework.jdbc.core.JdbcTemplate;
-import org.springframework.jdbc.support.GeneratedKeyHolder;
-import org.springframework.jdbc.support.KeyHolder;
+import org.springframework.jdbc.core.namedparam.BeanPropertySqlParameterSource;
+import org.springframework.jdbc.core.namedparam.SqlParameterSource;
+import org.springframework.jdbc.core.simple.SimpleJdbcInsert;
 import org.springframework.stereotype.Component;
 import roomescape.reservation.domain.Reservation;
 import roomescape.reservation.domain.ReservationTime;
@@ -14,25 +13,21 @@ import roomescape.reservation.domain.ReservationTime;
 @Component
 public class ReservationDao implements ReservationRepository {
     private final JdbcTemplate jdbcTemplate;
-    private final KeyHolder keyHolder = new GeneratedKeyHolder();
+    private final SimpleJdbcInsert simpleJdbcInsert;
 
-    public ReservationDao(final JdbcTemplate jdbcTemplate) {
+    public ReservationDao(JdbcTemplate jdbcTemplate, DataSource dataSource) {
         this.jdbcTemplate = jdbcTemplate;
+        this.simpleJdbcInsert = new SimpleJdbcInsert(dataSource)
+                .withTableName("reservation")
+                .usingGeneratedKeyColumns("id");
     }
 
     @Override
     public Reservation save(final Reservation reservation) {
-        String sql = "INSERT INTO reservation (name, date, time_id) values (?, ?, ?)";
-        jdbcTemplate.update(connection -> {
-            PreparedStatement preparedStatement = connection.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS);
-            preparedStatement.setString(1, reservation.getName());
-            preparedStatement.setDate(2, Date.valueOf(reservation.getDate()));
-            preparedStatement.setObject(3, reservation.getTime().getId());
-            return preparedStatement;
-        }, keyHolder);
-
+        SqlParameterSource params = new BeanPropertySqlParameterSource(reservation);
+        long id = simpleJdbcInsert.executeAndReturnKey(params).longValue();
         return new Reservation(
-                keyHolder.getKey().longValue(),
+                id,
                 reservation.getName(),
                 reservation.getDate(),
                 reservation.getTime()

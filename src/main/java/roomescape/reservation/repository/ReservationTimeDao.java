@@ -5,30 +5,32 @@ import java.sql.Statement;
 import java.sql.Time;
 import java.util.List;
 import java.util.Optional;
+import javax.sql.DataSource;
 import org.springframework.jdbc.core.JdbcTemplate;
-import org.springframework.jdbc.support.GeneratedKeyHolder;
-import org.springframework.jdbc.support.KeyHolder;
+import org.springframework.jdbc.core.namedparam.BeanPropertySqlParameterSource;
+import org.springframework.jdbc.core.namedparam.SqlParameterSource;
+import org.springframework.jdbc.core.simple.SimpleJdbcInsert;
 import org.springframework.stereotype.Component;
+import roomescape.reservation.domain.Reservation;
 import roomescape.reservation.domain.ReservationTime;
 
 @Component
 public class ReservationTimeDao implements ReservationTimeRepository {
     private final JdbcTemplate jdbcTemplate;
-    private final KeyHolder keyHolder = new GeneratedKeyHolder();
+    private final SimpleJdbcInsert simpleJdbcInsert;
 
-    public ReservationTimeDao(final JdbcTemplate jdbcTemplate) {
+    public ReservationTimeDao(JdbcTemplate jdbcTemplate, DataSource dataSource) {
         this.jdbcTemplate = jdbcTemplate;
+        this.simpleJdbcInsert = new SimpleJdbcInsert(dataSource)
+                .withTableName("reservation_time")
+                .usingGeneratedKeyColumns("id");
     }
 
     @Override
     public ReservationTime save(final ReservationTime reservationTime) {
-        String sql = "INSERT INTO reservation_time (start_at) values (?)";
-        jdbcTemplate.update(connection -> {
-            PreparedStatement preparedStatement = connection.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS);
-            preparedStatement.setTime(1, Time.valueOf(reservationTime.getStartAt()));
-            return preparedStatement;
-        }, keyHolder);
-        return new ReservationTime(keyHolder.getKey().longValue(), reservationTime.getStartAt());
+        SqlParameterSource params = new BeanPropertySqlParameterSource(reservationTime);
+        long id = simpleJdbcInsert.executeAndReturnKey(params).longValue();
+        return new ReservationTime(id, reservationTime.getStartAt());
     }
 
     @Override

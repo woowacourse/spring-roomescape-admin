@@ -5,12 +5,12 @@ import java.time.LocalTime;
 import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonProperty;
 
-public class Time {
+public class ReservationTime {
 
     private final long id;
     private final LocalTime startAt;
 
-    public Time(final long id, final LocalTime startAt) {
+    public ReservationTime(final long id, final LocalTime startAt) {
         this.id = id;
         this.startAt = startAt;
     }

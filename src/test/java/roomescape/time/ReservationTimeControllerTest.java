@@ -18,7 +18,7 @@ import io.restassured.http.ContentType;
 
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.DEFINED_PORT)
 @DirtiesContext(classMode = DirtiesContext.ClassMode.BEFORE_EACH_TEST_METHOD)
-class TimeControllerTest {
+class ReservationTimeControllerTest {
 
     @Autowired
     private JdbcTemplate jdbcTemplate;

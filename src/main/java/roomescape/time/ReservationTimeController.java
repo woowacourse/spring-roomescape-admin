@@ -18,17 +18,17 @@ import org.springframework.web.bind.annotation.RestController;
 
 @RestController
 @RequestMapping("/times")
-public class TimeController {
+public class ReservationTimeController {
 
     private final JdbcTemplate jdbcTemplate;
     private final SimpleJdbcInsert jdbcInsert;
 
-    private final RowMapper<Time> timeRowMapper = (resultSet, rowNum) -> new Time(
+    private final RowMapper<ReservationTime> timeRowMapper = (resultSet, rowNum) -> new ReservationTime(
             resultSet.getLong("id"),
             resultSet.getTime("start_at").toLocalTime()
     );
 
-    public TimeController(final JdbcTemplate jdbcTemplate) {
+    public ReservationTimeController(final JdbcTemplate jdbcTemplate) {
         this.jdbcTemplate = jdbcTemplate;
         this.jdbcInsert = new SimpleJdbcInsert(jdbcTemplate)
                 .withTableName("reservation_time")
@@ -36,24 +36,24 @@ public class TimeController {
     }
 
     @GetMapping
-    public ResponseEntity<List<Time>> findAll() {
+    public ResponseEntity<List<ReservationTime>> findAll() {
         return ResponseEntity.ok(jdbcTemplate.query("SELECT * FROM reservation_time", timeRowMapper));
     }
 
     @PostMapping
-    public ResponseEntity<Time> create(@RequestBody final Time time) {
-        SqlParameterSource params = new BeanPropertySqlParameterSource(time);
+    public ResponseEntity<ReservationTime> create(@RequestBody final ReservationTime reservationTime) {
+        SqlParameterSource params = new BeanPropertySqlParameterSource(reservationTime);
         long id = jdbcInsert.executeAndReturnKey(params).longValue();
-        Time createdTime = jdbcTemplate.queryForObject(
+        ReservationTime createdReservationTime = jdbcTemplate.queryForObject(
                 "SELECT * FROM reservation_time WHERE id = ?",
                 timeRowMapper,
                 id
         );
-        return ResponseEntity.ok(createdTime);
+        return ResponseEntity.ok(createdReservationTime);
     }
 
     @DeleteMapping("/{id}")
-    public ResponseEntity<Time> delete(@PathVariable final long id) {
+    public ResponseEntity<ReservationTime> delete(@PathVariable final long id) {
         jdbcTemplate.update("DELETE FROM reservation_time WHERE id = ?", id);
         return ResponseEntity.noContent().build();
     }

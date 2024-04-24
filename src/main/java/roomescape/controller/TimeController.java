@@ -32,11 +32,16 @@ public class TimeController {
     }
 
     @GetMapping()
-    public ResponseEntity<List<TimeSlot>> read() {
+    public ResponseEntity<List<TimeSlot>> findAll() {
         String sql = "select id, start_at from reservation_time";
         List<TimeSlot> reservations = jdbcTemplate.query(sql, rowMapper);
 
         return ResponseEntity.ok(reservations);
+    }
+
+    public TimeSlot findById(Long id) {
+        String sql = "select id, start_at from reservation_time where id = ?";
+        return jdbcTemplate.queryForObject(sql, rowMapper, id);
     }
 
     @PostMapping()

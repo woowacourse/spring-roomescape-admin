@@ -12,8 +12,11 @@ public class TimeSlot {
     }
 
     public TimeSlot(Long id, String startAt) {
-        this.id = id;
-        this.startAt = LocalTime.parse(startAt);
+        this(id, LocalTime.parse(startAt));
+    }
+
+    public TimeSlot(String startAt) {
+        this(null, startAt);
     }
 
     public Long getId() {

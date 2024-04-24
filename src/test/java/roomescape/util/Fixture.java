@@ -36,9 +36,11 @@ public class Fixture {
 
     public static final ReservationTimeRequest JOJO_RESERVATION_TIME_REQUEST = new ReservationTimeRequest(JOJO_TIME);
     public static final ReservationTimeResponse JOJO_RESERVATION_TIME_RESPONSE = ReservationTimeResponse.from(JOJO_RESERVATION_TIME);
+    public static final ReservationTimeRequest GAMJA_RESERVATION_TIME_REQUEST = new ReservationTimeRequest(GAMJA_TIME);
     public static final ReservationTimeResponse GAMJA_RESERVATION_TIME_RESPONSE = ReservationTimeResponse.from(GAMJA_RESERVATION_TIME);
 
     public static final ReservationRequest JOJO_RESERVATION_REQUEST = new ReservationRequest(JOJO, JOJO_DATE, 1L);
     public static final ReservationResponse JOJO_RESERVATION_RESPONSE = ReservationResponse.from(JOJO_RESERVATION);
+    public static final ReservationRequest GAMJA_RESERVATION_REQUEST = new ReservationRequest(GAMJA, GAMJA_DATE, 2L);
     public static final ReservationResponse GAMJA_RESERVATION_RESPONSE = ReservationResponse.from(GAMJA_RESERVATION);
 }

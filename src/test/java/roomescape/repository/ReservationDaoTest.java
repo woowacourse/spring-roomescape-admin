@@ -1,6 +1,10 @@
 package roomescape.repository;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static roomescape.util.Fixture.GAMJA_RESERVATION_REQUEST;
+import static roomescape.util.Fixture.GAMJA_RESERVATION_TIME_REQUEST;
+import static roomescape.util.Fixture.JOJO_RESERVATION_REQUEST;
+import static roomescape.util.Fixture.JOJO_RESERVATION_TIME_REQUEST;
 
 import java.util.List;
 import java.util.stream.Stream;
@@ -9,8 +13,6 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.annotation.DirtiesContext;
-import roomescape.dto.ReservationRequest;
-import roomescape.dto.ReservationTimeRequest;
 import roomescape.model.Reservation;
 
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.DEFINED_PORT)
@@ -25,10 +27,11 @@ class ReservationDaoTest {
     @DisplayName("전체 예약 조회")
     @Test
     void findAllReservations() {
-        Long firstTimeId = reservationTimeDao.save(new ReservationTimeRequest("09:00"));
-        Long secondTimeId = reservationTimeDao.save(new ReservationTimeRequest("10:00"));
-        reservationDao.save(new ReservationRequest("조조", "2024-04-21", firstTimeId));
-        reservationDao.save(new ReservationRequest("감자", "2024-04-22", secondTimeId));
+        reservationTimeDao.save(JOJO_RESERVATION_TIME_REQUEST);
+        reservationTimeDao.save(GAMJA_RESERVATION_TIME_REQUEST);
+
+        reservationDao.save(JOJO_RESERVATION_REQUEST);
+        reservationDao.save(GAMJA_RESERVATION_REQUEST);
 
         List<Reservation> reservations = reservationDao.findAll();
 
@@ -38,9 +41,9 @@ class ReservationDaoTest {
     @DisplayName("예약 추가")
     @Test
     void saveReservation() {
-        Long timeId = reservationTimeDao.save(new ReservationTimeRequest("09:00"));
+        reservationTimeDao.save(JOJO_RESERVATION_TIME_REQUEST);
 
-        Long savedId = reservationDao.save(new ReservationRequest("조조", "2024-04-21", timeId));
+        Long savedId = reservationDao.save(JOJO_RESERVATION_REQUEST);
 
         assertThat(savedId).isEqualTo(1);
     }
@@ -48,8 +51,8 @@ class ReservationDaoTest {
     @DisplayName("예약 삭제")
     @Test
     void deleteReservation() {
-        Long timeId = reservationTimeDao.save(new ReservationTimeRequest("09:00"));
-        Long savedId = reservationDao.save(new ReservationRequest("조조", "2024-04-21", timeId));
+        reservationTimeDao.save(JOJO_RESERVATION_TIME_REQUEST);
+        Long savedId = reservationDao.save(JOJO_RESERVATION_REQUEST);
 
         reservationDao.deleteById(savedId);
 

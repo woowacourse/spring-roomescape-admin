@@ -6,6 +6,7 @@ import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.boot.test.web.server.LocalServerPort;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.test.annotation.DirtiesContext;
 import roomescape.domain.ReservationTime;
@@ -16,9 +17,11 @@ import java.util.List;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
-@SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.DEFINED_PORT)
+@SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 @DirtiesContext(classMode = DirtiesContext.ClassMode.BEFORE_EACH_TEST_METHOD)
 class ReservationTimeControllerTest {
+    @LocalServerPort
+    private int port;
     @Autowired
     private JdbcTemplate jdbcTemplate;
     @Autowired
@@ -30,6 +33,7 @@ class ReservationTimeControllerTest {
         jdbcTemplate.update("INSERT INTO reservation_time (start_at) VALUES (?)", "10:00");
 
         List<ReservationTime> times = RestAssured.given().log().all()
+                .port(port)
                 .when().get("/times")
                 .then().log().all()
                 .statusCode(200).extract()
@@ -46,6 +50,7 @@ class ReservationTimeControllerTest {
         TimeCreateRequest params = new TimeCreateRequest("10:00");
 
         RestAssured.given().log().all()
+                .port(port)
                 .contentType(ContentType.JSON)
                 .body(params)
                 .when().post("/times")
@@ -62,6 +67,7 @@ class ReservationTimeControllerTest {
         jdbcTemplate.update("INSERT INTO reservation_time (start_at) VALUES (?)", "10:00");
 
         RestAssured.given().log().all()
+                .port(port)
                 .when().delete("/times/1")
                 .then().log().all()
                 .statusCode(204);

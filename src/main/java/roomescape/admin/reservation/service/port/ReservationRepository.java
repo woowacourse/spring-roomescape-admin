@@ -1,4 +1,4 @@
-package roomescape.admin.reservation.repository;
+package roomescape.admin.reservation.service.port;
 
 import java.util.List;
 import roomescape.admin.reservation.entity.Reservation;

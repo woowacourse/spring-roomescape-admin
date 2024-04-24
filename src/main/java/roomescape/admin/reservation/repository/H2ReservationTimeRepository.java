@@ -8,6 +8,7 @@ import org.springframework.jdbc.core.namedparam.SqlParameterSource;
 import org.springframework.jdbc.core.simple.SimpleJdbcInsert;
 import org.springframework.stereotype.Repository;
 import roomescape.admin.reservation.entity.ReservationTime;
+import roomescape.admin.reservation.service.port.ReservationTimeRepository;
 
 @Repository
 public class H2ReservationTimeRepository implements ReservationTimeRepository {

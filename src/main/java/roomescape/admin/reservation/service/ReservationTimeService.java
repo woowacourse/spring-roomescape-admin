@@ -3,8 +3,8 @@ package roomescape.admin.reservation.service;
 import java.util.List;
 import org.springframework.stereotype.Service;
 import roomescape.admin.reservation.entity.ReservationTime;
-import roomescape.admin.reservation.repository.ReservationTimeRepository;
 import roomescape.admin.reservation.service.exception.NoSuchDeleteIdException;
+import roomescape.admin.reservation.service.port.ReservationTimeRepository;
 
 @Service
 public class ReservationTimeService {

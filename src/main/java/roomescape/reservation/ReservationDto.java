@@ -11,10 +11,6 @@ public record ReservationDto(Long id, String name, LocalDate date, LocalTime tim
                 reservation.getTime());
     }
 
-    public Reservation toEntity(long id) {
-        return new Reservation(id, name, date, time);
-    }
-
     @Override
     @JsonFormat(pattern = "HH:mm")
     public LocalTime time() {

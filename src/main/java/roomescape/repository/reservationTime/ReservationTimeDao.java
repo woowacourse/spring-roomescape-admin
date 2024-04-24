@@ -26,7 +26,7 @@ public class ReservationTimeDao implements ReservationTimeRepository {
         String sql = "INSERT INTO reservation_time (start_at) VALUES (?)";
         PreparedStatementCreator preparedStatementCreator = (connect) -> {
             PreparedStatement statement = connect.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS);
-            statement.setString(1, reservationTime.getStartAt());
+            statement.setString(1, reservationTime.getStartAt().toString());
             return statement;
         };
 
@@ -59,7 +59,7 @@ public class ReservationTimeDao implements ReservationTimeRepository {
     private RowMapper<ReservationTime> getReservationTimeRowMapper() {
         return (resultSet, rowNum) -> new ReservationTime(
                 resultSet.getLong("id"),
-                resultSet.getString("start_at")
+                resultSet.getTime("start_at").toLocalTime()
         );
     }
 

@@ -10,6 +10,8 @@ import roomescape.domain.ReservationTime;
 import roomescape.repository.ReservationFakeDao;
 import roomescape.repository.ReservationTimeFakeDao;
 
+import java.time.LocalDate;
+import java.time.LocalTime;
 import java.util.List;
 
 import static org.assertj.core.api.Assertions.assertThat;
@@ -21,11 +23,15 @@ class ReservationServiceTest {
 
     private ReservationService reservationService;
     private ReservationTimeService reservationTimeService;
+    private LocalTime startAt;
+    private LocalDate date;
 
     @BeforeEach
     void setUp() {
         this.reservationTimeService = new ReservationTimeService(new ReservationTimeFakeDao());
         this.reservationService = new ReservationService(new ReservationFakeDao(), reservationTimeService);
+        this.startAt = LocalTime.of(10, 10);
+        this.date = LocalDate.of(2024, 11, 16);
     }
 
     @DisplayName("예약 서비스는 예약들을 조회한다.")
@@ -53,7 +59,7 @@ class ReservationServiceTest {
 
         // then
         assertAll(
-                () -> assertThat(reservation.getDate()).isEqualTo("2024-11-16"),
+                () -> assertThat(reservation.getDate()).isEqualTo(date),
                 () -> assertThat(reservation.getName()).isEqualTo("클로버")
         );
     }
@@ -63,16 +69,16 @@ class ReservationServiceTest {
     void createReservation() {
         // given
         ReservationTime reservationTime = reservationTimeService
-                .createTime(new ReservationTimeCreateRequest("10:00"));
+                .createTime(new ReservationTimeCreateRequest(startAt));
         ReservationCreateRequest request = new ReservationCreateRequest("클로버",
-                "2024-11-16", reservationTime.getId());
+                date, reservationTime.getId());
 
         // when
         Reservation reservation = reservationService.createReservation(request);
 
         // then
         assertAll(
-                () -> assertThat(reservation.getDate()).isEqualTo("2024-11-16"),
+                () -> assertThat(reservation.getDate()).isEqualTo(date),
                 () -> assertThat(reservation.getName()).isEqualTo("클로버"),
                 () -> assertThat(reservation.getTime().getStartAt()).isEqualTo(reservationTime.getStartAt())
         );
@@ -92,9 +98,9 @@ class ReservationServiceTest {
 
     private void createInitReservation() {
         ReservationTime reservationTime = reservationTimeService
-                .createTime(new ReservationTimeCreateRequest("10:00"));
+                .createTime(new ReservationTimeCreateRequest(startAt));
         ReservationCreateRequest request = new ReservationCreateRequest("클로버",
-                "2024-11-16", reservationTime.getId());
+                date, reservationTime.getId());
         reservationService.createReservation(request);
     }
 }

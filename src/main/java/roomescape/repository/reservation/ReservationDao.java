@@ -1,6 +1,5 @@
 package roomescape.repository.reservation;
 
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.PreparedStatementCreator;
 import org.springframework.jdbc.core.RowMapper;
@@ -29,7 +28,7 @@ public class ReservationDao implements ReservationRepository {
         PreparedStatementCreator preparedStatementCreator = (connect) -> {
             PreparedStatement statement = connect.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS);
             statement.setString(1, reservation.getName());
-            statement.setString(2, reservation.getDate());
+            statement.setString(2, reservation.getDate().toString());
             statement.setLong(3, reservation.getTime().getId());
 
             return statement;
@@ -67,10 +66,10 @@ public class ReservationDao implements ReservationRepository {
         return (resultSet, rowNum) -> new Reservation(
                 resultSet.getLong("id"),
                 resultSet.getString("name"),
-                resultSet.getString("date"),
+                resultSet.getDate("date").toLocalDate(),
                 new ReservationTime(
                         resultSet.getLong("time_id"),
-                        resultSet.getString("start_at")
+                        resultSet.getTime("start_at").toLocalTime()
                 )
         );
     }

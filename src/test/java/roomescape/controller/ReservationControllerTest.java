@@ -119,13 +119,8 @@ public class ReservationControllerTest {
     }
 
     @Test
-    void 육단계() {
-        Map<String, String> params = Map.of(
-                "name", "브라운",
-                "date", "2023-08-05",
-                "time", "10:00"
-        );
-
+    @DisplayName("하나의 예약만 등록한 경우, DB를 조회 했을 때 조회 결과 개수는 1개이다.")
+    void postReservationIntoDb() {
         RestAssured.given().log().all()
                 .contentType(ContentType.JSON)
                 .body(params)
@@ -136,6 +131,18 @@ public class ReservationControllerTest {
 
         Integer count = jdbcTemplate.queryForObject("SELECT count(1) from reservation", Integer.class);
         assertThat(count).isEqualTo(1);
+    }
+
+    @Test
+    @DisplayName("하나의 예약만 등록한 경우, 예약 삭제 뒤 DB를 조회 했을 때 조회 결과 개수는 0개이다.")
+    void readReservationsSizeFromDbAfterPostAndDelete() {
+        RestAssured.given().log().all()
+                .contentType(ContentType.JSON)
+                .body(params)
+                .when().post("/reservations")
+                .then().log().all()
+                .statusCode(201)
+                .header("Location", "/reservations/1");
 
         RestAssured.given().log().all()
                 .when().delete("/reservations/1")

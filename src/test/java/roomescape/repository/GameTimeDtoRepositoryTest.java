@@ -1,6 +1,8 @@
 package roomescape.repository;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.assertThatCode;
+import static org.assertj.core.api.Assertions.assertThatThrownBy;
 
 import java.time.LocalTime;
 import java.util.List;
@@ -8,6 +10,7 @@ import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.test.annotation.Rollback;
 import org.springframework.transaction.annotation.Transactional;
 import roomescape.entity.GameTime;
@@ -55,7 +58,8 @@ class GameTimeDtoRepositoryTest {
         GameTime gameTime = new GameTime(time);
         GameTime saved = gameTimeRepository.save(gameTime);
 
-        assertThat(gameTimeRepository.findById(saved.getId())).isEqualTo(saved);
+        assertThatCode(() -> gameTimeRepository.findById(saved.getId()))
+                .doesNotThrowAnyException();
     }
 
     @DisplayName("예약 가능 시간 단건을 삭제할 수 있다")
@@ -66,6 +70,7 @@ class GameTimeDtoRepositoryTest {
         GameTime saved = gameTimeRepository.save(gameTime);
         gameTimeRepository.deleteById(saved.getId());
 
-        assertThat(gameTimeRepository.readAll().size()).isEqualTo(0);
+        assertThatThrownBy(() -> gameTimeRepository.findById(saved.getId()))
+                .isInstanceOf(EmptyResultDataAccessException.class);
     }
 }

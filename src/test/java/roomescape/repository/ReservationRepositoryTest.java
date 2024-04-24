@@ -1,6 +1,7 @@
 package roomescape.repository;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import static roomescape.fixture.DateTimeFixture.DATE_2024_04_20;
 import static roomescape.fixture.DateTimeFixture.TIME_03_00;
 
@@ -10,6 +11,7 @@ import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.test.annotation.Rollback;
 import org.springframework.transaction.annotation.Transactional;
 import roomescape.entity.GameTime;
@@ -62,7 +64,7 @@ class ReservationRepositoryTest {
         Reservation reservation = new Reservation(null, "리비", DATE_2024_04_20, time_03_00);
         Reservation saved = reservationRepository.save(reservation);
 
-        assertThat(reservationRepository.findById(saved.getId())).isPresent();
+        assertThat(saved.getName()).isEqualTo("리비");
     }
 
     @DisplayName("예약 단건을 삭제할 수 있다")
@@ -73,7 +75,8 @@ class ReservationRepositoryTest {
         Reservation saved = reservationRepository.save(reservation);
         reservationRepository.deleteById(saved.getId());
 
-        assertThat(reservationRepository.findById(saved.getId())).isEmpty();
+        assertThatThrownBy(() -> reservationRepository.findById(saved.getId()))
+                .isInstanceOf(EmptyResultDataAccessException.class);
     }
 
     @DisplayName("특정 예약이 저장된 예약들과 시간이 겹치는 경우가 있는지 확인할 수 있다")

@@ -7,8 +7,6 @@ import java.time.LocalDate;
 import java.time.LocalTime;
 import java.time.format.DateTimeFormatter;
 import java.util.List;
-import java.util.Optional;
-import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;
 import org.springframework.jdbc.support.GeneratedKeyHolder;
@@ -48,16 +46,12 @@ public class ReservationRepository {
         return new Reservation(savedId, reservation.getName(), reservation.getStartDate(), time);
     }
 
-    public Optional<Reservation> findById(long id) {
+    public Reservation findById(long id) {
         String sql = "select r.id as reservation_id, r.name, r.date, t.id as time_id, t.start_at as time_value "
                 + "from reservation as r "
                 + "inner join reservation_time as t on t.id = r.time_id "
                 + "where r.id=?";
-        try {
-            return Optional.of(jdbcTemplate.queryForObject(sql, reservationRowMapper(), id));
-        } catch (EmptyResultDataAccessException ex) {
-            return Optional.empty();
-        }
+        return jdbcTemplate.queryForObject(sql, reservationRowMapper(), id);
     }
 
     public void deleteById(long id) {

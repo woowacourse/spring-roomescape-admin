@@ -3,8 +3,6 @@ package roomescape.controller;
 import io.restassured.RestAssured;
 import io.restassured.http.ContentType;
 import java.time.LocalTime;
-import java.util.HashMap;
-import java.util.Map;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -15,15 +13,14 @@ import org.springframework.boot.test.web.server.LocalServerPort;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.test.annotation.DirtiesContext;
 import roomescape.dto.ReservationTimeRequest;
-import roomescape.dto.ReservationTimeResponse;
 
 @SpringBootTest(webEnvironment = WebEnvironment.RANDOM_PORT)
 @DirtiesContext(classMode = DirtiesContext.ClassMode.BEFORE_EACH_TEST_METHOD)
 class ReservationTimeControllerTest {
-    @Autowired
-    private JdbcTemplate jdbcTemplate;
     @LocalServerPort
     int port;
+    @Autowired
+    private JdbcTemplate jdbcTemplate;
 
     @BeforeEach
     void initializePort() {

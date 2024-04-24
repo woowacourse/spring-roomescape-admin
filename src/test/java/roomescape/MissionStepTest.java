@@ -24,12 +24,12 @@ import roomescape.controller.ReservationController;
 @DirtiesContext(classMode = DirtiesContext.ClassMode.BEFORE_EACH_TEST_METHOD)
 public class MissionStepTest {
 
+    @LocalServerPort
+    int port;
     @Autowired
     private JdbcTemplate jdbcTemplate;
     @Autowired
     private ReservationController reservationController;
-    @LocalServerPort
-    int port;
 
     @BeforeEach
     void initializePort() {

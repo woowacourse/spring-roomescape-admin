@@ -1,31 +1,55 @@
 package roomescape.dao;
 
+import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.boot.test.autoconfigure.jdbc.JdbcTest;
 import org.springframework.jdbc.core.JdbcTemplate;
-import org.springframework.test.annotation.DirtiesContext;
+import roomescape.controller.dto.CreateReservationRequest;
+import roomescape.domain.Reservation;
 
-import java.sql.Connection;
-import java.sql.SQLException;
+import java.time.LocalDate;
+import java.util.List;
 
-import static org.assertj.core.api.Assertions.assertThat;
+@JdbcTest
+class ReservationDaoTest {
 
-@SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
-@DirtiesContext(classMode = DirtiesContext.ClassMode.BEFORE_EACH_TEST_METHOD)
-public class ReservationDaoTest {
+    ReservationDao reservationDao;
+    JdbcTemplate jdbcTemplate;
 
     @Autowired
-    private JdbcTemplate jdbcTemplate;
+    public ReservationDaoTest(JdbcTemplate jdbcTemplate) {
+        this.jdbcTemplate = jdbcTemplate;
+        this.reservationDao = new ReservationDao(jdbcTemplate);
+    }
 
     @Test
-    void 데이터베이스에_예약_테이블이_존재하는지_확인한다() {
-        try (Connection connection = jdbcTemplate.getDataSource().getConnection()) {
-            assertThat(connection).isNotNull();
-            assertThat(connection.getCatalog()).isEqualTo("DATABASE");
-            assertThat(connection.getMetaData().getTables(null, null, "RESERVATION", null).next()).isTrue();
-        } catch (SQLException e) {
-            throw new RuntimeException(e);
-        }
+    void 예약을_생성한다() {
+        jdbcTemplate.update("insert into reservation_time (start_at) values ('10:00')");
+        CreateReservationRequest request = new CreateReservationRequest("조앤", LocalDate.of(2023, 10, 23), 1);
+
+        reservationDao.create(request);
+
+        List<Reservation> reservations = reservationDao.readAll();
+        Assertions.assertThat(reservations).hasSize(1);
+    }
+
+    @Test
+    void 예약_목록을_조회한다() {
+        List<Reservation> reservations = reservationDao.readAll();
+
+        Assertions.assertThat(reservations).hasSize(0);
+    }
+
+    @Test
+    void 예약을_삭제한다() {
+        jdbcTemplate.update("insert into reservation_time (start_at) values ('10:00')");
+        CreateReservationRequest request = new CreateReservationRequest("조앤", LocalDate.of(2023, 10, 23), 2);
+        reservationDao.create(request);
+
+        reservationDao.delete(2);
+
+        List<Reservation> reservations = reservationDao.readAll();
+        Assertions.assertThat(reservations).hasSize(0);
     }
 }

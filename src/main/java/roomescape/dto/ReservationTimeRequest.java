@@ -15,7 +15,7 @@ public class ReservationTimeRequest {
     }
 
     public ReservationTime toEntity() {
-        return new ReservationTime(TEMPORARY_ID, startAt);
+        return new ReservationTime(startAt);
     }
 
     public LocalTime getStartAt() {

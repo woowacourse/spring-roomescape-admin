@@ -16,8 +16,8 @@ public class ReservationRequest {
     }
 
     public Reservation toEntity() {
-        return new Reservation(null, name, date,
-                new ReservationTime(timeId, null));
+        return new Reservation(name, date,
+                new ReservationTime(timeId));
     }
 
     public String getName() {

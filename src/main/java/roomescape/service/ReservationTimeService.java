@@ -9,8 +9,6 @@ import roomescape.repository.ReservationTimeRepository;
 
 @Service
 public class ReservationTimeService {
-    private static final Long TEMPORARY_ID = null;
-
     private final ReservationTimeRepository reservationTimeRepository;
 
     public ReservationTimeService(ReservationTimeRepository reservationTimeRepository) {

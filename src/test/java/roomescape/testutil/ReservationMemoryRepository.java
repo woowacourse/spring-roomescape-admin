@@ -28,7 +28,7 @@ public class ReservationMemoryRepository implements ReservationRepository {
     }
 
     @Override
-    public boolean deleteById(Long id) {
+    public boolean deleteById(final Long id) {
         final Optional<Reservation> findReservation = reservations.stream()
                 .filter(reservation -> reservation.getId().equals(id))
                 .findFirst();

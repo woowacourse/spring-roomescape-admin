@@ -15,7 +15,7 @@ public class ReservationTimeMemoryRepository implements ReservationTimeRepositor
     private final List<ReservationTime> reservationTimes = new ArrayList<>();
 
     @Override
-    public ReservationTime save(ReservationTime reservationTime) {
+    public ReservationTime save(final ReservationTime reservationTime) {
         final Long savedReservationTimeId = reservationTimeId.getAndIncrement();
         final ReservationTime savedReservationTime = new ReservationTime(savedReservationTimeId, reservationTime.getFormattedTime());
         reservationTimes.add(savedReservationTime);
@@ -23,7 +23,7 @@ public class ReservationTimeMemoryRepository implements ReservationTimeRepositor
     }
 
     @Override
-    public Optional<ReservationTime> findById(Long id) {
+    public Optional<ReservationTime> findById(final Long id) {
         return reservationTimes.stream()
                 .filter(reservationTime -> reservationTime.getId().equals(id))
                 .findFirst();
@@ -35,7 +35,7 @@ public class ReservationTimeMemoryRepository implements ReservationTimeRepositor
     }
 
     @Override
-    public boolean deleteById(Long id) {
+    public boolean deleteById(final Long id) {
         final Optional<ReservationTime> findReservationTime = reservationTimes.stream()
                 .filter(reservation -> reservation.getId().equals(id))
                 .findFirst();

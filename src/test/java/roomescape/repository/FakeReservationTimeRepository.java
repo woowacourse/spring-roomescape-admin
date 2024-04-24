@@ -8,7 +8,7 @@ import roomescape.controller.dto.ReservationTimeCreateRequest;
 import roomescape.domain.ReservationTime;
 import roomescape.util.CustomDateTimeFormatter;
 
-public class MemoryReservationTimes implements ReservationTimes {
+public class FakeReservationTimeRepository implements ReservationTimeRepository {
 
     private final List<ReservationTime> reservationTimes = new ArrayList<>();
     private final AtomicLong index = new AtomicLong(1);

@@ -8,14 +8,14 @@ import roomescape.domain.Reservation;
 import roomescape.domain.ReservationTime;
 import roomescape.util.CustomDateTimeFormatter;
 
-public class MemoryReservations implements Reservations {
+public class FakeReservationRepository implements ReservationRepository {
 
     private final List<Reservation> reservations;
     private final List<ReservationTime> reservationTimes;
     private final AtomicLong reservationIndex;
 
-    public MemoryReservations(List<Reservation> reservations, List<ReservationTime> reservationTimes,
-                              AtomicLong reservationIndex) {
+    public FakeReservationRepository(List<Reservation> reservations, List<ReservationTime> reservationTimes,
+                                     AtomicLong reservationIndex) {
         this.reservations = reservations;
         this.reservationTimes = reservationTimes;
         this.reservationIndex = reservationIndex;

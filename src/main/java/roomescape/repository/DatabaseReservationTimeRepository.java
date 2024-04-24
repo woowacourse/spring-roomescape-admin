@@ -11,11 +11,11 @@ import roomescape.domain.ReservationTime;
 import roomescape.util.CustomDateTimeFormatter;
 
 @Repository
-public class DatabaseReservationTimes implements ReservationTimes {
+public class DatabaseReservationTimeRepository implements ReservationTimeRepository {
 
     private final JdbcTemplate jdbcTemplate;
 
-    public DatabaseReservationTimes(JdbcTemplate jdbcTemplate) {
+    public DatabaseReservationTimeRepository(JdbcTemplate jdbcTemplate) {
         this.jdbcTemplate = jdbcTemplate;
     }
 

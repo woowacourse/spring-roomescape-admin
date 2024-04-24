@@ -13,7 +13,7 @@ import roomescape.domain.ReservationTime;
 import roomescape.util.CustomDateTimeFormatter;
 
 @Repository
-public class DatabaseReservations implements Reservations {
+public class DatabaseReservationRepository implements ReservationRepository {
 
     private final String findAllReservationQuery = """
             SELECT
@@ -39,7 +39,7 @@ public class DatabaseReservations implements Reservations {
 
     private final JdbcTemplate jdbcTemplate;
 
-    public DatabaseReservations(JdbcTemplate jdbcTemplate) {
+    public DatabaseReservationRepository(JdbcTemplate jdbcTemplate) {
         this.jdbcTemplate = jdbcTemplate;
     }
 

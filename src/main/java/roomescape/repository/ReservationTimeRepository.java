@@ -5,7 +5,7 @@ import java.util.Optional;
 import roomescape.controller.dto.ReservationTimeCreateRequest;
 import roomescape.domain.ReservationTime;
 
-public interface ReservationTimes {
+public interface ReservationTimeRepository {
     List<ReservationTime> findReservationTimes();
 
     Optional<ReservationTime> findReservationTimeById(Long id);

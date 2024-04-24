@@ -12,21 +12,21 @@ import roomescape.controller.dto.ReservationTimeCreateRequest;
 import roomescape.controller.dto.ReservationTimeCreateResponse;
 import roomescape.controller.dto.ReservationTimeFindResponse;
 import roomescape.domain.ReservationTime;
-import roomescape.repository.ReservationTimes;
+import roomescape.repository.ReservationTimeRepository;
 
 @RestController
 @RequestMapping("/times")
 public class ReservationTimeController {
 
-    private final ReservationTimes reservationTimes;
+    private final ReservationTimeRepository reservationTimeRepository;
 
-    public ReservationTimeController(ReservationTimes reservationTimes) {
-        this.reservationTimes = reservationTimes;
+    public ReservationTimeController(ReservationTimeRepository reservationTimeRepository) {
+        this.reservationTimeRepository = reservationTimeRepository;
     }
 
     @GetMapping
-    public List<ReservationTimeFindResponse> getReservationTimes() {
-        return reservationTimes.findReservationTimes().stream()
+    public List<ReservationTimeFindResponse> getReservationTimeRepository() {
+        return reservationTimeRepository.findReservationTimes().stream()
                 .map(ReservationTimeFindResponse::of)
                 .toList();
     }
@@ -35,7 +35,7 @@ public class ReservationTimeController {
     public ReservationTimeCreateResponse createReservationTime(
             @RequestBody ReservationTimeCreateRequest reservationTimeCreateRequest) {
 
-        ReservationTime createdReservationTime = reservationTimes.createReservationTime(
+        ReservationTime createdReservationTime = reservationTimeRepository.createReservationTime(
                 reservationTimeCreateRequest);
 
         return ReservationTimeCreateResponse.of(createdReservationTime);
@@ -43,6 +43,6 @@ public class ReservationTimeController {
 
     @DeleteMapping("/{id}")
     public void deleteReservationTime(@PathVariable Long id) {
-        reservationTimes.deleteReservationTimeById(id);
+        reservationTimeRepository.deleteReservationTimeById(id);
     }
 }

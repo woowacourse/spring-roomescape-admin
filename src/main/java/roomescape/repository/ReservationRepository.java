@@ -5,7 +5,7 @@ import java.util.Optional;
 import roomescape.controller.dto.ReservationCreateRequest;
 import roomescape.domain.Reservation;
 
-public interface Reservations {
+public interface ReservationRepository {
     List<Reservation> findReservations();
 
     Optional<Reservation> findReservationById(Long id);

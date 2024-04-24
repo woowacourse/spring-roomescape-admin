@@ -35,7 +35,7 @@ public class ReservationTimeRepositoryImpl implements ReservationTimeRepository 
 
     @Override
     public ReservationTime findById(Long id) {
-        String sql = "select id, start_at from reservation_time where id = ?";
+        String sql = "select * from reservation_time where id = ?";
         ReservationTime reservationTime = jdbcTemplate.queryForObject(sql, reservationTimeRowMapper, id);
         if (reservationTime == null) {
             throw new NoSuchElementException("존재하지 않는 아아디입니다.");

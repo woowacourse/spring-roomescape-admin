@@ -28,6 +28,14 @@ public class ReservationRepositoryImpl implements ReservationRepository {
                     LocalTime.parse(resultSet.getString("time_value"))
             )
     );
+    private final String basicSelectQuery = "SELECT " +
+            "r.id AS reservation_id, " +
+            "r.name, " +
+            "r.date, " +
+            "t.id AS time_id, " +
+            "t.start_at AS time_value " +
+            "FROM reservation AS r " +
+            "INNER JOIN reservation_time AS t ON r.time_id = t.id ";
 
     public ReservationRepositoryImpl(JdbcTemplate jdbcTemplate) {
         this.jdbcTemplate = jdbcTemplate;
@@ -35,29 +43,21 @@ public class ReservationRepositoryImpl implements ReservationRepository {
 
     @Override
     public List<Reservation> findAll() {
-        String sql = "SELECT " +
-                "r.id AS reservation_id, " +
-                "r.name, " +
-                "r.date, " +
-                "t.id AS time_id, " +
-                "t.start_at AS time_value " +
-                "FROM reservation AS r " +
-                "INNER JOIN reservation_time AS t ON r.time_id = t.id ";
-        List<Reservation> reservations = jdbcTemplate.query(sql, reservationRowMapper);
+        List<Reservation> reservations = jdbcTemplate.query(this.basicSelectQuery, reservationRowMapper);
 
         return Collections.unmodifiableList(reservations);
     }
 
     @Override
     public List<Reservation> findAllByReservationTimeId(Long id) {
-        String sql = "select * from reservation where time_id = ?";
+        String sql = basicSelectQuery + "where time_id = ?";
 
         return jdbcTemplate.query(sql, reservationRowMapper, id);
     }
 
     @Override
     public Reservation findById(Long id) {
-        String sql = "select * from reservation where id = ?";
+        String sql = basicSelectQuery + "where reservation_id = ?";
         Reservation reservation = jdbcTemplate.queryForObject(sql, reservationRowMapper, id);
         if (reservation == null) {
             throw new NoSuchElementException("존재하지 않는 아아디입니다.");

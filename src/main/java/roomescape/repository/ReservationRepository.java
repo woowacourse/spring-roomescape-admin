@@ -1,4 +1,4 @@
-package roomescape.dao;
+package roomescape.repository;
 
 import java.time.LocalDate;
 import java.time.LocalTime;
@@ -14,14 +14,14 @@ import roomescape.domain.ReservationTime;
 import roomescape.dto.ReservationCreateRequest;
 
 @Repository
-public class ReservationDao {
+public class ReservationRepository {
 
     private static final String DATABASE = "reservation";
 
     private final JdbcTemplate jdbcTemplate;
     private final SimpleJdbcInsert simpleJdbcInsert;
 
-    public ReservationDao(JdbcTemplate jdbcTemplate, DataSource dataSource) {
+    public ReservationRepository(JdbcTemplate jdbcTemplate, DataSource dataSource) {
         this.jdbcTemplate = jdbcTemplate;
         this.simpleJdbcInsert = new SimpleJdbcInsert(dataSource)
                 .withTableName("reservation")
@@ -57,7 +57,7 @@ public class ReservationDao {
         );
     }
 
-    public Long addReservation(ReservationCreateRequest reservationCreateRequest) {
+    public Long save(ReservationCreateRequest reservationCreateRequest) {
         SqlParameterSource parameterSource = new MapSqlParameterSource()
                 .addValue("name", reservationCreateRequest.name())
                 .addValue("date", reservationCreateRequest.date())

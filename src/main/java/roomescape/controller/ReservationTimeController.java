@@ -10,7 +10,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
-import roomescape.dao.ReservationTimeDao;
+import roomescape.repository.ReservationTimeRepository;
 import roomescape.dto.ReservationTimeCreateRequest;
 import roomescape.dto.ReservationTimeResponse;
 
@@ -18,15 +18,15 @@ import roomescape.dto.ReservationTimeResponse;
 @RequestMapping("/times")
 public class ReservationTimeController {
 
-    private final ReservationTimeDao reservationTimeDao;
+    private final ReservationTimeRepository reservationTimeRepository;
 
-    public ReservationTimeController(ReservationTimeDao reservationTimeDao) {
-        this.reservationTimeDao = reservationTimeDao;
+    public ReservationTimeController(ReservationTimeRepository reservationTimeRepository) {
+        this.reservationTimeRepository = reservationTimeRepository;
     }
 
     @GetMapping
     public ResponseEntity<List<ReservationTimeResponse>> findAllReservationTimes() {
-        List<ReservationTimeResponse> reservationTimeResponses = reservationTimeDao.findAll()
+        List<ReservationTimeResponse> reservationTimeResponses = reservationTimeRepository.findAll()
                 .stream()
                 .map(ReservationTimeResponse::toResponse)
                 .toList();
@@ -38,14 +38,14 @@ public class ReservationTimeController {
     @PostMapping
     public ResponseEntity<ReservationTimeResponse> createReservationTime(
             @RequestBody ReservationTimeCreateRequest reservationTimeCreateRequest) {
-        Long id = reservationTimeDao.addReservationTime(reservationTimeCreateRequest);
+        Long id = reservationTimeRepository.save(reservationTimeCreateRequest);
         return ResponseEntity.created(URI.create("/times/" + id))
                 .build();
     }
 
     @DeleteMapping("/{id}")
     public ResponseEntity<Void> deleteReservation(@PathVariable Long id) {
-        int deletedRowCount = reservationTimeDao.deleteById(id);
+        int deletedRowCount = reservationTimeRepository.deleteById(id);
         if (deletedRowCount == 0) {
             return ResponseEntity.notFound()
                     .build();

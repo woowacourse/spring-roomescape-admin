@@ -10,7 +10,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
-import roomescape.dao.ReservationDao;
+import roomescape.repository.ReservationRepository;
 import roomescape.dto.ReservationCreateRequest;
 import roomescape.dto.ReservationResponse;
 
@@ -18,15 +18,15 @@ import roomescape.dto.ReservationResponse;
 @RequestMapping("/reservations")
 public class ReservationController {
 
-    private final ReservationDao reservationDao;
+    private final ReservationRepository reservationRepository;
 
-    public ReservationController(ReservationDao reservationDao) {
-        this.reservationDao = reservationDao;
+    public ReservationController(ReservationRepository reservationRepository) {
+        this.reservationRepository = reservationRepository;
     }
 
     @GetMapping
     public ResponseEntity<List<ReservationResponse>> findAllReservations() {
-        List<ReservationResponse> reservationResponses = reservationDao.findAll()
+        List<ReservationResponse> reservationResponses = reservationRepository.findAll()
                 .stream()
                 .map(ReservationResponse::toResponse)
                 .toList();
@@ -37,14 +37,14 @@ public class ReservationController {
 
     @PostMapping
     public ResponseEntity<ReservationResponse> createReservation(@RequestBody ReservationCreateRequest reservationCreateRequest) {
-        Long id = reservationDao.addReservation(reservationCreateRequest);
+        Long id = reservationRepository.save(reservationCreateRequest);
         return ResponseEntity.created(URI.create("/reservations/" + id))
                 .build();
     }
 
     @DeleteMapping("/{id}")
     public ResponseEntity<Void> deleteReservation(@PathVariable Long id) {
-        int deletedRowCount = reservationDao.deleteById(id);
+        int deletedRowCount = reservationRepository.deleteById(id);
         if (deletedRowCount == 0) {
             return ResponseEntity.notFound()
                     .build();

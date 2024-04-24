@@ -34,4 +34,12 @@ class AdminControllerTest {
                 .when().get("/admin/reservation")
                 .then().statusCode(200);
     }
+
+    @DisplayName("예약 시간 화면 조회")
+    @Test
+    void responseTime() {
+        RestAssured.given().log().all()
+                .when().get("/admin/time")
+                .then().statusCode(200);
+    }
 }

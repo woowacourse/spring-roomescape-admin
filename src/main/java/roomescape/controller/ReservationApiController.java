@@ -30,7 +30,12 @@ public class ReservationApiController {
     @ResponseStatus(value = HttpStatus.CREATED)
     public ResponseEntity<ReservationCreateResponse> createReservation(
             @Valid @RequestBody final ReservationRequest reservationRequest) {
-        final ReservationCreateResponse reservationCreateResponse = reservationService.createReservation(reservationRequest);
+        final ReservationCreateResponse reservationCreateResponse =
+                reservationService.createReservation(
+                        reservationRequest.name(),
+                        reservationRequest.date(),
+                        reservationRequest.timeId());
+
         return ResponseEntity.created(reservationCreateResponse.getLocationHeaderValue())
                              .body(reservationCreateResponse);
     }

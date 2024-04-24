@@ -2,7 +2,6 @@ package roomescape.service;
 
 import org.springframework.stereotype.Service;
 import roomescape.domain.ReservationTime;
-import roomescape.dto.request.ReservationTimeCreateRequest;
 import roomescape.dto.response.ReservationTimeCreateResponse;
 import roomescape.dto.response.ReservationTimesResponse;
 import roomescape.exception.reservation.time.NotExistReservationTimeException;
@@ -34,8 +33,7 @@ public class ReservationTimeService {
         reservationTimeRepository.deleteById(reservationTimeId);
     }
 
-    public ReservationTimeCreateResponse createReservationTime(final ReservationTimeCreateRequest reservationTimeCreateRequest) {
-        final String startAt = reservationTimeCreateRequest.startAt();
+    public ReservationTimeCreateResponse createReservationTime(final String startAt) {
         final long reservationId = reservationTimeRepository.create(ReservationTime.from(startAt));
         return new ReservationTimeCreateResponse(reservationId, startAt);
     }

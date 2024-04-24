@@ -21,9 +21,9 @@ class ReservationTimeServiceTest {
     @Test
     @DisplayName("예약시간에 해당하는 예약이 존재하면 예외를 발생한다")
     void throw_exception_when_exist_reservation_in_reservation_time() {
-        reservationTimeService.createReservationTime(new ReservationTimeCreateRequest("10:00"));
+        reservationTimeService.createReservationTime("10:00");
 
-        reservationService.createReservation(new ReservationRequest("비밥", "2024-10-03", 1));
+        reservationService.createReservation("비밥", "2024-10-03", 1);
         assertThatThrownBy(() -> reservationTimeService.deleteReservationTime(1))
                 .isInstanceOf(ReservationExistInReservationTimeException.class);
     }

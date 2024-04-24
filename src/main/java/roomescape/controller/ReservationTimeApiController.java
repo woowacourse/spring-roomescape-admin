@@ -24,8 +24,8 @@ public class ReservationTimeApiController {
 
     @PostMapping
     @ResponseStatus(value = HttpStatus.CREATED)
-    public ReservationTimeCreateResponse createTime(@Valid  @RequestBody ReservationTimeCreateRequest reservationTimeCreateRequest) {
-        return this.reservationTimeService.createReservationTime(reservationTimeCreateRequest);
+    public ReservationTimeCreateResponse createTime(@Valid @RequestBody ReservationTimeCreateRequest reservationTimeCreateRequest) {
+        return this.reservationTimeService.createReservationTime(reservationTimeCreateRequest.startAt());
     }
 
     @DeleteMapping("/{id}")

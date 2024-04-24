@@ -9,6 +9,7 @@ import roomescape.domain.ReservationTime;
 
 import java.sql.PreparedStatement;
 import java.util.List;
+import java.util.Optional;
 
 @Repository
 public class ReservationTimeDao {
@@ -19,7 +20,7 @@ public class ReservationTimeDao {
         this.jdbcTemplate = jdbcTemplate;
     }
 
-    public Long insert(String startAt) {
+    public Optional<Long> insert(String startAt) {
         String insertSql = "INSERT INTO reservation_time(start_at) VALUES ?";
         KeyHolder keyHolder = new GeneratedKeyHolder();
         jdbcTemplate.update(connection -> {
@@ -30,7 +31,7 @@ public class ReservationTimeDao {
             return ps;
         }, keyHolder);
 
-        return keyHolder.getKey().longValue();
+        return Optional.ofNullable(keyHolder.getKeyAs(Long.class));
     }
 
     public List<ReservationTime> findAll() {
@@ -42,7 +43,7 @@ public class ReservationTimeDao {
                 ));
     }
 
-    public ReservationTime findById(Long id) {
+    public Optional<ReservationTime> findById(Long id) {
         String findByIdSql = "SELECT id, start_at FROM reservation_time WHERE id = ?";
         List<ReservationTime> reservationTimes = jdbcTemplate.query(findByIdSql,
                 (resultSet, numRow) -> new ReservationTime(
@@ -50,7 +51,7 @@ public class ReservationTimeDao {
                         resultSet.getString("start_at")
                 ), id);
 
-        return DataAccessUtils.singleResult(reservationTimes);
+        return Optional.ofNullable(DataAccessUtils.singleResult(reservationTimes));
     }
 
     public void deleteById(Long id) {

@@ -14,6 +14,7 @@ import roomescape.domain.Reservation;
 
 import java.sql.PreparedStatement;
 import java.util.List;
+import java.util.Optional;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
@@ -50,15 +51,19 @@ public class ReservationDaoTest {
 
     @Test
     void findById() {
-        Reservation reservation = reservationDao.findById(1L);
+        Optional<Reservation> reservation = reservationDao.findById(1L);
 
-        assertThat(reservation.getId()).isEqualTo(1L);
+        if(reservation.isEmpty()) {
+            throw new IllegalArgumentException("존재하지 않는 id 입니다.");
+        }
+
+        assertThat(reservation.get().getId()).isEqualTo(1L);
     }
 
     @Test
     void insertTest() {
         Long index = jdbcTemplate.queryForObject("SELECT count(*) FROM reservation", Long.class);
-        Long id = reservationDao.insert("토미", "2024-01-02", 1L);
+        Long id = reservationDao.insert("토미", "2024-01-02", 1L).get();
 
         assertThat(id).isEqualTo(index + 1);
     }
@@ -78,6 +83,6 @@ public class ReservationDaoTest {
         Long key = keyHolder.getKey().longValue();
         reservationDao.deleteById(key);
 
-        assertThat(reservationDao.findById(key)).isNull();
+        assertThat(reservationDao.findById(key)).isEqualTo(Optional.empty());
     }
 }

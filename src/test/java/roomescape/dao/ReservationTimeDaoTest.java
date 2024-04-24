@@ -51,7 +51,7 @@ public class ReservationTimeDaoTest {
     @Test
     void insertTest() {
         Long index = jdbcTemplate.queryForObject("SELECT count(*) FROM reservation_time", Long.class);
-        Long id = reservationTimeDao.insert("01:01");
+        Long id = reservationTimeDao.insert("01:01").get();
 
         assertThat(id).isEqualTo(index + 1);
     }

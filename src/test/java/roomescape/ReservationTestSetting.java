@@ -4,7 +4,8 @@ import java.time.LocalDate;
 import java.time.LocalTime;
 import java.util.Objects;
 import roomescape.domain.Reservation;
-import roomescape.dto.ReservationDto;
+import roomescape.domain.ReservationTime;
+import roomescape.dto.ReservationRequest;
 
 public class ReservationTestSetting {
 
@@ -14,12 +15,16 @@ public class ReservationTestSetting {
     public static Reservation createReservation() {
         String name = "ted";
         LocalDate date = LocalDate.parse("2024-01-01");
-        LocalTime time = LocalTime.parse("00:00");
-        return new Reservation(name, date, time);
+        ReservationTime reservationTime = new ReservationTime(1L, LocalTime.parse("10:00"));
+        return new Reservation(name, date, reservationTime);
     }
 
-    public static ReservationDto createReservationDto() {
-        return new ReservationDto(null, "ted", "2024-01-01", "00:00");
+    public static ReservationTime createReservationTime() {
+        return new ReservationTime(LocalTime.parse("10:00"));
+    }
+
+    public static ReservationRequest createReservationRequest() {
+        return new ReservationRequest("ted", "2024-01-01", 1L);
     }
 
     public static boolean isEqualsReservation(Reservation reservation1, Reservation reservation2) {
@@ -32,7 +37,18 @@ public class ReservationTestSetting {
 
         return Objects.equals(reservation1.getName(), reservation2.getName())
                 && Objects.equals(reservation1.getDate(), reservation2.getDate())
-                && Objects.equals(reservation1.getTime(), reservation2.getTime()
+                && isEqualsReservationTime(reservation1.getTime(), reservation2.getTime()
         );
+    }
+
+    public static boolean isEqualsReservationTime(ReservationTime reservationTime1, ReservationTime reservationTime2) {
+        if (reservationTime1 == reservationTime2) {
+            return true;
+        }
+        if (reservationTime1 == null || reservationTime2 == null) {
+            return false;
+        }
+
+        return Objects.equals(reservationTime1.getStartAt(), reservationTime2.getStartAt());
     }
 }

@@ -29,6 +29,11 @@ public class ReservationController {
         return ResponseEntity.ok(reservationService.getReservations());
     }
 
+    @GetMapping("/{id}")
+    public ResponseEntity<FindReservationResponse> getReservation(@PathVariable final Long id) {
+        return ResponseEntity.ok(reservationService.getReservation(id));
+    }
+
     @PostMapping
     public ResponseEntity<Void> createReservation(
             @RequestBody CreateReservationRequest createReservationRequest) {

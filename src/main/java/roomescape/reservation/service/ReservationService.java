@@ -26,6 +26,10 @@ public class ReservationService {
                 .toList();
     }
 
+    public FindReservationResponse getReservation(final Long id) {
+        return FindReservationResponse.of(reservationRepository.findById(id));
+    }
+
     public Long createReservation(final CreateReservationRequest createReservationRequest) {
         ReservationTime reservationTime = reservationTimeRepository.findById(createReservationRequest.timeId());
         return reservationRepository.save(createReservationRequest.toReservation(reservationTime));

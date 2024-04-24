@@ -42,8 +42,14 @@ public class JdbcReservationRepository implements ReservationRepository {
 
     @Override
     public Reservation findById(final Long id) {
-        String sql = "select * from reservation where id = ?";
-        return jdbcTemplate.queryForObject(sql, Reservation.class, id);
+        String sql = """
+                select r.id, r.name, r.date, t.id, t.start_at 
+                from reservation as r 
+                inner join reservation_time as t 
+                on r.time_id = t.id
+                where r.id = ?
+                """;
+        return jdbcTemplate.queryForObject(sql, reservationRowMapper, id);
     }
 
     @Override

@@ -18,42 +18,35 @@ public class ReservationRepository {
         this.jdbcTemplate = jdbcTemplate;
     }
 
-    private final RowMapper<Reservation> reservationRowMapper = (resultSet, rowNum) ->
-            new Reservation(
+    private final RowMapper<ReservationDto> reservationRowMapper = (resultSet, rowNum) ->
+            new ReservationDto(
                     resultSet.getLong("id"),
                     resultSet.getString("name"),
                     resultSet.getString("date"),
-                    resultSet.getString("time")
+                    resultSet.getLong("time_id")
             );
 
-    public List<Reservation> findAllReservations() {
-        String sqlToFind = "SELECT id, name, date, time FROM reservation";
+    public List<ReservationDto> findAllReservationDtos() {
+        String sqlToFind = "SELECT id, name, date, time_id FROM reservation";
+
         return jdbcTemplate.query(
                 sqlToFind,
                 reservationRowMapper);
     }
 
-    private Reservation findReservationById(Long id) {
-        String sqlToFind = "SELECT id, name, date, time FROM reservation WHERE id = ?";
-        return jdbcTemplate.queryForObject(
-                sqlToFind,
-                reservationRowMapper,
-                id);
-    }
-
-    public Reservation createReservation(Reservation reservation) {
-        String sqlToInsert = "INSERT INTO reservation (name, date, time) VALUES (?, ?, ?)";
+    public ReservationDto createReservation(ReservationDto reservationDto) {
+        String sqlToInsert = "INSERT INTO reservation (name, date, time_id) VALUES (?, ?, ?)";
         KeyHolder keyHolder = new GeneratedKeyHolder();
         jdbcTemplate.update(connection -> {
             PreparedStatement ps = connection.prepareStatement(
                     sqlToInsert,
                     new String[]{"id"});
-            ps.setString(1, reservation.name());
-            ps.setString(2, reservation.date());
-            ps.setString(3, reservation.time());
+            ps.setString(1, reservationDto.name());
+            ps.setString(2, reservationDto.date());
+            ps.setLong(3, reservationDto.timeId());
             return ps;
         }, keyHolder);
-        return reservation.toIdAssigned(Objects.requireNonNull(keyHolder.getKey())
+        return reservationDto.toIdAssigned(Objects.requireNonNull(keyHolder.getKey())
                 .longValue());
     }
 

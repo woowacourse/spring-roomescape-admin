@@ -55,16 +55,11 @@ class JdbcTemplateReservationTimeRepository implements ReservationTimeRepository
     @Override
     public ReservationTime findBy(long id) {
         try {
-            return tryFindBy(id);
+            String sql = "select * from reservation_time where id = ?";
+            return jdbcTemplate.queryForObject(sql, getReservationTimeRowMapper(), id);
         } catch (EmptyResultDataAccessException exception) {
             throw new EntityNotFoundException("존재하지 않는 예약 시간입니다.");
         }
-    }
-
-    private ReservationTime tryFindBy(long id) {
-        String sql = "select * from reservation_time where id = ?";
-
-        return jdbcTemplate.queryForObject(sql, getReservationTimeRowMapper(), id);
     }
 
     private RowMapper<ReservationTime> getReservationTimeRowMapper() {

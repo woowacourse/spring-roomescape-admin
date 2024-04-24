@@ -1,11 +1,13 @@
 package roomescape.reservation.service;
 
+import org.springframework.dao.DataAccessException;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import roomescape.reservation.dao.ReservationDao;
 import roomescape.reservation.domain.Reservation;
 import roomescape.reservation.dto.ReservationRequestDto;
 import roomescape.reservation.dto.ReservationResponseDto;
+import roomescape.reservation.dto.ResponseCode;
 
 import java.util.List;
 
@@ -34,10 +36,14 @@ public class ReservationService {
     }
 
     @Transactional
-    public boolean deleteById(final long id) {
-        if (reservationDao.deleteById(id) > 0) {
-            return true;
+    public ResponseCode deleteById(final long id) {
+        try {
+            if (reservationDao.deleteById(id) > 0) {
+                return ResponseCode.SUCCESS_DELETE;
+            }
+            return ResponseCode.NOT_FOUND;
+        } catch (final DataAccessException dataAccessException) {
+            return ResponseCode.FAILED_DELETE;
         }
-        return false;
     }
 }

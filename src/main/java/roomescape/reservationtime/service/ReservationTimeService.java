@@ -15,7 +15,7 @@ public class ReservationTimeService {
     }
 
     public Long createReservationTime(final CreateReservationTimeRequest createReservationTimeRequest) {
-        return reservationTimeRepository.save(createReservationTimeRequest.toDomain());
+        return reservationTimeRepository.save(createReservationTimeRequest.toReservationTime());
     }
 
     public List<FindReservationTimeResponse> getReservationTimes() {

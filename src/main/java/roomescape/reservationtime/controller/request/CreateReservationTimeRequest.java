@@ -4,7 +4,7 @@ import java.time.LocalTime;
 import roomescape.reservationtime.domain.ReservationTime;
 
 public record CreateReservationTimeRequest(LocalTime startAt) {
-    public ReservationTime toDomain() {
+    public ReservationTime toReservationTime() {
         return new ReservationTime(
                 null,
                 startAt);

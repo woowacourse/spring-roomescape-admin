@@ -28,7 +28,7 @@ public class ReservationService {
 
     public Long createReservation(final CreateReservationRequest createReservationRequest) {
         ReservationTime reservationTime = reservationTimeRepository.findById(createReservationRequest.timeId());
-        return reservationRepository.save(createReservationRequest.toDomain(reservationTime));
+        return reservationRepository.save(createReservationRequest.toReservation(reservationTime));
     }
 
     public void deleteReservation(final Long id) {

@@ -3,80 +3,95 @@ package roomescape.time.repository;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertAll;
 
+import java.time.LocalDate;
 import java.time.LocalTime;
 import java.util.List;
 import java.util.Optional;
-import java.util.stream.Stream;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
-import org.junit.jupiter.api.DynamicTest;
-import org.junit.jupiter.api.TestFactory;
+import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.jdbc.JdbcTest;
 import org.springframework.context.annotation.Import;
-import org.springframework.test.context.jdbc.Sql;
+import roomescape.reservation.domain.Name;
+import roomescape.reservation.domain.Reservation;
+import roomescape.reservation.repository.ReservationRepository;
 import roomescape.time.domain.Time;
-import roomescape.time.dto.TimeSaveRequest;
 
 @DisplayName("시간 레포지토리")
 @JdbcTest
-@Sql(scripts = "classpath:reservation-test.sql")
-@Import(TimeRepository.class)
+@Import({TimeRepository.class, ReservationRepository.class})
 class TimeRepositoryTest {
-
     @Autowired
     private TimeRepository timeRepository;
 
-    @TestFactory
-    Stream<DynamicTest> timeRepositoryDynamicTests() {
-        return Stream.of(
-                DynamicTest.dynamicTest("예약 정보를 저장한다.", () -> {
-                    // given
-                    Time time = new Time(LocalTime.parse("10:00"));
+    @Autowired
+    private ReservationRepository reservationRepository;
 
-                    // when
-                    Time savedTime = timeRepository.save(time);
+    private Time savedTime;
 
-                    // then
-                    assertThat(savedTime.getId()).isEqualTo(2L);
-                }),
-                DynamicTest.dynamicTest("id로 시간 정보를 조회한다.", () -> {
-                    // given & when
-                    Optional<Time> time = timeRepository.findById(2L);
+    @BeforeEach
+    void init() {
+        Time time = new Time(LocalTime.parse("10:00"));
+        savedTime = timeRepository.save(time);
+    }
 
-                    // then
-                    assertAll(
-                            () -> assertThat(time.get().getId()).isEqualTo(2L),
-                            () -> assertThat(time.get().getStartAt()).isEqualTo("10:00")
-                    );
-                }),
-                DynamicTest.dynamicTest("모든 시간 정보를 조회한다.", () -> {
-                    // given & when
-                    List<Time> reservations = timeRepository.findAll();
+    @DisplayName("id로 시간 정보를 조회한다.")
+    @Test
+    void findById() {
+        // given
+        Optional<Time> findTime = timeRepository.findById(savedTime.getId());
 
-                    // then
-                    assertThat(reservations).hasSize(2);
-                }),
-                DynamicTest.dynamicTest("time 기본키를 참조하는 reservation이 있는지 조회한다.", () -> {
-                    // given & when
-                    Optional<Time> time1 = timeRepository.findBySameReferId(1L);
-                    Optional<Time> time2 = timeRepository.findBySameReferId(2L);
+        // when
+        Time time = findTime.get();
 
-                    // then
-                    assertAll(
-                            () -> assertThat(time1.isPresent()).isTrue(),
-                            () -> assertThat(time2.isPresent()).isFalse()
-                    );
-                }),
-                DynamicTest.dynamicTest("id로 시간 정보를 제거한다.", () -> {
-                    // given
-                    Long id = 2L;
-
-                    // when
-                    timeRepository.deleteById(id);
-
-                    // then
-                    assertThat(timeRepository.findById(id).isEmpty()).isTrue();
-                })
+        // then
+        assertAll(
+                () -> assertThat(savedTime.getId()).isEqualTo(time.getId()),
+                () -> assertThat(savedTime.getStartAt()).isEqualTo(time.getStartAt())
         );
+    }
+
+    @DisplayName("모든 시간 정보를 조회한다.")
+    @Test
+    void findAll() {
+        // given & when
+        List<Time> reservations = timeRepository.findAll();
+
+        // then
+        assertThat(reservations).hasSize(1);
+    }
+
+    @DisplayName("time 기본키를 참조하는 예약이 있는지 조회한다.")
+    @Test
+    void test() {
+        // given
+        Reservation reservation = new Reservation(
+                new Name("브라운"), LocalDate.parse("2024-08-05"),
+                new Time(savedTime.getId(), LocalTime.parse("10:00"))
+        );
+        reservationRepository.save(reservation);
+
+        Time savedTime2 = timeRepository.save(new Time(LocalTime.parse("11:00")));
+
+        // when
+        Optional<Time> time1 = timeRepository.findBySameReferId(savedTime.getId());
+        Optional<Time> time2 = timeRepository.findBySameReferId(savedTime2.getId());
+
+        // then
+        assertAll(
+                () -> assertThat(time1.isPresent()).isTrue(),
+                () -> assertThat(time2.isPresent()).isFalse()
+        );
+    }
+
+    @DisplayName("id로 시간 정보를 제거한다.")
+    @Test
+    void delete() {
+        // given & when
+        timeRepository.deleteById(savedTime.getId());
+
+        // then
+        assertThat(timeRepository.findById(savedTime.getId()).isEmpty()).isTrue();
     }
 }

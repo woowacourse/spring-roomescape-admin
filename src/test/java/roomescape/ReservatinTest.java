@@ -60,7 +60,6 @@ public class ReservatinTest {
         // given
         jdbcTemplate.update("INSERT INTO reservation_time (start_at) VALUES (?)", "10:00");
         List<ReservationTime> all = new ReservationTimeDao(jdbcTemplate).findAll();
-        System.out.println("all = " + all);
 
         ReservationRequest params = new ReservationRequest("브라운", LocalDate.of(2023, 8, 5), 1);
 

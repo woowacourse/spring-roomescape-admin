@@ -39,7 +39,7 @@ public class ReservationDao {
                     t.start_at AS time_value
                 FROM reservation AS r
                 INNER JOIN reservation_time AS t
-                ON r.time_id = t.id""";  // time_value 이건 왜필요하지?
+                ON r.time_id = t.id""";
         return jdbcTemplate.query(sql, ACTOR_ROW_MAPPER);
     }
 

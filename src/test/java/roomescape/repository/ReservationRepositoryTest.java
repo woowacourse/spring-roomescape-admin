@@ -5,7 +5,6 @@ import static org.assertj.core.api.Assertions.assertThat;
 import java.time.LocalDate;
 import java.time.LocalTime;
 import java.util.List;
-import java.util.Optional;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -43,9 +42,9 @@ class ReservationRepositoryTest {
     void saveTest() {
         Reservation reservation = new Reservation("폭포", LocalDate.of(2024, 5, 20), LocalTime.of(3, 0));
         Reservation saved = reservationRepository.save(reservation);
-        Optional<Reservation> found = reservationRepository.findById(saved.getId());
 
-        assertThat(found).isPresent();
+        assertThat(saved).isEqualTo(new Reservation(saved.getId(), reservation.getName(), reservation.getStartDate(),
+                reservation.getStartTime()));
     }
 
     @DisplayName("예약 단건을 조회할 수 있다")

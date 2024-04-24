@@ -18,14 +18,6 @@ public class ReservationCreateRequest {
         this.timeId = timeId;
     }
 
-    public static ReservationCreateRequest of(Reservation reservation, ReservationTime reservationTime) {
-        return new ReservationCreateRequest(
-                reservation.getName().getValue(),
-                reservation.getDate().toStringDate(),
-                reservationTime.getId()
-        );
-    }
-
     public static ReservationCreateRequest of(String name, String date, Long timeId) {
         return new ReservationCreateRequest(name, date, timeId);
     }

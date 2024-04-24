@@ -15,9 +15,13 @@ import org.springframework.boot.test.context.SpringBootTest.WebEnvironment;
 import org.springframework.jdbc.core.JdbcTemplate;
 import roomescape.dao.ReservationDao;
 import roomescape.dao.ReservationTimeDao;
+import roomescape.domain.reservation.Reservation;
+import roomescape.domain.reservation.ReservationDate;
+import roomescape.domain.reservation.ReservationName;
+import roomescape.domain.reservationtime.ReservationStartAt;
+import roomescape.domain.reservationtime.ReservationTime;
 import roomescape.dto.reservation.ReservationCreateRequest;
 import roomescape.dto.reservation.ReservationResponse;
-import roomescape.dto.reservationtime.ReservationTimeCreateRequest;
 
 @SpringBootTest(webEnvironment = WebEnvironment.RANDOM_PORT)
 class ReservationServiceTest {
@@ -31,12 +35,26 @@ class ReservationServiceTest {
     @Autowired
     private ReservationService reservationService;
     private Long timeId;
+    private ReservationTime reservationTime;
 
     @BeforeEach
     void setUp() {
-        timeId = reservationTimeDao.add(ReservationTimeCreateRequest.from("12:02"));
-        reservationDao.add(ReservationCreateRequest.of("daon", "2024-04-23", timeId));
-        reservationDao.add(ReservationCreateRequest.of("ikjo", "2022-02-22", timeId));
+        timeId = reservationTimeDao.add(new ReservationTime(null, ReservationStartAt.from("12:02")));
+        reservationTime = reservationTimeDao.findById(timeId);
+        Reservation daon = new Reservation(
+                null,
+                new ReservationName("daon"),
+                ReservationDate.from("2024-04-24"),
+                reservationTime
+        );
+        Reservation ikjo = new Reservation(
+                null,
+                new ReservationName("ikjo"),
+                ReservationDate.from("2022-02-22"),
+                reservationTime
+        );
+        reservationDao.add(daon);
+        reservationDao.add(ikjo);
     }
 
     @AfterEach
@@ -128,7 +146,12 @@ class ReservationServiceTest {
     }
 
     private long addAndGetId() {
-        ReservationCreateRequest givenRequest = ReservationCreateRequest.of("3", "1999-09-19", timeId);
-        return reservationDao.add(givenRequest);
+        Reservation reservation = new Reservation(
+                null,
+                new ReservationName("33"),
+                ReservationDate.from("1999-09-19"),
+                reservationTime
+        );
+        return reservationDao.add(reservation);
     }
 }

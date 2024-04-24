@@ -18,11 +18,6 @@ public class ReservationTimeCreateRequest {
         return new ReservationTimeCreateRequest(startAt);
     }
 
-    public static ReservationTimeCreateRequest from(ReservationTime reservationTime) {
-        ReservationStartAt reservationStartAt = reservationTime.getStartAt();
-        return new ReservationTimeCreateRequest(reservationStartAt.toStringTime());
-    }
-
     public ReservationTime toDomain() {
         return new ReservationTime(
                 null,

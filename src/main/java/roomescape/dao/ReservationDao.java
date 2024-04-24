@@ -16,7 +16,6 @@ import roomescape.domain.reservation.ReservationDate;
 import roomescape.domain.reservation.ReservationName;
 import roomescape.domain.reservationtime.ReservationStartAt;
 import roomescape.domain.reservationtime.ReservationTime;
-import roomescape.dto.reservation.ReservationCreateRequest;
 
 @Component
 @Repository
@@ -66,7 +65,7 @@ public class ReservationDao {
         );
     }
 
-    public long add(ReservationCreateRequest request) {
+    public long add(Reservation reservation) {
         String sql = """
                 INSERT
                 INTO reservation
@@ -76,7 +75,7 @@ public class ReservationDao {
                 """;
         KeyHolder keyHolder = new GeneratedKeyHolder();
         jdbcTemplate.update(
-                connection -> getPreparedStatement(request, connection, sql),
+                connection -> getPreparedStatement(reservation, connection, sql),
                 keyHolder
         );
         return Objects.requireNonNull(keyHolder.getKey()).longValue();
@@ -119,13 +118,13 @@ public class ReservationDao {
         );
     }
 
-    private PreparedStatement getPreparedStatement(ReservationCreateRequest request,
+    private PreparedStatement getPreparedStatement(Reservation reservation,
                                                    Connection connection,
                                                    String sql) throws SQLException {
         PreparedStatement preparedStatement = connection.prepareStatement(sql, new String[]{"id"});
-        preparedStatement.setString(1, request.getName());
-        preparedStatement.setString(2, request.getDate());
-        preparedStatement.setLong(3, request.getTimeId());
+        preparedStatement.setString(1, reservation.getName().getValue());
+        preparedStatement.setString(2, reservation.getDate().toStringDate());
+        preparedStatement.setLong(3, reservation.getReservationTime().getId());
         return preparedStatement;
     }
 }

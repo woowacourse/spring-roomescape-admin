@@ -14,6 +14,8 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.context.SpringBootTest.WebEnvironment;
 import org.springframework.jdbc.core.JdbcTemplate;
 import roomescape.dao.ReservationTimeDao;
+import roomescape.domain.reservationtime.ReservationStartAt;
+import roomescape.domain.reservationtime.ReservationTime;
 import roomescape.dto.reservationtime.ReservationTimeCreateRequest;
 import roomescape.dto.reservationtime.ReservationTimeResponse;
 
@@ -29,8 +31,8 @@ class ReservationTimeServiceTest {
 
     @BeforeEach
     void setUp() {
-        reservationTimeDao.add(ReservationTimeCreateRequest.from("12:02"));
-        reservationTimeDao.add(ReservationTimeCreateRequest.from("12:42"));
+        reservationTimeDao.add(new ReservationTime(null, ReservationStartAt.from("12:02")));
+        reservationTimeDao.add(new ReservationTime(null, ReservationStartAt.from("12:42")));
     }
 
     @AfterEach
@@ -106,7 +108,7 @@ class ReservationTimeServiceTest {
     }
 
     private long addAndGetId() {
-        ReservationTimeCreateRequest request = ReservationTimeCreateRequest.from("01:00");
-        return reservationTimeDao.add(request);
+        ReservationTime reservationTime = new ReservationTime(null, ReservationStartAt.from("01:00"));
+        return reservationTimeDao.add(reservationTime);
     }
 }

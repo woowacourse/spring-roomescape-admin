@@ -10,8 +10,8 @@ import roomescape.domain.Time;
 @Component
 public class DatabaseInitializer {
     private final JdbcTemplate jdbcTemplate;
-    private Reservation reservation;
     private Time time;
+    private Reservation reservation;
 
     public DatabaseInitializer(JdbcTemplate jdbcTemplate) {
         this.jdbcTemplate = jdbcTemplate;
@@ -20,14 +20,6 @@ public class DatabaseInitializer {
     public void execute() {
         time = createInitTime();
         reservation = createInitReservation(time);
-    }
-
-    public Long getReservationId() {
-        return reservation.getId();
-    }
-
-    public Long getTimeId() {
-        return time.getId();
     }
 
     private Time createInitTime() {

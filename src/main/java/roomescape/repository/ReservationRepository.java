@@ -8,7 +8,7 @@ import org.springframework.jdbc.core.RowMapper;
 import org.springframework.jdbc.support.GeneratedKeyHolder;
 import org.springframework.jdbc.support.KeyHolder;
 import org.springframework.stereotype.Repository;
-import roomescape.model.ReservationDto;
+import roomescape.model.ReservationInfo;
 
 @Repository
 public class ReservationRepository {
@@ -19,15 +19,15 @@ public class ReservationRepository {
         this.jdbcTemplate = jdbcTemplate;
     }
 
-    private final RowMapper<ReservationDto> reservationRowMapper = (resultSet, rowNum) ->
-            new ReservationDto(
+    private final RowMapper<ReservationInfo> reservationRowMapper = (resultSet, rowNum) ->
+            new ReservationInfo(
                     resultSet.getLong("id"),
                     resultSet.getString("name"),
                     resultSet.getString("date"),
                     resultSet.getLong("time_id")
             );
 
-    public List<ReservationDto> findAllReservationDtos() {
+    public List<ReservationInfo> findAllReservationInfos() {
         String sqlToFind = "SELECT id, name, date, time_id FROM reservation";
 
         return jdbcTemplate.query(
@@ -35,19 +35,19 @@ public class ReservationRepository {
                 reservationRowMapper);
     }
 
-    public ReservationDto createReservation(ReservationDto reservationDto) {
+    public ReservationInfo createReservation(ReservationInfo reservationInfo) {
         String sqlToInsert = "INSERT INTO reservation (name, date, time_id) VALUES (?, ?, ?)";
         KeyHolder keyHolder = new GeneratedKeyHolder();
         jdbcTemplate.update(connection -> {
             PreparedStatement ps = connection.prepareStatement(
                     sqlToInsert,
                     new String[]{"id"});
-            ps.setString(1, reservationDto.name());
-            ps.setString(2, reservationDto.date());
-            ps.setLong(3, reservationDto.timeId());
+            ps.setString(1, reservationInfo.name());
+            ps.setString(2, reservationInfo.date());
+            ps.setLong(3, reservationInfo.timeId());
             return ps;
         }, keyHolder);
-        return reservationDto.toIdAssigned(Objects.requireNonNull(keyHolder.getKey())
+        return reservationInfo.toIdAssigned(Objects.requireNonNull(keyHolder.getKey())
                 .longValue());
     }
 

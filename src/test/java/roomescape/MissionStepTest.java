@@ -20,7 +20,7 @@ import org.springframework.jdbc.core.RowMapper;
 import org.springframework.test.annotation.DirtiesContext;
 import roomescape.controller.ReservationController;
 import roomescape.model.Reservation;
-import roomescape.model.ReservationDto;
+import roomescape.model.ReservationInfo;
 import roomescape.model.ReservationTime;
 
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
@@ -36,8 +36,8 @@ class MissionStepTest {
     @Autowired
     private ReservationController reservationController;
 
-    private final RowMapper<ReservationDto> reservationDtoMapper = (resultSet, rowNum) ->
-            new ReservationDto(
+    private final RowMapper<ReservationInfo> reservationDtoMapper = (resultSet, rowNum) ->
+            new ReservationInfo(
                     resultSet.getLong("id"),
                     resultSet.getString("name"),
                     resultSet.getString("date"),
@@ -87,11 +87,11 @@ class MissionStepTest {
     @Test
     @DisplayName("3단계, 8단계 Test- 새로운 예약 정보 등록 요청을 처리하고 성공 시 201 상태 코드를 응답한다.")
     void createReservation_ShouldReturnOK_WhenProceedCreateRequestSuccessfully() {
-        ReservationDto requestReservationDto = new ReservationDto(null, "브라운", "2023-08-05", 1L);
+        ReservationInfo requestReservationInfo = new ReservationInfo(null, "브라운", "2023-08-05", 1L);
 
         RestAssured.given().log().all()
                 .contentType(ContentType.JSON)
-                .body(requestReservationDto)
+                .body(requestReservationInfo)
                 .when().post("/reservations")
                 .then().log().all()
                 .statusCode(201);
@@ -106,11 +106,11 @@ class MissionStepTest {
     @Test
     @DisplayName("3단계, 8단계 Test- 특정 id를 가진 예약 정보를 삭제 요청을 처리하고 성공 시 204 상태 코드를 응답한다.")
     void deleteReservation_ShouldDeleteReservationAndReturnOK_WhenProceedDeleteRequestSuccessfully() {
-        ReservationDto requestReservationDto = new ReservationDto(null, "브라운", "2023-08-05", 1L);
+        ReservationInfo requestReservationInfo = new ReservationInfo(null, "브라운", "2023-08-05", 1L);
 
         RestAssured.given().log().all()
                 .contentType(ContentType.JSON)
-                .body(requestReservationDto)
+                .body(requestReservationInfo)
                 .when().post("/reservations");
 
         RestAssured.given().log().all()
@@ -158,12 +158,6 @@ class MissionStepTest {
     @Test
     @DisplayName("6단계 - 특정 Id의 reservation의 삭제 요청을 처리하고 성공 시 204 상태 코드를 응답한다.")
     void deleteReservation_ShouldReturnNOCONTENT_WhenDeleteSuccessfully() {
-        ReservationDto requestReservationDto = new ReservationDto(null, "브라운", "2023-08-05", 1L);
-
-        RestAssured.given().log().all()
-                .contentType(ContentType.JSON)
-                .body(requestReservationDto)
-                .when().post("/reservations");
 
         RestAssured.given().log().all()
                 .when().delete("/reservations/1")
@@ -196,11 +190,6 @@ class MissionStepTest {
     @Test
     @DisplayName("7단계 - time 삭제 요청을 처리하고 성공 시 204 상태 코드를 응답한다.")
     void deleteReservationTime_ShouldReturnNOCONTENT_WhenDeleteSuccessfully() {
-        ReservationTime reservationTime = new ReservationTime(null, "10:00");
-
-        RestAssured.given().log().all()
-                .contentType(ContentType.JSON)
-                .body(reservationTime);
 
         RestAssured.given().log().all()
                 .when().delete("/times/1")

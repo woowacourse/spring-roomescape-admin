@@ -11,7 +11,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import roomescape.model.Reservation;
-import roomescape.model.ReservationDto;
+import roomescape.model.ReservationInfo;
 import roomescape.service.ReservationService;
 
 @RestController
@@ -30,8 +30,8 @@ public class ReservationController {
     }
 
     @PostMapping
-    public ResponseEntity<Reservation> createReservation(@RequestBody ReservationDto reservationDto) {
-        Reservation newReservation = reservationService.createReservation(reservationDto);
+    public ResponseEntity<Reservation> createReservation(@RequestBody ReservationInfo reservationInfo) {
+        Reservation newReservation = reservationService.createReservation(reservationInfo);
         return ResponseEntity.created(URI.create("/reservations/" + newReservation.id())).build();
     }
 

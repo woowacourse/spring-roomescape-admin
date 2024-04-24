@@ -22,8 +22,8 @@ import roomescape.dto.ReservationResponse;
 
 @RestController
 public class RoomescapeRestController {
-    private JdbcTemplate jdbcTemplate;
-    private SimpleJdbcInsert jdbcInsert;
+    private final JdbcTemplate jdbcTemplate;
+    private final SimpleJdbcInsert jdbcInsert;
 
     public RoomescapeRestController(JdbcTemplate jdbcTemplate, DataSource dataSource) {
         this.jdbcTemplate = jdbcTemplate;

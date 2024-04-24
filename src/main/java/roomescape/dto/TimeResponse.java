@@ -4,8 +4,8 @@ import java.time.LocalTime;
 import roomescape.domain.Time;
 
 public class TimeResponse {
-    private Long id;
-    private LocalTime startAt;
+    private final Long id;
+    private final LocalTime startAt;
 
     public TimeResponse(Time time) {
         this(time.getId(), time.getStartAt());

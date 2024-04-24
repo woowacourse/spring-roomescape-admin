@@ -5,10 +5,10 @@ import java.time.LocalTime;
 import roomescape.domain.Reservation;
 
 public class ReservationResponse {
-    private Long id;
-    private String name;
-    private LocalDate date;
-    private LocalTime time;
+    private final Long id;
+    private final String name;
+    private final LocalDate date;
+    private final LocalTime time;
 
     public ReservationResponse(Reservation reservation) {
         this(reservation.getId(), reservation.getName().getName(), reservation.getDate(), reservation.getTime());

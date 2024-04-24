@@ -2,13 +2,13 @@ package roomescape.controller.dto;
 
 import java.time.LocalTime;
 
-public class ReservationAvailableTimeRequest {
+public class CreateAvailableTimeRequest {
     LocalTime time;
 
-    public ReservationAvailableTimeRequest() {
+    public CreateAvailableTimeRequest() {
     }
 
-    public ReservationAvailableTimeRequest(LocalTime time) {
+    public CreateAvailableTimeRequest(LocalTime time) {
         this.time = time;
     }
 

@@ -2,11 +2,11 @@ package roomescape.controller.dto;
 
 import java.time.LocalTime;
 
-public class ReservationAvailableTimeResponse {
+public class CreateAvailableTimeResponse {
     Long id;
     LocalTime time;
 
-    public ReservationAvailableTimeResponse(Long id, LocalTime time) {
+    public CreateAvailableTimeResponse(Long id, LocalTime time) {
         this.id = id;
         this.time = time;
     }

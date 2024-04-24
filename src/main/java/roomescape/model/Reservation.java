@@ -5,9 +5,4 @@ public record Reservation(
         String name,
         String date,
         ReservationTime time) {
-
-    public Reservation toIdAssigned(Long id) {
-        return new Reservation(id, this.name, this.date, this.time);
-    }
-
 }

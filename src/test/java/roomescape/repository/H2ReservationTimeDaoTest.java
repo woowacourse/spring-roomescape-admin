@@ -11,15 +11,15 @@ import roomescape.domain.ReservationTime;
 import static org.assertj.core.api.Assertions.assertThat;
 
 @JdbcTest
-public class H2ReservationTimeRepositoryTest {
+public class H2ReservationTimeDaoTest {
 
     private final JdbcTemplate jdbcTemplate;
-    private final H2ReservationTimeRepository repository;
+    private final H2ReservationTimeDao repository;
 
     @Autowired
-    public H2ReservationTimeRepositoryTest(JdbcTemplate jdbcTemplate) {
+    public H2ReservationTimeDaoTest(JdbcTemplate jdbcTemplate) {
         this.jdbcTemplate = jdbcTemplate;
-        this.repository = new H2ReservationTimeRepository(jdbcTemplate);
+        this.repository = new H2ReservationTimeDao(jdbcTemplate);
     }
 
     @BeforeEach

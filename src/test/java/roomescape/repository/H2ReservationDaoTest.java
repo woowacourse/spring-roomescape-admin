@@ -14,15 +14,15 @@ import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 
 @JdbcTest
-public class H2ReservationRepositoryTest {
+public class H2ReservationDaoTest {
 
     private final JdbcTemplate jdbcTemplate;
-    private final H2ReservationRepository repository;
+    private final H2ReservationDao repository;
 
     @Autowired
-    public H2ReservationRepositoryTest(JdbcTemplate jdbcTemplate) {
+    public H2ReservationDaoTest(JdbcTemplate jdbcTemplate) {
         this.jdbcTemplate = jdbcTemplate;
-        this.repository = new H2ReservationRepository(jdbcTemplate);
+        this.repository = new H2ReservationDao(jdbcTemplate);
     }
 
     @BeforeEach

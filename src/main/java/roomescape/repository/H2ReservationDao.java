@@ -12,12 +12,12 @@ import java.sql.PreparedStatement;
 import java.util.List;
 
 @Repository
-public class H2ReservationRepository {
+public class H2ReservationDao {
 
     private final JdbcTemplate jdbcTemplate;
 
     @Autowired
-    public H2ReservationRepository(JdbcTemplate jdbcTemplate) {
+    public H2ReservationDao(JdbcTemplate jdbcTemplate) {
         this.jdbcTemplate = jdbcTemplate;
     }
 

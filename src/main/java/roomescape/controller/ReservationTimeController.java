@@ -12,7 +12,7 @@ import org.springframework.web.bind.annotation.RestController;
 import roomescape.domain.ReservationTime;
 import roomescape.dto.ReservationTimeRequest;
 import roomescape.dto.ReservationTimeResponse;
-import roomescape.repository.H2ReservationTimeRepository;
+import roomescape.repository.H2ReservationTimeDao;
 
 import java.net.URI;
 import java.util.List;
@@ -21,10 +21,10 @@ import java.util.List;
 @RequestMapping("/times")
 public class ReservationTimeController {
 
-    private final H2ReservationTimeRepository repository;
+    private final H2ReservationTimeDao repository;
 
     @Autowired
-    public ReservationTimeController(H2ReservationTimeRepository repository) {
+    public ReservationTimeController(H2ReservationTimeDao repository) {
         this.repository = repository;
     }
 

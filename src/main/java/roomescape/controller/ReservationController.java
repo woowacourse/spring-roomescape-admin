@@ -13,8 +13,8 @@ import roomescape.domain.Reservation;
 import roomescape.domain.ReservationTime;
 import roomescape.dto.ReservationRequest;
 import roomescape.dto.ReservationResponse;
-import roomescape.repository.H2ReservationRepository;
-import roomescape.repository.H2ReservationTimeRepository;
+import roomescape.repository.H2ReservationDao;
+import roomescape.repository.H2ReservationTimeDao;
 
 import java.net.URI;
 import java.util.List;
@@ -23,11 +23,11 @@ import java.util.List;
 @RequestMapping("/reservations")
 public class ReservationController {
 
-    private final H2ReservationRepository reservationRepository;
-    private final H2ReservationTimeRepository reservationTimeRepository;
+    private final H2ReservationDao reservationRepository;
+    private final H2ReservationTimeDao reservationTimeRepository;
 
     @Autowired
-    public ReservationController(H2ReservationRepository reservationRepository, H2ReservationTimeRepository reservationTimeRepository) {
+    public ReservationController(H2ReservationDao reservationRepository, H2ReservationTimeDao reservationTimeRepository) {
         this.reservationRepository = reservationRepository;
         this.reservationTimeRepository = reservationTimeRepository;
     }

@@ -11,11 +11,11 @@ import java.sql.PreparedStatement;
 import java.util.List;
 
 @Repository
-public class H2ReservationTimeRepository {
+public class H2ReservationTimeDao {
     private final JdbcTemplate jdbcTemplate;
 
     @Autowired
-    public H2ReservationTimeRepository(JdbcTemplate jdbcTemplate) {
+    public H2ReservationTimeDao(JdbcTemplate jdbcTemplate) {
         this.jdbcTemplate = jdbcTemplate;
     }
 

@@ -18,7 +18,7 @@ class ReservationTimeDaoTest {
     @Autowired
     private ReservationTimeDao reservationTimeDao;
     @Autowired
-    private JdbcTemplate jdbcTemplate; // TODO: jdbcTemplate으로 given 만들어놓게 수정
+    private JdbcTemplate jdbcTemplate;
 
     @Test
     void add() {

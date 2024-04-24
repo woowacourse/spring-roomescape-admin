@@ -9,7 +9,6 @@ import org.springframework.jdbc.core.simple.SimpleJdbcInsert;
 import org.springframework.stereotype.Repository;
 import roomescape.domain.Reservation;
 import roomescape.domain.ReservationTime;
-import roomescape.dto.ReservationRequest;
 
 @Repository
 public class ReservationDao {
@@ -43,11 +42,12 @@ public class ReservationDao {
                 FROM reservation AS r
                 INNER JOIN reservation_time AS t
                 ON r.time_id = t.id""";
+
         return jdbcTemplate.query(sql, ACTOR_ROW_MAPPER);
     }
 
-    public Reservation add(final ReservationRequest reservationRequest) {
-        SqlParameterSource parameterSource = new BeanPropertySqlParameterSource(reservationRequest);
+    public Reservation add(final Reservation reservation) {
+        SqlParameterSource parameterSource = new BeanPropertySqlParameterSource(reservation);
         Number newId = simpleJdbcInsert.executeAndReturnKey(parameterSource);
         return findById(newId.longValue());
     }
@@ -65,8 +65,8 @@ public class ReservationDao {
                 ON r.time_id = t.id
                 WHERE r.id = ?
                 """;
-        Reservation reservation = jdbcTemplate.queryForObject(sql, ACTOR_ROW_MAPPER, id);
-        return reservation;
+
+        return jdbcTemplate.queryForObject(sql, ACTOR_ROW_MAPPER, id);
     }
 
     public void delete(final long id) {

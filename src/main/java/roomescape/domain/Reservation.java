@@ -5,19 +5,29 @@ import java.util.Objects;
 
 public class Reservation {
 
-    private final long id;
-    private final String name;
-    private final LocalDate date;
-    private final ReservationTime time;
+    private Long id;
+    private String name;
+    private LocalDate date;
+    private ReservationTime time;
 
-    public Reservation(final long id, final String name, final LocalDate date, final ReservationTime time) {
+    public Reservation(final Long id, final String name, final LocalDate date, final ReservationTime time) {
         this.id = id;
         this.name = name;
         this.date = date;
         this.time = time;
     }
 
-    public long getId() {
+    public Reservation(final String name, final LocalDate date, final ReservationTime time) {
+        this.id = null;
+        this.name = name;
+        this.date = date;
+        this.time = time;
+    }
+
+    public Reservation() {
+    }
+
+    public Long getId() {
         return id;
     }
 
@@ -33,6 +43,10 @@ public class Reservation {
         return time;
     }
 
+    public Long getTimeId() {
+        return time.getId();
+    }
+
     @Override
     public boolean equals(final Object o) {
         if (this == o) {
@@ -42,8 +56,8 @@ public class Reservation {
             return false;
         }
         final Reservation that = (Reservation) o;
-        return id == that.id && Objects.equals(name, that.name) && Objects.equals(date, that.date)
-                && Objects.equals(time, that.time);
+        return Objects.equals(id, that.id) && Objects.equals(name, that.name)
+                && Objects.equals(date, that.date) && Objects.equals(time, that.time);
     }
 
     @Override

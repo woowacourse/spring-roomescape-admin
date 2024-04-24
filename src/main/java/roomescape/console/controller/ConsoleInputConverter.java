@@ -12,11 +12,25 @@ import roomescape.service.dto.ReservationTimeServiceRequest;
 public class ConsoleInputConverter {
 
     public ReservationServiceRequest toReservationServiceRequest(List<String> body) {
+        validateReservationSize(body);
         return new ReservationServiceRequest(body.get(0), toLocalDate(body.get(1)), toLong(body.get(2)));
     }
 
+    private void validateReservationSize(List<String> body) {
+        if (body.size() != 3) {
+            throw new IllegalArgumentException("잘못된 입력 형식입니다.");
+        }
+    }
+
     public ReservationTimeServiceRequest toReservationTimeServiceRequest(List<String> body) {
+        validateReservationTimeSize(body);
         return new ReservationTimeServiceRequest(toLocalTime(body.get(0)));
+    }
+
+    private void validateReservationTimeSize(List<String> body) {
+        if (body.size() != 1) {
+            throw new IllegalArgumentException("잘못된 입력 형식입니다.");
+        }
     }
 
     public Long toId(List<String> body) {

@@ -20,7 +20,7 @@ import roomescape.dto.ReservationRequest;
 
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.DEFINED_PORT)
 @DirtiesContext(classMode = DirtiesContext.ClassMode.BEFORE_EACH_TEST_METHOD)
-public class ReservatinTest {
+public class ReservationTest {
 
     @Autowired
     private JdbcTemplate jdbcTemplate;

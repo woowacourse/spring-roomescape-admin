@@ -12,8 +12,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.annotation.Rollback;
 import org.springframework.transaction.annotation.Transactional;
+import roomescape.entity.GameTime;
 import roomescape.entity.Reservation;
-import roomescape.entity.ReservationTime;
 
 @SpringBootTest
 @Transactional
@@ -23,12 +23,12 @@ class ReservationRepositoryTest {
     @Autowired
     private ReservationRepository reservationRepository;
     @Autowired
-    private TimeRepository timeRepository;
-    private ReservationTime time_03_00;
+    private GameTimeRepository gameTimeRepository;
+    private GameTime time_03_00;
 
     @BeforeEach
     void setUp() {
-        time_03_00 = timeRepository.save(TIME_03_00);
+        time_03_00 = gameTimeRepository.save(TIME_03_00);
     }
 
     @DisplayName("전체 예약을 조회할 수 있다")

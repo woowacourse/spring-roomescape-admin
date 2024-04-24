@@ -10,35 +10,35 @@ import org.springframework.jdbc.core.RowMapper;
 import org.springframework.jdbc.support.GeneratedKeyHolder;
 import org.springframework.jdbc.support.KeyHolder;
 import org.springframework.stereotype.Repository;
-import roomescape.entity.ReservationTime;
+import roomescape.entity.GameTime;
 
 @Repository
-public class TimeRepository {
+public class GameTimeRepository {
     private final JdbcTemplate jdbcTemplate;
 
-    public TimeRepository(JdbcTemplate jdbcTemplate) {
+    public GameTimeRepository(JdbcTemplate jdbcTemplate) {
         this.jdbcTemplate = jdbcTemplate;
     }
 
-    public ReservationTime save(ReservationTime reservationTime) {
+    public GameTime save(GameTime gameTime) {
         String sql = "insert into reservation_time(start_at) values(?)";
         KeyHolder keyHolder = new GeneratedKeyHolder();
 
         jdbcTemplate.update(connection -> {
             PreparedStatement ps = connection.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS);
-            ps.setTime(1, Time.valueOf(reservationTime.getStartAt()));
+            ps.setTime(1, Time.valueOf(gameTime.getStartAt()));
             return ps;
         }, keyHolder);
         long savedId = keyHolder.getKey().longValue();
-        return new ReservationTime(savedId, reservationTime.getStartAt());
+        return new GameTime(savedId, gameTime.getStartAt());
     }
 
-    public ReservationTime findById(long id) {
+    public GameTime findById(long id) {
         String sql = "select * from reservation_time where id=?";
         return jdbcTemplate.queryForObject(sql, reservationAvailableTimeRowMapper(), id);
     }
 
-    public List<ReservationTime> readAll() {
+    public List<GameTime> readAll() {
         String sql = "select * from reservation_time";
         return jdbcTemplate.query(sql, reservationAvailableTimeRowMapper());
     }
@@ -48,12 +48,12 @@ public class TimeRepository {
         jdbcTemplate.update(sql, id);
     }
 
-    public RowMapper<ReservationTime> reservationAvailableTimeRowMapper() {
+    public RowMapper<GameTime> reservationAvailableTimeRowMapper() {
         return ((rs, rowNum) -> {
             long id = rs.getLong("id");
             LocalTime startAt = rs.getTime("start_at").toLocalTime();
 
-            return new ReservationTime(id, startAt);
+            return new GameTime(id, startAt);
         });
     }
 }

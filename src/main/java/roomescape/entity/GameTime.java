@@ -3,26 +3,26 @@ package roomescape.entity;
 import java.time.LocalTime;
 import java.util.Objects;
 
-public class ReservationTime {
+public class GameTime {
     private final Long id;
     private final LocalTime startAt;
 
-    public ReservationTime(Long id, LocalTime startAt) {
+    public GameTime(Long id, LocalTime startAt) {
         validate(startAt);
         this.id = id;
         this.startAt = startAt;
     }
 
-    public ReservationTime(LocalTime startAt) {
+    public GameTime(LocalTime startAt) {
         this(null, startAt);
     }
 
-    private void validate(LocalTime time) {
-        validateNonNull(time);
+    private void validate(LocalTime startAt) {
+        validateNonNull(startAt);
     }
 
-    private void validateNonNull(LocalTime time) {
-        if (time == null) {
+    private void validateNonNull(LocalTime startAt) {
+        if (startAt == null) {
             throw new NullPointerException("예약 가능한 시간은 null일 수 없습니다");
         }
     }
@@ -43,7 +43,7 @@ public class ReservationTime {
         if (o == null || getClass() != o.getClass()) {
             return false;
         }
-        ReservationTime that = (ReservationTime) o;
+        GameTime that = (GameTime) o;
         return Objects.equals(id, that.id) && Objects.equals(startAt, that.startAt);
     }
 

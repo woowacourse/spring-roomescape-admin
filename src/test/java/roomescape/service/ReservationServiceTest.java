@@ -12,8 +12,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.annotation.Rollback;
 import org.springframework.transaction.annotation.Transactional;
+import roomescape.entity.GameTime;
 import roomescape.entity.Reservation;
-import roomescape.entity.ReservationTime;
 
 @SpringBootTest
 @Transactional
@@ -22,13 +22,13 @@ class ReservationServiceTest {
     @Autowired
     private ReservationService reservationService;
     @Autowired
-    private TimeService timeService;
+    private GameTimeService gameTimeService;
 
-    private ReservationTime time_03_00;
+    private GameTime time_03_00;
 
     @BeforeEach
     void setUp() {
-        time_03_00 = timeService.save(TIME_03_00);
+        time_03_00 = gameTimeService.save(TIME_03_00);
     }
 
     @DisplayName("시간이 겹치는 예약이 존재하지 않는 경우 예약에 성공한다")

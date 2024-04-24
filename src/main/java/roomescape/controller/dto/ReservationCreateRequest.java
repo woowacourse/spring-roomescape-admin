@@ -1,8 +1,8 @@
 package roomescape.controller.dto;
 
 import java.time.LocalDate;
+import roomescape.entity.GameTime;
 import roomescape.entity.Reservation;
-import roomescape.entity.ReservationTime;
 
 public class ReservationCreateRequest {
     private String name;
@@ -18,8 +18,8 @@ public class ReservationCreateRequest {
         this.timeId = timeId;
     }
 
-    public Reservation toEntity(ReservationTime reservationTime) {
-        return new Reservation(name, date, reservationTime);
+    public Reservation toEntity(GameTime gameTime) {
+        return new Reservation(name, date, gameTime);
     }
 
     public String getName() {

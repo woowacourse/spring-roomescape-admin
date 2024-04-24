@@ -14,8 +14,8 @@ import org.springframework.jdbc.core.RowMapper;
 import org.springframework.jdbc.support.GeneratedKeyHolder;
 import org.springframework.jdbc.support.KeyHolder;
 import org.springframework.stereotype.Repository;
+import roomescape.entity.GameTime;
 import roomescape.entity.Reservation;
-import roomescape.entity.ReservationTime;
 
 @Repository
 public class ReservationRepository {
@@ -44,7 +44,7 @@ public class ReservationRepository {
             return ps;
         }, keyHolder);
         long savedId = keyHolder.getKey().longValue();
-        ReservationTime time = new ReservationTime(reservation.getReservationTimeId(), reservation.getStartTime());
+        GameTime time = new GameTime(reservation.getReservationTimeId(), reservation.getStartTime());
         return new Reservation(savedId, reservation.getName(), reservation.getStartDate(), time);
     }
 
@@ -77,7 +77,7 @@ public class ReservationRepository {
                 "    where ? between (r.date||' '||t.start_at) and dateadd('HOUR', ?, (r.date||' '||t.start_at)) " +
                 "    or ? between (r.date||' '||t.start_at) and dateadd('HOUR', ?, (r.date||' ' ||t.start_at)) " +
                 ") as exists_overlap;";
-        
+
         boolean conflict = jdbcTemplate.queryForObject(sql, Boolean.class, endDateTime, Reservation.TIME_DURATION,
                 startDateTime, Reservation.TIME_DURATION);
         return conflict;
@@ -92,7 +92,7 @@ public class ReservationRepository {
             long timeId = rs.getLong("time_id");
             LocalTime time = rs.getTime("start_at").toLocalTime();
 
-            return new Reservation(id, name, date, new ReservationTime(timeId, time));
+            return new Reservation(id, name, date, new GameTime(timeId, time));
         };
     }
 }

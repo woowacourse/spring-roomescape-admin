@@ -10,28 +10,28 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.annotation.Rollback;
 import org.springframework.transaction.annotation.Transactional;
-import roomescape.entity.ReservationTime;
+import roomescape.entity.GameTime;
 
 @SpringBootTest
 @Transactional
 @Rollback
-class TimeRepositoryTest {
+class GameTimeRepositoryTest {
 
     @Autowired
-    private TimeRepository timeRepository;
+    private GameTimeRepository gameTimeRepository;
 
     @DisplayName("전체 예약 가능 시각을 조회할 수 있다")
     @Test
     void readAllTest() {
         LocalTime time1 = LocalTime.of(1, 0);
         LocalTime time2 = LocalTime.of(2, 0);
-        ReservationTime reservationTime1 = new ReservationTime(time1);
-        ReservationTime reservationTime2 = new ReservationTime(time2);
+        GameTime gameTime1 = new GameTime(time1);
+        GameTime gameTime2 = new GameTime(time2);
 
-        timeRepository.save(reservationTime1);
-        timeRepository.save(reservationTime2);
+        gameTimeRepository.save(gameTime1);
+        gameTimeRepository.save(gameTime2);
 
-        List<ReservationTime> all = timeRepository.readAll();
+        List<GameTime> all = gameTimeRepository.readAll();
 
         assertThat(all)
                 .extracting("startAt")
@@ -42,8 +42,8 @@ class TimeRepositoryTest {
     @Test
     void saveTest() {
         LocalTime time = LocalTime.of(1, 0);
-        ReservationTime reservationTime = new ReservationTime(time);
-        ReservationTime saved = timeRepository.save(reservationTime);
+        GameTime gameTime = new GameTime(time);
+        GameTime saved = gameTimeRepository.save(gameTime);
 
         assertThat(saved.getStartAt()).isEqualTo(time);
     }
@@ -52,20 +52,20 @@ class TimeRepositoryTest {
     @Test
     void findByIdTest() {
         LocalTime time = LocalTime.of(1, 0);
-        ReservationTime reservationTime = new ReservationTime(time);
-        ReservationTime saved = timeRepository.save(reservationTime);
+        GameTime gameTime = new GameTime(time);
+        GameTime saved = gameTimeRepository.save(gameTime);
 
-        assertThat(timeRepository.findById(saved.getId())).isEqualTo(saved);
+        assertThat(gameTimeRepository.findById(saved.getId())).isEqualTo(saved);
     }
 
     @DisplayName("예약 가능 시간 단건을 삭제할 수 있다")
     @Test
     void deleteByIdTest() {
         LocalTime time = LocalTime.of(1, 0);
-        ReservationTime reservationTime = new ReservationTime(time);
-        ReservationTime saved = timeRepository.save(reservationTime);
-        timeRepository.deleteById(saved.getId());
+        GameTime gameTime = new GameTime(time);
+        GameTime saved = gameTimeRepository.save(gameTime);
+        gameTimeRepository.deleteById(saved.getId());
 
-        assertThat(timeRepository.readAll().size()).isEqualTo(0);
+        assertThat(gameTimeRepository.readAll().size()).isEqualTo(0);
     }
 }

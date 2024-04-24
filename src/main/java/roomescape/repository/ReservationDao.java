@@ -24,14 +24,14 @@ public class ReservationDao {
                 .usingGeneratedKeyColumns("id");
     }
 
-    public Reservation add(Reservation reservation) {
+    public Reservation save(ReservationRegisterDetail registerDetail) {
         SqlParameterSource parameters = new MapSqlParameterSource()
-                .addValue("name", reservation.getName())
-                .addValue("date", reservation.getDate())
-                .addValue("time_id", reservation.getTime().getId());
-        long newReservationId = insertActor.executeAndReturnKey(parameters).longValue();
+                .addValue("name", registerDetail.name())
+                .addValue("date", registerDetail.date())
+                .addValue("time_id", registerDetail.timeId());
+        long savedReservationId = insertActor.executeAndReturnKey(parameters).longValue();
 
-        return new Reservation(newReservationId, reservation);
+        return registerDetail.toEntity(savedReservationId);
     }
 
     public List<Reservation> findAll() {

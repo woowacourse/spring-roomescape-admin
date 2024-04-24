@@ -35,8 +35,7 @@ public class ReservationApiController {
 
     @PostMapping
     public ReservationResponse addReservation(@RequestBody ReservationRequest reservationRequest) {
-        Reservation reservation = mapper.mapReservationRequestToEntity(reservationRequest);
-        Reservation newReservation = reservationService.addReservation(reservation);
+        Reservation newReservation = reservationService.addReservation(reservationRequest);
 
         return mapper.mapReservationToResponse(newReservation);
     }

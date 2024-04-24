@@ -28,8 +28,8 @@
 - [x] API 명세를 따라 시간 조회 API를 구현한다.
 - [x] API 명세를 따라 시간 삭제 API를 구현한다.
 
-- [ ] 예약 페이지 파일을 수정한다.
-  - [ ] `templates/admin/reservation-legacy.html` 대신 `templates/admin/reservation.html` 파일을 활용한다.
+- [x] 예약 페이지 파일을 수정한다.
+  - [x] `templates/admin/reservation-legacy.html` 대신 `templates/admin/reservation.html` 파일을 활용한다.
 - [ ] 테이블 스키마를 재정의한다.
   - [ ] 외래키 지정을 통해 reservation 테이블과 reservation_time 테이블의 관계를 설정한다.
 - [ ] 예약 클래스를 수정한다.

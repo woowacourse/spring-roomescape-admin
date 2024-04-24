@@ -8,7 +8,6 @@ import io.restassured.http.ContentType;
 import java.lang.reflect.Field;
 import java.sql.Connection;
 import java.sql.SQLException;
-import java.util.HashMap;
 import java.util.Map;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
@@ -64,7 +63,7 @@ class MissionStepTest {
                 .when().get("/reservations")
                 .then().log().all()
                 .statusCode(200)
-                .body("size()", is(0));
+                .body("size()", is(3));
     }
 
     @DisplayName("RESERVATION 테이블이 정상적으로 생성됨을 확인한다.")
@@ -82,8 +81,7 @@ class MissionStepTest {
     @DisplayName("예약 시간의 추가, 조회, 삭제 기능을 테스트 한다.")
     @Test
     void reservationTimeTest() {
-        Map<String, String> params = new HashMap<>();
-        params.put("startAt", "10:00");
+        Map<String, String> params = Map.of("startAt", "12:00");
 
         RestAssured.given().log().all()
                 .contentType(ContentType.JSON)
@@ -97,21 +95,28 @@ class MissionStepTest {
                 .when().get("/times")
                 .then().log().all()
                 .statusCode(200)
-                .body("size()", is(2));
+                .body("size()", is(3));
 
         RestAssured.given().log().all()
-                .when().delete("/times/1")
+                .when().delete("/times/3")
                 .then().log().all()
                 .statusCode(204);
+
+        RestAssured.given().log().all()
+                .when().get("/times")
+                .then().log().all()
+                .statusCode(200)
+                .body("size()", is(2));
     }
 
     @DisplayName("저장된 시간의 id를 이용해 예약을 조회, 생성할 수 있다.")
     @Test
     void reservationUsingReservationTimeTest() {
-        Map<String, Object> reservation = new HashMap<>();
-        reservation.put("name", "브라운");
-        reservation.put("date", "2023-08-05");
-        reservation.put("timeId", 1);
+        Map<String, Object> reservation = Map.of(
+                "name", "브라운",
+                "date", "2023-08-05",
+                "timeId", 1
+        );
 
         RestAssured.given().log().all()
                 .contentType(ContentType.JSON)
@@ -124,7 +129,7 @@ class MissionStepTest {
                 .when().get("/reservations")
                 .then().log().all()
                 .statusCode(200)
-                .body("size()", is(1));
+                .body("size()", is(4));
     }
 
     @DisplayName("Controller 의 책임이 완벽히 분리됨을 테스트")

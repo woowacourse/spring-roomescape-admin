@@ -48,6 +48,16 @@ class TimeRepositoryTest {
         assertThat(saved.getStartAt()).isEqualTo(time);
     }
 
+    @DisplayName("예약 가능 시간 단건을 조회할 수 있다")
+    @Test
+    void findByIdTest() {
+        LocalTime time = LocalTime.of(1, 0);
+        ReservationTime reservationTime = new ReservationTime(time);
+        ReservationTime saved = timeRepository.save(reservationTime);
+
+        assertThat(timeRepository.findById(saved.getId())).isEqualTo(saved);
+    }
+
     @DisplayName("예약 가능 시간 단건을 삭제할 수 있다")
     @Test
     void deleteByIdTest() {

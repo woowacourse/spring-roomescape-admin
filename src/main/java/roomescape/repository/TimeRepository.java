@@ -33,6 +33,11 @@ public class TimeRepository {
         return new ReservationTime(savedId, reservationTime.getStartAt());
     }
 
+    public ReservationTime findById(long id) {
+        String sql = "select * from reservation_time where id=?";
+        return jdbcTemplate.queryForObject(sql, reservationAvailableTimeRowMapper(), id);
+    }
+
     public List<ReservationTime> readAll() {
         String sql = "select * from reservation_time";
         return jdbcTemplate.query(sql, reservationAvailableTimeRowMapper());

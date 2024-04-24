@@ -11,6 +11,8 @@ import roomescape.service.dto.ReservationTimeServiceRequest;
 @Component
 public class ConsoleInputConverter {
 
+    private static final String ERROR_MESSAGE = "잘못된 입력 형식입니다.";
+
     public ReservationServiceRequest toReservationServiceRequest(List<String> body) {
         validateReservationSize(body);
         return new ReservationServiceRequest(body.get(0), toLocalDate(body.get(1)), toLong(body.get(2)));
@@ -18,7 +20,7 @@ public class ConsoleInputConverter {
 
     private void validateReservationSize(List<String> body) {
         if (body.size() != 3) {
-            throw new IllegalArgumentException("잘못된 입력 형식입니다.");
+            throw new IllegalArgumentException(ERROR_MESSAGE);
         }
     }
 
@@ -29,7 +31,7 @@ public class ConsoleInputConverter {
 
     private void validateReservationTimeSize(List<String> body) {
         if (body.size() != 1) {
-            throw new IllegalArgumentException("잘못된 입력 형식입니다.");
+            throw new IllegalArgumentException(ERROR_MESSAGE);
         }
     }
 
@@ -41,7 +43,7 @@ public class ConsoleInputConverter {
         try {
             return Long.parseLong(input);
         } catch (NumberFormatException e) {
-            throw new IllegalArgumentException("잘못된 입력 형식입니다.");
+            throw new IllegalArgumentException(ERROR_MESSAGE);
         }
     }
 
@@ -49,7 +51,7 @@ public class ConsoleInputConverter {
         try {
             return LocalDate.parse(input);
         } catch (DateTimeParseException e) {
-            throw new IllegalArgumentException("잘못된 입력 형식입니다.");
+            throw new IllegalArgumentException(ERROR_MESSAGE);
         }
     }
 
@@ -57,7 +59,7 @@ public class ConsoleInputConverter {
         try {
             return LocalTime.parse(input);
         } catch (DateTimeParseException e) {
-            throw new IllegalArgumentException("잘못된 입력 형식입니다.");
+            throw new IllegalArgumentException(ERROR_MESSAGE);
         }
     }
 }

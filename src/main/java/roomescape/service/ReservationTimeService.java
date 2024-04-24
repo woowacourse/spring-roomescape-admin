@@ -34,6 +34,9 @@ public class ReservationTimeService {
     }
 
     public void deleteById(long id) {
-        reservationTimeDao.deleteById(id);
+        int isDelete = reservationTimeDao.deleteById(id);
+        if (isDelete < 1) {
+            throw new IllegalArgumentException("해당 id는 존재하지 않습니다.");
+        }
     }
 }

@@ -43,8 +43,8 @@ public class ReservationTimeDao {
         return jdbcInsert.executeAndReturnKey(parameterSource).longValue();
     }
 
-    public void deleteById(long id) {
+    public int deleteById(long id) {
         String sql = "DELETE FROM reservation_time WHERE id = ?";
-        jdbcTemplate.update(sql, id);
+        return jdbcTemplate.update(sql, id);
     }
 }

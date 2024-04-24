@@ -5,6 +5,7 @@
 - `/` : 웰컴 페이지
 - `/admin` : 어드민 메인 페이지
 - `/admin/reservation` : 예약 관리 페이지
+- `/admin/time` : 예약 시간 관리 페이지
 
 ## API 명세
 

@@ -20,4 +20,8 @@ public class TimeService {
     public ReservationTime save(ReservationTime reservationTime) {
         return timeRepository.save(reservationTime);
     }
+
+    public void deleteById(long id) {
+        timeRepository.deleteById(id);
+    }
 }

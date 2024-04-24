@@ -22,21 +22,28 @@ public class JdbcTemplateReservationTimeRepository implements ReservationTimeRep
                 .usingGeneratedKeyColumns("id");
     }
 
+    private final RowMapper<ReservationTime> reservationTimeRowMapper = (resultSet, rowNum) -> new ReservationTime(
+            resultSet.getLong("id"),
+            resultSet.getTime("start_at").toLocalTime()
+    );
+
     @Override
     public ReservationTime save(ReservationTime reservationTimeRequest) {
         Map<String, Object> params = new HashMap<>();
         params.put("start_at", reservationTimeRequest.getStartAt());
         Long id = jdbcInsert.executeAndReturnKey(params).longValue();
-        return new ReservationTime(id, reservationTimeRequest.getStartAt());
+        return findById(id);
+    }
+
+    private ReservationTime findById(Long id) {
+        return jdbcTemplate.queryForObject(
+                "SELECT id, start_at FROM reservation_time WHERE id = ?",
+                reservationTimeRowMapper, id);
     }
 
     @Override
     public List<ReservationTime> findAll() {
-        RowMapper<ReservationTime> timeRowMapper = (resultSet, rowNum) -> new ReservationTime(
-                resultSet.getLong("id"),
-                resultSet.getTime("start_at").toLocalTime()
-        );
-        return jdbcTemplate.query("SELECT id, start_at FROM reservation_time", timeRowMapper);
+        return jdbcTemplate.query("SELECT id, start_at FROM reservation_time", reservationTimeRowMapper);
     }
 
     @Override

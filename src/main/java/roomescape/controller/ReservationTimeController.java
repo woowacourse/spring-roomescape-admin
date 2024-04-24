@@ -29,15 +29,14 @@ public class ReservationTimeController {
 
     @PostMapping
     public ResponseEntity<ReservationTime> add(@RequestBody final ReservationTimeRequest reservationTimeRequest) {
-        ReservationTime reservationTime  = reservationTimeService.add(reservationTimeRequest);
+        ReservationTime reservationTime = reservationTimeService.add(reservationTimeRequest);
         return ResponseEntity.created(URI.create("/times/" + reservationTime.getId())).body(reservationTime);
     }
 
     @GetMapping
     @ResponseStatus(HttpStatus.OK)
     public List<ReservationTimeResponse> findAll() {
-        List<ReservationTime> reservationTimes = reservationTimeService.findAll();
-        return ReservationTimeResponse.fromReservationTimes(reservationTimes);
+        return reservationTimeService.findAll();
     }
 
     @DeleteMapping("/{id}")

@@ -8,7 +8,6 @@ import org.springframework.jdbc.core.namedparam.SqlParameterSource;
 import org.springframework.jdbc.core.simple.SimpleJdbcInsert;
 import org.springframework.stereotype.Repository;
 import roomescape.domain.ReservationTime;
-import roomescape.dto.ReservationTimeRequest;
 
 @Repository
 public class ReservationTimeDao {
@@ -29,8 +28,8 @@ public class ReservationTimeDao {
                 .usingGeneratedKeyColumns("id");
     }
 
-    public ReservationTime add(final ReservationTimeRequest reservationTimeRequest) {
-        SqlParameterSource parameterSource = new BeanPropertySqlParameterSource(reservationTimeRequest);
+    public ReservationTime add(final ReservationTime reservationTime) {
+        SqlParameterSource parameterSource = new BeanPropertySqlParameterSource(reservationTime);
         Number newId = simpleJdbcInsert.executeAndReturnKey(parameterSource);
         return findById(newId.longValue());
     }

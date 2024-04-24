@@ -7,7 +7,7 @@ public record ReservationTimeResponse(Long id, String startAt) {
     public static ReservationTimeResponse toResponse(ReservationTime reservationTime){
         return new ReservationTimeResponse(
                 reservationTime.getId(),
-                reservationTime.getTime().format(DateTimeFormatter.ofPattern("HH:mm"))
+                reservationTime.getStartAt().format(DateTimeFormatter.ofPattern("HH:mm"))
         );
     }
 }

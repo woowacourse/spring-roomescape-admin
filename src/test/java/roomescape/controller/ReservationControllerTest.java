@@ -5,13 +5,13 @@ import static org.assertj.core.api.Assertions.assertThat;
 
 import io.restassured.RestAssured;
 import io.restassured.http.ContentType;
-import java.util.Map;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.test.annotation.DirtiesContext;
+import roomescape.controller.dto.ReservationCreateRequest;
 
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.DEFINED_PORT)
 @DirtiesContext(classMode = DirtiesContext.ClassMode.BEFORE_EACH_TEST_METHOD)
@@ -24,11 +24,11 @@ class ReservationControllerTest {
     @DisplayName("예약을 추가한다.")
     void createReservation() {
         createInitialReservationTime();
-        final Map<String, Object> params = createReservationParam();
+        final ReservationCreateRequest request = new ReservationCreateRequest("냥인", "2024-04-24", 1L);
 
         RestAssured.given().log().all()
                 .contentType(ContentType.JSON)
-                .body(params)
+                .body(request)
                 .when().post("/reservations")
                 .then().log().all()
                 .statusCode(200);
@@ -72,13 +72,5 @@ class ReservationControllerTest {
     private void createInitialReservation() {
         jdbcTemplate.update("INSERT INTO reservation (name, date, time_id) VALUES (?, ?, ?)",
                 "냥인", "2024-04-21", 1L);
-    }
-
-    private Map<String, Object> createReservationParam() {
-        return Map.of(
-                "name", "브라운",
-                "date", "2023-08-05",
-                "timeId", 1L
-        );
     }
 }

@@ -1,21 +1,26 @@
 package roomescape.controller.dto;
 
 import java.time.LocalTime;
+import roomescape.entity.ReservationTime;
 
 public class CreateAvailableTimeResponse {
     Long id;
-    LocalTime time;
+    LocalTime startAt;
 
-    public CreateAvailableTimeResponse(Long id, LocalTime time) {
+    public CreateAvailableTimeResponse(Long id, LocalTime startAt) {
         this.id = id;
-        this.time = time;
+        this.startAt = startAt;
+    }
+
+    public static CreateAvailableTimeResponse from(ReservationTime reservationTime) {
+        return new CreateAvailableTimeResponse(reservationTime.getId(), reservationTime.getStartAt());
     }
 
     public Long getId() {
         return id;
     }
 
-    public LocalTime getTime() {
-        return time;
+    public LocalTime getStartAt() {
+        return startAt;
     }
 }

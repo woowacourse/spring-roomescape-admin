@@ -38,4 +38,13 @@ class AdminPageControllerTest {
                 .then().log().all()
                 .statusCode(200);
     }
+
+    @Test
+    @DisplayName("방탈출 예약 시간 관리 페이지 조회를 확인한다")
+    void showReservationTimePage() {
+        RestAssured.given().log().all()
+                .when().get("/admin/time")
+                .then().log().all()
+                .statusCode(200);
+    }
 }

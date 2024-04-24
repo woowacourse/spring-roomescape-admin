@@ -14,8 +14,8 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.context.SpringBootTest.WebEnvironment;
 import org.springframework.jdbc.core.JdbcTemplate;
 import roomescape.dao.ReservationTimeDao;
-import roomescape.dto.reservationtime.ReservationTimeCreateRequestDto;
-import roomescape.dto.reservationtime.ReservationTimeResponseDto;
+import roomescape.dto.reservationtime.ReservationTimeCreateRequest;
+import roomescape.dto.reservationtime.ReservationTimeResponse;
 
 @SpringBootTest(webEnvironment = WebEnvironment.RANDOM_PORT)
 class ReservationTimeServiceTest {
@@ -29,8 +29,8 @@ class ReservationTimeServiceTest {
 
     @BeforeEach
     void setUp() {
-        reservationTimeDao.add(ReservationTimeCreateRequestDto.from("12:02"));
-        reservationTimeDao.add(ReservationTimeCreateRequestDto.from("12:42"));
+        reservationTimeDao.add(ReservationTimeCreateRequest.from("12:02"));
+        reservationTimeDao.add(ReservationTimeCreateRequest.from("12:42"));
     }
 
     @AfterEach
@@ -43,8 +43,8 @@ class ReservationTimeServiceTest {
     @DisplayName("모든 예약 시간 정보를 조회한다.")
     void findAll() {
         //when
-        List<ReservationTimeResponseDto> results = reservationTimeService.findAll();
-        ReservationTimeResponseDto firstResponse = results.get(0);
+        List<ReservationTimeResponse> results = reservationTimeService.findAll();
+        ReservationTimeResponse firstResponse = results.get(0);
 
         //then
         assertAll(
@@ -58,10 +58,10 @@ class ReservationTimeServiceTest {
     void add() {
         //given
         String givenStartAt = "10:52";
-        ReservationTimeCreateRequestDto requestDto = ReservationTimeCreateRequestDto.from(givenStartAt);
+        ReservationTimeCreateRequest request = ReservationTimeCreateRequest.from(givenStartAt);
 
         //when
-        ReservationTimeResponseDto result = reservationTimeService.add(requestDto);
+        ReservationTimeResponse result = reservationTimeService.add(request);
 
         //then
         assertAll(
@@ -106,7 +106,7 @@ class ReservationTimeServiceTest {
     }
 
     private long addAndGetId() {
-        ReservationTimeCreateRequestDto requestDto = ReservationTimeCreateRequestDto.from("01:00");
-        return reservationTimeDao.add(requestDto);
+        ReservationTimeCreateRequest request = ReservationTimeCreateRequest.from("01:00");
+        return reservationTimeDao.add(request);
     }
 }

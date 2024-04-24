@@ -15,9 +15,9 @@ import org.springframework.boot.test.context.SpringBootTest.WebEnvironment;
 import org.springframework.jdbc.core.JdbcTemplate;
 import roomescape.dao.ReservationDao;
 import roomescape.dao.ReservationTimeDao;
-import roomescape.dto.reservation.ReservationCreateRequestDto;
-import roomescape.dto.reservation.ReservationResponseDto;
-import roomescape.dto.reservationtime.ReservationTimeCreateRequestDto;
+import roomescape.dto.reservation.ReservationCreateRequest;
+import roomescape.dto.reservation.ReservationResponse;
+import roomescape.dto.reservationtime.ReservationTimeCreateRequest;
 
 @SpringBootTest(webEnvironment = WebEnvironment.RANDOM_PORT)
 class ReservationServiceTest {
@@ -34,9 +34,9 @@ class ReservationServiceTest {
 
     @BeforeEach
     void setUp() {
-        timeId = reservationTimeDao.add(ReservationTimeCreateRequestDto.from("12:02"));
-        reservationDao.add(ReservationCreateRequestDto.of("daon", "2024-04-23", timeId));
-        reservationDao.add(ReservationCreateRequestDto.of("ikjo", "2022-02-22", timeId));
+        timeId = reservationTimeDao.add(ReservationTimeCreateRequest.from("12:02"));
+        reservationDao.add(ReservationCreateRequest.of("daon", "2024-04-23", timeId));
+        reservationDao.add(ReservationCreateRequest.of("ikjo", "2022-02-22", timeId));
     }
 
     @AfterEach
@@ -49,8 +49,8 @@ class ReservationServiceTest {
     @DisplayName("모든 예약 정보를 조회한다.")
     void findAll() {
         //when
-        List<ReservationResponseDto> results = reservationService.findAll();
-        ReservationResponseDto firstResponse = results.get(0);
+        List<ReservationResponse> results = reservationService.findAll();
+        ReservationResponse firstResponse = results.get(0);
 
         //then
         assertAll(
@@ -65,10 +65,10 @@ class ReservationServiceTest {
         //given
         String givenName = "wooteco";
         String givenDate = "2024-04-23";
-        ReservationCreateRequestDto requestDto = ReservationCreateRequestDto.of(givenName, givenDate, timeId);
+        ReservationCreateRequest givenRequest = ReservationCreateRequest.of(givenName, givenDate, timeId);
 
         //when
-        ReservationResponseDto result = reservationService.add(requestDto);
+        ReservationResponse result = reservationService.add(givenRequest);
 
         //then
         assertAll(
@@ -85,10 +85,10 @@ class ReservationServiceTest {
         Long given = -1L;
         String givenName = "wooteco";
         String givenDate = "2024-04-23";
-        ReservationCreateRequestDto requestDto = ReservationCreateRequestDto.of(givenName, givenDate, given);
+        ReservationCreateRequest givenRequest = ReservationCreateRequest.of(givenName, givenDate, given);
 
         //when //then
-        assertThatThrownBy(() -> reservationService.add(requestDto))
+        assertThatThrownBy(() -> reservationService.add(givenRequest))
                 .isInstanceOf(IllegalArgumentException.class);
     }
 
@@ -128,7 +128,7 @@ class ReservationServiceTest {
     }
 
     private long addAndGetId() {
-        ReservationCreateRequestDto requestDto = ReservationCreateRequestDto.of("3", "1999-09-19", timeId);
-        return reservationDao.add(requestDto);
+        ReservationCreateRequest givenRequest = ReservationCreateRequest.of("3", "1999-09-19", timeId);
+        return reservationDao.add(givenRequest);
     }
 }

@@ -40,8 +40,8 @@ class ReservationTimeControllerTest {
         String firstStartAt = "12:40";
         String secondStartAt = "23:25";
         List<ReservationTimeResponse> responses = List.of(
-                getReservationTimeResponse(1L, firstStartAt),
-                getReservationTimeResponse(2L, secondStartAt)
+                ReservationTimeResponse.of(1L, firstStartAt),
+                ReservationTimeResponse.of(2L, secondStartAt)
         );
         given(reservationTimeService.findAll())
                 .willReturn(responses);
@@ -62,7 +62,7 @@ class ReservationTimeControllerTest {
         //given
         String startAt = "22:04";
         ReservationTimeCreateRequest givenRequest = ReservationTimeCreateRequest.from(startAt);
-        ReservationTimeResponse expectedResponse = getReservationTimeResponse(2L, startAt);
+        ReservationTimeResponse expectedResponse = ReservationTimeResponse.of(2L, startAt);
         given(reservationTimeService.add(givenRequest))
                 .willReturn(expectedResponse);
         String requestBody = objectMapper.writeValueAsString(givenRequest);
@@ -86,10 +86,5 @@ class ReservationTimeControllerTest {
         //when //then
         mockMvc.perform(delete("/times/{id}", giveId))
                 .andExpect(status().isNoContent());
-    }
-
-
-    private ReservationTimeResponse getReservationTimeResponse(long id, String startAt) {
-        return ReservationTimeResponse.of(id, startAt);
     }
 }

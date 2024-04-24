@@ -33,15 +33,15 @@ class ReservationControllerTest {
     private MockMvc mockMvc;
     @MockBean
     private ReservationService reservationService;
-    
+
     @Test
     @DisplayName("전체 예약을 조회한다.")
     void getAllReservationsTest() throws Exception {
         //given
-        List<ReservationResponse> expectedResponses = List.of(
-                getReservationResponse(1L, "daon", "2022-02-23", 1L, "12:12"),
-                getReservationResponse(2L, "ikjo", "2022-02-05", 2L, "23:22")
-        );
+        String firstName = "daon";
+        String secondDate = "2022-02-05";
+        String secondStartAt = "23:22";
+        List<ReservationResponse> expectedResponses = getExpectedResponses(firstName, secondDate, secondStartAt);
         given(reservationService.findAll()).willReturn(expectedResponses);
 
         //when //then
@@ -50,9 +50,9 @@ class ReservationControllerTest {
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$", hasSize(2)))
                 .andExpect(jsonPath("$[0].id", is(1)))
-                .andExpect(jsonPath("$[0].name", is("daon")))
-                .andExpect(jsonPath("$[1].date", is("2022-02-05")))
-                .andExpect(jsonPath("$[1].time.startAt", is("23:22")));
+                .andExpect(jsonPath("$[0].name", is(firstName)))
+                .andExpect(jsonPath("$[1].date", is(secondDate)))
+                .andExpect(jsonPath("$[1].time.startAt", is(secondStartAt)));
     }
 
     @Test
@@ -63,8 +63,12 @@ class ReservationControllerTest {
         String expectedDate = "2024-11-29";
         String expectedStartAt = "00:01";
         ReservationCreateRequest givenRequest = ReservationCreateRequest.of(expectedName, expectedDate, 1L);
-        ReservationResponse response
-                = getReservationResponse(1L, expectedName, expectedDate, 1L, expectedStartAt);
+        ReservationResponse response = ReservationResponse.of(
+                1L,
+                expectedName,
+                expectedDate,
+                ReservationTimeResponse.of(1L, expectedStartAt)
+        );
         given(reservationService.add(givenRequest)).willReturn(response);
         String givenJsonRequest = objectMapper.writeValueAsString(givenRequest);
 
@@ -88,16 +92,20 @@ class ReservationControllerTest {
                 .andExpect(status().isNoContent());
     }
 
-    private ReservationResponse getReservationResponse(long id,
-                                                       String name,
-                                                       String date,
-                                                       long timeId,
-                                                       String startAt) {
-        return ReservationResponse.of(
-                id,
-                name,
-                date,
-                ReservationTimeResponse.of(timeId, startAt)
+    private List<ReservationResponse> getExpectedResponses(String firstName, String secondDate, String secondStartAt) {
+        return List.of(
+                ReservationResponse.of(
+                        1L,
+                        firstName,
+                        "2022-02-23",
+                        ReservationTimeResponse.of(1L, "12:12")
+                ),
+                ReservationResponse.of(
+                        2L,
+                        "ikjo",
+                        secondDate,
+                        ReservationTimeResponse.of(2L, secondStartAt)
+                )
         );
     }
 }

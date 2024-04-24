@@ -37,7 +37,7 @@ public class ReservationService {
         Reservation reservation = Reservation.of(
             savedId,
             reservationRequest.name(),
-            reservationRequest.date(), 
+            reservationRequest.date(),
             reservationTime
         );
         return ReservationResponse.from(reservation);

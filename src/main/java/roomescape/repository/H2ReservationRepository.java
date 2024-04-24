@@ -1,5 +1,6 @@
 package roomescape.repository;
 
+import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.jdbc.core.RowMapper;
 import org.springframework.jdbc.core.namedparam.MapSqlParameterSource;
 import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
@@ -11,6 +12,7 @@ import roomescape.domain.Reservation;
 import roomescape.domain.ReservationTime;
 
 import java.util.List;
+import java.util.Optional;
 
 @Repository
 public class H2ReservationRepository implements ReservationRepository {
@@ -41,6 +43,26 @@ public class H2ReservationRepository implements ReservationRepository {
     }
 
     @Override
+    public Optional<Reservation> findById(final Long reservationId) {
+        String sql = "SELECT "
+                + "r.id as reservation_id, r.name as name, r.date as date, t.id as time_id, t.start_at as time_value "
+                + "FROM reservation as r "
+                + "inner join reservation_time as t "
+                + "on r.time_id = t.id "
+                + "WHERE r.id = :reservationId";
+
+        try {
+            MapSqlParameterSource param = new MapSqlParameterSource()
+                    .addValue("reservationId", reservationId);
+            Reservation reservation = template.queryForObject(sql, param, itemRowMapper());
+
+            return Optional.of(reservation);
+        } catch (EmptyResultDataAccessException e) {
+            return Optional.empty();
+        }
+    }
+
+    @Override
     public Reservation save(final Reservation reservation) {
         String sql = "INSERT INTO reservation(name, date, time_id) VALUES (:name, :date, :timeId)";
         MapSqlParameterSource param = new MapSqlParameterSource()
@@ -61,15 +83,5 @@ public class H2ReservationRepository implements ReservationRepository {
         MapSqlParameterSource param = new MapSqlParameterSource()
                 .addValue("id", reservationId);
         template.update(sql, param);
-    }
-
-    @Override
-    public boolean existById(final Long reservationId) {
-        String sql = "SELECT count(*) FROM reservation WHERE id = :id";
-        MapSqlParameterSource param = new MapSqlParameterSource()
-                .addValue("id", reservationId);
-        Integer reservationCount = template.queryForObject(sql, param, Integer.class);
-
-        return reservationCount != null && reservationCount > 0;
     }
 }

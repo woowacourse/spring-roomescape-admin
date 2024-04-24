@@ -8,11 +8,13 @@ import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
 import org.springframework.jdbc.core.namedparam.SqlParameterSource;
 import org.springframework.jdbc.support.GeneratedKeyHolder;
 import org.springframework.jdbc.support.KeyHolder;
+import org.springframework.stereotype.Repository;
 import roomescape.domain.ReservationTime;
 
 import java.util.List;
 import java.util.Optional;
 
+@Repository
 public class H2ReservationTimeRepository implements ReservationTimeRepository {
     private final NamedParameterJdbcTemplate template;
 
@@ -66,15 +68,6 @@ public class H2ReservationTimeRepository implements ReservationTimeRepository {
         MapSqlParameterSource param = new MapSqlParameterSource()
                 .addValue("id", reservationTimeId);
         template.update(sql, param);
-    }
-
-    @Override
-    public boolean existById(final Long reservationTimeId) {
-        String sql = "SELECT count(*) FROM reservation_time WHERE id = :id";
-        MapSqlParameterSource param = new MapSqlParameterSource()
-                .addValue("id", reservationTimeId);
-        Integer reservationTimeCount = template.queryForObject(sql, param, Integer.class);
-
-        return reservationTimeCount != null && reservationTimeCount > 0;
+        System.out.println("param = " + param);
     }
 }

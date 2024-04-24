@@ -41,9 +41,8 @@ public class ReservationService {
     }
 
     private void checkReservationExist(final Long reservationId) {
-        if (!reservationRepository.existById(reservationId)) {
-            throw new NoSuchElementException("해당 id의 예약이 존재하지 않습니다.");
-        }
+        reservationRepository.findById(reservationId)
+                .orElseThrow(() -> new NoSuchElementException("해당 id의 예약이 존재하지 않습니다."));
     }
 
     public List<ReservationTime> getReservationTimes() {
@@ -60,8 +59,7 @@ public class ReservationService {
     }
 
     private void checkReservationTimeExist(final Long reservationTimeId) {
-        if (!reservationTimeRepository.existById(reservationTimeId)) {
-            throw new NoSuchElementException("해당 id의 예약 시간이 존재하지 않습니다.");
-        }
+        reservationTimeRepository.findById(reservationTimeId)
+                .orElseThrow(() -> new NoSuchElementException("해당 id의 예약 시간이 존재하지 않습니다."));
     }
 }

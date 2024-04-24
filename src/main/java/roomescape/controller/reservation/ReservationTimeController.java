@@ -1,10 +1,13 @@
 package roomescape.controller.reservation;
 
+import java.time.LocalTime;
+import java.util.List;
 import javax.sql.DataSource;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.namedparam.BeanPropertySqlParameterSource;
 import org.springframework.jdbc.core.namedparam.SqlParameterSource;
 import org.springframework.jdbc.core.simple.SimpleJdbcInsert;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -36,12 +39,18 @@ public class ReservationTimeController {
         return ReservationTimeResponse.from(reservationTime.of(id, reservationTime));
     }
 
-    /*
-    @Override
-    public Reservation add(Reservation reservation) {
-        SqlParameterSource params = new BeanPropertySqlParameterSource(reservation);
-        Long id = jdbcInsert.executeAndReturnKey(params).longValue();
-        return Reservation.of(id, reservation);
+    @GetMapping
+    public List<ReservationTimeResponse> getTimes() {
+        List<ReservationTime> reservationTimes = jdbcTemplate.query(
+                "SELECT * FROM reservation_time",
+                (resultSet, rowNum) -> new ReservationTime(
+                        resultSet.getLong("id"),
+                        LocalTime.parse(resultSet.getString("startAt"))
+                )
+        );
+
+        return reservationTimes.stream()
+                .map(ReservationTimeResponse::from)
+                .toList();
     }
-     */
 }

@@ -46,7 +46,7 @@ public class ReservationH2Repository implements ReservationRepository {
                         resultSet.getLong("id"),
                         resultSet.getString("name"),
                         LocalDate.parse(resultSet.getString("date")),
-                        LocalTime.parse(resultSet.getString("startAt"))
+                        LocalTime.parse(resultSet.getString("time"))
                 )
         );
     }

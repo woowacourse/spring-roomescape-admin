@@ -1,5 +1,6 @@
 package roomescape.service;
 
+import java.util.List;
 import org.springframework.stereotype.Service;
 import roomescape.dto.TimeRequest;
 import roomescape.dto.TimeResponse;
@@ -19,5 +20,12 @@ public class TimeService {
         final ReservationTime created = ReservationTime.create(timeRequest.startAt());
         final ReservationTime saved = timeDao.save(created);
         return TimeResponse.from(saved);
+    }
+
+    public List<TimeResponse> findAll() {
+        return timeDao.findAll()
+                .stream()
+                .map(TimeResponse::from)
+                .toList();
     }
 }

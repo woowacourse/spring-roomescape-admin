@@ -2,6 +2,7 @@ package roomescape.repository;
 
 import java.sql.PreparedStatement;
 import java.sql.Time;
+import java.util.List;
 import java.util.Objects;
 import javax.sql.DataSource;
 import org.springframework.jdbc.core.JdbcTemplate;
@@ -30,5 +31,14 @@ public class TimeDao {
 
         final long id = Objects.requireNonNull(keyHolder.getKey()).longValue();
         return reservationTime.toReservationTime(id);
+    }
+
+    public List<ReservationTime> findAll() {
+        return jdbcTemplate.query(
+                "SELECT id, start_at FROM reservation_time",
+                (resultSet, rowNum) -> new ReservationTime(
+                        resultSet.getLong("id"),
+                        resultSet.getTime("start_at").toLocalTime()
+                ));
     }
 }

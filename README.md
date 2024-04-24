@@ -110,3 +110,26 @@ Content-Type: application/json
 }
 ```
 
+<br>
+
+### 시간 조회 API
+
+**Request**
+
+```http request
+GET /times HTTP/1.1
+```
+
+**Response**
+
+```
+HTTP/1.1 200 
+Content-Type: application/json
+
+[
+   {
+        "id": 1,
+        "startAt": "10:00"
+    }
+]
+```

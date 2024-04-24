@@ -21,8 +21,15 @@ public class ReservationTimeService {
     }
 
     public ReservationTime create(final ReservationTimeRequest reservationTimeRequest) {
+        validateNotNull(reservationTimeRequest);
         final ReservationTime reservationTime = new ReservationTime(reservationTimeRequest.startAt());
         return reservationTimeDao.save(reservationTime);
+    }
+
+    private void validateNotNull(final ReservationTimeRequest reservationTimeRequest) {
+        if (reservationTimeRequest == null) {
+            throw new IllegalArgumentException("null이 될 수 없습니다.");
+        }
     }
 
     public List<ReservationTime> findAll() {

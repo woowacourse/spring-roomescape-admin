@@ -14,6 +14,7 @@ public class Reservation {
             final LocalDate date,
             final ReservationTime reservationTime
     ) {
+        validateNotNull(name, date, reservationTime);
         this.name = name;
         this.date = date;
         this.reservationTime = reservationTime;
@@ -25,10 +26,23 @@ public class Reservation {
             final LocalDate date,
             final ReservationTime reservationTime
     ) {
+        validateNotNull(id, name, date, reservationTime);
         this.id = id;
         this.name = name;
         this.date = date;
         this.reservationTime = reservationTime;
+    }
+
+    private void validateNotNull(final Object... objects) {
+        for (final Object object : objects) {
+            validateNotNull(object);
+        }
+    }
+
+    private void validateNotNull(final Object value) {
+        if (value == null) {
+            throw new IllegalArgumentException("값은 null이 될 수 없습니다.");
+        }
     }
 
     public Long getId() {

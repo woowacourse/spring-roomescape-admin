@@ -25,12 +25,20 @@ public class ReservationService {
     }
 
     public Reservation create(final ReservationRequest reservationRequest) {
+        validateNotNull(reservationRequest);
         final Reservation reservation = new Reservation(
                 reservationRequest.name(),
                 reservationRequest.date(),
                 reservationTimeDao.findById(reservationRequest.timeId())
+                        .orElseThrow(() -> new IllegalArgumentException("존재하지 않는 time id입니다."))
         );
         return reservationDao.save(reservation);
+    }
+
+    private void validateNotNull(final ReservationRequest reservationRequest) {
+        if (reservationRequest == null) {
+            throw new IllegalArgumentException("null이 될 수 없습니다.");
+        }
     }
 
     public List<Reservation> findAll() {

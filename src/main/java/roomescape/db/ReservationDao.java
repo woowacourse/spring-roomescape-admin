@@ -41,7 +41,7 @@ public class ReservationDao {
     public Optional<Reservation> findTimeId(final long id) {
         final String sql = "select * from reservation where time_id=?";
         try {
-            return Optional.of(jdbcTemplate.queryForObject(sql, Reservation.class, id));
+            return Optional.ofNullable(jdbcTemplate.queryForObject(sql, Reservation.class, id));
         } catch (final DataAccessException e) {
             return Optional.empty();
         }

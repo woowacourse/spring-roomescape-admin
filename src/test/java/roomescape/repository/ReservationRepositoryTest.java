@@ -1,10 +1,11 @@
 package roomescape.repository;
 
+import static org.assertj.core.api.Assertions.assertThat;
+
 import io.restassured.RestAssured;
 import java.time.LocalDate;
 import java.time.LocalTime;
 import java.util.List;
-import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -42,7 +43,7 @@ public class ReservationRepositoryTest {
         Reservation reservation = new Reservation(1L, "hogi", LocalDate.now(), LocalTime.now());
         Long saveId = reservationRepository.save(reservation);
 
-        Assertions.assertThat(saveId).isEqualTo(1L);
+        assertThat(saveId).isEqualTo(1L);
     }
 
     @Test
@@ -54,7 +55,7 @@ public class ReservationRepositoryTest {
         reservationRepository.save(reservation2);
 
         List<Reservation> reservations = reservationRepository.findAll();
-        Assertions.assertThat(reservations.size()).isEqualTo(2);
+        assertThat(reservations.size()).isEqualTo(2);
     }
 
     @Test
@@ -65,6 +66,6 @@ public class ReservationRepositoryTest {
 
         reservationRepository.delete(saveId);
         List<Reservation> reservations = reservationRepository.findAll();
-        Assertions.assertThat(reservations.size()).isEqualTo(0);
+        assertThat(reservations.size()).isEqualTo(0);
     }
 }

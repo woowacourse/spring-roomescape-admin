@@ -1,7 +1,6 @@
 package roomescape.reservation.service;
 
 import java.util.List;
-import java.util.concurrent.atomic.AtomicLong;
 import org.springframework.stereotype.Service;
 import roomescape.reservation.domain.Reservation;
 import roomescape.reservation.dto.RequestReservation;
@@ -12,15 +11,13 @@ import roomescape.reservation.repository.ReservationRepository;
 public class ReservationService {
 
     private final ReservationRepository reservationRepository;
-    private final AtomicLong atomicLong = new AtomicLong();
-
 
     public ReservationService(ReservationRepository reservationRepository) {
         this.reservationRepository = reservationRepository;
     }
 
     public Long save(RequestReservation requestReservation) {
-        Reservation reservation = new Reservation(atomicLong.incrementAndGet(), requestReservation.name(),
+        Reservation reservation = new Reservation(null, requestReservation.name(),
                 requestReservation.date(),
                 requestReservation.time());
 

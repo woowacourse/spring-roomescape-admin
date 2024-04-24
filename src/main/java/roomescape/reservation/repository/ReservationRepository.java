@@ -18,17 +18,16 @@ public class ReservationRepository {
     }
 
     public Long save(Reservation reservation) {
-        String sql = "insert into reservation (id, name, date, time) values (?,?,?,?)";
+        String sql = "insert into reservation (name, date, time) values (?,?,?)";
         KeyHolder keyHolder = new GeneratedKeyHolder();
 
         jdbcTemplate.update(con -> {
             PreparedStatement ps = con.prepareStatement(
                     sql, new String[]{"id"}
             );
-            ps.setString(1, String.valueOf(reservation.getId()));
-            ps.setString(2, reservation.getName());
-            ps.setString(3, String.valueOf(reservation.getDate()));
-            ps.setString(4, String.valueOf(reservation.getTime()));
+            ps.setString(1, reservation.getName());
+            ps.setString(2, String.valueOf(reservation.getDate()));
+            ps.setString(3, String.valueOf(reservation.getTime()));
             return ps;
         }, keyHolder);
 

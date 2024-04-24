@@ -23,7 +23,7 @@ public class ReservationTimeService {
         return reservationTimeRepository.readAll();
     }
 
-    public void deleteTimeWithId(long id) {
+    public void deleteTime(long id) {
         reservationTimeRepository.delete(id);
     }
 }

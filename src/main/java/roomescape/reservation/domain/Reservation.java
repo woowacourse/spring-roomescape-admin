@@ -17,9 +17,7 @@ public class Reservation {
     }
 
     public Reservation(final String name, final LocalDate date, final ReservationTime time) {
-        this.name = name;
-        this.date = date;
-        this.time = time;
+        this(null, name, date, time);
     }
 
     public Long getId() {

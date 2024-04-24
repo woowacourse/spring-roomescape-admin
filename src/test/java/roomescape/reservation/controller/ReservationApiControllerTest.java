@@ -63,7 +63,7 @@ class ReservationApiControllerTest {
         @Autowired
         private ObjectMapper objectMapper;
 
-        @DisplayName("예약 정보를 저장 성공 시 200 응답을 받고 Location 응답 헤더를 받는다.")
+        @DisplayName("예약 정보를 저장 성공 시 201 응답을 받고 Location 응답 헤더를 받는다.")
         @Test
         public void createSuccessTest() throws Exception {
             // given
@@ -80,7 +80,7 @@ class ReservationApiControllerTest {
             mockMvc.perform(post("/reservations")
                             .contentType(MediaType.APPLICATION_JSON)
                             .content(objectMapper.writeValueAsString(reservationSaveRequest)))
-                    .andExpect(status().isOk())
+                    .andExpect(status().isCreated())
                     .andExpect(header().string("Location", "/reservations/1"))
                     .andExpect(jsonPath("$.id").value(reservation.getId()))
                     .andExpect(jsonPath("$.name").value(reservation.getName()))
@@ -111,7 +111,7 @@ class ReservationApiControllerTest {
     @Nested
     class deleteTest {
 
-        @DisplayName("예약 정보 삭제 성공시 200 응답을 받는다.")
+        @DisplayName("예약 정보 삭제 성공시 204 응답을 받는다.")
         @Test
         public void deleteByIdSuccessTest() throws Exception {
             // given && when
@@ -121,7 +121,7 @@ class ReservationApiControllerTest {
             // then
             mockMvc.perform(delete("/reservations/{id}", 1L)
                             .contentType(MediaType.APPLICATION_JSON))
-                    .andExpect(status().isOk());
+                    .andExpect(status().isNoContent());
         }
 
         @DisplayName("예약 정보 삭제 실패시 400 응답을 받는다.")

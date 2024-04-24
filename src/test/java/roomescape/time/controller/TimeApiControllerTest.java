@@ -59,7 +59,7 @@ class TimeApiControllerTest {
         @Autowired
         private ObjectMapper objectMapper;
 
-        @DisplayName("시간 정보를 저장 성공 시 200 응답을 받는다.")
+        @DisplayName("시간 정보를 저장 성공 시 201 응답을 받는다.")
         @Test
         public void createSuccessTest() throws Exception {
             // given
@@ -74,9 +74,9 @@ class TimeApiControllerTest {
             mockMvc.perform(post("/times")
                             .contentType(MediaType.APPLICATION_JSON)
                             .content(objectMapper.writeValueAsString(timeSaveRequest)))
-                    .andExpect(status().isOk())
+                    .andExpect(status().isCreated())
                     .andExpect(jsonPath("$.id").value(time.getId()))
-                    .andExpect(jsonPath("$.startAt").value(time.getStartAt()));
+                    .andExpect(jsonPath("$.startAt").value(time.getStartAt().toString()));
         }
 
         @DisplayName("시간 저장 실패 시 400 응답을 받는다.")
@@ -101,7 +101,7 @@ class TimeApiControllerTest {
     @Nested
     class deleteTest {
 
-        @DisplayName("시간 삭제 성공시 200 응답을 받는다.")
+        @DisplayName("시간 삭제 성공시 204 응답을 받는다.")
         @Test
         public void deleteByIdSuccessTest() throws Exception {
             // given && when
@@ -111,7 +111,7 @@ class TimeApiControllerTest {
             // then
             mockMvc.perform(delete("/times/{id}", 1L)
                             .contentType(MediaType.APPLICATION_JSON))
-                    .andExpect(status().isOk());
+                    .andExpect(status().isNoContent());
         }
 
         @DisplayName("예약 정보 삭제 실패시 400 응답을 받는다.")

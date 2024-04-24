@@ -7,7 +7,7 @@ import java.time.LocalTime;
 public class Reservation {
     private static final Long DEFAULT_ID_VALUE = 0L;
 
-    private final Long id;
+    private final long id;
     private final ClientName clientName;
     private final LocalDate date;
     private final ReservationTime time;
@@ -16,7 +16,7 @@ public class Reservation {
         this(DEFAULT_ID_VALUE, clientName, date, time);
     }
 
-    public Reservation(final Long id, final ClientName clientName, final LocalDate date, final ReservationTime time) {
+    public Reservation(final long id, final ClientName clientName, final LocalDate date, final ReservationTime time) {
         validateReservationDateAndTime(date, time.getStartAt());
         this.id = id;
         this.clientName = clientName;
@@ -31,11 +31,11 @@ public class Reservation {
         }
     }
 
-    public Reservation initializeIndex(final Long reservationId) {
+    public Reservation initializeIndex(final long reservationId) {
         return new Reservation(reservationId, clientName, date, time);
     }
 
-    public Long getId() {
+    public long getId() {
         return id;
     }
 

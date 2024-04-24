@@ -59,15 +59,14 @@ public class ReservationDao {
         }
     }
 
-    private final RowMapper<Reservation> reservationRowMapper = (resultSet, rowNum) -> {
-        return Reservation.of(
-                resultSet.getLong("id"),
-                resultSet.getString("name"),
-                resultSet.getString("date"),
-                resultSet.getLong("time_id"),
-                resultSet.getString("start_at")
-        );
-    };
+    private final RowMapper<Reservation> reservationRowMapper = (resultSet, rowNum) ->
+            Reservation.of(
+                    resultSet.getLong("id"),
+                    resultSet.getString("name"),
+                    resultSet.getString("date"),
+                    resultSet.getLong("time_id"),
+                    resultSet.getString("start_at")
+            );
 
     public List<Reservation> getAll() {
         String sql = "SELECT r.id as reservation_id, r.name, r.date, t.id as time_id, t.start_at as time_value "

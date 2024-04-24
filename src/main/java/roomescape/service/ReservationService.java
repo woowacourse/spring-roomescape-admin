@@ -20,15 +20,10 @@ public class ReservationService {
         return reservationDao.save(reservation);
     }
 
-    private Reservation getReservation(final long id) {
-        return reservationDao.findById(id)
-                .orElseThrow(() -> new IllegalArgumentException("[ERROR] 예약 조회 결과가 없습니다."));
-    }
-
     public List<ReservationResponse> getAllReservations() {
         return reservationDao.getAll()
                 .stream()
-                .map(reservation -> ReservationResponse.from(reservation))
+                .map(ReservationResponse::from)
                 .toList();
     }
 

@@ -27,11 +27,15 @@ public class TimeDao {
                 }, keyHolder
         );
 
-        long id = keyHolder.getKey().longValue();
-        return new ReservationTime(
-                id,
-                reservationTimeRequest.startAt()
-        );
+        try {
+            long id = keyHolder.getKey().longValue();
+            return new ReservationTime(
+                    id,
+                    reservationTimeRequest.startAt()
+            );
+        } catch (NullPointerException exception) {
+            throw new RuntimeException("[ERROR] 예약 시간 추가 요청이 정상적으로 이루어지지 않았습니다.");
+        }
     }
 
     public List<ReservationTime> getAll() {

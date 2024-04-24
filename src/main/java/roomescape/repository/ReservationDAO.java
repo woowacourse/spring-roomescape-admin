@@ -20,13 +20,13 @@ public class ReservationDAO {
 
     public List<Reservation> findAllReservations() {
         String sql = """
-                SELECT
+                select
                     r.id as reservation_id,
                     r.name,
                     r.date,
                     t.id as time_id,
                     t.start_at as time_value
-                FROM reservation as r
+                from reservation as r
                 inner join reservation_time as t
                 on r.time_id = t.id
                 """;

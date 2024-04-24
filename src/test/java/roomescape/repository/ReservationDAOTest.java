@@ -27,33 +27,33 @@ class ReservationDAOTest {
 
     @BeforeEach
     void setUp() {
-        jdbcTemplate.execute("DROP TABLE reservation IF EXISTS");
-        jdbcTemplate.execute("DROP TABLE reservation_time IF EXISTS");
+        jdbcTemplate.execute("drop table reservation if exists");
+        jdbcTemplate.execute("drop table reservation_time if exists");
         jdbcTemplate.execute("""
-                CREATE TABLE reservation_time
+                create table reservation_time
                 (
-                    id   BIGINT       NOT NULL AUTO_INCREMENT,
-                    start_at VARCHAR(255) NOT NULL,
-                    PRIMARY KEY (id)
+                    id   bigint       not null auto_increment,
+                    start_at varchar(255) not null ,
+                    primary key (id)
                 );
                 """
         );
         jdbcTemplate.execute("""
-                CREATE TABLE reservation
+                create table reservation
                 (
-                    id   BIGINT       NOT NULL AUTO_INCREMENT,
-                    name VARCHAR(255) NOT NULL,
-                    date VARCHAR(255) NOT NULL,
-                    time_id BIGINT,
-                    PRIMARY KEY (id),
-                    FOREIGN KEY (time_id) REFERENCES reservation_time (id)
+                    id   bigint       not null auto_increment,
+                    name varchar(255) not null ,
+                    date varchar(255) not null ,
+                    time_id bigint,
+                    primary key (id),
+                    foreign key (time_id) references reservation_time (id)
                 );
                 """
         );
-        jdbcTemplate.update("INSERT INTO reservation_time (start_at) values (?)", "10:00");
-        jdbcTemplate.update("INSERT INTO reservation_time (start_at) values (?)", "11:00");
-        jdbcTemplate.update("INSERT INTO reservation (name, date, time_id) VALUES (?, ?, ?)", "브라운", "2023-08-05", "1");
-        jdbcTemplate.update("INSERT INTO reservation (name, date, time_id) VALUES (?, ?, ?)", "리사", "2023-08-01", "2");
+        jdbcTemplate.update("insert into reservation_time (start_at) values (?)", "10:00");
+        jdbcTemplate.update("insert into reservation_time (start_at) values (?)", "11:00");
+        jdbcTemplate.update("insert into reservation (name, date, time_id) values (?, ?, ?)", "브라운", "2023-08-05", "1");
+        jdbcTemplate.update("insert into reservation (name, date, time_id) values (?, ?, ?)", "리사", "2023-08-01", "2");
     }
 
     @DisplayName("모든 예약을 조회한다")
@@ -76,7 +76,7 @@ class ReservationDAOTest {
         ReservationTime reservationTime = new ReservationTime(1, LocalTime.of(10, 0));
         reservationDAO.add(
                 new Reservation("네오", LocalDate.of(2024, 9, 1), reservationTime));
-        Integer count = jdbcTemplate.queryForObject("SELECT count(1) from reservation", Integer.class);
+        Integer count = jdbcTemplate.queryForObject("select count(1) from reservation", Integer.class);
         assertThat(count).isEqualTo(3);
     }
 
@@ -84,7 +84,7 @@ class ReservationDAOTest {
     @Test
     void should_delete_reservation() {
         reservationDAO.delete(1);
-        Integer count = jdbcTemplate.queryForObject("SELECT count(1) from reservation", Integer.class);
+        Integer count = jdbcTemplate.queryForObject("select count(1) from reservation", Integer.class);
         assertThat(count).isEqualTo(1);
     }
 }

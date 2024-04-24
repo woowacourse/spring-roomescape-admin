@@ -30,10 +30,10 @@ public class DatabaseReservationRepository implements ReservationRepository {
             new Reservation(
                     rs.getLong("id"),
                     rs.getString("name"),
-                    CustomDateTimeFormatter.getLocalDate(rs.getString("date")),
+                    rs.getDate("date").toLocalDate(),
                     new ReservationTime(
                             rs.getLong("time_id"),
-                            CustomDateTimeFormatter.getLocalTime(rs.getString("time_value"))
+                            rs.getTime("time_value").toLocalTime()
                     )
             );
 
@@ -64,7 +64,7 @@ public class DatabaseReservationRepository implements ReservationRepository {
                 .usingGeneratedKeyColumns("id");
         long createdReservationId = simpleJdbcInsert.executeAndReturnKey(Map.of(
                 "name", reservationCreateRequest.name(),
-                "date", reservationCreateRequest.date(),
+                "date", CustomDateTimeFormatter.getLocalDate(reservationCreateRequest.date()),
                 "time_id", reservationCreateRequest.timeId()
         )).longValue();
         return findReservationById(createdReservationId).get();

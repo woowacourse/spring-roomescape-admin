@@ -4,6 +4,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 import org.springframework.jdbc.core.JdbcTemplate;
+import org.springframework.jdbc.core.RowMapper;
 import org.springframework.jdbc.core.simple.SimpleJdbcInsert;
 import org.springframework.stereotype.Repository;
 import roomescape.controller.dto.ReservationTimeCreateRequest;
@@ -12,6 +13,10 @@ import roomescape.util.CustomDateTimeFormatter;
 
 @Repository
 public class DatabaseReservationTimeRepository implements ReservationTimeRepository {
+    private final RowMapper<ReservationTime> reservationTimeRowMapper = (rs, rowNum) -> new ReservationTime(
+            rs.getLong("id"),
+            rs.getTime("start_at").toLocalTime()
+    );
 
     private final JdbcTemplate jdbcTemplate;
 
@@ -21,23 +26,14 @@ public class DatabaseReservationTimeRepository implements ReservationTimeReposit
 
     @Override
     public List<ReservationTime> findReservationTimes() {
-        return jdbcTemplate.query(
-                "SELECT * FROM reservation_time"
-                , (rs, rowNum) -> new ReservationTime(
-                        rs.getLong("id"),
-                        CustomDateTimeFormatter.getLocalTime(rs.getString("start_at"))
-                )
-        );
+        return jdbcTemplate.query("SELECT * FROM reservation_time", reservationTimeRowMapper);
     }
 
     @Override
     public Optional<ReservationTime> findReservationTimeById(Long id) {
         return Optional.ofNullable(jdbcTemplate.queryForObject(
                 "SELECT * FROM reservation_time WHERE id = ?",
-                (rs, rowNum) -> new ReservationTime(
-                        rs.getLong("id"),
-                        CustomDateTimeFormatter.getLocalTime(rs.getString("start_at")
-                        )),
+                reservationTimeRowMapper,
                 id));
     }
 
@@ -46,7 +42,7 @@ public class DatabaseReservationTimeRepository implements ReservationTimeReposit
         SimpleJdbcInsert simpleJdbcInsert = new SimpleJdbcInsert(jdbcTemplate).withTableName("reservation_time")
                 .usingGeneratedKeyColumns("id");
         long createdReservationTimeId = simpleJdbcInsert.executeAndReturnKey(Map.of(
-                "start_at", reservationTimeCreateRequest.startAt()
+                "start_at", CustomDateTimeFormatter.getLocalTime(reservationTimeCreateRequest.startAt())
         )).longValue();
 
         return findReservationTimeById(createdReservationTimeId).get();

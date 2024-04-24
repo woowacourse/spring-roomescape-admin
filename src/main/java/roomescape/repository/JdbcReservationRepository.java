@@ -1,6 +1,8 @@
 package roomescape.repository;
 
 import java.sql.PreparedStatement;
+import java.time.LocalDate;
+import java.time.LocalTime;
 import java.util.List;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;
@@ -23,18 +25,19 @@ public class JdbcReservationRepository implements ReservationRepository {
             + "FROM reservation as r \n"
             + "inner join reservation_time as t \n"
             + "on r.time_id = t.id";
-    private static final String DELETE_SQL = "DELETE FROM reservation WHERE id = ?";
+    private static final String DELETE_SQL = "DELETE FROM reservation";
+    private static final String WHERE_ID = " WHERE id = ?";
 
     private final JdbcTemplate jdbcTemplate;
 
-    private final RowMapper<Reservation> reservationMapper = (resultSet, rowNum) -> {
+    private final RowMapper<Reservation> rowMapper = (resultSet, rowNum) -> {
         Reservation reservation = new Reservation(
                 resultSet.getLong("reservation_id"),
                 resultSet.getString("name"),
-                resultSet.getDate("date").toLocalDate(),
+                LocalDate.parse(resultSet.getString("date")),
                 new ReservationTime(
                         resultSet.getLong("time_id"),
-                        resultSet.getTime("time_value").toLocalTime()
+                        LocalTime.parse(resultSet.getString("time_value"))
                 )
         );
         return reservation;
@@ -61,17 +64,16 @@ public class JdbcReservationRepository implements ReservationRepository {
 
     @Override
     public List<Reservation> findAll() {
-        return jdbcTemplate.query(SELECT_SQL, reservationMapper);
+        return jdbcTemplate.query(SELECT_SQL, rowMapper);
     }
 
     @Override
     public Reservation findById(Long id) {
-        String sql = SELECT_SQL + "WHERE id = ?";
-        return jdbcTemplate.queryForObject(sql, reservationMapper, id);
+        return jdbcTemplate.queryForObject(SELECT_SQL + WHERE_ID, rowMapper, id);
     }
 
     @Override
     public void delete(Long id) {
-        jdbcTemplate.update(DELETE_SQL, id);
+        jdbcTemplate.update(DELETE_SQL + WHERE_ID, id);
     }
 }

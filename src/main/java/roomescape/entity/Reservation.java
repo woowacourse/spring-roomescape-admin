@@ -20,16 +20,24 @@ public class Reservation {
         this.reservationTime = reservationTime;
     }
 
-    public Reservation(Long id, String name, LocalDate date, LocalTime time) {
-        this(id, new Name(name), new ReservationDate(date), new ReservationTime(time));
+    public Reservation(Long id, String name, LocalDate date, ReservationTime reservationTime) {
+        this(id, new Name(name), new ReservationDate(date), reservationTime);
     }
 
-    public Reservation(String name, LocalDate reservationDate, LocalTime reservationStartTime) {
-        this(null, name, reservationDate, reservationStartTime);
+    public Reservation(String name, LocalDate date, ReservationTime reservationTime) {
+        this(null, name, date, reservationTime);
+    }
+
+    public Reservation(Long id, Reservation reservation) {
+        this(id, reservation.getName(), reservation.getStartDate(), reservation.reservationTime);
     }
 
     public long getId() {
         return id;
+    }
+
+    public long getReservationTimeId() {
+        return reservationTime.getId();
     }
 
     public String getName() {

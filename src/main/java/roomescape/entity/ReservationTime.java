@@ -1,10 +1,12 @@
 package roomescape.entity;
 
+import java.time.LocalTime;
+
 public class ReservationTime {
     private final long id;
-    private final String startAt;
+    private final LocalTime startAt;
 
-    public ReservationTime(long id, String startAt) {
+    public ReservationTime(long id, LocalTime startAt) {
         this.id = id;
         this.startAt = startAt;
     }
@@ -13,7 +15,7 @@ public class ReservationTime {
         return id;
     }
 
-    public String getStartAt() {
+    public LocalTime getStartAt() {
         return startAt;
     }
 }

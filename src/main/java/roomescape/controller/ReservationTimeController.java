@@ -7,6 +7,7 @@ import roomescape.dto.ReservationTimeDto;
 import roomescape.entity.ReservationTime;
 import roomescape.service.ReservationTimeService;
 
+import java.time.LocalTime;
 import java.util.List;
 
 @RestController
@@ -37,7 +38,7 @@ public class ReservationTimeController {
     }
 
     private ReservationTime makeTimeObject(ReservationTimeDto reservationTimeDto, long timeId) {
-        String startAt = reservationTimeDto.startAt();
+        LocalTime startAt = reservationTimeDto.startAt();
         return new ReservationTime(timeId, startAt);
     }
 }

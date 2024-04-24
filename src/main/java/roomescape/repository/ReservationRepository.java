@@ -9,6 +9,7 @@ import roomescape.dto.ReservationDto;
 import roomescape.entity.Reservation;
 import roomescape.entity.ReservationTime;
 
+import java.sql.Date;
 import java.sql.PreparedStatement;
 import java.util.List;
 
@@ -23,8 +24,9 @@ public class ReservationRepository {
     private final RowMapper<Reservation> rowMapper = (resultSet, rowNum) -> new Reservation(
             resultSet.getLong("reservation_id"),
             resultSet.getString("name"),
-            resultSet.getString("date"),
-            new ReservationTime(resultSet.getLong("time_id"), resultSet.getString("time_value"))
+            resultSet.getDate("date").toLocalDate(),
+            new ReservationTime(resultSet.getLong("time_id"),
+                    resultSet.getTime("time_value").toLocalTime())
     );
 
     public long create(ReservationDto reservationDto) {
@@ -34,7 +36,7 @@ public class ReservationRepository {
         jdbcTemplate.update(connection -> {
             PreparedStatement ps = connection.prepareStatement(sql, new String[]{"id"});
             ps.setString(1, reservationDto.name());
-            ps.setString(2, reservationDto.date());
+            ps.setDate(2, Date.valueOf(reservationDto.date()));
             ps.setLong(3, reservationDto.timeId());
             return ps;
         }, keyHolder);

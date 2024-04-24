@@ -3,11 +3,8 @@ package roomescape.repository;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.support.GeneratedKeyHolder;
 import org.springframework.jdbc.support.KeyHolder;
-import org.springframework.test.annotation.DirtiesContext;
 import roomescape.domain.ReservationTime;
 
 import java.sql.PreparedStatement;
@@ -18,12 +15,7 @@ import java.util.Optional;
 import static org.assertj.core.api.Assertions.assertThat;
 import static roomescape.TestFixture.MIA_RESERVATION_TIME;
 
-@SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.DEFINED_PORT)
-@DirtiesContext(classMode = DirtiesContext.ClassMode.BEFORE_EACH_TEST_METHOD)
-class ReservationTimeRepositoryTest {
-    @Autowired
-    private JdbcTemplate jdbcTemplate;
-
+class ReservationTimeRepositoryTest extends RepositoryTest {
     @Autowired
     private ReservationTimeRepository reservationTimeRepository;
 

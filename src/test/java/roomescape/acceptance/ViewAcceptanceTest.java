@@ -3,8 +3,10 @@ package roomescape.acceptance;
 import io.restassured.RestAssured;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
+import org.springframework.boot.test.context.SpringBootTest;
 
-public class ViewAcceptanceTest implements AcceptanceTest {
+@SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.DEFINED_PORT)
+public class ViewAcceptanceTest {
 
     @Test
     @DisplayName("[Step1] 어드민 메인 페이지를 조회한다.")

@@ -4,10 +4,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.support.GeneratedKeyHolder;
 import org.springframework.jdbc.support.KeyHolder;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.sql.PreparedStatement;
 import java.sql.Time;
@@ -47,5 +44,13 @@ public class ReservationTimeController {
         final ReservationTime reservationTime = new ReservationTime(id, reservationTimeRequest.startAt());
 
         return ResponseEntity.ok(reservationTime);
+    }
+
+    @DeleteMapping("/times/{id}")
+    public ResponseEntity<Void> delete(@PathVariable("id") Long id) {
+        final String sql = "DELETE FROM reservation_time WHERE id = ?";
+        jdbcTemplate.update(sql, id);
+
+        return ResponseEntity.ok().build();
     }
 }

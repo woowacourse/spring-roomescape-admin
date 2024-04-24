@@ -28,7 +28,7 @@
 - [x] 예약 시간 테이블 스키마를 정의한다.
 - [x] API 명세를 따라 시간 추가 API를 구현한다.
 - [x] API 명세를 따라 시간 조회 API를 구현한다.
-- [ ] API 명세를 따라 시간 삭제 API를 구현한다.
+- [x] API 명세를 따라 시간 삭제 API를 구현한다.
 
 ## 커밋 컨밴션
 - feat, docs, fix, refactor, test, style, chore

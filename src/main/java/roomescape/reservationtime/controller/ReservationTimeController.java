@@ -30,7 +30,7 @@ public class ReservationTimeController {
         return ResponseEntity.created(URI.create("/times/" + id)).build();
     }
 
-    @GetMapping // TODO: List<FindReservationTimeResponse> -> FindReservationTimeListResponse 감싸기
+    @GetMapping
     public ResponseEntity<List<FindReservationTimeResponse>> getReservationTimes() {
         List<FindReservationTimeResponse> reservationTimeResponses = reservationTimeService.getReservationTimes();
         return ResponseEntity.ok(reservationTimeResponses);

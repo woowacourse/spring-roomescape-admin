@@ -28,6 +28,11 @@ public class TimeDao {
         return jdbcTemplate.query(sql, rowMapper);
     }
 
+    public ReservationTime readTimeById(long id) {
+        String sql = "SELECT id, start_at FROM reservation_time WHERE id = ?";
+        return jdbcTemplate.queryForObject(sql, rowMapper, id);
+    }
+
     public long createTime(String startAt) {
         KeyHolder keyHolder = new GeneratedKeyHolder();
         String sql = "INSERT INTO reservation_time(start_at) VALUES (?)";

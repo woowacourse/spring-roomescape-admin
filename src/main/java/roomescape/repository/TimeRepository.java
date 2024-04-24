@@ -38,6 +38,11 @@ public class TimeRepository {
         return jdbcTemplate.query(sql, reservationAvailableTimeRowMapper());
     }
 
+    public void deleteById(long id) {
+        String sql = "delete from reservation_time where id=?";
+        jdbcTemplate.update(sql, id);
+    }
+
     public RowMapper<ReservationTime> reservationAvailableTimeRowMapper() {
         return ((rs, rowNum) -> {
             long id = rs.getLong("id");

@@ -47,4 +47,15 @@ class TimeRepositoryTest {
 
         assertThat(saved.getStartAt()).isEqualTo(time);
     }
+
+    @DisplayName("예약 가능 시간 단건을 삭제할 수 있다")
+    @Test
+    void deleteByIdTest() {
+        LocalTime time = LocalTime.of(1, 0);
+        ReservationTime reservationTime = new ReservationTime(time);
+        ReservationTime saved = timeRepository.save(reservationTime);
+        timeRepository.deleteById(saved.getId());
+
+        assertThat(timeRepository.readAll().size()).isEqualTo(0);
+    }
 }

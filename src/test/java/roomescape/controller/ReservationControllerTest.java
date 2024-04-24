@@ -1,5 +1,6 @@
 package roomescape.controller;
 
+import java.lang.reflect.Field;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.LocalTime;
@@ -16,6 +17,7 @@ import roomescape.dto.ReservationResponse;
 import roomescape.dto.ReservationTimeResponse;
 import roomescape.repository.CollectionReservationRepository;
 import roomescape.repository.CollectionReservationTimeRepository;
+import roomescape.service.ReservationService;
 
 class ReservationControllerTest {
     static final long timeId = 1L;
@@ -30,7 +32,8 @@ class ReservationControllerTest {
     void saveReservation() {
         CollectionReservationRepository collectionReservationRepository = new CollectionReservationRepository(
                 timeRepository);
-        ReservationController reservationController = new ReservationController(collectionReservationRepository);
+        ReservationService reservationService = new ReservationService(collectionReservationRepository);
+        ReservationController reservationController = new ReservationController(reservationService);
         LocalDate date = LocalDate.now();
 
         ReservationResponse saveResponse = reservationController.saveReservation(
@@ -49,7 +52,8 @@ class ReservationControllerTest {
     void findAllReservations() {
         CollectionReservationRepository collectionReservationRepository = new CollectionReservationRepository(
                 timeRepository);
-        ReservationController reservationController = new ReservationController(collectionReservationRepository);
+        ReservationService reservationService = new ReservationService(collectionReservationRepository);
+        ReservationController reservationController = new ReservationController(reservationService);
         List<ReservationResponse> allReservations = reservationController.findAllReservations();
 
         Assertions.assertThat(allReservations)
@@ -62,12 +66,33 @@ class ReservationControllerTest {
         List<Reservation> reservations = List.of(new Reservation(1, "폴라", LocalDateTime.now()));
         CollectionReservationRepository collectionReservationRepository = new CollectionReservationRepository(
                 new ArrayList<>(reservations), timeRepository);
-        ReservationController reservationController = new ReservationController(collectionReservationRepository);
+        ReservationService reservationService = new ReservationService(collectionReservationRepository);
+        ReservationController reservationController = new ReservationController(reservationService);
 
         reservationController.delete(1L);
         List<ReservationResponse> reservationResponses = reservationController.findAllReservations();
 
         Assertions.assertThat(reservationResponses)
                 .isEmpty();
+    }
+
+    @Test
+    @DisplayName("내부에 Repository를 의존하고 있지 않은지 확인한다.")
+    void checkRepositoryDependency() {
+        CollectionReservationRepository collectionReservationRepository = new CollectionReservationRepository(
+                timeRepository);
+        ReservationService reservationService = new ReservationService(collectionReservationRepository);
+        ReservationController reservationController = new ReservationController(reservationService);
+
+        boolean isRepositoryInjected = false;
+
+        for (Field field : reservationController.getClass().getDeclaredFields()) {
+            if (field.getType().getName().contains("Repository")) {
+                isRepositoryInjected = true;
+                break;
+            }
+        }
+
+        Assertions.assertThat(isRepositoryInjected).isFalse();
     }
 }

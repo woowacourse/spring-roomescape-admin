@@ -29,10 +29,12 @@ public class JdbcReservationTimeRepositoryImpl implements ReservationTimeReposit
 
     @Override
     public ReservationTime save(ReservationTime reservationTime) {
-        SqlParameterSource parameterSource = new BeanPropertySqlParameterSource(reservationTime);
-        Number id = simpleJdbcInsert.executeAndReturnKey(parameterSource);
+        SqlParameterSource saveSource = new BeanPropertySqlParameterSource(reservationTime);
+        long id = simpleJdbcInsert
+                .executeAndReturnKey(saveSource)
+                .longValue();
 
-        return new ReservationTime(id.longValue(), reservationTime.getStartAt());
+        return new ReservationTime(id, reservationTime.getStartAt());
     }
 
     @Override

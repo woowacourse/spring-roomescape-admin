@@ -46,7 +46,7 @@ public class JdbcReservationRepositoryImpl implements ReservationRepository {
         String sql = """
                 SELECT r.id AS reservation_id, r.name AS reservation_name , r.date AS reservation_date, t.id AS time_id, t.start_at AS time_value
                 FROM reservation AS r 
-                INNER JOIN reservation_time AS t on r.time_id = t.id
+                INNER JOIN reservation_time AS t ON r.time_id = t.id
                 """;
 
         return jdbcTemplate.query(

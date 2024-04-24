@@ -47,13 +47,13 @@ public class JdbcReservationTimeRepositoryImpl implements ReservationTimeReposit
 
     @Override
     public void deleteById(Long id) {
-        String sql = "delete from reservation_time where id = ?";
+        String sql = "DELETE FROM reservation_time WHERE id = ?";
         jdbcTemplate.update(sql, id);
     }
 
     @Override
     public List<ReservationTime> findAll() {
-        String sql = "select * from reservation_time";
+        String sql = "SELECT * FROM reservation_time";
 
         return jdbcTemplate.query(
                 sql,

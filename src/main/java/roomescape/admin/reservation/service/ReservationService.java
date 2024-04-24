@@ -2,9 +2,7 @@ package roomescape.admin.reservation.service;
 
 import java.util.List;
 import org.springframework.stereotype.Service;
-import roomescape.admin.reservation.controller.dto.request.ReservationRequest;
 import roomescape.admin.reservation.entity.Reservation;
-import roomescape.admin.reservation.entity.ReservationTime;
 import roomescape.admin.reservation.repository.ReservationRepository;
 
 @Service
@@ -20,9 +18,7 @@ public class ReservationService {
         return reservationRepository.findAll();
     }
 
-    public Reservation create(ReservationRequest reservationRequest) {
-        Reservation reservation = new Reservation(reservationRequest.name(), reservationRequest.date(),
-                new ReservationTime(reservationRequest.timeId(), null));
+    public Reservation create(Reservation reservation) {
         return reservationRepository.save(reservation);
     }
 

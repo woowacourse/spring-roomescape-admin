@@ -2,7 +2,6 @@ package roomescape.admin.reservation.service;
 
 import java.util.List;
 import org.springframework.stereotype.Service;
-import roomescape.admin.reservation.controller.dto.request.ReservationTimeRequest;
 import roomescape.admin.reservation.entity.ReservationTime;
 import roomescape.admin.reservation.repository.ReservationTimeRepository;
 
@@ -19,8 +18,8 @@ public class ReservationTimeService {
         return reservationTimeRepository.findAll();
     }
 
-    public ReservationTime create(ReservationTimeRequest reservationTimeRequest) {
-        return reservationTimeRepository.save(new ReservationTime(reservationTimeRequest.startAt()));
+    public ReservationTime create(ReservationTime reservationTime) {
+        return reservationTimeRepository.save(new ReservationTime(reservationTime.getStartAt()));
     }
 
     public int delete(Long id) {

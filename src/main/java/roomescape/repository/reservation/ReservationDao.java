@@ -20,7 +20,6 @@ public class ReservationDao implements ReservationRepository {
 
     private final JdbcTemplate jdbcTemplate;
 
-    @Autowired
     public ReservationDao(JdbcTemplate jdbcTemplate) {
         this.jdbcTemplate = jdbcTemplate;
     }

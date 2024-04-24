@@ -1,6 +1,5 @@
 package roomescape.repository.reservationTime;
 
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.PreparedStatementCreator;
 import org.springframework.jdbc.core.RowMapper;
@@ -19,7 +18,6 @@ public class ReservationTimeDao implements ReservationTimeRepository {
 
     private final JdbcTemplate jdbcTemplate;
 
-    @Autowired
     public ReservationTimeDao(JdbcTemplate jdbcTemplate) {
         this.jdbcTemplate = jdbcTemplate;
     }

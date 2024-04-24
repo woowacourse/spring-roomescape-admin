@@ -163,13 +163,20 @@ class MissionStepTest {
         Map<String, String> params = new HashMap<>();
         params.put("startAt", "10:00");
 
+        Long expectedId = 4L;
         RestAssured.given().log().all()
                 .contentType(ContentType.JSON)
                 .body(params)
                 .when().post("/times")
                 .then().log().all()
                 .statusCode(201)
-                .header("Location", "/times/4");
+                .header("Location", "/times/" + expectedId);
+
+        RestAssured.given().log().all()
+                .contentType(ContentType.JSON)
+                .when().get("/times/" + expectedId)
+                .then().log().all()
+                .statusCode(200);
 
         RestAssured.given().log().all()
                 .when().get("/times")
@@ -179,7 +186,7 @@ class MissionStepTest {
                 .body("startAt", hasItems("10:00"));
 
         RestAssured.given().log().all()
-                .when().delete("/times/4")
+                .when().delete("/times/" + expectedId)
                 .then().log().all()
                 .statusCode(204);
     }
@@ -191,12 +198,20 @@ class MissionStepTest {
         reservation.put("date", "2023-08-05");
         reservation.put("timeId", 2);
 
+        Long expectedId = 3L;
         RestAssured.given().log().all()
                 .contentType(ContentType.JSON)
                 .body(reservation)
                 .when().post("/reservations")
                 .then().log().all()
-                .statusCode(201);
+                .statusCode(201)
+                .header("Location", "/reservations/" + expectedId);
+
+        RestAssured.given().log().all()
+                .contentType(ContentType.JSON)
+                .when().get("/reservations/" + expectedId)
+                .then().log().all()
+                .statusCode(200);
 
         RestAssured.given().log().all()
                 .when().get("/reservations")

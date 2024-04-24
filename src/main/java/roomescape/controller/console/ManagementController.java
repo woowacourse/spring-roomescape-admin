@@ -14,7 +14,7 @@ public abstract class ManagementController {
         prepareCommandExecutors();
     }
 
-    public void main() {
+    public void menu() {
         ManagementCommand command;
         do {
             showAllResults();

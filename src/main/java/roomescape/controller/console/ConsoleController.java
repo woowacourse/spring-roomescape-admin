@@ -38,8 +38,8 @@ public class ConsoleController {
 
     private void prepareCommandExecutors() {
         commandExecutors.putAll(Map.of(
-                AdminCommand.RESERVATION_MANAGEMENT, reservationController::main,
-                AdminCommand.TIME_SLOT_MANAGEMENT, timeSlotController::main,
+                AdminCommand.RESERVATION_MANAGEMENT, reservationController::menu,
+                AdminCommand.TIME_SLOT_MANAGEMENT, timeSlotController::menu,
                 AdminCommand.EXIT, () -> {}
         ));
     }

@@ -4,6 +4,7 @@ import java.sql.PreparedStatement;
 import java.util.List;
 import javax.sql.DataSource;
 import org.springframework.jdbc.core.JdbcTemplate;
+import org.springframework.jdbc.core.RowMapper;
 import org.springframework.jdbc.support.GeneratedKeyHolder;
 import org.springframework.jdbc.support.KeyHolder;
 import org.springframework.stereotype.Repository;
@@ -15,6 +16,11 @@ import roomescape.dto.ReservationRequest;
 public class ReservationDao {
 
     private final JdbcTemplate jdbcTemplate;
+    private final RowMapper<Reservation> rowMapper = (rs, rowNum) -> new Reservation(
+            rs.getLong("reservation_id"),
+            rs.getString("name"),
+            rs.getDate("date").toLocalDate(),
+            new ReservationTime(rs.getLong("time_id"), rs.getTime("time_value").toLocalTime()));
 
     public ReservationDao(DataSource dataSource) {
         this.jdbcTemplate = new JdbcTemplate(dataSource);
@@ -30,10 +36,7 @@ public class ReservationDao {
                 + "FROM reservation as r "
                 + "inner join reservation_time as t "
                 + "on r.time_id = t.id";
-        return jdbcTemplate.query(sql,
-                (rs, rowNum) -> new Reservation(rs.getLong("reservation_id"), rs.getString("name"),
-                        rs.getDate("date").toLocalDate(),
-                        new ReservationTime(rs.getLong("time_id"), rs.getTime("time_value").toLocalTime())));
+        return jdbcTemplate.query(sql, rowMapper);
     }
 
     public Reservation findById(long id) {
@@ -47,11 +50,7 @@ public class ReservationDao {
                 + "inner join reservation_time as t "
                 + "on r.time_id = t.id "
                 + "WHERE t.id = ?";
-        return jdbcTemplate.queryForObject(sql,
-                (rs, rowNum) -> new Reservation(rs.getLong("id"), rs.getString("name"),
-                        rs.getDate("date").toLocalDate(),
-                        new ReservationTime(rs.getLong("time_id"), rs.getTime("time_value").toLocalTime())),
-                id);
+        return jdbcTemplate.queryForObject(sql, rowMapper, id);
     }
 
     public long save(ReservationRequest reservationRequest) {

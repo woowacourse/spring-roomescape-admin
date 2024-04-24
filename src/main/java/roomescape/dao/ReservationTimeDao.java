@@ -4,6 +4,7 @@ import java.sql.PreparedStatement;
 import java.util.List;
 import javax.sql.DataSource;
 import org.springframework.jdbc.core.JdbcTemplate;
+import org.springframework.jdbc.core.RowMapper;
 import org.springframework.jdbc.support.GeneratedKeyHolder;
 import org.springframework.jdbc.support.KeyHolder;
 import org.springframework.stereotype.Repository;
@@ -14,6 +15,9 @@ import roomescape.dto.ReservationTimeRequest;
 public class ReservationTimeDao {
 
     private final JdbcTemplate jdbcTemplate;
+    private final RowMapper<ReservationTime> rowMapper = (rs, rowNum) -> new ReservationTime(
+            rs.getLong("id"),
+            rs.getTime("start_at").toLocalTime());
 
     public ReservationTimeDao(DataSource dataSource) {
         this.jdbcTemplate = new JdbcTemplate(dataSource);
@@ -21,16 +25,12 @@ public class ReservationTimeDao {
 
     public List<ReservationTime> findAll() {
         String sql = "SELECT id, start_at FROM reservation_time";
-        return jdbcTemplate.query(sql,
-                (rs, rowNum) -> new ReservationTime(rs.getLong("id"),
-                        rs.getTime("start_at").toLocalTime()));
+        return jdbcTemplate.query(sql, rowMapper);
     }
 
     public ReservationTime findById(long id) {
         String sql = "SELECT id, start_at FROM reservation_time WHERE id = ?";
-        return jdbcTemplate.queryForObject(sql,
-                (rs, rowNum) -> new ReservationTime(rs.getLong("id"), rs.getTime("start_at").toLocalTime()),
-                id);
+        return jdbcTemplate.queryForObject(sql, rowMapper, id);
     }
 
     public long save(ReservationTimeRequest reservationTimeRequest) {

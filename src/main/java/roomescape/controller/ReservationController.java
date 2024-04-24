@@ -24,8 +24,8 @@ public class ReservationController {
     }
 
     @GetMapping
-    public ResponseEntity<List<ReservationResponse>> getReservations() {
-        return ResponseEntity.ok(reservationService.getAll());
+    public ResponseEntity<List<ReservationResponse>> findReservations() {
+        return ResponseEntity.ok(reservationService.findAll());
     }
 
     @DeleteMapping("/{id}")

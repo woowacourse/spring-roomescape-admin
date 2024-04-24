@@ -59,7 +59,7 @@ class ReservationTimeServiceTest {
                 .willReturn(List.of(reservationTime));
 
         // when
-        List<ReservationTimeResponse> responses = reservationTimeService.getAll();
+        List<ReservationTimeResponse> responses = reservationTimeService.findAll();
 
         // then
         assertThat(responses).hasSize(1)

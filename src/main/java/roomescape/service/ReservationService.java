@@ -52,7 +52,7 @@ public class ReservationService {
         }
     }
 
-    public List<ReservationResponse> getAll() {
+    public List<ReservationResponse> findAll() {
         var reservations = reservationRepository.findAll();
         return reservations.stream()
                 .map(ReservationResponse::from)

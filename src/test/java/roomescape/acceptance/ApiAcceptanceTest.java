@@ -76,7 +76,7 @@ public class ApiAcceptanceTest {
 
     @Test
     @DisplayName("[Step7] 예약 시간 목록을 조회한다.")
-    void getReservationTimes() {
+    void findReservationTimes() {
         // given & when
         ExtractableResponse<Response> response = RestAssured.given().log().all()
                 .when().get("/times")
@@ -98,9 +98,9 @@ public class ApiAcceptanceTest {
     Stream<DynamicTest> createThenDeleteReservationTime() {
         return Stream.of(
                 dynamicTest("예약을 하나 생성한다.", this::createReservationTime),
-                dynamicTest("예약이 하나 생성된 예약 목록을 조회한다.", this::getReservationTimesWithSizeOne),
+                dynamicTest("예약이 하나 생성된 예약 목록을 조회한다.", this::findReservationTimesWithSizeOne),
                 dynamicTest("예약을 하나 삭제한다.", this::deleteOneReservationTime),
-                dynamicTest("예약 목록을 조회한다.", this::getReservationTimes)
+                dynamicTest("예약 목록을 조회한다.", this::findReservationTimes)
         );
     }
 
@@ -121,7 +121,7 @@ public class ApiAcceptanceTest {
         });
     }
 
-    void getReservationTimesWithSizeOne() {
+    void findReservationTimesWithSizeOne() {
         // given & when
         ExtractableResponse<Response> response = RestAssured.given().log().all()
                 .when().get("/times")
@@ -152,7 +152,7 @@ public class ApiAcceptanceTest {
 
     @Test
     @DisplayName("[Step2, Step5] 예약 목록을 조회한다.")
-    void getReservations() {
+    void findReservations() {
         // given & when
         ExtractableResponse<Response> response = RestAssured.given().log().all()
                 .when().get("/reservations")
@@ -223,9 +223,9 @@ public class ApiAcceptanceTest {
         return Stream.of(
                 dynamicTest("예약 시간을 생성한다.", this::createReservationTime),
                 dynamicTest("예약을 하나 생성한다.", this::createOneReservation),
-                dynamicTest("예약이 하나 생성된 예약 목록을 조회한다.", this::getReservationsWithSizeOne),
+                dynamicTest("예약이 하나 생성된 예약 목록을 조회한다.", this::findReservationsWithSizeOne),
                 dynamicTest("예약을 하나 삭제한다.", this::deleteOneReservation),
-                dynamicTest("예약 목록을 조회한다.", this::getReservations)
+                dynamicTest("예약 목록을 조회한다.", this::findReservations)
         );
     }
 
@@ -265,7 +265,7 @@ public class ApiAcceptanceTest {
         });
     }
 
-    void getReservationsWithSizeOne() {
+    void findReservationsWithSizeOne() {
         // given & when
         ExtractableResponse<Response> response = RestAssured.given().log().all()
                 .when().get("/reservations")

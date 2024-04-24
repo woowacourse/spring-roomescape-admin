@@ -24,7 +24,7 @@ public class ReservationTimeService {
         return ReservationTimeResponse.from(savedReservationTime);
     }
 
-    public List<ReservationTimeResponse> getAll() {
+    public List<ReservationTimeResponse> findAll() {
         var reservationTimes = reservationTimeRepository.findAll();
         return reservationTimes.stream()
                 .map(ReservationTimeResponse::from)

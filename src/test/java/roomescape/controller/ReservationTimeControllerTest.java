@@ -62,9 +62,9 @@ class ReservationTimeControllerTest extends ControllerTest {
 
     @Test
     @DisplayName("예약 시간 목록 GET 요청 시 상태코드 200을 반환한다.")
-    void getReservationTimes() throws Exception {
+    void findReservationTimes() throws Exception {
         // given
-        BDDMockito.given(reservationTimeService.getAll())
+        BDDMockito.given(reservationTimeService.findAll())
                 .willReturn(List.of(ReservationTimeResponse.from(new ReservationTime(MIA_RESERVATION_TIME))));
 
         // when & then

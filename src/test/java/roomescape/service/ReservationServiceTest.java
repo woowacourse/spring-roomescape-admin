@@ -98,7 +98,7 @@ class ReservationServiceTest {
                 .willReturn(List.of(miaReservation, tommyReservation));
 
         // when
-        List<ReservationResponse> reservations = reservationService.getAll();
+        List<ReservationResponse> reservations = reservationService.findAll();
 
         // then
         assertThat(reservations).hasSize(2)

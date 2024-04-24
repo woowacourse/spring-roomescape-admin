@@ -10,7 +10,9 @@ import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.support.GeneratedKeyHolder;
 import org.springframework.jdbc.support.KeyHolder;
 import org.springframework.stereotype.Repository;
+import roomescape.domain.Name;
 import roomescape.domain.Reservation;
+import roomescape.domain.ReservationDate;
 import roomescape.domain.ReservationRepository;
 import roomescape.domain.ReservationTime;
 
@@ -29,8 +31,8 @@ public class JdbcReservationRepository implements ReservationRepository {
             Reservation reservation = jdbcTemplate.queryForObject(sql,
                     (resultSet, rowNum) -> new Reservation(
                             resultSet.getLong("id"),
-                            resultSet.getString("name"),
-                            resultSet.getDate("date").toLocalDate(),
+                            new Name(resultSet.getString("name")),
+                            new ReservationDate(resultSet.getDate("date").toLocalDate()),
                             getReservationTime(resultSet.getLong("time_id"))
                     ), id);
             return Optional.of(Objects.requireNonNull(reservation));
@@ -62,8 +64,8 @@ public class JdbcReservationRepository implements ReservationRepository {
                 + "on r.time_id = t.id";
         return jdbcTemplate.query(sql, (resultSet, rowNum) -> new Reservation(
                 resultSet.getLong("reservation_id"),
-                resultSet.getString("name"),
-                resultSet.getDate("date").toLocalDate(),
+                new Name(resultSet.getString("name")),
+                new ReservationDate(resultSet.getDate("date").toLocalDate()),
                 new ReservationTime(
                         resultSet.getLong("time_id"),
                         resultSet.getTime("time_value").toLocalTime()
@@ -84,7 +86,8 @@ public class JdbcReservationRepository implements ReservationRepository {
                 return ps;
             }, keyHolder);
 
-            return new Reservation(keyHolder.getKey().longValue(), reservation.getName(), reservation.getDate(),
+            return new Reservation(keyHolder.getKey().longValue(), new Name(reservation.getName()),
+                    new ReservationDate(reservation.getDate()),
                     reservation.getTime());
         } catch (DuplicateKeyException e) {
             throw new IllegalArgumentException("이미 존재하는 예약입니다.");

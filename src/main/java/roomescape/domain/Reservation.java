@@ -1,39 +1,26 @@
 package roomescape.domain;
 
 import java.time.LocalDate;
+import java.util.Objects;
 
 public class Reservation {
     private Long id;
-    private String name;
-    private LocalDate date;
+    private Name name;
+    private ReservationDate date;
     private ReservationTime time;
 
     private Reservation() {
     }
 
-    public Reservation(String name, LocalDate date, ReservationTime time) {
+    public Reservation(Name name, ReservationDate date, ReservationTime time) {
         this(null, name, date, time);
     }
 
-    public Reservation(Long id, String name, LocalDate date, ReservationTime time) {
-        validateName(name);
-        validateDate(date);
+    public Reservation(Long id, Name name, ReservationDate date, ReservationTime time) {
         this.id = id;
         this.name = name;
         this.date = date;
         this.time = time;
-    }
-
-    private void validateDate(LocalDate date) {
-        if (date == null) {
-            throw new IllegalArgumentException("예약 일자는 필수 입력값 입니다.");
-        }
-    }
-
-    private void validateName(String name) {
-        if (name.isEmpty()) {
-            throw new IllegalArgumentException("예약자명은 필수 입력값 입니다.");
-        }
     }
 
     public Long getId() {
@@ -41,14 +28,30 @@ public class Reservation {
     }
 
     public String getName() {
-        return name;
+        return name.getName();
     }
 
     public LocalDate getDate() {
-        return date;
+        return date.getDate();
     }
 
     public ReservationTime getTime() {
         return time;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) {
+            return true;
+        }
+        if (!(o instanceof Reservation that)) {
+            return false;
+        }
+        return Objects.equals(id, that.id);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hashCode(id);
     }
 }

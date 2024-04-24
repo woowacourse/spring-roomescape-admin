@@ -1,6 +1,7 @@
 package roomescape.repository;
 
 import org.springframework.dao.DataAccessException;
+import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;
 import org.springframework.jdbc.core.simple.SimpleJdbcInsert;
@@ -14,6 +15,7 @@ import java.time.LocalTime;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 
 @Repository
 public class ReservationSqlRepository implements ReservationRepository {
@@ -69,29 +71,32 @@ public class ReservationSqlRepository implements ReservationRepository {
 
     public boolean deleteById(long reservationId) {
         try {
-            jdbcTemplate.update("delete from reservation where id=?",
-                    reservationId
-            );
-            return true;
+            return jdbcTemplate.update("delete from reservation where id=?", reservationId) != 0;
         } catch (DataAccessException e) {
             return false;
         }
     }
 
     @Override
-    public Reservation findById(final long id) {
-        return jdbcTemplate.queryForObject("""
-                SELECT
-                    r.id as reservation_id,
-                    r.name,
-                    r.date,
-                    t.id as time_id,
-                    t.start_at as time_value
-                FROM reservation as r
-                INNER JOIN reservation_time as t
-                ON r.time_id = t.id
-                WHERE r.id = ?;
-                """, mapper, id);
+    public Optional<Reservation> findById(final long id) {
+        try {
+            return Optional.ofNullable(jdbcTemplate.queryForObject("""
+                    SELECT
+                        r.id as reservation_id,
+                        r.name,
+                        r.date,
+                        t.id as time_id,
+                        t.start_at as time_value
+                    FROM reservation as r
+                    INNER JOIN reservation_time as t
+                    ON r.time_id = t.id
+                    WHERE r.id = ?;
+                    """, mapper, id));
+
+        } catch (EmptyResultDataAccessException e) {
+            return Optional.empty();
+        }
+
     }
 
     @Override

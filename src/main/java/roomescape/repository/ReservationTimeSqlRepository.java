@@ -11,6 +11,7 @@ import roomescape.domain.ReservationTime;
 
 import java.time.LocalTime;
 import java.util.List;
+import java.util.Optional;
 
 @Repository
 public class ReservationTimeSqlRepository implements ReservationTimeRepository {
@@ -53,11 +54,11 @@ public class ReservationTimeSqlRepository implements ReservationTimeRepository {
     }
 
     @Override
-    public ReservationTime findById(final long id) {
+    public Optional<ReservationTime> findById(final long id) {
         try {
-            return jdbcTemplate.queryForObject("select * from reservation_time where id=?", mapper, id);
+            return Optional.ofNullable(jdbcTemplate.queryForObject("select * from reservation_time where id=?", mapper, id));
         } catch (EmptyResultDataAccessException e) {
-            throw new IllegalArgumentException(String.format("%d 는 없는 id 입니다.", id), e);
+            return Optional.empty();
         }
     }
 
@@ -65,6 +66,6 @@ public class ReservationTimeSqlRepository implements ReservationTimeRepository {
     @Override
     public boolean isExistById(final long id) {
         String sqlQuery = "SELECT EXISTS (SELECT 1 FROM reservation_time WHERE id=?)";
-        return Boolean.TRUE.equals(jdbcTemplate.queryForObject(sqlQuery, Boolean.class,id));
+        return Boolean.TRUE.equals(jdbcTemplate.queryForObject(sqlQuery, Boolean.class, id));
     }
 }

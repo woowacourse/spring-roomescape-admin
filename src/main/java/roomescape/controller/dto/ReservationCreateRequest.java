@@ -4,15 +4,15 @@ import java.time.LocalDate;
 import roomescape.entity.Reservation;
 import roomescape.entity.ReservationTime;
 
-public class CreateReservationRequest {
+public class ReservationCreateRequest {
     private String name;
     private LocalDate date;
     private Long timeId;
 
-    public CreateReservationRequest() {
+    public ReservationCreateRequest() {
     }
 
-    public CreateReservationRequest(String name, LocalDate date, long timeId) {
+    public ReservationCreateRequest(String name, LocalDate date, long timeId) {
         this.name = name;
         this.date = date;
         this.timeId = timeId;

@@ -3,13 +3,13 @@ package roomescape.controller.dto;
 import java.time.LocalTime;
 import roomescape.entity.ReservationTime;
 
-public class CreateAvailableTimeRequest {
+public class ReservationTimeCreateRequest {
     LocalTime startAt;
 
-    public CreateAvailableTimeRequest() {
+    public ReservationTimeCreateRequest() {
     }
 
-    public CreateAvailableTimeRequest(LocalTime startAt) {
+    public ReservationTimeCreateRequest(LocalTime startAt) {
         this.startAt = startAt;
     }
 

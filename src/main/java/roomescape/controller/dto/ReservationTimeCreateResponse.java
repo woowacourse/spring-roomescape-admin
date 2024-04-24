@@ -3,17 +3,17 @@ package roomescape.controller.dto;
 import java.time.LocalTime;
 import roomescape.entity.ReservationTime;
 
-public class CreateAvailableTimeResponse {
+public class ReservationTimeCreateResponse {
     Long id;
     LocalTime startAt;
 
-    public CreateAvailableTimeResponse(Long id, LocalTime startAt) {
+    public ReservationTimeCreateResponse(Long id, LocalTime startAt) {
         this.id = id;
         this.startAt = startAt;
     }
 
-    public static CreateAvailableTimeResponse from(ReservationTime reservationTime) {
-        return new CreateAvailableTimeResponse(reservationTime.getId(), reservationTime.getStartAt());
+    public static ReservationTimeCreateResponse from(ReservationTime reservationTime) {
+        return new ReservationTimeCreateResponse(reservationTime.getId(), reservationTime.getStartAt());
     }
 
     public Long getId() {

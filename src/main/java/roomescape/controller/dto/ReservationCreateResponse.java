@@ -4,21 +4,21 @@ import java.time.LocalDate;
 import java.time.LocalTime;
 import roomescape.entity.Reservation;
 
-public class CreateReservationResponse {
+public class ReservationCreateResponse {
     private final Long id;
     private final String name;
     private final LocalDate date;
     private final LocalTime time;
 
-    public CreateReservationResponse(long id, String name, LocalDate date, LocalTime time) {
+    public ReservationCreateResponse(long id, String name, LocalDate date, LocalTime time) {
         this.id = id;
         this.name = name;
         this.date = date;
         this.time = time;
     }
 
-    public static CreateReservationResponse from(Reservation reservation) {
-        return new CreateReservationResponse(
+    public static ReservationCreateResponse from(Reservation reservation) {
+        return new ReservationCreateResponse(
                 reservation.getId(),
                 reservation.getName(),
                 reservation.getStartDate(),

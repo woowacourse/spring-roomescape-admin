@@ -9,8 +9,8 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
-import roomescape.controller.dto.CreateReservationRequest;
-import roomescape.controller.dto.CreateReservationResponse;
+import roomescape.controller.dto.ReservationCreateRequest;
+import roomescape.controller.dto.ReservationCreateResponse;
 import roomescape.entity.Reservation;
 import roomescape.entity.ReservationTime;
 import roomescape.service.ReservationService;
@@ -28,20 +28,20 @@ public class ReservationController {
     }
 
     @GetMapping()
-    public ResponseEntity<List<CreateReservationResponse>> readAllReservations() {
-        List<CreateReservationResponse> reservations = reservationService.readAll()
+    public ResponseEntity<List<ReservationCreateResponse>> readAllReservations() {
+        List<ReservationCreateResponse> reservations = reservationService.readAll()
                 .stream()
-                .map(CreateReservationResponse::from)
+                .map(ReservationCreateResponse::from)
                 .toList();
         return ResponseEntity.ok().body(reservations);
     }
 
     @PostMapping()
-    public ResponseEntity<CreateReservationResponse> createReservation(
-            @RequestBody CreateReservationRequest createReservationRequest) {
-        ReservationTime time = timeService.findById(createReservationRequest.getTimeId());
-        Reservation savedReservation = reservationService.saveReservation(createReservationRequest.toEntity(time));
-        return ResponseEntity.ok().body(CreateReservationResponse.from(savedReservation));
+    public ResponseEntity<ReservationCreateResponse> createReservation(
+            @RequestBody ReservationCreateRequest reservationCreateRequest) {
+        ReservationTime time = timeService.findById(reservationCreateRequest.getTimeId());
+        Reservation savedReservation = reservationService.saveReservation(reservationCreateRequest.toEntity(time));
+        return ResponseEntity.ok().body(ReservationCreateResponse.from(savedReservation));
     }
 
     @DeleteMapping("/{id}")

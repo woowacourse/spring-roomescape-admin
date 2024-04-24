@@ -20,7 +20,7 @@ public class Date {
         try {
             return LocalDate.parse(value);
         } catch (DateTimeParseException e) {
-            throw new IllegalArgumentException("예약 날짜 형식은 '2024-04-02'이어야 합니다.");
+            throw new IllegalArgumentException("예약 날짜 형식은 yyyy-MM-dd 이어야 합니다.");
         }
     }
 

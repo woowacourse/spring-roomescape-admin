@@ -23,7 +23,7 @@ public class StartAt {
         try {
             return LocalTime.parse(value);
         } catch (DateTimeParseException e) {
-            throw new IllegalArgumentException("시작 시간 형식은 '13:40'이어야 합니다.");
+            throw new IllegalArgumentException("시작 시간 형식은 HH:mm 이어야 합니다.");
         }
     }
 

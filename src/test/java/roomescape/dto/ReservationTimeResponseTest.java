@@ -7,6 +7,7 @@ import roomescape.domain.ReservationTime;
 import java.time.LocalTime;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.junit.jupiter.api.Assertions.assertAll;
 
 class ReservationTimeResponseTest {
     @DisplayName("ReservationTime을 입력받으면 ReservationTimeResponse로 변환한다.")
@@ -22,8 +23,10 @@ class ReservationTimeResponseTest {
         ReservationTimeResponse reservationTimeResponse = ReservationTimeResponse.from(reservationTime);
 
         // Then
-        assertThat(reservationTimeResponse).isNotNull();
-        assertThat(reservationTimeResponse.id()).isEqualTo(reservationTime.getId());
-        assertThat(reservationTimeResponse.startAt()).isEqualTo(reservationTime.getStartAt());
+        assertAll(
+                () -> assertThat(reservationTimeResponse).isNotNull(),
+                () -> assertThat(reservationTimeResponse.id()).isEqualTo(reservationTime.getId()),
+                () -> assertThat(reservationTimeResponse.startAt()).isEqualTo(reservationTime.getStartAt()
+                ));
     }
 }

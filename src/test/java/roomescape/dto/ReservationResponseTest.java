@@ -10,6 +10,7 @@ import java.time.LocalDate;
 import java.time.LocalTime;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.junit.jupiter.api.Assertions.assertAll;
 
 class ReservationResponseTest {
 
@@ -29,10 +30,12 @@ class ReservationResponseTest {
         ReservationResponse reservationResponse = ReservationResponse.from(reservation);
 
         // Then
-        assertThat(reservationResponse).isNotNull();
-        assertThat(reservationResponse.id()).isEqualTo(reservation.getId());
-        assertThat(reservationResponse.name()).isEqualTo(reservation.getClientName().getValue());
-        assertThat(reservationResponse.date()).isEqualTo(reservation.getDate());
-        assertThat(reservationResponse.time().startAt()).isEqualTo(reservation.getTime().getStartAt());
+        assertAll(
+                () -> assertThat(reservationResponse).isNotNull(),
+                () -> assertThat(reservationResponse.id()).isEqualTo(reservation.getId()),
+                () -> assertThat(reservationResponse.name()).isEqualTo(reservation.getClientName().getValue()),
+                () -> assertThat(reservationResponse.date()).isEqualTo(reservation.getDate()),
+                () -> assertThat(reservationResponse.time().startAt()).isEqualTo(reservation.getTime().getStartAt())
+        );
     }
 }

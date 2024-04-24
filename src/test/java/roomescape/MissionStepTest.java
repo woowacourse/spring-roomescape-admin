@@ -179,7 +179,7 @@ class MissionStepTest {
                 .body("startAt", hasItems("10:00"));
 
         RestAssured.given().log().all()
-                .when().delete("/times/3")
+                .when().delete("/times/4")
                 .then().log().all()
                 .statusCode(204);
     }

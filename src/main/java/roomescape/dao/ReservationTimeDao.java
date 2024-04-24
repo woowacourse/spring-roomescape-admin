@@ -1,12 +1,11 @@
 package roomescape.dao;
 
-import java.sql.PreparedStatement;
-import java.sql.Time;
 import java.util.List;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;
-import org.springframework.jdbc.support.GeneratedKeyHolder;
-import org.springframework.jdbc.support.KeyHolder;
+import org.springframework.jdbc.core.namedparam.BeanPropertySqlParameterSource;
+import org.springframework.jdbc.core.namedparam.SqlParameterSource;
+import org.springframework.jdbc.core.simple.SimpleJdbcInsert;
 import org.springframework.stereotype.Repository;
 import roomescape.domain.ReservationTime;
 import roomescape.dto.ReservationTimeRequest;
@@ -20,23 +19,20 @@ public class ReservationTimeDao {
                     rs.getTime("start_at").toLocalTime());
 
     private final JdbcTemplate jdbcTemplate;
+    private final SimpleJdbcInsert simpleJdbcInsert;
+
 
     public ReservationTimeDao(final JdbcTemplate jdbcTemplate) {
         this.jdbcTemplate = jdbcTemplate;
+        this.simpleJdbcInsert = new SimpleJdbcInsert(jdbcTemplate)
+                .withTableName("reservation_time")
+                .usingGeneratedKeyColumns("id");
     }
 
     public ReservationTime add(final ReservationTimeRequest reservationTimeRequest) {
-        String sql = "INSERT INTO reservation_time (start_at) VALUES (?)";
-
-        KeyHolder keyHolder = new GeneratedKeyHolder();
-        jdbcTemplate.update(connection -> {
-            PreparedStatement ps = connection.prepareStatement(sql, new String[]{"id"});
-            ps.setTime(1, Time.valueOf(reservationTimeRequest.startAt()));
-            return ps;
-        }, keyHolder);
-
-        long id = keyHolder.getKey().longValue();
-        return findById(id);
+        SqlParameterSource parameterSource = new BeanPropertySqlParameterSource(reservationTimeRequest);
+        Number newId = simpleJdbcInsert.executeAndReturnKey(parameterSource);
+        return findById(newId.longValue());
     }
 
     private ReservationTime findById(final long id) {

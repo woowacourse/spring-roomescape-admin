@@ -29,20 +29,12 @@ public class ReservationController {
 
     @PostMapping
     public ResponseEntity<?> create(@RequestBody ReservationRequest reservationRequest) {
-        try {
-            return ResponseEntity.ok().body(reservationService.create(reservationRequest));
-        } catch (IllegalArgumentException e) {
-            return ResponseEntity.badRequest().body(e.getMessage());
-        }
+        return ResponseEntity.ok().body(reservationService.create(reservationRequest));
     }
 
     @DeleteMapping("/{id}")
     public ResponseEntity<?> delete(@PathVariable("id") long reservationId) {
-        try {
-            reservationService.delete(reservationId);
-            return ResponseEntity.ok().build();
-        } catch (IllegalArgumentException e) {
-            return ResponseEntity.badRequest().build();
-        }
+        reservationService.delete(reservationId);
+        return ResponseEntity.ok().build();
     }
 }

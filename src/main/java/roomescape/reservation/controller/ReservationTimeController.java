@@ -3,6 +3,7 @@ package roomescape.reservation.controller;
 import java.util.List;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -34,11 +35,7 @@ public class ReservationTimeController {
 
     @DeleteMapping("/{id}")
     public ResponseEntity<?> delete(@PathVariable("id") long timeId) {
-        try {
-            reservationTimeService.delete(timeId);
-            return ResponseEntity.ok().build();
-        } catch (IllegalArgumentException e) {
-            return ResponseEntity.badRequest().body(e.getMessage());
-        }
+        reservationTimeService.delete(timeId);
+        return ResponseEntity.ok().build();
     }
 }

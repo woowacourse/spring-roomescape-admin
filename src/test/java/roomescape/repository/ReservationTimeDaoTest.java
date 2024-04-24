@@ -10,7 +10,6 @@ import org.springframework.boot.test.web.server.LocalServerPort;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.test.annotation.DirtiesContext;
 import roomescape.model.ReservationTime;
-import roomescape.repository.dto.ReservationTimeSaveDto;
 
 import java.time.LocalTime;
 import java.util.List;
@@ -41,8 +40,8 @@ class ReservationTimeDaoTest {
     @DisplayName("예약 시간 저장")
     @Test
     void save() {
-        final ReservationTimeSaveDto reservationTimeSaveDto = new ReservationTimeSaveDto("10:00");
-        final ReservationTime savedReservationTime = reservationTimeDao.save(reservationTimeSaveDto);
+        final ReservationTime reservationTime = new ReservationTime("10:00");
+        final ReservationTime savedReservationTime = reservationTimeDao.save(reservationTime);
         assertAll(
                 () -> assertThat(savedReservationTime.getId()).isEqualTo(3L),
                 () -> assertThat(savedReservationTime.getStartAt()).isEqualTo(LocalTime.parse("10:00"))

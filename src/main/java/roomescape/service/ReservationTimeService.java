@@ -1,13 +1,11 @@
 package roomescape.service;
 
 import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
 import roomescape.dto.ReservationTimeResponse;
 import roomescape.dto.ReservationTimeSaveRequest;
 import roomescape.exception.ResourceNotFoundException;
 import roomescape.model.ReservationTime;
 import roomescape.repository.ReservationTimeDao;
-import roomescape.repository.dto.ReservationTimeSaveDto;
 
 import java.util.List;
 
@@ -27,10 +25,9 @@ public class ReservationTimeService {
                 .toList();
     }
 
-    @Transactional
     public ReservationTimeResponse saveTime(final ReservationTimeSaveRequest reservationTimeSaveRequest) {
-        final ReservationTimeSaveDto reservationTimeSaveDto = new ReservationTimeSaveDto(reservationTimeSaveRequest.startAt());
-        final ReservationTime savedReservationTime = reservationTimeDao.save(reservationTimeSaveDto);
+        final ReservationTime reservationTime = new ReservationTime(reservationTimeSaveRequest.startAt());
+        final ReservationTime savedReservationTime = reservationTimeDao.save(reservationTime);
         return ReservationTimeResponse.from(savedReservationTime);
     }
 

@@ -6,8 +6,8 @@ import org.junit.jupiter.api.Test;
 import roomescape.dto.ReservationTimeResponse;
 import roomescape.dto.ReservationTimeSaveRequest;
 import roomescape.exception.ResourceNotFoundException;
+import roomescape.model.ReservationTime;
 import roomescape.repository.ReservationTimeDao;
-import roomescape.repository.dto.ReservationTimeSaveDto;
 import roomescape.testutil.ReservationTimeMemoryDao;
 
 import java.util.List;
@@ -22,8 +22,8 @@ class ReservationTimeServiceTest {
     @BeforeEach
     void init() {
         final ReservationTimeDao reservationTimeDao = new ReservationTimeMemoryDao();
-        reservationTimeDao.save(new ReservationTimeSaveDto("11:00"));
-        reservationTimeDao.save(new ReservationTimeSaveDto("12:00"));
+        reservationTimeDao.save(new ReservationTime("11:00"));
+        reservationTimeDao.save(new ReservationTime("12:00"));
         reservationTimeService = new ReservationTimeService(reservationTimeDao);
     }
 

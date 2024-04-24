@@ -1,7 +1,6 @@
 package roomescape.service;
 
 import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
 import roomescape.dto.ReservationResponse;
 import roomescape.dto.ReservationSaveRequest;
 import roomescape.exception.ResourceNotFoundException;
@@ -9,7 +8,6 @@ import roomescape.model.Reservation;
 import roomescape.model.ReservationTime;
 import roomescape.repository.ReservationDao;
 import roomescape.repository.ReservationTimeDao;
-import roomescape.repository.dto.ReservationSaveDto;
 
 import java.util.List;
 
@@ -31,12 +29,11 @@ public class ReservationService {
                 .toList();
     }
 
-    @Transactional
     public ReservationResponse saveReservation(final ReservationSaveRequest reservationSaveRequest) {
-        final ReservationTime reservationTime = reservationTimeDao.findById(reservationSaveRequest.timeId())
+        final ReservationTime time = reservationTimeDao.findById(reservationSaveRequest.timeId())
                 .orElseThrow(() -> new ResourceNotFoundException("존재하지 않는 예약 시간입니다."));
-        final ReservationSaveDto reservationSaveDto = ReservationSaveDto.of(reservationSaveRequest, reservationTime);
-        final Reservation savedReservation = reservationDao.save(reservationSaveDto);
+        final Reservation reservation = new Reservation(reservationSaveRequest.name(), reservationSaveRequest.date(), time);
+        final Reservation savedReservation = reservationDao.save(reservation);
         return ReservationResponse.from(savedReservation);
     }
 

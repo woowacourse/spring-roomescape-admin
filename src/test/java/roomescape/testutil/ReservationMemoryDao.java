@@ -2,7 +2,6 @@ package roomescape.testutil;
 
 import roomescape.model.Reservation;
 import roomescape.repository.ReservationDao;
-import roomescape.repository.dto.ReservationSaveDto;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -16,11 +15,11 @@ public class ReservationMemoryDao implements ReservationDao {
     private final List<Reservation> reservations = new ArrayList<>();
 
     @Override
-    public Reservation save(final ReservationSaveDto reservationSaveDto) {
+    public Reservation save(final Reservation reservation) {
         final Long savedReservationId = reservationId.getAndIncrement();
-        final Reservation reservation = new Reservation(savedReservationId, reservationSaveDto.name(), reservationSaveDto.date(), reservationSaveDto.time());
-        reservations.add(reservation);
-        return reservation;
+        final Reservation savedReservation = new Reservation(savedReservationId, reservation.getName().getValue(), reservation.getDate(), reservation.getTime());
+        reservations.add(savedReservation);
+        return savedReservation;
     }
 
     @Override

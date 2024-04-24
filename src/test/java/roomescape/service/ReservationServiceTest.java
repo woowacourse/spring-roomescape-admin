@@ -7,11 +7,10 @@ import roomescape.dto.ReservationResponse;
 import roomescape.dto.ReservationSaveRequest;
 import roomescape.dto.ReservationTimeResponse;
 import roomescape.exception.ResourceNotFoundException;
+import roomescape.model.Reservation;
 import roomescape.model.ReservationTime;
 import roomescape.repository.ReservationDao;
 import roomescape.repository.ReservationTimeDao;
-import roomescape.repository.dto.ReservationSaveDto;
-import roomescape.repository.dto.ReservationTimeSaveDto;
 import roomescape.testutil.ReservationMemoryDao;
 import roomescape.testutil.ReservationTimeMemoryDao;
 
@@ -28,8 +27,8 @@ class ReservationServiceTest {
     void init() {
         final ReservationTimeDao reservationTimeDao = new ReservationTimeMemoryDao();
         final ReservationDao reservationDao = new ReservationMemoryDao();
-        reservationTimeDao.save(new ReservationTimeSaveDto("10:00"));
-        reservationDao.save(new ReservationSaveDto("감자", "2024-05-13", new ReservationTime(1L, "10:00")));
+        reservationTimeDao.save(new ReservationTime("10:00"));
+        reservationDao.save(new Reservation("감자", "2024-05-13", new ReservationTime(1L, "10:00")));
         reservationService = new ReservationService(reservationDao, reservationTimeDao);
     }
 

@@ -11,7 +11,6 @@ import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.test.annotation.DirtiesContext;
 import roomescape.model.Reservation;
 import roomescape.model.ReservationTime;
-import roomescape.repository.dto.ReservationSaveDto;
 
 import java.util.List;
 
@@ -44,13 +43,13 @@ class ReservationDaoTest {
     @Test
     void save() {
         final ReservationTime reservationTime = new ReservationTime(1L, "08:00");
-        final ReservationSaveDto reservationSaveDto = new ReservationSaveDto("생강", "2025-01-01", reservationTime);
-        final Reservation reservation = reservationDao.save(reservationSaveDto);
+        final Reservation reservation = new Reservation("생강", "2025-01-01", reservationTime);
+        final Reservation savedReservation = reservationDao.save(reservation);
         assertAll(
-                () -> assertThat(reservation.getId()).isEqualTo(3L),
-                () -> assertThat(reservation.getName().getValue()).isEqualTo("생강"),
-                () -> assertThat(reservation.getDate()).isEqualTo("2025-01-01"),
-                () -> assertThat(reservation.getTime()).isEqualTo(reservationTime)
+                () -> assertThat(savedReservation.getId()).isEqualTo(3L),
+                () -> assertThat(savedReservation.getName().getValue()).isEqualTo("생강"),
+                () -> assertThat(savedReservation.getDate()).isEqualTo("2025-01-01"),
+                () -> assertThat(savedReservation.getTime()).isEqualTo(reservationTime)
         );
     }
 

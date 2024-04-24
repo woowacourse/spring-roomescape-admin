@@ -8,7 +8,6 @@ import org.springframework.jdbc.core.namedparam.SqlParameterSource;
 import org.springframework.jdbc.core.simple.SimpleJdbcInsert;
 import org.springframework.stereotype.Repository;
 import roomescape.model.ReservationTime;
-import roomescape.repository.dto.ReservationTimeSaveDto;
 
 import java.util.List;
 import java.util.Optional;
@@ -29,11 +28,12 @@ public class ReservationTimeJdbcDao implements ReservationTimeDao {
                 .usingGeneratedKeyColumns("id");
     }
 
-    public ReservationTime save(final ReservationTimeSaveDto reservationTimeSaveDto) {
+    public ReservationTime save(final ReservationTime reservationTime) {
+        final String startAt = reservationTime.getFormattedTime();
         final SqlParameterSource timeParameters = new MapSqlParameterSource()
-                .addValue("start_at", reservationTimeSaveDto.startAt());
+                .addValue("start_at", startAt);
         final Long savedTimeId = reservationTimeInsert.executeAndReturnKey(timeParameters).longValue();
-        return new ReservationTime(savedTimeId, reservationTimeSaveDto.startAt());
+        return new ReservationTime(savedTimeId, startAt);
     }
 
     public Optional<ReservationTime> findById(final Long id) {

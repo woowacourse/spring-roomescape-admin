@@ -1,14 +1,13 @@
 package roomescape.repository;
 
 import roomescape.model.ReservationTime;
-import roomescape.repository.dto.ReservationTimeSaveDto;
 
 import java.util.List;
 import java.util.Optional;
 
 public interface ReservationTimeDao {
 
-    ReservationTime save(final ReservationTimeSaveDto reservationTimeSaveDto);
+    ReservationTime save(final ReservationTime reservationTime);
 
     Optional<ReservationTime> findById(final Long id);
 

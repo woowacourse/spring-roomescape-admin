@@ -1,6 +1,7 @@
 package roomescape.model;
 
 import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
 
 public class Reservation {
 
@@ -11,6 +12,10 @@ public class Reservation {
 
     public Reservation(final Long id, final String name, final String date, final ReservationTime time) {
         this(id, name, parseDate(date), time);
+    }
+
+    public Reservation(final String name, final String date, final ReservationTime time) {
+        this(null, name, parseDate(date), time);
     }
 
     public Reservation(final Long id, final String name, final LocalDate date, final ReservationTime time) {
@@ -25,6 +30,10 @@ public class Reservation {
             throw new IllegalArgumentException("날짜가 입력되지 않았습니다.");
         }
         return LocalDate.parse(date);
+    }
+
+    public String getFormattedDate() {
+        return date.format(DateTimeFormatter.ISO_DATE);
     }
 
     public Long getId() {

@@ -17,20 +17,20 @@ public class ReservationTimeService {
         this.reservationTimeRepository = reservationTimeRepository;
     }
 
-    public List<ReservationTimeResponse> findAll() {
+    public List<ReservationTimeResponse> getAllReservationTimes() {
         return reservationTimeRepository.findAll()
                 .stream()
                 .map(ReservationTimeResponse::from)
                 .toList();
     }
 
-    public ReservationTimeResponse add(ReservationTimeRequest reservationTimeRequest) {
+    public ReservationTimeResponse addReservationTime(ReservationTimeRequest reservationTimeRequest) {
         ReservationTime reservationTime = ReservationTimeRequest.toReservationTime(reservationTimeRequest);
         ReservationTime savedReservationTime = reservationTimeRepository.save(reservationTime);
         return ReservationTimeResponse.from(savedReservationTime);
     }
 
-    public void deleteById(Long id) {
+    public void deleteReservationTimeById(Long id) {
         reservationTimeRepository.deleteById(id);
     }
 }

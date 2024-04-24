@@ -20,7 +20,7 @@ public class TimesController {
 
     @GetMapping
     ResponseEntity<List<ReservationTimeResponse>> getTimes() {
-        List<ReservationTimeResponse> reservationTimes = reservationTimeService.findAll();
+        List<ReservationTimeResponse> reservationTimes = reservationTimeService.getAllReservationTimes();
 
         return ResponseEntity.ok()
                 .body(reservationTimes);
@@ -28,7 +28,7 @@ public class TimesController {
 
     @PostMapping
     ResponseEntity<ReservationTimeResponse> addTime(@RequestBody ReservationTimeRequest reservationTimeRequest) {
-        ReservationTimeResponse reservationTimeResponse = reservationTimeService.add(reservationTimeRequest);
+        ReservationTimeResponse reservationTimeResponse = reservationTimeService.addReservationTime(reservationTimeRequest);
 
         return ResponseEntity.ok()
                 .body(reservationTimeResponse);
@@ -36,7 +36,7 @@ public class TimesController {
 
     @DeleteMapping("/{id}")
     ResponseEntity<Void> deleteTime(@PathVariable("id") Long id) {
-        reservationTimeService.deleteById(id);
+        reservationTimeService.deleteReservationTimeById(id);
 
         return ResponseEntity.noContent()
                 .build();

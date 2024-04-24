@@ -19,7 +19,6 @@ import java.util.NoSuchElementException;
 public class ReservationRepositoryImpl implements ReservationRepository {
 
     private final JdbcTemplate jdbcTemplate;
-
     private final RowMapper<Reservation> reservationRowMapper = (resultSet, rowNum) -> new Reservation(
             resultSet.getLong("reservation_id"),
             resultSet.getString("name"),
@@ -43,11 +42,21 @@ public class ReservationRepositoryImpl implements ReservationRepository {
                 "t.id AS time_id, " +
                 "t.start_at AS time_value " +
                 "FROM reservation AS r " +
-                "INNER JOIN reservation_time AS t " +
-                "ON r.time_id = t.id ";
+                "INNER JOIN reservation_time AS t ON r.time_id = t.id ";
         List<Reservation> reservations = jdbcTemplate.query(sql, reservationRowMapper);
 
         return Collections.unmodifiableList(reservations);
+    }
+
+    @Override
+    public Reservation findById(Long id) {
+        String sql = "select * from reservation where id = ?";
+        Reservation reservation = jdbcTemplate.queryForObject(sql, reservationRowMapper, id);
+        if (reservation == null) {
+            throw new NoSuchElementException("존재하지 않는 아아디입니다.");
+        }
+
+        return reservation;
     }
 
     @Override
@@ -71,16 +80,5 @@ public class ReservationRepositoryImpl implements ReservationRepository {
     public void deleteById(Long id) {
         String sql = "delete from reservation where id = ?";
         jdbcTemplate.update(sql, id);
-    }
-
-    @Override
-    public Reservation findById(Long id) {
-        String sql = "select * from reservation where id = ?";
-        Reservation reservation = jdbcTemplate.queryForObject(sql, reservationRowMapper, id);
-        if (reservation == null) {
-            throw new NoSuchElementException("존재하지 않는 아아디입니다.");
-        }
-
-        return reservation;
     }
 }

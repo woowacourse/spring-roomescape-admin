@@ -24,7 +24,7 @@ public class ReservationService {
     public List<ReservationResponse> getAllReservations() {
         return reservationRepository.findAll()
                 .stream()
-                .map(reservation -> ReservationResponse.from(reservation, reservation.getTime()))
+                .map(ReservationResponse::from)
                 .toList();
     }
 
@@ -33,7 +33,7 @@ public class ReservationService {
         Reservation reservation = new Reservation(null, reservationRequest.name(), reservationRequest.date(), reservationTime);
         Reservation savedReservation = reservationRepository.save(reservation);
 
-        return ReservationResponse.from(savedReservation, reservationTime);
+        return ReservationResponse.from(savedReservation);
     }
 
     public void deleteById(Long id) {

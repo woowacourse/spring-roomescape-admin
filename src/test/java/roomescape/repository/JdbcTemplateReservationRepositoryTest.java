@@ -67,6 +67,30 @@ class JdbcTemplateReservationRepositoryTest extends IntegrationTestSupport {
         assertThat(reservations).isEmpty();
     }
 
+    @DisplayName("주어진 시간을 사용하는 예약의 수를 조회할 수 있다.")
+    @Test
+    void countBy() {
+        ReservationTime savedTime = reservationTimeRepository.save(createReservationTime());
+        target.save(createReservation(savedTime));
+        target.save(createReservation(savedTime));
+
+        int countRow = target.countBy(savedTime.getId());
+
+        assertThat(countRow).isEqualTo(2);
+    }
+
+    @DisplayName("주어진 시간을 사용하는 예약이 존재하지 않는 경우, 0을 반환한다.")
+    @Test
+    void noCount() {
+        ReservationTime savedTime = reservationTimeRepository.save(createReservationTime());
+        target.save(createReservation(savedTime));
+        target.save(createReservation(savedTime));
+
+        int countRow = target.countBy(-1);
+
+        assertThat(countRow).isEqualTo(0);
+    }
+
     private ReservationTime createReservationTime() {
         return new ReservationTime(LocalTime.now());
     }

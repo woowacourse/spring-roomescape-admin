@@ -53,6 +53,13 @@ class JdbcTemplateReservationRepository implements ReservationRepository {
     }
 
     @Override
+    public int countBy(long timeId) {
+        String sql = "select count(*) from reservation where time_id = ?";
+
+        return jdbcTemplate.queryForObject(sql, Integer.class, timeId);
+    }
+
+    @Override
     public List<Reservation> findAll() {
         String sql = """
                     select 

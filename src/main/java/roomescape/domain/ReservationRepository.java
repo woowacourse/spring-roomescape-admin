@@ -8,5 +8,7 @@ public interface ReservationRepository {
 
     void deleteBy(long id);
 
+    int countBy(long timeId);
+
     List<Reservation> findAll();
 }

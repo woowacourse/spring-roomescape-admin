@@ -2,7 +2,6 @@ package roomescape.repository;
 
 import java.util.List;
 import java.util.Map;
-import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;
@@ -41,14 +40,6 @@ class JdbcTemplateReservationTimeRepository implements ReservationTimeRepository
 
     @Override
     public void deleteBy(long id) {
-        try {
-            tryDeleteBy(id);
-        } catch (DataIntegrityViolationException exception) {
-            throw new IllegalStateException("다른 예약에서 해당 예약 시간을 사용하고 있습니다.");
-        }
-    }
-
-    private void tryDeleteBy(long id) {
         String sql = "delete from reservation_time where id = ?";
 
         jdbcTemplate.update(sql, id);

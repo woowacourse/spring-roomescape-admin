@@ -32,9 +32,10 @@ class ReservationRepositoryTest {
 
     @BeforeEach
     void init() {
-        Time savedTime = timeRepository.save(new Time(LocalTime.parse("10:00")));
+        Time savedTime = timeRepository.save(new Time(null, LocalTime.parse("10:00")));
 
         Reservation reservation = new Reservation(
+                null,
                 new Name("브라운"), LocalDate.parse("2024-08-05"),
                 new Time(savedTime.getId(), savedTime.getStartAt())
         );

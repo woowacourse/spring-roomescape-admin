@@ -32,7 +32,7 @@ class TimeRepositoryTest {
 
     @BeforeEach
     void init() {
-        Time time = new Time(LocalTime.parse("10:00"));
+        Time time = new Time(null, LocalTime.parse("10:00"));
         savedTime = timeRepository.save(time);
     }
 
@@ -67,12 +67,13 @@ class TimeRepositoryTest {
     void test() {
         // given
         Reservation reservation = new Reservation(
+                null,
                 new Name("브라운"), LocalDate.parse("2024-08-05"),
                 new Time(savedTime.getId(), LocalTime.parse("10:00"))
         );
         reservationRepository.save(reservation);
 
-        Time savedTime2 = timeRepository.save(new Time(LocalTime.parse("11:00")));
+        Time savedTime2 = timeRepository.save(new Time(null, LocalTime.parse("11:00")));
 
         // when
         Optional<Time> time1 = timeRepository.findBySameReferId(savedTime.getId());

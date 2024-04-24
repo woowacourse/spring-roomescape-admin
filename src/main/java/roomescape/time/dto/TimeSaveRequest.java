@@ -16,7 +16,7 @@ public class TimeSaveRequest {
     }
 
     public Time toTime() {
-        return new Time(startAt);
+        return new Time(null, startAt);
     }
 
     public LocalTime getStartAt() {

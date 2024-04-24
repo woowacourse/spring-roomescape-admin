@@ -4,18 +4,11 @@ import java.time.LocalTime;
 import java.util.Objects;
 
 public class Time {
-    private Long id;
-    private LocalTime startAt;
-
-    public Time() {
-    }
+    private final Long id;
+    private final LocalTime startAt;
 
     public Time(final Long id, final LocalTime startAt) {
         this.id = id;
-        this.startAt = startAt;
-    }
-
-    public Time(final LocalTime startAt) {
         this.startAt = startAt;
     }
 

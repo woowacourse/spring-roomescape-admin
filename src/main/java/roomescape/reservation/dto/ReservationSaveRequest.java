@@ -20,7 +20,7 @@ public class ReservationSaveRequest {
     }
 
     public Reservation toReservation(final Time time) {
-        return new Reservation(new Name(name), date, time);
+        return new Reservation(null, new Name(name), date, time);
     }
 
     public String getName() {

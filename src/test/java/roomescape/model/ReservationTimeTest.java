@@ -25,5 +25,4 @@ class ReservationTimeTest {
             Arguments.of(1L, "abc")
         );
     }
-
 }

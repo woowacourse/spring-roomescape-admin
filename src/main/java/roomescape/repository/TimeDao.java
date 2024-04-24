@@ -1,5 +1,6 @@
 package roomescape.repository;
 
+import org.springframework.dao.DataAccessException;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;
 import org.springframework.jdbc.support.GeneratedKeyHolder;
@@ -11,6 +12,7 @@ import java.sql.PreparedStatement;
 import java.time.LocalTime;
 import java.util.Collections;
 import java.util.List;
+import java.util.Optional;
 
 @Repository
 public class TimeDao {
@@ -38,8 +40,13 @@ public class TimeDao {
         return keyHolder.getKey().longValue();
     }
 
-    public ReservationTime findById(long id) {
-        return jdbcTemplate.queryForObject("SELECT * FROM reservation_time WHERE id = ?", timeRowMapper, id);
+    public Optional<ReservationTime> findById(long id) {
+        String sql = "SELECT * FROM reservation_time WHERE id = ?";
+        try {
+            return Optional.ofNullable(jdbcTemplate.queryForObject(sql, timeRowMapper, id));
+        } catch (DataAccessException e) {
+            return Optional.empty();
+        }
     }
 
     public List<ReservationTime> findAll() {

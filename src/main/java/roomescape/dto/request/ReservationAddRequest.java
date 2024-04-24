@@ -1,12 +1,12 @@
 package roomescape.dto.request;
 
 import java.time.LocalDate;
-import java.time.LocalTime;
 import roomescape.domain.Reservation;
+import roomescape.domain.ReservationTime;
 
-public record ReservationAddRequest(String name, LocalDate date, LocalTime time) {
+public record ReservationAddRequest(String name, LocalDate date, Long timeId) {
 
     public Reservation toReservation() {
-        return new Reservation(null, name, date, time);
+        return new Reservation(null, name, date, ReservationTime.from(timeId));
     }
 }

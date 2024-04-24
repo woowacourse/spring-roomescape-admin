@@ -3,10 +3,10 @@ package roomescape.dto.request;
 import static org.assertj.core.api.Assertions.assertThat;
 
 import java.time.LocalDate;
-import java.time.LocalTime;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import roomescape.domain.Reservation;
+import roomescape.domain.ReservationTime;
 
 class ReservationAddRequestTest {
 
@@ -15,9 +15,9 @@ class ReservationAddRequestTest {
     void createReservationFromReservationAddRequest() {
         String name = "브라운";
         LocalDate date = LocalDate.parse("2024-04-01");
-        LocalTime time = LocalTime.parse("07:00");
-        ReservationAddRequest reservationAddRequest = new ReservationAddRequest(name, date, time);
-        Reservation expected = new Reservation(null, name, date, time);
+        Long timeId = 1L;
+        ReservationAddRequest reservationAddRequest = new ReservationAddRequest(name, date, timeId);
+        Reservation expected = new Reservation(null, name, date, ReservationTime.from(timeId));
 
         Reservation reservation = reservationAddRequest.toReservation();
 

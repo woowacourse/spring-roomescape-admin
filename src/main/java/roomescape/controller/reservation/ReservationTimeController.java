@@ -36,6 +36,11 @@ public class ReservationTimeController {
                 .toList();
     }
 
+    @GetMapping("/{id}")
+    public ReservationTimeResponse getTimeBy(@PathVariable Long id) {
+        return ReservationTimeResponse.from(reservationTimeRepository.findBy(id));
+    }
+
     @DeleteMapping("/{id}")
     public void delete(@PathVariable Long id) {
         reservationTimeRepository.remove(id);

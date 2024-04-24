@@ -3,6 +3,7 @@ package roomescape.repository.reservationtime;
 import java.time.LocalTime;
 import java.util.List;
 import javax.sql.DataSource;
+import org.springframework.context.annotation.Primary;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.namedparam.BeanPropertySqlParameterSource;
 import org.springframework.jdbc.core.namedparam.SqlParameterSource;
@@ -11,8 +12,8 @@ import org.springframework.stereotype.Repository;
 import roomescape.domain.ReservationTime;
 
 @Repository
+@Primary
 public class ReservationTimeH2Repository implements ReservationTimeRepository {
-
 
     private final JdbcTemplate jdbcTemplate;
     private final SimpleJdbcInsert jdbcInsert;
@@ -38,12 +39,24 @@ public class ReservationTimeH2Repository implements ReservationTimeRepository {
     }
 
     @Override
+    public ReservationTime findBy(Long id) {
+        return jdbcTemplate.queryForObject(
+                "SELECT * FROM reservation_time WHERE id = ?",
+                (resultSet, rowNum) -> new ReservationTime(
+                        resultSet.getLong("id"),
+                        LocalTime.parse(resultSet.getString("start_at"))
+                ),
+                id
+        );
+    }
+
+    @Override
     public List<ReservationTime> findAll() {
         return jdbcTemplate.query(
                 "SELECT * FROM reservation_time",
                 (resultSet, rowNum) -> new ReservationTime(
                         resultSet.getLong("id"),
-                        LocalTime.parse(resultSet.getString("startAt"))
+                        LocalTime.parse(resultSet.getString("start_at"))
                 )
         );
     }

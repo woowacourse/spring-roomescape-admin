@@ -19,18 +19,11 @@ public class ReservationTime {
 
     private void validate(LocalTime time) {
         validateNonNull(time);
-        validateHourlyUnit(time);
     }
 
     private void validateNonNull(LocalTime time) {
         if (time == null) {
             throw new NullPointerException("예약 가능한 시간은 null일 수 없습니다");
-        }
-    }
-
-    private void validateHourlyUnit(LocalTime time) {
-        if (time.getMinute() != 0) {
-            throw new IllegalStateException("예약 가능 시각은 정각 단위여야 합니다: " + time);
         }
     }
 

@@ -15,8 +15,11 @@ import roomescape.service.ReservationTimeService;
 
 @RestController
 public class ReservationTimeController {
-    @Autowired
-    private ReservationTimeService reservationTimeService;
+    private final ReservationTimeService reservationTimeService;
+
+    public ReservationTimeController(ReservationTimeService reservationTimeService) {
+        this.reservationTimeService = reservationTimeService;
+    }
 
     @GetMapping("/times")
     public ResponseEntity<List<ReservationTime>> reservationTimes() {

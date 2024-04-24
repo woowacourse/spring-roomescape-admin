@@ -11,10 +11,13 @@ import roomescape.dto.ReservationDto;
 
 @Service
 public class ReservationService {
-    @Autowired
-    private ReservationDao reservationDao;
-    @Autowired
-    private ReservationTimeDao reservationTimeDao;
+    private final ReservationDao reservationDao;
+    private final ReservationTimeDao reservationTimeDao;
+
+    public ReservationService(ReservationDao reservationDao, ReservationTimeDao reservationTimeDao) {
+        this.reservationDao = reservationDao;
+        this.reservationTimeDao = reservationTimeDao;
+    }
 
     public List<Reservation> findAll() {
         return reservationDao.findAll();

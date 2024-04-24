@@ -2,7 +2,6 @@ package roomescape.controller;
 
 import java.lang.reflect.Field;
 import java.time.LocalDate;
-import java.time.LocalDateTime;
 import java.time.LocalTime;
 import java.util.ArrayList;
 import java.util.List;
@@ -63,7 +62,8 @@ class ReservationControllerTest {
     @Test
     @DisplayName("예약 정보를 잘 지우는지 확인한다.")
     void delete() {
-        List<Reservation> reservations = List.of(new Reservation(1, "폴라", LocalDateTime.now()));
+        List<Reservation> reservations = List.of(
+                new Reservation(1L, "폴라", LocalDate.now(), new ReservationTime(LocalTime.now())));
         CollectionReservationRepository collectionReservationRepository = new CollectionReservationRepository(
                 new ArrayList<>(reservations), timeRepository);
         ReservationService reservationService = new ReservationService(collectionReservationRepository);

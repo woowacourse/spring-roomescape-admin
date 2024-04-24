@@ -21,10 +21,6 @@ public class Reservation implements Comparable<Reservation> {
         this.time = time;
     }
 
-    public Reservation(long id, String name, LocalDateTime dateTime) {
-        this(id, name, dateTime.toLocalDate(), new ReservationTime(dateTime.toLocalTime()));
-    }
-
     @Override
     public int compareTo(Reservation other) {
         LocalDateTime dateTime = LocalDateTime.of(date, time.getStartAt());

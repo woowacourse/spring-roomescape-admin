@@ -8,7 +8,7 @@ public class ReservationPageController {
 
     @GetMapping("/admin/reservation")
     public String reservationPage() {
-        return "admin/reservation-legacy";
+        return "admin/reservation";
     }
 }
 

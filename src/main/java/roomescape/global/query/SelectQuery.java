@@ -35,14 +35,20 @@ public class SelectQuery {
     }
 
     public String build() {
-        String query = "SELECT ";
+        return "SELECT " + buildColumnsAndTable() + buildCondition();
+    }
+
+    private String buildColumnsAndTable() {
         if (columns.isEmpty()) {
             throw new IllegalArgumentException("지정된 컬럼이 없습니다.");
         }
-        query += String.join(", ", columns) + " FROM " + table;
+        return String.join(", ", columns) + " FROM " + table;
+    }
+
+    private String buildCondition() {
         if (!condition.isEmpty()) {
-            query += " WHERE " + condition.build();
+            return " WHERE " + condition.build();
         }
-        return query;
+        return "";
     }
 }

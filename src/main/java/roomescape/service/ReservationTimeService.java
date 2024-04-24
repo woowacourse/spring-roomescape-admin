@@ -1,12 +1,12 @@
 package roomescape.service;
 
 import org.springframework.stereotype.Service;
+import roomescape.domain.Reservation;
+import roomescape.domain.ReservationRepository;
+import roomescape.domain.ReservationTime;
+import roomescape.domain.ReservationTimeRepository;
 import roomescape.dto.ReservationTimeRequest;
 import roomescape.dto.ReservationTimeResponse;
-import roomescape.model.Reservation;
-import roomescape.model.ReservationTime;
-import roomescape.repository.ReservationRepository;
-import roomescape.repository.ReservationTimeRepository;
 
 import java.util.List;
 
@@ -38,7 +38,7 @@ public class ReservationTimeService {
     public void deleteReservationTimeById(Long id) {
         List<Reservation> reservations = reservationRepository.findAllByReservationTimeId(id);
 
-        if(!reservations.isEmpty()) {
+        if (!reservations.isEmpty()) {
             throw new IllegalArgumentException("해당 시간에 예약이 존재합니다.");
         }
 

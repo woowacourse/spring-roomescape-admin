@@ -1,4 +1,4 @@
-package roomescape.model;
+package roomescape.domain;
 
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.params.ParameterizedTest;

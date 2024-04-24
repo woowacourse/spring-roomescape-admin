@@ -5,7 +5,8 @@ import org.springframework.jdbc.core.RowMapper;
 import org.springframework.jdbc.support.GeneratedKeyHolder;
 import org.springframework.jdbc.support.KeyHolder;
 import org.springframework.stereotype.Repository;
-import roomescape.model.ReservationTime;
+import roomescape.domain.ReservationTime;
+import roomescape.domain.ReservationTimeRepository;
 
 import java.sql.PreparedStatement;
 import java.time.LocalTime;

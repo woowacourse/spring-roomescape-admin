@@ -7,7 +7,11 @@ import roomescape.domain.time.ReservationTime;
 
 public class ReservationFixture {
     public static Reservation reservation() {
-        return new Reservation(1L, "prin", LocalDate.of(2024, 4, 23), reservationTime());
+        return reservation(1L);
+    }
+
+    public static Reservation reservation(long id) {
+        return new Reservation(id, "prin", LocalDate.of(2024, 4, 23), reservationTime());
     }
 
     public static ReservationTime reservationTime() {

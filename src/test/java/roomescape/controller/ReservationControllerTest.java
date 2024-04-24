@@ -47,7 +47,7 @@ class ReservationControllerTest extends ControllerTest {
     @Test
     void 전체_예약을_조회한다() throws Exception {
         List<Reservation> reservations = IntStream.range(0, 3)
-                .mapToObj(i -> ReservationFixture.reservation())
+                .mapToObj(ReservationFixture::reservation)
                 .toList();
         when(reservationService.findReservations()).thenReturn(reservations);
 
@@ -55,9 +55,11 @@ class ReservationControllerTest extends ControllerTest {
 
         result.andExpect(status().isOk())
                 .andDo(print())
-                .andExpect(jsonPath("$[0].name").value(reservations.get(0).getName()))
-                .andExpect(jsonPath("$[1].name").value(reservations.get(1).getName()))
-                .andExpect(jsonPath("$[2].name").value(reservations.get(2).getName()));
+                .andExpectAll(
+                        jsonPath("$[0].name").value(reservations.get(0).getName()),
+                        jsonPath("$[1].name").value(reservations.get(1).getName()),
+                        jsonPath("$[2].name").value(reservations.get(2).getName())
+                );
     }
 
     @Test

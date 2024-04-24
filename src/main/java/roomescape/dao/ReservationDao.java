@@ -5,15 +5,29 @@ import java.sql.PreparedStatement;
 import java.time.LocalDate;
 import java.util.List;
 import org.springframework.jdbc.core.JdbcTemplate;
+import org.springframework.jdbc.core.RowMapper;
 import org.springframework.jdbc.support.GeneratedKeyHolder;
 import org.springframework.jdbc.support.KeyHolder;
 import org.springframework.stereotype.Repository;
 import roomescape.domain.Reservation;
 import roomescape.domain.ReservationTime;
-import roomescape.dto.ReservationDto;
 
 @Repository
 public class ReservationDao {
+    private final RowMapper<Reservation> rowMapper = (resultSet, rowNum) -> {
+        ReservationTime reservationTime = new ReservationTime(
+                resultSet.getLong("time_id"),
+                resultSet.getTime("time_value")
+                        .toLocalTime());
+        Reservation reservation = new Reservation.Builder()
+                .id(resultSet.getLong("id"))
+                .name(resultSet.getString("name"))
+                .date(resultSet.getDate("date")
+                        .toLocalDate())
+                .time(reservationTime)
+                .build();
+        return reservation;
+    };
 
     private JdbcTemplate jdbcTemplate;
 
@@ -34,22 +48,7 @@ public class ReservationDao {
                 on r.time_id = t.id
                 where r.id = ?
                 """;
-        return jdbcTemplate.queryForObject(
-                sql,
-                (resultSet, rowNum) -> {
-                    ReservationTime reservationTime = new ReservationTime(
-                            resultSet.getLong("time_id"),
-                            resultSet.getTime("time_value")
-                                    .toLocalTime());
-                    Reservation reservation = new Reservation.Builder()
-                            .id(resultSet.getLong("id"))
-                            .name(resultSet.getString("name"))
-                            .date(resultSet.getDate("date")
-                                    .toLocalDate())
-                            .time(reservationTime)
-                            .build();
-                    return reservation;
-                }, id);
+        return jdbcTemplate.queryForObject(sql, rowMapper, id);
     }
 
     public List<Reservation> findAll() {
@@ -64,22 +63,7 @@ public class ReservationDao {
                 inner join reservation_time as t 
                 on r.time_id = t.id
                 """;
-        return jdbcTemplate.query(
-                sql,
-                (resultSet, rowNum) -> {
-                    ReservationTime reservationTime = new ReservationTime(
-                            resultSet.getLong("time_id"),
-                            resultSet.getTime("time_value")
-                                    .toLocalTime());
-                    Reservation reservation = new Reservation.Builder()
-                            .id(resultSet.getLong("id"))
-                            .name(resultSet.getString("name"))
-                            .date(resultSet.getDate("date")
-                                    .toLocalDate())
-                            .time(reservationTime)
-                            .build();
-                    return reservation;
-                });
+        return jdbcTemplate.query(sql, rowMapper);
     }
 
     public Long save(Reservation reservation) {

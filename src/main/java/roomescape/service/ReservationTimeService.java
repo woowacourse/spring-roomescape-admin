@@ -8,6 +8,8 @@ import roomescape.dao.ReservationTimeDao;
 import roomescape.domain.Reservation;
 import roomescape.domain.ReservationTime;
 import roomescape.dto.CreateReservationTimeRequest;
+import roomescape.dto.CreateReservationTimeResponse;
+import roomescape.mapper.ReservationTimeMapper;
 
 import java.util.List;
 
@@ -16,19 +18,22 @@ public class ReservationTimeService {
 
     private final ReservationTimeDao reservationTimeDao;
     private final ReservationDao reservationDao;
+    private final ReservationTimeMapper reservationTimeMapper;
 
-    public ReservationTimeService(ReservationTimeDao reservationTimeDao, ReservationDao reservationDao) {
+    public ReservationTimeService(ReservationTimeDao reservationTimeDao, ReservationDao reservationDao, ReservationTimeMapper reservationTimeMapper) {
         this.reservationTimeDao = reservationTimeDao;
         this.reservationDao = reservationDao;
+        this.reservationTimeMapper = reservationTimeMapper;
     }
 
     public List<ReservationTime> readAll() {
         return reservationTimeDao.findAll();
     }
 
-    public ReservationTime createTime(CreateReservationTimeRequest request) {
+    public CreateReservationTimeResponse createTime(CreateReservationTimeRequest request) {
         int createdId = reservationTimeDao.create(request);
-        return new ReservationTime(createdId, request.startAt());
+        ReservationTime reservationTime = new ReservationTime(createdId, request.startAt());
+        return reservationTimeMapper.toCreateReservationTimeResponse(reservationTime);
     }
 
     public void deleteTime(int id) {

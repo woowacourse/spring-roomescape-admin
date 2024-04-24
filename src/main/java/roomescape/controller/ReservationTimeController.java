@@ -4,6 +4,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import roomescape.domain.ReservationTime;
 import roomescape.dto.CreateReservationTimeRequest;
+import roomescape.dto.CreateReservationTimeResponse;
 import roomescape.service.ReservationTimeService;
 
 import java.util.List;
@@ -25,9 +26,9 @@ public class ReservationTimeController {
     }
 
     @PostMapping
-    public ResponseEntity<ReservationTime> createTime(@RequestBody CreateReservationTimeRequest request) {
-        ReservationTime reservationTime = reservationTimeService.createTime(request);
-        return ResponseEntity.ok(reservationTime);
+    public ResponseEntity<CreateReservationTimeResponse> createTime(@RequestBody CreateReservationTimeRequest request) {
+        CreateReservationTimeResponse response = reservationTimeService.createTime(request);
+        return ResponseEntity.ok(response);
     }
 
     // TODO: 시간이 삭제 되면 예약도 삭제되어야 하나?

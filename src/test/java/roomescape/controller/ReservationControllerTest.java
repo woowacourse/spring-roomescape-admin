@@ -54,7 +54,6 @@ class ReservationControllerTest {
 
         //then
         assertThat(controller.getReservations()).isEmpty();
-
     }
 
     @DisplayName("존재하지 않는 예약 삭제시 404 반환")

@@ -1,6 +1,7 @@
 package roomescape.service;
 
 import java.util.List;
+import java.util.Optional;
 import org.springframework.stereotype.Service;
 import roomescape.dto.TimeRequest;
 import roomescape.dto.TimeResponse;
@@ -27,5 +28,18 @@ public class TimeService {
                 .stream()
                 .map(TimeResponse::from)
                 .toList();
+    }
+
+    public void remove(final long id) {
+        //TODO findById 메서드 제거하기 reservation도
+        final Optional<ReservationTime> findReservation = findById(id);
+        if (findReservation.isEmpty()) {
+            throw new IllegalArgumentException(String.format("id: %s는 존재하지 않는 id 입니다.", id));
+        }
+        timeDao.remove(id);
+    }
+
+    private Optional<ReservationTime> findById(final long id) {
+        return timeDao.findById(id);
     }
 }

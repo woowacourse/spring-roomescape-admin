@@ -4,7 +4,9 @@ import java.sql.PreparedStatement;
 import java.sql.Time;
 import java.util.List;
 import java.util.Objects;
+import java.util.Optional;
 import javax.sql.DataSource;
+import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.support.GeneratedKeyHolder;
 import org.springframework.jdbc.support.KeyHolder;
@@ -33,6 +35,20 @@ public class TimeDao {
         return reservationTime.toReservationTime(id);
     }
 
+    public Optional<ReservationTime> findById(final long id) {
+        try {
+            final ReservationTime reservationTime = jdbcTemplate.queryForObject(
+                    "SELECT id, start_at FROM reservation_time WHERE id = ?",
+                    (resultSet, rowNum) -> new ReservationTime(
+                            resultSet.getLong("id"),
+                            resultSet.getTime("start_at").toLocalTime()
+                    ), id);
+            return Optional.ofNullable(reservationTime);
+        } catch (final EmptyResultDataAccessException exception) {
+            return Optional.empty();
+        }
+    }
+
     public List<ReservationTime> findAll() {
         return jdbcTemplate.query(
                 "SELECT id, start_at FROM reservation_time",
@@ -40,5 +56,10 @@ public class TimeDao {
                         resultSet.getLong("id"),
                         resultSet.getTime("start_at").toLocalTime()
                 ));
+    }
+
+    public void remove(final long id) {
+        final String sql = "DELETE FROM reservation_time WHERE id = ?";
+        jdbcTemplate.update(sql, id);
     }
 }

@@ -133,3 +133,19 @@ Content-Type: application/json
     }
 ]
 ```
+
+<br>
+
+### 시간 삭제 API
+
+**Request**
+
+```http request
+DELETE /times/1 HTTP/1.1
+```
+
+**Response**
+
+```
+HTTP/1.1 200
+```

@@ -13,7 +13,6 @@ import roomescape.dto.ReservationRequest;
 import roomescape.dto.ReservationResponse;
 
 @Service
-@Transactional
 public class ReservationService {
     private final ReservationRepository reservations;
     private final ReservationTimeRepository reservationTimes;
@@ -24,7 +23,14 @@ public class ReservationService {
         this.reservationTimes = reservationTimes;
     }
 
-    @Transactional(readOnly = true)
+    @Transactional
+    public ReservationResponse create(ReservationRequest request) {
+        ReservationTime reservationTime = reservationTimes.findById(request.timeId())
+                .orElseThrow(() -> new IllegalArgumentException("존재하지 않는 예약 시간 입니다."));
+        Reservation reservation = reservations.save(request.toReservation(reservationTime));
+        return ReservationResponse.from(reservation);
+    }
+
     public List<ReservationResponse> findAll() {
         List<Reservation> reservations = this.reservations.findAll();
         return convertToReservationResponses(reservations);
@@ -36,13 +42,7 @@ public class ReservationService {
                 .collect(Collectors.toList());
     }
 
-    public ReservationResponse create(ReservationRequest request) {
-        ReservationTime reservationTime = reservationTimes.findById(request.timeId())
-                .orElseThrow(() -> new IllegalArgumentException("존재하지 않는 예약 시간 입니다."));
-        Reservation reservation = reservations.save(request.toReservation(reservationTime));
-        return ReservationResponse.from(reservation);
-    }
-
+    @Transactional
     public void deleteById(long id) {
         Optional<Reservation> findReservation = reservations.findById(id);
         if (findReservation.isEmpty()) {

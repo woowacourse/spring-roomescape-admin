@@ -12,7 +12,6 @@ import roomescape.dto.ReservationTimeRequest;
 import roomescape.dto.ReservationTimeResponse;
 
 @Service
-@Transactional
 public class ReservationTimeService {
     private final ReservationTimeRepository reservationTimes;
     private final ReservationRepository reservations;
@@ -23,12 +22,12 @@ public class ReservationTimeService {
         this.reservations = reservations;
     }
 
+    @Transactional
     public ReservationTimeResponse create(ReservationTimeRequest request) {
         ReservationTime reservationTime = reservationTimes.create(request.toReservationTime());
         return ReservationTimeResponse.from(reservationTime);
     }
 
-    @Transactional(readOnly = true)
     public List<ReservationTimeResponse> findAll() {
         List<ReservationTime> reservationTimes = this.reservationTimes.findAll();
         return convertToReservationTimeResponses(reservationTimes);
@@ -40,6 +39,7 @@ public class ReservationTimeService {
                 .collect(Collectors.toList());
     }
 
+    @Transactional
     public void deleteById(long id) {
         Optional<ReservationTime> findReservationTime = reservationTimes.findById(id);
         if (findReservationTime.isEmpty()) {

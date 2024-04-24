@@ -19,7 +19,7 @@ public class ReservationDao {
         this.jdbcTemplate = jdbcTemplate;
     }
 
-    public long save(final Reservation reservation) {
+    public Reservation save(final Reservation reservation) {
         KeyHolder keyHolder = new GeneratedKeyHolder();
         jdbcTemplate.update(connection -> {
                     PreparedStatement ps = connection.prepareStatement(
@@ -33,7 +33,17 @@ public class ReservationDao {
                 }, keyHolder
         );
 
-        return keyHolder.getKey().longValue();
+        try {
+            long id = keyHolder.getKey().longValue();
+            return new Reservation(
+                    id,
+                    reservation.name(),
+                    reservation.date(),
+                    reservation.time()
+            );
+        } catch (NullPointerException exception) {
+            throw new RuntimeException("[ERROR] 예약 요청이 정상적으로 이루어지지 않았습니다.");
+        }
     }
 
     public Optional<Reservation> findById(long id) {

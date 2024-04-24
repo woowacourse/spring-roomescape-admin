@@ -17,8 +17,7 @@ public class ReservationService {
 
     public Reservation saveReservation(final ReservationRequest reservationRequest) {
         Reservation reservation = reservationRequest.toEntity();
-        long reservationId = reservationDao.save(reservation);
-        return getReservation(reservationId);
+        return reservationDao.save(reservation);
     }
 
     private Reservation getReservation(final long id) {

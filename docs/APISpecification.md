@@ -29,7 +29,7 @@ GET /admin/reservation HTTP/1.1
 HTTP/1.1 200 
 ```
 
-### 예약 조회
+### 예약 목록 조회
 
 #### Request
 
@@ -57,6 +57,28 @@ Content-Type: application/json
         "time": "11:00"
     }
 ]
+```
+
+### 예약 단건 조회
+
+#### Request
+
+```http request
+GET /reservations/{id} HTTP/1.1
+```
+
+#### Response
+
+```
+HTTP/1.1 200 
+Content-Type: application/json
+
+{
+    "id": 1,
+    "name": "브라운",
+    "date": "2023-01-01",
+    "time": "10:00"
+}
 ```
 
 ### 예약 추가
@@ -97,24 +119,7 @@ HTTP/1.1 204
 ---
 
 ## 7단계
-### 시간 추가
-#### Request
-```http request
-POST /times HTTP/1.1
-content-type: application/json
-
-{
-    "startAt": "10:00"
-}
-```
-
-#### Response
-```http request
-HTTP/1.1 201
-Location: /times/{id}
-```
-
-### 시간 조회
+### 시간 목록 조회
 #### Request
 ```http request
 GET /times HTTP/1.1
@@ -131,6 +136,40 @@ Content-Type: application/json
         "startAt": "10:00"
     }
 ]
+```
+
+### 시간 조회
+#### Request
+```http request
+GET /times/{id} HTTP/1.1
+```
+#### Response
+
+```http request
+HTTP/1.1 200
+Content-Type: application/json
+
+{
+    "id": 1,
+    "startAt": "10:00"
+}
+```
+
+### 시간 추가
+#### Request
+```http request
+POST /times HTTP/1.1
+content-type: application/json
+
+{
+    "startAt": "10:00"
+}
+```
+
+#### Response
+```http request
+HTTP/1.1 201
+Location: /times/{id}
 ```
 
 ### 시간 삭제

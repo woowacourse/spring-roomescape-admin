@@ -3,7 +3,11 @@ package roomescape.db;
 import java.time.LocalDate;
 import java.time.LocalTime;
 import java.util.List;
+import java.util.NoSuchElementException;
+import java.util.Optional;
 import javax.sql.DataSource;
+import org.springframework.dao.DataAccessException;
+import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;
 import org.springframework.jdbc.core.namedparam.BeanPropertySqlParameterSource;
@@ -16,25 +20,31 @@ import roomescape.domain.ReservationTime;
 
 @Repository
 public class ReservationDao {
-
     private final JdbcTemplate jdbcTemplate;
-
     private final SimpleJdbcInsert jdbcInsert;
 
     public ReservationDao(final JdbcTemplate jdbcTemplate) {
         this.jdbcTemplate = jdbcTemplate;
-        this.jdbcInsert = new SimpleJdbcInsert(jdbcTemplate)
-                .withTableName("reservation")
+        this.jdbcInsert = new SimpleJdbcInsert(jdbcTemplate).withTableName("reservation")
                 .usingGeneratedKeyColumns("id");
     }
 
-    public Reservation save(Reservation reservation) {
-        MapSqlParameterSource source = new MapSqlParameterSource().addValue("id", reservation.getId())
+    public Reservation save(final Reservation reservation) {
+        final MapSqlParameterSource source = new MapSqlParameterSource().addValue("id", reservation.getId())
                 .addValue("name", reservation.getName())
                 .addValue("date", reservation.getDate())
                 .addValue("time_id", reservation.getReservationTime().getId());
-        long id = jdbcInsert.executeAndReturnKey(source).longValue();
+        final long id = jdbcInsert.executeAndReturnKey(source).longValue();
         return new Reservation(id, reservation.getName(), reservation.getDate(), reservation.getReservationTime());
+    }
+
+    public Optional<Reservation> findTimeId(final long id) {
+        final String sql = "select * from reservation where time_id=?";
+        try {
+            return Optional.of(jdbcTemplate.queryForObject(sql, Reservation.class, id));
+        } catch (final DataAccessException e) {
+            return Optional.empty();
+        }
     }
 
     public List<Reservation> findAll() {
@@ -51,15 +61,13 @@ public class ReservationDao {
                 """, getReservationRowMapper());
     }
 
-    public void deleteById(final long id) {
-        jdbcTemplate.update("delete from reservation where id=?", id);
+    public boolean deleteById(final long id) {
+        return jdbcTemplate.update("delete from reservation where id=?", id) > 0;
     }
 
     private RowMapper<Reservation> getReservationRowMapper() {
-        return (resultSet, rowNum) -> new Reservation(resultSet.getLong("id"),
-                resultSet.getString("name"),
+        return (resultSet, rowNum) -> new Reservation(resultSet.getLong("id"), resultSet.getString("name"),
                 LocalDate.parse(resultSet.getString("date")),
-                new ReservationTime(resultSet.getLong("time_id"),
-                        LocalTime.parse(resultSet.getString("start_at"))));
+                new ReservationTime(resultSet.getLong("time_id"), LocalTime.parse(resultSet.getString("start_at"))));
     }
 }

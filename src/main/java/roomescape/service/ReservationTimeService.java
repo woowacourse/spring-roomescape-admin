@@ -33,6 +33,10 @@ public class ReservationTimeService {
     }
 
     public void delete(Long id) {
-        reservationTimeDao.deleteById(id);
+        boolean success = reservationTimeDao.deleteById(id);
+        if (success) {
+            return;
+        }
+        throw new IllegalArgumentException("존재하지 않는 시간 id입니다.");
     }
 }

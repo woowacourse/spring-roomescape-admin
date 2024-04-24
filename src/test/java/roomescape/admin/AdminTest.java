@@ -35,4 +35,13 @@ class AdminTest {
                 .then().log().all()
                 .statusCode(200);
     }
+
+    @DisplayName("시간 추가 페이지 테스트")
+    @Test
+    void timePage() {
+        RestAssured.given().log().all()
+                .when().get("/admin/time")
+                .then().log().all()
+                .statusCode(200);
+    }
 }

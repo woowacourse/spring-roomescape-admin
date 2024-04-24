@@ -10,6 +10,7 @@ import org.springframework.jdbc.core.namedparam.SqlParameterSource;
 import org.springframework.jdbc.core.simple.SimpleJdbcInsert;
 import org.springframework.stereotype.Repository;
 import roomescape.domain.Reservation;
+import roomescape.domain.ReservationTime;
 import roomescape.dto.ReservationCreateRequest;
 
 @Repository
@@ -28,7 +29,15 @@ public class ReservationDao {
     }
 
     public List<Reservation> findAll() {
-        String sql = "SELECT id, name, date, time FROM " + DATABASE;
+        String sql = "SELECT "
+                + "r.id as reservation_id, "
+                + "r.name, "
+                + "r.date, "
+                + "t.id as time_id, "
+                + "t.start_at as time_value "
+                + "FROM " + DATABASE + " as r "
+                + "inner join reservation_time as t "
+                + "on r.time_id = t.id";
 
         return jdbcTemplate.query(
                 sql,
@@ -38,7 +47,10 @@ public class ReservationDao {
                             resultSet.getLong("id"),
                             resultSet.getString("name"),
                             LocalDate.parse(resultSet.getString("date")),
-                            LocalTime.parse(resultSet.getString("time"))
+                            new ReservationTime(
+                                    resultSet.getLong("time_id"),
+                                    LocalTime.parse(resultSet.getString("start_at"))
+                            )
                     );
                     return reservation;
                 }
@@ -49,7 +61,7 @@ public class ReservationDao {
         SqlParameterSource parameterSource = new MapSqlParameterSource()
                 .addValue("name", reservationCreateRequest.name())
                 .addValue("date", reservationCreateRequest.date())
-                .addValue("time", reservationCreateRequest.time());
+                .addValue("time_id", reservationCreateRequest.timeId());
         return simpleJdbcInsert.executeAndReturnKey(parameterSource).longValue();
     }
 

@@ -25,7 +25,7 @@ class ReservationTimeServiceTest extends IntegrationTestSupport {
     @Autowired
     private ReservationTimeService target;
 
-    @DisplayName("예약 시간을 사용하고 있는 예약이 존재한다면, 예약을 삭제할 수 없다.")
+    @DisplayName("예약 시간을 사용하고 있는 예약이 존재한다면, 예약 시간을 삭제할 수 없다.")
     @Test
     void deleteUsedTime() {
         ReservationTime savedTime = reservationTimeRepository.save(createReservationTime());

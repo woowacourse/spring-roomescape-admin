@@ -75,9 +75,9 @@ class ReservationServiceTest {
         reservationTimeService.createReservationTime(reservationTimeRequest);
 
         ReservationRequest reservationRequest = new ReservationRequest("브라운", LocalDate.of(2023, 8, 5), 1L);
-        ReservationResponse reservation = reservationService.createReservation(reservationRequest);
+        ReservationResponse savedReservation = reservationService.createReservation(reservationRequest);
 
-        reservationService.deleteReservation(reservation.id());
+        reservationService.deleteReservation(savedReservation.id());
 
         List<ReservationResponse> reservations = reservationService.findAllReservations();
 

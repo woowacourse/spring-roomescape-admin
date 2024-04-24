@@ -1,6 +1,6 @@
 package roomescape.reservation.service;
 
-import static org.assertj.core.api.Assertions.*;
+import static org.assertj.core.api.Assertions.assertThat;
 
 import java.time.LocalTime;
 import java.util.List;
@@ -38,9 +38,10 @@ class ReservationTimeServiceTest {
     @Test
     void deleteReservationTime() {
         ReservationTimeRequest reservationTimeRequest = new ReservationTimeRequest(LocalTime.of(10, 1));
-        ReservationTimeResponse reservationTime = reservationTimeService.createReservationTime(reservationTimeRequest);
+        ReservationTimeResponse savedReservationTime = reservationTimeService.createReservationTime(
+                reservationTimeRequest);
 
-        reservationTimeService.deleteReservationTime(reservationTime.id());
+        reservationTimeService.deleteReservationTime(savedReservationTime.id());
         List<ReservationTimeResponse> reservationTimes = reservationTimeService.findAllReservationTimes();
         assertThat(reservationTimes).isEmpty();
     }

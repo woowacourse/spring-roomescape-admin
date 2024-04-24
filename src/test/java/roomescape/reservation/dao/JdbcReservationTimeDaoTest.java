@@ -1,6 +1,6 @@
 package roomescape.reservation.dao;
 
-import static org.assertj.core.api.Assertions.*;
+import static org.assertj.core.api.Assertions.assertThat;
 
 import java.time.LocalTime;
 import java.util.List;

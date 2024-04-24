@@ -3,7 +3,9 @@ package roomescape.service;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import roomescape.dao.ReservationDao;
+import roomescape.dao.ReservationTimeDao;
 import roomescape.domain.Reservation;
+import roomescape.domain.ReservationTime;
 import roomescape.dto.ReservationRequestDto;
 
 import java.util.List;
@@ -12,9 +14,11 @@ import java.util.List;
 public class ReservationService {
 
     private final ReservationDao reservationDao;
+    private final ReservationTimeDao reservationTimeDao;
 
-    public ReservationService(ReservationDao reservationDao) {
+    public ReservationService(ReservationDao reservationDao, ReservationTimeDao reservationTimeDao) {
         this.reservationDao = reservationDao;
+        this.reservationTimeDao = reservationTimeDao;
     }
 
     public List<Reservation> getAllReservations() {
@@ -24,14 +28,11 @@ public class ReservationService {
     @Transactional
     public Reservation insertReservation(ReservationRequestDto reservationRequestDto) {
         Long id = reservationDao.insert(reservationRequestDto.name(), reservationRequestDto.date(), reservationRequestDto.timeId());
-        return getReservation(id);
+        ReservationTime reservationTime = reservationTimeDao.findById(reservationRequestDto.timeId());
+        return new Reservation(id, reservationRequestDto.name(), reservationRequestDto.date(), reservationTime);
     }
 
     public void deleteReservation(Long id) {
         reservationDao.deleteById(id);
-    }
-
-    public Reservation getReservation(Long id) {
-        return reservationDao.findById(id);
     }
 }

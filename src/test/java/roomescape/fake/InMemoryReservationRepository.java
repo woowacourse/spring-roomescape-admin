@@ -1,14 +1,14 @@
-package roomescape.repository;
+package roomescape.fake;
 
 import org.springframework.stereotype.Repository;
 import roomescape.domain.Reservation;
+import roomescape.repository.ReservationRepository;
 
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 import java.util.concurrent.atomic.AtomicLong;
 
-@Repository
 public class InMemoryReservationRepository implements ReservationRepository {
     private final List<Reservation> reservations = Collections.synchronizedList(new ArrayList<>());
     private final AtomicLong index = new AtomicLong(0);
@@ -35,7 +35,7 @@ public class InMemoryReservationRepository implements ReservationRepository {
                 .ifPresent(reservations::remove);
     }
 
-    void deleteAll() {
+    public void deleteAll() {
         reservations.clear();
     }
 }

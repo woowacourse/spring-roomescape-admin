@@ -8,11 +8,11 @@ import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.context.annotation.Import;
 import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
+import roomescape.controller.request.ReservationRequest;
 import roomescape.domain.Reservation;
 import roomescape.domain.ReservationTime;
-import roomescape.controller.request.ReservationRequest;
-import roomescape.repository.InMemoryReservationRepository;
-import roomescape.repository.InMemoryReservationTimeRepository;
+import roomescape.fake.InMemoryReservationRepository;
+import roomescape.fake.InMemoryReservationTimeRepository;
 import roomescape.repository.ReservationRepository;
 import roomescape.repository.ReservationTimeRepository;
 

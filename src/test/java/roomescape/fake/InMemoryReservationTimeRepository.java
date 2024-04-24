@@ -1,7 +1,7 @@
-package roomescape.repository;
+package roomescape.fake;
 
-import org.springframework.stereotype.Repository;
 import roomescape.domain.ReservationTime;
+import roomescape.repository.ReservationTimeRepository;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -9,7 +9,6 @@ import java.util.List;
 import java.util.Optional;
 import java.util.concurrent.atomic.AtomicLong;
 
-@Repository
 public class InMemoryReservationTimeRepository implements ReservationTimeRepository {
     private final List<ReservationTime> reservationTimes = Collections.synchronizedList(new ArrayList<>());
     private final AtomicLong index = new AtomicLong(0);

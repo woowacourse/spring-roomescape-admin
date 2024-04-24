@@ -3,10 +3,10 @@ package roomescape.repository;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import roomescape.domain.Name;
 import roomescape.domain.Reservation;
+import roomescape.fake.InMemoryReservationRepository;
 
 import java.time.LocalDate;
 import java.time.LocalTime;
@@ -17,8 +17,7 @@ import static org.assertj.core.api.SoftAssertions.assertSoftly;
 
 @SpringBootTest
 class InMemoryReservationRepositoryTest {
-    @Autowired
-    private InMemoryReservationRepository reservationRepository;
+    private final InMemoryReservationRepository reservationRepository = new InMemoryReservationRepository();
 
     @BeforeEach
     void setUp() {

@@ -23,13 +23,14 @@ public class ReservationService {
                 .toList();
     }
 
-    public ReservationResponse findById(long id) {
-        Reservation reservation = reservationDao.findById(id);
-        return ReservationResponse.of(reservation);
+    public ReservationResponse save(ReservationRequest reservationRequest) {
+        long id = reservationDao.save(reservationRequest);
+        return findById(id);
     }
 
-    public long save(ReservationRequest reservationRequest) {
-        return reservationDao.save(reservationRequest);
+    private ReservationResponse findById(long id) {
+        Reservation reservation = reservationDao.findById(id);
+        return ReservationResponse.of(reservation);
     }
 
     public void deleteById(long id) {

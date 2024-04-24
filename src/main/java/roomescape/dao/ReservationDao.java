@@ -34,7 +34,7 @@ public class ReservationDao {
     }
 
     public List<Reservation> readAll() {
-        return jdbcTemplate.query("SELECT r.id as reservation_id, r.name, r.date, t.id as time_id, t.start_at as time_value " +
+        return jdbcTemplate.query("SELECT r.id as reservation_id, r.name, r.date, t.id as time_id, t.start_at " +
                         "FROM reservation as r " +
                         "inner join reservation_time as t on r.time_id = t.id",
                 getReservationRowMapper()
@@ -59,5 +59,13 @@ public class ReservationDao {
 
     public void delete(int id) {
         jdbcTemplate.update("delete from reservation where id = ?", id);
+    }
+
+    public List<Reservation> findAllByTimeId(int timeId) {
+        return jdbcTemplate.query("SELECT r.id as reservation_id, r.name, r.date, t.id as time_id, t.start_at " +
+                        "FROM reservation as r " +
+                        "inner join reservation_time as t on r.time_id = t.id " +
+                        "WHERE t.id = ?",
+                getReservationRowMapper(), timeId);
     }
 }

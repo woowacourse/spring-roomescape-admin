@@ -19,4 +19,12 @@ public class TimeResponse {
     public static TimeResponse from(Time time) {
         return new TimeResponse(time.getId(), time.getStartAt());
     }
+
+    public Long getId() {
+        return id;
+    }
+
+    public LocalTime getStartAt() {
+        return startAt;
+    }
 }

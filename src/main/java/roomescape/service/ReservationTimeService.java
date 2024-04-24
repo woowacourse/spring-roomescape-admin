@@ -3,6 +3,7 @@ package roomescape.service;
 import org.springframework.stereotype.Service;
 import roomescape.dto.ReservationTimeCreateRequest;
 import roomescape.domain.ReservationTime;
+import roomescape.exception.ResourceNotFoundException;
 import roomescape.repository.reservationTime.ReservationTimeRepository;
 
 import java.util.List;
@@ -25,7 +26,7 @@ public class ReservationTimeService {
 
     public ReservationTime readReservationTime(Long id) {
         return reservationTimeRepository.findById(id)
-                .orElseThrow(() -> new IllegalArgumentException(RESERVATION_TIME_NOT_FOUND));
+                .orElseThrow(() -> new ResourceNotFoundException(RESERVATION_TIME_NOT_FOUND));
     }
 
     public List<ReservationTime> readReservationTimes() {

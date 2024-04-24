@@ -1,6 +1,7 @@
 package roomescape.repository;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import static org.junit.jupiter.api.Assertions.assertAll;
 
 import org.junit.jupiter.api.DisplayName;
@@ -14,6 +15,7 @@ import roomescape.domain.ReservationTime;
 
 import java.time.LocalTime;
 import java.util.List;
+import java.util.Optional;
 
 @JdbcTest
 @DirtiesContext(classMode = DirtiesContext.ClassMode.BEFORE_EACH_TEST_METHOD)
@@ -54,12 +56,20 @@ class ReservationTimeJdbcRepositoryTest {
     void findReservationTimeById() {
         createInitialReservationTime();
 
-        final ReservationTime actual = reservationTimeRepository.findById(1L);
+        final ReservationTime actual = reservationTimeRepository.findById(1L).get();
 
         assertAll(
                 () -> assertThat(actual.getId()).isEqualTo(1L),
                 () -> assertThat(actual.getStartAt()).isEqualTo("15:40")
         );
+    }
+
+    @Test
+    @DisplayName("id에 해당하는 예약 시간 정보가 없을 경우 빈 옵셔널을 반환한다.")
+    void returnEmptyOptionalIfNotFindReservationTime() {
+        final Optional<ReservationTime> actual = reservationTimeRepository.findById(2L);
+
+        assertThat(actual).isEmpty();
     }
 
     @Test

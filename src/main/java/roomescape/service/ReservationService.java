@@ -23,7 +23,8 @@ public class ReservationService {
     }
 
     public ReservationResponse createReservation(final ReservationCreateRequest request) {
-        final ReservationTime reservationTime = reservationTimeRepository.findById(request.timeId());
+        final ReservationTime reservationTime = reservationTimeRepository.findById(request.timeId())
+                .orElseThrow(() -> new IllegalArgumentException(request.timeId() + "에 해당하는 예약 시간 정보가 없습니다."));
         final Reservation reservation = request.toReservation(reservationTime);
         final Long id = reservationRepository.save(reservation);
         return new ReservationResponse(id, reservation.getName(), reservation.getDate(), reservationTime);

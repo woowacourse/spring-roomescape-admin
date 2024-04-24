@@ -1,6 +1,7 @@
 package roomescape.service;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import static org.junit.jupiter.api.Assertions.assertAll;
 
 import org.junit.jupiter.api.DisplayName;
@@ -49,6 +50,16 @@ class ReservationServiceTest {
     }
 
     @Test
+    @DisplayName("id에 해당하는 예약 시간 정보가 없는 경우 예외가 발생한다.")
+    void throwExceptionIfNotFindReservationTime() {
+        final ReservationCreateRequest request = new ReservationCreateRequest(
+                "냥인", "2024-04-21", 1L);
+
+        assertThatThrownBy(() -> reservationService.createReservation(request))
+                .isInstanceOf(IllegalArgumentException.class);
+    }
+
+    @Test
     @DisplayName("예약 목록을 조회한다.")
     void readAllReservations() {
         getIdAfterCreateReservation();
@@ -57,7 +68,7 @@ class ReservationServiceTest {
 
         assertThat(actual).hasSize(1);
     }
-    
+
     @Test
     @DisplayName("예약을 취소한다.")
     void deleteReservation() {
@@ -73,7 +84,7 @@ class ReservationServiceTest {
         reservationTimeRepository.save(new ReservationTime(LocalTime.parse("10:00")));
         final ReservationCreateRequest request = new ReservationCreateRequest(
                 "냥인", "2024-04-21", 1L);
-        final ReservationTime reservationTime = reservationTimeRepository.findById(request.timeId());
+        final ReservationTime reservationTime = reservationTimeRepository.findById(request.timeId()).get();
         final Reservation reservation = request.toReservation(reservationTime);
         return reservationRepository.save(reservation);
     }

@@ -34,7 +34,7 @@ class ReservationJdbcRepositoryTest {
     void saveReservation() {
         createInitialReservationTime();
         final ReservationCreateRequest request = new ReservationCreateRequest("냥인", "2024-04-23", 1L);
-        final ReservationTime reservationTime = reservationTimeRepository.findById(1L);
+        final ReservationTime reservationTime = reservationTimeRepository.findById(1L).get();
         final Reservation reservation = request.toReservation(reservationTime);
 
         final Long actual = reservationRepository.save(reservation);

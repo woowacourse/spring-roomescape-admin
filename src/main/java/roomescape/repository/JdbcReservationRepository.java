@@ -25,8 +25,8 @@ public class JdbcReservationRepository implements ReservationRepository {
             + "FROM reservation as r \n"
             + "inner join reservation_time as t \n"
             + "on r.time_id = t.id";
-    private static final String DELETE_SQL = "DELETE FROM reservation";
-    private static final String WHERE_ID = " WHERE id = ?";
+    private static final String DELETE_SQL = "DELETE FROM reservation as r";
+    private static final String WHERE_ID = " WHERE r.id = ?";
 
     private final JdbcTemplate jdbcTemplate;
 

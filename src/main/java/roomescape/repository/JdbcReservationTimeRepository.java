@@ -16,7 +16,7 @@ public class JdbcReservationTimeRepository implements ReservationTimeRepository 
     private static final String INSERT_SQL = "INSERT INTO reservation_time(start_at) VALUES(?)";
     private static final String SELECT_SQL = "SELECT * FROM reservation_time";
     private static final String DELETE_SQL = "DELETE FROM reservation_time";
-    private static final String WHERE_ID = " WHERE = ?";
+    private static final String WHERE_ID = " WHERE id = ?";
 
     private final JdbcTemplate jdbcTemplate;
 

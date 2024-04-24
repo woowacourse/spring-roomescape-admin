@@ -5,6 +5,7 @@ import roomescape.dto.ReservationTimeDto;
 import roomescape.entity.ReservationTime;
 import roomescape.repository.ReservationTimeRepository;
 
+import java.time.LocalTime;
 import java.util.List;
 
 @Service
@@ -15,8 +16,10 @@ public class ReservationTimeService {
         this.reservationTimeRepository = reservationTimeRepository;
     }
 
-    public long createTime(ReservationTimeDto reservationTimeDto) {
-        return reservationTimeRepository.create(reservationTimeDto);
+    public ReservationTime createTime(ReservationTimeDto reservationTimeDto) {
+        long timeId = reservationTimeRepository.create(reservationTimeDto);
+
+        return makeTimeObject(reservationTimeDto, timeId);
     }
 
     public List<ReservationTime> readAllTime() {
@@ -25,5 +28,10 @@ public class ReservationTimeService {
 
     public void deleteTime(long id) {
         reservationTimeRepository.delete(id);
+    }
+
+    private ReservationTime makeTimeObject(ReservationTimeDto reservationTimeDto, long timeId) {
+        LocalTime startAt = reservationTimeDto.startAt();
+        return new ReservationTime(timeId, startAt);
     }
 }

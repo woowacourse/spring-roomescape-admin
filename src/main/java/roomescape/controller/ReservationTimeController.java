@@ -7,7 +7,6 @@ import roomescape.dto.ReservationTimeDto;
 import roomescape.entity.ReservationTime;
 import roomescape.service.ReservationTimeService;
 
-import java.time.LocalTime;
 import java.util.List;
 
 @RestController
@@ -20,8 +19,7 @@ public class ReservationTimeController {
 
     @PostMapping("/times")
     public ResponseEntity<ReservationTime> createTime(@RequestBody ReservationTimeDto reservationTimeDto) {
-        long timeId = reservationTimeService.createTime(reservationTimeDto);
-        ReservationTime reservationTime = makeTimeObject(reservationTimeDto, timeId);
+        ReservationTime reservationTime = reservationTimeService.createTime(reservationTimeDto);
 
         return ResponseEntity.status(HttpStatus.CREATED).body(reservationTime);
     }
@@ -35,10 +33,5 @@ public class ReservationTimeController {
     public ResponseEntity<Void> deleteTime(@PathVariable("id") long timeId) {
         reservationTimeService.deleteTime(timeId);
         return ResponseEntity.noContent().build();
-    }
-
-    private ReservationTime makeTimeObject(ReservationTimeDto reservationTimeDto, long timeId) {
-        LocalTime startAt = reservationTimeDto.startAt();
-        return new ReservationTime(timeId, startAt);
     }
 }

@@ -25,7 +25,15 @@ public class ReservationDao {
                 request.timeId());
     }
 
-    public Reservation read(int id) {
+    public List<Reservation> findAllByTimeId(int timeId) {
+        return jdbcTemplate.query("SELECT r.id as reservation_id, r.name, r.date, t.id as time_id, t.start_at " +
+                        "FROM reservation as r " +
+                        "inner join reservation_time as t on r.time_id = t.id " +
+                        "WHERE t.id = ?",
+                getReservationRowMapper(), timeId);
+    }
+
+    public Reservation findById(int id) {
         return jdbcTemplate.queryForObject("SELECT r.id, r.name, r.date, t.id AS time_id, t.start_at " +
                         "FROM reservation r " +
                         "JOIN reservation_time t ON r.time_id = t.id " +
@@ -33,7 +41,7 @@ public class ReservationDao {
                 getReservationRowMapper(), id);
     }
 
-    public List<Reservation> readAll() {
+    public List<Reservation> findAll() {
         return jdbcTemplate.query("SELECT r.id as reservation_id, r.name, r.date, t.id as time_id, t.start_at " +
                         "FROM reservation as r " +
                         "inner join reservation_time as t on r.time_id = t.id",
@@ -59,13 +67,5 @@ public class ReservationDao {
 
     public void delete(int id) {
         jdbcTemplate.update("delete from reservation where id = ?", id);
-    }
-
-    public List<Reservation> findAllByTimeId(int timeId) {
-        return jdbcTemplate.query("SELECT r.id as reservation_id, r.name, r.date, t.id as time_id, t.start_at " +
-                        "FROM reservation as r " +
-                        "inner join reservation_time as t on r.time_id = t.id " +
-                        "WHERE t.id = ?",
-                getReservationRowMapper(), timeId);
     }
 }

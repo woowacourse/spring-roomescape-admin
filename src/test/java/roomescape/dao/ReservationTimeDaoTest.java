@@ -27,13 +27,13 @@ class ReservationTimeDaoTest {
 
         reservationTimeDao.create(createReservationTimeRequest);
 
-        List<ReservationTime> reservationTimes = reservationTimeDao.readAll();
+        List<ReservationTime> reservationTimes = reservationTimeDao.findAll();
         Assertions.assertThat(reservationTimes).hasSize(1);
     }
 
     @Test
     void 예약시간_목록을_조회한다() {
-        List<ReservationTime> reservationTimes = reservationTimeDao.readAll();
+        List<ReservationTime> reservationTimes = reservationTimeDao.findAll();
 
         Assertions.assertThat(reservationTimes).hasSize(0);
     }
@@ -45,7 +45,7 @@ class ReservationTimeDaoTest {
 
         reservationTimeDao.delete(2);
 
-        List<ReservationTime> reservationTimes = reservationTimeDao.readAll();
+        List<ReservationTime> reservationTimes = reservationTimeDao.findAll();
         Assertions.assertThat(reservationTimes).hasSize(0);
     }
 }

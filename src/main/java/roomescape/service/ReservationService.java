@@ -18,12 +18,12 @@ public class ReservationService {
     }
 
     public List<Reservation> readReservations() {
-        return reservationDao.readAll();
+        return reservationDao.findAll();
     }
 
     public CreateReservationResponse createReservation(CreateReservationRequest request) {
         int createdId = reservationDao.create(request);
-        Reservation reservation = reservationDao.read(createdId);
+        Reservation reservation = reservationDao.findById(createdId);
         return CreateReservationResponse.from(reservation);
     }
 

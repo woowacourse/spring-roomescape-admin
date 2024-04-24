@@ -21,7 +21,7 @@ public class ReservationTimeDao {
                 request.startAt());
     }
 
-    public List<ReservationTime> readAll() {
+    public List<ReservationTime> findAll() {
         return jdbcTemplate.query("select * from reservation_time",
                 (resultSet, rowNum) -> new ReservationTime(
                         resultSet.getInt("id"),

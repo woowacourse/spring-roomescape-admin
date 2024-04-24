@@ -23,7 +23,7 @@ public class ReservationTimeService {
     }
 
     public List<ReservationTime> readAll() {
-        return reservationTimeDao.readAll();
+        return reservationTimeDao.findAll();
     }
 
     public ReservationTime createTime(CreateReservationTimeRequest request) {

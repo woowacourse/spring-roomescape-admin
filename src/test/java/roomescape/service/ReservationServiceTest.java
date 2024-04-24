@@ -3,7 +3,7 @@ package roomescape.service;
 import static org.assertj.core.api.Assertions.assertThatCode;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import static roomescape.fixture.DateTimeFixture.DATE_2024_04_20;
-import static roomescape.fixture.DateTimeFixture.TIME_03_00;
+import static roomescape.fixture.DateTimeFixture.TIME_03_00_WITH_ID;
 
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
@@ -28,7 +28,7 @@ class ReservationServiceTest {
 
     @BeforeEach
     void setUp() {
-        time_03_00 = gameTimeService.save(TIME_03_00);
+        time_03_00 = gameTimeService.save(TIME_03_00_WITH_ID);
     }
 
     @DisplayName("시간이 겹치는 예약이 존재하지 않는 경우 예약에 성공한다")

@@ -56,12 +56,10 @@ public class H2ReservationRepository implements ReservationRepository {
                 .addValue("time_id", reservation.getTime().getId());
         Long id = jdbcInsert.executeAndReturnKey(reservationParameter).longValue();
 
-        Reservation findReservation = getFindReservation(id);
-
-        return findReservation;
+        return findReservation(id);
     }
 
-    private Reservation getFindReservation(Long id) {
+    private Reservation findReservation(Long id) {
         String sql = """
                 SELECT
                     r.id as reservation_id,

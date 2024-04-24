@@ -74,12 +74,10 @@ public class ReservationRepository {
                 "    select 1 " +
                 "    from reservation as r " +
                 "    inner join reservation_time as t" +
-                "    where ? between (r.date || ' ' || t.start_at) and dateadd('HOUR', ?, (r.date || ' ' || t.start_at)) "
-                +
-                "    or ? between (r.date || ' ' || t.start_at) and dateadd('HOUR', ?, (r.date || ' ' || t.start_at)) "
-                +
+                "    where ? between (r.date||' '||t.start_at) and dateadd('HOUR', ?, (r.date||' '||t.start_at)) " +
+                "    or ? between (r.date||' '||t.start_at) and dateadd('HOUR', ?, (r.date||' ' ||t.start_at)) " +
                 ") as exists_overlap;";
-
+        
         boolean conflict = jdbcTemplate.queryForObject(sql, Boolean.class, endDateTime, Reservation.TIME_DURATION,
                 startDateTime, Reservation.TIME_DURATION);
         return conflict;

@@ -1,6 +1,7 @@
 package roomescape.view;
 
 import java.time.LocalTime;
+import java.time.format.DateTimeParseException;
 import java.util.List;
 import java.util.Scanner;
 import java.util.regex.Pattern;
@@ -15,7 +16,11 @@ public class ReservationTimeView {
         String rawReservationTime = SCANNER.nextLine();
         TIME_PATTERN.matcher(rawReservationTime);
 
-        return LocalTime.parse(rawReservationTime);
+        try {
+            return LocalTime.parse(rawReservationTime);
+        } catch (DateTimeParseException exception) {
+            throw new IllegalArgumentException("[ERROR] 방탈출 예약 가능 시간을 올바르게 입력해주세요.");
+        }
     }
 
     public void printSuccessfullyAdded() {

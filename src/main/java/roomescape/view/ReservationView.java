@@ -1,6 +1,7 @@
 package roomescape.view;
 
 import java.time.LocalDate;
+import java.time.format.DateTimeParseException;
 import java.util.List;
 import java.util.Scanner;
 import roomescape.dto.ReservationResponse;
@@ -15,7 +16,11 @@ public class ReservationView {
 
     public LocalDate readDate() {
         System.out.println("[INFO] 예약할 날짜를 선택해주세요. (ex. 2023-01-01)");
-        return LocalDate.parse(scanner.nextLine());
+        try {
+            return LocalDate.parse(scanner.nextLine());
+        } catch (DateTimeParseException exception) {
+            throw new IllegalArgumentException("[ERROR] 날짜를 올바르게 입력해주세요.");
+        }
     }
 
     public void printSuccessfullyAdded() {

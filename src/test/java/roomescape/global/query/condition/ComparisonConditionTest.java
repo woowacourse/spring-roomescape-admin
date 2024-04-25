@@ -7,8 +7,10 @@ import org.junit.jupiter.api.Test;
 class ComparisonConditionTest {
     @Test
     void 동등_연산자_조건을_생성한다() {
-        String condition = ComparisonCondition.equalTo("id", 1).build();
+        StringBuilder builder = new StringBuilder();
+        ComparisonCondition condition = ComparisonCondition.equalTo("id", 1);
+        condition.assemble(builder);
 
-        assertThat(condition).isEqualTo("id = '1'");
+        assertThat(builder.toString()).isEqualTo("id = '1'");
     }
 }

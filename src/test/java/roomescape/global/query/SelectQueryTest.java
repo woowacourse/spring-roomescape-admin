@@ -62,4 +62,16 @@ class SelectQueryTest {
         assertThat(selectQuery.build())
                 .isEqualTo("SELECT u.id, u.name, o.price FROM users AS u INNER JOIN orders AS o ON u.id = o.user_id");
     }
+
+    @Test
+    void WHERE_절과_JOIN_절을_추가한다() {
+        SelectQuery selectQuery = new SelectQuery("users")
+                .alias("u")
+                .addAllColumns()
+                .join("INNER", "orders", JoinCondition.on("u.id", "o.user_id"), "o")
+                .where(ComparisonCondition.equalTo("u.id", 1));
+
+        assertThat(selectQuery.build())
+                .isEqualTo("SELECT * FROM users AS u INNER JOIN orders AS o ON u.id = o.user_id WHERE u.id = '1'");
+    }
 }

@@ -1,6 +1,8 @@
 package roomescape.global.query.condition;
 
-public class JoinCondition {
+import roomescape.global.query.Assemblable;
+
+public class JoinCondition implements Assemblable {
     private final ComparisonCondition condition;
 
     private JoinCondition(ComparisonCondition condition) {
@@ -11,7 +13,10 @@ public class JoinCondition {
         return new JoinCondition(ComparisonCondition.equalTo(column, value));
     }
 
-    public String build() {
-        return condition.build().replace("'", "");
+    @Override
+    public void assemble(StringBuilder builder) {
+        builder.append(" ON ");
+        condition.useSingleQuotes(false);
+        condition.assemble(builder);
     }
 }

@@ -8,7 +8,7 @@ import roomescape.global.query.condition.ComparisonCondition;
 import roomescape.global.query.condition.JoinCondition;
 import roomescape.global.query.condition.LogicalCondition;
 
-public class SelectQuery {
+public class SelectQuery extends Query {
     private final String table;
     private final List<String> columns;
     private final LogicalCondition condition;
@@ -50,36 +50,31 @@ public class SelectQuery {
         return this;
     }
 
-    public String build() {
-        return "SELECT " + buildColumnsAndTable() + buildJoin() + buildCondition();
-    }
-
-    private String buildColumnsAndTable() {
+    @Override
+    public void assemble(StringBuilder builder) {
         if (columns.isEmpty()) {
             throw new IllegalArgumentException("지정된 컬럼이 없습니다.");
         }
+        builder.append("SELECT ")
+                .append(String.join(", ", columns))
+                .append(" FROM ")
+                .append(table);
         if (alias != null) {
-            return String.join(", ", columns) + " FROM " + table + " AS " + alias;
+            builder.append(" AS ").append(alias);
         }
-        return String.join(", ", columns) + " FROM " + table;
-    }
-
-    private String buildCondition() {
+        join.assemble(builder);
         if (!condition.isEmpty()) {
-            return " WHERE " + condition.build();
+            builder.append(" WHERE ");
+            condition.assemble(builder);
         }
-        return "";
     }
 
-    private String buildJoin() {
-        if (!join.isEmpty()) {
-            return join.build();
-        }
-        return "";
-    }
-
-    private static class Join {
-        private static final Join EMPTY = new Join("", "", null); // todo overriding
+    private static class Join implements Assemblable {
+        private static final Join EMPTY = new Join("", "", null) {
+            @Override
+            public void assemble(StringBuilder builder) {
+            }
+        };
 
         private final String joinType;
         private final String table;
@@ -97,15 +92,15 @@ public class SelectQuery {
             this.alias = alias;
         }
 
-        public boolean isEmpty() { // todo 삭제
-            return this == EMPTY;
-        }
-
-        public String build() {
+        @Override
+        public void assemble(StringBuilder builder) {
+            builder.append(" ").append(joinType)
+                    .append(" JOIN ")
+                    .append(table);
             if (alias != null) {
-                return " " + joinType + " JOIN " + table + " AS " + alias + " ON " + condition.build();
+                builder.append(" AS ").append(alias);
             }
-            return " " + joinType + " JOIN " + table + " ON " + condition.build();
+            condition.assemble(builder);
         }
     }
 }

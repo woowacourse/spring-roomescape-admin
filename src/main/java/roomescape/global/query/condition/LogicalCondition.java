@@ -1,9 +1,11 @@
 package roomescape.global.query.condition;
 
 import java.util.ArrayList;
+import java.util.Iterator;
 import java.util.List;
+import roomescape.global.query.Assemblable;
 
-public class LogicalCondition {
+public class LogicalCondition implements Assemblable {
     private final String operator;
     private final List<ComparisonCondition> conditions;
 
@@ -24,13 +26,18 @@ public class LogicalCondition {
         return conditions.isEmpty();
     }
 
-    public String build() {
-        return String.join(operator, buildConditions());
+    @Override
+    public void assemble(StringBuilder builder) {
+        Iterator<ComparisonCondition> conditionIterator = conditions.iterator();
+        while (conditionIterator.hasNext()) {
+            conditionIterator.next().assemble(builder);
+            appendOperator(builder, conditionIterator.hasNext());
+        }
     }
 
-    private List<String> buildConditions() {
-        return conditions.stream()
-                .map(ComparisonCondition::build)
-                .toList();
+    private void appendOperator(StringBuilder builder, boolean hasNext) {
+        if (hasNext) {
+            builder.append(operator);
+        }
     }
 }

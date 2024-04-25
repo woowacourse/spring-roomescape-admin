@@ -36,8 +36,8 @@ public class ReservationDao {
 
     public List<Reservation> findAll() {
         String query = "SELECT r.id, r.name, r.date, t.id AS time_id, t.start_at "
-                + "FROM reservation AS r "
-                + "INNER JOIN reservation_time AS t "
+                + "FROM RESERVATION AS r "
+                + "INNER JOIN RESERVATION_TIME AS t "
                 + "ON r.time_id = t.id";
         return jdbcTemplate.query(query, reservationRowMapper);
     }
@@ -53,13 +53,13 @@ public class ReservationDao {
 
     private Reservation findById(long id) {
         String query = "SELECT r.id, r.name, r.date, t.id AS time_id, t.start_at "
-                + "FROM reservation AS r "
-                + "INNER JOIN reservation_time AS t "
+                + "FROM RESERVATION AS r "
+                + "INNER JOIN RESERVATION_TIME AS t "
                 + "ON r.id = ?";
         return jdbcTemplate.queryForObject(query, reservationRowMapper, id);
     }
 
     public void deleteById(long id) {
-        jdbcTemplate.update("DELETE FROM reservation WHERE id = ?", id);
+        jdbcTemplate.update("DELETE FROM RESERVATION WHERE ID = ?", id);
     }
 }

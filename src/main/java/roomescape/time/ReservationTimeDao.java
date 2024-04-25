@@ -28,12 +28,12 @@ public class ReservationTimeDao {
     }
 
     public List<ReservationTime> findAll() {
-        return jdbcTemplate.query("SELECT * FROM reservation_time", reservationTimeRowMapper);
+        return jdbcTemplate.query("SELECT * FROM RESERVATION_TIME", reservationTimeRowMapper);
     }
 
     public ReservationTime findById(long id) {
         return jdbcTemplate.queryForObject(
-                "SELECT * FROM reservation_time WHERE id = ?", reservationTimeRowMapper, id
+                "SELECT * FROM RESERVATION_TIME WHERE ID = ?", reservationTimeRowMapper, id
         );
     }
 
@@ -45,6 +45,6 @@ public class ReservationTimeDao {
     }
 
     public void delete(long id) {
-        jdbcTemplate.update("DELETE FROM reservation_time WHERE id = ?", id);
+        jdbcTemplate.update("DELETE FROM RESERVATION_TIME WHERE ID = ?", id);
     }
 }

@@ -23,8 +23,8 @@ public class ReservationController {
     }
 
     @GetMapping("/reservations")
-    public List<Reservation> getReservationList() {
-        return reservationService.findAllReservation();
+    public ResponseEntity<List<Reservation>> getReservationList() {
+        return ResponseEntity.ok(reservationService.findAllReservation());
     }
 
     @PostMapping("/reservations")

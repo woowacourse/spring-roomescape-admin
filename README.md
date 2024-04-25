@@ -32,6 +32,16 @@
 - 예약 추가/취소 API 처리 로직에서 데이터베이스를 활용한다.
   - [x] 기존에 사용하던 List 및 AtomicLong 을 제거한다.
 
+## 7단계 - 시간 관리 기능
+
+- [ ] 예약 시간 테이블 스키마 정의 
+- [ ] `admin/time` 요청 시 예약 시간 관리 페이지를 응답한다.
+  - `templates/admin/time.html`
+- API 명세를 따라 시간 관리 API를 구현
+  - [ ] `GET /times` 요청 하면 `시간 조회 API` 를 호출한다. 
+  - [ ] 추가 버튼을 누르면 `시간 추가 API`를 호출한다.
+  - [ ] 삭제 버튼을 누르면 `시간 삭제 API`를 호출한다.
+
 # API 명세
 
 ## 예약 목록 조회 API
@@ -106,6 +116,67 @@ Response
 ```
 HTTP/1.1 200
 ```
+
+## 시간 추가 API
+
+Request
+
+```
+POST /times HTTP/1.1
+content-type: application/json
+
+{ 
+  "startAt": "10:00" 
+}
+```
+
+Response
+
+```
+HTTP/1.1 200
+Content-Type: application/json
+
+{
+  "id": 1,
+  "startAt": "10:00"
+}
+```
+
+## 시간 조회 API
+
+Request
+```
+GET /times HTTP/1.1
+```
+
+Response
+
+```
+HTTP/1.1 200
+Content-Type: application/json
+
+[
+  {
+    "id": 1,
+    "startAt": "10:00"
+  }
+]
+```
+
+## 시간 삭제 API
+
+Request
+
+```
+DELETE /times/1 HTTP/1.1
+```
+
+Response
+
+```
+HTTP/1.1 200
+```
+
 
 # 팀 컨벤션
 

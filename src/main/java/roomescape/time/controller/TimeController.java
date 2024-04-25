@@ -1,15 +1,10 @@
-package roomescape.reservation;
+package roomescape.time.controller;
 
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
 
 @Controller
-public class ReservationController {
-
-    @GetMapping("/reservation")
-    public String home() {
-        return "admin/reservation-legacy";
-    }
+public class TimeController {
 
     @GetMapping("/time")
     public String time() {

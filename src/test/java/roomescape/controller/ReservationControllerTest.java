@@ -20,8 +20,9 @@ import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
 import roomescape.controller.dto.ReservationRequest;
+import roomescape.controller.dto.ReservationResponse;
 import roomescape.domain.Reservation;
-import roomescape.repository.ReservationRepository;
+import roomescape.service.ReservationService;
 
 @WebMvcTest(ReservationController.class)
 class ReservationControllerTest {
@@ -31,13 +32,13 @@ class ReservationControllerTest {
     private MockMvc mockMvc;
 
     @MockBean
-    private ReservationRepository reservationRepository;
+    private ReservationService reservationService;
 
     @Test
     @DisplayName("예약 정보를 잘 저장하는지 확인한다.")
     void saveReservation() throws Exception {
-        Mockito.when(reservationRepository.saveReservation(any()))
-                .thenReturn(reservation);
+        Mockito.when(reservationService.addReservation(any()))
+                .thenReturn(toResponse(reservation));
 
         String content = new ObjectMapper()
                 .registerModule(new JavaTimeModule())
@@ -56,8 +57,8 @@ class ReservationControllerTest {
     @Test
     @DisplayName("예약 정보를 잘 불러오는지 확인한다.")
     void findAllReservations() throws Exception {
-        Mockito.when(reservationRepository.findAllReservation())
-                .thenReturn(List.of(reservation));
+        Mockito.when(reservationService.findReservations())
+                .thenReturn(List.of(toResponse(reservation)));
 
         mockMvc.perform(get("/reservations"))
                 .andDo(print())
@@ -70,5 +71,10 @@ class ReservationControllerTest {
         mockMvc.perform(delete("/reservations/1"))
                 .andDo(print())
                 .andExpect(status().isOk());
+    }
+
+    private ReservationResponse toResponse(Reservation reservation) {
+        return new ReservationResponse(reservation.getId(),
+                reservation.getName(), reservation.getDate(), reservation.getTime());
     }
 }

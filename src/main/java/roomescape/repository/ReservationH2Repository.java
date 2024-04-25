@@ -1,11 +1,13 @@
 package roomescape.repository;
 
+import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.namedparam.MapSqlParameterSource;
 import org.springframework.jdbc.core.namedparam.SqlParameterSource;
 import org.springframework.jdbc.core.simple.SimpleJdbcInsert;
 import org.springframework.stereotype.Repository;
 import roomescape.entity.Reservation;
+import roomescape.entity.ReservationTime;
 
 import javax.sql.DataSource;
 import java.sql.ResultSet;
@@ -20,14 +22,12 @@ public class ReservationH2Repository implements ReservationRepository {
 
     private final JdbcTemplate jdbcTemplate;
     private final SimpleJdbcInsert simpleJdbcInsert;
-    private final ReservationTimeRepository timeRepository;
 
-    public ReservationH2Repository(JdbcTemplate jdbcTemplate, DataSource dataSource, ReservationTimeRepository timeRepository) {
+    public ReservationH2Repository(JdbcTemplate jdbcTemplate, DataSource dataSource) {
         this.jdbcTemplate = jdbcTemplate;
         this.simpleJdbcInsert = new SimpleJdbcInsert(dataSource)
                 .withTableName("reservation")
                 .usingGeneratedKeyColumns("id");
-        this.timeRepository = timeRepository;
     }
 
     private Reservation mapRowReservation(ResultSet rs, int rowNum) throws SQLException {
@@ -35,7 +35,7 @@ public class ReservationH2Repository implements ReservationRepository {
                 rs.getLong("id"),
                 rs.getString("name"),
                 LocalDate.parse(rs.getString("date")),
-                timeRepository.findById(rs.getLong("time_id")).get()
+                new ReservationTime(rs.getLong("time_id"), null)
         );
     }
 
@@ -49,7 +49,12 @@ public class ReservationH2Repository implements ReservationRepository {
     @Override
     public Optional<Reservation> findById(Long id) {
         String sql = "SELECT * FROM reservation WHERE id = ?";
-        return Optional.ofNullable(jdbcTemplate.queryForObject(sql, this::mapRowReservation, id));
+
+        try {
+            return Optional.ofNullable(jdbcTemplate.queryForObject(sql, this::mapRowReservation, id));
+        } catch (EmptyResultDataAccessException e) {
+            return Optional.empty();
+        }
     }
 
     @Override
@@ -60,7 +65,8 @@ public class ReservationH2Repository implements ReservationRepository {
                 .addValue("time_id", reservation.time().id());
         Long id = simpleJdbcInsert.executeAndReturnKey(params).longValue();
 
-        return reservation.assign(id, timeRepository.findById(reservation.time().id()).get());
+        ReservationTime time = new ReservationTime(reservation.time().id(), null);
+        return reservation.assign(id, time);
     }
 
     @Override

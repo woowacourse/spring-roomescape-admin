@@ -6,6 +6,7 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.jdbc.JdbcTest;
 import org.springframework.jdbc.core.JdbcTemplate;
+import org.springframework.test.context.jdbc.Sql;
 import roomescape.entity.Reservation;
 import roomescape.entity.ReservationTime;
 
@@ -17,6 +18,8 @@ import java.util.List;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
+@Sql(scripts = {"/drop.sql", "/schema.sql"},
+        executionPhase = Sql.ExecutionPhase.AFTER_TEST_METHOD)
 @JdbcTest
 class ReservationRepositoryTest {
 
@@ -26,10 +29,7 @@ class ReservationRepositoryTest {
     @Autowired
     ReservationRepositoryTest(JdbcTemplate jdbcTemplate, DataSource dataSource) {
         this.jdbcTemplate = jdbcTemplate;
-        this.reservationRepository = new ReservationH2Repository(
-                jdbcTemplate,
-                dataSource,
-                new ReservationTimeH2Repository(jdbcTemplate, dataSource));
+        this.reservationRepository = new ReservationH2Repository(jdbcTemplate, dataSource);
     }
 
     @BeforeEach
@@ -39,11 +39,11 @@ class ReservationRepositoryTest {
     }
 
     void setUpReservationTimes() {
-        String sql = "INSERT INTO reservation_time (id, start_at) VALUES (?, ?)";
+        String sql = "INSERT INTO reservation_time (start_at) VALUES (?)";
         List<ReservationTime> times = List.of(
-                new ReservationTime(11L, LocalTime.of(10, 15)),
-                new ReservationTime(12L, LocalTime.of(11, 20)),
-                new ReservationTime(13L, LocalTime.of(12, 25))
+                new ReservationTime(null, LocalTime.of(10, 15)),
+                new ReservationTime(null, LocalTime.of(11, 20)),
+                new ReservationTime(null, LocalTime.of(12, 25))
         );
         List<Object[]> batchArgs = times.stream().map(time -> new Object[]{
                 time.id(),
@@ -53,22 +53,22 @@ class ReservationRepositoryTest {
     }
 
     void setUpReservations() {
-        String sql = "INSERT INTO reservation(id, name, date, time_id) VALUES (?, ?, ?, ?)";
+        String sql = "INSERT INTO reservation(NAME, DATE, TIME_ID) VALUES (?, ?, ?)";
         List<Reservation> reservations = List.of(
                 new Reservation(
-                        11L,
+                        null,
                         "seyang",
                         LocalDate.of(2024, 1, 20),
                         new ReservationTime(11L, null)
                 ),
                 new Reservation(
-                        12L,
+                        null,
                         "hana",
                         LocalDate.of(2024, 2, 19),
                         new ReservationTime(12L, null)
                 ),
                 new Reservation(
-                        13L,
+                        null,
                         "mura",
                         LocalDate.of(2024, 3, 18),
                         new ReservationTime(13L, null)

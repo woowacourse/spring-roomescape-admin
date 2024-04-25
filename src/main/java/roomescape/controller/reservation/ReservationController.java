@@ -9,9 +9,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
-import roomescape.entity.Reservation;
-import roomescape.repository.ReservationRepository;
-import roomescape.service.ReservationMapper;
+import roomescape.service.ReservationService;
 
 import java.net.URI;
 import java.util.List;
@@ -20,27 +18,21 @@ import java.util.List;
 @RequestMapping("/reservations")
 public class ReservationController {
 
-    private final ReservationRepository reservationRepository;
-    private final ReservationMapper reservationMapper;
+    private final ReservationService reservationService;
 
-    public ReservationController(ReservationRepository reservationRepository, ReservationMapper reservationMapper) {
-        this.reservationRepository = reservationRepository;
-        this.reservationMapper = reservationMapper;
+    public ReservationController(ReservationService reservationService) {
+        this.reservationService = reservationService;
     }
 
     @GetMapping
     public ResponseEntity<List<ReservationResponse>> getReservations() {
-        List<ReservationResponse> responses = reservationRepository.findAll().stream()
-                .map(reservationMapper::map)
-                .toList();
-
-        return ResponseEntity.ok(responses);
+        List<ReservationResponse> reservations = reservationService.getReservations();
+        return ResponseEntity.ok(reservations);
     }
 
     @PostMapping
     public ResponseEntity<ReservationResponse> addReservation(@RequestBody final ReservationRequest request) {
-        Reservation savedReservation = reservationRepository.save(reservationMapper.map(request));
-        ReservationResponse response = reservationMapper.map(savedReservation);
+        ReservationResponse response = reservationService.addReservation(request);
 
         return ResponseEntity
                 .status(HttpStatus.OK)
@@ -50,7 +42,8 @@ public class ReservationController {
 
     @DeleteMapping("/{id}")
     public ResponseEntity<Void> deleteReservationsData(@PathVariable("id") final Long id) {
-        if (reservationRepository.deleteById(id) == 0) {
+        int deletedCount = reservationService.deleteReservation(id);
+        if (deletedCount == 0) {
             return ResponseEntity.notFound().build();
         }
         return ResponseEntity.noContent().build();

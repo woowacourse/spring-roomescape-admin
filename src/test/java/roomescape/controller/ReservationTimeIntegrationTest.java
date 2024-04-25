@@ -20,7 +20,7 @@ import roomescape.dto.ReservationTimeRequest;
  */
 @SpringBootTest(webEnvironment = WebEnvironment.RANDOM_PORT)
 @Sql(scripts = "/reset_test_data.sql")
-class ReservationTimeControllerTest {
+class ReservationTimeIntegrationTest {
     @LocalServerPort
     private int port;
 

@@ -31,15 +31,10 @@ public class TimeService {
     }
 
     public void remove(final long id) {
-        //TODO findById 메서드 제거하기 reservation도
-        final Optional<ReservationTime> findReservation = findById(id);
+        final Optional<ReservationTime> findReservation = timeDao.findById(id);
         if (findReservation.isEmpty()) {
             throw new IllegalArgumentException(String.format("timeId: %s는 존재하지 않는 timeId 입니다.", id));
         }
         timeDao.remove(id);
-    }
-
-    private Optional<ReservationTime> findById(final long id) {
-        return timeDao.findById(id);
     }
 }

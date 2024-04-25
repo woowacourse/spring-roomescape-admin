@@ -1,4 +1,4 @@
-package roomescape.domain.time.repository;
+package roomescape.repository;
 
 import java.util.List;
 import javax.sql.DataSource;
@@ -9,6 +9,7 @@ import org.springframework.jdbc.core.namedparam.SqlParameterSource;
 import org.springframework.jdbc.core.simple.SimpleJdbcInsert;
 import org.springframework.stereotype.Repository;
 import roomescape.domain.time.Time;
+import roomescape.domain.time.TimeRepository;
 
 @Repository
 public class H2TimeRepository implements TimeRepository {

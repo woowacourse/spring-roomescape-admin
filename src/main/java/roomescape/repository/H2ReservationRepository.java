@@ -1,4 +1,4 @@
-package roomescape.domain.reservation.repository;
+package roomescape.repository;
 
 import java.util.List;
 import javax.sql.DataSource;
@@ -10,6 +10,7 @@ import org.springframework.jdbc.core.namedparam.SqlParameterSource;
 import org.springframework.jdbc.core.simple.SimpleJdbcInsert;
 import org.springframework.stereotype.Repository;
 import roomescape.domain.reservation.Reservation;
+import roomescape.domain.reservation.ReservationRepository;
 import roomescape.domain.time.Time;
 
 @Repository

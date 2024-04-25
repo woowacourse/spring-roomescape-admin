@@ -1,7 +1,6 @@
-package roomescape.domain.time.repository;
+package roomescape.domain.time;
 
 import java.util.List;
-import roomescape.domain.time.Time;
 
 public interface TimeRepository {
 

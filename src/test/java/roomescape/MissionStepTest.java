@@ -2,10 +2,7 @@ package roomescape;
 
 import io.restassured.RestAssured;
 import io.restassured.http.ContentType;
-import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.DynamicTest;
-import org.junit.jupiter.api.Test;
-import org.junit.jupiter.api.TestFactory;
+import org.junit.jupiter.api.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.web.server.LocalServerPort;
@@ -114,7 +111,7 @@ public class MissionStepTest {
     Stream<DynamicTest> 팔단계() {
         Map<String, Object> reservation = new HashMap<>();
         reservation.put("name", "브라운");
-        reservation.put("date", "2023-08-05");
+        reservation.put("date", "2024-08-05");
         reservation.put("timeId", 1);
         jdbcTemplate.update("INSERT INTO reservation_time (start_at) VALUES (?)", "10:00");
         return Stream.of(
@@ -145,5 +142,32 @@ public class MissionStepTest {
             }
         }
         assertThat(isJdbcTemplateInjected).isFalse();
+    }
+
+    @Test
+    @DisplayName("예약 등록 시 적절하지 않는 입력 값이 주어질 경우 400 오류를 반환한다.")
+    void Given_ReservationRequest_When_InvalidInput_Then_ReturnBadRequest() {
+        Map<String, Object> reservation = new HashMap<>();
+        reservation.put("name", "poke");
+        reservation.put("date", "1999-08-05");
+        reservation.put("timeId", 1);
+        RestAssured.given().log().all()
+                .contentType(ContentType.JSON)
+                .body(reservation)
+                .when().post("/reservations")
+                .then().statusCode(400);
+    }
+
+    @Test
+    @DisplayName("시간 등록 시 적절하지 않는 값이 주어질 경우 400 오류를 반환한다.")
+    void Given_ReservationTimeRequest_When_InvalidInput_Then_ReturnBadRequest() {
+        Map<String, Object> reservationTime = new HashMap<>();
+        reservationTime.put("startAt", "");
+        RestAssured.given().log().all()
+                .contentType(ContentType.JSON)
+                .body(reservationTime)
+                .when().post("/times")
+                .then().log().all()
+                .statusCode(400);
     }
 }

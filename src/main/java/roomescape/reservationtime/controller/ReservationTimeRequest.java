@@ -1,9 +1,12 @@
 package roomescape.reservationtime.controller;
 
+import jakarta.validation.constraints.NotNull;
+
 import java.time.LocalTime;
 
 public class ReservationTimeRequest {
 
+    @NotNull
     private final LocalTime startAt;
 
     private ReservationTimeRequest() {

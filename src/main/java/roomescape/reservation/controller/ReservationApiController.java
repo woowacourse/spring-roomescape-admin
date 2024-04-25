@@ -1,6 +1,8 @@
 package roomescape.reservation.controller;
 
+import jakarta.validation.Valid;
 import org.springframework.http.ResponseEntity;
+import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 import roomescape.reservation.service.ReservationService;
 
@@ -22,7 +24,10 @@ public class ReservationApiController {
     }
 
     @PostMapping("/reservations")
-    public ResponseEntity<ReservationResponse> create(@RequestBody final ReservationRequest reservationRequest) {
+    public ResponseEntity<Object> create(@RequestBody @Valid final ReservationRequest reservationRequest, BindingResult bindingResult) {
+        if (bindingResult.hasErrors()) {
+            return ResponseEntity.badRequest().body("적절하지 않는 입력값 입니다.");
+        }
         final ReservationResponse newReservationResponse = reservationService.saveReservation(reservationRequest);
         return ResponseEntity.ok().body(newReservationResponse);
     }

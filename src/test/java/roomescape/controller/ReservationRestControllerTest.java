@@ -5,6 +5,7 @@ import static org.hamcrest.Matchers.is;
 
 import io.restassured.RestAssured;
 import io.restassured.http.ContentType;
+import java.lang.reflect.Field;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -24,7 +25,8 @@ import roomescape.domain.Reservation;
 class ReservationRestControllerTest {
     @LocalServerPort
     int port;
-
+    @Autowired
+    private ReservationRestController reservationRestController;
     @Autowired
     private JdbcTemplate jdbcTemplate;
 
@@ -116,5 +118,20 @@ class ReservationRestControllerTest {
         Integer count = jdbcTemplate.queryForObject("SELECT count(1) from reservation", Integer.class);
 
         assertThat(reservations.size()).isEqualTo(count);
+    }
+
+    @DisplayName("데이터베이스 관련 로직 분리 테스트")
+    @Test
+    void seperateDao() {
+        boolean isJdbcTemplateInjected = false;
+
+        for (Field field : reservationRestController.getClass().getDeclaredFields()) {
+            if (field.getType().equals(JdbcTemplate.class)) {
+                isJdbcTemplateInjected = true;
+                break;
+            }
+        }
+
+        assertThat(isJdbcTemplateInjected).isFalse();
     }
 }

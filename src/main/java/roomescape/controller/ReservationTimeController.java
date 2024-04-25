@@ -10,37 +10,34 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
-import roomescape.dao.ReservationTimeDao;
-import roomescape.domain.ReservationTime;
 import roomescape.dto.TimeRequest;
 import roomescape.dto.TimeResponse;
+import roomescape.service.ReservationTimeService;
 
 @RestController
 public class ReservationTimeController {
-    private final ReservationTimeDao reservationTimeDao;
+    private final ReservationTimeService reservationTimeService;
 
     @Autowired
-    public ReservationTimeController(ReservationTimeDao reservationTimeDao) {
-        this.reservationTimeDao = reservationTimeDao;
+    public ReservationTimeController(ReservationTimeService reservationTimeService) {
+        this.reservationTimeService = reservationTimeService;
     }
 
     @GetMapping("/times")
     public List<TimeResponse> times() {
-        return reservationTimeDao.getReservationTimes().stream()
-                .map(TimeResponse::new)
-                .toList();
+        return reservationTimeService.getAllReservationTimes();
     }
 
     @PostMapping("/times")
     public ResponseEntity<TimeResponse> addTime(@RequestBody TimeRequest timeRequest) {
-        ReservationTime reservationTime = reservationTimeDao.add(timeRequest);
-        return ResponseEntity.created(URI.create("/times/" + reservationTime.getId()))
-                .body(new TimeResponse(reservationTime));
+        TimeResponse timeResponse = reservationTimeService.addReservationTime(timeRequest);
+        return ResponseEntity.created(URI.create("/times/" + timeResponse.getId()))
+                .body(timeResponse);
     }
 
     @DeleteMapping("/times/{id}")
     public ResponseEntity<Void> deleteTime(@PathVariable Long id) {
-        reservationTimeDao.delete(id);
+        reservationTimeService.deleteReservationTime(id);
         return ResponseEntity.noContent().build();
     }
 }

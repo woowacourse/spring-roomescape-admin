@@ -9,6 +9,7 @@ import roomescape.domain.reservation.Reservation;
 import roomescape.domain.reservation.ReservationDate;
 
 import java.util.List;
+import java.util.NoSuchElementException;
 
 @Service
 public class ReservationService {
@@ -38,7 +39,9 @@ public class ReservationService {
 
     private Reservation createReservation(ReservationRequest reservationRequest) {
         return new Reservation(new Name(reservationRequest.name()), new ReservationDate(reservationRequest.date()),
-                reservationTimeDao.findById(reservationRequest.timeId()));
+                reservationTimeDao.findById(reservationRequest.timeId())
+                        .orElseThrow(() -> new NoSuchElementException(reservationRequest.timeId() + "에 해당하는 시간이 없습니다."))
+        );
     }
 
     private boolean hasSameTimeReservation(ReservationRequest reservationRequest) {

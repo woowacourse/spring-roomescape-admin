@@ -9,6 +9,7 @@ import org.springframework.stereotype.Repository;
 import roomescape.domain.reservation.ReservationTime;
 
 import java.util.List;
+import java.util.Optional;
 
 @Repository
 public class ReservationTimeDao {
@@ -33,9 +34,11 @@ public class ReservationTimeDao {
         return simpleJdbcInsert.executeAndReturnKey(parameters).longValue();
     }
 
-    public ReservationTime findById(Long id) {
+    public Optional<ReservationTime> findById(Long id) {
         String sql = "SELECT * FROM RESERVATION_TIME WHERE id = ?";
-        return jdbcTemplate.queryForObject(sql, timeRowMapper, id);
+        return jdbcTemplate.query(sql, timeRowMapper, id)
+                .stream()
+                .findAny();
     }
 
     public List<ReservationTime> findAll() {

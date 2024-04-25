@@ -3,7 +3,7 @@ package roomescape.fixture;
 import io.restassured.RestAssured;
 import io.restassured.http.ContentType;
 import roomescape.domain.Reservation;
-import roomescape.dto.request.ReservationRequest;
+import roomescape.dto.request.ReservationCreateRequest;
 import roomescape.dto.response.ReservationsResponse;
 
 import java.util.HashMap;
@@ -11,11 +11,11 @@ import java.util.List;
 import java.util.Map;
 
 public class ReservationFixture {
-    public static void 예약_생성(ReservationRequest reservationRequest) {
+    public static void 예약_생성(ReservationCreateRequest reservationCreateRequest) {
         Map<String, String> params = new HashMap<>();
-        params.put("name", reservationRequest.name());
-        params.put("date", reservationRequest.date());
-        params.put("timeId", reservationRequest.timeId() + "");
+        params.put("name", reservationCreateRequest.name());
+        params.put("date", reservationCreateRequest.date());
+        params.put("timeId", reservationCreateRequest.timeId() + "");
         RestAssured.given()
                    .contentType(ContentType.JSON)
                    .body(params)

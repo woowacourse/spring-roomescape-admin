@@ -6,7 +6,7 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.web.server.LocalServerPort;
-import roomescape.dto.request.ReservationRequest;
+import roomescape.dto.request.ReservationCreateRequest;
 import roomescape.fixture.ReservationFixture;
 import roomescape.fixture.ReservationTimeFixture;
 
@@ -26,7 +26,7 @@ class ReservationApiTest {
     @Test
     void get_reservations() {
         final long reservationTimeId = ReservationTimeFixture.예약_시간_생성("10:30");
-        ReservationFixture.예약_생성(new ReservationRequest("조이썬", "2023-08-30", reservationTimeId));
+        ReservationFixture.예약_생성(new ReservationCreateRequest("조이썬", "2023-08-30", reservationTimeId));
 
         RestAssured.given()
                    .log()
@@ -59,7 +59,7 @@ class ReservationApiTest {
     @Test
     void delete_reservation() {
         final long reservationTimeId = ReservationTimeFixture.예약_시간_생성("10:30");
-        ReservationFixture.예약_생성(new ReservationRequest("조이썬", "2023-08-30", reservationTimeId));
+        ReservationFixture.예약_생성(new ReservationCreateRequest("조이썬", "2023-08-30", reservationTimeId));
 
         RestAssured.given()
                    .when()

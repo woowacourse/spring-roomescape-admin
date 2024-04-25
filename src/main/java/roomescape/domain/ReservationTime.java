@@ -1,24 +1,24 @@
 package roomescape.domain;
 
-public class Time {
+public class ReservationTime {
 
     private Long id;
     private String startAt;
 
-    private Time() {
+    private ReservationTime() {
     }
 
-    public Time(Long id, String startAt) {
+    public ReservationTime(Long id, String startAt) {
         this.id = id;
         this.startAt = startAt;
     }
 
-    public Time(String startAt) {
+    public ReservationTime(String startAt) {
         this(null, startAt);
     }
 
-    public static Time toEntity(Long id, Time time) {
-        return new Time(id, time.getStartAt());
+    public static ReservationTime toEntity(Long id, ReservationTime request) {
+        return new ReservationTime(id, request.getStartAt());
     }
 
     public Long getId() {

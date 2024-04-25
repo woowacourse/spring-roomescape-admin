@@ -5,18 +5,18 @@ import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.support.GeneratedKeyHolder;
 import org.springframework.jdbc.support.KeyHolder;
 import org.springframework.stereotype.Repository;
-import roomescape.domain.Time;
+import roomescape.domain.ReservationTime;
 
 import java.sql.PreparedStatement;
 import java.util.List;
 
 @Repository
-public class TimeDao {
+public class ReservationTimeDao {
 
     @Autowired
     JdbcTemplate jdbcTemplate;
 
-    public Long save(Time request) {
+    public Long save(ReservationTime request) {
         String query = "INSERT into reservation_time(start_at) VALUES(?)";
         KeyHolder keyHolder = new GeneratedKeyHolder();
 
@@ -31,17 +31,16 @@ public class TimeDao {
         return keyHolder.getKey().longValue();
     }
 
-    public List<Time> readAll() {
+    public List<ReservationTime> readAll() {
         String query = "SELECT * FROM reservation_time";
-        List<Time> times = jdbcTemplate.query(query,
+        List<ReservationTime> reservationTimes = jdbcTemplate.query(query,
                 (rs, rowNum) -> {
-                    Time time = new Time(
+                    return new ReservationTime(
                             rs.getLong("id"),
                             rs.getString("start_at"));
-                    return time;
                 }
         );
-        return times;
+        return reservationTimes;
     }
 
     public void delete(Long id) {

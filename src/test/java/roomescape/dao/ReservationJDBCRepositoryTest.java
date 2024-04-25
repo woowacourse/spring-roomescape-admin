@@ -17,12 +17,11 @@ import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
 
 @JdbcTest
 class ReservationJDBCRepositoryTest {
+    private final JdbcTemplate jdbcTemplate;
     private ReservationRepository reservationRepository;
     private ReservationTimeRepository reservationTimeRepository;
     private String date;
     private ReservationTime reservationTime;
-
-    private final JdbcTemplate jdbcTemplate;
 
     @Autowired
     ReservationJDBCRepositoryTest(final JdbcTemplate jdbcTemplate) {

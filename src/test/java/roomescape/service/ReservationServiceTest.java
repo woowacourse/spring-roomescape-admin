@@ -8,12 +8,10 @@ import roomescape.dao.FakeReservationRepository;
 import roomescape.dao.ReservationRepository;
 import roomescape.domain.Reservation;
 import roomescape.domain.ReservationTime;
-import roomescape.exception.InvalidReservationException;
 
 import java.util.List;
 
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.assertj.core.api.AssertionsForClassTypes.assertThatThrownBy;
 import static org.junit.jupiter.api.Assertions.assertAll;
 
 class ReservationServiceTest {
@@ -85,17 +83,5 @@ class ReservationServiceTest {
 
         //then
         assertThat(reservationService.findAll()).hasSize(0);
-    }
-
-    @DisplayName("존재하지 않는 id로 예약 삭제를 시도하면 예외를 던진다.")
-    @Test
-    void deleteFailByInvalidId() {
-        //given
-        long invalidId = 0;
-
-        //when&then
-        assertThatThrownBy(() -> reservationService.deleteById(invalidId))
-                .isInstanceOf(InvalidReservationException.class)
-                .hasMessage("존재하지 않는 예약 내역입니다. id: " + invalidId);
     }
 }

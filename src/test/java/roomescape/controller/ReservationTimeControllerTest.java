@@ -87,17 +87,4 @@ class ReservationTimeControllerTest {
                 .then().log().all()
                 .assertThat().body("size()", is(0));
     }
-
-    @DisplayName("시간 정보를 존재하지 않는 id로 삭제를 시도한다.")
-    @Test
-    void deleteFailReservationTimeByInvalidId() {
-        //given
-        long invalidId = 0;
-
-        //when&then
-        RestAssured.given().log().all()
-                .when().delete("/times/" + invalidId)
-                .then().log().all()
-                .assertThat().statusCode(400).body(is("존재하지 않는 예약 시간입니다. id: " + invalidId));
-    }
 }

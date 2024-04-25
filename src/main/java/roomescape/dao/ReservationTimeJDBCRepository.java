@@ -15,14 +15,6 @@ public class ReservationTimeJDBCRepository implements ReservationTimeRepository 
 
     private final JdbcTemplate jdbcTemplate;
     private final SimpleJdbcInsert simpleJdbcInsert;
-
-    public ReservationTimeJDBCRepository(final JdbcTemplate jdbcTemplate) {
-        this.jdbcTemplate = jdbcTemplate;
-        this.simpleJdbcInsert = new SimpleJdbcInsert(jdbcTemplate)
-                .withTableName(TABLE_NAME)
-                .usingGeneratedKeyColumns("id");
-    }
-
     private final RowMapper<ReservationTime> rowMapper = (resultSet, rowNum) -> {
         ReservationTime reservationTime = new ReservationTime(
                 resultSet.getLong("id"),
@@ -30,6 +22,13 @@ public class ReservationTimeJDBCRepository implements ReservationTimeRepository 
         );
         return reservationTime;
     };
+
+    public ReservationTimeJDBCRepository(final JdbcTemplate jdbcTemplate) {
+        this.jdbcTemplate = jdbcTemplate;
+        this.simpleJdbcInsert = new SimpleJdbcInsert(jdbcTemplate)
+                .withTableName(TABLE_NAME)
+                .usingGeneratedKeyColumns("id");
+    }
 
     @Override
     public ReservationTime save(final ReservationTime reservationTime) {

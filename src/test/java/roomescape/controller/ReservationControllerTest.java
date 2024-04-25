@@ -133,17 +133,4 @@ public class ReservationControllerTest {
                 .then().log().all()
                 .assertThat().body("size()", is(0));
     }
-
-    @DisplayName("예약 취소 실패 테스트")
-    @Test
-    void deleteReservationFail() {
-        //given
-        long invalidId = 0;
-
-        //when
-        RestAssured.given().log().all()
-                .when().delete("/reservations/" + invalidId)
-                .then().log().all()
-                .assertThat().statusCode(400).body(is("존재하지 않는 예약 내역입니다. id: " + invalidId));
-    }
 }

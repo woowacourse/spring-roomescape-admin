@@ -3,7 +3,6 @@ package roomescape.service;
 import org.springframework.stereotype.Service;
 import roomescape.dao.ReservationRepository;
 import roomescape.domain.Reservation;
-import roomescape.exception.InvalidReservationException;
 
 import java.util.List;
 
@@ -26,10 +25,6 @@ public class ReservationService {
 
 
     public void deleteById(final long id) {
-        if (reservationRepository.existsById(id)) {
-            reservationRepository.deleteById(id);
-            return;
-        }
-        throw new InvalidReservationException("존재하지 않는 예약 내역입니다. id: " + id);
+        reservationRepository.deleteById(id);
     }
 }

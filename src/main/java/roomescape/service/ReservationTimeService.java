@@ -24,11 +24,7 @@ public class ReservationTimeService {
     }
 
     public void deleteById(final long id) {
-        if (reservationTimeRepository.existsById(id)) {
-            reservationTimeRepository.deleteById(id);
-            return;
-        }
-        throw new InvalidReservationException("존재하지 않는 예약 시간입니다. id: " + id);
+        reservationTimeRepository.deleteById(id);
     }
 
     public ReservationTime findById(final long id) {

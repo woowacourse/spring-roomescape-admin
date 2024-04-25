@@ -16,14 +16,6 @@ public class ReservationJDBCRepository implements ReservationRepository {
 
     private final JdbcTemplate jdbcTemplate;
     private final SimpleJdbcInsert simpleJdbcInsert;
-
-    public ReservationJDBCRepository(final JdbcTemplate jdbcTemplate) {
-        this.jdbcTemplate = jdbcTemplate;
-        this.simpleJdbcInsert = new SimpleJdbcInsert(jdbcTemplate)
-                .withTableName(TABLE_NAME)
-                .usingGeneratedKeyColumns("id");
-    }
-
     private final RowMapper<Reservation> rowMapper = (resultSet, rowNum) -> {
         ReservationTime reservationTime = new ReservationTime(resultSet.getLong("time_id"), resultSet.getString("start_at"));
         Reservation reservation = new Reservation(
@@ -33,6 +25,13 @@ public class ReservationJDBCRepository implements ReservationRepository {
                 reservationTime);
         return reservation;
     };
+
+    public ReservationJDBCRepository(final JdbcTemplate jdbcTemplate) {
+        this.jdbcTemplate = jdbcTemplate;
+        this.simpleJdbcInsert = new SimpleJdbcInsert(jdbcTemplate)
+                .withTableName(TABLE_NAME)
+                .usingGeneratedKeyColumns("id");
+    }
 
     @Override
     public List<Reservation> findAll() {

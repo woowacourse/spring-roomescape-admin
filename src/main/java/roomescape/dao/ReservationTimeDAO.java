@@ -42,7 +42,7 @@ public class ReservationTimeDAO {
         return new ReservationTime(keyHolder.getKey().longValue(), timeCreateRequestDto.startAt());
     }
 
-    public void delete(long id) {
+    public void delete(Long id) {
         jdbcTemplate.update("DELETE FROM reservation_time WHERE id = ?", id);
     }
 }

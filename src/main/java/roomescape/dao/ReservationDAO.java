@@ -63,7 +63,7 @@ public class ReservationDAO {
                                 String.class, reservationCreateRequestDto.timeId())));
     }
 
-    public void delete(long id) {
+    public void delete(Long id) {
         jdbcTemplate.update("delete from reservation where id = ?", id);
     }
 }

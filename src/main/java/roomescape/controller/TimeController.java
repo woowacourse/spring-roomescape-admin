@@ -37,9 +37,11 @@ public class TimeController {
     }
 
     @DeleteMapping("/times/{id}")
-    public ResponseEntity<Void> delete(@PathVariable long id) {
+    public ResponseEntity<Void> delete(@PathVariable Long id) {
         try {
             reservationTimeDAO.delete(id);
+        } catch (NullPointerException e) {
+            System.out.println("ReservationTime id 가 null 입니다.");
         } catch (Exception e) {
             throw new ResponseStatusException(NOT_FOUND, "Unable to find resource");
         }

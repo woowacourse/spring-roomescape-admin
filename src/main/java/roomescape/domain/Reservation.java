@@ -30,7 +30,11 @@ public class Reservation {
         return new Reservation(null, name, date, reservationTime);
     }
 
-    private void validateNotNull(final String name, final LocalDate date, final ReservationTime reservationTime) {
+    private void validateNotNull(
+            final String name,
+            final LocalDate date,
+            final ReservationTime reservationTime
+    ) {
         Objects.requireNonNull(name);
         Objects.requireNonNull(date);
         Objects.requireNonNull(reservationTime);

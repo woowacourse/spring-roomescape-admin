@@ -17,11 +17,13 @@ import org.junit.jupiter.params.provider.ValueSource;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.web.server.LocalServerPort;
+import org.springframework.test.context.jdbc.Sql;
 import roomescape.controller.dto.ReservationTimeAddRequest;
 import roomescape.controller.dto.ReservationTimeResponse;
 import roomescape.service.TimeService;
 
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
+@Sql(value = "classpath:data-reset.sql", executionPhase = Sql.ExecutionPhase.AFTER_TEST_METHOD)
 class TimeControllerTest {
     @LocalServerPort
     private int port;
@@ -71,7 +73,7 @@ class TimeControllerTest {
     @DisplayName("중복된 예약 시간을 등록할 경우 400 상태 코드와 함께 오류 메시지를 응답한다.")
     @Test
     void addDuplicatedTimeTest() {
-        LocalTime duplicatedTime = LocalTime.of(0, 0);
+        LocalTime duplicatedTime = LocalTime.of(12, 0);
         timeService.addReservationTime(new ReservationTimeAddRequest(duplicatedTime));
 
         Map<String, String> params = Map.of(
@@ -129,7 +131,7 @@ class TimeControllerTest {
         assertThat(getTotalReservationsCount()).isEqualTo(initialReservationTimesCount - 1);
     }
 
-    @DisplayName("삭제한 ID에 해당하는 예약 시간이 없을 경우 204를 응답한다.")
+    @DisplayName("삭제할 ID에 해당하는 예약 시간이 없을 경우 204를 응답한다.")
     @Test
     void removeNotExistReservationTimeTest() {
         int neverExistId = 0;
@@ -137,5 +139,16 @@ class TimeControllerTest {
                 .when().delete("/times/" + neverExistId)
                 .then().log().all()
                 .statusCode(204);
+    }
+
+    @DisplayName("삭제할 ID에 해당하는 예약 시간에 이미 예약이 있을 경우 400을 응답한다.")
+    @Test
+    void removeWhenFKConstraintFails() {
+        RestAssured.given().log().all()
+                .contentType(ContentType.JSON)
+                .when().delete("/times/1")
+                .then().log().all()
+                .statusCode(400)
+                .body(containsString("해당 시간에 예약이 존재합니다."));
     }
 }

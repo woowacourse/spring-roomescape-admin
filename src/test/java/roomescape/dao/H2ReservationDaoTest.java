@@ -4,40 +4,23 @@ import static org.assertj.core.api.Assertions.assertThat;
 
 import java.time.LocalDate;
 import java.time.LocalTime;
-import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.jdbc.JdbcTest;
 import org.springframework.jdbc.core.JdbcTemplate;
-import roomescape.controller.dto.ReservationTimeAddRequest;
-import roomescape.domain.ReservationCreationRequest;
+import org.springframework.test.context.jdbc.Sql;
 import roomescape.domain.ReservationTime;
 import roomescape.service.dto.ReservationCreationDto;
 
 @JdbcTest
+@Sql(value = "classpath:data-reset.sql", executionPhase = Sql.ExecutionPhase.BEFORE_TEST_METHOD)
 class H2ReservationDaoTest {
     private final ReservationDao reservationDao;
-    private final TimeDao timeDao;
 
     @Autowired
     public H2ReservationDaoTest(JdbcTemplate jdbcTemplate) {
         this.reservationDao = new H2ReservationDao(jdbcTemplate);
-        this.timeDao = new H2TimeDao(jdbcTemplate);
-    }
-
-    @BeforeEach
-    void setUp() {
-        reservationDao.deleteAll();
-        timeDao.deleteAll();
-
-        ReservationTimeAddRequest request = new ReservationTimeAddRequest(LocalTime.MAX);
-        ReservationTime reservationTime = timeDao.add(request);
-
-        ReservationCreationRequest defaultReservation = new ReservationCreationRequest(
-                "브라운", LocalDate.MAX, reservationTime.getId()
-        );
-        reservationDao.add(ReservationCreationDto.from(defaultReservation, reservationTime));
     }
 
     @DisplayName("DB의 모든 예약을 조회한다.")

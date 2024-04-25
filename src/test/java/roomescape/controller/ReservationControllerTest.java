@@ -8,7 +8,6 @@ import java.util.List;
 import java.util.Map;
 import java.util.stream.Stream;
 import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
@@ -16,9 +15,11 @@ import org.junit.jupiter.params.provider.Arguments;
 import org.junit.jupiter.params.provider.MethodSource;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.web.server.LocalServerPort;
+import org.springframework.test.context.jdbc.Sql;
 import roomescape.controller.dto.ReservationResponse;
 
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
+@Sql(value = "classpath:data-reset.sql", executionPhase = Sql.ExecutionPhase.AFTER_TEST_METHOD)
 class ReservationControllerTest {
     @LocalServerPort
     private int port;
@@ -86,7 +87,7 @@ class ReservationControllerTest {
         assertThat(message).isEqualTo("이름은 공백일 수 없습니다.");
     }
 
-    @DisplayName("예약 날짜와 시각 정보를 잘못된 형식으로 요청할 경우 400 상태 코드와 함께 오류 메시지를 응답한다.")
+    @DisplayName("예약 날짜를 잘못된 형식으로 요청할 경우 400 상태 코드와 함께 오류 메시지를 응답한다.")
     @ParameterizedTest
     @MethodSource("inValidDateTime")
     void addReservationWithInValidDateTimeTest(Map<String, String> params) {
@@ -108,14 +109,14 @@ class ReservationControllerTest {
                         Map.of(
                                 "name", "브라운",
                                 "date", "1234-111-22",
-                                "time", "15:40"
+                                "timeId", 1
                         )
                 ),
                 Arguments.of(
                         Map.of(
                                 "name", "웨지",
-                                "date", "2024-08-05",
-                                "time", "26:99"
+                                "date", "Hello",
+                                "timeId", 1
                         )
                 )
         );
@@ -127,7 +128,7 @@ class ReservationControllerTest {
         Map<String, String> params = Map.of(
                 "name", "페드로",
                 "date", "2023-08-05",
-                "time", "15:40"
+                "timeId", "1"
         );
 
         String message = RestAssured.given().log().all()
@@ -148,7 +149,7 @@ class ReservationControllerTest {
         Map<String, String> params = Map.of(
                 "name", "브라운",
                 "date", "2024-08-05",
-                "time", "15:40"
+                "timeId", "1"
         );
 
         ReservationResponse reservationResponse = RestAssured.given().log().all()

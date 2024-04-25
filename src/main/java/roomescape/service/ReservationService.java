@@ -21,12 +21,12 @@ public class ReservationService {
         this.timeDao = timeDao;
     }
 
-    public ReservationResponse save(final ReservationRequest requestV2) {
-        final Optional<ReservationTime> findTime = timeDao.findById(requestV2.timeId());
+    public ReservationResponse save(final ReservationRequest request) {
+        final Optional<ReservationTime> findTime = timeDao.findById(request.timeId());
         if (findTime.isEmpty()) {
             throw new IllegalArgumentException("존재하지 않는 시간입니다.");
         }
-        final Reservation created = Reservation.create(requestV2.name(), requestV2.date(), findTime.get());
+        final Reservation created = Reservation.create(request.name(), request.date(), findTime.get());
         final Reservation saved = reservationDao.save(created, findTime.get().getId());
         return ReservationResponse.from(saved);
     }

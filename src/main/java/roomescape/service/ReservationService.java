@@ -25,9 +25,10 @@ public class ReservationService {
     }
 
     public CreateReservationResponse createReservation(CreateReservationRequest request) {
-        int createdId = reservationDao.create(request);
-        Reservation reservation = reservationDao.findById(createdId);
-        return reservationMapper.toCreateReservationResponse(reservation);
+        Reservation requestedReservation = reservationMapper.toReservation(request);
+        int createdId = reservationDao.create(requestedReservation);
+        Reservation createdReservation = reservationDao.findById(createdId);
+        return reservationMapper.toCreateReservationResponse(createdReservation);
     }
 
     public void deleteReservation(int id) {

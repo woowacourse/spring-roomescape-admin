@@ -27,8 +27,9 @@ class ReservationDaoTest {
     void 예약을_생성한다() {
         jdbcTemplate.update("insert into reservation_time (start_at) values ('10:00')");
         CreateReservationRequest request = new CreateReservationRequest("조앤", LocalDate.of(2023, 10, 23), 1);
+        Reservation reservation = Reservation.from(request.name(), request.date(), request.timeId());
 
-        reservationDao.create(request);
+        reservationDao.create(reservation);
 
         List<Reservation> reservations = reservationDao.findAll();
         Assertions.assertThat(reservations).hasSize(1);
@@ -45,7 +46,8 @@ class ReservationDaoTest {
     void 예약을_삭제한다() {
         jdbcTemplate.update("insert into reservation_time (start_at) values ('10:00')");
         CreateReservationRequest request = new CreateReservationRequest("조앤", LocalDate.of(2023, 10, 23), 2);
-        reservationDao.create(request);
+        Reservation reservation = Reservation.from(request.name(), request.date(), request.timeId());
+        reservationDao.create(reservation);
 
         reservationDao.delete(2);
 

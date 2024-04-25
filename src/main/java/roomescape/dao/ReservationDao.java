@@ -6,7 +6,6 @@ import org.springframework.jdbc.core.RowMapper;
 import org.springframework.stereotype.Component;
 import roomescape.domain.Reservation;
 import roomescape.domain.ReservationTime;
-import roomescape.dto.CreateReservationRequest;
 
 import java.util.List;
 import java.util.Optional;
@@ -34,12 +33,12 @@ public class ReservationDao {
         return reservation;
     };
 
-    public int create(CreateReservationRequest request) {
+    public int create(Reservation reservation) {
         String sql = "insert into reservation (name, date, time_id) values (?, ?, ?)";
         return jdbcTemplate.update(sql,
-                request.name(),
-                request.date(),
-                request.timeId());
+                reservation.getName(),
+                reservation.getDate(),
+                reservation.getTime().getId());
     }
 
     public Optional<Reservation> findAnyByTimeId(int timeId) {
@@ -70,7 +69,7 @@ public class ReservationDao {
                 "inner join reservation_time as t on r.time_id = t.id";
         return jdbcTemplate.query(sql, reservationRowMapper);
     }
-    
+
     public void delete(int id) {
         jdbcTemplate.update("delete from reservation where id = ?", id);
     }

@@ -56,4 +56,14 @@ public class ReservationDao {
         String sql = "DELETE FROM reservation WHERE id = ?";
         jdbcTemplate.update(sql, id);
     }
+
+    public List<Reservation> findAllByDateTime(Reservation reservation) {
+        String sql = "SELECT r.id as reservation_id, r.name, r.reservation_date, t.id as time_id, t.start_at as time_value" +
+                " FROM reservation as r" +
+                " inner join reservation_time as t" +
+                " on r.time_id = t.id" +
+                " WHERE r.reservation_date = ?" +
+                " WHERE r.time_id = ?";
+        return jdbcTemplate.query(sql, reservationRowMapper, reservation.getDate().getDate(), reservation.getTime().getTime());
+    }
 }

@@ -1,12 +1,12 @@
 package roomescape.service;
 
 import org.springframework.stereotype.Service;
+import roomescape.controller.request.ReservationRequest;
 import roomescape.dao.ReservationDao;
 import roomescape.dao.ReservationTimeDao;
 import roomescape.domain.reservation.Name;
 import roomescape.domain.reservation.Reservation;
 import roomescape.domain.reservation.ReservationDate;
-import roomescape.controller.request.ReservationRequest;
 
 import java.util.List;
 
@@ -25,6 +25,10 @@ public class ReservationService {
     }
 
     public Reservation reserve(ReservationRequest reservationRequest) {
+        if (hasSameTimeReservation(reservationRequest)) {
+            throw new IllegalArgumentException("이미 예약된 시간입니다.");
+        }
+
         Long savedId = reservationDao.add(createReservation(reservationRequest));
         return reservationDao.findById(savedId);
     }
@@ -36,5 +40,10 @@ public class ReservationService {
     private Reservation createReservation(ReservationRequest reservationRequest) {
         return new Reservation(new Name(reservationRequest.name()), new ReservationDate(reservationRequest.date()),
                 reservationTimeDao.findById(reservationRequest.timeId()));
+    }
+
+    private boolean hasSameTimeReservation(ReservationRequest reservationRequest) {
+        List<Reservation> sameTimeReservations = reservationDao.findAllByDateTime(createReservation(reservationRequest));
+        return sameTimeReservations.isEmpty();
     }
 }

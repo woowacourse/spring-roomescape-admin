@@ -1,13 +1,13 @@
 package roomescape.dao;
 
-import java.sql.PreparedStatement;
 import java.util.List;
 import javax.sql.DataSource;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;
-import org.springframework.jdbc.support.GeneratedKeyHolder;
-import org.springframework.jdbc.support.KeyHolder;
+import org.springframework.jdbc.core.namedparam.BeanPropertySqlParameterSource;
+import org.springframework.jdbc.core.namedparam.SqlParameterSource;
+import org.springframework.jdbc.core.simple.SimpleJdbcInsert;
 import org.springframework.stereotype.Repository;
 import roomescape.dto.TimeCreateRequestDto;
 import roomescape.model.ReservationTime;
@@ -16,10 +16,14 @@ import roomescape.model.ReservationTime;
 public class ReservationTimeDAO {
 
     private final JdbcTemplate jdbcTemplate;
+    private final SimpleJdbcInsert jdbcInsert;
 
     @Autowired
     public ReservationTimeDAO(DataSource dataSource) {
         this.jdbcTemplate = new JdbcTemplate(dataSource);
+        this.jdbcInsert = new SimpleJdbcInsert(dataSource)
+                .withTableName("reservation_time")
+                .usingGeneratedKeyColumns("id");
     }
 
     public List<ReservationTime> findAllTimes() {
@@ -31,15 +35,9 @@ public class ReservationTimeDAO {
             resultSet.getString("start_at"));
 
     public ReservationTime insert(TimeCreateRequestDto timeCreateRequestDto) {
-        String sql = "INSERT INTO reservation_time (start_at) VALUES (?)";
-        KeyHolder keyHolder = new GeneratedKeyHolder();
-        jdbcTemplate.update(connection -> {
-            PreparedStatement ps = connection.prepareStatement(
-                    sql, new String[]{"id"});
-            ps.setString(1, timeCreateRequestDto.startAt());
-            return ps;
-        }, keyHolder);
-        return new ReservationTime(keyHolder.getKey().longValue(), timeCreateRequestDto.startAt());
+        SqlParameterSource params = new BeanPropertySqlParameterSource(timeCreateRequestDto);
+        long id = jdbcInsert.executeAndReturnKey(params).longValue();
+        return new ReservationTime(id, timeCreateRequestDto.startAt());
     }
 
     public void delete(Long id) {

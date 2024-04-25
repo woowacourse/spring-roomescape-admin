@@ -1,13 +1,13 @@
 package roomescape.dao;
 
-import java.sql.PreparedStatement;
 import java.util.List;
 import javax.sql.DataSource;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;
-import org.springframework.jdbc.support.GeneratedKeyHolder;
-import org.springframework.jdbc.support.KeyHolder;
+import org.springframework.jdbc.core.namedparam.BeanPropertySqlParameterSource;
+import org.springframework.jdbc.core.namedparam.SqlParameterSource;
+import org.springframework.jdbc.core.simple.SimpleJdbcInsert;
 import org.springframework.stereotype.Repository;
 import roomescape.dto.ReservationCreateRequestDto;
 import roomescape.model.Reservation;
@@ -17,10 +17,14 @@ import roomescape.model.ReservationTime;
 public class ReservationDAO {
 
     private final JdbcTemplate jdbcTemplate;
+    private final SimpleJdbcInsert jdbcInsert;
 
     @Autowired
     public ReservationDAO(DataSource dataSource) {
         this.jdbcTemplate = new JdbcTemplate(dataSource);
+        this.jdbcInsert = new SimpleJdbcInsert(dataSource)
+                .withTableName("reservation")
+                .usingGeneratedKeyColumns("id");
     }
 
     public List<Reservation> findAllReservations() {
@@ -46,17 +50,9 @@ public class ReservationDAO {
                     resultSet.getString("time_value")));
 
     public Reservation insert(ReservationCreateRequestDto reservationCreateRequestDto) {
-        String sql = "INSERT INTO reservation(name, date, time_id) VALUES (?, ?, ?)";
-        KeyHolder keyHolder = new GeneratedKeyHolder();
-        jdbcTemplate.update(connection -> {
-            PreparedStatement ps = connection.prepareStatement(
-                    sql, new String[]{"id"});
-            ps.setString(1, reservationCreateRequestDto.name());
-            ps.setString(2, String.valueOf(reservationCreateRequestDto.date()));
-            ps.setString(3, String.valueOf(reservationCreateRequestDto.timeId()));
-            return ps;
-        }, keyHolder);
-        return new Reservation(keyHolder.getKey().longValue(), reservationCreateRequestDto.name(),
+        SqlParameterSource params = new BeanPropertySqlParameterSource(reservationCreateRequestDto);
+        long id = jdbcInsert.executeAndReturnKey(params).longValue();
+        return new Reservation(id, reservationCreateRequestDto.name(),
                 reservationCreateRequestDto.date(),
                 new ReservationTime(reservationCreateRequestDto.timeId(),
                         jdbcTemplate.queryForObject("SELECT start_at FROM reservation_time WHERE id = ?",

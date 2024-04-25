@@ -2,7 +2,6 @@ package roomescape.service;
 
 import java.util.List;
 import java.util.NoSuchElementException;
-import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.stereotype.Service;
 import roomescape.domain.Reservation;
 import roomescape.domain.ReservationRepository;
@@ -39,10 +38,7 @@ public class ReservationService {
     }
 
     private void validateReservationTime(Long id) {
-        try {
-            reservationTimeRepository.findById(id);
-        } catch (EmptyResultDataAccessException e) {
-            throw new NoSuchElementException("해당되는 예약 시간이 없습니다.");
-        }
+        reservationTimeRepository.findById(id)
+                .orElseThrow(() -> new NoSuchElementException("해당되는 예약 시간이 없습니다."));
     }
 }

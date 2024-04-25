@@ -4,7 +4,9 @@ import java.sql.PreparedStatement;
 import java.time.LocalTime;
 import java.time.format.DateTimeFormatter;
 import java.util.List;
+import java.util.NoSuchElementException;
 import java.util.Optional;
+import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;
 import org.springframework.jdbc.support.GeneratedKeyHolder;
@@ -26,10 +28,14 @@ public class ReservationTimeRepository {
     }
 
     public Optional<ReservationTime> findById(Long id) {
-        ReservationTime reservationTime = jdbcTemplate.queryForObject(
-                "SELECT id, start_at FROM reservation_time WHERE id = ?",
-                reservationTimeRowMapper(), id);
-        return Optional.ofNullable(reservationTime);
+        try {
+            ReservationTime reservationTime = jdbcTemplate.queryForObject(
+                    "SELECT id, start_at FROM reservation_time WHERE id = ?",
+                    reservationTimeRowMapper(), id);
+            return Optional.ofNullable(reservationTime);
+        } catch (EmptyResultDataAccessException e) {
+            return Optional.empty();
+        }
     }
 
     public ReservationTime create(ReservationTime reservationTime) {
@@ -44,7 +50,7 @@ public class ReservationTimeRepository {
         }, keyHolder);
 
         long id = keyHolder.getKey().longValue();
-        return findById(id).orElseThrow();
+        return findById(id).orElseThrow(() -> new NoSuchElementException("예약 시간이 생성되지 않았습니다."));
     }
 
     private RowMapper<ReservationTime> reservationTimeRowMapper() {

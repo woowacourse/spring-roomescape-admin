@@ -42,9 +42,18 @@
   - [x] 추가 버튼을 누르면 `시간 추가 API`를 호출한다.
   - [x] 삭제 버튼을 누르면 `시간 삭제 API`를 호출한다.
 
+## 8단계 - 예약과 시간 관리
+
+- [ ] API 명세를 따라 시간 관리 API를 수정한다.
+- 시간 테이블에 저장된 시간 값만 선택할 수 있도록 한다.
+  - [ ] 외래키 지정을 통해`reservation` 테이블과 `reservation_time` 테이블의 관계를 설정한다.
+  - [ ] 시간 타입을 `String` 에서 `ReservationTime` 객체로 수정한다.
+  - [ ] 예약 추가 시, 시간을 문자열(ex. "10:00") 형태로 입력하던 부분을 ReservationTime 의 식별자(ex. 1)로 수정한다.
+
+
 # API 명세
 
-## 예약 목록 조회 API
+## 예약 조회 API
 
 Request
 
@@ -55,23 +64,18 @@ GET /reservations HTTP/1.1
 Response
 
 ```
-HTTP/1.1 200
-Content-Type: application/json
-
 [
     {
         "id": 1,
         "name": "브라운",
-        "date": "2023-01-01",
-        "time": "10:00"
-    },
-    {
-        "id": 2,
-        "name": "브라운",
-        "date": "2023-01-02",
-        "time": "11:00"
+        "date": "2023-08-05",
+        "time": {
+            "id": 1,
+            "startAt": "10:00"
+        }
     }
 ]
+
 ```
 
 ## 예약 추가 API
@@ -83,9 +87,9 @@ POST /reservations HTTP/1.1
 content-type: application/json
 
 {
-  "date": "2023-08-05",
-  "name": "브라운",
-  "time": "15:40"
+    "date": "2023-08-05",
+    "name": "브라운",
+    "timeId": 1
 }
 ```
 
@@ -96,11 +100,15 @@ HTTP/1.1 200
 Content-Type: application/json
 
 {
-  "id": 1,
-  "name": "브라운",
-  "date": "2023-08-05",
-  "time": "15:40"
+    "id": 1,
+    "name": "브라운",
+    "date": "2023-08-05",
+    "time" : {
+        "id": 1,
+        "startAt" : "10:00"
+    }
 }
+
 ```
 
 ## 예약 삭제 API

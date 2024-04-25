@@ -1,7 +1,7 @@
 package roomescape.console.controller;
 
 import java.util.List;
-import org.springframework.stereotype.Controller;
+import org.springframework.stereotype.Component;
 import roomescape.console.util.InputConverter;
 import roomescape.console.view.Command;
 import roomescape.console.view.InputView;
@@ -10,7 +10,7 @@ import roomescape.reservation.dto.request.ReservationRequest;
 import roomescape.reservation.dto.response.ReservationResponse;
 import roomescape.reservation.service.ReservationService;
 
-@Controller
+@Component
 public class ReservationConsoleController implements ConsoleController {
 
     private final InputView inputView;

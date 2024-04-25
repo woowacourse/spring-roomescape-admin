@@ -5,6 +5,8 @@ import java.time.LocalDate;
 import java.time.LocalTime;
 import java.util.List;
 import org.springframework.jdbc.core.JdbcTemplate;
+import org.springframework.jdbc.core.PreparedStatementCreator;
+import org.springframework.jdbc.core.RowMapper;
 import org.springframework.jdbc.support.GeneratedKeyHolder;
 import org.springframework.jdbc.support.KeyHolder;
 import org.springframework.stereotype.Repository;
@@ -21,28 +23,27 @@ public class ReservationH2Dao implements ReservationDao {
     @Override
     public List<Reservation> findAll() {
         String sql = "SELECT * FROM reservation";
-        return jdbcTemplate.query(
-                sql,
-                (resultSet, rowNum) -> new Reservation(
-                        resultSet.getLong("id"),
-                        resultSet.getString("name"),
-                        resultSet.getObject("date", LocalDate.class),
-                        resultSet.getObject("time", LocalTime.class))
-        );
+
+        RowMapper<Reservation> reservationRowMapper = (resultSet, rowNum) -> new Reservation(
+                resultSet.getLong("id"),
+                resultSet.getString("name"),
+                resultSet.getObject("date", LocalDate.class),
+                resultSet.getObject("time", LocalTime.class));
+
+        return jdbcTemplate.query(sql, reservationRowMapper);
     }
 
     @Override
     public Reservation findById(Long id) {
         String sql = "SELECT * FROM reservation WHERE id = ?";
-        return jdbcTemplate.queryForObject(
-                sql,
-                (resultSet, rowNum) -> new Reservation(
-                        resultSet.getLong("id"),
-                        resultSet.getString("name"),
-                        LocalDate.parse(resultSet.getString("date")),
-                        LocalTime.parse(resultSet.getString("time"))),
-                id
-        );
+
+        RowMapper<Reservation> reservationRowMapper = (resultSet, rowNum) -> new Reservation(
+                resultSet.getLong("id"),
+                resultSet.getString("name"),
+                LocalDate.parse(resultSet.getString("date")),
+                LocalTime.parse(resultSet.getString("time")));
+
+        return jdbcTemplate.queryForObject(sql, reservationRowMapper, id);
     }
 
     @Override
@@ -50,15 +51,15 @@ public class ReservationH2Dao implements ReservationDao {
         String sql = "INSERT INTO reservation (name, date, time) values (?, ?, ?)";
         KeyHolder keyHolder = new GeneratedKeyHolder();
 
-        jdbcTemplate.update(connection -> {
-            PreparedStatement ps = connection.prepareStatement(
-                    sql,
-                    new String[]{"id"});
-            ps.setString(1, reservation.getName());
-            ps.setString(2, reservation.getDate().toString());
-            ps.setString(3, reservation.getTime().toString());
-            return ps;
-            }, keyHolder);
+        PreparedStatementCreator preparedStatementCreator = connection -> {
+            PreparedStatement statement = connection.prepareStatement(sql, new String[]{"id"});
+            statement.setString(1, reservation.getName());
+            statement.setString(2, reservation.getDate().toString());
+            statement.setString(3, reservation.getTime().toString());
+            return statement;
+        };
+
+        jdbcTemplate.update(preparedStatementCreator, keyHolder);
 
         Long id = keyHolder.getKey().longValue();
         return new Reservation(id, reservation.getName(), reservation.getDate(), reservation.getTime());

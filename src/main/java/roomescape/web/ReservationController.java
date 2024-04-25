@@ -32,6 +32,10 @@ public class ReservationController {
                 .toList();
     }
 
+    private Reservation findReservationById(Long id) {
+        return reservationDao.findById(id);
+    }
+
     @PostMapping
     public ResponseEntity<ReservationFindResponse> saveReservation(@RequestBody ReservationSaveRequest request) {
         Reservation reservation = request.toEntity();
@@ -45,9 +49,5 @@ public class ReservationController {
     public void deleteReservation(@PathVariable(value = "reservation_id") Long id) {
         Reservation reservation = findReservationById(id);
         reservationDao.delete(reservation);
-    }
-
-    private Reservation findReservationById(Long id) {
-        return reservationDao.findById(id);
     }
 }

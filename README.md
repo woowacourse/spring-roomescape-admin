@@ -80,7 +80,7 @@ Content-Type: application/json
     "startAt": "10:00"
 }
 ```
-- [ ] 시간 조회 API
+- [x] 시간 조회 API
 ```
 GET /times HTTP/1.1
 

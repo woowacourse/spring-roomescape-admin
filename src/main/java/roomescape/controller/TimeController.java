@@ -9,6 +9,8 @@ import roomescape.controller.dto.TimeResponse;
 import roomescape.domain.Time;
 import roomescape.repository.TimeRepository;
 
+import java.util.List;
+
 public class TimeController {
     private final TimeRepository timeRepository;
 
@@ -22,5 +24,14 @@ public class TimeController {
         Time savedTime = timeRepository.insert(time);
 
         return ResponseEntity.ok().body(new TimeResponse(savedTime.id(), savedTime.startAt()));
+    }
+
+    @GetMapping("/times")
+    public ResponseEntity<List<TimeResponse>> readTime() {
+        return ResponseEntity.ok().body(
+                timeRepository.list().stream()
+                        .map(time -> new TimeResponse(time.id(), time.startAt()))
+                        .toList()
+        );
     }
 }

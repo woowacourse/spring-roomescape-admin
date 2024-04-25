@@ -7,6 +7,7 @@ import org.springframework.jdbc.core.simple.SimpleJdbcInsert;
 import roomescape.domain.Time;
 
 import javax.sql.DataSource;
+import java.util.List;
 
 public class TimeRepository {
 
@@ -25,5 +26,18 @@ public class TimeRepository {
         long id = jdbcInsert.executeAndReturnKey(params).intValue();
 
         return new Time(id, time.startAt());
+    }
+
+    public List<Time> list() {
+        String sql = "SELECT * FROM reservation_time";
+        List<Time> times = jdbcTemplate.query(sql, (resultSet, rowNum) -> {
+            Time time = new Time(
+                    resultSet.getLong("id"),
+                    resultSet.getTime("startAt").toLocalTime()
+            );
+            return time;
+        });
+
+        return times;
     }
 }

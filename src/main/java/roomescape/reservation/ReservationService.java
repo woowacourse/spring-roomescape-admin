@@ -24,8 +24,7 @@ public class ReservationService {
 
     public Reservation save(ReservationRequest request) {
         ReservationTime reservationTime = reservationTimeDao.findById(request.timeId());
-        Reservation result = new Reservation(request.name(), request.date(), reservationTime);
-        return reservationDao.save(result);
+        return reservationDao.save(new Reservation(request.name(), request.date(), reservationTime));
     }
 
     public void delete(long id) {

@@ -1,5 +1,6 @@
 package roomescape.controller.console;
 
+import jakarta.annotation.PostConstruct;
 import java.util.EnumMap;
 import java.util.Map;
 import org.springframework.boot.CommandLineRunner;
@@ -27,7 +28,6 @@ public class ConsoleNavigator {
     }
 
     public void run() {
-        prepareCommandExecutors();
         AdminCommand command;
         do {
             OutputView.printAdminMenu();
@@ -36,6 +36,7 @@ public class ConsoleNavigator {
         } while (!command.isExit());
     }
 
+    @PostConstruct
     private void prepareCommandExecutors() {
         commandExecutors.putAll(Map.of(
                 AdminCommand.RESERVATION_MANAGEMENT, reservationController::menu,

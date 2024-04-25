@@ -7,7 +7,6 @@ import org.springframework.jdbc.core.namedparam.SqlParameterSource;
 import org.springframework.jdbc.core.simple.SimpleJdbcInsert;
 import org.springframework.stereotype.Repository;
 import roomescape.reservation.domain.Reservation;
-import roomescape.reservation.dto.ReservationRequestDto;
 
 import javax.sql.DataSource;
 import java.util.List;
@@ -35,7 +34,7 @@ public class ReservationDao {
         return jdbcTemplate.query(sql, (resultSet, rowNum) -> rowMapper.mapRow(resultSet, rowNum));
     }
 
-    public Reservation findById(final Long id) {
+    public Reservation findById(final long id) {
         final String sql = "SELECT r.id AS reservation_id, r.name, r.date, t.id AS time_id, t.start_at AS time_value " +
                 "FROM reservation AS r " +
                 "INNER JOIN reservation_time AS t " +
@@ -43,15 +42,16 @@ public class ReservationDao {
         return jdbcTemplate.queryForObject(sql, (resultSet, rowNum) -> rowMapper.mapRow(resultSet, rowNum), id);
     }
 
-    public long save(final ReservationRequestDto requestDto) {
+    public long save(final Reservation reservation) {
         final SqlParameterSource params = new MapSqlParameterSource()
-                .addValue("name", requestDto.name())
-                .addValue("date", requestDto.date())
-                .addValue("time_id", requestDto.timeId());
-        return simpleJdbcInsert.executeAndReturnKey(params).longValue();
+                .addValue("name", reservation.name())
+                .addValue("date", reservation.date())
+                .addValue("time_id", reservation.time().id());
+        return simpleJdbcInsert.executeAndReturnKey(params)
+                               .longValue();
     }
 
-    public int deleteById(final Long id) {
+    public int deleteById(final long id) {
         final String sql = "delete from reservation where id = ?";
         return jdbcTemplate.update(sql, Long.valueOf(id));
     }

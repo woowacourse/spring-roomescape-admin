@@ -30,7 +30,7 @@ public class ReservationService {
 
     @Transactional
     public ReservationResponseDto save(final ReservationRequestDto requestDto) {
-        final long reservationId = reservationDao.save(requestDto);
+        final long reservationId = reservationDao.save(requestDto.toReservation());
         final Reservation reservation = reservationDao.findById(reservationId);
         return new ReservationResponseDto(reservation);
     }

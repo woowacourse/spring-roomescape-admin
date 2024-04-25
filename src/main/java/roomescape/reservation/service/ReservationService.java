@@ -1,36 +1,61 @@
 package roomescape.reservation.service;
 
+import java.util.ArrayList;
 import java.util.List;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import roomescape.reservation.domain.Reservation;
 import roomescape.reservation.dto.RequestReservation;
 import roomescape.reservation.dto.ResponseReservation;
 import roomescape.reservation.repository.ReservationRepository;
+import roomescape.time.domain.Time;
+import roomescape.time.dto.ResponseTime;
+import roomescape.time.repository.TimeRepository;
 
 @Service
 public class ReservationService {
 
     private final ReservationRepository reservationRepository;
+    private final TimeRepository timeRepository;
 
-    public ReservationService(ReservationRepository reservationRepository) {
+    @Autowired
+    public ReservationService(ReservationRepository reservationRepository, TimeRepository timeRepository) {
         this.reservationRepository = reservationRepository;
+        this.timeRepository = timeRepository;
     }
 
     public Long save(RequestReservation requestReservation) {
+        Time time = timeRepository.findById(requestReservation.timeId());
+
         Reservation reservation = new Reservation(null, requestReservation.name(),
                 requestReservation.date(),
-                requestReservation.time());
+                time);
 
         return reservationRepository.save(reservation);
     }
 
-    public List<ResponseReservation> findAll() {
-        List<Reservation> reservations = reservationRepository.findAll();
+    public ResponseReservation findOneById(Long id) {
+        Reservation reservation = reservationRepository.findById(id);
+        ResponseTime responseTime = new ResponseTime(reservation.getTime().getId(),
+                reservation.getTime().getStartAt());
 
-        return reservations.stream()
-                .map(reservation -> new ResponseReservation(reservation.getId(), reservation.getName(),
-                        reservation.getDate(), reservation.getTime()))
-                .toList();
+        return new ResponseReservation(reservation.getId(),
+                reservation.getName(), reservation.getDate(), responseTime);
+    }
+
+    public List<ResponseReservation> findAll() {
+        List<ResponseReservation> responseReservations = new ArrayList<>();
+
+        List<Reservation> reservations = reservationRepository.findAll();
+        for (Reservation reservation : reservations) {
+            ResponseTime responseTime = new ResponseTime(reservation.getTime().getId(),
+                    reservation.getTime().getStartAt());
+            ResponseReservation responseReservation = new ResponseReservation(reservation.getId(),
+                    reservation.getName(), reservation.getDate(), responseTime);
+            responseReservations.add(responseReservation);
+        }
+
+        return responseReservations;
     }
 
     public void delete(Long id) {

@@ -7,6 +7,7 @@ import org.springframework.jdbc.support.GeneratedKeyHolder;
 import org.springframework.jdbc.support.KeyHolder;
 import org.springframework.stereotype.Repository;
 import roomescape.reservation.domain.Reservation;
+import roomescape.time.domain.Time;
 
 @Repository
 public class ReservationRepository {
@@ -18,7 +19,7 @@ public class ReservationRepository {
     }
 
     public Long save(Reservation reservation) {
-        String sql = "insert into reservation (name, date, time) values (?,?,?)";
+        String sql = "insert into reservation (name, date, time_id) values (?,?,?)";
         KeyHolder keyHolder = new GeneratedKeyHolder();
 
         jdbcTemplate.update(con -> {
@@ -27,22 +28,63 @@ public class ReservationRepository {
             );
             ps.setString(1, reservation.getName());
             ps.setString(2, String.valueOf(reservation.getDate()));
-            ps.setString(3, String.valueOf(reservation.getTime()));
+            ps.setString(3, String.valueOf(reservation.getTime().getId()));
             return ps;
         }, keyHolder);
 
         return keyHolder.getKey().longValue();
     }
 
+    public Reservation findById(Long id) {
+        String sql = """
+                SELECT
+                r.id,
+                r.name,
+                r.date,
+                t.id as time_id,
+                t.start_at
+                from reservation as r
+                inner join reservation_time as t
+                on r.time_id = t.id
+                where r.id = ?
+                """;
+
+        return jdbcTemplate.queryForObject(sql,
+                (rs, rowNum) -> {
+                    return new Reservation(
+                            rs.getLong("id"),
+                            rs.getString("name"),
+                            rs.getDate("date").toLocalDate(),
+                            new Time(
+                                    rs.getLong("time_id"),
+                                    rs.getTime("start_at").toLocalTime()
+                            )
+                    );
+                }, id);
+    }
+
     public List<Reservation> findAll() {
-        String sql = "select * from reservation";
+        String sql = """
+                SELECT
+                r.id,
+                r.name,
+                r.date,
+                t.id as time_id,
+                t.start_at
+                from reservation as r
+                inner join reservation_time as t
+                on r.time_id = t.id
+                """;
         return jdbcTemplate.query(sql,
                 (rs, rowNum) -> {
                     return new Reservation(
                             rs.getLong("id"),
                             rs.getString("name"),
                             rs.getDate("date").toLocalDate(),
-                            rs.getTime("time").toLocalTime()
+                            new Time(
+                                    rs.getLong("id"),
+                                    rs.getTime("start_at").toLocalTime()
+                            )
                     );
                 });
     }

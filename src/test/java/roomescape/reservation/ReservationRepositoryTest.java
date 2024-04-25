@@ -17,6 +17,8 @@ import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.test.annotation.DirtiesContext;
 import roomescape.reservation.domain.Reservation;
 import roomescape.reservation.repository.ReservationRepository;
+import roomescape.time.domain.Time;
+import roomescape.time.repository.TimeRepository;
 
 
 @SpringBootTest(webEnvironment = WebEnvironment.RANDOM_PORT)
@@ -33,14 +35,17 @@ public class ReservationRepositoryTest {
 
     @Autowired
     private JdbcTemplate jdbcTemplate;
-
     @Autowired
     private ReservationRepository reservationRepository;
+    @Autowired
+    private TimeRepository timeRepository;
 
     @Test
     @DisplayName("DB 저장 테스트")
     void saveTest() {
-        Reservation reservation = new Reservation(1L, "hogi", LocalDate.now(), LocalTime.now());
+        Time time = new Time(1L, LocalTime.now());
+        Long timeId = timeRepository.save(time);
+        Reservation reservation = new Reservation(1L, "hogi", LocalDate.now(), time);
         Long saveId = reservationRepository.save(reservation);
 
         assertThat(saveId).isEqualTo(1L);
@@ -49,8 +54,10 @@ public class ReservationRepositoryTest {
     @Test
     @DisplayName("DB 조회 테스트")
     void findAllTest() {
-        Reservation reservation1 = new Reservation(1L, "hogi", LocalDate.now(), LocalTime.now());
-        Reservation reservation2 = new Reservation(2L, "kaki", LocalDate.now(), LocalTime.now());
+        Time time = new Time(1L, LocalTime.now());
+        Long timeId = timeRepository.save(time);
+        Reservation reservation1 = new Reservation(1L, "hogi", LocalDate.now(), time);
+        Reservation reservation2 = new Reservation(2L, "kaki", LocalDate.now(), time);
         reservationRepository.save(reservation1);
         reservationRepository.save(reservation2);
 
@@ -61,7 +68,9 @@ public class ReservationRepositoryTest {
     @Test
     @DisplayName("DB 삭제 테스트")
     void deleteTest() {
-        Reservation reservation = new Reservation(1L, "hogi", LocalDate.now(), LocalTime.now());
+        Time time = new Time(1L, LocalTime.now());
+        Long timeId = timeRepository.save(time);
+        Reservation reservation = new Reservation(1L, "hogi", LocalDate.now(), time);
         Long saveId = reservationRepository.save(reservation);
 
         reservationRepository.delete(saveId);

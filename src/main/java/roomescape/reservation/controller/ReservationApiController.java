@@ -9,7 +9,6 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
 import roomescape.reservation.dto.RequestReservation;
-import roomescape.reservation.dto.ResponseId;
 import roomescape.reservation.dto.ResponseReservation;
 import roomescape.reservation.service.ReservationService;
 
@@ -30,10 +29,10 @@ public class ReservationApiController {
     }
 
     @PostMapping("/reservations")
-    public ResponseEntity<ResponseId> create(@RequestBody RequestReservation requestReservation) {
+    public ResponseEntity<ResponseReservation> create(@RequestBody RequestReservation requestReservation) {
         Long id = reservationService.save(requestReservation);
-
-        return ResponseEntity.ok(new ResponseId(id));
+        ResponseReservation responseReservation = reservationService.findOneById(id);
+        return ResponseEntity.ok(responseReservation);
     }
 
     @DeleteMapping("/reservations/{id}")

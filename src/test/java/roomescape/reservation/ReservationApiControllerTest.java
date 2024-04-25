@@ -44,12 +44,25 @@ class ReservationApiControllerTest {
     @DisplayName("예약을 추가하고 삭제합니다.")
     Collection<DynamicTest> createAndDeleteReservation() {
 
-        Map<String, String> params = Map.of(
+        Map<String, Object> timeParams = Map.of(
+                "startAt", "10:00"
+        );
+
+        Map<String, Object> params = Map.of(
                 "name", "브라운",
                 "date", "2023-08-05",
-                "time", "15:40");
+                "timeId", 1L);
 
         return List.of(
+                DynamicTest.dynamicTest("시간을 추가한다", () -> {
+                    RestAssured.given().log().all()
+                            .contentType(ContentType.JSON)
+                            .body(timeParams)
+                            .when().post("/times")
+                            .then().log().all()
+                            .statusCode(200);
+                }),
+
                 DynamicTest.dynamicTest("예약을 추가한다.", () -> {
                     RestAssured.given().log().all()
                             .contentType(ContentType.JSON)

@@ -17,8 +17,8 @@ class ReservationResponseTest {
         final long timeId = 1L;
         final String startAt = "13:00";
 
-        final TimeResponse timeResponse = new TimeResponse(timeId, startAt);
-        final ReservationResponse reservationResponse = new ReservationResponse(id, name, date, timeResponse);
+        final ReservationTimeResponse reservationTimeResponse = new ReservationTimeResponse(timeId, startAt);
+        final ReservationResponse reservationResponse = new ReservationResponse(id, name, date, reservationTimeResponse);
 
         final Reservation reservation = new Reservation(id, name, date, timeId, startAt);
 

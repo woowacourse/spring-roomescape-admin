@@ -20,10 +20,10 @@ import roomescape.model.ReservationTime;
 
 @SpringBootTest(webEnvironment = WebEnvironment.RANDOM_PORT)
 @DirtiesContext(classMode = DirtiesContext.ClassMode.BEFORE_EACH_TEST_METHOD)
-class TimeDaoTest {
+class ReservationTimeDaoTest {
 
     @Autowired
-    TimeDao timeDao;
+    ReservationTimeDao reservationTimeDao;
 
     @Autowired
     JdbcTemplate jdbcTemplate;
@@ -48,12 +48,12 @@ class TimeDaoTest {
     @Test
     void saveTime() {
         //given
-        final List<ReservationTime> beforeSaving = timeDao.findAll();
+        final List<ReservationTime> beforeSaving = reservationTimeDao.findAll();
         final ReservationTime time = ReservationTime.create("13:00");
 
         //when
-        timeDao.save(time);
-        final List<ReservationTime> afterSaving = timeDao.findAll();
+        reservationTimeDao.save(time);
+        final List<ReservationTime> afterSaving = reservationTimeDao.findAll();
 
         //then
         assertAll(
@@ -65,13 +65,13 @@ class TimeDaoTest {
     @DisplayName("시간 삭제")
     @Test
     void removeTime() {
-        final List<ReservationTime> beforeSaving = timeDao.findAll();
+        final List<ReservationTime> beforeSaving = reservationTimeDao.findAll();
         final ReservationTime reservationTime = ReservationTime.create("15:00");
 
-        timeDao.save(reservationTime);
-        final List<ReservationTime> afterSaving = timeDao.findAll();
-        timeDao.remove(1L);
-        final List<ReservationTime> afterRemoving = timeDao.findAll();
+        reservationTimeDao.save(reservationTime);
+        final List<ReservationTime> afterSaving = reservationTimeDao.findAll();
+        reservationTimeDao.remove(1L);
+        final List<ReservationTime> afterRemoving = reservationTimeDao.findAll();
 
         assertAll(
                 () -> assertThat(beforeSaving).isEmpty(),
@@ -88,8 +88,8 @@ class TimeDaoTest {
         final ReservationTime expected = reservationTime.toReservationTime(1L);
 
         //when
-        timeDao.save(reservationTime);
-        final Optional<ReservationTime> findReservationTime = timeDao.findById(1L);
+        reservationTimeDao.save(reservationTime);
+        final Optional<ReservationTime> findReservationTime = reservationTimeDao.findById(1L);
 
         //then
         assertThat(findReservationTime).contains(expected);
@@ -106,7 +106,7 @@ class TimeDaoTest {
         final List<ReservationTime> reservations = List.of(reservationTime1, reservationTime2, reservationTime3);
 
         for (final ReservationTime reservationTime : reservations) {
-            timeDao.save(reservationTime);
+            reservationTimeDao.save(reservationTime);
         }
 
         final List<ReservationTime> expected = new ArrayList<>();
@@ -115,7 +115,7 @@ class TimeDaoTest {
         }
 
         //when
-        final List<ReservationTime> findAll = timeDao.findAll();
+        final List<ReservationTime> findAll = reservationTimeDao.findAll();
 
         //then
         assertThat(findAll).isEqualTo(expected);

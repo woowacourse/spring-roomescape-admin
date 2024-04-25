@@ -9,34 +9,34 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
-import roomescape.dto.TimeRequest;
-import roomescape.dto.TimeResponse;
-import roomescape.service.TimeService;
+import roomescape.dto.ReservationTimeRequest;
+import roomescape.dto.ReservationTimeResponse;
+import roomescape.service.ReservationTimeService;
 
 @RestController
 @RequestMapping("/times")
-public class TimeController {
+public class ReservationTimeController {
 
-    private final TimeService timeService;
+    private final ReservationTimeService reservationTimeService;
 
-    public TimeController(final TimeService timeService) {
-        this.timeService = timeService;
+    public ReservationTimeController(final ReservationTimeService reservationTimeService) {
+        this.reservationTimeService = reservationTimeService;
     }
 
     @GetMapping
-    public List<TimeResponse> getTimes() {
-        return timeService.findAll();
+    public List<ReservationTimeResponse> getTimes() {
+        return reservationTimeService.findAll();
     }
 
     @PostMapping
-    public TimeResponse save(@RequestBody final TimeRequest timeRequest) {
-        return timeService.save(timeRequest);
+    public ReservationTimeResponse save(@RequestBody final ReservationTimeRequest reservationTimeRequest) {
+        return reservationTimeService.save(reservationTimeRequest);
     }
 
     @DeleteMapping("/{id}")
     public ResponseEntity<Void> delete(@PathVariable("id") final long id) {
         try {
-            timeService.remove(id);
+            reservationTimeService.remove(id);
             return ResponseEntity.ok()
                     .build();
         } catch (final IllegalArgumentException exception) {

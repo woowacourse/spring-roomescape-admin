@@ -10,15 +10,15 @@ import org.springframework.boot.test.context.SpringBootTest.WebEnvironment;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.test.annotation.DirtiesContext;
-import roomescape.dto.TimeRequest;
-import roomescape.dto.TimeResponse;
+import roomescape.dto.ReservationTimeRequest;
+import roomescape.dto.ReservationTimeResponse;
 
 @SpringBootTest(webEnvironment = WebEnvironment.RANDOM_PORT)
 @DirtiesContext(classMode = DirtiesContext.ClassMode.BEFORE_EACH_TEST_METHOD)
-class TimeControllerTest {
+class ReservationTimeControllerTest {
 
     @Autowired
-    TimeController controller;
+    ReservationTimeController controller;
 
     @Test
     @DisplayName("시간 예약 조회")
@@ -30,11 +30,11 @@ class TimeControllerTest {
     @Test
     void saveTime() {
         //given
-        final TimeRequest time = new TimeRequest("14:00");
-        final TimeResponse expected = new TimeResponse(1L, "14:00");
+        final ReservationTimeRequest time = new ReservationTimeRequest("14:00");
+        final ReservationTimeResponse expected = new ReservationTimeResponse(1L, "14:00");
 
         //when
-        final TimeResponse saved = controller.save(time);
+        final ReservationTimeResponse saved = controller.save(time);
 
         //then
         assertThat(saved).isEqualTo(expected);
@@ -44,8 +44,8 @@ class TimeControllerTest {
     @Test
     void deleteReservation() {
         //given
-        final TimeRequest time = new TimeRequest("14:00");
-        final TimeResponse saved = controller.save(time);
+        final ReservationTimeRequest time = new ReservationTimeRequest("14:00");
+        final ReservationTimeResponse saved = controller.save(time);
 
         //when
         assert saved != null;

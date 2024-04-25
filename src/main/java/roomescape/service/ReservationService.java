@@ -8,21 +8,21 @@ import roomescape.dto.ReservationResponse;
 import roomescape.model.Reservation;
 import roomescape.model.ReservationTime;
 import roomescape.repository.ReservationDao;
-import roomescape.repository.TimeDao;
+import roomescape.repository.ReservationTimeDao;
 
 @Service
 public class ReservationService {
 
     private final ReservationDao reservationDao;
-    private final TimeDao timeDao;
+    private final ReservationTimeDao reservationTimeDao;
 
-    public ReservationService(final ReservationDao reservationDao, final TimeDao timeDao) {
+    public ReservationService(final ReservationDao reservationDao, final ReservationTimeDao reservationTimeDao) {
         this.reservationDao = reservationDao;
-        this.timeDao = timeDao;
+        this.reservationTimeDao = reservationTimeDao;
     }
 
     public ReservationResponse save(final ReservationRequest request) {
-        final Optional<ReservationTime> findTime = timeDao.findById(request.timeId());
+        final Optional<ReservationTime> findTime = reservationTimeDao.findById(request.timeId());
         if (findTime.isEmpty()) {
             throw new IllegalArgumentException("존재하지 않는 시간입니다.");
         }

@@ -3,12 +3,12 @@ package roomescape.dto;
 import java.time.format.DateTimeFormatter;
 import roomescape.model.ReservationTime;
 
-public record TimeResponse(Long id, String startAt) {
+public record ReservationTimeResponse(Long id, String startAt) {
 
     private static final DateTimeFormatter TIME_FORMATTER = DateTimeFormatter.ofPattern("HH:mm");
 
-    public static TimeResponse from(final ReservationTime reservationTime) {
+    public static ReservationTimeResponse from(final ReservationTime reservationTime) {
         final String startAt = reservationTime.getStartAt().format(TIME_FORMATTER);
-        return new TimeResponse(reservationTime.getId(), startAt);
+        return new ReservationTimeResponse(reservationTime.getId(), startAt);
     }
 }

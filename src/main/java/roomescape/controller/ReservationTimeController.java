@@ -1,63 +1,46 @@
 package roomescape.controller;
 
 import java.net.URI;
-import java.time.LocalTime;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
-import javax.sql.DataSource;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
-import org.springframework.jdbc.core.JdbcTemplate;
-import org.springframework.jdbc.core.simple.SimpleJdbcInsert;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
+import roomescape.dao.ReservationTimeDao;
 import roomescape.domain.ReservationTime;
 import roomescape.dto.TimeRequest;
 import roomescape.dto.TimeResponse;
 
 @RestController
 public class ReservationTimeController {
-    private final JdbcTemplate jdbcTemplate;
-    private final SimpleJdbcInsert jdbcInsert;
+    private final ReservationTimeDao reservationTimeDao;
 
-    public ReservationTimeController(JdbcTemplate jdbcTemplate, DataSource dataSource) {
-        this.jdbcTemplate = jdbcTemplate;
-        this.jdbcInsert = new SimpleJdbcInsert(dataSource)
-                .withTableName("reservation_time")
-                .usingGeneratedKeyColumns("id");
+    @Autowired
+    public ReservationTimeController(ReservationTimeDao reservationTimeDao) {
+        this.reservationTimeDao = reservationTimeDao;
     }
 
     @GetMapping("/times")
-    public List<ReservationTime> times() {
-        String sql = "SELECT id, start_at FROM reservation_time";
-        return jdbcTemplate.query(
-                sql,
-                (resultSet, rowNum) -> {
-                    return new ReservationTime(
-                            resultSet.getLong("id"),
-                            LocalTime.parse(resultSet.getString("start_at"))
-                    );
-                });
+    public List<TimeResponse> times() {
+        return reservationTimeDao.getReservationTimes().stream()
+                .map(TimeResponse::new)
+                .toList();
     }
 
     @PostMapping("/times")
     public ResponseEntity<TimeResponse> addTime(@RequestBody TimeRequest timeRequest) {
-        Map<String, String> params = new HashMap<>();
-        params.put("start_at", timeRequest.getStartAt().toString());
-        Long id = jdbcInsert.executeAndReturnKey(params).longValue();
-        ReservationTime reservationTime = timeRequest.toTime(id);
-        return ResponseEntity.created(URI.create("/times/" + id))
+        ReservationTime reservationTime = reservationTimeDao.add(timeRequest);
+        return ResponseEntity.created(URI.create("/times/" + reservationTime.getId()))
                 .body(new TimeResponse(reservationTime));
     }
 
     @DeleteMapping("/times/{id}")
     public ResponseEntity<Void> deleteTime(@PathVariable Long id) {
-        String sql = "DELETE FROM reservation_time WHERE id = ?";
-        jdbcTemplate.update(sql, id);
+        reservationTimeDao.delete(id);
         return ResponseEntity.noContent().build();
     }
 }

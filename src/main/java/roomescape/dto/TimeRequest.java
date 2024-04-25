@@ -17,7 +17,7 @@ public class TimeRequest {
         return startAt;
     }
 
-    public ReservationTime toTime(Long id) {
+    public ReservationTime toReservationTime(Long id) {
         return new ReservationTime(id, this.startAt);
     }
 }

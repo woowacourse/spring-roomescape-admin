@@ -11,6 +11,7 @@ import roomescape.entity.ReservationTime;
 import javax.sql.DataSource;
 import java.time.LocalTime;
 import java.util.List;
+import java.util.Optional;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
@@ -43,6 +44,20 @@ class ReservationTimeRepositoryTest {
 
         // then
         assertThat(actual).containsExactlyInAnyOrderElementsOf(expected);
+    }
+
+    @Test
+    @DisplayName("특정 id를 통해 예약 시간 데이터를 조회한다.")
+    void findById() {
+        // given
+        Long id = 2L;
+        ReservationTime expected = new ReservationTime(id, LocalTime.of(11, 20));
+
+        // when
+        Optional<ReservationTime> actual = timeRepository.findById(id);
+
+        // then
+        assertThat(actual).hasValue(expected);
     }
 
     @Test

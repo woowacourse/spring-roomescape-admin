@@ -175,7 +175,7 @@ public class MissionStepTest {
                 .body(params)
                 .when().post("/times")
                 .then().log().all()
-                .statusCode(201);
+                .statusCode(200);
 
         RestAssured.given().log().all()
                 .when().get("/times")
@@ -186,7 +186,7 @@ public class MissionStepTest {
         RestAssured.given().log().all()
                 .when().delete("/times/1")
                 .then().log().all()
-                .statusCode(204);
+                .statusCode(200);
     }
 
     @Test

@@ -1,18 +1,13 @@
 package roomescape.dto;
 
-import com.fasterxml.jackson.annotation.JsonFormat;
 import java.time.LocalDate;
-import java.time.LocalDateTime;
-import java.time.LocalTime;
-import roomescape.domain.Reservation;
+import java.util.Objects;
 
-public record ReservationRequest(
-        String name,
-        @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd", timezone = "Asia/Seoul") LocalDate date,
+public record ReservationRequest(String name, LocalDate date, Long timeId) {
 
-        @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "HH:mm", timezone = "Asia/Seoul") LocalTime time
-) {
-    public Reservation toReservation(final long id) {
-        return new Reservation(id, name, LocalDateTime.of(date, time));
+    public ReservationRequest {
+        Objects.requireNonNull(name);
+        Objects.requireNonNull(date);
+        Objects.requireNonNull(timeId);
     }
 }

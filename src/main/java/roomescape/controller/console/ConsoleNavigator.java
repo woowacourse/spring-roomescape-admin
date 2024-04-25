@@ -3,17 +3,12 @@ package roomescape.controller.console;
 import jakarta.annotation.PostConstruct;
 import java.util.EnumMap;
 import java.util.Map;
-import org.springframework.boot.CommandLineRunner;
-import org.springframework.boot.autoconfigure.condition.ConditionalOnBean;
-import org.springframework.context.annotation.Bean;
 import org.springframework.stereotype.Component;
-import roomescape.RoomescapeConsoleApplication;
 import roomescape.view.InputView;
 import roomescape.view.OutputView;
 import roomescape.view.command.AdminCommand;
 
 @Component
-@ConditionalOnBean(RoomescapeConsoleApplication.class)
 public class ConsoleNavigator {
 
     private final ReservationConsoleController reservationController;
@@ -43,10 +38,5 @@ public class ConsoleNavigator {
                 AdminCommand.TIME_SLOT_MANAGEMENT, timeSlotController::menu,
                 AdminCommand.EXIT, () -> {}
         ));
-    }
-
-    @Bean
-    public CommandLineRunner executeOnStartUp() {
-        return args -> this.run();
     }
 }

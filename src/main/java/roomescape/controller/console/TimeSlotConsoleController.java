@@ -1,9 +1,7 @@
 package roomescape.controller.console;
 
 import java.util.List;
-import org.springframework.boot.autoconfigure.condition.ConditionalOnBean;
 import org.springframework.stereotype.Component;
-import roomescape.RoomescapeConsoleApplication;
 import roomescape.controller.dto.TimeSlotCreationRequest;
 import roomescape.controller.dto.TimeSlotCreationResponse;
 import roomescape.service.TimeSlotService;
@@ -11,7 +9,6 @@ import roomescape.view.InputView;
 import roomescape.view.OutputView;
 
 @Component
-@ConditionalOnBean(RoomescapeConsoleApplication.class)
 public class TimeSlotConsoleController extends ManagementController {
 
     private final TimeSlotService timeSlotService;

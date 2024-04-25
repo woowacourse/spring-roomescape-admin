@@ -14,11 +14,12 @@ import roomescape.controller.dto.ReservationRequest;
 import roomescape.controller.dto.ReservationResponse;
 import roomescape.domain.Reservation;
 import roomescape.domain.TimeSlot;
+import roomescape.environment.WebConfig;
 import roomescape.repository.ReservationRepository;
 import roomescape.repository.TimeSlotRepository;
 
 @SpringBootTest(
-        classes = TestConfig.class,
+        classes = {WebConfig.class, TestConfig.class},
         webEnvironment = SpringBootTest.WebEnvironment.NONE,
         properties = "spring.main.allow-bean-definition-overriding=true"
 )

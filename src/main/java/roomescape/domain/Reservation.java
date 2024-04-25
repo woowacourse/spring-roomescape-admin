@@ -16,10 +16,6 @@ public class Reservation {
         this.reservationTime = reservationTime;
     }
 
-    public boolean isIdOf(Long id) {
-        return this.id.equals(id);
-    }
-
     public Long getId() {
         return id;
     }

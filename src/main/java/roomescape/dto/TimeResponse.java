@@ -1,14 +1,14 @@
 package roomescape.dto;
 
 import java.time.LocalTime;
-import roomescape.domain.Time;
+import roomescape.domain.ReservationTime;
 
 public class TimeResponse {
     private final Long id;
     private final LocalTime startAt;
 
-    public TimeResponse(Time time) {
-        this(time.getId(), time.getStartAt());
+    public TimeResponse(ReservationTime reservationTime) {
+        this(reservationTime.getId(), reservationTime.getStartAt());
     }
 
     public TimeResponse(Long id, LocalTime startAt) {

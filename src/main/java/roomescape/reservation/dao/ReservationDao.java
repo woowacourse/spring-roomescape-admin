@@ -28,28 +28,18 @@ public class ReservationDao {
     }
 
     public List<Reservation> findAll() {
-        final String sql = "SELECT \n" +
-                "    r.id as reservation_id, \n" +
-                "    r.name, \n" +
-                "    r.date, \n" +
-                "    t.id as time_id, \n" +
-                "    t.start_at as time_value \n" +
-                "FROM reservation as r \n" +
-                "inner join reservation_time as t \n" +
-                "on r.time_id = t.id";
+        final String sql = "SELECT r.id AS reservation_id, r.name, r.date, t.id AS time_id, t.start_at AS time_value " +
+                "FROM reservation AS r " +
+                "INNER JOIN reservation_time AS t " +
+                "ON r.time_id = t.id";
         return jdbcTemplate.query(sql, (resultSet, rowNum) -> rowMapper.mapRow(resultSet, rowNum));
     }
 
     public Reservation findById(final Long id) {
-        final String sql = "SELECT \n" +
-                "    r.id as reservation_id, \n" +
-                "    r.name, \n" +
-                "    r.date, \n" +
-                "    t.id as time_id, \n" +
-                "    t.start_at as time_value \n" +
-                "FROM reservation as r \n" +
-                "inner join reservation_time as t \n" +
-                "on r.time_id = t.id and r.id = ?";
+        final String sql = "SELECT r.id AS reservation_id, r.name, r.date, t.id AS time_id, t.start_at AS time_value " +
+                "FROM reservation AS r " +
+                "INNER JOIN reservation_time AS t " +
+                "ON r.time_id = t.id AND r.id = ?";
         return jdbcTemplate.queryForObject(sql, (resultSet, rowNum) -> rowMapper.mapRow(resultSet, rowNum), id);
     }
 
@@ -58,8 +48,7 @@ public class ReservationDao {
                 .addValue("name", requestDto.name())
                 .addValue("date", requestDto.date())
                 .addValue("time_id", requestDto.timeId());
-        return simpleJdbcInsert.executeAndReturnKey(params)
-                               .longValue();
+        return simpleJdbcInsert.executeAndReturnKey(params).longValue();
     }
 
     public int deleteById(final Long id) {

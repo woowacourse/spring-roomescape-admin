@@ -28,7 +28,7 @@ public class TimeService {
     }
 
     public boolean deleteTime(long id) {
-        if(reservationDao.readReservationCountByTimeId(id) == 0) {
+        if (reservationDao.readReservationCountByTimeId(id) == 0) {
             timeDao.deleteTime(id);
             return true;
         }

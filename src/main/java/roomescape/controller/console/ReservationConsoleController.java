@@ -1,14 +1,14 @@
 package roomescape.controller.console;
 
 import java.util.List;
-import org.springframework.stereotype.Component;
+import org.springframework.stereotype.Controller;
 import roomescape.controller.dto.ReservationRequest;
 import roomescape.controller.dto.ReservationResponse;
 import roomescape.service.ReservationService;
 import roomescape.view.InputView;
 import roomescape.view.OutputView;
 
-@Component
+@Controller
 public class ReservationConsoleController extends ManagementController {
 
     private final ReservationService reservationService;

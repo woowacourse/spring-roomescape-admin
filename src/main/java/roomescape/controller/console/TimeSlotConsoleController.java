@@ -1,14 +1,14 @@
 package roomescape.controller.console;
 
 import java.util.List;
-import org.springframework.stereotype.Component;
+import org.springframework.stereotype.Controller;
 import roomescape.controller.dto.TimeSlotCreationRequest;
 import roomescape.controller.dto.TimeSlotCreationResponse;
 import roomescape.service.TimeSlotService;
 import roomescape.view.InputView;
 import roomescape.view.OutputView;
 
-@Component
+@Controller
 public class TimeSlotConsoleController extends ManagementController {
 
     private final TimeSlotService timeSlotService;

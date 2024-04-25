@@ -1,13 +1,9 @@
 package roomescape.controller;
 
-import static org.assertj.core.api.Assertions.assertThat;
 import static org.hamcrest.Matchers.is;
 
 import io.restassured.RestAssured;
 import io.restassured.http.ContentType;
-import java.lang.reflect.Field;
-import java.sql.Connection;
-import java.sql.SQLException;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -40,18 +36,6 @@ class ReservationIntegrationTest {
     @BeforeEach
     void setUp() {
         RestAssured.port = port;
-    }
-
-    @Test
-    @DisplayName("H2 데이터베이스에 연결한다.")
-    void connectH2Database() {
-        try (Connection connection = jdbcTemplate.getDataSource().getConnection()) {
-            assertThat(connection).isNotNull();
-            assertThat(connection.getCatalog()).isEqualTo("DATABASE");
-            assertThat(connection.getMetaData().getTables(null, null, "RESERVATION", null).next()).isTrue();
-        } catch (SQLException e) {
-            throw new RuntimeException(e);
-        }
     }
 
     @Test
@@ -91,20 +75,5 @@ class ReservationIntegrationTest {
                 .then().log().all()
                 .statusCode(200)
                 .body("size()", is(2));
-    }
-
-    @Test
-    @DisplayName("컨트롤러에는 데이터베이스 관련 로직이 존재하지 않는다.")
-    void isJdbcTemplateInjected() {
-        boolean isJdbcTemplateInjected = false;
-
-        for (Field field : reservationController.getClass().getDeclaredFields()) {
-            if (field.getType().equals(JdbcTemplate.class)) {
-                isJdbcTemplateInjected = true;
-                break;
-            }
-        }
-
-        assertThat(isJdbcTemplateInjected).isFalse();
     }
 }

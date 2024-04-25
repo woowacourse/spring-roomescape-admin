@@ -1,4 +1,8 @@
 package roomescape.dto.response;
 
-public record ReservationTimeCreateResponse(long id, String startAt) {
+import com.fasterxml.jackson.annotation.JsonFormat;
+
+public record ReservationTimeCreateResponse(long id,
+                                            @JsonFormat(pattern = "HH:mm")
+                                            String startAt) {
 }

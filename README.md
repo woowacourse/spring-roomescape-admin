@@ -43,30 +43,3 @@
 | GET         | `/times`             | 시간 목록 조회    |
 | POST        | `/times`             | 시간 추가       | 
 | DELETE      | `/times/{id}`        | 시간 삭제       |
-
-## DB 스키마
-
-### 예약
-
-```mysql
-CREATE TABLE reservation
-(
-    id      BIGINT       NOT NULL AUTO_INCREMENT,
-    name    VARCHAR(255) NOT NULL,
-    date    VARCHAR(255) NOT NULL,
-    time_id BIGINT,
-    PRIMARY KEY (id),
-    FOREIGN KEY (time_id) REFERENCES reservation_time (id)
-);
-```
-
-### 시간
-
-```mysql
-CREATE TABLE reservation_time
-(
-    id       BIGINT       NOT NULL AUTO_INCREMENT,
-    start_at VARCHAR(255) NOT NULL,
-    PRIMARY KEY (id)
-);
-```

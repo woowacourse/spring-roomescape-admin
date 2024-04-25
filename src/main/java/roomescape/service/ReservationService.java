@@ -32,7 +32,7 @@ public class ReservationService {
         return reservationDAO.selectAll();
     }
 
-    public void delete() {
-
+    public void delete(final long id) {
+        reservationDAO.deleteById(id);
     }
 }

@@ -35,11 +35,19 @@ public class ReservationTimeView {
         }
     }
 
-    public void printReservationTime(final int index, final ReservationTimeResponse response) {
-        System.out.printf("%d. %s%n", index, response.startAt().toString());
-    }
-
     public void printSuccessfullyDeleted() {
         System.out.println("[INFO] 예약 가능 시간이 삭제되었습니다.");
     }
+
+    public void printReservationTimes(final List<ReservationTimeResponse> reservationTimeResponses) {
+        System.out.println("[INFO] 방탈출 예약이 가능한 시간의 목록입니다.");
+        for (int index = 0; index < reservationTimeResponses.size(); index++) {
+            printReservationTime(index + 1, reservationTimeResponses.get(index));
+        }
+    }
+
+    private void printReservationTime(final int index, final ReservationTimeResponse response) {
+        System.out.printf("%d. %s%n", index, response.startAt().toString());
+    }
 }
+

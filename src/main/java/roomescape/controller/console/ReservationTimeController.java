@@ -35,6 +35,10 @@ public class ReservationTimeController {
         reservationTimeView.printSuccessfullyDeleted();
     }
 
+    public void getTimes() {
+        reservationTimeView.printReservationTimes(getReservationTimeResponses());
+    }
+
     private List<ReservationTimeResponse> getReservationTimeResponses() {
         return reservationTimeService.getTimes()
                 .stream()

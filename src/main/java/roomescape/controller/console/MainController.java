@@ -12,7 +12,8 @@ public class MainController {
 
     private final Map<Command, CommandExecutor> commands = Map.of(
             new Command(1), () -> reservationTimeController.saveTime(),
-            new Command(2), () -> reservationTimeController.deleteTime()
+            new Command(2), () -> reservationTimeController.deleteTime(),
+            new Command(3), () -> reservationTimeController.getTimes()
     );
 
     public void run() {

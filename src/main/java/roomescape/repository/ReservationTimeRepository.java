@@ -7,6 +7,7 @@ import org.springframework.stereotype.Repository;
 import roomescape.domain.ReservationTime;
 
 import java.sql.PreparedStatement;
+import java.sql.Time;
 import java.util.List;
 import java.util.Optional;
 
@@ -17,7 +18,7 @@ public class ReservationTimeRepository {
 
     private final RowMapper<ReservationTime> reservationTimeRowMapper = (resultSet, rowNum) -> new ReservationTime(
             resultSet.getLong("id"),
-            resultSet.getString("start_at")
+            resultSet.getTime("start_at").toLocalTime()
     );
 
 
@@ -33,7 +34,7 @@ public class ReservationTimeRepository {
             PreparedStatement ps = con.prepareStatement(
                     sql,
                     new String[]{"id"});
-            ps.setString(1, time.getStartAt());
+            ps.setTime(1, Time.valueOf(time.getStartAt()));
             return ps;
         }, keyHolder);
         return new ReservationTime(keyHolder.getKey().longValue(), time.getStartAt());

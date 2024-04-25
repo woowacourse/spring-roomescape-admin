@@ -20,7 +20,8 @@ public class ReservationRepository {
             resultSet.getLong("id"),
             resultSet.getString("name"),
             resultSet.getDate("date").toLocalDate(),
-            new ReservationTime(resultSet.getLong("reservation_time_id"), resultSet.getString("time_value"))
+            new ReservationTime(resultSet.getLong("reservation_time_id"),
+                    resultSet.getTime("time_value").toLocalTime())
     );
 
     public ReservationRepository(JdbcTemplate jdbcTemplate) {

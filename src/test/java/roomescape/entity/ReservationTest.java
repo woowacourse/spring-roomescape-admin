@@ -18,8 +18,7 @@ class ReservationTest {
                 null,
                 "seyang",
                 LocalDate.of(2024, 4, 24),
-                null);
-        ReservationTime reservationTime = new ReservationTime(1L, LocalTime.of(10, 0));
+                new ReservationTime(1L, LocalTime.of(10, 0)));
         Reservation expected = new Reservation(
                 2L,
                 "seyang",
@@ -27,7 +26,7 @@ class ReservationTest {
                 new ReservationTime(1L, LocalTime.of(10, 0)));
 
         // when
-        Reservation actual = reservation.assign(2L, reservationTime);
+        Reservation actual = reservation.assignId(2L);
 
         // then
         assertThat(actual).isEqualTo(expected);

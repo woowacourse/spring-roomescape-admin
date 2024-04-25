@@ -64,8 +64,7 @@ public class ReservationH2Repository implements ReservationRepository {
 
         try {
             Long id = simpleJdbcInsert.executeAndReturnKey(params).longValue();
-            ReservationTime time = new ReservationTime(reservation.time().id(), null);
-            return reservation.assign(id, time);
+            return reservation.assignId(id);
         } catch (DataIntegrityViolationException e) {
             throw new IllegalArgumentException("존재하지 않는 예약 시간입니다.");
         }

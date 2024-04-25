@@ -41,11 +41,11 @@ class TimeServiceTest {
     @DisplayName("예약 시간을 추가한다.")
     void addTIme() {
         // given
-        TimeRequest time = new TimeRequest(LocalTime.of(13, 30));
+        TimeRequest request = new TimeRequest(LocalTime.of(13, 30));
         TimeResponse expected = new TimeResponse(4L, "13:30");
 
         // when
-        TimeResponse actual = timeService.addTime(time);
+        TimeResponse actual = timeService.addTime(request);
 
         // then
         assertThat(actual).isEqualTo(expected);
@@ -53,7 +53,7 @@ class TimeServiceTest {
 
     @Test
     @DisplayName("존재하는 예약 시간을 삭제한다.")
-    void deleteTImePresent() {
+    void deleteTimePresent() {
         // given
         Long id = 2L;
 

@@ -4,7 +4,9 @@ import org.springframework.stereotype.Service;
 import roomescape.controller.reservation.ReservationRequest;
 import roomescape.controller.reservation.ReservationResponse;
 import roomescape.entity.Reservation;
+import roomescape.entity.ReservationTime;
 import roomescape.repository.ReservationRepository;
+import roomescape.repository.ReservationTimeRepository;
 
 import java.util.List;
 
@@ -12,13 +14,23 @@ import java.util.List;
 public class ReservationService {
 
     private final ReservationRepository reservationRepository;
+    private final ReservationTimeRepository reservationTimeRepository;
 
-    public ReservationService(ReservationRepository reservationRepository) {
+    public ReservationService(ReservationRepository reservationRepository, ReservationTimeRepository reservationTimeRepository) {
         this.reservationRepository = reservationRepository;
+        this.reservationTimeRepository = reservationTimeRepository;
+    }
+
+    private Reservation assignTime(Reservation reservation) {
+        ReservationTime time = reservationTimeRepository
+                .findById(reservation.id())
+                .orElse(reservation.time());
+        return reservation.assignTime(time);
     }
 
     public List<ReservationResponse> getReservations() {
         return reservationRepository.findAll().stream()
+                .map(this::assignTime)
                 .map(ReservationResponse::from)
                 .toList();
     }
@@ -26,7 +38,13 @@ public class ReservationService {
     public ReservationResponse addReservation(ReservationRequest reservationRequest) {
         Reservation parsedReservation = reservationRequest.toDomain();
         Reservation savedReservation = reservationRepository.save(parsedReservation);
-        return ReservationResponse.from(savedReservation);
+
+        ReservationTime time = reservationTimeRepository
+                .findById(savedReservation.id())
+                .orElse(savedReservation.time());
+        Reservation assignedReservation = savedReservation.assignTime(time);
+
+        return ReservationResponse.from(assignedReservation);
     }
 
     public int deleteReservation(Long id) {

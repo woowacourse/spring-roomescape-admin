@@ -1,7 +1,6 @@
 package roomescape.controller;
 
 import org.springframework.http.HttpStatus;
-import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 import roomescape.domain.Reservation;
 import roomescape.dto.ReservationRepositoryDto;
@@ -13,7 +12,7 @@ import roomescape.repository.ReservationTimeRepository;
 
 import java.util.List;
 
-@Controller
+@RestController
 @RequestMapping("/reservations")
 public class ReservationsController {
 
@@ -26,7 +25,6 @@ public class ReservationsController {
     }
 
     @GetMapping
-    @ResponseBody
     public List<ReservationsResponse> reservations() {
         return reservationRepository.findAll()
                 .stream()
@@ -36,7 +34,6 @@ public class ReservationsController {
     }
 
     @PostMapping
-    @ResponseBody
     public ReservationsResponse addReservation(@RequestBody ReservationsRequest reservationsRequest) {
         ReservationRepositoryDto requestReservationDto = new ReservationRepositoryDto(null, reservationsRequest.name(), reservationsRequest.date(), reservationsRequest.timeId());
         ReservationRepositoryDto newReservationDto = reservationRepository.add(requestReservationDto);
@@ -50,7 +47,6 @@ public class ReservationsController {
     }
 
     @DeleteMapping("/{id}")
-    @ResponseBody
     @ResponseStatus(HttpStatus.OK)
     public int deleteReservation(@PathVariable Long id) {
         return reservationRepository.remove(id);

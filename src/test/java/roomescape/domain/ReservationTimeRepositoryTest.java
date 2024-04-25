@@ -14,7 +14,6 @@ import org.springframework.boot.test.autoconfigure.jdbc.JdbcTest;
 import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.test.context.jdbc.Sql;
-import org.springframework.test.context.jdbc.Sql.ExecutionPhase;
 
 /*
  * 테스트 데이터베이스 초기 데이터
@@ -22,7 +21,7 @@ import org.springframework.test.context.jdbc.Sql.ExecutionPhase;
  * {ID=2, START_AT=11:00}
  */
 @JdbcTest
-@Sql(scripts = "/reset_test_data.sql", executionPhase = ExecutionPhase.BEFORE_TEST_METHOD)
+@Sql(scripts = "/reset_test_data.sql")
 class ReservationTimeRepositoryTest {
     private ReservationTimeRepository reservationTimeRepository;
 

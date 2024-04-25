@@ -11,7 +11,6 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.context.SpringBootTest.WebEnvironment;
 import org.springframework.boot.test.web.server.LocalServerPort;
 import org.springframework.test.context.jdbc.Sql;
-import org.springframework.test.context.jdbc.Sql.ExecutionPhase;
 import roomescape.dto.ReservationTimeRequest;
 
 /*
@@ -20,7 +19,7 @@ import roomescape.dto.ReservationTimeRequest;
  * {ID=2, START_AT=11:00}
  */
 @SpringBootTest(webEnvironment = WebEnvironment.RANDOM_PORT)
-@Sql(scripts = "/reset_test_data.sql", executionPhase = ExecutionPhase.BEFORE_TEST_METHOD)
+@Sql(scripts = "/reset_test_data.sql")
 class ReservationTimeControllerTest {
     @LocalServerPort
     private int port;

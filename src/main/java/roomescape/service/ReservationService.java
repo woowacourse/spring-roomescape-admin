@@ -31,7 +31,7 @@ public class ReservationService {
         return ReservationResponse.from(saved);
     }
 
-    public List<ReservationResponse> findAll2() {
+    public List<ReservationResponse> findAll() {
         final List<Reservation> reservations = reservationDao.findAll();
         return reservations.stream()
                 .map(ReservationResponse::from)

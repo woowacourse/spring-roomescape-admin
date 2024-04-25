@@ -24,7 +24,7 @@ class ReservationControllerTest {
     @Test
     @DisplayName("예약 조회")
     void getReservation() {
-        assertThat(controller.getReservations2()).isEmpty();
+        assertThat(controller.getReservations()).isEmpty();
     }
 
     @DisplayName("예약 추가")
@@ -38,7 +38,7 @@ class ReservationControllerTest {
         controller.save(reservation);
 
         //then
-        assertThat(controller.getReservations2()).hasSize(1);
+        assertThat(controller.getReservations()).hasSize(1);
     }
 
 
@@ -58,7 +58,7 @@ class ReservationControllerTest {
         controller.delete(body.id());
 
         //then
-        assertThat(controller.getReservations2()).isEmpty();
+        assertThat(controller.getReservations()).isEmpty();
     }
 
     @DisplayName("존재하지 않는 예약 삭제시 404 반환")

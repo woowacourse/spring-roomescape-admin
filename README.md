@@ -62,7 +62,7 @@
   - [x] 기존에 사용하던 List 및 AtomicLong을 제거한다.
   - [x] 예약 추가 시 예약 데이터 생성 후 생성된 id 값을 활용해서 응답한다.
 ### 시간 관리 기능 추가
-- [ ] 페이지는 `templates/admin/time.html` 파일을 사용한다.
+- [x] `admin/time` 요청 시 페이지는 `templates/admin/time.html` 파일을 사용한다.
 - [x] 시간 추가 API
 ```
 POST /times HTTP/1.1

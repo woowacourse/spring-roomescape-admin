@@ -16,7 +16,7 @@ import roomescape.dto.ReservationCreateRequest;
 @Repository
 public class ReservationRepository {
 
-    private static final String DATABASE = "reservation";
+    private static final String TABLE_NAME = "reservation";
 
     private final JdbcTemplate jdbcTemplate;
     private final SimpleJdbcInsert simpleJdbcInsert;
@@ -24,7 +24,7 @@ public class ReservationRepository {
     public ReservationRepository(JdbcTemplate jdbcTemplate, DataSource dataSource) {
         this.jdbcTemplate = jdbcTemplate;
         this.simpleJdbcInsert = new SimpleJdbcInsert(dataSource)
-                .withTableName("reservation")
+                .withTableName(TABLE_NAME)
                 .usingGeneratedKeyColumns("id");
     }
 
@@ -35,7 +35,7 @@ public class ReservationRepository {
                 + "r.date, "
                 + "t.id as time_id, "
                 + "t.start_at as time_value "
-                + "FROM " + DATABASE + " as r "
+                + "FROM " + TABLE_NAME + " as r "
                 + "inner join reservation_time as t "
                 + "on r.time_id = t.id";
 
@@ -57,16 +57,37 @@ public class ReservationRepository {
         );
     }
 
-    public Long save(ReservationCreateRequest reservationCreateRequest) {
+    private ReservationTime findByTimeId(Long timeId) {
+        String sql = "SELECT start_at FROM reservation_time WHERE id = ?";
+        return jdbcTemplate.queryForObject(
+                sql,
+                (resultSet, rowNum) -> {
+                    ReservationTime reservationTime
+                            = new ReservationTime(
+                            timeId,
+                            LocalTime.parse(resultSet.getString("start_at"))
+                    );
+                    return reservationTime;
+                }
+        );
+    }
+
+    public Reservation save(ReservationCreateRequest reservationCreateRequest) {
         SqlParameterSource parameterSource = new MapSqlParameterSource()
                 .addValue("name", reservationCreateRequest.name())
                 .addValue("date", reservationCreateRequest.date())
                 .addValue("time_id", reservationCreateRequest.timeId());
-        return simpleJdbcInsert.executeAndReturnKey(parameterSource).longValue();
+        Long id = simpleJdbcInsert.executeAndReturnKey(parameterSource).longValue();
+        ReservationTime reservationTime = findByTimeId(reservationCreateRequest.timeId());
+        return new Reservation(
+                id,
+                reservationCreateRequest.name(),
+                reservationCreateRequest.date(),
+                reservationTime);
     }
 
     public int deleteById(Long id) {
-        String sql = "delete from " + DATABASE + " where id = ?";
+        String sql = "delete from " + TABLE_NAME + " where id = ?";
         return jdbcTemplate.update(sql, id);
     }
 }

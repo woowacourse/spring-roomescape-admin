@@ -10,4 +10,6 @@ public interface TimeRepository {
     Time createTime(Time time);
 
     void deleteTime(Long id);
+
+    Time findTimeById(Long timeId);
 }

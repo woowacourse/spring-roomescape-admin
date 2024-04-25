@@ -13,6 +13,14 @@ import roomescape.domain.time.Time;
 @Repository
 public class H2TimeRepository implements TimeRepository {
 
+    private static final RowMapper<Time> ROW_MAPPER = (resultSet, rowNum) -> {
+        Time time = new Time(
+                resultSet.getLong("id"),
+                resultSet.getTime("start_at").toLocalTime()
+        );
+        return time;
+    };
+
     private final JdbcTemplate jdbcTemplate;
     private final SimpleJdbcInsert jdbcInsert;
 
@@ -24,17 +32,16 @@ public class H2TimeRepository implements TimeRepository {
     }
 
     @Override
+    public Time findTimeById(Long timeId) {
+        String sql = "SELECT * FROM reservation_time WHERE id = ?";
+        return jdbcTemplate.queryForObject(sql, ROW_MAPPER, timeId);
+    }
+
+    @Override
     public List<Time> findAllTimes() {
         String sql = "SELECT * FROM reservation_time";
-        RowMapper<Time> rowMapper = (resultSet, rowNum) -> {
-            Time time = new Time(
-                    resultSet.getLong("id"),
-                    resultSet.getTime("start_at").toLocalTime()
-            );
-            return time;
-        };
 
-        return jdbcTemplate.query(sql, rowMapper);
+        return jdbcTemplate.query(sql, ROW_MAPPER);
     }
 
     @Override

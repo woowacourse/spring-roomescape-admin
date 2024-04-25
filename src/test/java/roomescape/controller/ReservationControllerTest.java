@@ -24,7 +24,6 @@ class ReservationControllerTest {
     private final CollectionReservationTimeRepository timeRepository = new CollectionReservationTimeRepository(
             new ArrayList<>(List.of(new ReservationTime(timeId, time)))
     );
-    ;
 
     @Test
     @DisplayName("예약 정보를 잘 저장하는지 확인한다.")

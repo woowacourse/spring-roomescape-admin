@@ -39,7 +39,7 @@ public class ReservationTimeController {
     @PostMapping
     public ResponseEntity<ReservationTimeCreateResponse> createReservationTime(
             @RequestBody ReservationTimeCreateRequest reservationTimeCreateRequest) {
-        ReservationTime requestedReservationTime = reservationTimeCreateRequest.to();
+        ReservationTime requestedReservationTime = reservationTimeCreateRequest.toReservationTime();
         ReservationTime createdReservationTime =
                 reservationTimeRepository.createReservationTime(requestedReservationTime);
 

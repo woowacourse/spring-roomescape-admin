@@ -4,7 +4,7 @@ import roomescape.domain.ReservationTime;
 import roomescape.util.CustomDateTimeFormatter;
 
 public record ReservationTimeCreateRequest(String startAt) {
-    public ReservationTime to() {
+    public ReservationTime toReservationTime() {
         return new ReservationTime(
                 null,
                 CustomDateTimeFormatter.getLocalTime(startAt)

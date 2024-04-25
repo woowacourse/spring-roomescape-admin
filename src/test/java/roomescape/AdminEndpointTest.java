@@ -57,7 +57,7 @@ class AdminEndpointTest {
         List<ReservationTime> reservationTimes = reservationTimeRepository.findAll();
         int reservationTimeSize = reservationTimes.size();
 
-        HttpRestTestTemplate.assertGetOk("/time");
+        HttpRestTestTemplate.assertGetOk("/admin/time");
         HttpRestTestTemplate.assertGetOk("/times", "size()", reservationTimeSize);
     }
 

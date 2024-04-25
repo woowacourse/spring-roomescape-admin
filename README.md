@@ -33,7 +33,7 @@
 |-------------|----------------------|--------------|
 | GET         | `/admin`             | 관리자 메인 페이지   | 
 | GET         | `/admin/reservation` | 예약 관리 페이지    |
-| GET         | `/time`              | 예약 시간 관리 페이지 |
+| GET         | `/admin/time`        | 예약 시간 관리 페이지 |
 | GET         | `/reservations`      | 예약 목록 조회     |
 | POST        | `/reservations`      | 예약 추가        | 
 | DELETE      | `/reservations/{id}` | 예약 삭제        | 

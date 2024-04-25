@@ -18,8 +18,8 @@ import java.net.URI;
 public class ReservationController {
     private final ReservationService reservationService;
 
-    public ReservationController(ReservationService reservationService) {
-        this.reservationService = reservationService;
+    public ReservationController(ReservationService reservationServiceImpl) {
+        this.reservationService = reservationServiceImpl;
     }
 
     @GetMapping("/reservations")

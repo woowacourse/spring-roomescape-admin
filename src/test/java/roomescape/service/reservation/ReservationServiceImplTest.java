@@ -10,31 +10,31 @@ import roomescape.repository.ReservationRepositoryFake;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
-class ReservationServiceTest {
+class ReservationServiceImplTest {
 
-    private ReservationService reservationService;
+    private ReservationServiceImpl reservationServiceImpl;
 
     @BeforeEach
     void init() {
-        reservationService = new ReservationService(new ReservationRepositoryFake());
+        reservationServiceImpl = new ReservationServiceImpl(new ReservationRepositoryFake());
     }
 
     @DisplayName("예약 정보 삽입 테스트")
     @Test
     void insertTest() {
         ReservationRequestDto request = new ReservationRequestDto("name", "2000-09-07", "10:00");
-        ReservationResponseDto response = reservationService.addReservation(request);
+        ReservationResponseDto response = reservationServiceImpl.addReservation(request);
         assertThat(response.id()).isEqualTo(1L);
     }
 
     @DisplayName("예약 정보 전체 조회 테스트")
     @Test
     void findAllTest() {
-        reservationService.addReservation(new ReservationRequestDto("name1", "2000-09-07", "10:00"));
-        reservationService.addReservation(new ReservationRequestDto("name2", "2000-09-07", "10:00"));
-        reservationService.addReservation(new ReservationRequestDto("name3", "2000-09-07", "10:00"));
+        reservationServiceImpl.addReservation(new ReservationRequestDto("name1", "2000-09-07", "10:00"));
+        reservationServiceImpl.addReservation(new ReservationRequestDto("name2", "2000-09-07", "10:00"));
+        reservationServiceImpl.addReservation(new ReservationRequestDto("name3", "2000-09-07", "10:00"));
 
-        int findSize = reservationService.findAllReservation().reservations().size();
+        int findSize = reservationServiceImpl.findAllReservation().reservations().size();
         assertThat(findSize).isEqualTo(3);
     }
 
@@ -42,10 +42,10 @@ class ReservationServiceTest {
     @Test
     void deleteTest() {
         ReservationRequestDto request = new ReservationRequestDto("name", "2000-09-07", "10:00");
-        ReservationResponseDto response = reservationService.addReservation(request);
+        ReservationResponseDto response = reservationServiceImpl.addReservation(request);
 
-        reservationService.deleteReservationById(response.id());
-        int findSize = reservationService.findAllReservation().reservations().size();
+        reservationServiceImpl.deleteReservationById(response.id());
+        int findSize = reservationServiceImpl.findAllReservation().reservations().size();
         assertThat(findSize).isEqualTo(0);
     }
 
@@ -54,7 +54,7 @@ class ReservationServiceTest {
     void deleteFailTest() {
         Long noneExistId = -1L;
 
-        Assertions.assertThatThrownBy(() -> reservationService.deleteReservationById(noneExistId))
+        Assertions.assertThatThrownBy(() -> reservationServiceImpl.deleteReservationById(noneExistId))
                 .isInstanceOf(IllegalArgumentException.class);
     }
 }

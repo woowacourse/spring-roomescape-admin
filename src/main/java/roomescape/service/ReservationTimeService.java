@@ -27,7 +27,7 @@ public class ReservationTimeService {
         if (reservationRepository.isExistByReservationTimeId(reservationTimeId)) {
             throw new ReservationExistInReservationTimeException(reservationTimeId);
         }
-        if (!reservationTimeRepository.isExistById(reservationTimeId)) {
+        if (reservationTimeRepository.isNotExistById(reservationTimeId)) {
             throw new NotExistReservationTimeException(reservationTimeId);
         }
         reservationTimeRepository.deleteById(reservationTimeId);

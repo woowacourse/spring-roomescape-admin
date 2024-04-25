@@ -16,4 +16,7 @@ public interface ReservationTimeRepository {
 
     boolean isExistById(long id);
 
+    default boolean isNotExistById(long id) {
+        return !isExistById(id);
+    }
 }

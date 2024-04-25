@@ -22,10 +22,10 @@ class TimePageControllerTest {
     }
 
     @Test
-    @DisplayName("/admin/time 을 요청하면 time.html 를 반환한다.")
+    @DisplayName("/startAt 을 요청하면 startAt.html 를 반환한다.")
     void requestTime() {
         RestAssured.given().log().all()
-                .when().get("/admin/time")
+                .when().get("/time")
                 .then().log().all()
                 .statusCode(200);
     }

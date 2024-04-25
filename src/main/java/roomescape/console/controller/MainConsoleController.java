@@ -10,19 +10,16 @@ import roomescape.console.view.OutputView;
 public class MainConsoleController {
 
     private final InputView inputView;
-    private final OutputView outputView;
     private final ControllerMapper controllerMapper;
 
-    public MainConsoleController(InputView inputView, OutputView outputView, ControllerMapper controllerMapper) {
+    public MainConsoleController(InputView inputView, ControllerMapper controllerMapper) {
         this.inputView = inputView;
-        this.outputView = outputView;
         this.controllerMapper = controllerMapper;
     }
 
     public void run() {
         while (true) {
             try {
-                outputView.outputAdminMenu();
                 AdminMenu adminMenu = inputView.inputAdminMenu();
 
                 if (adminMenu == AdminMenu.QUIT) {

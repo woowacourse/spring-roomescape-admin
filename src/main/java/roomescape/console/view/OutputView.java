@@ -8,44 +8,6 @@ import roomescape.reservation.dto.response.ReservationTimeResponse;
 @Component
 public class OutputView {
 
-    public void outputAdminMenu() {
-        System.out.println("""
-                
-                <사용자 관리 명령어>
-                1. 시간 관리 기능
-                2. 예약 관리 기능
-                3. 종료
-                
-                """
-        );
-    }
-
-    public void outputReservationTimeMenu() {
-        System.out.println("""
-                
-                <사용자 관리 명령어>
-                - 시간등록: POST hh:mm 
-                    예시) POST 10:00
-                - 시간조회: GET
-                - 시간삭제: DELETE 1 
-                    예시) DELETE 1
-                    
-                """
-        );
-    }
-
-    public void outputReservationMenu() {
-        System.out.println("""
-                <사용자 관리 명령어>
-                - 예약등록: POST name, yyyy-MM-dd, {id} 
-                    예시) POST 브라운, 2023-08-05, 1
-                - 예약조회: GET
-                - 예약삭제: DELETE 1 
-                    예시) DELETE 1
-                """
-        );
-    }
-
     public void outputPostReservation(ReservationResponse reservationResponse) {
         System.out.println("예약이 성공적으로 등록되었습니다.");
         System.out.println(formatReservation(reservationResponse));

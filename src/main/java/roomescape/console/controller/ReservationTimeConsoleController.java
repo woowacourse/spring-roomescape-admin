@@ -40,8 +40,7 @@ public class ReservationTimeConsoleController implements ConsoleController {
 
     @Override
     public void run() {
-        outputView.outputReservationTimeMenu();
-        List<String> strings = inputView.inputCommandLine();
+        List<String> strings = inputView.inputReservationTimeMenu();
         Command command = new Command(strings);
         switch (command.getCommandType()) {
             case POST -> postReservationTime(InputConverter.toReservationTimeRequest(command.getBody()));

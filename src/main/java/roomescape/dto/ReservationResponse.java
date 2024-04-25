@@ -17,12 +17,7 @@ public record ReservationResponse(long id, String name, String date, Reservation
 
     public static List<ReservationResponse> toResponses(List<Reservation> reservations) {
         return reservations.stream()
-                .map(reservation -> new ReservationResponse(
-                        reservation.getId(),
-                        reservation.getName(),
-                        reservation.getDate(),
-                        reservation.getTime()
-                ))
+                .map(ReservationResponse::toResponse)
                 .toList();
     }
 }

@@ -23,8 +23,8 @@ public class ReservationTimeService {
     }
 
     public List<ReservationTimeResponse> getAllReservationTimes() {
-        List<ReservationTime> times = reservationTimeDao.getAll();
-        return ReservationTimeResponse.toResponses(times);
+        List<ReservationTime> reservationTimes = reservationTimeDao.getAll();
+        return ReservationTimeResponse.toResponses(reservationTimes);
     }
 
     public void deleteReservationTime(long id) {

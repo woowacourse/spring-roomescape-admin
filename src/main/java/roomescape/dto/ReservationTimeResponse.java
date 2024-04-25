@@ -9,9 +9,9 @@ public record ReservationTimeResponse(long id, String startAt) {
         return new ReservationTimeResponse(reservationTime.getId(), reservationTime.getStartAt());
     }
 
-    public static List<ReservationTimeResponse> toResponses(List<ReservationTime> times) {
-        return times.stream()
-                .map(time -> new ReservationTimeResponse(time.getId(), time.getStartAt()))
+    public static List<ReservationTimeResponse> toResponses(List<ReservationTime> reservationTimes) {
+        return reservationTimes.stream()
+                .map(ReservationTimeResponse::toResponse)
                 .toList();
     }
 }

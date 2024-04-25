@@ -28,10 +28,11 @@ public class ReservationTimeDao {
         this.timeRowMapper = timeRowMapper;
     }
 
-    public Long add(ReservationTime time) {
+    public ReservationTime add(ReservationTime time) {
         SqlParameterSource parameters = new MapSqlParameterSource()
                 .addValue("start_at", time.getTime());
-        return simpleJdbcInsert.executeAndReturnKey(parameters).longValue();
+        Long savedId = simpleJdbcInsert.executeAndReturnKey(parameters).longValue();
+        return new ReservationTime(savedId, time.getTime());
     }
 
     public Optional<ReservationTime> findById(Long id) {

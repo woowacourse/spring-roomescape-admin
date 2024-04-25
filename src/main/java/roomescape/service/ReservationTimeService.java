@@ -15,8 +15,7 @@ public class ReservationTimeService {
     }
 
     public ReservationTime addTime(ReservationTime reservationTime) {
-        Long savedId = reservationTimeDao.add(reservationTime);
-        return reservationTimeDao.findById(savedId);
+        return reservationTimeDao.add(reservationTime);
     }
 
     public List<ReservationTime> allReservationTimes() {

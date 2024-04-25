@@ -13,4 +13,10 @@ public class ExceptionControllerAdvice {
     public ResponseEntity<String> NoSuchElementException() {
         return ResponseEntity.notFound().build();
     }
+
+    @ExceptionHandler(IllegalArgumentException.class)
+    public ResponseEntity<String> IllegalArgumentException() {
+        return ResponseEntity.badRequest()
+                .body("[ERROR] 잘못된 접근입니다.");
+    }
 }

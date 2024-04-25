@@ -36,7 +36,7 @@ class ReservationTimeServiceTest {
         jdbcTemplate.update("INSERT INTO reservation (name, date, time_id) VALUES (?, ?, ?)", "테니", "13:00", savedId);
 
         assertThatThrownBy(() -> reservationTimeService.deleteTimeById(savedId))
-                .isInstanceOf(NoSuchElementException.class);
+                .isInstanceOf(IllegalArgumentException.class);
     }
 
     private long saveReservationTime() {

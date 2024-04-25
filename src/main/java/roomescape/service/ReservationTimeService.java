@@ -1,6 +1,6 @@
 package roomescape.service;
 
-import org.springframework.dao.DataAccessException;
+import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.stereotype.Service;
 import roomescape.domain.ReservationTime;
 import roomescape.dto.TimeResponse;
@@ -47,8 +47,8 @@ public class ReservationTimeService {
     public void deleteTimeById(Long id) {
         try {
             timeDao.deleteById(id);
-        } catch (DataAccessException e) {
-            throw new NoSuchElementException("[ERROR] 해당 예약 시간에 예약이 존재합니다");
+        } catch (DataIntegrityViolationException e) {
+            throw new IllegalArgumentException("[ERROR] 해당 시간에 예약이 존재합니다");
         }
     }
 }

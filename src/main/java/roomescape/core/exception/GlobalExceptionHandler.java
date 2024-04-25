@@ -14,7 +14,7 @@ class GlobalExceptionHandler {
     }
 
     @ExceptionHandler(value = DeleteReservationTimeException.class)
-    public ResponseEntity<ApiErrorResponse> deleteReservationTimeErrorHandler(Exception e) {
-        return ResponseEntity.badRequest().body(new ApiErrorResponse(e.getMessage()));
+    public ResponseEntity<ApiErrorResponse> deleteReservationTimeErrorHandler(DeleteReservationTimeException e) {
+        return ResponseEntity.status(e.getHttpStatus()).body(new ApiErrorResponse(e.getMessage()));
     }
 }

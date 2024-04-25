@@ -13,7 +13,6 @@ import org.springframework.jdbc.core.simple.SimpleJdbcInsert;
 import org.springframework.stereotype.Repository;
 import roomescape.domain.Reservation;
 import roomescape.domain.ReservationTime;
-import roomescape.repository.reservationtime.ReservationTimeRepository;
 
 @Repository
 @Primary
@@ -21,15 +20,12 @@ public class ReservationH2Repository implements ReservationRepository {
 
     private final JdbcTemplate jdbcTemplate;
     private final SimpleJdbcInsert jdbcInsert;
-    private final ReservationTimeRepository timeRepository;
 
-    public ReservationH2Repository(JdbcTemplate jdbcTemplate, DataSource source,
-                                   ReservationTimeRepository timeRepository) {
+    public ReservationH2Repository(JdbcTemplate jdbcTemplate, DataSource source) {
         this.jdbcTemplate = jdbcTemplate;
         this.jdbcInsert = new SimpleJdbcInsert(source)
                 .withTableName("RESERVATION")
                 .usingGeneratedKeyColumns("id");
-        this.timeRepository = timeRepository;
     }
 
     @Override
@@ -40,9 +36,8 @@ public class ReservationH2Repository implements ReservationRepository {
                 .addValue("date", reservation.date(DateTimeFormatter.ISO_DATE))
                 .addValue("time_id", timeId);
         Long id = jdbcInsert.executeAndReturnKey(params).longValue();
-        ReservationTime reservationTime = timeRepository.findById(timeId);
 
-        return Reservation.of(id, reservation, reservationTime);
+        return Reservation.of(id, reservation);
     }
 
     @Override

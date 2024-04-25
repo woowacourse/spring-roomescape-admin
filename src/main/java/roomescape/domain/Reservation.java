@@ -5,12 +5,12 @@ import java.time.format.DateTimeFormatter;
 
 public record Reservation(Long id, String name, LocalDate date, ReservationTime time) {
 
-    public static Reservation of(Long id, Reservation reservation, ReservationTime time) {
-        return new Reservation(id, reservation.name, reservation.date, time);
+    public Reservation(String name, LocalDate date, ReservationTime time) {
+        this(null, name, date, time);
     }
 
-    public static Reservation of(Long id, String name, LocalDate date, Long timeId) {
-        return new Reservation(id, name, date, ReservationTime.from(timeId));
+    public static Reservation of(Long id, Reservation reservation) {
+        return new Reservation(id, reservation.name, reservation.date, reservation.time);
     }
 
     public String date(DateTimeFormatter formatter) {

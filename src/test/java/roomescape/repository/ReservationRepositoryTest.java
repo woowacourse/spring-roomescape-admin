@@ -137,12 +137,12 @@ class ReservationRepositoryTest {
     @DisplayName("예약 정보를 저장하면 새로운 아이디가 부여된다.")
     void save() {
         // given
-        final Reservation reservation = reservationRepository.save(new Reservation(
+        final Reservation reservation = new Reservation(
                 null,
                 "gana",
                 LocalDate.of(2024, 3, 1),
                 new ReservationTime(12L, null)
-        ));
+        );
         Reservation expected = new Reservation(
                 1L,
                 "gana",
@@ -151,6 +151,7 @@ class ReservationRepositoryTest {
         );
 
         // when
+        reservationRepository.save(reservation);
         Reservation actual = reservationRepository.findById(1L);
 
         // then

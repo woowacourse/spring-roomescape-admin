@@ -35,7 +35,7 @@
 - [x] 예약 클래스를 수정한다.
   - [x] 시간 타입을 ReservationTime 객체로 수정한다.
 - [x] 예약 추가 쿼리를 수정한다.
-- [ ] 예약 조회 쿼리를 수정한다.
+- [x] 예약 조회 쿼리를 수정한다.
 
 ## 커밋 컨밴션
 - feat, docs, fix, refactor, test, style, chore

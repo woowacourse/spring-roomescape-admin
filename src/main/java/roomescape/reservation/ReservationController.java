@@ -25,12 +25,25 @@ public class ReservationController {
 
     @GetMapping("/reservations")
     public ResponseEntity<List<Reservation>> reservations() {
-        final String sql = "SELECT * FROM reservation";
+        final String sql =
+                "SELECT " +
+                        "r.id AS reservation_id, " +
+                        "r.name, " +
+                        "r.date, " +
+                        "t.id AS time_id, " +
+                        "t.start_at AS time_value " +
+                "FROM reservation AS r " +
+                "INNER JOIN reservation_time AS t " +
+                "ON r.time_id = t.id";
+
         final List<Reservation> reservations = jdbcTemplate.query(sql, (resultSet, rowNum) -> new Reservation(
                 resultSet.getLong("id"),
                 resultSet.getString("name"),
                 resultSet.getDate("date").toLocalDate(),
-                resultSet.getTime("time").toLocalTime()
+                new ReservationTime(
+                        resultSet.getLong("time_id"),
+                        resultSet.getTime("time_value").toLocalTime()
+                )
         ));
 
         return ResponseEntity.ok(reservations);

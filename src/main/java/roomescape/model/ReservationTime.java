@@ -38,11 +38,11 @@ public class ReservationTime {
             return false;
         }
         final ReservationTime that = (ReservationTime) o;
-        return Objects.equals(getId(), that.getId()) && Objects.equals(getStartAt(), that.getStartAt());
+        return Objects.equals(getId(), that.getId());
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(getId(), getStartAt());
+        return Objects.hash(getId());
     }
 }

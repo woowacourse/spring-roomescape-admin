@@ -2,7 +2,6 @@ package roomescape.repository;
 
 import java.sql.Date;
 import java.sql.PreparedStatement;
-import java.sql.Time;
 import java.util.List;
 import java.util.Objects;
 import java.util.Optional;
@@ -12,7 +11,6 @@ import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.support.GeneratedKeyHolder;
 import org.springframework.jdbc.support.KeyHolder;
 import org.springframework.stereotype.Repository;
-import roomescape.model.Reservation;
 import roomescape.model.Reservation2;
 
 @Repository
@@ -24,23 +22,7 @@ public class ReservationDao {
         this.jdbcTemplate = new JdbcTemplate(dataSource);
     }
 
-    public Reservation save(final Reservation reservation) {
-        final String sql = "INSERT INTO reservation (name, date, time) VALUES (?, ?, ?)";
-        final KeyHolder keyHolder = new GeneratedKeyHolder();
-
-        jdbcTemplate.update(connection -> {
-            final PreparedStatement preparedStatement = connection.prepareStatement(sql, new String[]{"id"});
-            preparedStatement.setString(1, reservation.getName());
-            preparedStatement.setDate(2, Date.valueOf(reservation.getDate()));
-            preparedStatement.setTime(3, Time.valueOf(reservation.getTime()));
-            return preparedStatement;
-        }, keyHolder);
-
-        final long id = Objects.requireNonNull(keyHolder.getKey()).longValue();
-        return reservation.toReservation(id);
-    }
-
-    public Reservation2 save2(final Reservation2 reservation, final long timeId) {
+    public Reservation2 save(final Reservation2 reservation, final long timeId) {
         final String sql = "INSERT INTO reservation (name, date, time_id) VALUES (?, ?, ?)";
         final KeyHolder keyHolder = new GeneratedKeyHolder();
 
@@ -85,18 +67,7 @@ public class ReservationDao {
         }
     }
 
-    public List<Reservation> findAll() {
-        return jdbcTemplate.query(
-                "SELECT id, name, date, time FROM reservation",
-                (resultSet, rowNum) -> new Reservation(
-                        resultSet.getLong("id"),
-                        resultSet.getString("name"),
-                        resultSet.getString("date"),
-                        resultSet.getString("time")
-                ));
-    }
-
-    public List<Reservation2> findAll2() {
+    public List<Reservation2> findAll() {
         final String sql = """
                 SELECT
                     r.id as reservation_id,

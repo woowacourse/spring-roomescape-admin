@@ -20,7 +20,8 @@ import org.springframework.boot.test.context.SpringBootTest.WebEnvironment;
 import org.springframework.boot.test.web.server.LocalServerPort;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.test.annotation.DirtiesContext;
-import roomescape.dto.ReservationResponse;
+import org.springframework.test.context.jdbc.Sql;
+import roomescape.dto.ReservationResponseV2;
 
 @SpringBootTest(webEnvironment = WebEnvironment.RANDOM_PORT)
 @DirtiesContext(classMode = DirtiesContext.ClassMode.BEFORE_EACH_TEST_METHOD)
@@ -63,19 +64,19 @@ class MissionStepTest {
 
     @DisplayName("예약 저장 및 예약 삭제")
     @Test
+    @Sql(scripts = "/createTime.sql")
     void step3() {
-        final Map<String, String> params = Map.of(
+        final Map<String, Object> params = Map.of(
                 "name", "브라운",
                 "date", "2023-08-05",
-                "time", "15:40");
+                "timeId", 1L);
 
         RestAssured.given().log().all()
                 .contentType(ContentType.JSON)
                 .body(params)
                 .when().post("/reservations")
                 .then().log().all()
-                .statusCode(201)
-                .header("Location", "/reservations/1");
+                .statusCode(200);
 
         RestAssured.given().log().all()
                 .when().get("/reservations")
@@ -86,7 +87,7 @@ class MissionStepTest {
         RestAssured.given().log().all()
                 .when().delete("/reservations/1")
                 .then().log().all()
-                .statusCode(204);
+                .statusCode(200);
 
         RestAssured.given().log().all()
                 .when().get("/reservations")
@@ -108,16 +109,17 @@ class MissionStepTest {
     }
 
     @DisplayName("데이터 조회")
+    @Sql(scripts = "/createTime.sql")
     @Test
     void step5() {
-        jdbcTemplate.update("INSERT INTO reservation (name, date, time) VALUES (?, ?, ?)",
-                "브라운", "2023-08-05", "15:40");
+        jdbcTemplate.update("INSERT INTO reservation (name, date, time_id) VALUES (?, ?, ?)",
+                "브라운", "2023-08-05", "1");
 
-        final List<ReservationResponse> reservations = RestAssured.given().log().all()
+        final List<ReservationResponseV2> reservations = RestAssured.given().log().all()
                 .when().get("/reservations")
                 .then().log().all()
                 .statusCode(200).extract()
-                .jsonPath().getList(".", ReservationResponse.class);
+                .jsonPath().getList(".", ReservationResponseV2.class);
 
         final Integer count = jdbcTemplate.queryForObject("SELECT COUNT(1) FROM reservation", Integer.class);
 
@@ -125,20 +127,20 @@ class MissionStepTest {
     }
 
     @DisplayName("데이터 추가 및 삭제")
+    @Sql(scripts = "/createTime.sql")
     @Test
     void step6() {
-        final Map<String, String> params = Map.of(
+        final Map<String, Object> params = Map.of(
                 "name", "브라운",
                 "date", "2023-08-05",
-                "time", "10:00");
+                "timeId", 1L);
 
         RestAssured.given().log().all()
                 .contentType(ContentType.JSON)
                 .body(params)
                 .when().post("/reservations")
                 .then().log().all()
-                .statusCode(201)
-                .header("Location", "/reservations/1");
+                .statusCode(200);
 
         final Integer count = jdbcTemplate.queryForObject("SELECT COUNT(1) FROM reservation", Integer.class);
         assertThat(count).isEqualTo(1);
@@ -146,7 +148,7 @@ class MissionStepTest {
         RestAssured.given().log().all()
                 .when().delete("/reservations/1")
                 .then().log().all()
-                .statusCode(204);
+                .statusCode(200);
 
         final Integer countAfterDelete = jdbcTemplate.queryForObject("SELECT COUNT(1) FROM reservation", Integer.class);
         assertThat(countAfterDelete).isZero();
@@ -178,6 +180,7 @@ class MissionStepTest {
     }
 
     @DisplayName("예약 시간 관리")
+    @Sql(scripts = "/createTime.sql")
     @Test
     void step8() {
         Map<String, Object> reservation = new HashMap<>();
@@ -192,11 +195,10 @@ class MissionStepTest {
                 .then().log().all()
                 .statusCode(200);
 
-
-//        RestAssured.given().log().all()
-//                .when().get("/reservations")
-//                .then().log().all()
-//                .statusCode(200)
-//                .body("size()", is(1));
+        RestAssured.given().log().all()
+                .when().get("/reservations")
+                .then().log().all()
+                .statusCode(200)
+                .body("size()", is(1));
     }
 }

@@ -29,13 +29,13 @@ public class ReservationController {
     }
 
     @PostMapping
-    public ResponseEntity<ReservationResponseV2> saveV2(@RequestBody final ReservationRequestV2 reservationRequestV2) {
-        final ReservationResponseV2 reservationResponse = reservationService.saveV2(reservationRequestV2);
+    public ResponseEntity<ReservationResponseV2> save(@RequestBody final ReservationRequestV2 reservationRequestV2) {
+        final ReservationResponseV2 reservationResponse = reservationService.save(reservationRequestV2);
         return ResponseEntity.ok(reservationResponse);
     }
 
     @DeleteMapping("/{id}")
-    public ResponseEntity<Void> delete2(@PathVariable("id") final long id) {
+    public ResponseEntity<Void> delete(@PathVariable("id") final long id) {
         try {
             reservationService.remove(id);
             return ResponseEntity.ok()

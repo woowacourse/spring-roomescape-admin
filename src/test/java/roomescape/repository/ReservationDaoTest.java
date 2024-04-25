@@ -16,8 +16,9 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.context.SpringBootTest.WebEnvironment;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.test.annotation.DirtiesContext;
-import roomescape.model.Reservation;
+import org.springframework.test.context.jdbc.Sql;
 import roomescape.model.Reservation2;
+import roomescape.model.ReservationTime;
 
 @SpringBootTest(webEnvironment = WebEnvironment.RANDOM_PORT)
 @DirtiesContext(classMode = DirtiesContext.ClassMode.BEFORE_EACH_TEST_METHOD)
@@ -43,11 +44,14 @@ class ReservationDaoTest {
 
     @DisplayName("예약 저장")
     @Test
+    @Sql(scripts = "/createTime.sql")
     void saveReservation() {
-        final List<Reservation> beforeSaving = reservationDao.findAll();
-        final Reservation reservation = Reservation.create("레디", "2024-02-03", "15:00");
-        reservationDao.save(reservation);
-        final List<Reservation> afterSaving = reservationDao.findAll();
+        final List<Reservation2> beforeSaving = reservationDao.findAll();
+        final ReservationTime time = ReservationTime.create("10:30");
+        final Reservation2 reservation = Reservation2.create("레디", "2024-02-03", time);
+
+        reservationDao.save(reservation, 1L);
+        final List<Reservation2> afterSaving = reservationDao.findAll();
 
         assertAll(
                 () -> assertThat(beforeSaving).isEmpty(),
@@ -56,14 +60,17 @@ class ReservationDaoTest {
     }
 
     @DisplayName("예약 삭제")
+    @Sql(scripts = "/createTime.sql")
     @Test
     void removeReservation() {
-        final List<Reservation> beforeSaving = reservationDao.findAll();
-        final Reservation reservation = Reservation.create("레디", "2024-02-03", "15:00");
-        reservationDao.save(reservation);
-        final List<Reservation> afterSaving = reservationDao.findAll();
+        final List<Reservation2> beforeSaving = reservationDao.findAll();
+        final ReservationTime time = ReservationTime.create("10:30");
+        final Reservation2 reservation = Reservation2.create("레디", "2024-02-03", time);
+
+        reservationDao.save(reservation, 1L);
+        final List<Reservation2> afterSaving = reservationDao.findAll();
         reservationDao.remove(1L);
-        final List<Reservation> afterRemoving = reservationDao.findAll();
+        final List<Reservation2> afterRemoving = reservationDao.findAll();
 
         assertAll(
                 () -> assertThat(beforeSaving).isEmpty(),
@@ -73,52 +80,57 @@ class ReservationDaoTest {
     }
 
     @DisplayName("단건 조회")
+    @Sql(scripts = "/createTime.sql")
     @Test
     void findById() {
         //given
-//        final Reservation reservation = Reservation.create("레디", "2024-02-03", "12:00");
-//        final Reservation expected1 = reservation.toReservation(1L);
-//
-//        //when
-//        reservationDao.save(reservation);
-//        final Optional<Reservation> findReservation1 = reservationDao.findById(1L);
-//
-//        //then
-//        assertThat(findReservation1).contains(expected1);
+        final ReservationTime time = ReservationTime.create("10:30");
+        final Reservation2 reservation = Reservation2.create("레디", "2024-02-03", time);
+
+        final Reservation2 expected = reservation.toReservation(1L);
+
+        //when
+        reservationDao.save(reservation, 1L);
+        final Optional<Reservation2> findReservation = reservationDao.findById(1L);
+
+        //then
+        assertThat(findReservation).contains(expected);
     }
 
     @DisplayName("전체 조회")
+    @Sql(scripts = "/createTime.sql")
     @Test
     void findAll() {
         //given
-        final Reservation reservation1 = Reservation.create("레디", "2024-02-04", "12:00");
-        final Reservation reservation2 = Reservation.create("감자", "2024-02-04", "13:00");
-        final Reservation reservation3 = Reservation.create("오리", "2024-02-04", "14:00");
+        final ReservationTime time = ReservationTime.create("10:30");
 
-        final List<Reservation> reservations = List.of(reservation1, reservation2, reservation3);
+        final Reservation2 reservation1 = Reservation2.create("레디", "2024-02-04", time);
+        final Reservation2 reservation2 = Reservation2.create("감자", "2024-02-04", time);
+        final Reservation2 reservation3 = Reservation2.create("오리", "2024-02-04", time);
 
-        for (final Reservation reservation : reservations) {
-            reservationDao.save(reservation);
+        final List<Reservation2> reservations = List.of(reservation1, reservation2, reservation3);
+
+        for (final Reservation2 reservation : reservations) {
+            reservationDao.save(reservation, 1L);
         }
 
-        final List<Reservation> expected = new ArrayList<>();
+        final List<Reservation2> expected = new ArrayList<>();
         for (long i = 1; i <= 3; i++) {
             expected.add(reservations.get((int) (i - 1)).toReservation(i));
         }
 
         //when
-        final List<Reservation> findAll = reservationDao.findAll();
+        final List<Reservation2> findAll = reservationDao.findAll();
 
         //then
         assertThat(findAll).isEqualTo(expected);
     }
 
-    @Test
     @DisplayName("전제 조회")
+    @Test
     void findAll2() {
         //given
-        final List<Reservation2> all2 = reservationDao.findAll2();
+        final List<Reservation2> all2 = reservationDao.findAll();
         assertThat(all2).isEmpty();
-
     }
 }

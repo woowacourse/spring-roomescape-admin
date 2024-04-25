@@ -7,7 +7,7 @@ public record ReservationResponse(Long id, String name, String date, Reservation
     public static ReservationResponse from(Reservation reservation) {
         return new ReservationResponse(
                 reservation.getId(),
-                reservation.getName(),
+                reservation.getNameValue(),
                 reservation.getDate(),
                 ReservationTimeResponse.from(reservation.getTime()));
     }

@@ -58,14 +58,14 @@ public class H2ReservationDao {
 
         jdbcTemplate.update(con -> {
             PreparedStatement ps = con.prepareStatement(sql, new String[]{"id"});
-            ps.setString(1, reservation.getName());
+            ps.setString(1, reservation.getNameValue());
             ps.setString(2, reservation.getDate());
             ps.setLong(3, reservation.getTime().getId());
             return ps;
         }, keyHolder);
 
         Long id = keyHolder.getKeyAs(Long.class);
-        return new Reservation(id, reservation.getName(), reservation.getDate(), reservation.getTime());
+        return new Reservation(id, reservation.getNameValue(), reservation.getDate(), reservation.getTime());
     }
 
     public void deleteById(long reservationId) {

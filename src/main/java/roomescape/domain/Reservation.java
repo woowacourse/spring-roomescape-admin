@@ -7,14 +7,14 @@ import java.util.Objects;
 public class Reservation {
 
     private final Long id;
-    private final String name;
+    private final Name name;
     private final String date;
     private final ReservationTime time;
 
     @JsonCreator
     public Reservation(Long id, String name, String date, ReservationTime time) {
         this.id = id;
-        this.name = name;
+        this.name = new Name(name);
         this.date = date;
         this.time = time;
     }
@@ -53,7 +53,7 @@ public class Reservation {
     public String toString() {
         return "Reservation{" +
                 "id=" + id +
-                ", name='" + name + '\'' +
+                ", name=" + name +
                 ", date='" + date + '\'' +
                 ", time=" + time +
                 '}';
@@ -63,8 +63,8 @@ public class Reservation {
         return id;
     }
 
-    public String getName() {
-        return name;
+    public String getNameValue() {
+        return name.getValue();
     }
 
     public String getDate() {

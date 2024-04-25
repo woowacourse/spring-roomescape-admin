@@ -1,49 +1,51 @@
 package roomescape.controller;
 
-import static org.assertj.core.api.Assertions.assertThat;
 import static org.hamcrest.Matchers.is;
 
 import io.restassured.RestAssured;
 import io.restassured.http.ContentType;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.test.annotation.DirtiesContext;
-import roomescape.entity.Reservation;
+import roomescape.dto.ReservationRequest;
+import roomescape.dto.ReservationTimeRequest;
 
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.DEFINED_PORT)
 @DirtiesContext(classMode = DirtiesContext.ClassMode.BEFORE_EACH_TEST_METHOD)
 class ReservationApiControllerTest {
 
     @Autowired
-    JdbcTemplate jdbcTemplate;
+    ReservationApiController reservationController;
+
+    @Autowired
+    ReservationTimeApiController timeController;
 
     @BeforeEach
     void setUp() {
-        // 시간 데이터는 미리 추가한다.
-        jdbcTemplate.update("INSERT INTO reservation_time (id, start_at) VALUES (?, ?)", 1L, "10:00");
+        timeController.addReservationTime(new ReservationTimeRequest("10:00"));
     }
 
     @DisplayName("예약 정보를 조회한다.")
     @Test
     void findAllReservations() {
-        jdbcTemplate.update("INSERT INTO reservation (name, date, time_id) VALUES (?, ?, ?)"
-                , "상돌", "2024-04-21", 1L);
+        timeController.addReservationTime(new ReservationTimeRequest("11:00"));
+        reservationController.addReservation(new ReservationRequest("상돌", "2024-04-25", 1L));
+        reservationController.addReservation(new ReservationRequest("상돌1", "2024-04-24", 2L));
 
-        List<Reservation> reservations = RestAssured.given().log().all()
+        RestAssured.given().log().all()
                 .when().get("/reservations")
                 .then().log().all()
-                .statusCode(200).extract()
-                .jsonPath().getList(".");
-
-        Integer reservationCount = getReservationCount();
-        assertThat(reservations.size()).isEqualTo(reservationCount);
+                .statusCode(200)
+                .body("size()", is(2))
+                .body("[0].id", is(1))
+                .body("[0].name", is("상돌"))
+                .body("[1].id", is(2))
+                .body("[1].name", is("상돌1"));
     }
 
     @DisplayName("예약을 추가한다.")
@@ -70,22 +72,11 @@ class ReservationApiControllerTest {
     @DisplayName("예약을 삭제한다.")
     @Test
     void deleteReservation() {
-        jdbcTemplate.update("INSERT INTO reservation (id, name, date, time_id) VALUES (?, ?, ?, ?)"
-                , 1L, "상돌", "2024-04-21", 1L);
-
-        Integer reservationCountBeforeDelete = getReservationCount();
-        assertThat(reservationCountBeforeDelete).isEqualTo(1);
+        reservationController.addReservation(new ReservationRequest("상돌", "2024-04-25", 1L));
 
         RestAssured.given().log().all()
                 .when().delete("/reservations/1")
                 .then().log().all()
                 .statusCode(200);
-
-        Integer reservationCountAfterDelete = getReservationCount();
-        assertThat(reservationCountAfterDelete).isEqualTo(0);
-    }
-
-    private Integer getReservationCount() {
-        return jdbcTemplate.queryForObject("SELECT count(*) from reservation", Integer.class);
     }
 }

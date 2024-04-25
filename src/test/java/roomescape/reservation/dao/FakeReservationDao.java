@@ -1,9 +1,10 @@
-package roomescape.reservation.repository;
+package roomescape.reservation.dao;
 
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import roomescape.reservation.domain.Reservation;
+import roomescape.reservation.domain.repository.ReservationRepository;
 
 public class FakeReservationDao implements ReservationRepository {
     private final Map<Long, Reservation> reservations = new HashMap<>();

@@ -7,11 +7,11 @@ import java.util.List;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
+import roomescape.reservation.dao.FakeReservationTimeDao;
 import roomescape.reservation.domain.ReservationTime;
+import roomescape.reservation.domain.repository.ReservationTimeRepository;
 import roomescape.reservation.dto.ReservationTimeRequest;
 import roomescape.reservation.dto.ReservationTimeResponse;
-import roomescape.reservation.repository.FakeReservationTimeDao;
-import roomescape.reservation.repository.ReservationTimeRepository;
 
 @DisplayName("예약 시간 로직 테스트")
 class ReservationTimeServiceTest {

@@ -34,7 +34,7 @@ public class ReservationController {
     @PostMapping("/reservations")
     public ResponseEntity<Void> createReservation(@RequestBody ReservationCreateRequest reservationCreateRequest) {
         Reservation reservation = reservationCreateRequest.toReservation();
-        Long savedId = reservationDao.save(reservation);
+        Long savedId = reservationDao.save(reservation);  //TODO 엔티티 반환
         return ResponseEntity.created(URI.create("/reservations/" + savedId)).build();
     }
 

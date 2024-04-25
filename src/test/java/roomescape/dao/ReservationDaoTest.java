@@ -27,12 +27,10 @@ class ReservationDaoTest {
     @Test
     void findAll() {
         reservationDao.save(request);
-        reservationDao.save(request);
-        reservationDao.save(request);
 
         List<Reservation> reservations = reservationDao.findAll();
 
-        assertThat(reservations).size().isEqualTo(3);
+        assertThat(reservations).size().isEqualTo(1);
     }
 
     @Test

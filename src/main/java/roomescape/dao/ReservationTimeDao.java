@@ -7,7 +7,6 @@ import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.support.GeneratedKeyHolder;
 import org.springframework.jdbc.support.KeyHolder;
 import org.springframework.stereotype.Repository;
-import roomescape.domain.Reservation;
 import roomescape.domain.ReservationTime;
 
 @Repository
@@ -20,7 +19,7 @@ public class ReservationTimeDao {
     }
 
     public ReservationTime save(ReservationTime time) {
-        String insertSQL = "insert into reservation_time (start_at) values (?)";
+        String insertSQL = "insert into reservation_time (start_at) values ?";
         KeyHolder keyHolder = new GeneratedKeyHolder();
 
         jdbcTemplate.update(connection -> {

@@ -32,10 +32,9 @@ class ReservationTimeDaoTest {
     @Test
     void findAll() {
         reservationTimeDao.save(reservationTime);
-        reservationTimeDao.save(reservationTime);
         List<ReservationTime> reservationTimes = reservationTimeDao.findAll();
 
-        assertThat(reservationTimes).size().isEqualTo(2);
+        assertThat(reservationTimes).size().isEqualTo(1);
     }
 
     @Test

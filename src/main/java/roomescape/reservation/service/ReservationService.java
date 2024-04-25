@@ -1,7 +1,7 @@
 package roomescape.reservation.service;
 
-import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import roomescape.reservation.domain.Reservation;
@@ -44,18 +44,14 @@ public class ReservationService {
     }
 
     public List<ResponseReservation> findAll() {
-        List<ResponseReservation> responseReservations = new ArrayList<>();
-
-        List<Reservation> reservations = reservationRepository.findAll();
-        for (Reservation reservation : reservations) {
-            ResponseTime responseTime = new ResponseTime(reservation.getTime().getId(),
-                    reservation.getTime().getStartAt());
-            ResponseReservation responseReservation = new ResponseReservation(reservation.getId(),
-                    reservation.getName(), reservation.getDate(), responseTime);
-            responseReservations.add(responseReservation);
-        }
-
-        return responseReservations;
+        return reservationRepository.findAll().stream()
+                .map(reservation -> {
+                    ResponseTime responseTime = new ResponseTime(reservation.getTime().getId(),
+                            reservation.getTime().getStartAt());
+                    return new ResponseReservation(reservation.getId(),
+                            reservation.getName(), reservation.getDate(), responseTime);
+                })
+                .collect(Collectors.toList());
     }
 
     public void delete(Long id) {

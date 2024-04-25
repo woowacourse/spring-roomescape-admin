@@ -1,7 +1,7 @@
 package roomescape.time.service;
 
-import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
 import org.springframework.stereotype.Service;
 import roomescape.time.domain.Time;
 import roomescape.time.dto.RequestTime;
@@ -28,13 +28,9 @@ public class TimeService {
     }
 
     public List<ResponseTime> findAll() {
-        List<ResponseTime> responseTimes = new ArrayList<>();
-        List<Time> times = timeRepository.findAll();
-        for (Time time : times) {
-            ResponseTime responseTime = new ResponseTime(time.getId(), time.getStartAt());
-            responseTimes.add(responseTime);
-        }
-        return responseTimes;
+        return timeRepository.findAll().stream()
+                .map(time -> new ResponseTime(time.getId(), time.getStartAt()))
+                .collect(Collectors.toList());
     }
 
     public void delete(Long id) {

@@ -51,7 +51,7 @@ public class JdbcReservationDao implements ReservationDao {
                 + "FROM reservation as r "
                 + "inner join reservation_time as t "
                 + "on r.time_id = t.id "
-                + "WHERE t.id = ?";
+                + "WHERE r.id = ?";
         return jdbcTemplate.queryForObject(sql, rowMapper, id);
     }
 

@@ -24,7 +24,7 @@ public class ReservationController {
 
     @PostMapping("/reservations")
     public ResponseEntity<Reservation> create(@RequestBody ReservationRequest reservationRequest) {
-        final Reservation reservation = reservationService.create(reservationRequest);
+        final Reservation reservation = reservationService.save(reservationRequest);
         return ResponseEntity.created(URI.create("/reservations/" + reservation.getId())).body(reservation);
     }
 

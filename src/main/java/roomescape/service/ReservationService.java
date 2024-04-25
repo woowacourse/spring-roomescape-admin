@@ -18,7 +18,7 @@ public class ReservationService {
         this.reservationTimeDAO = reservationTimeDAO;
     }
 
-    public Reservation create(final ReservationRequest reservationRequest) {
+    public Reservation save(final ReservationRequest reservationRequest) {
         final Reservation reservation = new Reservation(
                 reservationRequest.name(),
                 reservationRequest.date(),

@@ -1,21 +1,24 @@
-package roomescape.time;
+package roomescape.controller;
 
 import org.springframework.http.ResponseEntity;
 import org.springframework.jdbc.core.JdbcTemplate;
-import org.springframework.jdbc.core.namedparam.MapSqlParameterSource;
-import org.springframework.jdbc.core.namedparam.SqlParameterSource;
 import org.springframework.jdbc.core.simple.SimpleJdbcInsert;
 import org.springframework.web.bind.annotation.*;
+import roomescape.domain.ReservationTime;
+import roomescape.dto.ReservationTimeRequest;
+import roomescape.service.ReservationTimeService;
 
 import javax.sql.DataSource;
 import java.util.List;
 
 @RestController
 public class ReservationTimeController {
+    private final ReservationTimeService reservationTimeService;
     private final JdbcTemplate jdbcTemplate;
     private final SimpleJdbcInsert jdbcInsert;
 
-    public ReservationTimeController(final JdbcTemplate jdbcTemplate, final DataSource dataSource) {
+    public ReservationTimeController(final ReservationTimeService reservationTimeService, final JdbcTemplate jdbcTemplate, final DataSource dataSource) {
+        this.reservationTimeService = reservationTimeService;
         this.jdbcTemplate = jdbcTemplate;
         this.jdbcInsert = new SimpleJdbcInsert(dataSource)
                 .withTableName("reservation_time")
@@ -36,13 +39,8 @@ public class ReservationTimeController {
 
     @PostMapping("/times")
     public ResponseEntity<ReservationTime> create(@RequestBody ReservationTimeRequest reservationTimeRequest) {
-        final SqlParameterSource parameterSource = new MapSqlParameterSource()
-                .addValue("start_at", reservationTimeRequest.startAt());
-
-        final long id = jdbcInsert.executeAndReturnKey(parameterSource).longValue();
-        final ReservationTime reservationTime = new ReservationTime(id, reservationTimeRequest.startAt());
-
-        return ResponseEntity.ok(reservationTime);
+        final ReservationTime savedReservationTime = reservationTimeService.save(reservationTimeRequest);
+        return ResponseEntity.ok(savedReservationTime);
     }
 
     @DeleteMapping("/times/{id}")

@@ -3,25 +3,35 @@ package roomescape.service;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
+import org.mockito.Mock;
+import org.mockito.Mockito;
+import org.mockito.junit.jupiter.MockitoExtension;
+import roomescape.domain.ReservationTime;
 import roomescape.dto.reservationtime.ReservationTimeCreateRequest;
 import roomescape.dto.reservationtime.ReservationTimeResponse;
-import roomescape.repository.ReservationTimeFakeDao;
+import roomescape.repository.reservationtime.ReservationTimeRepository;
 
 import java.time.LocalTime;
 import java.util.List;
+import java.util.Optional;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatCode;
+import static org.mockito.ArgumentMatchers.any;
 
+@ExtendWith(MockitoExtension.class)
 @DisplayName("예약 시간 서비스")
 class ReservationTimeServiceTest {
 
     private ReservationTimeService reservationTimeService;
+    @Mock
+    private ReservationTimeRepository reservationTimeRepository;
     private LocalTime startAt;
 
     @BeforeEach
     void setUp() {
-        this.reservationTimeService = new ReservationTimeService(new ReservationTimeFakeDao());
+        this.reservationTimeService = new ReservationTimeService(reservationTimeRepository);
         this.startAt = LocalTime.of(10, 10);
     }
 
@@ -29,6 +39,8 @@ class ReservationTimeServiceTest {
     @Test
     void createTime() {
         // given
+        Mockito.when(reservationTimeRepository.save(any()))
+                .thenReturn(new ReservationTime(1L, startAt));
         ReservationTimeCreateRequest request = new ReservationTimeCreateRequest(startAt);
 
         // when
@@ -43,8 +55,9 @@ class ReservationTimeServiceTest {
     @Test
     void readReservationTime() {
         // given
-        createInitReservationTime();
         Long id = 1L;
+        Mockito.when(reservationTimeRepository.findById(id))
+                .thenReturn(Optional.of(new ReservationTime(id, startAt)));
 
         // when
         ReservationTimeResponse reservationTime = reservationTimeService.readReservationTime(id);
@@ -58,7 +71,8 @@ class ReservationTimeServiceTest {
     @Test
     void readReservationTimes() {
         // given
-        createInitReservationTime();
+        Mockito.when(reservationTimeRepository.findAll())
+                .thenReturn(List.of(new ReservationTime(1L, startAt)));
 
         // when
         List<ReservationTimeResponse> reservationTimes = reservationTimeService.readReservationTimes();
@@ -71,16 +85,11 @@ class ReservationTimeServiceTest {
     @Test
     void deleteTime() {
         // given
-        createInitReservationTime();
         Long id = 1L;
+        Mockito.doNothing().when(reservationTimeRepository).deleteById(id);
 
         // when & then
         assertThatCode(() -> reservationTimeService.deleteTime(id))
                 .doesNotThrowAnyException();
-    }
-
-    private void createInitReservationTime() {
-        ReservationTimeCreateRequest request = new ReservationTimeCreateRequest(startAt);
-        reservationTimeService.createTime(request);
     }
 }

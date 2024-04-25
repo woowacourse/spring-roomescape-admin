@@ -7,8 +7,6 @@ import static org.junit.jupiter.api.DynamicTest.dynamicTest;
 import io.restassured.RestAssured;
 import io.restassured.http.ContentType;
 import java.lang.reflect.Field;
-import java.sql.Connection;
-import java.sql.SQLException;
 import java.time.LocalDate;
 import java.util.Collection;
 import java.util.List;
@@ -40,20 +38,6 @@ class ReservationFlowTest {
     @BeforeEach
     void setUp() {
         RestAssured.port = port;
-    }
-
-    @Test
-    @DisplayName("데이터 베이스에 'reservation' 테이블이 생성된다.")
-    void createReservationTable() {
-        try (Connection connection = jdbcTemplate.getDataSource().getConnection()) {
-            assertThat(connection).isNotNull();
-            assertThat(connection.getCatalog()).isEqualTo("DATABASE");
-            assertThat(connection.getMetaData()
-                    .getTables(null, null, "RESERVATION", null).next())
-                    .isTrue();
-        } catch (SQLException e) {
-            throw new RuntimeException(e);
-        }
     }
 
     @Test

@@ -39,10 +39,13 @@ public class ReservationTimeController {
     @PostMapping
     public ResponseEntity<ReservationTimeCreateResponse> createReservationTime(
             @RequestBody ReservationTimeCreateRequest reservationTimeCreateRequest) {
+        ReservationTime requestedReservationTime = reservationTimeCreateRequest.to();
         ReservationTime createdReservationTime =
-                reservationTimeRepository.createReservationTime(reservationTimeCreateRequest);
+                reservationTimeRepository.createReservationTime(requestedReservationTime);
 
-        return ResponseEntity.ok(ReservationTimeCreateResponse.of(createdReservationTime));
+        return ResponseEntity.ok(
+                ReservationTimeCreateResponse.of(createdReservationTime)
+        );
     }
 
     @DeleteMapping("/{id}")

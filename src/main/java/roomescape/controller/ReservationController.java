@@ -1,6 +1,7 @@
 package roomescape.controller;
 
 import java.util.List;
+import java.util.Optional;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -14,16 +15,21 @@ import roomescape.controller.dto.ReservationCreateRequest;
 import roomescape.controller.dto.ReservationCreateResponse;
 import roomescape.controller.dto.ReservationFindResponse;
 import roomescape.domain.Reservation;
+import roomescape.domain.ReservationTime;
 import roomescape.repository.ReservationRepository;
+import roomescape.repository.ReservationTimeRepository;
 
 @RestController
 @RequestMapping("/reservations")
 public class ReservationController {
 
     private final ReservationRepository reservationRepository;
+    private final ReservationTimeRepository timeRepository;
 
-    public ReservationController(ReservationRepository reservationRepository) {
+    public ReservationController(ReservationRepository reservationRepository,
+                                 ReservationTimeRepository timeRepository) {
         this.reservationRepository = reservationRepository;
+        this.timeRepository = timeRepository;
     }
 
     @GetMapping
@@ -39,7 +45,14 @@ public class ReservationController {
     public ResponseEntity<ReservationCreateResponse> createReservation(
             @RequestBody ReservationCreateRequest reservationCreateRequest) {
 
-        Reservation createdReservation = reservationRepository.createReservation(reservationCreateRequest);
+        Optional<ReservationTime> reservationTime = timeRepository.findReservationTimeById(
+                reservationCreateRequest.timeId());
+        if (reservationTime.isEmpty()) {
+            return ResponseEntity.badRequest().build();
+        }
+        Reservation requestedReservation = reservationCreateRequest.toReservationWith(reservationTime.get());
+
+        Reservation createdReservation = reservationRepository.createReservation(requestedReservation);
 
         return ResponseEntity.status(HttpStatus.OK)
                 .header("Location", "/reservations/" + createdReservation.getId())

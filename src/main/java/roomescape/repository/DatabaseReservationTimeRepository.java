@@ -7,9 +7,7 @@ import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;
 import org.springframework.jdbc.core.simple.SimpleJdbcInsert;
 import org.springframework.stereotype.Repository;
-import roomescape.controller.dto.ReservationTimeCreateRequest;
 import roomescape.domain.ReservationTime;
-import roomescape.util.CustomDateTimeFormatter;
 
 @Repository
 public class DatabaseReservationTimeRepository implements ReservationTimeRepository {
@@ -38,11 +36,11 @@ public class DatabaseReservationTimeRepository implements ReservationTimeReposit
     }
 
     @Override
-    public ReservationTime createReservationTime(ReservationTimeCreateRequest reservationTimeCreateRequest) {
+    public ReservationTime createReservationTime(ReservationTime reservationTime) {
         SimpleJdbcInsert simpleJdbcInsert = new SimpleJdbcInsert(jdbcTemplate).withTableName("reservation_time")
                 .usingGeneratedKeyColumns("id");
         long createdReservationTimeId = simpleJdbcInsert.executeAndReturnKey(Map.of(
-                "start_at", CustomDateTimeFormatter.getLocalTime(reservationTimeCreateRequest.startAt())
+                "start_at", reservationTime.getStartAt()
         )).longValue();
 
         return findReservationTimeById(createdReservationTimeId).get();

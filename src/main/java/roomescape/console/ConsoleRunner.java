@@ -1,6 +1,7 @@
 package roomescape.console;
 
 import org.springframework.boot.CommandLineRunner;
+import org.springframework.context.annotation.Profile;
 import org.springframework.stereotype.Component;
 import roomescape.console.controller.DispatcherConsole;
 import roomescape.console.view.ConsoleCommand;
@@ -8,6 +9,7 @@ import roomescape.console.view.InputView;
 import roomescape.console.view.OutputView;
 
 @Component
+@Profile("!test")
 public class ConsoleRunner implements CommandLineRunner {
 
     private final DispatcherConsole dispatcherConsole;

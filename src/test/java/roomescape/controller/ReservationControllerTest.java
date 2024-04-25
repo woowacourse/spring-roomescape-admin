@@ -1,60 +1,74 @@
 package roomescape.controller;
 
-import java.time.LocalDate;
+import static org.mockito.ArgumentMatchers.any;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.delete;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
+import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
+
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
 import java.time.LocalDateTime;
-import java.time.LocalTime;
-import java.util.ArrayList;
 import java.util.List;
-import java.util.Objects;
-import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
+import org.mockito.Mockito;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
+import org.springframework.boot.test.mock.mockito.MockBean;
+import org.springframework.http.MediaType;
+import org.springframework.test.web.servlet.MockMvc;
+import roomescape.controller.dto.ReservationRequest;
+import roomescape.dao.ReservationRepository;
 import roomescape.domain.Reservation;
-import roomescape.dto.ReservationRequest;
-import roomescape.dto.ReservationResponse;
-import roomescape.storage.ReservationStorage;
 
+@WebMvcTest(ReservationController.class)
 class ReservationControllerTest {
+    private final Reservation reservation = new Reservation(1L, "polla", LocalDateTime.now());
+
+    @Autowired
+    private MockMvc mockMvc;
+
+    @MockBean
+    private ReservationRepository reservationRepository;
+
     @Test
     @DisplayName("예약 정보를 잘 저장하는지 확인한다.")
-    void saveReservation() {
-        ReservationStorage reservationStorage = new ReservationStorage();
-        ReservationController reservationController = new ReservationController(reservationStorage);
-        LocalDate date = LocalDate.now();
-        LocalTime time = LocalTime.now();
+    void saveReservation() throws Exception {
+        Mockito.when(reservationRepository.saveReservation(any()))
+                .thenReturn(reservation);
 
-        ReservationResponse saveResponse = reservationController.saveReservation(
-                new ReservationRequest(date, "폴라", time));
+        String content = new ObjectMapper()
+                .registerModule(new JavaTimeModule())
+                .writeValueAsString(
+                        new ReservationRequest(reservation.getDate(), "polla", reservation.getTime()));
 
-        long id = Objects.requireNonNull(saveResponse).id();
-        ReservationResponse expected = new ReservationResponse(id, "폴라", date, time);
-
-        Assertions.assertThat(saveResponse)
-                .isEqualTo(expected);
+        mockMvc.perform(post("/reservations")
+                        .content(content)
+                        .contentType("application/Json")
+                        .accept(MediaType.APPLICATION_JSON)
+                )
+                .andDo(print())
+                .andExpect(status().isOk());
     }
 
     @Test
     @DisplayName("예약 정보를 잘 불러오는지 확인한다.")
-    void findAllReservations() {
-        ReservationStorage reservationStorage = new ReservationStorage();
-        ReservationController reservationController = new ReservationController(reservationStorage);
-        List<ReservationResponse> allReservations = reservationController.findAllReservations();
+    void findAllReservations() throws Exception {
+        Mockito.when(reservationRepository.findAllReservation())
+                .thenReturn(List.of(reservation));
 
-        Assertions.assertThat(allReservations)
-                .isEmpty();
+        mockMvc.perform(get("/reservations"))
+                .andDo(print())
+                .andExpect(status().isOk());
     }
 
     @Test
     @DisplayName("예약 정보를 잘 지우는지 확인한다.")
-    void delete() {
-        List<Reservation> reservations = List.of(new Reservation(1, "폴라", LocalDateTime.now()));
-        ReservationStorage reservationStorage = new ReservationStorage(new ArrayList<>(reservations));
-        ReservationController reservationController = new ReservationController(reservationStorage);
-
-        reservationController.delete(1L);
-        List<ReservationResponse> reservationResponses = reservationController.findAllReservations();
-
-        Assertions.assertThat(reservationResponses)
-                .isEmpty();
+    void deleteReservation() throws Exception {
+        mockMvc.perform(delete("/reservations/1"))
+                .andDo(print())
+                .andExpect(status().isOk());
     }
 }

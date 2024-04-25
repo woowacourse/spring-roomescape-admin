@@ -15,7 +15,7 @@ public class TimeService {
         this.timeRepository = timeRepository;
     }
 
-    public List<TimeSlot> findAll() {;
+    public List<TimeSlot> findAll() {
         return timeRepository.findAll();
     }
 

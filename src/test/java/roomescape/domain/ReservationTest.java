@@ -14,9 +14,9 @@ class ReservationTest {
     void testNameNotEmpty() {
         //given, when, then
         assertThrows(IllegalArgumentException.class,
-        () -> {
-            new Reservation(1L, "", LocalDate.now(), new TimeSlot("23:59"));
-        });
+                () -> {
+                    new Reservation(1L, "", LocalDate.now(), new TimeSlot("23:59"));
+                });
     }
 
     @DisplayName("예약 요청 중 날짜가 비어있는 경우 예약이 성립하지 않는다.")

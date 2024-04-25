@@ -18,9 +18,12 @@ class ReservationTimeRepositoryTest {
     @DisplayName("ReservationTime 을 디비에 저장후, id 값을 반환한다")
     void create_reservationTime_with_domain() {
         final var reservationTime = ReservationTime.from("10:00");
+
         final var id = reservationTimeRepository.create(reservationTime);
-        assertThat(id).isNotZero()
-                      .isNotNegative();
+        final var entity = reservationTimeRepository.findById(id)
+                                                    .orElseThrow();
+
+        assertThat(entity.getStartAt()).isEqualTo("10:00");
     }
 
     @Test

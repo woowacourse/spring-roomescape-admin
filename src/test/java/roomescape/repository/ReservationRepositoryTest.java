@@ -15,15 +15,25 @@ class ReservationRepositoryTest {
     @Autowired
     private ReservationRepository reservationRepository;
 
+    @Autowired
+    private ReservationTimeRepository reservationTimeRepository;
+
     @Test
     @DisplayName("Reservation 을 디비에 저장후, id 값을 반환한다")
     void create_reservationTime_with_domain() {
+        final var reservationTime = ReservationTime.from("10:00");
+        final var reservationTimeId = reservationTimeRepository.create(reservationTime);
+
         final var reservation =
-                Reservation.from(null, "조이썬", "2024-10-03",
-                        ReservationTime.from("10:00"));
-        final var id = reservationRepository.create(reservation, 1);
-        assertThat(id).isNotZero()
-                      .isNotNegative();
+                Reservation.from(null, "조이썬", "2024-10-03", reservationTime);
+
+        final var reservationId = reservationRepository.create(reservation, reservationTimeId);
+        final var entity = reservationRepository.findById(reservationId)
+                                                .orElseThrow();
+
+        assertThat(entity.getTime()).isEqualTo(reservationTime);
+        assertThat(entity.getNameAsString()).isEqualTo("조이썬");
+        assertThat(entity.getDateAsString()).isEqualTo("2024-10-03");
     }
 
     @Test

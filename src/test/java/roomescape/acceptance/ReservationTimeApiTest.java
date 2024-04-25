@@ -49,13 +49,13 @@ class ReservationTimeApiTest {
 
     @Test
     void delete_reservation() {
-        ReservationTimeFixture.예약_시간_생성("10:30");
+        final long reservationTimeId = ReservationTimeFixture.예약_시간_생성("10:30");
 
         RestAssured.given()
                    .log()
                    .all()
                    .when()
-                   .delete("/times/1")
+                   .delete("/times/" + reservationTimeId)
                    .then()
                    .log()
                    .all()

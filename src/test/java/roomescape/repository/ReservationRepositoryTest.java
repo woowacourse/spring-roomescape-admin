@@ -9,7 +9,7 @@ import roomescape.domain.ReservationTime;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
-@SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.NONE)
+@SpringBootTest
 class ReservationRepositoryTest {
 
     @Autowired

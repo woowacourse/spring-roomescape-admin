@@ -9,7 +9,7 @@ import roomescape.exception.reservation.time.ReservationExistInReservationTimeEx
 
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 
-@SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.NONE)
+@SpringBootTest
 class ReservationTimeServiceTest {
     @Autowired
     ReservationTimeService reservationTimeService;

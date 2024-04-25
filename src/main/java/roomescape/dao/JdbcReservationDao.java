@@ -1,7 +1,6 @@
 package roomescape.dao;
 
 import java.util.List;
-import javax.sql.DataSource;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;
 import org.springframework.jdbc.core.namedparam.MapSqlParameterSource;
@@ -22,9 +21,9 @@ public class JdbcReservationDao implements ReservationDao {
             rs.getDate("date").toLocalDate(),
             new ReservationTime(rs.getLong("time_id"), rs.getTime("time_value").toLocalTime()));
 
-    public JdbcReservationDao(DataSource dataSource) {
-        this.jdbcTemplate = new JdbcTemplate(dataSource);
-        this.jdbcInsert = new SimpleJdbcInsert(dataSource)
+    public JdbcReservationDao(JdbcTemplate jdbcTemplate) {
+        this.jdbcTemplate = jdbcTemplate;
+        this.jdbcInsert = new SimpleJdbcInsert(jdbcTemplate)
                 .withTableName("reservation")
                 .usingGeneratedKeyColumns("id");
     }

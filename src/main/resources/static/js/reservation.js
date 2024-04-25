@@ -154,7 +154,7 @@ function requestCreate(reservation) {
 
     return fetch(RESERVATION_API_ENDPOINT, requestOptions)
         .then(response => {
-            if (response.status !== 201) return response.json();
+            if (response.status === 201) return response.json();
             throw new Error('Read failed');
         });
 }

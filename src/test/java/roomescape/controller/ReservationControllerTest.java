@@ -20,8 +20,8 @@ import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
 import roomescape.controller.dto.ReservationRequest;
-import roomescape.dao.ReservationRepository;
 import roomescape.domain.Reservation;
+import roomescape.repository.ReservationRepository;
 
 @WebMvcTest(ReservationController.class)
 class ReservationControllerTest {

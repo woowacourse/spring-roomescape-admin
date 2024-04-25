@@ -13,8 +13,8 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import roomescape.controller.dto.ReservationRequest;
 import roomescape.controller.dto.ReservationResponse;
-import roomescape.dao.ReservationRepository;
 import roomescape.domain.Reservation;
+import roomescape.repository.ReservationRepository;
 
 @RestController
 @RequestMapping("/reservations")

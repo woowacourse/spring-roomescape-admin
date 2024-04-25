@@ -1,4 +1,4 @@
-package roomescape.dao;
+package roomescape.repository;
 
 import java.util.List;
 import javax.sql.DataSource;
@@ -10,17 +10,18 @@ import org.springframework.stereotype.Repository;
 import roomescape.domain.Reservation;
 
 @Repository
-public class ReservationRepository {
+public class ReservationJdbcRepository implements ReservationRepository {
     private final JdbcTemplate jdbcTemplate;
     private final SimpleJdbcInsert jdbcInsert;
 
-    public ReservationRepository(DataSource dataSource) {
+    public ReservationJdbcRepository(DataSource dataSource) {
         this.jdbcTemplate = new JdbcTemplate(dataSource);
         this.jdbcInsert = new SimpleJdbcInsert(dataSource)
                 .withTableName("reservation")
                 .usingGeneratedKeyColumns("id");
     }
 
+    @Override
     public Reservation saveReservation(Reservation reservation) {
         SqlParameterSource sqlParameterSource = new BeanPropertySqlParameterSource(reservation);
 
@@ -29,6 +30,7 @@ public class ReservationRepository {
         return reservation;
     }
 
+    @Override
     public List<Reservation> findAllReservation() {
         String findAllReservationSql = "select id, name, `date`, `time` from reservation";
 
@@ -41,6 +43,7 @@ public class ReservationRepository {
                 ));
     }
 
+    @Override
     public void deleteReservationById(long reservationId) {
         String saveReservationSql = "DELETE FROM reservation WHERE id = ?";
         jdbcTemplate.update(saveReservationSql, reservationId);

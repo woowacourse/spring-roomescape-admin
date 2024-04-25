@@ -24,9 +24,7 @@ public class ReservationTimeView {
 
     public static int readReservationTimeIdToDelete(final List<ReservationTimeResponse> reservationTimeResponses) {
         System.out.println("[INFO] 삭제할 방탈출 예약 가능 시간의 번호를 선택해주세요.");
-        for (int index = 0; index < reservationTimeResponses.size(); index++) {
-            printReservationTime(index + 1, reservationTimeResponses.get(index));
-        }
+        printReservationTimes(reservationTimeResponses);
         try {
             return Integer.parseInt(SCANNER.nextLine());
         } catch (NumberFormatException exception) {
@@ -38,7 +36,7 @@ public class ReservationTimeView {
         System.out.println("[INFO] 예약 가능 시간이 삭제되었습니다.");
     }
 
-    public void printReservationTimes(final List<ReservationTimeResponse> reservationTimeResponses) {
+    public static void printReservationTimes(final List<ReservationTimeResponse> reservationTimeResponses) {
         System.out.println("[INFO] 방탈출 예약이 가능한 시간의 목록입니다.");
         for (int index = 0; index < reservationTimeResponses.size(); index++) {
             printReservationTime(index + 1, reservationTimeResponses.get(index));

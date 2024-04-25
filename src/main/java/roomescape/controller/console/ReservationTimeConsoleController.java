@@ -12,9 +12,9 @@ public class ReservationTimeConsoleController {
     private final ReservationTimeView reservationTimeView;
     private final ReservationTimeService reservationTimeService;
 
-    public ReservationTimeConsoleController() {
+    public ReservationTimeConsoleController(final ReservationTimeService reservationTimeService) {
         reservationTimeView = new ReservationTimeView();
-        this.reservationTimeService = new ReservationTimeService();
+        this.reservationTimeService = reservationTimeService;
     }
 
     public void saveTime() {

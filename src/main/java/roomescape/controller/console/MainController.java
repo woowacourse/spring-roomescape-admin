@@ -9,15 +9,25 @@ import roomescape.view.CommandView;
 @Controller
 public class MainController {
     private final CommandView commandView = new CommandView();
-    private final ReservationTimeConsoleController reservationTimeConsoleController = new ReservationTimeConsoleController();
-    private final ReservationConsoleController reservationConsoleController = new ReservationConsoleController();
+    private final ReservationTimeConsoleController reservationTimeConsoleController;
+    private final ReservationConsoleController reservationConsoleController;
+    private final Map<Command, CommandExecutor> commands;
 
-    private final Map<Command, CommandExecutor> commands = Map.of(
-            new Command(1), () -> reservationTimeConsoleController.saveTime(),
-            new Command(2), () -> reservationTimeConsoleController.deleteTime(),
-            new Command(3), () -> reservationTimeConsoleController.getTimes(),
-            new Command(4), () -> reservationConsoleController.saveReservation()
-    );
+    public MainController(
+            final ReservationTimeConsoleController reservationTimeConsoleController,
+            final ReservationConsoleController reservationConsoleController
+    ) {
+        this.reservationTimeConsoleController = reservationTimeConsoleController;
+        this.reservationConsoleController = reservationConsoleController;
+        this.commands = Map.of(
+                new Command(1), reservationTimeConsoleController::saveTime,
+                new Command(2), reservationTimeConsoleController::deleteTime,
+                new Command(3), reservationTimeConsoleController::getTimes,
+                new Command(4), reservationConsoleController::saveReservation,
+                new Command(5), reservationConsoleController::deleteReservation,
+                new Command(6), reservationConsoleController::getReservation
+        );
+    }
 
     public void run() {
         Command command = commandView.readCommand();

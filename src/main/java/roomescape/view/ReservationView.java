@@ -36,10 +36,11 @@ public class ReservationView {
         System.out.println("[INFO] 예약이 삭제되었습니다.");
     }
 
-    private void printReservations(final List<ReservationResponse> reservations) {
+    public void printReservations(final List<ReservationResponse> reservations) {
+        System.out.println("[INFO] 방탈출 예약 목록입니다.");
         System.out.println("번호  이름    날짜      시간");
         for (int index = 0; index < reservations.size(); index++) {
-            printReservation(index, reservations.get(index));
+            printReservation(index + 1, reservations.get(index));
         }
     }
 

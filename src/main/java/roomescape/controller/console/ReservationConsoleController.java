@@ -16,12 +16,6 @@ public class ReservationConsoleController {
     private final ReservationService reservationService;
     private final ReservationTimeService reservationTimeService;
 
-    public ReservationConsoleController() {
-        this.reservationView = new ReservationView();
-        this.reservationService = new ReservationService();
-        this.reservationTimeService = new ReservationTimeService();
-    }
-
     public void saveReservation() {
         ReservationRequest reservationRequest = new ReservationRequest(
                 reservationView.readName(),
@@ -32,6 +26,15 @@ public class ReservationConsoleController {
         );
         reservationService.saveReservation(reservationRequest);
         reservationView.printSuccessfullyAdded();
+    }
+
+    public ReservationConsoleController(
+            final ReservationService reservationService,
+            final ReservationTimeService reservationTimeService
+    ) {
+        this.reservationView = new ReservationView();
+        this.reservationService = reservationService;
+        this.reservationTimeService = reservationTimeService;
     }
 
     private List<ReservationTimeResponse> getReservationTimeResponses() {
@@ -45,6 +48,10 @@ public class ReservationConsoleController {
         int reservationId = reservationView.readReservationIdToDelete(getReservationResponses());
         reservationService.deleteReservation(reservationId);
         reservationView.printSuccessfullyDeleted();
+    }
+
+    public void getReservation() {
+        reservationView.printReservations(getReservationResponses());
     }
 
     private List<ReservationResponse> getReservationResponses() {

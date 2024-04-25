@@ -11,10 +11,6 @@ import roomescape.repository.TimeDao;
 public class ReservationTimeService {
     private final TimeDao timeDao;
 
-    public ReservationTimeService() {
-        this.timeDao = new TimeDao();
-    }
-
     public ReservationTimeService(final TimeDao timeDao) {
         this.timeDao = timeDao;
     }

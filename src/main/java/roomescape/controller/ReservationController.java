@@ -31,7 +31,7 @@ public class ReservationController {
 
     @GetMapping
     public ResponseEntity<List<ReservationResponse>> readReservations() {
-        List<Reservation> reservations = reservationRepository.findAllReservations();
+        List<Reservation> reservations = reservationRepository.findAll();
 
         List<ReservationResponse> reservationResponses = reservations.stream()
                 .map(reservation -> ReservationResponse.from(reservation))
@@ -43,10 +43,10 @@ public class ReservationController {
     @PostMapping
     public ResponseEntity<ReservationResponse> createReservation(@RequestBody ReservationRequest reservationRequest) {
         Long timeId = reservationRequest.timeId();
-        Time time = timeRepository.findTimeById(timeId);
+        Time time = timeRepository.findById(timeId);
 
         Reservation requestReservation = reservationRequest.toReservation(time);
-        Reservation responseReservation = reservationRepository.createReservation(requestReservation);
+        Reservation responseReservation = reservationRepository.create(requestReservation);
         ReservationResponse reservationResponse = ReservationResponse.from(responseReservation);
 
         return ResponseEntity.created(URI.create("/reservations/" + reservationResponse.getId()))
@@ -55,7 +55,7 @@ public class ReservationController {
 
     @DeleteMapping("/{id}")
     public ResponseEntity<Void> deleteReservation(@PathVariable Long id) {
-        reservationRepository.deleteReservation(id);
+        reservationRepository.delete(id);
 
         return ResponseEntity.noContent().build();
     }

@@ -13,12 +13,12 @@ public class InMemoryReservationRepository implements ReservationRepository {
     private final List<Reservation> reservations = new ArrayList<>();
 
     @Override
-    public List<Reservation> findAllReservations() {
+    public List<Reservation> findAll() {
         return reservations;
     }
 
     @Override
-    public Reservation createReservation(Reservation requestReservation) {
+    public Reservation create(Reservation requestReservation) {
         Reservation responseReservation = new Reservation(
                 id.getAndIncrement(),
                 requestReservation.getName(),
@@ -30,7 +30,7 @@ public class InMemoryReservationRepository implements ReservationRepository {
     }
 
     @Override
-    public void deleteReservation(Long id) {
+    public void delete(Long id) {
         reservations.removeIf(reservation -> reservation.getId().equals(id));
     }
 }

@@ -27,7 +27,7 @@ public class TimeController {
 
     @GetMapping
     public ResponseEntity<List<TimeResponse>> readTimes() {
-        List<TimeResponse> timeResponses = timeRepository.findAllTimes()
+        List<TimeResponse> timeResponses = timeRepository.findAll()
                 .stream()
                 .map(time -> TimeResponse.from(time))
                 .toList();
@@ -38,7 +38,7 @@ public class TimeController {
     @PostMapping
     public ResponseEntity<TimeResponse> createTime(@RequestBody TimeRequest timeRequest) {
         Time requestTime = timeRequest.toTime();
-        Time responseTime = timeRepository.createTime(requestTime);
+        Time responseTime = timeRepository.create(requestTime);
         TimeResponse timeResponse = TimeResponse.from(responseTime);
 
         return ResponseEntity.created(URI.create("/times/" + timeResponse.getId()))
@@ -47,7 +47,7 @@ public class TimeController {
 
     @DeleteMapping("/{id}")
     public ResponseEntity<Void> deleteTime(@PathVariable Long id) {
-        timeRepository.deleteTime(id);
+        timeRepository.delete(id);
 
         return ResponseEntity.noContent().build();
     }

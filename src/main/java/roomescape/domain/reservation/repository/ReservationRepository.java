@@ -5,9 +5,9 @@ import roomescape.domain.reservation.Reservation;
 
 public interface ReservationRepository {
 
-    List<Reservation> findAllReservations();
+    List<Reservation> findAll();
 
-    Reservation createReservation(Reservation reservation);
+    Reservation create(Reservation reservation);
 
-    void deleteReservation(Long id);
+    void delete(Long id);
 }

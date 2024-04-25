@@ -32,20 +32,20 @@ public class H2TimeRepository implements TimeRepository {
     }
 
     @Override
-    public Time findTimeById(Long timeId) {
+    public Time findById(Long timeId) {
         String sql = "SELECT * FROM reservation_time WHERE id = ?";
         return jdbcTemplate.queryForObject(sql, ROW_MAPPER, timeId);
     }
 
     @Override
-    public List<Time> findAllTimes() {
+    public List<Time> findAll() {
         String sql = "SELECT * FROM reservation_time";
 
         return jdbcTemplate.query(sql, ROW_MAPPER);
     }
 
     @Override
-    public Time createTime(Time requestTime) {
+    public Time create(Time requestTime) {
         SqlParameterSource params = new MapSqlParameterSource()
                 .addValue("start_at", requestTime.getStartAt());
         Long id = jdbcInsert.executeAndReturnKey(params).longValue();
@@ -54,7 +54,7 @@ public class H2TimeRepository implements TimeRepository {
     }
 
     @Override
-    public void deleteTime(Long id) {
+    public void delete(Long id) {
         String sql = "DELETE FROM reservation_time WHERE id = ?";
         jdbcTemplate.update(sql, id);
     }

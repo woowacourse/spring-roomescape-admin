@@ -5,11 +5,11 @@ import roomescape.domain.time.Time;
 
 public interface TimeRepository {
 
-    List<Time> findAllTimes();
+    Time findById(Long timeId);
 
-    Time createTime(Time time);
+    List<Time> findAll();
 
-    void deleteTime(Long id);
+    Time create(Time time);
 
-    Time findTimeById(Long timeId);
+    void delete(Long id);
 }

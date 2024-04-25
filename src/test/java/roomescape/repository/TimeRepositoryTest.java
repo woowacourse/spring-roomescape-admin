@@ -49,7 +49,7 @@ public class TimeRepositoryTest {
                 .body("id", is(1))
                 .header("Location", "/times/1");
 
-        Time time = timeRepository.findTimeById(1L);
+        Time time = timeRepository.findById(1L);
         Assertions.assertThat(time.getId()).isEqualTo(1L);
     }
 }

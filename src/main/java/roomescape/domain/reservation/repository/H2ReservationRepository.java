@@ -27,7 +27,7 @@ public class H2ReservationRepository implements ReservationRepository {
     }
 
     @Override
-    public List<Reservation> findAllReservations() {
+    public List<Reservation> findAll() {
         String sql = "SELECT * FROM reservation r JOIN reservation_time rt ON r.time_id = rt.id";
         RowMapper<Reservation> rowMapper = (resultSet, rowNum) -> {
             Time time = new Time(
@@ -47,7 +47,7 @@ public class H2ReservationRepository implements ReservationRepository {
     }
 
     @Override
-    public Reservation createReservation(Reservation requestReservation) {
+    public Reservation create(Reservation requestReservation) {
         SqlParameterSource params = new MapSqlParameterSource()
                 .addValue("name", requestReservation.getName())
                 .addValue("date", requestReservation.getDate())
@@ -60,7 +60,7 @@ public class H2ReservationRepository implements ReservationRepository {
     }
 
     @Override
-    public void deleteReservation(Long id) {
+    public void delete(Long id) {
         String sql = "DELETE FROM reservation WHERE id = ?";
         jdbcTemplate.update(sql, id);
     }

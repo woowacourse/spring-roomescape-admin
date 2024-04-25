@@ -16,15 +16,25 @@ import roomescape.domain.ReservationTime;
 class ReservationTimeH2RepositoryTest {
 
     @Autowired
-    private ReservationTimeH2Repository timeRepository;
+    private ReservationTimeH2Repository reservationTimeH2Repository;
+
+    @Test
+    @DisplayName("ReservationTime을 저장한다.")
+    void save() {
+        ReservationTime reservationTime = new ReservationTime(null, LocalTime.of(12, 0));
+
+        ReservationTime save = reservationTimeH2Repository.save(reservationTime);
+
+        assertThat(save).isEqualTo(ReservationTime.of(1L, reservationTime));
+    }
 
     @Test
     @DisplayName("모든 ReservationTime을 찾는다.")
     void findAll() {
-        timeRepository.save(new ReservationTime(null, LocalTime.of(12, 0)));
-        timeRepository.save(new ReservationTime(null, LocalTime.of(11, 0)));
+        reservationTimeH2Repository.save(new ReservationTime(null, LocalTime.of(12, 0)));
+        reservationTimeH2Repository.save(new ReservationTime(null, LocalTime.of(11, 0)));
 
-        List<ReservationTime> found = timeRepository.findAll();
+        List<ReservationTime> found = reservationTimeH2Repository.findAll();
 
         assertThat(found).hasSize(2);
     }
@@ -33,9 +43,9 @@ class ReservationTimeH2RepositoryTest {
     @DisplayName("id에 맞는 ReservationTime을 찾는다.")
     void findBy() {
         ReservationTime reservationTimeWithoutId = new ReservationTime(null, LocalTime.of(12, 0));
-        ReservationTime reservationTime = timeRepository.save(reservationTimeWithoutId);
+        ReservationTime reservationTime = reservationTimeH2Repository.save(reservationTimeWithoutId);
 
-        ReservationTime found = timeRepository.findById(1L);
+        ReservationTime found = reservationTimeH2Repository.findById(1L);
 
         assertThat(found).isEqualTo(reservationTime);
     }

@@ -25,7 +25,7 @@ public class ReservationTimeService {
         this.reservationTimeMapper = reservationTimeMapper;
     }
 
-    public List<ReservationTime> readAll() {
+    public List<ReservationTime> findAllTimes() {
         return reservationTimeDao.findAll();
     }
 

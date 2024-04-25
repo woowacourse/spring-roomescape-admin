@@ -21,7 +21,7 @@ public class ReservationController {
 
     @GetMapping
     public ResponseEntity<List<Reservation>> readReservations() {
-        List<Reservation> reservations = reservationService.readReservations();
+        List<Reservation> reservations = reservationService.findAllReservations();
         return ResponseEntity.ok(reservations);
     }
 
@@ -33,7 +33,7 @@ public class ReservationController {
 
     @DeleteMapping("/{id}")
     public ResponseEntity<Integer> deleteReservation(@PathVariable int id) {
-        reservationService.delete(id);
+        reservationService.deleteReservation(id);
         return ResponseEntity.noContent().build();
     }
 }

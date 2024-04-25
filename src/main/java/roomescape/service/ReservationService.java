@@ -20,7 +20,7 @@ public class ReservationService {
         this.reservationMapper = reservationMapper;
     }
 
-    public List<Reservation> readReservations() {
+    public List<Reservation> findAllReservations() {
         return reservationDao.findAll();
     }
 
@@ -30,7 +30,7 @@ public class ReservationService {
         return reservationMapper.toCreateReservationResponse(reservation);
     }
 
-    public void delete(int id) {
+    public void deleteReservation(int id) {
         reservationDao.delete(id);
     }
 }

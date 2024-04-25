@@ -9,13 +9,13 @@ import roomescape.dto.app.ReservationTimeAppRequest;
 
 @Service
 public class ReservationTimeService {
+    
     private final ReservationTimeRepository reservationTimeRepository;
 
     @Autowired
     public ReservationTimeService(ReservationTimeRepository reservationTimeRepository) {
         this.reservationTimeRepository = reservationTimeRepository;
     }
-
 
     public ReservationTime save(ReservationTimeAppRequest request) {
         ReservationTime newReservationTime = new ReservationTime(request.startAt());

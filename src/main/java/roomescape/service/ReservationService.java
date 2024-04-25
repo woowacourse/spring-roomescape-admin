@@ -20,8 +20,7 @@ public class ReservationService {
         this.reservationRepository = reservationRepository;
         this.reservationTimeRepository = reservationTimeRepository;
     }
-
-
+    
     public Reservation save(ReservationAppRequest request) {
         Reservation newReservation = new Reservation(request.name(), request.date(),
                 reservationTimeRepository.findById(request.timeId()));

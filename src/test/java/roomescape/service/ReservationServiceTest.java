@@ -8,21 +8,14 @@ import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.context.SpringBootTest;
-import roomescape.config.TestConfig;
 import roomescape.controller.dto.ReservationRequest;
 import roomescape.controller.dto.ReservationResponse;
 import roomescape.domain.Reservation;
 import roomescape.domain.TimeSlot;
-import roomescape.repository.ReservationRepository;
-import roomescape.repository.TimeSlotRepository;
+import roomescape.domain.ReservationRepository;
+import roomescape.domain.TimeSlotRepository;
 
-@SpringBootTest(
-        classes = TestConfig.class,
-        webEnvironment = SpringBootTest.WebEnvironment.NONE,
-        properties = "spring.main.allow-bean-definition-overriding=true"
-)
-class ReservationServiceTest {
+class ReservationServiceTest extends ServiceTest {
 
     @Autowired
     private ReservationRepository reservationRepository;

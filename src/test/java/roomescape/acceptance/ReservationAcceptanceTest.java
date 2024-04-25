@@ -11,8 +11,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import roomescape.controller.dto.ReservationRequest;
 import roomescape.domain.Reservation;
 import roomescape.domain.TimeSlot;
-import roomescape.repository.ReservationRepository;
-import roomescape.repository.TimeSlotRepository;
+import roomescape.domain.ReservationRepository;
+import roomescape.domain.TimeSlotRepository;
 
 class ReservationAcceptanceTest extends AcceptanceTest {
 

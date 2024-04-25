@@ -10,6 +10,7 @@ import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.simple.SimpleJdbcInsert;
 import org.springframework.stereotype.Repository;
 import roomescape.domain.TimeSlot;
+import roomescape.domain.TimeSlotRepository;
 import roomescape.repository.rowmapper.TimeSlotRowMapper;
 
 @Repository

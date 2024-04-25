@@ -10,14 +10,12 @@ import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.context.SpringBootTest;
 import roomescape.controller.dto.TimeSlotCreationRequest;
 import roomescape.controller.dto.TimeSlotCreationResponse;
 import roomescape.domain.TimeSlot;
-import roomescape.repository.TimeSlotRepository;
+import roomescape.domain.TimeSlotRepository;
 
-@SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.NONE)
-class TimeSlotServiceTest {
+class TimeSlotServiceTest extends ServiceTest {
 
     @Autowired
     private TimeSlotRepository timeSlotRepository;

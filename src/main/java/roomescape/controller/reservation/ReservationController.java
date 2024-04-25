@@ -32,12 +32,12 @@ public class ReservationController {
 
     @PostMapping
     public ResponseEntity<ReservationResponse> addReservation(@RequestBody final ReservationRequest request) {
-        ReservationResponse response = reservationService.addReservation(request);
+        ReservationResponse reservation = reservationService.addReservation(request);
 
         return ResponseEntity
                 .status(HttpStatus.OK)
-                .location(URI.create("/reservations/" + response.id()))
-                .body(response);
+                .location(URI.create("/reservations/" + reservation.id()))
+                .body(reservation);
     }
 
     @DeleteMapping("/{id}")

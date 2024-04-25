@@ -1,37 +1,35 @@
 package roomescape.dao;
 
 import org.springframework.jdbc.core.JdbcTemplate;
-import org.springframework.jdbc.support.GeneratedKeyHolder;
-import org.springframework.jdbc.support.KeyHolder;
+import org.springframework.jdbc.core.namedparam.MapSqlParameterSource;
+import org.springframework.jdbc.core.namedparam.SqlParameterSource;
+import org.springframework.jdbc.core.simple.SimpleJdbcInsert;
 import org.springframework.stereotype.Repository;
 import roomescape.domain.ReservationTime;
 
-import java.sql.PreparedStatement;
-import java.sql.Time;
+import javax.sql.DataSource;
 import java.time.LocalTime;
 import java.util.List;
 
 @Repository
 public class ReservationTimeDAO {
     private final JdbcTemplate jdbcTemplate;
+    private final SimpleJdbcInsert jdbcInsert;
 
-    public ReservationTimeDAO(final JdbcTemplate jdbcTemplate) {
+    public ReservationTimeDAO(final JdbcTemplate jdbcTemplate, final DataSource dataSource) {
         this.jdbcTemplate = jdbcTemplate;
+        this.jdbcInsert = new SimpleJdbcInsert(dataSource)
+                .withTableName("reservation_time")
+                .usingGeneratedKeyColumns("id");
     }
 
     public ReservationTime insert(final ReservationTime reservationTime) {
-        final String sql = "INSERT INTO reservation_time (start_at) VALUES (?)";
-        final KeyHolder keyHolder = new GeneratedKeyHolder();
-
         final LocalTime startAt = reservationTime.getStartAt();
 
-        jdbcTemplate.update(con -> {
-            final PreparedStatement preparedStatement = con.prepareStatement(sql, new String[]{"id"});
-            preparedStatement.setTime(1, Time.valueOf(startAt));
-            return preparedStatement;
-        }, keyHolder);
+        final SqlParameterSource parameterSource = new MapSqlParameterSource()
+                .addValue("start_at", startAt);
 
-        final long id = keyHolder.getKey().longValue();
+        final long id = jdbcInsert.executeAndReturnKey(parameterSource).longValue();
         return new ReservationTime(id, startAt);
     }
 

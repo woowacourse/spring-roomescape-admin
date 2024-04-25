@@ -12,7 +12,7 @@ import org.springframework.boot.test.context.SpringBootTest.WebEnvironment;
 import org.springframework.boot.test.web.server.LocalServerPort;
 import org.springframework.test.context.jdbc.Sql;
 import org.springframework.test.context.jdbc.Sql.ExecutionPhase;
-import roomescape.dto.ReservationTimeCreateDto;
+import roomescape.dto.ReservationTimeRequest;
 
 /*
  * 테스트 데이터베이스 초기 데이터
@@ -43,7 +43,7 @@ class ReservationTimeControllerTest {
     @Test
     @DisplayName("예약 시간을 생성한다.")
     void createReservationTime() {
-        ReservationTimeCreateDto createDto = new ReservationTimeCreateDto("13:00");
+        ReservationTimeRequest createDto = new ReservationTimeRequest("13:00");
 
         RestAssured.given().log().all()
                 .contentType(ContentType.JSON)

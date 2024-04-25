@@ -18,7 +18,7 @@ import org.springframework.boot.test.web.server.LocalServerPort;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.test.context.jdbc.Sql;
 import org.springframework.test.context.jdbc.Sql.ExecutionPhase;
-import roomescape.dto.ReservationCreateDto;
+import roomescape.dto.ReservationRequest;
 
 /*
  * 테스트 데이터베이스 초기 데이터
@@ -68,7 +68,7 @@ class ReservationControllerTest {
     @Test
     @DisplayName("예약을 생성한다.")
     void createReservation() {
-        ReservationCreateDto createDto = new ReservationCreateDto("브라운", "2023-08-05", 1L);
+        ReservationRequest createDto = new ReservationRequest("브라운", "2023-08-05", 1L);
 
         RestAssured.given().log().all()
                 .contentType(ContentType.JSON)

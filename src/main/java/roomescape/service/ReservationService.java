@@ -8,8 +8,8 @@ import org.springframework.transaction.annotation.Transactional;
 import roomescape.domain.Reservation;
 import roomescape.domain.ReservationRepository;
 import roomescape.domain.ReservationTimeRepository;
-import roomescape.dto.ReservationCreateDto;
-import roomescape.dto.ReservationResponseDto;
+import roomescape.dto.ReservationRequest;
+import roomescape.dto.ReservationResponse;
 
 @Service
 public class ReservationService {
@@ -22,18 +22,18 @@ public class ReservationService {
         this.reservationTimeRepository = reservationTimeRepository;
     }
 
-    public List<ReservationResponseDto> getAllReservations() {
+    public List<ReservationResponse> getAllReservations() {
         return reservationRepository.findAll().stream()
-                .map(ReservationResponseDto::from)
+                .map(ReservationResponse::from)
                 .toList();
     }
 
     @Transactional
-    public ReservationResponseDto createReservation(ReservationCreateDto createDto) {
+    public ReservationResponse createReservation(ReservationRequest createDto) {
         validateReservationTime(createDto.timeId());
         Reservation reservation = createDto.toDomain();
         Reservation createdReservation = reservationRepository.create(reservation);
-        return ReservationResponseDto.from(createdReservation);
+        return ReservationResponse.from(createdReservation);
     }
 
     public void deleteReservation(Long id) {

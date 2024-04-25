@@ -5,8 +5,8 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import roomescape.domain.ReservationTime;
 import roomescape.domain.ReservationTimeRepository;
-import roomescape.dto.ReservationTimeCreateDto;
-import roomescape.dto.ReservationTimeResponseDto;
+import roomescape.dto.ReservationTimeRequest;
+import roomescape.dto.ReservationTimeResponse;
 
 @Service
 public class ReservationTimeService {
@@ -16,17 +16,17 @@ public class ReservationTimeService {
         this.reservationTimeRepository = reservationTimeRepository;
     }
 
-    public List<ReservationTimeResponseDto> getAllReservationTimes() {
+    public List<ReservationTimeResponse> getAllReservationTimes() {
         return reservationTimeRepository.findAll().stream()
-                .map(ReservationTimeResponseDto::from)
+                .map(ReservationTimeResponse::from)
                 .toList();
     }
 
     @Transactional
-    public ReservationTimeResponseDto createReservationTime(ReservationTimeCreateDto createDto) {
+    public ReservationTimeResponse createReservationTime(ReservationTimeRequest createDto) {
         ReservationTime time = createDto.toDomain();
         ReservationTime createdReservationTime = reservationTimeRepository.create(time);
-        return ReservationTimeResponseDto.from(createdReservationTime);
+        return ReservationTimeResponse.from(createdReservationTime);
     }
 
     public void deleteReservationTime(Long id) {

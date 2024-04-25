@@ -94,7 +94,7 @@ Content-Type: application/json
     }
 ]
 ```
-- [ ] 시간 삭제 API
+- [x] 시간 삭제 API
 ```
 DELETE /times/1 HTTP/1.1
 

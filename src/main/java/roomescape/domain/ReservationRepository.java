@@ -56,7 +56,9 @@ public class ReservationRepository {
         KeyHolder keyHolder = new GeneratedKeyHolder();
         jdbcTemplate.update(connection -> {
             PreparedStatement ps = connection.prepareStatement(
-                    "INSERT INTO reservation (name, date, time_id) VALUES (?, ?, ?)", new String[]{"id"});
+                    "INSERT INTO reservation (name, date, time_id) VALUES (?, ?, ?)",
+                    new String[]{"id"}
+            );
             ps.setString(1, reservation.getName().getValue());
             ps.setString(2, reservation.getDate().format(DATE_FORMATTER));
             ps.setLong(3, reservation.getTime().getId());

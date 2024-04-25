@@ -36,7 +36,9 @@ public class ReservationTimeRepository {
         KeyHolder keyHolder = new GeneratedKeyHolder();
         jdbcTemplate.update(connection -> {
             PreparedStatement ps = connection.prepareStatement(
-                    "INSERT INTO reservation_time (start_at) VALUES (?)", new String[]{"id"});
+                    "INSERT INTO reservation_time (start_at) VALUES (?)",
+                    new String[]{"id"}
+            );
             ps.setString(1, reservationTime.getStartAt().format(TIME_FORMATTER));
             return ps;
         }, keyHolder);

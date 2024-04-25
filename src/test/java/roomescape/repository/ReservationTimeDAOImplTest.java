@@ -34,29 +34,9 @@ class ReservationTimeDAOImplTest {
 
     @BeforeEach
     void setUp() {
-        jdbcTemplate.execute("drop table reservation if exists");
-        jdbcTemplate.execute("drop table reservation_time if exists");
-        jdbcTemplate.execute("""
-                create table reservation_time
-                (
-                    id   bigint       not null AUTO_INCREMENT,
-                    start_at varchar(255) not null,
-                    primary key (id)
-                );
-                """
-        );
-        jdbcTemplate.execute("""
-                create table reservation
-                (
-                    id   bigint       not null AUTO_INCREMENT,
-                    name varchar(255) not null ,
-                    date varchar(255) not null ,
-                    time_id bigint,
-                    primary key (id),
-                    foreign key (time_id) references reservation_time (id)
-                );
-                """
-        );
+        jdbcTemplate.execute("SET REFERENTIAL_INTEGRITY FALSE");
+        jdbcTemplate.execute("TRUNCATE TABLE reservation_time RESTART IDENTITY");
+        jdbcTemplate.execute("SET REFERENTIAL_INTEGRITY TRUE");
 
         insertActor = new SimpleJdbcInsert(dataSource)
                 .withTableName("reservation_time")

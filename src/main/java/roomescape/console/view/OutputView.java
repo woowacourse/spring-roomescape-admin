@@ -1,11 +1,9 @@
 package roomescape.console.view;
 
 import java.util.List;
-import org.springframework.stereotype.Component;
 import roomescape.service.dto.ReservationServiceResponse;
 import roomescape.service.dto.ReservationTimeServiceResponse;
 
-@Component
 public class OutputView {
 
     public void printReservations(List<ReservationServiceResponse> reservations) {

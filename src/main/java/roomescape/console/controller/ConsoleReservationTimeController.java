@@ -1,21 +1,19 @@
 package roomescape.console.controller;
 
 import java.util.List;
-import org.springframework.stereotype.Component;
 import roomescape.console.view.OutputView;
 import roomescape.service.ReservationTimeService;
 import roomescape.service.dto.ReservationTimeServiceRequest;
 import roomescape.service.dto.ReservationTimeServiceResponse;
 
-@Component
 public class ConsoleReservationTimeController {
 
-    private final OutputView outputView;
     private final ReservationTimeService reservationTimeService;
+    private final OutputView outputView;
 
-    public ConsoleReservationTimeController(OutputView outputView, ReservationTimeService reservationTimeService) {
-        this.outputView = outputView;
+    public ConsoleReservationTimeController(ReservationTimeService reservationTimeService, OutputView outputView) {
         this.reservationTimeService = reservationTimeService;
+        this.outputView = outputView;
     }
 
     public void findAll() {

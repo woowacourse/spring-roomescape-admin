@@ -26,7 +26,7 @@ import roomescape.controller.dto.ReservationResponse;
 
 @SpringBootTest(webEnvironment = WebEnvironment.RANDOM_PORT)
 @DirtiesContext(classMode = ClassMode.AFTER_EACH_TEST_METHOD)
-@ActiveProfiles("test")
+@ActiveProfiles("web")
 class MissionStepTest {
 
     @LocalServerPort

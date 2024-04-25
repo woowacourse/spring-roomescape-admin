@@ -4,11 +4,9 @@ import java.time.LocalDate;
 import java.time.LocalTime;
 import java.time.format.DateTimeParseException;
 import java.util.List;
-import org.springframework.stereotype.Component;
 import roomescape.service.dto.ReservationServiceRequest;
 import roomescape.service.dto.ReservationTimeServiceRequest;
 
-@Component
 public class ConsoleInputConverter {
 
     private static final String ERROR_MESSAGE = "잘못된 입력 형식입니다.";

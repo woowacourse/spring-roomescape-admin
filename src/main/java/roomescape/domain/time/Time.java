@@ -1,10 +1,14 @@
 package roomescape.domain.time;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
 import java.time.LocalTime;
 
 public class Time {
 
     private final Long id;
+
+    // TODO: DTO 분리
+    @JsonFormat(pattern = "HH:mm")
     private final LocalTime startAt;
 
     public Time(LocalTime startAt) {

@@ -12,6 +12,8 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import roomescape.domain.reservation.Reservation;
 import roomescape.domain.reservation.repository.ReservationRepository;
+import roomescape.domain.time.Time;
+import roomescape.domain.time.repository.TimeRepository;
 import roomescape.dto.reservation.ReservationRequest;
 import roomescape.dto.reservation.ReservationResponse;
 
@@ -20,9 +22,11 @@ import roomescape.dto.reservation.ReservationResponse;
 public class ReservationController {
 
     private final ReservationRepository reservationRepository;
+    private final TimeRepository timeRepository;
 
-    public ReservationController(ReservationRepository reservationRepository) {
+    public ReservationController(ReservationRepository reservationRepository, TimeRepository timeRepository) {
         this.reservationRepository = reservationRepository;
+        this.timeRepository = timeRepository;
     }
 
     @GetMapping
@@ -38,7 +42,10 @@ public class ReservationController {
 
     @PostMapping
     public ResponseEntity<ReservationResponse> createReservation(@RequestBody ReservationRequest reservationRequest) {
-        Reservation requestReservation = reservationRequest.toReservation();
+        Long timeId = reservationRequest.timeId();
+        Time time = timeRepository.findTimeById(timeId);
+
+        Reservation requestReservation = reservationRequest.toReservation(time);
         Reservation responseReservation = reservationRepository.createReservation(requestReservation);
         ReservationResponse reservationResponse = ReservationResponse.from(responseReservation);
 

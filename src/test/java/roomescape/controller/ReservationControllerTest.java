@@ -27,15 +27,25 @@ public class ReservationControllerTest {
     @Autowired
     private JdbcTemplate jdbcTemplate;
 
-    private final Map<String, String> params = Map.of(
+    private final Map<String, String> timeParams = Map.of("startAt", "17:00");
+
+    private final Map<String, String> reservationParams = Map.of(
             "name", "썬",
             "date", "2024-04-18",
-            "time", "17:00"
+            "timeId", "1"
     );
 
     @BeforeEach
     void setUp() {
         RestAssured.port = port;
+
+        RestAssured.given().log().all()
+                .contentType(ContentType.JSON)
+                .body(timeParams)
+                .when().post("/times")
+                .then().log().all()
+                .statusCode(201)
+                .body("id", is(1));
     }
 
     @Test
@@ -43,7 +53,7 @@ public class ReservationControllerTest {
     void firstPost() {
         RestAssured.given().log().all()
                 .contentType(ContentType.JSON)
-                .body(params)
+                .body(reservationParams)
                 .when().post("/reservations")
                 .then().log().all()
                 .statusCode(201)
@@ -65,7 +75,7 @@ public class ReservationControllerTest {
     void readReservationsSizeAfterFirstPost() {
         RestAssured.given().log().all()
                 .contentType(ContentType.JSON)
-                .body(params)
+                .body(reservationParams)
                 .when().post("/reservations")
                 .then().log().all()
                 .statusCode(201)
@@ -83,7 +93,7 @@ public class ReservationControllerTest {
     void readReservationsSizeAfterPostAndDelete() {
         RestAssured.given().log().all()
                 .contentType(ContentType.JSON)
-                .body(params)
+                .body(reservationParams)
                 .when().post("/reservations")
                 .then().log().all()
                 .statusCode(201)
@@ -104,8 +114,8 @@ public class ReservationControllerTest {
     @Test
     @DisplayName("DB에 예약 하나 추가 후 예약 조회 API를 통해 조회한 예약 수는 DB를 통해 조회한 예약 수와 같다.")
     void readDbReservations() {
-        jdbcTemplate.update("INSERT INTO reservation (name, date, time) VALUES (?, ?, ?)",
-                "브라운", "2023-08-05", "15:40");
+        jdbcTemplate.update("INSERT INTO reservation (name, date, time_id) VALUES (?, ?, ?)",
+                "브라운", "2023-08-05", 1L);
 
         List<ReservationResponse> reservations = RestAssured.given().log().all()
                 .when().get("/reservations")
@@ -123,7 +133,7 @@ public class ReservationControllerTest {
     void postReservationIntoDb() {
         RestAssured.given().log().all()
                 .contentType(ContentType.JSON)
-                .body(params)
+                .body(reservationParams)
                 .when().post("/reservations")
                 .then().log().all()
                 .statusCode(201)
@@ -138,7 +148,7 @@ public class ReservationControllerTest {
     void readReservationsSizeFromDbAfterPostAndDelete() {
         RestAssured.given().log().all()
                 .contentType(ContentType.JSON)
-                .body(params)
+                .body(reservationParams)
                 .when().post("/reservations")
                 .then().log().all()
                 .statusCode(201)

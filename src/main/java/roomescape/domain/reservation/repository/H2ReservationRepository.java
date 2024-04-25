@@ -10,6 +10,7 @@ import org.springframework.jdbc.core.namedparam.SqlParameterSource;
 import org.springframework.jdbc.core.simple.SimpleJdbcInsert;
 import org.springframework.stereotype.Repository;
 import roomescape.domain.reservation.Reservation;
+import roomescape.domain.time.Time;
 
 @Repository
 @Primary
@@ -27,13 +28,17 @@ public class H2ReservationRepository implements ReservationRepository {
 
     @Override
     public List<Reservation> findAllReservations() {
-        String sql = "SELECT * FROM reservation";
+        String sql = "SELECT * FROM reservation r JOIN reservation_time rt ON r.time_id = rt.id";
         RowMapper<Reservation> rowMapper = (resultSet, rowNum) -> {
+            Time time = new Time(
+                    resultSet.getLong("reservation_time.id"),
+                    resultSet.getTime("reservation_time.start_at").toLocalTime());
+
             Reservation reservation = new Reservation(
-                    resultSet.getLong("id"),
-                    resultSet.getString("name"),
-                    resultSet.getDate("date").toLocalDate(),
-                    resultSet.getTime("time").toLocalTime()
+                    resultSet.getLong("reservation.id"),
+                    resultSet.getString("reservation.name"),
+                    resultSet.getDate("reservation.date").toLocalDate(),
+                    time
             );
             return reservation;
         };
@@ -46,7 +51,7 @@ public class H2ReservationRepository implements ReservationRepository {
         SqlParameterSource params = new MapSqlParameterSource()
                 .addValue("name", requestReservation.getName())
                 .addValue("date", requestReservation.getDate())
-                .addValue("time", requestReservation.getTime());
+                .addValue("time_id", requestReservation.getTime().getId());
         Long id = jdbcInsert.executeAndReturnKey(params).longValue();
 
         return new Reservation(

@@ -6,9 +6,9 @@ import org.springframework.jdbc.core.namedparam.MapSqlParameterSource;
 import org.springframework.jdbc.core.namedparam.SqlParameterSource;
 import org.springframework.jdbc.core.simple.SimpleJdbcInsert;
 import org.springframework.web.bind.annotation.*;
+import roomescape.time.ReservationTime;
 
 import javax.sql.DataSource;
-import java.net.URI;
 import java.util.List;
 
 @RestController
@@ -41,7 +41,7 @@ public class ReservationController {
         SqlParameterSource params = new MapSqlParameterSource()
                 .addValue("name", reservationRequest.name())
                 .addValue("date", reservationRequest.date())
-                .addValue("time", reservationRequest.time());
+                .addValue("time_id", reservationRequest.timeId());
 
         final long id = jdbcInsert.executeAndReturnKey(params).longValue();
 
@@ -49,10 +49,13 @@ public class ReservationController {
                 id,
                 reservationRequest.name(),
                 reservationRequest.date(),
-                reservationRequest.time()
+                jdbcTemplate.queryForObject("SELECT * FROM reservation_time WHERE id = ?", (resultSet, rowNum) -> new ReservationTime(
+                        resultSet.getLong("id"),
+                        resultSet.getTime("start_at").toLocalTime()
+                ), reservationRequest.timeId())
         );
 
-        return ResponseEntity.created(URI.create("/reservations/" + id)).body(reservation);
+        return ResponseEntity.ok(reservation);
     }
 
     @DeleteMapping("/reservations/{id}")

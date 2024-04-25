@@ -36,8 +36,9 @@ public class ReservationController {
     @GetMapping
     @ResponseStatus(HttpStatus.OK)
     public List<ReservationResponse> findAll() {
-        List<Reservation> reservations = reservationService.findAll();
-        return ReservationResponse.fromReservations(reservations);
+//        List<Reservation> reservations = reservationService.findAll();
+//        return ReservationResponse.fromReservations(reservations);
+        return reservationService.findAll();
     }
 
     @DeleteMapping("/{id}")

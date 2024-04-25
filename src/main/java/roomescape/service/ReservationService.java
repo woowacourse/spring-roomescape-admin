@@ -20,8 +20,9 @@ public class ReservationService {
         this.reservationTimeDao = reservationTimeDao;
     }
 
-    public List<Reservation> findAll() {
-        return reservationDao.findAll();
+    public List<ReservationResponse> findAll() {
+        List<Reservation> reservations = reservationDao.findAll();
+        return ReservationResponse.fromReservations(reservations);
     }
 
     public void delete(final long id) {

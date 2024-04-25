@@ -43,12 +43,15 @@ public class ReservationTimeDaoImpl implements ReservationTimeDao {
     @Override
     public ReservationTime findById(Long id) {
         String sql = "select * from reservation_time where id = ?";
-        ReservationTime reservationTime = jdbcTemplate.queryForObject(sql, rowMapper, id);
-        return reservationTime;
+        try {
+            return jdbcTemplate.queryForObject(sql, rowMapper, id);
+        }catch (Exception e){
+            return null;
+        }
     }
 
     @Override
-    public int deleteById(Long id) {
-        return jdbcTemplate.update("delete from reservation_time where id = ?", id);
+    public void deleteById(Long id) {
+        jdbcTemplate.update("delete from reservation_time where id = ?", id);
     }
 }

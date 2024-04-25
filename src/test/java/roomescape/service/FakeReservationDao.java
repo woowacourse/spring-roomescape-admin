@@ -1,6 +1,7 @@
 package roomescape.service;
 
 import java.time.LocalTime;
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -9,11 +10,13 @@ import roomescape.domain.Reservation;
 import roomescape.domain.ReservationTime;
 import roomescape.dto.ReservationAddRequest;
 import roomescape.repository.ReservationDao;
+import roomescape.repository.ReservationTimeDao;
 
 public class FakeReservationDao implements ReservationDao {
 
     Map<Long, Reservation> reservations;
-    AtomicLong atomicLong = new AtomicLong(0);
+    AtomicLong reservationAtomicLong = new AtomicLong(0);
+    AtomicLong reservationTimeAtomicLong = new AtomicLong(0);
 
     FakeReservationDao() {
         this.reservations = new HashMap<>();
@@ -33,15 +36,14 @@ public class FakeReservationDao implements ReservationDao {
 
     @Override
     public Reservation findById(Long id) {
-        return null;
+        return reservations.get(id);
     }
 
-    //todo: ReservationTime 생성하는 부분 dao참조하는 것으로 변경
     @Override
     public Reservation insert(ReservationAddRequest reservationAddRequest) {
-        Long id = atomicLong.incrementAndGet();
+        Long id = reservationAtomicLong.incrementAndGet();
         Reservation reservation = new Reservation(id, reservationAddRequest.getName(), reservationAddRequest.getDate(),
-                new ReservationTime(1L,
+                new ReservationTime(reservationTimeAtomicLong.incrementAndGet(),
                         LocalTime.of(10, 0)));
         reservations.put(id, reservation);
         return reservation;

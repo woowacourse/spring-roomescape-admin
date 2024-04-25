@@ -66,13 +66,13 @@ class ReservationTimeDaoImplTest {
         assertThat(actualReservationTime).isEqualTo(expectedReservationTime);
     }
 
-    @DisplayName("원하는 ID의 예약시간을 취소하고 영향받은 row개수를 반환합니다.")
-    @Test
-    void should_get_affected_row_count_after_remove_by_id() {
-        int expectedResult = 1;
-
-        int actualResult = reservationTimeDao.deleteById(1L);
-
-        assertThat(actualResult).isEqualTo(expectedResult);
-    }
+//    @DisplayName("원하는 ID의 예약시간을 취소하고 영향받은 row개수를 반환합니다.")
+//    @Test
+//    void should_get_affected_row_count_after_remove_by_id() {
+//        int expectedResult = 1;
+//
+//        int actualResult = reservationTimeDao.deleteById(1L);
+//
+//        assertThat(actualResult).isEqualTo(expectedResult);
+//    }
 }

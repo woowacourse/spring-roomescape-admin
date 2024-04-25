@@ -23,7 +23,10 @@ public class ReservationTimeService {
         return reservationTimeDao.insert(reservationTimeAddRequest);
     }
 
-    public boolean removeReservationTime(Long id) {
-        return reservationTimeDao.deleteById(id) > 0;
+    public void removeReservationTime(Long id) {
+        if (reservationTimeDao.findById(id)==null) {
+            throw new IllegalArgumentException("해당 id를 가진 예약시간이 존재하지 않습니다.");
+        }
+        reservationTimeDao.deleteById(id);
     }
 }

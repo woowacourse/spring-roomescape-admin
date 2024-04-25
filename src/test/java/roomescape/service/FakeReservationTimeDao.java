@@ -4,7 +4,6 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.concurrent.atomic.AtomicLong;
-import roomescape.domain.Reservation;
 import roomescape.domain.ReservationTime;
 import roomescape.dto.ReservationTimeAddRequest;
 import roomescape.repository.ReservationTimeDao;
@@ -18,10 +17,10 @@ public class FakeReservationTimeDao implements ReservationTimeDao {
         this.reservationTimes = new HashMap<>();
     }
 
-    FakeReservationTimeDao(List<ReservationTime> reservations) {
+    FakeReservationTimeDao(List<ReservationTime> reservationsTimes) {
         this.reservationTimes = new HashMap<>();
-        for (int i = 0; i < reservations.size(); i++) {
-            this.reservationTimes.put(reservations.get(i).getId(), reservationTimes.get(i));
+        for (int i = 0; i < reservationsTimes.size(); i++) {
+            this.reservationTimes.put(reservationsTimes.get(i).getId(), reservationsTimes.get(i));
         }
     }
 
@@ -32,7 +31,7 @@ public class FakeReservationTimeDao implements ReservationTimeDao {
 
     @Override
     public ReservationTime findById(Long id) {
-        return null;
+        return reservationTimes.get(id);
     }
 
     @Override
@@ -44,11 +43,7 @@ public class FakeReservationTimeDao implements ReservationTimeDao {
     }
 
     @Override
-    public int deleteById(Long id) {
-        if (reservationTimes.containsKey(id)) {
-            reservationTimes.remove(id);
-            return 1;
-        }
-        return 0;
+    public void deleteById(Long id) {
+        reservationTimes.remove(id);
     }
 }

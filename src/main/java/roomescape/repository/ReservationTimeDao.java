@@ -11,5 +11,5 @@ public interface ReservationTimeDao {
 
     ReservationTime insert(ReservationTimeAddRequest reservationTimeAddRequest);
 
-    int deleteById(Long id);
+    void deleteById(Long id);
 }

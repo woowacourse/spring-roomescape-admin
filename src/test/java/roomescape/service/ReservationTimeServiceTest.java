@@ -1,9 +1,11 @@
 package roomescape.service;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.assertThatThrownBy;
 
 import java.time.LocalTime;
 import java.util.Arrays;
+import java.util.HashMap;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import roomescape.domain.ReservationTime;
@@ -37,21 +39,27 @@ class ReservationTimeServiceTest {
         assertThat(actualReservationTime).isEqualTo(expectedReservationTime);
     }
 
-    @DisplayName("원하는 id의 예약시간을 삭제하면 true를 반환합니다.")
+    @DisplayName("원하는 id의 예약시간을 삭제합니다")
     @Test
-    void should_true_when_remove_reservation_time_with_exist_id() {
-        ReservationTimeService reservationTimeService = new ReservationTimeService(new FakeReservationTimeDao(
+    void should_remove_reservation_time_with_exist_id() {
+        FakeReservationTimeDao fakeReservationTimeDao = new FakeReservationTimeDao(
                 Arrays.asList(new ReservationTime(1L, LocalTime.of(10, 0)))
-        ));
+        );
+        ReservationTimeService reservationTimeService = new ReservationTimeService(fakeReservationTimeDao);
 
-        assertThat(reservationTimeService.removeReservationTime(1L)).isTrue();
+        reservationTimeService.removeReservationTime(1L);
+
+        assertThat(fakeReservationTimeDao.reservationTimes.containsKey(1L)).isFalse();
     }
 
-    @DisplayName("없는 id의 예약시간을 삭제하면 false를 반환합니다.")
+    @DisplayName("없는 id의 예약시간을 삭제하면 예외를 발생합니다.")
     @Test
-    void should_true_when_remove_reservation_time_with_non_exist_id() {
-        ReservationTimeService reservationTimeService = new ReservationTimeService(new FakeReservationTimeDao());
+    void should_throw_exception_when_remove_reservation_time_with_non_exist_id() {
+        FakeReservationTimeDao fakeReservationTimeDao = new FakeReservationTimeDao();
+        ReservationTimeService reservationTimeService = new ReservationTimeService(fakeReservationTimeDao);
 
-        assertThat(reservationTimeService.removeReservationTime(1L)).isFalse();
+        assertThatThrownBy(() -> reservationTimeService.removeReservationTime(1L)).isInstanceOf(
+                IllegalArgumentException.class)
+                .hasMessage("해당 id를 가진 예약시간이 존재하지 않습니다.");
     }
 }

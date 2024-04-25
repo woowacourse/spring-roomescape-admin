@@ -56,8 +56,7 @@ public class ReservationDAOImpl implements ReservationDAO {
         parameters.put("date", reservation.getDate());
         parameters.put("time_id", reservation.getTime().getId());
         Number newId = insertActor.executeAndReturnKey(parameters);
-        reservation.setId(newId.longValue());
-        return reservation;
+        return new Reservation(newId.longValue(), reservation.getName(), reservation.getDate(), reservation.getTime());
     }
 
     @Override

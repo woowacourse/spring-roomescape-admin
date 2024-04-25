@@ -48,8 +48,7 @@ public class ReservationTimeDAOImpl implements ReservationTimeDAO {
         Map<String, Object> parameters = new HashMap<>(1);
         parameters.put("start_at", reservationTime.getStartAt());
         Number newId = insertActor.executeAndReturnKey(parameters);
-        reservationTime.setId(newId.longValue());
-        return reservationTime;
+        return new ReservationTime(newId.longValue(), reservationTime.getStartAt());
     }
 
     @Override

@@ -31,8 +31,7 @@ class FakeReservationTimeDAO implements ReservationTimeDAO {
     @Override
     public ReservationTime addReservationTime(ReservationTime reservationTime) {
         reservationTimes.add(reservationTime);
-        reservationTime.setId(3);
-        return reservationTime;
+        return new ReservationTime(3, reservationTime.getStartAt());
     }
 
     @Override

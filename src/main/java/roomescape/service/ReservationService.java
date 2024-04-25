@@ -45,7 +45,7 @@ public class ReservationService {
     public void remove(final long id) {
         final Optional<Reservation> findReservation = findById(id);
         if (findReservation.isEmpty()) {
-            throw new IllegalArgumentException(String.format("timeId: %s는 존재하지 않는 timeId 입니다.", id));
+            throw new IllegalArgumentException(String.format("id: %s는 존재하지 않는 id 입니다.", id));
         }
         reservationDao.remove(id);
     }

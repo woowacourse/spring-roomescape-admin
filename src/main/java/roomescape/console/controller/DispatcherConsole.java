@@ -1,7 +1,10 @@
 package roomescape.console.controller;
 
+import java.util.List;
 import org.springframework.stereotype.Component;
 import roomescape.console.view.ConsoleCommand;
+import roomescape.service.dto.ReservationServiceRequest;
+import roomescape.service.dto.ReservationTimeServiceRequest;
 
 @Component
 public class DispatcherConsole {
@@ -23,11 +26,31 @@ public class DispatcherConsole {
     public void doDispatch(ConsoleCommand command) {
         switch (command.consoleCommandType()) {
             case FIND_RESERVATIONS -> reservationController.findAll();
-            case CREATE_RESERVATION -> reservationController.create(consoleInputConverter.toReservationServiceRequest(command.body()));
-            case DELETE_RESERVATION -> reservationController.delete(consoleInputConverter.toId(command.body()));
+            case CREATE_RESERVATION -> createReservation(command.body());
+            case DELETE_RESERVATION -> deleteReservation(command.body());
             case FIND_RESERVATION_TIMES -> reservationTimeController.findAll();
-            case CREATE_RESERVATION_TIME -> reservationTimeController.create(consoleInputConverter.toReservationTimeServiceRequest(command.body()));
-            case DELETE_RESERVATION_TIME -> reservationTimeController.delete(consoleInputConverter.toId(command.body()));
+            case CREATE_RESERVATION_TIME -> createReservationTime(command.body());
+            case DELETE_RESERVATION_TIME -> deleteReservationTime(command.body());
         }
+    }
+
+    private void createReservation(List<String> body) {
+        ReservationServiceRequest request = consoleInputConverter.toReservationServiceRequest(body);
+        reservationController.create(request);
+    }
+
+    private void deleteReservation(List<String> body) {
+        Long id = consoleInputConverter.toId(body);
+        reservationController.delete(id);
+    }
+
+    private void createReservationTime(List<String> body) {
+        ReservationTimeServiceRequest request = consoleInputConverter.toReservationTimeServiceRequest(body);
+        reservationTimeController.create(request);
+    }
+
+    private void deleteReservationTime(List<String> body) {
+        Long id = consoleInputConverter.toId(body);
+        reservationTimeController.delete(id);
     }
 }

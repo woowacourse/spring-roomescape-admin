@@ -21,7 +21,6 @@ public class JdbcTemplateReservationRepository implements ReservationRepository 
         this.jdbcTemplate = jdbcTemplate;
     }
 
-
     @Override
     public Reservation save(ReservationRequest reservationRequest) {
         String reservationTimeSelectSql = "select * from reservation_time where id = ?";

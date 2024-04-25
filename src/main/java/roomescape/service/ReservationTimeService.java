@@ -8,14 +8,16 @@ import roomescape.domain.time.Time;
 import roomescape.domain.time.repository.TimeRepository;
 import roomescape.dto.reservation.ReservationRequest;
 import roomescape.dto.reservation.ReservationResponse;
+import roomescape.dto.time.TimeRequest;
+import roomescape.dto.time.TimeResponse;
 
 @Service
-public class ReservationService {
+public class ReservationTimeService {
 
     private final ReservationRepository reservationRepository;
     private final TimeRepository timeRepository;
 
-    public ReservationService(ReservationRepository reservationRepository, TimeRepository timeRepository) {
+    public ReservationTimeService(ReservationRepository reservationRepository, TimeRepository timeRepository) {
         this.reservationRepository = reservationRepository;
         this.timeRepository = timeRepository;
     }
@@ -39,5 +41,23 @@ public class ReservationService {
 
     public void deleteReservation(Long id) {
         reservationRepository.delete(id);
+    }
+
+    public List<TimeResponse> findAllTimes() {
+        return timeRepository.findAll()
+                .stream()
+                .map(time -> TimeResponse.from(time))
+                .toList();
+    }
+
+    public TimeResponse createTime(TimeRequest timeRequest) {
+        Time requestTime = timeRequest.toTime();
+        Time responseTime = timeRepository.create(requestTime);
+
+        return TimeResponse.from(responseTime);
+    }
+
+    public void deleteTime(Long id) {
+        timeRepository.delete(id);
     }
 }

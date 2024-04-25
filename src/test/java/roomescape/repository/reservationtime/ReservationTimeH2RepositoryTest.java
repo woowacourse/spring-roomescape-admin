@@ -4,6 +4,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 
 import java.time.LocalTime;
 import java.util.List;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -18,14 +19,31 @@ class ReservationTimeH2RepositoryTest {
     @Autowired
     private ReservationTimeH2Repository reservationTimeH2Repository;
 
+    private ReservationTime reservationTime;
+
+    @BeforeEach
+    void init() {
+        reservationTime = reservationTimeH2Repository.save(
+                new ReservationTime(null, LocalTime.of(12, 0))
+        );
+    }
+
+//    @Test
+//    @DisplayName("ReservationTime을 저장한다.")
+//    void save() {
+//        ReservationTime reservationTime = new ReservationTime(null, LocalTime.of(12, 0));
+//
+//        ReservationTime save = reservationTimeH2Repository.save(reservationTime);
+//
+//        assertThat(save).isEqualTo(ReservationTime.of(1L, reservationTime));
+//    }
+
     @Test
-    @DisplayName("ReservationTime을 저장한다.")
-    void save() {
-        ReservationTime reservationTime = new ReservationTime(null, LocalTime.of(12, 0));
+    @DisplayName("id에 맞는 ReservationTime을 제거한다.")
+    void delete() {
+        reservationTimeH2Repository.delete(reservationTime.id());
 
-        ReservationTime save = reservationTimeH2Repository.save(reservationTime);
-
-        assertThat(save).isEqualTo(ReservationTime.of(1L, reservationTime));
+        assertThat(reservationTimeH2Repository.findAll()).hasSize(0);
     }
 
     @Test
@@ -36,16 +54,13 @@ class ReservationTimeH2RepositoryTest {
 
         List<ReservationTime> found = reservationTimeH2Repository.findAll();
 
-        assertThat(found).hasSize(2);
+        assertThat(found).hasSize(3);
     }
 
     @Test
     @DisplayName("id에 맞는 ReservationTime을 찾는다.")
     void findBy() {
-        ReservationTime reservationTimeWithoutId = new ReservationTime(null, LocalTime.of(12, 0));
-        ReservationTime reservationTime = reservationTimeH2Repository.save(reservationTimeWithoutId);
-
-        ReservationTime found = reservationTimeH2Repository.findById(1L);
+        ReservationTime found = reservationTimeH2Repository.findById(reservationTime.id());
 
         assertThat(found).isEqualTo(reservationTime);
     }

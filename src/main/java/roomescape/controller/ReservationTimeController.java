@@ -2,7 +2,6 @@ package roomescape.controller;
 
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-import roomescape.domain.reservation.ReservationTime;
 import roomescape.controller.request.ReservationTimeRequest;
 import roomescape.controller.response.ReservationTimeResponse;
 import roomescape.service.ReservationTimeService;
@@ -16,11 +15,10 @@ public class ReservationTimeController {
     public ReservationTimeController(ReservationTimeService reservationTimeService) {
         this.reservationTimeService = reservationTimeService;
     }
-    // TODO 바로 정적 팩터리 메서드로 Response화
     @PostMapping("/times")
     public ResponseEntity<ReservationTimeResponse> addTime(@RequestBody ReservationTimeRequest timeRequestDto) {
-        ReservationTime time = reservationTimeService.addTime(timeRequestDto.toEntity());
-        return ResponseEntity.ok(new ReservationTimeResponse(time));
+        ReservationTimeResponse time = ReservationTimeResponse.from(reservationTimeService.addTime(timeRequestDto.toEntity()));
+        return ResponseEntity.ok(time);
     }
 
     @GetMapping("/times")

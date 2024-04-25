@@ -7,6 +7,7 @@ import org.springframework.stereotype.Repository;
 import roomescape.domain.Reservation;
 import roomescape.domain.ReservationTime;
 
+import java.sql.Date;
 import java.sql.PreparedStatement;
 import java.util.List;
 
@@ -18,7 +19,7 @@ public class ReservationRepository {
     private final RowMapper<Reservation> reservationRowMapper = (resultSet, rowNum) -> new Reservation(
             resultSet.getLong("id"),
             resultSet.getString("name"),
-            resultSet.getString("date"),
+            resultSet.getDate("date").toLocalDate(),
             new ReservationTime(resultSet.getLong("reservation_time_id"), resultSet.getString("time_value"))
     );
 
@@ -48,7 +49,7 @@ public class ReservationRepository {
                     sql,
                     new String[]{"id"});
             ps.setString(1, reservation.getName());
-            ps.setString(2, reservation.getDate());
+            ps.setDate(2, Date.valueOf(reservation.getDate()));
             ps.setLong(3, reservation.getReservationTime().getId());
             return ps;
         }, keyHolder);

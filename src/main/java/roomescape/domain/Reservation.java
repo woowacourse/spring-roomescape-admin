@@ -1,24 +1,30 @@
 package roomescape.domain;
 
 import java.time.LocalDate;
-import java.time.LocalTime;
 import java.util.Objects;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 public class Reservation {
     private static final Pattern NAME_PATTERN = Pattern.compile("^\\d+$");
-    private static final int TIME_UNIT = 10;
 
-    private Long id;
+    private final Long id;
     private final String name;
     private final LocalDate date;
-    private final LocalTime time;
+    private final ReservationTime time;
 
-    public Reservation(String name, LocalDate date, LocalTime time) {
+    public Reservation(String name, LocalDate date, ReservationTime time) {
+        this(null, name, date, time);
+    }
+
+    public Reservation(Long id, Reservation reservation) {
+        this(id, reservation.name, reservation.date, reservation.time);
+    }
+
+    public Reservation(Long id, String name, LocalDate date, ReservationTime time) {
         validateName(name);
         validateDate(date);
-        validateTime(time);
+        this.id = id;
         this.name = name;
         this.date = date;
         this.time = time;
@@ -40,25 +46,16 @@ public class Reservation {
         }
     }
 
-    private void validateTime(LocalTime time) {
-        if (time == null || time.getMinute() % TIME_UNIT != 0) {
-            throw new IllegalArgumentException("유효하지 않은 예약 시간입니다.");
-        }
-    }
-
-    public void initializeId(Long id) {
-        if (this.id != null) {
-            throw new IllegalStateException("예약 ID를 변경할 수 없습니다.");
-        }
-        this.id = id;
-    }
-
-    public boolean hasSameDateTime(LocalDate date, LocalTime time) {
+    public boolean hasSameDateTime(LocalDate date, ReservationTime time) {
         return this.time.equals(time) && this.date.equals(date);
     }
 
     public boolean hasSameName(Reservation reservation) {
         return this.name.equals(reservation.name);
+    }
+
+    public Long getReservationTimeId() {
+        return time.getId();
     }
 
     public Long getId() {
@@ -73,7 +70,7 @@ public class Reservation {
         return date;
     }
 
-    public LocalTime getTime() {
+    public ReservationTime getTime() {
         return time;
     }
 

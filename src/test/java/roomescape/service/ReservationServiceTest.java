@@ -64,7 +64,7 @@ class ReservationServiceTest {
     void readAllReservations() {
         getIdAfterCreateReservation();
 
-        final List<Reservation> actual = reservationService.getAllReservations();
+        final List<ReservationResponse> actual = reservationService.getAllReservations();
 
         assertThat(actual).hasSize(1);
     }

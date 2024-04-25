@@ -30,8 +30,11 @@ public class ReservationService {
         return new ReservationResponse(id, reservation.getName(), reservation.getDate(), reservationTime);
     }
 
-    public List<Reservation> getAllReservations() {
-        return reservationDao.findAll();
+    public List<ReservationResponse> getAllReservations() {
+        return reservationDao.findAll()
+                .stream()
+                .map(ReservationResponse::new)
+                .toList();
     }
 
     public void deleteReservation(final Long id) {

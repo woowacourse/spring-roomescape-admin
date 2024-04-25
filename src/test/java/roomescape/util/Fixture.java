@@ -18,10 +18,16 @@ public class Fixture {
     public static final String JOJO_TIME = "10:00";
     public static final String GAMJA_TIME = "18:00";
 
-    public static final ReservationTime JOJO_RESERVATION_TIME_BEFORE_SAVE = new ReservationTime(0L, JOJO_TIME);
-    public static final ReservationTime JOJO_RESERVATION_TIME_AFTER_SAVE = new ReservationTime(1L, JOJO_TIME);
-    public static final ReservationTime GAMJA_RESERVATION_TIME_BEFORE_SAVE = new ReservationTime(0L, GAMJA_TIME);
-    public static final ReservationTime GAMJA_RESERVATION_TIME_AFTER_SAVE = new ReservationTime(2L, GAMJA_TIME);
+    public static final ReservationTime JOJO_RESERVATION_TIME_BEFORE_SAVE = new ReservationTime(JOJO_TIME);
+    public static final ReservationTime JOJO_RESERVATION_TIME_AFTER_SAVE = new ReservationTime(
+        1L,
+        JOJO_TIME
+    );
+    public static final ReservationTime GAMJA_RESERVATION_TIME_BEFORE_SAVE = new ReservationTime(GAMJA_TIME);
+    public static final ReservationTime GAMJA_RESERVATION_TIME_AFTER_SAVE = new ReservationTime(
+        2L,
+        GAMJA_TIME
+    );
 
     public static final Reservation JOJO_RESERVATION_BEFORE_SAVE = new Reservation(
         JOJO,
@@ -44,11 +50,20 @@ public class Fixture {
         GAMJA_RESERVATION_TIME_AFTER_SAVE
     );
 
-    public static final ReservationTimeRequest JOJO_RESERVATION_TIME_REQUEST = new ReservationTimeRequest(JOJO_TIME);
-    public static final ReservationTimeResponse JOJO_RESERVATION_TIME_RESPONSE = ReservationTimeResponse.from(JOJO_RESERVATION_TIME_AFTER_SAVE);
-    public static final ReservationTimeResponse GAMJA_RESERVATION_TIME_RESPONSE = ReservationTimeResponse.from(GAMJA_RESERVATION_TIME_AFTER_SAVE);
+    public static final ReservationTimeRequest JOJO_RESERVATION_TIME_REQUEST = new ReservationTimeRequest(
+        JOJO_TIME);
+    public static final ReservationTimeResponse JOJO_RESERVATION_TIME_RESPONSE = ReservationTimeResponse.from(
+        JOJO_RESERVATION_TIME_AFTER_SAVE);
+    public static final ReservationTimeResponse GAMJA_RESERVATION_TIME_RESPONSE = ReservationTimeResponse.from(
+        GAMJA_RESERVATION_TIME_AFTER_SAVE);
 
-    public static final ReservationRequest JOJO_RESERVATION_REQUEST = new ReservationRequest(JOJO, JOJO_DATE, 1L);
-    public static final ReservationResponse JOJO_RESERVATION_RESPONSE = ReservationResponse.from(JOJO_RESERVATION_AFTER_SAVE);
-    public static final ReservationResponse GAMJA_RESERVATION_RESPONSE = ReservationResponse.from(GAMJA_RESERVATION_AFTER_SAVE);
+    public static final ReservationRequest JOJO_RESERVATION_REQUEST = new ReservationRequest(
+        JOJO,
+        JOJO_DATE,
+        1L
+    );
+    public static final ReservationResponse JOJO_RESERVATION_RESPONSE = ReservationResponse.from(
+        JOJO_RESERVATION_AFTER_SAVE);
+    public static final ReservationResponse GAMJA_RESERVATION_RESPONSE = ReservationResponse.from(
+        GAMJA_RESERVATION_AFTER_SAVE);
 }

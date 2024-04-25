@@ -42,7 +42,10 @@ class ReservationServiceTest {
 
         List<ReservationResponse> reservations = reservationService.findAll();
 
-        assertThat(reservations).containsExactly(JOJO_RESERVATION_RESPONSE, GAMJA_RESERVATION_RESPONSE);
+        assertThat(reservations).containsExactly(
+            JOJO_RESERVATION_RESPONSE,
+            GAMJA_RESERVATION_RESPONSE
+        );
     }
 
     @DisplayName("예약 추가")
@@ -53,7 +56,8 @@ class ReservationServiceTest {
         BDDMockito.given(reservationDao.save(any()))
             .willReturn(JOJO_RESERVATION_AFTER_SAVE);
 
-        ReservationResponse reservationResponse = reservationService.create(JOJO_RESERVATION_REQUEST);
+        ReservationResponse reservationResponse = reservationService.create(
+            JOJO_RESERVATION_REQUEST);
 
         assertThat(reservationResponse).isEqualTo(JOJO_RESERVATION_RESPONSE);
     }

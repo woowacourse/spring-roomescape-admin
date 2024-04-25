@@ -34,7 +34,9 @@ class ReservationTimeServiceTest {
     @Test
     void findAllReservationTime() {
         BDDMockito.given(reservationTimeDao.findAll())
-            .willReturn(List.of(JOJO_RESERVATION_TIME_AFTER_SAVE, GAMJA_RESERVATION_TIME_AFTER_SAVE));
+            .willReturn(
+                List.of(JOJO_RESERVATION_TIME_AFTER_SAVE, GAMJA_RESERVATION_TIME_AFTER_SAVE)
+            );
 
         List<ReservationTimeResponse> reservationTimes = reservationTimeService.findAll();
 

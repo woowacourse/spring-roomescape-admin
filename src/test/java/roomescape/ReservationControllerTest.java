@@ -57,4 +57,15 @@ class ReservationControllerTest {
                 .then().log().all()
                 .statusCode(204);
     }
+
+    @Test
+    void postTime() { //TODO 테스트코드 바꿔도 되나??
+        RestAssured.given().log().all()
+                .contentType(ContentType.JSON)
+                .body(times)
+                .when().post("/times")
+                .then().log().all()
+                .statusCode(201)
+                .header("Location", "/times/1");
+    }
 }

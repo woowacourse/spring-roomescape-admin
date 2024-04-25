@@ -2,6 +2,7 @@ package roomescape.domain;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
+import static org.junit.jupiter.api.Assertions.assertAll;
 
 import java.time.LocalDate;
 import java.time.LocalTime;
@@ -55,7 +56,11 @@ class ReservationRepositoryTest {
         Reservation findReservations = reservationRepository.findById(2L);
 
         // then
-        assertThat(findReservations.getName()).isEqualTo(new Name("엘라"));
+        assertAll(
+                () -> assertThat(findReservations.getName().getValue()).isEqualTo("엘라"),
+                () -> assertThat(findReservations.getDate()).isEqualTo("2024-05-04")
+        );
+
     }
 
     @Test

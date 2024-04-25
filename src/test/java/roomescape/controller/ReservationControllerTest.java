@@ -54,6 +54,16 @@ class ReservationControllerTest {
                 .then().log().all().assertThat().statusCode(HttpStatus.OK.value());
     }
 
+    @DisplayName("참조키가 존재하지 않음으로 인한 예약 추가 실패 테스트")
+    @Test
+    void createReservationFail() {
+        RestAssured.given().log().all()
+                .contentType(ContentType.JSON)
+                .body(new ReservationRequest("브라운", "2023-08-05", 1))
+                .when().post("/reservations")
+                .then().log().all().assertThat().statusCode(HttpStatus.BAD_REQUEST.value());
+    }
+
     @DisplayName("예약 취소 성공 테스트")
     @Test
     void deleteReservationSuccess() {

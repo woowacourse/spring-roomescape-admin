@@ -4,7 +4,6 @@ import java.util.List;
 import java.util.NoSuchElementException;
 import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
 import roomescape.domain.Reservation;
 import roomescape.domain.ReservationRepository;
 import roomescape.domain.ReservationTimeRepository;
@@ -28,7 +27,6 @@ public class ReservationService {
                 .toList();
     }
 
-    @Transactional
     public ReservationResponse createReservation(ReservationRequest createDto) {
         validateReservationTime(createDto.timeId());
         Reservation reservation = createDto.toDomain();

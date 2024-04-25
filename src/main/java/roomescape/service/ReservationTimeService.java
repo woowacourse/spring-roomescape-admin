@@ -2,7 +2,6 @@ package roomescape.service;
 
 import java.util.List;
 import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
 import roomescape.domain.ReservationTime;
 import roomescape.domain.ReservationTimeRepository;
 import roomescape.dto.ReservationTimeRequest;
@@ -22,7 +21,6 @@ public class ReservationTimeService {
                 .toList();
     }
 
-    @Transactional
     public ReservationTimeResponse createReservationTime(ReservationTimeRequest createDto) {
         ReservationTime time = createDto.toDomain();
         ReservationTime createdReservationTime = reservationTimeRepository.create(time);

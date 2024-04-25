@@ -17,7 +17,7 @@ public class ReservationTimeService {
     }
 
     public List<TimeResponse> getAllReservationTimes() {
-        return reservationTimeDao.findALl().stream()
+        return reservationTimeDao.findAll().stream()
                 .map(TimeResponse::new)
                 .toList();
     }

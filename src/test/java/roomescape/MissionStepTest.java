@@ -2,6 +2,7 @@ package roomescape;
 
 import io.restassured.RestAssured;
 import io.restassured.http.ContentType;
+import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -29,6 +30,7 @@ public class MissionStepTest {
     @Autowired
     private JdbcTemplate jdbcTemplate;
 
+    @DisplayName("관리자 인덱스 페이지 접속 테스트")
     @Test
     void 일단계() {
         RestAssured.given().log().all()
@@ -38,6 +40,7 @@ public class MissionStepTest {
                 .statusCode(200);
     }
 
+    @DisplayName("예약 관리 페이지 접속 테스트")
     @Test
     void 이단계() {
         RestAssured.given().log().all()
@@ -54,6 +57,7 @@ public class MissionStepTest {
                 .body("reservations.size()", is(0));
     }
 
+    @DisplayName("예약 삭제 테스트")
     @Test
     void 삼단계() {
         Map<String, String> params = Map.of(
@@ -78,6 +82,7 @@ public class MissionStepTest {
                 .statusCode(204);
     }
 
+    @DisplayName("데이터베이스 연결 테스트")
     @Test
     void 사단계() {
         try (Connection conn = jdbcTemplate.getDataSource().getConnection()) {
@@ -89,7 +94,7 @@ public class MissionStepTest {
         }
     }
 
-
+    @DisplayName("예약 조회 기능 테스트")
     @Test
     void 오단계() {
         jdbcTemplate.update("INSERT INTO reservation (name, date, time) VALUES (?, ?, ?)", "브라운", "2023-08-05", "15:40");
@@ -106,6 +111,7 @@ public class MissionStepTest {
         assertThat(response.size()).isEqualTo(count);
     }
 
+    @DisplayName("예약 등록 후 삭제 기능 테스트")
     @Test
     void 육단계() {
         Map<String, String> params = new HashMap<>();

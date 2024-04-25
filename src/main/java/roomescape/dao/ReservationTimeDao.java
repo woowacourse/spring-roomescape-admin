@@ -3,7 +3,6 @@ package roomescape.dao;
 import java.util.List;
 import javax.sql.DataSource;
 import org.springframework.jdbc.core.JdbcTemplate;
-import org.springframework.jdbc.core.RowMapper;
 import org.springframework.jdbc.core.namedparam.MapSqlParameterSource;
 import org.springframework.jdbc.core.namedparam.SqlParameterSource;
 import org.springframework.jdbc.core.simple.SimpleJdbcInsert;
@@ -15,12 +14,14 @@ public class ReservationTimeDao {
 
     private final JdbcTemplate jdbcTemplate;
     private final SimpleJdbcInsert jdbcInsert;
+    private final ReservationTimeRowMapper rowMapper;
 
-    public ReservationTimeDao(JdbcTemplate jdbcTemplate, DataSource dataSource) {
+    public ReservationTimeDao(JdbcTemplate jdbcTemplate, DataSource dataSource, ReservationTimeRowMapper rowMapper) {
         this.jdbcTemplate = jdbcTemplate;
         this.jdbcInsert = new SimpleJdbcInsert(dataSource)
                 .withTableName("reservation_time")
                 .usingGeneratedKeyColumns("id");
+        this.rowMapper = rowMapper;
     }
 
     public ReservationTime create(ReservationTime reservationTime) {
@@ -32,19 +33,11 @@ public class ReservationTimeDao {
 
     public ReservationTime find(Long id) {
         String sql = "SELECT id, start_at FROM reservation_time WHERE id = ?";
-        RowMapper<ReservationTime> rowMapper = (resultSet, rowNum) -> new ReservationTime(
-                resultSet.getLong("id"),
-                resultSet.getString("start_at")
-        );
         return jdbcTemplate.queryForObject(sql, rowMapper, id);
     }
 
     public List<ReservationTime> getAll() {
         String sql = "SELECT id, start_at FROM reservation_time";
-        RowMapper<ReservationTime> rowMapper = (resultSet, rowNum) -> new ReservationTime(
-                resultSet.getLong("id"),
-                resultSet.getString("start_at")
-        );
         return jdbcTemplate.query(sql, rowMapper);
     }
 

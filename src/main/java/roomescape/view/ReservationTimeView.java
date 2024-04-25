@@ -29,6 +29,15 @@ public class ReservationTimeView {
 
     public static int readIndexToDelete(final List<ReservationTimeResponse> reservationTimeResponses) {
         System.out.println("[INFO] 삭제할 방탈출 예약 가능 시간의 번호를 선택해주세요.");
+        return readIndex(reservationTimeResponses);
+    }
+
+    public static int readIndexToReserve(final List<ReservationTimeResponse> reservationTimeResponses) {
+        System.out.println("[INFO] 방탈출 예약 가능 시간의 번호를 선택해주세요.");
+        return readIndex(reservationTimeResponses);
+    }
+
+    private static int readIndex(final List<ReservationTimeResponse> reservationTimeResponses) {
         printReservationTimes(reservationTimeResponses);
         try {
             return Integer.parseInt(SCANNER.nextLine());
@@ -56,8 +65,7 @@ public class ReservationTimeView {
         System.out.printf("%d. %s%n", index, response.startAt().toString());
     }
 
-    public void printHasNotAnyReservationTime() {
-        System.out.printf("[WARN] 방탈출 예약 가능한 시간이 없기 때문에 메뉴로 돌아갑니다.%n");
+    public void printHasNotAnyReservationTimeToDelete() {
+        System.out.printf("[WARN] 삭제할 방탈출 예약 시간이 없기 때문에 메뉴로 돌아갑니다.%n");
     }
 }
-

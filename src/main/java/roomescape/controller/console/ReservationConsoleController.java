@@ -16,6 +16,15 @@ public class ReservationConsoleController {
     private final ReservationService reservationService;
     private final ReservationTimeService reservationTimeService;
 
+    public ReservationConsoleController(
+            final ReservationService reservationService,
+            final ReservationTimeService reservationTimeService
+    ) {
+        this.reservationView = new ReservationView();
+        this.reservationService = reservationService;
+        this.reservationTimeService = reservationTimeService;
+    }
+
     public void saveReservation() {
         List<ReservationTimeResponse> reservationTimeResponses = getReservationTimeResponses();
         if (reservationTimeResponses.isEmpty()) {
@@ -25,19 +34,10 @@ public class ReservationConsoleController {
         ReservationRequest reservationRequest = new ReservationRequest(
                 reservationView.readName(),
                 reservationView.readDate(),
-                ReservationTimeView.readIndexToDelete(reservationTimeResponses)
+                ReservationTimeView.readIndexToReserve(reservationTimeResponses)
         );
         reservationService.saveReservation(reservationRequest);
         reservationView.printSuccessfullyAdded();
-    }
-
-    public ReservationConsoleController(
-            final ReservationService reservationService,
-            final ReservationTimeService reservationTimeService
-    ) {
-        this.reservationView = new ReservationView();
-        this.reservationService = reservationService;
-        this.reservationTimeService = reservationTimeService;
     }
 
     private List<ReservationTimeResponse> getReservationTimeResponses() {
@@ -54,7 +54,7 @@ public class ReservationConsoleController {
             return;
         }
         int index = reservationView.readIndexToDelete(reservationResponses);
-        reservationService.deleteReservation(reservationResponses.get(index).id());
+        reservationService.deleteReservation(reservationResponses.get(index - 1).id());
         reservationView.printSuccessfullyDeleted();
     }
 

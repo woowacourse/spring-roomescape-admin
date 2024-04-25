@@ -28,16 +28,16 @@ public class ReservationTimeConsoleController {
     public void deleteTime() {
         List<ReservationTimeResponse> reservationTimeResponses = getReservationTimeResponses();
         if (reservationTimeResponses.isEmpty()) {
-            reservationTimeView.printHasNotAnyReservationTime();
+            reservationTimeView.printHasNotAnyReservationTimeToDelete();
             return;
         }
 
-        int reservationTimeIndex = reservationTimeView.readIndexToDelete(reservationTimeResponses);
-        if (reservationTimeIndex < 0 || reservationTimeIndex > reservationTimeResponses.size()) {
+        int index = reservationTimeView.readIndexToDelete(reservationTimeResponses);
+        if (index < 0 || index > reservationTimeResponses.size()) {
             throw new IllegalArgumentException("[ERROR] 올바른 예약 가능 시간을 입력해주세요.");
         }
 
-        reservationTimeService.deleteTime(reservationTimeResponses.get(reservationTimeIndex).id());
+        reservationTimeService.deleteTime(reservationTimeResponses.get(index - 1).id());
         reservationTimeView.printSuccessfullyDeleted();
     }
 

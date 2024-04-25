@@ -3,6 +3,7 @@ package roomescape.console.controller;
 import java.util.List;
 import org.springframework.stereotype.Controller;
 import roomescape.console.util.InputConverter;
+import roomescape.console.view.Command;
 import roomescape.console.view.InputView;
 import roomescape.console.view.OutputView;
 import roomescape.reservation.dto.request.ReservationTimeRequest;
@@ -16,8 +17,7 @@ public class ReservationTimeConsoleController implements ConsoleController {
     private final OutputView outputView;
     private final ReservationTimeService reservationTimeService;
 
-    public ReservationTimeConsoleController(InputView inputView, OutputView outputView,
-                                            ReservationTimeService reservationTimeService) {
+    public ReservationTimeConsoleController(InputView inputView, OutputView outputView, ReservationTimeService reservationTimeService) {
         this.inputView = inputView;
         this.outputView = outputView;
         this.reservationTimeService = reservationTimeService;

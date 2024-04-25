@@ -3,9 +3,9 @@ package roomescape.console.config;
 import java.util.Map;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-import roomescape.console.controller.ControllerMapper;
 import roomescape.console.controller.ReservationConsoleController;
 import roomescape.console.controller.ReservationTimeConsoleController;
+import roomescape.console.view.AdminMenu;
 
 @Configuration
 public class ControllerMapperConfig {
@@ -22,8 +22,8 @@ public class ControllerMapperConfig {
     @Bean
     public ControllerMapper controllerMapper() {
         return new ControllerMapper(Map.of(
-                1, reservationTimeConsoleController,
-                2, reservationConsoleController
+                AdminMenu.RESERVATION_TIME, reservationTimeConsoleController,
+                AdminMenu.RESERVATION, reservationConsoleController
         ));
     }
 }

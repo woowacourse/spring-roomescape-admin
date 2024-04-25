@@ -1,7 +1,6 @@
-package roomescape.console.controller;
+package roomescape.console.view;
 
 import java.util.List;
-import roomescape.console.view.CommandType;
 
 public class Command {
 

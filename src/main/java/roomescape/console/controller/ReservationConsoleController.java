@@ -3,6 +3,7 @@ package roomescape.console.controller;
 import java.util.List;
 import org.springframework.stereotype.Controller;
 import roomescape.console.util.InputConverter;
+import roomescape.console.view.Command;
 import roomescape.console.view.InputView;
 import roomescape.console.view.OutputView;
 import roomescape.reservation.dto.request.ReservationRequest;
@@ -55,6 +56,5 @@ public class ReservationConsoleController implements ConsoleController {
             default:
                 throw new IllegalArgumentException("잘못된 명령어입니다.");
         }
-
     }
 }

@@ -13,7 +13,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import roomescape.controller.dto.TimeSlotCreationRequest;
 import roomescape.controller.dto.TimeSlotCreationResponse;
 import roomescape.domain.TimeSlot;
-import roomescape.repository.TimeSlotRepository;
+import roomescape.domain.TimeSlotRepository;
 
 class TimeSlotAcceptanceTest extends AcceptanceTest {
 

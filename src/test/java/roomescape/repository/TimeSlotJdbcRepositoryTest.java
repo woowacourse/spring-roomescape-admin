@@ -13,6 +13,7 @@ import org.springframework.boot.test.autoconfigure.jdbc.JdbcTest;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.simple.SimpleJdbcInsert;
 import roomescape.domain.TimeSlot;
+import roomescape.domain.TimeSlotRepository;
 
 @JdbcTest
 class TimeSlotJdbcRepositoryTest {

@@ -12,8 +12,8 @@ import roomescape.controller.dto.ReservationRequest;
 import roomescape.controller.dto.ReservationResponse;
 import roomescape.domain.Reservation;
 import roomescape.domain.TimeSlot;
-import roomescape.repository.ReservationRepository;
-import roomescape.repository.TimeSlotRepository;
+import roomescape.domain.ReservationRepository;
+import roomescape.domain.TimeSlotRepository;
 
 class ReservationServiceTest extends ServiceTest {
 

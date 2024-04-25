@@ -9,6 +9,7 @@ import org.springframework.stereotype.Repository;
 import roomescape.domain.Name;
 import roomescape.domain.Reservation;
 import roomescape.domain.ReservationDate;
+import roomescape.domain.ReservationRepository;
 import roomescape.domain.TimeSlot;
 import roomescape.repository.rowmapper.ReservationRowMapper;
 

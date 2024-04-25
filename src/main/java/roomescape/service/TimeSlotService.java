@@ -6,7 +6,7 @@ import org.springframework.stereotype.Service;
 import roomescape.controller.dto.TimeSlotCreationRequest;
 import roomescape.controller.dto.TimeSlotCreationResponse;
 import roomescape.domain.TimeSlot;
-import roomescape.repository.TimeSlotRepository;
+import roomescape.domain.TimeSlotRepository;
 
 @Service
 public class TimeSlotService {

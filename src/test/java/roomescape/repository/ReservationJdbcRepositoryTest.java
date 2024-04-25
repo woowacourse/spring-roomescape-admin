@@ -11,7 +11,9 @@ import org.springframework.boot.test.autoconfigure.jdbc.JdbcTest;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.simple.SimpleJdbcInsert;
 import roomescape.domain.Reservation;
+import roomescape.domain.ReservationRepository;
 import roomescape.domain.TimeSlot;
+import roomescape.domain.TimeSlotRepository;
 
 @JdbcTest
 class ReservationJdbcRepositoryTest {

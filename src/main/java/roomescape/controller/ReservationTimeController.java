@@ -38,7 +38,7 @@ public class ReservationTimeController {
             @RequestBody ReservationTimeCreateRequest reservationTimeCreateRequest) {
         ReservationTimeResponse reservationTimeResponse = reservationTimeService.create(reservationTimeCreateRequest);
         return ResponseEntity.created(URI.create("/times/" + reservationTimeResponse.id()))
-                .build();
+                .body(reservationTimeResponse);
     }
 
     @DeleteMapping("/{id}")

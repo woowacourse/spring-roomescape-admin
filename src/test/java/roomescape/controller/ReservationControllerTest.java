@@ -50,7 +50,7 @@ public class ReservationControllerTest {
     void addReservation_Success() {
         Map<String, String> params = Map.of("name", "브라운",
                 "date", "2023-08-05",
-                "time", "15:40"
+                "reservationTime", "15:40"
         );
 
         RestAssured.given().log().all()
@@ -74,7 +74,7 @@ public class ReservationControllerTest {
     void deleteReservation_Success() {
         Map<String, String> params = Map.of("name", "브라운",
                 "date", "2023-08-05",
-                "time", "15:40"
+                "reservationTime", "15:40"
         );
 
         RestAssured.given().log().all()
@@ -117,7 +117,7 @@ public class ReservationControllerTest {
     void addReservation_InDatabase_Success() {
         Map<String, String> params = Map.of("name", "브라운",
                 "date", "2023-08-05",
-                "time", "15:40"
+                "reservationTime", "15:40"
         );
 
         RestAssured.given().log().all()
@@ -138,7 +138,7 @@ public class ReservationControllerTest {
     void deleteReservation_InDatabase_Success() {
         Map<String, String> params = Map.of("name", "브라운",
                 "date", "2023-08-05",
-                "time", "15:40"
+                "reservationTime", "15:40"
         );
 
         RestAssured.given().log().all()
@@ -166,7 +166,7 @@ public class ReservationControllerTest {
     void ReservationTime_CREATE_READ_Success() {
         Map<String, Object> reservation = Map.of("name", "브라운",
                 "date", "2023-08-05",
-                "timeId", 1
+                "reservationTimeId", 1
         );
 
         Map<String, String> time = Map.of(

@@ -19,7 +19,7 @@ public class ReservationRepository {
             resultSet.getLong("id"),
             resultSet.getString("name"),
             resultSet.getString("date"),
-            new ReservationTime(resultSet.getLong("time_id"), resultSet.getString("time_value"))
+            new ReservationTime(resultSet.getLong("reservation_time_id"), resultSet.getString("time_value"))
     );
 
     public ReservationRepository(JdbcTemplate jdbcTemplate) {
@@ -31,16 +31,16 @@ public class ReservationRepository {
                 "    r.id as reservation_id, " +
                 "    r.name, " +
                 "    r.date, " +
-                "    t.id as time_id, " +
+                "    t.id as reservation_time_id, " +
                 "    t.start_at as time_value " +
                 "FROM reservation as r " +
                 "inner join reservation_time as t " +
-                "on r.time_id = t.id";
+                "on r.reservation_time_id = t.id";
         return jdbcTemplate.query(sql, reservationRowMapper);
     }
 
     public Reservation save(Reservation reservation) {
-        String sql = "INSERT INTO reservation (name, date, time_id) values (?, ?, ?)";
+        String sql = "INSERT INTO reservation (name, date, reservation_time_id) values (?, ?, ?)";
         GeneratedKeyHolder keyHolder = new GeneratedKeyHolder();
 
         jdbcTemplate.update(con -> {

@@ -3,21 +3,21 @@ package roomescape.service;
 import java.util.List;
 import org.springframework.stereotype.Service;
 import roomescape.entity.ReservationTime;
-import roomescape.dao.ReservationTimeDao;
+import roomescape.dao.JdbcReservationTimeDao;
 import roomescape.dto.ReservationTimeRequest;
 import roomescape.dto.ReservationTimeResponse;
 
 @Service
 public class ReservationTimeService {
 
-    private final ReservationTimeDao reservationTimeDao;
+    private final JdbcReservationTimeDao jdbcReservationTimeDao;
 
-    public ReservationTimeService(ReservationTimeDao reservationTimeDao) {
-        this.reservationTimeDao = reservationTimeDao;
+    public ReservationTimeService(JdbcReservationTimeDao jdbcReservationTimeDao) {
+        this.jdbcReservationTimeDao = jdbcReservationTimeDao;
     }
 
     public List<ReservationTimeResponse> findAll() {
-        List<ReservationTime> reservationTimes = reservationTimeDao.findAll();
+        List<ReservationTime> reservationTimes = jdbcReservationTimeDao.findAll();
         return reservationTimes.stream()
                 .map(ReservationTimeResponse::of)
                 .toList();
@@ -25,17 +25,17 @@ public class ReservationTimeService {
 
     public ReservationTimeResponse save(ReservationTimeRequest reservationTimeRequest) {
         ReservationTime reservationTime = reservationTimeRequest.toReservationTime();
-        long id = reservationTimeDao.save(reservationTime);
+        long id = jdbcReservationTimeDao.save(reservationTime);
         return findById(id);
     }
 
     private ReservationTimeResponse findById(long id) {
-        ReservationTime reservationTime = reservationTimeDao.findById(id);
+        ReservationTime reservationTime = jdbcReservationTimeDao.findById(id);
         return ReservationTimeResponse.of(reservationTime);
     }
 
     public void deleteById(long id) {
-        int isDelete = reservationTimeDao.deleteById(id);
+        int isDelete = jdbcReservationTimeDao.deleteById(id);
         if (isDelete < 1) {
             throw new IllegalArgumentException("해당 id는 존재하지 않습니다.");
         }

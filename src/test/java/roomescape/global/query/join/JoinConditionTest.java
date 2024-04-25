@@ -1,9 +1,8 @@
-package roomescape.global.query.condition;
+package roomescape.global.query.join;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
 import org.junit.jupiter.api.Test;
-import roomescape.global.query.join.JoinCondition;
 
 class JoinConditionTest {
     @Test

@@ -8,11 +8,11 @@ import roomescape.service.ReservationTimeService;
 import roomescape.view.ReservationTimeView;
 
 @Controller
-public class ReservationTimeController {
+public class ReservationTimeConsoleController {
     private final ReservationTimeView reservationTimeView;
     private final ReservationTimeService reservationTimeService;
 
-    public ReservationTimeController() {
+    public ReservationTimeConsoleController() {
         reservationTimeView = new ReservationTimeView();
         this.reservationTimeService = new ReservationTimeService();
     }
@@ -27,7 +27,7 @@ public class ReservationTimeController {
 
     public void deleteTime() {
         List<ReservationTimeResponse> reservationTimeResponses = getReservationTimeResponses();
-        int reservationTimeId = reservationTimeView.readReservationTimeId(
+        int reservationTimeId = reservationTimeView.readReservationTimeIdToDelete(
                 reservationTimeResponses
         );
         if (reservationTimeId < 0 || reservationTimeId > reservationTimeResponses.size()) {

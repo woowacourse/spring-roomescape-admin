@@ -8,8 +8,8 @@ import roomescape.controller.console.MainController;
 @SpringBootApplication
 public class RoomescapeApplication {
     public static void main(String[] args) {
-        ConfigurableApplicationContext run = SpringApplication.run(RoomescapeApplication.class, args);
-        MainController mainController = run.getBean("mainController", MainController.class);
+        ConfigurableApplicationContext applicationContext = SpringApplication.run(RoomescapeApplication.class, args);
+        MainController mainController = applicationContext.getBean("mainController", MainController.class);
         mainController.run();
     }
 

@@ -5,16 +5,24 @@ import org.springframework.stereotype.Service;
 import roomescape.domain.Reservation;
 import roomescape.dto.ReservationRequest;
 import roomescape.repository.ReservationDao;
+import roomescape.repository.ReservationTimeDao;
 
 @Service
 public class ReservationService {
     private final ReservationDao reservationDao;
+    private final ReservationTimeDao reservationTimeDao;
 
-    public ReservationService(final ReservationDao reservationDao) {
+    public ReservationService(
+            final ReservationDao reservationDao,
+            final ReservationTimeDao reservationTimeDao
+    ) {
         this.reservationDao = reservationDao;
+        this.reservationTimeDao = reservationTimeDao;
     }
 
     public Reservation saveReservation(final ReservationRequest reservationRequest) {
+        reservationTimeDao.findById(reservationRequest.timeId())
+                .orElseThrow(() -> new IllegalArgumentException("[ERROR] 잘못된 예약 가능 시간 번호를 입력하였습니다."));
         Reservation reservation = reservationRequest.toEntity();
         return reservationDao.save(reservation);
     }

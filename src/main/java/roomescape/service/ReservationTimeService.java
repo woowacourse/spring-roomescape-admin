@@ -5,26 +5,26 @@ import org.springframework.stereotype.Repository;
 import roomescape.domain.ReservationTime;
 import roomescape.dto.ReservationTimeRequest;
 import roomescape.dto.ReservationTimeResponse;
-import roomescape.repository.TimeDao;
+import roomescape.repository.ReservationTimeDao;
 
 @Repository
 public class ReservationTimeService {
-    private final TimeDao timeDao;
+    private final ReservationTimeDao reservationTimeDao;
 
-    public ReservationTimeService(final TimeDao timeDao) {
-        this.timeDao = timeDao;
+    public ReservationTimeService(final ReservationTimeDao reservationTimeDao) {
+        this.reservationTimeDao = reservationTimeDao;
     }
 
     public ReservationTimeResponse saveTime(final ReservationTimeRequest reservationTimeRequest) {
-        ReservationTime reservationTime = timeDao.save(reservationTimeRequest);
+        ReservationTime reservationTime = reservationTimeDao.save(reservationTimeRequest);
         return ReservationTimeResponse.from(reservationTime);
     }
 
     public List<ReservationTime> getTimes() {
-        return timeDao.getAll();
+        return reservationTimeDao.getAll();
     }
 
     public void deleteTime(final long id) {
-        timeDao.delete(id);
+        reservationTimeDao.delete(id);
     }
 }

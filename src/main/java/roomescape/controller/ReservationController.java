@@ -1,12 +1,13 @@
-package roomescape.reservation;
+package roomescape.controller;
 
 import org.springframework.http.ResponseEntity;
 import org.springframework.jdbc.core.JdbcTemplate;
-import org.springframework.jdbc.core.namedparam.MapSqlParameterSource;
-import org.springframework.jdbc.core.namedparam.SqlParameterSource;
 import org.springframework.jdbc.core.simple.SimpleJdbcInsert;
 import org.springframework.web.bind.annotation.*;
-import roomescape.time.ReservationTime;
+import roomescape.domain.Reservation;
+import roomescape.domain.ReservationTime;
+import roomescape.dto.ReservationRequest;
+import roomescape.service.ReservationService;
 
 import javax.sql.DataSource;
 import java.net.URI;
@@ -14,10 +15,12 @@ import java.util.List;
 
 @RestController
 public class ReservationController {
+    private final ReservationService reservationService;
     private final JdbcTemplate jdbcTemplate;
     private final SimpleJdbcInsert jdbcInsert;
 
-    public ReservationController(final JdbcTemplate jdbcTemplate, final DataSource dataSource) {
+    public ReservationController(final ReservationService reservationService, final JdbcTemplate jdbcTemplate, final DataSource dataSource) {
+        this.reservationService = reservationService;
         this.jdbcTemplate = jdbcTemplate;
         this.jdbcInsert = new SimpleJdbcInsert(dataSource)
                 .withTableName("reservation")
@@ -52,24 +55,8 @@ public class ReservationController {
 
     @PostMapping("/reservations")
     public ResponseEntity<Reservation> create(@RequestBody ReservationRequest reservationRequest) {
-        SqlParameterSource params = new MapSqlParameterSource()
-                .addValue("name", reservationRequest.name())
-                .addValue("date", reservationRequest.date())
-                .addValue("time_id", reservationRequest.timeId());
-
-        final long id = jdbcInsert.executeAndReturnKey(params).longValue();
-
-        final Reservation reservation = new Reservation(
-                id,
-                reservationRequest.name(),
-                reservationRequest.date(),
-                jdbcTemplate.queryForObject("SELECT * FROM reservation_time WHERE id = ?", (resultSet, rowNum) -> new ReservationTime(
-                        resultSet.getLong("id"),
-                        resultSet.getTime("start_at").toLocalTime()
-                ), reservationRequest.timeId())
-        );
-
-        return ResponseEntity.created(URI.create("/reservations/" + id)).body(reservation);
+        final Reservation reservation = reservationService.create(reservationRequest);
+        return ResponseEntity.created(URI.create("/reservations/" + reservation.getId())).body(reservation);
     }
 
     @DeleteMapping("/reservations/{id}")

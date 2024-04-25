@@ -20,6 +20,20 @@ public class ReservationDao {
         this.jdbcTemplate = jdbcTemplate;
     }
 
+    private final RowMapper<Reservation> reservationRowMapper = (resultSet, rowNum) -> {
+        Reservation reservation = new Reservation();
+        reservation.setId(resultSet.getInt("id"));
+        reservation.setName(resultSet.getString("name"));
+        reservation.setDate(resultSet.getDate("date").toLocalDate());
+
+        ReservationTime time = new ReservationTime();
+        time.setId(resultSet.getInt("time_id"));
+        time.setStartAt(resultSet.getTime("start_at").toLocalTime());
+        reservation.setTime(time);
+
+        return reservation;
+    };
+
     public int create(CreateReservationRequest request) {
         String sql = "insert into reservation (name, date, time_id) values (?, ?, ?)";
         return jdbcTemplate.update(sql,
@@ -35,7 +49,7 @@ public class ReservationDao {
                 "WHERE r.time_id = ? " +
                 "LIMIT 1";
         try {
-            Reservation reservation = jdbcTemplate.queryForObject(sql, getReservationRowMapper(), timeId);
+            Reservation reservation = jdbcTemplate.queryForObject(sql, reservationRowMapper, timeId);
             return Optional.ofNullable(reservation);
         } catch (EmptyResultDataAccessException e) {
             return Optional.empty();
@@ -47,32 +61,16 @@ public class ReservationDao {
                 "FROM reservation r " +
                 "JOIN reservation_time t ON r.time_id = t.id " +
                 "WHERE r.id = ?";
-        return jdbcTemplate.queryForObject(sql, getReservationRowMapper(), id);
+        return jdbcTemplate.queryForObject(sql, reservationRowMapper, id);
     }
 
     public List<Reservation> findAll() {
         String sql = "SELECT r.id as reservation_id, r.name, r.date, t.id as time_id, t.start_at " +
                 "FROM reservation as r " +
                 "inner join reservation_time as t on r.time_id = t.id";
-        return jdbcTemplate.query(sql, getReservationRowMapper());
+        return jdbcTemplate.query(sql, reservationRowMapper);
     }
-
-    private RowMapper<Reservation> getReservationRowMapper() {
-        return (resultSet, rowNum) -> {
-            Reservation reservation = new Reservation();
-            reservation.setId(resultSet.getInt("id"));
-            reservation.setName(resultSet.getString("name"));
-            reservation.setDate(resultSet.getDate("date").toLocalDate());
-
-            ReservationTime time = new ReservationTime();
-            time.setId(resultSet.getInt("time_id"));
-            time.setStartAt(resultSet.getTime("start_at").toLocalTime());
-            reservation.setTime(time);
-
-            return reservation;
-        };
-    }
-
+    
     public void delete(int id) {
         jdbcTemplate.update("delete from reservation where id = ?", id);
     }

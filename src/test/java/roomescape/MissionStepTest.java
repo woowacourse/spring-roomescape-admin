@@ -9,6 +9,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.test.annotation.DirtiesContext;
+import roomescape.controller.ReservationController;
+import roomescape.controller.TimeController;
 
 import java.sql.Connection;
 import java.sql.SQLException;
@@ -23,6 +25,12 @@ import static org.hamcrest.Matchers.is;
 public class MissionStepTest {
     @Autowired
     private JdbcTemplate jdbcTemplate;
+
+    @Autowired
+    private ReservationController reservationController;
+
+    @Autowired
+    private TimeController timeController;
 
     @DisplayName("admin 페이지 URL 요청이 올바르게 연결된다.")
     @Test
@@ -121,6 +129,4 @@ public class MissionStepTest {
                 .then().log().all()
                 .statusCode(204);
     }
-
-
 }

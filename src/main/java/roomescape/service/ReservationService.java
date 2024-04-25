@@ -4,7 +4,6 @@ import java.util.List;
 import org.springframework.stereotype.Repository;
 import roomescape.domain.Reservation;
 import roomescape.dto.ReservationRequest;
-import roomescape.dto.ReservationResponse;
 import roomescape.repository.ReservationDao;
 
 @Repository
@@ -24,11 +23,8 @@ public class ReservationService {
         return reservationDao.save(reservation);
     }
 
-    public List<ReservationResponse> getAllReservations() {
-        return reservationDao.getAll()
-                .stream()
-                .map(ReservationResponse::from)
-                .toList();
+    public List<Reservation> getAllReservations() {
+        return reservationDao.getAll();
     }
 
     public void deleteReservation(final long id) {

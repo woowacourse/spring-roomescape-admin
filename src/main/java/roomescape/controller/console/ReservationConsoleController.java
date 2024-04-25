@@ -3,6 +3,7 @@ package roomescape.controller.console;
 import java.util.List;
 import org.springframework.stereotype.Controller;
 import roomescape.dto.ReservationRequest;
+import roomescape.dto.ReservationResponse;
 import roomescape.dto.ReservationTimeResponse;
 import roomescape.service.ReservationService;
 import roomescape.service.ReservationTimeService;
@@ -37,6 +38,19 @@ public class ReservationConsoleController {
         return reservationTimeService.getTimes()
                 .stream()
                 .map(ReservationTimeResponse::from)
+                .toList();
+    }
+
+    public void deleteReservation() {
+        int reservationId = reservationView.readReservationIdToDelete(getReservationResponses());
+        reservationService.deleteReservation(reservationId);
+        reservationView.printSuccessfullyDeleted();
+    }
+
+    private List<ReservationResponse> getReservationResponses() {
+        return reservationService.getAllReservations()
+                .stream()
+                .map(ReservationResponse::from)
                 .toList();
     }
 }

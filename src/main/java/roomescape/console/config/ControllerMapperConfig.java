@@ -13,8 +13,10 @@ public class ControllerMapperConfig {
     private final ReservationConsoleController reservationConsoleController;
     private final ReservationTimeConsoleController reservationTimeConsoleController;
 
-    public ControllerMapperConfig(ReservationConsoleController reservationConsoleController,
-                                  ReservationTimeConsoleController reservationTimeConsoleController) {
+    public ControllerMapperConfig(
+            ReservationConsoleController reservationConsoleController,
+            ReservationTimeConsoleController reservationTimeConsoleController
+    ) {
         this.reservationConsoleController = reservationConsoleController;
         this.reservationTimeConsoleController = reservationTimeConsoleController;
     }

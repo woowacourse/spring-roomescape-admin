@@ -29,7 +29,7 @@ public class ReservationTime {
 
     private void validateNotNull(LocalTime startAt) {
         if (startAt == null) {
-            throw new ReservationTimeException(HttpStatus.BAD_REQUEST, "시작 시간은 비어있을 수 없습니다.");
+            throw new ReservationTimeException(HttpStatus.BAD_REQUEST, "시작 시간은 비어있을 수 없습니다");
         }
     }
 

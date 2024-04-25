@@ -24,22 +24,22 @@ public class Reservation {
     }
 
     private Reservation(long id, String name, LocalDate date, ReservationTime time) {
-        validateNotNull(name, date, time);
+        validateNotNull(name, date);
         this.id = id;
         this.name = name;
         this.date = date;
         this.time = time;
     }
 
-    private void validateNotNull(String name, LocalDate date, ReservationTime time) {
+    private void validateNotNull(String name, LocalDate date) {
+        if (name == null) {
+            throw new ReservationException(HttpStatus.BAD_REQUEST, "이름은 비어있을 수 없습니다");
+        }
         if (name.isEmpty()) {
             throw new ReservationException(HttpStatus.BAD_REQUEST, "이름은 비어있을 수 없습니다");
         }
         if (date == null) {
             throw new ReservationException(HttpStatus.BAD_REQUEST, "예약날짜는 비어있을 수 없습니다");
-        }
-        if (time == null) {
-            throw new ReservationException(HttpStatus.BAD_REQUEST, "예약시간은 비어있을 수 없습니다.");
         }
     }
 

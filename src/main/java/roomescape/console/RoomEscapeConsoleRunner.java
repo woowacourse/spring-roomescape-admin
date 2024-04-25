@@ -1,9 +1,7 @@
 package roomescape.console;
 
 import org.springframework.boot.CommandLineRunner;
-import org.springframework.stereotype.Component;
 
-@Component
 public class RoomEscapeConsoleRunner implements CommandLineRunner {
 
     private final ConsoleCommandMatcher consoleCommandMatcher;

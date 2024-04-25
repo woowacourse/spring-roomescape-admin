@@ -7,7 +7,6 @@ import org.springframework.jdbc.core.namedparam.SqlParameterSource;
 import org.springframework.jdbc.core.simple.SimpleJdbcInsert;
 import org.springframework.stereotype.Repository;
 import roomescape.time.domain.ReservationTime;
-import roomescape.time.dto.ReservationTimeRequestDto;
 
 import javax.sql.DataSource;
 import java.util.List;
@@ -26,11 +25,16 @@ public class ReservationTimeDao {
         this.rowMapper = rowMapper;
     }
 
-    public long save(final ReservationTimeRequestDto requestDto) {
+    public long save(final ReservationTime reservationTime) {
         final SqlParameterSource params = new MapSqlParameterSource()
-                .addValue("start_at", requestDto.startAt());
+                .addValue("start_at", reservationTime.startAt().toString());
         return simpleJdbcInsert.executeAndReturnKey(params)
                                .longValue();
+    }
+
+    public ReservationTime findById(final long id) {
+        final String sql = "select * from reservation_time where id = ?";
+        return jdbcTemplate.queryForObject(sql, (resultSet, rowNum) -> rowMapper.mapRow(resultSet, rowNum), id);
     }
 
     public List<ReservationTime> findAll() {
@@ -38,7 +42,7 @@ public class ReservationTimeDao {
         return jdbcTemplate.query(sql, (resultSet, rowNum) -> rowMapper.mapRow(resultSet, rowNum));
     }
 
-    public int deleteById(final Long id) {
+    public int deleteById(final long id) {
         final String sql = "delete from reservation_time where id = ?";
         return jdbcTemplate.update(sql, Long.valueOf(id));
     }

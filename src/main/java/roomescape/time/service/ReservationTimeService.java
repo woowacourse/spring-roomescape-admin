@@ -30,8 +30,9 @@ public class ReservationTimeService {
 
     @Transactional
     public ReservationTimeResponseDto save(final ReservationTimeRequestDto requestDto) {
-        final long id = reservationTimeDao.save(requestDto);
-        return new ReservationTimeResponseDto(id, requestDto.startAt());
+        final long id = reservationTimeDao.save(requestDto.toReservationTime());
+        final ReservationTime reservationTime = reservationTimeDao.findById(id);
+        return new ReservationTimeResponseDto(id, reservationTime.startAt().toString());
     }
 
     @Transactional

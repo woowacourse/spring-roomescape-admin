@@ -2,6 +2,7 @@ package roomescape.service;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatCode;
+import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyLong;
 import static roomescape.util.Fixture.GAMJA_RESERVATION_AFTER_SAVE;
@@ -70,5 +71,15 @@ class ReservationServiceTest {
 
         assertThatCode(() -> reservationService.delete(1L))
             .doesNotThrowAnyException();
+    }
+
+    @DisplayName("존재하지 않는 예약 삭제 시 예외 발생")
+    @Test
+    void throwExceptionIfReservationNotFound() {
+        BDDMockito.given(reservationDao.deleteById(anyLong()))
+            .willReturn(false);
+
+        assertThatThrownBy(() -> reservationService.delete(1L))
+            .isInstanceOf(IllegalArgumentException.class);
     }
 }

@@ -12,5 +12,5 @@ public interface ReservationDao {
 
     Reservation insert(ReservationAddRequest reservationAddRequest);
 
-    int deleteById(Long id);
+    void deleteById(Long id);
 }

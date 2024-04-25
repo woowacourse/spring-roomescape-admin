@@ -23,7 +23,10 @@ public class ReservationService {
         return reservationDao.insert(reservationAddRequest);
     }
 
-    public boolean removeReservation(Long id) {
-        return reservationDao.deleteById(id) > 0;
+    public void removeReservation(Long id) {
+        if (reservationDao.findById(id) == null) {
+            throw new IllegalArgumentException("해당 id를 가진 예약이 존재하지 않습니다.");
+        }
+        reservationDao.deleteById(id);
     }
 }

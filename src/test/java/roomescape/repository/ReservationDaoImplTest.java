@@ -69,13 +69,14 @@ class ReservationDaoImplTest {
         assertThat(actualReservation).isEqualTo(expectedReservation);
     }
 
-    @DisplayName("원하는 ID의 예약을 취소하고 영향받은 row개수를 반환합니다.")
+    @DisplayName("원하는 ID의 예약을 삭제할 수 있습니다.")
     @Test
     void should_deleteById() {
-        int expectedResult = 1;
+        int expectedCount = 0;
 
-        int actualResult = reservationDaoImpl.deleteById(1L);
+        reservationDaoImpl.deleteById(1L);
+        int actualCount = jdbcTemplate.queryForObject("select count(*) from reservation where id = 1", Integer.class);
 
-        assertThat(actualResult).isEqualTo(expectedResult);
+        assertThat(actualCount).isEqualTo(expectedCount);
     }
 }

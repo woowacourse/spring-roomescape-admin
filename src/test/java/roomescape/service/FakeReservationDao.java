@@ -1,7 +1,6 @@
 package roomescape.service;
 
 import java.time.LocalTime;
-import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -10,7 +9,6 @@ import roomescape.domain.Reservation;
 import roomescape.domain.ReservationTime;
 import roomescape.dto.ReservationAddRequest;
 import roomescape.repository.ReservationDao;
-import roomescape.repository.ReservationTimeDao;
 
 public class FakeReservationDao implements ReservationDao {
 
@@ -50,11 +48,7 @@ public class FakeReservationDao implements ReservationDao {
     }
 
     @Override
-    public int deleteById(Long id) {
-        if (reservations.containsKey(id)) {
-            reservations.remove(id);
-            return 1;
-        }
-        return 0;
+    public void deleteById(Long id) {
+        reservations.remove(id);
     }
 }

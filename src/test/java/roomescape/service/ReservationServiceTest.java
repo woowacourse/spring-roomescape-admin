@@ -1,6 +1,7 @@
 package roomescape.service;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.assertThatThrownBy;
 
 import java.time.LocalDate;
 import java.time.LocalTime;
@@ -42,23 +43,29 @@ class ReservationServiceTest {
         assertThat(actualReservation).isEqualTo(expectedReservation);
     }
 
-    @DisplayName("원하는 id의 예약을 삭제하면 true를 반환합니다.")
+    @DisplayName("원하는 id의 예약을 삭제합니다.")
     @Test
     void should_true_when_remove_reservation_with_exist_id() {
-        ReservationService reservationService = new ReservationService(new FakeReservationDao(
+        FakeReservationDao fakeReservationDao = new FakeReservationDao(
                 Arrays.asList(
                         new Reservation(1L, "dodo", LocalDate.of(2020, 12, 12),
-                                new ReservationTime(1L, LocalTime.of(12, 12))))
-        ));
+                                new ReservationTime(1L, LocalTime.of(12, 12))
+                        )
+                ));
+        ReservationService reservationService = new ReservationService(fakeReservationDao);
 
-        assertThat(reservationService.removeReservation(1L)).isTrue();
+        reservationService.removeReservation(1L);
+
+        assertThat(fakeReservationDao.reservations.containsKey(1L)).isFalse();
     }
 
-    @DisplayName("없는 id의 예약을 삭제시도하면 false를 반환합니다.")
+    @DisplayName("없는 id의 예약을 삭제하면 예외를 발생합니다.")
     @Test
     void should_false_when_remove_reservation_with_non_exist_id() {
         ReservationService reservationService = new ReservationService(new FakeReservationDao());
 
-        assertThat(reservationService.removeReservation(1L)).isFalse();
+        assertThatThrownBy(() -> reservationService.removeReservation(1L))
+                .isInstanceOf(IllegalArgumentException.class)
+                .hasMessage("해당 id를 가진 예약이 존재하지 않습니다.");
     }
 }

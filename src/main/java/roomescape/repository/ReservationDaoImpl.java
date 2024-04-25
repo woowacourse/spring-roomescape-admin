@@ -56,7 +56,12 @@ public class ReservationDaoImpl implements ReservationDao {
                 + "INNER JOIN reservation_time as t "
                 + "ON r.time_id = t.id "
                 + "WHERE r.id = ?";
-        return jdbcTemplate.queryForObject(sql, rowMapper, id);
+        try {
+            return jdbcTemplate.queryForObject(sql, rowMapper, id);
+        } catch (Exception e) {
+            return null;
+        }
+
     }
 
     @Override
@@ -70,7 +75,7 @@ public class ReservationDaoImpl implements ReservationDao {
     }
 
     @Override
-    public int deleteById(Long id) {
-        return jdbcTemplate.update("delete from reservation where id = ?", id);
+    public void deleteById(Long id) {
+        jdbcTemplate.update("delete from reservation where id = ?", id);
     }
 }

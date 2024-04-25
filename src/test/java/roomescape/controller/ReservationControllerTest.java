@@ -6,8 +6,6 @@ import io.restassured.RestAssured;
 import io.restassured.http.ContentType;
 import java.time.LocalDate;
 import java.time.LocalTime;
-import java.util.HashMap;
-import java.util.Map;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -30,13 +28,13 @@ public class ReservationControllerTest {
     }
 
 
-    @DisplayName("delete 요청 시 id값이 존재하지 않으면 에러코드로 응답한다.")
+    @DisplayName("delete 요청 시 id값이 존재하지 않으면 에러코드 500으로 응답한다.")
     @Test
     void should_response_bad_request_when_nonExist_id() {
         RestAssured.given().log().all()
                 .when().delete("/reservations/1")
                 .then().log().all()
-                .statusCode(404);
+                .statusCode(500);
     }
 
 

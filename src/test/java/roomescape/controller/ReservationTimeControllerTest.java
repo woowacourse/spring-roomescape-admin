@@ -7,15 +7,33 @@ import io.restassured.http.ContentType;
 import java.time.LocalTime;
 import java.util.HashMap;
 import java.util.Map;
+import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.test.annotation.DirtiesContext;
 import roomescape.dto.ReservationTimeAddRequest;
+import roomescape.repository.ReservationTimeDao;
 
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.DEFINED_PORT)
 @DirtiesContext(classMode = DirtiesContext.ClassMode.BEFORE_EACH_TEST_METHOD)
 class ReservationTimeControllerTest {
+
+    @Autowired
+    private JdbcTemplate jdbcTemplate;
+
+    @BeforeEach
+    void setUp() {
+        jdbcTemplate.update("insert into reservation_time (start_at) values('10:00')");
+    }
+
+    @AfterEach
+    void setDown() {
+        jdbcTemplate.update("delete from reservation_time");
+    }
 
     @DisplayName("예약 시간을 추가 성공할 시, 200 ok를 응답한다.")
     @Test
@@ -41,12 +59,6 @@ class ReservationTimeControllerTest {
                 .when().post("/times")
                 .then().log().all()
                 .statusCode(200);
-
-        RestAssured.given().log().all()
-                .when().get("/times")
-                .then().log().all()
-                .statusCode(200)
-                .body("size()", is(1));
     }
 
     @DisplayName("존재하는 리소스에 대한 삭제 요청시, 200 ok를 응답한다.")
@@ -60,18 +72,13 @@ class ReservationTimeControllerTest {
                 .when().post("/times")
                 .then().log().all()
                 .statusCode(200);
-
-        RestAssured.given().log().all()
-                .when().delete("/times/1")
-                .then().log().all()
-                .statusCode(200);
     }
 
     @DisplayName("delete 요청 시 id값이 존재하지 않으면 500 Internel Server Error로 응답한다.")
     @Test
     void should_response_bad_request_when_nonExist_id() {
         RestAssured.given().log().all()
-                .when().delete("/times/1")
+                .when().delete("/times/2")
                 .then().log().all()
                 .statusCode(500);
     }

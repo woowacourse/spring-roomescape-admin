@@ -26,21 +26,23 @@ public class ReservationController {
 
     @PostMapping
     public ResponseEntity<ReservationResponse> createReservation(
-            @RequestBody ReservationRequest reservationRequest
+            @RequestBody final ReservationRequest reservationRequest
     ) {
-        Reservation createdReservation = reservationService.create(reservationRequest);
+        final Reservation createdReservation = reservationService.create(reservationRequest);
         return ResponseEntity.created(URI.create("/reservations/" + createdReservation.getId()))
                 .body(ReservationResponse.from(createdReservation));
     }
 
     @GetMapping
     public ResponseEntity<List<ReservationResponse>> getReservations() {
-        List<Reservation> reservations = reservationService.findAll();
-        return ResponseEntity.ok().body(reservations.stream().map(ReservationResponse::from).toList());
+        final List<Reservation> reservations = reservationService.findAll();
+        return ResponseEntity.ok().body(reservations.stream()
+                .map(ReservationResponse::from)
+                .toList());
     }
 
     @DeleteMapping("/{id}")
-    public ResponseEntity<Void> deleteReservation(@PathVariable Long id) {
+    public ResponseEntity<Void> deleteReservation(@PathVariable final Long id) {
         reservationService.deleteById(id);
         return ResponseEntity.noContent().build();
     }

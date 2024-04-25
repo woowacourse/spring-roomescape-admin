@@ -5,6 +5,7 @@ import java.time.LocalTime;
 import java.util.List;
 import java.util.Optional;
 import org.springframework.dao.DataAccessException;
+import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.namedparam.MapSqlParameterSource;
 import org.springframework.jdbc.core.simple.SimpleJdbcInsert;
@@ -35,13 +36,13 @@ public class ReservationTimeDao {
                         LocalTime.parse(resultSet.getString("start_at"))));
     }
 
-    public Optional<ReservationTime> findById(final Long id) {
+    public Optional<ReservationTime> findById(final long id) {
         try {
             final String sql = "select id, start_at from reservation_time where id=?";
             return Optional.of(jdbcTemplate.queryForObject(sql,
                     (resultSet, rowNum) -> new ReservationTime(resultSet.getLong("id"),
                             LocalTime.parse(resultSet.getString("start_at"))), id));
-        } catch (final DataAccessException e) {
+        } catch (final EmptyResultDataAccessException e) {
             return Optional.empty();
         }
     }

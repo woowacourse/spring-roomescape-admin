@@ -4,6 +4,8 @@ import java.time.LocalDate;
 import java.time.LocalTime;
 import java.util.List;
 import java.util.Objects;
+import org.springframework.dao.CleanupFailureDataAccessException;
+import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;
 import org.springframework.jdbc.core.namedparam.MapSqlParameterSource;
@@ -33,19 +35,14 @@ public class ReservationDao {
         return new Reservation(id, reservation.getName(), reservation.getDate(), reservation.getReservationTime());
     }
 
-    public boolean anyMatchByTimeId(final long id) {
-        final String sql = """
-                SELECT CASE
-                           WHEN EXISTS (
-                               SELECT 1
-                               FROM reservation
-                               WHERE time_id = ?
-                           )
-                           THEN TRUE
-                           ELSE FALSE
-                       END""";
-        Long count = Objects.requireNonNull(jdbcTemplate.queryForObject(sql, Long.class, id));
-        return count > 0;
+    public boolean isTimeIdExist(final long id) {
+        final String sql = "select id from reservation where time_id=? limit 1";
+        try {
+            jdbcTemplate.queryForObject(sql, Long.class, id);
+            return true;
+        } catch (EmptyResultDataAccessException e) {
+            return false;
+        }
     }
 
     public List<Reservation> findAll() {

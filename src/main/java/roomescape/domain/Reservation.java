@@ -4,21 +4,10 @@ import java.time.LocalDate;
 import java.util.Objects;
 
 public class Reservation {
-    private Long id;
+    private final Long id;
     private final String name;
     private final LocalDate date;
     private final ReservationTime reservationTime;
-
-    public Reservation(
-            final String name,
-            final LocalDate date,
-            final ReservationTime reservationTime
-    ) {
-        validateNotNull(name, date, reservationTime);
-        this.name = name;
-        this.date = date;
-        this.reservationTime = reservationTime;
-    }
 
     public Reservation(
             final Long id,
@@ -26,23 +15,25 @@ public class Reservation {
             final LocalDate date,
             final ReservationTime reservationTime
     ) {
-        validateNotNull(id, name, date, reservationTime);
+        validateNotNull(name, date, reservationTime);
         this.id = id;
         this.name = name;
         this.date = date;
         this.reservationTime = reservationTime;
     }
 
-    private void validateNotNull(final Object... objects) {
-        for (final Object object : objects) {
-            validateNotNull(object);
-        }
+    public static Reservation from(
+            final String name,
+            final LocalDate date,
+            final ReservationTime reservationTime
+    ) {
+        return new Reservation(null, name, date, reservationTime);
     }
 
-    private void validateNotNull(final Object value) {
-        if (value == null) {
-            throw new IllegalArgumentException("값은 null이 될 수 없습니다.");
-        }
+    private void validateNotNull(final String name, final LocalDate date, final ReservationTime reservationTime) {
+        Objects.requireNonNull(name);
+        Objects.requireNonNull(date);
+        Objects.requireNonNull(reservationTime);
     }
 
     public Long getId() {

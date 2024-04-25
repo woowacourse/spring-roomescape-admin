@@ -28,10 +28,10 @@ class ReservationTimeServiceTest {
         final ReservationDao reservationDao = new ReservationDao(jdbcTemplate);
         final ReservationTimeDao reservationTimeDao = new ReservationTimeDao(jdbcTemplate);
         final ReservationTimeService reservationTimeService = new ReservationTimeService(reservationTimeDao, reservationDao);
-        final ReservationTime reservationTime = new ReservationTime(LocalTime.now());
+        final ReservationTime reservationTime = ReservationTime.from(LocalTime.now());
 
         reservationTimeDao.save(reservationTime);
-        reservationDao.save(new Reservation("qwe", LocalDate.now(), reservationTimeDao.findById(1L).get()));
+        reservationDao.save(Reservation.from("qwe", LocalDate.now(), reservationTimeDao.findById(1L).get()));
 
         Assertions.assertThatThrownBy(() -> reservationTimeService.deleteById(1))
                 .isInstanceOf(IllegalArgumentException.class)

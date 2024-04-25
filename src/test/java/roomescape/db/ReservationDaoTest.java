@@ -2,6 +2,7 @@ package roomescape.db;
 
 import java.time.LocalDate;
 import java.time.LocalTime;
+import java.util.Optional;
 import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
@@ -22,7 +23,7 @@ class ReservationDaoTest {
     @BeforeEach
     void setUp() {
         reservationTimeDao = new ReservationTimeDao(jdbcTemplate);
-        final ReservationTime reservationTime = new ReservationTime(LocalTime.now());
+        final ReservationTime reservationTime = ReservationTime.from(LocalTime.now());
         saved = reservationTimeDao.save(reservationTime);
     }
 
@@ -40,7 +41,7 @@ class ReservationDaoTest {
     void save() {
         final ReservationDao reservationDao = new ReservationDao(jdbcTemplate);
 
-        reservationDao.save(new Reservation("qwe", LocalDate.now(), reservationTimeDao.findById(saved.getId()).get()));
+        reservationDao.save(Reservation.from("qwe", LocalDate.now(), reservationTimeDao.findById(saved.getId()).get()));
         Assertions.assertThat(reservationDao.findAll()).hasSize(1);
     }
 
@@ -48,7 +49,7 @@ class ReservationDaoTest {
     @DisplayName("예약을 삭제할 수 있다")
     void delete() {
         final ReservationDao reservationDao = new ReservationDao(jdbcTemplate);
-        reservationDao.save(new Reservation("qwe", LocalDate.now(), reservationTimeDao.findById(saved.getId()).get()));
+        reservationDao.save(Reservation.from("qwe", LocalDate.now(), reservationTimeDao.findById(saved.getId()).get()));
 
         reservationDao.deleteById(saved.getId());
 

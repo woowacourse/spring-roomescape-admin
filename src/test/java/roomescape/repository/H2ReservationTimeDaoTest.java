@@ -24,7 +24,6 @@ public class H2ReservationTimeDaoTest {
 
     @BeforeEach
     void setup() {
-        jdbcTemplate.update("DELETE FROM reservation_time");
         jdbcTemplate.update("INSERT INTO reservation_time VALUES (0, '11:00')");
     }
 

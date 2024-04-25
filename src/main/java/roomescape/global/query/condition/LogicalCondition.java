@@ -6,16 +6,16 @@ import java.util.List;
 import roomescape.global.query.Assemblable;
 
 public class LogicalCondition implements Assemblable {
-    private final String operator;
+    private final Operator operator;
     private final List<ComparisonCondition> conditions;
 
-    private LogicalCondition(String operator) {
+    private LogicalCondition(Operator operator) {
         this.operator = operator;
         this.conditions = new ArrayList<>();
     }
 
     public static LogicalCondition and() {
-        return new LogicalCondition(" AND ");
+        return new LogicalCondition(Operator.AND);
     }
 
     public void addCondition(ComparisonCondition condition) {
@@ -37,7 +37,22 @@ public class LogicalCondition implements Assemblable {
 
     private void appendOperator(StringBuilder builder, boolean hasNext) {
         if (hasNext) {
-            builder.append(operator);
+            builder.append(operator.value());
+        }
+    }
+
+    enum Operator {
+        AND(" AND "),
+        OR(" OR ");
+
+        private final String value;
+
+        Operator(String value) {
+            this.value = value;
+        }
+
+        public String value() {
+            return value;
         }
     }
 }

@@ -5,10 +5,10 @@ import roomescape.global.query.Assemblable;
 public class ComparisonCondition implements Assemblable {
     private final String column;
     private final Object value;
-    private final String operator;
+    private final Operator operator;
     private boolean useSingleQuotes;
 
-    private ComparisonCondition(String column, Object value, String operator) {
+    private ComparisonCondition(String column, Object value, Operator operator) {
         this.column = column;
         this.value = value;
         this.operator = operator;
@@ -16,7 +16,7 @@ public class ComparisonCondition implements Assemblable {
     }
 
     public static ComparisonCondition equalTo(String column, Object value) {
-        return new ComparisonCondition(column, value, " = ");
+        return new ComparisonCondition(column, value, Operator.EQUAL_TO);
     }
 
     public void useSingleQuotes(boolean useSingleQuotes) {
@@ -26,7 +26,7 @@ public class ComparisonCondition implements Assemblable {
     @Override
     public void assemble(StringBuilder builder) {
         builder.append(column)
-                .append(operator)
+                .append(operator.value())
                 .append(value());
     }
 
@@ -35,5 +35,22 @@ public class ComparisonCondition implements Assemblable {
             return "'" + value + "'";
         }
         return value.toString();
+    }
+
+    enum Operator {
+        EQUAL_TO(" = "),
+        NOT_EQUAL_TO(" != "),
+        GREATER_THAN(" > "),
+        LESS_THAN(" < ");
+
+        private final String value;
+
+        Operator(String value) {
+            this.value = value;
+        }
+
+        public String value() {
+            return value;
+        }
     }
 }

@@ -26,40 +26,35 @@ class ReservationControllerTest {
     @Autowired
     private ReservationController reservationController;
 
-    @DisplayName("예약 내역을 조회한다.")
+    @DisplayName("예약을 조회한다.")
     @Test
     void findAll() {
-        RestAssured.given().log().all()
-                .when().get("/reservations")
-                .then().log().all()
-                .statusCode(200)
-                .body("size()", is(0));
-    }
-
-    @DisplayName("예약을 추가한다.")
-    @Test
-    void create() {
         insertReservationTime(jdbcTemplate);
-
-        RestAssured.given().log().all()
-                .contentType(ContentType.JSON)
-                .body(reservationRequest())
-                .when().post("/reservations")
-                .then().log().all()
-                .statusCode(200);
-
-        RestAssured.given().log().all()
-                .contentType(ContentType.JSON)
-                .body(reservationRequest())
-                .when().post("/reservations")
-                .then().log().all()
-                .statusCode(200);
+        insertReservation(jdbcTemplate);
+        insertReservation(jdbcTemplate);
 
         RestAssured.given().log().all()
                 .when().get("/reservations")
                 .then().log().all()
                 .statusCode(200)
                 .body("size()", is(2));
+    }
+
+    @DisplayName("예약을 추가한다.")
+    @Test
+    void create() {
+        insertReservationTime(jdbcTemplate);
+        insertReservation(jdbcTemplate);
+
+        RestAssured.given().log().all()
+                .contentType(ContentType.JSON)
+                .body(reservationRequest())
+                .when().post("/reservations")
+                .then().log().all()
+                .statusCode(200);
+
+        Integer count = jdbcTemplate.queryForObject("SELECT COUNT(*) FROM RESERVATION", Integer.class);
+        assertThat(count).isEqualTo(2);
     }
 
     @DisplayName("예약을 삭제한다.")
@@ -72,7 +67,7 @@ class ReservationControllerTest {
                 .then().log().all()
                 .statusCode(200);
 
-        Integer countAfterDelete = jdbcTemplate.queryForObject("SELECT COUNT(*) FROM reservation", Integer.class);
+        Integer countAfterDelete = jdbcTemplate.queryForObject("SELECT COUNT(*) FROM RESERVATION", Integer.class);
         assertThat(countAfterDelete).isEqualTo(0);
     }
 
@@ -96,13 +91,13 @@ class ReservationControllerTest {
     }
 
     static void insertReservationTime(JdbcTemplate jdbcTemplate) {
-        jdbcTemplate.update("INSERT INTO reservation_time (start_at) VALUES ('10:00')");
+        jdbcTemplate.update("INSERT INTO RESERVATION_TIME (START_AT) VALUES ('10:00')");
     }
 
     static void insertReservation(JdbcTemplate jdbcTemplate) {
         jdbcTemplate.update(
-                "INSERT INTO reservation (name, date, time_id) "
-                        + "VALUES (?, ?, SELECT t.id FROM reservation_time t WHERE t.id = ?)",
+                "INSERT INTO RESERVATION (NAME, DATE, TIME_ID) "
+                        + "VALUES (?, ?, SELECT t.id FROM RESERVATION_TIME t WHERE t.id = ?)",
                 "브라운", "2023-08-05", 1
         );
     }

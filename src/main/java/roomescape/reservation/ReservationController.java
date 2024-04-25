@@ -9,6 +9,7 @@ import org.springframework.web.bind.annotation.*;
 import roomescape.time.ReservationTime;
 
 import javax.sql.DataSource;
+import java.net.URI;
 import java.util.List;
 
 @RestController
@@ -32,9 +33,9 @@ public class ReservationController {
                         "r.date, " +
                         "t.id AS time_id, " +
                         "t.start_at AS time_value " +
-                "FROM reservation AS r " +
-                "INNER JOIN reservation_time AS t " +
-                "ON r.time_id = t.id";
+                        "FROM reservation AS r " +
+                        "INNER JOIN reservation_time AS t " +
+                        "ON r.time_id = t.id";
 
         final List<Reservation> reservations = jdbcTemplate.query(sql, (resultSet, rowNum) -> new Reservation(
                 resultSet.getLong("id"),
@@ -68,7 +69,7 @@ public class ReservationController {
                 ), reservationRequest.timeId())
         );
 
-        return ResponseEntity.ok(reservation);
+        return ResponseEntity.created(URI.create("/reservations/" + id)).body(reservation);
     }
 
     @DeleteMapping("/reservations/{id}")

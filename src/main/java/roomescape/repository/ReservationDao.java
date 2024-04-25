@@ -3,6 +3,7 @@ package roomescape.repository;
 import java.sql.PreparedStatement;
 import java.util.List;
 import java.util.Optional;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;
@@ -13,11 +14,9 @@ import roomescape.domain.Reservation;
 
 @Repository
 public class ReservationDao {
-    private JdbcTemplate jdbcTemplate;
 
-    public ReservationDao(final JdbcTemplate jdbcTemplate) {
-        this.jdbcTemplate = jdbcTemplate;
-    }
+    @Autowired
+    private JdbcTemplate jdbcTemplate;
 
     public Reservation save(final Reservation reservation) {
         KeyHolder keyHolder = new GeneratedKeyHolder();

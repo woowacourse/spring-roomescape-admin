@@ -8,10 +8,14 @@ import roomescape.dto.ReservationTimeResponse;
 import roomescape.repository.TimeDao;
 
 @Repository
-public class TimeService {
+public class ReservationTimeService {
     private final TimeDao timeDao;
 
-    public TimeService(final TimeDao timeDao) {
+    public ReservationTimeService() {
+        this.timeDao = new TimeDao();
+    }
+
+    public ReservationTimeService(final TimeDao timeDao) {
         this.timeDao = timeDao;
     }
 

@@ -11,6 +11,10 @@ import roomescape.repository.ReservationDao;
 public class ReservationService {
     private final ReservationDao reservationDao;
 
+    public ReservationService() {
+        this.reservationDao = new ReservationDao();
+    }
+
     public ReservationService(final ReservationDao reservationDao) {
         this.reservationDao = reservationDao;
     }

@@ -1,4 +1,4 @@
-package roomescape.controller;
+package roomescape.controller.web;
 
 import java.net.URI;
 import java.util.List;
@@ -20,8 +20,8 @@ import roomescape.service.ReservationService;
 public class ReservationController {
     private final ReservationService reservationService;
 
-    public ReservationController(final ReservationService reservationService) {
-        this.reservationService = reservationService;
+    public ReservationController() {
+        this.reservationService = new ReservationService();
     }
 
     @PostMapping

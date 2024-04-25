@@ -1,6 +1,7 @@
 package roomescape.repository;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.assertThatThrownBy;
 
 import java.util.List;
 import org.junit.jupiter.api.DisplayName;
@@ -8,12 +9,13 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.jdbc.JdbcTest;
 import org.springframework.context.annotation.Import;
+import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.test.annotation.DirtiesContext;
-import roomescape.dto.ReservationTimeRequest;
 import roomescape.entity.ReservationTime;
+import roomescape.repository.rowmapper.ReservationTimeRowMapper;
 
 @JdbcTest
-@Import(ReservationTimeDao.class)
+@Import(value = {ReservationTimeDao.class, ReservationTimeRowMapper.class})
 @DirtiesContext(classMode = DirtiesContext.ClassMode.BEFORE_EACH_TEST_METHOD)
 class ReservationTimeDaoTest {
 
@@ -23,8 +25,13 @@ class ReservationTimeDaoTest {
     @DisplayName("시간을 정상적으로 추가한다.")
     @Test
     void save() {
-        ReservationTime saved = save("10:00");
+        // given
+        ReservationTimeRegisterDetail registerDetail = new ReservationTimeRegisterDetail("10:00");
 
+        // when
+        ReservationTime saved = timeDao.save(registerDetail);
+
+        // then
         assertThat(saved.getId()).isEqualTo(1L);
         assertThat(saved.getStartAt()).isEqualTo("10:00");
     }
@@ -32,9 +39,15 @@ class ReservationTimeDaoTest {
     @DisplayName("모든 시간을 조회한다.")
     @Test
     void findAll() {
-        save("10:00");
-        save("11:00");
+        // given
+        ReservationTimeRegisterDetail registerDetail = new ReservationTimeRegisterDetail("10:00");
+        ReservationTimeRegisterDetail registerDetail1 = new ReservationTimeRegisterDetail("11:00");
 
+        // when
+        timeDao.save(registerDetail);
+        timeDao.save(registerDetail1);
+
+        // then
         List<ReservationTime> times = timeDao.findAll();
         assertThat(times).hasSize(2);
         assertThat(times).extracting("startAt").containsExactly("10:00", "11:00");
@@ -44,18 +57,15 @@ class ReservationTimeDaoTest {
     @DisplayName("ID로 시간을 제거한다.")
     @Test
     void delete() {
-        save("10:00");
+        // given
+        ReservationTimeRegisterDetail registerDetail = new ReservationTimeRegisterDetail("10:00");
+        ReservationTime saved = timeDao.save(registerDetail);
 
-        assertThat(timeDao.findAll()).hasSize(1);
+        // when
+        timeDao.deleteById(saved.getId());
 
-        timeDao.deleteById(1L);
-        assertThat(timeDao.findAll()).hasSize(0);
-    }
-
-    private ReservationTime save(String startAt) {
-        ReservationTimeRequest request = new ReservationTimeRequest(startAt);
-        ReservationTimeRegisterDetail registerDetail = new ReservationTimeRegisterDetail(request);
-
-        return timeDao.save(registerDetail);
+        // then
+        assertThatThrownBy(() -> timeDao.findById(saved.getId()))
+                .isInstanceOf(EmptyResultDataAccessException.class);
     }
 }

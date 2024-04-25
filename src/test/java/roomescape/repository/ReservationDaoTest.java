@@ -10,9 +10,12 @@ import org.springframework.boot.test.autoconfigure.jdbc.JdbcTest;
 import org.springframework.context.annotation.Import;
 import org.springframework.test.annotation.DirtiesContext;
 import roomescape.entity.Reservation;
+import roomescape.repository.rowmapper.ReservationRowMapper;
+import roomescape.repository.rowmapper.ReservationTimeRowMapper;
 
 @JdbcTest
-@Import(value = {ReservationDao.class, ReservationTimeDao.class})
+@Import(value = {ReservationDao.class, ReservationTimeDao.class, ReservationRowMapper.class,
+        ReservationTimeRowMapper.class})
 @DirtiesContext(classMode = DirtiesContext.ClassMode.BEFORE_EACH_TEST_METHOD)
 class ReservationDaoTest {
 
@@ -29,7 +32,9 @@ class ReservationDaoTest {
         timeDao.save(new ReservationTimeRegisterDetail("10:00"));
 
         // when
-        Reservation saved = save("상돌", "2024-04-25", 1L, "10:00");
+        Reservation saved = reservationDao.save(new ReservationRegisterDetail(
+                "상돌", "2024-04-25", 1L, "10:00"
+        ));
 
         // then
         assertThat(saved.getId()).isEqualTo(1L);
@@ -47,14 +52,20 @@ class ReservationDaoTest {
         timeDao.save(new ReservationTimeRegisterDetail("11:00"));
 
         // when
-        save("상돌", "2024-04-25", 1L, "10:00");
-        save("상돌1", "2024-04-25", 2L, "11:00");
+        reservationDao.save(new ReservationRegisterDetail(
+                "상돌", "2024-04-25", 1L, "10:00"
+        ));
+        reservationDao.save(new ReservationRegisterDetail(
+                "상돌1", "2024-04-24", 2L, "11:00"
+        ));
 
         // then
         List<Reservation> reservations = reservationDao.findAll();
         assertThat(reservations).hasSize(2);
         assertThat(reservations).extracting("id").containsExactly(1L, 2L);
         assertThat(reservations).extracting("name").containsExactly("상돌", "상돌1");
+        assertThat(reservations).extracting("date").contains("2024-04-25", "2024-04-24");
+        assertThat(reservations).extracting("time.startAt").contains("10:00", "11:00");
     }
 
     @DisplayName("ID로 시간을 제거한다.")
@@ -64,17 +75,15 @@ class ReservationDaoTest {
         timeDao.save(new ReservationTimeRegisterDetail("10:00"));
 
         // when
-        save("상돌", "2024-04-25", 1L, "10:00");
+        Reservation saved = reservationDao.save(new ReservationRegisterDetail(
+                "상돌", "2024-04-25", 1L, "10:00"
+        ));
+        int sizeBeforeDelete = reservationDao.findAll().size();
+
+        reservationDao.deleteById(saved.getId());
+        int sizeAfterDelete = reservationDao.findAll().size();
 
         // then
-        assertThat(reservationDao.findAll()).hasSize(1);
-
-        reservationDao.deleteById(1L);
-        assertThat(reservationDao.findAll()).hasSize(0);
-    }
-
-    private Reservation save(String name, String date, long timeId, String timeValue) {
-        ReservationRegisterDetail registerDetail = new ReservationRegisterDetail(name, date, timeId, timeValue);
-        return reservationDao.save(registerDetail);
+        assertThat(sizeBeforeDelete).isNotEqualTo(sizeAfterDelete);
     }
 }

@@ -6,11 +6,11 @@ import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.namedparam.BeanPropertySqlParameterSource;
 import org.springframework.jdbc.core.namedparam.SqlParameterSource;
 import org.springframework.jdbc.core.simple.SimpleJdbcInsert;
-import org.springframework.stereotype.Component;
+import org.springframework.stereotype.Repository;
 import roomescape.reservation.domain.Reservation;
 import roomescape.reservation.domain.ReservationTime;
 
-@Component
+@Repository
 public class ReservationDao implements ReservationRepository {
     private final JdbcTemplate jdbcTemplate;
     private final SimpleJdbcInsert simpleJdbcInsert;

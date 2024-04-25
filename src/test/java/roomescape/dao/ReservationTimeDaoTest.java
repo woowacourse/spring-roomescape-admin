@@ -23,9 +23,9 @@ class ReservationTimeDaoTest {
 
     @Test
     void 예약시간을_생성한다() {
-        CreateReservationTimeRequest createReservationTimeRequest = new CreateReservationTimeRequest(LocalTime.of(10, 0));
-
-        reservationTimeDao.create(createReservationTimeRequest);
+        CreateReservationTimeRequest request = new CreateReservationTimeRequest(LocalTime.of(10, 0));
+        ReservationTime reservationTime = new ReservationTime(request.startAt());
+        reservationTimeDao.create(reservationTime);
 
         List<ReservationTime> reservationTimes = reservationTimeDao.findAll();
         Assertions.assertThat(reservationTimes).hasSize(1);
@@ -40,8 +40,9 @@ class ReservationTimeDaoTest {
 
     @Test
     void 예약시간을_삭제한다() {
-        CreateReservationTimeRequest createReservationTimeRequest = new CreateReservationTimeRequest(LocalTime.of(10, 0));
-        reservationTimeDao.create(createReservationTimeRequest);
+        CreateReservationTimeRequest request = new CreateReservationTimeRequest(LocalTime.of(10, 0));
+        ReservationTime reservationTime = new ReservationTime(request.startAt());
+        reservationTimeDao.create(reservationTime);
 
         reservationTimeDao.delete(2);
 

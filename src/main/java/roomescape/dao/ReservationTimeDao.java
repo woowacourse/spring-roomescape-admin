@@ -2,6 +2,9 @@ package roomescape.dao;
 
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;
+import org.springframework.jdbc.core.namedparam.BeanPropertySqlParameterSource;
+import org.springframework.jdbc.core.namedparam.SqlParameterSource;
+import org.springframework.jdbc.core.simple.SimpleJdbcInsert;
 import org.springframework.stereotype.Component;
 import roomescape.domain.ReservationTime;
 
@@ -11,9 +14,13 @@ import java.util.List;
 public class ReservationTimeDao {
 
     private final JdbcTemplate jdbcTemplate;
+    private final SimpleJdbcInsert jdbcInsert;
 
     public ReservationTimeDao(JdbcTemplate jdbcTemplate) {
         this.jdbcTemplate = jdbcTemplate;
+        this.jdbcInsert = new SimpleJdbcInsert(jdbcTemplate)
+                .withTableName("RESERVATION_TIME")
+                .usingGeneratedKeyColumns("id");
     }
 
     private final RowMapper<ReservationTime> reservationTimeRowMapper = (resultSet, rowNum) -> new ReservationTime(
@@ -21,16 +28,19 @@ public class ReservationTimeDao {
             resultSet.getTime("start_at").toLocalTime()
     );
 
-    public int create(ReservationTime reservationTime) {
-        return jdbcTemplate.update("insert into reservation_time (start_at) values (?)",
-                reservationTime.getStartAt());
+    public ReservationTime create(ReservationTime reservationTime) {
+        SqlParameterSource params = new BeanPropertySqlParameterSource(reservationTime);
+        long id = jdbcInsert.executeAndReturnKey(params).longValue();
+        return new ReservationTime(id, reservationTime.getStartAt());
     }
 
     public List<ReservationTime> findAll() {
-        return jdbcTemplate.query("select * from reservation_time", reservationTimeRowMapper);
+        String sql = "select * from reservation_time";
+        return jdbcTemplate.query(sql, reservationTimeRowMapper);
     }
 
-    public void delete(int id) {
-        jdbcTemplate.update("delete from reservation_time where id = ?", id);
+    public void delete(long id) {
+        String sql = "delete from reservation_time where id = ?";
+        int updated = jdbcTemplate.update(sql, id);
     }
 }

@@ -3,6 +3,9 @@ package roomescape.dao;
 import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;
+import org.springframework.jdbc.core.namedparam.MapSqlParameterSource;
+import org.springframework.jdbc.core.namedparam.SqlParameterSource;
+import org.springframework.jdbc.core.simple.SimpleJdbcInsert;
 import org.springframework.stereotype.Component;
 import roomescape.domain.Reservation;
 import roomescape.domain.ReservationTime;
@@ -14,9 +17,13 @@ import java.util.Optional;
 public class ReservationDao {
 
     private final JdbcTemplate jdbcTemplate;
+    private final SimpleJdbcInsert jdbcInsert;
 
     public ReservationDao(JdbcTemplate jdbcTemplate) {
         this.jdbcTemplate = jdbcTemplate;
+        this.jdbcInsert = new SimpleJdbcInsert(jdbcTemplate)
+                .withTableName("RESERVATION")
+                .usingGeneratedKeyColumns("id");
     }
 
     private final RowMapper<Reservation> reservationRowMapper = (resultSet, rowNum) -> {
@@ -33,15 +40,15 @@ public class ReservationDao {
         return reservation;
     };
 
-    public int create(Reservation reservation) {
-        String sql = "insert into reservation (name, date, time_id) values (?, ?, ?)";
-        return jdbcTemplate.update(sql,
-                reservation.getName(),
-                reservation.getDate(),
-                reservation.getTime().getId());
+    public long create(Reservation reservation) {
+        SqlParameterSource params = new MapSqlParameterSource()
+                .addValue("name", reservation.getName())
+                .addValue("date", reservation.getDate())
+                .addValue("time_id", reservation.getTime().getId());
+        return jdbcInsert.executeAndReturnKey(params).longValue();
     }
 
-    public Optional<Reservation> findAnyByTimeId(int timeId) {
+    public Optional<Reservation> findAnyByTimeId(long timeId) {
         String sql = "SELECT r.id, r.name, r.date, t.id AS time_id, t.start_at " +
                 "FROM reservation r " +
                 "JOIN reservation_time t ON r.time_id = t.id " +
@@ -55,7 +62,7 @@ public class ReservationDao {
         }
     }
 
-    public Reservation findById(int id) {
+    public Reservation findById(long id) {
         String sql = "SELECT r.id, r.name, r.date, t.id AS time_id, t.start_at " +
                 "FROM reservation r " +
                 "JOIN reservation_time t ON r.time_id = t.id " +
@@ -70,7 +77,7 @@ public class ReservationDao {
         return jdbcTemplate.query(sql, reservationRowMapper);
     }
 
-    public void delete(int id) {
+    public void delete(long id) {
         jdbcTemplate.update("delete from reservation where id = ?", id);
     }
 }

@@ -7,7 +7,7 @@ import java.time.LocalDate;
 
 public class Reservation {
 
-    private int id;
+    private long id;
     private String name;
     private LocalDate date;
     private ReservationTime time;
@@ -15,7 +15,7 @@ public class Reservation {
     public Reservation() {
     }
 
-    public Reservation(int id, String name, LocalDate date) {
+    public Reservation(long id, String name, LocalDate date) {
         this(id, name, date, new ReservationTime());
     }
 
@@ -23,7 +23,7 @@ public class Reservation {
         this(-1, name, date, time);
     }
 
-    private Reservation(int id, String name, LocalDate date, ReservationTime time) {
+    private Reservation(long id, String name, LocalDate date, ReservationTime time) {
         validateNotNull(name, date, time);
         this.id = id;
         this.name = name;
@@ -43,12 +43,12 @@ public class Reservation {
         }
     }
 
-    public static Reservation from(String name, LocalDate date, int timeId) {
+    public static Reservation from(String name, LocalDate date, long timeId) {
         ReservationTime reservationTime = new ReservationTime(timeId);
         return new Reservation(name, date, reservationTime);
     }
 
-    public int getId() {
+    public long getId() {
         return id;
     }
 

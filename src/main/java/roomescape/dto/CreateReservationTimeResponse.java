@@ -2,5 +2,5 @@ package roomescape.dto;
 
 import java.time.LocalTime;
 
-public record CreateReservationTimeResponse(int id, LocalTime startAt) {
+public record CreateReservationTimeResponse(long id, LocalTime startAt) {
 }

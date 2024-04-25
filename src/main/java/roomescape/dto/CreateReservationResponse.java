@@ -4,5 +4,5 @@ import roomescape.domain.ReservationTime;
 
 import java.time.LocalDate;
 
-public record CreateReservationResponse(int id, String name, LocalDate date, ReservationTime reservationTime) {
+public record CreateReservationResponse(long id, String name, LocalDate date, ReservationTime reservationTime) {
 }

@@ -7,17 +7,17 @@ import java.time.LocalTime;
 
 public class ReservationTime {
 
-    private int id;
+    private long id;
     private LocalTime startAt;
 
     public ReservationTime() {
     }
 
-    public ReservationTime(int id) {
+    public ReservationTime(long id) {
         this(id, LocalTime.MIN);
     }
 
-    public ReservationTime(int id, LocalTime startAt) {
+    public ReservationTime(long id, LocalTime startAt) {
         validateNotNull(startAt);
         this.id = id;
         this.startAt = startAt;
@@ -33,7 +33,7 @@ public class ReservationTime {
         }
     }
 
-    public int getId() {
+    public long getId() {
         return id;
     }
 

@@ -31,12 +31,11 @@ public class ReservationTimeService {
 
     public CreateReservationTimeResponse createTime(CreateReservationTimeRequest request) {
         ReservationTime requestedReservationTime = reservationTimeMapper.toReservationTime(request);
-        int createdId = reservationTimeDao.create(requestedReservationTime);
-        ReservationTime createdReservationTime = new ReservationTime(createdId, request.startAt());
-        return reservationTimeMapper.toCreateReservationTimeResponse(createdReservationTime);
+        ReservationTime reservationTime = reservationTimeDao.create(requestedReservationTime);
+        return reservationTimeMapper.toCreateReservationTimeResponse(reservationTime);
     }
 
-    public void deleteTime(int timeId) {
+    public void deleteTime(long timeId) {
         reservationDao.findAnyByTimeId(timeId)
                 .ifPresentOrElse(
                         reservation -> {

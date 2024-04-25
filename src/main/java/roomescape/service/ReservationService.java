@@ -26,12 +26,12 @@ public class ReservationService {
 
     public CreateReservationResponse createReservation(CreateReservationRequest request) {
         Reservation requestedReservation = reservationMapper.toReservation(request);
-        int createdId = reservationDao.create(requestedReservation);
+        long createdId = reservationDao.create(requestedReservation);
         Reservation createdReservation = reservationDao.findById(createdId);
         return reservationMapper.toCreateReservationResponse(createdReservation);
     }
 
-    public void deleteReservation(int id) {
+    public void deleteReservation(long id) {
         reservationDao.delete(id);
     }
 }

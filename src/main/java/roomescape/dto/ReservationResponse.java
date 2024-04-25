@@ -6,23 +6,23 @@ import roomescape.domain.reservation.ReservationTime;
 import java.time.LocalDate;
 import java.util.List;
 
-public record ReservationResponseDto(Long id, String name, LocalDate date, ReservationTime time) {
+public record ReservationResponse(Long id, String name, LocalDate date, ReservationTime time) {
 
-    public ReservationResponseDto(Long id, String name, LocalDate date, ReservationTime time) {
+    public ReservationResponse(Long id, String name, LocalDate date, ReservationTime time) {
         this.id = id;
         this.name = name;
         this.date = date;
         this.time = time;
     }
 
-    public ReservationResponseDto(Reservation reservation) {
+    public ReservationResponse(Reservation reservation) {
         this(reservation.getId(), reservation.getName().getName(),
                 reservation.getDate().getDate(), reservation.getTime());
     }
 
-    public static List<ReservationResponseDto> listOf(List<Reservation> reservations) {
+    public static List<ReservationResponse> listOf(List<Reservation> reservations) {
         return reservations.stream()
-                .map(ReservationResponseDto::new)
+                .map(ReservationResponse::new)
                 .toList();
     }
 }

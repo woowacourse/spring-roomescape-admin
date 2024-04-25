@@ -38,7 +38,6 @@ public class ReservationTimeFakeDao implements ReservationTimeRepository {
 
     @Override
     public List<ReservationTime> findAll() {
-        System.out.println("nanananananananananana");
         return reservationTimes.values().stream()
                 .toList();
     }

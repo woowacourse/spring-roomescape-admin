@@ -61,6 +61,6 @@ class ReservationTimeControllerTest {
     }
 
     static ReservationTime timeParams() {
-        return new ReservationTime(LocalTime.parse("10:00"));
+        return new ReservationTime(0, LocalTime.parse("10:00"));
     }
 }

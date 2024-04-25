@@ -15,6 +15,7 @@ public class ReservationTimeController {
     public ReservationTimeController(ReservationTimeService reservationTimeService) {
         this.reservationTimeService = reservationTimeService;
     }
+
     @PostMapping("/times")
     public ResponseEntity<ReservationTimeResponse> addTime(@RequestBody ReservationTimeRequest timeRequestDto) {
         ReservationTimeResponse time = ReservationTimeResponse.from(reservationTimeService.addTime(timeRequestDto.toEntity()));

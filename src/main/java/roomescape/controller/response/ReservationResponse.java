@@ -1,7 +1,6 @@
 package roomescape.controller.response;
 
 import roomescape.domain.reservation.Reservation;
-import roomescape.domain.reservation.ReservationTime;
 
 import java.time.LocalDate;
 import java.util.List;

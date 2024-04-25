@@ -7,12 +7,11 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.context.SpringBootTest.WebEnvironment;
 import org.springframework.boot.test.web.server.LocalServerPort;
 import org.springframework.jdbc.core.JdbcTemplate;
-import org.springframework.test.annotation.DirtiesContext;
 import org.springframework.test.context.ActiveProfiles;
+import roomescape.helper.DatabaseCleaner;
 import roomescape.helper.DatabaseInitializer;
 
 @SpringBootTest(webEnvironment = WebEnvironment.RANDOM_PORT)
-@DirtiesContext(classMode = DirtiesContext.ClassMode.BEFORE_EACH_TEST_METHOD)
 @ActiveProfiles("test")
 public abstract class IntegrationTest {
     @LocalServerPort
@@ -22,11 +21,15 @@ public abstract class IntegrationTest {
     protected JdbcTemplate jdbcTemplate;
 
     @Autowired
+    protected DatabaseCleaner databaseCleaner;
+
+    @Autowired
     protected DatabaseInitializer databaseInitializer;
 
     @BeforeEach
     void setUp() {
         RestAssured.port = port;
+        databaseCleaner.execute();
         databaseInitializer.execute();
     }
 }

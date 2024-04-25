@@ -1,8 +1,8 @@
 package roomescape.repository;
 
 import static org.assertj.core.api.Assertions.assertThat;
-import static roomescape.util.Fixture.GAMJA_RESERVATION_TIME_REQUEST;
-import static roomescape.util.Fixture.JOJO_RESERVATION_TIME_REQUEST;
+import static roomescape.util.Fixture.GAMJA_RESERVATION_TIME_BEFORE_SAVE;
+import static roomescape.util.Fixture.JOJO_RESERVATION_TIME_BEFORE_SAVE;
 
 import java.util.List;
 import java.util.stream.Stream;
@@ -23,8 +23,8 @@ class ReservationTimeDaoTest {
     @DisplayName("전체 시간 조회")
     @Test
     void findAllReservationTimes() {
-        reservationTimeDao.save(JOJO_RESERVATION_TIME_REQUEST);
-        reservationTimeDao.save(GAMJA_RESERVATION_TIME_REQUEST);
+        reservationTimeDao.save(JOJO_RESERVATION_TIME_BEFORE_SAVE);
+        reservationTimeDao.save(GAMJA_RESERVATION_TIME_BEFORE_SAVE);
 
         List<ReservationTime> times = reservationTimeDao.findAll();
 
@@ -34,7 +34,8 @@ class ReservationTimeDaoTest {
     @DisplayName("시간 추가")
     @Test
     void saveReservationTime() {
-        Long savedId = reservationTimeDao.save(JOJO_RESERVATION_TIME_REQUEST);
+        Long savedId = reservationTimeDao.save(JOJO_RESERVATION_TIME_BEFORE_SAVE)
+            .getId();
 
         assertThat(savedId).isEqualTo(1);
     }
@@ -42,7 +43,8 @@ class ReservationTimeDaoTest {
     @DisplayName("시간 삭제")
     @Test
     void deleteReservationTime() {
-        Long savedId = reservationTimeDao.save(JOJO_RESERVATION_TIME_REQUEST);
+        Long savedId = reservationTimeDao.save(JOJO_RESERVATION_TIME_BEFORE_SAVE)
+            .getId();
 
         reservationTimeDao.deleteById(savedId);
 

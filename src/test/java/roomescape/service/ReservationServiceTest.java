@@ -9,7 +9,7 @@ import static roomescape.util.Fixture.GAMJA_RESERVATION_RESPONSE;
 import static roomescape.util.Fixture.JOJO_RESERVATION_AFTER_SAVE;
 import static roomescape.util.Fixture.JOJO_RESERVATION_REQUEST;
 import static roomescape.util.Fixture.JOJO_RESERVATION_RESPONSE;
-import static roomescape.util.Fixture.JOJO_RESERVATION_TIME;
+import static roomescape.util.Fixture.JOJO_RESERVATION_TIME_AFTER_SAVE;
 
 import java.util.List;
 import org.junit.jupiter.api.DisplayName;
@@ -49,7 +49,7 @@ class ReservationServiceTest {
     @Test
     void createReservation() {
         BDDMockito.given(reservationTimeDao.findById(anyLong()))
-            .willReturn(JOJO_RESERVATION_TIME);
+            .willReturn(JOJO_RESERVATION_TIME_AFTER_SAVE);
         BDDMockito.given(reservationDao.save(any()))
             .willReturn(JOJO_RESERVATION_AFTER_SAVE);
 

@@ -4,11 +4,10 @@ import java.util.List;
 import javax.sql.DataSource;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;
-import org.springframework.jdbc.core.namedparam.BeanPropertySqlParameterSource;
+import org.springframework.jdbc.core.namedparam.MapSqlParameterSource;
 import org.springframework.jdbc.core.namedparam.SqlParameterSource;
 import org.springframework.jdbc.core.simple.SimpleJdbcInsert;
 import org.springframework.stereotype.Repository;
-import roomescape.dto.ReservationTimeRequest;
 import roomescape.model.ReservationTime;
 
 @Repository
@@ -41,10 +40,13 @@ public class ReservationTimeDao {
         return jdbcTemplate.queryForObject(sql, mappingReservationTime(), timeId);
     }
 
-    public Long save(ReservationTimeRequest reservationTimeRequest) {
-        SqlParameterSource params = new BeanPropertySqlParameterSource(reservationTimeRequest);
-        return jdbcInsert.executeAndReturnKey(params)
+    public ReservationTime save(ReservationTime reservationTime) {
+        SqlParameterSource params = new MapSqlParameterSource()
+            .addValue("id", reservationTime.getId())
+            .addValue("start_at", reservationTime.getStartAt());
+        long id = jdbcInsert.executeAndReturnKey(params)
             .longValue();
+        return reservationTime.addId(id);
     }
 
     public boolean deleteById(Long id) {

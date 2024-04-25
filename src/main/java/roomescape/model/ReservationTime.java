@@ -33,6 +33,13 @@ public class ReservationTime {
         }
     }
 
+    public ReservationTime addId(long id) {
+        if (id <= 0) {
+            throw new IllegalArgumentException("유효하지 않은 id입니다.");
+        }
+        return new ReservationTime(id, startAt);
+    }
+
     public Long getId() {
         return id;
     }

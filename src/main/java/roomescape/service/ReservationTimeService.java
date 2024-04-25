@@ -26,10 +26,10 @@ public class ReservationTimeService {
             .toList();
     }
 
-    public ReservationTimeResponse create(ReservationTimeRequest timeRequest) {
-        Long savedId = reservationTimeDao.save(timeRequest);
-        ReservationTime reservationTime = ReservationTime.of(savedId, timeRequest.startAt());
-        return ReservationTimeResponse.from(reservationTime);
+    public ReservationTimeResponse create(ReservationTimeRequest request) {
+        ReservationTime reservationTime = ReservationTime.of(0L, request.startAt());
+        ReservationTime savedReservationTime = reservationTimeDao.save(reservationTime);
+        return ReservationTimeResponse.from(savedReservationTime);
     }
 
     public void delete(Long id) {

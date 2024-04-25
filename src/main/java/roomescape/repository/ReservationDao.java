@@ -3,7 +3,6 @@ package roomescape.repository;
 import java.time.LocalDate;
 import java.time.LocalTime;
 import java.util.List;
-import java.util.Objects;
 import java.util.Optional;
 import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.jdbc.core.JdbcTemplate;
@@ -81,19 +80,14 @@ public class ReservationDao {
 
     public Boolean existByTimeId(Long timeId) {
         String sql = """
-                SELECT CASE
-                           WHEN EXISTS (
-                               SELECT 1
-                               FROM reservation
-                               WHERE time_id = ?
-                           )
-                           THEN TRUE
-                           ELSE FALSE
-                       END""";
+                SELECT id
+                FROM reservation
+                WHERE time_id = ?
+                LIMIT 1""";
 
         try {
-            long count = Objects.requireNonNull(jdbcTemplate.queryForObject(sql, Long.class, timeId));
-            return count > 0L;
+            Long anyId = jdbcTemplate.queryForObject(sql, Long.class, timeId);
+            return anyId != null;
         } catch (EmptyResultDataAccessException e) {
             return false;
         }

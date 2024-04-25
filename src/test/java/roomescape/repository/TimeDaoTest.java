@@ -32,9 +32,13 @@ class TimeDaoTest {
     @Test
     void checkConnection() {
         try (final Connection connection = Objects.requireNonNull(jdbcTemplate.getDataSource()).getConnection()) {
-            assertThat(connection).isNotNull();
-            assertThat(connection.getCatalog()).isEqualTo("DATABASE_TEST");
-            assertThat(connection.getMetaData().getTables(null, null, "RESERVATION_TIME", null).next()).isTrue();
+            assertAll(
+                    () -> assertThat(connection).isNotNull(),
+                    () -> assertThat(connection.getCatalog()).isEqualTo("DATABASE_TEST"),
+                    () -> assertThat(
+                            connection.getMetaData().getTables(null, null, "RESERVATION_TIME", null).next()).isTrue()
+            );
+
         } catch (final SQLException e) {
             throw new IllegalStateException(e);
         }

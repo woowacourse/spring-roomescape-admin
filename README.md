@@ -61,3 +61,51 @@
 - [x] 예약 추가/취소 API 로직에서 데이터베이스를 활용한다.
   - [x] 기존에 사용하던 List 및 AtomicLong을 제거한다.
   - [x] 예약 추가 시 예약 데이터 생성 후 생성된 id 값을 활용해서 응답한다.
+### 시간 관리 기능 추가
+- [ ] 페이지는 `templates/admin/time.html` 파일을 사용한다.
+- [x] 시간 추가 API
+```
+POST /times HTTP/1.1
+content-type: application/json
+
+{
+  "startAt": "10:00"
+}
+
+HTTP/1.1 200
+Content-Type: application/json
+
+{
+    "id": 1,
+    "startAt": "10:00"
+}
+```
+- [ ] 시간 조회 API
+```
+GET /times HTTP/1.1
+
+HTTP/1.1 200 
+Content-Type: application/json
+
+[
+   {
+        "id": 1,
+        "startAt": "10:00"
+    }
+]
+```
+- [ ] 시간 삭제 API
+```
+DELETE /times/1 HTTP/1.1
+
+HTTP/1.1 200
+```
+- [x] 데이터 베이스 스키마 작성
+```
+CREATE TABLE reservation_time
+(
+    id   BIGINT       NOT NULL AUTO_INCREMENT,
+    start_at VARCHAR(255) NOT NULL,
+    PRIMARY KEY (id)
+);
+```

@@ -17,22 +17,22 @@ class ReservationTimeDaoTest {
     @Autowired
     private ReservationTimeDao reservationTimeDao;
 
-    private final ReservationTime time = new ReservationTime(
+    private final ReservationTime reservationTime = new ReservationTime(
             null,
             LocalTime.of(10,0)
     );
 
     @Test
     void save() {
-        ReservationTime savedTime = reservationTimeDao.save(time);
+        ReservationTime savedReservationTime = reservationTimeDao.save(reservationTime);
 
-        assertThat(savedTime.getId()).isEqualTo(1);
+        assertThat(savedReservationTime.getId()).isEqualTo(1);
     }
 
     @Test
     void findAll() {
-        reservationTimeDao.save(time);
-        reservationTimeDao.save(time);
+        reservationTimeDao.save(reservationTime);
+        reservationTimeDao.save(reservationTime);
         List<ReservationTime> reservationTimes = reservationTimeDao.findAll();
 
         assertThat(reservationTimes).size().isEqualTo(2);
@@ -40,8 +40,8 @@ class ReservationTimeDaoTest {
 
     @Test
     void delete() {
-        ReservationTime savedTime = reservationTimeDao.save(time);
-        reservationTimeDao.delete(savedTime.getId());
+        ReservationTime savedReservationTime = reservationTimeDao.save(reservationTime);
+        reservationTimeDao.delete(savedReservationTime.getId());
 
         assertThat(reservationTimeDao.findAll()).isEmpty();
     }

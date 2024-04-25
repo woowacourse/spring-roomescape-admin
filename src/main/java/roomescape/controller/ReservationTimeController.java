@@ -21,18 +21,18 @@ public class ReservationTimeController {
     }
 
     @PostMapping("/times")
-    public ResponseEntity<ReservationTimeResponse> createTime(@RequestBody ReservationTimeCreateRequest timeCreateRequest) {
-        ReservationTime time = timeCreateRequest.toReservationTime();
-        ReservationTime savedTime = reservationTimeDao.save(time);
-        ReservationTimeResponse timeResponse = ReservationTimeResponse.fromReservationTime(savedTime);
-        return ResponseEntity.ok(timeResponse);
+    public ResponseEntity<ReservationTimeResponse> createReservationTime(@RequestBody ReservationTimeCreateRequest reservationTimeCreateRequest) {
+        ReservationTime reservationTime = reservationTimeCreateRequest.toReservationTime();
+        ReservationTime savedReservationTime = reservationTimeDao.save(reservationTime);
+        ReservationTimeResponse reservationTimeResponse = ReservationTimeResponse.fromReservationTime(savedReservationTime);
+        return ResponseEntity.ok(reservationTimeResponse);
     }
 
     @GetMapping("/times")
-    public ResponseEntity<List<ReservationTimeResponse>> getTimes() {
-        List<ReservationTimeResponse> timeResponses = reservationTimeDao.findAll().stream()
+    public ResponseEntity<List<ReservationTimeResponse>> getReservationTimes() {
+        List<ReservationTimeResponse> reservationTimeResponses = reservationTimeDao.findAll().stream()
                 .map(ReservationTimeResponse::fromReservationTime)
                 .toList();
-        return ResponseEntity.ok(timeResponses);
+        return ResponseEntity.ok(reservationTimeResponses);
     }
 }

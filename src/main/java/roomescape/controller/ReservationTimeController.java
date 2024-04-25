@@ -2,6 +2,7 @@ package roomescape.controller;
 
 import java.net.URI;
 import java.util.List;
+import java.util.NoSuchElementException;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -10,26 +11,23 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
-import roomescape.repository.ReservationTimeRepository;
 import roomescape.dto.ReservationTimeCreateRequest;
 import roomescape.dto.ReservationTimeResponse;
+import roomescape.service.ReservationTimeService;
 
 @RestController
 @RequestMapping("/times")
 public class ReservationTimeController {
 
-    private final ReservationTimeRepository reservationTimeRepository;
+    private final ReservationTimeService reservationTimeService;
 
-    public ReservationTimeController(ReservationTimeRepository reservationTimeRepository) {
-        this.reservationTimeRepository = reservationTimeRepository;
+    public ReservationTimeController(ReservationTimeService reservationTimeService) {
+        this.reservationTimeService = reservationTimeService;
     }
 
     @GetMapping
     public ResponseEntity<List<ReservationTimeResponse>> findAllReservationTimes() {
-        List<ReservationTimeResponse> reservationTimeResponses = reservationTimeRepository.findAll()
-                .stream()
-                .map(ReservationTimeResponse::toResponse)
-                .toList();
+        List<ReservationTimeResponse> reservationTimeResponses = reservationTimeService.findAll();
 
         return ResponseEntity.ok()
                 .body(reservationTimeResponses);
@@ -38,15 +36,16 @@ public class ReservationTimeController {
     @PostMapping
     public ResponseEntity<ReservationTimeResponse> createReservationTime(
             @RequestBody ReservationTimeCreateRequest reservationTimeCreateRequest) {
-        Long id = reservationTimeRepository.save(reservationTimeCreateRequest);
-        return ResponseEntity.created(URI.create("/times/" + id))
+        ReservationTimeResponse reservationTimeResponse = reservationTimeService.create(reservationTimeCreateRequest);
+        return ResponseEntity.created(URI.create("/times/" + reservationTimeResponse.id()))
                 .build();
     }
 
     @DeleteMapping("/{id}")
     public ResponseEntity<Void> deleteReservation(@PathVariable Long id) {
-        int deletedRowCount = reservationTimeRepository.deleteById(id);
-        if (deletedRowCount == 0) {
+        try {
+            reservationTimeService.delete(id);
+        } catch (NoSuchElementException e) {
             return ResponseEntity.notFound()
                     .build();
         }

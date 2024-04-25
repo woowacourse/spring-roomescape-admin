@@ -16,6 +16,6 @@ public class ComparisonCondition {
     }
 
     public String build() {
-        return column + operator + value;
+        return column + operator + "'" + value + "'";
     }
 }

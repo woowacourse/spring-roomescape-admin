@@ -5,6 +5,7 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.Objects;
 import roomescape.global.query.condition.ComparisonCondition;
+import roomescape.global.query.condition.JoinCondition;
 import roomescape.global.query.condition.LogicalCondition;
 
 public class SelectQuery {
@@ -22,11 +23,6 @@ public class SelectQuery {
     }
 
     public SelectQuery addColumns(String... columnNames) {
-        if (alias != null) {
-            columnNames = Arrays.stream(columnNames)
-                    .map(s -> alias + "." + s)
-                    .toArray(String[]::new);
-        }
         this.columns.addAll(Arrays.asList(columnNames));
         return this;
     }
@@ -45,32 +41,17 @@ public class SelectQuery {
         if (alias == null || alias.isBlank()) {
             throw new IllegalArgumentException("alias가 비어있습니다.");
         }
-        if (!columns.isEmpty()) {
-            throw new IllegalArgumentException("alias를 먼저 지정하고 columns을 지정해야 합니다.");
-        }
         this.alias = alias;
         return this;
     }
 
-    public SelectQuery join(String joinType, String joinTable, ComparisonCondition comparisonCondition, String alias) {
-        join = new Join(joinType, joinTable, comparisonCondition, alias);
-        return this;
-    }
-
-    public SelectQuery addJoinColumns(String... columnNames) {
-        if (join.isEmpty()) {
-            throw new IllegalArgumentException("조인이 없습니다.");
-        }
-        if (join.hasAlias()) {
-            this.columns.addAll(Arrays.stream(columnNames)
-                    .map(s -> join.alias + "." + s)
-                    .toList());
-        }
+    public SelectQuery join(String joinType, String joinTable, JoinCondition joinCondition, String alias) {
+        join = new Join(joinType, joinTable, joinCondition, alias);
         return this;
     }
 
     public String build() {
-        return "SELECT " + buildColumnsAndTable() + buildCondition() + buildJoin();
+        return "SELECT " + buildColumnsAndTable() + buildJoin() + buildCondition();
     }
 
     private String buildColumnsAndTable() {
@@ -98,26 +79,26 @@ public class SelectQuery {
     }
 
     private static class Join {
-        private static final Join EMPTY = new Join("", "", null, null);
+        private static final Join EMPTY = new Join("", "", null); // todo overriding
 
         private final String joinType;
         private final String table;
-        private final ComparisonCondition condition;
-        private final String alias;
+        private final JoinCondition condition;
+        private String alias;
 
-        public Join(String joinType, String table, ComparisonCondition condition, String alias) {
+        public Join(String joinType, String table, JoinCondition condition) {
+            this(joinType, table, condition, null);
+        }
+
+        public Join(String joinType, String table, JoinCondition condition, String alias) {
             this.joinType = joinType;
             this.table = table;
             this.condition = condition;
             this.alias = alias;
         }
 
-        public boolean isEmpty() {
+        public boolean isEmpty() { // todo 삭제
             return this == EMPTY;
-        }
-
-        public boolean hasAlias() {
-            return alias != null;
         }
 
         public String build() {

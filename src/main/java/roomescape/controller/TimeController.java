@@ -8,6 +8,7 @@ import roomescape.dto.TimeCreateRequest;
 import roomescape.service.TimeService;
 
 import java.util.List;
+import java.util.Objects;
 
 @RestController
 @RequestMapping("/times")
@@ -31,8 +32,10 @@ public class TimeController {
 
     @DeleteMapping("/{id}")
     public ResponseEntity<Void> deleteTime(@PathVariable long id) {
-        service.deleteTime(id);
-        return ResponseEntity.noContent().build();
+        if(service.deleteTime(id)) {
+            return ResponseEntity.noContent().build();
+        }
+        return ResponseEntity.status(HttpStatus.BAD_REQUEST).build();
     }
 }
 

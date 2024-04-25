@@ -94,7 +94,13 @@ function deleteRow(event) {
     const id = row.cells[0].textContent;
 
     requestDelete(id)
-        .then(() => row.remove())
+        .then((code) => {
+            if(code === 204)
+                row.remove();
+            else {
+                alert("해당 시간에 예약이 존재하여 삭제할 수 없습니다.\n 해당 예약을 먼저 취소해주세요.");
+            }
+        })
         .catch(error => console.error('Error:', error));
 }
 
@@ -130,6 +136,8 @@ function requestDelete(id) {
 
     return fetch(`${API_ENDPOINT}/${id}`, requestOptions)
         .then(response => {
-            if (response.status !== 204) throw new Error('Delete failed');
+            if(response.status === 400) return 400;
+            if (response.status === 204) return 204;
+                throw new Error('Delete failed');
         });
 }

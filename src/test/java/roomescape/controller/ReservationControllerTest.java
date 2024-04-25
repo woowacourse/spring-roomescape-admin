@@ -8,6 +8,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.stream.Stream;
 import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
@@ -50,7 +51,7 @@ class ReservationControllerTest {
         Map<String, String> params = Map.of(
                 "name", "브라운",
                 "date", "2024-08-05",
-                "time", "15:40"
+                "timeId", "1"
         );
 
         int initialReservationsCount = getTotalReservationsCount();

@@ -10,25 +10,34 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.jdbc.JdbcTest;
 import org.springframework.jdbc.core.JdbcTemplate;
+import roomescape.controller.dto.ReservationTimeAddRequest;
 import roomescape.domain.ReservationCreationRequest;
+import roomescape.domain.ReservationTime;
 import roomescape.service.dto.ReservationCreationDto;
 
 @JdbcTest
 class H2ReservationDaoTest {
     private final ReservationDao reservationDao;
+    private final TimeDao timeDao;
 
     @Autowired
     public H2ReservationDaoTest(JdbcTemplate jdbcTemplate) {
         this.reservationDao = new H2ReservationDao(jdbcTemplate);
+        this.timeDao = new H2TimeDao(jdbcTemplate);
     }
 
     @BeforeEach
     void setUp() {
         reservationDao.deleteAll();
+        timeDao.deleteAll();
+
+        ReservationTimeAddRequest request = new ReservationTimeAddRequest(LocalTime.MAX);
+        ReservationTime reservationTime = timeDao.add(request);
+
         ReservationCreationRequest defaultReservation = new ReservationCreationRequest(
-                "브라운", LocalDate.MAX, LocalTime.now()
+                "브라운", LocalDate.MAX, reservationTime.getId()
         );
-        reservationDao.add(ReservationCreationDto.from(defaultReservation));
+        reservationDao.add(ReservationCreationDto.from(defaultReservation, reservationTime));
     }
 
     @DisplayName("DB의 모든 예약을 조회한다.")
@@ -41,7 +50,7 @@ class H2ReservationDaoTest {
     @Test
     void addTest() {
         ReservationCreationDto reservation = new ReservationCreationDto(
-                "페드로", LocalDate.MAX, LocalTime.MAX
+                "페드로", LocalDate.MAX, new ReservationTime(1L, LocalTime.MAX)
         );
         reservationDao.add(reservation);
         assertThat(reservationDao.isExist(2L)).isTrue();

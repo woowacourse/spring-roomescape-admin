@@ -1,25 +1,22 @@
 package roomescape.domain;
 
-import com.fasterxml.jackson.annotation.JsonCreator;
 import java.time.LocalDate;
-import java.time.LocalTime;
 
 public class Reservation {
     private final Long id;
     private final Name name;
     private final LocalDate date;
-    private final LocalTime time;
+    private final ReservationTime time;
 
-    @JsonCreator(mode = JsonCreator.Mode.PROPERTIES)
-    public Reservation(Long id, String name, LocalDate date, LocalTime time) {
+    public Reservation(Long id, String name, LocalDate date, ReservationTime time) {
         this.id = id;
         this.name = new Name(name);
         this.date = date;
         this.time = time;
     }
 
-    public Reservation(Long id, String name, String date, String time) {
-        this(id, name, LocalDate.parse(date), LocalTime.parse(time));
+    public Reservation(Long id, String name, String date, ReservationTime time) {
+        this(id, name, LocalDate.parse(date), time);
     }
 
     public boolean hasId(Long id) {
@@ -38,7 +35,7 @@ public class Reservation {
         return date;
     }
 
-    public LocalTime getTime() {
+    public ReservationTime getTime() {
         return time;
     }
 }

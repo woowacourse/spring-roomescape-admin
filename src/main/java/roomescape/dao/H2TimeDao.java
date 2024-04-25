@@ -3,6 +3,8 @@ package roomescape.dao;
 import java.time.LocalTime;
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
+import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;
 import org.springframework.jdbc.core.simple.SimpleJdbcInsert;
@@ -42,6 +44,17 @@ public class H2TimeDao implements TimeDao {
     }
 
     @Override
+    public Optional<ReservationTime> findById(Long id) {
+        String sql = "SELECT * FROM " + TABLE_NAME + " WHERE " + ID_COLUMN_NAME + " = ?";
+        try {
+            return Optional.ofNullable(jdbcTemplate.queryForObject(sql, rowMapper, id));
+        } catch (EmptyResultDataAccessException e) {
+            return Optional.empty();
+        }
+
+    }
+
+    @Override
     public List<ReservationTime> findAll() {
         String sql = "SELECT * FROM " + TABLE_NAME + " ORDER BY " + START_TIME_COLUMN_NAME + " ASC";
         return jdbcTemplate.query(sql, rowMapper);
@@ -57,6 +70,8 @@ public class H2TimeDao implements TimeDao {
     public void deleteAll() {
         String sql = "DELETE FROM " + TABLE_NAME;
         jdbcTemplate.update(sql);
+        // TODO: auto increment key reset 개선
+        jdbcTemplate.update("ALTER TABLE reservation_time ALTER COLUMN id RESTART WITH 1");
     }
 
     @Override

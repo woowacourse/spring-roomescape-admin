@@ -11,7 +11,7 @@ import roomescape.entity.Reservation;
 import roomescape.entity.ReservationTime;
 
 @Repository
-public class JdbcReservationDao implements ReservationDao {
+public class H2ReservationDao implements ReservationDao {
 
     private final JdbcTemplate jdbcTemplate;
     private final SimpleJdbcInsert jdbcInsert;
@@ -21,7 +21,7 @@ public class JdbcReservationDao implements ReservationDao {
             rs.getDate("date").toLocalDate(),
             new ReservationTime(rs.getLong("time_id"), rs.getTime("time_value").toLocalTime()));
 
-    public JdbcReservationDao(JdbcTemplate jdbcTemplate) {
+    public H2ReservationDao(JdbcTemplate jdbcTemplate) {
         this.jdbcTemplate = jdbcTemplate;
         this.jdbcInsert = new SimpleJdbcInsert(jdbcTemplate)
                 .withTableName("reservation")

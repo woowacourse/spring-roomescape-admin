@@ -44,17 +44,10 @@ public class ReservationTimeConsoleController implements ConsoleController {
         List<String> strings = inputView.inputCommandLine();
         Command command = new Command(strings);
         switch (command.getCommandType()) {
-            case POST:
-                postReservationTime(InputConverter.toReservationTimeRequest(command.getBody()));
-                break;
-            case GET:
-                getReservationTimes();
-                break;
-            case DELETE:
-                deleteReservationTime(InputConverter.toId(command.getBody()));
-                break;
-            default:
-                throw new IllegalArgumentException("잘못된 명령어입니다.");
+            case POST -> postReservationTime(InputConverter.toReservationTimeRequest(command.getBody()));
+            case GET -> getReservationTimes();
+            case DELETE -> deleteReservationTime(InputConverter.toId(command.getBody()));
+            default -> throw new IllegalArgumentException("잘못된 명령어입니다.");
         }
     }
 }

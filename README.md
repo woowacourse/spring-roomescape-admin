@@ -182,3 +182,21 @@ HTTP/1.1 200
 - Reservation 초기화 시 null 체크 : by Objects.requireNonNull
 - Dto 분리 : ReservationRequestDto/ReservationResponseDto
 - Reservations 내 자료구조 변경 : List > Map
+
+---
+
+## 2단계 1차 리뷰 반영 사안
+
+- 예약된 시간 검증 기능 추가 : 이미 예약된 시간(날짜와 시간이 동일)이라면 예약이 되지 않도록 예외처리
+- 패키지 구조 변경 : dto > controller.request/controller.response
+- Controller 계층에서 domain 의존성이 생기지 않도록 정적 팩토리 메서드를 활용해 바로 domain to dto
+- SimpleJdbcInsert를 활용한 insert 간편화
+- ReservationDao/ReservationTimeDao : add시 각각 key가 아닌 객체를 반환하도록 리팩터링
+- ReservationTimeDao : 단위 객체 조회(findByID) 시, Optional 반환을 통해 null 값 반환 방지
+
+### DB 스키마 변경
+- 시간 타입 변경 varchar(255) >  Time
+- 날짜 타입 변경 varchar(255) > Date
+- 날짜 변수명 변경 date > reservation_date
+
+

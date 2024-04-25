@@ -5,7 +5,7 @@ import java.util.List;
 
 public class LogicalCondition {
     private final String operator;
-    private List<ComparisonCondition> conditions;
+    private final List<ComparisonCondition> conditions;
 
     private LogicalCondition(String operator) {
         this.operator = operator;

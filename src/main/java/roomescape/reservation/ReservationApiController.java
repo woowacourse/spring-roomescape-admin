@@ -1,6 +1,5 @@
 package roomescape.reservation;
 
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -9,8 +8,11 @@ import java.util.List;
 @RestController
 public class ReservationApiController {
 
-    @Autowired
-    private ReservationService reservationService;
+    private final ReservationService reservationService;
+
+    private ReservationApiController(final ReservationService reservationService) {
+        this.reservationService = reservationService;
+    }
 
     @GetMapping("/reservations")
     public ResponseEntity<List<Reservation>> getAll() {

@@ -1,6 +1,5 @@
 package roomescape.reservation;
 
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import roomescape.reservationtime.ReservationTime;
 import roomescape.reservationtime.ReservationTimeRepository;
@@ -10,10 +9,13 @@ import java.util.List;
 @Service
 public class ReservationService {
 
-    @Autowired
-    private ReservationRepository reservationRepository;
-    @Autowired
-    private ReservationTimeRepository reservationTimeRepository;
+    private final ReservationRepository reservationRepository;
+    private final ReservationTimeRepository reservationTimeRepository;
+
+    private ReservationService(final ReservationTimeRepository reservationTimeRepository, final ReservationRepository reservationRepository) {
+        this.reservationTimeRepository = reservationTimeRepository;
+        this.reservationRepository = reservationRepository;
+    }
 
     public List<Reservation> getReservations() {
         return reservationRepository.findAll();

@@ -6,7 +6,7 @@ import roomescape.dao.ReservationTimeDao;
 import roomescape.domain.reservation.Name;
 import roomescape.domain.reservation.Reservation;
 import roomescape.domain.reservation.ReservationDate;
-import roomescape.dto.ReservationRequestDto;
+import roomescape.controller.request.ReservationRequest;
 
 import java.util.List;
 
@@ -24,8 +24,8 @@ public class ReservationService {
         return reservationDao.findAllReservation();
     }
 
-    public Reservation reserve(ReservationRequestDto reservationRequestDto) {
-        Long savedId = reservationDao.addReservation(createReservation(reservationRequestDto));
+    public Reservation reserve(ReservationRequest reservationRequest) {
+        Long savedId = reservationDao.addReservation(createReservation(reservationRequest));
         return reservationDao.findById(savedId);
     }
 
@@ -33,8 +33,8 @@ public class ReservationService {
         reservationDao.deleteReservation(id);
     }
 
-    private Reservation createReservation(ReservationRequestDto reservationRequestDto) {
-        return new Reservation(new Name(reservationRequestDto.name()), new ReservationDate(reservationRequestDto.date()),
-                reservationTimeDao.findById(reservationRequestDto.timeId()));
+    private Reservation createReservation(ReservationRequest reservationRequest) {
+        return new Reservation(new Name(reservationRequest.name()), new ReservationDate(reservationRequest.date()),
+                reservationTimeDao.findById(reservationRequest.timeId()));
     }
 }

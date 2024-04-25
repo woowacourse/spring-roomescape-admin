@@ -13,7 +13,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.server.ResponseStatusException;
 import roomescape.dao.ReservationDAO;
-import roomescape.dto.ReservationCreateRequestDto;
+import roomescape.dto.ReservationCreateRequest;
 import roomescape.model.Reservation;
 
 @RestController
@@ -31,8 +31,8 @@ public class ReservationController {
     }
 
     @PostMapping("/reservations")
-    public ResponseEntity<Reservation> create(@RequestBody ReservationCreateRequestDto reservationCreateRequestDto) {
-        Reservation reservation = reservationDao.insert(reservationCreateRequestDto);
+    public ResponseEntity<Reservation> create(@RequestBody ReservationCreateRequest reservationCreateRequest) {
+        Reservation reservation = reservationDao.insert(reservationCreateRequest);
         return ResponseEntity.created(URI.create("/reservations/" + reservation.getId())).body(reservation);
     }
 

@@ -9,7 +9,7 @@ import org.springframework.jdbc.core.namedparam.BeanPropertySqlParameterSource;
 import org.springframework.jdbc.core.namedparam.SqlParameterSource;
 import org.springframework.jdbc.core.simple.SimpleJdbcInsert;
 import org.springframework.stereotype.Repository;
-import roomescape.dto.ReservationCreateRequestDto;
+import roomescape.dto.ReservationCreateRequest;
 import roomescape.model.Reservation;
 import roomescape.model.ReservationTime;
 
@@ -49,14 +49,14 @@ public class ReservationDAO {
             new ReservationTime(resultSet.getLong("time_id"),
                     resultSet.getString("time_value")));
 
-    public Reservation insert(ReservationCreateRequestDto reservationCreateRequestDto) {
-        SqlParameterSource params = new BeanPropertySqlParameterSource(reservationCreateRequestDto);
+    public Reservation insert(ReservationCreateRequest reservationCreateRequest) {
+        SqlParameterSource params = new BeanPropertySqlParameterSource(reservationCreateRequest);
         long id = jdbcInsert.executeAndReturnKey(params).longValue();
-        return new Reservation(id, reservationCreateRequestDto.name(),
-                reservationCreateRequestDto.date(),
-                new ReservationTime(reservationCreateRequestDto.timeId(),
+        return new Reservation(id, reservationCreateRequest.name(),
+                reservationCreateRequest.date(),
+                new ReservationTime(reservationCreateRequest.timeId(),
                         jdbcTemplate.queryForObject("SELECT start_at FROM reservation_time WHERE id = ?",
-                                String.class, reservationCreateRequestDto.timeId())));
+                                String.class, reservationCreateRequest.timeId())));
     }
 
     public void delete(Long id) {

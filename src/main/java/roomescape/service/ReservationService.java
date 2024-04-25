@@ -3,14 +3,12 @@ package roomescape.service;
 import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
 import roomescape.domain.Reservation;
 import roomescape.domain.ReservationRepository;
 import roomescape.domain.ReservationTimeRepository;
 import roomescape.dto.app.ReservationAppRequest;
 
 @Service
-@Transactional
 public class ReservationService {
 
     private final ReservationRepository reservationRepository;

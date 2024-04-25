@@ -17,6 +17,7 @@ import static org.hamcrest.Matchers.is;
 class ReservationControllerTest {
 
     private static Map<String, String> params;
+    private static Map<String, String> times;
 
     @BeforeAll
     static void setUp() {
@@ -24,6 +25,9 @@ class ReservationControllerTest {
         params.put("name", "브라운");
         params.put("date", "2023-08-05");
         params.put("time", "15:40");
+
+        times = new HashMap<>();
+        times.put("startAt", "10:00");
     }
 
     @Test

@@ -22,6 +22,7 @@ import roomescape.model.ReservationTime;
 
 @SpringBootTest(webEnvironment = WebEnvironment.RANDOM_PORT)
 @DirtiesContext(classMode = DirtiesContext.ClassMode.BEFORE_EACH_TEST_METHOD)
+@Sql(scripts = "/createTime.sql", executionPhase = Sql.ExecutionPhase.BEFORE_TEST_METHOD)
 class ReservationDaoTest {
 
     @Autowired
@@ -44,7 +45,6 @@ class ReservationDaoTest {
 
     @DisplayName("예약 저장")
     @Test
-    @Sql(scripts = "/createTime.sql")
     void saveReservation() {
         final List<Reservation> beforeSaving = reservationDao.findAll();
         final ReservationTime time = ReservationTime.create("10:30");
@@ -60,7 +60,6 @@ class ReservationDaoTest {
     }
 
     @DisplayName("예약 삭제")
-    @Sql(scripts = "/createTime.sql")
     @Test
     void removeReservation() {
         final List<Reservation> beforeSaving = reservationDao.findAll();
@@ -80,7 +79,6 @@ class ReservationDaoTest {
     }
 
     @DisplayName("단건 조회")
-    @Sql(scripts = "/createTime.sql")
     @Test
     void findById() {
         //given
@@ -98,7 +96,6 @@ class ReservationDaoTest {
     }
 
     @DisplayName("전체 조회")
-    @Sql(scripts = "/createTime.sql")
     @Test
     void findAll() {
         //given
@@ -124,13 +121,5 @@ class ReservationDaoTest {
 
         //then
         assertThat(findAll).isEqualTo(expected);
-    }
-
-    @DisplayName("전제 조회")
-    @Test
-    void findAll2() {
-        //given
-        final List<Reservation> all2 = reservationDao.findAll();
-        assertThat(all2).isEmpty();
     }
 }

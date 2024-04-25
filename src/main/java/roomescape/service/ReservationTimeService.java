@@ -23,4 +23,8 @@ public class ReservationTimeService {
     public List<ReservationTime> findAll() {
         return reservationTimeDAO.selectAll();
     }
+
+    public void delete(final Long id) {
+        reservationTimeDAO.deleteById(id);
+    }
 }

@@ -45,6 +45,6 @@ public class ReservationService {
     }
 
     private boolean hasSameTimeReservation(ReservationRequest reservationRequest) {
-        return reservationDao.findAllByDateTime(createReservation(reservationRequest)).isEmpty();
+        return !reservationDao.findAllByDateTime(createReservation(reservationRequest)).isEmpty();
     }
 }

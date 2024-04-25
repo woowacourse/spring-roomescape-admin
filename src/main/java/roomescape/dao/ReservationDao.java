@@ -55,7 +55,7 @@ public class ReservationDao {
                 " inner join reservation_time as t" +
                 " on r.time_id = t.id" +
                 " WHERE r.reservation_date = ?" +
-                " WHERE r.time_id = ?";
-        return jdbcTemplate.query(sql, reservationRowMapper, reservation.getDate().getDate(), reservation.getTime().getTime());
+                " AND r.time_id = ?";
+        return jdbcTemplate.query(sql, reservationRowMapper, reservation.getDate().getDate(), reservation.getTime().getId().longValue());
     }
 }

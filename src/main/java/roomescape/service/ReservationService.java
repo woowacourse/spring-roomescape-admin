@@ -6,33 +6,33 @@ import roomescape.domain.Reservation;
 import roomescape.domain.ReservationTime;
 import roomescape.dto.ReservationFindResponse;
 import roomescape.dto.ReservationSaveRequest;
-import roomescape.repository.ReservationDao;
+import roomescape.repository.ReservationRepository;
 
 @Service
 public class ReservationService {
 
     private final ReservationTimeService reservationTimeService;
-    private final ReservationDao reservationDao;
+    private final ReservationRepository reservationRepository;
 
-    public ReservationService(ReservationDao reservationDao, ReservationTimeService reservationTimeService) {
-        this.reservationDao = reservationDao;
+    public ReservationService(ReservationRepository reservationRepository, ReservationTimeService reservationTimeService) {
+        this.reservationRepository = reservationRepository;
         this.reservationTimeService = reservationTimeService;
     }
 
     public List<ReservationFindResponse> findAll() {
-        List<Reservation> reservations = reservationDao.findAll();
+        List<Reservation> reservations = reservationRepository.findAll();
         return reservations.stream()
                 .map(ReservationFindResponse::from)
                 .toList();
     }
 
     public void deleteById(Long id) {
-        reservationDao.deleteById(id);
+        reservationRepository.deleteById(id);
     }
 
     public Reservation save(ReservationSaveRequest request) {
         ReservationTime reservationTime = reservationTimeService.findById(request.timeId());
         Reservation reservation = request.toEntity(reservationTime);
-        return reservationDao.save(reservation);
+        return reservationRepository.save(reservation);
     }
 }

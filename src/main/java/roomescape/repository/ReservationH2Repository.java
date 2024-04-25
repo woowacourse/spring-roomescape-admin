@@ -13,7 +13,7 @@ import roomescape.domain.Reservation;
 import roomescape.domain.ReservationTime;
 
 @Repository
-public class ReservationH2Dao implements ReservationDao {
+public class ReservationH2Repository implements ReservationRepository {
 
     private static final RowMapper<Reservation> reservationRowMapper = (resultSet, rowNum) -> new Reservation(
             resultSet.getLong("id"), resultSet.getString("name"), resultSet.getObject("date", LocalDate.class),
@@ -21,7 +21,7 @@ public class ReservationH2Dao implements ReservationDao {
 
     private final JdbcTemplate jdbcTemplate;
 
-    public ReservationH2Dao(JdbcTemplate jdbcTemplate) {
+    public ReservationH2Repository(JdbcTemplate jdbcTemplate) {
         this.jdbcTemplate = jdbcTemplate;
     }
 

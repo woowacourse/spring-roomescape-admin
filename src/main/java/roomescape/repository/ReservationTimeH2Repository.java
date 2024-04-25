@@ -11,7 +11,7 @@ import org.springframework.stereotype.Repository;
 import roomescape.domain.ReservationTime;
 
 @Repository
-public class ReservationTimeH2Dao implements ReservationTimeDao {
+public class ReservationTimeH2Repository implements ReservationTimeRepository {
 
     private static final RowMapper<ReservationTime> reservationTimeRowMapper = (resultSet, rowNum) -> new ReservationTime(
             resultSet.getLong("id"),
@@ -19,7 +19,7 @@ public class ReservationTimeH2Dao implements ReservationTimeDao {
 
     private final JdbcTemplate jdbcTemplate;
 
-    public ReservationTimeH2Dao(JdbcTemplate jdbcTemplate) {
+    public ReservationTimeH2Repository(JdbcTemplate jdbcTemplate) {
         this.jdbcTemplate = jdbcTemplate;
     }
 

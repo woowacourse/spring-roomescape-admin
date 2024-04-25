@@ -1,7 +1,8 @@
-package roomescape.dao;
+package roomescape.repository;
 
 import java.util.ArrayList;
 import java.util.List;
+import roomescape.domain.Reservation;
 
 public class ReservationMemoryDao implements ReservationDao {
 

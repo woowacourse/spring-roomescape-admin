@@ -21,9 +21,9 @@ import org.springframework.boot.test.context.SpringBootTest.WebEnvironment;
 import org.springframework.boot.test.web.server.LocalServerPort;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.test.annotation.DirtiesContext;
-import roomescape.web.ReservationController;
-import roomescape.web.dto.ReservationFindResponse;
-import roomescape.web.dto.ReservationSaveRequest;
+import roomescape.controller.ReservationController;
+import roomescape.dto.ReservationFindResponse;
+import roomescape.dto.ReservationSaveRequest;
 
 @SpringBootTest(webEnvironment = WebEnvironment.RANDOM_PORT)
 @DirtiesContext(classMode = DirtiesContext.ClassMode.BEFORE_EACH_TEST_METHOD)

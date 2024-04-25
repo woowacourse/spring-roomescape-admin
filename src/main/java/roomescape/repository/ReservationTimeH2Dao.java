@@ -1,4 +1,4 @@
-package roomescape.dao;
+package roomescape.repository;
 
 import java.sql.PreparedStatement;
 import java.time.LocalTime;
@@ -8,6 +8,7 @@ import org.springframework.jdbc.core.RowMapper;
 import org.springframework.jdbc.support.GeneratedKeyHolder;
 import org.springframework.jdbc.support.KeyHolder;
 import org.springframework.stereotype.Repository;
+import roomescape.domain.ReservationTime;
 
 @Repository
 public class ReservationTimeH2Dao implements ReservationTimeDao {

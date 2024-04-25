@@ -3,6 +3,7 @@ package roomescape;
 import static org.assertj.core.api.Assertions.assertThat;
 
 import java.time.LocalTime;
+import java.util.List;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -27,5 +28,14 @@ class TimeDaoTest {
         ReservationTime savedTime = reservationTimeDao.save(time);
 
         assertThat(savedTime.getId()).isEqualTo(1);
+    }
+
+    @Test
+    void findAll() {
+        reservationTimeDao.save(time);
+        reservationTimeDao.save(time);
+        List<ReservationTime> reservationTimes = reservationTimeDao.findAll();
+
+        assertThat(reservationTimes).size().isEqualTo(2);
     }
 }

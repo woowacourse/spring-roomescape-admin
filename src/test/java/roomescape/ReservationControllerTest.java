@@ -67,4 +67,13 @@ class ReservationControllerTest {
                 .then().log().all()
                 .statusCode(200);
     }
+
+    @Test
+    void getReservationTimes() {
+        RestAssured.given().log().all()
+                .when().get("/times")
+                .then().log().all()
+                .statusCode(200)
+                .body("size()", is(0));
+    }
 }

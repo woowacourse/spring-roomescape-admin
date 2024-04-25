@@ -13,6 +13,10 @@ public class Reservation {
         this(0, name, dateTime);
     }
 
+    public Reservation(long id, String name, LocalDate date, LocalTime time) {
+        this(id, name, LocalDateTime.of(date, time));
+    }
+
     public Reservation(long id, String name, LocalDateTime dateTime) {
         this.id = id;
         this.name = name;

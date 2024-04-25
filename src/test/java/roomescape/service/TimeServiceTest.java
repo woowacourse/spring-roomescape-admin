@@ -50,4 +50,24 @@ class TimeServiceTest {
         // then
         assertThat(actual).isEqualTo(expected);
     }
+
+    @Test
+    @DisplayName("존재하는 예약 시간을 삭제한다.")
+    void deleteTImePresent() {
+        // given
+        Long id = 2L;
+
+        // when & then
+        assertThat(timeService.deleteTime(id)).isEqualTo(1);
+    }
+
+    @Test
+    @DisplayName("존재하지 않는 예약 시간을 삭제할 경우 반환 값이 0이다.")
+    void deleteTImeNotPresent() {
+        // given
+        Long id = 4L;
+
+        // when & then
+        assertThat(timeService.deleteTime(id)).isEqualTo(0);
+    }
 }

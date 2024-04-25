@@ -4,9 +4,9 @@ import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatCode;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyLong;
-import static roomescape.util.Fixture.GAMJA_RESERVATION;
+import static roomescape.util.Fixture.GAMJA_RESERVATION_AFTER_SAVE;
 import static roomescape.util.Fixture.GAMJA_RESERVATION_RESPONSE;
-import static roomescape.util.Fixture.JOJO_RESERVATION;
+import static roomescape.util.Fixture.JOJO_RESERVATION_AFTER_SAVE;
 import static roomescape.util.Fixture.JOJO_RESERVATION_REQUEST;
 import static roomescape.util.Fixture.JOJO_RESERVATION_RESPONSE;
 import static roomescape.util.Fixture.JOJO_RESERVATION_TIME;
@@ -38,7 +38,7 @@ class ReservationServiceTest {
     @Test
     void findAllReservation() {
         BDDMockito.given(reservationDao.findAll())
-            .willReturn(List.of(JOJO_RESERVATION, GAMJA_RESERVATION));
+            .willReturn(List.of(JOJO_RESERVATION_AFTER_SAVE, GAMJA_RESERVATION_AFTER_SAVE));
 
         List<ReservationResponse> reservations = reservationService.findAll();
 
@@ -51,7 +51,7 @@ class ReservationServiceTest {
         BDDMockito.given(reservationTimeDao.findById(anyLong()))
             .willReturn(JOJO_RESERVATION_TIME);
         BDDMockito.given(reservationDao.save(any()))
-            .willReturn(1L);
+            .willReturn(JOJO_RESERVATION_AFTER_SAVE);
 
         ReservationResponse reservationResponse = reservationService.create(JOJO_RESERVATION_REQUEST);
 

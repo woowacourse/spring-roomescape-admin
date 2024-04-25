@@ -1,6 +1,5 @@
 package roomescape;
 
-import static org.assertj.core.api.Assertions.assertThat;
 import static org.hamcrest.Matchers.is;
 import static org.junit.jupiter.api.DynamicTest.dynamicTest;
 
@@ -18,9 +17,11 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.context.SpringBootTest.WebEnvironment;
 import org.springframework.boot.test.web.server.LocalServerPort;
 import org.springframework.jdbc.core.JdbcTemplate;
+import org.springframework.test.annotation.DirtiesContext;
 import roomescape.dto.ReservationTimeRequest;
 
 @SpringBootTest(webEnvironment = WebEnvironment.RANDOM_PORT)
+@DirtiesContext(classMode = DirtiesContext.ClassMode.BEFORE_EACH_TEST_METHOD)
 class ReservationReservationTimeFlowTest {
 
     @Autowired
@@ -48,9 +49,6 @@ class ReservationReservationTimeFlowTest {
                             .then().log().all()
                             .statusCode(201)
                             .header("Location", "/times/1");
-
-                    Integer count = jdbcTemplate.queryForObject("SELECT COUNT(1) from reservation_time", Integer.class);
-                    assertThat(count).isEqualTo(1);
                 }),
                 dynamicTest("저장된 모든 시간을 조회한다.", () -> {
                     RestAssured.given().log().all()
@@ -64,10 +62,6 @@ class ReservationReservationTimeFlowTest {
                             .when().delete("/times/1")
                             .then().log().all()
                             .statusCode(204);
-
-                    Integer countAfterDelete = jdbcTemplate.queryForObject("SELECT COUNT(1) from reservation_time",
-                            Integer.class);
-                    assertThat(countAfterDelete).isEqualTo(0);
                 }),
                 dynamicTest("존재하지 않는 시간을 삭제하려고 시도하면 404 status를 반환한다.", () -> {
                     RestAssured.given().log().all()

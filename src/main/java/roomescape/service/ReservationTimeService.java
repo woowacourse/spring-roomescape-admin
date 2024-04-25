@@ -20,7 +20,7 @@ public class ReservationTimeService {
     }
 
     public List<ReservationTime> allReservationTimes() {
-        return reservationTimeDao.findAllTimes();
+        return reservationTimeDao.findAll();
     }
 
     public void delete(Long id) {

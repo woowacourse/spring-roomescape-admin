@@ -2,37 +2,32 @@ package roomescape.dao;
 
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;
-import org.springframework.jdbc.support.GeneratedKeyHolder;
-import org.springframework.jdbc.support.KeyHolder;
+import org.springframework.jdbc.core.namedparam.BeanPropertySqlParameterSource;
+import org.springframework.jdbc.core.simple.SimpleJdbcInsert;
 import org.springframework.stereotype.Repository;
 import roomescape.domain.reservation.ReservationTime;
 
-import java.sql.PreparedStatement;
 import java.util.List;
-import java.util.Objects;
 
 @Repository
 public class ReservationTimeDao {
-    private JdbcTemplate jdbcTemplate;
+    private static final String TABLE_NAME = "reservation_time";
+    private static final String ID = "id";
 
-    public ReservationTimeDao(JdbcTemplate jdbcTemplate) {
+    private JdbcTemplate jdbcTemplate;
+    private SimpleJdbcInsert simpleJdbcInsert;
+    private final RowMapper<ReservationTime> timeRowMapper;
+
+    public ReservationTimeDao(JdbcTemplate jdbcTemplate, RowMapper<ReservationTime> timeRowMapper) {
         this.jdbcTemplate = jdbcTemplate;
+        this.simpleJdbcInsert = new SimpleJdbcInsert(this.jdbcTemplate)
+                .withTableName(TABLE_NAME)
+                .usingGeneratedKeyColumns(ID);
+        this.timeRowMapper = timeRowMapper;
     }
 
-    private final RowMapper<ReservationTime> timeRowMapper = ((rs, rowNum) ->
-            new ReservationTime(rs.getLong("id"), rs.getString("start_at")));
-
     public Long add(ReservationTime time) {
-        KeyHolder keyHolder = new GeneratedKeyHolder();
-        jdbcTemplate.update(connection -> {
-            PreparedStatement ps = connection.prepareStatement(
-                    "INSERT INTO RESERVATION_TIME(start_at) VALUES(?)",
-                    new String[]{"id"});
-            ps.setString(1, ReservationTime.formattedTime(time.getTime()));
-            return ps;
-        }, keyHolder);
-
-        return Objects.requireNonNull(keyHolder.getKey()).longValue();
+        return simpleJdbcInsert.executeAndReturnKey(new BeanPropertySqlParameterSource(time)).longValue();
     }
 
     public ReservationTime findById(Long id) {
@@ -40,7 +35,7 @@ public class ReservationTimeDao {
         return jdbcTemplate.queryForObject(sql, timeRowMapper, id);
     }
 
-    public List<ReservationTime> findAllTimes() {
+    public List<ReservationTime> findAll() {
         String sql = "SELECT * FROM RESERVATION_TIME";
         return jdbcTemplate.query(sql, timeRowMapper);
     }

@@ -21,16 +21,16 @@ public class ReservationService {
     }
 
     public List<Reservation> getAllReservations() {
-        return reservationDao.findAllReservation();
+        return reservationDao.findAll();
     }
 
     public Reservation reserve(ReservationRequest reservationRequest) {
-        Long savedId = reservationDao.addReservation(createReservation(reservationRequest));
+        Long savedId = reservationDao.add(createReservation(reservationRequest));
         return reservationDao.findById(savedId);
     }
 
     public void deleteReservation(Long id) {
-        reservationDao.deleteReservation(id);
+        reservationDao.delete(id);
     }
 
     private Reservation createReservation(ReservationRequest reservationRequest) {

@@ -1,18 +1,15 @@
 package roomescape.repository;
 
-import static org.hamcrest.Matchers.is;
+import static org.assertj.core.api.Assertions.assertThat;
 
-import io.restassured.RestAssured;
-import io.restassured.http.ContentType;
-import java.util.Map;
-import org.assertj.core.api.Assertions;
-import org.junit.jupiter.api.BeforeEach;
+import java.time.LocalTime;
+import java.util.List;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.context.SpringBootTest.WebEnvironment;
-import org.springframework.boot.test.web.server.LocalServerPort;
+import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.test.annotation.DirtiesContext;
 import org.springframework.test.annotation.DirtiesContext.ClassMode;
 import roomescape.domain.time.Time;
@@ -21,34 +18,53 @@ import roomescape.domain.time.Time;
 @DirtiesContext(classMode = ClassMode.BEFORE_EACH_TEST_METHOD)
 public class TimeRepositoryTest {
 
-    @LocalServerPort
-    private int port;
-
     @Autowired
     private H2TimeRepository timeRepository;
 
-    private final Map<String, String> params = Map.of(
-            "startAt", "17:00"
-    );
+    @Autowired
+    private JdbcTemplate jdbcTemplate;
 
-    @BeforeEach
-    void setUp() {
-        RestAssured.port = port;
-    }
+    private Time time = new Time(1L, LocalTime.of(17, 30));
 
     @Test
     @DisplayName("등록된 시간의 id를 통해 단건 조회할 수 있다.")
     void findTimeById() {
-        RestAssured.given().log().all()
-                .contentType(ContentType.JSON)
-                .body(params)
-                .when().post("/times")
-                .then().log().all()
-                .statusCode(201)
-                .body("id", is(1))
-                .header("Location", "/times/1");
+        timeRepository.create(time);
 
-        Time time = timeRepository.findById(1L);
-        Assertions.assertThat(time.getId()).isEqualTo(1L);
+        Time foundTime = timeRepository.findById(1L);
+
+        assertThat(foundTime.getId()).isEqualTo(1L);
+    }
+
+    @Test
+    @DisplayName("repository를 통해 조회한 시간 수는 DB를 통해 조회한 시간 수와 같다.")
+    void readDbTimes() {
+        timeRepository.create(time);
+
+        List<Time> times = timeRepository.findAll();
+        Integer count = jdbcTemplate.queryForObject("SELECT count(*) from reservation_time", Integer.class);
+
+        assertThat(times.size()).isEqualTo(count);
+    }
+
+    @Test
+    @DisplayName("하나의 시간만 등록한 경우, DB를 조회 했을 때 조회 결과 개수는 1개이다.")
+    void postTimeIntoDb() {
+        timeRepository.create(time);
+
+        List<Time> times = timeRepository.findAll();
+
+        assertThat(times.size()).isEqualTo(1);
+    }
+
+    @Test
+    @DisplayName("하나의 시간만 등록한 경우, 시간 삭제 뒤 DB를 조회 했을 때 조회 결과 개수는 0개이다.")
+    void readTimesSizeFromDbAfterPostAndDelete() {
+        timeRepository.create(time);
+
+        timeRepository.delete(1L);
+        List<Time> times = timeRepository.findAll();
+
+        assertThat(times.size()).isEqualTo(0);
     }
 }

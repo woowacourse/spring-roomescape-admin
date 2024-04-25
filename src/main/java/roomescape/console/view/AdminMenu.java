@@ -17,7 +17,7 @@ public enum AdminMenu {
     public static AdminMenu from(int inputNumber) {
         return Arrays.stream(AdminMenu.values())
                 .filter(adminMenu -> adminMenu.menuNumber == inputNumber)
-                .findFirst()
+                .findAny()
                 .orElseThrow(() -> new IllegalArgumentException("잘못된 명령어입니다."));
     }
 }

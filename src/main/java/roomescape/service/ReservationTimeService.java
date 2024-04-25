@@ -2,6 +2,7 @@ package roomescape.service;
 
 import java.util.List;
 import org.springframework.stereotype.Service;
+import roomescape.controller.request.ReservationTimeRequest;
 import roomescape.model.ReservationTime;
 import roomescape.repository.ReservationTimeDAO;
 
@@ -18,7 +19,8 @@ public class ReservationTimeService {
         return reservationTimeDAO.selectAllReservationTimes();
     }
 
-    public ReservationTime addReservationTime(ReservationTime reservationTime) {
+    public ReservationTime addReservationTime(ReservationTimeRequest request) {
+        ReservationTime reservationTime = new ReservationTime(request.startAt());
         return reservationTimeDAO.insertReservationTime(reservationTime);
     }
 

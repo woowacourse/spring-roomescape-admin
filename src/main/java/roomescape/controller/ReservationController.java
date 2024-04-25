@@ -11,19 +11,15 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
 import roomescape.controller.request.ReservationRequest;
 import roomescape.model.Reservation;
-import roomescape.model.ReservationTime;
 import roomescape.service.ReservationService;
-import roomescape.service.ReservationTimeService;
 
 @RestController
 public class ReservationController {
 
     private final ReservationService reservationService;
-    private final ReservationTimeService reservationTimeService;
 
-    public ReservationController(ReservationService reservationService, ReservationTimeService reservationTimeService) {
+    public ReservationController(ReservationService reservationService) {
         this.reservationService = reservationService;
-        this.reservationTimeService = reservationTimeService;
     }
 
 
@@ -34,10 +30,8 @@ public class ReservationController {
 
     @PostMapping("/reservations")
     public ResponseEntity<Reservation> addReservation(@RequestBody ReservationRequest request) {
-        ReservationTime reservationTime = reservationTimeService.findReservationTime(request.timeId());
-        Reservation reservation = new Reservation(request.name(), request.date(), reservationTime);
-        Reservation storedReservation = reservationService.addReservation(reservation);
-        return ResponseEntity.created(URI.create("/reservations/" + storedReservation.getId())).body(reservation);
+        Reservation reservation = reservationService.addReservation(request);
+        return ResponseEntity.created(URI.create("/reservations/" + reservation.getId())).body(reservation);
     }
 
     @DeleteMapping("/reservations/{id}")

@@ -7,6 +7,7 @@ import io.restassured.http.ContentType;
 import java.lang.reflect.Field;
 import java.time.LocalDate;
 import java.util.List;
+import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -40,13 +41,14 @@ class ReservationControllerTest {
 
         Integer count = jdbcTemplate.queryForObject("SELECT count(1) from reservation", Integer.class);
 
-        assertThat(reservations.size()).isEqualTo(count);
+        Assertions.assertThat(reservations).hasSize(count);
     }
 
     @DisplayName("예약을 추가할 수 있다.")
     @Test
     void should_insert_reservation() {
-        jdbcTemplate.update("INSERT INTO reservation_time (start_at) VALUES (?)", "10:00");
+        Integer count1 = jdbcTemplate.queryForObject("SELECT count(1) from reservation", Integer.class);
+        System.out.println("count1 = " + count1);
         ReservationRequest request = new ReservationRequest(
                 LocalDate.of(2023, 8, 5),
                 "브라운",
@@ -61,6 +63,7 @@ class ReservationControllerTest {
                 .header("Location", "/reservations/1");
 
         Integer count = jdbcTemplate.queryForObject("SELECT count(1) from reservation", Integer.class);
+        System.out.println("count = " + count);
         assertThat(count).isEqualTo(1);
     }
 

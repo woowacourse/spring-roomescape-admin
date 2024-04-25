@@ -9,12 +9,14 @@ import java.util.List;
 import java.util.NoSuchElementException;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
+import roomescape.controller.request.ReservationRequest;
 import roomescape.model.Reservation;
 import roomescape.model.ReservationTime;
 import roomescape.repository.ReservationDAO;
 
 class ReservationServiceTest {
-    ReservationService reservationService = new ReservationService(new FakeReservationDAO());
+    ReservationService reservationService = new ReservationService(new FakeReservationDAO(),
+            new FakeReservationTimeDAO());
 
     @DisplayName("모든 예약 시간을 반환한다")
     @Test
@@ -26,9 +28,8 @@ class ReservationServiceTest {
     @DisplayName("예약 시간을 추가한다")
     @Test
     void should_add_reservation_times() {
-        ReservationTime reservationTime = new ReservationTime(1, LocalTime.of(10, 0));
         reservationService.addReservation(
-                new Reservation("네오", LocalDate.of(2024, 9, 1), reservationTime));
+                new ReservationRequest(LocalDate.of(2024, 9, 1), "네오", 1));
         List<Reservation> allReservations = reservationService.findAllReservations();
         assertThat(allReservations).hasSize(3);
     }

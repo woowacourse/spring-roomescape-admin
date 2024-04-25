@@ -26,4 +26,12 @@ public class ReservationTimeResponseDto {
     public String getStartAt() {
         return startAt;
     }
+
+    @Override
+    public String toString() {
+        return "{" +
+                "id=" + id +
+                ", startAt='" + startAt + '\'' +
+                '}';
+    }
 }

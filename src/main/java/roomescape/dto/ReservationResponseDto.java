@@ -40,4 +40,14 @@ public class ReservationResponseDto {
     public ReservationTimeResponseDto getTime() {
         return time;
     }
+
+    @Override
+    public String toString() {
+        return "{" +
+                "id=" + id +
+                ", name='" + name + '\'' +
+                ", date='" + date + '\'' +
+                ", time=" + time +
+                '}';
+    }
 }

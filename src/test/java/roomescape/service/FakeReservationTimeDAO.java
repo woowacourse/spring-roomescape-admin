@@ -16,12 +16,12 @@ class FakeReservationTimeDAO implements ReservationTimeDAO {
 
 
     @Override
-    public List<ReservationTime> selectAllReservationTimes() {
+    public List<ReservationTime> findAllReservationTimes() {
         return reservationTimes;
     }
 
     @Override
-    public ReservationTime selectReservationById(long id) {
+    public ReservationTime findReservationById(long id) {
         return reservationTimes.stream()
                 .filter(reservationTime -> reservationTime.getId() == id)
                 .findFirst()
@@ -29,7 +29,7 @@ class FakeReservationTimeDAO implements ReservationTimeDAO {
     }
 
     @Override
-    public ReservationTime insertReservationTime(ReservationTime reservationTime) {
+    public ReservationTime addReservationTime(ReservationTime reservationTime) {
         reservationTimes.add(reservationTime);
         reservationTime.setId(3);
         return reservationTime;

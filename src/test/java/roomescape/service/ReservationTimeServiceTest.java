@@ -38,7 +38,7 @@ class ReservationTimeServiceTest {
     @DisplayName("예약 시간을 삭제한다")
     @Test
     void should_remove_reservation_times() {
-        reservationTimeService.removeReservationTime(1);
+        reservationTimeService.deleteReservationTime(1);
         List<ReservationTime> allReservationTimes = reservationTimeService.findAllReservationTimes();
         assertThat(allReservationTimes).hasSize(1);
     }

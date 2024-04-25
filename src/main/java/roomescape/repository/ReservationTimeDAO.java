@@ -4,11 +4,11 @@ import java.util.List;
 import roomescape.model.ReservationTime;
 
 public interface ReservationTimeDAO {
-    List<ReservationTime> selectAllReservationTimes();
+    List<ReservationTime> findAllReservationTimes();
 
-    ReservationTime selectReservationById(long id);
+    ReservationTime findReservationById(long id);
 
-    ReservationTime insertReservationTime(ReservationTime reservationTime);
+    ReservationTime addReservationTime(ReservationTime reservationTime);
 
     void deleteReservationTime(long id);
 }

@@ -25,7 +25,7 @@ public class ReservationDAOImpl implements ReservationDAO {
     }
 
     @Override
-    public List<Reservation> selectAllReservations() {
+    public List<Reservation> getAllReservations() {
         String sql = """
                 select
                     r.id as reservation_id,
@@ -50,7 +50,7 @@ public class ReservationDAOImpl implements ReservationDAO {
     }
 
     @Override
-    public Reservation insertReservation(Reservation reservation) {
+    public Reservation addReservation(Reservation reservation) {
         Map<String, Object> parameters = new HashMap<>(3);
         parameters.put("name", reservation.getName());
         parameters.put("date", reservation.getDate());

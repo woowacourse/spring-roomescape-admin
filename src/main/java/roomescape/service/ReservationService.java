@@ -20,15 +20,15 @@ public class ReservationService {
     }
 
     public List<Reservation> findAllReservations() {
-        return reservationDAO.selectAllReservations();
+        return reservationDAO.getAllReservations();
     }
 
     public Reservation addReservation(ReservationRequest request) {
-        ReservationTime reservationTime = reservationTimeDAO.selectReservationById(request.timeId());
-        return reservationDAO.insertReservation(new Reservation(request.name(), request.date(), reservationTime));
+        ReservationTime reservationTime = reservationTimeDAO.findReservationById(request.timeId());
+        return reservationDAO.addReservation(new Reservation(request.name(), request.date(), reservationTime));
     }
 
-    public void removeReservation(long id) {
+    public void deleteReservation(long id) {
         reservationDAO.deleteReservation(id);
     }
 }

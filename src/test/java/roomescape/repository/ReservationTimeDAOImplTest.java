@@ -74,14 +74,14 @@ class ReservationTimeDAOImplTest {
     @DisplayName("모든 예약 시간을 조회한다")
     @Test
     void should_get_reservation_times() {
-        List<ReservationTime> reservationTimes = reservationTimeDAOImpl.selectAllReservationTimes();
+        List<ReservationTime> reservationTimes = reservationTimeDAOImpl.findAllReservationTimes();
         assertThat(reservationTimes).hasSize(2);
     }
 
     @DisplayName("예약 시간을 추가한다")
     @Test
     void should_add_reservation_time() {
-        reservationTimeDAOImpl.insertReservationTime(new ReservationTime(LocalTime.of(12, 0)));
+        reservationTimeDAOImpl.addReservationTime(new ReservationTime(LocalTime.of(12, 0)));
         Integer count = jdbcTemplate.queryForObject("select count(1) from reservation_time", Integer.class);
         assertThat(count).isEqualTo(3);
     }
@@ -97,7 +97,7 @@ class ReservationTimeDAOImplTest {
     @DisplayName("아이디에 해당하는 예약 시간을 조회한다.")
     @Test
     void should_get_reservation_time() {
-        ReservationTime reservationTime = reservationTimeDAOImpl.selectReservationById(1);
+        ReservationTime reservationTime = reservationTimeDAOImpl.findReservationById(1);
         assertThat(reservationTime.getStartAt()).isEqualTo(LocalTime.of(10, 0));
     }
 }

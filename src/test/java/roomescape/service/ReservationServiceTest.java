@@ -37,7 +37,7 @@ class ReservationServiceTest {
     @DisplayName("예약 시간을 삭제한다")
     @Test
     void should_remove_reservation_times() {
-        reservationService.removeReservation(1);
+        reservationService.deleteReservation(1);
         List<Reservation> allReservations = reservationService.findAllReservations();
         assertThat(allReservations).hasSize(1);
     }
@@ -51,12 +51,12 @@ class ReservationServiceTest {
                         new ReservationTime(2, LocalTime.of(11, 0)))));
 
         @Override
-        public List<Reservation> selectAllReservations() {
+        public List<Reservation> getAllReservations() {
             return reservations;
         }
 
         @Override
-        public Reservation insertReservation(Reservation reservation) {
+        public Reservation addReservation(Reservation reservation) {
             reservations.add(reservation);
             return reservation;
         }

@@ -16,19 +16,19 @@ public class ReservationTimeService {
     }
 
     public List<ReservationTime> findAllReservationTimes() {
-        return reservationTimeDAO.selectAllReservationTimes();
+        return reservationTimeDAO.findAllReservationTimes();
     }
 
     public ReservationTime addReservationTime(ReservationTimeRequest request) {
         ReservationTime reservationTime = new ReservationTime(request.startAt());
-        return reservationTimeDAO.insertReservationTime(reservationTime);
+        return reservationTimeDAO.addReservationTime(reservationTime);
     }
 
     public ReservationTime findReservationTime(long id) {
-        return reservationTimeDAO.selectReservationById(id);
+        return reservationTimeDAO.findReservationById(id);
     }
 
-    public void removeReservationTime(long id) {
+    public void deleteReservationTime(long id) {
         reservationTimeDAO.deleteReservationTime(id);
     }
 }

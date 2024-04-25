@@ -24,7 +24,7 @@ public class ReservationTimeDAOImpl implements ReservationTimeDAO {
     }
 
     @Override
-    public List<ReservationTime> selectAllReservationTimes() {
+    public List<ReservationTime> findAllReservationTimes() {
         String sql = "select id, start_at from reservation_time";
         return jdbcTemplate.query(sql, (resultSet, rowNum) ->
                 new ReservationTime(
@@ -34,7 +34,7 @@ public class ReservationTimeDAOImpl implements ReservationTimeDAO {
     }
 
     @Override
-    public ReservationTime selectReservationById(long id) {
+    public ReservationTime findReservationById(long id) {
         String sql = "select * from reservation_time where id = ?";
         return jdbcTemplate.queryForObject(sql, (resultSet, rowNum) ->
                 new ReservationTime(
@@ -44,7 +44,7 @@ public class ReservationTimeDAOImpl implements ReservationTimeDAO {
     }
 
     @Override
-    public ReservationTime insertReservationTime(ReservationTime reservationTime) {
+    public ReservationTime addReservationTime(ReservationTime reservationTime) {
         Map<String, Object> parameters = new HashMap<>(1);
         parameters.put("start_at", reservationTime.getStartAt());
         Number newId = insertActor.executeAndReturnKey(parameters);

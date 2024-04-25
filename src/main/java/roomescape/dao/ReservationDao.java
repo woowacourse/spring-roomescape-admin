@@ -14,4 +14,6 @@ public interface ReservationDao {
     void deleteAll();
 
     boolean isExist(Long id);
+
+    boolean isExistByTimeId(Long timeId);
 }

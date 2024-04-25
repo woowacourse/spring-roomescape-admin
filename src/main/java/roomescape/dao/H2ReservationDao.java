@@ -79,8 +79,18 @@ public class H2ReservationDao implements ReservationDao {
     @Override
     public boolean isExist(Long id) {
         String sql = "SELECT id FROM reservation WHERE id = ? LIMIT 1";
-        return !jdbcTemplate.query(sql,
-                (rs, rowNum) -> rs.getInt("id"), id
+        return checkMatchedRowExistByIdColumn(sql, id.toString());
+    }
+
+    @Override
+    public boolean isExistByTimeId(Long timeId) {
+        String sql = "SELECT id FROM reservation WHERE time_id = ? LIMIT 1";
+        return checkMatchedRowExistByIdColumn(sql, timeId.toString());
+    }
+
+    private boolean checkMatchedRowExistByIdColumn(String singleParameterizedSql, String param) {
+        return !jdbcTemplate.query(singleParameterizedSql,
+                (rs, rowNum) -> rs.getInt("id"), param
         ).isEmpty();
     }
 }

@@ -4,9 +4,9 @@ import static org.assertj.core.api.Assertions.assertThat;
 
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
-import roomescape.model.Reservation2;
+import roomescape.model.Reservation;
 
-class ReservationResponseV2Test {
+class ReservationResponseTest {
 
     @DisplayName("dto 변환")
     @Test
@@ -18,10 +18,10 @@ class ReservationResponseV2Test {
         final String startAt = "13:00";
 
         final TimeResponse timeResponse = new TimeResponse(timeId, startAt);
-        final ReservationResponseV2 reservationResponseV2 = new ReservationResponseV2(id, name, date, timeResponse);
+        final ReservationResponse reservationResponse = new ReservationResponse(id, name, date, timeResponse);
 
-        final Reservation2 reservation = new Reservation2(id, name, date, timeId, startAt);
+        final Reservation reservation = new Reservation(id, name, date, timeId, startAt);
 
-        assertThat(ReservationResponseV2.from(reservation)).isEqualTo(reservationResponseV2);
+        assertThat(ReservationResponse.from(reservation)).isEqualTo(reservationResponse);
     }
 }

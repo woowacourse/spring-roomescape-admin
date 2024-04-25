@@ -11,7 +11,7 @@ import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.support.GeneratedKeyHolder;
 import org.springframework.jdbc.support.KeyHolder;
 import org.springframework.stereotype.Repository;
-import roomescape.model.Reservation2;
+import roomescape.model.Reservation;
 
 @Repository
 public class ReservationDao {
@@ -22,7 +22,7 @@ public class ReservationDao {
         this.jdbcTemplate = new JdbcTemplate(dataSource);
     }
 
-    public Reservation2 save(final Reservation2 reservation, final long timeId) {
+    public Reservation save(final Reservation reservation, final long timeId) {
         final String sql = "INSERT INTO reservation (name, date, time_id) VALUES (?, ?, ?)";
         final KeyHolder keyHolder = new GeneratedKeyHolder();
 
@@ -38,7 +38,7 @@ public class ReservationDao {
         return reservation.toReservation(id);
     }
 
-    public Optional<Reservation2> findById(final long id) {
+    public Optional<Reservation> findById(final long id) {
         final String sql = """
                 SELECT
                     r.id as reservation_id,
@@ -53,8 +53,8 @@ public class ReservationDao {
                 """;
 
         try {
-            final Reservation2 reservation = jdbcTemplate.queryForObject(
-                    sql, (resultSet, rowNum) -> new Reservation2(
+            final Reservation reservation = jdbcTemplate.queryForObject(
+                    sql, (resultSet, rowNum) -> new Reservation(
                             resultSet.getLong("id"),
                             resultSet.getString("name"),
                             resultSet.getString("date"),
@@ -67,7 +67,7 @@ public class ReservationDao {
         }
     }
 
-    public List<Reservation2> findAll() {
+    public List<Reservation> findAll() {
         final String sql = """
                 SELECT
                     r.id as reservation_id,
@@ -81,7 +81,7 @@ public class ReservationDao {
 
         return jdbcTemplate.query(
                 sql,
-                (resultSet, rowNum) -> new Reservation2(
+                (resultSet, rowNum) -> new Reservation(
                         resultSet.getLong("id"),
                         resultSet.getString("name"),
                         resultSet.getString("date"),

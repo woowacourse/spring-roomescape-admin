@@ -11,8 +11,8 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.test.annotation.DirtiesContext;
 import org.springframework.test.context.jdbc.Sql;
-import roomescape.dto.ReservationRequestV2;
-import roomescape.dto.ReservationResponseV2;
+import roomescape.dto.ReservationRequest;
+import roomescape.dto.ReservationResponse;
 
 @SpringBootTest(webEnvironment = WebEnvironment.RANDOM_PORT)
 @DirtiesContext(classMode = DirtiesContext.ClassMode.BEFORE_EACH_TEST_METHOD)
@@ -32,7 +32,7 @@ class ReservationControllerTest {
     @Test
     void saveReservation() {
         //given
-        final ReservationRequestV2 reservation = new ReservationRequestV2("2024-04-18", "레디", 1L);
+        final ReservationRequest reservation = new ReservationRequest("2024-04-18", "레디", 1L);
 
         //when
         controller.save(reservation);
@@ -47,11 +47,11 @@ class ReservationControllerTest {
     @Test
     void deleteReservation() {
         //given
-        final ReservationRequestV2 reservation = new ReservationRequestV2("2024-04-18", "레디", 1L);
+        final ReservationRequest reservation = new ReservationRequest("2024-04-18", "레디", 1L);
 
-        final ResponseEntity<ReservationResponseV2> saved = controller.save(reservation);
+        final ResponseEntity<ReservationResponse> saved = controller.save(reservation);
 
-        final ReservationResponseV2 body = saved.getBody();
+        final ReservationResponse body = saved.getBody();
 
         //when
         assert body != null;

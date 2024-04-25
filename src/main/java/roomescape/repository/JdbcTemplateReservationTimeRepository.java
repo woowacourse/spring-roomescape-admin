@@ -22,13 +22,17 @@ public class JdbcTemplateReservationTimeRepository implements ReservationTimeRep
     @Override
     public ReservationTime save(ReservationTimeRequest reservationTimeRequest) {
         KeyHolder keyHolder = new GeneratedKeyHolder();
+        save(reservationTimeRequest, keyHolder);
+        return new ReservationTime(keyHolder.getKey().longValue(), reservationTimeRequest.startAt());
+    }
+
+    private void save(ReservationTimeRequest reservationTimeRequest, KeyHolder keyHolder) {
         jdbcTemplate.update(con -> {
             PreparedStatement pstmt = con.prepareStatement("insert into reservation_time(start_at) values ( ? )",
                     new String[]{"id"});
             pstmt.setTime(1, Time.valueOf(reservationTimeRequest.startAt()));
             return pstmt;
         }, keyHolder);
-        return new ReservationTime(keyHolder.getKey().longValue(), reservationTimeRequest.startAt());
     }
 
     @Override

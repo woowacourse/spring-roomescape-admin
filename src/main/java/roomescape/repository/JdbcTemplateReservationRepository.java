@@ -23,15 +23,25 @@ public class JdbcTemplateReservationRepository implements ReservationRepository 
 
     @Override
     public Reservation save(ReservationRequest reservationRequest) {
+        ReservationTime reservationTime = findReservationTime(reservationRequest);
+        Reservation reservation = new Reservation(null, reservationRequest.name(), reservationRequest.date(),
+                reservationTime);
+        KeyHolder keyHolder = new GeneratedKeyHolder();
+        save(reservation, keyHolder);
+        long id = keyHolder.getKey().longValue();
+        return new Reservation(id, reservation);
+    }
+
+    private ReservationTime findReservationTime(ReservationRequest reservationRequest) {
         String reservationTimeSelectSql = "select * from reservation_time where id = ?";
-        ReservationTime reservationTime = jdbcTemplate.queryForObject(reservationTimeSelectSql, (rs, rowNum) -> {
+        return jdbcTemplate.queryForObject(reservationTimeSelectSql, (rs, rowNum) -> {
             long id = rs.getLong(1);
             LocalTime startAt = rs.getTime(2).toLocalTime();
             return new ReservationTime(id, startAt);
         }, reservationRequest.timeId());
-        Reservation reservation = new Reservation(null, reservationRequest.name(), reservationRequest.date(),
-                reservationTime);
-        KeyHolder keyHolder = new GeneratedKeyHolder();
+    }
+
+    private void save(Reservation reservation, KeyHolder keyHolder) {
         jdbcTemplate.update(con -> {
             String sql = "insert into reservation(name,date,time_id) values ( ?,?,? )";
             PreparedStatement preparedStatement = con.prepareStatement(sql, new String[]{"id"});
@@ -40,8 +50,6 @@ public class JdbcTemplateReservationRepository implements ReservationRepository 
             preparedStatement.setLong(3, reservation.getReservationTime().getId());
             return preparedStatement;
         }, keyHolder);
-        long id = keyHolder.getKey().longValue();
-        return new Reservation(id, reservation);
     }
 
     @Override

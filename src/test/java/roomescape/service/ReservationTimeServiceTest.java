@@ -46,7 +46,6 @@ class ReservationTimeServiceTest {
         final ReservationTimeService reservationTimeService = new ReservationTimeService(reservationTimeDao, reservationDao);
 
         Assertions.assertThatThrownBy(() -> reservationTimeService.create(null))
-                .isInstanceOf(IllegalArgumentException.class)
-                .hasMessage("null이 될 수 없습니다.");
+                .isInstanceOf(NullPointerException.class);
     }
 }

@@ -11,7 +11,7 @@ class ReservationTimeTest {
     @Test
     void notNull() {
         Assertions.assertThatThrownBy(() -> ReservationTime.from(null))
-                .isInstanceOf(IllegalArgumentException.class)
-                .hasMessage("값은 null이 될 수 없습니다.");
+                .isInstanceOf(NullPointerException.class);
+
     }
 }

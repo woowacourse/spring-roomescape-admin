@@ -1,7 +1,6 @@
 package roomescape.repository;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.support.GeneratedKeyHolder;
 import org.springframework.jdbc.support.KeyHolder;
@@ -34,16 +33,12 @@ public class H2ReservationTimeDao implements ReservationTimeDao {
     public Optional<ReservationTime> findById(long id) {
         String sql = "SELECT id, start_at FROM reservation_time WHERE id = ?";
 
-        try {
-            ReservationTime reservationTime = jdbcTemplate.queryForObject(sql,
-                    (rs, rowNum) -> new ReservationTime(
-                            rs.getLong("id"),
-                            rs.getString("start_at")
-                    ), id);
-            return Optional.of(reservationTime);
-        } catch (EmptyResultDataAccessException exception) {
-            return Optional.empty();
-        }
+        return jdbcTemplate.query(sql,
+                        (rs, rowNum) -> new ReservationTime(
+                                rs.getLong("id"),
+                                rs.getString("start_at")
+                        ), id).stream()
+                .findAny();
     }
 
     @Override

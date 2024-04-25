@@ -1,4 +1,4 @@
-package roomescape.domain;
+package roomescape.reservation.domain;
 
 public class Reservation {
 
@@ -22,7 +22,6 @@ public class Reservation {
     }
 
     public Reservation(final String name, final String date, final String time) {
-        this.id = id;
         this.name = name;
         this.date = date;
         this.time = time;

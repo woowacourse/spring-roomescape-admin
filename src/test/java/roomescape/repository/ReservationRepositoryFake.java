@@ -1,7 +1,7 @@
 package roomescape.repository;
 
-import roomescape.domain.Reservation;
-import roomescape.repository.reservation.ReservationRepository;
+import roomescape.reservation.domain.Reservation;
+import roomescape.reservation.repository.ReservationRepository;
 
 import java.util.List;
 import java.util.Map;

@@ -1,4 +1,4 @@
-package roomescape.dto.reservation.response;
+package roomescape.reservation.dto;
 
 public record ReservationResponseDto(
         Long id,

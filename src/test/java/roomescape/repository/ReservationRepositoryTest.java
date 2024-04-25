@@ -2,14 +2,14 @@ package roomescape.repository;
 
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
-import roomescape.domain.Reservation;
-import roomescape.repository.reservation.ReservationRepository;
+import roomescape.reservation.domain.Reservation;
+import roomescape.reservation.repository.ReservationRepository;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
 class ReservationRepositoryTest {
 
-    private ReservationRepository reservationRepository = new ReservationRepositoryFake();
+    private final ReservationRepository reservationRepository = new ReservationRepositoryFake();
 
     @DisplayName("예약 정보 삽입 테스트")
     @Test

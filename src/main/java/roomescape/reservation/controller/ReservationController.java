@@ -1,4 +1,4 @@
-package roomescape.controller;
+package roomescape.reservation.controller;
 
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -7,10 +7,10 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
-import roomescape.dto.reservation.request.ReservationRequestDto;
-import roomescape.dto.reservation.response.ReservationResponseDto;
-import roomescape.dto.reservation.response.ReservationsResponseDto;
-import roomescape.service.reservation.ReservationService;
+import roomescape.reservation.dto.ReservationRequestDto;
+import roomescape.reservation.dto.ReservationResponseDto;
+import roomescape.reservation.dto.ReservationsResponseDto;
+import roomescape.reservation.service.ReservationService;
 
 import java.net.URI;
 

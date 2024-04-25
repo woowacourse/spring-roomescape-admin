@@ -1,6 +1,5 @@
 package roomescape.controller;
 
-import java.net.URI;
 import java.sql.Date;
 import java.sql.PreparedStatement;
 import java.sql.Time;
@@ -57,14 +56,14 @@ public class ReservationController {
         ReservationResponse reservationResponse = new ReservationResponse(id, reservationRequest.name(),
                 reservationRequest.date().toString(), reservationRequest.time().toString());
 
-        return ResponseEntity.created(URI.create("/reservations/" + id)).body(reservationResponse);
+        return ResponseEntity.ok(reservationResponse);
     }
 
     @DeleteMapping("/{id}")
     public ResponseEntity<Void> delete(@PathVariable Long id) {
         jdbcTemplate.update("delete from reservation where id = ?", id);
 
-        return ResponseEntity.noContent().build();
+        return ResponseEntity.ok().build();
     }
 
     private List<Reservation> getReservations() {

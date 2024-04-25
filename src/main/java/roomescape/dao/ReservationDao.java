@@ -48,17 +48,29 @@ public class ReservationDao {
         return jdbcTemplate.queryForObject(sql, rowMapper, id);
     }
 
+    public Long readReservationCountByTimeId(long time_id) {
+        String sql = """
+                SELECT count(reservation.time_id)
+                FROM reservation
+                JOIN reservation_time ON reservation.time_id = reservation_time.id
+                WHERE reservation.time_id = ?
+                """;
+        return jdbcTemplate.queryForObject(sql, Long.class, time_id);
+    }
+
     public long createReservation(ReservationCreateRequest dto) {
         KeyHolder keyHolder = new GeneratedKeyHolder();
         String sql = "INSERT INTO reservation (name, date, time_id) values (?, ?, ?)";
 
-        return jdbcTemplate.update(connection -> {
+        jdbcTemplate.update(connection -> {
             PreparedStatement preparedStatement = connection.prepareStatement(sql, new String[]{"id"});
             preparedStatement.setString(1, dto.name());
             preparedStatement.setString(2, dto.date());
             preparedStatement.setLong(3, dto.timeId());
             return preparedStatement;
         }, keyHolder);
+
+        return keyHolder.getKey().longValue();
     }
 
     public void deleteReservation(long id) {

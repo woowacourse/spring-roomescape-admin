@@ -37,11 +37,13 @@ public class TimeDao {
         KeyHolder keyHolder = new GeneratedKeyHolder();
         String sql = "INSERT INTO reservation_time(start_at) VALUES (?)";
 
-        return jdbcTemplate.update((connection) -> {
+        jdbcTemplate.update((connection) -> {
             PreparedStatement preparedStatement = connection.prepareStatement(sql, new String[]{"id"});
             preparedStatement.setString(1, startAt);
             return preparedStatement;
         }, keyHolder);
+
+        return keyHolder.getKey().longValue();
     }
 
     public void deleteTime(long id) {

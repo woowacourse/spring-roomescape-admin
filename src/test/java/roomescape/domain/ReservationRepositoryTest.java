@@ -34,9 +34,6 @@ class ReservationRepositoryTest {
     @BeforeEach
     void setUp() {
         reservationRepository = new ReservationRepository(jdbcTemplate);
-        List<Reservation> reservations = reservationRepository.findAll();
-        reservations.forEach(reservation -> System.out.println(
-                "reservation.getId() = " + reservation.getId() + " time = " + reservation.getTime()));
     }
 
     @Test

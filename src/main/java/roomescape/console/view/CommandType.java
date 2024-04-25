@@ -17,7 +17,7 @@ public enum CommandType {
     public static CommandType from(String command) {
         return Arrays.stream(CommandType.values())
                 .filter(element -> element.command.equalsIgnoreCase(command))
-                .findFirst()
+                .findAny()
                 .orElseThrow(() -> new IllegalArgumentException("잘못된 명령어입니다."));
     }
 }

@@ -1,7 +1,6 @@
 package roomescape.domain;
 
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import static org.junit.jupiter.api.Assertions.assertAll;
 
 import java.time.LocalTime;
@@ -11,9 +10,9 @@ import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.jdbc.JdbcTest;
-import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.test.context.jdbc.Sql;
+import org.springframework.test.context.jdbc.Sql.ExecutionPhase;
 
 /*
  * 테스트 데이터베이스 초기 데이터
@@ -21,7 +20,7 @@ import org.springframework.test.context.jdbc.Sql;
  * {ID=2, START_AT=11:00}
  */
 @JdbcTest
-@Sql(scripts = "/reset_test_data.sql")
+@Sql(scripts = "/reset_test_data.sql", executionPhase = ExecutionPhase.BEFORE_TEST_CLASS)
 class ReservationTimeRepositoryTest {
     private ReservationTimeRepository reservationTimeRepository;
 
@@ -81,8 +80,7 @@ class ReservationTimeRepositoryTest {
 
         // then
         assertAll(
-                () -> assertThatThrownBy(() -> reservationTimeRepository.findById(id))
-                        .isInstanceOf(EmptyResultDataAccessException.class),
+                () -> assertThat(reservationTimeRepository.findById(id)).isEmpty(),
                 () -> assertThat(reservationTimeRepository.findAll()).hasSize(1)
         );
     }

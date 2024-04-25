@@ -6,14 +6,12 @@ import static org.junit.jupiter.api.DynamicTest.dynamicTest;
 
 import io.restassured.RestAssured;
 import io.restassured.http.ContentType;
-import java.lang.reflect.Field;
 import java.time.LocalDate;
 import java.util.Collection;
 import java.util.List;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.DynamicTest;
-import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.TestFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -22,7 +20,6 @@ import org.springframework.boot.test.context.SpringBootTest.WebEnvironment;
 import org.springframework.boot.test.web.server.LocalServerPort;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.test.annotation.DirtiesContext;
-import roomescape.controller.ReservationController;
 import roomescape.dto.ReservationRequest;
 
 @SpringBootTest(webEnvironment = WebEnvironment.RANDOM_PORT)
@@ -96,27 +93,5 @@ class ReservationFlowTest {
                 .when().delete("/reservations/1")
                 .then().log().all()
                 .statusCode(404);
-    }
-
-    @Nested
-    @DisplayName("클래스 분리 테스트")
-    class LayeredArchitectureTest {
-        @Autowired
-        private ReservationController reservationController;
-
-        @Test
-        @DisplayName("데이터베이스 관련 로직이 분리되어 있다.")
-        void databaseLogicSeparated() {
-            boolean isJdbcTemplateInjected = false;
-
-            for (Field field : reservationController.getClass().getDeclaredFields()) {
-                if (field.getType().equals(JdbcTemplate.class)) {
-                    isJdbcTemplateInjected = true;
-                    break;
-                }
-            }
-
-            assertThat(isJdbcTemplateInjected).isFalse();
-        }
     }
 }

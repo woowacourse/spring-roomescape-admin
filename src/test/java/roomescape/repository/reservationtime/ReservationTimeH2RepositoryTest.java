@@ -1,38 +1,42 @@
 package roomescape.repository.reservationtime;
 
-import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.test.annotation.DirtiesContext;
+import static org.assertj.core.api.Assertions.assertThat;
 
-@SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.DEFINED_PORT)
-@DirtiesContext(classMode = DirtiesContext.ClassMode.BEFORE_EACH_TEST_METHOD)
-// TODO: main에 있는 코드들처럼 의존성을 주입 받는 방법?
+import java.time.LocalTime;
+import java.util.List;
+import org.junit.jupiter.api.DisplayName;
+import org.junit.jupiter.api.Test;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.test.autoconfigure.jdbc.JdbcTest;
+import org.springframework.context.annotation.Import;
+import roomescape.domain.ReservationTime;
+
+@JdbcTest
+@Import(ReservationTimeH2Repository.class)
 class ReservationTimeH2RepositoryTest {
-//
-//    private final ReservationTimeRepository timeRepository;
-//
-//    public ReservationTimeRepositoryTest(ReservationTimeRepository timeRepository) {
-//        this.timeRepository = timeRepository;
-//    }
-//
-//    @Test
-//    @DisplayName("모든 ReservationTime을 찾는다.")
-//    void findAll() {
-//        timeRepository.add(new ReservationTime(null, LocalTime.of(12, 0)));
-//        timeRepository.add(new ReservationTime(null, LocalTime.of(11, 0)));
-//
-//        List<ReservationTime> found = timeRepository.findAll();
-//
-//        assertThat(found).hasSize(2);
-//    }
-//
-//    @Test
-//    @DisplayName("id에 맞는 ReservationTime을 찾는다.")
-//    void findBy() {
-//        ReservationTime reservationTimeWithoutId = new ReservationTime(null, LocalTime.of(12, 0));
-//        ReservationTime reservationTime = timeRepository.add(reservationTimeWithoutId);
-//
-//        ReservationTime found = timeRepository.findBy(1L);
-//
-//        assertThat(found).isEqualTo(reservationTime);
-//    }
+
+    @Autowired
+    private ReservationTimeH2Repository timeRepository;
+
+    @Test
+    @DisplayName("모든 ReservationTime을 찾는다.")
+    void findAll() {
+        timeRepository.add(new ReservationTime(null, LocalTime.of(12, 0)));
+        timeRepository.add(new ReservationTime(null, LocalTime.of(11, 0)));
+
+        List<ReservationTime> found = timeRepository.findAll();
+
+        assertThat(found).hasSize(2);
+    }
+
+    @Test
+    @DisplayName("id에 맞는 ReservationTime을 찾는다.")
+    void findBy() {
+        ReservationTime reservationTimeWithoutId = new ReservationTime(null, LocalTime.of(12, 0));
+        ReservationTime reservationTime = timeRepository.add(reservationTimeWithoutId);
+
+        ReservationTime found = timeRepository.findBy(1L);
+
+        assertThat(found).isEqualTo(reservationTime);
+    }
 }

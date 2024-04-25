@@ -3,12 +3,13 @@ package roomescape.repository;
 import roomescape.entity.ReservationTime;
 
 import java.util.List;
+import java.util.Optional;
 
 public interface ReservationTimeRepository {
 
     List<ReservationTime> findAll();
 
-    ReservationTime findById(Long id);
+    Optional<ReservationTime> findById(Long id);
 
     ReservationTime save(ReservationTime reservationTime);
 

@@ -1,6 +1,5 @@
 package roomescape.repository;
 
-import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.namedparam.MapSqlParameterSource;
 import org.springframework.jdbc.core.namedparam.SqlParameterSource;
@@ -14,6 +13,7 @@ import java.sql.SQLException;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.util.List;
+import java.util.Optional;
 
 @Repository
 public class ReservationH2Repository implements ReservationRepository {
@@ -35,7 +35,7 @@ public class ReservationH2Repository implements ReservationRepository {
                 rs.getLong("id"),
                 rs.getString("name"),
                 LocalDate.parse(rs.getString("date")),
-                timeRepository.findById(rs.getLong("time_id"))
+                timeRepository.findById(rs.getLong("time_id")).get()
         );
     }
 
@@ -47,14 +47,9 @@ public class ReservationH2Repository implements ReservationRepository {
     }
 
     @Override
-    public Reservation findById(Long id) {
+    public Optional<Reservation> findById(Long id) {
         String sql = "SELECT * FROM reservation WHERE id = ?";
-
-        try {
-            return jdbcTemplate.queryForObject(sql, this::mapRowReservation, id);
-        } catch (EmptyResultDataAccessException e) {
-            return null;
-        }
+        return Optional.ofNullable(jdbcTemplate.queryForObject(sql, this::mapRowReservation, id));
     }
 
     @Override
@@ -65,7 +60,7 @@ public class ReservationH2Repository implements ReservationRepository {
                 .addValue("time_id", reservation.time().id());
         Long id = simpleJdbcInsert.executeAndReturnKey(params).longValue();
 
-        return reservation.assign(id, timeRepository.findById(reservation.time().id()));
+        return reservation.assign(id, timeRepository.findById(reservation.time().id()).get());
     }
 
     @Override

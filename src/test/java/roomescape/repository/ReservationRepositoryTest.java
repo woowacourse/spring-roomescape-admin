@@ -127,7 +127,7 @@ class ReservationRepositoryTest {
         );
 
         // when
-        final Reservation reservation = reservationRepository.findById(12L);
+        final Reservation reservation = reservationRepository.findById(12L).get();
 
         // then
         assertThat(reservation).isEqualTo(expected);
@@ -152,7 +152,7 @@ class ReservationRepositoryTest {
 
         // when
         reservationRepository.save(reservation);
-        Reservation actual = reservationRepository.findById(1L);
+        Reservation actual = reservationRepository.findById(1L).get();
 
         // then
         assertThat(actual).isEqualTo(expected);

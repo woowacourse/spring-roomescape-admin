@@ -4,7 +4,6 @@ import static org.assertj.core.api.Assertions.assertThat;
 import static org.hamcrest.Matchers.is;
 
 import java.time.LocalTime;
-import java.util.Map;
 
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -61,7 +60,7 @@ class ReservationTimeControllerTest {
         assertThat(countAfterDelete).isEqualTo(0);
     }
 
-    static Map<String, String> timeParams() {
-        return Map.of("start_at", "10:00");
+    static ReservationTime timeParams() {
+        return new ReservationTime(LocalTime.parse("10:00"));
     }
 }

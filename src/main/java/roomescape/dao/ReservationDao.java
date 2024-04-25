@@ -12,4 +12,6 @@ public interface ReservationDao {
     long save(Reservation reservation);
 
     int deleteById(long id);
+
+    void deleteAll();
 }

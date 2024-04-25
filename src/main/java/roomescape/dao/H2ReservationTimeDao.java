@@ -45,4 +45,12 @@ public class H2ReservationTimeDao implements ReservationTimeDao {
         String sql = "DELETE FROM reservation_time WHERE id = ?";
         return jdbcTemplate.update(sql, id);
     }
+
+    @Override
+    public void deleteAll() {
+        String sql = "DELETE FROM reservation_time";
+        jdbcTemplate.update(sql);
+    }
+
+
 }

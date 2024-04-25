@@ -68,7 +68,8 @@ public class ReservationRepository {
                             LocalTime.parse(resultSet.getString("start_at"))
                     );
                     return reservationTime;
-                }
+                },
+                timeId
         );
     }
 

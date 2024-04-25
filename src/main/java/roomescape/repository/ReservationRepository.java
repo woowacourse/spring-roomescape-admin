@@ -1,6 +1,7 @@
 package roomescape.repository;
 
 import org.springframework.jdbc.core.JdbcTemplate;
+import org.springframework.jdbc.core.RowMapper;
 import org.springframework.jdbc.core.simple.SimpleJdbcInsert;
 import org.springframework.stereotype.Repository;
 import roomescape.dto.ReservationRepositoryDto;
@@ -38,12 +39,15 @@ public class ReservationRepository {
                 "INNER JOIN reservation_time AS t " +
                 "ON r.time_id = t.id";
 
-        return jdbcTemplate.query(SQL, (rs, rowNum) -> new ReservationRepositoryDto(
-                    rs.getLong("id"),
-                    rs.getString("name"),
-                    rs.getString("date"),
-                    rs.getLong("time_id")
-            )
+        return jdbcTemplate.query(SQL, ReservationRepositoryDtoRowMapper());
+    }
+
+    private static RowMapper<ReservationRepositoryDto> ReservationRepositoryDtoRowMapper() {
+        return (rs, rowNum) -> new ReservationRepositoryDto(
+                rs.getLong("id"),
+                rs.getString("name"),
+                rs.getString("date"),
+                rs.getLong("time_id")
         );
     }
 

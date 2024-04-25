@@ -1,6 +1,7 @@
 package roomescape.repository;
 
 import org.springframework.jdbc.core.JdbcTemplate;
+import org.springframework.jdbc.core.RowMapper;
 import org.springframework.jdbc.core.namedparam.BeanPropertySqlParameterSource;
 import org.springframework.jdbc.core.namedparam.SqlParameterSource;
 import org.springframework.jdbc.core.simple.SimpleJdbcInsert;
@@ -30,24 +31,19 @@ public class ReservationTimeRepository {
 
     public ReservationTimeDto findById(Long id) {
         String SQL = "SELECT * FROM reservation_time WHERE id = ?";
-        return jdbcTemplate.queryForObject(SQL, (rs, rowNum) -> {
-            ReservationTimeDto reservationTimeDto = new ReservationTimeDto(
-                    rs.getLong("id"),
-                    rs.getString("start_at")
-            );
-            return reservationTimeDto;
-        }, id);
+        return jdbcTemplate.queryForObject(SQL, ReservationTimeDtoRowMapper(), id);
     }
 
     public List<ReservationTimeDto> findAll() {
         String SQL = "SELECT * FROM reservation_time";
-        return jdbcTemplate.query(SQL, (rs, rowNum) -> {
-            ReservationTimeDto reservationTimeDto = new ReservationTimeDto(
+        return jdbcTemplate.query(SQL, ReservationTimeDtoRowMapper());
+    }
+
+    private static RowMapper<ReservationTimeDto> ReservationTimeDtoRowMapper() {
+        return (rs, rowNum) -> new ReservationTimeDto(
                     rs.getLong("id"),
                     rs.getString("start_at")
-            );
-            return reservationTimeDto;
-        });
+        );
     }
 
     public int remove(Long id) {

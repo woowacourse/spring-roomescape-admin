@@ -9,7 +9,6 @@ import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;
 import org.springframework.jdbc.core.simple.SimpleJdbcInsert;
 import org.springframework.stereotype.Repository;
-import roomescape.controller.dto.ReservationTimeAddRequest;
 import roomescape.domain.ReservationTime;
 
 @Repository
@@ -35,12 +34,12 @@ public class H2TimeDao implements TimeDao {
     );
 
     @Override
-    public ReservationTime add(ReservationTimeAddRequest request) {
+    public ReservationTime add(ReservationTime reservationTime) {
         Map<String, Object> parameters = Map.of(
-                START_TIME_COLUMN_NAME, request.startTime()
+                START_TIME_COLUMN_NAME, reservationTime.getStartTime()
         );
         Number key = simpleJdbcInsert.executeAndReturnKey(parameters);
-        return new ReservationTime(key.longValue(), request.startTime());
+        return new ReservationTime(key.longValue(), reservationTime.getStartTime());
     }
 
     @Override

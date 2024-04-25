@@ -3,6 +3,7 @@ package roomescape.service;
 import java.util.List;
 import org.springframework.stereotype.Service;
 import roomescape.controller.dto.ReservationTimeAddRequest;
+import roomescape.controller.dto.ReservationTimeResponse;
 import roomescape.dao.ReservationDao;
 import roomescape.dao.TimeDao;
 import roomescape.domain.ReservationTime;
@@ -17,19 +18,22 @@ public class TimeService {
         this.reservationDao = reservationDao;
     }
 
-    public ReservationTime addReservationTime(ReservationTimeAddRequest request) {
+    public ReservationTimeResponse addReservationTime(ReservationTimeAddRequest request) {
         if (isDuplicateTimeRegistered(request)) {
             throw new IllegalArgumentException("이미 등록된 시간입니다.");
         }
-        return timeDao.add(request);
+        ReservationTime reservationTime = request.toEntity();
+        return ReservationTimeResponse.from(timeDao.add(reservationTime));
     }
 
     private boolean isDuplicateTimeRegistered(ReservationTimeAddRequest time) {
         return timeDao.isExist(time.startTime());
     }
 
-    public List<ReservationTime> findAllReservationTimes() {
-        return timeDao.findAll();
+    public List<ReservationTimeResponse> findAllReservationTimes() {
+        return timeDao.findAll().stream()
+                .map(ReservationTimeResponse::from)
+                .toList();
     }
 
     public void removeReservationTime(Long id) {

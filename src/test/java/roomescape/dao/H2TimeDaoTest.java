@@ -12,7 +12,6 @@ import org.springframework.test.context.jdbc.Sql;
 import roomescape.controller.dto.ReservationTimeAddRequest;
 
 @JdbcTest
-//@SpringBootTest
 @Sql(value = "classpath:data-reset.sql", executionPhase = Sql.ExecutionPhase.BEFORE_TEST_METHOD)
 class H2TimeDaoTest {
     private final TimeDao timeDao;
@@ -39,7 +38,7 @@ class H2TimeDaoTest {
     void addTest() {
         LocalTime time = LocalTime.of(11, 0);
         ReservationTimeAddRequest request = new ReservationTimeAddRequest(time);
-        timeDao.add(request);
+        timeDao.add(request.toEntity());
         assertThat(timeDao.isExist(2L)).isTrue();
     }
 

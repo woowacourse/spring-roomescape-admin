@@ -8,7 +8,6 @@ import org.springframework.jdbc.core.simple.SimpleJdbcInsert;
 import org.springframework.stereotype.Repository;
 import roomescape.domain.Reservation;
 import roomescape.domain.ReservationTime;
-import roomescape.service.dto.ReservationCreationDto;
 
 @Repository
 public class H2ReservationDao implements ReservationDao {
@@ -49,18 +48,18 @@ public class H2ReservationDao implements ReservationDao {
     }
 
     @Override
-    public Reservation add(ReservationCreationDto request) {
-        ReservationTime reservationTime = request.reservationTime();
+    public Reservation add(Reservation reservation) {
+        ReservationTime reservationTime = reservation.getTime();
 
         Map<String, Object> parameters = Map.of(
-                "name", request.name(),
-                "date", request.date(),
+                "name", reservation.getName(),
+                "date", reservation.getDate(),
                 "time_id", reservationTime.getId()
         );
         Number key = simpleJdbcInsert.executeAndReturnKey(parameters);
         return new Reservation(
-                key.longValue(), request.name(),
-                request.date(), reservationTime
+                key.longValue(), reservation.getName(),
+                reservation.getDate(), reservationTime
         );
     }
 

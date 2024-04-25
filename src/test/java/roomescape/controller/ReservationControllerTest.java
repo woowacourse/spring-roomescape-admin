@@ -72,7 +72,7 @@ class ReservationControllerTest {
         Map<String, String> params = Map.of(
                 "name", "   ",
                 "date", "2024-08-05",
-                "time", "15:40"
+                "timeId", "1"
         );
 
         String message = RestAssured.given().log().all()

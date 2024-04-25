@@ -3,12 +3,12 @@ package roomescape.service;
 import java.time.LocalDateTime;
 import java.util.List;
 import org.springframework.stereotype.Service;
+import roomescape.controller.dto.ReservationRequest;
+import roomescape.controller.dto.ReservationResponse;
 import roomescape.dao.ReservationDao;
 import roomescape.dao.TimeDao;
 import roomescape.domain.Reservation;
-import roomescape.domain.ReservationCreationRequest;
 import roomescape.domain.ReservationTime;
-import roomescape.service.dto.ReservationCreationDto;
 
 @Service
 public class ReservationService {
@@ -20,20 +20,20 @@ public class ReservationService {
         this.timeDao = h2TimeDao;
     }
 
-    public List<Reservation> findAllReservations() {
-        return reservationDao.findAll();
+    public List<ReservationResponse> findAllReservations() {
+        return reservationDao.findAll().stream()
+                .map(ReservationResponse::from)
+                .toList();
     }
 
-    public Reservation createReservation(ReservationCreationRequest request) {
-        ReservationTime reservationTime = timeDao.findById(request.getTimeId())
+    public ReservationResponse createReservation(ReservationRequest request) {
+        ReservationTime reservationTime = timeDao.findById(request.timeId())
                 .orElseThrow(() -> new IllegalArgumentException("존재하지 않는 예약 시간입니다."));
-
-
-        LocalDateTime reservationDatetime = LocalDateTime.of(request.getDate(), reservationTime.getStartTime());
+        LocalDateTime reservationDatetime = LocalDateTime.of(request.date(), reservationTime.getStartTime());
         validateTimeSequence(reservationDatetime);
 
-        // TODO: DB의 연관관계를 고려한 테이블 구조에 맞는 객체를 만들어서 넘겨줘야 하나?
-        return reservationDao.add(ReservationCreationDto.from(request, reservationTime));
+        Reservation reservation = request.toEntity(reservationTime);
+        return ReservationResponse.from(reservationDao.add(reservation));
     }
 
     private void validateTimeSequence(LocalDateTime reservationDatetime) {

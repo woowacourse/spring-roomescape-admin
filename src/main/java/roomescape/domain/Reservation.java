@@ -19,8 +19,8 @@ public class Reservation {
         this(id, name, LocalDate.parse(date), time);
     }
 
-    public boolean hasId(Long id) {
-        return this.id.equals(id);
+    public Reservation(String name, LocalDate date, ReservationTime time) {
+        this(null, name, date, time);
     }
 
     public long getId() {

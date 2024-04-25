@@ -4,12 +4,14 @@ import static org.hamcrest.Matchers.is;
 
 import io.restassured.RestAssured;
 import io.restassured.http.ContentType;
+import java.time.LocalTime;
 import java.util.HashMap;
 import java.util.Map;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.annotation.DirtiesContext;
+import roomescape.dto.ReservationTimeAddRequest;
 
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.DEFINED_PORT)
 @DirtiesContext(classMode = DirtiesContext.ClassMode.BEFORE_EACH_TEST_METHOD)
@@ -18,12 +20,11 @@ class ReservationTimeControllerTest {
     @DisplayName("예약 시간을 추가할 수 있 습니다.")
     @Test
     void should_add_reservation_time_to_db() {
-        Map<String, String> params = new HashMap<>();
-        params.put("startAt", "10:00");
+        ReservationTimeAddRequest reservationTimeAddRequest = new ReservationTimeAddRequest(LocalTime.of(10, 0));
 
         RestAssured.given().log().all()
                 .contentType(ContentType.JSON)
-                .body(params)
+                .body(reservationTimeAddRequest)
                 .when().post("/times")
                 .then().log().all()
                 .statusCode(200);
@@ -32,12 +33,11 @@ class ReservationTimeControllerTest {
     @DisplayName("예약 시간을 조회할 수 있습니다.")
     @Test
     void should_get_reservation_time_list_in_db() {
-        Map<String, String> params = new HashMap<>();
-        params.put("startAt", "10:00");
+        ReservationTimeAddRequest reservationTimeAddRequest = new ReservationTimeAddRequest(LocalTime.of(10, 0));
 
         RestAssured.given().log().all()
                 .contentType(ContentType.JSON)
-                .body(params)
+                .body(reservationTimeAddRequest)
                 .when().post("/times")
                 .then().log().all()
                 .statusCode(200);
@@ -52,12 +52,11 @@ class ReservationTimeControllerTest {
     @DisplayName("예약 시간을 삭제할 수 있습니다.")
     @Test
     void should_remove_reservation_time_list_in_db() {
-        Map<String, String> params = new HashMap<>();
-        params.put("startAt", "10:00");
+        ReservationTimeAddRequest reservationTimeAddRequest = new ReservationTimeAddRequest(LocalTime.of(10, 0));
 
         RestAssured.given().log().all()
                 .contentType(ContentType.JSON)
-                .body(params)
+                .body(reservationTimeAddRequest)
                 .when().post("/times")
                 .then().log().all()
                 .statusCode(200);

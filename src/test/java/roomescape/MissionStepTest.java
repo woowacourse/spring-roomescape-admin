@@ -11,7 +11,7 @@ import org.springframework.boot.test.web.server.LocalServerPort;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.support.GeneratedKeyHolder;
 import org.springframework.jdbc.support.KeyHolder;
-import roomescape.controller.ReservationController;
+import roomescape.controller.RoomEscapeController;
 import roomescape.domain.Reservation;
 
 import java.lang.reflect.Field;
@@ -31,7 +31,7 @@ public class MissionStepTest {
     private JdbcTemplate jdbcTemplate;
 
     @Autowired
-    private ReservationController reservationController;
+    private RoomEscapeController controller;
 
     @LocalServerPort
     private Integer port;
@@ -240,7 +240,7 @@ public class MissionStepTest {
     void 구단계() {
         boolean isJdbcTemplateInjected = false;
 
-        for (Field field : reservationController.getClass().getDeclaredFields()) {
+        for (Field field : controller.getClass().getDeclaredFields()) {
             if (field.getType().equals(JdbcTemplate.class)) {
                 isJdbcTemplateInjected = true;
                 break;

@@ -17,7 +17,7 @@ import roomescape.dto.ReservationTimeAddRequest;
 @DirtiesContext(classMode = DirtiesContext.ClassMode.BEFORE_EACH_TEST_METHOD)
 class ReservationTimeControllerTest {
 
-    @DisplayName("예약 시간을 추가할 수 있 습니다.")
+    @DisplayName("예약 시간을 추가 성공할 시, 200 ok를 응답한다.")
     @Test
     void should_add_reservation_time_to_db() {
         ReservationTimeAddRequest reservationTimeAddRequest = new ReservationTimeAddRequest(LocalTime.of(10, 0));
@@ -30,7 +30,7 @@ class ReservationTimeControllerTest {
                 .statusCode(200);
     }
 
-    @DisplayName("예약 시간을 조회할 수 있습니다.")
+    @DisplayName("존재하는 예약 시간을 조회시, 200 ok를 응답한다.")
     @Test
     void should_get_reservation_time_list_in_db() {
         ReservationTimeAddRequest reservationTimeAddRequest = new ReservationTimeAddRequest(LocalTime.of(10, 0));
@@ -49,9 +49,9 @@ class ReservationTimeControllerTest {
                 .body("size()", is(1));
     }
 
-    @DisplayName("예약 시간을 삭제할 수 있습니다.")
+    @DisplayName("존재하는 리소스에 대한 삭제 요청시, 200 ok를 응답한다.")
     @Test
-    void should_remove_reservation_time_list_in_db() {
+    void should_remove_reservation_time_in_db() {
         ReservationTimeAddRequest reservationTimeAddRequest = new ReservationTimeAddRequest(LocalTime.of(10, 0));
 
         RestAssured.given().log().all()
@@ -67,7 +67,7 @@ class ReservationTimeControllerTest {
                 .statusCode(200);
     }
 
-    @DisplayName("delete 요청 시 id값이 존재하지 않으면 에러코드 500으로 응답한다.")
+    @DisplayName("delete 요청 시 id값이 존재하지 않으면 500 Internel Server Error로 응답한다.")
     @Test
     void should_response_bad_request_when_nonExist_id() {
         RestAssured.given().log().all()

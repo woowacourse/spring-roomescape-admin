@@ -28,7 +28,7 @@ public class ReservationControllerTest {
     }
 
 
-    @DisplayName("delete 요청 시 id값이 존재하지 않으면 에러코드 500으로 응답한다.")
+    @DisplayName("delete 요청 시 id값이 존재하지 않으면 500 Internel Server Error를 응답한다.")
     @Test
     void should_response_bad_request_when_nonExist_id() {
         RestAssured.given().log().all()
@@ -38,7 +38,7 @@ public class ReservationControllerTest {
     }
 
 
-    @DisplayName("예약을 추가할 수 있다.")
+    @DisplayName("예약을 추가를 성공할 시, 200 ok를 응답한다,")
     @Test
     void should_add_reservation_when_post_request_reservations() {
         ReservationTimeAddRequest reservationTimeAddRequest = new ReservationTimeAddRequest(LocalTime.of(10, 0));
@@ -69,7 +69,7 @@ public class ReservationControllerTest {
                 .body("size()", is(1));
     }
 
-    @DisplayName("예약을 삭제할 수 있다.")
+    @DisplayName("존재하는 리소스에 대한 삭제 요청시, 200 ok를 응답한다.")
     @Test
     void should_remove_reservation_when_delete_request_reservations_id() {
         ReservationTimeAddRequest reservationTimeAddRequest = new ReservationTimeAddRequest(LocalTime.of(10, 0));

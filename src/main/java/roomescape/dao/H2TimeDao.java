@@ -51,7 +51,6 @@ public class H2TimeDao implements TimeDao {
         } catch (EmptyResultDataAccessException e) {
             return Optional.empty();
         }
-
     }
 
     @Override
@@ -64,14 +63,6 @@ public class H2TimeDao implements TimeDao {
     public void delete(Long id) {
         String sql = "DELETE FROM " + TABLE_NAME + " WHERE " + ID_COLUMN_NAME + " = ?";
         jdbcTemplate.update(sql, id);
-    }
-
-    @Override
-    public void deleteAll() {
-        String sql = "DELETE FROM " + TABLE_NAME;
-        jdbcTemplate.update(sql);
-        // TODO: auto increment key reset 개선
-        jdbcTemplate.update("ALTER TABLE reservation_time ALTER COLUMN id RESTART WITH 1");
     }
 
     @Override

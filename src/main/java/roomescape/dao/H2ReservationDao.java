@@ -71,12 +71,6 @@ public class H2ReservationDao implements ReservationDao {
     }
 
     @Override
-    public void deleteAll() {
-        String sql = "DELETE FROM reservation";
-        jdbcTemplate.update(sql);
-    }
-
-    @Override
     public boolean isExist(Long id) {
         String sql = "SELECT id FROM reservation WHERE id = ? LIMIT 1";
         return checkMatchedRowExistByIdColumn(sql, id.toString());

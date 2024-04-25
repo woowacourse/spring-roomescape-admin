@@ -15,8 +15,6 @@ public interface TimeDao {
 
     void delete(Long id);
 
-    void deleteAll();
-
     boolean isExist(Long id);
 
     boolean isExist(LocalTime time);

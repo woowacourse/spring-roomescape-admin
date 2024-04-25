@@ -1,4 +1,4 @@
-package roomescape;
+package roomescape.dao;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
@@ -13,7 +13,7 @@ import roomescape.domain.ReservationTime;
 
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.DEFINED_PORT)
 @DirtiesContext(classMode = DirtiesContext.ClassMode.BEFORE_EACH_TEST_METHOD)
-class TimeDaoTest {
+class ReservationTimeDaoTest {
 
     @Autowired
     private ReservationTimeDao reservationTimeDao;

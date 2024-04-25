@@ -3,21 +3,18 @@ package roomescape.global.query;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
-import java.util.Objects;
 import roomescape.global.query.condition.ComparisonCondition;
 import roomescape.global.query.condition.JoinCondition;
 import roomescape.global.query.condition.LogicalCondition;
 
 public class SelectQuery extends Query {
-    private final String table;
     private final List<String> columns;
     private final LogicalCondition condition;
     private Join join = Join.EMPTY;
     private String alias;
 
     protected SelectQuery(String table) {
-        Objects.requireNonNull(table, "테이블명은 필수입니다.");
-        this.table = table;
+        super(table);
         this.columns = new ArrayList<>();
         this.condition = LogicalCondition.and();
     }

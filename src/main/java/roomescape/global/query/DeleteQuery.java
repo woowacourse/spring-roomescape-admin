@@ -1,16 +1,13 @@
 package roomescape.global.query;
 
-import java.util.Objects;
 import roomescape.global.query.condition.ComparisonCondition;
 import roomescape.global.query.condition.LogicalCondition;
 
 public class DeleteQuery extends Query {
-    private final String table;
     private final LogicalCondition condition;
 
     protected DeleteQuery(String table) {
-        Objects.requireNonNull(table, "테이블명은 필수입니다.");
-        this.table = table;
+        super(table);
         this.condition = LogicalCondition.and();
     }
 

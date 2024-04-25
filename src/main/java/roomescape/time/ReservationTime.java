@@ -3,25 +3,10 @@ package roomescape.time;
 import java.time.LocalTime;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
-import com.fasterxml.jackson.annotation.JsonProperty;
 
-public class ReservationTime {
-
-    private final long id;
-    private final LocalTime startAt;
-
-    public ReservationTime(final long id, final LocalTime startAt) {
-        this.id = id;
-        this.startAt = startAt;
-    }
-
-    public long getId() {
-        return id;
-    }
-
-    @JsonProperty("start_at")
+public record ReservationTime(long id, LocalTime startAt) {
     @JsonFormat(pattern = "HH:mm")
-    public LocalTime getStartAt() {
+    public LocalTime startAt() {
         return startAt;
     }
 }

@@ -28,7 +28,7 @@ public class ReservationTimeController {
             resultSet.getTime("start_at").toLocalTime()
     );
 
-    public ReservationTimeController(final JdbcTemplate jdbcTemplate) {
+    public ReservationTimeController(JdbcTemplate jdbcTemplate) {
         this.jdbcTemplate = jdbcTemplate;
         this.jdbcInsert = new SimpleJdbcInsert(jdbcTemplate)
                 .withTableName("reservation_time")
@@ -41,7 +41,7 @@ public class ReservationTimeController {
     }
 
     @PostMapping
-    public ResponseEntity<ReservationTime> create(@RequestBody final ReservationTime reservationTime) {
+    public ResponseEntity<ReservationTime> create(@RequestBody ReservationTime reservationTime) {
         SqlParameterSource params = new BeanPropertySqlParameterSource(reservationTime);
         long id = jdbcInsert.executeAndReturnKey(params).longValue();
         ReservationTime createdReservationTime = jdbcTemplate.queryForObject(
@@ -53,8 +53,8 @@ public class ReservationTimeController {
     }
 
     @DeleteMapping("/{id}")
-    public ResponseEntity<ReservationTime> delete(@PathVariable final long id) {
+    public ResponseEntity<Void> delete(@PathVariable long id) {
         jdbcTemplate.update("DELETE FROM reservation_time WHERE id = ?", id);
-        return ResponseEntity.noContent().build();
+        return ResponseEntity.ok().build();
     }
 }

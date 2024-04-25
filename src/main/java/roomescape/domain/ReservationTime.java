@@ -10,6 +10,10 @@ public class ReservationTime {
     public ReservationTime() {
     }
 
+    public ReservationTime(int id) {
+        this(id, null);
+    }
+
     public ReservationTime(int id, LocalTime startAt) {
         this.id = id;
         this.startAt = startAt;
@@ -19,15 +23,7 @@ public class ReservationTime {
         return id;
     }
 
-    public void setId(int id) {
-        this.id = id;
-    }
-
     public LocalTime getStartAt() {
         return startAt;
-    }
-
-    public void setStartAt(LocalTime startAt) {
-        this.startAt = startAt;
     }
 }

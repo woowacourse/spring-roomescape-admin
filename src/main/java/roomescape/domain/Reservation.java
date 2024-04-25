@@ -15,14 +15,17 @@ public class Reservation {
     public Reservation() {
     }
 
-    public static Reservation from(String name, LocalDate date, int timeId) {
-        ReservationTime reservationTime = new ReservationTime();
-        reservationTime.setId(timeId);
-        return new Reservation(name, date, reservationTime);
+    public Reservation(int id, String name, LocalDate date) {
+        this(id, name, date, new ReservationTime());
     }
 
-    public Reservation(String name, LocalDate date, ReservationTime time) {
+    private Reservation(String name, LocalDate date, ReservationTime time) {
+        this(-1, name, date, time);
+    }
+
+    private Reservation(int id, String name, LocalDate date, ReservationTime time) {
         validateNotNull(name, date, time);
+        this.id = id;
         this.name = name;
         this.date = date;
         this.time = time;
@@ -40,28 +43,21 @@ public class Reservation {
         }
     }
 
-    public int getId() {
-        return id;
+    public static Reservation from(String name, LocalDate date, int timeId) {
+        ReservationTime reservationTime = new ReservationTime(timeId);
+        return new Reservation(name, date, reservationTime);
     }
 
-    public void setId(int id) {
-        this.id = id;
+    public int getId() {
+        return id;
     }
 
     public String getName() {
         return name;
     }
 
-    public void setName(String name) {
-        this.name = name;
-    }
-
     public LocalDate getDate() {
         return date;
-    }
-
-    public void setDate(LocalDate date) {
-        this.date = date;
     }
 
     public ReservationTime getTime() {

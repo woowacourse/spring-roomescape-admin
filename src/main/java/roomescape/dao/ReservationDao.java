@@ -20,16 +20,16 @@ public class ReservationDao {
     }
 
     private final RowMapper<Reservation> reservationRowMapper = (resultSet, rowNum) -> {
-        Reservation reservation = new Reservation();
-        reservation.setId(resultSet.getInt("id"));
-        reservation.setName(resultSet.getString("name"));
-        reservation.setDate(resultSet.getDate("date").toLocalDate());
-
-        ReservationTime time = new ReservationTime();
-        time.setId(resultSet.getInt("time_id"));
-        time.setStartAt(resultSet.getTime("start_at").toLocalTime());
+        Reservation reservation = new Reservation(
+                resultSet.getInt("id"),
+                resultSet.getString("name"),
+                resultSet.getDate("date").toLocalDate()
+        );
+        ReservationTime time = new ReservationTime(
+                resultSet.getInt("time_id"),
+                resultSet.getTime("start_at").toLocalTime()
+        );
         reservation.setTime(time);
-
         return reservation;
     };
 

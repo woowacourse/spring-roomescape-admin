@@ -1,11 +1,10 @@
 package roomescape.controller;
 
-import jakarta.servlet.http.HttpServletResponse;
 import jakarta.validation.Valid;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-import roomescape.dto.request.ReservationRequest;
+import roomescape.dto.request.ReservationCreateRequest;
 import roomescape.dto.response.ReservationCreateResponse;
 import roomescape.dto.response.ReservationsResponse;
 import roomescape.service.ReservationService;
@@ -29,12 +28,9 @@ public class ReservationApiController {
     @PostMapping
     @ResponseStatus(value = HttpStatus.CREATED)
     public ResponseEntity<ReservationCreateResponse> createReservation(
-            @Valid @RequestBody final ReservationRequest reservationRequest) {
+            @Valid @RequestBody final ReservationCreateRequest reservationCreateRequest) {
         final ReservationCreateResponse reservationCreateResponse =
-                reservationService.createReservation(
-                        reservationRequest.name(),
-                        reservationRequest.date(),
-                        reservationRequest.timeId());
+                reservationService.createReservation(reservationCreateRequest.convert());
 
         return ResponseEntity.created(reservationCreateResponse.getLocationHeaderValue())
                              .body(reservationCreateResponse);

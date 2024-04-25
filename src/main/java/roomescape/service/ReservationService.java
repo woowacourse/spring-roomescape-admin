@@ -9,6 +9,7 @@ import roomescape.exception.reservation.time.NotExistReservationTimeException;
 import roomescape.repository.ReservationRepository;
 import roomescape.repository.ReservationSqlRepository;
 import roomescape.repository.ReservationTimeRepository;
+import roomescape.service.request.ReservationCreateRequestInService;
 
 @Service
 public class ReservationService {
@@ -28,16 +29,17 @@ public class ReservationService {
         reservationRepository.deleteById(reservationId);
     }
 
-    public ReservationCreateResponse createReservation(final String name, final String date, final long timeId) {
-        final ReservationTime reservationTime = reservationTimeRepository.findById(timeId)
-                                                                         .orElseThrow(() -> new NotExistReservationTimeException(timeId));
+    public ReservationCreateResponse createReservation(final ReservationCreateRequestInService request) {
+        final long reservationTimeId = request.timeId();
+        final ReservationTime reservationTime = reservationTimeRepository.findById(reservationTimeId)
+                                                                         .orElseThrow(() -> new NotExistReservationTimeException(reservationTimeId));
         final Reservation reservation = Reservation.builder()
-                                                   .name(name)
-                                                   .date(date)
+                                                   .name(request.name())
+                                                   .date(request.date())
                                                    .time(reservationTime)
                                                    .build();
 
-        final long reservationId = reservationRepository.create(reservation, timeId);
+        final long reservationId = reservationRepository.create(reservation, reservationTimeId);
         return ReservationCreateResponse.from(reservationId, reservation);
     }
 }

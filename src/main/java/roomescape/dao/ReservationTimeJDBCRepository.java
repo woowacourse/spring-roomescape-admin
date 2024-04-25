@@ -1,6 +1,7 @@
 package roomescape.dao;
 
 import org.springframework.jdbc.core.JdbcTemplate;
+import org.springframework.jdbc.core.RowMapper;
 import org.springframework.jdbc.core.simple.SimpleJdbcInsert;
 import org.springframework.stereotype.Repository;
 import roomescape.domain.ReservationTime;
@@ -22,6 +23,14 @@ public class ReservationTimeJDBCRepository implements ReservationTimeRepository 
                 .usingGeneratedKeyColumns("id");
     }
 
+    private final RowMapper<ReservationTime> rowMapper = (resultSet, rowNum) -> {
+        ReservationTime reservationTime = new ReservationTime(
+                resultSet.getLong("id"),
+                resultSet.getString("start_at")
+        );
+        return reservationTime;
+    };
+
     @Override
     public ReservationTime save(final ReservationTime reservationTime) {
         Map<String, String> params = Map.of(
@@ -33,14 +42,7 @@ public class ReservationTimeJDBCRepository implements ReservationTimeRepository 
     @Override
     public List<ReservationTime> findAll() {
         String sql = "SELECT * FROM reservation_time";
-        List<ReservationTime> reservationTimes = jdbcTemplate.query(sql,
-                (resultSet, rowNum) -> {
-                    ReservationTime reservationTime = new ReservationTime(
-                            resultSet.getLong("id"),
-                            resultSet.getString("start_at")
-                    );
-                    return reservationTime;
-                });
+        List<ReservationTime> reservationTimes = jdbcTemplate.query(sql, rowMapper);
         return reservationTimes;
     }
 
@@ -59,13 +61,6 @@ public class ReservationTimeJDBCRepository implements ReservationTimeRepository 
     @Override
     public ReservationTime findById(final long id) {
         String sql = "SELECT * FROM reservation_time WHERE id = ?";
-        return jdbcTemplate.queryForObject(sql,
-                (resultSet, rowNum) -> {
-                    ReservationTime reservationTime = new ReservationTime(
-                            resultSet.getLong("id"),
-                            resultSet.getString("start_at")
-                    );
-                    return reservationTime;
-                }, id);
+        return jdbcTemplate.queryForObject(sql, rowMapper, id);
     }
 }

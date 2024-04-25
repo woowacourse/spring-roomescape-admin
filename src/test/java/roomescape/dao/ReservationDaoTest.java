@@ -7,6 +7,7 @@ import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.support.GeneratedKeyHolder;
 import org.springframework.jdbc.support.KeyHolder;
 import org.springframework.test.annotation.DirtiesContext;
+import org.springframework.test.context.TestConstructor;
 import roomescape.domain.Reservation;
 
 import java.sql.PreparedStatement;
@@ -17,13 +18,12 @@ import static org.assertj.core.api.Assertions.assertThat;
 
 @JdbcTest
 @DirtiesContext(classMode = DirtiesContext.ClassMode.BEFORE_EACH_TEST_METHOD)
+@TestConstructor(autowireMode = TestConstructor.AutowireMode.ALL)
 public class ReservationDaoTest {
 
     private final JdbcTemplate jdbcTemplate;
-
     private final ReservationDao reservationDao;
 
-    @Autowired
     public ReservationDaoTest(JdbcTemplate jdbcTemplate) {
         this.jdbcTemplate = jdbcTemplate;
         this.reservationDao = new ReservationDao(jdbcTemplate);

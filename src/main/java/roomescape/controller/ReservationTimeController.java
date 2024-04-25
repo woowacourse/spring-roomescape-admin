@@ -3,8 +3,8 @@ package roomescape.controller;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import roomescape.domain.reservation.ReservationTime;
-import roomescape.dto.ReservationTimeRequestDto;
-import roomescape.dto.ReservationTimeResponseDto;
+import roomescape.controller.request.ReservationTimeRequest;
+import roomescape.controller.response.ReservationTimeResponse;
 import roomescape.service.ReservationTimeService;
 
 import java.util.List;
@@ -16,18 +16,16 @@ public class ReservationTimeController {
     public ReservationTimeController(ReservationTimeService reservationTimeService) {
         this.reservationTimeService = reservationTimeService;
     }
-
+    // TODO 바로 정적 팩터리 메서드로 Response화
     @PostMapping("/times")
-    public ResponseEntity<ReservationTimeResponseDto> addTime(@RequestBody ReservationTimeRequestDto timeRequestDto) {
-        System.out.println("tag" + timeRequestDto);
+    public ResponseEntity<ReservationTimeResponse> addTime(@RequestBody ReservationTimeRequest timeRequestDto) {
         ReservationTime time = reservationTimeService.addTime(timeRequestDto.toEntity());
-        System.out.println(time.getId() + " " + time.getTime());
-        return ResponseEntity.ok(new ReservationTimeResponseDto(time));
+        return ResponseEntity.ok(new ReservationTimeResponse(time));
     }
 
     @GetMapping("/times")
-    public ResponseEntity<List<ReservationTimeResponseDto>> times() {
-        List<ReservationTimeResponseDto> reservationTimes = ReservationTimeResponseDto.listOf(reservationTimeService.allReservationTimes());
+    public ResponseEntity<List<ReservationTimeResponse>> times() {
+        List<ReservationTimeResponse> reservationTimes = ReservationTimeResponse.listOf(reservationTimeService.allReservationTimes());
         return ResponseEntity.ok(reservationTimes);
     }
 

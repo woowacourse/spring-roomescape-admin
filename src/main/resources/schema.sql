@@ -1,7 +1,7 @@
 CREATE TABLE reservation_time
 (
     id   BIGINT       NOT NULL AUTO_INCREMENT,
-    start_at VARCHAR(255) NOT NULL,
+    start_at VARCHAR(255) NOT NULL, // TODO 시간을 의미하는 자료형으로 바꾸기
     PRIMARY KEY (id)
 );
 
@@ -9,7 +9,7 @@ CREATE TABLE reservation
 (
     id   BIGINT       NOT NULL AUTO_INCREMENT,
     name VARCHAR(255) NOT NULL,
-    date VARCHAR(255) NOT NULL,
+    date VARCHAR(255) NOT NULL, // TODO 예약어 date
     time_id BIGINT,                           -- 컬럼 수정
     PRIMARY KEY (id),
     FOREIGN KEY (time_id) REFERENCES reservation_time (id) -- 외래키 추가

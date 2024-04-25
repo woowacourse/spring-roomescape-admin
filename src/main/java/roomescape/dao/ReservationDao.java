@@ -1,5 +1,6 @@
 package roomescape.dao;
 
+import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;
 import org.springframework.stereotype.Component;
@@ -8,6 +9,7 @@ import roomescape.domain.ReservationTime;
 import roomescape.dto.CreateReservationRequest;
 
 import java.util.List;
+import java.util.Optional;
 
 @Component
 public class ReservationDao {
@@ -19,34 +21,40 @@ public class ReservationDao {
     }
 
     public int create(CreateReservationRequest request) {
-        return jdbcTemplate.update("insert into reservation (name, date, time_id) values (?, ?, ?)",
+        String sql = "insert into reservation (name, date, time_id) values (?, ?, ?)";
+        return jdbcTemplate.update(sql,
                 request.name(),
                 request.date(),
                 request.timeId());
     }
 
-    public List<Reservation> findAllByTimeId(int timeId) {
-        return jdbcTemplate.query("SELECT r.id as reservation_id, r.name, r.date, t.id as time_id, t.start_at " +
-                        "FROM reservation as r " +
-                        "inner join reservation_time as t on r.time_id = t.id " +
-                        "WHERE t.id = ?",
-                getReservationRowMapper(), timeId);
+    public Optional<Reservation> findAnyByTimeId(int timeId) {
+        String sql = "SELECT r.id, r.name, r.date, t.id AS time_id, t.start_at " +
+                "FROM reservation r " +
+                "JOIN reservation_time t ON r.time_id = t.id " +
+                "WHERE r.time_id = ? " +
+                "LIMIT 1";
+        try {
+            Reservation reservation = jdbcTemplate.queryForObject(sql, getReservationRowMapper(), timeId);
+            return Optional.ofNullable(reservation);
+        } catch (EmptyResultDataAccessException e) {
+            return Optional.empty();
+        }
     }
 
     public Reservation findById(int id) {
-        return jdbcTemplate.queryForObject("SELECT r.id, r.name, r.date, t.id AS time_id, t.start_at " +
-                        "FROM reservation r " +
-                        "JOIN reservation_time t ON r.time_id = t.id " +
-                        "WHERE r.id = ?",
-                getReservationRowMapper(), id);
+        String sql = "SELECT r.id, r.name, r.date, t.id AS time_id, t.start_at " +
+                "FROM reservation r " +
+                "JOIN reservation_time t ON r.time_id = t.id " +
+                "WHERE r.id = ?";
+        return jdbcTemplate.queryForObject(sql, getReservationRowMapper(), id);
     }
 
     public List<Reservation> findAll() {
-        return jdbcTemplate.query("SELECT r.id as reservation_id, r.name, r.date, t.id as time_id, t.start_at " +
-                        "FROM reservation as r " +
-                        "inner join reservation_time as t on r.time_id = t.id",
-                getReservationRowMapper()
-        );
+        String sql = "SELECT r.id as reservation_id, r.name, r.date, t.id as time_id, t.start_at " +
+                "FROM reservation as r " +
+                "inner join reservation_time as t on r.time_id = t.id";
+        return jdbcTemplate.query(sql, getReservationRowMapper());
     }
 
     private RowMapper<Reservation> getReservationRowMapper() {

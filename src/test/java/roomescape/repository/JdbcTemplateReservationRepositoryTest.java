@@ -4,6 +4,7 @@ import java.time.LocalDate;
 import java.util.List;
 import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -28,6 +29,7 @@ class JdbcTemplateReservationRepositoryTest {
     }
 
     @Test
+    @DisplayName("Reservation 을 잘 저장하는지 확인한다.")
     void save() {
         var beforeSave = reservationRepository.findAll();
         Reservation saved = reservationRepository.save(new ReservationRequest(LocalDate.now(), "test", 1));
@@ -39,6 +41,7 @@ class JdbcTemplateReservationRepositoryTest {
     }
 
     @Test
+    @DisplayName("Reservation 을 잘 조회하는지 확인한다.")
     void findAll() {
         List<Reservation> beforeSave = reservationRepository.findAll();
         reservationRepository.save(new ReservationRequest(LocalDate.now(), "test", 1));
@@ -50,6 +53,7 @@ class JdbcTemplateReservationRepositoryTest {
     }
 
     @Test
+    @DisplayName("Reservation 을 잘 지우는지 확인한다.")
     void delete() {
         List<Reservation> beforeSaveAndDelete = reservationRepository.findAll();
         reservationRepository.save(new ReservationRequest(LocalDate.now(), "test", 1));

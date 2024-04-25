@@ -1,4 +1,4 @@
-package roomescape;
+package roomescape.integration;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.hamcrest.Matchers.is;
@@ -15,7 +15,6 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.JdbcTemplate;
 import roomescape.domain.Reservation;
-import roomescape.integration.IntegrationTest;
 import roomescape.web.ReservationController;
 
 public class MissionStepTest extends IntegrationTest {

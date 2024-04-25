@@ -32,8 +32,8 @@
   - [x] `templates/admin/reservation-legacy.html` 대신 `templates/admin/reservation.html` 파일을 활용한다.
 - [x] 테이블 스키마를 재정의한다.
   - [x] 외래키 지정을 통해 reservation 테이블과 reservation_time 테이블의 관계를 설정한다.
-- [ ] 예약 클래스를 수정한다.
-  - [ ] 시간 타입을 ReservationTime 객체로 수정한다.
+- [x] 예약 클래스를 수정한다.
+  - [x] 시간 타입을 ReservationTime 객체로 수정한다.
 - [ ] 예약 추가 쿼리를 수정한다.
 - [ ] 예약 조회 쿼리를 수정한다.
 

@@ -1,4 +1,4 @@
-package roomescape;
+package roomescape.controller;
 
 import static org.hamcrest.Matchers.is;
 import static org.junit.jupiter.api.DynamicTest.dynamicTest;
@@ -41,16 +41,30 @@ class ReservationControllerTest {
     @TestFactory
     @DisplayName("예약 추가와 삭제의 작동을 확인한다")
     Stream<DynamicTest> reservationCreateAndDelete() {
-        Map<String, String> params = Map.of(
+        Map<String, String> reservationParams = Map.of(
                 "name", "브라운",
                 "date", "2023-08-05",
-                "time", "15:40"
+                "timeId", "1"
+        );
+
+        Map<String, String> reservationTimeParams = Map.of(
+                "id", "1",
+                "startAt", "10:00"
         );
 
         return Stream.of(
+                dynamicTest("예약 시간을 추가한다", () -> {
+                    RestAssured.given().log().all()
+                            .contentType(ContentType.JSON)
+                            .body(reservationTimeParams)
+                            .when().post("/times")
+                            .then().log().all()
+                            .statusCode(201);
+                }),
+
                 dynamicTest("예약을 추가한다", () -> {
                     RestAssured.given().log().all()
-                            .contentType(ContentType.JSON).body(params)
+                            .contentType(ContentType.JSON).body(reservationParams)
                             .when().post("/reservations")
                             .then().log().all()
                             .statusCode(201)

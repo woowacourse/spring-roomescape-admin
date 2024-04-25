@@ -6,6 +6,11 @@ import org.springframework.web.bind.annotation.GetMapping;
 @Controller
 public class ViewController {
 
+    @GetMapping("/admin")
+    public String main() {
+        return "admin/index";
+    }
+
     @GetMapping("/admin/time")
     public String reservationTimeAdminPage() {
         return "/admin/time";

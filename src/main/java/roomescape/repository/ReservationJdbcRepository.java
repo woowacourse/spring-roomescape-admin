@@ -1,51 +1,30 @@
 package roomescape.repository;
 
 import java.util.List;
-import javax.sql.DataSource;
-import org.springframework.jdbc.core.JdbcTemplate;
-import org.springframework.jdbc.core.namedparam.BeanPropertySqlParameterSource;
-import org.springframework.jdbc.core.namedparam.SqlParameterSource;
-import org.springframework.jdbc.core.simple.SimpleJdbcInsert;
-import org.springframework.stereotype.Repository;
+import org.springframework.stereotype.Component;
+import roomescape.dao.ReservationDaoImpl;
 import roomescape.domain.Reservation;
 
-@Repository
+@Component
 public class ReservationJdbcRepository implements ReservationRepository {
-    private final JdbcTemplate jdbcTemplate;
-    private final SimpleJdbcInsert jdbcInsert;
+    private final ReservationDaoImpl reservationDao;
 
-    public ReservationJdbcRepository(DataSource dataSource) {
-        this.jdbcTemplate = new JdbcTemplate(dataSource);
-        this.jdbcInsert = new SimpleJdbcInsert(dataSource)
-                .withTableName("reservation")
-                .usingGeneratedKeyColumns("id");
+    public ReservationJdbcRepository(ReservationDaoImpl reservationDao) {
+        this.reservationDao = reservationDao;
     }
 
     @Override
     public Reservation saveReservation(Reservation reservation) {
-        SqlParameterSource sqlParameterSource = new BeanPropertySqlParameterSource(reservation);
-
-        long id = jdbcInsert.executeAndReturnKey(sqlParameterSource).longValue();
-        reservation.setId(id);
-        return reservation;
+        return reservationDao.save(reservation);
     }
 
     @Override
     public List<Reservation> findAllReservation() {
-        String findAllReservationSql = "select id, name, `date`, `time` from reservation";
-
-        return jdbcTemplate.query(
-                findAllReservationSql, (resultSet, rowNum) -> new Reservation(
-                        resultSet.getLong("id"),
-                        resultSet.getString("name"),
-                        resultSet.getDate("date").toLocalDate(),
-                        resultSet.getTime("time").toLocalTime()
-                ));
+        return reservationDao.findAll();
     }
 
     @Override
     public void deleteReservationById(long reservationId) {
-        String saveReservationSql = "DELETE FROM reservation WHERE id = ?";
-        jdbcTemplate.update(saveReservationSql, reservationId);
+        reservationDao.deleteById(reservationId);
     }
 }

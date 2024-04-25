@@ -5,6 +5,7 @@ import java.time.LocalDateTime;
 import java.time.LocalTime;
 import java.util.List;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import roomescape.controller.dto.ReservationRequest;
 import roomescape.controller.dto.ReservationResponse;
 import roomescape.domain.Reservation;
@@ -18,6 +19,7 @@ public class ReservationService {
         this.reservationRepository = reservationRepository;
     }
 
+    @Transactional
     public ReservationResponse addReservation(ReservationRequest reservationRequest) {
         Reservation reservation = fromRequest(reservationRequest);
         Reservation savedReservation = reservationRepository.saveReservation(reservation);
@@ -32,6 +34,7 @@ public class ReservationService {
                 .toList();
     }
 
+    @Transactional
     public void removeReservations(long reservationId) {
         reservationRepository.deleteReservationById(reservationId);
     }

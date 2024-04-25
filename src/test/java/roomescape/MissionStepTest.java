@@ -5,6 +5,7 @@ import static org.hamcrest.Matchers.is;
 
 import io.restassured.RestAssured;
 import io.restassured.http.ContentType;
+import java.lang.reflect.Field;
 import java.sql.Connection;
 import java.sql.SQLException;
 import java.time.LocalDate;
@@ -20,6 +21,7 @@ import org.springframework.boot.test.context.SpringBootTest.WebEnvironment;
 import org.springframework.boot.test.web.server.LocalServerPort;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.test.annotation.DirtiesContext;
+import roomescape.web.ReservationController;
 import roomescape.web.dto.ReservationFindResponse;
 import roomescape.web.dto.ReservationSaveRequest;
 
@@ -37,6 +39,8 @@ public class MissionStepTest {
 
     @Autowired
     private JdbcTemplate jdbcTemplate;
+    @Autowired
+    private ReservationController reservationController;
 
     @Test
     @DisplayName("GET /admin 를 요청하면 어드민 메인 페이지가 200 으로 응답한다")
@@ -181,7 +185,8 @@ public class MissionStepTest {
     }
 
     @Test
-    void 팔단계() {
+    @DisplayName("reservation_time 추가 후 예약 추가, 조회한다")
+    void step8() {
         jdbcTemplate.update("INSERT INTO reservation_time (start_at) values (?)", "12:00");
         Map<String, Object> reservation = new HashMap<>();
         reservation.put("name", "브라운");
@@ -201,4 +206,20 @@ public class MissionStepTest {
                 .statusCode(200)
                 .body("size()", is(1));
     }
+
+    @Test
+    @DisplayName("예약 컨트롤러에 JdbcTemplate 을 주입했는지 확인한다")
+    void step9() {
+        boolean isJdbcTemplateInjected = false;
+
+        for (Field field : reservationController.getClass().getDeclaredFields()) {
+            if (field.getType().equals(JdbcTemplate.class)) {
+                isJdbcTemplateInjected = true;
+                break;
+            }
+        }
+
+        assertThat(isJdbcTemplateInjected).isFalse();
+    }
+
 }

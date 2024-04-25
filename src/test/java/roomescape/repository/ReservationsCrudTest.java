@@ -1,4 +1,4 @@
-package roomescape.controller;
+package roomescape.repository;
 
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -11,7 +11,7 @@ import java.sql.SQLException;
 import static org.assertj.core.api.Assertions.assertThat;
 
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
-public class CrudTest {
+public class ReservationsCrudTest {
 
     @Autowired
     private JdbcTemplate jdbcTemplate;

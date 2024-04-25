@@ -1,6 +1,5 @@
 package roomescape.controller;
 
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
@@ -18,10 +17,13 @@ import java.util.List;
 @RequestMapping("/reservations")
 public class ReservationsController {
 
-    @Autowired
-    private ReservationRepository reservationRepository;
-    @Autowired
-    private ReservationTimeRepository reservationTimeRepository;
+    private final ReservationRepository reservationRepository;
+    private final ReservationTimeRepository reservationTimeRepository;
+
+    public ReservationsController(ReservationRepository reservationRepository, ReservationTimeRepository reservationTimeRepository) {
+        this.reservationRepository = reservationRepository;
+        this.reservationTimeRepository = reservationTimeRepository;
+    }
 
     @GetMapping
     @ResponseBody
@@ -48,6 +50,7 @@ public class ReservationsController {
     }
 
     @DeleteMapping("/{id}")
+    @ResponseBody
     @ResponseStatus(HttpStatus.OK)
     public int deleteReservation(@PathVariable Long id) {
         return reservationRepository.remove(id);

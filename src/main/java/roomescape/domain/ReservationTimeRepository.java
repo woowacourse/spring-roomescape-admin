@@ -1,6 +1,5 @@
 package roomescape.domain;
 
-import java.sql.PreparedStatement;
 import java.time.LocalTime;
 import java.time.format.DateTimeFormatter;
 import java.util.List;
@@ -9,8 +8,9 @@ import java.util.Optional;
 import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;
-import org.springframework.jdbc.support.GeneratedKeyHolder;
-import org.springframework.jdbc.support.KeyHolder;
+import org.springframework.jdbc.core.namedparam.MapSqlParameterSource;
+import org.springframework.jdbc.core.namedparam.SqlParameterSource;
+import org.springframework.jdbc.core.simple.SimpleJdbcInsert;
 import org.springframework.stereotype.Repository;
 
 @Repository
@@ -18,9 +18,14 @@ public class ReservationTimeRepository {
     private static final DateTimeFormatter TIME_FORMATTER = DateTimeFormatter.ofPattern("HH:mm");
 
     private final JdbcTemplate jdbcTemplate;
+    private final SimpleJdbcInsert simpleJdbcInsert;
 
     public ReservationTimeRepository(JdbcTemplate jdbcTemplate) {
         this.jdbcTemplate = jdbcTemplate;
+        this.simpleJdbcInsert = new SimpleJdbcInsert(jdbcTemplate)
+                .withTableName("reservation_time")
+                .usingGeneratedKeyColumns("id");
+
     }
 
     public List<ReservationTime> findAll() {
@@ -39,17 +44,10 @@ public class ReservationTimeRepository {
     }
 
     public ReservationTime create(ReservationTime reservationTime) {
-        KeyHolder keyHolder = new GeneratedKeyHolder();
-        jdbcTemplate.update(connection -> {
-            PreparedStatement ps = connection.prepareStatement(
-                    "INSERT INTO reservation_time (start_at) VALUES (?)",
-                    new String[]{"id"}
-            );
-            ps.setString(1, reservationTime.getStartAt().format(TIME_FORMATTER));
-            return ps;
-        }, keyHolder);
+        SqlParameterSource params = new MapSqlParameterSource()
+                .addValue("start_at", reservationTime.getStartAt().format(TIME_FORMATTER));
+        Long id = simpleJdbcInsert.executeAndReturnKey(params).longValue();
 
-        long id = keyHolder.getKey().longValue();
         return findById(id).orElseThrow(() -> new NoSuchElementException("예약 시간이 생성되지 않았습니다."));
     }
 

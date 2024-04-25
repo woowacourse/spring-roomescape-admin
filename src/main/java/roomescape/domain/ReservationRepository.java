@@ -1,14 +1,14 @@
 package roomescape.domain;
 
-import java.sql.PreparedStatement;
 import java.time.LocalDate;
 import java.time.LocalTime;
 import java.time.format.DateTimeFormatter;
 import java.util.List;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;
-import org.springframework.jdbc.support.GeneratedKeyHolder;
-import org.springframework.jdbc.support.KeyHolder;
+import org.springframework.jdbc.core.namedparam.MapSqlParameterSource;
+import org.springframework.jdbc.core.namedparam.SqlParameterSource;
+import org.springframework.jdbc.core.simple.SimpleJdbcInsert;
 import org.springframework.stereotype.Repository;
 
 @Repository
@@ -16,9 +16,13 @@ public class ReservationRepository {
     private static final DateTimeFormatter DATE_FORMATTER = DateTimeFormatter.ofPattern("yyyy-MM-dd");
 
     private final JdbcTemplate jdbcTemplate;
+    private final SimpleJdbcInsert simpleJdbcInsert;
 
     public ReservationRepository(JdbcTemplate jdbcTemplate) {
         this.jdbcTemplate = jdbcTemplate;
+        this.simpleJdbcInsert = new SimpleJdbcInsert(jdbcTemplate)
+                .withTableName("reservation")
+                .usingGeneratedKeyColumns("id");
     }
 
     public List<Reservation> findAll() {
@@ -53,19 +57,12 @@ public class ReservationRepository {
     }
 
     public Reservation create(Reservation reservation) {
-        KeyHolder keyHolder = new GeneratedKeyHolder();
-        jdbcTemplate.update(connection -> {
-            PreparedStatement ps = connection.prepareStatement(
-                    "INSERT INTO reservation (name, date, time_id) VALUES (?, ?, ?)",
-                    new String[]{"id"}
-            );
-            ps.setString(1, reservation.getName().getValue());
-            ps.setString(2, reservation.getDate().format(DATE_FORMATTER));
-            ps.setLong(3, reservation.getTime().getId());
-            return ps;
-        }, keyHolder);
+        SqlParameterSource params = new MapSqlParameterSource()
+                .addValue("name", reservation.getName().getValue())
+                .addValue("date", reservation.getDate().format(DATE_FORMATTER))
+                .addValue("time_id", reservation.getTime().getId());
+        Long id = simpleJdbcInsert.executeAndReturnKey(params).longValue();
 
-        long id = keyHolder.getKey().longValue();
         return findById(id);
     }
 

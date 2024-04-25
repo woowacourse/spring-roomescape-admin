@@ -1,6 +1,7 @@
 package roomescape.controller;
 
 import static org.hamcrest.Matchers.is;
+import static org.hamcrest.Matchers.startsWith;
 
 import io.restassured.RestAssured;
 import io.restassured.http.ContentType;
@@ -50,7 +51,8 @@ class ReservationTimeIntegrationTest {
                 .when().post("/times")
                 .then().log().all()
                 .statusCode(201)
-                .header("Location", "/times/3");
+                .header("Location", startsWith("/times/"))
+                .body("startAt", is("13:00"));
     }
 
     @Test

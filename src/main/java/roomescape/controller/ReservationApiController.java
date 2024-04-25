@@ -1,6 +1,7 @@
 package roomescape.controller;
 
 import org.springframework.http.ResponseEntity;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -30,7 +31,7 @@ public class ReservationApiController {
     }
 
     @PostMapping
-    public ResponseEntity<ReservationResponseDto> postReservation(@RequestBody ReservationRequestDto reservationRequestDto) {
+    public ResponseEntity<ReservationResponseDto> postReservation(@RequestBody @Validated ReservationRequestDto reservationRequestDto) {
         Reservation requestedReservation = reservationMapper.toReservation(reservationRequestDto);
         Reservation reservation = reservationService.createReservation(requestedReservation);
         URI location = UriComponentsBuilder.newInstance()

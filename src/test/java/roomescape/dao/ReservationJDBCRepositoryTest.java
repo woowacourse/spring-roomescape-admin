@@ -22,8 +22,12 @@ class ReservationJDBCRepositoryTest {
     private String date;
     private ReservationTime reservationTime;
 
+    private final JdbcTemplate jdbcTemplate;
+
     @Autowired
-    private JdbcTemplate jdbcTemplate;
+    ReservationJDBCRepositoryTest(final JdbcTemplate jdbcTemplate) {
+        this.jdbcTemplate = jdbcTemplate;
+    }
 
     @BeforeEach
     void setUp() {

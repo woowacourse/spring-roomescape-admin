@@ -18,11 +18,11 @@ public class Reservation {
     }
 
     public Reservation(final long id, final String name, final String date, final ReservationTime reservationTime) {
-        this(id, new Name(name), new Schedule(date, reservationTime));
+        this(id, new Name(name), new Schedule(new ReservationDate(date), reservationTime));
     }
 
     public Reservation(final String name, final String date, final ReservationTime reservationTime) {
-        this(NO_ID, new Name(name), new Schedule(date, reservationTime));
+        this(NO_ID, new Name(name), new Schedule(new ReservationDate(date), reservationTime));
     }
 
     public long getId() {

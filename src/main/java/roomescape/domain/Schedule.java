@@ -5,43 +5,28 @@ import roomescape.exception.InvalidReservationException;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.LocalTime;
-import java.time.format.DateTimeFormatter;
-import java.time.format.DateTimeParseException;
 
 public class Schedule {
     private static final String INVALID_SCHEDULE = "현재보다 이전으로 일정을 설정할 수 없습니다.";
 
-    private final LocalDate date;
+    private final ReservationDate date;
     private final ReservationTime time;
 
-    public Schedule(final String date, final ReservationTime time) {
+    public Schedule(final ReservationDate date, final ReservationTime time) {
         validate(date, time);
-        this.date = LocalDate.parse(date);
+        this.date = date;
         this.time = time;
     }
 
-    private void validate(final String date, final ReservationTime time) {
-        validateIfInvalidDate(date);
-        validateIfBeforeCurrent(date, time);
-    }
-
-    private void validateIfBeforeCurrent(final String date, final ReservationTime time) {
-        LocalDateTime value = LocalDateTime.of(LocalDate.parse(date), LocalTime.parse(time.getStartAt()));
+    private void validate(final ReservationDate date, final ReservationTime time) {
+        LocalDateTime value = LocalDateTime.of(LocalDate.parse(date.getValue()), LocalTime.parse(time.getStartAt()));
         if (value.isBefore(LocalDateTime.now())) {
             throw new InvalidReservationException(INVALID_SCHEDULE);
         }
     }
 
-    private void validateIfInvalidDate(final String date) {
-        try {
-            LocalDate.parse(date);
-        } catch (DateTimeParseException e) {
-            throw new InvalidReservationException("올바르지 않은 날짜입니다. date: '" + date + "'");
-        }
-    }
-
     public String getDate() {
-        return date.format(DateTimeFormatter.ISO_DATE);
+        return date.getValue();
     }
 
     public String getTime() {

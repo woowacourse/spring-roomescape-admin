@@ -1,12 +1,11 @@
-package roomescape.controller;
+package roomescape.exception;
 
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
-import roomescape.exception.InvalidReservationException;
 
 @ControllerAdvice
-public class ReservationExceptionHandler {
+public class GlobalExceptionHandler {
     @ExceptionHandler
     protected ResponseEntity<String> handleInvalidReservationException(final InvalidReservationException exception) {
         return ResponseEntity.badRequest().body(exception.getMessage());

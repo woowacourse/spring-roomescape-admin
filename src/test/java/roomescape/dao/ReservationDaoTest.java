@@ -51,13 +51,9 @@ public class ReservationDaoTest {
 
     @Test
     void findById() {
-        Optional<Reservation> reservation = reservationDao.findById(1L);
+        Reservation reservation = reservationDao.findById(1L).get();
 
-        if(reservation.isEmpty()) {
-            throw new IllegalArgumentException("존재하지 않는 id 입니다.");
-        }
-
-        assertThat(reservation.get().getId()).isEqualTo(1L);
+        assertThat(reservation.getId()).isEqualTo(1L);
     }
 
     @Test

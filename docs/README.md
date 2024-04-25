@@ -58,6 +58,6 @@
 
 - [x] `ReservationController`에 `JdbcTemplate` 필드가 사라지게 만든다.
 - [ ] 컨트롤러는 웹 요청, 응답 책임만 가진다.
-    - [ ] DB 접근 책임은 Repository가 가진다.
+    - [x] DB 접근 책임은 Repository가 가진다.
     - [ ] 비즈니스 플로우 책임은 서비스가 가진다.
     - [ ] 비즈니스 규칙 책임은 도메인이 가진다.

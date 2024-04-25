@@ -4,12 +4,17 @@ import java.sql.PreparedStatement;
 import java.time.LocalTime;
 import java.util.List;
 import org.springframework.jdbc.core.JdbcTemplate;
+import org.springframework.jdbc.core.RowMapper;
 import org.springframework.jdbc.support.GeneratedKeyHolder;
 import org.springframework.jdbc.support.KeyHolder;
 import org.springframework.stereotype.Repository;
 
 @Repository
 public class ReservationTimeH2Dao implements ReservationTimeDao {
+
+    private static final RowMapper<ReservationTime> reservationTimeRowMapper = (resultSet, rowNum) -> new ReservationTime(
+            resultSet.getLong("id"),
+            resultSet.getObject("start_at", LocalTime.class));
 
     private final JdbcTemplate jdbcTemplate;
 
@@ -20,24 +25,13 @@ public class ReservationTimeH2Dao implements ReservationTimeDao {
     @Override
     public List<ReservationTime> findAll() {
         String sql = "SELECT * FROM reservation_time";
-        return jdbcTemplate.query(
-                sql,
-                (resultSet, rowNum) -> new ReservationTime(
-                        resultSet.getLong("id"),
-                        resultSet.getObject("start_at", LocalTime.class)
-                ));
+        return jdbcTemplate.query(sql, reservationTimeRowMapper);
     }
 
     @Override
     public ReservationTime findById(Long id) {
         String sql = "SELECT * FROM reservation_time WHERE id = ?";
-        return jdbcTemplate.queryForObject(
-                sql,
-                (resultSet, rowNum) -> new ReservationTime(
-                        resultSet.getLong("id"),
-                        resultSet.getObject("start_at", LocalTime.class)),
-                id
-        );
+        return jdbcTemplate.queryForObject(sql, reservationTimeRowMapper, id);
     }
 
     @Override

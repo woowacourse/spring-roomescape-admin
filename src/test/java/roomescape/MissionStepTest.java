@@ -8,7 +8,6 @@ import io.restassured.http.ContentType;
 import java.sql.Connection;
 import java.sql.SQLException;
 import java.time.LocalDate;
-import java.time.LocalTime;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -21,7 +20,7 @@ import org.springframework.boot.test.context.SpringBootTest.WebEnvironment;
 import org.springframework.boot.test.web.server.LocalServerPort;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.test.annotation.DirtiesContext;
-import roomescape.dao.Reservation;
+import roomescape.web.dto.ReservationFindResponse;
 import roomescape.web.dto.ReservationSaveRequest;
 
 @SpringBootTest(webEnvironment = WebEnvironment.RANDOM_PORT)
@@ -66,10 +65,11 @@ public class MissionStepTest {
     @Test
     @DisplayName("POST /reservations 는 예약 추가, DELETE /reservations/id 는 예약을 취소한다")
     void step3() {
+        jdbcTemplate.update("INSERT INTO reservation_time (start_at) values (?)", "12:00");
         final ReservationSaveRequest params = new ReservationSaveRequest(
                 "브라운",
                 LocalDate.of(2023, 8, 5),
-                LocalTime.of(15, 40)
+                1L
         );
 
         RestAssured.given().log().all()
@@ -113,12 +113,13 @@ public class MissionStepTest {
     @Test
     @DisplayName("데이터베이스에 예약 하나 추가 후 예약 조회 API를 통해 조회한 예약 수와 데이터베이스 쿼리를 통해 조회한 예약 수가 같은지 비교한다")
     void step5() {
-        jdbcTemplate.update("INSERT INTO reservation (name, date, time) VALUES (?, ?, ?)", "브라운", "2023-08-05", "15:40");
-        List<Reservation> reservations = RestAssured.given().log().all()
+        jdbcTemplate.update("INSERT INTO reservation_time (start_at) values (?)", "12:00");
+        jdbcTemplate.update("INSERT INTO reservation (name, date, time_id) VALUES (?, ?, ?)", "브라운", "2023-08-05", "1");
+        List<ReservationFindResponse> reservations = RestAssured.given().log().all()
                 .when().get("/reservations")
                 .then().log().all()
                 .statusCode(200).extract()
-                .jsonPath().getList(".", Reservation.class);
+                .jsonPath().getList(".", ReservationFindResponse.class);
 
         Integer count = jdbcTemplate.queryForObject("SELECT count(1) from reservation", Integer.class);
 
@@ -128,14 +129,15 @@ public class MissionStepTest {
     @Test
     @DisplayName("조회 쿼리를 이용하여 데이터가 저장 및 삭제되었는지 확인한다")
     void step6() {
-        Map<String, String> params = new HashMap<>();
-        params.put("name", "브라운");
-        params.put("date", "2023-08-05");
-        params.put("time", "10:00");
+        jdbcTemplate.update("INSERT INTO reservation_time (start_at) values (?)", "12:00");
+        Map<String, Object> reservation = new HashMap<>();
+        reservation.put("name", "브라운");
+        reservation.put("date", "2023-08-05");
+        reservation.put("timeId", 1L);
 
         RestAssured.given().log().all()
                 .contentType(ContentType.JSON)
-                .body(params)
+                .body(reservation)
                 .when().post("/reservations")
                 .then().log().all()
                 .statusCode(200)
@@ -176,5 +178,27 @@ public class MissionStepTest {
                 .when().delete("/times/1")
                 .then().log().all()
                 .statusCode(200);
+    }
+
+    @Test
+    void 팔단계() {
+        jdbcTemplate.update("INSERT INTO reservation_time (start_at) values (?)", "12:00");
+        Map<String, Object> reservation = new HashMap<>();
+        reservation.put("name", "브라운");
+        reservation.put("date", "2023-08-05");
+        reservation.put("timeId", 1L);
+
+        RestAssured.given().log().all()
+                .contentType(ContentType.JSON)
+                .body(reservation)
+                .when().post("/reservations")
+                .then().log().all()
+                .statusCode(200);
+
+        RestAssured.given().log().all()
+                .when().get("/reservations")
+                .then().log().all()
+                .statusCode(200)
+                .body("size()", is(1));
     }
 }

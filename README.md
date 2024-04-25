@@ -44,11 +44,11 @@
 
 ## 8단계 - 예약과 시간 관리
 
-- [ ] API 명세를 따라 시간 관리 API를 수정한다.
+- [x] API 명세를 따라 시간 관리 API를 수정한다.
 - 시간 테이블에 저장된 시간 값만 선택할 수 있도록 한다.
-  - [ ] 외래키 지정을 통해`reservation` 테이블과 `reservation_time` 테이블의 관계를 설정한다.
-  - [ ] 시간 타입을 `String` 에서 `ReservationTime` 객체로 수정한다.
-  - [ ] 예약 추가 시, 시간을 문자열(ex. "10:00") 형태로 입력하던 부분을 ReservationTime 의 식별자(ex. 1)로 수정한다.
+  - [x] 외래키 지정을 통해`reservation` 테이블과 `reservation_time` 테이블의 관계를 설정한다.
+  - [x] 시간 타입을 `String` 에서 `ReservationTime` 객체로 수정한다.
+  - [x] 예약 추가 시, 시간을 문자열(ex. "10:00") 형태로 입력하던 부분을 ReservationTime 의 식별자(ex. 1)로 수정한다.
 
 
 # API 명세

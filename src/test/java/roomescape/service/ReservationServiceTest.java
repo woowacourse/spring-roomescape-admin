@@ -65,6 +65,6 @@ class ReservationServiceTest {
     @Test
     void cancelReservationTest() {
         service.cancelReservation(1L);
-        assertThat(service.findAllReservations()).isEmpty();
+        assertThat(reservationDao.isExist(1L)).isFalse();
     }
 }

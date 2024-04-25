@@ -1,4 +1,4 @@
-package roomescape.reservationtime;
+package roomescape.reservationtime.controller;
 
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;

@@ -1,7 +1,8 @@
-package roomescape.reservationtime;
+package roomescape.reservationtime.controller;
 
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import roomescape.reservationtime.service.ReservationTimeService;
 
 import java.util.List;
 
@@ -15,15 +16,15 @@ public class ReservationTimeApiController {
     }
 
     @GetMapping("/times")
-    ResponseEntity<List<ReservationTime>> getAll() {
-        List<ReservationTime> reservationTimes = reservationTimeService.getReservationTimes();
-        return ResponseEntity.ok().body(reservationTimes);
+    ResponseEntity<List<ReservationTimeResponse>> getAll() {
+        List<ReservationTimeResponse> reservationTimeResponses = reservationTimeService.getReservationTimes();
+        return ResponseEntity.ok().body(reservationTimeResponses);
     }
 
     @PostMapping("/times")
-    ResponseEntity<ReservationTime> create(@RequestBody final ReservationTimeRequest reservationTimeRequest) {
-        ReservationTime newReservationTime = reservationTimeService.saveReservationTime(reservationTimeRequest);
-        return ResponseEntity.ok().body(newReservationTime);
+    ResponseEntity<ReservationTimeResponse> create(@RequestBody final ReservationTimeRequest reservationTimeRequest) {
+        ReservationTimeResponse newReservationTimeResponse = reservationTimeService.saveReservationTime(reservationTimeRequest);
+        return ResponseEntity.ok().body(newReservationTimeResponse);
     }
 
     @DeleteMapping("/times/{id}")

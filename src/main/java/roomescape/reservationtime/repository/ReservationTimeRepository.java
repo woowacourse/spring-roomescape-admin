@@ -1,9 +1,10 @@
-package roomescape.reservationtime;
+package roomescape.reservationtime.repository;
 
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.support.GeneratedKeyHolder;
 import org.springframework.jdbc.support.KeyHolder;
 import org.springframework.stereotype.Repository;
+import roomescape.reservationtime.controller.ReservationTimeResponse;
 
 import java.sql.PreparedStatement;
 import java.time.LocalTime;
@@ -18,16 +19,16 @@ public class ReservationTimeRepository {
         this.jdbcTemplate = jdbcTemplate;
     }
 
-    public List<ReservationTime> findAll() {
+    public List<ReservationTimeResponse> findAll() {
         String sql = "SELECT id, start_at FROM reservation_time";
         return jdbcTemplate.query(sql, (resultSet, rowNumber) ->
-                new ReservationTime(resultSet.getLong("id"), LocalTime.parse(resultSet.getString("start_at"))));
+                new ReservationTimeResponse(resultSet.getLong("id"), LocalTime.parse(resultSet.getString("start_at"))));
     }
 
-    public ReservationTime findById(final Long timeId) {
+    public ReservationTimeResponse findById(final Long timeId) {
         String sql = "SELECT start_at FROM reservation_time WHERE id = ?";
         return jdbcTemplate.queryForObject(sql, (resultSet, rowNumber) ->
-                new ReservationTime(timeId, LocalTime.parse(resultSet.getString("start_at"))), timeId);
+                new ReservationTimeResponse(timeId, LocalTime.parse(resultSet.getString("start_at"))), timeId);
     }
 
     public Long save(final LocalTime startAt) {

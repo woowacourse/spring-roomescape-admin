@@ -1,8 +1,11 @@
-package roomescape.reservation;
+package roomescape.reservation.service;
 
 import org.springframework.stereotype.Service;
-import roomescape.reservationtime.ReservationTime;
-import roomescape.reservationtime.ReservationTimeRepository;
+import roomescape.reservation.controller.ReservationRequest;
+import roomescape.reservation.controller.ReservationResponse;
+import roomescape.reservation.repository.ReservationRepository;
+import roomescape.reservationtime.controller.ReservationTimeResponse;
+import roomescape.reservationtime.repository.ReservationTimeRepository;
 
 import java.util.List;
 
@@ -17,14 +20,14 @@ public class ReservationService {
         this.reservationRepository = reservationRepository;
     }
 
-    public List<Reservation> getReservations() {
+    public List<ReservationResponse> getReservations() {
         return reservationRepository.findAll();
     }
 
-    public Reservation saveReservation(final ReservationRequest reservationRequest) {
+    public ReservationResponse saveReservation(final ReservationRequest reservationRequest) {
         Long id = reservationRepository.save(reservationRequest.getName(), reservationRequest.getDate(), reservationRequest.getTimeId());
-        ReservationTime reservationTime = reservationTimeRepository.findById(reservationRequest.getTimeId());
-        return new Reservation(id, reservationRequest.getName(), reservationRequest.getDate(), reservationTime);
+        ReservationTimeResponse reservationTimeResponse = reservationTimeRepository.findById(reservationRequest.getTimeId());
+        return new ReservationResponse(id, reservationRequest.getName(), reservationRequest.getDate(), reservationTimeResponse);
     }
 
     public void deleteReservationTime(Long id) {

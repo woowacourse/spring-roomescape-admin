@@ -1,7 +1,8 @@
-package roomescape.reservation;
+package roomescape.reservation.controller;
 
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import roomescape.reservation.service.ReservationService;
 
 import java.util.List;
 
@@ -15,15 +16,15 @@ public class ReservationApiController {
     }
 
     @GetMapping("/reservations")
-    public ResponseEntity<List<Reservation>> getAll() {
-        List<Reservation> reservations = reservationService.getReservations();
-        return ResponseEntity.ok().body(reservations);
+    public ResponseEntity<List<ReservationResponse>> getAll() {
+        List<ReservationResponse> reservationResponses = reservationService.getReservations();
+        return ResponseEntity.ok().body(reservationResponses);
     }
 
     @PostMapping("/reservations")
-    public ResponseEntity<Reservation> create(@RequestBody final ReservationRequest reservationRequest) {
-        final Reservation newReservation = reservationService.saveReservation(reservationRequest);
-        return ResponseEntity.ok().body(newReservation);
+    public ResponseEntity<ReservationResponse> create(@RequestBody final ReservationRequest reservationRequest) {
+        final ReservationResponse newReservationResponse = reservationService.saveReservation(reservationRequest);
+        return ResponseEntity.ok().body(newReservationResponse);
     }
 
     @DeleteMapping("/reservations/{id}")

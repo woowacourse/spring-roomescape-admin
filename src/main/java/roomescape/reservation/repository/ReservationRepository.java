@@ -1,10 +1,11 @@
-package roomescape.reservation;
+package roomescape.reservation.repository;
 
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.support.GeneratedKeyHolder;
 import org.springframework.jdbc.support.KeyHolder;
 import org.springframework.stereotype.Repository;
-import roomescape.reservationtime.ReservationTime;
+import roomescape.reservation.controller.ReservationResponse;
+import roomescape.reservationtime.controller.ReservationTimeResponse;
 
 import java.sql.PreparedStatement;
 import java.time.LocalDate;
@@ -20,7 +21,7 @@ public class ReservationRepository {
         this.jdbcTemplate = jdbcTemplate;
     }
 
-    public List<Reservation> findAll() {
+    public List<ReservationResponse> findAll() {
         String sql = "SELECT r.id as reservation_id, \n" +
                 "    r.name, \n" +
                 "    r.date, \n" +
@@ -30,11 +31,11 @@ public class ReservationRepository {
                 "inner join reservation_time as t \n" +
                 "on r.time_id = t.id";
         return jdbcTemplate.query(sql, (resultSet, rowNumber) ->
-                new Reservation(
+                new ReservationResponse(
                         resultSet.getLong("id"),
                         resultSet.getString("name"),
                         LocalDate.parse(resultSet.getString("date")),
-                        new ReservationTime(resultSet.getLong("time_id"),
+                        new ReservationTimeResponse(resultSet.getLong("time_id"),
                                 LocalTime.parse(resultSet.getString("time_value")))));
     }
 

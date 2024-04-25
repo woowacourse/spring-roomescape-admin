@@ -18,4 +18,4 @@
 ## 리팩토링 목록
 
 - [x] 시간 테이블에 저장된 시간만 선택할 수 있도록 수정
-- [ ] 시간 타입을 `LocalTime`에서 `ReservationTime` 객체로 수정
+- [x] 시간 타입을 `LocalTime`에서 `ReservationTime` 객체로 수정

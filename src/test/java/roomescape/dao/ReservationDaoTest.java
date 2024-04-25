@@ -1,11 +1,8 @@
 package roomescape.dao;
 
-import io.restassured.RestAssured;
-import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.boot.test.web.server.LocalServerPort;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.support.GeneratedKeyHolder;
 import org.springframework.jdbc.support.KeyHolder;
@@ -22,9 +19,6 @@ import static org.assertj.core.api.Assertions.assertThat;
 @DirtiesContext(classMode = DirtiesContext.ClassMode.BEFORE_EACH_TEST_METHOD)
 public class ReservationDaoTest {
 
-    @LocalServerPort
-    int port;
-
     @Autowired
     private final JdbcTemplate jdbcTemplate;
 
@@ -35,11 +29,6 @@ public class ReservationDaoTest {
     public ReservationDaoTest(JdbcTemplate jdbcTemplate, ReservationDao reservationDao) {
         this.jdbcTemplate = jdbcTemplate;
         this.reservationDao = reservationDao;
-    }
-
-    @BeforeEach
-    void setUp() {
-        RestAssured.port = port;
     }
 
     @Test

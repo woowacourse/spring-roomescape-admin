@@ -28,7 +28,12 @@ class TimeControllerTest {
     @LocalServerPort
     private int port;
     @Autowired
-    private TimeService timeService;
+    private final TimeService timeService;
+
+    @Autowired
+    public TimeControllerTest(TimeService timeService) {
+        this.timeService = timeService;
+    }
 
     @BeforeEach
     public void setUpTestPort() {

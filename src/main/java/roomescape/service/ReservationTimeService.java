@@ -32,7 +32,7 @@ public class ReservationTimeService {
     public ReservationTime findTimeById(Long id) {
         Optional<ReservationTime> optionalReservationTime = timeDao.findById(id);
         if (optionalReservationTime.isEmpty()) {
-            throw new NoSuchElementException("[ERROR] 해당 예약 시간을 찾을 수 없습니다");
+            throw new NoSuchElementException("[ERROR] 예약 시간을 찾을 수 없습니다");
         }
         return optionalReservationTime.get();
     }

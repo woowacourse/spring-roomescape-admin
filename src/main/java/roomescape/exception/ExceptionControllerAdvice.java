@@ -10,7 +10,7 @@ import java.util.NoSuchElementException;
 public class ExceptionControllerAdvice {
 
     @ExceptionHandler(NoSuchElementException.class)
-    public ResponseEntity<String> NoSuchElementException(NoSuchElementException e) {
-        return ResponseEntity.badRequest().body(e.getMessage());
+    public ResponseEntity<String> NoSuchElementException() {
+        return ResponseEntity.notFound().build();
     }
 }

@@ -31,7 +31,6 @@ public class ReservationTimeController {
         return ResponseEntity.ok(response);
     }
 
-    // TODO: 시간이 삭제 되면 예약도 삭제되어야 하나?
     @DeleteMapping("/{id}")
     public ResponseEntity<Integer> deleteTime(@PathVariable int id) {
         reservationTimeService.deleteTime(id);

@@ -1,20 +1,16 @@
 package roomescape.domain.reservation;
 
+import org.springframework.format.annotation.DateTimeFormat;
+
 import java.time.LocalDate;
-import java.time.format.DateTimeFormatter;
 
 public class ReservationDate {
-    private static final DateTimeFormatter DATE_FORMATTER = DateTimeFormatter.ofPattern("yyyy-MM-dd");
-
+    @DateTimeFormat(pattern = "yyyy-mm-dd")
     private final LocalDate date;
 
     public ReservationDate(LocalDate date) {
         validateDate(date);
         this.date = date;
-    }
-
-    public ReservationDate(String date) {
-        this(LocalDate.parse(date, DATE_FORMATTER));
     }
 
     private void validateDate(LocalDate date) {

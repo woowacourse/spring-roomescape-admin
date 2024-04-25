@@ -29,8 +29,7 @@ public class ReservationService {
             throw new IllegalArgumentException("이미 예약된 시간입니다.");
         }
 
-        Long savedId = reservationDao.add(createReservation(reservationRequest));
-        return reservationDao.findById(savedId);
+        return reservationDao.add(createReservation(reservationRequest));
     }
 
     public void deleteReservation(Long id) {
@@ -43,7 +42,6 @@ public class ReservationService {
     }
 
     private boolean hasSameTimeReservation(ReservationRequest reservationRequest) {
-        List<Reservation> sameTimeReservations = reservationDao.findAllByDateTime(createReservation(reservationRequest));
-        return sameTimeReservations.isEmpty();
+        return reservationDao.findAllByDateTime(createReservation(reservationRequest)).isEmpty();
     }
 }

@@ -35,21 +35,13 @@ public class ReservationDao {
         return jdbcTemplate.query(sql, reservationRowMapper);
     }
 
-    public Reservation findById(Long id) {
-        String sql = "SELECT r.id as reservation_id, r.name, r.reservation_date, t.id as time_id, t.start_at as time_value" +
-                " FROM reservation as r" +
-                " inner join reservation_time as t" +
-                " on r.time_id = t.id" +
-                " WHERE r.id = ?";
-        return jdbcTemplate.queryForObject(sql, reservationRowMapper, id);
-    }
-
-    public Long add(Reservation reservation) {
+    public Reservation add(Reservation reservation) {
         SqlParameterSource parameters = new MapSqlParameterSource()
                 .addValue("name", reservation.getName().getName())
                 .addValue("reservation_date", reservation.getDate().getDate())
                 .addValue("time_id", reservation.getTime().getId());
-        return simpleJdbcInsert.executeAndReturnKey(parameters).longValue();
+        Long savedId = simpleJdbcInsert.executeAndReturnKey(parameters).longValue();
+        return new Reservation(savedId, reservation.getName(), reservation.getDate(), reservation.getTime());
     }
 
     public void delete(Long id) {

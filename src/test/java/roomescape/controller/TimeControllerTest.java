@@ -26,6 +26,21 @@ class TimeControllerTest {
         assertThat(controller.getTimes()).isEmpty();
     }
 
+    @DisplayName("시간 예약 저장")
+    @Test
+    void saveTime() {
+        //given
+        final TimeRequest time = new TimeRequest("14:00");
+        final TimeResponse expected = new TimeResponse(1L, "14:00");
+
+        //when
+        final ResponseEntity<TimeResponse> saved = controller.save(time);
+        final TimeResponse body = saved.getBody();
+
+        //then
+        assertThat(body).isEqualTo(expected);
+    }
+
     @DisplayName("예약 삭제")
     @Test
     void deleteReservation() {

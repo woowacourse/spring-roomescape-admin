@@ -16,13 +16,13 @@ import java.time.format.DateTimeFormatter;
 import java.util.List;
 
 @Repository
-public class MemoryReservationRepository implements ReservationRepository {
+public class ReservationH2Repository implements ReservationRepository {
 
     private final JdbcTemplate jdbcTemplate;
     private final SimpleJdbcInsert simpleJdbcInsert;
     private final ReservationTimeRepository timeRepository;
 
-    public MemoryReservationRepository(JdbcTemplate jdbcTemplate, DataSource dataSource, ReservationTimeRepository timeRepository) {
+    public ReservationH2Repository(JdbcTemplate jdbcTemplate, DataSource dataSource, ReservationTimeRepository timeRepository) {
         this.jdbcTemplate = jdbcTemplate;
         this.simpleJdbcInsert = new SimpleJdbcInsert(dataSource)
                 .withTableName("reservation")

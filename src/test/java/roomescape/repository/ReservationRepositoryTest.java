@@ -26,10 +26,10 @@ class ReservationRepositoryTest {
     @Autowired
     ReservationRepositoryTest(JdbcTemplate jdbcTemplate, DataSource dataSource) {
         this.jdbcTemplate = jdbcTemplate;
-        this.reservationRepository = new MemoryReservationRepository(
+        this.reservationRepository = new ReservationH2Repository(
                 jdbcTemplate,
                 dataSource,
-                new MemoryReservationTimeRepository(jdbcTemplate, dataSource));
+                new ReservationTimeH2Repository(jdbcTemplate, dataSource));
     }
 
     @BeforeEach

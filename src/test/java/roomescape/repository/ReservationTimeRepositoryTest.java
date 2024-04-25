@@ -24,7 +24,7 @@ class ReservationTimeRepositoryTest {
     @Autowired
     ReservationTimeRepositoryTest(JdbcTemplate jdbcTemplate, DataSource dataSource) {
         this.jdbcTemplate = jdbcTemplate;
-        this.timeRepository = new MemoryReservationTimeRepository(jdbcTemplate, dataSource);
+        this.timeRepository = new ReservationTimeH2Repository(jdbcTemplate, dataSource);
     }
 
 

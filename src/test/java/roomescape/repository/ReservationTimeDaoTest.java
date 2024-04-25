@@ -3,29 +3,22 @@ package roomescape.repository;
 import static org.assertj.core.api.Assertions.assertThat;
 
 import java.util.List;
-import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.jdbc.JdbcTest;
-import org.springframework.jdbc.core.JdbcTemplate;
+import org.springframework.context.annotation.Import;
 import org.springframework.test.annotation.DirtiesContext;
 import roomescape.dto.ReservationTimeRequest;
 import roomescape.entity.ReservationTime;
 
 @JdbcTest
+@Import(ReservationTimeDao.class)
 @DirtiesContext(classMode = DirtiesContext.ClassMode.BEFORE_EACH_TEST_METHOD)
 class ReservationTimeDaoTest {
 
     @Autowired
-    private JdbcTemplate jdbcTemplate;
-
     private ReservationTimeDao timeDao;
-
-    @BeforeEach
-    void setUp() {
-        timeDao = new ReservationTimeDao(jdbcTemplate);
-    }
 
     @DisplayName("시간을 정상적으로 추가한다.")
     @Test

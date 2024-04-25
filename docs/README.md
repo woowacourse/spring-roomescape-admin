@@ -32,3 +32,62 @@
 - [x] 예약시간 추가 API 구현
 - [x] 예약시간 조회 API 구현
 - [x] 예약시간 삭제 API 구현
+
+## 8단계
+- [ ] 예약 페이지 파일 수정
+- [ ] 예약 추가 API 수정
+- [ ] 예약 조회 API 수정
+
+## API 명세
+
+### 예약 추가 API
+
+**Request**
+```
+POST /reservations HTTP/1.1
+content-type: application/json
+
+{
+    "date": "2023-08-05",
+    "name": "브라운",
+    "timeId": 1
+}
+```
+
+**Response**
+```
+HTTP/1.1 200
+Content-Type: application/json
+
+{
+    "id": 1,
+    "name": "브라운",
+    "date": "2023-08-05",
+    "time" : {
+        "id": 1,
+        "startAt" : "10:00"
+    }
+}
+```
+
+### 예약 조회 API
+
+**Request**
+```
+GET /reservations HTTP/1.1
+```
+
+**Response**
+```
+[
+    {
+        "id": 1,
+        "name": "브라운",
+        "date": "2023-08-05",
+        "time": {
+            "id": 1,
+            "startAt": "10:00"
+        }
+    }
+]
+```

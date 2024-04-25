@@ -10,11 +10,11 @@ import roomescape.domain.Reservation;
 import roomescape.domain.ReservationTime;
 
 @Repository
-public class ReservationJdbcDao implements ReservationDao {
+public class JdbcReservationDao implements ReservationDao {
     private final JdbcTemplate jdbcTemplate;
     private final SimpleJdbcInsert simpleJdbcInsert;
 
-    public ReservationJdbcDao(JdbcTemplate jdbcTemplate) {
+    public JdbcReservationDao(JdbcTemplate jdbcTemplate) {
         this.jdbcTemplate = jdbcTemplate;
         this.simpleJdbcInsert = new SimpleJdbcInsert(jdbcTemplate)
                 .withTableName("reservation")

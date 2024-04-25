@@ -1,5 +1,6 @@
 package roomescape.repository.reservationtime;
 
+import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;
 import org.springframework.jdbc.core.namedparam.BeanPropertySqlParameterSource;
@@ -33,18 +34,13 @@ public class ReservationTimeDao implements ReservationTimeRepository {
     }
 
     public Optional<ReservationTime> findById(Long id) {
-        if (!existsById(id)) {
+        try {
+            String sql = "SELECT * FROM reservation_time WHERE id = ?";
+            ReservationTime reservationTime = jdbcTemplate.queryForObject(sql, getReservationTimeRowMapper(), id);
+            return Optional.ofNullable(reservationTime);
+        } catch (EmptyResultDataAccessException exception) {
             return Optional.empty();
         }
-
-        String sql = "SELECT * FROM reservation_time WHERE id = ?";
-        ReservationTime reservationTime = jdbcTemplate.queryForObject(sql, getReservationTimeRowMapper(), id);
-        return Optional.ofNullable(reservationTime);
-    }
-
-    private Boolean existsById(Long id) {
-        String sql = "SELECT EXISTS (SELECT * FROM reservation_time WHERE id = ?)";
-        return jdbcTemplate.queryForObject(sql, Boolean.class, id);
     }
 
     public List<ReservationTime> findAll() {

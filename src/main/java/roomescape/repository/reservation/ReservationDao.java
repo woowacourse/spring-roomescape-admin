@@ -1,5 +1,6 @@
 package roomescape.repository.reservation;
 
+import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;
 import org.springframework.jdbc.core.namedparam.MapSqlParameterSource;
@@ -38,19 +39,14 @@ public class ReservationDao implements ReservationRepository {
     }
 
     public Optional<Reservation> findById(Long id) {
-        if (!existsById(id)) {
+        try {
+            String sql = "SELECT r.id AS reservation_id, r.name, r.date, t.id AS time_id, t.start_at AS start_at " +
+                    "FROM reservation AS r INNER JOIN reservation_time as t on r.time_id = t.id WHERE r.id = ?";
+            Reservation reservation = jdbcTemplate.queryForObject(sql, getReservationRowMapper(), id);
+            return Optional.ofNullable(reservation);
+        } catch (EmptyResultDataAccessException exception) {
             return Optional.empty();
         }
-
-        String sql = "SELECT r.id AS reservation_id, r.name, r.date, t.id AS time_id, t.start_at AS start_at " +
-                "FROM reservation AS r INNER JOIN reservation_time as t on r.time_id = t.id WHERE r.id = ?";
-        Reservation reservation = jdbcTemplate.queryForObject(sql, getReservationRowMapper(), id);
-        return Optional.ofNullable(reservation);
-    }
-
-    private Boolean existsById(Long id) {
-        String sql = "SELECT EXISTS (SELECT * FROM reservation WHERE id = ?)";
-        return jdbcTemplate.queryForObject(sql, Boolean.class, id);
     }
 
     public List<Reservation> findAll() {

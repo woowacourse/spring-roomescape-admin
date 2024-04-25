@@ -14,10 +14,6 @@ public class Reservation {
         this.time = time;
     }
 
-    public Reservation(long id, Reservation reservation) {
-        this(id, reservation.getName(), reservation.getDate(), reservation.getTime());
-    }
-
     public long getId() {
         return id;
     }

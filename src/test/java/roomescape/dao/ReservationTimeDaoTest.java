@@ -8,7 +8,6 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.annotation.DirtiesContext;
-import roomescape.dao.ReservationTimeDao;
 import roomescape.domain.ReservationTime;
 
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.DEFINED_PORT)
@@ -37,5 +36,13 @@ class ReservationTimeDaoTest {
         List<ReservationTime> reservationTimes = reservationTimeDao.findAll();
 
         assertThat(reservationTimes).size().isEqualTo(2);
+    }
+
+    @Test
+    void delete() {
+        ReservationTime savedTime = reservationTimeDao.save(time);
+        reservationTimeDao.delete(savedTime.getId());
+
+        assertThat(reservationTimeDao.findAll()).isEmpty();
     }
 }

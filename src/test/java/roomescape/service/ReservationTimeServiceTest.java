@@ -42,6 +42,4 @@ class ReservationTimeServiceTest {
         List<ReservationTime> allReservationTimes = reservationTimeService.findAllReservationTimes();
         assertThat(allReservationTimes).hasSize(1);
     }
-
-
 }

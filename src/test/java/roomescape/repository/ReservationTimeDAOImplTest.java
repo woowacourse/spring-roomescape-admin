@@ -93,4 +93,11 @@ class ReservationTimeDAOImplTest {
         Integer count = jdbcTemplate.queryForObject("select count(1) from reservation_time", Integer.class);
         assertThat(count).isEqualTo(1);
     }
+
+    @DisplayName("아이디에 해당하는 예약 시간을 조회한다.")
+    @Test
+    void should_get_reservation_time() {
+        ReservationTime reservationTime = reservationTimeDAOImpl.selectReservationById(1);
+        assertThat(reservationTime.getStartAt()).isEqualTo(LocalTime.of(10, 0));
+    }
 }

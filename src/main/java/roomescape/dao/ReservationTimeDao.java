@@ -4,7 +4,6 @@ import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;
 import org.springframework.stereotype.Component;
 import roomescape.domain.ReservationTime;
-import roomescape.dto.CreateReservationTimeRequest;
 
 import java.util.List;
 
@@ -22,9 +21,9 @@ public class ReservationTimeDao {
             resultSet.getTime("start_at").toLocalTime()
     );
 
-    public int create(CreateReservationTimeRequest request) {
+    public int create(ReservationTime reservationTime) {
         return jdbcTemplate.update("insert into reservation_time (start_at) values (?)",
-                request.startAt());
+                reservationTime.getStartAt());
     }
 
     public List<ReservationTime> findAll() {

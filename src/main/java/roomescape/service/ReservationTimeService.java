@@ -30,9 +30,10 @@ public class ReservationTimeService {
     }
 
     public CreateReservationTimeResponse createTime(CreateReservationTimeRequest request) {
-        int createdId = reservationTimeDao.create(request);
-        ReservationTime reservationTime = new ReservationTime(createdId, request.startAt());
-        return reservationTimeMapper.toCreateReservationTimeResponse(reservationTime);
+        ReservationTime requestedReservationTime = reservationTimeMapper.toReservationTime(request);
+        int createdId = reservationTimeDao.create(requestedReservationTime);
+        ReservationTime createdReservationTime = new ReservationTime(createdId, request.startAt());
+        return reservationTimeMapper.toCreateReservationTimeResponse(createdReservationTime);
     }
 
     public void deleteTime(int timeId) {

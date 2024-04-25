@@ -1,5 +1,8 @@
 package roomescape.domain;
 
+import org.springframework.http.HttpStatus;
+import roomescape.core.exception.ReservationTimeException;
+
 import java.time.LocalTime;
 
 public class ReservationTime {
@@ -11,12 +14,23 @@ public class ReservationTime {
     }
 
     public ReservationTime(int id) {
-        this(id, null);
+        this(id, LocalTime.MIN);
     }
 
     public ReservationTime(int id, LocalTime startAt) {
+        validateNotNull(startAt);
         this.id = id;
         this.startAt = startAt;
+    }
+
+    public ReservationTime(LocalTime startAt) {
+        this(-1, startAt);
+    }
+
+    private void validateNotNull(LocalTime startAt) {
+        if (startAt == null) {
+            throw new ReservationTimeException(HttpStatus.BAD_REQUEST, "시작 시간은 비어있을 수 없습니다.");
+        }
     }
 
     public int getId() {

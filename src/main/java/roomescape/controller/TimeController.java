@@ -11,7 +11,7 @@ import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 import roomescape.controller.dto.TimeRequest;
 import roomescape.controller.dto.TimeResponse;
-import roomescape.domain.Time;
+import roomescape.domain.ReservationTime;
 import roomescape.repository.TimeRepository;
 
 import java.util.List;
@@ -26,8 +26,8 @@ public class TimeController {
 
     @PostMapping("/times")
     public ResponseEntity<TimeResponse> createTime(@RequestBody TimeRequest timeRequest) {
-        Time time = new Time(null, timeRequest.startAt());
-        Time savedTime = timeRepository.insert(time);
+        ReservationTime time = new ReservationTime(null, timeRequest.startAt());
+        ReservationTime savedTime = timeRepository.insert(time);
 
         return ResponseEntity.ok().body(new TimeResponse(savedTime.id(), savedTime.startAt()));
     }

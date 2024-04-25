@@ -5,7 +5,7 @@ import org.springframework.jdbc.core.namedparam.BeanPropertySqlParameterSource;
 import org.springframework.jdbc.core.namedparam.SqlParameterSource;
 import org.springframework.jdbc.core.simple.SimpleJdbcInsert;
 import org.springframework.stereotype.Repository;
-import roomescape.domain.Time;
+import roomescape.domain.ReservationTime;
 
 import javax.sql.DataSource;
 import java.util.List;
@@ -23,17 +23,17 @@ public class TimeRepository {
                 .usingGeneratedKeyColumns("id");
     }
 
-    public Time insert(Time time) {
+    public ReservationTime insert(ReservationTime time) {
         SqlParameterSource params = new BeanPropertySqlParameterSource(time);
         long id = jdbcInsert.executeAndReturnKey(params).intValue();
 
-        return new Time(id, time.startAt());
+        return new ReservationTime(id, time.startAt());
     }
 
-    public List<Time> list() {
+    public List<ReservationTime> list() {
         String sql = "SELECT * FROM reservation_time";
-        List<Time> times = jdbcTemplate.query(sql, (resultSet, rowNum) -> {
-            Time time = new Time(
+        List<ReservationTime> times = jdbcTemplate.query(sql, (resultSet, rowNum) -> {
+            ReservationTime time = new ReservationTime(
                     resultSet.getLong("id"),
                     resultSet.getTime("start_at").toLocalTime()
             );

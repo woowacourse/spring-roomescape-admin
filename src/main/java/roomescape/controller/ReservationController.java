@@ -5,7 +5,6 @@ import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.simple.SimpleJdbcInsert;
 import org.springframework.web.bind.annotation.*;
 import roomescape.domain.Reservation;
-import roomescape.domain.ReservationTime;
 import roomescape.dto.ReservationRequest;
 import roomescape.service.ReservationService;
 
@@ -29,28 +28,7 @@ public class ReservationController {
 
     @GetMapping("/reservations")
     public ResponseEntity<List<Reservation>> reservations() {
-        final String sql =
-                "SELECT " +
-                        "r.id AS reservation_id, " +
-                        "r.name, " +
-                        "r.date, " +
-                        "t.id AS time_id, " +
-                        "t.start_at AS time_value " +
-                        "FROM reservation AS r " +
-                        "INNER JOIN reservation_time AS t " +
-                        "ON r.time_id = t.id";
-
-        final List<Reservation> reservations = jdbcTemplate.query(sql, (resultSet, rowNum) -> new Reservation(
-                resultSet.getLong("id"),
-                resultSet.getString("name"),
-                resultSet.getDate("date").toLocalDate(),
-                new ReservationTime(
-                        resultSet.getLong("time_id"),
-                        resultSet.getTime("time_value").toLocalTime()
-                )
-        ));
-
-        return ResponseEntity.ok(reservations);
+        return ResponseEntity.ok(reservationService.findAll());
     }
 
     @PostMapping("/reservations")

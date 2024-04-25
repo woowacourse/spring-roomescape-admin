@@ -10,6 +10,7 @@ import roomescape.domain.ReservationTime;
 import java.sql.Date;
 import java.sql.PreparedStatement;
 import java.time.LocalDate;
+import java.util.List;
 
 @Repository
 public class ReservationDAO {
@@ -37,5 +38,28 @@ public class ReservationDAO {
 
         final long id = keyHolder.getKey().longValue();
         return new Reservation(id, name, date, time);
+    }
+
+    public List<Reservation> selectAll() {
+        final String sql =
+                "SELECT " +
+                        "r.id AS reservation_id, " +
+                        "r.name, " +
+                        "r.date, " +
+                        "t.id AS time_id, " +
+                        "t.start_at AS time_value " +
+                "FROM reservation AS r " +
+                "INNER JOIN reservation_time AS t " +
+                "ON r.time_id = t.id";
+
+        return jdbcTemplate.query(sql, (resultSet, rowNum) -> new Reservation(
+                resultSet.getLong("id"),
+                resultSet.getString("name"),
+                resultSet.getDate("date").toLocalDate(),
+                new ReservationTime(
+                        resultSet.getLong("time_id"),
+                        resultSet.getTime("time_value").toLocalTime()
+                )
+        ));
     }
 }

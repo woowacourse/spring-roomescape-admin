@@ -29,7 +29,7 @@ public class ReservationService {
     }
 
     public List<Reservation> findAll() {
-        return null;
+        return reservationDAO.selectAll();
     }
 
     public void delete() {

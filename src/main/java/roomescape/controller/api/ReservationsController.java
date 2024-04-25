@@ -8,8 +8,8 @@ import roomescape.service.ReservationService;
 
 import java.util.List;
 
-@RestController
 @RequestMapping("/reservations")
+@RestController
 public class ReservationsController {
 
     private final ReservationService reservationService;

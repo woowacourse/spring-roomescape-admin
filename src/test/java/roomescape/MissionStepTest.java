@@ -111,7 +111,8 @@ public class MissionStepTest {
     }
 
     @Test
-    void 사단계() {
+    @DisplayName("Connection을 확인한다.")
+    void getConnection() {
         try (Connection connection = jdbcTemplate.getDataSource().getConnection()) {
             assertThat(connection).isNotNull();
             assertThat(connection.getCatalog()).isEqualTo("DATABASE");
@@ -122,7 +123,8 @@ public class MissionStepTest {
     }
 
     @Test
-    void 오단계() {
+    @DisplayName("시간을 추가한다.")
+    void createReservationTime() {
         jdbcTemplate.update("INSERT INTO reservation_time (start_at) VALUES (?)", "15:40");
         jdbcTemplate.update("INSERT INTO reservation (name, date, time_id) VALUES (?, ?, ?)", "브라운", "2023-08-05", 1);
 
@@ -138,7 +140,8 @@ public class MissionStepTest {
     }
 
     @Test
-    void 육단계() {
+    @DisplayName("시간을 삭제한다.")
+    void deleteReservationTime() {
         jdbcTemplate.update("INSERT INTO reservation_time (start_at) VALUES (?)", "10:00");
         Map<String, Object> params = new HashMap<>();
         params.put("name", "브라운");
@@ -166,7 +169,8 @@ public class MissionStepTest {
     }
 
     @Test
-    void 칠단계() {
+    @DisplayName("시간을 조회한다.")
+    void readReservationTime() {
         Map<String, String> params = new HashMap<>();
         params.put("startAt", "10:00");
 
@@ -190,7 +194,8 @@ public class MissionStepTest {
     }
 
     @Test
-    void 팔단계() {
+    @DisplayName("예약을 조회한다.")
+    void readReservation() {
         jdbcTemplate.update("INSERT INTO reservation_time (start_at) VALUES (?)", "10:00");
         Map<String, Object> reservation = new HashMap<>();
         reservation.put("name", "브라운");
@@ -212,7 +217,8 @@ public class MissionStepTest {
     }
 
     @Test
-    void 구단계() {
+    @DisplayName("ReservationController에 JdbcTemplate 필드가 사라진 것을 확인한다.")
+    void hasJdbcTemplate() {
         boolean isJdbcTemplateInjected = false;
 
         for (Field field : reservationController.getClass().getDeclaredFields()) {

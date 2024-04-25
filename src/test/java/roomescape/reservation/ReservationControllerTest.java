@@ -76,7 +76,7 @@ class ReservationControllerTest {
         assertThat(countAfterDelete).isEqualTo(0);
     }
 
-    @DisplayName("컨트롤럴와 DB 관련 로직 클래스의 분리를 확인한다.")
+    @DisplayName("컨트롤러와 DB 관련 로직 클래스의 분리를 확인한다.")
     @Test
     void layeredStructure() {
         boolean isJdbcTemplateInjected = false;
@@ -96,7 +96,7 @@ class ReservationControllerTest {
     }
 
     static void insertReservationTime(JdbcTemplate jdbcTemplate) {
-        jdbcTemplate.update("INSERT INTO reservation_time (start_at) VALUES '10:00'");
+        jdbcTemplate.update("INSERT INTO reservation_time (start_at) VALUES ('10:00')");
     }
 
     static void insertReservation(JdbcTemplate jdbcTemplate) {

@@ -1,7 +1,7 @@
 package roomescape.domain;
 
 import org.springframework.http.HttpStatus;
-import roomescape.core.exception.ReservationException;
+import roomescape.exception.ReservationException;
 
 import java.time.LocalDate;
 

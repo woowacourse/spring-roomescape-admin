@@ -2,12 +2,12 @@ package roomescape.service;
 
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
-import roomescape.core.exception.DeleteReservationTimeException;
 import roomescape.dao.ReservationDao;
 import roomescape.dao.ReservationTimeDao;
 import roomescape.domain.ReservationTime;
 import roomescape.dto.CreateReservationTimeRequest;
 import roomescape.dto.CreateReservationTimeResponse;
+import roomescape.exception.DeleteReservationTimeException;
 import roomescape.mapper.ReservationTimeMapper;
 
 import java.util.List;

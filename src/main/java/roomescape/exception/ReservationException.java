@@ -1,6 +1,7 @@
-package roomescape.core.exception;
+package roomescape.exception;
 
 import org.springframework.http.HttpStatus;
+import roomescape.core.exception.CustomException;
 
 public class ReservationException extends CustomException {
 

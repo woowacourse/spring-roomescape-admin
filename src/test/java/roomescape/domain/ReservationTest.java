@@ -4,7 +4,6 @@ import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 
 import java.time.LocalDate;
-import java.time.LocalTime;
 
 import static org.junit.jupiter.api.Assertions.*;
 
@@ -16,7 +15,7 @@ class ReservationTest {
         //given, when, then
         assertThrows(IllegalArgumentException.class,
         () -> {
-            new Reservation(1L, "", LocalDate.now(), LocalTime.now());
+            new Reservation(1L, "", LocalDate.now(), new TimeSlot("23:59"));
         });
     }
 
@@ -26,7 +25,7 @@ class ReservationTest {
         //given, when, then
         assertThrows(IllegalArgumentException.class,
                 () -> {
-                    new Reservation(1L, "Ash", null, LocalTime.now());
+                    new Reservation(1L, "Ash", null, new TimeSlot("23:59"));
                 });
     }
 
@@ -45,7 +44,7 @@ class ReservationTest {
     void testValidDate() {
         //given, when, then
         assertThrows(IllegalArgumentException.class, () -> {
-            new Reservation(1L, "Ash", LocalDate.of(2024, 1, 1), LocalTime.now());
+            new Reservation(1L, "Ash", LocalDate.of(2024, 1, 1), new TimeSlot("23:59"));
         });
     }
 
@@ -54,7 +53,7 @@ class ReservationTest {
     void testValidTime() {
         //given, when, then
         assertThrows(IllegalArgumentException.class, () -> {
-            new Reservation(1L, "Ash", LocalDate.now(), LocalTime.of(1, 0));
+            new Reservation(1L, "Ash", LocalDate.now(), new TimeSlot("00:00"));
         });
     }
 }

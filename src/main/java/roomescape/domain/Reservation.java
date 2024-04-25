@@ -26,17 +26,17 @@ public class Reservation {
         isValid();
     }
 
-    public void isValid() {
+    private void isValid() {
         if (name == null || name.trim().isEmpty()) {
             throw new IllegalArgumentException("[ERROR] 이름은 비워둘 수 없습니다.");
         }
 
-        if (date != null && date.isBefore(LocalDate.now())) {
+        if (date == null || date.isBefore(LocalDate.now())) {
             throw new IllegalArgumentException("[ERROR] 올바르지 않은 예약 날짜입니다.");
         }
 
-        if (time == null || time.isBefore(LocalTime.now()) && !date.isAfter(LocalDate.now())) {
-                throw new IllegalArgumentException("올바르지 않은 예약 시간입니다.");
+        if (time == null || (time.isTimeBeforeNow() && !date.isBefore(LocalDate.now()))) {
+            throw new IllegalArgumentException("[ERROR] 올바르지 않은 예약 시간입니다.");
         }
     }
 

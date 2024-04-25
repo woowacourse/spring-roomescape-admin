@@ -6,6 +6,7 @@ import java.util.List;
 import roomescape.global.query.condition.ComparisonCondition;
 import roomescape.global.query.condition.JoinCondition;
 import roomescape.global.query.condition.LogicalCondition;
+import roomescape.global.query.join.JoinType;
 
 public class SelectQuery extends Query {
     private final List<String> columns;
@@ -42,7 +43,7 @@ public class SelectQuery extends Query {
         return this;
     }
 
-    public SelectQuery join(String joinType, String joinTable, JoinCondition joinCondition, String alias) {
+    public SelectQuery join(JoinType joinType, String joinTable, JoinCondition joinCondition, String alias) {
         join = new Join(joinType, joinTable, joinCondition, alias);
         return this;
     }
@@ -52,10 +53,7 @@ public class SelectQuery extends Query {
         if (columns.isEmpty()) {
             throw new IllegalArgumentException("지정된 컬럼이 없습니다.");
         }
-        builder.append("SELECT ")
-                .append(String.join(", ", columns))
-                .append(" FROM ")
-                .append(table);
+        builder.append("SELECT ").append(String.join(", ", columns)).append(" FROM ").append(table);
         if (alias != null) {
             builder.append(" AS ").append(alias);
         }
@@ -67,33 +65,31 @@ public class SelectQuery extends Query {
     }
 
     private static class Join implements Assemblable {
-        private static final Join EMPTY = new Join("", "", null) {
+        private static final Join EMPTY = new Join(null, null, null) {
             @Override
             public void assemble(StringBuilder builder) {
             }
         };
 
-        private final String joinType;
-        private final String table;
+        private final JoinType joinType;
+        private final String joinTable;
         private final JoinCondition condition;
         private String alias;
 
-        public Join(String joinType, String table, JoinCondition condition) {
-            this(joinType, table, condition, null);
+        public Join(JoinType joinType, String joinTable, JoinCondition condition) {
+            this(joinType, joinTable, condition, null);
         }
 
-        public Join(String joinType, String table, JoinCondition condition, String alias) {
+        public Join(JoinType joinType, String joinTable, JoinCondition condition, String alias) {
             this.joinType = joinType;
-            this.table = table;
+            this.joinTable = joinTable;
             this.condition = condition;
             this.alias = alias;
         }
 
         @Override
         public void assemble(StringBuilder builder) {
-            builder.append(" ").append(joinType)
-                    .append(" JOIN ")
-                    .append(table);
+            builder.append(joinType.type()).append(joinTable);
             if (alias != null) {
                 builder.append(" AS ").append(alias);
             }

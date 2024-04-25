@@ -5,6 +5,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 import org.junit.jupiter.api.Test;
 import roomescape.global.query.condition.ComparisonCondition;
 import roomescape.global.query.condition.JoinCondition;
+import roomescape.global.query.join.JoinType;
 
 class SelectQueryTest {
     @Test
@@ -46,7 +47,7 @@ class SelectQueryTest {
         SelectQuery selectQuery = new SelectQuery("users")
                 .alias("u")
                 .addAllColumns()
-                .join("INNER", "orders", JoinCondition.on("u.id", "o.user_id"), "o");
+                .join(JoinType.INNER, "orders", JoinCondition.on("u.id", "o.user_id"), "o");
 
         assertThat(selectQuery.build())
                 .isEqualTo("SELECT * FROM users AS u INNER JOIN orders AS o ON u.id = o.user_id");
@@ -57,7 +58,7 @@ class SelectQueryTest {
         SelectQuery selectQuery = new SelectQuery("users")
                 .alias("u")
                 .addColumns("u.id", "u.name", "o.price")
-                .join("INNER", "orders", JoinCondition.on("u.id", "o.user_id"), "o");
+                .join(JoinType.INNER, "orders", JoinCondition.on("u.id", "o.user_id"), "o");
 
         assertThat(selectQuery.build())
                 .isEqualTo("SELECT u.id, u.name, o.price FROM users AS u INNER JOIN orders AS o ON u.id = o.user_id");
@@ -68,7 +69,7 @@ class SelectQueryTest {
         SelectQuery selectQuery = new SelectQuery("users")
                 .alias("u")
                 .addAllColumns()
-                .join("INNER", "orders", JoinCondition.on("u.id", "o.user_id"), "o")
+                .join(JoinType.INNER, "orders", JoinCondition.on("u.id", "o.user_id"), "o")
                 .where(ComparisonCondition.equalTo("u.id", 1));
 
         assertThat(selectQuery.build())

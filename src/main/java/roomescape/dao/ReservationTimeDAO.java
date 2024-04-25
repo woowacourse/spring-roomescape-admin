@@ -9,6 +9,7 @@ import roomescape.domain.ReservationTime;
 import java.sql.PreparedStatement;
 import java.sql.Time;
 import java.time.LocalTime;
+import java.util.List;
 
 @Repository
 public class ReservationTimeDAO {
@@ -38,9 +39,18 @@ public class ReservationTimeDAO {
         final String sql = "SELECT * FROM reservation_time WHERE id = ?";
 
         return jdbcTemplate.queryForObject(sql, (resultSet, rowNum) ->
-                        new ReservationTime(
-                                resultSet.getLong("id"),
-                                resultSet.getTime("start_at").toLocalTime()
-                        ), id);
+                new ReservationTime(
+                        resultSet.getLong("id"),
+                        resultSet.getTime("start_at").toLocalTime()
+                ), id);
+    }
+
+    public List<ReservationTime> selectAll() {
+        final String sql = "SELECT * FROM reservation_time";
+
+        return jdbcTemplate.query(sql, (resultSet, rowNum) -> new ReservationTime(
+                resultSet.getLong("id"),
+                resultSet.getTime("start_at").toLocalTime()
+        ));
     }
 }

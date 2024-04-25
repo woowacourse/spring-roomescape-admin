@@ -9,6 +9,7 @@ import roomescape.dto.ReservationTimeRequest;
 import roomescape.service.ReservationTimeService;
 
 import javax.sql.DataSource;
+import java.net.URI;
 import java.util.List;
 
 @RestController
@@ -27,20 +28,13 @@ public class ReservationTimeController {
 
     @GetMapping("/times")
     public ResponseEntity<List<ReservationTime>> times() {
-        final String sql = "SELECT * FROM reservation_time";
-        final List<ReservationTime> times = jdbcTemplate.query(sql, (resultSet, rowNum) -> new ReservationTime(
-                        resultSet.getLong("id"),
-                        resultSet.getTime("start_at").toLocalTime()
-                )
-        );
-
-        return ResponseEntity.ok(times);
+        return ResponseEntity.ok(reservationTimeService.findAll());
     }
 
     @PostMapping("/times")
     public ResponseEntity<ReservationTime> create(@RequestBody ReservationTimeRequest reservationTimeRequest) {
         final ReservationTime savedReservationTime = reservationTimeService.save(reservationTimeRequest);
-        return ResponseEntity.ok(savedReservationTime);
+        return ResponseEntity.created(URI.create("/times/" + savedReservationTime.getId())).body(savedReservationTime);
     }
 
     @DeleteMapping("/times/{id}")
@@ -48,6 +42,6 @@ public class ReservationTimeController {
         final String sql = "DELETE FROM reservation_time WHERE id = ?";
         jdbcTemplate.update(sql, id);
 
-        return ResponseEntity.ok().build();
+        return ResponseEntity.noContent().build();
     }
 }

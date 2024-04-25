@@ -5,6 +5,8 @@ import roomescape.dao.ReservationTimeDAO;
 import roomescape.domain.ReservationTime;
 import roomescape.dto.ReservationTimeRequest;
 
+import java.util.List;
+
 @Service
 public class ReservationTimeService {
     private final ReservationTimeDAO reservationTimeDAO;
@@ -16,5 +18,9 @@ public class ReservationTimeService {
     public ReservationTime save(final ReservationTimeRequest reservationTimeRequest) {
         final ReservationTime reservationTime = new ReservationTime(reservationTimeRequest.startAt());
         return reservationTimeDAO.insert(reservationTime);
+    }
+
+    public List<ReservationTime> findAll() {
+        return reservationTimeDAO.selectAll();
     }
 }

@@ -2,7 +2,8 @@ package roomescape.dao;
 
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;
-import org.springframework.jdbc.core.namedparam.BeanPropertySqlParameterSource;
+import org.springframework.jdbc.core.namedparam.MapSqlParameterSource;
+import org.springframework.jdbc.core.namedparam.SqlParameterSource;
 import org.springframework.jdbc.core.simple.SimpleJdbcInsert;
 import org.springframework.stereotype.Repository;
 import roomescape.domain.reservation.Reservation;
@@ -44,7 +45,11 @@ public class ReservationDao {
     }
 
     public Long add(Reservation reservation) {
-        return simpleJdbcInsert.executeAndReturnKey(new BeanPropertySqlParameterSource(reservation)).longValue();
+        SqlParameterSource parameters = new MapSqlParameterSource()
+                .addValue("name", reservation.getName().getName())
+                .addValue("reservation_date", reservation.getDate().getDate())
+                .addValue("time_id", reservation.getTime().getId());
+        return simpleJdbcInsert.executeAndReturnKey(parameters).longValue();
     }
 
     public void delete(Long id) {

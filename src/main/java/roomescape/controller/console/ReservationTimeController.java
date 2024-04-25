@@ -1,7 +1,6 @@
 package roomescape.controller.console;
 
-import java.net.URI;
-import org.springframework.http.ResponseEntity;
+import java.util.List;
 import roomescape.dto.ReservationTimeRequest;
 import roomescape.dto.ReservationTimeResponse;
 import roomescape.service.ReservationTimeService;
@@ -16,15 +15,30 @@ public class ReservationTimeController {
         this.reservationTimeService = new ReservationTimeService();
     }
 
-    public ResponseEntity<ReservationTimeResponse> saveTime() {
+    public void saveTime() {
         ReservationTimeRequest reservationTimeRequest = new ReservationTimeRequest(
                 reservationTimeView.readStartAt()
         );
-        ReservationTimeResponse reservationTimeResponse = reservationTimeService.saveTime(reservationTimeRequest);
+        reservationTimeService.saveTime(reservationTimeRequest);
         reservationTimeView.printSuccessfullyAdded();
-        return ResponseEntity.created(URI.create("/times/" + reservationTimeResponse.id()))
-                .body(reservationTimeResponse);
     }
 
+    public void deleteTime() {
+        List<ReservationTimeResponse> reservationTimeResponses = getReservationTimeResponses();
+        int reservationTimeId = reservationTimeView.readReservationTimeId(
+                reservationTimeResponses
+        );
+        if (reservationTimeId < 0 || reservationTimeId > reservationTimeResponses.size()) {
+            throw new IllegalArgumentException("[ERROR] 올바른 예약 가능 시간을 입력해주세요.");
+        }
+        reservationTimeService.deleteTime(reservationTimeId);
+        reservationTimeView.printSuccessfullyDeleted();
+    }
 
+    private List<ReservationTimeResponse> getReservationTimeResponses() {
+        return reservationTimeService.getTimes()
+                .stream()
+                .map(ReservationTimeResponse::from)
+                .toList();
+    }
 }

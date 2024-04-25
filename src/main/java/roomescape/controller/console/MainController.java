@@ -3,7 +3,6 @@ package roomescape.controller.console;
 import java.util.Map;
 import roomescape.controller.console.command.Command;
 import roomescape.controller.console.command.CommandExecutor;
-import roomescape.controller.web.ReservationController;
 import roomescape.view.CommandView;
 
 public class MainController {
@@ -12,9 +11,9 @@ public class MainController {
     private final ReservationController reservationController = new ReservationController();
 
     private final Map<Command, CommandExecutor> commands = Map.of(
-            new Command(1), () -> reservationTimeController.saveTime()
+            new Command(1), () -> reservationTimeController.saveTime(),
+            new Command(2), () -> reservationTimeController.deleteTime()
     );
-
 
     public void run() {
         Command command = commandView.readCommand();

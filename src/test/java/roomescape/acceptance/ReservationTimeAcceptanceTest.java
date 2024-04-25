@@ -1,43 +1,40 @@
 package roomescape.acceptance;
 
 import static org.hamcrest.Matchers.is;
+import static org.junit.jupiter.api.DynamicTest.dynamicTest;
 
-import io.restassured.RestAssured;
-import io.restassured.http.ContentType;
+import java.util.Arrays;
+import java.util.List;
 import java.util.Map;
 import org.junit.jupiter.api.DisplayName;
-import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.DynamicTest;
+import org.junit.jupiter.api.TestFactory;
 import roomescape.support.AcceptanceTest;
+import roomescape.support.SimpleRestAssured;
 
 class ReservationTimeAcceptanceTest extends AcceptanceTest {
     private static final String PATH = "/times";
+    private static final Map<String, String> BODY = Map.of(
+            "startAt", "10:00"
+    );
 
     @DisplayName("[7단계 - 시간 관리 기능]")
-    @Test
-    void step7() {
-        // 시간을 등록한다.
-        Map<String, String> params = Map.of(
-                "startAt", "10:00"
+    @TestFactory
+    List<DynamicTest> step7() {
+        return Arrays.asList(
+                dynamicTest("시간을 등록한다.", () -> {
+                    SimpleRestAssured.post(PATH, BODY)
+                            .statusCode(201);
+                }),
+                dynamicTest("등록된 시간을 조회한다.", () -> {
+                    SimpleRestAssured.get(PATH)
+                            .statusCode(200)
+                            .body("size()", is(1));
+                }),
+                dynamicTest("시간을 삭제한다.", () -> {
+                    SimpleRestAssured.delete(PATH + "/1")
+                            .statusCode(204);
+                })
         );
-
-        RestAssured.given().log().all()
-                .contentType(ContentType.JSON)
-                .body(params)
-                .when().post(PATH)
-                .then().log().all()
-                .statusCode(201);
-
-        // 등록된 시간을 조회한다.
-        RestAssured.given().log().all()
-                .when().get(PATH)
-                .then().log().all()
-                .statusCode(200)
-                .body("size()", is(1));
-
-        // 시간을 삭제한다.
-        RestAssured.given().log().all()
-                .when().delete("/times/1")
-                .then().log().all()
-                .statusCode(204);
     }
 }

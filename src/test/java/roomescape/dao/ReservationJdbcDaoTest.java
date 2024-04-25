@@ -1,4 +1,4 @@
-package roomescape.repository;
+package roomescape.dao;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
@@ -16,16 +16,16 @@ import java.util.List;
 
 @JdbcTest
 @DirtiesContext(classMode = DirtiesContext.ClassMode.BEFORE_EACH_TEST_METHOD)
-class ReservationJdbcRepositoryTest {
+class ReservationJdbcDaoTest {
 
-    private final ReservationRepository reservationRepository;
-    private final ReservationTimeRepository reservationTimeRepository;
+    private final ReservationDao reservationDao;
+    private final ReservationTimeDao reservationTimeDao;
     private final JdbcTemplate jdbcTemplate;
 
     @Autowired
-    public ReservationJdbcRepositoryTest(final JdbcTemplate jdbcTemplate) {
-        this.reservationRepository = new ReservationJdbcRepository(jdbcTemplate);
-        this.reservationTimeRepository = new ReservationTimeJdbcRepository(jdbcTemplate);
+    public ReservationJdbcDaoTest(final JdbcTemplate jdbcTemplate) {
+        this.reservationDao = new ReservationJdbcDao(jdbcTemplate);
+        this.reservationTimeDao = new ReservationTimeJdbcDao(jdbcTemplate);
         this.jdbcTemplate = jdbcTemplate;
     }
 
@@ -34,10 +34,10 @@ class ReservationJdbcRepositoryTest {
     void saveReservation() {
         createInitialReservationTime();
         final ReservationCreateRequest request = new ReservationCreateRequest("냥인", "2024-04-23", 1L);
-        final ReservationTime reservationTime = reservationTimeRepository.findById(1L).get();
+        final ReservationTime reservationTime = reservationTimeDao.findById(1L).get();
         final Reservation reservation = request.toReservation(reservationTime);
 
-        final Long actual = reservationRepository.save(reservation);
+        final Long actual = reservationDao.save(reservation);
 
         assertThat(actual).isEqualTo(1L);
     }
@@ -48,7 +48,7 @@ class ReservationJdbcRepositoryTest {
         createInitialReservationTime();
         createInitialReservations();
 
-        final List<Reservation> actual = reservationRepository.findAll();
+        final List<Reservation> actual = reservationDao.findAll();
 
         assertThat(actual).hasSize(1);
     }
@@ -59,7 +59,7 @@ class ReservationJdbcRepositoryTest {
         createInitialReservationTime();
         createInitialReservations();
 
-        reservationRepository.deleteById(1L);
+        reservationDao.deleteById(1L);
 
         final Integer actual = jdbcTemplate.queryForObject("SELECT count(*) from reservation", Integer.class);
         assertThat(actual).isZero();

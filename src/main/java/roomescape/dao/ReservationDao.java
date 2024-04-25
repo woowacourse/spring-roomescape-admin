@@ -1,9 +1,9 @@
-package roomescape.repository;
+package roomescape.dao;
 
 import roomescape.domain.Reservation;
 import java.util.List;
 
-public interface ReservationRepository {
+public interface ReservationDao {
 
     Long save(final Reservation reservation);
 

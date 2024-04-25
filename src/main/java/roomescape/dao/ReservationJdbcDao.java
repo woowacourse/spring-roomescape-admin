@@ -1,4 +1,4 @@
-package roomescape.repository;
+package roomescape.dao;
 
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;
@@ -12,7 +12,7 @@ import java.util.List;
 import java.util.Map;
 
 @Repository
-public class ReservationJdbcRepository implements ReservationRepository {
+public class ReservationJdbcDao implements ReservationDao {
 
     private final JdbcTemplate jdbcTemplate;
     private final SimpleJdbcInsert jdbcInsert;
@@ -27,7 +27,7 @@ public class ReservationJdbcRepository implements ReservationRepository {
         return reservation;
     };
 
-    public ReservationJdbcRepository(final JdbcTemplate jdbcTemplate) {
+    public ReservationJdbcDao(final JdbcTemplate jdbcTemplate) {
         this.jdbcTemplate = jdbcTemplate;
         this.jdbcInsert = new SimpleJdbcInsert(jdbcTemplate)
                 .withTableName("reservation")

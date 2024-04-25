@@ -11,7 +11,7 @@ import org.springframework.test.annotation.DirtiesContext;
 import roomescape.controller.dto.ReservationTimeCreateRequest;
 import roomescape.controller.dto.ReservationTimeResponse;
 import roomescape.domain.ReservationTime;
-import roomescape.repository.ReservationTimeRepository;
+import roomescape.dao.ReservationTimeDao;
 import java.time.LocalTime;
 import java.util.List;
 
@@ -23,7 +23,7 @@ class ReservationTimeServiceTest {
     private ReservationTimeService reservationTimeService;
 
     @Autowired
-    private ReservationTimeRepository reservationTimeRepository;
+    private ReservationTimeDao reservationTimeDao;
 
     @Test
     @DisplayName("예약 시간을 추가한다.")
@@ -54,7 +54,7 @@ class ReservationTimeServiceTest {
         final Long id = createInitialReservationTime();
 
         reservationTimeService.deleteReservationTime(id);
-        final List<ReservationTime> actual = reservationTimeRepository.findAll();
+        final List<ReservationTime> actual = reservationTimeDao.findAll();
 
         assertThat(actual).hasSize(0);
     }
@@ -62,6 +62,6 @@ class ReservationTimeServiceTest {
     private Long createInitialReservationTime() {
         final ReservationTimeCreateRequest request = new ReservationTimeCreateRequest(LocalTime.parse("10:09"));
         final ReservationTime reservationTime = request.toReservationTime();
-        return reservationTimeRepository.save(reservationTime);
+        return reservationTimeDao.save(reservationTime);
     }
 }

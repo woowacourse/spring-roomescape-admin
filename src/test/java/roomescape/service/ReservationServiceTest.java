@@ -13,8 +13,8 @@ import roomescape.controller.dto.ReservationCreateRequest;
 import roomescape.controller.dto.ReservationResponse;
 import roomescape.domain.Reservation;
 import roomescape.domain.ReservationTime;
-import roomescape.repository.ReservationRepository;
-import roomescape.repository.ReservationTimeRepository;
+import roomescape.dao.ReservationDao;
+import roomescape.dao.ReservationTimeDao;
 
 import java.time.LocalTime;
 import java.util.List;
@@ -27,15 +27,15 @@ class ReservationServiceTest {
     private ReservationService reservationService;
 
     @Autowired
-    private ReservationRepository reservationRepository;
+    private ReservationDao reservationDao;
 
     @Autowired
-    private ReservationTimeRepository reservationTimeRepository;
+    private ReservationTimeDao reservationTimeDao;
 
     @Test
     @DisplayName("예약을 추가한다.")
     void createReservation() {
-        reservationTimeRepository.save(new ReservationTime(LocalTime.parse("10:00")));
+        reservationTimeDao.save(new ReservationTime(LocalTime.parse("10:00")));
         final ReservationCreateRequest request = new ReservationCreateRequest(
                 "냥인", "2024-04-21", 1L);
 
@@ -75,17 +75,17 @@ class ReservationServiceTest {
         final Long id = getIdAfterCreateReservation();
 
         reservationService.deleteReservation(id);
-        final List<Reservation> actual = reservationRepository.findAll();
+        final List<Reservation> actual = reservationDao.findAll();
 
         assertThat(actual).hasSize(0);
     }
 
     private Long getIdAfterCreateReservation() {
-        reservationTimeRepository.save(new ReservationTime(LocalTime.parse("10:00")));
+        reservationTimeDao.save(new ReservationTime(LocalTime.parse("10:00")));
         final ReservationCreateRequest request = new ReservationCreateRequest(
                 "냥인", "2024-04-21", 1L);
-        final ReservationTime reservationTime = reservationTimeRepository.findById(request.timeId()).get();
+        final ReservationTime reservationTime = reservationTimeDao.findById(request.timeId()).get();
         final Reservation reservation = request.toReservation(reservationTime);
-        return reservationRepository.save(reservation);
+        return reservationDao.save(reservation);
     }
 }

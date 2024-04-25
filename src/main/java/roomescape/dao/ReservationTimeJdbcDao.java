@@ -1,4 +1,4 @@
-package roomescape.repository;
+package roomescape.dao;
 
 import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.jdbc.core.JdbcTemplate;
@@ -12,7 +12,7 @@ import java.util.Map;
 import java.util.Optional;
 
 @Repository
-public class ReservationTimeJdbcRepository implements ReservationTimeRepository {
+public class ReservationTimeJdbcDao implements ReservationTimeDao {
 
     private final JdbcTemplate jdbcTemplate;
     private final SimpleJdbcInsert jdbcInsert;
@@ -20,7 +20,7 @@ public class ReservationTimeJdbcRepository implements ReservationTimeRepository 
             resultSet.getLong("id"),
             LocalTime.parse(resultSet.getString("start_at")));
 
-    public ReservationTimeJdbcRepository(final JdbcTemplate jdbcTemplate) {
+    public ReservationTimeJdbcDao(final JdbcTemplate jdbcTemplate) {
         this.jdbcTemplate = jdbcTemplate;
         this.jdbcInsert = new SimpleJdbcInsert(jdbcTemplate)
                 .withTableName("reservation_time")

@@ -1,7 +1,6 @@
 package roomescape.service;
 
 import java.util.List;
-import java.util.Optional;
 import org.springframework.stereotype.Service;
 import roomescape.dto.TimeRequest;
 import roomescape.dto.TimeResponse;
@@ -31,10 +30,8 @@ public class TimeService {
     }
 
     public void remove(final long id) {
-        final Optional<ReservationTime> findReservation = timeDao.findById(id);
-        if (findReservation.isEmpty()) {
-            throw new IllegalArgumentException(String.format("timeId: %s는 존재하지 않는 timeId 입니다.", id));
-        }
-        timeDao.remove(id);
+        final ReservationTime findReservation = timeDao.findById(id)
+                .orElseThrow(() -> new IllegalArgumentException(String.format("timeId: %s는 존재하지 않는 timeId 입니다.", id)));
+        timeDao.remove(findReservation.getId());
     }
 }

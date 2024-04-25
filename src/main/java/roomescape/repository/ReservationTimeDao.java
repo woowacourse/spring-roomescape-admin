@@ -29,7 +29,7 @@ public class ReservationTimeDao {
     }
 
     private RowMapper<ReservationTime> mappingReservationTime() {
-        return (resultSet, rowNum) -> ReservationTime.of(
+        return (resultSet, rowNum) -> new ReservationTime(
             resultSet.getLong("id"),
             resultSet.getString("start_at")
         );
@@ -42,11 +42,10 @@ public class ReservationTimeDao {
 
     public ReservationTime save(ReservationTime reservationTime) {
         SqlParameterSource params = new MapSqlParameterSource()
-            .addValue("id", reservationTime.getId())
             .addValue("start_at", reservationTime.getStartAt());
-        long id = jdbcInsert.executeAndReturnKey(params)
+        Long id = jdbcInsert.executeAndReturnKey(params)
             .longValue();
-        return reservationTime.addId(id);
+        return new ReservationTime(id, reservationTime.getStartAt());
     }
 
     public boolean deleteById(Long id) {

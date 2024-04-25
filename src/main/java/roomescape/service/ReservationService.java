@@ -14,8 +14,6 @@ import roomescape.repository.ReservationTimeDao;
 @Transactional
 public class ReservationService {
 
-    private static final Long AUTO_INCREMENT_ID = 0L;
-
     private final ReservationDao reservationDao;
     private final ReservationTimeDao reservationTimeDao;
 
@@ -35,7 +33,7 @@ public class ReservationService {
 
     public ReservationResponse create(ReservationRequest request) {
         ReservationTime reservationTime = reservationTimeDao.findById(request.timeId());
-        Reservation reservation = Reservation.of(AUTO_INCREMENT_ID, request.name(), request.date(), reservationTime);
+        Reservation reservation = new Reservation(request.name(), request.date(), reservationTime);
         Reservation savedReservation = reservationDao.save(reservation);
         return ReservationResponse.from(savedReservation);
     }

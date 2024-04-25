@@ -24,7 +24,7 @@ public class ReservationTimeDao {
             PreparedStatement ps = connection.prepareStatement(
                     query,
                     new String[]{"id"});
-            ps.setString(1, request.getStartAt());
+            ps.setString(1, request.startAt());
             return ps;
         }, keyHolder);
 

@@ -28,7 +28,7 @@ public class ReservationDao {
                     new String[]{"id"});
             ps.setString(1, reservation.getName());
             ps.setString(2, reservation.getDate().toString());
-            ps.setLong(3, reservation.getTime().getId());
+            ps.setLong(3, reservation.getTime().id());
             return ps;
         }, keyHolder);
 

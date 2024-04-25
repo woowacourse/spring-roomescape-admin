@@ -1,10 +1,12 @@
 package roomescape.controller.console;
 
 import java.util.Map;
+import org.springframework.stereotype.Controller;
 import roomescape.controller.console.command.Command;
 import roomescape.controller.console.command.CommandExecutor;
 import roomescape.view.CommandView;
 
+@Controller
 public class MainController {
     private final CommandView commandView = new CommandView();
     private final ReservationTimeController reservationTimeController = new ReservationTimeController();

@@ -1,14 +1,16 @@
 package roomescape;
 
+import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
+import org.springframework.context.ConfigurableApplicationContext;
 import roomescape.controller.console.MainController;
 
 @SpringBootApplication
 public class RoomescapeApplication {
     public static void main(String[] args) {
-        // SpringApplication.run(RoomescapeApplication.class, args);
-        MainController controller = new MainController();
-        controller.run();
+        ConfigurableApplicationContext run = SpringApplication.run(RoomescapeApplication.class, args);
+        MainController mainController = run.getBean("mainController", MainController.class);
+        mainController.run();
     }
 
 }

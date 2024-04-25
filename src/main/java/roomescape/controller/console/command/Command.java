@@ -3,8 +3,8 @@ package roomescape.controller.console.command;
 import java.util.Objects;
 
 public class Command {
-    private static final int START_VALUE = 1;
-    private static final int END_VALUE = 1;
+    private static final int START_VALUE = 0;
+    private static final int END_VALUE = 6;
 
     private final int value;
 

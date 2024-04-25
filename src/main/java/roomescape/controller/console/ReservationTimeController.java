@@ -1,11 +1,13 @@
 package roomescape.controller.console;
 
 import java.util.List;
+import org.springframework.stereotype.Controller;
 import roomescape.dto.ReservationTimeRequest;
 import roomescape.dto.ReservationTimeResponse;
 import roomescape.service.ReservationTimeService;
 import roomescape.view.ReservationTimeView;
 
+@Controller
 public class ReservationTimeController {
     private final ReservationTimeView reservationTimeView;
     private final ReservationTimeService reservationTimeService;

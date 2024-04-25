@@ -24,7 +24,7 @@ public class ReservationService {
     public List<ReservationResponseDto> findAll() {
         final List<Reservation> reservations = reservationDao.findAll();
         return reservations.stream()
-                           .map(ReservationResponseDto::from)
+                           .map(ReservationResponseDto::new)
                            .toList();
     }
 
@@ -32,7 +32,7 @@ public class ReservationService {
     public ReservationResponseDto save(final ReservationRequestDto requestDto) {
         final long reservationId = reservationDao.save(requestDto);
         final Reservation reservation = reservationDao.findById(reservationId);
-        return ReservationResponseDto.from(reservation);
+        return new ReservationResponseDto(reservation);
     }
 
     @Transactional

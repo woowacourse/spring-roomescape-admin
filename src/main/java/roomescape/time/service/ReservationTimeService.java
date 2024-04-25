@@ -24,7 +24,7 @@ public class ReservationTimeService {
     public List<ReservationTimeResponseDto> findAll() {
         final List<ReservationTime> reservationTimes = reservationTimeDao.findAll();
         return reservationTimes.stream()
-                               .map(ReservationTimeResponseDto::from)
+                               .map(ReservationTimeResponseDto::new)
                                .toList();
     }
 

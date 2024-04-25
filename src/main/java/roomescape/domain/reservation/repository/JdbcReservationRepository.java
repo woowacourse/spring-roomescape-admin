@@ -13,6 +13,9 @@ import org.springframework.jdbc.core.simple.SimpleJdbcInsertOperations;
 import org.springframework.stereotype.Repository;
 import roomescape.domain.reservation.Reservation;
 import roomescape.domain.time.ReservationTime;
+import roomescape.global.query.QueryBuilder;
+import roomescape.global.query.condition.ComparisonCondition;
+import roomescape.global.query.condition.JoinCondition;
 
 @Repository
 public class JdbcReservationRepository implements ReservationRepository {
@@ -44,16 +47,25 @@ public class JdbcReservationRepository implements ReservationRepository {
 
     @Override
     public boolean existsByReservationDateTime(LocalDate date, long timeId) {
-        String sql = "SELECT COUNT(*) FROM reservation WHERE date = ? AND time_id = ?";
-        Integer count = jdbcTemplate.queryForObject(sql, Integer.class, date, timeId);
+        String query = QueryBuilder.select("reservation")
+                .addColumns("count(*)")
+                .where(ComparisonCondition.equalTo("date", date))
+                .where(ComparisonCondition.equalTo("time_id", timeId))
+                .build();
+        Integer count = jdbcTemplate.queryForObject(query, Integer.class);
         return count != null && count > 0;
     }
 
     @Override
     public Optional<Reservation> findById(long id) {
-        String sql = "SELECT * FROM reservation AS r JOIN reservation_time AS t ON r.time_id = t.id WHERE r.id = ?";
+        String query = QueryBuilder.select("reservation")
+                .alias("r")
+                .addAllColumns()
+                .join("INNER", "reservation_time", JoinCondition.on("r.time_id", "t.id"), "t")
+                .where(ComparisonCondition.equalTo("r.id", id))
+                .build();
         try {
-            return Optional.ofNullable(jdbcTemplate.queryForObject(sql, rowMapper, id));
+            return Optional.ofNullable(jdbcTemplate.queryForObject(query, rowMapper));
         } catch (DataAccessException e) {
             return Optional.empty();
         }
@@ -61,13 +73,19 @@ public class JdbcReservationRepository implements ReservationRepository {
 
     @Override
     public List<Reservation> findAll() {
-        String sql = "SELECT * FROM reservation AS r JOIN reservation_time AS t ON r.time_id = t.id";
-        return jdbcTemplate.query(sql, rowMapper);
+        String query = QueryBuilder.select("reservation")
+                .alias("r")
+                .addAllColumns()
+                .join("INNER", "reservation_time", JoinCondition.on("r.time_id", "t.id"), "t")
+                .build();
+        return jdbcTemplate.query(query, rowMapper);
     }
 
     @Override
     public void deleteById(long id) {
-        String sql = "DELETE FROM reservation WHERE id = ?";
-        jdbcTemplate.update(sql, id);
+        String query = QueryBuilder.delete("reservation")
+                .where(ComparisonCondition.equalTo("id", id))
+                .build();
+        jdbcTemplate.update(query);
     }
 }

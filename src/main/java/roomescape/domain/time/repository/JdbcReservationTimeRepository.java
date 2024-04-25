@@ -12,6 +12,8 @@ import org.springframework.jdbc.core.simple.SimpleJdbcInsert;
 import org.springframework.jdbc.core.simple.SimpleJdbcInsertOperations;
 import org.springframework.stereotype.Repository;
 import roomescape.domain.time.ReservationTime;
+import roomescape.global.query.QueryBuilder;
+import roomescape.global.query.condition.ComparisonCondition;
 
 @Repository
 public class JdbcReservationTimeRepository implements ReservationTimeRepository {
@@ -39,16 +41,22 @@ public class JdbcReservationTimeRepository implements ReservationTimeRepository 
 
     @Override
     public boolean existsByStartAt(LocalTime localTime) {
-        String sql = "SELECT COUNT(*) FROM reservation_time WHERE start_at = ?";
-        Integer count = jdbcTemplate.queryForObject(sql, Integer.class, localTime);
+        String query = QueryBuilder.select("reservation_time")
+                .addColumns("count(*)")
+                .where(ComparisonCondition.equalTo("start_at", localTime))
+                .build();
+        Integer count = jdbcTemplate.queryForObject(query, Integer.class);
         return count != null && count > 0;
     }
 
     @Override
     public Optional<ReservationTime> findById(long id) {
-        String sql = "SELECT * FROM reservation_time WHERE id = ?";
+        String query = QueryBuilder.select("reservation_time")
+                .addAllColumns()
+                .where(ComparisonCondition.equalTo("id", id))
+                .build();
         try {
-            return Optional.ofNullable(jdbcTemplate.queryForObject(sql, rowMapper, id));
+            return Optional.ofNullable(jdbcTemplate.queryForObject(query, rowMapper));
         } catch (DataAccessException e) {
             return Optional.empty();
         }
@@ -56,13 +64,17 @@ public class JdbcReservationTimeRepository implements ReservationTimeRepository 
 
     @Override
     public List<ReservationTime> findAll() {
-        String sql = "SELECT * FROM reservation_time";
-        return jdbcTemplate.query(sql, rowMapper);
+        String query = QueryBuilder.select("reservation_time")
+                .addAllColumns()
+                .build();
+        return jdbcTemplate.query(query, rowMapper);
     }
 
     @Override
     public void deleteById(long id) {
-        String sql = "DELETE FROM reservation_time WHERE id = ?";
-        jdbcTemplate.update(sql, id);
+        String query = QueryBuilder.delete("reservation_time")
+                .where(ComparisonCondition.equalTo("id", id))
+                .build();
+        jdbcTemplate.update(query);
     }
 }

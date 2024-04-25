@@ -20,7 +20,7 @@ public class ReservationTimeController {
     }
 
     @GetMapping
-    public ResponseEntity<List<ReservationTime>> readTimes() {
+    public ResponseEntity<List<ReservationTime>> findAllReservationTimes() {
         List<ReservationTime> reservationTimes = reservationTimeService.findAllTimes();
         return ResponseEntity.ok(reservationTimes);
     }

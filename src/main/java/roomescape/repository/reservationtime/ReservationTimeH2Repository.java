@@ -26,7 +26,7 @@ public class ReservationTimeH2Repository implements ReservationTimeRepository {
     }
 
     @Override
-    public ReservationTime add(ReservationTime reservationTime) {
+    public ReservationTime save(ReservationTime reservationTime) {
         SqlParameterSource params = new BeanPropertySqlParameterSource(reservationTime);
         long id = jdbcInsert.executeAndReturnKey(params).longValue();
 
@@ -34,12 +34,12 @@ public class ReservationTimeH2Repository implements ReservationTimeRepository {
     }
 
     @Override
-    public void remove(Long id) {
+    public void delete(Long id) {
         jdbcTemplate.update("DELETE FROM reservation_time WHERE id = ?", id);
     }
 
     @Override
-    public ReservationTime findBy(Long id) {
+    public ReservationTime findById(Long id) {
         return jdbcTemplate.queryForObject(
                 "SELECT * FROM reservation_time WHERE id = ?",
                 (resultSet, rowNum) -> new ReservationTime(

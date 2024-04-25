@@ -17,7 +17,7 @@ public class ReservationTimeService {
     }
 
     public ReservationTimeResponse addTime(ReservationTimeAddRequest reservationTimeAddRequest) {
-        ReservationTime reservationTime = reservationTimeRepository.add(reservationTimeAddRequest.toReservationTime());
+        ReservationTime reservationTime = reservationTimeRepository.save(reservationTimeAddRequest.toReservationTime());
         return ReservationTimeResponse.from(reservationTime);
     }
 
@@ -28,10 +28,10 @@ public class ReservationTimeService {
     }
 
     public ReservationTimeResponse getTime(Long id) {
-        return ReservationTimeResponse.from(reservationTimeRepository.findBy(id));
+        return ReservationTimeResponse.from(reservationTimeRepository.findById(id));
     }
 
     public void deleteTime(Long id) {
-        reservationTimeRepository.remove(id);
+        reservationTimeRepository.delete(id);
     }
 }

@@ -33,20 +33,20 @@ public class ReservationH2Repository implements ReservationRepository {
     }
 
     @Override
-    public Reservation add(Reservation reservation) {
+    public Reservation save(Reservation reservation) {
         Long timeId = reservation.time().id();
         SqlParameterSource params = new MapSqlParameterSource()
                 .addValue("name", reservation.name())
                 .addValue("date", reservation.date(DateTimeFormatter.ISO_DATE))
                 .addValue("time_id", timeId);
         Long id = jdbcInsert.executeAndReturnKey(params).longValue();
-        ReservationTime reservationTime = timeRepository.findBy(timeId);
+        ReservationTime reservationTime = timeRepository.findById(timeId);
 
         return Reservation.of(id, reservation, reservationTime);
     }
 
     @Override
-    public void remove(Long id) {
+    public void delete(Long id) {
         jdbcTemplate.update("DELETE FROM RESERVATION WHERE id = ?", id);
     }
 

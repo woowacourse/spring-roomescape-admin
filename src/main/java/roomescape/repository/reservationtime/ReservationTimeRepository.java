@@ -5,11 +5,11 @@ import roomescape.domain.ReservationTime;
 
 public interface ReservationTimeRepository {
 
-    ReservationTime add(ReservationTime reservationTime);
+    ReservationTime save(ReservationTime reservationTime);
 
-    void remove(Long id);
+    void delete(Long id);
 
-    ReservationTime findBy(Long id);
+    ReservationTime findById(Long id);
 
     List<ReservationTime> findAll();
 }

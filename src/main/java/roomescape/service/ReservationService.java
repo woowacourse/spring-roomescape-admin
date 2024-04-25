@@ -24,11 +24,11 @@ public class ReservationService {
     }
 
     public ReservationResponse addReservation(ReservationAddRequest reservationAddRequest) {
-        Reservation reservation = reservationRepository.add(reservationAddRequest.toReservation());
+        Reservation reservation = reservationRepository.save(reservationAddRequest.toReservation());
         return ReservationResponse.from(reservation);
     }
 
     public void deleteReservation(Long id) {
-        reservationRepository.remove(id);
+        reservationRepository.delete(id);
     }
 }

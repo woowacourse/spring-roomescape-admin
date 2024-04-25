@@ -1,6 +1,7 @@
 package roomescape.dao;
 
 import org.springframework.jdbc.core.JdbcTemplate;
+import org.springframework.jdbc.core.RowMapper;
 import org.springframework.jdbc.core.namedparam.MapSqlParameterSource;
 import org.springframework.jdbc.core.namedparam.SqlParameterSource;
 import org.springframework.jdbc.core.simple.SimpleJdbcInsert;
@@ -35,25 +36,23 @@ public class ReservationTimeDAO {
 
     public ReservationTime findById(final Long id) {
         final String sql = "SELECT * FROM reservation_time WHERE id = ?";
-
-        return jdbcTemplate.queryForObject(sql, (resultSet, rowNum) ->
-                new ReservationTime(
-                        resultSet.getLong("id"),
-                        resultSet.getTime("start_at").toLocalTime()
-                ), id);
+        return jdbcTemplate.queryForObject(sql, reservationTimeRowMapper(), id);
     }
 
     public List<ReservationTime> selectAll() {
         final String sql = "SELECT * FROM reservation_time";
-
-        return jdbcTemplate.query(sql, (resultSet, rowNum) -> new ReservationTime(
-                resultSet.getLong("id"),
-                resultSet.getTime("start_at").toLocalTime()
-        ));
+        return jdbcTemplate.query(sql, reservationTimeRowMapper());
     }
 
     public void deleteById(final Long id) {
         final String sql = "DELETE FROM reservation_time WHERE id = ?";
         jdbcTemplate.update(sql, id);
+    }
+
+    private RowMapper<ReservationTime> reservationTimeRowMapper() {
+        return (resultSet, rowNum) -> new ReservationTime(
+                resultSet.getLong("id"),
+                resultSet.getTime("start_at").toLocalTime()
+        );
     }
 }

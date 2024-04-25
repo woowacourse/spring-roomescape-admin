@@ -1,6 +1,7 @@
 package roomescape.dao;
 
 import org.springframework.jdbc.core.JdbcTemplate;
+import org.springframework.jdbc.core.RowMapper;
 import org.springframework.jdbc.core.namedparam.MapSqlParameterSource;
 import org.springframework.jdbc.core.namedparam.SqlParameterSource;
 import org.springframework.jdbc.core.simple.SimpleJdbcInsert;
@@ -50,7 +51,16 @@ public class ReservationDAO {
                 "INNER JOIN reservation_time AS t " +
                 "ON r.time_id = t.id";
 
-        return jdbcTemplate.query(sql, (resultSet, rowNum) -> new Reservation(
+        return jdbcTemplate.query(sql, reservationRowMapper());
+    }
+
+    public void deleteById(final long id) {
+        final String sql = "DELETE FROM reservation WHERE id = ?";
+        jdbcTemplate.update(sql, id);
+    }
+
+    private RowMapper<Reservation> reservationRowMapper() {
+        return (resultSet, rowNum) -> new Reservation(
                 resultSet.getLong("id"),
                 resultSet.getString("name"),
                 resultSet.getDate("date").toLocalDate(),
@@ -58,11 +68,6 @@ public class ReservationDAO {
                         resultSet.getLong("time_id"),
                         resultSet.getTime("time_value").toLocalTime()
                 )
-        ));
-    }
-
-    public void deleteById(final long id) {
-        final String sql = "DELETE FROM reservation WHERE id = ?";
-        jdbcTemplate.update(sql, id);
+        );
     }
 }

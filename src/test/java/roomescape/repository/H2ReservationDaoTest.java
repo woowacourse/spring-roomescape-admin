@@ -5,13 +5,11 @@ import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.jdbc.JdbcTest;
-import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.jdbc.core.JdbcTemplate;
 import roomescape.domain.Reservation;
 import roomescape.domain.ReservationTime;
 
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.assertj.core.api.Assertions.assertThatThrownBy;
 
 @JdbcTest
 public class H2ReservationDaoTest {
@@ -42,7 +40,7 @@ public class H2ReservationDaoTest {
     @Test
     void findByIdTest() {
         assertThat(repository.findById(0L))
-                .isEqualTo(new Reservation(0L, "nak", "2024-03-02", new ReservationTime(0L, "23:00")));
+                .contains(new Reservation(0L, "nak", "2024-03-02", new ReservationTime(0L, "23:00")));
     }
 
     @DisplayName("예약 저장 테스트")
@@ -54,7 +52,7 @@ public class H2ReservationDaoTest {
 
         // then
         assertThat(repository.findById(reservation.getId()))
-                .isEqualTo(reservation);
+                .contains(reservation);
     }
 
     @DisplayName("예약 삭제 테스트")
@@ -64,7 +62,7 @@ public class H2ReservationDaoTest {
         repository.deleteById(0L);
 
         // then
-        assertThatThrownBy(() -> repository.findById(0L))
-                .isInstanceOf(EmptyResultDataAccessException.class);
+        assertThat(repository.findById(0L))
+                .isEmpty();
     }
 }

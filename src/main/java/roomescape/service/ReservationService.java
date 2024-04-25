@@ -5,18 +5,18 @@ import org.springframework.stereotype.Service;
 import roomescape.domain.Reservation;
 import roomescape.domain.ReservationTime;
 import roomescape.dto.ReservationRequest;
-import roomescape.repository.H2ReservationDao;
+import roomescape.repository.ReservationDao;
 
 import java.util.List;
 
 @Service
 public class ReservationService {
 
-    private final H2ReservationDao reservationDao;
+    private final ReservationDao reservationDao;
     private final ReservationTimeService reservationTimeService;
 
     @Autowired
-    public ReservationService(H2ReservationDao reservationDao, ReservationTimeService reservationTimeService) {
+    public ReservationService(ReservationDao reservationDao, ReservationTimeService reservationTimeService) {
         this.reservationDao = reservationDao;
         this.reservationTimeService = reservationTimeService;
     }

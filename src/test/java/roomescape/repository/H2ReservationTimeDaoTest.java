@@ -38,7 +38,7 @@ public class H2ReservationTimeDaoTest {
     @Test
     void findByIdTest() {
         assertThat(repository.findById(0L))
-                .isEqualTo(new ReservationTime(0L, "11:00"));
+                .contains(new ReservationTime(0L, "11:00"));
     }
 
     @DisplayName("시간 저장 테스트")
@@ -49,7 +49,7 @@ public class H2ReservationTimeDaoTest {
 
         // then
         assertThat(repository.findById(reservationTime.getId()))
-                .isEqualTo(reservationTime);
+                .contains(reservationTime);
     }
 
     @DisplayName("시간 삭제 테스트")

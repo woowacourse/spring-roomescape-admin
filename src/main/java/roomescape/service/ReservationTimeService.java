@@ -4,17 +4,17 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import roomescape.domain.ReservationTime;
 import roomescape.dto.ReservationTimeRequest;
-import roomescape.repository.H2ReservationTimeDao;
+import roomescape.repository.ReservationTimeDao;
 
 import java.util.List;
 
 @Service
 public class ReservationTimeService {
 
-    private final H2ReservationTimeDao reservationTimeDao;
+    private final ReservationTimeDao reservationTimeDao;
 
     @Autowired
-    public ReservationTimeService(H2ReservationTimeDao reservationTimeDao) {
+    public ReservationTimeService(ReservationTimeDao reservationTimeDao) {
         this.reservationTimeDao = reservationTimeDao;
     }
 
@@ -23,7 +23,8 @@ public class ReservationTimeService {
     }
 
     public ReservationTime findById(Long id) {
-        return reservationTimeDao.findById(id);
+        return reservationTimeDao.findById(id)
+                .orElseThrow(() -> new IllegalArgumentException("존재하지 않는 예약 시간 id입니다."));
     }
 
     public ReservationTime save(ReservationTimeRequest reservationTimeRequest) {

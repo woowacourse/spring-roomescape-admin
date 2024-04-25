@@ -12,7 +12,7 @@ public class SelectQuery extends Query {
     private final List<String> columns;
     private final LogicalCondition condition;
     private Join join = Join.EMPTY;
-    private String alias;
+    private Alias alias = Alias.EMPTY;
 
     protected SelectQuery(String table) {
         super(table);
@@ -35,16 +35,16 @@ public class SelectQuery extends Query {
         return this;
     }
 
-    public SelectQuery alias(String alias) {
-        if (alias == null || alias.isBlank()) {
+    public SelectQuery alias(String aliasName) {
+        if (aliasName == null || aliasName.isBlank()) {
             throw new IllegalArgumentException("alias가 비어있습니다.");
         }
-        this.alias = alias;
+        this.alias = new Alias(aliasName);
         return this;
     }
 
     public SelectQuery join(JoinType joinType, String joinTable, JoinCondition joinCondition, String alias) {
-        join = new Join(joinType, joinTable, joinCondition, alias);
+        join = new Join(joinType, joinTable, joinCondition, new Alias(alias));
         return this;
     }
 
@@ -54,9 +54,7 @@ public class SelectQuery extends Query {
             throw new IllegalArgumentException("지정된 컬럼이 없습니다.");
         }
         builder.append("SELECT ").append(String.join(", ", columns)).append(" FROM ").append(table);
-        if (alias != null) {
-            builder.append(" AS ").append(alias);
-        }
+        alias.assemble(builder);
         join.assemble(builder);
         if (!condition.isEmpty()) {
             builder.append(" WHERE ");
@@ -74,13 +72,13 @@ public class SelectQuery extends Query {
         private final JoinType joinType;
         private final String joinTable;
         private final JoinCondition condition;
-        private String alias;
+        private final Alias alias;
 
         public Join(JoinType joinType, String joinTable, JoinCondition condition) {
-            this(joinType, joinTable, condition, null);
+            this(joinType, joinTable, condition, Alias.EMPTY);
         }
 
-        public Join(JoinType joinType, String joinTable, JoinCondition condition, String alias) {
+        public Join(JoinType joinType, String joinTable, JoinCondition condition, Alias alias) {
             this.joinType = joinType;
             this.joinTable = joinTable;
             this.condition = condition;
@@ -90,10 +88,27 @@ public class SelectQuery extends Query {
         @Override
         public void assemble(StringBuilder builder) {
             builder.append(joinType.type()).append(joinTable);
-            if (alias != null) {
-                builder.append(" AS ").append(alias);
-            }
+            alias.assemble(builder);
             condition.assemble(builder);
+        }
+    }
+
+    private static class Alias implements Assemblable {
+        private static final Alias EMPTY = new Alias(null) {
+            @Override
+            public void assemble(StringBuilder builder) {
+            }
+        };
+
+        private final String alias;
+
+        public Alias(String alias) {
+            this.alias = alias;
+        }
+
+        @Override
+        public void assemble(StringBuilder builder) {
+            builder.append(" AS ").append(alias);
         }
     }
 }

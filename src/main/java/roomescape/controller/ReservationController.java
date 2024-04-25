@@ -9,23 +9,18 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
-import roomescape.controller.dto.request.TimeCreateRequest;
 import roomescape.dao.ReservationDao;
 import roomescape.controller.dto.request.ReservationCreateRequest;
 import roomescape.controller.dto.response.ReservationResponse;
-import roomescape.dao.TimeDao;
 import roomescape.domain.Reservation;
-import roomescape.domain.Time;
 
 @RestController
 public class ReservationController {
 
     private final ReservationDao reservationDao;
-    private final TimeDao timeDao;
 
-    public ReservationController(ReservationDao reservationDao, TimeDao timeDao) {
+    public ReservationController(ReservationDao reservationDao) {
         this.reservationDao = reservationDao;
-        this.timeDao = timeDao;
     }
 
     @GetMapping("/reservations")
@@ -47,12 +42,5 @@ public class ReservationController {
     public ResponseEntity<Void> deleteReservation(@PathVariable("id") Long reservationId) {
         reservationDao.delete(reservationId);
         return ResponseEntity.noContent().build();
-    }
-
-    @PostMapping("/times")
-    public ResponseEntity<Void> createTime(@RequestBody TimeCreateRequest timeCreateRequest) {
-        Time time = timeCreateRequest.toTime();
-        Long savedId = timeDao.save(time);
-        return ResponseEntity.created(URI.create("/times/" + savedId)).build();
     }
 }

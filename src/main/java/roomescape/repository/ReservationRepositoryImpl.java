@@ -10,17 +10,16 @@ import org.springframework.jdbc.core.namedparam.SqlParameterSource;
 import org.springframework.jdbc.core.simple.SimpleJdbcInsert;
 import org.springframework.stereotype.Repository;
 import roomescape.domain.reservation.Reservation;
-import roomescape.domain.reservation.ReservationRepository;
 import roomescape.domain.time.Time;
 
 @Repository
 @Primary
-public class H2ReservationRepository implements ReservationRepository {
+public class ReservationRepositoryImpl implements roomescape.domain.reservation.ReservationRepository {
 
     private final JdbcTemplate jdbcTemplate;
     private final SimpleJdbcInsert jdbcInsert;
 
-    public H2ReservationRepository(JdbcTemplate jdbcTemplate, DataSource dataSource) {
+    public ReservationRepositoryImpl(JdbcTemplate jdbcTemplate, DataSource dataSource) {
         this.jdbcTemplate = jdbcTemplate;
         this.jdbcInsert = new SimpleJdbcInsert(dataSource)
                 .withTableName("reservation")

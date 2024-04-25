@@ -19,7 +19,7 @@ import roomescape.domain.time.Time;
 public class TimeRepositoryTest {
 
     @Autowired
-    private H2TimeRepository timeRepository;
+    private TimeRepository timeRepository;
 
     @Autowired
     private JdbcTemplate jdbcTemplate;

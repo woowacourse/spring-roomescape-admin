@@ -9,10 +9,9 @@ import org.springframework.jdbc.core.namedparam.SqlParameterSource;
 import org.springframework.jdbc.core.simple.SimpleJdbcInsert;
 import org.springframework.stereotype.Repository;
 import roomescape.domain.time.Time;
-import roomescape.domain.time.TimeRepository;
 
 @Repository
-public class H2TimeRepository implements TimeRepository {
+public class TimeRepository implements roomescape.domain.time.TimeRepository {
 
     private static final RowMapper<Time> ROW_MAPPER = (resultSet, rowNum) -> {
         Time time = new Time(
@@ -25,7 +24,7 @@ public class H2TimeRepository implements TimeRepository {
     private final JdbcTemplate jdbcTemplate;
     private final SimpleJdbcInsert jdbcInsert;
 
-    public H2TimeRepository(JdbcTemplate jdbcTemplate, DataSource dataSource) {
+    public TimeRepository(JdbcTemplate jdbcTemplate, DataSource dataSource) {
         this.jdbcTemplate = jdbcTemplate;
         this.jdbcInsert = new SimpleJdbcInsert(dataSource)
                 .withTableName("reservation_time")

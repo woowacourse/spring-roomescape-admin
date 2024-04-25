@@ -48,7 +48,7 @@ class ReservationTimeRepositoryTest {
 
     @Test
     @DisplayName("특정 id를 통해 예약 시간 데이터를 조회한다.")
-    void findById() {
+    void findByIdPresent() {
         // given
         Long id = 2L;
         ReservationTime expected = new ReservationTime(id, LocalTime.of(11, 20));
@@ -58,6 +58,19 @@ class ReservationTimeRepositoryTest {
 
         // then
         assertThat(actual).hasValue(expected);
+    }
+
+    @Test
+    @DisplayName("존재하지 않는 예약 시간 데이터를 조회할 경우 빈 값을 반환한다.")
+    void findByIdNotPresent() {
+        // given
+        Long id = 4L;
+
+        // when
+        Optional<ReservationTime> actual = timeRepository.findById(id);
+
+        // then
+        assertThat(actual).isEmpty();
     }
 
     @Test
@@ -76,7 +89,7 @@ class ReservationTimeRepositoryTest {
 
     @Test
     @DisplayName("등록된 예약 시간 번호로 삭제한다.")
-    void deleteAssignedId() {
+    void deleteByIdPresent() {
         // given
         Long id = 3L;
 
@@ -87,8 +100,8 @@ class ReservationTimeRepositoryTest {
     }
 
     @Test
-    @DisplayName("없는 예약 시간 번호로 삭제할 경우 아무런 영향이 없다.")
-    void deleteNotExistId() {
+    @DisplayName("존재하지 않는 예약 시간 번호로 삭제할 경우 아무런 영향이 없다.")
+    void deleteByIdNotPresent() {
         // given
         Long id = 4L;
 

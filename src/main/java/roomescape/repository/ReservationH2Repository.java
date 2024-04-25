@@ -1,6 +1,6 @@
 package roomescape.repository;
 
-import org.springframework.dao.EmptyResultDataAccessException;
+import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.namedparam.MapSqlParameterSource;
 import org.springframework.jdbc.core.namedparam.SqlParameterSource;
@@ -50,11 +50,9 @@ public class ReservationH2Repository implements ReservationRepository {
     public Optional<Reservation> findById(Long id) {
         String sql = "SELECT * FROM reservation WHERE id = ?";
 
-        try {
-            return Optional.ofNullable(jdbcTemplate.queryForObject(sql, this::mapRowReservation, id));
-        } catch (EmptyResultDataAccessException e) {
-            return Optional.empty();
-        }
+        return jdbcTemplate.query(sql, this::mapRowReservation, id)
+                .stream()
+                .findAny();
     }
 
     @Override
@@ -63,10 +61,14 @@ public class ReservationH2Repository implements ReservationRepository {
                 .addValue("name", reservation.name())
                 .addValue("date", reservation.date().format(DateTimeFormatter.ISO_LOCAL_DATE))
                 .addValue("time_id", reservation.time().id());
-        Long id = simpleJdbcInsert.executeAndReturnKey(params).longValue();
 
-        ReservationTime time = new ReservationTime(reservation.time().id(), null);
-        return reservation.assign(id, time);
+        try {
+            Long id = simpleJdbcInsert.executeAndReturnKey(params).longValue();
+            ReservationTime time = new ReservationTime(reservation.time().id(), null);
+            return reservation.assign(id, time);
+        } catch (DataIntegrityViolationException e) {
+            throw new IllegalArgumentException("존재하지 않는 예약 시간입니다.");
+        }
     }
 
     @Override

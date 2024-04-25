@@ -1,6 +1,5 @@
 package roomescape.repository;
 
-import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -12,75 +11,24 @@ import roomescape.entity.ReservationTime;
 
 import javax.sql.DataSource;
 import java.time.LocalDate;
-import java.time.LocalTime;
-import java.time.format.DateTimeFormatter;
 import java.util.List;
+import java.util.Optional;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.assertThatCode;
 
+@Sql(scripts = {"/sample.sql"},
+        executionPhase = Sql.ExecutionPhase.BEFORE_TEST_METHOD)
 @Sql(scripts = {"/drop.sql", "/schema.sql"},
         executionPhase = Sql.ExecutionPhase.AFTER_TEST_METHOD)
 @JdbcTest
 class ReservationRepositoryTest {
 
-    private final JdbcTemplate jdbcTemplate;
     private final ReservationRepository reservationRepository;
 
     @Autowired
     ReservationRepositoryTest(JdbcTemplate jdbcTemplate, DataSource dataSource) {
-        this.jdbcTemplate = jdbcTemplate;
         this.reservationRepository = new ReservationH2Repository(jdbcTemplate, dataSource);
-    }
-
-    @BeforeEach
-    void setUp() {
-        setUpReservationTimes();
-        setUpReservations();
-    }
-
-    void setUpReservationTimes() {
-        String sql = "INSERT INTO reservation_time (start_at) VALUES (?)";
-        List<ReservationTime> times = List.of(
-                new ReservationTime(null, LocalTime.of(10, 15)),
-                new ReservationTime(null, LocalTime.of(11, 20)),
-                new ReservationTime(null, LocalTime.of(12, 25))
-        );
-        List<Object[]> batchArgs = times.stream().map(time -> new Object[]{
-                time.id(),
-                time.startAt().format(DateTimeFormatter.ISO_LOCAL_TIME)
-        }).toList();
-        jdbcTemplate.batchUpdate(sql, batchArgs);
-    }
-
-    void setUpReservations() {
-        String sql = "INSERT INTO reservation(NAME, DATE, TIME_ID) VALUES (?, ?, ?)";
-        List<Reservation> reservations = List.of(
-                new Reservation(
-                        null,
-                        "seyang",
-                        LocalDate.of(2024, 1, 20),
-                        new ReservationTime(11L, null)
-                ),
-                new Reservation(
-                        null,
-                        "hana",
-                        LocalDate.of(2024, 2, 19),
-                        new ReservationTime(12L, null)
-                ),
-                new Reservation(
-                        null,
-                        "mura",
-                        LocalDate.of(2024, 3, 18),
-                        new ReservationTime(13L, null)
-                )
-        );
-        final List<Object[]> batchArgs = reservations.stream().map(reservation -> new Object[]{
-                reservation.id(),
-                reservation.name(),
-                reservation.date().format(DateTimeFormatter.ISO_LOCAL_DATE),
-                reservation.time().id()
-        }).toList();
-        jdbcTemplate.batchUpdate(sql, batchArgs);
     }
 
     @Test
@@ -89,83 +37,113 @@ class ReservationRepositoryTest {
         // given
         final List<Reservation> expected = List.of(
                 new Reservation(
-                        11L,
-                        "seyang",
+                        1L,
+                        "al",
                         LocalDate.of(2024, 1, 20),
-                        new ReservationTime(11L, LocalTime.of(10, 15))
+                        new ReservationTime(1L, null)
                 ),
                 new Reservation(
-                        12L,
-                        "hana",
+                        2L,
+                        "be",
                         LocalDate.of(2024, 2, 19),
-                        new ReservationTime(12L, LocalTime.of(11, 20))
-                ),
-                new Reservation(
-                        13L,
-                        "mura",
-                        LocalDate.of(2024, 3, 18),
-                        new ReservationTime(13L, LocalTime.of(12, 25))
+                        new ReservationTime(2L, null)
                 )
         );
 
         // when
-        final List<Reservation> reservations = reservationRepository.findAll();
+        List<Reservation> actual = reservationRepository.findAll();
 
         // then
-        assertThat(reservations).containsExactlyInAnyOrderElementsOf(expected);
+        assertThat(actual).containsExactlyInAnyOrderElementsOf(expected);
     }
 
     @Test
     @DisplayName("특정 id를 통해 예약을 조회한다.")
-    void findById() {
+    void findByIdPresent() {
         // given
-        final Reservation expected = new Reservation(
-                12L,
-                "hana",
+        Long id = 2L;
+        Reservation expected = new Reservation(
+                id,
+                "be",
                 LocalDate.of(2024, 2, 19),
-                new ReservationTime(12L, LocalTime.of(11, 20))
+                new ReservationTime(2L, null)
         );
 
         // when
-        final Reservation reservation = reservationRepository.findById(12L).get();
+        Optional<Reservation> actual = reservationRepository.findById(id);
 
         // then
-        assertThat(reservation).isEqualTo(expected);
+        assertThat(actual).hasValue(expected);
+    }
+
+    @Test
+    @DisplayName("존재하지 않는 예약을 조회할 경우 빈 값을 반환한다.")
+    void findByIdNotPresent() {
+        // given
+        Long id = 3L;
+
+        // when
+        Optional<Reservation> actual = reservationRepository.findById(id);
+
+        // then
+        assertThat(actual).isEmpty();
     }
 
     @Test
     @DisplayName("예약 정보를 저장하면 새로운 아이디가 부여된다.")
     void save() {
         // given
-        final Reservation reservation = new Reservation(
+        Reservation reservation = new Reservation(
                 null,
-                "gana",
+                "cha",
                 LocalDate.of(2024, 3, 1),
-                new ReservationTime(12L, null)
+                new ReservationTime(2L, null)
         );
         Reservation expected = new Reservation(
-                1L,
-                "gana",
+                3L,
+                "cha",
                 LocalDate.of(2024, 3, 1),
-                new ReservationTime(12L, LocalTime.of(11, 20))
+                new ReservationTime(2L, null)
         );
 
         // when
-        reservationRepository.save(reservation);
-        Reservation actual = reservationRepository.findById(1L).get();
+        Reservation actual = reservationRepository.save(reservation);
 
         // then
         assertThat(actual).isEqualTo(expected);
     }
 
     @Test
+    @DisplayName("존재하지 않는 예약 시간으로 예약 정보를 저장하면 예외가 발생한다.")
+    void exceptionOnSavingWithNotPresentTime() {
+        // given
+        Reservation reservation = new Reservation(
+                null,
+                "cha",
+                LocalDate.of(2024, 3, 1),
+                new ReservationTime(4L, null)
+        );
+        Reservation expected = new Reservation(
+                3L,
+                "cha",
+                LocalDate.of(2024, 3, 1),
+                new ReservationTime(4L, null)
+        );
+
+        // when & then
+        assertThatCode(() -> reservationRepository.save(reservation))
+                .isInstanceOf(IllegalArgumentException.class)
+                .hasMessage("존재하지 않는 예약 시간입니다.");
+    }
+
+    @Test
     @DisplayName("등록된 예약 번호로 삭제한다.")
     void deleteAssignedId() {
         // given
-        Long id = 13L;
+        Long id = 2L;
 
         // when & then
-        assertThat(reservationRepository.findById(id)).isNotNull();
+        assertThat(reservationRepository.findById(id)).isPresent();
         assertThat(reservationRepository.deleteById(id)).isNotZero();
     }
 
@@ -173,10 +151,10 @@ class ReservationRepositoryTest {
     @DisplayName("없는 예약 번호로 삭제할 경우 아무런 영향이 없다.")
     void deleteNotExistId() {
         // given
-        Long id = 14L;
+        Long id = 3L;
 
         // when & then
-        assertThat(reservationRepository.findById(id)).isNull();
+        assertThat(reservationRepository.findById(id)).isEmpty();
         assertThat(reservationRepository.deleteById(id)).isZero();
     }
 }

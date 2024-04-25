@@ -27,7 +27,7 @@ public class ReservationDAO {
                 .usingGeneratedKeyColumns("id");
     }
 
-    public List<Reservation> findAllReservations() {
+    public List<Reservation> findAll() {
         return jdbcTemplate.query(
                 "SELECT "
                         + "r.id as reservation_id, "

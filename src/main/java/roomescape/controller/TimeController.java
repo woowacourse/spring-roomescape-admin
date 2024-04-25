@@ -27,7 +27,7 @@ public class TimeController {
 
     @GetMapping("/times")
     public ResponseEntity<List<ReservationTime>> times() {
-        return ResponseEntity.ok(reservationTimeDAO.findAllTimes());
+        return ResponseEntity.ok(reservationTimeDAO.findAll());
     }
 
     @PostMapping("/times")

@@ -27,7 +27,7 @@ public class ReservationController {
 
     @GetMapping("/reservations")
     public ResponseEntity<List<Reservation>> reservations() {
-        return ResponseEntity.ok(reservationDao.findAllReservations());
+        return ResponseEntity.ok(reservationDao.findAll());
     }
 
     @PostMapping("/reservations")

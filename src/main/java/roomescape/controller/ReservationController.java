@@ -21,10 +21,10 @@ public class ReservationController {
 
     @PostMapping
     public ResponseEntity<ReservationResponse> createReservation(@RequestBody ReservationRequest reservationRequest) {
-        Reservation newReservation = new Reservation(null, reservationRequest.name(), reservationRequest.date(), reservationRequest.time());
+        Reservation reservation = new Reservation(null, reservationRequest.name(), reservationRequest.date(), reservationRequest.time());
 
-        Reservation reservation = reservationRepository.insert(newReservation);
-        return ResponseEntity.ok(new ReservationResponse(reservation.getId(), reservation.getName(), reservation.getDate(), reservation.getTime()));
+        Reservation savedReservation = reservationRepository.insert(reservation);
+        return ResponseEntity.ok(new ReservationResponse(savedReservation.id(), savedReservation.name(), savedReservation.date(), savedReservation.time()));
     }
 
     @GetMapping
@@ -32,10 +32,10 @@ public class ReservationController {
     public List<ReservationResponse> readReservations() {
         return reservationRepository.list().stream()
                 .map(reservation -> new ReservationResponse(
-                        reservation.getId(),
-                        reservation.getName(),
-                        reservation.getDate(),
-                        reservation.getTime()
+                        reservation.id(),
+                        reservation.name(),
+                        reservation.date(),
+                        reservation.time()
                         )
                 )
                 .toList();
@@ -47,4 +47,5 @@ public class ReservationController {
 
         return ResponseEntity.ok().build();
     }
+
 }

@@ -40,7 +40,7 @@ public class ReservationRepository {
     public Reservation insert(Reservation reservation) {
         SqlParameterSource params = new BeanPropertySqlParameterSource(reservation);
         long id = jdbcInsert.executeAndReturnKey(params).intValue();
-        return new Reservation(id, reservation.getName(), reservation.getDate(), reservation.getTime());
+        return new Reservation(id, reservation.name(), reservation.date(), reservation.time());
     }
 
     public void delete(long id) {

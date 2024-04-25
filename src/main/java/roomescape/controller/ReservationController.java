@@ -10,41 +10,28 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import roomescape.domain.Reservation;
-import roomescape.repository.ReservationDao;
-import roomescape.domain.ReservationTime;
-import roomescape.repository.ReservationTimeDao;
 import roomescape.dto.ReservationFindResponse;
 import roomescape.dto.ReservationSaveRequest;
+import roomescape.service.ReservationService;
 
 @RestController
 @RequestMapping("/reservations")
 public class ReservationController {
 
-    private final ReservationDao reservationDao;
-    private final ReservationTimeDao reservationTimeDao;
+    private final ReservationService reservationService;
 
-    public ReservationController(ReservationDao reservationDao, ReservationTimeDao reservationTimeDao) {
-        this.reservationDao = reservationDao;
-        this.reservationTimeDao = reservationTimeDao;
+    public ReservationController(ReservationService reservationService) {
+        this.reservationService = reservationService;
     }
 
     @GetMapping
     public List<ReservationFindResponse> findAllReservation() {
-        List<Reservation> reservations = reservationDao.findAll();
-        return reservations.stream()
-                .map(ReservationFindResponse::from)
-                .toList();
-    }
-
-    private Reservation findReservationById(Long id) {
-        return reservationDao.findById(id);
+        return reservationService.findAll();
     }
 
     @PostMapping
     public ResponseEntity<ReservationFindResponse> saveReservation(@RequestBody ReservationSaveRequest request) {
-        ReservationTime reservationTime = reservationTimeDao.findById(request.timeId());
-        Reservation reservation = request.toEntity(reservationTime);
-        Reservation savedReservation = reservationDao.save(reservation);
+        Reservation savedReservation = reservationService.save(request);
         return ResponseEntity.ok()
                 .header("Location", "/reservations/" + savedReservation.getId())
                 .body(ReservationFindResponse.from(savedReservation));
@@ -52,7 +39,6 @@ public class ReservationController {
 
     @DeleteMapping("/{reservation_id}")
     public void deleteReservation(@PathVariable(value = "reservation_id") Long id) {
-        Reservation reservation = findReservationById(id);
-        reservationDao.delete(reservation);
+        reservationService.deleteById(id);
     }
 }

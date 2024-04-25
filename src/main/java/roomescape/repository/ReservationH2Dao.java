@@ -16,13 +16,8 @@ import roomescape.domain.ReservationTime;
 public class ReservationH2Dao implements ReservationDao {
 
     private static final RowMapper<Reservation> reservationRowMapper = (resultSet, rowNum) -> new Reservation(
-            resultSet.getLong("id"),
-            resultSet.getString("name"),
-            resultSet.getObject("date", LocalDate.class),
-            new ReservationTime(
-                    resultSet.getLong("time_id"),
-                    resultSet.getTime("time_value").toLocalTime()
-            ));
+            resultSet.getLong("id"), resultSet.getString("name"), resultSet.getObject("date", LocalDate.class),
+            new ReservationTime(resultSet.getLong("time_id"), resultSet.getTime("time_value").toLocalTime()));
 
     private final JdbcTemplate jdbcTemplate;
 
@@ -32,8 +27,7 @@ public class ReservationH2Dao implements ReservationDao {
 
     @Override
     public List<Reservation> findAll() {
-        String sql =
-                """
+        String sql = """
                 SELECT r.id as reservation_id, r.name, r.date, t.id as time_id, t.start_at as time_value
                 FROM reservation as r
                 inner join reservation_time as t
@@ -41,20 +35,6 @@ public class ReservationH2Dao implements ReservationDao {
                 """;
 
         return jdbcTemplate.query(sql, reservationRowMapper);
-    }
-
-    @Override
-    public Reservation findById(Long id) {
-        String sql =
-                """
-                SELECT r.id as reservation_id, r.name, r.date, t.id as time_id, t.start_at as time_value
-                FROM reservation as r
-                inner join reservation_time as t
-                on r.time_id = t.id
-                WHERE r.id = ?
-                """;
-
-        return jdbcTemplate.queryForObject(sql, reservationRowMapper, id);
     }
 
     @Override
@@ -77,8 +57,8 @@ public class ReservationH2Dao implements ReservationDao {
     }
 
     @Override
-    public void delete(Reservation reservation) {
+    public void deleteById(Long id) {
         String sql = "DELETE FROM reservation WHERE id = ?";
-        jdbcTemplate.update(sql, reservation.getId());
+        jdbcTemplate.update(sql, id);
     }
 }

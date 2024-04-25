@@ -49,13 +49,11 @@ class ReservationControllerTest {
         //given
         final ReservationRequest reservation = new ReservationRequest("2024-04-18", "레디", 1L);
 
-        final ResponseEntity<ReservationResponse> saved = controller.save(reservation);
-
-        final ReservationResponse body = saved.getBody();
+        final ReservationResponse saved = controller.save(reservation);
 
         //when
-        assert body != null;
-        controller.delete(body.id());
+        assert saved != null;
+        controller.delete(saved.id());
 
         //then
         assertThat(controller.getReservations()).isEmpty();

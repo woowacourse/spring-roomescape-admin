@@ -29,10 +29,8 @@ public class TimeController {
     }
 
     @PostMapping
-    public ResponseEntity<TimeResponse> save(@RequestBody final TimeRequest timeRequest) {
-        final TimeResponse saved = timeService.save(timeRequest);
-
-        return ResponseEntity.ok(saved);
+    public TimeResponse save(@RequestBody final TimeRequest timeRequest) {
+        return timeService.save(timeRequest);
     }
 
     @DeleteMapping("/{id}")

@@ -34,11 +34,10 @@ class TimeControllerTest {
         final TimeResponse expected = new TimeResponse(1L, "14:00");
 
         //when
-        final ResponseEntity<TimeResponse> saved = controller.save(time);
-        final TimeResponse body = saved.getBody();
+        final TimeResponse saved = controller.save(time);
 
         //then
-        assertThat(body).isEqualTo(expected);
+        assertThat(saved).isEqualTo(expected);
     }
 
     @DisplayName("예약 삭제")
@@ -46,12 +45,11 @@ class TimeControllerTest {
     void deleteReservation() {
         //given
         final TimeRequest time = new TimeRequest("14:00");
-        final ResponseEntity<TimeResponse> saved = controller.save(time);
-        final TimeResponse body = saved.getBody();
+        final TimeResponse saved = controller.save(time);
 
         //when
-        assert body != null;
-        controller.delete(body.id());
+        assert saved != null;
+        controller.delete(saved.id());
 
         //then
         assertThat(controller.getTimes()).isEmpty();

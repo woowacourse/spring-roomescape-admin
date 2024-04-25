@@ -29,9 +29,8 @@ public class ReservationController {
     }
 
     @PostMapping
-    public ResponseEntity<ReservationResponse> save(@RequestBody final ReservationRequest reservationRequest) {
-        final ReservationResponse reservationResponse = reservationService.save(reservationRequest);
-        return ResponseEntity.ok(reservationResponse);
+    public ReservationResponse save(@RequestBody final ReservationRequest reservationRequest) {
+        return reservationService.save(reservationRequest);
     }
 
     @DeleteMapping("/{id}")

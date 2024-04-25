@@ -59,11 +59,11 @@ public class ReservationControllerTest {
 
     @Test
     void 예약삭제_및_조회를_수행한다() {
-        jdbcTemplate.update("insert into reservation_time (start_at) values ('10:00')");
+        int updated = jdbcTemplate.update("insert into reservation_time (start_at) values ('10:00')");
 
         RestAssured.given().log().all()
                 .contentType(ContentType.JSON)
-                .when().delete("/times/1")
+                .when().delete("/times/" + updated)
                 .then().log().all()
                 .statusCode(204);
 

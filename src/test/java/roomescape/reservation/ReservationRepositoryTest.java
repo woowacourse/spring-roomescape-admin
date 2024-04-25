@@ -66,6 +66,18 @@ public class ReservationRepositoryTest {
     }
 
     @Test
+    @DisplayName("id 값을 받아 Reservation 반환")
+    void findByIdTest() {
+        Time time = new Time(1L, LocalTime.now());
+        timeRepository.save(time);
+        Reservation reservation = new Reservation(1L, "hogi", LocalDate.now(), time);
+        Long saveId = reservationRepository.save(reservation);
+
+        Reservation findReservation = reservationRepository.findById(saveId);
+        assertThat(findReservation.getId()).isEqualTo(1);
+    }
+
+    @Test
     @DisplayName("DB 삭제 테스트")
     void deleteTest() {
         Time time = new Time(1L, LocalTime.now());

@@ -8,41 +8,37 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
-import roomescape.domain.ReservationTime;
 import roomescape.dto.request.ReservationTimeAddRequest;
 import roomescape.dto.response.ReservationTimeResponse;
-import roomescape.repository.reservationtime.ReservationTimeRepository;
+import roomescape.service.ReservationTimeService;
 
 @RestController
 @RequestMapping("/times")
 public class ReservationTimeController {
 
-    private final ReservationTimeRepository reservationTimeRepository;
+    private final ReservationTimeService reservationTimeService;
 
-    public ReservationTimeController(ReservationTimeRepository reservationTimeRepository) {
-        this.reservationTimeRepository = reservationTimeRepository;
+    public ReservationTimeController(ReservationTimeService reservationTimeService) {
+        this.reservationTimeService = reservationTimeService;
     }
 
     @PostMapping
     public ReservationTimeResponse addTime(@RequestBody ReservationTimeAddRequest reservationTimeAddRequest) {
-        ReservationTime reservationTime = reservationTimeRepository.add(reservationTimeAddRequest.toReservationTime());
-        return ReservationTimeResponse.from(reservationTime);
+        return reservationTimeService.addTime(reservationTimeAddRequest);
     }
 
     @GetMapping
     public List<ReservationTimeResponse> getTimes() {
-        return reservationTimeRepository.findAll().stream()
-                .map(ReservationTimeResponse::from)
-                .toList();
+        return reservationTimeService.getTimes();
     }
 
     @GetMapping("/{id}")
-    public ReservationTimeResponse getTimeBy(@PathVariable Long id) {
-        return ReservationTimeResponse.from(reservationTimeRepository.findBy(id));
+    public ReservationTimeResponse getTime(@PathVariable Long id) {
+        return reservationTimeService.getTime(id);
     }
 
     @DeleteMapping("/{id}")
-    public void delete(@PathVariable Long id) {
-        reservationTimeRepository.remove(id);
+    public void deleteTime(@PathVariable Long id) {
+        reservationTimeService.deleteTime(id);
     }
 }

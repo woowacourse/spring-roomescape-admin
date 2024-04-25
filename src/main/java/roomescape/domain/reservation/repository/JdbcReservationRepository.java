@@ -15,7 +15,8 @@ import roomescape.domain.reservation.Reservation;
 import roomescape.domain.time.ReservationTime;
 import roomescape.global.query.QueryBuilder;
 import roomescape.global.query.condition.ComparisonCondition;
-import roomescape.global.query.condition.JoinCondition;
+import roomescape.global.query.join.JoinCondition;
+import roomescape.global.query.join.JoinType;
 
 @Repository
 public class JdbcReservationRepository implements ReservationRepository {
@@ -61,7 +62,7 @@ public class JdbcReservationRepository implements ReservationRepository {
         String query = QueryBuilder.select("reservation")
                 .alias("r")
                 .addAllColumns()
-                .join("INNER", "reservation_time", JoinCondition.on("r.time_id", "t.id"), "t")
+                .join(JoinType.INNER, "reservation_time", JoinCondition.on("r.time_id", "t.id"), "t")
                 .where(ComparisonCondition.equalTo("r.id", id))
                 .build();
         try {
@@ -76,7 +77,7 @@ public class JdbcReservationRepository implements ReservationRepository {
         String query = QueryBuilder.select("reservation")
                 .alias("r")
                 .addAllColumns()
-                .join("INNER", "reservation_time", JoinCondition.on("r.time_id", "t.id"), "t")
+                .join(JoinType.INNER, "reservation_time", JoinCondition.on("r.time_id", "t.id"), "t")
                 .build();
         return jdbcTemplate.query(query, rowMapper);
     }

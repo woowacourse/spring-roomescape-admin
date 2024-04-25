@@ -1,6 +1,7 @@
-package roomescape.global.query.condition;
+package roomescape.global.query.join;
 
 import roomescape.global.query.Assemblable;
+import roomescape.global.query.condition.ComparisonCondition;
 
 public class JoinCondition implements Assemblable {
     private final ComparisonCondition condition;

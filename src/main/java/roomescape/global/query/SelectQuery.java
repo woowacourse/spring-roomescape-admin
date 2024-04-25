@@ -4,8 +4,8 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import roomescape.global.query.condition.ComparisonCondition;
-import roomescape.global.query.condition.JoinCondition;
 import roomescape.global.query.condition.LogicalCondition;
+import roomescape.global.query.join.JoinCondition;
 import roomescape.global.query.join.JoinType;
 
 public class SelectQuery extends Query {

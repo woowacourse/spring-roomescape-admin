@@ -4,7 +4,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 
 import org.junit.jupiter.api.Test;
 import roomescape.global.query.condition.ComparisonCondition;
-import roomescape.global.query.condition.JoinCondition;
+import roomescape.global.query.join.JoinCondition;
 import roomescape.global.query.join.JoinType;
 
 class SelectQueryTest {

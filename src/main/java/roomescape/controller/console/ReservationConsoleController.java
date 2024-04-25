@@ -17,12 +17,15 @@ public class ReservationConsoleController {
     private final ReservationTimeService reservationTimeService;
 
     public void saveReservation() {
+        List<ReservationTimeResponse> reservationTimeResponses = getReservationTimeResponses();
+        if (reservationTimeResponses.isEmpty()) {
+            reservationView.printHasNotAnyReservationTime();
+            return;
+        }
         ReservationRequest reservationRequest = new ReservationRequest(
                 reservationView.readName(),
                 reservationView.readDate(),
-                ReservationTimeView.readReservationTimeIdToDelete(
-                        getReservationTimeResponses()
-                )
+                ReservationTimeView.readIndexToDelete(reservationTimeResponses)
         );
         reservationService.saveReservation(reservationRequest);
         reservationView.printSuccessfullyAdded();
@@ -45,8 +48,13 @@ public class ReservationConsoleController {
     }
 
     public void deleteReservation() {
-        int reservationId = reservationView.readReservationIdToDelete(getReservationResponses());
-        reservationService.deleteReservation(reservationId);
+        List<ReservationResponse> reservationResponses = getReservationResponses();
+        if (reservationResponses.isEmpty()) {
+            reservationView.printHasNotAnyReservation();
+            return;
+        }
+        int index = reservationView.readIndexToDelete(reservationResponses);
+        reservationService.deleteReservation(reservationResponses.get(index).id());
         reservationView.printSuccessfullyDeleted();
     }
 

@@ -27,7 +27,7 @@ public class ReservationView {
         System.out.println("[INFO] 예약이 추가되었습니다.");
     }
 
-    public int readReservationIdToDelete(final List<ReservationResponse> reservationResponses) {
+    public int readIndexToDelete(final List<ReservationResponse> reservationResponses) {
         System.out.println("[INFO] 삭제할 방탈출 예약 번호를 선택해주세요.");
         printReservations(reservationResponses);
         try {
@@ -42,6 +42,10 @@ public class ReservationView {
     }
 
     public void printReservations(final List<ReservationResponse> reservations) {
+        if (reservations.isEmpty()) {
+            System.out.println("[INFO] 방탈출 예약 목록이 없습니다.");
+            return;
+        }
         System.out.println("[INFO] 방탈출 예약 목록입니다.");
         System.out.println("번호  이름    날짜      시간");
         for (int index = 0; index < reservations.size(); index++) {
@@ -57,5 +61,13 @@ public class ReservationView {
                 reservationResponse.date().toString(),
                 reservationResponse.time().startAt().toString()
         );
+    }
+
+    public void printHasNotAnyReservationTime() {
+        System.out.printf("[WARN] 방탈출 예약 가능한 시간이 없기 때문에 메뉴로 돌아갑니다.%n");
+    }
+
+    public void printHasNotAnyReservation() {
+        System.out.printf("[WARN] 방탈출 예약 내역이 없기 때문에 메뉴로 돌아갑니다.%n");
     }
 }

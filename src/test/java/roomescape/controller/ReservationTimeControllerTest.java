@@ -61,17 +61,13 @@ class ReservationTimeControllerTest {
                 .statusCode(200);
     }
 
-    @DisplayName("존재하는 리소스에 대한 삭제 요청시, 200 ok를 응답한다.")
+    @DisplayName("존재하는 리소스에 대한 삭제 요청시, 204 no content를 응답한다.")
     @Test
     void should_remove_reservation_time_in_db() {
-        ReservationTimeAddRequest reservationTimeAddRequest = new ReservationTimeAddRequest(LocalTime.of(10, 0));
-
         RestAssured.given().log().all()
-                .contentType(ContentType.JSON)
-                .body(reservationTimeAddRequest)
-                .when().post("/times")
+                .when().delete("/times/1")
                 .then().log().all()
-                .statusCode(200);
+                .statusCode(204);
     }
 
     @DisplayName("delete 요청 시 id값이 존재하지 않으면 500 Internel Server Error로 응답한다.")

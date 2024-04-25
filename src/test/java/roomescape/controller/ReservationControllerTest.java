@@ -62,7 +62,7 @@ public class ReservationControllerTest {
                 .statusCode(201);
     }
 
-    @DisplayName("존재하는 리소스에 대한 삭제 요청시, 204 ok를 응답한다.")
+    @DisplayName("존재하는 리소스에 대한 삭제 요청시, 204 no content를 응답한다.")
     @Test
     void should_remove_reservation_when_delete_request_reservations_id() {
         RestAssured.given().log().all()

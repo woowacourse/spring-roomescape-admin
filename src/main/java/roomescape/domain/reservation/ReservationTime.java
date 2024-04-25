@@ -1,5 +1,7 @@
 package roomescape.domain.reservation;
 
+import org.springframework.format.annotation.DateTimeFormat;
+
 import java.time.LocalTime;
 
 public class ReservationTime {

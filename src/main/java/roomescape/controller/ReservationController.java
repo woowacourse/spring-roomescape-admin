@@ -1,8 +1,8 @@
 package roomescape.controller;
 
 import org.springframework.web.bind.annotation.*;
-import roomescape.domain.Reservation;
-import roomescape.dto.ReservationCreateRequest;
+import roomescape.dto.reservation.ReservationCreateRequest;
+import roomescape.dto.reservation.ReservationResponse;
 import roomescape.service.ReservationService;
 
 import java.util.List;
@@ -18,17 +18,17 @@ public class ReservationController {
     }
 
     @GetMapping
-    public List<Reservation> readReservations() {
+    public List<ReservationResponse> readReservations() {
         return reservationService.readReservations();
     }
 
     @GetMapping("/{id}")
-    public Reservation readReservation(@PathVariable Long id) {
+    public ReservationResponse readReservation(@PathVariable Long id) {
         return reservationService.readReservation(id);
     }
 
     @PostMapping
-    public Reservation createReservation(@RequestBody ReservationCreateRequest request) {
+    public ReservationResponse createReservation(@RequestBody ReservationCreateRequest request) {
         return reservationService.createReservation(request);
     }
 

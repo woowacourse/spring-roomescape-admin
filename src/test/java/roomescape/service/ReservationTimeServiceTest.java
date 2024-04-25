@@ -3,8 +3,8 @@ package roomescape.service;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
-import roomescape.dto.ReservationTimeCreateRequest;
-import roomescape.domain.ReservationTime;
+import roomescape.dto.reservationtime.ReservationTimeCreateRequest;
+import roomescape.dto.reservationtime.ReservationTimeResponse;
 import roomescape.repository.ReservationTimeFakeDao;
 
 import java.time.LocalTime;
@@ -32,10 +32,10 @@ class ReservationTimeServiceTest {
         ReservationTimeCreateRequest request = new ReservationTimeCreateRequest(startAt);
 
         // when
-        ReservationTime reservationTime = reservationTimeService.createTime(request);
+        ReservationTimeResponse reservationTime = reservationTimeService.createTime(request);
 
         // then
-        assertThat(reservationTime.getStartAt())
+        assertThat(reservationTime.startAt())
                 .isEqualTo(startAt);
     }
 
@@ -47,10 +47,10 @@ class ReservationTimeServiceTest {
         Long id = 1L;
 
         // when
-        ReservationTime reservationTime = reservationTimeService.readReservationTime(id);
+        ReservationTimeResponse reservationTime = reservationTimeService.readReservationTime(id);
 
         // then
-        assertThat(reservationTime.getStartAt())
+        assertThat(reservationTime.startAt())
                 .isEqualTo(startAt);
     }
 
@@ -61,10 +61,9 @@ class ReservationTimeServiceTest {
         createInitReservationTime();
 
         // when
-        List<ReservationTime> reservationTimes = reservationTimeService.readReservationTimes();
+        List<ReservationTimeResponse> reservationTimes = reservationTimeService.readReservationTimes();
 
         // then
-        System.out.println(reservationTimes);
         assertThat(reservationTimes.size()).isEqualTo(1);
     }
 

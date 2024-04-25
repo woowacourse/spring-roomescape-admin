@@ -1,4 +1,4 @@
-package roomescape.dto;
+package roomescape.dto.reservationtime;
 
 import roomescape.domain.ReservationTime;
 

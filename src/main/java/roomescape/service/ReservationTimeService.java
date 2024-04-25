@@ -1,10 +1,11 @@
 package roomescape.service;
 
 import org.springframework.stereotype.Service;
-import roomescape.dto.ReservationTimeCreateRequest;
 import roomescape.domain.ReservationTime;
+import roomescape.dto.reservationtime.ReservationTimeCreateRequest;
+import roomescape.dto.reservationtime.ReservationTimeResponse;
 import roomescape.exception.ResourceNotFoundException;
-import roomescape.repository.reservationTime.ReservationTimeRepository;
+import roomescape.repository.reservationtime.ReservationTimeRepository;
 
 import java.util.List;
 
@@ -19,18 +20,22 @@ public class ReservationTimeService {
         this.reservationTimeRepository = reservationTimeRepository;
     }
 
-    public ReservationTime createTime(ReservationTimeCreateRequest request) {
+    public ReservationTimeResponse createTime(ReservationTimeCreateRequest request) {
         ReservationTime reservationTime = request.toReservationTime();
-        return reservationTimeRepository.save(reservationTime);
+        ReservationTime newReservationTime = reservationTimeRepository.save(reservationTime);
+        return ReservationTimeResponse.from(newReservationTime);
     }
 
-    public ReservationTime readReservationTime(Long id) {
-        return reservationTimeRepository.findById(id)
+    public ReservationTimeResponse readReservationTime(Long id) {
+        ReservationTime reservationTime = reservationTimeRepository.findById(id)
                 .orElseThrow(() -> new ResourceNotFoundException(RESERVATION_TIME_NOT_FOUND));
+        return ReservationTimeResponse.from(reservationTime);
     }
 
-    public List<ReservationTime> readReservationTimes() {
-        return reservationTimeRepository.findAll();
+    public List<ReservationTimeResponse> readReservationTimes() {
+        return reservationTimeRepository.findAll().stream()
+                .map(ReservationTimeResponse::from)
+                .toList();
     }
 
     public void deleteTime(Long id) {

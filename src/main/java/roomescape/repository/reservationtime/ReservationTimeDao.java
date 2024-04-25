@@ -1,8 +1,8 @@
-package roomescape.repository.reservationTime;
+package roomescape.repository.reservationtime;
 
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;
-import org.springframework.jdbc.core.namedparam.MapSqlParameterSource;
+import org.springframework.jdbc.core.namedparam.BeanPropertySqlParameterSource;
 import org.springframework.jdbc.core.namedparam.SqlParameterSource;
 import org.springframework.jdbc.core.simple.SimpleJdbcInsert;
 import org.springframework.stereotype.Repository;
@@ -26,8 +26,7 @@ public class ReservationTimeDao implements ReservationTimeRepository {
     }
 
     public ReservationTime save(ReservationTime reservationTime) {
-        SqlParameterSource sqlParameterSource = new MapSqlParameterSource()
-                .addValue("start_at", reservationTime.getStartAt());
+        SqlParameterSource sqlParameterSource = new BeanPropertySqlParameterSource(reservationTime);
         Long id = simpleJdbcInsert.executeAndReturnKey(sqlParameterSource).longValue();
 
         return new ReservationTime(id, reservationTime.getStartAt());

@@ -4,12 +4,13 @@ import org.assertj.core.api.SoftAssertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
-import roomescape.domain.Reservation;
-import roomescape.domain.ReservationTime;
-import roomescape.dto.ReservationCreateRequest;
-import roomescape.dto.ReservationTimeCreateRequest;
+import roomescape.dto.reservation.ReservationCreateRequest;
+import roomescape.dto.reservation.ReservationResponse;
+import roomescape.dto.reservationtime.ReservationTimeCreateRequest;
+import roomescape.dto.reservationtime.ReservationTimeResponse;
 import roomescape.repository.ReservationFakeDao;
 import roomescape.repository.ReservationTimeFakeDao;
+import roomescape.repository.reservationtime.ReservationTimeRepository;
 
 import java.time.LocalDate;
 import java.time.LocalTime;
@@ -28,8 +29,9 @@ class ReservationServiceTest {
 
     @BeforeEach
     void setUp() {
-        this.reservationTimeService = new ReservationTimeService(new ReservationTimeFakeDao());
-        this.reservationService = new ReservationService(new ReservationFakeDao(), reservationTimeService);
+        ReservationTimeRepository reservationTimeRepository = new ReservationTimeFakeDao();
+        this.reservationTimeService = new ReservationTimeService(reservationTimeRepository);
+        this.reservationService = new ReservationService(new ReservationFakeDao(), reservationTimeRepository);
         this.startAt = LocalTime.of(10, 10);
         this.date = LocalDate.of(2024, 11, 16);
     }
@@ -41,7 +43,7 @@ class ReservationServiceTest {
         createInitReservation();
 
         // when
-        List<Reservation> reservations = reservationService.readReservations();
+        List<ReservationResponse> reservations = reservationService.readReservations();
 
         // then
         assertThat(reservations.size()).isEqualTo(1);
@@ -55,12 +57,12 @@ class ReservationServiceTest {
         Long id = 1L;
 
         // when
-        Reservation reservation = reservationService.readReservation(id);
+        ReservationResponse reservation = reservationService.readReservation(id);
 
         // then
         SoftAssertions softAssertions = new SoftAssertions();
-        softAssertions.assertThat(reservation.getDate()).isEqualTo(date);
-        softAssertions.assertThat(reservation.getName()).isEqualTo("클로버");
+        softAssertions.assertThat(reservation.date()).isEqualTo(date);
+        softAssertions.assertThat(reservation.name()).isEqualTo("클로버");
         softAssertions.assertAll();
     }
 
@@ -68,19 +70,19 @@ class ReservationServiceTest {
     @Test
     void createReservation() {
         // given
-        ReservationTime reservationTime = reservationTimeService
+        ReservationTimeResponse reservationTime = reservationTimeService
                 .createTime(new ReservationTimeCreateRequest(startAt));
         ReservationCreateRequest request = new ReservationCreateRequest("클로버",
-                date, reservationTime.getId());
+                date, reservationTime.id());
 
         // when
-        Reservation reservation = reservationService.createReservation(request);
+        ReservationResponse reservation = reservationService.createReservation(request);
 
         // then
         SoftAssertions softAssertions = new SoftAssertions();
-        softAssertions.assertThat(reservation.getDate()).isEqualTo(date);
-        softAssertions.assertThat(reservation.getName()).isEqualTo("클로버");
-        softAssertions.assertThat(reservation.getTime().getStartAt()).isEqualTo(reservationTime.getStartAt());
+        softAssertions.assertThat(reservation.date()).isEqualTo(date);
+        softAssertions.assertThat(reservation.name()).isEqualTo("클로버");
+        softAssertions.assertThat(reservation.time().getStartAt()).isEqualTo(reservationTime.startAt());
         softAssertions.assertAll();
     }
 
@@ -97,10 +99,10 @@ class ReservationServiceTest {
     }
 
     private void createInitReservation() {
-        ReservationTime reservationTime = reservationTimeService
+        ReservationTimeResponse reservationTime = reservationTimeService
                 .createTime(new ReservationTimeCreateRequest(startAt));
         ReservationCreateRequest request = new ReservationCreateRequest("클로버",
-                date, reservationTime.getId());
+                date, reservationTime.id());
         reservationService.createReservation(request);
     }
 }

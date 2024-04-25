@@ -2,7 +2,6 @@ package roomescape.dao;
 
 import java.sql.PreparedStatement;
 import java.time.LocalDate;
-import java.time.LocalTime;
 import java.util.List;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.PreparedStatementCreator;
@@ -28,7 +27,7 @@ public class ReservationH2Dao implements ReservationDao {
                 resultSet.getLong("id"),
                 resultSet.getString("name"),
                 resultSet.getObject("date", LocalDate.class),
-                resultSet.getObject("time", LocalTime.class));
+                resultSet.getObject("time", ReservationTime.class));
 
         return jdbcTemplate.query(sql, reservationRowMapper);
     }
@@ -40,8 +39,8 @@ public class ReservationH2Dao implements ReservationDao {
         RowMapper<Reservation> reservationRowMapper = (resultSet, rowNum) -> new Reservation(
                 resultSet.getLong("id"),
                 resultSet.getString("name"),
-                LocalDate.parse(resultSet.getString("date")),
-                LocalTime.parse(resultSet.getString("time")));
+                resultSet.getObject("date", LocalDate.class),
+                resultSet.getObject("time", ReservationTime.class));
 
         return jdbcTemplate.queryForObject(sql, reservationRowMapper, id);
     }
@@ -55,14 +54,14 @@ public class ReservationH2Dao implements ReservationDao {
             PreparedStatement statement = connection.prepareStatement(sql, new String[]{"id"});
             statement.setString(1, reservation.getName());
             statement.setString(2, reservation.getDate().toString());
-            statement.setString(3, reservation.getTime().toString());
+            statement.setString(3, reservation.getReservationTime().toString());
             return statement;
         };
 
         jdbcTemplate.update(preparedStatementCreator, keyHolder);
 
         Long id = keyHolder.getKey().longValue();
-        return new Reservation(id, reservation.getName(), reservation.getDate(), reservation.getTime());
+        return new Reservation(id, reservation.getName(), reservation.getDate(), reservation.getReservationTime());
     }
 
     @Override

@@ -4,6 +4,7 @@ import com.fasterxml.jackson.annotation.JsonFormat;
 import java.time.LocalDate;
 import java.time.LocalTime;
 import roomescape.dao.Reservation;
+import roomescape.dao.ReservationTime;
 
 public record ReservationSaveRequest(
         String name,
@@ -12,6 +13,6 @@ public record ReservationSaveRequest(
         LocalTime time) {
 
     public Reservation toEntity() {
-        return new Reservation(null, this.name(), this.date(), this.time());
+        return new Reservation(null, name, date, new ReservationTime(null, time));
     }
 }

@@ -10,20 +10,12 @@ import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.context.SpringBootTest;
-import roomescape.config.TestConfig;
 import roomescape.controller.dto.TimeSlotCreationRequest;
 import roomescape.controller.dto.TimeSlotCreationResponse;
 import roomescape.domain.TimeSlot;
-import roomescape.environment.WebConfig;
 import roomescape.repository.TimeSlotRepository;
 
-@SpringBootTest(
-        classes = {WebConfig.class, TestConfig.class},
-        webEnvironment = SpringBootTest.WebEnvironment.NONE,
-        properties = "spring.main.allow-bean-definition-overriding=true"
-)
-class TimeSlotServiceTest {
+class TimeSlotServiceTest extends ServiceTest {
 
     @Autowired
     private TimeSlotRepository timeSlotRepository;

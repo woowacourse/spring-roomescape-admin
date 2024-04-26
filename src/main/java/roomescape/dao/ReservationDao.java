@@ -19,13 +19,11 @@ public class ReservationDao {
                 resultSet.getLong("time_id"),
                 resultSet.getTime("time_value")
                         .toLocalTime());
-        Reservation reservation = new Reservation.Builder()
-                .id(resultSet.getLong("id"))
-                .name(resultSet.getString("name"))
-                .date(resultSet.getDate("date")
-                        .toLocalDate())
-                .time(reservationTime)
-                .build();
+        Reservation reservation = new Reservation(
+                resultSet.getLong("id"),
+                resultSet.getString("name"),
+                resultSet.getDate("date").toLocalDate(),
+                reservationTime);
         return reservation;
     };
 

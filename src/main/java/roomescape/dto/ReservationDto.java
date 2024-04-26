@@ -6,10 +6,6 @@ import roomescape.domain.ReservationTime;
 
 public record ReservationDto(String name, LocalDate date, Long timeId) {
     public Reservation toEntity(ReservationTime reservationTime) {
-        return new Reservation.Builder()
-                .name(name)
-                .date(date)
-                .time(reservationTime)
-                .build();
+        return new Reservation(null, name, date, reservationTime);
     }
 }

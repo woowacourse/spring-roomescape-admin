@@ -4,10 +4,10 @@ import java.util.List;
 import org.springframework.stereotype.Service;
 import roomescape.core.dao.ReservationDao;
 import roomescape.core.dao.ReservationTimeDao;
-import roomescape.reservation.domain.Reservation;
-import roomescape.reservation.domain.ReservationTime;
-import roomescape.reservation.dto.request.ReservationRequest;
-import roomescape.reservation.dto.response.ReservationResponse;
+import roomescape.web.domain.Reservation;
+import roomescape.web.domain.ReservationTime;
+import roomescape.web.dto.request.ReservationRequest;
+import roomescape.web.dto.response.ReservationResponse;
 
 @Service
 public class ReservationService {

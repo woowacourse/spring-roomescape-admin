@@ -5,8 +5,8 @@ import roomescape.console.util.InputConverter;
 import roomescape.console.view.Command;
 import roomescape.console.view.InputView;
 import roomescape.console.view.OutputView;
-import roomescape.reservation.dto.request.ReservationTimeRequest;
-import roomescape.reservation.dto.response.ReservationTimeResponse;
+import roomescape.web.dto.request.ReservationTimeRequest;
+import roomescape.web.dto.response.ReservationTimeResponse;
 import roomescape.core.service.ReservationTimeService;
 
 public class ReservationTimeConsoleController implements ConsoleController {

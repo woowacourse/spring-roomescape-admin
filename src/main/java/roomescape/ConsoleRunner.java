@@ -1,4 +1,4 @@
-package roomescape.console;
+package roomescape;
 
 import roomescape.console.config.ControllerFactory;
 import roomescape.console.controller.MainConsoleController;

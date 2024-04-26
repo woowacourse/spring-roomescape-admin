@@ -1,8 +1,8 @@
 package roomescape.controller;
 
+import java.net.URI;
 import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -25,8 +25,7 @@ public class ReservationController {
     @PostMapping
     public ResponseEntity<Void> addReservation(@RequestBody ReservationRequest reservationRequest) {
         Long savedId = reservationService.addReservation(reservationRequest);
-        String redirectUrl = "/reservations/" + savedId;
-        return ResponseEntity.status(HttpStatus.CREATED).header("Location", redirectUrl).build();
+        return ResponseEntity.created(URI.create("/reservations/" + savedId)).build();
     }
 
     @GetMapping
@@ -44,6 +43,6 @@ public class ReservationController {
     @DeleteMapping("/{id}")
     public ResponseEntity<Void> deleteReservation(@PathVariable Long id) {
         reservationService.deleteReservation(id);
-        return ResponseEntity.status(HttpStatus.NO_CONTENT).build();
+        return ResponseEntity.noContent().build();
     }
 }

@@ -8,15 +8,19 @@ import org.springframework.stereotype.Component;
 @Component
 public class InputView {
     private static final Scanner scanner = new Scanner(System.in);
-    OutputView outputView;
+    private final OutputView outputView;
 
     public InputView(final OutputView outputView) {
         this.outputView = outputView;
     }
 
-    public int read() {
+    public String read() {
+        return scanner.nextLine();
+    }
+
+    public int readInt() {
         try {
-            return scanner.nextInt();
+            return Integer.parseInt(scanner.nextLine());
         } catch (InputMismatchException e) {
             throw new IllegalArgumentException("올바른 명령어가 아닙니다.");
         }
@@ -24,16 +28,27 @@ public class InputView {
 
     public String readTime() {
         outputView.print("예약할 시간을 입력해주세요. 형식(HH:mm)");
-        return scanner.next();
+        return scanner.nextLine();
     }
 
     public Long readTimeId() {
         try {
             outputView.print("삭제할 예약 시간 ID를 입력해주세요.");
-            return Long.parseLong(scanner.next());
+            return Long.parseLong(scanner.nextLine());
         } catch (NumberFormatException e) {
             throw new IllegalArgumentException("올바른 시간 ID가 아닙니다.");
         }
     }
 
+    public String readCreateReservation() {
+        outputView.print("예약을 생성합니다.");
+        outputView.print("형식: {이름 / 날짜(yyyy-mm-dd) / 예약 번호}");
+        return scanner.nextLine();
+    }
+
+    public long readReservationId() {
+        outputView.print("예약을 삭제합니다.");
+        outputView.print("형식: 예약 번호");
+        return Long.parseLong(scanner.nextLine());
+    }
 }

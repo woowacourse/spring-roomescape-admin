@@ -11,7 +11,8 @@ import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.test.annotation.DirtiesContext;
 import org.springframework.test.annotation.DirtiesContext.ClassMode;
 import roomescape.db.ReservationDao;
-import roomescape.db.ReservationTimeDao;
+import roomescape.db.ReservationDaoH2Impl;
+import roomescape.db.ReservationTimeDaoH2Impl;
 import roomescape.dto.ReservationRequest;
 
 
@@ -24,10 +25,11 @@ class ReservationServiceTest {
     @Test
     @DisplayName("존재하지 않는 아이디면 예외가 발생한다")
     void create() {
-        final ReservationDao reservationDao = new ReservationDao(jdbcTemplate);
-        final ReservationTimeDao reservationTimeDao = new ReservationTimeDao(jdbcTemplate);
+        final ReservationDao reservationDaoH2Impl = new ReservationDaoH2Impl(jdbcTemplate);
+        final ReservationTimeDaoH2Impl reservationTimeDaoH2Impl = new ReservationTimeDaoH2Impl(jdbcTemplate);
         final ReservationRequest reservationRequest = new ReservationRequest("a", LocalDate.now(), 1L);
-        final ReservationService reservationService = new ReservationService(reservationDao, reservationTimeDao);
+        final ReservationService reservationService = new ReservationService(reservationDaoH2Impl,
+                reservationTimeDaoH2Impl);
 
         Assertions.assertThatThrownBy(() -> reservationService.create(reservationRequest))
                 .isInstanceOf(IllegalArgumentException.class)
@@ -37,9 +39,10 @@ class ReservationServiceTest {
     @Test
     @DisplayName("값이 null이면 예외가 발생한다")
     void createNotNull() {
-        final ReservationDao reservationDao = new ReservationDao(jdbcTemplate);
-        final ReservationTimeDao reservationTimeDao = new ReservationTimeDao(jdbcTemplate);
-        final ReservationService reservationService = new ReservationService(reservationDao, reservationTimeDao);
+        final ReservationDao reservationDaoH2Impl = new ReservationDaoH2Impl(jdbcTemplate);
+        final ReservationTimeDaoH2Impl reservationTimeDaoH2Impl = new ReservationTimeDaoH2Impl(jdbcTemplate);
+        final ReservationService reservationService = new ReservationService(reservationDaoH2Impl,
+                reservationTimeDaoH2Impl);
 
         Assertions.assertThatThrownBy(() -> reservationService.create(null))
                 .isInstanceOf(NullPointerException.class);

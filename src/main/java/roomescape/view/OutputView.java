@@ -2,6 +2,7 @@ package roomescape.view;
 
 import java.util.List;
 import org.springframework.stereotype.Component;
+import roomescape.dto.ReservationResponse;
 import roomescape.dto.ReservationTimeResponse;
 
 @Component
@@ -42,5 +43,15 @@ public class OutputView {
         System.out.println("------------------------------------");
         System.out.println("예약 시간이 추가되었습니다.");
         System.out.println("------------------------------------");
+    }
+
+    public void printReservations(final List<ReservationResponse> all) {
+        System.out.println("생성된 예약 목록입니다.");
+        for (final ReservationResponse reservationResponse : all) {
+            System.out.printf("예약 번호: %d, 이름: %s, 날짜: %s, 예약 시간 번호: %d, 예약 시간: %s",
+                    reservationResponse.id(), reservationResponse.name(), reservationResponse.date(),
+                    reservationResponse.time().getId(), reservationResponse.time().getStartAt());
+            System.out.println();
+        }
     }
 }

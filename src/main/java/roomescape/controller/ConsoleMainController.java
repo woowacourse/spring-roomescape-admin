@@ -3,6 +3,7 @@ package roomescape.controller;
 
 import java.util.List;
 import org.springframework.stereotype.Controller;
+import roomescape.dto.ReservationResponse;
 import roomescape.dto.ReservationTimeResponse;
 import roomescape.view.InputView;
 import roomescape.view.OutputView;
@@ -29,7 +30,7 @@ public class ConsoleMainController {
 
     public void run() {
         outputView.printMainScreen();
-        int read = inputView.read();
+        int read = inputView.readInt();
         while (read != 0) {
             switch (read) {
                 case 1 -> {
@@ -41,9 +42,19 @@ public class ConsoleMainController {
                     outputView.printCreateReservationTimeResult();
                 }
                 case 3 -> consoleReservationTimeController.delete(inputView.readTimeId());
+                case 4 -> {
+                    List<ReservationResponse> all = consoleReservationController.findAll();
+                    outputView.printReservations(all);
+                }
+                case 5 -> {
+                    consoleReservationController.add(CommandConverter.convertPostReservation(inputView.readCreateReservation()));
+                }
+                case 6 -> {
+                    consoleReservationController.delete(inputView.readReservationId());
+                }
             }
             outputView.printMainScreen();
-            read = inputView.read();
+            read = inputView.readInt();
         }
     }
 }

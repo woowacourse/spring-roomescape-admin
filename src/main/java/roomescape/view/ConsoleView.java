@@ -18,14 +18,15 @@ public class ConsoleView {
     private final Scanner scanner = new Scanner(System.in);
 
     public String readCommand() {
-        System.out.println();
-        System.out.println("1. 시간 저장");
-        System.out.println("2. 시간 삭제");
-        System.out.println("3. 예약 저장");
-        System.out.println("4. 예약 삭제");
-        System.out.println("5. 종료");
-        System.out.println("원하는 동작의 번호를 입력해주세요. 예 - 1");
-        // TODO: validate
+        System.out.println("""
+                
+                1. 시간 저장
+                2. 시간 삭제
+                3. 예약 저장
+                4. 예약 삭제
+                5. 종료
+                원하는 동작의 번호를 입력해주세요. 예 - 1
+                """);
         return scanner.nextLine();
     }
 
@@ -75,7 +76,6 @@ public class ConsoleView {
         }
         for (ReservationResponseDto reservation : reservations) {
             System.out.println(reservation.getId() + " | " + reservation.getName() + " | " + reservation.getDate() + " | " + reservation.getTime().getStartAt());
-            // TODO: 포맷 통일하기
         }
     }
 }

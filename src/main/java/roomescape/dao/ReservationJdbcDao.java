@@ -30,7 +30,7 @@ public class ReservationJdbcDao implements ReservationTimeDao {
 
     @Override
     public List<ReservationTime> findAll() {
-        String findAllReservationTimeSql = "select id, start_at from reservation_time";
+        String findAllReservationTimeSql = "SELECT id, start_at FROM reservation_time ORDER BY start_at DESC ";
 
         return jdbcTemplate.query(findAllReservationTimeSql, (resultSet, rowNum) -> new ReservationTime(
                 resultSet.getLong("id"),

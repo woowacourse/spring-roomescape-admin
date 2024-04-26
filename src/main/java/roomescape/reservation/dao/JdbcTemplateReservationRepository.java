@@ -1,18 +1,18 @@
-package roomescape.reservation.repository;
+package roomescape.reservation.dao;
 
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;
 import org.springframework.jdbc.core.namedparam.BeanPropertySqlParameterSource;
 import org.springframework.jdbc.core.namedparam.SqlParameterSource;
 import org.springframework.jdbc.core.simple.SimpleJdbcInsert;
-import org.springframework.stereotype.Repository;
+import org.springframework.stereotype.Component;
 import roomescape.reservation.domain.Reservation;
 
 import javax.sql.DataSource;
 import java.util.List;
 
-@Repository
-public class JdbcTemplateReservationRepository implements ReservationRepository {
+@Component
+public class JdbcTemplateReservationRepository implements ReservationDao {
     private final JdbcTemplate jdbcTemplate;
     private final SimpleJdbcInsert jdbcInsert;
 

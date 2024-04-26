@@ -3,10 +3,10 @@ package roomescape.reservation.service;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import roomescape.reservation.domain.Reservation;
+import roomescape.reservation.domain.repository.ReservationRepository;
 import roomescape.reservation.dto.ReservationRequestDto;
 import roomescape.reservation.dto.ReservationResponseDto;
 import roomescape.reservation.dto.ReservationsResponseDto;
-import roomescape.reservation.repository.ReservationRepository;
 
 import java.util.List;
 

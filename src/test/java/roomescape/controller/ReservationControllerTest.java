@@ -8,8 +8,8 @@ import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.web.server.LocalServerPort;
-import roomescape.dto.ReservationRequest;
-import roomescape.dto.ReservationTimeRequest;
+import roomescape.service.dto.ReservationRequest;
+import roomescape.service.dto.ReservationTimeRequest;
 
 import java.time.LocalDate;
 import java.time.LocalTime;

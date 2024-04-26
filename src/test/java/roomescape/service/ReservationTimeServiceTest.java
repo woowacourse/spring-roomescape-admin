@@ -7,8 +7,8 @@ import org.junit.jupiter.api.Test;
 import roomescape.dao.FakeReservationTimeRepository;
 import roomescape.dao.ReservationTimeRepository;
 import roomescape.domain.ReservationTime;
-import roomescape.dto.ReservationTimeRequest;
-import roomescape.dto.ReservationTimeResponse;
+import roomescape.service.dto.ReservationTimeRequest;
+import roomescape.service.dto.ReservationTimeResponse;
 import roomescape.exception.InvalidReservationException;
 
 import java.util.List;

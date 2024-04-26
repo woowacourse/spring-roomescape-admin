@@ -10,8 +10,8 @@ import roomescape.dao.ReservationRepository;
 import roomescape.dao.ReservationTimeRepository;
 import roomescape.domain.Reservation;
 import roomescape.domain.ReservationTime;
-import roomescape.dto.ReservationRequest;
-import roomescape.dto.ReservationResponse;
+import roomescape.service.dto.ReservationRequest;
+import roomescape.service.dto.ReservationResponse;
 
 import java.util.List;
 

@@ -4,6 +4,7 @@ import java.sql.PreparedStatement;
 import java.sql.Time;
 import java.time.LocalTime;
 import java.util.List;
+import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.support.GeneratedKeyHolder;
 import org.springframework.jdbc.support.KeyHolder;
@@ -20,7 +21,7 @@ public class ReservationTimeDao {
     }
 
 
-    public ReservationTime findById(Long timeId) {
+    public ReservationTime findById(Long timeId) throws EmptyResultDataAccessException {
         String sql = "select id, start_at from reservation_time where id = ?";
         return jdbcTemplate.queryForObject(
                 sql,

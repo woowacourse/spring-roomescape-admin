@@ -14,7 +14,7 @@ import org.springframework.test.annotation.Rollback;
 import org.springframework.transaction.annotation.Transactional;
 import roomescape.entity.GameTime;
 import roomescape.entity.Reservation;
-import roomescape.service.exception.DataAlreadyExistException;
+import roomescape.service.exception.SavedDataConflictWithRequestException;
 
 @SpringBootTest
 @Transactional
@@ -49,6 +49,6 @@ class ReservationServiceTest {
         reservationService.saveReservation(reservation);
 
         assertThatThrownBy(() -> reservationService.saveReservation(conflictReservation))
-                .isInstanceOf(DataAlreadyExistException.class);
+                .isInstanceOf(SavedDataConflictWithRequestException.class);
     }
 }

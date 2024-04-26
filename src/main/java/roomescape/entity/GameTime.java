@@ -2,7 +2,7 @@ package roomescape.entity;
 
 import java.time.LocalTime;
 import java.util.Objects;
-import roomescape.entity.exception.InvalidRequestValueException;
+import roomescape.entity.exception.NullFieldExistException;
 
 public class GameTime {
     private final Long id;
@@ -24,7 +24,7 @@ public class GameTime {
 
     private void validateNonNull(LocalTime startAt) {
         if (startAt == null) {
-            throw new InvalidRequestValueException("예약 가능한 시간은 null일 수 없습니다");
+            throw new NullFieldExistException("예약 가능한 시간은 null일 수 없습니다");
         }
     }
 

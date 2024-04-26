@@ -49,7 +49,7 @@ public class Reservation {
             return false;
         }
         Reservation that = (Reservation) o;
-        return id == that.id;
+        return Objects.equals(id, that.id);
     }
 
     @Override

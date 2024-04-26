@@ -28,7 +28,7 @@ public class ReservationTimeDao {
             return preparedStatement;
         }, keyHolder);
 
-        return new ReservationTime(keyHolder.getKey().longValue(), time.getStartAt());
+        return findById(keyHolder.getKey().longValue());
     }
 
     public List<ReservationTime> findAll() {

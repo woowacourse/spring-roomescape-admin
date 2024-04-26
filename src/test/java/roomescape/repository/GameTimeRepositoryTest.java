@@ -28,13 +28,11 @@ class GameTimeRepositoryTest {
     @DisplayName("전체 예약 가능 시각을 조회할 수 있다")
     @Test
     void readAllTest() {
-        gameTimeRepository.save(GAME_TIME_WITH_NO_ID_0300);
-        gameTimeRepository.save(GAME_TIME_WITH_NO_ID_0400);
+        GameTime reservation0300 = gameTimeRepository.save(GAME_TIME_WITH_NO_ID_0300);
+        GameTime reservation0400 = gameTimeRepository.save(GAME_TIME_WITH_NO_ID_0400);
 
         List<GameTime> all = gameTimeRepository.readAll();
-        assertThat(all)
-                .extracting("startAt")
-                .containsExactly(LocalTime.of(3, 0), LocalTime.of(4, 0));
+        assertThat(all).containsExactly(reservation0300, reservation0400);
     }
 
     @DisplayName("예약 가능 시간 단건을 저장할 수 있다")

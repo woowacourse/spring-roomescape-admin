@@ -39,14 +39,13 @@ class ReservationRepositoryTest {
         Reservation reservation1 = new Reservation(null, "리비", DAY_AFTER_TOMORROW, savedTime0300);
         Reservation reservation2 = new Reservation(null, "웨지", DAY_AFTER_TOMORROW, savedTime0300);
 
-        reservationRepository.save(reservation1);
-        reservationRepository.save(reservation2);
+        Reservation libiReservation = reservationRepository.save(reservation1);
+        Reservation wedgeReservation = reservationRepository.save(reservation2);
 
         List<Reservation> reservations = reservationRepository.readAll();
 
         assertThat(reservationRepository.readAll())
-                .extracting("name")
-                .containsExactly("리비", "웨지");
+                .containsExactly(libiReservation, wedgeReservation);
     }
 
     @DisplayName("예약 단건을 저장할 수 있다")

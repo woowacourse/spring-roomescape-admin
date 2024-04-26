@@ -34,6 +34,7 @@ public class H2ReservationRepository implements ReservationRepository {
                 .usingGeneratedKeyColumns("id");
     }
 
+    @Override
     public Optional<Reservation> findById(Long id) {
         String findSql = """
                 SELECT
@@ -55,6 +56,7 @@ public class H2ReservationRepository implements ReservationRepository {
         }
     }
 
+    @Override
     public List<Reservation> findAll() {
         return jdbcTemplate.query("""
                 SELECT
@@ -68,6 +70,7 @@ public class H2ReservationRepository implements ReservationRepository {
                 ON r.time_id = t.id""", ROW_MAPPER);
     }
 
+    @Override
     public Reservation create(Reservation reservation) {
         Map<String, Object> params = Map.of(
                 "name", reservation.name(),
@@ -78,6 +81,7 @@ public class H2ReservationRepository implements ReservationRepository {
         return findById(id).orElseThrow(IllegalStateException::new);
     }
 
+    @Override
     public void deleteById(Long id) {
         jdbcTemplate.update("DELETE FROM %s WHERE id = ?".formatted(TABLE_NAME), id);
     }

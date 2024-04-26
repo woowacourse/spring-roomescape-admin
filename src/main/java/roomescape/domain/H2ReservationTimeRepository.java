@@ -29,6 +29,7 @@ public class H2ReservationTimeRepository implements ReservationTimeRepository {
                 .usingGeneratedKeyColumns("id");
     }
 
+    @Override
     public Optional<ReservationTime> findById(Long id) {
         String findSql = "SELECT id, start_at FROM %s WHERE id = ?";
 
@@ -41,10 +42,12 @@ public class H2ReservationTimeRepository implements ReservationTimeRepository {
         }
     }
 
+    @Override
     public List<ReservationTime> findAll() {
         return jdbcTemplate.query("SELECT id, start_at FROM %s".formatted(TABLE_NAME), ROW_MAPPER);
     }
 
+    @Override
     public ReservationTime create(ReservationTime reservationTime) {
         Map<String, Object> params = Map.of("start_at", reservationTime.startAt());
         Long id = simpleJdbcInsert.executeAndReturnKey(params).longValue();
@@ -52,6 +55,7 @@ public class H2ReservationTimeRepository implements ReservationTimeRepository {
         return new ReservationTime(id, reservationTime.startAt());
     }
 
+    @Override
     public void deleteById(Long id) {
         jdbcTemplate.update("DELETE FROM %s WHERE id = ?".formatted(TABLE_NAME), id);
     }

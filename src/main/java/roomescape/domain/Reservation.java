@@ -5,9 +5,9 @@ import java.time.LocalDate;
 public class Reservation {
 
     private Long id;
-    private String name;
-    private LocalDate date;
-    private ReservationTime reservationTime;
+    private final String name;
+    private final LocalDate date;
+    private final ReservationTime reservationTime;
 
     public Reservation(String name, LocalDate date, ReservationTime reservationTime) {
         this.name = name;

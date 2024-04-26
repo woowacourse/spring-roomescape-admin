@@ -29,9 +29,7 @@ public class ReservationService {
 
     private boolean isConflict(Reservation reservation) {
         return reservationRepository.readAll().stream()
-                .filter(reservation::isConflictWith)
-                .findAny()
-                .isPresent();
+                .anyMatch(reservation::isConflictWith);
     }
 
     public void deleteReservation(long id) {

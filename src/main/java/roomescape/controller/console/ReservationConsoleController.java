@@ -26,29 +26,29 @@ public class ReservationConsoleController {
         this.reservationTimeService = reservationTimeService;
     }
 
-    public void saveReservation() {
+    public void save() {
         try {
-            List<ReservationTimeResponse> reservationTimes = reservationTimeService.findReservationTimes();
+            List<ReservationTimeResponse> reservationTimes = reservationTimeService.findAll();
             ReservationRequest reservationRequest = new ReservationRequest(
                     reservationView.readName(),
                     reservationView.readDate(),
                     ReservationTimeView.readIndexToReserve(reservationTimes)
             );
-            reservationService.saveReservation(reservationRequest);
+            reservationService.save(reservationRequest);
             reservationView.printSuccessfullyAdded();
         } catch (IllegalStateException exception) {
             reservationView.printHasNotAnyReservationTime();
         }
     }
 
-    public void getReservation() {
-        reservationView.printReservations(reservationService.findReservations());
+    public void getAll() {
+        reservationView.printReservations(reservationService.findAll());
     }
 
-    public void deleteReservation() {
+    public void delete() {
         try {
-            List<ReservationResponse> reservationResponses = reservationService.findReservations();
-            reservationService.deleteReservation(
+            List<ReservationResponse> reservationResponses = reservationService.findAll();
+            reservationService.deleteById(
                     reservationView.readIndexToDelete(reservationResponses)
             );
             reservationView.printSuccessfullyDeleted();

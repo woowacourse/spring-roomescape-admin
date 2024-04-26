@@ -28,20 +28,20 @@ public class ReservationTimeController {
     public ResponseEntity<ReservationTimeResponse> saveTime(
             @RequestBody ReservationTimeRequest reservationTimeRequest
     ) {
-        ReservationTimeResponse reservationTimeResponse = reservationTimeService.saveTime(reservationTimeRequest);
+        ReservationTimeResponse reservationTimeResponse = reservationTimeService.save(reservationTimeRequest);
         return ResponseEntity.created(URI.create("/times/" + reservationTimeResponse.id()))
                 .body(reservationTimeResponse);
     }
 
     @GetMapping
     public ResponseEntity<List<ReservationTimeResponse>> getTimes() {
-        List<ReservationTimeResponse> reservationTimes = reservationTimeService.getReservationTimes();
+        List<ReservationTimeResponse> reservationTimes = reservationTimeService.getAll();
         return ResponseEntity.ok(reservationTimes);
     }
 
     @DeleteMapping("/{id}")
     public ResponseEntity<Void> deleteTime(@PathVariable("id") long id) {
-        reservationTimeService.deleteTime(id);
+        reservationTimeService.deleteById(id);
         return ResponseEntity.noContent().build();
     }
 }

@@ -15,27 +15,27 @@ public class ReservationTimeService {
         this.reservationTimeDao = reservationTimeDao;
     }
 
-    public ReservationTimeResponse saveTime(final ReservationTimeRequest reservationTimeRequest) {
+    public ReservationTimeResponse save(final ReservationTimeRequest reservationTimeRequest) {
         ReservationTime reservationTime = reservationTimeDao.save(reservationTimeRequest);
         return ReservationTimeResponse.from(reservationTime);
     }
 
-    public List<ReservationTimeResponse> findReservationTimes() {
-        List<ReservationTimeResponse> reservationTimes = getReservationTimes();
+    public List<ReservationTimeResponse> findAll() {
+        List<ReservationTimeResponse> reservationTimes = getAll();
         if (reservationTimes.isEmpty()) {
             throw new IllegalStateException("[ERROR] 방탈출 예약이 가능한 시간이 없습니다.");
         }
         return reservationTimes;
     }
 
-    public List<ReservationTimeResponse> getReservationTimes() {
+    public List<ReservationTimeResponse> getAll() {
         return reservationTimeDao.getAll()
                 .stream()
                 .map(ReservationTimeResponse::from)
                 .toList();
     }
 
-    public void deleteTime(final long id) {
+    public void deleteById(final long id) {
         reservationTimeDao.findById(id)
                 .orElseThrow(() -> new IllegalArgumentException("[ERROR] 삭제할 예약 시간이 없습니다."));
         reservationTimeDao.delete(id);

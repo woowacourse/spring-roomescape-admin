@@ -20,22 +20,22 @@ public class ReservationTimeConsoleController {
         this.reservationTimeService = reservationTimeService;
     }
 
-    public void saveTime() {
+    public void save() {
         ReservationTimeRequest reservationTimeRequest = new ReservationTimeRequest(
                 reservationTimeView.readStartAt()
         );
-        reservationTimeService.saveTime(reservationTimeRequest);
+        reservationTimeService.save(reservationTimeRequest);
         reservationTimeView.printSuccessfullyAdded();
     }
 
-    public void getTimes() {
-        ReservationTimeView.printReservationTimes(reservationTimeService.getReservationTimes());
+    public void getAll() {
+        ReservationTimeView.printReservationTimes(reservationTimeService.getAll());
     }
 
-    public void deleteTime() {
+    public void delete() {
         try {
-            List<ReservationTimeResponse> reservationTimeResponses = reservationTimeService.findReservationTimes();
-            reservationTimeService.deleteTime(
+            List<ReservationTimeResponse> reservationTimeResponses = reservationTimeService.findAll();
+            reservationTimeService.deleteById(
                     reservationTimeView.readIndexToDelete(reservationTimeResponses)
             );
             reservationTimeView.printSuccessfullyDeleted();

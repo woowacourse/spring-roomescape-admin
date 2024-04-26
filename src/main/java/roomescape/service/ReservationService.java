@@ -22,29 +22,29 @@ public class ReservationService {
         this.reservationTimeDao = reservationTimeDao;
     }
 
-    public ReservationResponse saveReservation(final ReservationRequest reservationRequest) {
+    public ReservationResponse save(final ReservationRequest reservationRequest) {
         ReservationTime reservationTime = reservationTimeDao.findById(reservationRequest.timeId())
                 .orElseThrow(() -> new IllegalArgumentException("[ERROR] 잘못된 예약 가능 시간 번호를 입력하였습니다."));
         Reservation reservation = reservationRequest.toEntity(reservationTime);
         return ReservationResponse.from(reservationDao.save(reservation));
     }
 
-    public List<ReservationResponse> findReservations() {
-        List<ReservationResponse> reservations = getReservations();
+    public List<ReservationResponse> findAll() {
+        List<ReservationResponse> reservations = getAll();
         if (reservations.isEmpty()) {
             throw new IllegalStateException("[ERROR] 방탈출 예약 내역이 없습니다.");
         }
         return reservations;
     }
 
-    public List<ReservationResponse> getReservations() {
+    public List<ReservationResponse> getAll() {
         return reservationDao.getAll()
                 .stream()
                 .map(ReservationResponse::from)
                 .toList();
     }
 
-    public void deleteReservation(final long id) {
+    public void deleteById(final long id) {
         reservationDao.findById(id)
                 .orElseThrow(() -> new IllegalArgumentException("[ERROR] 삭제할 예약 데이터가 없습니다."));
         reservationDao.delete(id);

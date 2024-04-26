@@ -16,12 +16,12 @@ public class MainController {
             final ReservationConsoleController reservationConsoleController
     ) {
         this.commands = Map.of(
-                new Command(1), reservationTimeConsoleController::saveTime,
-                new Command(2), reservationTimeConsoleController::deleteTime,
-                new Command(3), reservationTimeConsoleController::getTimes,
-                new Command(4), reservationConsoleController::saveReservation,
-                new Command(5), reservationConsoleController::deleteReservation,
-                new Command(6), reservationConsoleController::getReservation
+                new Command(1), reservationTimeConsoleController::save,
+                new Command(2), reservationTimeConsoleController::delete,
+                new Command(3), reservationTimeConsoleController::getAll,
+                new Command(4), reservationConsoleController::save,
+                new Command(5), reservationConsoleController::delete,
+                new Command(6), reservationConsoleController::getAll
         );
     }
 

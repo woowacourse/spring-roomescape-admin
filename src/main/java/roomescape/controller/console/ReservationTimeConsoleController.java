@@ -12,8 +12,11 @@ public class ReservationTimeConsoleController {
     private final ReservationTimeView reservationTimeView;
     private final ReservationTimeService reservationTimeService;
 
-    public ReservationTimeConsoleController(final ReservationTimeService reservationTimeService) {
-        reservationTimeView = new ReservationTimeView();
+    public ReservationTimeConsoleController(
+            final ReservationTimeView reservationTimeView,
+            final ReservationTimeService reservationTimeService
+    ) {
+        this.reservationTimeView = reservationTimeView;
         this.reservationTimeService = reservationTimeService;
     }
 
@@ -26,7 +29,7 @@ public class ReservationTimeConsoleController {
     }
 
     public void getTimes() {
-        reservationTimeView.printReservationTimes(reservationTimeService.getReservationTimes());
+        ReservationTimeView.printReservationTimes(reservationTimeService.getReservationTimes());
     }
 
     public void deleteTime() {

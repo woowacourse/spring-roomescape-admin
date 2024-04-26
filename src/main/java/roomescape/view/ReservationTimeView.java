@@ -5,8 +5,10 @@ import java.time.format.DateTimeParseException;
 import java.util.List;
 import java.util.Scanner;
 import java.util.regex.Pattern;
+import org.springframework.stereotype.Component;
 import roomescape.dto.ReservationTimeResponse;
 
+@Component
 public class ReservationTimeView {
     private static final Scanner SCANNER = new Scanner(System.in);
     private static final Pattern TIME_PATTERN = Pattern.compile("^\\d+:\\d+$");

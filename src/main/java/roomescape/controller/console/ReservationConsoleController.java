@@ -17,10 +17,11 @@ public class ReservationConsoleController {
     private final ReservationTimeService reservationTimeService;
 
     public ReservationConsoleController(
+            final ReservationView reservationView,
             final ReservationService reservationService,
             final ReservationTimeService reservationTimeService
     ) {
-        this.reservationView = new ReservationView();
+        this.reservationView = reservationView;
         this.reservationService = reservationService;
         this.reservationTimeService = reservationTimeService;
     }

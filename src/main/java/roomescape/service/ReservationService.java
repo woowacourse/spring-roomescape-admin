@@ -2,26 +2,26 @@ package roomescape.service;
 
 import java.util.List;
 import org.springframework.stereotype.Service;
-import roomescape.dao.ReservationDao;
-import roomescape.dao.ReservationTimeDao;
 import roomescape.domain.reservation.Reservation;
 import roomescape.domain.reservationtime.ReservationTime;
 import roomescape.dto.reservation.ReservationCreateRequest;
 import roomescape.dto.reservation.ReservationResponse;
+import roomescape.respository.ReservationRepository;
+import roomescape.respository.ReservationTimeRepository;
 
 @Service
 public class ReservationService {
 
-    private final ReservationDao reservationDao;
-    private final ReservationTimeDao reservationTimeDao;
+    private final ReservationRepository reservationRepository;
+    private final ReservationTimeRepository reservationTimeRepository;
 
-    public ReservationService(ReservationDao reservationDao, ReservationTimeDao reservationTimeDao) {
-        this.reservationDao = reservationDao;
-        this.reservationTimeDao = reservationTimeDao;
+    public ReservationService(ReservationRepository reservationRepository, ReservationTimeRepository reservationTimeRepository) {
+        this.reservationRepository = reservationRepository;
+        this.reservationTimeRepository = reservationTimeRepository;
     }
 
     public List<ReservationResponse> findAll() {
-        List<Reservation> reservations = reservationDao.findAll();
+        List<Reservation> reservations = reservationRepository.findAll();
         return reservations.stream()
                 .map(ReservationResponse::from)
                 .toList();
@@ -29,16 +29,16 @@ public class ReservationService {
 
     public ReservationResponse add(ReservationCreateRequest request) {
         validateNotExistReservationTime(request.getTimeId());
-        ReservationTime reservationTime = reservationTimeDao.findById(request.getTimeId());
+        ReservationTime reservationTime = reservationTimeRepository.findById(request.getTimeId());
         Reservation reservation = request.toDomain(reservationTime);
-        Reservation result = reservationDao.add(reservation);
+        Reservation result = reservationRepository.add(reservation);
         return ReservationResponse.from(result);
     }
 
     public void delete(Long id) {
         validateNull(id);
         validateNotExistReservation(id);
-        reservationDao.delete(id);
+        reservationRepository.delete(id);
     }
 
     private void validateNull(Long id) {
@@ -48,13 +48,13 @@ public class ReservationService {
     }
 
     private void validateNotExistReservation(Long id) {
-        if (!reservationDao.exist(id)) {
+        if (!reservationRepository.exist(id)) {
             throw new IllegalArgumentException("해당 아이디를 가진 예약이 존재하지 않습니다.");
         }
     }
 
     private void validateNotExistReservationTime(Long id) {
-        if (!reservationTimeDao.exist(id)) {
+        if (!reservationTimeRepository.exist(id)) {
             throw new IllegalArgumentException("예약 시간 아이디에 해당하는 예약 시간이 존재하지 않습니다.");
         }
     }

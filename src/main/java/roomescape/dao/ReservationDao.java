@@ -15,9 +15,10 @@ import roomescape.domain.reservation.ReservationDate;
 import roomescape.domain.reservation.ReservationName;
 import roomescape.domain.reservationtime.ReservationStartAt;
 import roomescape.domain.reservationtime.ReservationTime;
+import roomescape.respository.ReservationRepository;
 
 @Component
-public class ReservationDao {
+public class ReservationDao implements ReservationRepository {
 
     private final JdbcTemplate jdbcTemplate;
 
@@ -25,6 +26,7 @@ public class ReservationDao {
         this.jdbcTemplate = jdbcTemplate;
     }
 
+    @Override
     public List<Reservation> findAll() {
         String sql = """
                 SELECT
@@ -43,6 +45,7 @@ public class ReservationDao {
         );
     }
 
+    @Override
     public Reservation add(Reservation reservation) {
         String sql = """
                 INSERT
@@ -65,6 +68,7 @@ public class ReservationDao {
         );
     }
 
+    @Override
     public Boolean exist(long id) {
         String sql = """
                 SELECT
@@ -77,6 +81,7 @@ public class ReservationDao {
         return jdbcTemplate.queryForObject(sql, Boolean.class, id);
     }
 
+    @Override
     public void delete(long id) {
         String sql = """
                 DELETE

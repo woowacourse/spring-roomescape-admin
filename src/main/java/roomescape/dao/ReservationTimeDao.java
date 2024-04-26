@@ -9,12 +9,13 @@ import java.util.Objects;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.support.GeneratedKeyHolder;
 import org.springframework.jdbc.support.KeyHolder;
-import org.springframework.stereotype.Component;
+import org.springframework.stereotype.Repository;
 import roomescape.domain.reservationtime.ReservationStartAt;
 import roomescape.domain.reservationtime.ReservationTime;
+import roomescape.respository.ReservationTimeRepository;
 
-@Component
-public class ReservationTimeDao {
+@Repository
+public class ReservationTimeDao implements ReservationTimeRepository {
 
     private final JdbcTemplate jdbcTemplate;
 
@@ -22,6 +23,7 @@ public class ReservationTimeDao {
         this.jdbcTemplate = jdbcTemplate;
     }
 
+    @Override
     public List<ReservationTime> findAll() {
         String sql = """
                 SELECT
@@ -34,6 +36,7 @@ public class ReservationTimeDao {
         );
     }
 
+    @Override
     public ReservationTime findById(long id) {
         String sql = """
                 SELECT
@@ -48,6 +51,7 @@ public class ReservationTimeDao {
         );
     }
 
+    @Override
     public ReservationTime add(ReservationTime reservationTime) {
         String sql = """
                 INSERT
@@ -65,6 +69,7 @@ public class ReservationTimeDao {
         return new ReservationTime(id, reservationTime.getStartAt());
     }
 
+    @Override
     public Boolean exist(long id) {
         String sql = """
                 SELECT
@@ -77,6 +82,7 @@ public class ReservationTimeDao {
         return jdbcTemplate.queryForObject(sql, Boolean.class, id);
     }
 
+    @Override
     public void delete(long id) {
         String sql = """
                 DELETE

@@ -65,5 +65,4 @@ class ReservationServiceTest {
         //then
         verify(reservationRepository, times(1)).deleteById(reservationId);
     }
-
 }

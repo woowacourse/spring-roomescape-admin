@@ -15,19 +15,6 @@ import roomescape.domain.ReservationTime;
 @Repository
 public class JdbcReservationRepository implements ReservationRepository {
 
-    private static final String INSERT_SQL = "INSERT INTO reservation(name, date, time_id) VALUES(?, ?, ?)";
-    private static final String SELECT_SQL = "SELECT \n"
-            + "    r.id as reservation_id, \n"
-            + "    r.name, \n"
-            + "    r.date, \n"
-            + "    t.id as time_id, \n"
-            + "    t.start_at as time_value \n"
-            + "FROM reservation as r \n"
-            + "inner join reservation_time as t \n"
-            + "on r.time_id = t.id";
-    private static final String DELETE_SQL = "DELETE FROM reservation as r";
-    private static final String WHERE_ID = " WHERE r.id = ?";
-
     private final JdbcTemplate jdbcTemplate;
 
     private final RowMapper<Reservation> rowMapper = (resultSet, rowNum) -> {
@@ -49,10 +36,11 @@ public class JdbcReservationRepository implements ReservationRepository {
 
     @Override
     public Long save(Reservation reservation) {
+        String sql = "INSERT INTO reservation(name, date, time_id) VALUES(?, ?, ?)";
         KeyHolder keyHolder = new GeneratedKeyHolder();
 
         jdbcTemplate.update(connection -> {
-            PreparedStatement preparedStatement = connection.prepareStatement(INSERT_SQL, new String[]{"id"});
+            PreparedStatement preparedStatement = connection.prepareStatement(sql, new String[]{"id"});
             preparedStatement.setString(1, reservation.getName());
             preparedStatement.setString(2, reservation.getDate().toString());
             preparedStatement.setLong(3, reservation.getTime().getId());
@@ -64,16 +52,36 @@ public class JdbcReservationRepository implements ReservationRepository {
 
     @Override
     public List<Reservation> findAll() {
-        return jdbcTemplate.query(SELECT_SQL, rowMapper);
+        String sql = "SELECT "
+                + "r.id AS reservation_id,"
+                + " r.name,"
+                + " r.date,"
+                + " t.id AS time_id,"
+                + " t.start_at AS time_value "
+                + "FROM reservation AS r "
+                + "INNER JOIN reservation_time AS t "
+                + "ON r.time_id = t.id";
+        return jdbcTemplate.query(sql, rowMapper);
     }
 
     @Override
     public Reservation findById(Long id) {
-        return jdbcTemplate.queryForObject(SELECT_SQL + WHERE_ID, rowMapper, id);
+        String sql = "SELECT "
+                + "r.id AS reservation_id,"
+                + " r.name,"
+                + " r.date,"
+                + " t.id AS time_id,"
+                + " t.start_at AS time_value "
+                + "FROM reservation AS r "
+                + "INNER JOIN reservation_time AS t "
+                + "ON r.time_id = t.id "
+                + "WHERE r.id = ?";
+        return jdbcTemplate.queryForObject(sql, rowMapper, id);
     }
 
     @Override
     public void delete(Long id) {
-        jdbcTemplate.update(DELETE_SQL + WHERE_ID, id);
+        String sql = "DELETE FROM reservation WHERE id = ?";
+        jdbcTemplate.update(sql, id);
     }
 }

@@ -13,11 +13,6 @@ import roomescape.domain.ReservationTime;
 @Repository
 public class JdbcReservationTimeRepository implements ReservationTimeRepository {
 
-    private static final String INSERT_SQL = "INSERT INTO reservation_time(start_at) VALUES(?)";
-    private static final String SELECT_SQL = "SELECT * FROM reservation_time";
-    private static final String DELETE_SQL = "DELETE FROM reservation_time";
-    private static final String WHERE_ID = " WHERE id = ?";
-
     private final JdbcTemplate jdbcTemplate;
 
     public JdbcReservationTimeRepository(JdbcTemplate jdbcTemplate) {
@@ -34,10 +29,11 @@ public class JdbcReservationTimeRepository implements ReservationTimeRepository 
 
     @Override
     public Long save(ReservationTime reservationTime) {
+        String sql = "INSERT INTO reservation_time(start_at) VALUES(?)";
         KeyHolder keyHolder = new GeneratedKeyHolder();
 
         jdbcTemplate.update(connection -> {
-            PreparedStatement preparedStatement = connection.prepareStatement(INSERT_SQL, new String[]{"id"});
+            PreparedStatement preparedStatement = connection.prepareStatement(sql, new String[]{"id"});
             preparedStatement.setString(1, reservationTime.getStartAt().toString());
             return preparedStatement;
         }, keyHolder);
@@ -47,16 +43,19 @@ public class JdbcReservationTimeRepository implements ReservationTimeRepository 
 
     @Override
     public List<ReservationTime> findAll() {
-        return jdbcTemplate.query(SELECT_SQL, rowMapper);
+        String sql = "SELECT * FROM reservation_time";
+        return jdbcTemplate.query(sql, rowMapper);
     }
 
     @Override
     public ReservationTime findById(Long id) {
-        return jdbcTemplate.queryForObject(SELECT_SQL + WHERE_ID, rowMapper, id);
+        String sql = "SELECT * FROM reservation_time WHERE id = ?";
+        return jdbcTemplate.queryForObject(sql, rowMapper, id);
     }
 
     @Override
     public void delete(Long id) {
-        jdbcTemplate.update(DELETE_SQL + WHERE_ID, id);
+        String sql = "DELETE FROM reservation_time WHERE id = ?";
+        jdbcTemplate.update(sql, id);
     }
 }

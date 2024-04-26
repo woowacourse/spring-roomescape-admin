@@ -16,8 +16,8 @@ public record Reservation(
         return new Reservation(id, name, parsedDate, new ReservationTime(timeId, parsedTime));
     }
 
-    public static Reservation of(String name, LocalDate date, long timeId) {
-        return new Reservation(null, name, date, ReservationTime.from(timeId));
+    public static Reservation of(final String name, final LocalDate date, final ReservationTime reservationTime) {
+        return new Reservation(null, name, date, reservationTime);
     }
 
     public long getId() {

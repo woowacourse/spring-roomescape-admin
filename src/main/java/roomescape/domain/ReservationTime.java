@@ -13,10 +13,6 @@ public record ReservationTime(
         return new ReservationTime(id, LocalTime.parse(start_at));
     }
 
-    public static ReservationTime from(final long id) {
-        return new ReservationTime(id, null);
-    }
-
     public long getId() {
         return id;
     }

@@ -10,7 +10,6 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
-import roomescape.domain.Reservation;
 import roomescape.dto.ReservationRequest;
 import roomescape.dto.ReservationResponse;
 import roomescape.service.ReservationService;
@@ -25,10 +24,10 @@ public class ReservationController {
     }
 
     @PostMapping
-    public ResponseEntity<Reservation> saveReservation(@RequestBody ReservationRequest reservationRequest) {
-        Reservation reservation = reservationService.saveReservation(reservationRequest);
-        return ResponseEntity.created(URI.create("/reservations/" + reservation.id()))
-                .body(reservation);
+    public ResponseEntity<ReservationResponse> saveReservation(@RequestBody ReservationRequest reservationRequest) {
+        ReservationResponse reservationResponse = reservationService.saveReservation(reservationRequest);
+        return ResponseEntity.created(URI.create("/reservations/" + reservationResponse.id()))
+                .body(reservationResponse);
     }
 
     @GetMapping

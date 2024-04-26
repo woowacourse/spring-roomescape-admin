@@ -3,6 +3,7 @@ package roomescape.service;
 import java.util.List;
 import org.springframework.stereotype.Service;
 import roomescape.domain.Reservation;
+import roomescape.domain.ReservationTime;
 import roomescape.dto.ReservationRequest;
 import roomescape.dto.ReservationResponse;
 import roomescape.repository.ReservationDao;
@@ -21,11 +22,11 @@ public class ReservationService {
         this.reservationTimeDao = reservationTimeDao;
     }
 
-    public Reservation saveReservation(final ReservationRequest reservationRequest) {
-        reservationTimeDao.findById(reservationRequest.timeId())
+    public ReservationResponse saveReservation(final ReservationRequest reservationRequest) {
+        ReservationTime reservationTime = reservationTimeDao.findById(reservationRequest.timeId())
                 .orElseThrow(() -> new IllegalArgumentException("[ERROR] 잘못된 예약 가능 시간 번호를 입력하였습니다."));
-        Reservation reservation = reservationRequest.toEntity();
-        return reservationDao.save(reservation);
+        Reservation reservation = reservationRequest.toEntity(reservationTime);
+        return ReservationResponse.from(reservationDao.save(reservation));
     }
 
     public List<ReservationResponse> findReservations() {

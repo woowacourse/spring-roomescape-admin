@@ -9,7 +9,7 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.web.server.LocalServerPort;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.test.annotation.DirtiesContext;
-import roomescape.exception.DeleteReservationTimeException;
+import roomescape.exception.ReservationExistsForTimeException;
 
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 @DirtiesContext(classMode = DirtiesContext.ClassMode.BEFORE_EACH_TEST_METHOD)
@@ -33,7 +33,7 @@ class ReservationTimeServiceTest {
         jdbcTemplate.update("insert into reservation (name, date, time_id) values ('조앤', '2023-10-23', 1)");
 
         Assertions.assertThatCode(() -> reservationTimeService.deleteTime(1))
-                .isInstanceOf(DeleteReservationTimeException.class)
+                .isInstanceOf(ReservationExistsForTimeException.class)
                 .hasMessage("해당 예약시간에 예약이 등록되어 있습니다.");
     }
 }

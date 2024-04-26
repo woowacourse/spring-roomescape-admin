@@ -1,13 +1,12 @@
 package roomescape.service;
 
-import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import roomescape.dao.ReservationDao;
 import roomescape.dao.ReservationTimeDao;
 import roomescape.domain.ReservationTime;
 import roomescape.dto.CreateReservationTimeRequest;
 import roomescape.dto.CreateReservationTimeResponse;
-import roomescape.exception.DeleteReservationTimeException;
+import roomescape.exception.ReservationExistsForTimeException;
 import roomescape.mapper.ReservationTimeMapper;
 
 import java.util.List;
@@ -39,7 +38,7 @@ public class ReservationTimeService {
         reservationDao.findAnyByTimeId(timeId)
                 .ifPresentOrElse(
                         reservation -> {
-                            throw new DeleteReservationTimeException(HttpStatus.BAD_REQUEST, "해당 예약시간에 예약이 등록되어 있습니다.");
+                            throw new ReservationExistsForTimeException(timeId);
                         },
                         () -> reservationTimeDao.delete(timeId)
                 );

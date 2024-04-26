@@ -2,6 +2,8 @@ package roomescape.data.dto.request;
 
 import com.fasterxml.jackson.annotation.JsonCreator;
 import java.time.LocalDate;
+import java.time.LocalTime;
+import roomescape.data.vo.ReservationTime;
 
 public class ReservationRequest {
     private final String name;
@@ -21,6 +23,10 @@ public class ReservationRequest {
 
     public LocalDate getDate() {
         return date;
+    }
+
+    public ReservationTime getTime() {
+        return new ReservationTime(this.getTimeId(), LocalTime.now());
     }
 
     public long getTimeId() {

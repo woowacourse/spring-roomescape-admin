@@ -1,13 +1,11 @@
 package roomescape.service;
 
-import java.time.LocalTime;
 import java.util.List;
 import org.springframework.stereotype.Service;
 import roomescape.data.dto.request.ReservationRequest;
 import roomescape.data.dto.response.ReservationResponse;
 import roomescape.data.vo.Reservation;
 import roomescape.data.vo.Reservation.Builder;
-import roomescape.data.vo.ReservationTime;
 import roomescape.repository.ReservationRepository;
 
 @Service
@@ -26,7 +24,7 @@ public class ReservationService {
     public long createReservationCommand(final ReservationRequest request) {
         final var reservation = new Builder()
                 .name(request.getName())
-                .time(new ReservationTime(request.getTimeId(), LocalTime.now()))
+                .time(request.getTime())
                 .date(request.getDate())
                 .build();
 

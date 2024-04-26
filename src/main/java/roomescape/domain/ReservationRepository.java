@@ -8,7 +8,7 @@ public interface ReservationRepository {
 
     Optional<Reservation> findById(Long id);
 
-    void save(Reservation reservation);
+    Reservation save(Reservation reservation);
 
     void delete(Reservation reservation);
 }

@@ -52,13 +52,13 @@ public class ReservationDao implements ReservationRepository {
     }
 
     @Override
-    public void save(Reservation reservation) {
+    public Reservation save(Reservation reservation) {
         Map<String, Object> parameters = new HashMap<>();
         parameters.put("name", reservation.getName());
         parameters.put("date", reservation.getDate());
         parameters.put("time_id", reservation.getTime().getId());
         Long id = (Long) jdbcInsert.executeAndReturnKey(parameters);
-        reservation.setId(id);
+        return new Reservation(id, reservation.getName(), reservation.getDate(), reservation.getTime());
     }
 
     @Override

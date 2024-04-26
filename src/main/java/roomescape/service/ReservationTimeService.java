@@ -24,8 +24,8 @@ public class ReservationTimeService {
 
     public ReservationTimeResponse saveReservationTime(ReservationTimeRequest request) {
         ReservationTime reservationTime = request.toReservationTime();
-        reservationTimeRepository.save(reservationTime);
-        return ReservationTimeResponse.from(reservationTime);
+        ReservationTime savedReservationTime = reservationTimeRepository.save(reservationTime);
+        return ReservationTimeResponse.from(savedReservationTime);
     }
 
     public void deleteReservationTime(Long id) {

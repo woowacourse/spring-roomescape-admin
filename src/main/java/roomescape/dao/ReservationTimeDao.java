@@ -43,11 +43,11 @@ public class ReservationTimeDao implements ReservationTimeRepository {
     }
 
     @Override
-    public void save(ReservationTime time) {
+    public ReservationTime save(ReservationTime time) {
         Map<String, Object> parameters = new HashMap<>();
         parameters.put("start_at", time.getStartAt());
         Long id = (Long) jdbcInsert.executeAndReturnKey(parameters);
-        time.setId(id);
+        return new ReservationTime(id, time.getStartAt());
     }
 
     @Override

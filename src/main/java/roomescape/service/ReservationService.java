@@ -30,8 +30,8 @@ public class ReservationService {
     public ReservationResponse saveReservation(ReservationRequest request) {
         ReservationTime time = findReservationTimeById(request.timeId());
         Reservation reservation = request.toReservation(time);
-        reservationRepository.save(reservation);
-        return ReservationResponse.from(reservation);
+        Reservation savedReservation = reservationRepository.save(reservation);
+        return ReservationResponse.from(savedReservation);
     }
 
     public void deleteReservation(Long id) {

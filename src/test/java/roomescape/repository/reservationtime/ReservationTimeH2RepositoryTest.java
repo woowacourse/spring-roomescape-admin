@@ -4,39 +4,52 @@ import static org.assertj.core.api.Assertions.assertThat;
 
 import java.time.LocalTime;
 import java.util.List;
+import javax.sql.DataSource;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.jdbc.JdbcTest;
 import org.springframework.context.annotation.Import;
+import org.springframework.jdbc.core.namedparam.BeanPropertySqlParameterSource;
+import org.springframework.jdbc.core.namedparam.SqlParameterSource;
+import org.springframework.jdbc.core.simple.SimpleJdbcInsert;
 import roomescape.domain.ReservationTime;
 
 @JdbcTest
 @Import(ReservationTimeH2Repository.class)
 class ReservationTimeH2RepositoryTest {
 
+    private static final String TABLE_NAME = "RESERVATION_TIME";
+
     @Autowired
     private ReservationTimeH2Repository reservationTimeH2Repository;
-
+    @Autowired
+    private DataSource source;
     private ReservationTime reservationTime;
 
     @BeforeEach
     void init() {
-        reservationTime = reservationTimeH2Repository.save(
-                new ReservationTime(LocalTime.of(12, 0))
-        );
+        SimpleJdbcInsert jdbcInsert = new SimpleJdbcInsert(source)
+                .withTableName(TABLE_NAME)
+                .usingGeneratedKeyColumns("id");
+
+        ReservationTime reservationTimeWithoutId = new ReservationTime(LocalTime.of(12, 0));
+        SqlParameterSource params = new BeanPropertySqlParameterSource(reservationTimeWithoutId);
+        long id = jdbcInsert.executeAndReturnKey(params).longValue();
+
+        reservationTime = new ReservationTime(id, reservationTimeWithoutId.startAt());
     }
 
-//    @Test
-//    @DisplayName("ReservationTime을 저장한다.")
-//    void save() {
-//        ReservationTime reservationTime = new ReservationTime(null, LocalTime.of(12, 0));
-//
-//        ReservationTime save = reservationTimeH2Repository.save(reservationTime);
-//
-//        assertThat(save).isEqualTo(ReservationTime.of(1L, reservationTime));
-//    }
+    @Test
+    @DisplayName("ReservationTime을 저장한다.")
+    void save() {
+        ReservationTime reservationTime = new ReservationTime(LocalTime.of(12, 0));
+
+        ReservationTime saved = reservationTimeH2Repository.save(reservationTime);
+
+        assertThat(saved.id()).isNotNull();
+    }
 
     @Test
     @DisplayName("id에 맞는 ReservationTime을 제거한다.")
@@ -49,12 +62,9 @@ class ReservationTimeH2RepositoryTest {
     @Test
     @DisplayName("모든 ReservationTime을 찾는다.")
     void findAll() {
-        reservationTimeH2Repository.save(new ReservationTime(LocalTime.of(12, 0)));
-        reservationTimeH2Repository.save(new ReservationTime(LocalTime.of(11, 0)));
-
         List<ReservationTime> found = reservationTimeH2Repository.findAll();
 
-        assertThat(found).hasSize(3);
+        assertThat(found).containsExactly(reservationTime);
     }
 
     @Test

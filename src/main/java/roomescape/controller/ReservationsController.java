@@ -1,6 +1,7 @@
 package roomescape.controller;
 
 import org.springframework.web.bind.annotation.*;
+import roomescape.ReservationDao;
 import roomescape.domain.Reservation;
 import roomescape.dto.ReservationRequest;
 import roomescape.dto.ReservationResponse;
@@ -16,12 +17,15 @@ import java.util.concurrent.atomic.AtomicLong;
 public class ReservationsController {
     private final List<Reservation> reservations = new ArrayList<>();
     private final AtomicLong id = new AtomicLong(1);
+    private final ReservationDao reservationDao;
+
+    public ReservationsController(ReservationDao reservationDao) {
+        this.reservationDao = reservationDao;
+    }
 
     @GetMapping
-    public List<ReservationResponse> read() {
-        return reservations.stream()
-                .map(ReservationResponse::toDto)
-                .toList();
+    public List<Reservation> read() {
+        return reservationDao.findAll();
     }
 
     @PostMapping

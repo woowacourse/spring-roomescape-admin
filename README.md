@@ -40,3 +40,7 @@
 
 ## step9
 - [X] : ReservationsController 가 JdbcTemplate 를 모르도록 한다.
+
+## step10
+- [ ] : console view 를 구현한다.
+- [ ] : console view 에 대응되는 컨트롤러를 구현한다. 

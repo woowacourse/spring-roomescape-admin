@@ -1,4 +1,4 @@
-package roomescape.controller;
+package roomescape.controller.api;
 
 import java.sql.Date;
 import java.sql.PreparedStatement;
@@ -17,9 +17,9 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import roomescape.domain.Reservation;
 import roomescape.domain.ReservationTime;
-import roomescape.dto.ReservationRequest;
-import roomescape.dto.ReservationResponse;
-import roomescape.dto.ReservationTimeResponse;
+import roomescape.dto.reservation.ReservationRequest;
+import roomescape.dto.reservation.ReservationResponse;
+import roomescape.dto.reservationtime.ReservationTimeResponse;
 
 @RequestMapping("/reservations")
 @Controller

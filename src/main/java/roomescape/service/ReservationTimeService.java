@@ -36,6 +36,8 @@ public class ReservationTimeService {
     }
 
     public void deleteTime(final long id) {
+        reservationTimeDao.findById(id)
+                .orElseThrow(() -> new IllegalArgumentException("[ERROR] 삭제할 예약 시간이 없습니다."));
         reservationTimeDao.delete(id);
     }
 

@@ -32,12 +32,9 @@ public class ReservationTimeConsoleController {
     public void deleteTime() {
         try {
             List<ReservationTimeResponse> reservationTimeResponses = reservationTimeService.findReservationTimes();
-
-            int index = reservationTimeView.readIndexToDelete(reservationTimeResponses);
-            if (index < 0 || index > reservationTimeResponses.size()) {
-                throw new IllegalArgumentException("[ERROR] 올바른 예약 가능 시간을 입력해주세요.");
-            }
-            reservationTimeService.deleteTime(reservationTimeResponses.get(index - 1).id());
+            reservationTimeService.deleteTime(
+                    reservationTimeView.readIndexToDelete(reservationTimeResponses)
+            );
             reservationTimeView.printSuccessfullyDeleted();
         } catch (IllegalStateException exception) {
             reservationTimeView.printHasNotAnyReservationTimeToDelete();

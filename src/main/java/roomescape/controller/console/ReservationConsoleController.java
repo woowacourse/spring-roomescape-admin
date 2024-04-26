@@ -47,8 +47,9 @@ public class ReservationConsoleController {
     public void deleteReservation() {
         try {
             List<ReservationResponse> reservationResponses = reservationService.findReservations();
-            int index = reservationView.readIndexToDelete(reservationResponses);
-            reservationService.deleteReservation(reservationResponses.get(index - 1).id());
+            reservationService.deleteReservation(
+                    reservationView.readIndexToDelete(reservationResponses)
+            );
             reservationView.printSuccessfullyDeleted();
         } catch (final IllegalStateException exception) {
             reservationView.printHasNotAnyReservation();

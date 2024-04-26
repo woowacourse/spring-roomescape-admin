@@ -7,19 +7,17 @@ import java.time.format.DateTimeParseException;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 
-class ReservationTest {
+class ReservationTimeTest {
     @DisplayName("정상 생성 테스트")
     @Test
     void validCreate() {
-        assertDoesNotThrow(() -> new Reservation(1, "aa", "2023-10-10",
-                new ReservationTime(1, "10:00")));
+        assertDoesNotThrow(() -> new ReservationTime(1, "10:00"));
     }
 
-    @DisplayName("비정상 날짜 생성 불가 테스트")
+    @DisplayName("비정상 시간 생성 불가 테스트")
     @Test
-    void invalidDateCreate() {
-        assertThatThrownBy(() -> new Reservation(1, "aa", "20222-10-10",
-                new ReservationTime(1, "10:00")))
+    void invalidTimeCreate() {
+        assertThatThrownBy(() -> new ReservationTime(1, "25:00"))
                 .isInstanceOf(DateTimeParseException.class);
     }
 }

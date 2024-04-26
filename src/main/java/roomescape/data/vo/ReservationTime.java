@@ -9,12 +9,12 @@ public class ReservationTime {
     private final long id;
     private final LocalTime startAt;
 
-    public ReservationTime(LocalTime startAt) {
+    public ReservationTime(final LocalTime startAt) {
         this.id = UNDEFINED_TABLE_ID;
         this.startAt = startAt;
     }
 
-    public ReservationTime(long id, LocalTime startAt) {
+    public ReservationTime(final long id, final LocalTime startAt) {
         this.id = id;
         this.startAt = startAt;
     }

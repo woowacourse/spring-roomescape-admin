@@ -36,12 +36,12 @@ public class ReservationRepositoryImpl implements ReservationRepository {
     }
 
     @Override
-    public Reservation get(long id) {
+    public Reservation get(final long id) {
         return reservationDao.findOne(id);
     }
 
     @Override
-    public void remove(long id) {
+    public void remove(final long id) {
         reservationDao.delete(id);
     }
 }

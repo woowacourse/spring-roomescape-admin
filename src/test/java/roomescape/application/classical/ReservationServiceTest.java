@@ -3,7 +3,6 @@ package roomescape.application.classical;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 
-import java.time.Clock;
 import java.time.LocalDate;
 import java.time.LocalTime;
 import org.junit.jupiter.api.BeforeEach;
@@ -11,7 +10,6 @@ import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.boot.test.mock.mockito.SpyBean;
 import roomescape.application.ReservationService;
 import roomescape.domain.reservation.Reservation;
 import roomescape.domain.time.ReservationTime;
@@ -20,6 +18,7 @@ import roomescape.dto.reservation.ReservationRequest;
 import roomescape.support.annotation.FixedClock;
 import roomescape.support.extension.MockClockExtension;
 import roomescape.support.extension.TableTruncateExtension;
+
 
 @SpringBootTest
 @ExtendWith({TableTruncateExtension.class, MockClockExtension.class})
@@ -31,8 +30,6 @@ public class ReservationServiceTest {
     private ReservationService reservationService;
     @Autowired
     private ReservationTimeRepository reservationTimeRepository;
-    @SpyBean
-    private Clock clock;
 
     @BeforeEach
     void setUp() {

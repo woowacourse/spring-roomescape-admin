@@ -12,5 +12,4 @@ import org.springframework.boot.test.mock.mockito.SpyBean;
 @SpyBean(Clock.class)
 public @interface FixedClock {
     String date();
-
 }

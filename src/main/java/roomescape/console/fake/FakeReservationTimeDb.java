@@ -8,13 +8,8 @@ import org.springframework.dao.EmptyResultDataAccessException;
 import roomescape.domain.ReservationTime;
 
 public class FakeReservationTimeDb {
-    private static final FakeReservationTimeDb instance = new FakeReservationTimeDb();
     private final Map<Long, ReservationTime> reservationTimes = new ConcurrentHashMap<>();
     private final AtomicLong id = new AtomicLong(1);
-
-    public static FakeReservationTimeDb getInstance() {
-        return instance;
-    }
 
     public List<ReservationTime> selectAll() {
         return reservationTimes.values()

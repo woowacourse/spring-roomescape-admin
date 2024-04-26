@@ -16,7 +16,7 @@ import roomescape.service.ReservationTimeService;
 @Component
 public class ConsoleRunner implements CommandLineRunner {
     @Override
-    public void run(String... args) throws Exception {
+    public void run(String... args) {
         ConsoleController consoleController = initConsoleController();
         consoleController.run();
     }

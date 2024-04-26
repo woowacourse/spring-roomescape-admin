@@ -37,7 +37,7 @@ public class ReservationDao {
         ));
     }
 
-    public Long save(Reservation reservation) {
+    public Reservation save(Reservation reservation) {
         String insertSQL = "insert into reservation (name, date, time_id) values (?, ?, ?)";
         KeyHolder keyHolder = new GeneratedKeyHolder();
 
@@ -49,11 +49,30 @@ public class ReservationDao {
             return preparedStatement;
         }, keyHolder);
 
-        return keyHolder.getKey().longValue();
+        return findById(keyHolder.getKey().longValue());
     }
 
     public void delete(Long reservationId) {
         String deleteSQL = "delete from reservation where id = ?";
         jdbcTemplate.update(deleteSQL, reservationId);
+    }
+
+    public Reservation findById(Long reservationId) {
+        String selectSQL = """
+        SELECT r.id AS reservation_id, r.name AS reservation_name, r.date AS reservation_date,
+               t.id AS time_id, t.start_at AS time_start_at FROM reservation AS r
+        INNER JOIN reservation_time AS t ON r.time_id = t.id
+        WHERE r.id = ?
+        """;
+
+        return jdbcTemplate.queryForObject(selectSQL, (resultSet, rowNum) -> new Reservation(
+                resultSet.getLong("reservation_id"),
+                resultSet.getString("reservation_name"),
+                resultSet.getDate("reservation_date").toLocalDate(),
+                new ReservationTime(
+                        resultSet.getLong("time_id"),
+                        resultSet.getTime("time_start_at").toLocalTime()
+                )
+        ), reservationId);
     }
 }

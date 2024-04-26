@@ -25,8 +25,8 @@ class ReservationDaoTest {
 
     @Test
     void save() {
-        Long savedId = reservationDao.save(reservation);
-        assertThat(savedId).isEqualTo(1);
+        Reservation savedReservation = reservationDao.save(reservation);
+        assertThat(savedReservation.getId()).isEqualTo(1);
     }
 
     @Test
@@ -40,11 +40,19 @@ class ReservationDaoTest {
 
     @Test
     void delete() {
-        Long savedId = reservationDao.save(reservation);
+        Reservation savedReservation = reservationDao.save(reservation);
 
-        reservationDao.delete(savedId);
+        reservationDao.delete(savedReservation.getId());
 
         assertThat(reservationDao.findAll()).isEmpty();
+    }
+
+    @Test
+    void findById() {
+        Reservation savedReservation = reservationDao.save(reservation);
+        Reservation findReservation = reservationDao.findById(savedReservation.getId());
+
+        assertThat(findReservation).isNotNull();
     }
 
     private Reservation createTestReservation() {

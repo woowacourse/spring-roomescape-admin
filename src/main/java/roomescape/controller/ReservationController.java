@@ -35,11 +35,12 @@ public class ReservationController {
     }
 
     @PostMapping("/reservations")
-    public ResponseEntity<Void> createReservation(@RequestBody ReservationCreateRequest reservationCreateRequest) {
+    public ResponseEntity<ReservationResponse> createReservation(@RequestBody ReservationCreateRequest reservationCreateRequest) {
         ReservationTime reservationTime = reservationTimeDao.findById(reservationCreateRequest.timeId());
         Reservation reservation = reservationCreateRequest.toReservation(reservationTime);
-        reservationDao.save(reservation);  //TODO 엔티티 반환
-        return ResponseEntity.ok().build();
+        Reservation savedReservation = reservationDao.save(reservation);
+        ReservationResponse reservationResponse = ReservationResponse.fromReservation(savedReservation);
+        return ResponseEntity.ok(reservationResponse);
     }
 
     @DeleteMapping("/reservations/{id}")

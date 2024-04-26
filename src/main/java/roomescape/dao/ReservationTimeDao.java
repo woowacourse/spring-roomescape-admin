@@ -19,7 +19,7 @@ public class ReservationTimeDao {
     }
 
     public ReservationTime save(ReservationTime time) {
-        String insertSQL = "insert into reservation_time (start_at) values ?";
+        String insertSQL = "INSERT INTO reservation_time (start_at) VALUES ?";
         KeyHolder keyHolder = new GeneratedKeyHolder();
 
         jdbcTemplate.update(connection -> {
@@ -32,7 +32,7 @@ public class ReservationTimeDao {
     }
 
     public List<ReservationTime> findAll() {
-        String selectAllSQL = "select id, start_at from reservation_time";
+        String selectAllSQL = "SELECT id, start_at FROM reservation_time";
 
         return jdbcTemplate.query(selectAllSQL, (resultSet, rowNum) -> new ReservationTime(
                 resultSet.getLong("id"),
@@ -41,12 +41,12 @@ public class ReservationTimeDao {
     }
 
     public void delete(Long reservationTimeId) {
-        String deleteSQL = "delete from reservation_time where id = ?";
+        String deleteSQL = "DELETE FROM reservation_time WHERE id = ?";
         jdbcTemplate.update(deleteSQL, reservationTimeId);
     }
 
     public ReservationTime findById(Long timeId) {
-        String selectSQL = "select id, start_at from reservation_time where id = ?";
+        String selectSQL = "SELECT id, start_at FROM reservation_time WHERE id = ?";
 
         return jdbcTemplate.queryForObject(selectSQL, (result, rowNum) -> new ReservationTime(
                 result.getLong("id"),

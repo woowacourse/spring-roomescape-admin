@@ -38,7 +38,7 @@ public class ReservationDao {
     }
 
     public Reservation save(Reservation reservation) {
-        String insertSQL = "insert into reservation (name, date, time_id) values (?, ?, ?)";
+        String insertSQL = "INSERT INTO reservation (name, date, time_id) VALUES (?, ?, ?)";
         KeyHolder keyHolder = new GeneratedKeyHolder();
 
         jdbcTemplate.update(connection -> {
@@ -53,7 +53,7 @@ public class ReservationDao {
     }
 
     public void delete(Long reservationId) {
-        String deleteSQL = "delete from reservation where id = ?";
+        String deleteSQL = "DELETE FROM reservation WHERE id = ?";
         jdbcTemplate.update(deleteSQL, reservationId);
     }
 

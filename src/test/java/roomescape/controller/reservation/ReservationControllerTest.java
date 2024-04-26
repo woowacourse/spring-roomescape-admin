@@ -44,24 +44,17 @@ class ReservationControllerTest {
                 .when().get("/reservations")
                 .then().log().all()
                 .statusCode(200)
-                .body("size()", is(0));
+                .body("size()", is(2));
     }
 
     @Test
     @DisplayName("Reservation을 추가한다.")
     void addReservation() {
         //given
-        Map<String, String> timeParams = new HashMap<>();
-        timeParams.put("startAt", "10:00");
-        RestAssured.given().log().all()
-                .contentType(ContentType.JSON)
-                .body(timeParams)
-                .when().post("/times");
-
         Map<String, String> reservationParams = new HashMap<>();
-        reservationParams.put("name", "브라운");
+        reservationParams.put("name", "브리");
         reservationParams.put("date", "2023-08-05");
-        reservationParams.put("timeId", "1");
+        reservationParams.put("timeId", "10");
 
         //when & then
         RestAssured.given().log().all()
@@ -77,26 +70,9 @@ class ReservationControllerTest {
     @Test
     @DisplayName("Reservation을 삭제한다.")
     void deleteReservation() {
-        //given
-        Map<String, String> timeParams = new HashMap<>();
-        timeParams.put("startAt", "10:00");
-        RestAssured.given().log().all()
-                .contentType(ContentType.JSON)
-                .body(timeParams)
-                .when().post("/times");
-
-        Map<String, String> reservationParams = new HashMap<>();
-        reservationParams.put("name", "브라운");
-        reservationParams.put("date", "2023-08-05");
-        reservationParams.put("timeId", "1");
-        RestAssured.given().log().all()
-                .contentType(ContentType.JSON)
-                .body(reservationParams)
-                .when().post("/reservations");
-
         //when
         RestAssured.given().log().all()
-                .when().delete("/reservations/1")
+                .when().delete("/reservations/10")
                 .then().log().all()
                 .statusCode(204);
 
@@ -105,6 +81,6 @@ class ReservationControllerTest {
                 .when().get("/reservations")
                 .then().log().all()
                 .statusCode(200)
-                .body("size()", is(0));
+                .body("size()", is(1));
     }
 }

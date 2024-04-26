@@ -19,7 +19,7 @@ class ReservationTimeControllerTest {
     @DisplayName("예약 가능한 시간을 추가한다.")
     void addReservationTime() {
         Map<String, String> params = new HashMap<>();
-        params.put("startAt", "10:00");
+        params.put("startAt", "15:00");
 
         RestAssured.given().log().all()
                 .contentType(ContentType.JSON)
@@ -33,7 +33,7 @@ class ReservationTimeControllerTest {
     @DisplayName("예약 가능한 시간을 조회한다.")
     void getTimes() {
         Map<String, String> params = new HashMap<>();
-        params.put("startAt", "10:00");
+        params.put("startAt", "15:00");
         RestAssured.given().log().all()
                 .contentType(ContentType.JSON)
                 .body(params)
@@ -43,21 +43,14 @@ class ReservationTimeControllerTest {
                 .when().get("/times")
                 .then().log().all()
                 .statusCode(200)
-                .body("size()", is(1));
+                .body("size()", is(4));
     }
 
     @Test
     @DisplayName("id와 매칭되는 예약 가능 시간을 삭제한다.")
     void delete() {
-        Map<String, String> params = new HashMap<>();
-        params.put("startAt", "10:00");
         RestAssured.given().log().all()
-                .contentType(ContentType.JSON)
-                .body(params)
-                .when().post("/times");
-        
-        RestAssured.given().log().all()
-                .when().delete("/times/1")
+                .when().delete("/times/11")
                 .then().log().all()
                 .statusCode(200);
     }

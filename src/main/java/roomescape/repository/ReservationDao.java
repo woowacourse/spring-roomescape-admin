@@ -13,7 +13,8 @@ import roomescape.domain.Reservation;
 
 @Repository
 public class ReservationDao {
-    private JdbcTemplate jdbcTemplate;
+
+    private final JdbcTemplate jdbcTemplate;
 
     public ReservationDao(final JdbcTemplate jdbcTemplate) {
         this.jdbcTemplate = jdbcTemplate;

@@ -2,8 +2,10 @@ package roomescape.repository;
 
 import java.sql.PreparedStatement;
 import java.util.List;
-import org.springframework.beans.factory.annotation.Autowired;
+import java.util.Optional;
+import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.jdbc.core.JdbcTemplate;
+import org.springframework.jdbc.core.RowMapper;
 import org.springframework.jdbc.support.GeneratedKeyHolder;
 import org.springframework.jdbc.support.KeyHolder;
 import org.springframework.stereotype.Repository;
@@ -11,15 +13,18 @@ import roomescape.domain.ReservationTime;
 import roomescape.dto.ReservationTimeRequest;
 
 @Repository
-public class TimeDao {
-    @Autowired
-    private JdbcTemplate jdbcTemplate;
+public class ReservationTimeDao {
+    private final JdbcTemplate jdbcTemplate;
+
+    public ReservationTimeDao(final JdbcTemplate jdbcTemplate) {
+        this.jdbcTemplate = jdbcTemplate;
+    }
 
     public ReservationTime save(final ReservationTimeRequest reservationTimeRequest) {
         KeyHolder keyHolder = new GeneratedKeyHolder();
         jdbcTemplate.update(connection -> {
                     PreparedStatement ps = connection.prepareStatement(
-                            "insert into reservation_time (start_at) values (?)",
+                            "INSERT INTO reservation_time (start_at) VALUES (?)",
                             new String[]{"id"}
                     );
                     ps.setString(1, reservationTimeRequest.startAt().toString());
@@ -38,9 +43,24 @@ public class TimeDao {
         }
     }
 
+    public Optional<ReservationTime> findById(final long id) {
+        try {
+            String sql = "SELECT * FROM reservation_time WHERE id = ?";
+            return Optional.of(jdbcTemplate.queryForObject(sql, reservationTimeRowMapper, id));
+        } catch (EmptyResultDataAccessException exception) {
+            return Optional.empty();
+        }
+    }
+
+    private final RowMapper<ReservationTime> reservationTimeRowMapper = (resultSet, rowNum) ->
+            ReservationTime.of(
+                    resultSet.getLong("id"),
+                    resultSet.getString("start_at")
+            );
+
     public List<ReservationTime> getAll() {
         return jdbcTemplate.query(
-                "select id, start_at from reservation_time",
+                "SELECT id, start_at FROM reservation_time",
                 (resultSet, rowNum) -> ReservationTime.of(
                         resultSet.getLong("id"),
                         resultSet.getString("start_at")
@@ -49,6 +69,6 @@ public class TimeDao {
     }
 
     public void delete(final long id) {
-        jdbcTemplate.update("delete from reservation where id = ?", Long.valueOf(id));
+        jdbcTemplate.update("DELETE FROM reservation_time WHERE id = ?", Long.valueOf(id));
     }
 }

@@ -1,6 +1,5 @@
 package roomescape.dto.reservation;
 
-import com.fasterxml.jackson.annotation.JsonProperty;
 import java.util.Objects;
 import roomescape.domain.reservation.Reservation;
 import roomescape.domain.reservation.ReservationDate;
@@ -11,17 +10,16 @@ public class ReservationResponse {
     private final Long id;
     private final String name;
     private final String date;
-    @JsonProperty("time")
-    private final ReservationTimeResponse reservationTimeResponse;
+    private final ReservationTimeResponse time;
 
     private ReservationResponse(Long id,
                                 String name,
                                 String date,
-                                ReservationTimeResponse reservationTimeResponse) {
+                                ReservationTimeResponse time) {
         this.id = id;
         this.name = name;
         this.date = date;
-        this.reservationTimeResponse = reservationTimeResponse;
+        this.time = time;
     }
 
     public static ReservationResponse from(Reservation reservation) {
@@ -50,6 +48,10 @@ public class ReservationResponse {
         return date;
     }
 
+    public ReservationTimeResponse getTime() {
+        return time;
+    }
+
     @Override
     public boolean equals(Object o) {
         if (this == o) {
@@ -62,12 +64,12 @@ public class ReservationResponse {
         return Objects.equals(this.id, other.id)
                 && Objects.equals(this.name, other.name)
                 && Objects.equals(this.date, other.date)
-                && Objects.equals(this.reservationTimeResponse, other.reservationTimeResponse);
+                && Objects.equals(this.time, other.time);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(id, name, date, reservationTimeResponse);
+        return Objects.hash(id, name, date, time);
     }
 
     @Override
@@ -76,7 +78,7 @@ public class ReservationResponse {
                 "id=" + id +
                 ", name='" + name + '\'' +
                 ", date='" + date + '\'' +
-                ", reservationTimeDto=" + reservationTimeResponse +
+                ", time=" + time +
                 '}';
     }
 }

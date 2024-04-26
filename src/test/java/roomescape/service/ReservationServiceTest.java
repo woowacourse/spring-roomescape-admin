@@ -4,43 +4,57 @@ import org.assertj.core.api.SoftAssertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
+import org.mockito.Mock;
+import org.mockito.Mockito;
+import org.mockito.junit.jupiter.MockitoExtension;
+import roomescape.domain.Reservation;
+import roomescape.domain.ReservationTime;
 import roomescape.dto.reservation.ReservationCreateRequest;
 import roomescape.dto.reservation.ReservationResponse;
-import roomescape.dto.reservationtime.ReservationTimeCreateRequest;
-import roomescape.dto.reservationtime.ReservationTimeResponse;
-import roomescape.repository.ReservationFakeDao;
-import roomescape.repository.ReservationTimeFakeDao;
+import roomescape.repository.reservation.ReservationRepository;
 import roomescape.repository.reservationtime.ReservationTimeRepository;
 
 import java.time.LocalDate;
 import java.time.LocalTime;
 import java.util.List;
+import java.util.Optional;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatCode;
+import static org.mockito.ArgumentMatchers.any;
 
+@ExtendWith(MockitoExtension.class)
 @DisplayName("예약 서비스")
 class ReservationServiceTest {
 
     private ReservationService reservationService;
-    private ReservationTimeService reservationTimeService;
+    @Mock
+    private ReservationTimeRepository reservationTimeRepository;
+    @Mock
+    private ReservationRepository reservationRepository;
+    private Long id;
+    private String name;
     private LocalTime startAt;
     private LocalDate date;
+    private Reservation reservationFixture;
 
     @BeforeEach
     void setUp() {
-        ReservationTimeRepository reservationTimeRepository = new ReservationTimeFakeDao();
-        this.reservationTimeService = new ReservationTimeService(reservationTimeRepository);
-        this.reservationService = new ReservationService(new ReservationFakeDao(), reservationTimeRepository);
+        this.reservationService = new ReservationService(reservationRepository, reservationTimeRepository);
+        this.id = 1L;
+        this.name = "클로버";
         this.startAt = LocalTime.of(10, 10);
         this.date = LocalDate.of(2024, 11, 16);
+        this.reservationFixture = new Reservation(id, name, date, new ReservationTime(id, startAt));
     }
 
     @DisplayName("예약 서비스는 예약들을 조회한다.")
     @Test
     void readReservations() {
         // given
-        createInitReservation();
+        Mockito.when(reservationRepository.findAll())
+                .thenReturn(List.of(reservationFixture));
 
         // when
         List<ReservationResponse> reservations = reservationService.readReservations();
@@ -53,8 +67,8 @@ class ReservationServiceTest {
     @Test
     void readReservation() {
         // given
-        createInitReservation();
-        Long id = 1L;
+        Mockito.when(reservationRepository.findById(id))
+                .thenReturn(Optional.of(reservationFixture));
 
         // when
         ReservationResponse reservation = reservationService.readReservation(id);
@@ -62,7 +76,7 @@ class ReservationServiceTest {
         // then
         SoftAssertions softAssertions = new SoftAssertions();
         softAssertions.assertThat(reservation.date()).isEqualTo(date);
-        softAssertions.assertThat(reservation.name()).isEqualTo("클로버");
+        softAssertions.assertThat(reservation.name()).isEqualTo(name);
         softAssertions.assertAll();
     }
 
@@ -70,10 +84,11 @@ class ReservationServiceTest {
     @Test
     void createReservation() {
         // given
-        ReservationTimeResponse reservationTime = reservationTimeService
-                .createTime(new ReservationTimeCreateRequest(startAt));
-        ReservationCreateRequest request = new ReservationCreateRequest("클로버",
-                date, reservationTime.id());
+        Mockito.when(reservationTimeRepository.findById(id))
+                .thenReturn(Optional.of(new ReservationTime(id, startAt)));
+        ReservationCreateRequest request = new ReservationCreateRequest(name, date, 1L);
+        Mockito.when(reservationRepository.save(any()))
+                .thenReturn(reservationFixture);
 
         // when
         ReservationResponse reservation = reservationService.createReservation(request);
@@ -81,8 +96,8 @@ class ReservationServiceTest {
         // then
         SoftAssertions softAssertions = new SoftAssertions();
         softAssertions.assertThat(reservation.date()).isEqualTo(date);
-        softAssertions.assertThat(reservation.name()).isEqualTo("클로버");
-        softAssertions.assertThat(reservation.time().getStartAt()).isEqualTo(reservationTime.startAt());
+        softAssertions.assertThat(reservation.name()).isEqualTo(name);
+        softAssertions.assertThat(reservation.time().getStartAt()).isEqualTo(startAt);
         softAssertions.assertAll();
     }
 
@@ -90,19 +105,10 @@ class ReservationServiceTest {
     @Test
     void deleteReservation() {
         // given
-        createInitReservation();
-        Long id = 1L;
+        Mockito.doNothing().when(reservationRepository).deleteById(id);
 
         // when & then
         assertThatCode(() -> reservationService.deleteReservation(id))
                 .doesNotThrowAnyException();
-    }
-
-    private void createInitReservation() {
-        ReservationTimeResponse reservationTime = reservationTimeService
-                .createTime(new ReservationTimeCreateRequest(startAt));
-        ReservationCreateRequest request = new ReservationCreateRequest("클로버",
-                date, reservationTime.id());
-        reservationService.createReservation(request);
     }
 }

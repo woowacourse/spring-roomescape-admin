@@ -27,12 +27,16 @@ class ReservationTimeServiceTest {
     private ReservationTimeService reservationTimeService;
     @Mock
     private ReservationTimeRepository reservationTimeRepository;
+    private Long id;
     private LocalTime startAt;
+    private ReservationTime reservationTimeFixture;
 
     @BeforeEach
     void setUp() {
         this.reservationTimeService = new ReservationTimeService(reservationTimeRepository);
+        this.id = 1L;
         this.startAt = LocalTime.of(10, 10);
+        this.reservationTimeFixture = new ReservationTime(id, startAt);
     }
 
     @DisplayName("에약 시간 서비스는 시간을 생성한다.")
@@ -40,7 +44,7 @@ class ReservationTimeServiceTest {
     void createTime() {
         // given
         Mockito.when(reservationTimeRepository.save(any()))
-                .thenReturn(new ReservationTime(1L, startAt));
+                .thenReturn(reservationTimeFixture);
         ReservationTimeCreateRequest request = new ReservationTimeCreateRequest(startAt);
 
         // when
@@ -55,9 +59,8 @@ class ReservationTimeServiceTest {
     @Test
     void readReservationTime() {
         // given
-        Long id = 1L;
         Mockito.when(reservationTimeRepository.findById(id))
-                .thenReturn(Optional.of(new ReservationTime(id, startAt)));
+                .thenReturn(Optional.of(reservationTimeFixture));
 
         // when
         ReservationTimeResponse reservationTime = reservationTimeService.readReservationTime(id);
@@ -72,7 +75,7 @@ class ReservationTimeServiceTest {
     void readReservationTimes() {
         // given
         Mockito.when(reservationTimeRepository.findAll())
-                .thenReturn(List.of(new ReservationTime(1L, startAt)));
+                .thenReturn(List.of(reservationTimeFixture));
 
         // when
         List<ReservationTimeResponse> reservationTimes = reservationTimeService.readReservationTimes();
@@ -85,7 +88,6 @@ class ReservationTimeServiceTest {
     @Test
     void deleteTime() {
         // given
-        Long id = 1L;
         Mockito.doNothing().when(reservationTimeRepository).deleteById(id);
 
         // when & then

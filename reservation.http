@@ -1,0 +1,17 @@
+@base = http://localhost:8080/reservations
+
+### 예약 조회
+GET {{base}}
+
+### 예약 추가
+POST {{base}}
+Content-Type: application/json
+
+{
+  "date": "2023-08-05",
+  "name": "브라운",
+  "timeId": 1
+}
+
+### 예약 삭제
+DELETE {{base}}/1

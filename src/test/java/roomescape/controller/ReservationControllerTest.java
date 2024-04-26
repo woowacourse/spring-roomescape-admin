@@ -1,86 +1,111 @@
 package roomescape.controller;
 
+import static org.hamcrest.Matchers.hasSize;
 import static org.hamcrest.Matchers.is;
+import static org.mockito.BDDMockito.given;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.delete;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
+import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
-import io.restassured.RestAssured;
-import io.restassured.http.ContentType;
-import org.junit.jupiter.api.AfterEach;
-import org.junit.jupiter.api.BeforeEach;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import java.util.List;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.boot.test.context.SpringBootTest.WebEnvironment;
-import org.springframework.boot.test.web.server.LocalServerPort;
-import roomescape.domain.ReservationRepository;
-import roomescape.dto.ReservationDto;
+import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
+import org.springframework.boot.test.mock.mockito.MockBean;
+import org.springframework.http.MediaType;
+import org.springframework.test.web.servlet.MockMvc;
+import roomescape.dto.reservation.ReservationCreateRequest;
+import roomescape.dto.reservation.ReservationResponse;
+import roomescape.dto.reservationtime.ReservationTimeResponse;
+import roomescape.service.ReservationService;
 
-@SpringBootTest(webEnvironment = WebEnvironment.RANDOM_PORT)
+@WebMvcTest(ReservationController.class)
 class ReservationControllerTest {
 
-    @LocalServerPort
-    private int port;
     @Autowired
-    private ReservationRepository reservationRepository;
-    private ReservationDto reservationDto;
-
-    @BeforeEach
-    void setUp() {
-        RestAssured.port = port;
-        reservationRepository.add(ReservationDto.of(null, "다온", "2024-04-18", "16:12"));
-        String name = "브라운";
-        String date = "2023-08-05";
-        String time = "15:40";
-        reservationDto = ReservationDto.of(null, name, date, time);
-    }
-
-    @AfterEach
-    void tearDown() {
-        reservationRepository.deleteAll();
-    }
+    private ObjectMapper objectMapper;
+    @Autowired
+    private MockMvc mockMvc;
+    @MockBean
+    private ReservationService reservationService;
 
     @Test
     @DisplayName("전체 예약을 조회한다.")
-    void getAllReservationsTest() {
-        RestAssured.given().log().all()
-                .when().get("/reservations")
-                .then().log().all()
-                .statusCode(200)
-                .body("size()", is(1));
+    void getAllReservationsTest() throws Exception {
+        //given
+        String firstName = "daon";
+        String secondDate = "2022-02-05";
+        String secondStartAt = "23:22";
+        List<ReservationResponse> expectedResponses = getExpectedResponses(firstName, secondDate, secondStartAt);
+        given(reservationService.findAll()).willReturn(expectedResponses);
+
+        //when //then
+        mockMvc.perform(get("/reservations"))
+                .andDo(print())
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$", hasSize(2)))
+                .andExpect(jsonPath("$[0].id", is(1)))
+                .andExpect(jsonPath("$[0].name", is(firstName)))
+                .andExpect(jsonPath("$[1].date", is(secondDate)))
+                .andExpect(jsonPath("$[1].time.startAt", is(secondStartAt)));
     }
 
     @Test
     @DisplayName("예약을 성공적으로 추가한다.")
-    void addReservationTest() {
-        RestAssured.given().log().all()
-                .contentType(ContentType.JSON)
-                .body(reservationDto)
-                .when().post("/reservations")
-                .then().log().all()
-                .statusCode(201)
-                .body("id", is(2));
+    void addReservationTest() throws Exception {
+        //given
+        String expectedName = "daon";
+        String expectedDate = "2024-11-29";
+        String expectedStartAt = "00:01";
+        ReservationCreateRequest givenRequest = ReservationCreateRequest.of(expectedName, expectedDate, 1L);
+        ReservationResponse response = ReservationResponse.of(
+                1L,
+                expectedName,
+                expectedDate,
+                ReservationTimeResponse.of(1L, expectedStartAt)
+        );
+        given(reservationService.add(givenRequest)).willReturn(response);
+        String givenJsonRequest = objectMapper.writeValueAsString(givenRequest);
 
-        RestAssured.given().log().all()
-                .when().get("/reservations")
-                .then().log().all()
-                .statusCode(200)
-                .body("size()", is(2));
+        //when //then
+        mockMvc.perform(post("/reservations")
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(givenJsonRequest))
+                .andDo(print())
+                .andExpect(status().isCreated())
+                .andExpect(jsonPath("$.name", is(expectedName)))
+                .andExpect(jsonPath("$.date", is(expectedDate)))
+                .andExpect(jsonPath("$.time.startAt", is(expectedStartAt)));
     }
 
     @Test
     @DisplayName("예약을 성공적으로 삭제한다.")
-    void deleteReservationTest() {
-        RestAssured.given()
-                .pathParam("id", 1L)
-                .log().all()
-                .when().delete("/reservations/{id}")
-                .then().log().all()
-                .statusCode(204);
+    void deleteReservationTest() throws Exception {
+        //when //then
+        mockMvc.perform(delete("/reservations/{id}", 1))
+                .andDo(print())
+                .andExpect(status().isNoContent());
+    }
 
-        RestAssured.given().log().all()
-                .when().get("/reservations")
-                .then().log().all()
-                .statusCode(200)
-                .body("size()", is(0));
+    private List<ReservationResponse> getExpectedResponses(String firstName, String secondDate, String secondStartAt) {
+        return List.of(
+                ReservationResponse.of(
+                        1L,
+                        firstName,
+                        "2022-02-23",
+                        ReservationTimeResponse.of(1L, "12:12")
+                ),
+                ReservationResponse.of(
+                        2L,
+                        "ikjo",
+                        secondDate,
+                        ReservationTimeResponse.of(2L, secondStartAt)
+                )
+        );
     }
 }

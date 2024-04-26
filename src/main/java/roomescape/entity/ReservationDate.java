@@ -2,6 +2,7 @@ package roomescape.entity;
 
 import java.time.LocalDate;
 import java.util.Objects;
+import roomescape.entity.exception.ReservationDatePassedException;
 
 public class ReservationDate {
     private final LocalDate date;
@@ -24,7 +25,7 @@ public class ReservationDate {
 
     private void validateNonPassedDate(LocalDate date) {
         if (date.isBefore(LocalDate.now())) {
-            throw new IllegalStateException("예약 날짜는 현재 날짜보다 이전일 수 없습니다 예약날짜: " + date);
+            throw new ReservationDatePassedException("예약 날짜는 현재 날짜보다 이전일 수 없습니다 예약날짜: " + date);
         }
     }
 

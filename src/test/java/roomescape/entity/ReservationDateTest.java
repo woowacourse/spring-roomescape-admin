@@ -5,6 +5,7 @@ import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import java.time.LocalDate;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
+import roomescape.entity.exception.ReservationDatePassedException;
 
 class ReservationDateTest {
     @DisplayName("날짜가 null인 경우 ReservationDate 생성에 실패한다")
@@ -20,6 +21,6 @@ class ReservationDateTest {
         LocalDate now = LocalDate.now();
         LocalDate passedDate = now.minusDays(1);
         assertThatThrownBy(() -> new ReservationDate(passedDate))
-                .isInstanceOf(IllegalStateException.class);
+                .isInstanceOf(ReservationDatePassedException.class);
     }
 }

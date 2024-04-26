@@ -1,12 +1,10 @@
 package roomescape.console.controller;
 
-import org.springframework.stereotype.Component;
 import roomescape.console.config.ControllerMapper;
 import roomescape.console.view.AdminMenu;
 import roomescape.console.view.InputView;
 import roomescape.console.view.OutputView;
 
-@Component
 public class MainConsoleController {
 
     private final InputView inputView;

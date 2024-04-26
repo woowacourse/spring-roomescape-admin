@@ -7,6 +7,7 @@ import static roomescape.consoleview.command.CommandType.SHOW;
 
 import org.springframework.boot.ApplicationArguments;
 import org.springframework.boot.ApplicationRunner;
+import org.springframework.context.annotation.Profile;
 import org.springframework.stereotype.Component;
 import roomescape.consoleview.command.Command;
 import roomescape.controller.ReservationController;
@@ -14,6 +15,7 @@ import roomescape.controller.ReservationTimeController;
 import roomescape.controller.dto.SaveReservationRequest;
 import roomescape.controller.dto.SaveReservationTimeRequest;
 
+@Profile("!test")
 @Component
 public class ConsoleRunner implements ApplicationRunner {
 

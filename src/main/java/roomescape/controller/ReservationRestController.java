@@ -29,14 +29,14 @@ public class ReservationRestController {
     }
 
     @PostMapping("/reservations")
-    public ResponseEntity<ReservationResponse> addReservationInfo(@RequestBody ReservationRequest reservationRequest) {
+    public ResponseEntity<ReservationResponse> addReservation(@RequestBody ReservationRequest reservationRequest) {
         ReservationResponse reservation = reservationService.addReservation(reservationRequest);
         return ResponseEntity.created(URI.create("reservations/" + reservation.getId()))
                 .body(reservation);
     }
 
     @DeleteMapping("/reservations/{id}")
-    public ResponseEntity<Void> deleteReservationInfo(@PathVariable Long id) {
+    public ResponseEntity<Void> deleteReservation(@PathVariable Long id) {
         reservationService.deleteReservation(id);
         return ResponseEntity.noContent().build();
     }

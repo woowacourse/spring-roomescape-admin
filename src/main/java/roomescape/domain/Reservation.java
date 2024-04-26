@@ -33,7 +33,7 @@ public class Reservation {
 
     @Override
     public String toString() {
-        return "ReservationInfo{" +
+        return "Reservation{" +
                 "id=" + id +
                 ", name='" + name + '\'' +
                 ", date='" + date + '\'' +

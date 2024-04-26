@@ -3,7 +3,6 @@ package roomescape.admin.reservation.controller;
 import java.util.List;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
-import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -14,7 +13,6 @@ import roomescape.admin.reservation.controller.dto.request.ReservationTimeReques
 import roomescape.admin.reservation.controller.dto.response.ReservationTimeResponse;
 import roomescape.admin.reservation.entity.ReservationTime;
 import roomescape.admin.reservation.service.ReservationTimeService;
-import roomescape.admin.reservation.service.exception.NoSuchDeleteIdException;
 
 @RequestMapping("/times")
 @RestController
@@ -46,10 +44,5 @@ public class ReservationTimeController {
         reservationTimeService.delete(id);
 
         return ResponseEntity.ok().build();
-    }
-
-    @ExceptionHandler
-    private ResponseEntity<String> handleNoSuchDeleteIdException(NoSuchDeleteIdException e) {
-        return ResponseEntity.ok(e.getMessage());
     }
 }

@@ -117,7 +117,7 @@ class ReservationControllerTest {
                 .when().delete("/reservations/1")
                 .then().log().all()
                 .statusCode(200)
-                .body(equalTo("삭제할 예약이 존재하지 않습니다."));
+                .body(equalTo("삭제할 값이 존재하지 않습니다."));
     }
 
     @Test

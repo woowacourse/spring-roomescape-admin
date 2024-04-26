@@ -42,10 +42,7 @@ public class ReservationController {
 
     @DeleteMapping("/{id}")
     public ResponseEntity<?> delete(@PathVariable("id") Long id) {
-        int deleteCount = reservationService.delete(id);
-        if (deleteCount == 0) {
-            return ResponseEntity.ok().body("삭제할 예약이 존재하지 않습니다.");
-        }
+        reservationService.delete(id);
 
         return ResponseEntity.ok().build();
     }

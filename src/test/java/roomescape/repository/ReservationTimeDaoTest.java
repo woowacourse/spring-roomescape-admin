@@ -5,7 +5,7 @@ import static org.junit.jupiter.api.Assertions.assertAll;
 
 import java.sql.Connection;
 import java.sql.SQLException;
-import java.util.ArrayList;
+import java.time.LocalTime;
 import java.util.List;
 import java.util.Objects;
 import java.util.Optional;
@@ -16,6 +16,7 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.context.SpringBootTest.WebEnvironment;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.test.annotation.DirtiesContext;
+import org.springframework.test.context.jdbc.Sql;
 import roomescape.model.ReservationTime;
 
 @SpringBootTest(webEnvironment = WebEnvironment.RANDOM_PORT)
@@ -63,32 +64,27 @@ class ReservationTimeDaoTest {
     }
 
     @DisplayName("시간 삭제")
+    @Sql(scripts = "/createTime.sql")
     @Test
     void removeTime() {
-        final List<ReservationTime> beforeSaving = reservationTimeDao.findAll();
-        final ReservationTime reservationTime = new ReservationTime("15:00");
-
-        reservationTimeDao.save(reservationTime);
-        final List<ReservationTime> afterSaving = reservationTimeDao.findAll();
+        final List<ReservationTime> beforeRemoving = reservationTimeDao.findAll();
         reservationTimeDao.remove(1L);
         final List<ReservationTime> afterRemoving = reservationTimeDao.findAll();
 
         assertAll(
-                () -> assertThat(beforeSaving).isEmpty(),
-                () -> assertThat(afterSaving).hasSize(1),
+                () -> assertThat(beforeRemoving).hasSize(1),
                 () -> assertThat(afterRemoving).isEmpty()
         );
     }
 
     @DisplayName("단건 조회")
+    @Sql(scripts = "/createTime.sql")
     @Test
     void findById() {
         //given
-        final ReservationTime reservationTime = new ReservationTime("12:00");
-        final ReservationTime expected = reservationTime.toReservationTime(1L);
+        final ReservationTime expected = new ReservationTime(1L, LocalTime.parse("10:30"));
 
         //when
-        reservationTimeDao.save(reservationTime);
         final Optional<ReservationTime> findReservationTime = reservationTimeDao.findById(1L);
 
         //then
@@ -96,23 +92,14 @@ class ReservationTimeDaoTest {
     }
 
     @DisplayName("전체 조회")
+    @Sql(scripts = "/createTimes.sql")
     @Test
     void findAll() {
         //given
-        final ReservationTime reservationTime1 = new ReservationTime("12:00");
-        final ReservationTime reservationTime2 = new ReservationTime("13:00");
-        final ReservationTime reservationTime3 = new ReservationTime("14:00");
-
-        final List<ReservationTime> reservations = List.of(reservationTime1, reservationTime2, reservationTime3);
-
-        for (final ReservationTime reservationTime : reservations) {
-            reservationTimeDao.save(reservationTime);
-        }
-
-        final List<ReservationTime> expected = new ArrayList<>();
-        for (long i = 1; i <= 3; i++) {
-            expected.add(reservations.get((int) (i - 1)).toReservationTime(i));
-        }
+        final List<ReservationTime> expected = List.of(
+                new ReservationTime(1L, LocalTime.parse("12:00")),
+                new ReservationTime(2L, LocalTime.parse("13:00")),
+                new ReservationTime(3L, LocalTime.parse("14:00")));
 
         //when
         final List<ReservationTime> findAll = reservationTimeDao.findAll();

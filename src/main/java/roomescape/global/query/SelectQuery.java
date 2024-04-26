@@ -89,7 +89,7 @@ public class SelectQuery extends Query {
 
         @Override
         public void assemble(StringBuilder builder) {
-            builder.append(joinType.type()).append(joinTable);
+            builder.append(joinType).append(joinTable);
             alias.assemble(builder);
             condition.assemble(builder);
         }

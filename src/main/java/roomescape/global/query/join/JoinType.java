@@ -12,7 +12,8 @@ public enum JoinType {
         this.type = type;
     }
 
-    public String type() {
-        return type;
+    @Override
+    public String toString() {
+        return this.type;
     }
 }

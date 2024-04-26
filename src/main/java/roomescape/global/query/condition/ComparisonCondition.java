@@ -26,7 +26,7 @@ public class ComparisonCondition implements Assemblable {
     @Override
     public void assemble(StringBuilder builder) {
         builder.append(column)
-                .append(operator.value())
+                .append(operator)
                 .append(value());
     }
 
@@ -49,8 +49,9 @@ public class ComparisonCondition implements Assemblable {
             this.value = value;
         }
 
-        public String value() {
-            return value;
+        @Override
+        public String toString() {
+            return this.value;
         }
     }
 }

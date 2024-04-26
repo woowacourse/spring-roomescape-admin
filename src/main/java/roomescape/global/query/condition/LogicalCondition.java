@@ -37,7 +37,7 @@ public class LogicalCondition implements Assemblable {
 
     private void appendOperator(StringBuilder builder, boolean hasNext) {
         if (hasNext) {
-            builder.append(operator.value());
+            builder.append(operator);
         }
     }
 
@@ -51,8 +51,9 @@ public class LogicalCondition implements Assemblable {
             this.value = value;
         }
 
-        public String value() {
-            return value;
+        @Override
+        public String toString() {
+            return this.value;
         }
     }
 }

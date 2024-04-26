@@ -1,7 +1,6 @@
 package roomescape.data.vo;
 
 import java.time.LocalDate;
-import java.time.LocalTime;
 import java.util.Objects;
 
 
@@ -11,25 +10,12 @@ public class Reservation {
     private final LocalDate date;
     private final ReservationTime time;
 
-    private Reservation() {
-        this.id = 0;
-        this.name = "";
-        this.date = LocalDate.now();
-        this.time = new ReservationTime(LocalTime.now());
-    }
 
     private Reservation(final long id, final String name, final LocalDate date, final ReservationTime time) {
         this.id = id;
         this.name = name;
         this.date = date;
         this.time = time;
-    }
-
-    public Reservation(final long id, final Reservation reservation) {
-        this.id = id;
-        this.name = reservation.name;
-        this.date = reservation.date;
-        this.time = reservation.time;
     }
 
     public long getId() {

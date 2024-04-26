@@ -7,7 +7,6 @@ import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.context.SpringBootTest;
 import roomescape.data.dto.request.ReservationRequest;
 import roomescape.fixture.FakeReservationRepository;
-import roomescape.fixture.FakeReservationTimeRepository;
 
 @SpringBootTest
 class ReservationServiceTest {

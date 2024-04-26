@@ -1,7 +1,7 @@
 package roomescape.data.dto.response;
 
+import com.fasterxml.jackson.annotation.JsonCreator;
 import java.time.LocalDate;
-import java.time.LocalTime;
 import roomescape.data.vo.ReservationTime;
 
 public class ReservationResponse {
@@ -10,13 +10,7 @@ public class ReservationResponse {
     private final LocalDate date;
     private final ReservationTime time;
 
-    private ReservationResponse() {
-        this.id = 0;
-        this.name = "";
-        this.date = LocalDate.now();
-        this.time = new ReservationTime(0, LocalTime.now());
-    }
-
+    @JsonCreator
     private ReservationResponse(final long id, final String name, final LocalDate date, final ReservationTime time) {
         this.id = id;
         this.name = name;

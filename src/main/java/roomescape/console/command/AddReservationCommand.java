@@ -6,6 +6,7 @@ import roomescape.controller.ReservationApiController;
 import roomescape.controller.ReservationTimeApiController;
 import roomescape.dto.ReservationRequestDto;
 import java.time.LocalDate;
+import java.time.format.DateTimeParseException;
 
 @Component
 public class AddReservationCommand implements ConsoleCommand {
@@ -22,18 +23,36 @@ public class AddReservationCommand implements ConsoleCommand {
 
     @Override
     public void conduct() {
+        try {
+            String name = getInputName();
+            LocalDate date = getInputDate();
+            Long id = getInputId();
+            System.out.println(
+                    reservationApiController.postReservation(
+                            new ReservationRequestDto(name, date, id)
+                    )
+            );
+        } catch (DateTimeParseException pe) {
+            System.out.println("잘못된 날짜 형식입니다.");
+        } catch (NumberFormatException ne) {
+            System.out.println("잘못된 숫자 형식입니다.");
+        }
+    }
+
+    private String getInputName() {
         System.out.println("예약자 이름을 입력해주세요.");
-        String name = consoleInputScanner.getInput();
+        return consoleInputScanner.getInput();
+    }
+
+    private LocalDate getInputDate() {
         System.out.println("예약 날짜를 입력해주세요.(형식: YYYY-MM-DD)");
-        LocalDate date = LocalDate.parse(consoleInputScanner.getInput());
+        String input = consoleInputScanner.getInput();
+        return LocalDate.parse(input);
+    }
+
+    private Long getInputId() {
         System.out.println(reservationTimeApiController.getReservationTimes());
         System.out.println("예약 시간 id를 입력해주세요.");
-        Long id = Long.parseLong(consoleInputScanner.getInput());
-
-        System.out.println(
-                reservationApiController.postReservation(
-                        new ReservationRequestDto(name, date, id)
-                )
-        );
+        return Long.parseLong(consoleInputScanner.getInput());
     }
 }

@@ -26,7 +26,7 @@ public class ReservationService {
         return reservationDao.findAll();
     }
 
-    public Long save(ReservationDto reservationDto) {
+    public Reservation save(ReservationDto reservationDto) {
         ReservationTime reservationTime = reservationTimeDao.findById(reservationDto.timeId());
         return reservationDao.save(reservationDto.toEntity(reservationTime));
     }

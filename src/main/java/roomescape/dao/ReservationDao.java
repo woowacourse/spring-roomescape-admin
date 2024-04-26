@@ -66,7 +66,7 @@ public class ReservationDao {
         return jdbcTemplate.query(sql, ROW_MAPPER);
     }
 
-    public Long save(Reservation reservation) {
+    public Reservation save(Reservation reservation) {
         String name = reservation.getName();
         LocalDate date = reservation.getDate();
         Long timeId = reservation.getTimeId();
@@ -83,8 +83,9 @@ public class ReservationDao {
             return ps;
         }, keyHolder);
 
-        return keyHolder.getKey()
-                .longValue();
+        long saveId =  keyHolder.getKey().longValue();
+
+        return findById(saveId);
     }
 
     public void delete(Long id) {

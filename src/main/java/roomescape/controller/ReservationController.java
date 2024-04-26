@@ -29,8 +29,7 @@ public class ReservationController {
 
     @PostMapping
     public ResponseEntity<Reservation> reserve(@RequestBody ReservationDto reservationDto) {
-        Long saveId = reservationService.save(reservationDto);
-        return ResponseEntity.ok(reservationService.findById(saveId));
+        return ResponseEntity.ok(reservationService.save(reservationDto));
     }
 
     @DeleteMapping("/{id}")

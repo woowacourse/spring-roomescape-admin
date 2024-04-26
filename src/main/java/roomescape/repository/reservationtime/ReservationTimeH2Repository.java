@@ -4,6 +4,7 @@ import java.time.LocalTime;
 import java.util.List;
 import javax.sql.DataSource;
 import org.springframework.jdbc.core.JdbcTemplate;
+import org.springframework.jdbc.core.RowMapper;
 import org.springframework.jdbc.core.namedparam.BeanPropertySqlParameterSource;
 import org.springframework.jdbc.core.namedparam.SqlParameterSource;
 import org.springframework.jdbc.core.simple.SimpleJdbcInsert;
@@ -42,11 +43,15 @@ public class ReservationTimeH2Repository implements ReservationTimeRepository {
     public ReservationTime findById(Long id) {
         return jdbcTemplate.queryForObject(
                 "SELECT * FROM reservation_time WHERE id = ?",
-                (resultSet, rowNum) -> new ReservationTime(
-                        resultSet.getLong("id"),
-                        LocalTime.parse(resultSet.getString("start_at"))
-                ),
+                getReservationTimeRowMapper(),
                 id
+        );
+    }
+
+    private RowMapper<ReservationTime> getReservationTimeRowMapper() {
+        return (resultSet, rowNum) -> new ReservationTime(
+                resultSet.getLong("id"),
+                LocalTime.parse(resultSet.getString("start_at"))
         );
     }
 
@@ -54,10 +59,7 @@ public class ReservationTimeH2Repository implements ReservationTimeRepository {
     public List<ReservationTime> findAll() {
         return jdbcTemplate.query(
                 "SELECT * FROM reservation_time",
-                (resultSet, rowNum) -> new ReservationTime(
-                        resultSet.getLong("id"),
-                        LocalTime.parse(resultSet.getString("start_at"))
-                )
+                getReservationTimeRowMapper()
         );
     }
 }

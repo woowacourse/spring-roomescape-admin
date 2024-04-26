@@ -10,10 +10,11 @@ import org.springframework.boot.test.context.SpringBootTest.WebEnvironment;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.test.annotation.DirtiesContext;
 import org.springframework.test.annotation.DirtiesContext.ClassMode;
-import roomescape.db.ReservationDao;
-import roomescape.db.ReservationDaoH2Impl;
-import roomescape.db.ReservationTimeDaoH2Impl;
-import roomescape.dto.ReservationRequest;
+import roomescape.general.db.ReservationDao;
+import roomescape.general.service.ReservationService;
+import roomescape.web.db.ReservationDaoH2Impl;
+import roomescape.web.db.ReservationTimeDaoH2Impl;
+import roomescape.general.dto.ReservationRequest;
 
 
 @SpringBootTest(webEnvironment = WebEnvironment.DEFINED_PORT)

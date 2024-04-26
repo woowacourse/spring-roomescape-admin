@@ -129,6 +129,9 @@ function requestDelete(id) {
 
   return fetch(`${API_ENDPOINT}/${id}`, requestOptions)
       .then(response => {
-        if (response.status !== 200) throw new Error('Delete failed');
+        if (response.status !== 200) {
+          alert("이미 예약된 시간입니다.");
+          throw new Error('Delete failed');
+        }
       });
 }

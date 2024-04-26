@@ -1,6 +1,6 @@
 package roomescape;
 
-import roomescape.console.ConsoleRunner;
+import roomescape.console.controller.ConsoleRunner;
 import roomescape.console.config.ConsoleConfig;
 
 public class RoomEscapeConsoleApplication {

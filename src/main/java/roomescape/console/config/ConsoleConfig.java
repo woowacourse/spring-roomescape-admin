@@ -1,6 +1,6 @@
 package roomescape.console.config;
 
-import roomescape.console.ConsoleRunner;
+import roomescape.console.controller.ConsoleRunner;
 import roomescape.console.controller.ConsoleInputConverter;
 import roomescape.console.controller.ConsoleReservationController;
 import roomescape.console.controller.ConsoleReservationTimeController;

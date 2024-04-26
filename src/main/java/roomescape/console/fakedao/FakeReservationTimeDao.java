@@ -1,4 +1,4 @@
-package roomescape.dao.fakedao;
+package roomescape.console.fakedao;
 
 import java.util.List;
 import java.util.Map;

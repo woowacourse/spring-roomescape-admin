@@ -6,9 +6,9 @@ import static org.junit.jupiter.api.Assertions.assertAll;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
+import roomescape.console.fakedao.FakeReservationDao;
+import roomescape.console.fakedao.FakeReservationTimeDao;
 import roomescape.dao.ReservationTimeDao;
-import roomescape.dao.fakedao.FakeReservationDao;
-import roomescape.dao.fakedao.FakeReservationTimeDao;
 import roomescape.dto.ReservationRequest;
 import roomescape.dto.ReservationResponse;
 

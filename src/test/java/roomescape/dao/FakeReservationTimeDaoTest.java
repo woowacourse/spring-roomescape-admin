@@ -7,7 +7,7 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.dao.EmptyResultDataAccessException;
-import roomescape.dao.fakedao.FakeReservationTimeDao;
+import roomescape.console.fakedao.FakeReservationTimeDao;
 
 class FakeReservationTimeDaoTest {
     private ReservationTimeDao reservationTimeDao;

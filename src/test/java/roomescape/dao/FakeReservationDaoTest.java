@@ -5,7 +5,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
-import roomescape.dao.fakedao.FakeReservationDao;
+import roomescape.console.fakedao.FakeReservationDao;
 
 class FakeReservationDaoTest {
     private ReservationDao reservationDao;

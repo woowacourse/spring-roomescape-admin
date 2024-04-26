@@ -14,19 +14,19 @@ import java.util.Map;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.autoconfigure.EnableAutoConfiguration;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.context.SpringBootTest.WebEnvironment;
 import org.springframework.boot.test.web.server.LocalServerPort;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.test.annotation.DirtiesContext;
 import org.springframework.test.annotation.DirtiesContext.ClassMode;
-import org.springframework.test.context.ActiveProfiles;
-import roomescape.controller.ReservationController;
-import roomescape.controller.dto.ReservationResponse;
+import roomescape.web.controller.ReservationController;
+import roomescape.web.controller.dto.ReservationResponse;
 
+@EnableAutoConfiguration
 @SpringBootTest(webEnvironment = WebEnvironment.RANDOM_PORT)
 @DirtiesContext(classMode = ClassMode.AFTER_EACH_TEST_METHOD)
-@ActiveProfiles("web")
 class MissionStepTest {
 
     @LocalServerPort
@@ -223,3 +223,6 @@ class MissionStepTest {
         assertThat(isJdbcTemplateInjected).isFalse();
     }
 }
+
+
+

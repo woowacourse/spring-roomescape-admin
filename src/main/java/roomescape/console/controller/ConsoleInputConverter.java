@@ -4,8 +4,8 @@ import java.time.LocalDate;
 import java.time.LocalTime;
 import java.time.format.DateTimeParseException;
 import java.util.List;
-import roomescape.service.dto.ReservationServiceRequest;
-import roomescape.service.dto.ReservationTimeServiceRequest;
+import roomescape.core.service.dto.ReservationServiceRequest;
+import roomescape.core.service.dto.ReservationTimeServiceRequest;
 
 public class ConsoleInputConverter {
 

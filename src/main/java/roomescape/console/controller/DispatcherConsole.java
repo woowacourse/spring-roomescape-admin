@@ -2,8 +2,8 @@ package roomescape.console.controller;
 
 import java.util.List;
 import roomescape.console.view.ConsoleCommand;
-import roomescape.service.dto.ReservationServiceRequest;
-import roomescape.service.dto.ReservationTimeServiceRequest;
+import roomescape.core.service.dto.ReservationServiceRequest;
+import roomescape.core.service.dto.ReservationTimeServiceRequest;
 
 public class DispatcherConsole {
 

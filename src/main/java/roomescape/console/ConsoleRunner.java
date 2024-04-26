@@ -1,12 +1,11 @@
 package roomescape.console;
 
-import org.springframework.boot.CommandLineRunner;
 import roomescape.console.controller.DispatcherConsole;
 import roomescape.console.view.ConsoleCommand;
 import roomescape.console.view.InputView;
 import roomescape.console.view.OutputView;
 
-public class ConsoleRunner implements CommandLineRunner {
+public class ConsoleRunner {
 
     private final DispatcherConsole dispatcherConsole;
     private final InputView inputView;
@@ -18,14 +17,7 @@ public class ConsoleRunner implements CommandLineRunner {
         this.outputView = outputView;
     }
 
-    @Override
-    public void run(String... args) {
-        Thread thread = new Thread(this::runConsoleReservation);
-        thread.setDaemon(false);
-        thread.start();
-    }
-
-    private void runConsoleReservation() {
+    public void run() {
         while (true) {
             handleException();
         }
@@ -38,7 +30,7 @@ public class ConsoleRunner implements CommandLineRunner {
         } catch (IllegalArgumentException e) {
             outputView.printError(e.getMessage());
         } catch (Exception e) {
-            outputView.printError("서버 오류입니다.");
+            outputView.printError(e.getMessage());
         }
     }
 }

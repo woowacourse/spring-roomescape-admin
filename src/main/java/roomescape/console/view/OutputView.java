@@ -1,8 +1,8 @@
 package roomescape.console.view;
 
 import java.util.List;
-import roomescape.service.dto.ReservationServiceResponse;
-import roomescape.service.dto.ReservationTimeServiceResponse;
+import roomescape.core.service.dto.ReservationServiceResponse;
+import roomescape.core.service.dto.ReservationTimeServiceResponse;
 
 public class OutputView {
 

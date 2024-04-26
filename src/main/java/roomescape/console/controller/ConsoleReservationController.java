@@ -2,9 +2,9 @@ package roomescape.console.controller;
 
 import java.util.List;
 import roomescape.console.view.OutputView;
-import roomescape.service.ReservationService;
-import roomescape.service.dto.ReservationServiceRequest;
-import roomescape.service.dto.ReservationServiceResponse;
+import roomescape.core.service.ReservationService;
+import roomescape.core.service.dto.ReservationServiceRequest;
+import roomescape.core.service.dto.ReservationServiceResponse;
 
 public class ConsoleReservationController {
 

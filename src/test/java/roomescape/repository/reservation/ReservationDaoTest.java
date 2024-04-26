@@ -4,7 +4,7 @@ import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.jdbc.JdbcTest;
-import org.springframework.jdbc.core.JdbcTemplate;
+import org.springframework.context.annotation.Import;
 import org.springframework.jdbc.core.namedparam.BeanPropertySqlParameterSource;
 import org.springframework.jdbc.core.namedparam.MapSqlParameterSource;
 import org.springframework.jdbc.core.namedparam.SqlParameterSource;
@@ -13,7 +13,6 @@ import roomescape.domain.Reservation;
 import roomescape.domain.ReservationTime;
 
 import javax.sql.DataSource;
-
 import java.time.LocalDate;
 import java.time.LocalTime;
 import java.util.List;
@@ -22,6 +21,7 @@ import java.util.Optional;
 import static org.assertj.core.api.Assertions.assertThat;
 
 @JdbcTest
+@Import(ReservationDao.class)
 @DisplayName("예약 DAO")
 class ReservationDaoTest {
 
@@ -30,8 +30,8 @@ class ReservationDaoTest {
     private final SimpleJdbcInsert simpleJdbcInsertWithReservationTime;
 
     @Autowired
-    public ReservationDaoTest(JdbcTemplate jdbcTemplate, DataSource dataSource) {
-        this.reservationRepository = new ReservationDao(jdbcTemplate, dataSource);
+    public ReservationDaoTest(ReservationRepository reservationRepository, DataSource dataSource) {
+        this.reservationRepository = reservationRepository;
         this.simpleJdbcInsertWithReservation = new SimpleJdbcInsert(dataSource)
                 .withTableName("reservation")
                 .usingGeneratedKeyColumns("id");

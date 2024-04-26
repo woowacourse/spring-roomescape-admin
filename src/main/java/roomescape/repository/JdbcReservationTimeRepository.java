@@ -14,8 +14,17 @@ import roomescape.domain.ReservationTime;
 @Repository
 public class JdbcReservationTimeRepository implements ReservationTimeRepository {
 
+    private static final RowMapper<ReservationTime> ROW_MAPPER = (resultSet, rowNum) -> {
+        ReservationTime reservationTime = new ReservationTime(
+                resultSet.getLong("id"),
+                LocalTime.parse(resultSet.getString("start_at"))
+        );
+        return reservationTime;
+    };
+    
     private final JdbcTemplate jdbcTemplate;
     private final SimpleJdbcInsert jdbcInsert;
+
 
     public JdbcReservationTimeRepository(JdbcTemplate jdbcTemplate, DataSource dataSource) {
         this.jdbcTemplate = jdbcTemplate;
@@ -23,14 +32,6 @@ public class JdbcReservationTimeRepository implements ReservationTimeRepository 
                 .withTableName("reservation_time")
                 .usingGeneratedKeyColumns("id");
     }
-
-    private final RowMapper<ReservationTime> rowMapper = (resultSet, rowNum) -> {
-        ReservationTime reservationTime = new ReservationTime(
-                resultSet.getLong("id"),
-                LocalTime.parse(resultSet.getString("start_at"))
-        );
-        return reservationTime;
-    };
 
     @Override
     public Long save(ReservationTime reservationTime) {
@@ -41,13 +42,13 @@ public class JdbcReservationTimeRepository implements ReservationTimeRepository 
     @Override
     public List<ReservationTime> findAll() {
         String sql = "SELECT * FROM reservation_time";
-        return jdbcTemplate.query(sql, rowMapper);
+        return jdbcTemplate.query(sql, ROW_MAPPER);
     }
 
     @Override
     public ReservationTime findById(Long id) {
         String sql = "SELECT * FROM reservation_time WHERE id = ?";
-        return jdbcTemplate.queryForObject(sql, rowMapper, id);
+        return jdbcTemplate.queryForObject(sql, ROW_MAPPER, id);
     }
 
     @Override

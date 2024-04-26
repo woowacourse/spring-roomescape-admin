@@ -6,7 +6,6 @@ import java.util.List;
 import javax.sql.DataSource;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;
-import org.springframework.jdbc.core.namedparam.BeanPropertySqlParameterSource;
 import org.springframework.jdbc.core.namedparam.MapSqlParameterSource;
 import org.springframework.jdbc.core.namedparam.SqlParameterSource;
 import org.springframework.jdbc.core.simple.SimpleJdbcInsert;
@@ -17,17 +16,7 @@ import roomescape.domain.ReservationTime;
 @Repository
 public class JdbcReservationRepository implements ReservationRepository {
 
-    private final JdbcTemplate jdbcTemplate;
-    private final SimpleJdbcInsert jdbcInsert;
-
-    public JdbcReservationRepository(JdbcTemplate jdbcTemplate, DataSource dataSource) {
-        this.jdbcTemplate = jdbcTemplate;
-        this.jdbcInsert = new SimpleJdbcInsert(dataSource)
-                .withTableName("reservation")
-                .usingGeneratedKeyColumns("id");
-    }
-
-    private final RowMapper<Reservation> rowMapper = (resultSet, rowNum) -> {
+    private static final RowMapper<Reservation> ROW_MAPPER = (resultSet, rowNum) -> {
         Reservation reservation = new Reservation(
                 resultSet.getLong("reservation_id"),
                 resultSet.getString("name"),
@@ -39,6 +28,16 @@ public class JdbcReservationRepository implements ReservationRepository {
         );
         return reservation;
     };
+
+    private final JdbcTemplate jdbcTemplate;
+    private final SimpleJdbcInsert jdbcInsert;
+
+    public JdbcReservationRepository(JdbcTemplate jdbcTemplate, DataSource dataSource) {
+        this.jdbcTemplate = jdbcTemplate;
+        this.jdbcInsert = new SimpleJdbcInsert(dataSource)
+                .withTableName("reservation")
+                .usingGeneratedKeyColumns("id");
+    }
 
     @Override
     public Long save(Reservation reservation) {
@@ -60,7 +59,7 @@ public class JdbcReservationRepository implements ReservationRepository {
                 + "FROM reservation AS r "
                 + "INNER JOIN reservation_time AS t "
                 + "ON r.time_id = t.id";
-        return jdbcTemplate.query(sql, rowMapper);
+        return jdbcTemplate.query(sql, ROW_MAPPER);
     }
 
     @Override
@@ -75,7 +74,7 @@ public class JdbcReservationRepository implements ReservationRepository {
                 + "INNER JOIN reservation_time AS t "
                 + "ON r.time_id = t.id "
                 + "WHERE r.id = ?";
-        return jdbcTemplate.queryForObject(sql, rowMapper, id);
+        return jdbcTemplate.queryForObject(sql, ROW_MAPPER, id);
     }
 
     @Override

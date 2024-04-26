@@ -32,6 +32,18 @@ public class Reservation {
         this(id, reservation.getName(), reservation.getStartDate(), reservation.gameTime);
     }
 
+    public boolean isConflictWith(Reservation target) {
+        LocalDateTime start = getStartDateTime();
+        LocalDateTime end = getEndDateTime();
+        LocalDateTime targetStart = target.getStartDateTime();
+        LocalDateTime targetEnd = target.getEndDateTime();
+
+        if (targetEnd.isBefore(start) || targetStart.isAfter(end)) {
+            return false;
+        }
+        return true;
+    }
+
     public long getId() {
         return id;
     }

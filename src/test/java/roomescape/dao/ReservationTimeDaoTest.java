@@ -2,6 +2,7 @@ package roomescape.dao;
 
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.autoconfigure.jdbc.JdbcTest;
+import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.support.GeneratedKeyHolder;
 import org.springframework.jdbc.support.KeyHolder;
@@ -14,6 +15,7 @@ import java.util.List;
 import java.util.Optional;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.assertThatThrownBy;
 
 @JdbcTest
 @DirtiesContext(classMode = DirtiesContext.ClassMode.BEFORE_EACH_TEST_METHOD)
@@ -55,6 +57,12 @@ public class ReservationTimeDaoTest {
         Long id = reservationTimeDao.insert("01:01");
 
         assertThat(id).isEqualTo(index + 1);
+    }
+
+    @Test
+    void wrongInsertTest() {
+        assertThatThrownBy(() -> reservationTimeDao.insert(null))
+                .isInstanceOf(DataIntegrityViolationException.class);
     }
 
     @Test

@@ -50,7 +50,7 @@ public class ReservationTimeRepository {
     }
 
     public int deleteById(Long id) {
-        String sql = "delete from " + TABLE_NAME + " where id = ?";
+        String sql = "DELETE FROM " + TABLE_NAME + " WHERE id = ?";
         return jdbcTemplate.update(sql, id);
     }
 }

@@ -29,15 +29,17 @@ public class ReservationRepository {
     }
 
     public List<Reservation> findAll() {
-        String sql = "SELECT "
-                + "r.id as reservation_id, "
-                + "r.name, "
-                + "r.date, "
-                + "t.id as time_id, "
-                + "t.start_at as time_value "
-                + "FROM " + TABLE_NAME + " as r "
-                + "inner join reservation_time as t "
-                + "on r.time_id = t.id";
+        String sql = """
+                SELECT
+                    r.id as reservation_id,
+                    r.name,
+                    r.date,
+                    t.id as time_id,
+                    t.start_at as time_value
+                FROM reservation as r
+                inner join reservation_time as t
+                on r.time_id = t.id
+                """;
 
         return jdbcTemplate.query(
                 sql,
@@ -84,11 +86,12 @@ public class ReservationRepository {
                 id,
                 reservationCreateRequest.name(),
                 reservationCreateRequest.date(),
-                reservationTime);
+                reservationTime
+        );
     }
 
     public int deleteById(Long id) {
-        String sql = "delete from " + TABLE_NAME + " where id = ?";
+        String sql = "DELETE FROM " + TABLE_NAME + " WHERE id = ?";
         return jdbcTemplate.update(sql, id);
     }
 }

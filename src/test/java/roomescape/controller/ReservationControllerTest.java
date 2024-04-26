@@ -166,7 +166,7 @@ public class ReservationControllerTest {
     void ReservationTime_CREATE_READ_Success() {
         Map<String, Object> reservation = Map.of("name", "브라운",
                 "date", "2023-08-05",
-                "reservationTimeId", 1
+                "timeId", 1
         );
 
         Map<String, String> time = Map.of(

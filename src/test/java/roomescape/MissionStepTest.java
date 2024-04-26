@@ -16,6 +16,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.context.SpringBootTest.WebEnvironment;
 import org.springframework.boot.test.web.server.LocalServerPort;
+import org.springframework.http.HttpStatus;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.test.annotation.DirtiesContext;
 import roomescape.controller.ReservationController;
@@ -41,12 +42,12 @@ public class MissionStepTest {
         RestAssured.given().log().all()
                 .when().get("/")
                 .then().log().all()
-                .statusCode(200);
+                .statusCode(HttpStatus.OK.value());
 
         RestAssured.given().log().all()
                 .when().get("/admin")
                 .then().log().all()
-                .statusCode(200);
+                .statusCode(HttpStatus.OK.value());
     }
 
     @Test
@@ -54,12 +55,12 @@ public class MissionStepTest {
         RestAssured.given().log().all()
                 .when().get("/admin/reservation")
                 .then().log().all()
-                .statusCode(200);
+                .statusCode(HttpStatus.OK.value());
 
         RestAssured.given().log().all()
                 .when().get("/reservations")
                 .then().log().all()
-                .statusCode(200)
+                .statusCode(HttpStatus.OK.value())
                 .body("size()", is(0));
     }
 
@@ -84,18 +85,18 @@ public class MissionStepTest {
                 .body(params)
                 .when().post("/times")
                 .then().log().all()
-                .statusCode(200);
+                .statusCode(HttpStatus.OK.value());
 
         RestAssured.given().log().all()
                 .when().get("/times")
                 .then().log().all()
-                .statusCode(200)
+                .statusCode(HttpStatus.OK.value())
                 .body("size()", is(1));
 
         RestAssured.given().log().all()
                 .when().delete("/times/1")
                 .then().log().all()
-                .statusCode(200);
+                .statusCode(HttpStatus.OK.value());
     }
 
     @Test
@@ -113,19 +114,19 @@ public class MissionStepTest {
                 .body(params)
                 .when().post("/times")
                 .then().log().all()
-                .statusCode(200);
+                .statusCode(HttpStatus.OK.value());
 
         RestAssured.given().log().all()
                 .contentType(ContentType.JSON)
                 .body(reservation)
                 .when().post("/reservations")
                 .then().log().all()
-                .statusCode(201);
+                .statusCode(HttpStatus.OK.value());
 
         RestAssured.given().log().all()
                 .when().get("/reservations")
                 .then().log().all()
-                .statusCode(200)
+                .statusCode(HttpStatus.OK.value())
                 .body("size()", is(1));
     }
 

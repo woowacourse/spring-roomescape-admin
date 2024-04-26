@@ -10,6 +10,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.context.SpringBootTest.WebEnvironment;
 import org.springframework.boot.test.web.server.LocalServerPort;
+import org.springframework.http.HttpStatus;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.test.annotation.DirtiesContext;
 import roomescape.dto.ReservationTimeRequest;
@@ -37,7 +38,7 @@ class ReservationTimeControllerTest {
                 .body(reservationTimeRequest)
                 .when().post("/times")
                 .then().log().all()
-                .statusCode(200);
+                .statusCode(HttpStatus.OK.value());
     }
 
     @Test
@@ -47,7 +48,7 @@ class ReservationTimeControllerTest {
                 .contentType(ContentType.JSON)
                 .when().get("/times")
                 .then().log().all()
-                .statusCode(200);
+                .statusCode(HttpStatus.OK.value());
     }
 
     @Test
@@ -60,7 +61,7 @@ class ReservationTimeControllerTest {
                 .contentType(ContentType.JSON)
                 .when().delete("/times/1")
                 .then().log().all()
-                .statusCode(200);
+                .statusCode(HttpStatus.OK.value());
     }
 
 }

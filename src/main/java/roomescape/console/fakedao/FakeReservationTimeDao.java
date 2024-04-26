@@ -1,46 +1,38 @@
 package roomescape.console.fakedao;
 
 import java.util.List;
-import java.util.Map;
-import java.util.concurrent.ConcurrentHashMap;
-import java.util.concurrent.atomic.AtomicLong;
-import org.springframework.dao.EmptyResultDataAccessException;
 import roomescape.dao.ReservationTimeDao;
 import roomescape.domain.ReservationTime;
 
 public class FakeReservationTimeDao implements ReservationTimeDao {
-    private final Map<Long, ReservationTime> reservationTimes = new ConcurrentHashMap<>();
-    private final AtomicLong id = new AtomicLong(1);
+    private final FakeReservationDb fakeReservationDb;
+    private final FakeReservationTimeDb fakeReservationTimeDb;
 
+    public FakeReservationTimeDao(FakeReservationDb fakeReservationDb,
+                                  FakeReservationTimeDb fakeReservationTimeDb) {
+        this.fakeReservationDb = fakeReservationDb;
+        this.fakeReservationTimeDb = fakeReservationTimeDb;
+    }
 
     @Override
     public List<ReservationTime> findAll() {
-        return reservationTimes.values()
-                .stream()
-                .toList();
+        return fakeReservationTimeDb.selectAll();
     }
 
     @Override
     public ReservationTime findById(long id) {
-        if (reservationTimes.containsKey(id)) {
-            return reservationTimes.get(id);
-        }
-        throw new EmptyResultDataAccessException(1);
+        return fakeReservationTimeDb.selectById(id);
     }
 
     @Override
     public long save(String startAt) {
-        long thisId = id.getAndIncrement();
-        reservationTimes.put(thisId, new ReservationTime(thisId, startAt));
-        return thisId;
+        return fakeReservationTimeDb.insert(startAt);
     }
 
     @Override
     public boolean deleteById(long id) {
-        boolean exists = reservationTimes.containsKey(id);
-        if (exists) {
-            reservationTimes.remove(id);
-        }
-        return exists;
+        boolean deleted = fakeReservationTimeDb.deleteById(id);
+        fakeReservationDb.deleteByTimeId(id);
+        return deleted;
     }
 }

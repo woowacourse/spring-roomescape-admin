@@ -19,7 +19,6 @@ public class ConsoleController {
         this.reservationTimeService = reservationTimeService;
     }
 
-
     public void run() {
         try {
             Command command = InputView.inputCommand();

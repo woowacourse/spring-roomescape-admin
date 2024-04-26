@@ -1,9 +1,11 @@
 package roomescape.reservationtime.service;
 
 import java.util.List;
+import java.util.NoSuchElementException;
 import org.springframework.stereotype.Service;
 import roomescape.reservationtime.controller.request.CreateReservationTimeRequest;
 import roomescape.reservationtime.controller.response.FindReservationTimeResponse;
+import roomescape.reservationtime.model.ReservationTime;
 import roomescape.reservationtime.repository.ReservationTimeRepository;
 
 @Service
@@ -21,7 +23,9 @@ public class ReservationTimeService {
     }
 
     public FindReservationTimeResponse getReservationTime(final Long id) {
-        return FindReservationTimeResponse.of(reservationTimeRepository.findById(id));
+        ReservationTime reservationTime = reservationTimeRepository.findById(id)
+                .orElseThrow(() -> new NoSuchElementException("해당하는 예약 시간이 존재하지 않습니다."));
+        return FindReservationTimeResponse.of(reservationTime);
     }
 
     public Long createReservationTime(final CreateReservationTimeRequest createReservationTimeRequest) {

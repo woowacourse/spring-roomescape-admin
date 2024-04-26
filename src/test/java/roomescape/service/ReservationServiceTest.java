@@ -5,9 +5,13 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import roomescape.dao.FakeReservationRepository;
+import roomescape.dao.FakeReservationTimeRepository;
 import roomescape.dao.ReservationRepository;
+import roomescape.dao.ReservationTimeRepository;
 import roomescape.domain.Reservation;
 import roomescape.domain.ReservationTime;
+import roomescape.dto.ReservationRequest;
+import roomescape.dto.ReservationResponse;
 
 import java.util.List;
 
@@ -16,14 +20,17 @@ import static org.junit.jupiter.api.Assertions.assertAll;
 
 class ReservationServiceTest {
     private ReservationRepository reservationRepository;
+    private ReservationTimeRepository reservationTimeRepository;
     private ReservationService reservationService;
     private ReservationTime reservationTime;
 
     @BeforeEach
     void setUp() {
         reservationRepository = new FakeReservationRepository();
-        reservationService = new ReservationService(reservationRepository);
-        reservationTime = new ReservationTime("10:00");
+        reservationTimeRepository = new FakeReservationTimeRepository();
+        reservationService = new ReservationService(reservationRepository, reservationTimeRepository);
+
+        reservationTime = reservationTimeRepository.save(new ReservationTime("10:00"));
     }
 
     @AfterEach
@@ -39,17 +46,18 @@ class ReservationServiceTest {
         //given
         String name = "lini";
         String date = "2024-10-04";
-        Reservation reservation = new Reservation(name, date, reservationTime);
+        ReservationRequest reservationRequest = new ReservationRequest(name, date, reservationTime.getId());
 
         //when
-        Reservation result = reservationService.create(reservation);
+        ReservationResponse result = reservationService.create(reservationRequest);
 
         //then
         assertAll(
-                () -> assertThat(result.getId()).isNotZero(),
-                () -> assertThat(result.getName()).isEqualTo(name),
-                () -> assertThat(result.getDate()).isEqualTo(date),
-                () -> assertThat(result.getTime()).isEqualTo(reservationTime.getStartAt())
+                () -> assertThat(result.id()).isNotZero(),
+                () -> assertThat(result.name()).isEqualTo(name),
+                () -> assertThat(result.date()).isEqualTo(date),
+                () -> assertThat(result.time().id()).isNotZero(),
+                () -> assertThat(result.time().startAt()).isEqualTo(reservationTime.getStartAt())
         );
     }
 
@@ -59,11 +67,11 @@ class ReservationServiceTest {
         //given
         String name = "lini";
         String date = "2024-10-04";
-        Reservation reservation = new Reservation(name, date, reservationTime);
-        reservationService.create(reservation);
+        ReservationRequest reservationRequest = new ReservationRequest(name, date, reservationTime.getId());
+        reservationService.create(reservationRequest);
 
         //when
-        List<Reservation> reservations = reservationService.findAll();
+        List<ReservationResponse> reservations = reservationService.findAll();
 
         //then
         assertThat(reservations).hasSize(1);
@@ -75,11 +83,11 @@ class ReservationServiceTest {
         //given
         String name = "lini";
         String date = "2024-10-04";
-        Reservation reservation = new Reservation(name, date, reservationTime);
-        Reservation result = reservationService.create(reservation);
+        ReservationRequest reservationRequest = new ReservationRequest(name, date, reservationTime.getId());
+        ReservationResponse target = reservationService.create(reservationRequest);
 
         //when
-        reservationService.deleteById(result.getId());
+        reservationService.deleteById(target.id());
 
         //then
         assertThat(reservationService.findAll()).hasSize(0);

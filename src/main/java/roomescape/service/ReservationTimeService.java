@@ -3,6 +3,8 @@ package roomescape.service;
 import org.springframework.stereotype.Service;
 import roomescape.dao.ReservationTimeRepository;
 import roomescape.domain.ReservationTime;
+import roomescape.dto.ReservationTimeRequest;
+import roomescape.dto.ReservationTimeResponse;
 import roomescape.exception.InvalidReservationException;
 
 import java.util.List;
@@ -15,12 +17,15 @@ public class ReservationTimeService {
         this.reservationTimeRepository = reservationTimeRepository;
     }
 
-    public ReservationTime create(final ReservationTime reservationTime) {
-        return reservationTimeRepository.save(reservationTime);
+    public ReservationTimeResponse create(final ReservationTimeRequest reservationTimeRequest) {
+        ReservationTime reservationTime = reservationTimeRepository.save(new ReservationTime(reservationTimeRequest.startAt()));
+        return new ReservationTimeResponse(reservationTime);
     }
 
-    public List<ReservationTime> findAll() {
-        return reservationTimeRepository.findAll();
+    public List<ReservationTimeResponse> findAll() {
+        return reservationTimeRepository.findAll().stream()
+                .map(ReservationTimeResponse::new)
+                .toList();
     }
 
     public void deleteById(final long id) {

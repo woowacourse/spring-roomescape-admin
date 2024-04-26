@@ -7,6 +7,8 @@ import org.junit.jupiter.api.Test;
 import roomescape.dao.FakeReservationTimeRepository;
 import roomescape.dao.ReservationTimeRepository;
 import roomescape.domain.ReservationTime;
+import roomescape.dto.ReservationTimeRequest;
+import roomescape.dto.ReservationTimeResponse;
 import roomescape.exception.InvalidReservationException;
 
 import java.util.List;
@@ -37,15 +39,15 @@ class ReservationTimeServiceTest {
     void create() {
         //given
         String startAt = "10:00";
-        ReservationTime reservationTime = new ReservationTime(startAt);
+        ReservationTimeRequest reservationTimeRequest = new ReservationTimeRequest(startAt);
 
         //when
-        ReservationTime result = reservationTimeService.create(reservationTime);
+        ReservationTimeResponse result = reservationTimeService.create(reservationTimeRequest);
 
         //then
         assertAll(
-                () -> assertThat(result.getId()).isNotZero(),
-                () -> assertThat(result.getStartAt()).isEqualTo(startAt)
+                () -> assertThat(result.id()).isNotZero(),
+                () -> assertThat(result.startAt()).isEqualTo(startAt)
         );
     }
 
@@ -54,11 +56,11 @@ class ReservationTimeServiceTest {
     void findAll() {
         //given
         String startAt = "10:00";
-        ReservationTime reservationTime = new ReservationTime(startAt);
-        reservationTimeService.create(reservationTime);
+        ReservationTimeRequest reservationTimeRequest = new ReservationTimeRequest(startAt);
+        reservationTimeService.create(reservationTimeRequest);
 
         //when
-        List<ReservationTime> reservationTimes = reservationTimeService.findAll();
+        List<ReservationTimeResponse> reservationTimes = reservationTimeService.findAll();
 
         //then
         assertThat(reservationTimes).hasSize(1);
@@ -69,15 +71,15 @@ class ReservationTimeServiceTest {
     void findById() {
         //given
         String startAt = "10:00";
-        ReservationTime reservationTime = new ReservationTime(startAt);
-        ReservationTime target = reservationTimeService.create(reservationTime);
+        ReservationTimeRequest reservationTimeRequest = new ReservationTimeRequest(startAt);
+        ReservationTimeResponse target = reservationTimeService.create(reservationTimeRequest);
 
         //when
-        ReservationTime result = reservationTimeService.findById(target.getId());
+        ReservationTime result = reservationTimeService.findById(target.id());
 
         //then
         assertAll(
-                () -> assertThat(result.getId()).isEqualTo(target.getId()),
+                () -> assertThat(result.getId()).isEqualTo(target.id()),
                 () -> assertThat(result.getStartAt()).isEqualTo(startAt)
         );
     }
@@ -99,11 +101,11 @@ class ReservationTimeServiceTest {
     void deleteById() {
         //given
         String startAt = "10:00";
-        ReservationTime reservationTime = new ReservationTime(startAt);
-        ReservationTime result = reservationTimeService.create(reservationTime);
+        ReservationTimeRequest reservationTimeRequest = new ReservationTimeRequest(startAt);
+        ReservationTimeResponse target = reservationTimeService.create(reservationTimeRequest);
 
         //when
-        reservationTimeService.deleteById(result.getId());
+        reservationTimeService.deleteById(target.id());
 
         //then
         assertThat(reservationTimeService.findAll()).hasSize(0);

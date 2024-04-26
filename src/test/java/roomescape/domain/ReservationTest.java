@@ -1,12 +1,14 @@
-package roomescape.entity;
+package roomescape.domain;
 
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
+import roomescape.exception.InvalidException;
 
 import java.time.LocalDate;
 import java.time.LocalTime;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.assertThatCode;
 
 class ReservationTest {
 
@@ -41,17 +43,36 @@ class ReservationTest {
                 2L,
                 "seyang",
                 LocalDate.of(2024, 4, 24),
-                reservationTime);
+                reservationTime
+        );
         Reservation expected = new Reservation(
                 2L,
                 "seyang",
                 LocalDate.of(2024, 4, 24),
-                reservationTime);
+                reservationTime
+        );
 
         // when
         Reservation actual = reservation.assignTime(reservationTime);
 
         // then
         assertThat(actual).isEqualTo(expected);
+    }
+
+    @Test
+    @DisplayName("빈 이름이 입력 될 경우 예외가 발생한다.")
+    void validateEmptyName() {
+        // given
+        assertThatCode(() -> new Reservation(
+                2L,
+                "",
+                LocalDate.of(2024, 4, 24),
+                new ReservationTime(1L, LocalTime.of(10, 0))
+        )).isInstanceOf(InvalidException.class)
+                .hasMessage("이름은 공백일 수 없습니다.");
+
+        // when
+
+        // then
     }
 }

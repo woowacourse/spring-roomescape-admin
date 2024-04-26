@@ -1,6 +1,6 @@
 package roomescape.controller.time;
 
-import roomescape.entity.ReservationTime;
+import roomescape.domain.ReservationTime;
 
 import java.time.LocalTime;
 

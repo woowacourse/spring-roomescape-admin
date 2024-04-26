@@ -1,7 +1,7 @@
 package roomescape.controller.reservation;
 
 import roomescape.controller.time.TimeResponse;
-import roomescape.entity.Reservation;
+import roomescape.domain.Reservation;
 
 import java.time.format.DateTimeFormatter;
 

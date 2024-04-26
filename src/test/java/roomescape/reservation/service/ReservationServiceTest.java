@@ -27,7 +27,7 @@ class ReservationServiceTest {
     @BeforeEach
     void setUp() {
         MockitoAnnotations.initMocks(this);
-        reservationService = new ReservationService(reservationTimeRepository, reservationRepository);
+        reservationService = new ReservationService(reservationRepository, reservationTimeRepository);
     }
 
     @Test

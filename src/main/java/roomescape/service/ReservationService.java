@@ -2,25 +2,26 @@ package roomescape.service;
 
 import java.util.List;
 import org.springframework.stereotype.Service;
-import roomescape.dao.ReservationDao;
-import roomescape.dao.ReservationTimeDao;
 import roomescape.domain.Reservation;
+import roomescape.domain.ReservationRepository;
 import roomescape.domain.ReservationTime;
+import roomescape.domain.ReservationTimeRepository;
 import roomescape.web.dto.ReservationRequest;
 import roomescape.web.dto.ReservationResponse;
 
 @Service
 public class ReservationService {
-    private final ReservationDao reservationDao;
-    private final ReservationTimeDao reservationTimeDao;
+    private final ReservationRepository reservationRepository;
+    private final ReservationTimeRepository reservationTimeRepository;
 
-    public ReservationService(ReservationDao reservationDao, ReservationTimeDao reservationTimeDao) {
-        this.reservationDao = reservationDao;
-        this.reservationTimeDao = reservationTimeDao;
+    public ReservationService(ReservationRepository reservationRepository,
+                              ReservationTimeRepository reservationTimeRepository) {
+        this.reservationRepository = reservationRepository;
+        this.reservationTimeRepository = reservationTimeRepository;
     }
 
     public List<ReservationResponse> findAllReservation() {
-        List<Reservation> reservations = reservationDao.findAll();
+        List<Reservation> reservations = reservationRepository.findAll();
         return reservations.stream()
                 .map(ReservationResponse::from)
                 .toList();
@@ -29,22 +30,22 @@ public class ReservationService {
     public ReservationResponse saveReservation(ReservationRequest request) {
         ReservationTime time = findReservationTimeById(request.timeId());
         Reservation reservation = request.toReservation(time);
-        reservationDao.save(reservation);
+        reservationRepository.save(reservation);
         return ReservationResponse.from(reservation);
     }
 
     public void deleteReservation(Long id) {
         Reservation reservation = findReservationById(id);
-        reservationDao.delete(reservation);
+        reservationRepository.delete(reservation);
     }
 
     private Reservation findReservationById(Long id) {
-        return reservationDao.findById(id)
+        return reservationRepository.findById(id)
                 .orElseThrow(() -> new IllegalArgumentException("존재하지 않는 예약입니다."));
     }
 
     private ReservationTime findReservationTimeById(Long id) {
-        return reservationTimeDao.findById(id)
+        return reservationTimeRepository.findById(id)
                 .orElseThrow(() -> new IllegalArgumentException("존재하지 않는 시간입니다."));
     }
 }

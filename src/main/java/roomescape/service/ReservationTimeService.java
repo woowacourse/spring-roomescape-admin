@@ -25,8 +25,7 @@ public class ReservationTimeService {
 
     public ReservationTimeResponse add(ReservationTimeCreateRequest request) {
         ReservationTime reservationTime = request.toDomain();
-        long id = reservationTimeDao.add(reservationTime);
-        ReservationTime result = reservationTimeDao.findById(id);
+        ReservationTime result = reservationTimeDao.add(reservationTime);
         return ReservationTimeResponse.from(result);
     }
 

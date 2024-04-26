@@ -45,27 +45,7 @@ public class ReservationDao {
         );
     }
 
-    public Reservation findById(long id) {
-        String sql = """
-                SELECT
-                    r.id AS reservation_id,
-                    r.name,
-                    r.`date`,
-                    t.id AS time_id,
-                    t.start_at AS time_value
-                FROM reservation r
-                    INNER JOIN reservation_time t
-                    ON r.time_id = t.id
-                WHERE r.id = ?
-                """;
-        return jdbcTemplate.queryForObject(
-                sql,
-                (resultSet, rowNum) -> getReservation(resultSet, getReservationTime(resultSet)),
-                id
-        );
-    }
-
-    public long add(Reservation reservation) {
+    public Reservation add(Reservation reservation) {
         String sql = """
                 INSERT
                 INTO reservation
@@ -78,7 +58,13 @@ public class ReservationDao {
                 connection -> getPreparedStatement(reservation, connection, sql),
                 keyHolder
         );
-        return Objects.requireNonNull(keyHolder.getKey()).longValue();
+        long id = Objects.requireNonNull(keyHolder.getKey()).longValue();
+        return new Reservation(
+                id,
+                reservation.getName(),
+                reservation.getDate(),
+                reservation.getReservationTime()
+        );
     }
 
     public Boolean exist(long id) {

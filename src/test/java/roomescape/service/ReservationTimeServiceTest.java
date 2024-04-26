@@ -39,6 +39,8 @@ class ReservationTimeServiceTest {
     void tearDown() {
         jdbcTemplate.update("DELETE FROM reservation");
         jdbcTemplate.update("DELETE FROM reservation_time");
+        jdbcTemplate.execute("ALTER TABLE reservation ALTER COLUMN id RESTART WITH 1");
+        jdbcTemplate.execute("ALTER TABLE reservation_time ALTER COLUMN id RESTART WITH 1");
     }
 
     @Test
@@ -51,6 +53,7 @@ class ReservationTimeServiceTest {
         //then
         assertAll(
                 () -> assertThat(results).hasSize(2),
+                () -> assertThat(firstResponse.getId()).isEqualTo(1),
                 () -> assertThat(firstResponse.getStartAt()).isEqualTo("12:02")
         );
     }
@@ -67,6 +70,7 @@ class ReservationTimeServiceTest {
 
         //then
         assertAll(
+                () -> assertThat(result.getId()).isEqualTo(3),
                 () -> assertThat(result.getStartAt()).isEqualTo(givenStartAt),
                 () -> assertThat(reservationTimeService.findAll()).hasSize(3)
         );
@@ -76,13 +80,18 @@ class ReservationTimeServiceTest {
     @DisplayName("예약 시간을 삭제한다.")
     void delete() {
         //given
-        long givenId = addAndGetId();
+        long givenId = 1L;
 
         //when
         reservationTimeService.delete(givenId);
+        List<ReservationTimeResponse> results = reservationTimeService.findAll();
+        ReservationTimeResponse secondResponse = results.get(0);
 
         //then
-        assertThat(reservationTimeService.findAll()).hasSize(2);
+        assertAll(
+                () -> assertThat(results).hasSize(1),
+                () -> assertThat(secondResponse.getId()).isEqualTo(2)
+        );
     }
 
     @Test
@@ -100,15 +109,10 @@ class ReservationTimeServiceTest {
     @DisplayName("예약 시간 삭제시 아이디가 존재하지 않는다면 예외가 발생한다.")
     void deleteNotExistId() {
         //given
-        long givenId = addAndGetId() + 1;
+        long givenId = 3L;
 
         //when //then
         assertThatThrownBy(() -> reservationTimeService.delete(givenId))
                 .isInstanceOf(IllegalArgumentException.class);
-    }
-
-    private long addAndGetId() {
-        ReservationTime reservationTime = new ReservationTime(null, ReservationStartAt.from("01:00"));
-        return reservationTimeDao.add(reservationTime);
     }
 }

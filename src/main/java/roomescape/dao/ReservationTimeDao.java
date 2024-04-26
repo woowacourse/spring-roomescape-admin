@@ -48,7 +48,7 @@ public class ReservationTimeDao {
         );
     }
 
-    public long add(ReservationTime reservationTime) {
+    public ReservationTime add(ReservationTime reservationTime) {
         String sql = """
                 INSERT
                 INTO reservation_time
@@ -61,7 +61,8 @@ public class ReservationTimeDao {
                 connection -> getPreparedStatement(reservationTime, connection, sql),
                 keyHolder
         );
-        return Objects.requireNonNull(keyHolder.getKey()).longValue();
+        long id = Objects.requireNonNull(keyHolder.getKey()).longValue();
+        return new ReservationTime(id, reservationTime.getStartAt());
     }
 
     public Boolean exist(long id) {

@@ -34,13 +34,11 @@ class ReservationServiceTest {
     private ReservationTimeDao reservationTimeDao;
     @Autowired
     private ReservationService reservationService;
-    private Long timeId;
-    private ReservationTime reservationTime;
 
     @BeforeEach
     void setUp() {
-        timeId = reservationTimeDao.add(new ReservationTime(null, ReservationStartAt.from("12:02")));
-        reservationTime = reservationTimeDao.findById(timeId);
+        ReservationTime given = new ReservationTime(null, ReservationStartAt.from("12:40"));
+        ReservationTime reservationTime = reservationTimeDao.add(given);
         Reservation daon = new Reservation(
                 null,
                 new ReservationName("daon"),
@@ -61,6 +59,8 @@ class ReservationServiceTest {
     void tearDown() {
         jdbcTemplate.update("DELETE FROM reservation");
         jdbcTemplate.update("DELETE FROM reservation_time");
+        jdbcTemplate.execute("ALTER TABLE reservation ALTER COLUMN id RESTART WITH 1");
+        jdbcTemplate.execute("ALTER TABLE reservation_time ALTER COLUMN id RESTART WITH 1");
     }
 
     @Test
@@ -73,6 +73,7 @@ class ReservationServiceTest {
         //then
         assertAll(
                 () -> assertThat(results).hasSize(2),
+                () -> assertThat(firstResponse.getId()).isEqualTo(1),
                 () -> assertThat(firstResponse.getName()).isEqualTo("daon")
         );
     }
@@ -83,13 +84,14 @@ class ReservationServiceTest {
         //given
         String givenName = "wooteco";
         String givenDate = "2024-04-23";
-        ReservationCreateRequest givenRequest = ReservationCreateRequest.of(givenName, givenDate, timeId);
+        ReservationCreateRequest givenRequest = ReservationCreateRequest.of(givenName, givenDate, 1L);
 
         //when
         ReservationResponse result = reservationService.add(givenRequest);
 
         //then
         assertAll(
+                () -> assertThat(result.getId()).isEqualTo(3),
                 () -> assertThat(result.getName()).isEqualTo(givenName),
                 () -> assertThat(result.getDate()).isEqualTo(givenDate),
                 () -> assertThat(reservationService.findAll()).hasSize(3)
@@ -114,13 +116,18 @@ class ReservationServiceTest {
     @DisplayName("예약을 삭제한다.")
     void delete() {
         //given
-        long givenId = addAndGetId();
+        long givenId = 1L;
 
         //when
         reservationService.delete(givenId);
+        List<ReservationResponse> results = reservationService.findAll();
+        ReservationResponse secondResponse = results.get(0);
 
         //then
-        assertThat(reservationService.findAll()).hasSize(2);
+        assertAll(
+                () -> assertThat(results).hasSize(1),
+                () -> assertThat(secondResponse.getId()).isEqualTo(2)
+        );
     }
 
     @Test
@@ -138,20 +145,10 @@ class ReservationServiceTest {
     @DisplayName("예약 삭제시 아이디가 존재하지 않는다면 예외가 발생한다.")
     void deleteNotExistId() {
         //given
-        long givenId = addAndGetId() + 1;
+        long givenId = 3L;
 
         //when //then
         assertThatThrownBy(() -> reservationService.delete(givenId))
                 .isInstanceOf(IllegalArgumentException.class);
-    }
-
-    private long addAndGetId() {
-        Reservation reservation = new Reservation(
-                null,
-                new ReservationName("33"),
-                ReservationDate.from("1999-09-19"),
-                reservationTime
-        );
-        return reservationDao.add(reservation);
     }
 }

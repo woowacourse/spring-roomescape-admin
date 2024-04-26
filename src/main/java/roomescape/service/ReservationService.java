@@ -31,8 +31,7 @@ public class ReservationService {
         validateNotExistReservationTime(request.getTimeId());
         ReservationTime reservationTime = reservationTimeDao.findById(request.getTimeId());
         Reservation reservation = request.toDomain(reservationTime);
-        long id = reservationDao.add(reservation);
-        Reservation result = reservationDao.findById(id);
+        Reservation result = reservationDao.add(reservation);
         return ReservationResponse.from(result);
     }
 

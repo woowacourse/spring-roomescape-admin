@@ -3,7 +3,6 @@ package roomescape.repository.reservationtime;
 import java.time.LocalTime;
 import java.util.List;
 import javax.sql.DataSource;
-import org.springframework.context.annotation.Primary;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.namedparam.BeanPropertySqlParameterSource;
 import org.springframework.jdbc.core.namedparam.SqlParameterSource;
@@ -12,7 +11,6 @@ import org.springframework.stereotype.Repository;
 import roomescape.domain.ReservationTime;
 
 @Repository
-@Primary
 public class ReservationTimeH2Repository implements ReservationTimeRepository {
 
     private final JdbcTemplate jdbcTemplate;

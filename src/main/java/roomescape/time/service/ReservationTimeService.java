@@ -2,7 +2,6 @@ package roomescape.time.service;
 
 import org.springframework.dao.DataAccessException;
 import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
 import roomescape.reservation.dto.ResponseCode;
 import roomescape.time.dao.ReservationTimeDao;
 import roomescape.time.domain.ReservationTime;
@@ -12,7 +11,6 @@ import roomescape.time.dto.ReservationTimeResponseDto;
 import java.util.List;
 
 @Service
-@Transactional(readOnly = true)
 public class ReservationTimeService {
 
     private final ReservationTimeDao reservationTimeDao;
@@ -28,14 +26,12 @@ public class ReservationTimeService {
                                .toList();
     }
 
-    @Transactional
     public ReservationTimeResponseDto save(final ReservationTimeRequestDto requestDto) {
         final long id = reservationTimeDao.save(requestDto.toReservationTime());
         final ReservationTime reservationTime = reservationTimeDao.findById(id);
         return new ReservationTimeResponseDto(id, reservationTime.startAt().toString());
     }
 
-    @Transactional
     public ResponseCode deleteById(final long id) {
         try {
             if (reservationTimeDao.deleteById(id) > 0) {

@@ -8,6 +8,7 @@ import org.springframework.jdbc.core.namedparam.SqlParameterSource;
 import org.springframework.jdbc.core.simple.SimpleJdbcInsert;
 import org.springframework.stereotype.Component;
 import roomescape.domain.Reservation;
+import roomescape.domain.ReservationId;
 import roomescape.domain.ReservationTime;
 
 import java.util.List;
@@ -40,12 +41,13 @@ public class ReservationDao {
         return reservation;
     };
 
-    public long create(Reservation reservation) {
+    public ReservationId create(Reservation reservation) {
         SqlParameterSource params = new MapSqlParameterSource()
                 .addValue("name", reservation.getName())
                 .addValue("date", reservation.getDate())
                 .addValue("time_id", reservation.getTime().getId());
-        return jdbcInsert.executeAndReturnKey(params).longValue();
+        long createdId = jdbcInsert.executeAndReturnKey(params).longValue();
+        return new ReservationId(createdId);
     }
 
     public Optional<Reservation> findAnyByTimeId(long timeId) {

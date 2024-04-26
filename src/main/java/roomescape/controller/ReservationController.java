@@ -46,6 +46,6 @@ public class ReservationController {
     @DeleteMapping("/reservations/{id}")
     public ResponseEntity<Void> deleteReservation(@PathVariable("id") Long reservationId) {
         reservationDao.delete(reservationId);
-        return ResponseEntity.noContent().build();
+        return ResponseEntity.ok().build();
     }
 }

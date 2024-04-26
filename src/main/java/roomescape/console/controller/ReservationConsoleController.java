@@ -34,6 +34,7 @@ public class ReservationConsoleController implements ConsoleController {
 
     public void deleteReservation(Long id) {
         reservationService.deleteReservation(id);
+        outputView.outputDeleteReservation();
     }
 
 

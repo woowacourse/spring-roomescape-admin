@@ -9,6 +9,7 @@ import roomescape.repository.ReservationRepository;
 
 @Service
 public class ReservationService {
+    public static final int ONE_ROW = 1;
     private final ReservationRepository reservationRepository;
 
     public ReservationService(ReservationRepository reservationRepository) {
@@ -29,6 +30,6 @@ public class ReservationService {
     }
 
     public boolean deleteReservation(Long id) {
-        return id.equals(reservationRepository.deleteReservation(id));
+        return reservationRepository.deleteReservation(id) == ONE_ROW;
     }
 }

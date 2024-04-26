@@ -62,8 +62,8 @@ public class ReservationRepository {
         return jdbcTemplate.queryForObject(sql, actorRowMapper, id);
     }
 
-    public Long deleteReservation(Long id) {
+    public int deleteReservation(Long id) {
         String sql = "delete from reservation where id = ?";
-        return (long) jdbcTemplate.update(sql, id);
+        return jdbcTemplate.update(sql, id);
     }
 }

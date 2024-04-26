@@ -40,8 +40,8 @@ public class ReservationTimeRepository {
         return jdbcTemplate.query(sql, actorRowMapper);
     }
 
-    public Long deleteTime(Long id) {
+    public int deleteTime(Long id) {
         String sql = "delete from reservation_time where id = ?";
-        return (long) jdbcTemplate.update(sql, id);
+        return jdbcTemplate.update(sql, id);
     }
 }

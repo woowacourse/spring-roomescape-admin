@@ -32,7 +32,7 @@ public class MockClockExtension implements BeforeEachCallback {
         return date;
     }
 
-    private static Clock fixClock(String date) {
+    private Clock fixClock(String date) {
         return Clock.fixed(Instant.parse(date + "T00:00:00Z"), ZoneId.of("UTC"));
     }
 }

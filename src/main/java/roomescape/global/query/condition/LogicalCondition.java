@@ -41,7 +41,7 @@ public class LogicalCondition implements Assemblable {
         }
     }
 
-    enum Operator {
+    private enum Operator {
         AND(" AND "),
         OR(" OR ");
 

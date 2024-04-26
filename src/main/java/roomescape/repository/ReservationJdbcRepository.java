@@ -14,8 +14,8 @@ public class ReservationJdbcRepository implements ReservationRepository {
     }
 
     @Override
-    public Reservation saveReservation(Reservation reservation) {
-        return reservationDao.save(reservation);
+    public void saveReservation(Reservation reservation) {
+        reservationDao.save(reservation);
     }
 
     @Override

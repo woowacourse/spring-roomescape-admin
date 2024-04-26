@@ -22,8 +22,8 @@ public class ReservationService {
     @Transactional
     public ReservationResponse addReservation(ReservationRequest reservationRequest) {
         Reservation reservation = fromRequest(reservationRequest);
-        Reservation savedReservation = reservationRepository.saveReservation(reservation);
-        return toResponse(savedReservation);
+        reservationRepository.saveReservation(reservation);
+        return toResponse(reservation);
     }
 
     public List<ReservationResponse> findReservations() {

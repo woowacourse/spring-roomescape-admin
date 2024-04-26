@@ -22,16 +22,15 @@ public class ReservationDao implements ReservationDaoImpl {
     }
 
     @Override
-    public Reservation save(Reservation reservation) {
+    public void save(Reservation reservation) {
         SqlParameterSource sqlParameterSource = new BeanPropertySqlParameterSource(reservation);
         long id = jdbcInsert.executeAndReturnKey(sqlParameterSource).longValue();
         reservation.setId(id);
-        return reservation;
     }
 
     @Override
     public List<Reservation> findAll() {
-        String findAllReservationSql = "select id, name, `date`, `time` from reservation";
+        String findAllReservationSql = "SELECT id, name, `date`, `time` FROM reservation ORDER BY `date` ASC , `time` ASC ";
 
         return jdbcTemplate.query(
                 findAllReservationSql, (resultSet, rowNum) -> new Reservation(
@@ -44,7 +43,7 @@ public class ReservationDao implements ReservationDaoImpl {
 
     @Override
     public void deleteById(long reservationId) {
-        String saveReservationSql = "DELETE FROM reservation WHERE id = ?";
-        jdbcTemplate.update(saveReservationSql, reservationId);
+        String deleteReservationSql = "DELETE FROM reservation WHERE id = ?";
+        jdbcTemplate.update(deleteReservationSql, reservationId);
     }
 }

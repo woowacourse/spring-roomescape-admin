@@ -5,7 +5,7 @@ import roomescape.domain.Reservation;
 
 public interface ReservationDaoImpl {
 
-    Reservation save(Reservation reservation);
+    void save(Reservation reservation);
 
     List<Reservation> findAll();
 

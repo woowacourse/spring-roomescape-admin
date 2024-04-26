@@ -26,9 +26,9 @@ class ReservationDaoTest {
     @DisplayName("데이터들이 잘 저장되는지 확인.")
     void saveReservation() {
         Reservation reservation = new Reservation("범블비", LocalDateTime.now());
-        Reservation savedReservation = reservationDao.save(reservation);
+        reservationDao.save(reservation);
 
-        Assertions.assertThat(savedReservation).isNotNull();
+        Assertions.assertThat(reservation).isNotNull();
     }
 
     @Test

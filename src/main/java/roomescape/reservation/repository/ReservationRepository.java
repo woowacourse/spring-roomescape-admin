@@ -19,7 +19,7 @@ public class ReservationRepository {
     }
 
     public Long save(Reservation reservation) {
-        String sql = "insert into reservation (name, date, time_id) values (?,?,?)";
+        String sql = "insert into reservation (name, date, time_id) values (?, ?, ?)";
         KeyHolder keyHolder = new GeneratedKeyHolder();
 
         jdbcTemplate.update(con -> {

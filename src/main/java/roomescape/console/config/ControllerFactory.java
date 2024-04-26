@@ -27,7 +27,7 @@ public class ControllerFactory {
         );
 
         mainConsoleController = new MainConsoleController(
-                InputView.getInstance(), createMapper()
+                InputView.getInstance(),OutputView.getInstance(), createMapper()
         );
     }
 

@@ -43,6 +43,9 @@ public class OutputView {
         System.out.printf("%d번 예약이 성공적으로 삭제되었습니다.\n", id);
     }
 
+    public void outputExit() {
+        System.out.println("===============예약 프로그램이 종료되었습니다.===============");
+    }
     public static void printError(String message) {
         System.out.println("[ERROR] " + message);
     }

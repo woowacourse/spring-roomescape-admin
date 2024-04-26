@@ -1,7 +1,5 @@
 package roomescape.controller;
 
-import static org.hamcrest.Matchers.is;
-
 import io.restassured.RestAssured;
 
 import org.junit.jupiter.api.BeforeEach;
@@ -37,11 +35,14 @@ class AdminControllerTest {
                 .when().get("/admin/reservation")
                 .then().log().all()
                 .statusCode(200);
+    }
 
+    @DisplayName("시간 화면 조회")
+    @Test
+    void time() {
         RestAssured.given().log().all()
-                .when().get("/reservations")
+                .when().get("/admin/time")
                 .then().log().all()
-                .statusCode(200)
-                .body("size()", is(0));
+                .statusCode(200);
     }
 }

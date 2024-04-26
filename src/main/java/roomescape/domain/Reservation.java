@@ -22,10 +22,6 @@ public class Reservation {
         this(null, name, date, time);
     }
 
-    public static Reservation of(Long id, Reservation reservation) {
-        return new Reservation(id, reservation.name, reservation.date, reservation.time);
-    }
-
     public Long id() {
         return id;
     }

@@ -24,7 +24,7 @@ class ReservationTimeH2RepositoryTest {
     @BeforeEach
     void init() {
         reservationTime = reservationTimeH2Repository.save(
-                new ReservationTime(null, LocalTime.of(12, 0))
+                new ReservationTime(LocalTime.of(12, 0))
         );
     }
 
@@ -49,8 +49,8 @@ class ReservationTimeH2RepositoryTest {
     @Test
     @DisplayName("모든 ReservationTime을 찾는다.")
     void findAll() {
-        reservationTimeH2Repository.save(new ReservationTime(null, LocalTime.of(12, 0)));
-        reservationTimeH2Repository.save(new ReservationTime(null, LocalTime.of(11, 0)));
+        reservationTimeH2Repository.save(new ReservationTime(LocalTime.of(12, 0)));
+        reservationTimeH2Repository.save(new ReservationTime(LocalTime.of(11, 0)));
 
         List<ReservationTime> found = reservationTimeH2Repository.findAll();
 

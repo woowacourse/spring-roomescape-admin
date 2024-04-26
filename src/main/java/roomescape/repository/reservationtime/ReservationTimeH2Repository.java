@@ -30,7 +30,7 @@ public class ReservationTimeH2Repository implements ReservationTimeRepository {
         SqlParameterSource params = new BeanPropertySqlParameterSource(reservationTime);
         long id = jdbcInsert.executeAndReturnKey(params).longValue();
 
-        return ReservationTime.of(id, reservationTime);
+        return new ReservationTime(id, reservationTime.startAt());
     }
 
     @Override

@@ -14,12 +14,14 @@ public class ReservationTime {
         this.startAt = startAt;
     }
 
-    public static ReservationTime from(Long id) {
-        return new ReservationTime(id, null);
+    public ReservationTime(Long id) {
+        this.id = id;
+        this.startAt = null;
     }
 
-    public static ReservationTime of(Long id, ReservationTime reservationTime) {
-        return new ReservationTime(id, reservationTime.startAt);
+    public ReservationTime(LocalTime startAt) {
+        this.id = null;
+        this.startAt = startAt;
     }
 
     public Long id() {

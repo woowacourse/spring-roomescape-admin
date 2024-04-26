@@ -37,7 +37,7 @@ public class ReservationH2Repository implements ReservationRepository {
                 .addValue("time_id", timeId);
         Long id = jdbcInsert.executeAndReturnKey(params).longValue();
 
-        return Reservation.of(id, reservation);
+        return new Reservation(id, reservation.name(), reservation.date(), reservation.time());
     }
 
     @Override

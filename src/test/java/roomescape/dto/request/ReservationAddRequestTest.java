@@ -17,7 +17,7 @@ class ReservationAddRequestTest {
         LocalDate date = LocalDate.parse("2024-04-01");
         Long timeId = 1L;
         ReservationAddRequest reservationAddRequest = new ReservationAddRequest(name, date, timeId);
-        Reservation expected = new Reservation(null, name, date, ReservationTime.from(timeId));
+        Reservation expected = new Reservation(name, date, new ReservationTime(timeId));
 
         Reservation reservation = reservationAddRequest.toReservation();
 

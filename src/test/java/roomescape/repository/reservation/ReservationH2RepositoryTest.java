@@ -28,7 +28,7 @@ class ReservationH2RepositoryTest {
     @BeforeEach
     void init() {
         ReservationTime reservationTime = reservationTimeH2Repository.save(
-                new ReservationTime(null, LocalTime.of(12, 0))
+                new ReservationTime(LocalTime.of(12, 0))
         );
         reservation = reservationH2Repository.save(new Reservation(
                         "브라운",

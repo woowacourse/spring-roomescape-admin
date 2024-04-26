@@ -14,7 +14,7 @@ class ReservationTimeAddRequestTest {
     void toReservationTime() {
         LocalTime time = LocalTime.parse("10:00");
         ReservationTimeAddRequest reservationTimeAddRequest = new ReservationTimeAddRequest(time);
-        ReservationTime expected = new ReservationTime(null, time);
+        ReservationTime expected = new ReservationTime(time);
 
         ReservationTime reservationTime = reservationTimeAddRequest.toReservationTime();
 

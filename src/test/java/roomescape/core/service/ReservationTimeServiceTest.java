@@ -17,7 +17,6 @@ import roomescape.core.domain.ReservationTime;
 import roomescape.web.repository.JdbcReservationRepository;
 import roomescape.web.repository.JdbcReservationTimeRepository;
 
-@EnableAutoConfiguration
 @SpringBootTest(webEnvironment = WebEnvironment.NONE)
 class ReservationTimeServiceTest {
 

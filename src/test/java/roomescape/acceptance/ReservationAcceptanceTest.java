@@ -3,8 +3,6 @@ package roomescape.acceptance;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.hamcrest.Matchers.is;
 import static org.junit.jupiter.api.DynamicTest.dynamicTest;
-import static org.mockito.Mockito.when;
-import static roomescape.fixture.ClockFixture.fixedClock;
 
 import java.time.Clock;
 import java.time.LocalDate;
@@ -16,6 +14,7 @@ import org.junit.jupiter.api.DynamicNode;
 import org.junit.jupiter.api.DynamicTest;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.TestFactory;
+import org.junit.jupiter.api.extension.ExtendWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.mock.mockito.SpyBean;
 import org.springframework.jdbc.core.JdbcTemplate;
@@ -23,8 +22,12 @@ import org.springframework.test.context.jdbc.Sql;
 import roomescape.dto.reservation.ReservationResponse;
 import roomescape.support.AcceptanceTest;
 import roomescape.support.SimpleRestAssured;
+import roomescape.support.annotation.FixedClock;
+import roomescape.support.extension.MockClockExtension;
 
 @Sql("/init.sql")
+@ExtendWith(MockClockExtension.class)
+@FixedClock(date = "2023-08-04")
 class ReservationAcceptanceTest extends AcceptanceTest {
     private static final String PATH = "/reservations";
     private static final Map<String, Object> BODY = Map.of(
@@ -54,7 +57,6 @@ class ReservationAcceptanceTest extends AcceptanceTest {
     List<DynamicTest> step3() {
         return Arrays.asList(
                 dynamicTest("예약을 등록한다.", () -> {
-                    mockClock();
                     SimpleRestAssured.post(PATH, BODY)
                             .statusCode(201)
                             .body("id", is(1));
@@ -79,7 +81,6 @@ class ReservationAcceptanceTest extends AcceptanceTest {
     @DisplayName("[5단계 - 데이터 조회하기] 데이터 삽입 후 조회 API와 쿼리 결과를 비교한다")
     @Test
     void step5() {
-        mockClock();
         LocalDate date = LocalDate.of(2023, 8, 5);
         jdbcTemplate.update("INSERT INTO reservation (name, date, time_id) VALUES (?, ?, ?)", "브라운", date, 1L);
 
@@ -96,7 +97,6 @@ class ReservationAcceptanceTest extends AcceptanceTest {
     List<DynamicTest> step6() {
         return Arrays.asList(
                 dynamicTest("예약 등록 후 쿼리로 개수를 조회한다", () -> {
-                    mockClock();
                     SimpleRestAssured.post(PATH, BODY)
                             .statusCode(201)
                             .header("Location", "/reservations/1");
@@ -117,7 +117,6 @@ class ReservationAcceptanceTest extends AcceptanceTest {
     List<DynamicTest> step8() {
         return Arrays.asList(
                 dynamicTest("예약을 등록한다.", () -> {
-                    mockClock();
                     SimpleRestAssured.post(PATH, BODY)
                             .statusCode(201);
                 }),
@@ -127,10 +126,6 @@ class ReservationAcceptanceTest extends AcceptanceTest {
                             .body("size()", is(1));
                 })
         );
-    }
-
-    private void mockClock() {
-        when(clock.instant()).thenReturn(fixedClock(LocalDate.of(2023, 8, 4)).instant());
     }
 
     private Integer executeCountQuery() {

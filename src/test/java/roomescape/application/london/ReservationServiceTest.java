@@ -6,11 +6,12 @@ import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyLong;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
-import static roomescape.fixture.ClockFixture.fixedClock;
 
 import java.time.Clock;
+import java.time.Instant;
 import java.time.LocalDate;
 import java.time.LocalTime;
+import java.time.ZoneId;
 import java.util.Optional;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -32,7 +33,7 @@ class ReservationServiceTest {
     @InjectMocks
     private ReservationService reservationService;
     @Spy
-    private Clock clock = Clock.systemDefaultZone();
+    private Clock clock = Clock.fixed(Instant.parse("2024-04-20T00:00:00Z"), ZoneId.of("UTC"));
     @Mock
     private ReservationTimeService reservationTimeService;
     @Mock
@@ -41,7 +42,6 @@ class ReservationServiceTest {
     @Test
     void 예약을_성공한다() {
         LocalDate date = LocalDate.of(2024, 4, 21);
-        when(clock.instant()).thenReturn(fixedClock(LocalDate.of(2024, 4, 20)).instant());
         when(reservationTimeService.findReservationTime(anyLong())).thenReturn(time);
         when(reservationRepository.existsByReservationDateTime(any(), anyLong())).thenReturn(false);
         when(reservationRepository.save(any())).thenReturn(new Reservation(1L, "prin", date, time));
@@ -55,7 +55,6 @@ class ReservationServiceTest {
 
     @Test
     void 최소_1일_전에_예약하지_않으면_예약을_실패한다() {
-        when(clock.instant()).thenReturn(fixedClock(LocalDate.of(2024, 4, 20)).instant());
         when(reservationTimeService.findReservationTime(anyLong())).thenReturn(time);
         LocalDate invalidDate = LocalDate.of(2024, 4, 20);
         ReservationRequest reservationRequest = new ReservationRequest("liv", invalidDate, 1L);
@@ -67,7 +66,6 @@ class ReservationServiceTest {
 
     @Test
     void 중복된_예약이_있으면_예약을_실패한다() {
-        when(clock.instant()).thenReturn(fixedClock(LocalDate.of(2024, 4, 20)).instant());
         when(reservationTimeService.findReservationTime(anyLong())).thenReturn(time);
         when(reservationRepository.existsByReservationDateTime(any(), anyLong())).thenReturn(true);
         ReservationRequest reservationRequest = new ReservationRequest("sudal", LocalDate.of(2024, 4, 21), 1L);

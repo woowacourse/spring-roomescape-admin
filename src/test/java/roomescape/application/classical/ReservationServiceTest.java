@@ -2,8 +2,6 @@ package roomescape.application.classical;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
-import static org.mockito.Mockito.when;
-import static roomescape.fixture.ClockFixture.fixedClock;
 
 import java.time.Clock;
 import java.time.LocalDate;
@@ -19,10 +17,13 @@ import roomescape.domain.reservation.Reservation;
 import roomescape.domain.time.ReservationTime;
 import roomescape.domain.time.repository.ReservationTimeRepository;
 import roomescape.dto.reservation.ReservationRequest;
+import roomescape.support.annotation.FixedClock;
+import roomescape.support.extension.MockClockExtension;
 import roomescape.support.extension.TableTruncateExtension;
 
 @SpringBootTest
-@ExtendWith(TableTruncateExtension.class)
+@ExtendWith({TableTruncateExtension.class, MockClockExtension.class})
+@FixedClock(date = "2024-04-20")
 public class ReservationServiceTest {
     private final ReservationTime time = new ReservationTime(1L, LocalTime.of(10, 0));
 
@@ -36,8 +37,6 @@ public class ReservationServiceTest {
     @BeforeEach
     void setUp() {
         reservationTimeRepository.save(time);
-        when(clock.instant()).thenReturn(fixedClock(LocalDate.of(2024, 4, 20)).instant());
-
     }
 
     @Test

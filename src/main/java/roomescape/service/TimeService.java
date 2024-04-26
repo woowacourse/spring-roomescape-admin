@@ -23,8 +23,7 @@ public class TimeService {
     }
 
     public ReservationTime createTime(TimeCreateRequest dto) {
-        long id = timeDao.createTime(dto.startAt());
-        return timeDao.readTimeById(id);
+        return timeDao.createTime(dto.startAt());
     }
 
     public boolean deleteTime(long id) {

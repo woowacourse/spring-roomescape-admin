@@ -40,7 +40,7 @@ class ReservationTimeControllerTest {
                 .then().log().all().statusCode(200).body("id", is(greaterThan(0)));
     }
 
-    @DisplayName("시간 추가 실패 테스트")
+    @DisplayName("시간 추가 실패 테스트 - 시간 오류")
     @Test
     void createInvalidScheduleDateReservation() {
         //given
@@ -52,7 +52,7 @@ class ReservationTimeControllerTest {
                 .body(new ReservationTimeRequest(invalidTime))
                 .when().post("/times")
                 .then().log().all()
-                .assertThat().statusCode(400).body(is("올바르지 않은 시간입니다. time: '" + invalidTime + "'"));
+                .assertThat().statusCode(400).body("message", is("올바르지 않은 시간입니다. time: '" + invalidTime + "'"));
     }
 
     @DisplayName("등록된 시간 내역을 조회한다.")

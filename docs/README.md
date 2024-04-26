@@ -1,10 +1,8 @@
 ## 리팩토링 목록
-- [x] 공통 상위 url 별로 컨트롤러 나누기
-- [x] 서비스 레이어 분리
-- [x] repository로 atomic 등 이동
-- [x] response도 dto로 변환해서 보내기 (Q. 변환하는게 왜 좋지?)
-- [x] 공통되는 url requestMapping으로 빼기 (Q. 이렇게 쓰는 게 맞나?)
-- [x] repository의 db 경우 고려 interface 분리 
-- [x] 시간 출력 방식 요구사항에 맞게 수정
+- [x] 테스트 기능별 리팩토링
+- [x] ReservationTime response 만들기
+- [ ] findById 만약 찾을 수 없는 아이디면?
+- [ ] 시간 관리 페이지에서 초 단위 뜨는 오류 수정
 - [ ] TODO 제거
-- [ ] service, domain 테스트
+- [ ] 주석체크
+- [ ] ReservationTime  @JsonFormat(pattern = "HH:mm") // TODO: 여기 붙이면 언제 format이 되는거지?

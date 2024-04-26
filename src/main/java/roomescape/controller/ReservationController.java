@@ -1,6 +1,5 @@
 package roomescape.controller;
 
-import java.net.URI;
 import java.util.List;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -12,15 +11,19 @@ import org.springframework.web.bind.annotation.RestController;
 import roomescape.dao.ReservationDao;
 import roomescape.controller.dto.request.ReservationCreateRequest;
 import roomescape.controller.dto.response.ReservationResponse;
+import roomescape.dao.ReservationTimeDao;
 import roomescape.domain.Reservation;
+import roomescape.domain.ReservationTime;
 
 @RestController
 public class ReservationController {
 
     private final ReservationDao reservationDao;
+    private final ReservationTimeDao reservationTimeDao;
 
-    public ReservationController(ReservationDao reservationDao) {
+    public ReservationController(ReservationDao reservationDao, ReservationTimeDao reservationTimeDao) {
         this.reservationDao = reservationDao;
+        this.reservationTimeDao = reservationTimeDao;
     }
 
     @GetMapping("/reservations")
@@ -33,9 +36,10 @@ public class ReservationController {
 
     @PostMapping("/reservations")
     public ResponseEntity<Void> createReservation(@RequestBody ReservationCreateRequest reservationCreateRequest) {
-        Reservation reservation = reservationCreateRequest.toReservation();
-        Long savedId = reservationDao.save(reservation);  //TODO 엔티티 반환
-        return ResponseEntity.created(URI.create("/reservations/" + savedId)).build();
+        ReservationTime reservationTime = reservationTimeDao.findById(reservationCreateRequest.timeId());
+        Reservation reservation = reservationCreateRequest.toReservation(reservationTime);
+        reservationDao.save(reservation);  //TODO 엔티티 반환
+        return ResponseEntity.ok().build();
     }
 
     @DeleteMapping("/reservations/{id}")

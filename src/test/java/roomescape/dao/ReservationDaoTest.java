@@ -21,15 +21,18 @@ class ReservationDaoTest {
     @Autowired
     private ReservationDao reservationDao;
 
+    private final Reservation reservation = createTestReservation();
+
     @Test
     void save() {
-        Long savedId = reservationDao.save(createTestReservation());
+        Long savedId = reservationDao.save(reservation);
         assertThat(savedId).isEqualTo(1);
     }
 
     @Test
     void findAll() {
-        reservationDao.save(createTestReservation());
+        reservationDao.save(reservation);
+
         List<Reservation> reservations = reservationDao.findAll();
 
         assertThat(reservations).size().isEqualTo(1);
@@ -37,7 +40,8 @@ class ReservationDaoTest {
 
     @Test
     void delete() {
-        Long savedId = reservationDao.save(createTestReservation());
+        Long savedId = reservationDao.save(reservation);
+
         reservationDao.delete(savedId);
 
         assertThat(reservationDao.findAll()).isEmpty();

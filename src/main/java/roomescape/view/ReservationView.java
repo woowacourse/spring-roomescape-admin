@@ -27,11 +27,11 @@ public class ReservationView {
         System.out.println("[INFO] 예약이 추가되었습니다.");
     }
 
-    public int readIndexToDelete(final List<ReservationResponse> reservationResponses) {
+    public long readIndexToDelete(final List<ReservationResponse> reservationResponses) {
         System.out.println("[INFO] 삭제할 방탈출 예약 번호를 선택해주세요.");
         printReservations(reservationResponses);
         try {
-            return Integer.parseInt(scanner.nextLine());
+            return Long.parseLong(scanner.nextLine());
         } catch (NumberFormatException exception) {
             throw new IllegalArgumentException("[ERROR] 올바르지 않은 예약 번호 입력입니다.");
         }
@@ -42,21 +42,17 @@ public class ReservationView {
     }
 
     public void printReservations(final List<ReservationResponse> reservations) {
-        if (reservations.isEmpty()) {
-            System.out.println("[INFO] 방탈출 예약 목록이 없습니다.");
-            return;
-        }
         System.out.println("[INFO] 방탈출 예약 목록입니다.");
         System.out.println("번호  이름    날짜      시간");
-        for (int index = 0; index < reservations.size(); index++) {
-            printReservation(index + 1, reservations.get(index));
+        for (ReservationResponse reservationResponse : reservations) {
+            printReservation(reservationResponse.id(), reservationResponse);
         }
     }
 
-    private void printReservation(final int index, final ReservationResponse reservationResponse) {
+    private void printReservation(final long id, final ReservationResponse reservationResponse) {
         System.out.printf(
                 "%d.  %s  %s  %s%n",
-                index,
+                id,
                 reservationResponse.name(),
                 reservationResponse.date().toString(),
                 reservationResponse.time().startAt().toString()

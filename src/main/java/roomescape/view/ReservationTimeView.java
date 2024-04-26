@@ -27,17 +27,17 @@ public class ReservationTimeView {
         System.out.println("[INFO] 예약 가능 시간이 추가되었습니다.");
     }
 
-    public static int readIndexToDelete(final List<ReservationTimeResponse> reservationTimeResponses) {
+    public static long readIndexToDelete(final List<ReservationTimeResponse> reservationTimeResponses) {
         System.out.println("[INFO] 삭제할 방탈출 예약 가능 시간의 번호를 선택해주세요.");
         return readIndex(reservationTimeResponses);
     }
 
-    public static int readIndexToReserve(final List<ReservationTimeResponse> reservationTimeResponses) {
+    public static long readIndexToReserve(final List<ReservationTimeResponse> reservationTimeResponses) {
         System.out.println("[INFO] 방탈출 예약 가능 시간의 번호를 선택해주세요.");
         return readIndex(reservationTimeResponses);
     }
 
-    private static int readIndex(final List<ReservationTimeResponse> reservationTimeResponses) {
+    private static long readIndex(final List<ReservationTimeResponse> reservationTimeResponses) {
         printReservationTimes(reservationTimeResponses);
         try {
             return Integer.parseInt(SCANNER.nextLine());
@@ -51,18 +51,15 @@ public class ReservationTimeView {
     }
 
     public static void printReservationTimes(final List<ReservationTimeResponse> reservationTimeResponses) {
-        if (reservationTimeResponses.isEmpty()) {
-            System.out.println("[INFO] 방탈출 예약이 가능한 시간이 없습니다.");
-            return;
-        }
         System.out.println("[INFO] 방탈출 예약이 가능한 시간의 목록입니다.");
-        for (int index = 0; index < reservationTimeResponses.size(); index++) {
-            printReservationTime(index + 1, reservationTimeResponses.get(index));
+        System.out.println("번호  시작 시간");
+        for (ReservationTimeResponse reservationTimeResponse : reservationTimeResponses) {
+            printReservationTime(reservationTimeResponse.id(), reservationTimeResponse);
         }
     }
 
-    private static void printReservationTime(final int index, final ReservationTimeResponse response) {
-        System.out.printf("%d. %s%n", index, response.startAt().toString());
+    private static void printReservationTime(final long id, final ReservationTimeResponse response) {
+        System.out.printf(" %d  %s%n", id, response.startAt().toString());
     }
 
     public void printHasNotAnyReservationTimeToDelete() {

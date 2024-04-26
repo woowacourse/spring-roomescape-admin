@@ -1,4 +1,4 @@
-package roomescape.console.fakedao;
+package roomescape.console.fake;
 
 import java.util.List;
 import roomescape.dao.ReservationTimeDao;

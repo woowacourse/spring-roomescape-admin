@@ -1,6 +1,5 @@
 package roomescape.console;
 
-import org.springframework.stereotype.Controller;
 import roomescape.dto.ReservationRequest;
 import roomescape.dto.ReservationResponse;
 import roomescape.dto.ReservationTimeRequest;
@@ -8,7 +7,6 @@ import roomescape.dto.ReservationTimeResponse;
 import roomescape.service.ReservationService;
 import roomescape.service.ReservationTimeService;
 
-@Controller
 public class ConsoleController {
     private final ReservationService reservationService;
     private final ReservationTimeService reservationTimeService;

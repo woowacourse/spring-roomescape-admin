@@ -4,10 +4,10 @@ import org.springframework.boot.CommandLineRunner;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import roomescape.console.ConsoleController;
-import roomescape.console.fakedao.FakeReservationDao;
-import roomescape.console.fakedao.FakeReservationDb;
-import roomescape.console.fakedao.FakeReservationTimeDao;
-import roomescape.console.fakedao.FakeReservationTimeDb;
+import roomescape.console.fake.FakeReservationDao;
+import roomescape.console.fake.FakeReservationDb;
+import roomescape.console.fake.FakeReservationTimeDao;
+import roomescape.console.fake.FakeReservationTimeDb;
 import roomescape.service.ReservationService;
 import roomescape.service.ReservationTimeService;
 

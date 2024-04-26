@@ -5,7 +5,6 @@ import java.sql.PreparedStatement;
 import java.sql.Statement;
 import java.time.LocalDate;
 import java.time.LocalTime;
-import java.time.format.DateTimeFormatter;
 import java.util.List;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;
@@ -57,24 +56,6 @@ public class ReservationRepository {
     public void deleteById(long id) {
         String sql = "delete from reservation where id=?";
         jdbcTemplate.update(sql, id);
-    }
-
-    public boolean isAnyReservationConflictWith(Reservation reservation) {
-        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
-        String startDateTime = reservation.getStartDateTime().format(formatter);
-        String endDateTime = reservation.getEndDateTime().format(formatter);
-
-        String sql = "select exists (" +
-                "    select 1 " +
-                "    from reservation as r " +
-                "    inner join reservation_time as t" +
-                "    where ? between (r.date||' '||t.start_at) and dateadd('HOUR', ?, (r.date||' '||t.start_at)) " +
-                "    or ? between (r.date||' '||t.start_at) and dateadd('HOUR', ?, (r.date||' ' ||t.start_at)) " +
-                ") as exists_overlap;";
-
-        boolean conflict = jdbcTemplate.queryForObject(sql, Boolean.class, endDateTime, Reservation.TIME_DURATION,
-                startDateTime, Reservation.TIME_DURATION);
-        return conflict;
     }
 
     private RowMapper<Reservation> reservationRowMapper() {

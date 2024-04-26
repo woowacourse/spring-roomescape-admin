@@ -78,15 +78,4 @@ class ReservationRepositoryTest {
         assertThatThrownBy(() -> reservationRepository.findById(saved.getId()))
                 .isInstanceOf(EmptyResultDataAccessException.class);
     }
-
-    @DisplayName("특정 예약이 저장된 예약들과 시간이 겹치는 경우가 있는지 확인할 수 있다")
-    @Test
-    void isAnyReservationConflictWithTest() {
-        Reservation reservation = new Reservation(null, "리비", DAY_AFTER_TOMORROW, savedTime0300);
-        reservationRepository.save(reservation);
-
-        Reservation conflictReservation = new Reservation(3L, "폭포", DAY_AFTER_TOMORROW, savedTime0300);
-
-        assertThat(reservationRepository.isAnyReservationConflictWith(conflictReservation)).isTrue();
-    }
 }

@@ -19,7 +19,8 @@ public class MemoryReservationDao implements ReservationDao {
     @Override
     public Reservation save(Reservation reservation) {
         long id = index.incrementAndGet();
-        Reservation saveReservation = new Reservation(id, reservation.getName(), reservation.getDate(), reservation.getTime());
+        Reservation saveReservation = new Reservation(id, reservation.getName(), reservation.getDate(),
+                reservation.getTime());
         reservations.add(saveReservation);
 
         return saveReservation;

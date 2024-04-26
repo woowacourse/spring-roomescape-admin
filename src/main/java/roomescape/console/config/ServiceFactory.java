@@ -19,7 +19,8 @@ public class ServiceFactory {
         reservationTimeService = new ReservationTimeService(memoryReservationTimeDao);
     }
 
-    private ServiceFactory() {}
+    private ServiceFactory() {
+    }
 
     public static ServiceFactory getInstance() {
         return serviceFactory;

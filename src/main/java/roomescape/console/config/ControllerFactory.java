@@ -11,7 +11,6 @@ import roomescape.console.view.OutputView;
 public class ControllerFactory {
 
     private static final ControllerFactory INSTANCE = new ControllerFactory();
-
     private static final ReservationConsoleController reservationConsoleController;
     private static final ReservationTimeConsoleController reservationTimeConsoleController;
     private static final MainConsoleController mainConsoleController;
@@ -30,7 +29,6 @@ public class ControllerFactory {
         mainConsoleController = new MainConsoleController(
                 InputView.getInstance(), createMapper()
         );
-
     }
 
     private static ControllerMapper createMapper() {

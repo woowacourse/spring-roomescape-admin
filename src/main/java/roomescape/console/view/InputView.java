@@ -10,16 +10,17 @@ public class InputView {
     private static final InputView INSTANCE = new InputView();
     private static final Scanner SCANNER = new Scanner(System.in);
 
-    private InputView() {}
+    private InputView() {
+    }
 
     public AdminMenu inputAdminMenu() {
         System.out.println("""
-                
+                                
                 <사용자 관리 명령어>
                 1. 시간 관리 기능
                 2. 예약 관리 기능
                 3. 종료
-                
+                                
                 """
         );
         return AdminMenu.from(Integer.parseInt(SCANNER.nextLine()));
@@ -27,7 +28,7 @@ public class InputView {
 
     public List<String> inputReservationTimeMenu() {
         System.out.println("""
-                
+                                
                 <사용자 관리 명령어>
                 - 시간등록: POST hh:mm 
                     예시) POST 10:00

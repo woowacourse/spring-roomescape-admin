@@ -8,12 +8,14 @@ public class OutputView {
 
     private static final OutputView INSTANCE = new OutputView();
 
-    private OutputView() {}
+    private OutputView() {
+    }
 
     public void outputPostReservation(ReservationResponse reservationResponse) {
         System.out.println("예약이 성공적으로 등록되었습니다.");
         System.out.println(formatReservation(reservationResponse));
     }
+
     public void outputPostReservationTime(ReservationTimeResponse reservationTimeResponse) {
         System.out.println("시간이 성공적으로 등록되었습니다.");
         System.out.println(formatReservationTime(reservationTimeResponse));

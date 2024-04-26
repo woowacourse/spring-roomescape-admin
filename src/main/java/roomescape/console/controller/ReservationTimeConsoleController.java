@@ -5,9 +5,9 @@ import roomescape.console.util.InputConverter;
 import roomescape.console.view.Command;
 import roomescape.console.view.InputView;
 import roomescape.console.view.OutputView;
+import roomescape.core.service.ReservationTimeService;
 import roomescape.web.dto.request.ReservationTimeRequest;
 import roomescape.web.dto.response.ReservationTimeResponse;
-import roomescape.core.service.ReservationTimeService;
 
 public class ReservationTimeConsoleController implements ConsoleController {
 
@@ -15,7 +15,8 @@ public class ReservationTimeConsoleController implements ConsoleController {
     private final OutputView outputView;
     private final ReservationTimeService reservationTimeService;
 
-    public ReservationTimeConsoleController(InputView inputView, OutputView outputView, ReservationTimeService reservationTimeService) {
+    public ReservationTimeConsoleController(InputView inputView, OutputView outputView,
+                                            ReservationTimeService reservationTimeService) {
         this.inputView = inputView;
         this.outputView = outputView;
         this.reservationTimeService = reservationTimeService;

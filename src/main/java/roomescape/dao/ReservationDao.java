@@ -10,7 +10,6 @@ import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.support.GeneratedKeyHolder;
 import org.springframework.jdbc.support.KeyHolder;
 import org.springframework.stereotype.Component;
-import org.springframework.stereotype.Repository;
 import roomescape.domain.reservation.Reservation;
 import roomescape.domain.reservation.ReservationDate;
 import roomescape.domain.reservation.ReservationName;
@@ -18,7 +17,6 @@ import roomescape.domain.reservationtime.ReservationStartAt;
 import roomescape.domain.reservationtime.ReservationTime;
 
 @Component
-@Repository
 public class ReservationDao {
 
     private final JdbcTemplate jdbcTemplate;

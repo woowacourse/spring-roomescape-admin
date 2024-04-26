@@ -8,6 +8,7 @@ import java.util.Optional;
 import javax.sql.DataSource;
 import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.jdbc.core.JdbcTemplate;
+import org.springframework.jdbc.core.RowMapper;
 import org.springframework.jdbc.support.GeneratedKeyHolder;
 import org.springframework.jdbc.support.KeyHolder;
 import org.springframework.stereotype.Repository;
@@ -53,14 +54,7 @@ public class ReservationDao {
                 """;
 
         try {
-            final Reservation reservation = jdbcTemplate.queryForObject(
-                    sql, (resultSet, rowNum) -> new Reservation(
-                            resultSet.getLong("id"),
-                            resultSet.getString("name"),
-                            resultSet.getString("date"),
-                            resultSet.getLong("time_id"),
-                            resultSet.getString("time_value")
-                    ), id);
+            final Reservation reservation = jdbcTemplate.queryForObject(sql, getReservationRowMapper(), id);
             return Optional.ofNullable(reservation);
         } catch (final EmptyResultDataAccessException exception) {
             return Optional.empty();
@@ -79,15 +73,17 @@ public class ReservationDao {
                 inner join reservation_time as t
                 on r.time_id = t.id""";
 
-        return jdbcTemplate.query(
-                sql,
-                (resultSet, rowNum) -> new Reservation(
-                        resultSet.getLong("id"),
-                        resultSet.getString("name"),
-                        resultSet.getString("date"),
-                        resultSet.getLong("time_id"),
-                        resultSet.getString("time_value")
-                ));
+        return jdbcTemplate.query(sql, getReservationRowMapper());
+    }
+
+    private RowMapper<Reservation> getReservationRowMapper() {
+        return (resultSet, rowNum) -> new Reservation(
+                resultSet.getLong("id"),
+                resultSet.getString("name"),
+                resultSet.getString("date"),
+                resultSet.getLong("time_id"),
+                resultSet.getString("time_value")
+        );
     }
 
     public void remove(final long id) {

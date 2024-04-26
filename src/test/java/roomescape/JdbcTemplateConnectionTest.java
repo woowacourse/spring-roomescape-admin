@@ -1,6 +1,7 @@
 package roomescape;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.junit.jupiter.api.Assertions.assertAll;
 
 import io.restassured.RestAssured;
 import java.sql.Connection;
@@ -34,9 +35,13 @@ public class JdbcTemplateConnectionTest {
     @DisplayName("JdbcTemplate을 이용하여 DB 연결을 확인한다")
     void jdbcTemplateConnection() {
         try (Connection connection = jdbcTemplate.getDataSource().getConnection()) {
-            assertThat(connection).isNotNull();
-            assertThat(connection.getCatalog()).isEqualTo("DATABASE");
-            assertThat(connection.getMetaData().getTables(null, null, "RESERVATION", null).next()).isTrue();
+            assertAll(
+                    () -> assertThat(connection).isNotNull(),
+                    () -> assertThat(connection.getCatalog()).isEqualTo("DATABASE"),
+                    () -> assertThat(connection.getMetaData()
+                            .getTables(null, null, "RESERVATION", null).next())
+                            .isTrue()
+            );
         } catch (SQLException e) {
             throw new RuntimeException(e);
         }

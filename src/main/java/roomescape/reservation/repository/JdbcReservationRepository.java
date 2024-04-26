@@ -25,14 +25,14 @@ public class JdbcReservationRepository implements ReservationRepository {
                     resultSet.getLong("id"),
                     resultSet.getString("name"),
                     resultSet.getDate("date").toLocalDate(),
-                    resultSet.getLong("id"),
+                    resultSet.getLong("time_id"),
                     resultSet.getTime("start_at").toLocalTime()
             );
 
     @Override
     public List<Reservation> findAll() {
         String sql = """
-                select r.id, r.name, r.date, t.id, t.start_at 
+                select r.id, r.name, r.date, t.id as time_id, t.start_at 
                 from reservation as r 
                 inner join reservation_time as t 
                 on r.time_id = t.id
@@ -43,7 +43,7 @@ public class JdbcReservationRepository implements ReservationRepository {
     @Override
     public Reservation findById(final Long id) {
         String sql = """
-                select r.id, r.name, r.date, t.id, t.start_at 
+                select r.id, r.name, r.date, t.id as time_id, t.start_at 
                 from reservation as r 
                 inner join reservation_time as t 
                 on r.time_id = t.id

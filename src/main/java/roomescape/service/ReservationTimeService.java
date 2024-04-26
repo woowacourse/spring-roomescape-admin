@@ -29,7 +29,7 @@ public class ReservationTimeService {
     }
 
     public ReservationTimeResponse addReservationTime(ReservationTimeRequest reservationTimeRequest) {
-        ReservationTime reservationTime = ReservationTimeRequest.toReservationTime(reservationTimeRequest);
+        ReservationTime reservationTime = reservationTimeRequest.toReservationTime();
         ReservationTime savedReservationTime = reservationTimeRepository.save(reservationTime);
 
         return ReservationTimeResponse.from(savedReservationTime);

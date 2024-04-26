@@ -28,8 +28,7 @@ public class ReservationTimeDao {
     public long save(final ReservationTime reservationTime) {
         final SqlParameterSource params = new MapSqlParameterSource()
                 .addValue("start_at", reservationTime.startAt().toString());
-        return simpleJdbcInsert.executeAndReturnKey(params)
-                               .longValue();
+        return simpleJdbcInsert.executeAndReturnKey(params).longValue();
     }
 
     public ReservationTime findById(final long id) {

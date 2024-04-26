@@ -47,8 +47,7 @@ public class ReservationDao {
                 .addValue("name", reservation.name())
                 .addValue("date", reservation.date())
                 .addValue("time_id", reservation.time().id());
-        return simpleJdbcInsert.executeAndReturnKey(params)
-                               .longValue();
+        return simpleJdbcInsert.executeAndReturnKey(params).longValue();
     }
 
     public int deleteById(final long id) {

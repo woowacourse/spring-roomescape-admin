@@ -53,6 +53,6 @@ public class ReservationController {
 
         reservationDeleteService.deleteReservation(id);
 
-        return ResponseEntity.noContent().build();
+        return ResponseEntity.ok().build();
     }
 }

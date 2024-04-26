@@ -7,10 +7,12 @@
 - [x] 예약 조회 API 명세를 따라 예약 관리 페이지 로드 시 호출되는 예약 목록 조회 API를 구현한다.
 - [x] API 명세를 따라 예약 추가 API 와 삭제 API를 구현한다.
 - [x] 예약 추가와 취소가 잘 동작한다.
+- [ ] 시간 추가, 삭제, 조회 API를 구현한다.
 
 ### 데이터베이스
 
 - [x] h2 데이터베이스에 데이터를 저장하기 위해 연동한다.
+- [ ] 예약 시간 데이터베이스를 구축한다.
 
 # API 명세
 
@@ -86,6 +88,64 @@
 
 <br>
 
+## 시간 추가 API
+
+### Request
+
+> POST /times HTTP/1.1
+>
+>content-type: application/json
+
+```java
+{
+        "startAt":"10:00"
+        }
+```
+
+### Response
+
+> HTTP/1.1 200
+>
+> Content-Type: application/json
+
+```java
+{
+        "id":1,
+        "startAt":"10:00"
+        }
+```
+
+## 시간 조회 API
+
+### Request
+
+> GET /times HTTP/1.1
+
+### Response
+
+> HTTP/1.1 200
+>
+> Content-Type: application/json
+
+```java
+[
+        {
+        "id":1,
+        "startAt":"10:00"
+        }
+        ]
+```
+
+## 시간 삭제 API
+
+### Request
+
+> DELETE /times/1 HTTP/1.1
+
+### Response
+
+> HTTP/1.1 200
+
 ## 데이터베이스
 
 ### 예약
@@ -97,6 +157,17 @@ CREATE TABLE reservation
     name VARCHAR(255) NOT NULL,
     date VARCHAR(255) NOT NULL,
     time VARCHAR(255) NOT NULL,
+    PRIMARY KEY (id)
+);
+```
+
+### 예약 시간
+
+```mysql
+CREATE TABLE reservation_time
+(
+    id       BIGINT       NOT NULL AUTO_INCREMENT,
+    start_at VARCHAR(255) NOT NULL,
     PRIMARY KEY (id)
 );
 ```

@@ -16,6 +16,17 @@ import roomescape.entity.Reservation;
 
 @Repository
 public class ReservationRepository {
+    private static final RowMapper<Reservation> RESERVATION_ROW_MAPPER = (rs, rowNum) -> {
+        long id = rs.getLong("reservation_id");
+        String name = rs.getString("name");
+        LocalDate date = rs.getDate("date").toLocalDate();
+
+        long timeId = rs.getLong("time_id");
+        LocalTime time = rs.getTime("start_at").toLocalTime();
+
+        return new Reservation(id, name, date, new GameTime(timeId, time));
+    };
+
     private final JdbcTemplate jdbcTemplate;
 
     public ReservationRepository(JdbcTemplate jdbcTemplate) {
@@ -26,7 +37,7 @@ public class ReservationRepository {
         String sql = "select r.id as reservation_id, r.name, r.date, t.id as time_id, t.start_at as time_value "
                 + "from reservation as r "
                 + "inner join reservation_time as t on t.id = r.time_id";
-        return jdbcTemplate.query(sql, reservationRowMapper());
+        return jdbcTemplate.query(sql, RESERVATION_ROW_MAPPER);
     }
 
     public Reservation save(Reservation reservation) {
@@ -50,24 +61,11 @@ public class ReservationRepository {
                 + "from reservation as r "
                 + "inner join reservation_time as t on t.id = r.time_id "
                 + "where r.id=?";
-        return jdbcTemplate.queryForObject(sql, reservationRowMapper(), id);
+        return jdbcTemplate.queryForObject(sql, RESERVATION_ROW_MAPPER, id);
     }
 
     public void deleteById(long id) {
         String sql = "delete from reservation where id=?";
         jdbcTemplate.update(sql, id);
-    }
-
-    private RowMapper<Reservation> reservationRowMapper() {
-        return (rs, rowNum) -> {
-            long id = rs.getLong("reservation_id");
-            String name = rs.getString("name");
-            LocalDate date = rs.getDate("date").toLocalDate();
-
-            long timeId = rs.getLong("time_id");
-            LocalTime time = rs.getTime("start_at").toLocalTime();
-
-            return new Reservation(id, name, date, new GameTime(timeId, time));
-        };
     }
 }

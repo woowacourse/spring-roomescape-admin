@@ -14,6 +14,13 @@ import roomescape.entity.GameTime;
 
 @Repository
 public class GameTimeRepository {
+    private static final RowMapper<GameTime> GAME_TIME_ROW_MAPPER = (rs, rowNum) -> {
+        long id = rs.getLong("id");
+        LocalTime startAt = rs.getTime("start_at").toLocalTime();
+
+        return new GameTime(id, startAt);
+    };
+
     private final JdbcTemplate jdbcTemplate;
 
     public GameTimeRepository(JdbcTemplate jdbcTemplate) {
@@ -35,12 +42,12 @@ public class GameTimeRepository {
 
     public GameTime findById(long id) {
         String sql = "select * from reservation_time where id=?";
-        return jdbcTemplate.queryForObject(sql, reservationAvailableTimeRowMapper(), id);
+        return jdbcTemplate.queryForObject(sql, GAME_TIME_ROW_MAPPER, id);
     }
 
     public List<GameTime> readAll() {
         String sql = "select * from reservation_time";
-        return jdbcTemplate.query(sql, reservationAvailableTimeRowMapper());
+        return jdbcTemplate.query(sql, GAME_TIME_ROW_MAPPER);
     }
 
     public void deleteById(long id) {
@@ -52,14 +59,5 @@ public class GameTimeRepository {
         String sql = "SELECT COUNT(*) FROM reservation_time WHERE start_at = ?";
         int count = jdbcTemplate.queryForObject(sql, Integer.class, gameTime.getStartAt());
         return count > 0;
-    }
-
-    public RowMapper<GameTime> reservationAvailableTimeRowMapper() {
-        return ((rs, rowNum) -> {
-            long id = rs.getLong("id");
-            LocalTime startAt = rs.getTime("start_at").toLocalTime();
-
-            return new GameTime(id, startAt);
-        });
     }
 }

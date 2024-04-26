@@ -1,7 +1,7 @@
 package roomescape.domain;
 
-import org.springframework.http.HttpStatus;
-import roomescape.exception.ReservationException;
+import roomescape.exception.NonEmptyDateException;
+import roomescape.exception.NonEmptyNameException;
 
 import java.time.LocalDate;
 
@@ -33,13 +33,13 @@ public class Reservation {
 
     private void validateNotNull(String name, LocalDate date) {
         if (name == null) {
-            throw new ReservationException(HttpStatus.BAD_REQUEST, "이름은 비어있을 수 없습니다");
+            throw new NonEmptyNameException();
         }
         if (name.isEmpty()) {
-            throw new ReservationException(HttpStatus.BAD_REQUEST, "이름은 비어있을 수 없습니다");
+            throw new NonEmptyNameException();
         }
         if (date == null) {
-            throw new ReservationException(HttpStatus.BAD_REQUEST, "예약날짜는 비어있을 수 없습니다");
+            throw new NonEmptyDateException();
         }
     }
 

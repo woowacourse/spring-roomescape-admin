@@ -2,8 +2,7 @@ package roomescape.controller;
 
 import java.sql.Date;
 import java.sql.PreparedStatement;
-import java.sql.Time;
-import java.time.LocalDateTime;
+import java.time.LocalTime;
 import java.util.List;
 import org.springframework.http.ResponseEntity;
 import org.springframework.jdbc.core.JdbcTemplate;
@@ -17,8 +16,10 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import roomescape.domain.Reservation;
+import roomescape.domain.ReservationTime;
 import roomescape.dto.ReservationRequest;
 import roomescape.dto.ReservationResponse;
+import roomescape.dto.ReservationTimeResponse;
 
 @RequestMapping("/reservations")
 @Controller
@@ -45,16 +46,27 @@ public class ReservationController {
         KeyHolder keyHolder = new GeneratedKeyHolder();
         jdbcTemplate.update(connection -> {
             PreparedStatement ps = connection.prepareStatement(
-                    "insert into reservation (name, date, time) values (?, ?, ?)",
+                    "insert into reservation (name, date, time_id) values (?, ?, ?)",
                     new String[]{"id"});
             ps.setString(1, reservationRequest.name());
             ps.setDate(2, Date.valueOf(reservationRequest.date()));
-            ps.setTime(3, Time.valueOf(reservationRequest.time()));
+            ps.setLong(3, reservationRequest.timeId());
             return ps;
         }, keyHolder);
         Long id = keyHolder.getKey().longValue();
+
+        ReservationTimeResponse reservationTimeResponse = jdbcTemplate.queryForObject(
+                "select start_at from reservation_time where id = ?",
+                (resultSet, rowNum) -> {
+                    ReservationTimeResponse foundReservationTimeResponse = new ReservationTimeResponse(
+                            reservationRequest.timeId(),
+                            resultSet.getString("start_at")
+                    );
+                    return foundReservationTimeResponse;
+                }, reservationRequest.timeId());
+
         ReservationResponse reservationResponse = new ReservationResponse(id, reservationRequest.name(),
-                reservationRequest.date().toString(), reservationRequest.time().toString());
+                reservationRequest.date().toString(), reservationTimeResponse);
 
         return ResponseEntity.ok(reservationResponse);
     }
@@ -68,16 +80,28 @@ public class ReservationController {
 
     private List<Reservation> getReservations() {
         return jdbcTemplate.query(
-                "select id, name, date, time from reservation",
-                (resultSet, rowNum) ->
-                        new Reservation(
-                                resultSet.getLong("id"),
-                                resultSet.getString("name"),
-                                LocalDateTime.of(
-                                        resultSet.getDate("date").toLocalDate(),
-                                        resultSet.getTime("time").toLocalTime()
-                                )
-                        )
+                """
+                        SELECT
+                            r.id as reservation_id,
+                            r.name,
+                            r.date,
+                            t.id as time_id,
+                            t.start_at as time_value
+                        FROM reservation as r
+                        inner join reservation_time as t
+                        on r.time_id = t.id
+                        """,
+                (resultSet, rowNum) -> {
+                    Long timeId = resultSet.getLong("time_id");
+                    LocalTime time = resultSet.getTime("start_at").toLocalTime();
+
+                    return new Reservation(
+                            resultSet.getLong("id"),
+                            resultSet.getString("name"),
+                            resultSet.getString("date"),
+                            new ReservationTime(timeId, time)
+                    );
+                }
         );
     }
 }

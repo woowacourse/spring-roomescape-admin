@@ -20,11 +20,11 @@ import org.springframework.test.annotation.DirtiesContext;
 
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 @DirtiesContext(classMode = DirtiesContext.ClassMode.BEFORE_EACH_TEST_METHOD)
-class ReservationRestControllerTest {
+class ReservationControllerTest {
     @LocalServerPort
     int port;
     @Autowired
-    private ReservationRestController reservationRestController;
+    private ReservationController reservationController;
     @Autowired
     private JdbcTemplate jdbcTemplate;
 
@@ -93,7 +93,7 @@ class ReservationRestControllerTest {
     void seperateDao() {
         boolean isJdbcTemplateInjected = false;
 
-        for (Field field : reservationRestController.getClass().getDeclaredFields()) {
+        for (Field field : reservationController.getClass().getDeclaredFields()) {
             if (field.getType().equals(JdbcTemplate.class)) {
                 isJdbcTemplateInjected = true;
                 break;

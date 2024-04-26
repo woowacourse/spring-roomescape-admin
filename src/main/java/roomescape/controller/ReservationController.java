@@ -15,11 +15,11 @@ import roomescape.dto.ReservationResponse;
 import roomescape.service.ReservationService;
 
 @RestController
-public class ReservationRestController {
+public class ReservationController {
     private final ReservationService reservationService;
 
     @Autowired
-    public ReservationRestController(ReservationService reservationService) {
+    public ReservationController(ReservationService reservationService) {
         this.reservationService = reservationService;
     }
 

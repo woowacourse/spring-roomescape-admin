@@ -1,9 +1,8 @@
-package roomescape.repository;
+package roomescape.reservation.domain.repository;
 
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import roomescape.reservation.domain.Reservation;
-import roomescape.reservation.repository.ReservationRepository;
 
 import static org.assertj.core.api.Assertions.assertThat;
 

@@ -1,10 +1,10 @@
-package roomescape.service.reservation;
+package roomescape.reservation.service.reservation;
 
 import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
-import roomescape.repository.ReservationRepositoryFake;
+import roomescape.reservation.domain.repository.ReservationRepositoryFake;
 import roomescape.reservation.dto.ReservationRequestDto;
 import roomescape.reservation.dto.ReservationResponseDto;
 import roomescape.reservation.service.ReservationServiceImpl;

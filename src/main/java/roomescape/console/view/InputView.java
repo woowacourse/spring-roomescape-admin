@@ -7,7 +7,10 @@ import org.springframework.stereotype.Component;
 @Component
 public class InputView {
 
+    private static final InputView INSTANCE = new InputView();
     private static final Scanner SCANNER = new Scanner(System.in);
+
+    private InputView() {}
 
     public AdminMenu inputAdminMenu() {
         System.out.println("""
@@ -53,5 +56,9 @@ public class InputView {
     private List<String> inputCommandLine() {
         String input = SCANNER.nextLine();
         return List.of(input.split(" "));
+    }
+
+    public static InputView getInstance() {
+        return INSTANCE;
     }
 }

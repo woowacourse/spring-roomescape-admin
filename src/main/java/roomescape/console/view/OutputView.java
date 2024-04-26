@@ -1,12 +1,14 @@
 package roomescape.console.view;
 
 import java.util.List;
-import org.springframework.stereotype.Component;
 import roomescape.reservation.dto.response.ReservationResponse;
 import roomescape.reservation.dto.response.ReservationTimeResponse;
 
-@Component
 public class OutputView {
+
+    private static final OutputView INSTANCE = new OutputView();
+
+    private OutputView() {}
 
     public void outputPostReservation(ReservationResponse reservationResponse) {
         System.out.println("예약이 성공적으로 등록되었습니다.");
@@ -65,4 +67,7 @@ public class OutputView {
         );
     }
 
+    public static OutputView getInstance() {
+        return INSTANCE;
+    }
 }

@@ -79,32 +79,4 @@ class ReservationJDBCRepositoryTest {
         //then
         assertThat(reservationRepository.findAll().size()).isEqualTo(expectedSize);
     }
-
-    @DisplayName("해당 id를 가진 예약 내역이 존재한다.")
-    @Test
-    void existsByIdTest() {
-        //given
-        Reservation reservation = new Reservation("브라운", date, reservationTime);
-        Reservation target = reservationRepository.save(reservation);
-        long id = target.getId();
-
-        //when
-        boolean result = reservationRepository.existsById(id);
-
-        //then
-        assertThat(result).isTrue();
-    }
-
-    @DisplayName("해당 id를 가진 예약 내역이 존재하지 않는다.")
-    @Test
-    void notExistsByIdTest() {
-        //given
-        long invalidId = 0;
-
-        //when
-        boolean result = reservationRepository.existsById(invalidId);
-
-        //then
-        assertThat(result).isFalse();
-    }
 }

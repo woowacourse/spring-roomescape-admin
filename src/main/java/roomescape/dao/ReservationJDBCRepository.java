@@ -51,12 +51,6 @@ public class ReservationJDBCRepository implements ReservationRepository {
     }
 
     @Override
-    public boolean existsById(final long id) {
-        String sql = "SELECT EXISTS(SELECT 1 FROM Reservation WHERE id = ?)";
-        return jdbcTemplate.queryForObject(sql, Boolean.class, id);
-    }
-
-    @Override
     public void deleteById(final long id) {
         String sql = "DELETE FROM Reservation WHERE id = ?";
         jdbcTemplate.update(sql, id);

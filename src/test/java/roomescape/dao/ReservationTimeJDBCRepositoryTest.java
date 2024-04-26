@@ -65,7 +65,7 @@ class ReservationTimeJDBCRepositoryTest {
         ReservationTime target = reservationTimeRepository.save(reservationTime);
 
         //when
-        ReservationTime result = reservationTimeRepository.findById(target.getId());
+        ReservationTime result = reservationTimeRepository.findById(target.getId()).get();
 
         //then
         assertAll(
@@ -88,34 +88,5 @@ class ReservationTimeJDBCRepositoryTest {
 
         //then
         assertThat(reservationTimeRepository.findAll().size()).isEqualTo(expectedSize);
-    }
-
-    @DisplayName("해당 id를 가진 예약 내역이 존재한다.")
-    @Test
-    void existsByIdTest() {
-        //given
-        String startAt = "10:00";
-        ReservationTime reservationTime = new ReservationTime(startAt);
-        ReservationTime target = reservationTimeRepository.save(reservationTime);
-        long id = target.getId();
-
-        //when
-        boolean result = reservationTimeRepository.existsById(id);
-
-        //then
-        assertThat(result).isTrue();
-    }
-
-    @DisplayName("해당 id를 가진 예약 내역이 존재하지 않는다.")
-    @Test
-    void notExistsByIdTest() {
-        //given
-        long invalidId = 0;
-
-        //when
-        boolean result = reservationTimeRepository.existsById(invalidId);
-
-        //then
-        assertThat(result).isFalse();
     }
 }

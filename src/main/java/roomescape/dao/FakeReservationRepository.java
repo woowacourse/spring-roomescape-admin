@@ -24,11 +24,6 @@ public class FakeReservationRepository implements ReservationRepository {
     }
 
     @Override
-    public boolean existsById(final long id) {
-        return reservations.stream().anyMatch(reservation -> reservation.getId() == id);
-    }
-
-    @Override
     public void deleteById(final long id) {
         reservations.removeIf(reservation -> reservation.getId() == id);
     }

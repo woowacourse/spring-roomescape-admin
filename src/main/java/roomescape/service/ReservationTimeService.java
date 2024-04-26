@@ -28,9 +28,7 @@ public class ReservationTimeService {
     }
 
     public ReservationTime findById(final long id) {
-        if (reservationTimeRepository.existsById(id)) {
-            return reservationTimeRepository.findById(id);
-        }
-        throw new InvalidReservationException("존재하지 않는 예약 시간입니다. id: " + id);
+        return reservationTimeRepository.findById(id)
+                .orElseThrow(() -> new InvalidReservationException("존재하지 않는 예약 시간입니다. id: " + id));
     }
 }

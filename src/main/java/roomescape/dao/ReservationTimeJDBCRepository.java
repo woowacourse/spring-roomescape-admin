@@ -8,6 +8,7 @@ import roomescape.domain.ReservationTime;
 
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 
 @Repository
 public class ReservationTimeJDBCRepository implements ReservationTimeRepository {
@@ -46,20 +47,14 @@ public class ReservationTimeJDBCRepository implements ReservationTimeRepository 
     }
 
     @Override
-    public boolean existsById(final long id) {
-        String sql = "SELECT EXISTS(SELECT 1 FROM reservation_time WHERE id = ?)";
-        return jdbcTemplate.queryForObject(sql, Boolean.class, id);
-    }
-
-    @Override
     public void deleteById(final long id) {
         String sql = "DELETE FROM reservation_time WHERE id = ?";
         jdbcTemplate.update(sql, id);
     }
 
     @Override
-    public ReservationTime findById(final long id) {
+    public Optional<ReservationTime> findById(final long id) {
         String sql = "SELECT * FROM reservation_time WHERE id = ?";
-        return jdbcTemplate.queryForObject(sql, rowMapper, id);
+        return Optional.ofNullable(jdbcTemplate.queryForObject(sql, rowMapper, id));
     }
 }

@@ -13,13 +13,15 @@ import roomescape.domain.ReservationTime;
 @Repository
 public class ReservationTimeH2Repository implements ReservationTimeRepository {
 
+    private static final String TABLE_NAME = "RESERVATION_TIME";
+
     private final JdbcTemplate jdbcTemplate;
     private final SimpleJdbcInsert jdbcInsert;
 
     public ReservationTimeH2Repository(JdbcTemplate jdbcTemplate, DataSource source) {
         this.jdbcTemplate = jdbcTemplate;
         this.jdbcInsert = new SimpleJdbcInsert(source)
-                .withTableName("RESERVATION_TIME")
+                .withTableName(TABLE_NAME)
                 .usingGeneratedKeyColumns("id");
     }
 

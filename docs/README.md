@@ -1,6 +1,6 @@
 ## 리팩토링 목록
 - [x] 테스트 기능별 리팩토링
-- [ㅇ] ReservationTime response 만들기
+- [x] ReservationTime response 만들기
 - [ ] findById 만약 찾을 수 없는 아이디면?
 - [ ] 시간 관리 페이지에서 초 단위 뜨는 오류 수정
 - [ ] TODO 제거

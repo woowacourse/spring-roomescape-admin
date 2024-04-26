@@ -16,9 +16,10 @@ public class ReservationTimeService {
         this.reservationTimeDao = reservationTimeDao;
     }
 
-    public ReservationTime add(final ReservationTimeRequest reservationTimeRequest) {
+    public ReservationTimeResponse add(final ReservationTimeRequest reservationTimeRequest) {
         ReservationTime reservationTime = reservationTimeRequest.toReservationTime();
-        return reservationTimeDao.add(reservationTime);
+        ReservationTime newReservationTime = reservationTimeDao.add(reservationTime);
+        return ReservationTimeResponse.from(newReservationTime);
     }
 
     public List<ReservationTimeResponse> findAll() {

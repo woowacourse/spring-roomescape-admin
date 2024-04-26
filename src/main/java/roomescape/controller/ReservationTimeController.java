@@ -12,7 +12,6 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
-import roomescape.domain.ReservationTime;
 import roomescape.dto.ReservationTimeRequest;
 import roomescape.dto.ReservationTimeResponse;
 import roomescape.service.ReservationTimeService;
@@ -28,9 +27,9 @@ public class ReservationTimeController {
     }
 
     @PostMapping
-    public ResponseEntity<ReservationTime> add(@RequestBody final ReservationTimeRequest reservationTimeRequest) {
-        ReservationTime reservationTime = reservationTimeService.add(reservationTimeRequest);
-        return ResponseEntity.created(URI.create("/times/" + reservationTime.getId())).body(reservationTime);
+    public ResponseEntity<ReservationTimeResponse> add(@RequestBody final ReservationTimeRequest reservationTimeRequest) {
+        ReservationTimeResponse reservationTimeResponse = reservationTimeService.add(reservationTimeRequest);
+        return ResponseEntity.created(URI.create("/times/" + reservationTimeResponse.id())).body(reservationTimeResponse);
     }
 
     @GetMapping

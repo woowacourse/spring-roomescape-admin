@@ -10,18 +10,18 @@ import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;
 import org.springframework.jdbc.core.simple.SimpleJdbcInsert;
 import org.springframework.stereotype.Repository;
-import roomescape.domain.Time;
+import roomescape.domain.ReservationTime;
 
 @Repository
-public class TimeDaoImpl implements TimeDao {
+public class ReservationTimeDaoImpl implements ReservationTimeDao {
     private final JdbcTemplate jdbcTemplate;
     private final SimpleJdbcInsert jdbcInsert;
-    private final RowMapper<Time> timeRowMapper = (resultSet, rowNum) -> new Time(
+    private final RowMapper<ReservationTime> timeRowMapper = (resultSet, rowNum) -> new ReservationTime(
             resultSet.getLong("id"),
             LocalTime.parse(resultSet.getString("start_at"))
     );
 
-    public TimeDaoImpl(JdbcTemplate jdbcTemplate, DataSource dataSource) {
+    public ReservationTimeDaoImpl(JdbcTemplate jdbcTemplate, DataSource dataSource) {
         this.jdbcTemplate = jdbcTemplate;
         this.jdbcInsert = new SimpleJdbcInsert(dataSource)
                 .withTableName("reservation_time")
@@ -29,20 +29,20 @@ public class TimeDaoImpl implements TimeDao {
     }
 
     @Override
-    public List<Time> findAll() {
+    public List<ReservationTime> findAll() {
         String sql = "SELECT * FROM reservation_time";
         return jdbcTemplate.query(sql, timeRowMapper);
     }
 
     @Override
-    public Optional<Time> findById(Long id) {
+    public Optional<ReservationTime> findById(Long id) {
         String sql = "SELECT * FROM reservation_time WHERE id = ?";
-        Time time = jdbcTemplate.queryForObject(sql, timeRowMapper, id);
+        ReservationTime time = jdbcTemplate.queryForObject(sql, timeRowMapper, id);
         return Optional.ofNullable(time);
     }
 
     @Override
-    public void save(Time time) {
+    public void save(ReservationTime time) {
         Map<String, Object> parameters = new HashMap<>();
         parameters.put("start_at", time.getStartAt());
         Long id = (Long) jdbcInsert.executeAndReturnKey(parameters);
@@ -50,7 +50,7 @@ public class TimeDaoImpl implements TimeDao {
     }
 
     @Override
-    public void delete(Time time) {
+    public void delete(ReservationTime time) {
         String sql = "DELETE FROM reservation_time WHERE id = ?";
         jdbcTemplate.update(sql, time.getId());
     }

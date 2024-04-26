@@ -12,7 +12,7 @@ import org.springframework.jdbc.core.RowMapper;
 import org.springframework.jdbc.core.simple.SimpleJdbcInsert;
 import org.springframework.stereotype.Repository;
 import roomescape.domain.Reservation;
-import roomescape.domain.Time;
+import roomescape.domain.ReservationTime;
 
 @Repository
 public class ReservationDaoImpl implements ReservationDao {
@@ -22,7 +22,7 @@ public class ReservationDaoImpl implements ReservationDao {
             resultSet.getLong("reservation_id"),
             resultSet.getString("name"),
             LocalDate.parse(resultSet.getString("date")),
-            new Time(
+            new ReservationTime(
                     resultSet.getLong("time_id"),
                     LocalTime.parse(resultSet.getString("time_value"))
             )

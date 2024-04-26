@@ -9,7 +9,7 @@ import java.util.HashMap;
 import java.util.Map;
 import org.junit.jupiter.api.Test;
 
-public class TimeIntegrationTest extends IntegrationTest {
+public class ReservationTimeIntegrationTest extends IntegrationTest {
     @Test
     void 시간을_추가할_수_있다() {
         Map<String, String> params = new HashMap<>();

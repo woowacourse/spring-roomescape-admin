@@ -1,12 +1,12 @@
-package roomescape.view;
+package roomescape.console.view;
 
 import java.time.LocalDate;
 import java.time.LocalTime;
 import java.time.format.DateTimeFormatter;
 import java.util.List;
 import java.util.Scanner;
-import roomescape.controller.dto.ReservationRequest;
-import roomescape.controller.dto.ReservationTimeRequest;
+import roomescape.domain.dto.ReservationRequest;
+import roomescape.domain.dto.ReservationTimeRequest;
 
 public class ConsoleInputView {
 

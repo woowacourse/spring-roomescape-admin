@@ -1,4 +1,4 @@
-package roomescape.integratedtest;
+package roomescape.web.integratedtest;
 
 import io.restassured.RestAssured;
 import org.junit.jupiter.api.BeforeEach;

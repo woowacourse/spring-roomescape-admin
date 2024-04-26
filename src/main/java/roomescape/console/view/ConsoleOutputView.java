@@ -1,9 +1,9 @@
-package roomescape.view;
+package roomescape.console.view;
 
 import java.time.format.DateTimeFormatter;
 import java.util.List;
-import roomescape.controller.dto.ReservationResponse;
-import roomescape.controller.dto.ReservationTimeResponse;
+import roomescape.domain.dto.ReservationResponse;
+import roomescape.domain.dto.ReservationTimeResponse;
 
 public class ConsoleOutputView {
 

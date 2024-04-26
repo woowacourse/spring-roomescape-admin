@@ -7,17 +7,16 @@ import org.springframework.jdbc.core.namedparam.SqlParameterSource;
 import org.springframework.jdbc.core.simple.SimpleJdbcInsert;
 import org.springframework.stereotype.Component;
 import roomescape.reservation.domain.Reservation;
-import roomescape.reservation.domain.repository.ReservationRepository;
 
 import javax.sql.DataSource;
 import java.util.List;
 
 @Component
-public class JdbcTemplateReservationRepository implements ReservationDao {
+public class JdbcTemplateReservationDao implements ReservationDao {
     private final JdbcTemplate jdbcTemplate;
     private final SimpleJdbcInsert jdbcInsert;
 
-    public JdbcTemplateReservationRepository(final JdbcTemplate jdbcTemplate, final DataSource dataSource) {
+    public JdbcTemplateReservationDao(final JdbcTemplate jdbcTemplate, final DataSource dataSource) {
         this.jdbcTemplate = jdbcTemplate;
         this.jdbcInsert = new SimpleJdbcInsert(dataSource)
                 .withTableName("reservation")

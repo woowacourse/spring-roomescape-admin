@@ -10,7 +10,6 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
-import roomescape.domain.ReservationTime;
 import roomescape.dto.ReservationTimeRequest;
 import roomescape.dto.ReservationTimeResponse;
 import roomescape.service.ReservationTimeService;
@@ -35,8 +34,8 @@ public class ReservationTimeController {
     }
 
     @GetMapping
-    public ResponseEntity<List<ReservationTime>> getTimes() {
-        List<ReservationTime> reservationTimes = reservationTimeService.getTimes();
+    public ResponseEntity<List<ReservationTimeResponse>> getTimes() {
+        List<ReservationTimeResponse> reservationTimes = reservationTimeService.getReservationTimes();
         return ResponseEntity.ok(reservationTimes);
     }
 

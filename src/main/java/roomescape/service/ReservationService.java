@@ -40,11 +40,11 @@ public class ReservationService {
 
     private Reservation findReservationById(Long id) {
         return reservationDao.findById(id)
-                .orElseThrow();
+                .orElseThrow(() -> new IllegalArgumentException("존재하지 않는 예약입니다."));
     }
 
     private ReservationTime findReservationTimeById(Long id) {
         return reservationTimeDao.findById(id)
-                .orElseThrow();
+                .orElseThrow(() -> new IllegalArgumentException("존재하지 않는 시간입니다."));
     }
 }

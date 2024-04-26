@@ -35,6 +35,6 @@ public class ReservationTimeService {
 
     private ReservationTime findReservationTimeById(Long id) {
         return reservationTimeDao.findById(id)
-                .orElseThrow();
+                .orElseThrow(() -> new IllegalArgumentException("존재하지 않는 시간입니다."));
     }
 }

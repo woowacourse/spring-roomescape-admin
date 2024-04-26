@@ -5,6 +5,7 @@ import java.time.LocalTime;
 import java.util.List;
 import javax.sql.DataSource;
 import org.springframework.jdbc.core.JdbcTemplate;
+import org.springframework.jdbc.core.RowMapper;
 import org.springframework.jdbc.core.namedparam.MapSqlParameterSource;
 import org.springframework.jdbc.core.namedparam.SqlParameterSource;
 import org.springframework.jdbc.core.simple.SimpleJdbcInsert;
@@ -20,6 +21,29 @@ public class ReservationRepository {
 
     private final JdbcTemplate jdbcTemplate;
     private final SimpleJdbcInsert simpleJdbcInsert;
+
+    private final RowMapper<Reservation> reservationRowMapper = (resultSet, rowNum) -> {
+        Reservation reservation
+                = new Reservation(
+                resultSet.getLong("id"),
+                resultSet.getString("name"),
+                LocalDate.parse(resultSet.getString("date")),
+                new ReservationTime(
+                        resultSet.getLong("time_id"),
+                        LocalTime.parse(resultSet.getString("start_at"))
+                )
+        );
+        return reservation;
+    };
+
+    private final RowMapper<ReservationTime> reservationTimeRowMapper = (resultSet, rowNum) -> {
+        ReservationTime reservationTime
+                = new ReservationTime(
+                resultSet.getLong("id"),
+                LocalTime.parse(resultSet.getString("start_at"))
+        );
+        return reservationTime;
+    };
 
     public ReservationRepository(JdbcTemplate jdbcTemplate, DataSource dataSource) {
         this.jdbcTemplate = jdbcTemplate;
@@ -40,39 +64,12 @@ public class ReservationRepository {
                 inner join reservation_time as t
                 on r.time_id = t.id
                 """;
-
-        return jdbcTemplate.query(
-                sql,
-                (resultSet, rowNum) -> {
-                    Reservation reservation
-                            = new Reservation(
-                            resultSet.getLong("id"),
-                            resultSet.getString("name"),
-                            LocalDate.parse(resultSet.getString("date")),
-                            new ReservationTime(
-                                    resultSet.getLong("time_id"),
-                                    LocalTime.parse(resultSet.getString("start_at"))
-                            )
-                    );
-                    return reservation;
-                }
-        );
+        return jdbcTemplate.query(sql, reservationRowMapper);
     }
 
     private ReservationTime findByTimeId(Long timeId) {
         String sql = "SELECT start_at FROM reservation_time WHERE id = ?";
-        return jdbcTemplate.queryForObject(
-                sql,
-                (resultSet, rowNum) -> {
-                    ReservationTime reservationTime
-                            = new ReservationTime(
-                            timeId,
-                            LocalTime.parse(resultSet.getString("start_at"))
-                    );
-                    return reservationTime;
-                },
-                timeId
-        );
+        return jdbcTemplate.queryForObject(sql, reservationTimeRowMapper, timeId);
     }
 
     public Reservation save(ReservationCreateRequest reservationCreateRequest) {

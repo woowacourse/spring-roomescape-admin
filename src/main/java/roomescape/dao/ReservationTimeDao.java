@@ -20,7 +20,7 @@ public class ReservationTimeDao {
         this.jdbcTemplate = jdbcTemplate;
     }
 
-    public Optional<Long> insert(String startAt) {
+    public Long insert(String startAt) {
         String insertSql = "INSERT INTO reservation_time(start_at) VALUES ?";
         KeyHolder keyHolder = new GeneratedKeyHolder();
         jdbcTemplate.update(connection -> {
@@ -31,7 +31,7 @@ public class ReservationTimeDao {
             return ps;
         }, keyHolder);
 
-        return Optional.ofNullable(keyHolder.getKeyAs(Long.class));
+        return keyHolder.getKey().longValue();
     }
 
     public List<ReservationTime> findAll() {

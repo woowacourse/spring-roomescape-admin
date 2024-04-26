@@ -19,8 +19,7 @@ public class ReservationTimeService {
 
     public ReservationTime insertReservationTime(ReservationTimeRequestDto reservationTimeRequestDto) {
         Long id = reservationTimeDao.insert(
-                reservationTimeRequestDto.startAt().format(DateTimeFormatter.ofPattern("HH:mm")))
-                .orElseThrow(() -> new IllegalArgumentException("올바르지 않은 입력입니다."));
+                reservationTimeRequestDto.startAt().format(DateTimeFormatter.ofPattern("HH:mm")));
 
         return new ReservationTime(id, reservationTimeRequestDto.startAt().format(DateTimeFormatter.ofPattern("HH:mm")));
     }

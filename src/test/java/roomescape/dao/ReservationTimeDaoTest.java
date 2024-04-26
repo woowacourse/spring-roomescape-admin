@@ -1,7 +1,6 @@
 package roomescape.dao;
 
 import org.junit.jupiter.api.Test;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.jdbc.JdbcTest;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.support.GeneratedKeyHolder;
@@ -12,6 +11,7 @@ import roomescape.domain.ReservationTime;
 
 import java.sql.PreparedStatement;
 import java.util.List;
+import java.util.Optional;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
@@ -36,9 +36,23 @@ public class ReservationTimeDaoTest {
     }
 
     @Test
+    void findByIdTest() {
+        ReservationTime reservationTime = reservationTimeDao.findById(1L).get();
+
+        assertThat(reservationTime.getId()).isEqualTo(1L);
+    }
+
+    @Test
+    void findByWrongIdTest() {
+        Optional<ReservationTime> reservationTime = reservationTimeDao.findById(9L);
+
+        assertThat(reservationTime).isEqualTo(Optional.empty());
+    }
+
+    @Test
     void insertTest() {
         Long index = jdbcTemplate.queryForObject("SELECT count(*) FROM reservation_time", Long.class);
-        Long id = reservationTimeDao.insert("01:01").get();
+        Long id = reservationTimeDao.insert("01:01");
 
         assertThat(id).isEqualTo(index + 1);
     }

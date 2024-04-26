@@ -28,8 +28,7 @@ public class ReservationService {
     @Transactional
     public Reservation insertReservation(ReservationRequestDto reservationRequestDto) {
         Long id = reservationDao.insert(
-                reservationRequestDto.name(), reservationRequestDto.date(), reservationRequestDto.timeId())
-                .orElseThrow(() -> new IllegalArgumentException("올바르지 않은 입력입니다."));
+                reservationRequestDto.name(), reservationRequestDto.date(), reservationRequestDto.timeId());
         ReservationTime reservationTime = reservationTimeDao.findById(reservationRequestDto.timeId())
                 .orElseThrow(() -> new IllegalArgumentException("올바르지 않은 입력입니다."));
 

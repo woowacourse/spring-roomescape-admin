@@ -37,7 +37,7 @@ public class ReservationDao {
         );
     }
 
-    public Optional<Long> insert(String name, String date, Long timeId) {
+    public Long insert(String name, String date, Long timeId) {
         String insertSql = "INSERT INTO reservation(name, date, time_id) VALUES (?, ?, ?)";
         KeyHolder keyHolder = new GeneratedKeyHolder();
         jdbcTemplate.update(connection -> {
@@ -50,7 +50,7 @@ public class ReservationDao {
             return ps;
         }, keyHolder);
 
-        return Optional.ofNullable(keyHolder.getKeyAs(Long.class));
+        return keyHolder.getKey().longValue();
     }
 
     public void deleteById(Long id) {

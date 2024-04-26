@@ -15,7 +15,7 @@ import roomescape.domain.ReservationTime;
 
 @Repository
 public class ReservationDao {
-    private final RowMapper<Reservation> rowMapper = (resultSet, rowNum) -> {
+    private static final RowMapper<Reservation> ROW_MAPPER = (resultSet, rowNum) -> {
         ReservationTime reservationTime = new ReservationTime(
                 resultSet.getLong("time_id"),
                 resultSet.getTime("time_value")
@@ -47,7 +47,7 @@ public class ReservationDao {
                 on r.time_id = t.id
                 where r.id = ?
                 """;
-        return jdbcTemplate.queryForObject(sql, rowMapper, id);
+        return jdbcTemplate.queryForObject(sql, ROW_MAPPER, id);
     }
 
     public List<Reservation> findAll() {
@@ -62,7 +62,7 @@ public class ReservationDao {
                 inner join reservation_time as t 
                 on r.time_id = t.id
                 """;
-        return jdbcTemplate.query(sql, rowMapper);
+        return jdbcTemplate.query(sql, ROW_MAPPER);
     }
 
     public Long save(Reservation reservation) {

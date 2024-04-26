@@ -1,9 +1,7 @@
 package roomescape.controller;
 
-import java.util.ArrayList;
 import java.util.List;
-import java.util.Objects;
-import java.util.concurrent.atomic.AtomicLong;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -11,34 +9,34 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
-import roomescape.domain.Reservation;
+import roomescape.controller.dto.ReservationCreateRequest;
+import roomescape.controller.dto.ReservationResponse;
+import roomescape.service.ReservationService;
 
 @RestController
 @RequestMapping("/reservations")
 public class ReservationController {
 
-    private final AtomicLong index = new AtomicLong(1);
-    private final List<Reservation> reservations = new ArrayList<>();
+    private final ReservationService reservationService;
 
-    @GetMapping("")
-    public List<Reservation> readReservations() {
-        return reservations;
+    public ReservationController(final ReservationService reservationService) {
+        this.reservationService = reservationService;
     }
 
-    @PostMapping("")
-    public Reservation createReservation(@RequestBody ReservationRequestDto request) {
-        Reservation newReservation = new Reservation(
-            index.getAndIncrement(), request.name(), request.date(), request.time());
-        reservations.add(newReservation);
-        return newReservation;
+    @PostMapping
+    public ResponseEntity<ReservationResponse> createReservation(@RequestBody final ReservationCreateRequest request) {
+        final ReservationResponse response = reservationService.createReservation(request);
+        return ResponseEntity.ok(response);
+    }
+
+    @GetMapping
+    public ResponseEntity<List<ReservationResponse>> getReservations() {
+        return ResponseEntity.ok(reservationService.getAllReservations());
     }
 
     @DeleteMapping("/{id}")
-    public void deleteReservation(@PathVariable Long id) {
-        Reservation reservation = reservations.stream()
-            .filter(it -> Objects.equals(it.getId(), id))
-            .findFirst()
-            .orElseThrow(() -> new RuntimeException("[ERROR] 예약 번호가 잘못되었습니다."));
-        reservations.remove(reservation);
+    public ResponseEntity<Void> deleteReservation(@PathVariable final Long id) {
+        reservationService.deleteReservation(id);
+        return ResponseEntity.noContent().build();
     }
 }

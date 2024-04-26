@@ -10,56 +10,16 @@ import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.annotation.DirtiesContext;
-import roomescape.controller.dto.ReservationCreateRequest;
 import roomescape.controller.dto.ReservationTimeCreateRequest;
-
 import java.time.LocalTime;
-
 
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.DEFINED_PORT)
 @DirtiesContext(classMode = DirtiesContext.ClassMode.BEFORE_EACH_TEST_METHOD)
-class ReservationControllerTest {
+class ReservationTimeControllerTest {
 
     @Test
-    @DisplayName("예약을 성공적으로 추가하면 ok를 반환한다.")
-    void createReservation() {
-        createInitialReservationTime();
-        final ReservationCreateRequest request = new ReservationCreateRequest("냥인", "2024-04-24", 1L);
-
-        RestAssured.given().log().all()
-                .contentType(ContentType.JSON)
-                .body(request)
-                .when().post("/reservations")
-                .then().log().all()
-                .statusCode(200);
-    }
-
-    @Test
-    @DisplayName("예약 목록을 성공적으로 조회하면 ok를 반환하고, 바디의 사이즈를 확인한다.")
-    void readReservations() {
-        createInitialReservationTime();
-        createInitialReservation();
-
-        RestAssured.given().log().all()
-                .when().get("/reservations")
-                .then().log().all()
-                .statusCode(200)
-                .body("size()", is(1));
-    }
-
-    @Test
-    @DisplayName("예약을 성공적으로 삭제하면 noContent를 반환한다.")
-    void deleteReservation() {
-        createInitialReservationTime();
-        final int id = createInitialReservation();
-
-        RestAssured.given().log().all()
-                .when().delete("/reservations/" + id)
-                .then().log().all()
-                .statusCode(204);
-    }
-
-    private void createInitialReservationTime() {
+    @DisplayName("예약 시간을 성공적으로 추가하면 ok를 반환한다.")
+    void createReservationTime() {
         final ReservationTimeCreateRequest request = new ReservationTimeCreateRequest(LocalTime.parse("10:00"));
 
         RestAssured.given().log().all()
@@ -70,16 +30,40 @@ class ReservationControllerTest {
                 .statusCode(200);
     }
 
-    private int createInitialReservation() {
-        final ReservationCreateRequest request = new ReservationCreateRequest("냥인", "2024-04-24", 1L);
+    @Test
+    @DisplayName("예약 시간 목록을 성공적으로 조회하면 ok를 반환하고, 바디의 사이즈를 확인한다.")
+    void getReservationTimes() {
+        createInitialReservationTime();
 
-        final ExtractableResponse<Response> reservation = RestAssured.given().log().all()
+        RestAssured.given().log().all()
+                .when().get("/times")
+                .then().log().all()
+                .statusCode(200)
+                .body("size()", is(1));
+    }
+
+    @Test
+    @DisplayName("예약 시간을 성공적으로 삭제하면 noContent를 반환한다.")
+    void deleteReservationTime() {
+        final int id = createInitialReservationTime();
+
+        RestAssured.given().log().all()
+                .when().delete("/times/" + id)
+                .then().log().all()
+                .statusCode(204);
+    }
+
+    private int createInitialReservationTime() {
+        final ReservationTimeCreateRequest request = new ReservationTimeCreateRequest(LocalTime.parse("10:00"));
+
+        final ExtractableResponse<Response> reservationTime = RestAssured.given().log().all()
                 .contentType(ContentType.JSON)
                 .body(request)
-                .when().post("/reservations")
+                .when().post("/times")
                 .then().log().all()
                 .statusCode(200)
                 .extract();
-        return reservation.jsonPath().get("id");
+
+        return reservationTime.jsonPath().get("id");
     }
 }

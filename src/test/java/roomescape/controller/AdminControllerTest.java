@@ -12,19 +12,26 @@ class AdminControllerTest {
 
     @Test
     @DisplayName("어드민 메인 페이지를 응답한다.")
-    void mainPage() {
-        RestAssured.given().log().all()
-            .when().get("/admin")
-            .then().log().all()
-            .statusCode(200);
+    void RespondMainPage() {
+        assertGetRequestStatusCodeOK("/admin");
     }
 
     @Test
     @DisplayName("예약 관리 페이지를 응답한다.")
-    void reservationPage() {
+    void RespondReservationPage() {
+        assertGetRequestStatusCodeOK("/admin/reservation");
+    }
+    
+    @Test
+    @DisplayName("예약 시간 관리 페이지를 응답한다.")
+    void RespondReservationTimePage() {
+        assertGetRequestStatusCodeOK("/admin/time");
+    }
+
+    private void assertGetRequestStatusCodeOK(final String path) {
         RestAssured.given().log().all()
-            .when().get("/admin/reservation")
-            .then().log().all()
-            .statusCode(200);
+                .when().get(path)
+                .then().log().all()
+                .statusCode(200);
     }
 }

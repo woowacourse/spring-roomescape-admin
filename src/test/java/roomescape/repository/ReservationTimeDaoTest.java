@@ -49,7 +49,7 @@ class ReservationTimeDaoTest {
     void saveTime() {
         //given
         final List<ReservationTime> beforeSaving = reservationTimeDao.findAll();
-        final ReservationTime time = ReservationTime.create("13:00");
+        final ReservationTime time = new ReservationTime("13:00");
 
         //when
         reservationTimeDao.save(time);
@@ -66,7 +66,7 @@ class ReservationTimeDaoTest {
     @Test
     void removeTime() {
         final List<ReservationTime> beforeSaving = reservationTimeDao.findAll();
-        final ReservationTime reservationTime = ReservationTime.create("15:00");
+        final ReservationTime reservationTime = new ReservationTime("15:00");
 
         reservationTimeDao.save(reservationTime);
         final List<ReservationTime> afterSaving = reservationTimeDao.findAll();
@@ -84,7 +84,7 @@ class ReservationTimeDaoTest {
     @Test
     void findById() {
         //given
-        final ReservationTime reservationTime = ReservationTime.create("12:00");
+        final ReservationTime reservationTime = new ReservationTime("12:00");
         final ReservationTime expected = reservationTime.toReservationTime(1L);
 
         //when
@@ -99,9 +99,9 @@ class ReservationTimeDaoTest {
     @Test
     void findAll() {
         //given
-        final ReservationTime reservationTime1 = ReservationTime.create("12:00");
-        final ReservationTime reservationTime2 = ReservationTime.create("13:00");
-        final ReservationTime reservationTime3 = ReservationTime.create("14:00");
+        final ReservationTime reservationTime1 = new ReservationTime("12:00");
+        final ReservationTime reservationTime2 = new ReservationTime("13:00");
+        final ReservationTime reservationTime3 = new ReservationTime("14:00");
 
         final List<ReservationTime> reservations = List.of(reservationTime1, reservationTime2, reservationTime3);
 

@@ -25,8 +25,11 @@ public class Reservation {
         this.time = new ReservationTime(timeId, LocalTime.parse(startAt));
     }
 
-    public static Reservation create(final String name, final String date, final ReservationTime time) {
-        return new Reservation(null, name, LocalDate.parse(date), time);
+    public Reservation(final String name, final String date, final ReservationTime time) {
+        this.id = null;
+        this.name = name;
+        this.date = LocalDate.parse(date);
+        this.time = time;
     }
 
     public Reservation toReservation(final long id) {

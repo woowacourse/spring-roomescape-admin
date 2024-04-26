@@ -26,8 +26,8 @@ public class ReservationService {
         if (findTime.isEmpty()) {
             throw new IllegalArgumentException("존재하지 않는 시간입니다.");
         }
-        final Reservation created = Reservation.create(request.name(), request.date(), findTime.get());
-        final Reservation saved = reservationDao.save(created, findTime.get().getId());
+        final Reservation reservation = new Reservation(request.name(), request.date(), findTime.get());
+        final Reservation saved = reservationDao.save(reservation, findTime.get().getId());
         return ReservationResponse.from(saved);
     }
 

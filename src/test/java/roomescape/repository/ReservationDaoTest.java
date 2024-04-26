@@ -50,8 +50,8 @@ class ReservationDaoTest {
     @Test
     void saveReservation() {
         final List<Reservation> beforeSaving = reservationDao.findAll();
-        final ReservationTime time = ReservationTime.create("10:30");
-        final Reservation reservation = Reservation.create("레디", "2024-02-03", time);
+        final ReservationTime time = new ReservationTime("10:30");
+        final Reservation reservation = new Reservation("레디", "2024-02-03", time);
 
         reservationDao.save(reservation, 1L);
         final List<Reservation> afterSaving = reservationDao.findAll();
@@ -66,8 +66,8 @@ class ReservationDaoTest {
     @Test
     void removeReservation() {
         final List<Reservation> beforeSaving = reservationDao.findAll();
-        final ReservationTime time = ReservationTime.create("10:30");
-        final Reservation reservation = Reservation.create("레디", "2024-02-03", time);
+        final ReservationTime time = new ReservationTime("10:30");
+        final Reservation reservation = new Reservation("레디", "2024-02-03", time);
 
         reservationDao.save(reservation, 1L);
         final List<Reservation> afterSaving = reservationDao.findAll();
@@ -85,8 +85,8 @@ class ReservationDaoTest {
     @Test
     void findById() {
         //given
-        final ReservationTime time = ReservationTime.create("10:30");
-        final Reservation reservation = Reservation.create("레디", "2024-02-03", time);
+        final ReservationTime time = new ReservationTime("10:30");
+        final Reservation reservation = new Reservation("레디", "2024-02-03", time);
 
         final Reservation expected = reservation.toReservation(1L);
 
@@ -102,11 +102,11 @@ class ReservationDaoTest {
     @Test
     void findAll() {
         //given
-        final ReservationTime time = ReservationTime.create("10:30");
+        final ReservationTime time = new ReservationTime("10:30");
 
-        final Reservation reservation1 = Reservation.create("레디", "2024-02-04", time);
-        final Reservation reservation2 = Reservation.create("감자", "2024-02-04", time);
-        final Reservation reservation3 = Reservation.create("오리", "2024-02-04", time);
+        final Reservation reservation1 = new Reservation("레디", "2024-02-04", time);
+        final Reservation reservation2 = new Reservation("감자", "2024-02-04", time);
+        final Reservation reservation3 = new Reservation("오리", "2024-02-04", time);
 
         final List<Reservation> reservations = List.of(reservation1, reservation2, reservation3);
 

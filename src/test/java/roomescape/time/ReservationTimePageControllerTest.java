@@ -8,7 +8,7 @@ import roomescape.TestSupport;
 class ReservationTimePageControllerTest extends TestSupport {
 
     @Test
-    @DisplayName("/startAt 을 요청하면 startAt.html 를 반환한다.")
+    @DisplayName("/time 을 요청하면 time.html 를 반환한다.")
     void requestTime() {
         RestAssured.given().log().all()
                 .when().get("/time")

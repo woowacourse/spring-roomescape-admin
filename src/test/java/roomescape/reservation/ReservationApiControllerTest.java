@@ -8,27 +8,13 @@ import io.restassured.http.ContentType;
 import java.util.Collection;
 import java.util.List;
 import java.util.Map;
-import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.DynamicTest;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.TestFactory;
-import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.boot.test.context.SpringBootTest.WebEnvironment;
-import org.springframework.boot.test.web.server.LocalServerPort;
-import org.springframework.test.annotation.DirtiesContext;
+import roomescape.TestSupport;
 
-@SpringBootTest(webEnvironment = WebEnvironment.RANDOM_PORT)
-@DirtiesContext(classMode = DirtiesContext.ClassMode.BEFORE_EACH_TEST_METHOD)
-class ReservationApiControllerTest {
-
-    @LocalServerPort
-    private int port;
-
-    @BeforeEach
-    void beforeEach() {
-        RestAssured.port = port;
-    }
+class ReservationApiControllerTest extends TestSupport {
 
     @Test
     @DisplayName("예약 목록을 조회한다.")

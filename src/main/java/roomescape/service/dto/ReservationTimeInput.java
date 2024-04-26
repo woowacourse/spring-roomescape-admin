@@ -1,8 +1,8 @@
-package roomescape.dto;
+package roomescape.service.dto;
 
 import roomescape.domain.ReservationTime;
 
-public record ReservationTimeRequest(String startAt) {
+public record ReservationTimeInput(String startAt) {
 
     public ReservationTime toReservationTime() {
         return new ReservationTime(null, startAt);

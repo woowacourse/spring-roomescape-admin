@@ -10,9 +10,10 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
-import roomescape.dto.ReservationRequest;
-import roomescape.dto.ReservationResponse;
+import roomescape.controller.dto.ReservationRequest;
+import roomescape.controller.dto.ReservationResponse;
 import roomescape.service.ReservationService;
+import roomescape.service.dto.ReservationOutput;
 
 @RestController
 @RequestMapping("/reservations")
@@ -25,16 +26,16 @@ public class ReservationController {
     }
 
     @PostMapping
-    public ResponseEntity<ReservationResponse> createReservation(@RequestBody ReservationRequest reservationRequest) {
-        ReservationResponse reservationResponse = reservationService.createReservation(reservationRequest);
-        return ResponseEntity.created(URI.create("/reservations/" + reservationResponse.id()))
-                .body(reservationResponse);
+    public ResponseEntity<ReservationResponse> createReservation(@RequestBody ReservationRequest request) {
+        ReservationOutput output = reservationService.createReservation(request.toInput());
+        return ResponseEntity.created(URI.create("/reservations/" + output.id()))
+                .body(ReservationResponse.toResponse(output));
     }
 
     @GetMapping
     public ResponseEntity<List<ReservationResponse>> getAllReservations() {
-        List<ReservationResponse> reservationResponses = reservationService.getAllReservations();
-        return ResponseEntity.ok(reservationResponses);
+        List<ReservationOutput> outputs = reservationService.getAllReservations();
+        return ResponseEntity.ok(ReservationResponse.toResponses(outputs));
     }
 
     @DeleteMapping("/{id}")

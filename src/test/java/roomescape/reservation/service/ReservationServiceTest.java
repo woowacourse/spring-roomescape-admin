@@ -19,7 +19,6 @@ import roomescape.web.dto.request.ReservationRequest;
 import roomescape.web.dto.request.ReservationTimeRequest;
 import roomescape.web.dto.response.ReservationResponse;
 
-@ActiveProfiles("test")
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.DEFINED_PORT)
 @DirtiesContext(classMode = DirtiesContext.ClassMode.BEFORE_EACH_TEST_METHOD)
 class ReservationServiceTest {

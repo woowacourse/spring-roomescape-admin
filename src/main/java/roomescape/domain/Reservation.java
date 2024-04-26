@@ -23,10 +23,6 @@ public class Reservation {
         this.dateTime = dateTime;
     }
 
-    public int compareDatetime(Reservation other) {
-        return dateTime.compareTo(other.dateTime);
-    }
-
     public boolean hasSameId(long id) {
         return this.id == id;
     }

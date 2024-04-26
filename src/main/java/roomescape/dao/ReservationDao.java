@@ -53,16 +53,18 @@ public class ReservationDao {
     }
 
     public Reservation findOne(final long id) {
-        final var sql = "SELECT "
-                + "r.id as reservation_id, "
-                + "r.name,"
-                + "r.date,"
-                + "t.id as time_id,"
-                + "t.start_at as time_value "
-                + "FROM reservation as r "
-                + "inner join reservation_time as t "
-                + "on r.time_id = t.id "
-                + "where r.id = ?";
+        final var sql = """
+                SELECT 
+                r.id as reservation_id, 
+                r.name, 
+                r.date, 
+                t.id as time_id, 
+                t.start_at as time_value 
+                FROM reservation as r 
+                inner join reservation_time as t 
+                on r.time_id = t.id 
+                where r.id = ?
+                """;
 
         return jdbcTemplate.queryForObject(sql, actorRowMapper(), id);
     }

@@ -8,11 +8,9 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.jdbc.JdbcTest;
 import org.springframework.jdbc.core.JdbcTemplate;
-import org.springframework.test.context.jdbc.Sql;
 import roomescape.controller.dto.ReservationTimeAddRequest;
 
 @JdbcTest
-@Sql(value = "classpath:data-reset.sql", executionPhase = Sql.ExecutionPhase.BEFORE_TEST_METHOD)
 class H2TimeDaoTest {
     private final TimeDao timeDao;
 

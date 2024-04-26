@@ -18,7 +18,7 @@ import org.springframework.test.annotation.DirtiesContext;
 
 @SpringBootTest(webEnvironment = WebEnvironment.RANDOM_PORT)
 @DirtiesContext(classMode = DirtiesContext.ClassMode.BEFORE_EACH_TEST_METHOD)
-class TimeApiControllerTest {
+class ReservationTimeApiControllerTest {
 
     @LocalServerPort
     private int port;

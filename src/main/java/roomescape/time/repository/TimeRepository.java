@@ -6,7 +6,7 @@ import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.support.GeneratedKeyHolder;
 import org.springframework.jdbc.support.KeyHolder;
 import org.springframework.stereotype.Repository;
-import roomescape.time.domain.Time;
+import roomescape.time.domain.ReservationTime;
 
 @Repository
 public class TimeRepository {
@@ -17,7 +17,7 @@ public class TimeRepository {
         this.jdbcTemplate = jdbcTemplate;
     }
 
-    public Long save(Time time) {
+    public Long save(ReservationTime reservationTime) {
         String sql = "insert into reservation_time (start_at) values (?)";
         KeyHolder keyHolder = new GeneratedKeyHolder();
 
@@ -25,29 +25,29 @@ public class TimeRepository {
             PreparedStatement ps = con.prepareStatement(
                     sql, new String[]{"id"}
             );
-            ps.setString(1, String.valueOf(time.getStartAt()));
+            ps.setString(1, String.valueOf(reservationTime.getStartAt()));
             return ps;
         }, keyHolder);
 
         return keyHolder.getKey().longValue();
     }
 
-    public Time findById(Long id) {
+    public ReservationTime findById(Long id) {
         String sql = "select id, start_at from reservation_time where id = ?";
         return jdbcTemplate.queryForObject(sql,
                 (rs, rowNum) -> {
-                    return new Time(
+                    return new ReservationTime(
                             rs.getLong("id"),
                             rs.getTime("start_at").toLocalTime()
                     );
                 }, id);
     }
 
-    public List<Time> findAll() {
+    public List<ReservationTime> findAll() {
         String sql = "select id, start_at from reservation_time";
         return jdbcTemplate.query(sql,
                 (rs, rowNum) -> {
-                    return new Time(
+                    return new ReservationTime(
                             rs.getLong("id"),
                             rs.getTime("start_at").toLocalTime()
                     );

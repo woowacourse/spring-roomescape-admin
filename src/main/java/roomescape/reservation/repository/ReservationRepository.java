@@ -7,7 +7,7 @@ import org.springframework.jdbc.support.GeneratedKeyHolder;
 import org.springframework.jdbc.support.KeyHolder;
 import org.springframework.stereotype.Repository;
 import roomescape.reservation.domain.Reservation;
-import roomescape.time.domain.Time;
+import roomescape.time.domain.ReservationTime;
 
 @Repository
 public class ReservationRepository {
@@ -55,7 +55,7 @@ public class ReservationRepository {
                             rs.getLong("id"),
                             rs.getString("name"),
                             rs.getDate("date").toLocalDate(),
-                            new Time(
+                            new ReservationTime(
                                     rs.getLong("time_id"),
                                     rs.getTime("start_at").toLocalTime()
                             )
@@ -81,7 +81,7 @@ public class ReservationRepository {
                             rs.getLong("id"),
                             rs.getString("name"),
                             rs.getDate("date").toLocalDate(),
-                            new Time(
+                            new ReservationTime(
                                     rs.getLong("id"),
                                     rs.getTime("start_at").toLocalTime()
                             )

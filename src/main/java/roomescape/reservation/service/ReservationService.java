@@ -2,13 +2,12 @@ package roomescape.reservation.service;
 
 import java.util.List;
 import java.util.stream.Collectors;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import roomescape.reservation.domain.Reservation;
 import roomescape.reservation.dto.RequestReservation;
 import roomescape.reservation.dto.ResponseReservation;
 import roomescape.reservation.repository.ReservationRepository;
-import roomescape.time.domain.Time;
+import roomescape.time.domain.ReservationTime;
 import roomescape.time.dto.ResponseTime;
 import roomescape.time.repository.TimeRepository;
 
@@ -18,18 +17,17 @@ public class ReservationService {
     private final ReservationRepository reservationRepository;
     private final TimeRepository timeRepository;
 
-    @Autowired
     public ReservationService(ReservationRepository reservationRepository, TimeRepository timeRepository) {
         this.reservationRepository = reservationRepository;
         this.timeRepository = timeRepository;
     }
 
     public Long save(RequestReservation requestReservation) {
-        Time time = timeRepository.findById(requestReservation.timeId());
+        ReservationTime reservationTime = timeRepository.findById(requestReservation.timeId());
 
         Reservation reservation = new Reservation(null, requestReservation.name(),
                 requestReservation.date(),
-                time);
+                reservationTime);
 
         return reservationRepository.save(reservation);
     }

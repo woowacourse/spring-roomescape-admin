@@ -1,20 +1,20 @@
 package roomescape.reservation.domain;
 
 import java.time.LocalDate;
-import roomescape.time.domain.Time;
+import roomescape.time.domain.ReservationTime;
 
 public class Reservation {
 
     private final Long id;
     private final String name;
     private final LocalDate date;
-    private final Time time;
+    private final ReservationTime reservationTime;
 
-    public Reservation(Long id, String name, LocalDate date, Time time) {
+    public Reservation(Long id, String name, LocalDate date, ReservationTime reservationTime) {
         this.id = id;
         this.name = name;
         this.date = date;
-        this.time = time;
+        this.reservationTime = reservationTime;
     }
 
     public boolean isSameId(Long id) {
@@ -33,7 +33,7 @@ public class Reservation {
         return date;
     }
 
-    public Time getTime() {
-        return time;
+    public ReservationTime getTime() {
+        return reservationTime;
     }
 }

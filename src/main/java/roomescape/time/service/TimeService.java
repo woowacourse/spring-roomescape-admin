@@ -3,7 +3,7 @@ package roomescape.time.service;
 import java.util.List;
 import java.util.stream.Collectors;
 import org.springframework.stereotype.Service;
-import roomescape.time.domain.Time;
+import roomescape.time.domain.ReservationTime;
 import roomescape.time.dto.RequestTime;
 import roomescape.time.dto.ResponseTime;
 import roomescape.time.repository.TimeRepository;
@@ -18,13 +18,13 @@ public class TimeService {
     }
 
     public Long save(RequestTime requestTime) {
-        Time time = new Time(null, requestTime.startAt());
-        return timeRepository.save(time);
+        ReservationTime reservationTime = new ReservationTime(null, requestTime.startAt());
+        return timeRepository.save(reservationTime);
     }
 
     public ResponseTime findById(Long id) {
-        Time time = timeRepository.findById(id);
-        return new ResponseTime(time.getId(), time.getStartAt());
+        ReservationTime reservationTime = timeRepository.findById(id);
+        return new ResponseTime(reservationTime.getId(), reservationTime.getStartAt());
     }
 
     public List<ResponseTime> findAll() {

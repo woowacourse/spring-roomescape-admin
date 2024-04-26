@@ -19,12 +19,12 @@ public class ReservationTimeService {
     public List<ReservationTimeResponse> findAll() {
         return reservationTimeRepository.findAll()
                 .stream()
-                .map(ReservationTimeResponse::toResponse)
+                .map(ReservationTimeResponse::from)
                 .toList();
     }
 
     public ReservationTimeResponse create(ReservationTimeCreateRequest reservationTimeCreateRequest) {
-        return ReservationTimeResponse.toResponse(reservationTimeRepository.save(reservationTimeCreateRequest));
+        return ReservationTimeResponse.from(reservationTimeRepository.save(reservationTimeCreateRequest));
     }
 
     public void delete(Long id) {

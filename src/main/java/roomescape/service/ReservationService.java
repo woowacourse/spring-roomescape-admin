@@ -19,12 +19,12 @@ public class ReservationService {
     public List<ReservationResponse> findAll() {
         return reservationRepository.findAll()
                 .stream()
-                .map(ReservationResponse::toResponse)
+                .map(ReservationResponse::from)
                 .toList();
     }
 
     public ReservationResponse create(ReservationCreateRequest reservationCreateRequest) {
-        return ReservationResponse.toResponse(reservationRepository.save(reservationCreateRequest));
+        return ReservationResponse.from(reservationRepository.save(reservationCreateRequest));
     }
 
     public void delete(Long id) {

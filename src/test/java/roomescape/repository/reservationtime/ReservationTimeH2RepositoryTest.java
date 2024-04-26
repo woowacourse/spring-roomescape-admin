@@ -4,6 +4,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 
 import java.time.LocalTime;
 import java.util.List;
+import java.util.Optional;
 import javax.sql.DataSource;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
@@ -70,8 +71,16 @@ class ReservationTimeH2RepositoryTest {
     @Test
     @DisplayName("id에 맞는 ReservationTime을 찾는다.")
     void findBy() {
-        ReservationTime found = reservationTimeH2Repository.findById(reservationTime.id());
+        ReservationTime found = reservationTimeH2Repository.findById(reservationTime.id()).get();
 
         assertThat(found).isEqualTo(reservationTime);
+    }
+
+    @Test
+    @DisplayName("존재하지 않는 id가 들어오면 빈 Optional 객체를 반환한다.")
+    void findEmpty() {
+        Optional<ReservationTime> reservationTime = reservationTimeH2Repository.findById(-1L);
+
+        assertThat(reservationTime.isEmpty()).isTrue();
     }
 }

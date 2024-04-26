@@ -6,11 +6,11 @@ import roomescape.dao.ReservationTimeDao;
 import roomescape.data.vo.ReservationTime;
 
 @Component
-public class ReservationTimeRepositoryImpl implements ReservationTimeRepository {
+public class DbReservationTimeRepository implements ReservationTimeRepository {
 
     private final ReservationTimeDao reservationTimeDao;
 
-    public ReservationTimeRepositoryImpl(final ReservationTimeDao reservationTimeDao) {
+    public DbReservationTimeRepository(final ReservationTimeDao reservationTimeDao) {
         this.reservationTimeDao = reservationTimeDao;
     }
 

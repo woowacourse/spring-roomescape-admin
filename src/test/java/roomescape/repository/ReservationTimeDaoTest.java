@@ -2,6 +2,8 @@ package roomescape.repository;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertAll;
+import static org.springframework.boot.test.context.SpringBootTest.WebEnvironment.RANDOM_PORT;
+import static org.springframework.test.annotation.DirtiesContext.ClassMode.BEFORE_EACH_TEST_METHOD;
 
 import java.sql.Connection;
 import java.sql.SQLException;
@@ -13,14 +15,13 @@ import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.boot.test.context.SpringBootTest.WebEnvironment;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.test.annotation.DirtiesContext;
 import org.springframework.test.context.jdbc.Sql;
 import roomescape.model.ReservationTime;
 
-@SpringBootTest(webEnvironment = WebEnvironment.RANDOM_PORT)
-@DirtiesContext(classMode = DirtiesContext.ClassMode.BEFORE_EACH_TEST_METHOD)
+@SpringBootTest(webEnvironment = RANDOM_PORT)
+@DirtiesContext(classMode = BEFORE_EACH_TEST_METHOD)
 class ReservationTimeDaoTest {
 
     @Autowired
@@ -64,7 +65,7 @@ class ReservationTimeDaoTest {
     }
 
     @DisplayName("시간 삭제")
-    @Sql(scripts = "/createTime.sql")
+    @Sql("/createTime.sql")
     @Test
     void removeTime() {
         final List<ReservationTime> beforeRemoving = reservationTimeDao.findAll();
@@ -78,7 +79,7 @@ class ReservationTimeDaoTest {
     }
 
     @DisplayName("단건 조회")
-    @Sql(scripts = "/createTime.sql")
+    @Sql("/createTime.sql")
     @Test
     void findById() {
         //given
@@ -92,7 +93,7 @@ class ReservationTimeDaoTest {
     }
 
     @DisplayName("전체 조회")
-    @Sql(scripts = "/createTimes.sql")
+    @Sql("/createTimes.sql")
     @Test
     void findAll() {
         //given

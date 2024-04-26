@@ -2,6 +2,8 @@ package roomescape;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.hamcrest.Matchers.is;
+import static org.springframework.boot.test.context.SpringBootTest.WebEnvironment.RANDOM_PORT;
+import static org.springframework.test.annotation.DirtiesContext.ClassMode.BEFORE_EACH_TEST_METHOD;
 
 import io.restassured.RestAssured;
 import io.restassured.http.ContentType;
@@ -16,15 +18,14 @@ import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.boot.test.context.SpringBootTest.WebEnvironment;
 import org.springframework.boot.test.web.server.LocalServerPort;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.test.annotation.DirtiesContext;
 import org.springframework.test.context.jdbc.Sql;
 import roomescape.dto.ReservationResponse;
 
-@SpringBootTest(webEnvironment = WebEnvironment.RANDOM_PORT)
-@DirtiesContext(classMode = DirtiesContext.ClassMode.BEFORE_EACH_TEST_METHOD)
+@SpringBootTest(webEnvironment = RANDOM_PORT)
+@DirtiesContext(classMode = BEFORE_EACH_TEST_METHOD)
 class MissionStepTest {
 
     @LocalServerPort
@@ -64,7 +65,7 @@ class MissionStepTest {
 
     @DisplayName("예약 저장 및 예약 삭제")
     @Test
-    @Sql(scripts = "/createTime.sql")
+    @Sql("/createTime.sql")
     void step3() {
         final Map<String, Object> params = Map.of(
                 "name", "브라운",
@@ -109,7 +110,7 @@ class MissionStepTest {
     }
 
     @DisplayName("데이터 조회")
-    @Sql(scripts = "/createTime.sql")
+    @Sql("/createTime.sql")
     @Test
     void step5() {
         jdbcTemplate.update("INSERT INTO reservation (name, date, time_id) VALUES (?, ?, ?)",
@@ -127,7 +128,7 @@ class MissionStepTest {
     }
 
     @DisplayName("데이터 추가 및 삭제")
-    @Sql(scripts = "/createTime.sql")
+    @Sql("/createTime.sql")
     @Test
     void step6() {
         final Map<String, Object> params = Map.of(
@@ -180,7 +181,7 @@ class MissionStepTest {
     }
 
     @DisplayName("예약 시간 관리")
-    @Sql(scripts = "/createTime.sql")
+    @Sql("/createTime.sql")
     @Test
     void step8() {
         Map<String, Object> reservation = new HashMap<>();

@@ -5,6 +5,7 @@ import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import java.time.LocalDate;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
+import roomescape.entity.exception.InvalidRequestValueException;
 import roomescape.entity.exception.ReservationDatePassedException;
 
 class ReservationDateTest {
@@ -12,7 +13,7 @@ class ReservationDateTest {
     @Test
     void createReservationDateWithNullTest() {
         assertThatThrownBy(() -> new ReservationDate(null))
-                .isInstanceOf(NullPointerException.class);
+                .isInstanceOf(InvalidRequestValueException.class);
     }
 
     @DisplayName("날짜가 현재 날짜보다 이전 날짜인 경우 생성 시 예외가 발생한다")

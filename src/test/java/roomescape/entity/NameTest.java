@@ -7,13 +7,14 @@ import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.ValueSource;
+import roomescape.entity.exception.InvalidRequestValueException;
 
 class NameTest {
     @DisplayName("예약자 이름이 null인 경우 생성 시 예외가 발생한다")
     @Test
     void nullNameCreationTest() {
         assertThatThrownBy(() -> new Name(null))
-                .isInstanceOf(NullPointerException.class);
+                .isInstanceOf(InvalidRequestValueException.class);
     }
 
     @DisplayName("예약자 이름의 길이가 범위에 맞지 않는 경우 예외가 발생한다")
@@ -21,7 +22,7 @@ class NameTest {
     @ValueSource(strings = {"", "123456"})
     void invalidLengthNameCreationTest(String name) {
         assertThatThrownBy(() -> new Name(name))
-                .isInstanceOf(IllegalArgumentException.class);
+                .isInstanceOf(InvalidRequestValueException.class);
     }
 
     @DisplayName("조건에 맞는 이름을 생성할 경우 예외가 발생하지 않는다")

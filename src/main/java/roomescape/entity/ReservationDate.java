@@ -2,6 +2,7 @@ package roomescape.entity;
 
 import java.time.LocalDate;
 import java.util.Objects;
+import roomescape.entity.exception.InvalidRequestValueException;
 import roomescape.entity.exception.ReservationDatePassedException;
 
 public class ReservationDate {
@@ -19,7 +20,7 @@ public class ReservationDate {
 
     private void validateNonNull(LocalDate date) {
         if (date == null) {
-            throw new IllegalArgumentException("예약 날짜는 Null일 수 없습니다");
+            throw new InvalidRequestValueException("예약 날짜는 Null일 수 없습니다");
         }
     }
 

@@ -44,4 +44,9 @@ public class ReservationDao {
         long id = simpleJdbcInsert.executeAndReturnKey(parameterSource).longValue();
         return reservationRequest.toReservation(id);
     }
+
+    public void delete(long id){
+        String sql="delete from reservation where id=?";
+        jdbcTemplate.update(sql,id);
+    }
 }

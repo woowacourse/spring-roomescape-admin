@@ -18,7 +18,7 @@ public class Reservation {
     }
 
     public boolean isSameId(Long id) {
-        return this.id == id;
+        return this.id.equals(id);
     }
 
     public Long getId() {

@@ -25,57 +25,44 @@ class ReservationDaoTest {
     @Test
     void findAll() {
         // given
-        jdbcTemplate.update("INSERT INTO reservation_time (start_at) VALUES (?)", "10:00");
-        String name = "커비";
-        LocalDate date = LocalDate.of(2023, 1, 1);
-        LocalTime startAt = LocalTime.of(10, 0);
-        ReservationTime reservationTime = new ReservationTime(1L, startAt);
-        Reservation reservation = new Reservation(name, date, reservationTime);
-
-        reservationDao.add(reservation);
+        jdbcTemplate.update("INSERT INTO reservation_time (id, start_at) VALUES (?, ?)", 1, "10:00");
+        jdbcTemplate.update("INSERT INTO reservation (name, date, time_id) VALUES (?, ?, ?)", "커비", "2023-01-01", 1);
+        ReservationTime reservationTime = new ReservationTime(1L, LocalTime.of(10, 0));
 
         // when
         List<Reservation> reservations = reservationDao.findAll();
 
         // then
-        assertThat(reservations).containsExactly(new Reservation(1L, name, date, reservationTime));
+        assertThat(reservations).containsExactly(new Reservation(1L, "커비", LocalDate.of(2023, 1, 1), reservationTime));
     }
 
     @Test
     void add() {
         // given
         jdbcTemplate.update("INSERT INTO reservation_time (start_at) VALUES (?)", "10:00");
-        String name = "커비";
-        LocalDate date = LocalDate.of(2023, 1, 1);
-        LocalTime startAt = LocalTime.of(10, 0);
-        ReservationTime reservationTime = new ReservationTime(1L, startAt);
-        Reservation reservation = new Reservation(name, date, reservationTime);
+        ReservationTime reservationTime = new ReservationTime(1L, LocalTime.of(10, 0));
+        Reservation reservation = new Reservation("커비", LocalDate.of(2023, 1, 1), reservationTime);
 
         // when
         reservationDao.add(reservation);
 
         // then
         List<Reservation> reservations = reservationDao.findAll();
-        assertThat(reservations).containsExactly(new Reservation(1L, name, date, reservationTime));
+        assertThat(reservations).containsExactly(new Reservation(1L, "커비", LocalDate.of(2023, 1, 1), reservationTime));
     }
 
     @Test
     void delete() {
         // given
         jdbcTemplate.update("INSERT INTO reservation_time (start_at) VALUES (?)", "10:00");
-        String name = "커비";
-        LocalDate date = LocalDate.of(2023, 1, 1);
-        LocalTime startAt = LocalTime.of(10, 0);
-        ReservationTime reservationTime = new ReservationTime(1L, startAt);
-        Reservation reservation = new Reservation(name, date, reservationTime);
-
-        reservationDao.add(reservation);
+        jdbcTemplate.update("INSERT INTO reservation (name, date, time_id) VALUES (?, ?, ?)", "커비", "2023-01-01", 1);
+        ReservationTime reservationTime = new ReservationTime(1L, LocalTime.of(10, 0));
 
         // when
         reservationDao.delete(1);
 
         // then
         List<Reservation> reservations = reservationDao.findAll();
-        assertThat(reservations).doesNotContain(new Reservation(1L, name, date, reservationTime));
+        assertThat(reservations).doesNotContain(new Reservation(1L, "커비", LocalDate.of(2023, 1, 1), reservationTime));
     }
 }

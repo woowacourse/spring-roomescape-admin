@@ -15,7 +15,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.context.SpringBootTest.WebEnvironment;
 import org.springframework.test.annotation.DirtiesContext;
-import org.springframework.transaction.annotation.Transactional;
 import roomescape.domain.Reservation;
 import roomescape.domain.ReservationTime;
 
@@ -37,7 +36,6 @@ class JdbcReservationRepositoryTest {
     }
 
     @Test
-    @Transactional
     void 예약_저장() {
         //given
         Reservation reservation = createReservation();
@@ -51,7 +49,6 @@ class JdbcReservationRepositoryTest {
     }
 
     @Test
-    @Transactional
     void 전체_예약_조회() {
         //given
         Reservation reservation1 = createReservation();
@@ -71,7 +68,6 @@ class JdbcReservationRepositoryTest {
     }
 
     @Test
-    @Transactional
     void 예약_삭제() {
         //given
         Reservation reservationToDelete = createReservation();

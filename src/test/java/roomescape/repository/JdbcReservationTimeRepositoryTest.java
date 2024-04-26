@@ -12,7 +12,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.context.SpringBootTest.WebEnvironment;
 import org.springframework.test.annotation.DirtiesContext;
-import org.springframework.transaction.annotation.Transactional;
 import roomescape.domain.ReservationTime;
 
 @SpringBootTest(webEnvironment = WebEnvironment.RANDOM_PORT)
@@ -24,7 +23,6 @@ class JdbcReservationTimeRepositoryTest {
     JdbcReservationTimeRepository jdbcReservationTimeRepository;
 
     @Test
-    @Transactional
     void 예약_시간_저장() {
         //given
         ReservationTime reservationTime = createReservationTime();
@@ -38,7 +36,6 @@ class JdbcReservationTimeRepositoryTest {
     }
 
     @Test
-    @Transactional
     void 전체_예약_시간_조회() {
         //given
         ReservationTime reservationTime1 = createReservationTime();
@@ -55,7 +52,6 @@ class JdbcReservationTimeRepositoryTest {
     }
 
     @Test
-    @Transactional
     void 예약_시간_삭제() {
         //given
         ReservationTime reservationTime = createReservationTime();

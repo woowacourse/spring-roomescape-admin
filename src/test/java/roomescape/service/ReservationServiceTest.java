@@ -4,8 +4,8 @@ import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
-import roomescape.dao.FakeReservationRepository;
-import roomescape.dao.FakeReservationTimeRepository;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.test.context.SpringBootTest;
 import roomescape.dao.ReservationRepository;
 import roomescape.dao.ReservationTimeRepository;
 import roomescape.domain.Reservation;
@@ -18,18 +18,18 @@ import java.util.List;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertAll;
 
+@SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.NONE)
 class ReservationServiceTest {
+    @Autowired
     private ReservationRepository reservationRepository;
+    @Autowired
     private ReservationTimeRepository reservationTimeRepository;
+    @Autowired
     private ReservationService reservationService;
     private ReservationTime reservationTime;
 
     @BeforeEach
     void setUp() {
-        reservationRepository = new FakeReservationRepository();
-        reservationTimeRepository = new FakeReservationTimeRepository();
-        reservationService = new ReservationService(reservationRepository, reservationTimeRepository);
-
         reservationTime = reservationTimeRepository.save(new ReservationTime("10:00"));
     }
 

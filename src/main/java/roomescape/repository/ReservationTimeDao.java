@@ -15,6 +15,7 @@ import roomescape.model.ReservationTime;
 
 @Repository
 public class ReservationTimeDao {
+
     private final JdbcTemplate jdbcTemplate;
 
     public ReservationTimeDao(final DataSource dataSource) {

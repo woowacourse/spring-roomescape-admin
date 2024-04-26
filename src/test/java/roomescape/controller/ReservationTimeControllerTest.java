@@ -10,7 +10,7 @@ import org.springframework.boot.test.context.SpringBootTest.WebEnvironment;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.test.annotation.DirtiesContext;
-import roomescape.dto.ReservationTimeRequest;
+import roomescape.dto.CreateReservationTimeRequest;
 import roomescape.dto.ReservationTimeResponse;
 
 @SpringBootTest(webEnvironment = WebEnvironment.RANDOM_PORT)
@@ -30,7 +30,7 @@ class ReservationTimeControllerTest {
     @Test
     void saveTime() {
         //given
-        final ReservationTimeRequest time = new ReservationTimeRequest("14:00");
+        final CreateReservationTimeRequest time = new CreateReservationTimeRequest("14:00");
         final ReservationTimeResponse expected = new ReservationTimeResponse(1L, "14:00");
 
         //when
@@ -44,7 +44,7 @@ class ReservationTimeControllerTest {
     @Test
     void deleteReservation() {
         //given
-        final ReservationTimeRequest time = new ReservationTimeRequest("14:00");
+        final CreateReservationTimeRequest time = new CreateReservationTimeRequest("14:00");
         final ReservationTimeResponse saved = controller.save(time);
 
         //when

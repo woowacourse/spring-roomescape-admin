@@ -11,7 +11,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.test.annotation.DirtiesContext;
 import org.springframework.test.context.jdbc.Sql;
-import roomescape.dto.ReservationRequest;
+import roomescape.dto.CreateReservationRequest;
 import roomescape.dto.ReservationResponse;
 
 @SpringBootTest(webEnvironment = WebEnvironment.RANDOM_PORT)
@@ -32,7 +32,7 @@ class ReservationControllerTest {
     @Test
     void saveReservation() {
         //given
-        final ReservationRequest reservation = new ReservationRequest("2024-04-18", "레디", 1L);
+        final CreateReservationRequest reservation = new CreateReservationRequest("2024-04-18", "레디", 1L);
 
         //when
         controller.save(reservation);
@@ -47,7 +47,7 @@ class ReservationControllerTest {
     @Test
     void deleteReservation() {
         //given
-        final ReservationRequest reservation = new ReservationRequest("2024-04-18", "레디", 1L);
+        final CreateReservationRequest reservation = new CreateReservationRequest("2024-04-18", "레디", 1L);
 
         final ReservationResponse saved = controller.save(reservation);
 

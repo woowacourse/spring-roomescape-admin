@@ -9,16 +9,12 @@ import roomescape.view.CommandView;
 @Controller
 public class MainController {
     private final CommandView commandView = new CommandView();
-    private final ReservationTimeConsoleController reservationTimeConsoleController;
-    private final ReservationConsoleController reservationConsoleController;
     private final Map<Command, CommandExecutor> commands;
 
     public MainController(
             final ReservationTimeConsoleController reservationTimeConsoleController,
             final ReservationConsoleController reservationConsoleController
     ) {
-        this.reservationTimeConsoleController = reservationTimeConsoleController;
-        this.reservationConsoleController = reservationConsoleController;
         this.commands = Map.of(
                 new Command(1), reservationTimeConsoleController::saveTime,
                 new Command(2), reservationTimeConsoleController::deleteTime,

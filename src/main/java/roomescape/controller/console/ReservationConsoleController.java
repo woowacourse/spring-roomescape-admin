@@ -26,46 +26,32 @@ public class ReservationConsoleController {
     }
 
     public void saveReservation() {
-        List<ReservationTimeResponse> reservationTimeResponses = getReservationTimeResponses();
-        if (reservationTimeResponses.isEmpty()) {
+        try {
+            List<ReservationTimeResponse> reservationTimes = reservationTimeService.findReservationTimes();
+            ReservationRequest reservationRequest = new ReservationRequest(
+                    reservationView.readName(),
+                    reservationView.readDate(),
+                    ReservationTimeView.readIndexToReserve(reservationTimes)
+            );
+            reservationService.saveReservation(reservationRequest);
+            reservationView.printSuccessfullyAdded();
+        } catch (IllegalStateException exception) {
             reservationView.printHasNotAnyReservationTime();
-            return;
         }
-        ReservationRequest reservationRequest = new ReservationRequest(
-                reservationView.readName(),
-                reservationView.readDate(),
-                ReservationTimeView.readIndexToReserve(reservationTimeResponses)
-        );
-        reservationService.saveReservation(reservationRequest);
-        reservationView.printSuccessfullyAdded();
-    }
-
-    private List<ReservationTimeResponse> getReservationTimeResponses() {
-        return reservationTimeService.getTimes()
-                .stream()
-                .map(ReservationTimeResponse::from)
-                .toList();
-    }
-
-    public void deleteReservation() {
-        List<ReservationResponse> reservationResponses = getReservationResponses();
-        if (reservationResponses.isEmpty()) {
-            reservationView.printHasNotAnyReservation();
-            return;
-        }
-        int index = reservationView.readIndexToDelete(reservationResponses);
-        reservationService.deleteReservation(reservationResponses.get(index - 1).id());
-        reservationView.printSuccessfullyDeleted();
     }
 
     public void getReservation() {
-        reservationView.printReservations(getReservationResponses());
+        reservationView.printReservations(reservationService.findReservations());
     }
 
-    private List<ReservationResponse> getReservationResponses() {
-        return reservationService.getAllReservations()
-                .stream()
-                .map(ReservationResponse::from)
-                .toList();
+    public void deleteReservation() {
+        try {
+            List<ReservationResponse> reservationResponses = reservationService.findReservations();
+            int index = reservationView.readIndexToDelete(reservationResponses);
+            reservationService.deleteReservation(reservationResponses.get(index - 1).id());
+            reservationView.printSuccessfullyDeleted();
+        } catch (final IllegalStateException exception) {
+            reservationView.printHasNotAnyReservation();
+        }
     }
 }

@@ -23,7 +23,7 @@ public class GameTime {
 
     private void validateNonNull(LocalTime startAt) {
         if (startAt == null) {
-            throw new NullPointerException("예약 가능한 시간은 null일 수 없습니다");
+            throw new IllegalArgumentException("예약 가능한 시간은 null일 수 없습니다");
         }
     }
 

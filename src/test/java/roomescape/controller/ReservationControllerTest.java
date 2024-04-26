@@ -66,6 +66,13 @@ class ReservationControllerTest {
                 .extract().path("id");
 
         RestAssured.given().log().all()
+                .contentType(ContentType.JSON)
+                .body(params)
+                .when().post("/reservations")
+                .then().log().all()
+                .statusCode(400);
+
+        RestAssured.given().log().all()
                 .when().get("/reservations")
                 .then().log().all()
                 .statusCode(200)

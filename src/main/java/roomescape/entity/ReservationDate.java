@@ -18,7 +18,7 @@ public class ReservationDate {
 
     private void validateNonNull(LocalDate date) {
         if (date == null) {
-            throw new NullPointerException("예약 날짜는 Null일 수 없습니다");
+            throw new IllegalArgumentException("예약 날짜는 Null일 수 없습니다");
         }
     }
 

@@ -20,7 +20,7 @@ public class Name {
 
     private void validateNonNull(String name) {
         if (name == null) {
-            throw new NullPointerException("예약자 이름은 Null이 될 수 없습니다");
+            throw new IllegalArgumentException("예약자 이름은 Null이 될 수 없습니다");
         }
     }
 

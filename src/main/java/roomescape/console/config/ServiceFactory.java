@@ -2,8 +2,8 @@ package roomescape.console.config;
 
 import roomescape.console.dao.MemoryReservationDao;
 import roomescape.console.dao.MemoryReservationTimeDao;
-import roomescape.reservation.service.ReservationService;
-import roomescape.reservation.service.ReservationTimeService;
+import roomescape.core.service.ReservationService;
+import roomescape.core.service.ReservationTimeService;
 
 public class ServiceFactory {
 

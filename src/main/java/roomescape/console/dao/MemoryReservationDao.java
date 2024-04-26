@@ -3,7 +3,7 @@ package roomescape.console.dao;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.atomic.AtomicLong;
-import roomescape.reservation.dao.ReservationDao;
+import roomescape.core.dao.ReservationDao;
 import roomescape.reservation.domain.Reservation;
 
 public class MemoryReservationDao implements ReservationDao {

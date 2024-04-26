@@ -8,3 +8,8 @@ spring:
   # db url
   datasource:
     url: jdbc:h2:mem:database
+
+  sql:
+    init:
+      mode: always
+      schema-locations: classpath*:db/schema/schema.sql

@@ -6,21 +6,21 @@ public class ComparisonCondition implements Assemblable {
     private final String column;
     private final Object value;
     private final Operator operator;
-    private boolean usingSingleQuotes;
+    private final boolean usingSingleQuotes;
 
-    private ComparisonCondition(String column, Object value, Operator operator) {
+    private ComparisonCondition(String column, Object value, Operator operator, boolean usingSingleQuotes) {
         this.column = column;
         this.value = value;
         this.operator = operator;
-        this.usingSingleQuotes = true;
+        this.usingSingleQuotes = usingSingleQuotes;
     }
 
     public static ComparisonCondition equalTo(String column, Object value) {
-        return new ComparisonCondition(column, value, Operator.EQUAL_TO);
+        return equalTo(column, value, true);
     }
 
-    public void useSingleQuotes(boolean usingSingleQuotes) {
-        this.usingSingleQuotes = usingSingleQuotes;
+    public static ComparisonCondition equalTo(String column, Object value, boolean usingSingleQuotes) {
+        return new ComparisonCondition(column, value, Operator.EQUAL_TO, usingSingleQuotes);
     }
 
     @Override

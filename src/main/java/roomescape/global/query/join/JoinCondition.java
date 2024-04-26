@@ -11,13 +11,12 @@ public class JoinCondition implements Assemblable {
     }
 
     public static JoinCondition on(String column, Object value) {
-        return new JoinCondition(ComparisonCondition.equalTo(column, value));
+        return new JoinCondition(ComparisonCondition.equalTo(column, value, false));
     }
 
     @Override
     public void assemble(StringBuilder builder) {
         builder.append(" ON ");
-        condition.useSingleQuotes(false);
         condition.assemble(builder);
     }
 }

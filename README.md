@@ -80,22 +80,26 @@ content-type: application/json
   HTTP/1.1 400 
   Content-Type: application/json
   
-  "이름은 1자 이상, 5자 이하여야 합니다.";
-
+  {
+    "message": "이름은 1자 이상, 5자 이하여야 합니다."
+  }  
   ```
   - 추가 실패 : 일정 오류
   ```
   HTTP/1.1 400 
   Content-Type: application/json
   
-  "현재보다 이전으로 일정을 설정할 수 없습니다.";
-
+  {
+    "message": "현재보다 이전으로 일정을 설정할 수 없습니다."
+  }
   ```
   - 추가 실패 : 날짜 오류
   ```
   HTTP/1.1 400
   
-  "올바르지 않은 날짜입니다. date: ''"
+  {
+    "message": "올바르지 않은 날짜입니다. date: '03-04'"
+  }
   ```
 
 ### 예약 삭제
@@ -107,12 +111,6 @@ content-type: application/json
   - 존재하는 id로 삭제 요청
   ```
   HTTP/1.1 200
-  ```
-  - 존재하지 않는 id(0)로 삭제 요청
-  ```
-  HTTP/1.1 400
-  
-  "존재하지 않는 예약 내역입니다. id: 0"
   ```
   
 ### 시간 추가
@@ -142,7 +140,9 @@ Content-Type: application/json
   ```
   HTTP/1.1 400
   
-  "올바르지 않은 시간입니다. date: ''"
+  {
+    "message": "올바르지 않은 시간입니다. time: ''"
+  }
   ```
 
 ### 시간 조회
@@ -169,12 +169,6 @@ Content-Type: application/json
   - 존재하는 id로 삭제 요청
   ```
   HTTP/1.1 200
-  ```
-  - 존재하지 않는 id(0)로 삭제 요청
-  ```
-  HTTP/1.1 400
-  
-  "존재하지 않는 예약 시간입니다. id: 0"
   ```
 
 ## 기능 명세서

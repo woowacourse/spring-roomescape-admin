@@ -12,7 +12,7 @@ public class ReservationTimeService {
 
     private final ReservationTimeRepository reservationTimeRepository;
 
-    private ReservationTimeService(final ReservationTimeRepository reservationTimeRepository) {
+    public ReservationTimeService(final ReservationTimeRepository reservationTimeRepository) {
         this.reservationTimeRepository = reservationTimeRepository;
     }
 

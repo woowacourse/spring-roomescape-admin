@@ -13,7 +13,7 @@ public class ReservationTimeRequest {
         startAt = null;
     }
 
-    private ReservationTimeRequest(final LocalTime startAt) {
+    public ReservationTimeRequest(final LocalTime startAt) {
         this.startAt = startAt;
     }
 

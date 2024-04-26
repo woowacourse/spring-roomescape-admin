@@ -15,7 +15,7 @@ public class ReservationService {
     private final ReservationRepository reservationRepository;
     private final ReservationTimeRepository reservationTimeRepository;
 
-    private ReservationService(final ReservationTimeRepository reservationTimeRepository, final ReservationRepository reservationRepository) {
+    public ReservationService(final ReservationTimeRepository reservationTimeRepository, final ReservationRepository reservationRepository) {
         this.reservationTimeRepository = reservationTimeRepository;
         this.reservationRepository = reservationRepository;
     }
@@ -30,7 +30,7 @@ public class ReservationService {
         return new ReservationResponse(id, reservationRequest.getName(), reservationRequest.getDate(), reservationTimeResponse);
     }
 
-    public void deleteReservationTime(Long id) {
-        reservationTimeRepository.deleteById(id);
+    public void deleteReservation(Long id) {
+        reservationRepository.deleteById(id);
     }
 }

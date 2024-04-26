@@ -9,6 +9,8 @@ import roomescape.global.query.join.JoinCondition;
 import roomescape.global.query.join.JoinType;
 
 public class SelectQuery extends Query {
+    private static final String ALL_COLUMNS = "*";
+
     private final List<String> columns;
     private final LogicalCondition condition;
     private Join join = Join.EMPTY;
@@ -26,7 +28,7 @@ public class SelectQuery extends Query {
     }
 
     public SelectQuery addAllColumns() {
-        this.columns.add("*");
+        this.columns.add(ALL_COLUMNS);
         return this;
     }
 
@@ -44,7 +46,7 @@ public class SelectQuery extends Query {
     }
 
     public SelectQuery join(JoinType joinType, String joinTable, JoinCondition joinCondition, String alias) {
-        join = new Join(joinType, joinTable, joinCondition, new Alias(alias));
+        this.join = new Join(joinType, joinTable, joinCondition, new Alias(alias));
         return this;
     }
 

@@ -1,13 +1,13 @@
 package roomescape.controller.api;
 
 import java.sql.Date;
-import java.sql.PreparedStatement;
 import java.time.LocalTime;
 import java.util.List;
+import java.util.Map;
 import org.springframework.http.ResponseEntity;
 import org.springframework.jdbc.core.JdbcTemplate;
-import org.springframework.jdbc.support.GeneratedKeyHolder;
-import org.springframework.jdbc.support.KeyHolder;
+import org.springframework.jdbc.core.RowMapper;
+import org.springframework.jdbc.core.simple.SimpleJdbcInsert;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -25,10 +25,29 @@ import roomescape.dto.reservationtime.ReservationTimeResponse;
 @Controller
 public class ReservationController {
 
+    private static final RowMapper<Reservation> RESERVATION_ROW_MAPPER = (resultSet, rowNum) -> {
+        Long timeId = resultSet.getLong("time_id");
+        LocalTime time = resultSet.getTime("start_at").toLocalTime();
+
+        return new Reservation(
+                resultSet.getLong("id"),
+                resultSet.getString("name"),
+                resultSet.getString("date"),
+                new ReservationTime(timeId, time));
+    };
+    private static final RowMapper<ReservationTime> RESERVATION_TIME_ROW_MAPPER = (resultSet, rowNum) ->
+            new ReservationTime(
+                    resultSet.getLong("id"),
+                    resultSet.getTime("start_at").toLocalTime());
+
     private JdbcTemplate jdbcTemplate;
+    private SimpleJdbcInsert simpleJdbcInsert;
 
     public ReservationController(JdbcTemplate jdbcTemplate) {
         this.jdbcTemplate = jdbcTemplate;
+        this.simpleJdbcInsert = new SimpleJdbcInsert(jdbcTemplate.getDataSource())
+                .withTableName("reservation")
+                .usingGeneratedKeyColumns("id");
     }
 
     @GetMapping("")
@@ -37,36 +56,29 @@ public class ReservationController {
                 .map(ReservationResponse::from)
                 .toList();
 
-        return ResponseEntity.ok()
-                .body(reservationResponses);
+        return ResponseEntity.ok(reservationResponses);
     }
 
     @PostMapping("")
     public ResponseEntity<ReservationResponse> create(@RequestBody ReservationRequest reservationRequest) {
-        KeyHolder keyHolder = new GeneratedKeyHolder();
-        jdbcTemplate.update(connection -> {
-            PreparedStatement ps = connection.prepareStatement(
-                    "insert into reservation (name, date, time_id) values (?, ?, ?)",
-                    new String[]{"id"});
-            ps.setString(1, reservationRequest.name());
-            ps.setDate(2, Date.valueOf(reservationRequest.date()));
-            ps.setLong(3, reservationRequest.timeId());
-            return ps;
-        }, keyHolder);
-        Long id = keyHolder.getKey().longValue();
+        Long id = simpleJdbcInsert.executeAndReturnKey(
+                        Map.of(
+                                "name", reservationRequest.name(),
+                                "date", Date.valueOf(reservationRequest.date()),
+                                "time_id", reservationRequest.timeId()
+                        ))
+                .longValue();
 
-        ReservationTimeResponse reservationTimeResponse = jdbcTemplate.queryForObject(
-                "select start_at from reservation_time where id = ?",
-                (resultSet, rowNum) -> {
-                    ReservationTimeResponse foundReservationTimeResponse = new ReservationTimeResponse(
-                            reservationRequest.timeId(),
-                            resultSet.getString("start_at")
-                    );
-                    return foundReservationTimeResponse;
-                }, reservationRequest.timeId());
+        ReservationTime reservationTime = jdbcTemplate.queryForObject(
+                "select id, start_at from reservation_time where id = ?",
+                RESERVATION_TIME_ROW_MAPPER,
+                reservationRequest.timeId());
 
-        ReservationResponse reservationResponse = new ReservationResponse(id, reservationRequest.name(),
-                reservationRequest.date().toString(), reservationTimeResponse);
+        ReservationResponse reservationResponse = new ReservationResponse(
+                id,
+                reservationRequest.name(),
+                reservationRequest.date().toString(),
+                ReservationTimeResponse.from(reservationTime));
 
         return ResponseEntity.ok(reservationResponse);
     }
@@ -79,29 +91,18 @@ public class ReservationController {
     }
 
     private List<Reservation> getReservations() {
-        return jdbcTemplate.query(
-                """
-                        SELECT
-                            r.id as reservation_id,
-                            r.name,
-                            r.date,
-                            t.id as time_id,
-                            t.start_at as time_value
-                        FROM reservation as r
-                        inner join reservation_time as t
-                        on r.time_id = t.id
-                        """,
-                (resultSet, rowNum) -> {
-                    Long timeId = resultSet.getLong("time_id");
-                    LocalTime time = resultSet.getTime("start_at").toLocalTime();
+        String sql = """
+                select
+                    r.id as reservation_id,
+                    r.name,
+                    r.date,
+                    t.id as time_id,
+                    t.start_at as time_value
+                from reservation as r
+                inner join reservation_time as t
+                on r.time_id = t.id
+                """;
 
-                    return new Reservation(
-                            resultSet.getLong("id"),
-                            resultSet.getString("name"),
-                            resultSet.getString("date"),
-                            new ReservationTime(timeId, time)
-                    );
-                }
-        );
+        return jdbcTemplate.query(sql, RESERVATION_ROW_MAPPER);
     }
 }

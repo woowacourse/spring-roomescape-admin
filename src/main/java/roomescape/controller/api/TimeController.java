@@ -1,12 +1,11 @@
 package roomescape.controller.api;
 
-import java.sql.PreparedStatement;
-import java.sql.Time;
 import java.util.List;
+import java.util.Map;
 import org.springframework.http.ResponseEntity;
 import org.springframework.jdbc.core.JdbcTemplate;
-import org.springframework.jdbc.support.GeneratedKeyHolder;
-import org.springframework.jdbc.support.KeyHolder;
+import org.springframework.jdbc.core.RowMapper;
+import org.springframework.jdbc.core.simple.SimpleJdbcInsert;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -22,10 +21,20 @@ import roomescape.dto.reservationtime.ReservationTimeResponse;
 @Controller
 public class TimeController {
 
+    private static final RowMapper<ReservationTime> RESERVATION_TIME_ROW_MAPPER = (resultSet, rowNum) ->
+            new ReservationTime(
+                    resultSet.getLong("id"),
+                    resultSet.getTime("start_at").toLocalTime()
+            );
+
     private JdbcTemplate jdbcTemplate;
+    private SimpleJdbcInsert simpleJdbcInsert;
 
     public TimeController(JdbcTemplate jdbcTemplate) {
         this.jdbcTemplate = jdbcTemplate;
+        this.simpleJdbcInsert = new SimpleJdbcInsert(jdbcTemplate.getDataSource())
+                .withTableName("reservation_time")
+                .usingGeneratedKeyColumns("id");
     }
 
     @GetMapping("")
@@ -34,21 +43,17 @@ public class TimeController {
                 .map(ReservationTimeResponse::from)
                 .toList();
 
-        return ResponseEntity.ok()
-                .body(reservationTimeResponses);
+        return ResponseEntity.ok(reservationTimeResponses);
     }
 
     @PostMapping("")
     public ResponseEntity<ReservationTimeResponse> create(@RequestBody ReservationTimeRequest reservationTimeRequest) {
-        KeyHolder keyHolder = new GeneratedKeyHolder();
-        jdbcTemplate.update(connection -> {
-            PreparedStatement ps = connection.prepareStatement(
-                    "insert into reservation_time (start_at) values (?)",
-                    new String[]{"id"});
-            ps.setTime(1, Time.valueOf(reservationTimeRequest.startAt()));
-            return ps;
-        }, keyHolder);
-        Long id = keyHolder.getKey().longValue();
+        long id = simpleJdbcInsert.executeAndReturnKey(
+                        Map.of(
+                                "start_at", reservationTimeRequest.startAt()
+                        ))
+                .longValue();
+
         ReservationTimeResponse reservationTimeResponse = new ReservationTimeResponse(id,
                 reservationTimeRequest.startAt().toString());
 
@@ -63,13 +68,8 @@ public class TimeController {
     }
 
     private List<ReservationTime> getReservationTimes() {
-        return jdbcTemplate.query(
-                "select id, start_at from reservation_time",
-                (resultSet, rowNum) ->
-                        new ReservationTime(
-                                resultSet.getLong("id"),
-                                resultSet.getTime("start_at").toLocalTime()
-                        )
-        );
+        String sql = "select id, start_at from reservation_time";
+
+        return jdbcTemplate.query(sql, RESERVATION_TIME_ROW_MAPPER);
     }
 }

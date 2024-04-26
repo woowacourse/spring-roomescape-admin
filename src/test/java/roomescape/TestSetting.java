@@ -25,11 +25,14 @@ public class TestSetting {
     }
 
     public static ReservationRequest createReservationRequest() {
-        return new ReservationRequest("ted", "2024-01-01", 1L);
+        return new ReservationRequest(
+                "ted",
+                LocalDate.parse("2024-01-01"),
+                1L);
     }
 
     public static ReservationTimeRequest createReservationTimeRequest() {
-        return new ReservationTimeRequest("10:00");
+        return new ReservationTimeRequest(LocalTime.parse("10:00"));
     }
 
     public static boolean isEqualsReservation(Reservation reservation1, Reservation reservation2) {

@@ -4,6 +4,7 @@ import static io.restassured.RestAssured.given;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.hamcrest.Matchers.is;
 import static roomescape.TestSetting.createReservationRequest;
+import static roomescape.TestSetting.createReservationTime;
 
 import io.restassured.RestAssured;
 import io.restassured.http.ContentType;
@@ -19,6 +20,7 @@ import org.springframework.boot.test.web.server.LocalServerPort;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.test.annotation.DirtiesContext;
 import roomescape.dto.ReservationRequest;
+import roomescape.repository.ReservationTimeRepository;
 
 @SpringBootTest(webEnvironment = WebEnvironment.RANDOM_PORT)
 @DirtiesContext(classMode = DirtiesContext.ClassMode.BEFORE_EACH_TEST_METHOD)
@@ -30,6 +32,9 @@ public class ReservationAPITest {
 
     @Autowired
     JdbcTemplate jdbcTemplate;
+
+    @Autowired
+    ReservationTimeRepository reservationTimeRepository;
 
     @Test
     void 데이터베이스_예약_테이블_생성() {
@@ -44,7 +49,7 @@ public class ReservationAPITest {
 
     @Test
     void 예약_추가_및_삭제() {
-        jdbcTemplate.update("INSERT INTO reservation_time(start_at) VALUES(?)", "10:00");
+        reservationTimeRepository.save(createReservationTime());
 
         ReservationRequest reservationRequest = createReservationRequest();
 

@@ -6,6 +6,7 @@ import java.util.List;
 import java.util.Map;
 import javax.sql.DataSource;
 import org.springframework.jdbc.core.JdbcTemplate;
+import org.springframework.jdbc.core.RowMapper;
 import org.springframework.jdbc.core.simple.SimpleJdbcInsert;
 import org.springframework.stereotype.Repository;
 import roomescape.domain.ReservationTime;
@@ -13,6 +14,10 @@ import roomescape.dto.TimeRequest;
 
 @Repository
 public class ReservationTimeDao {
+    private static final RowMapper<ReservationTime> RESERVATION_TIME_ROW_MAPPER = (resultSet, rowNum) -> new ReservationTime(
+            resultSet.getLong("id"),
+            LocalTime.parse(resultSet.getString("start_at"))
+    );
     private final JdbcTemplate jdbcTemplate;
     private final SimpleJdbcInsert jdbcInsert;
 
@@ -25,14 +30,7 @@ public class ReservationTimeDao {
 
     public List<ReservationTime> findAll() {
         String sql = "SELECT id, start_at FROM reservation_time";
-        return jdbcTemplate.query(
-                sql,
-                (resultSet, rowNum) -> {
-                    return new ReservationTime(
-                            resultSet.getLong("id"),
-                            LocalTime.parse(resultSet.getString("start_at"))
-                    );
-                });
+        return jdbcTemplate.query(sql, RESERVATION_TIME_ROW_MAPPER);
     }
 
     public ReservationTime add(TimeRequest timeRequest) {

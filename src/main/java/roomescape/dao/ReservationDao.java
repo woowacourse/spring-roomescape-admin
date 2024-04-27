@@ -8,8 +8,8 @@ import org.springframework.jdbc.core.namedparam.SqlParameterSource;
 import org.springframework.jdbc.core.simple.SimpleJdbcInsert;
 import org.springframework.stereotype.Component;
 import roomescape.domain.Reservation;
-import roomescape.domain.ReservationId;
 import roomescape.domain.ReservationTime;
+import roomescape.dto.ReservationId;
 
 import java.util.List;
 import java.util.Optional;

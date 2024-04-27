@@ -3,9 +3,9 @@ package roomescape.service;
 import org.springframework.stereotype.Service;
 import roomescape.dao.ReservationDao;
 import roomescape.domain.Reservation;
-import roomescape.domain.ReservationId;
 import roomescape.dto.CreateReservationRequest;
 import roomescape.dto.CreateReservationResponse;
+import roomescape.dto.ReservationId;
 import roomescape.mapper.ReservationMapper;
 
 import java.util.List;
@@ -28,7 +28,7 @@ public class ReservationService {
     public CreateReservationResponse createReservation(CreateReservationRequest request) {
         Reservation requestedReservation = reservationMapper.toReservation(request);
         ReservationId createdId = reservationDao.create(requestedReservation);
-        Reservation createdReservation = reservationDao.findById(createdId.getId());
+        Reservation createdReservation = reservationDao.findById(createdId.id());
         return reservationMapper.toCreateReservationResponse(createdReservation);
     }
 

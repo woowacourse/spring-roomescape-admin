@@ -1,8 +1,8 @@
 package roomescape.console.controller;
 
 import org.springframework.stereotype.Component;
-import roomescape.console.controller.request.ReservationTimeRequest;
-import roomescape.console.controller.response.ReservationTimeResponse;
+import roomescape.console.controller.request.ReservationRequest;
+import roomescape.console.controller.response.ReservationResponse;
 import roomescape.console.view.ConsoleRequest;
 import roomescape.console.view.ConsoleResponse;
 import roomescape.console.view.ResponseMapper;
@@ -10,13 +10,13 @@ import roomescape.console.view.ResponseMapper;
 import java.util.List;
 
 @Component
-public class ReservationTimeControllerAdapter implements ControllerAdapter {
-    private final ReservationTimeController reservationTimeController;
+public class ReservationControllerAdapter implements ControllerAdapter {
+    private final ReservationController reservationController;
     private final ResponseMapper responseMapper;
 
-    public ReservationTimeControllerAdapter(ReservationTimeController reservationTimeController) {
-        this.reservationTimeController = reservationTimeController;
-        this.responseMapper = new ResponseMapper();
+    public ReservationControllerAdapter(ReservationController reservationController, final ResponseMapper responseMapper) {
+        this.reservationController = reservationController;
+        this.responseMapper = responseMapper;
     }
 
     @Override
@@ -30,19 +30,19 @@ public class ReservationTimeControllerAdapter implements ControllerAdapter {
     }
 
     private ConsoleResponse handlePostRequest(ConsoleRequest request) {
-        ReservationTimeRequest mappedRequest = ReservationTimeRequest.from(request.getContents());
-        ReservationTimeResponse response = reservationTimeController.save(mappedRequest);
-        return responseMapper.mapToReservationTimeConsoleResponse(response);
+        ReservationRequest mappedRequest = ReservationRequest.from(request.getContents());
+        ReservationResponse response = reservationController.save(mappedRequest);
+        return responseMapper.mapToReservationConsoleResponse(response);
     }
 
     private ConsoleResponse handleGetRequest(ConsoleRequest request) {
-        List<ReservationTimeResponse> reservationTimeResponses = reservationTimeController.findAll();
-        return responseMapper.mapToReservationTimeConsoleResponse(reservationTimeResponses);
+        List<ReservationResponse> reservationTimeResponses = reservationController.findAll();
+        return responseMapper.mapToReservationConsoleResponse(reservationTimeResponses);
     }
 
     private ConsoleResponse handleDeleteRequest(ConsoleRequest request) {
         Long id = Long.parseLong(request.getContents().get(0));
-        reservationTimeController.delete(id);
+        reservationController.delete(id);
         return responseMapper.empty();
     }
 }

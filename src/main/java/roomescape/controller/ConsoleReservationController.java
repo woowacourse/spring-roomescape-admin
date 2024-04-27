@@ -5,8 +5,10 @@ import static roomescape.controller.ReservationMenu.ADD_RESERVATION_TIME;
 import static roomescape.controller.ReservationMenu.DELETE_RESERVATION;
 import static roomescape.controller.ReservationMenu.DELETE_RESERVATION_TIME;
 
+import java.time.LocalTime;
 import java.util.List;
 import roomescape.dto.ReservationResponse;
+import roomescape.dto.ReservationTimeRequest;
 import roomescape.dto.ReservationTimeResponse;
 import roomescape.repository.MemoryReservationRepository;
 import roomescape.repository.MemoryReservationTimeRepository;
@@ -31,8 +33,10 @@ public class ConsoleReservationController {
     }
 
     public void run() {
-        showMainPage();
-        selectMenu();
+        while (true) {
+            showMainPage();
+            selectMenu();
+        }
     }
 
     private void showMainPage() {
@@ -52,7 +56,9 @@ public class ConsoleReservationController {
         List<ReservationTimeResponse> reservationTimes = reservationTimeService.findReservationTimes();
         if (reservationTimes.isEmpty()) {
             OUTPUT_VIEW.printNoReservationTime();
+            return;
         }
+        OUTPUT_VIEW.printReservationTimes(reservationTimes);
     }
 
     private void selectMenu() {
@@ -68,10 +74,15 @@ public class ConsoleReservationController {
             System.out.println("예약 삭제");
         }
         if (selectedMenu == ADD_RESERVATION_TIME) {
-            System.out.println("예약 시간 추가");
+            addReservationTime();
         }
         if (selectedMenu == DELETE_RESERVATION_TIME) {
             System.out.println("예약 시간 삭제");
         }
+    }
+
+    private void addReservationTime() {
+        LocalTime input = INPUT_VIEW.readReservationTime();
+        reservationTimeService.createReservationTime(new ReservationTimeRequest(input));
     }
 }

@@ -1,4 +1,4 @@
-package roomescape.console;
+package roomescape.console.utils;
 
 import java.util.Arrays;
 

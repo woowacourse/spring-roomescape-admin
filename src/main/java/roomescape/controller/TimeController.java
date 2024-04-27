@@ -37,7 +37,7 @@ public class TimeController {
     }
 
     @DeleteMapping("/times/{id}")
-    public ResponseEntity<Void> delete(@PathVariable Long id) {
+    public ResponseEntity<Void> delete(@PathVariable("id") Long id) {
         try {
             reservationTimeRepository.delete(id);
         } catch (NullPointerException e) {

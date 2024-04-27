@@ -133,6 +133,10 @@ id : long
 ---
 
 ## 콘솔 UI
+- 콘솔 UI를 사용해 생성되는 데이터는 데이터베이스가 아닌 메모리에 저장합니다.
+
+### 사용 방법
+- `RoomescapeConsoleApplication`을 실행하면 콘솔 UI를 사용할 수 있습니다.
 
 ~~~markdown
 [🚪 방탈출 관리 페이지]

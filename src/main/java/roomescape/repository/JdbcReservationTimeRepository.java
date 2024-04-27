@@ -14,14 +14,12 @@ import roomescape.domain.ReservationTime;
 @Repository
 public class JdbcReservationTimeRepository implements ReservationTimeRepository {
 
-    private static final RowMapper<ReservationTime> ROW_MAPPER = (resultSet, rowNum) -> {
-        ReservationTime reservationTime = new ReservationTime(
-                resultSet.getLong("id"),
-                LocalTime.parse(resultSet.getString("start_at"))
-        );
-        return reservationTime;
-    };
-    
+    private static final RowMapper<ReservationTime> ROW_MAPPER = (resultSet, rowNum) ->
+            new ReservationTime(
+                    resultSet.getLong("id"),
+                    LocalTime.parse(resultSet.getString("start_at"))
+            );
+
     private final JdbcTemplate jdbcTemplate;
     private final SimpleJdbcInsert jdbcInsert;
 

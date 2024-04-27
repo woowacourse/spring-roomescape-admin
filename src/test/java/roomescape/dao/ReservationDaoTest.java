@@ -57,6 +57,6 @@ class ReservationDaoTest {
 
     private Reservation createTestReservation() {
         ReservationTime reservationTime = new ReservationTime(1L, LocalTime.of(10, 0));
-        return new Reservation(null, "브라운", LocalDate.of(2023, 8, 5), reservationTime);
+        return new Reservation("브라운", LocalDate.of(2023, 8, 5), reservationTime);
     }
 }

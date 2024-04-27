@@ -38,7 +38,7 @@ public class RoomescapeConsoleApplication {
         do {
             domainCommand = inputView.chooseDomain();
             chooseDomain(domainCommand);
-        } while (domainCommand == null || domainCommand.isEndProgram());
+        } while (domainCommand.isContinueProgram());
     }
 
     private void chooseDomain(DomainCommand domainCommand) {

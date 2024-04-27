@@ -6,8 +6,8 @@ public enum DomainCommand {
     END_PROGRAM,
     ;
 
-    public boolean isEndProgram() {
-        return this == END_PROGRAM;
+    public boolean isContinueProgram() {
+        return this != END_PROGRAM;
     }
 
     public boolean isReservationDomain() {

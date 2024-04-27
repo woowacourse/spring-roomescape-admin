@@ -1,4 +1,4 @@
-package roomescape.model;
+package roomescape.domain;
 
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.params.ParameterizedTest;
@@ -15,7 +15,7 @@ class ReservationTest {
     @ParameterizedTest
     @CsvSource(value = {"1:1:true", "1:2:false"}, delimiter = ':')
     void isSameId(Long id1, Long id2, boolean expected) {
-        Reservation reservation = new Reservation(id1, "1", LocalDate.now(), LocalTime.now());
+        Reservation reservation = new Reservation(id1, "1", LocalDate.now(), new ReservationTime(1L, LocalTime.now()));
 
         boolean actual = reservation.isSameId(id2);
 

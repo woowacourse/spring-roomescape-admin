@@ -5,7 +5,7 @@ import io.restassured.http.ContentType;
 
 import static org.hamcrest.Matchers.is;
 
-public class HttpRestTestTemplate {
+class HttpRestTestTemplate {
 
     private HttpRestTestTemplate() {
     }
@@ -40,5 +40,12 @@ public class HttpRestTestTemplate {
                 .when().delete(path)
                 .then().log().all()
                 .statusCode(200);
+    }
+
+    public static void assertDeleteInitialServerError(String path) {
+        RestAssured.given().log().all()
+                .when().delete(path)
+                .then().log().all()
+                .statusCode(500);
     }
 }

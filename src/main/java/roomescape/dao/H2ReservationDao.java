@@ -36,13 +36,13 @@ public class H2ReservationDao implements ReservationDao {
     public List<Reservation> findAll() {
         String sql = """
             SELECT
-                r.id as reservation_id,\s
-                r.name,\s
-                r.date,\s
-                t.id as time_id,\s
-                t.start_at as time_value\s
-            FROM reservation as r\s
-            inner join reservation_time as t\s
+                r.id as reservation_id,
+                r.name,
+                r.date,
+                t.id as time_id,
+                t.start_at as time_value
+            FROM reservation as r
+            inner join reservation_time as t
             on r.time_id = t.id""";
         return jdbcTemplate.query(sql, rowMapper);
     }
@@ -58,8 +58,10 @@ public class H2ReservationDao implements ReservationDao {
         );
         Number key = simpleJdbcInsert.executeAndReturnKey(parameters);
         return new Reservation(
-                key.longValue(), reservation.getName(),
-                reservation.getDate(), reservationTime
+                key.longValue(),
+                reservation.getName(),
+                reservation.getDate(),
+                reservationTime
         );
     }
 

@@ -17,11 +17,12 @@ public class DatabaseTest {
     private JdbcTemplate jdbcTemplate;
 
     @Test
-    void database_Connection_Test() {
+    void Database_Connection_Test() {
         try (Connection connection = jdbcTemplate.getDataSource().getConnection()) {
             assertThat(connection).isNotNull();
             assertThat(connection.getCatalog()).isEqualTo("DATABASE");
             assertThat(connection.getMetaData().getTables(null, null, "RESERVATION", null).next()).isTrue();
+            assertThat(connection.getMetaData().getTables(null, null, "RESERVATION_TIME", null).next()).isTrue();
         } catch (SQLException e) {
             throw new RuntimeException(e);
         }

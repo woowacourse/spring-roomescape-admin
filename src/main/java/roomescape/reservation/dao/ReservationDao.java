@@ -8,7 +8,7 @@ public interface ReservationDao {
 
     Reservation insert(final Reservation reservation);
 
-    public List<Reservation> findAll();
+    List<Reservation> findAll();
 
-    public int deleteById(final Long id);
+    int deleteById(final Long id);
 }

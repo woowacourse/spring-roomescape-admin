@@ -9,6 +9,7 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.jdbc.JdbcTest;
 import org.springframework.context.annotation.Import;
+import org.springframework.jdbc.core.JdbcTemplate;
 import roomescape.dto.request.ReservationTimeAddRequest;
 import roomescape.dto.response.ReservationTimeResponse;
 import roomescape.repository.reservationtime.ReservationTimeH2Repository;
@@ -19,6 +20,8 @@ class ReservationTimeServiceTest {
 
     @Autowired
     private ReservationTimeService reservationTimeService;
+    @Autowired
+    private JdbcTemplate jdbcTemplate;
 
     @Test
     @DisplayName("예약 가능 시간을 추가하고 id값을 붙여서 응답 DTO를 생성한다.")
@@ -31,6 +34,7 @@ class ReservationTimeServiceTest {
     }
 
     @Test
+    @DisplayName("모든 예약 가능 시간을 조회한다.")
     void getTimes() {
         List<ReservationTimeResponse> times = reservationTimeService.getTimes();
 
@@ -38,9 +42,10 @@ class ReservationTimeServiceTest {
     }
 
     @Test
+    @DisplayName("id에 맞는 예약 가능 시간을 조회한다.")
     void getTime() {
         ReservationTimeResponse timeResponse = reservationTimeService.getTime(10L);
-        
+
         assertThat(timeResponse.startAt()).isEqualTo("09:00");
     }
 
@@ -49,6 +54,8 @@ class ReservationTimeServiceTest {
     void deleteTime() {
         reservationTimeService.deleteTime(11L);
 
-        assertThat(reservationTimeService.getTimes()).hasSize(2);
+        Integer count = jdbcTemplate.queryForObject("SELECT COUNT(*) FROM reservation_time", Integer.class);
+
+        assertThat(count).isEqualTo(2);
     }
 }

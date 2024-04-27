@@ -10,6 +10,7 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.jdbc.JdbcTest;
 import org.springframework.context.annotation.Import;
+import org.springframework.jdbc.core.JdbcTemplate;
 import roomescape.domain.ReservationTime;
 
 @JdbcTest
@@ -18,6 +19,8 @@ class ReservationTimeH2RepositoryTest {
 
     @Autowired
     private ReservationTimeH2Repository reservationTimeH2Repository;
+    @Autowired
+    private JdbcTemplate jdbcTemplate;
 
     @Test
     @DisplayName("ReservationTime을 저장한다.")
@@ -34,7 +37,9 @@ class ReservationTimeH2RepositoryTest {
     void delete() {
         reservationTimeH2Repository.delete(11L);
 
-        assertThat(reservationTimeH2Repository.findAll()).hasSize(2);
+        Integer count = jdbcTemplate.queryForObject("SELECT COUNT(*) FROM reservation_time", Integer.class);
+
+        assertThat(count).isEqualTo(2);
     }
 
     @Test

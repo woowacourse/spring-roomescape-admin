@@ -10,6 +10,7 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.jdbc.JdbcTest;
 import org.springframework.context.annotation.Import;
+import org.springframework.jdbc.core.JdbcTemplate;
 import roomescape.domain.Reservation;
 import roomescape.domain.ReservationTime;
 import roomescape.repository.reservationtime.ReservationTimeH2Repository;
@@ -20,6 +21,8 @@ class ReservationH2RepositoryTest {
 
     @Autowired
     private ReservationH2Repository reservationH2Repository;
+    @Autowired
+    private JdbcTemplate jdbcTemplate;
 
     @Test
     @DisplayName("Reservation을 저장하면 id가 포함된 Reservation이 반환된다.")
@@ -40,7 +43,9 @@ class ReservationH2RepositoryTest {
     void delete() {
         reservationH2Repository.delete(10L);
 
-        assertThat(reservationH2Repository.findAll()).hasSize(1);
+        Integer count = jdbcTemplate.queryForObject("SELECT COUNT(*) FROM reservation", Integer.class);
+
+        assertThat(count).isOne();
     }
 
     @Test

@@ -8,8 +8,6 @@ import org.springframework.transaction.annotation.Transactional;
 import roomescape.core.domain.Name;
 import roomescape.core.domain.Reservation;
 import roomescape.core.domain.ReservationTime;
-import roomescape.core.repository.H2ReservationRepository;
-import roomescape.core.repository.H2ReservationTimeRepository;
 
 import java.time.LocalDate;
 import java.time.LocalTime;

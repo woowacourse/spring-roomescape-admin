@@ -1,8 +1,8 @@
 package roomescape.controller;
 
+import java.net.URI;
 import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -23,27 +23,27 @@ public class ReservationTimeController {
     private ReservationTimeService reservationTimeService;
 
     @PostMapping
-    public ResponseEntity<Void> addReservationTime(@RequestBody ReservationTimeRequest reservationTimeRequest) {
-        Long savedId = reservationTimeService.addReservationTime(reservationTimeRequest);
-        String redirectUrl = "/times/" + savedId;
-        return ResponseEntity.status(HttpStatus.CREATED).header("Location", redirectUrl).build();
+    public ResponseEntity<ReservationTimeResponse> addReservationTime(@RequestBody ReservationTimeRequest timeRequest) {
+        Long savedId = reservationTimeService.addReservationTime(timeRequest);
+        ReservationTimeResponse timeResponse = reservationTimeService.getReservationTime(savedId);
+        return ResponseEntity.created(URI.create("/times/" + savedId)).body(timeResponse);
     }
 
     @GetMapping
     public ResponseEntity<List<ReservationTimeResponse>> getAllReservationTimes() {
-        List<ReservationTimeResponse> reservationResponses = reservationTimeService.getAllReservationTimes();
-        return ResponseEntity.ok(reservationResponses);
+        List<ReservationTimeResponse> timeResponses = reservationTimeService.getAllReservationTimes();
+        return ResponseEntity.ok(timeResponses);
     }
 
     @GetMapping("/{id}")
     public ResponseEntity<ReservationTimeResponse> getReservationTime(@PathVariable Long id) {
-        ReservationTimeResponse reservationTimeResponse = reservationTimeService.getReservationTime(id);
-        return ResponseEntity.ok(reservationTimeResponse);
+        ReservationTimeResponse timeResponse = reservationTimeService.getReservationTime(id);
+        return ResponseEntity.ok(timeResponse);
     }
 
     @DeleteMapping("/{id}")
     public ResponseEntity<Void> deleteReservationTime(@PathVariable Long id) {
         reservationTimeService.deleteReservationTime(id);
-        return ResponseEntity.status(HttpStatus.NO_CONTENT).build();
+        return ResponseEntity.noContent().build();
     }
 }

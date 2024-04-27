@@ -6,17 +6,17 @@ import roomescape.controller.request.ReservationRequest;
 import roomescape.model.Reservation;
 import roomescape.model.ReservationTime;
 import roomescape.repository.ReservationRepository;
-import roomescape.repository.ReservationTimeDAO;
+import roomescape.repository.ReservationTimeRepository;
 
 @Service
 public class ReservationService {
 
     private final ReservationRepository reservationRepository;
-    private final ReservationTimeDAO reservationTimeDAO;
+    private final ReservationTimeRepository reservationTimeDAO;
 
-    public ReservationService(ReservationRepository reservationRepository, ReservationTimeDAO reservationTimeDAO) {
+    public ReservationService(ReservationRepository reservationRepository, ReservationTimeRepository reservationTimeRepository) {
         this.reservationRepository = reservationRepository;
-        this.reservationTimeDAO = reservationTimeDAO;
+        this.reservationTimeDAO = reservationTimeRepository;
     }
 
     public List<Reservation> findAllReservations() {

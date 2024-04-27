@@ -5,9 +5,9 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.NoSuchElementException;
 import roomescape.model.ReservationTime;
-import roomescape.repository.ReservationTimeDAO;
+import roomescape.repository.ReservationTimeRepository;
 
-class FakeReservationTimeDAO implements ReservationTimeDAO {
+class FakeReservationTimeRepository implements ReservationTimeRepository {
 
     private List<ReservationTime> reservationTimes = new ArrayList<>(List.of(
             new ReservationTime(1, LocalTime.of(10, 0)),

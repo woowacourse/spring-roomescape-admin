@@ -16,7 +16,7 @@ import roomescape.repository.ReservationRepository;
 
 class ReservationServiceTest {
     ReservationService reservationService = new ReservationService(new FakeReservationRepository(),
-            new FakeReservationTimeDAO());
+            new FakeReservationTimeRepository());
 
     @DisplayName("모든 예약 시간을 반환한다")
     @Test

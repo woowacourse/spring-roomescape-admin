@@ -10,7 +10,7 @@ import roomescape.controller.request.ReservationTimeRequest;
 import roomescape.model.ReservationTime;
 
 class ReservationTimeServiceTest {
-    ReservationTimeService reservationTimeService = new ReservationTimeService(new FakeReservationTimeDAO());
+    ReservationTimeService reservationTimeService = new ReservationTimeService(new FakeReservationTimeRepository());
 
     @DisplayName("모든 예약 시간을 반환한다")
     @Test

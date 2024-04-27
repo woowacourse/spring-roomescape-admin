@@ -8,6 +8,7 @@ import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.web.server.LocalServerPort;
 import org.springframework.test.annotation.DirtiesContext;
+import org.springframework.test.context.jdbc.Sql;
 import roomescape.dto.ReservationResponse;
 
 import java.time.LocalDate;
@@ -17,9 +18,11 @@ import java.util.Map;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.hamcrest.Matchers.is;
+import static org.springframework.test.context.jdbc.Sql.ExecutionPhase.BEFORE_TEST_METHOD;
 
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 @DirtiesContext(classMode = DirtiesContext.ClassMode.BEFORE_EACH_TEST_METHOD)
+@Sql(value = "/schema.sql", executionPhase = BEFORE_TEST_METHOD)
 class ReservationIntegrationTest {
 
     @LocalServerPort
@@ -28,20 +31,6 @@ class ReservationIntegrationTest {
     @BeforeEach
     public void initReservation() {
         RestAssured.port = randomServerPort;
-
-        RestAssured.given().log().all()
-                .contentType(ContentType.JSON)
-                .body(Map.of("startAt", "10:00"))
-                .when().post("/times");
-
-        RestAssured.given().log().all()
-                .contentType(ContentType.JSON)
-                .body(Map.of(
-                        "name", "브라운",
-                        "date", LocalDate.now().plusDays(1).toString(),
-                        "timeId", "1")
-                )
-                .when().post("/reservations");
     }
 
     @DisplayName("전체 예약 정보를 조회한다.")
@@ -51,7 +40,7 @@ class ReservationIntegrationTest {
                 .when().get("/reservations")
                 .then().log().all()
                 .statusCode(200)
-                .body("size()", is(1));
+                .body("size()", is(2));
     }
 
     @DisplayName("예약 정보를 저장한다.")
@@ -68,7 +57,7 @@ class ReservationIntegrationTest {
                 .when().post("/reservations")
                 .then().log().all()
                 .statusCode(200)
-                .body("id", is(2));
+                .body("id", is(3));
     }
 
     @DisplayName("예약 정보를 삭제한다.")
@@ -85,7 +74,7 @@ class ReservationIntegrationTest {
                 .statusCode(200).extract()
                 .jsonPath().getList(".", ReservationResponse.class);
 
-        assertThat(reservations.size()).isEqualTo(0);
+        assertThat(reservations.size()).isEqualTo(1);
     }
 
     @DisplayName("존재하지 않는 예약 정보를 삭제하려고 하면 400코드가 응답된다.")
@@ -105,7 +94,7 @@ class ReservationIntegrationTest {
                 .when().get("/times")
                 .then().log().all()
                 .statusCode(200)
-                .body("size()", is(1));
+                .body("size()", is(2));
     }
 
     @DisplayName("예약 시간 정보를 저장한다.")
@@ -120,7 +109,7 @@ class ReservationIntegrationTest {
                 .when().post("/times")
                 .then().log().all()
                 .statusCode(200)
-                .body("id", is(2));
+                .body("id", is(3));
     }
 
     @DisplayName("존재하지 않는 예약 시간을 포함한 예약 저장 요청을 하면 400코드가 응답된다.")
@@ -179,7 +168,7 @@ class ReservationIntegrationTest {
                 .statusCode(200).extract()
                 .jsonPath().getList(".", ReservationResponse.class);
 
-        assertThat(reservations.size()).isEqualTo(0);
+        assertThat(reservations.size()).isEqualTo(1);
     }
 
     @DisplayName("존재하지 않는 예약 시간 정보를 삭제하려고 하면 400코드가 응답된다.")

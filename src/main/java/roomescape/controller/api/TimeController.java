@@ -1,11 +1,7 @@
 package roomescape.controller.api;
 
 import java.util.List;
-import java.util.Map;
 import org.springframework.http.ResponseEntity;
-import org.springframework.jdbc.core.JdbcTemplate;
-import org.springframework.jdbc.core.RowMapper;
-import org.springframework.jdbc.core.simple.SimpleJdbcInsert;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -13,7 +9,7 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
-import roomescape.domain.ReservationTime;
+import roomescape.dao.ReservationTimeDao;
 import roomescape.dto.reservationtime.ReservationTimeRequest;
 import roomescape.dto.reservationtime.ReservationTimeResponse;
 
@@ -21,25 +17,16 @@ import roomescape.dto.reservationtime.ReservationTimeResponse;
 @Controller
 public class TimeController {
 
-    private static final RowMapper<ReservationTime> RESERVATION_TIME_ROW_MAPPER = (resultSet, rowNum) ->
-            new ReservationTime(
-                    resultSet.getLong("id"),
-                    resultSet.getTime("start_at").toLocalTime()
-            );
+    private ReservationTimeDao reservationTimeDao;
 
-    private JdbcTemplate jdbcTemplate;
-    private SimpleJdbcInsert simpleJdbcInsert;
-
-    public TimeController(JdbcTemplate jdbcTemplate) {
-        this.jdbcTemplate = jdbcTemplate;
-        this.simpleJdbcInsert = new SimpleJdbcInsert(jdbcTemplate.getDataSource())
-                .withTableName("reservation_time")
-                .usingGeneratedKeyColumns("id");
+    public TimeController(ReservationTimeDao reservationTimeDao) {
+        this.reservationTimeDao = reservationTimeDao;
     }
 
     @GetMapping("")
     public ResponseEntity<List<ReservationTimeResponse>> times() {
-        List<ReservationTimeResponse> reservationTimeResponses = getReservationTimes().stream()
+        List<ReservationTimeResponse> reservationTimeResponses = reservationTimeDao.findAllReservationTimes()
+                .stream()
                 .map(ReservationTimeResponse::from)
                 .toList();
 
@@ -48,12 +35,7 @@ public class TimeController {
 
     @PostMapping("")
     public ResponseEntity<ReservationTimeResponse> create(@RequestBody ReservationTimeRequest reservationTimeRequest) {
-        long id = simpleJdbcInsert.executeAndReturnKey(
-                        Map.of(
-                                "start_at", reservationTimeRequest.startAt()
-                        ))
-                .longValue();
-
+        long id = reservationTimeDao.saveReservationTime(reservationTimeRequest);
         ReservationTimeResponse reservationTimeResponse = new ReservationTimeResponse(id,
                 reservationTimeRequest.startAt().toString());
 
@@ -62,14 +44,7 @@ public class TimeController {
 
     @DeleteMapping("/{id}")
     public ResponseEntity<Void> delete(@PathVariable Long id) {
-        jdbcTemplate.update("delete from reservation_time where id = ?", id);
-
+        reservationTimeDao.deleteReservationTime(id);
         return ResponseEntity.ok().build();
-    }
-
-    private List<ReservationTime> getReservationTimes() {
-        String sql = "select id, start_at from reservation_time";
-
-        return jdbcTemplate.query(sql, RESERVATION_TIME_ROW_MAPPER);
     }
 }

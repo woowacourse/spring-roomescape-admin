@@ -89,7 +89,7 @@ class ReservationServiceTest {
     void invalidDeleteById() {
         assertThatThrownBy(() -> reservationService.deleteById(3))
                 .isInstanceOf(IllegalArgumentException.class)
-                .hasMessage("해당 id는 존재하지 않습니다.");
+                .hasMessage("해당 id는 존재하지 않습니다. id = %d", 3);
     }
 
     @DisplayName("전체 예약을 삭제한다.")

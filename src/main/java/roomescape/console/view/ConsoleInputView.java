@@ -71,7 +71,7 @@ public class ConsoleInputView {
 
     private Long toId(String string) {
         try {
-            return Long.parseLong(string);
+            return Long.parseLong(string.trim());
         } catch (NumberFormatException exception) {
             throw new IllegalArgumentException("id 형식(양수)을 맞추어 입력해야 합니다.", exception);
         }

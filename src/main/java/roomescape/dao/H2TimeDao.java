@@ -28,7 +28,7 @@ public class H2TimeDao implements TimeDao {
                 .usingColumns(START_TIME_COLUMN_NAME);
     }
 
-    private final RowMapper<ReservationTime> rowMapper = (rs, rowNum) -> new ReservationTime(
+    private static final RowMapper<ReservationTime> rowMapper = (rs, rowNum) -> new ReservationTime(
             rs.getLong(ID_COLUMN_NAME),
             rs.getString(START_TIME_COLUMN_NAME)
     );

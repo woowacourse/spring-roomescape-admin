@@ -22,7 +22,7 @@ public class H2ReservationDao implements ReservationDao {
                 .usingColumns("name", "date", "time_id");
     }
 
-    private final RowMapper<Reservation> rowMapper = (rs, rowNum) -> new Reservation(
+    private static final RowMapper<Reservation> rowMapper = (rs, rowNum) -> new Reservation(
             rs.getLong("id"),
             rs.getString("name"),
             rs.getString("date"),

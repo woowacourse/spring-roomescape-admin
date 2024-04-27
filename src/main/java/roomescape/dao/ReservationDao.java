@@ -7,7 +7,9 @@ import org.springframework.jdbc.core.namedparam.SqlParameterSource;
 import org.springframework.jdbc.core.simple.SimpleJdbcInsert;
 import org.springframework.stereotype.Repository;
 import roomescape.domain.Reservation;
+import roomescape.domain.Time;
 import roomescape.dto.ReservationRequest;
+import roomescape.dto.ReservationResponse;
 
 import javax.sql.DataSource;
 import java.time.LocalDate;
@@ -27,26 +29,38 @@ public class ReservationDao {
                 .usingGeneratedKeyColumns("id");
     }
 
-    private final RowMapper<Reservation> reservationRowMapper = (resultSet, rowNum) -> new Reservation(
-            resultSet.getLong("id"),
+    private final RowMapper<ReservationResponse> reservationRowMapper = (resultSet, rowNum) -> new ReservationResponse(
+            resultSet.getLong("reservation_id"),
             resultSet.getString("name"),
             LocalDate.parse(resultSet.getString("date")),
-            LocalTime.parse(resultSet.getString("time"))
+            resultSet.getLong("time_id"),
+            LocalTime.parse(resultSet.getString("time_value"))
     );
 
     public List<Reservation> findAll() {
-        String sql = "select * from reservation";
-        return jdbcTemplate.query(sql, reservationRowMapper);
+        String sql = "select " +
+                "r.id as reservation_id," +
+                "r.name," +
+                "r.date," +
+                "t.id as time_id," +
+                "t.start_at as time_value " +
+                "from reservation as r " +
+                "inner join reservation_time as t " +
+                "on r.time_id=t.id";
+        List<ReservationResponse> reservationResponses = jdbcTemplate.query(sql, reservationRowMapper);
+        return reservationResponses.stream()
+                .map(ReservationResponse::toReservation)
+                .toList();
     }
 
-    public Reservation insert(ReservationRequest reservationRequest) {
+    public Reservation insert(ReservationRequest reservationRequest, Time time) {
         SqlParameterSource parameterSource = new BeanPropertySqlParameterSource(reservationRequest);
         long id = simpleJdbcInsert.executeAndReturnKey(parameterSource).longValue();
-        return reservationRequest.toReservation(id);
+        return reservationRequest.toReservation(id, time);
     }
 
-    public void delete(long id){
-        String sql="delete from reservation where id=?";
-        jdbcTemplate.update(sql,id);
+    public void delete(long id) {
+        String sql = "delete from reservation where id=?";
+        jdbcTemplate.update(sql, id);
     }
 }

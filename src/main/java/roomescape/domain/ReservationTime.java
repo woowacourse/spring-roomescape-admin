@@ -1,7 +1,5 @@
 package roomescape.domain;
 
-import java.util.Objects;
-
 public class ReservationTime {
 
     private final Long id;
@@ -14,24 +12,6 @@ public class ReservationTime {
 
     public ReservationTime(String startAt) {
         this(null, startAt);
-    }
-
-    @Override
-    public boolean equals(Object o) {
-        if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
-
-        ReservationTime that = (ReservationTime) o;
-
-        if (!Objects.equals(id, that.id)) return false;
-        return Objects.equals(startAt, that.startAt);
-    }
-
-    @Override
-    public int hashCode() {
-        int result = id != null ? id.hashCode() : 0;
-        result = 31 * result + (startAt != null ? startAt.hashCode() : 0);
-        return result;
     }
 
     @Override

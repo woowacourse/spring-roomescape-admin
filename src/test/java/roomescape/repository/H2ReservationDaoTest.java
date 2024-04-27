@@ -39,8 +39,9 @@ public class H2ReservationDaoTest {
     @DisplayName("id를 통해 예약 조회 테스트")
     @Test
     void findByIdTest() {
-        assertThat(repository.findById(0L))
-                .contains(new Reservation(0L, "nak", "2024-03-02", new ReservationTime(0L, "23:00")));
+        assertThat(repository.findById(0L).get())
+                .usingRecursiveComparison()
+                .isEqualTo(new Reservation(0L, "nak", "2024-03-02", new ReservationTime(0L, "23:00")));
     }
 
     @DisplayName("예약 저장 테스트")
@@ -51,8 +52,9 @@ public class H2ReservationDaoTest {
                 repository.save(new Reservation("solar", "2024-04-23", new ReservationTime(0L, "23:00")));
 
         // then
-        assertThat(repository.findById(reservation.getId()))
-                .contains(reservation);
+        assertThat(repository.findById(reservation.getId()).get())
+                .usingRecursiveComparison()
+                .isEqualTo(reservation);
     }
 
     @DisplayName("예약 삭제 테스트")

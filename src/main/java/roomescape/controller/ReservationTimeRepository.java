@@ -1,4 +1,4 @@
-package roomescape.repository;
+package roomescape.controller;
 
 import java.util.List;
 import java.util.Optional;

@@ -14,7 +14,6 @@ import roomescape.controller.dto.ReservationTimeCreateRequest;
 import roomescape.controller.dto.ReservationTimeCreateResponse;
 import roomescape.controller.dto.ReservationTimeFindResponse;
 import roomescape.domain.ReservationTime;
-import roomescape.repository.ReservationTimeRepository;
 
 @RestController
 @RequestMapping("/times")

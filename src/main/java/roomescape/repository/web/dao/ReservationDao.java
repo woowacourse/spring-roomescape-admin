@@ -5,13 +5,11 @@ import org.springframework.jdbc.core.RowMapper;
 import org.springframework.jdbc.core.namedparam.MapSqlParameterSource;
 import org.springframework.jdbc.core.namedparam.SqlParameterSource;
 import org.springframework.jdbc.core.simple.SimpleJdbcInsert;
-import org.springframework.stereotype.Repository;
 import roomescape.domain.reservation.Reservation;
 import roomescape.repository.ReservationRepository;
 
 import java.util.List;
 
-@Repository
 public class ReservationDao implements ReservationRepository {
     private static final String TABLE_NAME = "reservation";
     private static final String ID = "id";

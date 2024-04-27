@@ -24,4 +24,6 @@ public class Fixtures {
     public static final ReservationResponse THIRD_RESPONSE = new ReservationResponse(3L, "third", LocalDate.of(2024, 1, 2), SECOND_TIME_RESPONSE);
     public static final Reservation FIRST_RESERVATION = new Reservation(1L, "first", LocalDate.of(2024, 5, 10), FIRST_TIME);
     public static final Reservation SECOND_RESERVATION = new Reservation(2L, "second", LocalDate.of(2024, 10, 6), SECOND_TIME);
+    public static final Reservation THIRD_RESERVATION = new Reservation(3L, "third", LocalDate.of(2024, 1, 2), SECOND_TIME);
+
 }

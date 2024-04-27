@@ -176,3 +176,45 @@ delete times 1
 
 ```text
 ```
+
+### 예약 추가 API
+
+#### Request
+
+```text
+post reservations 비밥 2023-08-05 1
+```
+
+#### Response
+
+```text
+id - 1, name - 비밥, date - 2023-08-05, startAt - 10:00
+```
+
+### 예약 조회 API
+
+#### Request
+
+```text
+get reservations
+```
+
+#### Response
+
+```text
+id - 1, name - 비밥, date - 2023-08-05, startAt - 10:00
+id - 2, name - 망쵸, date - 2023-08-05, startAt - 11:00
+```
+
+### 예약 삭제 API
+
+#### Request
+
+```text
+delete reservations 1
+```
+
+#### Response
+
+```text
+```

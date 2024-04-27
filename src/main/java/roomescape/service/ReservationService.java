@@ -3,16 +3,22 @@ package roomescape.service;
 import java.util.List;
 import org.springframework.stereotype.Service;
 import roomescape.domain.Reservation;
-import roomescape.dto.ReservationResponse;
+import roomescape.domain.ReservationTime;
 import roomescape.dto.ReservationRequest;
+import roomescape.dto.ReservationResponse;
 import roomescape.repository.ReservationRepository;
+import roomescape.repository.ReservationTimeRepository;
 
 @Service
 public class ReservationService {
     private final ReservationRepository reservationRepository;
+    private final ReservationTimeRepository reservationTimeRepository;
 
-    public ReservationService(roomescape.repository.ReservationRepository reservationRepository) {
+    public ReservationService(
+            ReservationRepository reservationRepository,
+            ReservationTimeRepository reservationTimeRepository) {
         this.reservationRepository = reservationRepository;
+        this.reservationTimeRepository = reservationTimeRepository;
     }
 
     public List<ReservationResponse> findReservations() {
@@ -22,7 +28,8 @@ public class ReservationService {
     }
 
     public ReservationResponse createReservation(ReservationRequest reservationRequest) {
-        Reservation newReservation = reservationRepository.save(reservationRequest.toReservation());
+        ReservationTime reservationTime = reservationTimeRepository.findById(reservationRequest.timeId());
+        Reservation newReservation = reservationRepository.save(reservationRequest.toReservation(reservationTime));
         return ReservationResponse.from(newReservation);
     }
 

@@ -39,23 +39,7 @@ public class JdbcTemplateReservationRepository implements ReservationRepository 
         params.put("date", reservationRequest.getDate());
         params.put("time_id", reservationRequest.getTimeId());
         Long id = jdbcInsert.executeAndReturnKey(params).longValue();
-        return findById(id);
-    }
-
-    private Reservation findById(Long id) {
-        return jdbcTemplate.queryForObject(
-                """
-                        SELECT
-                            r.id AS reservation_id,
-                            r.name,
-                            r.date,
-                            t.id AS time_id,
-                            t.start_at AS time_value
-                        FROM reservation AS r
-                        INNER JOIN reservation_time AS t
-                        ON r.id = ?
-                        """, reservationRowMapper, id
-        );
+        return new Reservation(id, reservationRequest);
     }
 
     @Override

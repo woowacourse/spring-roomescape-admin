@@ -15,8 +15,12 @@ public class Reservation {
         this.time = time;
     }
 
-    public Reservation(String name, LocalDate date, Long timeId) {
-        this(null, name, date, new ReservationTime(timeId));
+    public Reservation(String name, LocalDate date, ReservationTime time) {
+        this(null, name, date, time);
+    }
+
+    public Reservation(Long id, Reservation reservation) {
+        this(id, reservation.getName(), reservation.getDate(), reservation.getTime());
     }
 
     public Long getId() {

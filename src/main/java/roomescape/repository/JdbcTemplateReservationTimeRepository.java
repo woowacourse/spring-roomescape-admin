@@ -35,7 +35,8 @@ public class JdbcTemplateReservationTimeRepository implements ReservationTimeRep
         return findById(id);
     }
 
-    private ReservationTime findById(Long id) {
+    @Override
+    public ReservationTime findById(Long id) {
         return jdbcTemplate.queryForObject(
                 "SELECT id, start_at FROM reservation_time WHERE id = ?",
                 reservationTimeRowMapper, id);

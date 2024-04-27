@@ -9,5 +9,5 @@ public interface ReservationRepository {
 
     List<Reservation> findAll();
 
-    void delete(long reservationId);
+    void delete(long id);
 }

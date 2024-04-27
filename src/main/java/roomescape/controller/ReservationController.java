@@ -31,8 +31,8 @@ public class ReservationController {
         return reservationService.findAll();
     }
 
-    @DeleteMapping("/{reservationId}")
-    public void delete(@PathVariable long reservationId) {
-        reservationService.delete(reservationId);
+    @DeleteMapping("/{id}")
+    public void delete(@PathVariable long id) {
+        reservationService.delete(id);
     }
 }

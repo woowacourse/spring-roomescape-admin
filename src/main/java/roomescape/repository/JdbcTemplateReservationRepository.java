@@ -76,7 +76,7 @@ public class JdbcTemplateReservationRepository implements ReservationRepository 
     }
 
     @Override
-    public void delete(long reservationId) {
-        jdbcTemplate.update("delete from reservation where id = ?", reservationId);
+    public void delete(long id) {
+        jdbcTemplate.update("delete from reservation where id = ?", id);
     }
 }

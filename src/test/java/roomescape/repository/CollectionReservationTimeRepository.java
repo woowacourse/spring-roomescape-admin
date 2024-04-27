@@ -37,9 +37,9 @@ public class CollectionReservationTimeRepository implements ReservationTimeRepos
     }
 
     @Override
-    public void delete(long timeId) {
+    public void delete(long id) {
         reservationTimes.stream()
-                .filter(reservationTime -> reservationTime.getId().equals(timeId))
+                .filter(reservationTime -> reservationTime.getId().equals(id))
                 .findAny()
                 .ifPresent(reservationTimes::remove);
     }

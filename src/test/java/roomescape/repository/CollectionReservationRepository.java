@@ -61,9 +61,9 @@ public class CollectionReservationRepository implements ReservationRepository {
     }
 
     @Override
-    public void delete(long reservationId) {
+    public void delete(long id) {
         reservations.stream()
-                .filter(reservation -> reservation.hasSameId(reservationId))
+                .filter(reservation -> reservation.hasSameId(id))
                 .findAny()
                 .ifPresent(reservations::remove);
     }

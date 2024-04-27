@@ -45,7 +45,7 @@ public class ReservationDao {
                 + "inner join reservation_time as t "
                 + "on r.time_id = t.id";
 
-        return jdbcTemplate.query(sql, actorRowMapper());
+        return jdbcTemplate.query(sql, reservationRowMapper());
     }
 
     public void delete(final long id) {
@@ -68,13 +68,13 @@ public class ReservationDao {
                 where r.id = ?
                 """;
 
-            return jdbcTemplate.queryForObject(sql, actorRowMapper(), id);
+            return jdbcTemplate.queryForObject(sql, reservationRowMapper(), id);
         }catch (final EmptyResultDataAccessException e) {
             throw new IllegalArgumentException(String.format("%s는 없는 시간 정보 입니다.", id));
         }
     }
 
-    private static RowMapper<Reservation> actorRowMapper() {
+    private static RowMapper<Reservation> reservationRowMapper() {
         return (resultSet, rowNum) -> new Reservation.Builder()
                 .id(resultSet.getLong("reservation_id"))
                 .name(resultSet.getString("reservation.name"))

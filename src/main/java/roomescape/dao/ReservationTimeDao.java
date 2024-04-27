@@ -33,7 +33,7 @@ public class ReservationTimeDao {
 
     public List<ReservationTime> findAll() {
         final var sql = "SELECT id, start_at FROM reservation_time";
-        return jdbcTemplate.query(sql, actorRowMapper());
+        return jdbcTemplate.query(sql, reservationTimeRowMapper());
     }
 
     public void delete(final long id){
@@ -48,13 +48,13 @@ public class ReservationTimeDao {
     public ReservationTime findOne(final long id) {
        try{
            final var sql = "SELECT id, start_at FROM reservation_time WHERE id = ?";
-           return jdbcTemplate.queryForObject(sql, actorRowMapper(), id);
+           return jdbcTemplate.queryForObject(sql, reservationTimeRowMapper(), id);
        } catch (final EmptyResultDataAccessException e) {
            throw new IllegalArgumentException(String.format("%d는 없는 id값입니다.", id));
        }
     }
 
-    private static RowMapper<ReservationTime> actorRowMapper() {
+    private static RowMapper<ReservationTime> reservationTimeRowMapper() {
         return (resultSet, rowNum) -> new ReservationTime(resultSet.getLong("id"),
                 resultSet.getTime("start_at").toLocalTime());
     }

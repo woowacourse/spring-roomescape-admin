@@ -24,6 +24,7 @@ public class FrontController implements CommandLineRunner {
     @Override
     public void run(String... args) {
         while (true) {
+            outputView.printCommandGuide();
             try {
                 ConsoleRequest request = inputView.getRequest();
                 if (request.isEnded()) {

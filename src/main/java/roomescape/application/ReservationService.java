@@ -27,7 +27,7 @@ public class ReservationService {
     }
 
     public Reservation reserve(ReservationRequest reservationRequest) {
-        ReservationTime time = reservationTimeService.findReservationTime(reservationRequest.timeId());
+        ReservationTime time = reservationTimeService.getReservationTime(reservationRequest.timeId());
         validateReservationInAdvance(reservationRequest.date(), time);
         if (reservationRepository.existsByReservationDateTime(reservationRequest.date(), time.getId())) {
             throw new IllegalArgumentException("이미 예약된 날짜, 시간입니다.");
@@ -44,7 +44,7 @@ public class ReservationService {
         }
     }
 
-    public List<Reservation> findReservations() {
+    public List<Reservation> getReservations() {
         return reservationRepository.findAll();
     }
 

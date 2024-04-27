@@ -49,7 +49,7 @@ class ReservationControllerTest extends ControllerTest {
         List<Reservation> reservations = IntStream.range(0, 3)
                 .mapToObj(ReservationFixture::reservation)
                 .toList();
-        when(reservationService.findReservations()).thenReturn(reservations);
+        when(reservationService.getReservations()).thenReturn(reservations);
 
         ResultActions result = SimpleMockMvc.get(mockMvc, "/reservations");
 

@@ -22,17 +22,17 @@ public class ReservationTimeService {
         return reservationTimeRepository.save(reservationTime);
     }
 
-    public ReservationTime findReservationTime(long id) {
+    public ReservationTime getReservationTime(long id) {
         return reservationTimeRepository.findById(id)
                 .orElseThrow(() -> new IllegalArgumentException("존재하지 않는 예약 시간입니다."));
     }
 
-    public List<ReservationTime> findReservationTimes() {
+    public List<ReservationTime> getReservationTimes() {
         return reservationTimeRepository.findAll();
     }
 
     public void delete(long id) {
-        ReservationTime reservationTime = findReservationTime(id);
+        ReservationTime reservationTime = getReservationTime(id);
         reservationTimeRepository.deleteById(reservationTime.getId());
     }
 }

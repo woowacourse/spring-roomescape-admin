@@ -77,7 +77,7 @@ public class ReservationServiceTest {
 
         reservationService.cancel(reservation.getId());
 
-        assertThat(reservationService.findReservations()).isEmpty();
+        assertThat(reservationService.getReservations()).isEmpty();
     }
 
     @Test

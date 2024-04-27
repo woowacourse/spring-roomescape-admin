@@ -48,7 +48,7 @@ public class ReservationTimeServiceTest {
 
         reservationTimeService.delete(reservationTime.getId());
 
-        assertThat(reservationTimeService.findReservationTimes()).isEmpty();
+        assertThat(reservationTimeService.getReservationTimes()).isEmpty();
     }
 
     @Test

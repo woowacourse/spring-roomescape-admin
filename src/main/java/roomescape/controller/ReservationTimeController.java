@@ -33,8 +33,8 @@ public class ReservationTimeController {
     }
 
     @GetMapping
-    public ResponseEntity<List<ReservationTimeResponse>> findReservationTimes() {
-        List<ReservationTime> reservationTimes = reservationTimeService.findReservationTimes();
+    public ResponseEntity<List<ReservationTimeResponse>> getReservationTimes() {
+        List<ReservationTime> reservationTimes = reservationTimeService.getReservationTimes();
         List<ReservationTimeResponse> responses = reservationTimes.stream()
                 .map(this::createResponse)
                 .toList();

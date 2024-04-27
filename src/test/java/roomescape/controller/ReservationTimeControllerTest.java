@@ -45,7 +45,7 @@ class ReservationTimeControllerTest extends ControllerTest {
         List<ReservationTime> reservationTimes = IntStream.range(0, 3)
                 .mapToObj(ReservationFixture::reservationTime)
                 .toList();
-        when(reservationTimeService.findReservationTimes()).thenReturn(reservationTimes);
+        when(reservationTimeService.getReservationTimes()).thenReturn(reservationTimes);
 
         ResultActions result = SimpleMockMvc.get(mockMvc, "/times");
 

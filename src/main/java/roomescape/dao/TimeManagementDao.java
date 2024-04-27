@@ -40,4 +40,9 @@ public class TimeManagementDao {
         long id = simpleJdbcInsert.executeAndReturnKey(parameterSource).longValue();
         return timeRequest.toTime(id);
     }
+
+    public void delete(long id) {
+        String sql = "delete from reservation_time where id=?";
+        jdbcTemplate.update(sql, id);
+    }
 }

@@ -26,4 +26,9 @@ public class TimeManagementController {
     public Time create(@RequestBody TimeRequest timeRequest) {
         return timeManagementDao.insert(timeRequest);
     }
+
+    @DeleteMapping("/{id}")
+    public void delete(@PathVariable long id){
+        timeManagementDao.delete(id);
+    }
 }

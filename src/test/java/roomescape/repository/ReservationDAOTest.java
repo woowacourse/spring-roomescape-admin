@@ -21,13 +21,13 @@ import roomescape.model.ReservationTime;
 
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.DEFINED_PORT)
 @DirtiesContext(classMode = DirtiesContext.ClassMode.BEFORE_EACH_TEST_METHOD)
-class ReservationDAOImplTest {
+class ReservationDAOTest {
 
     @Autowired
     JdbcTemplate jdbcTemplate;
 
     @Autowired
-    ReservationDAO reservationDAO;
+    ReservationRepository reservationRepository;
 
     @Autowired
     DataSource dataSource;
@@ -74,14 +74,14 @@ class ReservationDAOImplTest {
     @DisplayName("모든 예약을 조회한다")
     @Test
     void should_get_reservation() {
-        List<Reservation> reservations = reservationDAO.getAllReservations();
+        List<Reservation> reservations = reservationRepository.getAllReservations();
         assertThat(reservations).hasSize(2);
     }
 
     @DisplayName("조회한 예약에 예약 시간이 존재한다.")
     @Test
     void should_get_reservation_times() {
-        List<Reservation> reservations = reservationDAO.getAllReservations();
+        List<Reservation> reservations = reservationRepository.getAllReservations();
         assertThat(reservations.get(0).getTime().getStartAt()).isEqualTo(LocalTime.of(10, 0));
     }
 
@@ -89,7 +89,7 @@ class ReservationDAOImplTest {
     @Test
     void should_add_reservation() {
         ReservationTime reservationTime = new ReservationTime(1, LocalTime.of(10, 0));
-        reservationDAO.addReservation(
+        reservationRepository.addReservation(
                 new Reservation("네오", LocalDate.of(2024, 9, 1), reservationTime));
         Integer count = jdbcTemplate.queryForObject("select count(1) from reservation", Integer.class);
         assertThat(count).isEqualTo(3);
@@ -98,7 +98,7 @@ class ReservationDAOImplTest {
     @DisplayName("예약을 삭제한다")
     @Test
     void should_delete_reservation() {
-        reservationDAO.deleteReservation(1);
+        reservationRepository.deleteReservation(1);
         Integer count = jdbcTemplate.queryForObject("select count(1) from reservation", Integer.class);
         assertThat(count).isEqualTo(1);
     }

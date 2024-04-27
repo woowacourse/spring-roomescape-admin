@@ -5,30 +5,30 @@ import org.springframework.stereotype.Service;
 import roomescape.controller.request.ReservationRequest;
 import roomescape.model.Reservation;
 import roomescape.model.ReservationTime;
-import roomescape.repository.ReservationDAO;
+import roomescape.repository.ReservationRepository;
 import roomescape.repository.ReservationTimeDAO;
 
 @Service
 public class ReservationService {
 
-    private final ReservationDAO reservationDAO;
+    private final ReservationRepository reservationRepository;
     private final ReservationTimeDAO reservationTimeDAO;
 
-    public ReservationService(ReservationDAO reservationDAO, ReservationTimeDAO reservationTimeDAO) {
-        this.reservationDAO = reservationDAO;
+    public ReservationService(ReservationRepository reservationRepository, ReservationTimeDAO reservationTimeDAO) {
+        this.reservationRepository = reservationRepository;
         this.reservationTimeDAO = reservationTimeDAO;
     }
 
     public List<Reservation> findAllReservations() {
-        return reservationDAO.getAllReservations();
+        return reservationRepository.getAllReservations();
     }
 
     public Reservation addReservation(ReservationRequest request) {
         ReservationTime reservationTime = reservationTimeDAO.findReservationById(request.timeId());
-        return reservationDAO.addReservation(new Reservation(request.name(), request.date(), reservationTime));
+        return reservationRepository.addReservation(new Reservation(request.name(), request.date(), reservationTime));
     }
 
     public void deleteReservation(long id) {
-        reservationDAO.deleteReservation(id);
+        reservationRepository.deleteReservation(id);
     }
 }

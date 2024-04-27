@@ -12,10 +12,10 @@ import org.junit.jupiter.api.Test;
 import roomescape.controller.request.ReservationRequest;
 import roomescape.model.Reservation;
 import roomescape.model.ReservationTime;
-import roomescape.repository.ReservationDAO;
+import roomescape.repository.ReservationRepository;
 
 class ReservationServiceTest {
-    ReservationService reservationService = new ReservationService(new FakeReservationDAO(),
+    ReservationService reservationService = new ReservationService(new FakeReservationRepository(),
             new FakeReservationTimeDAO());
 
     @DisplayName("모든 예약 시간을 반환한다")
@@ -42,7 +42,7 @@ class ReservationServiceTest {
         assertThat(allReservations).hasSize(1);
     }
 
-    class FakeReservationDAO implements ReservationDAO {
+    class FakeReservationRepository implements ReservationRepository {
 
         private List<Reservation> reservations = new ArrayList<>(List.of(
                 new Reservation(1, "브라운", LocalDate.of(2023, 8, 5),

@@ -2,10 +2,10 @@ package roomescape.console;
 
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.stereotype.Component;
-import roomescape.console.controller.ConsoleController;
+import roomescape.console.controller.ControllerAdapter;
+import roomescape.console.utils.ControllerAdapterMapper;
 import roomescape.console.view.ConsoleRequest;
 import roomescape.console.view.ConsoleResponse;
-import roomescape.console.utils.ControllerMapper;
 import roomescape.console.view.InputView;
 import roomescape.console.view.OutputView;
 
@@ -13,12 +13,12 @@ import roomescape.console.view.OutputView;
 public class FrontController implements CommandLineRunner {
     private final InputView inputView;
     private final OutputView outputView;
-    private final ControllerMapper controllerMapper;
+    private final ControllerAdapterMapper controllerAdapterMapper;
 
-    public FrontController(ControllerMapper controllerMapper) {
+    public FrontController(ControllerAdapterMapper controllerAdapterMapper) {
         this.inputView = new InputView();
         this.outputView = new OutputView();
-        this.controllerMapper = controllerMapper;
+        this.controllerAdapterMapper = controllerAdapterMapper;
     }
 
     @Override
@@ -29,7 +29,7 @@ public class FrontController implements CommandLineRunner {
                 if (request.isEnded()) {
                     break;
                 }
-                ConsoleController handler = controllerMapper.getHandler(request);
+                ControllerAdapter handler = controllerAdapterMapper.getHandler(request);
                 ConsoleResponse response = handler.dispatch(request);
                 outputView.printResponse(response);
             } catch (RuntimeException e) {

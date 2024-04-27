@@ -10,10 +10,24 @@ public class Reservation {
     private final ReservationTime reservationTime;
 
     public Reservation(Long id, String name, LocalDate date, ReservationTime reservationTime) {
+        validateId(id);
         this.id = id;
         this.name = name;
         this.date = date;
         this.reservationTime = reservationTime;
+    }
+
+    public Reservation(String name, LocalDate date, ReservationTime reservationTime) {
+        this.id = null;
+        this.name = name;
+        this.date = date;
+        this.reservationTime = reservationTime;
+    }
+
+    private void validateId(Long id) {
+        if (id == null) {
+            throw new IllegalArgumentException("[ERROR] id값이 존재하지 않습니다.");
+        }
     }
 
     public Long getId() {

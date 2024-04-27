@@ -1,40 +1,38 @@
 package roomescape.service;
 
 import java.util.List;
-import java.util.concurrent.atomic.AtomicLong;
-import roomescape.dto.ReservationResponseDto;
+import org.springframework.stereotype.Service;
+import roomescape.dao.ReservationDao;
+import roomescape.dao.ReservationTimeDao;
+import roomescape.domain.ReservationTime;
 import roomescape.domain.Reservation;
-import roomescape.dto.ReservationRequestDto;
-import roomescape.domain.Reservations;
+import roomescape.service.dto.ReservationInput;
+import roomescape.service.dto.ReservationOutput;
 
+@Service
 public class ReservationService {
 
-    private final Reservations reservations;
-    private final AtomicLong index = new AtomicLong(1);
+    private final ReservationDao reservationDao;
+    private final ReservationTimeDao reservationTimeDao;
 
-    public ReservationService(Reservations reservations) {
-        this.reservations = reservations;
+    public ReservationService(ReservationDao reservationDao, ReservationTimeDao reservationTimeDao) {
+        this.reservationDao = reservationDao;
+        this.reservationTimeDao = reservationTimeDao;
     }
 
-    public ReservationService() {
-        this(new Reservations());
+    public ReservationOutput createReservation(ReservationInput input) {
+        ReservationTime time = reservationTimeDao.find(input.timeId());
+        Reservation reservation = input.toReservation(time);
+        Reservation savedReservation = reservationDao.create(reservation);
+        return ReservationOutput.toOutput(savedReservation);
     }
 
-    public List<ReservationResponseDto> getAllReservations() {
-        return reservations.getReservations().stream()
-                .map(ReservationResponseDto::new)
-                .toList();
-    }
-
-    public ReservationResponseDto addReservation(ReservationRequestDto reservationRequestDto) {
-        Reservation reservation = new Reservation(
-                index.getAndIncrement(), reservationRequestDto.name(), reservationRequestDto.date(), reservationRequestDto.time()
-        );
-        reservations.add(reservation);
-        return new ReservationResponseDto(reservation);
+    public List<ReservationOutput> getAllReservations() {
+        List<Reservation> reservations = reservationDao.getAll();
+        return ReservationOutput.toOutputs(reservations);
     }
 
     public void deleteReservation(long id) {
-        reservations.delete(id);
+        reservationDao.delete(id);
     }
 }

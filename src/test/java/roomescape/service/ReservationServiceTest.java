@@ -10,8 +10,8 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.jdbc.Sql;
-import roomescape.controller.dto.ReservationAddRequest;
-import roomescape.controller.dto.ReservationResponse;
+import roomescape.service.dto.ReservationAddRequest;
+import roomescape.service.dto.ReservationResponse;
 import roomescape.dao.ReservationDao;
 import roomescape.domain.Reservation;
 

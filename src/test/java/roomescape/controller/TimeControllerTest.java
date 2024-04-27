@@ -18,8 +18,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.web.server.LocalServerPort;
 import org.springframework.test.context.jdbc.Sql;
-import roomescape.controller.dto.ReservationTimeAddRequest;
-import roomescape.controller.dto.ReservationTimeResponse;
+import roomescape.service.dto.ReservationTimeAddRequest;
+import roomescape.service.dto.ReservationTimeResponse;
 import roomescape.service.TimeService;
 
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)

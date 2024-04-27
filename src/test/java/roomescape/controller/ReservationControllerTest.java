@@ -16,7 +16,7 @@ import org.junit.jupiter.params.provider.MethodSource;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.web.server.LocalServerPort;
 import org.springframework.test.context.jdbc.Sql;
-import roomescape.controller.dto.ReservationResponse;
+import roomescape.service.dto.ReservationResponse;
 
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 @Sql(value = "classpath:data-reset.sql", executionPhase = Sql.ExecutionPhase.AFTER_TEST_METHOD)

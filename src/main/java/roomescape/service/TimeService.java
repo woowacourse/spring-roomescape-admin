@@ -2,8 +2,8 @@ package roomescape.service;
 
 import java.util.List;
 import org.springframework.stereotype.Service;
-import roomescape.controller.dto.ReservationTimeAddRequest;
-import roomescape.controller.dto.ReservationTimeResponse;
+import roomescape.service.dto.ReservationTimeAddRequest;
+import roomescape.service.dto.ReservationTimeResponse;
 import roomescape.dao.ReservationDao;
 import roomescape.dao.TimeDao;
 import roomescape.domain.ReservationTime;

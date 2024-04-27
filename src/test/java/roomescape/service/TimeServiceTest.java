@@ -10,8 +10,8 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.jdbc.Sql;
-import roomescape.controller.dto.ReservationTimeAddRequest;
-import roomescape.controller.dto.ReservationTimeResponse;
+import roomescape.service.dto.ReservationTimeAddRequest;
+import roomescape.service.dto.ReservationTimeResponse;
 import roomescape.dao.TimeDao;
 
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.NONE)

@@ -1,4 +1,4 @@
-package roomescape.dao;
+package roomescape.domain.dao;
 
 import static org.assertj.core.api.Assertions.assertThat;
 

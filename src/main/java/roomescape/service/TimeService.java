@@ -42,8 +42,4 @@ public class TimeService {
         }
         timeDao.delete(id);
     }
-
-    public boolean checkReservationTimeExist(Long id) {
-        return timeDao.isExist(id);
-    }
 }

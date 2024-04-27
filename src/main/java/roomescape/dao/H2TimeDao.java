@@ -65,13 +65,6 @@ public class H2TimeDao implements TimeDao {
     }
 
     @Override
-    public boolean isExist(Long id) {
-        String sql = "SELECT * FROM " + TABLE_NAME + " WHERE " + ID_COLUMN_NAME + " = ? LIMIT 1";
-        List<ReservationTime> reservationTime = jdbcTemplate.query(sql, rowMapper, id);
-        return !reservationTime.isEmpty();
-    }
-
-    @Override
     public boolean isExist(LocalTime time) {
         String sql = "SELECT * FROM " + TABLE_NAME + " WHERE " + START_TIME_COLUMN_NAME + " = ? LIMIT 1";
         List<ReservationTime> reservationTime = jdbcTemplate.query(sql, rowMapper, time);

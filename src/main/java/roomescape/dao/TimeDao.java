@@ -13,8 +13,6 @@ public interface TimeDao {
     List<ReservationTime> findAll();
 
     void delete(Long id);
-
-    boolean isExist(Long id);
-
+    
     boolean isExist(LocalTime time);
 }

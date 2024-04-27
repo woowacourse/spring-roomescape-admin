@@ -14,10 +14,6 @@ public class Reservation {
         this.time = time;
     }
 
-    public Reservation(String name, String date) {
-        this(null, name, date, null);
-    }
-
     public Reservation(String name, String date, ReservationTime time) {
         this(null, name, date, time);
     }

@@ -6,14 +6,14 @@ import roomescape.console.view.ConsoleRequest;
 import java.util.Map;
 
 public class ControllerAdapterMapper {
-    private final Map<Command, ControllerAdapter> controllers;
+    private final Map<ConsoleCommand, ControllerAdapter> controllers;
 
-    public ControllerAdapterMapper(Map<Command, ControllerAdapter> controllers) {
+    public ControllerAdapterMapper(Map<ConsoleCommand, ControllerAdapter> controllers) {
         this.controllers = controllers;
     }
 
     public ControllerAdapter getHandler(ConsoleRequest request) {
-        Command command = Command.from(request.getCommand());
-        return controllers.get(command);
+        ConsoleCommand consoleCommand = ConsoleCommand.from(request.getCommand());
+        return controllers.get(consoleCommand);
     }
 }

@@ -24,6 +24,9 @@ public class ReservationTimeService {
     }
 
     public ReservationTimeResponse save(ReservationTimeRequest reservationTimeRequest) {
+        if (reservationTimeRequest.startAt() == null) {
+            throw new IllegalArgumentException("시간이 입력되지 않았습니다. 시간을 입력해주세요.");
+        }
         ReservationTime reservationTime = reservationTimeRequest.toReservationTime();
         long id = reservationTimeDao.save(reservationTime);
         return findById(id);

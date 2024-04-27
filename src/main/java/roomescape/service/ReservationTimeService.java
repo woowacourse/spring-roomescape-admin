@@ -31,8 +31,7 @@ public class ReservationTimeService {
     }
 
     public ReservationResponse createReservation(ReservationRequest reservationRequest) {
-        Long timeId = reservationRequest.timeId();
-        Time time = timeRepository.findById(timeId);
+        Time time = timeRepository.findById(reservationRequest.timeId());
 
         Reservation reservation = reservationRequest.toReservation(time);
         Reservation savedReservation = reservationRepository.create(reservation);

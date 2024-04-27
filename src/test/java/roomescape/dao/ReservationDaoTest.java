@@ -1,6 +1,6 @@
 package roomescape.dao;
 
-import java.time.LocalDateTime;
+import java.time.LocalDate;
 import java.util.List;
 import javax.sql.DataSource;
 import org.assertj.core.api.Assertions;
@@ -25,7 +25,7 @@ class ReservationDaoTest {
     @Test
     @DisplayName("데이터들이 잘 저장되는지 확인.")
     void saveReservation() {
-        Reservation reservation = new Reservation("범블비", LocalDateTime.now());
+        Reservation reservation = new Reservation("범블비", LocalDate.now(), 1L);
         reservationDao.save(reservation);
 
         Assertions.assertThat(reservation).isNotNull();

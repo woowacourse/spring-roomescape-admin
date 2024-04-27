@@ -3,11 +3,12 @@ package roomescape.dao;
 import java.util.List;
 import javax.sql.DataSource;
 import org.springframework.jdbc.core.JdbcTemplate;
-import org.springframework.jdbc.core.namedparam.BeanPropertySqlParameterSource;
+import org.springframework.jdbc.core.namedparam.MapSqlParameterSource;
 import org.springframework.jdbc.core.namedparam.SqlParameterSource;
 import org.springframework.jdbc.core.simple.SimpleJdbcInsert;
 import org.springframework.stereotype.Repository;
 import roomescape.domain.Reservation;
+import roomescape.domain.Time;
 
 @Repository
 public class ReservationDao implements ReservationDaoImpl {
@@ -21,27 +22,30 @@ public class ReservationDao implements ReservationDaoImpl {
                 .usingGeneratedKeyColumns("id");
     }
 
-    @Override
     public void save(Reservation reservation) {
-        SqlParameterSource sqlParameterSource = new BeanPropertySqlParameterSource(reservation);
+        SqlParameterSource sqlParameterSource = new MapSqlParameterSource()
+                .addValue("name", reservation.getName())
+                .addValue("date", reservation.getDate())
+                .addValue("time_id", reservation.getReservationTime().getId());
+
         long id = jdbcInsert.executeAndReturnKey(sqlParameterSource).longValue();
         reservation.setId(id);
     }
 
-    @Override
     public List<Reservation> findAll() {
-        String findAllReservationSql = "SELECT id, name, `date`, `time` FROM reservation ORDER BY `date` ASC , `time` ASC ";
-
-        return jdbcTemplate.query(
-                findAllReservationSql, (resultSet, rowNum) -> new Reservation(
-                        resultSet.getLong("id"),
-                        resultSet.getString("name"),
-                        resultSet.getDate("date").toLocalDate(),
-                        resultSet.getTime("time").toLocalTime()
-                ));
+        String findAllReservationSql = "SELECT r.id, r.name, r.`date`, t.id AS timeId, t.start_at "
+                + "FROM reservation r "
+                + "INNER JOIN reservation_time t "
+                + "ON r.time_id = t.id "
+                + "ORDER BY r.date ASC , t.`start_at` ASC";
+        return jdbcTemplate.query(findAllReservationSql, (resultSet, rowNum) -> new Reservation(
+                resultSet.getLong("id"),
+                resultSet.getString("name"),
+                resultSet.getDate("date").toLocalDate(),
+                new Time(resultSet.getLong("timeId"),
+                        resultSet.getTime("start_at").toLocalTime())));
     }
 
-    @Override
     public void deleteById(long reservationId) {
         String deleteReservationSql = "DELETE FROM reservation WHERE id = ?";
         jdbcTemplate.update(deleteReservationSql, reservationId);

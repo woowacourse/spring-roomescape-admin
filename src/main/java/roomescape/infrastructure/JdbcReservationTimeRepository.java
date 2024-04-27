@@ -41,14 +41,15 @@ public class JdbcReservationTimeRepository implements ReservationTimeRepository 
     }
 
     public ReservationTime create(ReservationTime reservationTime) {
-        LocalTime startAt = reservationTime.getStartAt();
         try {
+            LocalTime startAt = reservationTime.getStartAt();
             MapSqlParameterSource params = new MapSqlParameterSource()
                     .addValue("start_at", reservationTime.getStartAt());
             long id = simpleJdbcInsert.executeAndReturnKey(params).longValue();
             return new ReservationTime(id, startAt);
         } catch (DuplicateKeyException e) {
-            throw new IllegalArgumentException(String.format("이미 존재하는 예약 시간입니다. 입력 시간:%s", startAt));
+            throw new IllegalStateException(
+                    String.format("이미 존재하는 예약 시간입니다. 입력 시간:%s", reservationTime.getStartAt()));
         }
     }
 
@@ -63,5 +64,11 @@ public class JdbcReservationTimeRepository implements ReservationTimeRepository 
     public void deleteById(long id) {
         String sql = "delete from reservation_time where id = ?";
         jdbcTemplate.update(sql, id);
+    }
+
+    public boolean existByStartAt(LocalTime startAt) {
+        String sql = "select count(*) from reservation_time where start_at = ?";
+        Integer count = jdbcTemplate.queryForObject(sql, Integer.class, startAt);
+        return count != null && count > 0;
     }
 }

@@ -1,5 +1,6 @@
 package roomescape.application;
 
+import java.time.LocalTime;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
@@ -24,6 +25,9 @@ public class ReservationTimeService {
 
     @Transactional
     public ReservationTimeResponse create(ReservationTimeRequest request) {
+        if (existByStartAt(request.startAt())) {
+            throw new IllegalStateException(String.format("이미 존재하는 예약시간이 있습니다. 해당 시간:%s", request.startAt()));
+        }
         ReservationTime reservationTime = reservationTimes.create(request.toReservationTime());
         return ReservationTimeResponse.from(reservationTime);
     }
@@ -51,5 +55,9 @@ public class ReservationTimeService {
                     findReservationTime.get().getStartAt()));
         }
         reservationTimes.deleteById(id);
+    }
+
+    public boolean existByStartAt(LocalTime startAt) {
+        return reservationTimes.existByStartAt(startAt);
     }
 }

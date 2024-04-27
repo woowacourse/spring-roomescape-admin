@@ -1,10 +1,10 @@
 package roomescape.reservation;
 
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.hamcrest.Matchers.is;
 
 import java.lang.reflect.Field;
 import java.time.LocalDate;
+import java.util.List;
 
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -33,11 +33,14 @@ class ReservationControllerTest {
         insertReservation(jdbcTemplate);
         insertReservation(jdbcTemplate);
 
-        RestAssured.given().log().all()
-                .when().get("/reservations")
-                .then().log().all()
-                .statusCode(200)
-                .body("size()", is(2));
+        List<Reservation> reservations = RestAssured.given().log().all()
+                        .when().get("/reservations")
+                        .then().log().all()
+                        .statusCode(200).extract()
+                        .jsonPath().getList(".", Reservation.class);
+
+        Integer count = jdbcTemplate.queryForObject("SELECT COUNT(*) FROM reservation", Integer.class);
+        assertThat(reservations.size()).isEqualTo(count);
     }
 
     @DisplayName("예약을 추가한다.")

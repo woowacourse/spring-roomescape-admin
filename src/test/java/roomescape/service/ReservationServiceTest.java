@@ -11,6 +11,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.jdbc.JdbcTest;
 import org.springframework.context.annotation.Import;
 import org.springframework.jdbc.core.JdbcTemplate;
+import org.springframework.test.context.jdbc.Sql;
 import roomescape.dto.request.ReservationAddRequest;
 import roomescape.dto.response.ReservationResponse;
 import roomescape.repository.reservation.ReservationH2Repository;
@@ -18,6 +19,7 @@ import roomescape.repository.reservationtime.ReservationTimeH2Repository;
 
 @JdbcTest
 @Import({ReservationH2Repository.class, ReservationTimeH2Repository.class, ReservationService.class})
+@Sql("/initial_test_data.sql")
 class ReservationServiceTest {
 
     @Autowired

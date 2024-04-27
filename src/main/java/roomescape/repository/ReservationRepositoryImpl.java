@@ -1,7 +1,5 @@
 package roomescape.repository;
 
-import java.util.List;
-import javax.sql.DataSource;
 import org.springframework.context.annotation.Primary;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;
@@ -10,11 +8,15 @@ import org.springframework.jdbc.core.namedparam.SqlParameterSource;
 import org.springframework.jdbc.core.simple.SimpleJdbcInsert;
 import org.springframework.stereotype.Repository;
 import roomescape.domain.reservation.Reservation;
+import roomescape.domain.reservation.ReservationRepository;
 import roomescape.domain.time.Time;
+
+import javax.sql.DataSource;
+import java.util.List;
 
 @Repository
 @Primary
-public class ReservationRepositoryImpl implements roomescape.domain.reservation.ReservationRepository {
+public class ReservationRepositoryImpl implements ReservationRepository {
 
     private final JdbcTemplate jdbcTemplate;
     private final SimpleJdbcInsert jdbcInsert;

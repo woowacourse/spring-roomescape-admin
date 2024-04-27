@@ -1,4 +1,4 @@
-package roomescape.controller;
+package roomescape.controller.web;
 
 import java.net.URI;
 import java.util.List;

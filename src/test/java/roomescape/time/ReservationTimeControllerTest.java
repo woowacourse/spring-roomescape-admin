@@ -25,8 +25,8 @@ class ReservationTimeControllerTest {
     @DisplayName("시간을 조회한다.")
     @Test
     void findAll() {
-        insertReservationTime(jdbcTemplate, "09:00");
-        insertReservationTime(jdbcTemplate, "10:00");
+        insertReservationTime("09:00");
+        insertReservationTime("10:00");
 
         RestAssured.given().log().all()
                 .when().get("/times")
@@ -38,7 +38,7 @@ class ReservationTimeControllerTest {
     @DisplayName("시간을 추가한다.")
     @Test
     void create() {
-        insertReservationTime(jdbcTemplate, "11:00");
+        insertReservationTime("11:00");
 
         RestAssured.given().log().all()
                 .contentType(ContentType.JSON)
@@ -54,8 +54,8 @@ class ReservationTimeControllerTest {
     @DisplayName("시간을 삭제한다.")
     @Test
     void delete() {
-        insertReservationTime(jdbcTemplate, "12:00");
-        insertReservationTime(jdbcTemplate, "13:00");
+        insertReservationTime("12:00");
+        insertReservationTime("13:00");
 
         RestAssured.given().log().all()
                 .when().delete("/times/1")
@@ -66,11 +66,11 @@ class ReservationTimeControllerTest {
         assertThat(count).isEqualTo(1);
     }
 
-    static ReservationTime reservationTime() {
+    ReservationTime reservationTime() {
         return new ReservationTime(0, LocalTime.parse("10:00"));
     }
 
-    static void insertReservationTime(JdbcTemplate jdbcTemplate, String time) {
+    void insertReservationTime(String time) {
         jdbcTemplate.update("INSERT INTO RESERVATION_TIME (START_AT) VALUES (?)", time);
     }
 }

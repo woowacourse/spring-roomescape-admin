@@ -29,9 +29,9 @@ class ReservationControllerTest {
     @DisplayName("예약을 조회한다.")
     @Test
     void findAll() {
-        insertReservationTime(jdbcTemplate);
-        insertReservation(jdbcTemplate);
-        insertReservation(jdbcTemplate);
+        insertReservationTime();
+        insertReservation();
+        insertReservation();
 
         List<Reservation> reservations = RestAssured.given().log().all()
                         .when().get("/reservations")
@@ -46,8 +46,8 @@ class ReservationControllerTest {
     @DisplayName("예약을 추가한다.")
     @Test
     void create() {
-        insertReservationTime(jdbcTemplate);
-        insertReservation(jdbcTemplate);
+        insertReservationTime();
+        insertReservation();
 
         RestAssured.given().log().all()
                 .contentType(ContentType.JSON)
@@ -63,7 +63,7 @@ class ReservationControllerTest {
     @DisplayName("예약을 삭제한다.")
     @Test
     void delete() {
-        insertReservation(jdbcTemplate);
+        insertReservation();
 
         RestAssured.given().log().all()
                 .when().delete("/reservations/1")
@@ -89,15 +89,15 @@ class ReservationControllerTest {
         assertThat(isJdbcTemplateInjected).isFalse();
     }
 
-    static ReservationRequest reservationRequest() {
+    ReservationRequest reservationRequest() {
         return new ReservationRequest("브라운", LocalDate.parse("2023-08-05"), 1);
     }
 
-    static void insertReservationTime(JdbcTemplate jdbcTemplate) {
+    void insertReservationTime() {
         jdbcTemplate.update("INSERT INTO RESERVATION_TIME (START_AT) VALUES ('10:00')");
     }
 
-    static void insertReservation(JdbcTemplate jdbcTemplate) {
+    void insertReservation() {
         jdbcTemplate.update(
                 "INSERT INTO RESERVATION (NAME, DATE, TIME_ID) "
                         + "VALUES (?, ?, SELECT t.id FROM RESERVATION_TIME t WHERE t.id = ?)",

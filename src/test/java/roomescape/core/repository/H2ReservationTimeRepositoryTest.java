@@ -1,11 +1,12 @@
-package roomescape.repository;
+package roomescape.core.repository;
 
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.transaction.annotation.Transactional;
-import roomescape.domain.ReservationTime;
+import roomescape.core.domain.ReservationTime;
+import roomescape.core.repository.H2ReservationTimeRepository;
 
 import java.time.LocalTime;
 import java.util.List;

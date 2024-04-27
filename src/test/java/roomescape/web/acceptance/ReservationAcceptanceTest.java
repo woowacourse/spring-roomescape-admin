@@ -1,4 +1,4 @@
-package roomescape.acceptance;
+package roomescape.web.acceptance;
 
 import io.restassured.RestAssured;
 import io.restassured.http.ContentType;
@@ -6,10 +6,10 @@ import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.DynamicTest;
 import org.junit.jupiter.api.TestFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import roomescape.domain.Reservation;
-import roomescape.domain.ReservationTime;
-import roomescape.repository.ReservationRepository;
-import roomescape.repository.ReservationTimeRepository;
+import roomescape.core.domain.Reservation;
+import roomescape.core.domain.ReservationTime;
+import roomescape.core.repository.ReservationRepository;
+import roomescape.core.repository.ReservationTimeRepository;
 
 import java.time.LocalDate;
 import java.util.List;

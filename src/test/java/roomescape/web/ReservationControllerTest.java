@@ -1,4 +1,4 @@
-package roomescape.controller;
+package roomescape.web;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.junit.jupiter.api.DisplayName;
@@ -8,13 +8,13 @@ import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.context.annotation.Import;
 import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
-import roomescape.controller.request.ReservationRequest;
-import roomescape.domain.Reservation;
-import roomescape.domain.ReservationTime;
+import roomescape.web.request.ReservationRequest;
+import roomescape.core.domain.Reservation;
+import roomescape.core.domain.ReservationTime;
 import roomescape.fake.InMemoryReservationRepository;
 import roomescape.fake.InMemoryReservationTimeRepository;
-import roomescape.repository.ReservationRepository;
-import roomescape.repository.ReservationTimeRepository;
+import roomescape.core.repository.ReservationRepository;
+import roomescape.core.repository.ReservationTimeRepository;
 
 import java.time.LocalDate;
 import java.time.LocalTime;

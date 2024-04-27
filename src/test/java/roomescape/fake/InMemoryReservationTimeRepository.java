@@ -1,7 +1,7 @@
 package roomescape.fake;
 
-import roomescape.domain.ReservationTime;
-import roomescape.repository.ReservationTimeRepository;
+import roomescape.core.domain.ReservationTime;
+import roomescape.core.repository.ReservationTimeRepository;
 
 import java.util.ArrayList;
 import java.util.Collections;

@@ -1,8 +1,7 @@
 package roomescape.fake;
 
-import org.springframework.stereotype.Repository;
-import roomescape.domain.Reservation;
-import roomescape.repository.ReservationRepository;
+import roomescape.core.domain.Reservation;
+import roomescape.core.repository.ReservationRepository;
 
 import java.util.ArrayList;
 import java.util.Collections;

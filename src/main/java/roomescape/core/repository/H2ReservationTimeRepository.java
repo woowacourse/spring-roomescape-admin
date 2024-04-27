@@ -1,9 +1,9 @@
-package roomescape.repository;
+package roomescape.core.repository;
 
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.simple.SimpleJdbcInsert;
 import org.springframework.stereotype.Repository;
-import roomescape.domain.ReservationTime;
+import roomescape.core.domain.ReservationTime;
 
 import javax.sql.DataSource;
 import java.util.List;

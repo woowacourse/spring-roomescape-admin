@@ -1,11 +1,11 @@
-package roomescape.repository;
+package roomescape.core.repository;
 
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.context.SpringBootTest;
-import roomescape.domain.Name;
-import roomescape.domain.Reservation;
+import roomescape.core.domain.Name;
+import roomescape.core.domain.Reservation;
 import roomescape.fake.InMemoryReservationRepository;
 
 import java.time.LocalDate;

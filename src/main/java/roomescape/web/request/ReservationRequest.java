@@ -1,7 +1,7 @@
-package roomescape.controller.request;
+package roomescape.web.request;
 
-import roomescape.domain.Reservation;
-import roomescape.domain.ReservationTime;
+import roomescape.core.domain.Reservation;
+import roomescape.core.domain.ReservationTime;
 
 import java.time.LocalDate;
 import java.util.Objects;

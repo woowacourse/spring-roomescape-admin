@@ -13,13 +13,13 @@ import roomescape.dto.TimeCreateRequest;
 import roomescape.model.ReservationTime;
 
 @Repository
-public class ReservationTimeDAO {
+public class ReservationTimeRepository {
 
     private final JdbcTemplate jdbcTemplate;
     private final SimpleJdbcInsert jdbcInsert;
 
     @Autowired
-    public ReservationTimeDAO(DataSource dataSource) {
+    public ReservationTimeRepository(DataSource dataSource) {
         this.jdbcTemplate = new JdbcTemplate(dataSource);
         this.jdbcInsert = new SimpleJdbcInsert(dataSource)
                 .withTableName("reservation_time")

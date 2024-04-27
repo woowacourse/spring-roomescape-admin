@@ -12,34 +12,34 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.server.ResponseStatusException;
-import roomescape.dao.ReservationTimeDAO;
+import roomescape.dao.ReservationTimeRepository;
 import roomescape.dto.TimeCreateRequest;
 import roomescape.model.ReservationTime;
 
 @RestController
 public class TimeController {
 
-    private final ReservationTimeDAO reservationTimeDAO;
+    private final ReservationTimeRepository reservationTimeRepository;
 
-    public TimeController(ReservationTimeDAO reservationTimeDAO) {
-        this.reservationTimeDAO = reservationTimeDAO;
+    public TimeController(ReservationTimeRepository reservationTimeRepository) {
+        this.reservationTimeRepository = reservationTimeRepository;
     }
 
     @GetMapping("/times")
     public ResponseEntity<List<ReservationTime>> times() {
-        return ResponseEntity.ok(reservationTimeDAO.findAll());
+        return ResponseEntity.ok(reservationTimeRepository.findAll());
     }
 
     @PostMapping("/times")
     public ResponseEntity<ReservationTime> create(@RequestBody TimeCreateRequest timeCreateRequest) {
-        ReservationTime reservationTime = reservationTimeDAO.insert(timeCreateRequest);
+        ReservationTime reservationTime = reservationTimeRepository.insert(timeCreateRequest);
         return ResponseEntity.created(URI.create("/times/" + reservationTime.getId())).body(reservationTime);
     }
 
     @DeleteMapping("/times/{id}")
     public ResponseEntity<Void> delete(@PathVariable Long id) {
         try {
-            reservationTimeDAO.delete(id);
+            reservationTimeRepository.delete(id);
         } catch (NullPointerException e) {
             System.out.println("ReservationTime id 가 null 입니다.");
         } catch (Exception e) {

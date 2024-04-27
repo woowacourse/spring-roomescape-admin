@@ -7,7 +7,7 @@ import org.springframework.jdbc.core.namedparam.BeanPropertySqlParameterSource;
 import org.springframework.jdbc.core.namedparam.SqlParameterSource;
 import org.springframework.jdbc.core.simple.SimpleJdbcInsert;
 import org.springframework.stereotype.Repository;
-import roomescape.domain.ReservationTime;
+import roomescape.domain.Time;
 
 @Repository
 public class ReservationJdbcDao implements ReservationTimeDao {
@@ -22,20 +22,28 @@ public class ReservationJdbcDao implements ReservationTimeDao {
     }
 
     @Override
-    public void save(ReservationTime reservationTime) {
+    public void save(Time reservationTime) {
         SqlParameterSource sqlParameterSource = new BeanPropertySqlParameterSource(reservationTime);
         long id = jdbcInsert.executeAndReturnKey(sqlParameterSource).longValue();
         reservationTime.setId(id);
     }
 
     @Override
-    public List<ReservationTime> findAll() {
-        String findAllReservationTimeSql = "SELECT id, start_at FROM reservation_time ORDER BY start_at DESC ";
+    public List<Time> findAll() {
+        String findAllReservationTimeSql = "SELECT id, start_at FROM reservation_time ORDER BY start_at ASC ";
 
-        return jdbcTemplate.query(findAllReservationTimeSql, (resultSet, rowNum) -> new ReservationTime(
+        return jdbcTemplate.query(findAllReservationTimeSql, (resultSet, rowNum) -> new Time(
                 resultSet.getLong("id"),
                 resultSet.getTime("start_at").toLocalTime()
         ));
+    }
+
+    @Override
+    public Time findById(long reservationTimeId) {
+        String findReservationTimeSql = "SELECT start_at FROM reservation_time WHERE id = ?";
+        return jdbcTemplate.queryForObject(findReservationTimeSql, (resultSet, rowNum) -> new Time(
+                reservationTimeId,
+                resultSet.getTime("start_at").toLocalTime()), reservationTimeId);
     }
 
     @Override

@@ -1,4 +1,4 @@
-package roomescape.admin;
+package roomescape.admin.reservation.controller;
 
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -16,9 +16,13 @@ public class AdminController {
         return "admin/index";
     }
 
-
     @GetMapping("/admin/reservation")
     public String reservationPage() {
-        return "admin/reservation-legacy";
+        return "admin/reservation";
+    }
+
+    @GetMapping("/admin/time")
+    public String timePage() {
+        return "admin/time";
     }
 }

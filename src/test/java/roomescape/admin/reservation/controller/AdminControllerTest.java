@@ -1,4 +1,4 @@
-package roomescape.admin;
+package roomescape.admin.reservation.controller;
 
 import io.restassured.RestAssured;
 import org.junit.jupiter.api.DisplayName;
@@ -29,7 +29,7 @@ public class AdminControllerTest {
     }
 
     @Test
-    @DisplayName("/admin/reservation 를 요청하면 reservation-legacy.html 를 반환한다.")
+    @DisplayName("/admin/reservation 를 요청하면 reservation.html 를 반환한다.")
     void requestAdminReservation() {
         RestAssured.given().log().all()
                 .when().get("/admin/reservation")

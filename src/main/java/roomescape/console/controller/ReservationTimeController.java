@@ -1,8 +1,9 @@
 package roomescape.console.controller;
 
-import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
+import roomescape.console.request.ConsoleRequest;
 import roomescape.console.request.ReservationTimeRequest;
+import roomescape.console.response.ConsoleResponse;
 import roomescape.console.response.ReservationTimeResponse;
 import roomescape.core.domain.ReservationTime;
 import roomescape.core.repository.ReservationTimeRepository;
@@ -17,26 +18,51 @@ public class ReservationTimeController implements ConsoleController {
         this.reservationTimeRepository = reservationTimeRepository;
     }
 
-    public ResponseEntity<List<ReservationTimeResponse>> findAll() {
+    public List<ReservationTimeResponse> findAll() {
         List<ReservationTime> reservationTimes = reservationTimeRepository.findAll();
         List<ReservationTimeResponse> reservationTimeResponses = reservationTimes.stream()
                 .map(ReservationTimeResponse::from)
                 .toList();
 
-        return ResponseEntity.ok(reservationTimeResponses);
+        return reservationTimeResponses;
     }
 
-    public ResponseEntity<ReservationTimeResponse> save(ReservationTimeRequest reservationTimeRequest) {
+    public ReservationTimeResponse save(ReservationTimeRequest reservationTimeRequest) {
         ReservationTime reservationTime = reservationTimeRequest.toEntity();
 
         ReservationTime savedReservationTime = reservationTimeRepository.save(reservationTime);
 
-        return ResponseEntity.ok(ReservationTimeResponse.from(savedReservationTime));
+        return ReservationTimeResponse.from(savedReservationTime);
     }
 
-    public ResponseEntity<Void> save(Long id) {
+    public void delete(Long id) {
         reservationTimeRepository.deleteById(id);
+    }
 
-        return ResponseEntity.noContent().build();
+    @Override
+    public ConsoleResponse dispatch(ConsoleRequest request) {
+        return switch (request.getMethod()) {
+            case "post" -> handlePostRequest(request);
+            case "get" -> handleGetRequest(request);
+            case "delete" -> handleDeleteRequest(request);
+            default -> throw new IllegalArgumentException("잘못된 명령어입니다. 입력한 명령어 '" + request.getMethod() + "'");
+        };
+    }
+
+    private ConsoleResponse handlePostRequest(ConsoleRequest request) {
+        ReservationTimeRequest mappedRequest = ReservationTimeRequest.from(request.getContents());
+        ReservationTimeResponse response = save(mappedRequest);
+        return ConsoleResponse.from(response);
+    }
+
+    private ConsoleResponse handleGetRequest(ConsoleRequest request) {
+        List<ReservationTimeResponse> reservationTimeResponses = findAll();
+        return ConsoleResponse.from(reservationTimeResponses);
+    }
+
+    private ConsoleResponse handleDeleteRequest(ConsoleRequest request) {
+        Long id = Long.parseLong(request.getContents().get(0));
+        delete(id);
+        return ConsoleResponse.empty();
     }
 }

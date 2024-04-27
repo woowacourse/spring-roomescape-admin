@@ -1,7 +1,9 @@
 package roomescape.controller;
 
+import static org.springframework.http.HttpStatus.NOT_FOUND;
+
+import java.net.URI;
 import java.util.List;
-import java.util.concurrent.atomic.AtomicLong;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -9,35 +11,40 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.server.ResponseStatusException;
+import roomescape.dao.ReservationRepository;
+import roomescape.dto.ReservationCreateRequest;
 import roomescape.model.Reservation;
-import roomescape.model.Reservations;
-import roomescape.dto.ReservationCreateRequestDto;
 
 @RestController
 public class ReservationController {
 
-    private final Reservations reservations;
-    private final AtomicLong index = new AtomicLong(0);
+    private final ReservationRepository reservationRepository;
 
-    public ReservationController(Reservations reservations) {
-        this.reservations = reservations;
+    public ReservationController(ReservationRepository reservationRepository) {
+        this.reservationRepository = reservationRepository;
     }
 
     @GetMapping("/reservations")
     public ResponseEntity<List<Reservation>> reservations() {
-        return ResponseEntity.ok(reservations.getReservations());
+        return ResponseEntity.ok(reservationRepository.findAll());
     }
 
     @PostMapping("/reservations")
-    public ResponseEntity<Reservation> create(@RequestBody ReservationCreateRequestDto reservationCreateRequestDto) {
-        Reservation reservation = reservationCreateRequestDto.createReservation(index.incrementAndGet());
-        reservations.add(reservation);
-        return ResponseEntity.ok(reservation);
+    public ResponseEntity<Reservation> create(@RequestBody ReservationCreateRequest reservationCreateRequest) {
+        Reservation reservation = reservationRepository.insert(reservationCreateRequest);
+        return ResponseEntity.created(URI.create("/reservations/" + reservation.getId())).body(reservation);
     }
 
     @DeleteMapping("/reservations/{id}")
-    public ResponseEntity<Void> delete(@PathVariable long id) {
-        reservations.delete(id);
-        return ResponseEntity.ok().build();
+    public ResponseEntity<Void> delete(@PathVariable("id") Long id) {
+        try {
+            reservationRepository.delete(id);
+        } catch (NullPointerException e) {
+            System.out.println("Reservation id 가 null 입니다.");
+        } catch (Exception e) {
+            throw new ResponseStatusException(NOT_FOUND, "Unable to find resource");
+        }
+        return ResponseEntity.noContent().build();
     }
 }

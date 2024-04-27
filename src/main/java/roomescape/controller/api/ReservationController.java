@@ -36,9 +36,11 @@ public class ReservationController {
 
     @PostMapping("")
     public ResponseEntity<ReservationResponse> create(@RequestBody ReservationRequest reservationRequest) {
-        Long id = reservationDao.saveReservation(reservationRequest);
-        Reservation reservation = reservationDao.findReservation(id);
-        ReservationResponse reservationResponse = ReservationResponse.from(reservation);
+        Reservation reservation = reservationRequest.toReservation();
+
+        Long id = reservationDao.saveReservation(reservation);
+        Reservation saveReservation = reservationDao.findReservation(id);
+        ReservationResponse reservationResponse = ReservationResponse.from(saveReservation);
 
         return ResponseEntity.ok(reservationResponse);
     }

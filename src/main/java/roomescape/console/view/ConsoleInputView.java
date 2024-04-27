@@ -48,14 +48,14 @@ public class ConsoleInputView {
         return new ReservationTimeRequest(startAt);
     }
 
-    public DomainCommand inputChoosingDomain() {
+    public DomainCommand chooseDomain() {
         System.out.println();
         System.out.println("도메인을 선택해주세요.");
-        System.out.println("1 - 예약 관리, 2 - 예약 시간 관리");
+        System.out.println("1 - 예약 관리, 2 - 예약 시간 관리, 3 - 프로그램 종료");
         return INT_TO_DOMAIN_COMMAND.get(inputInt());
     }
 
-    public FunctionCommand inputChoosingFunction() {
+    public FunctionCommand chooseFunction() {
         System.out.println();
         System.out.println("기능을 선택해주세요");
         System.out.println("1 - 전체 조회, 2 - 생성, 3 - 삭제");
@@ -79,4 +79,5 @@ public class ConsoleInputView {
     private Long inputId() {
         return Long.parseLong(SCANNER.nextLine());
     }
+
 }

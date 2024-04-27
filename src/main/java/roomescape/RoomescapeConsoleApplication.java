@@ -15,10 +15,6 @@ import roomescape.domain.dto.ReservationTimeResponse;
 
 public class RoomescapeConsoleApplication {
 
-    public static void main(String[] args) {
-        new RoomescapeConsoleApplication().run();
-    }
-
     private final ReservationService reservationService;
     private final ReservationTimeService reservationTimeService;
     private final ConsoleInputView inputView;
@@ -33,10 +29,14 @@ public class RoomescapeConsoleApplication {
         this.outputView = new ConsoleOutputView();
     }
 
+    public static void main(String[] args) {
+        new RoomescapeConsoleApplication().run();
+    }
+
     public void run() {
         DomainCommand domainCommand;
         do {
-            domainCommand = inputView.inputChoosingDomain();
+            domainCommand = inputView.chooseDomain();
             chooseDomain(domainCommand);
         } while (domainCommand == null || domainCommand.isEndProgram());
     }
@@ -51,7 +51,7 @@ public class RoomescapeConsoleApplication {
     }
 
     public void runReservationFunction() {
-        FunctionCommand functionCommand = inputView.inputChoosingFunction();
+        FunctionCommand functionCommand = inputView.chooseFunction();
         if (functionCommand == FunctionCommand.GET_ALL) {
             outputView.printReservations(reservationService.getAllReservations());
         }
@@ -65,7 +65,7 @@ public class RoomescapeConsoleApplication {
     }
 
     public void runReservationTimeFunction() {
-        FunctionCommand functionCommand = inputView.inputChoosingFunction();
+        FunctionCommand functionCommand = inputView.chooseFunction();
         if (functionCommand == FunctionCommand.GET_ALL) {
             outputView.printReservationTimes(reservationTimeService.getAllReservationTimes());
         }
@@ -78,4 +78,5 @@ public class RoomescapeConsoleApplication {
             reservationTimeService.deleteReservationTime(inputView.inputDeletingId());
         }
     }
+
 }

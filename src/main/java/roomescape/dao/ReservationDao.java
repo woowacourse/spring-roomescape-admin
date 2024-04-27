@@ -3,6 +3,7 @@ package roomescape.dao;
 import java.sql.Date;
 import java.sql.PreparedStatement;
 import java.util.List;
+import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;
 import org.springframework.jdbc.support.GeneratedKeyHolder;
@@ -53,7 +54,8 @@ public class ReservationDao {
     }
 
     public Reservation findOne(final long id) {
-        final var sql = """
+        try {
+            final var sql = """
                 SELECT 
                 r.id as reservation_id, 
                 r.name, 
@@ -66,7 +68,10 @@ public class ReservationDao {
                 where r.id = ?
                 """;
 
-        return jdbcTemplate.queryForObject(sql, actorRowMapper(), id);
+            return jdbcTemplate.queryForObject(sql, actorRowMapper(), id);
+        }catch (final EmptyResultDataAccessException e) {
+            throw new IllegalArgumentException(String.format("%s는 없는 시간 정보 입니다.", id));
+        }
     }
 
     private static RowMapper<Reservation> actorRowMapper() {

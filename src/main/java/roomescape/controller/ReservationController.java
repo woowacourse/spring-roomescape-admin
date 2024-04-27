@@ -24,16 +24,24 @@ public class ReservationController {
 
     @GetMapping("/reservations")
     public ResponseEntity<List<Reservation>> getReservations() {
-        return ResponseEntity.ok(reservationService.getAllReservationQuery());
+        try{
+            return ResponseEntity.ok(reservationService.getAllReservationQuery());
+        } catch (final IllegalArgumentException e) {
+            return ResponseEntity.notFound().build();
+        }
     }
 
     @PostMapping("/reservations")
     public ResponseEntity<ReservationResponse> createReservation(@RequestBody final ReservationRequest reservationRequest) {
-        final var savedId = reservationService.createReservationCommand(reservationRequest);
+        try{
+            final var savedId = reservationService.createReservationCommand(reservationRequest);
 
-        final var response = reservationService.getReservationQuery(savedId);
-        return ResponseEntity.created(URI.create("/reservations/" + savedId))
-                .body(response);
+            final var response = reservationService.getReservationQuery(savedId);
+            return ResponseEntity.created(URI.create("/reservations/" + savedId))
+                    .body(response);
+        } catch (final IllegalArgumentException e) {
+            return ResponseEntity.notFound().build();
+        }
     }
 
     @DeleteMapping("/reservations/{id}")

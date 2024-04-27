@@ -3,6 +3,8 @@ package roomescape.dao;
 import java.sql.PreparedStatement;
 import java.util.List;
 import java.util.Objects;
+import org.springframework.dao.DataIntegrityViolationException;
+import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;
 import org.springframework.jdbc.support.GeneratedKeyHolder;
@@ -34,14 +36,22 @@ public class ReservationTimeDao {
         return jdbcTemplate.query(sql, actorRowMapper());
     }
 
-    public void delete(final long id) {
-        final var sql = "DELETE FROM reservation_time WHERE id = ?";
-        jdbcTemplate.update(sql, id);
+    public void delete(final long id){
+        try{
+            final var sql = "DELETE FROM reservation_time WHERE id = ?";
+            jdbcTemplate.update(sql, id);
+        } catch (final DataIntegrityViolationException e) {
+            throw new IllegalArgumentException(String.format("%d는 사용중입니다.", id) );
+        }
     }
 
     public ReservationTime findOne(final long id) {
-        final var sql = "SELECT id, start_at FROM reservation_time WHERE id = ?";
-        return jdbcTemplate.queryForObject(sql, actorRowMapper(), id);
+       try{
+           final var sql = "SELECT id, start_at FROM reservation_time WHERE id = ?";
+           return jdbcTemplate.queryForObject(sql, actorRowMapper(), id);
+       } catch (final EmptyResultDataAccessException e) {
+           throw new IllegalArgumentException(String.format("%d는 없는 id값입니다.", id));
+       }
     }
 
     private static RowMapper<ReservationTime> actorRowMapper() {

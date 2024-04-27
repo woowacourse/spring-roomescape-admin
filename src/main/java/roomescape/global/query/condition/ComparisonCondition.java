@@ -1,8 +1,6 @@
 package roomescape.global.query.condition;
 
-import roomescape.global.query.Assemblable;
-
-public class ComparisonCondition implements Assemblable {
+public class ComparisonCondition extends Condition {
     private final String column;
     private final Object value;
     private final Operator operator;

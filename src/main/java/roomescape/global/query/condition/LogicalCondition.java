@@ -3,11 +3,10 @@ package roomescape.global.query.condition;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
-import roomescape.global.query.Assemblable;
 
-public class LogicalCondition implements Assemblable {
+public class LogicalCondition extends Condition {
     private final Operator operator;
-    private final List<ComparisonCondition> conditions;
+    private final List<Condition> conditions;
 
     private LogicalCondition(Operator operator) {
         this.operator = operator;
@@ -18,7 +17,7 @@ public class LogicalCondition implements Assemblable {
         return new LogicalCondition(Operator.AND);
     }
 
-    public void addCondition(ComparisonCondition condition) {
+    public void addCondition(Condition condition) {
         conditions.add(condition);
     }
 
@@ -28,7 +27,7 @@ public class LogicalCondition implements Assemblable {
 
     @Override
     public void assemble(StringBuilder builder) {
-        Iterator<ComparisonCondition> conditionIterator = conditions.iterator();
+        Iterator<Condition> conditionIterator = conditions.iterator();
         while (conditionIterator.hasNext()) {
             conditionIterator.next().assemble(builder);
             appendOperator(builder, conditionIterator.hasNext());

@@ -3,7 +3,7 @@ package roomescape.global.query;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
-import roomescape.global.query.condition.ComparisonCondition;
+import roomescape.global.query.condition.Condition;
 import roomescape.global.query.condition.LogicalCondition;
 import roomescape.global.query.join.JoinCondition;
 import roomescape.global.query.join.JoinType;
@@ -32,7 +32,7 @@ public class SelectQuery extends Query {
         return this;
     }
 
-    public SelectQuery where(ComparisonCondition condition) {
+    public SelectQuery where(Condition condition) {
         this.condition.addCondition(condition);
         return this;
     }

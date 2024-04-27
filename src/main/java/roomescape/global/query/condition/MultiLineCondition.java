@@ -1,9 +1,8 @@
 package roomescape.global.query.condition;
 
-import roomescape.global.query.Assemblable;
 import roomescape.global.query.SelectQuery;
 
-public class MultiLineCondition implements Assemblable {
+public class MultiLineCondition extends Condition {
     private final Operator operator;
     private final SelectQuery subQuery;
 

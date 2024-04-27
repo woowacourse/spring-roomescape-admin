@@ -1,23 +1,54 @@
 package roomescape.domain;
 
+import roomescape.exception.NonEmptyDateException;
+import roomescape.exception.NonEmptyNameException;
+
 import java.time.LocalDate;
-import java.time.LocalTime;
 
 public class Reservation {
 
-    private final int id;
-    private final String name;
-    private final LocalDate date;
-    private final LocalTime time;
+    private long id;
+    private String name;
+    private LocalDate date;
+    private ReservationTime time;
 
-    public Reservation(int id, String name, LocalDate date, LocalTime time) {
+    public Reservation() {
+    }
+
+    public Reservation(long id, String name, LocalDate date) {
+        this(id, name, date, new ReservationTime());
+    }
+
+    private Reservation(String name, LocalDate date, ReservationTime time) {
+        this(-1, name, date, time);
+    }
+
+    private Reservation(long id, String name, LocalDate date, ReservationTime time) {
+        validateNotNull(name, date);
         this.id = id;
         this.name = name;
         this.date = date;
         this.time = time;
     }
 
-    public int getId() {
+    private void validateNotNull(String name, LocalDate date) {
+        if (name == null) {
+            throw new NonEmptyNameException();
+        }
+        if (name.isEmpty()) {
+            throw new NonEmptyNameException();
+        }
+        if (date == null) {
+            throw new NonEmptyDateException();
+        }
+    }
+
+    public static Reservation from(String name, LocalDate date, long timeId) {
+        ReservationTime reservationTime = new ReservationTime(timeId);
+        return new Reservation(name, date, reservationTime);
+    }
+
+    public long getId() {
         return id;
     }
 
@@ -29,7 +60,11 @@ public class Reservation {
         return date;
     }
 
-    public LocalTime getTime() {
+    public ReservationTime getTime() {
         return time;
+    }
+
+    public void setTime(ReservationTime time) {
+        this.time = time;
     }
 }

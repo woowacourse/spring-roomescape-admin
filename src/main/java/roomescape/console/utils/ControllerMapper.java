@@ -1,12 +1,10 @@
 package roomescape.console.utils;
 
-import org.springframework.stereotype.Component;
 import roomescape.console.controller.ConsoleController;
 import roomescape.console.view.ConsoleRequest;
 
 import java.util.Map;
 
-@Component
 public class ControllerMapper {
     private final Map<Command, ConsoleController> controllers;
 

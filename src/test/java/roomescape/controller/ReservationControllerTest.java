@@ -31,7 +31,8 @@ class ReservationControllerTest {
     @Test
     void findReservationTest() {
         RestAssured.given().log().all()
-                .when().get("/reservations").then()
+                .when().get("/reservations")
+                .then().log().all()
                 .statusCode(200)
                 .body("size()", is(3));
     }
@@ -39,7 +40,7 @@ class ReservationControllerTest {
     @DisplayName("예약을 정상적으로 생성할 수 있다.")
     @Test
     void createReservationTest() {
-        RestAssured.given()
+        RestAssured.given().log().all()
                 .contentType(ContentType.JSON)
                 .body(Map.of(
                         "name", "미르",
@@ -47,7 +48,7 @@ class ReservationControllerTest {
                         "timeId", "1"
                 ))
                 .when().post("/reservations")
-                .then()
+                .then().log().all()
                 .statusCode(200)
                 .header("Location", "/reservations/4")
                 .body("id", equalTo(4),
@@ -61,14 +62,14 @@ class ReservationControllerTest {
     @DisplayName("id를 활용해 예약을 삭제할 수 있다.")
     @Test
     void deleteReservationTest() {
-        RestAssured.given()
+        RestAssured.given().log().all()
                 .when().delete("/reservations/3")
-                .then()
+                .then().log().all()
                 .statusCode(204);
 
-        RestAssured.given()
+        RestAssured.given().log().all()
                 .when().get("/reservations")
-                .then()
+                .then().log().all()
                 .body("size()", is(2));
     }
 }

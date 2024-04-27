@@ -35,6 +35,11 @@ public class TimeManagementDao {
         return jdbcTemplate.query(sql, timeRowMapper);
     }
 
+    public Time findById(long id) {
+        String sql = "select * from reservation_time where id=?";
+        return jdbcTemplate.queryForObject(sql, timeRowMapper, id);
+    }
+
     public Time insert(TimeRequest timeRequest) {
         SqlParameterSource parameterSource = new BeanPropertySqlParameterSource(timeRequest);
         long id = simpleJdbcInsert.executeAndReturnKey(parameterSource).longValue();

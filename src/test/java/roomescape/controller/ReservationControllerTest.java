@@ -9,7 +9,8 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
-import java.time.LocalDateTime;
+import java.time.LocalDate;
+import java.time.LocalTime;
 import java.util.List;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -22,11 +23,13 @@ import org.springframework.test.web.servlet.MockMvc;
 import roomescape.controller.dto.ReservationRequest;
 import roomescape.controller.dto.ReservationResponse;
 import roomescape.domain.Reservation;
+import roomescape.domain.Time;
 import roomescape.service.ReservationService;
 
 @WebMvcTest(ReservationController.class)
 class ReservationControllerTest {
-    private final Reservation reservation = new Reservation(1L, "polla", LocalDateTime.now());
+    private final Reservation reservation = new Reservation(1L, "polla", LocalDate.now(),
+            new Time(1L, LocalTime.now()));
 
     @Autowired
     private MockMvc mockMvc;
@@ -43,7 +46,7 @@ class ReservationControllerTest {
         String content = new ObjectMapper()
                 .registerModule(new JavaTimeModule())
                 .writeValueAsString(
-                        new ReservationRequest(reservation.getDate(), "polla", reservation.getTime()));
+                        new ReservationRequest(reservation.getDate(), "polla", 1L));
 
         mockMvc.perform(post("/reservations")
                         .content(content)
@@ -75,6 +78,6 @@ class ReservationControllerTest {
 
     private ReservationResponse toResponse(Reservation reservation) {
         return new ReservationResponse(reservation.getId(),
-                reservation.getName(), reservation.getDate(), reservation.getTime());
+                reservation.getName(), reservation.getDate(), reservation.getReservationTime());
     }
 }

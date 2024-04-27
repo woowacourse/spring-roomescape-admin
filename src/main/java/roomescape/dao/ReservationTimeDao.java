@@ -1,13 +1,15 @@
 package roomescape.dao;
 
 import java.util.List;
-import roomescape.domain.ReservationTime;
+import roomescape.domain.Time;
 
 public interface ReservationTimeDao {
 
-    void save(ReservationTime reservationTime);
+    void save(Time reservationTime);
 
-    List<ReservationTime> findAll();
+    List<Time> findAll();
+
+    Time findById(long reservationTimeId);
 
     void deleteById(long reservationTimeId);
 }

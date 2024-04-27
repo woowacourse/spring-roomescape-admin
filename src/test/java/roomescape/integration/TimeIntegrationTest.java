@@ -13,7 +13,7 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.web.server.LocalServerPort;
 
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
-public class ReservationTimeIntegrationTest {
+public class TimeIntegrationTest {
     @LocalServerPort
     private int port;
 
@@ -21,7 +21,7 @@ public class ReservationTimeIntegrationTest {
     void init() {
         RestAssured.port = port;
     }
-    
+
     @Test
     @DisplayName("시간을 잘 등록하고 삭제하고 확인이 가능하다.")
     void reservationTimePageWorks() {

@@ -4,7 +4,7 @@ import java.util.List;
 import org.springframework.stereotype.Service;
 import roomescape.controller.dto.ReservationTimeRequest;
 import roomescape.controller.dto.ReservationTimeResponse;
-import roomescape.domain.ReservationTime;
+import roomescape.domain.Time;
 import roomescape.repository.ReservationTimeRepository;
 
 @Service
@@ -16,14 +16,14 @@ public class ReservationTimeService {
     }
 
     public ReservationTimeResponse addReservationTime(ReservationTimeRequest reservationTimeRequest) {
-        ReservationTime reservationTime = new ReservationTime(reservationTimeRequest.startAt());
+        Time reservationTime = new Time(reservationTimeRequest.startAt());
         reservationTimeRepository.saveReservationTime(reservationTime);
 
         return new ReservationTimeResponse(reservationTime.getId(), reservationTime.getStartAt());
     }
 
     public List<ReservationTimeResponse> findReservationTimes() {
-        List<ReservationTime> reservationTimes = reservationTimeRepository.findAllReservationTimes();
+        List<Time> reservationTimes = reservationTimeRepository.findAllReservationTimes();
 
         return reservationTimes.stream()
                 .map(reservationTime -> new ReservationTimeResponse(reservationTime.getId(),

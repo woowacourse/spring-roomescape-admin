@@ -2,10 +2,10 @@ package roomescape.service;
 
 import java.time.LocalDate;
 import java.time.LocalTime;
-import roomescape.dto.ReservationRequest;
-import roomescape.dto.ReservationResponse;
-import roomescape.dto.ReservationTimeRequest;
-import roomescape.dto.ReservationTimeResponse;
+import roomescape.domain.dto.ReservationRequest;
+import roomescape.domain.dto.ReservationResponse;
+import roomescape.domain.dto.ReservationTimeRequest;
+import roomescape.domain.dto.ReservationTimeResponse;
 import roomescape.domain.Reservation;
 import roomescape.domain.ReservationTime;
 

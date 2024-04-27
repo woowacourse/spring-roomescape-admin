@@ -1,14 +1,16 @@
-package roomescape.dto;
+package roomescape.service.dto;
 
 import roomescape.domain.Reservation;
 
+import java.time.LocalDate;
 import java.util.List;
 
-public record ReservationResponse(Long id, String name, String date, String time) {
+public record ReservationResponse(Long id, String name, LocalDate date,
+                                  ReservationTimeResponse time) {
 
     public static ReservationResponse of(Reservation reservation) {
         return new ReservationResponse(reservation.getId(), reservation.getName(),
-                reservation.getDate(), reservation.getTime());
+                reservation.getDate(), ReservationTimeResponse.of(reservation.getReservationTime()));
     }
 
     public static List<ReservationResponse> listOf(List<Reservation> reservations) {

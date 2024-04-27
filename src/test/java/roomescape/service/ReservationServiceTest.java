@@ -56,7 +56,7 @@ class ReservationServiceTest {
     @Test
     @DisplayName("모든 예약들을 조회한다.")
     void getReservations() {
-        List<ReservationResponse> reservations = reservationService.getReservations();
+        List<ReservationResponse> reservations = reservationService.findReservations();
 
         assertThat(reservations).hasSize(2);
     }

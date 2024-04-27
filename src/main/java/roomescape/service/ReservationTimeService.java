@@ -22,7 +22,7 @@ public class ReservationTimeService {
         return ReservationTimeResponse.from(reservationTime);
     }
 
-    public List<ReservationTimeResponse> getTimes() {
+    public List<ReservationTimeResponse> findTimes() {
         return reservationTimeRepository.findAll()
                 .stream()
                 .map(ReservationTimeResponse::from)

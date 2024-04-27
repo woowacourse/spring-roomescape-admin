@@ -50,7 +50,7 @@ public class ReservationService {
         reservationRepository.delete(id);
     }
 
-    public List<ReservationResponse> getReservations() {
+    public List<ReservationResponse> findReservations() {
         return reservationRepository.findAll()
                 .stream()
                 .map(ReservationResponse::from)

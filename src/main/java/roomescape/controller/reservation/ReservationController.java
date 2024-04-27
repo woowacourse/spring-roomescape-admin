@@ -26,7 +26,7 @@ public class ReservationController {
 
     @GetMapping
     public List<ReservationResponse> getReservations() {
-        return reservationService.getReservations();
+        return reservationService.findReservations();
     }
 
     @PostMapping

@@ -36,7 +36,7 @@ class ReservationTimeServiceTest {
     @Test
     @DisplayName("모든 예약 가능 시간을 조회한다.")
     void getTimes() {
-        List<ReservationTimeResponse> times = reservationTimeService.getTimes();
+        List<ReservationTimeResponse> times = reservationTimeService.findTimes();
 
         assertThat(times).hasSize(3);
     }

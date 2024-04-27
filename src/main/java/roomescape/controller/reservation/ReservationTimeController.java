@@ -28,8 +28,8 @@ public class ReservationTimeController {
     }
 
     @GetMapping
-    public List<ReservationTimeResponse> getTimes() {
-        return reservationTimeService.getTimes();
+    public List<ReservationTimeResponse> findTimes() {
+        return reservationTimeService.findTimes();
     }
 
     @GetMapping("/{id}")

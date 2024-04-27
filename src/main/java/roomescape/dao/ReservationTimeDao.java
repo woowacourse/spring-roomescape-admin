@@ -7,7 +7,6 @@ import org.springframework.jdbc.core.RowMapper;
 import org.springframework.jdbc.core.simple.SimpleJdbcInsert;
 import org.springframework.stereotype.Component;
 import roomescape.domain.ReservationTime;
-import roomescape.dto.reservationtime.ReservationTimeRequest;
 
 @Component
 public class ReservationTimeDao {
@@ -34,10 +33,10 @@ public class ReservationTimeDao {
         return jdbcTemplate.query(sql, RESERVATION_TIME_ROW_MAPPER);
     }
 
-    public Long saveReservationTime(ReservationTimeRequest reservationTimeRequest) {
+    public Long saveReservationTime(ReservationTime reservationTime) {
         return simpleJdbcInsert.executeAndReturnKey(
                         Map.of(
-                                "start_at", reservationTimeRequest.startAt()
+                                "start_at", reservationTime.getStartAt()
                         ))
                 .longValue();
     }

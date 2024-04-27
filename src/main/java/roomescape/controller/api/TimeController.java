@@ -10,6 +10,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import roomescape.dao.ReservationTimeDao;
+import roomescape.domain.ReservationTime;
 import roomescape.dto.reservationtime.ReservationTimeRequest;
 import roomescape.dto.reservationtime.ReservationTimeResponse;
 
@@ -35,8 +36,11 @@ public class TimeController {
 
     @PostMapping("")
     public ResponseEntity<ReservationTimeResponse> create(@RequestBody ReservationTimeRequest reservationTimeRequest) {
-        long id = reservationTimeDao.saveReservationTime(reservationTimeRequest);
-        ReservationTimeResponse reservationTimeResponse = new ReservationTimeResponse(id,
+        ReservationTime reservationTime = reservationTimeRequest.toReservationTime();
+
+        long id = reservationTimeDao.saveReservationTime(reservationTime);
+        ReservationTimeResponse reservationTimeResponse = new ReservationTimeResponse(
+                id,
                 reservationTimeRequest.startAt().toString());
 
         return ResponseEntity.ok(reservationTimeResponse);
@@ -45,6 +49,7 @@ public class TimeController {
     @DeleteMapping("/{id}")
     public ResponseEntity<Void> delete(@PathVariable Long id) {
         reservationTimeDao.deleteReservationTime(id);
+
         return ResponseEntity.ok().build();
     }
 }

@@ -6,6 +6,7 @@ import java.time.format.DateTimeFormatter;
 import java.util.List;
 import javax.sql.DataSource;
 import org.springframework.jdbc.core.JdbcTemplate;
+import org.springframework.jdbc.core.RowMapper;
 import org.springframework.jdbc.core.namedparam.MapSqlParameterSource;
 import org.springframework.jdbc.core.namedparam.SqlParameterSource;
 import org.springframework.jdbc.core.simple.SimpleJdbcInsert;
@@ -51,18 +52,22 @@ public class ReservationH2Repository implements ReservationRepository {
                 "SELECT r.id as reservation_id, r.name, r.date, t.id as time_id, t.start_at as time_value "
                         + "FROM reservation as r "
                         + "inner join reservation_time as t on r.time_id = t.id",
-                (resultSet, rowNum) -> {
-                    ReservationTime reservationTime = new ReservationTime(
-                            resultSet.getLong("time_id"),
-                            LocalTime.parse(resultSet.getString("time_value"))
-                    );
-                    return new Reservation(
-                            resultSet.getLong("id"),
-                            resultSet.getString("name"),
-                            LocalDate.parse(resultSet.getString("date")),
-                            reservationTime
-                    );
-                }
+                getReservationRowMapper()
         );
+    }
+
+    private RowMapper<Reservation> getReservationRowMapper() {
+        return (resultSet, rowNum) -> {
+            ReservationTime reservationTime = new ReservationTime(
+                    resultSet.getLong("time_id"),
+                    LocalTime.parse(resultSet.getString("time_value"))
+            );
+            return new Reservation(
+                    resultSet.getLong("id"),
+                    resultSet.getString("name"),
+                    LocalDate.parse(resultSet.getString("date")),
+                    reservationTime
+            );
+        };
     }
 }

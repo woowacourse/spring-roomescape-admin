@@ -1,7 +1,5 @@
 package roomescape.domain;
 
-import com.fasterxml.jackson.annotation.JsonCreator;
-
 import java.util.Objects;
 
 public class Reservation {
@@ -11,7 +9,6 @@ public class Reservation {
     private final String date;
     private final ReservationTime time;
 
-    @JsonCreator
     public Reservation(Long id, String name, String date, ReservationTime time) {
         this.id = id;
         this.name = new Name(name);

@@ -4,6 +4,7 @@ import static roomescape.controller.ReservationMenu.ADD_RESERVATION;
 import static roomescape.controller.ReservationMenu.ADD_RESERVATION_TIME;
 import static roomescape.controller.ReservationMenu.DELETE_RESERVATION;
 import static roomescape.controller.ReservationMenu.DELETE_RESERVATION_TIME;
+import static roomescape.controller.ReservationMenu.END;
 
 import java.time.LocalTime;
 import java.util.List;
@@ -34,9 +35,12 @@ public class ConsoleReservationController {
     }
 
     public void run() {
-        while (true) {
+        boolean isContinue = true;
+        while (isContinue) {
             showMainPage();
-            selectMenu();
+            ReservationMenu reservationMenu = selectMenu();
+            isContinue = reservationMenu != END;
+            changePage(reservationMenu);
         }
     }
 
@@ -64,9 +68,9 @@ public class ConsoleReservationController {
         OUTPUT_VIEW.printReservationTimes(reservationTimes);
     }
 
-    private void selectMenu() {
+    private ReservationMenu selectMenu() {
         int selectedMenu = INPUT_VIEW.readSelectedMenu();
-        changePage(ReservationMenu.findReservationMenu(selectedMenu));
+        return ReservationMenu.findReservationMenu(selectedMenu);
     }
 
     private void changePage(ReservationMenu selectedMenu) {

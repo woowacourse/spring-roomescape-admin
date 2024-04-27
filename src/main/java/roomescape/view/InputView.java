@@ -15,6 +15,7 @@ public class InputView {
                 2. 예약 삭제
                 3. 예약 시간 추가
                 4. 예약 시간 삭제
+                5. 종료
                 """);
         String input = SCANNER.nextLine();
         return Integer.parseInt(input);

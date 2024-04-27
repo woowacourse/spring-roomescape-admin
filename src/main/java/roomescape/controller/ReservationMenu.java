@@ -6,7 +6,8 @@ public enum ReservationMenu {
     ADD_RESERVATION(1),
     DELETE_RESERVATION(2),
     ADD_RESERVATION_TIME(3),
-    DELETE_RESERVATION_TIME(4);
+    DELETE_RESERVATION_TIME(4),
+    END(5);
 
     private final int menuOrder;
 

@@ -4,12 +4,12 @@ import static org.assertj.core.api.Assertions.assertThat;
 import static org.hamcrest.Matchers.is;
 
 import java.time.LocalTime;
+import java.util.List;
 
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.test.annotation.DirtiesContext;
 
 import io.restassured.RestAssured;
@@ -20,7 +20,7 @@ import io.restassured.http.ContentType;
 class ReservationTimeControllerTest {
 
     @Autowired
-    private JdbcTemplate jdbcTemplate;
+    private ReservationTimeDao reservationTimeDao;
 
     @DisplayName("시간을 조회한다.")
     @Test
@@ -39,6 +39,8 @@ class ReservationTimeControllerTest {
     @Test
     void create() {
         insertReservationTime("11:00");
+        List<ReservationTime> savedTimes = reservationTimeDao.findAll();
+        assertThat(savedTimes.size()).isEqualTo(1);
 
         RestAssured.given().log().all()
                 .contentType(ContentType.JSON)
@@ -47,23 +49,24 @@ class ReservationTimeControllerTest {
                 .then().log().all()
                 .statusCode(200);
 
-        Integer count = jdbcTemplate.queryForObject("SELECT COUNT(*) FROM RESERVATION_TIME", Integer.class);
-        assertThat(count).isEqualTo(2);
+        savedTimes = reservationTimeDao.findAll();
+        assertThat(savedTimes.size()).isEqualTo(2);
     }
 
     @DisplayName("시간을 삭제한다.")
     @Test
     void delete() {
-        insertReservationTime("12:00");
-        insertReservationTime("13:00");
+        long id = insertReservationTimeAndGetId("13:00");
+        List<ReservationTime> savedTimes = reservationTimeDao.findAll();
+        assertThat(savedTimes.size()).isEqualTo(1);
 
         RestAssured.given().log().all()
-                .when().delete("/times/1")
+                .when().delete("/times/" + id)
                 .then().log().all()
                 .statusCode(200);
 
-        Integer count = jdbcTemplate.queryForObject("SELECT COUNT(*) from RESERVATION_TIME", Integer.class);
-        assertThat(count).isEqualTo(1);
+        savedTimes = reservationTimeDao.findAll();
+        assertThat(savedTimes.size()).isEqualTo(0);
     }
 
     ReservationTime reservationTime() {
@@ -71,6 +74,10 @@ class ReservationTimeControllerTest {
     }
 
     void insertReservationTime(String time) {
-        jdbcTemplate.update("INSERT INTO RESERVATION_TIME (START_AT) VALUES (?)", time);
+        insertReservationTimeAndGetId(time);
+    }
+
+    long insertReservationTimeAndGetId(String time) {
+        return reservationTimeDao.save(new ReservationTime(0, LocalTime.parse(time))).id();
     }
 }

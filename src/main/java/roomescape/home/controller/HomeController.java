@@ -1,13 +1,13 @@
-package roomescape.reservation;
+package roomescape.home.controller;
 
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
 
 @Controller
-public class ReservationController {
+public class HomeController {
 
-    @GetMapping("/admin/reservation")
+    @GetMapping("/admin")
     public String home() {
-        return "admin/reservation-legacy";
+        return "admin/index";
     }
 }

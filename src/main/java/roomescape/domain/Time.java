@@ -3,10 +3,10 @@ package roomescape.domain;
 import java.time.LocalTime;
 
 public class Time {
-    private final Long id;
+    private final long id;
     private final LocalTime startTime;
 
-    public Time(Long id, LocalTime startTime) {
+    public Time(long id, LocalTime startTime) {
         this.id = id;
         this.startTime = startTime;
     }

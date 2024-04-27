@@ -28,7 +28,7 @@ task runConsole(type: JavaExec) {
     group = 'application'
     setMainClass 'roomescape.RoomescapeConsoleRunner'
     classpath = sourceSets.main.runtimeClasspath
-    args = ['--spring.profiles.active=console']
+    args = ['--spring.profiles.active=console', '--server.port=8081']
     standardInput System.in
 }
 springBoot {

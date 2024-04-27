@@ -26,7 +26,7 @@ public class JdbcReservationRepository implements ReservationRepository {
     private static final RowMapper<Reservation> ROW_MAPPER = (rs, rowNum) -> new Reservation(
             rs.getLong("id"),
             rs.getString("name"),
-            rs.getDate("date").toLocalDate(),
+            rs.getDate("reservation_date").toLocalDate(),
             new ReservationTime(rs.getLong("time_id"), rs.getTime("start_at").toLocalTime())
     );
 
@@ -44,7 +44,7 @@ public class JdbcReservationRepository implements ReservationRepository {
     public Reservation save(Reservation reservation) {
         SqlParameterSource params = new MapSqlParameterSource()
                 .addValue("name", reservation.getName())
-                .addValue("date", reservation.getDate())
+                .addValue("reservation_date", reservation.getDate())
                 .addValue("time_id", reservation.getTimeId());
         long id = jdbcInsert.executeAndReturnKey(params).longValue();
         return reservation.updateId(id);
@@ -54,7 +54,7 @@ public class JdbcReservationRepository implements ReservationRepository {
     public boolean existsByReservationDateTime(LocalDate date, long timeId) {
         SelectQuery subQuery = QueryBuilder.select(TABLE_NAME)
                 .addColumns("1")
-                .where(ComparisonCondition.equalTo("date", date))
+                .where(ComparisonCondition.equalTo("reservation_date", date))
                 .where(ComparisonCondition.equalTo("time_id", timeId));
         String query = QueryBuilder.select(TABLE_NAME)
                 .addColumns("id")

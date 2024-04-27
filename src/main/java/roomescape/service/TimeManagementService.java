@@ -3,9 +3,11 @@ package roomescape.service;
 import org.springframework.stereotype.Service;
 import roomescape.dao.TimeManagementDao;
 import roomescape.domain.Time;
+import roomescape.dto.ReservationRequest;
 import roomescape.dto.TimeRequest;
 
 import java.util.List;
+
 @Service
 public class TimeManagementService {
     private final TimeManagementDao timeManagementDao;
@@ -14,7 +16,7 @@ public class TimeManagementService {
         this.timeManagementDao = timeManagementDao;
     }
 
-    public List<Time> findAll() {
+    public List<Time> read() {
         return timeManagementDao.findAll();
     }
 
@@ -24,5 +26,9 @@ public class TimeManagementService {
 
     public void delete(long id) {
         timeManagementDao.delete(id);
+    }
+
+    public Time findById(ReservationRequest reservationRequest) {
+        return timeManagementDao.findById(reservationRequest.timeId());
     }
 }

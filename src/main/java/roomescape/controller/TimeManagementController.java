@@ -1,7 +1,6 @@
 package roomescape.controller;
 
 import org.springframework.web.bind.annotation.*;
-import roomescape.dao.TimeManagementDao;
 import roomescape.domain.Time;
 import roomescape.dto.TimeRequest;
 import roomescape.service.TimeManagementService;
@@ -19,7 +18,7 @@ public class TimeManagementController {
 
     @GetMapping
     public List<Time> read() {
-        return timeManagementService.findAll();
+        return timeManagementService.read();
     }
 
     @PostMapping

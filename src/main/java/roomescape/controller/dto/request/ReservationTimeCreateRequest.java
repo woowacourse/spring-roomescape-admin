@@ -6,6 +6,6 @@ import roomescape.domain.ReservationTime;
 public record ReservationTimeCreateRequest(LocalTime startAt){
 
     public ReservationTime toReservationTime() {
-        return new ReservationTime(null, startAt);
+        return new ReservationTime(startAt);
     }
 }

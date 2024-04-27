@@ -1,48 +1,50 @@
 package roomescape.service;
 
 import org.springframework.stereotype.Service;
+import roomescape.controller.request.ReservationRequest;
+import roomescape.dao.ReservationDao;
+import roomescape.dao.ReservationTimeDao;
+import roomescape.domain.reservation.Name;
 import roomescape.domain.reservation.Reservation;
-import roomescape.domain.reservation.Reservations;
-import roomescape.dto.ReservationRequestDto;
-import roomescape.dto.ReservationResponseDto;
+import roomescape.domain.reservation.ReservationDate;
 
-import java.util.Set;
-import java.util.concurrent.atomic.AtomicLong;
+import java.util.List;
+import java.util.NoSuchElementException;
 
 @Service
 public class ReservationService {
+    private final ReservationDao reservationDao;
+    private final ReservationTimeDao reservationTimeDao;
 
-    private final Reservations reservations;
-    private final AtomicLong index = new AtomicLong(1);
-
-
-    public ReservationService(Reservations reservations) {
-        this.reservations = reservations;
+    public ReservationService(ReservationDao reservationDao, ReservationTimeDao reservationTimeDao) {
+        this.reservationDao = reservationDao;
+        this.reservationTimeDao = reservationTimeDao;
     }
 
-    public ReservationService() {
-        this(new Reservations());
+    public List<Reservation> getAllReservations() {
+        return reservationDao.findAll();
     }
 
-    public Set<Reservation> getAllReservations() {
-        return reservations.getReservations();
-    }
+    public Reservation reserve(ReservationRequest reservationRequest) {
+        if (hasSameTimeReservation(reservationRequest)) {
+            throw new IllegalArgumentException("이미 예약된 시간입니다.");
+        }
 
-    public ReservationResponseDto reserve(ReservationRequestDto reservationRequestDto) {
-        Reservation reservation = createReservation(reservationRequestDto);
-        addReservation(reservation);
-        return reservation.toResponseDto();
+        return reservationDao.add(createReservation(reservationRequest));
     }
 
     public void deleteReservation(Long id) {
-        reservations.delete(id);
+        reservationDao.delete(id);
     }
 
-    private void addReservation(Reservation reservation) {
-        reservations.add(reservation.getId(), reservation);
+    private Reservation createReservation(ReservationRequest reservationRequest) {
+        return new Reservation(new Name(reservationRequest.name()), new ReservationDate(reservationRequest.date()),
+                reservationTimeDao.findById(reservationRequest.timeId())
+                        .orElseThrow(() -> new NoSuchElementException(reservationRequest.timeId() + "에 해당하는 시간이 없습니다."))
+        );
     }
 
-    private Reservation createReservation(ReservationRequestDto reservationRequestDto) {
-        return new Reservation(index.getAndIncrement(), reservationRequestDto);
+    private boolean hasSameTimeReservation(ReservationRequest reservationRequest) {
+        return !reservationDao.findAllByDateTime(createReservation(reservationRequest)).isEmpty();
     }
 }

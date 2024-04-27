@@ -3,7 +3,6 @@ package roomescape.service;
 import org.springframework.stereotype.Service;
 import roomescape.domain.reservation.ReservationTime;
 import roomescape.repository.ReservationTimeRepository;
-import roomescape.repository.web.dao.ReservationTimeDao;
 
 import java.util.List;
 
@@ -11,7 +10,7 @@ import java.util.List;
 public class ReservationTimeService {
     private final ReservationTimeRepository reservationTimeRepository;
 
-    public ReservationTimeService(ReservationTimeDao reservationTimeRepository) {
+    public ReservationTimeService(ReservationTimeRepository reservationTimeRepository) {
         this.reservationTimeRepository = reservationTimeRepository;
     }
 

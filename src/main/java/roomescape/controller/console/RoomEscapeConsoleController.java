@@ -3,6 +3,7 @@ package roomescape.controller.console;
 import static roomescape.view.Command.READ_ALL_RESERVATIONS;
 
 import java.util.List;
+import java.util.function.Supplier;
 import roomescape.dto.reservation.ReservationCreateRequest;
 import roomescape.dto.reservation.ReservationResponse;
 import roomescape.dto.reservationtime.ReservationTimeCreateRequest;
@@ -33,15 +34,24 @@ public class RoomEscapeConsoleController {
     public void run() {
         Command command = READ_ALL_RESERVATIONS;
         while (!command.isEnd()) {
-            command = inputView.readCommand();
-            switch (command) {
-                case READ_ALL_RESERVATIONS -> printReservations();
-                case READ_ALL_RESERVATIONS_TIMES -> printReservationTimes();
-                case CREATE_RESERVATION -> createReservation();
-                case CREATE_RESERVATIONS_TIME -> createReservationTime();
-                case DELETE_RESERVATION -> deleteReservation();
-                case DELETE_RESERVATIONS_TIME -> deleteReservationTime();
-            }
+            command = retryUntilSuccess(this::readCommandAndExecute);
+        }
+    }
+
+    private Command readCommandAndExecute() {
+        Command newCommand = inputView.readCommand();
+        execute(newCommand);
+        return newCommand;
+    }
+
+    private void execute(Command newCommand) {
+        switch (newCommand) {
+            case READ_ALL_RESERVATIONS -> printReservations();
+            case READ_ALL_RESERVATIONS_TIMES -> printReservationTimes();
+            case CREATE_RESERVATION -> createReservation();
+            case CREATE_RESERVATIONS_TIME -> createReservationTime();
+            case DELETE_RESERVATION -> deleteReservation();
+            case DELETE_RESERVATIONS_TIME -> deleteReservationTime();
         }
     }
 
@@ -77,5 +87,15 @@ public class RoomEscapeConsoleController {
         Long id = inputView.readReservationTimeId();
         reservationTimeService.delete(id);
         outputView.printSuccessDeleted();
+    }
+
+    private <T> T retryUntilSuccess(Supplier<T> supplier) {
+        while (true) {
+            try {
+                return supplier.get();
+            } catch (IllegalArgumentException e) {
+                outputView.printMessage((e.getMessage()));
+            }
+        }
     }
 }

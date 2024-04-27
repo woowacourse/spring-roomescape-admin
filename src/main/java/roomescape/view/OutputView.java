@@ -50,6 +50,10 @@ public class OutputView {
         System.out.println("성공적으로 삭제되었습니다.");
     }
 
+    public void printMessage(String message) {
+        System.out.println(message);
+    }
+
     private String getFormattedReservation(ReservationResponse response) {
         return String.format(
                 RESERVATION_FORMAT,

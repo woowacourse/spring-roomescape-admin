@@ -1,4 +1,4 @@
-package roomescape.controller.request;
+package roomescape.controller.web.request;
 
 import java.time.LocalDate;
 

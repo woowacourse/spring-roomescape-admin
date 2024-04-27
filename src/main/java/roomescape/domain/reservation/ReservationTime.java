@@ -1,6 +1,7 @@
 package roomescape.domain.reservation;
 
 import java.time.LocalTime;
+import java.util.Objects;
 
 public class ReservationTime {
     private static final LocalTime START_TIME = LocalTime.of(9, 0);
@@ -25,6 +26,10 @@ public class ReservationTime {
 
     public static LocalTime endTime() {
         return END_TIME;
+    }
+
+    public boolean hasSameTimeWith(ReservationTime reservationTime) {
+        return reservationTime.time == this.time;
     }
 
     private void validateTime(LocalTime time) {

@@ -1,6 +1,7 @@
 package roomescape.domain.reservation;
 
 import java.time.LocalDate;
+import java.util.Objects;
 
 public class ReservationDate {
     private final LocalDate date;
@@ -8,6 +9,10 @@ public class ReservationDate {
     public ReservationDate(LocalDate date) {
         validateDate(date);
         this.date = date;
+    }
+
+    public boolean hasSameDateWith(ReservationDate reservationDate) {
+        return reservationDate.date == this.date;
     }
 
     private void validateDate(LocalDate date) {

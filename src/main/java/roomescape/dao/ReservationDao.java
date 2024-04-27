@@ -85,7 +85,7 @@ public class ReservationDao {
 
         long saveId =  keyHolder.getKey().longValue();
 
-        return findById(saveId);
+        return new Reservation(saveId, name, date, reservation.getTime());
     }
 
     public void delete(Long id) {

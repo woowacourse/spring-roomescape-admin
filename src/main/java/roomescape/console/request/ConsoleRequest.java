@@ -29,4 +29,8 @@ public class ConsoleRequest {
     public List<String> getContents() {
         return contents;
     }
+
+    public boolean isEnded() {
+        return "end".equals(method);
+    }
 }

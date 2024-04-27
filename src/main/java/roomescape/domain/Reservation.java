@@ -3,6 +3,7 @@ package roomescape.domain;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.LocalTime;
+import java.util.Objects;
 
 public class Reservation {
     private static final Long DEFAULT_ID_VALUE = 0L;
@@ -49,5 +50,17 @@ public class Reservation {
 
     public ReservationTime getTime() {
         return time;
+    }
+
+    @Override
+    public boolean equals(final Object o) {
+        if (this == o) return true;
+        if (!(o instanceof final Reservation that)) return false;
+        return id == that.id;
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(id);
     }
 }

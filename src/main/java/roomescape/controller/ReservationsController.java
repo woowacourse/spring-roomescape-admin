@@ -2,13 +2,9 @@ package roomescape.controller;
 
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
-import roomescape.domain.Reservation;
-import roomescape.dto.ReservationRepositoryDto;
-import roomescape.dto.ReservationTimeDto;
 import roomescape.dto.request.ReservationsRequest;
 import roomescape.dto.response.ReservationsResponse;
-import roomescape.repository.ReservationRepository;
-import roomescape.repository.ReservationTimeRepository;
+import roomescape.service.RoomescapeService;
 
 import java.util.List;
 
@@ -16,39 +12,25 @@ import java.util.List;
 @RequestMapping("/reservations")
 public class ReservationsController {
 
-    private final ReservationRepository reservationRepository;
-    private final ReservationTimeRepository reservationTimeRepository;
+    private final RoomescapeService roomescapeService;
 
-    public ReservationsController(ReservationRepository reservationRepository, ReservationTimeRepository reservationTimeRepository) {
-        this.reservationRepository = reservationRepository;
-        this.reservationTimeRepository = reservationTimeRepository;
+    public ReservationsController(RoomescapeService roomescapeService) {
+        this.roomescapeService = roomescapeService;
     }
 
     @GetMapping
     public List<ReservationsResponse> reservations() {
-        return reservationRepository.findAll()
-                .stream()
-                .map(this::reservationRepositoryDtoToReservation)
-                .map(ReservationsResponse::new)
-                .toList();
+        return roomescapeService.finaAllReservations();
     }
 
     @PostMapping
     public ReservationsResponse addReservation(@RequestBody ReservationsRequest reservationsRequest) {
-        ReservationRepositoryDto requestReservationDto = new ReservationRepositoryDto(null, reservationsRequest.name(), reservationsRequest.date(), reservationsRequest.timeId());
-        ReservationRepositoryDto newReservationDto = reservationRepository.add(requestReservationDto);
-        Reservation newReservation = reservationRepositoryDtoToReservation(newReservationDto);
-        return new ReservationsResponse(newReservation);
-    }
-
-    private Reservation reservationRepositoryDtoToReservation(ReservationRepositoryDto reservationRepositoryDto) {
-        ReservationTimeDto reservationTimeDto = reservationTimeRepository.findById(reservationRepositoryDto.timeId());
-        return new Reservation(reservationRepositoryDto.id(), reservationRepositoryDto.name(), reservationRepositoryDto.date(), reservationTimeDto.toDomain());
+        return roomescapeService.addReservation(reservationsRequest);
     }
 
     @DeleteMapping("/{id}")
     @ResponseStatus(HttpStatus.OK)
     public int deleteReservation(@PathVariable Long id) {
-        return reservationRepository.remove(id);
+        return roomescapeService.removeReservation(id);
     }
 }

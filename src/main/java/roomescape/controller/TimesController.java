@@ -2,11 +2,9 @@ package roomescape.controller;
 
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
-import roomescape.domain.ReservationTime;
-import roomescape.dto.ReservationTimeDto;
 import roomescape.dto.request.TimesRequest;
 import roomescape.dto.response.TimesResponse;
-import roomescape.repository.ReservationTimeRepository;
+import roomescape.service.RoomescapeService;
 
 import java.util.List;
 
@@ -14,32 +12,25 @@ import java.util.List;
 @RequestMapping("/times")
 public class TimesController {
 
-    private final ReservationTimeRepository reservationTimeRepository;
+    private final RoomescapeService roomescapeService;
 
-    public TimesController(ReservationTimeRepository reservationTimeRepository) {
-        this.reservationTimeRepository = reservationTimeRepository;
+    public TimesController(RoomescapeService roomescapeService) {
+        this.roomescapeService = roomescapeService;
     }
 
     @GetMapping
     public List<TimesResponse> times() {
-        return reservationTimeRepository.findAll()
-                .stream()
-                .map(ReservationTimeDto::toDomain)
-                .map(TimesResponse::new)
-                .toList();
+        return roomescapeService.findAllTimes();
     }
 
     @PostMapping
     public TimesResponse addTimes(@RequestBody TimesRequest timesRequest) {
-        ReservationTimeDto reservationTimeDto = new ReservationTimeDto(null, timesRequest.startAt());
-        ReservationTimeDto newReservationTimeDto = reservationTimeRepository.add(reservationTimeDto);
-        ReservationTime newReservationTime = newReservationTimeDto.toDomain();
-        return new TimesResponse(newReservationTime);
+        return roomescapeService.addTime(timesRequest);
     }
 
     @DeleteMapping("/{id}")
     @ResponseStatus(HttpStatus.OK)
     public int deleteTimes(@PathVariable Long id) {
-        return reservationTimeRepository.remove(id);
+        return roomescapeService.removeTime(id);
     }
 }

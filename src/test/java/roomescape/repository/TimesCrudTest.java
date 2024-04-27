@@ -17,7 +17,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 public class TimesCrudTest {
 
     @Autowired
-    private ReservationTimeRepository reservationTimeRepository;
+    private DbReservationTimeRepository reservationTimeRepository;
 
     @LocalServerPort
     int port;

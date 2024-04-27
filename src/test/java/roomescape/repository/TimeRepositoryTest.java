@@ -20,7 +20,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 public class TimeRepositoryTest {
 
     @Autowired
-    private TimeRepositoryImpl timeRepository;
+    private TimeRepository timeRepository;
 
     @Autowired
     private JdbcTemplate jdbcTemplate;

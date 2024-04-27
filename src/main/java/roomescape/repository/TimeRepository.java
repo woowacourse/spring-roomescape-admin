@@ -7,13 +7,12 @@ import org.springframework.jdbc.core.namedparam.SqlParameterSource;
 import org.springframework.jdbc.core.simple.SimpleJdbcInsert;
 import org.springframework.stereotype.Repository;
 import roomescape.domain.time.Time;
-import roomescape.domain.time.TimeRepository;
 
 import javax.sql.DataSource;
 import java.util.List;
 
 @Repository
-public class TimeRepositoryImpl implements TimeRepository {
+public class TimeRepository {
 
     private static final RowMapper<Time> ROW_MAPPER = (resultSet, rowNum) -> {
         Time time = new Time(
@@ -26,27 +25,24 @@ public class TimeRepositoryImpl implements TimeRepository {
     private final JdbcTemplate jdbcTemplate;
     private final SimpleJdbcInsert jdbcInsert;
 
-    public TimeRepositoryImpl(JdbcTemplate jdbcTemplate, DataSource dataSource) {
+    public TimeRepository(JdbcTemplate jdbcTemplate, DataSource dataSource) {
         this.jdbcTemplate = jdbcTemplate;
         this.jdbcInsert = new SimpleJdbcInsert(dataSource)
                 .withTableName("reservation_time")
                 .usingGeneratedKeyColumns("id");
     }
 
-    @Override
     public Time findById(Long timeId) {
         String sql = "SELECT * FROM reservation_time WHERE id = ?";
         return jdbcTemplate.queryForObject(sql, ROW_MAPPER, timeId);
     }
 
-    @Override
     public List<Time> findAll() {
         String sql = "SELECT * FROM reservation_time";
 
         return jdbcTemplate.query(sql, ROW_MAPPER);
     }
 
-    @Override
     public Time create(Time requestTime) {
         SqlParameterSource params = new MapSqlParameterSource()
                 .addValue("start_at", requestTime.getStartAt());
@@ -55,7 +51,6 @@ public class TimeRepositoryImpl implements TimeRepository {
         return new Time(id, requestTime.getStartAt());
     }
 
-    @Override
     public void delete(Long id) {
         String sql = "DELETE FROM reservation_time WHERE id = ?";
         jdbcTemplate.update(sql, id);

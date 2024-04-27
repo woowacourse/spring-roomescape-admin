@@ -1,6 +1,5 @@
 package roomescape.repository;
 
-import org.springframework.context.annotation.Primary;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;
 import org.springframework.jdbc.core.namedparam.MapSqlParameterSource;
@@ -8,15 +7,13 @@ import org.springframework.jdbc.core.namedparam.SqlParameterSource;
 import org.springframework.jdbc.core.simple.SimpleJdbcInsert;
 import org.springframework.stereotype.Repository;
 import roomescape.domain.reservation.Reservation;
-import roomescape.domain.reservation.ReservationRepository;
 import roomescape.domain.time.Time;
 
 import javax.sql.DataSource;
 import java.util.List;
 
 @Repository
-@Primary
-public class ReservationRepositoryImpl implements ReservationRepository {
+public class ReservationRepository {
 
     private static final RowMapper<Reservation> ROW_MAPPER = (resultSet, rowNum) -> {
         Time time = new Time(
@@ -35,21 +32,19 @@ public class ReservationRepositoryImpl implements ReservationRepository {
     private final JdbcTemplate jdbcTemplate;
     private final SimpleJdbcInsert jdbcInsert;
 
-    public ReservationRepositoryImpl(JdbcTemplate jdbcTemplate, DataSource dataSource) {
+    public ReservationRepository(JdbcTemplate jdbcTemplate, DataSource dataSource) {
         this.jdbcTemplate = jdbcTemplate;
         this.jdbcInsert = new SimpleJdbcInsert(dataSource)
                 .withTableName("reservation")
                 .usingGeneratedKeyColumns("id");
     }
 
-    @Override
     public List<Reservation> findAll() {
         String sql = "SELECT * FROM reservation r JOIN reservation_time rt ON r.time_id = rt.id";
 
         return jdbcTemplate.query(sql, ROW_MAPPER);
     }
 
-    @Override
     public Reservation create(Reservation requestReservation) {
         SqlParameterSource params = new MapSqlParameterSource()
                 .addValue("name", requestReservation.getName())
@@ -62,7 +57,6 @@ public class ReservationRepositoryImpl implements ReservationRepository {
                 requestReservation.getDate(), requestReservation.getTime());
     }
 
-    @Override
     public void delete(Long id) {
         String sql = "DELETE FROM reservation WHERE id = ?";
         jdbcTemplate.update(sql, id);

@@ -12,7 +12,7 @@ import roomescape.domain.ReservationTime;
 import roomescape.domain.ReservationDao;
 
 @Repository
-public class H2ReservationDao implements ReservationDao {
+public class JdbcReservationDao implements ReservationDao {
 
     private final JdbcTemplate jdbcTemplate;
     private final SimpleJdbcInsert jdbcInsert;
@@ -22,7 +22,7 @@ public class H2ReservationDao implements ReservationDao {
             rs.getDate("date").toLocalDate(),
             new ReservationTime(rs.getLong("time_id"), rs.getTime("time_value").toLocalTime()));
 
-    public H2ReservationDao(JdbcTemplate jdbcTemplate) {
+    public JdbcReservationDao(JdbcTemplate jdbcTemplate) {
         this.jdbcTemplate = jdbcTemplate;
         this.jdbcInsert = new SimpleJdbcInsert(jdbcTemplate)
                 .withTableName("reservation")

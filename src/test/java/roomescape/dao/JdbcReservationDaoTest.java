@@ -16,7 +16,7 @@ import roomescape.domain.ReservationDao;
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.DEFINED_PORT)
 @DirtiesContext(classMode = DirtiesContext.ClassMode.BEFORE_EACH_TEST_METHOD)
 @Sql(value = "/setReservation.sql")
-class H2ReservationDaoTest {
+class JdbcReservationDaoTest {
 
     @Autowired
     private ReservationDao reservationDao;

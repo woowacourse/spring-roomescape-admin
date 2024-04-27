@@ -28,6 +28,12 @@ public class ReservationService {
     }
 
     public ReservationResponse save(ReservationRequest reservationRequest) {
+        if (reservationRequest.name() == null || reservationRequest.name().isBlank()) {
+            throw new IllegalArgumentException("이름이 입력되지 않았습니다. 이름을 입력해주세요.");
+        }
+        if (reservationRequest.date() == null) {
+            throw new IllegalArgumentException("날짜가 입력되지 않았습니다. 날짜를 입력해주세요.");
+        }
         ReservationTime reservationTime = reservationTimeDao.findById(reservationRequest.timeId());
         Reservation reservation = reservationRequest.toReservation(reservationTime);
         long id = reservationDao.save(reservation);

@@ -22,18 +22,17 @@ public class ReservationService {
     }
 
     public List<ReservationResponseDto> findAll() {
-        List<Reservation> reservations = reservationDao.findAll();
         return reservationDao.findAll().stream()
                 .map(reservation -> reservation.toDto())
                 .toList();
     }
 
-    public Reservation save(ReservationRequestDto reservationRequestDto) {
+    public Reservation save(ReservationRequestDto reservationRequestDto) throws IncorrectResultSizeDataAccessException {
         ReservationTime reservationTime = reservationTimeDao.findById(reservationRequestDto.timeId());
         return reservationDao.save(new Reservation(null, reservationRequestDto.name(), reservationRequestDto.date(), reservationTime));
     }
 
-    public void delete(Long id) throws DataIntegrityViolationException {
+    public void delete(Long id) throws DataIntegrityViolationException  {
         reservationDao.delete(id);
     }
 }

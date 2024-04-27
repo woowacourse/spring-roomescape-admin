@@ -4,6 +4,7 @@ import java.sql.PreparedStatement;
 import java.sql.Time;
 import java.time.LocalTime;
 import java.util.List;
+import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.dao.IncorrectResultSizeDataAccessException;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.support.GeneratedKeyHolder;
@@ -67,7 +68,7 @@ public class ReservationTimeDao {
         return new ReservationTime(id, startAt);
     }
 
-    public void delete(Long id) {
+    public void delete(Long id) throws DataIntegrityViolationException {
         String sql = "delete from reservation_time where id = ?";
         jdbcTemplate.update(sql, id);
     }

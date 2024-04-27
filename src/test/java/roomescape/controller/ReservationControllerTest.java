@@ -166,7 +166,7 @@ class ReservationControllerTest {
         RestAssured.given().log().all()
                 .when().delete("/reservations/" + newReservationId)
                 .then().log().all()
-                .statusCode(200);
+                .statusCode(204);
 
         assertThat(getTotalReservationsCount()).isEqualTo(initialReservationsCount - 1);
     }

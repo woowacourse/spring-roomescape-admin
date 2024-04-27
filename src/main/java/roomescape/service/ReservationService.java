@@ -45,8 +45,4 @@ public class ReservationService {
     public void cancelReservation(Long reservationId) {
         reservationDao.delete(reservationId);
     }
-
-    public boolean checkReservationExist(Long reservationId) {
-        return reservationDao.isExist(reservationId);
-    }
 }

@@ -131,7 +131,7 @@ class TimeControllerTest {
         RestAssured.given().log().all()
                 .when().delete("/times/" + newReservationTimeResponseId)
                 .then().log().all()
-                .statusCode(200);
+                .statusCode(204);
 
         assertThat(getTotalReservationsCount()).isEqualTo(initialReservationTimesCount - 1);
     }

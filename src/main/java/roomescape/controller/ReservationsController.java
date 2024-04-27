@@ -1,7 +1,7 @@
 package roomescape.controller;
 
 import org.springframework.web.bind.annotation.*;
-import roomescape.ReservationDao;
+import roomescape.dao.ReservationDao;
 import roomescape.domain.Reservation;
 import roomescape.dto.ReservationRequest;
 

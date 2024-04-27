@@ -47,6 +47,10 @@ public class OutputView {
         System.out.println(reservationTime.id() + " | " + reservationTime.startAt());
     }
 
+    public void printDeleteReservationTitle() {
+        System.out.println("[예약 삭제]");
+    }
+
     public void printDeleteReservationTimeTitle() {
         System.out.println("[예약 시간 삭제]");
     }

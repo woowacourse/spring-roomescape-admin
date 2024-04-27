@@ -30,6 +30,12 @@ public class InputView {
         return new ReservationRequest(name, date, timeId);
     }
 
+    public long readDeleteReservationId() {
+        System.out.println("삭제할 예약 번호를 입력해주세요.");
+        String input = SCANNER.nextLine();
+        return Long.parseLong(input);
+    }
+
     public LocalTime readReservationTime() {
         System.out.println("[예약 시간 추가]");
         System.out.println("추가 할 예약 시간을 입력해주세요.(ex. 14:00)");
@@ -38,7 +44,7 @@ public class InputView {
     }
 
     public long readDeleteReservationTimeId() {
-        System.out.println("삭제할 예약 번호를 입력해주세요.");
+        System.out.println("삭제할 예약 시간 번호를 입력해주세요.");
         String input = SCANNER.nextLine();
         return Long.parseLong(input);
     }

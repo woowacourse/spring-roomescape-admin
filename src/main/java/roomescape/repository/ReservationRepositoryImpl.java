@@ -18,6 +18,20 @@ import java.util.List;
 @Primary
 public class ReservationRepositoryImpl implements ReservationRepository {
 
+    private static final RowMapper<Reservation> ROW_MAPPER = (resultSet, rowNum) -> {
+        Time time = new Time(
+                resultSet.getLong("reservation_time.id"),
+                resultSet.getTime("reservation_time.start_at").toLocalTime());
+
+        Reservation reservation = new Reservation(
+                resultSet.getLong("reservation.id"),
+                resultSet.getString("reservation.name"),
+                resultSet.getDate("reservation.date").toLocalDate(),
+                time
+        );
+        return reservation;
+    };
+
     private final JdbcTemplate jdbcTemplate;
     private final SimpleJdbcInsert jdbcInsert;
 
@@ -31,21 +45,8 @@ public class ReservationRepositoryImpl implements ReservationRepository {
     @Override
     public List<Reservation> findAll() {
         String sql = "SELECT * FROM reservation r JOIN reservation_time rt ON r.time_id = rt.id";
-        RowMapper<Reservation> rowMapper = (resultSet, rowNum) -> {
-            Time time = new Time(
-                    resultSet.getLong("reservation_time.id"),
-                    resultSet.getTime("reservation_time.start_at").toLocalTime());
 
-            Reservation reservation = new Reservation(
-                    resultSet.getLong("reservation.id"),
-                    resultSet.getString("reservation.name"),
-                    resultSet.getDate("reservation.date").toLocalDate(),
-                    time
-            );
-            return reservation;
-        };
-
-        return jdbcTemplate.query(sql, rowMapper);
+        return jdbcTemplate.query(sql, ROW_MAPPER);
     }
 
     @Override

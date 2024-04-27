@@ -26,12 +26,8 @@ public class ReservationTimeService {
         return ReservationTimeResponse.from(newReservationTime);
     }
 
-    public boolean deleteReservationTime(Long id) {
-        try {
-            reservationTimeRepository.deleteById(id);
-        } catch (IllegalArgumentException e) {
-            return false;
-        }
-        return true;
+    public void deleteReservationTime(Long id) {
+        reservationTimeRepository.deleteById(id)
+                .orElseThrow(() -> new IllegalArgumentException("존재하지 않는 시간입니다."));
     }
 }

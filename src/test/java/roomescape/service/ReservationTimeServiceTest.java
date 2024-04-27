@@ -7,6 +7,7 @@ import java.util.List;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import roomescape.dao.ReservationTimeDao;
+import roomescape.dto.ReservationTimeRequest;
 import roomescape.dto.ReservationTimeResponse;
 
 class ReservationTimeServiceTest {
@@ -34,6 +35,15 @@ class ReservationTimeServiceTest {
         reservationTimeService.save(Fixtures.THIRD_TIME_REQUEST);
 
         assertThat(reservationTimeService.findAll()).isEqualTo(List.of(Fixtures.FIRST_TIME_RESPONSE, Fixtures.SECOND_TIME_RESPONSE, Fixtures.THIRD_TIME_RESPONSE));
+    }
+
+    @Test
+    void startAtIsNull() {
+        ReservationTimeRequest reservationTimeRequest = new ReservationTimeRequest(null);
+
+        assertThatThrownBy(() -> reservationTimeService.save(reservationTimeRequest))
+                .isInstanceOf(IllegalArgumentException.class)
+                .hasMessage("시간이 입력되지 않았습니다. 시간을 입력해주세요.");
     }
 
     @Test

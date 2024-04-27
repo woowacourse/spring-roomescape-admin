@@ -3,11 +3,13 @@ package roomescape.service;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 
+import java.time.LocalDate;
 import java.util.List;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import roomescape.dao.ReservationDao;
 import roomescape.dao.ReservationTimeDao;
+import roomescape.dto.ReservationRequest;
 import roomescape.dto.ReservationResponse;
 
 class ReservationServiceTest {
@@ -39,6 +41,33 @@ class ReservationServiceTest {
         reservationService.save(Fixtures.THIRD_REQUEST);
 
         assertThat(reservationService.findAll()).isEqualTo(List.of(Fixtures.FIRST_RESPONSE, Fixtures.SECOND_RESPONSE, Fixtures.THIRD_RESPONSE));
+    }
+
+    @Test
+    void nameIsNull() {
+        ReservationRequest reservationRequest = new ReservationRequest(null, LocalDate.of(2024, 1, 1), 1L);
+
+        assertThatThrownBy(() -> reservationService.save(reservationRequest))
+                .isInstanceOf(IllegalArgumentException.class)
+                .hasMessage("이름이 입력되지 않았습니다. 이름을 입력해주세요.");
+    }
+
+    @Test
+    void nameIsBlank() {
+        ReservationRequest reservationRequest = new ReservationRequest(" ", LocalDate.of(2024, 1, 1), 1L);
+
+        assertThatThrownBy(() -> reservationService.save(reservationRequest))
+                .isInstanceOf(IllegalArgumentException.class)
+                .hasMessage("이름이 입력되지 않았습니다. 이름을 입력해주세요.");
+    }
+
+    @Test
+    void dateIsNull() {
+        ReservationRequest reservationRequest = new ReservationRequest("first", null, 1L);
+
+        assertThatThrownBy(() -> reservationService.save(reservationRequest))
+                .isInstanceOf(IllegalArgumentException.class)
+                .hasMessage("날짜가 입력되지 않았습니다. 날짜를 입력해주세요.");
     }
 
     @Test

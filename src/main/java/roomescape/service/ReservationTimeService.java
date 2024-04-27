@@ -34,10 +34,10 @@ public class ReservationTimeService {
         Long timeId = reservationRequest.timeId();
         Time time = timeRepository.findById(timeId);
 
-        Reservation requestReservation = reservationRequest.toReservation(time);
-        Reservation responseReservation = reservationRepository.create(requestReservation);
+        Reservation reservation = reservationRequest.toReservation(time);
+        Reservation savedReservation = reservationRepository.create(reservation);
 
-        return ReservationResponse.from(responseReservation);
+        return ReservationResponse.from(savedReservation);
     }
 
     public void deleteReservation(Long id) {
@@ -52,10 +52,10 @@ public class ReservationTimeService {
     }
 
     public TimeResponse createTime(TimeRequest timeRequest) {
-        Time requestTime = timeRequest.toTime();
-        Time responseTime = timeRepository.create(requestTime);
+        Time time = timeRequest.toTime();
+        Time savedTime = timeRepository.create(time);
 
-        return TimeResponse.from(responseTime);
+        return TimeResponse.from(savedTime);
     }
 
     public void deleteTime(Long id) {

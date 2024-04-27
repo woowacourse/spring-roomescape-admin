@@ -7,7 +7,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.jdbc.JdbcTest;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.test.annotation.DirtiesContext;
-import roomescape.reservation.dao.JdbcTemplateReservationDao;
+import roomescape.reservation.dao.ReservationDao;
 import roomescape.reservation.domain.Reservation;
 
 import javax.sql.DataSource;
@@ -16,7 +16,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 
 @JdbcTest
 @DirtiesContext(classMode = DirtiesContext.ClassMode.BEFORE_EACH_TEST_METHOD)
-class ReservationRepositoryImplTest {
+class ReservationRepositoryTest {
 
     @Autowired
     private JdbcTemplate jdbcTemplate;
@@ -28,7 +28,7 @@ class ReservationRepositoryImplTest {
 
     @BeforeEach
     void init() {
-        reservationRepository = new ReservationRepositoryImpl(new JdbcTemplateReservationDao(jdbcTemplate, dataSource));
+        reservationRepository = new ReservationRepository(new ReservationDao(jdbcTemplate, dataSource));
     }
 
     @DisplayName("예약 정보 삽입 테스트")

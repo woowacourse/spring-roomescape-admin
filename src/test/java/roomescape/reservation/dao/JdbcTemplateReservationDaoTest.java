@@ -27,7 +27,7 @@ class JdbcTemplateReservationDaoTest {
 
     @BeforeEach
     void init() {
-        reservationDao = new JdbcTemplateReservationDao(jdbcTemplate, dataSource);
+        reservationDao = new ReservationDao(jdbcTemplate, dataSource);
     }
 
     @DisplayName("예약 정보 삽입 테스트")

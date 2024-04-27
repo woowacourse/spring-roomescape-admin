@@ -20,12 +20,21 @@ public class InputView {
         }
     }
 
-    public static LocalDate readDate() {
+    public LocalDate readDate() {
         try {
             return LocalDate.parse(SCANNER.nextLine());
         } catch (DateTimeParseException e) {
             throw new IllegalArgumentException("[ERROR] 잘못된 형식의 시간입니다.");
-        }    }
+        }
+    }
+
+    public Long readId() {
+        try {
+            return SCANNER.nextLong();
+        } catch (NumberFormatException e) {
+            throw new IllegalArgumentException("[ERROR] 잘못된 형식의 id입니다.");
+        }
+    }
 
     public String readName() {
         return SCANNER.nextLine();

@@ -7,7 +7,6 @@ import java.util.List;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
-import roomescape.domain.ReservationTimeDao;
 import roomescape.domain.dto.ReservationTimeRequest;
 import roomescape.domain.dto.ReservationTimeResponse;
 

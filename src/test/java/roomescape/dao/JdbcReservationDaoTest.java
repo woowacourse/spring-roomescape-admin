@@ -9,7 +9,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.jdbc.Sql;
 import roomescape.domain.Reservation;
-import roomescape.domain.ReservationDao;
+import roomescape.service.ReservationDao;
 import roomescape.service.Fixtures;
 
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.DEFINED_PORT)

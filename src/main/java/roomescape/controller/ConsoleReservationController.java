@@ -7,6 +7,7 @@ import static roomescape.controller.ReservationMenu.DELETE_RESERVATION_TIME;
 
 import java.time.LocalTime;
 import java.util.List;
+import roomescape.dto.ReservationRequest;
 import roomescape.dto.ReservationResponse;
 import roomescape.dto.ReservationTimeRequest;
 import roomescape.dto.ReservationTimeResponse;
@@ -49,7 +50,9 @@ public class ConsoleReservationController {
         List<ReservationResponse> reservations = reservationService.findReservations();
         if (reservations.isEmpty()) {
             OUTPUT_VIEW.printNoReservation();
+            return;
         }
+        OUTPUT_VIEW.printReservations(reservations);
     }
 
     private void showReservationTimeStatus() {
@@ -68,7 +71,7 @@ public class ConsoleReservationController {
 
     private void changePage(ReservationMenu selectedMenu) {
         if (selectedMenu == ADD_RESERVATION) {
-            System.out.println("예약 추가");
+            addReservation();
         }
         if (selectedMenu == DELETE_RESERVATION) {
             System.out.println("예약 삭제");
@@ -81,6 +84,16 @@ public class ConsoleReservationController {
         }
     }
 
+    private void addReservation() {
+        OUTPUT_VIEW.printAddReservationTitle();
+        showReservationTimeStatus();
+        if (checkReservationTimeEmpty()) {
+            return;
+        }
+        ReservationRequest reservationRequest = INPUT_VIEW.readReservationRequest();
+        reservationService.createReservation(reservationRequest);
+    }
+
     private void addReservationTime() {
         LocalTime input = INPUT_VIEW.readReservationTime();
         reservationTimeService.createReservationTime(new ReservationTimeRequest(input));
@@ -89,10 +102,14 @@ public class ConsoleReservationController {
     private void deleteReservationTime() {
         OUTPUT_VIEW.printDeleteReservationTimeTitle();
         showReservationTimeStatus();
-        if (reservationTimeService.findReservationTimes().isEmpty()) {
+        if (checkReservationTimeEmpty()) {
             return;
         }
         long selectedId = INPUT_VIEW.readDeleteReservationTimeId();
         reservationTimeService.deleteReservationTime(selectedId);
+    }
+
+    private boolean checkReservationTimeEmpty() {
+        return reservationTimeService.findReservationTimes().isEmpty();
     }
 }

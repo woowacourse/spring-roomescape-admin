@@ -1,4 +1,4 @@
-package roomescape.web.response;
+package roomescape.web.controller.response;
 
 import roomescape.core.domain.Reservation;
 

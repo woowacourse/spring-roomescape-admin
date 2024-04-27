@@ -1,4 +1,4 @@
-package roomescape.web;
+package roomescape.web.controller;
 
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -10,8 +10,8 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import roomescape.core.domain.Reservation;
 import roomescape.core.domain.ReservationTime;
-import roomescape.web.request.ReservationRequest;
-import roomescape.web.response.ReservationResponse;
+import roomescape.web.controller.request.ReservationRequest;
+import roomescape.web.controller.response.ReservationResponse;
 import roomescape.core.repository.ReservationRepository;
 import roomescape.core.repository.ReservationTimeRepository;
 

@@ -1,4 +1,4 @@
-package roomescape.web.response;
+package roomescape.web.controller.response;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
 import roomescape.core.domain.ReservationTime;

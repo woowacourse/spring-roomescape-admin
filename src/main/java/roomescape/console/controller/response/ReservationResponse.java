@@ -1,7 +1,7 @@
 package roomescape.console.controller.response;
 
 import roomescape.core.domain.Reservation;
-import roomescape.web.response.ReservationTimeResponse;
+import roomescape.web.controller.response.ReservationTimeResponse;
 
 import java.time.LocalDate;
 
@@ -9,7 +9,7 @@ public record ReservationResponse(
         Long id,
         String name,
         LocalDate date,
-        roomescape.web.response.ReservationTimeResponse time
+        ReservationTimeResponse time
 ) {
     public static ReservationResponse from(Reservation reservation) {
         return new ReservationResponse(

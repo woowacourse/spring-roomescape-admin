@@ -77,12 +77,22 @@ public class ConsoleReservationController {
             addReservationTime();
         }
         if (selectedMenu == DELETE_RESERVATION_TIME) {
-            System.out.println("예약 시간 삭제");
+            deleteReservationTime();
         }
     }
 
     private void addReservationTime() {
         LocalTime input = INPUT_VIEW.readReservationTime();
         reservationTimeService.createReservationTime(new ReservationTimeRequest(input));
+    }
+
+    private void deleteReservationTime() {
+        OUTPUT_VIEW.printDeleteReservationTimeTitle();
+        showReservationTimeStatus();
+        if (reservationTimeService.findReservationTimes().isEmpty()) {
+            return;
+        }
+        long selectedId = INPUT_VIEW.readDeleteReservationTimeId();
+        reservationTimeService.deleteReservationTime(selectedId);
     }
 }

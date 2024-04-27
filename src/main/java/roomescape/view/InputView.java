@@ -24,4 +24,10 @@ public class InputView {
         String input = SCANNER.nextLine();
         return LocalTime.parse(input);
     }
+
+    public long readDeleteReservationTimeId() {
+        System.out.println("삭제할 예약 번호를 입력해주세요.");
+        String input = SCANNER.nextLine();
+        return Long.parseLong(input);
+    }
 }

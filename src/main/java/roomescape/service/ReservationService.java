@@ -1,11 +1,8 @@
 package roomescape.service;
 
 import java.time.LocalDate;
-import java.time.LocalDateTime;
-import java.time.LocalTime;
 import java.util.List;
 import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
 import roomescape.controller.dto.ReservationRequest;
 import roomescape.controller.dto.ReservationResponse;
 import roomescape.domain.Reservation;
@@ -19,7 +16,6 @@ public class ReservationService {
         this.reservationRepository = reservationRepository;
     }
 
-    @Transactional
     public ReservationResponse addReservation(ReservationRequest reservationRequest) {
         Reservation reservation = fromRequest(reservationRequest);
         reservationRepository.saveReservation(reservation);
@@ -34,7 +30,6 @@ public class ReservationService {
                 .toList();
     }
 
-    @Transactional
     public void removeReservations(long reservationId) {
         reservationRepository.deleteReservationById(reservationId);
     }
@@ -42,13 +37,11 @@ public class ReservationService {
     private Reservation fromRequest(ReservationRequest reservationRequest) {
         String name = reservationRequest.name();
         LocalDate date = reservationRequest.date();
-        LocalTime time = reservationRequest.time();
-        LocalDateTime dateTime = LocalDateTime.of(date, time);
-        return new Reservation(name, dateTime);
+        return new Reservation(name, date, reservationRequest.timeId());
     }
 
     private ReservationResponse toResponse(Reservation reservation) {
-        return new ReservationResponse(reservation.getId(),
-                reservation.getName(), reservation.getDate(), reservation.getTime());
+        return new ReservationResponse(reservation.getId(), reservation.getName(), reservation.getDate(),
+                reservation.getReservationTime());
     }
 }

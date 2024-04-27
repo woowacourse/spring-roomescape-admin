@@ -1,5 +1,6 @@
 package roomescape.console;
 
+import roomescape.console.controller.ConsoleController;
 import roomescape.console.request.ConsoleRequest;
 
 import java.util.Map;

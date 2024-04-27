@@ -1,4 +1,4 @@
-package roomescape.console;
+package roomescape.console.controller;
 
 public interface ConsoleController {
 }

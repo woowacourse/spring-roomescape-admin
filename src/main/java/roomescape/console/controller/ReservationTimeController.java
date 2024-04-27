@@ -1,4 +1,4 @@
-package roomescape.console;
+package roomescape.console.controller;
 
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;

@@ -1,6 +1,8 @@
 package roomescape.controller;
 
 import java.util.List;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -22,8 +24,10 @@ public class ReservationController {
     }
 
     @PostMapping
-    public ReservationResponse reservationSave(@RequestBody ReservationRequest reservationRequest) {
-        return reservationService.addReservation(reservationRequest);
+    public ResponseEntity<ReservationResponse> reservationSave(@RequestBody ReservationRequest reservationRequest) {
+        return ResponseEntity
+                .status(HttpStatus.CREATED)
+                .body(reservationService.addReservation(reservationRequest));
     }
 
     @GetMapping
@@ -32,7 +36,8 @@ public class ReservationController {
     }
 
     @DeleteMapping("/{reservationId}")
-    public void reservationRemove(@PathVariable long reservationId) {
+    public ResponseEntity<Void> reservationRemove(@PathVariable long reservationId) {
         reservationService.removeReservations(reservationId);
+        return ResponseEntity.noContent().build();
     }
 }

@@ -54,7 +54,7 @@ class ReservationControllerTest {
                         .accept(MediaType.APPLICATION_JSON)
                 )
                 .andDo(print())
-                .andExpect(status().isOk());
+                .andExpect(status().isCreated());
     }
 
     @Test
@@ -73,7 +73,7 @@ class ReservationControllerTest {
     void deleteReservation() throws Exception {
         mockMvc.perform(delete("/reservations/1"))
                 .andDo(print())
-                .andExpect(status().isOk());
+                .andExpect(status().isNoContent());
     }
 
     private ReservationResponse toResponse(Reservation reservation) {

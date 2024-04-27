@@ -10,7 +10,7 @@ import roomescape.core.repository.ReservationTimeRepository;
 import java.util.List;
 
 @Controller
-public class ReservationTimeController {
+public class ReservationTimeController implements ConsoleController {
     private final ReservationTimeRepository reservationTimeRepository;
 
     public ReservationTimeController(ReservationTimeRepository reservationTimeRepository) {

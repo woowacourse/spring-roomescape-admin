@@ -48,7 +48,7 @@ public class ReservationTimeController {
     }
 
     @DeleteMapping("/{id}")
-    public ResponseEntity<Void> deleteReservationTime(@PathVariable Long id) {
+    public ResponseEntity<Void> deleteReservationTime(@PathVariable long id) {
         try {
             reservationTimeRepository.deleteReservationTimeById(id);
         } catch (DataIntegrityViolationException e) {

@@ -48,7 +48,7 @@ public class DatabaseReservationRepository implements ReservationRepository {
     }
 
     @Override
-    public Optional<Reservation> findReservationById(Long createdReservationId) {
+    public Optional<Reservation> findReservationById(long createdReservationId) {
         return Optional.ofNullable(
                 jdbcTemplate.queryForObject(findAllReservationQuery + " WHERE r.id = ?",
                         reservationRowMapper,
@@ -71,7 +71,7 @@ public class DatabaseReservationRepository implements ReservationRepository {
     }
 
     @Override
-    public void deleteReservationById(Long id) {
+    public void deleteReservationById(long id) {
         jdbcTemplate.update("DELETE FROM reservation WHERE id = ?", id);
     }
 }

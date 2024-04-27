@@ -31,7 +31,8 @@ class ReservationTimeControllerTest {
     @Test
     void findReservationTest() {
         RestAssured.given().log().all()
-                .when().get("/times").then()
+                .when().get("/times")
+                .then().log().all()
                 .statusCode(200)
                 .body("size()", is(2));
     }
@@ -39,13 +40,13 @@ class ReservationTimeControllerTest {
     @DisplayName("예약 시간을 정상적으로 생성할 수 있다.")
     @Test
     void createReservationTest() {
-        RestAssured.given()
+        RestAssured.given().log().all()
                 .contentType(ContentType.JSON)
                 .body(Map.of(
                         "startAt", "18:00"
                 ))
                 .when().post("/times")
-                .then()
+                .then().log().all()
                 .statusCode(200)
                 .body("id", equalTo(3),
                         "startAt", equalTo("18:00")
@@ -55,23 +56,29 @@ class ReservationTimeControllerTest {
     @DisplayName("id를 활용해 예약이 없는 예약 시간을 삭제할 수 있다.")
     @Test
     void deleteReservationTest() {
-        RestAssured.given()
+
+        RestAssured.given().log().all()
+                .when().get("/times")
+                .then().log().all()
+                .body("size()", is(2));
+
+        RestAssured.given().log().all()
                 .when().delete("/times/2")
-                .then()
+                .then().log().all()
                 .statusCode(204);
 
-        RestAssured.given()
+        RestAssured.given().log().all()
                 .when().get("/times")
-                .then()
+                .then().log().all()
                 .body("size()", is(1));
     }
 
     @DisplayName("예약이 있는 예약 시간은 삭제할 수 없다.")
     @Test
     void cantDeleteWhenReservationTimeUsedTest() {
-        RestAssured.given()
+        RestAssured.given().log().all()
                 .when().delete("/times/1")
-                .then()
+                .then().log().all()
                 .statusCode(400);
     }
 }

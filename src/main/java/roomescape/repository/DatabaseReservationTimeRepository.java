@@ -29,7 +29,7 @@ public class DatabaseReservationTimeRepository implements ReservationTimeReposit
     }
 
     @Override
-    public Optional<ReservationTime> findReservationTimeById(Long id) {
+    public Optional<ReservationTime> findReservationTimeById(long id) {
         return Optional.ofNullable(jdbcTemplate.queryForObject(
                 "SELECT * FROM reservation_time WHERE id = ?",
                 reservationTimeRowMapper,
@@ -48,7 +48,7 @@ public class DatabaseReservationTimeRepository implements ReservationTimeReposit
     }
 
     @Override
-    public void deleteReservationTimeById(Long id) {
+    public void deleteReservationTimeById(long id) {
         jdbcTemplate.update("DELETE FROM reservation_time WHERE id = ?", id);
     }
 }

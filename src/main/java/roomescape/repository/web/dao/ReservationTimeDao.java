@@ -1,4 +1,4 @@
-package roomescape.dao;
+package roomescape.repository.web.dao;
 
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;

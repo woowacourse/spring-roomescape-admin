@@ -9,7 +9,7 @@ import roomescape.model.Reservation;
 public class ReservationMemoryRepository implements ReservationRepository {
 
     private final List<Reservation> reservations = new ArrayList<>();
-    private static final AtomicLong INDEX = new AtomicLong(1L);
+    private static final AtomicLong index = new AtomicLong(0L);
 
     @Override
     public List<Reservation> getAllReservations() {
@@ -19,7 +19,7 @@ public class ReservationMemoryRepository implements ReservationRepository {
     @Override
     public Reservation addReservation(Reservation reservationDto) {
         Reservation reservation = new Reservation(
-                INDEX.getAndIncrement(),
+                index.getAndIncrement(),
                 reservationDto.getName(),
                 reservationDto.getDate(),
                 reservationDto.getTime());

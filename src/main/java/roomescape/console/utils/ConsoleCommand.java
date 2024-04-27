@@ -8,7 +8,7 @@ public enum ConsoleCommand {
 
     private final String value;
 
-    ConsoleCommand(final String value) {
+    ConsoleCommand(String value) {
         this.value = value;
     }
 

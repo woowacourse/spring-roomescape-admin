@@ -19,7 +19,7 @@ public record ReservationRequest(
         Objects.requireNonNull(timeId);
     }
 
-    public static ReservationRequest from(final List<String> contents) {
+    public static ReservationRequest from(List<String> contents) {
         try {
             String name = contents.get(0);
             LocalDate date = getLocalDate(contents.get(1));
@@ -33,7 +33,7 @@ public record ReservationRequest(
         }
     }
 
-    private static LocalDate getLocalDate(final String localDate) {
+    private static LocalDate getLocalDate(String localDate) {
         String[] split = localDate.split("-");
         return LocalDate.of(Integer.parseInt(split[0]), Integer.parseInt(split[1]), Integer.parseInt(split[2]));
     }

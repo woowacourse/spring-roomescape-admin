@@ -14,7 +14,7 @@ public class ReservationControllerAdapter implements ControllerAdapter {
     private final ReservationController reservationController;
     private final ResponseMapper responseMapper;
 
-    public ReservationControllerAdapter(ReservationController reservationController, final ResponseMapper responseMapper) {
+    public ReservationControllerAdapter(ReservationController reservationController, ResponseMapper responseMapper) {
         this.reservationController = reservationController;
         this.responseMapper = responseMapper;
     }

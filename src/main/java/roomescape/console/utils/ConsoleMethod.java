@@ -9,7 +9,7 @@ public enum ConsoleMethod {
 
     private final String value;
 
-    ConsoleMethod(final String value) {
+    ConsoleMethod(String value) {
         this.value = value;
     }
 

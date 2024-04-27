@@ -4,15 +4,15 @@ import java.util.Objects;
 
 public class Name {
 
-    private final String value;
+    private final String name;
 
-    public Name(String value) {
-        validateBlank(value);
-        this.value = value;
+    public Name(String name) {
+        validateBlank(name);
+        this.name = name;
     }
 
-    private void validateBlank(String value) {
-        if (value.isBlank()) {
+    private void validateBlank(String name) {
+        if (name.isBlank()) {
             throw new IllegalArgumentException("이름은 빈 칸이거나 공백일 수 없습니다.");
         }
     }
@@ -24,22 +24,22 @@ public class Name {
 
         Name name = (Name) o;
 
-        return Objects.equals(value, name.value);
+        return Objects.equals(this.name, name.name);
     }
 
     @Override
     public int hashCode() {
-        return value != null ? value.hashCode() : 0;
+        return name != null ? name.hashCode() : 0;
     }
 
     @Override
     public String toString() {
         return "Name{" +
-                "value='" + value + '\'' +
+                "name='" + name + '\'' +
                 '}';
     }
 
-    public String getValue() {
-        return value;
+    public String getName() {
+        return name;
     }
 }

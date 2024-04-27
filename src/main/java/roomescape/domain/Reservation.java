@@ -64,7 +64,7 @@ public class Reservation {
     }
 
     public String getNameValue() {
-        return name.getValue();
+        return name.getName();
     }
 
     public String getDate() {

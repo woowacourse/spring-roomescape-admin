@@ -1,7 +1,6 @@
 package roomescape.domain.reservation;
 
 import java.time.LocalTime;
-import java.util.Objects;
 
 public class ReservationTime {
     private static final LocalTime START_TIME = LocalTime.of(9, 0);

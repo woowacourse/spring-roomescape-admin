@@ -18,7 +18,7 @@ public class Reservation {
         this(null, name, date, time);
     }
 
-    public boolean hasSameReservationTime(Reservation otherReservation){
+    public boolean hasSameReservationTime(Reservation otherReservation) {
         return date.hasSameDateWith(otherReservation.date)
                 && time.hasSameTimeWith(otherReservation.time);
     }

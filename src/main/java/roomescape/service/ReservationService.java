@@ -1,14 +1,12 @@
 package roomescape.service;
 
 import org.springframework.stereotype.Service;
-import roomescape.controller.request.ReservationRequest;
-import roomescape.repository.ReservationRepository;
-import roomescape.repository.ReservationTimeRepository;
-import roomescape.repository.web.dao.ReservationDao;
-import roomescape.repository.web.dao.ReservationTimeDao;
+import roomescape.controller.web.request.ReservationRequest;
 import roomescape.domain.reservation.Name;
 import roomescape.domain.reservation.Reservation;
 import roomescape.domain.reservation.ReservationDate;
+import roomescape.repository.ReservationRepository;
+import roomescape.repository.ReservationTimeRepository;
 
 import java.util.List;
 import java.util.NoSuchElementException;

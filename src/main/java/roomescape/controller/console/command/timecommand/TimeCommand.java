@@ -1,6 +1,6 @@
-package roomescape.controller.command.timecommand;
+package roomescape.controller.console.command.timecommand;
 
-import roomescape.controller.command.Command;
+import roomescape.controller.console.command.Command;
 import roomescape.service.ReservationService;
 import roomescape.service.ReservationTimeService;
 import roomescape.view.InputView;

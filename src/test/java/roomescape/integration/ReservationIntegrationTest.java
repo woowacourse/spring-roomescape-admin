@@ -34,14 +34,13 @@ class ReservationIntegrationTest {
                 .body(Map.of("startAt", "10:00"))
                 .when().post("/times");
 
-        Map<String, String> params = new HashMap<>();
-        params.put("name", "브라운");
-        params.put("date", LocalDate.now().plusDays(1).toString());
-        params.put("timeId", "1");
-
         RestAssured.given().log().all()
                 .contentType(ContentType.JSON)
-                .body(params)
+                .body(Map.of(
+                        "name", "브라운",
+                        "date", LocalDate.now().plusDays(1).toString(),
+                        "timeId", "1")
+                )
                 .when().post("/reservations");
     }
 

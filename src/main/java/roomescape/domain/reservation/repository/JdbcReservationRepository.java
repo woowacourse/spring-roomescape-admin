@@ -14,25 +14,29 @@ import org.springframework.stereotype.Repository;
 import roomescape.domain.reservation.Reservation;
 import roomescape.domain.time.ReservationTime;
 import roomescape.global.query.QueryBuilder;
+import roomescape.global.query.SelectQuery;
 import roomescape.global.query.condition.ComparisonCondition;
+import roomescape.global.query.condition.MultiLineCondition;
 import roomescape.global.query.join.JoinCondition;
 import roomescape.global.query.join.JoinType;
 
 @Repository
 public class JdbcReservationRepository implements ReservationRepository {
-    private final JdbcTemplate jdbcTemplate;
-    private final SimpleJdbcInsertOperations jdbcInsert;
-    private final RowMapper<Reservation> rowMapper = (rs, rowNum) -> new Reservation(
+    private static final String TABLE_NAME = "reservation";
+    private static final RowMapper<Reservation> ROW_MAPPER = (rs, rowNum) -> new Reservation(
             rs.getLong("id"),
             rs.getString("name"),
             rs.getDate("date").toLocalDate(),
             new ReservationTime(rs.getLong("time_id"), rs.getTime("start_at").toLocalTime())
     );
 
+    private final JdbcTemplate jdbcTemplate;
+    private final SimpleJdbcInsertOperations jdbcInsert;
+
     public JdbcReservationRepository(JdbcTemplate jdbcTemplate) {
         this.jdbcTemplate = jdbcTemplate;
         this.jdbcInsert = new SimpleJdbcInsert(jdbcTemplate)
-                .withTableName("reservation")
+                .withTableName(TABLE_NAME)
                 .usingGeneratedKeyColumns("id");
     }
 
@@ -48,25 +52,32 @@ public class JdbcReservationRepository implements ReservationRepository {
 
     @Override
     public boolean existsByReservationDateTime(LocalDate date, long timeId) {
-        String query = QueryBuilder.select("reservation")
-                .addColumns("count(*)")
+        SelectQuery subQuery = QueryBuilder.select(TABLE_NAME)
+                .addColumns("1")
                 .where(ComparisonCondition.equalTo("date", date))
-                .where(ComparisonCondition.equalTo("time_id", timeId))
+                .where(ComparisonCondition.equalTo("time_id", timeId));
+        String query = QueryBuilder.select(TABLE_NAME)
+                .addColumns("id")
+                .where(MultiLineCondition.exists(subQuery))
                 .build();
-        Integer count = jdbcTemplate.queryForObject(query, Integer.class);
-        return count != null && count > 0;
+        try {
+            jdbcTemplate.queryForObject(query, Long.class);
+            return true;
+        } catch (DataAccessException e) {
+            return false;
+        }
     }
 
     @Override
     public Optional<Reservation> findById(long id) {
-        String query = QueryBuilder.select("reservation")
+        String query = QueryBuilder.select(TABLE_NAME)
                 .alias("r")
                 .addAllColumns()
                 .join(JoinType.INNER, "reservation_time", JoinCondition.on("r.time_id", "t.id"), "t")
                 .where(ComparisonCondition.equalTo("r.id", id))
                 .build();
         try {
-            return Optional.ofNullable(jdbcTemplate.queryForObject(query, rowMapper));
+            return Optional.ofNullable(jdbcTemplate.queryForObject(query, ROW_MAPPER));
         } catch (DataAccessException e) {
             return Optional.empty();
         }
@@ -74,17 +85,17 @@ public class JdbcReservationRepository implements ReservationRepository {
 
     @Override
     public List<Reservation> findAll() {
-        String query = QueryBuilder.select("reservation")
+        String query = QueryBuilder.select(TABLE_NAME)
                 .alias("r")
                 .addAllColumns()
                 .join(JoinType.INNER, "reservation_time", JoinCondition.on("r.time_id", "t.id"), "t")
                 .build();
-        return jdbcTemplate.query(query, rowMapper);
+        return jdbcTemplate.query(query, ROW_MAPPER);
     }
 
     @Override
     public void deleteById(long id) {
-        String query = QueryBuilder.delete("reservation")
+        String query = QueryBuilder.delete(TABLE_NAME)
                 .where(ComparisonCondition.equalTo("id", id))
                 .build();
         jdbcTemplate.update(query);

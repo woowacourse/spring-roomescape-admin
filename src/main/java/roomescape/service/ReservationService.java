@@ -1,6 +1,7 @@
 package roomescape.service;
 
 import java.util.List;
+import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.stereotype.Service;
 import roomescape.dao.ReservationDao;
 import roomescape.dao.ReservationTimeDao;
@@ -31,7 +32,7 @@ public class ReservationService {
         return reservationDao.save(reservationDto.toEntity(reservationTime));
     }
 
-    public void delete(Long id) {
+    public void delete(Long id) throws DataIntegrityViolationException {
         reservationDao.delete(id);
     }
 }

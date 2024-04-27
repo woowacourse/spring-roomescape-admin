@@ -4,8 +4,8 @@ import roomescape.domain.Time;
 
 import java.time.LocalTime;
 
-public record TimeRequest(LocalTime time) {
+public record TimeRequest(LocalTime startAt) {
     public Time toTime(long id) {
-        return new Time(id, time);
+        return new Time(id, startAt);
     }
 }

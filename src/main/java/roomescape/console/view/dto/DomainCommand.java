@@ -9,4 +9,13 @@ public enum DomainCommand {
     public boolean isEndProgram() {
         return this == END_PROGRAM;
     }
+
+    public boolean isReservationDomain() {
+        return this == RESERVATION;
+    }
+
+    public boolean isTimeDomain() {
+        return this == RESERVATION_TIME;
+    }
+
 }

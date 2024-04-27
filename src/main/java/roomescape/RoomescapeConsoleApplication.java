@@ -42,39 +42,39 @@ public class RoomescapeConsoleApplication {
     }
 
     private void chooseDomain(DomainCommand domainCommand) {
-        if (domainCommand == DomainCommand.RESERVATION) {
+        if (domainCommand.isReservationDomain()) {
             runReservationFunction();
         }
-        if (domainCommand == DomainCommand.RESERVATION_TIME) {
+        if (domainCommand.isTimeDomain()) {
             runReservationTimeFunction();
         }
     }
 
     public void runReservationFunction() {
         FunctionCommand functionCommand = inputView.chooseFunction();
-        if (functionCommand == FunctionCommand.GET_ALL) {
+        if (functionCommand.isFindAll()) {
             outputView.printReservations(reservationService.getAllReservations());
         }
-        if (functionCommand == FunctionCommand.CREATE) {
+        if (functionCommand.isCreate()) {
             ReservationResponse reservation = reservationService.createReservation(inputView.inputReservation());
             outputView.printReservation(reservation);
         }
-        if (functionCommand == FunctionCommand.DELETE) {
+        if (functionCommand.isDelete()) {
             reservationService.deleteReservation(inputView.inputDeletingId());
         }
     }
 
     public void runReservationTimeFunction() {
         FunctionCommand functionCommand = inputView.chooseFunction();
-        if (functionCommand == FunctionCommand.GET_ALL) {
+        if (functionCommand.isFindAll()) {
             outputView.printReservationTimes(reservationTimeService.getAllReservationTimes());
         }
-        if (functionCommand == FunctionCommand.CREATE) {
+        if (functionCommand.isCreate()) {
             ReservationTimeResponse time = reservationTimeService.createReservationTime(
                     inputView.inputReservationTime());
             outputView.printReservationTime(time);
         }
-        if (functionCommand == FunctionCommand.DELETE) {
+        if (functionCommand.isDelete()) {
             reservationTimeService.deleteReservationTime(inputView.inputDeletingId());
         }
     }

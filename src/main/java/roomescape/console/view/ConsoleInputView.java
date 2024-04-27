@@ -22,7 +22,7 @@ public class ConsoleInputView {
     private static final Map<Integer, DomainCommand> INT_TO_DOMAIN_COMMAND = Map.of(
             1, DomainCommand.RESERVATION, 2, DomainCommand.RESERVATION_TIME, 3, DomainCommand.END_PROGRAM);
     private static final Map<Integer, FunctionCommand> INT_TO_FUNCTION_COMMAND = Map.of(
-            1, FunctionCommand.GET_ALL, 2, FunctionCommand.CREATE, 3, FunctionCommand.DELETE);
+            1, FunctionCommand.FIND_ALL, 2, FunctionCommand.CREATE, 3, FunctionCommand.DELETE);
 
     public ReservationRequest inputReservation() {
         System.out.println();

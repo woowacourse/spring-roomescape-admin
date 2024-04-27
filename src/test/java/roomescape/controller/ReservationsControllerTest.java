@@ -16,18 +16,26 @@ import static org.hamcrest.Matchers.is;
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.DEFINED_PORT)
 @DirtiesContext(classMode = DirtiesContext.ClassMode.BEFORE_EACH_TEST_METHOD)
 public class ReservationsControllerTest {
-    private final Map<String, String> params = new HashMap<>();
+    private final Map<String, String> reservation = new HashMap<>();
+    private final Map<String, String> time = new HashMap<>();
 
     @BeforeEach
-    void initializeParams() {
-        params.put("name", "브라운");
-        params.put("date", "2023-08-05");
-        params.put("time", "15:40");
+    void initializeReservation() {
+        reservation.put("name", "브라운");
+        reservation.put("date", "2023-08-05");
+        reservation.put("timeId", "1");
+    }
+
+    @BeforeEach
+    void initializeTime() {
+        time.put("id", "1");
+        time.put("startAt", "17:00");
     }
 
     @AfterEach
-    void clearParams() {
-        params.clear();
+    void clearData() {
+        reservation.clear();
+        time.clear();
     }
 
     @Test
@@ -40,28 +48,15 @@ public class ReservationsControllerTest {
     }
 
     @Test
-    void post_Reservations_Test() {
-        RestAssured.given().log().all()
-                .contentType(ContentType.JSON)
-                .body(params)
-                .when().post("/reservations")
-                .then().log().all()
-                .statusCode(200)
-                .body("id", is(1));
-
-        RestAssured.given().log().all()
-                .when().get("/reservations")
-                .then().log().all()
-                .statusCode(200)
-                .body("size()", is(1));
-
-    }
-
-    @Test
     void delete_Reservations_Test() {
         RestAssured.given().log().all()
                 .contentType(ContentType.JSON)
-                .body(params)
+                .body(time)
+                .when().post("/times");
+
+        RestAssured.given().log().all()
+                .contentType(ContentType.JSON)
+                .body(reservation)
                 .when().post("/reservations")
                 .then().log().all()
                 .statusCode(200);
@@ -76,5 +71,26 @@ public class ReservationsControllerTest {
                 .then().log().all()
                 .statusCode(200)
                 .body("size()", is(0));
+    }
+
+    @Test
+    void post_Reservations_Test() {
+        RestAssured.given().log().all()
+                .contentType(ContentType.JSON)
+                .body(time)
+                .when().post("/times");
+
+        RestAssured.given().log().all()
+                .contentType(ContentType.JSON)
+                .body(reservation)
+                .when().post("/reservations")
+                .then().log().all()
+                .statusCode(200);
+
+        RestAssured.given().log().all()
+                .when().get("/reservations")
+                .then().log().all()
+                .statusCode(200)
+                .body("size()", is(1));
     }
 }

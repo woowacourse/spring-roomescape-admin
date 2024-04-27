@@ -1,6 +1,8 @@
 package roomescape.domain;
 
 import java.time.LocalDate;
+import roomescape.dto.ReservationResponseDto;
+import roomescape.dto.ReservationTimeResponseDto;
 
 
 public class Reservation {
@@ -21,6 +23,10 @@ public class Reservation {
         if(name == null || date == null || time == null) {
             throw new NullPointerException();
         }
+    }
+
+    public ReservationResponseDto toDto() {
+        return new ReservationResponseDto(id, name, date, time.toDto());
     }
 
     public Long getId() {

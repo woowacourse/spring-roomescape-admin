@@ -6,6 +6,7 @@ import org.springframework.stereotype.Service;
 import roomescape.dao.ReservationTimeDao;
 import roomescape.domain.ReservationTime;
 import roomescape.dto.ReservationTimeRequestDto;
+import roomescape.dto.ReservationTimeResponseDto;
 
 @Service
 public class ReservationTimeService {
@@ -15,8 +16,10 @@ public class ReservationTimeService {
         this.reservationTimeDao = reservationTimeDao;
     }
 
-    public List<ReservationTime> findAll() {
-        return reservationTimeDao.findAll();
+    public List<ReservationTimeResponseDto> findAll() {
+        return reservationTimeDao.findAll().stream()
+                .map(reservationTime -> reservationTime.toDto())
+                .toList();
     }
 
     public ReservationTime save(ReservationTimeRequestDto reservationTimeRequestDto) {

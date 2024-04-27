@@ -11,6 +11,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import roomescape.domain.Reservation;
 import roomescape.dto.ReservationRequestDto;
+import roomescape.dto.ReservationResponseDto;
 import roomescape.service.ReservationService;
 
 @RestController
@@ -23,7 +24,7 @@ public class ReservationController {
     }
 
     @GetMapping
-    public ResponseEntity<List<Reservation>> reservations() {
+    public ResponseEntity<List<ReservationResponseDto>> reservations() {
         return ResponseEntity.ok(reservationService.findAll());
     }
 

@@ -35,22 +35,6 @@ public class ReservationDao {
         this.jdbcTemplate = jdbcTemplate;
     }
 
-    public Reservation findById(Long id) throws IncorrectResultSizeDataAccessException {
-        String sql = """
-                select  
-                    r.id as reservation_id,  
-                    r.name, 
-                    r.date, 
-                    t.id as time_id, 
-                    t.start_at as time_value 
-                from reservation as r 
-                inner join reservation_time as t 
-                on r.time_id = t.id
-                where r.id = ?
-                """;
-        return jdbcTemplate.queryForObject(sql, ROW_MAPPER, id);
-    }
-
     public List<Reservation> findAll() {
         String sql = """
                 select  

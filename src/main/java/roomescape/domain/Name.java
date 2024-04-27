@@ -18,7 +18,7 @@ public class Name {
         this.value = trimmedValue;
     }
 
-    private void validateName(String name) {
+    private void validateName(final String name) {
         if (name.length() < MINIMUM_NAME_LENGTH || name.length() > MAXIMUM_NAME_LENGTH) {
             throw new InvalidReservationException(INVALID_NAME_LENGTH);
         }

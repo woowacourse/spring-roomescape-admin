@@ -15,9 +15,10 @@ class NameTest {
         //given
         String date = "2024-10-04";
         String time = "10:00";
+        ReservationTime reservationTime = new ReservationTime(1, time);
 
         //when&then
-        assertThatThrownBy(() -> new Reservation(name, date, time))
+        assertThatThrownBy(() -> new Reservation(name, date, reservationTime))
                 .isInstanceOf(InvalidReservationException.class)
                 .hasMessage("이름은 1자 이상, 5자 이하여야 합니다.");
     }

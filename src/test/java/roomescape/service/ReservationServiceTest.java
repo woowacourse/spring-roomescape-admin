@@ -10,7 +10,7 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.jdbc.Sql;
-import roomescape.controller.dto.ReservationRequest;
+import roomescape.controller.dto.ReservationAddRequest;
 import roomescape.controller.dto.ReservationResponse;
 import roomescape.dao.ReservationDao;
 import roomescape.domain.Reservation;
@@ -30,7 +30,7 @@ class ReservationServiceTest {
     @DisplayName("예약을 추가한다.")
     @Test
     void createReservationTest() {
-        ReservationRequest request = new ReservationRequest("페드로", LocalDate.MAX, 1L);
+        ReservationAddRequest request = new ReservationAddRequest("페드로", LocalDate.MAX, 1L);
         ReservationResponse response = service.createReservation(request);
 
         List<Reservation> reservations = reservationDao.findAll();
@@ -41,7 +41,7 @@ class ReservationServiceTest {
     @DisplayName("예약 추가 시 예약 시간이 등록되지 않은 경우 예외가 발생한다.")
     @Test
     void createReservationWithInvalidTimeTest() {
-        ReservationRequest request = new ReservationRequest("웨지", LocalDate.MAX, Long.MAX_VALUE);
+        ReservationAddRequest request = new ReservationAddRequest("웨지", LocalDate.MAX, Long.MAX_VALUE);
         assertThatThrownBy(() -> service.createReservation(request)).isInstanceOf(IllegalArgumentException.class)
                 .hasMessage("존재하지 않는 예약 시간입니다.");
     }
@@ -49,7 +49,7 @@ class ReservationServiceTest {
     @DisplayName("과거의 시간을 예약하는 경우 예외가 발생한다.")
     @Test
     void createReservationWithPastTimeTest() {
-        ReservationRequest request = new ReservationRequest("리사", LocalDate.MIN, 1L);
+        ReservationAddRequest request = new ReservationAddRequest("리사", LocalDate.MIN, 1L);
         assertThatThrownBy(() -> service.createReservation(request)).isInstanceOf(IllegalArgumentException.class)
                 .hasMessage("과거의 시각은 예약할 수 없습니다.");
     }

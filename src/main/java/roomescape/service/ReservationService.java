@@ -3,7 +3,7 @@ package roomescape.service;
 import java.time.LocalDateTime;
 import java.util.List;
 import org.springframework.stereotype.Service;
-import roomescape.controller.dto.ReservationRequest;
+import roomescape.controller.dto.ReservationAddRequest;
 import roomescape.controller.dto.ReservationResponse;
 import roomescape.dao.ReservationDao;
 import roomescape.dao.TimeDao;
@@ -26,7 +26,7 @@ public class ReservationService {
                 .toList();
     }
 
-    public ReservationResponse createReservation(ReservationRequest request) {
+    public ReservationResponse createReservation(ReservationAddRequest request) {
         ReservationTime reservationTime = timeDao.findById(request.timeId())
                 .orElseThrow(() -> new IllegalArgumentException("존재하지 않는 예약 시간입니다."));
         LocalDateTime reservationDatetime = LocalDateTime.of(request.date(), reservationTime.getStartTime());

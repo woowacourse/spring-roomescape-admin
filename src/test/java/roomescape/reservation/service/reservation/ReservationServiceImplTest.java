@@ -4,38 +4,56 @@ import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
-import roomescape.reservation.domain.repository.ReservationRepositoryFake;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.test.autoconfigure.jdbc.JdbcTest;
+import org.springframework.jdbc.core.JdbcTemplate;
+import org.springframework.test.annotation.DirtiesContext;
+import roomescape.reservation.dao.JdbcTemplateReservationDao;
+import roomescape.reservation.domain.repository.ReservationRepository;
+import roomescape.reservation.domain.repository.ReservationRepositoryImpl;
 import roomescape.reservation.dto.ReservationRequestDto;
 import roomescape.reservation.dto.ReservationResponseDto;
+import roomescape.reservation.service.ReservationService;
 import roomescape.reservation.service.ReservationServiceImpl;
+
+import javax.sql.DataSource;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
+@JdbcTest
+@DirtiesContext(classMode = DirtiesContext.ClassMode.BEFORE_EACH_TEST_METHOD)
 class ReservationServiceImplTest {
 
-    private ReservationServiceImpl reservationServiceImpl;
+    @Autowired
+    private JdbcTemplate jdbcTemplate;
+
+    @Autowired
+    private DataSource dataSource;
+
+    private ReservationService reservationService;
 
     @BeforeEach
     void init() {
-        reservationServiceImpl = new ReservationServiceImpl(new ReservationRepositoryFake());
+        ReservationRepository reservationRepository = new ReservationRepositoryImpl(new JdbcTemplateReservationDao(jdbcTemplate, dataSource));
+        reservationService = new ReservationServiceImpl(reservationRepository);
     }
 
     @DisplayName("예약 정보 삽입 테스트")
     @Test
     void insertTest() {
         ReservationRequestDto request = new ReservationRequestDto("name", "2000-09-07", "10:00");
-        ReservationResponseDto response = reservationServiceImpl.addReservation(request);
+        ReservationResponseDto response = reservationService.addReservation(request);
         assertThat(response.id()).isEqualTo(1L);
     }
 
     @DisplayName("예약 정보 전체 조회 테스트")
     @Test
     void findAllTest() {
-        reservationServiceImpl.addReservation(new ReservationRequestDto("name1", "2000-09-07", "10:00"));
-        reservationServiceImpl.addReservation(new ReservationRequestDto("name2", "2000-09-07", "10:00"));
-        reservationServiceImpl.addReservation(new ReservationRequestDto("name3", "2000-09-07", "10:00"));
+        reservationService.addReservation(new ReservationRequestDto("name1", "2000-09-07", "10:00"));
+        reservationService.addReservation(new ReservationRequestDto("name2", "2000-09-07", "10:00"));
+        reservationService.addReservation(new ReservationRequestDto("name3", "2000-09-07", "10:00"));
 
-        int findSize = reservationServiceImpl.findAllReservation().reservations().size();
+        int findSize = reservationService.findAllReservation().reservations().size();
         assertThat(findSize).isEqualTo(3);
     }
 
@@ -43,10 +61,10 @@ class ReservationServiceImplTest {
     @Test
     void deleteTest() {
         ReservationRequestDto request = new ReservationRequestDto("name", "2000-09-07", "10:00");
-        ReservationResponseDto response = reservationServiceImpl.addReservation(request);
+        ReservationResponseDto response = reservationService.addReservation(request);
 
-        reservationServiceImpl.deleteReservationById(response.id());
-        int findSize = reservationServiceImpl.findAllReservation().reservations().size();
+        reservationService.deleteReservationById(response.id());
+        int findSize = reservationService.findAllReservation().reservations().size();
         assertThat(findSize).isEqualTo(0);
     }
 
@@ -55,7 +73,7 @@ class ReservationServiceImplTest {
     void deleteFailTest() {
         Long noneExistId = -1L;
 
-        Assertions.assertThatThrownBy(() -> reservationServiceImpl.deleteReservationById(noneExistId))
+        Assertions.assertThatThrownBy(() -> reservationService.deleteReservationById(noneExistId))
                 .isInstanceOf(IllegalArgumentException.class);
     }
 }

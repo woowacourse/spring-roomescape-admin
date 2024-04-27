@@ -1,14 +1,35 @@
 package roomescape.reservation.domain.repository;
 
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.test.autoconfigure.jdbc.JdbcTest;
+import org.springframework.jdbc.core.JdbcTemplate;
+import org.springframework.test.annotation.DirtiesContext;
+import roomescape.reservation.dao.JdbcTemplateReservationDao;
 import roomescape.reservation.domain.Reservation;
+
+import javax.sql.DataSource;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
-class ReservationRepositoryTest {
+@JdbcTest
+@DirtiesContext(classMode = DirtiesContext.ClassMode.BEFORE_EACH_TEST_METHOD)
+class ReservationRepositoryImplTest {
 
-    private final ReservationRepository reservationRepository = new ReservationRepositoryFake();
+    @Autowired
+    private JdbcTemplate jdbcTemplate;
+
+    @Autowired
+    private DataSource dataSource;
+
+    private ReservationRepository reservationRepository;
+
+    @BeforeEach
+    void init() {
+        reservationRepository = new ReservationRepositoryImpl(new JdbcTemplateReservationDao(jdbcTemplate, dataSource));
+    }
 
     @DisplayName("예약 정보 삽입 테스트")
     @Test

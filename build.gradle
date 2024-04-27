@@ -23,6 +23,23 @@ dependencies {
     testImplementation 'io.rest-assured:rest-assured:5.3.1'
 }
 
+task runConsole(type: JavaExec) {
+    dependsOn assemble
+    group = 'application'
+    setMainClass 'roomescape.RoomescapeConsoleRunner'
+    classpath = sourceSets.main.runtimeClasspath
+    args = ['--spring.profiles.active=console']
+    standardInput System.in
+}
+springBoot {
+    setMainClass 'roomescape.RoomescapeApplication'
+}
+
+tasks.named("runConsole") {
+    setMainClass 'roomescape.RoomescapeConsoleRunner'
+}
+
+
 test {
     useJUnitPlatform()
 }

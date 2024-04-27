@@ -7,7 +7,7 @@ import roomescape.dao.ReservationDao;
 import roomescape.dao.ReservationTimeDao;
 import roomescape.domain.Reservation;
 import roomescape.domain.ReservationTime;
-import roomescape.dto.ReservationDto;
+import roomescape.dto.ReservationRequestDto;
 
 @Service
 public class ReservationService {
@@ -27,9 +27,9 @@ public class ReservationService {
         return reservationDao.findAll();
     }
 
-    public Reservation save(ReservationDto reservationDto) {
-        ReservationTime reservationTime = reservationTimeDao.findById(reservationDto.timeId());
-        return reservationDao.save(reservationDto.toEntity(reservationTime));
+    public Reservation save(ReservationRequestDto reservationRequestDto) {
+        ReservationTime reservationTime = reservationTimeDao.findById(reservationRequestDto.timeId());
+        return reservationDao.save(reservationRequestDto.toEntity(reservationTime));
     }
 
     public void delete(Long id) throws DataIntegrityViolationException {

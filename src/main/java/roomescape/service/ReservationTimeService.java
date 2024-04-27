@@ -5,7 +5,7 @@ import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.stereotype.Service;
 import roomescape.dao.ReservationTimeDao;
 import roomescape.domain.ReservationTime;
-import roomescape.dto.ReservationTimeDto;
+import roomescape.dto.ReservationTimeRequestDto;
 
 @Service
 public class ReservationTimeService {
@@ -19,8 +19,8 @@ public class ReservationTimeService {
         return reservationTimeDao.findAll();
     }
 
-    public ReservationTime save(ReservationTimeDto reservationTimeDto) {
-        return reservationTimeDao.save(reservationTimeDto);
+    public ReservationTime save(ReservationTimeRequestDto reservationTimeRequestDto) {
+        return reservationTimeDao.save(reservationTimeRequestDto);
     }
 
     public void delete(long id) throws DataIntegrityViolationException {

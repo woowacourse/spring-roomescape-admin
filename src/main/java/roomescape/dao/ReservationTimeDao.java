@@ -4,14 +4,13 @@ import java.sql.PreparedStatement;
 import java.sql.Time;
 import java.time.LocalTime;
 import java.util.List;
-import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.dao.IncorrectResultSizeDataAccessException;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.support.GeneratedKeyHolder;
 import org.springframework.jdbc.support.KeyHolder;
 import org.springframework.stereotype.Repository;
 import roomescape.domain.ReservationTime;
-import roomescape.dto.ReservationTimeDto;
+import roomescape.dto.ReservationTimeRequestDto;
 
 @Repository
 public class ReservationTimeDao {
@@ -49,8 +48,8 @@ public class ReservationTimeDao {
                 });
     }
 
-    public ReservationTime save(ReservationTimeDto reservationTimeDto) {
-        LocalTime startAt = reservationTimeDto.startAt();
+    public ReservationTime save(ReservationTimeRequestDto reservationTimeRequestDto) {
+        LocalTime startAt = reservationTimeRequestDto.startAt();
         String sql = "insert into reservation_time (start_at) values (?)";
         KeyHolder keyHolder = new GeneratedKeyHolder();
 

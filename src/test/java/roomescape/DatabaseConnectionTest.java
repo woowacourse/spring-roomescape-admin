@@ -32,7 +32,7 @@ public class DatabaseConnectionTest {
     @DisplayName("데이터베이스 이름이 application.properties에 작성한대로 설정되었는지 확인한다.")
     void checkDatabaseName() {
         try (Connection connection = jdbcTemplate.getDataSource().getConnection()) {
-            assertThat(connection.getCatalog()).isEqualTo("DATABASE");
+            assertThat(connection.getCatalog()).isEqualTo("TESTDATABASE");
         } catch (SQLException e) {
             throw new RuntimeException(e);
         }

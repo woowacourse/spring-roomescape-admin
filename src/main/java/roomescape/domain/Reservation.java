@@ -1,26 +1,26 @@
 package roomescape.domain;
 
 import java.time.LocalDate;
-import java.time.LocalDateTime;
-import java.time.LocalTime;
 
 public class Reservation {
     private long id;
     private final String name;
-    private final LocalDateTime dateTime;
+    private final LocalDate date;
+    private Time time;
 
-    public Reservation(String name, LocalDateTime dateTime) {
-        this(0, name, dateTime);
+    public Reservation(String name, LocalDate date, Time time) {
+        this(0, name, date, time);
     }
 
-    public Reservation(long id, String name, LocalDate date, LocalTime time) {
-        this(id, name, LocalDateTime.of(date, time));
+    public Reservation(String name, LocalDate date, long timeId) {
+        this(0, name, date, new Time(timeId, null));
     }
 
-    public Reservation(long id, String name, LocalDateTime dateTime) {
+    public Reservation(long id, String name, LocalDate date, Time time) {
         this.id = id;
         this.name = name;
-        this.dateTime = dateTime;
+        this.date = date;
+        this.time = time;
     }
 
     public boolean hasSameId(long id) {
@@ -36,14 +36,19 @@ public class Reservation {
     }
 
     public LocalDate getDate() {
-        return dateTime.toLocalDate();
+        return date;
     }
 
-    public LocalTime getTime() {
-        return dateTime.toLocalTime();
+    public Time getReservationTime() {
+        return time;
     }
 
     public void setId(long id) {
         this.id = id;
+    }
+
+
+    public void setTime(Time time) {
+        this.time = time;
     }
 }

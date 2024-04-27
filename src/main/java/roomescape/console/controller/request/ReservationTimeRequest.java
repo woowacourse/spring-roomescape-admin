@@ -1,4 +1,4 @@
-package roomescape.console.request;
+package roomescape.console.controller.request;
 
 import roomescape.core.domain.ReservationTime;
 

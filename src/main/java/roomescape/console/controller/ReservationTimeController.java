@@ -1,10 +1,10 @@
 package roomescape.console.controller;
 
 import org.springframework.stereotype.Controller;
-import roomescape.console.request.ConsoleRequest;
-import roomescape.console.request.ReservationTimeRequest;
-import roomescape.console.response.ConsoleResponse;
-import roomescape.console.response.ReservationTimeResponse;
+import roomescape.console.view.ConsoleRequest;
+import roomescape.console.controller.request.ReservationTimeRequest;
+import roomescape.console.view.ConsoleResponse;
+import roomescape.console.controller.response.ReservationTimeResponse;
 import roomescape.core.domain.ReservationTime;
 import roomescape.core.repository.ReservationTimeRepository;
 

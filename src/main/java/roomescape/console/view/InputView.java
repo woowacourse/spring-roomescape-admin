@@ -1,7 +1,5 @@
 package roomescape.console.view;
 
-import roomescape.console.request.ConsoleRequest;
-
 import java.util.Scanner;
 
 public class InputView {

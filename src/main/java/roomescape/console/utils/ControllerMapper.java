@@ -2,7 +2,7 @@ package roomescape.console.utils;
 
 import org.springframework.stereotype.Component;
 import roomescape.console.controller.ConsoleController;
-import roomescape.console.request.ConsoleRequest;
+import roomescape.console.view.ConsoleRequest;
 
 import java.util.Map;
 

@@ -33,7 +33,7 @@ class JdbcReservationTimeRepositoryTest {
     }
 
     @Test
-    void 예약_시간이_이미_존재하는지_true를_반환한다() {
+    void 예약_시간이_이미_존재하면_true를_반환한다() {
         String startAt = "13:00";
         ReservationTime reservationTime = ReservationFixture.reservationTime(startAt);
         reservationTimeRepository.save(reservationTime);

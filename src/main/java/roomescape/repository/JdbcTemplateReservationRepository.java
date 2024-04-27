@@ -3,6 +3,7 @@ package roomescape.repository;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 import javax.sql.DataSource;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;
@@ -59,10 +60,11 @@ public class JdbcTemplateReservationRepository implements ReservationRepository 
     }
 
     @Override
-    public void deleteById(Long id) {
+    public Optional<Integer> deleteById(Long id) {
         int rowCount = jdbcTemplate.update("DELETE FROM reservation WHERE id = ?", id);
         if (rowCount == 0) {
-            throw new IllegalArgumentException("존재하지 않는 예약입니다.");
+            return Optional.empty();
         }
+        return Optional.of(rowCount);
     }
 }

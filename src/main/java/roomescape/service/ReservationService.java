@@ -33,12 +33,8 @@ public class ReservationService {
         return ReservationResponse.from(newReservation);
     }
 
-    public boolean deleteReservation(Long id) {
-        try {
-            reservationRepository.deleteById(id);
-        } catch (IllegalArgumentException e) {
-            return false;
-        }
-        return true;
+    public void deleteReservation(Long id) {
+        reservationRepository.deleteById(id)
+                .orElseThrow(() -> new IllegalArgumentException("존재하지 않는 예약입니다."));
     }
 }

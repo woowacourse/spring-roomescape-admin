@@ -1,6 +1,5 @@
 package roomescape.console;
 
-import org.springframework.dao.EmptyResultDataAccessException;
 import roomescape.dto.ReservationRequest;
 import roomescape.dto.ReservationResponse;
 import roomescape.dto.ReservationTimeRequest;
@@ -19,30 +18,26 @@ public class ConsoleController {
     }
 
     public void run() {
-        try {
-            executeByInputCommand();
-        } catch (Exception e) {
-            OutputView.printErrorMessage(e.getMessage());
-            run();
-        }
+        tryAgainWhenException(this::executeByInputCommand);
     }
 
     private void executeByInputCommand() {
         Command command;
         while ((command = InputView.inputCommand()) != Command.EXIT) {
-            executeCommand(command);
+            tryAgainWhenException(executeCommand(command));
         }
     }
 
-    private void executeCommand(Command command) {
-        switch (command) {
-            case RESERVATION_GET -> printAllReservations();
-            case RESERVATION_POST -> createReservation();
-            case RESERVATION_DELETE -> deleteReservation();
-            case RESERVATION_TIME_GET -> printAllReservationTimes();
-            case RESERVATION_TIME_POST -> createReservationTime();
-            case RESERVATION_TIME_DELETE -> deleteReservationTime();
-        }
+    private Runnable executeCommand(Command command) {
+        return switch (command) {
+            case RESERVATION_GET -> this::printAllReservations;
+            case RESERVATION_POST -> this::createReservation;
+            case RESERVATION_DELETE -> this::deleteReservation;
+            case RESERVATION_TIME_GET -> this::printAllReservationTimes;
+            case RESERVATION_TIME_POST -> this::createReservationTime;
+            case RESERVATION_TIME_DELETE -> this::deleteReservationTime;
+            case EXIT -> throw new UnsupportedOperationException("unreachable statement.");
+        };
     }
 
     private void printAllReservations() {
@@ -51,13 +46,8 @@ public class ConsoleController {
 
     private void createReservation() {
         ReservationRequest reservationRequest = InputView.inputReservationRequest();
-        try {
-            ReservationResponse response = reservationService.save(reservationRequest);
-            OutputView.printReservationResponse(response);
-        } catch (EmptyResultDataAccessException e) {
-            OutputView.printErrorMessage(e.getMessage());
-            createReservation();
-        }
+        ReservationResponse response = reservationService.save(reservationRequest);
+        OutputView.printReservationResponse(response);
     }
 
     private void deleteReservation() {
@@ -80,5 +70,14 @@ public class ConsoleController {
         long id = InputView.inputDeleteId();
         boolean deleted = reservationTimeService.deleteById(id);
         OutputView.printDeleted(deleted);
+    }
+
+    private void tryAgainWhenException(Runnable runnable) {
+        try {
+            runnable.run();
+        } catch (RuntimeException e) {
+            OutputView.printErrorMessage(e.getMessage());
+            tryAgainWhenException(runnable);
+        }
     }
 }

@@ -3,6 +3,7 @@ package roomescape.entity;
 import java.time.LocalTime;
 import java.util.Objects;
 import roomescape.exception.IllegalRequestFormException;
+import roomescape.exception.IllegalReservationTimeException;
 
 public class GameTime {
     private final Long id;
@@ -20,11 +21,18 @@ public class GameTime {
 
     private void validate(LocalTime startAt) {
         validateNonNull(startAt);
+        validateHourlyUnit(startAt);
     }
 
     private void validateNonNull(LocalTime startAt) {
         if (startAt == null) {
             throw new IllegalRequestFormException("예약 가능한 시간은 null일 수 없습니다");
+        }
+    }
+
+    private void validateHourlyUnit(LocalTime startAt) {
+        if (startAt.getMinute() != 0) {
+            throw new IllegalReservationTimeException("예약 가능한 시간은 정각 단위로 설정되어야 합니다");
         }
     }
 

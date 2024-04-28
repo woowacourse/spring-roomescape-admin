@@ -42,4 +42,12 @@ public class OutputView {
         System.out.println("시간 : " + reservationsResponse.time().getStartAt());
         System.out.println();
     }
+
+    public void printReservations(List<ReservationsResponse> allReservations) {
+        System.out.println("""
+                예약자 리스트
+                =======================
+                """);
+        allReservations.forEach(this::printReservation);
+    }
 }

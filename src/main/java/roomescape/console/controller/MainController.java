@@ -48,7 +48,10 @@ public class MainController {
             handleCheckTime();
             return;
         }
-
+        if (menu.equals("6")) {
+            handleCheckReservation();
+            return;
+        }
     }
 
     private void handleTimeAdd() {
@@ -76,5 +79,10 @@ public class MainController {
         ReservationsRequest request = new ReservationsRequest(name, date, timeId);
         ReservationsResponse reservation = roomescapeService.addReservation(request);
         outputView.printAddedReservation(reservation);
+    }
+
+    private void handleCheckReservation() {
+        List<ReservationsResponse> allReservations = roomescapeService.finaAllReservations();
+        outputView.printReservations(allReservations);
     }
 }

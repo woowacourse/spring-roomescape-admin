@@ -10,6 +10,11 @@ import roomescape.dto.ReservationRequest;
 import roomescape.dto.ReservationTimeRequest;
 
 public class InputView {
+    public static final int NAME_INDEX = 0;
+    public static final int DATE_INDEX = 1;
+    public static final int TIME_ID_INDEX = 2;
+    public static final int COMMAND_LENGTH = 3;
+
     private final Scanner scanner = new Scanner(System.in);
 
     public Command readCommand() {
@@ -19,15 +24,17 @@ public class InputView {
     }
 
     public ReservationRequest readReservationRequest() {
-        System.out.println("생성하려는 예약 정보를 \"이름,날짜(yyyy-mm-dd),시간id\" 형태로 입력하세요.");
-        System.out.println("ex - 엘라,2024-06-01,1");
+        System.out.println("""
+                생성하려는 예약 정보를 \"이름,날짜(yyyy-mm-dd),시간id\" 형태로 입력하세요.
+                ex - 엘라,2024-06-01,1"""
+        );
         String input = scanner.nextLine();
         List<String> splitRequest = List.of(input.split(","));
         validateReservationRequest(splitRequest);
         return new ReservationRequest(
-                splitRequest.get(0),
-                splitRequest.get(1),
-                Long.parseLong(splitRequest.get(2))
+                splitRequest.get(NAME_INDEX),
+                splitRequest.get(DATE_INDEX),
+                Long.parseLong(splitRequest.get(TIME_ID_INDEX))
         );
     }
 
@@ -38,8 +45,10 @@ public class InputView {
     }
 
     public ReservationTimeRequest readReservationTimeRequest() {
-        System.out.println("생성하려는 예약 시간 정보를 \"HH:mm\" 형태로 입력하세요.");
-        System.out.println("ex- 10:00");
+        System.out.println("""
+                생성하려는 예약 시간 정보를 \"HH:mm\" 형태로 입력하세요.
+                ex- 10:00"""
+        );
         String input = scanner.nextLine();
         validateReservationTimeRequest(input);
         return new ReservationTimeRequest(input);
@@ -52,12 +61,12 @@ public class InputView {
     }
 
     private void validateReservationRequest(List<String> splitRequest) {
-        if (splitRequest.size() != 3) {
+        if (splitRequest.size() != COMMAND_LENGTH) {
             throw new IllegalArgumentException("올바르지 않은 예약 생성 요청입니다. 입력 형태를 확인하세요.");
         }
-        new Name(splitRequest.get(0));
+        new Name(splitRequest.get(NAME_INDEX));
         try {
-            LocalDate.parse(splitRequest.get(1));
+            LocalDate.parse(splitRequest.get(DATE_INDEX));
         } catch (DateTimeException e) {
             throw new IllegalArgumentException("올바르지 않은 예약 날짜입니다. 날짜 형태를 확인하세요");
         }

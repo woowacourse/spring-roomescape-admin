@@ -2,12 +2,17 @@ package roomescape;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.hamcrest.Matchers.is;
+import static org.mockito.BDDMockito.given;
 
 import io.restassured.RestAssured;
 import io.restassured.http.ContentType;
 import java.lang.reflect.Field;
 import java.sql.Connection;
 import java.sql.SQLException;
+import java.time.Clock;
+import java.time.Duration;
+import java.time.Instant;
+import java.time.ZoneId;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -15,6 +20,7 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.boot.test.web.server.LocalServerPort;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.test.annotation.DirtiesContext;
@@ -38,6 +44,9 @@ public class MissionStepTest {
     public void setUp() {
         RestAssured.port = this.port;
     }
+
+    @MockBean
+    private Clock clock;
 
     @Test
     void 일단계() {
@@ -67,6 +76,11 @@ public class MissionStepTest {
         params.put("name", "브라운");
         params.put("date", "2023-08-05");
         params.put("timeId", "1");
+
+        given(clock.instant())
+                .willReturn(Instant.now().minus(Duration.ofDays(365)));
+        given(clock.getZone())
+                .willReturn(ZoneId.systemDefault());
 
         RestAssured.given().log().all() // 추가한 부분
                 .contentType(ContentType.JSON)
@@ -138,6 +152,11 @@ public class MissionStepTest {
         params.put("date", "2023-08-05");
         params.put("timeId", "1");
 
+        given(clock.instant())
+                .willReturn(Instant.now().minus(Duration.ofDays(365)));
+        given(clock.getZone())
+                .willReturn(ZoneId.systemDefault());
+
         RestAssured.given().log().all() // 추가한 부분
                 .contentType(ContentType.JSON)
                 .body(Map.of("startAt", "15:40"))
@@ -199,6 +218,11 @@ public class MissionStepTest {
         reservation.put("name", "브라운");
         reservation.put("date", "2023-08-05");
         reservation.put("timeId", 1);
+
+        given(clock.instant())
+                .willReturn(Instant.now().minus(Duration.ofDays(365)));
+        given(clock.getZone())
+                .willReturn(ZoneId.systemDefault());
 
         RestAssured.given().log().all() // 추가한 부분
                 .contentType(ContentType.JSON)

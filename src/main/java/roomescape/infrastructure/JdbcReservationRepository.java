@@ -1,6 +1,7 @@
 package roomescape.infrastructure;
 
 import java.sql.PreparedStatement;
+import java.time.LocalDate;
 import java.util.List;
 import java.util.Objects;
 import java.util.Optional;
@@ -104,5 +105,12 @@ public class JdbcReservationRepository implements ReservationRepository {
     public long findReservationCountByTimeId(long timeId) {
         String sql = "select count(*) from reservation where time_id = ?";
         return jdbcTemplate.queryForObject(sql, Long.class, timeId);
+    }
+
+    @Override
+    public boolean existByNameAndDateAndTimeId(String name, LocalDate date, long timeId) {
+        String sql = "select count(*) from reservation where name = ? and date = ? and time_id = ?";
+        Integer count = jdbcTemplate.queryForObject(sql, Integer.class, name, date, timeId);
+        return count != null && count > 0;
     }
 }

@@ -1,6 +1,7 @@
 package roomescape.service;
 
 import java.time.LocalTime;
+import java.time.format.DateTimeParseException;
 import java.util.List;
 import org.springframework.stereotype.Service;
 import roomescape.domain.ReservationTime;
@@ -17,9 +18,11 @@ public class ReservationTimeService {
     }
 
     public ReservationTime save(SaveReservationTimeDto dto) {
-        return repository.save(
-            new ReservationTime(null, LocalTime.parse(dto.startAt()))
-        );
+        try {
+            return repository.save(new ReservationTime(null, LocalTime.parse(dto.startAt())));
+        } catch (DateTimeParseException exception) {
+            throw new IllegalArgumentException("올바르지 않은 시간 입력입니다.");
+        }
     }
 
     public List<ReservationTime> findAll() {

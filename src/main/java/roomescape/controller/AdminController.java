@@ -1,4 +1,4 @@
-package roomescape;
+package roomescape.controller;
 
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -9,5 +9,10 @@ public class AdminController {
     @GetMapping("/admin")
     public String admin() {
         return "/admin/index";
+    }
+
+    @GetMapping("/")
+    public String welcome() {
+        return "redirect:/admin";
     }
 }

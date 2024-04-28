@@ -1,4 +1,4 @@
-package roomescape.reservation.controller.response;
+package roomescape.reservation.dto.response;
 
 import roomescape.reservation.model.Reservation;
 import roomescape.util.CustomDateTimeFormatter;

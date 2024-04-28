@@ -2,7 +2,6 @@ package roomescape.controller;
 
 import org.springframework.web.bind.annotation.*;
 import roomescape.domain.Reservation;
-import roomescape.domain.Time;
 import roomescape.dto.ReservationRequest;
 import roomescape.service.ReservationService;
 import roomescape.service.TimeManagementService;

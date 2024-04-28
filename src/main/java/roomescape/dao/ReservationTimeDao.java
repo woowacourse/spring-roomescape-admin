@@ -13,6 +13,8 @@ import javax.sql.DataSource;
 import java.time.LocalTime;
 import java.util.List;
 
+import static roomescape.dao.Table.RESERVATION_TIME;
+
 @Repository
 public class ReservationTimeDao {
     private JdbcTemplate jdbcTemplate;
@@ -21,7 +23,7 @@ public class ReservationTimeDao {
     public ReservationTimeDao(JdbcTemplate jdbcTemplate, DataSource dataSource) {
         this.jdbcTemplate = jdbcTemplate;
         this.simpleJdbcInsert = new SimpleJdbcInsert(dataSource)
-                .withTableName("reservation_time")
+                .withTableName(RESERVATION_TIME.getName())
                 .usingGeneratedKeyColumns("id");
     }
 

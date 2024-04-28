@@ -16,6 +16,10 @@ public class ReservationTimeService {
         this.reservationTimeRepository = reservationTimeRepository;
     }
 
+    public Long createReservationTime(final CreateReservationTimeRequest createReservationTimeRequest) {
+        return reservationTimeRepository.save(createReservationTimeRequest.toReservationTime());
+    }
+
     public List<FindReservationTimeResponse> getReservationTimes() {
         return reservationTimeRepository.findAll().stream()
                 .map(FindReservationTimeResponse::of)
@@ -28,11 +32,9 @@ public class ReservationTimeService {
         return FindReservationTimeResponse.of(reservationTime);
     }
 
-    public Long createReservationTime(final CreateReservationTimeRequest createReservationTimeRequest) {
-        return reservationTimeRepository.save(createReservationTimeRequest.toReservationTime());
-    }
-
     public void deleteById(final Long id) {
+        reservationTimeRepository.findById(id)
+                .orElseThrow(() -> new NoSuchElementException("해당하는 예약 시간이 존재하지 않습니다."));
         reservationTimeRepository.deleteById(id);
     }
 }

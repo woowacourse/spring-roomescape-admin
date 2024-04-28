@@ -22,6 +22,12 @@ public class ReservationService {
         this.reservationTimeRepository = reservationTimeRepository;
     }
 
+    public Long createReservation(final CreateReservationRequest createReservationRequest) {
+        ReservationTime reservationTime = reservationTimeRepository.findById(createReservationRequest.timeId())
+                .orElseThrow(() -> new NoSuchElementException("해당하는 예약 시간이 존재하지 않습니다."));
+        return reservationRepository.save(createReservationRequest.toReservation(reservationTime));
+    }
+
     public List<FindReservationResponse> getReservations() {
         return reservationRepository.findAll().stream()
                 .map(FindReservationResponse::of)
@@ -34,12 +40,9 @@ public class ReservationService {
         return FindReservationResponse.of(reservation);
     }
 
-    public Long createReservation(final CreateReservationRequest createReservationRequest) {
-        ReservationTime reservationTime = reservationTimeRepository.findById(createReservationRequest.timeId()).orElseThrow();
-        return reservationRepository.save(createReservationRequest.toReservation(reservationTime));
-    }
-
     public void deleteReservation(final Long id) {
+        reservationRepository.findById(id)
+                .orElseThrow(() -> new NoSuchElementException("해당하는 예약이 존재하지 않습니다."));
         reservationRepository.deleteById(id);
     }
 }

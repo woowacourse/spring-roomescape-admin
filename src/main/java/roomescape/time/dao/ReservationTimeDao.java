@@ -32,11 +32,14 @@ public class ReservationTimeDao {
     }
 
     public List<ReservationTime> findAll() {
-        return jdbcTemplate.query("SELECT * FROM reservation_time", ROW_MAPPER);
+        String sql = "SELECT * FROM reservation_time";
+
+        return jdbcTemplate.query(sql, ROW_MAPPER);
     }
 
     public int deleteById(final Long id) {
-        int deleteCount = jdbcTemplate.update("DELETE FROM reservation_time WHERE id = (?)", id);
+        String sql = "DELETE FROM reservation_time WHERE id = (?)";
+        int deleteCount = jdbcTemplate.update(sql, id);
 
         return deleteCount;
     }

@@ -1,15 +1,15 @@
 package roomescape.reservationtime.repository;
 
-import java.sql.PreparedStatement;
 import java.sql.Time;
 import java.util.List;
 import java.util.Optional;
+import javax.sql.DataSource;
 import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.jdbc.core.JdbcTemplate;
-import org.springframework.jdbc.core.PreparedStatementCreator;
 import org.springframework.jdbc.core.RowMapper;
-import org.springframework.jdbc.support.GeneratedKeyHolder;
-import org.springframework.jdbc.support.KeyHolder;
+import org.springframework.jdbc.core.namedparam.MapSqlParameterSource;
+import org.springframework.jdbc.core.namedparam.SqlParameterSource;
+import org.springframework.jdbc.core.simple.SimpleJdbcInsert;
 import org.springframework.stereotype.Repository;
 import roomescape.reservationtime.model.ReservationTime;
 
@@ -17,9 +17,13 @@ import roomescape.reservationtime.model.ReservationTime;
 public class JdbcReservationTimeRepository implements ReservationTimeRepository {
 
     private final JdbcTemplate jdbcTemplate;
+    private final SimpleJdbcInsert simpleJdbcInsert;
 
-    public JdbcReservationTimeRepository(final JdbcTemplate jdbcTemplate) {
+    public JdbcReservationTimeRepository(final JdbcTemplate jdbcTemplate, final DataSource dataSource) {
         this.jdbcTemplate = jdbcTemplate;
+        this.simpleJdbcInsert = new SimpleJdbcInsert(dataSource)
+                .withTableName("reservation_time")
+                .usingGeneratedKeyColumns("id");
     }
 
     private final RowMapper<ReservationTime> reservationTimeRowMapper =
@@ -29,16 +33,9 @@ public class JdbcReservationTimeRepository implements ReservationTimeRepository 
             );
 
     public Long save(final ReservationTime reservationTime) {
-        String sql = "insert into reservation_time (start_at) values (?)";
-        KeyHolder keyHolder = new GeneratedKeyHolder();
-        PreparedStatementCreator preparedStatementCreator = connection -> {
-            PreparedStatement ps = connection.prepareStatement(sql, new String[]{"id"});
-            ps.setTime(1, Time.valueOf(reservationTime.getTime()));
-            return ps;
-        };
-
-        jdbcTemplate.update(preparedStatementCreator, keyHolder);
-        return keyHolder.getKey().longValue();
+        SqlParameterSource mapSqlParameterSource = new MapSqlParameterSource()
+                .addValue("start_at", Time.valueOf(reservationTime.getTime()));
+        return simpleJdbcInsert.executeAndReturnKey(mapSqlParameterSource).longValue();
     }
 
     @Override

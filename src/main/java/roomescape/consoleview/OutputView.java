@@ -3,6 +3,8 @@ package roomescape.consoleview;
 import java.util.List;
 import roomescape.controller.dto.FindReservationResponse;
 import roomescape.controller.dto.FindReservationTimeResponse;
+import roomescape.controller.dto.SaveReservationResponse;
+import roomescape.controller.dto.SaveReservationTimeResponse;
 
 public class OutputView {
 
@@ -65,10 +67,37 @@ public class OutputView {
             sb.append("\n---------------------");
         }
         System.out.println(sb);
-
     }
 
     public void printError(String message) {
         System.err.println("[ERROR] " + message);
+    }
+
+    public void printSaveReservation(SaveReservationResponse response) {
+        System.out.print("예약이 저장되었습니다. ");
+        System.out.printf(
+            "예약번호: %d, 예약자: %s, 날짜: %s, 시간: %s%n",
+            response.id(),
+            response.name(),
+            response.date().toString(),
+            response.time().getStartAt().toString()
+        );
+    }
+
+    public void printSaveTime(SaveReservationTimeResponse response) {
+        System.out.print("시간이 저장되었습니다. ");
+        System.out.printf(
+            "번호: %d, 시간: %s%n",
+            response.id(),
+            response.startAt().toString()
+        );
+    }
+
+    public void printDeleteReservation(long reservationId) {
+        System.out.printf("번호 %d의 예약 데이터가 성공적으로 삭제되었습니다%n", reservationId);
+    }
+
+    public void printDeleteTime(long timeId) {
+        System.out.printf("번호 %d의 시간 데이터가 성공적으로 삭제되었습니다%n", timeId);
     }
 }

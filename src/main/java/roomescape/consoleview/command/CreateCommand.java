@@ -5,7 +5,9 @@ import roomescape.consoleview.OutputView;
 import roomescape.controller.ReservationController;
 import roomescape.controller.ReservationTimeController;
 import roomescape.controller.dto.SaveReservationRequest;
+import roomescape.controller.dto.SaveReservationResponse;
 import roomescape.controller.dto.SaveReservationTimeRequest;
+import roomescape.controller.dto.SaveReservationTimeResponse;
 
 public class CreateCommand implements Command {
 
@@ -32,12 +34,16 @@ public class CreateCommand implements Command {
             String name = arguments.get(1);
             String date = arguments.get(2);
             Long timeId = Long.parseLong(arguments.get(3));
-            reservationController.save(new SaveReservationRequest(date, name, timeId));
+            SaveReservationResponse response = reservationController.save(
+                new SaveReservationRequest(date, name, timeId));
+            outputView.printSaveReservation(response);
         }
 
         if (arguments.get(0).equals(TIME)) {
             String startAt = arguments.get(1);
-            reservationTimeController.save(new SaveReservationTimeRequest(startAt));
+            SaveReservationTimeResponse response = reservationTimeController.save(
+                new SaveReservationTimeRequest(startAt));
+            outputView.printSaveTime(response);
         }
     }
 

@@ -28,10 +28,12 @@ public class DeleteCommand implements Command {
         if (arguments.get(0).equals(RESERVATION)) {
             long reservationId = Long.parseLong(arguments.get(1));
             reservationController.delete(reservationId);
+            outputView.printDeleteReservation(reservationId);
         }
         if (arguments.get(0).equals(TIME)) {
             long timeId = Long.parseLong(arguments.get(1));
             reservationTimeController.delete(timeId);
+            outputView.printDeleteTime(timeId);
         }
     }
 

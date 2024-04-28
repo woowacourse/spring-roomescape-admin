@@ -2,7 +2,9 @@ package roomescape.console.controller;
 
 import roomescape.console.view.InputView;
 import roomescape.console.view.OutputView;
+import roomescape.dto.request.ReservationsRequest;
 import roomescape.dto.request.TimesRequest;
+import roomescape.dto.response.ReservationsResponse;
 import roomescape.dto.response.TimesResponse;
 import roomescape.service.RoomescapeService;
 
@@ -34,6 +36,10 @@ public class MainController {
             handleTimeAdd();
             return;
         }
+        if (menu.equals("2")) {
+            handleReservationAdd();
+            return;
+        }
         if (menu.equals("3")) {
             handleDeleteTime();
             return;
@@ -61,5 +67,14 @@ public class MainController {
         Long id = inputView.readRemoveTimeId();
         int count = roomescapeService.removeTime(id);
         outputView.printDelete(count);
+    }
+
+    private void handleReservationAdd() {
+        String name = inputView.readName();
+        String date = inputView.readDate();
+        Long timeId = inputView.readTimeId();
+        ReservationsRequest request = new ReservationsRequest(name, date, timeId);
+        ReservationsResponse reservation = roomescapeService.addReservation(request);
+        outputView.printAddedReservation(reservation);
     }
 }

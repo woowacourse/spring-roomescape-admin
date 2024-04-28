@@ -1,5 +1,6 @@
 package roomescape.console.view;
 
+import roomescape.dto.response.ReservationsResponse;
 import roomescape.dto.response.TimesResponse;
 
 import java.util.List;
@@ -26,6 +27,19 @@ public class OutputView {
 
     public void printDelete(int count) {
         System.out.println(count + "개의 데이터가 성공적으로 삭제되었습니다.");
+        System.out.println();
+    }
+
+    public void printAddedReservation(ReservationsResponse reservationsResponse) {
+        System.out.println("예약이 성공적으로 추가되었습니다.");
+        System.out.println();
+        printReservation(reservationsResponse);
+    }
+
+    private void printReservation(ReservationsResponse reservationsResponse) {
+        System.out.println("예약자 : " + reservationsResponse.name());
+        System.out.println("날짜 : " + reservationsResponse.date());
+        System.out.println("시간 : " + reservationsResponse.time().getStartAt());
         System.out.println();
     }
 }

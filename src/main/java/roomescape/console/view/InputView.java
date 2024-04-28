@@ -31,19 +31,6 @@ public class InputView {
         return readLong();
     }
 
-    private String readString() {
-        String value = scanner.next();
-        validateBlank(value);
-        return value;
-    }
-
-    private Long readLong() {
-        String value = scanner.next();
-        validateBlank(value);
-        validateLong(value);
-        return Long.parseLong(value);
-    }
-
     private void validateBlank(String value) {
         if (value == null || value.isBlank()) {
             throw new IllegalArgumentException("빈 값을 입력했습니다.");
@@ -56,5 +43,33 @@ public class InputView {
         } catch (NumberFormatException e) {
             throw new IllegalArgumentException("잘못된 값을 입력했습니다.");
         }
+    }
+
+    public String readName() {
+        System.out.print("이름을 입력해주세요. : ");
+        return readString();
+    }
+
+    public String readDate() {
+        System.out.print("날짜를 입력해주세요. : ");
+        return readString();
+    }
+
+    public Long readTimeId() {
+        System.out.print("시간 ID를 입력해주세요. : ");
+        return readLong();
+    }
+
+    private String readString() {
+        String value = scanner.next();
+        validateBlank(value);
+        return value;
+    }
+
+    private Long readLong() {
+        String value = scanner.next();
+        validateBlank(value);
+        validateLong(value);
+        return Long.parseLong(value);
     }
 }

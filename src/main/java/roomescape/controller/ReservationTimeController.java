@@ -27,7 +27,7 @@ public class ReservationTimeController {
     @PostMapping
     public ResponseEntity<ReservationTimeResponse> createReservationTime(@RequestBody ReservationTimeRequest request) {
         ReservationTime time = reservationTimeService.register(request);
-        ReservationTimeResponse response = createResponse(time);
+        ReservationTimeResponse response = ReservationTimeResponse.from(time);
         URI location = URI.create("/times/" + response.id());
         return ResponseEntity.created(location).body(response);
     }
@@ -36,13 +36,9 @@ public class ReservationTimeController {
     public ResponseEntity<List<ReservationTimeResponse>> getReservationTimes() {
         List<ReservationTime> reservationTimes = reservationTimeService.getReservationTimes();
         List<ReservationTimeResponse> responses = reservationTimes.stream()
-                .map(this::createResponse)
+                .map(ReservationTimeResponse::from)
                 .toList();
         return ResponseEntity.ok(responses);
-    }
-
-    private ReservationTimeResponse createResponse(ReservationTime time) {
-        return new ReservationTimeResponse(time.getId(), time.getStartAt());
     }
 
     @DeleteMapping("/{id}")

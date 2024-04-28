@@ -1,4 +1,4 @@
-package roomescape.domain.dao;
+package roomescape.dao;
 
 import java.util.List;
 import org.springframework.jdbc.core.JdbcTemplate;
@@ -9,7 +9,7 @@ import org.springframework.jdbc.core.simple.SimpleJdbcInsert;
 import org.springframework.stereotype.Repository;
 import roomescape.domain.Reservation;
 import roomescape.domain.ReservationTime;
-import roomescape.service.ReservationDao;
+import roomescape.domain.ReservationDao;
 
 @Repository
 public class JdbcReservationDao implements ReservationDao {

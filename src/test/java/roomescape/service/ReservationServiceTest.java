@@ -8,8 +8,10 @@ import java.util.List;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
-import roomescape.domain.dto.ReservationRequest;
-import roomescape.domain.dto.ReservationResponse;
+import roomescape.domain.ReservationDao;
+import roomescape.domain.ReservationTimeDao;
+import roomescape.dto.ReservationRequest;
+import roomescape.dto.ReservationResponse;
 
 class ReservationServiceTest {
 

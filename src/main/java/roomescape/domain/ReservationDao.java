@@ -1,4 +1,4 @@
-package roomescape.service;
+package roomescape.domain;
 
 import java.util.List;
 import roomescape.domain.Reservation;

@@ -21,10 +21,10 @@ import org.mockito.Spy;
 import org.mockito.junit.jupiter.MockitoExtension;
 import roomescape.application.ReservationService;
 import roomescape.application.ReservationTimeService;
+import roomescape.application.dto.ReservationCreationRequest;
 import roomescape.domain.reservation.Reservation;
 import roomescape.domain.reservation.repository.ReservationRepository;
 import roomescape.domain.time.ReservationTime;
-import roomescape.dto.reservation.ReservationRequest;
 
 @ExtendWith(MockitoExtension.class)
 class ReservationServiceTest {
@@ -46,7 +46,8 @@ class ReservationServiceTest {
         when(reservationRepository.existsByReservationDateTime(any(), anyLong())).thenReturn(false);
         when(reservationRepository.save(any())).thenReturn(new Reservation(1L, "prin", date, time));
 
-        Reservation reservation = reservationService.reserve(new ReservationRequest("prin", date, 1L));
+        ReservationCreationRequest request = new ReservationCreationRequest("prin", date, 1L);
+        Reservation reservation = reservationService.reserve(request);
 
         assertThat(reservation.getName()).isEqualTo("prin");
         assertThat(reservation.getDate()).isEqualTo(date);
@@ -57,9 +58,9 @@ class ReservationServiceTest {
     void 최소_1일_전에_예약하지_않으면_예약을_실패한다() {
         when(reservationTimeService.getReservationTime(anyLong())).thenReturn(time);
         LocalDate invalidDate = LocalDate.of(2024, 4, 20);
-        ReservationRequest reservationRequest = new ReservationRequest("liv", invalidDate, 1L);
+        ReservationCreationRequest request = new ReservationCreationRequest("liv", invalidDate, 1L);
 
-        assertThatThrownBy(() -> reservationService.reserve(reservationRequest))
+        assertThatThrownBy(() -> reservationService.reserve(request))
                 .isExactlyInstanceOf(IllegalArgumentException.class)
                 .hasMessageContaining("예약은 최소 1일 전에 해야합니다.");
     }
@@ -68,9 +69,9 @@ class ReservationServiceTest {
     void 중복된_예약이_있으면_예약을_실패한다() {
         when(reservationTimeService.getReservationTime(anyLong())).thenReturn(time);
         when(reservationRepository.existsByReservationDateTime(any(), anyLong())).thenReturn(true);
-        ReservationRequest reservationRequest = new ReservationRequest("sudal", LocalDate.of(2024, 4, 21), 1L);
+        ReservationCreationRequest request = new ReservationCreationRequest("sudal", LocalDate.of(2024, 4, 21), 1L);
 
-        assertThatThrownBy(() -> reservationService.reserve(reservationRequest))
+        assertThatThrownBy(() -> reservationService.reserve(request))
                 .isExactlyInstanceOf(IllegalArgumentException.class)
                 .hasMessageContaining("이미 예약된 날짜, 시간입니다.");
     }

@@ -26,7 +26,7 @@ public class ReservationTimeController {
 
     @PostMapping
     public ResponseEntity<ReservationTimeResponse> createReservationTime(@RequestBody ReservationTimeRequest request) {
-        ReservationTime time = reservationTimeService.register(request);
+        ReservationTime time = reservationTimeService.register(request.toReservationCreationRequest());
         ReservationTimeResponse response = ReservationTimeResponse.from(time);
         URI location = URI.create("/times/" + response.id());
         return ResponseEntity.created(location).body(response);

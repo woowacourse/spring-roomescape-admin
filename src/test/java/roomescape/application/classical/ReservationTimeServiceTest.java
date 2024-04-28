@@ -9,8 +9,8 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import roomescape.application.ReservationTimeService;
+import roomescape.application.dto.ReservationTimeCreationRequest;
 import roomescape.domain.time.ReservationTime;
-import roomescape.dto.reservationtime.ReservationTimeRequest;
 import roomescape.support.extension.TableTruncateExtension;
 
 @SpringBootTest
@@ -22,7 +22,7 @@ public class ReservationTimeServiceTest {
     @Test
     void 예약_시간을_성공적으로_등록한다() {
         LocalTime startAt = LocalTime.of(13, 0);
-        ReservationTimeRequest request = new ReservationTimeRequest(startAt);
+        ReservationTimeCreationRequest request = new ReservationTimeCreationRequest(startAt);
 
         ReservationTime reservationTime = reservationTimeService.register(request);
 
@@ -32,7 +32,7 @@ public class ReservationTimeServiceTest {
     @Test
     void 중복된_예약_시간이_있으면_등록을_실패한다() {
         LocalTime startAt = LocalTime.of(13, 0);
-        ReservationTimeRequest request = new ReservationTimeRequest(startAt);
+        ReservationTimeCreationRequest request = new ReservationTimeCreationRequest(startAt);
         reservationTimeService.register(request);
 
         assertThatThrownBy(() -> reservationTimeService.register(request))
@@ -43,7 +43,7 @@ public class ReservationTimeServiceTest {
     @Test
     void 예약_시간을_삭제한다() {
         LocalTime startAt = LocalTime.of(13, 0);
-        ReservationTimeRequest request = new ReservationTimeRequest(startAt);
+        ReservationTimeCreationRequest request = new ReservationTimeCreationRequest(startAt);
         ReservationTime reservationTime = reservationTimeService.register(request);
 
         reservationTimeService.delete(reservationTime.getId());

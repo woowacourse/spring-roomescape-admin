@@ -15,9 +15,9 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 import roomescape.application.ReservationTimeService;
+import roomescape.application.dto.ReservationTimeCreationRequest;
 import roomescape.domain.time.ReservationTime;
 import roomescape.domain.time.repository.ReservationTimeRepository;
-import roomescape.dto.reservationtime.ReservationTimeRequest;
 
 @ExtendWith(MockitoExtension.class)
 class ReservationTimeServiceTest {
@@ -31,7 +31,7 @@ class ReservationTimeServiceTest {
         LocalTime startAt = LocalTime.of(13, 0);
         when(reservationTimeRepository.existsByStartAt(any())).thenReturn(false);
         when(reservationTimeRepository.save(any())).thenReturn(new ReservationTime(1L, startAt));
-        ReservationTimeRequest request = new ReservationTimeRequest(startAt);
+        ReservationTimeCreationRequest request = new ReservationTimeCreationRequest(startAt);
 
         ReservationTime reservationTime = reservationTimeService.register(request);
 
@@ -42,7 +42,7 @@ class ReservationTimeServiceTest {
     void 중복된_예약_시간이_있으면_등록을_실패한다() {
         when(reservationTimeRepository.existsByStartAt(any())).thenReturn(true);
         LocalTime startAt = LocalTime.of(13, 0);
-        ReservationTimeRequest request = new ReservationTimeRequest(startAt);
+        ReservationTimeCreationRequest request = new ReservationTimeCreationRequest(startAt);
 
         assertThatThrownBy(() -> reservationTimeService.register(request))
                 .isExactlyInstanceOf(IllegalArgumentException.class)

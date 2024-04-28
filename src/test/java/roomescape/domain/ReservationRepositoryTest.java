@@ -34,7 +34,7 @@ class ReservationRepositoryTest {
 
     @BeforeEach
     void setUp() {
-        reservationRepository = new ReservationRepository(jdbcTemplate);
+        reservationRepository = new ReservationRepositoryImpl(jdbcTemplate);
     }
 
     @Test

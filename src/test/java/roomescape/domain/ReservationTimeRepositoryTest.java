@@ -29,7 +29,7 @@ class ReservationTimeRepositoryTest {
 
     @BeforeEach
     void setUp() {
-        reservationTimeRepository = new ReservationTimeRepository(jdbcTemplate);
+        reservationTimeRepository = new ReservationTimeRepositoryImpl(jdbcTemplate);
     }
 
     @Test

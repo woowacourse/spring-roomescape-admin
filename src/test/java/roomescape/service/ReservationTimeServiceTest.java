@@ -6,9 +6,9 @@ import static org.junit.jupiter.api.Assertions.assertAll;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
-import roomescape.console.fake.FakeReservationDb;
 import roomescape.console.fake.FakeReservationTimeDao;
-import roomescape.console.fake.FakeReservationTimeDb;
+import roomescape.console.fake.InMemoryReservationDb;
+import roomescape.console.fake.InMemoryReservationTimeDb;
 import roomescape.dto.ReservationTimeRequest;
 import roomescape.dto.ReservationTimeResponse;
 
@@ -18,7 +18,7 @@ class ReservationTimeServiceTest {
     @BeforeEach
     void setUp() {
         reservationTimeService = new ReservationTimeService(new FakeReservationTimeDao(
-                new FakeReservationDb(), new FakeReservationTimeDb()));
+                new InMemoryReservationDb(), new InMemoryReservationTimeDb()));
     }
 
     @DisplayName("존재하는 모든 예약 시간을 반환한다.")

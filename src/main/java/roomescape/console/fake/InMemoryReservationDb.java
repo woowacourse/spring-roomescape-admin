@@ -7,7 +7,7 @@ import java.util.concurrent.atomic.AtomicLong;
 import roomescape.domain.Reservation;
 import roomescape.domain.ReservationTime;
 
-public class FakeReservationDb {
+public class InMemoryReservationDb {
     private final Map<Long, Reservation> reservations = new ConcurrentHashMap<>();
     private final AtomicLong id = new AtomicLong(1);
 

@@ -7,7 +7,7 @@ import java.util.concurrent.atomic.AtomicLong;
 import org.springframework.dao.EmptyResultDataAccessException;
 import roomescape.domain.ReservationTime;
 
-public class FakeReservationTimeDb {
+public class InMemoryReservationTimeDb {
     private final Map<Long, ReservationTime> reservationTimes = new ConcurrentHashMap<>();
     private final AtomicLong id = new AtomicLong(1);
 

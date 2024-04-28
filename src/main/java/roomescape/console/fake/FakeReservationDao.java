@@ -6,28 +6,28 @@ import roomescape.domain.Reservation;
 import roomescape.domain.ReservationTime;
 
 public class FakeReservationDao implements ReservationDao {
-    private final FakeReservationDb fakeReservationDb;
-    private final FakeReservationTimeDb fakeReservationTimeDb;
+    private final InMemoryReservationDb inMemoryReservationDb;
+    private final InMemoryReservationTimeDb inMemoryReservationTimeDb;
 
-    public FakeReservationDao(FakeReservationDb fakeReservationDb,
-                              FakeReservationTimeDb fakeReservationTimeDb) {
-        this.fakeReservationDb = fakeReservationDb;
-        this.fakeReservationTimeDb = fakeReservationTimeDb;
+    public FakeReservationDao(InMemoryReservationDb inMemoryReservationDb,
+                              InMemoryReservationTimeDb inMemoryReservationTimeDb) {
+        this.inMemoryReservationDb = inMemoryReservationDb;
+        this.inMemoryReservationTimeDb = inMemoryReservationTimeDb;
     }
 
     @Override
     public List<Reservation> findAll() {
-        return fakeReservationDb.selectAll();
+        return inMemoryReservationDb.selectAll();
     }
 
     @Override
     public long save(String name, String date, long timeId) {
-        ReservationTime reservationTime = fakeReservationTimeDb.selectById(timeId);
-        return fakeReservationDb.insert(name, date, reservationTime);
+        ReservationTime reservationTime = inMemoryReservationTimeDb.selectById(timeId);
+        return inMemoryReservationDb.insert(name, date, reservationTime);
     }
 
     @Override
     public boolean deleteById(long id) {
-        return fakeReservationDb.deleteById(id);
+        return inMemoryReservationDb.deleteById(id);
     }
 }

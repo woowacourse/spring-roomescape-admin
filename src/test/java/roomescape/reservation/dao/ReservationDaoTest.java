@@ -13,7 +13,7 @@ import org.springframework.test.context.jdbc.Sql.ExecutionPhase;
 import roomescape.reservation.domain.Reservation;
 
 @JdbcTest
-@Sql(scripts = "/data-test.sql", executionPhase = ExecutionPhase.BEFORE_TEST_CLASS)
+@Sql(scripts = "/data-test.sql", executionPhase = ExecutionPhase.BEFORE_TEST_METHOD)
 class ReservationDaoTest {
     private final ReservationJdbcDao reservationDao;
 

@@ -15,7 +15,7 @@ import roomescape.Time.dao.TimeJdbcDao;
 import roomescape.Time.domain.Time;
 
 @JdbcTest
-@Sql(scripts = "/data-test.sql", executionPhase = ExecutionPhase.BEFORE_TEST_CLASS)
+@Sql(scripts = "/data-test.sql", executionPhase = ExecutionPhase.BEFORE_TEST_METHOD)
 class TimeJdbcDaoTest {
     private final TimeJdbcDao timeJdbcDao;
 
@@ -31,6 +31,7 @@ class TimeJdbcDaoTest {
         timeJdbcDao.save(time);
 
         Assertions.assertThat(time.getId()).isNotEqualTo(0);
+        timeJdbcDao.deleteById(time.getId());
     }
 
     @Test
@@ -52,7 +53,6 @@ class TimeJdbcDaoTest {
     @Test
     @DisplayName("시간 데이터들의 연관관계가 있다면 에러가 나는지 확인")
     void canNotDeleteTime() {
-
         Assertions.assertThatThrownBy(() -> timeJdbcDao.deleteById(1L))
                 .isInstanceOf(DataAccessException.class);
     }

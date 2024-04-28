@@ -17,16 +17,16 @@ public class ConsoleReservationTimeController {
     }
 
     public List<ReservationTimeResponse> findAll() {
-         return reservationTimeService.findAll().stream()
+        return reservationTimeService.findAll().stream()
                 .map(ReservationTimeResponse::from)
                 .toList();
     }
 
-    public void add(final String read) {
-        reservationTimeService.create(new ReservationTimeRequest(LocalTime.parse(read)));
+    public void add(final String command) {
+        reservationTimeService.create(new ReservationTimeRequest(LocalTime.parse(command)));
     }
 
-    public void delete(final long read) {
-        reservationTimeService.deleteById(read);
+    public void delete(final long command) {
+        reservationTimeService.deleteById(command);
     }
 }

@@ -1,4 +1,4 @@
-package roomescape.db;
+package roomescape.web.db;
 
 import java.time.LocalTime;
 import org.assertj.core.api.Assertions;

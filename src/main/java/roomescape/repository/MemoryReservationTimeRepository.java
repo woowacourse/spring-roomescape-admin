@@ -1,8 +1,7 @@
-package roomescape.console.repository;
+package roomescape.repository;
 
 import roomescape.domain.ReservationTime;
 import roomescape.dto.ReservationTimeDto;
-import roomescape.repository.ReservationTimeRepository;
 
 import java.util.HashMap;
 import java.util.List;

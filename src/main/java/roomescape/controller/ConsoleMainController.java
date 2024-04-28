@@ -1,4 +1,4 @@
-package roomescape.console.controller;
+package roomescape.controller;
 
 import roomescape.console.view.InputView;
 import roomescape.console.view.OutputView;
@@ -10,12 +10,13 @@ import roomescape.service.RoomescapeService;
 
 import java.util.List;
 
-public class MainController {
+public class ConsoleMainController {
+
     private final InputView inputView;
     private final OutputView outputView;
     private final RoomescapeService roomescapeService;
 
-    public MainController(InputView inputView, OutputView outputView, RoomescapeService roomescapeService) {
+    public ConsoleMainController(InputView inputView, OutputView outputView, RoomescapeService roomescapeService) {
         this.inputView = inputView;
         this.outputView = outputView;
         this.roomescapeService = roomescapeService;

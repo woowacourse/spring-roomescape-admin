@@ -1,15 +1,12 @@
-package roomescape.console.repository;
+package roomescape.repository;
 
-import org.springframework.stereotype.Repository;
 import roomescape.dto.ReservationRepositoryDto;
-import roomescape.repository.ReservationRepository;
 
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.concurrent.atomic.AtomicLong;
 
-@Repository
 public class MemoryReservationRepository implements ReservationRepository {
 
     private static final Map<Long, ReservationRepositoryDto> repository = new HashMap<>(); // TODO ReservationRepositoryDto 로 매핑되는게 좀 별로

@@ -5,7 +5,6 @@ import java.time.LocalDate;
 import java.time.LocalTime;
 import java.time.format.DateTimeFormatter;
 import java.util.List;
-import java.util.Map;
 import java.util.Scanner;
 import roomescape.console.view.dto.DomainCommand;
 import roomescape.console.view.dto.FunctionCommand;
@@ -19,11 +18,6 @@ public class ConsoleInputView {
     private static final String DELIMITER = ",";
     private static final DateTimeFormatter DATE_FORMATTER = DateTimeFormatter.ofPattern("yyyy-MM-dd");
     private static final DateTimeFormatter TIME_FORMATTER = DateTimeFormatter.ofPattern("HH:mm");
-
-    private static final Map<Integer, DomainCommand> INT_TO_DOMAIN_COMMAND = Map.of(
-            1, DomainCommand.RESERVATION, 2, DomainCommand.RESERVATION_TIME, 3, DomainCommand.END_PROGRAM);
-    private static final Map<Integer, FunctionCommand> INT_TO_FUNCTION_COMMAND = Map.of(
-            1, FunctionCommand.FIND_ALL, 2, FunctionCommand.CREATE, 3, FunctionCommand.DELETE);
 
     public ReservationRequest inputReservation() {
         System.out.println();
@@ -81,22 +75,14 @@ public class ConsoleInputView {
         System.out.println();
         System.out.println("도메인을 선택해주세요.");
         System.out.println("1 - 예약 관리, 2 - 예약 시간 관리, 3 - 프로그램 종료");
-        return inputCommandBy(INT_TO_DOMAIN_COMMAND);
+        return DomainCommand.from(inputInt());
     }
 
     public FunctionCommand chooseFunction() {
         System.out.println();
         System.out.println("기능을 선택해주세요");
         System.out.println("1 - 전체 조회, 2 - 생성, 3 - 삭제");
-        return inputCommandBy(INT_TO_FUNCTION_COMMAND);
-    }
-
-    private <T> T inputCommandBy(Map<Integer, T> commandMap) {
-        T command = commandMap.get(inputInt());
-        if (command == null) {
-            throw new IllegalArgumentException("입력 형식이 일치하지 않습니다.");
-        }
-        return command;
+        return FunctionCommand.from(inputInt());
     }
 
     private int inputInt() {

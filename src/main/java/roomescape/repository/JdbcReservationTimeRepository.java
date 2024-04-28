@@ -23,6 +23,7 @@ public class JdbcReservationTimeRepository implements ReservationTimeRepository 
             .usingGeneratedKeyColumns("id");
     }
 
+    @Override
     public ReservationTime save(ReservationTime time) {
         SqlParameterSource params = new MapSqlParameterSource()
             .addValue("start_at", time.getStartAt());
@@ -30,6 +31,7 @@ public class JdbcReservationTimeRepository implements ReservationTimeRepository 
         return findById(id);
     }
 
+    @Override
     public ReservationTime findById(Long id) {
         return jdbcTemplate.queryForObject(
             "select id, start_at from reservation_time where id=?",
@@ -40,6 +42,7 @@ public class JdbcReservationTimeRepository implements ReservationTimeRepository 
         );
     }
 
+    @Override
     public List<ReservationTime> findAll() {
         return jdbcTemplate.query(
             "select id, start_at from reservation_time",
@@ -50,6 +53,7 @@ public class JdbcReservationTimeRepository implements ReservationTimeRepository 
         );
     }
 
+    @Override
     public void delete(Long id) {
         jdbcTemplate.update("delete from reservation_time where id = ?", id);
     }

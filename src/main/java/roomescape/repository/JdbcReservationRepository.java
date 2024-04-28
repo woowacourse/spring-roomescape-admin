@@ -25,6 +25,7 @@ public class JdbcReservationRepository implements ReservationRepository {
             .usingGeneratedKeyColumns("id");
     }
 
+    @Override
     public Reservation save(Reservation reservation) {
         SqlParameterSource params = new MapSqlParameterSource()
             .addValue("name", reservation.getName())
@@ -60,6 +61,7 @@ public class JdbcReservationRepository implements ReservationRepository {
         );
     }
 
+    @Override
     public List<Reservation> findAll() {
         return jdbcTemplate.query(
             """
@@ -85,6 +87,7 @@ public class JdbcReservationRepository implements ReservationRepository {
         );
     }
 
+    @Override
     public void delete(long id) {
         jdbcTemplate.update("delete from reservation where id = ?", id);
     }

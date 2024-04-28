@@ -21,6 +21,7 @@ public class OutputView {
             예약 시간 아아디: %d
             시작 시간: %s
             """;
+    private static final String DELETED_MESSAGE = "성공적으로 삭제되었습니다.";
 
     public void printReservations(List<ReservationResponse> responses) {
         String result = responses.stream()
@@ -47,7 +48,7 @@ public class OutputView {
     }
 
     public void printSuccessDeleted() {
-        System.out.println("성공적으로 삭제되었습니다.");
+        System.out.println(DELETED_MESSAGE);
     }
 
     public void printMessage(String message) {
@@ -55,8 +56,7 @@ public class OutputView {
     }
 
     private String getFormattedReservation(ReservationResponse response) {
-        return String.format(
-                RESERVATION_FORMAT,
+        return RESERVATION_FORMAT.formatted(
                 response.getId(),
                 response.getName(),
                 response.getDate(),
@@ -66,8 +66,7 @@ public class OutputView {
     }
 
     private String getFormattedReservationTime(ReservationTimeResponse response) {
-        return String.format(
-                RESERVATION_TIME_FORMAT,
+        return RESERVATION_TIME_FORMAT.formatted(
                 response.getId(),
                 response.getStartAt()
         );

@@ -34,15 +34,17 @@ public class ReservationTimeService {
     }
 
     private ReservationTimeResponse findById(long id) {
-        ReservationTime reservationTime = reservationTimeDao.findById(id);
+        ReservationTime reservationTime = reservationTimeDao.findById(id)
+                .orElseThrow(() -> new IllegalArgumentException("id가 %d인 예약 시간은 존재하지 않습니다.".formatted(id)));
         return ReservationTimeResponse.of(reservationTime);
     }
 
     public void deleteById(long id) {
-        DeletedCount deletedCount = reservationTimeDao.deleteById(id);
-        if (deletedCount.isNotDelete()) {
+        ReservationTimeResponse reservationTimeResponse = findById(id);
+        DeletedCount deletedCount = reservationTimeDao.deleteById(reservationTimeResponse.id());
+        /*if (deletedCount.isNotDelete()) {
             throw new IllegalArgumentException("해당 id는 존재하지 않습니다. id = %d".formatted(id));
-        }
+        }*/
     }
 
     public void deleteAll() {

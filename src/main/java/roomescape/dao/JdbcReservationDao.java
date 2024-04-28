@@ -1,6 +1,8 @@
 package roomescape.dao;
 
 import java.util.List;
+import java.util.Optional;
+import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;
 import org.springframework.jdbc.core.namedparam.MapSqlParameterSource;
@@ -9,8 +11,8 @@ import org.springframework.jdbc.core.simple.SimpleJdbcInsert;
 import org.springframework.stereotype.Repository;
 import roomescape.domain.DeletedCount;
 import roomescape.domain.Reservation;
-import roomescape.domain.ReservationTime;
 import roomescape.domain.ReservationDao;
+import roomescape.domain.ReservationTime;
 
 @Repository
 public class JdbcReservationDao implements ReservationDao {
@@ -43,7 +45,7 @@ public class JdbcReservationDao implements ReservationDao {
         return jdbcTemplate.query(sql, rowMapper);
     }
 
-    public Reservation findById(long id) {
+    public Optional<Reservation> findById(long id) {
         String sql = "SELECT "
                 + "r.id as reservation_id, "
                 + "r.name, "
@@ -54,7 +56,12 @@ public class JdbcReservationDao implements ReservationDao {
                 + "inner join reservation_time as t "
                 + "on r.time_id = t.id "
                 + "WHERE r.id = ?";
-        return jdbcTemplate.queryForObject(sql, rowMapper, id);
+        try {
+            Reservation reservation = jdbcTemplate.queryForObject(sql, rowMapper, id);
+            return Optional.ofNullable(reservation);
+        } catch (EmptyResultDataAccessException exception) {
+            return Optional.empty();
+        }
     }
 
     public long save(Reservation reservation) {

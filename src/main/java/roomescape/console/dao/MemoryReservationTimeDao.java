@@ -1,6 +1,7 @@
 package roomescape.console.dao;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
 import java.util.concurrent.atomic.AtomicLong;
@@ -28,7 +29,7 @@ public class MemoryReservationTimeDao implements ReservationTimeDao {
 
     @Override
     public List<ReservationTime> findAllReservationTimes() {
-        return reservationTimes;
+        return Collections.unmodifiableList(reservationTimes);
     }
 
     @Override

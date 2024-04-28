@@ -9,10 +9,11 @@ document.addEventListener('DOMContentLoaded', () => {
       .catch(error => console.error('Error fetching reservations:', error));
 });
 
-function render(data) {
+// ReservationResponseDto 파싱 작업
+function render(target) {
+  const data = target.reservations;
   const tableBody = document.getElementById('table-body');
   tableBody.innerHTML = '';
-
   data.forEach(item => {
     const row = tableBody.insertRow();
 
@@ -121,7 +122,7 @@ function requestCreate(reservation) {
 
   return fetch(RESERVATION_API_ENDPOINT, requestOptions)
       .then(response => {
-        if (response.status === 200) return response.json();
+        if (response.status === 201) return response.json();
         throw new Error('Create failed');
       });
 }
@@ -133,7 +134,7 @@ function requestDelete(id) {
 
   return fetch(`${RESERVATION_API_ENDPOINT}/${id}`, requestOptions)
       .then(response => {
-        if (response.status !== 200) throw new Error('Delete failed');
+        if (response.status !== 204) throw new Error('Delete failed');
       });
 }
 

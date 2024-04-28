@@ -21,7 +21,7 @@ public class DatabaseTest {
     void Database_Connection_Test() {
         try (Connection connection = jdbcTemplate.getDataSource().getConnection()) {
             assertThat(connection).isNotNull();
-            assertThat(connection.getCatalog()).isEqualTo("DATABASE");
+            assertThat(connection.getCatalog()).isEqualTo("TEST");
             assertThat(connection.getMetaData().getTables(null, null, "RESERVATION", null).next()).isTrue();
             assertThat(connection.getMetaData().getTables(null, null, "RESERVATION_TIME", null).next()).isTrue();
         } catch (SQLException e) {

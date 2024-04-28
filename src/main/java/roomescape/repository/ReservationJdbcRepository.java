@@ -13,15 +13,20 @@ import roomescape.domain.Reservation;
 import roomescape.domain.ReservationTime;
 
 @Repository
-public class ReservationH2Repository implements ReservationRepository {
+public class ReservationJdbcRepository implements ReservationRepository {
 
     private static final RowMapper<Reservation> RESERVATION_ROW_MAPPER = (resultSet, rowNum) -> new Reservation(
-            resultSet.getLong("id"), resultSet.getString("name"), resultSet.getObject("date", LocalDate.class),
-            new ReservationTime(resultSet.getLong("time_id"), resultSet.getTime("time_value").toLocalTime()));
+            resultSet.getLong("id"),
+            resultSet.getString("name"),
+            resultSet.getObject("date", LocalDate.class),
+            new ReservationTime(
+                    resultSet.getLong("time_id"),
+                    resultSet.getTime("time_value").toLocalTime())
+    );
 
     private final JdbcTemplate jdbcTemplate;
 
-    public ReservationH2Repository(JdbcTemplate jdbcTemplate) {
+    public ReservationJdbcRepository(JdbcTemplate jdbcTemplate) {
         this.jdbcTemplate = jdbcTemplate;
     }
 

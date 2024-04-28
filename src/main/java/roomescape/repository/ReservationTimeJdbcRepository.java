@@ -11,15 +11,16 @@ import org.springframework.stereotype.Repository;
 import roomescape.domain.ReservationTime;
 
 @Repository
-public class ReservationTimeH2Repository implements ReservationTimeRepository {
+public class ReservationTimeJdbcRepository implements ReservationTimeRepository {
 
     private static final RowMapper<ReservationTime> RESERVATION_TIME_ROW_MAPPER = (resultSet, rowNum) -> new ReservationTime(
             resultSet.getLong("id"),
-            resultSet.getObject("start_at", LocalTime.class));
+            resultSet.getObject("start_at", LocalTime.class)
+    );
 
     private final JdbcTemplate jdbcTemplate;
 
-    public ReservationTimeH2Repository(JdbcTemplate jdbcTemplate) {
+    public ReservationTimeJdbcRepository(JdbcTemplate jdbcTemplate) {
         this.jdbcTemplate = jdbcTemplate;
     }
 

@@ -21,7 +21,7 @@ public class InMemoryReservationTimeDb {
         if (reservationTimes.containsKey(id)) {
             return reservationTimes.get(id);
         }
-        throw new EmptyResultDataAccessException(1);
+        throw new EmptyResultDataAccessException("time id doesnt exist", 1);
     }
 
     public long insert(String startAt) {

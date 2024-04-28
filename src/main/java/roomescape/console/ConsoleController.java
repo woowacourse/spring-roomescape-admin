@@ -1,5 +1,6 @@
 package roomescape.console;
 
+import org.springframework.dao.EmptyResultDataAccessException;
 import roomescape.dto.ReservationRequest;
 import roomescape.dto.ReservationResponse;
 import roomescape.dto.ReservationTimeRequest;
@@ -50,8 +51,13 @@ public class ConsoleController {
 
     private void createReservation() {
         ReservationRequest reservationRequest = InputView.inputReservationRequest();
-        ReservationResponse response = reservationService.save(reservationRequest);
-        OutputView.printReservationResponse(response);
+        try {
+            ReservationResponse response = reservationService.save(reservationRequest);
+            OutputView.printReservationResponse(response);
+        } catch (EmptyResultDataAccessException e) {
+            OutputView.printErrorMessage(e.getMessage());
+            createReservation();
+        }
     }
 
     private void deleteReservation() {

@@ -28,7 +28,7 @@ class ReservationDaoTest {
         Reservation reservation = new Reservation("범블비", LocalDate.now(), 1L);
         reservationDao.save(reservation);
 
-        Assertions.assertThat(reservation).isNotNull();
+        Assertions.assertThat(reservation.getId()).isNotEqualTo(0);
     }
 
     @Test

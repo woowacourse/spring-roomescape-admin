@@ -44,8 +44,8 @@ public class RoomEscapeConsoleController {
         return newCommand;
     }
 
-    private void execute(Command newCommand) {
-        switch (newCommand) {
+    private void execute(Command command) {
+        switch (command) {
             case READ_ALL_RESERVATIONS -> printReservations();
             case READ_ALL_RESERVATIONS_TIMES -> printReservationTimes();
             case CREATE_RESERVATION -> createReservation();

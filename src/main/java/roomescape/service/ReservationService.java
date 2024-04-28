@@ -21,7 +21,7 @@ public class ReservationService {
     }
 
     public List<ReservationResponse> findAll() {
-        List<Reservation> reservations = reservationDao.findAll();
+        List<Reservation> reservations = reservationDao.readAll();
         return reservations.stream()
                 .map(ReservationResponse::from)
                 .toList();
@@ -29,10 +29,9 @@ public class ReservationService {
 
     public ReservationResponse add(ReservationCreateRequest request) {
         validateNotExistReservationTime(request.getTimeId());
-        ReservationTime reservationTime = reservationTimeDao.findById(request.getTimeId());
+        ReservationTime reservationTime = reservationTimeDao.readById(request.getTimeId());
         Reservation reservation = request.toDomain(reservationTime);
-        long id = reservationDao.add(reservation);
-        Reservation result = reservationDao.findById(id);
+        Reservation result = reservationDao.create(reservation);
         return ReservationResponse.from(result);
     }
 

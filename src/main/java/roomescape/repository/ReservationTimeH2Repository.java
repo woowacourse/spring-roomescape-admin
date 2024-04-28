@@ -13,7 +13,7 @@ import roomescape.domain.ReservationTime;
 @Repository
 public class ReservationTimeH2Repository implements ReservationTimeRepository {
 
-    private static final RowMapper<ReservationTime> reservationTimeRowMapper = (resultSet, rowNum) -> new ReservationTime(
+    private static final RowMapper<ReservationTime> RESERVATION_TIME_ROW_MAPPER = (resultSet, rowNum) -> new ReservationTime(
             resultSet.getLong("id"),
             resultSet.getObject("start_at", LocalTime.class));
 
@@ -26,13 +26,13 @@ public class ReservationTimeH2Repository implements ReservationTimeRepository {
     @Override
     public List<ReservationTime> findAll() {
         String sql = "SELECT * FROM reservation_time";
-        return jdbcTemplate.query(sql, reservationTimeRowMapper);
+        return jdbcTemplate.query(sql, RESERVATION_TIME_ROW_MAPPER);
     }
 
     @Override
     public ReservationTime findById(Long id) {
         String sql = "SELECT * FROM reservation_time WHERE id = ?";
-        return jdbcTemplate.queryForObject(sql, reservationTimeRowMapper, id);
+        return jdbcTemplate.queryForObject(sql, RESERVATION_TIME_ROW_MAPPER, id);
     }
 
     @Override

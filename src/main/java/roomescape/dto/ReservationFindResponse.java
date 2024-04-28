@@ -7,7 +7,8 @@ public record ReservationFindResponse(
         Long id,
         String name,
         LocalDate date,
-        ReservationTimeFindResponse time) {
+        ReservationTimeFindResponse time
+) {
 
     public static ReservationFindResponse from(Reservation reservation) {
         return new ReservationFindResponse(

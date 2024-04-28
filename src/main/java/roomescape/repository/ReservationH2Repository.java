@@ -15,7 +15,7 @@ import roomescape.domain.ReservationTime;
 @Repository
 public class ReservationH2Repository implements ReservationRepository {
 
-    private static final RowMapper<Reservation> reservationRowMapper = (resultSet, rowNum) -> new Reservation(
+    private static final RowMapper<Reservation> RESERVATION_ROW_MAPPER = (resultSet, rowNum) -> new Reservation(
             resultSet.getLong("id"), resultSet.getString("name"), resultSet.getObject("date", LocalDate.class),
             new ReservationTime(resultSet.getLong("time_id"), resultSet.getTime("time_value").toLocalTime()));
 
@@ -34,7 +34,7 @@ public class ReservationH2Repository implements ReservationRepository {
                 on r.time_id = t.id
                 """;
 
-        return jdbcTemplate.query(sql, reservationRowMapper);
+        return jdbcTemplate.query(sql, RESERVATION_ROW_MAPPER);
     }
 
     @Override

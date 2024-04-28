@@ -6,7 +6,8 @@ import roomescape.domain.ReservationTime;
 
 public record ReservationTimeSaveRequest(
         @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "HH:mm")
-        LocalTime startAt) {
+        LocalTime startAt
+) {
 
     public ReservationTime toEntity() {
         return new ReservationTime(null, this.startAt);

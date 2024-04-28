@@ -52,6 +52,7 @@ public class RoomEscapeConsoleController {
             case CREATE_RESERVATIONS_TIME -> createReservationTime();
             case DELETE_RESERVATION -> deleteReservation();
             case DELETE_RESERVATIONS_TIME -> deleteReservationTime();
+            default -> throw new UnsupportedOperationException("지원하지 않는 명령입니다. : " + command);
         }
     }
 

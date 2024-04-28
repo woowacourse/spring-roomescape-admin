@@ -9,32 +9,33 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
-import roomescape.controller.dto.GameTimeCreateRequest;
-import roomescape.controller.dto.GameTimeCreateResponse;
+import roomescape.controller.dto.ReservationTimeCreateRequest;
+import roomescape.controller.dto.ReservationTimeCreateResponse;
 import roomescape.entity.ReservationTime;
 import roomescape.service.GameTimeService;
 
 @RequestMapping("/times")
 @RestController
-public class GameTimeController {
+public class ReservationTimeController {
     private final GameTimeService gameTimeService;
 
-    public GameTimeController(GameTimeService gameTimeService) {
+    public ReservationTimeController(GameTimeService gameTimeService) {
         this.gameTimeService = gameTimeService;
     }
 
     @GetMapping()
-    public ResponseEntity<List<GameTimeCreateResponse>> readAllTimes() {
-        List<GameTimeCreateResponse> gameTimes = gameTimeService.readAll().stream()
-                .map(GameTimeCreateResponse::from)
+    public ResponseEntity<List<ReservationTimeCreateResponse>> readAllTimes() {
+        List<ReservationTimeCreateResponse> gameTimes = gameTimeService.readAll().stream()
+                .map(ReservationTimeCreateResponse::from)
                 .toList();
         return ResponseEntity.ok().body(gameTimes);
     }
 
     @PostMapping()
-    public ResponseEntity<GameTimeCreateResponse> createGameTime(@RequestBody GameTimeCreateRequest request) {
+    public ResponseEntity<ReservationTimeCreateResponse> createGameTime(
+            @RequestBody ReservationTimeCreateRequest request) {
         ReservationTime saved = gameTimeService.save(request.toEntity());
-        return ResponseEntity.ok().body(GameTimeCreateResponse.from(saved));
+        return ResponseEntity.ok().body(ReservationTimeCreateResponse.from(saved));
     }
 
     @DeleteMapping("/{id}")

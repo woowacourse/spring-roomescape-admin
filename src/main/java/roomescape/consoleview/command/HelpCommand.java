@@ -7,12 +7,17 @@ import roomescape.controller.ReservationTimeController;
 
 public class HelpCommand implements Command {
 
+    private final OutputView outputView;
+
+    public HelpCommand() {
+        this.outputView = OutputView.getInstance();
+    }
+
     @Override
     public void execute(
         List<String> arguments,
         ReservationController reservationController,
-        ReservationTimeController reservationTimeController,
-        OutputView outputView) {
+        ReservationTimeController reservationTimeController) {
 
         outputView.printHelp();
     }

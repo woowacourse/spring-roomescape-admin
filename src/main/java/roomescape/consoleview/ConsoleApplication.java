@@ -17,8 +17,8 @@ import roomescape.service.ReservationTimeService;
 
 public class ConsoleApplication {
 
-    private static final InputView INPUT_VIEW = new InputView();
-    private static final OutputView OUTPUT_VIEW = new OutputView();
+    private static final InputView INPUT_VIEW = InputView.getInstance();
+    private static final OutputView OUTPUT_VIEW = OutputView.getInstance();
 
     public static void main(String[] args) {
         while (true) {
@@ -39,8 +39,7 @@ public class ConsoleApplication {
             arguments,
             new ReservationController(new ReservationService(MemoryReservationRepository.getInstance(),
                 MemoryReservationTimeRepository.getInstance())),
-            new ReservationTimeController(new ReservationTimeService(MemoryReservationTimeRepository.getInstance())),
-            OUTPUT_VIEW
+            new ReservationTimeController(new ReservationTimeService(MemoryReservationTimeRepository.getInstance()))
         );
     }
 

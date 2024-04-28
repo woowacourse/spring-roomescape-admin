@@ -4,10 +4,16 @@ import java.util.Scanner;
 
 public class InputView {
 
+    private static final InputView INSTANCE = new InputView();
+
     private final Scanner scanner;
 
-    public InputView() {
+    private InputView() {
         this.scanner = new Scanner(System.in);
+    }
+
+    public static InputView getInstance() {
+        return INSTANCE;
     }
 
     public String readCommand() {

@@ -11,12 +11,17 @@ public class DeleteCommand implements Command {
     private static final String TIME = "time";
     private static final int DELETE_ARGS = 2;
 
+    private final OutputView outputView;
+
+    public DeleteCommand() {
+        this.outputView = OutputView.getInstance();
+    }
+
     @Override
     public void execute(
         List<String> arguments,
         ReservationController reservationController,
-        ReservationTimeController reservationTimeController,
-        OutputView outputView) {
+        ReservationTimeController reservationTimeController) {
 
         validateArguments(arguments);
 

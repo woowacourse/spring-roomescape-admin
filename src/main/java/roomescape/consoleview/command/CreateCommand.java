@@ -14,12 +14,17 @@ public class CreateCommand implements Command {
     private static final int CREATE_RESERVATION_ARGS = 4;
     private static final int CREATE_TIME_ARGS = 2;
 
+    private final OutputView outputView;
+
+    public CreateCommand() {
+        this.outputView = OutputView.getInstance();
+    }
+
     @Override
     public void execute(
         List<String> arguments,
         ReservationController reservationController,
-        ReservationTimeController reservationTimeController,
-        OutputView outputView) {
+        ReservationTimeController reservationTimeController) {
 
         validateArguments(arguments);
 

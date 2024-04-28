@@ -6,6 +6,16 @@ import roomescape.controller.dto.FindReservationTimeResponse;
 
 public class OutputView {
 
+    private static final OutputView INSTANCE = new OutputView();
+
+    private OutputView() {
+
+    }
+
+    public static OutputView getInstance() {
+        return INSTANCE;
+    }
+
     public void printHelp() {
         System.out.println("""
             [도움말 명령어]

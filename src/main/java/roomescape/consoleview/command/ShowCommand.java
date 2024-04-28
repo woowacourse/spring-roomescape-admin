@@ -11,12 +11,17 @@ public class ShowCommand implements Command {
     private static final String TIME = "time";
     private static final int SHOW_ARGS = 1;
 
+    private final OutputView outputView;
+
+    public ShowCommand() {
+        this.outputView = OutputView.getInstance();
+    }
+
     @Override
     public void execute(
         List<String> arguments,
         ReservationController reservationController,
-        ReservationTimeController reservationTimeController,
-        OutputView outputView) {
+        ReservationTimeController reservationTimeController) {
 
         validateArguments(arguments);
 

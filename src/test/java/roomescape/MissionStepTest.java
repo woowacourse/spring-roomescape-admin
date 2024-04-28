@@ -13,6 +13,7 @@ import java.sql.SQLException;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -30,16 +31,18 @@ class MissionStepTest {
     @Autowired
     private ReservationController reservationController;
 
+    @DisplayName("인덱스 페이지가 정상적으로 출력되는 지 확인")
     @Test
-    void 일단계() {
+    void indexPage() {
         RestAssured.given().log().all()
                 .when().get("/")
                 .then().log().all()
                 .statusCode(200);
     }
 
+    @DisplayName("reservation 페이지가 정상적으로 출력되는 지 확인")
     @Test
-    void 이단계() {
+    void reservationPage() {
         RestAssured.given().log().all()
                 .when().get("/admin/reservation")
                 .then().log().all()
@@ -52,8 +55,9 @@ class MissionStepTest {
                 .body("size()", is(0));
     }
 
+    @DisplayName("예약 추가 및 삭제가 정상적으로 이루어지는 지 확인")
     @Test
-    void 삼단계() {
+    void reservationSaveAndDelete() {
         Map<String, String> params = new HashMap<>();
         params.put("name", "브라운");
         params.put("date", "2023-08-05");
@@ -87,8 +91,9 @@ class MissionStepTest {
                 .body("size()", is(0));
     }
 
+    @DisplayName("데이터베이스 연결이 정상적으로 이루어지는 지 확인")
     @Test
-    void 사단계() {
+    void connectDateBase() {
         try (Connection connection = jdbcTemplate.getDataSource().getConnection()) {
             assertThat(connection).isNotNull();
             assertThat(connection.getCatalog()).isEqualTo("DATABASE");
@@ -98,8 +103,9 @@ class MissionStepTest {
         }
     }
 
+    @DisplayName("현재 저장되어 있는 예약 목록을 정상적으로 반환하는 지 확인")
     @Test
-    void 오단계() {
+    void getReservations() {
         jdbcTemplate.update("INSERT INTO reservation (name, date, time_id) VALUES (?, ?, ?)", "brown", "2023-08-05", "1");
 
         List<Reservation> reservations = RestAssured.given().log().all()
@@ -113,35 +119,9 @@ class MissionStepTest {
         assertThat(reservations.size()).isEqualTo(count);
     }
 
+    @DisplayName("예약 시간 추가 및 삭제가 정상적으로 이루어지는 지 확인")
     @Test
-    void 육단계() {
-        Map<String, String> params = new HashMap<>();
-        params.put("name", "브라운");
-        params.put("date", "2023-08-05");
-        params.put("timeId", "1");
-
-        RestAssured.given().log().all()
-                .contentType(ContentType.JSON)
-                .body(params)
-                .when().post("/reservations")
-                .then().log().all()
-                .statusCode(201)
-                .header("Location", "/reservations/1");
-
-        Integer count = jdbcTemplate.queryForObject("SELECT count(1) from reservation", Integer.class);
-        assertThat(count).isEqualTo(1);
-
-        RestAssured.given().log().all()
-                .when().delete("/reservations/1")
-                .then().log().all()
-                .statusCode(204);
-
-        Integer countAfterDelete = jdbcTemplate.queryForObject("SELECT count(1) from reservation", Integer.class);
-        assertThat(countAfterDelete).isEqualTo(0);
-    }
-
-    @Test
-    void 칠단계() {
+    void reservationTimeSaveAndDelete() {
         Map<String, String> params = new HashMap<>();
         params.put("startAt", "10:00");
 
@@ -166,8 +146,9 @@ class MissionStepTest {
                 .statusCode(204);
     }
 
+    @DisplayName("예약 추가가 정상적으로 이루어지는 지 확인")
     @Test
-    void 팔단계() {
+    void reservationSave() {
         Map<String, Object> reservation = new HashMap<>();
         reservation.put("name", "브라운");
         reservation.put("date", "2023-08-05");
@@ -188,8 +169,9 @@ class MissionStepTest {
                 .body("size()", is(1));
     }
 
+    @DisplayName("계층 분리 여부 확인")
     @Test
-    void 구단계() {
+    void layeredArchitecture() {
         boolean isJdbcTemplateInjected = false;
 
         for (Field field : reservationController.getClass().getDeclaredFields()) {

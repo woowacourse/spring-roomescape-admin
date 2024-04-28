@@ -9,7 +9,6 @@ import org.springframework.boot.test.autoconfigure.jdbc.JdbcTest;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.test.annotation.DirtiesContext;
 import roomescape.reservation.dao.ReservationDao;
-import roomescape.reservation.domain.repository.ReservationRepository;
 import roomescape.reservation.dto.ReservationRequestDto;
 import roomescape.reservation.dto.ReservationResponseDto;
 import roomescape.reservation.service.ReservationService;
@@ -32,8 +31,8 @@ class ReservationServiceTest {
 
     @BeforeEach
     void init() {
-        ReservationRepository reservationRepository = new ReservationRepository(new ReservationDao(jdbcTemplate, dataSource));
-        reservationService = new ReservationService(reservationRepository);
+        ReservationDao reservationDao = new ReservationDao(jdbcTemplate, dataSource);
+        reservationService = new ReservationService(reservationDao);
     }
 
     @DisplayName("예약 정보 삽입 테스트")

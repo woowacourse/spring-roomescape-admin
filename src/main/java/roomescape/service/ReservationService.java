@@ -23,7 +23,7 @@ public class ReservationService {
 
     public List<ReservationResponseDto> findAll() {
         return reservationDao.findAll().stream()
-                .map(reservation -> reservation.toDto())
+                .map(Reservation::toDto)
                 .toList();
     }
 

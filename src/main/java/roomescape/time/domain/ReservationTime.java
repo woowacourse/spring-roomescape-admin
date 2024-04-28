@@ -9,8 +9,12 @@ public class ReservationTime {
     }
 
     public ReservationTime(final long id, final ReservationTime reservationTime) {
+        this(id, reservationTime.getStartAt());
+    }
+
+    public ReservationTime(final Long id, final String startAt) {
         this.id = id;
-        this.startAt = reservationTime.startAt;
+        this.startAt = startAt;
     }
 
     public Long getId() {

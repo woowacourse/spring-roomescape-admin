@@ -1,11 +1,13 @@
 package roomescape.time.controller;
 
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
 import roomescape.time.dto.ReservationTimeRequestDto;
 import roomescape.time.dto.ReservationTimeResponseDto;
+import roomescape.time.dto.ReservationTimesResponseDto;
 import roomescape.time.service.ReservationTimeService;
 
 import java.net.URI;
@@ -20,6 +22,13 @@ public class ReservationTimeController {
     }
 
     // TODO: Controller 메서드 명 깔끔하게 수정
+    @GetMapping("/times")
+    public ResponseEntity<ReservationTimesResponseDto> getReservationTimes() {
+        ReservationTimesResponseDto response = reservationTimeService.findAllReservationTime();
+
+        return ResponseEntity.ok(response);
+    }
+
     @PostMapping("/times")
     public ResponseEntity<ReservationTimeResponseDto> addReservationTime(@RequestBody final ReservationTimeRequestDto request) {
         ReservationTimeResponseDto response = reservationTimeService.addReservationTime(request);

@@ -31,7 +31,7 @@ public class ReservationDao {
     }
 
     public List<Reservation> findAll() {
-        return jdbcTemplate.query("SELECT * FROM reservation", reservationRowMapper);
+        return jdbcTemplate.query("SELECT * FROM reservation", ROW_MAPPER);
     }
 
     public int deleteById(final Long id) {
@@ -41,7 +41,7 @@ public class ReservationDao {
         return updateCount;
     }
 
-    private final RowMapper<Reservation> reservationRowMapper = (rs, rowNum) -> {
+    private static final RowMapper<Reservation> ROW_MAPPER = (rs, rowNum) -> {
         Reservation reservation = new Reservation(
                 rs.getLong("id"),
                 rs.getString("name"),

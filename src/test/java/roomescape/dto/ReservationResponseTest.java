@@ -2,7 +2,7 @@ package roomescape.dto;
 
 import org.junit.jupiter.api.Test;
 import roomescape.domain.Reservation;
-import roomescape.domain.Time;
+import roomescape.domain.ReservationTime;
 
 import java.time.LocalDate;
 import java.time.LocalTime;
@@ -15,7 +15,7 @@ class ReservationResponseTest {
         ReservationResponse response = new ReservationResponse(1L, "abc", LocalDate.of(2024, 4, 23)
                 , 1L, LocalTime.of(13, 45));
         Reservation target = new Reservation(1L, "abc", LocalDate.of(2024, 4, 23)
-                , new Time(1L, LocalTime.of(13, 45)));
+                , new ReservationTime(1L, LocalTime.of(13, 45)));
         Reservation reservation = response.toReservation();
 
         assertThat(reservation).usingRecursiveComparison().isEqualTo(target);

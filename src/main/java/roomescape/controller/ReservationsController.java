@@ -4,7 +4,7 @@ import org.springframework.web.bind.annotation.*;
 import roomescape.domain.Reservation;
 import roomescape.dto.ReservationRequest;
 import roomescape.service.ReservationService;
-import roomescape.service.TimeManagementService;
+import roomescape.service.ReservationTimeService;
 
 import java.util.List;
 
@@ -13,11 +13,11 @@ import java.util.List;
 public class ReservationsController {
 
     private final ReservationService reservationService;
-    private final TimeManagementService timeManagementService;
+    private final ReservationTimeService reservationTimeService;
 
-    public ReservationsController(ReservationService reservationService, TimeManagementService timeManagementService) {
+    public ReservationsController(ReservationService reservationService, ReservationTimeService reservationTimeService) {
         this.reservationService = reservationService;
-        this.timeManagementService = timeManagementService;
+        this.reservationTimeService = reservationTimeService;
     }
 
     @GetMapping
@@ -27,7 +27,7 @@ public class ReservationsController {
 
     @PostMapping
     public Reservation create(@RequestBody ReservationRequest reservationRequest) {
-        return reservationService.create(reservationRequest, timeManagementService.findById(reservationRequest));
+        return reservationService.create(reservationRequest, reservationTimeService.findById(reservationRequest));
     }
 
     @DeleteMapping("/{id}")

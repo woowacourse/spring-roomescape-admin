@@ -24,6 +24,8 @@ public class OutputView {
     public void printAllReservations(List<ReservationResponse> allReservations) {
         if (allReservations.size() == 0) {
             System.out.println("존재하는 예약이없습니다.");
+            System.out.println();
+            return;
         }
         System.out.println("[예약 목록]");
         for (ReservationResponse response : allReservations) {
@@ -37,11 +39,12 @@ public class OutputView {
             );
             System.out.println();
         }
+        System.out.println();
     }
 
     public void printCreateReservationSuccessMessage(ReservationResponse response) {
         System.out.printf(
-                "id: %s, name: %s, date: %s, time-id: %d, start-at: %s",
+                "예약 생성이 완료되었습니다.\n생성된 예약 정보 - id: %s, name: %s, date: %s, time-id: %d, start-at: %s\n",
                 response.id(),
                 response.name(),
                 response.date(),
@@ -52,13 +55,15 @@ public class OutputView {
     }
 
     public void printDeleteReservationSuccessMessage() {
-        System.out.printf("예약 삭제가 완료되었습니다.");
+        System.out.println("예약 삭제가 완료되었습니다.");
         System.out.println();
     }
 
     public void printAllReservationTimes(List<ReservationTimeResponse> allReservationTimes) {
         if (allReservationTimes.size() == 0) {
             System.out.println("존재하는 예약 시간이없습니다.");
+            System.out.println();
+            return;
         }
         System.out.println("[예약시간 목록]");
         for (ReservationTimeResponse response : allReservationTimes) {
@@ -69,12 +74,13 @@ public class OutputView {
     }
 
     public void printCreateTimeSuccessMessage(ReservationTimeResponse response) {
-        System.out.printf("예약 시간 생성이 완료되었습니다. id: %d, start-at: %s", response.id(), response.startAt());
+        System.out.printf("예약 시간 생성이 완료되었습니다.\n생성된 예약시간 정보 - id: %d, start-at: %s\n", response.id(),
+                response.startAt());
         System.out.println();
     }
 
     public void printDeleteTimeSuccessMessage() {
-        System.out.printf("예약 시간 삭제가 완료되었습니다.");
+        System.out.println("예약 시간 삭제가 완료되었습니다.");
         System.out.println();
     }
 }

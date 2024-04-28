@@ -26,15 +26,35 @@ public class InputView {
         return readString();
     }
 
+    public Long readRemoveTimeId() {
+        System.out.println("삭제할 시간의 ID를 입력해주세요.");
+        return readLong();
+    }
+
     private String readString() {
         String value = scanner.next();
         validateBlank(value);
         return value;
     }
 
+    private Long readLong() {
+        String value = scanner.next();
+        validateBlank(value);
+        validateLong(value);
+        return Long.parseLong(value);
+    }
+
     private void validateBlank(String value) {
         if (value == null || value.isBlank()) {
             throw new IllegalArgumentException("빈 값을 입력했습니다.");
+        }
+    }
+
+    private void validateLong(String value) {
+        try {
+            Long.getLong(value);
+        } catch (NumberFormatException e) {
+            throw new IllegalArgumentException("잘못된 값을 입력했습니다.");
         }
     }
 }

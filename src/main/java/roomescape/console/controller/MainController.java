@@ -34,10 +34,15 @@ public class MainController {
             handleTimeAdd();
             return;
         }
+        if (menu.equals("3")) {
+            handleDeleteTime();
+            return;
+        }
         if (menu.equals("5")) {
             handleCheckTime();
             return;
         }
+
     }
 
     private void handleTimeAdd() {
@@ -50,5 +55,11 @@ public class MainController {
     private void handleCheckTime() {
         List<TimesResponse> allTimes = roomescapeService.findAllTimes();
         outputView.printTimes(allTimes);
+    }
+
+    private void handleDeleteTime() {
+        Long id = inputView.readRemoveTimeId();
+        int count = roomescapeService.removeTime(id);
+        outputView.printDelete(count);
     }
 }

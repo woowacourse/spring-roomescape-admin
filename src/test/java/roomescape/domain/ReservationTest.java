@@ -3,10 +3,12 @@ package roomescape.domain;
 import java.time.LocalDate;
 import java.time.LocalTime;
 import org.assertj.core.api.Assertions;
+import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 
 class ReservationTest {
 
+    @DisplayName("id값이 존재하는지 검증한다.")
     @Test
     void validateId() {
         ReservationTime reservationTime = new ReservationTime(1L, LocalTime.of(10, 0));

@@ -1,21 +1,20 @@
-package roomescape.domain;
+package roomescape.dto;
 
 import java.time.LocalDate;
-import java.time.LocalTime;
 
 public class ReservationAddRequest {
     private LocalDate date;
     private String name;
-    private LocalTime time;
+    private Long timeId;
 
     public ReservationAddRequest() {
 
     }
 
-    public ReservationAddRequest(LocalDate date, String name, LocalTime time) {
+    public ReservationAddRequest(LocalDate date, String name, Long timeId) {
         this.date = date;
         this.name = name;
-        this.time = time;
+        this.timeId = timeId;
     }
 
     public LocalDate getDate() {
@@ -26,7 +25,7 @@ public class ReservationAddRequest {
         return name;
     }
 
-    public LocalTime getTime() {
-        return time;
+    public Long getTimeId() {
+        return timeId;
     }
 }

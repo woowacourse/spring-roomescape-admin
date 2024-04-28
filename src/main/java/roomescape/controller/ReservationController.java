@@ -1,9 +1,7 @@
 package roomescape.controller;
 
-import java.util.ArrayList;
+import java.net.URI;
 import java.util.List;
-import java.util.Optional;
-import java.util.concurrent.atomic.AtomicLong;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -12,38 +10,32 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
 import roomescape.domain.Reservation;
-import roomescape.domain.ReservationAddRequest;
+import roomescape.dto.ReservationAddRequest;
+import roomescape.service.ReservationService;
 
 @RestController
 public class ReservationController {
 
-    private final List<Reservation> reservations = new ArrayList<>();
-    private final AtomicLong index = new AtomicLong(1);
+    private final ReservationService reservationService;
+
+    public ReservationController(ReservationService reservationService) {
+        this.reservationService = reservationService;
+    }
 
     @GetMapping("/reservations")
-    public List<Reservation> getReservationList() {
-        return reservations;
+    public ResponseEntity<List<Reservation>> getReservationList() {
+        return ResponseEntity.ok(reservationService.findAllReservation());
     }
 
     @PostMapping("/reservations")
-    public Reservation addReservation(@RequestBody ReservationAddRequest reservationAddRequest) {
-        Reservation reservation = new Reservation(index.getAndIncrement(), reservationAddRequest.getName(),
-                reservationAddRequest.getDate(), reservationAddRequest.getTime());
-        reservations.add(reservation);
-        return reservation;
+    public ResponseEntity<Reservation> addReservation(@RequestBody ReservationAddRequest reservationAddRequest) {
+        Reservation reservation = reservationService.addReservation(reservationAddRequest);
+        return ResponseEntity.created(URI.create("/reservation/" + reservation.getId())).body(reservation);
     }
 
     @DeleteMapping("/reservations/{id}")
     public ResponseEntity<Void> removeReservation(@PathVariable("id") Long id) {
-        Optional<Reservation> reservationOptional = reservations.stream()
-                .filter(it -> it.equalId(id))
-                .findFirst();
-
-        if (reservationOptional.isPresent()) {
-            reservations.remove(reservationOptional.get());
-            return ResponseEntity.ok().build();
-        }
-
-        return ResponseEntity.notFound().build();
+        reservationService.removeReservation(id);
+        return ResponseEntity.noContent().build();
     }
 }

@@ -2,6 +2,7 @@ package roomescape.service;
 
 import java.util.List;
 import org.springframework.stereotype.Service;
+import roomescape.domain.DeletedCount;
 import roomescape.domain.ReservationDao;
 import roomescape.domain.ReservationTimeDao;
 import roomescape.dto.ReservationRequest;
@@ -46,8 +47,8 @@ public class ReservationService {
     }
 
     public void deleteById(long id) {
-        int isDelete = reservationDao.deleteById(id);
-        if (isDelete < 1) {
+        DeletedCount deletedCount = reservationDao.deleteById(id);
+        if (deletedCount.isNotDelete()) {
             throw new IllegalArgumentException("해당 id는 존재하지 않습니다. id = %d".formatted(id));
         }
     }

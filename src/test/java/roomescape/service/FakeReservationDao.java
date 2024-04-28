@@ -4,6 +4,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.concurrent.atomic.AtomicLong;
+import roomescape.domain.DeletedCount;
 import roomescape.domain.Reservation;
 import roomescape.domain.ReservationDao;
 
@@ -30,12 +31,12 @@ public class FakeReservationDao implements ReservationDao {
     }
 
     @Override
-    public int deleteById(long id) {
+    public DeletedCount deleteById(long id) {
         Reservation reservation = fakeReservationDB.remove(id);
         if (reservation != null) {
-            return 1;
+            return new DeletedCount(1);
         }
-        return 0;
+        return new DeletedCount(0);
     }
 
     @Override

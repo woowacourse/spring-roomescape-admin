@@ -7,6 +7,7 @@ import org.springframework.jdbc.core.namedparam.MapSqlParameterSource;
 import org.springframework.jdbc.core.namedparam.SqlParameterSource;
 import org.springframework.jdbc.core.simple.SimpleJdbcInsert;
 import org.springframework.stereotype.Repository;
+import roomescape.domain.DeletedCount;
 import roomescape.domain.ReservationTime;
 import roomescape.domain.ReservationTimeDao;
 
@@ -42,9 +43,9 @@ public class JdbcReservationTimeDao implements ReservationTimeDao {
         return jdbcInsert.executeAndReturnKey(parameterSource).longValue();
     }
 
-    public int deleteById(long id) {
+    public DeletedCount deleteById(long id) {
         String sql = "DELETE FROM reservation_time WHERE id = ?";
-        return jdbcTemplate.update(sql, id);
+        return new DeletedCount(jdbcTemplate.update(sql, id));
     }
 
     @Override

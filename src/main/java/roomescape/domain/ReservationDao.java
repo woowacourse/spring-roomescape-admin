@@ -1,7 +1,6 @@
 package roomescape.domain;
 
 import java.util.List;
-import roomescape.domain.Reservation;
 
 public interface ReservationDao {
 
@@ -11,7 +10,7 @@ public interface ReservationDao {
 
     long save(Reservation reservation);
 
-    int deleteById(long id);
+    DeletedCount deleteById(long id);
 
     void deleteAll();
 }

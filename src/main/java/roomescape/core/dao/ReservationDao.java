@@ -1,7 +1,7 @@
 package roomescape.core.dao;
 
 import java.util.List;
-import roomescape.web.domain.Reservation;
+import roomescape.core.domain.Reservation;
 
 public interface ReservationDao {
 

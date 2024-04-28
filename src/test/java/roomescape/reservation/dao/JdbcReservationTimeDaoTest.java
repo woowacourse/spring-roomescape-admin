@@ -12,7 +12,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.jdbc.JdbcTest;
 import org.springframework.jdbc.core.JdbcTemplate;
 import roomescape.web.dao.JdbcReservationTimeDao;
-import roomescape.web.domain.ReservationTime;
+import roomescape.core.domain.ReservationTime;
 
 @JdbcTest
 class JdbcReservationTimeDaoTest {

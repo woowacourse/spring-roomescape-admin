@@ -3,8 +3,8 @@ package roomescape.console.util;
 import java.time.LocalDate;
 import java.time.LocalTime;
 import java.util.List;
-import roomescape.web.dto.request.ReservationRequest;
-import roomescape.web.dto.request.ReservationTimeRequest;
+import roomescape.core.dto.request.ReservationRequest;
+import roomescape.core.dto.request.ReservationTimeRequest;
 
 public class InputConverter {
 

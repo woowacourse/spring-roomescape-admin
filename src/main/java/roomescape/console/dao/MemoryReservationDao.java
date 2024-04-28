@@ -5,7 +5,7 @@ import java.util.Collections;
 import java.util.List;
 import java.util.concurrent.atomic.AtomicLong;
 import roomescape.core.dao.ReservationDao;
-import roomescape.web.domain.Reservation;
+import roomescape.core.domain.Reservation;
 
 public class MemoryReservationDao implements ReservationDao {
 

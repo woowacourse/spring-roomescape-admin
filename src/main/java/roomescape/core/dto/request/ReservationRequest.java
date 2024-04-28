@@ -1,8 +1,8 @@
-package roomescape.web.dto.request;
+package roomescape.core.dto.request;
 
 import java.time.LocalDate;
-import roomescape.web.domain.Reservation;
-import roomescape.web.domain.ReservationTime;
+import roomescape.core.domain.Reservation;
+import roomescape.core.domain.ReservationTime;
 
 public record ReservationRequest(String name, LocalDate date, Long timeId) {
 

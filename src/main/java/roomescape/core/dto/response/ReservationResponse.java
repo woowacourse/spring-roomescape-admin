@@ -1,8 +1,8 @@
-package roomescape.web.dto.response;
+package roomescape.core.dto.response;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
 import java.time.LocalDate;
-import roomescape.web.domain.Reservation;
+import roomescape.core.domain.Reservation;
 
 public record ReservationResponse(Long id, String name,
                                   @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd")

@@ -3,42 +3,35 @@ package roomescape.service;
 import java.util.List;
 import org.springframework.stereotype.Service;
 import roomescape.domain.Reservation;
-import roomescape.domain.ReservationTime;
 import roomescape.dto.request.ReservationAddRequest;
 import roomescape.dto.response.ReservationResponse;
+import roomescape.dto.response.ReservationTimeResponse;
 import roomescape.repository.reservation.ReservationRepository;
-import roomescape.repository.reservationtime.ReservationTimeRepository;
 
 @Service
 public class ReservationService {
 
     private final ReservationRepository reservationRepository;
-    private final ReservationTimeRepository reservationTimeRepository;
+    private final ReservationTimeService reservationTimeService;
 
     public ReservationService(
             ReservationRepository reservationRepository,
-            ReservationTimeRepository reservationTimeRepository
+            ReservationTimeService reservationTimeService
     ) {
         this.reservationRepository = reservationRepository;
-        this.reservationTimeRepository = reservationTimeRepository;
+        this.reservationTimeService = reservationTimeService;
     }
 
     public ReservationResponse addReservation(ReservationAddRequest reservationAddRequest) {
-        ReservationTime reservationTime = getValidReservationTime(reservationAddRequest);
+        ReservationTimeResponse timeResponse = reservationTimeService.getTime(reservationAddRequest.timeId());
 
         Reservation reservation = new Reservation(
                 reservationAddRequest.name(),
                 reservationAddRequest.date(),
-                reservationTime
+                timeResponse.toReservationTime()
         );
 
         return ReservationResponse.from(reservationRepository.save(reservation));
-    }
-
-    private ReservationTime getValidReservationTime(ReservationAddRequest reservationAddRequest) {
-        Long timeId = reservationAddRequest.timeId();
-        return reservationTimeRepository.findById(timeId)
-                .orElseThrow(() -> new IllegalArgumentException("존재하지 않는 예약 시간입니다. time_id = " + timeId));
     }
 
     public void deleteReservation(Long id) {

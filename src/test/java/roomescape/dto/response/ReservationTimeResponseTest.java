@@ -19,4 +19,15 @@ class ReservationTimeResponseTest {
 
         assertThat(reservationTimeResponse).isEqualTo(expected);
     }
+
+    @Test
+    @DisplayName("ReservationTimeResponse 객체로 ReservationTime을 만든다.")
+    void createReservationTime() {
+        ReservationTimeResponse reservationTimeResponse = new ReservationTimeResponse(1L, "10:00");
+        ReservationTime expected = new ReservationTime(1L, LocalTime.of(10, 0));
+
+        ReservationTime reservationTime = reservationTimeResponse.toReservationTime();
+
+        assertThat(reservationTime).isEqualTo(expected);
+    }
 }

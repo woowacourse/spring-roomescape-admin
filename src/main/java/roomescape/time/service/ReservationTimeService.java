@@ -32,4 +32,12 @@ public class ReservationTimeService {
 
         return new ReservationTimesResponseDto(response);
     }
+
+    public void deleteReservationTimeById(final Long id) {
+        int deleteCount = reservationTimeDao.deleteById(id);
+
+        if (deleteCount == 0) {
+            throw new IllegalArgumentException(String.format("ID %d - ReservationTime 정보가 존재하지 않습니다.", id));
+        }
+    }
 }

@@ -35,6 +35,12 @@ public class ReservationTimeDao {
         return jdbcTemplate.query("SELECT * FROM reservation_time", ROW_MAPPER);
     }
 
+    public int deleteById(final Long id) {
+        int deleteCount = jdbcTemplate.update("DELETE FROM reservation_time WHERE id = (?)", id);
+
+        return deleteCount;
+    }
+
     private static final RowMapper<ReservationTime> ROW_MAPPER = (rs, rowNum) -> {
         ReservationTime reservationTime = new ReservationTime(
                 rs.getLong("id"),

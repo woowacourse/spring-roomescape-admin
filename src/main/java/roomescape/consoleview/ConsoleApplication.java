@@ -15,7 +15,7 @@ import roomescape.repository.MemoryReservationTimeRepository;
 import roomescape.service.ReservationService;
 import roomescape.service.ReservationTimeService;
 
-public class ConsoleRunner {
+public class ConsoleApplication {
 
     private static final InputView INPUT_VIEW = new InputView();
     private static final OutputView OUTPUT_VIEW = new OutputView();

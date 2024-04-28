@@ -30,8 +30,8 @@ public class RoomEscapeConsoleRunner implements CommandLineRunner {
     public void run(String... args) {
         while (true) {
             consoleOutputView.printMessage(MEMU);
-            String s = consoleInputView.getInput();
-            consoleCommandMatcher.findConsoleCommand(s).conduct();
+            String commandInput = consoleInputView.getInput();
+            consoleCommandMatcher.findConsoleCommand(commandInput).conduct();
         }
     }
 }

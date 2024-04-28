@@ -86,7 +86,7 @@
 ## 10단계 콘솔 UI 지원 (선택)
 
 - [x] 시간, 예약 관리 기능을 콘솔에서도 사용할 수 있도록 콘솔 UI를 추가한다.
-  - CommandLineRunner를 구현한다.
+  - Main 클래스로 구현한다.
   - InputView, OutputView를 구현한다.
 - [x] 콘솔 UI를 사용해 생성되는 데이터는 데이터베이스가 아닌 메모리에 저장한다.
   - Repository 계층을 추상화한다.

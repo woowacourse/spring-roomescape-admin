@@ -4,8 +4,8 @@ import java.time.LocalDateTime;
 import java.util.List;
 import org.springframework.stereotype.Service;
 import roomescape.entity.Reservation;
+import roomescape.exception.IllegalReservationTimeException;
 import roomescape.repository.ReservationRepository;
-import roomescape.service.exception.SavedDataConflictWithRequestException;
 
 @Service
 public class ReservationService {
@@ -22,7 +22,7 @@ public class ReservationService {
     public Reservation saveReservation(Reservation reservation) {
         if (isConflict(reservation)) {
             LocalDateTime conflictDateTime = LocalDateTime.of(reservation.getStartDate(), reservation.getStartTime());
-            throw new SavedDataConflictWithRequestException("해당 시간 예약이 이미 존재합니다: " + conflictDateTime);
+            throw new IllegalReservationTimeException("해당 시간 예약이 이미 존재합니다: " + conflictDateTime);
         }
         return reservationRepository.save(reservation);
     }

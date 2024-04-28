@@ -3,8 +3,8 @@ package roomescape.service;
 import java.util.List;
 import org.springframework.stereotype.Service;
 import roomescape.entity.GameTime;
+import roomescape.exception.IllegalReservationTimeException;
 import roomescape.repository.GameTimeRepository;
-import roomescape.service.exception.SavedDataConflictWithRequestException;
 
 @Service
 public class GameTimeService {
@@ -24,7 +24,7 @@ public class GameTimeService {
 
     public GameTime save(GameTime gameTime) {
         if (gameTimeRepository.existByStartAt(gameTime)) {
-            throw new SavedDataConflictWithRequestException("해당 게임 시간은 이미 등록되어 있습니다: " + gameTime.getStartAt());
+            throw new IllegalReservationTimeException("해당 게임 시간은 이미 등록되어 있습니다: " + gameTime.getStartAt());
         }
         return gameTimeRepository.save(gameTime);
     }

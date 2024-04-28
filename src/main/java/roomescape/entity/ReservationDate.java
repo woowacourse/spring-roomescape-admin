@@ -2,8 +2,8 @@ package roomescape.entity;
 
 import java.time.LocalDate;
 import java.util.Objects;
-import roomescape.entity.exception.NullFieldExistException;
-import roomescape.entity.exception.ReservationDateIsPastException;
+import roomescape.exception.IllegalRequestFormException;
+import roomescape.exception.IllegalReservationDateException;
 
 public class ReservationDate {
     private final LocalDate date;
@@ -20,13 +20,13 @@ public class ReservationDate {
 
     private void validateNonNull(LocalDate date) {
         if (date == null) {
-            throw new NullFieldExistException("예약 날짜는 Null일 수 없습니다");
+            throw new IllegalRequestFormException("예약 날짜는 Null일 수 없습니다");
         }
     }
 
     private void validateNonPassedDate(LocalDate date) {
         if (date.isBefore(LocalDate.now())) {
-            throw new ReservationDateIsPastException("예약 날짜는 현재 날짜보다 이전일 수 없습니다 예약날짜: " + date);
+            throw new IllegalReservationDateException("예약 날짜는 현재 날짜보다 이전일 수 없습니다 예약날짜: " + date);
         }
     }
 

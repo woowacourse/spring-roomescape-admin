@@ -1,7 +1,7 @@
 package roomescape.entity;
 
 import java.util.Objects;
-import roomescape.entity.exception.NullFieldExistException;
+import roomescape.exception.IllegalRequestFormException;
 
 public class Name {
     private static final int MIN_LENGTH = 1;
@@ -21,13 +21,13 @@ public class Name {
 
     private void validateNonNull(String name) {
         if (name == null) {
-            throw new NullFieldExistException("예약자 이름은 Null이 될 수 없습니다");
+            throw new IllegalRequestFormException("예약자 이름은 Null이 될 수 없습니다");
         }
     }
 
     private void validateLength(String name) {
         if (MAX_LENGTH < name.length() || name.length() < MIN_LENGTH) {
-            throw new NullFieldExistException(
+            throw new IllegalRequestFormException(
                     "예약자 이름은 " + MIN_LENGTH + "자 이상, " + MAX_LENGTH + "자 미만이어야 합니다: " + name);
         }
     }

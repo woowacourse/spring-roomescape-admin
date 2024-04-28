@@ -8,7 +8,7 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.transaction.annotation.Transactional;
-import roomescape.service.exception.SavedDataConflictWithRequestException;
+import roomescape.exception.IllegalReservationTimeException;
 
 @SpringBootTest
 @Transactional
@@ -21,6 +21,6 @@ class GameTimeServiceTest {
     void gameTimeConflictTest() {
         gameTimeService.save(GAME_TIME_WITH_NO_ID_0300);
         assertThatThrownBy(() -> gameTimeService.save(GAME_TIME_WITH_NO_ID_0300))
-                .isInstanceOf(SavedDataConflictWithRequestException.class);
+                .isInstanceOf(IllegalReservationTimeException.class);
     }
 }

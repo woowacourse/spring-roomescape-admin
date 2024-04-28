@@ -18,7 +18,7 @@ import roomescape.dto.reservationtime.ReservationTimeResponse;
 @Controller
 public class TimeController {
 
-    private ReservationTimeDao reservationTimeDao;
+    private final ReservationTimeDao reservationTimeDao;
 
     public TimeController(ReservationTimeDao reservationTimeDao) {
         this.reservationTimeDao = reservationTimeDao;

@@ -4,6 +4,7 @@ import java.sql.PreparedStatement;
 import java.sql.Time;
 import java.time.LocalTime;
 import java.util.List;
+import org.springframework.dao.DataAccessException;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.dao.IncorrectResultSizeDataAccessException;
 import org.springframework.jdbc.core.JdbcTemplate;
@@ -22,17 +23,21 @@ public class ReservationTimeDao {
     }
 
 
-    public ReservationTime findById(Long timeId) throws IncorrectResultSizeDataAccessException {
-        String sql = "select id, start_at from reservation_time where id = ?";
-        return jdbcTemplate.queryForObject(
-                sql,
-                (resultSet, rowNum) -> {
-                    ReservationTime reservationTime = new ReservationTime(
-                            resultSet.getLong("id"),
-                            resultSet.getTime("start_at")
-                                    .toLocalTime());
-                    return reservationTime;
-                }, timeId);
+    public ReservationTime findById(Long timeId) {
+        try {
+            String sql = "select id, start_at from reservation_time where id = ?";
+            return jdbcTemplate.queryForObject(
+                    sql,
+                    (resultSet, rowNum) -> {
+                        ReservationTime reservationTime = new ReservationTime(
+                                resultSet.getLong("id"),
+                                resultSet.getTime("start_at")
+                                        .toLocalTime());
+                        return reservationTime;
+                    }, timeId);
+        } catch (DataAccessException e) {
+            throw new IllegalStateException("id에 해당하는 예약이 존재하지 않습니다.");
+        }
     }
 
     public List<ReservationTime> findAll() {

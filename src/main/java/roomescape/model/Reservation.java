@@ -19,17 +19,11 @@ public class Reservation {
     }
 
     public Reservation(final Long id, final String name, final String date, final Long timeId, final String startAt) {
-        this.id = id;
-        this.name = name;
-        this.date = LocalDate.parse(date);
-        this.time = new ReservationTime(timeId, LocalTime.parse(startAt));
+        this(id, name, LocalDate.parse(date), new ReservationTime(timeId, LocalTime.parse(startAt)));
     }
 
     public Reservation(final String name, final String date, final ReservationTime time) {
-        this.id = null;
-        this.name = name;
-        this.date = LocalDate.parse(date);
-        this.time = time;
+        this(null, name, LocalDate.parse(date), time);
     }
 
     public Reservation toReservation(final long id) {

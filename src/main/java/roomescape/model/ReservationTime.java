@@ -14,8 +14,7 @@ public class ReservationTime {
     }
 
     public ReservationTime(final String startAt) {
-        this.id = null;
-        this.startAt = LocalTime.parse(startAt);
+        this(null, LocalTime.parse(startAt));
     }
 
     public ReservationTime toReservationTime(final long id) {

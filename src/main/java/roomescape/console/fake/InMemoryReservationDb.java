@@ -34,7 +34,7 @@ public class InMemoryReservationDb {
     public void deleteByTimeId(long timeId) {
         reservations.entrySet()
                 .stream()
-                .filter(entry -> entry.getValue().getTime().getId() == timeId)
+                .filter(entry -> entry.getValue().hasSameTimeId(timeId))
                 .forEach(entry -> reservations.remove(entry.getKey()));
     }
 }

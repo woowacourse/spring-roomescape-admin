@@ -1,11 +1,9 @@
 package roomescape.consoleview;
 
 import java.util.List;
-import org.springframework.stereotype.Component;
 import roomescape.controller.dto.FindReservationResponse;
 import roomescape.controller.dto.FindReservationTimeResponse;
 
-@Component
 public class OutputView {
 
     public void printHelp() {

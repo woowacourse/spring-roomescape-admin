@@ -7,6 +7,7 @@ import org.springframework.jdbc.core.namedparam.SqlParameterSource;
 import org.springframework.jdbc.core.simple.SimpleJdbcInsert;
 import org.springframework.stereotype.Repository;
 import roomescape.dto.ReservationTimeDto;
+import roomescape.repository.entity.ReservationTimeEntity;
 
 import java.util.List;
 
@@ -25,7 +26,8 @@ public class DbReservationTimeRepository implements ReservationTimeRepository{
 
     @Override
     public ReservationTimeDto add(ReservationTimeDto reservationTimeDto) {
-        SqlParameterSource sqlParameterSource = new BeanPropertySqlParameterSource(reservationTimeDto);
+        ReservationTimeEntity reservationTimeEntity = reservationTimeDto.toEntity();
+        SqlParameterSource sqlParameterSource = new BeanPropertySqlParameterSource(reservationTimeEntity);
         Long id = simpleJdbcInsert.executeAndReturnKey(sqlParameterSource).longValue();
         return new ReservationTimeDto(id, reservationTimeDto.startAt());
     }

@@ -2,13 +2,14 @@ package roomescape.repository;
 
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;
+import org.springframework.jdbc.core.namedparam.BeanPropertySqlParameterSource;
+import org.springframework.jdbc.core.namedparam.SqlParameterSource;
 import org.springframework.jdbc.core.simple.SimpleJdbcInsert;
 import org.springframework.stereotype.Repository;
 import roomescape.dto.ReservationRepositoryDto;
+import roomescape.repository.entity.ReservationEntity;
 
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 @Repository
 public class DbReservationRepository implements ReservationRepository{
@@ -25,12 +26,9 @@ public class DbReservationRepository implements ReservationRepository{
 
     @Override
     public ReservationRepositoryDto add(ReservationRepositoryDto reservationRepositoryDto) {
-        Map<String, Object> parameters = new HashMap<>();
-        parameters.put("name", reservationRepositoryDto.name());
-        parameters.put("date", reservationRepositoryDto.date());
-        parameters.put("time_id", reservationRepositoryDto.timeId());
-
-        Long id = simpleJdbcInsert.executeAndReturnKey(parameters).longValue();
+        ReservationEntity reservationEntity = reservationRepositoryDto.toEntity();
+        SqlParameterSource sqlParameterSource = new BeanPropertySqlParameterSource(reservationEntity);
+        Long id = simpleJdbcInsert.executeAndReturnKey(sqlParameterSource).longValue();
         return new ReservationRepositoryDto(id, reservationRepositoryDto.name(), reservationRepositoryDto.date(), reservationRepositoryDto.timeId());
     }
 

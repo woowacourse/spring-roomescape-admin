@@ -1,6 +1,7 @@
 package roomescape.repository;
 
 import roomescape.dto.ReservationRepositoryDto;
+import roomescape.repository.entity.ReservationEntity;
 
 import java.util.HashMap;
 import java.util.List;
@@ -9,7 +10,7 @@ import java.util.concurrent.atomic.AtomicLong;
 
 public class MemoryReservationRepository implements ReservationRepository {
 
-    private static final Map<Long, ReservationRepositoryDto> repository = new HashMap<>(); // TODO ReservationRepositoryDto 로 매핑되는게 좀 별로
+    private static final Map<Long, ReservationEntity> repository = new HashMap<>();
 
     private final AtomicLong atomicLong = new AtomicLong();
 
@@ -17,7 +18,8 @@ public class MemoryReservationRepository implements ReservationRepository {
     public ReservationRepositoryDto add(ReservationRepositoryDto reservationRepositoryDto) {
         Long id = atomicLong.incrementAndGet();
         ReservationRepositoryDto repositoryDto = new ReservationRepositoryDto(id, reservationRepositoryDto.name(), reservationRepositoryDto.date(), reservationRepositoryDto.timeId());
-        repository.put(id, repositoryDto);
+        ReservationEntity reservationEntity = repositoryDto.toEntity();
+        repository.put(id, reservationEntity);
         return repositoryDto;
     }
 
@@ -25,6 +27,7 @@ public class MemoryReservationRepository implements ReservationRepository {
     public List<ReservationRepositoryDto> findAll() {
         return repository.values()
                 .stream()
+                .map(ReservationRepositoryDto::new)
                 .toList();
     }
 

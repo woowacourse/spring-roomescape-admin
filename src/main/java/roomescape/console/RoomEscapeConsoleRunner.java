@@ -4,25 +4,7 @@ import org.springframework.boot.CommandLineRunner;
 
 public class RoomEscapeConsoleRunner implements CommandLineRunner {
 
-    private final ConsoleCommandMatcher consoleCommandMatcher;
-    private final ConsoleInputScanner consoleInputScanner;
-
-    public RoomEscapeConsoleRunner(ConsoleCommandMatcher consoleCommandMatcher, ConsoleInputScanner consoleInputScanner) {
-        this.consoleCommandMatcher = consoleCommandMatcher;
-        this.consoleInputScanner = consoleInputScanner;
-    }
-
-    @Override
-    public void run(String... args) {
-        while (true) {
-            printMenuMessage();
-            String s = consoleInputScanner.getInput();
-            consoleCommandMatcher.findConsoleCommand(s).conduct();
-        }
-    }
-
-    public void printMenuMessage() {
-        System.out.println("""
+    private static final String MEMU = """
                                 
                 필요한 메뉴 번호를 입력해주세요.
                 1. 예약 가능 시간 확인
@@ -31,6 +13,25 @@ public class RoomEscapeConsoleRunner implements CommandLineRunner {
                 4. 예약 확인
                 5. 예약 추가
                 6. 예약 삭제
-                """);
+                """;
+
+    private final ConsoleCommandMatcher consoleCommandMatcher;
+    private final ConsoleInputView consoleInputView;
+    private final ConsoleOutputView consoleOutputView;
+
+    public RoomEscapeConsoleRunner(ConsoleCommandMatcher consoleCommandMatcher, ConsoleInputView consoleInputView,
+                                   ConsoleOutputView consoleOutputView) {
+        this.consoleCommandMatcher = consoleCommandMatcher;
+        this.consoleInputView = consoleInputView;
+        this.consoleOutputView = consoleOutputView;
+    }
+
+    @Override
+    public void run(String... args) {
+        while (true) {
+            consoleOutputView.printMessage(MEMU);
+            String s = consoleInputView.getInput();
+            consoleCommandMatcher.findConsoleCommand(s).conduct();
+        }
     }
 }

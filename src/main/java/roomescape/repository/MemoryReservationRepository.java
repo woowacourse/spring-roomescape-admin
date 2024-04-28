@@ -9,19 +9,28 @@ import roomescape.domain.Reservation;
 
 public class MemoryReservationRepository implements ReservationRepository {
 
+    private static final MemoryReservationRepository INSTANCE
+        = new MemoryReservationRepository(new HashMap<>(), new AtomicLong(1));
+
     private final Map<Long, Reservation> reservations;
     private final AtomicLong index;
 
-    public MemoryReservationRepository() {
-        this.reservations = new HashMap<>();
-        this.index = new AtomicLong(1);
+    private MemoryReservationRepository(Map<Long, Reservation> reservations, AtomicLong index) {
+        this.reservations = reservations;
+        this.index = index;
+    }
+
+    public static MemoryReservationRepository getInstance() {
+        return INSTANCE;
     }
 
     @Override
     public Reservation save(Reservation reservation) {
         long id = index.getAndIncrement();
-        reservations.put(id, new Reservation(id, reservation.getName(), reservation.getDate(), reservation.getTime()));
-        return reservations.get(id);
+        Reservation newReservation = new Reservation(
+            id, reservation.getName(), reservation.getDate(), reservation.getTime());
+        reservations.put(id, newReservation);
+        return newReservation;
     }
 
     @Override

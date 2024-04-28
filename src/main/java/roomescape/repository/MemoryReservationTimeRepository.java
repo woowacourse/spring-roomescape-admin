@@ -9,12 +9,19 @@ import roomescape.domain.ReservationTime;
 
 public class MemoryReservationTimeRepository implements ReservationTimeRepository {
 
+    private static final MemoryReservationTimeRepository INSTANCE
+        = new MemoryReservationTimeRepository(new HashMap<>(), new AtomicLong(1));
+
     private final Map<Long, ReservationTime> reservationTimes;
     private final AtomicLong index;
 
-    public MemoryReservationTimeRepository() {
-        this.reservationTimes = new HashMap<>();
-        this.index = new AtomicLong(1);
+    private MemoryReservationTimeRepository(Map<Long, ReservationTime> reservationTimes, AtomicLong index) {
+        this.reservationTimes = reservationTimes;
+        this.index = index;
+    }
+
+    public static MemoryReservationTimeRepository getInstance() {
+        return INSTANCE;
     }
 
     @Override
@@ -26,7 +33,11 @@ public class MemoryReservationTimeRepository implements ReservationTimeRepositor
 
     @Override
     public ReservationTime findById(Long id) {
-        return reservationTimes.get(id);
+        if (reservationTimes.containsKey(id)) {
+            return reservationTimes.get(id);
+        } else {
+            throw new IllegalArgumentException("해당 ID의 시간이 존재하지 않습니다.");
+        }
     }
 
     @Override

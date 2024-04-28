@@ -1,4 +1,4 @@
-package roomescape.dto;
+package roomescape.core.dto;
 
 public class ReservationRequestDto {
     private String date;

@@ -81,4 +81,11 @@ public class ReservationDao {
     public void deleteReservation(Long id) {
         jdbcTemplate.update("delete from reservation where id = ?", id);
     }
+
+    public boolean hasReservationOf(Long id) {
+        String sql = "SELECT COUNT(*) FROM RESERVATION WHERE time_id = ?";
+        int count = jdbcTemplate.queryForObject(sql, Integer.class, id);
+
+        return count > 0;
+    }
 }

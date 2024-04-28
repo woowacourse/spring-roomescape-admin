@@ -1,14 +1,14 @@
 package roomescape.view;
 
-import org.springframework.context.annotation.Profile;
 import org.springframework.stereotype.Component;
+import roomescape.annotation.ConsoleProperty;
 import roomescape.dto.response.ReservationCreateResponse;
 import roomescape.dto.response.ReservationTimeCreateResponse;
 import roomescape.dto.response.ReservationTimesResponse;
 import roomescape.dto.response.ReservationsResponse;
 
+@ConsoleProperty
 @Component
-@Profile("console")
 public class ConsoleOutputView {
     private ConsoleOutputView() {}
 

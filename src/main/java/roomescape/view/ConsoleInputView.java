@@ -1,12 +1,12 @@
 package roomescape.view;
 
-import org.springframework.context.annotation.Profile;
 import org.springframework.stereotype.Component;
+import roomescape.annotation.ConsoleProperty;
 
 import java.util.Scanner;
 
+@ConsoleProperty
 @Component
-@Profile("console")
 public class ConsoleInputView {
     private static final Scanner SCANNER = new Scanner(System.in);
 

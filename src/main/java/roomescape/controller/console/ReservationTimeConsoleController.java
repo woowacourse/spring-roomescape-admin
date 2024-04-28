@@ -1,15 +1,16 @@
 package roomescape.controller.console;
 
-import org.springframework.context.annotation.Profile;
 import org.springframework.stereotype.Controller;
+import roomescape.annotation.ConsoleProperty;
 import roomescape.dto.response.ReservationTimeCreateResponse;
 import roomescape.dto.response.ReservationTimesResponse;
 import roomescape.service.ReservationTimeService;
 import roomescape.view.ConsoleInputView;
 import roomescape.view.ConsoleOutputView;
 
+
+@ConsoleProperty
 @Controller
-@Profile("console")
 public class ReservationTimeConsoleController {
     private final ReservationTimeService reservationTimeService;
     private final ConsoleInputView consoleInputView;

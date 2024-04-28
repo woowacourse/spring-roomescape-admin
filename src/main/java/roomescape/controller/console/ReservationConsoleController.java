@@ -1,7 +1,7 @@
 package roomescape.controller.console;
 
-import org.springframework.context.annotation.Profile;
 import org.springframework.stereotype.Controller;
+import roomescape.annotation.ConsoleProperty;
 import roomescape.dto.response.ReservationCreateResponse;
 import roomescape.dto.response.ReservationsResponse;
 import roomescape.service.ReservationService;
@@ -9,14 +9,15 @@ import roomescape.service.request.ReservationCreateRequestInService;
 import roomescape.view.ConsoleInputView;
 import roomescape.view.ConsoleOutputView;
 
+@ConsoleProperty
 @Controller
-@Profile("console")
 public class ReservationConsoleController {
     private final ReservationService reservationService;
     private final ConsoleInputView consoleInputView;
     private final ConsoleOutputView consoleOutputView;
 
     public ReservationConsoleController(final ReservationService reservationService, final ConsoleInputView consoleInputView, final ConsoleOutputView consoleOutputView) {
+        System.out.println("Create");
         this.reservationService = reservationService;
         this.consoleInputView = consoleInputView;
         this.consoleOutputView = consoleOutputView;

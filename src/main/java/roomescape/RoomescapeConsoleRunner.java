@@ -4,15 +4,15 @@ import org.springframework.boot.CommandLineRunner;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.boot.autoconfigure.web.servlet.WebMvcAutoConfiguration;
-import org.springframework.context.annotation.Profile;
+import roomescape.annotation.ConsoleProperty;
 import roomescape.controller.console.ReservationConsoleController;
 import roomescape.controller.console.ReservationTimeConsoleController;
 import roomescape.view.ConsoleInputView;
 import roomescape.view.ConsoleOutputView;
 import roomescape.view.ReservationCommand;
 
+@ConsoleProperty
 @SpringBootApplication(exclude = {WebMvcAutoConfiguration.class})
-@Profile("console")
 public class RoomescapeConsoleRunner implements CommandLineRunner {
     private final ReservationConsoleController reservationConsoleController;
     private final ReservationTimeConsoleController reservationTimeConsoleController;

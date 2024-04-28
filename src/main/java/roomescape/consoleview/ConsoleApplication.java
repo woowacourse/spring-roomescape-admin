@@ -24,7 +24,7 @@ public class ConsoleApplication {
         while (true) {
             try {
                 execute(INPUT_VIEW.readCommand());
-            } catch (RuntimeException exception) {
+            } catch (IllegalArgumentException exception) {
                 OUTPUT_VIEW.printError(exception.getMessage());
             }
         }

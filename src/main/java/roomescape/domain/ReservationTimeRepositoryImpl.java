@@ -3,7 +3,6 @@ package roomescape.domain;
 import java.time.LocalTime;
 import java.time.format.DateTimeFormatter;
 import java.util.List;
-import java.util.NoSuchElementException;
 import java.util.Optional;
 import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.jdbc.core.JdbcTemplate;
@@ -48,7 +47,7 @@ public class ReservationTimeRepositoryImpl implements ReservationTimeRepository 
                 .addValue("start_at", reservationTime.getStartAt().format(TIME_FORMATTER));
         Long id = simpleJdbcInsert.executeAndReturnKey(params).longValue();
 
-        return findById(id).orElseThrow(() -> new NoSuchElementException("예약 시간이 생성되지 않았습니다."));
+        return new ReservationTime(id, reservationTime.getStartAt());
     }
 
     private RowMapper<ReservationTime> reservationTimeRowMapper() {

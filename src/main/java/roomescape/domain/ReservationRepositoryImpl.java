@@ -63,7 +63,7 @@ public class ReservationRepositoryImpl implements ReservationRepository {
                 .addValue("time_id", reservation.getTime().getId());
         Long id = simpleJdbcInsert.executeAndReturnKey(params).longValue();
 
-        return findById(id);
+        return new Reservation(id, reservation.getName(), reservation.getDate(), reservation.getTime());
     }
 
     public void removeById(Long id) {

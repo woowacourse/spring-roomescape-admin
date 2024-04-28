@@ -5,13 +5,15 @@ import roomescape.consoleview.OutputView;
 import roomescape.controller.ReservationController;
 import roomescape.controller.ReservationTimeController;
 
-@FunctionalInterface
-public interface Command {
+public class HelpCommand implements Command {
 
-    void execute(
+    @Override
+    public void execute(
         List<String> arguments,
         ReservationController reservationController,
         ReservationTimeController reservationTimeController,
-        OutputView outputView
-    );
+        OutputView outputView) {
+
+        outputView.printHelp();
+    }
 }

@@ -41,15 +41,19 @@ public class MainController {
             return;
         }
         if (menu.equals("3")) {
-            handleDeleteTime();
-            return;
-        }
-        if (menu.equals("5")) {
             handleCheckTime();
             return;
         }
-        if (menu.equals("6")) {
+        if (menu.equals("4")) {
             handleCheckReservation();
+            return;
+        }
+        if (menu.equals("5")) {
+            handleDeleteTime();
+            return;
+        }
+        if (menu.equals("6")) {
+            handleDeleteReservation();
             return;
         }
     }
@@ -68,8 +72,8 @@ public class MainController {
 
     private void handleDeleteTime() {
         Long id = inputView.readRemoveTimeId();
-        int count = roomescapeService.removeTime(id);
-        outputView.printDelete(count);
+        int removedCount = roomescapeService.removeTime(id);
+        outputView.printDelete(removedCount);
     }
 
     private void handleReservationAdd() {
@@ -84,5 +88,11 @@ public class MainController {
     private void handleCheckReservation() {
         List<ReservationsResponse> allReservations = roomescapeService.finaAllReservations();
         outputView.printReservations(allReservations);
+    }
+
+    private void handleDeleteReservation() {
+        Long id = inputView.readRemoveReservationId();
+        int removedCount = roomescapeService.removeReservation(id);
+        outputView.printDelete(removedCount);
     }
 }

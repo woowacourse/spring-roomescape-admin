@@ -37,6 +37,7 @@ public class OutputView {
     }
 
     private void printReservation(ReservationsResponse reservationsResponse) {
+        System.out.println("ID : " + reservationsResponse.id());
         System.out.println("예약자 : " + reservationsResponse.name());
         System.out.println("날짜 : " + reservationsResponse.date());
         System.out.println("시간 : " + reservationsResponse.time().getStartAt());

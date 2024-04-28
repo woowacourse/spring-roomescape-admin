@@ -8,8 +8,8 @@ public record FindReservationResponse(Long id, String name, String date, FindTim
     public static FindReservationResponse of(final Reservation reservation) {
         return new FindReservationResponse(
                 reservation.getId(),
-                reservation.getName().getValue(),
-                CustomDateTimeFormatter.getFormattedDate(reservation.getDate().getValue()),
+                reservation.getName(),
+                CustomDateTimeFormatter.getFormattedDate(reservation.getDate()),
                 FindTimeOfReservationsResponse.of(reservation.getReservationTime())
         );
     }

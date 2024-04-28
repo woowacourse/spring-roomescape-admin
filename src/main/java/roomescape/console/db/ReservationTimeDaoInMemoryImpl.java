@@ -10,7 +10,6 @@ import roomescape.general.db.ReservationTimeDao;
 import roomescape.general.domain.ReservationTime;
 
 
-@Primary
 @Repository
 public class ReservationTimeDaoInMemoryImpl implements ReservationTimeDao {
     private final List<ReservationTime> memory = new ArrayList<>();

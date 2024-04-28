@@ -8,7 +8,6 @@ import org.springframework.stereotype.Repository;
 import roomescape.general.db.ReservationDao;
 import roomescape.general.domain.Reservation;
 
-@Primary
 @Repository
 public class ReservationDaoInMemoryImpl implements ReservationDao {
     private final List<Reservation> memory = new ArrayList<>();

@@ -12,7 +12,6 @@ import org.springframework.jdbc.core.simple.SimpleJdbcInsert;
 import org.springframework.stereotype.Repository;
 import roomescape.domain.Reservation;
 import roomescape.domain.ReservationTime;
-import roomescape.dto.ReservationCreateRequest;
 
 @Repository
 public class ReservationRepository {
@@ -34,15 +33,6 @@ public class ReservationRepository {
                 )
         );
         return reservation;
-    };
-
-    private final RowMapper<ReservationTime> reservationTimeRowMapper = (resultSet, rowNum) -> {
-        ReservationTime reservationTime
-                = new ReservationTime(
-                resultSet.getLong("id"),
-                LocalTime.parse(resultSet.getString("start_at"))
-        );
-        return reservationTime;
     };
 
     public ReservationRepository(JdbcTemplate jdbcTemplate, DataSource dataSource) {
@@ -67,23 +57,17 @@ public class ReservationRepository {
         return jdbcTemplate.query(sql, reservationRowMapper);
     }
 
-    private ReservationTime findByTimeId(Long timeId) {
-        String sql = "SELECT id, start_at FROM reservation_time WHERE id = ?";
-        return jdbcTemplate.queryForObject(sql, reservationTimeRowMapper, timeId);
-    }
-
-    public Reservation save(ReservationCreateRequest reservationCreateRequest) {
+    public Reservation save(Reservation reservation) {
         SqlParameterSource parameterSource = new MapSqlParameterSource()
-                .addValue("name", reservationCreateRequest.name())
-                .addValue("date", reservationCreateRequest.date())
-                .addValue("time_id", reservationCreateRequest.timeId());
+                .addValue("name", reservation.getName())
+                .addValue("date", reservation.getDate())
+                .addValue("time_id", reservation.getReservationTime().getId());
         Long id = simpleJdbcInsert.executeAndReturnKey(parameterSource).longValue();
-        ReservationTime reservationTime = findByTimeId(reservationCreateRequest.timeId());
         return new Reservation(
                 id,
-                reservationCreateRequest.name(),
-                reservationCreateRequest.date(),
-                reservationTime
+                reservation.getName(),
+                reservation.getDate(),
+                reservation.getReservationTime()
         );
     }
 

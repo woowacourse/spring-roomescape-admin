@@ -10,7 +10,6 @@ import org.springframework.jdbc.core.namedparam.SqlParameterSource;
 import org.springframework.jdbc.core.simple.SimpleJdbcInsert;
 import org.springframework.stereotype.Repository;
 import roomescape.domain.ReservationTime;
-import roomescape.dto.ReservationTimeCreateRequest;
 
 @Repository
 public class ReservationTimeRepository {
@@ -41,11 +40,16 @@ public class ReservationTimeRepository {
         return jdbcTemplate.query(sql, reservationTimeRowMapper);
     }
 
-    public ReservationTime save(ReservationTimeCreateRequest reservationTimeCreateRequest) {
+    public ReservationTime findByTimeId(Long timeId) {
+        String sql = "SELECT id, start_at FROM reservation_time WHERE id = ?";
+        return jdbcTemplate.queryForObject(sql, reservationTimeRowMapper, timeId);
+    }
+
+    public ReservationTime save(ReservationTime reservationTime) {
         SqlParameterSource parameterSource = new MapSqlParameterSource()
-                .addValue("start_at", reservationTimeCreateRequest.startAt());
+                .addValue("start_at", reservationTime.getStartAt());
         Long id = simpleJdbcInsert.executeAndReturnKey(parameterSource).longValue();
-        return new ReservationTime(id, reservationTimeCreateRequest.startAt());
+        return new ReservationTime(id, reservationTime.getStartAt());
     }
 
     public int deleteById(Long id) {

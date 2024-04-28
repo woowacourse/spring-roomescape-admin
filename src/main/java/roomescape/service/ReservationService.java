@@ -3,17 +3,23 @@ package roomescape.service;
 import java.util.List;
 import java.util.NoSuchElementException;
 import org.springframework.stereotype.Service;
+import roomescape.domain.Reservation;
+import roomescape.domain.ReservationTime;
 import roomescape.dto.ReservationCreateRequest;
 import roomescape.dto.ReservationResponse;
 import roomescape.repository.ReservationRepository;
+import roomescape.repository.ReservationTimeRepository;
 
 @Service
 public class ReservationService {
 
     private final ReservationRepository reservationRepository;
+    private final ReservationTimeRepository reservationTimeRepository;
 
-    public ReservationService(ReservationRepository reservationRepository) {
+    public ReservationService(ReservationRepository reservationRepository,
+                              ReservationTimeRepository reservationTimeRepository) {
         this.reservationRepository = reservationRepository;
+        this.reservationTimeRepository = reservationTimeRepository;
     }
 
     public List<ReservationResponse> findAll() {
@@ -24,7 +30,13 @@ public class ReservationService {
     }
 
     public ReservationResponse create(ReservationCreateRequest reservationCreateRequest) {
-        return ReservationResponse.from(reservationRepository.save(reservationCreateRequest));
+        ReservationTime reservationTime = reservationTimeRepository.findByTimeId(reservationCreateRequest.timeId());
+        Reservation reservation = new Reservation(
+                reservationCreateRequest.name(),
+                reservationCreateRequest.date(),
+                reservationTime
+        );
+        return ReservationResponse.from(reservationRepository.save(reservation));
     }
 
     public void delete(Long id) {

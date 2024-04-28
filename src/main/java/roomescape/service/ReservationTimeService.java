@@ -3,6 +3,7 @@ package roomescape.service;
 import java.util.List;
 import java.util.NoSuchElementException;
 import org.springframework.stereotype.Service;
+import roomescape.domain.ReservationTime;
 import roomescape.dto.ReservationTimeCreateRequest;
 import roomescape.dto.ReservationTimeResponse;
 import roomescape.repository.ReservationTimeRepository;
@@ -24,7 +25,8 @@ public class ReservationTimeService {
     }
 
     public ReservationTimeResponse create(ReservationTimeCreateRequest reservationTimeCreateRequest) {
-        return ReservationTimeResponse.from(reservationTimeRepository.save(reservationTimeCreateRequest));
+        ReservationTime reservationTime = new ReservationTime(reservationTimeCreateRequest.startAt());
+        return ReservationTimeResponse.from(reservationTimeRepository.save(reservationTime));
     }
 
     public void delete(Long id) {

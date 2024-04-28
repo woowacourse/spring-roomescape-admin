@@ -31,10 +31,10 @@ task runConsole(type: JavaExec) {
     args = ['--spring.profiles.active=console', '--server.port=8081']
     standardInput System.in
 }
-springBoot {
+tasks.named("bootRun") {
     setMainClass 'roomescape.RoomescapeApplication'
+    args = ['--spring.profiles.active=web']
 }
-
 tasks.named("runConsole") {
     setMainClass 'roomescape.RoomescapeConsoleRunner'
 }

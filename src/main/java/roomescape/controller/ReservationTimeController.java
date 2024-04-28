@@ -2,7 +2,7 @@ package roomescape.controller;
 
 import org.springframework.web.bind.annotation.*;
 import roomescape.domain.ReservationTime;
-import roomescape.dto.ReservationTimeRequest;
+import roomescape.dto.ReservationTimeCreateRequest;
 import roomescape.service.ReservationTimeService;
 
 import java.util.List;
@@ -22,8 +22,8 @@ public class ReservationTimeController {
     }
 
     @PostMapping
-    public ReservationTime create(@RequestBody ReservationTimeRequest reservationTimeRequest) {
-        return reservationTimeService.create(reservationTimeRequest);
+    public ReservationTime create(@RequestBody ReservationTimeCreateRequest reservationTimeCreateRequest) {
+        return reservationTimeService.create(reservationTimeCreateRequest);
     }
 
     @DeleteMapping("/{id}")

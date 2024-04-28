@@ -7,7 +7,7 @@ import org.springframework.jdbc.core.namedparam.SqlParameterSource;
 import org.springframework.jdbc.core.simple.SimpleJdbcInsert;
 import org.springframework.stereotype.Repository;
 import roomescape.domain.ReservationTime;
-import roomescape.dto.ReservationTimeRequest;
+import roomescape.dto.ReservationTimeCreateRequest;
 
 import javax.sql.DataSource;
 import java.time.LocalTime;
@@ -40,10 +40,10 @@ public class ReservationTimeDao {
         return jdbcTemplate.queryForObject(sql, timeRowMapper, id);
     }
 
-    public ReservationTime insert(ReservationTimeRequest reservationTimeRequest) {
-        SqlParameterSource parameterSource = new BeanPropertySqlParameterSource(reservationTimeRequest);
+    public ReservationTime insert(ReservationTimeCreateRequest reservationTimeCreateRequest) {
+        SqlParameterSource parameterSource = new BeanPropertySqlParameterSource(reservationTimeCreateRequest);
         long id = simpleJdbcInsert.executeAndReturnKey(parameterSource).longValue();
-        return reservationTimeRequest.toTime(id);
+        return reservationTimeCreateRequest.toTime(id);
     }
 
     public void delete(long id) {

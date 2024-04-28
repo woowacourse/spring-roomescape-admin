@@ -6,8 +6,6 @@ import java.time.LocalTime;
 import java.util.Objects;
 
 public class Reservation {
-    public static final int TIME_DURATION = 1;
-
     private final Long id;
     private final Name name;
     private final ReservationDate reservationDate;

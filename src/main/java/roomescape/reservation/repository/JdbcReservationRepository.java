@@ -34,6 +34,14 @@ public class JdbcReservationRepository implements ReservationRepository {
                     resultSet.getLong("time_id"),
                     resultSet.getTime("start_at").toLocalTime()
             );
+    @Override
+    public Long save(final Reservation reservation) {
+        SqlParameterSource mapSqlParameterSource = new MapSqlParameterSource()
+                .addValue("name", reservation.getName())
+                .addValue("date", Date.valueOf(reservation.getDate()))
+                .addValue("time_id", reservation.getReservationTime().getId());
+        return simpleJdbcInsert.executeAndReturnKey(mapSqlParameterSource).longValue();
+    }
 
     @Override
     public List<Reservation> findAll() {
@@ -60,15 +68,6 @@ public class JdbcReservationRepository implements ReservationRepository {
         } catch (EmptyResultDataAccessException emptyResultDataAccessException) {
             return Optional.empty();
         }
-    }
-
-    @Override
-    public Long save(final Reservation reservation) {
-        SqlParameterSource mapSqlParameterSource = new MapSqlParameterSource()
-                .addValue("name", reservation.getName())
-                .addValue("date", Date.valueOf(reservation.getDate()))
-                .addValue("time_id", reservation.getReservationTime().getId());
-        return simpleJdbcInsert.executeAndReturnKey(mapSqlParameterSource).longValue();
     }
 
     @Override

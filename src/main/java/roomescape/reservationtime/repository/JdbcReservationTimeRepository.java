@@ -45,12 +45,6 @@ public class JdbcReservationTimeRepository implements ReservationTimeRepository 
     }
 
     @Override
-    public void deleteById(final Long id) {
-        String sql = "delete from reservation_time where id = ?";
-        jdbcTemplate.update(sql, id);
-    }
-
-    @Override
     public Optional<ReservationTime> findById(final Long timeId) {
         String sql = "select id, start_at from reservation_time where id = ?";
         try {
@@ -58,5 +52,11 @@ public class JdbcReservationTimeRepository implements ReservationTimeRepository 
         } catch (EmptyResultDataAccessException emptyResultDataAccessException) {
             return Optional.empty();
         }
+    }
+
+    @Override
+    public void deleteById(final Long id) {
+        String sql = "delete from reservation_time where id = ?";
+        jdbcTemplate.update(sql, id);
     }
 }

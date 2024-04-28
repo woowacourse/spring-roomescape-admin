@@ -5,12 +5,11 @@ import java.util.Optional;
 import roomescape.reservation.model.Reservation;
 
 public interface ReservationRepository {
+    Long save(Reservation reservation);
 
     List<Reservation> findAll();
 
     Optional<Reservation> findById(Long id);
-
-    Long save(Reservation reservation);
 
     void deleteById(Long id);
 }

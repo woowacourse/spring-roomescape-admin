@@ -26,8 +26,7 @@ public class ReservationService {
     }
 
     private boolean isConflict(Reservation reservation) {
-        return reservationRepository.readAll().stream()
-                .anyMatch(reservation::isConflictWith);
+        return reservationRepository.existByReservationTime(reservation.getStartDate(), reservation.getGameTimeId());
     }
 
     public void deleteReservation(long id) {

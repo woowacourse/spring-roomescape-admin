@@ -19,14 +19,17 @@ public class ConsoleController {
 
     public void run() {
         try {
-            Command command = InputView.inputCommand();
-            while (command != Command.EXIT) {
-                executeCommand(command);
-                command = InputView.inputCommand();
-            }
+            executeByInputCommand();
         } catch (Exception e) {
             System.out.println(e.getMessage());
             run();
+        }
+    }
+
+    private void executeByInputCommand() {
+        Command command;
+        while ((command = InputView.inputCommand()) != Command.EXIT) {
+            executeCommand(command);
         }
     }
 

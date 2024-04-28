@@ -21,6 +21,6 @@ public enum Command {
         return Arrays.stream(values())
                 .filter(v -> v.value.equals(command))
                 .findAny()
-                .get();
+                .orElseThrow(() -> new IllegalArgumentException("invalid command: " + command));
     }
 }

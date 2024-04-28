@@ -1,6 +1,7 @@
 package roomescape.repository;
 
 import org.springframework.jdbc.core.JdbcTemplate;
+import org.springframework.jdbc.core.RowMapper;
 import org.springframework.jdbc.core.namedparam.BeanPropertySqlParameterSource;
 import org.springframework.jdbc.core.namedparam.SqlParameterSource;
 import org.springframework.jdbc.core.simple.SimpleJdbcInsert;
@@ -11,16 +12,25 @@ import javax.sql.DataSource;
 import java.util.List;
 
 @Repository
-public class TimeRepository {
+public class ReservationTimeRepository {
 
     private final JdbcTemplate jdbcTemplate;
     private final SimpleJdbcInsert jdbcInsert;
 
-    public TimeRepository(JdbcTemplate jdbcTemplate, DataSource dataSource) {
+    private final RowMapper<ReservationTime> timeRowMapper = (resultSet, rowNum) -> {
+        ReservationTime reservationTime = new ReservationTime(
+                resultSet.getLong("id"),
+                resultSet.getString("start_at")
+        );
+        return reservationTime;
+    };
+
+    public ReservationTimeRepository(JdbcTemplate jdbcTemplate, DataSource dataSource) {
         this.jdbcTemplate = jdbcTemplate;
         this.jdbcInsert = new SimpleJdbcInsert(dataSource)
                 .withTableName("reservation_time")
-                .usingGeneratedKeyColumns("id");
+                .usingGeneratedKeyColumns("id")
+                .usingColumns("start_at");
     }
 
     public ReservationTime insert(ReservationTime time) {
@@ -32,19 +42,18 @@ public class TimeRepository {
 
     public List<ReservationTime> list() {
         String sql = "SELECT * FROM reservation_time";
-        List<ReservationTime> times = jdbcTemplate.query(sql, (resultSet, rowNum) -> {
-            ReservationTime time = new ReservationTime(
-                    resultSet.getLong("id"),
-                    resultSet.getTime("start_at").toLocalTime()
-            );
-            return time;
-        });
 
-        return times;
+        return jdbcTemplate.query(sql, timeRowMapper);
     }
 
     public void delete(long id) {
         String sql = "DELETE FROM reservation_time WHERE id = ?";
         jdbcTemplate.update(sql, id);
+    }
+
+    public ReservationTime findById(long id) {
+        String sql = "SELECT * FROM reservation_time WHERE id = ?";
+
+        return jdbcTemplate.queryForObject(sql, timeRowMapper, id);
     }
 }

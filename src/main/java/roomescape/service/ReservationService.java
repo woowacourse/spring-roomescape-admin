@@ -36,7 +36,8 @@ public class ReservationService {
                 reservationCreateRequest.date(),
                 reservationTime
         );
-        return ReservationResponse.from(reservationRepository.save(reservation));
+        Reservation savedReservation = reservationRepository.save(reservation);
+        return ReservationResponse.from(savedReservation);
     }
 
     public void delete(Long id) {

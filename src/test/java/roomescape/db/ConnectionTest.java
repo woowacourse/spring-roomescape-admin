@@ -9,10 +9,8 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.jdbc.core.JdbcTemplate;
-import org.springframework.test.context.ActiveProfiles;
 
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
-@ActiveProfiles("dev")
 public class ConnectionTest {
     @Autowired
     private JdbcTemplate jdbcTemplate;
@@ -22,8 +20,8 @@ public class ConnectionTest {
     void isConnectionSuccess() {
         try (Connection connection = jdbcTemplate.getDataSource().getConnection()) {
             assertThat(connection).isNotNull();
-            assertThat(connection.getCatalog()).isEqualTo("DATABASE");
-            assertThat(connection.getMetaData().getTables(null, null, "RESERVATION", null).next()).isTrue();
+            assertThat(connection.getCatalog()).isEqualTo("test");
+            assertThat(connection.getMetaData().getTables(null, null, "reservation", null).next()).isTrue();
         } catch (SQLException e) {
             throw new RuntimeException("데이터베이스 Connection에 실패했습니다. : " + e);
         }

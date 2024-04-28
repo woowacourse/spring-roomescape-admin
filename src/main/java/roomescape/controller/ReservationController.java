@@ -8,41 +8,31 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
-import roomescape.domain.Reservation;
 import roomescape.dto.ReservationRequest;
 import roomescape.dto.ReservationResponse;
-import roomescape.storage.ReservationStorage;
+import roomescape.service.ReservationService;
 
 @RestController
 @RequestMapping("/reservations")
 public class ReservationController {
-    private final ReservationStorage reservationStorage;
+    private final ReservationService reservationService;
 
-    public ReservationController(ReservationStorage reservationStorage) {
-        this.reservationStorage = reservationStorage;
+    public ReservationController(ReservationService reservationService) {
+        this.reservationService = reservationService;
     }
 
     @PostMapping
     public ReservationResponse saveReservation(@RequestBody ReservationRequest reservationRequest) {
-        Reservation reservation = reservationStorage.save(reservationRequest);
-        return toResponse(reservation);
-    }
-
-    private ReservationResponse toResponse(Reservation reservation) {
-        return new ReservationResponse(reservation.getId(),
-                reservation.getName(), reservation.getDate(), reservation.getTime());
+        return reservationService.save(reservationRequest);
     }
 
     @GetMapping
     public List<ReservationResponse> findAllReservations() {
-        return reservationStorage.findAllReservations()
-                .stream()
-                .map(this::toResponse)
-                .toList();
+        return reservationService.findAll();
     }
 
-    @DeleteMapping("/{reservationId}")
-    public void delete(@PathVariable long reservationId) {
-        reservationStorage.delete(reservationId);
+    @DeleteMapping("/{id}")
+    public void delete(@PathVariable long id) {
+        reservationService.delete(id);
     }
 }

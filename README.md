@@ -3,8 +3,7 @@
 ## WEB API 명세서
 
 - 프로그램 시작 지점
-  - [roomescape.RoomescapeApplication](./src/main/java/roomescape/RoomescapeApplication.java)
-- 
+  - [roomescape.RoomescapeApplication.java](./src/main/java/roomescape/RoomescapeApplication.java)
 
 ### 페이지 조회
 
@@ -136,7 +135,7 @@
 ## 콘솔 프로그램
 
 - 시작 지점
-  - [roomescape.RoomescapeConsoleApplication](./src/main/java/roomescape/RoomescapeConsoleApplication.java)
+  - [roomescape.RoomescapeConsoleApplication.java](./src/main/java/roomescape/RoomescapeConsoleApplication.java)
 
 ### 실행 예시
 

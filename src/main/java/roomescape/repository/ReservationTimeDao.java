@@ -8,6 +8,7 @@ import java.util.Optional;
 import javax.sql.DataSource;
 import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.jdbc.core.JdbcTemplate;
+import org.springframework.jdbc.core.RowMapper;
 import org.springframework.jdbc.support.GeneratedKeyHolder;
 import org.springframework.jdbc.support.KeyHolder;
 import org.springframework.stereotype.Repository;
@@ -40,10 +41,7 @@ public class ReservationTimeDao {
         try {
             final ReservationTime reservationTime = jdbcTemplate.queryForObject(
                     "SELECT id, start_at FROM reservation_time WHERE id = ?",
-                    (resultSet, rowNum) -> new ReservationTime(
-                            resultSet.getLong("id"),
-                            resultSet.getTime("start_at").toLocalTime()
-                    ), id);
+                    getReservationTimeRowMapper(), id);
             return Optional.ofNullable(reservationTime);
         } catch (final EmptyResultDataAccessException exception) {
             return Optional.empty();
@@ -53,10 +51,14 @@ public class ReservationTimeDao {
     public List<ReservationTime> findAll() {
         return jdbcTemplate.query(
                 "SELECT id, start_at FROM reservation_time",
-                (resultSet, rowNum) -> new ReservationTime(
-                        resultSet.getLong("id"),
-                        resultSet.getTime("start_at").toLocalTime()
-                ));
+                getReservationTimeRowMapper());
+    }
+
+    private RowMapper<ReservationTime> getReservationTimeRowMapper() {
+        return (resultSet, rowNum) -> new ReservationTime(
+                resultSet.getLong("id"),
+                resultSet.getTime("start_at").toLocalTime()
+        );
     }
 
     public void remove(final long id) {

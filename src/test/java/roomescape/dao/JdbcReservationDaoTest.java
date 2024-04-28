@@ -30,7 +30,7 @@ class JdbcReservationDaoTest {
     @DisplayName("해당 id의 예약을 반환한다.")
     @Test
     void findById() {
-        assertThat(reservationDao.findById(1).orElseThrow()).isEqualTo(Fixtures.FIRST_RESERVATION);
+        assertThat(reservationDao.findById(1)).isEqualTo(Fixtures.FIRST_RESERVATION);
     }
 
     @DisplayName("예약을 DB에 저장한다.")

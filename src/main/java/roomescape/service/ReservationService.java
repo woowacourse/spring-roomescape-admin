@@ -35,24 +35,22 @@ public class ReservationService {
         if (reservationRequest.date() == null) {
             throw new IllegalArgumentException("날짜가 입력되지 않았습니다. 날짜를 입력해주세요.");
         }
-        ReservationTime reservationTime = reservationTimeDao.findById(reservationRequest.timeId()).orElseThrow();
+        ReservationTime reservationTime = reservationTimeDao.findById(reservationRequest.timeId());
         Reservation reservation = reservationRequest.toReservation(reservationTime);
         long id = reservationDao.save(reservation);
         return findById(id);
     }
 
     private ReservationResponse findById(long id) {
-        Reservation reservation = reservationDao.findById(id)
-                .orElseThrow(() -> new IllegalArgumentException("id가 %d인 예약은 존재하지 않습니다.".formatted(id)));
+        Reservation reservation = reservationDao.findById(id);
         return ReservationResponse.of(reservation);
     }
 
     public void deleteById(long id) {
-        ReservationResponse reservationResponse = findById(id);
-        DeletedCount deletedCount = reservationDao.deleteById(reservationResponse.id());
-        /*if (deletedCount.isNotDelete()) {
+        DeletedCount deletedCount = reservationDao.deleteById(id);
+        if (deletedCount.isNotDelete()) {
             throw new IllegalArgumentException("해당 id는 존재하지 않습니다. id = %d".formatted(id));
-        }*/
+        }
     }
 
     public void deleteAll() {

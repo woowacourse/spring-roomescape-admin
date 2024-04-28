@@ -30,7 +30,7 @@ class JdbcReservationTimeDaoTest {
     @DisplayName("해당 id의 예약 시간을 반환한다.")
     @Test
     void findById() {
-        assertThat(reservationTimeDao.findById(1).orElseThrow()).isEqualTo(Fixtures.FIRST_TIME);
+        assertThat(reservationTimeDao.findById(1)).isEqualTo(Fixtures.FIRST_TIME);
     }
 
     @DisplayName("예약 시간을 DB에 저장한다.")

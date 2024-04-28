@@ -3,7 +3,6 @@ package roomescape.service;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.Optional;
 import java.util.concurrent.atomic.AtomicLong;
 import roomescape.domain.DeletedCount;
 import roomescape.domain.Reservation;
@@ -20,8 +19,8 @@ public class FakeReservationDao implements ReservationDao {
     }
 
     @Override
-    public Optional<Reservation> findById(long id) {
-        return Optional.ofNullable(fakeReservationDB.get(id));
+    public Reservation findById(long id) {
+        return fakeReservationDB.get(id);
     }
 
     @Override

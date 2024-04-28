@@ -1,8 +1,6 @@
 package roomescape.dao;
 
 import java.util.List;
-import java.util.Optional;
-import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;
 import org.springframework.jdbc.core.namedparam.MapSqlParameterSource;
@@ -34,14 +32,9 @@ public class JdbcReservationTimeDao implements ReservationTimeDao {
         return jdbcTemplate.query(sql, rowMapper);
     }
 
-    public Optional<ReservationTime> findById(long id) {
+    public ReservationTime findById(long id) {
         String sql = "SELECT id, start_at FROM reservation_time WHERE id = ?";
-        try {
-            ReservationTime reservation = jdbcTemplate.queryForObject(sql, rowMapper, id);
-            return Optional.ofNullable(reservation);
-        } catch (EmptyResultDataAccessException exception) {
-            return Optional.empty();
-        }
+        return jdbcTemplate.queryForObject(sql, rowMapper, id);
     }
 
     public long save(ReservationTime reservationTime) {

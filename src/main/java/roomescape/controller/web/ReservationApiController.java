@@ -4,12 +4,13 @@ import jakarta.validation.Valid;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import roomescape.annotation.WebProperty;
 import roomescape.dto.request.ReservationCreateRequest;
 import roomescape.dto.response.ReservationCreateResponse;
 import roomescape.dto.response.ReservationsResponse;
 import roomescape.service.ReservationService;
 
-
+@WebProperty
 @RestController
 @RequestMapping("reservations")
 public class ReservationApiController {
@@ -17,6 +18,7 @@ public class ReservationApiController {
     private final ReservationService reservationService;
 
     public ReservationApiController(final ReservationService reservationService) {
+        System.out.println("Web");
         this.reservationService = reservationService;
     }
 

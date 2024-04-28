@@ -3,11 +3,13 @@ package roomescape.controller.web;
 import jakarta.validation.Valid;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
+import roomescape.annotation.WebProperty;
 import roomescape.dto.request.ReservationTimeCreateRequest;
 import roomescape.dto.response.ReservationTimeCreateResponse;
 import roomescape.dto.response.ReservationTimesResponse;
 import roomescape.service.ReservationTimeService;
 
+@WebProperty
 @RestController()
 @RequestMapping("times")
 public class ReservationTimeApiController {

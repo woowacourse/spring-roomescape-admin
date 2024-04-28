@@ -6,6 +6,7 @@ import roomescape.dto.ReservationTimeRequest;
 
 public class InputView {
     private static final Scanner SCANNER = new Scanner(System.in);
+    private static final String DELIMITER = ",";
 
     public static Command inputCommand() {
         System.out.println("input command. (ex - reservations/get)");
@@ -15,9 +16,10 @@ public class InputView {
 
     public static ReservationRequest inputReservationRequest() {
         System.out.println(
-                "input reservation request(name,date,timeId). (ex - harry,2024-05-11,1)");
+                "input reservation request(name,date,timeId)."
+                        + " (ex - harry" + DELIMITER + "2024-05-11" + DELIMITER + "1)");
         String input = SCANNER.nextLine();
-        String[] split = input.split(",");
+        String[] split = input.split(DELIMITER);
         if (split.length == 3) {
             return new ReservationRequest(split[0], split[1], Long.parseLong(split[2]));
         }

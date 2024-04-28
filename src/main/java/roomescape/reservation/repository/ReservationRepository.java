@@ -17,10 +17,10 @@ public class ReservationRepository {
         this.timeDao = timeDao;
     }
 
-    public void saveReservation(Reservation reservation) {
+    public Reservation saveReservation(Reservation reservation) {
         Time time = timeDao.findById(reservation.getReservationTime().getId());
         reservation.setTime(time);
-        reservationDao.save(reservation);
+        return reservationDao.save(reservation);
     }
 
     public List<Reservation> findAllReservation() {

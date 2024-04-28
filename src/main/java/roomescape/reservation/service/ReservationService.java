@@ -18,8 +18,8 @@ public class ReservationService {
 
     public ReservationResponse addReservation(ReservationRequest reservationRequest) {
         Reservation reservation = fromRequest(reservationRequest);
-        reservationRepository.saveReservation(reservation);
-        return toResponse(reservation);
+        Reservation savedReservation = reservationRepository.saveReservation(reservation);
+        return toResponse(savedReservation);
     }
 
     public List<ReservationResponse> findReservations() {

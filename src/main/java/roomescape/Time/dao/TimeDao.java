@@ -5,7 +5,7 @@ import roomescape.Time.domain.Time;
 
 public interface TimeDao {
 
-    void save(Time reservationTime);
+    Time save(Time reservationTime);
 
     List<Time> findAll();
 

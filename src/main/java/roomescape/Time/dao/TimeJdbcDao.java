@@ -22,10 +22,11 @@ public class TimeJdbcDao implements TimeDao {
     }
 
     @Override
-    public void save(Time reservationTime) {
-        SqlParameterSource sqlParameterSource = new BeanPropertySqlParameterSource(reservationTime);
+    public Time save(Time time) {
+        SqlParameterSource sqlParameterSource = new BeanPropertySqlParameterSource(time);
         long id = jdbcInsert.executeAndReturnKey(sqlParameterSource).longValue();
-        reservationTime.setId(id);
+        time.setId(id);
+        return time;
     }
 
     @Override
@@ -48,7 +49,7 @@ public class TimeJdbcDao implements TimeDao {
 
     @Override
     public void deleteById(long reservationTimeId) {
-        String deleteReservationTimeSql = "DELETE FROM reservation WHERE id = ?";
+        String deleteReservationTimeSql = "DELETE FROM reservation_time WHERE id = ?";
         jdbcTemplate.update(deleteReservationTimeSql, reservationTimeId);
     }
 }

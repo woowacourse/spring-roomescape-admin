@@ -22,7 +22,7 @@ public class ReservationJdbcDao implements ReservationDao {
                 .usingGeneratedKeyColumns("id");
     }
 
-    public void save(Reservation reservation) {
+    public Reservation save(Reservation reservation) {
         SqlParameterSource sqlParameterSource = new MapSqlParameterSource()
                 .addValue("name", reservation.getName())
                 .addValue("date", reservation.getDate())
@@ -30,6 +30,7 @@ public class ReservationJdbcDao implements ReservationDao {
 
         long id = jdbcInsert.executeAndReturnKey(sqlParameterSource).longValue();
         reservation.setId(id);
+        return reservation;
     }
 
     public List<Reservation> findAll() {

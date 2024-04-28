@@ -17,9 +17,9 @@ public class TimeService {
 
     public ReservationTimeResponse addReservationTime(ReservationTimeRequest reservationTimeRequest) {
         Time reservationTime = new Time(reservationTimeRequest.startAt());
-        timeRepository.saveReservationTime(reservationTime);
+        Time savedReservationTime = timeRepository.saveReservationTime(reservationTime);
 
-        return toResponse(reservationTime);
+        return toResponse(savedReservationTime);
     }
 
     public List<ReservationTimeResponse> findReservationTimes() {

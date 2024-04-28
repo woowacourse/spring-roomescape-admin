@@ -13,8 +13,8 @@ public class TimeRepository {
         this.timeDao = timeDao;
     }
 
-    public void saveReservationTime(Time reservationTime) {
-        timeDao.save(reservationTime);
+    public Time saveReservationTime(Time reservationTime) {
+        return timeDao.save(reservationTime);
     }
 
     public List<Time> findAllReservationTimes() {

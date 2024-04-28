@@ -1,5 +1,6 @@
 package roomescape.console.controller;
 
+import java.util.function.Supplier;
 import roomescape.console.view.Command;
 import roomescape.console.view.InputView;
 import roomescape.console.view.OutputView;
@@ -30,7 +31,7 @@ public class ConsoleController {
         outputView.printStartMessage();
         outputView.printAdminFunction();
 
-        Command command = inputView.readCommand();
+        Command command = getCommand();
         while (command != Command.END) {
             switch (command) {
                 case READ_ALL_RESERVATIONS -> getReservations();
@@ -41,8 +42,12 @@ public class ConsoleController {
                 case DELETE_RESERVATION_TIME -> deleteReservationTime();
             }
             outputView.printAdminFunction();
-            command = inputView.readCommand();
+            command = getCommand();
         }
+    }
+
+    private Command getCommand() {
+        return repeatUntilSuccess(inputView::readCommand);
     }
 
     private void getReservations() {
@@ -50,13 +55,13 @@ public class ConsoleController {
     }
 
     private void createReservation() {
-        ReservationRequest request = inputView.readReservationRequest();
+        ReservationRequest request = repeatUntilSuccess(inputView::readReservationRequest);
         ReservationResponse response = reservationService.createReservation(request);
         outputView.printCreateReservationSuccessMessage(response);
     }
 
     private void deleteReservation() {
-        Long id = inputView.readDeleteReservationId();
+        Long id = repeatUntilSuccess(inputView::readDeleteReservationId);
         reservationService.deleteReservation(id);
         outputView.printDeleteReservationSuccessMessage();
     }
@@ -66,14 +71,24 @@ public class ConsoleController {
     }
 
     private void createReservationTime() {
-        ReservationTimeRequest request = inputView.readReservationTimeRequest();
+        ReservationTimeRequest request = repeatUntilSuccess(inputView::readReservationTimeRequest);
         ReservationTimeResponse response = reservationTimeService.createReservationTime(request);
         outputView.printCreateTimeSuccessMessage(response);
     }
 
     private void deleteReservationTime() {
-        Long id = inputView.readDeleteReservationTimeId();
+        Long id = repeatUntilSuccess(inputView::readDeleteReservationTimeId);
         reservationTimeService.deleteReservationTime(id);
         outputView.printDeleteTimeSuccessMessage();
+    }
+
+
+    private <T> T repeatUntilSuccess(Supplier<T> supplier) {
+        try {
+            return supplier.get();
+        } catch (IllegalArgumentException e) {
+            System.out.println("[ERROR] " + e.getMessage());
+            return repeatUntilSuccess(supplier);
+        }
     }
 }

@@ -21,6 +21,6 @@ public enum Command {
         return Arrays.stream(values())
                 .filter(command -> command.value.equals(input))
                 .findFirst()
-                .orElseThrow(() -> new IllegalArgumentException("해당되는 명령어가 없습니다."));
+                .orElseThrow(() -> new IllegalArgumentException("해당되는 명령어가 없습니다. 1~7의 정수를 입력하세요."));
     }
 }

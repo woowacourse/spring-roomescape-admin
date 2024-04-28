@@ -1,5 +1,6 @@
 package roomescape.controller;
 
+import java.net.URI;
 import java.util.List;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -11,8 +12,8 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import roomescape.application.ReservationService;
 import roomescape.domain.reservation.Reservation;
-import roomescape.dto.ReservationRequest;
-import roomescape.dto.ReservationResponse;
+import roomescape.dto.reservation.ReservationRequest;
+import roomescape.dto.reservation.ReservationResponse;
 
 @RestController
 @RequestMapping("/reservations")
@@ -24,19 +25,20 @@ public class ReservationController {
     }
 
     @PostMapping
-    public ResponseEntity<ReservationResponse> createReservation(@RequestBody ReservationRequest reservationRequest) {
-        Reservation reservation = reservationService.reserve(reservationRequest);
-        ReservationResponse reservationResponse = ReservationResponse.from(reservation);
-        return ResponseEntity.ok(reservationResponse);
+    public ResponseEntity<ReservationResponse> createReservation(@RequestBody ReservationRequest request) {
+        Reservation reservation = reservationService.reserve(request.toReservationCreationRequest());
+        ReservationResponse response = ReservationResponse.from(reservation);
+        URI location = URI.create("/reservations/" + response.id());
+        return ResponseEntity.created(location).body(response);
     }
 
     @GetMapping
-    public ResponseEntity<List<ReservationResponse>> findReservations() {
-        List<Reservation> reservations = reservationService.findReservations();
-        List<ReservationResponse> reservationResponses = reservations.stream()
+    public ResponseEntity<List<ReservationResponse>> getReservations() {
+        List<Reservation> reservations = reservationService.getReservations();
+        List<ReservationResponse> responses = reservations.stream()
                 .map(ReservationResponse::from)
                 .toList();
-        return ResponseEntity.ok(reservationResponses);
+        return ResponseEntity.ok(responses);
     }
 
     @DeleteMapping("/{id}")

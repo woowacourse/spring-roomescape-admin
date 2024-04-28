@@ -11,15 +11,7 @@ import java.util.StringJoiner;
 public class OutputView {
     private static final String RESERVATION_MESSAGE_FORMAT = "%3d %5s %9s %9s";
     private static final String RESERVATION_TIME_MESSAGE_FORMAT = "%3d %9s";
-    private static final String LINE_SEPERATOR = System.lineSeparator();
-
-    public void printNoTimeMessage() {
-        System.out.println("등록한 시간이 없습니다.");
-    }
-
-    public void printNoReservationMessage() {
-        System.out.println("예약된 방탈출이 없습니다.");
-    }
+    private static final String LINE_SEPARATOR = System.lineSeparator();
 
     public void printAllOptions() {
         System.out.println(resolveAllOptionsMessage());
@@ -34,15 +26,31 @@ public class OutputView {
     }
 
     public void printAllReservation(List<Reservation> reservations) {
+        if (reservations.isEmpty()) {
+            printNoReservationMessage();
+        }
+        System.out.println("id | 성명 |   날짜   |   시간   |");
         System.out.println(resolveAllReservationMessage(reservations));
     }
 
     public void printAllReservationTimes(List<ReservationTime> reservationTimes) {
+        if (reservationTimes.isEmpty()) {
+            printNoTimeMessage();
+        }
+        System.out.println("id |   시간   |");
         System.out.println(resolveAllTimeMessage(reservationTimes));
     }
 
+    private void printNoReservationMessage() {
+        System.out.println("예약된 방탈출이 없습니다.");
+    }
+
+    private void printNoTimeMessage() {
+        System.out.println("등록한 시간이 없습니다.");
+    }
+
     private String resolveAllReservationMessage(List<Reservation> reservations) {
-        StringJoiner joiner = new StringJoiner(LINE_SEPERATOR);
+        StringJoiner joiner = new StringJoiner(LINE_SEPARATOR);
         for (Reservation reservation : reservations) {
             joiner.add(resolveReservationMessage(reservation));
         }
@@ -58,7 +66,7 @@ public class OutputView {
     }
 
     private String resolveAllTimeMessage(List<ReservationTime> timeResponses) {
-        StringJoiner joiner = new StringJoiner(LINE_SEPERATOR);
+        StringJoiner joiner = new StringJoiner(LINE_SEPARATOR);
         for (ReservationTime time : timeResponses) {
             joiner.add(resolveTimeMessage(time));
         }
@@ -70,7 +78,7 @@ public class OutputView {
     }
 
     private String resolveAllOptionsMessage() {
-        StringJoiner sj = new StringJoiner(LINE_SEPERATOR);
+        StringJoiner sj = new StringJoiner(LINE_SEPARATOR);
         sj.add("[INFO] 방탈출 예약 및 시간 관리 어드민입니다.");
         sj.add("원하는 옵션을 선택해주세요. ex) 1");
         sj.add("--");
@@ -81,7 +89,7 @@ public class OutputView {
     }
 
     private String resolveReservationOptionsMessage() {
-        StringJoiner sj = new StringJoiner(LINE_SEPERATOR);
+        StringJoiner sj = new StringJoiner(LINE_SEPARATOR);
         sj.add("[INFO] 방탈출 예약 관리 어드민입니다.");
         sj.add("원하는 옵션을 선택해주세요. ex) 1");
         sj.add("--");
@@ -93,7 +101,7 @@ public class OutputView {
     }
 
     private String resolveTimeOptionsMessage() {
-        StringJoiner sj = new StringJoiner(LINE_SEPERATOR);
+        StringJoiner sj = new StringJoiner(LINE_SEPARATOR);
         sj.add("[INFO] 방탈출 시간 관리 어드민입니다.");
         sj.add("원하는 옵션을 선택해주세요. ex) 1");
         sj.add("--");

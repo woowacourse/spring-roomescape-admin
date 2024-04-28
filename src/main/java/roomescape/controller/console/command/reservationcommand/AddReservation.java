@@ -22,6 +22,7 @@ public class AddReservation implements Command {
         String name = inputView.readName();
         LocalDate date = inputView.readDate();
         outputView.printAllReservationTimes(reservationTimeService.allReservationTimes());
-        return new ReservationRequest(inputView.readName(), inputView.readDate(), inputView.readId());
+        Long timeId = inputView.readId();
+        return new ReservationRequest(name, date, timeId);
     }
 }

@@ -15,7 +15,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 
 @JdbcTest
 @DirtiesContext(classMode = DirtiesContext.ClassMode.BEFORE_EACH_TEST_METHOD)
-class JdbcTemplateReservationDaoTest {
+class ReservationDaoTest {
 
     @Autowired
     private JdbcTemplate jdbcTemplate;

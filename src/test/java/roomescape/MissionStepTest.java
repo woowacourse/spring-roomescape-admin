@@ -148,21 +148,24 @@ public class MissionStepTest {
         params.put("startAt", "10:00");
 
         RestAssured.given().log().all()
+                .port(randomServerPort)
                 .contentType(ContentType.JSON)
                 .body(params)
                 .when().post("/times")
                 .then().log().all()
-                .statusCode(200);
+                .statusCode(201);
 
         RestAssured.given().log().all()
+                .port(randomServerPort)
                 .when().get("/times")
                 .then().log().all()
                 .statusCode(200)
-                .body("size()", is(1));
+                .body("reservationTimes.size()", is(1));
 
         RestAssured.given().log().all()
+                .port(randomServerPort)
                 .when().delete("/times/1")
                 .then().log().all()
-                .statusCode(200);
+                .statusCode(204);
     }
 }

@@ -49,7 +49,7 @@ class ReservationTimeDaoImplTest {
     void should_find_reservation_time_by_id() {
         ReservationTime expectedReservationTime = new ReservationTime(1L, LocalTime.of(10, 0));
 
-        ReservationTime actualReservationTime = reservationTimeDao.findById(1L);
+        ReservationTime actualReservationTime = reservationTimeDao.findById(1L).get();
 
         assertThat(actualReservationTime).isEqualTo(expectedReservationTime);
     }
@@ -72,7 +72,8 @@ class ReservationTimeDaoImplTest {
         int expectedCount = 0;
 
         reservationTimeDao.deleteById(1L);
-        int actualCount = jdbcTemplate.queryForObject("select count(*) from reservation_time where id = 1", Integer.class);
+        int actualCount = jdbcTemplate.queryForObject("select count(*) from reservation_time where id = 1",
+                Integer.class);
 
         assertThat(actualCount).isEqualTo(expectedCount);
     }

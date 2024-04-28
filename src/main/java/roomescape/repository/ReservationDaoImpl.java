@@ -3,6 +3,7 @@ package roomescape.repository;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;
 import org.springframework.jdbc.core.simple.SimpleJdbcInsert;
@@ -45,7 +46,7 @@ public class ReservationDaoImpl implements ReservationDao {
     }
 
     @Override
-    public Reservation findById(Long id) {
+    public Optional<Reservation> findById(Long id) {
         String sql = "SELECT"
                 + "    r.id as reservation_id,"
                 + "    r.name,"
@@ -57,9 +58,9 @@ public class ReservationDaoImpl implements ReservationDao {
                 + "ON r.time_id = t.id "
                 + "WHERE r.id = ?";
         try {
-            return jdbcTemplate.queryForObject(sql, rowMapper, id);
+            return Optional.of(jdbcTemplate.queryForObject(sql, rowMapper, id));
         } catch (Exception e) {
-            return null;
+            return Optional.empty();
         }
 
     }
@@ -71,7 +72,7 @@ public class ReservationDaoImpl implements ReservationDao {
         reservation.put("date", reservationAddRequest.getDate());
         reservation.put("time_id", reservationAddRequest.getTimeId());
         Long id = simpleJdbcInsert.executeAndReturnKey(reservation).longValue();
-        return findById(id);
+        return findById(id).get();
     }
 
     @Override

@@ -4,6 +4,7 @@ import java.time.LocalTime;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 import java.util.concurrent.atomic.AtomicLong;
 import roomescape.domain.Reservation;
 import roomescape.domain.ReservationTime;
@@ -33,8 +34,11 @@ public class FakeReservationDao implements ReservationDao {
     }
 
     @Override
-    public Reservation findById(Long id) {
-        return reservations.get(id);
+    public Optional<Reservation> findById(Long id) {
+        if (reservations.containsKey(id)) {
+            return Optional.of(reservations.get(id));
+        }
+        return Optional.empty();
     }
 
     @Override

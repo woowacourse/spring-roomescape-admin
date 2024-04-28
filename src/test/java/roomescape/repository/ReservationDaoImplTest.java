@@ -52,7 +52,7 @@ class ReservationDaoImplTest {
         ReservationTime reservationTime = new ReservationTime(1L, LocalTime.of(10, 0));
         Reservation expectedReservation = new Reservation(1L, "브라운", LocalDate.of(2020, 12, 12), reservationTime);
 
-        Reservation actualReservation = reservationDaoImpl.findById(1L);
+        Reservation actualReservation = reservationDaoImpl.findById(1L).get();
 
         assertThat(actualReservation).isEqualTo(expectedReservation);
     }

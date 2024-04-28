@@ -24,7 +24,7 @@ public class ReservationService {
     }
 
     public void removeReservation(Long id) {
-        if (reservationDao.findById(id) == null) {
+        if (reservationDao.findById(id).isEmpty()) {
             throw new IllegalArgumentException("해당 id를 가진 예약이 존재하지 않습니다.");
         }
         reservationDao.deleteById(id);

@@ -10,6 +10,7 @@ import static org.mockito.Mockito.verify;
 import java.time.LocalDate;
 import java.time.LocalTime;
 import java.util.List;
+import java.util.Optional;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -61,7 +62,7 @@ class ReservationServiceMockTest {
     @DisplayName("원하는 id의 예약을 삭제합니다.")
     @Test
     void should_true_when_remove_reservation_with_exist_id() {
-        given(reservationDao.findById(1L)).willReturn(reservation);
+        given(reservationDao.findById(1L)).willReturn(Optional.of(reservation));
         doNothing().when(reservationDao).deleteById(1L);
 
         reservationService.removeReservation(1L);
@@ -72,7 +73,7 @@ class ReservationServiceMockTest {
     @DisplayName("없는 id의 예약을 삭제하면 예외를 발생합니다.")
     @Test
     void should_false_when_remove_reservation_with_non_exist_id() {
-        given(reservationDao.findById(1L)).willReturn(null);
+        given(reservationDao.findById(1L)).willReturn(Optional.empty());
 
         assertThatThrownBy(() -> reservationService.removeReservation(1L))
                 .isInstanceOf(IllegalArgumentException.class)

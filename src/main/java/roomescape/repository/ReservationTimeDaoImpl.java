@@ -3,6 +3,7 @@ package roomescape.repository;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;
 import org.springframework.jdbc.core.simple.SimpleJdbcInsert;
@@ -24,7 +25,8 @@ public class ReservationTimeDaoImpl implements ReservationTimeDao {
         this.jdbcTemplate = jdbcTemplate;
         this.simpleJdbcInsert = new SimpleJdbcInsert(jdbcTemplate)
                 .withTableName("RESERVATION_TIME")
-                .usingGeneratedKeyColumns("id");;
+                .usingGeneratedKeyColumns("id");
+        ;
     }
 
     @Override
@@ -37,16 +39,16 @@ public class ReservationTimeDaoImpl implements ReservationTimeDao {
         Map<String, Object> reservationTimeRow = new HashMap<>();
         reservationTimeRow.put("start_at", reservationTimeAddRequest.getStartAt());
         Long id = simpleJdbcInsert.executeAndReturnKey(reservationTimeRow).longValue();
-        return findById(id);
+        return findById(id).get();
     }
 
     @Override
-    public ReservationTime findById(Long id) {
+    public Optional<ReservationTime> findById(Long id) {
         String sql = "select * from reservation_time where id = ?";
         try {
-            return jdbcTemplate.queryForObject(sql, rowMapper, id);
-        }catch (Exception e){
-            return null;
+            return Optional.of(jdbcTemplate.queryForObject(sql, rowMapper, id));
+        } catch (Exception e) {
+            return Optional.empty();
         }
     }
 

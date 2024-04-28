@@ -24,7 +24,7 @@ public class ReservationTimeService {
     }
 
     public void removeReservationTime(Long id) {
-        if (reservationTimeDao.findById(id)==null) {
+        if (reservationTimeDao.findById(id).isEmpty()) {
             throw new IllegalArgumentException("해당 id를 가진 예약시간이 존재하지 않습니다.");
         }
         reservationTimeDao.deleteById(id);

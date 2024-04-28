@@ -28,7 +28,7 @@ public class ReservationTimeService {
         return ReservationTimeResponse.fromReservationTime(savedReservationTime);
     }
 
-    public void deleteReservationTime(Long reservationTimeId) {
+    public void delete(Long reservationTimeId) {
         reservationTimeDao.delete(reservationTimeId);
     }
 }

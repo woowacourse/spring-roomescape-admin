@@ -16,7 +16,6 @@ import org.springframework.test.annotation.DirtiesContext;
 import org.springframework.test.context.jdbc.Sql;
 import roomescape.controller.dto.request.ReservationCreateRequest;
 import roomescape.controller.dto.response.ReservationResponse;
-import roomescape.service.ReservationService;
 
 @SpringBootTest(webEnvironment = WebEnvironment.DEFINED_PORT)
 @DirtiesContext(classMode = DirtiesContext.ClassMode.BEFORE_EACH_TEST_METHOD)
@@ -48,10 +47,10 @@ class ReservationServiceTest {
     @DisplayName("저장되어 있는 예약을 전부 가져온다.")
     @Test
     void getReservations() {
-        // given
+        // given & when
         List<ReservationResponse> reservationResponses = reservationService.getReservations();
 
-        // when & then
+        //then
         ReservationResponse reservationResponse = reservationResponses.get(0);
         assertAll(
                 () -> assertThat(reservationResponses).hasSize(1),

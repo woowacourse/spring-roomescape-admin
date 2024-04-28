@@ -5,6 +5,10 @@ import roomescape.dto.ReservationResponse;
 import roomescape.dto.ReservationTimeResponse;
 
 public class OutputView {
+    public static void printErrorMessage(String errorMessage) {
+        System.out.println("[ERROR] " + errorMessage);
+    }
+
     public static void printAllReservations(List<ReservationResponse> reservationResponses) {
         System.out.println("reservation time responses:");
         for (ReservationResponse reservationResponse : reservationResponses) {

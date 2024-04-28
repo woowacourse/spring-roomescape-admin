@@ -21,7 +21,7 @@ public class ConsoleController {
         try {
             executeByInputCommand();
         } catch (Exception e) {
-            System.out.println(e.getMessage());
+            OutputView.printErrorMessage(e.getMessage());
             run();
         }
     }

@@ -21,7 +21,7 @@ public class InputView {
         if (split.length == 3) {
             return new ReservationRequest(split[0], split[1], Long.parseLong(split[2]));
         }
-        throw new IllegalArgumentException();
+        throw new IllegalArgumentException("invalid reservation request: " + input);
     }
 
     public static long inputDeleteId() {

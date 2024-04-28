@@ -15,7 +15,7 @@ import roomescape.controller.ReservationTimeController;
 import roomescape.controller.dto.SaveReservationRequest;
 import roomescape.controller.dto.SaveReservationTimeRequest;
 
-@Profile("!test")
+@Profile("default")
 @Component
 public class ConsoleRunner implements ApplicationRunner {
 

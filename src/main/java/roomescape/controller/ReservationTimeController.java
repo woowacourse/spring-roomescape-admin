@@ -39,8 +39,8 @@ public class ReservationTimeController {
                 .body(ReservationTimeFindResponse.from(saveReservationTime));
     }
 
-    @DeleteMapping("/{reservation_time_id}")
-    public void deleteReservationTime(@PathVariable(value = "reservation_time_id") Long id) {
+    @DeleteMapping("/{id}")
+    public void deleteReservationTime(@PathVariable Long id) {
         reservationTimeService.deleteById(id);
     }
 

@@ -11,6 +11,6 @@ public record ReservationSaveRequest(
 ) {
 
     public Reservation toEntity(ReservationTime reservationTime) {
-        return new Reservation(null, name, date, reservationTime);
+        return new Reservation(name, date, reservationTime);
     }
 }

@@ -56,7 +56,7 @@ public class GameTimeRepository {
     }
 
     public boolean existByStartAt(ReservationTime reservationTime) {
-        String sql = "SELECT COUNT(*) FROM reservation_time WHERE start_at = ?";
+        String sql = "select count(*) from reservation_time where start_at = ?";
         int count = jdbcTemplate.queryForObject(sql, Integer.class, reservationTime.getStartAt());
         return count > 0;
     }

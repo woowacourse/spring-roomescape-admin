@@ -20,8 +20,8 @@ public class InputView {
 
     public LocalTime readTime() {
         try {
-            System.out.println("[INFO] 원하는 예약 시간을 입력해주세요 ex) 19:00:00");
-            System.out.println("[INFO] 방탈출 예약 가능 시간은" + ReservationTime.startTime() +
+            System.out.println("[INFO] 예약 시간을 입력해주세요 ex) 19:00:00");
+            System.out.println("[INFO] 방탈출 예약 가능 시간은 " + ReservationTime.startTime() +
                     "부터 " + ReservationTime.endTime() + "까지입니다.");
             return LocalTime.parse(SCANNER.nextLine());
         } catch (DateTimeParseException e) {

@@ -25,7 +25,7 @@ public class ReservationService {
     public Long save(RequestReservation requestReservation) {
         ReservationTime reservationTime = timeRepository.findById(requestReservation.timeId());
 
-        Reservation reservation = new Reservation(null, requestReservation.name(),
+        Reservation reservation = new Reservation(requestReservation.name(),
                 requestReservation.date(),
                 reservationTime);
 

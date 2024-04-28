@@ -18,7 +18,7 @@ public class TimeService {
     }
 
     public Long save(RequestTime requestTime) {
-        ReservationTime reservationTime = new ReservationTime(null, requestTime.startAt());
+        ReservationTime reservationTime = new ReservationTime(requestTime.startAt());
         return timeRepository.save(reservationTime);
     }
 

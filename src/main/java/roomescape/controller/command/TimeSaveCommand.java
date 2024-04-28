@@ -15,7 +15,6 @@ public class TimeSaveCommand extends TimeCommand {
     }
 
     public void execute() {
-        consoleView.printAllTimes(reservationTimeService.findTimes());
         ReservationTimeRequestDto timeRequestDto = consoleView.readTimeToAdd();
         reservationTimeService.addTime(timeRequestDto);
     }

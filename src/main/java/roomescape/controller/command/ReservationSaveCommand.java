@@ -17,8 +17,6 @@ public class ReservationSaveCommand extends ReservationCommand{
 
     @Override
     public void execute() {
-        consoleView.printAllTimes(reservationTimeService.findTimes());
-        consoleView.printAllReservations(reservationService.findReservations());
         ReservationRequestDto reservationRequestDto = consoleView.readReservationToAdd();
         reservationService.addReservation(reservationRequestDto);
     }

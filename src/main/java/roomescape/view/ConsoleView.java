@@ -20,11 +20,13 @@ public class ConsoleView {
     public String readCommand() {
         System.out.println("""
                 
-                1. 시간 저장
-                2. 시간 삭제
-                3. 예약 저장
-                4. 예약 삭제
-                5. 종료
+                1. 시간 조회
+                2. 시간 저장
+                3. 시간 삭제
+                4. 예약 조회
+                5. 예약 저장
+                6. 예약 삭제
+                7. 종료
                 원하는 동작의 번호를 입력해주세요. 예 - 1
                 """);
         return scanner.nextLine();

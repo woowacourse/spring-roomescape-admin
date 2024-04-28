@@ -24,11 +24,13 @@ public class InputCommandMapper {
 
     private enum InputCommand {
 
-        SAVE_TIME("1", TimeSaveCommand.class),
-        DELETE_TIME("2", TimeDeleteCommand.class),
-        SAVE_RESERVATION("3", ReservationSaveCommand.class),
-        DELETE_RESERVATION("4", ReservationDeleteCommand.class),
-        EXIT("5", ExitCommand.class),
+        SHOW_TIME("1", TimeShowCommand.class),
+        SAVE_TIME("2", TimeSaveCommand.class),
+        DELETE_TIME("3", TimeDeleteCommand.class),
+        SHOW_RESERVATION("4", ReservationShowCommand.class),
+        SAVE_RESERVATION("5", ReservationSaveCommand.class),
+        DELETE_RESERVATION("6", ReservationDeleteCommand.class),
+        EXIT("7", ExitCommand.class),
         ;
 
         private final String input;

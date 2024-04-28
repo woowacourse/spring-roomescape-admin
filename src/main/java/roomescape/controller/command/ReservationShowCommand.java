@@ -7,16 +7,15 @@ import roomescape.service.ReservationTimeService;
 import roomescape.view.ConsoleView;
 
 @Component
-public class ReservationDeleteCommand extends ReservationCommand{
+public class ReservationShowCommand extends ReservationCommand {
 
     @Autowired
-    public ReservationDeleteCommand(ConsoleView consoleView, ReservationService reservationService, ReservationTimeService reservationTimeService) {
+    public ReservationShowCommand(ConsoleView consoleView, ReservationService reservationService, ReservationTimeService reservationTimeService) {
         super(consoleView, reservationService, reservationTimeService);
     }
 
     @Override
     public void execute() {
-        long id = consoleView.readReservationToDelete();
-        reservationService.deleteReservation(id);
+        consoleView.printAllReservations(reservationService.findReservations());
     }
 }

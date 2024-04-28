@@ -40,7 +40,7 @@ public class ConsoleInputView {
 
     public ReservationTimeRequest inputReservationTime() {
         System.out.println();
-        System.out.println("예약 시간 정보를 입력해주세요. (형식 : 시간");
+        System.out.println("예약 시간 정보를 입력해주세요. (형식 : 시간)");
         System.out.println("ex) 09:50");
 
         String reservationTime = inputString();

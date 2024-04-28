@@ -12,8 +12,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.annotation.Rollback;
 import org.springframework.transaction.annotation.Transactional;
-import roomescape.entity.GameTime;
 import roomescape.entity.Reservation;
+import roomescape.entity.ReservationTime;
 import roomescape.exception.IllegalReservationTimeException;
 
 @SpringBootTest
@@ -25,7 +25,7 @@ class ReservationServiceTest {
     @Autowired
     private GameTimeService gameTimeService;
 
-    private GameTime time_03_00;
+    private ReservationTime time_03_00;
 
     @BeforeEach
     void setUp() {

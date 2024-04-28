@@ -11,7 +11,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import roomescape.controller.dto.GameTimeCreateRequest;
 import roomescape.controller.dto.GameTimeCreateResponse;
-import roomescape.entity.GameTime;
+import roomescape.entity.ReservationTime;
 import roomescape.service.GameTimeService;
 
 @RequestMapping("/times")
@@ -33,7 +33,7 @@ public class GameTimeController {
 
     @PostMapping()
     public ResponseEntity<GameTimeCreateResponse> createGameTime(@RequestBody GameTimeCreateRequest request) {
-        GameTime saved = gameTimeService.save(request.toEntity());
+        ReservationTime saved = gameTimeService.save(request.toEntity());
         return ResponseEntity.ok().body(GameTimeCreateResponse.from(saved));
     }
 

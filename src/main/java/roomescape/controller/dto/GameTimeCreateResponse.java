@@ -1,7 +1,7 @@
 package roomescape.controller.dto;
 
 import java.time.LocalTime;
-import roomescape.entity.GameTime;
+import roomescape.entity.ReservationTime;
 
 public class GameTimeCreateResponse {
     private final Long id;
@@ -12,8 +12,8 @@ public class GameTimeCreateResponse {
         this.startAt = startAt;
     }
 
-    public static GameTimeCreateResponse from(GameTime gameTime) {
-        return new GameTimeCreateResponse(gameTime.getId(), gameTime.getStartAt());
+    public static GameTimeCreateResponse from(ReservationTime reservationTime) {
+        return new GameTimeCreateResponse(reservationTime.getId(), reservationTime.getStartAt());
     }
 
     public Long getId() {

@@ -11,25 +11,25 @@ public class Reservation {
     private final Long id;
     private final Name name;
     private final ReservationDate reservationDate;
-    private final GameTime gameTime;
+    private final ReservationTime reservationTime;
 
-    public Reservation(Long id, Name name, ReservationDate reservationDate, GameTime gameTime) {
+    public Reservation(Long id, Name name, ReservationDate reservationDate, ReservationTime reservationTime) {
         this.id = id;
         this.name = name;
         this.reservationDate = reservationDate;
-        this.gameTime = gameTime;
+        this.reservationTime = reservationTime;
     }
 
-    public Reservation(Long id, String name, LocalDate date, GameTime gameTime) {
-        this(id, new Name(name), new ReservationDate(date), gameTime);
+    public Reservation(Long id, String name, LocalDate date, ReservationTime reservationTime) {
+        this(id, new Name(name), new ReservationDate(date), reservationTime);
     }
 
-    public Reservation(String name, LocalDate date, GameTime gameTime) {
-        this(null, name, date, gameTime);
+    public Reservation(String name, LocalDate date, ReservationTime reservationTime) {
+        this(null, name, date, reservationTime);
     }
 
     public Reservation(Long id, Reservation reservation) {
-        this(id, reservation.getName(), reservation.getStartDate(), reservation.gameTime);
+        this(id, reservation.getName(), reservation.getStartDate(), reservation.reservationTime);
     }
 
     public long getId() {
@@ -37,7 +37,7 @@ public class Reservation {
     }
 
     public long getGameTimeId() {
-        return gameTime.getId();
+        return reservationTime.getId();
     }
 
     public String getName() {
@@ -49,7 +49,7 @@ public class Reservation {
     }
 
     public LocalTime getStartTime() {
-        return gameTime.getStartAt();
+        return reservationTime.getStartAt();
     }
 
     public LocalDateTime getStartDateTime() {
@@ -68,11 +68,11 @@ public class Reservation {
         Reservation that = (Reservation) o;
         return Objects.equals(id, that.id) && Objects.equals(name, that.name)
                 && Objects.equals(reservationDate, that.reservationDate) && Objects.equals(
-                gameTime, that.gameTime);
+                reservationTime, that.reservationTime);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(id, name, reservationDate, gameTime);
+        return Objects.hash(id, name, reservationDate, reservationTime);
     }
 }

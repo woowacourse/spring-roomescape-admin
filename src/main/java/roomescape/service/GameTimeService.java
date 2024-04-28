@@ -2,7 +2,7 @@ package roomescape.service;
 
 import java.util.List;
 import org.springframework.stereotype.Service;
-import roomescape.entity.GameTime;
+import roomescape.entity.ReservationTime;
 import roomescape.exception.IllegalReservationTimeException;
 import roomescape.repository.GameTimeRepository;
 
@@ -14,19 +14,19 @@ public class GameTimeService {
         this.gameTimeRepository = gameTimeRepository;
     }
 
-    public List<GameTime> readAll() {
+    public List<ReservationTime> readAll() {
         return gameTimeRepository.readAll();
     }
 
-    public GameTime findById(long id) {
+    public ReservationTime findById(long id) {
         return gameTimeRepository.findById(id);
     }
 
-    public GameTime save(GameTime gameTime) {
-        if (gameTimeRepository.existByStartAt(gameTime)) {
-            throw new IllegalReservationTimeException("해당 게임 시간은 이미 등록되어 있습니다: " + gameTime.getStartAt());
+    public ReservationTime save(ReservationTime reservationTime) {
+        if (gameTimeRepository.existByStartAt(reservationTime)) {
+            throw new IllegalReservationTimeException("해당 게임 시간은 이미 등록되어 있습니다: " + reservationTime.getStartAt());
         }
-        return gameTimeRepository.save(gameTime);
+        return gameTimeRepository.save(reservationTime);
     }
 
     public void deleteById(long id) {

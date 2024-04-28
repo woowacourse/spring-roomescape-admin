@@ -10,11 +10,11 @@ import org.junit.jupiter.params.provider.ValueSource;
 import roomescape.exception.IllegalRequestFormException;
 import roomescape.exception.IllegalReservationTimeException;
 
-class GameTimeTest {
+class ReservationTimeTest {
     @DisplayName("예약 가능 시각이 null인 경우 예외가 발생한다")
     @Test
     void createWithNullTest() {
-        assertThatThrownBy(() -> new GameTime(null))
+        assertThatThrownBy(() -> new ReservationTime(null))
                 .isInstanceOf(IllegalRequestFormException.class);
     }
 
@@ -22,7 +22,7 @@ class GameTimeTest {
     @ParameterizedTest
     @ValueSource(ints = {1, 2, 3, 58, 59})
     void createWithNonHourlyTimeTest(int nonHourlyMinute) {
-        assertThatThrownBy(() -> new GameTime(LocalTime.of(3, nonHourlyMinute)))
+        assertThatThrownBy(() -> new ReservationTime(LocalTime.of(3, nonHourlyMinute)))
                 .isInstanceOf(IllegalReservationTimeException.class);
     }
 }

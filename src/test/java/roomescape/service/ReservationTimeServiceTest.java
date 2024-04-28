@@ -12,7 +12,7 @@ import roomescape.exception.IllegalReservationTimeException;
 
 @SpringBootTest
 @Transactional
-class GameTimeServiceTest {
+class ReservationTimeServiceTest {
     @Autowired
     private GameTimeService gameTimeService;
 

@@ -11,8 +11,8 @@ import org.springframework.jdbc.core.RowMapper;
 import org.springframework.jdbc.support.GeneratedKeyHolder;
 import org.springframework.jdbc.support.KeyHolder;
 import org.springframework.stereotype.Repository;
-import roomescape.entity.GameTime;
 import roomescape.entity.Reservation;
+import roomescape.entity.ReservationTime;
 
 @Repository
 public class ReservationRepository {
@@ -24,7 +24,7 @@ public class ReservationRepository {
         long timeId = rs.getLong("time_id");
         LocalTime time = rs.getTime("start_at").toLocalTime();
 
-        return new Reservation(id, name, date, new GameTime(timeId, time));
+        return new Reservation(id, name, date, new ReservationTime(timeId, time));
     };
 
     private final JdbcTemplate jdbcTemplate;
@@ -52,7 +52,7 @@ public class ReservationRepository {
             return ps;
         }, keyHolder);
         long savedId = keyHolder.getKey().longValue();
-        GameTime time = new GameTime(reservation.getGameTimeId(), reservation.getStartTime());
+        ReservationTime time = new ReservationTime(reservation.getGameTimeId(), reservation.getStartTime());
         return new Reservation(savedId, reservation.getName(), reservation.getStartDate(), time);
     }
 

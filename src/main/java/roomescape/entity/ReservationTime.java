@@ -5,17 +5,17 @@ import java.util.Objects;
 import roomescape.exception.IllegalRequestFormException;
 import roomescape.exception.IllegalReservationTimeException;
 
-public class GameTime {
+public class ReservationTime {
     private final Long id;
     private final LocalTime startAt;
 
-    public GameTime(Long id, LocalTime startAt) {
+    public ReservationTime(Long id, LocalTime startAt) {
         validate(startAt);
         this.id = id;
         this.startAt = startAt;
     }
 
-    public GameTime(LocalTime startAt) {
+    public ReservationTime(LocalTime startAt) {
         this(null, startAt);
     }
 
@@ -52,7 +52,7 @@ public class GameTime {
         if (o == null || getClass() != o.getClass()) {
             return false;
         }
-        GameTime that = (GameTime) o;
+        ReservationTime that = (ReservationTime) o;
         return Objects.equals(id, that.id) && Objects.equals(startAt, that.startAt);
     }
 

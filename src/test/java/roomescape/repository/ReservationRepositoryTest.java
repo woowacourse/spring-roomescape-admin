@@ -13,8 +13,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.transaction.annotation.Transactional;
-import roomescape.entity.GameTime;
 import roomescape.entity.Reservation;
+import roomescape.entity.ReservationTime;
 
 @SpringBootTest
 @Transactional
@@ -24,7 +24,7 @@ class ReservationRepositoryTest {
     private ReservationRepository reservationRepository;
     @Autowired
     private GameTimeRepository gameTimeRepository;
-    private GameTime savedTime0300;
+    private ReservationTime savedTime0300;
 
     @BeforeEach
     void setUp() {

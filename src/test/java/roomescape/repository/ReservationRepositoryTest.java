@@ -55,6 +55,16 @@ class ReservationRepositoryTest {
         assertThat(saved).isEqualTo(new Reservation(saved.getId(), reservation));
     }
 
+    @DisplayName("같은 예약이 존재하는지 알 수 있다")
+    @Test
+    void existSameTimeReservationTest() {
+        Reservation reservation = new Reservation("웨지", DAY_AFTER_TOMORROW, savedTime0300);
+        reservationRepository.save(reservation);
+        Reservation conflictReservation = new Reservation("리비", DAY_AFTER_TOMORROW, savedTime0300);
+
+        assertThat(reservationRepository.existByReservationTime(DAY_AFTER_TOMORROW, savedTime0300.getId())).isTrue();
+    }
+
     @DisplayName("예약 단건을 조회할 수 있다")
     @Test
     void findByIdTest() {

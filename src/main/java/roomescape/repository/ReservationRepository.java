@@ -56,6 +56,16 @@ public class ReservationRepository {
         return new Reservation(savedId, reservation.getName(), reservation.getStartDate(), time);
     }
 
+    public boolean existByReservationTime(LocalDate date, long time_id) {
+        String sql = "select exists ( "
+                + "    select 1 "
+                + "    from reservation "
+                + "    where date = ? "
+                + "    and time_id = ? "
+                + ")";
+        return jdbcTemplate.queryForObject(sql, Boolean.class, date, time_id);
+    }
+
     public Reservation findById(long id) {
         String sql = "select r.id as reservation_id, r.name, r.date, t.id as time_id, t.start_at as time_value "
                 + "from reservation as r "

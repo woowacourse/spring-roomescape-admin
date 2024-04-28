@@ -19,6 +19,6 @@ public class AdminController {
 
     @GetMapping("/time")
     public String timePage() {
-        return "admin/time.html";
+        return "admin/time";
     }
 }

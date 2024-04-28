@@ -10,6 +10,7 @@ import java.sql.Connection;
 import java.sql.SQLException;
 import java.util.HashMap;
 import java.util.Map;
+import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -26,21 +27,27 @@ class MissionStepTest {
     @Autowired
     private ReservationController reservationController;
 
+    @DisplayName("admin 페이지를 응답한다.")
     @Test
-    void 일단계() {
+    void adminPageResponseTest() {
         RestAssured.given().log().all()
                 .when().get("/admin")
                 .then().log().all()
                 .statusCode(200);
     }
 
+    @DisplayName("reservation 페이지를 응답한다.")
     @Test
-    void 이단계() {
+    void reservationPageResponseTest() {
         RestAssured.given().log().all()
                 .when().get("/admin/reservation")
                 .then().log().all()
                 .statusCode(200);
+    }
 
+    @DisplayName("초기 reservation 목록을 조회한다.")
+    @Test
+    void reservationInquiryTest() {
         RestAssured.given().log().all()
                 .when().get("/reservations")
                 .then().log().all()
@@ -48,8 +55,9 @@ class MissionStepTest {
                 .body("size()", is(0));
     }
 
+    @DisplayName("connection 이 정상적으로 생성된다.")
     @Test
-    void 사단계() {
+    void connectionTest() {
         try (Connection connection = jdbcTemplate.getDataSource().getConnection()) {
             assertThat(connection).isNotNull();
             assertThat(connection.getCatalog()).isEqualTo("DATABASE");
@@ -59,8 +67,9 @@ class MissionStepTest {
         }
     }
 
+    @DisplayName("시간을 저장, 조회 및 삭제한다.")
     @Test
-    void 칠단계() {
+    void timeTest() {
         Map<String, String> params = new HashMap<>();
         params.put("startAt", "10:00");
 
@@ -83,8 +92,9 @@ class MissionStepTest {
                 .statusCode(200);
     }
 
+    @DisplayName("예약을 저장, 조회 및 삭제한다.")
     @Test
-    void 팔단계() {
+    void reservationTest() {
         Map<String, String> params = new HashMap<>();
         params.put("startAt", "10:00");
 
@@ -114,8 +124,9 @@ class MissionStepTest {
                 .body("size()", is(1));
     }
 
+    @DisplayName("reservation controller 에 JdbcTemplate 이 필드로 존재하지 않는다.")
     @Test
-    void 구단계() {
+    void reservationControllerNotHaveJdbcTemplateTest() {
         boolean isJdbcTemplateInjected = false;
 
         for (Field field : reservationController.getClass().getDeclaredFields()) {

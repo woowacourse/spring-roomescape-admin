@@ -1,6 +1,7 @@
 package roomescape.service;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import static org.junit.jupiter.api.Assertions.assertAll;
 import static org.springframework.boot.test.context.SpringBootTest.WebEnvironment.RANDOM_PORT;
 import static org.springframework.test.annotation.DirtiesContext.ClassMode.BEFORE_EACH_TEST_METHOD;
@@ -22,8 +23,8 @@ class ReservationTimeServiceTest {
     @Autowired
     ReservationTimeService reservationTimeService;
 
-    @Test
     @DisplayName("시간 저장")
+    @Test
     void saveTime() {
         //given
         final List<ReservationTimeResponse> beforeSaving = reservationTimeService.findAll();
@@ -69,5 +70,12 @@ class ReservationTimeServiceTest {
 
         //then
         assertThat(findAll).isEqualTo(expected);
+    }
+
+    @DisplayName("존재하지 않은 시간 삭제시 예외")
+    @Test
+    void removeNonExistentReservationTime() {
+        assertThatThrownBy(() -> reservationTimeService.remove(100L))
+                .isInstanceOf(IllegalArgumentException.class);
     }
 }

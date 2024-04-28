@@ -72,9 +72,9 @@ class ReservationServiceTest {
         assertThat(findAll).isEqualTo(expected);
     }
 
-    @Test
     @DisplayName("존재하지 않은 예약 삭제시 예외")
-    void removeNotExist() {
+    @Test
+    void removeNonExistentReservation() {
         assertThatThrownBy(() -> reservationService.remove(100L))
                 .isInstanceOf(IllegalArgumentException.class);
     }

@@ -5,6 +5,8 @@ import static org.hamcrest.Matchers.is;
 
 import io.restassured.RestAssured;
 import io.restassured.http.ContentType;
+import io.restassured.response.ExtractableResponse;
+import io.restassured.response.Response;
 import java.lang.reflect.Field;
 import java.sql.Connection;
 import java.sql.SQLException;
@@ -57,13 +59,15 @@ class MissionStepTest {
         params.put("date", "2023-08-05");
         params.put("timeId", "1");
 
-        RestAssured.given().log().all()
+        ExtractableResponse<Response> response = RestAssured.given().log().all()
                 .contentType(ContentType.JSON)
                 .body(params)
                 .when().post("/reservations")
                 .then().log().all()
                 .statusCode(201)
-                .body("id", is(1));
+                .body("id", is(1)).extract();
+
+        int id = response.jsonPath().get("id");
 
         RestAssured.given().log().all()
                 .when().get("/reservations")
@@ -72,7 +76,7 @@ class MissionStepTest {
                 .body("size()", is(1));
 
         RestAssured.given().log().all()
-                .when().delete("/reservations/1")
+                .when().delete("/reservations/%d".formatted(id))
                 .then().log().all()
                 .statusCode(204);
 
@@ -141,12 +145,14 @@ class MissionStepTest {
         Map<String, String> params = new HashMap<>();
         params.put("startAt", "10:00");
 
-        RestAssured.given().log().all()
+        ExtractableResponse<Response> response = RestAssured.given().log().all()
                 .contentType(ContentType.JSON)
                 .body(params)
                 .when().post("/times")
                 .then().log().all()
-                .statusCode(201);
+                .statusCode(201).extract();
+
+        int id = response.jsonPath().get("id");
 
         RestAssured.given().log().all()
                 .when().get("/times")
@@ -155,7 +161,7 @@ class MissionStepTest {
                 .body("size()", is(2));
 
         RestAssured.given().log().all()
-                .when().delete("/times/1")
+                .when().delete("/times/%d".formatted(id))
                 .then().log().all()
                 .statusCode(204);
     }

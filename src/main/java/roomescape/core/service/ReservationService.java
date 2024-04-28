@@ -1,0 +1,42 @@
+package roomescape.core.service;
+
+import java.util.List;
+import org.springframework.stereotype.Service;
+import roomescape.core.dao.ReservationDao;
+import roomescape.core.dao.ReservationTimeDao;
+import roomescape.core.domain.Reservation;
+import roomescape.core.domain.ReservationTime;
+import roomescape.core.dto.request.ReservationRequest;
+import roomescape.core.dto.response.ReservationResponse;
+
+@Service
+public class ReservationService {
+
+    private final ReservationDao reservationDao;
+    private final ReservationTimeDao reservationTimeDao;
+
+    public ReservationService(ReservationDao reservationDao, ReservationTimeDao reservationTimeDao) {
+        this.reservationDao = reservationDao;
+        this.reservationTimeDao = reservationTimeDao;
+    }
+
+    public ReservationResponse createReservation(ReservationRequest reservationRequest) {
+        ReservationTime reservationTime = reservationTimeDao.findById(reservationRequest.timeId())
+                .orElseThrow(() -> new IllegalArgumentException("예약 시간을 찾을 수 없습니다."));
+        Reservation reservation = reservationRequest.toEntity(reservationTime);
+
+        Reservation savedReservation = reservationDao.save(reservation);
+        return ReservationResponse.from(savedReservation);
+    }
+
+    public List<ReservationResponse> findAllReservations() {
+        List<Reservation> reservations = reservationDao.findAllReservations();
+        return reservations.stream()
+                .map(ReservationResponse::from)
+                .toList();
+    }
+
+    public void deleteReservation(Long id) {
+        reservationDao.delete(id);
+    }
+}

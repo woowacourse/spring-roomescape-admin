@@ -10,6 +10,7 @@ import org.springframework.boot.test.web.server.LocalServerPort;
 import org.springframework.test.annotation.DirtiesContext;
 import org.springframework.test.context.jdbc.Sql;
 import roomescape.dto.ReservationResponse;
+import roomescape.dto.ReservationTimeResponse;
 
 import java.time.LocalDate;
 import java.util.HashMap;
@@ -149,26 +150,20 @@ class ReservationControllerIntegrationTest {
     @DisplayName("예약 시간 정보를 삭제한다.")
     @Test
     void deleteReservationTimeTest() {
-        // 예약 정보 삭제
-        RestAssured.given().log().all()
-                .when().delete("/reservations/1")
-                .then().log().all()
-                .statusCode(200);
-
         // 예약 시간 정보 삭제
         RestAssured.given().log().all()
-                .when().delete("/times/1")
+                .when().delete("/times/2")
                 .then().log().all()
                 .statusCode(200);
 
         // 예약 시간 정보 조회
-        List<ReservationResponse> reservations = RestAssured.given().log().all()
-                .when().get("/reservations")
+        List<ReservationTimeResponse> reservationTimes = RestAssured.given().log().all()
+                .when().get("/times")
                 .then().log().all()
                 .statusCode(200).extract()
-                .jsonPath().getList(".", ReservationResponse.class);
+                .jsonPath().getList(".", ReservationTimeResponse.class);
 
-        assertThat(reservations.size()).isEqualTo(1);
+        assertThat(reservationTimes.size()).isEqualTo(1);
     }
 
     @DisplayName("존재하지 않는 예약 시간 정보를 삭제하려고 하면 400코드가 응답된다.")

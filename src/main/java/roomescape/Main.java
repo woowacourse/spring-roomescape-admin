@@ -1,10 +1,10 @@
 package roomescape;
 
 import roomescape.controller.console.RoomEscapeConsoleController;
-import roomescape.respository.ReservationRepository;
-import roomescape.respository.ReservationRepositoryImpl;
-import roomescape.respository.ReservationTimeRepository;
-import roomescape.respository.ReservationTimeRepositoryImpl;
+import roomescape.dao.ConsoleReservationDao;
+import roomescape.dao.ConsoleReservationTimeDao;
+import roomescape.dao.ReservationDao;
+import roomescape.dao.ReservationTimeDao;
 import roomescape.service.ReservationService;
 import roomescape.service.ReservationTimeService;
 import roomescape.view.InputView;
@@ -16,15 +16,15 @@ public class Main {
         InputView inputView = new InputView();
         OutputView outputView = new OutputView();
 
-        ReservationRepository reservationRepository = new ReservationRepositoryImpl();
-        ReservationTimeRepository reservationTimeRepository = new ReservationTimeRepositoryImpl();
+        ReservationDao reservationDao = new ConsoleReservationDao();
+        ReservationTimeDao reservationTimeDao = new ConsoleReservationTimeDao();
 
         ReservationService reservationService = new ReservationService(
-                reservationRepository,
-                reservationTimeRepository
+                reservationDao,
+                reservationTimeDao
         );
 
-        ReservationTimeService reservationTimeService = new ReservationTimeService(reservationTimeRepository);
+        ReservationTimeService reservationTimeService = new ReservationTimeService(reservationTimeDao);
 
         RoomEscapeConsoleController roomEscapeConsoleController = new RoomEscapeConsoleController(
                 inputView,

@@ -13,8 +13,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.context.SpringBootTest.WebEnvironment;
 import org.springframework.jdbc.core.JdbcTemplate;
-import roomescape.dao.ReservationDao;
-import roomescape.dao.ReservationTimeDao;
+import roomescape.dao.WebReservationDao;
+import roomescape.dao.WebReservationTimeDao;
 import roomescape.domain.reservation.Reservation;
 import roomescape.domain.reservation.ReservationDate;
 import roomescape.domain.reservation.ReservationName;
@@ -29,16 +29,16 @@ class ReservationServiceTest {
     @Autowired
     private JdbcTemplate jdbcTemplate;
     @Autowired
-    private ReservationDao reservationDao;
+    private WebReservationDao reservationDao;
     @Autowired
-    private ReservationTimeDao reservationTimeDao;
+    private WebReservationTimeDao reservationTimeDao;
     @Autowired
     private ReservationService reservationService;
 
     @BeforeEach
     void setUp() {
         ReservationTime given = new ReservationTime(null, ReservationStartAt.from("12:40"));
-        ReservationTime reservationTime = reservationTimeDao.add(given);
+        ReservationTime reservationTime = reservationTimeDao.create(given);
         Reservation daon = new Reservation(
                 null,
                 new ReservationName("daon"),
@@ -51,8 +51,8 @@ class ReservationServiceTest {
                 ReservationDate.from("2022-02-22"),
                 reservationTime
         );
-        reservationDao.add(daon);
-        reservationDao.add(ikjo);
+        reservationDao.create(daon);
+        reservationDao.create(ikjo);
     }
 
     @AfterEach

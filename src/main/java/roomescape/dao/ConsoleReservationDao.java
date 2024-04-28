@@ -1,4 +1,4 @@
-package roomescape.respository;
+package roomescape.dao;
 
 import java.util.List;
 import java.util.Map;
@@ -6,19 +6,19 @@ import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.atomic.AtomicLong;
 import roomescape.domain.reservation.Reservation;
 
-public class ReservationRepositoryImpl implements ReservationRepository {
+public class ConsoleReservationDao implements ReservationDao {
 
     public static final int INITIAL_ID_VALUE = 1;
     private final AtomicLong reservationId = new AtomicLong(INITIAL_ID_VALUE);
     private final Map<Long, Reservation> store = new ConcurrentHashMap<>();
 
     @Override
-    public List<Reservation> findAll() {
+    public List<Reservation> readAll() {
         return store.values().stream().toList();
     }
 
     @Override
-    public Reservation add(Reservation reservation) {
+    public Reservation create(Reservation reservation) {
         long id = reservationId.getAndIncrement();
         Reservation newReservation = new Reservation(
                 id,

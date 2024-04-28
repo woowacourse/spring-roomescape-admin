@@ -22,12 +22,11 @@ public class ReservationService {
     }
 
     public ReservationResponse save(final CreateReservationRequest request) {
-        final Optional<ReservationTime> findTime = reservationTimeDao.findById(request.timeId());
-        if (findTime.isEmpty()) {
-            throw new IllegalArgumentException("존재하지 않는 시간입니다.");
-        }
-        final Reservation reservation = new Reservation(request.name(), request.date(), findTime.get());
-        final Reservation saved = reservationDao.save(reservation, findTime.get().getId());
+        final ReservationTime findTime = reservationTimeDao.findById(request.timeId())
+                .orElseThrow(() -> new IllegalArgumentException("존재하지 않는 시간입니다."));
+
+        final Reservation reservation = new Reservation(request.name(), request.date(), findTime);
+        final Reservation saved = reservationDao.save(reservation, findTime.getId());
         return ReservationResponse.from(saved);
     }
 

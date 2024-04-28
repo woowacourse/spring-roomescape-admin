@@ -68,7 +68,7 @@ public class ReservationTimeDao {
         return new ReservationTime(id, startAt);
     }
 
-    public void delete(Long id) throws DataIntegrityViolationException {
+    public void delete(Long id) {
         String sql = "delete from reservation_time where id = ?";
         jdbcTemplate.update(sql, id);
     }

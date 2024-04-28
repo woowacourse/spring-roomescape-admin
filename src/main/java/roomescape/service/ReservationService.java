@@ -32,7 +32,7 @@ public class ReservationService {
         return reservationDao.save(new Reservation(null, reservationRequestDto.name(), reservationRequestDto.date(), reservationTime));
     }
 
-    public void delete(Long id) throws DataIntegrityViolationException  {
+    public void delete(Long id) {
         reservationDao.delete(id);
     }
 }

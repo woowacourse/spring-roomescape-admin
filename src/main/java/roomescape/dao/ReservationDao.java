@@ -51,6 +51,22 @@ public class ReservationDao {
         return jdbcTemplate.query(sql, ROW_MAPPER);
     }
 
+    public List<Reservation> findByTimeId(long id) {
+        String sql = """
+                select  
+                    r.id as reservation_id,  
+                    r.name, 
+                    r.date, 
+                    t.id as time_id, 
+                    t.start_at as time_value 
+                from reservation as r 
+                inner join reservation_time as t 
+                on r.time_id = t.id
+                where r.time_id = ?
+                """;
+        return jdbcTemplate.query(sql, ROW_MAPPER, id);
+    }
+
     public Reservation save(Reservation reservation) {
         String name = reservation.getName();
         LocalDate date = reservation.getDate();
@@ -73,7 +89,7 @@ public class ReservationDao {
         return new Reservation(saveId, name, date, reservation.getTime());
     }
 
-    public void delete(Long id) throws DataIntegrityViolationException {
+    public void delete(Long id) {
         String sql = "delete from reservation where id = ?";
         jdbcTemplate.update(sql, id);
     }

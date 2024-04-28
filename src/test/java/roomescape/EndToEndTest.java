@@ -47,6 +47,12 @@ class EndToEndTest {
                             .when().delete("/times/1")
                             .then().log().all()
                             .statusCode(200);
+
+                    RestAssured.given().log().all()
+                            .when().get("/times")
+                            .then().log().all()
+                            .statusCode(200)
+                            .body("size()", is(0));
                 })
         );
     }
@@ -92,6 +98,12 @@ class EndToEndTest {
                             .when().delete("/reservations/1")
                             .then().log().all()
                             .statusCode(200);
+
+                    RestAssured.given().log().all()
+                            .when().get("/reservations")
+                            .then().log().all()
+                            .statusCode(200)
+                            .body("size()", is(0));
                 })
         );
     }

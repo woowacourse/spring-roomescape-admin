@@ -9,7 +9,7 @@ public class InputView {
 
     private static final InputView INSTANCE = new InputView();
     private static final Scanner SCANNER = new Scanner(System.in);
-    public static final String DELIMITER = ",";
+    private static final String DELIMITER = ",";
 
     private InputView() {
     }

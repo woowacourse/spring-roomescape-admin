@@ -7,30 +7,30 @@ import roomescape.core.service.ReservationTimeService;
 
 public class ServiceFactory {
 
-    private static final ServiceFactory serviceFactory = new ServiceFactory();
-    private static final ReservationService reservationService;
-    private static final ReservationTimeService reservationTimeService;
+    private static final ServiceFactory INSTANCE = new ServiceFactory();
+    private static final ReservationService RESERVATION_SERVICE;
+    private static final ReservationTimeService RESERVATION_TIME_SERVICE;
 
     static {
         MemoryReservationDao memoryReservationDao = new MemoryReservationDao();
         MemoryReservationTimeDao memoryReservationTimeDao = new MemoryReservationTimeDao();
 
-        reservationService = new ReservationService(memoryReservationDao, memoryReservationTimeDao);
-        reservationTimeService = new ReservationTimeService(memoryReservationTimeDao);
+        RESERVATION_SERVICE = new ReservationService(memoryReservationDao, memoryReservationTimeDao);
+        RESERVATION_TIME_SERVICE = new ReservationTimeService(memoryReservationTimeDao);
     }
 
     private ServiceFactory() {
     }
 
     public static ServiceFactory getInstance() {
-        return serviceFactory;
+        return INSTANCE;
     }
 
     public ReservationService getReservationService() {
-        return reservationService;
+        return RESERVATION_SERVICE;
     }
 
     public ReservationTimeService getReservationTimeService() {
-        return reservationTimeService;
+        return RESERVATION_TIME_SERVICE;
     }
 }

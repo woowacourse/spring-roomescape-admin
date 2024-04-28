@@ -20,16 +20,16 @@ public class Reservation {
         this(id, new UserName(name), date, time);
     }
 
+    public Reservation(Long id, Reservation reservation) {
+        this(id, reservation.name, reservation.date, reservation.time);
+    }
+
     private Reservation(Long id, UserName name, LocalDate date, ReservationTime time) {
         Objects.requireNonNull(date, "예약 날짜는 필수입니다.");
         this.id = id;
         this.name = name;
         this.date = date;
         this.time = time;
-    }
-
-    public Reservation updateId(Long id) {
-        return new Reservation(id, name, date, time);
     }
 
     public Long getId() {

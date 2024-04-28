@@ -10,8 +10,8 @@ public record ReservationRequest(
         String name,
         Long timeId) {
 
-    public Reservation toDomain() {
-        return new Reservation(name(), date(), new ReservationTime(timeId()));
+    public Reservation toDomain(ReservationTime reservationTime) {
+        return new Reservation(name(), date(), reservationTime);
     }
 
 }

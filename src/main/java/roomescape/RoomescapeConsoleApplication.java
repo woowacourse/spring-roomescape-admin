@@ -23,7 +23,7 @@ public class RoomescapeConsoleApplication {
     public RoomescapeConsoleApplication() {
         ReservationTimeRepository reservationTimeRepository = new MemoryReservationTimeRepository();
         ReservationRepository reservationRepository = new MemoryReservationRepository(reservationTimeRepository);
-        this.reservationService = new ReservationService(reservationRepository);
+        this.reservationService = new ReservationService(reservationRepository, reservationTimeRepository);
         this.reservationTimeService = new ReservationTimeService(reservationTimeRepository);
         this.inputView = new ConsoleInputView();
         this.outputView = new ConsoleOutputView();

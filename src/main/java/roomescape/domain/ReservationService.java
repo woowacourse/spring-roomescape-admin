@@ -9,9 +9,12 @@ import roomescape.domain.dto.ReservationResponse;
 public class ReservationService {
 
     private final ReservationRepository reservationRepository;
+    private final ReservationTimeRepository reservationTimeRepository;
 
-    public ReservationService(ReservationRepository reservationRepository) {
+    public ReservationService(ReservationRepository reservationRepository,
+                              ReservationTimeRepository reservationTimeRepository) {
         this.reservationRepository = reservationRepository;
+        this.reservationTimeRepository = reservationTimeRepository;
     }
 
     public List<ReservationResponse> getAllReservations() {
@@ -21,7 +24,10 @@ public class ReservationService {
     }
 
     public ReservationResponse createReservation(ReservationRequest reservationRequest) {
-        Reservation reservation = reservationRequest.toDomain();
+        ReservationTime time = reservationTimeRepository.findById(reservationRequest.timeId())
+                .orElseThrow(() -> new IllegalStateException("해당 예약 시간이 존재하지 않습니다."));
+        Reservation reservation = reservationRequest.toDomain(time);
+
         Reservation createdReservation = reservationRepository.create(reservation);
         return ReservationResponse.from(createdReservation);
     }

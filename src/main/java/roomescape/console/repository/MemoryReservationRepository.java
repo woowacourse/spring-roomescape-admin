@@ -34,8 +34,7 @@ public class MemoryReservationRepository implements ReservationRepository {
     @Override
     public Reservation create(Reservation reservation) {
         Long timeId = reservation.time().id();
-        ReservationTime reservationTime = reservationTimeRepository.findById(timeId)
-                .orElseThrow(() -> new IllegalStateException("해당 예약 시간이 존재하지 않습니다."));
+        ReservationTime reservationTime = reservationTimeRepository.findById(timeId).orElseThrow();
 
         Long newReservationId = autoIncreaseId.getAndIncrement();
         Reservation newReservation = new Reservation(

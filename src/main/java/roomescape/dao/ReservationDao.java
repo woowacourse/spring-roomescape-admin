@@ -9,7 +9,6 @@ import org.springframework.stereotype.Repository;
 import roomescape.domain.Reservation;
 import roomescape.domain.ReservationTime;
 import roomescape.dto.ReservationCreateRequest;
-import roomescape.dto.ReservationResponse;
 
 import javax.sql.DataSource;
 import java.time.LocalDate;

@@ -1,8 +1,6 @@
 package roomescape.controller;
 
-import java.util.ArrayList;
 import java.util.List;
-import java.util.concurrent.atomic.AtomicLong;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -10,30 +8,35 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
-import roomescape.dto.ReservationRequestDto;
+import roomescape.dto.ReservationRequest;
+import roomescape.dto.ReservationResponse;
 import roomescape.entity.Reservation;
+import roomescape.service.ReservationService;
 
 @RestController
 @RequestMapping("/reservations")
 public class ReservationApiController {
 
-    private final List<Reservation> reservations = new ArrayList<>();
-    private final AtomicLong index = new AtomicLong(1);
+    private final ReservationService reservationService;
+
+    public ReservationApiController(ReservationService reservationService) {
+        this.reservationService = reservationService;
+    }
 
     @GetMapping
-    public List<Reservation> findAllReservations() {
-        return reservations;
+    public List<ReservationResponse> findAllReservations() {
+        return reservationService.findAllReservations().stream().map(ReservationResponse::new).toList();
     }
 
     @PostMapping
-    public Reservation addReservation(@RequestBody ReservationRequestDto reservationRequestDto) {
-        Reservation reservation = reservationRequestDto.toEntity(index.getAndIncrement());
-        reservations.add(reservation);
-        return reservation;
+    public ReservationResponse addReservation(@RequestBody ReservationRequest reservationRequest) {
+        Reservation newReservation = reservationService.addReservation(reservationRequest);
+
+        return new ReservationResponse(newReservation);
     }
 
     @DeleteMapping("/{id}")
     public void deleteReservation(@PathVariable long id) {
-        reservations.removeIf(reservation -> reservation.getId() == id);
+        reservationService.deleteReservationById(id);
     }
 }

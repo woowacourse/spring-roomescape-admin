@@ -33,18 +33,18 @@ public class TimeDao {
         return jdbcTemplate.queryForObject(sql, rowMapper, id);
     }
 
-    public ReservationTime createTime(String startAt) {
+    public ReservationTime createTime(ReservationTime time) {
         KeyHolder keyHolder = new GeneratedKeyHolder();
         String sql = "INSERT INTO reservation_time(start_at) VALUES (?)";
 
         jdbcTemplate.update((connection) -> {
             PreparedStatement preparedStatement = connection.prepareStatement(sql, new String[]{"id"});
-            preparedStatement.setString(1, startAt);
+            preparedStatement.setString(1, time.startAt());
             return preparedStatement;
         }, keyHolder);
 
         long id = keyHolder.getKey().longValue();
-        return new ReservationTime(id, startAt);
+        return time.changeId(id);
     }
 
     public void deleteTime(long id) {

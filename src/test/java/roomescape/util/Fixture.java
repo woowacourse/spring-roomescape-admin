@@ -35,6 +35,7 @@ public class Fixture {
         JOJO_RESERVATION_TIME_AFTER_SAVE
     );
     public static final Reservation JOJO_RESERVATION_AFTER_SAVE = new Reservation(
+        1L,
         JOJO,
         JOJO_DATE,
         JOJO_RESERVATION_TIME_AFTER_SAVE
@@ -45,6 +46,7 @@ public class Fixture {
         GAMJA_RESERVATION_TIME_AFTER_SAVE
     );
     public static final Reservation GAMJA_RESERVATION_AFTER_SAVE = new Reservation(
+        2L,
         GAMJA,
         GAMJA_DATE,
         GAMJA_RESERVATION_TIME_AFTER_SAVE

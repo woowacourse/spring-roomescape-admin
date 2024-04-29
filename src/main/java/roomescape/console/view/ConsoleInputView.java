@@ -39,7 +39,7 @@ public class ConsoleInputView {
 
     private void validateLong(String value) {
         try {
-            Long.getLong(value);
+            Long.parseLong(value);
         } catch (NumberFormatException e) {
             throw new IllegalArgumentException("잘못된 값을 입력했습니다.");
         }
@@ -51,7 +51,7 @@ public class ConsoleInputView {
     }
 
     public String readDate() {
-        System.out.print("날짜를 입력해주세요. : ");
+        System.out.print("날짜를 입력해주세요. (ex 2023-01-24): ");
         return readString();
     }
 

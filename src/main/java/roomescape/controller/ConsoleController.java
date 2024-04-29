@@ -23,6 +23,14 @@ public class ConsoleController {
     }
 
     public void run() {
+        try {
+            proceed();
+        } catch (IllegalArgumentException e) {
+            consoleOutputView.printException(e);
+        }
+    }
+
+    private void proceed() {
         while (true) {
             String menu = consoleInputView.readMenu();
             handleMyMenu(menu);

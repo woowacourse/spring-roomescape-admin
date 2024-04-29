@@ -56,4 +56,8 @@ public class ConsoleOutputView {
         System.out.println("일치하는 데이터가 없어 삭제된 데이터가 없습니다.");
         System.out.println();
     }
+
+    public void printException(Exception e) {
+        System.out.println("[ERROR] : " + e.getMessage());
+    }
 }

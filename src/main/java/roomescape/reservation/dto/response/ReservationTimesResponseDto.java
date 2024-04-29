@@ -1,4 +1,4 @@
-package roomescape.time.dto;
+package roomescape.reservation.dto.response;
 
 import java.util.List;
 

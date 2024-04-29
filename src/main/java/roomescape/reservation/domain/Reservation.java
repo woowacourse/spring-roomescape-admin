@@ -1,7 +1,5 @@
 package roomescape.reservation.domain;
 
-import roomescape.time.domain.ReservationTime;
-
 public class Reservation {
 
     private Long id;

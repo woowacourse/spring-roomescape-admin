@@ -8,8 +8,7 @@ import org.springframework.boot.test.autoconfigure.jdbc.JdbcTest;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.test.annotation.DirtiesContext;
 import roomescape.reservation.domain.Reservation;
-import roomescape.time.dao.ReservationTimeDao;
-import roomescape.time.domain.ReservationTime;
+import roomescape.reservation.domain.ReservationTime;
 
 import javax.sql.DataSource;
 

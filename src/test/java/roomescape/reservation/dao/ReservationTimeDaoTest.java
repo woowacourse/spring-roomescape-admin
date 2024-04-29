@@ -1,4 +1,4 @@
-package roomescape.time.dao;
+package roomescape.reservation.dao;
 
 import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
@@ -8,7 +8,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.jdbc.JdbcTest;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.test.annotation.DirtiesContext;
-import roomescape.time.domain.ReservationTime;
+import roomescape.reservation.domain.ReservationTime;
 
 import javax.sql.DataSource;
 import java.util.List;

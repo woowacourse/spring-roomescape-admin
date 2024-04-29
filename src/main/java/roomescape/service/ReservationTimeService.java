@@ -18,7 +18,7 @@ public class ReservationTimeService {
     }
 
     public ReservationTimeResponse create(ReservationTimeRequest request) {
-        ReservationTime reservationTime = request.toEntity();
+        ReservationTime reservationTime = new ReservationTime(request.getStartAt());
         Long id = reservationTimeDao.save(reservationTime);
         return ReservationTimeResponse.toResponse(id, reservationTime);
     }

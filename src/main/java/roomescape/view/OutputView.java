@@ -10,13 +10,11 @@ public class OutputView {
     }
 
     public void printNoReservation() {
-        System.out.println("예약이 없습니다.");
-        System.out.println();
+        System.out.println("예약이 없습니다." + System.lineSeparator());
     }
 
     public void printNoReservationTime() {
-        System.out.println("시간이 없습니다.");
-        System.out.println();
+        System.out.println("시간이 없습니다." + System.lineSeparator());
     }
 
     public void printReservations(List<ReservationResponse> reservations) {

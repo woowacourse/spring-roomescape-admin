@@ -38,8 +38,10 @@ public class InputView {
     }
 
     public LocalTime readReservationTime() {
-        System.out.println("[예약 시간 추가]");
-        System.out.println("추가 할 예약 시간을 입력해주세요.(ex. 14:00)");
+        System.out.println("""
+                [예약 시간 추가]
+                추가 할 예약 시간을 입력해주세요.(ex. 14:00)
+                """);
         String input = SCANNER.nextLine();
         return LocalTime.parse(input);
     }

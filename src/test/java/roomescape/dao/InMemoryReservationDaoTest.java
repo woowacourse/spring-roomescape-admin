@@ -5,11 +5,11 @@ import static org.assertj.core.api.Assertions.assertThat;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
-import roomescape.console.fake.FakeReservationDao;
-import roomescape.console.fake.InMemoryReservationDb;
-import roomescape.console.fake.InMemoryReservationTimeDb;
+import roomescape.console.dao.InMemoryReservationDao;
+import roomescape.console.db.InMemoryReservationDb;
+import roomescape.console.db.InMemoryReservationTimeDb;
 
-class FakeReservationDaoTest {
+class InMemoryReservationDaoTest {
     private InMemoryReservationTimeDb inMemoryReservationTimeDb;
     private ReservationDao reservationDao;
 
@@ -17,7 +17,8 @@ class FakeReservationDaoTest {
     void setUp() {
         InMemoryReservationDb inMemoryReservationDb = new InMemoryReservationDb();
         inMemoryReservationTimeDb = new InMemoryReservationTimeDb();
-        reservationDao = new FakeReservationDao(inMemoryReservationDb, inMemoryReservationTimeDb);
+        reservationDao = new InMemoryReservationDao(inMemoryReservationDb,
+                inMemoryReservationTimeDb);
     }
 
     @DisplayName("존재하는 모든 예약을 보여준다.")

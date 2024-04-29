@@ -1,15 +1,17 @@
-package roomescape.console.fake;
+package roomescape.console.dao;
 
 import java.util.List;
+import roomescape.console.db.InMemoryReservationDb;
+import roomescape.console.db.InMemoryReservationTimeDb;
 import roomescape.dao.ReservationTimeDao;
 import roomescape.domain.ReservationTime;
 
-public class FakeReservationTimeDao implements ReservationTimeDao {
+public class InMemoryReservationTimeDao implements ReservationTimeDao {
     private final InMemoryReservationDb inMemoryReservationDb;
     private final InMemoryReservationTimeDb inMemoryReservationTimeDb;
 
-    public FakeReservationTimeDao(InMemoryReservationDb inMemoryReservationDb,
-                                  InMemoryReservationTimeDb inMemoryReservationTimeDb) {
+    public InMemoryReservationTimeDao(InMemoryReservationDb inMemoryReservationDb,
+                                      InMemoryReservationTimeDb inMemoryReservationTimeDb) {
         this.inMemoryReservationDb = inMemoryReservationDb;
         this.inMemoryReservationTimeDb = inMemoryReservationTimeDb;
     }

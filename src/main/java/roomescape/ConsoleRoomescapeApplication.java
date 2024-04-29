@@ -1,10 +1,10 @@
 package roomescape;
 
 import roomescape.console.ConsoleController;
-import roomescape.console.fake.FakeReservationDao;
-import roomescape.console.fake.FakeReservationTimeDao;
-import roomescape.console.fake.InMemoryReservationDb;
-import roomescape.console.fake.InMemoryReservationTimeDb;
+import roomescape.console.dao.InMemoryReservationDao;
+import roomescape.console.dao.InMemoryReservationTimeDao;
+import roomescape.console.db.InMemoryReservationDb;
+import roomescape.console.db.InMemoryReservationTimeDb;
 import roomescape.dao.ReservationDao;
 import roomescape.dao.ReservationTimeDao;
 import roomescape.service.ReservationService;
@@ -21,9 +21,9 @@ public class ConsoleRoomescapeApplication {
         InMemoryReservationDb inMemoryReservationDb = new InMemoryReservationDb();
         InMemoryReservationTimeDb inMemoryReservationTimeDb = new InMemoryReservationTimeDb();
         ReservationDao fakeReservationDao
-                = new FakeReservationDao(inMemoryReservationDb, inMemoryReservationTimeDb);
+                = new InMemoryReservationDao(inMemoryReservationDb, inMemoryReservationTimeDb);
         ReservationTimeDao fakeReservationTimeDao
-                = new FakeReservationTimeDao(inMemoryReservationDb, inMemoryReservationTimeDb);
+                = new InMemoryReservationTimeDao(inMemoryReservationDb, inMemoryReservationTimeDb);
         ReservationService reservationService
                 = new ReservationService(fakeReservationDao, fakeReservationTimeDao);
         ReservationTimeService reservationTimeService

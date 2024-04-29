@@ -1,4 +1,4 @@
-package roomescape.console.fake;
+package roomescape.console.db;
 
 import java.util.List;
 import java.util.Map;

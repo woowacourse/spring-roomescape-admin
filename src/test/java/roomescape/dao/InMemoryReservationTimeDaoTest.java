@@ -7,16 +7,16 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.dao.EmptyResultDataAccessException;
-import roomescape.console.fake.FakeReservationTimeDao;
-import roomescape.console.fake.InMemoryReservationDb;
-import roomescape.console.fake.InMemoryReservationTimeDb;
+import roomescape.console.dao.InMemoryReservationTimeDao;
+import roomescape.console.db.InMemoryReservationDb;
+import roomescape.console.db.InMemoryReservationTimeDb;
 
-class FakeReservationTimeDaoTest {
+class InMemoryReservationTimeDaoTest {
     private ReservationTimeDao reservationTimeDao;
 
     @BeforeEach
     void setUp() {
-        reservationTimeDao = new FakeReservationTimeDao(
+        reservationTimeDao = new InMemoryReservationTimeDao(
                 new InMemoryReservationDb(), new InMemoryReservationTimeDb());
     }
 

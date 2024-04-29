@@ -12,7 +12,6 @@ public class ConsoleReservationRepository implements ReservationRepository {
     private final Map<Long, Reservation> reservations;
     private final AtomicLong index;
 
-
     public ConsoleReservationRepository() {
         this.reservations = new HashMap<>();
         this.index = new AtomicLong(1L);

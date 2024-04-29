@@ -13,7 +13,6 @@ public class ConsoleReservationTimeRepository implements ReservationTimeReposito
     private final Map<Long, ReservationTime> times;
     private final AtomicLong index;
 
-
     public ConsoleReservationTimeRepository() {
         this.times = new HashMap<>();
         this.index = new AtomicLong(1L);

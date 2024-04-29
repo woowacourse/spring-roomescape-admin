@@ -16,6 +16,6 @@ public record ReservationResponse(
                 reservation.getId(),
                 reservation.getName().value(),
                 reservation.getDate(),
-                ReservationTimeResponse.from(reservation.getTime()));
+                new ReservationTimeResponse(reservation.getId(), reservation.getTime().getStartAt()));
     }
 }

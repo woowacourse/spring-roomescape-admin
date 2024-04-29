@@ -1,6 +1,6 @@
 package roomescape.web.controller.response;
 
-import roomescape.core.domain.Reservation;
+import roomescape.core.service.response.ReservationResponseDto;
 
 import java.time.LocalDate;
 
@@ -10,11 +10,11 @@ public record ReservationResponse(
         LocalDate date,
         ReservationTimeResponse time
 ) {
-    public static ReservationResponse from(Reservation reservation) {
+    public static ReservationResponse from(ReservationResponseDto reservation) {
         return new ReservationResponse(
-                reservation.getId(),
-                reservation.getName().value(),
-                reservation.getDate(),
-                ReservationTimeResponse.from(reservation.getTime()));
+                reservation.id(),
+                reservation.name(),
+                reservation.date(),
+                ReservationTimeResponse.from(reservation.time()));
     }
 }

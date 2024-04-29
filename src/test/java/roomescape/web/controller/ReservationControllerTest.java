@@ -8,15 +8,18 @@ import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
-import roomescape.core.domain.Reservation;
-import roomescape.core.domain.ReservationTime;
-import roomescape.core.repository.ReservationRepository;
-import roomescape.core.repository.ReservationTimeRepository;
+import roomescape.core.service.ReservationService;
+import roomescape.core.service.request.ReservationRequestDto;
+import roomescape.core.service.response.ReservationResponseDto;
+import roomescape.core.service.response.ReservationTimeResponseDto;
 import roomescape.web.controller.request.ReservationRequest;
 
 import java.time.LocalDate;
 import java.time.LocalTime;
+import java.util.List;
 
+import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.Mockito.when;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.delete;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
@@ -30,23 +33,28 @@ class ReservationControllerTest {
     @Autowired
     private ObjectMapper objectMapper;
 
-    @Autowired
-    private ReservationRepository reservationRepository;
-
-    @Autowired
-    private ReservationTimeRepository reservationTimeRepository;
+    @MockBean
+    private ReservationService reservationService;
 
     @DisplayName("예약 목록 조회 요청 시, 200 OK를 응답한다")
     @Test
     void findAll() throws Exception {
+        when(reservationService.findAll())
+                .thenReturn(List.of());
+
         this.mvc.perform(get("/reservations"))
                 .andExpect(status().isOk());
     }
 
     @DisplayName("예약 추가 요청 시, 201 Created를 응답한다")
     @Test
-    void add() throws Exception {
-        reservationTimeRepository.save(new ReservationTime(LocalTime.of(9, 0)));
+    void save() throws Exception {
+        when(reservationService.save(any(ReservationRequestDto.class)))
+                .thenReturn(new ReservationResponseDto(
+                        1L,
+                        "비밥",
+                        LocalDate.now().plusDays(1),
+                        new ReservationTimeResponseDto(1L, LocalTime.of(9, 0))));
 
         String requestBody = objectMapper.writeValueAsString(new ReservationRequest(
                 "비밥",
@@ -59,27 +67,10 @@ class ReservationControllerTest {
                 .andExpect(status().isCreated());
     }
 
-    @DisplayName("존재하는 예약에 대한 삭제 요청 시, 204 No Content를 응답한다")
+    @DisplayName("삭제 요청 시, 204 No Content를 응답한다")
     @Test
     void delete_() throws Exception {
-        Reservation savedReservation = reservationRepository.save(new Reservation(
-                "비밥",
-                LocalDate.now().plusDays(1),
-                LocalTime.of(9, 0)));
-
-        this.mvc.perform(delete("/reservations/" + savedReservation.getId()))
-                .andExpect(status().isNoContent());
-    }
-
-    @DisplayName("존재하지 않는 예약에 대한 삭제 요청 시, 204 No Content를 응답한다")
-    @Test
-    void delete_notExist() throws Exception {
-        Reservation savedReservation = reservationRepository.save(new Reservation(
-                "비밥",
-                LocalDate.now().plusDays(1),
-                LocalTime.of(9, 0)));
-
-        this.mvc.perform(delete("/reservations/" + (1 + savedReservation.getId())))
+        this.mvc.perform(delete("/reservations/" + 1))
                 .andExpect(status().isNoContent());
     }
 }

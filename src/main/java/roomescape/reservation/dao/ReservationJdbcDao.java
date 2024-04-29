@@ -12,21 +12,28 @@ import roomescape.reservation.domain.Reservation;
 
 @Component
 public class ReservationJdbcDao implements ReservationDao {
+    public static final String TABLE_NAME = "reservation";
+    public static final String TABLE_KEY = "id";
+    public static final String RESERVATION_NAME_ATTRIBUTE = "name";
+    public static final String RESERVATION_DATE_ATTRIBUTE = "date";
+    public static final String TIME_TABLE_KEY = "time_id";
+    public static final String TIME_TABLE_START_TIME_ATTRIBUTE = "start_at";
+
     private final JdbcTemplate jdbcTemplate;
     private final SimpleJdbcInsert jdbcInsert;
 
     public ReservationJdbcDao(DataSource dataSource) {
         this.jdbcTemplate = new JdbcTemplate(dataSource);
         this.jdbcInsert = new SimpleJdbcInsert(dataSource)
-                .withTableName("reservation")
-                .usingGeneratedKeyColumns("id");
+                .withTableName(TABLE_NAME)
+                .usingGeneratedKeyColumns(TABLE_KEY);
     }
 
     public Reservation save(Reservation reservation) {
         SqlParameterSource sqlParameterSource = new MapSqlParameterSource()
-                .addValue("name", reservation.getName())
-                .addValue("date", reservation.getDate())
-                .addValue("time_id", reservation.getReservationTime().getId());
+                .addValue(RESERVATION_NAME_ATTRIBUTE, reservation.getName())
+                .addValue(RESERVATION_DATE_ATTRIBUTE, reservation.getDate())
+                .addValue(TIME_TABLE_KEY, reservation.getReservationTime().getId());
 
         long id = jdbcInsert.executeAndReturnKey(sqlParameterSource).longValue();
         reservation.setId(id);
@@ -40,11 +47,11 @@ public class ReservationJdbcDao implements ReservationDao {
                 + "ON r.time_id = t.id "
                 + "ORDER BY r.date ASC , t.`start_at` ASC";
         return jdbcTemplate.query(findAllReservationSql, (resultSet, rowNum) -> new Reservation(
-                resultSet.getLong("id"),
-                resultSet.getString("name"),
-                resultSet.getDate("date").toLocalDate(),
-                new Time(resultSet.getLong("timeId"),
-                        resultSet.getTime("start_at").toLocalTime())));
+                resultSet.getLong(TABLE_KEY),
+                resultSet.getString(RESERVATION_NAME_ATTRIBUTE),
+                resultSet.getDate(RESERVATION_DATE_ATTRIBUTE).toLocalDate(),
+                new Time(resultSet.getLong(TIME_TABLE_KEY),
+                        resultSet.getTime(TIME_TABLE_START_TIME_ATTRIBUTE).toLocalTime())));
     }
 
     public void deleteById(long reservationId) {

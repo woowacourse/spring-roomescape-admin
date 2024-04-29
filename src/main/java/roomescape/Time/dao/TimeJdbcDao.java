@@ -11,14 +11,17 @@ import roomescape.Time.domain.Time;
 
 @Component
 public class TimeJdbcDao implements TimeDao {
+    public static final String TABLE_NAME = "reservation_time";
+    public static final String TABLE_KEY = "id";
+    public static final String TIME_START_ATTRIBUTE = "start_at";
     private final JdbcTemplate jdbcTemplate;
     private final SimpleJdbcInsert jdbcInsert;
 
     public TimeJdbcDao(DataSource dataSource) {
         this.jdbcTemplate = new JdbcTemplate(dataSource);
         this.jdbcInsert = new SimpleJdbcInsert(dataSource)
-                .withTableName("reservation_time")
-                .usingGeneratedKeyColumns("id");
+                .withTableName(TABLE_NAME)
+                .usingGeneratedKeyColumns(TABLE_KEY);
     }
 
     @Override
@@ -34,8 +37,8 @@ public class TimeJdbcDao implements TimeDao {
         String findAllReservationTimeSql = "SELECT id, start_at FROM reservation_time ORDER BY start_at ASC ";
 
         return jdbcTemplate.query(findAllReservationTimeSql, (resultSet, rowNum) -> new Time(
-                resultSet.getLong("id"),
-                resultSet.getTime("start_at").toLocalTime()
+                resultSet.getLong(TABLE_KEY),
+                resultSet.getTime(TIME_START_ATTRIBUTE).toLocalTime()
         ));
     }
 
@@ -44,7 +47,7 @@ public class TimeJdbcDao implements TimeDao {
         String findReservationTimeSql = "SELECT start_at FROM reservation_time WHERE id = ?";
         return jdbcTemplate.queryForObject(findReservationTimeSql, (resultSet, rowNum) -> new Time(
                 reservationTimeId,
-                resultSet.getTime("start_at").toLocalTime()), reservationTimeId);
+                resultSet.getTime(TIME_START_ATTRIBUTE).toLocalTime()), reservationTimeId);
     }
 
     @Override

@@ -16,9 +16,46 @@
 - [x] 예약 추가 버튼을 누르면 `예약 추가 API`를 호출한다.
 - [x] 삭제 버튼을 누르면 `예약 삭제 API`를 호출한다.
 
+## 4단계 - 데이터베이스 적용
+
+- [x] h2 데이터베이스를 연동한다.
+- [x] 예약 테이블을 생성한다.
+
+## 5단계 - 데이터 조회
+
+- [x] `예약 목록 조회 API` 호출 시 데이터베이스에서 예약을 조회한다.
+
+## 6단계 - 데이터 추가/삭제
+
+- [x] `예약 추가 API` 호출 시 데이터베이스에 예약을 저장한다.
+- [x] `예약 삭제 API` 호출 시 데이터베이스에서 예약을 삭제한다.
+
+## 7단계 - 시간 관리 기능
+
+- [x] `/admin/time` 요청 시 시간 관리 페이지를 응답한다.
+    - `templates/admin/time.html`
+- [x] 예약 시간 테이블을 생성한다.
+- [x] 시간 관리 페이지 로드 시 `시간 목록 조회 API`를 호출한다.
+- [x] 시간 추가 버튼을 누르면 `시간 추가 API`를 호출한다.
+- [x] 삭제 버튼을 누르면 `시간 삭제 API`를 호출한다.
+
+## 8단계 - 예약과 시간 관리
+
+- [x] 예약 테이블과 예약 시간 테이블 간 다:1 관계를 추가한다.
+- [x] `/admin/reservation` 요청 시 리뉴얼된 예약 관리 페이지를 응답한다.
+- [x] `예약 추가 API`의 시간 필드를 예약 시간 타입으로 수정한다.
+- [x] `예약 목록 조회 API`의 시간 필드를 예약 시간 타입으로 수정한다.
+
+## 9단계 - 계층화 리팩터링
+
+- [x] 레이어드 아키텍처를 적용한다.
+- [x] 분리한 클래스를 스프링 빈으로 등록해서 사용한다.
+
 # API 명세
 
-## 예약 목록 조회 API
+## 예약
+
+### 예약 목록 조회 API
 
 Request
 
@@ -36,19 +73,16 @@ Content-Type: application/json
     {
         "id": 1,
         "name": "브라운",
-        "date": "2023-01-01",
-        "time": "10:00"
-    },
-    {
-        "id": 2,
-        "name": "브라운",
-        "date": "2023-01-02",
-        "time": "11:00"
+        "date": "2023-08-05",
+        "time": {
+            "id": 1,
+            "startAt": "10:00"
+        }
     }
 ]
 ```
 
-## 예약 추가 API
+### 예약 추가 API
 
 Request
 
@@ -57,27 +91,30 @@ POST /reservations HTTP/1.1
 content-type: application/json
 
 {
-  "date": "2023-08-05",
-  "name": "브라운",
-  "time": "15:40"
+    "date": "2023-08-05",
+    "name": "브라운",
+    "timeId": 1
 }
 ```
 
 Response
 
 ```
-HTTP/1.1 200
+HTTP/1.1 201
 Content-Type: application/json
 
 {
-  "id": 1,
-  "name": "브라운",
-  "date": "2023-08-05",
-  "time": "15:40"
+    "id": 1,
+    "name": "브라운",
+    "date": "2023-08-05",
+    "time" : {
+        "id": 1,
+        "startAt" : "10:00"
+    }
 }
 ```
 
-## 예약 삭제 API
+### 예약 삭제 API
 
 Request
 
@@ -88,7 +125,70 @@ DELETE /reservations/1 HTTP/1.1
 Response
 
 ```
-HTTP/1.1 200
+HTTP/1.1 204
+```
+
+## 시간
+
+### 시간 목록 조회 API
+
+Request
+
+```
+GET /times HTTP/1.1
+```
+
+Response
+
+```
+HTTP/1.1 200 
+Content-Type: application/json
+
+[
+   {
+        "id": 1,
+        "startAt": "10:00"
+    }
+]
+```
+
+### 시간 추가 API
+
+Request
+
+```
+POST /times HTTP/1.1
+content-type: application/json
+
+{
+    "startAt": "10:00"
+}
+```
+
+Response
+
+```
+HTTP/1.1 201
+Content-Type: application/json
+
+{
+    "id": 1,
+    "startAt": "10:00"
+}
+```
+
+### 시간 삭제 API
+
+Request
+
+```
+DELETE /times/1 HTTP/1.1
+```
+
+Response
+
+```
+HTTP/1.1 204
 ```
 
 # 팀 컨벤션
@@ -141,3 +241,27 @@ HTTP/1.1 200
 - Web : request/responseDTO로 웹과 상호작용
 - Service : request/responseDTO를 domain으로 매핑해 웹과 데이터저장공간 사이를 연결
 - Dao : domain으로 데이터저장공간과 상호작용
+
+## Dao라는 이름이 이상한걸까? -> No
+
+- 고민한 부분
+    - ReservationMemoryDao 클래스를 ReservationMemoryRepository 로 이름을 변경할지 고민했다.
+    - 그 이유는 Dao는 영속성과 관련되고, Repository는 도메인과 관련된다고 알고 있었는데 ReservationMemoryDao는 영속성을 가진 저장소에 접근하고 있지 않았기 때문이다.
+- 결론
+    - 공식문서를 찾아보며 Dao가 꼭 영속성과 관련될 필욘 없단 점을 깨달아, 해당 클래스를 표현할 때 Dao와 Repository 중엔 Dao가 더 적합한 네이밍이란 결론을 내렸다.
+
+### Dao에 대한 오해
+
+어떤 사람들은 Dao는 영속성 메커니즘에 접근해 CRUD를 처리하는 패턴이라 정의내리기도 한다.
+Data Access Object라는 이름 자체가 persistence를 나타낸다고 하는 블로그 글도 보았는데 공감하기 어려웠다.
+그래서 최대한 공식문서에서 말하는 Dao에 대해 찾아보게 되었다.
+
+### Oracle이 설명하는 Dao
+
+[관련 문서](https://www.oracle.com/java/technologies/data-access-object.html)
+> A data access object can represent data that is not stored in a database.
+> The sample application uses the DAO pattern to represent XML data sources as objects.
+> Sample application screens are defined in an XML file which is interpreted by the class ScreenDefinitionDAO.
+
+위 문장을 보면 Dao에서 접근할 데이터 저장소가 꼭 영속성을 가진 대상일 필요는 없음을 알 수 있다.
+ReservationMemoryDao 가 저장소로 바라보고 있는 List<Reservation>가 Dao의 데이터 저장소로 손색없다는 뜻이다.

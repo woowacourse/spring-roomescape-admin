@@ -25,11 +25,6 @@ public class OutputView {
         System.out.println();
     }
 
-    public void printDelete(int count) {
-        System.out.println(count + "개의 데이터가 성공적으로 삭제되었습니다.");
-        System.out.println();
-    }
-
     public void printAddedReservation(ReservationsResponse reservationsResponse) {
         System.out.println("예약이 성공적으로 추가되었습니다.");
         System.out.println();
@@ -50,5 +45,15 @@ public class OutputView {
                 =======================
                 """);
         allReservations.forEach(this::printReservation);
+    }
+
+    public void printDeleteSuccess() {
+        System.out.println("데이터가 성공적으로 삭제되었습니다.");
+        System.out.println();
+    }
+
+    public void printDeleteFail() {
+        System.out.println("일치하는 데이터가 없어 삭제된 데이터가 없습니다.");
+        System.out.println();
     }
 }

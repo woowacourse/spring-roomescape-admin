@@ -52,8 +52,11 @@ public class DbReservationRepository implements ReservationRepository{
     }
 
     @Override
-    public int remove(Long id) {
+    public boolean remove(Long id) {
         String SQL = "DELETE FROM RESERVATION WHERE id = ?";
-        return jdbcTemplate.update(SQL, id);
+        if (jdbcTemplate.update(SQL, id) > 0) {
+            return true;
+        }
+        return false;
     }
 }

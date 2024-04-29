@@ -73,8 +73,12 @@ public class ConsoleMainController {
 
     private void handleDeleteTime() {
         Long id = inputView.readRemoveTimeId();
-        int removedCount = roomescapeService.removeTime(id);
-        outputView.printDelete(removedCount);
+        boolean isDeleted = roomescapeService.removeTime(id);
+        if (isDeleted) {
+            outputView.printDeleteSuccess();
+            return;
+        }
+        outputView.printDeleteFail();
     }
 
     private void handleReservationAdd() {
@@ -93,7 +97,11 @@ public class ConsoleMainController {
 
     private void handleDeleteReservation() {
         Long id = inputView.readRemoveReservationId();
-        int removedCount = roomescapeService.removeReservation(id);
-        outputView.printDelete(removedCount);
+        boolean isDeleted = roomescapeService.removeReservation(id);
+        if (isDeleted) {
+            outputView.printDeleteSuccess();
+            return;
+        }
+        outputView.printDeleteFail();
     }
 }

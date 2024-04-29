@@ -44,7 +44,7 @@ public class RoomescapeService {
                 .toList();
     }
 
-    public int removeReservation(Long id) {
+    public boolean removeReservation(Long id) {
         return reservationRepository.remove(id);
     }
     
@@ -63,7 +63,7 @@ public class RoomescapeService {
                 .toList();
     }
 
-    public int removeTime(Long id) {
+    public boolean removeTime(Long id) {
         return reservationTimeRepository.remove(id);
     }
     

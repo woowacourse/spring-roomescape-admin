@@ -9,5 +9,5 @@ public interface ReservationTimeRepository {
     ReservationTimeDto add(ReservationTimeDto reservationTimeDto);
     ReservationTimeDto findById(Long id);
     List<ReservationTimeDto> findAll();
-    int remove(Long id);
+    boolean remove(Long id);
 }

@@ -32,11 +32,11 @@ public class MemoryReservationRepository implements ReservationRepository {
     }
 
     @Override
-    public int remove(Long id) {
+    public boolean remove(Long id) {
         if (repository.containsKey(id)) {
             repository.remove(id);
-            return 1;
+            return true;
         }
-        return 0;
+        return false;
     }
 }

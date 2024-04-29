@@ -28,7 +28,7 @@ public class TimesController {
     }
 
     @DeleteMapping("/{id}")
-    public int deleteTimes(@PathVariable Long id) {
+    public boolean deleteTimes(@PathVariable Long id) {
         return roomescapeService.removeTime(id);
     }
 }

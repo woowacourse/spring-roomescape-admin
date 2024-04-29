@@ -28,7 +28,7 @@ public class ReservationsController {
     }
 
     @DeleteMapping("/{id}")
-    public int deleteReservation(@PathVariable Long id) {
+    public boolean deleteReservation(@PathVariable Long id) {
         return roomescapeService.removeReservation(id);
     }
 }

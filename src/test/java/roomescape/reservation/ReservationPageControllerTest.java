@@ -13,7 +13,7 @@ class ReservationPageControllerTest extends TestSupport {
         RestAssured.given().log().all()
                 .when().get("/reservation")
                 .then().log().all()
-                .statusCode(200);
+                .statusCode(200)
+                .contentType("text/html");
     }
-
 }

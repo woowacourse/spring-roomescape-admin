@@ -13,7 +13,8 @@ public class AdminControllerTest extends TestSupport {
         RestAssured.given().log().all()
                 .when().get("/")
                 .then().log().all()
-                .statusCode(200);
+                .statusCode(200)
+                .contentType("text/html");
     }
 
     @Test
@@ -22,6 +23,7 @@ public class AdminControllerTest extends TestSupport {
         RestAssured.given().log().all()
                 .when().get("/admin")
                 .then().log().all()
-                .statusCode(200);
+                .statusCode(200)
+                .contentType("text/html");
     }
 }

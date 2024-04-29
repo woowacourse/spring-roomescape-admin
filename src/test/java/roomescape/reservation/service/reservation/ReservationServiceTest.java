@@ -12,6 +12,8 @@ import roomescape.reservation.dao.ReservationDao;
 import roomescape.reservation.dto.ReservationRequestDto;
 import roomescape.reservation.dto.ReservationResponseDto;
 import roomescape.reservation.service.ReservationService;
+import roomescape.time.dao.ReservationTimeDao;
+import roomescape.time.domain.ReservationTime;
 
 import javax.sql.DataSource;
 
@@ -32,13 +34,17 @@ class ReservationServiceTest {
     @BeforeEach
     void init() {
         ReservationDao reservationDao = new ReservationDao(jdbcTemplate, dataSource);
-        reservationService = new ReservationService(reservationDao);
+        ReservationTimeDao reservationTimeDao = new ReservationTimeDao(jdbcTemplate, dataSource);
+        reservationService = new ReservationService(reservationDao, reservationTimeDao);
+
+        reservationTimeDao.insert(new ReservationTime("10:00"));
     }
 
     @DisplayName("예약 정보 삽입 테스트")
     @Test
     void insertTest() {
-        ReservationRequestDto request = new ReservationRequestDto("name", "2000-09-07", "10:00");
+
+        ReservationRequestDto request = new ReservationRequestDto("name", "2000-09-07", 1L);
         ReservationResponseDto response = reservationService.addReservation(request);
         assertThat(response.id()).isEqualTo(1L);
     }
@@ -46,9 +52,9 @@ class ReservationServiceTest {
     @DisplayName("예약 정보 전체 조회 테스트")
     @Test
     void findAllTest() {
-        reservationService.addReservation(new ReservationRequestDto("name1", "2000-09-07", "10:00"));
-        reservationService.addReservation(new ReservationRequestDto("name2", "2000-09-07", "10:00"));
-        reservationService.addReservation(new ReservationRequestDto("name3", "2000-09-07", "10:00"));
+        reservationService.addReservation(new ReservationRequestDto("name1", "2000-09-07", 1L));
+        reservationService.addReservation(new ReservationRequestDto("name2", "2000-09-07", 1L));
+        reservationService.addReservation(new ReservationRequestDto("name3", "2000-09-07", 1L));
 
         int findSize = reservationService.findAllReservation().reservations().size();
         assertThat(findSize).isEqualTo(3);
@@ -57,7 +63,7 @@ class ReservationServiceTest {
     @DisplayName("예약 정보 삭제 테스트")
     @Test
     void deleteTest() {
-        ReservationRequestDto request = new ReservationRequestDto("name", "2000-09-07", "10:00");
+        ReservationRequestDto request = new ReservationRequestDto("name", "2000-09-07", 1L);
         ReservationResponseDto response = reservationService.addReservation(request);
 
         reservationService.deleteReservationById(response.id());

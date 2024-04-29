@@ -1,4 +1,4 @@
-package roomescape.admin.controller;
+package roomescape.time.controller;
 
 import io.restassured.RestAssured;
 import io.restassured.http.ContentType;
@@ -8,69 +8,69 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.web.server.LocalServerPort;
 import org.springframework.test.annotation.DirtiesContext;
 
+import java.util.HashMap;
 import java.util.Map;
 
 import static org.hamcrest.CoreMatchers.is;
 
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 @DirtiesContext(classMode = DirtiesContext.ClassMode.BEFORE_EACH_TEST_METHOD)
-class ReservationControllerTest {
+class ReservationTimeControllerTest {
 
     @LocalServerPort
     int randomServerPort;
 
-    @DisplayName("예약 정보 조회 테스트")
+    @DisplayName("예약 시간 조회 테스트")
     @Test
-    void reservationReadTest() {
+    void getReservationTime() {
         RestAssured.given().log().all()
                 .port(randomServerPort)
-                .when().get("/reservations")
+                .when().get("/times")
                 .then().log().all()
                 .statusCode(200)
-                .body("reservations.size()", is(0));
+                .body("reservationTimes.size()", is(0));
     }
 
-    @DisplayName("예약 삭제 테스트")
+    @DisplayName("예약 시간 등록 테스트")
     @Test
-    void reservationsDeleteTest() {
-        Map<String, String> params = Map.of(
-                "name", "새양",
-                "date", "1998-02-24",
-                "time", "10:00"
-        );
+    void addReservationTime() {
+        Map<String, String> params = new HashMap<>();
+        params.put("startAt", "10:00");
 
         RestAssured.given().log().all()
+                .port(randomServerPort)
                 .contentType(ContentType.JSON)
-                .port(randomServerPort)
                 .body(params)
-                .when().post("/reservations")
+                .when().post("/times")
                 .then().log().all()
-                .statusCode(201)
-                .body("id", is(1));
+                .statusCode(201);
 
         RestAssured.given().log().all()
                 .port(randomServerPort)
-                .when().delete("/reservations/1")
+                .when().get("/times")
+                .then().log().all()
+                .statusCode(200)
+                .body("reservationTimes.size()", is(1));
+    }
+
+    @DisplayName("예약 시간 삭제 테스트")
+    @Test
+    void deleteReservationTime() {
+        Map<String, String> params = new HashMap<>();
+        params.put("startAt", "10:00");
+
+        RestAssured.given().log().all()
+                .port(randomServerPort)
+                .contentType(ContentType.JSON)
+                .body(params)
+                .when().post("/times")
+                .then().log().all()
+                .statusCode(201);
+
+        RestAssured.given().log().all()
+                .port(randomServerPort)
+                .when().delete("/times/1")
                 .then().log().all()
                 .statusCode(204);
-    }
-
-    @DisplayName("예약 등록 테스트")
-    @Test
-    void reservationCreateTest() {
-        Map<String, String> params = Map.of(
-                "name", "새양",
-                "date", "1998-02-24",
-                "time", "10:00"
-        );
-
-        RestAssured.given().log().all()
-                .port(randomServerPort)
-                .contentType(ContentType.JSON)
-                .body(params)
-                .when().post("/reservations")
-                .then().log().all()
-                .statusCode(201)
-                .body("id", is(1));
     }
 }

@@ -23,7 +23,7 @@ public class Reservation {
         this(-1, name, date, time);
     }
 
-    private Reservation(long id, String name, LocalDate date, ReservationTime time) {
+    public Reservation(long id, String name, LocalDate date, ReservationTime time) {
         validateNotNull(name, date);
         this.id = id;
         this.name = name;

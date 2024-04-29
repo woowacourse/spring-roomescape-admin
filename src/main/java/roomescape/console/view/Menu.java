@@ -1,8 +1,8 @@
 package roomescape.console.view;
 
 public enum Menu {
-    RESERVATION,
     RESERVATION_TIME,
+    RESERVATION,
     END;
 
     public static Menu from(int index) {

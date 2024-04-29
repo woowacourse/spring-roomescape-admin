@@ -1,5 +1,6 @@
 package roomescape.console.view;
 
+import java.util.Arrays;
 import java.util.List;
 import java.util.Scanner;
 
@@ -51,6 +52,10 @@ public class InputView {
 
     private List<String> inputCommandLine() {
         String input = SCANNER.nextLine();
-        return List.of(input.split(DELIMITER));
+        String[] tokens = input.split(DELIMITER);
+
+        return Arrays.stream(tokens)
+                .map(String::trim)
+                .toList();
     }
 }

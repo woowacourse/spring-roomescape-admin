@@ -1,23 +1,25 @@
 package roomescape.console;
 
 import org.springframework.http.ResponseEntity;
-import org.springframework.jdbc.core.JdbcTemplate;
+import roomescape.console.dao.ReservationMemoryDao;
+import roomescape.console.dao.ReservationTimeMemoryDao;
 import roomescape.console.view.InputView;
 import roomescape.console.view.Menu;
 import roomescape.console.view.OutputView;
 import roomescape.controller.ReservationController;
 import roomescape.controller.ReservationTimeController;
-import roomescape.dao.ReservationDaoImpl;
-import roomescape.dao.ReservationTimeDaoImpl;
 import roomescape.domain.Reservation;
+import roomescape.domain.ReservationTime;
 import roomescape.dto.CreateReservationRequest;
 import roomescape.dto.CreateReservationResponse;
+import roomescape.dto.CreateReservationTimeRequest;
 import roomescape.mapper.ReservationMapper;
 import roomescape.mapper.ReservationTimeMapper;
 import roomescape.service.ReservationService;
 import roomescape.service.ReservationTimeService;
 
 import java.time.LocalDate;
+import java.time.LocalTime;
 import java.time.format.DateTimeFormatter;
 import java.util.List;
 
@@ -26,13 +28,32 @@ public class RoomescapeConsoleApplication {
     public static void main(String[] args) {
         InputView inputView = new InputView();
         OutputView outputView = new OutputView();
-        ReservationController reservationController = new ReservationController(new ReservationService(new ReservationDaoImpl(new JdbcTemplate()), new ReservationMapper()));
-        ReservationTimeController reservationTimeController = new ReservationTimeController(new ReservationTimeService(new ReservationTimeDaoImpl(new JdbcTemplate()), new ReservationDaoImpl(new JdbcTemplate()), new ReservationTimeMapper()));
+        ReservationMemoryDao reservationMemoryDao = ReservationMemoryDao.getInstance();
+        ReservationTimeMemoryDao reservationTimeMemoryDao = ReservationTimeMemoryDao.getInstance();
+        ReservationController reservationController = new ReservationController(new ReservationService(reservationMemoryDao, new ReservationMapper()));
+        ReservationTimeController reservationTimeController = new ReservationTimeController(new ReservationTimeService(reservationTimeMemoryDao, reservationMemoryDao, new ReservationTimeMapper()));
 
         while (true) {
             Menu menu = inputView.inputMenu();
-            if (menu == Menu.RESERVATION) {
+            if (menu == Menu.RESERVATION_TIME) {
                 List<String> commands = inputView.inputReservationTimeMenu();
+                if (commands.get(0).equals("POST")) {
+                    CreateReservationTimeRequest request = new CreateReservationTimeRequest(
+                            LocalTime.parse(commands.get(1))
+                    );
+                    reservationTimeController.createTime(request);
+                }
+                if (commands.get(0).equals("GET")) {
+                    ResponseEntity<List<ReservationTime>> reservationTimes = reservationTimeController.findAllReservationTimes();
+                    outputView.announceReservationTimes(reservationTimes.getBody());
+                }
+                if (commands.get(0).equals("DELETE")) {
+                    reservationTimeController.deleteTime(Long.parseLong(commands.get(1)));
+                    outputView.announceReservationTimeDeletion();
+                }
+            }
+            if (menu == Menu.RESERVATION) {
+                List<String> commands = inputView.inputReservationMenu();
                 if (commands.get(0).equals("POST")) {
                     DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
                     CreateReservationRequest request = new CreateReservationRequest(
@@ -50,13 +71,12 @@ public class RoomescapeConsoleApplication {
                     outputView.announceReservations(body);
                 }
                 if (commands.get(0).equals("DELETE")) {
-
+                    reservationController.deleteReservation(Long.parseLong(commands.get(1)));
+                    outputView.announceReservationDeletion();
                 }
             }
-            if (menu == Menu.RESERVATION_TIME) {
-                inputView.inputReservationMenu();
-            }
             if (menu == Menu.END) {
+                outputView.announceExit();
                 break;
             }
         }

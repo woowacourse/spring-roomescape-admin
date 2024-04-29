@@ -50,11 +50,11 @@ public class OutputView {
         System.out.println("예약이 성공적으로 삭제되었습니다.");
     }
 
-    public void announceReservationTimeDeletion(Long id) {
-        System.out.printf("%d번 예약이 성공적으로 삭제되었습니다.\n", id);
+    public void announceReservationTimeDeletion() {
+        System.out.printf("예약시간이 성공적으로 삭제되었습니다.");
     }
 
-    public void outputExit() {
+    public void announceExit() {
         System.out.println("===============예약 프로그램이 종료되었습니다.===============");
     }
 

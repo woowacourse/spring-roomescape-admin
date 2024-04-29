@@ -23,7 +23,6 @@ public class ReservationTimeController {
         this.reservationTimeService = reservationTimeService;
     }
 
-    // TODO: Controller 메서드 명 깔끔하게 수정
     @GetMapping("/times")
     public ResponseEntity<ReservationTimesResponseDto> reservationTimeList() {
         ReservationTimesResponseDto response = reservationTimeService.findAllReservationTime();
@@ -44,5 +43,4 @@ public class ReservationTimeController {
         reservationTimeService.removeReservationTimeById(id);
         return ResponseEntity.noContent().build();
     }
-
 }

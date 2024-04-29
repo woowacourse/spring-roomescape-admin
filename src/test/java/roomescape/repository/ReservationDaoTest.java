@@ -8,10 +8,8 @@ import static org.springframework.test.context.jdbc.Sql.ExecutionPhase.BEFORE_TE
 
 import java.sql.Connection;
 import java.sql.SQLException;
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
-import java.util.Optional;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -24,7 +22,7 @@ import roomescape.model.ReservationTime;
 
 @SpringBootTest(webEnvironment = RANDOM_PORT)
 @DirtiesContext(classMode = BEFORE_EACH_TEST_METHOD)
-@Sql(value = "/createTime.sql", executionPhase = BEFORE_TEST_METHOD)
+@Sql(value = "/createTimeAndReservations.sql", executionPhase = BEFORE_TEST_METHOD)
 class ReservationDaoTest {
 
     @Autowired
@@ -52,79 +50,43 @@ class ReservationDaoTest {
     @Test
     void saveReservation() {
         final List<Reservation> beforeSaving = reservationDao.findAll();
-        final ReservationTime time = new ReservationTime("10:30");
+        final ReservationTime time = new ReservationTime("13:00");
         final Reservation reservation = new Reservation("레디", "2024-02-03", time);
 
         reservationDao.save(reservation, 1L);
         final List<Reservation> afterSaving = reservationDao.findAll();
 
-        assertAll(
-                () -> assertThat(beforeSaving).isEmpty(),
-                () -> assertThat(afterSaving).hasSize(1)
-        );
+        assertThat(afterSaving.size() - beforeSaving.size()).isOne();
     }
 
     @DisplayName("예약 삭제")
     @Test
     void removeReservation() {
-        final List<Reservation> beforeSaving = reservationDao.findAll();
-        final ReservationTime time = new ReservationTime("10:30");
-        final Reservation reservation = new Reservation("레디", "2024-02-03", time);
-
-        reservationDao.save(reservation, 1L);
-        final List<Reservation> afterSaving = reservationDao.findAll();
+        final List<Reservation> beforeRemoving = reservationDao.findAll();
         reservationDao.remove(1L);
         final List<Reservation> afterRemoving = reservationDao.findAll();
 
-        assertAll(
-                () -> assertThat(beforeSaving).isEmpty(),
-                () -> assertThat(afterSaving).hasSize(1),
-                () -> assertThat(afterRemoving).isEmpty()
-        );
+        assertThat(beforeRemoving.size() - afterRemoving.size()).isOne();
     }
 
     @DisplayName("단건 조회")
     @Test
     void findById() {
-        //given
-        final ReservationTime time = new ReservationTime("10:30");
-        final Reservation reservation = new Reservation("레디", "2024-02-03", time);
+        final Reservation findReservation = reservationDao.findById(1L).get();
+        final Reservation expected = new Reservation(1L, "레디", "2024-02-13", 1L, "13:00");
 
-        final Reservation expected = reservation.toReservation(1L);
-
-        //when
-        reservationDao.save(reservation, 1L);
-        final Optional<Reservation> findReservation = reservationDao.findById(1L);
-
-        //then
-        assertThat(findReservation).contains(expected);
+        assertThat(findReservation).isEqualTo(expected);
     }
 
     @DisplayName("전체 조회")
     @Test
     void findAll() {
-        //given
-        final ReservationTime time = new ReservationTime("10:30");
+        final Reservation reservation1 = new Reservation(1L, "레디", "2024-02-13", 1L, "13:00");
+        final Reservation reservation2 = new Reservation(2L, "감자", "2024-02-14", 1L, "13:00");
+        final List<Reservation> expected = List.of(reservation1, reservation2);
 
-        final Reservation reservation1 = new Reservation("레디", "2024-02-04", time);
-        final Reservation reservation2 = new Reservation("감자", "2024-02-04", time);
-        final Reservation reservation3 = new Reservation("오리", "2024-02-04", time);
-
-        final List<Reservation> reservations = List.of(reservation1, reservation2, reservation3);
-
-        for (final Reservation reservation : reservations) {
-            reservationDao.save(reservation, 1L);
-        }
-
-        final List<Reservation> expected = new ArrayList<>();
-        for (long i = 1; i <= 3; i++) {
-            expected.add(reservations.get((int) (i - 1)).toReservation(i));
-        }
-
-        //when
         final List<Reservation> findAll = reservationDao.findAll();
 
-        //then
         assertThat(findAll).isEqualTo(expected);
     }
 }

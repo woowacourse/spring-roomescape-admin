@@ -4,6 +4,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertAll;
 import static org.springframework.boot.test.context.SpringBootTest.WebEnvironment.RANDOM_PORT;
 import static org.springframework.test.annotation.DirtiesContext.ClassMode.BEFORE_EACH_TEST_METHOD;
+import static org.springframework.test.context.jdbc.Sql.ExecutionPhase.BEFORE_TEST_METHOD;
 
 import java.sql.Connection;
 import java.sql.SQLException;
@@ -22,6 +23,7 @@ import roomescape.model.ReservationTime;
 
 @SpringBootTest(webEnvironment = RANDOM_PORT)
 @DirtiesContext(classMode = BEFORE_EACH_TEST_METHOD)
+@Sql(value = "/createTimes.sql", executionPhase = BEFORE_TEST_METHOD)
 class ReservationTimeDaoTest {
 
     @Autowired
@@ -58,28 +60,20 @@ class ReservationTimeDaoTest {
         final List<ReservationTime> afterSaving = reservationTimeDao.findAll();
 
         //then
-        assertAll(
-                () -> assertThat(beforeSaving).isEmpty(),
-                () -> assertThat(afterSaving).hasSize(1)
-        );
+        assertThat(afterSaving.size() - beforeSaving.size()).isOne();
     }
 
     @DisplayName("시간 삭제")
-    @Sql("/createTime.sql")
     @Test
     void removeTime() {
         final List<ReservationTime> beforeRemoving = reservationTimeDao.findAll();
         reservationTimeDao.remove(1L);
         final List<ReservationTime> afterRemoving = reservationTimeDao.findAll();
 
-        assertAll(
-                () -> assertThat(beforeRemoving).hasSize(1),
-                () -> assertThat(afterRemoving).isEmpty()
-        );
+        assertThat(beforeRemoving.size() - afterRemoving.size()).isOne();
     }
 
     @DisplayName("단건 조회")
-    @Sql("/createTime.sql")
     @Test
     void findById() {
         //given
@@ -93,7 +87,6 @@ class ReservationTimeDaoTest {
     }
 
     @DisplayName("전체 조회")
-    @Sql("/createTimes.sql")
     @Test
     void findAll() {
         //given

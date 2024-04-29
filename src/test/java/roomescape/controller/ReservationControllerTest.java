@@ -3,7 +3,9 @@ package roomescape.controller;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.springframework.boot.test.context.SpringBootTest.WebEnvironment.RANDOM_PORT;
 import static org.springframework.test.annotation.DirtiesContext.ClassMode.BEFORE_EACH_TEST_METHOD;
+import static org.springframework.test.context.jdbc.Sql.ExecutionPhase.BEFORE_TEST_METHOD;
 
+import java.util.List;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -17,6 +19,7 @@ import roomescape.dto.ReservationResponse;
 
 @SpringBootTest(webEnvironment = RANDOM_PORT)
 @DirtiesContext(classMode = BEFORE_EACH_TEST_METHOD)
+@Sql(value = "/createTimeAndReservations.sql", executionPhase = BEFORE_TEST_METHOD)
 class ReservationControllerTest {
 
     @Autowired
@@ -25,39 +28,35 @@ class ReservationControllerTest {
     @Test
     @DisplayName("예약 조회")
     void getReservation() {
-        assertThat(controller.getReservations()).isEmpty();
+        assertThat(controller.getReservations()).hasSize(2);
     }
 
     @DisplayName("예약 추가")
-    @Sql("/createTime.sql")
     @Test
     void saveReservation() {
         //given
         final CreateReservationRequest reservation = new CreateReservationRequest("2024-04-18", "레디", 1L);
 
         //when
+        final List<ReservationResponse> beforeSaving = controller.getReservations();
         controller.save(reservation);
+        final List<ReservationResponse> afterSaving = controller.getReservations();
 
         //then
-        assertThat(controller.getReservations()).hasSize(1);
+        assertThat(afterSaving.size() - beforeSaving.size()).isOne();
     }
 
 
     @DisplayName("예약 삭제")
-    @Sql("/createTime.sql")
     @Test
     void deleteReservation() {
-        //given
-        final CreateReservationRequest reservation = new CreateReservationRequest("2024-04-18", "레디", 1L);
 
-        final ReservationResponse saved = controller.save(reservation);
-
-        //when
-        assert saved != null;
-        controller.delete(saved.id());
+        final List<ReservationResponse> beforeDeleting = controller.getReservations();
+        controller.delete(1L);
+        final List<ReservationResponse> afterDeleting = controller.getReservations();
 
         //then
-        assertThat(controller.getReservations()).isEmpty();
+        assertThat(beforeDeleting.size() - afterDeleting.size()).isOne();
     }
 
     @DisplayName("존재하지 않는 예약 삭제시 404 반환")

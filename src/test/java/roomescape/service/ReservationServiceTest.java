@@ -6,9 +6,12 @@ import static org.junit.jupiter.api.Assertions.assertAll;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
+import roomescape.console.dao.InMemoryReservationDao;
+import roomescape.console.dao.InMemoryReservationTimeDao;
+import roomescape.console.db.InMemoryReservationDb;
+import roomescape.console.db.InMemoryReservationTimeDb;
+import roomescape.dao.ReservationDao;
 import roomescape.dao.ReservationTimeDao;
-import roomescape.dao.fakedao.FakeReservationDao;
-import roomescape.dao.fakedao.FakeReservationTimeDao;
 import roomescape.dto.ReservationRequest;
 import roomescape.dto.ReservationResponse;
 
@@ -18,9 +21,14 @@ class ReservationServiceTest {
 
     @BeforeEach
     void setUp() {
-        reservationTimeDao = new FakeReservationTimeDao();
+        InMemoryReservationDb inMemoryReservationDb = new InMemoryReservationDb();
+        InMemoryReservationTimeDb inMemoryReservationTimeDb = new InMemoryReservationTimeDb();
+        reservationTimeDao = new InMemoryReservationTimeDao(
+                inMemoryReservationDb, inMemoryReservationTimeDb);
+        ReservationDao reservationDao = new InMemoryReservationDao(
+                inMemoryReservationDb, inMemoryReservationTimeDb);
         reservationService = new ReservationService(
-                new FakeReservationDao(), reservationTimeDao);
+                reservationDao, reservationTimeDao);
     }
 
     @DisplayName("모든 예약 검색")

@@ -1,41 +1,35 @@
-package roomescape.dao.fakedao;
+package roomescape.console.db;
 
 import java.util.List;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.atomic.AtomicLong;
 import org.springframework.dao.EmptyResultDataAccessException;
-import roomescape.dao.ReservationTimeDao;
 import roomescape.domain.ReservationTime;
 
-public class FakeReservationTimeDao implements ReservationTimeDao {
+public class InMemoryReservationTimeDb {
     private final Map<Long, ReservationTime> reservationTimes = new ConcurrentHashMap<>();
     private final AtomicLong id = new AtomicLong(1);
 
-
-    @Override
-    public List<ReservationTime> findAll() {
+    public List<ReservationTime> selectAll() {
         return reservationTimes.values()
                 .stream()
                 .toList();
     }
 
-    @Override
-    public ReservationTime findById(long id) {
+    public ReservationTime selectById(long id) {
         if (reservationTimes.containsKey(id)) {
             return reservationTimes.get(id);
         }
-        throw new EmptyResultDataAccessException(1);
+        throw new EmptyResultDataAccessException("time id doesnt exist", 1);
     }
 
-    @Override
-    public long save(String startAt) {
+    public long insert(String startAt) {
         long thisId = id.getAndIncrement();
         reservationTimes.put(thisId, new ReservationTime(thisId, startAt));
         return thisId;
     }
 
-    @Override
     public boolean deleteById(long id) {
         boolean exists = reservationTimes.containsKey(id);
         if (exists) {

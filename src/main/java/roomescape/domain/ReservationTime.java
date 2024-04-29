@@ -20,6 +20,10 @@ public class ReservationTime {
         this.startAt = startAt;
     }
 
+    public boolean hasSameId(long id) {
+        return this.id == id;
+    }
+
     public long getId() {
         return id;
     }

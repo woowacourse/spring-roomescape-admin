@@ -3,9 +3,9 @@ package roomescape.dto;
 import roomescape.domain.ReservationTime;
 import roomescape.repository.entity.ReservationTimeEntity;
 
-public record ReservationTimeDto(Long id, String startAt) {
+public record ReservationRepositoryTimeDto(Long id, String startAt) {
 
-    public ReservationTimeDto(ReservationTimeEntity reservationTimeEntity) {
+    public ReservationRepositoryTimeDto(ReservationTimeEntity reservationTimeEntity) {
         this(reservationTimeEntity.id(), reservationTimeEntity.startAt());
     }
 

@@ -1,6 +1,6 @@
 package roomescape.repository;
 
-import roomescape.dto.ReservationTimeDto;
+import roomescape.dto.ReservationRepositoryTimeDto;
 import roomescape.repository.entity.ReservationTimeEntity;
 
 import java.util.HashMap;
@@ -15,24 +15,24 @@ public class MemoryReservationTimeRepository implements ReservationTimeRepositor
     private final AtomicLong atomicLong = new AtomicLong();
 
     @Override
-    public ReservationTimeDto add(ReservationTimeDto reservationTimeDto) {
+    public ReservationRepositoryTimeDto add(ReservationRepositoryTimeDto reservationRepositoryTimeDto) {
         Long id = atomicLong.incrementAndGet();
-        ReservationTimeEntity reservationTimeEntity = new ReservationTimeEntity(id, reservationTimeDto.startAt());
+        ReservationTimeEntity reservationTimeEntity = new ReservationTimeEntity(id, reservationRepositoryTimeDto.startAt());
         repository.put(id, reservationTimeEntity);
-        return new ReservationTimeDto(reservationTimeEntity);
+        return new ReservationRepositoryTimeDto(reservationTimeEntity);
     }
 
     @Override
-    public ReservationTimeDto findById(Long id) {
+    public ReservationRepositoryTimeDto findById(Long id) {
         ReservationTimeEntity reservationTimeEntity = repository.get(id);
-        return new ReservationTimeDto(reservationTimeEntity);
+        return new ReservationRepositoryTimeDto(reservationTimeEntity);
     }
 
     @Override
-    public List<ReservationTimeDto> findAll() {
+    public List<ReservationRepositoryTimeDto> findAll() {
         return repository.values()
                 .stream()
-                .map(ReservationTimeDto::new)
+                .map(ReservationRepositoryTimeDto::new)
                 .toList();
     }
 

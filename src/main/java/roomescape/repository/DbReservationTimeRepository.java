@@ -6,7 +6,7 @@ import org.springframework.jdbc.core.namedparam.BeanPropertySqlParameterSource;
 import org.springframework.jdbc.core.namedparam.SqlParameterSource;
 import org.springframework.jdbc.core.simple.SimpleJdbcInsert;
 import org.springframework.stereotype.Repository;
-import roomescape.dto.ReservationTimeDto;
+import roomescape.dto.ReservationRepositoryTimeDto;
 import roomescape.repository.entity.ReservationTimeEntity;
 
 import java.util.List;
@@ -25,27 +25,27 @@ public class DbReservationTimeRepository implements ReservationTimeRepository{
     }
 
     @Override
-    public ReservationTimeDto add(ReservationTimeDto reservationTimeDto) {
-        ReservationTimeEntity reservationTimeEntity = reservationTimeDto.toEntity();
+    public ReservationRepositoryTimeDto add(ReservationRepositoryTimeDto reservationRepositoryTimeDto) {
+        ReservationTimeEntity reservationTimeEntity = reservationRepositoryTimeDto.toEntity();
         SqlParameterSource sqlParameterSource = new BeanPropertySqlParameterSource(reservationTimeEntity);
         Long id = simpleJdbcInsert.executeAndReturnKey(sqlParameterSource).longValue();
-        return new ReservationTimeDto(id, reservationTimeDto.startAt());
+        return new ReservationRepositoryTimeDto(id, reservationRepositoryTimeDto.startAt());
     }
 
     @Override
-    public ReservationTimeDto findById(Long id) {
+    public ReservationRepositoryTimeDto findById(Long id) {
         String SQL = "SELECT * FROM reservation_time WHERE id = ?";
         return jdbcTemplate.queryForObject(SQL, ReservationTimeDtoRowMapper(), id);
     }
 
     @Override
-    public List<ReservationTimeDto> findAll() {
+    public List<ReservationRepositoryTimeDto> findAll() {
         String SQL = "SELECT * FROM reservation_time";
         return jdbcTemplate.query(SQL, ReservationTimeDtoRowMapper());
     }
 
-    private static RowMapper<ReservationTimeDto> ReservationTimeDtoRowMapper() {
-        return (rs, rowNum) -> new ReservationTimeDto(
+    private static RowMapper<ReservationRepositoryTimeDto> ReservationTimeDtoRowMapper() {
+        return (rs, rowNum) -> new ReservationRepositoryTimeDto(
                     rs.getLong("id"),
                     rs.getString("start_at")
         );

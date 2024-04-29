@@ -8,7 +8,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.web.server.LocalServerPort;
 import org.springframework.test.annotation.DirtiesContext;
-import roomescape.dto.ReservationTimeDto;
+import roomescape.dto.ReservationRepositoryTimeDto;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
@@ -30,37 +30,37 @@ public class TimesCrudTest {
     @Test
     void 시간을_추가한다() {
         //given
-        ReservationTimeDto reservationTimeDto = new ReservationTimeDto(1L, "12:00");
+        ReservationRepositoryTimeDto reservationRepositoryTimeDto = new ReservationRepositoryTimeDto(1L, "12:00");
 
         //when
-        reservationTimeRepository.add(reservationTimeDto);
+        reservationTimeRepository.add(reservationRepositoryTimeDto);
 
         //then
-        assertThat(reservationTimeRepository.findAll()).contains(reservationTimeDto);
+        assertThat(reservationTimeRepository.findAll()).contains(reservationRepositoryTimeDto);
     }
 
     @Test
     void 특정_시간을_조회한다() {
         //given
-        ReservationTimeDto reservationTimeDto = new ReservationTimeDto(1L, "12:00");
+        ReservationRepositoryTimeDto reservationRepositoryTimeDto = new ReservationRepositoryTimeDto(1L, "12:00");
 
         //when
-        reservationTimeRepository.add(reservationTimeDto);
+        reservationTimeRepository.add(reservationRepositoryTimeDto);
 
         //then
-        assertThat(reservationTimeRepository.findById(1L)).isEqualTo(reservationTimeDto);
+        assertThat(reservationTimeRepository.findById(1L)).isEqualTo(reservationRepositoryTimeDto);
     }
 
 
     @Test
     void 모든_시간을_조회한다() {
         //given
-        ReservationTimeDto reservationTimeDtoA = new ReservationTimeDto(1L, "12:00");
-        ReservationTimeDto reservationTimeDtoB = new ReservationTimeDto(2L, "13:00");
+        ReservationRepositoryTimeDto reservationRepositoryTimeDtoA = new ReservationRepositoryTimeDto(1L, "12:00");
+        ReservationRepositoryTimeDto reservationRepositoryTimeDtoB = new ReservationRepositoryTimeDto(2L, "13:00");
 
         //when
-        reservationTimeRepository.add(reservationTimeDtoA);
-        reservationTimeRepository.add(reservationTimeDtoB);
+        reservationTimeRepository.add(reservationRepositoryTimeDtoA);
+        reservationTimeRepository.add(reservationRepositoryTimeDtoB);
 
         //then
         assertThat(reservationTimeRepository.findAll()).hasSize(2);
@@ -70,13 +70,13 @@ public class TimesCrudTest {
     void 시간을_삭제한다() {
         //given
         Long id = 1L;
-        ReservationTimeDto reservationTimeDto = new ReservationTimeDto(id, "00:00");
+        ReservationRepositoryTimeDto reservationRepositoryTimeDto = new ReservationRepositoryTimeDto(id, "00:00");
 
         //when
-        reservationTimeRepository.add(reservationTimeDto);
+        reservationTimeRepository.add(reservationRepositoryTimeDto);
         reservationTimeRepository.remove(id);
 
         //then
-        assertThat(reservationTimeRepository.findAll()).doesNotContain(reservationTimeDto);
+        assertThat(reservationTimeRepository.findAll()).doesNotContain(reservationRepositoryTimeDto);
     }
 }

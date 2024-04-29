@@ -4,7 +4,7 @@ import org.springframework.stereotype.Service;
 import roomescape.domain.Reservation;
 import roomescape.domain.ReservationTime;
 import roomescape.dto.ReservationRepositoryDto;
-import roomescape.dto.ReservationTimeDto;
+import roomescape.dto.ReservationRepositoryTimeDto;
 import roomescape.dto.request.ReservationsRequest;
 import roomescape.dto.request.TimesRequest;
 import roomescape.dto.response.ReservationsResponse;
@@ -28,7 +28,7 @@ public class RoomescapeService {
     public ReservationsResponse addReservation(ReservationsRequest reservationsRequest) {
         ReservationRepositoryDto reservationRepositoryDto = new ReservationRepositoryDto(null, reservationsRequest.name(), reservationsRequest.date(), reservationsRequest.timeId());
         ReservationRepositoryDto addedReservationRepositoryDto = reservationRepository.add(reservationRepositoryDto);
-        ReservationTimeDto addedTimeDto = reservationTimeRepository.findById(reservationsRequest.timeId());
+        ReservationRepositoryTimeDto addedTimeDto = reservationTimeRepository.findById(reservationsRequest.timeId());
         Reservation addedReservation = convertToReservationWithDtos(addedReservationRepositoryDto, addedTimeDto);
         return new ReservationsResponse(addedReservation);
     }
@@ -37,7 +37,7 @@ public class RoomescapeService {
         return reservationRepository.findAll()
                 .stream()
                 .map(reservationRepositoryDto -> {
-                    ReservationTimeDto addedTimeDto = reservationTimeRepository.findById(reservationRepositoryDto.timeId());
+                    ReservationRepositoryTimeDto addedTimeDto = reservationTimeRepository.findById(reservationRepositoryDto.timeId());
                     return convertToReservationWithDtos(reservationRepositoryDto, addedTimeDto);
                 })
                 .map(ReservationsResponse::new)
@@ -49,16 +49,16 @@ public class RoomescapeService {
     }
     
     public TimesResponse addTime(TimesRequest timesRequest) {
-        ReservationTimeDto reservationTimeDto = new ReservationTimeDto(null, timesRequest.startAt());
-        ReservationTimeDto addedReservationTimeDto = reservationTimeRepository.add(reservationTimeDto);
-        ReservationTime addedTime = addedReservationTimeDto.toDomain();
+        ReservationRepositoryTimeDto reservationRepositoryTimeDto = new ReservationRepositoryTimeDto(null, timesRequest.startAt());
+        ReservationRepositoryTimeDto addedReservationRepositoryTimeDto = reservationTimeRepository.add(reservationRepositoryTimeDto);
+        ReservationTime addedTime = addedReservationRepositoryTimeDto.toDomain();
         return new TimesResponse(addedTime);
     }
     
     public List<TimesResponse> findAllTimes() {
         return reservationTimeRepository.findAll()
                 .stream()
-                .map(ReservationTimeDto::toDomain)
+                .map(ReservationRepositoryTimeDto::toDomain)
                 .map(TimesResponse::new)
                 .toList();
     }
@@ -67,7 +67,7 @@ public class RoomescapeService {
         return reservationTimeRepository.remove(id);
     }
     
-    private Reservation convertToReservationWithDtos(ReservationRepositoryDto repositoryDto, ReservationTimeDto reservationTimeDto) {
-        return new Reservation(repositoryDto.id(), repositoryDto.name(), repositoryDto.date(), reservationTimeDto.toDomain());
+    private Reservation convertToReservationWithDtos(ReservationRepositoryDto repositoryDto, ReservationRepositoryTimeDto reservationRepositoryTimeDto) {
+        return new Reservation(repositoryDto.id(), repositoryDto.name(), repositoryDto.date(), reservationRepositoryTimeDto.toDomain());
     }
 }

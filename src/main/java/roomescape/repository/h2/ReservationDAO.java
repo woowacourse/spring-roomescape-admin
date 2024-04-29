@@ -1,4 +1,4 @@
-package roomescape.repository;
+package roomescape.repository.h2;
 
 import java.util.HashMap;
 import java.util.List;
@@ -9,15 +9,16 @@ import org.springframework.jdbc.core.simple.SimpleJdbcInsert;
 import org.springframework.stereotype.Repository;
 import roomescape.model.Reservation;
 import roomescape.model.ReservationTime;
+import roomescape.repository.ReservationRepository;
 
 @Repository
-public class ReservationDAOImpl implements ReservationDAO {
+public class ReservationDAO implements ReservationRepository {
 
     private final JdbcTemplate jdbcTemplate;
 
     private SimpleJdbcInsert insertActor;
 
-    public ReservationDAOImpl(JdbcTemplate jdbcTemplate, DataSource dataSource) {
+    public ReservationDAO(JdbcTemplate jdbcTemplate, DataSource dataSource) {
         this.jdbcTemplate = jdbcTemplate;
         this.insertActor = new SimpleJdbcInsert(dataSource)
                 .withTableName("reservation")

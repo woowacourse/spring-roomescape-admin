@@ -3,7 +3,7 @@ package roomescape.repository;
 import java.util.List;
 import roomescape.model.ReservationTime;
 
-public interface ReservationTimeDAO {
+public interface ReservationTimeRepository {
     List<ReservationTime> findAllReservationTimes();
 
     ReservationTime findReservationById(long id);

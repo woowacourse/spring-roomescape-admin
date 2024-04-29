@@ -9,21 +9,21 @@ public class Reservation {
     private final Long id;
     private final String name;
     private final LocalDate date;
-    private final LocalTime time;
+    private final ReservationTime time;
 
-    private Reservation(final Long id, final String name, final LocalDate date, final LocalTime time) {
+    private Reservation(final Long id, final String name, final LocalDate date, final ReservationTime time) {
         this.id = id;
         this.name = name;
         this.date = date;
         this.time = time;
     }
 
-    public Reservation(final Long id, final String name, final String date, final String time) {
-        this(id, name, LocalDate.parse(date), LocalTime.parse(time));
+    public Reservation(final Long id, final String name, final String date, final Long timeId, final String startAt) {
+        this(id, name, LocalDate.parse(date), new ReservationTime(timeId, LocalTime.parse(startAt)));
     }
 
-    public static Reservation create(final String name, final String date, final String time) {
-        return new Reservation(null, name, date, time);
+    public Reservation(final String name, final String date, final ReservationTime time) {
+        this(null, name, LocalDate.parse(date), time);
     }
 
     public Reservation toReservation(final long id) {
@@ -42,36 +42,24 @@ public class Reservation {
         return date;
     }
 
-    public LocalTime getTime() {
+    public ReservationTime getTime() {
         return time;
     }
 
     @Override
-    public boolean equals(final Object target) {
-        if (this == target) {
+    public boolean equals(final Object o) {
+        if (this == o) {
             return true;
         }
-        if (target == null || getClass() != target.getClass()) {
+        if (o == null || getClass() != o.getClass()) {
             return false;
         }
-        final Reservation reservation = (Reservation) target;
-        return Objects.equals(getId(), reservation.getId()) && Objects.equals(getName(), reservation.getName())
-                && Objects.equals(getDate(), reservation.getDate()) && Objects.equals(getTime(),
-                reservation.getTime());
+        final Reservation that = (Reservation) o;
+        return Objects.equals(getId(), that.getId());
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(getId(), getName(), getDate(), getTime());
-    }
-
-    @Override
-    public String toString() {
-        return "Reservation{" +
-                "id=" + id +
-                ", name='" + name + '\'' +
-                ", date=" + date +
-                ", time=" + time +
-                '}';
+        return Objects.hash(getId());
     }
 }

@@ -9,34 +9,34 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
-import roomescape.dto.CreateReservationRequest;
-import roomescape.dto.ReservationResponse;
-import roomescape.service.ReservationService;
+import roomescape.dto.CreateReservationTimeRequest;
+import roomescape.dto.ReservationTimeResponse;
+import roomescape.service.ReservationTimeService;
 
 @RestController
-@RequestMapping("/reservations")
-public class ReservationController {
+@RequestMapping("/times")
+public class ReservationTimeController {
 
-    private final ReservationService reservationService;
+    private final ReservationTimeService reservationTimeService;
 
-    public ReservationController(final ReservationService reservationService) {
-        this.reservationService = reservationService;
+    public ReservationTimeController(final ReservationTimeService reservationTimeService) {
+        this.reservationTimeService = reservationTimeService;
     }
 
     @GetMapping
-    public List<ReservationResponse> getReservations() {
-        return reservationService.findAll();
+    public List<ReservationTimeResponse> getTimes() {
+        return reservationTimeService.findAll();
     }
 
     @PostMapping
-    public ReservationResponse save(@RequestBody final CreateReservationRequest request) {
-        return reservationService.save(request);
+    public ReservationTimeResponse save(@RequestBody final CreateReservationTimeRequest request) {
+        return reservationTimeService.save(request);
     }
 
     @DeleteMapping("/{id}")
     public ResponseEntity<Void> delete(@PathVariable("id") final long id) {
         try {
-            reservationService.remove(id);
+            reservationTimeService.remove(id);
             return ResponseEntity.ok()
                     .build();
         } catch (final IllegalArgumentException exception) {

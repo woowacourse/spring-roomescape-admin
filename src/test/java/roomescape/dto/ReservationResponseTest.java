@@ -14,10 +14,13 @@ class ReservationResponseTest {
         final long id = 1L;
         final String name = "레디";
         final String date = "2024-04-18";
-        final String time = "13:00";
-        final ReservationResponse reservationResponse = new ReservationResponse(id, name, date, time);
+        final long timeId = 1L;
+        final String startAt = "13:00";
 
-        final Reservation reservation = new Reservation(id, name, date, time);
+        final ReservationTimeResponse reservationTimeResponse = new ReservationTimeResponse(timeId, startAt);
+        final ReservationResponse reservationResponse = new ReservationResponse(id, name, date, reservationTimeResponse);
+
+        final Reservation reservation = new Reservation(id, name, date, timeId, startAt);
 
         assertThat(ReservationResponse.from(reservation)).isEqualTo(reservationResponse);
     }

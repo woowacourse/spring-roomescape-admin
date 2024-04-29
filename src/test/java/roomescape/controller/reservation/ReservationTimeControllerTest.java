@@ -28,7 +28,7 @@ class ReservationTimeControllerTest {
                 .body(params)
                 .when().post("/times")
                 .then().log().all()
-                .statusCode(200);
+                .statusCode(201);
     }
 
     @Test
@@ -54,6 +54,6 @@ class ReservationTimeControllerTest {
         RestAssured.given().log().all()
                 .when().delete("/times/11")
                 .then().log().all()
-                .statusCode(200);
+                .statusCode(204);
     }
 }

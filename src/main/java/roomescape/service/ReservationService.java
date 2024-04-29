@@ -34,12 +34,7 @@ public class ReservationService {
     public ReservationResponseDto addReservation(ReservationRequestDto reservationDto) {
         ReservationTime reservationTime = reservationTimeDao.findById(reservationDto.getTimeId());
         long id = reservationDao.save(ReservationSaveDto.from(reservationDto, reservationTime.getStartAt()));
-        Reservation reservation = new Reservation(
-                id,
-                reservationDto.getName(),
-                reservationDto.getDate(),
-                reservationTime
-        );
+        Reservation reservation = reservationDao.findById(id);
         return ReservationResponseDto.from(reservation);
     }
 

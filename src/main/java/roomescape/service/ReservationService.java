@@ -15,7 +15,8 @@ public class ReservationService {
     }
 
     public List<ReservationResponse> getAllReservations() {
-        return reservationDao.findAll().stream()
+        return reservationDao.findAll()
+                .stream()
                 .map(ReservationResponse::new)
                 .toList();
     }

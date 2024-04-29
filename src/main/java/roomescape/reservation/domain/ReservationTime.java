@@ -10,10 +10,6 @@ public class ReservationTime {
         this(null, startAt);
     }
 
-    public ReservationTime(final Long id) {
-        this(id, null);
-    }
-
     public ReservationTime(final long id, final ReservationTime reservationTime) {
         this(id, reservationTime.startAt);
     }

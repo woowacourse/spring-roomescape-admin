@@ -9,9 +9,6 @@ public class Reservation {
     private LocalDate date;
     private ReservationTime time;
 
-    public Reservation() {
-    }
-
     public Reservation(final Long id, final Reservation reservation) {
         this(id, reservation.name, reservation.date, reservation.time);
     }

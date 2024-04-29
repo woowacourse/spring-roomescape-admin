@@ -1,4 +1,4 @@
-package roomescape.dao;
+package roomescape.repository;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
@@ -15,9 +15,9 @@ import roomescape.dto.ReservationRequest;
 
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 @DirtiesContext(classMode = DirtiesContext.ClassMode.BEFORE_EACH_TEST_METHOD)
-class ReservationDaoTest {
+class ReservationRepositoryTest {
     @Autowired
-    private ReservationDao reservationDao;
+    private ReservationRepository reservationRepository;
     @Autowired
     private JdbcTemplate jdbcTemplate;
 
@@ -28,7 +28,7 @@ class ReservationDaoTest {
         jdbcTemplate.update("INSERT INTO reservation (name, date, time_id) VALUES (?, ?, ?)", "브라운", "2023-08-05",
                 1);
 
-        List<Reservation> reservation = reservationDao.findAll();
+        List<Reservation> reservation = reservationRepository.findAll();
         Integer count = jdbcTemplate.queryForObject("SELECT count(1) FROM reservation", Integer.class);
         assertThat(reservation.size()).isEqualTo(count);
     }
@@ -38,7 +38,7 @@ class ReservationDaoTest {
     void add() {
         jdbcTemplate.update("INSERT INTO reservation_time (id, start_at) VALUES (?, ?)", 1, "10:00");
         ReservationRequest reservationRequest = new ReservationRequest("test", LocalDate.parse("2023-08-05"), 1L);
-        reservationDao.add(reservationRequest);
+        reservationRepository.add(reservationRequest);
 
         Integer count = jdbcTemplate.queryForObject("SELECT count(1) FROM reservation", Integer.class);
         assertThat(count).isEqualTo(1);
@@ -50,7 +50,7 @@ class ReservationDaoTest {
         jdbcTemplate.update("INSERT INTO reservation_time (id, start_at) VALUES (?, ?)", 1, "10:00");
         jdbcTemplate.update("INSERT INTO reservation (name, date, time_id) VALUES (?, ?, ?)", "브라운", "2023-08-05",
                 1);
-        reservationDao.delete(1L);
+        reservationRepository.delete(1L);
 
         Integer countAfterDelete = jdbcTemplate.queryForObject("SELECT count(1) from reservation", Integer.class);
         assertThat(countAfterDelete).isEqualTo(0);

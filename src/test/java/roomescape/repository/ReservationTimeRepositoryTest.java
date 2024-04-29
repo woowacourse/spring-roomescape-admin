@@ -1,4 +1,4 @@
-package roomescape.dao;
+package roomescape.repository;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
@@ -15,18 +15,18 @@ import roomescape.dto.TimeRequest;
 
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 @DirtiesContext(classMode = DirtiesContext.ClassMode.BEFORE_EACH_TEST_METHOD)
-class ReservationTimeDaoTest {
+class ReservationTimeRepositoryTest {
     @Autowired
     private JdbcTemplate jdbcTemplate;
     @Autowired
-    private ReservationTimeDao reservationTimeDao;
+    private ReservationTimeRepository reservationTimeRepository;
 
     @DisplayName("reservation 조회 테스트")
     @Test
     void findAll() {
         jdbcTemplate.update("INSERT INTO reservation_time (id, start_at) VALUES (?, ?)", 1, "10:00");
 
-        List<ReservationTime> reservationTimes = reservationTimeDao.findAll();
+        List<ReservationTime> reservationTimes = reservationTimeRepository.findAll();
         Integer count = jdbcTemplate.queryForObject("SELECT count(1) FROM reservation_time", Integer.class);
         assertThat(reservationTimes.size()).isEqualTo(count);
     }
@@ -35,7 +35,7 @@ class ReservationTimeDaoTest {
     @Test
     void add() {
         TimeRequest timeRequest = new TimeRequest(LocalTime.parse("10:00"));
-        reservationTimeDao.add(timeRequest);
+        reservationTimeRepository.add(timeRequest);
 
         Integer count = jdbcTemplate.queryForObject("SELECT count(1) FROM reservation_time", Integer.class);
         assertThat(count).isEqualTo(1);
@@ -45,7 +45,7 @@ class ReservationTimeDaoTest {
     @Test
     void delete() {
         jdbcTemplate.update("INSERT INTO reservation_time (id, start_at) VALUES (?, ?)", 1, "10:00");
-        reservationTimeDao.delete(1L);
+        reservationTimeRepository.delete(1L);
 
         Integer countAfterDelete = jdbcTemplate.queryForObject("SELECT count(1) from reservation_time", Integer.class);
         assertThat(countAfterDelete).isEqualTo(0);

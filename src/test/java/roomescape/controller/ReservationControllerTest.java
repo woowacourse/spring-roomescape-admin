@@ -5,7 +5,6 @@ import static org.assertj.core.api.Assertions.assertThat;
 import io.restassured.RestAssured;
 import io.restassured.http.ContentType;
 import java.lang.reflect.Field;
-import java.util.HashMap;
 import java.util.Map;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
@@ -48,10 +47,11 @@ class ReservationControllerTest {
     @Test
     void addReservation() {
         jdbcTemplate.update("INSERT INTO reservation_time (id, start_at) VALUES (?, ?)", 1, "10:00");
-        Map<String, Object> reservation = new HashMap<>();
-        reservation.put("name", "브라운");
-        reservation.put("date", "2023-08-05");
-        reservation.put("timeId", 1);
+        Map<String, Object> reservation = Map.of(
+                "name", "브라운",
+                "date", "2023-08-05",
+                "timeId", 1
+        );
 
         RestAssured.given().log().all()
                 .contentType(ContentType.JSON)

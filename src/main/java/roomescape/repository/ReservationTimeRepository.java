@@ -1,4 +1,4 @@
-package roomescape.dao;
+package roomescape.repository;
 
 import java.time.LocalTime;
 import java.util.HashMap;
@@ -13,7 +13,7 @@ import roomescape.domain.ReservationTime;
 import roomescape.dto.TimeRequest;
 
 @Repository
-public class ReservationTimeDao {
+public class ReservationTimeRepository {
     private static final RowMapper<ReservationTime> RESERVATION_TIME_ROW_MAPPER = (resultSet, rowNum) -> new ReservationTime(
             resultSet.getLong("id"),
             LocalTime.parse(resultSet.getString("start_at"))
@@ -21,7 +21,7 @@ public class ReservationTimeDao {
     private final JdbcTemplate jdbcTemplate;
     private final SimpleJdbcInsert jdbcInsert;
 
-    public ReservationTimeDao(JdbcTemplate jdbcTemplate, DataSource dataSource) {
+    public ReservationTimeRepository(JdbcTemplate jdbcTemplate, DataSource dataSource) {
         this.jdbcTemplate = jdbcTemplate;
         this.jdbcInsert = new SimpleJdbcInsert(dataSource)
                 .withTableName("reservation_time")

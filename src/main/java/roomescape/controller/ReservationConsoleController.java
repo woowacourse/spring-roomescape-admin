@@ -57,18 +57,18 @@ public class ReservationConsoleController {
 
     }
 
-    public void printReservations() {
+    private void printReservations() {
         List<Reservation> allReservations = reservationService.findAllReservations();
         outputView.printAllReservations(allReservations);
     }
 
-    public void printReservationTimes() {
+    private void printReservationTimes() {
         List<ReservationTime> allReservationTimes = reservationTimeService.findAllReservationTimes();
         outputView.printAllReservationTimes(allReservationTimes);
     }
 
 
-    public void addReservations() {
+    private void addReservations() {
         List<ReservationTime> allReservationTimes = reservationTimeService.findAllReservationTimes();
         outputView.printAllReservationTimes(allReservationTimes);
         ReservationRequest request = inputView.askInputReservation();
@@ -76,19 +76,19 @@ public class ReservationConsoleController {
         outputView.printReservationComplete();
     }
 
-    public void addReservationTimes() {
+    private void addReservationTimes() {
         ReservationTimeRequest request = inputView.askInputReservationTime();
         reservationTimeService.addReservationTime(request);
         outputView.printAddReservationTime();
     }
 
-    public void deleteReservation() {
+    private void deleteReservation() {
         long reservationId = inputView.askInputReservationId();
         reservationService.deleteReservation(reservationId);
         outputView.printReservationDelete();
     }
 
-    public void deleteReservationTime() {
+    private void deleteReservationTime() {
         long reservationTimeId = inputView.askInputReservationTimeId();
         reservationTimeService.deleteReservationTime(reservationTimeId);
         outputView.printReservationTimeDelete();

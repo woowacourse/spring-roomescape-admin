@@ -37,7 +37,7 @@ public class ReservationRepository {
 
     public Reservation findById(Long id) {
         String sql = """
-                SELECT
+                select
                 r.id,
                 r.name,
                 r.date,
@@ -65,7 +65,7 @@ public class ReservationRepository {
 
     public List<Reservation> findAll() {
         String sql = """
-                SELECT
+                select
                 r.id,
                 r.name,
                 r.date,

@@ -1,12 +1,11 @@
 package roomescape.repository;
 
-import java.sql.PreparedStatement;
+import java.util.HashMap;
 import java.util.List;
-import java.util.Objects;
+import java.util.Map;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;
-import org.springframework.jdbc.support.GeneratedKeyHolder;
-import org.springframework.jdbc.support.KeyHolder;
+import org.springframework.jdbc.core.simple.SimpleJdbcInsert;
 import org.springframework.stereotype.Repository;
 import roomescape.model.ReservationTimeDto;
 
@@ -14,12 +13,16 @@ import roomescape.model.ReservationTimeDto;
 public class ReservationTimeRepository {
 
     private final JdbcTemplate jdbcTemplate;
+    private final SimpleJdbcInsert simpleJdbcInsert;
 
     public ReservationTimeRepository(JdbcTemplate jdbcTemplate) {
         this.jdbcTemplate = jdbcTemplate;
+        this.simpleJdbcInsert = new SimpleJdbcInsert(jdbcTemplate)
+                .withTableName("reservation_time")
+                .usingGeneratedKeyColumns("id");
     }
 
-    private final RowMapper<ReservationTimeDto> timeRowMapper = (resultSet, rowNum) ->
+    private static final RowMapper<ReservationTimeDto> timeRowMapper = (resultSet, rowNum) ->
             new ReservationTimeDto(
                     resultSet.getLong("id"),
                     resultSet.getString("start_at")
@@ -38,18 +41,12 @@ public class ReservationTimeRepository {
                 id);
     }
 
-    public ReservationTimeDto createReservationTime(ReservationTimeDto reservationTimeRequest) {
-        String sqlToInsert = "INSERT INTO reservation_time (start_at) VALUES (?)";
-        KeyHolder keyHolder = new GeneratedKeyHolder();
-        jdbcTemplate.update(connection -> {
-            PreparedStatement preparedStatement = connection.prepareStatement(
-                    sqlToInsert,
-                    new String[]{"id"});
-            preparedStatement.setString(1, reservationTimeRequest.startAt());
-            return preparedStatement;
-        }, keyHolder);
-        return findReservationTimeById(Objects.requireNonNull(keyHolder.getKey())
-                .longValue());
+    public ReservationTimeDto createReservationTime(ReservationTimeDto reservationTimeDto) {
+        Map<String, Object> parameters = new HashMap<>();
+        parameters.put("start_at", reservationTimeDto.startAt());
+
+        Number newId = simpleJdbcInsert.executeAndReturnKey(parameters);
+        return findReservationTimeById(newId.longValue());
     }
 
     public void deleteReservationTime(Long id) {

@@ -1,11 +1,14 @@
-package roomescape.repository;
+package roomescape.repository.memory;
 
 import java.util.ArrayList;
 import java.util.List;
 import java.util.NoSuchElementException;
 import java.util.concurrent.atomic.AtomicLong;
+import org.springframework.stereotype.Repository;
 import roomescape.model.Reservation;
+import roomescape.repository.ReservationRepository;
 
+@Repository
 public class ReservationMemoryRepository implements ReservationRepository {
 
     private final List<Reservation> reservations = new ArrayList<>();

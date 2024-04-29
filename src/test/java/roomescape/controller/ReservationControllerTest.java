@@ -15,6 +15,7 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.test.annotation.DirtiesContext;
 import roomescape.controller.request.ReservationRequest;
+import roomescape.controller.web.ReservationController;
 import roomescape.model.Reservation;
 
 

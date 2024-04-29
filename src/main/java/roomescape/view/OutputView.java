@@ -1,9 +1,11 @@
 package roomescape.view;
 
 import java.util.List;
+import org.springframework.stereotype.Component;
 import roomescape.model.Reservation;
 import roomescape.model.ReservationTime;
 
+@Component
 public class OutputView {
 
     private static final String COMMANDS_MESSAGE = """

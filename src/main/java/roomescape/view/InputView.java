@@ -3,9 +3,11 @@ package roomescape.view;
 import java.time.LocalDate;
 import java.time.LocalTime;
 import java.util.Scanner;
+import org.springframework.stereotype.Component;
 import roomescape.controller.request.ReservationRequest;
 import roomescape.controller.request.ReservationTimeRequest;
 
+@Component
 public class InputView {
 
     private static final Scanner in = new Scanner(System.in);

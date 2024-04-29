@@ -8,6 +8,7 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import roomescape.model.ReservationTime;
+import roomescape.repository.memory.ReservationTimeMemoryRepository;
 
 class ReservationTimeMemoryRepositoryTest {
 

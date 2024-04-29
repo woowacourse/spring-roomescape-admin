@@ -6,6 +6,11 @@ import org.springframework.web.bind.annotation.GetMapping;
 @Controller
 public class PageController {
 
+    @GetMapping
+    public String getDefaultPage() {
+        return "redirect:/admin";
+    }
+
     @GetMapping("admin")
     public String getWelcomePage() {
         return "admin/index";

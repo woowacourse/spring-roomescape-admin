@@ -38,7 +38,9 @@ tasks.named("bootRun") {
 tasks.named("runConsole") {
     setMainClass 'roomescape.RoomescapeConsoleRunner'
 }
-
+springBoot {
+    setMainClass 'roomescape.RoomescapeApplication'
+}
 
 test {
     useJUnitPlatform()

@@ -69,7 +69,7 @@ class ReservationControllerTest {
 
     @DisplayName("예약 등록 테스트")
     @Test
-    void reservationCreateTest() {
+    void reservationAddTest() {
         Map<String, String> params = Map.of(
                 "name", "새양",
                 "date", "1998-02-24",

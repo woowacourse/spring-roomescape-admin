@@ -22,7 +22,7 @@ class ReservationTimeControllerTest {
 
     @DisplayName("예약 시간 조회 테스트")
     @Test
-    void getReservationTime() {
+    void reservationTimeReadTest() {
         RestAssured.given().log().all()
                 .port(randomServerPort)
                 .when().get("/times")
@@ -33,7 +33,7 @@ class ReservationTimeControllerTest {
 
     @DisplayName("예약 시간 등록 테스트")
     @Test
-    void addReservationTime() {
+    void reservationTimeAddTest() {
         Map<String, String> params = new HashMap<>();
         params.put("startAt", "10:00");
 
@@ -55,7 +55,7 @@ class ReservationTimeControllerTest {
 
     @DisplayName("예약 시간 삭제 테스트")
     @Test
-    void deleteReservationTime() {
+    void reservationTimeDeleteTest() {
         Map<String, String> params = new HashMap<>();
         params.put("startAt", "10:00");
 

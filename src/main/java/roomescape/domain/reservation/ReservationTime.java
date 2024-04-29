@@ -27,6 +27,10 @@ public class ReservationTime {
         return END_TIME;
     }
 
+    public boolean hasSameTimeWith(ReservationTime reservationTime) {
+        return reservationTime.time == this.time;
+    }
+
     private void validateTime(LocalTime time) {
         if (time == null) {
             throw new IllegalArgumentException("time is null");

@@ -10,6 +10,10 @@ public class ReservationDate {
         this.date = date;
     }
 
+    public boolean hasSameDateWith(ReservationDate reservationDate) {
+        return reservationDate.date == this.date;
+    }
+
     private void validateDate(LocalDate date) {
         if (date == null) {
             throw new IllegalArgumentException("date is null");

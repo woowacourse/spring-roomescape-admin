@@ -1,4 +1,4 @@
-package roomescape.dao.rowmapper;
+package roomescape.repository.web.dao.rowmapper;
 
 import org.springframework.jdbc.core.RowMapper;
 import org.springframework.stereotype.Component;

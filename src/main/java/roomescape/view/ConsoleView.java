@@ -1,6 +1,6 @@
 package roomescape.view;
 
-import org.springframework.stereotype.Component;
+import roomescape.controller.command.Command;
 import roomescape.dto.ReservationRequestDto;
 import roomescape.dto.ReservationResponseDto;
 import roomescape.dto.ReservationTimeRequestDto;
@@ -12,12 +12,11 @@ import java.time.format.DateTimeFormatter;
 import java.util.List;
 import java.util.Scanner;
 
-@Component
 public class ConsoleView {
 
     private final Scanner scanner = new Scanner(System.in);
 
-    public String readCommand() {
+    public Class<? extends Command> readCommand() {
         System.out.println("""
                 
                 1. 시간 조회
@@ -29,7 +28,8 @@ public class ConsoleView {
                 7. 종료
                 원하는 동작의 번호를 입력해주세요. 예 - 1
                 """);
-        return scanner.nextLine();
+        String rawCommand = scanner.nextLine();
+        return InputCommandMapper.findCommandType(rawCommand);
     }
 
     public ReservationTimeRequestDto readTimeToAdd() {

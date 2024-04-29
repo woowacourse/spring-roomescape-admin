@@ -1,10 +1,9 @@
 package roomescape.controller;
 
-import roomescape.controller.command.Command;
+import roomescape.controller.command.*;
 import roomescape.service.ReservationService;
 import roomescape.service.ReservationTimeService;
 import roomescape.view.ConsoleView;
-import roomescape.view.InputCommandMapper;
 
 public class ConsoleController {
 
@@ -20,9 +19,31 @@ public class ConsoleController {
 
     public void run() {
         while (true) {
-            String rawCommand = consoleView.readCommand();
-            Command command = InputCommandMapper.findCommand(rawCommand, consoleView, reservationService, reservationTimeService);
+            Class<? extends Command> commandType = consoleView.readCommand();
+            Command command = createCommand(commandType);
             command.execute();
         }
+    }
+
+    private Command createCommand(Class<? extends Command> commandType) {
+        if (commandType == TimeShowCommand.class) {
+            return new TimeShowCommand(consoleView, reservationTimeService);
+        }
+        if (commandType == TimeSaveCommand.class) {
+            return new TimeSaveCommand(consoleView, reservationTimeService);
+        }
+        if (commandType == TimeDeleteCommand.class) {
+            return new TimeDeleteCommand(consoleView, reservationTimeService);
+        }
+        if (commandType == ReservationShowCommand.class) {
+            return new ReservationShowCommand(consoleView, reservationService);
+        }
+        if (commandType == ReservationSaveCommand.class) {
+            return new ReservationSaveCommand(consoleView, reservationService);
+        }
+        if (commandType == ReservationDeleteCommand.class) {
+            return new ReservationDeleteCommand(consoleView, reservationService);
+        }
+        return new ExitCommand(consoleView);
     }
 }

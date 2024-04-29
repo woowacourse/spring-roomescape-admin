@@ -1,31 +1,33 @@
 package roomescape.view;
 
 import roomescape.controller.command.*;
-import roomescape.service.ReservationService;
-import roomescape.service.ReservationTimeService;
 
-public class InputCommandMapper {
+import java.util.Arrays;
 
-    // TODO: refactoring - parameter
-    public static Command findCommand(String input, ConsoleView consoleView, ReservationService reservationService, ReservationTimeService reservationTimeService) {
-        if (input.equals("1")) {
-            return new TimeShowCommand(consoleView, reservationTimeService);
-        }
-        if (input.equals("2")) {
-            return new TimeSaveCommand(consoleView, reservationTimeService);
-        }
-        if (input.equals("3")) {
-            return new TimeDeleteCommand(consoleView, reservationTimeService);
-        }
-        if (input.equals("4")) {
-            return new ReservationShowCommand(consoleView, reservationService);
-        }
-        if (input.equals("5")) {
-            return new ReservationSaveCommand(consoleView, reservationService);
-        }
-        if (input.equals("6")) {
-            return new ReservationDeleteCommand(consoleView, reservationService);
-        }
-        return new ExitCommand(consoleView);
+enum InputCommandMapper {
+
+    SHOW_TIME("1", TimeShowCommand.class),
+    SAVE_TIME("2", TimeSaveCommand.class),
+    DELETE_TIME("3", TimeDeleteCommand.class),
+    SHOW_RESERVATION("4", ReservationShowCommand.class),
+    SAVE_RESERVATION("5", ReservationSaveCommand.class),
+    DELETE_RESERVATION("6", ReservationDeleteCommand.class),
+    EXIT("7", ExitCommand.class),
+    ;
+
+    private final String input;
+    private final Class<? extends Command> commandType;
+
+    InputCommandMapper(String input, Class<? extends Command> commandType) {
+        this.input = input;
+        this.commandType = commandType;
+    }
+
+    public static Class<? extends Command> findCommandType(String input) {
+        return Arrays.stream(values())
+                .filter(mapper -> mapper.input.equals(input))
+                .findFirst()
+                .orElseGet(() -> EXIT)
+                .commandType;
     }
 }

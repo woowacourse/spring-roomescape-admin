@@ -31,12 +31,12 @@ public class ReservationDao {
                 .usingGeneratedKeyColumns("id");
     }
 
-    private final RowMapper<ReservationResponse> reservationRowMapper = (resultSet, rowNum) -> new ReservationResponse(
+    private final RowMapper<Reservation> reservationRowMapper = (resultSet, rowNum) -> new Reservation(
             resultSet.getLong("reservation_id"),
             resultSet.getString("name"),
             LocalDate.parse(resultSet.getString("date")),
-            resultSet.getLong("time_id"),
-            LocalTime.parse(resultSet.getString("time_value"))
+            new ReservationTime(resultSet.getLong("time_id"),
+                    LocalTime.parse(resultSet.getString("time_value")))
     );
 
     public List<Reservation> findAll() {
@@ -49,10 +49,7 @@ public class ReservationDao {
                 "from reservation as r " +
                 "inner join reservation_time as t " +
                 "on r.time_id=t.id";
-        List<ReservationResponse> reservationResponses = jdbcTemplate.query(sql, reservationRowMapper);
-        return reservationResponses.stream()
-                .map(ReservationResponse::toReservation)
-                .toList();
+        return jdbcTemplate.query(sql, reservationRowMapper);
     }
 
     public Reservation insert(ReservationCreateRequest reservationCreateRequest, ReservationTime reservationTime) {

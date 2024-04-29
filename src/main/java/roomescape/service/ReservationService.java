@@ -43,7 +43,6 @@ public class ReservationService {
     public ReservationResponse addReservation(ReservationRequest reservationRequest) {
         ReservationTime reservationTime = reservationTimeRepository.findById(reservationRequest.timeId());
         Reservation reservation = reservationRepository.insert(new Reservation(
-                        null,
                         reservationRequest.name(),
                         reservationRequest.date(),
                         reservationTime

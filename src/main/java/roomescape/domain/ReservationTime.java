@@ -7,4 +7,8 @@ public record ReservationTime(Long id, LocalTime startAt) {
     public ReservationTime(Long id, String startAt) {
         this(id, LocalTime.parse(startAt));
     }
+
+    public ReservationTime(LocalTime startAt) {
+        this(null, startAt);
+    }
 }

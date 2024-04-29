@@ -28,7 +28,7 @@ public class ReservationTimeService {
 
     public ReservationTimeResponse addReservationTime(ReservationTimeRequest reservationTimeRequest) {
         ReservationTime reservationTime =
-                reservationTimeRepository.insert(new ReservationTime(null, reservationTimeRequest.startAt()));
+                reservationTimeRepository.insert(new ReservationTime(reservationTimeRequest.startAt()));
 
         return new ReservationTimeResponse(reservationTime.id(), reservationTime.startAt());
     }

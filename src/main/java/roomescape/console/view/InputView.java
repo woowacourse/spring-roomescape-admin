@@ -13,7 +13,7 @@ public class InputView {
     public int readSelectMenu() {
         System.out.println(
                 """
-                [방탈출] 원하시는 항목을 선택해 주세요. (ex.1)
+                \n[방탈출] 원하시는 항목을 선택해 주세요. (ex.1)
                 1. 예약 추가
                 2. 예약 삭제
                 3. 예약 시간 추가
@@ -34,7 +34,7 @@ public class InputView {
     }
 
     public Long readReservationDelete() {
-        System.out.println("<예약 삭제>를 선택하셨습니다.");
+        System.out.println("\n<예약 삭제>를 선택하셨습니다.");
         System.out.println("예약 현황을 참고하여 삭제할 ID를 선택해 주세요.");
         String input = SCANNER.nextLine();
         return Long.parseLong(input);
@@ -56,14 +56,14 @@ public class InputView {
     }
 
     public ReservationTimeRequest readReservationTimeCreate() {
-        System.out.println("<예약 시간 추가>를 선택하셨습니다.");
+        System.out.println("\n<예약 시간 추가>를 선택하셨습니다.");
         System.out.println("추가할 예약 시간을 입력해 주세요.");
         LocalTime localTime = LocalTime.parse(SCANNER.nextLine());
         return new ReservationTimeRequest(localTime);
     }
 
     public Long readReservationTimeDelete() {
-        System.out.println("<예약 시간 삭제>를 선택하셨습니다.");
+        System.out.println("\n<예약 시간 삭제>를 선택하셨습니다.");
         System.out.println("예약 시간 현황을 참고하여 삭제할 ID를 선택해 주세요.");
         String input = SCANNER.nextLine();
         return Long.parseLong(input);

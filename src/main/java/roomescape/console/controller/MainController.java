@@ -33,12 +33,12 @@ public class MainController {
         }
         selectAction(selectedMenu);
         run();
-
     }
 
     private void selectAction(int selectedMenu) {
         if (selectedMenu == 1 || selectedMenu == 2) {
             selectReservation(selectedMenu);
+            return;
         }
         selectReservationTime(selectedMenu);
     }
@@ -46,6 +46,7 @@ public class MainController {
     private void selectReservation(int selectedMenu) {
         if (selectedMenu == 1) {
             selectReservationCreate();
+            return;
         }
         selectReservationDelete();
     }
@@ -53,6 +54,7 @@ public class MainController {
     private void selectReservationTime(int selectedMenu) {
         if (selectedMenu == 3) {
             selectReservationTimeCreate();
+            return;
         }
         selectReservationTimeDelete();
     }

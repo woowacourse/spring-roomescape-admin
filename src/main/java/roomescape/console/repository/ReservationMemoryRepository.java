@@ -13,7 +13,7 @@ public class ReservationMemoryRepository implements ReservationRepository {
     private static final int ZERO_RESERVATION = 0;
     private static final int ONE_RESERVATION = 1;
     private final Map<Long, Reservation> reservations = new HashMap<>();
-    private final AtomicLong id = new AtomicLong(1);
+    private final AtomicLong id = new AtomicLong(0);
 
     @Override
     public Long createReservation(Reservation reservation) {

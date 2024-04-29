@@ -14,7 +14,7 @@ public class ReservationTimeMemoryRepository implements ReservationTimeRepositor
     private static final int ONE_RESERVATION = 1;
 
     Map<Long, ReservationTime> reservationTimes = new HashMap<>();
-    AtomicLong id = new AtomicLong(1);
+    AtomicLong id = new AtomicLong(0);
 
     @Override
     public Long createTime(ReservationTime reservationTime) {

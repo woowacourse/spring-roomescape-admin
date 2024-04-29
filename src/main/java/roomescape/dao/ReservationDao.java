@@ -7,7 +7,6 @@ import org.springframework.jdbc.support.KeyHolder;
 import org.springframework.stereotype.Repository;
 import roomescape.domain.Reservation;
 import roomescape.domain.ReservationTime;
-import roomescape.dto.ReservationCreateRequest;
 
 import java.sql.PreparedStatement;
 import java.util.List;
@@ -38,16 +37,6 @@ public class ReservationDao {
         return jdbcTemplate.query(sql, rowMapper);
     }
 
-    public Reservation readReservationById(long id) {
-        String sql = """
-                SELECT reservation.id, reservation.name, reservation.date, reservation.time_id, reservation_time.start_at
-                FROM reservation
-                JOIN reservation_time ON reservation.time_id = reservation_time.id
-                WHERE reservation.id = ?;
-                """;
-        return jdbcTemplate.queryForObject(sql, rowMapper, id);
-    }
-
     public Long readReservationCountByTimeId(long time_id) {
         String sql = """
                 SELECT count(reservation.time_id)
@@ -58,19 +47,20 @@ public class ReservationDao {
         return jdbcTemplate.queryForObject(sql, Long.class, time_id);
     }
 
-    public long createReservation(ReservationCreateRequest dto) {
+    public Reservation createReservation(Reservation reservation) {
         KeyHolder keyHolder = new GeneratedKeyHolder();
         String sql = "INSERT INTO reservation (name, date, time_id) values (?, ?, ?)";
 
         jdbcTemplate.update(connection -> {
             PreparedStatement preparedStatement = connection.prepareStatement(sql, new String[]{"id"});
-            preparedStatement.setString(1, dto.name());
-            preparedStatement.setString(2, dto.date());
-            preparedStatement.setLong(3, dto.timeId());
+            preparedStatement.setString(1, reservation.name());
+            preparedStatement.setString(2, reservation.date());
+            preparedStatement.setLong(3, reservation.time().id());
             return preparedStatement;
         }, keyHolder);
 
-        return keyHolder.getKey().longValue();
+        long id = keyHolder.getKey().longValue();
+        return reservation.changeId(id);
     }
 
     public void deleteReservation(long id) {

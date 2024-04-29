@@ -1,4 +1,4 @@
 package roomescape.domain;
 
-public record ReservationTime(long id, String startAt) {
+public record ReservationTime(Long id, String startAt) {
 }

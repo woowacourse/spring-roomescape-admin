@@ -5,8 +5,8 @@ import java.time.LocalDate;
 public class Reservation {
     private final Long id;
     private final Name name;
-    private LocalDate date;
-    private ReservationTime time;
+    private final LocalDate date;
+    private final ReservationTime time;
 
     public Reservation(Long id, Name name, LocalDate date, ReservationTime time) {
         this.id = id;

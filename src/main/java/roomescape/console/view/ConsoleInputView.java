@@ -65,7 +65,7 @@ public class ConsoleInputView {
 
     private Long toId(String string) {
         try {
-            return tryToId(string.trim());
+            return convertToId(string.trim());
         } catch (NumberFormatException exception) {
             throw new IllegalArgumentException("id 형식(양수)을 맞추어 입력해야 합니다.", exception);
         }
@@ -101,13 +101,13 @@ public class ConsoleInputView {
 
     private Long inputId() {
         try {
-            return tryToId(SCANNER.nextLine());
+            return convertToId(SCANNER.nextLine());
         } catch (IllegalArgumentException exception) {
             throw new IllegalArgumentException("id 형식(양수)을 맞추어 입력해야 합니다.", exception);
         }
     }
 
-    private Long tryToId(String string) {
+    private Long convertToId(String string) {
         Long id = Long.parseLong(string);
         if (id <= 0) {
             throw new IllegalArgumentException("id는 양수이어야 합니다.");

@@ -11,6 +11,7 @@ import org.springframework.test.annotation.DirtiesContext;
 import roomescape.reservation.domain.ReservationTime;
 
 import javax.sql.DataSource;
+import java.time.LocalTime;
 import java.util.List;
 
 import static org.assertj.core.api.Assertions.assertThat;
@@ -36,7 +37,7 @@ class ReservationTimeDaoTest {
     @Test
     void insertTest() {
         // given
-        ReservationTime reservationTime = new ReservationTime("10:00");
+        ReservationTime reservationTime = new ReservationTime(LocalTime.now());
 
         //when
         ReservationTime inserted = reservationTimeDao.insert(reservationTime);
@@ -49,9 +50,9 @@ class ReservationTimeDaoTest {
     @Test
     void findAllTest() {
         // given
-        reservationTimeDao.insert(new ReservationTime("10:00"));
-        reservationTimeDao.insert(new ReservationTime("10:00"));
-        reservationTimeDao.insert(new ReservationTime("10:00"));
+        reservationTimeDao.insert(new ReservationTime(LocalTime.now()));
+        reservationTimeDao.insert(new ReservationTime(LocalTime.now()));
+        reservationTimeDao.insert(new ReservationTime(LocalTime.now()));
 
         //when
         List<ReservationTime> reservationTimes = reservationTimeDao.findAll();
@@ -64,7 +65,7 @@ class ReservationTimeDaoTest {
     @Test
     void deleteTest() {
         // given
-        ReservationTime reservationTime = new ReservationTime("10:00");
+        ReservationTime reservationTime = new ReservationTime(LocalTime.now());
         ReservationTime inserted = reservationTimeDao.insert(reservationTime);
 
         //when & then

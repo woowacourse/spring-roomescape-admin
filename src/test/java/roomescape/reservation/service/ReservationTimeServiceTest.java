@@ -14,6 +14,7 @@ import roomescape.reservation.dto.response.ReservationTimeResponseDto;
 import roomescape.reservation.dto.response.ReservationTimesResponseDto;
 
 import javax.sql.DataSource;
+import java.time.LocalTime;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
@@ -38,7 +39,7 @@ class ReservationTimeServiceTest {
     @Test
     void insertTest() {
         // given
-        ReservationTimeRequestDto request = new ReservationTimeRequestDto("10:00");
+        ReservationTimeRequestDto request = new ReservationTimeRequestDto(LocalTime.now());
 
         //when
         ReservationTimeResponseDto response = reservationTimeService.addReservationTime(request);
@@ -51,9 +52,9 @@ class ReservationTimeServiceTest {
     @Test
     void findAllTest() {
         // given
-        reservationTimeService.addReservationTime(new ReservationTimeRequestDto("10:00"));
-        reservationTimeService.addReservationTime(new ReservationTimeRequestDto("10:00"));
-        reservationTimeService.addReservationTime(new ReservationTimeRequestDto("10:00"));
+        reservationTimeService.addReservationTime(new ReservationTimeRequestDto(LocalTime.now()));
+        reservationTimeService.addReservationTime(new ReservationTimeRequestDto(LocalTime.now()));
+        reservationTimeService.addReservationTime(new ReservationTimeRequestDto(LocalTime.now()));
 
         //when
         ReservationTimesResponseDto response = reservationTimeService.findAllReservationTime();
@@ -67,7 +68,7 @@ class ReservationTimeServiceTest {
     @Test
     void deleteTest() {
         // given
-        ReservationTimeResponseDto inserted = reservationTimeService.addReservationTime(new ReservationTimeRequestDto("10:00"));
+        ReservationTimeResponseDto inserted = reservationTimeService.addReservationTime(new ReservationTimeRequestDto(LocalTime.now()));
 
         //when & then
         Assertions.assertThatCode(() -> reservationTimeService.removeReservationTimeById(inserted.id()));

@@ -12,6 +12,7 @@ import org.springframework.test.annotation.DirtiesContext;
 import roomescape.reservation.dao.ReservationTimeDao;
 import roomescape.reservation.domain.ReservationTime;
 
+import java.time.LocalTime;
 import java.util.Map;
 
 import static org.hamcrest.CoreMatchers.is;
@@ -28,7 +29,7 @@ class ReservationControllerTest {
 
     @BeforeEach
     void init() {
-        reservationTimeDao.insert(new ReservationTime("10:00"));
+        reservationTimeDao.insert(new ReservationTime(LocalTime.now()));
     }
 
     @DisplayName("예약 정보 조회 테스트")

@@ -15,6 +15,8 @@ import roomescape.reservation.dto.request.ReservationRequestDto;
 import roomescape.reservation.dto.response.ReservationResponseDto;
 
 import javax.sql.DataSource;
+import java.time.LocalDate;
+import java.time.LocalTime;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
@@ -36,14 +38,14 @@ class ReservationServiceTest {
         ReservationTimeDao reservationTimeDao = new ReservationTimeDao(jdbcTemplate, dataSource);
         reservationService = new ReservationService(reservationDao, reservationTimeDao);
 
-        reservationTimeDao.insert(new ReservationTime("10:00"));
+        reservationTimeDao.insert(new ReservationTime(LocalTime.now()));
     }
 
     @DisplayName("예약 정보 삽입 테스트")
     @Test
     void insertTest() {
 
-        ReservationRequestDto request = new ReservationRequestDto("name", "2000-09-07", 1L);
+        ReservationRequestDto request = new ReservationRequestDto("name", LocalDate.now(), 1L);
         ReservationResponseDto response = reservationService.addReservation(request);
         assertThat(response.id()).isEqualTo(1L);
     }
@@ -51,9 +53,9 @@ class ReservationServiceTest {
     @DisplayName("예약 정보 전체 조회 테스트")
     @Test
     void findAllTest() {
-        reservationService.addReservation(new ReservationRequestDto("name1", "2000-09-07", 1L));
-        reservationService.addReservation(new ReservationRequestDto("name2", "2000-09-07", 1L));
-        reservationService.addReservation(new ReservationRequestDto("name3", "2000-09-07", 1L));
+        reservationService.addReservation(new ReservationRequestDto("name1", LocalDate.now(), 1L));
+        reservationService.addReservation(new ReservationRequestDto("name2", LocalDate.now(), 1L));
+        reservationService.addReservation(new ReservationRequestDto("name3", LocalDate.now(), 1L));
 
         int findSize = reservationService.findAllReservation().reservations().size();
         assertThat(findSize).isEqualTo(3);
@@ -62,7 +64,7 @@ class ReservationServiceTest {
     @DisplayName("예약 정보 삭제 테스트")
     @Test
     void deleteTest() {
-        ReservationRequestDto request = new ReservationRequestDto("name", "2000-09-07", 1L);
+        ReservationRequestDto request = new ReservationRequestDto("name", LocalDate.now(), 1L);
         ReservationResponseDto response = reservationService.addReservation(request);
 
         reservationService.removeReservationById(response.id());

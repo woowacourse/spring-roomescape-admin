@@ -13,6 +13,7 @@ import roomescape.reservation.domain.ReservationTime;
 
 import javax.sql.DataSource;
 import java.time.LocalDate;
+import java.time.LocalTime;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
@@ -35,7 +36,7 @@ class ReservationDaoTest {
         reservationDao = new ReservationDao(jdbcTemplate, dataSource);
 
         ReservationTimeDao reservationTimeDao = new ReservationTimeDao(jdbcTemplate, dataSource);
-        reservationTime = reservationTimeDao.insert(new ReservationTime("10:00"));
+        reservationTime = reservationTimeDao.insert(new ReservationTime(LocalTime.now()));
     }
 
     @DisplayName("예약 정보 삽입 테스트")

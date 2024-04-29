@@ -22,7 +22,7 @@ class ReservationDaoTest {
     @Autowired
     public ReservationDaoTest(JdbcTemplate jdbcTemplate) {
         this.jdbcTemplate = jdbcTemplate;
-        this.reservationDao = new ReservationDao(jdbcTemplate);
+        this.reservationDao = new ReservationDaoImpl(jdbcTemplate);
     }
 
     @Test

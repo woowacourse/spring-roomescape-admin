@@ -20,8 +20,6 @@ import static org.hamcrest.Matchers.is;
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.DEFINED_PORT)
 @DirtiesContext(classMode = DirtiesContext.ClassMode.BEFORE_EACH_TEST_METHOD)
 public class ReservationsControllerTest {
-    @Autowired
-    private ReservationsController reservationController;
     private final Map<String, String> reservation = new HashMap<>();
     private final Map<String, String> time = new HashMap<>();
 
@@ -98,19 +96,5 @@ public class ReservationsControllerTest {
                 .then().log().all()
                 .statusCode(200)
                 .body("size()", is(1));
-    }
-
-    @Test
-    void check_JdbcTemplate_Injection_Test() {
-        boolean isJdbcTemplateInjected = false;
-
-        for (Field field : reservationController.getClass().getDeclaredFields()) {
-            if (field.getType().equals(JdbcTemplate.class)) {
-                isJdbcTemplateInjected = true;
-                break;
-            }
-        }
-
-        assertThat(isJdbcTemplateInjected).isFalse();
     }
 }

@@ -14,9 +14,6 @@ import java.util.List;
 @Repository
 public class ReservationTimeRepository {
 
-    private final JdbcTemplate jdbcTemplate;
-    private final SimpleJdbcInsert jdbcInsert;
-
     private static final RowMapper<ReservationTime> timeRowMapper = (resultSet, rowNum) -> {
         ReservationTime reservationTime = new ReservationTime(
                 resultSet.getLong("id"),
@@ -24,6 +21,9 @@ public class ReservationTimeRepository {
         );
         return reservationTime;
     };
+
+    private final JdbcTemplate jdbcTemplate;
+    private final SimpleJdbcInsert jdbcInsert;
 
     public ReservationTimeRepository(JdbcTemplate jdbcTemplate, DataSource dataSource) {
         this.jdbcTemplate = jdbcTemplate;

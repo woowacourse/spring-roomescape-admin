@@ -1,6 +1,7 @@
 package roomescape.repository;
 
 import org.springframework.jdbc.core.JdbcTemplate;
+import org.springframework.jdbc.core.RowMapper;
 import org.springframework.jdbc.core.namedparam.MapSqlParameterSource;
 import org.springframework.jdbc.core.namedparam.SqlParameterSource;
 import org.springframework.jdbc.core.simple.SimpleJdbcInsert;
@@ -13,6 +14,20 @@ import java.util.List;
 
 @Repository
 public class ReservationRepository {
+
+    private static final RowMapper<Reservation> reservationRowMapper = (resultSet, rowNum) -> {
+        Reservation reservation = new Reservation(
+                resultSet.getLong("id"),
+                resultSet.getString("name"),
+                resultSet.getDate("date").toLocalDate(),
+                new ReservationTime(
+                        resultSet.getLong("time_id"),
+                        resultSet.getString("time_value")
+                )
+        );
+        return reservation;
+    };
+
     private final JdbcTemplate jdbcTemplate;
     private final SimpleJdbcInsert jdbcInsert;
 
@@ -28,19 +43,7 @@ public class ReservationRepository {
         String sql = "SELECT r.id as reservation_id, r.name, r.date, t.id as time_id, t.start_at as time_value"
                 + " FROM reservation as r inner join reservation_time as t on r.time_id = t.id";
 
-        return jdbcTemplate.query(sql, (resultSet, rowNum) -> {
-            ReservationTime reservationTime = new ReservationTime(
-                    resultSet.getLong("time_id"),
-                    resultSet.getString("time_value")
-            );
-
-            return new Reservation(
-                    resultSet.getLong("id"),
-                    resultSet.getString("name"),
-                    resultSet.getDate("date").toLocalDate(),
-                    reservationTime
-            );
-        });
+        return jdbcTemplate.query(sql, reservationRowMapper);
     }
 
     public Reservation insert(Reservation reservation) {

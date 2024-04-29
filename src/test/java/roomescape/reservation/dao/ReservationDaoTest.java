@@ -1,5 +1,6 @@
 package roomescape.reservation.dao;
 
+import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -31,6 +32,7 @@ class ReservationDaoTest {
     @BeforeEach
     void init() {
         reservationDao = new ReservationDao(jdbcTemplate, dataSource);
+
         ReservationTimeDao reservationTimeDao = new ReservationTimeDao(jdbcTemplate, dataSource);
         reservationTime = reservationTimeDao.insert(new ReservationTime("10:00"));
     }
@@ -38,29 +40,45 @@ class ReservationDaoTest {
     @DisplayName("예약 정보 삽입 테스트")
     @Test
     void insertTest() {
-        Reservation insert = reservationDao.insert(new Reservation("name", "2000-09-07", reservationTime));
+        // given
+        Reservation reservation = new Reservation("name", "2000-09-07", reservationTime);
+
+        // when
+        Reservation insert = reservationDao.insert(reservation);
+
+        //then
         assertThat(insert.getId()).isEqualTo(1L);
     }
 
     @DisplayName("예약 정보 전체 조회 테스트")
     @Test
     void findAllTest() {
+        // given
         reservationDao.insert(new Reservation("name1", "2000-09-07", reservationTime));
         reservationDao.insert(new Reservation("name2", "2000-09-07", reservationTime));
         reservationDao.insert(new Reservation("name3", "2000-09-07", reservationTime));
 
+        // when
         int findSize = reservationDao.findAll().size();
+
+        // then
         assertThat(findSize).isEqualTo(3);
     }
 
     @DisplayName("예약 정보 삭제 테스트")
     @Test
     void deleteTest() {
+        //given
         Reservation insert = reservationDao.insert(new Reservation("name", "2000-09-07", reservationTime));
+
+        // when
         int deleteCount = reservationDao.deleteById(insert.getId());
         int findSize = reservationDao.findAll().size();
 
-        assertThat(deleteCount).isEqualTo(1);
-        assertThat(findSize).isEqualTo(0);
+        // then
+        Assertions.assertAll(
+                () -> assertThat(deleteCount).isEqualTo(1),
+                () -> assertThat(findSize).isEqualTo(0)
+        );
     }
 }

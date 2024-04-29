@@ -14,6 +14,7 @@ import org.springframework.boot.test.context.SpringBootTest.WebEnvironment;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.test.annotation.DirtiesContext;
 import org.springframework.test.annotation.DirtiesContext.ClassMode;
+import org.springframework.test.jdbc.JdbcTestUtils;
 import roomescape.domain.reservation.Reservation;
 import roomescape.domain.time.Time;
 
@@ -30,13 +31,14 @@ public class ReservationRepositoryTest {
     @Autowired
     private JdbcTemplate jdbcTemplate;
 
-    private Time time = new Time(1L, LocalTime.of(17, 30));
+    private Time time;
 
-    private Reservation reservation = new Reservation(1L, "브라운", LocalDate.of(2024, 4, 25), time);
+    private Reservation reservation;
 
     @BeforeEach
     void setUp() {
-        timeRepository.save(time);
+        time = timeRepository.save(new Time(LocalTime.of(17, 30)));
+        reservation = new Reservation("브라운", LocalDate.of(2024, 4, 25), time);
     }
 
     @Test
@@ -45,7 +47,7 @@ public class ReservationRepositoryTest {
         reservationRepository.save(reservation);
 
         List<Reservation> reservations = reservationRepository.findAll();
-        Integer count = jdbcTemplate.queryForObject("SELECT count(*) from reservation", Integer.class);
+        int count = JdbcTestUtils.countRowsInTable(jdbcTemplate, "reservation");
 
         assertThat(reservations.size()).isEqualTo(count);
     }
@@ -55,19 +57,18 @@ public class ReservationRepositoryTest {
     void postReservationIntoDb() {
         reservationRepository.save(reservation);
 
-        List<Reservation> reservations = reservationRepository.findAll();
-
-        assertThat(reservations.size()).isEqualTo(1);
+        int count = JdbcTestUtils.countRowsInTable(jdbcTemplate, "reservation");
+        assertThat(count).isEqualTo(1);
     }
 
     @Test
     @DisplayName("하나의 예약만 등록한 경우, 예약 삭제 뒤 DB를 조회 했을 때 조회 결과 개수는 0개이다.")
     void readReservationsSizeFromDbAfterPostAndDelete() {
-        reservationRepository.save(reservation);
+        Reservation saved = reservationRepository.save(reservation);
 
-        reservationRepository.delete(1L);
-        List<Reservation> reservations = reservationRepository.findAll();
+        reservationRepository.delete(saved.getId());
+        int count = JdbcTestUtils.countRowsInTable(jdbcTemplate, "reservation");
 
-        assertThat(reservations.size()).isEqualTo(0);
+        assertThat(count).isEqualTo(0);
     }
 }

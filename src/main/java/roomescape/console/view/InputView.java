@@ -2,7 +2,6 @@ package roomescape.console.view;
 
 import java.time.LocalDate;
 import java.time.LocalTime;
-import java.util.Date;
 import java.util.Scanner;
 import roomescape.core.dto.ReservationRequest;
 import roomescape.core.dto.ReservationTimeRequest;
@@ -13,14 +12,14 @@ public class InputView {
     public int readSelectMenu() {
         System.out.println(
                 """
-                \n[방탈출] 원하시는 항목을 선택해 주세요. (ex.1)
-                1. 예약 추가
-                2. 예약 삭제
-                3. 예약 시간 추가
-                4. 예약 시간 삭제
-                5. 프로그램 종료
-                """
-                );
+                        \n[방탈출] 원하시는 항목을 선택해 주세요. (ex.1)
+                        1. 예약 추가
+                        2. 예약 삭제
+                        3. 예약 시간 추가
+                        4. 예약 시간 삭제
+                        5. 프로그램 종료
+                        """
+        );
         String input = SCANNER.nextLine();
         return Integer.parseInt(input);
     }

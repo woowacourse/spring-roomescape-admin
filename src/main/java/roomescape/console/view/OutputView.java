@@ -16,7 +16,8 @@ public class OutputView {
 
     private void printReservation(ReservationResponse reservationResponse) {
         System.out.printf("(%d) %s | %s | %s\n",
-                reservationResponse.getId(), reservationResponse.getName(), reservationResponse.getDate(), reservationResponse.getTime().getId());
+                reservationResponse.getId(), reservationResponse.getName(), reservationResponse.getDate(),
+                reservationResponse.getTime().getId());
     }
 
     public void printReservationTimes(List<ReservationTimeResponse> reservationTimeResponses) {

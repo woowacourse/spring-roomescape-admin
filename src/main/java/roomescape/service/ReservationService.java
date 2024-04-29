@@ -25,17 +25,17 @@ public class ReservationService {
     public List<ReservationResponse> findAllReservation() {
         return reservationRepository.list().stream()
                 .map(reservation -> {
-                    ReservationTime reservationTime = reservation.time();
-                    return new ReservationResponse(
-                                reservation.id(),
-                                reservation.name(),
-                                reservation.date(),
-                                new ReservationTimeResponse(
-                                        reservationTime.id(),
-                                        reservationTime.startAt()
-                                )
-                        );
-                    }
+                            ReservationTime reservationTime = reservation.time();
+                            return new ReservationResponse(
+                                    reservation.id(),
+                                    reservation.name(),
+                                    reservation.date(),
+                                    new ReservationTimeResponse(
+                                            reservationTime.id(),
+                                            reservationTime.startAt()
+                                    )
+                            );
+                        }
                 )
                 .toList();
     }

@@ -1,18 +1,24 @@
 package roomescape;
 
-import org.springframework.boot.WebApplicationType;
-import org.springframework.boot.autoconfigure.SpringBootApplication;
-import org.springframework.boot.builder.SpringApplicationBuilder;
 import roomescape.controller.ConsoleController;
+import roomescape.dao.ReservationDao;
+import roomescape.dao.ReservationDaoMemory;
+import roomescape.dao.ReservationTimeDao;
+import roomescape.dao.ReservationTimeDaoMemory;
+import roomescape.service.ReservationService;
+import roomescape.service.ReservationTimeService;
+import roomescape.view.ConsoleView;
 
-@SpringBootApplication
 public class RoomEscapeConsoleApplication {
 
     public static void main(String[] args) {
-        new SpringApplicationBuilder(RoomEscapeConsoleApplication.class)
-                .web(WebApplicationType.NONE)
-                .run(args)
-                .getBean(ConsoleController.class)
-                .run();
+        ConsoleView view = new ConsoleView();
+        ReservationDao reservationDao = new ReservationDaoMemory();
+        ReservationTimeDao reservationTimeDao = new ReservationTimeDaoMemory();
+        ReservationService reservationService = new ReservationService(reservationDao, reservationTimeDao);
+        ReservationTimeService reservationTimeService = new ReservationTimeService(reservationTimeDao);
+        ConsoleController controller = new ConsoleController(view, reservationService, reservationTimeService);
+
+        controller.run();
     }
 }

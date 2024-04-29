@@ -1,27 +1,27 @@
 package roomescape.controller;
 
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Component;
 import roomescape.controller.command.Command;
+import roomescape.service.ReservationService;
+import roomescape.service.ReservationTimeService;
 import roomescape.view.ConsoleView;
 import roomescape.view.InputCommandMapper;
 
-@Component
 public class ConsoleController {
 
     private final ConsoleView consoleView;
-    private final InputCommandMapper inputCommandMapper;
+    private final ReservationService reservationService;
+    private final ReservationTimeService reservationTimeService;
 
-    @Autowired
-    public ConsoleController(ConsoleView consoleView, InputCommandMapper inputCommandMapper) {
+    public ConsoleController(ConsoleView consoleView, ReservationService reservationService, ReservationTimeService reservationTimeService) {
         this.consoleView = consoleView;
-        this.inputCommandMapper = inputCommandMapper;
+        this.reservationService = reservationService;
+        this.reservationTimeService = reservationTimeService;
     }
 
     public void run() {
         while (true) {
             String rawCommand = consoleView.readCommand();
-            Command command = inputCommandMapper.findCommand(rawCommand);
+            Command command = InputCommandMapper.findCommand(rawCommand, consoleView, reservationService, reservationTimeService);
             command.execute();
         }
     }

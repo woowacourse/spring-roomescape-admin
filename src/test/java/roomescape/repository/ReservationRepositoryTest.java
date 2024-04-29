@@ -28,7 +28,7 @@ class ReservationRepositoryTest {
 
     @Autowired
     ReservationRepositoryTest(JdbcTemplate jdbcTemplate, DataSource dataSource) {
-        this.reservationRepository = new ReservationH2Repository(jdbcTemplate, dataSource);
+        this.reservationRepository = new H2ReservationRepository(jdbcTemplate, dataSource);
     }
 
     @Test

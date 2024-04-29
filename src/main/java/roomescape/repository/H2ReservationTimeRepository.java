@@ -15,12 +15,12 @@ import java.util.List;
 import java.util.Optional;
 
 @Repository
-public class ReservationTimeH2Repository implements ReservationTimeRepository {
+public class H2ReservationTimeRepository implements ReservationTimeRepository {
 
     private final JdbcTemplate jdbcTemplate;
     private final SimpleJdbcInsert simpleJdbcInsert;
 
-    public ReservationTimeH2Repository(JdbcTemplate jdbcTemplate, DataSource dataSource) {
+    public H2ReservationTimeRepository(JdbcTemplate jdbcTemplate, DataSource dataSource) {
         this.jdbcTemplate = jdbcTemplate;
         this.simpleJdbcInsert = new SimpleJdbcInsert(dataSource)
                 .withTableName("reservation_time")

@@ -7,7 +7,7 @@ import org.springframework.jdbc.core.namedparam.SqlParameterSource;
 import org.springframework.jdbc.core.simple.SimpleJdbcInsert;
 import org.springframework.stereotype.Repository;
 import roomescape.domain.TimeSlot;
-import roomescape.domain.TimeSlotDto;
+import roomescape.domain.TimeSlotRequest;
 
 import java.util.List;
 
@@ -39,9 +39,9 @@ public class TimeRepository {
         return jdbcTemplate.queryForObject(sql, rowMapper, id);
     }
 
-    public Long create(TimeSlotDto timeSlotDto) {
+    public Long create(TimeSlotRequest timeSlotRequest) {
         SqlParameterSource parameterSource = new MapSqlParameterSource()
-                .addValue("start_at", timeSlotDto.startAt());
+                .addValue("start_at", timeSlotRequest.startAt());
         return jdbcInsert.executeAndReturnKey(parameterSource).longValue();
     }
 

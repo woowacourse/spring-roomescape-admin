@@ -3,7 +3,7 @@ package roomescape.controller;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import roomescape.domain.TimeSlot;
-import roomescape.domain.TimeSlotDto;
+import roomescape.domain.TimeSlotRequest;
 import roomescape.service.TimeService;
 
 import java.util.List;
@@ -17,15 +17,15 @@ public class TimeController {
         this.timeService = timeService;
     }
 
-    @GetMapping()
+    @GetMapping
     public ResponseEntity<List<TimeSlot>> findAll() {
         List<TimeSlot> reservations = timeService.findAll();
         return ResponseEntity.ok(reservations);
     }
 
-    @PostMapping()
-    public ResponseEntity<TimeSlot> create(@RequestBody TimeSlotDto timeSlotDto) {
-        TimeSlot newTimeSlot = timeService.create(timeSlotDto);
+    @PostMapping
+    public ResponseEntity<TimeSlot> create(@RequestBody TimeSlotRequest timeSlotRequest) {
+        TimeSlot newTimeSlot = timeService.create(timeSlotRequest);
         return ResponseEntity.ok(newTimeSlot);
     }
 

@@ -7,7 +7,7 @@ import org.springframework.jdbc.core.namedparam.SqlParameterSource;
 import org.springframework.jdbc.core.simple.SimpleJdbcInsert;
 import org.springframework.stereotype.Repository;
 import roomescape.domain.Reservation;
-import roomescape.domain.ReservationDto;
+import roomescape.domain.ReservationRequest;
 import roomescape.domain.TimeSlot;
 
 import java.time.LocalDate;
@@ -49,11 +49,11 @@ public class ReservationRepository {
         return jdbcTemplate.query(sql, rowMapper);
     }
 
-    public Long create(ReservationDto reservationDto) {
+    public Long create(ReservationRequest reservationRequest) {
         SqlParameterSource parameterSource = new MapSqlParameterSource()
-                .addValue("name", reservationDto.name())
-                .addValue("date", reservationDto.date())
-                .addValue("time_id", reservationDto.timeId());
+                .addValue("name", reservationRequest.name())
+                .addValue("date", reservationRequest.date())
+                .addValue("time_id", reservationRequest.timeId());
         return jdbcInsert.executeAndReturnKey(parameterSource).longValue();
     }
 

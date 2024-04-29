@@ -2,7 +2,7 @@ package roomescape.service;
 
 import org.springframework.stereotype.Service;
 import roomescape.domain.TimeSlot;
-import roomescape.domain.TimeSlotDto;
+import roomescape.domain.TimeSlotRequest;
 import roomescape.repository.TimeRepository;
 
 import java.util.List;
@@ -23,9 +23,9 @@ public class TimeService {
         return timeRepository.findById(id);
     }
 
-    public TimeSlot create(TimeSlotDto timeSlotDto) {
-        Long id = timeRepository.create(timeSlotDto);
-        return timeSlotDto.toEntity(id);
+    public TimeSlot create(TimeSlotRequest timeSlotRequest) {
+        Long id = timeRepository.create(timeSlotRequest);
+        return timeSlotRequest.toEntity(id);
     }
 
     public void delete(Long id) {

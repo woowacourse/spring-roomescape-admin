@@ -9,11 +9,11 @@ import java.util.concurrent.atomic.AtomicLong;
 import roomescape.domain.ReservationTime;
 import roomescape.domain.ReservationTimeRepository;
 
-public class ConsoleReservationTimeRepository implements ReservationTimeRepository {
+public class MemoryReservationTimeRepository implements ReservationTimeRepository {
     private final Map<Long, ReservationTime> times;
     private final AtomicLong index;
 
-    public ConsoleReservationTimeRepository() {
+    public MemoryReservationTimeRepository() {
         this.times = new HashMap<>();
         this.index = new AtomicLong(1L);
     }

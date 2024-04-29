@@ -1,7 +1,7 @@
 package roomescape.console.config;
 
-import roomescape.console.domain.ConsoleReservationRepository;
-import roomescape.console.domain.ConsoleReservationTimeRepository;
+import roomescape.console.domain.MemoryReservationRepository;
+import roomescape.console.domain.MemoryReservationTimeRepository;
 import roomescape.console.view.InputView;
 import roomescape.console.view.OutputView;
 import roomescape.domain.ReservationRepository;
@@ -14,8 +14,8 @@ public class ConsoleConfig {
     private final ReservationRepository reservationRepository;
 
     public ConsoleConfig() {
-        this.reservationTimeRepository = new ConsoleReservationTimeRepository();
-        this.reservationRepository = new ConsoleReservationRepository();
+        this.reservationTimeRepository = new MemoryReservationTimeRepository();
+        this.reservationRepository = new MemoryReservationRepository();
     }
 
     public ReservationTimeRepository reservationTimeRepository() {

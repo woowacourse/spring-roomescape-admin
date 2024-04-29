@@ -17,7 +17,7 @@ public class ConsoleConfiguration {
 
     @Bean
     public RoomEscapeConsoleRunner roomEscapeConsoleRunner() {
-        return new RoomEscapeConsoleRunner(consoleCommandMatcher(), consoleInputScanner());
+        return new RoomEscapeConsoleRunner(consoleCommandMatcher(), consoleInputScanner(), consoleView());
     }
 
     @Bean
@@ -26,7 +26,12 @@ public class ConsoleConfiguration {
     }
 
     @Bean
-    public ConsoleInputScanner consoleInputScanner() {
-        return new ConsoleInputScanner();
+    public ConsoleInputView consoleInputScanner() {
+        return new ConsoleInputView();
+    }
+
+    @Bean
+    public ConsoleOutputView consoleView() {
+        return new ConsoleOutputView();
     }
 }

@@ -1,58 +1,63 @@
 package roomescape.console.command;
 
+import java.time.LocalDate;
+import java.time.format.DateTimeParseException;
 import org.springframework.stereotype.Component;
-import roomescape.console.ConsoleInputScanner;
+import roomescape.console.ConsoleInputView;
+import roomescape.console.ConsoleOutputView;
 import roomescape.controller.ReservationApiController;
 import roomescape.controller.ReservationTimeApiController;
 import roomescape.dto.ReservationRequestDto;
-import java.time.LocalDate;
-import java.time.format.DateTimeParseException;
 
 @Component
 public class AddReservationCommand implements ConsoleCommand {
 
     private final ReservationApiController reservationApiController;
     private final ReservationTimeApiController reservationTimeApiController;
-    private final ConsoleInputScanner consoleInputScanner;
+    private final ConsoleInputView consoleInputView;
+    private final ConsoleOutputView consoleOutputView;
 
-    public AddReservationCommand(ReservationApiController reservationApiController, ConsoleInputScanner consoleInputScanner, ReservationTimeApiController reservationTimeApiController) {
+    public AddReservationCommand(ReservationApiController reservationApiController,
+                                 ReservationTimeApiController reservationTimeApiController,
+                                 ConsoleInputView consoleInputView,
+                                 ConsoleOutputView consoleOutputView) {
         this.reservationApiController = reservationApiController;
-        this.consoleInputScanner = consoleInputScanner;
         this.reservationTimeApiController = reservationTimeApiController;
+        this.consoleInputView = consoleInputView;
+        this.consoleOutputView = consoleOutputView;
     }
 
     @Override
     public void conduct() {
         try {
-            String name = getInputName();
-            LocalDate date = getInputDate();
-            Long id = getInputId();
-            System.out.println(
+            String name = getName();
+            LocalDate date = getDate();
+            Long id = getId();
+            consoleOutputView.printResult(
                     reservationApiController.postReservation(
                             new ReservationRequestDto(name, date, id)
                     )
             );
-        } catch (DateTimeParseException pe) {
-            System.out.println("잘못된 날짜 형식입니다.");
+        } catch (DateTimeParseException de) {
+            consoleOutputView.printErrorMessage("잘못된 날짜 입력입니다.");
         } catch (NumberFormatException ne) {
-            System.out.println("잘못된 숫자 형식입니다.");
+            consoleOutputView.printErrorMessage("ERROR: 잘못된 id 입력입니다.");
         }
     }
 
-    private String getInputName() {
-        System.out.println("예약자 이름을 입력해주세요.");
-        return consoleInputScanner.getInput();
+    private String getName() {
+        consoleOutputView.printMessage("예약자 이름을 입력해주세요.");
+        return consoleInputView.getInput();
     }
 
-    private LocalDate getInputDate() {
-        System.out.println("예약 날짜를 입력해주세요.(형식: YYYY-MM-DD)");
-        String input = consoleInputScanner.getInput();
-        return LocalDate.parse(input);
+    private LocalDate getDate() {
+        consoleOutputView.printMessage("예약 날짜를 입력해주세요.(형식: YYYY-MM-DD)");
+        return LocalDate.parse(consoleInputView.getInput());
     }
 
-    private Long getInputId() {
+    private Long getId() {
         System.out.println(reservationTimeApiController.getReservationTimes());
-        System.out.println("예약 시간 id를 입력해주세요.");
-        return Long.parseLong(consoleInputScanner.getInput());
+        consoleOutputView.printMessage("예약 시간 id를 입력해주세요.");
+        return Long.parseLong(consoleInputView.getInput());
     }
 }

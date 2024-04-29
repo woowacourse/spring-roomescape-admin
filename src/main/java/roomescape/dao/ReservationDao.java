@@ -1,40 +1,37 @@
 package roomescape.dao;
 
 import org.springframework.jdbc.core.JdbcTemplate;
-import org.springframework.jdbc.support.GeneratedKeyHolder;
-import org.springframework.jdbc.support.KeyHolder;
+import org.springframework.jdbc.core.simple.SimpleJdbcInsert;
 import org.springframework.stereotype.Repository;
 import roomescape.domain.Reservation;
 import roomescape.domain.ReservationTime;
 
-import java.sql.PreparedStatement;
+import javax.sql.DataSource;
 import java.time.LocalDate;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 @Repository
 public class ReservationDao {
 
     private final JdbcTemplate jdbcTemplate;
+    private final SimpleJdbcInsert simpleJdbcInsert;
 
-    public ReservationDao(JdbcTemplate jdbcTemplate) {
+    public ReservationDao(JdbcTemplate jdbcTemplate, DataSource dataSource) {
         this.jdbcTemplate = jdbcTemplate;
+        this.simpleJdbcInsert = new SimpleJdbcInsert(dataSource)
+                .withTableName("reservation")
+                .usingGeneratedKeyColumns("id");
     }
 
     public Long save(Reservation reservation) {
-        String query = "INSERT into reservation(name, date, time_id) VALUES(?, ?, ?)";
-        KeyHolder keyHolder = new GeneratedKeyHolder();
-
-        jdbcTemplate.update(connection -> {
-            PreparedStatement ps = connection.prepareStatement(
-                    query,
-                    new String[]{"id"});
-            ps.setString(1, reservation.getName());
-            ps.setString(2, reservation.getDate().toString());
-            ps.setLong(3, reservation.getTime().id());
-            return ps;
-        }, keyHolder);
-
-        return keyHolder.getKey().longValue();
+        Map<String, Object> parameters = new HashMap<>();
+        parameters.put("name", reservation.getName());
+        parameters.put("date", reservation.getDate());
+        parameters.put("time_id", reservation.getTime().id());
+        Number key = simpleJdbcInsert.executeAndReturnKey(parameters);
+        return key.longValue();
     }
 
     public List<Reservation> readAll() {
@@ -68,10 +65,5 @@ public class ReservationDao {
     public void delete(Long id) {
         String query = "DELETE FROM reservation WHERE id = ?";
         jdbcTemplate.update(query, id);
-    }
-
-    public String findStartTimeByTimeId(Long timeId) {
-        String query = "SELECT start_at FROM reservation_time WHERE id = ?";
-        return jdbcTemplate.queryForObject(query, String.class, timeId);
     }
 }

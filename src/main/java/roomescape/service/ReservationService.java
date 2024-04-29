@@ -2,6 +2,7 @@ package roomescape.service;
 
 import org.springframework.stereotype.Service;
 import roomescape.dao.ReservationDao;
+import roomescape.dao.ReservationTimeDao;
 import roomescape.domain.Reservation;
 import roomescape.domain.ReservationTime;
 import roomescape.dto.ReservationRequest;
@@ -13,9 +14,11 @@ import java.util.List;
 public class ReservationService {
 
     private final ReservationDao reservationDao;
+    private final ReservationTimeDao reservationTimeDao;
 
-    public ReservationService(ReservationDao reservationDao) {
+    public ReservationService(ReservationDao reservationDao, ReservationTimeDao reservationTimeDao) {
         this.reservationDao = reservationDao;
+        this.reservationTimeDao = reservationTimeDao;
     }
 
     public List<ReservationResponse> findAll() {
@@ -32,7 +35,7 @@ public class ReservationService {
 
     private Reservation makeReservationByRequest(ReservationRequest request) {
         Long timeId = request.getTimeId();
-        String startAt = reservationDao.findStartTimeByTimeId(timeId);
+        String startAt = reservationTimeDao.findStartTimeByTimeId(timeId);
         ReservationTime reservationTime = new ReservationTime(timeId, startAt);
         return new Reservation(request.getName(), request.getDate(), reservationTime);
     }

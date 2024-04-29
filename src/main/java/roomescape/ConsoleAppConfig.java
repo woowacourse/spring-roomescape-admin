@@ -1,18 +1,18 @@
 package roomescape;
 
-import roomescape.console.view.InputView;
-import roomescape.console.view.OutputView;
-import roomescape.controller.ConsoleMainController;
+import roomescape.console.view.ConsoleInputView;
+import roomescape.console.view.ConsoleOutputView;
+import roomescape.controller.ConsoleController;
 import roomescape.repository.MemoryReservationRepository;
 import roomescape.repository.MemoryReservationTimeRepository;
 import roomescape.repository.ReservationRepository;
 import roomescape.repository.ReservationTimeRepository;
 import roomescape.service.RoomescapeService;
 
-public class AppConfig {
+public class ConsoleAppConfig {
 
-    public static ConsoleMainController consoleMainController() {
-        return new ConsoleMainController(inputView(), outputView(), roomescapeService());
+    public static ConsoleController consoleMainController() {
+        return new ConsoleController(inputView(), outputView(), roomescapeService());
     }
 
     public static RoomescapeService roomescapeService() {
@@ -27,11 +27,11 @@ public class AppConfig {
         return new MemoryReservationTimeRepository();
     }
 
-    public static InputView inputView() {
-        return new InputView();
+    public static ConsoleInputView inputView() {
+        return new ConsoleInputView();
     }
 
-    public static OutputView outputView() {
-        return new OutputView();
+    public static ConsoleOutputView outputView() {
+        return new ConsoleOutputView();
     }
 }

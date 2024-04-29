@@ -1,7 +1,7 @@
 package roomescape.controller;
 
-import roomescape.console.view.InputView;
-import roomescape.console.view.OutputView;
+import roomescape.console.view.ConsoleInputView;
+import roomescape.console.view.ConsoleOutputView;
 import roomescape.dto.request.ReservationsRequest;
 import roomescape.dto.request.TimesRequest;
 import roomescape.dto.response.ReservationsResponse;
@@ -10,21 +10,21 @@ import roomescape.service.RoomescapeService;
 
 import java.util.List;
 
-public class ConsoleMainController {
+public class ConsoleController {
 
-    private final InputView inputView;
-    private final OutputView outputView;
+    private final ConsoleInputView consoleInputView;
+    private final ConsoleOutputView consoleOutputView;
     private final RoomescapeService roomescapeService;
 
-    public ConsoleMainController(InputView inputView, OutputView outputView, RoomescapeService roomescapeService) {
-        this.inputView = inputView;
-        this.outputView = outputView;
+    public ConsoleController(ConsoleInputView consoleInputView, ConsoleOutputView consoleOutputView, RoomescapeService roomescapeService) {
+        this.consoleInputView = consoleInputView;
+        this.consoleOutputView = consoleOutputView;
         this.roomescapeService = roomescapeService;
     }
 
     public void run() {
         while (true) {
-            String menu = inputView.readMenu();
+            String menu = consoleInputView.readMenu();
             handleMyMenu(menu);
             if (menu.equals("exit")) {
                 break;
@@ -60,48 +60,48 @@ public class ConsoleMainController {
     }
 
     private void handleTimeAdd() {
-        String startAt = inputView.readTime();
+        String startAt = consoleInputView.readTime();
         TimesRequest timesRequest = new TimesRequest(startAt);
         TimesResponse timesResponse = roomescapeService.addTime(timesRequest);
-        outputView.printTime(timesResponse);
+        consoleOutputView.printTime(timesResponse);
     }
 
     private void handleCheckTime() {
         List<TimesResponse> allTimes = roomescapeService.findAllTimes();
-        outputView.printTimes(allTimes);
+        consoleOutputView.printTimes(allTimes);
     }
 
     private void handleDeleteTime() {
-        Long id = inputView.readRemoveTimeId();
+        Long id = consoleInputView.readRemoveTimeId();
         boolean isDeleted = roomescapeService.removeTime(id);
         if (isDeleted) {
-            outputView.printDeleteSuccess();
+            consoleOutputView.printDeleteSuccess();
             return;
         }
-        outputView.printDeleteFail();
+        consoleOutputView.printDeleteFail();
     }
 
     private void handleReservationAdd() {
-        String name = inputView.readName();
-        String date = inputView.readDate();
-        Long timeId = inputView.readTimeId();
+        String name = consoleInputView.readName();
+        String date = consoleInputView.readDate();
+        Long timeId = consoleInputView.readTimeId();
         ReservationsRequest request = new ReservationsRequest(name, date, timeId);
         ReservationsResponse reservation = roomescapeService.addReservation(request);
-        outputView.printAddedReservation(reservation);
+        consoleOutputView.printAddedReservation(reservation);
     }
 
     private void handleCheckReservation() {
         List<ReservationsResponse> allReservations = roomescapeService.finaAllReservations();
-        outputView.printReservations(allReservations);
+        consoleOutputView.printReservations(allReservations);
     }
 
     private void handleDeleteReservation() {
-        Long id = inputView.readRemoveReservationId();
+        Long id = consoleInputView.readRemoveReservationId();
         boolean isDeleted = roomescapeService.removeReservation(id);
         if (isDeleted) {
-            outputView.printDeleteSuccess();
+            consoleOutputView.printDeleteSuccess();
             return;
         }
-        outputView.printDeleteFail();
+        consoleOutputView.printDeleteFail();
     }
 }

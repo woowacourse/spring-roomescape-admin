@@ -5,7 +5,7 @@ import roomescape.dto.response.TimesResponse;
 
 import java.util.List;
 
-public class OutputView {
+public class ConsoleOutputView {
 
     public void printTime(TimesResponse timesResponse) {
         System.out.println("추가된 시간");

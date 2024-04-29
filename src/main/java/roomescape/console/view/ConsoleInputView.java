@@ -2,7 +2,7 @@ package roomescape.console.view;
 
 import java.util.Scanner;
 
-public class InputView {
+public class ConsoleInputView {
 
     private Scanner scanner = new Scanner(System.in);
 

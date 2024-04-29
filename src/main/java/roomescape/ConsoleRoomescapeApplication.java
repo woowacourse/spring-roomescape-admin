@@ -1,10 +1,10 @@
 package roomescape;
 
-import roomescape.controller.ConsoleMainController;
+import roomescape.controller.ConsoleController;
 
 public class ConsoleRoomescapeApplication {
     public static void main(String[] args) {
-        ConsoleMainController controller = AppConfig.consoleMainController();
+        ConsoleController controller = ConsoleAppConfig.consoleMainController();
 
         controller.run();
     }

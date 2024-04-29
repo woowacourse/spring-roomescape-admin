@@ -3,8 +3,7 @@ package roomescape.core.repository;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.transaction.annotation.Transactional;
+import roomescape.core.RepositoryTest;
 import roomescape.core.domain.ReservationTime;
 
 import java.time.LocalTime;
@@ -12,8 +11,7 @@ import java.util.List;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
-@Transactional
-@SpringBootTest
+@RepositoryTest
 class H2ReservationTimeRepositoryTest {
     @Autowired
     private H2ReservationTimeRepository reservationTimeRepository;

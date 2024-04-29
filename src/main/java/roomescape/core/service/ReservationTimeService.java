@@ -4,8 +4,8 @@ import java.util.List;
 import org.springframework.stereotype.Service;
 import roomescape.core.domain.ReservationTime;
 import roomescape.core.domain.ReservationTimeRepository;
-import roomescape.web.presentation.dto.ReservationTimeRequest;
-import roomescape.web.presentation.dto.ReservationTimeResponse;
+import roomescape.core.service.dto.ReservationTimeRequest;
+import roomescape.core.service.dto.ReservationTimeResponse;
 
 @Service
 public class ReservationTimeService {

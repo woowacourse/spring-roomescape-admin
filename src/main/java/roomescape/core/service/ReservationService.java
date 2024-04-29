@@ -6,8 +6,8 @@ import roomescape.core.domain.Reservation;
 import roomescape.core.domain.ReservationRepository;
 import roomescape.core.domain.ReservationTime;
 import roomescape.core.domain.ReservationTimeRepository;
-import roomescape.web.presentation.dto.ReservationRequest;
-import roomescape.web.presentation.dto.ReservationResponse;
+import roomescape.core.service.dto.ReservationRequest;
+import roomescape.core.service.dto.ReservationResponse;
 
 @Service
 public class ReservationService {

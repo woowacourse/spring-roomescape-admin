@@ -17,7 +17,7 @@ public class ReservationTimeRepository {
     private final JdbcTemplate jdbcTemplate;
     private final SimpleJdbcInsert jdbcInsert;
 
-    private final RowMapper<ReservationTime> timeRowMapper = (resultSet, rowNum) -> {
+    private static final RowMapper<ReservationTime> timeRowMapper = (resultSet, rowNum) -> {
         ReservationTime reservationTime = new ReservationTime(
                 resultSet.getLong("id"),
                 resultSet.getString("start_at")

@@ -1,6 +1,5 @@
 package roomescape.controller;
 
-import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 import roomescape.dto.request.ReservationsRequest;
 import roomescape.dto.response.ReservationsResponse;
@@ -29,7 +28,6 @@ public class ReservationsController {
     }
 
     @DeleteMapping("/{id}")
-    @ResponseStatus(HttpStatus.OK)
     public int deleteReservation(@PathVariable Long id) {
         return roomescapeService.removeReservation(id);
     }

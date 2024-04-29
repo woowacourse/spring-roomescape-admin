@@ -1,6 +1,7 @@
 package roomescape.dao;
 
 import org.springframework.jdbc.core.JdbcTemplate;
+import org.springframework.jdbc.core.RowMapper;
 import org.springframework.jdbc.core.simple.SimpleJdbcInsert;
 import org.springframework.stereotype.Repository;
 import roomescape.domain.ReservationTime;
@@ -15,6 +16,11 @@ public class ReservationTimeDao {
 
     private final JdbcTemplate jdbcTemplate;
     private final SimpleJdbcInsert simpleJdbcInsert;
+    private final RowMapper<ReservationTime> rowMapper = (rs, rowNum) -> {
+        return new ReservationTime(
+                rs.getLong("id"),
+                rs.getString("start_at"));
+    };
 
     public ReservationTimeDao(JdbcTemplate jdbcTemplate, DataSource dataSource) {
         this.jdbcTemplate = jdbcTemplate;
@@ -32,14 +38,8 @@ public class ReservationTimeDao {
 
     public List<ReservationTime> readAll() {
         String query = "SELECT * FROM reservation_time";
-        List<ReservationTime> reservationTimes = jdbcTemplate.query(query,
-                (rs, rowNum) -> {
-                    return new ReservationTime(
-                            rs.getLong("id"),
-                            rs.getString("start_at"));
-                }
-        );
-        return reservationTimes;
+
+        return jdbcTemplate.query(query, rowMapper);
     }
 
     public void delete(Long id) {

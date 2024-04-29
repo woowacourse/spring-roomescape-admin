@@ -1,6 +1,7 @@
 package roomescape.dao;
 
 import org.springframework.jdbc.core.JdbcTemplate;
+import org.springframework.jdbc.core.RowMapper;
 import org.springframework.jdbc.core.simple.SimpleJdbcInsert;
 import org.springframework.stereotype.Repository;
 import roomescape.domain.Reservation;
@@ -17,6 +18,18 @@ public class ReservationDao {
 
     private final JdbcTemplate jdbcTemplate;
     private final SimpleJdbcInsert simpleJdbcInsert;
+    private final RowMapper<Reservation> rowMapper = (rs, rowNum) -> {
+        Long timeId = rs.getLong("time_id");
+        String startTime = rs.getString("time_value");
+        ReservationTime reservationTime = new ReservationTime(timeId, startTime);
+
+        return new Reservation(
+                rs.getLong("reservation_id"),
+                rs.getString("reservation_name"),
+                rs.getObject("reservation_date", LocalDate.class),
+                reservationTime
+        );
+    };
 
     public ReservationDao(JdbcTemplate jdbcTemplate, DataSource dataSource) {
         this.jdbcTemplate = jdbcTemplate;
@@ -45,21 +58,7 @@ public class ReservationDao {
                 "inner join reservation_time as t " +
                 "on r.time_id = t.id";
 
-        List<Reservation> reservations = jdbcTemplate.query(query,
-                (rs, rowNum) -> {
-                    Long timeId = rs.getLong("time_id");
-                    String startTime = rs.getString("time_value");
-                    ReservationTime reservationTime = new ReservationTime(timeId, startTime);
-
-                    return new Reservation(
-                            rs.getLong("reservation_id"),
-                            rs.getString("reservation_name"),
-                            rs.getObject("reservation_date", LocalDate.class),
-                            reservationTime
-                    );
-                }
-        );
-        return reservations;
+        return jdbcTemplate.query(query, rowMapper);
     }
 
     public void delete(Long id) {

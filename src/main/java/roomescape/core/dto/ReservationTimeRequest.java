@@ -1,7 +1,7 @@
-package roomescape.dto;
+package roomescape.core.dto;
 
 import java.time.LocalTime;
-import roomescape.model.ReservationTime;
+import roomescape.core.model.ReservationTime;
 
 public class ReservationTimeRequest {
     private static final Long TEMPORARY_ID = null;

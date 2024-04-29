@@ -1,8 +1,8 @@
-package roomescape.dto;
+package roomescape.core.dto;
 
 import java.time.LocalDate;
-import roomescape.model.Reservation;
-import roomescape.model.ReservationTime;
+import roomescape.core.model.Reservation;
+import roomescape.core.model.ReservationTime;
 
 public class ReservationRequest {
     private final String name;

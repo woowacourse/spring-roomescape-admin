@@ -1,13 +1,12 @@
-package roomescape.service;
+package roomescape.core.service;
 
 import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import roomescape.dto.ReservationRequest;
-import roomescape.dto.ReservationResponse;
-import roomescape.model.Reservation;
-import roomescape.repository.ReservationJdbcRepository;
-import roomescape.repository.ReservationRepository;
+import roomescape.core.dto.ReservationRequest;
+import roomescape.core.dto.ReservationResponse;
+import roomescape.core.model.Reservation;
+import roomescape.core.repository.ReservationRepository;
 
 @Service
 public class ReservationService {

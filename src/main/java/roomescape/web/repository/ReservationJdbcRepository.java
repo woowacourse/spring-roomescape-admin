@@ -1,4 +1,4 @@
-package roomescape.repository;
+package roomescape.web.repository;
 
 import java.util.HashMap;
 import java.util.List;
@@ -9,11 +9,12 @@ import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;
 import org.springframework.jdbc.core.simple.SimpleJdbcInsert;
 import org.springframework.stereotype.Repository;
-import roomescape.model.Reservation;
-import roomescape.model.ReservationTime;
+import roomescape.core.model.Reservation;
+import roomescape.core.model.ReservationTime;
+import roomescape.core.repository.ReservationRepository;
 
 @Repository
-public class ReservationJdbcRepository implements ReservationRepository{
+public class ReservationJdbcRepository implements ReservationRepository {
     private static final RowMapper<Reservation> actorRowMapper = (resultSet, rowNum) -> {
         ReservationTime time = new ReservationTime(
                 resultSet.getLong("time_id"),

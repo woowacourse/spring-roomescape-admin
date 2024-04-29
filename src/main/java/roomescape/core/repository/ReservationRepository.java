@@ -1,9 +1,7 @@
-package roomescape.repository;
+package roomescape.core.repository;
 
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
-import roomescape.model.Reservation;
+import roomescape.core.model.Reservation;
 
 public interface ReservationRepository {
 

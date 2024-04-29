@@ -1,9 +1,7 @@
-package roomescape.repository;
+package roomescape.core.repository;
 
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
-import roomescape.model.ReservationTime;
+import roomescape.core.model.ReservationTime;
 
 public interface ReservationTimeRepository {
     Long createTime(ReservationTime reservationTime);

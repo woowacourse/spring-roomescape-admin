@@ -1,20 +1,18 @@
-package roomescape.web;
+package roomescape.web.controller;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
-import org.springframework.context.annotation.Import;
+import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
-import roomescape.web.request.ReservationRequest;
 import roomescape.core.domain.Reservation;
 import roomescape.core.domain.ReservationTime;
-import roomescape.fake.InMemoryReservationRepository;
-import roomescape.fake.InMemoryReservationTimeRepository;
 import roomescape.core.repository.ReservationRepository;
 import roomescape.core.repository.ReservationTimeRepository;
+import roomescape.web.controller.request.ReservationRequest;
 
 import java.time.LocalDate;
 import java.time.LocalTime;
@@ -24,8 +22,6 @@ import static org.springframework.test.web.servlet.request.MockMvcRequestBuilder
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
-@Import(value = {InMemoryReservationRepository.class,
-        InMemoryReservationTimeRepository.class})
 @WebMvcTest(ReservationController.class)
 class ReservationControllerTest {
     @Autowired

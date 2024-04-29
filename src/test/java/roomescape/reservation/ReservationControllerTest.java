@@ -32,7 +32,7 @@ class ReservationControllerTest {
     @Autowired
     private ReservationController reservationController;
 
-    @DisplayName("모든 예약을 조회한다.")
+    @DisplayName("저장된 모든 예약을 조회하고 상태코드 200을 응답한다.")
     @Test
     void findAll() {
         long timeId = insertReservationTimeAndGetId("10:00");
@@ -50,7 +50,7 @@ class ReservationControllerTest {
         assertThat(reservations.size()).isEqualTo(count);
     }
 
-    @DisplayName("예약을 추가한다.")
+    @DisplayName("예약을 추가하고 상태코드 200을 응답한다.")
     @Test
     void create() {
         long timeId = insertReservationTimeAndGetId("10:00");
@@ -67,7 +67,7 @@ class ReservationControllerTest {
         assertReservationCountIsEqualTo(2);
     }
 
-    @DisplayName("예약을 삭제한다.")
+    @DisplayName("저장된 예약을 삭제하고 상태코드 200을 응답한다.")
     @Test
     void delete() {
         long timeId = insertReservationTimeAndGetId("10:00");

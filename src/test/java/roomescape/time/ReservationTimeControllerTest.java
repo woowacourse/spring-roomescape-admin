@@ -21,7 +21,7 @@ class ReservationTimeControllerTest {
     @Autowired
     private ReservationTimeDao reservationTimeDao;
 
-    @DisplayName("시간을 조회한다.")
+    @DisplayName("저장된 모든 예약시간을 조회하고 상태코드 200을 응답한다.")
     @Test
     void findAll() {
         insertReservationTime("09:00");
@@ -38,7 +38,7 @@ class ReservationTimeControllerTest {
         assertThat(times.size()).isEqualTo(count);
     }
 
-    @DisplayName("시간을 추가한다.")
+    @DisplayName("예약시간을 추가하고 상태코드 200을 응답한다.")
     @Test
     void create() {
         insertReservationTime("11:00");
@@ -54,7 +54,7 @@ class ReservationTimeControllerTest {
         assertReservationTimeCountIsEqualTo(2);
     }
 
-    @DisplayName("시간을 삭제한다.")
+    @DisplayName("저장된 예약시간을 삭제하고 상태코드 200을 응답한다.")
     @Test
     void delete() {
         long id = insertReservationTimeAndGetId("13:00");

@@ -9,6 +9,7 @@ import org.springframework.stereotype.Repository;
 import roomescape.reservation.domain.ReservationTime;
 
 import javax.sql.DataSource;
+import java.time.LocalTime;
 import java.util.List;
 
 @Repository
@@ -53,7 +54,7 @@ public class ReservationTimeDao {
     private static final RowMapper<ReservationTime> ROW_MAPPER = (rs, rowNum) -> {
         ReservationTime reservationTime = new ReservationTime(
                 rs.getLong("id"),
-                rs.getString("start_at")
+                rs.getObject("start_at", LocalTime.class)
         );
 
         return reservationTime;

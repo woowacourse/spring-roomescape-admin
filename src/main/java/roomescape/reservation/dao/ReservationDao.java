@@ -11,6 +11,8 @@ import roomescape.reservation.domain.ReservationTime;
 
 import javax.sql.DataSource;
 import java.sql.PreparedStatement;
+import java.time.LocalDate;
+import java.time.LocalTime;
 import java.util.List;
 
 @Repository
@@ -33,7 +35,7 @@ public class ReservationDao {
             PreparedStatement ps = connection
                     .prepareStatement(sql, new String[]{"id"});
             ps.setString(1, reservation.getName());
-            ps.setString(2, reservation.getDate());
+            ps.setObject(2, reservation.getDate());
             ps.setLong(3, reservation.getTime().getId());
             return ps;
         }, keyHolder);
@@ -57,8 +59,8 @@ public class ReservationDao {
         Reservation reservation = new Reservation(
                 rs.getLong("id"),
                 rs.getString("name"),
-                rs.getString("date"),
-                new ReservationTime(rs.getLong("time_id"))
+                rs.getObject("date", LocalDate.class),
+                new ReservationTime(rs.getLong("time_id"), rs.getObject("start_at", LocalTime.class))
         );
 
         return reservation;

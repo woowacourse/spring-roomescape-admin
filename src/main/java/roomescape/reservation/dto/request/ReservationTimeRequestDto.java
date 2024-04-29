@@ -1,4 +1,10 @@
 package roomescape.reservation.dto.request;
 
-public record ReservationTimeRequestDto(String startAt) {
+import org.springframework.format.annotation.DateTimeFormat;
+
+import java.time.LocalTime;
+
+public record ReservationTimeRequestDto(
+        @DateTimeFormat(pattern = "kk:mm")
+        LocalTime startAt) {
 }

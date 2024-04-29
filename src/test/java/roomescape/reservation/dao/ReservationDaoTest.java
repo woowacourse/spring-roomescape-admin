@@ -12,6 +12,7 @@ import roomescape.reservation.domain.Reservation;
 import roomescape.reservation.domain.ReservationTime;
 
 import javax.sql.DataSource;
+import java.time.LocalDate;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
@@ -41,7 +42,7 @@ class ReservationDaoTest {
     @Test
     void insertTest() {
         // given
-        Reservation reservation = new Reservation("name", "2000-09-07", reservationTime);
+        Reservation reservation = new Reservation("name", LocalDate.now(), reservationTime);
 
         // when
         Reservation insert = reservationDao.insert(reservation);
@@ -54,9 +55,9 @@ class ReservationDaoTest {
     @Test
     void findAllTest() {
         // given
-        reservationDao.insert(new Reservation("name1", "2000-09-07", reservationTime));
-        reservationDao.insert(new Reservation("name2", "2000-09-07", reservationTime));
-        reservationDao.insert(new Reservation("name3", "2000-09-07", reservationTime));
+        reservationDao.insert(new Reservation("name1", LocalDate.now(), reservationTime));
+        reservationDao.insert(new Reservation("name2", LocalDate.now(), reservationTime));
+        reservationDao.insert(new Reservation("name3", LocalDate.now(), reservationTime));
 
         // when
         int findSize = reservationDao.findAll().size();
@@ -69,7 +70,7 @@ class ReservationDaoTest {
     @Test
     void deleteTest() {
         //given
-        Reservation insert = reservationDao.insert(new Reservation("name", "2000-09-07", reservationTime));
+        Reservation insert = reservationDao.insert(new Reservation("name", LocalDate.now(), reservationTime));
 
         // when
         int deleteCount = reservationDao.deleteById(insert.getId());

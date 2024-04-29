@@ -43,14 +43,9 @@ class ReservationTimeControllerTest {
                 .body(params)
                 .when().post("/times")
                 .then().log().all()
-                .statusCode(201);
-
-        RestAssured.given().log().all()
-                .port(randomServerPort)
-                .when().get("/times")
-                .then().log().all()
-                .statusCode(200)
-                .body("reservationTimes.size()", is(1));
+                .statusCode(201)
+                .header("Location", is("/times/1"))
+                .body("id", is(1));
     }
 
     @DisplayName("예약 시간 삭제 테스트")

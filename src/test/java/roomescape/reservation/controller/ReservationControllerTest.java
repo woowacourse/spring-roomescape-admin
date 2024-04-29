@@ -84,6 +84,7 @@ class ReservationControllerTest {
                 .when().post("/reservations")
                 .then().log().all()
                 .statusCode(201)
+                .header("Location", is("/reservations/1"))
                 .body("id", is(1));
     }
 }

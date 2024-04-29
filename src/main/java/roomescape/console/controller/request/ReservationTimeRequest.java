@@ -1,6 +1,6 @@
 package roomescape.console.controller.request;
 
-import roomescape.core.domain.ReservationTime;
+import roomescape.core.service.request.ReservationTimeRequestDto;
 
 import java.time.LocalTime;
 import java.util.List;
@@ -25,7 +25,7 @@ public record ReservationTimeRequest(LocalTime startAt) {
         return LocalTime.of(Integer.parseInt(split[0]), Integer.parseInt(split[1]));
     }
 
-    public ReservationTime toEntity() {
-        return new ReservationTime(startAt);
+    public ReservationTimeRequestDto toDto() {
+        return new ReservationTimeRequestDto(startAt);
     }
 }

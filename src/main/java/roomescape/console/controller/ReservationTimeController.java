@@ -3,21 +3,21 @@ package roomescape.console.controller;
 import org.springframework.stereotype.Controller;
 import roomescape.console.controller.request.ReservationTimeRequest;
 import roomescape.console.controller.response.ReservationTimeResponse;
-import roomescape.core.domain.ReservationTime;
-import roomescape.core.repository.ReservationTimeRepository;
+import roomescape.core.service.ReservationTimeService;
+import roomescape.core.service.response.ReservationTimeResponseDto;
 
 import java.util.List;
 
 @Controller
 public class ReservationTimeController {
-    private final ReservationTimeRepository reservationTimeRepository;
+    private final ReservationTimeService reservationTimeService;
 
-    public ReservationTimeController(ReservationTimeRepository reservationTimeRepository) {
-        this.reservationTimeRepository = reservationTimeRepository;
+    public ReservationTimeController(ReservationTimeService reservationTimeService) {
+        this.reservationTimeService = reservationTimeService;
     }
 
     public List<ReservationTimeResponse> findAll() {
-        List<ReservationTime> reservationTimes = reservationTimeRepository.findAll();
+        List<ReservationTimeResponseDto> reservationTimes = reservationTimeService.findAll();
 
         return reservationTimes.stream()
                 .map(ReservationTimeResponse::from)
@@ -25,14 +25,12 @@ public class ReservationTimeController {
     }
 
     public ReservationTimeResponse save(ReservationTimeRequest reservationTimeRequest) {
-        ReservationTime reservationTime = reservationTimeRequest.toEntity();
+        ReservationTimeResponseDto reservationTime = reservationTimeService.save(reservationTimeRequest.toDto());
 
-        ReservationTime savedReservationTime = reservationTimeRepository.save(reservationTime);
-
-        return ReservationTimeResponse.from(savedReservationTime);
+        return ReservationTimeResponse.from(reservationTime);
     }
 
     public void delete(Long id) {
-        reservationTimeRepository.deleteById(id);
+        reservationTimeService.deleteById(id);
     }
 }

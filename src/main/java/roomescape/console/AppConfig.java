@@ -1,6 +1,7 @@
 package roomescape.console;
 
 import org.springframework.context.annotation.Bean;
+import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Configuration;
 import roomescape.console.controller.ControllerAdapter;
 import roomescape.console.controller.ReservationControllerAdapter;
@@ -11,6 +12,7 @@ import roomescape.console.utils.ControllerAdapterMapper;
 import java.util.Map;
 
 @Configuration
+@ComponentScan(basePackages = {"roomescape.core"})
 public class AppConfig {
     @Bean
     public ControllerAdapterMapper controllerAdapterMapper(

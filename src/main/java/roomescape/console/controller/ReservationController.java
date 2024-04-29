@@ -3,42 +3,40 @@ package roomescape.console.controller;
 import org.springframework.stereotype.Controller;
 import roomescape.console.controller.request.ReservationRequest;
 import roomescape.console.controller.response.ReservationResponse;
-import roomescape.core.domain.Reservation;
-import roomescape.core.domain.ReservationTime;
-import roomescape.core.repository.ReservationRepository;
-import roomescape.core.repository.ReservationTimeRepository;
+import roomescape.core.service.ReservationService;
+import roomescape.core.service.ReservationTimeService;
+import roomescape.core.service.request.ReservationRequestDto;
+import roomescape.core.service.response.ReservationResponseDto;
 
 import java.util.List;
 
 @Controller
 public class ReservationController {
-    private final ReservationRepository reservationRepository;
-    private final ReservationTimeRepository reservationTimeRepository;
+    private final ReservationService reservationService;
+    private final ReservationTimeService reservationTimeService;
 
-    public ReservationController(ReservationRepository reservationRepository, ReservationTimeRepository reservationTimeRepository) {
-        this.reservationRepository = reservationRepository;
-        this.reservationTimeRepository = reservationTimeRepository;
+    public ReservationController(ReservationService reservationService, ReservationTimeService reservationTimeService) {
+        this.reservationService = reservationService;
+        this.reservationTimeService = reservationTimeService;
     }
 
     public List<ReservationResponse> findAll() {
-        List<Reservation> reservations = reservationRepository.findAll();
+        List<ReservationResponseDto> reservationResponses = reservationService.findAll();
 
-        return reservations.stream()
+        return reservationResponses.stream()
                 .map(ReservationResponse::from)
                 .toList();
     }
 
     public ReservationResponse save(ReservationRequest reservationRequest) {
-        ReservationTime reservationTime = reservationTimeRepository.findById(reservationRequest.timeId())
-                .orElseThrow(() -> new IllegalArgumentException("예약할 수 없는 시간입니다. timeId: " + reservationRequest.timeId()));
-        Reservation reservation = reservationRequest.toEntity(reservationTime);
+        ReservationRequestDto reservation = reservationRequest.toDto();
 
-        Reservation savedReservation = reservationRepository.save(reservation);
+        ReservationResponseDto reservationResponse = reservationService.save(reservation);
 
-        return ReservationResponse.from(savedReservation);
+        return ReservationResponse.from(reservationResponse);
     }
 
     public void delete(Long id) {
-        reservationRepository.deleteById(id);
+        reservationService.deleteById(id);
     }
 }

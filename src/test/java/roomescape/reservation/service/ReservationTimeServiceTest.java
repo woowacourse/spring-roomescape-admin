@@ -70,7 +70,7 @@ class ReservationTimeServiceTest {
         ReservationTimeResponseDto inserted = reservationTimeService.addReservationTime(new ReservationTimeRequestDto("10:00"));
 
         //when & then
-        Assertions.assertThatCode(() -> reservationTimeService.deleteReservationTimeById(inserted.id()));
+        Assertions.assertThatCode(() -> reservationTimeService.removeReservationTimeById(inserted.id()));
     }
 
     @DisplayName("예약 시간 삭제 실패 테스트")
@@ -80,7 +80,7 @@ class ReservationTimeServiceTest {
         Long noneExistId = -1L;
 
         //when & then
-        Assertions.assertThatThrownBy(() -> reservationTimeService.deleteReservationTimeById(noneExistId))
+        Assertions.assertThatThrownBy(() -> reservationTimeService.removeReservationTimeById(noneExistId))
                 .isInstanceOf(IllegalArgumentException.class);
     }
 }

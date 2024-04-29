@@ -65,7 +65,7 @@ class ReservationServiceTest {
         ReservationRequestDto request = new ReservationRequestDto("name", "2000-09-07", 1L);
         ReservationResponseDto response = reservationService.addReservation(request);
 
-        reservationService.deleteReservationById(response.id());
+        reservationService.removeReservationById(response.id());
         int findSize = reservationService.findAllReservation().reservations().size();
         assertThat(findSize).isEqualTo(0);
     }
@@ -75,7 +75,7 @@ class ReservationServiceTest {
     void deleteFailTest() {
         Long noneExistId = -1L;
 
-        Assertions.assertThatThrownBy(() -> reservationService.deleteReservationById(noneExistId))
+        Assertions.assertThatThrownBy(() -> reservationService.removeReservationById(noneExistId))
                 .isInstanceOf(IllegalArgumentException.class);
     }
 }

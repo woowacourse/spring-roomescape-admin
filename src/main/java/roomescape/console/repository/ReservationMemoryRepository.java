@@ -4,9 +4,11 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.concurrent.atomic.AtomicLong;
+import org.springframework.stereotype.Repository;
 import roomescape.core.model.Reservation;
 import roomescape.core.repository.ReservationRepository;
 
+@Repository
 public class ReservationMemoryRepository implements ReservationRepository {
     private static final int ZERO_RESERVATION = 0;
     private static final int ONE_RESERVATION = 1;
@@ -15,8 +17,9 @@ public class ReservationMemoryRepository implements ReservationRepository {
 
     @Override
     public Long createReservation(Reservation reservation) {
-        reservations.put(id.incrementAndGet(), reservation);
-        return id.longValue();
+        Long newId = id.incrementAndGet();
+        reservations.put(newId, reservation.makeId(newId));
+        return newId;
     }
 
     @Override

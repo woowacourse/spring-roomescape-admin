@@ -23,6 +23,10 @@ public class Reservation {
         this.time = time;
     }
 
+    public Reservation makeId(Long id) {
+        return new Reservation(id, this.name, this.date, this.time);
+    }
+
     public Long getId() {
         return id;
     }

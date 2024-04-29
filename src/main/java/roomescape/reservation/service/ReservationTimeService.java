@@ -33,7 +33,7 @@ public class ReservationTimeService {
         return new ReservationTimesResponseDto(response);
     }
 
-    public void deleteReservationTimeById(final Long id) {
+    public void removeReservationTimeById(final Long id) {
         int deleteCount = reservationTimeDao.deleteById(id);
 
         if (deleteCount == 0) {

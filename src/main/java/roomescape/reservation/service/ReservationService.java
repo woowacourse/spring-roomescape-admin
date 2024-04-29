@@ -46,7 +46,7 @@ public class ReservationService {
         );
     }
 
-    public void deleteReservationById(final Long id) {
+    public void removeReservationById(final Long id) {
         int updateCount = reservationDao.deleteById(id);
         if (updateCount == 0) {
             throw new IllegalArgumentException(String.format("ID %d - Reservation 정보가 존재하지 않습니다.", id));

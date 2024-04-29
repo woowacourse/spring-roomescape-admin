@@ -4,7 +4,6 @@ import org.springframework.http.HttpStatus;
 import roomescape.exception.ReservationTimeException;
 
 import java.time.LocalTime;
-import java.util.Objects;
 
 public class ReservationTime {
 
@@ -40,18 +39,5 @@ public class ReservationTime {
 
     public LocalTime getStartAt() {
         return startAt;
-    }
-
-    @Override
-    public boolean equals(Object o) {
-        if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
-        ReservationTime that = (ReservationTime) o;
-        return id == that.id;
-    }
-
-    @Override
-    public int hashCode() {
-        return Objects.hash(id);
     }
 }

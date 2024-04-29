@@ -37,12 +37,7 @@ public class ReservationMemoryDao implements ReservationDao {
 
     @Override
     public Optional<Reservation> findAnyByTimeId(long timeId) {
-        try {
-            Reservation reservation = reservations.get((int) timeId);
-            return Optional.ofNullable(reservation);
-        } catch (IndexOutOfBoundsException e) {
-            return Optional.empty();
-        }
+        return reservations.stream().filter(reservation -> reservation.getTime().getId() == timeId).findFirst();
     }
 
     @Override

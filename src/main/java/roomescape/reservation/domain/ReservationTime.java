@@ -5,11 +5,11 @@ public class ReservationTime {
     private String startAt;
 
     public ReservationTime(final String startAt) {
-        this.startAt = startAt;
+        this(null, startAt);
     }
 
     public ReservationTime(final Long id) {
-        this.id = id;
+        this(id, null);
     }
 
     public ReservationTime(final long id, final ReservationTime reservationTime) {

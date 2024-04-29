@@ -34,7 +34,7 @@ class ReservationServiceTest {
 
     @BeforeEach
     void init() {
-        ReservationDao reservationDao = new ReservationDao(jdbcTemplate, dataSource);
+        ReservationDao reservationDao = new ReservationDao(jdbcTemplate);
         ReservationTimeDao reservationTimeDao = new ReservationTimeDao(jdbcTemplate, dataSource);
         reservationService = new ReservationService(reservationDao, reservationTimeDao);
 

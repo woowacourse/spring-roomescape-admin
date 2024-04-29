@@ -33,7 +33,7 @@ class ReservationDaoTest {
 
     @BeforeEach
     void init() {
-        reservationDao = new ReservationDao(jdbcTemplate, dataSource);
+        reservationDao = new ReservationDao(jdbcTemplate);
 
         ReservationTimeDao reservationTimeDao = new ReservationTimeDao(jdbcTemplate, dataSource);
         reservationTime = reservationTimeDao.insert(new ReservationTime(LocalTime.now()));

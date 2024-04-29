@@ -2,14 +2,12 @@ package roomescape.reservation.dao;
 
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;
-import org.springframework.jdbc.core.simple.SimpleJdbcInsert;
 import org.springframework.jdbc.support.GeneratedKeyHolder;
 import org.springframework.jdbc.support.KeyHolder;
 import org.springframework.stereotype.Repository;
 import roomescape.reservation.domain.Reservation;
 import roomescape.reservation.domain.ReservationTime;
 
-import javax.sql.DataSource;
 import java.sql.PreparedStatement;
 import java.time.LocalDate;
 import java.time.LocalTime;
@@ -18,13 +16,9 @@ import java.util.List;
 @Repository
 public class ReservationDao {
     private final JdbcTemplate jdbcTemplate;
-    private final SimpleJdbcInsert jdbcInsert;
 
-    public ReservationDao(final JdbcTemplate jdbcTemplate, final DataSource dataSource) {
+    public ReservationDao(final JdbcTemplate jdbcTemplate) {
         this.jdbcTemplate = jdbcTemplate;
-        this.jdbcInsert = new SimpleJdbcInsert(dataSource)
-                .withTableName("reservation")
-                .usingGeneratedKeyColumns("id");
     }
 
     public Reservation insert(final Reservation reservation) {

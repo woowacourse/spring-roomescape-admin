@@ -40,7 +40,7 @@ public class ReservationRepository {
         return jdbcTemplate.query(sql, ROW_MAPPER);
     }
 
-    public Reservation create(Reservation requestReservation) {
+    public Reservation save(Reservation requestReservation) {
         SqlParameterSource params = new MapSqlParameterSource()
                 .addValue("name", requestReservation.getName())
                 .addValue("date", requestReservation.getDate())

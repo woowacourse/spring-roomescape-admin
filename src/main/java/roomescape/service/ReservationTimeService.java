@@ -1,5 +1,6 @@
 package roomescape.service;
 
+import java.util.List;
 import org.springframework.stereotype.Service;
 import roomescape.domain.reservation.Reservation;
 import roomescape.domain.time.Time;
@@ -9,8 +10,6 @@ import roomescape.dto.time.TimeRequest;
 import roomescape.dto.time.TimeResponse;
 import roomescape.repository.ReservationRepository;
 import roomescape.repository.TimeRepository;
-
-import java.util.List;
 
 @Service
 public class ReservationTimeService {
@@ -34,7 +33,7 @@ public class ReservationTimeService {
         Time time = timeRepository.findById(reservationRequest.timeId());
 
         Reservation reservation = reservationRequest.toReservation(time);
-        Reservation savedReservation = reservationRepository.create(reservation);
+        Reservation savedReservation = reservationRepository.save(reservation);
 
         return ReservationResponse.from(savedReservation);
     }
@@ -52,7 +51,7 @@ public class ReservationTimeService {
 
     public TimeResponse createTime(TimeRequest timeRequest) {
         Time time = timeRequest.toTime();
-        Time savedTime = timeRepository.create(time);
+        Time savedTime = timeRepository.save(time);
 
         return TimeResponse.from(savedTime);
     }

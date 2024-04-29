@@ -1,5 +1,10 @@
 package roomescape.repository;
 
+import static org.assertj.core.api.Assertions.assertThat;
+
+import java.time.LocalDate;
+import java.time.LocalTime;
+import java.util.List;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -11,12 +16,6 @@ import org.springframework.test.annotation.DirtiesContext;
 import org.springframework.test.annotation.DirtiesContext.ClassMode;
 import roomescape.domain.reservation.Reservation;
 import roomescape.domain.time.Time;
-
-import java.time.LocalDate;
-import java.time.LocalTime;
-import java.util.List;
-
-import static org.assertj.core.api.Assertions.assertThat;
 
 @SpringBootTest(webEnvironment = WebEnvironment.RANDOM_PORT)
 @DirtiesContext(classMode = ClassMode.BEFORE_EACH_TEST_METHOD)
@@ -37,13 +36,13 @@ public class ReservationRepositoryTest {
 
     @BeforeEach
     void setUp() {
-        timeRepository.create(time);
+        timeRepository.save(time);
     }
 
     @Test
     @DisplayName("repository를 통해 조회한 예약 수는 DB를 통해 조회한 예약 수와 같다.")
     void readDbReservations() {
-        reservationRepository.create(reservation);
+        reservationRepository.save(reservation);
 
         List<Reservation> reservations = reservationRepository.findAll();
         Integer count = jdbcTemplate.queryForObject("SELECT count(*) from reservation", Integer.class);
@@ -54,7 +53,7 @@ public class ReservationRepositoryTest {
     @Test
     @DisplayName("하나의 예약만 등록한 경우, DB를 조회 했을 때 조회 결과 개수는 1개이다.")
     void postReservationIntoDb() {
-        reservationRepository.create(reservation);
+        reservationRepository.save(reservation);
 
         List<Reservation> reservations = reservationRepository.findAll();
 
@@ -64,7 +63,7 @@ public class ReservationRepositoryTest {
     @Test
     @DisplayName("하나의 예약만 등록한 경우, 예약 삭제 뒤 DB를 조회 했을 때 조회 결과 개수는 0개이다.")
     void readReservationsSizeFromDbAfterPostAndDelete() {
-        reservationRepository.create(reservation);
+        reservationRepository.save(reservation);
 
         reservationRepository.delete(1L);
         List<Reservation> reservations = reservationRepository.findAll();

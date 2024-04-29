@@ -17,7 +17,7 @@ public class TimeRepository {
             resultSet.getLong("id"),
             resultSet.getTime("start_at").toLocalTime()
     );
-    
+
     private final JdbcTemplate jdbcTemplate;
     private final SimpleJdbcInsert jdbcInsert;
 
@@ -39,7 +39,7 @@ public class TimeRepository {
         return jdbcTemplate.query(sql, ROW_MAPPER);
     }
 
-    public Time create(Time requestTime) {
+    public Time save(Time requestTime) {
         SqlParameterSource params = new MapSqlParameterSource()
                 .addValue("start_at", requestTime.getStartAt());
         Long id = jdbcInsert.executeAndReturnKey(params).longValue();

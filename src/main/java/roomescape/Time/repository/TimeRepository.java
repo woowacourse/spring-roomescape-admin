@@ -18,7 +18,7 @@ public class TimeRepository {
     }
 
     public List<Time> findAllReservationTimes() {
-        return timeDao.findAll();
+        return timeDao.findAllOrderByReservationTime();
     }
 
     public void deleteReservationTimeById(long reservationTimeId) {

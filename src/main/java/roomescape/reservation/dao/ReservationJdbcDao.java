@@ -33,7 +33,7 @@ public class ReservationJdbcDao implements ReservationDao {
         return reservation;
     }
 
-    public List<Reservation> findAll() {
+    public List<Reservation> findAllOrderByDateAndReservationTime() {
         String findAllReservationSql = "SELECT r.id, r.name, r.`date`, t.id AS timeId, t.start_at "
                 + "FROM reservation r "
                 + "INNER JOIN reservation_time t "

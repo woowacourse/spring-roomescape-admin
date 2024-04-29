@@ -34,7 +34,7 @@ class ReservationDaoTest {
     @Test
     @DisplayName("데이터들을 잘 가져오는지 확인.")
     void getReservations() {
-        List<Reservation> reservations = reservationDao.findAll();
+        List<Reservation> reservations = reservationDao.findAllOrderByDateAndReservationTime();
 
         Assertions.assertThat(reservations.size()).isEqualTo(2);
     }
@@ -44,6 +44,6 @@ class ReservationDaoTest {
     void deleteReservations() {
         reservationDao.deleteById(1L);
 
-        Assertions.assertThat(reservationDao.findAll().size()).isEqualTo(1);
+        Assertions.assertThat(reservationDao.findAllOrderByDateAndReservationTime().size()).isEqualTo(1);
     }
 }

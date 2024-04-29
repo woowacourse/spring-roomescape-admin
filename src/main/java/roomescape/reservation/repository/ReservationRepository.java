@@ -24,7 +24,7 @@ public class ReservationRepository {
     }
 
     public List<Reservation> findAllReservation() {
-        return reservationDao.findAll();
+        return reservationDao.findAllOrderByDateAndReservationTime();
     }
 
     public void deleteReservationById(long reservationId) {

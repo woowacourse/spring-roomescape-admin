@@ -30,7 +30,7 @@ public class TimeJdbcDao implements TimeDao {
     }
 
     @Override
-    public List<Time> findAll() {
+    public List<Time> findAllOrderByReservationTime() {
         String findAllReservationTimeSql = "SELECT id, start_at FROM reservation_time ORDER BY start_at ASC ";
 
         return jdbcTemplate.query(findAllReservationTimeSql, (resultSet, rowNum) -> new Time(

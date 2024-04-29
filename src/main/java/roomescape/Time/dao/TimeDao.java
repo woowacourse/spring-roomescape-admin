@@ -7,7 +7,7 @@ public interface TimeDao {
 
     Time save(Time reservationTime);
 
-    List<Time> findAll();
+    List<Time> findAllOrderByReservationTime();
 
     Time findById(long reservationTimeId);
 

@@ -63,7 +63,7 @@
 
 ### Response
 
-> HTTP/1.1 200
+> HTTP/1.1 201
 >
 > Content-Type: application/json
 
@@ -84,7 +84,7 @@
 
 ### Response
 
-> HTTP/1.1 200
+> HTTP/1.1 204
 
 <br>
 
@@ -104,7 +104,7 @@
 
 ### Response
 
-> HTTP/1.1 200
+> HTTP/1.1 201
 >
 > Content-Type: application/json
 
@@ -144,7 +144,7 @@
 
 ### Response
 
-> HTTP/1.1 200
+> HTTP/1.1 204
 
 ## 데이터베이스
 

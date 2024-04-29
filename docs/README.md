@@ -7,3 +7,6 @@
 | GET    | `/reservations`      | 예약 정보        |                                           | `@RestController` |
 | POST   | `/reservations`      | 예약 추가        |                                           | `@RestController` |
 | DELETE | `/reservations/{id}` | 예약 취소        |                                           | `@RestController` |
+| GET | `/times` | 예약 시간 조회        |                                           | `@RestController` |
+| POST | `/times` | 예약 시간 삭제        |                                           | `@RestController` |
+| DELETE | `/times/{id}` | 예약 시간 추가        |                                           | `@RestController` |

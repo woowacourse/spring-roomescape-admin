@@ -38,8 +38,7 @@ public class MemoryReservationTimeRepository implements ReservationTimeRepositor
         if (reservationTimes.containsKey(id)) {
             reservationTimes.remove(id);
             return Optional.of(1);
-        } else {
-            return Optional.empty();
         }
+        return Optional.empty();
     }
 }

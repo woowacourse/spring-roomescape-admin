@@ -33,8 +33,7 @@ public class MemoryReservationRepository implements ReservationRepository {
         if (reservations.containsKey(id)) {
             reservations.remove(id);
             return Optional.of(1);
-        } else {
-            return Optional.empty();
         }
+        return Optional.empty();
     }
 }

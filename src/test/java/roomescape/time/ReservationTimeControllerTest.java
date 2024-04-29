@@ -1,7 +1,6 @@
 package roomescape.time;
 
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.hamcrest.Matchers.is;
 
 import java.time.LocalTime;
 import java.util.List;
@@ -27,50 +26,50 @@ class ReservationTimeControllerTest {
     void findAll() {
         insertReservationTime("09:00");
         insertReservationTime("10:00");
+        assertReservationTimeCountIsEqualTo(2);
 
-        RestAssured.given().log().all()
+        List<ReservationTime> times = RestAssured.given().log().all()
                 .when().get("/times")
                 .then().log().all()
-                .statusCode(200)
-                .body("size()", is(2));
+                .statusCode(200).extract()
+                .jsonPath().getList(".", ReservationTime.class);
+
+        Integer count = reservationTimeDao.findAll().size();
+        assertThat(times.size()).isEqualTo(count);
     }
 
     @DisplayName("시간을 추가한다.")
     @Test
     void create() {
         insertReservationTime("11:00");
-        List<ReservationTime> savedTimes = reservationTimeDao.findAll();
-        assertThat(savedTimes.size()).isEqualTo(1);
+        assertReservationTimeCountIsEqualTo(1);
 
         RestAssured.given().log().all()
                 .contentType(ContentType.JSON)
-                .body(reservationTime())
+                .body(reservationTime("10:00"))
                 .when().post("/times")
                 .then().log().all()
                 .statusCode(200);
 
-        savedTimes = reservationTimeDao.findAll();
-        assertThat(savedTimes.size()).isEqualTo(2);
+        assertReservationTimeCountIsEqualTo(2);
     }
 
     @DisplayName("시간을 삭제한다.")
     @Test
     void delete() {
         long id = insertReservationTimeAndGetId("13:00");
-        List<ReservationTime> savedTimes = reservationTimeDao.findAll();
-        assertThat(savedTimes.size()).isEqualTo(1);
+        assertReservationTimeCountIsEqualTo(1);
 
         RestAssured.given().log().all()
                 .when().delete("/times/" + id)
                 .then().log().all()
                 .statusCode(200);
 
-        savedTimes = reservationTimeDao.findAll();
-        assertThat(savedTimes.size()).isEqualTo(0);
+        assertReservationTimeCountIsEqualTo(0);
     }
 
-    ReservationTime reservationTime() {
-        return new ReservationTime(0, LocalTime.parse("10:00"));
+    ReservationTime reservationTime(String time) {
+        return new ReservationTime(0, LocalTime.parse(time));
     }
 
     void insertReservationTime(String time) {
@@ -79,5 +78,9 @@ class ReservationTimeControllerTest {
 
     long insertReservationTimeAndGetId(String time) {
         return reservationTimeDao.save(new ReservationTime(0, LocalTime.parse(time))).id();
+    }
+
+    void assertReservationTimeCountIsEqualTo(int count) {
+        assertThat(count).isEqualTo(reservationTimeDao.findAll().size());
     }
 }

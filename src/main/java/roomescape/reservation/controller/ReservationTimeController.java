@@ -24,14 +24,14 @@ public class ReservationTimeController {
     }
 
     @GetMapping("/times")
-    public ResponseEntity<ReservationTimesResponseDto> reservationTimeList() {
+    public ResponseEntity<ReservationTimesResponseDto> getAllReservationTimes() {
         ReservationTimesResponseDto response = reservationTimeService.findAllReservationTime();
 
         return ResponseEntity.ok(response);
     }
 
     @PostMapping("/times")
-    public ResponseEntity<ReservationTimeResponseDto> reservationTimeSave(@RequestBody final ReservationTimeRequestDto request) {
+    public ResponseEntity<ReservationTimeResponseDto> saveReservationTime(@RequestBody final ReservationTimeRequestDto request) {
         ReservationTimeResponseDto response = reservationTimeService.addReservationTime(request);
 
         return ResponseEntity.created(URI.create("/times/" + response.id()))
@@ -39,7 +39,7 @@ public class ReservationTimeController {
     }
 
     @DeleteMapping("/times/{id}")
-    public ResponseEntity<Void> reservationTimeRemove(@PathVariable final Long id) {
+    public ResponseEntity<Void> removeReservationTime(@PathVariable final Long id) {
         reservationTimeService.removeReservationTimeById(id);
         return ResponseEntity.noContent().build();
     }

@@ -23,12 +23,12 @@ public class ReservationController {
     }
 
     @GetMapping("/reservations")
-    public ResponseEntity<ReservationsResponseDto> reservationList() {
+    public ResponseEntity<ReservationsResponseDto> getAllReservations() {
         return ResponseEntity.ok(reservationService.findAllReservation());
     }
 
     @PostMapping("/reservations")
-    public ResponseEntity<ReservationResponseDto> reservationSave(@RequestBody final ReservationRequestDto request) {
+    public ResponseEntity<ReservationResponseDto> saveReservation(@RequestBody final ReservationRequestDto request) {
         ReservationResponseDto response = reservationService.addReservation(request);
 
         return ResponseEntity.created(URI.create("/reservations/" + response.id()))
@@ -36,7 +36,7 @@ public class ReservationController {
     }
 
     @DeleteMapping("/reservations/{id}")
-    public ResponseEntity<Void> reservationRemove(@PathVariable final Long id) {
+    public ResponseEntity<Void> removeReservation(@PathVariable final Long id) {
         reservationService.removeReservationById(id);
         return ResponseEntity.noContent().build();
     }

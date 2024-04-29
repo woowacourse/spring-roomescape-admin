@@ -8,7 +8,6 @@ import java.util.concurrent.atomic.AtomicLong;
 import roomescape.domain.ReservationTime;
 
 public class MemoryReservationTimeRepository implements ReservationTimeRepository {
-
     private final Map<Long, ReservationTime> reservationTimes;
     private final AtomicLong index;
 

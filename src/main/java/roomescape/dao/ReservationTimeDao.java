@@ -41,7 +41,7 @@ public class ReservationTimeDao {
             final var sql = "DELETE FROM reservation_time WHERE id = ?";
             jdbcTemplate.update(sql, id);
         } catch (final DataIntegrityViolationException e) {
-            throw new IllegalArgumentException(String.format("%d는 사용중입니다.", id) );
+            throw new IllegalStateException(String.format("%d는 사용중입니다.", id) );
         }
     }
 

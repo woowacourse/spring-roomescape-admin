@@ -3,6 +3,7 @@ package roomescape.repository;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 import javax.sql.DataSource;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;
@@ -32,10 +33,11 @@ public class JdbcTemplateReservationTimeRepository implements ReservationTimeRep
         Map<String, Object> params = new HashMap<>();
         params.put("start_at", reservationTimeRequest.getStartAt());
         Long id = jdbcInsert.executeAndReturnKey(params).longValue();
-        return findById(id);
+        return new ReservationTime(id, reservationTimeRequest);
     }
 
-    private ReservationTime findById(Long id) {
+    @Override
+    public ReservationTime findById(Long id) {
         return jdbcTemplate.queryForObject(
                 "SELECT id, start_at FROM reservation_time WHERE id = ?",
                 reservationTimeRowMapper, id);
@@ -47,10 +49,11 @@ public class JdbcTemplateReservationTimeRepository implements ReservationTimeRep
     }
 
     @Override
-    public void deleteById(Long id) {
+    public Optional<Integer> deleteById(Long id) {
         int rowCount = jdbcTemplate.update("DELETE FROM reservation_time WHERE id = ?", id);
         if (rowCount == 0) {
-            throw new IllegalArgumentException("존재하지 않는 시간입니다.");
+            return Optional.empty();
         }
+        return Optional.of(rowCount);
     }
 }

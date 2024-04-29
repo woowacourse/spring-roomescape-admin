@@ -3,6 +3,7 @@ package roomescape.repository;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 import javax.sql.DataSource;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;
@@ -39,23 +40,7 @@ public class JdbcTemplateReservationRepository implements ReservationRepository 
         params.put("date", reservationRequest.getDate());
         params.put("time_id", reservationRequest.getTimeId());
         Long id = jdbcInsert.executeAndReturnKey(params).longValue();
-        return findById(id);
-    }
-
-    private Reservation findById(Long id) {
-        return jdbcTemplate.queryForObject(
-                """
-                        SELECT
-                            r.id AS reservation_id,
-                            r.name,
-                            r.date,
-                            t.id AS time_id,
-                            t.start_at AS time_value
-                        FROM reservation AS r
-                        INNER JOIN reservation_time AS t
-                        ON r.id = ?
-                        """, reservationRowMapper, id
-        );
+        return new Reservation(id, reservationRequest);
     }
 
     @Override
@@ -75,10 +60,11 @@ public class JdbcTemplateReservationRepository implements ReservationRepository 
     }
 
     @Override
-    public void deleteById(Long id) {
+    public Optional<Integer> deleteById(Long id) {
         int rowCount = jdbcTemplate.update("DELETE FROM reservation WHERE id = ?", id);
         if (rowCount == 0) {
-            throw new IllegalArgumentException("존재하지 않는 예약입니다.");
+            return Optional.empty();
         }
+        return Optional.of(rowCount);
     }
 }

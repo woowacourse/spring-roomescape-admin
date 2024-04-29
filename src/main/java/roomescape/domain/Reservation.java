@@ -20,7 +20,7 @@ public class Reservation {
     }
 
     public boolean hasSameTimeId(long timeId) {
-        return time.getId() == timeId;
+        return time.hasSameId(timeId);
     }
 
     public long getId() {

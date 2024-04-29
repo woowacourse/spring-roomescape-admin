@@ -33,7 +33,7 @@ public class JdbcTemplateReservationTimeRepository implements ReservationTimeRep
         Map<String, Object> params = new HashMap<>();
         params.put("start_at", reservationTimeRequest.getStartAt());
         Long id = jdbcInsert.executeAndReturnKey(params).longValue();
-        return findById(id);
+        return new ReservationTime(id, reservationTimeRequest);
     }
 
     @Override

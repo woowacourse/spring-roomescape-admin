@@ -1,7 +1,7 @@
 package roomescape.controller;
 
 import java.util.List;
-import roomescape.controller.request.ConsoleCommand;
+import roomescape.view.command.ConsoleCommand;
 import roomescape.controller.request.ReservationRequest;
 import roomescape.controller.request.ReservationTimeRequest;
 import roomescape.model.Reservation;

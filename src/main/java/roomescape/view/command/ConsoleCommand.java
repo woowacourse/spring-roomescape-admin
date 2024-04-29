@@ -1,4 +1,4 @@
-package roomescape.controller.request;
+package roomescape.view.command;
 
 import java.util.Arrays;
 import java.util.NoSuchElementException;

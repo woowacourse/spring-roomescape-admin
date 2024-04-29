@@ -19,14 +19,13 @@ public class InputView {
     public ReservationRequest askReservationContentToSave() {
         System.out.println("""
                 > 추가할 예약의 정보를 {이름,날짜(yyyy-MM-dd),시간ID} 형식에 맞춰 입력해 주세요.
-                > ex. 도라,2024-04-29,1
-                """);
+                > ex. 도라,2024-04-29,1""");
         String input = SCANNER.next();
         List<String> content = List.of(input.split(","));
         validateContentSize(content, 3);
         return new ReservationRequest(
-                parseLocalDate(content.get(0)),
-                content.get(1),
+                parseLocalDate(content.get(1)),
+                content.get(0),
                 parseLong(content.get(2))
         );
     }
@@ -40,8 +39,7 @@ public class InputView {
     public ReservationTimeRequest askReservationTimeContentToSave() {
         System.out.println("""
                 > 추가할 시간의 정보를 {시간(HH:mm)} 형식에 맞춰 입력해 주세요.
-                > ex. 15:05
-                """);
+                > ex. 15:05""");
         String input = SCANNER.next();
         return new ReservationTimeRequest(parseLocalTime(input));
     }

@@ -1,25 +1,13 @@
 package roomescape;
 
+import org.springframework.context.ApplicationContext;
+import org.springframework.context.annotation.AnnotationConfigApplicationContext;
 import roomescape.controller.ReservationConsoleController;
-import roomescape.repository.ReservationMemoryRepository;
-import roomescape.repository.ReservationTimeMemoryRepository;
-import roomescape.service.ReservationService;
-import roomescape.service.ReservationTimeService;
-import roomescape.view.InputView;
-import roomescape.view.OutputView;
 
 public class ConsoleApplication {
     public static void main(String[] args) {
-
-        ReservationMemoryRepository reservationRepository = new ReservationMemoryRepository();
-        ReservationTimeMemoryRepository reservationTimeRepository = new ReservationTimeMemoryRepository();
-
-        ReservationConsoleController reservationController = new ReservationConsoleController(
-                new InputView(),
-                new OutputView(),
-                new ReservationService(reservationRepository, reservationTimeRepository),
-                new ReservationTimeService(reservationTimeRepository));
-
-        reservationController.start();
+        ApplicationContext applicationContext = new AnnotationConfigApplicationContext(ConsoleConfiguration.class);
+        ReservationConsoleController console = applicationContext.getBean(ReservationConsoleController.class);
+        console.start();
     }
 }

@@ -10,6 +10,7 @@ public class ReservationTimeMemoryRepository implements ReservationTimeRepositor
 
     private final List<ReservationTime> reservationTimes = new ArrayList<>();
     private final AtomicLong index = new AtomicLong(1L);
+
     @Override
     public List<ReservationTime> findAllReservationTimes() {
         return reservationTimes;

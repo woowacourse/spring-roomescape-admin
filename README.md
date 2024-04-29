@@ -18,3 +18,9 @@
     - [x] 시간 목록을 조회할 수 있다
     - [x] 시간 슬롯을 생성할 수 있다
     - [x] 시간 슬롯을 삭제할 수 있다
+
+### 데이터베이스 접근 방식
+- http://localhost:8080/h2-console 에서 확인 가능
+  - jdbc url : dbc:h2:mem:database
+    - select * from reservation_time
+    - select * from reservation

@@ -17,7 +17,6 @@ import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.test.context.jdbc.Sql;
 import org.springframework.test.context.jdbc.Sql.ExecutionPhase;
 
-
 /*
  * 테스트 데이터베이스 초기 데이터
  * {ID=1, NAME=브라운, DATE=2024-05-04, TIME={ID=1, START_AT="10:00"}}
@@ -34,7 +33,7 @@ class ReservationRepositoryTest {
 
     @BeforeEach
     void setUp() {
-        reservationRepository = new ReservationRepository(jdbcTemplate);
+        reservationRepository = new JdbcReservationRepository(jdbcTemplate);
     }
 
     @Test

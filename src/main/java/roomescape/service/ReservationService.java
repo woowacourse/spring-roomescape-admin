@@ -5,6 +5,7 @@ import java.util.NoSuchElementException;
 import org.springframework.stereotype.Service;
 import roomescape.domain.Reservation;
 import roomescape.domain.ReservationRepository;
+import roomescape.domain.ReservationTime;
 import roomescape.domain.ReservationTimeRepository;
 import roomescape.dto.ReservationRequest;
 import roomescape.dto.ReservationResponse;
@@ -27,8 +28,8 @@ public class ReservationService {
     }
 
     public ReservationResponse createReservation(ReservationRequest createDto) {
-        validateReservationTime(createDto.timeId());
-        Reservation reservation = createDto.toDomain();
+        ReservationTime reservationTime = getReservationTime(createDto.timeId());
+        Reservation reservation = createDto.toDomain(reservationTime);
         Reservation createdReservation = reservationRepository.create(reservation);
         return ReservationResponse.from(createdReservation);
     }
@@ -37,8 +38,8 @@ public class ReservationService {
         reservationRepository.removeById(id);
     }
 
-    private void validateReservationTime(Long id) {
-        reservationTimeRepository.findById(id)
+    private ReservationTime getReservationTime(Long id) {
+        return reservationTimeRepository.findById(id)
                 .orElseThrow(() -> new NoSuchElementException("해당되는 예약 시간이 없습니다."));
     }
 }

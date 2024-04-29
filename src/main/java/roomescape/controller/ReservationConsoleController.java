@@ -1,6 +1,7 @@
 package roomescape.controller;
 
 import java.util.List;
+import roomescape.controller.request.ConsoleCommand;
 import roomescape.controller.request.ReservationRequest;
 import roomescape.controller.request.ReservationTimeRequest;
 import roomescape.model.Reservation;
@@ -31,27 +32,19 @@ public class ReservationConsoleController {
         int command;
         while (true) {
             command = inputView.askInputNumber();
-            if (command == 1) { //방탈출 예약 조회
-                printReservations();
+            ConsoleCommand consoleCommand = ConsoleCommand.getConsoleCommand(command);
+            switch (consoleCommand) {
+                case FIND_RESERVATIONS -> printReservations();
+                case FIND_RESERVATION_TIMES -> printReservationTimes();
+                case ADD_RESERVATION -> addReservations();
+                case ADD_RESERVATION_TIME -> addReservationTimes();
+                case DELETE_RESERVATION -> deleteReservation();
+                case DELETE_RESERVATION_TIME -> deleteReservationTime();
+                case EXIT -> outputView.printEnd();
+                default -> throw new RuntimeException();
             }
-            if (command == 2) { //방탈출 예약시간 조회
-                printReservationTimes();
-            }
-            if (command == 3) { //방탈출 예약 추가
-                addReservations();
-            }
-            if (command == 4) { //방탈출 예약시간 추가
-                addReservationTimes();
-            }
-            if (command == 5) { //방탈출 예약 삭제
-                deleteReservation();
-            }
-            if (command == 6) { // 방탈출 예약시간 삭제
-                deleteReservationTime();
-            }
-            if (command == 7) {
-                outputView.printEnd();
-                break;
+            if (consoleCommand.isEnd()) {
+                return;
             }
         }
 

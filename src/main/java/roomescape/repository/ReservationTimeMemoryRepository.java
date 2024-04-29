@@ -8,8 +8,8 @@ import roomescape.model.ReservationTime;
 
 public class ReservationTimeMemoryRepository implements ReservationTimeRepository {
 
-    private static final List<ReservationTime> reservationTimes = new ArrayList<>();
-    private static final AtomicLong index = new AtomicLong(1L);
+    private final List<ReservationTime> reservationTimes = new ArrayList<>();
+    private final AtomicLong index = new AtomicLong(1L);
     @Override
     public List<ReservationTime> findAllReservationTimes() {
         return reservationTimes;

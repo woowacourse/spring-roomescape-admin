@@ -9,18 +9,18 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import roomescape.TestSupport;
 import roomescape.time.domain.ReservationTime;
-import roomescape.time.repository.TimeRepository;
+import roomescape.time.repository.ReservationTimeRepository;
 
 class ReservationTimeRepositoryTest extends TestSupport {
 
     @Autowired
-    private TimeRepository timeRepository;
+    private ReservationTimeRepository reservationTimeRepository;
 
     @Test
     @DisplayName("데이터를 저장한다")
     void saveTest() {
         ReservationTime reservationTime = new ReservationTime(null, LocalTime.now());
-        Long saveId = timeRepository.save(reservationTime);
+        Long saveId = reservationTimeRepository.save(reservationTime);
 
         assertThat(saveId).isEqualTo(1);
     }
@@ -30,9 +30,9 @@ class ReservationTimeRepositoryTest extends TestSupport {
     void findByIdTest() {
         ReservationTime reservationTime1 = new ReservationTime(1L, LocalTime.now());
         ReservationTime reservationTime2 = new ReservationTime(2L, LocalTime.now());
-        timeRepository.save(reservationTime1);
-        timeRepository.save(reservationTime2);
-        ReservationTime findReservationTime = timeRepository.findById(reservationTime2.getId());
+        reservationTimeRepository.save(reservationTime1);
+        reservationTimeRepository.save(reservationTime2);
+        ReservationTime findReservationTime = reservationTimeRepository.findById(reservationTime2.getId());
         assertThat(findReservationTime.getId()).isEqualTo(2);
     }
 
@@ -41,9 +41,9 @@ class ReservationTimeRepositoryTest extends TestSupport {
     void findAllTest() {
         ReservationTime reservationTime1 = new ReservationTime(1L, LocalTime.now());
         ReservationTime reservationTime2 = new ReservationTime(2L, LocalTime.now());
-        timeRepository.save(reservationTime1);
-        timeRepository.save(reservationTime2);
-        List<ReservationTime> reservationTimes = timeRepository.findAll();
+        reservationTimeRepository.save(reservationTime1);
+        reservationTimeRepository.save(reservationTime2);
+        List<ReservationTime> reservationTimes = reservationTimeRepository.findAll();
         assertThat(reservationTimes.size()).isEqualTo(2);
     }
 
@@ -51,9 +51,9 @@ class ReservationTimeRepositoryTest extends TestSupport {
     @DisplayName("id를 받아 삭제한다.")
     void deleteTest() {
         ReservationTime reservationTime = new ReservationTime(1L, LocalTime.now());
-        timeRepository.save(reservationTime);
-        timeRepository.delete(1L);
-        List<ReservationTime> reservationTimes = timeRepository.findAll();
+        reservationTimeRepository.save(reservationTime);
+        reservationTimeRepository.delete(1L);
+        List<ReservationTime> reservationTimes = reservationTimeRepository.findAll();
 
         assertThat(reservationTimes.size()).isEqualTo(0);
     }

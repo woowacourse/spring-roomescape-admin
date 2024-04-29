@@ -12,20 +12,20 @@ import roomescape.TestSupport;
 import roomescape.reservation.domain.Reservation;
 import roomescape.reservation.repository.ReservationRepository;
 import roomescape.time.domain.ReservationTime;
-import roomescape.time.repository.TimeRepository;
+import roomescape.time.repository.ReservationTimeRepository;
 
 public class ReservationRepositoryTest extends TestSupport {
 
     @Autowired
     private ReservationRepository reservationRepository;
     @Autowired
-    private TimeRepository timeRepository;
+    private ReservationTimeRepository reservationTimeRepository;
 
     @Test
     @DisplayName("DB 저장 테스트")
     void saveTest() {
         ReservationTime reservationTime = new ReservationTime(1L, LocalTime.now());
-        Long timeId = timeRepository.save(reservationTime);
+        Long timeId = reservationTimeRepository.save(reservationTime);
         Reservation reservation = new Reservation(1L, "hogi", LocalDate.now(), reservationTime);
         Long saveId = reservationRepository.save(reservation);
 
@@ -36,7 +36,7 @@ public class ReservationRepositoryTest extends TestSupport {
     @DisplayName("DB 조회 테스트")
     void findAllTest() {
         ReservationTime reservationTime = new ReservationTime(1L, LocalTime.now());
-        Long timeId = timeRepository.save(reservationTime);
+        Long timeId = reservationTimeRepository.save(reservationTime);
         Reservation reservation1 = new Reservation(1L, "hogi", LocalDate.now(), reservationTime);
         Reservation reservation2 = new Reservation(2L, "kaki", LocalDate.now(), reservationTime);
         reservationRepository.save(reservation1);
@@ -50,7 +50,7 @@ public class ReservationRepositoryTest extends TestSupport {
     @DisplayName("id 값을 받아 Reservation 반환")
     void findByIdTest() {
         ReservationTime reservationTime = new ReservationTime(1L, LocalTime.now());
-        timeRepository.save(reservationTime);
+        reservationTimeRepository.save(reservationTime);
         Reservation reservation = new Reservation(1L, "hogi", LocalDate.now(), reservationTime);
         Long saveId = reservationRepository.save(reservation);
 
@@ -62,7 +62,7 @@ public class ReservationRepositoryTest extends TestSupport {
     @DisplayName("DB 삭제 테스트")
     void deleteTest() {
         ReservationTime reservationTime = new ReservationTime(1L, LocalTime.now());
-        Long timeId = timeRepository.save(reservationTime);
+        Long timeId = reservationTimeRepository.save(reservationTime);
         Reservation reservation = new Reservation(1L, "hogi", LocalDate.now(), reservationTime);
         Long saveId = reservationRepository.save(reservation);
 

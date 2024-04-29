@@ -9,21 +9,22 @@ import roomescape.reservation.dto.ResponseReservation;
 import roomescape.reservation.repository.ReservationRepository;
 import roomescape.time.domain.ReservationTime;
 import roomescape.time.dto.ResponseTime;
-import roomescape.time.repository.TimeRepository;
+import roomescape.time.repository.ReservationTimeRepository;
 
 @Service
 public class ReservationService {
 
     private final ReservationRepository reservationRepository;
-    private final TimeRepository timeRepository;
+    private final ReservationTimeRepository reservationTimeRepository;
 
-    public ReservationService(ReservationRepository reservationRepository, TimeRepository timeRepository) {
+    public ReservationService(ReservationRepository reservationRepository,
+                              ReservationTimeRepository reservationTimeRepository) {
         this.reservationRepository = reservationRepository;
-        this.timeRepository = timeRepository;
+        this.reservationTimeRepository = reservationTimeRepository;
     }
 
     public Long save(RequestReservation requestReservation) {
-        ReservationTime reservationTime = timeRepository.findById(requestReservation.timeId());
+        ReservationTime reservationTime = reservationTimeRepository.findById(requestReservation.timeId());
 
         Reservation reservation = new Reservation(requestReservation.name(),
                 requestReservation.date(),

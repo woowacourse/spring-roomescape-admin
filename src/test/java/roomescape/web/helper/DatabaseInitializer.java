@@ -1,11 +1,11 @@
-package roomescape.helper;
+package roomescape.web.helper;
 
 import java.time.LocalDate;
 import java.time.LocalTime;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Component;
-import roomescape.domain.Reservation;
-import roomescape.domain.ReservationTime;
+import roomescape.core.domain.Reservation;
+import roomescape.core.domain.ReservationTime;
 
 @Component
 public class DatabaseInitializer {

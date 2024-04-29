@@ -1,4 +1,4 @@
-package roomescape.web;
+package roomescape.web.presentation;
 
 import java.net.URI;
 import java.util.List;
@@ -10,9 +10,9 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
-import roomescape.service.ReservationTimeService;
-import roomescape.web.dto.ReservationTimeRequest;
-import roomescape.web.dto.ReservationTimeResponse;
+import roomescape.core.service.ReservationTimeService;
+import roomescape.web.presentation.dto.ReservationTimeRequest;
+import roomescape.web.presentation.dto.ReservationTimeResponse;
 
 @RequestMapping("/times")
 @RestController

@@ -1,4 +1,4 @@
-package roomescape.helper;
+package roomescape.web.helper;
 
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Component;

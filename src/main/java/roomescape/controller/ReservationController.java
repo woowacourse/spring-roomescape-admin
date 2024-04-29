@@ -3,39 +3,36 @@ package roomescape.controller;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import roomescape.domain.Reservation;
-import roomescape.domain.ReservationDto;
+import roomescape.domain.dto.ReservationRequest;
+import roomescape.domain.dto.ReservationResponse;
+import roomescape.service.ReservationService;
 
-import java.util.ArrayList;
 import java.util.List;
-import java.util.Objects;
-import java.util.concurrent.atomic.AtomicLong;
 
 @RestController
 @RequestMapping("/reservations")
 public class ReservationController {
-    private final List<Reservation> reservations = new ArrayList<>();
-    private final AtomicLong id = new AtomicLong(1);
+    private final ReservationService reservationService;
 
-    @GetMapping()
-    public ResponseEntity<List<Reservation>> read() {
-        return ResponseEntity.ok().body(reservations);
+    public ReservationController(ReservationService reservationService) {
+        this.reservationService = reservationService;
     }
 
-    @PostMapping()
-    public ResponseEntity<Reservation> create(@RequestBody ReservationDto reservationDto) {
-        Reservation newReservation = reservationDto.toEntity(id.getAndIncrement());
-        reservations.add(newReservation);
-        return ResponseEntity.ok().body(newReservation);
+    @GetMapping
+    public ResponseEntity<List<ReservationResponse>> read() {
+        List<ReservationResponse> reservations = reservationService.findEntireReservationList();
+        return ResponseEntity.ok(reservations);
+    }
+
+    @PostMapping
+    public ResponseEntity<ReservationResponse> create(@RequestBody ReservationRequest reservationRequest) {
+        ReservationResponse reservationResponse = reservationService.create(reservationRequest);
+        return ResponseEntity.ok(reservationResponse);
     }
 
     @DeleteMapping("/{id}")
     public ResponseEntity<Void> delete(@PathVariable Long id) {
-        Reservation reservation = reservations.stream()
-                .filter(target -> Objects.equals(target.getId(), id))
-                .findFirst()
-                .orElseThrow(RuntimeException::new);
-
-        reservations.remove(reservation);
-        return ResponseEntity.ok().build();
+        reservationService.delete(id);
+        return ResponseEntity.noContent().build();
     }
 }

@@ -2,33 +2,39 @@ package roomescape.service;
 
 import org.springframework.stereotype.Service;
 import roomescape.domain.TimeSlot;
-import roomescape.domain.TimeSlotRequest;
-import roomescape.repository.TimeRepository;
+import roomescape.domain.dto.TimeSlotRequest;
+import roomescape.domain.dto.TimeSlotResponse;
+import roomescape.repository.TimeDAO;
 
 import java.util.List;
 
 @Service
 public class TimeService {
-    private final TimeRepository timeRepository;
+    private final TimeDAO timeDAO;
 
-    public TimeService(TimeRepository timeRepository) {
-        this.timeRepository = timeRepository;
+    public TimeService(TimeDAO timeDAO) {
+        this.timeDAO = timeDAO;
     }
 
-    public List<TimeSlot> findAll() {
-        return timeRepository.findAll();
+    public List<TimeSlotResponse> findAll() {
+        return timeDAO.findAll()
+                .stream()
+                .map(TimeSlotResponse::from)
+                .toList();
     }
 
-    public TimeSlot findById(Long id) {
-        return timeRepository.findById(id);
+    public TimeSlotResponse findById(Long id) {
+        TimeSlot timeSlot = timeDAO.findById(id);
+        return TimeSlotResponse.from(timeSlot);
     }
 
-    public TimeSlot create(TimeSlotRequest timeSlotRequest) {
-        Long id = timeRepository.create(timeSlotRequest);
-        return timeSlotRequest.toEntity(id);
+    public TimeSlotResponse create(TimeSlotRequest timeSlotRequest) {
+        Long id = timeDAO.create(timeSlotRequest);
+        TimeSlot timeSlot = timeSlotRequest.toEntity(id);
+        return TimeSlotResponse.from(timeSlot);
     }
 
     public void delete(Long id) {
-        timeRepository.delete(id);
+        timeDAO.delete(id);
     }
 }

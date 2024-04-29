@@ -2,35 +2,40 @@ package roomescape.service;
 
 import org.springframework.stereotype.Service;
 import roomescape.domain.Reservation;
-import roomescape.domain.ReservationRequest;
+import roomescape.domain.dto.ReservationRequest;
 import roomescape.domain.TimeSlot;
-import roomescape.repository.ReservationRepository;
-import roomescape.repository.TimeRepository;
+import roomescape.domain.dto.ReservationResponse;
+import roomescape.repository.ReservationDAO;
+import roomescape.repository.TimeDAO;
 
 import java.util.List;
 
 @Service
 public class ReservationService {
-    private final TimeRepository timeRepository;
-    private final ReservationRepository reservationRepository;
+    private final TimeDAO timeDAO;
+    private final ReservationDAO reservationDAO;
 
-    public ReservationService(TimeRepository timeRepository, ReservationRepository reservationRepository) {
-        this.timeRepository = timeRepository;
-        this.reservationRepository = reservationRepository;
+    public ReservationService(TimeDAO timeDAO, ReservationDAO reservationDAO) {
+        this.timeDAO = timeDAO;
+        this.reservationDAO = reservationDAO;
     }
 
-    public List<Reservation> findEntireReservationList() {
-        return reservationRepository.read();
+    public List<ReservationResponse> findEntireReservationList() {
+        return reservationDAO.read()
+                .stream()
+                .map(ReservationResponse::from)
+                .toList();
     }
 
-    public Reservation create(ReservationRequest reservationRequest) {
-        Long reservationId = reservationRepository.create(reservationRequest);
-        TimeSlot timeSlot = timeRepository.findById(reservationRequest.timeId());
+    public ReservationResponse create(ReservationRequest reservationRequest) {
+        Long reservationId = reservationDAO.create(reservationRequest);
+        TimeSlot timeSlot = timeDAO.findById(reservationRequest.timeId());
 
-        return reservationRequest.toEntity(reservationId, timeSlot);
+        Reservation reservation = reservationRequest.toEntity(reservationId, timeSlot);
+        return ReservationResponse.from(reservation);
     }
 
     public void delete(Long id) {
-        reservationRepository.delete(id);
+        reservationDAO.delete(id);
     }
 }

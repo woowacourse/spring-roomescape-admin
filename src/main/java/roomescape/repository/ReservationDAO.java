@@ -7,14 +7,14 @@ import org.springframework.jdbc.core.namedparam.SqlParameterSource;
 import org.springframework.jdbc.core.simple.SimpleJdbcInsert;
 import org.springframework.stereotype.Repository;
 import roomescape.domain.Reservation;
-import roomescape.domain.ReservationRequest;
+import roomescape.domain.dto.ReservationRequest;
 import roomescape.domain.TimeSlot;
 
 import java.time.LocalDate;
 import java.util.List;
 
 @Repository
-public class ReservationRepository {
+public class ReservationDAO {
 
     private final JdbcTemplate jdbcTemplate;
     private final SimpleJdbcInsert jdbcInsert;
@@ -27,7 +27,7 @@ public class ReservationRepository {
             );
 
 
-    public ReservationRepository(JdbcTemplate jdbcTemplate) {
+    public ReservationDAO(JdbcTemplate jdbcTemplate) {
         this.jdbcTemplate = jdbcTemplate;
         this.jdbcInsert = new SimpleJdbcInsert(jdbcTemplate)
                 .withTableName("reservation")

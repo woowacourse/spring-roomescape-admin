@@ -7,12 +7,12 @@ import org.springframework.jdbc.core.namedparam.SqlParameterSource;
 import org.springframework.jdbc.core.simple.SimpleJdbcInsert;
 import org.springframework.stereotype.Repository;
 import roomescape.domain.TimeSlot;
-import roomescape.domain.TimeSlotRequest;
+import roomescape.domain.dto.TimeSlotRequest;
 
 import java.util.List;
 
 @Repository
-public class TimeRepository {
+public class TimeDAO {
     private final JdbcTemplate jdbcTemplate;
     private final SimpleJdbcInsert jdbcInsert;
     private final RowMapper<TimeSlot> rowMapper =
@@ -21,7 +21,7 @@ public class TimeRepository {
                     resultSet.getString("start_at")
             );
 
-    public TimeRepository(JdbcTemplate jdbcTemplate) {
+    public TimeDAO(JdbcTemplate jdbcTemplate) {
         this.jdbcTemplate = jdbcTemplate;
         this.jdbcInsert = new SimpleJdbcInsert(jdbcTemplate)
                 .withTableName("reservation_time")

@@ -3,28 +3,39 @@ package roomescape.entity;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.LocalTime;
+import java.util.Objects;
 
 public class Reservation {
     private final Long id;
     private final Name name;
-    private final ReservationTime time;
+    private final ReservationDate reservationDate;
+    private final ReservationTime reservationTime;
 
-    public Reservation(Long id, String name, LocalDate reservationDate, LocalTime reservationStartTime) {
+    public Reservation(Long id, Name name, ReservationDate reservationDate, ReservationTime reservationTime) {
         this.id = id;
-        this.name = new Name(name);
-        this.time = new ReservationTime(LocalDateTime.of(reservationDate, reservationStartTime));
+        this.name = name;
+        this.reservationDate = reservationDate;
+        this.reservationTime = reservationTime;
     }
 
-    public Reservation(String name, LocalDate reservationDate, LocalTime reservationStartTime) {
-        this(null, name, reservationDate, reservationStartTime);
+    public Reservation(Long id, String name, LocalDate date, ReservationTime reservationTime) {
+        this(id, new Name(name), new ReservationDate(date), reservationTime);
     }
 
-    public boolean isConflictWith(Reservation other) {
-        return time.isConflictWith(other.time);
+    public Reservation(String name, LocalDate date, ReservationTime reservationTime) {
+        this(null, name, date, reservationTime);
+    }
+
+    public Reservation(Long id, Reservation reservation) {
+        this(id, reservation.getName(), reservation.getStartDate(), reservation.reservationTime);
     }
 
     public long getId() {
         return id;
+    }
+
+    public long getGameTimeId() {
+        return reservationTime.getId();
     }
 
     public String getName() {
@@ -32,10 +43,34 @@ public class Reservation {
     }
 
     public LocalDate getStartDate() {
-        return time.getStartDate();
+        return reservationDate.getDate();
     }
 
     public LocalTime getStartTime() {
-        return time.getStartTime();
+        return reservationTime.getStartAt();
+    }
+
+    public LocalDateTime getStartDateTime() {
+        return LocalDateTime.of(getStartDate(), getStartTime());
+    }
+
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) {
+            return true;
+        }
+        if (o == null || getClass() != o.getClass()) {
+            return false;
+        }
+        Reservation that = (Reservation) o;
+        return Objects.equals(id, that.id) && Objects.equals(name, that.name)
+                && Objects.equals(reservationDate, that.reservationDate) && Objects.equals(
+                reservationTime, that.reservationTime);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(id, name, reservationDate, reservationTime);
     }
 }

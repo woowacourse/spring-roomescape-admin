@@ -2,42 +2,36 @@ package roomescape.controller;
 
 import org.springframework.web.bind.annotation.*;
 import roomescape.domain.Reservation;
-import roomescape.dto.ReservationRequest;
-import roomescape.dto.ReservationResponse;
+import roomescape.dto.ReservationCreateRequest;
+import roomescape.service.ReservationService;
+import roomescape.service.ReservationTimeService;
 
-import java.util.ArrayList;
 import java.util.List;
-import java.util.NoSuchElementException;
-import java.util.Objects;
-import java.util.concurrent.atomic.AtomicLong;
 
 @RestController
 @RequestMapping("/reservations")
 public class ReservationsController {
-    private final List<Reservation> reservations = new ArrayList<>();
-    private final AtomicLong id = new AtomicLong(1);
+
+    private final ReservationService reservationService;
+    private final ReservationTimeService reservationTimeService;
+
+    public ReservationsController(ReservationService reservationService, ReservationTimeService reservationTimeService) {
+        this.reservationService = reservationService;
+        this.reservationTimeService = reservationTimeService;
+    }
 
     @GetMapping
-    public List<ReservationResponse> read() {
-        return reservations.stream()
-                .map(ReservationResponse::toDto)
-                .toList();
+    public List<Reservation> readReservations() {
+        return reservationService.readReservations();
     }
 
     @PostMapping
-    public ReservationResponse create(@RequestBody ReservationRequest reservationRequest) {
-        Reservation newReservation = reservationRequest.toReservation(id.getAndIncrement());
-        reservations.add(newReservation);
-        return ReservationResponse.toDto(newReservation);
+    public Reservation create(@RequestBody ReservationCreateRequest reservationCreateRequest) {
+        return reservationService.create(reservationCreateRequest, reservationTimeService.findById(reservationCreateRequest));
     }
 
     @DeleteMapping("/{id}")
-    public void delete(@PathVariable Long id) {
-        Reservation reservation = reservations.stream()
-                .filter(target -> Objects.equals(target.getId(), id))
-                .findFirst()
-                .orElseThrow(NoSuchElementException::new);
-
-        reservations.remove(reservation);
+    public void delete(@PathVariable long id) {
+        reservationService.delete(id);
     }
 }

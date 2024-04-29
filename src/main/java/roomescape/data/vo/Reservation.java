@@ -3,6 +3,8 @@ package roomescape.data.vo;
 import java.time.LocalDate;
 
 public class Reservation {
+    private static final long UNDEFINED_TABLE_ID = 0L;
+
     private final long id;
     private final String name;
     private final LocalDate date;
@@ -37,7 +39,7 @@ public class Reservation {
     }
 
     public static class Builder {
-        private long id;
+        private long id = UNDEFINED_TABLE_ID;
         private String name;
         private LocalDate date;
         private ReservationTime time;

@@ -1,5 +1,7 @@
 package roomescape.repository;
 
+import java.util.List;
+import javax.sql.DataSource;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;
 import org.springframework.jdbc.core.namedparam.MapSqlParameterSource;
@@ -8,20 +10,14 @@ import org.springframework.jdbc.core.simple.SimpleJdbcInsert;
 import org.springframework.stereotype.Repository;
 import roomescape.domain.time.Time;
 
-import javax.sql.DataSource;
-import java.util.List;
-
 @Repository
 public class TimeRepository {
 
-    private static final RowMapper<Time> ROW_MAPPER = (resultSet, rowNum) -> {
-        Time time = new Time(
-                resultSet.getLong("id"),
-                resultSet.getTime("start_at").toLocalTime()
-        );
-        return time;
-    };
-
+    private static final RowMapper<Time> ROW_MAPPER = (resultSet, rowNum) -> new Time(
+            resultSet.getLong("id"),
+            resultSet.getTime("start_at").toLocalTime()
+    );
+    
     private final JdbcTemplate jdbcTemplate;
     private final SimpleJdbcInsert jdbcInsert;
 

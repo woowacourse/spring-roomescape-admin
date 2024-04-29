@@ -16,7 +16,7 @@ public class ReservationService {
         this.reservationDao = reservationDao;
     }
 
-    public List<Reservation> read() {
+    public List<Reservation> readReservations() {
         return reservationDao.findAll();
     }
 

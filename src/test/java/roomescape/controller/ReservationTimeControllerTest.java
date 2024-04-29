@@ -17,7 +17,7 @@ public class ReservationTimeControllerTest {
     private final Map<String, String> time = Map.of("startAt", "10:00");
 
     @Test
-    void create_Time_Test() {
+    void create_ReservationTime_Test() {
         RestAssured.given().log().all()
                 .contentType(ContentType.JSON)
                 .body(time)
@@ -27,7 +27,7 @@ public class ReservationTimeControllerTest {
     }
 
     @Test
-    void read_Time_Test() {
+    void read_ReservationTimes_Test() {
         RestAssured.given().log().all()
                 .contentType(ContentType.JSON)
                 .body(time)

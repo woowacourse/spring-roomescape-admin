@@ -21,8 +21,8 @@ public class ReservationsController {
     }
 
     @GetMapping
-    public List<Reservation> read() {
-        return reservationService.read();
+    public List<Reservation> readReservations() {
+        return reservationService.readReservations();
     }
 
     @PostMapping

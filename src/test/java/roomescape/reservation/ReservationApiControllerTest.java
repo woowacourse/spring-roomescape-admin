@@ -8,27 +8,13 @@ import io.restassured.http.ContentType;
 import java.util.Collection;
 import java.util.List;
 import java.util.Map;
-import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.DynamicTest;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.TestFactory;
-import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.boot.test.context.SpringBootTest.WebEnvironment;
-import org.springframework.boot.test.web.server.LocalServerPort;
-import org.springframework.test.annotation.DirtiesContext;
+import roomescape.TestSupport;
 
-@SpringBootTest(webEnvironment = WebEnvironment.RANDOM_PORT)
-@DirtiesContext(classMode = DirtiesContext.ClassMode.BEFORE_EACH_TEST_METHOD)
-class ReservationApiControllerTest {
-
-    @LocalServerPort
-    private int port;
-
-    @BeforeEach
-    void beforeEach() {
-        RestAssured.port = port;
-    }
+class ReservationApiControllerTest extends TestSupport {
 
     @Test
     @DisplayName("예약 목록을 조회한다.")
@@ -44,12 +30,25 @@ class ReservationApiControllerTest {
     @DisplayName("예약을 추가하고 삭제합니다.")
     Collection<DynamicTest> createAndDeleteReservation() {
 
-        Map<String, String> params = Map.of(
+        Map<String, Object> timeParams = Map.of(
+                "startAt", "10:00"
+        );
+
+        Map<String, Object> params = Map.of(
                 "name", "브라운",
                 "date", "2023-08-05",
-                "time", "15:40");
+                "timeId", 1L);
 
         return List.of(
+                DynamicTest.dynamicTest("시간을 추가한다", () -> {
+                    RestAssured.given().log().all()
+                            .contentType(ContentType.JSON)
+                            .body(timeParams)
+                            .when().post("/times")
+                            .then().log().all()
+                            .statusCode(200);
+                }),
+
                 DynamicTest.dynamicTest("예약을 추가한다.", () -> {
                     RestAssured.given().log().all()
                             .contentType(ContentType.JSON)

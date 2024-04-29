@@ -1,5 +1,6 @@
 package roomescape.core.service;
 
+import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.stereotype.Service;
 import roomescape.core.domain.ReservationTime;
 import roomescape.core.repository.ReservationTimeRepository;
@@ -33,6 +34,10 @@ public class ReservationTimeService {
     }
 
     public void deleteById(long id) {
-        reservationTimeRepository.deleteById(id);
+        try {
+            reservationTimeRepository.deleteById(id);
+        } catch (DataIntegrityViolationException e) {
+            throw new IllegalArgumentException("예약된 시간은 삭제할 수 없습니다. 입력한 timeId - '" + id + "'");
+        }
     }
 }

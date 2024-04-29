@@ -1,10 +1,12 @@
 package roomescape.service;
 
 import java.util.List;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import roomescape.dto.ReservationRequest;
 import roomescape.dto.ReservationResponse;
 import roomescape.model.Reservation;
+import roomescape.repository.ReservationJdbcRepository;
 import roomescape.repository.ReservationRepository;
 
 @Service
@@ -12,6 +14,7 @@ public class ReservationService {
     public static final int ONE_ROW = 1;
     private final ReservationRepository reservationRepository;
 
+    @Autowired
     public ReservationService(ReservationRepository reservationRepository) {
         this.reservationRepository = reservationRepository;
     }

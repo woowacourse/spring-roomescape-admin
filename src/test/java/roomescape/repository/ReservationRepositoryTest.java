@@ -36,9 +36,9 @@ class ReservationRepositoryTest {
                 .build();
 
         reservationRepository.add(expected);
-         final var sut = reservationRepository.getAll().get(0);
+        final var sut = reservationRepository.getAll().get(0);
 
-         Assertions.assertThat(expected).isEqualTo(sut);
+        Assertions.assertThat(expected).isEqualTo(sut);
     }
 
     @Test

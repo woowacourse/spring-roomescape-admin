@@ -82,7 +82,6 @@ class ReservationTimeTest {
                 .then().log().all()
                 .statusCode(201);
 
-
         RestAssured.given().log().all()
                 .when().get("/reservations")
                 .then().log().all()

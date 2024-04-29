@@ -17,10 +17,10 @@ class ReservationServiceTest {
     @DisplayName("모든 예약 정보를 가져온다.")
     void getAllReservationQuery_ShouldBringAllData_WhenDBHasReservationInfo() {
         final var reservationList = reservationService.getAllReservationQuery();
-        
+
         Assertions.assertThat(reservationList).isEmpty();
     }
-    
+
     @Test
     @DisplayName("예약 정보를 저장한다")
     void createReservationCommand_ShouldSaveDate_WhenHasReservationInfo() {

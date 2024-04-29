@@ -19,6 +19,16 @@ public class ReservationDao {
         this.jdbcTemplate = jdbcTemplate;
     }
 
+    private static RowMapper<Reservation> reservationRowMapper() {
+        return (resultSet, rowNum) -> new Reservation.Builder()
+                .id(resultSet.getLong("reservation_id"))
+                .name(resultSet.getString("reservation.name"))
+                .date(resultSet.getDate("reservation.date").toLocalDate())
+                .time(new ReservationTime(resultSet.getLong("time_id"),
+                        resultSet.getTime("reservation_time.start_at").toLocalTime()))
+                .build();
+    }
+
     public long save(final Reservation reservation) {
         final var sql = "INSERT INTO reservation(name, date, time_id) VALUES(?,?,?)";
         final var keyHolder = new GeneratedKeyHolder();
@@ -35,15 +45,15 @@ public class ReservationDao {
     }
 
     public List<Reservation> findAll() {
-        final var sql = "SELECT "
-                + "r.id as reservation_id,"
-                + "r.name,"
-                + "r.date,"
-                + "t.id as time_id,"
-                + "t.start_at as time_value "
-                + "FROM reservation as r "
-                + "inner join reservation_time as t "
-                + "on r.time_id = t.id";
+        final var sql = """
+                SELECT 
+                r.id as reservation_id,
+                r.name,r.date,t.id as time_id,
+                t.start_at as time_value 
+                FROM reservation as r 
+                inner join reservation_time as t 
+                on r.time_id = t.id
+                """;
 
         return jdbcTemplate.query(sql, reservationRowMapper());
     }
@@ -56,31 +66,21 @@ public class ReservationDao {
     public Reservation findOne(final long id) {
         try {
             final var sql = """
-                SELECT 
-                r.id as reservation_id, 
-                r.name, 
-                r.date, 
-                t.id as time_id, 
-                t.start_at as time_value 
-                FROM reservation as r 
-                inner join reservation_time as t 
-                on r.time_id = t.id 
-                where r.id = ?
-                """;
+                    SELECT 
+                    r.id as reservation_id, 
+                    r.name, 
+                    r.date, 
+                    t.id as time_id, 
+                    t.start_at as time_value 
+                    FROM reservation as r 
+                    inner join reservation_time as t 
+                    on r.time_id = t.id 
+                    where r.id = ?
+                    """;
 
             return jdbcTemplate.queryForObject(sql, reservationRowMapper(), id);
-        }catch (final EmptyResultDataAccessException e) {
+        } catch (final EmptyResultDataAccessException e) {
             throw new IllegalArgumentException(String.format("%s는 없는 시간 정보 입니다.", id));
         }
-    }
-
-    private static RowMapper<Reservation> reservationRowMapper() {
-        return (resultSet, rowNum) -> new Reservation.Builder()
-                .id(resultSet.getLong("reservation_id"))
-                .name(resultSet.getString("reservation.name"))
-                .date(resultSet.getDate("reservation.date").toLocalDate())
-                .time(new ReservationTime(resultSet.getLong("time_id"),
-                        resultSet.getTime("reservation_time.start_at").toLocalTime()))
-                .build();
     }
 }

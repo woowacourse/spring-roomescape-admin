@@ -16,12 +16,12 @@ public class DbReservationTimeRepository implements ReservationTimeRepository {
 
     @Override
     public List<ReservationTime> getAll() {
-        return this.reservationTimeDao.findAll();
+        return reservationTimeDao.findAll();
     }
 
     @Override
     public ReservationTime get(final long id) {
-        return this.reservationTimeDao.findOne(id);
+        return reservationTimeDao.findOne(id);
     }
 
     @Override

@@ -7,26 +7,26 @@ import roomescape.repository.ReservationRepository;
 
 public class FakeReservationRepository implements ReservationRepository {
 
-    private List<Reservation> fake = new ArrayList<>();
+    private final List<Reservation> reservations = new ArrayList<>();
 
     @Override
     public Reservation get(final long id) {
-        return fake.get((int) id);
+        return reservations.get((int) id);
     }
 
     @Override
     public long add(Reservation reservation) {
-        fake.add(reservation);
-        return fake.indexOf(reservation) + 1;
+        reservations.add(reservation);
+        return reservations.indexOf(reservation) + 1;
     }
 
     @Override
     public List<Reservation> getAll() {
-        return fake;
+        return reservations;
     }
 
     @Override
     public void remove(long id) {
-        fake.remove(fake.get((int) (id -1)));
+        reservations.remove(reservations.get((int) (id - 1)));
     }
 }

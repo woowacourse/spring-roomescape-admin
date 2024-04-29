@@ -1,13 +1,13 @@
 package roomescape.reservation.repository;
 
 import java.util.List;
-import org.springframework.stereotype.Component;
+import org.springframework.stereotype.Repository;
 import roomescape.Time.dao.TimeDao;
 import roomescape.Time.domain.Time;
 import roomescape.reservation.dao.ReservationDao;
 import roomescape.reservation.domain.Reservation;
 
-@Component
+@Repository
 public class ReservationRepository {
     private final ReservationDao reservationDao;
     private final TimeDao timeDao;

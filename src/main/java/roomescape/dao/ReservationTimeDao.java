@@ -1,5 +1,6 @@
 package roomescape.dao;
 
+import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;
 import org.springframework.jdbc.core.namedparam.BeanPropertySqlParameterSource;
@@ -39,7 +40,11 @@ public class ReservationTimeDao {
 
     public ReservationTime findById(long id) {
         String sql = "select * from reservation_time where id=?";
-        return jdbcTemplate.queryForObject(sql, timeRowMapper, id);
+        try {
+            return jdbcTemplate.queryForObject(sql, timeRowMapper, id);
+        }catch(EmptyResultDataAccessException e) {
+            throw new IllegalArgumentException("해당 id는 reservation_time에 존재하지 않습니다");
+        }
     }
 
     public ReservationTime insert(ReservationTimeCreateRequest reservationTimeCreateRequest) {

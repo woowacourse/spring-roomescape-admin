@@ -35,7 +35,7 @@ public class Reservation {
             throw new IllegalArgumentException("[ERROR] 올바르지 않은 예약 날짜입니다.");
         }
 
-        if (time == null || (time.isTimeBeforeNow() && !date.isBefore(LocalDate.now()))) {
+        if (time == null || (time.isTimeBeforeNow() && !date.isAfter(LocalDate.now()))) {
             throw new IllegalArgumentException("[ERROR] 올바르지 않은 예약 시간입니다.");
         }
     }

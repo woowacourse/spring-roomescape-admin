@@ -10,14 +10,17 @@ import org.springframework.dao.EmptyResultDataAccessException;
 import roomescape.console.dao.InMemoryReservationTimeDao;
 import roomescape.console.db.InMemoryReservationDb;
 import roomescape.console.db.InMemoryReservationTimeDb;
+import roomescape.domain.ReservationTime;
 
 class InMemoryReservationTimeDaoTest {
+    private InMemoryReservationDb inMemoryReservationDb;
     private ReservationTimeDao reservationTimeDao;
 
     @BeforeEach
     void setUp() {
+        inMemoryReservationDb = new InMemoryReservationDb();
         reservationTimeDao = new InMemoryReservationTimeDao(
-                new InMemoryReservationDb(), new InMemoryReservationTimeDb());
+                inMemoryReservationDb, new InMemoryReservationTimeDb());
     }
 
     @DisplayName("모든 예약 시간을 보여준다")
@@ -60,6 +63,17 @@ class InMemoryReservationTimeDaoTest {
         reservationTimeDao.deleteById(1);
         //then
         assertThat(reservationTimeDao.findAll()).isEmpty();
+    }
+
+    @DisplayName("해당 id의 예약 시간을 삭제하는 경우, 그 id를 참조하는 예약도 삭제한다.")
+    @Test
+    void deleteByIdDeletesReservationAlso() {
+        reservationTimeDao.save("10:00");
+        inMemoryReservationDb.insert("aa", "2024-10-11", new ReservationTime(1, "10:00"));
+
+        reservationTimeDao.deleteById(1);
+
+        assertThat(inMemoryReservationDb.selectAll()).isEmpty();
     }
 
     @DisplayName("삭제 대상이 존재하면 true를 반환한다.")

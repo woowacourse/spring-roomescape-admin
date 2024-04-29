@@ -8,7 +8,7 @@ import org.springframework.jdbc.core.RowMapper;
 import org.springframework.jdbc.support.GeneratedKeyHolder;
 import org.springframework.jdbc.support.KeyHolder;
 import org.springframework.stereotype.Repository;
-import roomescape.model.Reservation;
+import roomescape.model.ReservationDto;
 
 @Repository
 public class ReservationRepository {
@@ -19,35 +19,61 @@ public class ReservationRepository {
         this.jdbcTemplate = jdbcTemplate;
     }
 
-    private final RowMapper<Reservation> reservationRowMapper = (resultSet, rowNum) ->
-            new Reservation(
+    private final RowMapper<ReservationDto> reservationRowMapper = (resultSet, rowNum) ->
+            new ReservationDto(
                     resultSet.getLong("id"),
                     resultSet.getString("name"),
                     resultSet.getString("date"),
-                    resultSet.getLong("time_id")
+                    resultSet.getLong("time_id"),
+                    resultSet.getString("start_at")
             );
 
-    public List<Reservation> findAllReservationInfos() {
-        String sqlToFind = "SELECT id, name, date, time_id FROM reservation";
+    public List<ReservationDto> findAllReservations() {
+        String sqlToFind = "SELECT"
+                + " r.id as reservation_id,"
+                + " r.name,"
+                + " r.date,"
+                + " t.id AS time_id,"
+                + " t.start_at AS time_value"
+                + " FROM reservation AS r"
+                + " INNER JOIN reservation_time AS t"
+                + " ON r.time_id = t.id";
 
         return jdbcTemplate.query(
                 sqlToFind,
                 reservationRowMapper);
     }
 
-    public Reservation createReservation(Reservation reservation) {
+    public ReservationDto findReservationById(final Long id) {
+        String sqlToFind = "SELECT"
+                + " r.id AS reservation_id,"
+                + " r.name,"
+                + " r.date,"
+                + " t.id AS time_id,"
+                + " t.start_at AS time_value"
+                + " FROM reservation AS r"
+                + " INNER JOIN reservation_time AS t"
+                + " ON r.time_id = t.id"
+                + " WHERE r.id = ?";
+
+        return jdbcTemplate.queryForObject(
+                sqlToFind,
+                reservationRowMapper, id);
+    }
+
+    public ReservationDto createReservation(ReservationDto reservationDto) {
         String sqlToInsert = "INSERT INTO reservation (name, date, time_id) VALUES (?, ?, ?)";
         KeyHolder keyHolder = new GeneratedKeyHolder();
         jdbcTemplate.update(connection -> {
             PreparedStatement ps = connection.prepareStatement(
                     sqlToInsert,
                     new String[]{"id"});
-            ps.setString(1, reservation.name());
-            ps.setString(2, reservation.date());
-            ps.setLong(3, reservation.timeId());
+            ps.setString(1, reservationDto.name());
+            ps.setString(2, reservationDto.date());
+            ps.setLong(3, reservationDto.timeId());
             return ps;
         }, keyHolder);
-        return reservation.toIdAssigned(Objects.requireNonNull(keyHolder.getKey())
+        return findReservationById(Objects.requireNonNull(keyHolder.getKey())
                 .longValue());
     }
 

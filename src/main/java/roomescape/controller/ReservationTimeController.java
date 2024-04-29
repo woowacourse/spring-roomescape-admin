@@ -1,6 +1,5 @@
 package roomescape.controller;
 
-import java.net.URI;
 import java.util.List;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -10,7 +9,9 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
-import roomescape.model.ReservationTime;
+import roomescape.model.ReservationTimeDto;
+import roomescape.model.ReservationTimeRequest;
+import roomescape.model.ReservationTimeResponse;
 import roomescape.service.ReservationTimeService;
 
 @RestController
@@ -24,20 +25,33 @@ public class ReservationTimeController {
     }
 
     @GetMapping
-    public ResponseEntity<List<ReservationTime>> listReservationTimes() {
-        return ResponseEntity.ok(reservationTimeService.listReservationTimes());
+    public ResponseEntity<List<ReservationTimeResponse>> listReservationTimes() {
+        return ResponseEntity.ok(reservationTimeService.findAll()
+                .stream()
+                .map(this::toResponse)
+                .toList());
     }
 
     @PostMapping
-    public ResponseEntity<ReservationTime> createReservationTime(@RequestBody ReservationTime reservationTime) {
-        ReservationTime newReservationTime = reservationTimeService.createReservationTime(reservationTime);
-        return ResponseEntity.created(URI.create("/times/" + newReservationTime.id())).build();
+    public ResponseEntity<ReservationTimeResponse> createReservationTime(
+            @RequestBody ReservationTimeRequest reservationTimeRequest) {
+        ReservationTimeDto newReservationTimeDto = reservationTimeService.save(this.toDto(reservationTimeRequest));
+        return ResponseEntity.ok(toResponse(newReservationTimeDto));
     }
 
     @DeleteMapping("/{id}")
     public ResponseEntity<Void> deleteReservationTime(@PathVariable Long id) {
-        reservationTimeService.deleteReservationTime(id);
-        return ResponseEntity.noContent().build();
+        reservationTimeService.delete(id);
+        return ResponseEntity.ok()
+                .build();
+    }
+
+    private ReservationTimeResponse toResponse(final ReservationTimeDto reservationTimeDto) {
+        return new ReservationTimeResponse(reservationTimeDto.id(), reservationTimeDto.startAt());
+    }
+
+    private ReservationTimeDto toDto(final ReservationTimeRequest reservationTimeRequest) {
+        return new ReservationTimeDto(null, reservationTimeRequest.startAt());
     }
 
 }

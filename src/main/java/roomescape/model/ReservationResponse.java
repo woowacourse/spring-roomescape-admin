@@ -1,8 +1,8 @@
 package roomescape.model;
 
-public record ReservationInfo(
+public record ReservationResponse(
         Long id,
         String name,
         String date,
-        ReservationTime time) {
+        ReservationTimeResponse time) {
 }

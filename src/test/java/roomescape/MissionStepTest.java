@@ -19,9 +19,9 @@ import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;
 import org.springframework.test.annotation.DirtiesContext;
 import roomescape.controller.ReservationController;
-import roomescape.model.ReservationInfo;
-import roomescape.model.Reservation;
-import roomescape.model.ReservationTime;
+import roomescape.model.ReservationResponse;
+import roomescape.model.ReservationRequest;
+import roomescape.model.ReservationTimeRequest;
 
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 @DirtiesContext(classMode = DirtiesContext.ClassMode.BEFORE_EACH_TEST_METHOD)
@@ -36,23 +36,22 @@ class MissionStepTest {
     @Autowired
     private ReservationController reservationController;
 
-    private final RowMapper<Reservation> reservationDtoMapper = (resultSet, rowNum) ->
-            new Reservation(
-                    resultSet.getLong("id"),
+    private final RowMapper<ReservationRequest> reservationDtoMapper = (resultSet, rowNum) ->
+            new ReservationRequest(
                     resultSet.getString("name"),
                     resultSet.getString("date"),
-                    resultSet.getLong("time_id")
+                    resultSet.getLong("timeId")
             );
 
     @BeforeEach
     void setUp() {
         RestAssured.port = this.port;
 
-        ReservationTime reservationTime = new ReservationTime(1L, "99:99");
+        ReservationTimeRequest reservationTimeRequest = new ReservationTimeRequest("99:99");
 
         RestAssured.given().log().all()
                 .contentType(ContentType.JSON)
-                .body(reservationTime)
+                .body(reservationTimeRequest)
                 .post("/times");
     }
 
@@ -85,16 +84,16 @@ class MissionStepTest {
     }
 
     @Test
-    @DisplayName("3단계, 8단계 Test- 새로운 예약 정보 등록 요청을 처리하고 성공 시 201 상태 코드를 응답한다.")
+    @DisplayName("3단계, 8단계 Test- 새로운 예약 정보 등록 요청을 처리하고 성공 시 200 상태 코드를 응답한다.")
     void createReservation_ShouldReturnOK_WhenProceedCreateRequestSuccessfully() {
-        Reservation requestReservation = new Reservation(null, "브라운", "2023-08-05", 1L);
+        ReservationRequest requestReservationRequest = new ReservationRequest("브라운", "2023-08-05", 1L);
 
         RestAssured.given().log().all()
                 .contentType(ContentType.JSON)
-                .body(requestReservation)
+                .body(requestReservationRequest)
                 .when().post("/reservations")
                 .then().log().all()
-                .statusCode(201);
+                .statusCode(200);
 
         RestAssured.given().log().all()
                 .when().get("/reservations")
@@ -106,17 +105,17 @@ class MissionStepTest {
     @Test
     @DisplayName("3단계, 8단계 Test- 특정 id를 가진 예약 정보를 삭제 요청을 처리하고 성공 시 204 상태 코드를 응답한다.")
     void deleteReservation_ShouldDeleteReservationAndReturnOK_WhenProceedDeleteRequestSuccessfully() {
-        Reservation requestReservation = new Reservation(null, "브라운", "2023-08-05", 1L);
+        ReservationRequest requestReservationRequest = new ReservationRequest("브라운", "2023-08-05", 1L);
 
         RestAssured.given().log().all()
                 .contentType(ContentType.JSON)
-                .body(requestReservation)
+                .body(requestReservationRequest)
                 .when().post("/reservations");
 
         RestAssured.given().log().all()
                 .when().delete("/reservations/1")
                 .then().log().all()
-                .statusCode(204);
+                .statusCode(200);
 
         RestAssured.given().log().all()
                 .when().get("/reservations")
@@ -143,42 +142,42 @@ class MissionStepTest {
         jdbcTemplate.update("INSERT INTO reservation (name, date, time_id) VALUES (?, ?, ?)", "브라운", "2023-08-05",
                 1L);
 
-        List<ReservationInfo> reservationInfos = RestAssured.given()
+        List<ReservationResponse> reservationResponses = RestAssured.given()
                 .log().all()
                 .when().get("/reservations")
                 .then().log().all()
                 .statusCode(200).extract().jsonPath()
-                .getList(".", ReservationInfo.class);
+                .getList(".", ReservationResponse.class);
 
         Integer count = jdbcTemplate.queryForObject("SELECT count(1) from reservation", Integer.class);
 
-        assertThat(reservationInfos.size()).isEqualTo(count);
+        assertThat(reservationResponses.size()).isEqualTo(count);
     }
 
     @Test
-    @DisplayName("6단계 - 특정 Id의 reservation의 삭제 요청을 처리하고 성공 시 204 상태 코드를 응답한다.")
+    @DisplayName("6단계 - 특정 Id의 reservation의 삭제 요청을 처리하고 성공 시 200 상태 코드를 응답한다.")
     void deleteReservation_ShouldReturnNOCONTENT_WhenDeleteSuccessfully() {
 
         RestAssured.given().log().all()
                 .when().delete("/reservations/1")
                 .then().log().all()
-                .statusCode(204);
+                .statusCode(200);
 
         Integer countAfterDelete = jdbcTemplate.queryForObject("SELECT count(1) from reservation", Integer.class);
         assertThat(countAfterDelete).isZero();
     }
 
     @Test
-    @DisplayName("7단계 - time 추가 요청을 처리하고 성공 시 201 상태 코드를 응답한다.")
+    @DisplayName("7단계 - time 추가 요청을 처리하고 성공 시 200 상태 코드를 응답한다.")
     void createReservationTime_ShouldReturnCREATED_WhenCreateSuccessfully() {
-        ReservationTime reservationTime = new ReservationTime(null, "10:00");
+        ReservationTimeRequest reservationTimeRequest = new ReservationTimeRequest("10:00");
 
         RestAssured.given().log().all()
                 .contentType(ContentType.JSON)
-                .body(reservationTime)
+                .body(reservationTimeRequest)
                 .when().post("/times")
                 .then().log().all()
-                .statusCode(201);
+                .statusCode(200);
 
         RestAssured.given().log().all()
                 .when().get("/times")
@@ -188,13 +187,13 @@ class MissionStepTest {
     }
 
     @Test
-    @DisplayName("7단계 - time 삭제 요청을 처리하고 성공 시 204 상태 코드를 응답한다.")
+    @DisplayName("7단계 - time 삭제 요청을 처리하고 성공 시 200 상태 코드를 응답한다.")
     void deleteReservationTime_ShouldReturnNOCONTENT_WhenDeleteSuccessfully() {
 
         RestAssured.given().log().all()
                 .when().delete("/times/1")
                 .then().log().all()
-                .statusCode(204);
+                .statusCode(200);
     }
 
     @Test

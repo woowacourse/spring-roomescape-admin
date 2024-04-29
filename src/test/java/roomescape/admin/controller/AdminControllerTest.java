@@ -25,12 +25,22 @@ class AdminControllerTest {
                 .statusCode(200);
     }
 
-    @DisplayName("어드민 예약 정보 조회 페이지 테스트")
+    @DisplayName("어드민 예약 정보 관리 페이지 테스트")
     @Test
     void adminReservationPageReadTest() {
         RestAssured.given().log().all()
                 .port(randomServerPort)
                 .when().get("/admin/reservation")
+                .then().log().all()
+                .statusCode(200);
+    }
+
+    @DisplayName("어드민 예약 시간 관리 페이지 테스트")
+    @Test
+    void adminReservationTimePageReadTest() {
+        RestAssured.given().log().all()
+                .port(randomServerPort)
+                .when().get("/admin/time")
                 .then().log().all()
                 .statusCode(200);
     }

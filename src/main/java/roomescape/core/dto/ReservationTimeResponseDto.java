@@ -1,6 +1,6 @@
-package roomescape.dto;
+package roomescape.core.dto;
 
-import roomescape.domain.ReservationTime;
+import roomescape.core.domain.ReservationTime;
 
 public class ReservationTimeResponseDto {
     private Long id;

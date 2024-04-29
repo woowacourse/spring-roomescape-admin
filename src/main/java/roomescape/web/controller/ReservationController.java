@@ -1,4 +1,4 @@
-package roomescape.controller;
+package roomescape.web.controller;
 
 import java.net.URI;
 import java.util.List;
@@ -10,9 +10,9 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
-import roomescape.dto.ReservationRequestDto;
-import roomescape.dto.ReservationResponseDto;
-import roomescape.service.ReservationService;
+import roomescape.core.dto.ReservationRequestDto;
+import roomescape.core.dto.ReservationResponseDto;
+import roomescape.core.service.ReservationService;
 
 @RestController
 @RequestMapping("/reservations")
@@ -52,7 +52,7 @@ public class ReservationController {
         if (name == null || name.isBlank()) {
             throw new IllegalArgumentException("Name cannot be null or empty");
         }
-        
+
         if (request.getTimeId() == null) {
             throw new IllegalArgumentException("Time ID cannot be null");
         }

@@ -19,7 +19,7 @@ public class ReservationService {
         this.reservationRepository = reservationRepository;
     }
 
-    public List<Reservation> read() {
+    public List<Reservation> findEntireReservationList() {
         return reservationRepository.read();
     }
 

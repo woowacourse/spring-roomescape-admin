@@ -16,7 +16,7 @@ public class ReservationJdbcDao implements ReservationDao {
     public static final String TABLE_KEY = "id";
     public static final String RESERVATION_NAME_ATTRIBUTE = "name";
     public static final String RESERVATION_DATE_ATTRIBUTE = "date";
-    public static final String TIME_TABLE_KEY = "time_id";
+    public static final String TIME_TABLE_KEY = "timeId";
     public static final String TIME_TABLE_START_TIME_ATTRIBUTE = "start_at";
 
     private final JdbcTemplate jdbcTemplate;

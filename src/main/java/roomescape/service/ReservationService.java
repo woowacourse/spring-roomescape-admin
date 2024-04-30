@@ -18,7 +18,7 @@ public class ReservationService {
     }
 
     public List<Reservation> getAllReservationQuery() {
-        return this.reservationRepository.getAll();
+        return reservationRepository.getAll();
     }
 
     public long createReservationCommand(final ReservationRequest request) {

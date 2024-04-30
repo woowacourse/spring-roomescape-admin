@@ -12,7 +12,7 @@ class ReservationTimeControllerAdviceTest {
     @Test
     @DisplayName("의도하지 않은 상태에서 DB 접근 시 400 BAD REQUEST 상태 코드를 반환한다.")
     void invokeIllegalStatement_ShouldReturnBadRequestStateCode_WhenAccessUnintendedCondition() {
-        Map<String, String> params = Map.of("date", "2023-08-25", "name", "fram", "timeId", "1");
+        final var params = Map.of("date", "2023-08-25", "name", "fram", "timeId", "1");
 
         RestAssured.given().log().all()
                 .contentType(ContentType.JSON)

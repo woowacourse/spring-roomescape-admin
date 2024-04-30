@@ -11,7 +11,7 @@ import roomescape.fixture.FakeReservationRepository;
 @SpringBootTest
 class ReservationServiceTest {
 
-    private ReservationService reservationService = new ReservationService(new FakeReservationRepository());
+    private final ReservationService reservationService = new ReservationService(new FakeReservationRepository());
 
     @Test
     @DisplayName("모든 예약 정보를 가져온다.")

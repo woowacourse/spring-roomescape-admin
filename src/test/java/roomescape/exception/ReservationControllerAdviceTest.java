@@ -13,7 +13,7 @@ class ReservationControllerAdviceTest {
     @Test
     @DisplayName("잘못된 리소스를 찾을 경우 404 NOT FOUND 상태 코드를 반환한다. ")
     void invokeIllegalArgument_ShouldReturnNotFoundStateCode_WhenSearchDoesNotExistResources() {
-        Map<String, String> params = Map.of("date", "2023-08-25", "name", "fram", "timeId", "-1");
+        final var params = Map.of("date", "2023-08-25", "name", "fram", "timeId", "-1");
 
         RestAssured.given().log().all()
                 .contentType(ContentType.JSON)

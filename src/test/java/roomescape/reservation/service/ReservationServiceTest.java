@@ -1,4 +1,4 @@
-package roomescape.reservation.service.reservation;
+package roomescape.reservation.service;
 
 import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
@@ -7,19 +7,21 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.jdbc.JdbcTest;
 import org.springframework.jdbc.core.JdbcTemplate;
-import org.springframework.test.annotation.DirtiesContext;
+import org.springframework.test.context.jdbc.Sql;
 import roomescape.reservation.dao.ReservationDao;
-import roomescape.reservation.domain.repository.ReservationRepository;
-import roomescape.reservation.dto.ReservationRequestDto;
-import roomescape.reservation.dto.ReservationResponseDto;
-import roomescape.reservation.service.ReservationService;
+import roomescape.reservation.dao.ReservationTimeDao;
+import roomescape.reservation.domain.ReservationTime;
+import roomescape.reservation.dto.request.ReservationRequestDto;
+import roomescape.reservation.dto.response.ReservationResponseDto;
 
 import javax.sql.DataSource;
+import java.time.LocalDate;
+import java.time.LocalTime;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
 @JdbcTest
-@DirtiesContext(classMode = DirtiesContext.ClassMode.BEFORE_EACH_TEST_METHOD)
+@Sql(scripts = "classpath:db/truncate.sql", executionPhase = Sql.ExecutionPhase.AFTER_TEST_METHOD)
 class ReservationServiceTest {
 
     @Autowired
@@ -32,14 +34,18 @@ class ReservationServiceTest {
 
     @BeforeEach
     void init() {
-        ReservationRepository reservationRepository = new ReservationRepository(new ReservationDao(jdbcTemplate, dataSource));
-        reservationService = new ReservationService(reservationRepository);
+        ReservationDao reservationDao = new ReservationDao(jdbcTemplate);
+        ReservationTimeDao reservationTimeDao = new ReservationTimeDao(jdbcTemplate, dataSource);
+        reservationService = new ReservationService(reservationDao, reservationTimeDao);
+
+        reservationTimeDao.insert(new ReservationTime(LocalTime.now()));
     }
 
     @DisplayName("예약 정보 삽입 테스트")
     @Test
     void insertTest() {
-        ReservationRequestDto request = new ReservationRequestDto("name", "2000-09-07", "10:00");
+
+        ReservationRequestDto request = new ReservationRequestDto("name", LocalDate.now(), 1L);
         ReservationResponseDto response = reservationService.addReservation(request);
         assertThat(response.id()).isEqualTo(1L);
     }
@@ -47,9 +53,9 @@ class ReservationServiceTest {
     @DisplayName("예약 정보 전체 조회 테스트")
     @Test
     void findAllTest() {
-        reservationService.addReservation(new ReservationRequestDto("name1", "2000-09-07", "10:00"));
-        reservationService.addReservation(new ReservationRequestDto("name2", "2000-09-07", "10:00"));
-        reservationService.addReservation(new ReservationRequestDto("name3", "2000-09-07", "10:00"));
+        reservationService.addReservation(new ReservationRequestDto("name1", LocalDate.now(), 1L));
+        reservationService.addReservation(new ReservationRequestDto("name2", LocalDate.now(), 1L));
+        reservationService.addReservation(new ReservationRequestDto("name3", LocalDate.now(), 1L));
 
         int findSize = reservationService.findAllReservation().reservations().size();
         assertThat(findSize).isEqualTo(3);
@@ -58,10 +64,10 @@ class ReservationServiceTest {
     @DisplayName("예약 정보 삭제 테스트")
     @Test
     void deleteTest() {
-        ReservationRequestDto request = new ReservationRequestDto("name", "2000-09-07", "10:00");
+        ReservationRequestDto request = new ReservationRequestDto("name", LocalDate.now(), 1L);
         ReservationResponseDto response = reservationService.addReservation(request);
 
-        reservationService.deleteReservationById(response.id());
+        reservationService.removeReservationById(response.id());
         int findSize = reservationService.findAllReservation().reservations().size();
         assertThat(findSize).isEqualTo(0);
     }
@@ -71,7 +77,7 @@ class ReservationServiceTest {
     void deleteFailTest() {
         Long noneExistId = -1L;
 
-        Assertions.assertThatThrownBy(() -> reservationService.deleteReservationById(noneExistId))
+        Assertions.assertThatThrownBy(() -> reservationService.removeReservationById(noneExistId))
                 .isInstanceOf(IllegalArgumentException.class);
     }
 }

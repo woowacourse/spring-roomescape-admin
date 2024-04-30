@@ -52,4 +52,10 @@ public class H2ReservationTimeRepository implements ReservationTimeRepository {
         String sql = "delete from reservation_time where id = ?";
         jdbcTemplate.update(sql, id);
     }
+
+    public boolean isReferencedId(final Long id) {
+        String sql = "select count(*) from reservation where time_id = ?";
+        Long count = jdbcTemplate.queryForObject(sql, Long.class, id);
+        return count > 0;
+    }
 }

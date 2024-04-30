@@ -43,11 +43,9 @@ public class ReservationTimeService {
     }
 
     private void validateReferencedReservationTime(long id) {
-        List<Reservation> reservations = reservationRepository.findAll();
-        boolean isReservationReferred = reservations.stream()
-                .anyMatch(reservation -> reservation.hasId(id));
+        boolean isReferencedId = reservationTimeRepository.isReferencedId(id);
 
-        if (isReservationReferred) {
+        if (isReferencedId) {
             throw new IllegalArgumentException("예약된 시간은 삭제할 수 없습니다. 입력한 timeId - '" + id + "'");
         }
     }

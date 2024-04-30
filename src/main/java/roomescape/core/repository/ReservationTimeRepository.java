@@ -13,4 +13,6 @@ public interface ReservationTimeRepository {
     void deleteById(long id);
 
     Optional<ReservationTime> findById(Long id);
+
+    boolean isReferencedId(Long id);
 }

@@ -20,4 +20,10 @@ public class ReservationControllerAdvice {
         return ResponseEntity.badRequest()
                 .body(e.getMessage());
     }
+
+    @ExceptionHandler(Exception.class)
+    public ResponseEntity<String> invokeUnDefineException() {
+        return ResponseEntity.badRequest()
+                .build();
+    }
 }

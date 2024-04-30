@@ -23,7 +23,6 @@ public class H2ReservationRepository implements ReservationRepository {
                 .usingGeneratedKeyColumns("id");
     }
 
-    @Override
     public List<Reservation> findAll() {
         String sql = """
                     select 
@@ -46,7 +45,6 @@ public class H2ReservationRepository implements ReservationRepository {
                         rs.getTime("time_value").toLocalTime())));
     }
 
-    @Override
     public Reservation save(Reservation reservation) {
         long reservationId = jdbcInsert.executeAndReturnKey(Map.of(
                         "name", reservation.getName().value(),
@@ -61,7 +59,6 @@ public class H2ReservationRepository implements ReservationRepository {
                 reservation.getTime());
     }
 
-    @Override
     public void deleteById(long id) {
         String sql = "delete from reservation where id = ?";
         jdbcTemplate.update(sql, id);

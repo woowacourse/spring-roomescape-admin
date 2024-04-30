@@ -39,7 +39,6 @@ public class H2ReservationTimeRepository implements ReservationTimeRepository {
                 resultSet.getTime("start_at").toLocalTime()));
     }
 
-    @Override
     public Optional<ReservationTime> findById(Long id) {
         String sql = "select * from reservation_time where id = ?";
         List<ReservationTime> reservationTimes = jdbcTemplate.query(sql, (resultSet, rowNum) -> new ReservationTime(
@@ -49,7 +48,6 @@ public class H2ReservationTimeRepository implements ReservationTimeRepository {
         return reservationTimes.stream().findFirst();
     }
 
-    @Override
     public void deleteById(long id) {
         String sql = "delete from reservation_time where id = ?";
         jdbcTemplate.update(sql, id);

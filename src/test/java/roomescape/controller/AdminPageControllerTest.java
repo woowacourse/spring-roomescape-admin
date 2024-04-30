@@ -1,4 +1,4 @@
-package roomescape;
+package roomescape.controller;
 
 import io.restassured.RestAssured;
 import org.junit.jupiter.api.BeforeEach;
@@ -35,6 +35,15 @@ class AdminPageControllerTest {
     void showReservationPage() {
         RestAssured.given().log().all()
                 .when().get("/admin/reservation")
+                .then().log().all()
+                .statusCode(200);
+    }
+
+    @Test
+    @DisplayName("방탈출 예약 시간 관리 페이지 조회를 확인한다")
+    void showReservationTimePage() {
+        RestAssured.given().log().all()
+                .when().get("/admin/time")
                 .then().log().all()
                 .statusCode(200);
     }

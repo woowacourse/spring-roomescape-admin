@@ -1,10 +1,8 @@
 package roomescape.controller;
 
-import java.util.ArrayList;
+import java.net.URI;
 import java.util.List;
-import java.util.Objects;
-import java.util.concurrent.atomic.AtomicLong;
-import org.springframework.http.HttpStatus;
+import java.util.NoSuchElementException;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -13,51 +11,45 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
-import roomescape.domain.Reservation;
 import roomescape.dto.ReservationCreateRequest;
+import roomescape.dto.ReservationResponse;
+import roomescape.service.ReservationService;
 
 @RestController
-@RequestMapping("reservations")
+@RequestMapping("/reservations")
 public class ReservationController {
 
-    private final List<Reservation> reservations = new ArrayList<>();
-    private final AtomicLong index = new AtomicLong(1);
+    private final ReservationService reservationService;
+
+    public ReservationController(ReservationService reservationService) {
+        this.reservationService = reservationService;
+    }
 
     @GetMapping
-    public ResponseEntity<List<Reservation>> reservations() {
+    public ResponseEntity<List<ReservationResponse>> findAllReservations() {
+        List<ReservationResponse> reservationResponses = reservationService.findAll();
+
         return ResponseEntity.ok()
-                .body(reservations);
+                .body(reservationResponses);
     }
 
     @PostMapping
-    public ResponseEntity<Reservation> createReservation(@RequestBody ReservationCreateRequest reservationCreateRequest) {
-        Reservation reservation = Reservation.toEntity(
-                index.getAndIncrement(),
-                reservationCreateRequest.name(),
-                reservationCreateRequest.date(),
-                reservationCreateRequest.time());
-
-        reservations.add(reservation);
-        return ResponseEntity.ok()
-                .body(reservation);
+    public ResponseEntity<ReservationResponse> createReservation(
+            @RequestBody ReservationCreateRequest reservationCreateRequest) {
+        ReservationResponse reservationResponse = reservationService.create(reservationCreateRequest);
+        return ResponseEntity.created(URI.create("/reservations/" + reservationResponse.id()))
+                .body(reservationResponse);
     }
 
     @DeleteMapping("/{id}")
-    public ResponseEntity<String> deleteReservation(@PathVariable Long id) {
-        Reservation reservation;
+    public ResponseEntity<Void> deleteReservation(@PathVariable Long id) {
         try {
-            reservation = reservations.stream()
-                    .filter(it -> Objects.equals(it.getId(), id))
-                    .findFirst()
-                    .orElseThrow(() ->
-                            new RuntimeException("삭제할 예약이 존재하지 않습니다.")
-                    );
+            reservationService.delete(id);
+        } catch (NoSuchElementException e) {
+            return ResponseEntity.notFound()
+                    .build();
         }
-        catch (RuntimeException e) {
-            return ResponseEntity.status(HttpStatus.NOT_FOUND).body("삭제할 예약이 존재하지 않습니다.");
-        }
-        reservations.remove(reservation);
-        return ResponseEntity.ok()
+        return ResponseEntity.noContent()
                 .build();
     }
 }

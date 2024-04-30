@@ -1,4 +1,6 @@
 package roomescape.dto;
 
-public record ReservationCreateRequest(String name, String date, String time) {
+import java.time.LocalDate;
+
+public record ReservationCreateRequest(String name, LocalDate date, Long timeId) {
 }

@@ -1,17 +1,16 @@
-
 ## 구현 기능 목록
-
-#### 레벨 1
 
 - [x] `localhost:8080/admin` 요청 시 어드민 메인 페이지가 응답한다.
     - 어드민 메인 페이지 - `templates/admin/index.html`
 
-#### 레벨 2
-
 - [x] `localhost:8080/admin/reservation` 요청 시 예약 관리 페이지가 응답한다.
-    - 예약 관리 페이지 - `templates/admin/reservation-legacy.html`
+    - 예약 관리 페이지 - `templates/admin/reservation.html`
 
-- [x] 예약 목록을 읽을 수 있다. (예약 조회)
+- [x] `localhost:8080/admin/time` 요청 시 시간 관리 페이지가 응답한다.
+    - 시간 관리 페이지 - `templates/admin/time.html`
+
+
+- [x] DB에서 예약 목록을 읽어 올 수 있다. (예약 조회)
     - request
       ```
        GET /reservations HTTP/1.1
@@ -36,9 +35,7 @@
         ]
       ```
 
-#### 레벨 3
-- [x] 예약 추가시 id는 자동 증가 된다.
-- [x] data, name, time을 받아서 예약을 추가 할 수 있다.
+- [x] data, name, time을 받아서 DB에 예약을 추가 할 수 있다.
     - request
       ```
         POST /reservations HTTP/1.1
@@ -52,7 +49,7 @@
       ```
     - response
       ```
-        HTTP/1.1 200
+        HTTP/1.1 201
         Content-Type: application/json
         
         {
@@ -63,12 +60,58 @@
         }
       ```
 
-- [x] 삭제할 예약의 id를 받아서 예약을 삭제 할 수 있다.
+- [x] 삭제할 id를 받아서 DB에서 해당 예약을 삭제 할 수 있다.
     - request
       ```
       DELETE /reservations/1 HTTP/1.1
       ```
     - response
       ```
+      HTTP/1.1 204
+      ```
+
+- [x] DB에서 시간 목록을 읽어 올 수 있다. (예약 조회)
+    - request
+      ```
+       GET /times HTTP/1.1
+      ```
+    - response
+      ```
+      HTTP/1.1 200
+      Content-Type: application/json
+      [{
+      "id": 1, 
+      "startAt": "10:00" 
+      }]
+      ```
+
+- [x] 시작 시간을 받아서 DB에 시간을 추가 할 수 있다.
+    - request
+      ```
+      POST /times HTTP/1.1
+      content-type: application/json
+      {
+      "startAt": "10:00"
+      }
+      ```
+    - response
+      ```
+      HTTP/1.1 200
+      Content-Type: application/json
+      { 
+      "id": 1, 
+      "startAt": "10:00" 
+      }
+      ```
+
+- [x] 삭제할 id를 받아서 DB에서 해당 시간을 삭제 할 수 있다.
+    - request
+      ```
+      DELETE /times/1 HTTP/1.1
+      ```
+    - response
+      ```
       HTTP/1.1 200
       ```
+
+- [ ] 약 기능에서 시간을 시간 테이블에 저장된 값만 선택할 수 있다.

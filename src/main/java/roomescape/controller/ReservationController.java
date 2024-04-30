@@ -1,40 +1,40 @@
 package roomescape.controller;
 
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import roomescape.domain.Reservation;
 import roomescape.dto.ReservationCreateRequest;
+import roomescape.service.ReservationService;
 
-import java.util.ArrayList;
 import java.util.List;
-import java.util.concurrent.atomic.AtomicLong;
 
 @RestController
+@RequestMapping("/reservations")
 public class ReservationController {
-    private final List<Reservation> reservations = new ArrayList<>();
-    private final AtomicLong index = new AtomicLong(1);
+    private final ReservationService service;
 
-    @GetMapping("/reservations")
+    public ReservationController(ReservationService service) {
+        this.service = service;
+    }
+
+    @GetMapping
     public ResponseEntity<List<Reservation>> readReservations() {
-        return ResponseEntity.ok(reservations);
+        return ResponseEntity.ok(service.readReservations());
     }
 
-    @ResponseBody
-    @PostMapping("/reservations")
+    @PostMapping
     public ResponseEntity<Reservation> createReservation(@RequestBody ReservationCreateRequest dto) {
-        Reservation reservation = dto.createReservation(index.getAndIncrement());
-        reservations.add(reservation);
-        return ResponseEntity.ok(reservation);
+        Reservation reservation = service.createReservation(dto);
+        return ResponseEntity
+                .status(HttpStatus.CREATED)
+                .header("Location", "/reservations/" + reservation.id())
+                .body(reservation);
     }
 
-    @DeleteMapping("/reservations/{id}")
-    public ResponseEntity<Void> deleteReservation(@PathVariable(name = "id") long id) {
-        Reservation findReservation = reservations.stream()
-                .filter(reservation -> reservation.checkSameId(id))
-                .findAny()
-                .orElseThrow(() -> new IllegalArgumentException("해당 id(%d)의 예약이 존재하지 않습니다.".formatted(id)));
-
-        reservations.remove(findReservation);
-        return ResponseEntity.ok().build();
+    @DeleteMapping("/{id}")
+    public ResponseEntity<Void> deleteReservation(@PathVariable long id) {
+        service.deleteReservation(id);
+        return ResponseEntity.noContent().build();
     }
 }

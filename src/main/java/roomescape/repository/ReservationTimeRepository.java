@@ -14,7 +14,7 @@ import java.util.List;
 @Repository
 public class ReservationTimeRepository {
 
-    private static final RowMapper<ReservationTime> timeRowMapper = (resultSet, rowNum) -> {
+    private static final RowMapper<ReservationTime> TIME_ROW_MAPPER = (resultSet, rowNum) -> {
         ReservationTime reservationTime = new ReservationTime(
                 resultSet.getLong("id"),
                 resultSet.getString("start_at")
@@ -43,7 +43,7 @@ public class ReservationTimeRepository {
     public List<ReservationTime> list() {
         String sql = "SELECT * FROM reservation_time";
 
-        return jdbcTemplate.query(sql, timeRowMapper);
+        return jdbcTemplate.query(sql, TIME_ROW_MAPPER);
     }
 
     public void delete(long id) {
@@ -54,6 +54,6 @@ public class ReservationTimeRepository {
     public ReservationTime findById(long id) {
         String sql = "SELECT * FROM reservation_time WHERE id = ?";
 
-        return jdbcTemplate.queryForObject(sql, timeRowMapper, id);
+        return jdbcTemplate.queryForObject(sql, TIME_ROW_MAPPER, id);
     }
 }

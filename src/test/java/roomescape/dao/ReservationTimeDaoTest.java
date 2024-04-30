@@ -20,7 +20,7 @@ class ReservationTimeDaoTest {
 
     @Autowired
     public ReservationTimeDaoTest(JdbcTemplate jdbcTemplate) {
-        this.reservationTimeDao = new ReservationTimeDao(jdbcTemplate);
+        this.reservationTimeDao = new ReservationTimeDaoImpl(jdbcTemplate);
     }
 
     @Test

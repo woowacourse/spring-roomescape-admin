@@ -19,9 +19,9 @@ public class MainController {
     private final ReservationService reservationService;
     private final ReservationTimeService reservationTimeService;
 
-    public MainController() {
-        this.reservationService = new ReservationService(new ReservationMemoryRepository());
-        this.reservationTimeService = new ReservationTimeService(new ReservationTimeMemoryRepository());
+    public MainController(ReservationService reservationService, ReservationTimeService reservationTimeService) {
+        this.reservationService = reservationService;
+        this.reservationTimeService = reservationTimeService;
     }
 
     public void run() {

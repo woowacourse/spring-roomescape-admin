@@ -43,8 +43,8 @@ class ReservationServiceTest {
         ReservationTime savedReservationTime1 = new ReservationTime(1L, LocalTime.now().plusHours(3));
         ReservationTime savedReservationTime2 = new ReservationTime(2L, LocalTime.now().plusHours(4));
         List<Reservation> savedReservations = List.of(
-                new Reservation(1L, new ClientName("켈리"), LocalDate.now(), savedReservationTime1),
-                new Reservation(2L, new ClientName("켈리"), LocalDate.now(), savedReservationTime2)
+                new Reservation(1L, new ClientName("켈리"), LocalDate.now().plusDays(5), savedReservationTime1),
+                new Reservation(2L, new ClientName("켈리"), LocalDate.now().plusDays(6), savedReservationTime2)
         );
 
         given(reservationRepository.findAll()).willReturn(savedReservations);
@@ -61,8 +61,8 @@ class ReservationServiceTest {
     void saveReservationTest() {
         // Given
         ReservationTime savedReservationTime = new ReservationTime(1L, LocalTime.now().plusHours(3));
-        Reservation savedReservation = new Reservation(1L, new ClientName("켈리"), LocalDate.now(), savedReservationTime);
-        SaveReservationRequest saveReservationRequest = new SaveReservationRequest(LocalDate.now(), "켈리", 1L);
+        Reservation savedReservation = new Reservation(1L, new ClientName("켈리"), LocalDate.now().plusDays(5), savedReservationTime);
+        SaveReservationRequest saveReservationRequest = new SaveReservationRequest(LocalDate.now().plusDays(5), "켈리", 1L);
 
         given(reservationTimeRepository.findById(1L)).willReturn(Optional.of(savedReservationTime));
         given(reservationRepository.save(saveReservationRequest.toReservation(savedReservationTime))).willReturn(savedReservation);
@@ -93,7 +93,7 @@ class ReservationServiceTest {
     void deleteReservationTest() {
         // Given
         ReservationTime savedReservationTime = new ReservationTime(1L, LocalTime.now().plusHours(3));
-        Reservation savedReservation = new Reservation(1L, new ClientName("켈리"), LocalDate.now(), savedReservationTime);
+        Reservation savedReservation = new Reservation(1L, new ClientName("켈리"), LocalDate.now().plusDays(5), savedReservationTime);
 
         given(reservationRepository.findById(1L)).willReturn(Optional.of(savedReservation));
         willDoNothing().given(reservationRepository).deleteById(1L);

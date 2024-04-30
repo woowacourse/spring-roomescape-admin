@@ -4,10 +4,13 @@ import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import roomescape.domain.ClientName;
 import roomescape.domain.Reservation;
+import roomescape.domain.ReservationTime;
 
-import java.time.LocalDateTime;
+import java.time.LocalDate;
+import java.time.LocalTime;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.junit.jupiter.api.Assertions.assertAll;
 
 class ReservationResponseTest {
 
@@ -15,15 +18,24 @@ class ReservationResponseTest {
     @Test
     void convertDtoTest() {
         // Given
+        ReservationTime reservationTime = new ReservationTime(1L, LocalTime.of(2, 22));
         Reservation reservation = new Reservation(
+                1L,
                 new ClientName("켈리"),
-                LocalDateTime.of(2023, 1, 12, 1, 12)
+                LocalDate.now().plusDays(1),
+                reservationTime
         );
 
         // When
         ReservationResponse reservationResponse = ReservationResponse.from(reservation);
 
         // Then
-        assertThat(reservationResponse).isNotNull();
+        assertAll(
+                () -> assertThat(reservationResponse).isNotNull(),
+                () -> assertThat(reservationResponse.id()).isEqualTo(reservation.getId()),
+                () -> assertThat(reservationResponse.name()).isEqualTo(reservation.getClientName().getValue()),
+                () -> assertThat(reservationResponse.date()).isEqualTo(reservation.getDate()),
+                () -> assertThat(reservationResponse.time().startAt()).isEqualTo(reservation.getTime().getStartAt())
+        );
     }
 }

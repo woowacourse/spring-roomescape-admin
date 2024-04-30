@@ -1,6 +1,7 @@
 package roomescape.dao;
 
 import java.sql.PreparedStatement;
+import java.sql.Time;
 import java.util.List;
 import java.util.Objects;
 import org.springframework.dao.DataIntegrityViolationException;
@@ -30,7 +31,7 @@ public class ReservationTimeDao {
         final var keyHolder = new GeneratedKeyHolder();
         jdbcTemplate.update(con -> {
             PreparedStatement pstmt = con.prepareStatement(sql, new String[]{"id"});
-            pstmt.setTime(1, java.sql.Time.valueOf(reservationTime.getStartAt()));
+            pstmt.setTime(1, Time.valueOf(reservationTime.getStartAt()));
             return pstmt;
         }, keyHolder);
         return Objects.requireNonNull(keyHolder.getKey()).longValue();

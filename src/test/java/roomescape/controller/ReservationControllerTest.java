@@ -1,34 +1,50 @@
-package roomescape;
+package roomescape.controller;
+
+import static org.assertj.core.api.Assertions.assertThat;
+import static org.hamcrest.Matchers.is;
 
 import io.restassured.RestAssured;
 import io.restassured.http.ContentType;
+import java.lang.reflect.Field;
+import java.util.Map;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.web.server.LocalServerPort;
+import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.test.annotation.DirtiesContext;
-
-import java.util.Map;
-
-import static org.hamcrest.Matchers.is;
 
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 @DirtiesContext(classMode = DirtiesContext.ClassMode.BEFORE_EACH_TEST_METHOD)
 public class ReservationControllerTest {
 
+    @Autowired
+    private ReservationController reservationController;
+
     @LocalServerPort
     private int port;
 
-    private final Map<String, String> params = Map.of(
+    private final Map<String, String> timeParams = Map.of("startAt", "17:00");
+
+    private final Map<String, String> reservationParams = Map.of(
             "name", "썬",
             "date", "2024-04-18",
-            "time", "17:00"
+            "timeId", "1"
     );
 
     @BeforeEach
     void setUp() {
         RestAssured.port = port;
+
+        RestAssured.given().log().all()
+                .contentType(ContentType.JSON)
+                .body(timeParams)
+                .when().post("/times")
+                .then().log().all()
+                .statusCode(201)
+                .body("id", is(1));
     }
 
     @Test
@@ -36,11 +52,12 @@ public class ReservationControllerTest {
     void firstPost() {
         RestAssured.given().log().all()
                 .contentType(ContentType.JSON)
-                .body(params)
+                .body(reservationParams)
                 .when().post("/reservations")
                 .then().log().all()
-                .statusCode(200)
-                .body("id", is(1));
+                .statusCode(201)
+                .body("id", is(1))
+                .header("Location", "/reservations/1");
     }
 
     @Test
@@ -58,11 +75,12 @@ public class ReservationControllerTest {
     void readReservationsSizeAfterFirstPost() {
         RestAssured.given().log().all()
                 .contentType(ContentType.JSON)
-                .body(params)
+                .body(reservationParams)
                 .when().post("/reservations")
                 .then().log().all()
-                .statusCode(200)
-                .body("id", is(1));
+                .statusCode(201)
+                .body("id", is(1))
+                .header("Location", "/reservations/1");
 
         RestAssured.given().log().all()
                 .when().get("/reservations")
@@ -72,34 +90,41 @@ public class ReservationControllerTest {
     }
 
     @Test
-    @DisplayName("값이 없을 때 예약을 삭제하려 시도하는 경우, 상태 코드는 404이다.")
-    void emptyReservationsDelete() {
-        RestAssured.given().log().all()
-                .when().delete("/reservations/1")
-                .then().log().all()
-                .statusCode(404);
-    }
-
-    @Test
     @DisplayName("하나의 예약만 등록한 경우, 예약 삭제 뒤 예약 목록 조회 결과 개수는 0개이다.")
     void readReservationsSizeAfterPostAndDelete() {
         RestAssured.given().log().all()
                 .contentType(ContentType.JSON)
-                .body(params)
+                .body(reservationParams)
                 .when().post("/reservations")
                 .then().log().all()
-                .statusCode(200)
-                .body("id", is(1));
+                .statusCode(201)
+                .body("id", is(1))
+                .header("Location", "/reservations/1");
 
         RestAssured.given().log().all()
                 .when().delete("/reservations/1")
                 .then().log().all()
-                .statusCode(200);
+                .statusCode(204);
 
         RestAssured.given().log().all()
                 .when().get("/reservations")
                 .then().log().all()
                 .statusCode(200)
                 .body("size()", is(0));
+    }
+
+    @Test
+    @DisplayName("컨트롤러에는 JdbcTemplate를 사용한 DB관련 로직이 존재하지 않는다.")
+    void jdbcTemplateNotInjected() {
+        boolean isJdbcTemplateInjected = false;
+
+        for (Field field : reservationController.getClass().getDeclaredFields()) {
+            if (field.getType().equals(JdbcTemplate.class)) {
+                isJdbcTemplateInjected = true;
+                break;
+            }
+        }
+
+        assertThat(isJdbcTemplateInjected).isFalse();
     }
 }

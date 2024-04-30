@@ -1,4 +1,4 @@
-package roomescape.console.utils;
+package roomescape.console.adapter;
 
 import roomescape.console.controller.ControllerAdapter;
 import roomescape.console.view.ConsoleRequest;

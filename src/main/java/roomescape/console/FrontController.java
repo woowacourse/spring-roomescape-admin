@@ -3,7 +3,7 @@ package roomescape.console;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.stereotype.Component;
 import roomescape.console.controller.ControllerAdapter;
-import roomescape.console.utils.ControllerAdapterMapper;
+import roomescape.console.adapter.ControllerAdapterMapper;
 import roomescape.console.view.ConsoleRequest;
 import roomescape.console.view.ConsoleResponse;
 import roomescape.console.view.InputView;

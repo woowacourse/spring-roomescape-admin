@@ -6,8 +6,8 @@ import org.springframework.context.annotation.Configuration;
 import roomescape.console.controller.ControllerAdapter;
 import roomescape.console.controller.ReservationControllerAdapter;
 import roomescape.console.controller.ReservationTimeControllerAdapter;
-import roomescape.console.utils.ConsoleCommand;
-import roomescape.console.utils.ControllerAdapterMapper;
+import roomescape.console.adapter.ConsoleCommand;
+import roomescape.console.adapter.ControllerAdapterMapper;
 
 import java.util.Map;
 

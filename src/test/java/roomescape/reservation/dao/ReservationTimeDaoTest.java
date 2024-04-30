@@ -69,6 +69,7 @@ class ReservationTimeDaoTest {
         ReservationTime inserted = reservationTimeDao.insert(reservationTime);
 
         //when & then
-        Assertions.assertThatCode(() -> reservationTimeDao.deleteById(inserted.getId()));
+        Assertions.assertThatCode(() -> reservationTimeDao.deleteById(inserted.getId()))
+                .doesNotThrowAnyException();
     }
 }

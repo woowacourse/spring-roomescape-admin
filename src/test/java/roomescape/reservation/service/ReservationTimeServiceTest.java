@@ -71,7 +71,8 @@ class ReservationTimeServiceTest {
         ReservationTimeResponseDto inserted = reservationTimeService.addReservationTime(new ReservationTimeRequestDto(LocalTime.now()));
 
         //when & then
-        Assertions.assertThatCode(() -> reservationTimeService.removeReservationTimeById(inserted.id()));
+        Assertions.assertThatCode(() -> reservationTimeService.removeReservationTimeById(inserted.id()))
+                .doesNotThrowAnyException();
     }
 
     @DisplayName("예약 시간 삭제 실패 테스트")

@@ -7,8 +7,8 @@ import org.springframework.jdbc.core.namedparam.MapSqlParameterSource;
 import org.springframework.jdbc.core.namedparam.SqlParameterSource;
 import org.springframework.jdbc.core.simple.SimpleJdbcInsert;
 import org.springframework.stereotype.Component;
-import roomescape.Time.domain.Time;
 import roomescape.reservation.domain.Reservation;
+import roomescape.time.domain.Time;
 
 @Component
 public class ReservationJdbcDao implements ReservationDao {

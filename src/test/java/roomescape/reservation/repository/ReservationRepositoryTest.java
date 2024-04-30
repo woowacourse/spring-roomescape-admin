@@ -12,10 +12,10 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.Mockito;
 import org.mockito.junit.jupiter.MockitoExtension;
-import roomescape.Time.dao.TimeJdbcDao;
-import roomescape.Time.domain.Time;
 import roomescape.reservation.dao.ReservationJdbcDao;
 import roomescape.reservation.domain.Reservation;
+import roomescape.time.dao.TimeJdbcDao;
+import roomescape.time.domain.Time;
 
 @ExtendWith(MockitoExtension.class)
 class ReservationRepositoryTest {

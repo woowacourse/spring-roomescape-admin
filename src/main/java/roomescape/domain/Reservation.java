@@ -1,31 +1,35 @@
-package roomescape.dto;
+package roomescape.domain;
 
 import java.time.LocalDate;
-import java.time.LocalTime;
+import java.util.Objects;
 
 public class Reservation {
 
     private Long id;
     private String name;
     private LocalDate date;
-    private LocalTime time;
+    private ReservationTime time;
 
     private Reservation() {
     }
 
-    public Reservation(Long id, String name, LocalDate date, LocalTime time) {
+    public Reservation(Long id, String name, LocalDate date, ReservationTime time) {
         this.id = id;
         this.name = name;
         this.date = date;
         this.time = time;
     }
 
-    public Reservation(LocalDate date, String name, LocalTime time) {
+    public Reservation(String name, LocalDate date, ReservationTime time) {
         this(null, name, date, time);
     }
 
     public static Reservation toEntity(long id, Reservation reservation) {
         return new Reservation(id, reservation.getName(), reservation.getDate(), reservation.getTime());
+    }
+
+    public Long getId() {
+        return id;
     }
 
     public String getName() {
@@ -36,7 +40,20 @@ public class Reservation {
         return date;
     }
 
-    public LocalTime getTime() {
+    public ReservationTime getTime() {
         return time;
+    }
+
+    @Override
+    public boolean equals(Object obj) {
+        if (!(obj instanceof Reservation other)) {
+            return false;
+        }
+        return id.equals(other.getId());
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(id);
     }
 }

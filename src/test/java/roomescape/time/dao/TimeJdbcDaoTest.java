@@ -15,8 +15,6 @@ import org.springframework.test.context.junit.jupiter.SpringExtension;
 import roomescape.config.TestConfig;
 import roomescape.time.domain.Time;
 
-
-//@TestConstructor(autowireMode = AutowireMode.ALL)
 @ExtendWith(SpringExtension.class)
 @Import(TestConfig.class)
 @Sql(scripts = {"/schema-test.sql", "/data-test.sql"}, executionPhase = ExecutionPhase.BEFORE_TEST_METHOD)

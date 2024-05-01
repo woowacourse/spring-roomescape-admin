@@ -2,11 +2,11 @@ package roomescape.config;
 
 import javax.sql.DataSource;
 import org.springframework.boot.jdbc.DataSourceBuilder;
+import org.springframework.boot.test.context.TestConfiguration;
 import org.springframework.context.annotation.Bean;
-import org.springframework.context.annotation.Configuration;
 import roomescape.time.dao.TimeJdbcDao;
 
-@Configuration
+@TestConfiguration
 public class TestConfig {
 
     @Bean
@@ -20,7 +20,8 @@ public class TestConfig {
     }
 
     @Bean
-    public TimeJdbcDao timeJdbcDao(DataSource dataSource) {
+    public TimeJdbcDao timeJdbcDaoTest(DataSource dataSource) {
         return new TimeJdbcDao(dataSource);
     }
+
 }

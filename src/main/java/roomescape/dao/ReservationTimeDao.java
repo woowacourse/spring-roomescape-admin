@@ -31,7 +31,7 @@ public class ReservationTimeDao {
 
     public Long save(ReservationTime reservationTime) {
         Map<String, Object> parameters = new HashMap<>();
-        parameters.put("start_at", reservationTime.startAt());
+        parameters.put("start_at", reservationTime.getStartAt());
         Number key = simpleJdbcInsert.executeAndReturnKey(parameters);
         return key.longValue();
     }

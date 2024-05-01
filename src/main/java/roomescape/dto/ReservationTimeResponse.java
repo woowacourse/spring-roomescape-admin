@@ -16,11 +16,11 @@ public class ReservationTimeResponse {
     }
 
     public static ReservationTimeResponse toResponse(Long id, ReservationTime reservationTime) {
-        return new ReservationTimeResponse(id, reservationTime.startAt());
+        return new ReservationTimeResponse(id, reservationTime.getStartAt());
     }
 
     public static ReservationTimeResponse toResponse(ReservationTime reservationTime) {
-        return new ReservationTimeResponse(reservationTime.id(), reservationTime.startAt());
+        return new ReservationTimeResponse(reservationTime.getId(), reservationTime.getStartAt());
     }
 
     public static List<ReservationTimeResponse> toReservationTimesResponse(List<ReservationTime> reservationTimes) {

@@ -61,8 +61,8 @@ public class ReservationDao {
         return jdbcTemplate.query(query, rowMapper);
     }
 
-    public void delete(Long id) {
+    public int delete(Long id) {
         String query = "DELETE FROM reservation WHERE id = ?";
-        jdbcTemplate.update(query, id);
+        return jdbcTemplate.update(query, id);
     }
 }

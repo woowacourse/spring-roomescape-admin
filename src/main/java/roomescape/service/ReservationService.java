@@ -41,6 +41,9 @@ public class ReservationService {
     }
 
     public void delete(Long id) {
-        reservationDao.delete(id);
+        int deleteCount = reservationDao.delete(id);
+        if (deleteCount == 0) {
+            throw new DeleteException();
+        }
     }
 }

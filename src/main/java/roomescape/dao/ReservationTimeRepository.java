@@ -1,49 +1,15 @@
 package roomescape.dao;
 
-import org.springframework.jdbc.core.JdbcTemplate;
-import org.springframework.jdbc.core.namedparam.MapSqlParameterSource;
-import org.springframework.jdbc.core.namedparam.SqlParameterSource;
-import org.springframework.jdbc.core.simple.SimpleJdbcInsert;
-import org.springframework.stereotype.Repository;
 import roomescape.entity.ReservationTime;
-import javax.sql.DataSource;
 import java.util.List;
 
-@Repository
-public class ReservationTimeRepository {
+public interface ReservationTimeRepository {
 
-    private final JdbcTemplate jdbcTemplate;
-    private final SimpleJdbcInsert simpleJdbcInsert;
+    ReservationTime createReservationTime(ReservationTime reservationTime);
 
-    public ReservationTimeRepository(JdbcTemplate jdbcTemplate, DataSource dataSource) {
-        this.jdbcTemplate = jdbcTemplate;
-        this.simpleJdbcInsert = new SimpleJdbcInsert(dataSource)
-                .withTableName("reservation_times")
-                .usingGeneratedKeyColumns("id");
-    }
+    ReservationTime findReservationTime(Long id);
 
-    public ReservationTime createReservationTime(ReservationTime reservationTime) {
-        SqlParameterSource params = new MapSqlParameterSource()
-                .addValue("start_at", reservationTime.getStartAt());
-        Long id = simpleJdbcInsert.executeAndReturnKey(params).longValue();
-        return new ReservationTime(id, reservationTime.getStartAt());
-    }
+    List<ReservationTime> findReservationTimes();
 
-    public ReservationTime findReservationTime(Long id) {
-        String sql = "SELECT id, start_at FROM reservation_times WHERE id = ?";
-        return jdbcTemplate.queryForObject(sql, (rs, rowNum) -> new ReservationTime(
-                rs.getLong("id"),
-                rs.getTime("start_at").toLocalTime()), id);
-    }
-
-    public List<ReservationTime> findReservationTimes() {
-        String sql = "SELECT id, start_at FROM reservation_times";
-        return jdbcTemplate.query(sql, (rs, rowNum) -> new ReservationTime(
-                rs.getLong("id"),
-                rs.getTime("start_at").toLocalTime()));
-    }
-
-    public void removeReservationTime(Long id) {
-        jdbcTemplate.update("DELETE reservation_times WHERE id = ?", id);
-    }
+    void removeReservationTime(Long id);
 }

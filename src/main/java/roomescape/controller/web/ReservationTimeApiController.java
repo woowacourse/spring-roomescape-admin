@@ -1,4 +1,4 @@
-package roomescape.controller;
+package roomescape.controller.web;
 
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.annotation.Validated;

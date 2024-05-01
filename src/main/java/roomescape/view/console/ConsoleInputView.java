@@ -1,9 +1,7 @@
-package roomescape.console;
+package roomescape.view.console;
 
-import org.springframework.stereotype.Component;
 import java.util.Scanner;
 
-@Component
 public class ConsoleInputView {
 
     private final Scanner scanner = new Scanner(System.in);

@@ -1,16 +1,15 @@
-package roomescape;
+package roomescape.data.dto.response;
 
 import java.time.LocalDate;
-import java.time.LocalTime;
+import roomescape.data.vo.ReservationTime;
 
-
-public class Reservation {
+public class ReservationResponse {
     private final long id;
     private final String name;
     private final LocalDate date;
-    private final LocalTime time;
+    private final ReservationTime time;
 
-    private Reservation(long id, String name, LocalDate date, LocalTime time) {
+    private ReservationResponse(final long id, final String name, final LocalDate date, final ReservationTime time) {
         this.id = id;
         this.name = name;
         this.date = date;
@@ -29,7 +28,7 @@ public class Reservation {
         return date;
     }
 
-    public LocalTime getTime() {
+    public ReservationTime getTime() {
         return time;
     }
 
@@ -37,34 +36,31 @@ public class Reservation {
         private long id;
         private String name;
         private LocalDate date;
-        private LocalTime time;
+        private ReservationTime time;
 
-        public Builder id(long id) {
+        public Builder id(final long id) {
             this.id = id;
             return this;
         }
 
-        public Builder name(String name) {
+        public Builder name(final String name) {
             this.name = name;
             return this;
         }
 
-        public Builder date(LocalDate date) {
+        public Builder date(final LocalDate date) {
             this.date = date;
             return this;
         }
 
-        public Builder time(LocalTime time) {
+        public Builder time(final ReservationTime time) {
             this.time = time;
             return this;
         }
 
-        public Reservation build() {
-            return new Reservation(id, name, date, time);
+        public ReservationResponse build() {
+            return new ReservationResponse(id, name, date, time);
         }
     }
 
-    public boolean isSameId(final long id) {
-        return this.id == id;
-    }
 }

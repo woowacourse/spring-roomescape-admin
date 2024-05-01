@@ -11,8 +11,11 @@ Content-Type: application/json
 {
   "date": "2023-08-05",
   "name": "브라운",
-  "time": "15:40"
+  "timeId": 1
 }
 
 ### 예약 삭제 요청
 DELETE localhost:8080/reservations/1
+
+### 예약 정보 요청 By id
+GET localhost:8080/reservations/3

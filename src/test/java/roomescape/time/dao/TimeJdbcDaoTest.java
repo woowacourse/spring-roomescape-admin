@@ -2,7 +2,6 @@ package roomescape.time.dao;
 
 import java.time.LocalTime;
 import java.util.List;
-import javax.sql.DataSource;
 import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -17,16 +16,14 @@ import roomescape.config.TestConfig;
 import roomescape.time.domain.Time;
 
 
+//@TestConstructor(autowireMode = AutowireMode.ALL)
 @ExtendWith(SpringExtension.class)
 @Import(TestConfig.class)
 @Sql(scripts = {"/schema-test.sql", "/data-test.sql"}, executionPhase = ExecutionPhase.BEFORE_TEST_METHOD)
 class TimeJdbcDaoTest {
-    private final TimeJdbcDao timeJdbcDao;
 
     @Autowired
-    public TimeJdbcDaoTest(DataSource dataSource) {
-        this.timeJdbcDao = new TimeJdbcDao(dataSource);
-    }
+    private TimeJdbcDao timeJdbcDao;
 
     @Test
     @DisplayName("시간 데이터들이 잘 저장되는지 확인.")

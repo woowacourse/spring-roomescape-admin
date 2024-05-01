@@ -1,10 +1,10 @@
 package roomescape.reservation.repository;
 
+import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 
 import java.time.LocalDate;
 import java.time.LocalTime;
-import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -40,7 +40,7 @@ class ReservationRepositoryTest {
 
         Reservation savedReservation = reservationRepository.saveReservation(reservation);
 
-        Assertions.assertThat(savedReservation.getId()).isEqualTo(1);
+        assertEquals(savedReservation.getId(), 1);
     }
 
     @Test

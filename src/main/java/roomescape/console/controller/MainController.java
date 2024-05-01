@@ -28,7 +28,7 @@ public class MainController {
         outputView.printReservations(reservationService.readReservations());
         outputView.printReservationTimes(reservationTimeService.readTimes());
         int selectedMenu = inputView.readSelectMenu();
-        if (selectedMenu == 7) {
+        if (selectedMenu == 5) {
             return;
         }
         selectAction(selectedMenu);

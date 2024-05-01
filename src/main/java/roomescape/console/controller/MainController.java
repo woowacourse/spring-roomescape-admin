@@ -1,8 +1,6 @@
 package roomescape.console.controller;
 
 import org.springframework.stereotype.Controller;
-import roomescape.console.repository.ReservationMemoryRepository;
-import roomescape.console.repository.ReservationTimeMemoryRepository;
 import roomescape.console.view.InputView;
 import roomescape.console.view.OutputView;
 import roomescape.core.dto.ReservationRequest;

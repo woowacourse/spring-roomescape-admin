@@ -158,8 +158,11 @@ class MissionStepTest {
                 .statusCode(200)
                 .body("size()", is(1));
 
+        String sql = "SELECT id FROM reservation_time";
+        Long id = jdbcTemplate.queryForObject(sql, Long.class);
+
         RestAssured.given().log().all()
-                .when().delete("/times/1")
+                .when().delete("/times/" + id)
                 .then().log().all()
                 .statusCode(204);
     }

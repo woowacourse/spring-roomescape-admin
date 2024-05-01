@@ -1,12 +1,13 @@
 package roomescape.repository;
 
-import java.sql.PreparedStatement;
 import java.time.LocalTime;
 import java.util.List;
+import javax.sql.DataSource;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;
-import org.springframework.jdbc.support.GeneratedKeyHolder;
-import org.springframework.jdbc.support.KeyHolder;
+import org.springframework.jdbc.core.namedparam.BeanPropertySqlParameterSource;
+import org.springframework.jdbc.core.namedparam.SqlParameterSource;
+import org.springframework.jdbc.core.simple.SimpleJdbcInsert;
 import org.springframework.stereotype.Repository;
 import roomescape.domain.ReservationTime;
 
@@ -19,9 +20,13 @@ public class ReservationTimeJdbcRepository implements ReservationTimeRepository 
     );
 
     private final JdbcTemplate jdbcTemplate;
+    private final SimpleJdbcInsert jdbcInsert;
 
-    public ReservationTimeJdbcRepository(JdbcTemplate jdbcTemplate) {
+    public ReservationTimeJdbcRepository(JdbcTemplate jdbcTemplate, DataSource dataSource) {
         this.jdbcTemplate = jdbcTemplate;
+        this.jdbcInsert = new SimpleJdbcInsert(dataSource)
+                .withTableName("reservation_time")
+                .usingGeneratedKeyColumns("id");
     }
 
     @Override
@@ -38,16 +43,10 @@ public class ReservationTimeJdbcRepository implements ReservationTimeRepository 
 
     @Override
     public ReservationTime save(ReservationTime reservationTime) {
-        String sql = "INSERT INTO reservation_time (start_at) values (?)";
-        KeyHolder keyHolder = new GeneratedKeyHolder();
+        SqlParameterSource params = new BeanPropertySqlParameterSource(reservationTime);
 
-        jdbcTemplate.update(connection -> {
-            PreparedStatement statement = connection.prepareStatement(sql, new String[]{"id"});
-            statement.setString(1, reservationTime.getStartAt().toString());
-            return statement;
-        }, keyHolder);
+        Long id = jdbcInsert.executeAndReturnKey(params).longValue();
 
-        Long id = keyHolder.getKey().longValue();
         return new ReservationTime(id, reservationTime.getStartAt());
     }
 

@@ -7,7 +7,7 @@ import roomescape.view.console.ConsoleOutputView;
 
 public class DeleteReservationCommand implements ConsoleCommand {
 
-    private static final String COMMAND_INPUT = "3";
+    private static final String COMMAND_INPUT = "6";
 
     public DeleteReservationCommand(String input) {
         if (!COMMAND_INPUT.equals(input)) {

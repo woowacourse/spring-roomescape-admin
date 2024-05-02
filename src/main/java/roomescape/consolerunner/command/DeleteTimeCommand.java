@@ -8,7 +8,7 @@ import roomescape.view.console.ConsoleOutputView;
 
 public class DeleteTimeCommand implements ConsoleCommand {
 
-    private static final String COMMAND_INPUT = "6";
+    private static final String COMMAND_INPUT = "3";
 
     public DeleteTimeCommand(String input) {
         if (!COMMAND_INPUT.equals(input)) {

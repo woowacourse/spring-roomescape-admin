@@ -19,8 +19,6 @@ public class RoomEscapeConsoleApplication {
         ReservationTimeRepository reservationTimeRepository = new ReservationTimeConsoleRepository();
         ReservationTimeService reservationTimeService = new ReservationTimeService(reservationTimeRepository);
         ReservationService reservationService = new ReservationService(reservationRepository);
-
-
         RoomEscapeConsoleRunner consoleRunner = new RoomEscapeConsoleRunner(
                 new ReservationConsoleController(reservationService, reservationTimeService),
                 new ReservationTimeConsoleController(reservationTimeService),

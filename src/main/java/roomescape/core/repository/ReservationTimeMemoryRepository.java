@@ -28,6 +28,11 @@ public class ReservationTimeMemoryRepository implements ReservationTimeRepositor
         return reservationTimes.values().stream().toList();
     }
 
+    public ReservationTime findById(Long id) {
+        ReservationTime reservationTime = reservationTimes.get(id);
+        return new ReservationTime(id, reservationTime.getStartAt());
+    }
+
     @Override
     public int deleteTime(Long id) {
         if (reservationTimes.remove(id) == null) {

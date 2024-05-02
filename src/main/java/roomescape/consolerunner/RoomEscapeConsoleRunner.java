@@ -38,13 +38,19 @@ public class RoomEscapeConsoleRunner {
         while (true) {
             consoleOutputView.printMessage(MEMU);
             String commandInput = consoleInputView.getInput();
-            ConsoleCommand commandFromInput = CommandHolder.getCommandFromInput(commandInput);
-            commandFromInput.conduct(
+            conductCommand(CommandHolder.getCommandFromInput(commandInput));
+        }
+    }
+
+    private void conductCommand(ConsoleCommand consoleCommand) {
+        try {
+            consoleCommand.conduct(
                     reservationConsoleController,
                     reservationTimeConsoleController,
                     consoleInputView,
-                    consoleOutputView
-            );
+                    consoleOutputView);
+        } catch (RuntimeException e) {
+            consoleOutputView.printErrorMessage("오류가 발생했습니다: " + e.getMessage());
         }
     }
 }

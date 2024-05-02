@@ -10,7 +10,6 @@ import roomescape.core.dto.ReservationTimeResponse;
 import roomescape.core.service.ReservationService;
 import roomescape.core.service.ReservationTimeService;
 
-@Controller
 public class MainController {
     private final InputView inputView = new InputView();
     private final OutputView outputView = new OutputView();

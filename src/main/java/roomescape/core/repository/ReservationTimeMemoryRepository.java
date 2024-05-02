@@ -8,7 +8,6 @@ import org.springframework.stereotype.Repository;
 import roomescape.core.model.ReservationTime;
 import roomescape.core.repository.ReservationTimeRepository;
 
-@Repository
 public class ReservationTimeMemoryRepository implements ReservationTimeRepository {
     private static final int ZERO_RESERVATION = 0;
     private static final int ONE_RESERVATION = 1;

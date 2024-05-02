@@ -1,15 +1,27 @@
 package roomescape.config;
 
-import java.util.concurrent.CopyOnWriteArrayList;
-import java.util.concurrent.atomic.AtomicLong;
+import javax.sql.DataSource;
+import org.springframework.boot.jdbc.DataSourceBuilder;
+import org.springframework.boot.test.context.TestConfiguration;
 import org.springframework.context.annotation.Bean;
-import org.springframework.context.annotation.Configuration;
-import roomescape.storage.ReservationStorage;
+import roomescape.time.dao.TimeJdbcDao;
 
-@Configuration
+@TestConfiguration
 public class TestConfig {
+
     @Bean
-    ReservationStorage reservationStorage() {
-        return new ReservationStorage(new CopyOnWriteArrayList<>(), new AtomicLong(0));
+    public DataSource dataSource() {
+        DataSourceBuilder dataSourceBuilder = DataSourceBuilder.create();
+        dataSourceBuilder.driverClassName("org.h2.Driver");
+        dataSourceBuilder.url("jdbc:h2:mem:test");
+        dataSourceBuilder.username("SA");
+        dataSourceBuilder.password("");
+        return dataSourceBuilder.build();
     }
+
+    @Bean
+    public TimeJdbcDao timeJdbcDaoTest(DataSource dataSource) {
+        return new TimeJdbcDao(dataSource);
+    }
+
 }

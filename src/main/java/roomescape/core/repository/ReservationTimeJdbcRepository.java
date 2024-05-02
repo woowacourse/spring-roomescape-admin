@@ -1,4 +1,4 @@
-package roomescape.web.repository;
+package roomescape.core.repository;
 
 import java.util.HashMap;
 import java.util.List;

@@ -23,7 +23,6 @@ public class RoomescapeApplication {
     @Bean
     public ApplicationRunner initData() {
         return args -> {
-            System.out.println("init data");
             reservationTimeRepository.insert(new ReservationTime(LocalTime.of(9, 0)));
         };
     }

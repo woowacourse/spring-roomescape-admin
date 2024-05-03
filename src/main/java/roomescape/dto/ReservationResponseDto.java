@@ -1,19 +1,28 @@
 package roomescape.dto;
 
-import roomescape.entity.ReservationEntity;
+import roomescape.entity.Reservation;
 
 public class ReservationResponseDto {
 
     private final Long id;
     private final String name;
     private final String date;
-    private final String time;
+    private final ReservationTimeResponseDto time;
 
-    public ReservationResponseDto(ReservationEntity reservation) {
-        this.id = reservation.getId();
-        this.name = reservation.getName();
-        this.date = reservation.getDate().toString();
-        this.time = reservation.getTime().toString();
+    private ReservationResponseDto(Long id, String name, String date, ReservationTimeResponseDto time) {
+        this.id = id;
+        this.name = name;
+        this.date = date;
+        this.time = time;
+    }
+
+    public static ReservationResponseDto from(Reservation reservation) {
+        return new ReservationResponseDto(
+                reservation.getId(),
+                reservation.getName(),
+                reservation.getDate().toString(),
+                ReservationTimeResponseDto.from(reservation.getReservationTime())
+        );
     }
 
     public Long getId() {
@@ -28,7 +37,17 @@ public class ReservationResponseDto {
         return date;
     }
 
-    public String getTime() {
+    public ReservationTimeResponseDto getTime() {
         return time;
+    }
+
+    @Override
+    public String toString() {
+        return "{" +
+                "id=" + id +
+                ", name='" + name + '\'' +
+                ", date='" + date + '\'' +
+                ", time=" + time +
+                '}';
     }
 }

@@ -1,28 +1,34 @@
 package roomescape.dto;
 
+import jakarta.validation.constraints.NotNull;
 import java.time.LocalDate;
-import java.time.LocalTime;
-import java.time.format.DateTimeFormatter;
-import roomescape.entity.ReservationEntity;
 
 public class ReservationRequestDto {
 
-    private static final DateTimeFormatter dateFormatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
-    private static final DateTimeFormatter timeFormatter = DateTimeFormatter.ofPattern("HH:mm");
-
+    @NotNull
     private final String name;
-    private final String date;
-    private final String time;
 
-    public ReservationRequestDto(String name, String date, String time) {
+    @NotNull
+    private final LocalDate date;
+
+    @NotNull
+    private final Long timeId;
+
+    public ReservationRequestDto(String name, LocalDate date, Long timeId) {
         this.name = name;
         this.date = date;
-        this.time = time;
+        this.timeId = timeId;
     }
 
-    public ReservationEntity toEntity() {
-        LocalDate localDate = LocalDate.parse(date, dateFormatter);
-        LocalTime localTime = LocalTime.parse(time, timeFormatter);
-        return new ReservationEntity(name, localDate, localTime);
+    public String getName() {
+        return name;
+    }
+
+    public LocalDate getDate() {
+        return date;
+    }
+
+    public Long getTimeId() {
+        return timeId;
     }
 }

@@ -1,4 +1,4 @@
-package roomescape.model;
+package roomescape.core.model;
 
 import java.time.LocalTime;
 
@@ -21,6 +21,10 @@ public class ReservationTime {
     public ReservationTime(LocalTime startAt) {
         this.id = NULL_ID;
         this.startAt = startAt;
+    }
+
+    public ReservationTime makeId(Long id) {
+        return new ReservationTime(id, this.startAt);
     }
 
     public Long getId() {

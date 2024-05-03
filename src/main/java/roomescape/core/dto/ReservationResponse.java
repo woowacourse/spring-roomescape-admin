@@ -1,8 +1,8 @@
-package roomescape.dto;
+package roomescape.core.dto;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
 import java.time.LocalDate;
-import roomescape.model.Reservation;
+import roomescape.core.model.Reservation;
 
 public class ReservationResponse {
     private final Long id;

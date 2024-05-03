@@ -1,17 +1,19 @@
-package roomescape.repository;
+package roomescape.core.repository;
 
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import javax.sql.DataSource;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;
 import org.springframework.jdbc.core.simple.SimpleJdbcInsert;
 import org.springframework.stereotype.Repository;
-import roomescape.model.ReservationTime;
+import roomescape.core.model.ReservationTime;
+import roomescape.core.repository.ReservationTimeRepository;
 
 @Repository
-public class ReservationTimeRepository {
+public class ReservationTimeJdbcRepository implements ReservationTimeRepository {
     private static final RowMapper<ReservationTime> actorRowMapper = (resultSet, rowNum) -> {
         return new ReservationTime(
                 resultSet.getLong("id"),
@@ -21,7 +23,8 @@ public class ReservationTimeRepository {
     private final JdbcTemplate jdbcTemplate;
     private final SimpleJdbcInsert jdbcInsert;
 
-    public ReservationTimeRepository(JdbcTemplate jdbcTemplate, DataSource dataSource) {
+    @Autowired
+    public ReservationTimeJdbcRepository(JdbcTemplate jdbcTemplate, DataSource dataSource) {
         this.jdbcTemplate = jdbcTemplate;
         this.jdbcInsert = new SimpleJdbcInsert(dataSource)
                 .withTableName("RESERVATION_TIME")

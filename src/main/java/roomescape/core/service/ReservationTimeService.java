@@ -1,17 +1,19 @@
-package roomescape.service;
+package roomescape.core.service;
 
 import java.util.List;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import roomescape.dto.ReservationTimeRequest;
-import roomescape.dto.ReservationTimeResponse;
-import roomescape.model.ReservationTime;
-import roomescape.repository.ReservationTimeRepository;
+import roomescape.core.dto.ReservationTimeRequest;
+import roomescape.core.dto.ReservationTimeResponse;
+import roomescape.core.model.ReservationTime;
+import roomescape.core.repository.ReservationTimeRepository;
 
 @Service
 public class ReservationTimeService {
     public static final int ONE_ROW = 1;
     private final ReservationTimeRepository reservationTimeRepository;
 
+    @Autowired
     public ReservationTimeService(ReservationTimeRepository reservationTimeRepository) {
         this.reservationTimeRepository = reservationTimeRepository;
     }

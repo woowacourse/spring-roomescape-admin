@@ -42,17 +42,13 @@ public class CreateCommand implements Command {
     }
 
     private void validateArguments(List<String> arguments) {
-        if (arguments.isEmpty()) {
-            throw new IllegalArgumentException(
-                "잘못된 명령어입니다.\n예) create reservation John 2025-01-01 1\n예) create time 23:00");
+        if (arguments.size() == CREATE_RESERVATION_ARGS && arguments.get(0).equals(RESERVATION)) {
+            return;
         }
-
-        if (arguments.get(0).equals(RESERVATION) && arguments.size() != CREATE_RESERVATION_ARGS) {
-            throw new IllegalArgumentException("잘못된 명령어입니다. 예) create reservation John 2025-01-01 1");
+        if (arguments.size() == CREATE_TIME_ARGS && arguments.get(0).equals(TIME)) {
+            return;
         }
-
-        if (arguments.get(0).equals(TIME) && arguments.size() != CREATE_TIME_ARGS) {
-            throw new IllegalArgumentException("잘못된 명령어입니다. 예) 예) create time 23:00");
-        }
+        throw new IllegalArgumentException(
+            "잘못된 명령어입니다.\n예) create reservation John 2025-01-01 1\n예) create time 23:00");
     }
 }

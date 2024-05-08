@@ -7,6 +7,7 @@ import roomescape.consoleview.command.Command;
 import roomescape.consoleview.command.CreateCommand;
 import roomescape.consoleview.command.DeleteCommand;
 import roomescape.consoleview.command.HelpCommand;
+import roomescape.consoleview.command.IllegalCommand;
 import roomescape.consoleview.command.ShowCommand;
 import roomescape.controller.ReservationController;
 import roomescape.controller.ReservationTimeController;
@@ -48,10 +49,6 @@ public class ConsoleApplication {
             "delete", new DeleteCommand()
         );
 
-        try {
-            return commandMap.get(prefix);
-        } catch (NullPointerException exception) {
-            throw new IllegalArgumentException("존재하지 않는 명령어입니다.");
-        }
+        return commandMap.getOrDefault(prefix, new IllegalCommand());
     }
 }

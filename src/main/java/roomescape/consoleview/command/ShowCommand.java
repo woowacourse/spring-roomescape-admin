@@ -11,12 +11,6 @@ public class ShowCommand implements Command {
     private static final String TIME = "time";
     private static final int SHOW_ARGS = 1;
 
-    private final OutputView outputView;
-
-    public ShowCommand() {
-        this.outputView = OutputView.getInstance();
-    }
-
     @Override
     public void execute(
         List<String> arguments,
@@ -26,10 +20,10 @@ public class ShowCommand implements Command {
         validateArguments(arguments);
 
         if (arguments.get(0).equals(RESERVATION)) {
-            outputView.printReservations(reservationController.findAll());
+            OutputView.printReservations(reservationController.findAll());
         }
         if (arguments.get(0).equals(TIME)) {
-            outputView.printTimes(reservationTimeController.findAll());
+            OutputView.printTimes(reservationTimeController.findAll());
         }
     }
 

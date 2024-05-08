@@ -11,12 +11,6 @@ public class DeleteCommand implements Command {
     private static final String TIME = "time";
     private static final int DELETE_ARGS = 2;
 
-    private final OutputView outputView;
-
-    public DeleteCommand() {
-        this.outputView = OutputView.getInstance();
-    }
-
     @Override
     public void execute(
         List<String> arguments,
@@ -28,12 +22,12 @@ public class DeleteCommand implements Command {
         if (arguments.get(0).equals(RESERVATION)) {
             long reservationId = Long.parseLong(arguments.get(1));
             reservationController.delete(reservationId);
-            outputView.printDeleteReservation(reservationId);
+            OutputView.printDeleteReservation(reservationId);
         }
         if (arguments.get(0).equals(TIME)) {
             long timeId = Long.parseLong(arguments.get(1));
             reservationTimeController.delete(timeId);
-            outputView.printDeleteTime(timeId);
+            OutputView.printDeleteTime(timeId);
         }
     }
 

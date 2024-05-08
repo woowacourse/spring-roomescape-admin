@@ -8,17 +8,7 @@ import roomescape.controller.dto.SaveReservationTimeResponse;
 
 public class OutputView {
 
-    private static final OutputView INSTANCE = new OutputView();
-
-    private OutputView() {
-
-    }
-
-    public static OutputView getInstance() {
-        return INSTANCE;
-    }
-
-    public void printHelp() {
+    public static void printHelp() {
         System.out.println("""
             [도움말 명령어]
             help: 모든 명령어 목록을 조회합니다.
@@ -39,7 +29,7 @@ public class OutputView {
             """);
     }
 
-    public void printReservations(List<FindReservationResponse> reservations) {
+    public static void printReservations(List<FindReservationResponse> reservations) {
         StringBuilder sb = new StringBuilder();
         if (reservations.isEmpty()) {
             sb.append("예약이 존재하지 않습니다.");
@@ -55,7 +45,7 @@ public class OutputView {
         System.out.println(sb);
     }
 
-    public void printTimes(List<FindReservationTimeResponse> times) {
+    public static void printTimes(List<FindReservationTimeResponse> times) {
         StringBuilder sb = new StringBuilder();
         if (times.isEmpty()) {
             sb.append("시간 데이터가 존재하지 않습니다.");
@@ -69,11 +59,11 @@ public class OutputView {
         System.out.println(sb);
     }
 
-    public void printError(String message) {
+    public static void printError(String message) {
         System.err.println("[ERROR] " + message);
     }
 
-    public void printSaveReservation(SaveReservationResponse response) {
+    public static void printSaveReservation(SaveReservationResponse response) {
         System.out.print("예약이 저장되었습니다. ");
         System.out.printf(
             "예약번호: %d, 예약자: %s, 날짜: %s, 시간: %s%n",
@@ -84,7 +74,7 @@ public class OutputView {
         );
     }
 
-    public void printSaveTime(SaveReservationTimeResponse response) {
+    public static void printSaveTime(SaveReservationTimeResponse response) {
         System.out.print("시간이 저장되었습니다. ");
         System.out.printf(
             "번호: %d, 시간: %s%n",
@@ -93,11 +83,11 @@ public class OutputView {
         );
     }
 
-    public void printDeleteReservation(long reservationId) {
+    public static void printDeleteReservation(long reservationId) {
         System.out.printf("번호 %d의 예약 데이터가 성공적으로 삭제되었습니다%n", reservationId);
     }
 
-    public void printDeleteTime(long timeId) {
+    public static void printDeleteTime(long timeId) {
         System.out.printf("번호 %d의 시간 데이터가 성공적으로 삭제되었습니다%n", timeId);
     }
 }

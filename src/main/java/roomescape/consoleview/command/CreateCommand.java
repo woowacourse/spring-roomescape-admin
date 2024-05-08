@@ -16,12 +16,6 @@ public class CreateCommand implements Command {
     private static final int CREATE_RESERVATION_ARGS = 4;
     private static final int CREATE_TIME_ARGS = 2;
 
-    private final OutputView outputView;
-
-    public CreateCommand() {
-        this.outputView = OutputView.getInstance();
-    }
-
     @Override
     public void execute(
         List<String> arguments,
@@ -36,14 +30,14 @@ public class CreateCommand implements Command {
             Long timeId = Long.parseLong(arguments.get(3));
             SaveReservationResponse response = reservationController.save(
                 new SaveReservationRequest(date, name, timeId));
-            outputView.printSaveReservation(response);
+            OutputView.printSaveReservation(response);
         }
 
         if (arguments.get(0).equals(TIME)) {
             String startAt = arguments.get(1);
             SaveReservationTimeResponse response = reservationTimeController.save(
                 new SaveReservationTimeRequest(startAt));
-            outputView.printSaveTime(response);
+            OutputView.printSaveTime(response);
         }
     }
 

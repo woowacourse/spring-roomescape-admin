@@ -1,6 +1,7 @@
 package roomescape.service;
 
 import java.time.LocalDate;
+import java.time.format.DateTimeParseException;
 import java.util.List;
 import org.springframework.stereotype.Service;
 import roomescape.domain.Reservation;
@@ -23,7 +24,11 @@ public class ReservationService {
 
     public Reservation save(SaveReservationDto dto) {
         ReservationTime time = reservationTimeRepository.findById(dto.timeId());
-        return reservationRepository.save(new Reservation(null, dto.name(), LocalDate.parse(dto.date()), time));
+        try {
+            return reservationRepository.save(new Reservation(null, dto.name(), LocalDate.parse(dto.date()), time));
+        } catch (DateTimeParseException exception) {
+            throw new IllegalArgumentException("올바르지 않은 날짜 입력입니다.");
+        }
     }
 
     public List<Reservation> findAll() {

@@ -1,4 +1,5 @@
-create table reservations
+drop table if exists reservation;
+create table reservation
 (
     id   BIGINT       NOT NULL AUTO_INCREMENT,
     name VARCHAR(255) NOT NULL,

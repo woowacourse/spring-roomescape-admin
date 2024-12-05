@@ -33,7 +33,7 @@ public class ReservationRepository {
         this.jdbcTemplate = new JdbcTemplate(dataSource);
         this.jdbcInsert = new SimpleJdbcInsert(dataSource)
                 .usingGeneratedKeyColumns("id")
-                .withTableName("reservations");
+                .withTableName("reservation");
     }
 
     public Reservation save(Reservation reservation) {
@@ -43,7 +43,7 @@ public class ReservationRepository {
     }
 
     public Optional<Reservation> findById(long id) {
-        String sql = "select * from reservations where id = ?";
+        String sql = "select * from reservation where id = ?";
         try {
             Reservation reservation = jdbcTemplate.queryForObject(sql, RESERVATION_ROW_MAPPER, id);
             return Optional.of(reservation);
@@ -53,7 +53,7 @@ public class ReservationRepository {
     }
 
     public List<Reservation> findAll() {
-        String sql = "select * from reservations";
+        String sql = "select * from reservation";
         return jdbcTemplate.query(sql, RESERVATION_ROW_MAPPER);
     }
 }

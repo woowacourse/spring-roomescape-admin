@@ -2,6 +2,7 @@ package roomescape.repository;
 
 import java.time.LocalDate;
 import java.time.LocalTime;
+import java.util.List;
 import java.util.Optional;
 import javax.sql.DataSource;
 import org.springframework.dao.EmptyResultDataAccessException;
@@ -49,5 +50,10 @@ public class ReservationRepository {
         } catch (EmptyResultDataAccessException e) {
             return Optional.empty();
         }
+    }
+
+    public List<Reservation> findAll() {
+        String sql = "select * from reservations";
+        return jdbcTemplate.query(sql, RESERVATION_ROW_MAPPER);
     }
 }

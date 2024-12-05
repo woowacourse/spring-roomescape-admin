@@ -1,5 +1,6 @@
 package roomescape.service;
 
+import java.util.List;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -25,5 +26,11 @@ public class ReservationService {
         Reservation found = reservationRepository.findById(id).orElseThrow();
 
         return new ReservationResponse(found);
+    }
+
+    public List<ReservationResponse> findAll() {
+        return reservationRepository.findAll().stream()
+                .map(ReservationResponse::new)
+                .toList();
     }
 }

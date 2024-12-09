@@ -1,8 +1,11 @@
 package roomescape.service;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.assertThatThrownBy;
 
 import java.util.List;
+import java.util.NoSuchElementException;
+import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -59,5 +62,19 @@ class ReservationServiceTest {
 
         // then
         assertThat(result).containsExactly(response1, response2, response3);
+    }
+
+    @Test
+    @DisplayName("예약을 삭제한다.")
+    void remove() {
+        // given
+        ReservationResponse savedResponse = reservationService.create(ReservationFixture.request(1, 1));
+
+        // when
+        reservationService.remove(savedResponse.id());
+
+        // then
+        assertThatThrownBy(() -> reservationService.findOne(savedResponse.id()))
+                .isInstanceOf(NoSuchElementException.class);
     }
 }

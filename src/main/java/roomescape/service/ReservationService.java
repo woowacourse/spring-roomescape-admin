@@ -33,4 +33,9 @@ public class ReservationService {
                 .map(ReservationResponse::new)
                 .toList();
     }
+
+    @Transactional
+    public void remove(Long id) {
+        reservationRepository.delete(id);
+    }
 }

@@ -2,6 +2,7 @@ package roomescape.controller;
 
 import static org.mockito.Mockito.any;
 import static org.mockito.Mockito.when;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.delete;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
@@ -90,5 +91,12 @@ class ReservationControllerTest {
         mockMvc.perform(get("/reservations"))
                 .andExpect(status().isOk())
                 .andExpect(content().json(expectedResponse));
+    }
+
+    @Test
+    @DisplayName("예약을 취소한다.")
+    void cancelReservation() throws Exception {
+        mockMvc.perform(delete("/reservations/1"))
+                .andExpect(status().isOk());
     }
 }

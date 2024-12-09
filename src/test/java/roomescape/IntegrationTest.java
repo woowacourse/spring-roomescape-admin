@@ -67,4 +67,18 @@ public class IntegrationTest {
                 .statusCode(200)
                 .body("size()", is(4));
     }
+
+    @Test
+    @DisplayName("예약을 취소한다.")
+    void cancelReservation() {
+        RestAssured
+                .when().delete("/reservations/1")
+                .then().statusCode(200);
+
+        RestAssured
+                .when().get("/reservations")
+                .then()
+                .statusCode(200)
+                .body("size()", is(2));
+    }
 }

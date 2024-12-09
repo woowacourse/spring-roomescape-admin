@@ -5,6 +5,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 import java.util.List;
 import javax.sql.DataSource;
 import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.jdbc.JdbcTest;
@@ -67,5 +68,18 @@ class ReservationRepositoryTest {
 
         // then
         assertThat(result).containsExactly(saved1, saved2, saved3);
+    }
+
+    @Test
+    @DisplayName("예약을 삭제한다.")
+    void delete() {
+        // given
+        Reservation saved = repository.save(ReservationFixture.entity(1, 1));
+
+        // when
+        repository.delete(saved.getId());
+
+        // then
+        assertThat(repository.findById(saved.getId())).isEmpty();
     }
 }

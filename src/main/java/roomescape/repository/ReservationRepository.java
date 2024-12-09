@@ -42,7 +42,7 @@ public class ReservationRepository {
         return new Reservation(key.longValue(), reservation);
     }
 
-    public Optional<Reservation> findById(long id) {
+    public Optional<Reservation> findById(Long id) {
         String sql = "select * from reservation where id = ?";
         try {
             Reservation reservation = jdbcTemplate.queryForObject(sql, RESERVATION_ROW_MAPPER, id);
@@ -55,5 +55,10 @@ public class ReservationRepository {
     public List<Reservation> findAll() {
         String sql = "select * from reservation";
         return jdbcTemplate.query(sql, RESERVATION_ROW_MAPPER);
+    }
+
+    public void delete(Long id) {
+        String sql = "delete from reservation where id = ?";
+        jdbcTemplate.update(sql, id);
     }
 }

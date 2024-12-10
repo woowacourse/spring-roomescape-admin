@@ -30,7 +30,7 @@ public class IntegrationTest {
     @DisplayName("관리자 예약 페이지를 응답한다.")
     void adminReservationPage() {
         RestAssured.given().log().all()
-                .when().get("/admin/reservation")
+                .when().get("/reservation")
                 .then().log().all()
                 .statusCode(200);
     }

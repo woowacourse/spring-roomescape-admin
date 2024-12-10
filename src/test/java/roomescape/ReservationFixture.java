@@ -3,8 +3,8 @@ package roomescape;
 import java.time.LocalDate;
 import java.time.LocalTime;
 import roomescape.domain.Reservation;
-import roomescape.service.ReservationRequest;
-import roomescape.service.ReservationResponse;
+import roomescape.service.dto.ReservationRequest;
+import roomescape.service.dto.ReservationResponse;
 
 public class ReservationFixture {
 

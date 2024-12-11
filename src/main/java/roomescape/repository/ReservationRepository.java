@@ -1,7 +1,5 @@
 package roomescape.repository;
 
-import java.time.LocalDate;
-import java.time.LocalTime;
 import java.util.List;
 import java.util.Optional;
 import javax.sql.DataSource;
@@ -21,8 +19,8 @@ public class ReservationRepository {
         return new Reservation(
                 rs.getLong("id"),
                 rs.getString("name"),
-                LocalDate.parse(rs.getString("date")),
-                LocalTime.parse(rs.getString("time"))
+                rs.getDate("date").toLocalDate(),
+                rs.getTime("time").toLocalTime()
         );
     };
 

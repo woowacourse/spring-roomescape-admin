@@ -36,6 +36,15 @@ public class IntegrationTest {
     }
 
     @Test
+    @DisplayName("관리자 시간 관리 페이지를 응답한다.")
+    void adminTimePage() {
+        RestAssured.given().log().all()
+                .when().get("/time")
+                .then().log().all()
+                .statusCode(200);
+    }
+
+    @Test
     @DisplayName("모든 예약을 조회한다.")
     void findAllReservations() {
         RestAssured.given().log().all()

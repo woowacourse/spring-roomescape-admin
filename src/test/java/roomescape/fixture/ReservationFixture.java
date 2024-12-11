@@ -1,4 +1,4 @@
-package roomescape;
+package roomescape.fixture;
 
 import java.time.LocalDate;
 import java.time.LocalTime;
@@ -6,7 +6,7 @@ import roomescape.domain.Reservation;
 import roomescape.service.dto.ReservationRequest;
 import roomescape.service.dto.ReservationResponse;
 
-public class ReservationFixture {
+public abstract class ReservationFixture {
 
     public static final String NAME = "test name";
     public static final LocalDate BASE_DATE = LocalDate.now();

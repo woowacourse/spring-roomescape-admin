@@ -18,7 +18,7 @@ import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
 import roomescape.service.ReservationTimeService;
-import roomescape.service.dto.ReservatonTimeResponse;
+import roomescape.service.dto.ReservationTimeResponse;
 
 @WebMvcTest(ReservationTimeController.class)
 class ReservationTimeControllerTest {
@@ -38,7 +38,7 @@ class ReservationTimeControllerTest {
                     "startAt": "10:00"
                 }
                 """;
-        ReservatonTimeResponse expected = new ReservatonTimeResponse(1L, LocalTime.of(10, 00));
+        ReservationTimeResponse expected = new ReservationTimeResponse(1L, LocalTime.of(10, 00));
         when(reservationTimeService.create(any())).thenReturn(expected);
 
         // when & then
@@ -59,9 +59,9 @@ class ReservationTimeControllerTest {
     @DisplayName("모든 예약 조회시 형식에 맞게 응답한다.")
     void findAllTimes() throws Exception {
         // given
-        List<ReservatonTimeResponse> expected = List.of(
-                new ReservatonTimeResponse(1L, LocalTime.of(10, 0)),
-                new ReservatonTimeResponse(2L, LocalTime.of(11, 0))
+        List<ReservationTimeResponse> expected = List.of(
+                new ReservationTimeResponse(1L, LocalTime.of(10, 0)),
+                new ReservationTimeResponse(2L, LocalTime.of(11, 0))
         );
         when(reservationTimeService.findAll()).thenReturn(expected);
 

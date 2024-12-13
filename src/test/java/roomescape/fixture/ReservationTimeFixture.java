@@ -4,7 +4,7 @@ import static roomescape.fixture.ReservationFixture.BASE_TIME;
 
 import roomescape.domain.ReservationTime;
 import roomescape.service.dto.ReservationTimeRequest;
-import roomescape.service.dto.ReservatonTimeResponse;
+import roomescape.service.dto.ReservationTimeResponse;
 
 public abstract class ReservationTimeFixture {
 
@@ -16,7 +16,7 @@ public abstract class ReservationTimeFixture {
         return new ReservationTimeRequest(BASE_TIME.plusHours(plusHours));
     }
 
-    public static ReservatonTimeResponse response(long id, int plusHours) {
-        return new ReservatonTimeResponse(id, BASE_TIME.plusHours(plusHours));
+    public static ReservationTimeResponse response(long id, int plusHours) {
+        return new ReservationTimeResponse(id, BASE_TIME.plusHours(plusHours));
     }
 }

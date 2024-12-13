@@ -11,7 +11,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import roomescape.service.ReservationTimeService;
 import roomescape.service.dto.ReservationTimeRequest;
-import roomescape.service.dto.ReservatonTimeResponse;
+import roomescape.service.dto.ReservationTimeResponse;
 
 @RequiredArgsConstructor
 @RequestMapping("/times")
@@ -21,12 +21,12 @@ public class ReservationTimeController {
     private final ReservationTimeService reservationTimeService;
 
     @PostMapping
-    public ReservatonTimeResponse createTime(@RequestBody ReservationTimeRequest reservationTimeRequest) {
+    public ReservationTimeResponse createTime(@RequestBody ReservationTimeRequest reservationTimeRequest) {
         return reservationTimeService.create(reservationTimeRequest);
     }
 
     @GetMapping
-    public List<ReservatonTimeResponse> findAllTimes() {
+    public List<ReservationTimeResponse> findAllTimes() {
         return reservationTimeService.findAll();
     }
 

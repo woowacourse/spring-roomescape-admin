@@ -7,7 +7,7 @@ import org.springframework.transaction.annotation.Transactional;
 import roomescape.domain.ReservationTime;
 import roomescape.repository.ReservationTimeRepository;
 import roomescape.service.dto.ReservationTimeRequest;
-import roomescape.service.dto.ReservatonTimeResponse;
+import roomescape.service.dto.ReservationTimeResponse;
 
 @RequiredArgsConstructor
 @Transactional(readOnly = true)
@@ -17,22 +17,22 @@ public class ReservationTimeService {
     private final ReservationTimeRepository reservationTimeRepository;
 
     @Transactional
-    public ReservatonTimeResponse create(ReservationTimeRequest reservationTimeRequest) {
+    public ReservationTimeResponse create(ReservationTimeRequest reservationTimeRequest) {
         ReservationTime reservationTime = reservationTimeRequest.toTime();
         ReservationTime saved = reservationTimeRepository.save(reservationTime);
 
-        return new ReservatonTimeResponse(saved);
+        return new ReservationTimeResponse(saved);
     }
 
-    public ReservatonTimeResponse findOne(long id) {
+    public ReservationTimeResponse findOne(long id) {
         ReservationTime found = reservationTimeRepository.findById(id).orElseThrow();
 
-        return new ReservatonTimeResponse(found);
+        return new ReservationTimeResponse(found);
     }
 
-    public List<ReservatonTimeResponse> findAll() {
+    public List<ReservationTimeResponse> findAll() {
         return reservationTimeRepository.findAll().stream()
-                .map(ReservatonTimeResponse::new)
+                .map(ReservationTimeResponse::new)
                 .toList();
     }
 

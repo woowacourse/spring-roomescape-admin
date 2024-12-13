@@ -20,10 +20,13 @@ import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
 import roomescape.service.ReservationService;
 import roomescape.service.dto.ReservationResponse;
+import roomescape.service.dto.ReservationTimeResponse;
 
 @WebMvcTest(ReservationController.class)
 class ReservationControllerTest {
 
+    private static final ReservationTimeResponse RESERVATION_TIME_RESPONSE = new ReservationTimeResponse(1L,
+            LocalTime.of(10, 0));
     @Autowired
     private MockMvc mockMvc;
 
@@ -38,11 +41,11 @@ class ReservationControllerTest {
                 {
                     "date": "2023-08-05",
                     "name": "브라운",
-                    "time": "15:40"
+                    "timeId": 1
                 }
                 """;
         ReservationResponse expected = new ReservationResponse(1L, "브라운", LocalDate.of(2023, 8, 5),
-                LocalTime.of(15, 40));
+                RESERVATION_TIME_RESPONSE);
         when(reservationService.create(any())).thenReturn(expected);
 
         // when & then
@@ -51,7 +54,10 @@ class ReservationControllerTest {
                     "id": 1,
                     "name": "브라운",
                     "date": "2023-08-05",
-                    "time": "15:40"
+                    "time" : {
+                        "id": 1,
+                        "startAt" : "10:00"
+                    }
                 }
                 """;
         mockMvc.perform(post("/reservations")
@@ -66,8 +72,8 @@ class ReservationControllerTest {
     void findAllReservations() throws Exception {
         // given
         List<ReservationResponse> expected = List.of(
-                new ReservationResponse(1L, "브라운", LocalDate.of(2023, 1, 1), LocalTime.of(10, 0)),
-                new ReservationResponse(2L, "브라운", LocalDate.of(2023, 1, 2), LocalTime.of(11, 0))
+                new ReservationResponse(1L, "브라운", LocalDate.of(2023, 1, 1), RESERVATION_TIME_RESPONSE),
+                new ReservationResponse(2L, "브라운", LocalDate.of(2023, 1, 2), RESERVATION_TIME_RESPONSE)
         );
         when(reservationService.findAll()).thenReturn(expected);
 
@@ -78,13 +84,19 @@ class ReservationControllerTest {
                         "id": 1,
                         "name": "브라운",
                         "date": "2023-01-01",
-                        "time": "10:00"
+                        "time" : {
+                            "id": 1,
+                            "startAt" : "10:00"
+                        }
                     },
                     {
                         "id": 2,
                         "name": "브라운",
                         "date": "2023-01-02",
-                        "time": "11:00"
+                        "time" : {
+                            "id": 1,
+                            "startAt" : "10:00"
+                        }
                     }
                 ]
                 """;

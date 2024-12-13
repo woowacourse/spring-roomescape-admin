@@ -13,7 +13,7 @@ import org.springframework.test.context.jdbc.Sql;
 import org.springframework.test.context.jdbc.Sql.ExecutionPhase;
 import roomescape.fixture.ReservationTimeFixture;
 import roomescape.service.dto.ReservationTimeRequest;
-import roomescape.service.dto.ReservatonTimeResponse;
+import roomescape.service.dto.ReservationTimeResponse;
 
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.NONE)
 @Sql(scripts = "/truncate.sql", executionPhase = ExecutionPhase.BEFORE_TEST_METHOD)
@@ -28,10 +28,10 @@ class ReservationTimeServiceTest {
         ReservationTimeRequest reservationTimeRequest = ReservationTimeFixture.request(1);
 
         // when
-        ReservatonTimeResponse result = reservationTimeService.create(reservationTimeRequest);
+        ReservationTimeResponse result = reservationTimeService.create(reservationTimeRequest);
 
         // then
-        ReservatonTimeResponse expected = ReservationTimeFixture.response(result.id(), 1);
+        ReservationTimeResponse expected = ReservationTimeFixture.response(result.id(), 1);
         assertThat(result).isEqualTo(expected);
     }
 
@@ -39,11 +39,11 @@ class ReservationTimeServiceTest {
     void findOne() {
         // given
         ReservationTimeRequest reservationTimeRequest = ReservationTimeFixture.request(1);
-        ReservatonTimeResponse expected = reservationTimeService.create(reservationTimeRequest);
+        ReservationTimeResponse expected = reservationTimeService.create(reservationTimeRequest);
         long id = expected.id();
 
         // when
-        ReservatonTimeResponse result = reservationTimeService.findOne(id);
+        ReservationTimeResponse result = reservationTimeService.findOne(id);
 
         // then
         assertThat(result).isEqualTo(expected);
@@ -55,12 +55,12 @@ class ReservationTimeServiceTest {
         ReservationTimeRequest request1 = ReservationTimeFixture.request(1);
         ReservationTimeRequest request2 = ReservationTimeFixture.request(1);
         ReservationTimeRequest request3 = ReservationTimeFixture.request(1);
-        ReservatonTimeResponse response1 = reservationTimeService.create(request1);
-        ReservatonTimeResponse response2 = reservationTimeService.create(request2);
-        ReservatonTimeResponse response3 = reservationTimeService.create(request3);
+        ReservationTimeResponse response1 = reservationTimeService.create(request1);
+        ReservationTimeResponse response2 = reservationTimeService.create(request2);
+        ReservationTimeResponse response3 = reservationTimeService.create(request3);
 
         // when
-        List<ReservatonTimeResponse> result = reservationTimeService.findAll();
+        List<ReservationTimeResponse> result = reservationTimeService.findAll();
 
         // then
         assertThat(result).containsExactly(response1, response2, response3);
@@ -70,7 +70,7 @@ class ReservationTimeServiceTest {
     @DisplayName("예약을 삭제한다.")
     void remove() {
         // given
-        ReservatonTimeResponse savedResponse = reservationTimeService.create(ReservationTimeFixture.request(1));
+        ReservationTimeResponse savedResponse = reservationTimeService.create(ReservationTimeFixture.request(1));
 
         // when
         reservationTimeService.remove(savedResponse.id());

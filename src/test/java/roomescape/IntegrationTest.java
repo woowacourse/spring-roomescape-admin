@@ -57,10 +57,10 @@ public class IntegrationTest {
     @Test
     @DisplayName("예약을 추가한다.")
     void createReservation() {
-        Map<String, String> params = new HashMap<>();
+        Map<String, Object> params = new HashMap<>();
         params.put("name", "브라운");
         params.put("date", "2023-08-05");
-        params.put("time", "15:40");
+        params.put("timeId", 1L);
 
         RestAssured.given().log().all()
                 .contentType(ContentType.JSON)

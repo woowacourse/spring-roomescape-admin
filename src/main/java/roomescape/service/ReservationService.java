@@ -5,7 +5,9 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import roomescape.domain.Reservation;
+import roomescape.domain.ReservationTime;
 import roomescape.repository.ReservationRepository;
+import roomescape.repository.ReservationTimeRepository;
 import roomescape.service.dto.ReservationRequest;
 import roomescape.service.dto.ReservationResponse;
 
@@ -15,10 +17,12 @@ import roomescape.service.dto.ReservationResponse;
 public class ReservationService {
 
     private final ReservationRepository reservationRepository;
+    private final ReservationTimeRepository timeRepository;
 
     @Transactional
     public ReservationResponse create(ReservationRequest reservationRequest) {
-        Reservation reservation = reservationRequest.toReservation();
+        ReservationTime time = timeRepository.findById(reservationRequest.timeId()).orElseThrow();
+        Reservation reservation = new Reservation(reservationRequest.name(), reservationRequest.date(), time);
         Reservation savedReservation = reservationRepository.save(reservation);
 
         return new ReservationResponse(savedReservation);

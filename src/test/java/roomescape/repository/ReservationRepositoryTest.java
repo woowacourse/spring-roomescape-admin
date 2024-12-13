@@ -2,6 +2,8 @@ package roomescape.repository;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
+import java.time.LocalDate;
+import java.time.LocalTime;
 import java.util.List;
 import javax.sql.DataSource;
 import org.junit.jupiter.api.BeforeEach;
@@ -10,25 +12,31 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.jdbc.JdbcTest;
 import roomescape.domain.Reservation;
-import roomescape.fixture.ReservationFixture;
+import roomescape.domain.ReservationTime;
 
 @JdbcTest
 class ReservationRepositoryTest {
 
+    private static final LocalDate DATE = LocalDate.now().plusDays(1);
     @Autowired
     private DataSource dataSource;
 
     private ReservationRepository repository;
+    private ReservationTimeRepository timeRepository;
+    private ReservationTime time;
 
     @BeforeEach
     void setUp() {
         repository = new ReservationRepository(dataSource);
+        timeRepository = new ReservationTimeRepository(dataSource);
+        time = timeRepository.save(new ReservationTime(LocalTime.now()));
     }
 
     @Test
+    @DisplayName("예약을 추가한다.")
     void save() {
         // given
-        Reservation reservation = ReservationFixture.entity(1, 0);
+        Reservation reservation = new Reservation("카고", DATE, time);
 
         // when
         Reservation savedReservation = repository.save(reservation);
@@ -41,8 +49,8 @@ class ReservationRepositoryTest {
     @Test
     void findById() {
         // given
-        Reservation reservation1 = ReservationFixture.entity(1, 0);
-        Reservation reservation2 = ReservationFixture.entity(1, 0);
+        Reservation reservation1 = new Reservation("카고", DATE, time);
+        Reservation reservation2 = new Reservation("카고", DATE.plusDays(1), time);
         Reservation savedReservation1 = repository.save(reservation1);
         repository.save(reservation2);
 
@@ -56,25 +64,24 @@ class ReservationRepositoryTest {
     @Test
     void findAll() {
         // given
-        Reservation reservation1 = ReservationFixture.entity(1, 0);
-        Reservation reservation2 = ReservationFixture.entity(1, 0);
-        Reservation reservation3 = ReservationFixture.entity(1, 0);
+        Reservation reservation1 = new Reservation("카고", DATE, time);
+        Reservation reservation2 = new Reservation("카고", DATE.plusDays(1), time);
         Reservation saved1 = repository.save(reservation1);
         Reservation saved2 = repository.save(reservation2);
-        Reservation saved3 = repository.save(reservation3);
 
         // when
         List<Reservation> result = repository.findAll();
 
         // then
-        assertThat(result).containsExactly(saved1, saved2, saved3);
+        assertThat(result).containsExactly(saved1, saved2);
     }
 
     @Test
     @DisplayName("예약을 삭제한다.")
     void delete() {
         // given
-        Reservation saved = repository.save(ReservationFixture.entity(1, 1));
+        Reservation reservation = new Reservation("카고", DATE, time);
+        Reservation saved = repository.save(reservation);
 
         // when
         repository.delete(saved.getId());

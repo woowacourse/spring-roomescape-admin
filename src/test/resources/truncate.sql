@@ -1,3 +1,5 @@
+SET REFERENTIAL_INTEGRITY FALSE;
+
 truncate table reservation;
 ALTER TABLE reservation
     ALTER COLUMN id RESTART WITH 1;
@@ -5,3 +7,5 @@ ALTER TABLE reservation
 truncate table reservation_time;
 ALTER TABLE reservation_time
     ALTER COLUMN id RESTART WITH 1;
+
+SET REFERENTIAL_INTEGRITY TRUE;

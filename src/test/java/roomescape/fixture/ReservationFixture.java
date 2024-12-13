@@ -13,15 +13,16 @@ public abstract class ReservationFixture {
     public static final LocalTime BASE_TIME = LocalTime.now();
 
     public static Reservation entity(int plusDays, int plusHours) {
-        return new Reservation(NAME, BASE_DATE.plusDays(plusDays), BASE_TIME.plusHours(plusHours));
+        return new Reservation(NAME, BASE_DATE.plusDays(plusDays), ReservationTimeFixture.entity(plusHours));
     }
 
-    public static ReservationRequest request(int plusDays, int plusHours) {
-        return new ReservationRequest(NAME, BASE_DATE.plusDays(plusDays), BASE_TIME.plusHours(plusHours));
+    public static ReservationRequest request(int plusDays, Long timeId) {
+        return new ReservationRequest(NAME, BASE_DATE.plusDays(plusDays), timeId);
     }
 
-    public static ReservationResponse response(long id, int plusDays, int plusHours) {
-        return new ReservationResponse(id, NAME, BASE_DATE.plusDays(plusDays), BASE_TIME.plusHours(plusHours));
+    public static ReservationResponse response(long id, int plusDays, Long timeId) {
+        return new ReservationResponse(id, NAME, BASE_DATE.plusDays(plusDays),
+                ReservationTimeFixture.response(timeId, 0));
     }
 
 }

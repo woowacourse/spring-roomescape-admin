@@ -1,6 +1,7 @@
 package roomescape;
 
 import io.restassured.RestAssured;
+import static org.hamcrest.Matchers.is;
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.annotation.DirtiesContext;
@@ -12,9 +13,38 @@ public class MissionStepTest {
     @Test
     void 일단계() {
         RestAssured.given().log().all()
-                .when().get("/")
+                .when().get("/admin")
                 .then().log().all()
                 .statusCode(200);
     }
 
+    @Test
+    void 이단계() {
+        RestAssured.given().log().all()
+                .when().get("/admin/reservation")
+                .then().log().all()
+                .statusCode(200);
+
+        RestAssured.given().log().all()
+                .when().get("/reservations")
+                .then().log().all()
+                .statusCode(200)
+                .body("size()", is(3)); // 아직 생성 요청이 없으니 Controller에서 임의로 넣어준 Reservation 갯수 만큼 검증하거나 0개임을 확인하세요.
+    }
+
+    @Test
+    void 예약페이지_접속() {
+        RestAssured.given().log().all()
+                .when().get("/reservation")
+                .then().log().all()
+                .statusCode(200);
+    }
+
+    @Test
+    void 시간관리페이지_접속() {
+        RestAssured.given().log().all()
+                .when().get("/time")
+                .then().log().all()
+                .statusCode(200);
+    }
 }

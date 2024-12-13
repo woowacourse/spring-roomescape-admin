@@ -10,12 +10,12 @@ import org.springframework.jdbc.core.namedparam.BeanPropertySqlParameterSource;
 import org.springframework.jdbc.core.namedparam.SqlParameterSource;
 import org.springframework.jdbc.core.simple.SimpleJdbcInsert;
 import org.springframework.stereotype.Repository;
-import roomescape.domain.Time;
+import roomescape.domain.ReservationTime;
 
 @Repository
-public class TimeRepository {
-    private static final RowMapper<Time> TIME_ROW_MAPPER = (rs, rowNum) -> {
-        return new Time(
+public class ReservationTimeRepository {
+    private static final RowMapper<ReservationTime> TIME_ROW_MAPPER = (rs, rowNum) -> {
+        return new ReservationTime(
                 rs.getLong("id"),
                 rs.getTime("start_at").toLocalTime()
         );
@@ -24,30 +24,30 @@ public class TimeRepository {
     private final JdbcTemplate jdbcTemplate;
     private final SimpleJdbcInsert jdbcInsert;
 
-    public TimeRepository(DataSource dataSource) {
+    public ReservationTimeRepository(DataSource dataSource) {
         this.jdbcTemplate = new JdbcTemplate(dataSource);
         this.jdbcInsert = new SimpleJdbcInsert(dataSource)
                 .usingGeneratedKeyColumns("id")
                 .withTableName("reservation_time");
     }
 
-    public Time save(Time time) {
-        SqlParameterSource params = new BeanPropertySqlParameterSource(time);
+    public ReservationTime save(ReservationTime reservationTime) {
+        SqlParameterSource params = new BeanPropertySqlParameterSource(reservationTime);
         Number key = jdbcInsert.executeAndReturnKey(params);
-        return new Time(key.longValue(), time);
+        return new ReservationTime(key.longValue(), reservationTime);
     }
 
-    public Optional<Time> findById(Long id) {
+    public Optional<ReservationTime> findById(Long id) {
         String sql = "select * from reservation_time where id = ?";
         try {
-            Time time = jdbcTemplate.queryForObject(sql, TIME_ROW_MAPPER, id);
-            return Optional.of(time);
+            ReservationTime reservationTime = jdbcTemplate.queryForObject(sql, TIME_ROW_MAPPER, id);
+            return Optional.of(reservationTime);
         } catch (EmptyResultDataAccessException e) {
             return Optional.empty();
         }
     }
 
-    public List<Time> findAll() {
+    public List<ReservationTime> findAll() {
         String sql = "select * from reservation_time";
         return jdbcTemplate.query(sql, TIME_ROW_MAPPER);
     }

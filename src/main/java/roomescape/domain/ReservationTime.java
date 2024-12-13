@@ -8,16 +8,16 @@ import lombok.Getter;
 @AllArgsConstructor
 @Getter
 @EqualsAndHashCode(of = "id")
-public class Time {
+public class ReservationTime {
 
     private Long id;
     private LocalTime startAt;
 
-    public Time(LocalTime startAt) {
+    public ReservationTime(LocalTime startAt) {
         this.startAt = startAt;
     }
 
-    public Time(Long id, Time time) {
-        this(id, time.getStartAt());
+    public ReservationTime(Long id, ReservationTime reservationTime) {
+        this(id, reservationTime.getStartAt());
     }
 }

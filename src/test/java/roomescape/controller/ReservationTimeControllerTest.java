@@ -17,17 +17,17 @@ import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
-import roomescape.service.TimeService;
-import roomescape.service.dto.TimeResponse;
+import roomescape.service.ReservationTimeService;
+import roomescape.service.dto.ReservatonTimeResponse;
 
-@WebMvcTest(TimeController.class)
-class TimeControllerTest {
+@WebMvcTest(ReservationTimeController.class)
+class ReservationTimeControllerTest {
 
     @Autowired
     private MockMvc mockMvc;
 
     @MockBean
-    private TimeService timeService;
+    private ReservationTimeService reservationTimeService;
 
     @Test
     @DisplayName("예약을 추가하면 예약 정보를 응답받는다.")
@@ -38,8 +38,8 @@ class TimeControllerTest {
                     "startAt": "10:00"
                 }
                 """;
-        TimeResponse expected = new TimeResponse(1L, LocalTime.of(10, 00));
-        when(timeService.create(any())).thenReturn(expected);
+        ReservatonTimeResponse expected = new ReservatonTimeResponse(1L, LocalTime.of(10, 00));
+        when(reservationTimeService.create(any())).thenReturn(expected);
 
         // when & then
         String expectedResponse = """
@@ -59,11 +59,11 @@ class TimeControllerTest {
     @DisplayName("모든 예약 조회시 형식에 맞게 응답한다.")
     void findAllTimes() throws Exception {
         // given
-        List<TimeResponse> expected = List.of(
-                new TimeResponse(1L, LocalTime.of(10, 0)),
-                new TimeResponse(2L, LocalTime.of(11, 0))
+        List<ReservatonTimeResponse> expected = List.of(
+                new ReservatonTimeResponse(1L, LocalTime.of(10, 0)),
+                new ReservatonTimeResponse(2L, LocalTime.of(11, 0))
         );
-        when(timeService.findAll()).thenReturn(expected);
+        when(reservationTimeService.findAll()).thenReturn(expected);
 
         // when & then
         String expectedResponse = """

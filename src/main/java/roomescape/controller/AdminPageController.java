@@ -18,7 +18,7 @@ public class AdminPageController {
         return "/admin/reservation";
     }
 
-    @GetMapping("/time")
+    @GetMapping("/admin/time")
     public String adminTimePage() {
         return "/admin/time";
     }

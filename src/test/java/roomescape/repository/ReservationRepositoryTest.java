@@ -89,4 +89,33 @@ class ReservationRepositoryTest {
         // then
         assertThat(repository.findById(saved.getId())).isEmpty();
     }
+
+    @Test
+    @DisplayName("특정 시간에 예약이 존재하면 true를 반환한다.")
+    void existsByTimeIdTrue() {
+        // given
+        Reservation reservation = new Reservation("카고", DATE, time);
+        repository.save(reservation);
+
+        // when
+        boolean result = repository.existsByTimeId(time.getId());
+
+        // then
+        assertThat(result).isTrue();
+    }
+
+    @Test
+    @DisplayName("특정 시간에 예약이 존재하지 않으면 false를 반환한다.")
+    void existsByTimeIdFalse() {
+        // given
+        Reservation reservation = new Reservation("카고", DATE, time);
+        repository.save(reservation);
+        Long notExistTimeId = time.getId() + 1;
+
+        // when
+        boolean result = repository.existsByTimeId(notExistTimeId);
+
+        // then
+        assertThat(result).isFalse();
+    }
 }

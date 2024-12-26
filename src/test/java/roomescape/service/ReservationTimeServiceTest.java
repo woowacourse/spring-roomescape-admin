@@ -11,7 +11,13 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.jdbc.Sql;
 import org.springframework.test.context.jdbc.Sql.ExecutionPhase;
+import roomescape.domain.Reservation;
+import roomescape.domain.ReservationTime;
+import roomescape.exception.BadRequestException;
+import roomescape.fixture.ReservationFixture;
 import roomescape.fixture.ReservationTimeFixture;
+import roomescape.repository.ReservationRepository;
+import roomescape.repository.ReservationTimeRepository;
 import roomescape.service.dto.ReservationTimeRequest;
 import roomescape.service.dto.ReservationTimeResponse;
 
@@ -21,6 +27,12 @@ class ReservationTimeServiceTest {
 
     @Autowired
     private ReservationTimeService reservationTimeService;
+
+    @Autowired
+    private ReservationRepository reservationRepository;
+
+    @Autowired
+    private ReservationTimeRepository reservationTimeRepository;
 
     @Test
     void create() {
@@ -67,7 +79,7 @@ class ReservationTimeServiceTest {
     }
 
     @Test
-    @DisplayName("예약을 삭제한다.")
+    @DisplayName("시간을 삭제한다.")
     void remove() {
         // given
         ReservationTimeResponse savedResponse = reservationTimeService.create(ReservationTimeFixture.request(1));
@@ -78,5 +90,19 @@ class ReservationTimeServiceTest {
         // then
         assertThatThrownBy(() -> reservationTimeService.findOne(savedResponse.id()))
                 .isInstanceOf(NoSuchElementException.class);
+    }
+
+    @Test
+    @DisplayName("예약이 존재하는 시간을 삭제하려고 시도하면 예외가 발생한다.")
+    void removeFail() {
+        // given
+        ReservationTime time = ReservationTimeFixture.entity(0);
+        ReservationTime savedTime = reservationTimeRepository.save(time);
+        Reservation reservation = ReservationFixture.entity(savedTime);
+        reservationRepository.save(reservation);
+
+        // when & then
+        assertThatThrownBy(() -> reservationTimeService.remove(savedTime.getId()))
+                .isInstanceOf(BadRequestException.class);
     }
 }

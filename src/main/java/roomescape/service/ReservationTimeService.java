@@ -5,6 +5,8 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import roomescape.domain.ReservationTime;
+import roomescape.exception.BadRequestException;
+import roomescape.repository.ReservationRepository;
 import roomescape.repository.ReservationTimeRepository;
 import roomescape.service.dto.ReservationTimeRequest;
 import roomescape.service.dto.ReservationTimeResponse;
@@ -15,6 +17,7 @@ import roomescape.service.dto.ReservationTimeResponse;
 public class ReservationTimeService {
 
     private final ReservationTimeRepository reservationTimeRepository;
+    private final ReservationRepository reservationRepository;
 
     @Transactional
     public ReservationTimeResponse create(ReservationTimeRequest reservationTimeRequest) {
@@ -38,6 +41,9 @@ public class ReservationTimeService {
 
     @Transactional
     public void remove(Long id) {
+        if (reservationRepository.existsByTimeId(id)) {
+            throw new BadRequestException("예약이 존재하는 시간은 삭제할 수 없습니다.");
+        }
         reservationTimeRepository.delete(id);
     }
 }

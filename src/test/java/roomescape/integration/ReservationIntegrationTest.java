@@ -1,4 +1,4 @@
-package roomescape;
+package roomescape.integration;
 
 import static org.hamcrest.Matchers.is;
 
@@ -15,7 +15,7 @@ import org.springframework.test.context.jdbc.Sql.ExecutionPhase;
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.DEFINED_PORT)
 @Sql(scripts = "/truncate.sql", executionPhase = ExecutionPhase.BEFORE_TEST_METHOD)
 @Sql(scripts = "/test_data.sql", executionPhase = ExecutionPhase.BEFORE_TEST_METHOD)
-public class IntegrationTest {
+public class ReservationIntegrationTest {
 
     @Test
     @DisplayName("관리자 페이지를 응답한다.")

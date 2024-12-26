@@ -2,6 +2,8 @@ insert into reservation_time (start_at)
 values ('10:00');
 insert into reservation_time (start_at)
 values ('11:00');
+insert into reservation_time (start_at)
+values ('12:00');
 
 insert into reservation (name, date, time_id)
 values ('r1', '2100-12-01', 1);

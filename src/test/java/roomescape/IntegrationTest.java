@@ -39,7 +39,7 @@ public class IntegrationTest {
     @DisplayName("관리자 시간 관리 페이지를 응답한다.")
     void adminTimePage() {
         RestAssured.given().log().all()
-                .when().get("/time")
+                .when().get("/admin/time")
                 .then().log().all()
                 .statusCode(200);
     }
@@ -67,7 +67,7 @@ public class IntegrationTest {
                 .body(params)
                 .when().post("/reservations")
                 .then().log().all()
-                .statusCode(200)
+                .statusCode(201)
                 .body("id", is(4));
 
         RestAssured.given().log().all()
@@ -82,7 +82,7 @@ public class IntegrationTest {
     void cancelReservation() {
         RestAssured
                 .when().delete("/reservations/1")
-                .then().statusCode(200);
+                .then().statusCode(204);
 
         RestAssured
                 .when().get("/reservations")

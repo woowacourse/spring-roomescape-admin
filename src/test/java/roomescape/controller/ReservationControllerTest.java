@@ -63,7 +63,7 @@ class ReservationControllerTest {
         mockMvc.perform(post("/reservations")
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(reservationRequest))
-                .andExpect(status().isOk())
+                .andExpect(status().isCreated())
                 .andExpect(content().json(expectedResponse));
     }
 
@@ -109,6 +109,6 @@ class ReservationControllerTest {
     @DisplayName("예약을 취소한다.")
     void cancelReservation() throws Exception {
         mockMvc.perform(delete("/reservations/1"))
-                .andExpect(status().isOk());
+                .andExpect(status().isNoContent());
     }
 }

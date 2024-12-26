@@ -8,7 +8,7 @@ import roomescape.domain.ReservationTime;
 public abstract class ReservationFixture {
 
     public static final String NAME = "test name";
-    public static final LocalDate BASE_DATE = LocalDate.now();
+    public static final LocalDate BASE_DATE = LocalDate.now().plusDays(1);
     public static final LocalTime BASE_TIME = LocalTime.now();
 
     public static Reservation entity(ReservationTime time) {

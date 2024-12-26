@@ -4,6 +4,8 @@ import static org.hamcrest.Matchers.is;
 
 import io.restassured.RestAssured;
 import io.restassured.http.ContentType;
+import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
 import java.util.HashMap;
 import java.util.Map;
 import org.junit.jupiter.api.DisplayName;
@@ -59,7 +61,7 @@ public class ReservationIntegrationTest {
     void createReservation() {
         Map<String, Object> params = new HashMap<>();
         params.put("name", "브라운");
-        params.put("date", "2023-08-05");
+        params.put("date", LocalDate.now().plusDays(1).format(DateTimeFormatter.ISO_DATE));
         params.put("timeId", 1L);
 
         RestAssured.given().log().all()
@@ -75,6 +77,22 @@ public class ReservationIntegrationTest {
                 .then().log().all()
                 .statusCode(200)
                 .body("size()", is(4));
+    }
+
+    @Test
+    @DisplayName("과거 시간대 예약을 시도하면 400을 반환한다.")
+    void createReservationFail() {
+        Map<String, Object> params = new HashMap<>();
+        params.put("name", "브라운");
+        params.put("date", LocalDate.now().minusDays(1).format(DateTimeFormatter.ISO_DATE));
+        params.put("timeId", 1L);
+
+        RestAssured.given()
+                .contentType(ContentType.JSON)
+                .body(params)
+                .when().post("/reservations")
+                .then()
+                .statusCode(400);
     }
 
     @Test

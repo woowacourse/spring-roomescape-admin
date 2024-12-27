@@ -12,6 +12,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.jdbc.Sql;
 import org.springframework.test.context.jdbc.Sql.ExecutionPhase;
+import roomescape.exception.BadRequestException;
 import roomescape.service.dto.ReservationRequest;
 import roomescape.service.dto.ReservationResponse;
 import roomescape.service.dto.ReservationTimeResponse;
@@ -41,6 +42,17 @@ class ReservationServiceTest {
 
         // then
         assertThat(result).isEqualTo(RESERVATION_RESPONSE_A);
+    }
+
+    @Test
+    @DisplayName("중복된 예약을 요청하면 예외가 발생한다.")
+    void createFail() {
+        // given
+        reservationService.create(RESERVATION_REQUEST_A);
+
+        // when & then
+        assertThatThrownBy(() -> reservationService.create(RESERVATION_REQUEST_A))
+                .isInstanceOf(BadRequestException.class);
     }
 
     @Test

@@ -2,10 +2,12 @@ package roomescape.service;
 
 import java.util.List;
 import lombok.RequiredArgsConstructor;
+import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import roomescape.domain.Reservation;
 import roomescape.domain.ReservationTime;
+import roomescape.exception.BadRequestException;
 import roomescape.repository.ReservationRepository;
 import roomescape.repository.ReservationTimeRepository;
 import roomescape.service.dto.ReservationRequest;
@@ -19,13 +21,17 @@ public class ReservationService {
     private final ReservationRepository reservationRepository;
     private final ReservationTimeRepository timeRepository;
 
+    //TODO: 중복 예약 검증 방법이 이게 최선인지 고민해보기
     @Transactional
     public ReservationResponse create(ReservationRequest reservationRequest) {
         ReservationTime time = timeRepository.findById(reservationRequest.timeId()).orElseThrow();
         Reservation reservation = new Reservation(reservationRequest.name(), reservationRequest.date(), time);
-        Reservation savedReservation = reservationRepository.save(reservation);
-
-        return new ReservationResponse(savedReservation);
+        try {
+            Reservation savedReservation = reservationRepository.save(reservation);
+            return new ReservationResponse(savedReservation);
+        } catch (DataIntegrityViolationException e) {
+            throw new BadRequestException("같은 시간에 이미 예약이 존재합니다.");
+        }
     }
 
     public ReservationResponse findOne(long id) {

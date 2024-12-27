@@ -21,8 +21,8 @@ public class LocalDataInit {
         ReservationTime time1 = timeRepository.save(new ReservationTime(LocalTime.now()));
         ReservationTime time2 = timeRepository.save(new ReservationTime(LocalTime.now().plusHours(1)));
 
-        reservationRepository.save(new Reservation("브라운", LocalDate.now(), time1));
-        reservationRepository.save(new Reservation("솔라", LocalDate.now().plusDays(1), time1));
-        reservationRepository.save(new Reservation("브리", LocalDate.now().plusDays(2), time2));
+        reservationRepository.save(new Reservation("브라운", LocalDate.now().plusDays(1), time1));
+        reservationRepository.save(new Reservation("솔라", LocalDate.now().plusDays(2), time1));
+        reservationRepository.save(new Reservation("브리", LocalDate.now().plusDays(3), time2));
     }
 }

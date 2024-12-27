@@ -1,4 +1,4 @@
-package roomescape.controller;
+package roomescape.controller.api;
 
 import java.util.List;
 import lombok.RequiredArgsConstructor;
@@ -11,31 +11,31 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
-import roomescape.service.ReservationService;
-import roomescape.service.dto.ReservationRequest;
-import roomescape.service.dto.ReservationResponse;
+import roomescape.service.ReservationTimeService;
+import roomescape.service.dto.ReservationTimeRequest;
+import roomescape.service.dto.ReservationTimeResponse;
 
 @RequiredArgsConstructor
-@RequestMapping("/reservations")
+@RequestMapping("/times")
 @RestController
-public class ReservationController {
+public class ReservationTimeController {
 
-    private final ReservationService reservationService;
+    private final ReservationTimeService reservationTimeService;
 
     @ResponseStatus(HttpStatus.CREATED)
     @PostMapping
-    public ReservationResponse createReservation(@RequestBody ReservationRequest reservationRequest) {
-        return reservationService.create(reservationRequest);
+    public ReservationTimeResponse createTime(@RequestBody ReservationTimeRequest reservationTimeRequest) {
+        return reservationTimeService.create(reservationTimeRequest);
     }
 
     @GetMapping
-    public List<ReservationResponse> findAllReservations() {
-        return reservationService.findAll();
+    public List<ReservationTimeResponse> findAllTimes() {
+        return reservationTimeService.findAll();
     }
 
     @ResponseStatus(HttpStatus.NO_CONTENT)
     @DeleteMapping("/{id}")
-    public void cancelReservation(@PathVariable Long id) {
-        reservationService.remove(id);
+    public void cancelTime(@PathVariable Long id) {
+        reservationTimeService.remove(id);
     }
 }

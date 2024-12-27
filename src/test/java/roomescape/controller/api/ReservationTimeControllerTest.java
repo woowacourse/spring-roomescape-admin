@@ -1,4 +1,4 @@
-package roomescape.controller;
+package roomescape.controller.api;
 
 import static org.mockito.Mockito.any;
 import static org.mockito.Mockito.when;

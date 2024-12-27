@@ -1,42 +1,32 @@
 package roomescape.repository;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static roomescape.fixture.ReservationFixture.INITIAL_RESERVATION_SIZE;
+import static roomescape.fixture.ReservationFixture.RESERVATION_1_ID;
+import static roomescape.fixture.ReservationTimeFixture.NO_RESERVATION_TIME_ID;
+import static roomescape.fixture.ReservationTimeFixture.TIME_1_ID;
 
-import java.time.LocalDate;
-import java.time.LocalTime;
 import java.util.List;
-import javax.sql.DataSource;
-import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.jdbc.JdbcTest;
+import org.springframework.context.annotation.Import;
 import roomescape.domain.Reservation;
-import roomescape.domain.ReservationTime;
+import roomescape.fixture.ReservationFixture;
 
+@Import(ReservationRepository.class)
 @JdbcTest
 class ReservationRepositoryTest {
 
-    private static final LocalDate DATE = LocalDate.now().plusDays(1);
     @Autowired
-    private DataSource dataSource;
-
     private ReservationRepository repository;
-    private ReservationTimeRepository timeRepository;
-    private ReservationTime time;
-
-    @BeforeEach
-    void setUp() {
-        repository = new ReservationRepository(dataSource);
-        timeRepository = new ReservationTimeRepository(dataSource);
-        time = timeRepository.save(new ReservationTime(LocalTime.now()));
-    }
 
     @Test
     @DisplayName("예약을 추가한다.")
     void save() {
         // given
-        Reservation reservation = new Reservation("카고", DATE, time);
+        Reservation reservation = ReservationFixture.newReservationWithoutId();
 
         // when
         Reservation savedReservation = repository.save(reservation);
@@ -48,57 +38,40 @@ class ReservationRepositoryTest {
 
     @Test
     void findById() {
-        // given
-        Reservation reservation1 = new Reservation("카고", DATE, time);
-        Reservation reservation2 = new Reservation("카고", DATE.plusDays(1), time);
-        Reservation savedReservation1 = repository.save(reservation1);
-        repository.save(reservation2);
-
         // when
-        Reservation found = repository.findById(savedReservation1.getId()).get();
+        Reservation found = repository.findById(RESERVATION_1_ID).get();
 
         // then
-        assertThat(found).isEqualTo(savedReservation1);
+        assertThat(found.getName()).isEqualTo(ReservationFixture.reservation1().getName());
     }
 
     @Test
     void findAll() {
-        // given
-        Reservation reservation1 = new Reservation("카고", DATE, time);
-        Reservation reservation2 = new Reservation("카고", DATE.plusDays(1), time);
-        Reservation saved1 = repository.save(reservation1);
-        Reservation saved2 = repository.save(reservation2);
-
         // when
         List<Reservation> result = repository.findAll();
 
         // then
-        assertThat(result).containsExactly(saved1, saved2);
+        assertThat(result.size()).isEqualTo(INITIAL_RESERVATION_SIZE);
     }
 
     @Test
     @DisplayName("예약을 삭제한다.")
     void delete() {
         // given
-        Reservation reservation = new Reservation("카고", DATE, time);
-        Reservation saved = repository.save(reservation);
+        assertThat(repository.findById(RESERVATION_1_ID)).isNotEmpty();
 
         // when
-        repository.delete(saved.getId());
+        repository.delete(RESERVATION_1_ID);
 
         // then
-        assertThat(repository.findById(saved.getId())).isEmpty();
+        assertThat(repository.findById(RESERVATION_1_ID)).isEmpty();
     }
 
     @Test
     @DisplayName("특정 시간에 예약이 존재하면 true를 반환한다.")
     void existsByTimeIdTrue() {
-        // given
-        Reservation reservation = new Reservation("카고", DATE, time);
-        repository.save(reservation);
-
         // when
-        boolean result = repository.existsByTimeId(time.getId());
+        boolean result = repository.existsByTimeId(TIME_1_ID);
 
         // then
         assertThat(result).isTrue();
@@ -107,13 +80,8 @@ class ReservationRepositoryTest {
     @Test
     @DisplayName("특정 시간에 예약이 존재하지 않으면 false를 반환한다.")
     void existsByTimeIdFalse() {
-        // given
-        Reservation reservation = new Reservation("카고", DATE, time);
-        repository.save(reservation);
-        Long notExistTimeId = time.getId() + 1;
-
         // when
-        boolean result = repository.existsByTimeId(notExistTimeId);
+        boolean result = repository.existsByTimeId(NO_RESERVATION_TIME_ID);
 
         // then
         assertThat(result).isFalse();

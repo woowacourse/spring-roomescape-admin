@@ -21,17 +21,19 @@ public class Reservation {
     private String name;
     private LocalDate date;
     private ReservationTime time;
+    private Theme theme;
 
-    public Reservation(String name, LocalDate date, ReservationTime time) {
+    public Reservation(String name, LocalDate date, ReservationTime time, Theme theme) {
         validateName(name);
         validateIsBeforeNow(date, time.getStartAt());
         this.name = name;
         this.date = date;
         this.time = time;
+        this.theme = theme;
     }
 
     public Reservation(Long id, Reservation reservation) {
-        this(id, reservation.name, reservation.date, reservation.time);
+        this(id, reservation.name, reservation.date, reservation.time, reservation.getTheme());
     }
 
     public void validateName(String name) {

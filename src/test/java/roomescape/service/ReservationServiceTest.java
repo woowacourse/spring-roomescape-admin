@@ -1,9 +1,11 @@
 package roomescape.service;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.assertThatCode;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
+import static roomescape.fixture.ReservationFixture.INITIAL_RESERVATION_SIZE;
+import static roomescape.fixture.ReservationFixture.RESERVATION_1_ID;
 
-import java.time.LocalDate;
 import java.util.List;
 import java.util.NoSuchElementException;
 import org.junit.jupiter.api.DisplayName;
@@ -13,59 +15,49 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.jdbc.Sql;
 import org.springframework.test.context.jdbc.Sql.ExecutionPhase;
 import roomescape.exception.BadRequestException;
+import roomescape.fixture.ReservationFixture;
 import roomescape.service.dto.ReservationRequest;
 import roomescape.service.dto.ReservationResponse;
-import roomescape.service.dto.ReservationTimeResponse;
 
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.NONE)
 @Sql(scripts = "/truncate.sql", executionPhase = ExecutionPhase.BEFORE_TEST_METHOD)
 @Sql(scripts = "/test_data.sql", executionPhase = ExecutionPhase.BEFORE_TEST_METHOD)
 class ReservationServiceTest {
 
-    private static final ReservationRequest RESERVATION_REQUEST_A = new ReservationRequest("userA",
-            LocalDate.of(2100, 1, 1), 1L);
-    private static final ReservationRequest RESERVATION_REQUEST_B = new ReservationRequest("userB",
-            LocalDate.of(2100, 1, 2), 1L);
-    private static final ReservationTimeResponse RESERVATION_TIME_RESPONSE = new ReservationTimeResponse(1L, "10:00");
-    private static final ReservationResponse RESERVATION_RESPONSE_A = new ReservationResponse(4L, "userA",
-            LocalDate.of(2100, 1, 1), RESERVATION_TIME_RESPONSE);
-    private static final ReservationResponse RESERVATION_RESPONSE_B = new ReservationResponse(4L, "userB",
-            LocalDate.of(2100, 1, 2), RESERVATION_TIME_RESPONSE);
-
     @Autowired
     private ReservationService reservationService;
 
     @Test
     void create() {
+        // given
+        ReservationRequest request = ReservationFixture.newRequest();
+
         // when
-        ReservationResponse result = reservationService.create(RESERVATION_REQUEST_A);
+        ReservationResponse result = reservationService.create(request);
 
         // then
-        assertThat(result).isEqualTo(RESERVATION_RESPONSE_A);
+        assertThat(result).isEqualTo(ReservationFixture.newResponse());
     }
 
     @Test
     @DisplayName("중복된 예약을 요청하면 예외가 발생한다.")
     void createFail() {
         // given
-        reservationService.create(RESERVATION_REQUEST_A);
+        ReservationRequest request = ReservationFixture.newRequest();
+        reservationService.create(request);
 
         // when & then
-        assertThatThrownBy(() -> reservationService.create(RESERVATION_REQUEST_A))
+        assertThatThrownBy(() -> reservationService.create(request))
                 .isInstanceOf(BadRequestException.class);
     }
 
     @Test
     void findOne() {
-        // given
-        ReservationResponse expected = reservationService.create(RESERVATION_REQUEST_A);
-        long id = expected.id();
-
         // when
-        ReservationResponse result = reservationService.findOne(id);
+        ReservationResponse result = reservationService.findOne(RESERVATION_1_ID);
 
         // then
-        assertThat(result).isEqualTo(RESERVATION_RESPONSE_A);
+        assertThat(result.name()).isEqualTo(ReservationFixture.reservation1().getName());
     }
 
     @Test
@@ -74,20 +66,21 @@ class ReservationServiceTest {
         List<ReservationResponse> result = reservationService.findAll();
 
         // then
-        assertThat(result.size()).isEqualTo(3);
+        assertThat(result.size()).isEqualTo(INITIAL_RESERVATION_SIZE);
     }
 
     @Test
     @DisplayName("예약을 삭제한다.")
     void remove() {
         // given
-        ReservationResponse savedResponse = reservationService.create(RESERVATION_REQUEST_A);
+        assertThatCode(() -> reservationService.findOne(RESERVATION_1_ID))
+                .doesNotThrowAnyException();
 
         // when
-        reservationService.remove(savedResponse.id());
+        reservationService.remove(RESERVATION_1_ID);
 
         // then
-        assertThatThrownBy(() -> reservationService.findOne(savedResponse.id()))
+        assertThatThrownBy(() -> reservationService.findOne(RESERVATION_1_ID))
                 .isInstanceOf(NoSuchElementException.class);
     }
 }

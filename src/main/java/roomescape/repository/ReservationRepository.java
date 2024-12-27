@@ -11,6 +11,7 @@ import org.springframework.jdbc.core.simple.SimpleJdbcInsert;
 import org.springframework.stereotype.Repository;
 import roomescape.domain.Reservation;
 import roomescape.domain.ReservationTime;
+import roomescape.domain.Theme;
 
 @Repository
 public class ReservationRepository {
@@ -23,6 +24,12 @@ public class ReservationRepository {
                 new ReservationTime(
                         rs.getLong("time_id"),
                         rs.getTime("start_at").toLocalTime()
+                ),
+                new Theme(
+                        rs.getLong("theme_id"),
+                        rs.getString("theme_name"),
+                        rs.getString("description"),
+                        rs.getString("thumbnail")
                 )
         );
     };
@@ -38,20 +45,23 @@ public class ReservationRepository {
     }
 
     public Reservation save(Reservation reservation) {
-        Long timeId = reservation.getTime().getId();
         MapSqlParameterSource params = new MapSqlParameterSource()
                 .addValue("name", reservation.getName())
                 .addValue("date", reservation.getDate())
-                .addValue("time_id", timeId);
+                .addValue("time_id", reservation.getTime().getId())
+                .addValue("theme_id", reservation.getTheme().getId());
+
         Number key = jdbcInsert.executeAndReturnKey(params);
         return new Reservation(key.longValue(), reservation);
     }
 
     public Optional<Reservation> findById(Long id) {
-        String sql = "select r.id, r.name, r.date, r.time_id, rt.start_at "
-                + "from reservation as r "
-                + "left join reservation_time as rt on rt.id = r.time_id "
-                + "where r.id = ?";
+        String sql =
+                "select r.id, r.name, r.date, r.time_id, rt.start_at, r.theme_id, t.name as theme_name, t.description, t.thumbnail "
+                        + "from reservation as r "
+                        + "left join reservation_time as rt on rt.id = r.time_id "
+                        + "left join theme as t on t.id = r.theme_id "
+                        + "where r.id = ?";
         try {
             Reservation reservation = jdbcTemplate.queryForObject(sql, RESERVATION_ROW_MAPPER, id);
             return Optional.of(reservation);
@@ -61,9 +71,11 @@ public class ReservationRepository {
     }
 
     public List<Reservation> findAll() {
-        String sql = "select r.id, r.name, r.date, r.time_id, rt.start_at "
-                + "from reservation as r "
-                + "left join reservation_time as rt on rt.id = r.time_id";
+        String sql =
+                "select r.id, r.name, r.date, r.time_id, rt.start_at, r.theme_id, t.name as theme_name, t.description, t.thumbnail "
+                        + "from reservation as r "
+                        + "left join reservation_time as rt on rt.id = r.time_id "
+                        + "left join theme as t on t.id = r.theme_id ";
         return jdbcTemplate.query(sql, RESERVATION_ROW_MAPPER);
     }
 

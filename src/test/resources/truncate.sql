@@ -8,4 +8,8 @@ truncate table reservation_time;
 ALTER TABLE reservation_time
     ALTER COLUMN id RESTART WITH 1;
 
+truncate table theme;
+ALTER TABLE theme
+    ALTER COLUMN id RESTART WITH 1;
+
 SET REFERENTIAL_INTEGRITY TRUE;

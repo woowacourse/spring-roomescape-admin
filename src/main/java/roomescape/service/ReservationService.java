@@ -7,9 +7,11 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import roomescape.domain.Reservation;
 import roomescape.domain.ReservationTime;
+import roomescape.domain.Theme;
 import roomescape.exception.BadRequestException;
 import roomescape.repository.ReservationRepository;
 import roomescape.repository.ReservationTimeRepository;
+import roomescape.repository.ThemeRepository;
 import roomescape.service.dto.ReservationRequest;
 import roomescape.service.dto.ReservationResponse;
 
@@ -20,12 +22,14 @@ public class ReservationService {
 
     private final ReservationRepository reservationRepository;
     private final ReservationTimeRepository timeRepository;
+    private final ThemeRepository themeRepository;
 
     //TODO: 중복 예약 검증 방법이 이게 최선인지 고민해보기
     @Transactional
     public ReservationResponse create(ReservationRequest reservationRequest) {
         ReservationTime time = timeRepository.findById(reservationRequest.timeId()).orElseThrow();
-        Reservation reservation = new Reservation(reservationRequest.name(), reservationRequest.date(), time);
+        Theme theme = themeRepository.findById(reservationRequest.themeId()).orElseThrow();
+        Reservation reservation = new Reservation(reservationRequest.name(), reservationRequest.date(), time, theme);
         try {
             Reservation savedReservation = reservationRepository.save(reservation);
             return new ReservationResponse(savedReservation);

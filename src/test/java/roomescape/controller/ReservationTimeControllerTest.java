@@ -8,7 +8,6 @@ import static org.springframework.test.web.servlet.request.MockMvcRequestBuilder
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
-import java.time.LocalTime;
 import java.util.List;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -17,6 +16,7 @@ import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
+import roomescape.fixture.ReservationTimeFixture;
 import roomescape.service.ReservationTimeService;
 import roomescape.service.dto.ReservationTimeResponse;
 
@@ -38,7 +38,7 @@ class ReservationTimeControllerTest {
                     "startAt": "10:00"
                 }
                 """;
-        ReservationTimeResponse expected = new ReservationTimeResponse(1L, LocalTime.of(10, 00));
+        ReservationTimeResponse expected = new ReservationTimeResponse(ReservationTimeFixture.time1());
         when(reservationTimeService.create(any())).thenReturn(expected);
 
         // when & then
@@ -60,8 +60,9 @@ class ReservationTimeControllerTest {
     void findAllTimes() throws Exception {
         // given
         List<ReservationTimeResponse> expected = List.of(
-                new ReservationTimeResponse(1L, LocalTime.of(10, 0)),
-                new ReservationTimeResponse(2L, LocalTime.of(11, 0))
+                new ReservationTimeResponse(ReservationTimeFixture.time1()),
+                new ReservationTimeResponse(ReservationTimeFixture.time2()),
+                new ReservationTimeResponse(ReservationTimeFixture.noReservationTime())
         );
         when(reservationTimeService.findAll()).thenReturn(expected);
 
@@ -75,6 +76,10 @@ class ReservationTimeControllerTest {
                     {
                         "id": 2,
                         "startAt": "11:00"
+                    },
+                    {
+                        "id": 3,
+                        "startAt": "12:00"
                     }
                 ]
                 """;

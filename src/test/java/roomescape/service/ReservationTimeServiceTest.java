@@ -7,6 +7,7 @@ import static roomescape.fixture.ReservationTimeFixture.NO_RESERVATION_TIME_ID;
 import static roomescape.fixture.ReservationTimeFixture.TIME_1_ID;
 import static roomescape.fixture.ReservationTimeFixture.newTimeRequest;
 import static roomescape.fixture.ReservationTimeFixture.newTimeResponse;
+import static roomescape.fixture.ThemeFixture.THEME_1_ID;
 
 import java.time.format.DateTimeFormatter;
 import java.util.List;
@@ -18,9 +19,9 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.jdbc.Sql;
 import org.springframework.test.context.jdbc.Sql.ExecutionPhase;
 import roomescape.exception.BadRequestException;
+import roomescape.fixture.ReservationFixture;
 import roomescape.fixture.ReservationTimeFixture;
-import roomescape.repository.ReservationRepository;
-import roomescape.repository.ReservationTimeRepository;
+import roomescape.service.dto.AvailableReservationTimeResponse;
 import roomescape.service.dto.ReservationTimeRequest;
 import roomescape.service.dto.ReservationTimeResponse;
 
@@ -31,12 +32,6 @@ class ReservationTimeServiceTest {
 
     @Autowired
     private ReservationTimeService reservationTimeService;
-
-    @Autowired
-    private ReservationRepository reservationRepository;
-
-    @Autowired
-    private ReservationTimeRepository reservationTimeRepository;
 
     @Test
     void create() {
@@ -88,5 +83,20 @@ class ReservationTimeServiceTest {
         // when & then
         assertThatThrownBy(() -> reservationTimeService.remove(TIME_1_ID))
                 .isInstanceOf(BadRequestException.class);
+    }
+
+    @Test
+    @DisplayName("특정 날짜와 테마에 예약이 됐는지 여부와 함께 시간들을 조회한다.")
+    void findAllWithAvailable() {
+        // when
+        List<AvailableReservationTimeResponse> result = reservationTimeService.findAllWithAvailable(
+                ReservationFixture.reservation1().getDate(), THEME_1_ID);
+
+        // then
+        assertThat(result).containsExactly(
+                new AvailableReservationTimeResponse(ReservationTimeFixture.time1(), true),
+                new AvailableReservationTimeResponse(ReservationTimeFixture.time2(), true),
+                new AvailableReservationTimeResponse(ReservationTimeFixture.noReservationTime(), false)
+        );
     }
 }

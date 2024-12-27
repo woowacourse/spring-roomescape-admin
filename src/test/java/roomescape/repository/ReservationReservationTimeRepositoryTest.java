@@ -10,13 +10,15 @@ import java.util.List;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.autoconfigure.jdbc.JdbcTest;
-import org.springframework.context.annotation.Import;
+import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.test.context.jdbc.Sql;
+import org.springframework.test.context.jdbc.Sql.ExecutionPhase;
 import roomescape.domain.ReservationTime;
 import roomescape.fixture.ReservationTimeFixture;
 
-@Import(ReservationTimeRepository.class)
-@JdbcTest
+@SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.NONE)
+@Sql(scripts = "/truncate.sql", executionPhase = ExecutionPhase.BEFORE_TEST_METHOD)
+@Sql(scripts = "/test_data.sql", executionPhase = ExecutionPhase.BEFORE_TEST_METHOD)
 class ReservationReservationTimeRepositoryTest {
 
     @Autowired

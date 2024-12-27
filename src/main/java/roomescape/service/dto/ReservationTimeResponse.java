@@ -6,7 +6,7 @@ import roomescape.domain.ReservationTime;
 
 public record ReservationTimeResponse(long id, String startAt) {
 
-    private static final DateTimeFormatter FORMATTER = DateTimeFormatter.ofPattern("HH:mm");
+    public static final DateTimeFormatter FORMATTER = DateTimeFormatter.ofPattern("HH:mm");
 
     public ReservationTimeResponse(long id, LocalTime time) {
         this(id, time.format(FORMATTER));

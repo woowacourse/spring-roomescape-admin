@@ -5,18 +5,21 @@ import static roomescape.fixture.ReservationFixture.INITIAL_RESERVATION_SIZE;
 import static roomescape.fixture.ReservationFixture.RESERVATION_1_ID;
 import static roomescape.fixture.ReservationTimeFixture.NO_RESERVATION_TIME_ID;
 import static roomescape.fixture.ReservationTimeFixture.TIME_1_ID;
+import static roomescape.fixture.ReservationTimeFixture.TIME_2_ID;
 
 import java.util.List;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.autoconfigure.jdbc.JdbcTest;
-import org.springframework.context.annotation.Import;
+import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.test.context.jdbc.Sql;
+import org.springframework.test.context.jdbc.Sql.ExecutionPhase;
 import roomescape.domain.Reservation;
 import roomescape.fixture.ReservationFixture;
 
-@Import(ReservationRepository.class)
-@JdbcTest
+@SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.NONE)
+@Sql(scripts = "/truncate.sql", executionPhase = ExecutionPhase.BEFORE_TEST_METHOD)
+@Sql(scripts = "/test_data.sql", executionPhase = ExecutionPhase.BEFORE_TEST_METHOD)
 class ReservationRepositoryTest {
 
     @Autowired
@@ -85,5 +88,17 @@ class ReservationRepositoryTest {
 
         // then
         assertThat(result).isFalse();
+    }
+
+    @Test
+    @DisplayName("특정 날짜, 테마에 예약된 시간들을 조회한다.")
+    void findTimeIdByDateAndThemeId() {
+        // when
+        Reservation reservation = ReservationFixture.reservation1();
+        List<Long> timeIds = repository.findTimeIdByDateAndThemeId(
+                reservation.getDate(), reservation.getTheme().getId());
+
+        // then
+        assertThat(timeIds).containsExactly(TIME_1_ID, TIME_2_ID);
     }
 }

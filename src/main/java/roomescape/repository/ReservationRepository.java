@@ -1,5 +1,6 @@
 package roomescape.repository;
 
+import java.time.LocalDate;
 import java.util.List;
 import java.util.Optional;
 import javax.sql.DataSource;
@@ -77,6 +78,15 @@ public class ReservationRepository {
                         + "left join reservation_time as rt on rt.id = r.time_id "
                         + "left join theme as t on t.id = r.theme_id ";
         return jdbcTemplate.query(sql, RESERVATION_ROW_MAPPER);
+    }
+
+    public List<Long> findTimeIdByDateAndThemeId(LocalDate date, Long themeId) {
+        String sql = """
+                select time_id
+                from reservation
+                where date = ? and theme_id = ?
+                """;
+        return jdbcTemplate.queryForList(sql, Long.class, date, themeId);
     }
 
     public void delete(Long id) {

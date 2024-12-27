@@ -14,8 +14,9 @@ import roomescape.exception.BadRequestException;
 @EqualsAndHashCode(of = "id")
 public class Reservation {
 
-    private static final int MAX_NAME_LENGTH = 20;
     private static final int MIN_NAME_LENGTH = 1;
+    private static final int MAX_NAME_LENGTH = 20;
+
     private Long id;
     private String name;
     private LocalDate date;

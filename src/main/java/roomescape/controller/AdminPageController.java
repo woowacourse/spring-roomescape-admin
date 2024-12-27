@@ -22,4 +22,9 @@ public class AdminPageController {
     public String adminTimePage() {
         return "/admin/time";
     }
+
+    @GetMapping("/admin/theme")
+    public String adminThemePage() {
+        return "/admin/theme";
+    }
 }

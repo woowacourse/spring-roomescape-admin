@@ -1,5 +1,6 @@
 package roomescape.repository;
 
+import java.time.LocalDate;
 import java.util.List;
 import java.util.Optional;
 import javax.sql.DataSource;
@@ -52,6 +53,17 @@ public class ThemeRepository {
     public List<Theme> findAll() {
         String sql = "select * from theme";
         return jdbcTemplate.query(sql, THEME_ROW_MAPPER);
+    }
+
+    public List<Theme> findPopularThemes(LocalDate startDay, LocalDate endDay, int limit) {
+        return jdbcTemplate.query("""
+                select t.id, t.name, t.description, t.thumbnail, count(*) as reservation_count
+                from theme t
+                inner join reservation r on r.theme_id = t.id and r.date >= ? and r.date <= ? 
+                group by t.id
+                order by reservation_count desc
+                limit ?
+                """, THEME_ROW_MAPPER, startDay, endDay, limit);
     }
 
     public void delete(Long id) {

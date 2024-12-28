@@ -1,5 +1,6 @@
 package roomescape.service;
 
+import java.time.LocalDate;
 import java.util.List;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -35,6 +36,12 @@ public class ThemeService {
 
     public List<ThemeResponse> findAll() {
         return themeRepository.findAll().stream()
+                .map(ThemeResponse::new)
+                .toList();
+    }
+
+    public List<ThemeResponse> findPopularThemes(LocalDate startDay, LocalDate endDay, int limit) {
+        return themeRepository.findPopularThemes(startDay, endDay, limit).stream()
                 .map(ThemeResponse::new)
                 .toList();
     }

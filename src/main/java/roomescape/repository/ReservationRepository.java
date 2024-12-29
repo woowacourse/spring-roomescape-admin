@@ -107,4 +107,10 @@ public class ReservationRepository {
 
         return count > 0;
     }
+
+    public boolean existsByDateAndThemeIdAndTimeId(LocalDate date, Long themeId, Long timeId) {
+        String sql = "select count(1) from reservation where date = ? and theme_id = ? and time_id = ?";
+        long count = jdbcTemplate.queryForObject(sql, Long.class, date, themeId, timeId);
+        return count > 0;
+    }
 }

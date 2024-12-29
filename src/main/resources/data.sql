@@ -22,3 +22,6 @@ values ('reservator2', CURRENT_DATE - 1, 1, 2);
 -- 같은 날짜, 다른 시간, 같은 테마
 insert into reservation (name, date, time_id, theme_id)
 values ('reservator3', CURRENT_DATE - 1, 2, 1);
+
+insert into member(name, email, password)
+values ('kargo', 'kargo@google.com', '1234');

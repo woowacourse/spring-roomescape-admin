@@ -7,3 +7,8 @@ spring:
       path: /h2-console
   profiles:
     active: local
+
+jwt:
+  secret: "Yn2kjibddFAWtnPJ2AFlL8WXmohJMCvigQggaEypa5E="
+  expiration: 1800000
+  expirationInSeconds: 1800

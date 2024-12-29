@@ -48,7 +48,20 @@ class ReservationServiceTest {
 
         // when & then
         assertThatThrownBy(() -> reservationService.create(request))
-                .isInstanceOf(BadRequestException.class);
+                .isInstanceOf(BadRequestException.class)
+                .hasMessageContaining("같은 시간에 이미 예약이 존재합니다.");
+    }
+
+    @Test
+    @DisplayName("현재 시간보다 이전 시간의 예약을 시도하면 예외가 발생한다.")
+    void createLate() {
+        // given
+        ReservationRequest request = ReservationFixture.badRequest();
+
+        // when & then
+        assertThatThrownBy(() -> reservationService.create(request))
+                .isInstanceOf(BadRequestException.class)
+                .hasMessageContaining("현재 시각보다 이전의 예약은 불가능합니다.");
     }
 
     @Test

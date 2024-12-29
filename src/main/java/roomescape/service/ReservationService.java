@@ -1,5 +1,6 @@
 package roomescape.service;
 
+import java.time.LocalDateTime;
 import java.util.List;
 import lombok.RequiredArgsConstructor;
 import org.springframework.dao.DataIntegrityViolationException;
@@ -30,11 +31,18 @@ public class ReservationService {
         ReservationTime time = timeRepository.findById(reservationRequest.timeId()).orElseThrow();
         Theme theme = themeRepository.findById(reservationRequest.themeId()).orElseThrow();
         Reservation reservation = new Reservation(reservationRequest.name(), reservationRequest.date(), time, theme);
+        validateIsBeforeNow(reservation);
         try {
             Reservation savedReservation = reservationRepository.save(reservation);
             return new ReservationResponse(savedReservation);
         } catch (DataIntegrityViolationException e) {
             throw new BadRequestException("같은 시간에 이미 예약이 존재합니다.");
+        }
+    }
+
+    private void validateIsBeforeNow(Reservation reservation) {
+        if (reservation.isBefore(LocalDateTime.now())) {
+            throw new BadRequestException("현재 시각보다 이전의 예약은 불가능합니다.");
         }
     }
 

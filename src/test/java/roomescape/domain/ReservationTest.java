@@ -1,9 +1,12 @@
 package roomescape.domain;
 
+import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatCode;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 
 import java.time.LocalDate;
+import java.time.LocalDateTime;
+import java.time.LocalTime;
 import org.apache.logging.log4j.util.Strings;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -46,26 +49,38 @@ class ReservationTest {
     }
 
     @Test
-    @DisplayName("현재 시각보다 이후의 예약은 가능하다.")
-    void reservationSuccess() {
+    @DisplayName("예약 시간이 특정 시간보다 이전이면 true를 반환한다.")
+    void isBeforeTrue() {
         // given
-        ReservationTime time = ReservationTimeFixture.time2();
-        Theme theme = ThemeFixture.theme2();
+        LocalDate date = LocalDate.now();
+        LocalTime early = LocalTime.of(10, 0);
+        LocalTime late = LocalTime.of(10, 1);
 
-        // when & then
-        assertThatCode(() -> new Reservation("카고", LocalDate.now().plusDays(1), time, theme))
-                .doesNotThrowAnyException();
+        ReservationTime time = new ReservationTime(early);
+        Reservation reservation = new Reservation("카고", date, time, ThemeFixture.theme1());
+
+        // when 
+        boolean result = reservation.isBefore(LocalDateTime.of(date, late));
+
+        // then
+        assertThat(result).isTrue();
     }
 
     @Test
-    @DisplayName("현재 시각보다 이전의 예약은 불가능하다.")
-    void reservationFailByLate() {
+    @DisplayName("예약 시간이 특정 시간보다 이후이면 false를 반환한다.")
+    void isBeforeFalse() {
         // given
-        ReservationTime time = ReservationTimeFixture.time2();
-        Theme theme = ThemeFixture.theme2();
+        LocalDate date = LocalDate.now();
+        LocalTime early = LocalTime.of(10, 0);
+        LocalTime late = LocalTime.of(10, 1);
 
-        // when & then
-        assertThatThrownBy(() -> new Reservation("카고", LocalDate.now().minusDays(1), time, theme))
-                .isInstanceOf(BadRequestException.class);
+        ReservationTime time = new ReservationTime(late);
+        Reservation reservation = new Reservation("카고", date, time, ThemeFixture.theme1());
+
+        // when
+        boolean result = reservation.isBefore(LocalDateTime.of(date, early));
+
+        // then
+        assertThat(result).isFalse();
     }
 }

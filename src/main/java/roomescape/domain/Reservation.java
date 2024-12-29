@@ -3,7 +3,6 @@ package roomescape.domain;
 import io.micrometer.common.util.StringUtils;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
-import java.time.LocalTime;
 import lombok.AllArgsConstructor;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
@@ -25,7 +24,6 @@ public class Reservation {
 
     public Reservation(String name, LocalDate date, ReservationTime time, Theme theme) {
         validateName(name);
-        validateIsBeforeNow(date, time.getStartAt());
         this.name = name;
         this.date = date;
         this.time = time;
@@ -43,10 +41,8 @@ public class Reservation {
         }
     }
 
-    public void validateIsBeforeNow(LocalDate date, LocalTime time) {
-        LocalDateTime dateTime = LocalDateTime.of(date, time);
-        if (dateTime.isBefore(LocalDateTime.now())) {
-            throw new BadRequestException("현재 시각보다 이전의 예약은 불가능합니다.");
-        }
+    public boolean isBefore(LocalDateTime dateTime) {
+        LocalDateTime reservationDateTime = LocalDateTime.of(date, time.getStartAt());
+        return reservationDateTime.isBefore(dateTime);
     }
 }

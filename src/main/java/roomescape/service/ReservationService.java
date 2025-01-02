@@ -37,7 +37,7 @@ public class ReservationService {
             Reservation savedReservation = reservationRepository.save(reservation);
             return new ReservationResponse(savedReservation);
         } catch (DataIntegrityViolationException e) {
-            throw new BadRequestException("같은 시간에 이미 예약이 존재합니다.");
+            throw new BadRequestException("같은 시간에 이미 예약이 존재합니다.", e);
         }
     }
 

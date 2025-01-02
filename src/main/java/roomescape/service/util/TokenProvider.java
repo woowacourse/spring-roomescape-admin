@@ -1,11 +1,14 @@
 package roomescape.service.util;
 
 import io.jsonwebtoken.Claims;
+import io.jsonwebtoken.ExpiredJwtException;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.security.Keys;
+import io.jsonwebtoken.security.SignatureException;
 import java.util.Date;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
+import roomescape.exception.BadRequestException;
 
 @Component
 public class TokenProvider {
@@ -26,12 +29,18 @@ public class TokenProvider {
     }
 
     public Long parseUserId(String token) {
-        Claims claims = Jwts.parserBuilder()
-                .setSigningKey(Keys.hmacShaKeyFor(secret.getBytes()))
-                .build()
-                .parseClaimsJws(token)
-                .getBody();
+        try {
+            Claims claims = Jwts.parserBuilder()
+                    .setSigningKey(Keys.hmacShaKeyFor(secret.getBytes()))
+                    .build()
+                    .parseClaimsJws(token)
+                    .getBody();
 
-        return Long.valueOf(claims.getSubject());
+            return Long.valueOf(claims.getSubject());
+        } catch (SignatureException e) {
+            throw new BadRequestException("올바르지 않은 토큰입니다.", e);
+        } catch (ExpiredJwtException e) {
+            throw new BadRequestException("만료된 토큰입니다.", e);
+        }
     }
 }

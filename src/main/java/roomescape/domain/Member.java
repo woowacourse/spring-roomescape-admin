@@ -2,10 +2,12 @@ package roomescape.domain;
 
 import java.util.Objects;
 import lombok.AllArgsConstructor;
+import lombok.EqualsAndHashCode;
 import lombok.Getter;
 
 @Getter
 @AllArgsConstructor
+@EqualsAndHashCode(of = "id")
 public class Member {
 
     private Long id;

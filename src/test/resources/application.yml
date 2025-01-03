@@ -3,3 +3,8 @@ spring:
     active: test
   datasource:
     url: jdbc:h2:mem:test
+
+jwt:
+  secret: "testscretkeytestscretkeytestscretkeytestscretkey"
+  expiration: 100
+  expirationInSeconds: 1

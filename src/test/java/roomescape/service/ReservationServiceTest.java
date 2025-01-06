@@ -17,6 +17,7 @@ import roomescape.exception.BadRequestException;
 import roomescape.fixture.MemberFixture;
 import roomescape.fixture.ReservationFixture;
 import roomescape.repository.ReservationRepository;
+import roomescape.service.dto.ReservationAdminRequest;
 import roomescape.service.dto.ReservationRequest;
 import roomescape.service.dto.ReservationResponse;
 
@@ -68,6 +69,33 @@ class ReservationServiceTest {
         assertThatThrownBy(() -> reservationService.create(request, member))
                 .isInstanceOf(BadRequestException.class)
                 .hasMessageContaining("현재 시각보다 이전의 예약은 불가능합니다.");
+    }
+
+    @Test
+    @DisplayName("관리자 계정으로 예약한다.")
+    void createAdmin() {
+        // given
+        ReservationAdminRequest adminRequest = ReservationFixture.newAdminRequest();
+        Member member = MemberFixture.member1();
+
+        // when
+        ReservationResponse result = reservationService.create(adminRequest, member);
+
+        // then
+        assertThat(result).isEqualTo(ReservationFixture.newResponse());
+    }
+
+    @Test
+    @DisplayName("일반 유저가 관리자 예약을 시도하면 예외가 발생한다.")
+    void createAdminFail() {
+        // given
+        ReservationAdminRequest adminRequest = ReservationFixture.newAdminRequest();
+        Member member = MemberFixture.member2();
+
+        // when & then
+        assertThatThrownBy(() -> reservationService.create(adminRequest, member))
+                .isInstanceOf(BadRequestException.class)
+                .hasMessageContaining("관리자만 접근 가능한 요청입니다.");
     }
 
     @Test

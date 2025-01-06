@@ -10,7 +10,6 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 
 import jakarta.servlet.http.Cookie;
 import java.util.List;
-import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -18,10 +17,10 @@ import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
-import roomescape.fixture.MemberFixture;
 import roomescape.fixture.ReservationFixture;
 import roomescape.service.LoginService;
 import roomescape.service.ReservationService;
+import roomescape.service.dto.ReservationRequest;
 import roomescape.service.dto.ReservationResponse;
 
 @WebMvcTest(ReservationController.class)
@@ -38,11 +37,6 @@ class ReservationControllerTest {
     @MockBean
     private LoginService loginService;
 
-    @BeforeEach
-    void init() {
-        when(loginService.findMemberByToken(any())).thenReturn(MemberFixture.member1());
-    }
-
     @Test
     @DisplayName("예약을 추가하면 예약 정보를 응답받는다.")
     void createReservation() throws Exception {
@@ -55,17 +49,20 @@ class ReservationControllerTest {
                 }
                 """;
         ReservationResponse expected = ReservationFixture.newResponse();
-        when(reservationService.create(any(), any())).thenReturn(expected);
+        when(reservationService.create(any(ReservationRequest.class), any())).thenReturn(expected);
 
         // when & then
         String expectedResponse = """
                 {
                     "id": 4,
-                    "name": "kargo",
                     "date": "2100-12-01",
                     "time": {
                         "id": 2,
                         "startAt" : "11:00"
+                    },
+                    "member": {
+                        "id": 1,
+                        "name": "kargo"
                     },
                     "theme": {
                         "id": 2,
@@ -80,7 +77,7 @@ class ReservationControllerTest {
                         .content(reservationRequest)
                         .cookie(COOKIE))
                 .andExpect(status().isCreated())
-                .andExpect(content().json(expectedResponse));
+                .andExpect(content().json(expectedResponse, true));
     }
 
     @Test
@@ -99,8 +96,11 @@ class ReservationControllerTest {
                 [
                     {
                         "id": 1,
-                        "name": "kargo",
                         "date": "2100-12-01",
+                        "member": {
+                            "id": 1,
+                            "name": "kargo"
+                        },
                         "time" : {
                             "id": 1,
                             "startAt" : "10:00"
@@ -114,8 +114,11 @@ class ReservationControllerTest {
                     },
                     {
                         "id": 2,
-                        "name": "solar",
                         "date": "2100-12-01",
+                        "member": {
+                            "id": 2,
+                            "name": "solar"
+                        },
                         "time": {
                             "id": 1,
                             "startAt" : "10:00"
@@ -129,8 +132,11 @@ class ReservationControllerTest {
                     },
                     {
                         "id": 3,
-                        "name": "hotea",
                         "date": "2100-12-01",
+                        "member": {
+                            "id": 3,
+                            "name": "hotea"
+                        },
                         "time" : {
                             "id": 2,
                             "startAt" : "11:00"
@@ -146,7 +152,7 @@ class ReservationControllerTest {
                 """;
         mockMvc.perform(get("/reservations"))
                 .andExpect(status().isOk())
-                .andExpect(content().json(expectedResponse));
+                .andExpect(content().json(expectedResponse, true));
     }
 
     @Test

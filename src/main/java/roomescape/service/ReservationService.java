@@ -11,9 +11,11 @@ import roomescape.domain.Reservation;
 import roomescape.domain.ReservationTime;
 import roomescape.domain.Theme;
 import roomescape.exception.BadRequestException;
+import roomescape.repository.MemberRepository;
 import roomescape.repository.ReservationRepository;
 import roomescape.repository.ReservationTimeRepository;
 import roomescape.repository.ThemeRepository;
+import roomescape.service.dto.ReservationAdminRequest;
 import roomescape.service.dto.ReservationRequest;
 import roomescape.service.dto.ReservationResponse;
 
@@ -25,6 +27,7 @@ public class ReservationService {
     private final ReservationRepository reservationRepository;
     private final ReservationTimeRepository timeRepository;
     private final ThemeRepository themeRepository;
+    private final MemberRepository memberRepository;
 
     //TODO: 중복 예약 검증 방법이 이게 최선인지 고민해보기
     @Transactional
@@ -39,6 +42,32 @@ public class ReservationService {
             return new ReservationResponse(savedReservation);
         } catch (DataIntegrityViolationException e) {
             throw new BadRequestException("같은 시간에 이미 예약이 존재합니다.", e);
+        }
+    }
+
+    @Transactional
+    public ReservationResponse create(ReservationAdminRequest adminRequest, Member admin) {
+        validateAdmin(admin);
+        ReservationTime time = timeRepository.findById(adminRequest.timeId())
+                .orElseThrow(() -> new BadRequestException("예약 시간이 존재하지 않습니다. id = " + adminRequest.timeId()));
+        Theme theme = themeRepository.findById(adminRequest.themeId())
+                .orElseThrow(() -> new BadRequestException("테마가 존재하지 않습니다. id = " + adminRequest.themeId()));
+        Member member = memberRepository.findById(adminRequest.memberId())
+                .orElseThrow(() -> new BadRequestException("회원이 존재하지 않습니다. id = " + adminRequest.memberId()));
+        Reservation reservation = new Reservation(adminRequest.date(), member, time, theme);
+        validateIsBeforeNow(reservation);
+        validateDuplicated(reservation);
+        try {
+            Reservation savedReservation = reservationRepository.save(reservation);
+            return new ReservationResponse(savedReservation);
+        } catch (DataIntegrityViolationException e) {
+            throw new BadRequestException("같은 시간에 이미 예약이 존재합니다.", e);
+        }
+    }
+
+    private void validateAdmin(Member admin) {
+        if (!admin.isAdmin()) {
+            throw new BadRequestException("관리자만 접근 가능한 요청입니다.");
         }
     }
 

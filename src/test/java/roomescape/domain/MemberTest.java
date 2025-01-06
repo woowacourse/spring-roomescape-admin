@@ -44,7 +44,7 @@ class MemberTest {
     @DisplayName("비밀번호가 올바른지 확인한다.")
     void isCorrectPassword(String password, boolean expected) {
         // given
-        Member member = new Member("kargo", "kargo@google.com", "1234");
+        Member member = new Member("kargo", "kargo@google.com", "1234", Role.ADMIN);
 
         // when
         boolean result = member.isNotCorrectPassword(password);

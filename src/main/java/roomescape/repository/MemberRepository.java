@@ -1,5 +1,6 @@
 package roomescape.repository;
 
+import java.util.List;
 import java.util.Optional;
 import javax.sql.DataSource;
 import org.springframework.dao.EmptyResultDataAccessException;
@@ -10,6 +11,7 @@ import org.springframework.jdbc.core.namedparam.SqlParameterSource;
 import org.springframework.jdbc.core.simple.SimpleJdbcInsert;
 import org.springframework.stereotype.Repository;
 import roomescape.domain.Member;
+import roomescape.domain.Role;
 
 @Repository
 public class MemberRepository {
@@ -20,7 +22,8 @@ public class MemberRepository {
                 rs.getLong("id"),
                 rs.getString("name"),
                 rs.getString("email"),
-                rs.getString("password")
+                rs.getString("password"),
+                Role.match(rs.getString("role"))
         );
     });
 
@@ -59,5 +62,11 @@ public class MemberRepository {
         } catch (EmptyResultDataAccessException e) {
             return Optional.empty();
         }
+    }
+
+    public List<Member> findAll() {
+        String sql = "select * from member";
+
+        return jdbcTemplate.query(sql, MEMBER_ROW_MAPPER);
     }
 }

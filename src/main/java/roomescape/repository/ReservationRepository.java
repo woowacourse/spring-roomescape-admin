@@ -13,6 +13,7 @@ import org.springframework.stereotype.Repository;
 import roomescape.domain.Member;
 import roomescape.domain.Reservation;
 import roomescape.domain.ReservationTime;
+import roomescape.domain.Role;
 import roomescape.domain.Theme;
 
 @Repository
@@ -26,7 +27,8 @@ public class ReservationRepository {
                         rs.getLong("member_id"),
                         rs.getString("name"),
                         rs.getString("email"),
-                        rs.getString("password")
+                        rs.getString("password"),
+                        Role.match(rs.getString("role"))
                 ),
                 new ReservationTime(
                         rs.getLong("time_id"),
@@ -64,7 +66,7 @@ public class ReservationRepository {
 
     public Optional<Reservation> findById(Long id) {
         String sql =
-                "select r.id, r.date, r.member_id, m.name, m.email, m.password, r.time_id, rt.start_at, r.theme_id, t.name as theme_name, t.description, t.thumbnail "
+                "select r.id, r.date, r.member_id, m.name, m.email, m.password, m.role, r.time_id, rt.start_at, r.theme_id, t.name as theme_name, t.description, t.thumbnail "
                         + "from reservation as r "
                         + "left join reservation_time as rt on rt.id = r.time_id "
                         + "left join theme as t on t.id = r.theme_id "
@@ -80,7 +82,7 @@ public class ReservationRepository {
 
     public List<Reservation> findAll() {
         String sql =
-                "select r.id, r.date, r.member_id, m.name, m.email, m.password, r.time_id, rt.start_at, r.theme_id, t.name as theme_name, t.description, t.thumbnail "
+                "select r.id, r.date, r.member_id, m.name, m.email, m.password, m.role, r.time_id, rt.start_at, r.theme_id, t.name as theme_name, t.description, t.thumbnail "
                         + "from reservation as r "
                         + "left join reservation_time as rt on rt.id = r.time_id "
                         + "left join theme as t on t.id = r.theme_id "

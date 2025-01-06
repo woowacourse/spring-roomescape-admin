@@ -14,9 +14,9 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import roomescape.domain.Member;
 import roomescape.service.LoginService;
-import roomescape.service.dto.LoginMemberResponse;
 import roomescape.service.dto.LoginRequest;
 import roomescape.service.dto.LoginResponse;
+import roomescape.service.dto.MemberResponse;
 
 @Slf4j
 @RequiredArgsConstructor
@@ -47,8 +47,8 @@ public class LoginController {
     }
 
     @GetMapping("/check")
-    public LoginMemberResponse loginCheck(@CookieValue(name = LOGIN_TOKEN_HEADER_NAME) String token) {
+    public MemberResponse loginCheck(@CookieValue(name = LOGIN_TOKEN_HEADER_NAME) String token) {
         Member member = loginService.findMemberByToken(token);
-        return new LoginMemberResponse(member);
+        return new MemberResponse(member);
     }
 }

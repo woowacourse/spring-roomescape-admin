@@ -4,6 +4,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 import static roomescape.fixture.MemberFixture.MEMBER_1_ID;
 import static roomescape.fixture.MemberFixture.NOT_EXIST_ID;
 
+import java.util.List;
 import java.util.Optional;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -64,5 +65,15 @@ class MemberRepositoryTest {
 
         // then
         assertThat(found.getName()).isEqualTo(MemberFixture.member1().getName());
+    }
+
+    @Test
+    @DisplayName("모든 회원을 조회한다.")
+    void findAll() {
+        // when
+        List<Member> found = repository.findAll();
+
+        // then
+        assertThat(found.size()).isEqualTo(MemberFixture.INITIAL_MEMBER_SIZE);
     }
 }

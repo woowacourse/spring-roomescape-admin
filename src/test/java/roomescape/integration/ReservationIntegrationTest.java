@@ -14,6 +14,7 @@ import org.springframework.test.context.jdbc.Sql.ExecutionPhase;
 import roomescape.fixture.MemberFixture;
 import roomescape.fixture.ReservationFixture;
 import roomescape.service.dto.LoginRequest;
+import roomescape.service.dto.ReservationAdminRequest;
 import roomescape.service.dto.ReservationRequest;
 
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.DEFINED_PORT)
@@ -31,8 +32,6 @@ public class ReservationIntegrationTest {
                 .body(loginRequest)
                 .when().post("/login")
                 .then().extract().cookie(LOGIN_TOKEN_HEADER_NAME);
-
-        System.out.println("###" + token);
     }
 
     @Test
@@ -46,13 +45,30 @@ public class ReservationIntegrationTest {
     }
 
     @Test
+    @DisplayName("관리자 예약을 추가한다.")
+    void createAdminReservation() {
+        ReservationAdminRequest adminRequest = ReservationFixture.newAdminRequest();
+
+        RestAssured.given().log().all()
+                .contentType(ContentType.JSON)
+                .body(adminRequest)
+                .cookie(LOGIN_TOKEN_HEADER_NAME, token)
+                .when().post("/reservations")
+                .then().log().all()
+                .statusCode(201)
+                .body("id", is(4));
+
+        RestAssured.given().log().all()
+                .when().get("/reservations")
+                .then().log().all()
+                .statusCode(200)
+                .body("size()", is(4));
+    }
+
+    @Test
     @DisplayName("예약을 추가한다.")
     void createReservation() {
         ReservationRequest request = ReservationFixture.newRequest();
-//        Map<String, Object> params = new HashMap<>();
-//        params.put("name", "브라운");
-//        params.put("date", LocalDate.now().plusDays(1).format(DateTimeFormatter.ISO_DATE));
-//        params.put("timeId", 1L);
 
         RestAssured.given().log().all()
                 .contentType(ContentType.JSON)

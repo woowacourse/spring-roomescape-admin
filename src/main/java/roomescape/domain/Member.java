@@ -19,17 +19,19 @@ public class Member {
     private String name;
     private String email;
     private String password;
+    private Role role;
 
-    public Member(String name, String email, String password) {
+    public Member(String name, String email, String password, Role role) {
         // TODO: email, password 검증 로직
         validateName(name);
         this.name = name;
         this.email = email;
         this.password = password;
+        this.role = role;
     }
 
     public Member(Long id, Member member) {
-        this(id, member.getName(), member.getEmail(), member.getPassword());
+        this(id, member.getName(), member.getEmail(), member.getPassword(), member.getRole());
     }
 
     public void validateName(String name) {
@@ -41,5 +43,9 @@ public class Member {
 
     public boolean isNotCorrectPassword(String password) {
         return !Objects.equals(this.password, password);
+    }
+
+    public boolean isAdmin() {
+        return role == Role.ADMIN;
     }
 }

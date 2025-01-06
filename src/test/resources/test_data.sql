@@ -14,12 +14,12 @@ values ('theme2', 'none', 'none');
 insert into theme (name, description, thumbnail)
 values ('no_reservation_theme', 'none', 'none');
 
-insert into member(name, email, password)
-values ('kargo', 'kargo@google.com', '1234');
-insert into member(name, email, password)
-values ('solar', 'solar@google.com', '1234');
-insert into member(name, email, password)
-values ('hotea', 'hotea@google.com', '1234');
+insert into member(name, email, password, role)
+values ('kargo', 'kargo@google.com', '1234', 'admin');
+insert into member(name, email, password, role)
+values ('solar', 'solar@google.com', '1234', 'user');
+insert into member(name, email, password, role)
+values ('hotea', 'hotea@google.com', '1234', 'user');
 
 insert into reservation (member_id, date, time_id, theme_id)
 values (1, '2100-12-01', 1, 1);

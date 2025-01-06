@@ -9,9 +9,10 @@ import static roomescape.fixture.MemberFixture.PASSWORD;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.context.SpringBootTest.WebEnvironment;
+import org.springframework.boot.test.context.TestConfiguration;
+import org.springframework.context.annotation.Bean;
 import org.springframework.test.context.jdbc.Sql;
 import org.springframework.test.context.jdbc.Sql.ExecutionPhase;
 import roomescape.domain.Member;
@@ -19,14 +20,22 @@ import roomescape.exception.BadRequestException;
 import roomescape.fixture.MemberFixture;
 import roomescape.service.dto.LoginRequest;
 import roomescape.service.dto.LoginResponse;
+import roomescape.service.util.TokenProvider;
 
 @SpringBootTest(webEnvironment = WebEnvironment.NONE)
 @Sql(scripts = "/truncate.sql", executionPhase = ExecutionPhase.BEFORE_TEST_METHOD)
 @Sql(scripts = "/test_data.sql", executionPhase = ExecutionPhase.BEFORE_TEST_METHOD)
 class LoginServiceTest {
 
-    @Value("${jwt.expiration}")
-    private long expiration;
+    private static final long EXPIRATION = 1000;
+
+    @TestConfiguration
+    static class TestConfig {
+        @Bean
+        public TokenProvider tokenProvider() {
+            return new TokenProvider("testscretkeytestscretkeytestscretkeytestscretkey", EXPIRATION);
+        }
+    }
 
     @Autowired
     private LoginService loginService;
@@ -90,7 +99,7 @@ class LoginServiceTest {
     void findMemberByExpiredToken() throws InterruptedException {
         // given
         LoginResponse loginResponse = loginService.login(MemberFixture.loginRequest1());
-        Thread.sleep(expiration);
+        Thread.sleep(EXPIRATION);
         assertThatThrownBy(() -> loginService.findMemberByToken(loginResponse.token()))
                 .isInstanceOf(BadRequestException.class)
                 .hasMessageContaining("만료된 토큰입니다.");

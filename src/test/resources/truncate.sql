@@ -12,4 +12,8 @@ truncate table theme;
 ALTER TABLE theme
     ALTER COLUMN id RESTART WITH 1;
 
+truncate table member;
+ALTER TABLE member
+    ALTER COLUMN id RESTART WITH 1;
+
 SET REFERENTIAL_INTEGRITY TRUE;

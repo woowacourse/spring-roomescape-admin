@@ -17,6 +17,7 @@ import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
 import roomescape.fixture.ReservationTimeFixture;
+import roomescape.service.LoginService;
 import roomescape.service.ReservationTimeService;
 import roomescape.service.dto.ReservationTimeResponse;
 
@@ -28,6 +29,9 @@ class ReservationTimeControllerTest {
 
     @MockBean
     private ReservationTimeService reservationTimeService;
+    // TODO: WebMvcConfiguration을 exclude하는 방법이 더 좋을지, 아래와 같이 MockBean을 만들어주는게 나을지 고민해보기
+    @MockBean
+    private LoginService loginService;
 
     @Test
     @DisplayName("예약을 추가하면 예약 정보를 응답받는다.")

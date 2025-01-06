@@ -13,11 +13,16 @@ import roomescape.exception.BadRequestException;
 @Component
 public class TokenProvider {
 
-    @Value("${jwt.secret}")
-    private String secret;
+    private final String secret;
+    private final long expiration;
 
-    @Value("${jwt.expiration}")
-    private long expiration;
+    public TokenProvider(
+            @Value("${jwt.secret}") String secret,
+            @Value("${jwt.expiration}") long expiration
+    ) {
+        this.secret = secret;
+        this.expiration = expiration;
+    }
 
     public String generateToken(Long userId) {
         return Jwts.builder()

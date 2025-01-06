@@ -24,7 +24,7 @@ import roomescape.service.dto.LoginResponse;
 @RestController
 public class LoginController {
 
-    private static final String LOGIN_TOKEN_HEADER_NAME = "token";
+    public static final String LOGIN_TOKEN_HEADER_NAME = "token";
 
     @Value("${jwt.expirationInSeconds}")
     private long expirationInSeconds;

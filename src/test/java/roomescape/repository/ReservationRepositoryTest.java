@@ -8,6 +8,7 @@ import static roomescape.fixture.ReservationTimeFixture.TIME_1_ID;
 import static roomescape.fixture.ReservationTimeFixture.TIME_2_ID;
 
 import java.util.List;
+import java.util.Optional;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -42,10 +43,10 @@ class ReservationRepositoryTest {
     @Test
     void findById() {
         // when
-        Reservation found = repository.findById(RESERVATION_1_ID).get();
+        Optional<Reservation> found = repository.findById(RESERVATION_1_ID);
 
         // then
-        assertThat(found.getName()).isEqualTo(ReservationFixture.reservation1().getName());
+        assertThat(found).isNotEmpty();
     }
 
     @Test

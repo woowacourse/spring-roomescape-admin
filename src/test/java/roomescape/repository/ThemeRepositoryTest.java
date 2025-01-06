@@ -43,17 +43,17 @@ class ThemeRepositoryTest {
         // theme4 : 예약 1개
         jdbcTemplate.update("insert into theme (name, description, thumbnail) values ('theme4', 'none', 'none')");
         jdbcTemplate.update(
-                "insert into reservation (name, date, time_id, theme_id) values ('reservator4', '2100-11-30', 1, 3)");
+                "insert into reservation (member_id, date, time_id, theme_id) values (1, '2100-11-30', 1, 3)");
         jdbcTemplate.update(
-                "insert into reservation (name, date, time_id, theme_id) values ('reservator5', '2100-11-30', 2, 3)");
+                "insert into reservation (member_id, date, time_id, theme_id) values (1, '2100-11-30', 2, 3)");
         jdbcTemplate.update(
-                "insert into reservation (name, date, time_id, theme_id) values ('reservator6', '2100-11-30', 3, 3)");
+                "insert into reservation (member_id, date, time_id, theme_id) values (1, '2100-11-30', 3, 3)");
         jdbcTemplate.update(
-                "insert into reservation (name, date, time_id, theme_id) values ('reservator7', '2100-12-02', 1, 1)");
+                "insert into reservation (member_id, date, time_id, theme_id) values (1, '2100-12-02', 1, 1)");
         jdbcTemplate.update(
-                "insert into reservation (name, date, time_id, theme_id) values ('reservator8', '2100-12-02', 1, 2)");
+                "insert into reservation (member_id, date, time_id, theme_id) values (1, '2100-12-02', 1, 2)");
         jdbcTemplate.update(
-                "insert into reservation (name, date, time_id, theme_id) values ('reservator9', '2100-12-02', 1, 4)");
+                "insert into reservation (member_id, date, time_id, theme_id) values (1, '2100-12-02', 1, 4)");
 
         LocalDate startDay = LocalDate.of(2100, 12, 1);
         LocalDate endDay = LocalDate.of(2100, 12, 2);

@@ -14,11 +14,20 @@ values ('theme2', 'none', 'none');
 insert into theme (name, description, thumbnail)
 values ('no_reservation_theme', 'none', 'none');
 
-insert into reservation (name, date, time_id, theme_id)
-values ('reservator1', '2100-12-01', 1, 1);
--- 같은 날짜, 같은 시간, 다른 테마
-insert into reservation (name, date, time_id, theme_id)
-values ('reservator2', '2100-12-01', 1, 2);
--- 같은 날짜, 다른 시간, 같은 테마
-insert into reservation (name, date, time_id, theme_id)
-values ('reservator3', '2100-12-01', 2, 1);
+insert into member(name, email, password)
+values ('kargo', 'kargo@google.com', '1234');
+insert into member(name, email, password)
+values ('solar', 'solar@google.com', '1234');
+insert into member(name, email, password)
+values ('hotea', 'hotea@google.com', '1234');
+
+insert into reservation (member_id, date, time_id, theme_id)
+values (1, '2100-12-01', 1, 1);
+
+-- 1번 예약과 비교했을 때, 같은 날짜, 같은 시간, 다른 테마
+insert into reservation (member_id, date, time_id, theme_id)
+values (2, '2100-12-01', 1, 2);
+
+-- 1번 예약과 비교했을 때, 같은 날짜, 다른 시간, 같은 테마
+insert into reservation (member_id, date, time_id, theme_id)
+values (3, '2100-12-01', 2, 1);

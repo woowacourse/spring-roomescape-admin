@@ -16,47 +16,36 @@ public abstract class ReservationFixture {
     public static final long RESERVATION_3_ID = 3;
 
     public static Reservation reservation1() {
-        return new Reservation(RESERVATION_1_ID, "reservator1", LocalDate.of(2100, 12, 1),
+        return new Reservation(RESERVATION_1_ID, LocalDate.of(2100, 12, 1), MemberFixture.member1(),
                 ReservationTimeFixture.time1(), ThemeFixture.theme1());
     }
 
     public static Reservation reservation2() {
-        return new Reservation(RESERVATION_2_ID, "reservator2", LocalDate.of(2100, 12, 1),
+        return new Reservation(RESERVATION_2_ID, LocalDate.of(2100, 12, 1), MemberFixture.member2(),
                 ReservationTimeFixture.time1(), ThemeFixture.theme2());
     }
 
     public static Reservation reservation3() {
-        return new Reservation(RESERVATION_3_ID, "reservator3", LocalDate.of(2100, 12, 1),
+        return new Reservation(RESERVATION_3_ID, LocalDate.of(2100, 12, 1), MemberFixture.member3(),
                 ReservationTimeFixture.time2(), ThemeFixture.theme1());
     }
 
     public static Reservation newReservationWithoutId() {
-        return new Reservation("reservator4", LocalDate.of(2100, 12, 1), ReservationTimeFixture.time2(),
+        return new Reservation(LocalDate.of(2100, 12, 1), MemberFixture.member1(), ReservationTimeFixture.time2(),
                 ThemeFixture.theme2());
     }
 
     public static Reservation newReservation() {
-        return new Reservation(INITIAL_RESERVATION_SIZE + 1L, "reservator4", LocalDate.of(2100, 12, 1),
+        return new Reservation(INITIAL_RESERVATION_SIZE + 1L, LocalDate.of(2100, 12, 1), MemberFixture.member1(),
                 ReservationTimeFixture.time2(), ThemeFixture.theme2());
     }
 
     public static ReservationRequest newRequest() {
-        return new ReservationRequest("reservator4", LocalDate.of(2100, 12, 1), TIME_2_ID, THEME_2_ID);
+        return new ReservationRequest(LocalDate.of(2100, 12, 1), TIME_2_ID, THEME_2_ID);
     }
 
     public static ReservationRequest badRequest() {
-        return new ReservationRequest("reservator4", LocalDate.now().minusDays(1), TIME_2_ID, THEME_2_ID);
-    }
-
-    public static String newRequestString() {
-        return """
-                {
-                    "date": "2100-12-01",
-                    "name": "reservatior4",
-                    "timeId": 2,
-                    "themeId": 2,
-                }
-                """;
+        return new ReservationRequest(LocalDate.now().minusDays(1), TIME_2_ID, THEME_2_ID);
     }
 
     public static ReservationResponse newResponse() {

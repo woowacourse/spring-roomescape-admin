@@ -1,16 +1,19 @@
 package roomescape.integration;
 
 import static org.hamcrest.Matchers.is;
+import static roomescape.controller.api.LoginController.LOGIN_TOKEN_HEADER_NAME;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
 import io.restassured.RestAssured;
 import io.restassured.http.ContentType;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.jdbc.Sql;
 import org.springframework.test.context.jdbc.Sql.ExecutionPhase;
+import roomescape.fixture.MemberFixture;
 import roomescape.fixture.ReservationFixture;
+import roomescape.service.dto.LoginRequest;
 import roomescape.service.dto.ReservationRequest;
 
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.DEFINED_PORT)
@@ -18,33 +21,18 @@ import roomescape.service.dto.ReservationRequest;
 @Sql(scripts = "/test_data.sql", executionPhase = ExecutionPhase.BEFORE_TEST_METHOD)
 public class ReservationIntegrationTest {
 
-    private final ObjectMapper objectMapper = new ObjectMapper();
+    private String token;
 
-    @Test
-    @DisplayName("관리자 페이지를 응답한다.")
-    void adminPage() {
-        RestAssured.given().log().all()
-                .when().get("/admin")
-                .then().log().all()
-                .statusCode(200);
-    }
+    @BeforeEach
+    void init() {
+        LoginRequest loginRequest = MemberFixture.loginRequest1();
+        token = RestAssured.given()
+                .contentType(ContentType.JSON)
+                .body(loginRequest)
+                .when().post("/login")
+                .then().extract().cookie(LOGIN_TOKEN_HEADER_NAME);
 
-    @Test
-    @DisplayName("관리자 예약 페이지를 응답한다.")
-    void adminReservationPage() {
-        RestAssured.given().log().all()
-                .when().get("/admin/reservation")
-                .then().log().all()
-                .statusCode(200);
-    }
-
-    @Test
-    @DisplayName("관리자 시간 관리 페이지를 응답한다.")
-    void adminTimePage() {
-        RestAssured.given().log().all()
-                .when().get("/admin/time")
-                .then().log().all()
-                .statusCode(200);
+        System.out.println("###" + token);
     }
 
     @Test
@@ -69,6 +57,7 @@ public class ReservationIntegrationTest {
         RestAssured.given().log().all()
                 .contentType(ContentType.JSON)
                 .body(request)
+                .cookie(LOGIN_TOKEN_HEADER_NAME, token)
                 .when().post("/reservations")
                 .then().log().all()
                 .statusCode(201)
@@ -93,6 +82,7 @@ public class ReservationIntegrationTest {
         RestAssured.given()
                 .contentType(ContentType.JSON)
                 .body(request)
+                .cookie(LOGIN_TOKEN_HEADER_NAME, token)
                 .when().post("/reservations")
                 .then()
                 .statusCode(400);

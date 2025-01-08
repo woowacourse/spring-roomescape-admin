@@ -40,7 +40,7 @@ public class ReservationController {
 
     @ResponseStatus(HttpStatus.NO_CONTENT)
     @DeleteMapping("/{id}")
-    public void cancelReservation(@PathVariable Long id) {
-        reservationService.remove(id);
+    public void cancelReservation(@PathVariable Long id, @Login Member member) {
+        reservationService.remove(id, member);
     }
 }

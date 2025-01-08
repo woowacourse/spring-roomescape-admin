@@ -3,7 +3,7 @@ package roomescape.service;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import static roomescape.fixture.ReservationFixture.INITIAL_RESERVATION_SIZE;
-import static roomescape.fixture.ReservationFixture.RESERVATION_1_ID;
+import static roomescape.fixture.ReservationFixture.RESERVATION_2_ID;
 
 import java.util.List;
 import org.junit.jupiter.api.DisplayName;
@@ -108,15 +108,40 @@ class ReservationServiceTest {
     }
 
     @Test
-    @DisplayName("예약을 삭제한다.")
-    void remove() {
+    @DisplayName("관리자는 모든 예약을 취소할 수 있다.")
+    void removeByAdmin() {
         // given
-        assertThat(reservationRepository.findById(RESERVATION_1_ID)).isNotEmpty();
+        assertThat(reservationRepository.findById(RESERVATION_2_ID)).isNotEmpty();
 
         // when
-        reservationService.remove(RESERVATION_1_ID);
+        reservationService.remove(RESERVATION_2_ID, MemberFixture.member1());
 
         // then
-        assertThat(reservationRepository.findById(RESERVATION_1_ID)).isEmpty();
+        assertThat(reservationRepository.findById(RESERVATION_2_ID)).isEmpty();
+    }
+
+    @Test
+    @DisplayName("예약자는 자신의 예약을 취소할 수 있다.")
+    void removeByOwner() {
+        // given
+        assertThat(reservationRepository.findById(RESERVATION_2_ID)).isNotEmpty();
+
+        // when
+        reservationService.remove(RESERVATION_2_ID, MemberFixture.member2());
+
+        // then
+        assertThat(reservationRepository.findById(RESERVATION_2_ID)).isEmpty();
+    }
+
+    @Test
+    @DisplayName("관리자 또는 예약자가 아닌 회원이 예약 취소를 시도하면 예외가 발생한다.")
+    void removeFail() {
+        // given
+        assertThat(reservationRepository.findById(RESERVATION_2_ID)).isNotEmpty();
+
+        // when & then
+        assertThatThrownBy(() -> reservationService.remove(RESERVATION_2_ID, MemberFixture.member3()))
+                .isInstanceOf(BadRequestException.class)
+                .hasMessageContaining("예약을 취소할 권한이 없습니다.");
     }
 }

@@ -32,4 +32,8 @@ public class Reservation {
         LocalDateTime reservationDateTime = LocalDateTime.of(date, time.getStartAt());
         return reservationDateTime.isBefore(dateTime);
     }
+
+    public boolean hasCancelPermission(Member member) {
+        return member.isAdmin() || this.member.equals(member);
+    }
 }

@@ -175,7 +175,8 @@ class ReservationControllerTest {
     @Test
     @DisplayName("예약을 취소한다.")
     void cancelReservation() throws Exception {
-        mockMvc.perform(delete("/reservations/1"))
+        mockMvc.perform(delete("/reservations/1")
+                        .cookie(COOKIE))
                 .andExpect(status().isNoContent());
     }
 }

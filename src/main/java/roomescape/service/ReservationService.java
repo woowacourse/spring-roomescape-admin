@@ -95,7 +95,13 @@ public class ReservationService {
     }
 
     @Transactional
-    public void remove(Long id) {
-        reservationRepository.delete(id);
+    public void remove(Long id, Member member) {
+        reservationRepository.findById(id).ifPresent(r -> {
+            if (r.hasCancelPermission(member)) {
+                reservationRepository.delete(id);
+                return;
+            }
+            throw new BadRequestException("예약을 취소할 권한이 없습니다.");
+        });
     }
 }

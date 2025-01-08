@@ -107,7 +107,8 @@ public class ReservationIntegrationTest {
     @Test
     @DisplayName("예약을 취소한다.")
     void cancelReservation() {
-        RestAssured
+        RestAssured.given()
+                .cookie(LOGIN_TOKEN_HEADER_NAME, token)
                 .when().delete("/reservations/1")
                 .then().statusCode(204);
 

@@ -13,6 +13,8 @@ import roomescape.exception.BadRequestException;
 @Component
 public class TokenProvider {
 
+    private static final String ROLE = "role";
+
     private final String secret;
     private final long expiration;
 
@@ -24,24 +26,35 @@ public class TokenProvider {
         this.expiration = expiration;
     }
 
-    public String generateToken(Long userId) {
+    public String generateToken(long memberId, String role) {
         return Jwts.builder()
-                .setSubject(String.valueOf(userId))
+                .setSubject(String.valueOf(memberId))
+                .claim(ROLE, role)
                 .setIssuedAt(new Date())
                 .setExpiration(new Date(System.currentTimeMillis() + expiration))
                 .signWith(Keys.hmacShaKeyFor(secret.getBytes()))
                 .compact();
     }
 
-    public Long parseUserId(String token) {
+    public long parseMemberId(String token) {
+        Claims claims = parseClaims(token);
+
+        return Long.valueOf(claims.getSubject());
+    }
+
+    public String parseRole(String token) {
+        Claims claims = parseClaims(token);
+
+        return claims.get(ROLE, String.class);
+    }
+
+    private Claims parseClaims(String token) {
         try {
-            Claims claims = Jwts.parserBuilder()
+            return Jwts.parserBuilder()
                     .setSigningKey(Keys.hmacShaKeyFor(secret.getBytes()))
                     .build()
                     .parseClaimsJws(token)
                     .getBody();
-
-            return Long.valueOf(claims.getSubject());
         } catch (SignatureException e) {
             throw new BadRequestException("올바르지 않은 토큰입니다.", e);
         } catch (ExpiredJwtException e) {

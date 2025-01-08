@@ -40,4 +40,8 @@ public abstract class MemberFixture {
     public static LoginRequest loginRequest1() {
         return new LoginRequest(MEMBER_1_EMAIL, PASSWORD);
     }
+
+    public static LoginRequest loginRequest2() {
+        return new LoginRequest(MEMBER_2_EMAIL, PASSWORD);
+    }
 }

@@ -33,7 +33,7 @@ class LoginServiceTest {
     static class TestConfig {
         @Bean
         public TokenProvider tokenProvider() {
-            return new TokenProvider("testscretkeytestscretkeytestscretkeytestscretkey", EXPIRATION);
+            return new TokenProvider("testSecretKeyFAWtnPJ2AFlL8WXmohJMCvigQggaEypa5E=", EXPIRATION);
         }
     }
 
@@ -103,5 +103,31 @@ class LoginServiceTest {
         assertThatThrownBy(() -> loginService.findMemberByToken(loginResponse.token()))
                 .isInstanceOf(BadRequestException.class)
                 .hasMessageContaining("만료된 토큰입니다.");
+    }
+
+    @Test
+    @DisplayName("토큰이 관리자의 토큰이면 true를 반환한다.")
+    void isAdminToken() {
+        // given
+        String token = loginService.login(MemberFixture.loginRequest1()).token();
+
+        // when
+        boolean result = loginService.isAdminToken(token);
+
+        // then
+        assertThat(result).isTrue();
+    }
+
+    @Test
+    @DisplayName("토큰이 관리자의 토큰이 아니면 false를 반환한다.")
+    void isNotAdminToken() {
+        // given
+        String token = loginService.login(MemberFixture.loginRequest2()).token();
+
+        // when
+        boolean result = loginService.isAdminToken(token);
+
+        // then
+        assertThat(result).isFalse();
     }
 }

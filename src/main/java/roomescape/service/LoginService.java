@@ -4,6 +4,7 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import roomescape.domain.Member;
+import roomescape.domain.Role;
 import roomescape.exception.BadRequestException;
 import roomescape.repository.MemberRepository;
 import roomescape.service.dto.LoginRequest;
@@ -24,14 +25,21 @@ public class LoginService {
         if (member.isNotCorrectPassword(loginRequest.password())) {
             throw new BadRequestException("비밀번호가 일치하지 않습니다.");
         }
-        String token = tokenProvider.generateToken(member.getId());
+        String token = tokenProvider.generateToken(member.getId(), member.getRole().toString());
         return new LoginResponse(token);
     }
 
     public Member findMemberByToken(String token) {
-        Long userId = tokenProvider.parseUserId(token);
+        Long userId = tokenProvider.parseMemberId(token);
 
         return memberRepository.findById(userId)
                 .orElseThrow(() -> new BadRequestException("로그인을 위한 토큰이 유효하지 않습니다."));
+    }
+
+    public boolean isAdminToken(String token) {
+        String roleName = tokenProvider.parseRole(token);
+
+        Role role = Role.match(roleName);
+        return role.isAdmin();
     }
 }

@@ -6,6 +6,7 @@ import static org.springframework.test.web.servlet.request.MockMvcRequestBuilder
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
+import static roomescape.controller.api.LoginController.LOGIN_TOKEN_HEADER_NAME;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import jakarta.servlet.http.Cookie;
@@ -30,7 +31,7 @@ import roomescape.service.dto.ReservationResponse;
 class ReservationControllerTest {
 
     private static final String MEMBER_1_TOKEN = "member1TokenValue";
-    private static final Cookie COOKIE = new Cookie("token", MEMBER_1_TOKEN);
+    private static final Cookie COOKIE = new Cookie(LOGIN_TOKEN_HEADER_NAME, MEMBER_1_TOKEN);
 
     @Autowired
     private MockMvc mockMvc;

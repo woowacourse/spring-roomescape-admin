@@ -23,8 +23,8 @@ import roomescape.service.dto.LoginResponse;
 import roomescape.service.util.TokenProvider;
 
 @SpringBootTest(webEnvironment = WebEnvironment.NONE)
-@Sql(scripts = "/truncate.sql", executionPhase = ExecutionPhase.BEFORE_TEST_METHOD)
-@Sql(scripts = "/test_data.sql", executionPhase = ExecutionPhase.BEFORE_TEST_METHOD)
+@Sql(scripts = "/truncate.sql", executionPhase = ExecutionPhase.BEFORE_TEST_CLASS)
+@Sql(scripts = "/test_data.sql", executionPhase = ExecutionPhase.BEFORE_TEST_CLASS)
 class LoginServiceTest {
 
     private static final long EXPIRATION = 1000;

@@ -1,6 +1,5 @@
 package roomescape.controller.api;
 
-import static org.mockito.Mockito.any;
 import static org.mockito.Mockito.when;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.delete;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
@@ -8,8 +7,10 @@ import static org.springframework.test.web.servlet.request.MockMvcRequestBuilder
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
 import jakarta.servlet.http.Cookie;
 import java.util.List;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -17,6 +18,8 @@ import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
+import roomescape.domain.Member;
+import roomescape.fixture.MemberFixture;
 import roomescape.fixture.ReservationFixture;
 import roomescape.service.LoginService;
 import roomescape.service.ReservationService;
@@ -26,10 +29,14 @@ import roomescape.service.dto.ReservationResponse;
 @WebMvcTest(ReservationController.class)
 class ReservationControllerTest {
 
-    private static final Cookie COOKIE = new Cookie("token", "token");
+    private static final String MEMBER_1_TOKEN = "member1TokenValue";
+    private static final Cookie COOKIE = new Cookie("token", MEMBER_1_TOKEN);
 
     @Autowired
     private MockMvc mockMvc;
+
+    @Autowired
+    private ObjectMapper objectMapper;
 
     @MockBean
     private ReservationService reservationService;
@@ -37,19 +44,28 @@ class ReservationControllerTest {
     @MockBean
     private LoginService loginService;
 
+    private Member member = MemberFixture.member1();
+
+    @BeforeEach
+    void init() {
+        when(loginService.findMemberByToken(MEMBER_1_TOKEN)).thenReturn(member);
+    }
+
     @Test
-    @DisplayName("예약을 추가하면 예약 정보를 응답받는다.")
+    @DisplayName("예약 요청이 API 스펙에 맞게 오면 API 스펙에 맞는 응답을 내리며, 쿠키에서 로그인을 위한 토큰을 파싱할 수 있다.")
     void createReservation() throws Exception {
         // given
-        String reservationRequest = """
+        String requestString = """
                 {
                     "date": "2100-12-01",
                     "timeId": 2,
                     "themeId": 2
                 }
                 """;
+
+        ReservationRequest request = objectMapper.readValue(requestString, ReservationRequest.class);
         ReservationResponse expected = ReservationFixture.newResponse();
-        when(reservationService.create(any(ReservationRequest.class), any())).thenReturn(expected);
+        when(reservationService.create(request, member)).thenReturn(expected);
 
         // when & then
         String expectedResponse = """
@@ -74,7 +90,7 @@ class ReservationControllerTest {
                 """;
         mockMvc.perform(post("/reservations")
                         .contentType(MediaType.APPLICATION_JSON)
-                        .content(reservationRequest)
+                        .content(requestString)
                         .cookie(COOKIE))
                 .andExpect(status().isCreated())
                 .andExpect(content().json(expectedResponse, true));

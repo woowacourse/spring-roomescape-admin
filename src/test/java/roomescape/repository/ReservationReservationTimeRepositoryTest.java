@@ -66,7 +66,7 @@ class ReservationReservationTimeRepositoryTest {
         assertThat(reservationTimeRepository.findById(NO_RESERVATION_TIME_ID)).isNotEmpty();
 
         // when
-        reservationTimeRepository.delete(NO_RESERVATION_TIME_ID);
+        reservationTimeRepository.deleteById(NO_RESERVATION_TIME_ID);
 
         // then
         assertThat(reservationTimeRepository.findById(NO_RESERVATION_TIME_ID)).isEmpty();

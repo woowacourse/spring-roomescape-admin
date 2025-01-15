@@ -65,7 +65,7 @@ class ReservationRepositoryTest {
         assertThat(repository.findById(RESERVATION_1_ID)).isNotEmpty();
 
         // when
-        repository.delete(RESERVATION_1_ID);
+        repository.deleteById(RESERVATION_1_ID);
 
         // then
         assertThat(repository.findById(RESERVATION_1_ID)).isEmpty();
@@ -75,7 +75,7 @@ class ReservationRepositoryTest {
     @DisplayName("특정 시간에 예약이 존재하면 true를 반환한다.")
     void existsByTimeIdTrue() {
         // when
-        boolean result = repository.existsByTimeId(TIME_1_ID);
+        boolean result = repository.existsById(TIME_1_ID);
 
         // then
         assertThat(result).isTrue();

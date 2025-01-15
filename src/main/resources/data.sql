@@ -15,11 +15,11 @@ insert into theme (name, description, thumbnail)
 values ('no_reservation_theme', 'none', '/image/floors.png');
 
 insert into member(name, email, password, role)
-values ('kargo', 'kargo@google.com', '1234', 'admin');
+values ('kargo', 'kargo@google.com', '1234', 'ADMIN');
 insert into member(name, email, password, role)
-values ('solar', 'solar@google.com', '1234', 'user');
+values ('solar', 'solar@google.com', '1234', 'USER');
 insert into member(name, email, password, role)
-values ('hotea', 'hotea@google.com', '1234', 'user');
+values ('hotea', 'hotea@google.com', '1234', 'USER');
 
 
 insert into reservation (member_id, date, time_id, theme_id)

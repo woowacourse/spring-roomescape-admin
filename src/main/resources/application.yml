@@ -7,6 +7,8 @@ spring:
       path: /h2-console
   profiles:
     active: local
+  jpa:
+    defer-datasource-initialization: true
 
 jwt:
   secret: "Yn2kjibddFAWtnPJ2AFlL8WXmohJMCvigQggaEypa5E="

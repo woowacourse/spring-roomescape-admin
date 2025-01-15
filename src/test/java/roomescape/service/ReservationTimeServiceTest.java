@@ -9,6 +9,7 @@ import static roomescape.fixture.ReservationTimeFixture.newTimeRequest;
 import static roomescape.fixture.ReservationTimeFixture.newTimeResponse;
 import static roomescape.fixture.ThemeFixture.THEME_1_ID;
 
+import jakarta.persistence.EntityManager;
 import java.time.format.DateTimeFormatter;
 import java.util.List;
 import java.util.NoSuchElementException;
@@ -32,6 +33,9 @@ class ReservationTimeServiceTest {
 
     @Autowired
     private ReservationTimeService reservationTimeService;
+
+    @Autowired
+    private EntityManager em;
 
     @Test
     void create() {

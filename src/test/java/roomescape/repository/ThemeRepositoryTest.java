@@ -10,6 +10,7 @@ import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.test.context.jdbc.Sql;
 import org.springframework.test.context.jdbc.Sql.ExecutionPhase;
@@ -57,10 +58,10 @@ class ThemeRepositoryTest {
 
         LocalDate startDay = LocalDate.of(2100, 12, 1);
         LocalDate endDay = LocalDate.of(2100, 12, 2);
-        int limit = 2;
+        PageRequest pageRequest = PageRequest.of(0, 2);
 
         // when
-        List<Theme> popularThemes = themeRepository.findPopularThemes(startDay, endDay, limit);
+        List<Theme> popularThemes = themeRepository.findPopularThemes(startDay, endDay, pageRequest);
 
         // then
         List<String> names = popularThemes.stream().map(Theme::getName).toList();

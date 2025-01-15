@@ -48,7 +48,7 @@ public class ReservationTimeService {
         if (reservationRepository.existsByTimeId(id)) {
             throw new BadRequestException("예약이 존재하는 시간은 삭제할 수 없습니다.");
         }
-        reservationTimeRepository.delete(id);
+        reservationTimeRepository.deleteById(id);
     }
 
     public List<AvailableReservationTimeResponse> findAllWithAvailable(LocalDate date, Long themeId) {

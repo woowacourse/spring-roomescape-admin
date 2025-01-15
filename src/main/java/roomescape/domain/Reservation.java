@@ -1,20 +1,38 @@
 package roomescape.domain;
 
+import jakarta.persistence.Entity;
+import jakarta.persistence.FetchType;
+import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.GenerationType;
+import jakarta.persistence.Id;
+import jakarta.persistence.ManyToOne;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
+import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 
+@NoArgsConstructor(access = AccessLevel.PROTECTED)
 @AllArgsConstructor
 @Getter
 @EqualsAndHashCode(of = "id")
+@Entity
 public class Reservation {
 
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
     private LocalDate date;
+
+    @ManyToOne(fetch = FetchType.LAZY)
     private Member member;
+
+    @ManyToOne(fetch = FetchType.LAZY)
     private ReservationTime time;
+
+    @ManyToOne(fetch = FetchType.LAZY)
     private Theme theme;
 
     public Reservation(LocalDate date, Member member, ReservationTime time, Theme theme) {

@@ -98,7 +98,7 @@ public class ReservationService {
     public void remove(Long id, Member member) {
         reservationRepository.findById(id).ifPresent(r -> {
             if (r.hasCancelPermission(member)) {
-                reservationRepository.delete(id);
+                reservationRepository.deleteById(id);
                 return;
             }
             throw new BadRequestException("예약을 취소할 권한이 없습니다.");

@@ -24,6 +24,7 @@ import roomescape.fixture.MemberFixture;
 import roomescape.fixture.ReservationFixture;
 import roomescape.service.LoginService;
 import roomescape.service.ReservationService;
+import roomescape.service.dto.ReservationMineResponse;
 import roomescape.service.dto.ReservationRequest;
 import roomescape.service.dto.ReservationResponse;
 
@@ -168,6 +169,32 @@ class ReservationControllerTest {
                 ]
                 """;
         mockMvc.perform(get("/reservations"))
+                .andExpect(status().isOk())
+                .andExpect(content().json(expectedResponse, true));
+    }
+
+    @Test
+    @DisplayName("특정 회원의 예약 조회시 형식에 맞게 응답한다.")
+    void findReservationsOfMember() throws Exception {
+        // given
+        List<ReservationMineResponse> expected = List.of(
+                new ReservationMineResponse(ReservationFixture.reservation1())
+        );
+        when(reservationService.findOfMember(member)).thenReturn(expected);
+
+        // when & then
+        String expectedResponse = """
+                [
+                    {
+                        "reservationId": 1,
+                        "themeName": "theme1",
+                        "date": "2100-12-01",
+                        "startAt": "10:00",
+                        "status": "예약"
+                    }
+                ]
+                """;
+        mockMvc.perform(get("/reservations/mine").cookie(COOKIE))
                 .andExpect(status().isOk())
                 .andExpect(content().json(expectedResponse, true));
     }

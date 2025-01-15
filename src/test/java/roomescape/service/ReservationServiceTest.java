@@ -3,6 +3,7 @@ package roomescape.service;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import static roomescape.fixture.ReservationFixture.INITIAL_RESERVATION_SIZE;
+import static roomescape.fixture.ReservationFixture.RESERVATION_1_ID;
 import static roomescape.fixture.ReservationFixture.RESERVATION_2_ID;
 
 import java.util.List;
@@ -18,6 +19,7 @@ import roomescape.fixture.MemberFixture;
 import roomescape.fixture.ReservationFixture;
 import roomescape.repository.ReservationRepository;
 import roomescape.service.dto.ReservationAdminRequest;
+import roomescape.service.dto.ReservationMineResponse;
 import roomescape.service.dto.ReservationRequest;
 import roomescape.service.dto.ReservationResponse;
 
@@ -105,6 +107,22 @@ class ReservationServiceTest {
 
         // then
         assertThat(result.size()).isEqualTo(INITIAL_RESERVATION_SIZE);
+    }
+
+    @Test
+    @DisplayName("특정 회원의 모든 예약을 조회한다.")
+    void findOfMember() {
+        // given
+        Member member = MemberFixture.member1();
+
+        // when
+        List<ReservationMineResponse> result = reservationService.findOfMember(member);
+
+        // then
+        List<Long> reservationIds = result.stream()
+                .map(ReservationMineResponse::reservationId)
+                .toList();
+        assertThat(reservationIds).containsExactly(RESERVATION_1_ID);
     }
 
     @Test

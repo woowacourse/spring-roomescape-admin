@@ -14,6 +14,7 @@ import org.springframework.web.bind.annotation.RestController;
 import roomescape.controller.Login;
 import roomescape.domain.Member;
 import roomescape.service.ReservationService;
+import roomescape.service.dto.ReservationMineResponse;
 import roomescape.service.dto.ReservationRequest;
 import roomescape.service.dto.ReservationResponse;
 
@@ -36,6 +37,11 @@ public class ReservationController {
     @GetMapping
     public List<ReservationResponse> findAllReservations() {
         return reservationService.findAll();
+    }
+
+    @GetMapping("/mine")
+    public List<ReservationMineResponse> findReservationsOfMember(@Login Member member) {
+        return reservationService.findOfMember(member);
     }
 
     @ResponseStatus(HttpStatus.NO_CONTENT)

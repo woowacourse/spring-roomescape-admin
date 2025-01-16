@@ -15,9 +15,9 @@ public interface ThemeRepository extends JpaRepository<Theme, Long> {
             SELECT r.theme 
             FROM Reservation r
             JOIN r.theme t
-            WHERE r.date BETWEEN :startDay AND :endDay
+            WHERE r.date BETWEEN :startDate AND :endDate
             GROUP BY r.theme
             ORDER BY COUNT(r) DESC
             """)
-    List<Theme> findPopularThemes(LocalDate startDay, LocalDate endDay, Pageable pageable);
+    List<Theme> findPopularThemes(LocalDate startDate, LocalDate endDate, Pageable pageable);
 }

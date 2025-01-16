@@ -37,11 +37,11 @@ public class ThemeController {
 
     @GetMapping("/popular")
     public List<ThemeResponse> findPopularThemes(
-            @RequestParam LocalDate startDay,
-            @RequestParam LocalDate endDay,
+            @RequestParam LocalDate startDate,
+            @RequestParam LocalDate endDate,
             @RequestParam int limit
     ) {
-        return themeService.findPopularThemes(startDay, endDay, limit);
+        return themeService.findPopularThemes(startDate, endDate, limit);
     }
 
     @ResponseStatus(HttpStatus.NO_CONTENT)

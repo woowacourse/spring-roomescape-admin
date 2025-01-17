@@ -9,6 +9,8 @@ spring:
     active: local
   jpa:
     defer-datasource-initialization: true
+    hibernate:
+      ddl-auto: none
 
 jwt:
   secret: "Yn2kjibddFAWtnPJ2AFlL8WXmohJMCvigQggaEypa5E="

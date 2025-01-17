@@ -1,13 +1,12 @@
 package roomescape.domain;
 
 import jakarta.persistence.Entity;
-import jakarta.persistence.EnumType;
-import jakarta.persistence.Enumerated;
 import jakarta.persistence.FetchType;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.ManyToOne;
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
@@ -20,32 +19,27 @@ import lombok.NoArgsConstructor;
 @Getter
 @EqualsAndHashCode(of = "id")
 @Entity
-public class Reservation {
+public class ReservationSlot {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
+    private LocalDate date;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    private Member member;
+    private ReservationTime time;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    private ReservationSlot slot;
+    private Theme theme;
 
-    @Enumerated(EnumType.STRING)
-    private ReservationStatus status;
-
-    public Reservation(Member member, ReservationSlot slot, ReservationStatus status) {
-        this.member = member;
-        this.slot = slot;
-        this.status = status;
+    public ReservationSlot(LocalDate date, ReservationTime time, Theme theme) {
+        this.date = date;
+        this.time = time;
+        this.theme = theme;
     }
 
     public boolean isBefore(LocalDateTime dateTime) {
-        return slot.isBefore(dateTime);
-    }
-
-    public boolean hasCancelPermission(Member member) {
-        return member.isAdmin() || this.member.equals(member);
+        LocalDateTime reservationDateTime = LocalDateTime.of(date, time.getStartAt());
+        return reservationDateTime.isBefore(dateTime);
     }
 }

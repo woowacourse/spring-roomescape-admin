@@ -71,7 +71,7 @@ class AdminControllerTest {
                 """;
         ReservationAdminRequest request = objectMapper.readValue(requestString, ReservationAdminRequest.class);
         ReservationResponse response = ReservationFixture.newResponse();
-        when(reservationService.create(request, member1)).thenReturn(response);
+        when(reservationService.createReservationByAdmin(request)).thenReturn(response);
 
         // when & then
         String expectedResponse = """
@@ -115,7 +115,7 @@ class AdminControllerTest {
                 """;
         ReservationAdminRequest request = objectMapper.readValue(requestString, ReservationAdminRequest.class);
         ReservationResponse response = ReservationFixture.newResponse();
-        when(reservationService.create(request, member1)).thenReturn(response);
+        when(reservationService.createReservationByAdmin(request)).thenReturn(response);
 
         // when & then
         mockMvc.perform(post("/admin/reservations")

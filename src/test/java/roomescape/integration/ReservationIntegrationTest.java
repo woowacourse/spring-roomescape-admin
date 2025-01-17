@@ -89,7 +89,7 @@ public class ReservationIntegrationTest {
     @Test
     @DisplayName("과거 시간대 예약을 시도하면 400을 반환한다.")
     void createReservationFail() {
-        ReservationRequest request = ReservationFixture.badRequest();
+        ReservationRequest request = ReservationFixture.pastRequest();
 //        Map<String, Object> params = new HashMap<>();
 //        params.put("name", "브라운");
 //        params.put("date", LocalDate.now().minusDays(1).format(DateTimeFormatter.ISO_DATE));

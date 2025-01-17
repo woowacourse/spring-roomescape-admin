@@ -67,7 +67,7 @@ class ReservationControllerTest {
 
         ReservationRequest request = objectMapper.readValue(requestString, ReservationRequest.class);
         ReservationResponse expected = ReservationFixture.newResponse();
-        when(reservationService.create(request, member)).thenReturn(expected);
+        when(reservationService.createReservation(request, member)).thenReturn(expected);
 
         // when & then
         String expectedResponse = """

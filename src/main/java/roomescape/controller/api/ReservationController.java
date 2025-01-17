@@ -31,7 +31,7 @@ public class ReservationController {
             @RequestBody ReservationRequest reservationRequest,
             @Login Member member
     ) {
-        return reservationService.create(reservationRequest, member);
+        return reservationService.createReservation(reservationRequest, member);
     }
 
     @GetMapping

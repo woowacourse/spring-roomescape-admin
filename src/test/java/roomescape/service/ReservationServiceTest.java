@@ -5,19 +5,25 @@ import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import static roomescape.fixture.ReservationFixture.INITIAL_RESERVATION_SIZE;
 import static roomescape.fixture.ReservationFixture.RESERVATION_1_ID;
 import static roomescape.fixture.ReservationFixture.RESERVATION_2_ID;
+import static roomescape.fixture.ReservationSlotFixture.INITIAL_SLOT_SIZE;
 
 import java.util.List;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.test.context.jdbc.Sql;
 import org.springframework.test.context.jdbc.Sql.ExecutionPhase;
+import org.springframework.transaction.PlatformTransactionManager;
+import org.springframework.transaction.TransactionStatus;
+import org.springframework.transaction.support.DefaultTransactionDefinition;
 import roomescape.domain.Member;
 import roomescape.exception.BadRequestException;
 import roomescape.fixture.MemberFixture;
 import roomescape.fixture.ReservationFixture;
 import roomescape.repository.ReservationRepository;
+import roomescape.repository.ReservationSlotRepository;
 import roomescape.service.dto.ReservationAdminRequest;
 import roomescape.service.dto.ReservationMineResponse;
 import roomescape.service.dto.ReservationRequest;
@@ -32,43 +38,78 @@ class ReservationServiceTest {
     private ReservationService reservationService;
     @Autowired
     private ReservationRepository reservationRepository;
+    @Autowired
+    private PlatformTransactionManager transactionManager;
+    @Autowired
+    private ReservationSlotRepository slotRepository;
 
     @Test
-    void create() {
+    @DisplayName("두 개의 스레드가 동시에 슬롯 생성을 요청하면 DataIntegrityViolationException을 원인으로 한 예외가 발생한다.")
+    void createFailByDataIntegrityViolationException() throws InterruptedException {
         // given
-        ReservationRequest request = ReservationFixture.newRequest();
-        Member member = MemberFixture.member1();
+        SlotCreator slotCreator1 = new SlotCreator(reservationService, transactionManager);
+        SlotCreator slotCreator2 = new SlotCreator(reservationService, transactionManager);
+        Thread thread1 = new Thread(slotCreator1, "request1");
+        Thread thread2 = new Thread(slotCreator2, "request2");
+
+        thread1.start();
 
         // when
-        ReservationResponse result = reservationService.create(request, member);
+        // 여기서 무조건 예외가 터지긴 하는데, DataIntegrityViolationException를 cause로 갖고있는지가 관건
+        Thread.sleep(100); // thread2가 100ms 늦게 출발
+        thread2.start();
 
-        // then
-        assertThat(result).isEqualTo(ReservationFixture.newResponse());
+        // 테스트 메서드가 thread1, thread2보다 더 빨리 끝나는 것을 방지
+        thread1.join();
+        thread2.join();
+
+        // then: thread1은 예약 성공, thread2는 예약 실패
+        assertThat(slotRepository.findAll().size()).isEqualTo(INITIAL_SLOT_SIZE + 1);
+        assertThat(reservationRepository.findAll().size()).isEqualTo(INITIAL_RESERVATION_SIZE + 1);
+        assertThat(slotCreator2.getException().getCause()).isInstanceOf(DataIntegrityViolationException.class);
     }
 
-    @Test
-    @DisplayName("중복된 예약을 요청하면 예외가 발생한다.")
-    void createFail() {
-        // given
-        ReservationRequest request = ReservationFixture.newRequest();
-        Member member = MemberFixture.member1();
-        reservationService.create(request, member);
+    static class SlotCreator implements Runnable {
 
-        // when & then
-        assertThatThrownBy(() -> reservationService.create(request, member))
-                .isInstanceOf(BadRequestException.class)
-                .hasMessageContaining("같은 시간에 이미 예약이 존재합니다.");
+        private final ReservationService reservationService;
+        private final PlatformTransactionManager transactionManager;
+        private Exception e;
+
+        public SlotCreator(ReservationService reservationService, PlatformTransactionManager transactionManager) {
+            this.reservationService = reservationService;
+            this.transactionManager = transactionManager;
+        }
+
+        @Override
+        public void run() {
+            try {
+                // thread1의 트랜잭션이 커밋되기 전에 thread2의 트랜잭션이 시작하여
+                // reservationSlotRepository.existsByDateAndThemeIdAndTimeId() 메서드를 통과하게 되고 insert 쿼리까지 날린다.
+                // 하지만 thread1이 커밋된 후 thread2가 커밋을 시도할 때 DataIntegrityViolationException이 발생한다.
+                TransactionStatus status = transactionManager.getTransaction(new DefaultTransactionDefinition());
+                reservationService.createReservation(ReservationFixture.newRequest(), MemberFixture.member1());
+                // unique 조건 때문에 락이 걸려있어서 스레드2가 여기까지도 못 온다.
+                // 커밋을 시도하기 전에, insert 쿼리에서 이미 예외가 발생한다.
+                Thread.sleep(200);
+                transactionManager.commit(status);
+            } catch (Exception e) {
+                this.e = e;
+            }
+        }
+
+        public Exception getException() {
+            return e;
+        }
     }
 
     @Test
     @DisplayName("현재 시간보다 이전 시간의 예약을 시도하면 예외가 발생한다.")
     void createLate() {
         // given
-        ReservationRequest request = ReservationFixture.badRequest();
-        Member member = MemberFixture.member1();
+        ReservationRequest request = ReservationFixture.pastRequest();
 
         // when & then
-        assertThatThrownBy(() -> reservationService.create(request, member))
+        assertThatThrownBy(() -> reservationService.createReservation(request, MemberFixture.member1()))
                 .isInstanceOf(BadRequestException.class)
                 .hasMessageContaining("현재 시각보다 이전의 예약은 불가능합니다.");
     }
@@ -81,23 +122,10 @@ class ReservationServiceTest {
         Member member = MemberFixture.member1();
 
         // when
-        ReservationResponse result = reservationService.create(adminRequest, member);
+        ReservationResponse result = reservationService.createReservationByAdmin(adminRequest);
 
         // then
         assertThat(result).isEqualTo(ReservationFixture.newResponse());
-    }
-
-    @Test
-    @DisplayName("일반 유저가 관리자 예약을 시도하면 예외가 발생한다.")
-    void createAdminFail() {
-        // given
-        ReservationAdminRequest adminRequest = ReservationFixture.newAdminRequest();
-        Member member = MemberFixture.member2();
-
-        // when & then
-        assertThatThrownBy(() -> reservationService.create(adminRequest, member))
-                .isInstanceOf(BadRequestException.class)
-                .hasMessageContaining("관리자만 접근 가능한 요청입니다.");
     }
 
     @Test

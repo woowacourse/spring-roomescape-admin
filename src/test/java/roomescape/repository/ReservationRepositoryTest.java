@@ -9,6 +9,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.jdbc.Sql;
 import org.springframework.test.context.jdbc.Sql.ExecutionPhase;
+import roomescape.fixture.ReservationSlotFixture;
 
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.NONE)
 @Sql(scripts = "/truncate.sql", executionPhase = ExecutionPhase.BEFORE_TEST_METHOD)
@@ -24,6 +25,17 @@ class ReservationRepositoryTest {
     void existsReservedReservationTrue(long slotId, boolean expected) {
         // when
         boolean result = reservationRepository.existsReservedReservation(slotId);
+
+        // then
+        assertThat(result).isEqualTo(expected);
+    }
+
+    @ParameterizedTest
+    @CsvSource({"1, true", "2, false"})
+    @DisplayName("회원이 특정 슬롯에 이미 예약 또는 예약 대기를 신청했는지 확인한다.")
+    void existsByMemberIdAndSlotId(long memberId, boolean expected) {
+        // when
+        boolean result = reservationRepository.existsByMemberIdAndSlotId(memberId, ReservationSlotFixture.SLOT_1_ID);
 
         // then
         assertThat(result).isEqualTo(expected);

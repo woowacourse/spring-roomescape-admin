@@ -19,7 +19,10 @@ import org.springframework.transaction.PlatformTransactionManager;
 import org.springframework.transaction.TransactionStatus;
 import org.springframework.transaction.support.DefaultTransactionDefinition;
 import roomescape.domain.Member;
+import roomescape.domain.Reservation;
+import roomescape.domain.ReservationStatus;
 import roomescape.exception.BadRequestException;
+import roomescape.exception.DuplicatedWaitingException;
 import roomescape.fixture.MemberFixture;
 import roomescape.fixture.ReservationFixture;
 import roomescape.repository.ReservationRepository;
@@ -126,6 +129,46 @@ class ReservationServiceTest {
 
         // then
         assertThat(result).isEqualTo(ReservationFixture.newResponse());
+    }
+
+    @Test
+    @DisplayName("예약 대기를 생성한다.")
+    void createWaiting() {
+        // given
+        ReservationRequest request = ReservationFixture.newRequest();
+        reservationService.createReservation(request, MemberFixture.member1());
+
+        // when
+        reservationService.createWaiting(request, MemberFixture.member2());
+
+        // then
+        Reservation waiting = reservationRepository.findById(INITIAL_RESERVATION_SIZE + 2L).get();
+        assertThat(waiting.getStatus()).isEqualTo(ReservationStatus.WAITING);
+    }
+
+    @Test
+    @DisplayName("특정 슬롯에 대해 이미 예약에 성공한 회원은 예약 대기 시 예외가 발생한다.")
+    void createWaitingFailAlreadyReserved() {
+        // given
+        ReservationRequest request = ReservationFixture.newRequest();
+        reservationService.createReservation(request, MemberFixture.member1());
+
+        // when & then
+        assertThatThrownBy(() -> reservationService.createWaiting(request, MemberFixture.member1()))
+                .isInstanceOf(DuplicatedWaitingException.class);
+    }
+
+    @Test
+    @DisplayName("특정 슬롯에 대해 이미 예약 대기에 성공한 회원은 예약 대기 시 예외가 발생한다.")
+    void createWaitingFailAlreadyWaiting() {
+        // given
+        ReservationRequest request = ReservationFixture.newRequest();
+        reservationService.createReservation(request, MemberFixture.member1());
+        reservationService.createWaiting(request, MemberFixture.member2());
+
+        // when & then
+        assertThatThrownBy(() -> reservationService.createWaiting(request, MemberFixture.member2()))
+                .isInstanceOf(DuplicatedWaitingException.class);
     }
 
     @Test

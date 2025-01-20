@@ -23,7 +23,7 @@ import roomescape.domain.Member;
 import roomescape.fixture.MemberFixture;
 import roomescape.fixture.ReservationFixture;
 import roomescape.service.LoginService;
-import roomescape.service.ReservationService;
+import roomescape.service.ReservationFacadeService;
 import roomescape.service.dto.ReservationMineResponse;
 import roomescape.service.dto.ReservationRequest;
 import roomescape.service.dto.ReservationResponse;
@@ -41,7 +41,7 @@ class ReservationControllerTest {
     private ObjectMapper objectMapper;
 
     @MockBean
-    private ReservationService reservationService;
+    private ReservationFacadeService reservationFacadeService;
 
     @MockBean
     private LoginService loginService;
@@ -67,7 +67,7 @@ class ReservationControllerTest {
 
         ReservationRequest request = objectMapper.readValue(requestString, ReservationRequest.class);
         ReservationResponse expected = ReservationFixture.newResponse();
-        when(reservationService.createReservation(request, member)).thenReturn(expected);
+        when(reservationFacadeService.createReservation(request, member)).thenReturn(expected);
 
         // when & then
         String expectedResponse = """
@@ -99,6 +99,51 @@ class ReservationControllerTest {
     }
 
     @Test
+    @DisplayName("예약 대기 요청이 API 스펙에 맞게 오면 API 스펙에 맞는 응답을 내리며, 쿠키에서 로그인을 위한 토큰을 파싱할 수 있다.")
+    void createWaiting() throws Exception {
+        // given
+        String requestString = """
+                {
+                    "date": "2100-12-01",
+                    "timeId": 2,
+                    "themeId": 2
+                }
+                """;
+
+        ReservationRequest request = objectMapper.readValue(requestString, ReservationRequest.class);
+        ReservationResponse expected = ReservationFixture.newResponse();
+        when(reservationFacadeService.createWaiting(request, member)).thenReturn(expected);
+
+        // when & then
+        String expectedResponse = """
+                {
+                    "id": 4,
+                    "date": "2100-12-01",
+                    "time": {
+                        "id": 2,
+                        "startAt" : "11:00"
+                    },
+                    "member": {
+                        "id": 1,
+                        "name": "kargo"
+                    },
+                    "theme": {
+                        "id": 2,
+                        "name": "theme2",
+                        "description": "none",
+                        "thumbnail": "none"
+                    }
+                }
+                """;
+        mockMvc.perform(post("/reservations/waitings")
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(requestString)
+                        .cookie(COOKIE))
+                .andExpect(status().isCreated())
+                .andExpect(content().json(expectedResponse, true));
+    }
+
+    @Test
     @DisplayName("모든 예약 조회시 형식에 맞게 응답한다.")
     void findAllReservations() throws Exception {
         // given
@@ -107,7 +152,7 @@ class ReservationControllerTest {
                 new ReservationResponse(ReservationFixture.reservation2()),
                 new ReservationResponse(ReservationFixture.reservation3())
         );
-        when(reservationService.findAll()).thenReturn(expected);
+        when(reservationFacadeService.findAll()).thenReturn(expected);
 
         // when & then
         String expectedResponse = """
@@ -180,7 +225,7 @@ class ReservationControllerTest {
         List<ReservationMineResponse> expected = List.of(
                 new ReservationMineResponse(ReservationFixture.reservation1())
         );
-        when(reservationService.findOfMember(member)).thenReturn(expected);
+        when(reservationFacadeService.findOfMember(member)).thenReturn(expected);
 
         // when & then
         String expectedResponse = """

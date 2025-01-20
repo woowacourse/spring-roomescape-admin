@@ -1,5 +1,6 @@
 package roomescape.repository;
 
+import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 
 import org.junit.jupiter.api.DisplayName;
@@ -31,5 +32,20 @@ class ReservationSlotRepositoryTest {
         // when & then
         assertThatThrownBy(() -> reservationSlotRepository.save(duplicatedSlot))
                 .isInstanceOf(DataIntegrityViolationException.class);
+    }
+
+    @Test
+    @DisplayName("특정 날짜, 시간, 테마 슬롯을 찾아온다.")
+    void findByDateAndTimeIdAndThemeId() {
+        // given
+        ReservationSlot slot = ReservationSlotFixture.slot1();
+
+        // when
+        ReservationSlot foundSlot = reservationSlotRepository.findByDateAndTimeIdAndThemeId(
+                        slot.getDate(), slot.getTime().getId(), slot.getTheme().getId())
+                .get();
+
+        // then
+        assertThat(foundSlot).isEqualTo(slot);
     }
 }

@@ -20,7 +20,7 @@ import roomescape.domain.Member;
 import roomescape.fixture.MemberFixture;
 import roomescape.fixture.ReservationFixture;
 import roomescape.service.LoginService;
-import roomescape.service.ReservationService;
+import roomescape.service.ReservationFacadeService;
 import roomescape.service.dto.ReservationAdminRequest;
 import roomescape.service.dto.ReservationResponse;
 
@@ -40,7 +40,7 @@ class AdminControllerTest {
     private ObjectMapper objectMapper;
 
     @MockBean
-    private ReservationService reservationService;
+    private ReservationFacadeService reservationFacadeService;
 
     @MockBean
     private LoginService loginService;
@@ -71,7 +71,7 @@ class AdminControllerTest {
                 """;
         ReservationAdminRequest request = objectMapper.readValue(requestString, ReservationAdminRequest.class);
         ReservationResponse response = ReservationFixture.newResponse();
-        when(reservationService.createReservationByAdmin(request)).thenReturn(response);
+        when(reservationFacadeService.createReservationByAdmin(request)).thenReturn(response);
 
         // when & then
         String expectedResponse = """
@@ -115,7 +115,7 @@ class AdminControllerTest {
                 """;
         ReservationAdminRequest request = objectMapper.readValue(requestString, ReservationAdminRequest.class);
         ReservationResponse response = ReservationFixture.newResponse();
-        when(reservationService.createReservationByAdmin(request)).thenReturn(response);
+        when(reservationFacadeService.createReservationByAdmin(request)).thenReturn(response);
 
         // when & then
         mockMvc.perform(post("/admin/reservations")

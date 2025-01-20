@@ -13,7 +13,7 @@ import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 import roomescape.controller.Login;
 import roomescape.domain.Member;
-import roomescape.service.ReservationService;
+import roomescape.service.ReservationFacadeService;
 import roomescape.service.dto.ReservationMineResponse;
 import roomescape.service.dto.ReservationRequest;
 import roomescape.service.dto.ReservationResponse;
@@ -23,7 +23,7 @@ import roomescape.service.dto.ReservationResponse;
 @RestController
 public class ReservationController {
 
-    private final ReservationService reservationService;
+    private final ReservationFacadeService reservationFacadeService;
 
     @ResponseStatus(HttpStatus.CREATED)
     @PostMapping
@@ -31,22 +31,31 @@ public class ReservationController {
             @RequestBody ReservationRequest reservationRequest,
             @Login Member member
     ) {
-        return reservationService.createReservation(reservationRequest, member);
+        return reservationFacadeService.createReservation(reservationRequest, member);
+    }
+
+    @ResponseStatus(HttpStatus.CREATED)
+    @PostMapping("/waitings")
+    public ReservationResponse createWaiting(
+            @RequestBody ReservationRequest reservationRequest,
+            @Login Member member
+    ) {
+        return reservationFacadeService.createWaiting(reservationRequest, member);
     }
 
     @GetMapping
     public List<ReservationResponse> findAllReservations() {
-        return reservationService.findAll();
+        return reservationFacadeService.findAll();
     }
 
     @GetMapping("/mine")
     public List<ReservationMineResponse> findReservationsOfMember(@Login Member member) {
-        return reservationService.findOfMember(member);
+        return reservationFacadeService.findOfMember(member);
     }
 
     @ResponseStatus(HttpStatus.NO_CONTENT)
     @DeleteMapping("/{id}")
     public void cancelReservation(@PathVariable Long id, @Login Member member) {
-        reservationService.remove(id, member);
+        reservationFacadeService.remove(id, member);
     }
 }

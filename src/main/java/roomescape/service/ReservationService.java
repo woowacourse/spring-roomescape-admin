@@ -14,6 +14,7 @@ import roomescape.domain.ReservationTime;
 import roomescape.domain.Theme;
 import roomescape.exception.BadRequestException;
 import roomescape.exception.DuplicatedSlotException;
+import roomescape.exception.DuplicatedWaitingException;
 import roomescape.repository.MemberRepository;
 import roomescape.repository.ReservationRepository;
 import roomescape.repository.ReservationSlotRepository;
@@ -63,6 +64,25 @@ public class ReservationService {
             return reservationSlotRepository.save(slot);
         } catch (DataIntegrityViolationException e) {
             throw new DuplicatedSlotException("이미 등록된 슬롯입니다.", e);
+        }
+    }
+
+    // TODO: WaitingResponse DTO를 따로 분리하거나, ReservationResponse에 status를 추가할 지 고려
+    @Transactional
+    public ReservationResponse createWaiting(ReservationRequest request, Member member) {
+        ReservationSlot slot = reservationSlotRepository.findByDateAndTimeIdAndThemeId(
+                        request.date(), request.timeId(), request.themeId())
+                .orElseThrow(() -> new BadRequestException("앞선 예약이 존재하지 않아서 대기가 불가능합니다."));
+        validateDuplicatedWaiting(slot, member);
+
+        Reservation reservation = new Reservation(member, slot, ReservationStatus.WAITING);
+        Reservation savedReservation = reservationRepository.save(reservation);
+        return new ReservationResponse(savedReservation);
+    }
+
+    private void validateDuplicatedWaiting(ReservationSlot slot, Member member) {
+        if (reservationRepository.existsByMemberIdAndSlotId(member.getId(), slot.getId())) {
+            throw new DuplicatedWaitingException("이미 예약에 성공했거나, 대기에 성공했기 때문에 추가로 대기할 수 없습니다.");
         }
     }
 

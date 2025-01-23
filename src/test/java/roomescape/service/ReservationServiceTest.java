@@ -90,7 +90,7 @@ class ReservationServiceTest {
                 // reservationSlotRepository.existsByDateAndThemeIdAndTimeId() 메서드를 통과하게 되고 insert 쿼리까지 날린다.
                 // 하지만 thread1이 커밋된 후 thread2가 커밋을 시도할 때 DataIntegrityViolationException이 발생한다.
                 TransactionStatus status = transactionManager.getTransaction(new DefaultTransactionDefinition());
-                reservationService.createReservation(ReservationFixture.newRequest(), MemberFixture.member1());
+                reservationService.createReservedReservation(ReservationFixture.newRequest(), MemberFixture.member1());
                 // unique 조건 때문에 락이 걸려있어서 스레드2가 여기까지도 못 온다.
                 // 커밋을 시도하기 전에, insert 쿼리에서 이미 예외가 발생한다.
                 Thread.sleep(200);
@@ -112,7 +112,7 @@ class ReservationServiceTest {
         ReservationRequest request = ReservationFixture.pastRequest();
 
         // when & then
-        assertThatThrownBy(() -> reservationService.createReservation(request, MemberFixture.member1()))
+        assertThatThrownBy(() -> reservationService.createReservedReservation(request, MemberFixture.member1()))
                 .isInstanceOf(BadRequestException.class)
                 .hasMessageContaining("현재 시각보다 이전의 예약은 불가능합니다.");
     }
@@ -128,7 +128,7 @@ class ReservationServiceTest {
         ReservationResponse result = reservationService.createReservationByAdmin(adminRequest);
 
         // then
-        assertThat(result).isEqualTo(ReservationFixture.newResponse());
+        assertThat(result).isEqualTo(ReservationFixture.newResponse(ReservationStatus.RESERVED));
     }
 
     @Test
@@ -136,10 +136,10 @@ class ReservationServiceTest {
     void createWaiting() {
         // given
         ReservationRequest request = ReservationFixture.newRequest();
-        reservationService.createReservation(request, MemberFixture.member1());
+        reservationService.createReservedReservation(request, MemberFixture.member1());
 
         // when
-        reservationService.createWaiting(request, MemberFixture.member2());
+        reservationService.createWaitingReservation(request, MemberFixture.member2());
 
         // then
         Reservation waiting = reservationRepository.findById(INITIAL_RESERVATION_SIZE + 2L).get();
@@ -151,10 +151,10 @@ class ReservationServiceTest {
     void createWaitingFailAlreadyReserved() {
         // given
         ReservationRequest request = ReservationFixture.newRequest();
-        reservationService.createReservation(request, MemberFixture.member1());
+        reservationService.createReservedReservation(request, MemberFixture.member1());
 
         // when & then
-        assertThatThrownBy(() -> reservationService.createWaiting(request, MemberFixture.member1()))
+        assertThatThrownBy(() -> reservationService.createWaitingReservation(request, MemberFixture.member1()))
                 .isInstanceOf(DuplicatedWaitingException.class);
     }
 
@@ -163,11 +163,11 @@ class ReservationServiceTest {
     void createWaitingFailAlreadyWaiting() {
         // given
         ReservationRequest request = ReservationFixture.newRequest();
-        reservationService.createReservation(request, MemberFixture.member1());
-        reservationService.createWaiting(request, MemberFixture.member2());
+        reservationService.createReservedReservation(request, MemberFixture.member1());
+        reservationService.createWaitingReservation(request, MemberFixture.member2());
 
         // when & then
-        assertThatThrownBy(() -> reservationService.createWaiting(request, MemberFixture.member2()))
+        assertThatThrownBy(() -> reservationService.createWaitingReservation(request, MemberFixture.member2()))
                 .isInstanceOf(DuplicatedWaitingException.class);
     }
 

@@ -9,7 +9,8 @@ public record ReservationResponse(
         LocalDate date,
         MemberResponse member,
         ReservationTimeResponse time,
-        ThemeResponse theme
+        ThemeResponse theme,
+        String status
 ) {
 
     private static final DateTimeFormatter FORMATTER = DateTimeFormatter.ofPattern("HH:mm");
@@ -20,7 +21,8 @@ public record ReservationResponse(
                 reservation.getSlot().getDate(),
                 new MemberResponse(reservation.getMember()),
                 new ReservationTimeResponse(reservation.getSlot().getTime()),
-                new ThemeResponse(reservation.getSlot().getTheme())
+                new ThemeResponse(reservation.getSlot().getTheme()),
+                reservation.getStatus().getViewName()
         );
     }
 }

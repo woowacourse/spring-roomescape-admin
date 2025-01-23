@@ -4,6 +4,7 @@ import java.util.List;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import roomescape.domain.Member;
+import roomescape.domain.ReservationStatus;
 import roomescape.exception.DuplicatedSlotException;
 import roomescape.service.dto.ReservationAdminRequest;
 import roomescape.service.dto.ReservationMineResponse;
@@ -21,15 +22,18 @@ public class ReservationFacadeService {
     }
 
     public ReservationResponse createReservation(ReservationRequest request, Member member) {
-        try {
-            return reservationService.createReservation(request, member);
-        } catch (DuplicatedSlotException e) {
-            return reservationService.createWaiting(request, member);
+        if (ReservationStatus.findByViewName(request.status()) == ReservationStatus.RESERVED) {
+            return createReservedReservation(request, member);
         }
+        return reservationService.createWaitingReservation(request, member);
     }
 
-    public ReservationResponse createWaiting(ReservationRequest request, Member member) {
-        return reservationService.createWaiting(request, member);
+    private ReservationResponse createReservedReservation(ReservationRequest request, Member member) {
+        try {
+            return reservationService.createReservedReservation(request, member);
+        } catch (DuplicatedSlotException e) {
+            return reservationService.createWaitingReservation(request, member);
+        }
     }
 
     public List<ReservationResponse> findAll() {

@@ -34,15 +34,6 @@ public class ReservationController {
         return reservationFacadeService.createReservation(reservationRequest, member);
     }
 
-    @ResponseStatus(HttpStatus.CREATED)
-    @PostMapping("/waitings")
-    public ReservationResponse createWaiting(
-            @RequestBody ReservationRequest reservationRequest,
-            @Login Member member
-    ) {
-        return reservationFacadeService.createWaiting(reservationRequest, member);
-    }
-
     @GetMapping
     public List<ReservationResponse> findAllReservations() {
         return reservationFacadeService.findAll();

@@ -20,6 +20,7 @@ import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
 import roomescape.domain.Member;
+import roomescape.domain.ReservationStatus;
 import roomescape.fixture.MemberFixture;
 import roomescape.fixture.ReservationFixture;
 import roomescape.service.LoginService;
@@ -61,12 +62,13 @@ class ReservationControllerTest {
                 {
                     "date": "2100-12-01",
                     "timeId": 2,
-                    "themeId": 2
+                    "themeId": 2,
+                    "status": "예약"
                 }
                 """;
 
         ReservationRequest request = objectMapper.readValue(requestString, ReservationRequest.class);
-        ReservationResponse expected = ReservationFixture.newResponse();
+        ReservationResponse expected = ReservationFixture.newResponse(ReservationStatus.RESERVED);
         when(reservationFacadeService.createReservation(request, member)).thenReturn(expected);
 
         // when & then
@@ -87,7 +89,8 @@ class ReservationControllerTest {
                         "name": "theme2",
                         "description": "none",
                         "thumbnail": "none"
-                    }
+                    },
+                    "status": "예약"
                 }
                 """;
         mockMvc.perform(post("/reservations")
@@ -106,13 +109,14 @@ class ReservationControllerTest {
                 {
                     "date": "2100-12-01",
                     "timeId": 2,
-                    "themeId": 2
+                    "themeId": 2,
+                    "status": "대기"
                 }
                 """;
 
         ReservationRequest request = objectMapper.readValue(requestString, ReservationRequest.class);
-        ReservationResponse expected = ReservationFixture.newResponse();
-        when(reservationFacadeService.createWaiting(request, member)).thenReturn(expected);
+        ReservationResponse expected = ReservationFixture.newResponse(ReservationStatus.WAITING);
+        when(reservationFacadeService.createReservation(request, member)).thenReturn(expected);
 
         // when & then
         String expectedResponse = """
@@ -132,10 +136,11 @@ class ReservationControllerTest {
                         "name": "theme2",
                         "description": "none",
                         "thumbnail": "none"
-                    }
+                    },
+                    "status": "대기"
                 }
                 """;
-        mockMvc.perform(post("/reservations/waitings")
+        mockMvc.perform(post("/reservations")
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(requestString)
                         .cookie(COOKIE))
@@ -173,7 +178,8 @@ class ReservationControllerTest {
                             "name": "theme1",
                             "description": "none",
                             "thumbnail": "none"
-                        }
+                        },
+                        "status": "예약"
                     },
                     {
                         "id": 2,
@@ -191,7 +197,8 @@ class ReservationControllerTest {
                             "name": "theme2",
                             "description": "none",
                             "thumbnail": "none"
-                        }
+                        },
+                        "status": "예약"
                     },
                     {
                         "id": 3,
@@ -209,7 +216,8 @@ class ReservationControllerTest {
                             "name": "theme1",
                             "description": "none",
                             "thumbnail": "none"
-                        }
+                        },
+                        "status": "예약"
                     }
                 ]
                 """;

@@ -49,7 +49,8 @@ public abstract class ReservationFixture {
         return new ReservationRequest(
                 LocalDate.of(2100, 12, 1),
                 TIME_2_ID,
-                THEME_2_ID
+                THEME_2_ID,
+                ReservationStatus.RESERVED.getViewName()
         );
     }
 
@@ -58,24 +59,30 @@ public abstract class ReservationFixture {
                 LocalDate.of(2100, 12, 1),
                 TIME_2_ID,
                 THEME_2_ID,
-                MEMBER_1_ID
+                MEMBER_1_ID,
+                ReservationStatus.RESERVED.getViewName()
         );
     }
 
     public static ReservationRequest pastRequest() {
-        return new ReservationRequest(LocalDate.now().minusDays(1), TIME_2_ID, THEME_2_ID);
+        return new ReservationRequest(
+                LocalDate.now().minusDays(1),
+                TIME_2_ID,
+                THEME_2_ID,
+                ReservationStatus.RESERVED.getViewName()
+        );
     }
 
-    public static ReservationResponse newResponse() {
-        return new ReservationResponse(newReservation());
+    public static ReservationResponse newResponse(ReservationStatus status) {
+        return new ReservationResponse(newReservation(status));
     }
 
-    public static Reservation newReservation() {
+    public static Reservation newReservation(ReservationStatus status) {
         return new Reservation(
                 INITIAL_RESERVATION_SIZE + 1L,
                 MemberFixture.member1(),
                 ReservationSlotFixture.newSlot(),
-                ReservationStatus.RESERVED
+                status
         );
     }
 }

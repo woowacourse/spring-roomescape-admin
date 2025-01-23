@@ -17,6 +17,7 @@ import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
 import roomescape.domain.Member;
+import roomescape.domain.ReservationStatus;
 import roomescape.fixture.MemberFixture;
 import roomescape.fixture.ReservationFixture;
 import roomescape.service.LoginService;
@@ -66,11 +67,12 @@ class AdminControllerTest {
                     "date": "2100-12-01",
                     "timeId": 2,
                     "themeId": 2,
-                    "memberId": 1
+                    "memberId": 1,
+                    "status": "예약"
                 }
                 """;
         ReservationAdminRequest request = objectMapper.readValue(requestString, ReservationAdminRequest.class);
-        ReservationResponse response = ReservationFixture.newResponse();
+        ReservationResponse response = ReservationFixture.newResponse(ReservationStatus.RESERVED);
         when(reservationFacadeService.createReservationByAdmin(request)).thenReturn(response);
 
         // when & then
@@ -90,7 +92,8 @@ class AdminControllerTest {
                         "name": "theme2",
                         "description": "none",
                         "thumbnail": "none"
-                    }
+                    },
+                    "status": "예약"
                 }
                 """;
         mockMvc.perform(post("/admin/reservations")
@@ -110,11 +113,12 @@ class AdminControllerTest {
                     "date": "2100-12-01",
                     "timeId": 2,
                     "themeId": 2,
-                    "memberId": 1
+                    "memberId": 1,
+                    "status": "예약"
                 }
                 """;
         ReservationAdminRequest request = objectMapper.readValue(requestString, ReservationAdminRequest.class);
-        ReservationResponse response = ReservationFixture.newResponse();
+        ReservationResponse response = ReservationFixture.newResponse(ReservationStatus.RESERVED);
         when(reservationFacadeService.createReservationByAdmin(request)).thenReturn(response);
 
         // when & then

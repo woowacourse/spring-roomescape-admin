@@ -41,13 +41,13 @@ public class ReservationService {
     public ReservationResponse createReservationByAdmin(ReservationAdminRequest request) {
         Member member = memberRepository.findById(request.memberId())
                 .orElseThrow(() -> new BadRequestException("회원이 존재하지 않습니다. id = " + request.memberId()));
-        return createReservation(new ReservationRequest(request), member);
+        return createReservedReservation(new ReservationRequest(request), member);
     }
 
     //TODO: createWaiting 메서드를 따로 만들고, facade에서 createReservation 중 createSlot에 실패하면 catch해서 createWaiting 시도! (복구로직)
     //TODO: Facade를 만들지 않고, 그냥 여기서 try catch 해도 되는거 아닌가?
     @Transactional
-    public ReservationResponse createReservation(ReservationRequest request, Member member) {
+    public ReservationResponse createReservedReservation(ReservationRequest request, Member member) {
         ReservationSlot slot = createSlot(request);
 
         Reservation reservation = new Reservation(member, slot, ReservationStatus.RESERVED);
@@ -70,7 +70,7 @@ public class ReservationService {
 
     // TODO: WaitingResponse DTO를 따로 분리하거나, ReservationResponse에 status를 추가할 지 고려
     @Transactional
-    public ReservationResponse createWaiting(ReservationRequest request, Member member) {
+    public ReservationResponse createWaitingReservation(ReservationRequest request, Member member) {
         ReservationSlot slot = reservationSlotRepository.findByDateAndTimeIdAndThemeId(
                         request.date(), request.timeId(), request.themeId())
                 .orElseThrow(() -> new BadRequestException("앞선 예약이 존재하지 않아서 대기가 불가능합니다."));

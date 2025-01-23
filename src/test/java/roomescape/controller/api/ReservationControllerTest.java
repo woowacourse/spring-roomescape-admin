@@ -74,7 +74,7 @@ class ReservationControllerTest {
         // when & then
         String expectedResponse = """
                 {
-                    "id": 4,
+                    "id": 6,
                     "date": "2100-12-01",
                     "time": {
                         "id": 2,
@@ -121,7 +121,7 @@ class ReservationControllerTest {
         // when & then
         String expectedResponse = """
                 {
-                    "id": 4,
+                    "id": 6,
                     "date": "2100-12-01",
                     "time": {
                         "id": 2,

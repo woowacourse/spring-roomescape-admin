@@ -41,7 +41,7 @@ public class ReservationIntegrationTest {
                 .when().get("/reservations")
                 .then().log().all()
                 .statusCode(200)
-                .body("size()", is(3));
+                .body("size()", is(ReservationFixture.INITIAL_RESERVATION_SIZE));
     }
 
     @Test
@@ -56,13 +56,13 @@ public class ReservationIntegrationTest {
                 .when().post("/reservations")
                 .then().log().all()
                 .statusCode(201)
-                .body("id", is(4));
+                .body("id", is(6));
 
         RestAssured.given().log().all()
                 .when().get("/reservations")
                 .then().log().all()
                 .statusCode(200)
-                .body("size()", is(4));
+                .body("size()", is(6));
     }
 
     @Test
@@ -77,13 +77,13 @@ public class ReservationIntegrationTest {
                 .when().post("/reservations")
                 .then().log().all()
                 .statusCode(201)
-                .body("id", is(4));
+                .body("id", is(6));
 
         RestAssured.given().log().all()
                 .when().get("/reservations")
                 .then().log().all()
                 .statusCode(200)
-                .body("size()", is(4));
+                .body("size()", is(6));
     }
 
     //TODO: 예약 대기를 추가한다.
@@ -118,6 +118,6 @@ public class ReservationIntegrationTest {
                 .when().get("/reservations")
                 .then()
                 .statusCode(200)
-                .body("size()", is(2));
+                .body("size()", is(4));
     }
 }

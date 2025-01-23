@@ -38,3 +38,9 @@ values (2, 2, 'RESERVED');
 -- 1번 예약과 비교했을 때, 같은 날짜, 다른 시간, 같은 테마
 insert into reservation (member_id, slot_id, status)
 values (3, 3, 'RESERVED');
+
+insert into reservation (member_id, slot_id, status)
+values (2, 1, 'WAITING');
+
+insert into reservation (member_id, slot_id, status)
+values (3, 1, 'WAITING');

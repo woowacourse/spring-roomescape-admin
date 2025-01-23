@@ -31,11 +31,11 @@ class ReservationRepositoryTest {
     }
 
     @ParameterizedTest
-    @CsvSource({"1, true", "2, false"})
+    @CsvSource({"2, true", "1, false"})
     @DisplayName("회원이 특정 슬롯에 이미 예약 또는 예약 대기를 신청했는지 확인한다.")
     void existsByMemberIdAndSlotId(long memberId, boolean expected) {
         // when
-        boolean result = reservationRepository.existsByMemberIdAndSlotId(memberId, ReservationSlotFixture.SLOT_1_ID);
+        boolean result = reservationRepository.existsByMemberIdAndSlotId(memberId, ReservationSlotFixture.SLOT_2_ID);
 
         // then
         assertThat(result).isEqualTo(expected);

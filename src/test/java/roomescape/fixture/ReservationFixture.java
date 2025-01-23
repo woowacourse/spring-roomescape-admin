@@ -13,7 +13,7 @@ import roomescape.service.dto.ReservationResponse;
 
 public abstract class ReservationFixture {
 
-    public static final int INITIAL_RESERVATION_SIZE = 3;
+    public static final int INITIAL_RESERVATION_SIZE = 5;
     public static final long RESERVATION_1_ID = 1;
     public static final long RESERVATION_2_ID = 2;
     public static final long RESERVATION_3_ID = 3;

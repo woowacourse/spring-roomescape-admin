@@ -20,7 +20,7 @@ import lombok.NoArgsConstructor;
 @Getter
 @EqualsAndHashCode(of = "id")
 @Entity
-public class Reservation {
+public class Reservation extends BaseEntity {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)

@@ -20,7 +20,7 @@ import roomescape.exception.BadRequestException;
 @AllArgsConstructor
 @EqualsAndHashCode(of = "id")
 @Entity
-public class Member {
+public class Member extends BaseEntity {
 
     private static final int MIN_NAME_LENGTH = 1;
     private static final int MAX_NAME_LENGTH = 20;

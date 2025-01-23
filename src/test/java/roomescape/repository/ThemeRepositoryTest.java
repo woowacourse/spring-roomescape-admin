@@ -42,26 +42,33 @@ class ThemeRepositoryTest {
         // theme2 : 예약 2개
         // theme3 : 날짜 범위 벗어난 예약 3개
         // theme4 : 예약 1개
-        jdbcTemplate.update("insert into theme (name, description, thumbnail) values ('theme4', 'none', 'none')");
+        jdbcTemplate.update(
+                "insert into theme (name, description, thumbnail, created_date, last_modified_date) values ('theme4', 'none', 'none', '2100-11-29', '2100-11-29')");
 
-        jdbcTemplate.update("insert into reservation_slot (date, time_id, theme_id) values ('2100-11-30', 1, 3)");
-        jdbcTemplate.update("insert into reservation_slot (date, time_id, theme_id) values ('2100-11-30', 2, 3)");
-        jdbcTemplate.update("insert into reservation_slot (date, time_id, theme_id) values ('2100-11-30', 3, 3)");
-        jdbcTemplate.update("insert into reservation_slot (date, time_id, theme_id) values ('2100-12-02', 1, 1)");
-        jdbcTemplate.update("insert into reservation_slot (date, time_id, theme_id) values ('2100-12-02', 1, 2)");
-        jdbcTemplate.update("insert into reservation_slot (date, time_id, theme_id) values ('2100-12-02', 1, 4)");
         jdbcTemplate.update(
-                "insert into reservation (member_id, slot_id, status) values (1, 1, 'RESERVED')");
+                "insert into reservation_slot (date, time_id, theme_id, created_date, last_modified_date) values ('2100-11-30', 1, 3, '2100-11-29', '2100-11-29')");
         jdbcTemplate.update(
-                "insert into reservation (member_id, slot_id, status) values (1, 2, 'RESERVED')");
+                "insert into reservation_slot (date, time_id, theme_id, created_date, last_modified_date) values ('2100-11-30', 2, 3, '2100-11-29', '2100-11-29')");
         jdbcTemplate.update(
-                "insert into reservation (member_id, slot_id, status) values (1, 3, 'RESERVED')");
+                "insert into reservation_slot (date, time_id, theme_id, created_date, last_modified_date) values ('2100-11-30', 3, 3, '2100-11-29', '2100-11-29')");
         jdbcTemplate.update(
-                "insert into reservation (member_id, slot_id, status) values (1, 4, 'RESERVED')");
+                "insert into reservation_slot (date, time_id, theme_id, created_date, last_modified_date) values ('2100-12-02', 1, 1, '2100-11-29', '2100-11-29')");
         jdbcTemplate.update(
-                "insert into reservation (member_id, slot_id, status) values (1, 5, 'RESERVED')");
+                "insert into reservation_slot (date, time_id, theme_id, created_date, last_modified_date) values ('2100-12-02', 1, 2, '2100-11-29', '2100-11-29')");
         jdbcTemplate.update(
-                "insert into reservation (member_id, slot_id, status) values (1, 6, 'RESERVED')");
+                "insert into reservation_slot (date, time_id, theme_id, created_date, last_modified_date) values ('2100-12-02', 1, 4, '2100-11-29', '2100-11-29')");
+        jdbcTemplate.update(
+                "insert into reservation (member_id, slot_id, status, created_date, last_modified_date) values (1, 1, 'RESERVED', '2100-11-29', '2100-11-29')");
+        jdbcTemplate.update(
+                "insert into reservation (member_id, slot_id, status, created_date, last_modified_date) values (1, 2, 'RESERVED', '2100-11-29', '2100-11-29')");
+        jdbcTemplate.update(
+                "insert into reservation (member_id, slot_id, status, created_date, last_modified_date) values (1, 3, 'RESERVED', '2100-11-29', '2100-11-29')");
+        jdbcTemplate.update(
+                "insert into reservation (member_id, slot_id, status, created_date, last_modified_date) values (1, 4, 'RESERVED', '2100-11-29', '2100-11-29')");
+        jdbcTemplate.update(
+                "insert into reservation (member_id, slot_id, status, created_date, last_modified_date) values (1, 5, 'RESERVED', '2100-11-29', '2100-11-29')");
+        jdbcTemplate.update(
+                "insert into reservation (member_id, slot_id, status, created_date, last_modified_date) values (1, 6, 'RESERVED', '2100-11-29', '2100-11-29')");
 
         LocalDate startDay = LocalDate.of(2100, 12, 1);
         LocalDate endDay = LocalDate.of(2100, 12, 2);

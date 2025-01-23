@@ -45,6 +45,7 @@ public class ReservationService {
     }
 
     //TODO: createWaiting 메서드를 따로 만들고, facade에서 createReservation 중 createSlot에 실패하면 catch해서 createWaiting 시도! (복구로직)
+    //TODO: Facade를 만들지 않고, 그냥 여기서 try catch 해도 되는거 아닌가?
     @Transactional
     public ReservationResponse createReservation(ReservationRequest request, Member member) {
         ReservationSlot slot = createSlot(request);

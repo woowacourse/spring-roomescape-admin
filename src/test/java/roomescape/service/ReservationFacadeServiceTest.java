@@ -38,4 +38,6 @@ class ReservationFacadeServiceTest {
                 .get();
         assertThat(waiting.getStatus()).isEqualTo(ReservationStatus.WAITING);
     }
+
+    //TODO: 동시 예약요청이 오는 상황을 만들어서, 이 때 예약 대기를 잘 요청하는지 테스트
 }

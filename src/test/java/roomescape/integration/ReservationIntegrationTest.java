@@ -86,6 +86,8 @@ public class ReservationIntegrationTest {
                 .body("size()", is(4));
     }
 
+    //TODO: 예약 대기를 추가한다.
+
     @Test
     @DisplayName("과거 시간대 예약을 시도하면 400을 반환한다.")
     void createReservationFail() {

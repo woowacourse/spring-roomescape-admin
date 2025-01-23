@@ -11,14 +11,13 @@ import roomescape.domain.Theme;
 @Repository
 public interface ThemeRepository extends JpaRepository<Theme, Long> {
 
-    //    @Query("""
-//            SELECT r.theme
-//            FROM Reservation r
-//            JOIN r.theme t
-//            WHERE r.date BETWEEN :startDate AND :endDate
-//            GROUP BY r.theme
-//            ORDER BY COUNT(r) DESC
-//            """)
-    @Query("select t from Theme t")
+    @Query("""
+            SELECT rs.theme
+            FROM ReservationSlot rs
+            JOIN rs.theme t
+            WHERE rs.date BETWEEN :startDate AND :endDate
+            GROUP BY rs.theme
+            ORDER BY COUNT(rs) DESC
+            """)
     List<Theme> findPopularThemes(LocalDate startDate, LocalDate endDate, Pageable pageable);
 }

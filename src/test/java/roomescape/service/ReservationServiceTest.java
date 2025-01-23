@@ -191,7 +191,7 @@ class ReservationServiceTest {
 
         // then
         List<Long> reservationIds = result.stream()
-                .map(ReservationMineResponse::reservationId)
+                .map(ReservationMineResponse::id)
                 .toList();
         assertThat(reservationIds).containsExactly(RESERVATION_1_ID);
     }
@@ -206,7 +206,8 @@ class ReservationServiceTest {
         reservationService.remove(RESERVATION_2_ID, MemberFixture.member1());
 
         // then
-        assertThat(reservationRepository.findById(RESERVATION_2_ID)).isEmpty();
+        assertThat(reservationRepository.findById(RESERVATION_2_ID).get().getStatus())
+                .isEqualTo(ReservationStatus.CANCEL);
     }
 
     @Test
@@ -219,7 +220,8 @@ class ReservationServiceTest {
         reservationService.remove(RESERVATION_2_ID, MemberFixture.member2());
 
         // then
-        assertThat(reservationRepository.findById(RESERVATION_2_ID)).isEmpty();
+        assertThat(reservationRepository.findById(RESERVATION_2_ID).get().getStatus())
+                .isEqualTo(ReservationStatus.CANCEL);
     }
 
     @Test

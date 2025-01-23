@@ -5,7 +5,7 @@ import java.time.format.DateTimeFormatter;
 import roomescape.domain.Reservation;
 
 public record ReservationMineResponse(
-        long reservationId,
+        long id,
         String themeName,
         LocalDate date,
         String startAt,

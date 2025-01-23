@@ -45,7 +45,15 @@ public class Reservation {
         return slot.isBefore(dateTime);
     }
 
-    public boolean hasCancelPermission(Member member) {
+    public boolean cancelBy(Member member) {
+        if (hasCancelPermission(member)) {
+            status = ReservationStatus.CANCEL;
+            return true;
+        }
+        return false;
+    }
+
+    private boolean hasCancelPermission(Member member) {
         return member.isAdmin() || this.member.equals(member);
     }
 }

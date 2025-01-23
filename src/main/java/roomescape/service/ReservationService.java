@@ -116,11 +116,11 @@ public class ReservationService {
                 .toList();
     }
 
+    // TODO: "예약"상태의 예약을 취소하면, "대기" 1번을 "예약"으로 승격한다.
     @Transactional
     public void remove(Long id, Member member) {
         reservationRepository.findById(id).ifPresent(r -> {
-            if (r.hasCancelPermission(member)) {
-                reservationRepository.deleteById(id);
+            if (r.cancelBy(member)) {
                 return;
             }
             throw new BadRequestException("예약을 취소할 권한이 없습니다.");

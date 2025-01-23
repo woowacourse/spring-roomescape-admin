@@ -113,11 +113,5 @@ public class ReservationIntegrationTest {
                 .cookie(LOGIN_TOKEN_HEADER_NAME, token)
                 .when().delete("/reservations/1")
                 .then().statusCode(204);
-
-        RestAssured
-                .when().get("/reservations")
-                .then()
-                .statusCode(200)
-                .body("size()", is(4));
     }
 }

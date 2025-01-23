@@ -4,7 +4,8 @@ import java.util.Arrays;
 
 public enum ReservationStatus {
     RESERVED("예약"),
-    WAITING("대기");
+    WAITING("대기"),
+    CANCEL("취소");
 
     private String viewName;
 

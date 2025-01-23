@@ -239,7 +239,7 @@ class ReservationControllerTest {
         String expectedResponse = """
                 [
                     {
-                        "reservationId": 1,
+                        "id": 1,
                         "themeName": "theme1",
                         "date": "2100-12-01",
                         "startAt": "10:00",

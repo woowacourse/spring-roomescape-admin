@@ -20,11 +20,17 @@ function render(data) {
         const date = item.date;
         const startAt = item.startAt;
         const status = item.status;
+        const rank = item.rank;
+        let statusMessage = '';
 
         row.insertCell(0).textContent = themeName;
         row.insertCell(1).textContent = date;
         row.insertCell(2).textContent = startAt;
-        row.insertCell(3).textContent = status;
+        if (status == '대기') {
+            statusMessage = rank + '번째 예약'
+        }
+        statusMessage += status;
+        row.insertCell(3).textContent = statusMessage;
 
         /*
         [3단계] 예약 대기 기능 - 예약 대기 취소 기능 구현 후 활성화

@@ -23,6 +23,7 @@ import roomescape.domain.Member;
 import roomescape.domain.ReservationStatus;
 import roomescape.fixture.MemberFixture;
 import roomescape.fixture.ReservationFixture;
+import roomescape.repository.ReservationWithRank;
 import roomescape.service.LoginService;
 import roomescape.service.ReservationFacadeService;
 import roomescape.service.dto.ReservationMineResponse;
@@ -231,7 +232,7 @@ class ReservationControllerTest {
     void findReservationsOfMember() throws Exception {
         // given
         List<ReservationMineResponse> expected = List.of(
-                new ReservationMineResponse(ReservationFixture.reservation1())
+                new ReservationMineResponse(new ReservationWithRank(ReservationFixture.reservation1(), 0))
         );
         when(reservationFacadeService.findOfMember(member)).thenReturn(expected);
 
@@ -243,7 +244,8 @@ class ReservationControllerTest {
                         "themeName": "theme1",
                         "date": "2100-12-01",
                         "startAt": "10:00",
-                        "status": "예약"
+                        "status": "예약",
+                        "rank": 0
                     }
                 ]
                 """;

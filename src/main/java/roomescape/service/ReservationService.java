@@ -111,7 +111,7 @@ public class ReservationService {
     }
 
     public List<ReservationMineResponse> findOfMember(Member member) {
-        return reservationRepository.findByMemberId(member.getId()).stream()
+        return reservationRepository.findReservationWithRankByMemberId(member.getId()).stream()
                 .map(ReservationMineResponse::new)
                 .toList();
     }

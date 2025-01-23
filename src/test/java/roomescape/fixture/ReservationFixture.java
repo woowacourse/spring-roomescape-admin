@@ -17,6 +17,8 @@ public abstract class ReservationFixture {
     public static final long RESERVATION_1_ID = 1;
     public static final long RESERVATION_2_ID = 2;
     public static final long RESERVATION_3_ID = 3;
+    public static final long RESERVATION_4_ID = 4;
+    public static final long RESERVATION_5_ID = 5;
 
     public static Reservation reservation1() {
         return new Reservation(
@@ -42,6 +44,24 @@ public abstract class ReservationFixture {
                 MemberFixture.member3(),
                 ReservationSlotFixture.slot3(),
                 ReservationStatus.RESERVED
+        );
+    }
+
+    public static Reservation reservation4() {
+        return new Reservation(
+                RESERVATION_4_ID,
+                MemberFixture.member2(),
+                ReservationSlotFixture.slot1(),
+                ReservationStatus.WAITING
+        );
+    }
+
+    public static Reservation reservation5() {
+        return new Reservation(
+                RESERVATION_5_ID,
+                MemberFixture.member3(),
+                ReservationSlotFixture.slot1(),
+                ReservationStatus.WAITING
         );
     }
 

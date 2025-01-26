@@ -22,7 +22,7 @@ import roomescape.domain.Member;
 import roomescape.domain.Reservation;
 import roomescape.domain.ReservationStatus;
 import roomescape.exception.BadRequestException;
-import roomescape.exception.DuplicatedWaitingException;
+import roomescape.exception.ErrorCode;
 import roomescape.fixture.MemberFixture;
 import roomescape.fixture.ReservationFixture;
 import roomescape.repository.ReservationRepository;
@@ -155,7 +155,8 @@ class ReservationServiceTest {
 
         // when & then
         assertThatThrownBy(() -> reservationService.createWaitingReservation(request, MemberFixture.member1()))
-                .isInstanceOf(DuplicatedWaitingException.class);
+                .isInstanceOf(BadRequestException.class)
+                .hasMessageContaining(ErrorCode.DUPLICATED_WAITING.getMessage());
     }
 
     @Test
@@ -168,7 +169,8 @@ class ReservationServiceTest {
 
         // when & then
         assertThatThrownBy(() -> reservationService.createWaitingReservation(request, MemberFixture.member2()))
-                .isInstanceOf(DuplicatedWaitingException.class);
+                .isInstanceOf(BadRequestException.class)
+                .hasMessageContaining(ErrorCode.DUPLICATED_WAITING.getMessage());
     }
 
     @Test

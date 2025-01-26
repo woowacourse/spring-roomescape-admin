@@ -5,6 +5,7 @@ import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.servlet.HandlerInterceptor;
 import roomescape.exception.BadRequestException;
+import roomescape.exception.ErrorCode;
 import roomescape.service.LoginService;
 import roomescape.service.util.LoginTokenExtractorUtil;
 
@@ -20,6 +21,6 @@ public class AdminInterceptor implements HandlerInterceptor {
         if (loginService.isAdminToken(token)) {
             return true;
         }
-        throw new BadRequestException("관리자만 접근할 수 있는 요청입니다.");
+        throw new BadRequestException(ErrorCode.FORBIDDEN_ADMIN_ACCESS);
     }
 }

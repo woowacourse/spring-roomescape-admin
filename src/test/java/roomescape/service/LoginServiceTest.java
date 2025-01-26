@@ -17,6 +17,7 @@ import org.springframework.test.context.jdbc.Sql;
 import org.springframework.test.context.jdbc.Sql.ExecutionPhase;
 import roomescape.domain.Member;
 import roomescape.exception.BadRequestException;
+import roomescape.exception.ErrorCode;
 import roomescape.fixture.MemberFixture;
 import roomescape.service.dto.LoginRequest;
 import roomescape.service.dto.LoginResponse;
@@ -91,7 +92,7 @@ class LoginServiceTest {
         // then & then
         assertThatThrownBy(() -> loginService.findMemberByToken(invalidToken))
                 .isInstanceOf(BadRequestException.class)
-                .hasMessageContaining("올바르지 않은 토큰입니다.");
+                .hasMessageContaining(ErrorCode.INVALID_TOKEN.getMessage());
     }
 
     @Test

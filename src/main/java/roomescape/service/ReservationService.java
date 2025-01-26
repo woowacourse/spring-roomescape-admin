@@ -14,7 +14,9 @@ import roomescape.domain.ReservationTime;
 import roomescape.domain.Theme;
 import roomescape.exception.BadRequestException;
 import roomescape.exception.DuplicatedSlotException;
-import roomescape.exception.DuplicatedWaitingException;
+import roomescape.exception.ErrorCode;
+import roomescape.exception.ForbiddenException;
+import roomescape.exception.NotFoundException;
 import roomescape.repository.MemberRepository;
 import roomescape.repository.ReservationRepository;
 import roomescape.repository.ReservationSlotRepository;
@@ -40,7 +42,7 @@ public class ReservationService {
     @Transactional
     public ReservationResponse createReservationByAdmin(ReservationAdminRequest request) {
         Member member = memberRepository.findById(request.memberId())
-                .orElseThrow(() -> new BadRequestException("회원이 존재하지 않습니다. id = " + request.memberId()));
+                .orElseThrow(() -> new NotFoundException(ErrorCode.NOT_FOUND_MEMBER, request.memberId()));
         return createReservedReservation(new ReservationRequest(request), member);
     }
 
@@ -57,14 +59,16 @@ public class ReservationService {
 
     private ReservationSlot createSlot(ReservationRequest request) {
         try {
-            ReservationTime time = timeRepository.findById(request.timeId()).orElseThrow();
-            Theme theme = themeRepository.findById(request.themeId()).orElseThrow();
+            ReservationTime time = timeRepository.findById(request.timeId())
+                    .orElseThrow(() -> new BadRequestException(ErrorCode.NOT_FOUND_TIME));
+            Theme theme = themeRepository.findById(request.themeId())
+                    .orElseThrow(() -> new BadRequestException(ErrorCode.NOT_FOUND_THEME));
             ReservationSlot slot = new ReservationSlot(request.date(), time, theme);
             validateIsBeforeNow(slot);
             validateDuplicatedSlot(slot);
             return reservationSlotRepository.save(slot);
         } catch (DataIntegrityViolationException e) {
-            throw new DuplicatedSlotException("이미 등록된 슬롯입니다.", e);
+            throw new DuplicatedSlotException(ErrorCode.DUPLICATED_RESERVATION, e);
         }
     }
 
@@ -73,7 +77,7 @@ public class ReservationService {
     public ReservationResponse createWaitingReservation(ReservationRequest request, Member member) {
         ReservationSlot slot = reservationSlotRepository.findByDateAndTimeIdAndThemeId(
                         request.date(), request.timeId(), request.themeId())
-                .orElseThrow(() -> new BadRequestException("앞선 예약이 존재하지 않아서 대기가 불가능합니다."));
+                .orElseThrow(() -> new BadRequestException(ErrorCode.WAITING_WITHOUT_RESERVATION));
         validateDuplicatedWaiting(slot, member);
 
         Reservation reservation = new Reservation(member, slot, ReservationStatus.WAITING);
@@ -83,13 +87,13 @@ public class ReservationService {
 
     private void validateDuplicatedWaiting(ReservationSlot slot, Member member) {
         if (reservationRepository.existsByMemberIdAndSlotId(member.getId(), slot.getId())) {
-            throw new DuplicatedWaitingException("이미 예약에 성공했거나, 대기에 성공했기 때문에 추가로 대기할 수 없습니다.");
+            throw new BadRequestException(ErrorCode.DUPLICATED_WAITING);
         }
     }
 
     private void validateIsBeforeNow(ReservationSlot slot) {
         if (slot.isBefore(LocalDateTime.now())) {
-            throw new BadRequestException("현재 시각보다 이전의 예약은 불가능합니다.");
+            throw new BadRequestException(ErrorCode.PAST_TIME_RESERVATION_NOT_ALLOWED);
         }
     }
 
@@ -100,7 +104,7 @@ public class ReservationService {
         Long themeId = slot.getTheme().getId();
         Long timeId = slot.getTime().getId();
         if (reservationSlotRepository.existsByDateAndThemeIdAndTimeId(slot.getDate(), themeId, timeId)) {
-            throw new DuplicatedSlotException("이미 등록된 슬롯입니다.");
+            throw new DuplicatedSlotException(ErrorCode.DUPLICATED_RESERVATION);
         }
     }
 
@@ -123,7 +127,7 @@ public class ReservationService {
             if (r.cancelBy(member)) {
                 return;
             }
-            throw new BadRequestException("예약을 취소할 권한이 없습니다.");
+            throw new ForbiddenException(ErrorCode.FORBIDDEN_RESERVATION_CANCEL);
         });
     }
 }

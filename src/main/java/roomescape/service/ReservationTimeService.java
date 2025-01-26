@@ -9,6 +9,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import roomescape.domain.ReservationTime;
 import roomescape.exception.BadRequestException;
+import roomescape.exception.ErrorCode;
 import roomescape.repository.ReservationSlotRepository;
 import roomescape.repository.ReservationTimeRepository;
 import roomescape.service.dto.AvailableReservationTimeResponse;
@@ -31,12 +32,6 @@ public class ReservationTimeService {
         return new ReservationTimeResponse(saved);
     }
 
-    public ReservationTimeResponse findOne(long id) {
-        ReservationTime found = reservationTimeRepository.findById(id).orElseThrow();
-
-        return new ReservationTimeResponse(found);
-    }
-
     public List<ReservationTimeResponse> findAll() {
         return reservationTimeRepository.findAll().stream()
                 .map(ReservationTimeResponse::new)
@@ -46,7 +41,7 @@ public class ReservationTimeService {
     @Transactional
     public void remove(Long id) {
         if (reservationSlotRepository.existsByTimeId(id)) {
-            throw new BadRequestException("예약이 존재하는 시간은 삭제할 수 없습니다.");
+            throw new BadRequestException(ErrorCode.CANNOT_DELETE_TIME_WITH_RESERVATION);
         }
         reservationTimeRepository.deleteById(id);
     }

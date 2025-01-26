@@ -8,6 +8,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import roomescape.domain.Theme;
 import roomescape.exception.BadRequestException;
+import roomescape.exception.ErrorCode;
 import roomescape.repository.ReservationSlotRepository;
 import roomescape.repository.ThemeRepository;
 import roomescape.service.dto.ThemeRequest;
@@ -29,12 +30,6 @@ public class ThemeService {
         return new ThemeResponse(saved);
     }
 
-    public ThemeResponse findOne(long id) {
-        Theme found = themeRepository.findById(id).orElseThrow();
-
-        return new ThemeResponse(found);
-    }
-
     public List<ThemeResponse> findAll() {
         return themeRepository.findAll().stream()
                 .map(ThemeResponse::new)
@@ -51,7 +46,7 @@ public class ThemeService {
     @Transactional
     public void remove(Long id) {
         if (reservationSlotRepository.existsByThemeId(id)) {
-            throw new BadRequestException("예약이 존재하는 테마는 삭제할 수 없습니다.");
+            throw new BadRequestException(ErrorCode.CANNOT_DELETE_THEME_WITH_RESERVATION);
         }
         themeRepository.deleteById(id);
     }

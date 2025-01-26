@@ -9,6 +9,7 @@ import java.util.Date;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 import roomescape.exception.BadRequestException;
+import roomescape.exception.ErrorCode;
 
 @Component
 public class TokenProvider {
@@ -56,9 +57,9 @@ public class TokenProvider {
                     .parseClaimsJws(token)
                     .getBody();
         } catch (SignatureException e) {
-            throw new BadRequestException("올바르지 않은 토큰입니다.", e);
+            throw new BadRequestException(ErrorCode.INVALID_TOKEN);
         } catch (ExpiredJwtException e) {
-            throw new BadRequestException("만료된 토큰입니다.", e);
+            throw new BadRequestException(ErrorCode.EXPIRED_TOKEN);
         }
     }
 }

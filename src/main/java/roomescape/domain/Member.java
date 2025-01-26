@@ -14,6 +14,7 @@ import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import roomescape.exception.BadRequestException;
+import roomescape.exception.ErrorCode;
 
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @Getter
@@ -22,8 +23,8 @@ import roomescape.exception.BadRequestException;
 @Entity
 public class Member extends BaseEntity {
 
-    private static final int MIN_NAME_LENGTH = 1;
-    private static final int MAX_NAME_LENGTH = 20;
+    public static final int MIN_NAME_LENGTH = 1;
+    public static final int MAX_NAME_LENGTH = 20;
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -49,8 +50,7 @@ public class Member extends BaseEntity {
 
     public void validateName(String name) {
         if (StringUtils.isBlank(name) || name.length() > MAX_NAME_LENGTH) {
-            throw new BadRequestException(
-                    String.format("예약자의 이름은 %d자 이상 %d자 이하여야 합니다.", MIN_NAME_LENGTH, MAX_NAME_LENGTH));
+            throw new BadRequestException(ErrorCode.INVALID_MEMBER_NAME_LENGTH);
         }
     }
 

@@ -12,9 +12,23 @@ public class GlobalExceptionHandler {
 
     @ExceptionHandler
     @ResponseStatus(HttpStatus.BAD_REQUEST)
-    public String handleBadRequestException(BadRequestException e) {
-        log.error(e.getMessage(), e);
-        return e.getMessage();
+    public ErrorResponse handleBadRequestException(BadRequestException e) {
+        log.error("code: {}, message: {}", e.getCode().toString(), e.getMessage(), e);
+        return new ErrorResponse(e.getCode().toString(), e.getMessage());
+    }
+
+    @ExceptionHandler
+    @ResponseStatus(HttpStatus.NOT_FOUND)
+    public ErrorResponse handleNotFoundException(NotFoundException e) {
+        log.error("code: {}, message: {}", e.getCode().toString(), e.getMessage(), e);
+        return new ErrorResponse(e.getCode().toString(), e.getMessage());
+    }
+
+    @ExceptionHandler
+    @ResponseStatus(HttpStatus.FORBIDDEN)
+    public ErrorResponse handleForbiddenException(ForbiddenException e) {
+        log.error("code: {}, message: {}", e.getCode().toString(), e.getMessage(), e);
+        return new ErrorResponse(e.getCode().toString(), e.getMessage());
     }
 
     @ExceptionHandler

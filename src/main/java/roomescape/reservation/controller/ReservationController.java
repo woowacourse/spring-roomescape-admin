@@ -1,11 +1,17 @@
 package roomescape.reservation.controller;
 
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.concurrent.atomic.AtomicLong;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.ResponseBody;
+import roomescape.reservation.dto.CreateReservationResponseDto;
+import roomescape.reservation.dto.ReservationRequestDto;
 import roomescape.reservation.dto.ReservationResponseDto;
 import roomescape.reservation.entity.Reservation;
 
@@ -13,6 +19,7 @@ import roomescape.reservation.entity.Reservation;
 public class ReservationController {
 
     private final List<Reservation> reservations = new ArrayList<>();
+    private AtomicLong index = new AtomicLong(1);
 
     @GetMapping("/admin/reservation")
     public String adminReservationDashboard() {
@@ -22,10 +29,21 @@ public class ReservationController {
     @GetMapping("/reservations")
     @ResponseBody
     public ResponseEntity<List<ReservationResponseDto>> readAllReservations() {
-        List<ReservationResponseDto> allReservations = reservations.stream()
-                .map(ReservationResponseDto::toDto)
+        List<ReservationResponseDto> allReservations = reservations.stream().map(ReservationResponseDto::toDto)
                 .toList();
 
         return ResponseEntity.ok(allReservations);
     }
+
+    @PostMapping("/reservations")
+    public ResponseEntity<CreateReservationResponseDto> add(@RequestBody ReservationRequestDto requestDto) {
+        LocalDateTime localDateTime = LocalDateTime.of(requestDto.date(), requestDto.time());
+
+        Reservation reservation = new Reservation(index.getAndIncrement(), requestDto.name(), localDateTime);
+        reservations.add(reservation);
+        CreateReservationResponseDto responseDto = CreateReservationResponseDto.toDto(reservation);
+
+        return ResponseEntity.ok(responseDto);
+    }
+
 }

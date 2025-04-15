@@ -17,6 +17,12 @@ public class Reservation {
         this.dateTime = dateTime;
     }
 
+    public Reservation(String name, LocalDateTime dateTime) {
+        this.name = name;
+        this.dateTime = dateTime;
+    }
+
+
     public long getId() {
         return id;
     }

@@ -5,7 +5,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.server.ResponseStatusException;
-import roomescape.ReservationDto;
+import roomescape.dto.CreateReservationDto;
 import roomescape.model.Reservation;
 import java.util.ArrayList;
 import java.util.List;
@@ -36,7 +36,7 @@ public class ReservationController {
 
     @PostMapping("/reservations")
     @ResponseBody
-    public ResponseEntity<Reservation> addReservation(@RequestBody ReservationDto reservationDto){
+    public ResponseEntity<Reservation> addReservation(@RequestBody CreateReservationDto reservationDto){
         Reservation reservation = new Reservation(index.getAndIncrement(), reservationDto.name(),reservationDto.date(),reservationDto.time());
         reservations.add(reservation);
         return ResponseEntity.ok().body(reservation);

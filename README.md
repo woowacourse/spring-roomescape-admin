@@ -2,10 +2,10 @@
 
 ### 요구기능사항
 
-- [ ] 홈 화면
-    - [ ] API 경로는 `GET /admin` 으로 구현한다.
-    - [ ] 메인 페이지 파일은 `templates/admin/index.html`를 사용한다.
-    - [ ] 응답 성공시, `200 OK`를 반환한다.
+- [x] 홈 화면
+    - [x] API 경로는 `GET /admin` 으로 구현한다.
+    - [x] 메인 페이지 파일은 `templates/admin/index.html`를 사용한다.
+    - [x] 응답 성공시, `200 OK`를 반환한다.
 - [ ] 예약 조회 기능
     - [ ] `GET /admin/reservation` 요청 시 예약 관리 페이지를 응답해야 한다.
     - [ ] 예약 조회 페이지 파일은 `templates/admin/reservation-legacy.html`를 사용한다.

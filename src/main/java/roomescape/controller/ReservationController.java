@@ -7,9 +7,6 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.server.ResponseStatusException;
 import roomescape.ReservationDto;
 import roomescape.model.Reservation;
-
-import java.time.LocalDate;
-import java.time.LocalTime;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.atomic.AtomicLong;
@@ -40,9 +37,7 @@ public class ReservationController {
     @PostMapping("/reservations")
     @ResponseBody
     public ResponseEntity<Reservation> addReservation(@RequestBody ReservationDto reservationDto){
-
-        Reservation reservation = new Reservation(index.getAndDecrement(), reservationDto.name(),reservationDto.date(),reservationDto.time());
-
+        Reservation reservation = new Reservation(index.getAndIncrement(), reservationDto.name(),reservationDto.date(),reservationDto.time());
         reservations.add(reservation);
         return ResponseEntity.ok().body(reservation);
     }

@@ -6,14 +6,9 @@ import org.springframework.web.bind.annotation.RequestMapping;
 
 @Controller
 @RequestMapping("/admin")
-public class AdminRoomescapeController {
+public class AdminReservationController {
 
-    @GetMapping
-    public String getAdminPage() {
-        return "admin/index";
-    }
-
-    @GetMapping("reservation")
+    @GetMapping("/reservation")
     public String getAdminReservationPage() {
         return "admin/reservation-legacy";
     }

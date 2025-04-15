@@ -10,6 +10,9 @@
 - 페이지는 **`templates/admin/reservation-legacy.html`** 파일을 이용하세요.
 - 아래의 API 명세를 따라 예약 관리 페이지 로드 시 호출되는 예약 목록 조회 API도 함께 구현하세요.
 
+- API 명세를 따라 예약 추가 API 와 삭제 API를 구현하세요.
+- 아래 화면에서 예약 추가와 취소가 잘 동작해야합니다.
+
 ### 요구사항 해결 방향성
 
 **웹 관련 의존성**
@@ -43,4 +46,19 @@ public class ReservationController {
 
     private List<Reservation> reservations = new ArrayList<>();
 }
+```
+
+- 추가/취소 API 요청과 응답을 처리하는 컨트롤러 메서드 구현을 위해서는 Spring MVC가 제공하는 Annotation을 잘 활용해야합니다.
+- 학습 테스트를 참고하여 기능을 익히고 각 기능들이 어떤 역할을 하는지 학습하세요.
+
+**식별자 처리**
+- 예약 정보의 식별자를 생성할 때 AtomicLong를 활용할 수 있습니다.
+
+```java
+public class ReservationController {
+
+    private AtomicLong index = new AtomicLong(1);
+
+    // AtomicLong 활용 예시
+    reservations.add(new Reservation(index.incrementAndGet(), "브라운", "2023-01-01", "10:00"));
 ```

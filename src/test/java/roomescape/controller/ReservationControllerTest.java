@@ -1,7 +1,6 @@
 package roomescape.controller;
 
 import static org.hamcrest.Matchers.is;
-import static org.junit.jupiter.api.Assertions.*;
 
 import io.restassured.RestAssured;
 import io.restassured.http.ContentType;

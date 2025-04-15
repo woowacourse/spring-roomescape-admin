@@ -14,4 +14,9 @@ public class AdminController {
     public String admin() {
         return PATH_PREFIX + "index";
     }
+
+    @GetMapping("/reservation")
+    public String adminReservation() {
+        return PATH_PREFIX + "reservation-legacy";
+    }
 }

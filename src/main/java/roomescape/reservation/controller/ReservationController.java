@@ -21,7 +21,7 @@ import roomescape.reservation.entity.Reservation;
 public class ReservationController {
 
     private final List<Reservation> reservations = new ArrayList<>();
-    private AtomicLong index = new AtomicLong(1);
+    private final AtomicLong index = new AtomicLong(1);
 
     @GetMapping("/admin/reservation")
     public String adminReservationDashboard() {

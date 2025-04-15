@@ -22,7 +22,6 @@ public class Reservation {
         this.dateTime = dateTime;
     }
 
-
     public long getId() {
         return id;
     }

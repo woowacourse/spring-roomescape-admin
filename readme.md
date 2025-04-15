@@ -12,5 +12,5 @@
 - [x] "/reservations" post 요청으로  name, date, time 을 body 로 전송하여 추가할 수 있다.
 
 ### 예약 취소
-- [ ] "/reservations/{id}" delete 요청 시 해당 id로 설정된 예약을 삭제되고 204 NO_CONTENT 상태 코드가 반환된다.
-- [ ] 만약 해당 예약이 삭제되었다면 404 NOT FOUND 상태 코드가 반환된다. 
+- [x] "/reservations/{id}" delete 요청 시 해당 id로 설정된 예약을 삭제되고 204 NO_CONTENT 상태 코드가 반환된다.
+- [x] 만약 해당 예약이 삭제되었다면 404 NOT FOUND 상태 코드가 반환된다. 

@@ -1,7 +1,6 @@
 package roomescape;
 
 import java.util.List;
-import java.util.concurrent.atomic.AtomicLong;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
@@ -15,7 +14,6 @@ import org.springframework.web.bind.annotation.RequestBody;
 public class RoomEscapeController {
 
     private final Reservations reservations = new Reservations();
-    private final AtomicLong index = new AtomicLong(1L);
 
     @GetMapping("/admin")
     public String homePage() {
@@ -34,7 +32,7 @@ public class RoomEscapeController {
 
     @PostMapping("reservations")
     public ResponseEntity<Reservation> addReservation(@RequestBody ReservationRequest request) {
-        long id = index.getAndIncrement();
+        long id = reservations.nextId();
         Reservation reservation = request.toReservation(id);
         reservations.add(reservation);
         return ResponseEntity.ok(reservation);

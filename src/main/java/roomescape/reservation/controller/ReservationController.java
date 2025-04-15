@@ -25,6 +25,11 @@ public class ReservationController {
     private final List<Reservation> reservations = new ArrayList<>();
     private final AtomicLong index = new AtomicLong(1);
 
+    public ReservationController() {
+        reservations.add(new Reservation(index.getAndIncrement(), "꾹이", LocalDateTime.now()));
+        reservations.add(new Reservation(index.getAndIncrement(), "드라고", LocalDateTime.now()));
+    }
+
     @GetMapping("/admin/reservation")
     public String adminReservationDashboard() {
         return "/admin/reservation-legacy";

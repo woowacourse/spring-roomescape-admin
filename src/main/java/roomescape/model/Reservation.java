@@ -24,4 +24,8 @@ public class Reservation {
     public LocalDateTime getReservationTime() {
         return reservationTime;
     }
+
+    public boolean sameId(Long id){
+        return this.id.equals(id);
+    }
 }

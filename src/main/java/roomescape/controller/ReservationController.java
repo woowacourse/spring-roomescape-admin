@@ -9,16 +9,19 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
-import roomescape.entity.Reservation;
-import roomescape.dao.MemoryReservationDao;
 import roomescape.dto.CreateReservationDto;
 import roomescape.dto.ReservationDto;
+import roomescape.entity.Reservation;
 import roomescape.repository.ReservationRepository;
 
 @RestController
 @RequestMapping("/reservations")
 public class ReservationController {
-    private final ReservationRepository reservationRepository = new MemoryReservationDao();
+    private final ReservationRepository reservationRepository;
+
+    public ReservationController(final ReservationRepository reservationRepository) {
+        this.reservationRepository = reservationRepository;
+    }
 
     @GetMapping
     public ResponseEntity<List<ReservationDto>> getAllReservations() {

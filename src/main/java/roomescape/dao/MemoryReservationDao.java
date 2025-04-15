@@ -3,9 +3,11 @@ package roomescape.dao;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.atomic.AtomicLong;
+import org.springframework.stereotype.Repository;
 import roomescape.entity.Reservation;
 import roomescape.repository.ReservationRepository;
 
+@Repository
 public class MemoryReservationDao implements ReservationRepository {
 
     private final List<Reservation> reservations = new ArrayList<>();

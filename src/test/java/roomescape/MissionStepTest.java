@@ -52,7 +52,7 @@ public class MissionStepTest {
                 .body("size()", is(0)); // 아직 생성 요청이 없으니 Controller에서 임의로 넣어준 Reservation 갯수 만큼 검증하거나 0개임을 확인하세요.
     }
 
-
+    @DisplayName("예약을 생성하고 삭제한다.")
     @Test
     void 삼단계() {
         final Map<String, String> params = new HashMap<>();

@@ -24,4 +24,8 @@ public class Reservation {
         this.date = reservation.date;
         this.time = reservation.time;
     }
+
+    public Long getId() {
+        return id;
+    }
 }

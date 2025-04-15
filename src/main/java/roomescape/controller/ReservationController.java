@@ -3,6 +3,7 @@ package roomescape.controller;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
+import java.util.Optional;
 import java.util.concurrent.atomic.AtomicLong;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
@@ -26,12 +27,7 @@ public class ReservationController {
     @GetMapping
     public ResponseEntity<List<ReservationResponse>> getReservations() {
         final List<ReservationResponse> reservationResponses = reservations.stream()
-                .map(reservation -> new ReservationResponse(
-                        reservation.getId(),
-                        reservation.getName(),
-                        reservation.getDate(),
-                        reservation.getTime()
-                ))
+                .map(ReservationResponse::new)
                 .toList();
 
         return ResponseEntity.ok(reservationResponses);
@@ -49,23 +45,18 @@ public class ReservationController {
         );
         reservations.add(reservation);
 
-        return ResponseEntity.ok(
-                new ReservationResponse(
-                        reservation.getId(),
-                        reservation.getName(),
-                        reservation.getDate(),
-                        reservation.getTime()
-                )
-        );
+        return ResponseEntity.ok(new ReservationResponse(reservation));
     }
 
     @DeleteMapping("/{id}")
     public ResponseEntity<Void> deleteReservation(@PathVariable("id") final Long id) {
-        final Reservation reservation = reservations.stream()
+        final Optional<Reservation> reservation = reservations.stream()
                 .filter(value -> Objects.equals(value.getId(), id))
-                .findFirst()
-                .orElseThrow(() -> new IllegalArgumentException("아이디 없음"));
-        reservations.remove(reservation);
+                .findFirst();
+        if (reservation.isEmpty()) {
+            return ResponseEntity.notFound().build();
+        }
+        reservations.remove(reservation.get());
 
         return ResponseEntity.ok().build();
     }

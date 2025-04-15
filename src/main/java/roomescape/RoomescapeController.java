@@ -10,4 +10,14 @@ public class RoomescapeController {
     public String admin() {
         return "admin/index.html";
     }
+
+    @GetMapping("/admin/reservation")
+    public String reservation() {
+        return "admin/reservation-legacy.html";
+    }
+
+    @GetMapping("/reservations")
+    public ResponseEntity<List<Reservation>> reservations() {
+        return new ResponseEntity<>(reservations.getReservations(), HttpStatus.OK);
+    }
 }

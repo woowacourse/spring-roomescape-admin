@@ -33,6 +33,16 @@ public class UserRoomEscapeController {
         return ResponseEntity.ok(newReservation);
     }
 
+    @DeleteMapping("/reservations/{id}")
+    public ResponseEntity<Void> deleteReservations(@PathVariable("id") Long id) {
+        Reservation target = reservations.stream()
+                .filter(reservation -> Objects.equals(reservation.id(), id))
+                .findFirst()
+                .orElseThrow(IllegalArgumentException::new);
+        reservations.remove(target);
+        return ResponseEntity.ok().build();
+    }
+
     public static void clear() {
         reservations.clear();
         autoIncrement.set(0);

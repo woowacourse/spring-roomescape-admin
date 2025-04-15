@@ -11,13 +11,13 @@ public class Reservation {
     private final LocalDate date;
     private final LocalTime time;
 
-    public Reservation(final Long id,
-                       final String name,
-                       final LocalDate date,
-                       final LocalTime time) {
-        Objects.requireNonNull(name);
-        Objects.requireNonNull(date);
-        Objects.requireNonNull(time);
+    public Reservation(
+            final Long id,
+            final String name,
+            final LocalDate date,
+            final LocalTime time
+    ) {
+        validateNotNull(id, name, date, time);
         this.id = id;
         this.name = name;
         this.date = date;
@@ -38,5 +38,12 @@ public class Reservation {
 
     public LocalDate getDate() {
         return date;
+    }
+
+    private void validateNotNull(final Long id, final String name, final LocalDate date, final LocalTime time) {
+        Objects.requireNonNull(id);
+        Objects.requireNonNull(name);
+        Objects.requireNonNull(date);
+        Objects.requireNonNull(time);
     }
 }

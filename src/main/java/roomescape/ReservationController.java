@@ -11,18 +11,20 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
 
 @Controller
+@RequestMapping("/reservations")
 public class ReservationController {
     private final AtomicLong index = new AtomicLong(1);
     private List<Reservation> reservations = new ArrayList<>();
 
-    @GetMapping("/reservations")
+    @GetMapping()
     public ResponseEntity<List<Reservation>> read() {
         return ResponseEntity.ok(reservations);
     }
 
-    @PostMapping("/reservations")
+    @PostMapping()
     public ResponseEntity<Reservation> create(
             @RequestBody final Reservation reservation
     ) {
@@ -31,9 +33,11 @@ public class ReservationController {
         return ResponseEntity.ok(createdReservation);
     }
 
-    @DeleteMapping("/reservations/{id}")
-    public ResponseEntity<Void> delete(@PathVariable final long id) {
-        Reservation target = reservations.stream()
+    @DeleteMapping("/{id}")
+    public ResponseEntity<Void> delete(
+            @PathVariable("id") final long id
+    ) {
+        final Reservation target = reservations.stream()
                 .filter(reservation -> Objects.equals(reservation.getId(), id))
                 .findFirst()
                 .orElseThrow(() -> new IllegalArgumentException("[ERROR]"));

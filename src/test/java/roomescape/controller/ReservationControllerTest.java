@@ -6,6 +6,7 @@ import io.restassured.RestAssured;
 import io.restassured.response.ExtractableResponse;
 import io.restassured.response.Response;
 import org.junit.jupiter.api.Test;
+import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.http.HttpStatus;
 
@@ -14,7 +15,8 @@ class ReservationControllerTest {
 
     @Test
     void reservation_url로_요청하면_예약_페이지를_반환한다() {
-        ExtractableResponse<Response> response = RestAssured.given()
+        ExtractableResponse<Response> response = RestAssured
+                .given()
                 .log().all()
                 .when().get("http://localhost:8080/admin/reservation")
                 .then().log().all()

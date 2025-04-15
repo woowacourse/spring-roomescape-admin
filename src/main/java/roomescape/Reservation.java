@@ -4,40 +4,10 @@ import java.time.LocalDate;
 import java.time.LocalTime;
 import java.util.Objects;
 
-public class Reservation {
+public record Reservation(Long id, String name, LocalDate date, LocalTime time) {
 
-    private final Long id;
-    private final String name;
-    private final LocalDate date;
-    private final LocalTime time;
-
-    public Reservation(
-            final Long id,
-            final String name,
-            final LocalDate date,
-            final LocalTime time
-    ) {
+    public Reservation {
         validateNotNull(id, name, date, time);
-        this.id = id;
-        this.name = name;
-        this.date = date;
-        this.time = time;
-    }
-
-    public Long getId() {
-        return id;
-    }
-
-    public String getName() {
-        return name;
-    }
-
-    public LocalTime getTime() {
-        return time;
-    }
-
-    public LocalDate getDate() {
-        return date;
     }
 
     private void validateNotNull(final Long id, final String name, final LocalDate date, final LocalTime time) {

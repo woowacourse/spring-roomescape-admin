@@ -15,7 +15,7 @@ public class Reservations {
     }
 
     public void add(Reservation reservation) {
-        reservations.put(reservation.getId(), reservation);
+        reservations.put(reservation.id(), reservation);
     }
 
     public boolean removeById(long id) {

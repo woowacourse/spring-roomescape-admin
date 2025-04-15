@@ -37,9 +37,9 @@
 
 ## 3단계
 
-- [ ] API 명세에 따라 아래 기능 구현
-    - [ ] 예약 추가 API 구현
-        - [ ] Request
+- [x] API 명세에 따라 아래 기능 구현
+    - [x] 예약 추가 API 구현
+        - [x] Request
         ```
         POST /reservations HTTP/1.1
         content-type: application/json
@@ -51,7 +51,7 @@
         }
         ```
 
-        - [ ] Response
+        - [x] Response
         ```
         HTTP/1.1 200
         Content-Type: application/json
@@ -64,7 +64,7 @@
         }
         ```
 
-    - [ ] 예약 삭제 API 구현
+    - [x] 예약 삭제 API 구현
         - Request
         ```
         DELETE /reservations/1 HTTP/1.1

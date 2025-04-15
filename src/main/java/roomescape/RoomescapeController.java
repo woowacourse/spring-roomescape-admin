@@ -2,25 +2,21 @@ package roomescape;
 
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.bind.annotation.*;
 
 import java.time.LocalDate;
 import java.time.LocalTime;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.concurrent.atomic.AtomicLong;
 
 @Controller
 public class RoomescapeController {
     private final List<Reservation> reservations;
+    private final AtomicLong reservationIndex = new AtomicLong(1);
 
     public RoomescapeController() {
         this.reservations = new ArrayList<>();
-        reservations.addAll(List.of(
-                new Reservation(1L, "브라운", LocalDate.of(2025, 4, 20), LocalTime.of(10, 0)),
-                new Reservation(2L, "솔라", LocalDate.of(2025, 4, 20), LocalTime.of(11, 0)),
-                new Reservation(3L, "부리", LocalDate.of(2025, 4, 21), LocalTime.of(10, 0))
-        ));
     }
 
     @GetMapping("/admin")
@@ -37,5 +33,28 @@ public class RoomescapeController {
     @ResponseBody
     public ResponseEntity<List<Reservation>> getAllReservation() {
         return ResponseEntity.ok().body(reservations);
+    }
+
+    @PostMapping("/reservations")
+    @ResponseBody
+    public ResponseEntity<Reservation> createReservation(@RequestBody ReservationDto reservationDto) {
+        Reservation newReservation = new Reservation(
+                reservationIndex.getAndIncrement(),
+                reservationDto.name(),
+                reservationDto.date(),
+                reservationDto.time());
+        reservations.add(newReservation);
+        return ResponseEntity.ok(newReservation);
+    }
+
+    @DeleteMapping("/reservations/{id}")
+    @ResponseBody
+    public ResponseEntity<Void> deleteReservation(@PathVariable Long id) {
+        Reservation findReservation = reservations.stream()
+                .filter(reservation -> reservation.id().equals(id))
+                .findFirst()
+                .orElseThrow(() -> new IllegalArgumentException("[ERROR] 존재하지 않는 id 입니다."));
+        reservations.remove(findReservation);
+        return ResponseEntity.ok().build();
     }
 }

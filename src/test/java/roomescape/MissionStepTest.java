@@ -19,10 +19,11 @@ public class MissionStepTest {
     }
 
     @Test
-    void 일단계() {
+    @DisplayName("/admin 요청에 응답한다")
+    void admin_page() {
         RestAssured.given().log().all()
-                .when().get("/")
-                .then().log().all()
-                .statusCode(200);
+            .when().get("/admin")
+            .then().log().all()
+            .statusCode(200);
     }
 }

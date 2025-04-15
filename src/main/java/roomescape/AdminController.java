@@ -10,13 +10,8 @@ public class AdminController {
 
     private static final String PATH_PREFIX = "admin/";
 
-    @GetMapping("/")
+    @GetMapping()
     public String admin() {
         return PATH_PREFIX + "index";
-    }
-
-    @GetMapping("/reservation")
-    public String adminReservation(){
-        return PATH_PREFIX + "reservation-legacy";
     }
 }

@@ -15,16 +15,6 @@ public class RoomescapeController {
     private final List<Reservation> reservations = new ArrayList<>();
     private final AtomicLong index = new AtomicLong(1);
 
-    @GetMapping("/admin")
-    public String getMainPage() {
-        return "admin/index";
-    }
-
-    @GetMapping("/admin/reservation")
-    public String getReservationPage() {
-        return "admin/reservation-legacy";
-    }
-
     @GetMapping("/reservations")
     public ResponseEntity<List<Reservation>> getReservations() {
         return ResponseEntity.ok().body(reservations);

@@ -1,5 +1,7 @@
 package roomescape;
 
+import static org.hamcrest.Matchers.is;
+
 import io.restassured.RestAssured;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -25,5 +27,24 @@ public class MissionStepTest {
             .when().get("/admin")
             .then().log().all()
             .statusCode(200);
+    }
+
+    @Test
+    @DisplayName("/admin/reservation 요청에 응답한다")
+    void admin_reservation_page() {
+        RestAssured.given().log().all()
+                .when().get("/admin/reservation")
+                .then().log().all()
+                .statusCode(200);
+    }
+
+    @Test
+    @DisplayName("/reservations 요청에 정상적으로 응답한다")
+    void reservations_api() {
+        RestAssured.given().log().all()
+                .when().get("/reservations")
+                .then().log().all()
+                .statusCode(200)
+                .body("size()", is(0)); // 아직 생성 요청이 없으니 Controller에서 임의로 넣어준 Reservation 갯수 만큼 검증하거나 0개임을 확인하세요.
     }
 }

@@ -1,7 +1,7 @@
 package roomescape.model;
 
-import org.joda.time.LocalDate;
-import org.joda.time.LocalTime;
+import java.time.LocalDate;
+import java.time.LocalTime;
 
 public class Reservation {
 
@@ -15,5 +15,21 @@ public class Reservation {
         this.userName = userName;
         this.date = date;
         this.time = time;
+    }
+
+    public Long getId() {
+        return id;
+    }
+
+    public String getUserName() {
+        return userName;
+    }
+
+    public LocalDate getDate() {
+        return date;
+    }
+
+    public LocalTime getTime() {
+        return time;
     }
 }

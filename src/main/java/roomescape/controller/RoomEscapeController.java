@@ -4,7 +4,6 @@ import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 import org.springframework.stereotype.Controller;
-import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 import roomescape.dto.ReservationDto;
@@ -25,10 +24,7 @@ public class RoomEscapeController {
     }
 
     @GetMapping("/admin/reservation")
-    public String reservationAdminPage(Model model){
-        List<ReservationDto> dtos = reservations.stream().map(ReservationDto::EntityToDto).toList();
-
-        model.addAttribute("reservations", dtos);
+    public String reservationAdminPage(){
         return "admin/reservation-legacy";
     }
 

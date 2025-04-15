@@ -8,18 +8,18 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 @Controller
 public class RoomescapeController {
 
     private final Reservations reservations;
+    private final AtomicLong index = new AtomicLong(1);
 
     public RoomescapeController() {
-        this.reservations = new Reservations(List.of(
-                new Reservation(new AtomicLong(1), "브라운", LocalDate.of(2023, 1, 1), LocalTime.of(10, 0)),
-                new Reservation(new AtomicLong(2), "브라운", LocalDate.of(2023, 1, 2), LocalTime.of(11, 0))
-        ));
+        this.reservations = new Reservations(List.of());
     }
 
     @GetMapping("/admin")
@@ -37,4 +37,14 @@ public class RoomescapeController {
     public ResponseEntity<List<Reservation>> reservations() {
         return new ResponseEntity<>(reservations.getReservations(), HttpStatus.OK);
     }
+
+    @ResponseBody
+    @PostMapping("/reservations")
+    public ResponseEntity<Reservation> createReservation(@RequestBody ReservationDto reservationDto) {
+        Reservation reservation = new Reservation(index.getAndIncrement(), reservationDto.name(), reservationDto.date(),
+                reservationDto.time());
+        reservations.add(reservation);
+        return new ResponseEntity<>(reservation, HttpStatus.OK);
+    }
+
 }

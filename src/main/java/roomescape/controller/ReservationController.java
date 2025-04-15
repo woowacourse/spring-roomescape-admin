@@ -27,7 +27,7 @@ public class ReservationController {
     }
 
     @PostMapping("/reservations")
-    public ResponseEntity<Reservation> create(
+    public ResponseEntity<Reservation> createReservation(
             String name,
             LocalDate date,
             LocalTime time

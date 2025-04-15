@@ -3,14 +3,18 @@ package roomescape.domain;
 import java.util.Objects;
 
 public class Reservation {
-    private final int id;
+    private final Long id;
     private final Person person;
     private final ReservationTime reservationTime;
 
-    public Reservation(int id, Person person, ReservationTime reservationTime) {
+    public Reservation(long id, Person person, ReservationTime reservationTime) {
         this.id = id;
         this.person = person;
         this.reservationTime = reservationTime;
+    }
+
+    public long getId() {
+        return id;
     }
 
     public Person getPerson() {
@@ -27,7 +31,7 @@ public class Reservation {
             return false;
         }
         Reservation that = (Reservation) o;
-        return id == that.id && Objects.equals(person, that.person)
+        return id.equals(that.id) && Objects.equals(person, that.person)
             && Objects.equals(reservationTime, that.reservationTime);
     }
 

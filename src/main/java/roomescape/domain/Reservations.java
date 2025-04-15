@@ -8,8 +8,8 @@ public class Reservations {
 
     private final List<Reservation> reservations;
 
-    public Reservations(List<Reservation> reservations) {
-        this.reservations = new ArrayList<>(reservations);
+    public Reservations() {
+        this.reservations = new ArrayList<>();
     }
 
     public List<Reservation> getReservations() {

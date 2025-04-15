@@ -6,15 +6,15 @@
 
 ## 2단계
 
-- [ ] /admin/reservation 요청 시 예약 관리 페이지(templates/admin/reservation-legacy.html)가 응답한다.
-- [ ]  API 명세에 따라 아래 기능 구현
-- [ ] 예약 확인 API 구현
-    - [ ] Request
+- [x] /admin/reservation 요청 시 예약 관리 페이지(templates/admin/reservation-legacy.html)가 응답한다.
+- [x]  API 명세에 따라 아래 기능 구현
+- [x] 예약 확인 API 구현
+    - [x] Request
     ```
     GET /reservations HTTP/1.1
     ```
 
-    - [ ] Response
+    - [x] Response
     ```
     HTTP/1.1 200
     Content-Type: application/json

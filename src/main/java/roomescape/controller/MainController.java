@@ -1,13 +1,13 @@
-package roomescape;
+package roomescape.controller;
 
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
 
 @Controller
-public class RoomescapeController {
+public class MainController {
 
-    @GetMapping("/admin")
+    @GetMapping("/")
     public String showAdminMainPage() {
-        return "./admin/index.html";
+        return "/admin/index";
     }
 }

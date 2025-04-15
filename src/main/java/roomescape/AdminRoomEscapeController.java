@@ -10,4 +10,9 @@ public class AdminRoomEscapeController {
     public String home() {
         return "/admin/index";
     }
+
+    @GetMapping("/admin/reservation")
+    public String reservation() {
+        return "/admin/reservation-legacy";
+    }
 }

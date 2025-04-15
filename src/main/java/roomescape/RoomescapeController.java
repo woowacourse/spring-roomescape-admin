@@ -1,13 +1,13 @@
 package roomescape;
 
-import java.time.LocalDate;
-import java.time.LocalTime;
 import java.util.List;
 import java.util.concurrent.atomic.AtomicLong;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.ResponseBody;
@@ -47,4 +47,10 @@ public class RoomescapeController {
         return new ResponseEntity<>(reservation, HttpStatus.OK);
     }
 
+    @ResponseBody
+    @DeleteMapping("/reservations/{id}")
+    public ResponseEntity<Void> deleteReservation(@PathVariable("id") Long id) {
+        reservations.deleteBy(id);
+        return ResponseEntity.ok().build();
+    }
 }

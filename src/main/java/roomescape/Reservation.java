@@ -9,8 +9,4 @@ public record Reservation(
         LocalDate date,
         LocalTime time
 ) {
-
-    public Reservation withId(Long newId) {
-        return new Reservation(newId, name, date, time);
-    }
 }

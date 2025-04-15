@@ -12,6 +12,8 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.ResponseBody;
+import roomescape.dto.request.ReservationCreateRequest;
+import roomescape.dto.response.ReservationResponse;
 
 @Controller
 public class UserRoomEscapeController {
@@ -21,16 +23,22 @@ public class UserRoomEscapeController {
 
     @GetMapping("/reservations")
     @ResponseBody
-    public ResponseEntity<List<Reservation>> reservations() {
-        return ResponseEntity.ok(reservations);
+    public ResponseEntity<List<ReservationResponse>> reservations() {
+        List<ReservationResponse> response = reservations.stream()
+                .map(ReservationResponse::from)
+                .toList();
+
+        return ResponseEntity.ok(response);
     }
 
     @PostMapping("/reservations")
     @ResponseBody
-    public ResponseEntity<Reservation> addReservations(@RequestBody Reservation reservation) {
-        Reservation newReservation = reservation.withId(autoIncrement.incrementAndGet());
+    public ResponseEntity<ReservationResponse> addReservations(@RequestBody ReservationCreateRequest request) {
+        Reservation newReservation = request.toDomain(autoIncrement.incrementAndGet());
+
         reservations.add(newReservation);
-        return ResponseEntity.ok(newReservation);
+
+        return ResponseEntity.ok(ReservationResponse.from(newReservation));
     }
 
     @DeleteMapping("/reservations/{id}")
@@ -39,7 +47,9 @@ public class UserRoomEscapeController {
                 .filter(reservation -> Objects.equals(reservation.id(), id))
                 .findFirst()
                 .orElseThrow(IllegalArgumentException::new);
+
         reservations.remove(target);
+
         return ResponseEntity.ok().build();
     }
 

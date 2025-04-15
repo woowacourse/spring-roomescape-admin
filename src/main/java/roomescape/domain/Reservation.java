@@ -1,10 +1,8 @@
 package roomescape.domain;
 
-import com.fasterxml.jackson.annotation.JsonAutoDetect;
 import java.time.LocalDate;
 import java.time.LocalTime;
 
-@JsonAutoDetect
 public class Reservation {
 
     private final Long id;

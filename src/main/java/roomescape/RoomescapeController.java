@@ -8,7 +8,8 @@ import org.springframework.web.bind.annotation.RestController;
 public class RoomescapeController {
 
     @GetMapping("/admin")
-    public String admin(){
+    public String admin(
+    ){
         return "/admin/index.html";
     }
 }

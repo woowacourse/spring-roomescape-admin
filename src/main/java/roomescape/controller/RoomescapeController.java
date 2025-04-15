@@ -1,4 +1,4 @@
-package roomescape;
+package roomescape.controller;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -11,11 +11,13 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
+import roomescape.dto.CreateReservationDto;
+import roomescape.entity.Reservation;
 
 @Controller
 public class RoomescapeController {
-    private List<Reservation> reservations = new ArrayList<>();
-    private AtomicLong index = new AtomicLong(1);
+    private final List<Reservation> reservations = new ArrayList<>();
+    private final AtomicLong index = new AtomicLong(1);
 
     @GetMapping("/admin")
     public String admin(){

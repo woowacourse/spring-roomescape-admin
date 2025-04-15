@@ -2,7 +2,7 @@
 
 ## 1단계
 
-- [ ] localhost:8080/admin 요청 시 어드민 메인 페이지(templates/admin/index.htm)를 응답한다.
+- [x] localhost:8080/admin 요청 시 어드민 메인 페이지(templates/admin/index.htm)를 응답한다.
 
 ## 2단계
 

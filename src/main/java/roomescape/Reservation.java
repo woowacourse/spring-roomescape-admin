@@ -2,23 +2,23 @@ package roomescape;
 
 import java.time.LocalDate;
 import java.time.LocalTime;
-import java.util.concurrent.atomic.AtomicInteger;
+import java.util.concurrent.atomic.AtomicLong;
 
 public class Reservation {
 
-    private AtomicInteger id;
+    private AtomicLong id;
     private String name;
     private LocalDate date;
     private LocalTime time;
 
-    public Reservation(final AtomicInteger id, final String name, final LocalDate date, final LocalTime time) {
+    public Reservation(final AtomicLong id, final String name, final LocalDate date, final LocalTime time) {
         this.id = id;
         this.name = name;
         this.date = date;
         this.time = time;
     }
 
-    public AtomicInteger getId() {
+    public AtomicLong getId() {
         return id;
     }
 

@@ -7,10 +7,22 @@ public class Reservation {
     private final String name;
     private final LocalDateTime reservationTime;
 
-    public Reservation(Long id, String name, LocalDateTime reservationTime) {
+    private Reservation(Long id, String name, LocalDateTime reservationTime) {
         this.id = id;
         this.name = name;
         this.reservationTime = reservationTime;
+    }
+
+    public static Reservation createReservation(Long id, String name, LocalDateTime reservationTime){
+        return new Reservation(id,name,reservationTime);
+    }
+
+    public static Reservation createReservationWithId(Long id, Reservation reservation){
+        return new Reservation(id, reservation.getName(), reservation.reservationTime);
+    }
+
+    public static Reservation createReservationWithoutID(String name, LocalDateTime reservationTime){
+        return new Reservation(null,name,reservationTime);
     }
 
     public Long getId() {

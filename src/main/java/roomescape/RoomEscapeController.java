@@ -33,9 +33,14 @@ public class RoomEscapeController {
     @PostMapping("reservations")
     public ResponseEntity<Reservation> addReservation(@RequestBody ReservationRequest request) {
         long id = reservations.nextId();
-        Reservation reservation = request.toReservation(id);
-        reservations.add(reservation);
-        return ResponseEntity.ok(reservation);
+        try {
+            Reservation reservation = request.toReservation(id);
+            reservations.add(reservation);
+            return ResponseEntity.ok(reservation);
+
+        } catch (NullPointerException e) {
+            return ResponseEntity.badRequest().build();
+        }
     }
 
     @DeleteMapping("reservations/{id}")

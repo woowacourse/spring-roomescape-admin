@@ -17,7 +17,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 @RequestMapping("/reservations")
 public class ReservationController {
     private final AtomicLong index = new AtomicLong(1);
-    private List<Reservation> reservations = new ArrayList<>();
+    private final List<Reservation> reservations = new ArrayList<>();
 
     @GetMapping()
     public ResponseEntity<List<Reservation>> read() {

@@ -12,13 +12,13 @@ public class Reservation {
     public Reservation() {
     }
 
-    public Reservation(String name, LocalDate date, LocalTime time) {
+    public Reservation(final String name, final LocalDate date, final LocalTime time) {
         this.name = name;
         this.date = date;
         this.time = time;
     }
 
-    public Reservation(long id, Reservation reservation) {
+    public Reservation(final long id, final Reservation reservation) {
         this.id = id;
         this.name = reservation.name;
         this.date = reservation.date;

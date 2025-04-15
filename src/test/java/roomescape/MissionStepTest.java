@@ -10,11 +10,18 @@ import org.springframework.test.annotation.DirtiesContext;
 public class MissionStepTest {
 
     @Test
-    void 일단계() {
+    void original_test() {
         RestAssured.given().log().all()
                 .when().get("/")
                 .then().log().all()
                 .statusCode(200);
     }
 
+    @Test
+    void admin_test() {
+        RestAssured.given().log().all()
+                .when().get("/admin")
+                .then().log().all()
+                .statusCode(200);
+    }
 }

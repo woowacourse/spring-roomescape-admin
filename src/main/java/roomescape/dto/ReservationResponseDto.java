@@ -3,9 +3,9 @@ package roomescape.dto;
 import java.time.format.DateTimeFormatter;
 import roomescape.domain.Reservation;
 
-public record ReservationDto(long id, String name, String date, String time) {
-    public static ReservationDto from(Reservation reservation){
-        return new ReservationDto(
+public record ReservationResponseDto(long id, String name, String date, String time) {
+    public static ReservationResponseDto from(Reservation reservation){
+        return new ReservationResponseDto(
             reservation.getId(),
             reservation.getPerson().getName(),
             reservation.getReservationTime().getDate().toString(),

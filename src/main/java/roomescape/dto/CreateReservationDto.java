@@ -1,17 +1,15 @@
 package roomescape.dto;
 
+import jakarta.validation.constraints.NotNull;
+import java.time.Clock;
 import java.time.LocalDate;
 import java.time.LocalTime;
-import roomescape.entity.Reservation;
+import roomescape.domain.ReservationDateTime;
+import roomescape.domain.ReservationInfo;
 
-public record CreateReservationDto(String name, String date, String time) {
+public record CreateReservationDto(@NotNull String name, @NotNull LocalDate date, @NotNull LocalTime time) {
 
-    public Reservation toEntity() {
-        return new Reservation(
-                null,
-                name,
-                LocalDate.parse(date),
-                LocalTime.parse(time)
-        );
+    public ReservationInfo toReservationInfo(Clock clock) {
+        return new ReservationInfo(name, new ReservationDateTime(date, time, clock));
     }
 }

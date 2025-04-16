@@ -9,10 +9,13 @@ import java.util.Map;
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.annotation.DirtiesContext;
+import org.springframework.test.context.ActiveProfiles;
 
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.DEFINED_PORT)
 @DirtiesContext(classMode = DirtiesContext.ClassMode.BEFORE_EACH_TEST_METHOD)
+@ActiveProfiles("test")
 class MissionStepTest {
+
 
     @Test
     void 일단계() {
@@ -43,7 +46,7 @@ class MissionStepTest {
     private static void createReservationData() {
         Map<String, String> params = new HashMap<>();
         params.put("name", "브라운");
-        params.put("date", "2023-08-05");
+        params.put("date", "2025-08-05");
         params.put("time", "15:40");
 
         RestAssured.given().log().all()
@@ -56,7 +59,7 @@ class MissionStepTest {
     void 삼단계() {
         Map<String, String> params = new HashMap<>();
         params.put("name", "브라운");
-        params.put("date", "2023-08-05");
+        params.put("date", "2025-08-05");
         params.put("time", "15:40");
 
         RestAssured.given().log().all()

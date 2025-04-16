@@ -1,7 +1,5 @@
 package roomescape;
 
-import java.time.LocalDate;
-import java.time.LocalTime;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
@@ -45,18 +43,7 @@ public class AdminController {
 
     @DeleteMapping("/reservations/{id}")
     public ResponseEntity<Void> deleteReservation(@PathVariable Long id) {
-        reservations.removeIf(each -> Objects.equals(each.id, id));
+        reservations.removeIf(each -> Objects.equals(each.id(), id));
         return ResponseEntity.ok().build();
-    }
-
-    record Reservation(
-        Long id,
-        String name,
-        LocalDate date,
-        LocalTime time
-    ) {
-        public static Reservation of(Long id, Reservation reservation) {
-            return new Reservation(id, reservation.name, reservation.date, reservation.time);
-        }
     }
 }

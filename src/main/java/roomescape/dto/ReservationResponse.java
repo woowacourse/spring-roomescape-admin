@@ -10,8 +10,13 @@ public record ReservationResponse(long id,
                                   String name,
                                   LocalDate date,
                                   LocalTime time) {
+
     public static ReservationResponse from(ReservationEntity reservationEntity) {
-        return new ReservationResponse(reservationEntity.getId(), reservationEntity.getName(), reservationEntity.getDate(), reservationEntity.getTime());
+        return new ReservationResponse(
+                reservationEntity.getId(),
+                reservationEntity.getName(),
+                reservationEntity.getDate(),
+                reservationEntity.getTime());
     }
 
     public static List<ReservationResponse> from(List<ReservationEntity> reservations) {

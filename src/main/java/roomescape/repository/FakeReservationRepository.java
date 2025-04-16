@@ -15,7 +15,7 @@ public class FakeReservationRepository implements ReservationRepository {
 
     private final AtomicLong idGenerator = new AtomicLong(START_ID_NUMBER);
 
-    private final Map<Long, ReservationEntity> reservations = new HashMap();
+    private final Map<Long, ReservationEntity> reservations = new HashMap<>();
 
     @Override
     public List<ReservationEntity> findAll() {

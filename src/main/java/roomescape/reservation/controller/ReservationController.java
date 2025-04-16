@@ -9,9 +9,9 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
+import roomescape.reservation.domain.Reservation;
 import roomescape.reservation.dto.ReservationRequestDto;
 import roomescape.reservation.dto.ReservationResponseDto;
-import roomescape.reservation.domain.Reservation;
 import roomescape.reservation.repository.ReservationRepository;
 
 @Controller
@@ -42,7 +42,7 @@ public class ReservationController {
     public ResponseEntity<ReservationResponseDto> add(@RequestBody ReservationRequestDto requestDto) {
         LocalDateTime localDateTime = LocalDateTime.of(requestDto.date(), requestDto.time());
 
-        Reservation reservation = new Reservation(requestDto.name(), localDateTime);
+        Reservation reservation = new Reservation(reservationRepository.generateId(), requestDto.name(), localDateTime);
         Reservation saved = reservationRepository.save(reservation);
         ReservationResponseDto responseDto = ReservationResponseDto.toDto(saved);
 

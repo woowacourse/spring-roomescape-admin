@@ -6,6 +6,8 @@ import roomescape.reservation.domain.Reservation;
 
 public interface ReservationRepository {
 
+    long generateId();
+
     List<Reservation> findAll();
 
     Optional<Reservation> findById(Long id);

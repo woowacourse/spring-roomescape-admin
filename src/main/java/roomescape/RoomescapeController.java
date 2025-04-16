@@ -42,7 +42,11 @@ public class RoomescapeController {
     public ResponseEntity<Reservation> createReservation(@Valid @RequestBody ReservationRequest request) {
         final Reservation reservation = reservationManager.createReservation(request);
 
-        reservations.add(reservation);
+        try {
+            reservations.add(reservation);
+        } catch (final IllegalStateException e) {
+            return ResponseEntity.badRequest().build();
+        }
         return ResponseEntity.ok(reservation);
     }
 

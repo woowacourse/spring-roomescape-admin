@@ -45,7 +45,7 @@ public class ReservationController {
     @DeleteMapping("/reservations/{id}")
     public ResponseEntity<Void> deleteReservation(@PathVariable("id") Long id){
         Reservation deleteReservation = reservations.stream()
-                .filter(reservation -> reservation.getId() == id)
+                .filter(reservation -> reservation.id() == id)
                 .findAny()
                 .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND));
         reservations.remove(deleteReservation);

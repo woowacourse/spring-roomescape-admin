@@ -37,7 +37,6 @@ public class RoomEscapeController {
             Reservation reservation = request.toReservation(id);
             reservations.add(reservation);
             return ResponseEntity.ok(reservation);
-
         } catch (IllegalArgumentException e) {
             return ResponseEntity.badRequest().build();
         }

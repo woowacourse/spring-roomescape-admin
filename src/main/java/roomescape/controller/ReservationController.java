@@ -18,7 +18,7 @@ import java.util.concurrent.atomic.AtomicLong;
 @RequestMapping("/reservations")
 public class ReservationController {
 
-    private final AtomicLong index = new AtomicLong(1);
+    private final AtomicLong counter = new AtomicLong(1);
     private final Reservations reservations = new Reservations(new ArrayList<>());
 
     @GetMapping
@@ -30,7 +30,7 @@ public class ReservationController {
     @PostMapping
     public ResponseEntity<ReservationResponse> createReservation(@Valid @RequestBody ReservationRequest reservationRequest) {
         LocalDateTime dateTime = LocalDateTime.of(reservationRequest.date(), reservationRequest.time());
-        Reservation reservation = new Reservation(index.getAndIncrement(), reservationRequest.name(), dateTime);
+        Reservation reservation = new Reservation(counter.getAndIncrement(), reservationRequest.name(), dateTime);
         reservations.add(reservation);
         return ResponseEntity.ok(ReservationResponse.from(reservation));
     }

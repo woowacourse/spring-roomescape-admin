@@ -40,8 +40,9 @@ public class RoomescapeController {
 
     @ResponseBody
     @PostMapping("/reservations")
-    public ResponseEntity<Reservation> createReservation(@RequestBody ReservationDto reservationDto) {
-        Reservation reservation = new Reservation(index.getAndIncrement(), reservationDto.name(), reservationDto.date(),
+    public ResponseEntity<Reservation> createReservation(@RequestBody final ReservationDto reservationDto) {
+        final Reservation reservation = new Reservation(index.getAndIncrement(), reservationDto.name(),
+                reservationDto.date(),
                 reservationDto.time());
         reservations.add(reservation);
         return new ResponseEntity<>(reservation, HttpStatus.OK);
@@ -49,7 +50,7 @@ public class RoomescapeController {
 
     @ResponseBody
     @DeleteMapping("/reservations/{id}")
-    public ResponseEntity<Void> deleteReservation(@PathVariable("id") Long id) {
+    public ResponseEntity<Void> deleteReservation(@PathVariable("id") final Long id) {
         reservations.deleteBy(id);
         return ResponseEntity.ok().build();
     }

@@ -19,23 +19,21 @@ public class ReservationController {
 
     @GetMapping("/admin")
     public String home() {
-        return "admin/index.html";
+        return "admin/index";
     }
 
     @GetMapping("/admin/reservation")
     public String reservationPage() {
-        return "admin/reservation-legacy.html";
+        return "admin/reservation-legacy";
     }
 
     @GetMapping("/reservations")
-    @ResponseBody
     public ResponseEntity<List<Reservation>> getAllReservations() {
         return ResponseEntity.ok()
                 .body(reservations);
     }
 
     @PostMapping("/reservations")
-    @ResponseBody
     public ResponseEntity<Reservation> addReservation(@RequestBody CreateReservationDto reservationDto){
         Reservation reservation = new Reservation(index.getAndIncrement(), reservationDto.name(),reservationDto.date(),reservationDto.time());
         reservations.add(reservation);

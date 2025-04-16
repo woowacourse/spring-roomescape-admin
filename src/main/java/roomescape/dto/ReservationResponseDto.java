@@ -7,10 +7,10 @@ public record ReservationResponseDto(long id, String name, String date, String t
 
     public static ReservationResponseDto from(Reservation reservation) {
         return new ReservationResponseDto(
-            reservation.getId(),
-            reservation.getPerson().getName(),
-            reservation.getReservationTime().getDate().toString(),
-            reservation.getReservationTime().getTime().format(DateTimeFormatter.ofPattern("HH:mm"))
+            reservation.id(),
+            reservation.getPersonName(),
+            reservation.getDate().toString(),
+            reservation.getTime().format(DateTimeFormatter.ofPattern("HH:mm"))
         );
     }
 }

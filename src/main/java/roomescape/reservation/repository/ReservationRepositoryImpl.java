@@ -30,8 +30,6 @@ public class ReservationRepositoryImpl implements ReservationRepository {
     }
 
     public Reservation save(Reservation reservation) {
-        // TODO repository에서 객체 생성의 책임을 부여하는 것은 과도하다고 생각함.
-//        Reservation reservationEntity = Reservation.toEntity(index.getAndIncrement(), reservation);
         reservations.add(reservation);
         return reservation;
     }

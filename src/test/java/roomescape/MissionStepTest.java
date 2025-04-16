@@ -69,4 +69,13 @@ public class MissionStepTest {
                 .statusCode(200)
                 .body("size()", is(0));
     }
+
+    @Test
+    void 삼단계_존재하지_않는_예약의_삭제를_요청하면_BAD_REQUEST를_응답한다() {
+        RestAssured.given().log().all()
+                .contentType(ContentType.JSON)
+                .when().delete("/reservations/1")
+                .then().log().all()
+                .statusCode(400);
+    }
 }

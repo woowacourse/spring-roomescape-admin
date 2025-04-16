@@ -47,6 +47,6 @@ public class ReservationController {
         if (isDeleted) {
             return ResponseEntity.ok().build();
         }
-        return ResponseEntity.notFound().build();
+        return ResponseEntity.badRequest().build();
     }
 }

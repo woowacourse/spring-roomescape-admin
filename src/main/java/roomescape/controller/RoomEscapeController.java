@@ -1,4 +1,4 @@
-package roomescape;
+package roomescape.controller;
 
 import java.time.LocalDate;
 import java.time.LocalTime;
@@ -7,9 +7,10 @@ import java.util.List;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
+import roomescape.Reservation;
 
 @Controller
-public class RoomescapeController {
+public class RoomEscapeController {
 
     private List<Reservation> reservations = new ArrayList<>();
 

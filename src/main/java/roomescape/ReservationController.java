@@ -10,22 +10,24 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
 
 @Controller
+@RequestMapping("/reservations")
 public class ReservationController {
     private final AtomicLong index = new AtomicLong(1);
     private List<Reservation> reservations = new ArrayList<>();
 
-    @GetMapping("/reservations")
-    public ResponseEntity<List<ReservationResponse>> getReservations() {
+    @GetMapping
+    public ResponseEntity<List<ReservationResponse>> getAll() {
         List<ReservationResponse> reservationResponses = reservations.stream()
             .map(ReservationResponse::from)
             .toList();
         return ResponseEntity.ok().body(reservationResponses);
     }
 
-    @PostMapping("/reservations")
-    public ResponseEntity<ReservationResponse> createReservation(
+    @PostMapping
+    public ResponseEntity<ReservationResponse> create(
         @RequestBody ReservationRequest request) {
         Reservation reservation = new Reservation(index.getAndIncrement(), request.name(),
             request.date(), request.time());
@@ -33,8 +35,8 @@ public class ReservationController {
         return ResponseEntity.ok().body(ReservationResponse.from(reservation));
     }
 
-    @DeleteMapping("/reservations/{id}")
-    public ResponseEntity<Void> deleteReservation(@PathVariable(name = "id") Long id) {
+    @DeleteMapping("/{id}")
+    public ResponseEntity<Void> delete(@PathVariable(name = "id") Long id) {
         boolean isRemoved = reservations.removeIf(reservation -> reservation.getId() == id);
         if (isRemoved) {
             return ResponseEntity.ok().build();

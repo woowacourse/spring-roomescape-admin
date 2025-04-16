@@ -22,36 +22,36 @@ public class ReservationEntity {
         this.time = time;
     }
 
-    public static ReservationEntity createWithoutId(String name, LocalDate date, LocalTime time){
-        return new ReservationEntity(name,date,time);
+    public static ReservationEntity createWithoutId(String name, LocalDate date, LocalTime time) {
+        return new ReservationEntity(name, date, time);
     }
 
     public long getId() {
         return id;
     }
 
-    public String getName() {
-        return name;
-    }
-
-    public LocalDate getDate() {
-        return date;
-    }
-
-    public LocalTime getTime() {
-        return time;
-    }
-
     public void setId(final long id) {
         this.id = id;
+    }
+
+    public String getName() {
+        return name;
     }
 
     public void setName(final String name) {
         this.name = name;
     }
 
+    public LocalDate getDate() {
+        return date;
+    }
+
     public void setDate(final LocalDate date) {
         this.date = date;
+    }
+
+    public LocalTime getTime() {
+        return time;
     }
 
     public void setTime(final LocalTime time) {

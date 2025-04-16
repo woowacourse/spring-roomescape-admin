@@ -9,7 +9,7 @@ import roomescape.repository.ReservationRepository;
 import java.util.List;
 
 @Service
-public class ReservationServiceImpl implements ReservationService{
+public class ReservationServiceImpl implements ReservationService {
 
     private final ReservationRepository reservationRepository;
 

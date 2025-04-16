@@ -1,42 +1,51 @@
 package roomescape;
 
+import static io.restassured.module.mockmvc.RestAssuredMockMvc.given;
 import static org.hamcrest.Matchers.is;
 
-import io.restassured.RestAssured;
-import io.restassured.http.ContentType;
-import io.restassured.response.ValidatableResponse;
-import java.util.HashMap;
-import java.util.Map;
-import org.apache.http.HttpStatus;
-import org.junit.jupiter.api.Order;
+import io.restassured.module.mockmvc.RestAssuredMockMvc;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.test.annotation.DirtiesContext;
+import org.springframework.http.HttpStatus;
+import org.springframework.web.context.WebApplicationContext;
 
-@SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.DEFINED_PORT)
-@DirtiesContext(classMode = DirtiesContext.ClassMode.BEFORE_EACH_TEST_METHOD)
+import java.util.*;
+import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
+import org.springframework.beans.factory.annotation.Autowired;
+import roomescape.controller.AdminController;
+import roomescape.controller.ReservationController;
+
+@WebMvcTest(controllers = {ReservationController.class, AdminController.class})
 public class MissionStepTest {
+
+    @Autowired
+    private WebApplicationContext context;
+
+    @BeforeEach
+    void setup() {
+        RestAssuredMockMvc.webAppContextSetup(context);
+    }
 
     @Test
     void 일단계() {
-        RestAssured.given().log().all()
+        given()
                 .when().get("/")
-                .then().log().all()
+                .then()
                 .statusCode(200);
     }
 
     @Test
     void 이단계() {
-        RestAssured.given().log().all()
+        given()
                 .when().get("/admin/reservation")
-                .then().log().all()
+                .then()
                 .statusCode(200);
 
-        RestAssured.given().log().all()
+        given()
                 .when().get("/reservations")
-                .then().log().all()
+                .then()
                 .statusCode(200)
-                .body("size()", is(0)); // 아직 생성 요청이 없으니 Controller에서 임의로 넣어준 Reservation 갯수 만큼 검증하거나 0개임을 확인하세요.
+                .body("size()", is(0));
     }
 
     @Test
@@ -46,28 +55,28 @@ public class MissionStepTest {
         params.put("date", "2023-08-05");
         params.put("time", "15:40");
 
-        RestAssured.given().log().all()
-                .contentType(ContentType.JSON)
+        given()
+                .contentType("application/json")
                 .body(params)
                 .when().post("/reservations")
-                .then().log().all()
-                .statusCode(201);
+                .then()
+                .statusCode(HttpStatus.CREATED.value());
 
-        RestAssured.given().log().all()
+        given()
                 .when().get("/reservations")
-                .then().log().all()
-                .statusCode(HttpStatus.SC_OK)
+                .then()
+                .statusCode(HttpStatus.OK.value())
                 .body("size()", is(1));
 
-        RestAssured.given().log().all()
+        given()
                 .when().delete("/reservations/1")
-                .then().log().all()
-                .statusCode(HttpStatus.SC_NO_CONTENT);
+                .then()
+                .statusCode(HttpStatus.NO_CONTENT.value());
 
-        RestAssured.given().log().all()
+        given()
                 .when().get("/reservations")
-                .then().log().all()
-                .statusCode(HttpStatus.SC_OK)
+                .then()
+                .statusCode(HttpStatus.OK.value())
                 .body("size()", is(0));
     }
 }

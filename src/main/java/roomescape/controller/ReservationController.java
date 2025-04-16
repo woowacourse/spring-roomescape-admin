@@ -1,12 +1,9 @@
 package roomescape.controller;
 
 import java.net.URI;
-import java.time.LocalDate;
-import java.time.LocalTime;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.atomic.AtomicLong;
-import java.util.stream.Stream;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -51,6 +48,7 @@ public class ReservationController {
                 .filter((reservation) -> reservation.id().equals(id))
                 .findAny()
                 .orElseThrow(InvalidReservationRequest::new);
+
         reservations.remove(deleteReservation);
         return ResponseEntity.noContent().build();
     }

@@ -20,7 +20,7 @@ public class ReservationController {
     public ResponseEntity<Reservation> createReservation(
             @RequestBody final Reservation reservation
     ) {
-        final Reservation savedReservation = reservations.saveReservation(reservation);
+        final Reservation savedReservation = reservations.save(reservation);
         return ResponseEntity.ok(savedReservation);
     }
 

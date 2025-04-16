@@ -7,12 +7,11 @@ import java.util.concurrent.atomic.AtomicLong;
 
 public class Reservations {
 
-    private final AtomicLong index = new AtomicLong(1);
+    private final AtomicLong nextId = new AtomicLong(1);
     private final List<Reservation> reservations = new ArrayList<>();
 
-
-    public Reservation saveReservation(final Reservation reservation) {
-        final Reservation reservationWithId = reservation.writeId(index.getAndIncrement());
+    public Reservation save(final Reservation reservation) {
+        final Reservation reservationWithId = reservation.writeId(nextId.getAndIncrement());
         reservations.add(reservationWithId);
 
         return reservationWithId;

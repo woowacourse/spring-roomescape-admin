@@ -15,8 +15,13 @@ public class RoomEscapeController {
 
     private final Reservations reservations = new Reservations();
 
-    @GetMapping("/admin")
+    @GetMapping("/")
     public String homePage() {
+        return "home";
+    }
+
+    @GetMapping("/admin")
+    public String adminHomePage() {
         return "admin/index";
     }
 

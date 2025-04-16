@@ -3,18 +3,14 @@ package roomescape.domain;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
-import java.util.stream.Collectors;
+import java.util.Optional;
 
 public class Reservations {
 
-    private List<Reservation> reservations;
+    private final List<Reservation> reservations;
 
     public Reservations(final List<Reservation> reservations) {
         this.reservations = new ArrayList<>(reservations);
-    }
-
-    public List<Reservation> getReservations() {
-        return Collections.unmodifiableList(reservations);
     }
 
     public void add(final Reservation reservation) {
@@ -22,8 +18,13 @@ public class Reservations {
     }
 
     public void deleteBy(final Long id) {
-        reservations = reservations.stream()
-                .filter(reservation -> !reservation.getId().equals(id))
-                .collect(Collectors.toList());
+        final Optional<Reservation> target = reservations.stream()
+                .filter(reservation -> reservation.getId().equals(id))
+                .findFirst();
+        target.ifPresent(reservations::remove);
+    }
+
+    public List<Reservation> getReservations() {
+        return Collections.unmodifiableList(reservations);
     }
 }

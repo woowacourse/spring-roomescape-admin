@@ -33,6 +33,13 @@ public class ReservationServiceImpl implements ReservationService {
 
     @Override
     public void delete(final long id) {
-        reservationRepository.delete(id);
+        reservationRepository.findById(id)
+                .orElseThrow(NoSuchElementException::new);
+
+        try {
+            reservationRepository.deleteById(id);
+        } catch (DataAccessException e) {
+            throw new IllegalStateException("삭제에 실패했습니다");
+        }
     }
 }

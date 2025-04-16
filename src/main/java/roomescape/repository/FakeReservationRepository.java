@@ -6,6 +6,7 @@ import roomescape.entity.ReservationEntity;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 import java.util.concurrent.atomic.AtomicLong;
 
 @Repository
@@ -16,6 +17,11 @@ public class FakeReservationRepository implements ReservationRepository {
     private final AtomicLong idGenerator = new AtomicLong(START_ID_NUMBER);
 
     private final Map<Long, ReservationEntity> reservations = new HashMap<>();
+
+    @Override
+    public Optional<ReservationEntity> findById(final long id) {
+        return Optional.ofNullable(reservations.getOrDefault(id, null));
+    }
 
     @Override
     public List<ReservationEntity> findAll() {
@@ -32,7 +38,7 @@ public class FakeReservationRepository implements ReservationRepository {
     }
 
     @Override
-    public void delete(final long id) {
+    public void deleteById(final long id) {
         reservations.remove(id);
     }
 }

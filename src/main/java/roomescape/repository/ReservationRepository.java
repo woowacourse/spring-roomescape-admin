@@ -10,5 +10,5 @@ public interface ReservationRepository {
 
     ReservationEntity save(ReservationEntity reservationEntity);
 
-    void delete(long id);
+    void deleteById(long id);
 }

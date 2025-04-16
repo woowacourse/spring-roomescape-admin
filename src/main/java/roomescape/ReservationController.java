@@ -17,8 +17,8 @@ public class ReservationController {
     private final AtomicLong index = new AtomicLong(1);
 
     @GetMapping("/reservations")
-    List<Reservation> read() {
-        return reservations.getReservations();
+    ResponseEntity<List<Reservation>> read() {
+        return ResponseEntity.ok(reservations.getReservations());
     }
 
     @PostMapping("/reservations")

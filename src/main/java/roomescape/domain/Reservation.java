@@ -1,22 +1,36 @@
 package roomescape.domain;
 
+import com.fasterxml.jackson.annotation.JsonAutoDetect;
+import com.fasterxml.jackson.annotation.JsonAutoDetect.Visibility;
 import java.time.LocalDate;
 import java.time.LocalTime;
 
+@JsonAutoDetect(fieldVisibility = Visibility.ANY)
 public class Reservation {
 
     private long id;
-    private String name;
-    private LocalDate date;
-    private LocalTime time;
+    private final String name;
+    private final LocalDate date;
+    private final LocalTime time;
 
-    public Reservation(final long id,
-                       final String name,
-                       final LocalDate date,
-                       final LocalTime time) {
+    private Reservation(final long id, final String name, final LocalDate date, final LocalTime time) {
         this.id = id;
         this.name = name;
         this.date = date;
         this.time = time;
+    }
+
+    public Reservation(final String name, final LocalDate date, final LocalTime time) {
+        this.name = name;
+        this.date = date;
+        this.time = time;
+    }
+
+    public static Reservation toEntity(Reservation reservation, long id) {
+        return new Reservation(id, reservation.name, reservation.date, reservation.time);
+    }
+
+    public boolean isSameDateTime(Reservation reservation) {
+        return this.date.equals(reservation.date) && this.time.equals(reservation.time);
     }
 }

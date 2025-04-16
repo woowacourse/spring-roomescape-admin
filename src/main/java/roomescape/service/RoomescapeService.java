@@ -17,4 +17,8 @@ public class RoomescapeService {
     public List<Reservation> findReservations() {
         return roomescapeRepository.findAll();
     }
+
+    public Reservation addReservation(final Reservation reservation) {
+        return roomescapeRepository.saveReservation(reservation);
+    }
 }

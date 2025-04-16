@@ -12,7 +12,7 @@ import java.util.concurrent.atomic.AtomicLong;
 public class ReservationController {
 
     private final List<Reservation> reservations = new ArrayList<>();
-    private final AtomicLong atomicLong = new AtomicLong();
+    private final AtomicLong index = new AtomicLong(1);
 
     @GetMapping("/admin/reservation")
     public String reservation() {
@@ -26,7 +26,7 @@ public class ReservationController {
 
     @PostMapping("/reservations")
     public ResponseEntity<Reservation> addReservation(@RequestBody Reservation reservation){
-        Reservation newReservation = Reservation.toEntity(reservation, atomicLong.incrementAndGet());
+        Reservation newReservation = Reservation.toEntity(reservation, index.incrementAndGet());
         reservations.add(newReservation);
         return ResponseEntity.ok().body(newReservation);
     }

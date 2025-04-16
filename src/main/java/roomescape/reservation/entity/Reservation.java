@@ -8,9 +8,6 @@ public class Reservation {
     private String name;
     private LocalDateTime dateTime;
 
-    public Reservation() {
-    }
-
     public Reservation(long id, String name, LocalDateTime dateTime) {
         this.id = id;
         this.name = name;
@@ -20,6 +17,13 @@ public class Reservation {
     public Reservation(String name, LocalDateTime dateTime) {
         this.name = name;
         this.dateTime = dateTime;
+    }
+
+    public static Reservation toEntity(Long id, Reservation reservation) {
+        return new Reservation(
+                id,
+                reservation.getName(),
+                reservation.getDateTime());
     }
 
     public long getId() {

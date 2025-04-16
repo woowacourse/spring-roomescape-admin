@@ -47,7 +47,7 @@ public class ReservationController {
                     .orElseThrow();
             reservations.remove(reservation);
 
-            return ResponseEntity.noContent().build();
+            return ResponseEntity.ok().build();
         } catch (NoSuchElementException e) {
             return ResponseEntity.notFound().build();
         }

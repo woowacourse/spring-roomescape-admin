@@ -11,6 +11,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.ResponseBody;
 import roomescape.domain.Reservation;
 import roomescape.dto.ReservationRequest;
+import roomescape.dto.ReservationResponse;
 import roomescape.service.RoomescapeService;
 
 @Controller
@@ -34,18 +35,18 @@ public class RoomescapeController {
 
     @GetMapping("/reservations")
     @ResponseBody
-    public ResponseEntity<List<Reservation>> reservationList() {
+    public ResponseEntity<List<ReservationResponse>> reservationList() {
         List<Reservation> reservations = roomescapeService.findReservations();
-        return ResponseEntity.ok(reservations);
+        List<ReservationResponse> responses = reservations.stream().map(ReservationResponse::of).toList();
+        return ResponseEntity.ok(responses);
     }
 
     @PostMapping("/reservations")
     @ResponseBody
-    public ResponseEntity<Reservation> reservationAdd(@RequestBody ReservationRequest request) {
+    public ResponseEntity<ReservationResponse> reservationAdd(@RequestBody ReservationRequest request) {
         try {
-            Reservation reservation = new Reservation(request.name(), request.date(), request.time());
-            Reservation savedReservation = roomescapeService.addReservation(reservation);
-            return ResponseEntity.ok(savedReservation);
+            Reservation savedReservation = roomescapeService.addReservation(request.toReservation());
+            return ResponseEntity.ok(ReservationResponse.of(savedReservation));
         } catch (IllegalArgumentException e) {
             return ResponseEntity.notFound().build();
         }

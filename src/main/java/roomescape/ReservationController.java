@@ -2,13 +2,8 @@ package roomescape;
 
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
-import java.time.LocalDate;
-import java.time.LocalTime;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.atomic.AtomicLong;
@@ -34,5 +29,15 @@ public class ReservationController {
         Reservation newReservation = Reservation.toEntity(reservation, atomicLong.incrementAndGet());
         reservations.add(newReservation);
         return ResponseEntity.ok().body(newReservation);
+    }
+
+    @DeleteMapping("/reservations/{id}")
+    public ResponseEntity<Void> deleteReservation(@PathVariable Long id) {
+        Reservation findReservation = reservations.stream()
+                .filter(reservation -> reservation.isSameId(id))
+                .findFirst()
+                .orElseThrow(() -> new IllegalArgumentException("해당 예약을 찾을 수 없습니다"));
+        reservations.remove(findReservation);
+        return ResponseEntity.ok().build();
     }
 }

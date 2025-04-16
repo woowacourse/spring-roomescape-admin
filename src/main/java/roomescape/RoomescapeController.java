@@ -2,7 +2,6 @@ package roomescape;
 
 import jakarta.validation.Valid;
 import java.util.List;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -18,7 +17,6 @@ public class RoomescapeController {
     private final Reservations reservations;
     private final ReservationManager reservationManager;
 
-    @Autowired
     public RoomescapeController(final Reservations reservations, final ReservationManager reservationManager) {
         this.reservations = reservations;
         this.reservationManager = reservationManager;

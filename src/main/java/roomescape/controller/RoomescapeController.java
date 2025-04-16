@@ -1,8 +1,5 @@
 package roomescape.controller;
 
-import com.fasterxml.jackson.annotation.JsonFormat;
-import java.time.LocalDate;
-import java.time.LocalTime;
 import java.util.List;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -11,6 +8,8 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
+import roomescape.controller.dto.ReservationDto;
+import roomescape.controller.dto.ReservationRegisterDto;
 import roomescape.domain.Reservation;
 import roomescape.repository.ReservationRepository;
 
@@ -30,20 +29,6 @@ public class RoomescapeController {
                 .toList();
     }
 
-    record ReservationDto(
-            long id,
-            String name,
-            LocalDate date,
-            @JsonFormat(pattern = "HH:mm")
-            LocalTime time
-    ) {
-
-        public static ReservationDto toDto(final Reservation reservation) {
-            return new ReservationDto(reservation.getId(), reservation.getName(), reservation.getDate(),
-                    reservation.getTime());
-        }
-    }
-
     @PostMapping("/reservations")
     public ReservationDto registerReservation(@RequestBody final ReservationRegisterDto reservationRegisterDto) {
         Reservation reservation = reservationRegisterDto.toEntity();
@@ -58,17 +43,6 @@ public class RoomescapeController {
             return ResponseEntity.ok().build();
         } catch (IllegalArgumentException e) {
             return ResponseEntity.notFound().build();
-        }
-    }
-
-    record ReservationRegisterDto(
-            LocalDate date,
-            String name,
-            @JsonFormat(pattern = "HH:mm")
-            LocalTime time
-    ) {
-        public Reservation toEntity() {
-            return new Reservation(name, date, time);
         }
     }
 }

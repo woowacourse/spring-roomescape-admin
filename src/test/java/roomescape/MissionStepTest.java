@@ -7,32 +7,36 @@ import io.restassured.RestAssured;
 import io.restassured.http.ContentType;
 import java.util.HashMap;
 import java.util.Map;
+import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.annotation.DirtiesContext;
 
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.DEFINED_PORT)
 @DirtiesContext(classMode = DirtiesContext.ClassMode.BEFORE_EACH_TEST_METHOD)
-public class MissionStepTest {
+class MissionStepTest {
 
+    @DisplayName("루트 경로 페이지 요청에 성공하면 200 코드를 반환한다")
     @Test
-    void 일단계() {
+    void root_request_test() {
         RestAssured.given().log().all()
                 .when().get("/")
                 .then().log().all()
                 .statusCode(200);
     }
 
+    @DisplayName("어드민 경로 페이지 요청에 성공하면 200 코드를 반환한다")
     @Test
-    void 이단계() {
+    void admin_request_test() {
         RestAssured.given().log().all()
                 .when().get("/admin")
                 .then().log().all()
                 .statusCode(200);
     }
 
+    @DisplayName("예약 경로 페이지 요청에 성공하면 200 코드를 반환한다")
     @Test
-    void 삼단계() {
+    void reservation_request_test() {
         RestAssured.given().log().all()
                 .when().get("/admin/reservation")
                 .then().log().all()
@@ -42,11 +46,12 @@ public class MissionStepTest {
                 .when().get("/reservations")
                 .then().log().all()
                 .statusCode(200)
-                .body("size()", is(1)); // 아직 생성 요청이 없으니 Controller에서 임의로 넣어준 Reservation 갯수 만큼 검증하거나 0개임을 확인하세요.
+                .body("size()", is(0)); // 아직 생성 요청이 없으니 Controller에서 임의로 넣어준 Reservation 갯수 만큼 검증하거나 0개임을 확인하세요.
     }
 
+    @DisplayName("예약 및 삭제 요청이 200 코드를 반환한다")
     @Test
-    void 사단계() {
+    void reservation_delete_test() {
         Map<String, String> params = new HashMap<>();
         params.put("name", "브라운");
         params.put("date", "2023-08-05");
@@ -77,5 +82,4 @@ public class MissionStepTest {
                 .statusCode(200)
                 .body("size()", is(0));
     }
-
 }

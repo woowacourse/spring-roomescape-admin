@@ -42,7 +42,7 @@ class MemoryReservationDaoTest extends TestBase {
         // when
         List<Reservation> reservations = memoryReservationDao.getReservations();
 
-        // thenR
+        // then
         Assertions.assertThat(reservations).contains(new Reservation(
                 1L,
                 "name1",

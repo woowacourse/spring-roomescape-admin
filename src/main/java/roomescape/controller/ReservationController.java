@@ -6,10 +6,13 @@ import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
+import java.util.Objects;
 import java.util.concurrent.atomic.AtomicLong;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import roomescape.dto.response.ReservationFindResponse;
@@ -21,24 +24,17 @@ public class ReservationController {
     private final AtomicLong index = new AtomicLong(1);
 
     @GetMapping("/admin/reservation")
-    public String getReservation() {
+    public String getReservationPage() {
         return "admin/reservation-legacy";
     }
 
     @GetMapping("/reservations")
-    public ResponseEntity<List<ReservationFindResponse>> getReservations() {
-        ReservationFindResponse reservation1 = new ReservationFindResponse(1L, "fora", null, null);
-        ReservationFindResponse reservation2 = new ReservationFindResponse(2L, "aa", null, null);
-        ReservationFindResponse reservation3 = new ReservationFindResponse(3L, "bb", null, null);
-
-        reservations.add(reservation1);
-        reservations.add(reservation2);
-        reservations.add(reservation3);
+    public ResponseEntity<List<ReservationFindResponse>> findAll() {
         return ResponseEntity.ok().body(reservations);
     }
 
     @PostMapping("/reservations")
-    public ResponseEntity<ReservationFindResponse> createReservation(@RequestBody Map<String, String> resultMap) {
+    public ResponseEntity<ReservationFindResponse> create(@RequestBody Map<String, String> resultMap) {
 
         DateTimeFormatter dateFormatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
         DateTimeFormatter timeFormatter = DateTimeFormatter.ofPattern("HH:mm");
@@ -52,5 +48,17 @@ public class ReservationController {
                 time);
         reservations.add(reservationFindResponse);
         return ResponseEntity.ok().body(reservationFindResponse);
+    }
+
+    @DeleteMapping("/reservations/{id}")
+    public ResponseEntity<Void> delete(@PathVariable Long id) {
+        ReservationFindResponse reservationFindResponse = reservations.stream()
+                .filter(it -> Objects.equals(it.id(), id))
+                .findFirst()
+                .orElseThrow(RuntimeException::new);
+
+        reservations.remove(reservationFindResponse);
+
+        return ResponseEntity.noContent().build();
     }
 }

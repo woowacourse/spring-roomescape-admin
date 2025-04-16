@@ -1,6 +1,6 @@
-package roomescape;
+package roomescape.controller;
 
-import dto.ReservationDto;
+import roomescape.dto.ReservationDto;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.atomic.AtomicLong;
@@ -11,6 +11,7 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
+import roomescape.model.Reservation;
 
 @Controller
 public class ReservationController {

@@ -26,7 +26,7 @@ Content-Type: application/json
   }
 ]
   ```
-- [ ] API 명세를 따라 예약 추가 API 구현
+- [x] API 명세를 따라 예약 추가 API 구현
 - request
 ``` http request
 POST /reservations HTTP/1.1
@@ -51,7 +51,7 @@ Content-Type: application/json
     "time": "15:40"
 }
   ```
-- [ ] API 명세를 따라 예약 삭제 API 구현
+- [x] API 명세를 따라 예약 삭제 API 구현
 ```http request
 DELETE /reservations/1 HTTP/1.1
 

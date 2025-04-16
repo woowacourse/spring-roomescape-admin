@@ -26,4 +26,12 @@ public class ReservationInMemoryRepository implements ReservationRepository {
     public List<Reservation> findAll() {
         return sources.values().stream().toList();
     }
+
+    @Override
+    public void deleteById(final long id) {
+        if (!sources.containsKey(id)) {
+            throw new IllegalArgumentException("id에 해당하는 예약 내역이 없습니다.");
+        }
+        sources.remove(id);
+    }
 }

@@ -32,7 +32,7 @@ public class MissionStepTest {
         given()
                 .when().get("/")
                 .then()
-                .statusCode(HttpStatus.ACCEPTED.value());
+                .statusCode(HttpStatus.OK.value());
     }
 
     @Test
@@ -40,12 +40,12 @@ public class MissionStepTest {
         given()
                 .when().get("/admin/reservation")
                 .then()
-                .statusCode(HttpStatus.ACCEPTED.value());
+                .statusCode(HttpStatus.OK.value());
 
         given()
                 .when().get("/reservations")
                 .then()
-                .statusCode(HttpStatus.ACCEPTED.value())
+                .statusCode(HttpStatus.OK.value())
                 .body("size()", is(0));
     }
 

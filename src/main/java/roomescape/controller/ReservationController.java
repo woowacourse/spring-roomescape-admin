@@ -2,6 +2,7 @@ package roomescape.controller;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 import java.util.concurrent.atomic.AtomicLong;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -43,9 +44,9 @@ public class ReservationController {
     }
 
     @DeleteMapping("/reservations/{id}")
-    public String deleteReservation(@PathVariable long id) {
+    public String deleteReservation(@PathVariable Long id) {
         Reservation reservation = reservations.stream()
-                .filter(r -> r.getId() == id)
+                .filter(r -> Objects.equals(r.getId(), id))
                 .findFirst()
                 .orElseThrow();
         reservations.remove(reservation);

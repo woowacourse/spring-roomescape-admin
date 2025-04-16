@@ -12,6 +12,7 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.ResponseBody;
+import roomescape.dto.ReservationDto;
 import roomescape.model.Reservation;
 
 @Controller
@@ -33,15 +34,15 @@ public class AdminController {
 
     @GetMapping("/reservations")
     @ResponseBody
-    public ResponseEntity<List<Reservation>> readReservations() {
-        return ResponseEntity.ok().body(reservations);
+    public ResponseEntity<List<ReservationDto>> readReservations() {
+        List<ReservationDto> reservationDtos = reservations.stream().map(ReservationDto::of).toList();
+        return ResponseEntity.ok().body(reservationDtos);
     }
 
     @PostMapping("/reservations")
     @ResponseBody
-    public ResponseEntity<Reservation> createReservations(@RequestBody Reservation reservation) {
-        Reservation newReservation = new Reservation(index.getAndIncrement(), reservation.getName(),
-                reservation.getDate(), reservation.getTime());
+    public ResponseEntity<Reservation> createReservation(@RequestBody Reservation reservation) {
+        Reservation newReservation = reservation.copyWithId(index.getAndIncrement());
         reservations.add(newReservation);
         return ResponseEntity.ok().body(newReservation);
     }

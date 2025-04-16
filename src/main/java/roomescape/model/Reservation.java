@@ -16,6 +16,10 @@ public class Reservation {
         this.time = time;
     }
 
+    public Reservation copyWithId(long id) {
+        return new Reservation(id, name, date, time);
+    }
+
     public long getId() {
         return id;
     }

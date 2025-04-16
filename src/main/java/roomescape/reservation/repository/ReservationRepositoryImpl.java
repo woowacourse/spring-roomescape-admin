@@ -6,7 +6,7 @@ import java.util.Optional;
 import java.util.concurrent.atomic.AtomicLong;
 import org.springframework.stereotype.Repository;
 import roomescape.reservation.exception.EntityNotFoundException;
-import roomescape.reservation.entity.Reservation;
+import roomescape.reservation.domain.Reservation;
 
 @Repository
 public class ReservationRepositoryImpl implements ReservationRepository {

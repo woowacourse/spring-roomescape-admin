@@ -68,4 +68,12 @@ public class MissionStepTest {
                 .statusCode(200)
                 .body("size()", is(0));
     }
+
+    @Test
+    void 존재하지_않는_id의_예약_삭제시_404_반환() {
+        RestAssured.given().log().all()
+                .when().delete("/reservations/77")
+                .then().log().all()
+                .statusCode(404);
+    }
 }

@@ -87,3 +87,17 @@ Content-Type: application/json
     "time": "15:40"
 }
 ```
+
+# 5. 예약 취소
+
+### Request
+
+```
+DELETE /reservations/{reservationId} HTTP/1.1
+```
+
+### Response
+
+```
+HTTP/1.1 200
+```

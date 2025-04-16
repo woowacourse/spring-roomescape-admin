@@ -22,7 +22,7 @@ public class ReservationController {
     }
 
     @PostMapping("/reservations")
-    ResponseEntity<Reservation> write(@RequestBody Reservation reservation) {
+    ResponseEntity<Reservation> create(@RequestBody Reservation reservation) {
         Reservation newReservation = Reservation.toEntity(reservation, index.getAndIncrement());
         reservations.add(newReservation);
 

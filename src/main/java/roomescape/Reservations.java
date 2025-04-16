@@ -11,10 +11,6 @@ public class Reservations {
         this.reservations = new ArrayList<>();
     }
 
-    public List<Reservation> getReservations() {
-        return new ArrayList<>(reservations);
-    }
-
     public void add(Reservation reservation) {
         reservations.add(reservation);
     }
@@ -26,5 +22,9 @@ public class Reservations {
                 .orElseThrow(() -> new IllegalArgumentException("일치하는 ID의 예약을 찾을 수 없습니다."));
 
         reservations.remove(removeReservation);
+    }
+
+    public List<Reservation> getReservations() {
+        return new ArrayList<>(reservations);
     }
 }

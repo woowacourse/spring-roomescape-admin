@@ -14,18 +14,13 @@ public class ReservationController {
     private final List<Reservation> reservations = new ArrayList<>();
     private final AtomicLong index = new AtomicLong();
 
-    @GetMapping("/admin/reservation")
-    public String reservation() {
-        return "./admin/reservation-legacy";
-    }
-
     @GetMapping("/reservations")
     public ResponseEntity<List<Reservation>> searchReservations() {
         return ResponseEntity.ok().body(reservations);
     }
 
     @PostMapping("/reservations")
-    public ResponseEntity<Reservation> addReservation(@RequestBody Reservation reservation){
+    public ResponseEntity<Reservation> addReservation(@RequestBody Reservation reservation) {
         Reservation newReservation = Reservation.toEntity(reservation, index.incrementAndGet());
         reservations.add(newReservation);
         return ResponseEntity.ok().body(newReservation);

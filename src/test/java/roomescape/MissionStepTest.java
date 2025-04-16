@@ -101,4 +101,13 @@ public class MissionStepTest {
             .statusCode(200)
             .body("size()", is(0));
     }
+
+    @Test
+    @DisplayName("/reservations DELETE 요청에 존재하지 않는 자원이면 404로 응답한다")
+    void reservation_delete_api_not_found() {
+        RestAssured.given().log().all()
+            .when().delete("/reservations/1")
+            .then().log().all()
+            .statusCode(404);
+    }
 }

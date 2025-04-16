@@ -10,14 +10,8 @@ public class Reservation {
     private final LocalDate date;
     private final LocalTime time;
 
-    public Reservation(final long id, final String name, final LocalDate date, final LocalTime time) {
-        this.id = id;
-        this.name = name;
-        this.date = date;
-        this.time = time;
-    }
-
     public Reservation(final String name, final LocalDate date, final LocalTime time) {
+        validateNameLength(name);
         this.name = name;
         this.date = date;
         this.time = time;
@@ -41,5 +35,11 @@ public class Reservation {
 
     public void setId(long id) {
         this.id = id;
+    }
+
+    private void validateNameLength(final String name) {
+        if (name.length() > 4) {
+            throw new IllegalArgumentException("예약자의 이름은 4글자를 초과할 수 없습니다.");
+        }
     }
 }

@@ -1,7 +1,5 @@
 package roomescape.controller;
 
-import roomescape.dto.ReservationDto;
-import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.atomic.AtomicLong;
 import org.springframework.http.ResponseEntity;
@@ -11,12 +9,14 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
+import roomescape.dto.ReservationDto;
 import roomescape.model.Reservation;
+import roomescape.model.Reservations;
 
 @Controller
 public class ReservationController {
 
-    private List<Reservation> reservations = new ArrayList<>();
+    private Reservations reservations = new Reservations();
 
     private AtomicLong index = new AtomicLong(1);
 
@@ -32,7 +32,7 @@ public class ReservationController {
 
     @GetMapping("/reservations")
     public ResponseEntity<List<Reservation>> reservations() {
-        return ResponseEntity.ok(reservations);
+        return ResponseEntity.ok(reservations.getReservations());
     }
 
     @PostMapping("/reservations")
@@ -50,11 +50,7 @@ public class ReservationController {
     @DeleteMapping("/reservations/{id}")
     public ResponseEntity<Void> deleteReservation(@PathVariable("id") Long id) {
         try {
-            Reservation findReservation = reservations.stream()
-                    .filter(reservation -> reservation.getId() == id)
-                    .findAny()
-                    .orElseThrow(RuntimeException::new);
-            reservations.remove(findReservation);
+            reservations.removeById(id);
             return ResponseEntity.ok().build();
         } catch (RuntimeException e) {
             return ResponseEntity.badRequest().build();

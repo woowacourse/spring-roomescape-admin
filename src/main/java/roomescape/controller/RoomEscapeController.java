@@ -24,13 +24,13 @@ public class RoomEscapeController {
     }
 
     @GetMapping("/admin/reservation")
-    public String reservationAdminPage(){
+    public String reservationAdminPage() {
         return "admin/reservation-legacy";
     }
 
     @ResponseBody
     @GetMapping("/reservations")
-    public List<ReservationResponse> reservationsJson(){
+    public List<ReservationResponse> reservationsJson() {
         return ReservationResponse.reservationsToDtos(repository.findAll());
     }
 
@@ -42,7 +42,7 @@ public class RoomEscapeController {
     }
 
     @DeleteMapping("/reservations/{id}")
-    public ResponseEntity<Void> deleteReservation(@PathVariable("id") Long id){
+    public ResponseEntity<Void> deleteReservation(@PathVariable("id") Long id) {
         repository.deleteById(id);
         return ResponseEntity.ok().build();
     }

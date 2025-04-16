@@ -32,10 +32,11 @@ public class ReservationRepository {
         return currentIndex;
     }
 
-    public Reservation findById(Long id){
-        return reservations.stream().filter(reservation -> reservation.sameId(id))
+    public Reservation findById(Long id) {
+        return reservations.stream()
+                .filter(reservation -> reservation.sameId(id))
                 .findAny()
-                .orElseThrow(()->new IllegalArgumentException("해당 ID가 존재하지 않습니다."));
+                .orElseThrow(() -> new IllegalArgumentException("해당 ID가 존재하지 않습니다."));
     }
 
     public void deleteById(Long id) {

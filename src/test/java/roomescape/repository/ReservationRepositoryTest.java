@@ -49,7 +49,7 @@ class ReservationRepositoryTest {
         // then
         assertThat(reservation.getId()).isEqualTo(1L);
         assertThat(reservation.getName()).isEqualTo("브라운");
-        assertThat(reservation.getReservationTime()).isEqualTo( LocalDateTime.of(2024, 4, 1, 10, 0));
+        assertThat(reservation.getReservationTime()).isEqualTo(LocalDateTime.of(2024, 4, 1, 10, 0));
     }
 
     @DisplayName("없는 id로 찾으려고 할 때 예외가 발생한다.")

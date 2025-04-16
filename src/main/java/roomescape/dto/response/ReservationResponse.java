@@ -16,10 +16,16 @@ public record ReservationResponse(
         LocalDateTime dateTime = reservation.getReservationTime();
         DateTimeFormatter timeFormatter = DateTimeFormatter.ofPattern("HH:mm");
         DateTimeFormatter dateFormatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
-        return new ReservationResponse(reservation.getId(), reservation.getName(), dateTime.toLocalDate().format(dateFormatter), dateTime.toLocalTime().format(timeFormatter));
+        return new ReservationResponse(
+                reservation.getId(),
+                reservation.getName(),
+                dateTime.toLocalDate().format(dateFormatter),
+                dateTime.toLocalTime().format(timeFormatter));
     }
 
-    public static List<ReservationResponse> reservationsToDtos(List<Reservation> reservations){
-        return reservations.stream().map(ReservationResponse::reservationToDto).toList();
+    public static List<ReservationResponse> reservationsToDtos(List<Reservation> reservations) {
+        return reservations.stream()
+                .map(ReservationResponse::reservationToDto)
+                .toList();
     }
 }

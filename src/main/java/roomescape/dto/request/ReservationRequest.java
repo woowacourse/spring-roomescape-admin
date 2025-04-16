@@ -10,7 +10,7 @@ public record ReservationRequest(
         String name,
         String time
 ) {
-    public Reservation dtoToReservationWithoutId(){
+    public Reservation dtoToReservationWithoutId() {
         LocalDate date = LocalDate.parse(date());
         LocalTime time = LocalTime.parse(time());
 

@@ -38,7 +38,8 @@ public class ReservationController {
     }
 
     @PostMapping
-    public ResponseEntity<ReservationDto> createReservation(@RequestBody CreateReservationDto createReservationDto) {
+    public ResponseEntity<ReservationDto> createReservation(
+            @RequestBody final CreateReservationDto createReservationDto) {
         System.out.println(LocalDateTime.now(clock));
         ReservationInfo reservationInfo = createReservationDto.toReservationInfo(clock);
         Reservation savedReservation = reservationRepository.add(reservationInfo);
@@ -46,7 +47,7 @@ public class ReservationController {
     }
 
     @DeleteMapping("/{id}")
-    public ResponseEntity<Void> deleteReservation(@PathVariable("id") Long id) {
+    public ResponseEntity<Void> deleteReservation(@PathVariable("id") final Long id) {
         if (!reservationRepository.existReservation(id)) {
             throw new IllegalArgumentException("존재하지 않는 예약입니다.");
         }

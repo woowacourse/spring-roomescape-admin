@@ -8,7 +8,7 @@ public class ReservationInfo {
     private final String name;
     private final ReservationDateTime reservationDateTime;
 
-    public ReservationInfo(String name, ReservationDateTime reservationDateTime) {
+    public ReservationInfo(final String name, final ReservationDateTime reservationDateTime) {
         this.name = name;
         this.reservationDateTime = reservationDateTime;
     }

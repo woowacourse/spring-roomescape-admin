@@ -20,11 +20,11 @@ public class MemoryReservationDao implements ReservationRepository {
         return newReservation;
     }
 
-    public void deleteById(Long id) {
+    public void deleteById(final Long id) {
         reservations.removeIf(reservation -> reservation.isEqualId(id));
     }
 
-    public boolean existReservation(Long id) {
+    public boolean existReservation(final Long id) {
         return reservations.stream()
                 .anyMatch(reservation -> reservation.isEqualId(id));
     }

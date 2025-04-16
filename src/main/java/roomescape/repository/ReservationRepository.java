@@ -10,7 +10,7 @@ public interface ReservationRepository {
 
     Reservation add(final ReservationInfo reservationInfo);
 
-    void deleteById(Long id);
+    void deleteById(final Long id);
 
-    boolean existReservation(Long id);
+    boolean existReservation(final Long id);
 }

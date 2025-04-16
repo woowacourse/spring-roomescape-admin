@@ -18,11 +18,11 @@ public class Reservation {
         this.time = time;
     }
 
-    public Reservation(Long id, ReservationInfo reservationInfo) {
+    public Reservation(final Long id, final ReservationInfo reservationInfo) {
         this(id, reservationInfo.getName(), reservationInfo.getReservationDate(), reservationInfo.getReservationTime());
     }
 
-    public boolean isEqualId(Long id) {
+    public boolean isEqualId(final Long id) {
         return this.id.equals(id);
     }
 

@@ -31,7 +31,7 @@ public class ReservationController {
     public ResponseEntity<Reservation> addReservation(
             @RequestBody Reservation input
     ) {
-        Reservation reservation = Reservation.toEntity(input, atomicLong.incrementAndGet());
+        Reservation reservation = Reservation.injectId(input, atomicLong.incrementAndGet());
         reservations.add(reservation);
 
         return ResponseEntity.ok().body(reservation);
@@ -39,7 +39,9 @@ public class ReservationController {
 
     @DeleteMapping("/reservations/{id}")
     public ResponseEntity<Void> deleteReservation(@PathVariable("id") Long id) {
-        Reservation targetReservation = reservations.stream().filter(reservation -> reservation.getId().equals(id)).findAny()
+        Reservation targetReservation = reservations.stream()
+                .filter(reservation -> Objects.equals(reservation.id(), id))
+                .findAny()
                 .orElseThrow(RuntimeException::new);
         reservations.remove(targetReservation);
 

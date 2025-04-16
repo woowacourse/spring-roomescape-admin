@@ -15,6 +15,10 @@ public class Reservation {
         this.dateTime = dateTime;
     }
 
+    public Reservation(long id, String name, LocalDate date, LocalTime time) {
+        this(id, name, LocalDateTime.of(date, time));
+    }
+
     public long getId() {
         return id;
     }

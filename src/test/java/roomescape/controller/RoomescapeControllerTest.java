@@ -55,4 +55,13 @@ class RoomescapeControllerTest {
                 .then().log().all()
                 .statusCode(400);
     }
+
+    @Test
+    void id_값이_문자열_이므로_400을_반환한다() {
+        RestAssured.given().log().all()
+                .pathParam("id", "일")
+                .when().delete("/reservations/{id}")
+                .then().log().all()
+                .statusCode(400);
+    }
 }

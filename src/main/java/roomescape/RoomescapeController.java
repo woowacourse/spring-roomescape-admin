@@ -8,7 +8,9 @@ import java.util.Map;
 import java.util.concurrent.atomic.AtomicLong;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 
@@ -44,5 +46,17 @@ public class RoomescapeController {
         reservations.add(created);
 
         return ResponseEntity.ok(created);
+    }
+
+    @DeleteMapping("/reservations/{id}")
+    public ResponseEntity<Void> deleteReservation(@PathVariable Long id) {
+        Reservation find = reservations.stream()
+                .filter(reservation -> reservation.getId().equals(id))
+                .findFirst()
+                .orElseThrow();
+
+        reservations.remove(find);
+
+        return ResponseEntity.ok().build();
     }
 }

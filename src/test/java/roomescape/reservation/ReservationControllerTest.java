@@ -58,4 +58,13 @@ public class ReservationControllerTest {
                 .statusCode(200)
                 .body("size()", is(0));
     }
+
+    @DisplayName("주어진 아이디에 해당하는 예약이 없다면 404로 응답한다.")
+    @Test
+    void Naming_Test() {
+        RestAssured.given().log().all()
+                .when().delete("/reservations/3")
+                .then().log().all()
+                .statusCode(404);
+    }
 }

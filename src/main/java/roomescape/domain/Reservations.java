@@ -16,7 +16,19 @@ public class Reservations {
         return Collections.unmodifiableList(reservations);
     }
 
-    public void save(Reservation reservation){
+    public void save(Reservation reservation) {
         reservations.add(reservation);
+    }
+
+    public void deleteById(long id) {
+        Reservation reservation = findById(id);
+        reservations.remove(reservation);
+    }
+
+    private Reservation findById(long id) {
+        return reservations.stream()
+            .filter(reservation -> reservation.getId() == id)
+            .findFirst()
+            .orElseThrow(() -> new IllegalArgumentException("존재하지 않는 예약번호 입니다."));
     }
 }

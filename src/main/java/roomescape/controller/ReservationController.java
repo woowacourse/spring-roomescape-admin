@@ -16,7 +16,6 @@ import roomescape.domain.Reservation;
 import roomescape.dto.request.ReservationCreateRequest;
 import roomescape.dto.response.ReservationResponse;
 
-//@Controller
 @RestController
 @RequestMapping("/reservations")
 public class ReservationController {

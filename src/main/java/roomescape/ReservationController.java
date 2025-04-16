@@ -27,10 +27,11 @@ public class ReservationController {
     }
 
     @PostMapping("/reservations")
-    public ResponseEntity<Reservation> createReservation(@RequestBody final ReservationDto reservationDto) {
-        final Reservation reservation = new Reservation(index.getAndIncrement(), reservationDto.name(),
-                reservationDto.date(),
-                reservationDto.time());
+    public ResponseEntity<Reservation> createReservation(
+            @RequestBody final ReservationRequestDto reservationRequestDto) {
+        final Reservation reservation = new Reservation(index.getAndIncrement(), reservationRequestDto.name(),
+                reservationRequestDto.date(),
+                reservationRequestDto.time());
         reservations.add(reservation);
         return new ResponseEntity<>(reservation, HttpStatus.OK);
     }

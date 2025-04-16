@@ -1,12 +1,15 @@
 package roomescape.service;
 
+import org.springframework.dao.DataAccessException;
 import org.springframework.stereotype.Service;
+import roomescape.Reservation;
 import roomescape.dto.ReservationRequest;
 import roomescape.dto.ReservationResponse;
 import roomescape.entity.ReservationEntity;
 import roomescape.repository.ReservationRepository;
 
 import java.util.List;
+import java.util.NoSuchElementException;
 
 @Service
 public class ReservationServiceImpl implements ReservationService {
@@ -24,11 +27,13 @@ public class ReservationServiceImpl implements ReservationService {
 
     @Override
     public ReservationResponse createReservation(final ReservationRequest reservationRequest) {
-        ReservationEntity reservationEntity = ReservationEntity.createWithoutId(reservationRequest.name(),
+        Reservation reservation = new Reservation(
+                reservationRequest.name(),
                 reservationRequest.date(),
                 reservationRequest.time());
 
-        return ReservationResponse.from(reservationRepository.save(reservationEntity));
+        final ReservationEntity saved = reservationRepository.save(reservation.toEntity());
+        return ReservationResponse.from(saved);
     }
 
     @Override

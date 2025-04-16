@@ -2,34 +2,30 @@ package roomescape;
 
 import java.time.LocalDate;
 import java.time.LocalTime;
+import com.fasterxml.jackson.annotation.JsonFormat;
 
 public class Reservation {
 
-    private int id;
+    private Long id;
     private String name;
-    private LocalDate localDate;
-    private LocalTime localTime;
 
-    public Reservation(int id, String name, LocalDate localDate, LocalTime localTime) {
+    @JsonFormat(pattern = "yyyy-MM-dd")
+    private LocalDate date;
+    @JsonFormat(pattern = "HH:mm")
+    private LocalTime time;
+
+    public Reservation(Long id, String name, LocalDate date, LocalTime time) {
         this.id = id;
         this.name = name;
-        this.localDate = localDate;
-        this.localTime = localTime;
+        this.date = date;
+        this.time = time;
     }
 
-    public int getId() {
+    public static Reservation toEntity(Reservation reservation, Long id) {
+        return new Reservation(id, reservation.name, reservation.date, reservation.time);
+    }
+
+    public Long getId() {
         return id;
-    }
-
-    public String getName() {
-        return name;
-    }
-
-    public LocalDate getLocalDate() {
-        return localDate;
-    }
-
-    public LocalTime getLocalTime() {
-        return localTime;
     }
 }

@@ -19,5 +19,4 @@ public class WelcomeTest {
                 .then().log().all()
                 .statusCode(200);
     }
-
 }

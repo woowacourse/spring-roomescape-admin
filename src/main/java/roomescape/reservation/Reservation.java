@@ -5,6 +5,7 @@ import java.time.LocalTime;
 import java.util.Objects;
 
 public class Reservation {
+
     private long id;
     private String name;
     private LocalDate date;

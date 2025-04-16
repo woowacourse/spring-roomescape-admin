@@ -6,6 +6,7 @@ import java.util.Objects;
 import java.util.concurrent.atomic.AtomicLong;
 
 public class Reservations {
+
     private final AtomicLong index = new AtomicLong(1);
     private final List<Reservation> reservations = new ArrayList<>();
 

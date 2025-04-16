@@ -13,6 +13,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 @Controller
 @RequestMapping("/reservations")
 public class ReservationController {
+
     private final Reservations reservations = new Reservations();
 
     @PostMapping

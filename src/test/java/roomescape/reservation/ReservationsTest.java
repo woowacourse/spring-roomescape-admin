@@ -9,6 +9,7 @@ import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 
 public class ReservationsTest {
+
     @DisplayName("예약을 입력받아 저장한다.")
     @Test
     void saveReservation1() {
@@ -61,7 +62,7 @@ public class ReservationsTest {
         // given
         final Reservations reservations = new Reservations();
 
-        // when // then
+        // when & then
         assertThatCode(() -> reservations.removeReservation(1))
                 .isInstanceOf(IllegalArgumentException.class)
                 .hasMessageStartingWith("[ERROR]");

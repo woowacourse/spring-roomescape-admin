@@ -8,35 +8,27 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 
-import java.util.ArrayList;
 import java.util.List;
-import java.util.concurrent.atomic.AtomicLong;
 
 @Controller
 public class ReservationController {
 
-    private final List<Reservation> reservations = new ArrayList<>();
-    private final AtomicLong index = new AtomicLong(0);
+    private final Reservations reservations = new Reservations();
 
     @GetMapping("/reservations")
-    public ResponseEntity<List<Reservation>> get() {
-        return ResponseEntity.ok(reservations);
+    public ResponseEntity<List<Reservation>> readAll() {
+        return ResponseEntity.ok(reservations.getAllReservations());
     }
 
     @PostMapping("/reservations")
     public ResponseEntity<Reservation> create(@RequestBody Reservation reservation) {
-        Reservation newReservation = Reservation.toEntity(reservation, index.incrementAndGet());
-        reservations.add(newReservation);
+        Reservation newReservation = reservations.addAndGet(reservation);
         return ResponseEntity.ok(newReservation);
     }
 
     @DeleteMapping("/reservations/{id}")
     public ResponseEntity<Void> delete(@PathVariable Long id) {
-        Reservation selectedReservation = reservations.stream()
-                .filter(reservation -> reservation.getId().equals(id))
-                .findFirst()
-                .orElseThrow(RuntimeException::new);
-        reservations.remove(selectedReservation);
+        reservations.delete(id);
         return ResponseEntity.ok().build();
     }
 }

@@ -2,34 +2,24 @@ package roomescape.controller;
 
 import java.util.List;
 import org.springframework.http.ResponseEntity;
-import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RestController;
 import roomescape.dto.CreateReservationDto;
 import roomescape.dto.ReservationResponseDto;
 import roomescape.entity.Reservation;
 import roomescape.repository.ReservationRepository;
 
-@Controller
+@RestController
 public class RoomescapeController {
 
     private final ReservationRepository reservationRepository;
 
     public RoomescapeController(ReservationRepository reservationRepository) {
         this.reservationRepository = reservationRepository;
-    }
-
-    @GetMapping("/admin")
-    public String admin(){
-        return "index";
-    }
-
-    @GetMapping("/admin/reservation")
-    public String adminReservation(){
-        return "admin/reservation-legacy";
     }
 
     @GetMapping("/reservations")

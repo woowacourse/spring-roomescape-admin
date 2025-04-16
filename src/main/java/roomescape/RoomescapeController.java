@@ -1,15 +1,11 @@
 package roomescape;
 
 import jakarta.validation.Valid;
-import java.util.ArrayList;
 import java.util.List;
-import java.util.Objects;
-import java.util.concurrent.atomic.AtomicLong;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.validation.BindingResult;
-import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -19,8 +15,14 @@ import org.springframework.web.bind.annotation.RequestBody;
 @Controller
 public class RoomescapeController {
 
-    private final List<Reservation> reservations = new ArrayList<>();
-    private final AtomicLong index = new AtomicLong();
+    private final Reservations reservations;
+    private final ReservationManager reservationManager;
+
+    @Autowired
+    public RoomescapeController(final Reservations reservations, final ReservationManager reservationManager) {
+        this.reservations = reservations;
+        this.reservationManager = reservationManager;
+    }
 
     @GetMapping("/admin")
     public String getAdminPage() {
@@ -35,25 +37,20 @@ public class RoomescapeController {
 
     @GetMapping("/reservations")
     public ResponseEntity<List<Reservation>> getReservations() {
-        return ResponseEntity.ok(reservations);
+        return ResponseEntity.ok(reservations.getReservations());
     }
 
     @PostMapping("/reservations")
     public ResponseEntity<Reservation> createReservation(@Valid @RequestBody ReservationRequest request) {
-        final long reservationId = index.incrementAndGet();
-        final Reservation reservation = new Reservation(reservationId, request.name(), request.date(), request.time());
+        final Reservation reservation = reservationManager.createReservation(request);
+
         reservations.add(reservation);
         return ResponseEntity.ok(reservation);
     }
 
     @DeleteMapping("/reservations/{id}")
     public ResponseEntity<Void> deleteReservation(@PathVariable Long id) {
-        final Reservation reservation = reservations.stream()
-                .filter(rs -> Objects.equals(rs.getId(), id))
-                .findFirst()
-                .orElseThrow(() -> new IllegalArgumentException("존재하지 않는 ID 입니다."));
-
-        reservations.remove(reservation);
+        reservations.removeById(id);
         return ResponseEntity.ok().build();
     }
 }

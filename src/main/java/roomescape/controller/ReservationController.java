@@ -47,10 +47,4 @@ public class ReservationController {
 
         return ResponseEntity.ok().build();
     }
-
-    @RequestMapping("/admin/reservation")
-    public String reservation(Model model) {
-        model.addAttribute("reservations", reservations);
-        return "admin/reservation-legacy";
-    }
 }

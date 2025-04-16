@@ -1,5 +1,6 @@
 package roomescape;
 
+import jakarta.validation.Valid;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
@@ -7,6 +8,8 @@ import java.util.concurrent.atomic.AtomicLong;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.validation.BindingResult;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -36,7 +39,7 @@ public class RoomescapeController {
     }
 
     @PostMapping("/reservations")
-    public ResponseEntity<Reservation> createReservation(@RequestBody ReservationRequest request) {
+    public ResponseEntity<Reservation> createReservation(@Valid @RequestBody ReservationRequest request) {
         final long reservationId = index.incrementAndGet();
         final Reservation reservation = new Reservation(reservationId, request.name(), request.date(), request.time());
         reservations.add(reservation);

@@ -1,5 +1,7 @@
 package roomescape;
 
+import static org.hamcrest.Matchers.is;
+
 import io.restassured.RestAssured;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -17,6 +19,21 @@ public class ReservationControllerTest {
                 .when().get("/admin")
                 .then().log().all()
                 .statusCode(200);
+    }
+
+    @Test
+    @DisplayName("/admin/reservation 요청 시 예약 관리 페이지 응답")
+    void readReservation() {
+        RestAssured.given().log().all()
+                .when().get("/admin/reservation")
+                .then().log().all()
+                .statusCode(200);
+
+        RestAssured.given().log().all()
+                .when().get("/reservations")
+                .then().log().all()
+                .statusCode(200)
+                .body("size()", is(0));
     }
 
 }

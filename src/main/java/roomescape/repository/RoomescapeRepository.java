@@ -28,6 +28,14 @@ public class RoomescapeRepository {
         return saved;
     }
 
+    public void deleteById(final long id) {
+        Reservation found = reservations.stream()
+                .filter(reservation -> reservation.getId() == id)
+                .findAny()
+                .orElseThrow(() -> new IllegalArgumentException("[ERROR] 존재하지 않는 예약입니다."));
+        reservations.remove(found);
+    }
+
     private boolean existsSameDateTime(final Reservation reservation) {
         return reservations.stream()
                 .anyMatch(reservation::isSameDateTime);

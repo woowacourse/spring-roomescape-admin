@@ -21,4 +21,8 @@ public class RoomescapeService {
     public Reservation addReservation(final Reservation reservation) {
         return roomescapeRepository.saveReservation(reservation);
     }
+
+    public void removeReservation(final long id) {
+        roomescapeRepository.deleteById(id);
+    }
 }

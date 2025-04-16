@@ -42,4 +42,18 @@ class RoomescapeControllerTest {
                 .then().log().all()
                 .statusCode(404);
     }
+
+    @DisplayName("존재하지 않는 예약을 삭제하려는 경우 404 Not Found를 던진다")
+    @Test
+    void reservationRemove() {
+        //given
+        long notExistId = 1;
+
+        //when & then
+        RestAssured.given().log().all()
+                .contentType(ContentType.JSON)
+                .when().delete("/reservations/" + notExistId)
+                .then().log().all()
+                .statusCode(404);
+    }
 }

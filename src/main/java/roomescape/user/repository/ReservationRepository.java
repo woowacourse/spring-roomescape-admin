@@ -30,4 +30,8 @@ public class ReservationRepository {
     public List<Reservation> findAll() {
         return List.copyOf(reservations);
     }
+
+    public void delete(final Reservation reservation) {
+        reservations.remove(reservation);
+    }
 }

@@ -1,4 +1,4 @@
-package roomescape;
+package roomescape.model;
 
 import java.util.List;
 import java.util.Map;

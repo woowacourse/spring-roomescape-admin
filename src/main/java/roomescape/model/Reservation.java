@@ -1,8 +1,7 @@
-package roomescape;
+package roomescape.model;
 
 import java.time.LocalDate;
 import java.time.LocalTime;
-import java.util.Objects;
 
 public class Reservation {
     private Long id;
@@ -37,19 +36,5 @@ public class Reservation {
 
     public LocalTime getTime() {
         return time;
-    }
-
-    @Override
-    public boolean equals(Object object) {
-        if (object == null || getClass() != object.getClass()) {
-            return false;
-        }
-        Reservation that = (Reservation) object;
-        return id == that.id;
-    }
-
-    @Override
-    public int hashCode() {
-        return Objects.hashCode(id);
     }
 }

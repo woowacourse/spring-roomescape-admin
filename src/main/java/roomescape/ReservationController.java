@@ -17,15 +17,17 @@ public final class ReservationController {
     private final AtomicInteger id = new AtomicInteger(1);
 
     @GetMapping("/reservations")
-    public List<Reservation> reservations() {
-        return reservations;
+    public List<ReservationResponseDto> reservations() {
+        return reservations.stream()
+                .map(ReservationResponseDto::from)
+                .toList();
     }
 
     @PostMapping("/reservations")
-    public Reservation reserve(@RequestBody ReservationRequestDto reservationRequestDto) {
+    public ReservationResponseDto reserve(@RequestBody ReservationRequestDto reservationRequestDto) {
         Reservation reservation = reservationRequestDto.toEntity(id.getAndIncrement());
         reservations.add(reservation);
-        return reservation;
+        return ReservationResponseDto.from(reservation);
     }
 
     @DeleteMapping("/reservations/{id}")

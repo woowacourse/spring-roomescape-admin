@@ -72,7 +72,7 @@ public class MissionStepTest {
                 .statusCode(200)
                 .body("size()", is(0));
     }
-    
+
     @DisplayName("예약 삭제 실패 시 400 반환 테스트")
     @Test
     void 예약_삭제_실패() {

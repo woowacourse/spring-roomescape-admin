@@ -1,5 +1,7 @@
 package roomescape.model;
 
+import java.time.LocalDate;
+import java.time.LocalTime;
 import java.util.List;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
@@ -11,8 +13,8 @@ public class Reservations {
     private final Map<Long, Reservation> reservations = new ConcurrentHashMap<>();
     private final AtomicLong index = new AtomicLong(1);
 
-    public Reservation add(Reservation reservationWithoutId) {
-        Reservation newReservation = new Reservation(index.getAndIncrement(), reservationWithoutId);
+    public Reservation add(String name, LocalDate date, LocalTime time) {
+        Reservation newReservation = new Reservation(index.getAndIncrement(), name, date, time);
         reservations.put(newReservation.getId(), newReservation);
         return newReservation;
     }

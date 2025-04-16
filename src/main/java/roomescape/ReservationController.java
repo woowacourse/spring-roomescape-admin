@@ -1,22 +1,23 @@
 package roomescape;
 
-import java.time.LocalDate;
-import java.time.LocalTime;
+import dto.ReservationDto;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.concurrent.atomic.AtomicLong;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
-import org.springframework.ui.Model;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 
 @Controller
 public class ReservationController {
 
-    private List<Reservation> reservations = List.of(
-            new Reservation(1L, "브라운", LocalDate.of(2023, 1, 1), LocalTime.of(10, 0)),
-            new Reservation(2L, "브라운", LocalDate.of(2023, 1, 2), LocalTime.of(11, 0)),
-            new Reservation(3L, "워니", LocalDate.of(2023, 1, 3), LocalTime.of(12, 0))
-    );
+    private List<Reservation> reservations = new ArrayList<>();
+
+    private AtomicLong index = new AtomicLong(1);
 
     @GetMapping("/admin")
     public String admin() {
@@ -31,5 +32,31 @@ public class ReservationController {
     @GetMapping("/reservations")
     public ResponseEntity<List<Reservation>> reservations() {
         return ResponseEntity.ok(reservations);
+    }
+
+    @PostMapping("/reservations")
+    public ResponseEntity<Reservation> addReservation(@RequestBody ReservationDto reservationDto) {
+        //RequestBody와 ModelAttribute 차이 알아보기
+        Reservation newReservation = new Reservation(
+                index.getAndIncrement(),
+                reservationDto.getName(),
+                reservationDto.getDate(),
+                reservationDto.getTime());
+        reservations.add(newReservation);
+        return ResponseEntity.ok(newReservation);
+    }
+
+    @DeleteMapping("/reservations/{id}")
+    public ResponseEntity<Void> deleteReservation(@PathVariable("id") Long id) {
+        try {
+            Reservation findReservation = reservations.stream()
+                    .filter(reservation -> reservation.getId() == id)
+                    .findAny()
+                    .orElseThrow(RuntimeException::new);
+            reservations.remove(findReservation);
+            return ResponseEntity.ok().build();
+        } catch (RuntimeException e) {
+            return ResponseEntity.badRequest().build();
+        }
     }
 }

@@ -12,7 +12,7 @@ import java.util.concurrent.atomic.AtomicLong;
 public class ReservationController {
 
     private final List<Reservation> reservations = new ArrayList<>();
-    private final AtomicLong index = new AtomicLong(1);
+    private final AtomicLong index = new AtomicLong();
 
     @GetMapping("/admin/reservation")
     public String reservation() {

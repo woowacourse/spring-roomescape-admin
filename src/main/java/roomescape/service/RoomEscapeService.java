@@ -1,8 +1,9 @@
-package roomescape;
+package roomescape.service;
 
 import java.util.concurrent.atomic.AtomicLong;
 import org.springframework.stereotype.Service;
 import roomescape.domain.Reservation;
+import roomescape.domain.dto.ReservationRequestDto;
 
 @Service
 public class RoomEscapeService {

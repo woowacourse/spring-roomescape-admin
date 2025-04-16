@@ -28,21 +28,18 @@ public class ReservationController {
     @GetMapping()
     public ResponseEntity<List<ReservationResponse>> getReservations() {
         List<ReservationResponse> reservations = reservationService.getReservations();
-        System.out.println("조회");
         return ResponseEntity.ok(reservations);
     }
 
     @PostMapping()
     public ResponseEntity<ReservationResponse> createReservation(@RequestBody @Valid ReservationRequest reservationRequest) {
         ReservationResponse reservationResponse = reservationService.createReservation(reservationRequest);
-        System.out.println("삽입");
         return ResponseEntity.ok(reservationResponse);
     }
 
     @DeleteMapping("/{id}")
     public ResponseEntity<String> deleteReservation(@PathVariable long id) {
         reservationService.delete(id);
-        System.out.println("삭제");
         return ResponseEntity.ok(null);
     }
 }

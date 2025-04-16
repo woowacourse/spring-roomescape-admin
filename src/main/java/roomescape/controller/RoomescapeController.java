@@ -1,10 +1,8 @@
-package roomescape;
+package roomescape.controller;
 
 import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.atomic.AtomicLong;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -12,6 +10,7 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
+import roomescape.model.Reservation;
 
 @Controller
 public class RoomescapeController {
@@ -36,8 +35,7 @@ public class RoomescapeController {
 
     @PostMapping("/reservations")
     public ResponseEntity<Reservation> addReservation(@RequestBody Reservation reservation) {
-        Reservation newReservation = new Reservation(index.getAndIncrement(), reservation.getName(), reservation.getDate(),
-                reservation.getTime());
+        Reservation newReservation = Reservation.toEntity(index.getAndIncrement(), reservation);
         reservations.add(newReservation);
         return ResponseEntity.ok().body(newReservation);
     }
@@ -45,7 +43,7 @@ public class RoomescapeController {
     @DeleteMapping("/reservations/{id}")
     public ResponseEntity<Reservation> deleteReservation(@PathVariable long id) {
         Reservation reservation1 = reservations.stream().filter(reservation -> reservation.getId() == id).findFirst()
-                .orElseThrow(() ->new IllegalArgumentException("해당 ID 없음"));
+                .orElseThrow(() -> new IllegalArgumentException("해당 ID 없음"));
         reservations.remove(reservation1);
         return ResponseEntity.ok().body(reservation1);
     }

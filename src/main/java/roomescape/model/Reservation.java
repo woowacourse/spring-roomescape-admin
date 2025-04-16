@@ -1,4 +1,4 @@
-package roomescape;
+package roomescape.model;
 
 public class Reservation {
     private Long id;
@@ -19,6 +19,10 @@ public class Reservation {
         this.name = name;
         this.date = date;
         this.time = time;
+    }
+
+    public static Reservation toEntity(Long id, Reservation reservation) {
+        return new Reservation(id, reservation.getName(), reservation.getDate(), reservation.getTime());
     }
 
     public Long getId() {

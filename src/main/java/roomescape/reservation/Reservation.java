@@ -9,7 +9,6 @@ public class Reservation {
     private final long id;
     private final String name;
     private final LocalDate date;
-
     @JsonFormat(pattern = "HH:mm")
     private final LocalTime time;
 

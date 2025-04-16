@@ -17,7 +17,7 @@ import org.springframework.web.bind.annotation.ResponseBody;
 public class ReservationController {
 
     private final AtomicLong index = new AtomicLong(1L);
-    private List<Reservation> reservations = new ArrayList<>();
+    private final List<Reservation> reservations = new ArrayList<>();
 
     @GetMapping("/admin/reservation")
     public String getReservationPage(Model model) {
@@ -30,12 +30,11 @@ public class ReservationController {
         return reservations;
     }
 
-
     @PostMapping("/reservations")
     @ResponseBody
-    public ResponseEntity<Reservation> addReservation(@RequestBody ReservationDto reservationDto) {
-        Reservation reservation = new Reservation(index.getAndIncrement(), reservationDto.name(), reservationDto.date(),
-                reservationDto.time());
+    public ResponseEntity<Reservation> addReservation(@RequestBody ReservationRequest reservationRequest) {
+        Reservation reservation = new Reservation(index.getAndIncrement(), reservationRequest.name(), reservationRequest.date(),
+                reservationRequest.time());
         reservations.add(reservation);
         return ResponseEntity.ok(reservation);
     }

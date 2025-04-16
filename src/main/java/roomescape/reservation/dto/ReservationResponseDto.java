@@ -1,10 +1,13 @@
 package roomescape.reservation.dto;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
+import com.fasterxml.jackson.annotation.JsonFormat.Shape;
 import java.time.LocalDate;
 import java.time.LocalTime;
 import roomescape.reservation.domain.Reservation;
 
-public record ReservationResponseDto(Long id, String name, LocalDate date, LocalTime time) {
+public record ReservationResponseDto(Long id, String name, LocalDate date,
+                                     @JsonFormat(shape = Shape.STRING, pattern = "HH:mm") LocalTime time) {
 
     public static ReservationResponseDto toDto(Reservation reservation) {
         LocalDate localDate = reservation.getDateTime().toLocalDate();

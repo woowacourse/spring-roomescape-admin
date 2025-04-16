@@ -8,11 +8,11 @@ import roomescape.domain.Reservation;
 import roomescape.domain.dto.ReservationRequestDto;
 
 @Service
-public class RoomEscapeService {
+public class ReservationService {
 
     private final ReservationDatabase reservationDatabase;
 
-    public RoomEscapeService() {
+    public ReservationService() {
         this.reservationDatabase = new ReservationDatabaseImpl();
     }
 

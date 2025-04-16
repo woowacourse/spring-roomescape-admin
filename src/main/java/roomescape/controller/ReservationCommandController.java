@@ -9,29 +9,29 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
 import roomescape.domain.Reservation;
 import roomescape.domain.dto.ReservationRequestDto;
-import roomescape.service.RoomEscapeService;
+import roomescape.service.ReservationService;
 
 @RestController
-public class RoomEscapeCommandController {
+public class ReservationCommandController {
 
-    private final RoomEscapeService roomEscapeService;
+    private final ReservationService reservationService;
 
-    public RoomEscapeCommandController(RoomEscapeService roomEscapeService) {
-        this.roomEscapeService = roomEscapeService;
+    public ReservationCommandController(ReservationService reservationService) {
+        this.reservationService = reservationService;
     }
 
     @GetMapping("reservations")
     public List<Reservation> readReservations() {
-        return roomEscapeService.readAll();
+        return reservationService.readAll();
     }
 
     @PostMapping("reservations")
     public Reservation add(@RequestBody ReservationRequestDto reservationDto) {
-        return roomEscapeService.add(reservationDto);
+        return reservationService.add(reservationDto);
     }
 
     @DeleteMapping("reservations/{reservationId}")
     public void delete(@PathVariable("reservationId") Long id) {
-       roomEscapeService.delete(id);
+       reservationService.delete(id);
     }
 }

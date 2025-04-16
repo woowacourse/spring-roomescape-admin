@@ -39,7 +39,7 @@ public class ReservationRestController {
         Reservation reservation = reservations.stream()
                 .filter(r -> Objects.equals(r.getId(), id))
                 .findFirst()
-                .orElseThrow();
+                .orElseThrow(IllegalArgumentException::new);
         reservations.remove(reservation);
     }
 }

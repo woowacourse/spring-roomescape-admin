@@ -10,7 +10,7 @@ import java.util.concurrent.atomic.AtomicLong;
 
 @Controller
 public class RoomescapeController {
-    private final List<Reservation> reservations;
+    private final List<ReservationEntity> reservations;
     private final AtomicLong reservationIndex = new AtomicLong(1);
 
     public RoomescapeController() {
@@ -29,13 +29,13 @@ public class RoomescapeController {
 
     @GetMapping("/reservations")
     @ResponseBody
-    public List<Reservation> getAllReservation() {
+    public List<ReservationEntity> getAllReservation() {
         return reservations;
     }
 
     @PostMapping("/reservations")
-    public ResponseEntity<Reservation> createReservation(@RequestBody ReservationDto reservationDto) {
-        Reservation newReservation = new Reservation(
+    public ResponseEntity<ReservationEntity> createReservation(@RequestBody ReservationDto reservationDto) {
+        ReservationEntity newReservation = new ReservationEntity(
                 reservationIndex.getAndIncrement(),
                 reservationDto.name(),
                 reservationDto.date(),

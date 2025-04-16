@@ -59,7 +59,6 @@ public class MissionStepTest {
                 .statusCode(HttpStatus.SC_OK)
                 .body("size()", is(1));
 
-        //TODO 분리해야함.
         RestAssured.given().log().all()
                 .when().delete("/reservations/1")
                 .then().log().all()

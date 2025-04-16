@@ -1,9 +1,13 @@
-package roomescape.controller;
+package roomescape.controller.rest;
 
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.DeleteMapping;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RestController;
 import roomescape.dto.CreateReservationDto;
 import roomescape.model.Reservation;
 
@@ -12,24 +16,13 @@ import java.util.List;
 import java.util.Objects;
 import java.util.concurrent.atomic.AtomicLong;
 
-@Controller
-public class ReservationController {
+@RestController
+public class ReservationRestController {
 
     private final List<Reservation> reservations = new ArrayList<>();
     private final AtomicLong index = new AtomicLong(1);
 
-    @GetMapping("/admin")
-    public String getAdminHomepage() {
-        return "admin/index.html";
-    }
-
-    @GetMapping("/admin/reservation")
-    public String getAdminReservationPage() {
-        return "admin/reservation-legacy.html";
-    }
-
     @GetMapping("/reservations")
-    @ResponseBody
     public ResponseEntity<List<Reservation>> getAllReservations() {
         return ResponseEntity
                 .status(HttpStatus.OK)
@@ -37,7 +30,6 @@ public class ReservationController {
     }
 
     @PostMapping("/reservations")
-    @ResponseBody
     public ResponseEntity<Reservation> addReservation(@RequestBody CreateReservationDto reservationDto) {
         Reservation reservation = new Reservation(index.getAndIncrement(), reservationDto.name(), reservationDto.date(), reservationDto.time());
         reservations.add(reservation);

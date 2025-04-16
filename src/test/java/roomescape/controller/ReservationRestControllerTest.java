@@ -19,57 +19,57 @@ public class ReservationRestControllerTest {
     @DisplayName("/admin/reservation 요청 시 예약 관리 페이지 응답")
     void readReservation() {
         RestAssured.given().log().all()
-                .when().get("/reservations")
-                .then().log().all()
-                .statusCode(200)
-                .body("size()", is(0));
+            .when().get("/reservations")
+            .then().log().all()
+            .statusCode(200)
+            .body("size()", is(0));
     }
 
     @Test
     @DisplayName("예약 관리 페이지 내에서 예약 추가")
     void postReservation() {
         RestAssured.given().log().all()
-                .contentType(ContentType.JSON)
-                .body(getTestParamsWithReservation())
-                .when().post("/reservations")
-                .then().log().all()
-                .statusCode(200)
-                .body("name", is("브라운"));
+            .contentType(ContentType.JSON)
+            .body(getTestParamsWithReservation())
+            .when().post("/reservations")
+            .then().log().all()
+            .statusCode(200)
+            .body("name", is("브라운"));
 
         RestAssured.given().log().all()
-                .when().get("/reservations")
-                .then().log().all()
-                .statusCode(200)
-                .body("size()", is(1));
+            .when().get("/reservations")
+            .then().log().all()
+            .statusCode(200)
+            .body("size()", is(1));
     }
 
     @Test
     @DisplayName("예약 관리 페이지 내에서 예약 삭제")
     void deleteReservation() {
         RestAssured.given().log().all()
-                .contentType(ContentType.JSON)
-                .body(getTestParamsWithReservation())
-                .when().post("/reservations")
-                .then().log().all()
-                .statusCode(200)
-                .body("id", is(1));
+            .contentType(ContentType.JSON)
+            .body(getTestParamsWithReservation())
+            .when().post("/reservations")
+            .then().log().all()
+            .statusCode(200)
+            .body("id", is(1));
 
         RestAssured.given().log().all()
-                .when().get("/reservations")
-                .then().log().all()
-                .statusCode(200)
-                .body("size()", is(1));
-        
-        RestAssured.given().log().all()
-                .when().delete("/reservations/1")
-                .then().log().all()
-                .statusCode(200);
+            .when().get("/reservations")
+            .then().log().all()
+            .statusCode(200)
+            .body("size()", is(1));
 
         RestAssured.given().log().all()
-                .when().get("/reservations")
-                .then().log().all()
-                .statusCode(200)
-                .body("size()", is(0));
+            .when().delete("/reservations/1")
+            .then().log().all()
+            .statusCode(200);
+
+        RestAssured.given().log().all()
+            .when().get("/reservations")
+            .then().log().all()
+            .statusCode(200)
+            .body("size()", is(0));
     }
 
     private Map<String, String> getTestParamsWithReservation() {

@@ -18,7 +18,8 @@ public class Reservation {
     }
 
     public static Reservation toEntity(Reservation reservation, long id) {
-        return new Reservation(id, reservation.getName(), reservation.getDate(), reservation.getTime());
+        return new Reservation(id, reservation.getName(), reservation.getDate(),
+            reservation.getTime());
     }
 
     public Long getId() {

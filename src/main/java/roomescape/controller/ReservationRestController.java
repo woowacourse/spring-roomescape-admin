@@ -37,9 +37,9 @@ public class ReservationRestController {
     @ResponseBody
     public void deleteReservation(@PathVariable Long id) {
         Reservation reservation = reservations.stream()
-                .filter(r -> Objects.equals(r.getId(), id))
-                .findFirst()
-                .orElseThrow(IllegalArgumentException::new);
+            .filter(r -> Objects.equals(r.getId(), id))
+            .findFirst()
+            .orElseThrow(IllegalArgumentException::new);
         reservations.remove(reservation);
     }
 }

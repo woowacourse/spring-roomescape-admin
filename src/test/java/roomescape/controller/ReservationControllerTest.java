@@ -14,17 +14,17 @@ public class ReservationControllerTest {
     @DisplayName("/admin으로 요청시 메인 페이지 응답")
     void getMainPage() {
         RestAssured.given().log().all()
-                .when().get("/admin")
-                .then().log().all()
-                .statusCode(200);
+            .when().get("/admin")
+            .then().log().all()
+            .statusCode(200);
     }
 
     @Test
     @DisplayName("/admin/reservation 요청 시 예약 관리 페이지 응답")
     void readReservation() {
         RestAssured.given().log().all()
-                .when().get("/admin/reservation")
-                .then().log().all()
-                .statusCode(200);
+            .when().get("/admin/reservation")
+            .then().log().all()
+            .statusCode(200);
     }
 }

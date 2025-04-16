@@ -19,7 +19,7 @@ public class Reservations {
         Reservation selectedReservation = reservations.stream()
                 .filter(reservation -> reservation.getId().equals(id))
                 .findFirst()
-                .orElseThrow(RuntimeException::new);
+                .orElseThrow(() -> new IllegalArgumentException("[ERROR] 해당 예약 id는 존재하지 않습니다."));
         reservations.remove(selectedReservation);
     }
 

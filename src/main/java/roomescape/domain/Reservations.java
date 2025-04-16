@@ -15,4 +15,8 @@ public class Reservations {
     public List<Reservation> getReservations() {
         return Collections.unmodifiableList(reservations);
     }
+
+    public void save(Reservation reservation){
+        reservations.add(reservation);
+    }
 }

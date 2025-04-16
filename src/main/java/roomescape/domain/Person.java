@@ -1,15 +1,15 @@
 package roomescape.domain;
 
 public class Person {
-    private final int id;
+    private final long id;
     private final String name;
 
-    public Person(int id, String name) {
+    public Person(long id, String name) {
         this.id = id;
         this.name = name;
     }
 
-    public int getId() {
+    public long getId() {
         return id;
     }
 

@@ -30,7 +30,7 @@ public class ReservationController {
 
     @PostMapping("")
     public ResponseEntity<Void> addReservations(@RequestBody AddReservationDto addReservationDto) {
-        if(addReservationDto == null){
+        if (addReservationDto == null) {
             throw new InvalidReservationRequest();
         }
 

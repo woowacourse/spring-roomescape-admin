@@ -29,12 +29,11 @@ public class RoomescapeController {
 
     @GetMapping("/reservations")
     @ResponseBody
-    public ResponseEntity<List<Reservation>> getAllReservation() {
-        return ResponseEntity.ok().body(reservations);
+    public List<Reservation> getAllReservation() {
+        return reservations;
     }
 
     @PostMapping("/reservations")
-    @ResponseBody
     public ResponseEntity<Reservation> createReservation(@RequestBody ReservationDto reservationDto) {
         Reservation newReservation = new Reservation(
                 reservationIndex.getAndIncrement(),
@@ -46,7 +45,6 @@ public class RoomescapeController {
     }
 
     @DeleteMapping("/reservations/{id}")
-    @ResponseBody
     public ResponseEntity<Void> deleteReservation(@PathVariable Long id) {
         if (reservations.removeIf(reservation -> reservation.id().equals(id))) {
             return ResponseEntity.ok().build();

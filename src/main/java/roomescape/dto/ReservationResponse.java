@@ -3,10 +3,15 @@ package roomescape.dto;
 import java.time.format.DateTimeFormatter;
 import roomescape.entity.Reservation;
 
-public record ReservationDto(Long id, String name, String date, String time) {
+public record ReservationResponse(
+        Long id,
+        String name,
+        String date,
+        String time
+) {
 
-    public static ReservationDto from(final Reservation reservationInfo) {
-        return new ReservationDto(
+    public static ReservationResponse from(final Reservation reservationInfo) {
+        return new ReservationResponse(
                 reservationInfo.getId(),
                 reservationInfo.getName(),
                 reservationInfo.getDate().toString(),

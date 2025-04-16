@@ -1,6 +1,7 @@
 package roomescape;
 
 import io.restassured.RestAssured;
+import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.annotation.DirtiesContext;
@@ -12,7 +13,7 @@ public class MissionStepTest {
     @Test
     void 일단계() {
         RestAssured.given().log().all()
-                .when().get("/")
+                .when().get("/admin")
                 .then().log().all()
                 .statusCode(200);
     }

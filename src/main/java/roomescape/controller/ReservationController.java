@@ -39,8 +39,8 @@ public class ReservationController {
 
     @PostMapping
     public ResponseEntity<ReservationDto> createReservation(
-            @RequestBody final CreateReservationDto createReservationDto) {
-        System.out.println(LocalDateTime.now(clock));
+            @RequestBody final CreateReservationDto createReservationDto
+    ) {
         ReservationInfo reservationInfo = createReservationDto.toReservationInfo(clock);
         Reservation savedReservation = reservationRepository.add(reservationInfo);
         return ResponseEntity.ok(ReservationDto.from(savedReservation));

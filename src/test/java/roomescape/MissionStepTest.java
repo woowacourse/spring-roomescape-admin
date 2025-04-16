@@ -15,7 +15,11 @@ import org.springframework.test.context.ActiveProfiles;
 @DirtiesContext(classMode = DirtiesContext.ClassMode.BEFORE_EACH_TEST_METHOD)
 @ActiveProfiles("test")
 class MissionStepTest {
-
+    private final Map<String, String> CREATE_RESERVATION_PARAMS = Map.of(
+            "name", "브라운",
+            "date", "2025-08-05",
+            "time", "15:40"
+    );
 
     @Test
     void 일단계() {
@@ -40,31 +44,14 @@ class MissionStepTest {
                 .when().get("/reservations")
                 .then().log().all()
                 .statusCode(200)
-                .body("size()", is(3)); // 아직 생성 요청이 없으니 Controller에서 임의로 넣어준 Reservation 갯수 만큼 검증하거나 0개임을 확인하세요.
-    }
-
-    private static void createReservationData() {
-        Map<String, String> params = new HashMap<>();
-        params.put("name", "브라운");
-        params.put("date", "2025-08-05");
-        params.put("time", "15:40");
-
-        RestAssured.given().log().all()
-                .contentType(ContentType.JSON)
-                .body(params)
-                .when().post("/reservations");
+                .body("size()", is(3));
     }
 
     @Test
     void 삼단계() {
-        Map<String, String> params = new HashMap<>();
-        params.put("name", "브라운");
-        params.put("date", "2025-08-05");
-        params.put("time", "15:40");
-
         RestAssured.given().log().all()
                 .contentType(ContentType.JSON)
-                .body(params)
+                .body(CREATE_RESERVATION_PARAMS)
                 .when().post("/reservations")
                 .then().log().all()
                 .statusCode(200)
@@ -86,5 +73,12 @@ class MissionStepTest {
                 .then().log().all()
                 .statusCode(200)
                 .body("size()", is(0));
+    }
+
+    private void createReservationData() {
+        RestAssured.given().log().all()
+                .contentType(ContentType.JSON)
+                .body(CREATE_RESERVATION_PARAMS)
+                .when().post("/reservations");
     }
 }

@@ -1,5 +1,7 @@
 package roomescape.dao;
 
+import static org.assertj.core.api.Assertions.*;
+
 import java.time.Clock;
 import java.time.LocalDate;
 import java.time.LocalTime;
@@ -37,13 +39,15 @@ class MemoryReservationDaoTest extends TestBase {
     @Test
     void 예약을_조회한다() {
         // given
+
         ReservationInfo reservationInfo = new ReservationInfo("name1", RESERVATION_DATE_TIME);
         memoryReservationDao.add(reservationInfo);
+
         // when
         List<Reservation> reservations = memoryReservationDao.getReservations();
 
-        // thenR
-        Assertions.assertThat(reservations).contains(new Reservation(
+        // then
+        assertThat(reservations).contains(new Reservation(
                 1L,
                 "name1",
                 RESERVATION_DATE,
@@ -56,6 +60,7 @@ class MemoryReservationDaoTest extends TestBase {
         // given
         ReservationInfo reservationInfo = new ReservationInfo("name1", RESERVATION_DATE_TIME);
         memoryReservationDao.add(reservationInfo);
+
         // when & then
         SoftAssertions softly = new SoftAssertions();
         softly.assertThat(memoryReservationDao.existReservation(1L)).isTrue();
@@ -67,11 +72,13 @@ class MemoryReservationDaoTest extends TestBase {
     void 예약을_한개_추가한다() {
         // given
         ReservationInfo reservationInfo = new ReservationInfo("name1", RESERVATION_DATE_TIME);
+
         // when
         memoryReservationDao.add(reservationInfo);
+
         // then
         List<Reservation> reservations = memoryReservationDao.getReservations();
-        Assertions.assertThat(reservations).hasSize(1);
+        assertThat(reservations).hasSize(1);
     }
 
     @Test
@@ -79,12 +86,14 @@ class MemoryReservationDaoTest extends TestBase {
         // given
         ReservationInfo reservationInfo1 = new ReservationInfo("name1", RESERVATION_DATE_TIME);
         ReservationInfo reservationInfo2 = new ReservationInfo("name2", RESERVATION_DATE_TIME);
+
         // when
         memoryReservationDao.add(reservationInfo1);
         memoryReservationDao.add(reservationInfo2);
+
         // then
         List<Reservation> reservations = memoryReservationDao.getReservations();
-        Assertions.assertThat(reservations).contains(
+        assertThat(reservations).contains(
                 new Reservation(1L, "name1", RESERVATION_DATE, RESERVATION_TIME),
                 new Reservation(2L, "name2", RESERVATION_DATE, RESERVATION_TIME)
         );
@@ -95,10 +104,11 @@ class MemoryReservationDaoTest extends TestBase {
         // given
         ReservationInfo reservationInfo = new ReservationInfo("name1", RESERVATION_DATE_TIME);
         memoryReservationDao.add(reservationInfo);
+
         // when
         memoryReservationDao.deleteById(1L);
 
         // then
-        Assertions.assertThat(memoryReservationDao.getReservations()).hasSize(0);
+        assertThat(memoryReservationDao.getReservations()).isEmpty();
     }
 }

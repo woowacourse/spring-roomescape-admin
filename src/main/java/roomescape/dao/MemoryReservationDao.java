@@ -10,7 +10,6 @@ import roomescape.repository.ReservationRepository;
 
 @Repository
 public class MemoryReservationDao implements ReservationRepository {
-
     private final List<Reservation> reservations = new ArrayList<>();
     private final AtomicLong increment = new AtomicLong(1);
 

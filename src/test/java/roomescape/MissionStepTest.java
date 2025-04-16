@@ -5,6 +5,8 @@ import io.restassured.http.ContentType;
 import java.util.HashMap;
 import java.util.Map;
 import static org.hamcrest.Matchers.is;
+
+import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.annotation.DirtiesContext;
@@ -59,15 +61,24 @@ public class MissionStepTest {
                 .statusCode(200)
                 .body("size()", is(1));
 
-//        RestAssured.given().log().all()
-//                .when().delete("/reservations/1")
-//                .then().log().all()
-//                .statusCode(200);
-//
-//        RestAssured.given().log().all()
-//                .when().get("/reservations")
-//                .then().log().all()
-//                .statusCode(200)
-//                .body("size()", is(0));
+        RestAssured.given().log().all()
+                .when().delete("/reservations/1")
+                .then().log().all()
+                .statusCode(200);
+
+        RestAssured.given().log().all()
+                .when().get("/reservations")
+                .then().log().all()
+                .statusCode(200)
+                .body("size()", is(0));
+    }
+
+    @Test
+    @DisplayName("id가 존재하지 않아 예외가 발생한다")
+    void deleteFailTest() {
+        RestAssured.given().log().all()
+                .when().delete("/reservations/1")
+                .then().log().all()
+                .statusCode(404);
     }
 }

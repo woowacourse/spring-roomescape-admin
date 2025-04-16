@@ -20,12 +20,12 @@ public class ReservationController {
     private final List<Reservation> reservations = new ArrayList<>();
 
     @GetMapping()
-    public ResponseEntity<List<Reservation>> read() {
+    public ResponseEntity<List<Reservation>> readAllReservation() {
         return ResponseEntity.ok(reservations);
     }
 
     @PostMapping()
-    public ResponseEntity<Reservation> create(
+    public ResponseEntity<Reservation> createReservation(
             @RequestBody final Reservation reservation
     ) {
         final Reservation createdReservation = new Reservation(index.getAndIncrement(), reservation);
@@ -34,7 +34,7 @@ public class ReservationController {
     }
 
     @DeleteMapping("/{id}")
-    public ResponseEntity<Void> delete(
+    public ResponseEntity<Void> deleteReservationById(
             @PathVariable("id") final long id
     ) {
         final Reservation target = reservations.stream()

@@ -21,16 +21,15 @@ public class ReservationController {
     @GetMapping
     public ResponseEntity<List<ReservationResponse>> getAll() {
         List<ReservationResponse> reservationResponses = reservations.stream()
-            .map(ReservationResponse::from)
-            .toList();
+                .map(ReservationResponse::from)
+                .toList();
         return ResponseEntity.ok().body(reservationResponses);
     }
 
     @PostMapping
-    public ResponseEntity<ReservationResponse> create(
-        @RequestBody ReservationRequest request) {
-        Reservation reservation = new Reservation(index.getAndIncrement(), request.name(),
-            request.date(), request.time());
+    public ResponseEntity<ReservationResponse> create(@RequestBody ReservationRequest request) {
+        Reservation reservation = new Reservation(index.getAndIncrement(), request.name(), request.date(),
+                request.time());
         reservations.add(reservation);
         return ResponseEntity.ok().body(ReservationResponse.from(reservation));
     }

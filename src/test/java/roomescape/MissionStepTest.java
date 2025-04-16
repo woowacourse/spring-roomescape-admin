@@ -71,4 +71,12 @@ public class MissionStepTest {
                 .statusCode(200)
                 .body("size()", is(0));
     }
+
+    @Test
+    void 삼단계_delete_실패() {
+        RestAssured.given().log().all()
+                .when().delete("/reservations/1")
+                .then().log().all()
+                .statusCode(400);
+    }
 }

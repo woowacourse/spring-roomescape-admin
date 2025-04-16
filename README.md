@@ -7,8 +7,8 @@
 - [x] localhost:8080/admin 요청 시 홈 화면이 응답한다.
 
 ### 2단계
-- [x] /admin/reservation 요청 시 예약 관리 페이지가 응답한다.
+- [x] /admin/reservationResponse 요청 시 예약 관리 페이지가 응답한다.
 - [x] 예약 관리 페이지 로드 시 호출되는 예약 목록 조회 API 구현
 
 ### 3단계
-- [ ] 예약 추가 및 삭제 API 구현
+- [x] 예약 추가 및 삭제 API 구현

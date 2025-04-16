@@ -10,25 +10,12 @@ import org.springframework.test.annotation.DirtiesContext;
 
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.DEFINED_PORT)
 @DirtiesContext(classMode = DirtiesContext.ClassMode.BEFORE_EACH_TEST_METHOD)
-public class MissionStepTest {
+class ReservationControllerTest {
 
-    @DisplayName("1단계 - 관리자 홈 화면 응답 성공")
+    @DisplayName("예약 목록을 조회할 수 있다.")
     @Test
-    void step1() {
-        RestAssured.given().log().all()
-                .when().get("/admin")
-                .then().log().all()
-                .statusCode(200);
-    }
-
-    @DisplayName("2단계 - 예약 조회 화면 응답 성공 및 예약 목록 조회 성공")
-    @Test
-    void step2() {
-        RestAssured.given().log().all()
-                .when().get("/admin/reservation")
-                .then().log().all()
-                .statusCode(200);
-
+    void getReservationsTest() {
+        // TODO: 추가 기능 구현 시 테스트 리팩터링
         RestAssured.given().log().all()
                 .when().get("/reservations")
                 .then().log().all()

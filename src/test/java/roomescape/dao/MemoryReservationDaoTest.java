@@ -1,10 +1,11 @@
 package roomescape.dao;
 
+import static org.assertj.core.api.Assertions.assertThat;
+
 import java.time.Clock;
 import java.time.LocalDate;
 import java.time.LocalTime;
 import java.util.List;
-import org.assertj.core.api.Assertions;
 import org.assertj.core.api.SoftAssertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -43,7 +44,7 @@ class MemoryReservationDaoTest extends TestBase {
         List<Reservation> reservations = memoryReservationDao.getReservations();
 
         // then
-        Assertions.assertThat(reservations).contains(new Reservation(
+        assertThat(reservations).contains(new Reservation(
                 1L,
                 "name1",
                 RESERVATION_DATE,
@@ -71,7 +72,7 @@ class MemoryReservationDaoTest extends TestBase {
         memoryReservationDao.add(reservationInfo);
         // then
         List<Reservation> reservations = memoryReservationDao.getReservations();
-        Assertions.assertThat(reservations).hasSize(1);
+        assertThat(reservations).hasSize(1);
     }
 
     @Test
@@ -84,7 +85,7 @@ class MemoryReservationDaoTest extends TestBase {
         memoryReservationDao.add(reservationInfo2);
         // then
         List<Reservation> reservations = memoryReservationDao.getReservations();
-        Assertions.assertThat(reservations).contains(
+        assertThat(reservations).contains(
                 new Reservation(1L, "name1", RESERVATION_DATE, RESERVATION_TIME),
                 new Reservation(2L, "name2", RESERVATION_DATE, RESERVATION_TIME)
         );
@@ -99,6 +100,6 @@ class MemoryReservationDaoTest extends TestBase {
         memoryReservationDao.deleteById(1L);
 
         // then
-        Assertions.assertThat(memoryReservationDao.getReservations()).hasSize(0);
+        assertThat(memoryReservationDao.getReservations()).hasSize(0);
     }
 }

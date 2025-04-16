@@ -19,18 +19,18 @@ public class ReservationController {
     private final AtomicLong index = new AtomicLong(1);
     private final List<Reservation> reservations = new ArrayList<>();
 
-    @GetMapping()
-    public ResponseEntity<List<Reservation>> readAllReservation() {
-        return ResponseEntity.ok(reservations);
-    }
-
-    @PostMapping()
+    @PostMapping
     public ResponseEntity<Reservation> createReservation(
             @RequestBody final Reservation reservation
     ) {
         final Reservation createdReservation = new Reservation(index.getAndIncrement(), reservation);
         reservations.add(createdReservation);
         return ResponseEntity.ok(createdReservation);
+    }
+
+    @GetMapping
+    public ResponseEntity<List<Reservation>> readAllReservation() {
+        return ResponseEntity.ok(reservations);
     }
 
     @DeleteMapping("/{id}")

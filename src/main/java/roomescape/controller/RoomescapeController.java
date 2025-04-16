@@ -11,6 +11,7 @@ import org.springframework.web.bind.annotation.RestController;
 import roomescape.dto.CreateReservationDto;
 import roomescape.dto.ReservationResponseDto;
 import roomescape.entity.Reservation;
+import roomescape.exception.InvalidReservationException;
 import roomescape.repository.ReservationRepository;
 
 @RestController
@@ -39,7 +40,11 @@ public class RoomescapeController {
 
     @DeleteMapping("/reservations/{id}")
     public ResponseEntity<Void> deleteReservation(@PathVariable("id") Long id) {
-        reservationRepository.deleteById(id);
-        return ResponseEntity.ok().build();
+        try {
+            reservationRepository.deleteById(id);
+            return ResponseEntity.ok().build();
+        } catch (InvalidReservationException e){
+            return ResponseEntity.badRequest().build();
+        }
     }
 }

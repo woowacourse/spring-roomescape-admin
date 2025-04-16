@@ -7,6 +7,7 @@ import java.util.concurrent.atomic.AtomicLong;
 import org.springframework.stereotype.Repository;
 import roomescape.dto.CreateReservationDto;
 import roomescape.entity.Reservation;
+import roomescape.exception.InvalidReservationException;
 
 @Repository
 public class ReservationRepository {
@@ -27,7 +28,7 @@ public class ReservationRepository {
         Reservation reservation = reservations.stream()
                 .filter(item -> item.getId().equals(id))
                 .findFirst()
-                .orElseThrow(RuntimeException::new);
+                .orElseThrow(InvalidReservationException::new);
 
         reservations.remove(reservation);
     }

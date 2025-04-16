@@ -12,10 +12,10 @@ public class Reservations {
 
 
     public Reservation saveReservation(final Reservation reservation) {
-        final Reservation indexedReservation = new Reservation(index.getAndIncrement(), reservation);
-        reservations.add(indexedReservation);
+        final Reservation reservationWithId = reservation.writeId(index.getAndIncrement());
+        reservations.add(reservationWithId);
 
-        return indexedReservation;
+        return reservationWithId;
     }
 
     public void removeReservation(final long id) {
@@ -26,7 +26,7 @@ public class Reservations {
 
     private Reservation findBy(long id) {
         return reservations.stream()
-                .filter(reservation -> Objects.equals(reservation.getId(), id))
+                .filter(reservation -> Objects.equals(reservation.id(), id))
                 .findFirst()
                 .orElseThrow(() -> new IllegalArgumentException("[ERROR]"));
     }

@@ -10,12 +10,14 @@ import org.junit.jupiter.api.Test;
 
 public class ReservationsTest {
 
+    public static final long DUMMY_ID = 0L;
+
     @DisplayName("예약을 입력받아 저장한다.")
     @Test
     void saveReservation1() {
         // given
         final Reservations reservations = new Reservations();
-        final Reservation reservation = new Reservation("검프",
+        final Reservation reservation = new Reservation(DUMMY_ID, "검프",
                 LocalDate.of(2025, 4, 4), LocalTime.of(14, 28));
 
         // when
@@ -30,14 +32,14 @@ public class ReservationsTest {
     void saveReservation2() {
         // given
         final Reservations reservations = new Reservations();
-        final Reservation reservation = new Reservation("검프",
+        final Reservation reservation = new Reservation(DUMMY_ID, "검프",
                 LocalDate.of(2025, 4, 4), LocalTime.of(14, 28));
 
         // when
         Reservation result = reservations.saveReservation(reservation);
 
         // then
-        assertThat(result).isEqualTo(new Reservation(1, reservation));
+        assertThat(result).isEqualTo(reservation.writeId(1L));
     }
 
     @DisplayName("아이디를 입력받아 예약을 삭제한다.")
@@ -45,12 +47,12 @@ public class ReservationsTest {
     void removeReservation1() {
         // given
         final Reservations reservations = new Reservations();
-        final Reservation reservation = new Reservation("검프",
+        final Reservation reservation = new Reservation(DUMMY_ID, "검프",
                 LocalDate.of(2025, 4, 4), LocalTime.of(14, 28));
         final Reservation savedReservation = reservations.saveReservation(reservation);
 
         // when
-        reservations.removeReservation(savedReservation.getId());
+        reservations.removeReservation(savedReservation.id());
 
         // then
         assertThat(reservations.getReservations()).hasSize(0);

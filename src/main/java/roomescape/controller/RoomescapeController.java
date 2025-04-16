@@ -1,5 +1,6 @@
 package roomescape.controller;
 
+import jakarta.validation.Valid;
 import java.util.List;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -30,7 +31,8 @@ public class RoomescapeController {
     }
 
     @PostMapping("/reservations")
-    public ReservationDto registerReservation(@RequestBody final ReservationRegisterDto reservationRegisterDto) {
+    public ReservationDto registerReservation(
+            @RequestBody @Valid final ReservationRegisterDto reservationRegisterDto) {
         Reservation reservation = reservationRegisterDto.toEntity();
         this.reservationRepository.save(reservation);
         return ReservationDto.toDto(reservation);

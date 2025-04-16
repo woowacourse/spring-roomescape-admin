@@ -32,13 +32,13 @@ public class RoomEscapeController {
 
     @PostMapping("reservations")
     public ResponseEntity<Reservation> addReservation(@RequestBody ReservationRequest request) {
-        long id = reservations.nextId();
         try {
+            long id = reservations.nextId();
             Reservation reservation = request.toReservation(id);
             reservations.add(reservation);
             return ResponseEntity.ok(reservation);
 
-        } catch (NullPointerException e) {
+        } catch (IllegalArgumentException e) {
             return ResponseEntity.badRequest().build();
         }
     }

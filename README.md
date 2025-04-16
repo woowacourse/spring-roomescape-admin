@@ -50,8 +50,8 @@
         "time": "15:40"
         }
         ```
-        - [ ] 이름, 날짜, 시간 중 하나라도 없으면 400 Bad Request
-        - [ ] 이름, 날짜, 시간 중 잘못된 형식이면 400 Bad Request
+        - [x] 이름, 날짜, 시간 중 하나라도 없으면 400 Bad Request
+        - [x] 이름, 날짜, 시간 중 잘못된 형식이면 400 Bad Request
 
         - [x] Response
         ```

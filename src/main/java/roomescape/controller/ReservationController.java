@@ -40,7 +40,10 @@ public class ReservationController {
 
     @DeleteMapping("/reservations/{id}")
     public ResponseEntity<Void> deleteReservation(@PathVariable("id") final Long id) {
-        reservations.deleteBy(id);
-        return ResponseEntity.ok().build();
+        if (reservations.isExistById(id)) {
+            reservations.deleteBy(id);
+            return ResponseEntity.ok().build();
+        }
+        return ResponseEntity.badRequest().build();
     }
 }

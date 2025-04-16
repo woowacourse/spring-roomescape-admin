@@ -3,7 +3,6 @@ package roomescape.domain;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
-import java.util.Optional;
 
 public class Reservations {
 
@@ -17,11 +16,17 @@ public class Reservations {
         reservations.add(reservation);
     }
 
+    public boolean isExistById(final Long id) {
+        return reservations.stream()
+                .anyMatch(reservation -> reservation.getId().equals(id));
+    }
+
     public void deleteBy(final Long id) {
-        final Optional<Reservation> target = reservations.stream()
+        final Reservation target = reservations.stream()
                 .filter(reservation -> reservation.getId().equals(id))
-                .findFirst();
-        target.ifPresent(reservations::remove);
+                .findFirst()
+                .orElseThrow(IllegalArgumentException::new);
+        reservations.remove(target);
     }
 
     public List<Reservation> getReservations() {

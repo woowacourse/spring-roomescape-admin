@@ -14,6 +14,10 @@ public class Reservation {
         this.dateTime = dateTime;
     }
 
+    public boolean sameId(long id) {
+        return this.id == id;
+    }
+
     public long getId() {
         return id;
     }

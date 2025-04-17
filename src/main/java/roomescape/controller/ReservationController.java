@@ -25,8 +25,10 @@ public class ReservationController {
     }
 
     @GetMapping("/reservations")
-    public List<Reservation> readReservation() {
-        return repository.findAll();
+    public List<ReservationResponseDto> readReservation() {
+        return repository.findAll().stream()
+                .map(ReservationResponseDto::toDto)
+                .toList();
     }
 
     @PostMapping("/reservations")
@@ -38,7 +40,7 @@ public class ReservationController {
     @DeleteMapping("/reservations/{id}")
     public ResponseEntity<Void> deleteReservation(@PathVariable Long id) {
         try {
-            repository.delete(id);
+            repository.deleteById(id);
             return ResponseEntity.ok().build();
         } catch (IllegalArgumentException e) {
             return ResponseEntity.notFound().build();

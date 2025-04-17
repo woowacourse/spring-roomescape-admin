@@ -37,7 +37,7 @@ public class ReservationInMemoryRepository implements ReservationRepository {
         return reservation;
     }
 
-    public void delete(Long id) {
+    public void deleteById(Long id) {
         Reservation reservation = reservations.stream()
                 .filter(r -> Objects.equals(r.getId(), id))
                 .findFirst()

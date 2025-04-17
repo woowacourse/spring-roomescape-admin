@@ -29,7 +29,7 @@ public class ReservationInMemoryRepositoryTest {
     }
 
     @Test
-    void test_delete() {
+    void test_deleteById() {
         Long id = 1L;
         Reservation reservation = new Reservation(id, "브라운", LocalDate.now(), LocalTime.now());
         List<Reservation> reservations = List.of(reservation);
@@ -37,7 +37,7 @@ public class ReservationInMemoryRepositoryTest {
 
         assertThat(repository.findAll().size()).isEqualTo(1);
 
-        repository.delete(id);
+        repository.deleteById(id);
         assertThat(repository.findAll().size()).isEqualTo(0);
     }
 }

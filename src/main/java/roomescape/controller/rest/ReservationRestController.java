@@ -8,12 +8,12 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.server.ResponseStatusException;
 import roomescape.dto.CreateReservationDto;
 import roomescape.model.Reservation;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Objects;
 import java.util.concurrent.atomic.AtomicLong;
 
 @RestController
@@ -31,16 +31,25 @@ public class ReservationRestController {
 
     @PostMapping("/reservations")
     public ResponseEntity<Reservation> addReservation(@RequestBody CreateReservationDto reservationDto) {
-        Reservation reservation = new Reservation(index.getAndIncrement(), reservationDto.name(), reservationDto.date(), reservationDto.time());
-        reservations.add(reservation);
-        return ResponseEntity
-                .status(HttpStatus.OK)
-                .body(reservation);
+        try {
+            Reservation reservation = new Reservation(index.getAndIncrement(), reservationDto.name(), reservationDto.date(), reservationDto.time());
+            reservations.add(reservation);
+            return ResponseEntity
+                    .status(HttpStatus.OK)
+                    .body(reservation);
+        } catch (IllegalArgumentException exception) {
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST);
+        }
     }
 
     @DeleteMapping("/reservations/{id}")
     public ResponseEntity<Void> deleteReservation(@PathVariable("id") Long id) {
-        reservations.removeIf(reservation -> Objects.equals(reservation.id(), id));
+        Reservation deleteReservation = reservations.stream()
+                .filter(reservation -> reservation.id().equals(id))
+                .findFirst()
+                .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND));
+        reservations.remove(deleteReservation);
+
         return ResponseEntity
                 .status(HttpStatus.OK)
                 .build();

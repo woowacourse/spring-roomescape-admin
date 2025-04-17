@@ -20,8 +20,7 @@ public class ReservationApiController {
 
     @GetMapping("/reservations")
     public ResponseEntity<List<Reservation>> getAllReservations() {
-        return ResponseEntity.ok()
-                .body(reservations);
+        return ResponseEntity.ok().body(reservations);
     }
 
     @PostMapping("/reservations")

@@ -6,17 +6,20 @@ import io.restassured.RestAssured;
 import io.restassured.http.ContentType;
 import java.util.HashMap;
 import java.util.Map;
+import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.context.SpringBootTest.WebEnvironment;
-import org.springframework.test.annotation.DirtiesContext;
-import org.springframework.test.annotation.DirtiesContext.ClassMode;
+import roomescape.reservation.repository.ReservationRepository;
 
-@DirtiesContext(classMode = ClassMode.BEFORE_EACH_TEST_METHOD)
 @SpringBootTest(webEnvironment = WebEnvironment.DEFINED_PORT)
 class ReservationApiTest {
+
+    @Autowired
+    private ReservationRepository reservationRepository;
 
     @DisplayName("어드민 페이지로 접근할 수 있다.")
     @Test
@@ -71,7 +74,8 @@ class ReservationApiTest {
 
     @DisplayName("예약 삭제")
     @Nested
-    class delete{
+    class delete {
+
         @DisplayName("예약을 삭제한다.")
         @Test
         void test1() {
@@ -102,11 +106,16 @@ class ReservationApiTest {
 
         @DisplayName("존재하지 않는 예약을 삭제할 경우 NOT_FOUND 반환")
         @Test
-        void test2(){
+        void test2() {
             RestAssured.given().log().all()
                     .when().delete("/reservations/4")
                     .then().log().all()
                     .statusCode(404);
         }
+    }
+
+    @AfterEach()
+    void clear() {
+        reservationRepository.deleteAll();
     }
 }

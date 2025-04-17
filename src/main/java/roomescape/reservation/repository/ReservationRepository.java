@@ -14,5 +14,7 @@ public interface ReservationRepository {
 
     Reservation save(Reservation reservation);
 
+    void deleteAll();
+
     void deleteById(Long id);
 }

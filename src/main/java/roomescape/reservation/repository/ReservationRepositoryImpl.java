@@ -11,8 +11,10 @@ import roomescape.reservation.exception.EntityNotFoundException;
 @Repository
 public class ReservationRepositoryImpl implements ReservationRepository {
 
+    private static final int INIT_INDEX = 1;
+
     private final List<Reservation> reservations = new ArrayList<>();
-    private final AtomicLong index = new AtomicLong(1);
+    private final AtomicLong index = new AtomicLong(INIT_INDEX);
 
     public long generateId() {
         return index.getAndIncrement();
@@ -32,6 +34,12 @@ public class ReservationRepositoryImpl implements ReservationRepository {
     public Reservation save(Reservation reservation) {
         reservations.add(reservation);
         return reservation;
+    }
+
+    @Override
+    public void deleteAll() {
+        reservations.clear();
+        index.set(INIT_INDEX);
     }
 
     public void deleteById(Long id) {

@@ -1,12 +1,12 @@
 package roomescape.model;
 
-public class Reservation {
-    private Long id;
-    private String name;
-    private String date;
-    private String time;
+import roomescape.dto.ReservationDto;
 
-    public Reservation() {}
+public class Reservation {
+    private final Long id;
+    private final String name;
+    private final String date;
+    private final String time;
 
     public Reservation(Long id, String name, String date, String time) {
         this.id = id;
@@ -15,25 +15,22 @@ public class Reservation {
         this.time = time;
     }
 
-    public Reservation(String name, String date, String time) {
-        this.name = name;
-        this.date = date;
-        this.time = time;
-    }
-
-    public static Reservation toEntity(Long id, Reservation reservation) {
-        return new Reservation(id, reservation.getName(), reservation.getDate(), reservation.getTime());
+    public static Reservation toEntity(Long id, ReservationDto reservationDto) {
+        return new Reservation(id, reservationDto.name(), reservationDto.date(), reservationDto.time());
     }
 
     public Long getId() {
         return id;
     }
+
     public String getName() {
         return name;
     }
+
     public String getDate() {
         return date;
     }
+
     public String getTime() {
         return time;
     }

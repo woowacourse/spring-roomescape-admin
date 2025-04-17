@@ -7,7 +7,7 @@ import org.mockito.Mockito;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.dao.DataAccessException;
-import roomescape.entity.ReservationEntity;
+import roomescape.entity.Reservation;
 import roomescape.repository.ReservationRepository;
 
 import java.time.LocalDate;
@@ -42,7 +42,7 @@ class ReservationServiceImplTest {
     void deleteUnknownDataAccessException() {
         // given
         long invalidId = 1;
-        ReservationEntity fakeReservation = new ReservationEntity(1L, "테스트", LocalDate.now(), LocalTime.now());
+        Reservation fakeReservation = new Reservation(1L, "테스트", LocalDate.now(), LocalTime.now());
 
         reservationService = new ReservationServiceImpl(reservationRepository);
 

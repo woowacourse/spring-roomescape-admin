@@ -2,10 +2,9 @@ package roomescape.service;
 
 import org.springframework.dao.DataAccessException;
 import org.springframework.stereotype.Service;
-import roomescape.Reservation;
 import roomescape.dto.ReservationRequest;
 import roomescape.dto.ReservationResponse;
-import roomescape.entity.ReservationEntity;
+import roomescape.entity.Reservation;
 import roomescape.repository.ReservationRepository;
 
 import java.util.List;
@@ -32,7 +31,7 @@ public class ReservationServiceImpl implements ReservationService {
                 reservationRequest.date(),
                 reservationRequest.time());
 
-        final ReservationEntity saved = reservationRepository.save(reservation.toEntity());
+        final Reservation saved = reservationRepository.save(reservation);
         return ReservationResponse.from(saved);
     }
 
@@ -40,11 +39,6 @@ public class ReservationServiceImpl implements ReservationService {
     public void delete(final long id) {
         reservationRepository.findById(id)
                 .orElseThrow(NoSuchElementException::new);
-
-        try {
-            reservationRepository.deleteById(id);
-        } catch (DataAccessException e) {
-            throw new IllegalStateException("삭제에 실패했습니다");
-        }
+        reservationRepository.deleteById(id);
     }
 }

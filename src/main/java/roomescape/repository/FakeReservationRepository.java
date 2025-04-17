@@ -1,7 +1,7 @@
 package roomescape.repository;
 
 import org.springframework.stereotype.Repository;
-import roomescape.entity.ReservationEntity;
+import roomescape.entity.Reservation;
 
 import java.util.HashMap;
 import java.util.List;
@@ -16,25 +16,25 @@ public class FakeReservationRepository implements ReservationRepository {
 
     private final AtomicLong idGenerator = new AtomicLong(START_ID_NUMBER);
 
-    private final Map<Long, ReservationEntity> reservations = new HashMap<>();
+    private final Map<Long, Reservation> reservations = new HashMap<>();
 
     @Override
-    public Optional<ReservationEntity> findById(final long id) {
+    public Optional<Reservation> findById(final long id) {
         return Optional.ofNullable(reservations.getOrDefault(id, null));
     }
 
     @Override
-    public List<ReservationEntity> findAll() {
+    public List<Reservation> findAll() {
         return reservations.values()
                 .stream()
                 .toList();
     }
 
     @Override
-    public ReservationEntity save(final ReservationEntity reservationEntity) {
-        reservationEntity.setId(idGenerator.getAndIncrement());
-        reservations.put(reservationEntity.getId(), reservationEntity);
-        return reservationEntity;
+    public Reservation save(final Reservation reservation) {
+        reservation.setId(idGenerator.getAndIncrement());
+        reservations.put(reservation.getId(), reservation);
+        return reservation;
     }
 
     @Override

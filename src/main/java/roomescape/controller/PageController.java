@@ -5,6 +5,11 @@ import org.springframework.web.bind.annotation.GetMapping;
 
 @Controller
 public class PageController {
+    @GetMapping()
+    String welcomePage() {
+        return "welcomePage";
+    }
+
     @GetMapping("/admin")
     String adminPage() {
         return "admin/index";
@@ -13,10 +18,5 @@ public class PageController {
     @GetMapping("/admin/reservation")
     String adminReservationPage() {
         return "admin/reservation-legacy";
-    }
-
-    @GetMapping()
-    String welcomePage() {
-        return "welcomePage";
     }
 }

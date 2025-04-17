@@ -17,7 +17,6 @@ public record ReservationRegisterDto(
         @Length(min = 1, max = 4)
         String name,
 
-        @Future
         @DateTimeFormat(pattern = "HH:mm")
         LocalTime time
 ) {

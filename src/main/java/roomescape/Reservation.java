@@ -24,6 +24,22 @@ public final class Reservation {
         return id.equals(targetId);
     }
 
+    public Long getId() {
+        return id;
+    }
+
+    public String getName() {
+        return name;
+    }
+
+    public LocalDate getDate() {
+        return date;
+    }
+
+    public LocalTime getTime() {
+        return time;
+    }
+
     @Override
     public boolean equals(Object other) {
         if (other == this) {

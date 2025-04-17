@@ -2,10 +2,10 @@ package roomescape;
 
 import io.restassured.RestAssured;
 import io.restassured.http.ContentType;
+import java.time.LocalDate;
 import java.util.HashMap;
 import java.util.Map;
 import static org.hamcrest.Matchers.is;
-
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -41,7 +41,7 @@ public class MissionStepTest {
     void 삼단계() {
         Map<String, String> params = new HashMap<>();
         params.put("name", "브라운");
-        params.put("date", "2023-08-05");
+        params.put("date", LocalDate.now().plusDays(1).toString());
         params.put("time", "15:40");
 
         RestAssured.given().log().all()
@@ -52,7 +52,7 @@ public class MissionStepTest {
                 .statusCode(200)
                 .body("id", is(1))
                 .body("name", is("브라운"))
-                .body("date", is("2023-08-05"))
+                .body("date", is(LocalDate.now().plusDays(1).toString()))
                 .body("time", is("15:40"));
 
         RestAssured.given().log().all()

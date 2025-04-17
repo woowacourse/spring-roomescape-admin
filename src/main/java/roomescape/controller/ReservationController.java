@@ -2,6 +2,7 @@ package roomescape.controller;
 
 import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -14,12 +15,12 @@ import roomescape.entity.Reservation;
 import roomescape.repository.ReservationRepository;
 
 @RestController
-public class ReservationRestController {
+public class ReservationController {
 
     private final ReservationRepository repository;
 
     @Autowired
-    public ReservationRestController(ReservationRepository repository) {
+    public ReservationController(ReservationRepository repository) {
         this.repository = repository;
     }
 
@@ -31,11 +32,16 @@ public class ReservationRestController {
     @PostMapping("/reservations")
     public ReservationResponseDto postReservation(@RequestBody ReservationRequestDto requestDto) {
         Reservation newReservation = repository.save(requestDto.toEntity(null));
-        return new ReservationResponseDto(newReservation);
+        return ReservationResponseDto.toDto(newReservation);
     }
 
     @DeleteMapping("/reservations/{id}")
-    public void deleteReservation(@PathVariable Long id) {
-        repository.delete(id);
+    public ResponseEntity<Void> deleteReservation(@PathVariable Long id) {
+        try {
+            repository.delete(id);
+            return ResponseEntity.ok().build();
+        } catch (IllegalArgumentException e) {
+            return ResponseEntity.notFound().build();
+        }
     }
 }

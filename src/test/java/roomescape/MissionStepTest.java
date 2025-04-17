@@ -1,9 +1,10 @@
-package roomescape.controller;
+package roomescape;
 
 import static org.hamcrest.Matchers.is;
 
 import io.restassured.RestAssured;
 import io.restassured.http.ContentType;
+import java.time.LocalDate;
 import java.util.HashMap;
 import java.util.Map;
 import org.junit.jupiter.api.DisplayName;
@@ -13,11 +14,23 @@ import org.springframework.test.annotation.DirtiesContext;
 
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.DEFINED_PORT)
 @DirtiesContext(classMode = DirtiesContext.ClassMode.BEFORE_EACH_TEST_METHOD)
-public class ReservationRestControllerTest {
+public class MissionStepTest {
 
     @Test
-    @DisplayName("/admin/reservation 요청 시 예약 관리 페이지 응답")
-    void readReservation() {
+    void 일단계() {
+        RestAssured.given().log().all()
+                .when().get("/admin")
+                .then().log().all()
+                .statusCode(200);
+    }
+
+    @Test
+    void 이단계() {
+        RestAssured.given().log().all()
+                .when().get("/admin/reservation")
+                .then().log().all()
+                .statusCode(200);
+
         RestAssured.given().log().all()
                 .when().get("/reservations")
                 .then().log().all()
@@ -26,40 +39,29 @@ public class ReservationRestControllerTest {
     }
 
     @Test
-    @DisplayName("예약 관리 페이지 내에서 예약 추가")
-    void postReservation() {
+    void 삼단계() {
+        Map<String, String> params = new HashMap<>();
+        params.put("name", "브라운");
+        params.put("date", LocalDate.now().plusDays(1).toString());
+        params.put("time", "15:40");
+
         RestAssured.given().log().all()
                 .contentType(ContentType.JSON)
-                .body(getTestParamsWithReservation())
+                .body(params)
                 .when().post("/reservations")
                 .then().log().all()
                 .statusCode(200)
-                .body("name", is("브라운"));
+                .body("id", is(1))
+                .body("name", is("브라운"))
+                .body("date", is(LocalDate.now().plusDays(1).toString()))
+                .body("time", is("15:40"));
 
         RestAssured.given().log().all()
                 .when().get("/reservations")
                 .then().log().all()
                 .statusCode(200)
                 .body("size()", is(1));
-    }
 
-    @Test
-    @DisplayName("예약 관리 페이지 내에서 예약 삭제")
-    void deleteReservation() {
-        RestAssured.given().log().all()
-                .contentType(ContentType.JSON)
-                .body(getTestParamsWithReservation())
-                .when().post("/reservations")
-                .then().log().all()
-                .statusCode(200)
-                .body("id", is(1));
-
-        RestAssured.given().log().all()
-                .when().get("/reservations")
-                .then().log().all()
-                .statusCode(200)
-                .body("size()", is(1));
-        
         RestAssured.given().log().all()
                 .when().delete("/reservations/1")
                 .then().log().all()
@@ -72,11 +74,12 @@ public class ReservationRestControllerTest {
                 .body("size()", is(0));
     }
 
-    private Map<String, String> getTestParamsWithReservation() {
-        Map<String, String> params = new HashMap<>();
-        params.put("name", "브라운");
-        params.put("date", "2023-08-05");
-        params.put("time", "15:40");
-        return params;
+    @Test
+    @DisplayName("id가 존재하지 않아 예외가 발생한다")
+    void deleteFailTest() {
+        RestAssured.given().log().all()
+                .when().delete("/reservations/1")
+                .then().log().all()
+                .statusCode(404);
     }
 }

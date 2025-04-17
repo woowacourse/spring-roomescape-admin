@@ -9,8 +9,8 @@ public class Reservations {
     private final List<Reservation> reservations = new ArrayList<>();
     private final AtomicLong index = new AtomicLong(0);
 
-    public Reservation addAndGet(Reservation reservation) {
-        Reservation newReservation = Reservation.toEntity(reservation, index.incrementAndGet());
+    public Reservation addAndGet(ReservationReqDto dto) {
+        Reservation newReservation = new Reservation(index.incrementAndGet(), dto.name(), dto.date(), dto.time());
         reservations.add(newReservation);
         return newReservation;
     }

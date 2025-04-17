@@ -2,7 +2,6 @@ package roomescape;
 
 import static org.hamcrest.Matchers.is;
 
-import java.io.IOException;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -10,13 +9,8 @@ import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.annotation.DirtiesContext;
 
-import com.fasterxml.jackson.annotation.JsonView;
-import com.fasterxml.jackson.core.JsonProcessingException;
-import com.fasterxml.jackson.databind.ObjectMapper;
-
 import io.restassured.RestAssured;
 import io.restassured.http.ContentType;
-import roomescape.view.Views;
 
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.DEFINED_PORT)
 @DirtiesContext(classMode = DirtiesContext.ClassMode.BEFORE_EACH_TEST_METHOD)
@@ -75,40 +69,5 @@ public class MissionStepTest {
             .then().log().all()
             .statusCode(200)
             .body("size()", is(0));
-    }
-
-    @Test
-    public void whenUseInternalView_thenAllSerialized() throws JsonProcessingException {
-        User user = new User(2L, "book");
-
-        ObjectMapper mapper = new ObjectMapper();
-        String result = mapper
-            .writerWithView(Views.Normal.class)
-            .writeValueAsString(user);
-
-        System.out.println("result = " + result);
-    }
-
-    @Test
-    void whenUseJsonViewToDeserialize_thenCorrect()
-        throws IOException {
-        String json = "{\"id\":1,\"name\":\"John\"}";
-
-        ObjectMapper mapper = new ObjectMapper();
-        User user = mapper
-            .readerWithView(Views.Normal.class)
-            .forType(User.class)
-            .readValue(json);
-
-        System.out.println("user.id = " + user.id);
-        System.out.println("user.name = " + user.name);
-    }
-
-    record User(
-        @JsonView(Views.Admin.class)
-        Long id,
-        @JsonView(Views.Normal.class)
-        String name
-    ) {
     }
 }

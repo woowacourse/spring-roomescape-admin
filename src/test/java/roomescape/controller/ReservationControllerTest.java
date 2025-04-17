@@ -1,4 +1,4 @@
-package roomescape;
+package roomescape.controller;
 
 import io.restassured.RestAssured;
 import io.restassured.http.ContentType;
@@ -14,7 +14,7 @@ import org.springframework.test.annotation.DirtiesContext;
 
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.DEFINED_PORT)
 @DirtiesContext(classMode = DirtiesContext.ClassMode.BEFORE_EACH_TEST_METHOD)
-public class RoomEscapeControllerTest {
+public class ReservationControllerTest {
 
     public static Stream<Arguments> NullParameter() {
         return Stream.of(

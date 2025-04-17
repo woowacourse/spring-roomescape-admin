@@ -1,4 +1,4 @@
-package roomescape;
+package roomescape.controller;
 
 import java.util.List;
 import org.springframework.http.HttpStatus;
@@ -9,25 +9,18 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
+import roomescape.Reservation;
+import roomescape.ReservationRequest;
+import roomescape.Reservations;
 
 @Controller
-public class RoomEscapeController {
+public class ReservationController {
 
     private final Reservations reservations = new Reservations();
 
     @GetMapping("/")
     public String homePage() {
         return "home";
-    }
-
-    @GetMapping("/admin")
-    public String adminHomePage() {
-        return "admin/index";
-    }
-
-    @GetMapping("/admin/reservation")
-    public String manageReservation() {
-        return "admin/reservation-legacy";
     }
 
     @GetMapping("reservations")

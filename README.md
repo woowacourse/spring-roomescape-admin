@@ -1,17 +1,37 @@
-# 방탈출
+# 방탈출 예약 관리 시스템 🚪
 
-## 기능 구현 목록 ⚙️
+## 📌 소개
 
-### ✅어드민 페이지 응답
+- 방탈출 예약을 관리할 수 있는 웹 애플리케이션입니다.
+- 예약 시간 관리 기능을 제공합니다.
+- 사용자 친화적인 UI/UX를 제공합니다.
 
-- [x] `localhost:8080/admin` 요청 시 아래 화면과 같이 어드민 메인 페이지가 응답
+## 📌 기능
 
-### ✅ 방탈출 예약 페이지 응답
+- 예약 전체 조회
+- 예약 추가
+- 예약 삭제
 
-- [x] `/admin/reservation` 요청 시 아래 화면과 같이 예약 관리 페이지가 응답
+## 📌 프로젝트 구조
 
-### ✅예약 조회, 추가, 삭제 기능
+```
+📦java
+ ┗ 📂roomescape
+ ┃ ┣ 📂controller
+ ┃ ┃ ┣ 📜AdminViewController.java
+ ┃ ┃ ┗ 📜ReservationApiController.java
+ ┃ ┣ 📂domain
+ ┃ ┃ ┗ 📜Reservation.java
+ ┃ ┣ 📂dto
+ ┃ ┃ ┣ 📜ReservationRequest.java
+ ┃ ┃ ┗ 📜ReservationResponse.java
+ ┃ ┗ 📜RoomescapeApplication.java
+```
 
-- [x] 예약 목록 조회 API 응답
-- [x] 예약 목록 추가 API 응답
-- [x] 예약 목록 삭제 API 응답
+## 📌 API 명세
+
+| Method | URL                   | Description |
+|--------|-----------------------|-------------|
+| GET    | /api/reservation      | 예약 전체 조회    |
+| POST   | /api/reservation      | 예약 추가       |
+| DELETE | /api/reservation/{id} | 예약 삭제       |

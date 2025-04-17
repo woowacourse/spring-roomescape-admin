@@ -23,12 +23,12 @@ public class ReservationController {
         return "home";
     }
 
-    @GetMapping("reservations")
+    @GetMapping("/reservations")
     public ResponseEntity<List<Reservation>> checkReservation() {
         return ResponseEntity.ok(reservations.getReservations());
     }
 
-    @PostMapping("reservations")
+    @PostMapping("/reservations")
     public ResponseEntity<Reservation> addReservation(@RequestBody ReservationRequest request) {
         try {
             long id = reservations.nextId();
@@ -40,7 +40,7 @@ public class ReservationController {
         }
     }
 
-    @DeleteMapping("reservations/{id}")
+    @DeleteMapping("/reservations/{id}")
     public ResponseEntity<Void> deleteReservation(@PathVariable("id") Long id) {
         boolean isRemoved = reservations.removeById(id);
         if (isRemoved) {

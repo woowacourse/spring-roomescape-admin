@@ -30,7 +30,7 @@ public class ReservationController {
     @ResponseBody
     public ResponseEntity<Reservation> addReservation(@RequestBody ReservationRequest reservationRequest) {
         try {
-            Reservation reservation = Reservation.from(reservationRequest, index.getAndIncrement());
+            Reservation reservation = Reservation.of(reservationRequest, index.getAndIncrement());
             reservations.add(reservation);
             return ResponseEntity.ok(reservation);
         } catch (Exception e) {

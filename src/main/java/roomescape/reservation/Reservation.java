@@ -36,7 +36,7 @@ public class Reservation {
         return time;
     }
 
-    public static Reservation from(ReservationRequest reservationRequest, long index) {
+    public static Reservation of(ReservationRequest reservationRequest, long index) {
         return new Reservation(index, reservationRequest.name(), reservationRequest.date(), reservationRequest.time());
     }
 }

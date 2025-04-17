@@ -1,6 +1,6 @@
 package roomescape.controller.dto;
 
-import jakarta.validation.constraints.Future;
+import jakarta.validation.constraints.FutureOrPresent;
 import jakarta.validation.constraints.NotBlank;
 import java.time.LocalDate;
 import java.time.LocalTime;
@@ -9,7 +9,7 @@ import org.springframework.format.annotation.DateTimeFormat;
 import roomescape.domain.Reservation;
 
 public record ReservationRegisterDto(
-        @Future
+        @FutureOrPresent
         @DateTimeFormat(pattern = "yyyy-MM-dd")
         LocalDate date,
 

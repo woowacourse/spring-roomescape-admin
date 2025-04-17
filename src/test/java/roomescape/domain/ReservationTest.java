@@ -28,9 +28,10 @@ class ReservationTest {
     @Test
     void 시간이_지금보다_이전인_경우_예외가_발생한다() {
         // given
+        final LocalDate now = LocalDate.now();
         LocalTime time = LocalTime.now().minusHours(1);
 
         // should
-        assertThatIllegalArgumentException().isThrownBy(() -> new Reservation("히로", LocalDate.now(), time));
+        assertThatIllegalArgumentException().isThrownBy(() -> new Reservation("히로", now, time));
     }
 }

@@ -1,6 +1,7 @@
 package roomescape.controller;
 
 import jakarta.validation.Valid;
+import java.net.URI;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
@@ -40,7 +41,7 @@ public class ReservationController {
                 reservationCreateRequest.time()
         );
         reservations.add(reservation);
-        return ResponseEntity.ok().body(reservation);
+        return ResponseEntity.created(URI.create("/reservations/" + index.get())).body(reservation);
     }
 
     @DeleteMapping("/reservations/{id}")

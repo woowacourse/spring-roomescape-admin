@@ -28,7 +28,7 @@ public class UserRoomEscapeController {
     }
 
     @PostMapping("/reservations")
-    public ResponseEntity<ReservationResponse> addReservations(@RequestBody ReservationCreateRequest request) {
+    public ResponseEntity<ReservationResponse> createReservation(@RequestBody ReservationCreateRequest request) {
         Reservation newReservation = request.toDomain(autoIncrement.incrementAndGet());
 
         reservations.add(newReservation);
@@ -37,7 +37,7 @@ public class UserRoomEscapeController {
     }
 
     @DeleteMapping("/reservations/{reservationId}")
-    public ResponseEntity<Void> deleteReservations(@PathVariable("reservationId") Long reservationId) {
+    public ResponseEntity<Void> deleteReservation(@PathVariable("reservationId") Long reservationId) {
         Reservation target = getReservation(reservationId);
 
         reservations.remove(target);
@@ -45,15 +45,15 @@ public class UserRoomEscapeController {
         return ResponseEntity.ok().build();
     }
 
+    public static void clear() {
+        reservations.clear();
+        autoIncrement.set(0);
+    }
+
     private Reservation getReservation(Long reservationId) {
         return reservations.stream()
                 .filter(reservation -> Objects.equals(reservation.id(), reservationId))
                 .findFirst()
                 .orElseThrow(() -> new IllegalArgumentException("id에 해당하는 예약이 존재하지 않습니다."));
-    }
-
-    public static void clear() {
-        reservations.clear();
-        autoIncrement.set(0);
     }
 }

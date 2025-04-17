@@ -5,6 +5,7 @@ import java.time.LocalTime;
 import java.util.Objects;
 
 import com.fasterxml.jackson.annotation.JsonCreator;
+import com.fasterxml.jackson.annotation.JsonFormat;
 
 public class Reservation {
 
@@ -39,7 +40,9 @@ public class Reservation {
         return reservationDateTime.getDate();
     }
 
+    @JsonFormat(pattern = "HH:mm")
     public LocalTime getTime() {
         return reservationDateTime.getTime();
     }
+
 }

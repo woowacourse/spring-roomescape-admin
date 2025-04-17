@@ -5,7 +5,6 @@ import java.util.List;
 import java.util.Objects;
 import java.util.concurrent.atomic.AtomicLong;
 import org.springframework.stereotype.Repository;
-import roomescape.dto.ReservationRequestDto;
 import roomescape.entity.Reservation;
 
 @Repository
@@ -20,18 +19,22 @@ public class ReservationInMemoryRepository implements ReservationRepository {
     }
 
     public ReservationInMemoryRepository(List<Reservation> reservations) {
-        this.reservations = reservations;
+        this.reservations = new ArrayList<>(reservations);
     }
- 
+
     public List<Reservation> findAll() {
         return new ArrayList<>(reservations);
     }
 
-    public Reservation save(ReservationRequestDto requestDto) {
-        Long id = ATOMIC_LONG.getAndIncrement();
-        Reservation newReservation = requestDto.toEntity(id);
-        reservations.add(newReservation);
-        return newReservation;
+    public Reservation save(Reservation reservation) {
+        if (reservation.getId() == null) {
+            Long id = ATOMIC_LONG.getAndIncrement();
+            reservation = new Reservation(id, reservation.getName(),
+                    reservation.getDate(),
+                    reservation.getTime());
+        }
+        reservations.add(reservation);
+        return reservation;
     }
 
     public void delete(Long id) {

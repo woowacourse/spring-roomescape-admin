@@ -36,16 +36,20 @@ public class UserRoomEscapeController {
         return ResponseEntity.ok(ReservationResponse.from(newReservation));
     }
 
-    @DeleteMapping("/reservations/{id}")
-    public ResponseEntity<Void> deleteReservations(@PathVariable("id") Long id) {
-        Reservation target = reservations.stream()
-                .filter(reservation -> Objects.equals(reservation.id(), id))
-                .findFirst()
-                .orElseThrow(() -> new IllegalArgumentException("id에 해당하는 예약이 존재하지 않습니다."));
+    @DeleteMapping("/reservations/{reservationId}")
+    public ResponseEntity<Void> deleteReservations(@PathVariable("reservationId") Long reservationId) {
+        Reservation target = getReservation(reservationId);
 
         reservations.remove(target);
 
         return ResponseEntity.ok().build();
+    }
+
+    private static Reservation getReservation(Long reservationId) {
+        return reservations.stream()
+                .filter(reservation -> Objects.equals(reservation.id(), reservationId))
+                .findFirst()
+                .orElseThrow(() -> new IllegalArgumentException("id에 해당하는 예약이 존재하지 않습니다."));
     }
 
     public static void clear() {

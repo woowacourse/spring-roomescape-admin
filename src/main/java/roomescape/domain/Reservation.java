@@ -1,5 +1,6 @@
 package roomescape.domain;
 
+import com.fasterxml.jackson.annotation.JsonProperty;
 import java.time.LocalDate;
 import java.time.LocalTime;
 import java.util.concurrent.atomic.AtomicLong;
@@ -8,9 +9,13 @@ public class Reservation {
 
     private final static AtomicLong ID_GENERATOR = new AtomicLong(0);
 
+    @JsonProperty
     private final Long id;
+    @JsonProperty
     private final String name;
+    @JsonProperty
     private final LocalDate date;
+    @JsonProperty
     private final LocalTime time;
 
     public Reservation(String name, LocalDate date, LocalTime time) {

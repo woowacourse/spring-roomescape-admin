@@ -1,103 +1,92 @@
-# 1. 메인페이지 응답
+# :sparkling_heart: spring-roomescape-admin 프로젝트 소개
 
-### Request
+웹 백엔드 7기 레벨2 방탈출 예약 미션을 구현한 프로젝트입니다.
 
-```
-GET /admin HTTP/1.1
-```
+# :dart: 구현 기능 목록
 
-### Response
+## :rocket: 페이지 응답
 
-```
-templates/admin/index.html
-```
+### 페이지 응답
 
-# 2. 예약페이지 응답
+- [x] 메인 페이지 응답
+- [x] 예약 페이지 응답
+- [x] 웹컴 페이지의 경우 메인 페이지로 리다이렉션
 
-### Request
+## :rocket: 예약 관리
 
-```
-GET /admin/reservation HTTP/1.1
-```
+### 예약 조회
 
-### Response
+- [x] 저장된 모든 예외를 응답
 
-```
-templates/admin/reservation-legacy.html
-```
+### 예약 추가
 
-# 3. 예약 조회
+- [x] 예약일자, 예약시간, 이름을 통해 예약 추가
+- [x] 예약을 추가할때 검증을 수행
+  - [x] 이름은 빈값을 허용하지 않는다.
 
-### Request
+### 예약 취소
 
-```
-GET /reservations HTTP/1.1
+- [x] 특정 예약의 ID를 통해 예약을 취소
 
-```
+# :dart: API 정보
 
-### Response
+- GET /
+  - 설명 : 웰컴 페이지 응답 (메인 페이지로 리다이렉션)
+  - 정상 응답 (308)
 
-```
-HTTP/1.1 200
-Content-Type: application/json
+- GET /admin 
+  - 설명 : 메인페이지 응답
+  - 정상 응답 (200)
+    ```
+    메인 페이지 HTML 파일
+    ```
 
-[
+- GET /admin/reservation
+  - 설명 : 예약페이지 응답
+  - 정상 응답 (200)
+    ```
+    예약 페이지 HTML 문서
+    ```
+  
+- GET /reservations
+  - 설명 : 예약 조회
+  - 정상 응답 (200)
+    ```
+    [
+        {
+            "id": 1,
+            "name": "브라운",
+            "date": "2023-01-01",
+            "time": "10:00"
+        },
+        {
+            "id": 2,
+            "name": "브라운",
+            "date": "2023-01-02",
+            "time": "11:00"
+        },
+        ...
+    ]
+    ```
+- POST /reservations
+  - 설명 : 예약 추가
+  - 요청 파라미터
+    ```
+    {
+        "date": "2023-08-05",  // NotNull
+        "name": "브라운",       // NotNull, NotBlank
+        "time": "15:40"        // NotNull
+    }
+    ```
+  - 정상 응답 (201)
+    ```
     {
         "id": 1,
         "name": "브라운",
-        "date": "2023-01-01",
-        "time": "10:00"
-    },
-    {
-        "id": 2,
-        "name": "브라운",
-        "date": "2023-01-02",
-        "time": "11:00"
+        "date": "2023-08-05",
+        "time": "15:40"
     }
-]
-
-```
-
-# 4. 예약 추가
-
-### Request
-
-```
-POST /reservations HTTP/1.1
-content-type: application/json
-
-{
-    "date": "2023-08-05",
-    "name": "브라운",
-    "time": "15:40"
-}
-
-```
-
-### Response
-
-```
-HTTP/1.1 200
-Content-Type: application/json
-
-{
-    "id": 1,
-    "name": "브라운",
-    "date": "2023-08-05",
-    "time": "15:40"
-}
-```
-
-# 5. 예약 취소
-
-### Request
-
-```
-DELETE /reservations/{reservationId} HTTP/1.1
-```
-
-### Response
-
-```
-HTTP/1.1 200
-```
+    ```
+- DELETE /reservations/{reservationId}
+    - 설명 : 예약 취소
+    - 정상 응답 (200)

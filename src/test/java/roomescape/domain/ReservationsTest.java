@@ -22,7 +22,8 @@ public class ReservationsTest {
     void save_once() {
         //given
         Reservation reservation = new Reservation(
-            new Person("james"),
+            1,
+            new Person(1, "james"),
             new ReservationTime(LocalDateTime.of(2025, 4, 17, 11, 30)));
 
         //when
@@ -38,11 +39,13 @@ public class ReservationsTest {
     void save() {
         //given
         Reservation reservation1 = new Reservation(
-            new Person("james"),
+            1,
+            new Person(1, "james"),
             new ReservationTime(LocalDateTime.of(2025, 4, 17, 11, 30)));
 
         Reservation reservation2 = new Reservation(
-            new Person("pobi"),
+            2,
+            new Person(2, "pobi"),
             new ReservationTime(LocalDateTime.of(2025, 4, 18, 12, 30)));
 
         //when
@@ -68,10 +71,12 @@ public class ReservationsTest {
     void given_valid_id_then_delete_reservation() {
         //given
         Reservation reservation1 = new Reservation(
-            new Person("james"),
+            1,
+            new Person(1, "james"),
             new ReservationTime(LocalDateTime.of(2025, 4, 17, 11, 30)));
         Reservation reservation2 = new Reservation(
-            new Person("pobi"),
+            2,
+            new Person(2, "pobi"),
             new ReservationTime(LocalDateTime.of(2025, 4, 18, 12, 30)));
         reservations.save(reservation1);
         reservations.save(reservation2);

@@ -1,11 +1,8 @@
 package roomescape.domain;
 
-import com.fasterxml.jackson.annotation.JsonAutoDetect;
-import com.fasterxml.jackson.annotation.JsonAutoDetect.Visibility;
 import java.time.LocalDate;
 import java.time.LocalTime;
 
-@JsonAutoDetect(fieldVisibility = Visibility.ANY)
 public class Reservation {
 
     private long id;

@@ -13,7 +13,7 @@ import org.springframework.boot.test.context.SpringBootTest;
 import roomescape.user.repository.ReservationRepository;
 
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.DEFINED_PORT)
-public class MissionStepTest {
+public class MissionStepTest {  // TODO: 추후 테스트에 대한 요구사항이 있을 시 변경 필요
 
     @Autowired
     private ReservationRepository reservationRepository;

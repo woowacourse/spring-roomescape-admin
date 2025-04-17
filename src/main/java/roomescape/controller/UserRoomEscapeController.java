@@ -41,7 +41,7 @@ public class UserRoomEscapeController {
         Reservation target = reservations.stream()
                 .filter(reservation -> Objects.equals(reservation.id(), id))
                 .findFirst()
-                .orElseThrow(IllegalArgumentException::new);
+                .orElseThrow(() -> new IllegalArgumentException("id에 해당하는 예약이 존재하지 않습니다."));
 
         reservations.remove(target);
 

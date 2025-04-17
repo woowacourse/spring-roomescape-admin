@@ -6,17 +6,17 @@ import java.time.LocalTime;
 
 public class Reservation {
     private final long id;
-    private String name;
-    private LocalDateTime dateTime;
+    private String customerName;
+    private LocalDateTime reservationDateTime;
 
-    public Reservation(long id, String name, LocalDateTime dateTime) {
+    public Reservation(long id, String customerName, LocalDateTime reservationDateTime) {
         this.id = id;
-        this.name = name;
-        this.dateTime = dateTime;
+        this.customerName = customerName;
+        this.reservationDateTime = reservationDateTime;
     }
 
-    public Reservation(long id, String name, LocalDate date, LocalTime time) {
-        this(id, name, LocalDateTime.of(date, time));
+    public Reservation(long id, String customerName, LocalDate reservationDate, LocalTime reservationTime) {
+        this(id, customerName, LocalDateTime.of(reservationDate, reservationTime));
     }
 
     public boolean isIdEquals(long id) {
@@ -27,15 +27,15 @@ public class Reservation {
         return id;
     }
 
-    public String getName() {
-        return name;
+    public String getCustomerName() {
+        return customerName;
     }
 
-    public LocalDate getDate() {
-        return dateTime.toLocalDate();
+    public LocalDate getReservationDate() {
+        return reservationDateTime.toLocalDate();
     }
 
-    public LocalTime getTime() {
-        return dateTime.toLocalTime();
+    public LocalTime getReservationTime() {
+        return reservationDateTime.toLocalTime();
     }
 }

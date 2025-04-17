@@ -10,7 +10,7 @@ public record ReservationResponse(
         String time
 ) {
 
-    public static ReservationResponse of(Reservation reservation) {
+    public static ReservationResponse fromReservation(Reservation reservation) {
         DateTimeFormatter timeFormatter = DateTimeFormatter.ofPattern("HH:mm");
 
         return new ReservationResponse(

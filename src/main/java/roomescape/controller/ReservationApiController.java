@@ -26,7 +26,7 @@ public class ReservationApiController {
     @GetMapping
     public ResponseEntity<List<ReservationResponse>> getReservations() {
         List<ReservationResponse> responses = reservations.getReservations().stream()
-                .map(ReservationResponse::of)
+                .map(ReservationResponse::fromReservation)
                 .toList();
 
         return ResponseEntity.ok(responses);
@@ -38,7 +38,7 @@ public class ReservationApiController {
         reservations.add(created);
 
         return ResponseEntity.ok(
-                ReservationResponse.of(created)
+                ReservationResponse.fromReservation(created)
         );
     }
 

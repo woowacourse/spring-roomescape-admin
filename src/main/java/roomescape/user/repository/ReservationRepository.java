@@ -3,7 +3,6 @@ package roomescape.user.repository;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
-import java.util.concurrent.atomic.AtomicLong;
 import org.springframework.stereotype.Repository;
 import roomescape.user.domain.Reservation;
 
@@ -11,14 +10,19 @@ import roomescape.user.domain.Reservation;
 public class ReservationRepository {
 
     private final List<Reservation> reservations = new ArrayList<>();
-    private final AtomicLong id = new AtomicLong(1L);
+    private Long id = 1L;
 
-    public Long save(final Reservation reservation) {
+    public synchronized Long save(final Reservation reservation) {
         final Reservation created = new Reservation(
-                id.get(), reservation.getName(), reservation.getDate(), reservation.getTime());
+                id, reservation.getName(), reservation.getDate(), reservation.getTime());
         reservations.add(created);
+        increaseId();
 
         return created.getId();
+    }
+
+    private void increaseId() {
+        id = id + 1;
     }
 
     public Optional<Reservation> findById(final Long id) {

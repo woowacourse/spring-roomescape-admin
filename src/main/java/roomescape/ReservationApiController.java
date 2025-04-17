@@ -5,6 +5,7 @@ import java.time.LocalTime;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 import java.util.concurrent.atomic.AtomicLong;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -25,11 +26,6 @@ public class ReservationApiController {
         return ResponseEntity.ok(reservations);
     }
 
-    @GetMapping("/reservations/test")
-    public List<Reservation> getTestReservations() {
-        return reservations;
-    }
-
     @PostMapping("/reservations")
     public ResponseEntity<Reservation> createReservation(@RequestBody Map<String, String> newReservation) {
 
@@ -45,13 +41,15 @@ public class ReservationApiController {
 
     @DeleteMapping("/reservations/{id}")
     public ResponseEntity<Void> deleteReservation(@PathVariable Long id) {
-        Reservation find = reservations.stream()
+        Optional<Reservation> find = reservations.stream()
                 .filter(reservation -> reservation.getId().equals(id))
-                .findFirst()
-                .orElseThrow();
+                .findFirst();
 
-        reservations.remove(find);
+        if (find.isEmpty()) {
+            return ResponseEntity.notFound().build();
+        }
 
+        reservations.remove(find.get());
         return ResponseEntity.ok().build();
     }
 }

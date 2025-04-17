@@ -24,12 +24,12 @@ public class ReservationController {
     private final AtomicLong index = new AtomicLong(1);
     private final List<Reservation> reservations = new ArrayList<>();
 
-    @GetMapping("")
+    @GetMapping
     public ResponseEntity<List<Reservation>> reservations() {
         return ResponseEntity.ok(reservations);
     }
 
-    @PostMapping("")
+    @PostMapping
     public ResponseEntity<Void> addReservations(@RequestBody AddReservationDto addReservationDto) {
         if (addReservationDto == null) {
             throw new InvalidReservationRequest();

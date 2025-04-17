@@ -15,7 +15,7 @@ import org.springframework.test.annotation.DirtiesContext;
 public class MissionStepTest {
 
     @Test
-    void 일단계() {
+    void home() {
         RestAssured.given().log().all()
                 .when().get("/admin")
                 .then().log().all()
@@ -23,7 +23,7 @@ public class MissionStepTest {
     }
 
     @Test
-    void 이단계() {
+    void readReservations() {
         RestAssured.given().log().all()
                 .when().get("/admin/reservation")
                 .then().log().all()
@@ -37,7 +37,7 @@ public class MissionStepTest {
     }
 
     @Test
-    void 삼단계() {
+    void addAndDelete() {
         Map<String, String> params = new HashMap<>();
         params.put("name", "브라운");
         params.put("date", "2023-08-05");

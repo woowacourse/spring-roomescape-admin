@@ -5,6 +5,7 @@ import java.util.Optional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
+import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -18,6 +19,11 @@ import roomescape.user.repository.ReservationRepository;
 public class UserReservationRestController {
 
     private final ReservationRepository reservationRepository;
+
+    @ExceptionHandler(IllegalArgumentException.class)
+    public ResponseEntity<Void> handleIllegalArgumentException(final IllegalArgumentException e) {
+        return ResponseEntity.badRequest().build();
+    }
 
     @GetMapping("/reservations")
     public ResponseEntity<List<Reservation>> retrieveReservations() {

@@ -9,7 +9,6 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.ResponseBody;
 
 @Controller
 public class ReservationController {
@@ -21,14 +20,12 @@ public class ReservationController {
     }
 
     @GetMapping("/reservations")
-    @ResponseBody
     public ResponseEntity<List<Reservation>> getReservations() {
         List<Reservation> reservations = reservationRepository.findAll();
         return ResponseEntity.ok(reservations);
     }
 
     @PostMapping("/reservations")
-    @ResponseBody
     public ResponseEntity<Reservation> createReservation(@RequestBody @Valid ReservationRequest request) {
         Reservation reservation = request.toEntity();
         Reservation saved = reservationRepository.save(reservation);
@@ -36,7 +33,6 @@ public class ReservationController {
     }
 
     @DeleteMapping("/reservations/{id}")
-    @ResponseBody
     public ResponseEntity<Void> deleteReservation(@PathVariable Long id) {
         try {
             Reservation found = reservationRepository.findById(id)

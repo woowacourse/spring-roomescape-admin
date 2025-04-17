@@ -152,6 +152,6 @@ public class RoomescapeControllerTest {
                 .body(params)
                 .when().post("/reservations")
                 .then().log().all()
-                .statusCode(500);
+                .statusCode(400);
     }
 }

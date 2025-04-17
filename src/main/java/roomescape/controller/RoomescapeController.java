@@ -31,11 +31,15 @@ public class RoomescapeController {
     }
 
     @PostMapping("/reservations")
-    public ReservationDto registerReservation(
+    public ResponseEntity<ReservationDto> registerReservation(
             @RequestBody @Valid final ReservationRegisterDto reservationRegisterDto) {
-        Reservation reservation = reservationRegisterDto.toEntity();
-        this.reservationRepository.save(reservation);
-        return ReservationDto.toDto(reservation);
+        try {
+            Reservation reservation = reservationRegisterDto.toEntity();
+            this.reservationRepository.save(reservation);
+            return ResponseEntity.ok().body(ReservationDto.toDto(reservation));
+        } catch (IllegalArgumentException e) {
+            return ResponseEntity.badRequest().build();
+        }
     }
 
     @DeleteMapping("/reservations/{id}")

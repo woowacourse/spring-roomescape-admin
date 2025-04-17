@@ -73,4 +73,4 @@
         Response
         HTTP/1.1 200
         ```
-        - [ ] 존재하지 않는 Id를 삭제하면 204 NO_CONTENT
+        - [x] 존재하지 않는 Id를 삭제하면 204 NO_CONTENT

@@ -3,7 +3,6 @@ package roomescape.model;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
-import java.util.Objects;
 
 public class Reservations {
     private final List<Reservation> reservations;
@@ -16,9 +15,9 @@ public class Reservations {
         reservations.add(reservation);
     }
 
-    public void deleteById(Long id) {
+    public void deleteById(Id id) {
         Reservation reservation = reservations.stream()
-                .filter(reserve -> Objects.equals(reserve.getId(), id))
+                .filter(reserve -> reserve.isSameId(id))
                 .findFirst()
                 .orElseThrow(RuntimeException::new);
         reservations.remove(reservation);

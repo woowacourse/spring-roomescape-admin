@@ -42,7 +42,7 @@ public class ReservationApiController {
     @DeleteMapping("/reservations/{id}")
     public ResponseEntity<Void> deleteReservation(@PathVariable Long id) {
         Optional<Reservation> find = reservations.stream()
-                .filter(reservation -> reservation.getId().equals(id))
+                .filter(reservation -> reservation.isSameId(id))
                 .findFirst();
 
         if (find.isEmpty()) {

@@ -28,7 +28,7 @@ public class Reservations {
         throw new IllegalArgumentException("해당하는 예약이 존재하지 않습니다.");
     }
 
-    public List<ReservationResponse> getReservations(){
+    public List<ReservationResponse> getReservations() {
         return reservations.entrySet().stream()
                 .map(entry -> ReservationResponse.toDto(entry.getKey(), entry.getValue()))
                 .toList();

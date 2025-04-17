@@ -8,16 +8,16 @@ public class Reservations {
 
     private final List<Reservation> reservations = new ArrayList<>();
 
-    public void add(Reservation reservation) {
+    public void add(final Reservation reservation) {
         reservations.add(reservation);
     }
 
-    public void removeById(Long id) {
+    public void removeById(final Long id) {
         Reservation removeReservation = findById(id);
         reservations.remove(removeReservation);
     }
 
-    private Reservation findById(Long id) {
+    private Reservation findById(final Long id) {
         return reservations.stream()
                 .filter(reservation -> Objects.equals(reservation.getId(), id))
                 .findAny()
@@ -27,4 +27,5 @@ public class Reservations {
     public List<Reservation> getReservations() {
         return reservations;
     }
+
 }

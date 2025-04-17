@@ -1,9 +1,10 @@
 package roomescape.model;
 
-import com.fasterxml.jackson.annotation.JsonCreator;
 import java.time.LocalDate;
 import java.time.LocalTime;
 import java.util.Objects;
+
+import com.fasterxml.jackson.annotation.JsonCreator;
 
 public class Reservation {
 
@@ -12,13 +13,13 @@ public class Reservation {
     private final ReservationDateTime reservationDateTime;
 
     @JsonCreator
-    public Reservation(Long id, String name, ReservationDateTime reservationDateTime) {
+    public Reservation(final Long id, final String name, final ReservationDateTime reservationDateTime) {
         this.id = Objects.requireNonNull(id);
         this.name = validateNonBlank(name);
         this.reservationDateTime = reservationDateTime;
     }
 
-    private String validateNonBlank(String name) {
+    private String validateNonBlank(final String name) {
         if (name == null || name.isBlank()) {
             throw new IllegalArgumentException();
         }

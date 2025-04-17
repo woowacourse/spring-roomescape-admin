@@ -37,7 +37,7 @@ public class Reservation {
     }
 
     private void validateName(String value) {
-        if (value.isBlank()) {
+        if (value == null || value.isBlank()) {
             throw new IllegalArgumentException("[ERROR] 이름을 입력해주세요.");
         }
     }

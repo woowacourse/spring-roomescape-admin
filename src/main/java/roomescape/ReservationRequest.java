@@ -6,5 +6,5 @@ import jakarta.validation.constraints.NotNull;
 import java.time.LocalDate;
 import java.time.LocalTime;
 
-public record ReservationRequest(@NotBlank String name, @NotNull @Future LocalDate date, @Future @NotNull LocalTime time) {
+public record ReservationRequest(@NotBlank String name, @NotNull @Future LocalDate date, @NotNull LocalTime time) {
 }

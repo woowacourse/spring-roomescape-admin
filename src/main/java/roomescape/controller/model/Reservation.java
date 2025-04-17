@@ -34,7 +34,10 @@ public record Reservation(
         }
     }
 
-    public static Reservation of(Long id, Reservation reservation) {
-        return new Reservation(id, reservation.name, reservation.date, reservation.time);
+    public Reservation withId(Long id) {
+        if (id == null) {
+            throw new IllegalArgumentException("[ERROR]  예약 필수 정보가 누락되었습니다. id: " + id);
+        }
+        return new Reservation(id, name, date, time);
     }
 }

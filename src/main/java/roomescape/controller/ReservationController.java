@@ -20,7 +20,7 @@ import roomescape.controller.model.Reservation;
 @RequestMapping("/reservations")
 public class ReservationController {
 
-    private final AtomicLong id = new AtomicLong(0L);
+    private final AtomicLong autoIncrementId = new AtomicLong(0L);
     private final Map<Long, Reservation> reservations = new ConcurrentHashMap<>();
 
     @GetMapping
@@ -30,14 +30,14 @@ public class ReservationController {
 
     @PostMapping
     public ResponseEntity<Reservation> createReservation(@RequestBody Reservation reservation) {
-        Long generatedId = id.incrementAndGet();
-        reservations.put(generatedId, Reservation.of(generatedId, reservation));
-        return ResponseEntity.ok(reservations.get(generatedId));
+        Long id = autoIncrementId.incrementAndGet();
+        reservations.put(id, reservation.withId(id));
+        return ResponseEntity.ok(reservations.get(id));
     }
 
-    @DeleteMapping("/{id}")
-    public ResponseEntity<Void> deleteReservation(@PathVariable Long id) {
-        reservations.remove(id);
+    @DeleteMapping("/{reservationId}")
+    public ResponseEntity<Void> deleteReservation(@PathVariable Long reservationId) {
+        reservations.remove(reservationId);
         return ResponseEntity.ok().build();
     }
 }

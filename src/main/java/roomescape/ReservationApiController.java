@@ -1,6 +1,7 @@
 package roomescape;
 
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.time.LocalTime;
 import java.util.ArrayList;
 import java.util.List;
@@ -24,21 +25,26 @@ public class ReservationApiController {
     private final AtomicLong reservationId = new AtomicLong();
 
     @GetMapping
-    public ResponseEntity<List<Reservation>> getReservations() {
-        return ResponseEntity.ok(reservations);
+    public ResponseEntity<List<ReservationResponse>> getReservations() {
+        List<ReservationResponse> reservationResponses = reservations.stream()
+                .map(ReservationResponse::of)
+                .toList();
+
+        return ResponseEntity.ok(reservationResponses);
     }
 
     @PostMapping
-    public ResponseEntity<Reservation> createReservation(@RequestBody Map<String, String> newReservation) {
-
+    public ResponseEntity<ReservationResponse> createReservation(@RequestBody Map<String, String> newReservation) {
         String name = newReservation.get("name");
         LocalDate date = LocalDate.parse(newReservation.get("date"));
         LocalTime time = LocalTime.parse(newReservation.get("time"));
 
-        Reservation created = new Reservation(reservationId.incrementAndGet(), name, date, time);
+        Reservation created = new Reservation(reservationId.incrementAndGet(), name, LocalDateTime.of(date, time));
         reservations.add(created);
 
-        return ResponseEntity.ok(created);
+        return ResponseEntity.ok(
+                ReservationResponse.of(created)
+        );
     }
 
     @DeleteMapping("{id}")

@@ -6,6 +6,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.DeleteMapping;
+import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -41,22 +42,25 @@ public class RoomescapeController {
     @PostMapping("/reservations")
     public ResponseEntity<Reservation> createReservation(@Valid @RequestBody ReservationRequest request) {
         final Reservation reservation = reservationManager.createReservation(request);
-
-        try {
-            reservations.add(reservation);
-        } catch (final IllegalStateException e) {
-            return ResponseEntity.badRequest().build();
-        }
+        reservations.add(reservation);
         return ResponseEntity.ok(reservation);
     }
 
     @DeleteMapping("/reservations/{id}")
     public ResponseEntity<Void> deleteReservation(@PathVariable Long id) {
-        try {
-            reservations.removeById(id);
-        } catch (IllegalArgumentException e) {
-            return ResponseEntity.badRequest().build();
-        }
+        reservations.removeById(id);
         return ResponseEntity.ok().build();
+    }
+
+    @ExceptionHandler(IllegalArgumentException.class)
+    public ResponseEntity<Void> handleIllegalException(IllegalArgumentException e) {
+        System.out.println("IllegalArgumentException occurred: " + e.getMessage());
+        return ResponseEntity.badRequest().build();
+    }
+
+    @ExceptionHandler(IllegalStateException.class)
+    public ResponseEntity<Void> handleIllegalException(IllegalStateException e) {
+        System.out.println("IllegalStateException occurred: " + e.getMessage());
+        return ResponseEntity.internalServerError().build();
     }
 }

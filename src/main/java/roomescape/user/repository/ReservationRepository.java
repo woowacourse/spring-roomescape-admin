@@ -34,4 +34,8 @@ public class ReservationRepository {
     public void delete(final Reservation reservation) {
         reservations.remove(reservation);
     }
+
+    public void clear() {
+        reservations.clear();
+    }
 }

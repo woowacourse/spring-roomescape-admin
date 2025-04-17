@@ -3,6 +3,7 @@ package roomescape.reservation.controller;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.BDDMockito.given;
 import static org.mockito.BDDMockito.willDoNothing;
+import static org.mockito.BDDMockito.willThrow;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.delete;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
@@ -25,6 +26,7 @@ import org.springframework.test.context.bean.override.mockito.MockitoBean;
 import org.springframework.test.web.servlet.MockMvc;
 import roomescape.reservation.dto.ReservationRequestDto;
 import roomescape.reservation.entity.Reservation;
+import roomescape.reservation.exception.EntityNotFoundException;
 import roomescape.reservation.repository.ReservationRepository;
 
 @WebMvcTest(controllers = ReservationController.class)
@@ -92,9 +94,22 @@ class ReservationControllerTest {
         willDoNothing().given(reservationRepository).deleteById(id);
 
         // when & then
-        mvc.perform(delete("/reservations/{id}", id)
-        ).andExpect(status().isNoContent());
+        mvc.perform(delete("/reservations/{id}", id))
+                .andExpect(status().isNoContent());
+    }
 
+    @DisplayName("삭제할 예약 정보가 없다면 404 에러 코드를 반환한다")
+    @Test
+    void test4() throws Exception {
+        // given
+        long id = 1L;
+
+        willThrow(new EntityNotFoundException(""))
+                .given(reservationRepository).deleteById(id);
+
+        // when & then
+        mvc.perform(delete("/reservations/{id}", id))
+                .andExpect(status().isNotFound());
     }
 
 }

@@ -8,7 +8,7 @@ import org.springframework.test.annotation.DirtiesContext;
 
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.DEFINED_PORT)
 @DirtiesContext(classMode = DirtiesContext.ClassMode.BEFORE_EACH_TEST_METHOD)
-public class ReservationControllerTest {
+public class ViewControllerTest {
 
     @Test
     @DisplayName("/admin으로 요청시 메인 페이지 응답")
@@ -21,7 +21,7 @@ public class ReservationControllerTest {
 
     @Test
     @DisplayName("/admin/reservation 요청 시 예약 관리 페이지 응답")
-    void readReservation() {
+    void getReservationPage() {
         RestAssured.given().log().all()
                 .when().get("/admin/reservation")
                 .then().log().all()

@@ -11,6 +11,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
+import roomescape.dto.ReservationRequestDto;
 import roomescape.entity.Reservation;
 
 @RestController
@@ -27,8 +28,9 @@ public class ReservationRestController {
 
     @PostMapping("/reservations")
     @ResponseBody
-    public Reservation postReservation(@RequestBody Reservation reservation) {
-        Reservation newReservation = Reservation.toEntity(reservation, index.getAndIncrement());
+    public Reservation postReservation(@RequestBody ReservationRequestDto requestDto) {
+        Long id = index.getAndIncrement();
+        Reservation newReservation = requestDto.toEntity(id);
         reservations.add(newReservation);
         return newReservation;
     }

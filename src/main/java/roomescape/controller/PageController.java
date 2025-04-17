@@ -14,4 +14,9 @@ public class PageController {
     String reservation() {
         return "admin/reservation-legacy";
     }
+
+    @GetMapping()
+    String welcomePage() {
+        return "welcomePage";
+    }
 }

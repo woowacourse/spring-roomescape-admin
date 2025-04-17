@@ -10,11 +10,11 @@ import org.springframework.test.annotation.DirtiesContext;
 
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.DEFINED_PORT)
 @DirtiesContext(classMode = DirtiesContext.ClassMode.BEFORE_EACH_TEST_METHOD)
-class AdminControllerTest {
+class AdminPageControllerTest {
 
     @DisplayName("관리자 홈 화면 핵심 태그 존재 여부를 확인한다.")
     @Test
-    void containsCoreTagsInAdmin() {
+    void containsCoreTagsInAdminTest() {
         RestAssured.given().log().all()
                 .when().get("/admin")
                 .then().log().all()

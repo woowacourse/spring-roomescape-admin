@@ -15,7 +15,7 @@ import org.springframework.test.annotation.DirtiesContext;
 
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.DEFINED_PORT)
 @DirtiesContext(classMode = DirtiesContext.ClassMode.BEFORE_EACH_TEST_METHOD)
-class ReservationControllerTest {
+class ReservationApiControllerTest {
 
     @DisplayName("예약 목록을 조회할 수 있다.")
     @Test

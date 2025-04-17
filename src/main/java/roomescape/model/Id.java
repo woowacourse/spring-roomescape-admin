@@ -5,6 +5,7 @@ import java.util.concurrent.atomic.AtomicLong;
 
 public class Id {
     private static final AtomicLong index = new AtomicLong(1);
+
     private final long value;
 
     public Id() {

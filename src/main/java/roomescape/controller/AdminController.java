@@ -17,7 +17,6 @@ import roomescape.model.Reservations;
 
 @Controller
 public class AdminController {
-
     private final Reservations reservations = new Reservations();
 
     @GetMapping("/admin")
@@ -40,14 +39,18 @@ public class AdminController {
 
     @PostMapping("/reservations")
     @ResponseBody
-    public ResponseEntity<Reservation> createReservation(@RequestBody ReservationRequestDto reservationRequest) {
+    public ResponseEntity<Reservation> createReservation(
+            @RequestBody ReservationRequestDto reservationRequest
+    ) {
         Reservation newReservation = Reservation.toEntity(reservationRequest);
         reservations.add(newReservation);
         return ResponseEntity.ok().body(newReservation);
     }
 
     @DeleteMapping("/reservations/{id}")
-    public ResponseEntity<Void> deleteReservation(@PathVariable("id") Long idRequest) {
+    public ResponseEntity<Void> deleteReservation(
+            @PathVariable("id") Long idRequest
+    ) {
         reservations.deleteById(Id.toEntity(idRequest));
         return ResponseEntity.ok().build();
     }

@@ -4,6 +4,7 @@ import static org.hamcrest.Matchers.is;
 
 import io.restassured.RestAssured;
 import io.restassured.http.ContentType;
+import java.time.LocalDate;
 import java.util.HashMap;
 import java.util.Map;
 import org.junit.jupiter.api.Test;
@@ -42,8 +43,10 @@ public class MissionStepTest {
     @Test
     void 삼단계() {
         Map<String, String> params = new HashMap<>();
+        final LocalDate now = LocalDate.now();
+        final LocalDate localDate = now.plusDays(1);
         params.put("name", "브라운");
-        params.put("date", "2023-08-05");
+        params.put("date", localDate.toString());
         params.put("time", "15:40");
 
         RestAssured.given().log().all()

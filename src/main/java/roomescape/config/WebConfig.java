@@ -10,5 +10,6 @@ public class WebConfig implements WebMvcConfigurer {
     @Override
     public void addViewControllers(ViewControllerRegistry registry) {
         registry.addViewController("/admin").setViewName("forward:/admin.html");
+        registry.addViewController("/admin/reservation").setViewName("/admin/reservation-legacy");
     }
 }

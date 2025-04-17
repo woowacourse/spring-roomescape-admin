@@ -2,8 +2,6 @@ package roomescape.reservation.controller;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.NoSuchElementException;
-import java.util.Objects;
 import java.util.concurrent.atomic.AtomicLong;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -14,25 +12,28 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import roomescape.reservation.domain.Reservation;
+import roomescape.reservation.repository.ReservationRepository;
 
 @RestController
 @RequestMapping("/reservations")
 public class ReservationController {
-    private final AtomicLong id = new AtomicLong(1);
-    private final List<Reservation> reservations = new ArrayList<>();
+    private final ReservationRepository reservationRepository;
+
+    public ReservationController(final ReservationRepository reservationRepository) {
+        this.reservationRepository = reservationRepository;
+    }
+
 
     @GetMapping
     public ResponseEntity<List<Reservation>> getReservations() {
-        return ResponseEntity.ok(reservations);
+        return ResponseEntity.ok(reservationRepository.getAll());
     }
 
     @PostMapping
     public ResponseEntity<Reservation> createReservation(
             @RequestBody Reservation reservation
     ) {
-        Reservation newReservation = Reservation.toEntity(reservation, id.getAndIncrement());
-        reservations.add(newReservation);
-
+        Reservation newReservation = reservationRepository.put(reservation);
         return ResponseEntity.ok(newReservation);
     }
 
@@ -41,14 +42,9 @@ public class ReservationController {
             @PathVariable("id") Long id
     ) {
         try {
-            Reservation reservation = reservations.stream()
-                    .filter(it -> Objects.equals(it.getId(), id))
-                    .findAny()
-                    .orElseThrow();
-            reservations.remove(reservation);
-
+            reservationRepository.deleteById(id);
             return ResponseEntity.ok().build();
-        } catch (NoSuchElementException e) {
+        } catch (IllegalArgumentException e) {
             return ResponseEntity.notFound().build();
         }
     }

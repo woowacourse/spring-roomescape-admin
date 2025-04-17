@@ -1,4 +1,4 @@
-package roomescape;
+package roomescape.controller;
 
 import static org.hamcrest.CoreMatchers.is;
 
@@ -11,11 +11,12 @@ import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.annotation.DirtiesContext;
 import org.springframework.test.context.ContextConfiguration;
+import roomescape.RoomescapeApplication;
 
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.DEFINED_PORT)
 @DirtiesContext(classMode = DirtiesContext.ClassMode.BEFORE_EACH_TEST_METHOD)
 @ContextConfiguration(classes = RoomescapeApplication.class)
-public class AdminTest {
+public class AdminControllerTest {
 
     @Test
     @DisplayName("예약 관리 메인 페이지를 렌더링한다.")

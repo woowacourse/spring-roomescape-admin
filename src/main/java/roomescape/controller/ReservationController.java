@@ -9,26 +9,16 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RestController;
 import roomescape.dto.ReservationDto;
 import roomescape.model.Reservation;
 import roomescape.model.Reservations;
 
-@Controller
+@RestController
 public class ReservationController {
 
     private Reservations reservations = new Reservations();
-
     private AtomicLong index = new AtomicLong(1);
-
-    @GetMapping("/admin")
-    public String admin() {
-        return "admin/index";
-    }
-
-    @GetMapping("/admin/reservation")
-    public String reservation() {
-        return "admin/reservation-legacy";
-    }
 
     @GetMapping("/reservations")
     public ResponseEntity<List<Reservation>> reservations() {
@@ -37,7 +27,6 @@ public class ReservationController {
 
     @PostMapping("/reservations")
     public ResponseEntity<Reservation> addReservation(@RequestBody ReservationDto reservationDto) {
-        //RequestBody와 ModelAttribute 차이 알아보기
         Reservation newReservation = new Reservation(
                 index.getAndIncrement(),
                 reservationDto.getName(),

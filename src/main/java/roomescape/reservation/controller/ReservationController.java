@@ -2,8 +2,7 @@ package roomescape.reservation.controller;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.NoSuchElementException;
-import java.util.Objects;
+import java.util.Optional;
 import java.util.concurrent.atomic.AtomicLong;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -18,7 +17,9 @@ import roomescape.reservation.domain.Reservation;
 @RestController
 @RequestMapping("/reservations")
 public class ReservationController {
-    private final AtomicLong id = new AtomicLong(1);
+    private static final int INITIAL_VALUE = 1;
+
+    private final AtomicLong id = new AtomicLong(INITIAL_VALUE);
     private final List<Reservation> reservations = new ArrayList<>();
 
     @GetMapping
@@ -38,18 +39,17 @@ public class ReservationController {
 
     @DeleteMapping("/{id}")
     public ResponseEntity<Void> deleteReservations(
-            @PathVariable("id") Long id
+            @PathVariable("id") long id
     ) {
-        try {
-            Reservation reservation = reservations.stream()
-                    .filter(it -> Objects.equals(it.getId(), id))
-                    .findAny()
-                    .orElseThrow();
-            reservations.remove(reservation);
+        Optional<Reservation> reservation = reservations.stream()
+                .filter(it -> it.getId() == id)
+                .findFirst();
 
+        if (reservation.isPresent()) {
+            reservations.remove(reservation.get());
             return ResponseEntity.ok().build();
-        } catch (NoSuchElementException e) {
-            return ResponseEntity.notFound().build();
         }
+        return ResponseEntity.notFound().build();
     }
+
 }

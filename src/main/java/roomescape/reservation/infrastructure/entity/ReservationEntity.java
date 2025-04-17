@@ -3,19 +3,18 @@ package roomescape.reservation.infrastructure.entity;
 import roomescape.reservation.domain.Reservation;
 
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.time.LocalTime;
 
 public class ReservationEntity {
+    private final String name;
+    private final LocalDateTime dateTime;
     private Long id;
-    private String name;
-    private LocalDate date;
-    private LocalTime time;
 
-    private ReservationEntity(final Long id, final String name, final LocalDate date, final LocalTime time) {
+    public ReservationEntity(final Long id, final String name, final LocalDateTime dateTime) {
         this.id = id;
         this.name = name;
-        this.date = date;
-        this.time = time;
+        this.dateTime = dateTime;
     }
 
     public static ReservationEntity from(Reservation reservation) {
@@ -23,27 +22,15 @@ public class ReservationEntity {
     }
 
     public static ReservationEntity createWithoutId(String name, LocalDate date, LocalTime time) {
-        return new ReservationEntity(null, name, date, time);
+        return new ReservationEntity(null, name, LocalDateTime.of(date, time));
     }
 
     public Reservation toDomain() {
-        return Reservation.createWithId(id, name, date, time);
+        return Reservation.createWithId(id, name, dateTime);
     }
 
     public long getId() {
         return id;
-    }
-
-    public String getName() {
-        return name;
-    }
-
-    public LocalDate getDate() {
-        return date;
-    }
-
-    public LocalTime getTime() {
-        return time;
     }
 
     public void setId(final long id) {

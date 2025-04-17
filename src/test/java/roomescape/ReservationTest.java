@@ -5,6 +5,7 @@ import org.junit.jupiter.api.Test;
 import roomescape.reservation.domain.Reservation;
 
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.time.LocalTime;
 
 import static org.assertj.core.api.AssertionsForClassTypes.assertThatThrownBy;
@@ -17,7 +18,10 @@ class ReservationTest {
         //given
         //when
         //then
-        assertThatThrownBy(() -> Reservation.createWithId(1L, "Lemon", LocalDate.now(), LocalTime.of(7, 0)))
+        assertThatThrownBy(() -> Reservation.createWithId(1L, "Lemon",
+                LocalDateTime.of(
+                        LocalDate.now(),
+                        LocalTime.of(7, 0))))
                 .isInstanceOf(IllegalArgumentException.class)
                 .hasMessageContaining("예약할 수 없는 시간입니다.");
     }

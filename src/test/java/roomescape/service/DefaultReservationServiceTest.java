@@ -7,12 +7,11 @@ import org.mockito.Mockito;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.dao.DataAccessException;
-import roomescape.reservation.domain.Reservation;
 import roomescape.reservation.application.DefaultReservationService;
+import roomescape.reservation.domain.Reservation;
 import roomescape.reservation.domain.ReservationRepository;
 
-import java.time.LocalDate;
-import java.time.LocalTime;
+import java.time.LocalDateTime;
 import java.util.NoSuchElementException;
 import java.util.Optional;
 
@@ -43,7 +42,7 @@ class DefaultReservationServiceTest {
     void deleteUnknownDataAccessException() {
         // given
         long invalidId = 1L;
-        Reservation fakeReservation = Reservation.createWithId(invalidId, "테스트", LocalDate.now(), LocalTime.now());
+        Reservation fakeReservation = Reservation.createWithId(invalidId, "테스트", LocalDateTime.now());
 
         reservationService = new DefaultReservationService(reservationRepository);
 
@@ -52,7 +51,8 @@ class DefaultReservationServiceTest {
                 .thenReturn(Optional.of(fakeReservation));
 
         // 그런데 문제 발생 (커넥션 등)
-        Mockito.doThrow(new DataAccessException("DB Unknown Error") {})
+        Mockito.doThrow(new DataAccessException("DB Unknown Error") {
+                })
                 .when(reservationRepository).deleteById(invalidId);
 
         // when

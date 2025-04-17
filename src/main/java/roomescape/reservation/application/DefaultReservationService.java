@@ -26,13 +26,8 @@ public class DefaultReservationService implements ReservationService {
 
     @Override
     public ReservationResponse createReservation(final ReservationRequest reservationRequest) {
-        final Reservation reservation = Reservation.createWithoutId(
-                reservationRequest.name(),
-                reservationRequest.date(),
-                reservationRequest.time());
-
-        final Reservation saved = reservationRepository.save(reservation);
         return ReservationResponse.from(saved);
+        final Reservation saved = reservationRepository.save(reservationRequestDto.toDomain());
     }
 
     @Override

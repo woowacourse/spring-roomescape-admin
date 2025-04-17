@@ -9,4 +9,18 @@ public record Reservation(
         LocalDate date,
         LocalTime time
 ) {
+    public Reservation {
+        if (name == null) {
+            throw new IllegalArgumentException("이름은 null이 될 수 없습니다.");
+        }
+        if (name.isBlank()) {
+            throw new IllegalArgumentException("이름은 비어 있을 수 없습니다.");
+        }
+        if (date == null) {
+            throw new IllegalArgumentException("날짜는 null이 될 수 없습니다.");
+        }
+        if (time == null) {
+            throw new IllegalArgumentException("시간은 null이 될 수 없습니다.");
+        }
+    }
 }

@@ -1,7 +1,7 @@
-package roomescape.service;
+package roomescape.reservation.application;
 
-import roomescape.dto.ReservationRequest;
-import roomescape.dto.ReservationResponse;
+import roomescape.reservation.ui.dto.ReservationRequest;
+import roomescape.reservation.ui.dto.ReservationResponse;
 
 import java.util.List;
 

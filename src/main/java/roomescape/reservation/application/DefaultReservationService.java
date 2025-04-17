@@ -1,22 +1,21 @@
-package roomescape.service;
+package roomescape.reservation.application;
 
 import org.springframework.dao.DataAccessException;
 import org.springframework.stereotype.Service;
-import roomescape.Reservation;
-import roomescape.dto.ReservationRequest;
-import roomescape.dto.ReservationResponse;
-import roomescape.entity.ReservationEntity;
-import roomescape.repository.ReservationRepository;
+import roomescape.reservation.domain.Reservation;
+import roomescape.reservation.domain.ReservationRepository;
+import roomescape.reservation.ui.dto.ReservationRequest;
+import roomescape.reservation.ui.dto.ReservationResponse;
 
 import java.util.List;
 import java.util.NoSuchElementException;
 
 @Service
-public class ReservationServiceImpl implements ReservationService {
+public class DefaultReservationService implements ReservationService {
 
     private final ReservationRepository reservationRepository;
 
-    public ReservationServiceImpl(final ReservationRepository reservationRepository) {
+    public DefaultReservationService(final ReservationRepository reservationRepository) {
         this.reservationRepository = reservationRepository;
     }
 
@@ -27,12 +26,12 @@ public class ReservationServiceImpl implements ReservationService {
 
     @Override
     public ReservationResponse createReservation(final ReservationRequest reservationRequest) {
-        Reservation reservation = new Reservation(
+        final Reservation reservation = Reservation.createWithoutId(
                 reservationRequest.name(),
                 reservationRequest.date(),
                 reservationRequest.time());
 
-        final ReservationEntity saved = reservationRepository.save(reservation.toEntity());
+        final Reservation saved = reservationRepository.save(reservation);
         return ReservationResponse.from(saved);
     }
 

@@ -7,8 +7,9 @@ import org.mockito.Mockito;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.dao.DataAccessException;
-import roomescape.entity.ReservationEntity;
-import roomescape.repository.ReservationRepository;
+import roomescape.reservation.domain.Reservation;
+import roomescape.reservation.application.DefaultReservationService;
+import roomescape.reservation.domain.ReservationRepository;
 
 import java.time.LocalDate;
 import java.time.LocalTime;
@@ -18,10 +19,10 @@ import java.util.Optional;
 import static org.assertj.core.api.AssertionsForClassTypes.assertThatThrownBy;
 
 @SpringBootTest
-class ReservationServiceImplTest {
+class DefaultReservationServiceTest {
 
     @Autowired
-    private ReservationServiceImpl reservationService;
+    private DefaultReservationService reservationService;
 
     @Mock
     private ReservationRepository reservationRepository;
@@ -41,10 +42,10 @@ class ReservationServiceImplTest {
     @DisplayName("DataAccessException 발생 시 삭제 실패를 알린다")
     void deleteUnknownDataAccessException() {
         // given
-        long invalidId = 1;
-        ReservationEntity fakeReservation = new ReservationEntity(1L, "테스트", LocalDate.now(), LocalTime.now());
+        long invalidId = 1L;
+        Reservation fakeReservation = Reservation.createWithId(invalidId, "테스트", LocalDate.now(), LocalTime.now());
 
-        reservationService = new ReservationServiceImpl(reservationRepository);
+        reservationService = new DefaultReservationService(reservationRepository);
 
         // 저장된 상황
         Mockito.when(reservationRepository.findById(invalidId))

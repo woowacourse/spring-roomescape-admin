@@ -2,6 +2,7 @@ package roomescape;
 
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
+import roomescape.reservation.domain.Reservation;
 
 import java.time.LocalDate;
 import java.time.LocalTime;
@@ -16,7 +17,7 @@ class ReservationTest {
         //given
         //when
         //then
-        assertThatThrownBy(() -> new Reservation("Lemon", LocalDate.now(), LocalTime.of(7, 0)))
+        assertThatThrownBy(() -> Reservation.createWithId(1L, "Lemon", LocalDate.now(), LocalTime.of(7, 0)))
                 .isInstanceOf(IllegalArgumentException.class)
                 .hasMessageContaining("예약할 수 없는 시간입니다.");
     }

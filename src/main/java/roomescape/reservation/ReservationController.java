@@ -28,11 +28,14 @@ public class ReservationController {
 
     @PostMapping
     @ResponseBody
-    public ResponseEntity<Reservation> addReservation(@RequestBody ReservationDto reservationDto) {
-        Reservation reservation = new Reservation(index.getAndIncrement(), reservationDto.name(), reservationDto.date(),
-                reservationDto.time());
-        reservations.add(reservation);
-        return ResponseEntity.ok(reservation);
+    public ResponseEntity<Reservation> addReservation(@RequestBody ReservationRequest reservationRequest) {
+        try {
+            Reservation reservation = Reservation.from(reservationRequest, index.getAndIncrement());
+            reservations.add(reservation);
+            return ResponseEntity.ok(reservation);
+        } catch (Exception e) {
+            return ResponseEntity.badRequest().build();
+        }
     }
 
     @DeleteMapping("/{id}")

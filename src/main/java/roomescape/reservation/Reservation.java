@@ -35,4 +35,8 @@ public class Reservation {
     public LocalTime getTime() {
         return time;
     }
+
+    public static Reservation from(ReservationRequest reservationRequest, long index) {
+        return new Reservation(index, reservationRequest.name(), reservationRequest.date(), reservationRequest.time());
+    }
 }

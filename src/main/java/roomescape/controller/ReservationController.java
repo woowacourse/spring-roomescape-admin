@@ -1,8 +1,8 @@
 package roomescape.controller;
 
-import java.util.ArrayList;
 import java.util.List;
-import java.util.Objects;
+import java.util.Map;
+import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.atomic.AtomicLong;
 
 import org.springframework.http.ResponseEntity;
@@ -21,23 +21,23 @@ import roomescape.controller.model.Reservation;
 public class ReservationController {
 
     private final AtomicLong id = new AtomicLong(0L);
-    private final List<Reservation> reservations = new ArrayList<>();
+    private final Map<Long, Reservation> reservations = new ConcurrentHashMap<>();
 
     @GetMapping
     public ResponseEntity<List<Reservation>> reservations() {
-        return ResponseEntity.ok(reservations);
+        return ResponseEntity.ok(reservations.values().stream().toList());
     }
 
     @PostMapping
     public ResponseEntity<Reservation> createReservation(@RequestBody Reservation reservation) {
-        Reservation createdReservation = Reservation.of(id.incrementAndGet(), reservation);
-        reservations.add(createdReservation);
-        return ResponseEntity.ok(createdReservation);
+        Long generatedId = id.incrementAndGet();
+        reservations.put(generatedId, Reservation.of(generatedId, reservation));
+        return ResponseEntity.ok(reservations.get(generatedId));
     }
 
     @DeleteMapping("/{id}")
     public ResponseEntity<Void> deleteReservation(@PathVariable Long id) {
-        reservations.removeIf(each -> Objects.equals(each.id(), id));
+        reservations.remove(id);
         return ResponseEntity.ok().build();
     }
 }

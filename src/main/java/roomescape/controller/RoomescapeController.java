@@ -39,7 +39,7 @@ public class RoomescapeController {
     }
 
     @DeleteMapping("/reservations/{id}")
-    public ResponseEntity<Void> deleteReservation(@PathVariable final long id) {
+    public ResponseEntity<Void> deleteReservation(@PathVariable(name = "id") final long id) {
         try {
             reservationRepository.deleteById(id);
             return ResponseEntity.ok().build();

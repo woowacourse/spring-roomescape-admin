@@ -23,7 +23,7 @@ public class RoomescapeController {
     }
 
     @GetMapping("/admin/reservation")
-    public String showReservations() {
+    public String showAllReservation() {
         return "admin/reservation-legacy";
     }
 

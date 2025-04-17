@@ -7,6 +7,7 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.server.ResponseStatusException;
 import roomescape.dto.CreateReservationDto;
 import roomescape.model.Reservation;
+
 import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.atomic.AtomicLong;
@@ -34,14 +35,14 @@ public class ReservationController {
     }
 
     @PostMapping("/reservations")
-    public ResponseEntity<Reservation> addReservation(@RequestBody CreateReservationDto reservationDto){
-        Reservation reservation = new Reservation(index.getAndIncrement(), reservationDto.name(),reservationDto.date(),reservationDto.time());
+    public ResponseEntity<Reservation> addReservation(@RequestBody CreateReservationDto reservationDto) {
+        Reservation reservation = new Reservation(index.getAndIncrement(), reservationDto.name(), reservationDto.date(), reservationDto.time());
         reservations.add(reservation);
         return ResponseEntity.ok().body(reservation);
     }
 
     @DeleteMapping("/reservations/{id}")
-    public ResponseEntity<Void> deleteReservation(@PathVariable("id") Long id){
+    public ResponseEntity<Void> deleteReservation(@PathVariable("id") Long id) {
         Reservation deleteReservation = reservations.stream()
                 .filter(reservation -> reservation.id() == id)
                 .findAny()

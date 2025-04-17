@@ -6,8 +6,8 @@ import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 import roomescape.Reservation;
 import roomescape.ReservationRepository;
-import roomescape.dto.request.ReservationCreateRequest;
-import roomescape.dto.response.ReservationResponse;
+import roomescape.controller.dto.request.ReservationCreateRequest;
+import roomescape.controller.dto.response.ReservationResponse;
 
 import java.util.List;
 

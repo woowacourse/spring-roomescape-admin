@@ -15,7 +15,7 @@ public class Reservations {
         return newReservation;
     }
 
-    public void delete(Long id) {
+    public void deleteById(Long id) {
         Reservation selectedReservation = reservations.stream()
                 .filter(reservation -> reservation.getId().equals(id))
                 .findFirst()

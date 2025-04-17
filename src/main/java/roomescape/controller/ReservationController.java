@@ -2,7 +2,6 @@ package roomescape.controller;
 
 import java.time.LocalDateTime;
 import java.util.List;
-import java.util.concurrent.atomic.AtomicLong;
 
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -21,7 +20,6 @@ import roomescape.model.Reservations;
 public class ReservationController {
 
     private final Reservations reservations = new Reservations();
-    private final AtomicLong index = new AtomicLong(1);
 
     @GetMapping("/reservations")
     public ResponseEntity<List<Reservation>> reservations() {
@@ -29,24 +27,22 @@ public class ReservationController {
     }
 
     @PostMapping("/reservations")
-    public ResponseEntity<Reservation> addReservation(@RequestBody ReservationDto reservationDto) {
+    public ResponseEntity<Reservation> addReservation(@RequestBody final ReservationDto reservationDto) {
         try {
             ReservationDateTime reservationDateTime = new ReservationDateTime(
                     LocalDateTime.of(reservationDto.date(), reservationDto.time())
             );
-            Reservation newReservation = new Reservation(
-                    index.getAndIncrement(),
-                    reservationDto.name(),
-                    reservationDateTime);
-            reservations.add(newReservation);
-            return ResponseEntity.ok(newReservation);
+
+            Long reservationId = reservations.addReservation(reservationDto.name(), reservationDateTime);
+            Reservation reservation = reservations.findById(reservationId);
+            return ResponseEntity.ok(reservation);
         } catch (NullPointerException | IllegalArgumentException e) {
             return ResponseEntity.badRequest().build();
         }
     }
 
     @DeleteMapping("/reservations/{id}")
-    public ResponseEntity<Void> deleteReservation(@PathVariable("id") Long id) {
+    public ResponseEntity<Void> deleteReservation(@PathVariable("id") final Long id) {
         try {
             reservations.removeById(id);
             return ResponseEntity.ok().build();

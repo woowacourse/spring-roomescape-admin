@@ -4,7 +4,6 @@ import jakarta.validation.Valid;
 import java.util.List;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
-import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -29,8 +28,7 @@ public class RoomescapeController {
     }
 
     @GetMapping("/admin/reservation")
-    public String getReservationPage(Model model) {
-        model.addAttribute("reservations", reservations);
+    public String getReservationPage() {
         return "admin/reservation-legacy";
     }
 

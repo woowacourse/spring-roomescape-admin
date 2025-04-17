@@ -6,6 +6,7 @@ import io.restassured.RestAssured;
 import io.restassured.http.ContentType;
 import java.util.HashMap;
 import java.util.Map;
+import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.annotation.DirtiesContext;
@@ -14,16 +15,18 @@ import org.springframework.test.annotation.DirtiesContext;
 @DirtiesContext(classMode = DirtiesContext.ClassMode.BEFORE_EACH_TEST_METHOD)
 public class MissionStepTest {
 
+    @DisplayName("루트 페이지에 연결 가능하다.")
     @Test
-    void 일단계() {
+    void connect_route_page() {
         RestAssured.given().log().all()
             .when().get("/")
             .then().log().all()
             .statusCode(200);
     }
 
+    @DisplayName("관리자는 모든 예약을 조회할 수 있다.")
     @Test
-    void 이단계() {
+    void admin_can_check_all_reservation() {
         RestAssured.given().log().all()
             .when().get("/admin/reservation")
             .then().log().all()
@@ -36,8 +39,9 @@ public class MissionStepTest {
             .body("size()", is(0));
     }
 
+    @DisplayName("예약을 추가할 수 있다.")
     @Test
-    void 삼단계() {
+    void add_reservation() {
         Map<String, String> params = new HashMap<>();
         params.put("name", "브라운");
         params.put("date", "2023-08-05");

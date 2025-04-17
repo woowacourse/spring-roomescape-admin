@@ -50,8 +50,8 @@ public class RoomescapeControllerTest {
     @Test
     void 모든_예약_정보를_정상적으로_반환한다() {
         // given
-        final Reservation 윌슨 = new Reservation("윌슨", LocalDate.now(), LocalTime.now());
-        final Reservation 히로 = new Reservation("히로", LocalDate.now(), LocalTime.now());
+        final Reservation 윌슨 = new Reservation("윌슨", LocalDate.now().plusDays(1), LocalTime.now());
+        final Reservation 히로 = new Reservation("히로", LocalDate.now().plusDays(1), LocalTime.now());
         윌슨.setId(1L);
         히로.setId(2L);
         List<Reservation> reservations = List.of(
@@ -75,7 +75,7 @@ public class RoomescapeControllerTest {
     void 이름이_빈_값인_경우_400을_반환한다() {
         Map<String, String> params = new HashMap<>();
         params.put("name", " ");
-        params.put("date", "2023-08-05");
+        params.put("date", LocalDate.now().plusDays(1).toString());
         params.put("time", "15:40");
 
         RestAssuredMockMvc.given().log().all()
@@ -90,7 +90,7 @@ public class RoomescapeControllerTest {
     void 시간이_형식에_맞지_않는_경우_400을_반환한다() {
         Map<String, String> params = new HashMap<>();
         params.put("name", "브라운");
-        params.put("date", "2023-08-05");
+        params.put("date", LocalDate.now().plusDays(1).toString());
         params.put("time", "15 40");
 
         RestAssuredMockMvc.given().log().all()
@@ -106,6 +106,51 @@ public class RoomescapeControllerTest {
         RestAssuredMockMvc.given().log().all()
                 .pathParam("id", "일")
                 .when().delete("/reservations/{id}")
+                .then().log().all()
+                .statusCode(400);
+    }
+
+    @Test
+    void 이름이_4글자를_초과하면_400을_반환한다() {
+        Map<String, String> params = new HashMap<>();
+        params.put("name", "브라우우운");
+        params.put("date", LocalDate.now().plusDays(1).toString());
+        params.put("time", "15:40");
+
+        RestAssuredMockMvc.given().log().all()
+                .contentType(ContentType.JSON)
+                .body(params)
+                .when().post("/reservations")
+                .then().log().all()
+                .statusCode(400);
+    }
+
+    @Test
+    void 예약_날짜가_현재보다_이전이면_400을_반환한다() {
+        Map<String, String> params = new HashMap<>();
+        params.put("name", "브라운");
+        params.put("date", "2023-08-05");
+        params.put("time", "15:40");
+
+        RestAssuredMockMvc.given().log().all()
+                .contentType(ContentType.JSON)
+                .body(params)
+                .when().post("/reservations")
+                .then().log().all()
+                .statusCode(400);
+    }
+
+    @Test
+    void 예약_시각이_현재보다_이전이면_400을_반환한다() {
+        Map<String, String> params = new HashMap<>();
+        params.put("name", "브라운");
+        params.put("date", LocalDate.now().toString());
+        params.put("time", LocalTime.now().minusHours(1).toString());
+
+        RestAssuredMockMvc.given().log().all()
+                .contentType(ContentType.JSON)
+                .body(params)
+                .when().post("/reservations")
                 .then().log().all()
                 .statusCode(400);
     }

@@ -21,7 +21,8 @@
  ┃ ┃ ┣ 📜AdminViewController.java
  ┃ ┃ ┗ 📜ReservationApiController.java
  ┃ ┣ 📂domain
- ┃ ┃ ┗ 📜Reservation.java
+ ┃ ┃ ┣ 📜Reservation.java
+ ┃ ┃ ┗ 📜Reservations.java
  ┃ ┣ 📂dto
  ┃ ┃ ┣ 📜ReservationRequest.java
  ┃ ┃ ┗ 📜ReservationResponse.java

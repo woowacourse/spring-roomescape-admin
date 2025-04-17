@@ -8,15 +8,13 @@ import org.springframework.web.bind.annotation.RequestMapping;
 @RequestMapping("/admin")
 public class AdminController {
 
-    private static final String VIEW_PREFIX = "admin/";
-
     @GetMapping
     public String admin() {
-        return VIEW_PREFIX + "index.html";
+        return "admin/index";
     }
 
     @GetMapping("/reservation")
     public String reservation() {
-        return VIEW_PREFIX + "reservation-legacy.html";
+        return "admin/reservation-legacy";
     }
 }

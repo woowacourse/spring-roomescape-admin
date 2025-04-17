@@ -1,9 +1,9 @@
-package roomescape.reservation;
+package roomescape.reservation.model;
 
 import java.time.LocalDate;
 import java.time.LocalTime;
 
-public class Reservation {
+public final class Reservation {
 
     private final long id;
     private final String name;

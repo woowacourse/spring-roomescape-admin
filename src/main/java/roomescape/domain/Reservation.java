@@ -12,6 +12,7 @@ public class Reservation {
 
     public Reservation(final String name, final LocalDate date, final LocalTime time) {
         validateNameLength(name);
+        validateDateTime(date, time);
         this.name = name;
         this.date = date;
         this.time = time;
@@ -40,6 +41,12 @@ public class Reservation {
     private void validateNameLength(final String name) {
         if (name.length() > 4) {
             throw new IllegalArgumentException("예약자의 이름은 4글자를 초과할 수 없습니다.");
+        }
+    }
+
+    private void validateDateTime(final LocalDate date, final LocalTime time) {
+        if (date.isBefore(LocalDate.now()) || date.isEqual(LocalDate.now()) && time.isBefore(LocalTime.now())) {
+            throw new IllegalArgumentException("예약 날짜와 시각은 현재보다 이전일 수 없습니다.");
         }
     }
 }

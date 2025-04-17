@@ -82,4 +82,13 @@ class MissionStepTest {
                 .statusCode(200)
                 .body("size()", is(0));
     }
+
+    @DisplayName("없는 회원 정보를 삭제할 시 예외가 발생한다")
+    @Test
+    void reservation_delete_exception() {
+        RestAssured.given().log().all()
+                .when().delete("/reservations/1")
+                .then().log().all()
+                .statusCode(404);
+    }
 }

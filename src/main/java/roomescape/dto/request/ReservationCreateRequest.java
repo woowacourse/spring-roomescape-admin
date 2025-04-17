@@ -25,7 +25,7 @@ public record ReservationCreateRequest(
         }
     }
 
-    public Reservation toDomain(Long id) {
-        return new Reservation(id, name, date, time);
+    public Reservation toDomain() {
+        return new Reservation(null, name, date, time);
     }
 }

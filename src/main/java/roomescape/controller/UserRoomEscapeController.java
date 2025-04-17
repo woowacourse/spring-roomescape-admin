@@ -1,26 +1,25 @@
 package roomescape.controller;
 
+import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 import roomescape.Reservation;
+import roomescape.ReservationRepository;
 import roomescape.dto.request.ReservationCreateRequest;
 import roomescape.dto.response.ReservationResponse;
 
-import java.util.ArrayList;
 import java.util.List;
-import java.util.Objects;
-import java.util.concurrent.atomic.AtomicLong;
 
 @Controller
+@RequiredArgsConstructor
 public class UserRoomEscapeController {
 
-    private static final AtomicLong autoIncrement = new AtomicLong(0);
-    private static final List<Reservation> reservations = new ArrayList<>();
+    private final ReservationRepository reservationRepository;
 
     @GetMapping("/reservations")
     public ResponseEntity<List<ReservationResponse>> reservations() {
-        List<ReservationResponse> response = reservations.stream()
+        List<ReservationResponse> response = reservationRepository.getAll().stream()
                 .map(ReservationResponse::from)
                 .toList();
 
@@ -29,31 +28,24 @@ public class UserRoomEscapeController {
 
     @PostMapping("/reservations")
     public ResponseEntity<ReservationResponse> createReservation(@RequestBody ReservationCreateRequest request) {
-        Reservation newReservation = request.toDomain(autoIncrement.incrementAndGet());
+        Reservation reservation = request.toDomain();
 
-        reservations.add(newReservation);
+        Reservation savedReservation = reservationRepository.save(reservation);
 
-        return ResponseEntity.ok(ReservationResponse.from(newReservation));
+        return ResponseEntity.ok(ReservationResponse.from(savedReservation));
     }
 
     @DeleteMapping("/reservations/{reservationId}")
     public ResponseEntity<Void> deleteReservation(@PathVariable("reservationId") Long reservationId) {
         Reservation target = getReservation(reservationId);
 
-        reservations.remove(target);
+        reservationRepository.remove(target);
 
         return ResponseEntity.ok().build();
     }
 
-    public static void clear() {
-        reservations.clear();
-        autoIncrement.set(0);
-    }
-
     private Reservation getReservation(Long reservationId) {
-        return reservations.stream()
-                .filter(reservation -> Objects.equals(reservation.id(), reservationId))
-                .findFirst()
+        return reservationRepository.findById(reservationId)
                 .orElseThrow(() -> new IllegalArgumentException("id에 해당하는 예약이 존재하지 않습니다."));
     }
 }

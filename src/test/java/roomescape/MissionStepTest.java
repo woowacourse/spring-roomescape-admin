@@ -5,21 +5,24 @@ import io.restassured.http.ContentType;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.context.annotation.Import;
 import org.springframework.test.annotation.DirtiesContext;
-import roomescape.controller.UserRoomEscapeController;
+import roomescape.config.TestConfig;
 
 import java.util.HashMap;
 import java.util.Map;
+import roomescape.fake.FakeReservationRepository;
 
 import static org.hamcrest.core.Is.is;
 
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.DEFINED_PORT)
 @DirtiesContext(classMode = DirtiesContext.ClassMode.BEFORE_EACH_TEST_METHOD)
+@Import(TestConfig.class)
 public class MissionStepTest {
 
     @BeforeEach
     void setUp() {
-        UserRoomEscapeController.clear();
+        FakeReservationRepository.clear();
     }
 
     @Test

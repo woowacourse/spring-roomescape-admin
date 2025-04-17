@@ -10,6 +10,8 @@ public record Reservation(
     LocalTime time
 ) {
 
+    public static final String ERROR_MESSAGE_FORMAT = "[ERROR]  예약 필수 정보가 누락되었습니다. %s: %s";
+
     public Reservation {
         validateName(name);
         validateDate(date);
@@ -18,25 +20,25 @@ public record Reservation(
 
     private void validateName(String name) {
         if (name == null || name.isBlank()) {
-            throw new IllegalArgumentException("[ERROR]  예약 필수 정보가 누락되었습니다. name: " + name);
+            throw new IllegalArgumentException(String.format(ERROR_MESSAGE_FORMAT, "name", name));
         }
     }
 
     private void validateDate(LocalDate date) {
         if (date == null) {
-            throw new IllegalArgumentException("[ERROR]  예약 필수 정보가 누락되었습니다. date: " + date);
+            throw new IllegalArgumentException(String.format(ERROR_MESSAGE_FORMAT, "date", date));
         }
     }
 
     private void validateTime(LocalTime time) {
         if (time == null) {
-            throw new IllegalArgumentException("[ERROR]  예약 필수 정보가 누락되었습니다. time: " + time);
+            throw new IllegalArgumentException(String.format(ERROR_MESSAGE_FORMAT, "time", time));
         }
     }
 
     public Reservation withId(Long id) {
         if (id == null) {
-            throw new IllegalArgumentException("[ERROR]  예약 필수 정보가 누락되었습니다. id: " + id);
+            throw new IllegalArgumentException(String.format(ERROR_MESSAGE_FORMAT, "id", id));
         }
         return new Reservation(id, name, date, time);
     }

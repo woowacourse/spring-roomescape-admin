@@ -1,6 +1,7 @@
 package roomescape.reservation;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 import java.util.concurrent.atomic.AtomicLong;
 import org.springframework.http.ResponseEntity;
@@ -17,7 +18,7 @@ import org.springframework.web.bind.annotation.RestController;
 public class ReservationController {
 
     private final AtomicLong index = new AtomicLong(1L);
-    private final List<Reservation> reservations = new ArrayList<>();
+    private final List<Reservation> reservations = Collections.synchronizedList(new ArrayList<>());
 
     @GetMapping
     public List<Reservation> getReservations() {

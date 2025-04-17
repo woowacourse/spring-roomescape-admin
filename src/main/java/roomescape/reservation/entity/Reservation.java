@@ -1,4 +1,4 @@
-package roomescape.reservation.domain;
+package roomescape.reservation.entity;
 
 import java.time.LocalDateTime;
 
@@ -12,6 +12,10 @@ public class Reservation {
         this.id = id;
         this.name = name;
         this.dateTime = dateTime;
+    }
+
+    public boolean sameId(Reservation reservation) {
+        return sameId(reservation.id);
     }
 
     public boolean sameId(long id) {

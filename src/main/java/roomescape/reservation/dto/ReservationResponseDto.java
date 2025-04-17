@@ -4,7 +4,7 @@ import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonFormat.Shape;
 import java.time.LocalDate;
 import java.time.LocalTime;
-import roomescape.reservation.domain.Reservation;
+import roomescape.reservation.entity.Reservation;
 
 public record ReservationResponseDto(Long id, String name, LocalDate date,
                                      @JsonFormat(shape = Shape.STRING, pattern = "HH:mm") LocalTime time) {

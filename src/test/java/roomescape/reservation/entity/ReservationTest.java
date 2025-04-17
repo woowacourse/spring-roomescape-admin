@@ -1,4 +1,4 @@
-package roomescape.reservation.domain;
+package roomescape.reservation.entity;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
@@ -9,7 +9,7 @@ import org.junit.jupiter.params.provider.CsvSource;
 
 class ReservationTest {
 
-    @DisplayName("같은 아이디는 true를 반환한다.")
+    @DisplayName("같은 아이디를 처리할 수 있다.")
     @ParameterizedTest
     @CsvSource(value = {"1,true", "2,false"}, delimiter = ',')
     void test1(long id, boolean expected) {

@@ -26,6 +26,10 @@ public class Reservation {
         );
     }
 
+    public boolean isSameId(Id id) {
+        return this.id.equals(id);
+    }
+
     public long getId() {
         return id.getValue();
     }
@@ -40,9 +44,5 @@ public class Reservation {
 
     public LocalTime getTime() {
         return time;
-    }
-
-    public boolean isSameId(Id id) {
-        return this.id.equals(id);
     }
 }

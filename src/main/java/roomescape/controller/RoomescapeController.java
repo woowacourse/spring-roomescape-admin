@@ -18,7 +18,6 @@ public class RoomescapeController {
 
     private final ReservationService reservationService;
 
-    @Autowired
     public RoomescapeController(ReservationService reservationService) {
         this.reservationService = reservationService;
     }

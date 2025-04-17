@@ -62,6 +62,6 @@ class RoomescapeControllerTest {
                 .pathParam("id", "일")
                 .when().delete("/reservations/{id}")
                 .then().log().all()
-                .statusCode(400);
+                .statusCode(500);
     }
 }

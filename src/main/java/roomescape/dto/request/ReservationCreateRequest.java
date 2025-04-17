@@ -26,6 +26,6 @@ public record ReservationCreateRequest(
     }
 
     public Reservation toDomain() {
-        return new Reservation(null, name, date, time);
+        return new Reservation(name, date, time);
     }
 }

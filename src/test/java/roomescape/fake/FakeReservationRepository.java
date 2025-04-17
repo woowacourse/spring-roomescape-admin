@@ -27,7 +27,7 @@ public class FakeReservationRepository implements ReservationRepository {
     @Override
     public Optional<Reservation> findById(Long id) {
         return REPOSITORY.stream()
-                .filter(reservation -> Objects.equals(reservation.id(), id))
+                .filter(reservation -> reservation.isEqualId(id))
                 .findFirst();
     }
 

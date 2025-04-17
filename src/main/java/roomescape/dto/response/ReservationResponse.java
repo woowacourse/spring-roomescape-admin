@@ -12,7 +12,7 @@ public record ReservationResponse(
 ) {
 
     public static ReservationResponse from(Reservation reservation) {
-        String time = DataTimeFormatterUtils.formatToHourMinute(reservation.time());
-        return new ReservationResponse(reservation.id(), reservation.name(), reservation.date(), time);
+        String time = DataTimeFormatterUtils.formatToHourMinute(reservation.getTime());
+        return new ReservationResponse(reservation.getId(), reservation.getName(), reservation.getDate(), time);
     }
 }

@@ -22,11 +22,11 @@ public class ReservationApiController {
 
     @GetMapping
     public ResponseEntity<List<ReservationResponse>> getReservations() {
-        List<ReservationResponse> reservationResponses = reservations.stream()
+        List<ReservationResponse> responses = reservations.stream()
                 .map(ReservationResponse::of)
                 .toList();
 
-        return ResponseEntity.ok(reservationResponses);
+        return ResponseEntity.ok(responses);
     }
 
     @PostMapping

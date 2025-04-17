@@ -10,6 +10,7 @@ public record ReservationResponse(
         String date,
         String time
 ) {
+
     public static ReservationResponse of(Reservation reservation) {
         LocalDate date = reservation.getDateTime().toLocalDate();
         LocalTime time = reservation.getDateTime().toLocalTime();

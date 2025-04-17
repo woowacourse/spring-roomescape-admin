@@ -50,7 +50,7 @@ public class AdminController {
     @DeleteMapping("/reservations/{id}")
     public ResponseEntity<Void> deleteReservation(@PathVariable("id") Long id) {
         Reservation reservation = reservations.stream()
-                .filter(reserve -> Objects.equals(reserve.getId(), id))
+                .filter(reserve -> Objects.equals(reserve.id(), id))
                 .findFirst()
                 .orElseThrow(RuntimeException::new);
 

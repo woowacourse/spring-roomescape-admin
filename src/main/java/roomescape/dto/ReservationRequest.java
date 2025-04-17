@@ -11,7 +11,7 @@ public record ReservationRequest(
         String time
 ) {
 
-    public Reservation toEntity(Long id) {
+    public Reservation toReservation(Long id) {
         LocalDateTime dateTime = LocalDateTime.of(
                 LocalDate.parse(this.date),
                 LocalTime.parse(this.time)

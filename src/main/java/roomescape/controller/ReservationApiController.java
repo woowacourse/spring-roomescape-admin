@@ -34,7 +34,7 @@ public class ReservationApiController {
 
     @PostMapping
     public ResponseEntity<ReservationResponse> createReservation(@RequestBody ReservationRequest request) {
-        Reservation created = request.toEntity(reservationId.incrementAndGet());
+        Reservation created = request.toReservation(reservationId.incrementAndGet());
         reservations.add(created);
 
         return ResponseEntity.ok(

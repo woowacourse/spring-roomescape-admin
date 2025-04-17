@@ -4,14 +4,16 @@ import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.LocalTime;
 
-public record ReservationDateTime(
-        LocalDateTime dateTime
-) {
+public final class ReservationDateTime {
+
     public static final LocalTime START_RESERVATION_TIME = LocalTime.of(10, 0);
     public static final LocalTime LAST_RESERVATION_TIME = LocalTime.of(23, 0);
 
-    public ReservationDateTime {
+    private final LocalDateTime dateTime;
+
+    public ReservationDateTime(final LocalDateTime dateTime) {
         validate(dateTime);
+        this.dateTime = dateTime;
     }
 
     public static ReservationDateTime from(LocalDateTime dateTime) {

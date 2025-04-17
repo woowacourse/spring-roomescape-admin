@@ -14,18 +14,6 @@ public class Reservation {
         this.dateTime = dateTime;
     }
 
-    public Reservation(String name, LocalDateTime dateTime) {
-        this.name = name;
-        this.dateTime = dateTime;
-    }
-
-    public static Reservation toEntity(Long id, Reservation reservation) {
-        return new Reservation(
-                id,
-                reservation.getName(),
-                reservation.getDateTime());
-    }
-
     public long getId() {
         return id;
     }

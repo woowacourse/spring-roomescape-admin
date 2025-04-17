@@ -2,6 +2,8 @@ package roomescape.reservation.controller;
 
 import java.time.LocalDateTime;
 import java.util.List;
+import java.util.concurrent.atomic.AtomicLong;
+
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -18,6 +20,7 @@ import roomescape.reservation.repository.ReservationRepository;
 public class ReservationController {
 
     private final ReservationRepository reservationRepository;
+    private final AtomicLong index = new AtomicLong(1);
 
     public ReservationController(ReservationRepository reservationRepository) {
         this.reservationRepository = reservationRepository;
@@ -42,7 +45,7 @@ public class ReservationController {
     public ResponseEntity<ReservationResponseDto> add(@RequestBody ReservationRequestDto requestDto) {
         LocalDateTime localDateTime = LocalDateTime.of(requestDto.date(), requestDto.time());
 
-        Reservation reservation = new Reservation(requestDto.name(), localDateTime);
+        Reservation reservation = new Reservation(index.getAndIncrement(), requestDto.name(), localDateTime);
         Reservation saved = reservationRepository.save(reservation);
         ReservationResponseDto responseDto = ReservationResponseDto.toDto(saved);
 

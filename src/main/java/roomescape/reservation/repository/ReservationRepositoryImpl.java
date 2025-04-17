@@ -12,7 +12,6 @@ import roomescape.reservation.entity.Reservation;
 public class ReservationRepositoryImpl implements ReservationRepository {
 
     private final List<Reservation> reservations = new ArrayList<>();
-    private final AtomicLong index = new AtomicLong(1);
 
     public List<Reservation> findAll() {
         return reservations.stream()
@@ -26,9 +25,8 @@ public class ReservationRepositoryImpl implements ReservationRepository {
     }
 
     public Reservation save(Reservation reservation) {
-        Reservation reservationEntity = Reservation.toEntity(index.getAndIncrement(), reservation);
-        reservations.add(reservationEntity);
-        return reservationEntity;
+        reservations.add(reservation);
+        return reservation;
     }
 
     public void deleteById(Long id) {

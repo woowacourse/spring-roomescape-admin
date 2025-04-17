@@ -7,16 +7,26 @@ import roomescape.exception.DomainException;
 
 public final class Reservation {
 
-    private final int id;
+    private final Integer id;
     private final String name;
     private final LocalDate date;
     private final LocalTime time;
 
-    public Reservation(int id, String name, LocalDate date, LocalTime time) {
+    public Reservation(Integer id, String name, LocalDate date, LocalTime time) {
         validateNotBlankName(name);
         validateNotNullDateTime(date, time);
         validateNotPastDateTime(LocalDateTime.of(date, time));
         this.id = id;
+        this.name = name;
+        this.date = date;
+        this.time = time;
+    }
+
+    public Reservation(String name, LocalDate date, LocalTime time) {
+        validateNotBlankName(name);
+        validateNotNullDateTime(date, time);
+        validateNotPastDateTime(LocalDateTime.of(date, time));
+        this.id = null;
         this.name = name;
         this.date = date;
         this.time = time;
@@ -41,6 +51,10 @@ public final class Reservation {
         if (reservationDateTime.isBefore(LocalDateTime.now())) {
             throw new DomainException("과거 일시로 예약을 생성할 수 없습니다.");
         }
+    }
+
+    public static Reservation toEntity(Integer id, Reservation reservation) {
+        return new Reservation(id, reservation.name, reservation.date, reservation.time);
     }
 
     public int getId() {

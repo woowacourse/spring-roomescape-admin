@@ -23,6 +23,10 @@ public class Reservation {
         return new Reservation(id, reservation.name, reservation.date, reservation.time);
     }
 
+    public boolean isSameId(final long id) {
+        return this.id == id;
+    }
+
     public Long getId() {
         return id;
     }

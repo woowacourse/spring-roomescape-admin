@@ -1,6 +1,5 @@
 package roomescape.controller;
 
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 import java.util.concurrent.atomic.AtomicLong;
@@ -13,6 +12,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import roomescape.domain.Reservation;
+import roomescape.domain.Reservations;
 import roomescape.dto.ReservationRequest;
 import roomescape.dto.ReservationResponse;
 
@@ -20,12 +20,12 @@ import roomescape.dto.ReservationResponse;
 @RequestMapping("reservations")
 public class ReservationApiController {
 
-    private final List<Reservation> reservations = new ArrayList<>();
+    private final Reservations reservations = new Reservations();
     private final AtomicLong reservationId = new AtomicLong();
 
     @GetMapping
     public ResponseEntity<List<ReservationResponse>> getReservations() {
-        List<ReservationResponse> responses = reservations.stream()
+        List<ReservationResponse> responses = reservations.getReservations().stream()
                 .map(ReservationResponse::of)
                 .toList();
 
@@ -44,15 +44,12 @@ public class ReservationApiController {
 
     @DeleteMapping("{id}")
     public ResponseEntity<Void> deleteReservation(@PathVariable Long id) {
-        Optional<Reservation> find = reservations.stream()
-                .filter(reservation -> reservation.isSameId(id))
-                .findFirst();
+        Optional<Reservation> target = reservations.findById(id);
 
-        if (find.isEmpty()) {
+        if (target.isEmpty()) {
             return ResponseEntity.notFound().build();
         }
-
-        reservations.remove(find.get());
+        reservations.remove(target.get());
         return ResponseEntity.ok().build();
     }
 }

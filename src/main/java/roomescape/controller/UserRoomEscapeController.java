@@ -45,7 +45,7 @@ public class UserRoomEscapeController {
         return ResponseEntity.ok().build();
     }
 
-    private static Reservation getReservation(Long reservationId) {
+    private Reservation getReservation(Long reservationId) {
         return reservations.stream()
                 .filter(reservation -> Objects.equals(reservation.id(), reservationId))
                 .findFirst()

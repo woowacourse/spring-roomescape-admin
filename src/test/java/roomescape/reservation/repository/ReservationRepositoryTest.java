@@ -90,7 +90,6 @@ class ReservationRepositoryTest {
     @Test
     void test6() {
         // given
-
         LocalDateTime now = LocalDateTime.now();
 
         Reservation reservation1 = new Reservation(1, "꾹", now);

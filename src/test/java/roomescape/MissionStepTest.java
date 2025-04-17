@@ -82,4 +82,13 @@ class MissionStepTest {
                 .statusCode(200)
                 .body("size()", is(0));
     }
+
+    @DisplayName("삭제하려는 id의 예약 정보가 존재하지 않으면 404 코드를 반환한다")
+    @Test
+    void reservation_delete_exception(){
+        RestAssured.given().log().all()
+                .when().delete("/reservations/1")
+                .then().log().all()
+                .statusCode(404);
+    }
 }

@@ -1,6 +1,5 @@
 package roomescape.reservation.controller;
 
-import java.time.LocalDateTime;
 import java.util.List;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
@@ -40,9 +39,9 @@ public class ReservationController {
 
     @PostMapping("/reservations")
     public ResponseEntity<ReservationResponseDto> add(@RequestBody ReservationRequestDto requestDto) {
-        LocalDateTime localDateTime = LocalDateTime.of(requestDto.date(), requestDto.time());
+        Reservation reservation = new Reservation(reservationRepository.generateId(), requestDto.name(),
+                requestDto.toDateTime());
 
-        Reservation reservation = new Reservation(reservationRepository.generateId(), requestDto.name(), localDateTime);
         Reservation saved = reservationRepository.save(reservation);
         ReservationResponseDto responseDto = ReservationResponseDto.toDto(saved);
 

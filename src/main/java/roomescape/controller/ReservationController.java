@@ -36,9 +36,13 @@ public class ReservationController {
 
     @PostMapping("/reservations")
     public ResponseEntity<Reservation> addReservation(@RequestBody CreateReservationDto reservationDto) {
-        Reservation reservation = new Reservation(index.getAndIncrement(), reservationDto.name(), reservationDto.date(), reservationDto.time());
-        reservations.add(reservation);
-        return ResponseEntity.ok().body(reservation);
+        try {
+            Reservation reservation = new Reservation(index.getAndIncrement(), reservationDto.name(), reservationDto.date(), reservationDto.time());
+            reservations.add(reservation);
+            return ResponseEntity.ok().body(reservation);
+        } catch (IllegalArgumentException e) {
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).build();
+        }
     }
 
     @DeleteMapping("/reservations/{id}")

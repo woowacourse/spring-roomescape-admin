@@ -3,7 +3,6 @@ package roomescape.controller;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.atomic.AtomicInteger;
-import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -28,14 +27,10 @@ public final class ReservationController {
     }
 
     @PostMapping("/reservations")
-    public ResponseEntity<?> reserve(@RequestBody ReservationRequestDto dto) {
-        try {
-            Reservation reservation = dto.toEntity(id.getAndIncrement());
-            reservations.add(reservation);
-            return ResponseEntity.ok(ReservationResponseDto.from(reservation));
-        } catch (IllegalArgumentException e) {
-            return ResponseEntity.badRequest().body(e.getMessage());
-        }
+    public ReservationResponseDto reserve(@RequestBody ReservationRequestDto dto) {
+        Reservation reservation = dto.toEntity(id.getAndIncrement());
+        reservations.add(reservation);
+        return ReservationResponseDto.from(reservation);
     }
 
     @DeleteMapping("/reservations/{id}")

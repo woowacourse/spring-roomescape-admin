@@ -3,6 +3,7 @@ package roomescape.model;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.LocalTime;
+import roomescape.exception.DomainException;
 
 public final class Reservation {
 
@@ -23,22 +24,22 @@ public final class Reservation {
 
     private void validateNotNullDateTime(LocalDate date, LocalTime time) {
         if (date == null) {
-            throw new IllegalArgumentException("예약 날짜가 입력되지 않았습니다.");
+            throw new DomainException("예약 날짜가 입력되지 않았습니다.");
         }
         if (time == null) {
-            throw new IllegalArgumentException("예약 시간이 입력되지 않았습니다.");
+            throw new DomainException("예약 시간이 입력되지 않았습니다.");
         }
     }
 
     private void validateNotBlankName(String name) {
         if (name == null || name.isBlank()) {
-            throw new IllegalArgumentException("예약자명이 입력되지 않았습니다.");
+            throw new DomainException("예약자명이 입력되지 않았습니다.");
         }
     }
 
     private void validateNotPastDateTime(LocalDateTime reservationDateTime) {
         if (reservationDateTime.isBefore(LocalDateTime.now())) {
-            throw new IllegalArgumentException("과거 일시로 예약을 생성할 수 없습니다.");
+            throw new DomainException("과거 일시로 예약을 생성할 수 없습니다.");
         }
     }
 

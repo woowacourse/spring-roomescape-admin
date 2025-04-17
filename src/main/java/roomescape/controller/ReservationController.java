@@ -17,7 +17,7 @@ import roomescape.dto.ReservationRequestDto;
 import roomescape.dto.ReservationResponseDto;
 
 @RestController
-public class RoomescapeController {
+public class ReservationController {
 
     private final Reservations reservations = new Reservations();
     private final AtomicLong reservationIndex = new AtomicLong(1);

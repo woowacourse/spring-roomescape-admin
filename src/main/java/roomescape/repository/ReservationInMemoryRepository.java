@@ -8,7 +8,7 @@ import org.springframework.stereotype.Repository;
 import roomescape.entity.Reservation;
 
 @Repository
-public class ReservationInMemoryRepository implements ReservationRepository {
+public final class ReservationInMemoryRepository implements ReservationRepository {
 
     private static final AtomicLong ATOMIC_LONG = new AtomicLong(1L);
 

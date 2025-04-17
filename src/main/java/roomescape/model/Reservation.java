@@ -1,20 +1,29 @@
 package roomescape.model;
 
+import com.fasterxml.jackson.annotation.JsonCreator;
 import java.time.LocalDate;
 import java.time.LocalTime;
+import java.util.Objects;
 
 public class Reservation {
 
     private final Long id;
     private final String name;
-    private final LocalDate date;
-    private final LocalTime time;
+    private final ReservationDateTime reservationDateTime;
 
-    public Reservation(Long id, String name, LocalDate date, LocalTime time) {
-        this.id = id;
-        this.name = name;
-        this.date = date;
-        this.time = time;
+    @JsonCreator
+    public Reservation(Long id, String name, ReservationDateTime reservationDateTime) {
+        this.id = Objects.requireNonNull(id);
+        this.name = validateNonBlank(name);
+        this.reservationDateTime = reservationDateTime;
+    }
+
+    private String validateNonBlank(String name) {
+        if (name == null || name.isBlank()) {
+            throw new IllegalArgumentException();
+        }
+
+        return name;
     }
 
     public Long getId() {
@@ -26,10 +35,10 @@ public class Reservation {
     }
 
     public LocalDate getDate() {
-        return date;
+        return reservationDateTime.getDate();
     }
 
     public LocalTime getTime() {
-        return time;
+        return reservationDateTime.getTime();
     }
 }

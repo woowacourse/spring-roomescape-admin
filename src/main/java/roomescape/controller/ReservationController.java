@@ -1,9 +1,9 @@
 package roomescape.controller;
 
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.concurrent.atomic.AtomicLong;
 import org.springframework.http.ResponseEntity;
-import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -12,6 +12,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
 import roomescape.dto.ReservationDto;
 import roomescape.model.Reservation;
+import roomescape.model.ReservationDateTime;
 import roomescape.model.Reservations;
 
 @RestController
@@ -27,13 +28,20 @@ public class ReservationController {
 
     @PostMapping("/reservations")
     public ResponseEntity<Reservation> addReservation(@RequestBody ReservationDto reservationDto) {
-        Reservation newReservation = new Reservation(
-                index.getAndIncrement(),
-                reservationDto.getName(),
-                reservationDto.getDate(),
-                reservationDto.getTime());
-        reservations.add(newReservation);
-        return ResponseEntity.ok(newReservation);
+        try {
+            ReservationDateTime reservationDateTime = new ReservationDateTime(
+                    LocalDateTime.of(reservationDto.getDate(), reservationDto.getTime())
+            );
+
+            Reservation newReservation = new Reservation(
+                    index.getAndIncrement(),
+                    reservationDto.getName(),
+                    reservationDateTime);
+            reservations.add(newReservation);
+            return ResponseEntity.ok(newReservation);
+        } catch (NullPointerException | IllegalArgumentException e) {
+            return ResponseEntity.badRequest().build();
+        }
     }
 
     @DeleteMapping("/reservations/{id}")

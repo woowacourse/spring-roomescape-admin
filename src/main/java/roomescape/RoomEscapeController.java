@@ -15,16 +15,6 @@ public class RoomEscapeController {
 
     private final Reservations reservations = new Reservations();
 
-    @GetMapping("/admin")
-    public String homePage() {
-        return "admin/index";
-    }
-
-    @GetMapping("/admin/reservation")
-    public String manageReservation() {
-        return "admin/reservation-legacy";
-    }
-
     @GetMapping("reservations")
     public ResponseEntity<List<Reservation>> checkReservation() {
         return ResponseEntity.ok(reservations.getReservations());

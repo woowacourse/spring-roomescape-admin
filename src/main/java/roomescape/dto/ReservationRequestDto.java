@@ -1,15 +1,15 @@
 package roomescape.dto;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
 import java.time.LocalDate;
 import java.time.LocalTime;
-import org.springframework.format.annotation.DateTimeFormat;
 import roomescape.entity.Reservation;
 
 public record ReservationRequestDto(
         String name,
-        @DateTimeFormat(pattern = "yyyy-MM-dd")
+        @JsonFormat(pattern = "yyyy-MM-dd")
         LocalDate date,
-        @DateTimeFormat(pattern = "HH:mm")
+        @JsonFormat(pattern = "HH:mm")
         LocalTime time
 ) {
 

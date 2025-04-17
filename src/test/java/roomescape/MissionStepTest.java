@@ -75,8 +75,8 @@ public class MissionStepTest {
     }
 
     @Test
-    @DisplayName("id가 존재하지 않아 예외가 발생한다")
-    void deleteFailTest() {
+    @DisplayName("존재하지 않는 ID로 삭제 요청 시 404 응답이 반환되어야 한다")
+    void deleteNonExistingReservation() {
         RestAssured.given().log().all()
                 .when().delete("/reservations/1")
                 .then().log().all()

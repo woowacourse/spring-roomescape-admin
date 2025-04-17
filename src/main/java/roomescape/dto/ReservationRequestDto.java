@@ -1,7 +1,8 @@
-package roomescape;
+package roomescape.dto;
 
 import java.time.LocalDate;
 import java.time.LocalTime;
+import roomescape.model.Reservation;
 
 public record ReservationRequestDto(
         String name,

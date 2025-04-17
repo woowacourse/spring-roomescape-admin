@@ -1,4 +1,4 @@
-package roomescape;
+package roomescape.model;
 
 import static org.assertj.core.api.Assertions.assertThatCode;
 

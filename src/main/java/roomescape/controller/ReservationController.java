@@ -1,4 +1,4 @@
-package roomescape;
+package roomescape.controller;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -10,6 +10,9 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
+import roomescape.model.Reservation;
+import roomescape.dto.ReservationRequestDto;
+import roomescape.dto.ReservationResponseDto;
 
 @RestController
 public final class ReservationController {

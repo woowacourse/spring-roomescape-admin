@@ -2,7 +2,6 @@ package roomescape.model;
 
 import java.time.LocalDate;
 import java.time.LocalTime;
-import java.util.Objects;
 
 public record Reservation(Long id, String name, LocalDate date, LocalTime time) {
 
@@ -12,7 +11,7 @@ public record Reservation(Long id, String name, LocalDate date, LocalTime time) 
     }
 
     private void validateNotNull(Long id, String name, LocalDate date, LocalTime time) {
-        if (Objects.isNull(id) || Objects.isNull(name) || Objects.isNull(date) || Objects.isNull(time)) {
+        if (id == null || name == null || date == null || time == null) {
             throw new IllegalArgumentException("Invalid reservation");
         }
     }

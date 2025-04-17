@@ -5,7 +5,7 @@ import java.time.LocalDate;
 import java.time.LocalTime;
 import roomescape.model.Reservation;
 
-public record ReservationRequest(Long id,
+public record ReservationRequest(
                                  String name,
                                  @JsonFormat(pattern = "yyyy-MM-dd", timezone = "Asia/Seoul") LocalDate date,
                                  @JsonFormat(pattern = "HH:mm", timezone = "Asia/Seoul") LocalTime time) {

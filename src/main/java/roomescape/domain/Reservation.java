@@ -18,11 +18,15 @@ public class Reservation {
     @JsonProperty
     private final LocalTime time;
 
-    public Reservation(String name, LocalDate date, LocalTime time) {
-        this.id = ID_GENERATOR.incrementAndGet();
+    public Reservation(Long id, String name, LocalDate date, LocalTime time) {
+        this.id = id;
         this.name = name;
         this.date = date;
         this.time = time;
+    }
+
+    public static Reservation of(String name, LocalDate date, LocalTime time) {
+        return new Reservation(ID_GENERATOR.incrementAndGet(), name, date, time);
     }
 
     public Long getId() {

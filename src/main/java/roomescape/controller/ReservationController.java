@@ -1,6 +1,5 @@
 package roomescape.controller;
 
-import java.time.LocalDateTime;
 import java.util.List;
 import java.util.concurrent.atomic.AtomicLong;
 import org.springframework.http.ResponseEntity;
@@ -12,14 +11,12 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
 import roomescape.dto.ReservationDto;
 import roomescape.model.Reservation;
-import roomescape.model.ReservationDateTime;
 import roomescape.model.Reservations;
 
 @RestController
 public class ReservationController {
 
     private Reservations reservations = new Reservations();
-    private AtomicLong index = new AtomicLong(1);
 
     @GetMapping("/reservations")
     public ResponseEntity<List<Reservation>> reservations() {
@@ -29,16 +26,9 @@ public class ReservationController {
     @PostMapping("/reservations")
     public ResponseEntity<Reservation> addReservation(@RequestBody ReservationDto reservationDto) {
         try {
-            ReservationDateTime reservationDateTime = new ReservationDateTime(
-                    LocalDateTime.of(reservationDto.date(), reservationDto.time())
-            );
-
-            Reservation newReservation = new Reservation(
-                    index.getAndIncrement(),
-                    reservationDto.name(),
-                    reservationDateTime);
-            reservations.add(newReservation);
-            return ResponseEntity.ok(newReservation);
+            Long id = reservations.add(reservationDto);
+            Reservation findReservation = reservations.findById(id);
+            return ResponseEntity.ok(findReservation);
         } catch (NullPointerException | IllegalArgumentException e) {
             return ResponseEntity.badRequest().build();
         }

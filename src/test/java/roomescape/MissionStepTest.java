@@ -73,7 +73,7 @@ public class MissionStepTest {
     }
 
     @Test
-    void 삼단계_delete_실패() {
+    void 삼단계_delete_존재하지_않는_id_실패() {
         RestAssured.given().log().all()
                 .when().delete("/reservations/1")
                 .then().log().all()

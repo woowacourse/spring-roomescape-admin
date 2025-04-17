@@ -1,11 +1,7 @@
 package roomescape.controller;
 
-import java.time.LocalDate;
-import java.time.LocalTime;
-import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Map;
 import java.util.Objects;
 import java.util.concurrent.atomic.AtomicLong;
 import org.springframework.http.ResponseEntity;
@@ -16,6 +12,7 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import roomescape.domain.Reservation;
+import roomescape.dto.request.ReservationCreateRequest;
 
 @Controller
 public class ReservationController {
@@ -34,18 +31,13 @@ public class ReservationController {
     }
 
     @PostMapping("/reservations")
-    public ResponseEntity<Reservation> create(@RequestBody Map<String, String> resultMap) {
-
-        DateTimeFormatter dateFormatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
-        DateTimeFormatter timeFormatter = DateTimeFormatter.ofPattern("HH:mm");
-
-        LocalDate date = LocalDate.parse(resultMap.get("date"), dateFormatter);
-        LocalTime time = LocalTime.parse(resultMap.get("time"), timeFormatter);
+    public ResponseEntity<Reservation> create(@RequestBody ReservationCreateRequest reservationCreateRequest) {
 
         Reservation reservation = new Reservation(index.getAndIncrement(),
-                resultMap.get("name"),
-                date,
-                time);
+                reservationCreateRequest.name(),
+                reservationCreateRequest.date(),
+                reservationCreateRequest.time()
+        );
         reservations.add(reservation);
         return ResponseEntity.ok().body(reservation);
     }

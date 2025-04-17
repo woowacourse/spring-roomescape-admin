@@ -4,8 +4,8 @@ import org.springframework.dao.DataAccessException;
 import org.springframework.stereotype.Service;
 import roomescape.reservation.domain.Reservation;
 import roomescape.reservation.domain.ReservationRepository;
-import roomescape.reservation.ui.dto.ReservationRequest;
-import roomescape.reservation.ui.dto.ReservationResponse;
+import roomescape.reservation.ui.dto.ReservationRequestDto;
+import roomescape.reservation.ui.dto.ReservationResponseDto;
 
 import java.util.List;
 import java.util.NoSuchElementException;
@@ -20,14 +20,14 @@ public class DefaultReservationService implements ReservationService {
     }
 
     @Override
-    public List<ReservationResponse> getReservations() {
-        return ReservationResponse.from(reservationRepository.findAll());
+    public List<ReservationResponseDto> getReservations() {
+        return ReservationResponseDto.from(reservationRepository.findAll());
     }
 
     @Override
-    public ReservationResponse createReservation(final ReservationRequest reservationRequest) {
-        return ReservationResponse.from(saved);
+    public ReservationResponseDto createReservation(final ReservationRequestDto reservationRequestDto) {
         final Reservation saved = reservationRepository.save(reservationRequestDto.toDomain());
+        return ReservationResponseDto.from(saved);
     }
 
     @Override

@@ -21,7 +21,7 @@ public class Reservation {
     }
 
     public static Reservation createWithoutId(String name, LocalDateTime dateTime) {
-        return new Reservation(null, name, ReservationDateTime.from(dateTime));
+        return createWithId(null, name, dateTime);
     }
 
     public boolean isSaved() {
@@ -30,7 +30,7 @@ public class Reservation {
 
     public Long getId() {
         if (isSaved()) {
-            throw new IllegalStateException("저장되지 않은 예약은 예약 번호가 존재하지 않습니다");
+            throw new IllegalStateException();
         }
         return id;
     }

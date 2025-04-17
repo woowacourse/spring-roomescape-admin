@@ -7,9 +7,9 @@ import java.time.LocalDateTime;
 import java.time.LocalTime;
 
 public class ReservationEntity {
+    private Long id;
     private final String name;
     private final LocalDateTime dateTime;
-    private Long id;
 
     public ReservationEntity(final Long id, final String name, final LocalDateTime dateTime) {
         this.id = id;

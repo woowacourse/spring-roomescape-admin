@@ -13,11 +13,12 @@ import java.util.List;
 
 @Controller
 @RequiredArgsConstructor
-public class UserRoomEscapeController {
+@RequestMapping("/reservations")
+public class UserReservationController {
 
     private final ReservationRepository reservationRepository;
 
-    @GetMapping("/reservations")
+    @GetMapping
     public ResponseEntity<List<ReservationResponse>> reservations() {
         List<ReservationResponse> response = reservationRepository.getAll().stream()
                 .map(ReservationResponse::from)
@@ -26,7 +27,7 @@ public class UserRoomEscapeController {
         return ResponseEntity.ok(response);
     }
 
-    @PostMapping("/reservations")
+    @PostMapping
     public ResponseEntity<ReservationResponse> createReservation(@RequestBody ReservationCreateRequest request) {
         Reservation reservation = request.toDomain();
 
@@ -35,8 +36,8 @@ public class UserRoomEscapeController {
         return ResponseEntity.ok(ReservationResponse.from(savedReservation));
     }
 
-    @DeleteMapping("/reservations/{reservationId}")
-    public ResponseEntity<Void> deleteReservation(@PathVariable("reservationId") Long reservationId) {
+    @DeleteMapping("/{id}")
+    public ResponseEntity<Void> deleteReservation(@PathVariable("id") Long reservationId) {
         Reservation target = getReservation(reservationId);
 
         reservationRepository.remove(target);

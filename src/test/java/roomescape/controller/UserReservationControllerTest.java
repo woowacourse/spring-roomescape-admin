@@ -16,7 +16,7 @@ import roomescape.fake.FakeReservationRepository;
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.DEFINED_PORT)
 @DirtiesContext(classMode = DirtiesContext.ClassMode.BEFORE_EACH_TEST_METHOD)
 @Import(TestConfig.class)
-class UserRoomEscapeControllerTest {
+class UserReservationControllerTest {
 
     @BeforeEach
     void setUp() {

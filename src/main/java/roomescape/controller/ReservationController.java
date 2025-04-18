@@ -13,7 +13,8 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import roomescape.domain.Reservation;
-import roomescape.dto.AddReservationDto;
+import roomescape.dto.AddReservationRequest;
+import roomescape.dto.ReservationResponse;
 import roomescape.exception.InvalidReservationException;
 
 @Controller
@@ -24,20 +25,21 @@ public class ReservationController {
     private final List<Reservation> reservations = new ArrayList<>();
 
     @GetMapping("")
-    public ResponseEntity<List<Reservation>> reservations() {
-        return ResponseEntity.ok(reservations);
+    public ResponseEntity<List<ReservationResponse>> reservations() {
+        List<ReservationResponse> reservationResponses = reservations.stream()
+                .map(ReservationResponse::fromReservation)
+                .toList();
+        return ResponseEntity.ok(reservationResponses);
     }
 
     @PostMapping("")
-    public ResponseEntity<Void> addReservations(@RequestBody AddReservationDto addReservationDto) {
-        if (addReservationDto == null) {
+    public ResponseEntity<Void> addReservations(@RequestBody AddReservationRequest addReservationRequest) {
+        if (addReservationRequest == null) {
             throw new InvalidReservationException("예약을 추가할 수 없습니다.");
         }
 
-        Reservation newReservation = new Reservation(index.getAndIncrement(), addReservationDto.name(),
-                addReservationDto.date(), addReservationDto.time());
+        Reservation newReservation = addReservationRequest.toReservation(index.getAndIncrement());
         reservations.add(newReservation);
-
         return ResponseEntity.created(URI.create("/reservations/" + newReservation.id())).build();
     }
 

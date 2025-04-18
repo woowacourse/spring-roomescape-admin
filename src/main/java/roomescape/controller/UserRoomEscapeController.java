@@ -4,6 +4,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 import roomescape.Reservation;
+import roomescape.database.ReservationDatabase;
 import roomescape.dto.request.ReservationCreateRequest;
 import roomescape.dto.response.ReservationResponse;
 
@@ -16,9 +17,16 @@ public class UserRoomEscapeController {
 
     private static final AtomicLong autoIncrement = new AtomicLong(0);
     private static final List<Reservation> reservations = new ArrayList<>();
+    private final ReservationDatabase reservationDatabase;
+
+    public UserRoomEscapeController(final ReservationDatabase reservationDatabase) {
+        this.reservationDatabase = reservationDatabase;
+    }
 
     @GetMapping("/reservations")
     public ResponseEntity<List<ReservationResponse>> reservations() {
+        final List<Reservation> reservations = reservationDatabase.findAll();
+
         List<ReservationResponse> response = reservations.stream()
                 .map(ReservationResponse::from)
                 .toList();

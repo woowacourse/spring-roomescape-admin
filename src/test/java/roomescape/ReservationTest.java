@@ -10,12 +10,13 @@ import static org.assertj.core.api.Assertions.assertThatThrownBy;
 
 class ReservationTest {
 
+    private static final long validId = 1;
+
     @Test
     @DisplayName("이름이 빈 문자열이면 예외가 발생한다")
     void nameExceptionTest() {
         // given
         String invalidName = "";
-        long validId = 1;
         LocalDate validDate = LocalDate.now();
         LocalTime validTime = LocalTime.now();
 
@@ -30,7 +31,6 @@ class ReservationTest {
         // given
         LocalDate invalidDate = null;
         String validName = "포비";
-        long validId = 1;
         LocalTime validTime = LocalTime.now();
 
         // when & then
@@ -44,7 +44,6 @@ class ReservationTest {
         // given
         LocalTime invalidTime = null;
         String validName = "포비";
-        long validId = 1;
         LocalDate validDate = LocalDate.now();
 
         // when & then

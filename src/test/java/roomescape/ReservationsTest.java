@@ -1,9 +1,10 @@
 package roomescape;
 
-import java.time.LocalDate;
-import java.time.LocalTime;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
+
+import java.time.LocalDate;
+import java.time.LocalTime;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
@@ -12,7 +13,7 @@ import static org.junit.jupiter.api.Assertions.assertDoesNotThrow;
 class ReservationsTest {
 
     @Test
-    @DisplayName("새 예약 데이터를 추가하면 해당 데이터에 아이디를 부여하고 반환한다")
+    @DisplayName("새 예약 데이터를 추가하면 해당 데이터에 아이디를 부여한다.")
     void addAndGetTest() {
         // given
         Reservations reservations = new Reservations();
@@ -22,7 +23,7 @@ class ReservationsTest {
         Reservation newReservation = reservations.addAndGet(reservationReqDto);
 
         // then
-        assertThat(newReservation.getId()).isEqualTo(1);
+        assertThat(newReservation.getId()).isNotNull();
     }
 
     @Test

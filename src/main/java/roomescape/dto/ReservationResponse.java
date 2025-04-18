@@ -10,7 +10,7 @@ public record ReservationResponse(Long id, String name, String date, String time
     private static final String DATE_FORMAT = "yyyy-MM-dd";
     private static final String TIME_FORMAT = "HH:mm";
 
-    public static ReservationResponse toDto(Reservation reservation) {
+    public static ReservationResponse toDto(final Reservation reservation) {
         DateTimeFormatter dateFormatter = DateTimeFormatter.ofPattern(DATE_FORMAT, Locale.KOREA);
         DateTimeFormatter timeFormatter = DateTimeFormatter.ofPattern(TIME_FORMAT, Locale.KOREA);
 

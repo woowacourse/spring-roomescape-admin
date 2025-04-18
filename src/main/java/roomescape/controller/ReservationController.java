@@ -21,7 +21,7 @@ public class ReservationController {
 
     private final ReservationRepository reservationRepository;
 
-    public ReservationController(ReservationRepository reservationRepository) {
+    public ReservationController(final ReservationRepository reservationRepository) {
         this.reservationRepository = reservationRepository;
     }
 
@@ -35,13 +35,13 @@ public class ReservationController {
     }
 
     @PostMapping
-    public ResponseEntity<ReservationResponse> createReservation(@RequestBody ReservationRequest reservationRequest) {
+    public ResponseEntity<ReservationResponse> createReservation(@RequestBody final ReservationRequest reservationRequest) {
         Reservation reservation = reservationRepository.add(reservationRequest);
         return ResponseEntity.ok().body(ReservationResponse.toDto(reservation));
     }
 
     @DeleteMapping("/{id}")
-    public ResponseEntity<Void> deleteReservation(@PathVariable("id") Long id) {
+    public ResponseEntity<Void> deleteReservation(@PathVariable("id") final Long id) {
         try {
             reservationRepository.deleteById(id);
             return ResponseEntity.ok().build();

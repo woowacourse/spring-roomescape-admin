@@ -31,7 +31,7 @@ public class ReservationRepositoryImpl implements ReservationRepository {
 
     public void deleteById(Long id) {
         Reservation findReservation = findById(id)
-                .orElseThrow(() -> new EntityNotFoundException("엔티티가 존재하지 않습니다."));
+                .orElseThrow(() -> new EntityNotFoundException("삭제할 예약 엔티티가 존재하지 않습니다."));
 
         reservations.remove(findReservation);
     }

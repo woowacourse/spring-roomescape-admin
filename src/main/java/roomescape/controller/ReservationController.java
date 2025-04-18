@@ -1,7 +1,5 @@
 package roomescape.controller;
 
-import java.time.LocalDate;
-import java.time.LocalTime;
 import java.util.List;
 import java.util.Objects;
 import java.util.concurrent.atomic.AtomicLong;
@@ -11,6 +9,7 @@ import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import roomescape.entity.Reservation;
@@ -36,19 +35,17 @@ public class ReservationController {
 
     @PostMapping()
     public ResponseEntity<Reservation> createReservation(
-            String name,
-            LocalDate date,
-            LocalTime time
+            @RequestBody Reservation reservation
     ) {
-        Reservation reservation = new Reservation(index.getAndIncrement(), name, date, time);
+        Reservation newReservation = Reservation.toEntity(reservation, index.getAndIncrement());
 
-        reservations.validateSameDateTime(reservation);
-        reservations.saveReservation(reservation);
-        return ResponseEntity.ok().body(reservation);
+        reservations.validateReservationTimeAvailability(newReservation);
+        reservations.saveReservation(newReservation);
+        return ResponseEntity.ok().body(newReservation);
     }
 
     @DeleteMapping("/{id}")
-    public ResponseEntity<Reservations> deleteReservation(
+    public ResponseEntity<List<Reservation>> deleteReservation(
             @PathVariable Long id
     ) {
         Reservation reservation = reservations.findAllReservations().stream()
@@ -58,7 +55,7 @@ public class ReservationController {
 
         reservations.deleteReservation(reservation);
 
-        return ResponseEntity.ok().body(reservations);
+        return ResponseEntity.ok().body(reservations.findAllReservations());
     }
 
 }

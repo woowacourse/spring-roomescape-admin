@@ -39,7 +39,7 @@ class ReservationsTest {
 
         reservations.deleteReservation(reservation);
 
-        assertThat(reservations.getReservations().contains(reservation)).isFalse();
+        assertThat(reservations.findAllReservations().contains(reservation)).isFalse();
     }
 
     @Test

@@ -28,7 +28,7 @@ public class Reservations {
         }
     }
 
-    public List<Reservation> getReservations() {
+    public List<Reservation> findAllReservations() {
         return reservations;
     }
 }

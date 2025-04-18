@@ -5,7 +5,7 @@ import java.time.LocalTime;
 
 public class Reservation {
 
-    private long id;
+    private final long id;
     private final String name;
     private final LocalDate date;
     private final LocalTime time;
@@ -21,8 +21,8 @@ public class Reservation {
         this(0, name, date, time);
     }
 
-    public static Reservation toEntity(Reservation reservation, long id) {
-        return new Reservation(id, reservation.name, reservation.date, reservation.time);
+    public Reservation withId(final long id) {
+        return new Reservation(id, this.name, this.date, this.time);
     }
 
     public boolean isSameDateTime(Reservation reservation) {

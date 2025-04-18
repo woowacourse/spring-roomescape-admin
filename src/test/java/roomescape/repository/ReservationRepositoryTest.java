@@ -2,7 +2,6 @@ package roomescape.repository;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
-import static org.junit.jupiter.api.Assertions.*;
 
 import java.time.LocalDateTime;
 import org.junit.jupiter.api.BeforeEach;
@@ -28,7 +27,7 @@ class ReservationRepositoryTest {
     @Test
     void addTest() {
         // given
-        Reservation reservation = Reservation.createReservationWithoutID("멍구", LocalDateTime.of(2024, 4, 4, 10, 0));
+        Reservation reservation = Reservation.createReservationWithoutId("멍구", LocalDateTime.of(2024, 4, 4, 10, 0));
 
         // when
         repository.add(reservation);

@@ -21,7 +21,7 @@ public class Reservation {
         return new Reservation(id, reservation.getName(), reservation.reservationTime);
     }
 
-    public static Reservation createReservationWithoutID(String name, LocalDateTime reservationTime) {
+    public static Reservation createReservationWithoutId(String name, LocalDateTime reservationTime) {
         return new Reservation(null, name, reservationTime);
     }
 

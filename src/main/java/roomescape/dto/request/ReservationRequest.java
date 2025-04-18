@@ -26,7 +26,7 @@ public class ReservationRequest {
         LocalTime time = LocalTime.parse(this.time);
 
         LocalDateTime reservationTime = LocalDateTime.of(date, time);
-        return Reservation.createReservationWithoutID(name, reservationTime);
+        return Reservation.createReservationWithoutId(name, reservationTime);
     }
 
     private void validateDateAndTime(String date, String time) {

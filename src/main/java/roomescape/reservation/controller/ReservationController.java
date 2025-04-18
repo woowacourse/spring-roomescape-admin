@@ -2,17 +2,17 @@ package roomescape.reservation.controller;
 
 import java.util.List;
 import org.springframework.http.ResponseEntity;
-import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
 import roomescape.reservation.domain.Reservation;
 import roomescape.reservation.repository.ReservationRepository;
 
-@Controller
+@RestController
 @RequestMapping("/reservations")
 public class ReservationController {
     private final ReservationRepository reservationRepository;
@@ -22,8 +22,8 @@ public class ReservationController {
     }
 
     @GetMapping
-    public ResponseEntity<List<Reservation>> getReservations() {
-        return ResponseEntity.ok(reservationRepository.getAll());
+    public List<Reservation> getReservations() {
+        return reservationRepository.getAll();
     }
 
     @PostMapping

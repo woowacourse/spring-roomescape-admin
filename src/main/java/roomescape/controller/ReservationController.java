@@ -8,34 +8,34 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
-import roomescape.dto.CreateReservationDto;
-import roomescape.dto.ReservationResponseDto;
+import roomescape.dto.ReservationRequest;
+import roomescape.dto.ReservationResponse;
 import roomescape.entity.Reservation;
 import roomescape.exception.InvalidReservationException;
 import roomescape.repository.ReservationRepository;
 
 @RestController
-public class RoomescapeController {
+public class ReservationController {
 
     private final ReservationRepository reservationRepository;
 
-    public RoomescapeController(ReservationRepository reservationRepository) {
+    public ReservationController(ReservationRepository reservationRepository) {
         this.reservationRepository = reservationRepository;
     }
 
     @GetMapping("/reservations")
-    public ResponseEntity<List<ReservationResponseDto>> getReservations(){
-        List<ReservationResponseDto> reservations = reservationRepository.findAll()
+    public ResponseEntity<List<ReservationResponse>> getReservations(){
+        List<ReservationResponse> reservations = reservationRepository.findAll()
                 .stream()
-                .map(ReservationResponseDto::toDto)
+                .map(ReservationResponse::toDto)
                 .toList();
         return ResponseEntity.ok().body(reservations);
     }
 
     @PostMapping("/reservations")
-    public ResponseEntity<ReservationResponseDto> createReservation(@RequestBody CreateReservationDto createReservationDto) {
-        Reservation reservation = reservationRepository.add(createReservationDto);
-        return ResponseEntity.ok().body(ReservationResponseDto.toDto(reservation));
+    public ResponseEntity<ReservationResponse> createReservation(@RequestBody ReservationRequest reservationRequest) {
+        Reservation reservation = reservationRepository.add(reservationRequest);
+        return ResponseEntity.ok().body(ReservationResponse.toDto(reservation));
     }
 
     @DeleteMapping("/reservations/{id}")

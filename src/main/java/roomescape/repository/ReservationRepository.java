@@ -5,7 +5,7 @@ import java.util.Collections;
 import java.util.List;
 import java.util.concurrent.atomic.AtomicLong;
 import org.springframework.stereotype.Repository;
-import roomescape.dto.CreateReservationDto;
+import roomescape.dto.ReservationRequest;
 import roomescape.entity.Reservation;
 import roomescape.exception.InvalidReservationException;
 
@@ -18,8 +18,8 @@ public class ReservationRepository {
         return Collections.unmodifiableList(reservations);
     }
 
-    public Reservation add(CreateReservationDto createReservationDto) {
-        Reservation reservation = createReservationDto.toEntity(index.getAndIncrement());
+    public Reservation add(ReservationRequest reservationRequest) {
+        Reservation reservation = reservationRequest.toEntity(index.getAndIncrement());
         reservations.add(reservation);
         return reservation;
     }

@@ -25,7 +25,10 @@ public class ReservationController {
 
     @GetMapping
     public ResponseEntity<List<ReservationResponse>> getReservations() {
-        return ResponseEntity.ok(reservations.stream().map(ReservationResponse::from).toList());
+        List<ReservationResponse> response = reservations.stream()
+            .map(ReservationResponse::from)
+            .toList();
+        return ResponseEntity.ok(response);
     }
 
     @PostMapping

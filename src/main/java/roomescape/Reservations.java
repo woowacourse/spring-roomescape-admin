@@ -11,14 +11,14 @@ public class Reservations {
         this.reservations = new ArrayList<>();
     }
 
-    public void save(Reservation entity) {
-        if (reservations.stream().anyMatch(reservation -> reservation.isSameWith(entity))) {
+    public void save(Reservation newReservation) {
+        if (reservations.stream().anyMatch(reservation -> reservation.isSameWith(newReservation))) {
             throw new IllegalArgumentException("이미 예약이 존재하는 날짜입니다.");
         }
-        reservations.add(entity);
+        reservations.add(newReservation);
     }
 
-    public void deleteById(Long id) {
+    public void deleteById(final Long id) {
         if (!reservations.removeIf(reservation -> reservation.getId().equals(id))) {
             throw new IllegalArgumentException("존재하지 않는 예약입니다.");
         }

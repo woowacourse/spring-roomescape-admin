@@ -38,29 +38,27 @@ public class ReservationApiController {
 
     @PostMapping
     public ResponseEntity<ReservationResponse> createReservation(@RequestBody ReservationCreateRequest request) {
-        Reservation created = new Reservation(
+        Reservation reservation = new Reservation(
                 reservationId.incrementAndGet(),
                 request.name(),
                 LocalDateTime.of(LocalDate.parse(request.date()), LocalTime.parse(request.time()))
         );
-        reservations.create(created);
+        reservations.create(reservation);
 
         return ResponseEntity.ok(
-                ReservationResponse.of(created)
+                ReservationResponse.of(reservation)
         );
     }
 
     @DeleteMapping("/{id}")
     public ResponseEntity<Void> deleteReservation(@PathVariable Long id) {
-        Optional<Reservation> find = reservations.getReservations().stream()
-                .filter(reservation -> reservation.isSameId(id))
-                .findFirst();
+        Optional<Reservation> reservation = reservations.findById(id);
 
-        if (find.isEmpty()) {
+        if (reservation.isEmpty()) {
             return ResponseEntity.notFound().build();
         }
 
-        reservations.delete(find.get());
+        reservations.delete(reservation.get());
         return ResponseEntity.ok().build();
     }
 }

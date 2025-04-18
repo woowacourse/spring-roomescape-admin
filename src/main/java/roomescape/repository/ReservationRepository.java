@@ -2,6 +2,7 @@ package roomescape.repository;
 
 import java.time.LocalDateTime;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 import java.util.concurrent.atomic.AtomicLong;
 import roomescape.model.Reservation;
@@ -22,7 +23,7 @@ public class ReservationRepository {
     }
 
     public List<Reservation> findAll() {
-        return reservations;
+        return Collections.unmodifiableList(reservations);
     }
 
     public Long add(Reservation reservation) {

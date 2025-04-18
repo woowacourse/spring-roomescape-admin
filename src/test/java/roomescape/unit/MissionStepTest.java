@@ -32,7 +32,7 @@ public class MissionStepTest {
         given()
                 .when().get("/")
                 .then()
-                .statusCode(HttpStatus.ACCEPTED.value());
+                .statusCode(HttpStatus.OK.value());
     }
 
     @Test
@@ -40,12 +40,12 @@ public class MissionStepTest {
         given()
                 .when().get("/admin/reservation")
                 .then()
-                .statusCode(HttpStatus.ACCEPTED.value());
+                .statusCode(HttpStatus.OK.value());
 
         given()
                 .when().get("/reservations")
                 .then()
-                .statusCode(HttpStatus.ACCEPTED.value())
+                .statusCode(HttpStatus.OK.value())
                 .body("size()", is(0));
     }
 
@@ -66,6 +66,7 @@ public class MissionStepTest {
             given()
                     .contentType("application/json")
                     .body(params)
+                    .log().all()  // 요청 로그 출력 (삭제 예정)
                     .when().post("/reservations")
                     .then()
                     .statusCode(HttpStatus.CREATED.value());
@@ -74,7 +75,8 @@ public class MissionStepTest {
                     .when().get("/reservations")
                     .then()
                     .statusCode(HttpStatus.OK.value())
-                    .body("size()", is(1));
+                    .body("size()", is(1))
+                    .log().all();   // 응답 로그 출력 (삭제 예정)
         }
 
         @Test

@@ -58,14 +58,7 @@ POST /reservations
 }
 
 Response
-Content-Type: application/json
-HTTP/1.1 200 
-{
-    "id": 1,
-    "name": "브라운",
-    "date": "2023-08-05",
-    "time": "15:40"
-}
+HTTP/1.1 201
 
 ```
 
@@ -76,5 +69,5 @@ Request
 DELETE /reservations/1 HTTP/1.1
 
 Response
-HTTP/1.1 200
+HTTP/1.1 204
 ```

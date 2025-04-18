@@ -24,10 +24,7 @@ public class RoomescapeReservationRestController {
 
     @PostMapping("/")
     public ResponseEntity<ReservationDto> createReservation(@RequestBody ReservationDto reservationDto) {
-        ReservationEntity entity = new ReservationEntity(
-                reservationDto.name(), reservationDto.date(), reservationDto.time()
-        );
-        reservations.save(entity);
+        reservations.save(reservationDto.toEntity());
         return ResponseEntity.ok().body(reservationDto);
     }
 

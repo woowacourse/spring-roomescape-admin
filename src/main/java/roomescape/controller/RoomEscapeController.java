@@ -19,13 +19,13 @@ public class RoomEscapeController {
 
     @GetMapping("/reservations")
     public List<ReservationResponse> findReservations() {
-        return ReservationResponse.reservationsToDtos(repository.findAll());
+        return ReservationResponse.from(repository.findAll());
     }
 
     @PostMapping("/reservations")
     public ReservationResponse addReservation(@RequestBody ReservationRequest request) {
         Long id = repository.add(request.dtoToReservationWithoutId());
-        return ReservationResponse.reservationToDto(repository.findById(id));
+        return ReservationResponse.from(repository.findById(id));
     }
 
     @DeleteMapping("/reservations/{id}")

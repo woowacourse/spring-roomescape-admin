@@ -12,7 +12,7 @@ public record ReservationResponse(
         String time
 ) {
 
-    public static ReservationResponse reservationToDto(Reservation reservation) {
+    public static ReservationResponse from(Reservation reservation) {
         LocalDateTime dateTime = reservation.getReservationTime();
         DateTimeFormatter timeFormatter = DateTimeFormatter.ofPattern("HH:mm");
         DateTimeFormatter dateFormatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
@@ -23,9 +23,9 @@ public record ReservationResponse(
                 dateTime.toLocalTime().format(timeFormatter));
     }
 
-    public static List<ReservationResponse> reservationsToDtos(List<Reservation> reservations) {
+    public static List<ReservationResponse> from(List<Reservation> reservations) {
         return reservations.stream()
-                .map(ReservationResponse::reservationToDto)
+                .map(ReservationResponse::from)
                 .toList();
     }
 }

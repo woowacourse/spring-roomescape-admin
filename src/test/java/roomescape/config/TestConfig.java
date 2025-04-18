@@ -2,7 +2,7 @@ package roomescape.config;
 
 import org.springframework.boot.test.context.TestConfiguration;
 import org.springframework.context.annotation.Bean;
-import roomescape.ReservationRepository;
+import roomescape.domain.ReservationRepository;
 import roomescape.fake.FakeReservationRepository;
 
 @TestConfiguration

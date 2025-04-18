@@ -1,4 +1,4 @@
-package roomescape;
+package roomescape.domain;
 
 import java.util.List;
 import java.util.Optional;

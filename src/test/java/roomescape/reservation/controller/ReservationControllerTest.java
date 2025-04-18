@@ -47,11 +47,11 @@ class ReservationControllerTest {
         // given
         LocalDateTime now = LocalDateTime.now();
 
-        Reservation reservation1 = new Reservation(1, "꾹", now);
-        Reservation reservation2 = new Reservation(2, "꾹", now);
-        Reservation reservation3 = new Reservation(3, "꾹", now);
-
-        List<Reservation> reservations = List.of(reservation1, reservation2, reservation3);
+        List<Reservation> reservations = List.of(
+                new Reservation(1, "꾹", now),
+                new Reservation(2, "꾹", now),
+                new Reservation(3, "꾹", now)
+        );
 
         given(reservationRepository.findAll()).willReturn(reservations);
 

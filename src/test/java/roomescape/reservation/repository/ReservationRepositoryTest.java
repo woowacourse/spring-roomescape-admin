@@ -5,18 +5,19 @@ import static org.assertj.core.api.Assertions.assertThat;
 import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
-import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.context.SpringBootTest;
 import roomescape.reservation.entity.Reservation;
 
-@SpringBootTest
 class ReservationRepositoryTest {
 
-    @Autowired
     private ReservationRepository reservationRepository;
+
+    @BeforeEach
+    void init() {
+        reservationRepository = new ReservationRepositoryImpl();
+    }
 
     @DisplayName("초기 ID의 값은 1이다.")
     @Test
@@ -92,11 +93,11 @@ class ReservationRepositoryTest {
         // given
         LocalDateTime now = LocalDateTime.now();
 
-        Reservation reservation1 = new Reservation(1, "꾹", now);
-        Reservation reservation2 = new Reservation(2, "꾹", now);
-        Reservation reservation3 = new Reservation(3, "꾹", now);
-
-        List<Reservation> reservations = List.of(reservation1, reservation2, reservation3);
+        List<Reservation> reservations = List.of(
+                new Reservation(1, "꾹", now),
+                new Reservation(2, "꾹", now),
+                new Reservation(3, "꾹", now)
+        );
 
         for (Reservation reservation : reservations) {
             reservationRepository.save(reservation);
@@ -124,10 +125,5 @@ class ReservationRepositoryTest {
         // then
         Optional<Reservation> result = reservationRepository.findById(id);
         assertThat(result).isEmpty();
-    }
-
-    @AfterEach
-    void clear() {
-        reservationRepository.deleteAll();
     }
 }

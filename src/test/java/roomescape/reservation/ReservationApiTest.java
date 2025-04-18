@@ -6,7 +6,6 @@ import io.restassured.RestAssured;
 import io.restassured.http.ContentType;
 import java.util.HashMap;
 import java.util.Map;
-import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
@@ -112,10 +111,5 @@ class ReservationApiTest {
                     .then().log().all()
                     .statusCode(404);
         }
-    }
-
-    @AfterEach()
-    void clear() {
-        reservationRepository.deleteAll();
     }
 }

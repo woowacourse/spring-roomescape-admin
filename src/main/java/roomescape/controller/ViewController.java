@@ -7,7 +7,7 @@ import org.springframework.web.bind.annotation.GetMapping;
 public class ViewController {
 
     @GetMapping("admin")
-    public String home() {
+    public String getHomePage() {
         return "admin/index";
     }
 

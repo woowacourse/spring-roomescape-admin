@@ -4,6 +4,8 @@ import static org.hamcrest.Matchers.is;
 
 import io.restassured.RestAssured;
 import io.restassured.http.ContentType;
+import java.time.LocalDate;
+import java.time.LocalTime;
 import java.util.HashMap;
 import java.util.Map;
 import org.junit.jupiter.api.Test;
@@ -15,7 +17,7 @@ import org.springframework.test.annotation.DirtiesContext;
 public class MissionStepTest {
 
     @Test
-    void 일단계() {
+    void getHomePageTest() {
         RestAssured.given().log().all()
                 .when().get("/admin")
                 .then().log().all()
@@ -23,12 +25,15 @@ public class MissionStepTest {
     }
 
     @Test
-    void 이단계() {
+    void getReservationPageTest() {
         RestAssured.given().log().all()
                 .when().get("/admin/reservation")
                 .then().log().all()
                 .statusCode(200);
+    }
 
+    @Test
+    void getReservationsTest() {
         RestAssured.given().log().all()
                 .when().get("/reservations")
                 .then().log().all()
@@ -37,11 +42,11 @@ public class MissionStepTest {
     }
 
     @Test
-    void 삼단계() {
+    void addReservationTest() {
         Map<String, String> params = new HashMap<>();
         params.put("name", "브라운");
-        params.put("date", "2025-04-18");
-        params.put("time", "19:00");
+        params.put("date", LocalDate.now().toString());
+        params.put("time", LocalTime.now().plusHours(1).toString());
 
         RestAssured.given().log().all()
                 .contentType(ContentType.JSON)
@@ -55,6 +60,22 @@ public class MissionStepTest {
                 .then().log().all()
                 .statusCode(200)
                 .body("size()", is(1));
+    }
+
+    @Test
+    void deleteReservationTest() {
+
+        Map<String, String> params = new HashMap<>();
+        params.put("name", "브라운");
+        params.put("date", LocalDate.now().toString());
+        params.put("time", LocalTime.now().plusHours(1).toString());
+
+        RestAssured.given().log().all()
+                .contentType(ContentType.JSON)
+                .body(params)
+                .when().post("/reservations")
+                .then().log().all()
+                .statusCode(201);
 
         RestAssured.given().log().all()
                 .when().delete("/reservations/1")

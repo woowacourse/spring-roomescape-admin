@@ -2,6 +2,8 @@ package roomescape.domain;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertAll;
+import static roomescape.test.utility.ReservationTestUtility.checkReservation;
+import static roomescape.test.utility.ReservationsTestUtility.checkDeleteReservation;
 
 import java.time.LocalDate;
 import java.time.LocalTime;
@@ -15,16 +17,12 @@ class ReservationsTest {
     @DisplayName("예약을 추가할 수 있다")
     @Test
     void addReservation() {
-        String name = "Kim";
-        LocalDate date = LocalDate.now();
-        LocalTime time = LocalTime.now();
-        reservations.add(name, date, time);
+        Reservation expected = new Reservation(1L, "reservation1", LocalDate.now(), LocalTime.now());
+
+        reservations.add(expected.getName(), expected.getDate(), expected.getTime());
 
         Reservation savedReservation = reservations.getReservations().getFirst();
-        assertAll(
-                () -> assertThat(savedReservation.getName()).isEqualTo(name),
-                () -> assertThat(savedReservation.getDate()).isEqualTo(date),
-                () -> assertThat(savedReservation.getTime()).isEqualTo(time));
+        checkReservation(savedReservation, expected);
     }
 
     @DisplayName("ID를 기반으로 예약을 삭제할 수 있다")
@@ -38,9 +36,7 @@ class ReservationsTest {
         reservations.deleteBy(deleteReservationId);
         assertAll(
                 () -> assertThat(reservations.getReservations()).hasSize(2),
-                () -> assertThat(reservations.getReservations())
-                        .extracting(Reservation::getId)
-                        .doesNotContain(deleteReservationId));
+                () -> checkDeleteReservation(reservations, deleteReservationId));
     }
 
     @DisplayName("모든 예약들을 조회할 수 있다")

@@ -23,10 +23,6 @@ public class ReservationController {
     private final List<ReservationResponse> reservations = new ArrayList<>();
     private final AtomicLong index = new AtomicLong(1);
 
-    @GetMapping("/admin/reservation")
-    public String getReservationPage() {
-        return "admin/reservation-legacy";
-    }
 
     @GetMapping("/reservations")
     public ResponseEntity<List<ReservationResponse>> findAll() {

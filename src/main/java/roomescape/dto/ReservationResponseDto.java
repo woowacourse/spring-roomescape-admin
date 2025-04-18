@@ -7,9 +7,10 @@ import java.util.Locale;
 
 public record ReservationResponseDto(Long id, String name, String date, String time) {
 
-    public static ReservationResponseDto toDto(Reservation reservation) {
-        DateTimeFormatter dateFormatter = DateTimeFormatter.ofPattern("yyyy-MM-dd", Locale.KOREA);
-        DateTimeFormatter timeFormatter = DateTimeFormatter.ofPattern("HH:mm", Locale.KOREA);
+    private static final DateTimeFormatter dateFormatter = DateTimeFormatter.ofPattern("yyyy-MM-dd", Locale.KOREA);
+    private static final DateTimeFormatter timeFormatter = DateTimeFormatter.ofPattern("HH:mm", Locale.KOREA);
+
+    public static ReservationResponseDto from(Reservation reservation) {
 
          return new ReservationResponseDto(
                  reservation.getId(),

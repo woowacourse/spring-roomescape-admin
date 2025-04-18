@@ -2,20 +2,20 @@ package roomescape.controller;
 
 import java.util.List;
 import org.springframework.http.ResponseEntity;
+import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
 import roomescape.dto.CreateReservationDto;
 import roomescape.dto.ReservationResponseDto;
 import roomescape.entity.Reservation;
 import roomescape.exception.InvalidReservationException;
 import roomescape.repository.ReservationRepository;
 
-@RestController
+@Controller
 @RequestMapping("/reservations")
 public class ReservationController {
 
@@ -29,7 +29,7 @@ public class ReservationController {
     public ResponseEntity<List<ReservationResponseDto>> getReservations(){
         List<ReservationResponseDto> reservations = reservationRepository.findAll()
                 .stream()
-                .map(ReservationResponseDto::toDto)
+                .map(ReservationResponseDto::from)
                 .toList();
         return ResponseEntity.ok().body(reservations);
     }
@@ -37,7 +37,7 @@ public class ReservationController {
     @PostMapping
     public ResponseEntity<ReservationResponseDto> createReservation(@RequestBody CreateReservationDto createReservationDto) {
         Reservation reservation = reservationRepository.add(createReservationDto);
-        return ResponseEntity.ok().body(ReservationResponseDto.toDto(reservation));
+        return ResponseEntity.ok().body(ReservationResponseDto.from(reservation));
     }
 
     @DeleteMapping("/{id}")

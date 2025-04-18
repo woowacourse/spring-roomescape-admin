@@ -7,6 +7,7 @@ import java.util.TreeMap;
 import java.util.concurrent.atomic.AtomicLong;
 import org.springframework.stereotype.Repository;
 import roomescape.reservation.entity.Reservation;
+import roomescape.reservation.exception.EntityNotFoundException;
 
 @Repository
 public class ReservationRepositoryImpl implements ReservationRepository {
@@ -41,6 +42,10 @@ public class ReservationRepositoryImpl implements ReservationRepository {
 
     @Override
     public void deleteById(long id) {
+        if (!database.containsKey((int) id)) {
+            throw new EntityNotFoundException("해당 엔티티가 존재하지 않습니다. id = " + id);
+        }
+
         database.remove((int) id);
     }
 }

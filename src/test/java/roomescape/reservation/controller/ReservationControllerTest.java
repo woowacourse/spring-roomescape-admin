@@ -1,49 +1,41 @@
 package roomescape.reservation.controller;
 
-import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.BDDMockito.given;
-import static org.mockito.BDDMockito.willDoNothing;
-import static org.mockito.BDDMockito.willThrow;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.delete;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
+import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.assertThatCode;
+import static org.assertj.core.api.Assertions.assertThatThrownBy;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.LocalTime;
 import java.util.List;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.CsvSource;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
-import org.springframework.http.MediaType;
-import org.springframework.test.context.bean.override.mockito.MockitoBean;
-import org.springframework.test.web.servlet.MockMvc;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import roomescape.reservation.dto.ReservationRequestDto;
+import roomescape.reservation.dto.ReservationResponseDto;
 import roomescape.reservation.entity.Reservation;
 import roomescape.reservation.exception.EntityNotFoundException;
 import roomescape.reservation.repository.ReservationRepository;
+import roomescape.reservation.repository.ReservationRepositoryImpl;
 
-@WebMvcTest(controllers = ReservationController.class)
 class ReservationControllerTest {
 
-    @MockitoBean
-    ReservationRepository reservationRepository;
+    private ReservationRepository reservationRepository;
+    private ReservationController reservationController;
 
-    @Autowired
-    private MockMvc mvc;
-
-    @Autowired
-    private ObjectMapper objectMapper;
+    @BeforeEach
+    void init() {
+        reservationRepository = new ReservationRepositoryImpl();
+        reservationController = new ReservationController(reservationRepository);
+    }
 
     @DisplayName("모든 예약 정보를 가져온다.")
     @Test
-    void test1() throws Exception {
+    void test1() {
         // given
         LocalDateTime now = LocalDateTime.now();
 
@@ -53,63 +45,63 @@ class ReservationControllerTest {
                 new Reservation(3, "꾹", now)
         );
 
-        given(reservationRepository.findAll()).willReturn(reservations);
+        List<ReservationResponseDto> expected = reservations.stream()
+                .map(ReservationResponseDto::toDto)
+                .toList();
 
-        // when & then
-        mvc.perform(get("/reservations"))
-                .andExpect(status().isOk())
-                .andExpect(jsonPath("$.length()").value(3))
-                .andExpect(jsonPath("$[0].name").value("꾹"));
+        for (Reservation reservation : reservations) {
+            reservationRepository.save(reservation);
+        }
+
+        // when
+        ResponseEntity<List<ReservationResponseDto>> result = reservationController.readAllReservations();
+
+        // then
+        assertThat(result.getStatusCode()).isEqualTo(HttpStatus.OK);
+        assertThat(result.getBody()).isEqualTo(expected);
     }
 
     @DisplayName("예약 정보를 추가한다.")
     @ParameterizedTest
     @CsvSource(value = {"꾹,2025-04-17,10:00"}, delimiter = ',')
-    void test2(String name, String date, String time) throws Exception {
-
+    void test2(String name, String date, String time) {
         // given
         LocalDate localDate = LocalDate.parse(date);
         LocalTime localTime = LocalTime.parse(time);
-        LocalDateTime localDateTime = LocalDateTime.of(localDate, localTime);
 
         ReservationRequestDto requestDto = new ReservationRequestDto(name, localDate, localTime);
-        Reservation reservation = new Reservation(1, name, localDateTime);
-        given(reservationRepository.save(any())).willReturn(reservation);
+        ReservationResponseDto expected = new ReservationResponseDto(1L, name, localDate, localTime);
 
-        String json = objectMapper.writeValueAsString(requestDto);
+        // when
+        ResponseEntity<ReservationResponseDto> result = reservationController.add(requestDto);
 
-        // when & then
-        mvc.perform(post("/reservations")
-                .contentType(MediaType.APPLICATION_JSON)
-                .content(json)
-        ).andExpect(status().isOk());
+        // then
+        assertThat(result.getStatusCode()).isEqualTo(HttpStatus.OK);
+        assertThat(result.getBody()).isEqualTo(expected);
     }
 
     @DisplayName("예약 정보를 삭제한다.")
     @Test
-    void test3() throws Exception {
+    void test3() {
         // given
         long id = 1L;
-
-        willDoNothing().given(reservationRepository).deleteById(id);
+        Reservation reservation = new Reservation(id, "꾹", LocalDateTime.now());
+        reservationRepository.save(reservation);
 
         // when & then
-        mvc.perform(delete("/reservations/{id}", id))
-                .andExpect(status().isNoContent());
+        assertThatCode(() -> reservationController.delete(id))
+                .doesNotThrowAnyException();
     }
 
     @DisplayName("삭제할 예약 정보가 없다면 404 에러 코드를 반환한다")
     @Test
-    void test4() throws Exception {
+    void test4() {
         // given
         long id = 1L;
 
-        willThrow(new EntityNotFoundException(""))
-                .given(reservationRepository).deleteById(id);
-
         // when & then
-        mvc.perform(delete("/reservations/{id}", id))
-                .andExpect(status().isNotFound());
+        assertThatThrownBy(() -> reservationController.delete(id))
+                .isInstanceOf(EntityNotFoundException.class);
     }
 
 }

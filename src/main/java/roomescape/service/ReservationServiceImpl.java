@@ -1,5 +1,8 @@
 package roomescape.service;
 
+import java.time.LocalDate;
+import java.time.LocalTime;
+import java.util.Optional;
 import org.springframework.dao.DataAccessException;
 import org.springframework.stereotype.Service;
 import roomescape.dto.ReservationRequest;
@@ -26,10 +29,14 @@ public class ReservationServiceImpl implements ReservationService {
 
     @Override
     public ReservationResponse createReservation(final ReservationRequest reservationRequest) {
-        Reservation reservation = new Reservation(
-                reservationRequest.name(),
-                reservationRequest.date(),
-                reservationRequest.time());
+        String name = reservationRequest.name();
+        LocalDate date = reservationRequest.date();
+        LocalTime time = reservationRequest.time();
+        if (reservationRepository.selectByDateAndTime(date,time)) {
+            throw new IllegalArgumentException("해당 시간에는 예약이 존재합니다.");
+        }
+
+        Reservation reservation = new Reservation(name, date, time);
 
         final Reservation saved = reservationRepository.save(reservation);
         return ReservationResponse.from(saved);

@@ -21,4 +21,6 @@ class ReservationTest {
                 .isInstanceOf(IllegalArgumentException.class)
                 .hasMessageContaining("예약할 수 없는 시간입니다.");
     }
+
+
 }

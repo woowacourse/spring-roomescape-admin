@@ -1,5 +1,7 @@
 package roomescape.repository;
 
+import java.time.LocalDate;
+import java.time.LocalTime;
 import org.springframework.stereotype.Repository;
 import roomescape.entity.Reservation;
 
@@ -40,5 +42,12 @@ public class FakeReservationRepository implements ReservationRepository {
     @Override
     public void deleteById(final long id) {
         reservations.remove(id);
+    }
+
+    @Override
+    public boolean selectByDateAndTime(LocalDate date, LocalTime time) {
+        return reservations.values().stream()
+                .anyMatch(
+                        reservation -> reservation.getDate().isEqual(date) ||reservation.getTime().equals(time));
     }
 }

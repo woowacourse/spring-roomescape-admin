@@ -10,6 +10,7 @@
     - ```
       GET /reservations HTTP/1.1
       ```
+      
   - Response
     - ```
       HTTP/1.1 200
@@ -29,6 +30,7 @@
           }
       ]
       ``` 
+      
 - [x] 예약 추가 API 
   - Request
     - ```
@@ -41,6 +43,7 @@
       "time": "15:40"
       }
       ```
+      
   - Response
     - ```
       HTTP/1.1 200
@@ -53,11 +56,13 @@
       "time": "15:40"
       }
       ```
+      
 - [x] 예약 취소 API
    - Request 
      - ```
        DELETE /reservations/1 HTTP/1.1
        ```
+       
    - Response
      - ```
        HTTP/1.1 200

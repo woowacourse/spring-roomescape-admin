@@ -23,8 +23,8 @@ public class Reservation {
         this.time = time;
     }
 
-    public static Reservation toEntity(Reservation reservation, long id) {
-        return new Reservation(id, reservation.name, reservation.date, reservation.time);
+    public Reservation toEntity(long id) {
+        return new Reservation(id, name, date, time);
     }
 
     public boolean isDuplicateReservation(Reservation reservation) {

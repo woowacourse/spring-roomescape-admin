@@ -23,7 +23,7 @@ public class RoomescapeRepository {
         if (existsSameDateTime(reservation)) {
             throw new IllegalArgumentException("[ERROR] 이미 존재하는 예약시간입니다.");
         }
-        Reservation saved = Reservation.toEntity(reservation, index.getAndIncrement());
+        Reservation saved = reservation.toEntity(index.getAndIncrement());
         reservations.add(saved);
         return saved;
     }

@@ -1,4 +1,4 @@
-package roomescape;
+package roomescape.reservation.controller;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
@@ -16,6 +16,8 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
+import roomescape.reservation.controller.response.ReservationResponse;
+import roomescape.reservation.domain.Reservation;
 
 @RestController
 @RequestMapping("reservations")

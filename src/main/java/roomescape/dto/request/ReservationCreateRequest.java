@@ -1,5 +1,6 @@
 package roomescape.dto.request;
 
+import org.springframework.util.ObjectUtils;
 import roomescape.Reservation;
 
 import java.time.LocalDate;
@@ -11,11 +12,8 @@ public record ReservationCreateRequest(
         LocalTime time
 ) {
     public ReservationCreateRequest {
-        if (name == null) {
+        if (ObjectUtils.isEmpty(name)) {
             throw new IllegalArgumentException("이름은 필수값입니다.");
-        }
-        if (name.isBlank()) {
-            throw new IllegalArgumentException("이름은 비어 있을 수 없습니다.");
         }
         if (date == null) {
             throw new IllegalArgumentException("날짜는 필수값입니다.");

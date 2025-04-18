@@ -20,7 +20,7 @@ import roomescape.reservation.controller.response.ReservationResponse;
 import roomescape.reservation.domain.Reservation;
 
 @RestController
-@RequestMapping("reservations")
+@RequestMapping("/reservations")
 public class ReservationApiController {
 
     private final List<Reservation> reservations = new ArrayList<>();
@@ -49,7 +49,7 @@ public class ReservationApiController {
         );
     }
 
-    @DeleteMapping("{id}")
+    @DeleteMapping("/{id}")
     public ResponseEntity<Void> deleteReservation(@PathVariable Long id) {
         Optional<Reservation> find = reservations.stream()
                 .filter(reservation -> reservation.isSameId(id))

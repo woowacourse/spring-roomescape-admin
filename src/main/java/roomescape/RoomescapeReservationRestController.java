@@ -24,10 +24,14 @@ public class RoomescapeReservationRestController {
     }
 
     @PostMapping("")
-    public ResponseEntity<ReservationEntity> createReservation(@RequestBody ReservationDto reservationDto) {
-        ReservationEntity entity = reservationDto.toEntity();
-        reservations.save(entity);
-        return ResponseEntity.ok().body(entity);
+    public ResponseEntity<Reservation> createReservation(@RequestBody ReservationDto reservationDto) {
+        Reservation entity = reservationDto.toEntity();
+        try {
+            reservations.save(entity);
+            return ResponseEntity.ok().body(entity);
+        } catch (IllegalArgumentException e) {
+            return ResponseEntity.badRequest().build();
+        }
     }
 
     @DeleteMapping("/{id}")

@@ -11,6 +11,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import jakarta.validation.Valid;
 import roomescape.model.Reservation;
 import roomescape.model.Reservations;
 
@@ -26,7 +27,7 @@ public class ReservationController {
     }
 
     @PostMapping
-    public ResponseEntity<Reservation> createReservation(@RequestBody Reservation reservation) {
+    public ResponseEntity<Reservation> createReservation(@RequestBody @Valid Reservation reservation) {
         return ResponseEntity.ok(reservations.save(reservation));
     }
 

@@ -18,6 +18,11 @@ public class RoomEscapeController {
 
     private final ReservationRepository repository = new ReservationRepository();
 
+    @GetMapping("/")
+    public String redirectReservationPage() {
+        return "redirect:/admin/reservation";
+    }
+
     @GetMapping("/admin")
     public String adminPage() {
         return "admin/index";

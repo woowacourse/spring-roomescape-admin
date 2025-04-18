@@ -44,7 +44,7 @@ class ReservationsTest {
 
     @Test
     @DisplayName("예약 중복 테스트")
-    void validateSameDateTimeTest() {
+    void validateReservationTimeAvailabilityTest() {
         Reservation reservation1 = new Reservation(
                 1L, "브라운",
                 LocalDate.of(2024, 4, 18), LocalTime.of(9, 3));
@@ -56,7 +56,7 @@ class ReservationsTest {
                 LocalDate.of(2024, 4, 18), LocalTime.of(9, 3));
 
         assertThatThrownBy(() ->
-                reservations.validateSameDateTime(reservation2))
+                reservations.validateReservationTimeAvailability(reservation2))
                 .isInstanceOf(IllegalArgumentException.class)
                 .hasMessage("[ERROR] 이미 예약되었어요. 다른 날짜를 골라주세요.");
 

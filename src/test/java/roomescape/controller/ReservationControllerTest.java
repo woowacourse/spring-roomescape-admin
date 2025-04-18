@@ -26,7 +26,6 @@ class ReservationControllerTest {
         params.put("time", "15:40");
     }
 
-
     @Test
     @DisplayName("예약 추가 후 조회 테스트")
     void createReservationTest() {
@@ -43,6 +42,28 @@ class ReservationControllerTest {
                 .then().log().all()
                 .statusCode(200)
                 .body("size()", is(1));
+    }
+
+    @Test
+    @DisplayName("중복된 예약 테스트")
+    void isDuplicateReservationTest() {
+        RestAssured.given().log().all()
+                .contentType(ContentType.JSON)
+                .body(params)
+                .when().post("/reservations")
+                .then().log().all()
+                .statusCode(200);
+
+        params.put("name", "솔라");
+        params.put("date", "2023-08-05");
+        params.put("time", "15:40");
+
+        RestAssured.given().log().all()
+                .contentType(ContentType.JSON)
+                .body(params)
+                .when().post("/reservations")
+                .then().log().all()
+                .statusCode(500);
     }
 
     @Test

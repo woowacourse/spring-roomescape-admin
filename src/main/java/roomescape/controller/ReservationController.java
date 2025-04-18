@@ -11,6 +11,7 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
 import roomescape.dto.request.ReservationRequest;
 import roomescape.dto.response.ReservationResponse;
+import roomescape.mapper.ReservationMapper;
 import roomescape.model.Reservation;
 import roomescape.repository.ReservationRepository;
 
@@ -28,14 +29,14 @@ public class ReservationController {
     @GetMapping
     public List<ReservationResponse> getAllReservations() {
         List<Reservation> allReservations = repository.findAll();
-        return ReservationResponse.reservationsToDtos(allReservations);
+        return ReservationMapper.toDtos(allReservations);
     }
 
     @ResponseBody
     @PostMapping
     public ReservationResponse addReservation(@RequestBody ReservationRequest request) {
-        Long id = repository.add(request.dtoToReservationWithoutId());
-        return ReservationResponse.reservationToDto(repository.findById(id));
+        Long id = repository.add(ReservationMapper.toDomain(request));
+        return ReservationMapper.toDto(repository.findById(id));
     }
 
     @ResponseBody

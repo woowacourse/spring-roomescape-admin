@@ -6,8 +6,7 @@ import roomescape.domain.Reservation;
 
 public record ReservationRes(Long id, String name, LocalDate date, LocalTime time) {
 
-    public static ReservationResponse from(final Reservation reservation) {
-        return new ReservationResponse(reservation.getId(), reservation.getName(), reservation.getDate(),
-                reservation.getTime());
+    public static ReservationRes from(final Long id, final Reservation reservation) {
+        return new ReservationRes(id, reservation.getName(), reservation.getDate(), reservation.getTime());
     }
 }

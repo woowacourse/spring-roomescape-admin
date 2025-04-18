@@ -1,35 +1,39 @@
 package roomescape.domain;
 
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.List;
+import java.util.Map.Entry;
+import java.util.concurrent.ConcurrentHashMap;
+import roomescape.dto.ReservationRes;
 
 public class Reservations {
 
-    private final List<Reservation> reservations;
+    private final ConcurrentHashMap<Long, Reservation> reservations;
+    private Long index;
 
-    public Reservations(final List<Reservation> reservations) {
-        this.reservations = new ArrayList<>(reservations);
+    public Reservations() {
+        this.reservations = new ConcurrentHashMap<>();
+        this.index = 1L;
     }
 
-    public void add(final Reservation reservation) {
-        reservations.add(reservation);
+    public long add(final Reservation reservation) {
+        reservations.put(index, reservation);
+        return index++;
     }
 
     public boolean isExistById(final Long id) {
-        return reservations.stream()
-                .anyMatch(reservation -> reservation.getId().equals(id));
+        return reservations.containsKey(id);
     }
 
     public void deleteBy(final Long id) {
-        final Reservation target = reservations.stream()
-                .filter(reservation -> reservation.getId().equals(id))
-                .findFirst()
-                .orElseThrow(IllegalArgumentException::new);
-        reservations.remove(target);
+        reservations.remove(id);
     }
 
-    public List<Reservation> getReservations() {
-        return Collections.unmodifiableList(reservations);
+    public List<ReservationRes> getReservations() {
+        final List<ReservationRes> reservationRes = new ArrayList<>();
+        for (Entry<Long, Reservation> each : reservations.entrySet()) {
+            reservationRes.add(ReservationRes.from(each.getKey(), each.getValue()));
+        }
+        return reservationRes;
     }
 }

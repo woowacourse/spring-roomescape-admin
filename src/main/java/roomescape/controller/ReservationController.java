@@ -30,16 +30,12 @@ public class ReservationController {
     }
 
     @PostMapping
-    public ResponseEntity<Void> addReservations(@RequestBody AddReservationDto addReservationDto) {
-        if (addReservationDto == null) {
-            throw new InvalidReservationRequest();
-        }
+    public ResponseEntity<Void> addReservations(@RequestBody AddReservationDto newReservationDto) {
+        Reservation addedReservation = new Reservation(index.getAndIncrement(), newReservationDto.name(),
+                newReservationDto.date(), newReservationDto.time());
+        reservations.add(addedReservation);
 
-        Reservation newReservation = new Reservation(index.getAndIncrement(), addReservationDto.name(),
-                addReservationDto.date(), addReservationDto.time());
-        reservations.add(newReservation);
-
-        return ResponseEntity.created(URI.create("/reservations/" + newReservation.id())).build();
+        return ResponseEntity.created(URI.create("/reservations/" + addedReservation.id())).build();
     }
 
     @DeleteMapping("/{id}")

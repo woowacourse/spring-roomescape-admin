@@ -18,7 +18,7 @@ public class RoomEscapeController {
     private final ReservationRepository repository = new ReservationRepository();
 
     @GetMapping("/reservations")
-    public List<ReservationResponse> reservationsJson() {
+    public List<ReservationResponse> findReservations() {
         return ReservationResponse.reservationsToDtos(repository.findAll());
     }
 

@@ -11,6 +11,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.ResponseBody;
 import roomescape.dto.request.ReservationRequest;
 import roomescape.dto.response.ReservationResponse;
+import roomescape.model.Reservation;
 import roomescape.repository.ReservationRepository;
 
 @Controller
@@ -30,8 +31,9 @@ public class RoomEscapeController {
 
     @ResponseBody
     @GetMapping("/reservations")
-    public List<ReservationResponse> reservationsJson() {
-        return ReservationResponse.reservationsToDtos(repository.findAll());
+    public List<ReservationResponse> getAllReservations() {
+        List<Reservation> allReservations = repository.findAll();
+        return ReservationResponse.reservationsToDtos(allReservations);
     }
 
     @ResponseBody
@@ -40,6 +42,7 @@ public class RoomEscapeController {
         Long id = repository.add(request.dtoToReservationWithoutId());
         return ReservationResponse.reservationToDto(repository.findById(id));
     }
+
 
     @DeleteMapping("/reservations/{id}")
     public ResponseEntity<Void> deleteReservation(@PathVariable("id") Long id) {

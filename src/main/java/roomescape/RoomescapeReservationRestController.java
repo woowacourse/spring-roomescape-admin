@@ -6,14 +6,15 @@ import org.springframework.web.bind.annotation.*;
 import java.util.List;
 
 @RestController
-public class RoomescapeRestController {
+@RequestMapping("/reservations")
+public class RoomescapeReservationRestController {
     private final Reservations reservations;
 
-    public RoomescapeRestController() {
+    public RoomescapeReservationRestController() {
         this.reservations = new Reservations();
     }
 
-    @GetMapping("/reservations")
+    @GetMapping("/")
     public List<ReservationDto> getAllReservation() {
         return reservations.findAll()
                 .stream()
@@ -21,7 +22,7 @@ public class RoomescapeRestController {
                 .toList();
     }
 
-    @PostMapping("/reservations")
+    @PostMapping("/")
     public ResponseEntity<ReservationDto> createReservation(@RequestBody ReservationDto reservationDto) {
         ReservationEntity entity = new ReservationEntity(
                 reservationDto.name(), reservationDto.date(), reservationDto.time()
@@ -30,7 +31,7 @@ public class RoomescapeRestController {
         return ResponseEntity.ok().body(reservationDto);
     }
 
-    @DeleteMapping("/reservations/{id}")
+    @DeleteMapping("/{id}")
     public ResponseEntity<Void> deleteReservation(@PathVariable Long id) {
         try {
             reservations.deleteById(id);

@@ -5,10 +5,13 @@ import java.time.LocalTime;
 
 public class Reservation {
 
-    private final Long id;
-    private final String name;
-    private final LocalDate date;
-    private final LocalTime time;
+    private Long id;
+    private String name;
+    private LocalDate date;
+    private LocalTime time;
+
+    public Reservation() {
+    }
 
     public Reservation(Long id, String name, LocalDate date, LocalTime time) {
         this.id = id;
@@ -17,8 +20,18 @@ public class Reservation {
         this.time = time;
     }
 
+    public Reservation(String name, LocalDate date, LocalTime time) {
+        this.name = name;
+        this.date = date;
+        this.time = time;
+    }
+
     public boolean isSameDateTime(Reservation reservation) {
         return reservation.date.isEqual(this.date) && reservation.time.equals(this.time);
+    }
+
+    public static Reservation toEntity(Reservation reservation, Long id) {
+        return new Reservation(id, reservation.name,reservation.date , reservation.time);
     }
 
     public String getName() {

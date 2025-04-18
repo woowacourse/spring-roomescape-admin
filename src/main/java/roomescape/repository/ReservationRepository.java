@@ -13,6 +13,10 @@ public class ReservationRepository {
     private final List<Reservation> reservations = new ArrayList<>();
     private final AtomicLong index = new AtomicLong(1L);
 
+    public long getNextId() {
+        return index.getAndIncrement();
+    }
+
     public List<Reservation> findAll() {
         return new ArrayList<>(reservations);
     }
@@ -24,12 +28,8 @@ public class ReservationRepository {
     }
 
     public Reservation save(Reservation reservation) {
-        Reservation saved = new Reservation(index.getAndIncrement(),
-                reservation.getName(),
-                reservation.getDate(),
-                reservation.getTime());
-        reservations.add(saved);
-        return saved;
+        reservations.add(reservation);
+        return reservation;
     }
 
     public void delete(Reservation reservation) {

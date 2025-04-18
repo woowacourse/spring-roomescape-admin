@@ -11,7 +11,7 @@ public record ReservationRequest(
         @NotNull LocalDate date,
         @NotNull LocalTime time
 ) {
-    public Reservation toEntity() {
-        return new Reservation(null, name, date, time);
+    public Reservation toReservation(Long id) {
+        return new Reservation(id, name, date, time);
     }
 }

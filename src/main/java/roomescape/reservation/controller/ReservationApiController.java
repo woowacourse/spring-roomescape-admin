@@ -5,7 +5,6 @@ import java.time.LocalDateTime;
 import java.time.LocalTime;
 import java.util.List;
 import java.util.Optional;
-import java.util.concurrent.atomic.AtomicLong;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -25,16 +24,14 @@ import roomescape.reservation.domain.Reservations;
 public class ReservationApiController {
 
     private final Reservations reservations = new Reservations();
-    private final AtomicLong reservationId = new AtomicLong();
 
     @GetMapping
     public ResponseEntity<List<ReservationResponse>> getReservations() {
         List<ReservationResponse> reservationResponses = reservations.getReservations()
                 .stream()
-                .map(ReservationResponse::of)
+                .map(ReservationResponse::from)
                 .toList();
 
-        return ResponseEntity.ok(reservationResponses);
         return ResponseEntity
                 .status(HttpStatus.CREATED)
                 .body(reservationResponses);
@@ -43,14 +40,14 @@ public class ReservationApiController {
     @PostMapping
     public ResponseEntity<ReservationResponse> createReservation(@RequestBody ReservationCreateRequest request) {
         Reservation reservation = new Reservation(
-                reservationId.incrementAndGet(),
+                reservations.generateId(),
                 request.name(),
                 LocalDateTime.of(LocalDate.parse(request.date()), LocalTime.parse(request.time()))
         );
         reservations.create(reservation);
 
         return ResponseEntity.ok(
-                ReservationResponse.of(reservation)
+                ReservationResponse.from(reservation)
         );
     }
 

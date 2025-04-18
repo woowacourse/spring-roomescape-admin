@@ -11,7 +11,7 @@ public record ReservationResponse(
         String date,
         String time
 ) {
-    public static ReservationResponse of(Reservation reservation) {
+    public static ReservationResponse from(Reservation reservation) {
         LocalDate date = reservation.getDateTime().toLocalDate();
         LocalTime time = reservation.getDateTime().toLocalTime();
 

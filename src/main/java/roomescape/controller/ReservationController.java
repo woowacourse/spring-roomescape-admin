@@ -33,7 +33,7 @@ public class ReservationController {
     }
 
     @PostMapping
-    public ResponseEntity<Void> addReservations(@RequestBody final AddReservationRequest addReservationRequest) {
+    public ResponseEntity<Void> save(@RequestBody final AddReservationRequest addReservationRequest) {
         if (addReservationRequest == null) {
             throw new InvalidReservationException("예약을 추가할 수 없습니다.");
         }
@@ -44,7 +44,7 @@ public class ReservationController {
     }
 
     @DeleteMapping("/{id}")
-    public ResponseEntity<Void> deleteReservations(@PathVariable final Long id) {
+    public ResponseEntity<Void> delete(@PathVariable final Long id) {
         final Reservation deleteReservation = reservations.stream()
                 .filter((reservation) -> reservation.id().equals(id))
                 .findAny()

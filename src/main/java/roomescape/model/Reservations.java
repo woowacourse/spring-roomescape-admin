@@ -2,6 +2,7 @@ package roomescape.model;
 
 import java.time.LocalDateTime;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 import java.util.Objects;
 import java.util.concurrent.atomic.AtomicLong;
@@ -40,6 +41,6 @@ public class Reservations {
     }
 
     public List<Reservation> getReservations() {
-        return reservations;
+        return Collections.unmodifiableList(reservations);
     }
 }

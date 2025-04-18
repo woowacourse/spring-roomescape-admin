@@ -7,6 +7,8 @@ import io.restassured.module.mockmvc.RestAssuredMockMvc;
 import java.util.HashMap;
 import java.util.Map;
 import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.DisplayNameGeneration;
+import org.junit.jupiter.api.DisplayNameGenerator;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -52,21 +54,21 @@ public class MissionStepTest {
     @Nested
     class 삼단계 {
 
-        static Map<String, String> params;
-
-        static {
-            params = new HashMap<>();
+        private Map<String, String> createTestParams() {
+            Map<String, String> params = new HashMap<>();
             params.put("name", "브라운");
             params.put("date", "2023-08-05");
             params.put("time", "15:40");
+            return params;
         }
 
         @Test
         void 삼단계_예약을_할_수_있다() {
+            Map<String, String> params = createTestParams();
+
             given()
                     .contentType("application/json")
                     .body(params)
-                    .log().all()  // 요청 로그 출력 (삭제 예정)
                     .when().post("/reservations")
                     .then()
                     .statusCode(HttpStatus.CREATED.value());
@@ -75,12 +77,13 @@ public class MissionStepTest {
                     .when().get("/reservations")
                     .then()
                     .statusCode(HttpStatus.OK.value())
-                    .body("size()", is(1))
-                    .log().all();   // 응답 로그 출력 (삭제 예정)
+                    .body("size()", is(1));
         }
 
         @Test
         void 삼단계_예약을_삭제할_수_있다() {
+            Map<String, String> params = createTestParams();
+
             given()
                     .contentType("application/json")
                     .body(params)

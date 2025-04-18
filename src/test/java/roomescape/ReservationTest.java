@@ -5,6 +5,7 @@ import org.junit.jupiter.api.Test;
 
 import java.time.LocalDate;
 import java.time.LocalTime;
+import roomescape.model.Reservation;
 
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 

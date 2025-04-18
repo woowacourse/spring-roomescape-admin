@@ -8,7 +8,7 @@ public class ViewController {
 
     @GetMapping("/admin")
     public String admin(){
-        return "index";
+        return "admin/index";
     }
 
     @GetMapping("/admin/reservation")

@@ -14,6 +14,7 @@ import roomescape.reservation.controller.response.ReservationResponse;
 import roomescape.reservation.controller.response.ReservationsResponse;
 import roomescape.reservation.domain.Reservation;
 import roomescape.reservation.domain.Reservations;
+import roomescape.reservation.domain.exception.ReserverNameEmptyException;
 import roomescape.reservation.service.ReservationService;
 import roomescape.reservation.service.exception.ReservationNotFoundException;
 
@@ -38,7 +39,12 @@ public class ReservationApiController {
 
     @PostMapping
     public ResponseEntity<ReservationResponse> createReservation(@RequestBody ReservationCreateRequest request) {
-        Reservation reservation = reservationService.createReservation(request);
+        Reservation reservation;
+        try {
+            reservation = reservationService.createReservation(request);
+        } catch (ReserverNameEmptyException e) {
+            return ResponseEntity.badRequest().build();
+        }
 
         return ResponseEntity.ok(
                 ReservationResponse.from(reservation)

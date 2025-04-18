@@ -66,14 +66,32 @@ public class ReservationTest {
                 .statusCode(200);
 
         RestAssured.given().log().all()
-                .when().delete("/reservations/2")
-                .then().log().all()
-                .statusCode(404);
-
-        RestAssured.given().log().all()
                 .when().get("/reservations")
                 .then().log().all()
                 .statusCode(201)
                 .body("reservationResponses.size()", is(0));
+    }
+
+    @Test
+    void 방탈출_예약_생성시_예약자_이름이_비어있으면_예외를_응답한다() {
+        Map<String, String> params = new HashMap<>();
+        params.put("name", "");
+        params.put("date", "2023-08-05");
+        params.put("time", "15:40");
+
+        RestAssured.given().log().all()
+                .contentType(ContentType.JSON)
+                .body(params)
+                .when().post("/reservations")
+                .then().log().all()
+                .statusCode(400);
+    }
+
+    @Test
+    void 예약_삭제시_존재하지_않는_예약이면_예외를_응답한다() {
+        RestAssured.given().log().all()
+                .when().delete("/reservations/2")
+                .then().log().all()
+                .statusCode(404);
     }
 }

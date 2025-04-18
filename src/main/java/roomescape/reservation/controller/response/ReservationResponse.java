@@ -19,7 +19,7 @@ public record ReservationResponse(
 
         return new ReservationResponse(
                 reservation.getId(),
-                reservation.getCustomerName(),
+                reservation.getReserverName(),
                 date.toString(),
                 time.format(timeFormatter)
         );

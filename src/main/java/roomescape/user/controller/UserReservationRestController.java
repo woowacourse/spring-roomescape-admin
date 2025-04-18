@@ -11,6 +11,7 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
+import roomescape.exception.DataNotFoundException;
 import roomescape.user.domain.Reservation;
 import roomescape.user.repository.ReservationRepository;
 
@@ -23,6 +24,11 @@ public class UserReservationRestController {
     @ExceptionHandler(IllegalArgumentException.class)
     public ResponseEntity<Void> handleIllegalArgumentException(final IllegalArgumentException e) {
         return ResponseEntity.badRequest().build();
+    }
+
+    @ExceptionHandler(DataNotFoundException.class)
+    public ResponseEntity<Void> handleDataNotFoundException(final DataNotFoundException e) {
+        return ResponseEntity.notFound().build();
     }
 
     @GetMapping("/reservations")
@@ -45,7 +51,7 @@ public class UserReservationRestController {
     public ResponseEntity<Void> deleteReservation(@PathVariable final Long id) {
         final Optional<Reservation> found = reservationRepository.findById(id);
         if (found.isEmpty()) {
-            return ResponseEntity.notFound().build();
+            throw new DataNotFoundException("해당 예약 정보가 존재하지 않습니다. id = " + id);
         }
 
         reservationRepository.delete(found.get());

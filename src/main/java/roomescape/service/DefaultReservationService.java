@@ -4,8 +4,8 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Map.Entry;
 import org.springframework.stereotype.Service;
-import roomescape.dto.ReservationReq;
-import roomescape.dto.ReservationRes;
+import roomescape.dto.ReservationRequest;
+import roomescape.dto.ReservationResponse;
 import roomescape.model.Reservation;
 import roomescape.model.Reservations;
 
@@ -19,19 +19,19 @@ public class DefaultReservationService implements ReservationService {
     }
 
     @Override
-    public List<ReservationRes> get() {
-        final List<ReservationRes> responses = new ArrayList<>();
+    public List<ReservationResponse> get() {
+        final List<ReservationResponse> responses = new ArrayList<>();
         for (Entry<Long, Reservation> each : reservations.getReservations().entrySet()) {
-            responses.add(ReservationRes.from(each.getKey(), each.getValue()));
+            responses.add(ReservationResponse.from(each.getKey(), each.getValue()));
         }
         return responses;
     }
 
     @Override
-    public ReservationRes create(final ReservationReq req) {
+    public ReservationResponse create(final ReservationRequest req) {
         final Reservation reservation = req.toEntity();
         final long id = reservations.add(reservation);
-        return ReservationRes.from(id, reservation);
+        return ReservationResponse.from(id, reservation);
     }
 
     @Override

@@ -2,14 +2,14 @@ package roomescape.service;
 
 
 import java.util.List;
-import roomescape.dto.ReservationReq;
-import roomescape.dto.ReservationRes;
+import roomescape.dto.ReservationRequest;
+import roomescape.dto.ReservationResponse;
 
 public interface ReservationService {
 
-    List<ReservationRes> get();
+    List<ReservationResponse> get();
 
-    ReservationRes create(ReservationReq req);
+    ReservationResponse create(ReservationRequest req);
 
     void delete(Long id);
 }

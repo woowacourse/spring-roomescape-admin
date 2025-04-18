@@ -1,9 +1,11 @@
 package roomescape;
 
 import org.springframework.context.annotation.Bean;
+import org.springframework.context.annotation.Configuration;
 import roomescape.repository.ReservationRepository;
 import roomescape.service.ReservationService;
 
+@Configuration
 public class AppConfig {
 
     @Bean

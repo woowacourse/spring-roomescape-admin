@@ -33,7 +33,8 @@ public class UserRoomEscapeController {
 
         reservations.add(newReservation);
 
-        return ResponseEntity.ok(ReservationResponse.from(newReservation));
+        ReservationResponse response = ReservationResponse.from(newReservation);
+        return ResponseEntity.ok(response);
     }
 
     @DeleteMapping("/reservations/{reservationId}")

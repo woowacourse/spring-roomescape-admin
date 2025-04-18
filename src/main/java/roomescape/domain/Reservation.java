@@ -40,6 +40,10 @@ public class Reservation {
     }
 
     private void validateNameLength(final String name) {
+        if (name.isEmpty()) {
+            throw new IllegalArgumentException("예약자의 이름은 1글자 이상이어야 합니다.");
+        }
+
         if (name.length() > VALID_MAX_NAME_LENGTH) {
             throw new IllegalArgumentException("예약자의 이름은 4글자를 초과할 수 없습니다.");
         }

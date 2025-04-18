@@ -2,7 +2,6 @@ package roomescape.reservation;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.concurrent.atomic.AtomicLong;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -11,18 +10,16 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.ResponseBody;
-import org.springframework.web.bind.annotation.RestController;
 import roomescape.reservation.dto.ReservationRequest;
 import roomescape.reservation.dto.ReservationResponse;
 import roomescape.reservation.model.Reservation;
+import roomescape.reservation.model.ReservationId;
 import roomescape.reservation.model.Reservations;
 
-@RestController
+@Controller
 @RequestMapping("/reservations")
 public class ReservationController {
 
-    private final AtomicLong index = new AtomicLong(1L);
     private final Reservations reservations;
 
     public ReservationController() {
@@ -30,15 +27,16 @@ public class ReservationController {
     }
 
     @GetMapping
-    public List<ReservationResponse> getReservations() {
-        return reservations.getReservations().stream()
+    public ResponseEntity<List<ReservationResponse>> getReservations() {
+        List<ReservationResponse> list = reservations.getReservations().stream()
                 .map(ReservationResponse::from)
                 .toList();
+        return ResponseEntity.ok(list);
     }
 
     @PostMapping
     public ResponseEntity<ReservationResponse> addReservation(@RequestBody ReservationRequest reservationRequest) {
-        Reservation reservation = new Reservation(index.getAndIncrement(), reservationRequest.name(),
+        Reservation reservation = new Reservation(ReservationId.create(), reservationRequest.name(),
                 reservationRequest.date(),
                 reservationRequest.time());
         reservations.addReservation(reservation);

@@ -18,6 +18,7 @@ import org.springframework.web.context.WebApplicationContext;
 import roomescape.controller.AdminController;
 import roomescape.controller.ReservationController;
 
+@DisplayNameGeneration(DisplayNameGenerator.ReplaceUnderscores.class)
 @WebMvcTest(controllers = {ReservationController.class, AdminController.class})
 public class MissionStepTest {
 

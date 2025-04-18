@@ -12,7 +12,7 @@ public class Reservations {
     }
 
     public void save(Reservation newReservation) {
-        if (reservations.stream().anyMatch(reservation -> reservation.isSameWith(newReservation))) {
+        if (reservations.stream().anyMatch(reservation -> reservation.isDuplicatedWith(newReservation))) {
             throw new IllegalArgumentException("이미 예약이 존재하는 날짜입니다.");
         }
         reservations.add(newReservation);

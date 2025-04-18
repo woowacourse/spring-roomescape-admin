@@ -6,6 +6,7 @@ import java.util.concurrent.atomic.AtomicLong;
 
 public class Reservation {
     private static final AtomicLong index = new AtomicLong(1);
+    private static final LocalTime runningTime = LocalTime.of(2, 0);
     private final Long id;
     private final String name;
     private final LocalDate date;
@@ -18,8 +19,11 @@ public class Reservation {
         this.time = time;
     }
 
-    public boolean isSameWith(Reservation other) {
-        return date.isEqual(other.date) && time.toNanoOfDay() == other.time.toNanoOfDay();
+    public boolean isDuplicatedWith(Reservation other) {
+        LocalTime endTime = time.plusSeconds(runningTime.toSecondOfDay());
+        LocalTime otherStartTime = other.time;
+        return otherStartTime.toNanoOfDay() >= time.toNanoOfDay()
+                && otherStartTime.toNanoOfDay() < endTime.toNanoOfDay();
     }
 
     public Long getId() {

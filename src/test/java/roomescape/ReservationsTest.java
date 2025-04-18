@@ -24,4 +24,15 @@ class ReservationsTest {
             reservations.save(new Reservation("test2", date, time));
         }).isInstanceOf(IllegalArgumentException.class);
     }
+
+    @Test
+    @DisplayName("존재하지 않는 예약은 삭제할 수 없다.")
+    void deleteNotExistedReservation() {
+        // given
+
+        // when & then
+        assertThatThrownBy(() -> {
+            reservations.deleteById(1L);
+        }).isInstanceOf(IllegalArgumentException.class);
+    }
 }

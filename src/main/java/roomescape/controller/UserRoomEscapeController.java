@@ -4,19 +4,15 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 import roomescape.Reservation;
-import roomescape.database.ReservationDatabase;
 import roomescape.dto.request.ReservationCreateRequest;
 import roomescape.dto.response.ReservationResponse;
+import roomescape.infra.ReservationDatabase;
 
-import java.util.ArrayList;
 import java.util.List;
-import java.util.concurrent.atomic.AtomicLong;
 
 @Controller
 public class UserRoomEscapeController {
 
-    private static final AtomicLong autoIncrement = new AtomicLong(0);
-    private static final List<Reservation> reservations = new ArrayList<>();
     private final ReservationDatabase reservationDatabase;
 
     public UserRoomEscapeController(final ReservationDatabase reservationDatabase) {
@@ -24,7 +20,7 @@ public class UserRoomEscapeController {
     }
 
     @GetMapping("/reservations")
-    public ResponseEntity<List<ReservationResponse>> reservations() {
+    public ResponseEntity<List<ReservationResponse>> getAll() {
         final List<Reservation> reservations = reservationDatabase.findAll();
 
         List<ReservationResponse> response = reservations.stream()
@@ -35,33 +31,17 @@ public class UserRoomEscapeController {
     }
 
     @PostMapping("/reservations")
-    public ResponseEntity<ReservationResponse> addReservations(@RequestBody ReservationCreateRequest request) {
-        Reservation newReservation = request.toDomain(autoIncrement.incrementAndGet());
+    public ResponseEntity<ReservationResponse> add(@RequestBody ReservationCreateRequest request) {
+        final Long savedId = reservationDatabase.saveAndGetId(request.name(), request.date(), request.time());
 
-        reservations.add(newReservation);
-
-        ReservationResponse response = ReservationResponse.from(newReservation);
+        ReservationResponse response = ReservationResponse.from(request, savedId);
         return ResponseEntity.ok(response);
     }
 
     @DeleteMapping("/reservations/{reservationId}")
-    public ResponseEntity<Void> deleteReservations(@PathVariable("reservationId") Long reservationId) {
-        Reservation target = getReservation(reservationId);
-
-        reservations.remove(target);
+    public ResponseEntity<Void> delete(@PathVariable("reservationId") Long reservationId) {
+        reservationDatabase.deleteById(reservationId);
 
         return ResponseEntity.ok().build();
-    }
-
-    private static Reservation getReservation(Long reservationId) {
-        return reservations.stream()
-                .filter(reservation -> reservation.hasSameId(reservationId))
-                .findFirst()
-                .orElseThrow(() -> new IllegalArgumentException("id에 해당하는 예약이 존재하지 않습니다."));
-    }
-
-    public static void clear() {
-        reservations.clear();
-        autoIncrement.set(0);
     }
 }

@@ -10,11 +10,11 @@ public class AdminViewController {
 
     @GetMapping
     public String home() {
-        return "/admin/index";
+        return "redirect:/admin/index.html";
     }
 
     @GetMapping("/reservation")
     public String reservation() {
-        return "/admin/reservation-legacy";
+        return "redirect:/admin/reservation-legacy.html";
     }
 }

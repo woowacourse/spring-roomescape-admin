@@ -24,8 +24,6 @@ public class Reservations {
     }
 
     public List<Reservation> getAllReservations() {
-        return reservations.stream()
-                .map(reservation -> new Reservation(reservation.getId(), reservation.getName(), reservation.getDate(), reservation.getTime()))
-                .toList();
+        return List.copyOf(reservations);
     }
 }

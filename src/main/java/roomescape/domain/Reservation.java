@@ -49,6 +49,9 @@ public class Reservation {
     }
 
     public static Reservation deepCopyOf(Reservation reservation) {
+        if (reservation == null) {
+            throw new IllegalArgumentException("null인 객체는 복사할 수 없습니다");
+        }
         return new Reservation(reservation.getId(), reservation.getName(), reservation.getDate(),
                 reservation.getTime());
     }

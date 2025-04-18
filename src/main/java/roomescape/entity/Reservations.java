@@ -18,13 +18,12 @@ public class Reservations {
         reservations.remove(reservation);
     }
 
-    public void validateSameDateTime(Reservation reservation) {
+    public void validateReservationTimeAvailability(Reservation reservation) {
         boolean isDuplicate = reservations.stream()
                 .anyMatch(existing -> existing.isSameDateTime(reservation));
 
         if (isDuplicate) {
             throw new IllegalArgumentException("[ERROR] 이미 예약되었어요. 다른 날짜를 골라주세요.");
-
         }
     }
 

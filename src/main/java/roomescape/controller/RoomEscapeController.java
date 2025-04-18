@@ -1,7 +1,6 @@
 package roomescape.controller;
 
 import java.util.List;
-import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -43,10 +42,9 @@ public class RoomEscapeController {
         return ReservationResponse.reservationToDto(repository.findById(id));
     }
 
-
+    @ResponseBody
     @DeleteMapping("/reservations/{id}")
-    public ResponseEntity<Void> deleteReservation(@PathVariable("id") Long id) {
+    public void deleteReservation(@PathVariable("id") Long id) {
         repository.deleteById(id);
-        return ResponseEntity.ok().build();
     }
 }

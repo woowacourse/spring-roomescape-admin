@@ -26,6 +26,10 @@ public class Reservation {
                 && otherStartTime.toNanoOfDay() < endTime.toNanoOfDay();
     }
 
+    public boolean isSameId(final Long id) {
+        return this.id.equals(id);
+    }
+
     public Long getId() {
         return id;
     }

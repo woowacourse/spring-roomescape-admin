@@ -19,7 +19,7 @@ public class Reservations {
     }
 
     public void deleteById(final Long id) {
-        if (!reservations.removeIf(reservation -> reservation.getId().equals(id))) {
+        if (!reservations.removeIf(reservation -> reservation.isSameId(id))) {
             throw new IllegalArgumentException("존재하지 않는 예약입니다.");
         }
     }

@@ -15,11 +15,11 @@ import roomescape.exception.InvalidReservationException;
 import roomescape.repository.ReservationRepository;
 
 @RestController
-public class RoomescapeController {
+public class ReservationController {
 
     private final ReservationRepository reservationRepository;
 
-    public RoomescapeController(ReservationRepository reservationRepository) {
+    public ReservationController(ReservationRepository reservationRepository) {
         this.reservationRepository = reservationRepository;
     }
 

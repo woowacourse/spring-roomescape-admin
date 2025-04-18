@@ -51,14 +51,17 @@ public class MissionStepTest {
             .body(params)
             .when().post("/reservations")
             .then().log().all()
-            .statusCode(200)
-            .body("id", is(1));
+            .statusCode(200);
 
         RestAssured.given().log().all()
             .when().get("/reservations")
             .then().log().all()
             .statusCode(200)
-            .body("size()", is(1));
+            .body("size()", is(1))
+            .body("[0].id", is(1))
+            .body("[0].name", is("브라운"))
+            .body("[0].date", is("2023-08-05"))
+            .body("[0].time", is("15:40"));
     }
 
     @Test

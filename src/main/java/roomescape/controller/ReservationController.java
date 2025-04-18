@@ -37,13 +37,11 @@ public class ReservationController {
 
     @DeleteMapping("/reservations/{id}")
     public ResponseEntity<Void> deleteReservation(@PathVariable Long id) {
-        try {
-            Reservation found = reservationRepository.findById(id)
-                    .orElseThrow(() -> new IllegalArgumentException("예약을 찾을 수 없습니다."));
-            reservationRepository.delete(found);
-            return ResponseEntity.ok().build();
-        } catch (IllegalArgumentException e) {
-            return ResponseEntity.notFound().build();
-        }
+        return reservationRepository.findById(id)
+                .map(reservation -> {
+                    reservationRepository.delete(reservation);
+                    return ResponseEntity.ok().<Void>build();
+                })
+                .orElseGet(() -> ResponseEntity.notFound().build());
     }
 }

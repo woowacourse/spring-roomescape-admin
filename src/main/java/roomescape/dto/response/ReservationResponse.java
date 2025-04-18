@@ -12,15 +12,16 @@ public record ReservationResponse(
         String time
 ) {
 
+    private static final DateTimeFormatter TIME_FORMATTER = java.time.format.DateTimeFormatter.ofPattern("HH:mm");
+    private static final DateTimeFormatter DATE_FORMATTER = DateTimeFormatter.ofPattern("yyyy-MM-dd");
+
     public static ReservationResponse reservationToDto(Reservation reservation) {
         LocalDateTime dateTime = reservation.getReservationTime();
-        DateTimeFormatter timeFormatter = DateTimeFormatter.ofPattern("HH:mm");
-        DateTimeFormatter dateFormatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
         return new ReservationResponse(
                 reservation.getId(),
                 reservation.getName(),
-                dateTime.toLocalDate().format(dateFormatter),
-                dateTime.toLocalTime().format(timeFormatter));
+                dateTime.toLocalDate().format(DATE_FORMATTER),
+                dateTime.toLocalTime().format(TIME_FORMATTER));
     }
 
     public static List<ReservationResponse> reservationsToDtos(List<Reservation> reservations) {

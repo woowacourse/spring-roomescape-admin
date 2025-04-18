@@ -1,4 +1,6 @@
-package roomescape;
+package roomescape.dto;
+
+import roomescape.ReservationEntity;
 
 import java.time.LocalDate;
 import java.time.LocalTime;
@@ -9,6 +11,6 @@ public record ReservationDto(LocalDate date, String name, LocalTime time) {
     }
 
     public ReservationEntity toEntity() {
-        return new ReservationEntity(name, date, time);
+        return ReservationEntity.of(name, date, time);
     }
 }

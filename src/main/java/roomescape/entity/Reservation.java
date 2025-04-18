@@ -17,6 +17,10 @@ public class Reservation {
         this.time = time;
     }
 
+    public boolean isSameDateTime(Reservation reservation) {
+        return reservation.date.isEqual(this.date) && reservation.time.equals(this.time);
+    }
+
     public String getName() {
         return name;
     }

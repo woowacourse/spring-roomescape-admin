@@ -24,7 +24,7 @@ public class ReservationController {
     }
 
     @GetMapping("/reservations")
-    public ResponseEntity<List<Reservation>> checkReservation() {
+    public ResponseEntity<List<Reservation>> getReservations() {
         return ResponseEntity.ok(reservations.getReservations());
     }
 

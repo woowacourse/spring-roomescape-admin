@@ -1,79 +1,121 @@
 package roomescape.controller;
 
-import io.restassured.RestAssured;
-import io.restassured.http.ContentType;
-import java.util.Map;
+import static org.assertj.core.api.Assertions.assertThat;
+import static org.junit.jupiter.api.Assertions.assertAll;
+
+import java.time.LocalDate;
+import java.time.LocalTime;
 import java.util.stream.Stream;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.Arguments;
 import org.junit.jupiter.params.provider.MethodSource;
-import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.test.annotation.DirtiesContext;
+import org.springframework.http.HttpStatus;
+import roomescape.Reservation;
+import roomescape.ReservationRequest;
 
-@SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.DEFINED_PORT)
-@DirtiesContext(classMode = DirtiesContext.ClassMode.BEFORE_EACH_TEST_METHOD)
 public class ReservationControllerTest {
 
-    public static Stream<Arguments> NullParameter() {
-        return Stream.of(
-                Arguments.of(
-                        Map.of("name", "브라운", "date", "2023-08-05")
-                ),
-                Arguments.of(
-                        Map.of("date", "2023-08-05", "time", "15:40")
-                ),
-                Arguments.of(
-                        Map.of("name", "브라운", "time", "15:40")
-                )
+    @Test
+    @DisplayName("예약을 추가할 수 있다.")
+    void addReservation() {
+        //given
+        final var controller = new ReservationController();
+        final var request = new ReservationRequest(
+            "포포",
+            LocalDate.of(2024, 4, 18),
+            LocalTime.of(12, 0)
         );
-    }
 
-    @ParameterizedTest
-    @MethodSource("NullParameter")
-    @DisplayName("이름, 날짜, 시간 중 하나라도 없으면 400 Bad Request")
-    void badRequestAnyParameterNull(Map<String, String> params) {
-        RestAssured.given().log().all()
-                .contentType(ContentType.JSON)
-                .body(params)
-                .when().post("/reservations")
-                .then().log().all()
-                .statusCode(400);
-    }
+        //when
+        final var addResponse = controller.addReservation(request);
 
-    public static Stream<Arguments> InvalidParameter() {
-        return Stream.of(
-                Arguments.of(
-                        Map.of("name", "브라운", "date", "2023-13-01", "time", "23:00")
-                ),
-                Arguments.of(
-                        Map.of("name", "브라운", "date", "2023-08-05", "time", "25:00")
-                ),
-                Arguments.of(
-                        Map.of("name", "여섯글자이름", "date", "2023-08-05", "time", "15:40")
-                )
+        //then
+        final var reservations = controller.getReservations();
+        assertAll(
+            () -> assertThat(addResponse.getStatusCode()).isEqualTo(HttpStatus.OK),
+            () -> assertThat(reservations.getBody()).hasSize(1)
         );
-    }
-
-    @ParameterizedTest
-    @MethodSource("InvalidParameter")
-    @DisplayName("이름, 날짜, 시간 중 하나라도 잘못된 형식이면 400 Bad Request")
-    void badRequestAnyParameterInvalid(Map<String, String> params) {
-        RestAssured.given().log().all()
-                .contentType(ContentType.JSON)
-                .body(params)
-                .when().post("/reservations")
-                .then().log().all()
-                .statusCode(400);
     }
 
     @Test
-    @DisplayName("존재하지 않는 Id를 삭제하면 204 No Content")
+    @DisplayName("예약을 삭제할 수 있다.")
+    void deleteReservation() {
+        //given
+        final var controller = new ReservationController();
+        final var addedReservation = addOneReservation(controller);
+
+        //when
+        final var deleteResponse = controller.deleteReservation(addedReservation.id());
+
+        //then
+        final var reservations = controller.getReservations();
+        assertAll(
+            () -> assertThat(deleteResponse.getStatusCode()).isEqualTo(HttpStatus.OK),
+            () -> assertThat(reservations.getBody()).isEmpty()
+        );
+    }
+
+    @ParameterizedTest
+    @MethodSource("parametersThatAnyOneIsNull")
+    @DisplayName("예약 추가 시 이름, 날짜, 시간 중 하나라도 없으면 400 Bad Request")
+    void badRequestAnyParameterNull(ReservationRequest request) {
+        //given
+        final var controller = new ReservationController();
+
+        //when
+        final var responseEntity = controller.addReservation(request);
+
+        //then
+        assertThat(responseEntity.getStatusCode()).isEqualTo(HttpStatus.BAD_REQUEST);
+    }
+
+    @Test
+    @DisplayName("예약 추가 시 이름이 잘못된 형식이면 400 Bad Request")
+    void badRequestAnyParameterInvalid() {
+        //given
+        final var controller = new ReservationController();
+        final var request = new ReservationRequest(
+            "여섯글자이름",
+            LocalDate.of(2023, 8, 5),
+            LocalTime.of(15, 40)
+        );
+
+        //when
+        final var responseEntity = controller.addReservation(request);
+
+        //then
+        assertThat(responseEntity.getStatusCode()).isEqualTo(HttpStatus.BAD_REQUEST);
+    }
+
+    @Test
+    @DisplayName("예약 삭제 시 존재하지 않는 Id를 삭제하면 204 No Content")
     void noContentDeleteNotExistId() {
-        RestAssured.given().log().all()
-                .when().delete("/reservations/1")
-                .then().log().all()
-                .statusCode(204);
+        //given
+        final var controller = new ReservationController();
+
+        //when
+        final var responseEntity = controller.deleteReservation(5L);
+
+        //then
+        assertThat(responseEntity.getStatusCode()).isEqualTo(HttpStatus.NO_CONTENT);
+    }
+
+    public static Stream<Arguments> parametersThatAnyOneIsNull() {
+        return Stream.of(
+            Arguments.of(new ReservationRequest("브라운", LocalDate.of(2023, 8, 5), null)),
+            Arguments.of(new ReservationRequest("브라운", null, LocalTime.of(15, 40))),
+            Arguments.of(new ReservationRequest(null, LocalDate.of(2023, 8, 5), LocalTime.of(15, 40)))
+        );
+    }
+
+    private Reservation addOneReservation(final ReservationController controller) {
+        final var request = new ReservationRequest(
+            "포포",
+            LocalDate.of(2024, 4, 18),
+            LocalTime.of(12, 0)
+        );
+        return controller.addReservation(request).getBody();
     }
 }

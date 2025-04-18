@@ -31,13 +31,13 @@ class ReservationsTest {
     @Test
     void can_remove_reservation() {
         Reservations reservations = new Reservations();
+
         reservations.add(
                 new ReservationDto("포스티",
                         LocalDate.of(2025, 4, 16),
                         LocalTime.of(11, 0)
                 )
         );
-
         reservations.removeById(1L);
 
         assertThat(reservations.getReservations()).hasSize(0);

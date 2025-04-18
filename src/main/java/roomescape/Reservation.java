@@ -13,11 +13,16 @@ public class Reservation {
     private final LocalDate date;
     private final LocalTime time;
 
-    public Reservation(String name, LocalDate date, LocalTime time) {
+    public Reservation(Long id, String name, LocalDate date, LocalTime time) {
         validate(name, date, time);
-        this.name = name;
         this.date = date;
         this.time = time;
+        this.name = name;
+        this.id = id;
+    }
+
+    public Reservation(String name, LocalDate date, LocalTime time) {
+        this(null, name, date, time);
     }
 
     private void validate(String name, LocalDate date, LocalTime time) {
@@ -41,5 +46,10 @@ public class Reservation {
 
     public boolean isEqualId(Long id) {
         return Objects.equals(this.id, id);
+    }
+
+    public static Reservation deepCopyOf(Reservation reservation) {
+        return new Reservation(reservation.getId(), reservation.getName(), reservation.getDate(),
+                reservation.getTime());
     }
 }

@@ -19,7 +19,7 @@ public class UserReservationController {
     private final ReservationRepository reservationRepository;
 
     @GetMapping
-    public ResponseEntity<List<ReservationResponse>> reservations() {
+    public ResponseEntity<List<ReservationResponse>> getAll() {
         List<ReservationResponse> response = reservationRepository.getAll().stream()
                 .map(ReservationResponse::from)
                 .toList();
@@ -28,7 +28,7 @@ public class UserReservationController {
     }
 
     @PostMapping
-    public ResponseEntity<ReservationResponse> createReservation(@RequestBody ReservationCreateRequest request) {
+    public ResponseEntity<ReservationResponse> create(@RequestBody ReservationCreateRequest request) {
         Reservation reservation = request.toDomain();
 
         Reservation savedReservation = reservationRepository.save(reservation);
@@ -37,10 +37,10 @@ public class UserReservationController {
     }
 
     @DeleteMapping("/{id}")
-    public ResponseEntity<Void> deleteReservation(@PathVariable("id") Long reservationId) {
-        Reservation target = getReservation(reservationId);
+    public ResponseEntity<Void> delete(@PathVariable("id") Long id) {
+        Reservation target = getReservation(id);
 
-        reservationRepository.remove(target);
+        reservationRepository.remove(target.getId());
 
         return ResponseEntity.ok().build();
     }

@@ -1,6 +1,7 @@
 package roomescape.repository;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
 import java.util.concurrent.atomic.AtomicLong;
@@ -10,7 +11,7 @@ import roomescape.entity.Reservation;
 @Repository
 public class ReservationRepository {
 
-    private final List<Reservation> reservations = new ArrayList<>();
+    private final List<Reservation> reservations = Collections.synchronizedList(new ArrayList<>());
     private final AtomicLong index = new AtomicLong(1L);
 
     public long getNextId() {

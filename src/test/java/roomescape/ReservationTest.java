@@ -32,11 +32,12 @@ public class ReservationTest {
 
     @Test
     @DisplayName("예약에 대한 생성, 조회, 삭제를 진행한다.")
-    void reservationCrdr() {
-        Map<String, String> params = new HashMap<>();
-        params.put("name", "브라운");
-        params.put("date", "2023-08-05");
-        params.put("time", "15:40");
+    void reservationCrd() {
+        Map<String, String> params = Map.of(
+                "name", "브라운",
+                "date", "2023-08-05",
+                "time", "15:40"
+        );
 
         RestAssured.given().log().all()
                 .contentType(ContentType.JSON)

@@ -6,8 +6,10 @@ import java.util.Collections;
 import java.util.List;
 import java.util.Objects;
 import java.util.concurrent.atomic.AtomicLong;
+import org.springframework.stereotype.Component;
 import roomescape.dto.ReservationDto;
 
+@Component
 public class Reservations {
 
     private final List<Reservation> reservations = new ArrayList<>();

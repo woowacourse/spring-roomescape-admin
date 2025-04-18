@@ -15,7 +15,11 @@ import roomescape.model.Reservations;
 @RestController
 public class ReservationController {
 
-    private Reservations reservations = new Reservations();
+    private final Reservations reservations;
+
+    public ReservationController(Reservations reservations) {
+        this.reservations = reservations;
+    }
 
     @GetMapping("/reservations")
     public ResponseEntity<List<Reservation>> reservations() {

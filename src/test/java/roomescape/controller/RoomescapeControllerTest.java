@@ -16,7 +16,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import roomescape.domain.Reservation;
 import roomescape.domain.Reservations;
-import roomescape.vo.ReservationCreateVo;
+import roomescape.dto.ReservationCreateVo;
 
 class RoomescapeControllerTest {
 

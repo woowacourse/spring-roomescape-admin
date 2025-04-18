@@ -11,10 +11,11 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import roomescape.domain.Reservation;
 import roomescape.domain.Reservations;
-import roomescape.vo.ReservationCreateVo;
+import roomescape.dto.ReservationCreateVo;
 
 @Controller
 public class RoomescapeController {
+
     private final Reservations reservations;
 
     public RoomescapeController(Reservations reservations) {

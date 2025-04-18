@@ -12,6 +12,9 @@ public class Reservations {
     }
 
     public void save(Reservation entity) {
+        if (reservations.stream().anyMatch(reservation -> reservation.isSameWith(entity))) {
+            throw new IllegalArgumentException("이미 예약이 존재하는 날짜입니다.");
+        }
         reservations.add(entity);
     }
 

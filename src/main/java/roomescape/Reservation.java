@@ -18,6 +18,10 @@ public class Reservation {
         this.time = time;
     }
 
+    public boolean isSameWith(Reservation other) {
+        return date.isEqual(other.date) && time.toNanoOfDay() == other.time.toNanoOfDay();
+    }
+
     public Long getId() {
         return id;
     }

@@ -2,17 +2,14 @@ package roomescape.infra;
 
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;
-import org.springframework.jdbc.support.GeneratedKeyHolder;
-import org.springframework.jdbc.support.KeyHolder;
+import org.springframework.jdbc.core.simple.SimpleJdbcInsert;
 import org.springframework.stereotype.Repository;
 import roomescape.Reservation;
 
-import java.sql.Date;
-import java.sql.PreparedStatement;
-import java.sql.Time;
 import java.time.LocalDate;
 import java.time.LocalTime;
 import java.util.List;
+import java.util.Map;
 
 @Repository
 public class ReservationDatabase {
@@ -24,7 +21,6 @@ public class ReservationDatabase {
         final LocalTime time = rs.getTime("time").toLocalTime();
         return new Reservation(id, name, date, time);
     };
-
     private final JdbcTemplate jdbcTemplate;
 
     public ReservationDatabase(final JdbcTemplate jdbcTemplate) {
@@ -39,25 +35,17 @@ public class ReservationDatabase {
         return jdbcTemplate.query(sql, reservationRowMapper);
     }
 
-    public Long saveAndGetId(final String name, final LocalDate date, final LocalTime time) {
-        final KeyHolder keyHolder = new GeneratedKeyHolder();
+    public long saveAndGetId(final String name, final LocalDate date, final LocalTime time) {
+        final Number savedId = new SimpleJdbcInsert(jdbcTemplate)
+                .withTableName("reservation")
+                .usingGeneratedKeyColumns("id")
+                .executeAndReturnKey(Map.of(
+                        "name", name,
+                        "date", date,
+                        "time", time
+                ));
 
-        jdbcTemplate.update(connection -> {
-            final String sql = """
-                    INSERT INTO RESERVATION (name, date, time)
-                    VALUES (?, ?, ?);
-                    """;
-            final PreparedStatement ps = connection.prepareStatement(
-                    sql,
-                    new String[]{"id"});
-
-            ps.setString(1, name);
-            ps.setDate(2, Date.valueOf(date));
-            ps.setTime(3, Time.valueOf(time));
-            return ps;
-        }, keyHolder);
-
-        return keyHolder.getKey().longValue();
+        return savedId.longValue();
     }
 
     public void deleteById(final Long id) {

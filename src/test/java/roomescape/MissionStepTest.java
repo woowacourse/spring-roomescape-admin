@@ -68,4 +68,12 @@ public class MissionStepTest {
                 .statusCode(200)
                 .body("size()", is(0));
     }
+
+    @Test
+    void deleteNonExistReservation() {
+        RestAssured.given().log().all()
+                .when().delete("/reservations/123")
+                .then().log().all()
+                .statusCode(404);
+    }
 }

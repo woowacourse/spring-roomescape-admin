@@ -1,6 +1,7 @@
 package roomescape.model;
 
 import java.util.Map;
+import java.util.NoSuchElementException;
 import java.util.concurrent.ConcurrentHashMap;
 import org.springframework.stereotype.Component;
 
@@ -22,7 +23,7 @@ public class Reservations {
 
     public void deleteBy(final Long id) {
         if (!reservations.containsKey(id)) {
-            throw new IllegalArgumentException("해당하는 id의 예약기록이 없습니다.");
+            throw new NoSuchElementException("해당하는 id의 예약기록이 없습니다.");
         }
         reservations.remove(id);
     }

@@ -68,6 +68,8 @@ public class AdminControllerTest {
     @Test
     @DisplayName("예약을 삭제한다.")
     void deleteReservation() {
+        createReservation();
+
         RestAssured.given().log().all()
                 .when().delete("/reservations/1")
                 .then().log().all()

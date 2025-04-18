@@ -16,7 +16,7 @@ import org.junit.jupiter.api.Test;
 public class MissionStepTest {
 
     @Test
-    void 일단계() {
+    void 어드민_페이지_연결_테스트() {
         RestAssured.given().log().all()
                 .when().get("/admin")
                 .then().log().all()
@@ -24,7 +24,7 @@ public class MissionStepTest {
     }
 
     @Test
-    void 이단계() {
+    void 예약_조회_테스트() {
         RestAssured.given().log().all()
                 .when().get("/admin/reservation")
                 .then().log().all()
@@ -38,7 +38,7 @@ public class MissionStepTest {
     }
 
     @Test
-    void 삼단계() {
+    void 예약_추가_취소_테스트() {
         Map<String, String> params = new HashMap<>();
         params.put("name", "브라운");
         params.put("date", "2025-08-05");

@@ -2,7 +2,6 @@ package roomescape.model;
 
 import java.time.LocalDate;
 import java.time.LocalTime;
-import roomescape.dto.ReservationRequestDto;
 
 public class Reservation {
     private Id id;
@@ -18,12 +17,6 @@ public class Reservation {
         this.name = name;
         this.date = date;
         this.time = time;
-    }
-
-    public static Reservation toEntity(ReservationRequestDto reservationDto) {
-        return new Reservation(
-                new Id(), reservationDto.name(), reservationDto.date(), reservationDto.time()
-        );
     }
 
     public boolean isSameId(Id id) {

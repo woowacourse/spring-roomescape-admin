@@ -42,12 +42,13 @@ public class AdminController {
     public ResponseEntity<Reservation> createReservation(
             @RequestBody ReservationRequestDto reservationRequest
     ) {
-        Reservation newReservation = Reservation.toEntity(reservationRequest);
+        Reservation newReservation = reservationRequest.toEntity(new Id()); //TODO ID 위치
         reservations.add(newReservation);
         return ResponseEntity.ok().body(newReservation);
     }
 
     @DeleteMapping("/reservations/{id}")
+    @ResponseBody
     public ResponseEntity<Void> deleteReservation(
             @PathVariable("id") Long idRequest
     ) {

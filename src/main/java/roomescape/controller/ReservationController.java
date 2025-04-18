@@ -5,6 +5,7 @@ import java.util.List;
 import java.util.concurrent.atomic.AtomicLong;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -28,10 +29,9 @@ public class ReservationController {
             .toList();
         return ResponseEntity.ok().body(reservationResponses);
     }
-
+    @Transactional
     @PostMapping
-    public ResponseEntity<ReservationResponse> create(
-        @RequestBody ReservationRequest request) {
+    public ResponseEntity<ReservationResponse> create(@RequestBody ReservationRequest request) {
         Reservation reservation = new Reservation(index.getAndIncrement(), request.name(),
             request.date(), request.time());
         reservations.add(reservation);
@@ -40,7 +40,7 @@ public class ReservationController {
 
     @DeleteMapping("/{id}")
     public ResponseEntity<Void> delete(@PathVariable(name = "id") Long id) {
-        boolean isRemoved = reservations.removeIf(reservation -> reservation.getId() == id);
+        boolean isRemoved = reservations.removeIf(reservation -> reservation.isSameId(id));
         if (isRemoved) {
             return ResponseEntity.ok().build();
         }

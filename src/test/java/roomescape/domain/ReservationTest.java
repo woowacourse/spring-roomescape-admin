@@ -17,6 +17,15 @@ class ReservationTest {
     }
 
     @Test
+    void 이름이_빈_값이면_예외가_발생한다() {
+        //given
+        final String name = " ";
+
+        //should
+        assertThatIllegalArgumentException().isThrownBy(() -> new Reservation(name, LocalDate.now(), LocalTime.now()));
+    }
+
+    @Test
     void 날짜가_오늘보다_이전인_경우_예외가_발생한다() {
         // given
         LocalDate date = LocalDate.now().minusDays(1);

@@ -12,6 +12,7 @@ import java.util.concurrent.atomic.AtomicLong;
 
 @Repository
 public class ReservationRepository {
+
     private final ConcurrentMap<Long, Reservation> reservations = new ConcurrentHashMap<>();
     private final AtomicLong index = new AtomicLong(1);
 

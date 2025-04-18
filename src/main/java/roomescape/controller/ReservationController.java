@@ -1,9 +1,6 @@
 package roomescape.controller;
 
 import java.util.List;
-import java.util.Map;
-import java.util.concurrent.ConcurrentHashMap;
-import java.util.concurrent.atomic.AtomicLong;
 
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -14,25 +11,23 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import roomescape.controller.model.Reservation;
+import roomescape.model.Reservation;
+import roomescape.model.Reservations;
 
 @RestController
 @RequestMapping("/reservations")
 public class ReservationController {
 
-    private final AtomicLong autoIncrementId = new AtomicLong(0L);
-    private final Map<Long, Reservation> reservations = new ConcurrentHashMap<>();
+    private final Reservations reservations = new Reservations();
 
     @GetMapping
     public ResponseEntity<List<Reservation>> reservations() {
-        return ResponseEntity.ok(reservations.values().stream().toList());
+        return ResponseEntity.ok(reservations.getAll());
     }
 
     @PostMapping
     public ResponseEntity<Reservation> createReservation(@RequestBody Reservation reservation) {
-        Long id = autoIncrementId.incrementAndGet();
-        reservations.put(id, reservation.withId(id));
-        return ResponseEntity.ok(reservations.get(id));
+        return ResponseEntity.ok(reservations.save(reservation));
     }
 
     @DeleteMapping("/{reservationId}")

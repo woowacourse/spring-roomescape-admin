@@ -36,7 +36,7 @@ public class ReservationTest {
                 .when().get("/reservations")
                 .then().log().all()
                 .statusCode(201)
-                .body("size()", is(0));
+                .body("reservationResponses.size()", is(0));
     }
 
     @Test
@@ -74,6 +74,6 @@ public class ReservationTest {
                 .when().get("/reservations")
                 .then().log().all()
                 .statusCode(201)
-                .body("size()", is(0));
+                .body("reservationResponses.size()", is(0));
     }
 }

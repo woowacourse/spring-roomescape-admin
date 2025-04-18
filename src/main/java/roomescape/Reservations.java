@@ -9,10 +9,9 @@ public class Reservations {
     private final List<Reservation> reservations = new ArrayList<>();
     private final AtomicLong index = new AtomicLong(0);
 
-    public Reservation addAndGet(ReservationReqDto dto) {
-        Reservation newReservation = new Reservation(index.incrementAndGet(), dto.name(), dto.date(), dto.time());
-        reservations.add(newReservation);
-        return newReservation;
+    public Reservation add(Reservation reservation) {
+        reservations.add(reservation);
+        return reservation;
     }
 
     public void deleteById(Long id) {
@@ -25,5 +24,9 @@ public class Reservations {
 
     public List<Reservation> getAllReservations() {
         return List.copyOf(reservations);
+    }
+
+    public Long generateId() {
+        return index.incrementAndGet();
     }
 }

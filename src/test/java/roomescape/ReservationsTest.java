@@ -14,13 +14,14 @@ class ReservationsTest {
 
     @Test
     @DisplayName("새 예약 데이터를 추가하면 해당 데이터에 아이디를 부여한다.")
-    void addAndGetTest() {
+    void addTest() {
         // given
         Reservations reservations = new Reservations();
         ReservationReqDto reservationReqDto = new ReservationReqDto("포비", LocalDate.now(), LocalTime.now());
+        Reservation reservation = reservationReqDto.toReservation(reservations.generateId());
 
         // when
-        Reservation newReservation = reservations.addAndGet(reservationReqDto);
+        Reservation newReservation = reservations.add(reservation);
 
         // then
         assertThat(newReservation.getId()).isNotNull();
@@ -32,9 +33,10 @@ class ReservationsTest {
         // given
         Reservations reservations = new Reservations();
         ReservationReqDto reservationReqDto = new ReservationReqDto("포비", LocalDate.now(), LocalTime.now());
+        Reservation reservation = reservationReqDto.toReservation(reservations.generateId());
 
         // when
-        Reservation newReservation = reservations.addAndGet(reservationReqDto);
+        Reservation newReservation = reservations.add(reservation);
         Long reservationId = newReservation.getId();
 
         // then
@@ -47,9 +49,10 @@ class ReservationsTest {
         // given
         Reservations reservations = new Reservations();
         ReservationReqDto reservationReqDto = new ReservationReqDto("포비", LocalDate.now(), LocalTime.now());
+        Reservation reservation = reservationReqDto.toReservation(reservations.generateId());
 
         // when
-        reservations.addAndGet(reservationReqDto);
+        reservations.add(reservation);
         Long invalidId = 20L;
 
         // then

@@ -4,7 +4,6 @@ import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.LocalTime;
 import java.util.List;
-import java.util.Map;
 import java.util.Optional;
 import java.util.concurrent.atomic.AtomicLong;
 import org.springframework.http.ResponseEntity;
@@ -15,6 +14,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
+import roomescape.reservation.controller.request.ReservationCreateRequest;
 import roomescape.reservation.controller.response.ReservationResponse;
 import roomescape.reservation.domain.Reservation;
 import roomescape.reservation.domain.Reservations;
@@ -37,12 +37,12 @@ public class ReservationApiController {
     }
 
     @PostMapping
-    public ResponseEntity<ReservationResponse> createReservation(@RequestBody Map<String, String> newReservation) {
-        String name = newReservation.get("name");
-        LocalDate date = LocalDate.parse(newReservation.get("date"));
-        LocalTime time = LocalTime.parse(newReservation.get("time"));
-
-        Reservation created = new Reservation(reservationId.incrementAndGet(), name, LocalDateTime.of(date, time));
+    public ResponseEntity<ReservationResponse> createReservation(@RequestBody ReservationCreateRequest request) {
+        Reservation created = new Reservation(
+                reservationId.incrementAndGet(),
+                request.name(),
+                LocalDateTime.of(LocalDate.parse(request.date()), LocalTime.parse(request.time()))
+        );
         reservations.create(created);
 
         return ResponseEntity.ok(

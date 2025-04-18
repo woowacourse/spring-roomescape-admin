@@ -1,6 +1,7 @@
 package roomescape.repository;
 
 import java.util.List;
+import java.util.concurrent.CopyOnWriteArrayList;
 import java.util.concurrent.atomic.AtomicLong;
 import org.springframework.stereotype.Repository;
 import roomescape.domain.Reservation;
@@ -12,7 +13,7 @@ public class RoomescapeRepository {
     private final AtomicLong index = new AtomicLong(1);
 
     public RoomescapeRepository(final List<Reservation> reservations) {
-        this.reservations = reservations;
+        this.reservations = new CopyOnWriteArrayList<>(reservations);
     }
 
     public List<Reservation> findAll() {

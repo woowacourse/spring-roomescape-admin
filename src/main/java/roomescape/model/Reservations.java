@@ -19,7 +19,7 @@ public class Reservations {
         Reservation reservation = reservations.stream()
                 .filter(reserve -> reserve.isSameId(id))
                 .findFirst()
-                .orElseThrow(RuntimeException::new);
+                .orElseThrow(IllegalArgumentException::new);
         reservations.remove(reservation);
     }
 

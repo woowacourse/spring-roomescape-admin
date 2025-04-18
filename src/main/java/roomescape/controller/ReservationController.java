@@ -22,13 +22,13 @@ public class ReservationController {
     private List<Reservation> reservations = new ArrayList<>();
     private AtomicLong index = new AtomicLong(1);
 
-    @GetMapping()
+    @GetMapping
     public List<Reservation> getReservations(
     ) {
         return reservations;
     }
 
-    @PostMapping()
+    @PostMapping
     public ResponseEntity<Reservation> createReservation(
             String name,
             LocalDate date,

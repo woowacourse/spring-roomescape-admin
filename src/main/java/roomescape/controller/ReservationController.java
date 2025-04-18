@@ -4,6 +4,7 @@ import java.util.List;
 import java.util.Objects;
 import java.util.concurrent.atomic.AtomicLong;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -12,6 +13,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.server.ResponseStatusException;
 import roomescape.entity.Reservation;
 import roomescape.entity.Reservations;
 
@@ -39,7 +41,12 @@ public class ReservationController {
     ) {
         Reservation newReservation = Reservation.toEntity(reservation, index.getAndIncrement());
 
-        reservations.validateReservationTimeAvailability(newReservation);
+        try{
+            reservations.validateReservationTimeAvailability(newReservation);
+        } catch (IllegalArgumentException e) {
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST);
+        }
+
         reservations.saveReservation(newReservation);
         return ResponseEntity.ok().body(newReservation);
     }

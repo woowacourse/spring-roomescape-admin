@@ -18,9 +18,7 @@ public class Reservation {
     }
 
     public Reservation(final String name, final LocalDate date, final LocalTime time) {
-        this.name = name;
-        this.date = date;
-        this.time = time;
+        this(0, name, date, time);
     }
 
     public static Reservation toEntity(Reservation reservation, long id) {

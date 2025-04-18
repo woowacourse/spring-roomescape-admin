@@ -11,11 +11,11 @@ import roomescape.infra.ReservationDatabase;
 import java.util.List;
 
 @Controller
-public class UserRoomEscapeController {
+public class ReservationController {
 
     private final ReservationDatabase reservationDatabase;
 
-    public UserRoomEscapeController(final ReservationDatabase reservationDatabase) {
+    public ReservationController(final ReservationDatabase reservationDatabase) {
         this.reservationDatabase = reservationDatabase;
     }
 

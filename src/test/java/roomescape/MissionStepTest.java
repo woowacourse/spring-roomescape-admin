@@ -40,8 +40,8 @@ public class MissionStepTest {
     void 삼단계() {
         Map<String, String> params = new HashMap<>();
         params.put("name", "브라운");
-        params.put("date", "2026-08-05");
-        params.put("time", "23:59");
+        params.put("date", "2025-04-18");
+        params.put("time", "19:00");
 
         RestAssured.given().log().all()
                 .contentType(ContentType.JSON)

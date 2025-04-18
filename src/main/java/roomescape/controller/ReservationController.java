@@ -1,6 +1,5 @@
 package roomescape.controller;
 
-import java.time.LocalDateTime;
 import java.util.List;
 import java.util.concurrent.atomic.AtomicLong;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -35,8 +34,8 @@ public class ReservationController {
     public Reservation createReservations(
             @RequestBody ReservationRequestDto reservationRequestDto) {
         Person person = new Person(personIndex.getAndIncrement(), reservationRequestDto.name());
-        ReservationTime reservationTime = new ReservationTime(
-                LocalDateTime.of(reservationRequestDto.date(), reservationRequestDto.time()));
+        ReservationTime reservationTime = reservationRequestDto.getReservationTime();
+
         return reservations.save(person, reservationTime);
     }
 

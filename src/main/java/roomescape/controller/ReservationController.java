@@ -24,28 +24,28 @@ public class ReservationController {
     private final AtomicLong index = new AtomicLong(1);
     private final List<Reservation> reservations = new ArrayList<>();
 
-    @GetMapping("")
+    @GetMapping
     public ResponseEntity<List<ReservationResponse>> reservations() {
-        List<ReservationResponse> reservationResponses = reservations.stream()
+        final List<ReservationResponse> reservationResponses = reservations.stream()
                 .map(ReservationResponse::fromReservation)
                 .toList();
         return ResponseEntity.ok(reservationResponses);
     }
 
-    @PostMapping("")
-    public ResponseEntity<Void> addReservations(@RequestBody AddReservationRequest addReservationRequest) {
+    @PostMapping
+    public ResponseEntity<Void> addReservations(@RequestBody final AddReservationRequest addReservationRequest) {
         if (addReservationRequest == null) {
             throw new InvalidReservationException("예약을 추가할 수 없습니다.");
         }
 
-        Reservation newReservation = addReservationRequest.toReservation(index.getAndIncrement());
+        final Reservation newReservation = addReservationRequest.toReservation(index.getAndIncrement());
         reservations.add(newReservation);
         return ResponseEntity.created(URI.create("/reservations/" + newReservation.id())).build();
     }
 
     @DeleteMapping("/{id}")
-    public ResponseEntity<Void> deleteReservations(@PathVariable Long id) {
-        Reservation deleteReservation = reservations.stream()
+    public ResponseEntity<Void> deleteReservations(@PathVariable final Long id) {
+        final Reservation deleteReservation = reservations.stream()
                 .filter((reservation) -> reservation.id().equals(id))
                 .findAny()
                 .orElseThrow(() -> new InvalidReservationException("존재하지 않는 예약 번호를 삭제할 수 없습니다."));

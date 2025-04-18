@@ -35,7 +35,7 @@ public class ReservationTest {
         RestAssured.given().log().all()
                 .when().get("/reservations")
                 .then().log().all()
-                .statusCode(200)
+                .statusCode(201)
                 .body("size()", is(0));
     }
 
@@ -57,7 +57,7 @@ public class ReservationTest {
         RestAssured.given().log().all()
                 .when().get("/reservations")
                 .then().log().all()
-                .statusCode(200)
+                .statusCode(201)
                 .body("size()", is(1));
 
         RestAssured.given().log().all()
@@ -73,7 +73,7 @@ public class ReservationTest {
         RestAssured.given().log().all()
                 .when().get("/reservations")
                 .then().log().all()
-                .statusCode(200)
+                .statusCode(201)
                 .body("size()", is(0));
     }
 }

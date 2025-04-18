@@ -6,6 +6,7 @@ import java.time.LocalTime;
 import java.util.List;
 import java.util.Optional;
 import java.util.concurrent.atomic.AtomicLong;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -34,6 +35,9 @@ public class ReservationApiController {
                 .toList();
 
         return ResponseEntity.ok(reservationResponses);
+        return ResponseEntity
+                .status(HttpStatus.CREATED)
+                .body(reservationResponses);
     }
 
     @PostMapping

@@ -15,8 +15,8 @@ class ReservationTest {
         Reservation reservation = new Reservation(1, person, reservationTime);
 
         assertAll(
-                () -> assertThat(reservation.sameId(1)).isTrue(),
-                () -> assertThat(reservation.sameId(2)).isFalse()
+                () -> assertThat(reservation.isSameId(1)).isTrue(),
+                () -> assertThat(reservation.isSameId(2)).isFalse()
         );
     }
 }

@@ -31,7 +31,7 @@ public class Reservations {
 
     private Reservation findById(long id) {
         return reservations.stream()
-                .filter(reservation -> reservation.sameId(id))
+                .filter(reservation -> reservation.isSameId(id))
                 .findFirst()
                 .orElseThrow(() -> new IllegalArgumentException("존재하지 않는 예약번호 입니다."));
     }

@@ -38,7 +38,7 @@ class RoomescapeRepositoryTest {
         //when & then
         Assertions.assertThatThrownBy(() -> roomescapeRepository.deleteById(notExistId))
                 .isInstanceOf(IllegalArgumentException.class)
-                .hasMessage("[ERROR] 존재하지 않는 예약입니다.");
+                .hasMessage("[ERROR] 예약번호 1번은 존재하지 않습니다.");
     }
 
 }

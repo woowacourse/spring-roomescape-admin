@@ -32,7 +32,7 @@ public class RoomescapeRepository {
         Reservation found = reservations.stream()
                 .filter(reservation -> reservation.getId() == id)
                 .findAny()
-                .orElseThrow(() -> new IllegalArgumentException("[ERROR] 존재하지 않는 예약입니다."));
+                .orElseThrow(() -> new IllegalArgumentException(String.format("[ERROR] 예약번호 %d번은 존재하지 않습니다.", id)));
         reservations.remove(found);
     }
 

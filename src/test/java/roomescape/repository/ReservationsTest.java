@@ -4,19 +4,21 @@ import static org.assertj.core.api.Assertions.assertThat;
 
 import java.time.LocalDate;
 import java.time.LocalTime;
+import java.util.ArrayList;
 import java.util.List;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import roomescape.domain.Reservation;
+import roomescape.domain.Reservations;
 
-class ReservationRepositoryTest {
+class ReservationsTest {
 
-    private ReservationRepository reservationRepository;
+    private Reservations reservations;
 
     @BeforeEach
     void setUp() {
-        reservationRepository = new ReservationRepository();
+        reservations = new Reservations(new ArrayList<>());
     }
 
     @DisplayName("예약을 조회한다.")
@@ -28,7 +30,7 @@ class ReservationRepositoryTest {
         // when
 
         // then
-        assertThat(reservationRepository.findAll().size()).isEqualTo(0);
+        assertThat(reservations.findAll().size()).isEqualTo(0);
     }
 
     @DisplayName("예약을 추가한다.")
@@ -38,10 +40,10 @@ class ReservationRepositoryTest {
         // given
 
         // when
-        reservationRepository.add("체체", LocalDate.now(), LocalTime.now().plusHours(1));
+        reservations.add("체체", LocalDate.now(), LocalTime.now().plusHours(1));
 
         // then
-        assertThat(reservationRepository.findAll().size()).isEqualTo(1);
+        assertThat(reservations.findAll().size()).isEqualTo(1);
     }
 
     @DisplayName("예약을 삭제한다.")
@@ -51,13 +53,13 @@ class ReservationRepositoryTest {
         // given
 
         // when
-        reservationRepository.add("체체", LocalDate.now(), LocalTime.now().plusHours(1));
-        List<Reservation> reservations = reservationRepository.findAll();
+        reservations.add("체체", LocalDate.now(), LocalTime.now().plusHours(1));
+        List<Reservation> reservations = this.reservations.findAll();
         Reservation findReservation = reservations.getFirst();
-        reservationRepository.remove(findReservation.getId());
+        this.reservations.remove(findReservation.getId());
 
         // then
-        assertThat(reservationRepository.findAll().size()).isEqualTo(0);
+        assertThat(this.reservations.findAll().size()).isEqualTo(0);
     }
 
 }

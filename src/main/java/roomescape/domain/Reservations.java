@@ -1,20 +1,20 @@
-package roomescape.repository;
+package roomescape.domain;
 
 import java.time.LocalDate;
 import java.time.LocalTime;
-import java.util.ArrayList;
 import java.util.List;
 import java.util.NoSuchElementException;
 import java.util.Objects;
 import java.util.concurrent.atomic.AtomicLong;
-import org.springframework.stereotype.Repository;
-import roomescape.domain.Reservation;
 
-@Repository
-public class ReservationRepository {
+public class Reservations {
 
-    private final List<Reservation> reservations = new ArrayList<>();
+    private final List<Reservation> reservations;
     private final AtomicLong index = new AtomicLong(1);
+
+    public Reservations(final List<Reservation> reservations) {
+        this.reservations = reservations;
+    }
 
     public List<Reservation> findAll() {
         return reservations;

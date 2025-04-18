@@ -2,7 +2,6 @@ package roomescape;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Objects;
 
 public class Reservations {
     private final List<Reservation> reservations;
@@ -17,7 +16,7 @@ public class Reservations {
 
     public void remove(Long id) {
         Reservation removeReservation = reservations.stream()
-                .filter(reservation -> Objects.equals(reservation.getId(), id))
+                .filter(reservation -> reservation.isSameId(id))
                 .findFirst()
                 .orElseThrow(() -> new IllegalArgumentException("일치하는 ID의 예약을 찾을 수 없습니다."));
 

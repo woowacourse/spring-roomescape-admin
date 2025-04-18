@@ -2,6 +2,7 @@ package roomescape;
 
 import java.time.LocalDate;
 import java.time.LocalTime;
+import java.util.Objects;
 import com.fasterxml.jackson.annotation.JsonFormat;
 
 public class Reservation {
@@ -23,6 +24,10 @@ public class Reservation {
 
     public static Reservation toEntity(Reservation reservation, Long id) {
         return new Reservation(id, reservation.name, reservation.date, reservation.time);
+    }
+
+    public boolean isSameId(Long id) {
+        return Objects.equals(this.id, id);
     }
 
     public Long getId() {

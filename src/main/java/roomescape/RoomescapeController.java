@@ -8,8 +8,13 @@ import org.springframework.web.bind.annotation.RequestMapping;
 @RequestMapping("/admin")
 public class RoomescapeController {
 
-    @GetMapping()
+    @GetMapping
     public String getAdminPage() {
         return "admin/index";
+    }
+
+    @GetMapping("/reservation")
+    public String getReservationPage() {
+        return "admin/reservation-legacy";
     }
 }

@@ -38,6 +38,6 @@ public class RoomescapeRepository {
 
     private boolean existsSameDateTime(final Reservation reservation) {
         return reservations.stream()
-                .anyMatch(reservation::isSameDateTime);
+                .anyMatch(reservation::isDuplicateReservation);
     }
 }

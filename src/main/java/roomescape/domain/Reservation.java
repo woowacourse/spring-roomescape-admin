@@ -27,7 +27,7 @@ public class Reservation {
         return new Reservation(id, reservation.name, reservation.date, reservation.time);
     }
 
-    public boolean isSameDateTime(Reservation reservation) {
+    public boolean isDuplicateReservation(Reservation reservation) {
         return this.date.equals(reservation.date) && this.time.equals(reservation.time);
     }
 

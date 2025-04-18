@@ -32,7 +32,7 @@ public class UserRoomEscapeController {
 
     @PostMapping("/reservations")
     public ResponseEntity<ReservationResponse> add(@RequestBody ReservationCreateRequest request) {
-        final Long savedId = reservationDatabase.saveAndGetId(request.name(), request.date(), request.time());
+        final Long savedId = reservationDatabase.saveAndGetId(request);
 
         ReservationResponse response = ReservationResponse.from(request, savedId);
         return ResponseEntity.ok(response);

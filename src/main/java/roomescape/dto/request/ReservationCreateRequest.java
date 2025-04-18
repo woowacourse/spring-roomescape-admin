@@ -4,6 +4,7 @@ import org.springframework.util.ObjectUtils;
 
 import java.time.LocalDate;
 import java.time.LocalTime;
+import java.util.Map;
 
 public record ReservationCreateRequest(
         String name,
@@ -20,5 +21,13 @@ public record ReservationCreateRequest(
         if (time == null) {
             throw new IllegalArgumentException("시간은 필수값입니다.");
         }
+    }
+
+    public Map<String, ?> dataMap() {
+        return Map.of(
+                "name", name,
+                "date", date,
+                "time", time
+        );
     }
 }

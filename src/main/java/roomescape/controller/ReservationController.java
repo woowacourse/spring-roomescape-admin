@@ -13,8 +13,8 @@ import roomescape.domain.Person;
 import roomescape.domain.Reservation;
 import roomescape.domain.ReservationTime;
 import roomescape.domain.Reservations;
-import roomescape.dto.ReservationRequestDto;
-import roomescape.dto.ReservationResponseDto;
+import roomescape.dto.ReservationRequest;
+import roomescape.dto.ReservationResponse;
 
 @RestController
 @RequestMapping("/reservations")
@@ -24,17 +24,17 @@ public class ReservationController {
     private final AtomicLong personIndex = new AtomicLong(1);
 
     @GetMapping("")
-    public List<ReservationResponseDto> readReservations() {
+    public List<ReservationResponse> readReservations() {
         return reservations.getReservations().stream()
-                .map(ReservationResponseDto::from)
+                .map(ReservationResponse::from)
                 .toList();
     }
 
     @PostMapping("")
     public Reservation createReservations(
-            @RequestBody ReservationRequestDto reservationRequestDto) {
-        Person person = new Person(personIndex.getAndIncrement(), reservationRequestDto.name());
-        ReservationTime reservationTime = reservationRequestDto.getReservationTime();
+            @RequestBody ReservationRequest reservationRequest) {
+        Person person = new Person(personIndex.getAndIncrement(), reservationRequest.name());
+        ReservationTime reservationTime = reservationRequest.getReservationTime();
 
         return reservations.save(person, reservationTime);
     }

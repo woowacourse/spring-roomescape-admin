@@ -11,8 +11,8 @@ import java.util.Map;
 
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.DEFINED_PORT)
 @DirtiesContext(classMode = DirtiesContext.ClassMode.BEFORE_EACH_TEST_METHOD)
-class UserRoomEscapeControllerTest {
-    
+class ReservationControllerTest {
+
     @Test
     void 이름이_없으면_400_응답을_반환한다() {
         Map<String, String> params = new HashMap<>();

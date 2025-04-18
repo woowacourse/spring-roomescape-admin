@@ -20,7 +20,7 @@ public class Reservation {
 
     private String validateNonBlank(String name) {
         if (name == null || name.isBlank()) {
-            throw new IllegalArgumentException();
+            throw new IllegalArgumentException("[ERROR] 이름은 빈 값일 수 없습니다.");
         }
 
         return name;

@@ -37,7 +37,7 @@ public class Reservations {
         return reservations.stream()
                 .filter(reservation -> Objects.equals(reservation.getId(), id))
                 .findAny()
-                .orElseThrow(RuntimeException::new);
+                .orElseThrow(() -> new IllegalArgumentException("[ERROR] 찾으려는 id 값이 없습니다."));
     }
 
     public List<Reservation> getReservations() {

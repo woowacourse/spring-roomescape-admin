@@ -16,7 +16,11 @@ import roomescape.repository.ReservationRepository;
 @Controller
 public class RoomEscapeController {
 
-    private final ReservationRepository repository = new ReservationRepository();
+    private final ReservationRepository repository;
+
+    public RoomEscapeController(ReservationRepository repository) {
+        this.repository = repository;
+    }
 
     @GetMapping("/")
     public String redirectReservationPage() {

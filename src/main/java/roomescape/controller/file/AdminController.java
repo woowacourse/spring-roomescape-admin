@@ -4,14 +4,15 @@ import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 
 @Controller
-public class ReservationController {
+@RequestMapping("/admin")
+public class AdminController {
 
-    @GetMapping("/admin")
+    @GetMapping({"", "/"})
     public String getAdminHomepage() {
         return "admin/index.html";
     }
 
-    @GetMapping("/admin/reservation")
+    @GetMapping("/reservation")
     public String getAdminReservationPage() {
         return "admin/reservation-legacy.html";
     }

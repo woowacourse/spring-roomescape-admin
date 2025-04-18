@@ -1,9 +1,5 @@
 package roomescape.reservation.controller;
 
-import java.time.LocalDate;
-import java.time.LocalDateTime;
-import java.time.LocalTime;
-import java.util.Optional;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -18,30 +14,30 @@ import roomescape.reservation.controller.response.ReservationResponse;
 import roomescape.reservation.controller.response.ReservationsResponse;
 import roomescape.reservation.domain.Reservation;
 import roomescape.reservation.domain.Reservations;
+import roomescape.reservation.service.ReservationService;
 
 @RestController
 @RequestMapping("/reservations")
 public class ReservationApiController {
 
-    private final Reservations reservations = new Reservations();
+    private final ReservationService reservationService;
+
+    public ReservationApiController(ReservationService reservationService) {
+        this.reservationService = reservationService;
+    }
 
     @GetMapping
     public ResponseEntity<ReservationsResponse> getReservations() {
-        ReservationsResponse reservationsResponse = ReservationsResponse.from(reservations);
+        Reservations reservations = reservationService.findReservations();
 
         return ResponseEntity
                 .status(HttpStatus.CREATED)
-                .body(reservationsResponse);
+                .body(ReservationsResponse.from(reservations));
     }
 
     @PostMapping
     public ResponseEntity<ReservationResponse> createReservation(@RequestBody ReservationCreateRequest request) {
-        Reservation reservation = new Reservation(
-                reservations.generateId(),
-                request.name(),
-                LocalDateTime.of(LocalDate.parse(request.date()), LocalTime.parse(request.time()))
-        );
-        reservations.create(reservation);
+        Reservation reservation = reservationService.createReservation(request);
 
         return ResponseEntity.ok(
                 ReservationResponse.from(reservation)
@@ -50,13 +46,15 @@ public class ReservationApiController {
 
     @DeleteMapping("/{id}")
     public ResponseEntity<Void> deleteReservation(@PathVariable Long id) {
-        Optional<Reservation> reservation = reservations.findById(id);
-
-        if (reservation.isEmpty()) {
+        Reservation reservation;
+        try {
+            reservation = reservationService.findReservation(id);
+        } catch (IllegalArgumentException e) {
             return ResponseEntity.notFound().build();
         }
 
-        reservations.delete(reservation.get());
+        reservationService.delete(reservation);
+
         return ResponseEntity.ok().build();
     }
 }

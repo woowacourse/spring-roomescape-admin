@@ -16,7 +16,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import roomescape.domain.Reservation;
 import roomescape.domain.Reservations;
-import roomescape.dto.ReservationCreateVo;
+import roomescape.dto.ReservationCreationInput;
 
 class RoomescapeControllerTest {
 
@@ -43,7 +43,7 @@ class RoomescapeControllerTest {
     @Test
     void createReservation() {
         Reservation expecteReservation = new Reservation(1L, "reservation1", LocalDate.now(), LocalTime.now());
-        ReservationCreateVo input = new ReservationCreateVo(
+        ReservationCreationInput input = new ReservationCreationInput(
                 expecteReservation.getName(), expecteReservation.getDate(), expecteReservation.getTime());
 
         ResponseEntity<Reservation> response = controller.createReservation(input);

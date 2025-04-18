@@ -1,9 +1,9 @@
 package roomescape.domain;
 
+import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertAll;
 
 import java.time.LocalDateTime;
-import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.Test;
 
 class ReservationTest {
@@ -15,8 +15,8 @@ class ReservationTest {
         Reservation reservation = new Reservation(1, person, reservationTime);
 
         assertAll(
-                () -> Assertions.assertThat(reservation.sameId(1)).isTrue(),
-                () -> Assertions.assertThat(reservation.sameId(2)).isFalse()
+                () -> assertThat(reservation.sameId(1)).isTrue(),
+                () -> assertThat(reservation.sameId(2)).isFalse()
         );
     }
 }

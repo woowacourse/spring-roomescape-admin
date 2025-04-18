@@ -11,7 +11,7 @@
 <body>
 
 <nav class="navbar navbar-expand-lg navbar-light bg-light">
-  <a class="navbar-brand" href="/">
+  <a class="navbar-brand" href="/static">
     <img src="/image/admin-logo.png" alt="LOGO" style="height: 40px;">
   </a>
   <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent"
@@ -32,7 +32,7 @@
 </nav>
 
 <div class="content-container">
-  <h2 class="content-container-title">방탈출 예약 페이지</h2>
+  <h2 class="content-container-title">시간 관리 페이지</h2>
   <div class="table-header">
     <button id="add-button" class="btn btn-custom mb-2 float-right">예약 추가</button>
   </div>
@@ -40,11 +40,9 @@
   <table class="table">
     <thead>
     <tr>
-      <th>예약번호</th>
-      <th>예약자</th>
-      <th>날짜</th>
-      <th>시간</th>
-      <th></th>
+      <th scope="col">순서</th>
+      <th scope="col">시간</th>
+      <th scope="col"></th>
     </tr>
     </thead>
     <tbody id="table-body">
@@ -52,6 +50,6 @@
   </table>
 </div>
 
-<script src="/js/reservation.js"></script>
+<script src="/js/time.js"></script>
 </body>
 </html>

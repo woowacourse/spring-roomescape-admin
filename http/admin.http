@@ -1,0 +1,5 @@
+### 어드민 홈화면
+GET localhost:8080/admin
+
+### 어드민 예약 현황 조회
+GET localhost:8080/admin/reservation

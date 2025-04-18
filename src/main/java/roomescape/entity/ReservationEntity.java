@@ -5,20 +5,20 @@ import java.time.LocalTime;
 import java.util.Objects;
 import roomescape.domain.ReservationInfo;
 
-public class Reservation {
+public class ReservationEntity {
     private final Long id;
     private final String name;
     private final LocalDate date;
     private final LocalTime time;
 
-    public Reservation(final Long id, final String name, final LocalDate date, final LocalTime time) {
+    public ReservationEntity(final Long id, final String name, final LocalDate date, final LocalTime time) {
         this.id = id;
         this.name = name;
         this.date = date;
         this.time = time;
     }
 
-    public Reservation(final Long id, final ReservationInfo reservationInfo) {
+    public ReservationEntity(final Long id, final ReservationInfo reservationInfo) {
         this(id, reservationInfo.getName(), reservationInfo.getReservationDate(), reservationInfo.getReservationTime());
     }
 
@@ -47,7 +47,7 @@ public class Reservation {
         if (this == o) {
             return true;
         }
-        if (!(o instanceof Reservation that)) {
+        if (!(o instanceof ReservationEntity that)) {
             return false;
         }
         return Objects.equals(getId(), that.getId());

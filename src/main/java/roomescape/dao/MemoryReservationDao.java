@@ -5,17 +5,17 @@ import java.util.List;
 import java.util.concurrent.atomic.AtomicLong;
 import org.springframework.stereotype.Repository;
 import roomescape.domain.ReservationInfo;
-import roomescape.entity.Reservation;
+import roomescape.entity.ReservationEntity;
 import roomescape.repository.ReservationRepository;
 
 @Repository
 public class MemoryReservationDao implements ReservationRepository {
 
-    private final List<Reservation> reservations = new ArrayList<>();
+    private final List<ReservationEntity> reservations = new ArrayList<>();
     private final AtomicLong increment = new AtomicLong(1);
 
-    public Reservation add(final ReservationInfo reservationInfo) {
-        Reservation newReservation = new Reservation(increment.getAndIncrement(), reservationInfo);
+    public ReservationEntity add(final ReservationInfo reservationInfo) {
+        ReservationEntity newReservation = new ReservationEntity(increment.getAndIncrement(), reservationInfo);
         reservations.add(newReservation);
         return newReservation;
     }
@@ -29,7 +29,7 @@ public class MemoryReservationDao implements ReservationRepository {
                 .anyMatch(reservation -> reservation.isEqualId(id));
     }
 
-    public List<Reservation> getReservations() {
+    public List<ReservationEntity> getReservations() {
         return reservations;
     }
 }

@@ -14,7 +14,7 @@ import org.springframework.web.bind.annotation.RestController;
 import roomescape.domain.ReservationInfo;
 import roomescape.dto.CreateReservationDto;
 import roomescape.dto.ReservationDto;
-import roomescape.entity.Reservation;
+import roomescape.entity.ReservationEntity;
 import roomescape.repository.ReservationRepository;
 
 @RestController
@@ -41,8 +41,8 @@ public class ReservationController {
     public ResponseEntity<ReservationDto> createReservation(
             @RequestBody @Valid final CreateReservationDto createReservationDto) {
         ReservationInfo reservationInfo = createReservationDto.toReservationInfo(clock);
-        Reservation savedReservation = reservationRepository.add(reservationInfo);
-        return ResponseEntity.ok(ReservationDto.from(savedReservation));
+        ReservationEntity savedReservationEntity = reservationRepository.add(reservationInfo);
+        return ResponseEntity.ok(ReservationDto.from(savedReservationEntity));
     }
 
     @DeleteMapping("/{id}")

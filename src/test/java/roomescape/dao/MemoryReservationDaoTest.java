@@ -13,7 +13,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import roomescape.TestBase;
 import roomescape.domain.ReservationDateTime;
 import roomescape.domain.ReservationInfo;
-import roomescape.entity.Reservation;
+import roomescape.entity.ReservationEntity;
 
 class MemoryReservationDaoTest extends TestBase {
     private final LocalDate RESERVATION_DATE = LocalDate.of(2025, 1, 2);
@@ -41,10 +41,10 @@ class MemoryReservationDaoTest extends TestBase {
         ReservationInfo reservationInfo = new ReservationInfo("name1", RESERVATION_DATE_TIME);
         memoryReservationDao.add(reservationInfo);
         // when
-        List<Reservation> reservations = memoryReservationDao.getReservations();
+        List<ReservationEntity> reservations = memoryReservationDao.getReservations();
 
         // then
-        assertThat(reservations).contains(new Reservation(
+        assertThat(reservations).contains(new ReservationEntity(
                 1L,
                 "name1",
                 RESERVATION_DATE,
@@ -71,7 +71,7 @@ class MemoryReservationDaoTest extends TestBase {
         // when
         memoryReservationDao.add(reservationInfo);
         // then
-        List<Reservation> reservations = memoryReservationDao.getReservations();
+        List<ReservationEntity> reservations = memoryReservationDao.getReservations();
         assertThat(reservations).hasSize(1);
     }
 
@@ -84,10 +84,10 @@ class MemoryReservationDaoTest extends TestBase {
         memoryReservationDao.add(reservationInfo1);
         memoryReservationDao.add(reservationInfo2);
         // then
-        List<Reservation> reservations = memoryReservationDao.getReservations();
+        List<ReservationEntity> reservations = memoryReservationDao.getReservations();
         assertThat(reservations).contains(
-                new Reservation(1L, "name1", RESERVATION_DATE, RESERVATION_TIME),
-                new Reservation(2L, "name2", RESERVATION_DATE, RESERVATION_TIME)
+                new ReservationEntity(1L, "name1", RESERVATION_DATE, RESERVATION_TIME),
+                new ReservationEntity(2L, "name2", RESERVATION_DATE, RESERVATION_TIME)
         );
     }
 

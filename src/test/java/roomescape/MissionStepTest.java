@@ -41,15 +41,14 @@ public class MissionStepTest {
         Map<String, String> params = new HashMap<>();
         params.put("name", "브라운");
         params.put("date", "2026-08-05");
-        params.put("time", "15:40");
+        params.put("time", "23:59");
 
         RestAssured.given().log().all()
                 .contentType(ContentType.JSON)
                 .body(params)
                 .when().post("/reservations")
                 .then().log().all()
-                .statusCode(200)
-                .body("id", is(1));
+                .statusCode(201);
 
         RestAssured.given().log().all()
                 .when().get("/reservations")

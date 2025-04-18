@@ -1,6 +1,7 @@
 package roomescape.controller;
 
 import jakarta.validation.Valid;
+import java.net.URI;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
@@ -25,13 +26,13 @@ public class ReservationController {
     private final List<Reservation> reservations = new ArrayList<>();
     private final AtomicLong index = new AtomicLong(1);
 
-    @GetMapping()
+    @GetMapping
     public ResponseEntity<List<ReservationResponse>> findAll() {
         return ResponseEntity.ok().body(createReservationResponses());
     }
 
-    @PostMapping()
-    public ResponseEntity<ReservationResponse> create(
+    @PostMapping
+    public ResponseEntity<Void> create(
             @Valid @RequestBody ReservationCreateRequest reservationCreateRequest) {
 
         Reservation reservation = new Reservation(index.getAndIncrement(),
@@ -40,7 +41,8 @@ public class ReservationController {
                 reservationCreateRequest.time()
         );
         reservations.add(reservation);
-        return ResponseEntity.ok().body(createReservationResponse(reservation));
+
+        return ResponseEntity.created(URI.create("/reservations/" + reservation.getId())).build();
     }
 
     @DeleteMapping("{id}")

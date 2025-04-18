@@ -9,7 +9,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.server.ResponseStatusException;
-import roomescape.dto.CreateReservationDto;
+import roomescape.dto.ReservationCreateRequest;
 import roomescape.model.Reservation;
 
 import java.util.ArrayList;
@@ -30,9 +30,9 @@ public class ReservationRestController {
     }
 
     @PostMapping("/reservations")
-    public ResponseEntity<Reservation> addReservation(@RequestBody CreateReservationDto reservationDto) {
+    public ResponseEntity<Reservation> addReservation(@RequestBody ReservationCreateRequest reservationCreateRequest) {
         try {
-            Reservation reservation = new Reservation(index.getAndIncrement(), reservationDto.name(), reservationDto.date(), reservationDto.time());
+            Reservation reservation = new Reservation(index.getAndIncrement(), reservationCreateRequest.name(), reservationCreateRequest.date(), reservationCreateRequest.time());
             reservations.add(reservation);
             return ResponseEntity
                     .status(HttpStatus.OK)

@@ -15,8 +15,8 @@ import static org.hamcrest.CoreMatchers.is;
 @DirtiesContext(classMode = DirtiesContext.ClassMode.BEFORE_EACH_TEST_METHOD)
 public class MissionStepTest {
 
-    @DisplayName("일단계")
     @Test
+    @DisplayName("/admin get 요청 시, 200 OK를 응답해야 한다")
     void level1() {
         RestAssured.given().log().all()
                 .when().get("/admin")
@@ -24,8 +24,8 @@ public class MissionStepTest {
                 .statusCode(200);
     }
 
-    @DisplayName("이단계")
     @Test
+    @DisplayName("/admin/reservation get 요청 시, 200 OK를 응답한 다음, /reservations get을 호출하여 예약 관리 데이터 및 200 OK를 응답해야 한다")
     void level2() {
         RestAssured.given().log().all()
                 .when().get("/admin/reservation")
@@ -36,11 +36,11 @@ public class MissionStepTest {
                 .when().get("/reservations")
                 .then().log().all()
                 .statusCode(200)
-                .body("size()", is(0)); // 아직 생성 요청이 없으니 Controller에서 임의로 넣어준 Reservation 갯수 만큼 검증하거나 0개임을 확인하세요.
+                .body("size()", is(0));
     }
 
-    @DisplayName("삼단계")
     @Test
+    @DisplayName("예약 추가 시 예약 정보를 저장하고 200 OK를, 삭제 시 id에 해당하는 예약을 제거하고 200 OK를 응답해야 한다")
     void level3() {
         Map<String, String> params = new HashMap<>();
         params.put("name", "브라운");

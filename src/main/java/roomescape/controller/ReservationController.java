@@ -1,8 +1,8 @@
 package roomescape.controller;
 
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
+import java.util.Vector;
 import java.util.concurrent.atomic.AtomicLong;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
@@ -21,7 +21,7 @@ import roomescape.dto.ReservationResponse;
 public class ReservationController {
 
     private final AtomicLong index = new AtomicLong(1);
-    private final List<Reservation> reservations = new ArrayList<>();
+    private final Vector<Reservation> reservations = new Vector<>();
 
     @GetMapping
     public ResponseEntity<List<ReservationResponse>> getReservations() {

@@ -2,7 +2,6 @@ package roomescape.controller;
 
 import io.restassured.RestAssured;
 import io.restassured.http.ContentType;
-import java.util.HashMap;
 import java.util.Map;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -17,10 +16,11 @@ class ReservationControllerTest {
     @Test
     void reservationAdd() {
         //given
-        Map<String, String> params = new HashMap<>();
-        params.put("name", "브라운");
-        params.put("date", "2023-08-05");
-        params.put("time", "15:40");
+        Map<String, String> params = Map.of(
+                "name", "브라운",
+                "date", "2023-08-05",
+                "time", "15:40"
+        );
 
         RestAssured.given().log().all()
                 .contentType(ContentType.JSON)
@@ -29,10 +29,11 @@ class ReservationControllerTest {
                 .then().log().all()
                 .statusCode(200);
 
-        Map<String, String> duplicated = new HashMap<>();
-        duplicated.put("name", "네오");
-        duplicated.put("date", "2023-08-05");
-        duplicated.put("time", "15:40");
+        Map<String, String> duplicated = Map.of(
+                "name", "네오",
+                "date", "2023-08-05",
+                "time", "15:40"
+        );
 
         //when & then
         RestAssured.given().log().all()

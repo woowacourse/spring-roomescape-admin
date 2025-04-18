@@ -33,10 +33,6 @@ public class Reservation {
         }
     }
 
-    public static Reservation createWithoutId(String name, LocalDate date, LocalTime time) {
-        return new Reservation(name, date, time);
-    }
-
     public long getId() {
         return id;
     }

@@ -18,7 +18,7 @@ public class RoomescapeReservationRestController {
     public List<ReservationDto> getAllReservation() {
         return reservations.findAll()
                 .stream()
-                .map(entity -> new ReservationDto(entity.date(), entity.name(), entity.time()))
+                .map(ReservationDto::from)
                 .toList();
     }
 

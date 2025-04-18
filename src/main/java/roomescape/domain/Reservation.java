@@ -17,7 +17,7 @@ public record Reservation(long id, Person person, ReservationTime reservationTim
         return reservationTime.getTime();
     }
 
-    public boolean sameId(long id) {
+    public boolean isSameId(long id) {
         return this.id == id;
     }
 }

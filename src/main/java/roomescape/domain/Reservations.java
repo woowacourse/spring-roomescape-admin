@@ -12,11 +12,11 @@ public class Reservations {
         this.reservations = new ArrayList<>(reservations);
     }
 
-    public void add(final Reservation reservation) {
+    public synchronized void add(final Reservation reservation) {
         reservations.add(reservation);
     }
 
-    public void deleteById(final Long id) {
+    public synchronized void deleteById(final Long id) {
         Reservation reservation = findById(id);
         reservations.remove(reservation);
     }
@@ -28,7 +28,7 @@ public class Reservations {
                 .orElseThrow(() -> new IllegalArgumentException("[ERROR] 해당 id가 없습니다."));
     }
 
-    public List<Reservation> getReservations() {
+    public synchronized List<Reservation> getReservations() {
         return Collections.unmodifiableList(reservations);
     }
 }

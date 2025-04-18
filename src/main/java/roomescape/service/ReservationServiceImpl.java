@@ -37,8 +37,9 @@ public class ReservationServiceImpl implements ReservationService {
 
     @Override
     public void delete(final long id) {
-        reservationRepository.findById(id)
-                .orElseThrow(NoSuchElementException::new);
+        if (reservationRepository.findById(id) == null) {
+            throw new NoSuchElementException("없는 예약번호 입니다.");
+        }
         reservationRepository.deleteById(id);
     }
 }

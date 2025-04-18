@@ -19,8 +19,8 @@ public class FakeReservationRepository implements ReservationRepository {
     private final Map<Long, Reservation> reservations = new HashMap<>();
 
     @Override
-    public Optional<Reservation> findById(final long id) {
-        return Optional.ofNullable(reservations.getOrDefault(id, null));
+    public Reservation findById(final long id) {
+        return reservations.get(id);
     }
 
     @Override

@@ -2,6 +2,7 @@ package roomescape;
 
 import java.time.LocalDate;
 import java.time.LocalTime;
+import java.util.Objects;
 
 public record Reservation(
         Long id,
@@ -22,5 +23,9 @@ public record Reservation(
         if (time == null) {
             throw new IllegalArgumentException("시간은 null이 될 수 없습니다.");
         }
+    }
+
+    public boolean hasSameId(Long id) {
+        return Objects.equals(this.id, id);
     }
 }

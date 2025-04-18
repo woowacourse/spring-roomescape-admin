@@ -9,7 +9,6 @@ import roomescape.dto.response.ReservationResponse;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Objects;
 import java.util.concurrent.atomic.AtomicLong;
 
 @Controller
@@ -48,7 +47,7 @@ public class UserRoomEscapeController {
 
     private static Reservation getReservation(Long reservationId) {
         return reservations.stream()
-                .filter(reservation -> Objects.equals(reservation.id(), reservationId))
+                .filter(reservation -> reservation.hasSameId(reservationId))
                 .findFirst()
                 .orElseThrow(() -> new IllegalArgumentException("id에 해당하는 예약이 존재하지 않습니다."));
     }

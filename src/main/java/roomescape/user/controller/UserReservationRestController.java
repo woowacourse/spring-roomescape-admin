@@ -35,9 +35,9 @@ public class UserReservationRestController {
     @PostMapping("/reservations")
     public ResponseEntity<Reservation> persistReservation(@RequestBody final Reservation reservation) {
         final Long id = reservationRepository.save(reservation);
-        final Optional<Reservation> found = reservationRepository.findById(id);
-
-        return found.map(ResponseEntity::ok)
+        
+        return reservationRepository.findById(id)
+                .map(ResponseEntity::ok)
                 .orElseGet(() -> ResponseEntity.notFound().build());
     }
 

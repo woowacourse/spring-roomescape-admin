@@ -22,7 +22,6 @@ import roomescape.dto.ReservationResponseDto;
 public class ReservationController {
 
     private final Reservations reservations = new Reservations();
-    private final AtomicLong reservationIndex = new AtomicLong(1);
     private final AtomicLong personIndex = new AtomicLong(1);
 
     @GetMapping("")

@@ -11,7 +11,7 @@ import org.springframework.test.annotation.DirtiesContext;
 
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.DEFINED_PORT)
 @DirtiesContext(classMode = DirtiesContext.ClassMode.BEFORE_EACH_TEST_METHOD)
-class RoomescapeControllerTest {
+class ReservationControllerTest {
 
     @DisplayName("같은 날짜 및 시간 예약이 존재하면 404 Not Found를 던진다")
     @Test

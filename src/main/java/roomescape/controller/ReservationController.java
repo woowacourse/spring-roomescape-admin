@@ -15,11 +15,11 @@ import roomescape.dto.ReservationResponse;
 import roomescape.service.RoomescapeService;
 
 @Controller
-public class RoomescapeController {
+public class ReservationController {
 
     private final RoomescapeService roomescapeService;
 
-    public RoomescapeController(final RoomescapeService roomescapeService) {
+    public ReservationController(final RoomescapeService roomescapeService) {
         this.roomescapeService = roomescapeService;
     }
 

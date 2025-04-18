@@ -6,6 +6,7 @@ import io.restassured.RestAssured;
 import io.restassured.http.ContentType;
 import java.util.HashMap;
 import java.util.Map;
+import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.context.SpringBootTest.WebEnvironment;
@@ -20,7 +21,8 @@ public class MissionStepTest {
     int port;
 
     @Test
-    void 일단계() {
+    @DisplayName("/admin 경로 응답 테스트")
+    void adminRequestResponseTest() {
         RestAssured.port = this.port;
         RestAssured.given().log().all()
                 .when().get("/admin")
@@ -29,12 +31,19 @@ public class MissionStepTest {
     }
 
     @Test
-    void 이단계() {
+    @DisplayName("/admin/reservation 응답 테스트")
+    void adminReservationResponseTest() {
         RestAssured.port = this.port;
         RestAssured.given().log().all()
                 .when().get("/admin/reservation")
                 .then().log().all()
                 .statusCode(200);
+    }
+
+    @Test
+    @DisplayName("/reservations 응답 테스트")
+    void reservationsResponseTest() {
+        RestAssured.port = this.port;
 
         RestAssured.given().log().all()
                 .when().get("/reservations")
@@ -44,7 +53,8 @@ public class MissionStepTest {
     }
 
     @Test
-    void 삼단계() {
+    @DisplayName("/reservations 추가 요청 테스트")
+    void addReservationsTest() {
         RestAssured.port = this.port;
         Map<String, String> params = new HashMap<>();
         params.put("name", "브라운");
@@ -78,7 +88,8 @@ public class MissionStepTest {
     }
 
     @Test
-    public void 추가_테스트() {
+    @DisplayName("/reservations 추가 요청 응답 테스트")
+    public void addReservationsResponseTest() {
         RestAssured.port = this.port;
         Map<String, String> params = new HashMap<>();
         params.put("name", "브라운");

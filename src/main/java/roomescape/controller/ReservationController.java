@@ -3,7 +3,9 @@ package roomescape.controller;
 import java.time.LocalDate;
 import java.time.LocalTime;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.Objects;
 import java.util.concurrent.atomic.AtomicLong;
 import org.springframework.http.ResponseEntity;
@@ -19,13 +21,13 @@ import roomescape.entity.Reservation;
 @RequestMapping("/reservations")
 public class ReservationController {
 
-    private List<Reservation> reservations = new ArrayList<>();
     private AtomicLong index = new AtomicLong(1);
+    private Map<Long, Reservation> reservations = new HashMap<>();
 
     @GetMapping
     public List<Reservation> getReservations(
     ) {
-        return reservations;
+        return reservations.values().stream().toList();
     }
 
     @PostMapping
@@ -36,7 +38,7 @@ public class ReservationController {
     ) {
         Reservation reservation = new Reservation(index.getAndIncrement(), name, date, time);
 
-        reservations.add(reservation);
+        reservations.put(reservation.getId(), reservation);
         return ResponseEntity.ok().body(reservation);
     }
 
@@ -44,14 +46,9 @@ public class ReservationController {
     public ResponseEntity<List<Reservation>> deleteReservation(
             @PathVariable Long id
     ) {
-        Reservation reservation = reservations.stream()
-                .filter(it -> Objects.equals(it.getId(), id))
-                .findFirst()
-                .orElseThrow(RuntimeException::new);
+        reservations.remove(id);
 
-        reservations.remove(reservation);
-
-        return ResponseEntity.ok().body(reservations);
+        return ResponseEntity.ok().build();
     }
 
 }

@@ -23,9 +23,11 @@ public class ReservationController {
     private Map<Long, Reservation> reservations = new HashMap<>();
 
     @GetMapping
-    public List<Reservation> getReservations(
+    public ResponseEntity<List<Reservation>> getReservations(
     ) {
-        return reservations.values().stream().toList();
+        return ResponseEntity.ok().body(
+                reservations.values().stream().toList()
+        );
     }
 
     @PostMapping

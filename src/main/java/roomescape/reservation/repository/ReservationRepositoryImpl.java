@@ -20,7 +20,7 @@ public class ReservationRepositoryImpl implements ReservationRepository {
 
     public Optional<Reservation> findById(Long id) {
         return reservations.stream()
-                .filter(reservation -> reservation.getId() == id)
+                .filter(reservation -> reservation.isSameId(id))
                 .findFirst();
     }
 

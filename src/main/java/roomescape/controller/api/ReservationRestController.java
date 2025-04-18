@@ -1,4 +1,4 @@
-package roomescape.controller.rest;
+package roomescape.controller.api;
 
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;

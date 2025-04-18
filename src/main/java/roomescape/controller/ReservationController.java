@@ -14,7 +14,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import roomescape.domain.Reservation;
 import roomescape.dto.AddReservationDto;
-import roomescape.exception.InvalidReservationRequest;
+import roomescape.exception.InvalidReservationException;
 
 @Controller
 @RequestMapping("/reservations")
@@ -31,7 +31,7 @@ public class ReservationController {
     @PostMapping("")
     public ResponseEntity<Void> addReservations(@RequestBody AddReservationDto addReservationDto) {
         if (addReservationDto == null) {
-            throw new InvalidReservationRequest();
+            throw new InvalidReservationException("예약을 추가할 수 없습니다.");
         }
 
         Reservation newReservation = new Reservation(index.getAndIncrement(), addReservationDto.name(),
@@ -46,7 +46,7 @@ public class ReservationController {
         Reservation deleteReservation = reservations.stream()
                 .filter((reservation) -> reservation.id().equals(id))
                 .findAny()
-                .orElseThrow(InvalidReservationRequest::new);
+                .orElseThrow(() -> new InvalidReservationException("존재하지 않는 예약 번호를 삭제할 수 없습니다."));
 
         reservations.remove(deleteReservation);
         return ResponseEntity.noContent().build();

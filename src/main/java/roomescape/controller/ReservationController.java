@@ -15,11 +15,12 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import roomescape.domain.Reservation;
 import roomescape.dto.request.ReservationCreateRequest;
+import roomescape.dto.response.ReservationResponse;
 
 @Controller
 public class ReservationController {
 
-    private final List<Reservation> reservations = new ArrayList<>();
+    private final List<ReservationResponse> reservations = new ArrayList<>();
     private final AtomicLong index = new AtomicLong(1);
 
     @GetMapping("/admin/reservation")
@@ -28,26 +29,25 @@ public class ReservationController {
     }
 
     @GetMapping("/reservations")
-    public ResponseEntity<List<Reservation>> findAll() {
+    public ResponseEntity<List<ReservationResponse>> findAll() {
         return ResponseEntity.ok().body(reservations);
     }
 
     @PostMapping("/reservations")
-    public ResponseEntity<Reservation> create(@Valid @RequestBody ReservationCreateRequest reservationCreateRequest) {
+    public ResponseEntity<ReservationResponse> create(@Valid @RequestBody ReservationCreateRequest reservationCreateRequest) {
 
-        Reservation reservation = new Reservation(index.getAndIncrement(),
-                reservationCreateRequest.name(),
-                reservationCreateRequest.date(),
-                reservationCreateRequest.time()
-        );
-        reservations.add(reservation);
-        return ResponseEntity.created(URI.create("/reservations/" + index.get())).body(reservation);
+        Reservation reservation = reservationCreateRequest.dtoToReservation();
+        Reservation reservationWithId = Reservation.createReservationWithId(index.getAndIncrement(), reservation);
+
+        ReservationResponse returnDto = ReservationResponse.reservationToDto(reservationWithId);
+        reservations.add(returnDto);
+        return ResponseEntity.created(URI.create("/reservations/" + index.get())).body(returnDto);
     }
 
     @DeleteMapping("/reservations/{id}")
     public ResponseEntity<Void> delete(@PathVariable Long id) {
-        Reservation reservation = reservations.stream()
-                .filter(it -> Objects.equals(it.getId(), id))
+        ReservationResponse reservation = reservations.stream()
+                .filter(it -> Objects.equals(it.id(), id))
                 .findFirst()
                 .orElseThrow(RuntimeException::new);
 

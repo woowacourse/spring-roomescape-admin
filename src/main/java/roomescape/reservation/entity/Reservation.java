@@ -4,7 +4,7 @@ import java.time.LocalDateTime;
 
 public class Reservation {
 
-    private final long id;
+    private final Long id;
     private final String name;
     private final LocalDateTime dateTime;
 

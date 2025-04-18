@@ -4,10 +4,12 @@ import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.time.LocalTime;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
-import roomescape.dto.ReservationDto;
+import roomescape.model.Reservation;
+import roomescape.model.ReservationDateTime;
 import roomescape.model.Reservations;
 
 class ReservationsTest {
@@ -16,13 +18,9 @@ class ReservationsTest {
     @Test
     void can_add_reservation() {
         Reservations reservations = new Reservations();
+        LocalDateTime localDateTime = LocalDateTime.of(LocalDate.of(2025, 4, 18), LocalTime.of(11, 0));
 
-        reservations.add(
-                new ReservationDto("포스티",
-                        LocalDate.of(2025, 4, 16),
-                        LocalTime.of(11, 0)
-                )
-        );
+        reservations.add(new Reservation("율무", new ReservationDateTime(localDateTime)));
 
         assertThat(reservations.getReservations()).hasSize(1);
     }
@@ -31,13 +29,9 @@ class ReservationsTest {
     @Test
     void can_remove_reservation() {
         Reservations reservations = new Reservations();
+        LocalDateTime localDateTime = LocalDateTime.of(LocalDate.of(2025, 4, 18), LocalTime.of(11, 0));
 
-        reservations.add(
-                new ReservationDto("포스티",
-                        LocalDate.of(2025, 4, 16),
-                        LocalTime.of(11, 0)
-                )
-        );
+        reservations.add(new Reservation("율무", new ReservationDateTime(localDateTime)));
         reservations.removeById(1L);
 
         assertThat(reservations.getReservations()).hasSize(0);

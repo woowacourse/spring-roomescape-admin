@@ -2,6 +2,7 @@ package roomescape.repository;
 
 import java.time.LocalDateTime;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 import java.util.concurrent.atomic.AtomicLong;
 import org.springframework.stereotype.Component;
@@ -10,7 +11,7 @@ import roomescape.model.Reservation;
 @Component
 public class ReservationRepository {
 
-    private final List<Reservation> reservations = new ArrayList<>();
+    private final List<Reservation> reservations = Collections.synchronizedList(new ArrayList<>());
 
     private AtomicLong index = new AtomicLong(3);
 

@@ -15,6 +15,7 @@ import roomescape.reservation.controller.response.ReservationsResponse;
 import roomescape.reservation.domain.Reservation;
 import roomescape.reservation.domain.Reservations;
 import roomescape.reservation.service.ReservationService;
+import roomescape.reservation.service.exception.ReservationNotFoundException;
 
 @RestController
 @RequestMapping("/reservations")
@@ -49,7 +50,7 @@ public class ReservationApiController {
         Reservation reservation;
         try {
             reservation = reservationService.findReservation(id);
-        } catch (IllegalArgumentException e) {
+        } catch (ReservationNotFoundException e) {
             return ResponseEntity.notFound().build();
         }
 

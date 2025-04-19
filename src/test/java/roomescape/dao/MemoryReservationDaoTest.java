@@ -28,7 +28,7 @@ class MemoryReservationDaoTest extends TestBase {
     @BeforeEach
     void setUp() {
         memoryReservationDao = new MemoryReservationDao();
-        RESERVATION_DATE_TIME = new ReservationDateTime(
+        RESERVATION_DATE_TIME = ReservationDateTime.createNewReservationTime(
                 RESERVATION_DATE,
                 RESERVATION_TIME,
                 clock

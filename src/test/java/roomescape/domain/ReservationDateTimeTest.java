@@ -18,7 +18,7 @@ public class ReservationDateTimeTest extends TestBase {
     @Test
     void 예약_일시는_현재일시_이전이면_예외가_발생한다() {
         // given & when & then
-        assertThatThrownBy(() -> new ReservationDateTime(
+        assertThatThrownBy(() -> ReservationDateTime.createNewReservationTime(
                 LocalDate.of(2025, 1, 1),
                 LocalTime.of(10, 10, 10),
                 clock
@@ -28,7 +28,7 @@ public class ReservationDateTimeTest extends TestBase {
     @Test
     void 예약_일시는_현재일시_이후여야_한다() {
         // given & when & then
-        assertThatCode(() -> new ReservationDateTime(
+        assertThatCode(() -> ReservationDateTime.createNewReservationTime(
                 LocalDate.of(2025, 1, 2),
                 LocalTime.of(10, 10, 10),
                 clock

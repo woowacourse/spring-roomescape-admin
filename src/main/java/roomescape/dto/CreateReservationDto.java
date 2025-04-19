@@ -20,6 +20,6 @@ public record CreateReservationDto(
 ) {
 
     public ReservationInfo toReservationInfo(final Clock clock) {
-        return new ReservationInfo(name, new ReservationDateTime(date, time, clock));
+        return new ReservationInfo(name, ReservationDateTime.createNewReservationTime(date, time, clock));
     }
 }

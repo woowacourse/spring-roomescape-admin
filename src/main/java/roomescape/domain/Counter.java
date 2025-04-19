@@ -6,7 +6,7 @@ public class Counter {
 
     private final AtomicLong value = new AtomicLong(1);
 
-    public long increase() {
+    public long getAndIncrease() {
         return value.getAndIncrement();
     }
 }

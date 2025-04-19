@@ -1,43 +1,39 @@
 package roomescape.domain;
 
 import java.time.LocalDateTime;
-import java.util.ArrayList;
 import java.util.Collections;
-import java.util.List;
+import java.util.HashMap;
+import java.util.Map;
 
 public class Reservations {
 
-    private final List<Reservation> reservations;
+    private final Map<Long, Reservation> reservations;
     private final Counter counter;
 
-    public Reservations(final List<Reservation> reservations, final Counter counter) {
+    public Reservations(final Map<Long, Reservation> reservations, final Counter counter) {
         this.reservations = reservations;
         this.counter = counter;
     }
 
     public Reservations() {
-        this(new ArrayList<>(), new Counter());
+        this(new HashMap<>(), new Counter());
     }
 
     public Reservation addReservation(final String name, final LocalDateTime dateTime) {
-        final Reservation reservation = new Reservation(counter.increase(), name, dateTime);
-        reservations.add(reservation);
+        long id = counter.getAndIncrease();
+        final Reservation reservation = new Reservation(id, name, dateTime);
+        reservations.put(id, reservation);
         return reservation;
     }
 
     public void deleteById(final Long id) {
-        Reservation reservation = findById(id);
-        reservations.remove(reservation);
+        if (!reservations.containsKey(id)) {
+            throw new IllegalArgumentException("[ERROR] 해당 id가 없습니다.");
+        }
+        reservations.remove(id);
     }
 
-    private Reservation findById(final Long id) {
-        return reservations.stream()
-                .filter(reservation -> reservation.isSameId(id))
-                .findFirst()
-                .orElseThrow(() -> new IllegalArgumentException("[ERROR] 해당 id가 없습니다."));
-    }
-
-    public List<Reservation> getReservations() {
-        return Collections.unmodifiableList(reservations);
+    public Map<Long, Reservation> getReservations() {
+        return Collections.unmodifiableMap(reservations);
     }
 }

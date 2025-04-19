@@ -37,7 +37,7 @@ public final class ReservationApiController {
     }
 
     @DeleteMapping("/{id}")
-    public void cancel(@PathVariable int id) {
+    public void cancel(@PathVariable Long id) {
         reservationRepository.removeById(id);
     }
 }

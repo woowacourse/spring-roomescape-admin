@@ -2,7 +2,7 @@ package roomescape.repository;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.concurrent.atomic.AtomicInteger;
+import java.util.concurrent.atomic.AtomicLong;
 import org.springframework.stereotype.Repository;
 import roomescape.model.Reservation;
 
@@ -10,7 +10,7 @@ import roomescape.model.Reservation;
 public class MemoryReservationRepository implements ReservationRepository {
 
     private final List<Reservation> reservations = new ArrayList<>();
-    private final AtomicInteger nextId = new AtomicInteger(1);
+    private final AtomicLong nextId = new AtomicLong(1);
 
     @Override
     public List<Reservation> findAll() {
@@ -25,7 +25,7 @@ public class MemoryReservationRepository implements ReservationRepository {
     }
 
     @Override
-    public void removeById(int id) {
-        reservations.removeIf(reservation -> reservation.getId() == id);
+    public void removeById(Long id) {
+        reservations.removeIf(reservation -> reservation.getId().equals(id));
     }
 }

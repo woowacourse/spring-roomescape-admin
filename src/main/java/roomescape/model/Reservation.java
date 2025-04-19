@@ -7,12 +7,12 @@ import roomescape.exception.DomainException;
 
 public final class Reservation {
 
-    private final Integer id;
+    private final Long id;
     private final String name;
     private final LocalDate date;
     private final LocalTime time;
 
-    public Reservation(Integer id, String name, LocalDate date, LocalTime time) {
+    public Reservation(Long id, String name, LocalDate date, LocalTime time) {
         validateNotBlankName(name);
         validateNotNullDateTime(date, time);
         validateNotPastDateTime(LocalDateTime.of(date, time));
@@ -53,11 +53,11 @@ public final class Reservation {
         }
     }
 
-    public static Reservation toEntity(Integer id, Reservation reservation) {
+    public static Reservation toEntity(Long id, Reservation reservation) {
         return new Reservation(id, reservation.name, reservation.date, reservation.time);
     }
 
-    public int getId() {
+    public Long getId() {
         return id;
     }
 

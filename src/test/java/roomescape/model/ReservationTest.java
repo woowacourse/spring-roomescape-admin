@@ -19,7 +19,7 @@ class ReservationTest {
     @ValueSource(ints = {1, 60, 3_600, 86_400})
     void createTest(int differentSecond) {
         // given
-        int id = 1;
+        Long id = 1L;
         String name = "브라운";
         LocalDateTime reservationDateTime = LocalDateTime.now().plusSeconds(differentSecond);
         LocalDate reservationDate = reservationDateTime.toLocalDate();
@@ -35,7 +35,7 @@ class ReservationTest {
     @ValueSource(ints = {1, 60, 3_600, 86_400})
     void shouldThrowException_WhenCreatePastReservation(int differentSecond) {
         // given
-        int id = 1;
+        Long id = 1L;
         String name = "브라운";
         LocalDateTime reservationDateTime = LocalDateTime.now().minusSeconds(differentSecond);
         LocalDate reservationDate = reservationDateTime.toLocalDate();
@@ -52,7 +52,7 @@ class ReservationTest {
     @NullAndEmptySource
     void shouldThrowException_WhenCreateWithEmptyName(String emptyName) {
         // given
-        int id = 1;
+        Long id = 1L;
         LocalDateTime reservationDateTime = LocalDateTime.now().plusHours(1);
         LocalDate reservationDate = reservationDateTime.toLocalDate();
         LocalTime reservationTime = reservationDateTime.toLocalTime();
@@ -67,7 +67,7 @@ class ReservationTest {
     @Test
     void shouldThrowException_WhenCreateWithNullDate() {
         // given
-        int id = 1;
+        Long id = 1L;
         String name = "브라운";
         LocalDateTime reservationDateTime = LocalDateTime.now().plusHours(1);
         LocalTime reservationTime = reservationDateTime.toLocalTime();
@@ -82,7 +82,7 @@ class ReservationTest {
     @Test
     void shouldThrowException_WhenCreateWithNullTime() {
         // given
-        int id = 1;
+        Long id = 1L;
         String name = "브라운";
         LocalDateTime reservationDateTime = LocalDateTime.now().plusHours(1);
         LocalDate reservationDate = reservationDateTime.toLocalDate();

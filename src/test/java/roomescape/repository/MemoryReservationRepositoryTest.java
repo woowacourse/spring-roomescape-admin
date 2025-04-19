@@ -18,7 +18,7 @@ class MemoryReservationRepositoryTest {
     @Test
     void findAllTest() {
         // given
-        int id = 1;
+        Long id = 1L;
         String name = "브라운";
         LocalDateTime reservationDateTime = LocalDateTime.now().plusDays(1);
         LocalDate reservationDate = reservationDateTime.toLocalDate();
@@ -43,7 +43,7 @@ class MemoryReservationRepositoryTest {
     @Test
     void addTest() {
         // given
-        int id = 1;
+        Long id = 1L;
         String name = "브라운";
         LocalDateTime reservationDateTime = LocalDateTime.now().plusDays(1);
         LocalDate reservationDate = reservationDateTime.toLocalDate();
@@ -69,7 +69,7 @@ class MemoryReservationRepositoryTest {
     @Test
     void removeByIdTest() {
         // given
-        int id = 1;
+        Long id = 1L;
         String name = "브라운";
         LocalDateTime reservationDateTime = LocalDateTime.now().plusDays(1);
         LocalDate reservationDate = reservationDateTime.toLocalDate();

@@ -1,15 +1,9 @@
-package roomescape.domain;
+package roomescape.domain.dto;
 
 import java.time.LocalDate;
 import java.time.LocalTime;
-import java.util.concurrent.atomic.AtomicLong;
 
-public class Reservation {
-
-    private final static AtomicLong ID_GENERATOR = new AtomicLong(0);
-
-
-    private final Long id;
+public class ReservationReqDto {
 
     private final String name;
 
@@ -17,15 +11,10 @@ public class Reservation {
 
     private final LocalTime time;
 
-    public Reservation(String name, LocalDate date, LocalTime time) {
-        this.id = ID_GENERATOR.incrementAndGet();
+    public ReservationReqDto(String name, LocalDate date, LocalTime time) {
         this.name = name;
         this.date = date;
         this.time = time;
-    }
-
-    public Long getId() {
-        return id;
     }
 
     public String getName() {

@@ -1,11 +1,14 @@
 package roomescape.service;
 
-import java.util.List;
 import org.springframework.stereotype.Service;
 import roomescape.database.ReservationDatabase;
 import roomescape.database.ReservationDatabaseImpl;
 import roomescape.domain.Reservation;
-import roomescape.domain.dto.ReservationRequestDto;
+import roomescape.domain.dto.ReservationReqDto;
+import roomescape.domain.dto.ReservationResDto;
+
+import java.util.List;
+import java.util.stream.Collectors;
 
 @Service
 public class ReservationService {
@@ -16,13 +19,17 @@ public class ReservationService {
         this.reservationDatabase = new ReservationDatabaseImpl();
     }
 
-    public List<Reservation> readAll() {
-        return reservationDatabase.findAll();
+    public List<ReservationResDto> readAll() {
+        List<Reservation> reservations = reservationDatabase.findAll();
+        return reservations.stream()
+                .map(this::convertReservationResDto)
+                .collect(Collectors.toList());
     }
 
-    public Reservation add(ReservationRequestDto reservationDto) {
-        Reservation reservation = convertReservation(reservationDto);
-        return reservationDatabase.add(reservation);
+    public ReservationResDto add(ReservationReqDto dto) {
+        Reservation reservation = convertReservation(dto);
+        Reservation savedReservation = reservationDatabase.add(reservation);
+        return convertReservationResDto(savedReservation);
     }
 
     public void delete(Long id) {
@@ -30,10 +37,19 @@ public class ReservationService {
         reservationDatabase.delete(reservation);
     }
 
-    private Reservation convertReservation(ReservationRequestDto reservationDto) {
+    private Reservation convertReservation(ReservationReqDto dto) {
         return new Reservation(
-                reservationDto.name(),
-                reservationDto.date(),
-                reservationDto.time());
+                dto.getName(),
+                dto.getDate(),
+                dto.getTime());
+    }
+
+    private ReservationResDto convertReservationResDto(Reservation reservation) {
+        return new ReservationResDto(
+                reservation.getId(),
+                reservation.getName(),
+                reservation.getDate(),
+                reservation.getTime()
+        );
     }
 }

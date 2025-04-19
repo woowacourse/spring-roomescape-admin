@@ -12,9 +12,16 @@ import java.util.stream.Stream;
 
 class ReservationTest {
 
+    @Test
+    void invalidReservationInputTest() {
+        Assertions.assertThatThrownBy(() -> new Reservation(null, null, null, null))
+                .isInstanceOf(IllegalArgumentException.class);
+    }
+
+
     @ParameterizedTest
     @MethodSource("invalidNames")
-    void 공백이거나_이름이_비었으면_에러가_발생한다(String reservationName) {
+    void invalidReservationNameTest(String reservationName) {
         Long id = 1L;
         LocalDate localDate = LocalDate.now();
         LocalTime localTime = LocalTime.now();
@@ -28,11 +35,5 @@ class ReservationTest {
                 Arguments.of(" "),
                 Arguments.of("")
         );
-    }
-
-    @Test
-    void 예약_생성_시_null_값이_들어올_수_없다() {
-        Assertions.assertThatThrownBy(() -> new Reservation(null, null, null, null))
-                .isInstanceOf(IllegalArgumentException.class);
     }
 }

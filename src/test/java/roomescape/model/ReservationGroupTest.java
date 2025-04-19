@@ -18,7 +18,7 @@ class ReservationGroupTest {
     }
 
     @Test
-    void 그룹애_존재하지_않는_예약을_삭제하는_경우() {
+    void invalidReservationIdTest() {
         Reservation person = new Reservation(1L, "person", LocalDate.now(), LocalTime.now());
         Long deleteId = 2L;
 

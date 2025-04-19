@@ -34,7 +34,7 @@ public class ReservationController {
             @PathVariable("id") final long id
     ) {
         try {
-            reservations.removeReservation(id);
+            reservations.removeReservationById(id);
             return ResponseEntity.ok().build();
         } catch (final IllegalArgumentException e) {
             return ResponseEntity.notFound().build();

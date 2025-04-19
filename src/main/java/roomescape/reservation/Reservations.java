@@ -17,13 +17,13 @@ public class Reservations {
         return reservationWithId;
     }
 
-    public void removeReservation(final long id) {
-        final Reservation target = findBy(id);
+    public void removeReservationById(final long id) {
+        final Reservation target = findById(id);
 
         reservations.remove(target);
     }
 
-    private Reservation findBy(long id) {
+    private Reservation findById(long id) {
         return reservations.stream()
                 .filter(reservation -> Objects.equals(reservation.id(), id))
                 .findFirst()

@@ -52,7 +52,7 @@ public class ReservationsTest {
         final Reservation savedReservation = reservations.save(reservation);
 
         // when
-        reservations.removeReservation(savedReservation.id());
+        reservations.removeReservationById(savedReservation.id());
 
         // then
         assertThat(reservations.getReservations()).hasSize(0);
@@ -65,7 +65,7 @@ public class ReservationsTest {
         final Reservations reservations = new Reservations();
 
         // when & then
-        assertThatCode(() -> reservations.removeReservation(1))
+        assertThatCode(() -> reservations.removeReservationById(1))
                 .isInstanceOf(IllegalArgumentException.class)
                 .hasMessageStartingWith("[ERROR]");
     }

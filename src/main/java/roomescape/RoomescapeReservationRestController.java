@@ -32,7 +32,7 @@ public class RoomescapeReservationRestController {
     }
 
     @DeleteMapping("/{id}")
-    public ResponseEntity<Void> deleteReservation(@PathVariable Long id) {
+    public ResponseEntity<Void> deleteReservation(@PathVariable("id") Long id) {
         try {
             reservations.deleteById(id);
             return ResponseEntity.ok().build();

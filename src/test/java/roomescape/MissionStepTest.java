@@ -1,10 +1,12 @@
 package roomescape;
 
 import static org.hamcrest.Matchers.is;
-import java.util.HashMap;
-import java.util.Map;
+
 import io.restassured.RestAssured;
 import io.restassured.http.ContentType;
+import java.util.HashMap;
+import java.util.Map;
+import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.annotation.DirtiesContext;
@@ -13,30 +15,37 @@ import org.springframework.test.annotation.DirtiesContext;
 @DirtiesContext(classMode = DirtiesContext.ClassMode.BEFORE_EACH_TEST_METHOD)
 public class MissionStepTest {
 
+    @DisplayName("/admin 경로 요청 시 200 OK를 반환한다")
     @Test
-    void 일단계() {
+    void requestSuccessAdmin() {
         RestAssured.given().log().all()
                 .when().get("/admin")
                 .then().log().all()
                 .statusCode(200);
     }
 
+    @DisplayName("/admin/reservation 경로 요청시 200 OK를 반환한다.")
     @Test
-    void 이단계() {
+    void requestSuccessReservation() {
         RestAssured.given().log().all()
                 .when().get("/admin/reservation")
                 .then().log().all()
                 .statusCode(200);
+    }
 
+    @DisplayName("/reservations 경로 요청시 200 OK를 반환한다.")
+    @Test
+    void requestSuccessReservations() {
         RestAssured.given().log().all()
                 .when().get("/reservations")
                 .then().log().all()
                 .statusCode(200)
-                .body("size()", is(0)); // 아직 생성 요청이 없으니 Controller에서 임의로 넣어준 Reservation 갯수 만큼 검증하거나 0개임을 확인하세요.
+                .body("size()", is(0));
     }
 
+    @DisplayName("예약을 생성하고, 조회하고, 삭제 할 수 있다.")
     @Test
-    void 삼단계() {
+    void reservationCRD() {
         Map<String, String> params = new HashMap<>();
         params.put("name", "브라운");
         params.put("date", "2023-08-05");

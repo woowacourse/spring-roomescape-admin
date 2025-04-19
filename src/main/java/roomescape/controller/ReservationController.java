@@ -37,7 +37,8 @@ public class ReservationController {
     @PostMapping("/reservations")
     public ResponseEntity<Reservation> addReservation(@RequestBody ReservationRequest request) {
         try {
-            final var saved = reservationRepository.save(request);
+            final var savedId = reservationRepository.save(request);
+            final var saved = reservationRepository.findById(savedId).get();
             return ResponseEntity.ok(saved);
         } catch (IllegalArgumentException e) {
             return ResponseEntity.badRequest().build();

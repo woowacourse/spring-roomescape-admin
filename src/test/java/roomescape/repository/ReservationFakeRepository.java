@@ -18,10 +18,10 @@ public class ReservationFakeRepository implements ReservationRepository {
         return Optional.ofNullable(reservations.get(id));
     }
 
-    public Reservation save(ReservationRequest request) {
+    public long save(ReservationRequest request) {
         final var reservation = request.toReservation(index.getAndIncrement());
         reservations.put(reservation.id(), reservation);
-        return reservation;
+        return reservation.id();
     }
 
     public boolean removeById(long id) {

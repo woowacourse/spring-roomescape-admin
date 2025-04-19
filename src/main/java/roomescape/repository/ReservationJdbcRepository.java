@@ -1,12 +1,11 @@
 package roomescape.repository;
 
-import java.sql.Date;
-import java.sql.Time;
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.JdbcTemplate;
-import org.springframework.jdbc.support.GeneratedKeyHolder;
+import org.springframework.jdbc.core.simple.SimpleJdbcInsert;
 import org.springframework.stereotype.Repository;
 import roomescape.Reservation;
 import roomescape.ReservationRequest;
@@ -35,23 +34,16 @@ public class ReservationJdbcRepository implements ReservationRepository {
         return reservations.stream().findAny();
     }
 
-    public Reservation save(ReservationRequest request) {
-        final var sql = "insert into RESERVATION (name, date, time) values (?, ?, ?)";
-        final var keyHolder = new GeneratedKeyHolder();
-
-        jdbcTemplate.update(
-            connection -> {
-                final var pstmt = connection.prepareStatement(sql, new String[]{"id"});
-                pstmt.setString(1, request.name());
-                pstmt.setDate(2, Date.valueOf(request.date()));
-                pstmt.setTime(3, Time.valueOf(request.time()));
-                return pstmt;
-            },
-            keyHolder
-        );
-
-        final var id = keyHolder.getKey().longValue();
-        return findById(id).get();
+    public long save(ReservationRequest request) {
+        SimpleJdbcInsert insertActor = new SimpleJdbcInsert(jdbcTemplate);
+        final var generatedKey = insertActor.withTableName("RESERVATION")
+            .usingGeneratedKeyColumns("id")
+            .executeAndReturnKey(Map.of(
+                "name", request.name(),
+                "date", request.date(),
+                "time", request.time()
+            ));
+        return generatedKey.longValue();
     }
 
     public boolean removeById(long id) {

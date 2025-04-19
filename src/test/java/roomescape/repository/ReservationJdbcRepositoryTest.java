@@ -29,11 +29,10 @@ public class ReservationJdbcRepositoryTest {
             LocalDate.of(2023, 12, 1),
             LocalTime.of(1, 1)
         );
-        final var saved = reservationJdbcRepository.save(request);
+        final var savedId = reservationJdbcRepository.save(request);
 
         //when
-        final var id = saved.id();
-        final var foundReservation = reservationJdbcRepository.findById(id);
+        final var foundReservation = reservationJdbcRepository.findById(savedId);
 
         //then
         assertThat(foundReservation).isPresent();
@@ -51,7 +50,8 @@ public class ReservationJdbcRepositoryTest {
         );
 
         // when
-        final var saved = reservationJdbcRepository.save(request);
+        final var savedId = reservationJdbcRepository.save(request);
+        final var saved = reservationJdbcRepository.findById(savedId).get();
 
         // then
         assertThat(reservationJdbcRepository.getReservations()).containsOnly(saved);
@@ -67,10 +67,10 @@ public class ReservationJdbcRepositoryTest {
             LocalDate.of(2023, 12, 1),
             LocalTime.of(1, 1)
         );
-        final var saved = reservationJdbcRepository.save(request);
+        final var savedId = reservationJdbcRepository.save(request);
 
         // when
-        reservationJdbcRepository.removeById(saved.id());
+        reservationJdbcRepository.removeById(savedId);
 
         // then
         assertThat(reservationJdbcRepository.getReservations()).isEmpty();

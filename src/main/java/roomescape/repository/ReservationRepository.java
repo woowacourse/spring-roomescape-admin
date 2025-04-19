@@ -9,7 +9,7 @@ public interface ReservationRepository {
 
     Optional<Reservation> findById(long id);
 
-    Reservation save(ReservationRequest request);
+    long save(ReservationRequest request);
 
     boolean removeById(long id);
 

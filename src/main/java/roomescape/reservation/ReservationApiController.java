@@ -15,8 +15,8 @@ import org.springframework.web.bind.annotation.RestController;
 public class ReservationApiController {
     private final Reservations reservations;
 
-    public ReservationApiController(Reservations reservations) {
-        this.reservations = reservations;
+    public ReservationApiController() {
+        this.reservations = new Reservations();
     }
 
     @PostMapping

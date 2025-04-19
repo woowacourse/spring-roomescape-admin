@@ -3,10 +3,8 @@ package roomescape.reservation;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
-import org.springframework.stereotype.Component;
 
-@Component
-public final class Reservations {
+public class Reservations {
     private final List<Reservation> reservations;
 
     public Reservations() {

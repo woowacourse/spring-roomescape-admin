@@ -30,7 +30,7 @@ public class ReservationController {
 
     @PostMapping("/reservations")
     public ResponseEntity<Reservation> createReservation(@RequestBody @Valid ReservationRequest request) {
-        Reservation reservation = request.toReservation(reservationRepository.getNextId());
+        Reservation reservation = request.toReservation();
         Reservation saved = reservationRepository.save(reservation);
         return ResponseEntity.ok(saved);
     }

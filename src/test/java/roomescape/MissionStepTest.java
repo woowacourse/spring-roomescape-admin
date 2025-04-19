@@ -9,10 +9,10 @@ import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.context.annotation.Import;
 import org.springframework.test.annotation.DirtiesContext;
-import roomescape.config.TestClockConfig;
+import roomescape.config.ClockConfig;
 
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.DEFINED_PORT)
-@Import({TestClockConfig.class})
+@Import({ClockConfig.class})
 @DirtiesContext(classMode = DirtiesContext.ClassMode.BEFORE_EACH_TEST_METHOD)
 class MissionStepTest {
 

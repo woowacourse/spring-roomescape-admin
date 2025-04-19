@@ -14,7 +14,7 @@ public class ReservationRepositoryImpl implements ReservationRepository {
 
     private static final int INIT_INDEX = 1;
 
-    private final Map<Integer, Reservation> reservations = new TreeMap<>();
+    private final Map<Long, Reservation> reservations = new TreeMap<>();
     private final AtomicLong index = new AtomicLong(INIT_INDEX);
 
     @Override
@@ -30,22 +30,22 @@ public class ReservationRepositoryImpl implements ReservationRepository {
 
     @Override
     public Optional<Reservation> findById(long id) {
-        return Optional.ofNullable(reservations.get((int) id));
+        return Optional.ofNullable(reservations.get(id));
     }
 
     @Override
     public Reservation save(Reservation reservation) {
-        reservations.put((int) reservation.getId(), reservation);
+        reservations.put(reservation.getId(), reservation);
 
         return reservation;
     }
 
     @Override
     public void deleteById(long id) {
-        if (!reservations.containsKey((int) id)) {
+        if (!reservations.containsKey(id)) {
             throw new EntityNotFoundException("해당 엔티티가 존재하지 않습니다. id = " + id);
         }
 
-        reservations.remove((int) id);
+        reservations.remove(id);
     }
 }

@@ -32,5 +32,4 @@ public class Reservations {
     public List<Reservation> getReservations() {
         return reservations;
     }
-
 }

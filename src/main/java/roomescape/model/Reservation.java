@@ -44,5 +44,4 @@ public class Reservation {
     public LocalTime getTime() {
         return reservationDateTime.getTime();
     }
-
 }

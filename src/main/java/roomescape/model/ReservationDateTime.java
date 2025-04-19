@@ -20,5 +20,4 @@ public class ReservationDateTime {
     public LocalTime getTime() {
         return reservationDateTime.toLocalTime();
     }
-
 }

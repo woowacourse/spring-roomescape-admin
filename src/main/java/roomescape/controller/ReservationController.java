@@ -50,5 +50,4 @@ public class ReservationController {
             return ResponseEntity.badRequest().build();
         }
     }
-
 }

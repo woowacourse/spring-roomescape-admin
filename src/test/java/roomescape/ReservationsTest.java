@@ -52,5 +52,4 @@ class ReservationsTest {
         assertThatThrownBy(() -> reservations.removeById(1L))
                 .isInstanceOf(RuntimeException.class);
     }
-
 }

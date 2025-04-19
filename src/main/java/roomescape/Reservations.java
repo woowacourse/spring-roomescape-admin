@@ -12,7 +12,20 @@ public class Reservations {
     }
 
     public void add(Reservation reservation) {
+        boolean isDuplicate = isDuplicate(reservation);
+        if (isDuplicate) {
+            throw new IllegalArgumentException("이미 해당 시간에 예약한 이름이 존재합니다.");
+        }
         reservations.add(reservation);
+    }
+
+    private boolean isDuplicate(final Reservation reservation) {
+        return reservations.stream()
+                .anyMatch(existing ->
+                        existing.getName().equals(reservation.getName()) &&
+                                existing.getDate().equals(reservation.getDate()) &&
+                                existing.getTime().equals(reservation.getTime())
+                );
     }
 
     public void remove(Long id) {

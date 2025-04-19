@@ -11,6 +11,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
 import roomescape.dto.ReservationRequestDto;
+import roomescape.dto.ReservationResponseDto;
 import roomescape.model.Reservation;
 import roomescape.model.ReservationDateTime;
 import roomescape.model.Reservations;
@@ -27,7 +28,7 @@ public class ReservationController {
     }
 
     @PostMapping("/reservations")
-    public ResponseEntity<Reservation> addReservation(@RequestBody ReservationRequestDto reservationRequestDto) {
+    public ResponseEntity<ReservationResponseDto> addReservation(@RequestBody ReservationRequestDto reservationRequestDto) {
         try {
             ReservationDateTime reservationDateTime = new ReservationDateTime(
                     LocalDateTime.of(reservationRequestDto.getDate(), reservationRequestDto.getTime())
@@ -38,7 +39,7 @@ public class ReservationController {
                     reservationRequestDto.getName(),
                     reservationDateTime);
             reservations.add(newReservation);
-            return ResponseEntity.ok(newReservation);
+            return ResponseEntity.ok(ReservationResponseDto.from(newReservation));
         } catch (NullPointerException | IllegalArgumentException e) {
             return ResponseEntity.badRequest().build();
         }

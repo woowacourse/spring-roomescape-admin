@@ -6,13 +6,13 @@ import org.springframework.web.bind.annotation.ExceptionHandler;
 public class GlobalReservationExceptionHandler {
 
     @ExceptionHandler(IllegalArgumentException.class)
-    public ResponseEntity<Void> handleIllegalException(IllegalArgumentException e) {
+    public ResponseEntity<Void> handleIllegalArgumentException(IllegalArgumentException e) {
         System.out.println("IllegalArgumentException occurred: " + e.getMessage());
         return ResponseEntity.badRequest().build();
     }
 
     @ExceptionHandler(IllegalStateException.class)
-    public ResponseEntity<Void> handleIllegalException(IllegalStateException e) {
+    public ResponseEntity<Void> handleIllegalStateException(IllegalStateException e) {
         System.out.println("IllegalStateException occurred: " + e.getMessage());
         return ResponseEntity.internalServerError().build();
     }

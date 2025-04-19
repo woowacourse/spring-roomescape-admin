@@ -7,14 +7,15 @@ import roomescape.exception.DomainException;
 
 public final class Reservation {
 
+    private static final int MAX_NAME_LENGTH = 20;
+
     private final Integer id;
     private final String name;
     private final LocalDate date;
     private final LocalTime time;
 
     public Reservation(Integer id, String name, LocalDate date, LocalTime time) {
-        validateNotBlankName(name);
-        validateNotNullDateTime(date, time);
+        validateNameLength(name);
         validateNotPastDateTime(LocalDateTime.of(date, time));
         this.id = id;
         this.name = name;
@@ -23,8 +24,7 @@ public final class Reservation {
     }
 
     public Reservation(String name, LocalDate date, LocalTime time) {
-        validateNotBlankName(name);
-        validateNotNullDateTime(date, time);
+        validateNameLength(name);
         validateNotPastDateTime(LocalDateTime.of(date, time));
         this.id = null;
         this.name = name;
@@ -32,18 +32,9 @@ public final class Reservation {
         this.time = time;
     }
 
-    private void validateNotNullDateTime(LocalDate date, LocalTime time) {
-        if (date == null) {
-            throw new DomainException("예약 날짜가 입력되지 않았습니다.");
-        }
-        if (time == null) {
-            throw new DomainException("예약 시간이 입력되지 않았습니다.");
-        }
-    }
-
-    private void validateNotBlankName(String name) {
-        if (name == null || name.isBlank()) {
-            throw new DomainException("예약자명이 입력되지 않았습니다.");
+    private void validateNameLength(String name) {
+        if (name.isEmpty() || MAX_NAME_LENGTH < name.length()) {
+            throw new DomainException("예약자명은 1자 이상 %d자 이하로만 가능합니다.".formatted(MAX_NAME_LENGTH));
         }
     }
 

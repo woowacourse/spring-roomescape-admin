@@ -9,6 +9,7 @@ import java.time.format.DateTimeFormatter;
 import java.util.HashMap;
 import java.util.Map;
 import org.junit.jupiter.api.DisplayName;
+import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.annotation.DirtiesContext;
@@ -78,5 +79,49 @@ class ReservationApiControllerTest {
                 .when().delete("/reservations/1")
                 .then().log().all()
                 .statusCode(200);
+    }
+
+    @DisplayName("예약 입력값 유효성 검증")
+    @Nested
+    class ReservationValidationTest {
+
+        @DisplayName("예약자명을 입력하지 않은 경우 예약할 수 없다.")
+        @Test
+        void shouldFailWhenNameIsMissing() {
+            Map<String, String> params = new HashMap<>();
+            params.put("date", LocalDate.now().plusDays(1).format(DateTimeFormatter.ofPattern("yyyy-MM-dd")));
+            params.put("time", "15:40");
+
+            assertBadRequestWhenPostingReservation(params);
+        }
+
+        @DisplayName("예약 날짜를 입력하지 않은 경우 예약할 수 없다.")
+        @Test
+        void shouldFailWhenDateIsMissing() {
+            Map<String, String> params = new HashMap<>();
+            params.put("name", "브라운");
+            params.put("time", "15:40");
+
+            assertBadRequestWhenPostingReservation(params);
+        }
+
+        @DisplayName("예약 시간을 입력하지 않은 경우 예약할 수 없다.")
+        @Test
+        void shouldFailWhenTimeIsMissing() {
+            Map<String, String> params = new HashMap<>();
+            params.put("name", "브라운");
+            params.put("date", LocalDate.now().plusDays(1).format(DateTimeFormatter.ofPattern("yyyy-MM-dd")));
+
+            assertBadRequestWhenPostingReservation(params);
+        }
+
+        private void assertBadRequestWhenPostingReservation(Map<String, String> params) {
+            RestAssured.given().log().all()
+                    .contentType(ContentType.JSON)
+                    .body(params)
+                    .when().post("/reservations")
+                    .then().log().all()
+                    .statusCode(400);
+        }
     }
 }

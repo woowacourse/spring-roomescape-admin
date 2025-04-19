@@ -6,9 +6,7 @@ import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.LocalTime;
 import org.junit.jupiter.api.DisplayName;
-import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
-import org.junit.jupiter.params.provider.NullAndEmptySource;
 import org.junit.jupiter.params.provider.ValueSource;
 import roomescape.exception.DomainException;
 
@@ -45,46 +43,18 @@ class ReservationTest {
                 .hasMessage("과거 일시로 예약을 생성할 수 없습니다.");
     }
 
-    @DisplayName("예약자명이 null 또는 빈 문자열인 경우 예외가 발생한다.")
+    @DisplayName("예약자명 1자 이상 20자 이하가 아닌 경우 예외가 발생한다.")
     @ParameterizedTest
-    @NullAndEmptySource
-    void shouldThrowException_WhenCreateWithEmptyName(String emptyName) {
+    @ValueSource(strings = {"", "이 문자열은 21자로 구성되어있습니다."})
+    void shouldThrowException_WhenCreateWithEmptyName(String invalidName) {
         // given
         LocalDateTime reservationDateTime = LocalDateTime.now().plusHours(1);
         LocalDate reservationDate = reservationDateTime.toLocalDate();
         LocalTime reservationTime = reservationDateTime.toLocalTime();
 
         // when & then
-        assertThatCode(() -> new Reservation(emptyName, reservationDate, reservationTime))
+        assertThatCode(() -> new Reservation(invalidName, reservationDate, reservationTime))
                 .isInstanceOf(DomainException.class)
-                .hasMessage("예약자명이 입력되지 않았습니다.");
-    }
-
-    @DisplayName("예약 날짜가 null인 경우 예외가 발생한다.")
-    @Test
-    void shouldThrowException_WhenCreateWithNullDate() {
-        // given
-        String name = "브라운";
-        LocalDateTime reservationDateTime = LocalDateTime.now().plusHours(1);
-        LocalTime reservationTime = reservationDateTime.toLocalTime();
-
-        // when & then
-        assertThatCode(() -> new Reservation(name, null, reservationTime))
-                .isInstanceOf(DomainException.class)
-                .hasMessage("예약 날짜가 입력되지 않았습니다.");
-    }
-
-    @DisplayName("예약 시간이 null인 경우 예외가 발생한다.")
-    @Test
-    void shouldThrowException_WhenCreateWithNullTime() {
-        // given
-        String name = "브라운";
-        LocalDateTime reservationDateTime = LocalDateTime.now().plusHours(1);
-        LocalDate reservationDate = reservationDateTime.toLocalDate();
-
-        // when & then
-        assertThatCode(() -> new Reservation(name, reservationDate, null))
-                .isInstanceOf(DomainException.class)
-                .hasMessage("예약 시간이 입력되지 않았습니다.");
+                .hasMessage("예약자명은 1자 이상 20자 이하로만 가능합니다.");
     }
 }

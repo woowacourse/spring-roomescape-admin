@@ -8,9 +8,13 @@ import java.time.LocalDate;
 import java.time.LocalTime;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
-import roomescape.TestBase;
+import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.context.annotation.Import;
+import roomescape.config.TestClockConfig;
 
-public class ReservationDateTimeTest extends TestBase {
+@SpringBootTest
+@Import(TestClockConfig.class)
+public class ReservationDateTimeTest {
 
     @Autowired
     private Clock clock;
@@ -19,8 +23,8 @@ public class ReservationDateTimeTest extends TestBase {
     void 예약_일시는_현재일시_이전이면_예외가_발생한다() {
         // given & when & then
         assertThatThrownBy(() -> ReservationDateTime.createNewReservationTime(
-                LocalDate.of(2025, 1, 1),
-                LocalTime.of(10, 10, 10),
+                LocalDate.of(2024, 12, 31),
+                LocalTime.of(23, 59, 59),
                 clock
         )).isInstanceOf(IllegalArgumentException.class);
     }
@@ -29,7 +33,7 @@ public class ReservationDateTimeTest extends TestBase {
     void 예약_일시는_현재일시_이후여야_한다() {
         // given & when & then
         assertThatCode(() -> ReservationDateTime.createNewReservationTime(
-                LocalDate.of(2025, 1, 2),
+                LocalDate.of(2025, 2, 2),
                 LocalTime.of(10, 10, 10),
                 clock
         )).doesNotThrowAnyException();

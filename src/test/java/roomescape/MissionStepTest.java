@@ -7,12 +7,13 @@ import io.restassured.http.ContentType;
 import java.util.Map;
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.context.annotation.Import;
 import org.springframework.test.annotation.DirtiesContext;
-import org.springframework.test.context.ActiveProfiles;
+import roomescape.config.TestClockConfig;
 
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.DEFINED_PORT)
+@Import({TestClockConfig.class})
 @DirtiesContext(classMode = DirtiesContext.ClassMode.BEFORE_EACH_TEST_METHOD)
-@ActiveProfiles("test")
 class MissionStepTest {
 
     public static final Map<String, String> RESERVATION_DATA =
@@ -73,7 +74,7 @@ class MissionStepTest {
     }
 
     private void createReservationData() {
-        RestAssured.given().log().all()
+        RestAssured.given()
                 .contentType(ContentType.JSON)
                 .body(RESERVATION_DATA)
                 .when().post("/reservations");

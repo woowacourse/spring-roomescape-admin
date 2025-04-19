@@ -3,22 +3,23 @@ package roomescape.model;
 import java.util.Map;
 import java.util.NoSuchElementException;
 import java.util.concurrent.ConcurrentHashMap;
+import java.util.concurrent.atomic.AtomicLong;
 import org.springframework.stereotype.Component;
 
 @Component
 public class Reservations {
 
     private final ConcurrentHashMap<Long, Reservation> reservations;
-    private Long index;
+    private final AtomicLong index;
 
     public Reservations() {
         this.reservations = new ConcurrentHashMap<>();
-        this.index = 1L;
+        this.index = new AtomicLong(1);
     }
 
     public long add(final Reservation reservation) {
-        reservations.put(index, reservation);
-        return index++;
+        reservations.put(index.getAndIncrement(), reservation);
+        return index.get();
     }
 
     public void deleteBy(final Long id) {

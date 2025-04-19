@@ -15,7 +15,7 @@ import roomescape.reservation.Reservation;
 
 @RestController
 @RequestMapping("/reservations")
-public class ReservationController {
+public class ReservationAPIController {
 
     private final List<Reservation> reservations = new ArrayList<>();
     private final AtomicLong index = new AtomicLong();

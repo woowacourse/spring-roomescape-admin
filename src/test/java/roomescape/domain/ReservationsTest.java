@@ -3,13 +3,12 @@ package roomescape.domain;
 import static org.assertj.core.api.Assertions.assertThat;
 
 import java.time.LocalDateTime;
-import java.util.ArrayList;
 import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.Test;
 
 class ReservationsTest {
 
-    private final Reservations reservations = new Reservations(new ArrayList<>(), new Counter());
+    private final Reservations reservations = new Reservations();
 
     @Test
     void 예약을_추가한다() {

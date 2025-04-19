@@ -1,6 +1,7 @@
 package roomescape.domain;
 
 import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
@@ -12,6 +13,10 @@ public class Reservations {
     public Reservations(final List<Reservation> reservations, final Counter counter) {
         this.reservations = reservations;
         this.counter = counter;
+    }
+
+    public Reservations() {
+        this(new ArrayList<>(), new Counter());
     }
 
     public Reservation addReservation(final String name, final LocalDateTime dateTime) {

@@ -50,9 +50,9 @@ class ReservationApiTest {
         LocalDateTime now = LocalDateTime.now();
 
         List<Reservation> reservations = List.of(
-                new Reservation(1, "꾹", now),
-                new Reservation(2, "꾹", now),
-                new Reservation(3, "꾹", now)
+                new Reservation(1L, "꾹", now),
+                new Reservation(2L, "꾹", now),
+                new Reservation(3L, "꾹", now)
         );
 
         for (Reservation reservation : reservations) {

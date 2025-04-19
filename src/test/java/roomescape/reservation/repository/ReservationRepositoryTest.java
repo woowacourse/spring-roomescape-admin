@@ -1,54 +1,46 @@
 package roomescape.reservation.repository;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.assertThatThrownBy;
 
 import java.time.LocalDateTime;
+import java.time.chrono.ChronoLocalDateTime;
 import java.util.List;
 import java.util.Optional;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
+import org.springframework.jdbc.core.JdbcTemplate;
+import roomescape.config.TestConfig;
 import roomescape.reservation.entity.Reservation;
+import roomescape.reservation.exception.EntityNotFoundException;
 
 class ReservationRepositoryTest {
 
+    private JdbcTemplate jdbcTemplate;
     private ReservationRepository reservationRepository;
 
     @BeforeEach
     void init() {
-        reservationRepository = new ReservationRepositoryImpl();
-    }
+        jdbcTemplate = TestConfig.getJdbcTemplate();
+        reservationRepository = new ReservationRepositoryImpl(jdbcTemplate);
 
-    @DisplayName("초기 ID의 값은 1이다.")
-    @Test
-    void test1() {
-        long result = reservationRepository.generateId();
-
-        assertThat(result).isEqualTo(1);
-    }
-
-    @DisplayName("ID의 값은 순차적으로 올라간다.")
-    @Test
-    void test2() {
-        for (int i = 1; i <= 5000; i++) {
-            long result = reservationRepository.generateId();
-
-            assertThat(result).isEqualTo(i);
-        }
     }
 
     @DisplayName("예약 정보를 저장한다.")
     @Test
-    void test3() {
+    void test1() {
         // given
         LocalDateTime now = LocalDateTime.now();
-        Reservation reservation = new Reservation(1, "꾹", now);
+        String name = "꾹";
+        Reservation reservation = Reservation.withoutId(name, now);
 
         // when
         Reservation result = reservationRepository.save(reservation);
 
         // then
-        assertThat(result).isEqualTo(reservation);
+        assertThat(result.getName()).isEqualTo(name);
+        assertThat(result.getDateTime()).isEqualTo(now);
     }
 
     @DisplayName("id가 같다면 해당 예약 정보로 변경한다.")
@@ -59,10 +51,10 @@ class ReservationRepositoryTest {
 
         String originalName = "꾹";
         String changedName = "드라고";
-        Reservation reservation = new Reservation(1, originalName, now);
-        reservationRepository.save(reservation);
+        String sql = "insert into reservation (id, name, date_time) values (?, ?, ?)";
+        jdbcTemplate.update(sql, 1, originalName, now);
 
-        Reservation updateReservation = new Reservation(1, changedName, now);
+        Reservation updateReservation = new Reservation(1L, changedName, now);
 
         // when
         Reservation result = reservationRepository.save(updateReservation);
@@ -71,20 +63,38 @@ class ReservationRepositoryTest {
         assertThat(result).isEqualTo(updateReservation);
     }
 
+    @DisplayName("존재하지 않는 id를 save한다면 예외를 반환한다.")
+    @Test
+    void test8() {
+        // given
+        LocalDateTime now = LocalDateTime.now();
+        Reservation reservation = new Reservation(1L, "꾹", now);
+
+        // when & then
+        assertThatThrownBy(() -> reservationRepository.save(reservation))
+                .isInstanceOf(EntityNotFoundException.class);
+    }
+
     @DisplayName("id로 예약 정보를 가져온다")
     @Test
     void test5() {
         // given
-        long id = 2;
+        long id = 1;
+        String name = "꾹";
         LocalDateTime now = LocalDateTime.now();
-        Reservation reservation = new Reservation(id, "꾹", now);
-        reservationRepository.save(reservation);
+        String sql = "insert into reservation (id, name, date_time) values (?, ?, ?)";
+
+        jdbcTemplate.update(sql, 1, name, now);
 
         // when
-        Optional<Reservation> result = reservationRepository.findById(id);
+        Reservation result = reservationRepository.findById(id).get();
 
         // then
-        assertThat(result).contains(reservation);
+
+        assertThat(result.getName()).isEqualTo(name);
+
+        ChronoLocalDateTime.timeLineOrder();
+        assertThat(result.getDateTime()).isEqualToIgnoringNanos(now);
     }
 
     @DisplayName("모든 예약 정보를 가져온다.")
@@ -93,21 +103,28 @@ class ReservationRepositoryTest {
         // given
         LocalDateTime now = LocalDateTime.now();
 
-        List<Reservation> reservations = List.of(
-                new Reservation(1, "꾹", now),
-                new Reservation(2, "꾹", now),
-                new Reservation(3, "꾹", now)
-        );
+        List<String> names = List.of("꾹", "헤일러", "라젤");
 
-        for (Reservation reservation : reservations) {
-            reservationRepository.save(reservation);
+        String sql = "insert into reservation (name, date_time) values (?, ?)";
+
+        for (String name : names) {
+            jdbcTemplate.update(sql, name, now);
         }
+
 
         // when
         List<Reservation> result = reservationRepository.findAll();
 
         // then
-        assertThat(result).containsExactlyInAnyOrderElementsOf(reservations);
+
+        List<String> resultNames = result.stream().map(Reservation::getName).toList();
+        List<LocalDateTime> resultDateTimes = result.stream().map(Reservation::getDateTime).toList();
+
+        assertThat(resultNames).containsAll(names);
+
+        for(LocalDateTime resultDateTime : resultDateTimes ){
+            assertThat(resultDateTime).isEqualToIgnoringNanos(now);
+        }
     }
 
     @DisplayName("예약 정보를 삭제한다.")
@@ -116,7 +133,7 @@ class ReservationRepositoryTest {
         // given
         long id = 1;
         LocalDateTime now = LocalDateTime.now();
-        Reservation reservation = new Reservation(id, "꾹", now);
+        Reservation reservation = Reservation.withoutId("꾹", now);
         reservationRepository.save(reservation);
 
         // when

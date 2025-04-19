@@ -15,6 +15,7 @@ import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.CsvSource;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.jdbc.core.JdbcTemplate;
 import roomescape.reservation.dto.ReservationRequestDto;
 import roomescape.reservation.dto.ReservationResponseDto;
 import roomescape.reservation.entity.Reservation;
@@ -24,12 +25,14 @@ import roomescape.reservation.repository.ReservationRepositoryImpl;
 
 class ReservationControllerTest {
 
+    private final JdbcTemplate jdbcTemplate = new JdbcTemplate();
+
     private ReservationRepository reservationRepository;
     private ReservationController reservationController;
 
     @BeforeEach
     void init() {
-        reservationRepository = new ReservationRepositoryImpl();
+        reservationRepository = new ReservationRepositoryImpl(jdbcTemplate);
         reservationController = new ReservationController(reservationRepository);
     }
 
@@ -40,9 +43,9 @@ class ReservationControllerTest {
         LocalDateTime now = LocalDateTime.now();
 
         List<Reservation> reservations = List.of(
-                new Reservation(1, "꾹", now),
-                new Reservation(2, "꾹", now),
-                new Reservation(3, "꾹", now)
+                new Reservation(1L, "꾹", now),
+                new Reservation(2L, "꾹", now),
+                new Reservation(3L, "꾹", now)
         );
 
         for (Reservation reservation : reservations) {

@@ -9,16 +9,16 @@ import org.junit.jupiter.params.provider.CsvSource;
 
 class ReservationTest {
 
-    @DisplayName("같은 아이디를 처리할 수 있다.")
+    @DisplayName("아이디 존재 여부")
     @ParameterizedTest
-    @CsvSource(value = {"1,true", "2,false"}, delimiter = ',')
-    void test1(long id, boolean expected) {
+    @CsvSource(value = {"1,true", "null,false"}, delimiter = ',', nullValues = "null")
+    void test1(Long id, boolean expected) {
         // given
         LocalDateTime now = LocalDateTime.now();
-        Reservation reservation = new Reservation(1, "꾹이", now);
+        Reservation reservation = new Reservation(id ,"꾹이", now);
 
         // when
-        boolean result = reservation.sameId(id);
+        boolean result = reservation.existId();
 
         // then
         assertThat(result).isEqualTo(expected);

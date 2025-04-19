@@ -7,51 +7,52 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.server.ResponseStatusException;
 import roomescape.dto.ReservationCreateRequest;
 import roomescape.model.Reservation;
+import roomescape.repository.MemoryReservationRepository;
+import roomescape.repository.ReservationRepository;
 
-import java.util.ArrayList;
 import java.util.List;
-import java.util.concurrent.atomic.AtomicLong;
 
 @RestController
+@RequestMapping("/reservations")
 public class ReservationRestController {
 
-    private final List<Reservation> reservations = new ArrayList<>();
-    private final AtomicLong index = new AtomicLong(1);
+    private final ReservationRepository reservationRepository = new MemoryReservationRepository();
 
-    @GetMapping("/reservations")
+    @GetMapping("")
     public ResponseEntity<List<Reservation>> getAllReservations() {
+        List<Reservation> reservations = reservationRepository.findAll();
         return ResponseEntity
                 .status(HttpStatus.OK)
                 .body(reservations);
     }
 
-    @PostMapping("/reservations")
+    @PostMapping("")
     public ResponseEntity<Reservation> addReservation(@RequestBody ReservationCreateRequest reservationCreateRequest) {
         try {
-            Reservation reservation = new Reservation(index.getAndIncrement(), reservationCreateRequest.name(), reservationCreateRequest.date(), reservationCreateRequest.time());
-            reservations.add(reservation);
+            Reservation reservation = new Reservation(reservationCreateRequest.name(), reservationCreateRequest.date(), reservationCreateRequest.time());
+            reservationRepository.add(reservation);
             return ResponseEntity
                     .status(HttpStatus.OK)
-                    .body(reservation);
+                    .body(reservationRepository.findLast());
         } catch (IllegalArgumentException exception) {
             throw new ResponseStatusException(HttpStatus.BAD_REQUEST);
         }
     }
 
-    @DeleteMapping("/reservations/{id}")
+    @DeleteMapping("/{id}")
     public ResponseEntity<Void> deleteReservation(@PathVariable("id") Long id) {
-        Reservation deleteReservation = reservations.stream()
-                .filter(reservation -> reservation.id().equals(id))
-                .findFirst()
-                .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND));
-        reservations.remove(deleteReservation);
-
-        return ResponseEntity
-                .status(HttpStatus.OK)
-                .build();
+        try {
+            reservationRepository.deleteById(id);
+            return ResponseEntity
+                    .status(HttpStatus.OK)
+                    .build();
+        } catch (IllegalArgumentException exception) {
+            throw new ResponseStatusException(HttpStatus.NOT_FOUND);
+        }
     }
 }

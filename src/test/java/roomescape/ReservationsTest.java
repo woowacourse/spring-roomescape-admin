@@ -22,8 +22,7 @@ class ReservationsTest {
         reservations.add(
                 new Reservation(1L, "포스티", new ReservationDateTime(
                         LocalDateTime.of(
-                                LocalDate.of(2025, 4, 16),
-                                LocalTime.of(11, 0)
+                                2025, 4, 16, 11, 0
                         )))
         );
 
@@ -37,14 +36,13 @@ class ReservationsTest {
         reservations.add(
                 new Reservation(1L, "포스티", new ReservationDateTime(
                         LocalDateTime.of(
-                                LocalDate.of(2025, 4, 16),
-                                LocalTime.of(11, 0)
+                                2025, 4, 16, 11, 0
                         )))
         );
 
         reservations.removeById(1L);
 
-        assertThat(reservations.getReservations()).hasSize(0);
+        assertThat(reservations.getReservations()).isEmpty();
     }
 
     @DisplayName("존재하지 않는 예약은 삭제할 수 없다.")
@@ -53,6 +51,6 @@ class ReservationsTest {
         Reservations reservations = new Reservations();
 
         assertThatThrownBy(() -> reservations.removeById(1L))
-                .isInstanceOf(RuntimeException.class);
+                .isInstanceOf(IllegalArgumentException.class).hasMessage("존재하지 않는 id값 입니다.");
     }
 }

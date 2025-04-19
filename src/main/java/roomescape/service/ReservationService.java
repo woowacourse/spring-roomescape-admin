@@ -15,8 +15,8 @@ public class ReservationService {
 
     private final ReservationDatabase reservationDatabase;
 
-    public ReservationService() {
-        this.reservationDatabase = new ReservationDatabaseImpl();
+    public ReservationService(ReservationDatabaseImpl reservationDatabase) {
+        this.reservationDatabase = reservationDatabase;
     }
 
     public List<ReservationResDto> readAll() {
@@ -28,6 +28,7 @@ public class ReservationService {
 
     public ReservationResDto add(ReservationReqDto dto) {
         Reservation reservation = convertReservation(dto);
+        validateDuplicateDateTime(reservation);
         Reservation savedReservation = reservationDatabase.add(reservation);
         return convertReservationResDto(savedReservation);
     }
@@ -42,6 +43,15 @@ public class ReservationService {
                 dto.getName(),
                 dto.getDate(),
                 dto.getTime());
+    }
+
+    private void validateDuplicateDateTime(Reservation inputReservation) {
+        List<Reservation> reservations = reservationDatabase.findAll();
+        for (Reservation reservation : reservations) {
+            if (inputReservation.isSameDateTime(reservation)) {
+                throw new IllegalArgumentException("이미 예약되어 있는 시간입니다.");
+            }
+        }
     }
 
     private ReservationResDto convertReservationResDto(Reservation reservation) {

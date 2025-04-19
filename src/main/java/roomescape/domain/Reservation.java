@@ -9,7 +9,6 @@ public class Reservation {
 
     private final static AtomicLong ID_GENERATOR = new AtomicLong(0);
 
-
     private final Long id;
 
     private final String name;
@@ -37,6 +36,10 @@ public class Reservation {
         }
     }
 
+    public LocalDateTime getDateTime() {
+        return LocalDateTime.of(date, time);
+    }
+
     public Long getId() {
         return id;
     }
@@ -56,5 +59,9 @@ public class Reservation {
     private static boolean isPastTense(LocalDateTime dateTime) {
         LocalDateTime now = LocalDateTime.now();
         return dateTime.isBefore(now);
+    }
+
+    public boolean isSameDateTime(Reservation compare) {
+        return this.getDateTime().isEqual(compare.getDateTime());
     }
 }

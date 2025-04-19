@@ -1,6 +1,6 @@
 package roomescape.model;
 
-import roomescape.dto.ReservationDto;
+import roomescape.dto.ReservationRequest;
 
 public class Reservation {
     private final Long id;
@@ -15,8 +15,8 @@ public class Reservation {
         this.time = time;
     }
 
-    public static Reservation toEntity(Long id, ReservationDto reservationDto) {
-        return new Reservation(id, reservationDto.name(), reservationDto.date(), reservationDto.time());
+    public static Reservation toEntity(Long id, ReservationRequest reservationRequest) {
+        return new Reservation(id, reservationRequest.name(), reservationRequest.date(), reservationRequest.time());
     }
 
     public Long getId() {

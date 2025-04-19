@@ -29,6 +29,6 @@ public class MemoryReservationRepository implements ReservationRepository {
     }
 
     public List<Reservation> getReservations() {
-        return reservations;
+        return Collections.unmodifiableList(reservations);
     }
 }

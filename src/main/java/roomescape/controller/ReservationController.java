@@ -3,36 +3,35 @@ package roomescape.controller;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import roomescape.reservation.Reservation;
+import roomescape.reservation.Reservations;
 
-import java.util.ArrayList;
 import java.util.List;
-import java.util.concurrent.atomic.AtomicLong;
 
 @RestController
 public class ReservationController {
 
-    private final List<Reservation> reservations = new ArrayList<>();
-    private final AtomicLong index = new AtomicLong();
+    private final Reservations reservations;
+
+    public ReservationController(Reservations reservations) {
+        this.reservations = reservations;
+    }
 
     @GetMapping("/reservations")
     public ResponseEntity<List<Reservation>> searchReservations() {
-        return ResponseEntity.ok().body(reservations);
+        List<Reservation> findReservations = reservations.findAll();
+        return ResponseEntity.ok().body(findReservations);
     }
 
     @PostMapping("/reservations")
     public ResponseEntity<Reservation> addReservation(@RequestBody Reservation reservation) {
-        Reservation newReservation = Reservation.toEntity(reservation, index.incrementAndGet());
+        Reservation newReservation = Reservation.toEntity(reservation);
         reservations.add(newReservation);
         return ResponseEntity.ok().body(newReservation);
     }
 
     @DeleteMapping("/reservations/{id}")
     public ResponseEntity<Void> deleteReservation(@PathVariable Long id) {
-        Reservation findReservation = reservations.stream()
-                .filter(reservation -> reservation.isSameId(id))
-                .findFirst()
-                .orElseThrow(() -> new IllegalArgumentException("해당 예약을 찾을 수 없습니다"));
-        reservations.remove(findReservation);
+        reservations.deleteById(id);
         return ResponseEntity.ok().build();
     }
 }

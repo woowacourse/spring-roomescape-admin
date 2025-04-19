@@ -8,8 +8,8 @@ public class Reservations {
 
     private final List<Reservation> reservations;
 
-    public Reservations(final List<Reservation> reservations) {
-        this.reservations = new ArrayList<>(reservations);
+    public Reservations() {
+        this.reservations = new ArrayList<>();
     }
 
     public synchronized void add(final Reservation reservation) {
@@ -25,7 +25,7 @@ public class Reservations {
         return reservations.stream()
                 .filter(reservation -> reservation.isSameId(id))
                 .findFirst()
-                .orElseThrow(() -> new IllegalArgumentException("[ERROR] 해당 id가 없습니다."));
+                .orElseThrow(() -> new IllegalArgumentException("[ERROR] 해당 id에 대한 예약 기록이 존재하지 않습니다."));
     }
 
     public synchronized List<Reservation> getReservations() {

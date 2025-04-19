@@ -9,7 +9,6 @@ import roomescape.dto.request.ReservationRequest;
 import roomescape.dto.response.ReservationResponse;
 
 import java.time.LocalDateTime;
-import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.atomic.AtomicLong;
 
@@ -18,7 +17,7 @@ import java.util.concurrent.atomic.AtomicLong;
 public class ReservationController {
 
     private final AtomicLong counter = new AtomicLong(1);
-    private final Reservations reservations = new Reservations(new ArrayList<>());
+    private final Reservations reservations = new Reservations();
 
     @GetMapping
     public ResponseEntity<List<ReservationResponse>> readReservations() {

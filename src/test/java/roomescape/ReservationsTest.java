@@ -12,7 +12,7 @@ class ReservationsTest {
 
         // then
         assertAll(
-                () -> Assertions.assertThat(reservations.getReservations().size()).isEqualTo(0),
+                () -> Assertions.assertThat(reservations.getReservations()).hasSize(0),
                 () -> Assertions.assertThat(reservations).isInstanceOf(Reservations.class)
         );
     }
@@ -26,7 +26,7 @@ class ReservationsTest {
         reservations.add(new Reservation(0L, null, null, null));
 
         // then
-        Assertions.assertThat(reservations.getReservations().size()).isEqualTo(1);
+        Assertions.assertThat(reservations.getReservations()).hasSize(1);
     }
 
     @Test
@@ -39,6 +39,6 @@ class ReservationsTest {
         reservations.remove(0L);
 
         // then
-        Assertions.assertThat(reservations.getReservations().size()).isEqualTo(0);
+        Assertions.assertThat(reservations.getReservations()).isEmpty();
     }
 }

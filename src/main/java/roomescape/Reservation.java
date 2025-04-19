@@ -1,6 +1,8 @@
 package roomescape;
 
 
+import jakarta.validation.constraints.Future;
+
 import java.time.LocalDate;
 import java.time.LocalTime;
 import java.util.Objects;
@@ -12,6 +14,9 @@ public class Reservation {
     private final LocalTime time;
 
     public Reservation(final Long id, final String name, final LocalDate date, final LocalTime time) {
+        if (LocalDate.now().isAfter(date)) {
+            throw new IllegalArgumentException("예약은 미래 날짜여야 합니다.");
+        }
         this.id = id;
         this.name = name;
         this.date = date;

@@ -19,7 +19,7 @@ public class MissionStepTest {
     private static final String DATE_FORMAT = "%d-%02d-%02d";
 
     @Test
-    void 일단계() {
+    void 홈화면을_조회한다() {
         RestAssured.given().log().all()
                 .when().get("/admin")
                 .then().log().all()
@@ -27,45 +27,15 @@ public class MissionStepTest {
     }
 
     @Test
-    void 이단계() {
+    void 예약_페이지를_조회한다() {
         RestAssured.given().log().all()
                 .when().get("/admin/reservation")
                 .then().log().all()
                 .statusCode(200);
-
-        RestAssured.given().log().all()
-                .when().get("/reservations")
-                .then().log().all()
-                .statusCode(200)
-                .body("size()", is(0));
     }
 
     @Test
-    void 삼단계() {
-        Map<String, String> params = new HashMap<>();
-        params.put("name", "브라운");
-        params.put("date", makeTodayMessage());
-        params.put("time", "15:40");
-
-        RestAssured.given().log().all()
-                .contentType(ContentType.JSON)
-                .body(params)
-                .when().post("/reservations")
-                .then().log().all()
-                .statusCode(200)
-                .body("id", is(1));
-
-        RestAssured.given().log().all()
-                .when().get("/reservations")
-                .then().log().all()
-                .statusCode(200)
-                .body("size()", is(1));
-
-        RestAssured.given().log().all()
-                .when().delete("/reservations/1")
-                .then().log().all()
-                .statusCode(200);
-
+    void 예약_목록을_조회한다() {
         RestAssured.given().log().all()
                 .when().get("/reservations")
                 .then().log().all()
@@ -74,7 +44,29 @@ public class MissionStepTest {
     }
 
     @Nested
-    class 예약_요청_유효성_검증 {
+    class 예약_추가_테스트 {
+
+        @Test
+        void 예약을_추가한다() {
+            Map<String, String> params = new HashMap<>();
+            params.put("name", "브라운");
+            params.put("date", makeTodayMessage());
+            params.put("time", "15:40");
+
+            RestAssured.given().log().all()
+                    .contentType(ContentType.JSON)
+                    .body(params)
+                    .when().post("/reservations")
+                    .then().log().all()
+                    .statusCode(200)
+                    .body("id", is(1));
+
+            RestAssured.given().log().all()
+                    .when().get("/reservations")
+                    .then().log().all()
+                    .statusCode(200)
+                    .body("size()", is(1));
+        }
 
         @Test
         void 이름_null_검증_테스트() {
@@ -144,5 +136,32 @@ public class MissionStepTest {
     private String makeTodayMessage() {
         LocalDate today = LocalDate.now();
         return String.format(DATE_FORMAT, today.getYear(), today.getMonthValue(), today.getDayOfMonth());
+    }
+
+    @Test
+    void 예약을_삭제한다() {
+        Map<String, String> params = new HashMap<>();
+        params.put("name", "브라운");
+        params.put("date", makeTodayMessage());
+        params.put("time", "15:40");
+
+        RestAssured.given().log().all()
+                .contentType(ContentType.JSON)
+                .body(params)
+                .when().post("/reservations")
+                .then().log().all()
+                .statusCode(200)
+                .body("id", is(1));
+
+        RestAssured.given().log().all()
+                .when().delete("/reservations/1")
+                .then().log().all()
+                .statusCode(200);
+
+        RestAssured.given().log().all()
+                .when().get("/reservations")
+                .then().log().all()
+                .statusCode(200)
+                .body("size()", is(0));
     }
 }

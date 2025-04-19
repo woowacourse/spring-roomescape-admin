@@ -1,18 +1,51 @@
 package roomescape.domain;
 
+import java.time.LocalDate;
 import java.time.LocalDateTime;
-import java.util.Objects;
 
 public class Reservation {
+
+    private static final int NAME_MAX_LENGTH = 10;
 
     private final Long id;
     private final String name;
     private final LocalDateTime dateTime;
 
     public Reservation(final Long id, final String name, final LocalDateTime dateTime) {
-        this.id = Objects.requireNonNull(id, "Id는 null이 될 수 없습니다.");
-        this.name = Objects.requireNonNull(name, "Name은 null이 될 수 없습니다.");
-        this.dateTime = Objects.requireNonNull(dateTime, "DateTime은 null이 될 수 없습니다.");
+        validate(id, name, dateTime);
+        this.id = id;
+        this.name = name;
+        this.dateTime = dateTime;
+    }
+
+    private void validate(final Long id, final String name, final LocalDateTime dateTime) {
+        validateId(id);
+        validateName(name);
+        validateDateTime(dateTime);
+    }
+
+    private void validateId(final Long id) {
+        if (id == null) {
+            throw new IllegalArgumentException("[ERROR] Id는 null이 될 수 없습니다.");
+        }
+    }
+
+    private void validateName(final String name) {
+        if (name == null) {
+            throw new IllegalArgumentException("[ERROR] name은 null이 될 수 없습니다.");
+        }
+        if (name.length() > NAME_MAX_LENGTH) {
+            throw new IllegalArgumentException("[ERROR] 이름은 10글자를 넘을 수 없습니다.");
+        }
+    }
+
+    private void validateDateTime(final LocalDateTime dateTime) {
+        if (dateTime == null) {
+            throw new IllegalArgumentException("[ERROR] dateTime은 null이 될 수 없습니다.");
+        }
+        if (dateTime.toLocalDate().isBefore(LocalDate.now())) {
+            throw new IllegalArgumentException("[ERROR] 과거 날짜로 예약할 수 없습니다.");
+        }
     }
 
     public boolean isSameId(final Long givenId) {

@@ -5,22 +5,32 @@ import java.time.LocalTime;
 
 public class Reservation {
     private long id;
-    private String name;
+    private Name name;
     private LocalDate date;
     private LocalTime time;
 
-    public Reservation(long id, String name, LocalDate date, LocalTime time) {
+    public Reservation(long id, Name name, LocalDate date, LocalTime time) {
         this.id = id;
         this.name = name;
         this.date = date;
         this.time = time;
     }
 
+    public Reservation(Name name, LocalDate date, LocalTime time) {
+        this.name = name;
+        this.date = date;
+        this.time = time;
+    }
+
+    public static Reservation toEntity(long id, Reservation reservation) {
+        return new Reservation(id, reservation.name, reservation.date, reservation.time);
+    }
+
     public long getId() {
         return id;
     }
 
-    public String getName() {
+    public Name getName() {
         return name;
     }
 

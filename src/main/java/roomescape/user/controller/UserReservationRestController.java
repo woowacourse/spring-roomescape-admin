@@ -31,13 +31,6 @@ public class UserReservationRestController {
         return ResponseEntity.notFound().build();
     }
 
-    @GetMapping("/reservations")
-    public ResponseEntity<List<Reservation>> retrieveReservations() {
-        final List<Reservation> reservations = reservationRepository.findAll();
-
-        return ResponseEntity.ok(reservations);
-    }
-
     @PostMapping("/reservations")
     public ResponseEntity<Reservation> persistReservation(@RequestBody final Reservation reservation) {
         final Long id = reservationRepository.save(reservation);
@@ -45,6 +38,13 @@ public class UserReservationRestController {
         return reservationRepository.findById(id)
                 .map(ResponseEntity::ok)
                 .orElseGet(() -> ResponseEntity.notFound().build());
+    }
+
+    @GetMapping("/reservations")
+    public ResponseEntity<List<Reservation>> retrieveReservations() {
+        final List<Reservation> reservations = reservationRepository.findAll();
+
+        return ResponseEntity.ok(reservations);
     }
 
     @DeleteMapping("/reservations/{id}")

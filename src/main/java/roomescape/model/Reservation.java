@@ -23,13 +23,7 @@ public final class Reservation {
     }
 
     public Reservation(String name, LocalDate date, LocalTime time) {
-        validateNotBlankName(name);
-        validateNotNullDateTime(date, time);
-        validateNotPastDateTime(LocalDateTime.of(date, time));
-        this.id = null;
-        this.name = name;
-        this.date = date;
-        this.time = time;
+        this(null, name, date, time);
     }
 
     private void validateNotNullDateTime(LocalDate date, LocalTime time) {

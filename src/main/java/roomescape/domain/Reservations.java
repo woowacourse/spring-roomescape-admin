@@ -1,19 +1,23 @@
 package roomescape.domain;
 
-import java.util.ArrayList;
+import java.time.LocalDateTime;
 import java.util.Collections;
 import java.util.List;
 
 public class Reservations {
 
     private final List<Reservation> reservations;
+    private final Counter counter;
 
-    public Reservations(final List<Reservation> reservations) {
-        this.reservations = new ArrayList<>(reservations);
+    public Reservations(final List<Reservation> reservations, final Counter counter) {
+        this.reservations = reservations;
+        this.counter = counter;
     }
 
-    public void add(final Reservation reservation) {
+    public Reservation addReservation(final String name, final LocalDateTime dateTime) {
+        final Reservation reservation = new Reservation(counter.increase(), name, dateTime);
         reservations.add(reservation);
+        return reservation;
     }
 
     public void deleteById(final Long id) {

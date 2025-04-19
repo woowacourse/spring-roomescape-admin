@@ -15,6 +15,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.server.ResponseStatusException;
+import roomescape.domain.Counter;
 import roomescape.domain.Reservation;
 import roomescape.domain.Reservations;
 import roomescape.dto.request.ReservationRequest;
@@ -24,8 +25,7 @@ import roomescape.dto.response.ReservationResponse;
 @RequestMapping("/reservations")
 public class ReservationController {
 
-    private final AtomicLong counter = new AtomicLong(1);
-    private final Reservations reservations = new Reservations(new ArrayList<>());
+    private final Reservations reservations = new Reservations(new ArrayList<>(), new Counter());
 
     @GetMapping
     public ResponseEntity<List<ReservationResponse>> readReservations() {
@@ -34,16 +34,16 @@ public class ReservationController {
     }
 
     @PostMapping
-    public ResponseEntity<ReservationResponse> createReservation(@Valid @RequestBody ReservationRequest reservationRequest) {
+    public ResponseEntity<ReservationResponse> createReservation(
+            @Valid @RequestBody ReservationRequest reservationRequest) {
         Reservation reservation = makeReservation(reservationRequest);
-        reservations.add(reservation);
         return ResponseEntity.ok(ReservationResponse.from(reservation));
     }
 
     private Reservation makeReservation(final ReservationRequest reservationRequest) {
         LocalDateTime dateTime = LocalDateTime.of(reservationRequest.date(), reservationRequest.time());
         try {
-            return new Reservation(counter.getAndIncrement(), reservationRequest.name(), dateTime);
+            return reservations.addReservation(reservationRequest.name(), dateTime);
         } catch (IllegalArgumentException e) {
             throw new ResponseStatusException(HttpStatus.BAD_REQUEST);
         }

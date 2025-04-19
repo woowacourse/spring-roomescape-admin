@@ -10,7 +10,8 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.server.ResponseStatusException;
-import roomescape.dto.ReservationCreateRequest;
+import roomescape.dto.CreateReservationRequest;
+import roomescape.dto.GetReservationResponse;
 import roomescape.model.Reservation;
 import roomescape.repository.MemoryReservationRepository;
 import roomescape.repository.ReservationRepository;
@@ -24,17 +25,20 @@ public class ReservationRestController {
     private final ReservationRepository reservationRepository = new MemoryReservationRepository();
 
     @GetMapping("")
-    public ResponseEntity<List<Reservation>> getAllReservations() {
+    public ResponseEntity<List<GetReservationResponse>> getAllReservations() {
         List<Reservation> reservations = reservationRepository.findAll();
+        List<GetReservationResponse> getReservationResponses = reservations.stream()
+                .map(GetReservationResponse::from)
+                .toList();
         return ResponseEntity
                 .status(HttpStatus.OK)
-                .body(reservations);
+                .body(getReservationResponses);
     }
 
     @PostMapping("")
-    public ResponseEntity<Reservation> addReservation(@RequestBody ReservationCreateRequest reservationCreateRequest) {
+    public ResponseEntity<Reservation> addReservation(@RequestBody CreateReservationRequest createReservationRequest) {
         try {
-            Reservation reservation = new Reservation(reservationCreateRequest.name(), reservationCreateRequest.date(), reservationCreateRequest.time());
+            Reservation reservation = new Reservation(createReservationRequest.name(), createReservationRequest.date(), createReservationRequest.time());
             reservationRepository.add(reservation);
             return ResponseEntity
                     .status(HttpStatus.OK)

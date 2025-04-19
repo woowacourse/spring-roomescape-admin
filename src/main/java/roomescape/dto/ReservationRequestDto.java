@@ -8,9 +8,9 @@ import roomescape.model.Reservation;
 
 public record ReservationRequestDto(String name, LocalDate date, LocalTime time) {
 
-    public Reservation toEntity(Id id) {
+    public Reservation toEntity() {
         return new Reservation(
-                id, name, date, time
+                name, date, time
         );
     }
 }

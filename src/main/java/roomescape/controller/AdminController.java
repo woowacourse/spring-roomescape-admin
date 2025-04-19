@@ -42,7 +42,7 @@ public class AdminController {
     public ResponseEntity<Reservation> createReservation(
             @RequestBody ReservationRequestDto reservationRequest
     ) {
-        Reservation newReservation = reservationRequest.toEntity(new Id()); //TODO ID 위치
+        Reservation newReservation = reservationRequest.toEntity();
         reservations.add(newReservation);
         return ResponseEntity.ok().body(newReservation);
     }

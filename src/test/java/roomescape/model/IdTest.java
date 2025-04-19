@@ -12,7 +12,6 @@ public class IdTest {
         Id id1 = new Id();
         Id id2 = new Id();
 
-        assertThat(id1.getValue()).isEqualTo(1L);
-        assertThat(id2.getValue()).isEqualTo(2L);
+        assertThat(id2.getValue() - id1.getValue()).isEqualTo(1L);
     }
 }

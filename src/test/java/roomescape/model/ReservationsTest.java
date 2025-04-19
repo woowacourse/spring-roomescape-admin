@@ -12,8 +12,10 @@ class ReservationsTest {
     @DisplayName("예약 리스트에 예약을 추가한다.")
     void addReservation() {
         Reservations reservations = new Reservations();
-        Reservation reservation = new Reservation(new Id(), "moda",
-                LocalDate.of(2025, 4, 17), LocalTime.of(10, 10));
+        Reservation reservation = new Reservation("moda",
+                LocalDate.of(2025, 4, 17),
+                LocalTime.of(10, 10)
+        );
 
         reservations.add(reservation);
 
@@ -24,12 +26,13 @@ class ReservationsTest {
     @DisplayName("예약 리스트에 예약을 삭제한다.")
     void deleteReservation() {
         Reservations reservations = new Reservations();
-        Id id = new Id();
-        Reservation reservation = new Reservation(id, "moda",
-                LocalDate.of(2025, 4, 17), LocalTime.of(10, 10));
+        Reservation reservation = new Reservation("moda",
+                LocalDate.of(2025, 4, 17),
+                LocalTime.of(10, 10)
+        );
         reservations.add(reservation);
 
-        reservations.deleteById(id);
+        reservations.deleteById(reservation.getId());
 
         assertThat(reservations.getAll()).isEmpty();
     }

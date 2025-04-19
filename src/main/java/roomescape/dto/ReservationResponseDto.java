@@ -9,7 +9,9 @@ public record ReservationResponseDto(long id, String name, LocalDate date, Strin
     public static ReservationResponseDto of(Reservation reservation) {
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern("HH:mm");
         return new ReservationResponseDto(
-                reservation.getId(), reservation.getName(), reservation.getDate(),
+                reservation.getId().getValue(),
+                reservation.getName(),
+                reservation.getDate(),
                 reservation.getTime().format(formatter)
         );
     }

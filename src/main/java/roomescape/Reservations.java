@@ -27,8 +27,8 @@ public class Reservations {
     }
 
     private void validateUnique(final Long id) {
-        final boolean isUnique = reservations.stream().anyMatch(reservation -> reservation.getId().equals(id));
-        if (isUnique) {
+        final boolean isNotUnique = reservations.stream().anyMatch(reservation -> reservation.getId().equals(id));
+        if (isNotUnique) {
             throw new IllegalStateException("이미 존재하는 ID입니다.");
         }
     }

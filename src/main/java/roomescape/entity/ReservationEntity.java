@@ -3,7 +3,7 @@ package roomescape.entity;
 import java.time.LocalDate;
 import java.time.LocalTime;
 import java.util.Objects;
-import roomescape.domain.ReservationInfo;
+import roomescape.domain.Reservation;
 
 public class ReservationEntity {
     private final Long id;
@@ -18,8 +18,8 @@ public class ReservationEntity {
         this.time = time;
     }
 
-    public ReservationEntity(final Long id, final ReservationInfo reservationInfo) {
-        this(id, reservationInfo.getName(), reservationInfo.getReservationDate(), reservationInfo.getReservationTime());
+    public ReservationEntity(final Long id, final Reservation reservation) {
+        this(id, reservation.getName(), reservation.getReservationDate(), reservation.getReservationTime());
     }
 
     public boolean isEqualId(final Long id) {

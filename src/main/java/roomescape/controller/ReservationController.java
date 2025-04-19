@@ -11,7 +11,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
-import roomescape.domain.ReservationInfo;
+import roomescape.domain.Reservation;
 import roomescape.dto.CreateReservationDto;
 import roomescape.dto.ReservationDto;
 import roomescape.entity.ReservationEntity;
@@ -40,8 +40,8 @@ public class ReservationController {
     @PostMapping
     public ResponseEntity<ReservationDto> createReservation(
             @RequestBody @Valid final CreateReservationDto createReservationDto) {
-        ReservationInfo reservationInfo = createReservationDto.toReservationInfo(clock);
-        ReservationEntity savedReservationEntity = reservationRepository.add(reservationInfo);
+        Reservation reservation = createReservationDto.toReservationInfo(clock);
+        ReservationEntity savedReservationEntity = reservationRepository.add(reservation);
         return ResponseEntity.ok(ReservationDto.from(savedReservationEntity));
     }
 

@@ -11,8 +11,8 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import roomescape.TestBase;
+import roomescape.domain.Reservation;
 import roomescape.domain.ReservationDateTime;
-import roomescape.domain.ReservationInfo;
 import roomescape.entity.ReservationEntity;
 
 class MemoryReservationDaoTest extends TestBase {
@@ -38,8 +38,8 @@ class MemoryReservationDaoTest extends TestBase {
     @Test
     void 예약을_조회한다() {
         // given
-        ReservationInfo reservationInfo = new ReservationInfo("name1", RESERVATION_DATE_TIME);
-        memoryReservationDao.add(reservationInfo);
+        Reservation reservation = new Reservation("name1", RESERVATION_DATE_TIME);
+        memoryReservationDao.add(reservation);
         // when
         List<ReservationEntity> reservations = memoryReservationDao.getReservations();
 
@@ -55,8 +55,8 @@ class MemoryReservationDaoTest extends TestBase {
     @Test
     void 예약이_존재하는지_확인한다() {
         // given
-        ReservationInfo reservationInfo = new ReservationInfo("name1", RESERVATION_DATE_TIME);
-        memoryReservationDao.add(reservationInfo);
+        Reservation reservation = new Reservation("name1", RESERVATION_DATE_TIME);
+        memoryReservationDao.add(reservation);
         // when & then
         SoftAssertions softly = new SoftAssertions();
         softly.assertThat(memoryReservationDao.existReservation(1L)).isTrue();
@@ -67,9 +67,9 @@ class MemoryReservationDaoTest extends TestBase {
     @Test
     void 예약을_한개_추가한다() {
         // given
-        ReservationInfo reservationInfo = new ReservationInfo("name1", RESERVATION_DATE_TIME);
+        Reservation reservation = new Reservation("name1", RESERVATION_DATE_TIME);
         // when
-        memoryReservationDao.add(reservationInfo);
+        memoryReservationDao.add(reservation);
         // then
         List<ReservationEntity> reservations = memoryReservationDao.getReservations();
         assertThat(reservations).hasSize(1);
@@ -78,11 +78,11 @@ class MemoryReservationDaoTest extends TestBase {
     @Test
     void 예약을_여러개_추가한다() {
         // given
-        ReservationInfo reservationInfo1 = new ReservationInfo("name1", RESERVATION_DATE_TIME);
-        ReservationInfo reservationInfo2 = new ReservationInfo("name2", RESERVATION_DATE_TIME);
+        Reservation reservation1 = new Reservation("name1", RESERVATION_DATE_TIME);
+        Reservation reservation2 = new Reservation("name2", RESERVATION_DATE_TIME);
         // when
-        memoryReservationDao.add(reservationInfo1);
-        memoryReservationDao.add(reservationInfo2);
+        memoryReservationDao.add(reservation1);
+        memoryReservationDao.add(reservation2);
         // then
         List<ReservationEntity> reservations = memoryReservationDao.getReservations();
         assertThat(reservations).contains(
@@ -94,8 +94,8 @@ class MemoryReservationDaoTest extends TestBase {
     @Test
     void 예약을_삭제한다() {
         // given
-        ReservationInfo reservationInfo = new ReservationInfo("name1", RESERVATION_DATE_TIME);
-        memoryReservationDao.add(reservationInfo);
+        Reservation reservation = new Reservation("name1", RESERVATION_DATE_TIME);
+        memoryReservationDao.add(reservation);
         // when
         memoryReservationDao.deleteById(1L);
 

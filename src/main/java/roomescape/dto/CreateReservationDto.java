@@ -5,8 +5,8 @@ import jakarta.validation.constraints.NotNull;
 import java.time.Clock;
 import java.time.LocalDate;
 import java.time.LocalTime;
+import roomescape.domain.Reservation;
 import roomescape.domain.ReservationDateTime;
-import roomescape.domain.ReservationInfo;
 
 public record CreateReservationDto(
         @NotNull @NotBlank
@@ -19,7 +19,7 @@ public record CreateReservationDto(
         LocalTime time
 ) {
 
-    public ReservationInfo toReservationInfo(final Clock clock) {
-        return new ReservationInfo(name, ReservationDateTime.createNewReservationTime(date, time, clock));
+    public Reservation toReservationInfo(final Clock clock) {
+        return new Reservation(name, ReservationDateTime.createNewReservationTime(date, time, clock));
     }
 }

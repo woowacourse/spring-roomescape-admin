@@ -3,12 +3,12 @@ package roomescape.domain;
 import java.time.LocalDate;
 import java.time.LocalTime;
 
-public class ReservationInfo {
+public class Reservation {
 
     private final String name;
     private final ReservationDateTime reservationDateTime;
 
-    public ReservationInfo(final String name, final ReservationDateTime reservationDateTime) {
+    public Reservation(final String name, final ReservationDateTime reservationDateTime) {
         this.name = name;
         this.reservationDateTime = reservationDateTime;
     }

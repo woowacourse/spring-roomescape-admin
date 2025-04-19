@@ -15,7 +15,7 @@ public class RoomescapeReservationRestController {
         this.reservations = new Reservations();
     }
 
-    @GetMapping("")
+    @GetMapping
     public List<ReservationDto> getAllReservation() {
         return reservations.findAll()
                 .stream()
@@ -23,7 +23,7 @@ public class RoomescapeReservationRestController {
                 .toList();
     }
 
-    @PostMapping("")
+    @PostMapping
     public ResponseEntity<Reservation> createReservation(@RequestBody ReservationDto reservationDto) {
         Reservation entity = reservationDto.toEntity();
         try {

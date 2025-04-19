@@ -11,10 +11,10 @@ import roomescape.domain.Reservation;
 public class MemoryReservationRepository implements ReservationRepository {
 
     private final List<Reservation> reservations = Collections.synchronizedList(new ArrayList<>());
-    private final AtomicLong increment = new AtomicLong(1);
+    private final AtomicLong index = new AtomicLong(1);
 
     public Reservation add(final Reservation reservation) {
-        Reservation newReservation = new Reservation(increment.getAndIncrement(), reservation);
+        Reservation newReservation = new Reservation(index.getAndIncrement(), reservation);
         reservations.add(newReservation);
         return newReservation;
     }

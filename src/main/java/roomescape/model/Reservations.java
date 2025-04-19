@@ -12,9 +12,8 @@ public class Reservations {
     private final Map<Long, Reservation> reservations = new ConcurrentHashMap<>();
     private final AtomicLong atomicLong = new AtomicLong();
 
-    public ReservationResponse createReservation(ReservationRequest request) {
+    public ReservationResponse createReservation(Reservation reservation) {
         long id = atomicLong.incrementAndGet();
-        Reservation reservation = request.toEntity();
         reservations.put(id, reservation);
 
         return ReservationResponse.toDto(id, reservation);

@@ -53,8 +53,8 @@ public final class Reservation {
         }
     }
 
-    public static Reservation toEntity(Integer id, Reservation reservation) {
-        return new Reservation(id, reservation.name, reservation.date, reservation.time);
+    public Reservation createWithId(Integer id) {
+        return new Reservation(id, name, date, time);
     }
 
     public int getId() {

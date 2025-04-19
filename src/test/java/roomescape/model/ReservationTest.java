@@ -19,14 +19,13 @@ class ReservationTest {
     @ValueSource(ints = {1, 60, 3_600, 86_400})
     void createTest(int differentSecond) {
         // given
-        int id = 1;
         String name = "브라운";
         LocalDateTime reservationDateTime = LocalDateTime.now().plusSeconds(differentSecond);
         LocalDate reservationDate = reservationDateTime.toLocalDate();
         LocalTime reservationTime = reservationDateTime.toLocalTime();
 
         // when & then
-        assertThatCode(() -> new Reservation(id, name, reservationDate, reservationTime))
+        assertThatCode(() -> new Reservation(name, reservationDate, reservationTime))
                 .doesNotThrowAnyException();
     }
 
@@ -35,14 +34,13 @@ class ReservationTest {
     @ValueSource(ints = {1, 60, 3_600, 86_400})
     void shouldThrowException_WhenCreatePastReservation(int differentSecond) {
         // given
-        int id = 1;
         String name = "브라운";
         LocalDateTime reservationDateTime = LocalDateTime.now().minusSeconds(differentSecond);
         LocalDate reservationDate = reservationDateTime.toLocalDate();
         LocalTime reservationTime = reservationDateTime.toLocalTime();
 
         // when & then
-        assertThatCode(() -> new Reservation(id, name, reservationDate, reservationTime))
+        assertThatCode(() -> new Reservation(name, reservationDate, reservationTime))
                 .isInstanceOf(DomainException.class)
                 .hasMessage("과거 일시로 예약을 생성할 수 없습니다.");
     }
@@ -52,13 +50,12 @@ class ReservationTest {
     @NullAndEmptySource
     void shouldThrowException_WhenCreateWithEmptyName(String emptyName) {
         // given
-        int id = 1;
         LocalDateTime reservationDateTime = LocalDateTime.now().plusHours(1);
         LocalDate reservationDate = reservationDateTime.toLocalDate();
         LocalTime reservationTime = reservationDateTime.toLocalTime();
 
         // when & then
-        assertThatCode(() -> new Reservation(id, emptyName, reservationDate, reservationTime))
+        assertThatCode(() -> new Reservation(emptyName, reservationDate, reservationTime))
                 .isInstanceOf(DomainException.class)
                 .hasMessage("예약자명이 입력되지 않았습니다.");
     }
@@ -67,13 +64,12 @@ class ReservationTest {
     @Test
     void shouldThrowException_WhenCreateWithNullDate() {
         // given
-        int id = 1;
         String name = "브라운";
         LocalDateTime reservationDateTime = LocalDateTime.now().plusHours(1);
         LocalTime reservationTime = reservationDateTime.toLocalTime();
 
         // when & then
-        assertThatCode(() -> new Reservation(id, name, null, reservationTime))
+        assertThatCode(() -> new Reservation(name, null, reservationTime))
                 .isInstanceOf(DomainException.class)
                 .hasMessage("예약 날짜가 입력되지 않았습니다.");
     }
@@ -82,13 +78,12 @@ class ReservationTest {
     @Test
     void shouldThrowException_WhenCreateWithNullTime() {
         // given
-        int id = 1;
         String name = "브라운";
         LocalDateTime reservationDateTime = LocalDateTime.now().plusHours(1);
         LocalDate reservationDate = reservationDateTime.toLocalDate();
 
         // when & then
-        assertThatCode(() -> new Reservation(id, name, reservationDate, null))
+        assertThatCode(() -> new Reservation(name, reservationDate, null))
                 .isInstanceOf(DomainException.class)
                 .hasMessage("예약 시간이 입력되지 않았습니다.");
     }

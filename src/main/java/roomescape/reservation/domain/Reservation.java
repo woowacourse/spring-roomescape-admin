@@ -14,6 +14,10 @@ public class Reservation {
         this.dateTime = dateTime;
     }
 
+    public Reservation(String reserverName, LocalDateTime dateTime) {
+        this(null, reserverName, dateTime);
+    }
+
     public boolean isSameId(final Long id) {
         return this.id.equals(id);
     }

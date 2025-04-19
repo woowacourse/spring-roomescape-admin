@@ -3,8 +3,8 @@ package roomescape.reservation.service;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.LocalTime;
+import java.util.List;
 import java.util.Optional;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import roomescape.reservation.controller.request.ReservationCreateRequest;
 import roomescape.reservation.domain.Reservation;
@@ -15,26 +15,28 @@ import roomescape.reservation.service.exception.ReservationNotFoundException;
 @Service
 public class ReservationService {
 
-    private final Reservations reservations = new Reservations();
-    @Autowired
-    private ReservationRepository reservationRepository;
+    private final ReservationRepository reservationRepository;
+
+    public ReservationService(ReservationRepository reservationRepository) {
+        this.reservationRepository = reservationRepository;
+    }
 
     public Reservations findReservations() {
-        return reservationRepository.findAll();
+        List<Reservation> reservations = reservationRepository.findAll();
+        return new Reservations(reservations);
     }
 
     public Reservation createReservation(ReservationCreateRequest request) {
         Reservation reservation = new Reservation(
-                reservations.generateId(),
                 request.name(),
                 LocalDateTime.of(LocalDate.parse(request.date()), LocalTime.parse(request.time()))
         );
-        reservations.create(reservation);
-        return reservation;
+        Optional<Reservation> created = reservationRepository.save(reservation);
+        return created.get();
     }
 
     public Reservation findReservation(Long id) {
-        Optional<Reservation> reservation = reservations.findById(id);
+        Optional<Reservation> reservation = reservationRepository.findById(id);
 
         if (reservation.isEmpty()) {
             throw new ReservationNotFoundException("[ERROR] 예약을 찾을 수 없습니다.");
@@ -44,6 +46,6 @@ public class ReservationService {
     }
 
     public void delete(Reservation reservation) {
-        reservations.delete(reservation);
+        reservationRepository.delete(reservation);
     }
 }

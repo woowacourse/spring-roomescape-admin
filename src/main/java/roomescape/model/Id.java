@@ -12,12 +12,8 @@ public class Id {
         this(index.getAndIncrement());
     }
 
-    private Id(long value) {
+    public Id(long value) {
         this.value = value;
-    }
-
-    public static Id toEntity(Long id) {
-        return new Id(id);
     }
 
     public long getValue() {

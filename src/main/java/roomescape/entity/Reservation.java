@@ -36,4 +36,12 @@ public class Reservation {
     public void setId(Long id) {
         this.id = id;
     }
+
+    public boolean isIdNull() {
+        return this.id == null;
+    }
+
+    public boolean isIdEqualTo(Long id) {
+        return this.id.equals(id);
+    }
 }

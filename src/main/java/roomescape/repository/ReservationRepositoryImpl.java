@@ -22,13 +22,13 @@ public class ReservationRepositoryImpl implements ReservationRepository {
     @Override
     public Optional<Reservation> findById(Long id) {
         return reservations.stream()
-                .filter(reservation -> reservation.getId().equals(id))
+                .filter(reservation -> reservation.isIdEqualTo(id))
                 .findFirst();
     }
 
     @Override
     public Reservation save(Reservation reservation) {
-        if (reservation.getId() == null) {
+        if (reservation.isIdNull()) {
             reservation.setId(index.getAndIncrement());
         }
         reservations.add(reservation);

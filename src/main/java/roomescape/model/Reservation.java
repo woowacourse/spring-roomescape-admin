@@ -11,17 +11,27 @@ public class Reservation {
     private final ReservationDateTime reservationDateTime;
 
     public Reservation(final Long id, final String name, final ReservationDateTime reservationDateTime) {
-        this.id = Objects.requireNonNull(id);
-        this.name = validateNonBlank(name);
+        validate(id, name, reservationDateTime);
+        this.id = id;
+        this.name = name;
         this.reservationDateTime = reservationDateTime;
     }
 
-    private String validateNonBlank(final String name) {
-        if (name == null || name.isBlank()) {
-            throw new IllegalArgumentException();
+    private void validate(final Long id, final String name, final ReservationDateTime reservationDateTime) {
+        try {
+            Objects.requireNonNull(id);
+            Objects.requireNonNull(name);
+            Objects.requireNonNull(reservationDateTime);
+            validateBlank(name);
+        } catch (NullPointerException e) {
+            throw new IllegalArgumentException(e);
         }
+    }
 
-        return name;
+    private void validateBlank(final String name) {
+        if (name.isBlank()) {
+            throw new IllegalArgumentException("예약자명이 존재하지 않습니다.");
+        }
     }
 
     public Long getId() {

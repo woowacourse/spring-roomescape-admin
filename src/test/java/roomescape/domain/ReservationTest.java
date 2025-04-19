@@ -32,7 +32,7 @@ class ReservationTest {
     void 날짜가_null인_경우_예외를_발생시킨다() {
         Assertions.assertThatThrownBy(() -> new Reservation(2L, "메이", null))
                 .isInstanceOf(IllegalArgumentException.class)
-                .hasMessageContaining("[ERROR] 과거 날짜에 대한 예약을 할 수 없습니다.");
+                .hasMessageContaining("[ERROR] 예약 날짜는 null이 될 수 없습니다.");
     }
 
     @Test

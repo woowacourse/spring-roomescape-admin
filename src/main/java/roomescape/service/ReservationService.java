@@ -32,7 +32,7 @@ public class ReservationService {
         return ReservationResponse.from(id, reservation);
     }
 
-    public void delete(final Long id) {
-        reservations.deleteBy(id);
+    public void deleteById(final Long id) {
+        reservations.deleteById(id);
     }
 }

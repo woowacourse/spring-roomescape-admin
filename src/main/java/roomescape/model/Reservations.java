@@ -22,7 +22,7 @@ public class Reservations {
         return index.get();
     }
 
-    public void deleteBy(final Long id) {
+    public void deleteById(final Long id) {
         if (reservations.containsKey(id)) {
             reservations.remove(id);
             return;

@@ -12,7 +12,7 @@ class DomainEntityIdTest {
     @DisplayName("값이 설정되지 않았다면, 예외가 발생한다")
     void whenValueIsNullThrowException() {
         // given
-        DomainEntityId id = DomainEntityId.from(null);
+        final DomainEntityId id = DomainEntityId.from(null);
 
         // when
         // then

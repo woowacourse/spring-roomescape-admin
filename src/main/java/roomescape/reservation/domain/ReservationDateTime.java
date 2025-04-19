@@ -15,7 +15,7 @@ public final class ReservationDateTime {
         this.dateTime = dateTime;
     }
 
-    public static ReservationDateTime from(LocalDateTime dateTime) {
+    public static ReservationDateTime from(final LocalDateTime dateTime) {
         return new ReservationDateTime(dateTime);
     }
 

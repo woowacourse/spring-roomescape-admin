@@ -11,7 +11,7 @@ public record ReservationResponseDto(long id,
                                      LocalDate date,
                                      LocalTime time) {
 
-    public static ReservationResponseDto from(Reservation reservation) {
+    public static ReservationResponseDto from(final Reservation reservation) {
         return new ReservationResponseDto(
                 reservation.getId(),
                 reservation.getName(),
@@ -19,7 +19,7 @@ public record ReservationResponseDto(long id,
                 reservation.getDatetime().toLocalTime());
     }
 
-    public static List<ReservationResponseDto> from(List<Reservation> reservations) {
+    public static List<ReservationResponseDto> from(final List<Reservation> reservations) {
         return reservations.stream()
                 .map(ReservationResponseDto::from)
                 .toList();

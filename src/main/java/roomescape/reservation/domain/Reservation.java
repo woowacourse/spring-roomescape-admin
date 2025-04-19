@@ -16,11 +16,11 @@ public class Reservation {
         this.datetime = datetime;
     }
 
-    public static Reservation of(Long id, String name, LocalDateTime dateTime) {
+    public static Reservation of(final Long id, final String name, final LocalDateTime dateTime) {
         return new Reservation(DomainEntityId.from(id), name, ReservationDateTime.from(dateTime));
     }
 
-    public static Reservation of(String name, LocalDateTime dateTime) {
+    public static Reservation of(final String name, final LocalDateTime dateTime) {
         return of(null, name, dateTime);
     }
 

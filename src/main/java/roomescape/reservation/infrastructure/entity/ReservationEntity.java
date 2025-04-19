@@ -2,9 +2,7 @@ package roomescape.reservation.infrastructure.entity;
 
 import roomescape.reservation.domain.Reservation;
 
-import java.time.LocalDate;
 import java.time.LocalDateTime;
-import java.time.LocalTime;
 
 public class ReservationEntity {
     private final Long id;
@@ -17,7 +15,7 @@ public class ReservationEntity {
         this.dateTime = dateTime;
     }
 
-    public static ReservationEntity of(Long id, Reservation reservation) {
+    public static ReservationEntity of(final Long id, final Reservation reservation) {
         return new ReservationEntity(id, reservation.getName(), reservation.getDatetime());
     }
 

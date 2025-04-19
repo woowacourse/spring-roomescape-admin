@@ -30,7 +30,7 @@ class DefaultReservationServiceTest {
     @DisplayName("존재하지 않는 아이디를 삭제시 예외 발생")
     void deleteException() {
         // given
-        long invalidId = 1;
+        final long invalidId = 1;
 
         // when & then
         assertThatThrownBy(() -> reservationService.delete(invalidId)).
@@ -41,8 +41,8 @@ class DefaultReservationServiceTest {
     @DisplayName("DataAccessException 발생 시 삭제 실패를 알린다")
     void deleteUnknownDataAccessException() {
         // given
-        long invalidId = 1L;
-        Reservation fakeReservation = Reservation.of(invalidId, "테스트", LocalDateTime.now());
+        final long invalidId = 1L;
+        final Reservation fakeReservation = Reservation.of(invalidId, "테스트", LocalDateTime.now());
 
         reservationService = new DefaultReservationService(reservationRepository);
 

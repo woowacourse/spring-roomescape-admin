@@ -1,6 +1,6 @@
 package roomescape.domain;
 
 
-public record Person(long id, String name) {
+public record Person(String name) {
 
 }

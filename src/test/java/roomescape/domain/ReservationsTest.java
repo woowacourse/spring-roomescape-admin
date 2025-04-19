@@ -23,7 +23,7 @@ public class ReservationsTest {
         //given
         Reservation reservation = new Reservation(
             1,
-            new Person(1, "james"),
+            new Person("james"),
             new ReservationTime(LocalDateTime.of(2025, 4, 17, 11, 30)));
 
         //when
@@ -40,12 +40,12 @@ public class ReservationsTest {
         //given
         Reservation reservation1 = new Reservation(
             1,
-            new Person(1, "james"),
+            new Person("james"),
             new ReservationTime(LocalDateTime.of(2025, 4, 17, 11, 30)));
 
         Reservation reservation2 = new Reservation(
             2,
-            new Person(2, "pobi"),
+            new Person("pobi"),
             new ReservationTime(LocalDateTime.of(2025, 4, 18, 12, 30)));
 
         //when
@@ -72,11 +72,11 @@ public class ReservationsTest {
         //given
         Reservation reservation1 = new Reservation(
             1,
-            new Person(1, "james"),
+            new Person("james"),
             new ReservationTime(LocalDateTime.of(2025, 4, 17, 11, 30)));
         Reservation reservation2 = new Reservation(
             2,
-            new Person(2, "pobi"),
+            new Person("pobi"),
             new ReservationTime(LocalDateTime.of(2025, 4, 18, 12, 30)));
         reservations.save(reservation1);
         reservations.save(reservation2);

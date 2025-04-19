@@ -9,6 +9,7 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
+import roomescape.dao.QueryingDao;
 import roomescape.domain.Person;
 import roomescape.domain.Reservation;
 import roomescape.domain.ReservationTime;
@@ -19,13 +20,19 @@ import roomescape.dto.ReservationResponseDto;
 @RestController
 public class ReservationController {
 
+    private final QueryingDao queryingDao;
+
+    public ReservationController(QueryingDao queryingDao) {
+        this.queryingDao = queryingDao;
+    }
+
     private final Reservations reservations = new Reservations();
-    private final AtomicLong personIndex = new AtomicLong(1);
+    //private final AtomicLong personIndex = new AtomicLong(1);
     private final AtomicLong reservationIndex = new AtomicLong(1);
 
     @GetMapping("/reservations")
     public List<ReservationResponseDto> readReservations() {
-        return reservations.getReservations().stream()
+        return queryingDao.findAllReservation().stream()
             .map(ReservationResponseDto::from)
             .toList();
     }
@@ -33,7 +40,7 @@ public class ReservationController {
     @PostMapping("/reservations")
     public Reservation createReservations(
         @RequestBody ReservationRequestDto reservationRequestDto) {
-        Person person = new Person(personIndex.getAndIncrement(), reservationRequestDto.name());
+        Person person = new Person(reservationRequestDto.name());
         ReservationTime reservationTime = new ReservationTime(
             LocalDateTime.of(reservationRequestDto.date(), reservationRequestDto.time()));
         Reservation reservation = new Reservation(reservationIndex.getAndIncrement(), person,

@@ -8,11 +8,11 @@ public class RoomescapeController {
 
     @GetMapping("/admin")
     public String welcomeHome() {
-        return "./admin/index";
+        return "admin/index";
     }
 
     @GetMapping("/admin/reservation")
     public String reservation() {
-        return "./admin/reservation-legacy";
+        return "admin/reservation-legacy";
     }
 }

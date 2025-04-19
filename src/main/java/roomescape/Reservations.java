@@ -15,13 +15,6 @@ public class Reservations {
         reservations.add(reservation);
     }
 
-    private void validateUnique(final Long id) {
-        final boolean isUnique = reservations.stream().anyMatch(reservation -> reservation.getId().equals(id));
-        if (isUnique) {
-            throw new IllegalStateException("이미 존재하는 ID입니다.");
-        }
-    }
-
     public void removeById(final Long id) {
         reservations.remove(findById(id));
     }
@@ -30,7 +23,14 @@ public class Reservations {
         return reservations.stream()
                 .filter(rs -> rs.getId().equals(id))
                 .findFirst()
-                .orElseThrow(() -> new IllegalArgumentException("존재하지 않는 ID 입니다."));
+                .orElseThrow(() -> new IllegalArgumentException("존재하지 않는 예약입니다."));
+    }
+
+    private void validateUnique(final Long id) {
+        final boolean isUnique = reservations.stream().anyMatch(reservation -> reservation.getId().equals(id));
+        if (isUnique) {
+            throw new IllegalStateException("이미 존재하는 ID입니다.");
+        }
     }
 
     public List<Reservation> getReservations() {

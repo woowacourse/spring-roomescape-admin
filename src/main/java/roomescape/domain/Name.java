@@ -1,8 +1,14 @@
 package roomescape.domain;
 
-public record Name(String value) {
-    public Name {
+public class Name {
+    private String value;
+
+    public Name() {
+    }
+
+    public Name(String value) {
         validateNull(value);
+        this.value = value;
     }
 
     private void validateNull(final String value) {
@@ -13,5 +19,9 @@ public record Name(String value) {
 
     public static Name from(String value) {
         return new Name(value);
+    }
+
+    public String getValue() {
+        return value;
     }
 }

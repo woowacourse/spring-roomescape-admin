@@ -9,6 +9,9 @@ public class Reservation {
     private LocalDate date;
     private LocalTime time;
 
+    public Reservation() {
+    }
+
     public Reservation(long id, Name name, LocalDate date, LocalTime time) {
         this.id = id;
         this.name = name;
@@ -20,6 +23,10 @@ public class Reservation {
         this.name = name;
         this.date = date;
         this.time = time;
+    }
+
+    public Reservation(long id, Reservation reservation) {
+        this(id, reservation.name, reservation.date, reservation.time);
     }
 
     public static Reservation toEntity(long id, Reservation reservation) {

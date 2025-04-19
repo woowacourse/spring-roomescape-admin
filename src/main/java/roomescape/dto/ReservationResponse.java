@@ -1,21 +1,28 @@
 package roomescape.dto;
 
-import java.time.format.DateTimeFormatter;
-import roomescape.entity.Reservation;
+import java.time.LocalDate;
+import java.time.LocalTime;
+import java.util.List;
+import roomescape.domain.Reservation;
 
 public record ReservationResponse(
         Long id,
         String name,
-        String date,
-        String time
+        LocalDate date,
+        LocalTime time
 ) {
 
-    public static ReservationResponse from(final Reservation reservationInfo) {
+    public static ReservationResponse from(final Reservation reservation) {
         return new ReservationResponse(
-                reservationInfo.getId(),
-                reservationInfo.getName(),
-                reservationInfo.getDate().toString(),
-                reservationInfo.getTime().format(DateTimeFormatter.ofPattern("HH:mm"))
+                reservation.id(),
+                reservation.name(),
+                reservation.date(),
+                reservation.time()
         );
+    }
+
+    public static List<ReservationResponse> from(final List<Reservation> reservations) {
+        return reservations.stream().map(ReservationResponse::from).toList();
+
     }
 }

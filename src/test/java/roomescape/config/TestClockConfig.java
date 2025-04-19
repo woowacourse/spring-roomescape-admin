@@ -1,19 +1,18 @@
 package roomescape.config;
 
-import java.time.Clock;
-import java.time.LocalDateTime;
-import java.time.ZoneId;
-import org.springframework.context.annotation.Bean;
-import org.springframework.context.annotation.Configuration;
-import org.springframework.context.annotation.Profile;
+import static roomescape.common.Constant.FIXED_CLOCK;
 
-@Configuration
-@Profile("test")
+import java.time.Clock;
+import org.springframework.boot.test.context.TestConfiguration;
+import org.springframework.context.annotation.Bean;
+import org.springframework.context.annotation.Primary;
+
+@TestConfiguration
 public class TestClockConfig {
 
     @Bean
+    @Primary
     public Clock clock() {
-        LocalDateTime fixedDateTime = LocalDateTime.of(2025, 1, 1, 12, 0);
-        return Clock.fixed(fixedDateTime.atZone(ZoneId.systemDefault()).toInstant(), ZoneId.systemDefault());
+        return FIXED_CLOCK;
     }
 }

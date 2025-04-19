@@ -139,8 +139,9 @@ class ReservationRepositoryTest {
         reservationRepository.deleteById(id);
 
         // then
-        Optional<Reservation> result = reservationRepository.findById(id);
-        assertThat(result).isEmpty();
+        String sql = "select count(*) from reservation where id = ?";
+        int count = jdbcTemplate.queryForObject(sql,  Integer.class, id);
+        assertThat(count).isZero();
     }
 
     private void saveReservation(Long id, String name, LocalDateTime dateTime) {

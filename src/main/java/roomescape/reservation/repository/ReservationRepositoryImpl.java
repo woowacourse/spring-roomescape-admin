@@ -46,7 +46,7 @@ public class ReservationRepositoryImpl implements ReservationRepository {
 
             return Optional.ofNullable(reservation);
         } catch (EmptyResultDataAccessException e) {
-            return Optional.empty();
+            throw new EntityNotFoundException("entity not found");
         }
     }
 

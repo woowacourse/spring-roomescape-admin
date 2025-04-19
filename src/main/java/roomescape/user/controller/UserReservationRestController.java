@@ -53,10 +53,5 @@ public class UserReservationRestController {
         reservationRepository.delete(found.get());
 
         return ResponseEntity.ok().build();
-//        return found.<ResponseEntity<Void>>map(reservation -> {
-//                    reservationRepository.deleteById(reservation);
-//                    return ResponseEntity.ok().build();
-//                })
-//                .orElseGet(() -> ResponseEntity.notFound().build());
     }
 }

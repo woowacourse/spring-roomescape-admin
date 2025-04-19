@@ -8,7 +8,7 @@ public class ReservationManager {
 
     private final AtomicLong index = new AtomicLong();
 
-    public Reservation createReservation(final ReservationRequest request) {
+    public Reservation createReservation(final ReservationCreateRequest request) {
         return new Reservation(index.incrementAndGet(), request.name(), request.date(), request.time());
     }
 }

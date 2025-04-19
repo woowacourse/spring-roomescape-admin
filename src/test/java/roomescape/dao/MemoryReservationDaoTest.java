@@ -2,25 +2,19 @@ package roomescape.dao;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
-import java.time.Clock;
 import java.time.LocalDate;
 import java.time.LocalTime;
 import java.util.List;
 import org.assertj.core.api.SoftAssertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import org.springframework.beans.factory.annotation.Autowired;
-import roomescape.TestBase;
 import roomescape.domain.Reservation;
 import roomescape.domain.ReservationDateTime;
 import roomescape.entity.ReservationEntity;
 
-class MemoryReservationDaoTest extends TestBase {
+class MemoryReservationDaoTest {
     private final LocalDate RESERVATION_DATE = LocalDate.of(2025, 1, 2);
     private final LocalTime RESERVATION_TIME = LocalTime.of(9, 0);
-
-    @Autowired
-    private Clock clock;
 
     private ReservationDateTime RESERVATION_DATE_TIME;
     private MemoryReservationDao memoryReservationDao;
@@ -28,11 +22,7 @@ class MemoryReservationDaoTest extends TestBase {
     @BeforeEach
     void setUp() {
         memoryReservationDao = new MemoryReservationDao();
-        RESERVATION_DATE_TIME = ReservationDateTime.createNewReservationTime(
-                RESERVATION_DATE,
-                RESERVATION_TIME,
-                clock
-        );
+        RESERVATION_DATE_TIME = ReservationDateTime.of(RESERVATION_DATE, RESERVATION_TIME);
     }
 
     @Test

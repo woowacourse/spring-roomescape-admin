@@ -14,6 +14,10 @@ public class ReservationDateTime {
         this.time = time;
     }
 
+    public static ReservationDateTime of(final LocalDate date, final LocalTime time) {
+        return new ReservationDateTime(date, time);
+    }
+
     public static ReservationDateTime createNewReservationTime(final LocalDate date, final LocalTime time,
                                                                final Clock clock) {
         validateFutureTime(date, time, clock);

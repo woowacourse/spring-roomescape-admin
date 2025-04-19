@@ -1,6 +1,7 @@
 package roomescape;
 
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.time.LocalTime;
 import java.util.concurrent.atomic.AtomicLong;
 
@@ -9,21 +10,19 @@ public class Reservation {
     private static final LocalTime runningTime = LocalTime.of(2, 0);
     private final Long id;
     private final String name;
-    private final LocalDate date;
-    private final LocalTime time;
+    private final LocalDateTime dateTime;
 
-    public Reservation(String name, LocalDate date, LocalTime time) {
+    public Reservation(String name, LocalDateTime dateTime) {
         this.id = index.getAndIncrement();
         this.name = name;
-        this.date = date;
-        this.time = time;
+        this.dateTime = dateTime;
     }
 
     public boolean isDuplicatedWith(Reservation other) {
-        LocalTime endTime = time.plusSeconds(runningTime.toSecondOfDay());
-        LocalTime otherStartTime = other.time;
-        return otherStartTime.toNanoOfDay() >= time.toNanoOfDay()
-                && otherStartTime.toNanoOfDay() < endTime.toNanoOfDay();
+        LocalDateTime endTime = dateTime.plusSeconds(runningTime.toSecondOfDay());
+        LocalDateTime otherStartTime = other.dateTime;
+        return (otherStartTime.isAfter(dateTime) || otherStartTime.isEqual(dateTime))
+                && otherStartTime.isBefore(endTime);
     }
 
     public boolean isSameId(final Long id) {
@@ -39,10 +38,10 @@ public class Reservation {
     }
 
     public LocalDate getDate() {
-        return date;
+        return dateTime.toLocalDate();
     }
 
     public LocalTime getTime() {
-        return time;
+        return dateTime.toLocalTime();
     }
 }

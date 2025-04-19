@@ -41,27 +41,27 @@ public class Reservation {
 
     private void validateId(final Long id) {
         if (id == null) {
-            throw new IllegalArgumentException("Id는 null이 될 수 없습니다.");
+            throw new IllegalArgumentException("[ERROR] 예약 기록 id는 null이 될 수 없습니다.");
         }
     }
 
     private void validateName(final String name) {
         if (name == null) {
-            throw new IllegalArgumentException("Name은 null이 될 수 없습니다.");
+            throw new IllegalArgumentException("[ERROR] 예약자 이름은 null이 될 수 없습니다.");
         }
         if (name.length() > MAX_NAME_LENGTH) {
-            throw new IllegalArgumentException("Name은 10글자를 초과할 수 없습니다.");
+            throw new IllegalArgumentException("[ERROR] 예약자 이름은 10글자를 초과할 수 없습니다.");
         }
     }
 
     private void validateDateTime(final LocalDateTime dateTime) {
         if (dateTime == null) {
-            throw new IllegalArgumentException("DateTime은 null이 될 수 없습니다.");
+            throw new IllegalArgumentException("[ERROR] 예약 날짜는 null이 될 수 없습니다.");
         }
 
         boolean isPast = dateTime.toLocalDate().isBefore(LocalDate.now());
         if (isPast) {
-            throw new IllegalArgumentException("과거 날짜에 대한 예약을 할 수 없습니다.");
+            throw new IllegalArgumentException("[ERROR] 과거 날짜에 대한 예약을 할 수 없습니다.");
         }
     }
 }

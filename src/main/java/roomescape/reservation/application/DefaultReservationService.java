@@ -1,6 +1,5 @@
 package roomescape.reservation.application;
 
-import org.springframework.dao.DataAccessException;
 import org.springframework.stereotype.Service;
 import roomescape.reservation.domain.Reservation;
 import roomescape.reservation.domain.ReservationRepository;
@@ -35,10 +34,6 @@ public class DefaultReservationService implements ReservationService {
         reservationRepository.findById(id)
                 .orElseThrow(NoSuchElementException::new);
 
-        try {
-            reservationRepository.deleteById(id);
-        } catch (DataAccessException e) {
-            throw new IllegalStateException("삭제에 실패했습니다");
-        }
+        reservationRepository.deleteById(id);
     }
 }

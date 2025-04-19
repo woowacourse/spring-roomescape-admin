@@ -58,7 +58,6 @@ class DefaultReservationServiceTest {
         // when
         // then
         assertThatThrownBy(() -> reservationService.delete(invalidId))
-                .isInstanceOf(IllegalStateException.class)
-                .hasMessageContaining("삭제에 실패했습니다");
+                .isInstanceOf(DataAccessException.class);
     }
 }

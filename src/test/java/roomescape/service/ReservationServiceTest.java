@@ -13,10 +13,10 @@ import org.springframework.boot.test.context.SpringBootTest;
 import roomescape.dto.ReservationRequest;
 
 @SpringBootTest
-class ReservationServiceImplTest {
+class ReservationServiceTest {
 
     @Autowired
-    private ReservationServiceImpl reservationService;
+    private ReservationService reservationService;
 
     @Test
     @DisplayName("존재하지 않는 아이디를 삭제시 예외 발생")

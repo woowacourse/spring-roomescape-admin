@@ -6,10 +6,21 @@ import java.time.LocalTime;
 public class Reservation {
 
     private static final int VALID_MAX_NAME_LENGTH = 4;
+
     private long id;
-    private final String name;
-    private final LocalDate date;
-    private final LocalTime time;
+    private String name;
+    private LocalDate date;
+    private LocalTime time;
+
+    public Reservation() {
+    }
+
+    public Reservation(final long id, final String name, final LocalDate date, final LocalTime time) {
+        this.id = id;
+        this.name = name;
+        this.date = date;
+        this.time = time;
+    }
 
     public Reservation(final String name, final LocalDate date, final LocalTime time) {
         validateNameLength(name);

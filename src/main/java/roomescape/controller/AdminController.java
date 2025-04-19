@@ -39,20 +39,24 @@ public class AdminController {
 
     @PostMapping("/reservations")
     @ResponseBody
-    public ResponseEntity<Reservation> createReservation(
+    public ResponseEntity<ReservationResponseDto> createReservation(
             @RequestBody ReservationRequestDto reservationRequest
     ) {
         Reservation newReservation = reservationRequest.toEntity();
         reservations.add(newReservation);
-        return ResponseEntity.ok().body(newReservation);
+        return ResponseEntity.ok().body(ReservationResponseDto.of(newReservation));
     }
 
     @DeleteMapping("/reservations/{id}")
     @ResponseBody
-    public ResponseEntity<Void> deleteReservation(
-            @PathVariable("id") Long idRequest
+    public ResponseEntity<String> deleteReservation(
+            @PathVariable("id") long idRequest
     ) {
-        reservations.deleteById(Id.toEntity(idRequest));
-        return ResponseEntity.ok().build();
+        try {
+            reservations.deleteById(new Id(idRequest));
+            return ResponseEntity.ok().build();
+        } catch (IllegalArgumentException e) {
+            return ResponseEntity.badRequest().body(e.getMessage());
+        }
     }
 }

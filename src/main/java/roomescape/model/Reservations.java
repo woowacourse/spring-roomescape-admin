@@ -19,7 +19,7 @@ public class Reservations {
         Reservation reservation = reservations.stream()
                 .filter(reserve -> reserve.isSameId(id))
                 .findFirst()
-                .orElseThrow(IllegalArgumentException::new);
+                .orElseThrow(() -> new IllegalArgumentException("해당하는 id값이 존재하지 않습니다."));
         reservations.remove(reservation);
     }
 

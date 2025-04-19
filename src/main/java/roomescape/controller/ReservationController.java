@@ -1,6 +1,7 @@
 package roomescape.controller;
 
 import java.util.List;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
@@ -11,12 +12,17 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import roomescape.Reservation;
 import roomescape.ReservationRequest;
-import roomescape.Reservations;
+import roomescape.repository.ReservationRepository;
 
 @Controller
 public class ReservationController {
 
-    private final Reservations reservations = new Reservations();
+    private final ReservationRepository reservationRepository;
+
+    @Autowired
+    public ReservationController(final ReservationRepository reservationRepository) {
+        this.reservationRepository = reservationRepository;
+    }
 
     @GetMapping("/")
     public String homePage() {
@@ -25,16 +31,14 @@ public class ReservationController {
 
     @GetMapping("/reservations")
     public ResponseEntity<List<Reservation>> getReservations() {
-        return ResponseEntity.ok(reservations.getReservations());
+        return ResponseEntity.ok(reservationRepository.getReservations());
     }
 
     @PostMapping("/reservations")
     public ResponseEntity<Reservation> addReservation(@RequestBody ReservationRequest request) {
         try {
-            long id = reservations.nextId();
-            Reservation reservation = request.toReservation(id);
-            reservations.add(reservation);
-            return ResponseEntity.ok(reservation);
+            final var saved = reservationRepository.save(request);
+            return ResponseEntity.ok(saved);
         } catch (IllegalArgumentException e) {
             return ResponseEntity.badRequest().build();
         }
@@ -42,7 +46,7 @@ public class ReservationController {
 
     @DeleteMapping("/reservations/{id}")
     public ResponseEntity<Void> deleteReservation(@PathVariable("id") Long id) {
-        boolean isRemoved = reservations.removeById(id);
+        boolean isRemoved = reservationRepository.removeById(id);
         if (isRemoved) {
             return ResponseEntity.ok().build();
         }

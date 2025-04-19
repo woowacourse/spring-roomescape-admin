@@ -1,21 +1,27 @@
-package roomescape;
+package roomescape.repository;
 
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.atomic.AtomicLong;
+import roomescape.Reservation;
+import roomescape.ReservationRequest;
 
-public class Reservations {
+public class ReservationFakeRepository implements ReservationRepository {
 
     private final Map<Long, Reservation> reservations = new ConcurrentHashMap<>();
     private final AtomicLong index = new AtomicLong(1L);
 
-    public Long nextId() {
-        return index.getAndIncrement();
+    @Override
+    public Optional<Reservation> findById(final long id) {
+        return Optional.ofNullable(reservations.get(id));
     }
 
-    public void add(Reservation reservation) {
+    public Reservation save(ReservationRequest request) {
+        final var reservation = request.toReservation(index.getAndIncrement());
         reservations.put(reservation.id(), reservation);
+        return reservation;
     }
 
     public boolean removeById(long id) {

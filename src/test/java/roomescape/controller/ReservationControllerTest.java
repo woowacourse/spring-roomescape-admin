@@ -12,6 +12,7 @@ import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.Arguments;
 import org.junit.jupiter.params.provider.MethodSource;
 import org.springframework.http.HttpStatus;
+import roomescape.repository.ReservationFakeRepository;
 import roomescape.Reservation;
 import roomescape.ReservationRequest;
 
@@ -21,7 +22,7 @@ public class ReservationControllerTest {
     @DisplayName("예약을 추가할 수 있다.")
     void addReservation() {
         //given
-        final var controller = new ReservationController();
+        final var controller = new ReservationController(new ReservationFakeRepository());
         final var request = new ReservationRequest(
             "포포",
             LocalDate.of(2024, 4, 18),
@@ -43,7 +44,7 @@ public class ReservationControllerTest {
     @DisplayName("예약을 삭제할 수 있다.")
     void deleteReservation() {
         //given
-        final var controller = new ReservationController();
+        final var controller = new ReservationController(new ReservationFakeRepository());
         final var addedReservation = addOneReservation(controller);
 
         //when
@@ -62,7 +63,7 @@ public class ReservationControllerTest {
     @DisplayName("예약 추가 시 이름, 날짜, 시간 중 하나라도 없으면 400 Bad Request")
     void badRequestAnyParameterNull(ReservationRequest request) {
         //given
-        final var controller = new ReservationController();
+        final var controller = new ReservationController(new ReservationFakeRepository());
 
         //when
         final var responseEntity = controller.addReservation(request);
@@ -75,7 +76,7 @@ public class ReservationControllerTest {
     @DisplayName("예약 추가 시 이름이 잘못된 형식이면 400 Bad Request")
     void badRequestAnyParameterInvalid() {
         //given
-        final var controller = new ReservationController();
+        final var controller = new ReservationController(new ReservationFakeRepository());
         final var request = new ReservationRequest(
             "여섯글자이름",
             LocalDate.of(2023, 8, 5),
@@ -93,7 +94,7 @@ public class ReservationControllerTest {
     @DisplayName("예약 삭제 시 존재하지 않는 Id를 삭제하면 204 No Content")
     void noContentDeleteNotExistId() {
         //given
-        final var controller = new ReservationController();
+        final var controller = new ReservationController(new ReservationFakeRepository());
 
         //when
         final var responseEntity = controller.deleteReservation(5L);

@@ -1,6 +1,5 @@
 package roomescape.model;
 
-import com.fasterxml.jackson.annotation.JsonCreator;
 import java.time.LocalDate;
 import java.time.LocalTime;
 import java.util.Objects;
@@ -11,7 +10,6 @@ public class Reservation {
     private final String name;
     private final ReservationDateTime reservationDateTime;
 
-    @JsonCreator
     public Reservation(Long id, String name, ReservationDateTime reservationDateTime) {
         this.id = Objects.requireNonNull(id);
         this.name = validateNonBlank(name);

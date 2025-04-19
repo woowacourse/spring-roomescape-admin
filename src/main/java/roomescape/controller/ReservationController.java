@@ -31,12 +31,12 @@ public class ReservationController {
     public ResponseEntity<ReservationResponseDto> addReservation(@RequestBody ReservationRequestDto reservationRequestDto) {
         try {
             ReservationDateTime reservationDateTime = new ReservationDateTime(
-                    LocalDateTime.of(reservationRequestDto.getDate(), reservationRequestDto.getTime())
+                    LocalDateTime.of(reservationRequestDto.date(), reservationRequestDto.time())
             );
 
             Reservation newReservation = new Reservation(
                     index.getAndIncrement(),
-                    reservationRequestDto.getName(),
+                    reservationRequestDto.name(),
                     reservationDateTime);
             reservations.add(newReservation);
             return ResponseEntity.ok(ReservationResponseDto.from(newReservation));

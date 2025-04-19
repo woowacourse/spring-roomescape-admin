@@ -72,3 +72,12 @@
         ```http request
         HTTP/1.1 200
         ```
+    - 존재하지 않는 예약을 삭제할 수 없다
+        - request
+            ```http request
+            DELETE /reservations/100 HTTP/1.1
+            ```
+        - response
+            ```http request
+            HTTP/1.1 404
+            ```

@@ -80,6 +80,6 @@ class MissionStepTest {
         RestAssured.given().log().all()
                 .when().delete("/reservations/2")
                 .then().log().all()
-                .statusCode(400);
+                .statusCode(404);
     }
 }

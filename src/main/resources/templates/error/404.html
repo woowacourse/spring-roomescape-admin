@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <title>404 - 출구를 찾을 수 없습니다</title>
+    <style>
+        body {
+            background-color: #ffffff;
+            color: #222222;
+            font-family: 'Noto Sans KR', sans-serif;
+            text-align: center;
+            padding: 80px 20px;
+        }
+
+        h1 {
+            font-size: 64px;
+            margin-bottom: 10px;
+        }
+
+        h2 {
+            font-size: 24px;
+            margin-bottom: 40px;
+            color: #555555;
+        }
+
+        .door {
+            width: 160px;
+            height: 260px;
+            background-color: #dddddd;
+            border: 4px solid #aaaaaa;
+            border-radius: 8px;
+            margin: 0 auto 30px;
+            position: relative;
+        }
+
+        .door::before {
+            content: "";
+            position: absolute;
+            width: 20px;
+            height: 20px;
+            background-color: #888888;
+            border-radius: 50%;
+            top: 120px;
+            right: 20px;
+        }
+
+        a {
+            color: #007acc;
+            text-decoration: none;
+            font-weight: bold;
+        }
+
+        a:hover {
+            text-decoration: underline;
+        }
+
+        .hint {
+            margin-top: 50px;
+            font-size: 14px;
+            color: #999999;
+        }
+    </style>
+</head>
+<body>
+
+<div class="door"></div>
+
+<h1>404</h1>
+<h2>출구를 찾을 수 없습니다!</h2>
+<p>이 방은 존재하지 않거나, 이미 탈출하셨습니다 🕵️‍♂️</p>
+<p><a href="/">홈으로 돌아가기</a></p>
+
+<div class="hint">Tip: 방 이름을 다시 확인하거나 관리자에게 문의해주세요.</div>
+
+</body>
+</html>

@@ -23,10 +23,11 @@ public class Reservations {
     }
 
     public void deleteBy(final Long id) {
-        if (!reservations.containsKey(id)) {
-            throw new NoSuchElementException("해당하는 id의 예약기록이 없습니다.");
+        if (reservations.containsKey(id)) {
+            reservations.remove(id);
+            return;
         }
-        reservations.remove(id);
+        throw new NoSuchElementException("해당하는 id의 예약기록이 없습니다.");
     }
 
     public Map<Long, Reservation> getReservations() {

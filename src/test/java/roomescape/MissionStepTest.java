@@ -1,6 +1,12 @@
 package roomescape;
 
+import static org.hamcrest.CoreMatchers.is;
+
 import io.restassured.RestAssured;
+import io.restassured.http.ContentType;
+import java.util.HashMap;
+import java.util.Map;
+import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.annotation.DirtiesContext;
@@ -9,12 +15,70 @@ import org.springframework.test.annotation.DirtiesContext;
 @DirtiesContext(classMode = DirtiesContext.ClassMode.BEFORE_EACH_TEST_METHOD)
 public class MissionStepTest {
 
+    @DisplayName("관리자 페이지 GET 요청 시 200 OK를 반환한다")
     @Test
     void 일단계() {
         RestAssured.given().log().all()
-                .when().get("/")
+                .when().get("/admin")
                 .then().log().all()
                 .statusCode(200);
     }
 
+    @DisplayName("GET /admin/reservation 및 /reservations 요청 시 200 OK와 빈 목록 반환 확인")
+    @Test
+    void 이단계() {
+        RestAssured.given().log().all()
+                .when().get("/admin/reservation")
+                .then().log().all()
+                .statusCode(200);
+
+        RestAssured.given().log().all()
+                .when().get("/reservations")
+                .then().log().all()
+                .statusCode(200)
+                .body("size()", is(0)); // 아직 생성 요청이 없으니 Controller에서 임의로 넣어준 Reservation 갯수 만큼 검증하거나 0개임을 확인하세요.
+    }
+
+    @DisplayName("예약 생성 후 조회 및 삭제까지의 전체 흐름 테스트")
+    @Test
+    void 삼단계() {
+        Map<String, String> params = new HashMap<>();
+        params.put("name", "브라운");
+        params.put("date", "2023-08-05");
+        params.put("time", "15:40");
+
+        RestAssured.given().log().all()
+                .contentType(ContentType.JSON)
+                .body(params)
+                .when().post("/reservations")
+                .then().log().all()
+                .statusCode(200)
+                .body("id", is(1));
+
+        RestAssured.given().log().all()
+                .when().get("/reservations")
+                .then().log().all()
+                .statusCode(200)
+                .body("size()", is(1));
+
+        RestAssured.given().log().all()
+                .when().delete("/reservations/1")
+                .then().log().all()
+                .statusCode(200);
+
+        RestAssured.given().log().all()
+                .when().get("/reservations")
+                .then().log().all()
+                .statusCode(200)
+                .body("size()", is(0));
+    }
+    
+    @DisplayName("예약 삭제 실패 시 400 반환 테스트")
+    @Test
+    void 예약_삭제_실패() {
+        RestAssured.given().log().all()
+                .when().delete("/reservations/2")
+                .then().log().all()
+                .statusCode(400);
+    }
 }

@@ -7,14 +7,14 @@ import roomescape.model.Reservation;
 
 public record ReservationResponse(long id, String name, LocalDate date, String time) {
 
-    private static final DateTimeFormatter formatter = DateTimeFormatter.ofPattern("HH:mm");
+    private static final DateTimeFormatter FORMATTER = DateTimeFormatter.ofPattern("HH:mm");
 
     private static ReservationResponse of(Reservation reservation) {
         return new ReservationResponse(
                 reservation.id(),
                 reservation.name(),
                 reservation.date(),
-                reservation.time().format(formatter)
+                reservation.time().format(FORMATTER)
         );
     }
 

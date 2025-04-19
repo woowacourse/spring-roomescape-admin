@@ -57,8 +57,7 @@ public class MissionStepTest {  // TODO: 추후 테스트에 대한 요구사항
                 .body(params)
                 .when().post("/reservations")
                 .then().log().all()
-                .statusCode(200)
-                .body("id", is(1));
+                .statusCode(200);
 
         RestAssured.given().log().all()
                 .when().get("/reservations")

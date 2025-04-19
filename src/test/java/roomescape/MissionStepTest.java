@@ -16,7 +16,7 @@ import static org.hamcrest.Matchers.is;
 public class MissionStepTest {
 
     @Test
-    void 일단계() {
+    void 웰컴_페이지_테스트() {
         RestAssured.given().log().all()
                 .when().get("/admin")
                 .then().log().all()
@@ -24,12 +24,15 @@ public class MissionStepTest {
     }
 
     @Test
-    void 이단계() {
+    void 예약페이지_테스트() {
         RestAssured.given().log().all()
                 .when().get("/admin/reservation")
                 .then().log().all()
                 .statusCode(200);
+    }
 
+    @Test
+    void 예약_정보_테스트() {
         RestAssured.given().log().all()
                 .when().get("/reservations")
                 .then().log().all()
@@ -38,7 +41,7 @@ public class MissionStepTest {
     }
 
     @Test
-    void 삼단계() {
+    void 예약_추가_테스트() {
         Map<String, String> params = new HashMap<>();
         params.put("name", "브라운");
         params.put("date", "2023-08-05");
@@ -57,6 +60,14 @@ public class MissionStepTest {
                 .then().log().all()
                 .statusCode(200)
                 .body("size()", is(1));
+    }
+
+    @Test
+    void 예약_삭제_테스트() {
+        Map<String, String> params = new HashMap<>();
+        params.put("name", "브라운");
+        params.put("date", "2023-08-05");
+        params.put("time", "15:40");
 
         RestAssured.given().log().all()
                 .when().delete("/reservations/1")
@@ -71,11 +82,32 @@ public class MissionStepTest {
     }
 
     @Test
-    void 클라이언트_예약_생성_유효성_테스트() {
+    void 입력값이_올바르지_않은_경우_에러_테스트1() {
+        Map<String, String> params = new HashMap<>();
+        RestAssured.given().log().all()
+                .contentType(ContentType.JSON)
+                .body(params)
+                .when().post("/reservations")
+                .then().log().all()
+                .statusCode(400);
+    }
+
+    @Test
+    void 입력값이_올바르지_않은_경우_에러_테스트2() {
+        Map<String, String> params = new HashMap<>();
+        params.put("name", "브라운");
+        RestAssured.given().log().all()
+                .contentType(ContentType.JSON)
+                .body(params)
+                .when().post("/reservations")
+                .then().log().all()
+                .statusCode(400);
+    }
+
+    @Test
+    void 입력값이_올바르지_않은_경우_에러_테스트3() {
         Map<String, String> params = new HashMap<>();
         params.put("date", "2023-08-05");
-        params.put("time", "15:40");
-
         RestAssured.given().log().all()
                 .contentType(ContentType.JSON)
                 .body(params)

@@ -5,7 +5,7 @@ import java.time.LocalTime;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import roomescape.dto.ReservationReqDto;
-import roomescape.model.Reservation;
+import roomescape.dto.ReservationResDto;
 import roomescape.model.Reservations;
 
 import static org.assertj.core.api.Assertions.assertThat;
@@ -22,10 +22,10 @@ class ReservationsTest {
         ReservationReqDto reservationReqDto = new ReservationReqDto("포비", LocalDate.now(), LocalTime.now());
 
         // when
-        Reservation newReservation = reservations.addAndGet(reservationReqDto);
+        ReservationResDto newReservation = reservations.addAndGet(reservationReqDto);
 
         // then
-        assertThat(newReservation.getId()).isEqualTo(1);
+        assertThat(newReservation.id()).isEqualTo(1);
     }
 
     @Test
@@ -36,8 +36,8 @@ class ReservationsTest {
         ReservationReqDto reservationReqDto = new ReservationReqDto("포비", LocalDate.now(), LocalTime.now());
 
         // when
-        Reservation newReservation = reservations.addAndGet(reservationReqDto);
-        Long reservationId = newReservation.getId();
+        ReservationResDto newReservation = reservations.addAndGet(reservationReqDto);
+        Long reservationId = newReservation.id();
 
         // then
         assertDoesNotThrow(() -> reservations.deleteById(reservationId));

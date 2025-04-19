@@ -12,7 +12,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.util.UriComponentsBuilder;
 import roomescape.dto.ReservationReqDto;
-import roomescape.model.Reservation;
+import roomescape.dto.ReservationResDto;
 import roomescape.model.Reservations;
 
 @RestController
@@ -22,14 +22,14 @@ public class ReservationController {
     private final Reservations reservations = new Reservations();
 
     @GetMapping
-    public ResponseEntity<List<Reservation>> readAll() {
+    public ResponseEntity<List<ReservationResDto>> readAll() {
         return ResponseEntity.ok(reservations.getAllReservations());
     }
 
     @PostMapping
-    public ResponseEntity<Reservation> create(@RequestBody ReservationReqDto dto, UriComponentsBuilder ucb) {
-        Reservation newReservation = reservations.addAndGet(dto);
-        URI uri = ucb.path("reservations/{id}").buildAndExpand(newReservation.getId()).toUri();
+    public ResponseEntity<ReservationResDto> create(@RequestBody ReservationReqDto dto, UriComponentsBuilder ucb) {
+        ReservationResDto newReservation = reservations.addAndGet(dto);
+        URI uri = ucb.path("reservations/{id}").buildAndExpand(newReservation.id()).toUri();
         return ResponseEntity.created(uri).body(newReservation);
     }
 

@@ -1,14 +1,17 @@
 package roomescape;
 
-import static org.hamcrest.core.Is.is;
-
 import io.restassured.RestAssured;
 import io.restassured.http.ContentType;
-import java.util.HashMap;
-import java.util.Map;
+import io.restassured.response.ValidatableResponse;
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.annotation.DirtiesContext;
+
+import java.time.LocalDateTime;
+import java.util.HashMap;
+import java.util.Map;
+
+import static org.hamcrest.core.Is.is;
 
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.DEFINED_PORT)
 @DirtiesContext(classMode = DirtiesContext.ClassMode.BEFORE_EACH_TEST_METHOD)
@@ -33,29 +36,54 @@ public class MissionStepTest {
                 .when().get("/reservations")
                 .then().log().all()
                 .statusCode(200)
-                .body("size()", is(0)); // 아직 생성 요청이 없으니 Controller에서 임의로 넣어준 Reservation 갯수 만큼 검증하거나 0개임을 확인하세요.
+                .body("size()", is(0));
     }
 
     @Test
-    void addAndDelete() {
+    void add() {
+        LocalDateTime localDateTime = LocalDateTime.now().plusDays(1);
+
+        String dummyName = "브라운";
+        String dummyDateText = localDateTime.toLocalDate().toString();
+        String dummyTimeText = localDateTime.toLocalTime().toString();
+
         Map<String, String> params = new HashMap<>();
-        params.put("name", "브라운");
-        params.put("date", "2023-08-05");
-        params.put("time", "15:40");
+        params.put("name", dummyName);
+        params.put("date", dummyDateText);
+        params.put("time", dummyTimeText);
+
+        ValidatableResponse response = RestAssured.given().log().all()
+                .contentType(ContentType.JSON)
+                .body(params)
+                .when().post("/reservations")
+                .then().log().all()
+                .statusCode(200);
+
+        response.body("id", is(1));
+        response.body("name", is(dummyName));
+        response.body("date", is(dummyDateText));
+        response.body("time", is(dummyTimeText));
+    }
+
+    @Test
+    void delete() {
+        LocalDateTime localDateTime = LocalDateTime.now().plusDays(1);
+
+        String dummyName = "브라운";
+        String dummyDateText = localDateTime.toLocalDate().toString();
+        String dummyTimeText = localDateTime.toLocalTime().toString();
+
+        Map<String, String> params = new HashMap<>();
+        params.put("name", dummyName);
+        params.put("date", dummyDateText);
+        params.put("time", dummyTimeText);
 
         RestAssured.given().log().all()
                 .contentType(ContentType.JSON)
                 .body(params)
                 .when().post("/reservations")
                 .then().log().all()
-                .statusCode(200)
-                .body("id", is(1));
-
-        RestAssured.given().log().all()
-                .when().get("/reservations")
-                .then().log().all()
-                .statusCode(200)
-                .body("size()", is(1));
+                .statusCode(200);
 
         RestAssured.given().log().all()
                 .when().delete("/reservations/1")

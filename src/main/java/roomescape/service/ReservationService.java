@@ -1,37 +1,35 @@
 package roomescape.service;
 
 import java.util.List;
-import java.util.Map;
-import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.atomic.AtomicLong;
 import org.springframework.stereotype.Service;
 import roomescape.dto.ReservationRequest;
 import roomescape.model.Reservation;
+import roomescape.repository.ReservationRepository;
 
 @Service
 public class ReservationService {
 
-    private Map<Long, Reservation> reservations = new ConcurrentHashMap<>();
-    private AtomicLong index = new AtomicLong(1);
+    private final ReservationRepository reservationRepository;
+    private final AtomicLong index = new AtomicLong(1);
+
+    public ReservationService(ReservationRepository reservationRepository) {
+        this.reservationRepository = reservationRepository;
+    }
 
     public Reservation addReservation(ReservationRequest reservationRequest) {
-        Reservation reservation = reservationRequest.toEntity(getIndexAndIncrement());
-        return reservations.put(reservation.getId(), reservation);
+        Reservation reservation = reservationRequest.toEntity(index.getAndIncrement());
+        return reservationRepository.save(reservation);
     }
 
     public Reservation deleteReservation(long id) {
-        if(!reservations.containsKey(id)) {
+        if (!reservationRepository.isExist(id)) {
             throw new IllegalArgumentException("해당 ID 없음");
         }
-        return reservations.remove(id);
+        return reservationRepository.delete(id);
     }
 
     public List<Reservation> getReservations() {
-        return reservations.values().stream()
-                .toList();
-    }
-
-    public Long getIndexAndIncrement() {
-        return index.getAndIncrement();
+        return reservationRepository.findAll();
     }
 }

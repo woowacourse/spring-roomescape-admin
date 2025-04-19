@@ -7,27 +7,20 @@ public class Reservation {
 
     private static final int NAME_MAX_LENGTH = 10;
 
-    private final Long id;
+    private final long id;
     private final String name;
     private final LocalDateTime dateTime;
 
-    public Reservation(final Long id, final String name, final LocalDateTime dateTime) {
-        validate(id, name, dateTime);
+    public Reservation(final long id, final String name, final LocalDateTime dateTime) {
+        validate(name, dateTime);
         this.id = id;
         this.name = name;
         this.dateTime = dateTime;
     }
 
-    private void validate(final Long id, final String name, final LocalDateTime dateTime) {
-        validateId(id);
+    private void validate(final String name, final LocalDateTime dateTime) {
         validateName(name);
         validateDateTime(dateTime);
-    }
-
-    private void validateId(final Long id) {
-        if (id == null) {
-            throw new IllegalArgumentException("[ERROR] Id는 null이 될 수 없습니다.");
-        }
     }
 
     private void validateName(final String name) {
@@ -48,11 +41,11 @@ public class Reservation {
         }
     }
 
-    public boolean isSameId(final Long givenId) {
-        return id.equals(givenId);
+    public boolean isSameId(final long givenId) {
+        return id == givenId;
     }
 
-    public Long getId() {
+    public long getId() {
         return id;
     }
 

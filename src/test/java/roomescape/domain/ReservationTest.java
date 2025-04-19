@@ -7,13 +7,6 @@ import org.junit.jupiter.api.Test;
 class ReservationTest {
 
     @Test
-    void 아이디가_null인_경우_예외를_발생시킨다() {
-        Assertions.assertThatThrownBy(() -> new Reservation(null, "밍트", LocalDateTime.now()))
-                .isInstanceOf(IllegalArgumentException.class)
-                .hasMessageContaining("[ERROR] Id는 null이 될 수 없습니다.");
-    }
-
-    @Test
     void 이름이_null인_경우_예외를_발생시킨다() {
         Assertions.assertThatThrownBy(() -> new Reservation(1L, null, LocalDateTime.now()))
                 .isInstanceOf(IllegalArgumentException.class)

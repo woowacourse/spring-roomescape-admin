@@ -23,13 +23,13 @@ public class AdminReservationsController {
     @GetMapping("/reservations")
     public ResponseEntity<List<ReservationResponse>> readReservations() {
         List<ReservationResponse> responses = ReservationResponse.toResponses(reservations.findReservations());
-        return ResponseEntity.ok().body(responses);
+        return ResponseEntity.ok(responses);
     }
 
     @PostMapping("/reservations")
     public ResponseEntity<Reservation> createReservation(@RequestBody ReservationRequest reservationRequest) {
         Reservation reservation = reservations.saveReservation(reservationRequest.toReservation(id.getAndIncrement()));
-        return ResponseEntity.ok().body(reservation);
+        return ResponseEntity.ok(reservation);
     }
 
     @DeleteMapping("/reservations/{id}")

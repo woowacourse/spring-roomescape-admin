@@ -3,11 +3,13 @@ package roomescape.database;
 import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
+import org.springframework.test.annotation.DirtiesContext;
 import roomescape.domain.Reservation;
 
 import java.time.LocalDateTime;
 import java.util.List;
 
+@DirtiesContext(classMode = DirtiesContext.ClassMode.BEFORE_EACH_TEST_METHOD)
 class ReservationDatabaseImplTest {
 
     @DisplayName("존재하지 않는 예약 ID로 조회하면 예외가 발생한다.")
@@ -33,7 +35,7 @@ class ReservationDatabaseImplTest {
 
         // when & then
         Assertions.assertThatCode(
-                () -> db.findById(3L)
+                () -> db.findById(Long.MAX_VALUE)
         ).isInstanceOf(IllegalArgumentException.class);
     }
 

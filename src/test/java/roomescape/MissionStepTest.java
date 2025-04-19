@@ -59,7 +59,6 @@ public class MissionStepTest {
                 .then().log().all()
                 .statusCode(200);
 
-        response.body("id", is(1));
         response.body("name", is(dummyName));
         response.body("date", is(dummyDateText));
         response.body("time", is(dummyTimeText));

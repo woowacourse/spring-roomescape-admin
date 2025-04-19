@@ -8,10 +8,11 @@ import static org.assertj.core.api.Assertions.*;
 
 class ReservationsTest {
 
+    private final static LocalDate RESERVATION_DATE = LocalDate.now().plusDays(1);
+
     public Reservations createTestReservations() {
         final Reservations reservations = new Reservations();
-        reservations.add(new Reservation(1L, "테스트", LocalDate.of(2025, 4, 16), LocalTime.of(12, 44)));
-
+        reservations.add(new Reservation(1L, "테스트", RESERVATION_DATE, LocalTime.of(12, 44)));
         return reservations;
     }
 
@@ -21,7 +22,7 @@ class ReservationsTest {
         Reservations reservations = createTestReservations();
 
         //then
-        assertThat(reservations.findById(1L)).isEqualTo(new Reservation(1L, "테스트", LocalDate.of(2025, 4, 16), LocalTime.of(12, 44)));
+        assertThat(reservations.findById(1L)).isEqualTo(new Reservation(1L, "테스트", RESERVATION_DATE, LocalTime.of(12, 44)));
     }
 
     @Test
@@ -39,7 +40,7 @@ class ReservationsTest {
     void 예약_추가_실패() {
         //given, when
         Reservations reservations = createTestReservations();
-        final Reservation reservation = new Reservation(1L, "테스트2", LocalDate.of(2026, 4, 16), LocalTime.of(13, 44));
+        final Reservation reservation = new Reservation(1L, "테스트2", RESERVATION_DATE, LocalTime.of(13, 44));
 
         // then
         assertThatThrownBy(() -> reservations.add(reservation)).isInstanceOf(IllegalStateException.class);
@@ -49,7 +50,7 @@ class ReservationsTest {
     void 예약_추가_성공() {
         //given, when
         Reservations reservations = createTestReservations();
-        reservations.add(new Reservation(2L, "테스트2", LocalDate.of(2026, 4, 16), LocalTime.of(13, 44)));
+        reservations.add(new Reservation(2L, "테스트2", RESERVATION_DATE, LocalTime.of(13, 44)));
 
         // then
         assertThat(reservations.getReservations().size()).isEqualTo(2);

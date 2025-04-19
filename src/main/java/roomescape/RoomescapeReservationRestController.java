@@ -16,11 +16,8 @@ public class RoomescapeReservationRestController {
     }
 
     @GetMapping
-    public List<ReservationDto> getAllReservation() {
-        return reservations.findAll()
-                .stream()
-                .map(ReservationDto::from)
-                .toList();
+    public List<Reservation> getAllReservation() {
+        return reservations.findAll();
     }
 
     @PostMapping

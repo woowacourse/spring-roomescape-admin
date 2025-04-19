@@ -1,16 +1,16 @@
 package roomescape.dto;
 
 import java.time.format.DateTimeFormatter;
-import roomescape.entity.ReservationEntity;
+import roomescape.domain.Reservation;
 
 public record ReservationDto(Long id, String name, String date, String time) {
 
-    public static ReservationDto from(final ReservationEntity reservationInfo) {
+    public static ReservationDto from(final Reservation reservation) {
         return new ReservationDto(
-                reservationInfo.getId(),
-                reservationInfo.getName(),
-                reservationInfo.getDate().toString(),
-                reservationInfo.getTime().format(DateTimeFormatter.ofPattern("HH:mm"))
+                reservation.getId(),
+                reservation.getName(),
+                reservation.getDate().toString(),
+                reservation.getTime().format(DateTimeFormatter.ofPattern("HH:mm"))
         );
     }
 }

@@ -14,12 +14,12 @@ import org.springframework.web.bind.annotation.RestController;
 import roomescape.domain.Reservation;
 import roomescape.dto.CreateReservationDto;
 import roomescape.dto.ReservationDto;
-import roomescape.entity.ReservationEntity;
 import roomescape.repository.ReservationRepository;
 
 @RestController
 @RequestMapping("/reservations")
 public class ReservationController {
+
     private final ReservationRepository reservationRepository;
     private final Clock clock;
 
@@ -30,19 +30,19 @@ public class ReservationController {
 
     @GetMapping
     public ResponseEntity<List<ReservationDto>> getAllReservations() {
-        List<ReservationDto> reservationDtos = reservationRepository.getReservations()
+        List<ReservationDto> response = reservationRepository.getReservations()
                 .stream()
                 .map(ReservationDto::from)
                 .toList();
-        return ResponseEntity.ok(reservationDtos);
+        return ResponseEntity.ok(response);
     }
 
     @PostMapping
     public ResponseEntity<ReservationDto> createReservation(
             @RequestBody @Valid final CreateReservationDto createReservationDto) {
-        Reservation reservation = createReservationDto.toReservationInfo(clock);
-        ReservationEntity savedReservationEntity = reservationRepository.add(reservation);
-        return ResponseEntity.ok(ReservationDto.from(savedReservationEntity));
+        Reservation reservation = createReservationDto.toReservation(clock);
+        Reservation savedReservation = reservationRepository.add(reservation);
+        return ResponseEntity.ok(ReservationDto.from(savedReservation));
     }
 
     @DeleteMapping("/{id}")

@@ -19,7 +19,7 @@ public record CreateReservationDto(
         LocalTime time
 ) {
 
-    public Reservation toReservationInfo(final Clock clock) {
-        return new Reservation(name, ReservationDateTime.createNewReservationTime(date, time, clock));
+    public Reservation toReservation(final Clock clock) {
+        return new Reservation(null, name, ReservationDateTime.createNewReservationTime(date, time, clock));
     }
 }

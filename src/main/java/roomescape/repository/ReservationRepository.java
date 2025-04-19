@@ -2,13 +2,12 @@ package roomescape.repository;
 
 import java.util.List;
 import roomescape.domain.Reservation;
-import roomescape.entity.ReservationEntity;
 
 public interface ReservationRepository {
 
-    List<ReservationEntity> getReservations();
+    List<Reservation> getReservations();
 
-    ReservationEntity add(final Reservation reservation);
+    Reservation add(final Reservation reservation);
 
     void deleteById(final Long id);
 

@@ -1,4 +1,4 @@
-package roomescape.dao;
+package roomescape.repository;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
@@ -12,16 +12,16 @@ import roomescape.domain.Reservation;
 import roomescape.domain.ReservationDateTime;
 import roomescape.entity.ReservationEntity;
 
-class MemoryReservationDaoTest {
+class MemoryReservationRepositoryTest {
     private final LocalDate RESERVATION_DATE = LocalDate.of(2025, 1, 2);
     private final LocalTime RESERVATION_TIME = LocalTime.of(9, 0);
 
     private ReservationDateTime RESERVATION_DATE_TIME;
-    private MemoryReservationDao memoryReservationDao;
+    private MemoryReservationRepository memoryReservationRepository;
 
     @BeforeEach
     void setUp() {
-        memoryReservationDao = new MemoryReservationDao();
+        memoryReservationRepository = new MemoryReservationRepository();
         RESERVATION_DATE_TIME = ReservationDateTime.of(RESERVATION_DATE, RESERVATION_TIME);
     }
 
@@ -29,9 +29,9 @@ class MemoryReservationDaoTest {
     void 예약을_조회한다() {
         // given
         Reservation reservation = new Reservation("name1", RESERVATION_DATE_TIME);
-        memoryReservationDao.add(reservation);
+        memoryReservationRepository.add(reservation);
         // when
-        List<ReservationEntity> reservations = memoryReservationDao.getReservations();
+        List<ReservationEntity> reservations = memoryReservationRepository.getReservations();
 
         // then
         assertThat(reservations).contains(new ReservationEntity(
@@ -46,11 +46,11 @@ class MemoryReservationDaoTest {
     void 예약이_존재하는지_확인한다() {
         // given
         Reservation reservation = new Reservation("name1", RESERVATION_DATE_TIME);
-        memoryReservationDao.add(reservation);
+        memoryReservationRepository.add(reservation);
         // when & then
         SoftAssertions softly = new SoftAssertions();
-        softly.assertThat(memoryReservationDao.existReservation(1L)).isTrue();
-        softly.assertThat(memoryReservationDao.existReservation(2L)).isFalse();
+        softly.assertThat(memoryReservationRepository.existReservation(1L)).isTrue();
+        softly.assertThat(memoryReservationRepository.existReservation(2L)).isFalse();
         softly.assertAll();
     }
 
@@ -59,9 +59,9 @@ class MemoryReservationDaoTest {
         // given
         Reservation reservation = new Reservation("name1", RESERVATION_DATE_TIME);
         // when
-        memoryReservationDao.add(reservation);
+        memoryReservationRepository.add(reservation);
         // then
-        List<ReservationEntity> reservations = memoryReservationDao.getReservations();
+        List<ReservationEntity> reservations = memoryReservationRepository.getReservations();
         assertThat(reservations).hasSize(1);
     }
 
@@ -71,10 +71,10 @@ class MemoryReservationDaoTest {
         Reservation reservation1 = new Reservation("name1", RESERVATION_DATE_TIME);
         Reservation reservation2 = new Reservation("name2", RESERVATION_DATE_TIME);
         // when
-        memoryReservationDao.add(reservation1);
-        memoryReservationDao.add(reservation2);
+        memoryReservationRepository.add(reservation1);
+        memoryReservationRepository.add(reservation2);
         // then
-        List<ReservationEntity> reservations = memoryReservationDao.getReservations();
+        List<ReservationEntity> reservations = memoryReservationRepository.getReservations();
         assertThat(reservations).contains(
                 new ReservationEntity(1L, "name1", RESERVATION_DATE, RESERVATION_TIME),
                 new ReservationEntity(2L, "name2", RESERVATION_DATE, RESERVATION_TIME)
@@ -85,11 +85,11 @@ class MemoryReservationDaoTest {
     void 예약을_삭제한다() {
         // given
         Reservation reservation = new Reservation("name1", RESERVATION_DATE_TIME);
-        memoryReservationDao.add(reservation);
+        memoryReservationRepository.add(reservation);
         // when
-        memoryReservationDao.deleteById(1L);
+        memoryReservationRepository.deleteById(1L);
 
         // then
-        assertThat(memoryReservationDao.getReservations()).hasSize(0);
+        assertThat(memoryReservationRepository.getReservations()).hasSize(0);
     }
 }

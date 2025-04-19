@@ -1,4 +1,4 @@
-package roomescape.dao;
+package roomescape.repository;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -7,10 +7,9 @@ import java.util.concurrent.atomic.AtomicLong;
 import org.springframework.stereotype.Repository;
 import roomescape.domain.Reservation;
 import roomescape.entity.ReservationEntity;
-import roomescape.repository.ReservationRepository;
 
 @Repository
-public class MemoryReservationDao implements ReservationRepository {
+public class MemoryReservationRepository implements ReservationRepository {
 
     private final List<ReservationEntity> reservations = Collections.synchronizedList(new ArrayList<>());
     private final AtomicLong increment = new AtomicLong(1);

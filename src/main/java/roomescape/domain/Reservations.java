@@ -20,7 +20,7 @@ public class Reservations {
     }
 
     public Reservation addReservation(final String name, final LocalDateTime dateTime) {
-        long id = counter.getAndIncrease();
+        final long id = counter.getAndIncrease();
         final Reservation reservation = new Reservation(id, name, dateTime);
         reservations.put(id, reservation);
         return reservation;

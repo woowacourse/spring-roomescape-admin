@@ -41,7 +41,7 @@ content-type: application/json
 ```
 - response
 ```http request
-HTTP/1.1 200
+HTTP/1.1 201
 Content-Type: application/json
 
 {

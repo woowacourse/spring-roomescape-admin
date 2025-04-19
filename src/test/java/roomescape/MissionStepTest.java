@@ -1,76 +1,115 @@
 package roomescape;
 
+import static org.assertj.core.api.Assertions.assertThat;
 import static org.hamcrest.core.Is.is;
 
 import io.restassured.RestAssured;
 import io.restassured.http.ContentType;
+import java.sql.Connection;
+import java.sql.SQLException;
 import java.util.HashMap;
 import java.util.Map;
 import org.junit.jupiter.api.DisplayName;
+import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.test.annotation.DirtiesContext;
 
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.DEFINED_PORT)
 @DirtiesContext(classMode = DirtiesContext.ClassMode.BEFORE_EACH_TEST_METHOD)
 public class MissionStepTest {
 
-    @DisplayName("루트 페이지에 연결 가능하다.")
-    @Test
-    void connect_route_page() {
-        RestAssured.given().log().all()
-            .when().get("/")
-            .then().log().all()
-            .statusCode(200);
+    @Nested
+    class GivenTest {
+        @DisplayName("루트 페이지에 연결 가능하다.")
+        @Test
+        void connect_route_page() {
+            RestAssured.given().log().all()
+                    .when().get("/")
+                    .then().log().all()
+                    .statusCode(200);
+        }
+
+        @DisplayName("관리자는 모든 예약을 조회할 수 있다.")
+        @Test
+        void admin_can_check_all_reservation() {
+            RestAssured.given().log().all()
+                    .when().get("/admin/reservation")
+                    .then().log().all()
+                    .statusCode(200);
+
+            RestAssured.given().log().all()
+                    .when().get("/reservations")
+                    .then().log().all()
+                    .statusCode(200)
+                    .body("size()", is(0));
+        }
+
+        @DisplayName("예약을 추가할 수 있다.")
+        @Test
+        void add_reservation() {
+            Map<String, String> params = new HashMap<>();
+            params.put("name", "브라운");
+            params.put("date", "2023-08-05");
+            params.put("time", "15:40");
+
+            RestAssured.given().log().all()
+                    .contentType(ContentType.JSON)
+                    .body(params)
+                    .when().post("/reservations")
+                    .then().log().all()
+                    .statusCode(200)
+                    .body("id", is(1));
+
+            RestAssured.given().log().all()
+                    .when().get("/reservations")
+                    .then().log().all()
+                    .statusCode(200)
+                    .body("size()", is(1));
+
+            RestAssured.given().log().all()
+                    .when().delete("/reservations/1")
+                    .then().log().all()
+                    .statusCode(200);
+
+            RestAssured.given().log().all()
+                    .when().get("/reservations")
+                    .then().log().all()
+                    .statusCode(200)
+                    .body("size()", is(0));
+        }
     }
 
-    @DisplayName("관리자는 모든 예약을 조회할 수 있다.")
-    @Test
-    void admin_can_check_all_reservation() {
-        RestAssured.given().log().all()
-            .when().get("/admin/reservation")
-            .then().log().all()
-            .statusCode(200);
+    @Nested
+    class GivenDBTest {
+        @Autowired
+        private JdbcTemplate jdbcTemplate;
 
-        RestAssured.given().log().all()
-            .when().get("/reservations")
-            .then().log().all()
-            .statusCode(200)
-            .body("size()", is(0));
+        @DisplayName("DB를 연결을 확인한다.")
+        @Test
+        void test_connection_DB() {
+            try (Connection connection = jdbcTemplate.getDataSource().getConnection()) {
+                assertThat(connection).isNotNull();
+                assertThat(connection.getCatalog()).isEqualTo("DATABASE");
+                assertThat(connection.getMetaData().getTables(null, null, "RESERVATION", null).next()).isTrue();
+            } catch (SQLException e) {
+                throw new RuntimeException(e);
+            }
+        }
     }
 
-    @DisplayName("예약을 추가할 수 있다.")
-    @Test
-    void add_reservation() {
-        Map<String, String> params = new HashMap<>();
-        params.put("name", "브라운");
-        params.put("date", "2023-08-05");
-        params.put("time", "15:40");
+    @Nested
+    class CustomMissionStepTest {
 
-        RestAssured.given().log().all()
-            .contentType(ContentType.JSON)
-            .body(params)
-            .when().post("/reservations")
-            .then().log().all()
-            .statusCode(200)
-            .body("id", is(1));
-
-        RestAssured.given().log().all()
-            .when().get("/reservations")
-            .then().log().all()
-            .statusCode(200)
-            .body("size()", is(1));
-
-        RestAssured.given().log().all()
-            .when().delete("/reservations/1")
-            .then().log().all()
-            .statusCode(200);
-
-        RestAssured.given().log().all()
-            .when().get("/reservations")
-            .then().log().all()
-            .statusCode(200)
-            .body("size()", is(0));
+        @DisplayName("예약을 삭제할 아이디가 없다면 예외를 던진다.")
+        @Test
+        void status_500_delete_reservation_when_id_not_exists() {
+            RestAssured.given().log().all()
+                    .when().delete("/reservations/1")
+                    .then().statusCode(500);
+        }
     }
 }
 

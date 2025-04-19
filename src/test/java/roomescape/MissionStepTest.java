@@ -41,9 +41,9 @@ public class MissionStepTest {
                 .body("size()", is(0));
     }
 
-    @DisplayName("3단계 - 예약 추가 및 삭제 성공")
+    @DisplayName("3단계 - 예약 추가 성공")
     @Test
-    void step3() {
+    void step3_1() {
         Map<String, String> params = new HashMap<>();
         params.put("name", "브라운");
         params.put("date", LocalDate.now().plusDays(1).format(DateTimeFormatter.ofPattern("yyyy-MM-dd")));
@@ -62,6 +62,23 @@ public class MissionStepTest {
                 .then().log().all()
                 .statusCode(200)
                 .body("size()", is(1));
+    }
+
+    @DisplayName("3단계 - 예약 삭제 성공")
+    @Test
+    void step3_2() {
+        Map<String, String> params = new HashMap<>();
+        params.put("name", "브라운");
+        params.put("date", LocalDate.now().plusDays(1).format(DateTimeFormatter.ofPattern("yyyy-MM-dd")));
+        params.put("time", "15:40");
+
+        RestAssured.given().log().all()
+                .contentType(ContentType.JSON)
+                .body(params)
+                .when().post("/reservations")
+                .then().log().all()
+                .statusCode(200)
+                .body("id", is(1));
 
         RestAssured.given().log().all()
                 .when().delete("/reservations/1")

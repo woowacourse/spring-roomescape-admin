@@ -13,6 +13,6 @@ public record ReservationRequestDto(@NotBlank String name,
                                     @NotNull LocalTime time) {
 
     public Reservation toDomain() {
-        return Reservation.createWithoutId(name, LocalDateTime.of(date, time));
+        return Reservation.of(name, LocalDateTime.of(date, time));
     }
 }

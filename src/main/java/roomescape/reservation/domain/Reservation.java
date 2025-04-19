@@ -1,27 +1,27 @@
 package roomescape.reservation.domain;
 
-import java.time.LocalDate;
+import roomescape.common.domain.DomainEntityId;
+
 import java.time.LocalDateTime;
-import java.time.LocalTime;
 
 public class Reservation {
 
-    private final ReservationId id;
+    private final DomainEntityId id;
     private final String name;
     private final ReservationDateTime datetime;
 
-    public Reservation(final ReservationId id, final String name, final ReservationDateTime datetime) {
+    public Reservation(final DomainEntityId id, final String name, final ReservationDateTime datetime) {
         this.id = id;
         this.name = name;
         this.datetime = datetime;
     }
 
-    public static Reservation createWithId(Long id, String name, LocalDateTime dateTime) {
-        return new Reservation(ReservationId.from(id), name, ReservationDateTime.from(dateTime));
+    public static Reservation of(Long id, String name, LocalDateTime dateTime) {
+        return new Reservation(DomainEntityId.from(id), name, ReservationDateTime.from(dateTime));
     }
 
-    public static Reservation createWithoutId(String name, LocalDateTime dateTime) {
-        return createWithId(null, name, dateTime);
+    public static Reservation of(String name, LocalDateTime dateTime) {
+        return of(null, name, dateTime);
     }
 
     public Long getId() {
@@ -32,11 +32,7 @@ public class Reservation {
         return name;
     }
 
-    public LocalDate getDate() {
-        return datetime.getDate();
-    }
-
-    public LocalTime getTime() {
-        return datetime.getTime();
+    public LocalDateTime getDatetime() {
+        return datetime.getDateTime();
     }
 }

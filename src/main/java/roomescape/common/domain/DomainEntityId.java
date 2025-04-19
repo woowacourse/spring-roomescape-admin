@@ -1,15 +1,15 @@
-package roomescape.reservation.domain;
+package roomescape.common.domain;
 
-public class ReservationId {
+public class DomainEntityId {
 
     private final Long id;
 
-    private ReservationId(final Long value) {
+    private DomainEntityId(final Long value) {
         this.id = value;
     }
 
-    public static ReservationId from(final Long id) {
-        return new ReservationId(id);
+    public static DomainEntityId from(final Long id) {
+        return new DomainEntityId(id);
     }
 
     public Long getValue() {

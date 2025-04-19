@@ -15,8 +15,8 @@ public record ReservationResponseDto(long id,
         return new ReservationResponseDto(
                 reservation.getId(),
                 reservation.getName(),
-                reservation.getDate(),
-                reservation.getTime());
+                reservation.getDatetime().toLocalDate(),
+                reservation.getDatetime().toLocalTime());
     }
 
     public static List<ReservationResponseDto> from(List<Reservation> reservations) {

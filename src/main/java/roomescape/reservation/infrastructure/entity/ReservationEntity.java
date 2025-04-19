@@ -7,7 +7,7 @@ import java.time.LocalDateTime;
 import java.time.LocalTime;
 
 public class ReservationEntity {
-    private Long id;
+    private final Long id;
     private final String name;
     private final LocalDateTime dateTime;
 
@@ -17,16 +17,12 @@ public class ReservationEntity {
         this.dateTime = dateTime;
     }
 
-    public static ReservationEntity from(Reservation reservation) {
-        return createWithoutId(reservation.getName(), reservation.getDate(), reservation.getTime());
-    }
-
-    public static ReservationEntity createWithoutId(String name, LocalDate date, LocalTime time) {
-        return new ReservationEntity(null, name, LocalDateTime.of(date, time));
+    public static ReservationEntity of(Long id, Reservation reservation) {
+        return new ReservationEntity(id, reservation.getName(), reservation.getDatetime());
     }
 
     public Reservation toDomain() {
-        return Reservation.createWithId(id, name, dateTime);
+        return Reservation.of(id, name, dateTime);
     }
 
     public long getId() {

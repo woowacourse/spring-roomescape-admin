@@ -42,7 +42,7 @@ class DefaultReservationServiceTest {
     void deleteUnknownDataAccessException() {
         // given
         long invalidId = 1L;
-        Reservation fakeReservation = Reservation.createWithId(invalidId, "테스트", LocalDateTime.now());
+        Reservation fakeReservation = Reservation.of(invalidId, "테스트", LocalDateTime.now());
 
         reservationService = new DefaultReservationService(reservationRepository);
 

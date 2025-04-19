@@ -38,7 +38,7 @@ public class ReservationService {
     }
 
     private Reservation convertReservation(ReservationReqDto dto) {
-        return new Reservation(
+        return Reservation.of(
                 dto.getName(),
                 dto.getDate(),
                 dto.getTime());

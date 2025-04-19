@@ -9,6 +9,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
+import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.atomic.AtomicLong;
 
 @Repository
@@ -17,7 +18,7 @@ public class InMemoryReservationRepository implements ReservationRepository {
     private static final int START_ID_NUMBER = 1;
 
     private final AtomicLong idGenerator = new AtomicLong(START_ID_NUMBER);
-    private final Map<Long, ReservationEntity> reservations = new HashMap<>();
+    private final Map<Long, ReservationEntity> reservations = new ConcurrentHashMap<>();
 
     @Override
     public Optional<Reservation> findById(final long id) {
@@ -35,8 +36,9 @@ public class InMemoryReservationRepository implements ReservationRepository {
 
     @Override
     public Reservation save(final Reservation reservation) {
-        final ReservationEntity reservationEntity = ReservationEntity.from(reservation);
-        reservationEntity.setId(idGenerator.getAndIncrement());
+        final ReservationEntity reservationEntity =
+                ReservationEntity.of(idGenerator.getAndIncrement(), reservation);
+
         reservations.put(reservationEntity.getId(), reservationEntity);
 
         return reservationEntity.toDomain();

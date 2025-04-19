@@ -5,6 +5,7 @@ import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.atomic.AtomicLong;
 import org.springframework.stereotype.Service;
+import roomescape.dto.ReservationRequest;
 import roomescape.model.Reservation;
 
 @Service
@@ -13,7 +14,8 @@ public class ReservationService {
     private Map<Long, Reservation> reservations = new ConcurrentHashMap<>();
     private AtomicLong index = new AtomicLong(1);
 
-    public Reservation addReservation(Reservation reservation) {
+    public Reservation addReservation(ReservationRequest reservationRequest) {
+        Reservation reservation = reservationRequest.toEntity(getIndexAndIncrement());
         return reservations.put(reservation.getId(), reservation);
     }
 

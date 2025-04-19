@@ -28,13 +28,13 @@ public class ReservationController {
 
     @GetMapping("")
     public ResponseEntity<List<Reservation>> reservations() {
-        return ResponseEntity.ok(reservationService.getReservations());
+        List<Reservation> reservations = reservationService.getReservations();
+        return ResponseEntity.ok(reservations);
     }
 
     @PostMapping("")
     public ResponseEntity<Reservation> addReservation(@RequestBody ReservationRequest reservationRequest) {
-        Reservation newReservation = Reservation.toEntity(reservationService.getIndexAndIncrement(), reservationRequest);
-        reservationService.addReservation(newReservation);
+        Reservation newReservation = reservationService.addReservation(reservationRequest);
         return ResponseEntity.ok().body(newReservation);
     }
 

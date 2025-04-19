@@ -19,7 +19,7 @@ class RoomescapeRepositoryTest {
         LocalTime time = LocalTime.of(10, 10);
         List<Reservation> reservations = new ArrayList<>();
         reservations.add(new Reservation("test", date, time));
-        RoomescapeRepository roomescapeRepository = new RoomescapeRepository(reservations);
+        RoomescapeRepositoryImpl roomescapeRepository = new RoomescapeRepositoryImpl(reservations);
 
         //when & then
         Reservation duplicated = new Reservation("test2", date, time);
@@ -32,7 +32,7 @@ class RoomescapeRepositoryTest {
     @Test
     void deleteById() {
         //given
-        RoomescapeRepository roomescapeRepository = new RoomescapeRepository(new ArrayList<>());
+        RoomescapeRepositoryImpl roomescapeRepository = new RoomescapeRepositoryImpl(new ArrayList<>());
         long notExistId = 1;
 
         //when & then

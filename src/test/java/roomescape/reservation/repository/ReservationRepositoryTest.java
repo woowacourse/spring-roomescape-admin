@@ -7,6 +7,8 @@ import java.time.LocalDateTime;
 import java.time.chrono.ChronoLocalDateTime;
 import java.util.List;
 import java.util.Optional;
+import org.junit.jupiter.api.AfterAll;
+import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -24,7 +26,6 @@ class ReservationRepositoryTest {
     void init() {
         jdbcTemplate = TestConfig.getJdbcTemplate();
         reservationRepository = new ReservationRepositoryImpl(jdbcTemplate);
-
     }
 
     @DisplayName("예약 정보를 저장한다.")
@@ -47,14 +48,14 @@ class ReservationRepositoryTest {
     @Test
     void test4() {
         // given
+        long id = 1;
         LocalDateTime now = LocalDateTime.now();
-
         String originalName = "꾹";
-        String changedName = "드라고";
-        String sql = "insert into reservation (id, name, date_time) values (?, ?, ?)";
-        jdbcTemplate.update(sql, 1, originalName, now);
+        saveReservation(id, originalName, now);
 
-        Reservation updateReservation = new Reservation(1L, changedName, now);
+        String changedName = "드라고";
+
+        Reservation updateReservation = new Reservation(id, changedName, now);
 
         // when
         Reservation result = reservationRepository.save(updateReservation);
@@ -82,9 +83,7 @@ class ReservationRepositoryTest {
         long id = 1;
         String name = "꾹";
         LocalDateTime now = LocalDateTime.now();
-        String sql = "insert into reservation (id, name, date_time) values (?, ?, ?)";
-
-        jdbcTemplate.update(sql, 1, name, now);
+        saveReservation(id, name, now);
 
         // when
         Reservation result = reservationRepository.findById(id).get();
@@ -111,7 +110,6 @@ class ReservationRepositoryTest {
             jdbcTemplate.update(sql, name, now);
         }
 
-
         // when
         List<Reservation> result = reservationRepository.findAll();
 
@@ -122,7 +120,7 @@ class ReservationRepositoryTest {
 
         assertThat(resultNames).containsAll(names);
 
-        for(LocalDateTime resultDateTime : resultDateTimes ){
+        for (LocalDateTime resultDateTime : resultDateTimes) {
             assertThat(resultDateTime).isEqualToIgnoringNanos(now);
         }
     }
@@ -132,9 +130,10 @@ class ReservationRepositoryTest {
     void test7() {
         // given
         long id = 1;
+        String name = "꾹";
         LocalDateTime now = LocalDateTime.now();
-        Reservation reservation = Reservation.withoutId("꾹", now);
-        reservationRepository.save(reservation);
+
+        saveReservation(id, name, now);
 
         // when
         reservationRepository.deleteById(id);
@@ -142,5 +141,15 @@ class ReservationRepositoryTest {
         // then
         Optional<Reservation> result = reservationRepository.findById(id);
         assertThat(result).isEmpty();
+    }
+
+    private void saveReservation(Long id, String name, LocalDateTime dateTime) {
+        String sql = "insert into reservation (id, name, date_time) values (?, ?, ?)";
+        jdbcTemplate.update(sql, id, name, dateTime);
+    }
+
+    @AfterEach
+    void cleanUp(){
+        jdbcTemplate.update("truncate TABLE reservation");
     }
 }

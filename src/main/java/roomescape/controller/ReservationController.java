@@ -4,7 +4,6 @@ import jakarta.validation.Valid;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.concurrent.atomic.AtomicLong;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
@@ -14,6 +13,7 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.server.ResponseStatusException;
 import roomescape.domain.Counter;
 import roomescape.domain.Reservation;
@@ -29,29 +29,29 @@ public class ReservationController {
 
     @GetMapping
     public ResponseEntity<List<ReservationResponse>> readReservations() {
-        List<ReservationResponse> dtos = ReservationResponse.from(reservations);
+        final List<ReservationResponse> dtos = ReservationResponse.from(reservations);
         return ResponseEntity.ok(dtos);
     }
 
     @PostMapping
     public ResponseEntity<ReservationResponse> createReservation(
-            @Valid @RequestBody ReservationRequest reservationRequest) {
-        Reservation reservation = makeReservation(reservationRequest);
+            @Valid @RequestBody final ReservationRequest reservationRequest) {
+        final Reservation reservation = makeReservation(reservationRequest);
         return ResponseEntity.ok(ReservationResponse.from(reservation));
-    }
-
-    private Reservation makeReservation(final ReservationRequest reservationRequest) {
-        LocalDateTime dateTime = LocalDateTime.of(reservationRequest.date(), reservationRequest.time());
-        try {
-            return reservations.addReservation(reservationRequest.name(), dateTime);
-        } catch (IllegalArgumentException e) {
-            throw new ResponseStatusException(HttpStatus.BAD_REQUEST);
-        }
     }
 
     @DeleteMapping("/{id}")
     public ResponseEntity<Void> deleteReservation(@PathVariable final Long id) {
         reservations.deleteById(id);
         return ResponseEntity.ok().build();
+    }
+
+    private Reservation makeReservation(final ReservationRequest reservationRequest) {
+        final LocalDateTime dateTime = LocalDateTime.of(reservationRequest.date(), reservationRequest.time());
+        try {
+            return reservations.addReservation(reservationRequest.name(), dateTime);
+        } catch (IllegalArgumentException e) {
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST);
+        }
     }
 }

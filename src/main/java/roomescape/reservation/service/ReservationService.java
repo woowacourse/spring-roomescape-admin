@@ -4,19 +4,23 @@ import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.LocalTime;
 import java.util.Optional;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import roomescape.reservation.controller.request.ReservationCreateRequest;
 import roomescape.reservation.domain.Reservation;
 import roomescape.reservation.domain.Reservations;
+import roomescape.reservation.repository.ReservationRepository;
 import roomescape.reservation.service.exception.ReservationNotFoundException;
 
 @Service
 public class ReservationService {
 
     private final Reservations reservations = new Reservations();
+    @Autowired
+    private ReservationRepository reservationRepository;
 
     public Reservations findReservations() {
-        return reservations;
+        return reservationRepository.findAll();
     }
 
     public Reservation createReservation(ReservationCreateRequest request) {

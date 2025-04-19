@@ -14,6 +14,10 @@ public class Reservations {
         this.reservations = new ArrayList<>();
     }
 
+    public Reservations(List<Reservation> reservations) {
+        this.reservations = reservations;
+    }
+
     public void create(Reservation created) {
         reservations.add(created);
     }

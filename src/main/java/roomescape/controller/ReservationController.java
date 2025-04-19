@@ -1,7 +1,6 @@
 package roomescape.controller;
 
 import org.springframework.http.ResponseEntity;
-import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 import roomescape.domain.Reservation;
 import roomescape.domain.Reservations;
@@ -12,7 +11,7 @@ import java.time.LocalDateTime;
 import java.util.List;
 import java.util.concurrent.atomic.AtomicLong;
 
-@Controller
+@RestController
 @RequestMapping("/reservations")
 public class ReservationController {
 

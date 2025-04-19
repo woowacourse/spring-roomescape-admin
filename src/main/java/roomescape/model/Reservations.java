@@ -3,6 +3,7 @@ package roomescape.model;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.atomic.AtomicLong;
+import roomescape.dto.ReservationReqDto;
 
 public class Reservations {
 

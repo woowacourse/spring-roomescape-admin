@@ -1,49 +1,33 @@
-package roomescape;
+package roomescape.controller;
 
 import static org.hamcrest.CoreMatchers.is;
 
 import io.restassured.RestAssured;
 import io.restassured.http.ContentType;
-import java.util.HashMap;
 import java.util.Map;
+import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.annotation.DirtiesContext;
-import org.springframework.test.context.ContextConfiguration;
 
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.DEFINED_PORT)
 @DirtiesContext(classMode = DirtiesContext.ClassMode.BEFORE_EACH_TEST_METHOD)
-@ContextConfiguration(classes = RoomescapeApplication.class)
-public class MissionStepTest {
+public class AdminReservationsControllerTest {
 
+    @DisplayName("어드민 예약 내역 페이지의 데이터를 추가, 조회, 삭제하여 반영한다")
     @Test
-    void 일단계() {
-        RestAssured.given().log().all()
-                .when().get("/admin")
-                .then().log().all()
-                .statusCode(200);
-    }
-
-    @Test
-    void 이단계() {
-        RestAssured.given().log().all()
-                .when().get("/admin/reservation")
-                .then().log().all()
-                .statusCode(200);
-
+    void checkAdminReservationsCRD() {
         RestAssured.given().log().all()
                 .when().get("/reservations")
                 .then().log().all()
                 .statusCode(200)
                 .body("size()", is(0));
-    }
 
-    @Test
-    void 삼단계() {
-        Map<String, String> params = new HashMap<>();
-        params.put("name", "브라운");
-        params.put("date", "2023-08-05");
-        params.put("time", "15:40");
+        Map<String, String> params = Map.of(
+                "name", "브라운",
+                "date", "2023-08-05",
+                "time", "15:40"
+        );
 
         RestAssured.given().log().all()
                 .contentType(ContentType.JSON)

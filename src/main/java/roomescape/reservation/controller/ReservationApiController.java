@@ -33,8 +33,7 @@ public class ReservationApiController {
         Reservations reservations = reservationService.findReservations();
 
         return ResponseEntity
-                .status(HttpStatus.CREATED)
-                .body(ReservationsResponse.from(reservations));
+                .ok(ReservationsResponse.from(reservations));
     }
 
     @PostMapping
@@ -46,9 +45,9 @@ public class ReservationApiController {
             return ResponseEntity.badRequest().build();
         }
 
-        return ResponseEntity.ok(
-                ReservationResponse.from(reservation)
-        );
+        return ResponseEntity
+                .status(HttpStatus.CREATED)
+                .body(ReservationResponse.from(reservation));
     }
 
     @DeleteMapping("/{id}")

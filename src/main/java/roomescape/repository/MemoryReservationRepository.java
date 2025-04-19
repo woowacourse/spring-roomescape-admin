@@ -21,7 +21,7 @@ public class MemoryReservationRepository implements ReservationRepository {
     public Reservation add(Reservation reservation) {
         Reservation entity = Reservation.toEntity(nextId.getAndIncrement(), reservation);
         reservations.add(entity);
-        return entity;
+        return reservations.getLast();
     }
 
     @Override

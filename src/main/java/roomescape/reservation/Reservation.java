@@ -7,22 +7,25 @@ import java.util.concurrent.atomic.AtomicLong;
 
 public class Reservation {
 
-    private static final AtomicLong index = new AtomicLong();
+    private static final AtomicLong ID = new AtomicLong();
 
     private final Long id;
     private final String name;
     private final LocalDate date;
     private final LocalTime time;
 
-    public Reservation(Long id, String name, LocalDate date, LocalTime time) {
-        this.id = id;
+    public Reservation(String name, LocalDate date, LocalTime time) {
+        this.id = ID.incrementAndGet();
         this.name = name;
         this.date = date;
         this.time = time;
     }
 
-    public static Reservation toEntity(Reservation reservation) {
-        return new Reservation(index.incrementAndGet(), reservation.name, reservation.date, reservation.time);
+    public Reservation(Long id, String name, LocalDate date, LocalTime time) {
+        this.id = id;
+        this.name = name;
+        this.date = date;
+        this.time = time;
     }
 
     public boolean isSameId(Long id) {
@@ -55,5 +58,15 @@ public class Reservation {
     @Override
     public int hashCode() {
         return Objects.hash(id, name, date, time);
+    }
+
+    @Override
+    public String toString() {
+        return "Reservation{" +
+                "id=" + id +
+                ", name='" + name + '\'' +
+                ", date=" + date +
+                ", time=" + time +
+                '}';
     }
 }

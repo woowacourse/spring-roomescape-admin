@@ -7,7 +7,6 @@ import java.util.List;
 
 @Component
 public class Reservations {
-
     private final List<Reservation> values = new ArrayList<>();
 
     public void add(Reservation reservation) {

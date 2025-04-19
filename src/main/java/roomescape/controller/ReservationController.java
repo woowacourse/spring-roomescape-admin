@@ -2,6 +2,7 @@ package roomescape.controller;
 
 import jakarta.validation.Valid;
 import java.time.Clock;
+import java.time.LocalDateTime;
 import java.util.List;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -40,7 +41,7 @@ public class ReservationController {
     @PostMapping
     public ResponseEntity<ReservationDto> createReservation(
             @RequestBody @Valid final CreateReservationDto createReservationDto) {
-        Reservation reservation = createReservationDto.toReservation(clock);
+        Reservation reservation = createReservationDto.toReservation(LocalDateTime.now((clock)));
         Reservation savedReservation = reservationRepository.add(reservation);
         return ResponseEntity.ok(ReservationDto.from(savedReservation));
     }

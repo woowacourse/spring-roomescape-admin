@@ -5,6 +5,7 @@ import static org.assertj.core.api.Assertions.assertThatThrownBy;
 
 import java.time.Clock;
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.time.LocalTime;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -25,7 +26,7 @@ public class ReservationDateTimeTest {
         assertThatThrownBy(() -> ReservationDateTime.createNewReservationTime(
                 LocalDate.of(2024, 12, 31),
                 LocalTime.of(23, 59, 59),
-                clock
+                LocalDateTime.of(2025, 1, 1, 0, 0)
         )).isInstanceOf(IllegalArgumentException.class);
     }
 
@@ -35,7 +36,7 @@ public class ReservationDateTimeTest {
         assertThatCode(() -> ReservationDateTime.createNewReservationTime(
                 LocalDate.of(2025, 2, 2),
                 LocalTime.of(10, 10, 10),
-                clock
+                LocalDateTime.of(2025, 1, 1, 0, 0)
         )).doesNotThrowAnyException();
     }
 }

@@ -1,6 +1,5 @@
 package roomescape.domain;
 
-import java.time.Clock;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.LocalTime;
@@ -19,14 +18,14 @@ public class ReservationDateTime {
     }
 
     public static ReservationDateTime createNewReservationTime(final LocalDate date, final LocalTime time,
-                                                               final Clock clock) {
-        validateFutureTime(date, time, clock);
+                                                               final LocalDateTime now) {
+        validateFutureTime(date, time, now);
         return new ReservationDateTime(date, time);
     }
 
-    private static void validateFutureTime(final LocalDate date, final LocalTime time, final Clock clock) {
+    private static void validateFutureTime(final LocalDate date, final LocalTime time, final LocalDateTime now) {
         LocalDateTime reservationDatetime = LocalDateTime.of(date, time);
-        if (!reservationDatetime.isAfter(LocalDateTime.now(clock))) {
+        if (!reservationDatetime.isAfter(now)) {
             throw new IllegalArgumentException("예약은 현재 일시 이후여야 합니다.");
         }
     }

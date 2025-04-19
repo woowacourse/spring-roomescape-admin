@@ -1,5 +1,7 @@
 package roomescape.dto;
 
+import java.time.LocalDate;
+import java.time.LocalTime;
 import roomescape.model.Reservation;
 
 public record ReservationRequest(
@@ -8,6 +10,11 @@ public record ReservationRequest(
         String time
 ) {
     public Reservation toEntity(Long id) {
-        return new Reservation(id, name, date, time);
+        return new Reservation(
+                id,
+                name,
+                LocalDate.parse(date),
+                LocalTime.parse(time)
+        );
     }
 }

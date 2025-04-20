@@ -36,7 +36,7 @@ public class ReservationController {
         Reservation newReservation = Reservation.toEntity(index.getAndIncrement(), reservation);
         reservations.put(newReservation.getId(), newReservation);
 
-        return ResponseEntity.ok().body(reservation);
+        return ResponseEntity.ok().body(newReservation);
     }
 
     @DeleteMapping("/{id}")

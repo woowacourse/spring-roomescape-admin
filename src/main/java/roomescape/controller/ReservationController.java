@@ -36,27 +36,19 @@ public class ReservationController {
 
     @PostMapping
     public ResponseEntity<ReservationResponse> addReservation(@RequestBody final ReservationCreateRequest request) {
-        try {
-            ReservationDateTime reservationDateTime = new ReservationDateTime(
-                    LocalDateTime.of(request.date(), request.time())
-            );
+        ReservationDateTime reservationDateTime = new ReservationDateTime(
+                LocalDateTime.of(request.date(), request.time())
+        );
 
-            Long reservationId = reservations.addReservation(request.name(), reservationDateTime);
-            Reservation reservation = reservations.findById(reservationId);
-            return ResponseEntity.status(HttpStatus.CREATED)
-                    .body(new ReservationResponse(reservation));
-        } catch (NullPointerException | IllegalArgumentException e) {
-            return ResponseEntity.badRequest().build();
-        }
+        Long reservationId = reservations.addReservation(request.name(), reservationDateTime);
+        Reservation reservation = reservations.findById(reservationId);
+        return ResponseEntity.status(HttpStatus.CREATED)
+                .body(new ReservationResponse(reservation));
     }
 
-    @DeleteMapping("{id}")
+    @DeleteMapping("/{id}")
     public ResponseEntity<Void> deleteReservation(@PathVariable("id") final Long id) {
-        try {
-            reservations.removeById(id);
-            return ResponseEntity.ok().build();
-        } catch (RuntimeException e) {
-            return ResponseEntity.notFound().build();
-        }
+        reservations.removeById(id);
+        return ResponseEntity.ok().build();
     }
 }

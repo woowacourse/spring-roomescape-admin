@@ -6,6 +6,8 @@ import java.util.List;
 import java.util.Objects;
 import java.util.concurrent.atomic.AtomicLong;
 
+import roomescape.model.exception.ReservationNotFoundException;
+
 public class Reservations {
 
     private final List<Reservation> reservations = new ArrayList<>();
@@ -27,7 +29,7 @@ public class Reservations {
         return reservations.stream()
                 .filter(reservation -> Objects.equals(reservation.getId(), id))
                 .findAny()
-                .orElseThrow(RuntimeException::new);
+                .orElseThrow(() -> new ReservationNotFoundException("존재하지 않는 예약 입니다."));
     }
 
     public List<Reservation> getReservations() {

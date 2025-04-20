@@ -12,6 +12,7 @@ import org.junit.jupiter.api.Test;
 
 import roomescape.model.ReservationDateTime;
 import roomescape.model.Reservations;
+import roomescape.model.exception.ReservationNotFoundException;
 
 class ReservationsTest {
 
@@ -50,6 +51,6 @@ class ReservationsTest {
         Reservations reservations = new Reservations();
 
         assertThatThrownBy(() -> reservations.removeById(1L))
-                .isInstanceOf(RuntimeException.class);
+                .isInstanceOf(ReservationNotFoundException.class);
     }
 }

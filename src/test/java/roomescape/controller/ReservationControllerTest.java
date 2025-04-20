@@ -22,6 +22,7 @@ import org.springframework.test.context.bean.override.mockito.MockitoBean;
 import org.springframework.test.web.servlet.MockMvc;
 import roomescape.dto.ReservationRequestDto;
 import roomescape.entity.Reservation;
+import roomescape.exceptions.EntityNotFoundException;
 import roomescape.repository.ReservationRepository;
 
 @WebMvcTest(ReservationController.class)
@@ -104,9 +105,11 @@ public class ReservationControllerTest {
     @Test
     @DisplayName("존재하지 않는 ID로 삭제 요청 시 404 응답이 반환되어야 한다")
     void deleteNonExistingReservation() {
-        Long nonExistingId = 999L;
+        long nonExistingId = 999L;
 
-        willThrow(new IllegalArgumentException()).given(reservationRepository).deleteById(nonExistingId);
+        willThrow(new EntityNotFoundException("데이터를 찾을 수 없습니다."))
+                .given(reservationRepository)
+                .deleteById(nonExistingId);
 
         RestAssuredMockMvc.given().log().all()
                 .when().delete("/reservations/" + nonExistingId)

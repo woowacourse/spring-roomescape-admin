@@ -1,7 +1,6 @@
 package roomescape.controller;
 
 import java.util.List;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -12,6 +11,7 @@ import org.springframework.web.bind.annotation.RestController;
 import roomescape.dto.ReservationRequestDto;
 import roomescape.dto.ReservationResponseDto;
 import roomescape.entity.Reservation;
+import roomescape.exceptions.EntityNotFoundException;
 import roomescape.repository.ReservationRepository;
 
 @RestController
@@ -19,7 +19,6 @@ public class ReservationController {
 
     private final ReservationRepository repository;
 
-    @Autowired
     public ReservationController(ReservationRepository repository) {
         this.repository = repository;
     }
@@ -42,7 +41,7 @@ public class ReservationController {
         try {
             repository.deleteById(id);
             return ResponseEntity.ok().build();
-        } catch (IllegalArgumentException e) {
+        } catch (EntityNotFoundException e) {
             return ResponseEntity.notFound().build();
         }
     }

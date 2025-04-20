@@ -39,13 +39,13 @@ public class JdbcReservationDao implements ReservationDao {
         String sql = "INSERT INTO reservation(name, date, time) VALUES(?, ?, ?)";
         KeyHolder keyHolder = new GeneratedKeyHolder();
         jdbcTemplate.update(connection -> {
-            PreparedStatement preparedStatement = connection.prepareStatement(sql);
+            PreparedStatement preparedStatement = connection.prepareStatement(sql, new String[]{"id"});
             preparedStatement.setString(1, reservation.getCustomerName());
             preparedStatement.setDate(2, Date.valueOf(reservation.getReservationDate()));
             preparedStatement.setTime(3, Time.valueOf(reservation.getReservationTime()));
             return preparedStatement;
         }, keyHolder);
-        return new Reservation(keyHolder.getKey().longValue(), reservation.getCustomerName(),
+        return new Reservation(keyHolder.getKeyAs(Long.class), reservation.getCustomerName(),
                 reservation.getReservationDate(), reservation.getReservationTime());
     }
 

@@ -15,10 +15,6 @@ public class Reservation {
         this.dateTime = dateTime;
     }
 
-    public boolean isSameId(final Long id) {
-        return this.id.equals(id);
-    }
-
     public String formatDateTime(DateTimeFormatter formatter) {
         return dateTime.format(formatter);
     }

@@ -11,14 +11,13 @@ public record ReservationRequest(
         String time
 ) {
 
-    public Reservation toReservation(Long id) {
+    public Reservation toReservation() {
         LocalDateTime dateTime = LocalDateTime.of(
                 LocalDate.parse(this.date),
                 LocalTime.parse(this.time)
         );
 
         return new Reservation(
-                id,
                 name,
                 dateTime
         );

@@ -14,7 +14,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.test.annotation.DirtiesContext;
-import roomescape.reservation.Reservation;
+import roomescape.reservation.web.ReservationResponse;
 
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.DEFINED_PORT)
 @DirtiesContext(classMode = DirtiesContext.ClassMode.BEFORE_EACH_TEST_METHOD)
@@ -26,18 +26,18 @@ public class MissionStepTest {
     @Test
     void welcome_page() {
         RestAssured.given().log().all()
-            .when().get("/")
-            .then().log().all()
-            .statusCode(200);
+                .when().get("/")
+                .then().log().all()
+                .statusCode(200);
     }
 
     @DisplayName("/admin GET 요청에 응답한다")
     @Test
     void admin_page() {
         RestAssured.given().log().all()
-            .when().get("/admin")
-            .then().log().all()
-            .statusCode(200);
+                .when().get("/admin")
+                .then().log().all()
+                .statusCode(200);
     }
 
     @DisplayName("/admin/reservation GET 요청에 응답한다")
@@ -68,18 +68,18 @@ public class MissionStepTest {
         params.put("time", "15:40");
 
         RestAssured.given().log().all()
-            .contentType(ContentType.JSON)
-            .body(params)
-            .when().post("/reservations")
-            .then().log().all()
-            .statusCode(200)
-            .body("id", is(1));
+                .contentType(ContentType.JSON)
+                .body(params)
+                .when().post("/reservations")
+                .then().log().all()
+                .statusCode(200)
+                .body("id", is(1));
 
         RestAssured.given().log().all()
-            .when().get("/reservations")
-            .then().log().all()
-            .statusCode(200)
-            .body("size()", is(1));
+                .when().get("/reservations")
+                .then().log().all()
+                .statusCode(200)
+                .body("size()", is(1));
     }
 
     @DisplayName("/reservations DELETE 요청에 정상적으로 응답한다")
@@ -91,32 +91,32 @@ public class MissionStepTest {
         params.put("time", "15:40");
 
         RestAssured.given().log().all()
-            .contentType(ContentType.JSON)
-            .body(params)
-            .when().post("/reservations")
-            .then().log().all()
-            .statusCode(200)
-            .body("id", is(1));
+                .contentType(ContentType.JSON)
+                .body(params)
+                .when().post("/reservations")
+                .then().log().all()
+                .statusCode(200)
+                .body("id", is(1));
 
         RestAssured.given().log().all()
-            .when().delete("/reservations/1")
-            .then().log().all()
-            .statusCode(200);
+                .when().delete("/reservations/1")
+                .then().log().all()
+                .statusCode(200);
 
         RestAssured.given().log().all()
-            .when().get("/reservations")
-            .then().log().all()
-            .statusCode(200)
-            .body("size()", is(0));
+                .when().get("/reservations")
+                .then().log().all()
+                .statusCode(200)
+                .body("size()", is(0));
     }
 
     @DisplayName("/reservations DELETE 요청에 존재하지 않는 자원이면 404로 응답한다")
     @Test
     void reservation_delete_api_not_found() {
         RestAssured.given().log().all()
-            .when().delete("/reservations/1")
-            .then().log().all()
-            .statusCode(404);
+                .when().delete("/reservations/1")
+                .then().log().all()
+                .statusCode(404);
     }
 
     @DisplayName("/reservations GET api는 DB로부터 데이터를 조회한다")
@@ -125,11 +125,11 @@ public class MissionStepTest {
         String sql = "INSERT INTO reservation (name, date, time) VALUES (?, ?, ?)";
         jdbcTemplate.update(sql, "브라운", "2023-08-05", "15:40");
 
-        List<Reservation> reservations = RestAssured.given().log().all()
+        List<ReservationResponse> reservations = RestAssured.given().log().all()
                 .when().get("/reservations")
                 .then().log().all()
                 .statusCode(200).extract()
-                .jsonPath().getList(".", Reservation.class);
+                .jsonPath().getList(".", ReservationResponse.class);
 
         Integer count = jdbcTemplate.queryForObject("SELECT count(1) from reservation", Integer.class);
 

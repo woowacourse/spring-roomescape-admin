@@ -1,6 +1,7 @@
 package roomescape;
 
 import java.util.List;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -13,11 +14,17 @@ import org.springframework.web.bind.annotation.RequestMapping;
 @Controller
 @RequestMapping("/reservations")
 public class ReservationController {
-    Reservations reservations = new Reservations();
+    private ReservationDao reservationDao;
+    private ListBasedReservationDao listBasedReservationDao = new ListBasedReservationDao();
+
+    @Autowired
+    public ReservationController(ReservationDao reservationDao) {
+        this.reservationDao = reservationDao;
+    }
 
     @GetMapping
     public ResponseEntity<List<ReservationResponse>> getAll() {
-        List<ReservationResponse> responses = reservations.findAll()
+        List<ReservationResponse> responses = reservationDao.findAll()
                 .stream()
                 .map(ReservationResponse::from)
                 .toList();
@@ -26,14 +33,14 @@ public class ReservationController {
 
     @PostMapping
     public ResponseEntity<ReservationResponse> create(@RequestBody ReservationRequest request) {
-        Reservation savedReservation = reservations.save(request.toReservation());
+        Reservation savedReservation = listBasedReservationDao.save(request.toReservation());
         ReservationResponse response = ReservationResponse.from(savedReservation);
         return ResponseEntity.ok().body(response);
     }
 
     @DeleteMapping("/{id}")
     public ResponseEntity<Void> delete(@PathVariable(name = "id") Long id) {
-        boolean isRemoved = reservations.removeById(id);
+        boolean isRemoved = listBasedReservationDao.removeById(id);
         if (isRemoved) {
             return ResponseEntity.ok().build();
         }

@@ -13,13 +13,14 @@ import org.springframework.http.ResponseEntity;
 import roomescape.ReservationController;
 import roomescape.ReservationRequest;
 import roomescape.ReservationResponse;
+import roomescape.ListBasedReservationDao;
 
 class ReservationControllerTest {
     @DisplayName("예약을_생성할_수_있다")
     @Test
     void create() {
         // given
-        ReservationController reservationController = new ReservationController();
+        ReservationController reservationController = new ReservationController(new ListBasedReservationDao());
         String name = "레오";
         LocalDate date = LocalDate.now();
         LocalTime time = LocalTime.now();
@@ -43,7 +44,7 @@ class ReservationControllerTest {
     @Test
     void getAll() {
         // given
-        ReservationController reservationController = new ReservationController();
+        ReservationController reservationController = new ReservationController(new ListBasedReservationDao());
         ReservationRequest request = new ReservationRequest("레오", LocalDate.now(), LocalTime.now());
         reservationController.create(request);
 
@@ -62,7 +63,7 @@ class ReservationControllerTest {
     @Test
     void delete() {
         // given
-        ReservationController reservationController = new ReservationController();
+        ReservationController reservationController = new ReservationController(new ListBasedReservationDao());
         ReservationRequest request = new ReservationRequest("레오", LocalDate.now(), LocalTime.now());
         ResponseEntity<ReservationResponse> responseEntity = reservationController.create(request);
 

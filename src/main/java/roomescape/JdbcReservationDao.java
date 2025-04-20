@@ -7,7 +7,7 @@ import org.springframework.jdbc.core.RowMapper;
 import org.springframework.stereotype.Component;
 
 @Component
-public class ReservationDao {
+public class JdbcReservationDao implements ReservationDao {
     private final JdbcTemplate jdbcTemplate;
     private final RowMapper<Reservation> reservationRowMapper = (resultSet, rowNum) -> {
         return new Reservation(
@@ -19,12 +19,22 @@ public class ReservationDao {
     };
 
     @Autowired
-    public ReservationDao(JdbcTemplate jdbcTemplate) {
+    public JdbcReservationDao(JdbcTemplate jdbcTemplate) {
         this.jdbcTemplate = jdbcTemplate;
     }
 
     public List<Reservation> findAll() {
         String sql = "SELECT * FROM reservation";
         return jdbcTemplate.query(sql, reservationRowMapper);
+    }
+
+    @Override
+    public Reservation save(Reservation reservation) {
+        return null;
+    }
+
+    @Override
+    public boolean removeById(long id) {
+        return false;
     }
 }

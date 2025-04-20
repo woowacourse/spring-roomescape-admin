@@ -26,4 +26,8 @@ public class Reservation {
     public String getName() {
         return name;
     }
+
+    public LocalDateTime getDateTime() {
+        return dateTime;
+    }
 }

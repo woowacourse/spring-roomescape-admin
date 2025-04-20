@@ -36,7 +36,7 @@ public class ReservationController {
 
     @PostMapping
     public ResponseEntity<ReservationResponse> create(@RequestBody ReservationRequest request) {
-        Reservation savedReservation = listBasedReservationDao.save(request.toReservation());
+        Reservation savedReservation = reservationDao.save(request.toReservation());
         ReservationResponse response = ReservationResponse.from(savedReservation);
         return ResponseEntity.ok().body(response);
     }

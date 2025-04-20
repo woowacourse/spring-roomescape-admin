@@ -40,7 +40,8 @@ public class RoomescapeController {
         if (validatePastDateAndTime(input.getDate(), input.getTime())) {
             return ResponseEntity.badRequest().build();
         }
-        long id = reservationRepository.add(input.getName(), input.getDate(), input.getTime());
+        Reservation reservation = Reservation.createWithoutId(input.getName(), input.getDate(), input.getTime());
+        long id = reservationRepository.add(reservation);
         return ResponseEntity
                 .created(URI.create("reservations/" + id))
                 .body(new ReservationCreationResponse(id));

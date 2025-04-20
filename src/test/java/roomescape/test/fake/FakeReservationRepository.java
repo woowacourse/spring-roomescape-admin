@@ -1,7 +1,5 @@
 package roomescape.test.fake;
 
-import java.time.LocalDate;
-import java.time.LocalTime;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
@@ -33,8 +31,9 @@ public class FakeReservationRepository extends ReservationRepository {
     }
 
     @Override
-    public long add(String name, LocalDate date, LocalTime time) {
-        Reservation newReservation = new Reservation(index.getAndIncrement(), name, date, time);
+    public long add(Reservation reservation) {
+        Reservation newReservation = new Reservation(
+                index.getAndIncrement(), reservation.getName(), reservation.getDate(), reservation.getTime());
         reservations.put(newReservation.getId(), newReservation);
         return newReservation.getId();
     }

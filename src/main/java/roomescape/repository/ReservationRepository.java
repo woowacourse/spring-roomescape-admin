@@ -4,8 +4,6 @@ import java.sql.Date;
 import java.sql.PreparedStatement;
 import java.sql.Statement;
 import java.sql.Time;
-import java.time.LocalDate;
-import java.time.LocalTime;
 import java.util.List;
 import java.util.Optional;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -58,15 +56,15 @@ public class ReservationRepository {
         }
     }
 
-    public long add(String name, LocalDate date, LocalTime time) {
+    public long add(Reservation reservation) {
         String sql = "INSERT INTO reservation (name, date, time) values (?,?,?)";
         KeyHolder keyHolder = new GeneratedKeyHolder();
         template.update(
                 (connection) -> {
                     PreparedStatement statement = connection.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS);
-                    statement.setString(1, name);
-                    statement.setDate(2, Date.valueOf(date));
-                    statement.setTime(3, Time.valueOf(time));
+                    statement.setString(1, reservation.getName());
+                    statement.setDate(2, Date.valueOf(reservation.getDate()));
+                    statement.setTime(3, Time.valueOf(reservation.getTime()));
                     return statement;
                 },
                 keyHolder

@@ -46,7 +46,7 @@ public class ReservationController {
             reservationRepository.deleteById(id);
             return ResponseEntity.ok().build();
         } catch (InvalidReservationException e){
-            return ResponseEntity.badRequest().build();
+            return ResponseEntity.noContent().build();
         }
     }
 }

@@ -10,6 +10,10 @@ public record Reservation(Long id, String name, LocalDate date, LocalTime time) 
         validateName(name);
     }
 
+    public boolean isSameId(Long id) {
+        return this.id == id;
+    }
+
     private void validateReservation(Long id, String name, LocalDate date, LocalTime time) {
         if (id == null || name == null || date == null || time == null) {
             throw new IllegalArgumentException("Invalid reservation");

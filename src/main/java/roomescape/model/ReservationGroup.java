@@ -5,7 +5,6 @@ import org.springframework.web.server.ResponseStatusException;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Objects;
 import java.util.concurrent.atomic.AtomicLong;
 
 public class ReservationGroup {
@@ -23,7 +22,7 @@ public class ReservationGroup {
 
     public void deleteReservationById(Long id) {
         Reservation deleteReservation = reservations.stream()
-                .filter(reservation -> Objects.equals(reservation.id(), id))
+                .filter(reservation -> reservation.isSameId(id))
                 .findAny()
                 .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND));
 

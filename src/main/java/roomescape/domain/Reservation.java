@@ -1,8 +1,7 @@
 package roomescape.domain;
 
-import java.time.LocalDate;
 import java.time.LocalDateTime;
-import java.time.LocalTime;
+import java.time.format.DateTimeFormatter;
 
 public class Reservation {
 
@@ -20,19 +19,15 @@ public class Reservation {
         return this.id.equals(id);
     }
 
+    public String formatDateTime(DateTimeFormatter formatter) {
+        return dateTime.format(formatter);
+    }
+
     public Long getId() {
         return id;
     }
 
     public String getName() {
         return name;
-    }
-
-    public LocalDate getDate() {
-        return dateTime.toLocalDate();
-    }
-
-    public LocalTime getTime() {
-        return dateTime.toLocalTime();
     }
 }

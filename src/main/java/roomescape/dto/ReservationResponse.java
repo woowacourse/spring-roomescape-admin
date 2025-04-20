@@ -14,8 +14,8 @@ public record ReservationResponse(
         this(
                 reservation.getId(),
                 reservation.getName(),
-                reservation.getDate().toString(),
-                reservation.getTime().format(DateTimeFormatter.ofPattern("HH:mm"))
+                reservation.formatDateTime(DateTimeFormatter.ofPattern("yyyy-MM-dd")),
+                reservation.formatDateTime(DateTimeFormatter.ofPattern("HH:mm"))
         );
     }
 }

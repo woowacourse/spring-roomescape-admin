@@ -39,7 +39,7 @@ public class MissionStepTest {
                 .body("size()", is(0));
     }
 
-    @DisplayName("예약 추가하고 취소할 수 있다.")
+    @DisplayName("예약을 추가하고 취소할 수 있다.")
     @Test
     void testCreateDeleteReservation() {
         Map<String, String> params = new HashMap<>();

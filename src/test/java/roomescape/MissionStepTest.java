@@ -1,20 +1,28 @@
 package roomescape;
 
 
+import static org.assertj.core.api.Assertions.assertThat;
 import static org.hamcrest.core.Is.is;
 
 import io.restassured.RestAssured;
 import io.restassured.http.ContentType;
+import java.sql.Connection;
+import java.sql.SQLException;
 import java.util.HashMap;
 import java.util.Map;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.test.annotation.DirtiesContext;
 
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.DEFINED_PORT)
 @DirtiesContext(classMode = DirtiesContext.ClassMode.BEFORE_EACH_TEST_METHOD)
 class MissionStepTest {
+
+    @Autowired
+    private JdbcTemplate jdbcTemplate;
 
     @DisplayName("루트 경로 페이지 요청에 성공하면 200 코드를 반환한다")
     @Test
@@ -85,10 +93,23 @@ class MissionStepTest {
 
     @DisplayName("삭제하려는 id의 예약 정보가 존재하지 않으면 404 코드를 반환한다")
     @Test
-    void reservation_delete_exception(){
+    void reservation_delete_exception() {
         RestAssured.given().log().all()
                 .when().delete("/reservations/1")
                 .then().log().all()
                 .statusCode(404);
     }
+
+    @DisplayName("연결된 DB 커넥션을 확인한다")
+    @Test
+    void connection_test() {
+        try (Connection connection = jdbcTemplate.getDataSource().getConnection()) {
+            assertThat(connection).isNotNull();
+            assertThat(connection.getCatalog()).isEqualTo("DATABASE");
+            assertThat(connection.getMetaData().getTables(null, null, "RESERVATION", null).next()).isTrue();
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        }
+    }
+
 }

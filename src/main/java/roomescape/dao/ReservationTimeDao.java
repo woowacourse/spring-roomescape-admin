@@ -30,27 +30,33 @@ public class ReservationTimeDao {
     public ReservationTime save(ReservationTime reservationTime) {
         KeyHolder keyHolder = new GeneratedKeyHolder();
         String sql = "INSERT INTO reservation_time(start_at) VALUES ?";
+
         jdbcTemplate.update(connection -> {
             PreparedStatement ps = connection.prepareStatement(sql, new String[]{"id"});
             ps.setTime(1, Time.valueOf(reservationTime.getStartAt()));
             return ps;
         }, keyHolder);
+
         long id = keyHolder.getKey().longValue();
+
         return new ReservationTime(id, reservationTime);
     }
 
     public List<ReservationTime> findAll() {
         String sql = "SELECT id, start_at FROM reservation_time";
+
         return jdbcTemplate.query(sql, reservationTimeRowMapper);
     }
 
     public ReservationTime findById(long id) {
         String sql = "SELECT id, start_at FROM reservation_time WHERE id = ?";
+
         return jdbcTemplate.queryForObject(sql, reservationTimeRowMapper, id);
     }
 
     public void deleteById(long id) {
         String sql = "DELETE FROM reservation_time WHERE id = ?";
+
         jdbcTemplate.update(sql, id);
     }
 }

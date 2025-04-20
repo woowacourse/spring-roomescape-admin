@@ -7,6 +7,7 @@ import io.restassured.RestAssured;
 import io.restassured.http.ContentType;
 import java.sql.Connection;
 import java.sql.SQLException;
+import java.time.LocalTime;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -25,6 +26,9 @@ public class MissionStepTest {
 
     @Nested
     class GivenTest {
+        @Autowired
+        private JdbcTemplate jdbcTemplate;
+
         @DisplayName("루트 페이지에 연결 가능하다.")
         @Test
         void connect_route_page() {
@@ -55,7 +59,10 @@ public class MissionStepTest {
             Map<String, String> params = new HashMap<>();
             params.put("name", "브라운");
             params.put("date", "2023-08-05");
-            params.put("time", "15:40");
+            params.put("timeId", "1");
+
+            jdbcTemplate.update("INSERT INTO reservation_time(start_at) VALUES ?",
+                    LocalTime.of(10,0));
 
             RestAssured.given().log().all()
                     .contentType(ContentType.JSON)
@@ -107,6 +114,31 @@ public class MissionStepTest {
                     .then().log().all()
                     .statusCode(200);
         }
+
+        @DisplayName("예약을 추가할 때, 이미 추가된 time을 사용한다.")
+        @Test
+        void use_reservation_time_in_db_when_create_reservation() {
+            Map<String, Object> reservation = new HashMap<>();
+            reservation.put("name", "브라운");
+            reservation.put("date", "2023-08-05");
+            reservation.put("timeId", 1);
+
+            jdbcTemplate.update("INSERT INTO reservation_time(start_at) VALUES ?",
+                    LocalTime.of(10,0));
+
+            RestAssured.given().log().all()
+                    .contentType(ContentType.JSON)
+                    .body(reservation)
+                    .when().post("/reservations")
+                    .then().log().all()
+                    .statusCode(201);
+
+            RestAssured.given().log().all()
+                    .when().get("/reservations")
+                    .then().log().all()
+                    .statusCode(200)
+                    .body("size()", is(1));
+        }
     }
 
     @Nested
@@ -129,7 +161,11 @@ public class MissionStepTest {
         @DisplayName("DB를 이용해 예약을 조회한다.")
         @Test
         void check_reservations_in_db() {
-            jdbcTemplate.update("INSERT INTO reservation (name, date, time) VALUES (?, ?, ?)", "브라운", "2023-08-05", "15:40");
+            // ReservationTime 추가
+            jdbcTemplate.update("INSERT INTO reservation_time(start_at) VALUES ?",
+                    LocalTime.of(10,0));
+
+            jdbcTemplate.update("INSERT INTO reservation (name, date, time_id) VALUES (?, ?, ?)", "브라운", "2023-08-05", 1);
 
             List<Reservation> reservations = RestAssured.given().log().all()
                     .when().get("/reservations")
@@ -148,7 +184,10 @@ public class MissionStepTest {
             Map<String, String> params = new HashMap<>();
             params.put("name", "브라운");
             params.put("date", "2023-08-05");
-            params.put("time", "10:00");
+            params.put("timeId", "1");
+
+            jdbcTemplate.update("INSERT INTO reservation_time(start_at) VALUES ?",
+                    LocalTime.of(10,0));
 
             RestAssured.given().log().all()
                     .contentType(ContentType.JSON)

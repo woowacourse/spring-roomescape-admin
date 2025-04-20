@@ -1,8 +1,8 @@
 package roomescape.dao;
 
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.assertj.core.api.Assertions.assertThatCode;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
+import static org.junit.jupiter.api.Assertions.assertAll;
 
 import java.time.LocalDate;
 import java.time.LocalTime;
@@ -18,11 +18,13 @@ import org.springframework.test.annotation.DirtiesContext;
 import org.springframework.test.annotation.DirtiesContext.MethodMode;
 import roomescape.domain.Name;
 import roomescape.domain.Reservation;
+import roomescape.domain.ReservationTime;
 
 @JdbcTest
 public class ReservationDaoTest {
 
     ReservationDao reservationDao;
+    ReservationTimeDao reservationTimeDao;
 
     @Autowired
     JdbcTemplate jdbcTemplate;
@@ -30,16 +32,19 @@ public class ReservationDaoTest {
     @BeforeEach
     void setUp() {
         reservationDao = new ReservationDao(jdbcTemplate);
+        reservationTimeDao = new ReservationTimeDao(jdbcTemplate);
     }
 
     @DisplayName("DB에 예약을 추가한다.")
     @Test
     void save() {
         // given
+        ReservationTime reservationTime = new ReservationTime(LocalTime.of(19, 34));
+        ReservationTime savedTime = reservationTimeDao.save(reservationTime);
         Reservation reservation = new Reservation(
                 Name.from("훌라"),
                 LocalDate.of(2024, 4, 20),
-                LocalTime.of(12, 17)
+                savedTime
         );
 
         // when
@@ -53,10 +58,12 @@ public class ReservationDaoTest {
     @Test
     void findAll() {
         // given
+        ReservationTime reservationTime = new ReservationTime(LocalTime.of(19, 34));
+        ReservationTime savedTime = reservationTimeDao.save(reservationTime);
         Reservation reservation = new Reservation(
                 Name.from("훌라"),
                 LocalDate.of(2024, 4, 20),
-                LocalTime.of(12, 17)
+                savedTime
         );
         reservationDao.save(reservation);
 
@@ -72,10 +79,12 @@ public class ReservationDaoTest {
     @Test
     void findById() {
         // given
+        ReservationTime reservationTime = new ReservationTime(LocalTime.of(19, 34));
+        ReservationTime savedTime = reservationTimeDao.save(reservationTime);
         Reservation reservation = new Reservation(
                 Name.from("훌라"),
                 LocalDate.of(2024, 4, 20),
-                LocalTime.of(12, 17)
+                savedTime
         );
         reservationDao.save(reservation);
 
@@ -94,19 +103,28 @@ public class ReservationDaoTest {
     }
 
     @DisplayName("id를 통해 DB에서 예약을 삭제한다.")
+    @DirtiesContext(methodMode = MethodMode.BEFORE_METHOD)
     @Test
     void deleteById() {
         // given
+        ReservationTime reservationTime = new ReservationTime(LocalTime.of(19, 34));
+        ReservationTime savedTime = reservationTimeDao.save(reservationTime);
         Reservation reservation = new Reservation(
                 Name.from("훌라"),
                 LocalDate.of(2024, 4, 20),
-                LocalTime.of(12, 17)
+                savedTime
         );
         reservationDao.save(reservation);
 
         // when
+        int beforeSize = reservationDao.findAll().size();
+        reservationDao.deleteById(1);
+        int afterSize = reservationDao.findAll().size();
+
         //then
-        assertThatCode(() -> reservationDao.deleteById(1))
-                .doesNotThrowAnyException();
+        assertAll(() -> {
+            assertThat(beforeSize).isEqualTo(1);
+            assertThat(afterSize).isEqualTo(0);
+        });
     }
 }

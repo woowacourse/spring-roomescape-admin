@@ -1,8 +1,8 @@
 package roomescape.dao;
 
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.assertj.core.api.Assertions.assertThatCode;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
+import static org.junit.jupiter.api.Assertions.assertAll;
 
 import java.time.LocalTime;
 import java.util.List;
@@ -86,6 +86,7 @@ public class ReservationTimeDaoTest {
     }
 
     @DisplayName("id를 통해 DB에서 예약 시간을 삭제한다.")
+    @DirtiesContext(methodMode = MethodMode.BEFORE_METHOD)
     @Test
     void deleteById() {
         // given
@@ -95,8 +96,14 @@ public class ReservationTimeDaoTest {
         reservationTimeDao.save(reservationTime);
 
         // when
+        int beforeSize = reservationTimeDao.findAll().size();
+        reservationTimeDao.deleteById(1);
+        int afterSize = reservationTimeDao.findAll().size();
+
         //then
-        assertThatCode(() -> reservationTimeDao.deleteById(1))
-                .doesNotThrowAnyException();
+        assertAll(() -> {
+            assertThat(beforeSize).isEqualTo(1);
+            assertThat(afterSize).isEqualTo(0);
+        });
     }
 }

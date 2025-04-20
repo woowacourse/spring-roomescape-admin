@@ -2,7 +2,6 @@ package roomescape.dto;
 
 import java.time.LocalDate;
 import java.time.LocalTime;
-import roomescape.exception.ValidationExceptionMessage;
 
 public final class ReservationCreationRequest {
 
@@ -37,19 +36,19 @@ public final class ReservationCreationRequest {
 
     private void validateName(String name) {
         if (name == null || name.isBlank()) {
-            throw new IllegalArgumentException(ValidationExceptionMessage.NULL_OR_BLANK_NAME.getContent());
+            throw new IllegalArgumentException("[ERROR] 이름은 빈 값이나 공백값을 허용하지 않습니다.");
         }
     }
 
     private void validateDate(LocalDate date) {
         if (date == null) {
-            throw new IllegalArgumentException(ValidationExceptionMessage.NULL_DATE.getContent());
+            throw new IllegalArgumentException("[ERROR] 날짜는 빈 값을 허용하지 않습니다.");
         }
     }
 
     private void validateTime(LocalTime time) {
         if (time == null) {
-            throw new IllegalArgumentException(ValidationExceptionMessage.NULL_TIME.getContent());
+            throw new IllegalArgumentException("[ERROR] 시간은 빈 값을 허용하지 않습니다.");
         }
     }
 }

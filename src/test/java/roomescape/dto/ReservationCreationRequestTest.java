@@ -8,7 +8,6 @@ import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.NullAndEmptySource;
-import roomescape.exception.ValidationExceptionMessage;
 
 class ReservationCreationRequestTest {
 
@@ -18,7 +17,7 @@ class ReservationCreationRequestTest {
     void validateName(String invalidName) {
         assertThatThrownBy(() -> new ReservationCreationRequest(invalidName, LocalDate.now(), LocalTime.now()))
                 .isInstanceOf(IllegalArgumentException.class)
-                .hasMessage(ValidationExceptionMessage.NULL_OR_BLANK_NAME.getContent());
+                .hasMessage("[ERROR] 이름은 빈 값이나 공백값을 허용하지 않습니다.");
     }
 
     @DisplayName("비어있는 날짜를 허용하지 않는다.")
@@ -27,7 +26,7 @@ class ReservationCreationRequestTest {
         LocalDate nullDate = null;
         assertThatThrownBy(() -> new ReservationCreationRequest("kim", nullDate, LocalTime.now()))
                 .isInstanceOf(IllegalArgumentException.class)
-                .hasMessage(ValidationExceptionMessage.NULL_DATE.getContent());
+                .hasMessage("[ERROR] 날짜는 빈 값을 허용하지 않습니다.");
     }
 
     @DisplayName("비어있는 시간을 허용하지 않는다.")
@@ -36,6 +35,6 @@ class ReservationCreationRequestTest {
         LocalTime nullTime = null;
         assertThatThrownBy(() -> new ReservationCreationRequest("kim", LocalDate.now(), nullTime))
                 .isInstanceOf(IllegalArgumentException.class)
-                .hasMessage(ValidationExceptionMessage.NULL_TIME.getContent());
+                .hasMessage("[ERROR] 시간은 빈 값을 허용하지 않습니다.");
     }
 }

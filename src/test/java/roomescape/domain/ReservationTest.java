@@ -5,7 +5,6 @@ import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import java.time.LocalDateTime;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
-import roomescape.exception.DomainValidationMessage;
 
 class ReservationTest {
 
@@ -17,6 +16,6 @@ class ReservationTest {
 
         assertThatThrownBy(() -> new Reservation(1L, "reservation1", past.toLocalDate(), past.toLocalTime()))
                 .isInstanceOf(IllegalArgumentException.class)
-                .hasMessage(DomainValidationMessage.PAST_DATE_TIME.getContent());
+                .hasMessage("과거의 날짜와 시간으로 예약을 생성할 수 없습니다.");
     }
 }

@@ -4,7 +4,6 @@ import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.LocalTime;
 import java.util.Objects;
-import roomescape.exception.DomainValidationMessage;
 
 public final class Reservation {
 
@@ -41,7 +40,7 @@ public final class Reservation {
         LocalDateTime dateTime = LocalDateTime.of(date, time);
         LocalDateTime now = LocalDateTime.now();
         if (dateTime.isBefore(now)) {
-            throw new IllegalArgumentException(DomainValidationMessage.PAST_DATE_TIME.getContent());
+            throw new IllegalArgumentException("과거의 날짜와 시간으로 예약을 생성할 수 없습니다.");
         }
     }
 

@@ -1,9 +1,10 @@
-package roomescape;
+package roomescape.reservation.dao;
 
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 import java.util.concurrent.atomic.AtomicLong;
+import roomescape.reservation.Reservation;
 
 public class ListBasedReservationDao implements ReservationDao {
     private List<Reservation> reservations = new ArrayList<>();

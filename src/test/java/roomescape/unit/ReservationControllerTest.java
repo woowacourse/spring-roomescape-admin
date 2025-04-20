@@ -10,10 +10,10 @@ import java.util.List;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.http.ResponseEntity;
-import roomescape.ReservationController;
-import roomescape.ReservationRequest;
-import roomescape.ReservationResponse;
-import roomescape.ListBasedReservationDao;
+import roomescape.reservation.web.ReservationController;
+import roomescape.reservation.web.ReservationRequest;
+import roomescape.reservation.web.ReservationResponse;
+import roomescape.reservation.dao.ListBasedReservationDao;
 
 class ReservationControllerTest {
     @DisplayName("예약을_생성할_수_있다")

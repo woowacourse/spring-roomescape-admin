@@ -5,7 +5,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 import java.time.LocalDateTime;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
-import roomescape.Reservation;
+import roomescape.reservation.Reservation;
 
 class ReservationTest {
     @DisplayName("id가_같은지_여부를_반환한다")

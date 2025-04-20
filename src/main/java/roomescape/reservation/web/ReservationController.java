@@ -1,4 +1,4 @@
-package roomescape;
+package roomescape.reservation.web;
 
 import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -10,6 +10,9 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import roomescape.reservation.Reservation;
+import roomescape.reservation.dao.ListBasedReservationDao;
+import roomescape.reservation.dao.ReservationDao;
 
 @Controller
 @RequestMapping("/reservations")

@@ -26,7 +26,7 @@ public class ReservationApiController {
     @GetMapping
     public List<ReservationResponse> getReservations() {
         return reservations.getReservations().stream()
-                .map(ReservationResponse::fromReservation)
+                .map(ReservationResponse::new)
                 .toList();
     }
 
@@ -35,7 +35,7 @@ public class ReservationApiController {
         Reservation created = request.toReservation(reservationId.incrementAndGet());
         reservations.add(created);
 
-        return ReservationResponse.fromReservation(created);
+        return new ReservationResponse(created);
     }
 
     @DeleteMapping("{id}")

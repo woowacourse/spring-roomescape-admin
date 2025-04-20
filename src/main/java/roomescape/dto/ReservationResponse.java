@@ -10,14 +10,12 @@ public record ReservationResponse(
         String time
 ) {
 
-    public static ReservationResponse fromReservation(Reservation reservation) {
-        DateTimeFormatter timeFormatter = DateTimeFormatter.ofPattern("HH:mm");
-
-        return new ReservationResponse(
+    public ReservationResponse(Reservation reservation) {
+        this(
                 reservation.getId(),
                 reservation.getName(),
                 reservation.getDate().toString(),
-                reservation.getTime().format(timeFormatter)
+                reservation.getTime().format(DateTimeFormatter.ofPattern("HH:mm"))
         );
     }
 }

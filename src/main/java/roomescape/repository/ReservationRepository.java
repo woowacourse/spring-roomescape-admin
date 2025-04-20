@@ -1,5 +1,9 @@
 package roomescape.repository;
 
+import java.sql.Date;
+import java.sql.PreparedStatement;
+import java.sql.Statement;
+import java.sql.Time;
 import java.time.LocalDate;
 import java.time.LocalTime;
 import java.util.List;
@@ -8,8 +12,12 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;
+import org.springframework.jdbc.support.GeneratedKeyHolder;
+import org.springframework.jdbc.support.KeyHolder;
+import org.springframework.stereotype.Repository;
 import roomescape.domain.Reservation;
 
+@Repository
 public class ReservationRepository {
 
     private static final RowMapper<Reservation> reservationRowMapper;
@@ -50,13 +58,24 @@ public class ReservationRepository {
         }
     }
 
-    public Reservation add(String name, LocalDate date, LocalTime time) {
-        return new Reservation(1L, name, date, time);
+    public long add(String name, LocalDate date, LocalTime time) {
+        String sql = "INSERT INTO reservation (name, date, time) values (?,?,?)";
+        KeyHolder keyHolder = new GeneratedKeyHolder();
+        template.update(
+                (connection) -> {
+                    PreparedStatement statement = connection.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS);
+                    statement.setString(1, name);
+                    statement.setDate(2, Date.valueOf(date));
+                    statement.setTime(3, Time.valueOf(time));
+                    return statement;
+                },
+                keyHolder
+        );
+        return keyHolder.getKey().longValue();
     }
 
     public void deleteById(long id) {
-        if (findById(id).isEmpty()) {
-            throw new IllegalArgumentException("[ERROR] 해당 id의 예약이 없습니다: " + id);
-        }
+        String sql = "DELETE FROM reservation WHERE reservation.id = ?";
+        template.update(sql, id);
     }
 }

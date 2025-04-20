@@ -1,6 +1,7 @@
 package roomescape.controller;
 
 import java.net.URI;
+import java.time.LocalDateTime;
 import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
@@ -32,8 +33,15 @@ public class RoomescapeController {
     @PostMapping("/reservations")
     public ResponseEntity<Reservation> createReservation(@RequestBody ReservationCreationRequest input) {
         try {
-            Reservation newReservation = reservationRepository.add(input.getName(), input.getDate(), input.getTime());
-            return ResponseEntity.created(URI.create("reservations/" + newReservation.getId())).body(newReservation);
+            LocalDateTime dateTime = LocalDateTime.of(input.getDate(), input.getTime());
+            LocalDateTime now = LocalDateTime.now();
+            if (dateTime.isBefore(now)) {
+                throw new IllegalArgumentException("과거의 날짜와 시간으로 예약을 생성할 수 없습니다.");
+            }
+
+            long id = reservationRepository.add(input.getName(), input.getDate(), input.getTime());
+            Reservation reservation = reservationRepository.findById(id).get();
+            return ResponseEntity.created(URI.create("reservations/" + reservation.getId())).body(reservation);
         } catch (IllegalArgumentException exception) {
             return ResponseEntity.badRequest().build();
         }
@@ -41,11 +49,10 @@ public class RoomescapeController {
 
     @DeleteMapping("/reservations/{id}")
     public ResponseEntity<Void> deleteReservation(@PathVariable Long id) {
-        try {
-            reservationRepository.deleteById(id);
-            return ResponseEntity.ok().build();
-        } catch (IllegalArgumentException e) {
+        if (reservationRepository.findById(id).isEmpty()) {
             return ResponseEntity.notFound().build();
         }
+        reservationRepository.deleteById(id);
+        return ResponseEntity.ok().build();
     }
 }

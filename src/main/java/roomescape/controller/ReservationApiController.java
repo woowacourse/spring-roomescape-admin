@@ -22,7 +22,7 @@ public class ReservationApiController {
     private final ReservationDao reservationDao;
 
     @Autowired
-    public ReservationApiController(final ReservationDao reservationDao) {
+    public ReservationApiController(ReservationDao reservationDao) {
         this.reservationDao = reservationDao;
     }
 

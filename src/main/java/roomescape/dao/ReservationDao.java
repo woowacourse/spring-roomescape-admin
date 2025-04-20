@@ -26,7 +26,7 @@ public class ReservationDao {
             );
 
     @Autowired
-    public ReservationDao(final JdbcTemplate jdbcTemplate) {
+    public ReservationDao(JdbcTemplate jdbcTemplate) {
         this.jdbcTemplate = jdbcTemplate;
     }
 

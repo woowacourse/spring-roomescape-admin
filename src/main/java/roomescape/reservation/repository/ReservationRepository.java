@@ -36,7 +36,7 @@ public class ReservationRepository {
                 ));
     }
 
-    public Optional<Reservation> save(Reservation reservation) {
+    public Reservation save(Reservation reservation) {
         SimpleJdbcInsert jdbcInsert = new SimpleJdbcInsert(jdbcTemplate)
                 .withTableName("reservation")
                 .usingGeneratedKeyColumns("id");
@@ -47,7 +47,7 @@ public class ReservationRepository {
                 .addValue("time", reservation.getDateTime().toLocalTime());
         Long id = jdbcInsert.executeAndReturnKey(parameters).longValue();
 
-        return Optional.of(new Reservation(id, reservation.getReserverName(), reservation.getDateTime()));
+        return new Reservation(id, reservation.getReserverName(), reservation.getDateTime());
     }
 
     public Optional<Reservation> findById(Long id) {

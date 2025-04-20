@@ -29,18 +29,17 @@ public class ReservationService {
                 request.name(),
                 LocalDateTime.of(LocalDate.parse(request.date()), LocalTime.parse(request.time()))
         );
-        Optional<Reservation> created = reservationRepository.save(reservation);
-        return created.get();
+        return reservationRepository.save(reservation);
     }
 
     public Reservation findReservation(Long id) {
-        Optional<Reservation> reservation = reservationRepository.findById(id);
+        Optional<Reservation> found = reservationRepository.findById(id);
 
-        if (reservation.isEmpty()) {
+        if (found.isEmpty()) {
             throw new ReservationNotFoundException("[ERROR] 예약을 찾을 수 없습니다.");
         }
 
-        return reservation.get();
+        return found.get();
     }
 
     public void delete(Reservation reservation) {

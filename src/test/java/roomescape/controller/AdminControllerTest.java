@@ -58,7 +58,7 @@ public class AdminControllerTest {
                 .statusCode(200)
                 .body("name", is("브라운"),
                         "date", is("2023-08-05"),
-                        "time", is("15:40:00"));
+                        "time", is("15:40"));
 
         RestAssured.given().log().all()
                 .when().get("/reservations")

@@ -1,6 +1,8 @@
 package roomescape.domain;
 
+import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.time.LocalTime;
 import java.time.format.DateTimeFormatter;
 
 public class Reservation {
@@ -10,6 +12,13 @@ public class Reservation {
     private final LocalDateTime dateTime;
 
     public Reservation(Long id, String name, LocalDateTime dateTime) {
+        this.id = id;
+        this.name = name;
+        this.dateTime = dateTime;
+    }
+
+    public Reservation(Long id, String name, LocalDate date, LocalTime time) {
+        LocalDateTime dateTime = LocalDateTime.of(date, time);
         this.id = id;
         this.name = name;
         this.dateTime = dateTime;

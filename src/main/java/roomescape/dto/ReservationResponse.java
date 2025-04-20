@@ -7,18 +7,17 @@ import java.util.Locale;
 
 public record ReservationResponse(Long id, String name, String date, String time) {
 
-    private static final String DATE_FORMAT = "yyyy-MM-dd";
-    private static final String TIME_FORMAT = "HH:mm";
+    private static final DateTimeFormatter DATE_FORMATTER = DateTimeFormatter.ofPattern("yyyy-MM-dd", Locale.KOREA);
+    private static final DateTimeFormatter TIME_FORMATTER = DateTimeFormatter.ofPattern("HH:mm", Locale.KOREA);
+
 
     public static ReservationResponse toDto(final Reservation reservation) {
-        DateTimeFormatter dateFormatter = DateTimeFormatter.ofPattern(DATE_FORMAT, Locale.KOREA);
-        DateTimeFormatter timeFormatter = DateTimeFormatter.ofPattern(TIME_FORMAT, Locale.KOREA);
 
          return new ReservationResponse(
                  reservation.getId(),
-                 reservation.getName(),
-                 reservation.getReservationDateTime().toLocalDate().format(dateFormatter),
-                 reservation.getReservationDateTime().toLocalTime().format(timeFormatter)
+                 reservation.getCustomerName(),
+                 reservation.getReservationDateTime().toLocalDate().format(DATE_FORMATTER),
+                 reservation.getReservationDateTime().toLocalTime().format(TIME_FORMATTER)
          );
     }
 }

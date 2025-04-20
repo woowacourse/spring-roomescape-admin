@@ -12,7 +12,7 @@ import org.springframework.http.ResponseEntity;
 
 class PageControllerTest {
 
-    PageController pageController = new PageController();
+    private final PageController pageController = new PageController();
 
     @DisplayName("웹컴페이지 요청시 메인페이지로 리다이렉션한다")
     @Test

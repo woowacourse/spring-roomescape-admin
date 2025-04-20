@@ -21,8 +21,8 @@ import roomescape.dto.ReservationCreationRequest;
 
 class RoomescapeControllerTest {
 
-    Reservations reservations = new Reservations();
-    RoomescapeController controller = new RoomescapeController(reservations);
+    private final Reservations reservations = new Reservations();
+    private final RoomescapeController controller = new RoomescapeController(reservations);
 
     @DisplayName("저장된 예약들을 조회할 수 있다")
     @Test

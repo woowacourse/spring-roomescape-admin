@@ -12,7 +12,7 @@ import org.junit.jupiter.api.Test;
 
 class ReservationsTest {
 
-    Reservations reservations = new Reservations();
+    private final Reservations reservations = new Reservations();
 
     @DisplayName("예약을 추가할 수 있다")
     @Test

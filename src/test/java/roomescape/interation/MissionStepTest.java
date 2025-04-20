@@ -16,7 +16,7 @@ import org.springframework.test.annotation.DirtiesContext;
 @DirtiesContext(classMode = DirtiesContext.ClassMode.BEFORE_EACH_TEST_METHOD)
 public class MissionStepTest {
 
-    private final String FUTURE_DATE_TEXT = LocalDate.now().plusDays(1).toString();
+    private static final String FUTURE_DATE_TEXT = LocalDate.now().plusDays(1).toString();
 
     @DisplayName("메인페이지를 응답할 수 있다")
     @Test

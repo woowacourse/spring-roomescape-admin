@@ -1,9 +1,9 @@
 package roomescape.controller;
 
+import jakarta.servlet.http.HttpServletResponse;
 import java.util.List;
 import java.util.Optional;
 import java.util.concurrent.atomic.AtomicLong;
-import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -24,32 +24,28 @@ public class ReservationApiController {
     private final AtomicLong reservationId = new AtomicLong();
 
     @GetMapping
-    public ResponseEntity<List<ReservationResponse>> getReservations() {
-        List<ReservationResponse> responses = reservations.getReservations().stream()
+    public List<ReservationResponse> getReservations() {
+        return reservations.getReservations().stream()
                 .map(ReservationResponse::fromReservation)
                 .toList();
-
-        return ResponseEntity.ok(responses);
     }
 
     @PostMapping
-    public ResponseEntity<ReservationResponse> createReservation(@RequestBody ReservationRequest request) {
+    public ReservationResponse createReservation(@RequestBody ReservationRequest request) {
         Reservation created = request.toReservation(reservationId.incrementAndGet());
         reservations.add(created);
 
-        return ResponseEntity.ok(
-                ReservationResponse.fromReservation(created)
-        );
+        return ReservationResponse.fromReservation(created);
     }
 
     @DeleteMapping("{id}")
-    public ResponseEntity<Void> deleteReservation(@PathVariable Long id) {
+    public void deleteReservation(@PathVariable Long id, HttpServletResponse response) {
         Optional<Reservation> target = reservations.findById(id);
 
         if (target.isEmpty()) {
-            return ResponseEntity.notFound().build();
+            response.setStatus(HttpServletResponse.SC_NOT_FOUND);
+            return;
         }
         reservations.remove(target.get());
-        return ResponseEntity.ok().build();
     }
 }

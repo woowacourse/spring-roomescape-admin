@@ -56,4 +56,21 @@ public class ReservationRepositoryTest {
         assertThat(count).isEqualTo(1);
     }
 
+    @Test
+    void 예약_데이터를_삭제한다() {
+        jdbcTemplate.update("INSERT INTO reservation (name, dateTime) VALUES (?, ?)",
+                "브라운",
+                LocalDateTime.of(2023, 8, 5, 15, 40).toString());
+
+        Integer count = jdbcTemplate.queryForObject("SELECT count(1) from reservation", Integer.class);
+        assertThat(count).isEqualTo(1);
+
+        RestAssured.given().log().all()
+                .when().delete("/reservations/1")
+                .then().log().all()
+                .statusCode(200);
+
+        Integer countAfterDelete = jdbcTemplate.queryForObject("SELECT count(1) from reservation", Integer.class);
+        assertThat(countAfterDelete).isEqualTo(0);
+    }
 }

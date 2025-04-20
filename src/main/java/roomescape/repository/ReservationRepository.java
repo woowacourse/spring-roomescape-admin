@@ -55,11 +55,7 @@ public class ReservationRepository {
     }
 
     public void deleteById(Long id) {
-//        Reservation reservation = reservations.stream()
-//                .filter(item -> item.getId().equals(id))
-//                .findFirst()
-//                .orElseThrow(InvalidReservationException::new);
-//
-//        reservations.remove(reservation);
+        String sql = "DELETE FROM reservation WHERE id = ?";
+        jdbcTemplate.update(sql, id);
     }
 }

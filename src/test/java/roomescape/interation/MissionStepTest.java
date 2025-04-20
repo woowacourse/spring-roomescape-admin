@@ -4,6 +4,7 @@ import static org.hamcrest.Matchers.is;
 
 import io.restassured.RestAssured;
 import io.restassured.http.ContentType;
+import java.time.LocalDate;
 import java.util.HashMap;
 import java.util.Map;
 import org.junit.jupiter.api.DisplayName;
@@ -14,6 +15,8 @@ import org.springframework.test.annotation.DirtiesContext;
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.DEFINED_PORT)
 @DirtiesContext(classMode = DirtiesContext.ClassMode.BEFORE_EACH_TEST_METHOD)
 public class MissionStepTest {
+
+    private final String FUTURE_DATE_TEXT = LocalDate.now().plusDays(1).toString();
 
     @DisplayName("메인페이지를 응답할 수 있다")
     @Test
@@ -48,7 +51,7 @@ public class MissionStepTest {
     void canCreateReservation() {
         Map<String, String> params = new HashMap<>();
         params.put("name", "브라운");
-        params.put("date", "2023-08-05");
+        params.put("date", FUTURE_DATE_TEXT);
         params.put("time", "15:40");
 
         RestAssured.given().log().all()
@@ -71,7 +74,7 @@ public class MissionStepTest {
     void canDeleteReservation() {
         Map<String, String> params = new HashMap<>();
         params.put("name", "브라운");
-        params.put("date", "2023-08-05");
+        params.put("date", FUTURE_DATE_TEXT);
         params.put("time", "15:40");
 
         RestAssured.given().log().all()

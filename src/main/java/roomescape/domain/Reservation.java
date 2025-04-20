@@ -1,8 +1,10 @@
 package roomescape.domain;
 
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.time.LocalTime;
 import java.util.Objects;
+import roomescape.exception.DomainValidationMessage;
 
 public final class Reservation {
 
@@ -12,6 +14,7 @@ public final class Reservation {
     private final LocalTime time;
 
     public Reservation(Long id, String name, LocalDate date, LocalTime time) {
+        validatePastDateTime(date, time);
         this.id = id;
         this.name = name;
         this.date = date;
@@ -32,6 +35,14 @@ public final class Reservation {
 
     public LocalTime getTime() {
         return time;
+    }
+
+    private void validatePastDateTime(LocalDate date, LocalTime time) {
+        LocalDateTime dateTime = LocalDateTime.of(date, time);
+        LocalDateTime now = LocalDateTime.now();
+        if (dateTime.isBefore(now)) {
+            throw new IllegalArgumentException(DomainValidationMessage.PAST_DATE_TIME.getContent());
+        }
     }
 
     @Override

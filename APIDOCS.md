@@ -43,9 +43,9 @@
     - 요청 파라미터
       ```
       {
-          LocalDate "date": "2023-08-05",  // NotNull
-          String "name": "브라운",       // NotNull, NotBlank
-          LocalTime "time": "15:40"        // NotNull
+          LocalDate "date": "2023-08-05",  // NotNull, (과거 날짜 허용X)
+          String "name": "브라운",          // NotNull, NotBlank
+          LocalTime "time": "15:40"        // NotNull, (과거 시간 허용X)
       }
       ```
     - 정상 응답 (201)

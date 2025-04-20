@@ -8,6 +8,7 @@ import static roomescape.test.utility.ReservationTestUtility.checkReservation;
 import static roomescape.test.utility.ReservationsTestUtility.checkDeleteReservation;
 
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.time.LocalTime;
 import java.util.List;
 import org.junit.jupiter.api.DisplayName;
@@ -42,7 +43,8 @@ class RoomescapeControllerTest {
     @DisplayName("예약을 추가할 수 있다.")
     @Test
     void createReservation() {
-        Reservation expecteReservation = new Reservation(1L, "reservation1", LocalDate.now(), LocalTime.now());
+        Reservation expecteReservation = new Reservation(
+                1L, "reservation1", LocalDate.now().plusDays(1), LocalTime.now());
         ReservationCreationInput input = new ReservationCreationInput(
                 expecteReservation.getName(), expecteReservation.getDate(), expecteReservation.getTime());
 
@@ -54,6 +56,22 @@ class RoomescapeControllerTest {
                 () -> checkStatusCode(response, HttpStatus.CREATED),
                 () -> checkLocationHeader(response, "reservations/" + newReservation.getId()),
                 () -> checkReservation(response.getBody(), expecteReservation)
+        );
+    }
+
+
+    @DisplayName("과거 날짜와 시간으로는 예약을 추가할 수 없다.")
+    @Test
+    void canNotCreateReservationWithPastDateTime() {
+        LocalDateTime past = LocalDateTime.now().minusNanos(1);
+        ReservationCreationInput input = new ReservationCreationInput(
+                "reservation", past.toLocalDate(), past.toLocalTime());
+
+        ResponseEntity<Reservation> response = controller.createReservation(input);
+
+        assertAll(
+                () -> assertThat(reservations.getReservations()).isEmpty(),
+                () -> checkStatusCode(response, HttpStatus.BAD_REQUEST)
         );
     }
 

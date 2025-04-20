@@ -29,8 +29,12 @@ public class RoomescapeController {
 
     @PostMapping("/reservations")
     public ResponseEntity<Reservation> createReservation(@RequestBody ReservationCreationInput input) {
-        Reservation newReservation = reservations.add(input.getName(), input.getDate(), input.getTime());
-        return ResponseEntity.created(URI.create("reservations/" + newReservation.getId())).body(newReservation);
+        try {
+            Reservation newReservation = reservations.add(input.getName(), input.getDate(), input.getTime());
+            return ResponseEntity.created(URI.create("reservations/" + newReservation.getId())).body(newReservation);
+        } catch (IllegalArgumentException exception) {
+            return ResponseEntity.badRequest().build();
+        }
     }
 
     @DeleteMapping("/reservations/{id}")

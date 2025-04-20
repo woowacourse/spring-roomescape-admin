@@ -1,4 +1,8 @@
-# 1. 메인페이지 응답
+# 1, 2, 3단계
+
+- [x] 다음 API를 구현한다
+
+## 1. 메인페이지 응답
 
 ### Request
 
@@ -12,7 +16,7 @@ GET /admin HTTP/1.1
 templates/admin/index.html
 ```
 
-# 2. 예약페이지 응답
+## 2. 예약페이지 응답
 
 ### Request
 
@@ -26,7 +30,7 @@ GET /admin/reservation HTTP/1.1
 templates/admin/reservation-legacy.html
 ```
 
-# 3. 예약 조회
+## 3. 예약 조회
 
 ### Request
 
@@ -58,7 +62,7 @@ Content-Type: application/json
 
 ```
 
-# 4. 예약 추가
+## 4. 예약 추가
 
 ### Request
 
@@ -88,7 +92,7 @@ Content-Type: application/json
 }
 ```
 
-# 5. 예약 취소
+## 5. 예약 취소
 
 ### Request
 
@@ -101,3 +105,10 @@ DELETE /reservations/{reservationId} HTTP/1.1
 ```
 HTTP/1.1 200
 ```
+
+---
+
+# 4단계
+
+- [x] 테이블 스키마를 다음과 같이 정의한다
+- [x] h2 데이터베이스를 설정한다

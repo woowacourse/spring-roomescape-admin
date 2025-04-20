@@ -3,7 +3,7 @@ package roomescape.model;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.LocalTime;
-import roomescape.exception.DomainException;
+import roomescape.exception.ReservationException;
 
 public final class Reservation {
 
@@ -34,13 +34,13 @@ public final class Reservation {
 
     private void validateNameLength(String name) {
         if (name.isEmpty() || MAX_NAME_LENGTH < name.length()) {
-            throw new DomainException("예약자명은 1자 이상 %d자 이하로만 가능합니다.".formatted(MAX_NAME_LENGTH));
+            throw new ReservationException("예약자명은 1자 이상 %d자 이하로만 가능합니다.".formatted(MAX_NAME_LENGTH));
         }
     }
 
     private void validateNotPastDateTime(LocalDateTime reservationDateTime) {
         if (reservationDateTime.isBefore(LocalDateTime.now())) {
-            throw new DomainException("과거 일시로 예약을 생성할 수 없습니다.");
+            throw new ReservationException("과거 일시로 예약을 생성할 수 없습니다.");
         }
     }
 

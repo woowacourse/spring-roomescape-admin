@@ -8,8 +8,8 @@ import org.springframework.web.bind.annotation.ExceptionHandler;
 @ControllerAdvice
 public final class DomainExceptionHandler {
 
-    @ExceptionHandler(DomainException.class)
-    public ResponseEntity<String> handleDomainException(DomainException exception) {
+    @ExceptionHandler(ReservationException.class)
+    public ResponseEntity<String> handleReservationException(ReservationException exception) {
         return ResponseEntity.status(HttpStatus.BAD_REQUEST)
                 .body(exception.getMessage());
     }

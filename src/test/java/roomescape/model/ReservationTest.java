@@ -8,7 +8,7 @@ import java.time.LocalTime;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.ValueSource;
-import roomescape.exception.DomainException;
+import roomescape.exception.ReservationException;
 
 class ReservationTest {
 
@@ -39,7 +39,7 @@ class ReservationTest {
 
         // when & then
         assertThatCode(() -> new Reservation(name, reservationDate, reservationTime))
-                .isInstanceOf(DomainException.class)
+                .isInstanceOf(ReservationException.class)
                 .hasMessage("과거 일시로 예약을 생성할 수 없습니다.");
     }
 
@@ -54,7 +54,7 @@ class ReservationTest {
 
         // when & then
         assertThatCode(() -> new Reservation(invalidName, reservationDate, reservationTime))
-                .isInstanceOf(DomainException.class)
+                .isInstanceOf(ReservationException.class)
                 .hasMessage("예약자명은 1자 이상 20자 이하로만 가능합니다.");
     }
 }

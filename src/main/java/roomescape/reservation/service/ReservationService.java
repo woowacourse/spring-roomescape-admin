@@ -8,7 +8,6 @@ import java.util.Optional;
 import org.springframework.stereotype.Service;
 import roomescape.reservation.controller.request.ReservationCreateRequest;
 import roomescape.reservation.domain.Reservation;
-import roomescape.reservation.domain.Reservations;
 import roomescape.reservation.repository.ReservationRepository;
 import roomescape.reservation.service.exception.ReservationNotFoundException;
 
@@ -21,9 +20,8 @@ public class ReservationService {
         this.reservationRepository = reservationRepository;
     }
 
-    public Reservations findReservations() {
-        List<Reservation> reservations = reservationRepository.findAll();
-        return new Reservations(reservations);
+    public List<Reservation> findReservations() {
+        return reservationRepository.findAll();
     }
 
     public Reservation createReservation(ReservationCreateRequest request) {

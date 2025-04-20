@@ -1,5 +1,6 @@
 package roomescape.reservation.controller;
 
+import java.util.List;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -11,9 +12,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import roomescape.reservation.controller.request.ReservationCreateRequest;
 import roomescape.reservation.controller.response.ReservationResponse;
-import roomescape.reservation.controller.response.ReservationsResponse;
 import roomescape.reservation.domain.Reservation;
-import roomescape.reservation.domain.Reservations;
 import roomescape.reservation.domain.exception.ReserverNameEmptyException;
 import roomescape.reservation.service.ReservationService;
 import roomescape.reservation.service.exception.ReservationNotFoundException;
@@ -29,11 +28,11 @@ public class ReservationApiController {
     }
 
     @GetMapping
-    public ResponseEntity<ReservationsResponse> getReservations() {
-        Reservations reservations = reservationService.findReservations();
+    public ResponseEntity<List<ReservationResponse>> getReservations() {
+        List<Reservation> reservations = reservationService.findReservations();
 
         return ResponseEntity
-                .ok(ReservationsResponse.from(reservations));
+                .ok(ReservationResponse.from(reservations));
     }
 
     @PostMapping

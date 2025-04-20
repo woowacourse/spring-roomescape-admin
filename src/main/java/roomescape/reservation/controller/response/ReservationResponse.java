@@ -1,8 +1,7 @@
 package roomescape.reservation.controller.response;
 
-import java.time.LocalDate;
-import java.time.LocalTime;
 import java.time.format.DateTimeFormatter;
+import java.util.List;
 import roomescape.reservation.domain.Reservation;
 
 public record ReservationResponse(
@@ -12,16 +11,19 @@ public record ReservationResponse(
         String time
 ) {
     public static ReservationResponse from(Reservation reservation) {
-        LocalDate date = reservation.getDateTime().toLocalDate();
-        LocalTime time = reservation.getDateTime().toLocalTime();
-
         DateTimeFormatter timeFormatter = DateTimeFormatter.ofPattern("HH:mm");
 
         return new ReservationResponse(
                 reservation.getId(),
                 reservation.getReserverName(),
-                date.toString(),
-                time.format(timeFormatter)
+                reservation.getDate().toString(),
+                reservation.getTime().format(timeFormatter)
         );
+    }
+
+    public static List<ReservationResponse> from(List<Reservation> reservations) {
+        return reservations.stream()
+                .map(ReservationResponse::from)
+                .toList();
     }
 }

@@ -8,13 +8,14 @@ import io.restassured.http.ContentType;
 import java.sql.Connection;
 import java.sql.SQLException;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.test.annotation.DirtiesContext;
-import roomescape.reservation.controller.response.ReservationsResponse;
+import roomescape.reservation.controller.response.ReservationResponse;
 
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.DEFINED_PORT)
 @DirtiesContext(classMode = DirtiesContext.ClassMode.BEFORE_EACH_TEST_METHOD)
@@ -41,15 +42,15 @@ public class ReservationTest {
                 "2023-08-05",
                 "15:40");
 
-        ReservationsResponse response = RestAssured.given().log().all()
+        List<ReservationResponse> response = RestAssured.given().log().all()
                 .when().get("/reservations")
                 .then().log().all()
                 .statusCode(200).extract()
-                .as(ReservationsResponse.class);
+                .jsonPath().getList(".", ReservationResponse.class);
 
         Integer count = jdbcTemplate.queryForObject("SELECT count(1) from reservation", Integer.class);
 
-        assertThat(response.reservationResponses().size()).isEqualTo(count);
+        assertThat(response.size()).isEqualTo(count);
     }
 
     @Test

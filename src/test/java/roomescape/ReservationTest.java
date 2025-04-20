@@ -10,19 +10,35 @@ import static org.assertj.core.api.Assertions.assertThatThrownBy;
 
 class ReservationTest {
 
-    private static final long validId = 1;
+    private static final long VALID_ID = 1;
+    private static final String VALID_NAME = "포비";
 
     @Test
     @DisplayName("이름이 빈 문자열이면 예외가 발생한다")
-    void nameExceptionTest() {
+    void nameEmptyExceptionTest() {
         // given
         String invalidName = "";
         LocalDate validDate = LocalDate.now();
         LocalTime validTime = LocalTime.now();
 
         // when & then
-        assertThatThrownBy(() -> new Reservation(validId, invalidName, validDate, validTime))
-                .isInstanceOf(IllegalArgumentException.class);
+        assertThatThrownBy(() -> new Reservation(VALID_ID, invalidName, validDate, validTime))
+                .isInstanceOf(IllegalArgumentException.class)
+                .hasMessage("[ERROR] 이름을 입력해주세요.");
+    }
+
+    @Test
+    @DisplayName("이름이 null이면 예외가 발생한다")
+    void nameNullExceptionTest() {
+        // given
+        String invalidName = null;
+        LocalDate validDate = LocalDate.now();
+        LocalTime validTime = LocalTime.now();
+
+        // when & then
+        assertThatThrownBy(() -> new Reservation(VALID_ID, invalidName, validDate, validTime))
+                .isInstanceOf(IllegalArgumentException.class)
+                .hasMessage("[ERROR] 이름을 입력해주세요.");
     }
 
     @Test
@@ -30,12 +46,12 @@ class ReservationTest {
     void dateExceptionTest() {
         // given
         LocalDate invalidDate = null;
-        String validName = "포비";
         LocalTime validTime = LocalTime.now();
 
         // when & then
-        assertThatThrownBy(() -> new Reservation(validId, validName, invalidDate, validTime))
-                .isInstanceOf(IllegalArgumentException.class);
+        assertThatThrownBy(() -> new Reservation(VALID_ID, VALID_NAME, invalidDate, validTime))
+                .isInstanceOf(IllegalArgumentException.class)
+                .hasMessage("[ERROR] 날짜를 입력해주세요.");
     }
 
     @Test
@@ -43,11 +59,11 @@ class ReservationTest {
     void timeExceptionTest() {
         // given
         LocalTime invalidTime = null;
-        String validName = "포비";
         LocalDate validDate = LocalDate.now();
 
         // when & then
-        assertThatThrownBy(() -> new Reservation(validId, validName, validDate, invalidTime))
-                .isInstanceOf(IllegalArgumentException.class);
+        assertThatThrownBy(() -> new Reservation(VALID_ID, VALID_NAME, validDate, invalidTime))
+                .isInstanceOf(IllegalArgumentException.class)
+                .hasMessage("[ERROR] 시간을 입력해주세요.");
     }
 }

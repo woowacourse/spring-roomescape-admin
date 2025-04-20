@@ -1,0 +1,30 @@
+package roomescape;
+
+import java.util.List;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.jdbc.core.JdbcTemplate;
+import org.springframework.jdbc.core.RowMapper;
+import org.springframework.stereotype.Component;
+
+@Component
+public class ReservationDao {
+    private final JdbcTemplate jdbcTemplate;
+    private final RowMapper<Reservation> reservationRowMapper = (resultSet, rowNum) -> {
+        return new Reservation(
+                resultSet.getLong("id"),
+                resultSet.getString("name"),
+                resultSet.getDate("date").toLocalDate(),
+                resultSet.getTime("time").toLocalTime()
+        );
+    };
+
+    @Autowired
+    public ReservationDao(JdbcTemplate jdbcTemplate) {
+        this.jdbcTemplate = jdbcTemplate;
+    }
+
+    public List<Reservation> findAll() {
+        String sql = "SELECT * FROM reservation";
+        return jdbcTemplate.query(sql, reservationRowMapper);
+    }
+}

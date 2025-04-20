@@ -33,7 +33,7 @@ class ReservationsTest {
         reservations.add("reservation3", LocalDate.now(), LocalTime.now());
         long deleteReservationId = reservations.getReservations().getFirst().getId();
 
-        reservations.deleteBy(deleteReservationId);
+        reservations.deleteById(deleteReservationId);
         assertAll(
                 () -> assertThat(reservations.getReservations()).hasSize(2),
                 () -> checkDeleteReservation(reservations, deleteReservationId));

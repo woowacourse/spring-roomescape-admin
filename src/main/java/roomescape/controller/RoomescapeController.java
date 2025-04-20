@@ -40,7 +40,7 @@ public class RoomescapeController {
     @DeleteMapping("/reservations/{id}")
     public ResponseEntity<Void> deleteReservation(@PathVariable Long id) {
         try {
-            reservations.deleteBy(id);
+            reservations.deleteById(id);
             return ResponseEntity.ok().build();
         } catch (IllegalArgumentException e) {
             return ResponseEntity.notFound().build();

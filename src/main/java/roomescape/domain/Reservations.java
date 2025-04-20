@@ -10,6 +10,7 @@ import org.springframework.stereotype.Component;
 
 @Component
 public class Reservations {
+
     private final Map<Long, Reservation> reservations = new ConcurrentHashMap<>();
     private final AtomicLong index = new AtomicLong(1);
 
@@ -19,7 +20,7 @@ public class Reservations {
         return newReservation;
     }
 
-    public void deleteBy(Long id) {
+    public void deleteById(Long id) {
         if (!reservations.containsKey(id)) {
             throw new IllegalArgumentException("[ERROR] 해당 id의 예약이 없습니다: " + id);
         }

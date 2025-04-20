@@ -27,11 +27,11 @@ public class ReservationInMemoryRepository implements ReservationRepository {
     }
 
     public Reservation save(Reservation reservation) {
-        if (reservation.getId() == null) {
+        if (reservation.id() == null) {
             long id = ATOMIC_LONG.getAndIncrement();
-            reservation = new Reservation(id, reservation.getName(),
-                    reservation.getDate(),
-                    reservation.getTime());
+            reservation = new Reservation(id, reservation.name(),
+                    reservation.date(),
+                    reservation.time());
         }
         reservations.add(reservation);
         return reservation;
@@ -39,7 +39,7 @@ public class ReservationInMemoryRepository implements ReservationRepository {
 
     public void deleteById(long id) {
         Reservation reservation = reservations.stream()
-                .filter(r -> r.getId() == id)
+                .filter(r -> r.id() == id)
                 .findFirst()
                 .orElseThrow(() -> new EntityNotFoundException("예약 데이터를 찾을 수 없습니다:" + id));
         reservations.remove(reservation);

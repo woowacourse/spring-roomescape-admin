@@ -6,6 +6,7 @@ import java.util.List;
 import java.util.Map;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.JdbcTemplate;
+import org.springframework.jdbc.core.RowMapper;
 import org.springframework.jdbc.core.simple.SimpleJdbcInsert;
 import org.springframework.stereotype.Component;
 import roomescape.domain.Reservation;
@@ -16,17 +17,23 @@ public class ReservationDao {
     private static final String FIND_ALL_SQL = "select * from reservation";
     private static final String DELETE_BY_ID_SQL = "delete from reservation where id = ?";
 
+    private final JdbcTemplate jdbcTemplate;
+    private final RowMapper<Reservation> reservationMapper = (resultSet, row) ->
+            new Reservation(
+                    resultSet.getLong("id"),
+                    resultSet.getString("name"),
+                    resultSet.getObject("datetime", LocalDateTime.class)
+            );
+
     @Autowired
-    private JdbcTemplate jdbcTemplate;
+    public ReservationDao(final JdbcTemplate jdbcTemplate) {
+        this.jdbcTemplate = jdbcTemplate;
+    }
 
     public List<Reservation> findAll() {
         return jdbcTemplate.query(
                 FIND_ALL_SQL,
-                (resultSet, row) -> new Reservation(
-                        resultSet.getLong("id"),
-                        resultSet.getString("name"),
-                        resultSet.getObject("datetime", LocalDateTime.class)
-                )
+                reservationMapper
         );
     }
 

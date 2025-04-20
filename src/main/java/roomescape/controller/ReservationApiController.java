@@ -19,8 +19,12 @@ import roomescape.dto.ReservationResponse;
 @RequestMapping("reservations")
 public class ReservationApiController {
 
+    private final ReservationDao reservationDao;
+
     @Autowired
-    private ReservationDao reservationDao;
+    public ReservationApiController(final ReservationDao reservationDao) {
+        this.reservationDao = reservationDao;
+    }
 
     @GetMapping
     public List<ReservationResponse> getReservations() {

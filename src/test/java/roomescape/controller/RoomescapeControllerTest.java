@@ -16,20 +16,21 @@ import org.junit.jupiter.api.Test;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import roomescape.domain.Reservation;
-import roomescape.domain.Reservations;
 import roomescape.dto.ReservationCreationRequest;
+import roomescape.repository.ReservationRepository;
+import roomescape.test.fake.FakeReservationRepository;
 
 class RoomescapeControllerTest {
 
-    private final Reservations reservations = new Reservations();
-    private final RoomescapeController controller = new RoomescapeController(reservations);
+    private final ReservationRepository reservationRepository = new FakeReservationRepository();
+    private final RoomescapeController controller = new RoomescapeController(reservationRepository);
 
     @DisplayName("저장된 예약들을 조회할 수 있다")
     @Test
     void getReservations() {
-        reservations.add("reservation1", LocalDate.now(), LocalTime.now());
-        reservations.add("reservation2", LocalDate.now(), LocalTime.now());
-        reservations.add("reservation3", LocalDate.now(), LocalTime.now());
+        reservationRepository.add("reservation1", LocalDate.now(), LocalTime.now());
+        reservationRepository.add("reservation2", LocalDate.now(), LocalTime.now());
+        reservationRepository.add("reservation3", LocalDate.now(), LocalTime.now());
 
         ResponseEntity<List<Reservation>> response = controller.getReservations();
         List<Reservation> actualReservations = response.getBody();
@@ -50,7 +51,7 @@ class RoomescapeControllerTest {
 
         ResponseEntity<Reservation> response = controller.createReservation(input);
 
-        Reservation newReservation = reservations.getReservations().getFirst();
+        Reservation newReservation = reservationRepository.findAll().getFirst();
         assertAll(
                 () -> checkReservation(newReservation, expecteReservation),
                 () -> checkStatusCode(response, HttpStatus.CREATED),
@@ -70,7 +71,7 @@ class RoomescapeControllerTest {
         ResponseEntity<Reservation> response = controller.createReservation(input);
 
         assertAll(
-                () -> assertThat(reservations.getReservations()).isEmpty(),
+                () -> assertThat(reservationRepository.findAll()).isEmpty(),
                 () -> checkStatusCode(response, HttpStatus.BAD_REQUEST)
         );
     }
@@ -78,13 +79,14 @@ class RoomescapeControllerTest {
     @DisplayName("특정 ID의 예약을 삭제할 수 있다.")
     @Test
     void deleteReservation() {
-        reservations.add("reservation1", LocalDate.now(), LocalTime.now());
-        reservations.add("reservation2", LocalDate.now(), LocalTime.now());
-        reservations.add("reservation3", LocalDate.now(), LocalTime.now());
-        long deleteReservationId = reservations.getReservations().getFirst().getId();
+        reservationRepository.add("reservation1", LocalDate.now(), LocalTime.now());
+        reservationRepository.add("reservation2", LocalDate.now(), LocalTime.now());
+        reservationRepository.add("reservation3", LocalDate.now(), LocalTime.now());
+        long deleteReservationId = reservationRepository.findAll().getFirst().getId();
 
         ResponseEntity<Void> response = controller.deleteReservation(deleteReservationId);
 
+        List<Reservation> reservations = reservationRepository.findAll();
         assertAll(
                 () -> checkDeleteReservation(reservations, deleteReservationId),
                 () -> checkStatusCode(response, HttpStatus.OK)

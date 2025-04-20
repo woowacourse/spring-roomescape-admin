@@ -36,7 +36,7 @@ class ReservationsTest {
         reservations.deleteById(deleteReservationId);
         assertAll(
                 () -> assertThat(reservations.getReservations()).hasSize(2),
-                () -> checkDeleteReservation(reservations, deleteReservationId));
+                () -> checkDeleteReservation(reservations.getReservations(), deleteReservationId));
     }
 
     @DisplayName("모든 예약들을 조회할 수 있다")

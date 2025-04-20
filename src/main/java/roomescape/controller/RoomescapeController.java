@@ -2,6 +2,7 @@ package roomescape.controller;
 
 import java.net.URI;
 import java.util.List;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -10,27 +11,28 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import roomescape.domain.Reservation;
-import roomescape.domain.Reservations;
 import roomescape.dto.ReservationCreationRequest;
+import roomescape.repository.ReservationRepository;
 
 @Controller
 public class RoomescapeController {
 
-    private final Reservations reservations;
+    @Autowired
+    private final ReservationRepository reservationRepository;
 
-    public RoomescapeController(Reservations reservations) {
-        this.reservations = reservations;
+    public RoomescapeController(ReservationRepository reservationRepository) {
+        this.reservationRepository = reservationRepository;
     }
 
     @GetMapping("/reservations")
     public ResponseEntity<List<Reservation>> getReservations() {
-        return ResponseEntity.ok().body(reservations.getReservations());
+        return ResponseEntity.ok().body(reservationRepository.findAll());
     }
 
     @PostMapping("/reservations")
     public ResponseEntity<Reservation> createReservation(@RequestBody ReservationCreationRequest input) {
         try {
-            Reservation newReservation = reservations.add(input.getName(), input.getDate(), input.getTime());
+            Reservation newReservation = reservationRepository.add(input.getName(), input.getDate(), input.getTime());
             return ResponseEntity.created(URI.create("reservations/" + newReservation.getId())).body(newReservation);
         } catch (IllegalArgumentException exception) {
             return ResponseEntity.badRequest().build();
@@ -40,7 +42,7 @@ public class RoomescapeController {
     @DeleteMapping("/reservations/{id}")
     public ResponseEntity<Void> deleteReservation(@PathVariable Long id) {
         try {
-            reservations.deleteById(id);
+            reservationRepository.deleteById(id);
             return ResponseEntity.ok().build();
         } catch (IllegalArgumentException e) {
             return ResponseEntity.notFound().build();

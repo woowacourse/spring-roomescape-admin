@@ -2,10 +2,10 @@ package roomescape.repository;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Objects;
 import java.util.concurrent.atomic.AtomicLong;
 import org.springframework.stereotype.Repository;
 import roomescape.entity.Reservation;
+import roomescape.exceptions.EntityNotFoundException;
 
 @Repository
 public class ReservationInMemoryRepository implements ReservationRepository {
@@ -28,7 +28,7 @@ public class ReservationInMemoryRepository implements ReservationRepository {
 
     public Reservation save(Reservation reservation) {
         if (reservation.getId() == null) {
-            Long id = ATOMIC_LONG.getAndIncrement();
+            long id = ATOMIC_LONG.getAndIncrement();
             reservation = new Reservation(id, reservation.getName(),
                     reservation.getDate(),
                     reservation.getTime());
@@ -37,11 +37,11 @@ public class ReservationInMemoryRepository implements ReservationRepository {
         return reservation;
     }
 
-    public void deleteById(Long id) {
+    public void deleteById(long id) {
         Reservation reservation = reservations.stream()
-                .filter(r -> Objects.equals(r.getId(), id))
+                .filter(r -> r.getId() == id)
                 .findFirst()
-                .orElseThrow(IllegalArgumentException::new);
+                .orElseThrow(() -> new EntityNotFoundException("예약 데이터를 찾을 수 없습니다:" + id));
         reservations.remove(reservation);
     }
 }

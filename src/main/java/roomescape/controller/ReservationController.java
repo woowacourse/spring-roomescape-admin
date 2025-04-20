@@ -3,6 +3,7 @@ package roomescape.controller;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.atomic.AtomicLong;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -19,7 +20,7 @@ import roomescape.entity.Reservation;
 public class ReservationController {
 
     private AtomicLong index = new AtomicLong(1);
-    private Map<Long, Reservation> reservations = new HashMap<>();
+    private Map<Long, Reservation> reservations = new ConcurrentHashMap<>();
 
     @GetMapping
     public ResponseEntity<List<Reservation>> getReservations(

@@ -31,7 +31,11 @@ public class ReservationController {
 
     @DeleteMapping("/{id}")
     public ResponseEntity<Void> delete(@PathVariable Long id) {
-        reservations.deleteById(id);
-        return ResponseEntity.ok().build();
+        try {
+            reservations.deleteById(id);
+            return ResponseEntity.ok().build();
+        } catch (RuntimeException e) {
+            return ResponseEntity.badRequest().build();
+        }
     }
 }

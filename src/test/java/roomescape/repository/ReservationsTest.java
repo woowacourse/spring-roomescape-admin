@@ -2,11 +2,13 @@ package roomescape.repository;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
+import java.time.Clock;
+import java.time.Instant;
 import java.time.LocalDate;
 import java.time.LocalTime;
+import java.time.ZoneId;
 import java.util.ArrayList;
 import java.util.List;
-import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import roomescape.domain.Reservation;
@@ -14,12 +16,8 @@ import roomescape.domain.Reservations;
 
 class ReservationsTest {
 
-    private Reservations reservations;
-
-    @BeforeEach
-    void setUp() {
-        reservations = new Reservations(new ArrayList<>());
-    }
+    private final Reservations reservations = new Reservations(new ArrayList<>());
+    private final Clock clock = Clock.fixed(Instant.parse("2025-04-20T10:00:00Z"), ZoneId.systemDefault());
 
     @DisplayName("예약을 조회한다.")
     @Test
@@ -38,9 +36,11 @@ class ReservationsTest {
     void addTest() {
 
         // given
+        final LocalDate date = LocalDate.of(2025, 4, 21);
+        final LocalTime time = LocalTime.of(10, 0);
 
         // when
-        reservations.add("체체", LocalDate.now(), LocalTime.now().plusHours(1));
+        reservations.add("체체", date, time, clock);
 
         // then
         assertThat(reservations.findAll().size()).isEqualTo(1);
@@ -51,11 +51,13 @@ class ReservationsTest {
     void deleteTest() {
 
         // given
-
-        // when
-        reservations.add("체체", LocalDate.now(), LocalTime.now().plusHours(1));
+        final LocalDate date = LocalDate.of(2025, 4, 21);
+        final LocalTime time = LocalTime.of(10, 0);
+        reservations.add("체체", date, time, clock);
         List<Reservation> reservations = this.reservations.findAll();
         Reservation findReservation = reservations.getFirst();
+
+        // when
         this.reservations.remove(findReservation.getId());
 
         // then

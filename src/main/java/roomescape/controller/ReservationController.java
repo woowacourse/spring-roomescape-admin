@@ -1,6 +1,7 @@
 package roomescape.controller;
 
 import java.net.URI;
+import java.time.Clock;
 import java.util.ArrayList;
 import java.util.List;
 import org.springframework.http.ResponseEntity;
@@ -25,7 +26,7 @@ public class ReservationController {
     public ReservationController() {
         this.reservations = new Reservations(new ArrayList<>());
     }
-    
+
     @GetMapping
     public ResponseEntity<List<ReservationResponse>> findAll() {
         return ResponseEntity.ok().body(createReservationResponses(reservations.findAll()));
@@ -37,7 +38,8 @@ public class ReservationController {
         final Long id = reservations.add(
                 reservationCreateRequest.name(),
                 reservationCreateRequest.date(),
-                reservationCreateRequest.time()
+                reservationCreateRequest.time(),
+                Clock.systemDefaultZone()
         );
         return ResponseEntity.created(URI.create("/reservations/" + id)).build();
     }

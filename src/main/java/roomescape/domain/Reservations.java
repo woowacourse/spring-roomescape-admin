@@ -1,5 +1,6 @@
 package roomescape.domain;
 
+import java.time.Clock;
 import java.time.LocalDate;
 import java.time.LocalTime;
 import java.util.List;
@@ -20,11 +21,12 @@ public class Reservations {
         return reservations;
     }
 
-    public Long add(final String name, final LocalDate date, final LocalTime time) {
+    public Long add(final String name, final LocalDate date, final LocalTime time, Clock clock) {
         Reservation reservation = new Reservation(index.getAndIncrement(),
                 name,
                 date,
-                time
+                time,
+                clock
         );
         reservations.add(reservation);
         return reservation.getId();
@@ -35,7 +37,6 @@ public class Reservations {
                 .filter(it -> Objects.equals(it.getId(), id))
                 .findFirst()
                 .orElseThrow(NoSuchElementException::new);
-
         reservations.remove(reservation);
     }
 }

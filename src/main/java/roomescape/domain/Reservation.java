@@ -5,6 +5,8 @@ import java.time.LocalTime;
 
 public class Reservation {
 
+    private static final int NAME_MAX_LENGTH = 4;
+
     private long id;
     private final String name;
     private final LocalDate date;
@@ -39,8 +41,8 @@ public class Reservation {
     }
 
     private void validateNameLength(final String name) {
-        if (name.length() > 4) {
-            throw new IllegalArgumentException("예약자의 이름은 4글자를 초과할 수 없습니다.");
+        if (name.length() > NAME_MAX_LENGTH) {
+            throw new IllegalArgumentException(String.format("예약자의 이름은 %d글자를 초과할 수 없습니다.", NAME_MAX_LENGTH));
         }
     }
 

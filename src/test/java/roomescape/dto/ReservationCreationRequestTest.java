@@ -10,13 +10,13 @@ import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.NullAndEmptySource;
 import roomescape.exception.ValidationExceptionMessage;
 
-class ReservationCreationInputTest {
+class ReservationCreationRequestTest {
 
     @DisplayName("null이거나 공백인 이름을 허용하지 않는다")
     @ParameterizedTest
     @NullAndEmptySource
     void validateName(String invalidName) {
-        assertThatThrownBy(() -> new ReservationCreationInput(invalidName, LocalDate.now(), LocalTime.now()))
+        assertThatThrownBy(() -> new ReservationCreationRequest(invalidName, LocalDate.now(), LocalTime.now()))
                 .isInstanceOf(IllegalArgumentException.class)
                 .hasMessage(ValidationExceptionMessage.NULL_OR_BLANK_NAME.getContent());
     }
@@ -25,7 +25,7 @@ class ReservationCreationInputTest {
     @Test
     void validateDate() {
         LocalDate nullDate = null;
-        assertThatThrownBy(() -> new ReservationCreationInput("kim", nullDate, LocalTime.now()))
+        assertThatThrownBy(() -> new ReservationCreationRequest("kim", nullDate, LocalTime.now()))
                 .isInstanceOf(IllegalArgumentException.class)
                 .hasMessage(ValidationExceptionMessage.NULL_DATE.getContent());
     }
@@ -34,7 +34,7 @@ class ReservationCreationInputTest {
     @Test
     void validateTime() {
         LocalTime nullTime = null;
-        assertThatThrownBy(() -> new ReservationCreationInput("kim", LocalDate.now(), nullTime))
+        assertThatThrownBy(() -> new ReservationCreationRequest("kim", LocalDate.now(), nullTime))
                 .isInstanceOf(IllegalArgumentException.class)
                 .hasMessage(ValidationExceptionMessage.NULL_TIME.getContent());
     }

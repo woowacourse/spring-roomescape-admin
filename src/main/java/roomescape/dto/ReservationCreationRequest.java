@@ -4,13 +4,13 @@ import java.time.LocalDate;
 import java.time.LocalTime;
 import roomescape.exception.ValidationExceptionMessage;
 
-public final class ReservationCreationInput {
+public final class ReservationCreationRequest {
 
     private final String name;
     private final LocalDate date;
     private final LocalTime time;
 
-    public ReservationCreationInput(String name, LocalDate date, LocalTime time) {
+    public ReservationCreationRequest(String name, LocalDate date, LocalTime time) {
         validate(name, date, time);
         this.name = name;
         this.date = date;

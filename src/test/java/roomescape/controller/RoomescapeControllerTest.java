@@ -17,7 +17,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import roomescape.domain.Reservation;
 import roomescape.domain.Reservations;
-import roomescape.dto.ReservationCreationInput;
+import roomescape.dto.ReservationCreationRequest;
 
 class RoomescapeControllerTest {
 
@@ -45,7 +45,7 @@ class RoomescapeControllerTest {
     void createReservation() {
         Reservation expecteReservation = new Reservation(
                 1L, "reservation1", LocalDate.now().plusDays(1), LocalTime.now());
-        ReservationCreationInput input = new ReservationCreationInput(
+        ReservationCreationRequest input = new ReservationCreationRequest(
                 expecteReservation.getName(), expecteReservation.getDate(), expecteReservation.getTime());
 
         ResponseEntity<Reservation> response = controller.createReservation(input);
@@ -64,7 +64,7 @@ class RoomescapeControllerTest {
     @Test
     void canNotCreateReservationWithPastDateTime() {
         LocalDateTime past = LocalDateTime.now().minusNanos(1);
-        ReservationCreationInput input = new ReservationCreationInput(
+        ReservationCreationRequest input = new ReservationCreationRequest(
                 "reservation", past.toLocalDate(), past.toLocalTime());
 
         ResponseEntity<Reservation> response = controller.createReservation(input);

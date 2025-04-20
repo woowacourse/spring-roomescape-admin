@@ -1,12 +1,12 @@
 package roomescape.controller;
 
+import java.sql.PreparedStatement;
 import java.util.List;
-import java.util.Map;
-import java.util.concurrent.ConcurrentHashMap;
-import java.util.concurrent.atomic.AtomicLong;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.jdbc.core.JdbcTemplate;
+import org.springframework.jdbc.support.GeneratedKeyHolder;
+import org.springframework.jdbc.support.KeyHolder;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -19,9 +19,6 @@ import roomescape.controller.model.Reservation;
 @RestController
 @RequestMapping("/reservations")
 public class ReservationController {
-
-    private final AtomicLong autoIncrementId = new AtomicLong(0L);
-    private final Map<Long, Reservation> reservations = new ConcurrentHashMap<>();
 
     @Autowired
     private final JdbcTemplate jdbcTemplate;
@@ -44,14 +41,23 @@ public class ReservationController {
 
     @PostMapping
     public ResponseEntity<Reservation> createReservation(@RequestBody Reservation reservation) {
-        Long id = autoIncrementId.incrementAndGet();
-        reservations.put(id, reservation.withId(id));
-        return ResponseEntity.ok(reservations.get(id));
+        String sql = "INSERT INTO reservation(name, date, time) VALUES (?, ?, ?)";
+        KeyHolder keyHolder = new GeneratedKeyHolder();
+
+        jdbcTemplate.update(con -> {
+            PreparedStatement ps = con.prepareStatement(sql, new String[]{"id"});
+            ps.setString(1, reservation.name());
+            ps.setString(2, reservation.date().toString());
+            ps.setString(3, reservation.time().toString());
+            return ps;
+        }, keyHolder);
+
+        return ResponseEntity.ok(reservation.withId(keyHolder.getKey().longValue()));
     }
 
     @DeleteMapping("/{reservationId}")
     public ResponseEntity<Void> deleteReservation(@PathVariable("reservationId") Long reservationId) {
-        reservations.remove(reservationId);
+        jdbcTemplate.update("DELETE FROM reservation WHERE id = ?", reservationId);
         return ResponseEntity.ok().build();
     }
 }

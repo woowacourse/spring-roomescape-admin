@@ -13,4 +13,10 @@ public class ReservationTestUtility {
     public static void checkReservationId(long actualId, long expectedId) {
         assertThat(actualId).isEqualTo(expectedId);
     }
+
+    public static void checkReservationFieldWithoutId(Reservation actual, Reservation expected) {
+        assertThat(actual.getName()).isEqualTo(expected.getName());
+        assertThat(actual.getDate()).isEqualTo(expected.getDate());
+        assertThat(actual.getTime()).isEqualTo(expected.getTime());
+    }
 }

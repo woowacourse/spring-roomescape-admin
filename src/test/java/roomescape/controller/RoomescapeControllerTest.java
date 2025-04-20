@@ -4,13 +4,11 @@ import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertAll;
 import static roomescape.test.utility.HttpResponseTestUtility.checkLocationHeader;
 import static roomescape.test.utility.HttpResponseTestUtility.checkStatusCode;
-import static roomescape.test.utility.ReservationTestUtility.checkReservation;
+import static roomescape.test.utility.ReservationTestUtility.checkReservationFieldWithoutId;
 import static roomescape.test.utility.ReservationTestUtility.checkReservationId;
 import static roomescape.test.utility.ReservationsTestUtility.checkDeleteReservation;
 
-import java.time.LocalDate;
 import java.time.LocalDateTime;
-import java.time.LocalTime;
 import java.util.List;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -21,6 +19,7 @@ import roomescape.dto.ReservationCreationRequest;
 import roomescape.dto.ReservationCreationResponse;
 import roomescape.repository.ReservationRepository;
 import roomescape.test.fake.FakeReservationRepository;
+import roomescape.test.fixture.ReservationFixture;
 
 class RoomescapeControllerTest {
 
@@ -30,9 +29,9 @@ class RoomescapeControllerTest {
     @DisplayName("저장된 예약들을 조회할 수 있다")
     @Test
     void getReservations() {
-        reservationRepository.add(Reservation.createWithoutId("reservation1", LocalDate.now(), LocalTime.now()));
-        reservationRepository.add(Reservation.createWithoutId("reservation2", LocalDate.now(), LocalTime.now()));
-        reservationRepository.add(Reservation.createWithoutId("reservation3", LocalDate.now(), LocalTime.now()));
+        reservationRepository.add(ReservationFixture.create("reservation1"));
+        reservationRepository.add(ReservationFixture.create("reservation2"));
+        reservationRepository.add(ReservationFixture.create("reservation3"));
 
         ResponseEntity<List<Reservation>> response = controller.getReservations();
         List<Reservation> actualReservations = response.getBody();
@@ -46,8 +45,7 @@ class RoomescapeControllerTest {
     @DisplayName("예약을 추가할 수 있다.")
     @Test
     void createReservation() {
-        Reservation expecteReservation = new Reservation(
-                1L, "reservation1", LocalDate.now().plusDays(1), LocalTime.now());
+        Reservation expecteReservation = ReservationFixture.create("reservation1");
         ReservationCreationRequest input = new ReservationCreationRequest(
                 expecteReservation.getName(), expecteReservation.getDate(), expecteReservation.getTime());
 
@@ -55,7 +53,8 @@ class RoomescapeControllerTest {
 
         Reservation newReservation = reservationRepository.findAll().getFirst();
         assertAll(
-                () -> checkReservation(newReservation, expecteReservation),
+                () -> checkReservationId(newReservation.getId(), 1L),
+                () -> checkReservationFieldWithoutId(newReservation, expecteReservation),
                 () -> checkStatusCode(response, HttpStatus.CREATED),
                 () -> checkLocationHeader(response, "reservations/" + newReservation.getId()),
                 () -> checkReservationId(response.getBody().id(), 1L)
@@ -66,7 +65,7 @@ class RoomescapeControllerTest {
     @DisplayName("과거 날짜와 시간으로는 예약을 추가할 수 없다.")
     @Test
     void canNotCreateReservationWithPastDateTime() {
-        LocalDateTime past = LocalDateTime.now().minusNanos(1);
+        LocalDateTime past = LocalDateTime.now().minusSeconds(1);
         ReservationCreationRequest input = new ReservationCreationRequest(
                 "reservation", past.toLocalDate(), past.toLocalTime());
 
@@ -81,9 +80,9 @@ class RoomescapeControllerTest {
     @DisplayName("특정 ID의 예약을 삭제할 수 있다.")
     @Test
     void deleteReservation() {
-        reservationRepository.add(Reservation.createWithoutId("reservation1", LocalDate.now(), LocalTime.now()));
-        reservationRepository.add(Reservation.createWithoutId("reservation2", LocalDate.now(), LocalTime.now()));
-        reservationRepository.add(Reservation.createWithoutId("reservation3", LocalDate.now(), LocalTime.now()));
+        reservationRepository.add(ReservationFixture.create("reservation1"));
+        reservationRepository.add(ReservationFixture.create("reservation2"));
+        reservationRepository.add(ReservationFixture.create("reservation3"));
         long deleteReservationId = reservationRepository.findAll().getFirst().getId();
 
         ResponseEntity<Void> response = controller.deleteReservation(deleteReservationId);

@@ -8,6 +8,6 @@ public class ReservationFixture {
 
     public static Reservation create(String name) {
         return Reservation.createWithoutId(
-                name, LocalDate.now(), LocalTime.now().withNano(0));
+                name, LocalDate.now().plusDays(1), LocalTime.now().withNano(0));
     }
 }

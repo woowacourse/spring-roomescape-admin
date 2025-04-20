@@ -11,6 +11,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import roomescape.dto.CreateReservationDto;
+import roomescape.dto.ReservationResponseDto;
 import roomescape.entity.Reservation;
 import roomescape.repository.ReservationRepository;
 
@@ -24,8 +25,10 @@ public class ReservationController {
     }
 
     @GetMapping
-    public List<Reservation> getReservations() {
-        return reservationRepository.findAll();
+    public List<ReservationResponseDto> getReservations() {
+        return reservationRepository.findAll().stream()
+                .map(ReservationResponseDto::from)
+                .toList();
     }
 
     @PostMapping

@@ -1,11 +1,11 @@
 package roomescape.repository;
 
-import java.sql.PreparedStatement;
 import java.time.LocalDateTime;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import org.springframework.jdbc.core.JdbcTemplate;
-import org.springframework.jdbc.support.GeneratedKeyHolder;
-import org.springframework.jdbc.support.KeyHolder;
+import org.springframework.jdbc.core.simple.SimpleJdbcInsert;
 import org.springframework.stereotype.Repository;
 import roomescape.dto.CreateReservationDto;
 import roomescape.entity.Reservation;
@@ -29,19 +29,18 @@ public class ReservationRepository {
     }
 
     public Reservation add(CreateReservationDto createReservationDto) {
-        KeyHolder identifier = new GeneratedKeyHolder();
-        String sql = "INSERT INTO reservation (name, dateTime) VALUES (?,?)";
-        jdbcTemplate.update(connection -> {
-            LocalDateTime dateTime = LocalDateTime.of(
-                    createReservationDto.date(),
-                    createReservationDto.time()
-            );
+        SimpleJdbcInsert insertQuery = new SimpleJdbcInsert(jdbcTemplate.getDataSource())
+                .withTableName("reservation")
+                .usingColumns("name", "dateTime")
+                .usingGeneratedKeyColumns("id");
 
-            PreparedStatement ps = connection.prepareStatement(sql, new String[]{"id"});
-            ps.setString(1, createReservationDto.name());
-            ps.setString(2, dateTime.toString());
-            return ps;
-        }, identifier);
+        Map<String, Object> parameters = new HashMap<>();
+        parameters.put("name", createReservationDto.name());
+        parameters.put("dateTime", LocalDateTime.of(
+                createReservationDto.date(),
+                createReservationDto.time()
+        ));
+        Long id = insertQuery.executeAndReturnKey(parameters).longValue();
 
         String selectSql = "SELECT * FROM reservation WHERE id = ?";
         Reservation reservation = jdbcTemplate.queryForObject(selectSql,
@@ -50,7 +49,7 @@ public class ReservationRepository {
                         resultSet.getString("name"),
                         resultSet.getObject("dateTime", LocalDateTime.class)
                 ),
-                identifier.getKey().longValue());
+                id);
         return reservation;
     }
 

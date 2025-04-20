@@ -1,15 +1,10 @@
 package roomescape.controller;
 
 import java.util.List;
-import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
-import roomescape.dto.request.ReservationRequest;
 import roomescape.dto.response.ReservationResponse;
 import roomescape.mapper.ReservationMapper;
 import roomescape.model.Reservation;
@@ -32,16 +27,16 @@ public class ReservationController {
         return ReservationMapper.toDtos(allReservations);
     }
 
-    @ResponseBody
-    @PostMapping
-    public ReservationResponse addReservation(@RequestBody ReservationRequest request) {
-        Long id = repository.add(ReservationMapper.toDomain(request));
-        return ReservationMapper.toDto(repository.findById(id));
-    }
-
-    @ResponseBody
-    @DeleteMapping("/{id}")
-    public void deleteReservation(@PathVariable("id") Long id) {
-        repository.deleteById(id);
-    }
+//    @ResponseBody
+//    @PostMapping
+//    public ReservationResponse addReservation(@RequestBody ReservationRequest request) {
+//        Long id = repository.add(ReservationMapper.toDomain(request));
+//        return ReservationMapper.toDto(repository.findById(id));
+//    }
+//
+//    @ResponseBody
+//    @DeleteMapping("/{id}")
+//    public void deleteReservation(@PathVariable("id") Long id) {
+//        repository.deleteById(id);
+//    }
 }

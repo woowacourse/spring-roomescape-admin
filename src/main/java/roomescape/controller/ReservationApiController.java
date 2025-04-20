@@ -1,14 +1,15 @@
 package roomescape.controller;
 
 import jakarta.servlet.http.HttpServletResponse;
-import java.sql.PreparedStatement;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.LocalTime;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.JdbcTemplate;
-import org.springframework.jdbc.support.GeneratedKeyHolder;
+import org.springframework.jdbc.core.simple.SimpleJdbcInsert;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -52,17 +53,15 @@ public class ReservationApiController {
         LocalTime time = LocalTime.parse(request.time());
         LocalDateTime dateTime = LocalDateTime.of(date, time);
 
-        String sql = "insert into reservation (name, datetime) values(?, ?)";
-        GeneratedKeyHolder keyHolder = new GeneratedKeyHolder();
+        SimpleJdbcInsert simpleJdbcInsert = new SimpleJdbcInsert(jdbcTemplate)
+                .withTableName("reservation")
+                .usingGeneratedKeyColumns("id");
 
-        jdbcTemplate.update(connection -> {
-            PreparedStatement prepared = connection.prepareStatement(sql, new String[]{"id"});
-            prepared.setString(1, request.name());
-            prepared.setObject(2, dateTime);
-            return prepared;
-        }, keyHolder);
+        Map<String, Object> params = new HashMap<>(2);
+        params.put("name", request.name());
+        params.put("datetime", dateTime);
 
-        long id = keyHolder.getKey().longValue();
+        Long id = simpleJdbcInsert.executeAndReturnKey(params).longValue();
 
         Reservation created = request.toReservation(id);
 

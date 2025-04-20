@@ -117,8 +117,6 @@ class ReservationApiControllerTest {
 
     @Test
     void DB_테이블_레코드_수와_API_응답_크기가_일치한다() {
-        jdbcTemplate.update("INSERT INTO reservation (name, datetime) VALUES (?, ?)", "브라운", "2023-08-05T15:40");
-
         List<ReservationResponse> reservations = RestAssured.given().log().all()
                 .when().get("/reservations")
                 .then().log().all()
@@ -128,5 +126,28 @@ class ReservationApiControllerTest {
         Integer count = jdbcTemplate.queryForObject("SELECT count(*) from reservation", Integer.class);
 
         assertThat(reservations.size()).isEqualTo(count);
+    }
+
+    @Test
+    void 예약_추가_후_DB_테이블_레코드가_증가한다() {
+        createAndSendReservation();
+
+        Integer count = jdbcTemplate.queryForObject("SELECT count(*) from reservation", Integer.class);
+
+        assertThat(count).isEqualTo(1);
+    }
+
+    @Test
+    void 예약_삭제_후_DB_테이블_레코드가_감소한다() {
+        createAndSendReservation();
+
+        RestAssured.given().log().all()
+                .when().delete("/reservations/1")
+                .then().log().all()
+                .statusCode(200);
+
+        Integer countAfterDelete = jdbcTemplate.queryForObject("SELECT count(*) from reservation", Integer.class);
+
+        assertThat(countAfterDelete).isEqualTo(0);
     }
 }

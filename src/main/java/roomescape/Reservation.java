@@ -5,17 +5,17 @@ import java.time.LocalDateTime;
 import java.time.LocalTime;
 
 public class Reservation {
-    private final long id;
-    private String customerName;
-    private LocalDateTime reservationDateTime;
+    private final Long id;
+    private final String customerName;
+    private final LocalDateTime reservationDateTime;
 
-    public Reservation(long id, String customerName, LocalDateTime reservationDateTime) {
+    public Reservation(Long id, String customerName, LocalDateTime reservationDateTime) {
         this.id = id;
         this.customerName = customerName;
         this.reservationDateTime = reservationDateTime;
     }
 
-    public Reservation(long id, String customerName, LocalDate reservationDate, LocalTime reservationTime) {
+    public Reservation(Long id, String customerName, LocalDate reservationDate, LocalTime reservationTime) {
         this(id, customerName, LocalDateTime.of(reservationDate, reservationTime));
     }
 

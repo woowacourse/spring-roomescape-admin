@@ -43,7 +43,7 @@ public class ReservationController {
 
     @DeleteMapping("/{id}")
     public ResponseEntity<Void> delete(@PathVariable(name = "id") Long id) {
-        boolean isRemoved = listBasedReservationDao.removeById(id);
+        boolean isRemoved = reservationDao.removeById(id);
         if (isRemoved) {
             return ResponseEntity.ok().build();
         }

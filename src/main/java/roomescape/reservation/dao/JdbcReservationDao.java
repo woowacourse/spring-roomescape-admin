@@ -42,7 +42,7 @@ public class JdbcReservationDao implements ReservationDao {
             PreparedStatement preparedStatement = connection.prepareStatement(sql);
             preparedStatement.setString(1, reservation.getCustomerName());
             preparedStatement.setDate(2, Date.valueOf(reservation.getReservationDate()));
-            preparedStatement.setTime(2, Time.valueOf(reservation.getReservationTime()));
+            preparedStatement.setTime(3, Time.valueOf(reservation.getReservationTime()));
             return preparedStatement;
         }, keyHolder);
         return new Reservation(keyHolder.getKey().longValue(), reservation.getCustomerName(),
@@ -51,6 +51,8 @@ public class JdbcReservationDao implements ReservationDao {
 
     @Override
     public boolean removeById(long id) {
-        return false;
+        String sql = "DELETE FROM reservation WHERE id = ?";
+        int rowNumber = jdbcTemplate.update(sql, id);
+        return rowNumber == 1;
     }
 }

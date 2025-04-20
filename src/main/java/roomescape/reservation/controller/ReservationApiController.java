@@ -13,9 +13,7 @@ import org.springframework.web.bind.annotation.RestController;
 import roomescape.reservation.controller.request.ReservationCreateRequest;
 import roomescape.reservation.controller.response.ReservationResponse;
 import roomescape.reservation.domain.Reservation;
-import roomescape.reservation.domain.exception.ReserverNameEmptyException;
 import roomescape.reservation.service.ReservationService;
-import roomescape.reservation.service.exception.ReservationNotFoundException;
 
 @RestController
 @RequestMapping("/reservations")
@@ -29,36 +27,26 @@ public class ReservationApiController {
 
     @GetMapping
     public ResponseEntity<List<ReservationResponse>> getReservations() {
-        List<Reservation> reservations = reservationService.findReservations();
+        List<Reservation> founds = reservationService.findReservations();
 
         return ResponseEntity
-                .ok(ReservationResponse.from(reservations));
+                .ok(ReservationResponse.from(founds));
     }
 
     @PostMapping
     public ResponseEntity<ReservationResponse> createReservation(@RequestBody ReservationCreateRequest request) {
-        Reservation reservation;
-        try {
-            reservation = reservationService.createReservation(request);
-        } catch (ReserverNameEmptyException e) {
-            return ResponseEntity.badRequest().build();
-        }
+        Reservation created = reservationService.createReservation(request);
 
         return ResponseEntity
                 .status(HttpStatus.CREATED)
-                .body(ReservationResponse.from(reservation));
+                .body(ReservationResponse.from(created));
     }
 
     @DeleteMapping("/{id}")
     public ResponseEntity<Void> deleteReservation(@PathVariable Long id) {
-        Reservation reservation;
-        try {
-            reservation = reservationService.findReservation(id);
-        } catch (ReservationNotFoundException e) {
-            return ResponseEntity.notFound().build();
-        }
+        Reservation found = reservationService.findReservation(id);
 
-        reservationService.delete(reservation);
+        reservationService.delete(found);
 
         return ResponseEntity.ok().build();
     }

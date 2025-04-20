@@ -63,6 +63,21 @@
             "time": "15:40"
         }
         ```
+    - 예약 정보가 존재하지 않으면 예약을 추가할 수 없다
+        - request
+            ```http request
+            POST /reservations HTTP/1.1
+            content-type: application/json
+            {
+                "date": "",
+                "name": "브라운",
+                "time": "15:40"
+            }
+            ```
+        - response
+            ```http request
+            HTTP/1.1 400
+            ```
 - [x] 예약을 삭제한다.
     - request
         ```http request
@@ -80,4 +95,13 @@
         - response
             ```http request
             HTTP/1.1 404
+            ```
+    - 잘못된 예약번호를 삭제할 수 없다
+        - request
+            ```http request
+            DELETE /reservations/one HTTP/1.1
+            ```
+        - response
+            ```http request
+            HTTP/1.1 400
             ```

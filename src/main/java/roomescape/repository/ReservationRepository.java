@@ -13,7 +13,7 @@ public class ReservationRepository {
 
     private final List<Reservation> reservations = Collections.synchronizedList(new ArrayList<>());
 
-    private AtomicLong index = new AtomicLong(3);
+    private AtomicLong index;
 
     public ReservationRepository() {
         List<Reservation> initialReservations = List.of(
@@ -22,6 +22,10 @@ public class ReservationRepository {
                 Reservation.createReservation(3L, "브리", LocalDateTime.of(2024, 4, 2, 14, 0))
         );
         reservations.addAll(initialReservations);
+
+        long size = reservations.size();
+
+        this.index = new AtomicLong(size);
     }
 
     public List<Reservation> findAll() {

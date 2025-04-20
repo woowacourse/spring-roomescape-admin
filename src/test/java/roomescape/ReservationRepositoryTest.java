@@ -3,8 +3,11 @@ package roomescape;
 import static org.assertj.core.api.Assertions.assertThat;
 
 import io.restassured.RestAssured;
+import io.restassured.http.ContentType;
 import java.time.LocalDateTime;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -19,7 +22,7 @@ public class ReservationRepositoryTest {
     private JdbcTemplate jdbcTemplate;
 
     @Test
-    void 오단계() {
+    void 예약_목록을_조회한다() {
         jdbcTemplate.update("INSERT INTO reservation (name, dateTime) VALUES (?, ?)",
                 "브라운",
                 LocalDateTime.of(2023, 8, 5, 15, 40).toString());
@@ -34,4 +37,23 @@ public class ReservationRepositoryTest {
 
         assertThat(reservations.size()).isEqualTo(count);
     }
+
+    @Test
+    void 예약_데이터를_추가한다() {
+        Map<String, String> params = new HashMap<>();
+        params.put("name", "브라운");
+        params.put("date", "2023-08-05");
+        params.put("time", "10:00");
+
+        RestAssured.given().log().all()
+                .contentType(ContentType.JSON)
+                .body(params)
+                .when().post("/reservations")
+                .then().log().all()
+                .statusCode(200);
+
+        Integer count = jdbcTemplate.queryForObject("SELECT count(1) from reservation", Integer.class);
+        assertThat(count).isEqualTo(1);
+    }
+
 }

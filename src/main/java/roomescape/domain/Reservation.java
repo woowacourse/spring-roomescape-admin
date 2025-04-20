@@ -37,6 +37,10 @@ public class Reservation {
         }
     }
 
+    public boolean isEqualId(final Long id) {
+        return this.id.equals(id);
+    }
+
     public Long getId() {
         return id;
     }

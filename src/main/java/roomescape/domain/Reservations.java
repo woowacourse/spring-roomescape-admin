@@ -5,7 +5,6 @@ import java.time.LocalDate;
 import java.time.LocalTime;
 import java.util.List;
 import java.util.NoSuchElementException;
-import java.util.Objects;
 import java.util.concurrent.atomic.AtomicLong;
 
 public class Reservations {
@@ -34,7 +33,7 @@ public class Reservations {
 
     public void remove(final Long id) {
         Reservation reservation = reservations.stream()
-                .filter(it -> Objects.equals(it.getId(), id))
+                .filter(it -> it.isEqualId(id))
                 .findFirst()
                 .orElseThrow(NoSuchElementException::new);
         reservations.remove(reservation);

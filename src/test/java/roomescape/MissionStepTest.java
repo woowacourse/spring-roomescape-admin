@@ -82,6 +82,31 @@ public class MissionStepTest {
                     .statusCode(200)
                     .body("size()", is(0));
         }
+
+        @DisplayName("시간 정보를 추가, 조회, 삭제할 수 있다.")
+        @Test
+        void create_get_delete_time() {
+            Map<String, String> params = new HashMap<>();
+            params.put("startAt", "10:00");
+
+            RestAssured.given().log().all()
+                    .contentType(ContentType.JSON)
+                    .body(params)
+                    .when().post("/times")
+                    .then().log().all()
+                    .statusCode(201);
+
+            RestAssured.given().log().all()
+                    .when().get("/times")
+                    .then().log().all()
+                    .statusCode(200)
+                    .body("size()", is(1));
+
+            RestAssured.given().log().all()
+                    .when().delete("/times/1")
+                    .then().log().all()
+                    .statusCode(200);
+        }
     }
 
     @Nested

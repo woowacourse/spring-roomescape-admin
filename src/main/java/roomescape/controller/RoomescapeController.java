@@ -15,4 +15,9 @@ public class RoomescapeController {
     public String getAdminPage() {
         return "admin/index";
     }
+
+    @GetMapping("/admin/time")
+    public String getAdminTimePage() {
+        return "admin/time";
+    }
 }

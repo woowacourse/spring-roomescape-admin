@@ -5,6 +5,7 @@ import static org.junit.jupiter.api.Assertions.assertAll;
 import static roomescape.test.utility.HttpResponseTestUtility.checkLocationHeader;
 import static roomescape.test.utility.HttpResponseTestUtility.checkStatusCode;
 import static roomescape.test.utility.ReservationTestUtility.checkReservation;
+import static roomescape.test.utility.ReservationTestUtility.checkReservationId;
 import static roomescape.test.utility.ReservationsTestUtility.checkDeleteReservation;
 
 import java.time.LocalDate;
@@ -17,6 +18,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import roomescape.domain.Reservation;
 import roomescape.dto.ReservationCreationRequest;
+import roomescape.dto.ReservationCreationResponse;
 import roomescape.repository.ReservationRepository;
 import roomescape.test.fake.FakeReservationRepository;
 
@@ -49,14 +51,14 @@ class RoomescapeControllerTest {
         ReservationCreationRequest input = new ReservationCreationRequest(
                 expecteReservation.getName(), expecteReservation.getDate(), expecteReservation.getTime());
 
-        ResponseEntity<Reservation> response = controller.createReservation(input);
+        ResponseEntity<ReservationCreationResponse> response = controller.createReservation(input);
 
         Reservation newReservation = reservationRepository.findAll().getFirst();
         assertAll(
                 () -> checkReservation(newReservation, expecteReservation),
                 () -> checkStatusCode(response, HttpStatus.CREATED),
                 () -> checkLocationHeader(response, "reservations/" + newReservation.getId()),
-                () -> checkReservation(response.getBody(), expecteReservation)
+                () -> checkReservationId(response.getBody().id(), 1L)
         );
     }
 
@@ -68,7 +70,7 @@ class RoomescapeControllerTest {
         ReservationCreationRequest input = new ReservationCreationRequest(
                 "reservation", past.toLocalDate(), past.toLocalTime());
 
-        ResponseEntity<Reservation> response = controller.createReservation(input);
+        ResponseEntity<ReservationCreationResponse> response = controller.createReservation(input);
 
         assertAll(
                 () -> assertThat(reservationRepository.findAll()).isEmpty(),

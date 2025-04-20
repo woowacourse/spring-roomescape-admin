@@ -13,6 +13,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import roomescape.domain.Reservation;
 import roomescape.dto.ReservationCreationRequest;
+import roomescape.dto.ReservationCreationResponse;
 import roomescape.repository.ReservationRepository;
 
 @Controller
@@ -31,7 +32,9 @@ public class RoomescapeController {
     }
 
     @PostMapping("/reservations")
-    public ResponseEntity<Reservation> createReservation(@RequestBody ReservationCreationRequest input) {
+    public ResponseEntity<ReservationCreationResponse> createReservation(
+            @RequestBody ReservationCreationRequest input
+    ) {
         try {
             LocalDateTime dateTime = LocalDateTime.of(input.getDate(), input.getTime());
             LocalDateTime now = LocalDateTime.now();
@@ -40,8 +43,9 @@ public class RoomescapeController {
             }
 
             long id = reservationRepository.add(input.getName(), input.getDate(), input.getTime());
-            Reservation reservation = reservationRepository.findById(id).get();
-            return ResponseEntity.created(URI.create("reservations/" + reservation.getId())).body(reservation);
+            return ResponseEntity
+                    .created(URI.create("reservations/" + id))
+                    .body(new ReservationCreationResponse(id));
         } catch (IllegalArgumentException exception) {
             return ResponseEntity.badRequest().build();
         }

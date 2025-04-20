@@ -51,10 +51,7 @@
     - 정상 응답 (201)
       ```
       {
-          Long "id": 1,
-          String "name": "브라운",
-          LocalDate "date": "2023-08-05",
-          LocalTime "time": "15:40"
+          Long "id": 1
       }
       ```
     - 예외 응답 (400)

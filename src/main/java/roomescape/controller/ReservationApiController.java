@@ -12,6 +12,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import roomescape.dao.ReservationDao;
 import roomescape.domain.Reservation;
+import roomescape.domain.Reservations;
 import roomescape.dto.ReservationRequest;
 import roomescape.dto.ReservationResponse;
 
@@ -28,8 +29,8 @@ public class ReservationApiController {
 
     @GetMapping
     public List<ReservationResponse> getReservations() {
-        List<Reservation> reservations = reservationDao.findAll();
-        return reservations.stream()
+        Reservations reservations = reservationDao.findAll();
+        return reservations.getReservations().stream()
                 .map(ReservationResponse::new)
                 .toList();
     }

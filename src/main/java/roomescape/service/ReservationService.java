@@ -1,38 +1,30 @@
 package roomescape.service;
 
-import java.util.ArrayList;
 import java.util.List;
-import java.util.Map.Entry;
 import org.springframework.stereotype.Service;
 import roomescape.controller.request.ReservationRequest;
 import roomescape.controller.response.ReservationResponse;
-import roomescape.model.Reservation;
-import roomescape.model.Reservations;
+import roomescape.repository.ReservationRepository;
 
 @Service
 public class ReservationService {
 
-    private final Reservations reservations;
+    private final ReservationRepository repository;
 
-    public ReservationService(final Reservations reservations) {
-        this.reservations = reservations;
+    public ReservationService(final ReservationRepository repository) {
+        this.repository = repository;
     }
 
     public List<ReservationResponse> get() {
-        final List<ReservationResponse> responses = new ArrayList<>();
-        for (Entry<Long, Reservation> each : reservations.getReservations().entrySet()) {
-            responses.add(ReservationResponse.from(each.getKey(), each.getValue()));
-        }
-        return responses;
+        return repository.findAll();
     }
 
-    public ReservationResponse create(final ReservationRequest req) {
-        final Reservation reservation = req.toEntity();
-        final long id = reservations.add(reservation);
-        return ReservationResponse.from(id, reservation);
+    public ReservationResponse create(final ReservationRequest request) {
+        final long id = repository.add(request);
+        return repository.findById(id);
     }
 
     public void deleteById(final Long id) {
-        reservations.deleteById(id);
+        repository.deleteById(id);
     }
 }

@@ -2,8 +2,8 @@ package roomescape.domain;
 
 import java.time.LocalDateTime;
 import java.util.Collections;
-import java.util.HashMap;
 import java.util.Map;
+import java.util.concurrent.ConcurrentHashMap;
 
 public class Reservations {
 
@@ -16,7 +16,7 @@ public class Reservations {
     }
 
     public Reservations() {
-        this(new HashMap<>(), new Counter());
+        this(new ConcurrentHashMap<>(), new Counter());
     }
 
     public Reservation addReservation(final String name, final LocalDateTime dateTime) {

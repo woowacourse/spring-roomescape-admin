@@ -16,11 +16,11 @@ import roomescape.repository.ReservationTimeRepository;
 
 @RestController
 @RequestMapping("/times")
-public class TimeController {
+public class ReservationTimeController {
 
     private final ReservationTimeRepository reservationTimeRepository;
 
-    public TimeController(ReservationTimeRepository reservationTimeRepository) {
+    public ReservationTimeController(ReservationTimeRepository reservationTimeRepository) {
         this.reservationTimeRepository = reservationTimeRepository;
     }
 

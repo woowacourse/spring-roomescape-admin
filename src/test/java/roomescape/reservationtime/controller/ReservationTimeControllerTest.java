@@ -24,7 +24,7 @@ class ReservationTimeControllerTest {
 
     @Test
     @DisplayName("시간을 조회하는 API를 요청한다.")
-    void getTimes() {
+    void getReservationTimes() {
         // given
         jdbcTemplate.update("INSERT INTO reservation_time (start_at) VALUES (?)", "10:00");
 
@@ -43,7 +43,7 @@ class ReservationTimeControllerTest {
 
     @Test
     @DisplayName("시간을 생성하는 API를 요청한다.")
-    void creatTime() {
+    void createReservationTime() {
         // given
         var params = Map.of(
                 "startAt", "10:00"
@@ -62,7 +62,7 @@ class ReservationTimeControllerTest {
 
     @Test
     @DisplayName("시간을 삭제하는 API를 요청한다.")
-    void deleteTime() {
+    void deleteReservationTime() {
         // given
         jdbcTemplate.update("INSERT INTO reservation_time (start_at) VALUES (?)", "10:00");
 

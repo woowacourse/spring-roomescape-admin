@@ -1,12 +1,10 @@
 package roomescape.repository;
 
-import java.sql.Date;
-import java.sql.PreparedStatement;
-import java.sql.Time;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import org.springframework.jdbc.core.JdbcTemplate;
-import org.springframework.jdbc.support.GeneratedKeyHolder;
-import org.springframework.jdbc.support.KeyHolder;
+import org.springframework.jdbc.core.simple.SimpleJdbcInsert;
 import org.springframework.stereotype.Repository;
 import roomescape.dto.ReservationReadDto;
 import roomescape.exception.reservation.ReservationNotFoundException;
@@ -15,22 +13,23 @@ import roomescape.model.Reservation;
 @Repository
 public class ReservationRepository {
     private final JdbcTemplate jdbcTemplate;
+    private final SimpleJdbcInsert jdbcInsert;
 
     public ReservationRepository(JdbcTemplate jdbcTemplate) {
         this.jdbcTemplate = jdbcTemplate;
+        this.jdbcInsert = new SimpleJdbcInsert(jdbcTemplate)
+                .withTableName("reservation")
+                .usingGeneratedKeyColumns("id");
     }
 
     public Long add(Reservation reservation) {
-        String sql = "insert into reservation (name, date, time) values (?, ?, ?)";
-        KeyHolder keyHolder = new GeneratedKeyHolder();
-        jdbcTemplate.update(connection -> {
-            PreparedStatement ps = connection.prepareStatement(sql, new String[]{"id"});
-            ps.setString(1, reservation.getName());
-            ps.setDate(2, Date.valueOf(reservation.getDate()));
-            ps.setTime(3, Time.valueOf(reservation.getTime()));
-            return ps;
-        }, keyHolder);
-        return keyHolder.getKey().longValue();
+        Map<String, Object> params = new HashMap<>();
+        params.put("name", reservation.getName());
+        params.put("date", reservation.getDate());
+        params.put("time", reservation.getTime());
+
+        Long id = jdbcInsert.executeAndReturnKey(params).longValue();
+        return id;
     }
 
     public int deleteBy(Long id) {

@@ -1,8 +1,6 @@
 package roomescape.controller;
 
 import java.net.URI;
-import java.time.Clock;
-import java.util.ArrayList;
 import java.util.List;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -22,8 +20,8 @@ public class ReservationController {
 
     private final Reservations reservations;
 
-    public ReservationController() {
-        this.reservations = new Reservations(new ArrayList<>());
+    public ReservationController(final Reservations reservations) {
+        this.reservations = reservations;
     }
 
     @GetMapping
@@ -44,8 +42,7 @@ public class ReservationController {
         final Long id = reservations.add(
                 reservationCreateRequest.name(),
                 reservationCreateRequest.date(),
-                reservationCreateRequest.time(),
-                Clock.systemDefaultZone()
+                reservationCreateRequest.time()
         );
         return ResponseEntity.created(URI.create("/reservations/" + id)).build();
     }

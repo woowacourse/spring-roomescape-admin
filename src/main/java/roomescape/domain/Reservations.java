@@ -1,31 +1,42 @@
 package roomescape.domain;
 
-import java.time.Clock;
 import java.time.LocalDate;
 import java.time.LocalTime;
 import java.util.List;
-import java.util.NoSuchElementException;
 import java.util.concurrent.atomic.AtomicLong;
+import org.springframework.jdbc.core.JdbcTemplate;
+import org.springframework.jdbc.core.RowMapper;
+import org.springframework.stereotype.Repository;
 
+@Repository
 public class Reservations {
 
-    private final List<Reservation> reservations;
     private final AtomicLong index = new AtomicLong(1);
+    private final JdbcTemplate jdbcTemplate;
 
-    public Reservations(final List<Reservation> reservations) {
-        this.reservations = reservations;
+    public Reservations(final JdbcTemplate jdbcTemplate) {
+        this.jdbcTemplate = jdbcTemplate;
     }
+
+    private final RowMapper<Reservation> actorRowMapper = (resultSet, rowNum) -> {
+        return new Reservation(
+                resultSet.getLong("id"),
+                resultSet.getString("name"),
+                LocalDate.parse(resultSet.getString("date")),
+                LocalTime.parse(resultSet.getString("time"))
+        );
+    };
 
     public List<Reservation> findAll() {
-        return reservations;
+        final String sql = "SELECT id, name, date, time FROM reservation";
+        return jdbcTemplate.query(sql, actorRowMapper);
     }
 
-    public Long add(final String name, final LocalDate date, final LocalTime time, Clock clock) {
+    public Long add(final String name, final LocalDate date, final LocalTime time) {
         Reservation reservation = new Reservation(index.getAndIncrement(),
                 name,
                 date,
-                time,
-                clock
+                time
         );
         reservations.add(reservation);
         return reservation.getId();

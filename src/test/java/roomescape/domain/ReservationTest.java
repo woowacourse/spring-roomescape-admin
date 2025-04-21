@@ -24,7 +24,7 @@ class ReservationTest {
         final LocalTime time = LocalTime.of(10, 0);
 
         // when & then
-        assertThatThrownBy(() -> new Reservation(1L, name, date, time, clock))
+        assertThatThrownBy(() -> new Reservation(1L, name, date, time))
                 .isInstanceOf(IllegalArgumentException.class)
                 .hasMessage("예약 시간은 과거일 수 없습니다.");
     }
@@ -39,7 +39,7 @@ class ReservationTest {
         final LocalTime time = LocalTime.of(9, 59);
 
         // when & then
-        assertThatThrownBy(() -> new Reservation(1L, name, date, time, clock))
+        assertThatThrownBy(() -> new Reservation(1L, name, date, time))
                 .isInstanceOf(IllegalArgumentException.class)
                 .hasMessage("예약 시간은 과거일 수 없습니다.");
     }

@@ -10,15 +10,16 @@ import java.sql.SQLException;
 import java.time.LocalDate;
 import java.time.LocalTime;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.test.annotation.DirtiesContext;
+import roomescape.domain.Reservation;
 
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.DEFINED_PORT)
 @DirtiesContext(classMode = DirtiesContext.ClassMode.BEFORE_EACH_TEST_METHOD)
@@ -97,39 +98,51 @@ public class MissionStepTest {
                 .body("size()", is(0));
     }
 
-    @Nested
-    class DatabaseTest {
+    @Autowired
+    private JdbcTemplate jdbcTemplate;
 
-        @Autowired
-        private JdbcTemplate jdbcTemplate;
+    private Connection connection;
 
-        private Connection connection;
+    @BeforeEach
+    void setUp() throws SQLException {
+        connection = jdbcTemplate.getDataSource().getConnection();
+    }
 
-        @BeforeEach
-        void setUp() throws SQLException {
-            connection = jdbcTemplate.getDataSource().getConnection();
+    @AfterEach
+    void tearDown() throws SQLException {
+        if (connection != null && !connection.isClosed()) {
+            connection.close();
         }
+    }
 
-        @AfterEach
-        void tearDown() throws SQLException {
-            if (connection != null && !connection.isClosed()) {
-                connection.close();
-            }
-        }
+    @Test
+    void connectDatabaseNotNullTest() {
+        assertThat(connection).isNotNull();
+    }
 
-        @Test
-        void connectDatabaseNotNullTest() {
-            assertThat(connection).isNotNull();
-        }
+    @Test
+    void validateDatabaseCatalogNameTest() throws SQLException {
+        assertThat(connection.getCatalog()).isEqualTo("DATABASE");
+    }
 
-        @Test
-        void validateDatabaseCatalogNameTest() throws SQLException {
-            assertThat(connection.getCatalog()).isEqualTo("DATABASE");
-        }
+    @Test
+    void validateDatabaseMetaDataTest() throws SQLException {
+        assertThat(connection.getMetaData().getTables(null, null, "RESERVATION", null).next()).isTrue();
+    }
 
-        @Test
-        void validateDatabaseMetaDataTest() throws SQLException {
-            assertThat(connection.getMetaData().getTables(null, null, "RESERVATION", null).next()).isTrue();
-        }
+    @Test
+    void findAllInDatabaseTest() {
+        jdbcTemplate.update("INSERT INTO reservation (name, date, time) VALUES (?, ?, ?)", "브라운", "2026-08-05",
+                "15:40");
+
+        List<Reservation> reservations = RestAssured.given().log().all()
+                .when().get("/reservations")
+                .then().log().all()
+                .statusCode(200).extract()
+                .jsonPath().getList(".", Reservation.class);
+
+        Integer count = jdbcTemplate.queryForObject("SELECT count(1) from reservation", Integer.class);
+
+        assertThat(reservations.size()).isEqualTo(count);
     }
 }

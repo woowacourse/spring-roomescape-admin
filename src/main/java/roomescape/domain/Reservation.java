@@ -1,6 +1,5 @@
 package roomescape.domain;
 
-import java.time.Clock;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.LocalTime;
@@ -12,17 +11,16 @@ public class Reservation {
     private final LocalDate date;
     private final LocalTime time;
 
-    public Reservation(final Long id, final String name, final LocalDate date, final LocalTime time,
-                       final Clock clock) {
-        validateDateTime(date, time, clock);
+    public Reservation(final Long id, final String name, final LocalDate date, final LocalTime time) {
+        validateDateTime(date, time);
         this.id = id;
         this.name = name;
         this.date = date;
         this.time = time;
     }
 
-    private void validateDateTime(final LocalDate date, final LocalTime time, final Clock clock) {
-        LocalDateTime now = LocalDateTime.now(clock);
+    private void validateDateTime(final LocalDate date, final LocalTime time) {
+        LocalDateTime now = LocalDateTime.now();
         LocalDateTime inputDateTime = LocalDateTime.of(date, time);
 
         if (inputDateTime.isBefore(now)) {

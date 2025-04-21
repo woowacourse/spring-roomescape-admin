@@ -116,4 +116,34 @@ public class MissionStepTest {
 
         assertThat(reservations.size()).isEqualTo(count);
     }
+
+    @DisplayName("6단계 - 예약 추가 후 조회, 예약 삭제 후 조회 확인")
+    @Test
+    void step6() {
+        LocalDateTime now = LocalDateTime.now();
+        String date = now.plusDays(1).format(DateTimeFormatter.ofPattern("yyyy-MM-dd"));
+        String time = now.format(DateTimeFormatter.ofPattern("HH:mm"));
+        Map<String, String> params = new HashMap<>();
+        params.put("name", "브라운");
+        params.put("date", date);
+        params.put("time", time);
+
+        RestAssured.given().log().all()
+                .contentType(ContentType.JSON)
+                .body(params)
+                .when().post("/reservations")
+                .then().log().all()
+                .statusCode(200);
+
+        Integer count = jdbcTemplate.queryForObject("SELECT COUNT(1) FROM Reservation", Integer.class);
+        assertThat(count).isEqualTo(1);
+
+        RestAssured.given().log().all()
+                .when().delete("/reservations/1")
+                .then().log().all()
+                .statusCode(200);
+
+        Integer countAfterDelete = jdbcTemplate.queryForObject("SELECT COUNT(1) FROM Reservation", Integer.class);
+        assertThat(countAfterDelete).isEqualTo(0);
+    }
 }

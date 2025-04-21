@@ -52,6 +52,9 @@
       ```
       {
           Long "id": 1
+          LocalDate "date": "2023-08-05", 
+          String "name": "브라운",
+          LocalTime "time": "15:40" 
       }
       ```
     - 예외 응답 (400)

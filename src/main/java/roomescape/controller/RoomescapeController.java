@@ -5,6 +5,7 @@ import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.LocalTime;
 import java.util.List;
+import java.util.Optional;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -14,7 +15,6 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import roomescape.domain.Reservation;
 import roomescape.dto.ReservationCreationRequest;
-import roomescape.dto.ReservationCreationResponse;
 import roomescape.repository.ReservationRepository;
 
 @Controller
@@ -32,7 +32,7 @@ public class RoomescapeController {
     }
 
     @PostMapping("/reservations")
-    public ResponseEntity<ReservationCreationResponse> createReservation(
+    public ResponseEntity<Reservation> createReservation(
             @RequestBody ReservationCreationRequest input
     ) {
         if (validatePastDateAndTime(input.getDate(), input.getTime())) {
@@ -40,9 +40,15 @@ public class RoomescapeController {
         }
         Reservation reservation = Reservation.createWithoutId(input.getName(), input.getDate(), input.getTime());
         long id = reservationRepository.add(reservation);
+
+        Optional<Reservation> addedReservation = reservationRepository.findById(id);
+        if (addedReservation.isEmpty()) {
+            throw new IllegalArgumentException("ID에 해당하는 예약이 존재하지 않습니다.");
+        }
+
         return ResponseEntity
                 .created(URI.create("reservations/" + id))
-                .body(new ReservationCreationResponse(id));
+                .body(addedReservation.get());
     }
 
     @DeleteMapping("/reservations/{id}")

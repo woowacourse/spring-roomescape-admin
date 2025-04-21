@@ -16,7 +16,6 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import roomescape.domain.Reservation;
 import roomescape.dto.ReservationCreationRequest;
-import roomescape.dto.ReservationCreationResponse;
 import roomescape.repository.ReservationRepository;
 import roomescape.test.fake.FakeReservationRepository;
 import roomescape.test.fixture.ReservationFixture;
@@ -49,7 +48,7 @@ class RoomescapeControllerTest {
         ReservationCreationRequest input = new ReservationCreationRequest(
                 expecteReservation.getName(), expecteReservation.getDate(), expecteReservation.getTime());
 
-        ResponseEntity<ReservationCreationResponse> response = controller.createReservation(input);
+        ResponseEntity<Reservation> response = controller.createReservation(input);
 
         Reservation newReservation = reservationRepository.findAll().getFirst();
         assertAll(
@@ -57,7 +56,8 @@ class RoomescapeControllerTest {
                 () -> checkReservationFieldWithoutId(newReservation, expecteReservation),
                 () -> checkStatusCode(response, HttpStatus.CREATED),
                 () -> checkLocationHeader(response, "reservations/" + newReservation.getId()),
-                () -> checkReservationId(response.getBody().id(), 1L)
+                () -> checkReservationId(response.getBody().getId(), 1L),
+                () -> checkReservationFieldWithoutId(response.getBody(), expecteReservation)
         );
     }
 
@@ -69,7 +69,7 @@ class RoomescapeControllerTest {
         ReservationCreationRequest input = new ReservationCreationRequest(
                 "reservation", past.toLocalDate(), past.toLocalTime());
 
-        ResponseEntity<ReservationCreationResponse> response = controller.createReservation(input);
+        ResponseEntity<Reservation> response = controller.createReservation(input);
 
         assertAll(
                 () -> assertThat(reservationRepository.findAll()).isEmpty(),

@@ -38,7 +38,7 @@ public class MissionStepTest {
     }
 
     @Test
-    void 예약_추가_취소_테스트() {
+    void 예약_추가_테스트() {
         Map<String, String> params = new HashMap<>();
         params.put("name", "브라운");
         params.put("date", "2025-08-05");
@@ -57,6 +57,22 @@ public class MissionStepTest {
                 .then().log().all()
                 .statusCode(200)
                 .body("size()", is(1));
+    }
+
+    @Test
+    void 예약_취소_테스트() {
+        Map<String, String> params = new HashMap<>();
+        params.put("name", "브라운");
+        params.put("date", "2025-08-05");
+        params.put("time", "19:40");
+
+        RestAssured.given().log().all()
+                .contentType(ContentType.JSON)
+                .body(params)
+                .when().post("/reservations")
+                .then().log().all()
+                .statusCode(201)
+                .body("id", is(1));
 
         RestAssured.given().log().all()
                 .when().delete("/reservations/1")

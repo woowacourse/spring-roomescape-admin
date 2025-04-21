@@ -86,8 +86,8 @@
 
 - [x] /admin/time 요청 시 시간 관리 페이지를 응답한다.
 
-- [ ] API 명세에 따라 아래 기능 구현
-    - [ ] 시간 추가 API 구현
+- [x] API 명세에 따라 아래 기능 구현
+    - [x] 시간 추가 API 구현
         - Request
         ```
         POST /times HTTP/1.1
@@ -108,7 +108,7 @@
         "startAt": "10:00"
         }
         ```
-    - [ ] 시간 조회 API 구현
+    - [x] 시간 조회 API 구현
       - Request
       ```
       GET /times HTTP/1.1
@@ -127,7 +127,7 @@
       ]
       ```
 
-    - [ ] 시간 삭제 API 구현
+    - [x] 시간 삭제 API 구현
       - Request
       ```
       DELETE /times/1 HTTP/1.1

@@ -6,6 +6,7 @@ import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.annotation.DirtiesContext;
 
+import java.time.LocalDate;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -15,8 +16,8 @@ class ReservationControllerTest {
 
     @Test
     void 이름이_없으면_400_응답을_반환한다() {
-        Map<String, String> params = new HashMap<>();
-        params.put("date", "2023-08-05");
+        Map<String, Object> params = new HashMap<>();
+        params.put("date", LocalDate.now().plusDays(20));
         params.put("time", "15:40");
 
         RestAssured.given().log().all()
@@ -29,9 +30,9 @@ class ReservationControllerTest {
 
     @Test
     void 이름이_비어있으면_400_응답을_반환한다() {
-        Map<String, String> params = new HashMap<>();
+        Map<String, Object> params = new HashMap<>();
         params.put("name", "");
-        params.put("date", "2023-08-05");
+        params.put("date", LocalDate.now().plusDays(20));
         params.put("time_id", "1");
 
         RestAssured.given().log().all()
@@ -44,7 +45,7 @@ class ReservationControllerTest {
 
     @Test
     void 날짜가_없으면_400_응답을_반환한다() {
-        Map<String, String> params = new HashMap<>();
+        Map<String, Object> params = new HashMap<>();
         params.put("name", "dompoo");
         params.put("time", "15:40");
 
@@ -58,9 +59,9 @@ class ReservationControllerTest {
 
     @Test
     void 시간이_없으면_400_응답을_반환한다() {
-        Map<String, String> params = new HashMap<>();
+        Map<String, Object> params = new HashMap<>();
         params.put("name", "dompoo");
-        params.put("date", "2023-08-05");
+        params.put("date", LocalDate.now().plusDays(20));
 
         RestAssured.given().log().all()
                 .contentType(ContentType.JSON)

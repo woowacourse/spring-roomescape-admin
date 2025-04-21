@@ -2,24 +2,30 @@ package roomescape;
 
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.jdbc.core.JdbcTemplate;
 
 import java.time.LocalDateTime;
 
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 
+@SpringBootTest
 class ReservationsTest {
-    private final Reservations reservations = new Reservations();
+    @Autowired
+    private JdbcTemplate jdbcTemplate;
+    private final Reservations reservations = new Reservations(jdbcTemplate);
 
     @Test
     @DisplayName("같은 날짜, 같은 시각에 이미 예약이 존재하는 경우, 재생성할 수 없다.")
     void duplicateReservation() {
         // given
         LocalDateTime dateTime = LocalDateTime.of(2025, 1, 2, 12, 0);
-        reservations.save(new Reservation("test", dateTime));
+        reservations.save(Reservation.of("test", dateTime));
 
         // when & then
         assertThatThrownBy(() -> {
-            reservations.save(new Reservation("test2", dateTime));
+            reservations.save(Reservation.of("test2", dateTime));
         }).isInstanceOf(IllegalArgumentException.class);
     }
 

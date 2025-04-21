@@ -1,13 +1,20 @@
 package roomescape;
 
+import org.springframework.jdbc.core.JdbcTemplate;
+import org.springframework.stereotype.Component;
+
+import java.time.LocalDate;
+import java.time.LocalTime;
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.List;
 
+@Component
 public class Reservations {
     private final List<Reservation> reservations;
+    private final JdbcTemplate jdbcTemplate;
 
-    public Reservations() {
+    public Reservations(JdbcTemplate jdbcTemplate) {
+        this.jdbcTemplate = jdbcTemplate;
         this.reservations = new ArrayList<>();
     }
 
@@ -25,6 +32,16 @@ public class Reservations {
     }
 
     public List<Reservation> findAll() {
-        return Collections.unmodifiableList(reservations);
+        String query = "SELECT id, name, date, time FROM reservation";
+        return jdbcTemplate.query(query, (resultSet, rowNum) -> {
+            LocalDate date = resultSet.getObject("date", LocalDate.class);
+            LocalTime time = resultSet.getObject("time", LocalTime.class);
+            return new Reservation(
+                    resultSet.getLong("id"),
+                    resultSet.getString("name"),
+                    date,
+                    time
+            );
+        });
     }
 }

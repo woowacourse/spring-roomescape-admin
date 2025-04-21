@@ -1,6 +1,7 @@
 package roomescape;
 
 import org.springframework.http.ResponseEntity;
+import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.web.bind.annotation.*;
 import roomescape.dto.ReservationDto;
 
@@ -11,8 +12,8 @@ import java.util.List;
 public class RoomescapeReservationRestController {
     private final Reservations reservations;
 
-    public RoomescapeReservationRestController() {
-        this.reservations = new Reservations();
+    public RoomescapeReservationRestController(JdbcTemplate jdbcTemplate) {
+        this.reservations = new Reservations(jdbcTemplate);
     }
 
     @GetMapping

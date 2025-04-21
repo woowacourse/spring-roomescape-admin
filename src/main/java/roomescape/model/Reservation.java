@@ -2,6 +2,7 @@ package roomescape.model;
 
 import java.time.LocalDate;
 import java.time.LocalTime;
+import java.util.Objects;
 
 public class Reservation {
 
@@ -33,13 +34,13 @@ public class Reservation {
 
     private void validateNotNull(String name, LocalDate date, LocalTime time) {
         if (name == null || date == null || time == null) {
-            throw new IllegalArgumentException("Invalid reservation");
+            throw new IllegalArgumentException("예약자 이름과 예약 날짜, 시간을 올바르게 입력해 주세요.");
         }
     }
 
     private void validateName(String name) {
         if (name.isBlank() || name.isEmpty()) {
-            throw new IllegalArgumentException("Invalid name");
+            throw new IllegalArgumentException("예약자 이름은 빈 칸일 수 없습니다.");
         }
     }
 
@@ -57,5 +58,18 @@ public class Reservation {
 
     public LocalTime getTime() {
         return time;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        Reservation that = (Reservation) o;
+        return Objects.equals(name, that.name) && Objects.equals(date, that.date) && Objects.equals(time, that.time);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(name, date, time);
     }
 }

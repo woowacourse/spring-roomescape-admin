@@ -103,6 +103,6 @@
       ]
       ```
 
-- DELETE /times/{ReservationTimeId}
+- DELETE /times/{reservationTimeId}
     - 설명 : ID에 해당하는 예약 가능한 시간 삭제
     - 정상 응답 (200)

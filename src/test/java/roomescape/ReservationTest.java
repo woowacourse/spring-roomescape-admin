@@ -17,8 +17,8 @@ class ReservationTest {
     void duplicateWhenDateAndTimeIsSame() {
         // given
         LocalDateTime dateTime = LocalDateTime.of(2025, 1, 2, 10, 0);
-        Reservation reservation = new Reservation("test", dateTime);
-        Reservation other = new Reservation("test2", dateTime);
+        Reservation reservation = Reservation.of("test", dateTime);
+        Reservation other = Reservation.of("test2", dateTime);
 
         // when
         final boolean isSame = reservation.isDuplicatedWith(other);
@@ -33,8 +33,8 @@ class ReservationTest {
     void duplicateWhenBetweenStartAndEnd(String description, LocalDateTime otherDateTime, boolean expected) {
         // given
         LocalDateTime dateTime = LocalDateTime.of(2025, 1, 2, 10, 0);
-        Reservation reservation = new Reservation("test", dateTime);
-        Reservation other = new Reservation("test2", otherDateTime);
+        Reservation reservation = Reservation.of("test", dateTime);
+        Reservation other = Reservation.of("test2", otherDateTime);
 
         // when
         final boolean isDuplicated = reservation.isDuplicatedWith(other);

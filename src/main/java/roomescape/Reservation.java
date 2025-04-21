@@ -5,43 +5,33 @@ import java.time.LocalDateTime;
 import java.time.LocalTime;
 import java.util.concurrent.atomic.AtomicLong;
 
-public class Reservation {
+public record Reservation(
+        Long id,
+        String name,
+        LocalDate date,
+        LocalTime time
+) {
     private static final AtomicLong index = new AtomicLong(1);
     private static final LocalTime runningTime = LocalTime.of(2, 0);
-    private final Long id;
-    private final String name;
-    private final LocalDateTime dateTime;
 
-    public Reservation(String name, LocalDateTime dateTime) {
-        this.id = index.getAndIncrement();
-        this.name = name;
-        this.dateTime = dateTime;
+    public static Reservation of(String name, LocalDateTime dateTime) {
+        return new Reservation(
+                index.getAndIncrement(),
+                name,
+                dateTime.toLocalDate(),
+                dateTime.toLocalTime()
+        );
     }
 
     public boolean isDuplicatedWith(Reservation other) {
-        LocalDateTime endTime = dateTime.plusSeconds(runningTime.toSecondOfDay());
-        LocalDateTime otherStartTime = other.dateTime;
-        return (otherStartTime.isAfter(dateTime) || otherStartTime.isEqual(dateTime))
+        LocalDateTime startTime = LocalDateTime.of(date, time);
+        LocalDateTime endTime = startTime.plusSeconds(runningTime.toSecondOfDay());
+        LocalDateTime otherStartTime = LocalDateTime.of(other.date, other.time);
+        return (otherStartTime.isAfter(startTime) || otherStartTime.isEqual(startTime))
                 && otherStartTime.isBefore(endTime);
     }
 
     public boolean isSameId(final Long id) {
         return this.id.equals(id);
-    }
-
-    public Long getId() {
-        return id;
-    }
-
-    public String getName() {
-        return name;
-    }
-
-    public LocalDate getDate() {
-        return dateTime.toLocalDate();
-    }
-
-    public LocalTime getTime() {
-        return dateTime.toLocalTime();
     }
 }

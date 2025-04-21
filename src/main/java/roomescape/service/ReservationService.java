@@ -10,22 +10,22 @@ import java.util.List;
 @Service
 public class ReservationService {
 
-    private final ReservationDatabase reservationDatabase;
+    private final ReservationDatabase database;
 
-    public ReservationService(final ReservationDatabase reservationDatabase) {
-        this.reservationDatabase = reservationDatabase;
+    public ReservationService(final ReservationDatabase database) {
+        this.database = database;
     }
 
     public List<Reservation> getAll() {
-        return reservationDatabase.findAll();
+        return database.findAll();
     }
 
     public Reservation saveAndGet(final ReservationCreateRequest request) {
-        final long savedId = reservationDatabase.saveAndGetId(request);
-        return reservationDatabase.findById(savedId);
+        final long savedId = database.saveAndGetId(request);
+        return database.findById(savedId);
     }
 
     public void deleteById(final long reservationId) {
-        reservationDatabase.deleteById(reservationId);
+        database.deleteById(reservationId);
     }
 }

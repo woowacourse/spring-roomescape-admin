@@ -27,8 +27,9 @@ public class ReservationControllerTest {
     @DisplayName("예약을 조회하는 API를 요청한다.")
     void getReservations() {
         // given
-        jdbcTemplate.update("INSERT INTO reservation (name, date, time) VALUES (?, ?, ?)",
-                "브라운", "2023-08-05", "15:40");
+        jdbcTemplate.update("INSERT INTO reservation_time (start_at) VALUES (?)", "10:00");
+        jdbcTemplate.update("INSERT INTO reservation (name, date, time_id) VALUES (?, ?, ?)",
+                "브라운", "2023-08-05", 1L);
 
         // when
         List<Reservation> reservations = RestAssured
@@ -47,10 +48,11 @@ public class ReservationControllerTest {
     @DisplayName("예약을 생성하는 API를 요청한다.")
     void createReservation() {
         // given
+        jdbcTemplate.update("INSERT INTO reservation_time (start_at) VALUES (?)", "10:00");
         var params = Map.of(
                 "name", "브라운",
                 "date", "2023-08-05",
-                "time", "15:40"
+                "timeId", 1L
         );
 
         // when & then
@@ -68,8 +70,9 @@ public class ReservationControllerTest {
     @DisplayName("예약을 삭제하는 API를 요청한다.")
     void deleteReservation() {
         // given
-        jdbcTemplate.update("INSERT INTO reservation (name, date, time) VALUES (?, ?, ?)",
-                "브라운", "2023-08-05", "15:40");
+        jdbcTemplate.update("INSERT INTO reservation_time (start_at) VALUES (?)", "10:00");
+        jdbcTemplate.update("INSERT INTO reservation (name, date, time_id) VALUES (?, ?, ?)",
+                "브라운", "2023-08-05", 1L);
 
         // when
         RestAssured

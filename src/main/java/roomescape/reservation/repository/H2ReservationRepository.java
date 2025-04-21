@@ -11,6 +11,7 @@ import org.springframework.jdbc.support.GeneratedKeyHolder;
 import org.springframework.jdbc.support.KeyHolder;
 import org.springframework.stereotype.Repository;
 import roomescape.reservation.domain.Reservation;
+import roomescape.reservationtime.domain.ReservationTime;
 
 @Repository
 public class H2ReservationRepository implements ReservationRepository {
@@ -24,20 +25,31 @@ public class H2ReservationRepository implements ReservationRepository {
 
     @Override
     public List<Reservation> findAll() {
-        String sql = "select id, name, date, time from reservation";
+        String sql = "select r.id, r.name, r.date, rt.id as time_id, rt.start_at "
+                + "from reservation r "
+                + "inner join reservation_time rt on r.time_id = rt.id";
+
         return jdbcTemplate.query(
                 sql,
                 (resultSet, rowNum) -> new Reservation(
                         resultSet.getLong("id"),
                         resultSet.getString("name"),
                         LocalDate.parse(resultSet.getString("date")),
-                        LocalTime.parse(resultSet.getString("time"))
-                ));
+                        new ReservationTime(
+                                resultSet.getLong("time_id"),
+                                LocalTime.parse(resultSet.getString("start_at"))
+                        )
+                )
+        );
     }
 
     @Override
     public Optional<Reservation> findById(Long id) {
-        String sql = "select id, name, date, time from reservation where id = ?";
+        String sql = "select r.id, r.name, r.date, rt.id as time_id, rt.start_at "
+                + "from reservation r "
+                + "inner join reservation_time rt on r.time_id = rt.id "
+                + "where r.id = ?";
+
         return Optional.ofNullable(
                 jdbcTemplate.queryForObject(
                         sql,
@@ -45,15 +57,18 @@ public class H2ReservationRepository implements ReservationRepository {
                                 resultSet.getLong("id"),
                                 resultSet.getString("name"),
                                 LocalDate.parse(resultSet.getString("date")),
-                                LocalTime.parse(resultSet.getString("time"))
+                                new ReservationTime(
+                                        resultSet.getLong("time_id"),
+                                        LocalTime.parse(resultSet.getString("start_at"))
+                                )
                         ),
-                        id
-                ));
+                        id)
+        );
     }
 
     @Override
     public Reservation save(Reservation reservation) {
-        String sql = "insert into reservation (name, date, time) values (?, ?, ?)";
+        String sql = "insert into reservation (name, date, time_id) values (?, ?, ?)";
         KeyHolder keyHolder = new GeneratedKeyHolder();
         jdbcTemplate.update(connection -> {
             PreparedStatement ps = connection.prepareStatement(
@@ -61,7 +76,7 @@ public class H2ReservationRepository implements ReservationRepository {
                     new String[]{"id"});
             ps.setString(1, reservation.getName());
             ps.setString(2, reservation.getDate().toString());
-            ps.setString(3, reservation.getTime().toString());
+            ps.setLong(3, reservation.getTime().getId());
             return ps;
         }, keyHolder);
 

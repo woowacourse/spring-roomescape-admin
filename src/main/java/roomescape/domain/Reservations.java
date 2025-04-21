@@ -1,43 +1,36 @@
 package roomescape.domain;
 
-import java.util.Collections;
 import java.util.List;
-import java.util.concurrent.atomic.AtomicLong;
-import roomescape.exception.CannotAddException;
-import roomescape.exception.CannotRemoveException;
+import org.springframework.stereotype.Component;
+import roomescape.dao.ReservationDAO;
 
+@Component
 public class Reservations {
 
-    private final List<Reservation> reservations;
-    private final AtomicLong index = new AtomicLong(1);
+    private static final int DUPLICATED_RESERVATION = -1;
 
-    public Reservations(final List<Reservation> reservations) {
-        this.reservations = reservations;
+    private final ReservationDAO reservationDAO;
+
+    public Reservations(final ReservationDAO reservationDAO) {
+        this.reservationDAO = reservationDAO;
     }
 
     public List<Reservation> findAll() {
-        return Collections.unmodifiableList(reservations);
+        return reservationDAO.findAll();
     }
 
-    public Reservation addReservation(final Reservation reservation) {
+    public long addReservation(final Reservation reservation) {
         if (existsSameDateTime(reservation)) {
-            throw new CannotAddException("[ERROR] 이미 존재하는 예약 시간입니다.");
+            return DUPLICATED_RESERVATION;
         }
-        Reservation saved = reservation.withId(index.getAndIncrement());
-        reservations.add(saved);
-        return saved;
+        return reservationDAO.insert(reservation);
     }
 
-    public void removeReservationById(final long id) {
-        Reservation found = reservations.stream()
-                .filter(reservation -> reservation.getId() == id)
-                .findAny()
-                .orElseThrow(() -> new CannotRemoveException("[ERROR] 존재하지 않는 예약 번호입니다: " + id));
-        reservations.remove(found);
+    public boolean removeReservationById(final long id) {
+        return reservationDAO.deleteById(id);
     }
 
     private boolean existsSameDateTime(final Reservation reservation) {
-        return reservations.stream()
-                .anyMatch(reservation::isSameDateTime);
+        return reservationDAO.existsByDateAndTime(reservation.getDate(), reservation.getTime());
     }
 }

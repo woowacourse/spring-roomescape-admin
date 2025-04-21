@@ -1,7 +1,6 @@
 package roomescape.controller;
 
 import java.util.List;
-import java.util.Vector;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -13,16 +12,14 @@ import roomescape.domain.Reservation;
 import roomescape.domain.Reservations;
 import roomescape.dto.ReservationRequest;
 import roomescape.dto.ReservationResponse;
-import roomescape.exception.CannotAddException;
-import roomescape.exception.CannotRemoveException;
 
 @RestController
 public class RoomescapeApiController {
 
     private final Reservations reservations;
 
-    public RoomescapeApiController() {
-        this.reservations = new Reservations(new Vector<>());
+    public RoomescapeApiController(final Reservations reservations) {
+        this.reservations = reservations;
     }
 
     @GetMapping("/reservations")
@@ -35,21 +32,21 @@ public class RoomescapeApiController {
 
     @PostMapping("/reservations")
     public ResponseEntity<ReservationResponse> addReservation(@RequestBody ReservationRequest request) {
-        try {
-            Reservation savedReservation = reservations.addReservation(request.toReservation());
-            return ResponseEntity.ok(ReservationResponse.from(savedReservation));
-        } catch (CannotAddException e) {
-            return ResponseEntity.badRequest().build();
+        Reservation reservation = request.toReservation();
+        long savedId = reservations.addReservation(reservation);
+        if (savedId > 0) {
+            return ResponseEntity.ok(ReservationResponse.from(reservation.withId(savedId)));
         }
+        return ResponseEntity.badRequest().build();
+
     }
 
     @DeleteMapping("/reservations/{id}")
     public ResponseEntity<Void> removeReservation(@PathVariable long id) {
-        try {
-            reservations.removeReservationById(id);
+        boolean removed = reservations.removeReservationById(id);
+        if (removed) {
             return ResponseEntity.ok().build();
-        } catch (CannotRemoveException e) {
-            return ResponseEntity.notFound().build();
         }
+        return ResponseEntity.notFound().build();
     }
 }

@@ -32,7 +32,7 @@ class ReservationControllerTest {
         Map<String, String> params = new HashMap<>();
         params.put("name", "");
         params.put("date", "2023-08-05");
-        params.put("time", "15:40");
+        params.put("time_id", "1");
 
         RestAssured.given().log().all()
                 .contentType(ContentType.JSON)

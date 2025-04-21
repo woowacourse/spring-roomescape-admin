@@ -11,9 +11,9 @@ public record ReservationTimeResponse(
 ) {
     private static final DateTimeFormatter TIME_FORMATTER = DateTimeFormatter.ofPattern("HH:mm");
 
-    public static ReservationTimeResponse from(final ReservationTime times) {
-        String startTime = TIME_FORMATTER.format(times.startTime());
-        return new ReservationTimeResponse(times.id(), startTime);
+    public static ReservationTimeResponse from(final ReservationTime time) {
+        String startTime = TIME_FORMATTER.format(time.startTime());
+        return new ReservationTimeResponse(time.id(), startTime);
     }
 
     public static ReservationTimeResponse from(final ReservationTimeCreateRequest request, final long savedId) {

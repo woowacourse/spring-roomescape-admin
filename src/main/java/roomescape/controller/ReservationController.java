@@ -32,9 +32,9 @@ public class ReservationController {
 
     @PostMapping("/reservations")
     public ResponseEntity<ReservationResponse> add(@RequestBody ReservationCreateRequest request) {
-        final Long savedId = reservationDatabase.saveAndGetId(request);
+        final Reservation reservation = reservationDatabase.saveAndGet(request);
 
-        ReservationResponse response = ReservationResponse.from(request, savedId);
+        ReservationResponse response = ReservationResponse.from(reservation);
         return ResponseEntity.ok(response);
     }
 

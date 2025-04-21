@@ -2,7 +2,7 @@ package roomescape.dto.response;
 
 import org.junit.jupiter.api.Test;
 import roomescape.Reservation;
-import roomescape.dto.request.ReservationCreateRequest;
+import roomescape.ReservationTime;
 
 import java.time.LocalDate;
 import java.time.LocalTime;
@@ -17,7 +17,7 @@ class ReservationResponseTest {
                 1L,
                 "dompoo",
                 LocalDate.of(2025, 5, 17),
-                LocalTime.of(10, 0)
+                new ReservationTime(2L, LocalTime.of(10, 0))
         );
 
         final ReservationResponse result = ReservationResponse.from(reservation);
@@ -25,22 +25,7 @@ class ReservationResponseTest {
         assertThat(result.id()).isEqualTo(1L);
         assertThat(result.name()).isEqualTo("dompoo");
         assertThat(result.date()).isEqualTo(LocalDate.of(2025, 5, 17));
-        assertThat(result.time()).isEqualTo("10:00");
-    }
-
-    @Test
-    void 생성_요청으로부터_생성될_수_있다() {
-        final ReservationCreateRequest request = new ReservationCreateRequest(
-                "dompoo",
-                LocalDate.of(2025, 5, 17),
-                LocalTime.of(10, 0)
-        );
-
-        final ReservationResponse result = ReservationResponse.from(request, 1L);
-
-        assertThat(result.id()).isEqualTo(1L);
-        assertThat(result.name()).isEqualTo("dompoo");
-        assertThat(result.date()).isEqualTo(LocalDate.of(2025, 5, 17));
-        assertThat(result.time()).isEqualTo("10:00");
+        assertThat(result.time().id()).isEqualTo(2L);
+        assertThat(result.time().startAt()).isEqualTo("10:00");
     }
 }

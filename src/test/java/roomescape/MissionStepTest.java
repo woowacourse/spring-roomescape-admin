@@ -7,6 +7,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.test.annotation.DirtiesContext;
+import roomescape.dto.response.ReservationResponse;
 
 import java.sql.Connection;
 import java.sql.SQLException;
@@ -49,13 +50,23 @@ public class MissionStepTest {
     @Test
     void 삼단계() {
         Map<String, String> params = new HashMap<>();
-        params.put("name", "브라운");
-        params.put("date", "2023-08-05");
-        params.put("time", "15:40");
+        params.put("startAt", "10:00");
 
         RestAssured.given().log().all()
                 .contentType(ContentType.JSON)
                 .body(params)
+                .when().post("/times")
+                .then().log().all()
+                .statusCode(200);
+
+        Map<String, String> params2 = new HashMap<>();
+        params2.put("name", "브라운");
+        params2.put("date", "2023-08-05");
+        params2.put("timeId", "1");
+
+        RestAssured.given().log().all()
+                .contentType(ContentType.JSON)
+                .body(params2)
                 .when().post("/reservations")
                 .then().log().all()
                 .statusCode(200)
@@ -92,25 +103,28 @@ public class MissionStepTest {
 
     @Test
     void 오단계() {
-        jdbcTemplate.update("INSERT INTO reservation (name, date, time) VALUES (?, ?, ?)", "브라운", "2023-08-05", "15:40");
+        jdbcTemplate.update("INSERT INTO reservation_time (start_at) VALUES (?)", "10:00");
+        jdbcTemplate.update("INSERT INTO reservation (name, date, time_id) VALUES (?, ?, ?)", "브라운", "2023-08-05", "1");
 
-        List<Reservation> reservations = RestAssured.given().log().all()
+        final List<ReservationResponse> response = RestAssured.given().log().all()
                 .when().get("/reservations")
                 .then().log().all()
                 .statusCode(200).extract()
-                .jsonPath().getList(".", Reservation.class);
+                .jsonPath().getList(".", ReservationResponse.class);
 
         Integer count = jdbcTemplate.queryForObject("SELECT count(1) from reservation", Integer.class);
 
-        assertThat(reservations.size()).isEqualTo(count);
+        assertThat(response.size()).isEqualTo(count);
     }
 
     @Test
     void 육단계() {
+        jdbcTemplate.update("INSERT INTO reservation_time (start_at) VALUES (?)", "10:00");
+
         Map<String, String> params = new HashMap<>();
         params.put("name", "브라운");
         params.put("date", "2023-08-05");
-        params.put("time", "10:00");
+        params.put("timeId", "1");
 
         RestAssured.given().log().all()
                 .contentType(ContentType.JSON)
@@ -153,5 +167,29 @@ public class MissionStepTest {
                 .when().delete("/times/1")
                 .then().log().all()
                 .statusCode(200);
+    }
+
+    @Test
+    void 팔단계() {
+        jdbcTemplate.update("INSERT INTO reservation_time (start_at) VALUES (?)", "10:00");
+        
+        Map<String, Object> reservation = new HashMap<>();
+        reservation.put("name", "브라운");
+        reservation.put("date", "2023-08-05");
+        reservation.put("timeId", 1);
+
+        RestAssured.given().log().all()
+                .contentType(ContentType.JSON)
+                .body(reservation)
+                .when().post("/reservations")
+                .then().log().all()
+                .statusCode(200);
+
+
+        RestAssured.given().log().all()
+                .when().get("/reservations")
+                .then().log().all()
+                .statusCode(200)
+                .body("size()", is(1));
     }
 }

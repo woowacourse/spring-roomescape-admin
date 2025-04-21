@@ -1,4 +1,4 @@
-package roomescape.infra;
+package roomescape.infra.jdbc;
 
 import org.springframework.context.annotation.Primary;
 import org.springframework.jdbc.core.JdbcTemplate;
@@ -7,6 +7,7 @@ import org.springframework.jdbc.core.simple.SimpleJdbcInsert;
 import org.springframework.stereotype.Repository;
 import roomescape.domain.ReservationTime;
 import roomescape.dto.request.ReservationTimeCreateRequest;
+import roomescape.infra.ReservationTimeDatabase;
 
 import java.time.LocalTime;
 import java.util.List;

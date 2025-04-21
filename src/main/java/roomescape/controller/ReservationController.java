@@ -4,6 +4,7 @@ import jakarta.validation.Valid;
 import java.time.LocalDateTime;
 import java.util.List;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -24,16 +25,16 @@ public class ReservationController {
     private final Reservations reservations = new Reservations();
 
     @GetMapping
-    public List<ReservationResponse> readReservations() {
+    public ResponseEntity<List<ReservationResponse>> readReservations() {
         final List<ReservationResponse> dtos = ReservationResponse.from(reservations);
-        return dtos;
+        return ResponseEntity.ok(dtos);
     }
 
     @PostMapping
-    public ReservationResponse createReservation(
+    public ResponseEntity<ReservationResponse> createReservation(
             @Valid @RequestBody final ReservationRequest reservationRequest) {
         final Reservation reservation = makeReservation(reservationRequest);
-        return ReservationResponse.from(reservation);
+        return ResponseEntity.ok(ReservationResponse.from(reservation));
     }
 
     @DeleteMapping("/{id}")

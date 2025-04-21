@@ -20,10 +20,10 @@ import roomescape.repository.ReservationRepository;
 import roomescape.test.fake.FakeReservationRepository;
 import roomescape.test.fixture.ReservationFixture;
 
-class RoomescapeControllerTest {
+class ReservationControllerTest {
 
     private final ReservationRepository reservationRepository = new FakeReservationRepository();
-    private final RoomescapeController controller = new RoomescapeController(reservationRepository);
+    private final ReservationController controller = new ReservationController(reservationRepository);
 
     @DisplayName("저장된 예약들을 조회할 수 있다")
     @Test

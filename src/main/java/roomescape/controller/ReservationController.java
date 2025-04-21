@@ -7,22 +7,22 @@ import java.time.LocalTime;
 import java.util.List;
 import java.util.Optional;
 import org.springframework.http.ResponseEntity;
-import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RestController;
 import roomescape.domain.Reservation;
 import roomescape.dto.ReservationCreationRequest;
 import roomescape.repository.ReservationRepository;
 
-@Controller
-public class RoomescapeController {
+@RestController
+public class ReservationController {
 
     private final ReservationRepository reservationRepository;
 
-    public RoomescapeController(ReservationRepository reservationRepository) {
+    public ReservationController(ReservationRepository reservationRepository) {
         this.reservationRepository = reservationRepository;
     }
 
@@ -33,17 +33,17 @@ public class RoomescapeController {
 
     @PostMapping("/reservations")
     public ResponseEntity<Reservation> createReservation(
-            @RequestBody ReservationCreationRequest input
+            @RequestBody ReservationCreationRequest request
     ) {
-        if (validatePastDateAndTime(input.getDate(), input.getTime())) {
+        if (validatePastDateAndTime(request.getDate(), request.getTime())) {
             return ResponseEntity.badRequest().build();
         }
-        Reservation reservation = Reservation.createWithoutId(input.getName(), input.getDate(), input.getTime());
+        Reservation reservation = Reservation.createWithoutId(request.getName(), request.getDate(), request.getTime());
         long id = reservationRepository.add(reservation);
 
         Optional<Reservation> addedReservation = reservationRepository.findById(id);
         if (addedReservation.isEmpty()) {
-            throw new IllegalArgumentException("ID에 해당하는 예약이 존재하지 않습니다.");
+            throw new IllegalArgumentException("[ERROR] ID에 해당하는 예약이 존재하지 않습니다.");
         }
 
         return ResponseEntity

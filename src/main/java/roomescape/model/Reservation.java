@@ -16,11 +16,16 @@ public class Reservation {
         this.reservationDateTime = reservationDateTime;
     }
 
+    public Reservation(String name, ReservationDateTime reservationDateTime){
+        this.id = null;
+        this.name = name;
+        this.reservationDateTime = reservationDateTime;
+    }
+
     private String validateNonBlank(String name) {
         if (name == null || name.isBlank()) {
             throw new IllegalArgumentException("이름은 null이거나 공백일 수 없습니다");
         }
-
         return name;
     }
 

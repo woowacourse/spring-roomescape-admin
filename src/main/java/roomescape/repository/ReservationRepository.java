@@ -22,14 +22,14 @@ public class ReservationRepository {
                 .usingGeneratedKeyColumns("id");
     }
 
-    public Long add(Reservation reservation) {
+    public ReservationReadDto add(Reservation reservation) {
         Map<String, Object> params = new HashMap<>();
         params.put("name", reservation.getName());
         params.put("date", reservation.getDate());
         params.put("time", reservation.getTime());
 
         Long id = jdbcInsert.executeAndReturnKey(params).longValue();
-        return id;
+        return new ReservationReadDto(id, reservation.getName(), reservation.getDate(), reservation.getTime());
     }
 
     public int deleteBy(Long id) {

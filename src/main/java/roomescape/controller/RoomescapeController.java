@@ -1,9 +1,7 @@
 package roomescape.controller;
 
 import java.net.URI;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -30,12 +28,10 @@ public class RoomescapeController {
     }
 
     @PostMapping("/reservations")
-    public ResponseEntity<Map<String, Long>> createReservation(@RequestBody ReservationCreateDto dto) {
+    public ResponseEntity<ReservationReadDto> createReservation(@RequestBody ReservationCreateDto dto) {
         Reservation newReservation = new Reservation(dto.getName(), dto.getDate(), dto.getTime());
-        Long newId = reservationRepository.add(newReservation);
-        Map<String, Long> response = new HashMap<>();
-        response.put("id", newId);
-        return ResponseEntity.created(URI.create("reservations/" + newId)).body(response);
+        ReservationReadDto readDto = reservationRepository.add(newReservation);
+        return ResponseEntity.created(URI.create("reservations/" + readDto.getId())).body(readDto);
     }
 
     @DeleteMapping("/reservations/{id}")

@@ -10,11 +10,11 @@ public class AdminController {
 
     @GetMapping
     public String admin() {
-        return "admin/index.html";
+        return "admin/index";
     }
 
     @GetMapping("/reservation")
     public String reservation() {
-        return "admin/reservation-legacy.html";
+        return "admin/reservation-legacy";
     }
 }

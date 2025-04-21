@@ -6,7 +6,6 @@ import java.util.concurrent.atomic.AtomicInteger;
 import org.springframework.stereotype.Repository;
 import roomescape.model.Reservation;
 
-@Repository
 public class MemoryReservationRepository implements ReservationRepository {
 
     private final List<Reservation> reservations = new ArrayList<>();

@@ -1,7 +1,5 @@
-package roomescape;
+package roomescape.entity;
 
-
-import jakarta.validation.constraints.Future;
 
 import java.time.LocalDate;
 import java.time.LocalTime;

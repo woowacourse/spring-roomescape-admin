@@ -48,6 +48,7 @@ public class ReservationDaoImpl implements ReservationDao {
     @Override
     public Reservation findById(long id) {
         String sql = "select * from reservation where id = ?";
+
         return jdbcTemplate.queryForObject(
                 sql,
                 (resultSet, rowNum) -> new Reservation(
@@ -61,6 +62,7 @@ public class ReservationDaoImpl implements ReservationDao {
     @Override
     public List<Reservation> findAll() {
         String sql = "select * from reservation";
+
         List<Reservation> reservations =  jdbcTemplate.query(
                 sql,
                 (resultSet, rowNum) -> new Reservation(

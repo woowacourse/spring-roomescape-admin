@@ -137,3 +137,58 @@
       ```
       HTTP/1.1 200
       ```
+
+## 8단계
+
+- [ ] 방탈출 예약 시 시간 테이블에 저장된 시간만 선택할 수 있도록 수정
+
+- [ ] 예약 추가/조회 API 명세 변경
+  - [ ] 예약 추가 API
+    - Request
+    ```
+    POST /reservations HTTP/1.1
+    content-type: application/json
+    
+    {
+        "date": "2023-08-05",
+        "name": "브라운",
+        "timeId": 1
+    }
+    ```
+
+    - Response
+    ```
+    HTTP/1.1 200
+    Content-Type: application/json
+    
+    {
+        "id": 1,
+        "name": "브라운",
+        "date": "2023-08-05",
+        "time" : {
+            "id": 1,
+            "startAt" : "10:00"
+        }
+    }
+    ```
+
+  - [ ] 예약 조회 API
+    - Request
+    ```
+    GET /reservations HTTP/1.1
+    ```
+    
+    - Response
+    ```
+    [
+        {
+            "id": 1,
+            "name": "브라운",
+            "date": "2023-08-05",
+            "time": {
+                "id": 1,
+                "startAt": "10:00"
+            }
+        }
+    ]
+    ```

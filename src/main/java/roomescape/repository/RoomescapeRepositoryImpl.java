@@ -9,12 +9,8 @@ import roomescape.domain.Reservation;
 @Repository
 public class RoomescapeRepositoryImpl implements RoomescapeRepository {
 
-    private final List<Reservation> reservations;
+    private final List<Reservation> reservations = new CopyOnWriteArrayList<>();
     private final AtomicLong index = new AtomicLong(1);
-
-    public RoomescapeRepositoryImpl(final List<Reservation> reservations) {
-        this.reservations = new CopyOnWriteArrayList<>(reservations);
-    }
 
     @Override
     public List<Reservation> findAll() {
@@ -23,9 +19,6 @@ public class RoomescapeRepositoryImpl implements RoomescapeRepository {
 
     @Override
     public Reservation saveReservation(final Reservation reservation) {
-        if (existsSameReservation(reservation)) {
-            throw new IllegalArgumentException("[ERROR] 이미 존재하는 예약시간입니다.");
-        }
         Reservation saved = reservation.toEntity(index.getAndIncrement());
         reservations.add(saved);
         return saved;
@@ -40,8 +33,9 @@ public class RoomescapeRepositoryImpl implements RoomescapeRepository {
         reservations.remove(found);
     }
 
-    private boolean existsSameReservation(final Reservation reservation) {
-        return reservations.stream()
-                .anyMatch(reservation::isDuplicateReservation);
+    @Override
+    public void clear() {
+        reservations.clear();
     }
+
 }

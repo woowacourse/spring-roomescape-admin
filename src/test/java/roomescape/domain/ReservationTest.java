@@ -1,14 +1,53 @@
 package roomescape.domain;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.assertThatIllegalArgumentException;
 import static org.junit.jupiter.api.Assertions.assertAll;
+import static org.junit.jupiter.api.Assertions.assertDoesNotThrow;
 
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
+import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.CsvSource;
 
 class ReservationTest {
+
+    @Test
+    void 이름이_BLACK인_경우_예외가_발생한다() {
+        // given
+        String name = "a".repeat(255);
+
+        // when & then
+        assertAll(
+                () -> assertThatIllegalArgumentException().isThrownBy(() ->
+                        new Reservation(null, " ", LocalDateTime.MAX)),
+                () -> assertThatIllegalArgumentException().isThrownBy(() ->
+                        new Reservation(null, null, LocalDateTime.MAX)),
+                () -> assertThatIllegalArgumentException().isThrownBy(() ->
+                        new Reservation(null, "", LocalDateTime.MAX))
+        );
+    }
+
+    @Test
+    void 이름의_길이가_255_이하인_경우_예외가_발생하지_않는다() {
+        // given
+        String name = "a".repeat(255);
+
+        // when & then
+        assertDoesNotThrow(() -> new Reservation(null, name, LocalDateTime.MAX));
+    }
+
+    @Test
+    void 이름의_길이가_255_초과인_경우_예외가_발생한다() {
+        // given
+        String name = "a".repeat(256);
+
+        // when & then
+        assertThatIllegalArgumentException()
+                .isThrownBy(() -> new Reservation(null, name, LocalDateTime.MAX))
+                .withMessage("이름의 길이는 255 초과할 수 없습니다.");
+    }
 
     @ParameterizedTest
     @CsvSource({

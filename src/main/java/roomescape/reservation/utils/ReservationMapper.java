@@ -1,16 +1,18 @@
 package roomescape.reservation.utils;
 
+import org.springframework.stereotype.Component;
 import roomescape.reservation.domain.Reservation;
 import roomescape.reservation.dto.ReservationRequest;
 import roomescape.reservation.dto.ReservationResponse;
 
+@Component
 public class ReservationMapper {
 
-    public static Reservation toReservation(ReservationRequest reservationRequest, long index) {
+    public Reservation toReservation(ReservationRequest reservationRequest, long index) {
         return new Reservation(index, reservationRequest.name(), reservationRequest.date(), reservationRequest.time());
     }
 
-    public static ReservationResponse toReservationResponse(Reservation reservation) {
+    public ReservationResponse toReservationResponse(Reservation reservation) {
         return new ReservationResponse(
                 reservation.getId(),
                 reservation.getName(),

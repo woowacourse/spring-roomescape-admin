@@ -26,13 +26,13 @@ public class ReservationController {
 
     @GetMapping
     public List<ReservationResponse> getReservations() {
-        return reservationService.findAll();
+        return reservationService.findAllReservations();
     }
 
     @PostMapping
     public ResponseEntity<ReservationResponse> addReservation(@Valid @RequestBody ReservationRequest reservationRequest) {
         try {
-            return ResponseEntity.ok(reservationService.insert(reservationRequest));
+            return ResponseEntity.ok(reservationService.addReservation(reservationRequest));
         } catch (DataAccessException e) {
             System.out.println(e.getMessage());
             return ResponseEntity.badRequest().build();
@@ -42,7 +42,7 @@ public class ReservationController {
     @DeleteMapping("/{id}")
     public ResponseEntity<Void> deleteReservation(@PathVariable("id") long id) {
         try {
-            reservationService.delete(id);
+            reservationService.deleteReservationById(id);
             return ResponseEntity.ok().build();
         } catch (NoSuchElementException e) {
             return ResponseEntity.badRequest().build();

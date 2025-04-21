@@ -21,6 +21,9 @@ import roomescape.reservation.utils.ReservationMapper;
 public class ReservationDaoImpl implements ReservationDao {
 
     @Autowired
+    private ReservationMapper reservationMapper;
+
+    @Autowired
     private JdbcTemplate jdbcTemplate;
 
     @Override
@@ -39,7 +42,7 @@ public class ReservationDaoImpl implements ReservationDao {
             return ps;
         }, keyHolder);
 
-        return ReservationMapper.toReservation(reservationRequest, keyHolder.getKey().longValue());
+        return reservationMapper.toReservation(reservationRequest, keyHolder.getKey().longValue());
     }
 
     @Override

@@ -4,6 +4,7 @@ import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import roomescape.reservation.dao.ReservationDao;
+import roomescape.reservation.domain.Reservation;
 import roomescape.reservation.dto.ReservationRequest;
 import roomescape.reservation.dto.ReservationResponse;
 import roomescape.reservation.utils.ReservationMapper;
@@ -11,24 +12,31 @@ import roomescape.reservation.utils.ReservationMapper;
 @Service
 public class ReservationService {
 
+    private final ReservationDao reservationDao;
+    private final ReservationMapper reservationMapper;
+
     @Autowired
-    private ReservationDao reservationDao;
-
-    public ReservationResponse insert(ReservationRequest reservationRequest) {
-        return ReservationMapper.toReservationResponse(reservationDao.insert(reservationRequest));
+    public ReservationService(ReservationDao reservationDao, ReservationMapper reservationMapper) {
+        this.reservationDao = reservationDao;
+        this.reservationMapper = reservationMapper;
     }
 
-    public ReservationResponse findById(long id) {
-        return ReservationMapper.toReservationResponse(reservationDao.findById(id));
+    public ReservationResponse addReservation(ReservationRequest reservationRequest) {
+        return reservationMapper.toReservationResponse(reservationDao.insert(reservationRequest));
     }
 
-    public List<ReservationResponse> findAll() {
-        return reservationDao.findAll().stream()
-                .map(ReservationMapper::toReservationResponse)
+    public ReservationResponse findReservationById(long id) {
+        return reservationMapper.toReservationResponse(reservationDao.findById(id));
+    }
+
+    public List<ReservationResponse> findAllReservations() {
+        List<Reservation> reservations = reservationDao.findAll();
+        return reservations.stream()
+                .map(reservationMapper::toReservationResponse)
                 .toList();
     }
 
-    public void delete(long id) {
+    public void deleteReservationById(long id) {
         reservationDao.delete(id);
     }
 }

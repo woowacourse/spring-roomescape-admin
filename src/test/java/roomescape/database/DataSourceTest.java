@@ -10,19 +10,29 @@ import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.boot.test.context.SpringBootTest.WebEnvironment;
+import org.springframework.boot.test.web.server.LocalServerPort;
 import org.springframework.jdbc.core.JdbcTemplate;
 import roomescape.reservation.Reservation;
 
-@SpringBootTest
+@SpringBootTest(webEnvironment = WebEnvironment.RANDOM_PORT)
 public class DataSourceTest {
 
-    @Autowired
-    private JdbcTemplate jdbcTemplate;
+    private final JdbcTemplate jdbcTemplate;
+    private final int port;
+
+    public DataSourceTest(
+            @Autowired final JdbcTemplate jdbcTemplate,
+            @LocalServerPort final int port
+    ){
+        this.jdbcTemplate = jdbcTemplate;
+        this.port = port;
+    }
 
     @DisplayName("데이터베이스가 존재하고, 예약 테이블이 존재하는지 검증")
     @Test
     void 사단계() {
-        try (Connection connection = jdbcTemplate.getDataSource().getConnection()) {
+        try (final Connection connection = jdbcTemplate.getDataSource().getConnection()) {
             assertThat(connection).isNotNull();
             assertThat(connection.getCatalog()).isEqualTo("DATABASE");
             assertThat(connection.getMetaData().getTables(null, null, "RESERVATION", null).next()).isTrue();
@@ -36,13 +46,13 @@ public class DataSourceTest {
     void 오단계() {
         jdbcTemplate.update("INSERT INTO reservation (name, date, time) VALUES (?, ?, ?)", "브라운", "2023-08-05", "15:40");
 
-        List<Reservation> reservations = RestAssured.given().log().all()
+        final List<Reservation> reservations = RestAssured.given().port(port).log().all()
                 .when().get("/reservations")
                 .then().log().all()
                 .statusCode(200).extract()
                 .jsonPath().getList(".", Reservation.class);
 
-        Integer count = jdbcTemplate.queryForObject("SELECT count(1) from reservation", Integer.class);
+        final Integer count = jdbcTemplate.queryForObject("SELECT count(1) from reservation", Integer.class);
 
         assertThat(reservations.size()).isEqualTo(count);
     }

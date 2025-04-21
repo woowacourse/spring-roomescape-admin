@@ -1,6 +1,7 @@
 package roomescape.dao;
 
 import org.springframework.jdbc.core.JdbcTemplate;
+import org.springframework.jdbc.core.RowMapper;
 import org.springframework.jdbc.support.GeneratedKeyHolder;
 import org.springframework.jdbc.support.KeyHolder;
 import org.springframework.stereotype.Repository;
@@ -19,24 +20,20 @@ public class ReservationDao {
         this.jdbcTemplate = jdbcTemplate;
     }
 
+    private final RowMapper<Reservation> reservationRowMapper = (resultSet, rowNum) -> new Reservation(
+        resultSet.getLong("id"),
+        resultSet.getString("name"),
+        resultSet.getObject("datetime", LocalDateTime.class)
+    );
+
     public List<Reservation> findAll() {
         String sql = "SELECT id, name, datetime FROM reservation";
-        return jdbcTemplate.query(sql,
-                (resultSet, rowNum) -> new Reservation(
-                        resultSet.getLong("id"),
-                        resultSet.getString("name"),
-                        resultSet.getObject("datetime", LocalDateTime.class)
-                ));
+        return jdbcTemplate.query(sql, reservationRowMapper);
     }
 
     public Reservation findReservationById(final Long id) {
         String sql = "SELECT id, name, datetime FROM reservation WHERE id = ?";
-        return jdbcTemplate.queryForObject(sql,
-                (resultSet, rowNum) -> new Reservation(
-                        resultSet.getLong("id"),
-                        resultSet.getString("name"),
-                        resultSet.getObject("datetime", LocalDateTime.class)
-                ), id);
+        return jdbcTemplate.queryForObject(sql, reservationRowMapper, id);
     }
 
     public Long insertWithKeyHolder(final Reservation reservation) {

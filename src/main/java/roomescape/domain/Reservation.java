@@ -14,18 +14,11 @@ public class Reservation {
 
     public Reservation(final Long id, final String name, final LocalDate date, final LocalTime time,
                        final Clock clock) {
-        validateName(name);
         validateDateTime(date, time, clock);
         this.id = id;
         this.name = name;
         this.date = date;
         this.time = time;
-    }
-
-    private void validateName(final String name) {
-        if (name == null || name.isBlank()) {
-            throw new IllegalArgumentException("이름은 비어있을 수 없습니다.");
-        }
     }
 
     private void validateDateTime(final LocalDate date, final LocalTime time, final Clock clock) {

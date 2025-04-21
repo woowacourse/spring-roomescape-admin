@@ -64,6 +64,10 @@ Content-Type: application/json
 
 ## 4. 예약 추가
 
+- [x] `name`이 null일 시 예외처리한다
+- [x] `date`가 null일 시 예외처리한다
+- [x] `time`이 null일 시 예외처리한다
+
 ### Request
 
 ```
@@ -93,6 +97,8 @@ Content-Type: application/json
 ```
 
 ## 5. 예약 취소
+
+- [x] 취소하려는 예약의 id가 존재하지 않을 시 예외처리한다
 
 ### Request
 
@@ -136,8 +142,8 @@ HTTP/1.1 200
   );
   ```
 - [x] 시간 추가 API를 구현한다
-
-  request
+    - [x] `startAt`이 null일 시 예외처리한다
+      request
   ```angular2html
   POST /times HTTP/1.1
   content-type: application/json

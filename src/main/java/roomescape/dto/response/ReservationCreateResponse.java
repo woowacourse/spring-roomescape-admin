@@ -1,4 +1,4 @@
 package roomescape.dto.response;
 
-public record ReservationCreateResponse(Long id) {
+public record ReservationCreateResponse(long id) {
 }

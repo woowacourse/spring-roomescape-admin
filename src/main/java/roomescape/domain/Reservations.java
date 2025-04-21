@@ -24,7 +24,7 @@ public class Reservations {
         return jdbcTemplate.query(sql, actorRowMapper);
     }
 
-    public Long add(final String name, final LocalDate date, final LocalTime time) {
+    public long add(final String name, final LocalDate date, final LocalTime time) {
         final String sql = "INSERT INTO reservation (name, date, time) VALUES (?, ?, ?)";
 
         KeyHolder keyHolder = new GeneratedKeyHolder();

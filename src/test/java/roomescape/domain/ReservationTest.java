@@ -13,7 +13,7 @@ class ReservationTest {
     @DisplayName("아이디가 같으면 true를, 다르면 false를 반환한다.")
     @ParameterizedTest
     @CsvSource(value = "1, 1, true, 1, 2, false")
-    void equalIdTest(final Long firstId, final Long secondId, boolean result) {
+    void equalIdTest(final long firstId, final long secondId, boolean result) {
 
         // given
         Reservation reservation = new Reservation(firstId, "체체", LocalDate.of(2024, 12, 12), LocalTime.of(10, 0));

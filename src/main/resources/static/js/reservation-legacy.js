@@ -121,7 +121,7 @@ function requestCreate(reservation) {
 
     return fetch(RESERVATION_API_ENDPOINT, requestOptions)
         .then(response => {
-            if (response.status === 201) return;
+            if (response.status === 200) return;
             throw new Error('Create failed');
         });
 }

@@ -5,10 +5,7 @@ import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
 import org.springframework.test.annotation.DirtiesContext;
-
-import java.time.LocalDate;
-import java.time.LocalDateTime;
-import java.time.LocalTime;
+import roomescape.fixture.ReservationFixture;
 
 @DirtiesContext(classMode = DirtiesContext.ClassMode.BEFORE_EACH_TEST_METHOD)
 class ReservationTest {
@@ -21,15 +18,11 @@ class ReservationTest {
         @Test
         void isPastTense_throwsExceptionByPastTime() {
             // given
-            LocalDateTime pastDateTime = LocalDateTime.now().minusHours(1);
-
             String dummyName = "kali";
-            LocalDate inputDate = pastDateTime.toLocalDate();
-            LocalTime inputTime = pastDateTime.toLocalTime();
 
             // when & then
             Assertions.assertThatCode(
-                    () -> Reservation.of(dummyName, inputDate, inputTime)
+                    () -> ReservationFixture.createPastReservationBeforeOneDay(dummyName)
             ).isInstanceOf(IllegalArgumentException.class);
         }
 
@@ -37,15 +30,11 @@ class ReservationTest {
         @Test
         void isPastTense_doesNotThrowExceptionByFutureTime() {
             // given
-            LocalDateTime futureDateTime = LocalDateTime.now().plusHours(1);
-
             String dummyName = "kali";
-            LocalDate inputDate = futureDateTime.toLocalDate();
-            LocalTime inputTime = futureDateTime.toLocalTime();
 
             // when & then
             Assertions.assertThatCode(
-                    () -> Reservation.of(dummyName, inputDate, inputTime)
+                    () -> ReservationFixture.createFutureReservationAfterOneDay(dummyName)
             ).doesNotThrowAnyException();
         }
     }

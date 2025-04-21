@@ -8,6 +8,7 @@ import org.springframework.test.annotation.DirtiesContext;
 import roomescape.database.ReservationDatabaseImpl;
 import roomescape.domain.Reservation;
 import roomescape.domain.dto.ReservationReqDto;
+import roomescape.fixture.ReservationFixture;
 
 import java.time.LocalDateTime;
 import java.util.List;
@@ -24,16 +25,17 @@ class ReservationServiceTest {
         void add_failure_byDuplicateDateTime() {
             // given
             String dummyName1 = "kali";
-            LocalDateTime dummyDateTime1 = LocalDateTime.now().plusDays(1);
+            int dummyFuturePlusDay1 = 1;
+            LocalDateTime dummyFuture = LocalDateTime.now().plusDays(dummyFuturePlusDay1);
+            LocalDateTime duplicateDateTime = dummyFuture;
+            Reservation reservation1 = ReservationFixture.createReservation(dummyName1, duplicateDateTime);
 
 
             String dummyName2 = "pobi";
-            LocalDateTime dummyDateTime2 = LocalDateTime.now().plusDays(2);
+            int dummyFuturePlusDay2 = 2;
+            Reservation reservation2 = ReservationFixture.createFutureReservationAfterDays(dummyName2, dummyFuturePlusDay2);
 
-            List<Reservation> reservations = List.of(
-                    Reservation.of(dummyName1, dummyDateTime1.toLocalDate(), dummyDateTime1.toLocalTime()),
-                    Reservation.of(dummyName2, dummyDateTime2.toLocalDate(), dummyDateTime2.toLocalTime())
-            );
+            List<Reservation> reservations = List.of(reservation1, reservation2);
 
             ReservationDatabaseImpl db = new ReservationDatabaseImpl();
             for (Reservation reservation : reservations) {
@@ -43,7 +45,7 @@ class ReservationServiceTest {
 
             // when & then
             String dummyName3 = "jason";
-            ReservationReqDto reqDto = new ReservationReqDto(dummyName3, dummyDateTime1.toLocalDate(), dummyDateTime1.toLocalTime());
+            ReservationReqDto reqDto = ReservationFixture.createDTO(dummyName3, duplicateDateTime);
 
             Assertions.assertThatCode(
                     () -> service.add(reqDto)

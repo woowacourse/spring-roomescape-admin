@@ -2,6 +2,7 @@ package roomescape;
 
 import java.util.concurrent.atomic.AtomicLong;
 import org.springframework.stereotype.Component;
+import roomescape.controller.dto.ReservationRequest;
 
 @Component
 public class ReservationManager {

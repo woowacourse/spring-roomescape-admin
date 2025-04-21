@@ -22,12 +22,11 @@ public class ReservationTest {
 
     @Test
     void 과거_시간으로_예약할_수_없다() {
-        LocalDateTime now = LocalDateTime.of(2025, 4, 21, 0, 0);
+        LocalDateTime now = LocalDateTime.now();
+        LocalDateTime reservationDateTime = now.minusMinutes(1);
 
         assertThatThrownBy(() -> new ReservationDateTime(
-                LocalDateTime.of(
-                        2025, 4, 20, 0, 0
-                ), now
+                reservationDateTime, now
         )).isInstanceOf(PastReservationException.class);
     }
 }

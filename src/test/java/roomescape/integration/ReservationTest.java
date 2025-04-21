@@ -25,6 +25,30 @@ public class ReservationTest {
     private JdbcTemplate jdbcTemplate;
 
     @Test
+    void 칠단계() {
+        Map<String, String> params = new HashMap<>();
+        params.put("startAt", "10:00");
+
+        RestAssured.given().log().all()
+                .contentType(ContentType.JSON)
+                .body(params)
+                .when().post("/times")
+                .then().log().all()
+                .statusCode(200);
+
+        RestAssured.given().log().all()
+                .when().get("/times")
+                .then().log().all()
+                .statusCode(200)
+                .body("size()", is(1));
+
+        RestAssured.given().log().all()
+                .when().delete("/times/1")
+                .then().log().all()
+                .statusCode(200);
+    }
+
+    @Test
     void 데이터베이스_연결을_검증한다() {
         try (Connection connection = jdbcTemplate.getDataSource().getConnection()) {
             assertThat(connection).isNotNull();
@@ -54,7 +78,7 @@ public class ReservationTest {
     }
 
     @Test
-    void 육단계() {
+    void 방탈출_예약_목록을_조회하고_삭제한다() {
         Map<String, String> params = new HashMap<>();
         params.put("name", "브라운");
         params.put("date", "2023-08-05");

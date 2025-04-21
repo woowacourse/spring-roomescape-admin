@@ -1,11 +1,11 @@
-package roomescape.repository;
+package roomescape.reservation.repository;
 
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
 import java.util.concurrent.atomic.AtomicLong;
-import roomescape.domain.Reservation;
+import roomescape.reservation.domain.Reservation;
 
 public class ListReservationRepository implements ReservationRepository {
 

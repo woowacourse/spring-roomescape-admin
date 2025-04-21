@@ -1,4 +1,4 @@
-package roomescape;
+package roomescape.reservation.repository;
 
 import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
 
@@ -16,9 +16,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.test.annotation.DirtiesContext;
-import roomescape.domain.Reservation;
-import roomescape.repository.H2ReservationRepository;
-import roomescape.repository.ReservationRepository;
+import roomescape.reservation.domain.Reservation;
 
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.DEFINED_PORT)
 @DirtiesContext(classMode = DirtiesContext.ClassMode.BEFORE_EACH_TEST_METHOD)

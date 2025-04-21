@@ -3,9 +3,8 @@ package roomescape.dto;
 import java.time.LocalDate;
 import java.time.LocalTime;
 import roomescape.model.Reservation;
-import roomescape.model.ReservationDateTime;
 
-public record ReservationResponseDto (
+public record ReservationResponseDto(
         Long id,
         String name,
         LocalDate date,

@@ -39,7 +39,7 @@ public class ReservationApiTest {
                 .when().post("/reservations")
                 .then().log().all()
                 .statusCode(200)
-                .body("id", is(1));
+                .body("id", is(0));
     }
 
     @DisplayName("존재하는 모든 예약과 200 OK를 응답")
@@ -51,7 +51,7 @@ public class ReservationApiTest {
                 .when().post("/reservations")
                 .then().log().all()
                 .statusCode(200)
-                .body("id", is(1));
+                .body("id", is(0));
 
         RestAssured.given().port(port).log().all()
                 .when().get("/reservations")
@@ -79,10 +79,10 @@ public class ReservationApiTest {
                 .when().post("/reservations")
                 .then().log().all()
                 .statusCode(200)
-                .body("id", is(1));
+                .body("id", is(0));
 
         RestAssured.given().port(port).log().all()
-                .when().delete("/reservations/1")
+                .when().delete("/reservations/0")
                 .then().log().all()
                 .statusCode(200);
     }

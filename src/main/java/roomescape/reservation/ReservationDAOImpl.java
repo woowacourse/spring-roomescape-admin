@@ -17,6 +17,13 @@ public class ReservationDAOImpl implements ReservationDAO {
     }
 
     @Override
+    public Reservation saveReservation(final Reservation reservation) {
+        final String query = "INSERT INTO RESERVATION(name, date, time) VALUES(?, ?, ?)";
+        jdbcTemplate.update(query, reservation.name(), reservation.date(), reservation.time());
+        return reservation;
+    }
+
+    @Override
     public List<Reservation> findAllReservation() {
         final String query = "SELECT * FROM RESERVATION";
         final List<Reservation> reservations = jdbcTemplate.query(query, (rs, rowNum) -> {

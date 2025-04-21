@@ -12,7 +12,7 @@ import roomescape.dao.QueryingDao;
 import roomescape.dao.UpdatingDao;
 import roomescape.domain.Person;
 import roomescape.domain.Reservation;
-import roomescape.domain.ReservationTime;
+import roomescape.domain.ReservationDateTime;
 import roomescape.dto.ReservationRequestDto;
 import roomescape.dto.ReservationResponseDto;
 
@@ -38,9 +38,9 @@ public class ReservationController {
     public Reservation createReservations(
         @RequestBody ReservationRequestDto reservationRequestDto) {
         Person person = new Person(reservationRequestDto.name());
-        ReservationTime reservationTime = new ReservationTime(
+        ReservationDateTime reservationDateTime = new ReservationDateTime(
             LocalDateTime.of(reservationRequestDto.date(), reservationRequestDto.time()));
-        Reservation reservation = new Reservation(person, reservationTime);
+        Reservation reservation = new Reservation(person, reservationDateTime);
         updatingDao.saveReservation(reservation);
         return reservation;
     }

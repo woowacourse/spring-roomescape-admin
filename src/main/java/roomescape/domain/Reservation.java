@@ -7,17 +7,17 @@ public class Reservation {
 
     private Long id;
     private final Person person;
-    private final ReservationTime reservationTime;
+    private final ReservationDateTime reservationDateTime;
 
-    public Reservation(Long id, Person person, ReservationTime reservationTime) {
+    public Reservation(Long id, Person person, ReservationDateTime reservationDateTime) {
         this.id = id;
         this.person = person;
-        this.reservationTime = reservationTime;
+        this.reservationDateTime = reservationDateTime;
     }
 
-    public Reservation(Person person, ReservationTime reservationTime) {
+    public Reservation(Person person, ReservationDateTime reservationDateTime) {
         this.person = person;
-        this.reservationTime = reservationTime;
+        this.reservationDateTime = reservationDateTime;
     }
 
     public void setId(Long id) {
@@ -33,10 +33,10 @@ public class Reservation {
     }
 
     public LocalDate getDate() {
-        return reservationTime.getDate();
+        return reservationDateTime.getDate();
     }
 
     public LocalTime getTime() {
-        return reservationTime.getTime();
+        return reservationDateTime.getTime();
     }
 }

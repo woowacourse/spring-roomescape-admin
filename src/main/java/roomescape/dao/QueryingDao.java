@@ -8,7 +8,7 @@ import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Repository;
 import roomescape.domain.Person;
 import roomescape.domain.Reservation;
-import roomescape.domain.ReservationTime;
+import roomescape.domain.ReservationDateTime;
 
 @Repository
 public class QueryingDao {
@@ -26,7 +26,7 @@ public class QueryingDao {
                 Reservation reservation = new Reservation(
                     resultSet.getLong("id"),
                     new Person(resultSet.getString("name")),
-                    new ReservationTime(
+                    new ReservationDateTime(
                         LocalDateTime.of(
                             LocalDate.parse(resultSet.getString("date")),
                             LocalTime.parse(resultSet.getString("time"))

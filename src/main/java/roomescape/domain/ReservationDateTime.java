@@ -4,7 +4,7 @@ import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.LocalTime;
 
-public record ReservationTime(LocalDateTime reservationTime) {
+public record ReservationDateTime(LocalDateTime reservationTime) {
 
     public LocalDate getDate() {
         return reservationTime.toLocalDate();

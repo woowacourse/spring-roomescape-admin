@@ -81,7 +81,7 @@ class ReservationControllerTest {
 
     @Test
     @DisplayName("DELETE /reservations/{id} - 존재하지 않는 예약 삭제 시 400 반환")
-    void deleteNotExistReservation() throws Exception {
+    void delete_reservation_when_not_exist_id() throws Exception {
         mockMvc.perform(delete("/reservations/2"))
                 .andExpect(status().isBadRequest());
     }

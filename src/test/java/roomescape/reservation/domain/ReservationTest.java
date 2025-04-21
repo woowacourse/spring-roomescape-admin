@@ -12,8 +12,7 @@ public class ReservationTest {
 
     @Test
     void 과거_시간으로_예약할_수_없다() {
-        assertThatThrownBy(() -> new Reservation(
-                1L, "폰트",
+        assertThatThrownBy(() -> new ReservationDateTime(
                 LocalDateTime.of(
                         LocalDate.of(2025, 4, 20),
                         LocalTime.of(0, 0)

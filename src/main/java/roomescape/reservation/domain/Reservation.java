@@ -3,26 +3,17 @@ package roomescape.reservation.domain;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.LocalTime;
-import roomescape.reservation.domain.exception.PastReservationException;
 
 public class Reservation {
 
     private final Long id;
     private final ReserverName reserverName;
-    private final LocalDateTime dateTime;
+    private final ReservationDateTime reservationDateTime;
 
     public Reservation(Long id, String reserverName, LocalDateTime dateTime) {
         this.id = id;
         this.reserverName = new ReserverName(reserverName);
-        this.dateTime = validatePast(dateTime);
-    }
-
-    private LocalDateTime validatePast(LocalDateTime reservationTime) {
-        LocalDateTime now = LocalDateTime.now();
-        if (reservationTime.isBefore(now)) {
-            throw new PastReservationException("[ERROR] 예약 불가능한 시간입니다.");
-        }
-        return reservationTime;
+        this.reservationDateTime = new ReservationDateTime(dateTime);
     }
 
     public Reservation(String reserverName, LocalDateTime dateTime) {
@@ -38,14 +29,14 @@ public class Reservation {
     }
 
     public LocalDateTime getDateTime() {
-        return dateTime;
+        return reservationDateTime.getDateTime();
     }
 
     public LocalDate getDate() {
-        return dateTime.toLocalDate();
+        return reservationDateTime.getDate();
     }
 
     public LocalTime getTime() {
-        return dateTime.toLocalTime();
+        return reservationDateTime.getTime();
     }
 }

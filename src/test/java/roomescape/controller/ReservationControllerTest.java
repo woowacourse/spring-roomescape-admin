@@ -21,6 +21,7 @@ import roomescape.domain.ReservationTime;
 import roomescape.dto.ReservationCreationRequest;
 import roomescape.repository.ReservationRepository;
 import roomescape.repository.ReservationTimeRepository;
+import roomescape.service.ReservationService;
 import roomescape.test.fake.FakeReservationRepository;
 import roomescape.test.fake.FakeReservationTimeRepository;
 import roomescape.test.fixture.ReservationFixture;
@@ -29,7 +30,8 @@ class ReservationControllerTest {
 
     private final ReservationRepository reservationRepository = new FakeReservationRepository();
     private final ReservationTimeRepository timeRepository = new FakeReservationTimeRepository();
-    private final ReservationController controller = new ReservationController(reservationRepository, timeRepository);
+    private final ReservationService reservationService = new ReservationService(reservationRepository, timeRepository);
+    private final ReservationController controller = new ReservationController(reservationService);
 
     @DisplayName("저장된 예약들을 조회할 수 있다")
     @Test

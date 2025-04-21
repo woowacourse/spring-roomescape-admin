@@ -32,6 +32,7 @@ public class H2ReservationRepositoryTest {
     }
 
     @Test
+    @DisplayName("데이터베이스를 연결한다.")
     void connectDatabase() {
         try (Connection connection = jdbcTemplate.getDataSource().getConnection()) {
             assertThat(connection).isNotNull();
@@ -40,26 +41,6 @@ public class H2ReservationRepositoryTest {
         } catch (SQLException e) {
             throw new RuntimeException(e);
         }
-    }
-
-    @Test
-    @DisplayName("예약 저장을 테스트한다.")
-    void save() {
-        // given
-        Reservation reservation = new Reservation(
-                null,
-                "미소",
-                LocalDate.of(2025, 4, 21),
-                LocalTime.of(10, 0)
-        );
-
-        // when
-        Reservation saved = reservationRepository.save(reservation);
-
-        // then
-        Assertions.assertThat(saved.getName()).isEqualTo(reservation.getName());
-        Assertions.assertThat(saved.getDate()).isEqualTo(reservation.getDate());
-        Assertions.assertThat(saved.getTime()).isEqualTo(reservation.getTime());
     }
 
     @Test
@@ -94,6 +75,27 @@ public class H2ReservationRepositoryTest {
     }
 
     @Test
+    @DisplayName("예약을 저장한다.")
+    void save() {
+        // given
+        Reservation reservation = new Reservation(
+                null,
+                "미소",
+                LocalDate.of(2025, 4, 21),
+                LocalTime.of(10, 0)
+        );
+
+        // when
+        Reservation saved = reservationRepository.save(reservation);
+
+        // then
+        Assertions.assertThat(saved.getId()).isEqualTo(1L);
+        Assertions.assertThat(saved.getName()).isEqualTo(reservation.getName());
+        Assertions.assertThat(saved.getDate()).isEqualTo(reservation.getDate());
+        Assertions.assertThat(saved.getTime()).isEqualTo(reservation.getTime());
+    }
+
+    @Test
     @DisplayName("id로 예약을 삭제한다.")
     void deleteById() {
         // given
@@ -104,7 +106,14 @@ public class H2ReservationRepositoryTest {
         reservationRepository.deleteById(1L);
 
         // then
-        List<Reservation> reservations = reservationRepository.findAll();
+        List<Reservation> reservations = jdbcTemplate.query(
+                "select * from reservation",
+                (resultSet, rowNum) -> new Reservation(
+                        resultSet.getLong("id"),
+                        resultSet.getString("name"),
+                        LocalDate.parse(resultSet.getString("date")),
+                        LocalTime.parse(resultSet.getString("time"))
+                ));
         Assertions.assertThat(reservations).isEmpty();
     }
 }

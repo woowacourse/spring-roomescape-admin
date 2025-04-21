@@ -37,7 +37,7 @@ public class H2ReservationRepository implements ReservationRepository {
 
     @Override
     public Optional<Reservation> findById(Long id) {
-        String sql = "select id, name, date, time from reservation";
+        String sql = "select id, name, date, time from reservation where id = ?";
         return Optional.ofNullable(
                 jdbcTemplate.queryForObject(
                         sql,
@@ -46,7 +46,8 @@ public class H2ReservationRepository implements ReservationRepository {
                                 resultSet.getString("name"),
                                 LocalDate.parse(resultSet.getString("date")),
                                 LocalTime.parse(resultSet.getString("time"))
-                        )
+                        ),
+                        id
                 ));
     }
 

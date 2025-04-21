@@ -15,13 +15,6 @@ public class Reservations {
         reservations.add(reservation);
     }
 
-    private void validateUnique(final Long id) {
-        final boolean isUnique = reservations.stream().anyMatch(reservation -> reservation.getId().equals(id));
-        if (isUnique) {
-            throw new IllegalStateException("이미 존재하는 ID입니다.");
-        }
-    }
-
     public void removeById(final Long id) {
         reservations.remove(findById(id));
     }

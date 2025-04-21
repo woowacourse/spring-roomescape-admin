@@ -1,7 +1,9 @@
 package roomescape.domain;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import java.time.LocalDate;
 import java.time.LocalTime;
+import java.util.Objects;
 
 public class Reservation {
 
@@ -37,11 +39,39 @@ public class Reservation {
         this.id = id;
     }
 
+    @JsonIgnore
     public boolean isIdNull() {
         return this.id == null;
     }
 
+    @JsonIgnore
     public boolean isIdEqualTo(Long id) {
         return this.id.equals(id);
+    }
+
+    @Override
+    public boolean equals(Object object) {
+        if (object == null || getClass() != object.getClass()) {
+            return false;
+        }
+        Reservation that = (Reservation) object;
+        return Objects.equals(getId(), that.getId()) && Objects.equals(getName(), that.getName())
+                && Objects.equals(getDate(), that.getDate()) && Objects.equals(getTime(),
+                that.getTime());
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(getId(), getName(), getDate(), getTime());
+    }
+
+    @Override
+    public String toString() {
+        return "Reservation{" +
+                "id=" + id +
+                ", name='" + name + '\'' +
+                ", date=" + date +
+                ", time=" + time +
+                '}';
     }
 }

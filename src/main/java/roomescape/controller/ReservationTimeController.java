@@ -20,18 +20,18 @@ public class ReservationTimeController {
         this.reservationTimeDao = reservationTimeDao;
     }
 
-    @GetMapping("/admin/times")
+    @GetMapping("/times")
     public List<ReservationTime> readReservationTimes() {
         return reservationTimeDao.findAllReservationTimes();
     }
 
-    @PostMapping("/admin/times")
+    @PostMapping("/times")
     public void saveReservationTime(
         @RequestBody ReservationTimeRequestDto reservationTimeRequestDto) {
         reservationTimeDao.saveReservationTime(reservationTimeRequestDto.toReservationTime());
     }
 
-    @DeleteMapping("/admin/times/{id}")
+    @DeleteMapping("/times/{id}")
     public void deleteReservationTime(@PathVariable(name = "id") Long id) {
         reservationTimeDao.deleteReservationTime(id);
     }

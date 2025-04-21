@@ -1,0 +1,17 @@
+package roomescape.repository;
+
+import java.util.List;
+import java.util.Optional;
+import roomescape.CreateTimeSlotRequest;
+import roomescape.ReservationTimeSlot;
+
+public interface ReservationTimeSlotRepository {
+
+    Optional<ReservationTimeSlot> findById(long id);
+
+    long save(CreateTimeSlotRequest request);
+
+    boolean removeById(long id);
+
+    List<ReservationTimeSlot> getTimeSlots();
+}

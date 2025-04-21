@@ -7,4 +7,5 @@ public interface ReservationRepository {
     public int deleteReservation(Long wantToDeleteId);
     public Reservation findReservationById(Long wandToFindId);
     public List<Reservation> findAllReservations();
+    public boolean isExistReservation(Reservation wantToSaveReservation);
 }

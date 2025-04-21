@@ -39,7 +39,7 @@ public class JdbcReservationRepository implements ReservationRepository {
 
     @Override
     public Reservation findReservationById(Long wandToFindId) {
-        String query = "String select id, name, date, time FROM RESERVATION";
+        String query = "SELECT id, name, date, time FROM RESERVATION WHERE id = ?";
         return jdbcTemplate.queryForObject(
                 query,
                 (rs, rowNum) -> {
@@ -71,6 +71,13 @@ public class JdbcReservationRepository implements ReservationRepository {
                     return reservation;
                 }
         );
+    }
+
+    @Override
+    public boolean isExistReservation(Reservation wantToSaveReservation) {
+        String query = "SELECT COUNT(*) FROM RESERVATION WHERE DATE = ? AND TIME = ?";
+        Integer count = jdbcTemplate.queryForObject(query, Integer.class, wantToSaveReservation.getDate(), wantToSaveReservation.getTime());
+        return count != null && count > 0;
     }
 
 }

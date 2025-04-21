@@ -1,4 +1,4 @@
-package roomescape.unit;
+package roomescape.integrated.mission;
 
 import static io.restassured.module.mockmvc.RestAssuredMockMvc.given;
 import static org.hamcrest.Matchers.is;
@@ -19,7 +19,7 @@ import org.springframework.web.context.WebApplicationContext;
 @SpringBootTest
 @AutoConfigureMockMvc
 @DirtiesContext
-public class MissionStepTest {
+public class MissionStep1Test {
 
     @Autowired
     private WebApplicationContext context;

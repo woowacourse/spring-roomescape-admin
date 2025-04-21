@@ -15,20 +15,40 @@ public class ReservationDao {
 
     public List<Reservation> findAll() {
         String sql = "SELECT * FROM reservation";
-        return jdbcTemplate.query(sql,(resultSet, rowNum) -> {
+        return jdbcTemplate.query(sql, (resultSet, rowNum) -> {
             Reservation reservation = new Reservation(
                     resultSet.getLong("id"),
                     resultSet.getString("name"),
-                    new ReservationDateTime(LocalDateTime.of(
-                            resultSet.getDate("date").toLocalDate(),
-                            resultSet.getTime("time").toLocalTime()
-                    )));
+                    new ReservationDateTime(
+                            LocalDateTime.of(
+                                    resultSet.getDate("date").toLocalDate(),
+                                    resultSet.getTime("time").toLocalTime())
+                    ));
             return reservation;
         });
     }
 
-    public void saveReservation(Reservation reservation){
+    public void saveReservation(Reservation reservation) {
         String sql = "INSERT INTO reservation (name, date, time) value(?,?,?)";
-        jdbcTemplate.update(sql,reservation.getName(), reservation.getDate(), reservation.getTime());
+        jdbcTemplate.update(sql, reservation.getName(), reservation.getDate(), reservation.getTime());
+    }
+
+    public Reservation findByNameAndDateTime(Reservation reservation) {
+        String sql = "SELECT * FROM reservation WHERE (name, date, time) value(?,?,?)";
+        Reservation findReservation = jdbcTemplate.queryForObject(
+                sql, (resultSet, rowNum) ->{
+                    Reservation newReservation = new Reservation(
+                            resultSet.getLong("id"),
+                            resultSet.getString("name"),
+                            new ReservationDateTime(
+                                    LocalDateTime.of(
+                                            resultSet.getDate("date").toLocalDate(),
+                                            resultSet.getTime("time").toLocalTime())
+                            )
+                    );
+                    return newReservation;
+                }
+                ,reservation.getName(), reservation.getDate(), reservation.getTime());
+        return findReservation;
     }
 }

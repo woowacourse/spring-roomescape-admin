@@ -5,6 +5,7 @@ import static org.hamcrest.Matchers.is;
 
 import io.restassured.RestAssured;
 import io.restassured.http.ContentType;
+import java.lang.reflect.Field;
 import java.util.List;
 import java.util.Map;
 import org.junit.jupiter.api.DisplayName;
@@ -21,6 +22,9 @@ class ReservationTimeControllerTest {
 
     @Autowired
     private JdbcTemplate jdbcTemplate;
+
+    @Autowired
+    private ReservationTimeController reservationTimeController;
 
     @Test
     @DisplayName("시간을 조회하는 API를 요청한다.")
@@ -76,5 +80,20 @@ class ReservationTimeControllerTest {
         // then
         Integer count = jdbcTemplate.queryForObject("SELECT count(1) from reservation_time", Integer.class);
         assertThat(count).isEqualTo(0);
+    }
+
+    @Test
+    @DisplayName("서비스 계층 분리를 확인한다.")
+    void separateServiceLayer() {
+        boolean isJdbcTemplateInjected = false;
+
+        for (Field field : reservationTimeController.getClass().getDeclaredFields()) {
+            if (field.getType().equals(JdbcTemplate.class)) {
+                isJdbcTemplateInjected = true;
+                break;
+            }
+        }
+
+        assertThat(isJdbcTemplateInjected).isFalse();
     }
 }

@@ -5,12 +5,13 @@ import static org.assertj.core.api.Assertions.assertThatThrownBy;
 
 import java.time.LocalDate;
 import java.time.LocalTime;
+import java.util.ArrayList;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 
 public class ReservationsTest {
 
-    private final Reservations reservations = new Reservations();
+    private final Reservations reservations = new Reservations(new ArrayList<>());
 
     @DisplayName("예약 내역을 조회하는 기능을 구현한다")
     @Test

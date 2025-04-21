@@ -6,7 +6,6 @@ import java.sql.Statement;
 import java.sql.Time;
 import java.util.List;
 import java.util.Optional;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;
@@ -19,8 +18,6 @@ import roomescape.domain.Reservation;
 public class ReservationRepository {
 
     private static final RowMapper<Reservation> reservationRowMapper;
-
-    @Autowired
     private final JdbcTemplate template;
 
     static {

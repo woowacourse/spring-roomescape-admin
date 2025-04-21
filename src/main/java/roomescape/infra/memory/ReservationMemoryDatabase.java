@@ -1,6 +1,7 @@
 package roomescape.infra.memory;
 
 import org.springframework.beans.factory.annotation.Qualifier;
+import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.stereotype.Repository;
 import roomescape.business.domain.Reservation;
 import roomescape.business.domain.ReservationTime;
@@ -14,6 +15,7 @@ import java.util.List;
 import java.util.Map;
 
 @Repository
+@ConditionalOnProperty(name = "room-escape.console-view.enabled", havingValue = "true")
 public class ReservationMemoryDatabase implements ReservationDatabase {
 
     private record ReservationData(

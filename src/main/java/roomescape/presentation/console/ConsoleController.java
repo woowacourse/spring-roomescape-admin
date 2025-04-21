@@ -17,7 +17,7 @@ import roomescape.presentation.console.view.OutputView;
 import java.util.List;
 
 @Component
-@ConditionalOnProperty(name = "room-escape-console", havingValue = "enable")
+@ConditionalOnProperty(name = "room-escape.console-view.enabled", havingValue = "true")
 public class ConsoleController {
 
     private final InputView inputView;

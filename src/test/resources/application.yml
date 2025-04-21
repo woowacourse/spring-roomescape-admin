@@ -9,4 +9,6 @@ spring:
       mode: always
       platform: h2
 
-room-escape-console: disable
+room-escape:
+  console-view:
+    enabled: false

@@ -6,7 +6,7 @@ import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.stereotype.Component;
 
 @Component
-@ConditionalOnProperty(name = "room-escape-console", havingValue = "enable")
+@ConditionalOnProperty(name = "room-escape.console-view.enabled", havingValue = "true")
 public class ConsoleRunner implements ApplicationRunner {
 
     private final ConsoleController consoleController;

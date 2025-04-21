@@ -39,4 +39,9 @@ public class ReservationTimeDao {
         Number newId = insertActor.executeAndReturnKey(parameters);
         reservationTime.setId(newId.longValue());
     }
+
+    public void deleteReservationTime(Long id) {
+        String query = "delete from reservation_time where id = ?";
+        jdbcTemplate.update(query, id);
+    }
 }

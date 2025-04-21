@@ -1,12 +1,9 @@
 package roomescape.controller;
 
 import java.sql.PreparedStatement;
-import java.time.LocalDate;
-import java.time.LocalTime;
 import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
-import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.support.GeneratedKeyHolder;
 import org.springframework.jdbc.support.KeyHolder;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -17,49 +14,30 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import roomescape.Reservation;
+import roomescape.ReservationRepository;
 
 @RestController
 @RequestMapping("/reservations")
 public class ReservationController {
+    private final ReservationRepository reservationRepository;
+
     @Autowired
-    JdbcTemplate jdbcTemplate;
+    public ReservationController(ReservationRepository reservationRepository) {
+        this.reservationRepository = reservationRepository;
+    }
 
     @GetMapping()
-    ResponseEntity<List<Reservation>> read() {
-        final String query = "SELECT id, name, date, time FROM reservation";
-        List<Reservation> reservList = jdbcTemplate.query(
-                query,
-                (resultSet, rowNum) -> new Reservation(
-                        resultSet.getLong("id"),
-                        resultSet.getString("name"),
-                        LocalDate.now(),
-                        LocalTime.now()
-                )
-        );
-
-        return ResponseEntity.ok(reservList);
+    public ResponseEntity<List<Reservation>> read() {
+        return reservationRepository.readReservations();
     }
 
     @PostMapping
     ResponseEntity<Reservation> create(@RequestBody Reservation reservation) {
-        final String query = "INSERT INTO reservation (name, date, time) VALUES (?, ?, ?)";
-        KeyHolder keyHolder = new GeneratedKeyHolder();
-        jdbcTemplate.update(connection -> {
-            PreparedStatement ps = connection.prepareStatement(query, new String[]{"id"});
-            ps.setString(1, reservation.getName());
-            ps.setObject(2, reservation.getDate());
-            ps.setObject(3, reservation.getTime());
-            return ps;
-        }, keyHolder);
-
-        Reservation newReservation = Reservation.toEntity(reservation, keyHolder.getKey().longValue());
-        return ResponseEntity.ok().body(newReservation);
+        return reservationRepository.createReservation(reservation);
     }
 
     @DeleteMapping("/{id}")
     ResponseEntity<Void> delete(@PathVariable Long id) {
-        final String query = "DELETE FROM reservation WHERE id = ?";
-        jdbcTemplate.update(query, id);
-        return ResponseEntity.ok().build();
+        return reservationRepository.deleteReservation(id);
     }
 }

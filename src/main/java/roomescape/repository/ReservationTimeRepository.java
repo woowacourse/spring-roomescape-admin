@@ -2,6 +2,7 @@ package roomescape.repository;
 
 import java.time.LocalTime;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.simple.SimpleJdbcInsert;
@@ -27,5 +28,20 @@ public class ReservationTimeRepository {
 
         Long id = jdbcInsert.executeAndReturnKey(params).longValue();
         return new ReservationTimeReadDto(id, time.getStartAt());
+    }
+
+    public List<ReservationTimeReadDto> findAll() {
+        String sql = "select * from reservation_time";
+        List<ReservationTimeReadDto> dtos = jdbcTemplate.query(
+                sql,
+                (resultSet, rowNum) -> {
+                    ReservationTimeReadDto dto = new ReservationTimeReadDto(
+                            resultSet.getLong("id"),
+                            resultSet.getTime("start_at").toLocalTime()
+                    );
+                    return dto;
+                }
+        );
+        return dtos;
     }
 }

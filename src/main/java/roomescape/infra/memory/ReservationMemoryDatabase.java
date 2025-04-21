@@ -1,5 +1,6 @@
 package roomescape.infra.memory;
 
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Repository;
 import roomescape.domain.Reservation;
 import roomescape.domain.ReservationTime;
@@ -33,7 +34,10 @@ public class ReservationMemoryDatabase implements ReservationDatabase {
     private final IdGenerator idGenerator;
     private final ReservationTimeDatabase timeDatabase;
 
-    public ReservationMemoryDatabase(final ReservationTimeDatabase timeDatabase, final IdGenerator idGenerator) {
+    public ReservationMemoryDatabase(
+            @Qualifier("reservationTimeMemoryDatabase") final ReservationTimeDatabase timeDatabase,
+            final IdGenerator idGenerator
+    ) {
         this.timeDatabase = timeDatabase;
         this.idGenerator = idGenerator;
     }

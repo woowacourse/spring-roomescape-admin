@@ -1,9 +1,9 @@
 package roomescape.dto.response;
 
 import roomescape.ReservationTime;
-import roomescape.dto.request.ReservationTimeCreateRequest;
 
 import java.time.format.DateTimeFormatter;
+import java.util.List;
 
 public record ReservationTimeResponse(
         long id,
@@ -16,8 +16,9 @@ public record ReservationTimeResponse(
         return new ReservationTimeResponse(time.id(), startTime);
     }
 
-    public static ReservationTimeResponse from(final ReservationTimeCreateRequest request, final long savedId) {
-        String startTime = TIME_FORMATTER.format(request.startAt());
-        return new ReservationTimeResponse(savedId, startTime);
+    public static List<ReservationTimeResponse> fromList(final List<ReservationTime> reservationTimes) {
+        return reservationTimes.stream()
+                .map(ReservationTimeResponse::from)
+                .toList();
     }
 }

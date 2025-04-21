@@ -63,11 +63,6 @@ public class ReservationDatabase {
         return jdbcTemplate.queryForObject(sql, ROW_MAPPER, id);
     }
 
-    public Reservation saveAndGet(final ReservationCreateRequest request) {
-        final long savedId = saveAndGetId(request);
-        return findById(savedId);
-    }
-
     public long saveAndGetId(final ReservationCreateRequest request) {
         final Number savedId = new SimpleJdbcInsert(jdbcTemplate)
                 .withTableName("reservation")

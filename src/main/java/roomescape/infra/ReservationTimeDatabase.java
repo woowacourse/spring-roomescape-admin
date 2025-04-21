@@ -33,6 +33,15 @@ public class ReservationTimeDatabase {
         return jdbcTemplate.query(sql, ROW_MAPPER);
     }
 
+    public ReservationTime findById(final long id) {
+        final String sql = """
+                SELECT * FROM RESERVATION_TIME
+                WHERE id = ?
+                """;
+
+        return jdbcTemplate.queryForObject(sql, ROW_MAPPER, id);
+    }
+
     public long saveAndGetId(final ReservationTimeCreateRequest request) {
         final Number savedId = new SimpleJdbcInsert(jdbcTemplate)
                 .withTableName("reservation_time")

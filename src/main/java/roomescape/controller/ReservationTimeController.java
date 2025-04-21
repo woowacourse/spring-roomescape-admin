@@ -6,41 +6,38 @@ import org.springframework.web.bind.annotation.*;
 import roomescape.ReservationTime;
 import roomescape.dto.request.ReservationTimeCreateRequest;
 import roomescape.dto.response.ReservationTimeResponse;
-import roomescape.infra.ReservationTimeDatabase;
+import roomescape.service.ReservationTimeService;
 
 import java.util.List;
 
 @Controller
 public class ReservationTimeController {
 
-    private final ReservationTimeDatabase reservationTimeDatabase;
+    private final ReservationTimeService service;
 
-    public ReservationTimeController(final ReservationTimeDatabase reservationTimeDatabase) {
-        this.reservationTimeDatabase = reservationTimeDatabase;
+    public ReservationTimeController(final ReservationTimeService service) {
+        this.service = service;
     }
 
     @PostMapping("/times")
     public ResponseEntity<ReservationTimeResponse> add(@RequestBody ReservationTimeCreateRequest request) {
-        final long savedId = reservationTimeDatabase.saveAndGetId(request);
+        final ReservationTime reservationTime = service.saveAndGet(request);
+        final ReservationTimeResponse response = ReservationTimeResponse.from(reservationTime);
 
-        final ReservationTimeResponse response = ReservationTimeResponse.from(request, savedId);
         return ResponseEntity.ok(response);
     }
 
     @GetMapping("/times")
     public ResponseEntity<List<ReservationTimeResponse>> getAll() {
-        final List<ReservationTime> times = reservationTimeDatabase.findAll();
-
-        final List<ReservationTimeResponse> response = times.stream()
-                .map(ReservationTimeResponse::from)
-                .toList();
+        final List<ReservationTime> reservationTimes = service.getAll();
+        final List<ReservationTimeResponse> response = ReservationTimeResponse.fromList(reservationTimes);
 
         return ResponseEntity.ok(response);
     }
 
     @DeleteMapping("/times/{reservationTimeId}")
     public ResponseEntity<Void> delete(@PathVariable("reservationTimeId") long id) {
-        reservationTimeDatabase.deleteById(id);
+        service.deleteById(id);
 
         return ResponseEntity.ok().build();
     }

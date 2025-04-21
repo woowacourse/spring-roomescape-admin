@@ -3,10 +3,8 @@ package roomescape.repository;
 import java.util.List;
 import java.util.concurrent.CopyOnWriteArrayList;
 import java.util.concurrent.atomic.AtomicLong;
-import org.springframework.stereotype.Repository;
 import roomescape.domain.Reservation;
 
-@Repository
 public class RoomescapeRepositoryImpl implements RoomescapeRepository {
 
     private final List<Reservation> reservations = new CopyOnWriteArrayList<>();

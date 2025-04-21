@@ -1,5 +1,6 @@
 package roomescape;
 
+import static org.hamcrest.Matchers.equalTo;
 import static org.hamcrest.Matchers.is;
 
 import io.restassured.RestAssured;
@@ -80,6 +81,7 @@ public class MissionStepTest {
         RestAssured.given().log().all()
                 .when().delete("/reservations/1")
                 .then().log().all()
-                .statusCode(404);
+                .statusCode(404)
+                .body("body.detail", equalTo("[ERROR] 예약 데이터를 찾을 수 없습니다:1"));
     }
 }

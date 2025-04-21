@@ -11,7 +11,6 @@ import org.springframework.web.bind.annotation.RestController;
 import roomescape.dto.ReservationRequestDto;
 import roomescape.dto.ReservationResponseDto;
 import roomescape.entity.Reservation;
-import roomescape.exceptions.EntityNotFoundException;
 import roomescape.repository.ReservationRepository;
 
 @RestController
@@ -38,11 +37,7 @@ public class ReservationController {
 
     @DeleteMapping("/reservations/{id}")
     public ResponseEntity<Void> deleteReservation(@PathVariable Long id) {
-        try {
-            repository.deleteById(id);
-            return ResponseEntity.ok().build();
-        } catch (EntityNotFoundException e) {
-            return ResponseEntity.notFound().build();
-        }
+        repository.deleteById(id);
+        return ResponseEntity.ok().build();
     }
 }

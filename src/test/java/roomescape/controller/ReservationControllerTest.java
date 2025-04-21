@@ -1,5 +1,6 @@
 package roomescape.controller;
 
+import static org.hamcrest.Matchers.equalTo;
 import static org.hamcrest.Matchers.is;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.BDDMockito.given;
@@ -7,6 +8,7 @@ import static org.mockito.BDDMockito.willDoNothing;
 import static org.mockito.BDDMockito.willThrow;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.when;
 
 import io.restassured.http.ContentType;
 import io.restassured.module.mockmvc.RestAssuredMockMvc;
@@ -89,7 +91,7 @@ public class ReservationControllerTest {
     @Test
     @DisplayName("존재하는 ID로 삭제 요청 시 성공적으로 처리되어야 한다")
     void deleteExistingReservation() {
-        Long reservationId = 1L;
+        long reservationId = 1L;
 
         willDoNothing().given(reservationRepository).deleteById(reservationId);
 
@@ -98,7 +100,6 @@ public class ReservationControllerTest {
                 .then().log().all()
                 .statusCode(200);
 
-        // 해당 메서드가 실제로 호출되었는지 검증
         verify(reservationRepository, times(1)).deleteById(reservationId);
     }
 
@@ -117,5 +118,18 @@ public class ReservationControllerTest {
                 .statusCode(404);
 
         verify(reservationRepository, times(1)).deleteById(nonExistingId);
+    }
+
+    @Test
+    @DisplayName("서버 내부 오류 발생 시 500 응답이 반환되어야 한다")
+    void handleServerInternalError() {
+        when(reservationRepository.findAll()).thenThrow(new RuntimeException("데이터베이스 오류"));
+
+        RestAssuredMockMvc.given().log().all()
+                .when().get("/reservations")
+                .then().log().all()
+                .statusCode(500)
+                .body("body.title", equalTo("Internal Server Error"))
+                .body("body.detail", equalTo("서버 오류가 발생했습니다"));
     }
 }

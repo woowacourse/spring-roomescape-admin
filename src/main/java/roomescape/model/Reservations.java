@@ -18,8 +18,9 @@ public class Reservations {
     }
 
     public long add(final Reservation reservation) {
-        reservations.put(index.getAndIncrement(), reservation);
-        return index.get();
+        final long id = index.getAndIncrement();
+        reservations.put(id, reservation);
+        return id;
     }
 
     public void deleteById(final Long id) {

@@ -1,8 +1,8 @@
-package roomescape.console.view;
+package roomescape.presentation.console.view;
 
 import org.springframework.stereotype.Component;
-import roomescape.domain.Reservation;
-import roomescape.domain.ReservationTime;
+import roomescape.business.domain.Reservation;
+import roomescape.business.domain.ReservationTime;
 
 import java.util.List;
 

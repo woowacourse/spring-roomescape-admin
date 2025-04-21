@@ -1,4 +1,4 @@
-package roomescape.console.view;
+package roomescape.presentation.console.view;
 
 public enum CommandType {
     예약_전체_조회,

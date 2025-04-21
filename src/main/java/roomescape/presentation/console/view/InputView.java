@@ -1,4 +1,4 @@
-package roomescape.console.view;
+package roomescape.presentation.console.view;
 
 import org.springframework.stereotype.Component;
 import roomescape.dto.request.ReservationCreateRequest;

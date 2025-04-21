@@ -1,6 +1,6 @@
 package roomescape.infra;
 
-import roomescape.domain.ReservationTime;
+import roomescape.business.domain.ReservationTime;
 import roomescape.dto.request.ReservationTimeCreateRequest;
 
 import java.util.List;

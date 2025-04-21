@@ -1,10 +1,10 @@
-package roomescape.domain;
+package roomescape.business.domain;
 
 import java.time.LocalDate;
 import java.time.LocalTime;
 
 public class Reservation {
-    
+
     private final long id;
     private final String name;
     private final LocalDate date;

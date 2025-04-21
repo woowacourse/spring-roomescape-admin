@@ -1,12 +1,12 @@
-package roomescape.controller;
+package roomescape.presentation.web;
 
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
-import roomescape.domain.Reservation;
+import roomescape.business.domain.Reservation;
+import roomescape.business.service.ReservationService;
 import roomescape.dto.request.ReservationCreateRequest;
 import roomescape.dto.response.ReservationResponse;
-import roomescape.service.ReservationService;
 
 import java.util.List;
 

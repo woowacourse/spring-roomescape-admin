@@ -2,8 +2,8 @@ package roomescape.infra.memory;
 
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Repository;
-import roomescape.domain.Reservation;
-import roomescape.domain.ReservationTime;
+import roomescape.business.domain.Reservation;
+import roomescape.business.domain.ReservationTime;
 import roomescape.dto.request.ReservationCreateRequest;
 import roomescape.infra.ReservationDatabase;
 import roomescape.infra.ReservationTimeDatabase;

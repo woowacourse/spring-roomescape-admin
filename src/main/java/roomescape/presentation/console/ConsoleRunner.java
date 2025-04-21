@@ -1,4 +1,4 @@
-package roomescape.console;
+package roomescape.presentation.console;
 
 import org.springframework.boot.ApplicationArguments;
 import org.springframework.boot.ApplicationRunner;

@@ -4,9 +4,9 @@ import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertAll;
 import static roomescape.test.utility.HttpResponseTestUtility.checkLocationHeader;
 import static roomescape.test.utility.HttpResponseTestUtility.checkStatusCode;
+import static roomescape.test.utility.ReservationTestUtility.checkDeleteReservation;
 import static roomescape.test.utility.ReservationTestUtility.checkReservationFieldWithoutId;
 import static roomescape.test.utility.ReservationTestUtility.checkReservationId;
-import static roomescape.test.utility.ReservationsTestUtility.checkDeleteReservation;
 
 import java.time.LocalDateTime;
 import java.util.List;

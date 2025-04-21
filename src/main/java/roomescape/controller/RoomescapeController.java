@@ -3,7 +3,10 @@ package roomescape.controller;
 import java.util.List;
 
 import java.util.concurrent.atomic.AtomicLong;
+
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
+import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -19,6 +22,8 @@ public class RoomescapeController {
     private final Reservations reservations;
     private AtomicLong index = new AtomicLong(1);
 
+    @Autowired
+    private JdbcTemplate jdbcTemplate;
 
     public RoomescapeController(Reservations reservations) {
         this.reservations = reservations;
@@ -36,7 +41,17 @@ public class RoomescapeController {
 
     @GetMapping("/reservations")
     public ResponseEntity<List<Reservation>> reservations() {
-        return ResponseEntity.ok(reservations.getReservations());
+        String sql = "SELECT id, name, date, time FROM reservation";
+        List<Reservation> reservationsFromDB = jdbcTemplate.query(sql, (rs, rowNum) -> {
+            Reservation reservation = new Reservation(
+                    rs.getLong("id"),
+                    rs.getString("name"),
+                    rs.getString("date"),
+                    rs.getString("time")
+            );
+            return reservation;
+        });
+        return ResponseEntity.ok(reservationsFromDB);
     }
 
     @PostMapping("/reservations")

@@ -1,10 +1,10 @@
 package roomescape.reservation.controller;
 
 import jakarta.validation.Valid;
-import java.util.ArrayList;
-import java.util.Collections;
 import java.util.List;
-import java.util.concurrent.atomic.AtomicLong;
+import java.util.NoSuchElementException;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.dao.DataAccessException;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -13,6 +13,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
+import roomescape.reservation.dao.ReservationDao;
 import roomescape.reservation.dto.ReservationRequest;
 import roomescape.reservation.dto.ReservationResponse;
 import roomescape.reservation.domain.Reservation;
@@ -21,31 +22,31 @@ import roomescape.reservation.domain.Reservation;
 @RequestMapping("/reservations")
 public class ReservationController {
 
-    private final AtomicLong index = new AtomicLong(1L);
-    private final List<Reservation> reservations = Collections.synchronizedList(new ArrayList<>());
+    @Autowired
+    private ReservationDao reservationDao;
 
     @GetMapping
     public List<Reservation> getReservations() {
-        return reservations;
+        return reservationDao.findAll();
     }
 
     @PostMapping
     public ResponseEntity<ReservationResponse> addReservation(@Valid @RequestBody ReservationRequest reservationRequest) {
         try {
-            Reservation reservation = Reservation.of(reservationRequest, index.getAndIncrement());
-            reservations.add(reservation);
-            return ResponseEntity.ok(reservation.toResponse());
-        } catch (Exception e) {
+            return ResponseEntity.ok(reservationDao.insert(reservationRequest).toResponse());
+        } catch (DataAccessException e) {
+            System.out.println(e.getMessage());
             return ResponseEntity.badRequest().build();
         }
     }
 
     @DeleteMapping("/{id}")
-    public ResponseEntity<Void> deleteReservations(@PathVariable("id") long id) {
-        boolean isDeleted = reservations.removeIf((reservation) -> reservation.getId() == id);
-        if (isDeleted) {
+    public ResponseEntity<Void> deleteReservation(@PathVariable("id") long id) {
+        try {
+            reservationDao.delete(id);
             return ResponseEntity.ok().build();
+        } catch (NoSuchElementException e) {
+            return ResponseEntity.badRequest().build();
         }
-        return ResponseEntity.badRequest().build();
     }
 }

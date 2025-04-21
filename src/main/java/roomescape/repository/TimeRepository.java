@@ -3,6 +3,8 @@ package roomescape.repository;
 import java.sql.PreparedStatement;
 import java.sql.Statement;
 import java.sql.Time;
+import java.time.LocalTime;
+import java.util.List;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.support.GeneratedKeyHolder;
 import org.springframework.jdbc.support.KeyHolder;
@@ -38,4 +40,14 @@ public class TimeRepository {
         return key.longValue();
     }
 
+    public List<ReservationTime> findAll() {
+        String findAllSql = "SELECT id, start_at FROM reservation_time";
+
+        return jdbcTemplate.query(findAllSql,
+                (rs, rowNum) -> ReservationTime.of(
+                        rs.getLong("id"),
+                        LocalTime.parse(rs.getString("start_at"))
+                )
+        );
+    }
 }

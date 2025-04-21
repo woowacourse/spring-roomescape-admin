@@ -1,6 +1,7 @@
 package roomescape.dto.response;
 
 import java.time.format.DateTimeFormatter;
+import java.util.List;
 import roomescape.model.ReservationTime;
 
 public record TimeResponse(
@@ -13,5 +14,11 @@ public record TimeResponse(
         String formattedStartAt = reservationTime.getStartAt().format(RESERVATION_TIME_FORMATTER);
         Long id = reservationTime.getId();
         return new TimeResponse(id, formattedStartAt);
+    }
+
+    public static List<TimeResponse> toDtos(List<ReservationTime> reservationTimes) {
+        return reservationTimes.stream()
+                .map(TimeResponse::toDto)
+                .toList();
     }
 }

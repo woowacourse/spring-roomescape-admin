@@ -10,6 +10,8 @@ import java.sql.SQLException;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import org.junit.jupiter.api.DisplayNameGeneration;
+import org.junit.jupiter.api.DisplayNameGenerator.ReplaceUnderscores;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -19,6 +21,7 @@ import roomescape.model.Reservation;
 
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.DEFINED_PORT)
 @DirtiesContext(classMode = DirtiesContext.ClassMode.BEFORE_EACH_TEST_METHOD)
+@DisplayNameGeneration(ReplaceUnderscores.class)
 public class MissionStepTest {
 
     private void 예약_생성(String name, String date, String time) {
@@ -94,7 +97,7 @@ public class MissionStepTest {
     private JdbcTemplate jdbcTemplate;
 
     @Test
-    void 사단계() {
+    void 데이터베이스_연결_및_테이블_존재_확인() {
         try (Connection connection = jdbcTemplate.getDataSource().getConnection()) {
             assertThat(connection).isNotNull();
             assertThat(connection.getCatalog()).isEqualTo("DATABASE");
@@ -105,7 +108,7 @@ public class MissionStepTest {
     }
 
     @Test
-    void 오단계() {
+    void 예약생성시_DB에_정상적으로_삽입() {
         jdbcTemplate.update("INSERT INTO reservation (name, date, time) VALUES (?, ?, ?)", "브라운", "2023-08-05", "15:40");
 
         List<Reservation> reservations = RestAssured.given().log().all()
@@ -120,7 +123,7 @@ public class MissionStepTest {
     }
 
     @Test
-    void 육단계() {
+    void 예약취소시_DB에서_정상적으로_삭제() {
         Map<String, String> params = new HashMap<>();
         params.put("name", "브라운");
         params.put("date", "2023-08-05");

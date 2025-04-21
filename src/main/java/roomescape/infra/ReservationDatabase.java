@@ -14,13 +14,14 @@ import java.util.List;
 @Repository
 public class ReservationDatabase {
 
-    private static final RowMapper<Reservation> reservationRowMapper = (rs, rowNum) -> {
+    private static final RowMapper<Reservation> ROW_MAPPER = (rs, rowNum) -> {
         final long id = rs.getLong("id");
         final String name = rs.getString("name");
         final LocalDate date = rs.getDate("date").toLocalDate();
         final LocalTime time = rs.getTime("time").toLocalTime();
         return new Reservation(id, name, date, time);
     };
+
     private final JdbcTemplate jdbcTemplate;
 
     public ReservationDatabase(final JdbcTemplate jdbcTemplate) {
@@ -32,7 +33,7 @@ public class ReservationDatabase {
                 SELECT * FROM RESERVATION
                 """;
 
-        return jdbcTemplate.query(sql, reservationRowMapper);
+        return jdbcTemplate.query(sql, ROW_MAPPER);
     }
 
     public long saveAndGetId(final ReservationCreateRequest request) {

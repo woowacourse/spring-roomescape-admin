@@ -10,6 +10,7 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import roomescape.domain.Reservation;
 import roomescape.domain.ReservationDateTime;
+import roomescape.domain.ReservationTime;
 
 class MemoryReservationRepositoryTest {
     private final LocalDate RESERVATION_DATE = LocalDate.of(2025, 1, 2);
@@ -21,7 +22,7 @@ class MemoryReservationRepositoryTest {
     @BeforeEach
     void setUp() {
         memoryReservationRepository = new MemoryReservationRepository();
-        RESERVATION_DATE_TIME = ReservationDateTime.of(RESERVATION_DATE, RESERVATION_TIME);
+        RESERVATION_DATE_TIME = ReservationDateTime.of(RESERVATION_DATE, new ReservationTime(1L, RESERVATION_TIME));
     }
 
     @Test

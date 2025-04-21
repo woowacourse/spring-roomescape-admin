@@ -1,10 +1,9 @@
 package roomescape.repository;
 
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
 import org.springframework.jdbc.core.JdbcTemplate;
-import org.springframework.jdbc.core.namedparam.BeanPropertySqlParameterSource;
-import org.springframework.jdbc.core.namedparam.SqlParameterSource;
 import org.springframework.jdbc.core.simple.SimpleJdbcInsert;
 import roomescape.domain.ReservationTime;
 
@@ -31,7 +30,7 @@ public class JdbcReservationTimeRepository implements ReservationTimeRepository 
 
     @Override
     public ReservationTime add(ReservationTime reservationTime) {
-        SqlParameterSource parameter = new BeanPropertySqlParameterSource(reservationTime);
+        Map<String, Object> parameter = Map.of("start_at", reservationTime.getStartAt());
         Long newId = simpleJdbcInsert.executeAndReturnKey(parameter).longValue();
         return new ReservationTime(newId, reservationTime);
     }

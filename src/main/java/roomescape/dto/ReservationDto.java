@@ -10,7 +10,7 @@ public record ReservationDto(Long id, String name, String date, String time) {
                 reservation.getId(),
                 reservation.getName(),
                 reservation.getDate().toString(),
-                reservation.getTime().format(DateTimeFormatter.ofPattern("HH:mm"))
+                reservation.getReservationTime().getStartAt().format(DateTimeFormatter.ofPattern("HH:mm"))
         );
     }
 }

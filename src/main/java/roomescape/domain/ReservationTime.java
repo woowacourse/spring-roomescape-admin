@@ -16,6 +16,10 @@ public class ReservationTime {
         this(id, reservationTime.startAt);
     }
 
+    public boolean isAfter(LocalTime comparedTime) {
+        return startAt.isAfter(comparedTime);
+    }
+
     public Long getId() {
         return id;
     }

@@ -18,6 +18,10 @@ public class Reservation {
         this.time = time;
     }
 
+    public boolean isSameId(final Long id) {
+        return this.id.equals(id);
+    }
+
     @Override
     public boolean equals(final Object o) {
         if (o == null || getClass() != o.getClass()) {

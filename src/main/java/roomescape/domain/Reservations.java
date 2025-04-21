@@ -18,12 +18,12 @@ public class Reservations {
 
     public boolean isExistById(final Long id) {
         return reservations.stream()
-                .anyMatch(reservation -> reservation.getId().equals(id));
+                .anyMatch(reservation -> reservation.isSameId(id));
     }
 
     public void deleteBy(final Long id) {
         final Reservation target = reservations.stream()
-                .filter(reservation -> reservation.getId().equals(id))
+                .filter(reservation -> reservation.isSameId(id))
                 .findFirst()
                 .orElseThrow(IllegalArgumentException::new);
         reservations.remove(target);

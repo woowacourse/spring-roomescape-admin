@@ -14,7 +14,7 @@ import org.junit.jupiter.params.provider.MethodSource;
 import org.springframework.http.HttpStatus;
 import roomescape.repository.ReservationFakeRepository;
 import roomescape.Reservation;
-import roomescape.ReservationRequest;
+import roomescape.dto.CreateReservationRequest;
 
 public class ReservationControllerTest {
 
@@ -23,7 +23,7 @@ public class ReservationControllerTest {
     void addReservation() {
         //given
         final var controller = new ReservationController(new ReservationFakeRepository());
-        final var request = new ReservationRequest(
+        final var request = new CreateReservationRequest(
             "포포",
             LocalDate.of(2024, 4, 18),
             LocalTime.of(12, 0)
@@ -61,7 +61,7 @@ public class ReservationControllerTest {
     @ParameterizedTest
     @MethodSource("parametersThatAnyOneIsNull")
     @DisplayName("예약 추가 시 이름, 날짜, 시간 중 하나라도 없으면 400 Bad Request")
-    void badRequestAnyParameterNull(ReservationRequest request) {
+    void badRequestAnyParameterNull(CreateReservationRequest request) {
         //given
         final var controller = new ReservationController(new ReservationFakeRepository());
 
@@ -77,7 +77,7 @@ public class ReservationControllerTest {
     void badRequestAnyParameterInvalid() {
         //given
         final var controller = new ReservationController(new ReservationFakeRepository());
-        final var request = new ReservationRequest(
+        final var request = new CreateReservationRequest(
             "여섯글자이름",
             LocalDate.of(2023, 8, 5),
             LocalTime.of(15, 40)
@@ -105,14 +105,14 @@ public class ReservationControllerTest {
 
     public static Stream<Arguments> parametersThatAnyOneIsNull() {
         return Stream.of(
-            Arguments.of(new ReservationRequest("브라운", LocalDate.of(2023, 8, 5), null)),
-            Arguments.of(new ReservationRequest("브라운", null, LocalTime.of(15, 40))),
-            Arguments.of(new ReservationRequest(null, LocalDate.of(2023, 8, 5), LocalTime.of(15, 40)))
+            Arguments.of(new CreateReservationRequest("브라운", LocalDate.of(2023, 8, 5), null)),
+            Arguments.of(new CreateReservationRequest("브라운", null, LocalTime.of(15, 40))),
+            Arguments.of(new CreateReservationRequest(null, LocalDate.of(2023, 8, 5), LocalTime.of(15, 40)))
         );
     }
 
     private Reservation addOneReservation(final ReservationController controller) {
-        final var request = new ReservationRequest(
+        final var request = new CreateReservationRequest(
             "포포",
             LocalDate.of(2024, 4, 18),
             LocalTime.of(12, 0)

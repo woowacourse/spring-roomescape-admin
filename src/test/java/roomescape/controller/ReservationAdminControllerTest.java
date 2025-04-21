@@ -5,7 +5,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 import java.time.LocalTime;
 import org.junit.jupiter.api.Test;
 import org.springframework.http.HttpStatus;
-import roomescape.CreateTimeSlotRequest;
+import roomescape.dto.CreateTimeSlotRequest;
 import roomescape.repository.ReservationTimeSlotFakeRepository;
 
 class ReservationAdminControllerTest {

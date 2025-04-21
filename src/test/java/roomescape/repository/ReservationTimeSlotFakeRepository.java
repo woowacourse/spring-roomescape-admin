@@ -5,7 +5,7 @@ import java.util.Map;
 import java.util.Optional;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.atomic.AtomicLong;
-import roomescape.CreateTimeSlotRequest;
+import roomescape.dto.CreateTimeSlotRequest;
 import roomescape.ReservationTimeSlot;
 
 public class ReservationTimeSlotFakeRepository implements ReservationTimeSlotRepository {

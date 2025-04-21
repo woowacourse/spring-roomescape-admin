@@ -2,7 +2,7 @@ package roomescape.repository;
 
 import java.util.List;
 import java.util.Optional;
-import roomescape.CreateTimeSlotRequest;
+import roomescape.dto.CreateTimeSlotRequest;
 import roomescape.ReservationTimeSlot;
 
 public interface ReservationTimeSlotRepository {

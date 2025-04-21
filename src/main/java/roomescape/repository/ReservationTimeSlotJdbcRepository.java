@@ -8,7 +8,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.simple.SimpleJdbcInsert;
 import org.springframework.stereotype.Repository;
-import roomescape.CreateTimeSlotRequest;
+import roomescape.dto.CreateTimeSlotRequest;
 import roomescape.ReservationTimeSlot;
 
 @Repository

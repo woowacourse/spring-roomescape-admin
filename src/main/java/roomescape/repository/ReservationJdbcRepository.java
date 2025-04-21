@@ -8,7 +8,7 @@ import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.simple.SimpleJdbcInsert;
 import org.springframework.stereotype.Repository;
 import roomescape.Reservation;
-import roomescape.ReservationRequest;
+import roomescape.dto.CreateReservationRequest;
 
 @Repository
 public class ReservationJdbcRepository implements ReservationRepository {
@@ -34,7 +34,7 @@ public class ReservationJdbcRepository implements ReservationRepository {
         return reservations.stream().findAny();
     }
 
-    public long save(ReservationRequest request) {
+    public long save(CreateReservationRequest request) {
         SimpleJdbcInsert insertActor = new SimpleJdbcInsert(jdbcTemplate);
         final var generatedKey = insertActor.withTableName("RESERVATION")
             .usingGeneratedKeyColumns("id")

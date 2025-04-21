@@ -10,7 +10,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.jdbc.AutoConfigureTestDatabase;
 import org.springframework.boot.test.autoconfigure.jdbc.JdbcTest;
 import org.springframework.jdbc.core.JdbcTemplate;
-import roomescape.ReservationRequest;
+import roomescape.dto.CreateReservationRequest;
 
 @JdbcTest(properties = "spring.datasource.url=jdbc:h2:mem:database-test")
 @AutoConfigureTestDatabase(replace = AutoConfigureTestDatabase.Replace.NONE)
@@ -24,7 +24,7 @@ public class ReservationJdbcRepositoryTest {
     void findReservation() {
         //given
         ReservationJdbcRepository reservationJdbcRepository = new ReservationJdbcRepository(jdbcTemplate);
-        ReservationRequest request = new ReservationRequest(
+        CreateReservationRequest request = new CreateReservationRequest(
             "브라운",
             LocalDate.of(2023, 12, 1),
             LocalTime.of(1, 1)
@@ -43,7 +43,7 @@ public class ReservationJdbcRepositoryTest {
     void addReservation() {
         // given
         ReservationJdbcRepository reservationJdbcRepository = new ReservationJdbcRepository(jdbcTemplate);
-        ReservationRequest request = new ReservationRequest(
+        CreateReservationRequest request = new CreateReservationRequest(
             "브라운",
             LocalDate.of(2023, 12, 1),
             LocalTime.of(1, 1)
@@ -62,7 +62,7 @@ public class ReservationJdbcRepositoryTest {
     void removeReservation() {
         // given
         ReservationJdbcRepository reservationJdbcRepository = new ReservationJdbcRepository(jdbcTemplate);
-        ReservationRequest request = new ReservationRequest(
+        CreateReservationRequest request = new CreateReservationRequest(
             "브라운",
             LocalDate.of(2023, 12, 1),
             LocalTime.of(1, 1)
@@ -81,12 +81,12 @@ public class ReservationJdbcRepositoryTest {
     void getAllReservation() {
         // given
         ReservationJdbcRepository reservationJdbcRepository = new ReservationJdbcRepository(jdbcTemplate);
-        ReservationRequest request1 = new ReservationRequest(
+        CreateReservationRequest request1 = new CreateReservationRequest(
             "브라운",
             LocalDate.of(2023, 12, 1),
             LocalTime.of(1, 1)
         );
-        ReservationRequest request2 = new ReservationRequest(
+        CreateReservationRequest request2 = new CreateReservationRequest(
             "브라운",
             LocalDate.of(2023, 12, 1),
             LocalTime.of(1, 1)

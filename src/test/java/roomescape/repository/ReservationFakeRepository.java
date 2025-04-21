@@ -6,7 +6,7 @@ import java.util.Optional;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.atomic.AtomicLong;
 import roomescape.Reservation;
-import roomescape.ReservationRequest;
+import roomescape.dto.CreateReservationRequest;
 
 public class ReservationFakeRepository implements ReservationRepository {
 
@@ -18,7 +18,7 @@ public class ReservationFakeRepository implements ReservationRepository {
         return Optional.ofNullable(reservations.get(id));
     }
 
-    public long save(ReservationRequest request) {
+    public long save(CreateReservationRequest request) {
         final var reservation = request.toReservation(index.getAndIncrement());
         reservations.put(reservation.id(), reservation);
         return reservation.id();

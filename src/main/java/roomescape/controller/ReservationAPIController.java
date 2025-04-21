@@ -10,9 +10,9 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
+import roomescape.domain.Reservation;
+import roomescape.domain.Reservations;
 import roomescape.dto.ReservationRequest;
-import roomescape.reservation.Reservation;
-import roomescape.reservation.Reservations;
 
 @RestController
 @RequestMapping("/reservations")

@@ -4,6 +4,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.RowMapper;
 import org.springframework.jdbc.core.namedparam.MapSqlParameterSource;
 import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
+import org.springframework.jdbc.support.GeneratedKeyHolder;
 import org.springframework.stereotype.Repository;
 import roomescape.reservation.entity.Reservation;
 import roomescape.reservation.exception.EntityNotFoundException;
@@ -31,12 +32,16 @@ public class ReservationInMemoryRepository implements ReservationRepository {
     @Override
     public Reservation save(Reservation reservation) {
         String sql = "INSERT INTO reservation (name, date, time) VALUES(:name, :date, :time)";
+        GeneratedKeyHolder keyHolder = new GeneratedKeyHolder();
+
         MapSqlParameterSource mapSqlParameterSource = new MapSqlParameterSource()
             .addValue("name", reservation.getName())
             .addValue("date", reservation.getDate())
             .addValue("time", reservation.getTime());
-        jdbcTemplate.update(sql, mapSqlParameterSource);
-        return reservation;
+        jdbcTemplate.update(sql, mapSqlParameterSource, keyHolder);
+
+        Number key = keyHolder.getKey();
+        return new Reservation(key.longValue(), reservation.getName(), reservation.getDate(), reservation.getTime());
     }
 
     @Override

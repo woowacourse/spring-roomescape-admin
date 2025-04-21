@@ -9,9 +9,9 @@ public record ReservationRequest(
         String date,
         String time
 ) {
-    public Reservation toEntity(Long id) {
+    public Reservation toEntity() {
         return new Reservation(
-                id,
+                null,
                 name,
                 LocalDate.parse(date),
                 LocalTime.parse(time)

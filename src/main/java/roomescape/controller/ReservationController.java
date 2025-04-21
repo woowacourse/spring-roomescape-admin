@@ -23,45 +23,26 @@ import roomescape.service.ReservationService;
 public class ReservationController {
 
     private final ReservationService reservationService;
-    private final JdbcTemplate jdbcTemplate;
 
-    public ReservationController(ReservationService reservationService, JdbcTemplate jdbcTemplate) {
+    public ReservationController(ReservationService reservationService) {
         this.reservationService = reservationService;
-        this.jdbcTemplate = jdbcTemplate;
     }
 
     @GetMapping("")
     public ResponseEntity<List<Reservation>> reservations() {
-        List<Reservation> reservations = jdbcTemplate.query(
-                "SELECT id, name, date, time FROM reservation",
-                (rs, rowNum) -> {
-                    return new Reservation(
-                            rs.getLong("id"),
-                            rs.getString("name"),
-                            LocalDate.parse(rs.getString("date")),
-                            LocalTime.parse(rs.getString("time"))
-                    );
-                }
-        );
+        List<Reservation> reservations = reservationService.getReservations();
         return ResponseEntity.ok(reservations);
     }
 
     @PostMapping("")
     public ResponseEntity<Reservation> addReservation(@RequestBody ReservationRequest reservationRequest) {
         Reservation newReservation = reservationService.addReservation(reservationRequest);
-        jdbcTemplate.update(
-                "INSERT INTO reservation(id, name, date, time) VALUES(?, ?, ?, ?)",
-                newReservation.getId(),
-                newReservation.getName(),
-                newReservation.getDate(),
-                newReservation.getTime()
-        );
         return ResponseEntity.ok().body(newReservation);
     }
 
     @DeleteMapping("/{id}")
     public ResponseEntity<Reservation> deleteReservation(@PathVariable long id) {
-        Reservation oldReservation = reservationService.deleteReservation(id);
-        return ResponseEntity.ok().body(oldReservation);
+        reservationService.deleteReservation(id);
+        return ResponseEntity.ok().build();
     }
 }

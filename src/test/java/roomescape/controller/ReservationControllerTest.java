@@ -87,6 +87,24 @@ class ReservationControllerTest {
         );
     }
 
+    @DisplayName("이미 예약한 날짜와 시간으로는 예약이 불가능하다")
+    @Test
+    void canNotCreateReservationWithSameDateTime() {
+        LocalDate sameDate = LocalDate.now().plusDays(1);
+        ReservationTime sameReservationTime = createReservationTime(1L, LocalTime.of(10, 0));
+        timeRepository.add(sameReservationTime);
+        reservationRepository.add(ReservationFixture.createReservation("reservation1", sameDate, sameReservationTime));
+
+        ReservationCreationRequest request =
+                new ReservationCreationRequest("reservation2", sameDate, sameReservationTime.getId());
+        ResponseEntity<Reservation> response = controller.createReservation(request);
+
+        assertAll(
+                () -> assertThat(reservationRepository.findAll()).hasSize(1),
+                () -> checkStatusCode(response, HttpStatus.BAD_REQUEST)
+        );
+    }
+
     @DisplayName("특정 ID의 예약을 삭제할 수 있다.")
     @Test
     void deleteReservation() {

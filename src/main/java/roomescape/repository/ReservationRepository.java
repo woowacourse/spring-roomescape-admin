@@ -3,6 +3,7 @@ package roomescape.repository;
 import java.sql.Date;
 import java.sql.PreparedStatement;
 import java.sql.Statement;
+import java.time.LocalDate;
 import java.util.List;
 import java.util.Optional;
 import org.springframework.dao.EmptyResultDataAccessException;
@@ -52,6 +53,20 @@ public class ReservationRepository {
                 + "WHERE r.id = ?";
         try {
             Reservation reservation = template.queryForObject(sql, mapper, id);
+            return Optional.of(reservation);
+        } catch (EmptyResultDataAccessException exception) {
+            return Optional.empty();
+        }
+    }
+
+    public Optional<Reservation> findByDateAndTime(LocalDate date, long timeId) {
+        String sql = "SELECT r.id as reservation_id, r.name, r.date, rt.id as time_id, rt.start_at "
+                + "FROM reservation AS r "
+                + "INNER JOIN reservation_time AS rt "
+                + "ON r.time_id = rt.id "
+                + "WHERE r.date = ? AND r.time_id = ? ";
+        try {
+            Reservation reservation = template.queryForObject(sql, mapper, date, timeId);
             return Optional.of(reservation);
         } catch (EmptyResultDataAccessException exception) {
             return Optional.empty();

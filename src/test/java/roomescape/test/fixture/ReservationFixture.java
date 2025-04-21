@@ -10,4 +10,8 @@ public class ReservationFixture {
         return Reservation.createWithoutId(
                 name, LocalDate.now().plusDays(1), reservationTime);
     }
+
+    public static Reservation createReservation(String name, LocalDate date, ReservationTime reservationTime) {
+        return Reservation.createWithoutId(name, date, reservationTime);
+    }
 }

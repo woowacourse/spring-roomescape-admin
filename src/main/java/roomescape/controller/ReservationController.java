@@ -41,12 +41,12 @@ public class ReservationController {
 
     @DeleteMapping("/reservations/{id}")
     public ResponseEntity<Void> deleteReservation(@PathVariable("id") final Long id) {
-        if (reservations.isExistById(id)) {
-            reservations.deleteBy(id);
-            return ResponseEntity.ok()
+        if (!reservations.isExistById(id)) {
+            return ResponseEntity.badRequest()
                     .build();
         }
-        return ResponseEntity.badRequest()
+        reservations.deleteBy(id);
+        return ResponseEntity.ok()
                 .build();
     }
 }

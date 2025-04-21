@@ -1,6 +1,5 @@
 package roomescape.controller;
 
-import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.atomic.AtomicLong;
 import org.springframework.http.ResponseEntity;
@@ -13,17 +12,18 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import roomescape.dto.ReservationRequest;
 import roomescape.reservation.Reservation;
+import roomescape.reservation.Reservations;
 
 @RestController
 @RequestMapping("/reservations")
 public class ReservationAPIController {
 
-    private final List<Reservation> reservations = new ArrayList<>();
+    private final Reservations reservations = new Reservations();
     private final AtomicLong index = new AtomicLong();
 
     @GetMapping
     public ResponseEntity<List<Reservation>> searchReservations() {
-        return ResponseEntity.ok().body(reservations);
+        return ResponseEntity.ok().body(reservations.getAll());
     }
 
     @PostMapping
@@ -36,11 +36,7 @@ public class ReservationAPIController {
 
     @DeleteMapping("/{id}")
     public ResponseEntity<Void> deleteReservation(@PathVariable Long id) {
-        Reservation findReservation = reservations.stream()
-                .filter(reservation -> reservation.isSameId(id))
-                .findFirst()
-                .orElseThrow(() -> new IllegalArgumentException("해당 예약을 찾을 수 없습니다"));
-        reservations.remove(findReservation);
+        reservations.removeById(id);
         return ResponseEntity.ok().build();
     }
 }

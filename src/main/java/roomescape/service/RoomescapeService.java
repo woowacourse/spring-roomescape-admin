@@ -3,6 +3,8 @@ package roomescape.service;
 import java.util.List;
 import org.springframework.stereotype.Service;
 import roomescape.domain.Reservation;
+import roomescape.dto.ReservationRequest;
+import roomescape.dto.ReservationResponse;
 import roomescape.repository.RoomescapeRepository;
 
 @Service
@@ -14,15 +16,18 @@ public class RoomescapeService {
         this.roomescapeRepository = roomescapeRepository;
     }
 
-    public List<Reservation> findReservations() {
-        return roomescapeRepository.findAll();
+    public List<ReservationResponse> findReservations() {
+        List<Reservation> reservations = roomescapeRepository.findAll();
+        return reservations.stream().map(ReservationResponse::of).toList();
     }
 
-    public Reservation addReservation(final Reservation reservation) {
+    public ReservationResponse addReservation(final ReservationRequest request) {
+        Reservation reservation = request.toReservation();
         if (existsSameReservation(reservation)) {
             throw new IllegalArgumentException("[ERROR] 이미 존재하는 예약시간입니다.");
         }
-        return roomescapeRepository.saveReservation(reservation);
+        Reservation saved = roomescapeRepository.saveReservation(reservation);
+        return ReservationResponse.of(saved);
     }
 
     public void removeReservation(final long id) {
@@ -33,7 +38,7 @@ public class RoomescapeService {
     }
 
     private boolean existsSameReservation(final Reservation reservation) {
-        List<Reservation> reservations = findReservations();
+        List<Reservation> reservations = roomescapeRepository.findAll();
         boolean exists = false;
         for (Reservation candidate : reservations) {
             exists = candidate.isDuplicateReservation(reservation);

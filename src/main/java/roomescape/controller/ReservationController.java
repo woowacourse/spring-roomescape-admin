@@ -24,16 +24,13 @@ public class ReservationController {
 
     @GetMapping("/reservations")
     public ResponseEntity<List<ReservationResponse>> reservationList() {
-        List<Reservation> reservations = roomescapeService.findReservations();
-        List<ReservationResponse> responses = reservations.stream().map(ReservationResponse::of).toList();
-        return ResponseEntity.ok(responses);
+        return ResponseEntity.ok(roomescapeService.findReservations());
     }
 
     @PostMapping("/reservations")
     public ResponseEntity<ReservationResponse> reservationAdd(@RequestBody ReservationRequest request) {
         try {
-            Reservation savedReservation = roomescapeService.addReservation(request.toReservation());
-            return ResponseEntity.ok(ReservationResponse.of(savedReservation));
+            return ResponseEntity.ok(roomescapeService.addReservation(request));
         } catch (IllegalArgumentException e) {
             return ResponseEntity.notFound().build();
         }

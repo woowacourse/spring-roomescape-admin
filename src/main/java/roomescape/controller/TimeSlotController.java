@@ -13,21 +13,21 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import roomescape.dto.CreateTimeSlotRequest;
 import roomescape.ReservationTimeSlot;
-import roomescape.repository.ReservationTimeSlotRepository;
+import roomescape.repository.TimeSlotRepository;
 
 @Controller
 @RequestMapping("/times")
-public class ReservationTimeSlotController {
+public class TimeSlotController {
 
-    private final ReservationTimeSlotRepository repository;
+    private final TimeSlotRepository repository;
 
     @Autowired
-    public ReservationTimeSlotController(ReservationTimeSlotRepository repository) {
+    public TimeSlotController(TimeSlotRepository repository) {
         this.repository = repository;
     }
 
     @GetMapping
-    public ResponseEntity<List<ReservationTimeSlot>> getAll() {
+    public ResponseEntity<List<ReservationTimeSlot>> getAllTimeSlots() {
         return ResponseEntity.ok(repository.getTimeSlots());
     }
 

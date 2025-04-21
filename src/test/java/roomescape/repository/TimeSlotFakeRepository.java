@@ -8,7 +8,7 @@ import java.util.concurrent.atomic.AtomicLong;
 import roomescape.dto.CreateTimeSlotRequest;
 import roomescape.ReservationTimeSlot;
 
-public class ReservationTimeSlotFakeRepository implements ReservationTimeSlotRepository {
+public class TimeSlotFakeRepository implements TimeSlotRepository {
 
     private final Map<Long, ReservationTimeSlot> timeSlots = new ConcurrentHashMap<>();
     private final AtomicLong index = new AtomicLong(1L);

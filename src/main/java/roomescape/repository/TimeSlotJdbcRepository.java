@@ -12,12 +12,12 @@ import roomescape.dto.CreateTimeSlotRequest;
 import roomescape.ReservationTimeSlot;
 
 @Repository
-public class ReservationTimeSlotJdbcRepository implements ReservationTimeSlotRepository {
+public class TimeSlotJdbcRepository implements TimeSlotRepository {
 
     private final JdbcTemplate jdbcTemplate;
 
     @Autowired
-    public ReservationTimeSlotJdbcRepository(final JdbcTemplate jdbcTemplate) {
+    public TimeSlotJdbcRepository(final JdbcTemplate jdbcTemplate) {
         this.jdbcTemplate = jdbcTemplate;
     }
 

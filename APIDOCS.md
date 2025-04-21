@@ -73,7 +73,7 @@
 
 - POST /times
     - 설명 : 예약 가능한 시간 추가
-    - 요청 파라미터
+    - 요청 페이로드
       ```
       {
           LocalTime "startAt": "10:00"  // NotNull

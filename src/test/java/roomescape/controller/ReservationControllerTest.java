@@ -13,7 +13,7 @@ import org.junit.jupiter.params.provider.Arguments;
 import org.junit.jupiter.params.provider.MethodSource;
 import org.springframework.http.HttpStatus;
 import roomescape.repository.ReservationFakeRepository;
-import roomescape.Reservation;
+import roomescape.model.Reservation;
 import roomescape.dto.CreateReservationRequest;
 
 public class ReservationControllerTest {

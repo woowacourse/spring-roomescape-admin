@@ -9,7 +9,7 @@ import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.simple.SimpleJdbcInsert;
 import org.springframework.stereotype.Repository;
 import roomescape.dto.CreateTimeSlotRequest;
-import roomescape.ReservationTimeSlot;
+import roomescape.model.ReservationTimeSlot;
 
 @Repository
 public class TimeSlotJdbcRepository implements TimeSlotRepository {

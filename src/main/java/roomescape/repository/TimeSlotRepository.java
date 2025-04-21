@@ -3,7 +3,7 @@ package roomescape.repository;
 import java.util.List;
 import java.util.Optional;
 import roomescape.dto.CreateTimeSlotRequest;
-import roomescape.ReservationTimeSlot;
+import roomescape.model.ReservationTimeSlot;
 
 public interface TimeSlotRepository {
 

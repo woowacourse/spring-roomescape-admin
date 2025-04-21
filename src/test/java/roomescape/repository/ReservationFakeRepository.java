@@ -5,7 +5,7 @@ import java.util.Map;
 import java.util.Optional;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.atomic.AtomicLong;
-import roomescape.Reservation;
+import roomescape.model.Reservation;
 import roomescape.dto.CreateReservationRequest;
 
 public class ReservationFakeRepository implements ReservationRepository {

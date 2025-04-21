@@ -15,16 +15,23 @@ import roomescape.dto.ReservationResponseDto;
 import roomescape.model.Reservation;
 import roomescape.model.ReservationDateTime;
 import roomescape.model.Reservations;
+import roomescape.service.ReservationService;
 
 @RestController
 public class ReservationController {
 
     private Reservations reservations = new Reservations();
+    private final ReservationService reservationService;
     private AtomicLong index = new AtomicLong(1);
+
+    public ReservationController(ReservationService reservationService) {
+        this.reservationService = reservationService;
+    }
 
     @GetMapping("/reservations")
     public ResponseEntity<List<Reservation>> reservations() {
-        return ResponseEntity.ok(reservations.getReservations());
+        List<Reservation> allReservation = reservationService.getAllReservations();
+        return ResponseEntity.ok(allReservation);
     }
 
     @PostMapping("/reservations")
@@ -39,6 +46,7 @@ public class ReservationController {
                     reservationRequestDto.name(),
                     reservationDateTime);
             reservations.add(newReservation);
+            reservationService.saveReservation(reservationRequestDto);
             return ResponseEntity.ok(ReservationResponseDto.from(newReservation));
         } catch (NullPointerException | IllegalArgumentException e) {
             return ResponseEntity.badRequest().build();

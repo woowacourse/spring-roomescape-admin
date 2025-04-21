@@ -81,8 +81,8 @@ public class MissionStepTest {
     }
 
     @Test
-    @DisplayName("DELETE /reservations/{id} 요청시 예약을 삭제한다")
-    void delete_reservations_요청시_예약을_추가하고_삭제한다() {
+    @DisplayName("예약추가 후 DELETE /reservations/{id} 요청시 예약을 삭제한다")
+    void 예약추가후_delete_reservations_요청시_예약을_삭제한다() {
         Map<String, String> params = new HashMap<>();
         params.put("name", "브라운");
         params.put("date", "2023-08-05");
@@ -133,5 +133,32 @@ public class MissionStepTest {
         Integer count = jdbcTemplate.queryForObject("SELECT count(1) FROM reservation", Integer.class);
 
         assertThat(reservations.size()).isEqualTo(count);
+    }
+
+    @Test
+    @DisplayName("POST /reservations 요청시 예약을 추가하고, DELETE /reservations 요청시 예약을 삭제한다")
+    void post_reservations_요청시_예약을_추가하고_delete_reservations_요청시_예약을_삭제한다() {
+        Map<String, String> params = new HashMap<>();
+        params.put("name", "브라운");
+        params.put("date", "2023-08-05");
+        params.put("time", "10:00");
+
+        RestAssured.given().log().all()
+                .contentType(ContentType.JSON)
+                .body(params)
+                .when().post("/reservations")
+                .then().log().all()
+                .statusCode(200);
+
+        Integer count = jdbcTemplate.queryForObject("SELECT count(1) from reservation", Integer.class);
+        assertThat(count).isEqualTo(1);
+
+        RestAssured.given().log().all()
+                .when().delete("/reservations/1")
+                .then().log().all()
+                .statusCode(200);
+
+        Integer countAfterDelete = jdbcTemplate.queryForObject("SELECT count(1) from reservation", Integer.class);
+        assertThat(countAfterDelete).isEqualTo(0);
     }
 }

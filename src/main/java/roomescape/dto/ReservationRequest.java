@@ -8,9 +8,9 @@ import java.time.LocalTime;
 
 public record ReservationRequest(String name, LocalDate date, LocalTime time) {
 
-    public Reservation toEntity(final Long id) {
+    public Reservation toEntity() {
         validateDateTime(date, time);
-        return new Reservation(id, name, LocalDateTime.of(date, time));
+        return new Reservation(null, name, LocalDateTime.of(date, time));
     }
 
     private void validateDateTime(final LocalDate date, final LocalTime time) {

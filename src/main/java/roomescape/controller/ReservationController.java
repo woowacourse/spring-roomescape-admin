@@ -1,6 +1,5 @@
 package roomescape.controller;
 
-import java.util.List;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -13,8 +12,8 @@ import roomescape.dao.ReservationDao;
 import roomescape.dto.ReservationRequest;
 import roomescape.dto.ReservationResponse;
 import roomescape.entity.Reservation;
-import roomescape.exception.InvalidReservationException;
-import roomescape.repository.ReservationRepository;
+
+import java.util.List;
 
 @RestController
 @RequestMapping("/reservations")
@@ -35,19 +34,18 @@ public class ReservationController {
         return ResponseEntity.ok().body(reservations);
     }
 
-//    @PostMapping
-//    public ResponseEntity<ReservationResponse> createReservation(@RequestBody final ReservationRequest reservationRequest) {
-//        Reservation reservation = reservationRepository.add(reservationRequest);
-//        return ResponseEntity.ok().body(ReservationResponse.toDto(reservation));
-//    }
-//
-//    @DeleteMapping("/{id}")
-//    public ResponseEntity<Void> deleteReservation(@PathVariable("id") final Long id) {
-//        try {
-//            reservationRepository.deleteById(id);
-//            return ResponseEntity.ok().build();
-//        } catch (InvalidReservationException e){
-//            return ResponseEntity.noContent().build();
-//        }
-//    }
+    @PostMapping
+    public ResponseEntity<ReservationResponse> createReservation(@RequestBody final ReservationRequest reservationRequest) {
+        Long savedId = reservationDao.insertWithKeyHolder(reservationRequest.toEntity());
+        Reservation newReservation = reservationDao.findReservationById(savedId);
+        return ResponseEntity.ok().body(ReservationResponse.toDto(newReservation));
+    }
+
+    @DeleteMapping("/{id}")
+    public ResponseEntity<Void> deleteReservation(@PathVariable("id") final Long id) {
+        if (reservationDao.deleteById(id)) {
+            return ResponseEntity.ok().build();
+        }
+        return ResponseEntity.noContent().build();
+    }
 }

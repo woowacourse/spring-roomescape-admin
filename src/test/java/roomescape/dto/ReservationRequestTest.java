@@ -15,14 +15,14 @@ class ReservationRequestTest {
     @Test
     void 예약일자는_null일_수_없다() {
         ReservationRequest reservationRequest = new ReservationRequest("듀이", null, LocalTime.now());
-        assertThatThrownBy(() -> reservationRequest.toEntity(1L))
+        assertThatThrownBy(() -> reservationRequest.toEntity())
                 .isInstanceOf(IllegalArgumentException.class);
     }
 
     @Test
     void 예약시간은_null일_수_없다() {
         ReservationRequest reservationRequest = new ReservationRequest("듀이", LocalDate.now(), null);
-        assertThatThrownBy(() -> reservationRequest.toEntity(1L))
+        assertThatThrownBy(() -> reservationRequest.toEntity())
                 .isInstanceOf(IllegalArgumentException.class);
     }
 }

@@ -78,6 +78,8 @@
 - DELETE /reservations/{reservationId}
     - 설명 : 예약 취소
     - 정상 응답 (200)
+    - 예외 응답 (404)
+        - reservationId에 해당하는 예약이 존재하지 않을 경우
 
 ### 예약 시간 API
 
@@ -116,3 +118,6 @@
 - DELETE /times/{reservationTimeId}
     - 설명 : ID에 해당하는 예약 가능한 시간 삭제
     - 정상 응답 (200)
+        - 예외 응답 (404)
+            - reservationTimeId 해당하는 예약 가능 시간이 존재하지 않을 경우
+            - 이미 해당 예약 가능 시간으로 예약 데이터가 존재하는 경우

@@ -16,14 +16,18 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import roomescape.domain.ReservationTime;
 import roomescape.dto.ReservationTimeCreationRequest;
+import roomescape.repository.ReservationRepository;
 import roomescape.repository.ReservationTimeRepository;
+import roomescape.test.fake.FakeReservationRepository;
 import roomescape.test.fake.FakeReservationTimeRepository;
 import roomescape.test.utility.HttpResponseTestUtility;
 
 class ReservationTimeControllerTest {
 
+    private final ReservationRepository reservationRepository = new FakeReservationRepository();
     private final ReservationTimeRepository reservationTimeRepository = new FakeReservationTimeRepository();
-    private final ReservationTimeController controller = new ReservationTimeController(reservationTimeRepository);
+    private final ReservationTimeController controller =
+            new ReservationTimeController(reservationRepository, reservationTimeRepository);
 
     @DisplayName("등록된 모든 예약 가능 시간을 조회활 수 있다")
     @Test

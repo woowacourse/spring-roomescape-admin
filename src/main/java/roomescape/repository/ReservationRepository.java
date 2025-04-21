@@ -45,6 +45,15 @@ public class ReservationRepository {
         return template.query(sql, mapper);
     }
 
+    public List<Reservation> findAllByReservationTimeId(long reservationTimeId) {
+        String sql = "SELECT r.id as reservation_id, r.name, r.date, rt.id as time_id, rt.start_at "
+                + "FROM reservation AS r "
+                + "INNER JOIN reservation_time AS rt "
+                + "ON r.time_id = rt.id "
+                + "WHERE r.time_id = ? ";
+        return template.query(sql, mapper, reservationTimeId);
+    }
+
     public Optional<Reservation> findById(long id) {
         String sql = "SELECT r.id as reservation_id, r.name, r.date, rt.id as time_id, rt.start_at "
                 + "FROM reservation AS r "

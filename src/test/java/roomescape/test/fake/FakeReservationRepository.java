@@ -24,6 +24,13 @@ public class FakeReservationRepository extends ReservationRepository {
     }
 
     @Override
+    public List<Reservation> findAllByReservationTimeId(long reservationTimeId) {
+        return reservations.values().stream()
+                .filter(reservation -> reservation.getTime().getId().equals(reservationTimeId))
+                .toList();
+    }
+
+    @Override
     public Optional<Reservation> findById(long id) {
         if (!reservations.containsKey(id)) {
             return Optional.empty();

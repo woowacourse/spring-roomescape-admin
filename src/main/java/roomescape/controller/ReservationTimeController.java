@@ -12,14 +12,18 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
 import roomescape.domain.ReservationTime;
 import roomescape.dto.ReservationTimeCreationRequest;
+import roomescape.repository.ReservationRepository;
 import roomescape.repository.ReservationTimeRepository;
 
 @RestController
 public class ReservationTimeController {
 
+    private final ReservationRepository reservationRepository;
     private final ReservationTimeRepository reservationTimeRepository;
 
-    public ReservationTimeController(ReservationTimeRepository reservationTimeRepository) {
+    public ReservationTimeController(ReservationRepository reservationRepository,
+            ReservationTimeRepository reservationTimeRepository) {
+        this.reservationRepository = reservationRepository;
         this.reservationTimeRepository = reservationTimeRepository;
     }
 
@@ -55,6 +59,11 @@ public class ReservationTimeController {
         if (reservationTimeRepository.findById(id).isEmpty()) {
             return ResponseEntity.notFound().build();
         }
+
+        if (!reservationRepository.findAllByReservationTimeId(id).isEmpty()) {
+            return ResponseEntity.badRequest().build();
+        }
+
         reservationTimeRepository.deleteById(id);
         return ResponseEntity.ok().build();
     }

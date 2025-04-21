@@ -38,16 +38,12 @@ public class ReservationController {
 
     @PostMapping
     public ReservationCreateResponse create(@RequestBody ReservationCreateRequest reservationCreateRequest) {
-        return new ReservationCreateResponse(reservations.add(
-                reservationCreateRequest.name(),
-                reservationCreateRequest.date(),
-                reservationCreateRequest.time()
-        ));
+        return new ReservationCreateResponse(reservations.create(reservationCreateRequest));
     }
 
     @DeleteMapping("{id}")
     public ResponseEntity<Void> delete(@PathVariable Long id) {
-        reservations.remove(id);
+        reservations.delete(id);
         return ResponseEntity.noContent().build();
     }
 }

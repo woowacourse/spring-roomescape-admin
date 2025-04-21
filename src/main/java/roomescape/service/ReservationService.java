@@ -7,6 +7,7 @@ import java.util.concurrent.atomic.AtomicLong;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Service;
 import roomescape.dto.ReservationRequest;
+import roomescape.dto.ReservationResponse;
 import roomescape.model.Reservation;
 import roomescape.repository.ReservationRepository;
 
@@ -19,9 +20,10 @@ public class ReservationService {
         this.reservationRepository = reservationRepository;
     }
 
-    public Reservation addReservation(ReservationRequest reservationRequest) {
-        Reservation reservation = reservationRequest.toEntity();
-        return reservationRepository.save(reservation);
+    public ReservationResponse addReservation(ReservationRequest reservationRequest) {
+        Reservation reservation = reservationRequest.toEntity(null);
+        Reservation savedReservation = reservationRepository.save(reservation);
+        return ReservationResponse.fromEntity(savedReservation);
     }
 
     public void deleteReservation(long id) {
@@ -31,7 +33,10 @@ public class ReservationService {
         }
     }
 
-    public List<Reservation> getReservations() {
-        return reservationRepository.findAll();
+    public List<ReservationResponse> getReservations() {
+        return reservationRepository.findAll()
+                .stream()
+                .map(ReservationResponse::fromEntity)
+                .toList();
     }
 }

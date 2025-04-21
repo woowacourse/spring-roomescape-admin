@@ -1,4 +1,4 @@
-package roomescape.time.repository;
+package roomescape.reservationtime.repository;
 
 import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
 
@@ -12,19 +12,19 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.test.annotation.DirtiesContext;
-import roomescape.time.domain.Time;
+import roomescape.reservationtime.domain.ReservationTime;
 
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.DEFINED_PORT)
 @DirtiesContext(classMode = DirtiesContext.ClassMode.BEFORE_EACH_TEST_METHOD)
-class H2TimeRepositoryTest {
+class H2ReservationTimeRepositoryTest {
 
     @Autowired
     private JdbcTemplate jdbcTemplate;
-    private TimeRepository timeRepository;
+    private ReservationTimeRepository reservationTimeRepository;
 
     @BeforeEach
     void beforeEach() {
-        timeRepository = new H2TimeRepository(jdbcTemplate);
+        reservationTimeRepository = new H2ReservationTimeRepository(jdbcTemplate);
     }
 
     @Test
@@ -34,12 +34,12 @@ class H2TimeRepositoryTest {
         jdbcTemplate.update("INSERT INTO reservation_time (start_at) VALUES (?)", "10:00");
 
         // when
-        List<Time> times = timeRepository.findAll();
+        List<ReservationTime> reservationTimes = reservationTimeRepository.findAll();
 
         // then
-        Time expected = new Time(1L, LocalTime.of(10, 0));
-        assertThat(times.size()).isEqualTo(1);
-        assertThat(times.getFirst()).isEqualTo(expected);
+        ReservationTime expected = new ReservationTime(1L, LocalTime.of(10, 0));
+        assertThat(reservationTimes.size()).isEqualTo(1);
+        assertThat(reservationTimes.getFirst()).isEqualTo(expected);
     }
 
     @Test
@@ -49,10 +49,10 @@ class H2TimeRepositoryTest {
         jdbcTemplate.update("INSERT INTO reservation_time (start_at) VALUES (?)", "10:00");
 
         // when
-        Optional<Time> time = timeRepository.findById(1L);
+        Optional<ReservationTime> time = reservationTimeRepository.findById(1L);
 
         // then
-        Time expected = new Time(1L, LocalTime.of(10, 0));
+        ReservationTime expected = new ReservationTime(1L, LocalTime.of(10, 0));
         assertThat(time.get()).isEqualTo(expected);
     }
 
@@ -60,17 +60,17 @@ class H2TimeRepositoryTest {
     @DisplayName("시간을 저장한다.")
     void save() {
         // given
-        Time time = new Time(
+        ReservationTime reservationTime = new ReservationTime(
                 null,
                 LocalTime.of(10, 0)
         );
 
         // when
-        Time saved = timeRepository.save(time);
+        ReservationTime saved = reservationTimeRepository.save(reservationTime);
 
         // then
         assertThat(saved.getId()).isEqualTo(1L);
-        assertThat(saved.getStartAt()).isEqualTo(time.getStartAt());
+        assertThat(saved.getStartAt()).isEqualTo(reservationTime.getStartAt());
     }
 
     @Test
@@ -80,16 +80,16 @@ class H2TimeRepositoryTest {
         jdbcTemplate.update("INSERT INTO reservation_time (start_at) VALUES (?)", "10:00");
 
         // when
-        timeRepository.deleteById(1L);
+        reservationTimeRepository.deleteById(1L);
 
         // then
-        List<Time> times = jdbcTemplate.query(
+        List<ReservationTime> reservationTimes = jdbcTemplate.query(
                 "select id, start_at from reservation_time",
-                (resultSet, rowNum) -> new Time(
+                (resultSet, rowNum) -> new ReservationTime(
                         resultSet.getLong("id"),
                         LocalTime.parse(resultSet.getString("start_at"))
                 )
         );
-        assertThat(times.size()).isEqualTo(0);
+        assertThat(reservationTimes.size()).isEqualTo(0);
     }
 }

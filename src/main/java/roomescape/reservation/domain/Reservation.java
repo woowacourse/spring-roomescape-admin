@@ -2,17 +2,17 @@ package roomescape.reservation.domain;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import java.time.LocalDate;
-import java.time.LocalTime;
 import java.util.Objects;
+import roomescape.reservationtime.domain.ReservationTime;
 
 public class Reservation {
 
     private Long id;
     private final String name;
     private final LocalDate date;
-    private final LocalTime time;
+    private final ReservationTime time;
 
-    public Reservation(Long id, String name, LocalDate date, LocalTime time) {
+    public Reservation(Long id, String name, LocalDate date, ReservationTime time) {
         this.id = id;
         this.name = name;
         this.date = date;
@@ -31,7 +31,7 @@ public class Reservation {
         return date;
     }
 
-    public LocalTime getTime() {
+    public ReservationTime getTime() {
         return time;
     }
 

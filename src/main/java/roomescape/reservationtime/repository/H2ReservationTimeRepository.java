@@ -1,4 +1,4 @@
-package roomescape.time.repository;
+package roomescape.reservationtime.repository;
 
 import java.sql.PreparedStatement;
 import java.time.LocalTime;
@@ -9,24 +9,24 @@ import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.support.GeneratedKeyHolder;
 import org.springframework.jdbc.support.KeyHolder;
 import org.springframework.stereotype.Repository;
-import roomescape.time.domain.Time;
+import roomescape.reservationtime.domain.ReservationTime;
 
 @Repository
-public class H2TimeRepository implements TimeRepository {
+public class H2ReservationTimeRepository implements ReservationTimeRepository {
 
     private final JdbcTemplate jdbcTemplate;
 
     @Autowired
-    public H2TimeRepository(JdbcTemplate jdbcTemplate) {
+    public H2ReservationTimeRepository(JdbcTemplate jdbcTemplate) {
         this.jdbcTemplate = jdbcTemplate;
     }
 
     @Override
-    public List<Time> findAll() {
+    public List<ReservationTime> findAll() {
         String sql = "select id, start_at from reservation_time";
         return jdbcTemplate.query(
                 sql,
-                (resultSet, rowNum) -> new Time(
+                (resultSet, rowNum) -> new ReservationTime(
                         resultSet.getLong("id"),
                         LocalTime.parse(resultSet.getString("start_at"))
                 )
@@ -34,12 +34,12 @@ public class H2TimeRepository implements TimeRepository {
     }
 
     @Override
-    public Optional<Time> findById(Long id) {
+    public Optional<ReservationTime> findById(Long id) {
         String sql = "select id, start_at from reservation_time where id = ?";
         return Optional.ofNullable(
                 jdbcTemplate.queryForObject(
                         sql,
-                        (resultSet, rowNum) -> new Time(
+                        (resultSet, rowNum) -> new ReservationTime(
                                 resultSet.getLong("id"),
                                 LocalTime.parse(resultSet.getString("start_at"))
                         ),
@@ -48,7 +48,7 @@ public class H2TimeRepository implements TimeRepository {
     }
 
     @Override
-    public Time save(Time time) {
+    public ReservationTime save(ReservationTime reservationTime) {
         String sql = "insert into reservation_time (start_at) values (?)";
         KeyHolder keyHolder = new GeneratedKeyHolder();
         jdbcTemplate.update(connection -> {
@@ -56,13 +56,13 @@ public class H2TimeRepository implements TimeRepository {
                     sql,
                     new String[]{"id"}
             );
-            ps.setString(1, time.getStartAt().toString());
+            ps.setString(1, reservationTime.getStartAt().toString());
             return ps;
         }, keyHolder);
 
         long id = keyHolder.getKey().longValue();
 
-        return new Time(id, time.getStartAt());
+        return new ReservationTime(id, reservationTime.getStartAt());
     }
 
     @Override

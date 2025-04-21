@@ -1,4 +1,4 @@
-package roomescape.time.controller;
+package roomescape.reservationtime.controller;
 
 import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
 import static org.hamcrest.Matchers.is;
@@ -13,11 +13,11 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.test.annotation.DirtiesContext;
-import roomescape.time.domain.Time;
+import roomescape.reservationtime.domain.ReservationTime;
 
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.DEFINED_PORT)
 @DirtiesContext(classMode = DirtiesContext.ClassMode.BEFORE_EACH_TEST_METHOD)
-class TimeControllerTest {
+class ReservationTimeControllerTest {
 
     @Autowired
     private JdbcTemplate jdbcTemplate;
@@ -29,16 +29,16 @@ class TimeControllerTest {
         jdbcTemplate.update("INSERT INTO reservation_time (start_at) VALUES (?)", "10:00");
 
         // when
-        List<Time> times = RestAssured
+        List<ReservationTime> reservationTimes = RestAssured
                 .given().log().all()
                 .when().get("/times")
                 .then().log().all()
                 .statusCode(200).extract()
-                .jsonPath().getList(".", Time.class);
+                .jsonPath().getList(".", ReservationTime.class);
 
         // then
         Integer count = jdbcTemplate.queryForObject("SELECT count(1) from reservation_time", Integer.class);
-        assertThat(times.size()).isEqualTo(count);
+        assertThat(reservationTimes.size()).isEqualTo(count);
     }
 
     @Test

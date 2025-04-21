@@ -1,14 +1,14 @@
-package roomescape.time.domain;
+package roomescape.reservationtime.domain;
 
 import java.time.LocalTime;
 import java.util.Objects;
 
-public class Time {
+public class ReservationTime {
 
     private Long id;
     private final LocalTime startAt;
 
-    public Time(Long id, LocalTime startAt) {
+    public ReservationTime(Long id, LocalTime startAt) {
         this.id = id;
         this.startAt = startAt;
     }
@@ -30,8 +30,9 @@ public class Time {
         if (object == null || getClass() != object.getClass()) {
             return false;
         }
-        Time time = (Time) object;
-        return Objects.equals(getId(), time.getId()) && Objects.equals(getStartAt(), time.getStartAt());
+        ReservationTime reservationTime = (ReservationTime) object;
+        return Objects.equals(getId(), reservationTime.getId()) && Objects.equals(getStartAt(),
+                reservationTime.getStartAt());
     }
 
     @Override

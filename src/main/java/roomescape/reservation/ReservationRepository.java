@@ -3,7 +3,7 @@ package roomescape.reservation;
 import java.util.List;
 
 public interface ReservationRepository {
-    public void saveReservation(Reservation wantToSaveReservation);
+    public Reservation saveReservation(Reservation wantToSaveReservation);
     public int deleteReservation(Long wantToDeleteId);
     public Reservation findReservationById(Long wandToFindId);
     public List<Reservation> findAllReservations();

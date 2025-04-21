@@ -1,7 +1,10 @@
 package roomescape.reservation;
 
+import java.sql.PreparedStatement;
 import java.util.List;
 import org.springframework.jdbc.core.JdbcTemplate;
+import org.springframework.jdbc.support.GeneratedKeyHolder;
+import org.springframework.jdbc.support.KeyHolder;
 
 public class JdbcReservationRepository implements ReservationRepository {
 
@@ -12,9 +15,20 @@ public class JdbcReservationRepository implements ReservationRepository {
     }
 
     @Override
-    public void saveReservation(Reservation wantToSaveReservation) {
+    public Reservation saveReservation(Reservation wantToSaveReservation) {
         String query = "INSERT INTO RESERVATION (name, date, time) values (?,?,?)";
-        jdbcTemplate.update(query, wantToSaveReservation.getName(), wantToSaveReservation.getDate(), wantToSaveReservation.getTime());
+        KeyHolder keyHolder = new GeneratedKeyHolder();
+
+        jdbcTemplate.update(connection -> {
+            PreparedStatement preparedStatement = connection.prepareStatement(
+                    query, new String[]{"id"});
+            preparedStatement.setString(1, wantToSaveReservation.getName());
+            preparedStatement.setDate(2, java.sql.Date.valueOf(wantToSaveReservation.getDate()));
+            preparedStatement.setTime(3, java.sql.Time.valueOf(wantToSaveReservation.getTime()));
+            return preparedStatement;
+        }, keyHolder);
+
+        return Reservation.toEntity(wantToSaveReservation, keyHolder.getKey().longValue());
     }
 
     @Override

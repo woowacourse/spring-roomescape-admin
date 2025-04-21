@@ -1,8 +1,8 @@
 package roomescape.dto.response;
 
 import org.junit.jupiter.api.Test;
-import roomescape.Reservation;
-import roomescape.ReservationTime;
+import roomescape.domain.Reservation;
+import roomescape.domain.ReservationTime;
 
 import java.time.LocalDate;
 import java.time.LocalTime;

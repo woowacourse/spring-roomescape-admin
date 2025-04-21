@@ -1,6 +1,6 @@
 package roomescape.dto.response;
 
-import roomescape.ReservationTime;
+import roomescape.domain.ReservationTime;
 
 import java.time.format.DateTimeFormatter;
 import java.util.List;

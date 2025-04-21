@@ -10,8 +10,8 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.server.ResponseStatusException;
-import roomescape.dto.CreateReservationRequest;
-import roomescape.dto.GetReservationResponse;
+import roomescape.dto.ReservationCreateRequest;
+import roomescape.dto.ReservationGetResponse;
 import roomescape.model.Reservation;
 import roomescape.repository.MemoryReservationRepository;
 import roomescape.repository.ReservationRepository;
@@ -25,20 +25,20 @@ public class ReservationRestController {
     private final ReservationRepository reservationRepository = new MemoryReservationRepository();
 
     @GetMapping
-    public ResponseEntity<List<GetReservationResponse>> getAllReservations() {
+    public ResponseEntity<List<ReservationGetResponse>> getAllReservations() {
         List<Reservation> reservations = reservationRepository.findAll();
-        List<GetReservationResponse> getReservationResponses = reservations.stream()
-                .map(GetReservationResponse::from)
+        List<ReservationGetResponse> reservationGetResponses = reservations.stream()
+                .map(ReservationGetResponse::from)
                 .toList();
         return ResponseEntity
                 .status(HttpStatus.OK)
-                .body(getReservationResponses);
+                .body(reservationGetResponses);
     }
 
     @PostMapping
-    public ResponseEntity<Reservation> addReservation(@RequestBody CreateReservationRequest createReservationRequest) {
+    public ResponseEntity<Reservation> addReservation(@RequestBody ReservationCreateRequest reservationCreateRequest) {
         try {
-            Reservation reservation = new Reservation(createReservationRequest.name(), createReservationRequest.date(), createReservationRequest.time());
+            Reservation reservation = new Reservation(reservationCreateRequest.name(), reservationCreateRequest.date(), reservationCreateRequest.time());
             reservationRepository.add(reservation);
             return ResponseEntity
                     .status(HttpStatus.OK)

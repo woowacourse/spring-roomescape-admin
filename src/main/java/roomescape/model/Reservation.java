@@ -15,18 +15,15 @@ public class Reservation {
         this.reservationTime = reservationTime;
     }
 
-    public static Reservation from(Long id, String name, LocalDate date, LocalTime time) {
+    public static Reservation of(Long id, String name, LocalDate date, LocalTime time) {
         return new Reservation(id, name, LocalDateTime.of(date, time));
     }
-    public static Reservation createReservation(Long id, String name, LocalDateTime reservationTime) {
-        return new Reservation(id, name, reservationTime);
-    }
 
-    public static Reservation createReservationWithId(Long id, Reservation reservation) {
+    public static Reservation withId(Long id, Reservation reservation) {
         return new Reservation(id, reservation.getName(), reservation.reservationTime);
     }
 
-    public static Reservation createReservationWithoutID(String name, LocalDateTime reservationTime) {
+    public static Reservation withoutId(String name, LocalDateTime reservationTime) {
         return new Reservation(null, name, reservationTime);
     }
 
@@ -40,9 +37,5 @@ public class Reservation {
 
     public LocalDateTime getReservationTime() {
         return reservationTime;
-    }
-
-    public boolean sameId(Long id) {
-        return this.id.equals(id);
     }
 }

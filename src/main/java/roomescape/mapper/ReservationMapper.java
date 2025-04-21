@@ -15,7 +15,7 @@ public class ReservationMapper {
         LocalTime time = LocalTime.parse(request.time());
         LocalDateTime reservationTime = LocalDateTime.of(date, time);
 
-        return Reservation.createReservationWithoutID(request.name(), reservationTime);
+        return Reservation.withoutId(request.name(), reservationTime);
     }
 
     private static final DateTimeFormatter TIME_FORMATTER = java.time.format.DateTimeFormatter.ofPattern("HH:mm");

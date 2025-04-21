@@ -23,14 +23,14 @@ public class ReservationController {
     private final Reservations reservations = new Reservations();
     private final AtomicLong personIndex = new AtomicLong(1);
 
-    @GetMapping("")
+    @GetMapping()
     public List<ReservationResponse> readReservations() {
         return reservations.getReservations().stream()
                 .map(ReservationResponse::from)
                 .toList();
     }
 
-    @PostMapping("")
+    @PostMapping()
     public Reservation createReservations(
             @RequestBody ReservationRequest reservationRequest) {
         Person person = new Person(personIndex.getAndIncrement(), reservationRequest.name());

@@ -24,7 +24,7 @@ public class UpdatingDao {
         Map<String, Object> parameters = new HashMap<>(3);
         parameters.put("name", reservation.getPersonName());
         parameters.put("date", reservation.getDate());
-        parameters.put("time", reservation.getTime());
+        parameters.put("time_id", reservation.getTimeId());
         Number newId = insertActor.executeAndReturnKey(parameters);
         reservation.setId(newId.longValue());
     }

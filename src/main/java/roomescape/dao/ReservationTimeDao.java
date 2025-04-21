@@ -35,7 +35,7 @@ public class ReservationTimeDao {
 
     public void saveReservationTime(ReservationTime reservationTime) {
         Map<String, Object> parameters = new HashMap<>(1);
-        parameters.put("start_at", reservationTime.getTime());
+        parameters.put("start_at", reservationTime.getStartAt());
         Number newId = insertActor.executeAndReturnKey(parameters);
         reservationTime.setId(newId.longValue());
     }
@@ -43,5 +43,16 @@ public class ReservationTimeDao {
     public void deleteReservationTime(Long id) {
         String query = "delete from reservation_time where id = ?";
         jdbcTemplate.update(query, id);
+    }
+
+    public ReservationTime findById(Long id) {
+        String query = "select * from reservation_time where id = ?";
+        return jdbcTemplate.queryForObject(query,
+            (resultSet, rowNum) -> {
+                ReservationTime reservationTime = new ReservationTime(
+                    resultSet.getLong("id"),
+                    LocalTime.parse(resultSet.getString("start_at")));
+                return reservationTime;
+            }, id);
     }
 }

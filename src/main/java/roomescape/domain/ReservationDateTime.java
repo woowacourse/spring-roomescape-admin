@@ -1,16 +1,23 @@
 package roomescape.domain;
 
 import java.time.LocalDate;
-import java.time.LocalDateTime;
 import java.time.LocalTime;
 
-public record ReservationDateTime(LocalDateTime reservationTime) {
+public class ReservationDateTime {
+
+    private final LocalDate date;
+    private final ReservationTime reservationTime;
+
+    public ReservationDateTime(LocalDate date, ReservationTime reservationTime) {
+        this.date = date;
+        this.reservationTime = reservationTime;
+    }
 
     public LocalDate getDate() {
-        return reservationTime.toLocalDate();
+        return date;
     }
 
     public LocalTime getTime() {
-        return reservationTime.toLocalTime();
+        return reservationTime.getStartAt();
     }
 }

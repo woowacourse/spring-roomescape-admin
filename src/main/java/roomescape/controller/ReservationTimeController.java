@@ -10,6 +10,7 @@ import org.springframework.web.bind.annotation.RestController;
 import roomescape.dao.ReservationTimeDao;
 import roomescape.domain.ReservationTime;
 import roomescape.dto.ReservationTimeRequestDto;
+import roomescape.dto.ReservationTimeResponseDto;
 
 @RestController
 public class ReservationTimeController {
@@ -21,14 +22,19 @@ public class ReservationTimeController {
     }
 
     @GetMapping("/times")
-    public List<ReservationTime> readReservationTimes() {
-        return reservationTimeDao.findAllReservationTimes();
+    public List<ReservationTimeResponseDto> readReservationTimes() {
+        List<ReservationTime> reservationTimes = reservationTimeDao.findAllReservationTimes();
+        return reservationTimes.stream()
+            .map(ReservationTimeResponseDto::from)
+            .toList();
     }
 
     @PostMapping("/times")
-    public void saveReservationTime(
+    public ReservationTimeResponseDto saveReservationTime(
         @RequestBody ReservationTimeRequestDto reservationTimeRequestDto) {
-        reservationTimeDao.saveReservationTime(reservationTimeRequestDto.toReservationTime());
+        ReservationTime reservationTime = reservationTimeRequestDto.toReservationTime();
+        reservationTimeDao.saveReservationTime(reservationTime);
+        return ReservationTimeResponseDto.from(reservationTime);
     }
 
     @DeleteMapping("/times/{id}")

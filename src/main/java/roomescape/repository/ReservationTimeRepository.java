@@ -6,4 +6,6 @@ import roomescape.domain.ReservationTime;
 public interface ReservationTimeRepository {
 
     List<ReservationTime> findAll();
+
+    ReservationTime add(ReservationTime reservationTime);
 }

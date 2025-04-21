@@ -1,9 +1,14 @@
 package roomescape.controller;
 
 import java.util.List;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
+import roomescape.domain.ReservationTime;
+import roomescape.dto.CreateReservationTimeDto;
 import roomescape.dto.ReservationTimeDto;
 import roomescape.repository.ReservationTimeRepository;
 
@@ -23,5 +28,13 @@ public class TimeController {
                 .stream()
                 .map(ReservationTimeDto::from)
                 .toList();
+    }
+
+    @PostMapping
+    public ResponseEntity<ReservationTimeDto> createReservationTime(
+            @RequestBody CreateReservationTimeDto createReservationTimeDto) {
+        ReservationTime savedReservationTime = reservationTimeRepository.add(
+                createReservationTimeDto.toReservationTime());
+        return ResponseEntity.ok(ReservationTimeDto.from(savedReservationTime));
     }
 }

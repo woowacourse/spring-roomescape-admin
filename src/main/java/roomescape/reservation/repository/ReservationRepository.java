@@ -71,8 +71,8 @@ public class ReservationRepository {
         return Optional.of(Objects.requireNonNull(reservation));
     }
 
-    public void delete(Reservation reservation) {
+    public void deleteById(Long id) {
         String sql = "delete from reservation where id = ?";
-        jdbcTemplate.update(sql, reservation.getId());
+        jdbcTemplate.update(sql, id);
     }
 }

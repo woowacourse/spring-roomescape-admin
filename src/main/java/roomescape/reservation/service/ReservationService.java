@@ -32,7 +32,12 @@ public class ReservationService {
         return reservationRepository.save(reservation);
     }
 
-    public Reservation findReservation(Long id) {
+    public void delete(Long id) {
+        Reservation reservation = findReservation(id);
+        reservationRepository.deleteById(reservation.getId());
+    }
+
+    private Reservation findReservation(Long id) {
         Optional<Reservation> found = reservationRepository.findById(id);
 
         if (found.isEmpty()) {
@@ -40,9 +45,5 @@ public class ReservationService {
         }
 
         return found.get();
-    }
-
-    public void delete(Reservation reservation) {
-        reservationRepository.delete(reservation);
     }
 }

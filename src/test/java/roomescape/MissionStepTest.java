@@ -1,15 +1,23 @@
 package roomescape;
 
+import static org.assertj.core.api.Assertions.assertThat;
 import static org.hamcrest.Matchers.is;
 
 import io.restassured.RestAssured;
 import io.restassured.http.ContentType;
+import java.sql.Connection;
+import java.sql.SQLException;
 import java.time.LocalDate;
 import java.time.LocalTime;
 import java.util.HashMap;
 import java.util.Map;
+import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.test.annotation.DirtiesContext;
 
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.DEFINED_PORT)
@@ -87,5 +95,41 @@ public class MissionStepTest {
                 .then().log().all()
                 .statusCode(200)
                 .body("size()", is(0));
+    }
+
+    @Nested
+    class DatabaseTest {
+
+        @Autowired
+        private JdbcTemplate jdbcTemplate;
+
+        private Connection connection;
+
+        @BeforeEach
+        void setUp() throws SQLException {
+            connection = jdbcTemplate.getDataSource().getConnection();
+        }
+
+        @AfterEach
+        void tearDown() throws SQLException {
+            if (connection != null && !connection.isClosed()) {
+                connection.close();
+            }
+        }
+
+        @Test
+        void connectDatabaseNotNullTest() {
+            assertThat(connection).isNotNull();
+        }
+
+        @Test
+        void validateDatabaseCatalogNameTest() throws SQLException {
+            assertThat(connection.getCatalog()).isEqualTo("DATABASE");
+        }
+
+        @Test
+        void validateDatabaseMetaDataTest() throws SQLException {
+            assertThat(connection.getMetaData().getTables(null, null, "RESERVATION", null).next()).isTrue();
+        }
     }
 }

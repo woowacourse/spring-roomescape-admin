@@ -1,20 +1,18 @@
 package roomescape.model;
 
+import java.sql.PreparedStatement;
 import java.time.LocalDate;
 import java.time.LocalTime;
 import java.util.List;
-import java.util.Map;
-import java.util.concurrent.ConcurrentHashMap;
-import java.util.concurrent.atomic.AtomicLong;
 
 import org.springframework.jdbc.core.JdbcTemplate;
+import org.springframework.jdbc.support.GeneratedKeyHolder;
+import org.springframework.jdbc.support.KeyHolder;
 import org.springframework.stereotype.Component;
 
 @Component
 public class Reservations {
 
-    private final AtomicLong autoIncrementId = new AtomicLong(0L);
-    private final Map<Long, Reservation> reservations = new ConcurrentHashMap<>();
     private final JdbcTemplate jdbcTemplate;
 
     public Reservations(JdbcTemplate jdbcTemplate) {
@@ -32,12 +30,20 @@ public class Reservations {
     }
 
     public Reservation save(Reservation reservation) {
-        Reservation saved = reservation.withId(autoIncrementId.incrementAndGet());
-        reservations.put(saved.id(), saved);
-        return saved;
+        String query = "INSERT INTO reservation (name, date, time) VALUES (?, ?, ?)";
+        KeyHolder keyHolder = new GeneratedKeyHolder();
+        jdbcTemplate.update(connection -> {
+            PreparedStatement ps = connection.prepareStatement(query, new String[] {"id"});
+            ps.setString(1, reservation.name());
+            ps.setObject(2, reservation.date());
+            ps.setObject(3, reservation.time());
+            return ps;
+        }, keyHolder);
+        return reservation.withId(keyHolder.getKey().longValue());
     }
 
     public void remove(Long id) {
-        reservations.remove(id);
+        String query = "DELETE FROM reservation WHERE id = ?";
+        jdbcTemplate.update(query, id);
     }
 }

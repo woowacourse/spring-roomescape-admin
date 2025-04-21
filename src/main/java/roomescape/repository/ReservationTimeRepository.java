@@ -44,4 +44,10 @@ public class ReservationTimeRepository {
         );
         return dtos;
     }
+
+    public int deleteBy(Long id) {
+        String sql = "delete from reservation_time where id = ?";
+        int rowNum = jdbcTemplate.update(sql, id);
+        return rowNum;
+    }
 }

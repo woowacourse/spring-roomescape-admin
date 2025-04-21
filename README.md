@@ -163,7 +163,7 @@ HTTP/1.1 200
   }
   ```
 
-- [ ] 시간 조회 API를 구현한다
+- [x] 시간 조회 API를 구현한다
 
   request
   ```angular2html
@@ -182,7 +182,7 @@ HTTP/1.1 200
   ]
   ```
 
-- [ ] 시간 삭제 API를 구현한다
+- [x] 시간 삭제 API를 구현한다
 
   request
   ```angular2html

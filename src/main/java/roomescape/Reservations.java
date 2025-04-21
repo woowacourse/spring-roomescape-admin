@@ -5,28 +5,29 @@ import org.springframework.stereotype.Component;
 
 import java.time.LocalDate;
 import java.time.LocalTime;
-import java.util.ArrayList;
 import java.util.List;
 
 @Component
 public class Reservations {
-    private final List<Reservation> reservations;
     private final JdbcTemplate jdbcTemplate;
 
     public Reservations(JdbcTemplate jdbcTemplate) {
         this.jdbcTemplate = jdbcTemplate;
-        this.reservations = new ArrayList<>();
     }
 
     public void save(Reservation newReservation) {
-        if (reservations.stream().anyMatch(reservation -> reservation.isDuplicatedWith(newReservation))) {
+        List<Reservation> allReservations = findAll();
+        if (allReservations.stream().anyMatch(reservation -> reservation.isDuplicatedWith(newReservation))) {
             throw new IllegalArgumentException("이미 예약이 존재하는 날짜입니다.");
         }
-        reservations.add(newReservation);
+        String query = "INSERT INTO reservation (name, date, time) VALUES (?, ?, ?)";
+        jdbcTemplate.update(query, newReservation.name(), newReservation.date(), newReservation.time());
     }
 
     public void deleteById(final Long id) {
-        if (!reservations.removeIf(reservation -> reservation.isSameId(id))) {
+        String query = "DELETE FROM reservation WHERE id = ?";
+        final int deletedCount = jdbcTemplate.update(query, id);
+        if (deletedCount == 0) {
             throw new IllegalArgumentException("존재하지 않는 예약입니다.");
         }
     }

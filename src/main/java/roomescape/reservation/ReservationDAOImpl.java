@@ -1,8 +1,13 @@
 package roomescape.reservation;
 
+import java.sql.Date;
+import java.sql.PreparedStatement;
+import java.sql.Time;
 import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.JdbcTemplate;
+import org.springframework.jdbc.support.GeneratedKeyHolder;
+import org.springframework.jdbc.support.KeyHolder;
 import org.springframework.stereotype.Repository;
 
 @Repository
@@ -19,8 +24,18 @@ public class ReservationDAOImpl implements ReservationDAO {
     @Override
     public Reservation saveReservation(final Reservation reservation) {
         final String query = "INSERT INTO RESERVATION(name, date, time) VALUES(?, ?, ?)";
-        jdbcTemplate.update(query, reservation.name(), reservation.date(), reservation.time());
-        return reservation;
+        final KeyHolder keyHolder = new GeneratedKeyHolder();
+
+        jdbcTemplate.update(connect -> {
+            final PreparedStatement preparedStatement = connect.prepareStatement(query, new String[]{"id"});
+            preparedStatement.setString(1, reservation.name());
+            preparedStatement.setDate(2, Date.valueOf(reservation.date()));
+            preparedStatement.setTime(3, Time.valueOf(reservation.time()));
+            return preparedStatement;
+        }, keyHolder);
+
+        final long key = keyHolder.getKey().longValue();
+        return reservation.writeId(key);
     }
 
     @Override
@@ -35,5 +50,18 @@ public class ReservationDAOImpl implements ReservationDAO {
             );
         });
         return reservations;
+    }
+
+    @Override
+    public void deleteReservationById(final long id) {
+        final String query = "DELETE FROM RESERVATION WHERE ID=?";
+        final int updatedCount = jdbcTemplate.update(query, id);
+        validateUpdateSuccess(updatedCount);
+    }
+
+    private static void validateUpdateSuccess(final int updatedCount) {
+        if (updatedCount == 0) {
+            throw new IllegalArgumentException("[ERROR]");
+        }
     }
 }

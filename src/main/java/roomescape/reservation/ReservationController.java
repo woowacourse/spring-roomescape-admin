@@ -42,7 +42,7 @@ public class ReservationController {
             @PathVariable("id") final long id
     ) {
         try {
-            reservations.removeReservationById(id);
+            reservationDAO.deleteReservationById(id);
             return ResponseEntity.ok().build();
         } catch (final IllegalArgumentException e) {
             return ResponseEntity.notFound().build();

@@ -2,13 +2,16 @@ package roomescape.database;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
+import io.restassured.RestAssured;
 import java.sql.Connection;
 import java.sql.SQLException;
+import java.util.List;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.jdbc.core.JdbcTemplate;
+import roomescape.reservation.Reservation;
 
 @SpringBootTest
 public class DataSourceTest {
@@ -26,5 +29,21 @@ public class DataSourceTest {
         } catch (SQLException e) {
             throw new RuntimeException(e);
         }
+    }
+
+    @DisplayName("데이터베이스에 예약 하나 추가 후 예약 조회 API를 통해 조회한 예약 수와 데이터베이스 쿼리를 통해 조회한 예약 수가 같은지 비교")
+    @Test
+    void 오단계() {
+        jdbcTemplate.update("INSERT INTO reservation (name, date, time) VALUES (?, ?, ?)", "브라운", "2023-08-05", "15:40");
+
+        List<Reservation> reservations = RestAssured.given().log().all()
+                .when().get("/reservations")
+                .then().log().all()
+                .statusCode(200).extract()
+                .jsonPath().getList(".", Reservation.class);
+
+        Integer count = jdbcTemplate.queryForObject("SELECT count(1) from reservation", Integer.class);
+
+        assertThat(reservations.size()).isEqualTo(count);
     }
 }

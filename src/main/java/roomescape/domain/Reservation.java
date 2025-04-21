@@ -16,7 +16,7 @@ public class Reservation {
     private final LocalDateTime dateTime;
 
     public Reservation(Long id, String name, LocalDateTime dateTime) {
-        validateNameLength(name);
+        validateName(name);
         this.id = id;
         this.name = name;
         this.dateTime = dateTime;
@@ -30,7 +30,7 @@ public class Reservation {
         return dateTime.format(formatter);
     }
 
-    private void validateNameLength(String name) {
+    private void validateName(String name) {
         if (name == null || name.isBlank()) {
             throw new IllegalArgumentException(ERROR_NAME_BLACK_MESSAGE);
         }

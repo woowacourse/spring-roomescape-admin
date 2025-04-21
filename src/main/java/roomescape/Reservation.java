@@ -37,4 +37,12 @@ public class Reservation {
     public String getName() {
         return name;
     }
+
+    public LocalDate getDate() {
+        return date;
+    }
+
+    public LocalTime getTime() {
+        return time;
+    }
 }

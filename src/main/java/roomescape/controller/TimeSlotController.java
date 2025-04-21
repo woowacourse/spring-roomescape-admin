@@ -33,8 +33,9 @@ public class TimeSlotController {
 
     @PostMapping
     public ResponseEntity<ReservationTimeSlot> create(@RequestBody CreateTimeSlotRequest request) {
-        repository.save(request);
-        return ResponseEntity.ok().build();
+        final var savedId = repository.save(request);
+        final var saved = repository.findById(savedId).get();
+        return ResponseEntity.ok(saved);
     }
 
     @DeleteMapping("/{id}")

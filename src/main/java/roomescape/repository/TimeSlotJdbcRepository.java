@@ -28,9 +28,10 @@ public class TimeSlotJdbcRepository implements TimeSlotRepository {
             sql,
             (rs, rowNum) -> {
                 final var savedId = rs.getLong("id");
-                final var startAt = rs.getString("startAt");
+                final var startAt = rs.getString("start_at");
                 return new ReservationTimeSlot(savedId, LocalTime.parse(startAt));
-            }
+            },
+            id
         );
 
         return timeSlots.stream().findAny();

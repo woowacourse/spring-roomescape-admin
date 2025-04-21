@@ -13,7 +13,8 @@ public class AdminControllerTest {
     @Test
     @DisplayName("어드민 페이지를 반환한다.")
     void getAdminPage() {
-        RestAssured.given().log().all()
+        RestAssured
+                .given().log().all()
                 .when().get("/admin")
                 .then().log().all()
                 .statusCode(200);
@@ -22,7 +23,8 @@ public class AdminControllerTest {
     @Test
     @DisplayName("모든 예약 페이지를 반환한다.")
     void getAllReservations() {
-        RestAssured.given().log().all()
+        RestAssured
+                .given().log().all()
                 .when().get("/admin/reservation")
                 .then().log().all()
                 .statusCode(200);

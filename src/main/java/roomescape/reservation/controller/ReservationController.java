@@ -39,11 +39,7 @@ public class ReservationController {
 
     @DeleteMapping("/{id}")
     public ResponseEntity<Void> deleteReservation(@PathVariable Long id) {
-        try {
-            reservationRepository.deleteById(id);
-            return ResponseEntity.ok().build();
-        } catch (IllegalStateException e) {
-            return ResponseEntity.notFound().build();
-        }
+        reservationRepository.deleteById(id);
+        return ResponseEntity.ok().build();
     }
 }

@@ -8,7 +8,6 @@ import java.time.LocalDate;
 import java.time.LocalTime;
 import java.util.List;
 import java.util.Optional;
-import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -55,8 +54,8 @@ public class H2ReservationRepositoryTest {
 
         // then
         Reservation expected = new Reservation(1L, "브라운", LocalDate.of(2023, 8, 5), LocalTime.of(15, 40));
-        Assertions.assertThat(reservations.size()).isEqualTo(1);
-        Assertions.assertThat(reservations.getFirst()).isEqualTo(expected);
+        assertThat(reservations.size()).isEqualTo(1);
+        assertThat(reservations.getFirst()).isEqualTo(expected);
     }
 
     @Test
@@ -71,7 +70,7 @@ public class H2ReservationRepositoryTest {
 
         // then
         Reservation expected = new Reservation(1L, "브라운", LocalDate.of(2023, 8, 5), LocalTime.of(15, 40));
-        Assertions.assertThat(reservation.get()).isEqualTo(expected);
+        assertThat(reservation.get()).isEqualTo(expected);
     }
 
     @Test
@@ -89,10 +88,10 @@ public class H2ReservationRepositoryTest {
         Reservation saved = reservationRepository.save(reservation);
 
         // then
-        Assertions.assertThat(saved.getId()).isEqualTo(1L);
-        Assertions.assertThat(saved.getName()).isEqualTo(reservation.getName());
-        Assertions.assertThat(saved.getDate()).isEqualTo(reservation.getDate());
-        Assertions.assertThat(saved.getTime()).isEqualTo(reservation.getTime());
+        assertThat(saved.getId()).isEqualTo(1L);
+        assertThat(saved.getName()).isEqualTo(reservation.getName());
+        assertThat(saved.getDate()).isEqualTo(reservation.getDate());
+        assertThat(saved.getTime()).isEqualTo(reservation.getTime());
     }
 
     @Test
@@ -114,6 +113,6 @@ public class H2ReservationRepositoryTest {
                         LocalDate.parse(resultSet.getString("date")),
                         LocalTime.parse(resultSet.getString("time"))
                 ));
-        Assertions.assertThat(reservations).isEmpty();
+        assertThat(reservations.size()).isEqualTo(0);
     }
 }

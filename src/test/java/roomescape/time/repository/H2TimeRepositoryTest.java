@@ -1,9 +1,10 @@
 package roomescape.time.repository;
 
+import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
+
 import java.time.LocalTime;
 import java.util.List;
 import java.util.Optional;
-import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -37,8 +38,8 @@ class H2TimeRepositoryTest {
 
         // then
         Time expected = new Time(1L, LocalTime.of(10, 0));
-        Assertions.assertThat(times.size()).isEqualTo(1);
-        Assertions.assertThat(times.getFirst()).isEqualTo(expected);
+        assertThat(times.size()).isEqualTo(1);
+        assertThat(times.getFirst()).isEqualTo(expected);
     }
 
     @Test
@@ -52,7 +53,7 @@ class H2TimeRepositoryTest {
 
         // then
         Time expected = new Time(1L, LocalTime.of(10, 0));
-        Assertions.assertThat(time.get()).isEqualTo(expected);
+        assertThat(time.get()).isEqualTo(expected);
     }
 
     @Test
@@ -68,8 +69,8 @@ class H2TimeRepositoryTest {
         Time saved = timeRepository.save(time);
 
         // then
-        Assertions.assertThat(saved.getId()).isEqualTo(1L);
-        Assertions.assertThat(saved.getStartAt()).isEqualTo(time.getStartAt());
+        assertThat(saved.getId()).isEqualTo(1L);
+        assertThat(saved.getStartAt()).isEqualTo(time.getStartAt());
     }
 
     @Test
@@ -89,6 +90,6 @@ class H2TimeRepositoryTest {
                         LocalTime.parse(resultSet.getString("start_at"))
                 )
         );
-        Assertions.assertThat(times).isEmpty();
+        assertThat(times.size()).isEqualTo(0);
     }
 }

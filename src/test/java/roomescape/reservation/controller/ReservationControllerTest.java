@@ -45,13 +45,15 @@ public class ReservationControllerTest {
 
     @Test
     @DisplayName("예약을 생성하는 API를 요청한다.")
-    void createReservations() {
+    void createReservation() {
+        // given
         var params = Map.of(
                 "name", "브라운",
                 "date", "2023-08-05",
                 "time", "15:40"
         );
 
+        // when & then
         RestAssured
                 .given().log().all()
                 .contentType(ContentType.JSON)
@@ -64,7 +66,7 @@ public class ReservationControllerTest {
 
     @Test
     @DisplayName("예약을 삭제하는 API를 요청한다.")
-    void createAndReadAndDeleteReservation() {
+    void deleteReservation() {
         // given
         jdbcTemplate.update("INSERT INTO reservation (name, date, time) VALUES (?, ?, ?)",
                 "브라운", "2023-08-05", "15:40");
@@ -85,12 +87,14 @@ public class ReservationControllerTest {
     @Test
     @DisplayName("예약 생성시 이름이 비어있으면 예외가 발생한다.")
     void cannotCreateReservationWhenNameIsBlank() {
+        // given
         var params = Map.of(
                 "name", "",
                 "date", "2023-08-05",
                 "time", "15:40"
         );
 
+        // when & then
         RestAssured
                 .given().log().all()
                 .contentType(ContentType.JSON)
@@ -104,11 +108,13 @@ public class ReservationControllerTest {
     @Test
     @DisplayName("예약 생성시 날짜가 null이면 예외가 발생한다.")
     void cannotCreateReservationWhenDateIsNull() {
+        // given
         var params = new HashMap<String, String>();
         params.put("name", "브라운");
         params.put("date", null);
         params.put("time", "15:40");
 
+        // when & then
         RestAssured
                 .given().log().all()
                 .contentType(ContentType.JSON)
@@ -122,11 +128,13 @@ public class ReservationControllerTest {
     @Test
     @DisplayName("예약 생성시 시간이 null이면 예외가 발생한다.")
     void cannotCreateReservationWhenTimeIsNull() {
+        // given
         var params = new HashMap<String, String>();
         params.put("name", "브라운");
         params.put("date", "2023-08-05");
         params.put("time", null);
 
+        // when & then
         RestAssured
                 .given().log().all()
                 .contentType(ContentType.JSON)

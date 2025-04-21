@@ -68,3 +68,6 @@
 - [x] JdbcTemplate 및 H2 의존성 추가
 - [x] reservation 테이블 스키마 정의
 - [x] h2-console 기능 활성화
+
+## 데이터베이스 연동
+- [ ] 애플리케이션에 H2 데이터베이스 연동

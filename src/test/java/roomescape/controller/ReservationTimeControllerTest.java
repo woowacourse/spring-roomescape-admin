@@ -1,0 +1,87 @@
+package roomescape.controller;
+
+import static org.assertj.core.api.Assertions.assertThat;
+import static org.junit.jupiter.api.Assertions.assertAll;
+import static roomescape.test.utility.HttpResponseTestUtility.checkLocationHeader;
+import static roomescape.test.utility.HttpResponseTestUtility.checkStatusCode;
+import static roomescape.test.utility.ReservationTimeTestUtility.checkDeleteReservationTime;
+import static roomescape.test.utility.ReservationTimeTestUtility.checkReservationTimeFieldWithoutId;
+import static roomescape.test.utility.ReservationTimeTestUtility.checkReservationTimeId;
+
+import java.time.LocalTime;
+import java.util.List;
+import org.junit.jupiter.api.DisplayName;
+import org.junit.jupiter.api.Test;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
+import roomescape.domain.ReservationTime;
+import roomescape.dto.ReservationTimeCreationRequest;
+import roomescape.repository.ReservationTimeRepository;
+import roomescape.test.fake.FakeReservationTimeRepository;
+import roomescape.test.utility.HttpResponseTestUtility;
+
+class ReservationTimeControllerTest {
+
+    private final ReservationTimeRepository reservationTimeRepository = new FakeReservationTimeRepository();
+    private final ReservationTimeController controller = new ReservationTimeController(reservationTimeRepository);
+
+    @DisplayName("등록된 모든 예약 가능 시간을 조회활 수 있다")
+    @Test
+    void canGetReservationTimes() {
+        reservationTimeRepository.add(ReservationTime.createWithoutId(LocalTime.of(10, 0)));
+        reservationTimeRepository.add(ReservationTime.createWithoutId(LocalTime.of(11, 0)));
+        reservationTimeRepository.add(ReservationTime.createWithoutId(LocalTime.of(12, 0)));
+
+        ResponseEntity<List<ReservationTime>> response = controller.getReservationTimes();
+
+        assertAll(
+                () -> HttpResponseTestUtility.checkStatusCode(response, HttpStatus.OK),
+                () -> assertThat(response.getBody()).hasSize(3)
+        );
+    }
+
+    @DisplayName("예약 가능 시간을 추가할 수 있다")
+    @Test
+    void canCreateReservationTime() {
+        ReservationTime expectedReservationTime = ReservationTime.createWithoutId(LocalTime.of(10, 0));
+        ReservationTimeCreationRequest request = new ReservationTimeCreationRequest(
+                expectedReservationTime.getStartAt());
+
+        ResponseEntity<ReservationTime> response = controller.createReservationTime(request);
+
+        ReservationTime savedReservationTime = reservationTimeRepository.findAll().getFirst();
+        assertAll(
+                () -> checkReservationTimeId(savedReservationTime.getId(), 1L),
+                () -> checkReservationTimeFieldWithoutId(savedReservationTime, expectedReservationTime),
+                () -> checkStatusCode(response, HttpStatus.CREATED),
+                () -> checkLocationHeader(response, "times/1"),
+                () -> checkReservationTimeId(response.getBody().getId(), 1L),
+                () -> checkReservationTimeFieldWithoutId(response.getBody(), expectedReservationTime)
+        );
+    }
+
+    @DisplayName("ID를 통해 예약 가능 시간을 삭제할 수 있다")
+    @Test
+    void canDeleteReservationTime() {
+        reservationTimeRepository.add(ReservationTime.createWithoutId(LocalTime.of(10, 0)));
+        reservationTimeRepository.add(ReservationTime.createWithoutId(LocalTime.of(11, 0)));
+        reservationTimeRepository.add(ReservationTime.createWithoutId(LocalTime.of(12, 0)));
+
+        ResponseEntity<Void> response = controller.deleteReservationTime(1L);
+
+        List<ReservationTime> reservationTimes = reservationTimeRepository.findAll();
+        assertAll(
+                () -> checkDeleteReservationTime(reservationTimes, 1L),
+                () -> checkStatusCode(response, HttpStatus.OK)
+        );
+    }
+
+    @DisplayName("존재하지 않는 예약 가능 시간을 삭제하려고 할 경우 예외 응답을 보낸다")
+    @Test
+    void canNotDeleteWithInvalidId() {
+        long noneExistentReservationId = 1L;
+        ResponseEntity<Void> response = controller.deleteReservationTime(noneExistentReservationId);
+
+        checkStatusCode(response, HttpStatus.NOT_FOUND);
+    }
+}

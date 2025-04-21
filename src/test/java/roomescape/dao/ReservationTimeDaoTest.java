@@ -16,6 +16,7 @@ import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.test.annotation.DirtiesContext;
 import org.springframework.test.annotation.DirtiesContext.MethodMode;
 import roomescape.domain.ReservationTime;
+import roomescape.repository.dao.ReservationTimeDao;
 
 @JdbcTest
 public class ReservationTimeDaoTest {

@@ -5,9 +5,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.jdbc.core.JdbcTemplate;
-import roomescape.entity.JdbcReservationRepository;
-import roomescape.entity.ReservationRepository;
-import roomescape.entity.Reservations;
+import roomescape.reservation.JdbcReservationRepository;
+import roomescape.reservation.ReservationRepository;
+import roomescape.reservation.Reservations;
 
 @Configuration
 public class AppConfig {

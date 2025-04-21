@@ -4,7 +4,6 @@ import java.util.List;
 import java.util.Objects;
 import java.util.concurrent.atomic.AtomicLong;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -13,26 +12,25 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
-import org.springframework.web.server.ResponseStatusException;
-import roomescape.entity.Reservation;
-import roomescape.entity.Reservations;
+import roomescape.reservation.Reservation;
+import roomescape.reservation.ReservationRepository;
 
 @RestController
 @RequestMapping("/reservations")
 public class ReservationController {
 
-    private final Reservations reservations;
+    private final ReservationRepository reservationRepository;
     private AtomicLong index = new AtomicLong(1);
 
     @Autowired
-    public ReservationController(Reservations reservations) {
-        this.reservations = reservations;
+    public ReservationController(ReservationRepository reservationRepository) {
+        this.reservationRepository = reservationRepository;
     }
 
     @GetMapping()
     public List<Reservation> getReservations(
     ) {
-        return reservations.findAllReservations();
+        return reservationRepository.findAllReservations();
     }
 
     @PostMapping()
@@ -41,13 +39,13 @@ public class ReservationController {
     ) {
         Reservation newReservation = Reservation.toEntity(reservation, index.getAndIncrement());
 
-        try{
-            reservations.validateReservationTimeAvailability(newReservation);
+        /*try{
+            reservationRepository.validateReservationTimeAvailability(newReservation);
         } catch (IllegalArgumentException e) {
             throw new ResponseStatusException(HttpStatus.BAD_REQUEST);
-        }
+        }*/
 
-        reservations.saveReservation(newReservation);
+        reservationRepository.saveReservation(newReservation);
         return ResponseEntity.ok().body(newReservation);
     }
 
@@ -55,14 +53,14 @@ public class ReservationController {
     public ResponseEntity<List<Reservation>> deleteReservation(
             @PathVariable Long id
     ) {
-        Reservation reservation = reservations.findAllReservations().stream()
+        Reservation reservation = reservationRepository.findAllReservations().stream()
                 .filter(it -> Objects.equals(it.getId(), id))
                 .findFirst()
                 .orElseThrow(RuntimeException::new);
 
-        reservations.deleteReservation(reservation);
+        reservationRepository.deleteReservation(reservation.getId());
 
-        return ResponseEntity.ok().body(reservations.findAllReservations());
+        return ResponseEntity.ok().body(reservationRepository.findAllReservations());
     }
 
 }

@@ -12,27 +12,28 @@ import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.CsvSource;
 
 class ReservationTest {
+    
+    private static final int MAX_NAME_LENGTH = 255;
 
     @Test
     void 이름이_BLACK인_경우_예외가_발생한다() {
-        // given
-        String name = "a".repeat(255);
-
-        // when & then
         assertAll(
-                () -> assertThatIllegalArgumentException().isThrownBy(() ->
-                        new Reservation(null, " ", LocalDateTime.MAX)),
-                () -> assertThatIllegalArgumentException().isThrownBy(() ->
-                        new Reservation(null, null, LocalDateTime.MAX)),
-                () -> assertThatIllegalArgumentException().isThrownBy(() ->
-                        new Reservation(null, "", LocalDateTime.MAX))
+                () -> assertThatIllegalArgumentException()
+                        .isThrownBy(() -> new Reservation(null, " ", LocalDateTime.MAX))
+                        .withMessage("이름은 공백이거나 NULL일 수 없습니다."),
+                () -> assertThatIllegalArgumentException()
+                        .isThrownBy(() -> new Reservation(null, null, LocalDateTime.MAX))
+                        .withMessage("이름은 공백이거나 NULL일 수 없습니다."),
+                () -> assertThatIllegalArgumentException()
+                        .isThrownBy(() -> new Reservation(null, "", LocalDateTime.MAX))
+                        .withMessage("이름은 공백이거나 NULL일 수 없습니다.")
         );
     }
 
     @Test
     void 이름의_길이가_255_이하인_경우_예외가_발생하지_않는다() {
         // given
-        String name = "a".repeat(255);
+        String name = "a".repeat(MAX_NAME_LENGTH);
 
         // when & then
         assertDoesNotThrow(() -> new Reservation(null, name, LocalDateTime.MAX));
@@ -41,7 +42,7 @@ class ReservationTest {
     @Test
     void 이름의_길이가_255_초과인_경우_예외가_발생한다() {
         // given
-        String name = "a".repeat(256);
+        String name = "a".repeat(MAX_NAME_LENGTH + 1);
 
         // when & then
         assertThatIllegalArgumentException()
@@ -62,7 +63,7 @@ class ReservationTest {
         DateTimeFormatter timeFormatter = DateTimeFormatter.ofPattern(timePattern);
 
         LocalDateTime dateTime = LocalDateTime.of(2024, 12, 23, 15, 0);
-        Reservation reservation = new Reservation(null, null, dateTime);
+        Reservation reservation = new Reservation(null, "testName", dateTime);
 
         // when
         String resultDate = reservation.formatDateTime(dateFormatter);

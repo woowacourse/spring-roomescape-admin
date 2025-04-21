@@ -42,7 +42,7 @@ public class ReservationTimeController {
         }
 
         return ResponseEntity
-                .created(URI.create("/times/" + id))
+                .created(URI.create("times/" + id))
                 .body(addedReservation.get());
     }
 

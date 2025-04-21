@@ -24,7 +24,7 @@ public class ReservationRestController {
 
     private final ReservationRepository reservationRepository = new MemoryReservationRepository();
 
-    @GetMapping("")
+    @GetMapping
     public ResponseEntity<List<GetReservationResponse>> getAllReservations() {
         List<Reservation> reservations = reservationRepository.findAll();
         List<GetReservationResponse> getReservationResponses = reservations.stream()
@@ -35,7 +35,7 @@ public class ReservationRestController {
                 .body(getReservationResponses);
     }
 
-    @PostMapping("")
+    @PostMapping
     public ResponseEntity<Reservation> addReservation(@RequestBody CreateReservationRequest createReservationRequest) {
         try {
             Reservation reservation = new Reservation(createReservationRequest.name(), createReservationRequest.date(), createReservationRequest.time());

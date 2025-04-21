@@ -26,6 +26,10 @@ public class Reservation {
         this(id, name, LocalDateTime.of(date, time));
     }
 
+    public Reservation(Long id, Reservation original) {
+        this(id, original.name, original.dateTime);
+    }
+
     public String formatDateTime(DateTimeFormatter formatter) {
         return dateTime.format(formatter);
     }

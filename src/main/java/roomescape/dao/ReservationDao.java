@@ -48,7 +48,7 @@ public class ReservationDao {
 
         Long id = jdbcInsert.executeAndReturnKey(params).longValue();
 
-        return new Reservation(id, reservation.getName(), reservation.getDateTime());
+        return new Reservation(id, reservation);
     }
 
     public boolean deleteById(Long id) {

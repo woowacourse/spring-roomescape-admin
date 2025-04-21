@@ -4,10 +4,8 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 import java.util.concurrent.atomic.AtomicLong;
-import org.springframework.stereotype.Repository;
 import roomescape.domain.Reservation;
 
-@Repository
 public class MemoryReservationRepository implements ReservationRepository {
 
     private final List<Reservation> reservations = Collections.synchronizedList(new ArrayList<>());

@@ -16,14 +16,14 @@ public class ReservationDao {
 
     private static final String FIND_ALL_SQL = "select * from reservation";
     private static final String DELETE_BY_ID_SQL = "delete from reservation where id = ?";
-
-    private final JdbcTemplate jdbcTemplate;
-    private final RowMapper<Reservation> reservationMapper = (resultSet, row) ->
+    private static final RowMapper<Reservation> RESERVATION_ROW_MAPPER = (resultSet, row) ->
             new Reservation(
                     resultSet.getLong("id"),
                     resultSet.getString("name"),
                     resultSet.getObject("datetime", LocalDateTime.class)
             );
+
+    private final JdbcTemplate jdbcTemplate;
 
     @Autowired
     public ReservationDao(JdbcTemplate jdbcTemplate) {
@@ -33,7 +33,7 @@ public class ReservationDao {
     public Reservations findAll() {
         return new Reservations(jdbcTemplate.query(
                 FIND_ALL_SQL,
-                reservationMapper
+                RESERVATION_ROW_MAPPER
         ));
     }
 

@@ -5,6 +5,8 @@ import static org.assertj.core.api.Assertions.assertThat;
 import java.util.List;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.params.ParameterizedTest;
+import org.junit.jupiter.params.provider.CsvSource;
 import roomescape.domain.fixture.ReservationFixture;
 import roomescape.domain.fixture.ReservationsFixture;
 
@@ -26,41 +28,24 @@ class ReservationsTest {
         assertThat(gotReservations).hasSize(expectedSize);
     }
 
-    @Test
-    @DisplayName("주어진 id와 같은 예약이 존재하면 true 반환한다")
-    void should_return_true_when_reservation_exists_by_id() {
+    @ParameterizedTest
+    @DisplayName("id에 해당하는 예약이 없으면 true, 예약이 있으면 false 반환한다")
+    @CsvSource(value = {"1, false", "2, true"})
+    void should_return_true_when_reservation_does_not_exist_by_id(Long checkId, boolean expected) {
         // given
-        Long id = 1L;
         Reservation reservation = ReservationFixture.RESERVATION_1_KIM_2025_04_21_10_00;
         Reservations reservations = ReservationsFixture.createEmptyReservations();
         reservations.add(reservation);
 
         // when
-        boolean result = reservations.isExistById(id);
+        boolean result = reservations.isNotExistById(checkId);
 
         // then
-        assertThat(result).isTrue();
+        assertThat(result).isEqualTo(expected);
     }
 
     @Test
-    @DisplayName("주어진 id와 같은 예약이 존재하지 않으면 false 반환한다")
-    void should_return_false_when_reservation_does_not_exist_by_id() {
-        // given
-        Reservations reservations = ReservationsFixture.createEmptyReservations();
-        Long id = 1L;
-        Long otherId = 2L;
-        Reservation reservation = ReservationFixture.RESERVATION_1_KIM_2025_04_21_10_00;
-        reservations.add(reservation);
-
-        // when
-        boolean result = reservations.isExistById(otherId);
-
-        // then
-        assertThat(result).isFalse();
-    }
-
-    @Test
-    @DisplayName("주어진 id와 같은 예약을 삭제한다")
+    @DisplayName("id에 해당하는 예약을 삭제한다")
     void should_delete_reservation_by_id() {
         // given
         Long deleteId = 1L;

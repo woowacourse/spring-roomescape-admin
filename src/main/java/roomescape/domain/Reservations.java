@@ -16,9 +16,13 @@ public class Reservations {
         reservations.add(reservation);
     }
 
-    public boolean isExistById(final Long id) {
+    private boolean isExistById(final Long id) {
         return reservations.stream()
                 .anyMatch(reservation -> reservation.isSameId(id));
+    }
+
+    public boolean isNotExistById(final Long id) {
+        return !isExistById(id);
     }
 
     public void deleteBy(final Long id) {

@@ -14,6 +14,12 @@ import org.springframework.test.annotation.DirtiesContext;
 @DirtiesContext(classMode = DirtiesContext.ClassMode.BEFORE_EACH_TEST_METHOD)
 public class AdminReservationsControllerTest {
 
+    private static final Map<String, String> INPUT_VALUES = Map.of(
+            "name", "브라운",
+            "date", "2023-08-05",
+            "time", "15:40"
+    );
+
     @DisplayName("어드민 예약 내역 페이지의 데이터를 추가, 조회, 삭제하여 반영한다")
     @Test
     void checkAdminReservationsCRD() {
@@ -23,15 +29,9 @@ public class AdminReservationsControllerTest {
                 .statusCode(200)
                 .body("size()", is(0));
 
-        Map<String, String> params = Map.of(
-                "name", "브라운",
-                "date", "2023-08-05",
-                "time", "15:40"
-        );
-
         RestAssured.given().log().all()
                 .contentType(ContentType.JSON)
-                .body(params)
+                .body(INPUT_VALUES)
                 .when().post("/reservations")
                 .then().log().all()
                 .statusCode(200)

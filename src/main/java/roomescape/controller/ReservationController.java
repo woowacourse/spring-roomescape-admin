@@ -27,7 +27,8 @@ public class ReservationController {
 
     @GetMapping("/reservations")
     public ResponseEntity<List<Reservation>> reservations() {
-        return new ResponseEntity<>(reservations.getReservations(), HttpStatus.OK);
+        return ResponseEntity.ok()
+                .body(reservations.getReservations());
     }
 
     @PostMapping("/reservations")
@@ -35,15 +36,18 @@ public class ReservationController {
             @RequestBody final ReservationRequest reservationRequest) {
         final Reservation reservation = reservationRequest.toEntity(index.getAndIncrement());
         reservations.add(reservation);
-        return new ResponseEntity<>(ReservationResponse.from(reservation), HttpStatus.OK);
+        return ResponseEntity.ok()
+                .body(ReservationResponse.from(reservation));
     }
 
     @DeleteMapping("/reservations/{id}")
     public ResponseEntity<Void> deleteReservation(@PathVariable("id") final Long id) {
         if (reservations.isExistById(id)) {
             reservations.deleteBy(id);
-            return ResponseEntity.ok().build();
+            return ResponseEntity.ok()
+                    .build();
         }
-        return ResponseEntity.badRequest().build();
+        return ResponseEntity.badRequest()
+                .build();
     }
 }

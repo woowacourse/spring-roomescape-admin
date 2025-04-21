@@ -37,11 +37,11 @@ public class ReservationController {
 
     @DeleteMapping("/reservations/{id}")
     public ResponseEntity<Void> deleteReservation(@PathVariable Long id) {
-        return reservationRepository.findById(id)
-                .map(reservation -> {
-                    reservationRepository.delete(reservation);
-                    return ResponseEntity.ok().<Void>build();
-                })
-                .orElseGet(() -> ResponseEntity.notFound().build());
+        try {
+            reservationRepository.deleteById(id);
+            return ResponseEntity.ok().build();
+        } catch (IllegalStateException e) {
+            return ResponseEntity.notFound().build();
+        }
     }
 }

@@ -17,23 +17,24 @@ import roomescape.reservation.dao.ReservationDao;
 import roomescape.reservation.dto.ReservationRequest;
 import roomescape.reservation.dto.ReservationResponse;
 import roomescape.reservation.domain.Reservation;
+import roomescape.reservation.service.ReservationService;
 
 @RestController
 @RequestMapping("/reservations")
 public class ReservationController {
 
     @Autowired
-    private ReservationDao reservationDao;
+    private ReservationService reservationService;
 
     @GetMapping
     public List<Reservation> getReservations() {
-        return reservationDao.findAll();
+        return reservationService.findAll();
     }
 
     @PostMapping
     public ResponseEntity<ReservationResponse> addReservation(@Valid @RequestBody ReservationRequest reservationRequest) {
         try {
-            return ResponseEntity.ok(reservationDao.insert(reservationRequest).toResponse());
+            return ResponseEntity.ok(reservationService.insert(reservationRequest).toResponse());
         } catch (DataAccessException e) {
             System.out.println(e.getMessage());
             return ResponseEntity.badRequest().build();
@@ -43,7 +44,7 @@ public class ReservationController {
     @DeleteMapping("/{id}")
     public ResponseEntity<Void> deleteReservation(@PathVariable("id") long id) {
         try {
-            reservationDao.delete(id);
+            reservationService.delete(id);
             return ResponseEntity.ok().build();
         } catch (NoSuchElementException e) {
             return ResponseEntity.badRequest().build();

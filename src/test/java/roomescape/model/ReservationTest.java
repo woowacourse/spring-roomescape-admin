@@ -15,42 +15,42 @@ public class ReservationTest {
 
     public static Stream<Arguments> NullValues() {
         return Stream.of(
-                Arguments.of(
-                        null,
-                        "brown",
-                        LocalDate.of(2023, 12, 1),
-                        LocalTime.of(1, 1)
-                ),
-                Arguments.of(
-                        1L,
-                        null,
-                        LocalDate.of(2023, 12, 1),
-                        LocalTime.of(1, 1)
-                ),
-                Arguments.of(
-                        1L,
-                        "brown",
-                        null,
-                        LocalTime.of(1, 1)
-                ),
-                Arguments.of(
-                        1L,
-                        "brown",
-                        LocalDate.of(2023, 12, 1),
-                        null
-                )
+            Arguments.of(
+                null,
+                "brown",
+                LocalDate.of(2023, 12, 1),
+                new ReservationTimeSlot(1L, LocalTime.of(10, 0))
+            ),
+            Arguments.of(
+                1L,
+                null,
+                LocalDate.of(2023, 12, 1),
+                new ReservationTimeSlot(1L, LocalTime.of(10, 0))
+            ),
+            Arguments.of(
+                1L,
+                "brown",
+                null,
+                new ReservationTimeSlot(1L, LocalTime.of(10, 0))
+            ),
+            Arguments.of(
+                1L,
+                "brown",
+                LocalDate.of(2023, 12, 1),
+                null
+            )
         );
     }
 
     @ParameterizedTest
     @MethodSource("NullValues")
     @DisplayName("예약 생성 시 모든 값들이 존재하지 않으면 예외가 발생한다")
-    void ExceptionAnyValueNull(Long id, String name, LocalDate date, LocalTime time) {
+    void ExceptionAnyValueNull(Long id, String name, LocalDate date, ReservationTimeSlot timeSlot) {
         // given
         // when
         // then
-        assertThatThrownBy(() -> new Reservation(id, name, date, time))
-                .isInstanceOf(IllegalArgumentException.class);
+        assertThatThrownBy(() -> new Reservation(id, name, date, timeSlot))
+            .isInstanceOf(IllegalArgumentException.class);
     }
 
     @Test
@@ -61,11 +61,10 @@ public class ReservationTest {
 
         // then
         assertThatThrownBy(() -> new Reservation(
-                1L,
-                "여섯글자이름",
-                LocalDate.of(2023, 12, 1),
-                LocalTime.of(1, 1))
-        )
-                .isInstanceOf(IllegalArgumentException.class);
+            1L,
+            "여섯글자이름",
+            LocalDate.of(2023, 12, 1),
+            new ReservationTimeSlot(1L, LocalTime.of(10, 0)))
+        ).isInstanceOf(IllegalArgumentException.class);
     }
 }

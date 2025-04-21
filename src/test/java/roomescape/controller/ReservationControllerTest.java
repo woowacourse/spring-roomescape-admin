@@ -4,8 +4,8 @@ import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertAll;
 
 import java.time.LocalDate;
-import java.time.LocalTime;
 import java.util.stream.Stream;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
@@ -18,15 +18,23 @@ import roomescape.dto.CreateReservationRequest;
 
 public class ReservationControllerTest {
 
+    private static final long timeSlotId = ReservationFakeRepository.FIXED_TIME_SLOT.id();
+
+    private ReservationController controller;
+
+    @BeforeEach
+    void setUp() {
+        controller = new ReservationController(new ReservationFakeRepository());
+    }
+
     @Test
     @DisplayName("예약을 추가할 수 있다.")
     void addReservation() {
         //given
-        final var controller = new ReservationController(new ReservationFakeRepository());
         final var request = new CreateReservationRequest(
             "포포",
             LocalDate.of(2024, 4, 18),
-            LocalTime.of(12, 0)
+            timeSlotId
         );
 
         //when
@@ -44,7 +52,6 @@ public class ReservationControllerTest {
     @DisplayName("예약을 삭제할 수 있다.")
     void deleteReservation() {
         //given
-        final var controller = new ReservationController(new ReservationFakeRepository());
         final var addedReservation = addOneReservation(controller);
 
         //when
@@ -62,9 +69,6 @@ public class ReservationControllerTest {
     @MethodSource("parametersThatAnyOneIsNull")
     @DisplayName("예약 추가 시 이름, 날짜, 시간 중 하나라도 없으면 400 Bad Request")
     void badRequestAnyParameterNull(CreateReservationRequest request) {
-        //given
-        final var controller = new ReservationController(new ReservationFakeRepository());
-
         //when
         final var responseEntity = controller.addReservation(request);
 
@@ -76,11 +80,10 @@ public class ReservationControllerTest {
     @DisplayName("예약 추가 시 이름이 잘못된 형식이면 400 Bad Request")
     void badRequestAnyParameterInvalid() {
         //given
-        final var controller = new ReservationController(new ReservationFakeRepository());
         final var request = new CreateReservationRequest(
             "여섯글자이름",
             LocalDate.of(2023, 8, 5),
-            LocalTime.of(15, 40)
+            timeSlotId
         );
 
         //when
@@ -93,9 +96,6 @@ public class ReservationControllerTest {
     @Test
     @DisplayName("예약 삭제 시 존재하지 않는 Id를 삭제하면 204 No Content")
     void noContentDeleteNotExistId() {
-        //given
-        final var controller = new ReservationController(new ReservationFakeRepository());
-
         //when
         final var responseEntity = controller.deleteReservation(5L);
 
@@ -106,8 +106,8 @@ public class ReservationControllerTest {
     public static Stream<Arguments> parametersThatAnyOneIsNull() {
         return Stream.of(
             Arguments.of(new CreateReservationRequest("브라운", LocalDate.of(2023, 8, 5), null)),
-            Arguments.of(new CreateReservationRequest("브라운", null, LocalTime.of(15, 40))),
-            Arguments.of(new CreateReservationRequest(null, LocalDate.of(2023, 8, 5), LocalTime.of(15, 40)))
+            Arguments.of(new CreateReservationRequest("브라운", null, timeSlotId)),
+            Arguments.of(new CreateReservationRequest(null, LocalDate.of(2023, 8, 5), timeSlotId))
         );
     }
 
@@ -115,7 +115,7 @@ public class ReservationControllerTest {
         final var request = new CreateReservationRequest(
             "포포",
             LocalDate.of(2024, 4, 18),
-            LocalTime.of(12, 0)
+            timeSlotId
         );
         return controller.addReservation(request).getBody();
     }

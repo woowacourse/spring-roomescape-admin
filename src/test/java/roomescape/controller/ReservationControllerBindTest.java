@@ -27,8 +27,8 @@ public class ReservationControllerBindTest {
 
     public static Stream<Arguments> invalidRequestParameters() {
         return Stream.of(
-            Arguments.of(Map.of("name", "brown", "date", "2-0-2-3", "time", "12:00")),
-            Arguments.of(Map.of("name", "brown", "date", "2023-01-01", "time", "30:00"))
+            Arguments.of(Map.of("name", "brown", "date", "2-0-2-3", "timeId", "1")),
+            Arguments.of(Map.of("name", "brown", "date", "2023-01-01", "timeId", "abc"))
         );
     }
 }

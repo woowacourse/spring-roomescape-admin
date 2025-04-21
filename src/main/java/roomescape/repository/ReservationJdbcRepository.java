@@ -7,8 +7,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.simple.SimpleJdbcInsert;
 import org.springframework.stereotype.Repository;
-import roomescape.model.Reservation;
 import roomescape.dto.CreateReservationRequest;
+import roomescape.model.Reservation;
+import roomescape.model.ReservationTimeSlot;
 
 @Repository
 public class ReservationJdbcRepository implements ReservationRepository {
@@ -22,12 +23,13 @@ public class ReservationJdbcRepository implements ReservationRepository {
 
     public Optional<Reservation> findById(final long id) {
         final var reservations = jdbcTemplate.query(
-            "select * from RESERVATION where id = ?",
+            "select * from RESERVATION R left join RESERVATION_TIME RT on R.time_id = RT.id where R.id = ?",
             (rs, rowNum) -> {
                 final var name = rs.getString("name");
                 final var date = rs.getDate("date").toLocalDate();
-                final var time = rs.getTime("time").toLocalTime();
-                return new Reservation(id, name, date, time);
+                final var timeSlotId = rs.getLong("id");
+                final var time = rs.getTime("start_at").toLocalTime();
+                return new Reservation(id, name, date, new ReservationTimeSlot(timeSlotId, time));
             },
             id
         );
@@ -41,7 +43,7 @@ public class ReservationJdbcRepository implements ReservationRepository {
             .executeAndReturnKey(Map.of(
                 "name", request.name(),
                 "date", request.date(),
-                "time", request.time()
+                "time_id", request.timeSlotId()
             ));
         return generatedKey.longValue();
     }
@@ -52,12 +54,15 @@ public class ReservationJdbcRepository implements ReservationRepository {
     }
 
     public List<Reservation> getReservations() {
-        return jdbcTemplate.query("select * from RESERVATION", (rs, rowNum) -> {
-            final var id = rs.getLong("id");
-            final var name = rs.getString("name");
-            final var date = rs.getDate("date").toLocalDate();
-            final var time = rs.getTime("time").toLocalTime();
-            return new Reservation(id, name, date, time);
-        });
+        return jdbcTemplate.query(
+            "select * from RESERVATION R left join RESERVATION_TIME RT on R.time_id = RT.id",
+            (rs, rowNum) -> {
+                final var id = rs.getLong("id");
+                final var name = rs.getString("name");
+                final var date = rs.getDate("date").toLocalDate();
+                final var timeSlotId = rs.getLong("time_id");
+                final var time = rs.getTime("start_at").toLocalTime();
+                return new Reservation(id, name, date, new ReservationTimeSlot(timeSlotId, time));
+            });
     }
 }

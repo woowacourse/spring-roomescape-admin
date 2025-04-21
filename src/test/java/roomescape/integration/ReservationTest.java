@@ -63,7 +63,7 @@ public class ReservationTest {
     void 방탈출_예약_목록을_조회한다() {
         jdbcTemplate.update("INSERT INTO reservation (name, date, time) VALUES (?, ?, ?)",
                 "브라운",
-                "2023-08-05",
+                "2025-08-05",
                 "15:40");
 
         List<ReservationResponse> response = RestAssured.given().log().all()
@@ -81,7 +81,7 @@ public class ReservationTest {
     void 방탈출_예약_목록을_조회하고_삭제한다() {
         Map<String, String> params = new HashMap<>();
         params.put("name", "브라운");
-        params.put("date", "2023-08-05");
+        params.put("date", "2025-08-05");
         params.put("time", "10:00");
 
         RestAssured.given().log().all()
@@ -98,7 +98,6 @@ public class ReservationTest {
                 .when().delete("/reservations/1")
                 .then().log().all()
                 .statusCode(200);
-
         Integer countAfterDelete = jdbcTemplate.queryForObject("SELECT count(1) from reservation", Integer.class);
         assertThat(countAfterDelete).isEqualTo(0);
     }
@@ -132,7 +131,7 @@ public class ReservationTest {
     void 방탈출_예약을_생성_조회_삭제한다() {
         Map<String, String> params = new HashMap<>();
         params.put("name", "브라운");
-        params.put("date", "2023-08-05");
+        params.put("date", "2025-08-05");
         params.put("time", "15:40");
 
         RestAssured.given().log().all()
@@ -165,7 +164,7 @@ public class ReservationTest {
     void 방탈출_예약_생성시_예약자_이름이_비어있으면_예외를_응답한다() {
         Map<String, String> params = new HashMap<>();
         params.put("name", "");
-        params.put("date", "2023-08-05");
+        params.put("date", "2025-08-05");
         params.put("time", "15:40");
 
         RestAssured.given().log().all()

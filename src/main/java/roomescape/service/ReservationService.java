@@ -4,6 +4,7 @@ import java.util.List;
 import org.springframework.stereotype.Service;
 import roomescape.dao.ReservationDao;
 import roomescape.dto.ReservationRequestDto;
+import roomescape.dto.ReservationResponseDto;
 import roomescape.model.Reservation;
 
 @Service
@@ -13,12 +14,17 @@ public class ReservationService {
     public ReservationService(ReservationDao reservationDao) {
         this.reservationDao = reservationDao;
     }
-    public void saveReservation(ReservationRequestDto reservationResponseDto){
+
+    public ReservationResponseDto saveReservation(ReservationRequestDto reservationResponseDto){
         Reservation reservation = reservationResponseDto.convertToReservation();
-        reservationDao.saveReservation(reservation);
+        Long id = reservationDao.saveReservation(reservation);
+        Reservation findReservation = reservationDao.findReservationById(id);
+        return ReservationResponseDto.from(findReservation);
     }
 
     public List<Reservation> getAllReservations() {
         return reservationDao.findAll();
     }
+
+
 }

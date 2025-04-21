@@ -38,11 +38,11 @@ public class ReservationRestController {
     @PostMapping
     public ResponseEntity<Reservation> addReservation(@RequestBody ReservationCreateRequest reservationCreateRequest) {
         try {
-            Reservation reservation = new Reservation(reservationCreateRequest.name(), reservationCreateRequest.date(), reservationCreateRequest.time());
-            reservationRepository.add(reservation);
+            Reservation reservationExcludeIndex = new Reservation(reservationCreateRequest.name(), reservationCreateRequest.date(), reservationCreateRequest.time());
+            Reservation reservation = reservationRepository.insertAndGet(reservationExcludeIndex);
             return ResponseEntity
                     .status(HttpStatus.OK)
-                    .body(reservationRepository.findLast());
+                    .body(reservation);
         } catch (IllegalArgumentException exception) {
             throw new ResponseStatusException(HttpStatus.BAD_REQUEST);
         }

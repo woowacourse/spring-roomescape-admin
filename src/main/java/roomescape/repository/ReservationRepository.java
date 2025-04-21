@@ -8,9 +8,7 @@ public interface ReservationRepository {
 
     List<Reservation> findAll();
 
-    Reservation findLast();
-
-    void add(Reservation reservation);
+    Reservation insertAndGet(Reservation reservationExcludeIndex);
 
     void deleteById(Long id);
 }

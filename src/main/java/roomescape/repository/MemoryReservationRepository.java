@@ -17,14 +17,10 @@ public class MemoryReservationRepository implements ReservationRepository {
     }
 
     @Override
-    public Reservation findLast() {
-        return reservations.getLast();
-    }
-
-    @Override
-    public void add(Reservation reservationExcludeIndex) {
+    public Reservation insertAndGet(Reservation reservationExcludeIndex) {
         Reservation reservation = Reservation.toEntity(reservationExcludeIndex, index.getAndIncrement());
         reservations.add(reservation);
+        return reservation;
     }
 
     @Override

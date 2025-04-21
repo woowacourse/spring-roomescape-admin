@@ -122,3 +122,67 @@ HTTP/1.1 200
 - [x] 예약 추가 API 처리 로직에서 데이터베이스를 활용
 - [x] 예약 취소 API 처리 로직에서 데이터베이스를 활용
     - [x] 취소하려는 예약의 id가 존재하지 않을 시 404 상태의 커스텀 예외 발생
+
+# 7단계
+
+- [x] `admin/time` 페이지로 접속 시 시간 관리 페이지를 반환한다
+- [ ] 다음과 같은 형식의 reservation_time 테이블을 생성한다
+  ```angular2html
+  CREATE TABLE reservation_time
+  (
+      id   BIGINT       NOT NULL AUTO_INCREMENT,
+      start_at VARCHAR(255) NOT NULL,
+      PRIMARY KEY (id)
+  );
+  ```
+- [ ] 시간 추가 API를 구현한다
+
+  request
+  ```angular2html
+  POST /times HTTP/1.1
+  content-type: application/json
+  
+  {
+      "startAt": "10:00"
+  }
+  ```
+  response
+  ```
+  HTTP/1.1 200
+  Content-Type: application/json
+  
+  {
+      "id": 1,
+      "startAt": "10:00"
+  }
+  ```
+
+- [ ] 시간 조회 API를 구현한다
+
+  request
+  ```angular2html
+  GET /times HTTP/1.1
+  ```
+  response
+  ```
+  HTTP/1.1 200
+  Content-Type: application/json
+  
+  [
+      {
+          "id": 1,
+          "startAt": "10:00"
+      }
+  ]
+  ```
+
+- [ ] 시간 삭제 API를 구현한다
+
+  request
+  ```angular2html
+  DELETE /times/1 HTTP/1.1
+  ```
+  response
+  ```
+  HTTP/1.1 200
+  ```

@@ -1,6 +1,5 @@
 package roomescape.controller;
 
-import java.net.URI;
 import java.util.List;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -12,6 +11,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import roomescape.domain.Reservations;
 import roomescape.dto.request.ReservationCreateRequest;
+import roomescape.dto.response.ReservationCreateResponse;
 import roomescape.dto.response.ReservationResponse;
 
 @RestController
@@ -37,14 +37,12 @@ public class ReservationController {
     }
 
     @PostMapping
-    public ResponseEntity<Void> create(@RequestBody ReservationCreateRequest reservationCreateRequest) {
-
-        final Long id = reservations.add(
+    public ReservationCreateResponse create(@RequestBody ReservationCreateRequest reservationCreateRequest) {
+        return new ReservationCreateResponse(reservations.add(
                 reservationCreateRequest.name(),
                 reservationCreateRequest.date(),
                 reservationCreateRequest.time()
-        );
-        return ResponseEntity.created(URI.create("/reservations/" + id)).build();
+        ));
     }
 
     @DeleteMapping("{id}")

@@ -1,46 +1,26 @@
 package roomescape.domain;
 
-import static org.assertj.core.api.Assertions.assertThatThrownBy;
+import static org.assertj.core.api.Assertions.assertThat;
 
-import java.time.Clock;
-import java.time.Instant;
 import java.time.LocalDate;
 import java.time.LocalTime;
-import java.time.ZoneId;
 import org.junit.jupiter.api.DisplayName;
-import org.junit.jupiter.api.Test;
+import org.junit.jupiter.params.ParameterizedTest;
+import org.junit.jupiter.params.provider.CsvSource;
 
 class ReservationTest {
 
-    private final Clock clock = Clock.fixed(Instant.parse("2025-04-20T10:00:00Z"), ZoneId.systemDefault());
-
-    @DisplayName("예약 날짜가 이전 날짜면 예외를 발생한다.")
-    @Test
-    void validateDatePreviousThrowExceptionTest() {
-
-        // given
-        final String name = "체체";
-        final LocalDate date = LocalDate.of(2025, 4, 19);
-        final LocalTime time = LocalTime.of(10, 0);
-
-        // when & then
-        assertThatThrownBy(() -> new Reservation(1L, name, date, time))
-                .isInstanceOf(IllegalArgumentException.class)
-                .hasMessage("예약 시간은 과거일 수 없습니다.");
-    }
-
-    @DisplayName("예약 날짜가 오늘이며 시간이 과거일 경우 예외를 발생한다.")
-    @Test
-    void validateDateSameAndPreviousTimeThrowExceptionTest() {
+    @DisplayName("아이디가 같으면 true를, 다르면 false를 반환한다.")
+    @ParameterizedTest
+    @CsvSource(value = "1, 1, true, 1, 2, false")
+    void equalIdTest(final Long firstId, final Long secondId, boolean result) {
 
         // given
-        final String name = "체체";
-        final LocalDate date = LocalDate.of(2025, 4, 20);
-        final LocalTime time = LocalTime.of(9, 59);
+        Reservation reservation = new Reservation(firstId, "체체", LocalDate.of(2024, 12, 12), LocalTime.of(10, 0));
 
-        // when & then
-        assertThatThrownBy(() -> new Reservation(1L, name, date, time))
-                .isInstanceOf(IllegalArgumentException.class)
-                .hasMessage("예약 시간은 과거일 수 없습니다.");
+        // when
+
+        // then
+        assertThat(reservation.isEqualId(secondId)).isEqualTo(result);
     }
 }

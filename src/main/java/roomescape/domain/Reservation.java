@@ -1,7 +1,6 @@
 package roomescape.domain;
 
 import java.time.LocalDate;
-import java.time.LocalDateTime;
 import java.time.LocalTime;
 
 public class Reservation {
@@ -12,20 +11,10 @@ public class Reservation {
     private final LocalTime time;
 
     public Reservation(final Long id, final String name, final LocalDate date, final LocalTime time) {
-        validateDateTime(date, time);
         this.id = id;
         this.name = name;
         this.date = date;
         this.time = time;
-    }
-
-    private void validateDateTime(final LocalDate date, final LocalTime time) {
-        LocalDateTime now = LocalDateTime.now();
-        LocalDateTime inputDateTime = LocalDateTime.of(date, time);
-
-        if (inputDateTime.isBefore(now)) {
-            throw new IllegalArgumentException("예약 시간은 과거일 수 없습니다.");
-        }
     }
 
     public boolean isEqualId(final Long id) {

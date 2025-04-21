@@ -25,6 +25,23 @@ import roomescape.domain.Reservation;
 @DirtiesContext(classMode = DirtiesContext.ClassMode.BEFORE_EACH_TEST_METHOD)
 public class MissionStepTest {
 
+    @Autowired
+    private JdbcTemplate jdbcTemplate;
+
+    private Connection connection;
+
+    @BeforeEach
+    void setUp() throws SQLException {
+        connection = jdbcTemplate.getDataSource().getConnection();
+    }
+
+    @AfterEach
+    void tearDown() throws SQLException {
+        if (connection != null && !connection.isClosed()) {
+            connection.close();
+        }
+    }
+
     @Test
     void getHomePageTest() {
         RestAssured.given().log().all()
@@ -62,7 +79,7 @@ public class MissionStepTest {
                 .body(params)
                 .when().post("/reservations")
                 .then().log().all()
-                .statusCode(201);
+                .statusCode(200);
 
         RestAssured.given().log().all()
                 .when().get("/reservations")
@@ -84,7 +101,7 @@ public class MissionStepTest {
                 .body(params)
                 .when().post("/reservations")
                 .then().log().all()
-                .statusCode(201);
+                .statusCode(200);
 
         RestAssured.given().log().all()
                 .when().delete("/reservations/1")
@@ -96,23 +113,6 @@ public class MissionStepTest {
                 .then().log().all()
                 .statusCode(200)
                 .body("size()", is(0));
-    }
-
-    @Autowired
-    private JdbcTemplate jdbcTemplate;
-
-    private Connection connection;
-
-    @BeforeEach
-    void setUp() throws SQLException {
-        connection = jdbcTemplate.getDataSource().getConnection();
-    }
-
-    @AfterEach
-    void tearDown() throws SQLException {
-        if (connection != null && !connection.isClosed()) {
-            connection.close();
-        }
     }
 
     @Test
@@ -132,7 +132,7 @@ public class MissionStepTest {
 
     @Test
     void findAllInDatabaseTest() {
-        jdbcTemplate.update("INSERT INTO reservation (name, date, time) VALUES (?, ?, ?)", "브라운", "2026-08-05",
+        jdbcTemplate.update("INSERT INTO reservation (name, date, time) VALUES (?, ?, ?)", "브라운", "2023-08-05",
                 "15:40");
 
         List<Reservation> reservations = RestAssured.given().log().all()
@@ -144,5 +144,49 @@ public class MissionStepTest {
         Integer count = jdbcTemplate.queryForObject("SELECT count(1) from reservation", Integer.class);
 
         assertThat(reservations.size()).isEqualTo(count);
+    }
+
+    @Test
+    void addDatabaseTest() {
+        Map<String, String> params = new HashMap<>();
+        params.put("name", "브라운");
+        params.put("date", "2023-08-05");
+        params.put("time", "10:00");
+
+        RestAssured.given().log().all()
+                .contentType(ContentType.JSON)
+                .body(params)
+                .when().post("/reservations")
+                .then().log().all()
+                .statusCode(200);
+
+        Integer count = jdbcTemplate.queryForObject("SELECT count(1) from reservation", Integer.class);
+        assertThat(count).isEqualTo(1);
+    }
+
+    @Test
+    void deleteDatabaseTest() {
+        Map<String, String> params = new HashMap<>();
+        params.put("name", "브라운");
+        params.put("date", "2023-08-05");
+        params.put("time", "10:00");
+
+        RestAssured.given().log().all()
+                .contentType(ContentType.JSON)
+                .body(params)
+                .when().post("/reservations")
+                .then().log().all()
+                .statusCode(200);
+
+        Integer count = jdbcTemplate.queryForObject("SELECT count(1) from reservation", Integer.class);
+        assertThat(count).isEqualTo(1);
+
+        RestAssured.given().log().all()
+                .when().delete("/reservations/1")
+                .then().log().all()
+                .statusCode(204);
+
+        Integer countAfterDelete = jdbcTemplate.queryForObject("SELECT count(1) from reservation", Integer.class);
+        assertThat(countAfterDelete).isEqualTo(0);
     }
 }

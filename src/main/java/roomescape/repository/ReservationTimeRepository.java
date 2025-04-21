@@ -58,7 +58,7 @@ public class ReservationTimeRepository {
         return keyHolder.getKey().longValue();
     }
 
-    public void delete(long id) {
+    public void deleteById(long id) {
         String sql = "DELETE FROM reservation_time WHERE reservation_time.id = ?";
         template.update(sql, id);
     }

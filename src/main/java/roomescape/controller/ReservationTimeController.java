@@ -51,7 +51,7 @@ public class ReservationTimeController {
         if (reservationTimeRepository.findById(id).isEmpty()) {
             return ResponseEntity.notFound().build();
         }
-        reservationTimeRepository.delete(id);
+        reservationTimeRepository.deleteById(id);
         return ResponseEntity.ok().build();
     }
 }

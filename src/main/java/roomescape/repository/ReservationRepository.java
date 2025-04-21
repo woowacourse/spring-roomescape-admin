@@ -17,11 +17,11 @@ import roomescape.domain.Reservation;
 @Repository
 public class ReservationRepository {
 
-    private static final RowMapper<Reservation> reservationRowMapper;
+    private static final RowMapper<Reservation> mapper;
     private final JdbcTemplate template;
 
     static {
-        reservationRowMapper = (resultSet, resultNumber) -> new Reservation(
+        mapper = (resultSet, resultNumber) -> new Reservation(
                 resultSet.getLong("id"),
                 resultSet.getString("name"),
                 resultSet.getDate("date").toLocalDate(),
@@ -33,20 +33,14 @@ public class ReservationRepository {
     }
 
     public List<Reservation> findAll() {
-        return template.query(
-                "SELECT * FROM reservation",
-                (resultSet, resultNumber) -> new Reservation(
-                        resultSet.getLong("id"),
-                        resultSet.getString("name"),
-                        resultSet.getDate("date").toLocalDate(),
-                        resultSet.getTime("time").toLocalTime())
-        );
+        String sql = "SELECT * FROM reservation";
+        return template.query(sql, mapper);
     }
 
     public Optional<Reservation> findById(long id) {
         String sql = "SELECT * FROM reservation WHERE ?";
         try {
-            Reservation reservation = template.queryForObject(sql, reservationRowMapper, id);
+            Reservation reservation = template.queryForObject(sql, mapper, id);
             return Optional.of(reservation);
         } catch (EmptyResultDataAccessException exception) {
             return Optional.empty();

@@ -20,16 +20,17 @@ public class ReservationService {
         this.reservationTimeService = reservationTimeService;
     }
 
-    public List<Reservation> findReservations() {
+    public List<Reservation> findAll() {
         return reservationRepository.findAll();
     }
 
-    public Reservation createReservation(Reservation reservation, Long timeId) {
+    public Reservation create(Reservation reservation, Long timeId) {
         ReservationTime reservationTime = reservationTimeService.findById(timeId);
-        return reservationRepository.save(reservation, reservationTime);
+        reservation.setReservationTime(reservationTime);
+        return reservationRepository.save(reservation);
     }
 
-    public void delete(Long id) {
+    public void deleteById(Long id) {
         Reservation reservation = findReservation(id);
         reservationRepository.deleteById(reservation.getId());
     }

@@ -15,6 +15,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.test.annotation.DirtiesContext;
+import roomescape.reservation.controller.request.ReservationCreateRequest;
 import roomescape.reservation.controller.response.ReservationResponse;
 
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.DEFINED_PORT)
@@ -25,7 +26,7 @@ public class ReservationTest {
     private JdbcTemplate jdbcTemplate;
 
     @Test
-    void 팔단계() {
+    void 방탈출_예약을_생성_조회_삭제한다() {
         Map<String, String> params = new HashMap<>();
         params.put("startAt", "10:00");
 
@@ -46,18 +47,28 @@ public class ReservationTest {
                 .body(reservation)
                 .when().post("/reservations")
                 .then().log().all()
-                .statusCode(200);
+                .statusCode(201);
 
         RestAssured.given().log().all()
                 .when().get("/reservations")
                 .then().log().all()
                 .statusCode(200)
                 .body("size()", is(1));
+
+        RestAssured.given().log().all()
+                .when().delete("/reservations/1")
+                .then().log().all()
+                .statusCode(200);
+
+        RestAssured.given().log().all()
+                .when().get("/reservations")
+                .then().log().all()
+                .statusCode(200)
+                .body("reservationResponses.size()", is(0));
     }
 
-
     @Test
-    void 칠단계() {
+    void 예약_시간을_생성_조회_삭제한다() {
         Map<String, String> params = new HashMap<>();
         params.put("startAt", "10:00");
 
@@ -93,10 +104,10 @@ public class ReservationTest {
 
     @Test
     void 방탈출_예약_목록을_조회한다() {
-        jdbcTemplate.update("INSERT INTO reservation (name, date, time) VALUES (?, ?, ?)",
-                "브라운",
-                "2025-08-05",
-                "15:40");
+        jdbcTemplate.update("INSERT INTO reservation_time (start_at) VALUES (?)",
+                "10:00");
+        jdbcTemplate.update("INSERT INTO reservation (name, date, time_id) VALUES (?, ?, ?)",
+                "브라운", "2025-08-05", 1);
 
         List<ReservationResponse> response = RestAssured.given().log().all()
                 .when().get("/reservations")
@@ -110,15 +121,15 @@ public class ReservationTest {
     }
 
     @Test
-    void 방탈출_예약_목록을_조회하고_삭제한다() {
-        Map<String, String> params = new HashMap<>();
-        params.put("name", "브라운");
-        params.put("date", "2025-08-05");
-        params.put("time", "10:00");
+    void 방탈출_예약_목록을_생성_조회_삭제한다() {
+        jdbcTemplate.update("INSERT INTO reservation_time (start_at) VALUES (?)",
+                "10:00");
+
+        ReservationCreateRequest request = new ReservationCreateRequest("브라운", "2025-08-05", 1L);
 
         RestAssured.given().log().all()
                 .contentType(ContentType.JSON)
-                .body(params)
+                .body(request)
                 .when().post("/reservations")
                 .then().log().all()
                 .statusCode(201);
@@ -152,39 +163,6 @@ public class ReservationTest {
 
     @Test
     void 방탈출_예약_목록을_응답한다() {
-        RestAssured.given().log().all()
-                .when().get("/reservations")
-                .then().log().all()
-                .statusCode(200)
-                .body("reservationResponses.size()", is(0));
-    }
-
-    @Test
-    void 방탈출_예약을_생성_조회_삭제한다() {
-        Map<String, String> params = new HashMap<>();
-        params.put("name", "브라운");
-        params.put("date", "2025-08-05");
-        params.put("time", "15:40");
-
-        RestAssured.given().log().all()
-                .contentType(ContentType.JSON)
-                .body(params)
-                .when().post("/reservations")
-                .then().log().all()
-                .statusCode(201)
-                .body("id", is(1));
-
-        RestAssured.given().log().all()
-                .when().get("/reservations")
-                .then().log().all()
-                .statusCode(200)
-                .body("size()", is(1));
-
-        RestAssured.given().log().all()
-                .when().delete("/reservations/1")
-                .then().log().all()
-                .statusCode(200);
-
         RestAssured.given().log().all()
                 .when().get("/reservations")
                 .then().log().all()

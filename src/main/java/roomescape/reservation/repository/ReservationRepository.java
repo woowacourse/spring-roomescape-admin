@@ -12,7 +12,6 @@ import org.springframework.jdbc.core.namedparam.SqlParameterSource;
 import org.springframework.jdbc.core.simple.SimpleJdbcInsert;
 import org.springframework.stereotype.Repository;
 import roomescape.reservation.domain.Reservation;
-import roomescape.time.domain.ReservationTime;
 
 @Repository
 public class ReservationRepository {
@@ -24,17 +23,21 @@ public class ReservationRepository {
     }
 
     public List<Reservation> findAll() {
-        String sql = "select * from reservation";
+        String sql = "select r.id as reservation_id, r.name, r.date, t.id as time_id, t.start_at as time_value " +
+                "from reservation as r " +
+                "inner join reservation_time as t " +
+                "on r.time_id = t.id";
+
         return jdbcTemplate.query(sql, (resultSet, rowNum) ->
                 new Reservation(
                         resultSet.getLong("id"),
                         resultSet.getString("name"),
                         LocalDate.parse(resultSet.getString("date")),
-                        LocalTime.parse(resultSet.getString("time"))
+                        LocalTime.parse(resultSet.getString("start_at"))
                 ));
     }
 
-    public Reservation save(Reservation reservation, ReservationTime reservationTime) {
+    public Reservation save(Reservation reservation) {
         SimpleJdbcInsert jdbcInsert = new SimpleJdbcInsert(jdbcTemplate)
                 .withTableName("reservation")
                 .usingGeneratedKeyColumns("id");
@@ -42,10 +45,10 @@ public class ReservationRepository {
         SqlParameterSource parameters = new MapSqlParameterSource()
                 .addValue("name", reservation.getReserverName())
                 .addValue("date", reservation.getDate())
-                .addValue("time_id", reservationTime.getId());
+                .addValue("time_id", reservation.getTimeId());
         Long id = jdbcInsert.executeAndReturnKey(parameters).longValue();
 
-        return new Reservation(id, reservation.getReserverName(), reservation.getDate(), reservationTime.getStartAt());
+        return new Reservation(id, reservation.getReserverName(), reservation.getDate(), reservation.getTime());
     }
 
     public Optional<Reservation> findById(Long id) {
@@ -62,7 +65,7 @@ public class ReservationRepository {
                             resultSet.getLong("id"),
                             resultSet.getString("name"),
                             LocalDate.parse(resultSet.getString("date")),
-                            LocalTime.parse(resultSet.getString("time"))
+                            LocalTime.parse(resultSet.getString("start_at"))
                     ), id);
         } catch (EmptyResultDataAccessException e) {
             return Optional.empty();

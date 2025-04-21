@@ -7,17 +7,17 @@ import java.time.LocalDateTime;
 public class Reservation {
 
     private final DomainEntityId id;
-    private final String name;
+    private final ReserverName name;
     private final ReservationDateTime datetime;
 
-    public Reservation(final DomainEntityId id, final String name, final ReservationDateTime datetime) {
+    private Reservation(final DomainEntityId id, final ReserverName name, final ReservationDateTime datetime) {
         this.id = id;
         this.name = name;
         this.datetime = datetime;
     }
 
     public static Reservation of(final Long id, final String name, final LocalDateTime dateTime) {
-        return new Reservation(DomainEntityId.from(id), name, ReservationDateTime.from(dateTime));
+        return new Reservation(DomainEntityId.from(id), ReserverName.from(name), ReservationDateTime.from(dateTime));
     }
 
     public static Reservation of(final String name, final LocalDateTime dateTime) {
@@ -29,7 +29,7 @@ public class Reservation {
     }
 
     public String getName() {
-        return name;
+        return name.getValue();
     }
 
     public LocalDateTime getDatetime() {

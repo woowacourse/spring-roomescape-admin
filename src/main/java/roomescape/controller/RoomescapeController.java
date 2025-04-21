@@ -2,6 +2,7 @@ package roomescape.controller;
 
 import java.util.List;
 
+import java.util.concurrent.atomic.AtomicLong;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -16,6 +17,8 @@ import roomescape.model.Reservations;
 @Controller
 public class RoomescapeController {
     private final Reservations reservations;
+    private AtomicLong index = new AtomicLong(1);
+
 
     public RoomescapeController(Reservations reservations) {
         this.reservations = reservations;
@@ -38,10 +41,15 @@ public class RoomescapeController {
 
     @PostMapping("/reservations")
     public ResponseEntity<Reservation> addReservation(@RequestBody AddReservationDto addReservationDto) {
-        Reservation newReservation = AddReservationDto.toEntity(reservations.getIndexAndIncrement(), addReservationDto);
+        Reservation newReservation = AddReservationDto.toEntity(getIndexAndIncrement(), addReservationDto);
         reservations.addReservation(newReservation);
         return ResponseEntity.ok().body(newReservation);
     }
+
+    public Long getIndexAndIncrement() {
+        return index.getAndIncrement();
+    }
+
 
     @DeleteMapping("/reservations/{id}")
     public ResponseEntity<Reservation> deleteReservation(@PathVariable long id) {

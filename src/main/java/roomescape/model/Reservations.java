@@ -9,7 +9,6 @@ import java.util.concurrent.atomic.AtomicLong;
 @Component
 public class Reservations {
     private List<Reservation> reservations = new ArrayList<>();
-    private AtomicLong index = new AtomicLong(1);
 
     public Reservation deleteReservation(long id) {
         Reservation oldReservation = reservations.stream()
@@ -18,10 +17,6 @@ public class Reservations {
                 .orElseThrow(() -> new IllegalArgumentException(String.format("[ERROR] ID(%d)가 일치하는 예약 내역을 찾을 수 없습니다.", id)));
         reservations.remove(oldReservation);
         return oldReservation;
-    }
-
-    public Long getIndexAndIncrement() {
-        return index.getAndIncrement();
     }
 
     public boolean addReservation(Reservation reservation) {

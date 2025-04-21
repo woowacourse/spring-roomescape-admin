@@ -27,4 +27,16 @@ class RoomescapeServiceTest {
                 .hasMessage("[ERROR] 이미 존재하는 예약시간입니다.");
     }
 
+    @DisplayName("존재하지 않는 예약을 삭제하려는 경우 예외를 던진다")
+    @Test
+    void removeReservation() {
+        //given
+        long notExistId = 1;
+
+        //when & then
+        Assertions.assertThatThrownBy(() -> service.removeReservation(notExistId))
+                .isInstanceOf(IllegalArgumentException.class)
+                .hasMessage("[ERROR] 예약번호 1번은 존재하지 않습니다.");
+    }
+
 }

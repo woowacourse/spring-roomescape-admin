@@ -26,7 +26,10 @@ public class RoomescapeService {
     }
 
     public void removeReservation(final long id) {
-        roomescapeRepository.deleteById(id);
+        int deleteCounts = roomescapeRepository.deleteById(id);
+        if (deleteCounts == 0) {
+            throw new IllegalArgumentException(String.format("[ERROR] 예약번호 %d번은 존재하지 않습니다.", id));
+        }
     }
 
     private boolean existsSameReservation(final Reservation reservation) {
@@ -37,4 +40,5 @@ public class RoomescapeService {
         }
         return exists;
     }
+
 }

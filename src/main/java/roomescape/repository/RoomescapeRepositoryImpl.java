@@ -25,12 +25,12 @@ public class RoomescapeRepositoryImpl implements RoomescapeRepository {
     }
 
     @Override
-    public void deleteById(final long id) {
-        Reservation found = reservations.stream()
+    public int deleteById(final long id) {
+        List<Reservation> candidates = reservations.stream()
                 .filter(reservation -> reservation.getId() == id)
-                .findAny()
-                .orElseThrow(() -> new IllegalArgumentException(String.format("[ERROR] 예약번호 %d번은 존재하지 않습니다.", id)));
-        reservations.remove(found);
+                .toList();
+        reservations.removeAll(candidates);
+        return candidates.size();
     }
 
     @Override

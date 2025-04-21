@@ -1,4 +1,4 @@
-package roomescape.unit;
+package roomescape.integrated.mission;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
@@ -64,7 +64,7 @@ public class MissionStep2Test {
     }
 
     @Test
-    void 육단계_데이터베이스에_UPDATE() {
+    void 육단계_데이터베이스_CRUD() {
         Map<String, String> params = new HashMap<>();
         params.put("name", "브라운");
         params.put("date", "2023-08-05");

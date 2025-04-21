@@ -78,6 +78,14 @@ public class MissionStepTest {
     }
 
     @Test
+    void 삼단계_없는예약_삭제하기() {
+        RestAssured.given().log().all()
+                .when().delete("/reservations/123")
+                .then().log().all()
+                .statusCode(404);
+    }
+
+    @Test
     void 사단계() {
         try (Connection connection = jdbcTemplate.getDataSource().getConnection()) {
             assertThat(connection).isNotNull();

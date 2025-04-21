@@ -135,7 +135,7 @@ HTTP/1.1 200
       PRIMARY KEY (id)
   );
   ```
-- [ ] 시간 추가 API를 구현한다
+- [x] 시간 추가 API를 구현한다
 
   request
   ```angular2html

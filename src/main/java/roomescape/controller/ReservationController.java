@@ -20,9 +20,7 @@ import roomescape.service.ReservationService;
 @RestController
 public class ReservationController {
 
-    private Reservations reservations = new Reservations();
     private final ReservationService reservationService;
-    private AtomicLong index = new AtomicLong(1);
 
     public ReservationController(ReservationService reservationService) {
         this.reservationService = reservationService;
@@ -37,17 +35,8 @@ public class ReservationController {
     @PostMapping("/reservations")
     public ResponseEntity<ReservationResponseDto> addReservation(@RequestBody ReservationRequestDto reservationRequestDto) {
         try {
-            ReservationDateTime reservationDateTime = new ReservationDateTime(
-                    LocalDateTime.of(reservationRequestDto.date(), reservationRequestDto.time())
-            );
-
-            Reservation newReservation = new Reservation(
-                    index.getAndIncrement(),
-                    reservationRequestDto.name(),
-                    reservationDateTime);
-            reservations.add(newReservation);
-            reservationService.saveReservation(reservationRequestDto);
-            return ResponseEntity.ok(ReservationResponseDto.from(newReservation));
+            ReservationResponseDto reservationResponseDto = reservationService.saveReservation(reservationRequestDto);
+            return ResponseEntity.ok(reservationResponseDto);
         } catch (NullPointerException | IllegalArgumentException e) {
             return ResponseEntity.badRequest().build();
         }
@@ -56,7 +45,7 @@ public class ReservationController {
     @DeleteMapping("/reservations/{id}")
     public ResponseEntity<Void> deleteReservation(@PathVariable("id") Long id) {
         try {
-            reservations.removeById(id);
+            reservationService.cancelReservation(id);
             return ResponseEntity.ok().build();
         } catch (RuntimeException e) {
             return ResponseEntity.badRequest().build();

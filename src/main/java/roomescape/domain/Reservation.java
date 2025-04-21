@@ -7,6 +7,10 @@ import java.time.format.DateTimeFormatter;
 
 public class Reservation {
 
+    private static final int MAX_NAME_LENGTH = 255;
+    private static final String ERROR_NAME_BLACK_MESSAGE = "이름은 공백이거나 NULL일 수 없습니다.";
+    private static final String ERROR_NAME_LENGTH_MESSAGE = "이름의 길이는 " + MAX_NAME_LENGTH + " 초과할 수 없습니다.";
+
     private final Long id;
     private final String name;
     private final LocalDateTime dateTime;
@@ -28,10 +32,10 @@ public class Reservation {
 
     private void validateNameLength(String name) {
         if (name == null || name.isBlank()) {
-            throw new IllegalArgumentException("이름은 빈칸이거나 NULL일 수 없습니다.");
+            throw new IllegalArgumentException(ERROR_NAME_BLACK_MESSAGE);
         }
-        if (name.length() > 255) {
-            throw new IllegalArgumentException("이름의 길이는 " + 255 + " 초과할 수 없습니다.");
+        if (name.length() > MAX_NAME_LENGTH) {
+            throw new IllegalArgumentException(ERROR_NAME_LENGTH_MESSAGE);
         }
     }
 

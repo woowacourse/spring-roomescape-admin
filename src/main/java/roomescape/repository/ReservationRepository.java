@@ -1,7 +1,9 @@
 package roomescape.repository;
 
+import java.sql.Date;
 import java.sql.PreparedStatement;
 import java.sql.Statement;
+import java.sql.Time;
 import java.time.LocalDate;
 import java.time.LocalTime;
 import java.util.List;
@@ -48,8 +50,8 @@ public class ReservationRepository {
                     Statement.RETURN_GENERATED_KEYS
             );
             ps.setString(1, reservation.getName());
-            ps.setObject(2, reservation.getReservationTime().toLocalDate());
-            ps.setObject(3, reservation.getReservationTime().toLocalTime());
+            ps.setDate(2, Date.valueOf(reservation.getReservationTime().toLocalDate()));
+            ps.setTime(3, Time.valueOf(reservation.getReservationTime().toLocalTime()));
             return ps;
         }, keyHolder);
 

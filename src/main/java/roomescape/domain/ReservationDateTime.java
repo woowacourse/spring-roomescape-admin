@@ -6,23 +6,31 @@ import java.time.LocalTime;
 import java.util.Objects;
 
 public class ReservationDateTime {
-    private final LocalDate date;
-    private final LocalTime time;
+    private final ReservationDate reservationDate;
+    private final ReservationTime reservationTime;
 
-    public ReservationDateTime(final LocalDate date, final LocalTime time) {
-        this.date = Objects.requireNonNull(date, "예약 날짜는 null일 수 없습니다.");
-        this.time = Objects.requireNonNull(time, "예약 시간은 null일 수 없습니다.");
+    public ReservationDateTime(final ReservationDate reservationDate, final ReservationTime reservationTime) {
+        this.reservationDate = Objects.requireNonNull(reservationDate, "예약 날짜는 null일 수 없습니다.");
+        this.reservationTime = Objects.requireNonNull(reservationTime, "예약 시간은 null일 수 없습니다.");
     }
 
     public LocalDate date() {
-        return date;
+        return reservationDate.date();
     }
 
     public LocalTime time() {
-        return time;
+        return reservationTime.time();
+    }
+
+    public ReservationTime reservationTime() {
+        return reservationTime;
+    }
+
+    public ReservationDate reservationDate() {
+        return reservationDate;
     }
 
     public boolean isAfter(final LocalDateTime now) {
-        return LocalDateTime.of(date, time).isAfter(now);
+        return LocalDateTime.of(reservationDate.date(), reservationTime.time()).isAfter(now);
     }
 }

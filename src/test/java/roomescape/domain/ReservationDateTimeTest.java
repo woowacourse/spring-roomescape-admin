@@ -6,27 +6,30 @@ import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.LocalTime;
 import org.junit.jupiter.api.Test;
+import roomescape.common.Constant;
 
 class ReservationDateTimeTest {
+
+    private final LocalDateTime now = LocalDateTime.now(Constant.FIXED_CLOCK);
 
     @Test
     void 예약_날짜와_시간을_올바르게_생성한다() {
         // given
-        LocalDate date = LocalDate.of(2025, 5, 1);
-        LocalTime time = LocalTime.of(14, 30);
+        ReservationDate date = new ReservationDate(LocalDate.of(2025, 5, 1));
+        ReservationTime time = new ReservationTime(1L, LocalTime.of(14, 30));
 
         // when
         ReservationDateTime reservationDateTime = new ReservationDateTime(date, time);
 
         // then
-        assertThat(reservationDateTime.date()).isEqualTo(date);
-        assertThat(reservationDateTime.time()).isEqualTo(time);
+        assertThat(reservationDateTime.reservationTime()).isEqualTo(time);
+        assertThat(reservationDateTime.reservationDate()).isEqualTo(date);
     }
 
     @Test
     void 예약_날짜는_null일_수_없다() {
         // given
-        LocalTime time = LocalTime.of(14, 30);
+        ReservationTime time = new ReservationTime(1L, LocalTime.of(14, 30));
 
         // when & then
         assertThatThrownBy(() -> new ReservationDateTime(null, time))
@@ -37,7 +40,7 @@ class ReservationDateTimeTest {
     @Test
     void 예약_시간은_null일_수_없다() {
         // given
-        LocalDate date = LocalDate.of(2025, 5, 1);
+        ReservationDate date = new ReservationDate(LocalDate.of(2025, 5, 1));
 
         // when & then
         assertThatThrownBy(() -> new ReservationDateTime(date, null))
@@ -48,11 +51,9 @@ class ReservationDateTimeTest {
     @Test
     void 미래_시간의_예약은_isAfter이다() {
         // given
-        LocalDate futureDate = LocalDate.now().plusDays(1);
-        LocalTime time = LocalTime.of(14, 30);
+        ReservationDate futureDate = new ReservationDate(now.toLocalDate().plusDays(1));
+        ReservationTime time = new ReservationTime(1L, now.toLocalTime());
         ReservationDateTime reservationDateTime = new ReservationDateTime(futureDate, time);
-
-        LocalDateTime now = LocalDateTime.now();
 
         // when & then
         assertThat(reservationDateTime.isAfter(now)).isTrue();
@@ -61,11 +62,9 @@ class ReservationDateTimeTest {
     @Test
     void 과거_시간의_예약은_isAfter가_아니다() {
         // given
-        LocalDate pastDate = LocalDate.now().minusDays(1);
-        LocalTime time = LocalTime.of(14, 30);
+        ReservationDate pastDate = new ReservationDate(now.toLocalDate().minusDays(1));
+        ReservationTime time = new ReservationTime(1L, LocalTime.of(14, 30));
         ReservationDateTime reservationDateTime = new ReservationDateTime(pastDate, time);
-
-        LocalDateTime now = LocalDateTime.now();
 
         // when & then
         assertThat(reservationDateTime.isAfter(now)).isFalse();
@@ -74,11 +73,10 @@ class ReservationDateTimeTest {
     @Test
     void 같은_날_미래_시간의_예약은_isAfter이다() {
         // given
-        LocalDate today = LocalDate.now();
-        LocalTime futureTime = LocalTime.now().plusHours(1);
-        ReservationDateTime reservationDateTime = new ReservationDateTime(today, futureTime);
+        ReservationDate today = new ReservationDate(now.toLocalDate());
+        ReservationTime futureTime = new ReservationTime(1L, now.toLocalTime().plusHours(1));
 
-        LocalDateTime now = LocalDateTime.now();
+        ReservationDateTime reservationDateTime = new ReservationDateTime(today, futureTime);
 
         // when & then
         assertThat(reservationDateTime.isAfter(now)).isTrue();
@@ -87,11 +85,9 @@ class ReservationDateTimeTest {
     @Test
     void 같은_날_과거_시간의_예약은_isAfter가_아니다() {
         // given
-        LocalDate today = LocalDate.now();
-        LocalTime pastTime = LocalTime.now().minusHours(1);
+        ReservationDate today = new ReservationDate(now.toLocalDate());
+        ReservationTime pastTime = new ReservationTime(1L, now.toLocalTime().minusHours(1));
         ReservationDateTime reservationDateTime = new ReservationDateTime(today, pastTime);
-
-        LocalDateTime now = LocalDateTime.now();
 
         // when & then
         assertThat(reservationDateTime.isAfter(now)).isFalse();

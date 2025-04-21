@@ -5,11 +5,9 @@ import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
 import java.util.concurrent.atomic.AtomicLong;
-import org.springframework.stereotype.Repository;
 import roomescape.domain.Reservation;
 
-@Repository
-public class ReservationRepositoryImpl implements ReservationRepository {
+public class ListReservationRepository implements ReservationRepository {
 
     private final List<Reservation> reservations = Collections.synchronizedList(new ArrayList<>());
     private final AtomicLong index = new AtomicLong(1L);
@@ -36,7 +34,9 @@ public class ReservationRepositoryImpl implements ReservationRepository {
     }
 
     @Override
-    public void delete(Reservation reservation) {
-        reservations.remove(reservation);
+    public void deleteById(Long id) {
+        findById(id)
+                .map(reservations::remove)
+                .orElseThrow(IllegalStateException::new);
     }
 }

@@ -33,7 +33,7 @@ public class OutputView {
                 .append("id : ").append(reservation.id()).append("\n")
                 .append("예약자 : ").append(reservation.name()).append("\n")
                 .append("날짜 : ").append(reservation.date()).append("\n")
-                .append("시작 시간 : ").append(reservation.time().startTime()).append("\n")
+                .append("시작 시간 : ").append(reservation.startTime()).append("\n")
                 .append("]").append("\n");
     }
 

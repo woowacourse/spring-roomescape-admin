@@ -12,7 +12,7 @@ public record ReservationResponse(
         ReservationTimeResponse time
 ) {
     public static ReservationResponse from(final Reservation reservation) {
-        return new ReservationResponse(reservation.id(), reservation.name(), reservation.date(), ReservationTimeResponse.from(reservation.time()));
+        return new ReservationResponse(reservation.id(), reservation.name(), reservation.date(), ReservationTimeResponse.from(reservation.reservationTime()));
     }
 
     public static List<ReservationResponse> fromList(final List<Reservation> reservations) {

@@ -4,6 +4,7 @@ import java.time.LocalDateTime;
 import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.JdbcTemplate;
+import org.springframework.jdbc.core.RowMapper;
 import org.springframework.stereotype.Repository;
 import roomescape.model.Reservation;
 import roomescape.model.ReservationDateTime;
@@ -13,19 +14,22 @@ public class ReservationDao {
     @Autowired
     private JdbcTemplate jdbcTemplate;
 
+    private final RowMapper<Reservation> actorRowMapper = (resultSet, rowNum) -> {
+        Reservation reservation = new Reservation(
+                resultSet.getLong("id"),
+                resultSet.getString("name"),
+                new ReservationDateTime(
+                        LocalDateTime.of(
+                                resultSet.getDate("date").toLocalDate(),
+                                resultSet.getTime("time").toLocalTime())
+                ));
+        return reservation;
+    };
+
+
     public List<Reservation> findAll() {
         String sql = "SELECT * FROM reservation";
-        return jdbcTemplate.query(sql, (resultSet, rowNum) -> {
-            Reservation reservation = new Reservation(
-                    resultSet.getLong("id"),
-                    resultSet.getString("name"),
-                    new ReservationDateTime(
-                            LocalDateTime.of(
-                                    resultSet.getDate("date").toLocalDate(),
-                                    resultSet.getTime("time").toLocalTime())
-                    ));
-            return reservation;
-        });
+        return jdbcTemplate.query(sql, actorRowMapper);
     }
 
     public void saveReservation(Reservation reservation) {
@@ -36,19 +40,7 @@ public class ReservationDao {
     public Reservation findByNameAndDateTime(Reservation reservation) {
         String sql = "SELECT * FROM reservation WHERE (name, date, time) value(?,?,?)";
         Reservation findReservation = jdbcTemplate.queryForObject(
-                sql, (resultSet, rowNum) ->{
-                    Reservation newReservation = new Reservation(
-                            resultSet.getLong("id"),
-                            resultSet.getString("name"),
-                            new ReservationDateTime(
-                                    LocalDateTime.of(
-                                            resultSet.getDate("date").toLocalDate(),
-                                            resultSet.getTime("time").toLocalTime())
-                            )
-                    );
-                    return newReservation;
-                }
-                ,reservation.getName(), reservation.getDate(), reservation.getTime());
+                sql, actorRowMapper,reservation.getName(), reservation.getDate(), reservation.getTime());
         return findReservation;
     }
 }

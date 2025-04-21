@@ -7,14 +7,20 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.context.SpringBootTest.WebEnvironment;
 import org.springframework.boot.test.web.server.LocalServerPort;
 import org.springframework.test.annotation.DirtiesContext;
+import org.springframework.test.annotation.DirtiesContext.ClassMode;
 
 
 @SpringBootTest(webEnvironment = WebEnvironment.RANDOM_PORT)
-@DirtiesContext(classMode = DirtiesContext.ClassMode.BEFORE_EACH_TEST_METHOD)
+@DirtiesContext(classMode = ClassMode.AFTER_EACH_TEST_METHOD)
 public class AdminApiTest {
 
-    @LocalServerPort
     private int port;
+
+    public AdminApiTest(
+            @LocalServerPort final int port
+    ){
+        this.port = port;
+    }
 
     @DisplayName("/admin으로 요청이 들어오면 어드민 페이지를 응답한다.")
     @Test

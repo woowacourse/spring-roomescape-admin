@@ -8,8 +8,5 @@ spring:
     init:
       mode: always
       platform: h2
-  h2:
-    console:
-      enabled: true
 
-room-escape-console: enable
+room-escape-console: disable

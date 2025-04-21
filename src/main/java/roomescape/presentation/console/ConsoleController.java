@@ -1,6 +1,7 @@
 package roomescape.presentation.console;
 
 import org.springframework.beans.factory.annotation.Qualifier;
+import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.stereotype.Component;
 import roomescape.business.domain.Reservation;
 import roomescape.business.domain.ReservationTime;
@@ -16,6 +17,7 @@ import roomescape.presentation.console.view.OutputView;
 import java.util.List;
 
 @Component
+@ConditionalOnProperty(name = "room-escape-console", havingValue = "enable")
 public class ConsoleController {
 
     private final InputView inputView;

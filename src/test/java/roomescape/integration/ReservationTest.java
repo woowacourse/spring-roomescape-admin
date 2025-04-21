@@ -25,6 +25,38 @@ public class ReservationTest {
     private JdbcTemplate jdbcTemplate;
 
     @Test
+    void 팔단계() {
+        Map<String, String> params = new HashMap<>();
+        params.put("startAt", "10:00");
+
+        RestAssured.given().log().all()
+                .contentType(ContentType.JSON)
+                .body(params)
+                .when().post("/times")
+                .then().log().all()
+                .statusCode(200);
+
+        Map<String, Object> reservation = new HashMap<>();
+        reservation.put("name", "브라운");
+        reservation.put("date", "2023-08-05");
+        reservation.put("timeId", 1);
+
+        RestAssured.given().log().all()
+                .contentType(ContentType.JSON)
+                .body(reservation)
+                .when().post("/reservations")
+                .then().log().all()
+                .statusCode(200);
+
+        RestAssured.given().log().all()
+                .when().get("/reservations")
+                .then().log().all()
+                .statusCode(200)
+                .body("size()", is(1));
+    }
+
+
+    @Test
     void 칠단계() {
         Map<String, String> params = new HashMap<>();
         params.put("startAt", "10:00");

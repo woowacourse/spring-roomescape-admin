@@ -35,7 +35,7 @@ public class ReservationApiController {
 
     @PostMapping
     public ResponseEntity<ReservationResponse> createReservation(@RequestBody ReservationCreateRequest request) {
-        Reservation created = reservationService.createReservation(request.to());
+        Reservation created = reservationService.createReservation(request.to(), request.getTimeId());
 
         return ResponseEntity
                 .status(HttpStatus.CREATED)

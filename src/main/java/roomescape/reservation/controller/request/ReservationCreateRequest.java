@@ -1,18 +1,18 @@
 package roomescape.reservation.controller.request;
 
 import java.time.LocalDate;
-import java.time.LocalDateTime;
-import java.time.LocalTime;
 import roomescape.reservation.domain.Reservation;
 
 public record ReservationCreateRequest(
         String name,
         String date,
-        String time
+        Long timeId
 ) {
     public Reservation to() {
-        return new Reservation(
-                name, LocalDateTime.of(LocalDate.parse(date), LocalTime.parse(time))
-        );
+        return new Reservation(name, LocalDate.parse(date), null);
+    }
+
+    public Long getTimeId() {
+        return timeId;
     }
 }

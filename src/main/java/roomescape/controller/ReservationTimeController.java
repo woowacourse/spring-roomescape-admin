@@ -33,6 +33,10 @@ public class ReservationTimeController {
     public ResponseEntity<ReservationTime> createReservationTime(
             @RequestBody ReservationTimeCreationRequest request
     ) {
+        if (reservationTimeRepository.findByStartAt(request.getStartAt()).isPresent()) {
+            return ResponseEntity.badRequest().build();
+        }
+
         ReservationTime newReservation = ReservationTime.createWithoutId(request.getStartAt());
         long id = reservationTimeRepository.add(newReservation);
 

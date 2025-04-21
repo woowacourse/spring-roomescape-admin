@@ -1,5 +1,6 @@
 package roomescape.test.fake;
 
+import java.time.LocalTime;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
@@ -28,6 +29,13 @@ public class FakeReservationTimeRepository extends ReservationTimeRepository {
             return Optional.empty();
         }
         return Optional.of(reservationTimes.get(id));
+    }
+
+    @Override
+    public Optional<ReservationTime> findByStartAt(LocalTime startAt) {
+        return reservationTimes.values().stream()
+                .filter(time -> time.getStartAt().equals(startAt))
+                .findFirst();
     }
 
     @Override

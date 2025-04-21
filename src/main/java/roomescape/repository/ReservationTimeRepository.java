@@ -3,6 +3,7 @@ package roomescape.repository;
 import java.sql.PreparedStatement;
 import java.sql.Statement;
 import java.sql.Time;
+import java.time.LocalTime;
 import java.util.List;
 import java.util.Optional;
 import org.springframework.dao.EmptyResultDataAccessException;
@@ -38,6 +39,16 @@ public class ReservationTimeRepository {
         String sql = "SELECT * FROM reservation_time WHERE reservation_time.id = ?";
         try {
             ReservationTime reservationTime = template.queryForObject(sql, mapper, id);
+            return Optional.of(reservationTime);
+        } catch (EmptyResultDataAccessException exception) {
+            return Optional.empty();
+        }
+    }
+
+    public Optional<ReservationTime> findByStartAt(LocalTime startAt) {
+        String sql = "SELECT * FROM reservation_time WHERE reservation_time.start_at = ?";
+        try {
+            ReservationTime reservationTime = template.queryForObject(sql, mapper, startAt);
             return Optional.of(reservationTime);
         } catch (EmptyResultDataAccessException exception) {
             return Optional.empty();

@@ -60,6 +60,22 @@ class ReservationTimeControllerTest {
         );
     }
 
+    @DisplayName("이미 추가한 시간의 경우 추가할 수 없다")
+    @Test
+    void canCreateSameReservationTime() {
+        LocalTime sameStartAt = LocalTime.of(10, 0);
+        reservationTimeRepository.add(ReservationTime.createWithoutId(sameStartAt));
+        ReservationTimeCreationRequest request = new ReservationTimeCreationRequest(sameStartAt);
+
+        ResponseEntity<ReservationTime> response = controller.createReservationTime(request);
+
+        List<ReservationTime> reservationTimes = reservationTimeRepository.findAll();
+        assertAll(
+                () -> assertThat(reservationTimes).hasSize(1),
+                () -> checkStatusCode(response, HttpStatus.BAD_REQUEST)
+        );
+    }
+
     @DisplayName("ID를 통해 예약 가능 시간을 삭제할 수 있다")
     @Test
     void canDeleteReservationTime() {

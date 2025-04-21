@@ -13,7 +13,7 @@ public class Reservation {
     public Reservation(Long id, String reserverName, LocalDateTime dateTime) {
         this.id = id;
         this.reserverName = new ReserverName(reserverName);
-        this.reservationDateTime = new ReservationDateTime(dateTime);
+        this.reservationDateTime = new ReservationDateTime(dateTime, LocalDateTime.now());
     }
 
     public Reservation(String reserverName, LocalDateTime dateTime) {

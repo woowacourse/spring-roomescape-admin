@@ -2,9 +2,7 @@ package roomescape.reservation.domain;
 
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 
-import java.time.LocalDate;
 import java.time.LocalDateTime;
-import java.time.LocalTime;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.NullAndEmptySource;
@@ -24,11 +22,12 @@ public class ReservationTest {
 
     @Test
     void 과거_시간으로_예약할_수_없다() {
+        LocalDateTime now = LocalDateTime.of(2025, 4, 21, 0, 0);
+
         assertThatThrownBy(() -> new ReservationDateTime(
                 LocalDateTime.of(
-                        LocalDate.of(2025, 4, 20),
-                        LocalTime.of(0, 0)
-                )
+                        2025, 4, 20, 0, 0
+                ), now
         )).isInstanceOf(PastReservationException.class);
     }
 }

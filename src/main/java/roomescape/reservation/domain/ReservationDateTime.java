@@ -9,12 +9,11 @@ public class ReservationDateTime {
 
     private final LocalDateTime reservationDateTime;
 
-    public ReservationDateTime(LocalDateTime reservationDateTime) {
-        this.reservationDateTime = validatePast(reservationDateTime);
+    public ReservationDateTime(LocalDateTime reservationDateTime, LocalDateTime now) {
+        this.reservationDateTime = validatePast(reservationDateTime, now);
     }
 
-    private LocalDateTime validatePast(LocalDateTime reservationTime) {
-        LocalDateTime now = LocalDateTime.now();
+    private LocalDateTime validatePast(LocalDateTime reservationTime, LocalDateTime now) {
         if (reservationTime.isBefore(now)) {
             throw new PastReservationException("[ERROR] 예약 불가능한 시간입니다.");
         }

@@ -23,6 +23,6 @@ public class PageController {
 
     @GetMapping("/admin/reservation")
     public String getReservationPage() {
-        return "admin/reservation-legacy";
+        return "admin/reservation";
     }
 }

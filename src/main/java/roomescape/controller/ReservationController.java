@@ -14,16 +14,21 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
 import roomescape.domain.Reservation;
+import roomescape.domain.ReservationTime;
 import roomescape.dto.ReservationCreationRequest;
 import roomescape.repository.ReservationRepository;
+import roomescape.repository.ReservationTimeRepository;
 
 @RestController
 public class ReservationController {
 
     private final ReservationRepository reservationRepository;
+    private final ReservationTimeRepository reservationTimeRepository;
 
-    public ReservationController(ReservationRepository reservationRepository) {
+    public ReservationController(ReservationRepository reservationRepository,
+            ReservationTimeRepository reservationTimeRepository) {
         this.reservationRepository = reservationRepository;
+        this.reservationTimeRepository = reservationTimeRepository;
     }
 
     @GetMapping("/reservations")
@@ -35,12 +40,23 @@ public class ReservationController {
     public ResponseEntity<Reservation> createReservation(
             @RequestBody ReservationCreationRequest request
     ) {
-        if (validatePastDateAndTime(request.getDate(), request.getTime())) {
+        // 입력된 예약 시간인 등록된 예약 시간인지 확인
+        Optional<ReservationTime> reservationTime = reservationTimeRepository.findById(request.getTimeId());
+        if (reservationTime.isEmpty()) {
             return ResponseEntity.badRequest().build();
         }
-        Reservation reservation = Reservation.createWithoutId(request.getName(), request.getDate(), request.getTime());
+
+        // 이미 지난 예약 날짜와 시간인지 확인
+        if (validatePastDateAndTime(request.getDate(), reservationTime.get().getStartAt())) {
+            return ResponseEntity.badRequest().build();
+        }
+
+        // 예약 추가
+        Reservation reservation = Reservation.createWithoutId(
+                request.getName(), request.getDate(), reservationTime.get());
         long id = reservationRepository.add(reservation);
 
+        // 추가된 예약 조회
         Optional<Reservation> addedReservation = reservationRepository.findById(id);
         if (addedReservation.isEmpty()) {
             throw new IllegalArgumentException("[ERROR] ID에 해당하는 예약이 존재하지 않습니다.");

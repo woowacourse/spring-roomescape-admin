@@ -35,6 +35,6 @@ class PageControllerTest {
     @Test
     void requestReservationPage() {
         String reservationPageViewName = pageController.getReservationPage();
-        assertThat(reservationPageViewName).isEqualTo("admin/reservation-legacy");
+        assertThat(reservationPageViewName).isEqualTo("admin/reservation");
     }
 }

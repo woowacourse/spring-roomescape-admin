@@ -1,19 +1,18 @@
 package roomescape.dto;
 
 import java.time.LocalDate;
-import java.time.LocalTime;
 
 public final class ReservationCreationRequest {
 
     private final String name;
     private final LocalDate date;
-    private final LocalTime time;
+    private final Long timeId;
 
-    public ReservationCreationRequest(String name, LocalDate date, LocalTime time) {
-        validate(name, date, time);
+    public ReservationCreationRequest(String name, LocalDate date, Long timeId) {
+        validate(name, date, timeId);
         this.name = name;
         this.date = date;
-        this.time = time;
+        this.timeId = timeId;
     }
 
     public String getName() {
@@ -24,11 +23,11 @@ public final class ReservationCreationRequest {
         return date;
     }
 
-    public LocalTime getTime() {
-        return time;
+    public Long getTimeId() {
+        return timeId;
     }
 
-    private void validate(String name, LocalDate date, LocalTime time) {
+    private void validate(String name, LocalDate date, Long time) {
         validateName(name);
         validateDate(date);
         validateTime(time);
@@ -46,7 +45,7 @@ public final class ReservationCreationRequest {
         }
     }
 
-    private void validateTime(LocalTime time) {
+    private void validateTime(Long time) {
         if (time == null) {
             throw new IllegalArgumentException("[ERROR] 시간은 빈 값을 허용하지 않습니다.");
         }

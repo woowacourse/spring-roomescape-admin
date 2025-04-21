@@ -2,35 +2,43 @@ package roomescape.controller;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertAll;
+import static roomescape.test.fixture.ReservationTimeFixture.createReservationTime;
 import static roomescape.test.utility.HttpResponseTestUtility.checkLocationHeader;
 import static roomescape.test.utility.HttpResponseTestUtility.checkStatusCode;
 import static roomescape.test.utility.ReservationTestUtility.checkDeleteReservation;
 import static roomescape.test.utility.ReservationTestUtility.checkReservationFieldWithoutId;
 import static roomescape.test.utility.ReservationTestUtility.checkReservationId;
 
-import java.time.LocalDateTime;
+import java.time.LocalDate;
+import java.time.LocalTime;
 import java.util.List;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import roomescape.domain.Reservation;
+import roomescape.domain.ReservationTime;
 import roomescape.dto.ReservationCreationRequest;
 import roomescape.repository.ReservationRepository;
+import roomescape.repository.ReservationTimeRepository;
 import roomescape.test.fake.FakeReservationRepository;
+import roomescape.test.fake.FakeReservationTimeRepository;
 import roomescape.test.fixture.ReservationFixture;
 
 class ReservationControllerTest {
 
     private final ReservationRepository reservationRepository = new FakeReservationRepository();
-    private final ReservationController controller = new ReservationController(reservationRepository);
+    private final ReservationTimeRepository timeRepository = new FakeReservationTimeRepository();
+    private final ReservationController controller = new ReservationController(reservationRepository, timeRepository);
 
     @DisplayName("저장된 예약들을 조회할 수 있다")
     @Test
     void getReservations() {
-        reservationRepository.add(ReservationFixture.create("reservation1"));
-        reservationRepository.add(ReservationFixture.create("reservation2"));
-        reservationRepository.add(ReservationFixture.create("reservation3"));
+        ReservationTime reservationTime = createReservationTime(1L, LocalTime.now());
+        timeRepository.add(reservationTime);
+        reservationRepository.add(ReservationFixture.createReservation("reservation1", reservationTime));
+        reservationRepository.add(ReservationFixture.createReservation("reservation2", reservationTime));
+        reservationRepository.add(ReservationFixture.createReservation("reservation3", reservationTime));
 
         ResponseEntity<List<Reservation>> response = controller.getReservations();
         List<Reservation> actualReservations = response.getBody();
@@ -44,20 +52,21 @@ class ReservationControllerTest {
     @DisplayName("예약을 추가할 수 있다.")
     @Test
     void createReservation() {
-        Reservation expecteReservation = ReservationFixture.create("reservation1");
-        ReservationCreationRequest input = new ReservationCreationRequest(
-                expecteReservation.getName(), expecteReservation.getDate(), expecteReservation.getTime());
+        ReservationTime reservationTime = createReservationTime(1L, LocalTime.now());
+        timeRepository.add(reservationTime);
+        Reservation expected = ReservationFixture.createReservation("reservation1", reservationTime);
+        ReservationCreationRequest request = new ReservationCreationRequest(expected.getName(), expected.getDate(), 1L);
 
-        ResponseEntity<Reservation> response = controller.createReservation(input);
+        ResponseEntity<Reservation> response = controller.createReservation(request);
 
         Reservation newReservation = reservationRepository.findAll().getFirst();
         assertAll(
                 () -> checkReservationId(newReservation.getId(), 1L),
-                () -> checkReservationFieldWithoutId(newReservation, expecteReservation),
+                () -> checkReservationFieldWithoutId(newReservation, expected),
                 () -> checkStatusCode(response, HttpStatus.CREATED),
                 () -> checkLocationHeader(response, "reservations/" + newReservation.getId()),
                 () -> checkReservationId(response.getBody().getId(), 1L),
-                () -> checkReservationFieldWithoutId(response.getBody(), expecteReservation)
+                () -> checkReservationFieldWithoutId(response.getBody(), expected)
         );
     }
 
@@ -65,11 +74,12 @@ class ReservationControllerTest {
     @DisplayName("과거 날짜와 시간으로는 예약을 추가할 수 없다.")
     @Test
     void canNotCreateReservationWithPastDateTime() {
-        LocalDateTime past = LocalDateTime.now().minusSeconds(1);
-        ReservationCreationRequest input = new ReservationCreationRequest(
-                "reservation", past.toLocalDate(), past.toLocalTime());
+        ReservationTime pastTime = createReservationTime(1L, LocalTime.now().minusSeconds(1));
+        timeRepository.add(pastTime);
+        ReservationCreationRequest request =
+                new ReservationCreationRequest("reservation", LocalDate.now(), pastTime.getId());
 
-        ResponseEntity<Reservation> response = controller.createReservation(input);
+        ResponseEntity<Reservation> response = controller.createReservation(request);
 
         assertAll(
                 () -> assertThat(reservationRepository.findAll()).isEmpty(),
@@ -80,9 +90,11 @@ class ReservationControllerTest {
     @DisplayName("특정 ID의 예약을 삭제할 수 있다.")
     @Test
     void deleteReservation() {
-        reservationRepository.add(ReservationFixture.create("reservation1"));
-        reservationRepository.add(ReservationFixture.create("reservation2"));
-        reservationRepository.add(ReservationFixture.create("reservation3"));
+        ReservationTime reservationTime = createReservationTime(1L, LocalTime.now());
+        timeRepository.add(reservationTime);
+        reservationRepository.add(ReservationFixture.createReservation("reservation1", reservationTime));
+        reservationRepository.add(ReservationFixture.createReservation("reservation2", reservationTime));
+        reservationRepository.add(ReservationFixture.createReservation("reservation3", reservationTime));
         long deleteReservationId = reservationRepository.findAll().getFirst().getId();
 
         ResponseEntity<Void> response = controller.deleteReservation(deleteReservationId);

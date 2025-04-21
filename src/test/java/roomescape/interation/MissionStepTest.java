@@ -56,21 +56,47 @@ public class MissionStepTest {
                 .body("size()", is(0));
     }
 
-    @DisplayName("예약을 추가할 수 있다")
+    @DisplayName("예약 가능한 시간을 추가하고 조회하고 삭제할 수 있다.")
     @Test
-    void canCreateReservation() {
+    void canManageReservationTime() {
         Map<String, String> params = new HashMap<>();
-        params.put("name", "브라운");
-        params.put("date", FUTURE_DATE_TEXT);
-        params.put("time", "15:40");
+        params.put("startAt", "10:00");
 
         RestAssured.given().log().all()
                 .contentType(ContentType.JSON)
                 .body(params)
+                .when().post("/times")
+                .then().log().all()
+                .statusCode(201);
+
+        RestAssured.given().log().all()
+                .when().get("/times")
+                .then().log().all()
+                .statusCode(200)
+                .body("size()", is(1));
+
+        RestAssured.given().log().all()
+                .when().delete("/times/1")
+                .then().log().all()
+                .statusCode(200);
+    }
+
+    @DisplayName("예약을 추가하고 조회활 수 있다")
+    @Test
+    void canCreateReservation() {
+        jdbcTemplate.update("INSERT INTO reservation_time (start_at) VALUES (?)", "10:00");
+
+        Map<String, Object> reservation = new HashMap<>();
+        reservation.put("name", "브라운");
+        reservation.put("date", FUTURE_DATE_TEXT);
+        reservation.put("timeId", 1);
+
+        RestAssured.given().log().all()
+                .contentType(ContentType.JSON)
+                .body(reservation)
                 .when().post("/reservations")
                 .then().log().all()
-                .statusCode(201)
-                .body("id", is(1));
+                .statusCode(201);
 
         RestAssured.given().log().all()
                 .when().get("/reservations")
@@ -82,18 +108,19 @@ public class MissionStepTest {
     @DisplayName("예약을 삭제할 수 있다")
     @Test
     void canDeleteReservation() {
-        Map<String, String> params = new HashMap<>();
-        params.put("name", "브라운");
-        params.put("date", FUTURE_DATE_TEXT);
-        params.put("time", "15:40");
+        jdbcTemplate.update("INSERT INTO reservation_time (start_at) VALUES (?)", "10:00");
+
+        Map<String, Object> reservation = new HashMap<>();
+        reservation.put("name", "브라운");
+        reservation.put("date", FUTURE_DATE_TEXT);
+        reservation.put("timeId", 1);
 
         RestAssured.given().log().all()
                 .contentType(ContentType.JSON)
-                .body(params)
+                .body(reservation)
                 .when().post("/reservations")
                 .then().log().all()
-                .statusCode(201)
-                .body("id", is(1));
+                .statusCode(201);
 
         RestAssured.given().log().all()
                 .when().delete("/reservations/1")
@@ -122,9 +149,10 @@ public class MissionStepTest {
     @DisplayName("데이터베이스에 저장된 예약들을 조회할 수 있다.")
     @Test
     void canFindAllReservationInDatabase() {
+        jdbcTemplate.update("INSERT INTO reservation_time (start_at) VALUES (?)", "10:00");
         jdbcTemplate.update(
-                "INSERT INTO reservation (name, date, time) VALUES (?, ?, ?)",
-                "브라운", "2023-08-05", "15:40");
+                "INSERT INTO reservation (name, date, time_id) VALUES (?, ?, ?)",
+                "브라운", "2023-08-05", "1");
 
         List<Reservation> reservations = RestAssured.given().log().all()
                 .when().get("/reservations")
@@ -140,14 +168,16 @@ public class MissionStepTest {
     @DisplayName("데이터베이스에 예약을 추가하고 삭제할 수 있다")
     @Test
     void canAddAndDeleteReservationInDatabase() {
-        Map<String, String> params = new HashMap<>();
-        params.put("name", "브라운");
-        params.put("date", FUTURE_DATE_TEXT);
-        params.put("time", "10:00");
+        jdbcTemplate.update("INSERT INTO reservation_time (start_at) VALUES (?)", "10:00");
+
+        Map<String, Object> reservation = new HashMap<>();
+        reservation.put("name", "브라운");
+        reservation.put("date", FUTURE_DATE_TEXT);
+        reservation.put("timeId", 1);
 
         RestAssured.given().log().all()
                 .contentType(ContentType.JSON)
-                .body(params)
+                .body(reservation)
                 .when().post("/reservations")
                 .then().log().all()
                 .statusCode(201);
@@ -163,30 +193,4 @@ public class MissionStepTest {
         Integer countAfterDelete = jdbcTemplate.queryForObject("SELECT count(1) from reservation", Integer.class);
         assertThat(countAfterDelete).isEqualTo(0);
     }
-
-    @DisplayName("예약 가능한 시간을 추가하고 조회하고 삭제할 수 있다.")
-    @Test
-    void canManageReservationTime() {
-        Map<String, String> params = new HashMap<>();
-        params.put("startAt", "10:00");
-
-        RestAssured.given().log().all()
-                .contentType(ContentType.JSON)
-                .body(params)
-                .when().post("/times")
-                .then().log().all()
-                .statusCode(201);
-
-        RestAssured.given().log().all()
-                .when().get("/times")
-                .then().log().all()
-                .statusCode(200)
-                .body("size()", is(1));
-
-        RestAssured.given().log().all()
-                .when().delete("/times/1")
-                .then().log().all()
-                .statusCode(200);
-    }
-
 }

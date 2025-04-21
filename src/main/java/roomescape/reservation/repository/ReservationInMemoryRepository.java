@@ -6,6 +6,7 @@ import org.springframework.jdbc.core.namedparam.MapSqlParameterSource;
 import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
 import org.springframework.stereotype.Repository;
 import roomescape.reservation.entity.Reservation;
+import roomescape.reservation.exception.EntityNotFoundException;
 
 import java.time.LocalDate;
 import java.time.LocalTime;
@@ -40,8 +41,18 @@ public class ReservationInMemoryRepository implements ReservationRepository {
 
     @Override
     public void deleteById(Long id) {
+        if (!existReservation(id)) {
+            throw new EntityNotFoundException("삭제할 예약이 없습니다.");
+        }
         String sql = "DELETE FROM reservation WHERE id = :id";
         jdbcTemplate.update(sql, new MapSqlParameterSource("id", id));
+    }
+
+    private boolean existReservation(Long id) {
+        String sql = "SELECT EXISTS (SELECT 1 FROM reservation WHERE id = :id)";
+        return Boolean.TRUE.equals(
+            jdbcTemplate.queryForObject(sql, new MapSqlParameterSource("id", id), Boolean.class)
+        );
     }
 
     private RowMapper<Reservation> getReservationRowMapper() {

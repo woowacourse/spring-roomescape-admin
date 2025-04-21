@@ -1,33 +1,39 @@
 package roomescape.reservation.infrastructure.entity;
 
-import roomescape.reservation.domain.Reservation;
-
-import java.time.LocalDateTime;
+import java.time.LocalDate;
+import java.time.LocalTime;
 
 public class ReservationEntity {
+
     private final Long id;
     private final String name;
-    private final LocalDateTime dateTime;
+    private final LocalDate date;
+    private final LocalTime time;
 
-    private ReservationEntity(final Long id, final String name, final LocalDateTime dateTime) {
+    private ReservationEntity(final Long id, final String name, final LocalDate date, final LocalTime time) {
         this.id = id;
         this.name = name;
-        this.dateTime = dateTime;
+        this.date = date;
+        this.time = time;
     }
 
-    public static ReservationEntity of(final Long id, final String name, final LocalDateTime dateTime) {
-        return new ReservationEntity(id, name, dateTime);
+    public static ReservationEntity of(final Long id, final String name, final LocalDate date, final LocalTime time) {
+        return new ReservationEntity(id, name, date, time);
     }
 
-    public static ReservationEntity of(final Long id, final Reservation reservation) {
-        return ReservationEntity.of(id, reservation.getName(), reservation.getDatetime());
-    }
-
-    public Reservation toDomain() {
-        return Reservation.of(id, name, dateTime);
-    }
-
-    public long getId() {
+    public Long getId() {
         return id;
+    }
+
+    public String getName() {
+        return name;
+    }
+
+    public LocalDate getDate() {
+        return date;
+    }
+
+    public LocalTime getTime() {
+        return time;
     }
 }

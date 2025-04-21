@@ -44,8 +44,8 @@ class MemoryReservationRepositoryTest {
         memoryReservationRepository.add(reservation);
         // when & then
         SoftAssertions softly = new SoftAssertions();
-        softly.assertThat(memoryReservationRepository.existReservation(1L)).isTrue();
-        softly.assertThat(memoryReservationRepository.existReservation(2L)).isFalse();
+        softly.assertThat(memoryReservationRepository.findById(1L).isPresent()).isTrue();
+        softly.assertThat(memoryReservationRepository.findById(2L).isPresent()).isFalse();
         softly.assertAll();
     }
 

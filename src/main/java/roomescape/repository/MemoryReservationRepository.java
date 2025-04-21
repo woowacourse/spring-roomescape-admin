@@ -3,6 +3,7 @@ package roomescape.repository;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
+import java.util.Optional;
 import java.util.concurrent.atomic.AtomicLong;
 import roomescape.domain.Reservation;
 
@@ -21,9 +22,9 @@ public class MemoryReservationRepository implements ReservationRepository {
         reservations.removeIf(reservation -> reservation.isEqualId(id));
     }
 
-    public boolean existReservation(final Long id) {
+    public Optional<Reservation> findById(final Long id) {
         return reservations.stream()
-                .anyMatch(reservation -> reservation.isEqualId(id));
+                .filter(reservation -> reservation.isEqualId(id)).findFirst();
     }
 
     public List<Reservation> getReservations() {

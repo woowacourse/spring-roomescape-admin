@@ -12,5 +12,5 @@ CREATE TABLE reservation
     date VARCHAR(255) NOT NULL,
     time_id BIGINT,                           -- 컬럼 수정
     PRIMARY KEY (id),
-    FOREIGN KEY (time_id) REFERENCES reservation_time (id) -- 외래키 추가
+    FOREIGN KEY (time_id) REFERENCES reservation_time (id) ON DELETE CASCADE-- 외래키 추가
 );

@@ -1,6 +1,7 @@
 package roomescape.repository;
 
 import java.util.List;
+import java.util.Optional;
 import roomescape.domain.Reservation;
 
 public interface ReservationRepository {
@@ -9,7 +10,7 @@ public interface ReservationRepository {
 
     Reservation add(final Reservation reservation);
 
-    void deleteById(final Long id);
+    Optional<Reservation> findById(final Long id);
 
-    boolean existReservation(final Long id);
+    void deleteById(final Long id);
 }

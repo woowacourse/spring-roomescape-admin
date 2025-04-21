@@ -15,7 +15,6 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import roomescape.reservation.dto.ReservationRequest;
 import roomescape.reservation.dto.ReservationResponse;
-import roomescape.reservation.domain.Reservation;
 import roomescape.reservation.service.ReservationService;
 
 @RestController
@@ -26,14 +25,14 @@ public class ReservationController {
     private ReservationService reservationService;
 
     @GetMapping
-    public List<Reservation> getReservations() {
+    public List<ReservationResponse> getReservations() {
         return reservationService.findAll();
     }
 
     @PostMapping
     public ResponseEntity<ReservationResponse> addReservation(@Valid @RequestBody ReservationRequest reservationRequest) {
         try {
-            return ResponseEntity.ok(reservationService.insert(reservationRequest).toResponse());
+            return ResponseEntity.ok(reservationService.insert(reservationRequest));
         } catch (DataAccessException e) {
             System.out.println(e.getMessage());
             return ResponseEntity.badRequest().build();

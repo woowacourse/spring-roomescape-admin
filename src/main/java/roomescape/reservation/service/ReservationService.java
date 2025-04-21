@@ -4,8 +4,9 @@ import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import roomescape.reservation.dao.ReservationDao;
-import roomescape.reservation.domain.Reservation;
 import roomescape.reservation.dto.ReservationRequest;
+import roomescape.reservation.dto.ReservationResponse;
+import roomescape.reservation.utils.ReservationMapper;
 
 @Service
 public class ReservationService {
@@ -13,16 +14,18 @@ public class ReservationService {
     @Autowired
     private ReservationDao reservationDao;
 
-    public Reservation insert(ReservationRequest reservationRequest) {
-        return reservationDao.insert(reservationRequest);
+    public ReservationResponse insert(ReservationRequest reservationRequest) {
+        return ReservationMapper.toReservationResponse(reservationDao.insert(reservationRequest));
     }
 
-    public Reservation findById(long id) {
-        return reservationDao.findById(id);
+    public ReservationResponse findById(long id) {
+        return ReservationMapper.toReservationResponse(reservationDao.findById(id));
     }
 
-    public List<Reservation> findAll() {
-        return reservationDao.findAll();
+    public List<ReservationResponse> findAll() {
+        return reservationDao.findAll().stream()
+                .map(ReservationMapper::toReservationResponse)
+                .toList();
     }
 
     public void delete(long id) {

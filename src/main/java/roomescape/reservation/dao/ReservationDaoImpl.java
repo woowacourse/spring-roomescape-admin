@@ -15,6 +15,7 @@ import org.springframework.jdbc.support.KeyHolder;
 import org.springframework.stereotype.Repository;
 import roomescape.reservation.domain.Reservation;
 import roomescape.reservation.dto.ReservationRequest;
+import roomescape.reservation.utils.ReservationMapper;
 
 @Repository
 public class ReservationDaoImpl implements ReservationDao {
@@ -38,7 +39,7 @@ public class ReservationDaoImpl implements ReservationDao {
             return ps;
         }, keyHolder);
 
-        return Reservation.of(reservationRequest, keyHolder.getKey().longValue());
+        return ReservationMapper.toReservation(reservationRequest, keyHolder.getKey().longValue());
     }
 
     @Override

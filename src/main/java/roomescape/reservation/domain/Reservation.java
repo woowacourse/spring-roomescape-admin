@@ -2,8 +2,6 @@ package roomescape.reservation.domain;
 
 import java.time.LocalDate;
 import java.time.LocalTime;
-import roomescape.reservation.dto.ReservationRequest;
-import roomescape.reservation.dto.ReservationResponse;
 
 public class Reservation {
 
@@ -23,16 +21,15 @@ public class Reservation {
         return id;
     }
 
-    public static Reservation of(ReservationRequest reservationRequest, long index) {
-        return new Reservation(index, reservationRequest.name(), reservationRequest.date(), reservationRequest.time());
+    public String getName() {
+        return name;
     }
 
-    public ReservationResponse toResponse() {
-        return new ReservationResponse(
-                this.id,
-                this.name,
-                this.date,
-                this.time
-        );
+    public LocalDate getDate() {
+        return date;
+    }
+
+    public LocalTime getTime() {
+        return time;
     }
 }

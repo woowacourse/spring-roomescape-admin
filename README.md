@@ -126,7 +126,7 @@ HTTP/1.1 200
 # 7단계
 
 - [x] `admin/time` 페이지로 접속 시 시간 관리 페이지를 반환한다
-- [ ] 다음과 같은 형식의 reservation_time 테이블을 생성한다
+- [x] 다음과 같은 형식의 reservation_time 테이블을 생성한다
   ```angular2html
   CREATE TABLE reservation_time
   (

@@ -66,5 +66,5 @@
 
 ## 데이터베이스 설정
 - [x] JdbcTemplate 및 H2 의존성 추가
-- [ ] reservation 테이블 스키마 정의
+- [x] reservation 테이블 스키마 정의
 - [x] h2-console 기능 활성화

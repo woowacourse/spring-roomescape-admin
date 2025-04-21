@@ -2,23 +2,18 @@ package roomescape.model;
 
 import java.time.LocalDate;
 import java.time.LocalTime;
+import roomescape.exception.reservation.ReservationFieldRequiredException;
 
 public class Reservation {
-    private Long id;
     private String name;
     private LocalDate date;
     private LocalTime time;
 
-    public Reservation(Long id, String name, LocalDate date, LocalTime time) {
+    public Reservation(String name, LocalDate date, LocalTime time) {
         validate(name, date, time);
-        this.id = id;
         this.name = name;
         this.date = date;
         this.time = time;
-    }
-
-    public long getId() {
-        return id;
     }
 
     public String getName() {
@@ -41,19 +36,19 @@ public class Reservation {
 
     private void validateName(String name) {
         if (name == null || name.isBlank()) {
-            throw new IllegalArgumentException("[ERROR] 유효하지 않은 이름입니다.");
+            throw new ReservationFieldRequiredException("이름");
         }
     }
 
     private void validateDate(LocalDate date) {
         if (date == null) {
-            throw new IllegalArgumentException("[ERROR] 유효하지 않은 날짜입니다.");
+            throw new ReservationFieldRequiredException("날짜");
         }
     }
 
     private void validateTime(LocalTime time) {
         if (time == null) {
-            throw new IllegalArgumentException("[ERROR] 유효하지 않은 시간입니다.");
+            throw new ReservationFieldRequiredException("시간");
         }
     }
 }

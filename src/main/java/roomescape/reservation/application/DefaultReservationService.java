@@ -1,6 +1,7 @@
 package roomescape.reservation.application;
 
 import org.springframework.stereotype.Service;
+import roomescape.reservation.application.converter.ReservationConverter;
 import roomescape.reservation.domain.Reservation;
 import roomescape.reservation.domain.ReservationRepository;
 import roomescape.reservation.ui.dto.ReservationRequestDto;
@@ -19,14 +20,14 @@ public class DefaultReservationService implements ReservationService {
     }
 
     @Override
-    public List<ReservationResponseDto> getReservations() {
-        return ReservationResponseDto.from(reservationRepository.findAll());
+    public List<ReservationResponseDto> getAll() {
+        return ReservationConverter.toDto(reservationRepository.findAll());
     }
 
     @Override
-    public ReservationResponseDto createReservation(final ReservationRequestDto reservationRequestDto) {
-        final Reservation saved = reservationRepository.save(reservationRequestDto.toDomain());
-        return ReservationResponseDto.from(saved);
+    public ReservationResponseDto create(final ReservationRequestDto reservationRequestDto) {
+        final Reservation saved = reservationRepository.save(ReservationConverter.toDomain(reservationRequestDto));
+        return ReservationConverter.toDto(saved);
     }
 
     @Override

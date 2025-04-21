@@ -6,7 +6,7 @@ import java.time.LocalDateTime;
 public class Reservation {
 
     private static final int MAX_NAME_LENGTH = 10;
-    private final Long id;
+    private Long id;
     private final String name;
     private final LocalDateTime dateTime;
 
@@ -17,8 +17,10 @@ public class Reservation {
         this.dateTime = dateTime;
     }
 
-    public boolean isSameId(final Long givenId) {
-        return id.equals(givenId);
+    public Reservation(final String name, final LocalDateTime dateTime) {
+        validate(name, dateTime);
+        this.name = name;
+        this.dateTime = dateTime;
     }
 
     public Long getId() {
@@ -31,6 +33,11 @@ public class Reservation {
 
     public LocalDateTime getDateTime() {
         return dateTime;
+    }
+
+    private void validate(final String name, final LocalDateTime dateTime) {
+        validateName(name);
+        validateDateTime(dateTime);
     }
 
     private void validate(final Long id, final String name, final LocalDateTime dateTime) {

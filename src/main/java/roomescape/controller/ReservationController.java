@@ -2,24 +2,27 @@ package roomescape.controller;
 
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import roomescape.dao.ReservationDao;
 import roomescape.domain.Reservation;
-import roomescape.domain.Reservations;
 import roomescape.dto.request.ReservationRequest;
 import roomescape.dto.response.ReservationResponse;
 
 import java.time.LocalDateTime;
 import java.util.List;
-import java.util.concurrent.atomic.AtomicLong;
 
 @RestController
 @RequestMapping("/reservations")
 public class ReservationController {
 
-    private final AtomicLong counter = new AtomicLong(1);
-    private final Reservations reservations = new Reservations();
+    private final ReservationDao reservationDao;
+
+    public ReservationController(final ReservationDao reservationDao) {
+        this.reservationDao = reservationDao;
+    }
 
     @GetMapping
     public ResponseEntity<List<ReservationResponse>> readReservations() {
+        List<Reservation> reservations = reservationDao.findAllReservations();
         List<ReservationResponse> dtos = ReservationResponse.from(reservations);
         return ResponseEntity.ok(dtos);
     }
@@ -27,14 +30,17 @@ public class ReservationController {
     @PostMapping
     public ResponseEntity<?> createReservation(@RequestBody ReservationRequest reservationRequest) {
         LocalDateTime dateTime = LocalDateTime.of(reservationRequest.date(), reservationRequest.time());
-        Reservation reservation = new Reservation(counter.getAndIncrement(), reservationRequest.name(), dateTime);
-        reservations.add(reservation);
-        return ResponseEntity.ok(ReservationResponse.from(reservation));
+        Reservation reservation = new Reservation(reservationRequest.name(), dateTime);
+        long id = reservationDao.insert(reservation);
+        return ResponseEntity.ok(ReservationResponse.of(id, reservation));
     }
 
     @DeleteMapping("/{id}")
     public ResponseEntity<?> deleteReservation(@PathVariable final Long id) {
-        reservations.deleteById(id);
+        int count = reservationDao.delete(id);
+        if (count == 0) {
+            throw new IllegalArgumentException("[ERROR] 해당 id에 대한 예약 기록이 존재하지 않습니다.");
+        }
         return ResponseEntity.ok().build();
     }
 }

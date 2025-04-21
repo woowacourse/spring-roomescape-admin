@@ -31,10 +31,10 @@ HTTP/1.1 200
 Content-Type: application/json
 [
     {
-        "id": 1,
-        "name": "브라운",
-        "date": "2023-01-01",
-        "time": "10:00"
+        "id": "Integer",
+        "name": "String",
+        "date": "LocalDate (YYYY-MM-DD)",
+        "time": "LocalTime (HH:mm)"
     },
     {
         "id": 2,
@@ -52,19 +52,19 @@ Request
 Content-Type: application/json
 POST /reservations
 {
-    "date": "2023-08-05",
-    "name": "브라운",
-    "time": "15:40"
+    "name": "String",
+    "date": "LocalDate (YYYY-MM-DD)",
+    "time": "LocalTime (HH:mm)"
 }
 
 Response
 Content-Type: application/json
 HTTP/1.1 200 
 {
-    "id": 1,
-    "name": "브라운",
-    "date": "2023-08-05",
-    "time": "15:40"
+    "id": "Integer",
+    "name": "String",
+    "date": "LocalDate (YYYY-MM-DD)",
+    "time": "LocalTime (HH:mm)"
 }
 
 ```

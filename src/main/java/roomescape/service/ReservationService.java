@@ -26,5 +26,7 @@ public class ReservationService {
         return reservationDao.findAll();
     }
 
-
+    public void cancelReservation(Long id) {
+        reservationDao.deleteById(id);
+    }
 }

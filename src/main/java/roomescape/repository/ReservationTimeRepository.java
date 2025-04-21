@@ -8,6 +8,7 @@ import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.simple.SimpleJdbcInsert;
 import org.springframework.stereotype.Repository;
 import roomescape.dto.ReservationTimeReadDto;
+import roomescape.exception.reservationTime.ReservationTimeNotFoundException;
 import roomescape.model.ReservationTime;
 
 @Repository
@@ -48,6 +49,9 @@ public class ReservationTimeRepository {
     public int deleteBy(Long id) {
         String sql = "delete from reservation_time where id = ?";
         int rowNum = jdbcTemplate.update(sql, id);
+        if (rowNum == 0) {
+            throw new ReservationTimeNotFoundException(id);
+        }
         return rowNum;
     }
 }

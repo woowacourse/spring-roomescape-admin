@@ -183,8 +183,8 @@ HTTP/1.1 200
   ```
 
 - [x] 시간 삭제 API를 구현한다
-
-  request
+    - [x] 삭제하려는 예약시간의 id가 존재하지 않을 시 404 상태의 커스텀 예외 발생
+      request
   ```angular2html
   DELETE /times/1 HTTP/1.1
   ```

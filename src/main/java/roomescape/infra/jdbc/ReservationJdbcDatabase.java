@@ -79,7 +79,7 @@ public class ReservationJdbcDatabase implements ReservationDatabase {
     }
 
     @Override
-    public void deleteById(final Long id) {
+    public void deleteById(final long id) {
         final String sql = """
                 DELETE FROM RESERVATION
                 WHERE id = ?

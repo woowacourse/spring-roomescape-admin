@@ -13,5 +13,5 @@ public interface ReservationDatabase {
 
     long saveAndGetId(final ReservationCreateRequest request);
 
-    void deleteById(final Long id);
+    void deleteById(final long id);
 }

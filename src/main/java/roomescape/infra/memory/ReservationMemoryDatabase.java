@@ -67,7 +67,7 @@ public class ReservationMemoryDatabase implements ReservationDatabase {
     }
 
     @Override
-    public void deleteById(final Long id) {
+    public void deleteById(final long id) {
         DATA.remove(id);
     }
 }

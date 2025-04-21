@@ -1,17 +1,20 @@
 package roomescape.reservation.entity;
 
-import java.time.LocalDateTime;
+import java.time.LocalDate;
+import java.time.LocalTime;
 
 public class Reservation {
 
     private final Long id;
     private final String name;
-    private final LocalDateTime dateTime;
+    private final LocalDate date;
+    private final LocalTime time;
 
-    public Reservation(long id, String name, LocalDateTime dateTime) {
+    public Reservation(Long id, String name, LocalDate date, LocalTime time) {
         this.id = id;
         this.name = name;
-        this.dateTime = dateTime;
+        this.date = date;
+        this.time = time;
     }
 
     public boolean isSameId(long id) {
@@ -26,7 +29,7 @@ public class Reservation {
         return name;
     }
 
-    public LocalDateTime getDateTime() {
-        return dateTime;
-    }
+    public LocalDate getDate() { return date; }
+
+    public LocalTime getTime() { return time; }
 }

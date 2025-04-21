@@ -1,14 +1,12 @@
 package roomescape.reservation.repository;
 
+import roomescape.reservation.entity.Reservation;
+import roomescape.reservation.exception.EntityNotFoundException;
+
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
-import java.util.concurrent.atomic.AtomicLong;
-import org.springframework.stereotype.Repository;
-import roomescape.reservation.exception.EntityNotFoundException;
-import roomescape.reservation.entity.Reservation;
 
-@Repository
 public class ReservationRepositoryImpl implements ReservationRepository {
 
     private final List<Reservation> reservations = new ArrayList<>();

@@ -1,6 +1,7 @@
 package roomescape.repository;
 
 import java.util.List;
+import java.util.Optional;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.namedparam.BeanPropertySqlParameterSource;
 import org.springframework.jdbc.core.namedparam.SqlParameterSource;
@@ -33,5 +34,25 @@ public class JdbcReservationTimeRepository implements ReservationTimeRepository 
         SqlParameterSource parameter = new BeanPropertySqlParameterSource(reservationTime);
         Long newId = simpleJdbcInsert.executeAndReturnKey(parameter).longValue();
         return new ReservationTime(newId, reservationTime);
+    }
+
+    @Override
+    public Optional<ReservationTime> findById(Long id) {
+        String sql = "SELECT * FROM reservation_time WHERE id = ?";
+        ReservationTime reservationTime = jdbcTemplate.queryForObject(
+                sql,
+                (rs, rowNum) -> new ReservationTime(
+                        rs.getLong("id"),
+                        rs.getTime("start_at").toLocalTime()
+                ),
+                id
+        );
+        return Optional.ofNullable(reservationTime);
+    }
+
+    @Override
+    public void deleteById(Long id) {
+        String sql = "DELETE FROM reservation_time WHERE id = ?";
+        jdbcTemplate.update(sql, id);
     }
 }

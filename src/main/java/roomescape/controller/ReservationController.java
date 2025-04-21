@@ -1,10 +1,9 @@
 package roomescape.controller;
 
 import java.net.URI;
-import java.util.ArrayList;
 import java.util.List;
-import java.util.concurrent.atomic.AtomicLong;
 import org.springframework.http.ResponseEntity;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -14,37 +13,34 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import roomescape.domain.Reservation;
 import roomescape.dto.AddReservationDto;
-import roomescape.exception.InvalidReservationRequest;
+import roomescape.service.ReservationService;
 
 @RestController
 @RequestMapping("/reservations")
 public class ReservationController {
 
-    private final AtomicLong index = new AtomicLong(1);
-    private final List<Reservation> reservations = new ArrayList<>();
+    private final ReservationService reservationService;
+
+    public ReservationController(ReservationService reservationService) {
+        this.reservationService = reservationService;
+    }
 
     @GetMapping
     public ResponseEntity<List<Reservation>> reservations() {
+        List<Reservation> reservations = reservationService.allReservations();
         return ResponseEntity.ok(reservations);
     }
 
     @PostMapping
-    public ResponseEntity<Void> addReservations(@RequestBody AddReservationDto newReservationDto) {
-        Reservation addedReservation = new Reservation(index.getAndIncrement(), newReservationDto.name(),
-                newReservationDto.date(), newReservationDto.time());
-        reservations.add(addedReservation);
-
-        return ResponseEntity.created(URI.create("/reservations/" + addedReservation.id())).build();
+    public ResponseEntity<Void> addReservations(@RequestBody @Validated AddReservationDto newReservationDto) {
+        Reservation newReservation = newReservationDto.toEntity();
+        long addedReservationId = reservationService.addReservation(newReservation);
+        return ResponseEntity.created(URI.create("/reservations/" + addedReservationId)).build();
     }
 
     @DeleteMapping("/{id}")
     public ResponseEntity<Void> deleteReservations(@PathVariable Long id) {
-        Reservation deleteReservation = reservations.stream()
-                .filter((reservation) -> reservation.id().equals(id))
-                .findAny()
-                .orElseThrow(InvalidReservationRequest::new);
-
-        reservations.remove(deleteReservation);
+        reservationService.deleteReservation(id);
         return ResponseEntity.noContent().build();
     }
 }

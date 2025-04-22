@@ -24,8 +24,8 @@ public class ReservationTimeApiController {
 
     @PostMapping("/times")
     public ResponseEntity<ReservationTimeResponse> createTime(
-            @RequestBody ReservationTimeCreateRequest reservationTimeCreateRequest) {
-        ReservationTime reservationTime = reservationTimeCreateRequest.to();
+            @RequestBody ReservationTimeCreateRequest request) {
+        ReservationTime reservationTime = request.to();
 
         ReservationTime saved = reservationTimeService.create(reservationTime);
 

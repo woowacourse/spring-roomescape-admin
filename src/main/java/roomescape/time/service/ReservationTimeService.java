@@ -3,6 +3,7 @@ package roomescape.time.service;
 import java.util.List;
 import org.springframework.stereotype.Service;
 import roomescape.time.domain.ReservationTime;
+import roomescape.time.repository.ReservationTimeRepository;
 
 @Service
 public class ReservationTimeService {

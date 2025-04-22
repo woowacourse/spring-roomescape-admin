@@ -1,4 +1,4 @@
-package roomescape.time.infrastructure;
+package roomescape.time.repository;
 
 import java.time.LocalTime;
 import java.util.List;
@@ -9,18 +9,16 @@ import org.springframework.jdbc.core.namedparam.SqlParameterSource;
 import org.springframework.jdbc.core.simple.SimpleJdbcInsert;
 import org.springframework.stereotype.Repository;
 import roomescape.time.domain.ReservationTime;
-import roomescape.time.service.ReservationTimeRepository;
 
 @Repository
-public class ReservationTimeRepositoryImpl implements ReservationTimeRepository {
+public class ReservationTimeRepository {
 
     private final JdbcTemplate jdbcTemplate;
 
-    public ReservationTimeRepositoryImpl(JdbcTemplate jdbcTemplate) {
+    public ReservationTimeRepository(JdbcTemplate jdbcTemplate) {
         this.jdbcTemplate = jdbcTemplate;
     }
 
-    @Override
     public ReservationTime save(ReservationTime reservationTime) {
         SimpleJdbcInsert jdbcInsert = new SimpleJdbcInsert(jdbcTemplate)
                 .withTableName("reservation_time")
@@ -33,7 +31,6 @@ public class ReservationTimeRepositoryImpl implements ReservationTimeRepository 
         return new ReservationTime(id, reservationTime.getStartAt());
     }
 
-    @Override
     public List<ReservationTime> findAll() {
         String sql = "select * from reservation_time";
         return jdbcTemplate.query(sql, (resultSet, rowNum) ->
@@ -43,13 +40,11 @@ public class ReservationTimeRepositoryImpl implements ReservationTimeRepository 
                 ));
     }
 
-    @Override
     public void deleteById(Long id) {
         String sql = "delete from reservation_time where id = ?";
         jdbcTemplate.update(sql, id);
     }
 
-    @Override
     public Optional<ReservationTime> findById(Long id) {
         String sql = "select * from reservation_time where id = ?";
         return jdbcTemplate.query(sql, (resultSet, rowNum) ->

@@ -29,4 +29,14 @@ public class RoomescapeTimeApiController {
                 .map(ReservationTimeResponse::from)
                 .toList();
     }
+
+    @PostMapping("/times")
+    public ResponseEntity<ReservationTimeResponse> addReservationTime(@RequestBody ReservationTimeRequest request) {
+        ReservationTime reservationTime = request.toReservationTime();
+        long savedId = reservationTimeService.addReservationTime(reservationTime);
+        if (savedId > 0) {
+            return ResponseEntity.ok(ReservationTimeResponse.from(reservationTime.withId(savedId)));
+        }
+        return ResponseEntity.badRequest().build();
+    }
 }

@@ -26,4 +26,36 @@ class ReservationTimeServiceTest {
         //then
         assertThat(actual).hasSize(1);
     }
+
+    @Test
+    @DisplayName("시간 데이터를 추가할 수 있어야 한다")
+    void addReservationTime() {
+        //given
+        ReservationTimeService reservationTimeService = new ReservationTimeService(
+                new ImMemoryReservationTimeDAO(new ArrayList<>()));
+
+        //when
+        ReservationTime reservationTime = new ReservationTime(LocalTime.of(10, 0));
+        reservationTimeService.addReservationTime(reservationTime);
+
+        //then
+        assertThat(reservationTimeService.findAll()).hasSize(1);
+    }
+
+    @Test
+    @DisplayName("이미 존재하는 시간 데이터일 경우 -1을 리턴해야 한다")
+    void cannotAddReservationTime() {
+        //given
+        ReservationTimeService reservationTimeService = new ReservationTimeService(
+                new ImMemoryReservationTimeDAO(new ArrayList<>()));
+        ReservationTime savedTime = new ReservationTime(LocalTime.of(10, 0));
+        reservationTimeService.addReservationTime(savedTime);
+
+        //when
+        ReservationTime duplicatedTime = new ReservationTime(LocalTime.of(10, 0));
+        long actual = reservationTimeService.addReservationTime(duplicatedTime);
+
+        //then
+        assertThat(actual).isEqualTo(-1);
+    }
 }

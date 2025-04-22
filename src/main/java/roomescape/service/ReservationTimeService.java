@@ -8,6 +8,8 @@ import roomescape.domain.ReservationTime;
 @Component
 public class ReservationTimeService {
 
+    private static final int EXIST_RESERVATION_TIME = -1;
+
     private final ReservationTimeDAO reservationTimeDAO;
 
     public ReservationTimeService(final ReservationTimeDAO reservationTimeDAO) {
@@ -18,4 +20,14 @@ public class ReservationTimeService {
         return reservationTimeDAO.findAll();
     }
 
+    public long addReservationTime(final ReservationTime reservationTime) {
+        if (reservationTimeDAO.existsByStartAt(reservationTime.getStartAt())) {
+            return EXIST_RESERVATION_TIME;
+        }
+        return reservationTimeDAO.insert(reservationTime);
+    }
+
+    public boolean deleteById(final long id) {
+        return reservationTimeDAO.deleteById(id);
+    }
 }

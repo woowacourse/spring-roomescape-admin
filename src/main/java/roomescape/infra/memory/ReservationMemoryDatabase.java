@@ -25,7 +25,7 @@ public class ReservationMemoryDatabase implements ReservationDatabase {
             long timeId
     ) {
 
-        public ReservationEntity toEntity(ReservationTimeDatabase database) {
+        public ReservationEntity toEntity(final ReservationTimeDatabase database) {
             final ReservationTimeEntity entity = database.findById(timeId).get();
             return new ReservationEntity(id, name, date, entity);
         }
@@ -62,13 +62,13 @@ public class ReservationMemoryDatabase implements ReservationDatabase {
     }
 
     @Override
-    public long saveAndGetId(final ReservationEntity request) {
+    public long saveAndGetId(final ReservationEntity entity) {
         final long id = idGenerator.get();
         DATA.put(id, new ReservationData(
                 id,
-                request.getName(),
-                request.getDate(),
-                request.getTime().getId()
+                entity.getName(),
+                entity.getDate(),
+                entity.getTime().getId()
         ));
         return id;
     }

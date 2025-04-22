@@ -21,7 +21,7 @@ public class ReservationEntity {
         this.time = time;
     }
 
-    public static ReservationEntity beforeSave(ReservationCreateRequest request) {
+    public static ReservationEntity beforeSave(final ReservationCreateRequest request) {
         return new ReservationEntity(null, request.name(), request.date(), new ReservationTimeEntity(request.timeId(), null));
     }
 

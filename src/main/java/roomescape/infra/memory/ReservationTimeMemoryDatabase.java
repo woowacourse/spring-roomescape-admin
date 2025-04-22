@@ -50,9 +50,9 @@ public class ReservationTimeMemoryDatabase implements ReservationTimeDatabase {
     }
 
     @Override
-    public long saveAndGetId(final ReservationTimeEntity request) {
+    public long saveAndGetId(final ReservationTimeEntity entity) {
         final long id = idGenerator.get();
-        DATA.put(id, new ReservationTimeData(id, request.getStartAt()));
+        DATA.put(id, new ReservationTimeData(id, entity.getStartAt()));
         return id;
     }
 

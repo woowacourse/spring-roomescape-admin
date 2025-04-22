@@ -35,9 +35,9 @@ public class ReservationService {
     }
 
     @Transactional
-    public void deleteById(final long reservationId) {
-        database.findById(reservationId)
+    public void deleteById(final long id) {
+        database.findById(id)
                 .orElseThrow(() -> new IllegalArgumentException("존재하지 않는 예약 id 입니다."));
-        database.deleteById(reservationId);
+        database.deleteById(id);
     }
 }

@@ -9,9 +9,9 @@ public interface ReservationDatabase {
 
     List<ReservationEntity> findAll();
 
-    Optional<ReservationEntity> findById(long id);
+    Optional<ReservationEntity> findById(final long id);
 
-    long saveAndGetId(final ReservationEntity request);
+    long saveAndGetId(final ReservationEntity entity);
 
     void deleteById(final long id);
 }

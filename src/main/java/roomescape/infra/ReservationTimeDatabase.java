@@ -11,7 +11,7 @@ public interface ReservationTimeDatabase {
 
     Optional<ReservationTimeEntity> findById(final long id);
 
-    long saveAndGetId(final ReservationTimeEntity request);
+    long saveAndGetId(final ReservationTimeEntity entity);
 
     void deleteById(final long id);
 }

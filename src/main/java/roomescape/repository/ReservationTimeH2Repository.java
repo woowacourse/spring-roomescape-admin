@@ -4,6 +4,7 @@ import java.sql.PreparedStatement;
 import java.sql.Statement;
 import java.sql.Time;
 import java.util.List;
+import java.util.Optional;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.support.GeneratedKeyHolder;
 import org.springframework.jdbc.support.KeyHolder;
@@ -54,5 +55,16 @@ public class ReservationTimeH2Repository implements ReservationTimeRepository {
         if (update == 0) {
             throw new IllegalArgumentException("id에 해당하는 예약 시간이 없습니다.");
         }
+    }
+
+    @Override
+    public Optional<ReservationTime> findById(Long id) {
+        String query = "SELECT * FROM reservation_time WHERE id = ?";
+
+        ReservationTime reservationTime = jdbcTemplate.queryForObject(query, (rs, rowNum) ->
+                new ReservationTime(rs.getLong("id"), rs.getTime("start_at").toLocalTime())
+        );
+
+        return Optional.ofNullable(reservationTime);
     }
 }

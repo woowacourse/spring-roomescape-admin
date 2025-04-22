@@ -57,7 +57,7 @@ public class JdbcTemplateRepository implements ReservationRepository {
     }
 
     @Override
-    public Reservation create(final String name, final LocalDate date, final LocalTime time) {
+    public Reservation save(final String name, final LocalDate date, final LocalTime time) {
         MapSqlParameterSource params = new MapSqlParameterSource()
                 .addValue("name", name)
                 .addValue("date", date)

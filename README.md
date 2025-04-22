@@ -63,7 +63,7 @@
      - ```
        HTTP/1.1 204
        ``` 
-- [ ] 시간 추가 API
+- [x] 시간 추가 API
   - Request
     - ```
       POST /times HTTP/1.1
@@ -83,7 +83,7 @@
           "startAt": "10:00"
       }
       ```
-- [ ] 시간 조회 API
+- [x] 시간 조회 API
   - Request
     - ```
       GET /times HTTP/1.1

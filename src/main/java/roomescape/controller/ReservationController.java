@@ -7,7 +7,6 @@ import java.util.Objects;
 import java.util.Optional;
 import java.util.concurrent.atomic.AtomicLong;
 import org.springframework.http.ResponseEntity;
-import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -27,7 +26,7 @@ public class ReservationController {
     private final AtomicLong index = new AtomicLong();
 
     @GetMapping
-    public ResponseEntity<List<ReservationResponse>> getReservations() {
+    public ResponseEntity<List<ReservationResponse>> readAll() {
         final List<ReservationResponse> reservationResponses = reservations.stream()
                 .map(ReservationResponse::new)
                 .toList();
@@ -36,7 +35,7 @@ public class ReservationController {
     }
 
     @PostMapping
-    public ResponseEntity<ReservationResponse> createReservation(
+    public ResponseEntity<ReservationResponse> create(
             @RequestBody final ReservationRequest reservationRequest
     ) {
         final Reservation reservation = new Reservation(
@@ -51,7 +50,7 @@ public class ReservationController {
     }
 
     @DeleteMapping("/{id}")
-    public ResponseEntity<Void> deleteReservation(@PathVariable("id") final Long id) {
+    public ResponseEntity<Void> delete(@PathVariable("id") final Long id) {
         final Optional<Reservation> reservation = reservations.stream()
                 .filter(value -> Objects.equals(value.getId(), id))
                 .findFirst();

@@ -7,6 +7,7 @@ import org.junit.jupiter.api.DisplayNameGeneration;
 import org.junit.jupiter.api.DisplayNameGenerator;
 import org.junit.jupiter.api.Test;
 import roomescape.domain.Reservation;
+import roomescape.domain.ReservationTime;
 
 @DisplayNameGeneration(DisplayNameGenerator.ReplaceUnderscores.class)
 class ReservationTest {
@@ -15,7 +16,7 @@ class ReservationTest {
     void 이전_날짜에_예약할_수_없다() {
         LocalDate localDate = LocalDate.now().minusDays(1);
         LocalTime localTime = LocalTime.now();
-        Assertions.assertThatThrownBy(() -> new Reservation(1L, "투다", localDate, localTime))
+        Assertions.assertThatThrownBy(() -> new Reservation(1L, "투다", localDate, new ReservationTime(1L, localTime)))
                 .isInstanceOf(IllegalArgumentException.class);
     }
 
@@ -23,7 +24,7 @@ class ReservationTest {
     void 같은날짜일시_이전_시간에_예약할_수_없다() {
         LocalDate localDate = LocalDate.now();
         LocalTime localTime = LocalTime.now().minusHours(1);
-        Assertions.assertThatThrownBy(() -> new Reservation(1L, "투다", localDate, localTime))
+        Assertions.assertThatThrownBy(() -> new Reservation(1L, "투다", localDate, new ReservationTime(1L, localTime)))
                 .isInstanceOf(IllegalArgumentException.class);
     }
 
@@ -31,7 +32,7 @@ class ReservationTest {
     void 이후_날짜에_예약할_수_있다() {
         LocalDate localDate = LocalDate.now().plusDays(1);
         LocalTime localTime = LocalTime.now();
-        Assertions.assertThatCode(() -> new Reservation(1L, "투다", localDate, localTime))
+        Assertions.assertThatCode(() -> new Reservation(1L, "투다", localDate, new ReservationTime(1L, localTime)))
                 .doesNotThrowAnyException();
     }
 
@@ -39,7 +40,7 @@ class ReservationTest {
     void 같은날짜일시_이후_시간_예약할_수_있다() {
         LocalDate localDate = LocalDate.now();
         LocalTime localTime = LocalTime.now().plusHours(1);
-        Assertions.assertThatCode(() -> new Reservation(1L, "투다", localDate, localTime))
+        Assertions.assertThatCode(() -> new Reservation(1L, "투다", localDate, new ReservationTime(1L, localTime)))
                 .doesNotThrowAnyException();
     }
 }

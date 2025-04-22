@@ -1,7 +1,6 @@
 package roomescape.domain;
 
 import java.time.LocalTime;
-import roomescape.dto.validation.ReservationTimeValidator;
 
 public class ReservationTime {
 
@@ -9,8 +8,7 @@ public class ReservationTime {
     private final LocalTime time;
 
     private void validate() {
-        boolean valid = new ReservationTimeValidator().isValid(this, null);
-        if (!valid) {
+        if (time == null) {
             throw new IllegalArgumentException("유효하지 않은 예약시간입니다.");
         }
     }

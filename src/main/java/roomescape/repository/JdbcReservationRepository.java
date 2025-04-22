@@ -2,7 +2,6 @@ package roomescape.repository;
 
 import java.sql.Date;
 import java.sql.PreparedStatement;
-import java.sql.Time;
 import java.time.LocalDate;
 import java.time.LocalTime;
 import java.util.List;
@@ -13,6 +12,7 @@ import org.springframework.jdbc.support.KeyHolder;
 import org.springframework.stereotype.Repository;
 import roomescape.domain.Reservation;
 import roomescape.domain.ReservationRepository;
+import roomescape.domain.ReservationTime;
 
 @Repository
 public class JdbcReservationRepository implements ReservationRepository {
@@ -24,23 +24,28 @@ public class JdbcReservationRepository implements ReservationRepository {
     }
 
     private final RowMapper<Reservation> reservationRowMapper = (resultSet, rowNumber) -> {
-        long id = resultSet.getLong("id");
+        long reservationId = resultSet.getLong("reservation_id");
         String name = resultSet.getString("name");
         LocalDate date = resultSet.getDate("date").toLocalDate();
-        LocalTime time = LocalTime.parse(resultSet.getTime("time").toString());
-        return new Reservation(id, name, date, time);
+        long timeId = resultSet.getLong("time_id");
+        LocalTime timeValue = resultSet.getTime("time_value").toLocalTime();
+
+        ReservationTime reservationTime = new ReservationTime(timeId, timeValue);
+
+        return new Reservation(reservationId, name, date, reservationTime);
     };
+
 
     @Override
     public long add(Reservation reservation) {
         KeyHolder keyHolder = new GeneratedKeyHolder();
         int update = jdbcTemplate.update(connection -> {
             PreparedStatement ps = connection.prepareStatement(
-                    "insert into reservation (name,date,time) values(?,?,?)",
+                    "insert into reservation (name,date,time_id) values(?,?,?)",
                     new String[]{"id"});
             ps.setString(1, reservation.getName());
             ps.setDate(2, Date.valueOf(reservation.getDate()));
-            ps.setTime(3, Time.valueOf(reservation.getTime()));
+            ps.setLong(3, reservation.getTime().getId());
             return ps;
         }, keyHolder);
 
@@ -49,7 +54,17 @@ public class JdbcReservationRepository implements ReservationRepository {
 
     @Override
     public List<Reservation> findAll() {
-        String sql = "select id,name,date,time from reservation";
+        String sql = """
+                SELECT
+                    r.id as reservation_id,
+                        r.name,
+                        r.date,
+                        t.id as time_id,
+                        t.start_at as time_value
+                    FROM reservation as r
+                    inner join reservation_time as t
+                    on r.time_id = t.id
+                """;
         return jdbcTemplate.query(sql, reservationRowMapper);
     }
 

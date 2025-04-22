@@ -7,6 +7,7 @@ import java.time.LocalTime;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.NoSuchElementException;
+import java.util.Optional;
 import java.util.concurrent.atomic.AtomicLong;
 import org.assertj.core.api.Assertions;
 import org.assertj.core.api.SoftAssertions;
@@ -47,8 +48,22 @@ class ReservationServiceTest {
     }
 
     @Test
+    @DisplayName("아이디를 통해 예약을 삭제한다.")
+    void deleteReservationById() {
+        // given
+        long validId = 1;  // 삭제할 예약 아이디 (유효한 값)
+        // when
+        reservationService.delete(validId);  // 서비스에서 삭제 메서드 호출
+
+        // then
+        Reservation deletedReservation = fakeReservationRepository.findById(validId);  // 리포지토리에서 해당 예약을 찾기
+        Assertions.assertThat(deletedReservation).isNull();  // 삭제된 예약은 존재하지 않아야 함
+    }
+
+
+    @Test
     @DisplayName("전체 예약 목록 을 찾는다.")
-    void test(){
+    void findAllReservations(){
         // given
         // when
         List<ReservationResponse> reservations = reservationService.getReservations();
@@ -94,6 +109,11 @@ class ReservationServiceTest {
 
         @Override
         public int deleteById(long id) {
+            boolean existingId = reservations.stream().anyMatch(reservation -> reservation.getId() == id);
+            if (existingId) {
+                reservations.removeIf(reservation -> reservation.getId() == id);
+                return 1;
+            }
             return 0;
         }
 

@@ -1,9 +1,8 @@
 package roomescape.reservation.controller;
 
-import java.util.ArrayList;
 import java.util.List;
-import java.util.concurrent.atomic.AtomicLong;
-import org.springframework.http.ResponseEntity;
+import java.util.stream.Collectors;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -11,40 +10,49 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
+import roomescape.reservation.dao.ReservationDAO;
 import roomescape.reservation.domain.Reservation;
+import roomescape.reservation.dto.ReservationAllResponse;
+import roomescape.reservation.dto.ReservationRequest;
+import roomescape.reservation.dto.ReservationIDResponse;
 
 @RestController
 @RequestMapping("/reservations")
 public class ReservationController {
-    private static final int INITIAL_VALUE = 1;
 
-    private final AtomicLong id = new AtomicLong(INITIAL_VALUE);
-    private final List<Reservation> reservations = new ArrayList<>();
+    private final ReservationDAO reservationDAO;
 
-    @GetMapping
-    public ResponseEntity<List<Reservation>> getReservations() {
-        return ResponseEntity.ok(reservations);
+    @Autowired
+    public ReservationController(final ReservationDAO reservationDAO) {
+        this.reservationDAO = reservationDAO;
     }
 
-    @PostMapping
-    public ResponseEntity<Reservation> createReservation(
-            @RequestBody Reservation reservation
-    ) {
-        Reservation newReservation = Reservation.toEntity(reservation, id.getAndIncrement());
-        reservations.add(newReservation);
+    @GetMapping
+    public List<ReservationAllResponse> getReservations() {
+        List<Reservation> reservations = reservationDAO.findAllReservations();
 
-        return ResponseEntity.ok(newReservation);
+        return reservations.stream()
+                .map(reservation -> new ReservationAllResponse(
+                        reservation.getId(),
+                        reservation.getName(),
+                        reservation.getDate(),
+                        reservation.getTime()
+                )).toList();
+    }
+
+
+    @PostMapping
+    public ReservationIDResponse createReservation(
+            @RequestBody ReservationRequest reservationRequest
+    ) {
+        long insertedId = reservationDAO.insertReservation(reservationRequest);
+        return new ReservationIDResponse(insertedId);
     }
 
     @DeleteMapping("/{id}")
-    public ResponseEntity<Void> deleteReservations(
+    public void deleteReservations(
             @PathVariable("id") long id
     ) {
-        boolean isRemoved = reservations.removeIf(reservation -> reservation.isSameId(id));
-        if (isRemoved) {
-            return ResponseEntity.ok().build();
-        }
-        return ResponseEntity.notFound().build();
+        reservationDAO.removeReservation(id);
     }
-
 }

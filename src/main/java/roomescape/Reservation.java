@@ -30,8 +30,4 @@ public record Reservation(
         return (otherStartTime.isAfter(startTime) || otherStartTime.isEqual(startTime))
                 && otherStartTime.isBefore(endTime);
     }
-
-    public boolean isSameId(final Long id) {
-        return this.id.equals(id);
-    }
 }

@@ -5,11 +5,16 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.jdbc.JdbcTest;
 import org.springframework.context.annotation.Import;
 import org.springframework.jdbc.core.JdbcTemplate;
+import org.springframework.jdbc.support.GeneratedKeyHolder;
+import org.springframework.jdbc.support.KeyHolder;
 import org.springframework.transaction.annotation.Transactional;
 import roomescape.business.domain.Reservation;
 import roomescape.dto.request.ReservationCreateRequest;
 import roomescape.dto.request.ReservationTimeCreateRequest;
 
+import java.sql.Date;
+import java.sql.PreparedStatement;
+import java.sql.Statement;
 import java.time.LocalDate;
 import java.time.LocalTime;
 import java.util.List;
@@ -47,6 +52,28 @@ class ReservationJdbcDatabaseTest {
         assertThat(result.get(1).name()).isEqualTo("popo");
         assertThat(result.get(1).date()).isEqualTo(LocalDate.now().plusDays(25));
         assertThat(result.get(1).startTime()).isEqualTo(LocalTime.of(13, 0));
+    }
+
+    @Test
+    void id_조회_테스트() {
+        final long timeId = timeDatabase.saveAndGetId(new ReservationTimeCreateRequest(LocalTime.of(10, 0)));
+        KeyHolder keyHolder = new GeneratedKeyHolder();
+        jdbcTemplate.update(connection -> {
+            PreparedStatement ps = connection.prepareStatement(
+                    "INSERT INTO reservation (name, date, time_id) VALUES (?, ?, ?)",
+                    Statement.RETURN_GENERATED_KEYS);
+            ps.setString(1, "dompoo");
+            ps.setDate(2, Date.valueOf(LocalDate.now().plusDays(20)));
+            ps.setLong(3, timeId);
+            return ps;
+        }, keyHolder);
+        long reservationId = keyHolder.getKey().longValue();
+
+        final Reservation result = database.findById(reservationId);
+
+        assertThat(result.name()).isEqualTo("dompoo");
+        assertThat(result.date()).isEqualTo(LocalDate.now().plusDays(20));
+        assertThat(result.startTime()).isEqualTo(LocalTime.of(10, 0));
     }
 
     @Test

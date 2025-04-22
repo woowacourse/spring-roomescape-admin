@@ -33,6 +33,12 @@ public class RoomescapeController {
         return ResponseEntity.ok(request.mapToReservation(id));
     }
 
+    @GetMapping("/reservations/{id}")
+    public ResponseEntity<Reservation> getReservation(@PathVariable Long id) {
+        Reservation reservation = reservationRepository.findById(id);
+        return ResponseEntity.ok(reservation);
+    }
+
     @DeleteMapping("/reservations/{id}")
     public ResponseEntity<Void> deleteReservation(@PathVariable Long id) {
         reservationRepository.removeById(id);

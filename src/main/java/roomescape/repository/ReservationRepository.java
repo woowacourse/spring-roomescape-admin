@@ -9,8 +9,6 @@ import roomescape.ReservationCreateRequest;
 import roomescape.entity.Reservation;
 
 import java.sql.PreparedStatement;
-import java.time.format.DateTimeFormatter;
-import java.time.format.FormatStyle;
 import java.util.List;
 
 @Repository
@@ -34,12 +32,17 @@ public class ReservationRepository {
         jdbcTemplate.update(connection -> {
             PreparedStatement ps = connection.prepareStatement(sql, new String[]{"id"});
             ps.setString(1, request.name());
-            ps.setDate(2, Date.valueOf(request.date()));
-            ps.setTime(3, Time.valueOf(request.time()));
+            ps.setString(2, String.valueOf(request.date()));
+            ps.setString(3, String.valueOf(request.time()));
             return ps;
         }, keyHolder);
 
         return keyHolder.getKey().longValue();
+    }
+
+    public Reservation findById(final Long id) {
+        String sql = "SELECT * FROM RESERVATION WHERE id = ?";
+        return jdbcTemplate.queryForObject(sql, reservationRowMapper, id);
     }
 
     public void removeById(final Long id) {

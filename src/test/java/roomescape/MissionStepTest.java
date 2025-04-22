@@ -185,16 +185,9 @@ public class MissionStepTest {
                 .then().log().all()
                 .statusCode(200);
 
-        RestAssured.given().log().all()
-                .contentType(ContentType.JSON)
-                .body(params)
-                .when().post("/times")
-                .then().log().all()
-                .statusCode(200);
-
         reservation.put("name", "브라운");
         reservation.put("date", LocalDate.now().plusDays(1).toString());
-        reservation.put("timeId", 2);
+        reservation.put("timeId", 1);
 
         RestAssured.given().log().all()
                 .contentType(ContentType.JSON)
@@ -203,10 +196,10 @@ public class MissionStepTest {
                 .then().log().all()
                 .statusCode(200);
 
-//        RestAssured.given().log().all()
-//                .when().get("/reservations")
-//                .then().log().all()
-//                .statusCode(200)
-//                .body("size()", is(1));
+        RestAssured.given().log().all()
+                .when().get("/reservations")
+                .then().log().all()
+                .statusCode(200)
+                .body("size()", is(1));
     }
 }

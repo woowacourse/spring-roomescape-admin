@@ -10,4 +10,6 @@ public interface ReservationTimes {
     long create(ReservationTimeCreateRequest reservationTimeCreateRequest);
 
     void delete(final Long id);
+
+    ReservationTime findById(Long id);
 }

@@ -44,6 +44,12 @@ public class JdbcReservationTimes implements ReservationTimes {
         jdbcTemplate.update(sql, id);
     }
 
+    @Override
+    public ReservationTime findById(final Long id) {
+        final String sql = "SELECT * FROM reservation_time WHERE id = ?";
+        return jdbcTemplate.queryForObject(sql, reservationTimeMapper, id);
+    }
+
     private final RowMapper<ReservationTime> reservationTimeMapper = (resultSet, rowNum) -> new ReservationTime(
             resultSet.getLong("id"),
             resultSet.getObject("start_at", LocalTime.class)

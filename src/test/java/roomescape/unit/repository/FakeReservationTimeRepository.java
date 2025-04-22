@@ -33,4 +33,13 @@ public class FakeReservationTimeRepository implements ReservationTimeRepository 
         findReservationTimes.orElseThrow(() -> new IllegalArgumentException("존재하지 않는 id입니다." + id));
         reservationTimes.remove(findReservationTimes.get());
     }
+
+    @Override
+    public ReservationTime findById(Long id) {
+        Optional<ReservationTime> findReservationTimes = reservationTimes.stream()
+                .filter(reservation -> reservation.getId().equals(id))
+                .findAny();
+        findReservationTimes.orElseThrow(() -> new IllegalArgumentException("존재하지 않는 id입니다." + id));
+        return findReservationTimes.get();
+    }
 }

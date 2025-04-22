@@ -3,6 +3,7 @@ package roomescape.service;
 import java.util.List;
 import org.springframework.stereotype.Service;
 import roomescape.domain.ReservationTime;
+import roomescape.dto.AddReservationTimeDto;
 import roomescape.repository.ReservationTimeRepository;
 
 @Service
@@ -22,7 +23,12 @@ public class ReservationTimeService {
         reservationTimeRepository.deleteById(id);
     }
 
-    public Long addReservationTime(ReservationTime reservationTime) {
+    public Long addReservationTime(AddReservationTimeDto addReservationTimeDto) {
+        ReservationTime reservationTime = addReservationTimeDto.toEntity();
         return reservationTimeRepository.add(reservationTime);
+    }
+
+    public ReservationTime findReservationTimeById(Long id) {
+        return reservationTimeRepository.findById(id);
     }
 }

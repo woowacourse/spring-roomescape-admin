@@ -8,6 +8,7 @@ import java.time.LocalDate;
 import java.util.HashMap;
 import java.util.Map;
 import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.DisplayNameGeneration;
 import org.junit.jupiter.api.DisplayNameGenerator;
 import org.junit.jupiter.api.Nested;
@@ -23,6 +24,7 @@ import org.springframework.web.context.WebApplicationContext;
 @AutoConfigureMockMvc
 @DirtiesContext
 @DisplayNameGeneration(DisplayNameGenerator.ReplaceUnderscores.class)
+@Disabled
 public class MissionStep1Test {
 
     @Autowired

@@ -36,10 +36,7 @@ public class ReservationService {
         Person person = new Person(reservationRequestDto.name());
         LocalDate date = LocalDate.parse(reservationRequestDto.date());
 
-        ReservationTime reservationTime = reservationTimes.findById(
-            reservationRequestDto.timeId());
-        //ReservationTime reservationTime = reservationTimeDao.findById(
-        //    reservationRequestDto.timeId());
+        ReservationTime reservationTime = reservationTimes.findById(reservationRequestDto.timeId());
         Reservation reservation = new Reservation(person, date, reservationTime);
         reservationDao.saveReservation(reservation);
         reservations.save(reservation);

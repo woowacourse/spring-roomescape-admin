@@ -2,6 +2,7 @@ package roomescape;
 
 import java.util.Optional;
 import org.springframework.stereotype.Service;
+import roomescape.controller.dto.ReservationDto;
 import roomescape.controller.dto.ReservationRegisterDto;
 import roomescape.domain.Reservation;
 import roomescape.domain.ReservationTime;
@@ -19,7 +20,7 @@ public class ReservationService {
         this.reservationTimeRepository = reservationTimeRepository;
     }
 
-    public Long save(final ReservationRegisterDto reservationRegisterDto) {
+    public Long saveReservation(final ReservationRegisterDto reservationRegisterDto) {
         ReservationTime reservationTime = findReservationTime(reservationRegisterDto);
         Reservation reservation = reservationRegisterDto.toReservation(reservationTime);
         long savedId = reservationRepository.save(reservation);
@@ -28,11 +29,21 @@ public class ReservationService {
         return savedId;
     }
 
+    public ReservationDto findReservationById(final Long id) {
+        Optional<Reservation> foundReservation = reservationRepository.findById(id);
+
+        if (foundReservation.isEmpty()) {
+            throw new IllegalArgumentException("해당 id 와 일치하는 예약 내역이 존재하지 않습니다.");
+        }
+
+        return new ReservationDto(foundReservation.get());
+    }
+
     private ReservationTime findReservationTime(ReservationRegisterDto reservationRegisterDto) {
         Optional<ReservationTime> foundReservationTime = reservationTimeRepository.findById(
                 reservationRegisterDto.reservationTimeId());
         if (foundReservationTime.isEmpty()) {
-            throw new IllegalArgumentException("해당 id 와 일치하는 ReservationTime 이 존재하지 않습니다.");
+            throw new IllegalArgumentException("해당 id 와 일치하는 예약 시각이 존재하지 않습니다.");
         }
         return foundReservationTime.get();
     }

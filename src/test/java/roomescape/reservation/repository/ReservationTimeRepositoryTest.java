@@ -12,9 +12,10 @@ import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
 import org.springframework.jdbc.core.JdbcTemplate;
+import roomescape.common.exception.AlreadyInUseException;
+import roomescape.common.exception.EntityNotFoundException;
 import roomescape.config.TestConfig;
 import roomescape.reservation.entity.ReservationTime;
-import roomescape.common.exception.EntityNotFoundException;
 
 class ReservationTimeRepositoryTest {
 
@@ -52,20 +53,6 @@ class ReservationTimeRepositoryTest {
 
     }
 
-    @DisplayName("해당 ID를 삭제한다.")
-    @Test
-    void test6() {
-        // given
-        Long id = 1L;
-        LocalTime now = LocalTime.of(9, 0);
-        String sql = "insert into reservation_time(id, start_at) values(?, ?)";
-        jdbcTemplate.update(sql, id, now);
-
-        // when
-        assertThatCode(() -> reservationTimeRepository.deleteById(id))
-                .doesNotThrowAnyException();
-    }
-
     @DisplayName("해당 ID가 DB에 없다면 예외를 반환한다.")
     @Test
     void test7() {
@@ -76,16 +63,52 @@ class ReservationTimeRepositoryTest {
     /**
      *    외래키 제약 조건에 의해 truncate를 사용할 수 없다. 제약을 거는게 맞을까?
      *    코드 레벨에서 처리 방법은? 물론, 데이터베이스 제약에 의해 문제를 인지할 수 있다는 장점은 있다.
+     *    유연성을 준다면, 제약을 코드 레벨에서 하는 방법도 좋다고 생각한다.
      */
     @AfterEach
     void cleanUp() {
-        //        jdbcTemplate.update("truncate table reservation_time");
+        jdbcTemplate.update("truncate table reservation");
         jdbcTemplate.update("delete from reservation_time");
     }
 
     private void saveReservationTime(Long id, LocalTime startAt) {
         String sql = "insert into reservation_time (id, start_at) values (?, ?)";
         jdbcTemplate.update(sql, id, startAt);
+    }
+
+    @DisplayName("예약 시간을 삭제한다.")
+    @Nested
+    class delete {
+
+        @DisplayName("해당 ID를 삭제한다.")
+        @Test
+        void test1() {
+            // given
+            Long id = 1L;
+            LocalTime now = LocalTime.of(9, 0);
+            String sql = "insert into reservation_time(id, start_at) values(?, ?)";
+            jdbcTemplate.update(sql, id, now);
+
+            // when
+            assertThatCode(() -> reservationTimeRepository.deleteById(id))
+                    .doesNotThrowAnyException();
+        }
+
+        @DisplayName("Reservation 테이블에서 사용 중이라면 AlreadyUseException 예외를 반환한다.")
+        @Test
+        void test2(){
+            // given
+            Long id = 1L;
+            LocalTime now = LocalTime.of(9, 0);
+            String sql = "insert into reservation_time(id, start_at) values(?, ?)";
+            jdbcTemplate.update(sql, id, now);
+
+            jdbcTemplate.update("INSERT INTO reservation(name, date, time_id) VALUES (?, ?, ?)", "꾹", LocalTime.now(), id);
+
+            // when
+            assertThatThrownBy(() -> reservationTimeRepository.deleteById(id))
+                    .isInstanceOf(AlreadyInUseException.class);
+        }
     }
 
     @DisplayName("예약 시간을 저장한다.")

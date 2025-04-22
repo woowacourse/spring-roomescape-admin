@@ -10,8 +10,9 @@ import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.support.GeneratedKeyHolder;
 import org.springframework.jdbc.support.KeyHolder;
 import org.springframework.stereotype.Repository;
-import roomescape.reservation.entity.ReservationTime;
+import roomescape.common.exception.AlreadyInUseException;
 import roomescape.common.exception.EntityNotFoundException;
+import roomescape.reservation.entity.ReservationTime;
 
 @Repository
 public class ReservationTimeRepositoryImpl implements ReservationTimeRepository {
@@ -95,13 +96,24 @@ public class ReservationTimeRepositoryImpl implements ReservationTimeRepository 
 
     @Override
     public void deleteById(Long id) {
+        checkUsingReservationTime(id);
+
         String deleteSql = "delete from reservation_time where id = ?";
 
-        // TODO
         int update = jdbcTemplate.update(deleteSql, id);
 
         if (update != 1) {
             throw new EntityNotFoundException("ReservationTime with id " + id + " not found");
+        }
+    }
+
+    private void checkUsingReservationTime(Long timeId) {
+        String selectSql = "select count(*) from reservation where time_id = ?";
+
+        Integer count = jdbcTemplate.queryForObject(selectSql, Integer.class, timeId);
+
+        if (count > 0) {
+            throw new AlreadyInUseException("reservation time with id " + timeId + " already exists");
         }
     }
 

@@ -1,5 +1,7 @@
 package roomescape.service;
 
+import java.time.LocalDate;
+import java.time.LocalTime;
 import java.util.List;
 import org.springframework.stereotype.Service;
 import roomescape.domain.Reservation;
@@ -19,6 +21,16 @@ public class ReservationService {
     }
 
     public long addReservation(Reservation newReservation) {
+        LocalDate nowDate = LocalDate.now();
+        LocalTime nowTime = LocalTime.now();
+
+        if (newReservation.getDate().isBefore(nowDate)) {
+            throw new IllegalArgumentException("과거 시간에 예약할 수 없습니다.");
+        }
+
+        if (newReservation.getDate().isEqual(nowDate) && newReservation.getTime().getTime().isBefore(nowTime)) {
+            throw new IllegalArgumentException("과거 시간에 예약할 수 없습니다.");
+        }
         return reservationDao.add(newReservation);
     }
 

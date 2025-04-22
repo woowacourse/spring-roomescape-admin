@@ -1,12 +1,14 @@
 package roomescape.integrated.mission;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.hamcrest.Matchers.is;
 
 import io.restassured.RestAssured;
 import io.restassured.http.ContentType;
 import java.sql.Connection;
 import java.sql.SQLException;
 import java.time.LocalDate;
+import java.time.LocalTime;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -96,14 +98,15 @@ class MissionStep2Test {
     @Test
     void 칠단계_시간_추가() {
         Map<String, String> params = new HashMap<>();
-        params.put("startAt", "10:00");
+        LocalTime afterTime = LocalTime.now().plusHours(1L);
+        params.put("startAt", afterTime.toString());
 
         RestAssured.given().log().all()
                 .contentType(ContentType.JSON)
                 .body(params)
                 .when().post("/times")
                 .then().log().all()
-                .statusCode(200);
+                .statusCode(201);
 
         RestAssured.given().log().all()
                 .when().get("/times")
@@ -114,7 +117,7 @@ class MissionStep2Test {
         RestAssured.given().log().all()
                 .when().delete("/times/1")
                 .then().log().all()
-                .statusCode(200);
+                .statusCode(204);
     }
 
 }

@@ -6,6 +6,7 @@ import jakarta.validation.constraints.NotNull;
 import java.time.LocalDate;
 import java.time.LocalTime;
 import roomescape.domain.Reservation;
+import roomescape.dto.validation.FutureDateTime;
 
 @FutureDateTime
 public record AddReservationDto(@NotNull @NotBlank(message = "이름이 비어있을 수 없습니다.") String name,

@@ -1,8 +1,8 @@
-package roomescape.reservationTime.repository;
+package roomescape.repository;
 
 import java.util.List;
-import roomescape.reservationTime.controller.request.ReservationTimeRequest;
-import roomescape.reservationTime.controller.response.ReservationTimeResponse;
+import roomescape.controller.request.ReservationTimeRequest;
+import roomescape.controller.response.ReservationTimeResponse;
 
 public interface ReservationTimeRepository {
 

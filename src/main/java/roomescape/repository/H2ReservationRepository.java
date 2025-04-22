@@ -1,4 +1,4 @@
-package roomescape.reservation.repository;
+package roomescape.repository;
 
 import java.time.LocalDate;
 import java.time.LocalTime;
@@ -11,9 +11,9 @@ import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;
 import org.springframework.jdbc.core.simple.SimpleJdbcInsert;
 import org.springframework.stereotype.Repository;
-import roomescape.reservation.controller.request.ReservationRequest;
-import roomescape.reservation.controller.response.ReservationResponse;
-import roomescape.reservationTime.controller.response.ReservationTimeResponse;
+import roomescape.controller.request.ReservationRequest;
+import roomescape.controller.response.ReservationResponse;
+import roomescape.controller.response.ReservationTimeResponse;
 
 @Primary
 @Repository

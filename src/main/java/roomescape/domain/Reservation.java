@@ -1,7 +1,6 @@
-package roomescape.reservation.model;
+package roomescape.domain;
 
 import java.time.LocalDate;
-import roomescape.reservationTime.model.ReservationTime;
 
 public class Reservation {
 

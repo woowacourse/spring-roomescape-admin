@@ -1,4 +1,4 @@
-package roomescape.reservationTime.repository;
+package roomescape.repository;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -7,9 +7,9 @@ import java.util.NoSuchElementException;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.atomic.AtomicLong;
 import org.springframework.stereotype.Repository;
-import roomescape.reservationTime.controller.request.ReservationTimeRequest;
-import roomescape.reservationTime.controller.response.ReservationTimeResponse;
-import roomescape.reservationTime.model.ReservationTime;
+import roomescape.controller.request.ReservationTimeRequest;
+import roomescape.controller.response.ReservationTimeResponse;
+import roomescape.domain.ReservationTime;
 
 @Repository
 public class MemoryReservationTimeRepository implements ReservationTimeRepository {

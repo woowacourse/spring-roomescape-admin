@@ -1,9 +1,9 @@
-package roomescape.reservation.controller.request;
+package roomescape.controller.request;
 
 import java.time.LocalDate;
-import roomescape.reservation.model.Reservation;
-import roomescape.reservationTime.controller.response.ReservationTimeResponse;
-import roomescape.reservationTime.model.ReservationTime;
+import roomescape.controller.response.ReservationTimeResponse;
+import roomescape.domain.Reservation;
+import roomescape.domain.ReservationTime;
 
 public record ReservationRequest(String name, LocalDate date, Long timeId) {
 

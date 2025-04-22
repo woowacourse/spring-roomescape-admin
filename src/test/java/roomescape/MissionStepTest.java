@@ -63,7 +63,11 @@ public class MissionStepTest {
                 .body(params)
                 .when().post("/reservations")
                 .then().log().all()
-                .statusCode(200);
+                .statusCode(200)
+                .body("id", is(1))
+                .body("name", is("브라운"))
+                .body("date", is(date))
+                .body("time", is("15:40"));
 
         RestAssured.given().log().all()
                 .when().get("/reservations")

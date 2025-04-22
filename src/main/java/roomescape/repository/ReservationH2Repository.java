@@ -1,9 +1,15 @@
 package roomescape.repository;
 
+import java.sql.Date;
+import java.sql.PreparedStatement;
+import java.sql.Time;
 import java.util.List;
+import java.util.Objects;
 import org.springframework.context.annotation.Primary;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;
+import org.springframework.jdbc.support.GeneratedKeyHolder;
+import org.springframework.jdbc.support.KeyHolder;
 import org.springframework.stereotype.Repository;
 import roomescape.entity.Reservation;
 import roomescape.exceptions.EntityNotFoundException;
@@ -25,9 +31,18 @@ public class ReservationH2Repository implements ReservationRepository {
     }
 
     @Override
-    public void save(Reservation reservation) {
+    public Reservation save(Reservation reservation) {
+        KeyHolder keyHolder = new GeneratedKeyHolder();
         String sql = "insert into reservation (name, date, time) values (?, ?, ?)";
-        jdbcTemplate.update(sql, reservation.name(), reservation.date(), reservation.time());
+        jdbcTemplate.update(connection -> {
+            PreparedStatement ps = connection.prepareStatement(sql, new String[]{"id"});
+            ps.setString(1, reservation.name());
+            ps.setDate(2, Date.valueOf(reservation.date()));
+            ps.setTime(3, Time.valueOf(reservation.time()));
+            return ps;
+        }, keyHolder);
+        Long id = Objects.requireNonNull(keyHolder.getKey()).longValue();
+        return new Reservation(id, reservation.name(), reservation.date(), reservation.time());
     }
 
     @Override

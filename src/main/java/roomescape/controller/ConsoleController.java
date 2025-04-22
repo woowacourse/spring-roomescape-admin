@@ -37,45 +37,49 @@ public class ConsoleController {
         Command command = null;
         while (command != Command.QUIT) {
             command = retry(inputView::readCommand);
-            if (command == Command.TIME_GET) {
-                outputView.printReservationTimes(reservationTimeService.findAllReservationTime());
-                continue;
-            }
-            if (command == Command.TIME_ADD) {
-                retry(() -> {
-                    CreateReservationTimeDto createReservationTimeDto = inputView.readReservationTimeDto();
-                    reservationTimeService.createReservationTime(createReservationTimeDto);
-                });
-                outputView.printSuccessMessage();
-                continue;
-            }
-            if (command == Command.TIME_DELETE) {
-                retry(() -> {
-                    Long id = inputView.readReservationTimeId();
-                    reservationTimeService.deleteReservationTime(id);
-                });
-                outputView.printSuccessMessage();
-                continue;
-            }
-            if (command == Command.RESERVATION_GET) {
-                outputView.printReservations(reservationService.findAllReservations());
-                continue;
-            }
-            if (command == Command.RESERVATION_ADD) {
-                retry(() -> {
-                    CreateReservationDto createReservationDto = inputView.readReservationDto();
-                    reservationService.createReservation(createReservationDto);
-                });
-                outputView.printSuccessMessage();
-                continue;
-            }
-            if (command == Command.RESERVATION_DELETE) {
-                retry(() -> {
-                    Long id = inputView.readReservationId();
-                    reservationService.deleteReservation(id);
-                });
-                outputView.printSuccessMessage();
-            }
+            processCommand(command);
+        }
+    }
+
+    private void processCommand(Command command) {
+        if (command == Command.TIME_GET) {
+            outputView.printReservationTimes(reservationTimeService.findAllReservationTime());
+            return;
+        }
+        if (command == Command.TIME_ADD) {
+            retry(() -> {
+                CreateReservationTimeDto createReservationTimeDto = inputView.readReservationTimeDto();
+                reservationTimeService.createReservationTime(createReservationTimeDto);
+            });
+            outputView.printSuccessMessage();
+            return;
+        }
+        if (command == Command.TIME_DELETE) {
+            retry(() -> {
+                Long id = inputView.readReservationTimeId();
+                reservationTimeService.deleteReservationTime(id);
+            });
+            outputView.printSuccessMessage();
+            return;
+        }
+        if (command == Command.RESERVATION_GET) {
+            outputView.printReservations(reservationService.findAllReservations());
+            return;
+        }
+        if (command == Command.RESERVATION_ADD) {
+            retry(() -> {
+                CreateReservationDto createReservationDto = inputView.readReservationDto();
+                reservationService.createReservation(createReservationDto);
+            });
+            outputView.printSuccessMessage();
+            return;
+        }
+        if (command == Command.RESERVATION_DELETE) {
+            retry(() -> {
+                Long id = inputView.readReservationId();
+                reservationService.deleteReservation(id);
+            });
+            outputView.printSuccessMessage();
         }
     }
 

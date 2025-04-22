@@ -9,6 +9,7 @@ import roomescape.dto.ReservationRequest;
 import roomescape.dto.ReservationResponse;
 import roomescape.entity.Reservation;
 import roomescape.repository.ReservationRepository;
+import roomescape.repository.ReservationRepositoryImpl;
 
 @Service
 public class ReservationService {

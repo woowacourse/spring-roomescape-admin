@@ -1,0 +1,31 @@
+package roomescape.service;
+
+import java.time.LocalTime;
+import java.util.List;
+import lombok.RequiredArgsConstructor;
+import org.springframework.stereotype.Service;
+import roomescape.ReservationTime;
+import roomescape.repository.ReservationTimeRepository;
+import roomescape.service.dto.ReservationTimeResponse;
+
+@Service
+@RequiredArgsConstructor
+public class ReservationTimeService {
+
+    private final ReservationTimeRepository reservationTimeRepository;
+
+    public ReservationTime saveTime(final LocalTime time) {
+        return reservationTimeRepository.save(time);
+    }
+
+    public List<ReservationTimeResponse> findAll() {
+        final List<ReservationTime> reservationTimes = reservationTimeRepository.findAll();
+        return reservationTimes.stream()
+                .map(ReservationTimeResponse::new)
+                .toList();
+    }
+
+    public void delete(final Long id) {
+        reservationTimeRepository.delete(id);
+    }
+}

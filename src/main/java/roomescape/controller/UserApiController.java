@@ -1,5 +1,7 @@
 package roomescape.controller;
 
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import roomescape.domain.dto.ReservationReqDto;
 import roomescape.domain.dto.ReservationResDto;
@@ -17,17 +19,20 @@ public class UserApiController {
     }
 
     @GetMapping("reservations")
-    public List<ReservationResDto> readReservations() {
-        return reservationService.readAll();
+    public ResponseEntity<List<ReservationResDto>> readReservations() {
+        List<ReservationResDto> resDtos = reservationService.readAll();
+        return ResponseEntity.ok(resDtos);
     }
 
     @PostMapping("reservations")
-    public ReservationResDto add(@RequestBody ReservationReqDto dto) {
-        return reservationService.add(dto);
+    public ResponseEntity<ReservationResDto> add(@RequestBody ReservationReqDto dto) {
+        ReservationResDto resDto = reservationService.add(dto);
+        return ResponseEntity.status(HttpStatus.CREATED).body(resDto);
     }
 
     @DeleteMapping("reservations/{reservationId}")
-    public void delete(@PathVariable("reservationId") Long id) {
+    public ResponseEntity<Void> delete(@PathVariable("reservationId") Long id) {
        reservationService.delete(id);
+        return ResponseEntity.noContent().build();
     }
 }

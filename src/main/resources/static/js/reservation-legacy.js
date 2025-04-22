@@ -121,7 +121,7 @@ function requestCreate(reservation) {
 
   return fetch(RESERVATION_API_ENDPOINT, requestOptions)
       .then(response => {
-        if (response.status === 200) return response.json();
+        if (response.ok) return response.json();
         throw new Error('Create failed');
       });
 }
@@ -133,7 +133,7 @@ function requestDelete(id) {
 
   return fetch(`${RESERVATION_API_ENDPOINT}/${id}`, requestOptions)
       .then(response => {
-        if (response.status !== 200) throw new Error('Delete failed');
+        if (!response.ok) throw new Error('Delete failed');
       });
 }
 

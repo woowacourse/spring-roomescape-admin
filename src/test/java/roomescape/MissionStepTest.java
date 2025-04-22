@@ -5,6 +5,7 @@ import io.restassured.http.ContentType;
 import io.restassured.response.ValidatableResponse;
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.http.HttpStatus;
 import org.springframework.test.annotation.DirtiesContext;
 
 import java.time.LocalDateTime;
@@ -57,7 +58,7 @@ public class MissionStepTest {
                 .body(params)
                 .when().post("/reservations")
                 .then().log().all()
-                .statusCode(200);
+                .statusCode(HttpStatus.CREATED.value());
 
         response.body("name", is(dummyName));
         response.body("date", is(dummyDateText));
@@ -82,17 +83,17 @@ public class MissionStepTest {
                 .body(params)
                 .when().post("/reservations")
                 .then().log().all()
-                .statusCode(200);
+                .statusCode(HttpStatus.CREATED.value());
 
         RestAssured.given().log().all()
                 .when().delete("/reservations/1")
                 .then().log().all()
-                .statusCode(200);
+                .statusCode(HttpStatus.NO_CONTENT.value());
 
         RestAssured.given().log().all()
                 .when().get("/reservations")
                 .then().log().all()
-                .statusCode(200)
+                .statusCode(HttpStatus.OK.value())
                 .body("size()", is(0));
     }
 }

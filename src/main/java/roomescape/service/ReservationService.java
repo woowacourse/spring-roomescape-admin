@@ -48,7 +48,7 @@ public class ReservationService {
     private void validateDuplicateDateTime(Reservation inputReservation) {
         List<Reservation> reservations = reservationDatabase.findAll();
         for (Reservation reservation : reservations) {
-            if (inputReservation.isSameDateTime(reservation)) {
+            if (inputReservation.isSameDateTime(reservation)) { // TODO 2025. 4. 22. 11:12: 중복 예외 상태 코드는 409
                 throw new IllegalArgumentException("이미 예약되어 있는 시간입니다.");
             }
         }

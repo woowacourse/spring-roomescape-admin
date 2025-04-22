@@ -31,7 +31,7 @@ class MemoryReservationRepositoryTest {
         Reservation reservation = new Reservation(1L, "name1", RESERVATION_DATE_TIME);
         memoryReservationRepository.add(reservation);
         // when
-        List<Reservation> reservations = memoryReservationRepository.getReservations();
+        List<Reservation> reservations = memoryReservationRepository.findAll();
 
         // then
         assertThat(reservations).contains(new Reservation(1L, "name1", RESERVATION_DATE_TIME));
@@ -56,7 +56,7 @@ class MemoryReservationRepositoryTest {
         // when
         memoryReservationRepository.add(reservation);
         // then
-        List<Reservation> reservations = memoryReservationRepository.getReservations();
+        List<Reservation> reservations = memoryReservationRepository.findAll();
         assertThat(reservations).hasSize(1);
     }
 
@@ -69,7 +69,7 @@ class MemoryReservationRepositoryTest {
         memoryReservationRepository.add(reservation1);
         memoryReservationRepository.add(reservation2);
         // then
-        List<Reservation> reservations = memoryReservationRepository.getReservations();
+        List<Reservation> reservations = memoryReservationRepository.findAll();
         assertThat(reservations).contains(
                 new Reservation(1L, "name1", RESERVATION_DATE_TIME),
                 new Reservation(2L, "name2", RESERVATION_DATE_TIME)
@@ -85,6 +85,6 @@ class MemoryReservationRepositoryTest {
         memoryReservationRepository.deleteById(1L);
 
         // then
-        assertThat(memoryReservationRepository.getReservations()).hasSize(0);
+        assertThat(memoryReservationRepository.findAll()).hasSize(0);
     }
 }

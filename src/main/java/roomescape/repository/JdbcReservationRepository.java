@@ -32,7 +32,7 @@ public class JdbcReservationRepository implements ReservationRepository {
     }
 
     @Override
-    public List<Reservation> getReservations() {
+    public List<Reservation> findAll() {
         String sql = """
                 SELECT 
                     r.id as reservation_id, 

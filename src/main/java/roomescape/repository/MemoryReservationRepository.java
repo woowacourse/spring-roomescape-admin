@@ -27,7 +27,7 @@ public class MemoryReservationRepository implements ReservationRepository {
                 .filter(reservation -> reservation.isEqualId(id)).findFirst();
     }
 
-    public List<Reservation> getReservations() {
+    public List<Reservation> findAll() {
         return Collections.unmodifiableList(reservations);
     }
 }

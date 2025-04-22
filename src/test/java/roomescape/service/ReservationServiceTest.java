@@ -59,7 +59,7 @@ class ReservationServiceTest {
         ReservationDto reservation = reservationService.createReservation(createReservationDto);
         // then
         SoftAssertions soft = new SoftAssertions();
-        soft.assertThat(reservationRepository.getReservations()).hasSize(1);
+        soft.assertThat(reservationRepository.findAll()).hasSize(1);
         soft.assertThat(reservation.id()).isEqualTo(1L);
         soft.assertThat(reservation.name()).isEqualTo("name1");
         soft.assertThat(reservation.date()).isEqualTo("2025-12-12");
@@ -87,7 +87,7 @@ class ReservationServiceTest {
         SoftAssertions soft = new SoftAssertions();
         soft.assertThatCode(() -> reservationService.deleteReservation(1L))
                 .doesNotThrowAnyException();
-        soft.assertThat(reservationRepository.getReservations()).hasSize(0);
+        soft.assertThat(reservationRepository.findAll()).hasSize(0);
         soft.assertAll();
     }
 

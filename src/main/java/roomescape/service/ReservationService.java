@@ -26,7 +26,7 @@ public class ReservationService {
     }
 
     public List<ReservationDto> findAllReservations() {
-        return reservationRepository.getReservations()
+        return reservationRepository.findAll()
                 .stream()
                 .map(ReservationDto::from)
                 .toList();

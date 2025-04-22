@@ -28,23 +28,6 @@ class ReservationApiControllerTest {
     @Autowired
     private JdbcTemplate jdbcTemplate;
 
-    private static void createAndSendReservation() {
-        Map<String, String> params = createReservationData();
-
-        RestAssured.given().log().all()
-                .contentType(ContentType.JSON)
-                .body(params)
-                .when().post("/reservations");
-    }
-
-    private static Map<String, String> createReservationData() {
-        Map<String, String> params = new HashMap<>();
-        params.put("name", "브라운");
-        params.put("date", "2023-08-05");
-        params.put("time", "15:40");
-        return params;
-    }
-
     @BeforeEach
     void setUp() {
         RestAssured.port = port;
@@ -160,5 +143,22 @@ class ReservationApiControllerTest {
         Integer countAfterDelete = jdbcTemplate.queryForObject("SELECT count(*) from reservation", Integer.class);
 
         assertThat(countAfterDelete).isEqualTo(0);
+    }
+
+    private void createAndSendReservation() {
+        Map<String, String> params = createReservationData();
+
+        RestAssured.given().log().all()
+                .contentType(ContentType.JSON)
+                .body(params)
+                .when().post("/reservations");
+    }
+
+    private Map<String, String> createReservationData() {
+        Map<String, String> params = new HashMap<>();
+        params.put("name", "브라운");
+        params.put("date", "2023-08-05");
+        params.put("time", "15:40");
+        return params;
     }
 }

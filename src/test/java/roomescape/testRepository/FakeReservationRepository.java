@@ -3,7 +3,7 @@ package roomescape.testRepository;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
-import roomescape.model.Reservation;
+import roomescape.domain.Reservation;
 import roomescape.repository.ReservationRepository;
 
 public class FakeReservationRepository implements ReservationRepository {

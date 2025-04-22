@@ -13,7 +13,7 @@ import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.ValueSource;
 import roomescape.dto.request.TimeRequest;
 import roomescape.dto.response.TimeResponse;
-import roomescape.model.ReservationTime;
+import roomescape.domain.ReservationTime;
 import roomescape.repository.TimeRepository;
 import roomescape.testRepository.FakeTimeRepository;
 

@@ -6,7 +6,7 @@ import java.util.List;
 import org.springframework.stereotype.Service;
 import roomescape.dto.request.TimeRequest;
 import roomescape.dto.response.TimeResponse;
-import roomescape.model.ReservationTime;
+import roomescape.domain.ReservationTime;
 import roomescape.repository.TimeRepository;
 
 @Service

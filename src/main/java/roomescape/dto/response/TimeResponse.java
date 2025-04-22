@@ -2,7 +2,7 @@ package roomescape.dto.response;
 
 import java.time.format.DateTimeFormatter;
 import java.util.List;
-import roomescape.model.ReservationTime;
+import roomescape.domain.ReservationTime;
 
 public record TimeResponse(
         Long id,

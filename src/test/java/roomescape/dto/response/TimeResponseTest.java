@@ -7,7 +7,7 @@ import java.time.LocalTime;
 import java.util.List;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
-import roomescape.model.ReservationTime;
+import roomescape.domain.ReservationTime;
 
 class TimeResponseTest {
 

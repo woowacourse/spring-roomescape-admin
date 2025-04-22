@@ -11,8 +11,8 @@ import org.junit.jupiter.api.Test;
 import roomescape.dto.request.ReservationRequest;
 import roomescape.dto.response.ReservationResponse;
 import roomescape.dto.response.TimeResponse;
-import roomescape.model.Reservation;
-import roomescape.model.ReservationTime;
+import roomescape.domain.Reservation;
+import roomescape.domain.ReservationTime;
 
 class ReservationMapperTest {
 

@@ -15,8 +15,8 @@ import org.junit.jupiter.params.provider.ValueSource;
 import roomescape.dto.request.ReservationRequest;
 import roomescape.dto.response.ReservationResponse;
 import roomescape.dto.response.TimeResponse;
-import roomescape.model.Reservation;
-import roomescape.model.ReservationTime;
+import roomescape.domain.Reservation;
+import roomescape.domain.ReservationTime;
 import roomescape.testRepository.FakeReservationRepository;
 import roomescape.testRepository.FakeTimeRepository;
 

@@ -2,7 +2,7 @@ package roomescape.repository;
 
 import java.util.List;
 import java.util.Optional;
-import roomescape.model.ReservationTime;
+import roomescape.domain.ReservationTime;
 
 public interface TimeRepository {
     Long save(ReservationTime reservationTime);

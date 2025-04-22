@@ -1,6 +1,8 @@
 package roomescape.reservation.repository;
 
 import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
 import java.sql.Statement;
 import java.time.LocalDate;
 import java.time.LocalTime;
@@ -11,9 +13,9 @@ import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.support.GeneratedKeyHolder;
 import org.springframework.jdbc.support.KeyHolder;
 import org.springframework.stereotype.Repository;
+import roomescape.common.exception.EntityNotFoundException;
 import roomescape.reservation.entity.Reservation;
 import roomescape.reservation.entity.ReservationTime;
-import roomescape.common.exception.EntityNotFoundException;
 
 @Repository
 public class ReservationRepositoryImpl implements ReservationRepository {
@@ -26,43 +28,51 @@ public class ReservationRepositoryImpl implements ReservationRepository {
 
     @Override
     public List<Reservation> findAll() {
-        String sql = "select rs.id as reservation_id, rs.name, rs.date, rst.id as reservation_time_id, rst.start_at from reservation rs INNER JOIN reservation_time rst ON rs.time_id = rst.id";
+        String sql = """
+                select rs.id as reservation_id, rs.name, rs.date, rst.id as reservation_time_id, rst.start_at
+                from reservation rs
+                INNER JOIN reservation_time rst ON rs.time_id = rst.id
+                """;
 
         return jdbcTemplate.query(sql,
-                (resultSet, rowNum) -> new Reservation(
-                        resultSet.getLong("reservation_id"),
-                        resultSet.getString("name"),
-                        LocalDate.parse(resultSet.getString("date")),
-                        new ReservationTime(
-                                resultSet.getLong("reservation_time_id"),
-                                LocalTime.parse(resultSet.getString("start_at"))
-                        ))
+                (resultSet, rowNum) -> getReservation(resultSet)
         );
     }
 
     @Override
     public Optional<Reservation> findById(Long id) {
-        String sql = "select rs.id as reservation_id, rs.name, rs.date, rst.id  as reservation_time_id, rst.start_at from reservation rs inner join reservation_time rst on rs.time_id = rst.id where rs.id = ?";
+        String sql = """
+                select rs.id as reservation_id, rs.name, rs.date, rst.id  as reservation_time_id, rst.start_at
+                from reservation rs
+                inner join reservation_time rst on rs.time_id = rst.id where rs.id = ?
+                """;
 
         try {
             Reservation reservation = jdbcTemplate.queryForObject(sql,
-                    (resultSet, rowNum) -> new Reservation(
-                            resultSet.getLong("reservation_id"),
-                            resultSet.getString("name"),
-                            LocalDate.parse(resultSet.getString("date")),
-                            new ReservationTime(
-                                    resultSet.getLong("reservation_time_id"),
-                                    LocalTime.parse(resultSet.getString("start_at")
-                                    ))), id);
+                    (resultSet, rowNum) -> getReservation(resultSet), id);
             return Optional.ofNullable(reservation);
         } catch (EmptyResultDataAccessException e) {
             throw new EntityNotFoundException("entity not found");
         }
     }
 
+    private Reservation getReservation(ResultSet resultSet) throws SQLException {
+        return new Reservation(
+                resultSet.getLong("reservation_id"),
+                resultSet.getString("name"),
+                LocalDate.parse(resultSet.getString("date")),
+                getReservationTime(resultSet));
+    }
+
+    private ReservationTime getReservationTime(ResultSet resultSet) throws SQLException {
+        return new ReservationTime(
+                resultSet.getLong("reservation_time_id"),
+                LocalTime.parse(resultSet.getString("start_at")
+                ));
+    }
+
     @Override
     public Reservation save(Reservation reservation) {
-
 
         if (reservation.existId()) {
             return update(reservation);

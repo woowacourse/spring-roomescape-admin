@@ -1,6 +1,8 @@
 package roomescape.reservation.repository;
 
 import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
 import java.sql.Statement;
 import java.time.LocalTime;
 import java.util.List;
@@ -28,10 +30,7 @@ public class ReservationTimeRepositoryImpl implements ReservationTimeRepository 
         String sql = "select * from reservation_time";
 
         return jdbcTemplate.query(sql,
-                (resultSet, rowNum) -> new ReservationTime(
-                        resultSet.getLong("id"),
-                        LocalTime.parse(resultSet.getString("start_at"))
-                )
+                (resultSet, rowNum) -> getReservationTime(resultSet)
         );
     }
 
@@ -40,10 +39,8 @@ public class ReservationTimeRepositoryImpl implements ReservationTimeRepository 
         String sql = "select * from reservation_time where id = ?";
 
         try {
-            ReservationTime reservationTime = jdbcTemplate.queryForObject(sql, (resultSet, rowNum) ->
-                            new ReservationTime(resultSet.getLong("id"),
-                                    LocalTime.parse(resultSet.getString("start_at"))
-                            ),
+            ReservationTime reservationTime = jdbcTemplate.queryForObject(sql,
+                    (resultSet, rowNum) -> getReservationTime(resultSet),
                     id
             );
 
@@ -51,6 +48,13 @@ public class ReservationTimeRepositoryImpl implements ReservationTimeRepository 
         } catch (EmptyResultDataAccessException e) {
             throw new EntityNotFoundException("ReservationTime with id " + id + " not found");
         }
+    }
+
+    private ReservationTime getReservationTime(ResultSet resultSet) throws SQLException {
+        return new ReservationTime(
+                resultSet.getLong("id"),
+                LocalTime.parse(resultSet.getString("start_at"))
+        );
     }
 
     @Override

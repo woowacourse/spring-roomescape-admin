@@ -1,6 +1,7 @@
 package roomescape.controller;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import roomescape.dao.ReservationDao;
 import roomescape.dto.CreateReservationRequestDto;
@@ -20,23 +21,26 @@ public class ReservationApiController {
     }
 
     @GetMapping("/reservations")
-    public List<ReservationResponseDto> getAllReservations() {
-        return reservationDao.findAllReservations();
+    public ResponseEntity<List<ReservationResponseDto>> getAllReservations() {
+        List<ReservationResponseDto> allReservations = reservationDao.findAllReservations();
+        return ResponseEntity.ok(allReservations);
     }
 
     @PostMapping("/reservations")
-    public ReservationResponseDto addReservation(@RequestBody final CreateReservationRequestDto reservationDto) {
+    public ResponseEntity<ReservationResponseDto> addReservation(@RequestBody final CreateReservationRequestDto reservationDto) {
         Reservation noIdReservation = reservationDto.toEntity();
         Long id = reservationDao.saveAndReturnId(noIdReservation);
-        return new ReservationResponseDto(
-                id,
-                noIdReservation.name(),
-                noIdReservation.date(),
-                noIdReservation.time());
+        ReservationResponseDto responseDto = new ReservationResponseDto(id, noIdReservation.name(), noIdReservation.date(), noIdReservation.time());
+        return ResponseEntity.ok(responseDto);
     }
 
     @DeleteMapping("/reservations/{id}")
-    public void deleteReservation(@PathVariable("id") final Long id) {
-        reservationDao.deleteById(id);
+    public ResponseEntity<Void> deleteReservation(@PathVariable("id") final Long id) {
+        try {
+            reservationDao.deleteById(id);
+            return ResponseEntity.noContent().build();
+        } catch (IllegalStateException e) {
+            return ResponseEntity.notFound().build();
+        }
     }
 }

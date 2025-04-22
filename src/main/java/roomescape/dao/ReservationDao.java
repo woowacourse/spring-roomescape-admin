@@ -60,7 +60,7 @@ public class ReservationDao {
         int affectedRows = jdbcTemplate.update(sql, id);
 
         if (affectedRows == 0) {
-            throw new IllegalStateException("Invalid reservation id");
+            throw new IllegalStateException();
         }
     }
 }

@@ -12,7 +12,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import roomescape.dto.CreateTimeSlotRequest;
-import roomescape.model.ReservationTimeSlot;
+import roomescape.model.TimeSlot;
 import roomescape.repository.TimeSlotRepository;
 
 @Controller
@@ -27,12 +27,12 @@ public class TimeSlotController {
     }
 
     @GetMapping
-    public ResponseEntity<List<ReservationTimeSlot>> getAllTimeSlots() {
+    public ResponseEntity<List<TimeSlot>> getAllTimeSlots() {
         return ResponseEntity.ok(repository.getTimeSlots());
     }
 
     @PostMapping
-    public ResponseEntity<ReservationTimeSlot> create(@RequestBody CreateTimeSlotRequest request) {
+    public ResponseEntity<TimeSlot> create(@RequestBody CreateTimeSlotRequest request) {
         final var savedId = repository.save(request);
         final var saved = repository.findById(savedId).get();
         return ResponseEntity.ok(saved);

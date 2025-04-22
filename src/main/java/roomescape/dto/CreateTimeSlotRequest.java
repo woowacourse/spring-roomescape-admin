@@ -1,13 +1,13 @@
 package roomescape.dto;
 
 import java.time.LocalTime;
-import roomescape.model.ReservationTimeSlot;
+import roomescape.model.TimeSlot;
 
 public record CreateTimeSlotRequest(
     LocalTime startAt
 ) {
 
-    public ReservationTimeSlot toEntity(final long id) {
-        return new ReservationTimeSlot(id, startAt);
+    public TimeSlot toEntity(final long id) {
+        return new TimeSlot(id, startAt);
     }
 }

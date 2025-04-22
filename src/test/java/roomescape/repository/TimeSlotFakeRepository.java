@@ -6,15 +6,15 @@ import java.util.Optional;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.atomic.AtomicLong;
 import roomescape.dto.CreateTimeSlotRequest;
-import roomescape.model.ReservationTimeSlot;
+import roomescape.model.TimeSlot;
 
 public class TimeSlotFakeRepository implements TimeSlotRepository {
 
-    private final Map<Long, ReservationTimeSlot> timeSlots = new ConcurrentHashMap<>();
+    private final Map<Long, TimeSlot> timeSlots = new ConcurrentHashMap<>();
     private final AtomicLong index = new AtomicLong(1L);
 
     @Override
-    public Optional<ReservationTimeSlot> findById(final long id) {
+    public Optional<TimeSlot> findById(final long id) {
         return Optional.ofNullable(timeSlots.get(id));
     }
 
@@ -25,11 +25,11 @@ public class TimeSlotFakeRepository implements TimeSlotRepository {
     }
 
     public boolean removeById(long id) {
-        ReservationTimeSlot removed = timeSlots.remove(id);
+        TimeSlot removed = timeSlots.remove(id);
         return removed != null;
     }
 
-    public List<ReservationTimeSlot> getTimeSlots() {
+    public List<TimeSlot> getTimeSlots() {
         return List.copyOf(timeSlots.values());
     }
 }

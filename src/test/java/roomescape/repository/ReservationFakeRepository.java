@@ -8,12 +8,12 @@ import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.atomic.AtomicLong;
 import roomescape.model.Reservation;
 import roomescape.dto.CreateReservationRequest;
-import roomescape.model.ReservationTimeSlot;
+import roomescape.model.TimeSlot;
 
 public class ReservationFakeRepository implements ReservationRepository {
 
-    public static final ReservationTimeSlot FIXED_TIME_SLOT
-        = new ReservationTimeSlot(1L, LocalTime.of(10, 0));
+    public static final TimeSlot FIXED_TIME_SLOT
+        = new TimeSlot(1L, LocalTime.of(10, 0));
 
     private final Map<Long, Reservation> reservations = new ConcurrentHashMap<>();
     private final AtomicLong index = new AtomicLong(1L);
@@ -24,7 +24,7 @@ public class ReservationFakeRepository implements ReservationRepository {
     }
 
     public long save(CreateReservationRequest request) {
-        ReservationTimeSlot timeSlot = defineTimeSlot(request);
+        TimeSlot timeSlot = defineTimeSlot(request);
         final var reservation = request.toReservation(index.getAndIncrement(), timeSlot);
         reservations.put(reservation.id(), reservation);
         return reservation.id();
@@ -39,7 +39,7 @@ public class ReservationFakeRepository implements ReservationRepository {
         return List.copyOf(reservations.values());
     }
 
-    private ReservationTimeSlot defineTimeSlot(final CreateReservationRequest request) {
+    private TimeSlot defineTimeSlot(final CreateReservationRequest request) {
         if (request.timeSlotId() != null) {
             return FIXED_TIME_SLOT;
         }

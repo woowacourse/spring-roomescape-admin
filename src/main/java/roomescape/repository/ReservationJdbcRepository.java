@@ -9,7 +9,7 @@ import org.springframework.jdbc.core.simple.SimpleJdbcInsert;
 import org.springframework.stereotype.Repository;
 import roomescape.dto.CreateReservationRequest;
 import roomescape.model.Reservation;
-import roomescape.model.ReservationTimeSlot;
+import roomescape.model.TimeSlot;
 
 @Repository
 public class ReservationJdbcRepository implements ReservationRepository {
@@ -29,7 +29,7 @@ public class ReservationJdbcRepository implements ReservationRepository {
                 final var date = rs.getDate("date").toLocalDate();
                 final var timeSlotId = rs.getLong("id");
                 final var time = rs.getTime("start_at").toLocalTime();
-                return new Reservation(id, name, date, new ReservationTimeSlot(timeSlotId, time));
+                return new Reservation(id, name, date, new TimeSlot(timeSlotId, time));
             },
             id
         );
@@ -62,7 +62,7 @@ public class ReservationJdbcRepository implements ReservationRepository {
                 final var date = rs.getDate("date").toLocalDate();
                 final var timeSlotId = rs.getLong("time_id");
                 final var time = rs.getTime("start_at").toLocalTime();
-                return new Reservation(id, name, date, new ReservationTimeSlot(timeSlotId, time));
+                return new Reservation(id, name, date, new TimeSlot(timeSlotId, time));
             });
     }
 }

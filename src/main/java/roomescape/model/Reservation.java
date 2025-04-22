@@ -6,7 +6,7 @@ public record Reservation(
     Long id,
     String name,
     LocalDate date,
-    ReservationTimeSlot timeSlot
+    TimeSlot timeSlot
 ) {
 
     private static final int NAME_MAX_LENGTH = 5;
@@ -20,7 +20,7 @@ public record Reservation(
         final Long id,
         final String name,
         final LocalDate date,
-        final ReservationTimeSlot timeSlot
+        final TimeSlot timeSlot
     ) {
         if (id == null || name == null || date == null || timeSlot == null) {
             throw new IllegalArgumentException("모든 값들이 존재해야 합니다.");

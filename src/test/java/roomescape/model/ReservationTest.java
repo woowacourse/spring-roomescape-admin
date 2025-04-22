@@ -19,19 +19,19 @@ public class ReservationTest {
                 null,
                 "brown",
                 LocalDate.of(2023, 12, 1),
-                new ReservationTimeSlot(1L, LocalTime.of(10, 0))
+                new TimeSlot(1L, LocalTime.of(10, 0))
             ),
             Arguments.of(
                 1L,
                 null,
                 LocalDate.of(2023, 12, 1),
-                new ReservationTimeSlot(1L, LocalTime.of(10, 0))
+                new TimeSlot(1L, LocalTime.of(10, 0))
             ),
             Arguments.of(
                 1L,
                 "brown",
                 null,
-                new ReservationTimeSlot(1L, LocalTime.of(10, 0))
+                new TimeSlot(1L, LocalTime.of(10, 0))
             ),
             Arguments.of(
                 1L,
@@ -45,7 +45,7 @@ public class ReservationTest {
     @ParameterizedTest
     @MethodSource("NullValues")
     @DisplayName("예약 생성 시 모든 값들이 존재하지 않으면 예외가 발생한다")
-    void ExceptionAnyValueNull(Long id, String name, LocalDate date, ReservationTimeSlot timeSlot) {
+    void ExceptionAnyValueNull(Long id, String name, LocalDate date, TimeSlot timeSlot) {
         // given
         // when
         // then
@@ -64,7 +64,7 @@ public class ReservationTest {
             1L,
             "여섯글자이름",
             LocalDate.of(2023, 12, 1),
-            new ReservationTimeSlot(1L, LocalTime.of(10, 0)))
+            new TimeSlot(1L, LocalTime.of(10, 0)))
         ).isInstanceOf(IllegalArgumentException.class);
     }
 }

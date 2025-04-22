@@ -9,7 +9,7 @@ import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.simple.SimpleJdbcInsert;
 import org.springframework.stereotype.Repository;
 import roomescape.dto.CreateTimeSlotRequest;
-import roomescape.model.ReservationTimeSlot;
+import roomescape.model.TimeSlot;
 
 @Repository
 public class TimeSlotJdbcRepository implements TimeSlotRepository {
@@ -22,14 +22,14 @@ public class TimeSlotJdbcRepository implements TimeSlotRepository {
     }
 
     @Override
-    public Optional<ReservationTimeSlot> findById(final long id) {
+    public Optional<TimeSlot> findById(final long id) {
         String sql = "SELECT * FROM RESERVATION_TIME WHERE id = ?";
         final var timeSlots = jdbcTemplate.query(
             sql,
             (rs, rowNum) -> {
                 final var savedId = rs.getLong("id");
                 final var startAt = rs.getString("start_at");
-                return new ReservationTimeSlot(savedId, LocalTime.parse(startAt));
+                return new TimeSlot(savedId, LocalTime.parse(startAt));
             },
             id
         );
@@ -56,14 +56,14 @@ public class TimeSlotJdbcRepository implements TimeSlotRepository {
     }
 
     @Override
-    public List<ReservationTimeSlot> getTimeSlots() {
+    public List<TimeSlot> getTimeSlots() {
         String sql = "SELECT * FROM RESERVATION_TIME";
         return jdbcTemplate.query(
             sql,
             (rs, rowNum) -> {
                 final var savedId = rs.getLong("id");
                 final var startAt = rs.getString("start_at");
-                return new ReservationTimeSlot(savedId, LocalTime.parse(startAt));
+                return new TimeSlot(savedId, LocalTime.parse(startAt));
             }
         );
     }

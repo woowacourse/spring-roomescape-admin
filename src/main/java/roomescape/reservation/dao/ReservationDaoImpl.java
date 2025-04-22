@@ -72,7 +72,7 @@ public class ReservationDaoImpl implements ReservationDao {
                         resultSet.getObject("time", LocalTime.class)
                 ));
 
-        return new ArrayList<>(reservations);
+        return reservations;
     }
 
     @Override

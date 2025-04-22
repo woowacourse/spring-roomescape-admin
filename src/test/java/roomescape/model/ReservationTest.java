@@ -59,4 +59,19 @@ class ReservationTest {
         assertThat(reservationEntity.getDate()).isEqualTo(date);
         assertThat(reservationEntity.getTime()).isEqualTo(time);
     }
+
+    @Test
+    void 이미_Entity화_되어있는_객체는_또다시_Entity화_시킬_수_없다() {
+        // Given
+        String name = "프리";
+        LocalDate date = LocalDate.now();
+        LocalTime time = LocalTime.now();
+        Reservation reservationExcludeIndex = new Reservation(name, date, time);
+        Reservation reservationEntity = Reservation.toEntity(reservationExcludeIndex, 1L);
+
+        // When & Then
+        assertThatThrownBy(() -> Reservation.toEntity(reservationEntity, 2L))
+                .isInstanceOf(IllegalArgumentException.class)
+                .hasMessage("이미 Entity화 되어있는 객체입니다.");
+    }
 }

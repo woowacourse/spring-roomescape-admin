@@ -21,6 +21,8 @@ import roomescape.repository.ReservationTimeRepository;
 import roomescape.service.ReservationTimeService;
 import roomescape.test.fake.FakeReservationRepository;
 import roomescape.test.fake.FakeReservationTimeRepository;
+import roomescape.test.fixture.ReservationFixture;
+import roomescape.test.fixture.ReservationTimeFixture;
 import roomescape.test.utility.HttpResponseTestUtility;
 
 class ReservationTimeControllerTest {
@@ -105,5 +107,21 @@ class ReservationTimeControllerTest {
         ResponseEntity<Void> response = controller.deleteReservationTime(noneExistentReservationId);
 
         checkStatusCode(response, HttpStatus.NOT_FOUND);
+    }
+
+    @DisplayName("이미 해당 시간에 예약이 존재하는 경우 예약을 제거할 수 없습니다.")
+    @Test
+    void canNotDeleteBecauseReservations() {
+        long savedId = reservationTimeRepository.add(ReservationTimeFixture.createReservationTime(LocalTime.of(10, 0)));
+        ReservationTime savedTime = reservationTimeRepository.findById(savedId).get();
+        reservationRepository.add(ReservationFixture.createReservation("reservation1", savedTime));
+
+        ResponseEntity<Void> response = controller.deleteReservationTime(savedId);
+
+        List<ReservationTime> reservationTimes = reservationTimeRepository.findAll();
+        assertAll(
+                () -> assertThat(reservationTimes).hasSize(1),
+                () -> checkStatusCode(response, HttpStatus.BAD_REQUEST)
+        );
     }
 }

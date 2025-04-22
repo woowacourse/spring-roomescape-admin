@@ -7,4 +7,6 @@ public interface ReservationTimeRepository {
     long save(ReservationTime reservationTime);
 
     List<ReservationTime> findAll();
+
+    void deleteById(Long id);
 }

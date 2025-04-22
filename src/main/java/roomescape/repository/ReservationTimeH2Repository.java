@@ -45,4 +45,14 @@ public class ReservationTimeH2Repository implements ReservationTimeRepository {
                 new ReservationTime(rs.getLong("id"), rs.getTime("start_at").toLocalTime()))
         );
     }
+
+    @Override
+    public void deleteById(final Long id) {
+        String query = "DELETE FROM reservation_time WHERE id = ?";
+        int update = jdbcTemplate.update(query, id);
+
+        if (update == 0) {
+            throw new IllegalArgumentException("id에 해당하는 예약 시간이 없습니다.");
+        }
+    }
 }

@@ -1,13 +1,11 @@
 package roomescape.repository;
 
-import java.sql.PreparedStatement;
-import java.sql.Statement;
 import java.sql.Time;
 import java.util.List;
+import java.util.Map;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;
-import org.springframework.jdbc.support.GeneratedKeyHolder;
-import org.springframework.jdbc.support.KeyHolder;
+import org.springframework.jdbc.core.simple.SimpleJdbcInsert;
 import org.springframework.stereotype.Repository;
 import roomescape.model.ReservationTime;
 
@@ -28,22 +26,15 @@ public class JdbcTimeRepository implements TimeRepository {
 
     @Override
     public Long save(ReservationTime reservationTime) {
-        KeyHolder keyHolder = new GeneratedKeyHolder();
+        SimpleJdbcInsert simpleJdbcInsert = new SimpleJdbcInsert(jdbcTemplate)
+                .withTableName("reservation_time")
+                .usingGeneratedKeyColumns("id");
 
-        String insertSql = "INSERT INTO reservation_time(start_at) VALUES(?)";
-        jdbcTemplate.update(connection -> {
-            PreparedStatement ps = connection.prepareStatement(
-                    insertSql,
-                    Statement.RETURN_GENERATED_KEYS
-            );
-            ps.setTime(1, Time.valueOf(reservationTime.getStartAt()));
-            return ps;
-        }, keyHolder);
+        Map<String, Object> params = Map.of(
+                "start_at", Time.valueOf(reservationTime.getStartAt())
+        );
 
-        Number key = keyHolder.getKey();
-        if (key == null) {
-            throw new IllegalStateException("예약 저장 중 id 생성 실패");
-        }
+        Number key = simpleJdbcInsert.executeAndReturnKey(params);
         return key.longValue();
     }
 

@@ -1,21 +1,20 @@
 package roomescape.repository;
 
 import java.sql.Date;
-import java.sql.PreparedStatement;
-import java.sql.Statement;
 import java.time.LocalDate;
 import java.time.LocalTime;
 import java.util.List;
+import java.util.Map;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;
-import org.springframework.jdbc.support.GeneratedKeyHolder;
-import org.springframework.jdbc.support.KeyHolder;
+import org.springframework.jdbc.core.simple.SimpleJdbcInsert;
 import org.springframework.stereotype.Repository;
 import roomescape.model.Reservation;
 import roomescape.model.ReservationTime;
 
 @Repository
-public class JdbcReservationRepository implements ReservationRepository{
+public class JdbcReservationRepository implements ReservationRepository {
+
     private final JdbcTemplate jdbcTemplate;
 
     public JdbcReservationRepository(JdbcTemplate jdbcTemplate) {
@@ -51,24 +50,17 @@ public class JdbcReservationRepository implements ReservationRepository{
 
     @Override
     public Long save(Reservation reservation) {
-        KeyHolder keyHolder = new GeneratedKeyHolder();
+        SimpleJdbcInsert simpleJdbcInsert = new SimpleJdbcInsert(jdbcTemplate)
+                .withTableName("reservation")
+                .usingGeneratedKeyColumns("id");
 
-        String insertSql = "INSERT INTO reservation(name, date, time_id) VALUES(?, ?, ?)";
-        jdbcTemplate.update(connection -> {
-            PreparedStatement ps = connection.prepareStatement(
-                    insertSql,
-                    Statement.RETURN_GENERATED_KEYS
-            );
-            ps.setString(1, reservation.getName());
-            ps.setDate(2, Date.valueOf(reservation.getReservationDate()));
-            ps.setLong(3, reservation.getReservationTime().getId());
-            return ps;
-        }, keyHolder);
+        Map<String, Object> parameters = Map.of(
+                "name", reservation.getName(),
+                "date", Date.valueOf(reservation.getReservationDate()),
+                "time_id", reservation.getReservationTime().getId()
+        );
 
-        Number key = keyHolder.getKey();
-        if (key == null) {
-            throw new IllegalStateException("예약 저장 중 id 생성 실패");
-        }
+        Number key = simpleJdbcInsert.executeAndReturnKey(parameters);
         return key.longValue();
     }
 

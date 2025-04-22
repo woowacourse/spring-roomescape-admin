@@ -34,7 +34,6 @@ public class ReservationController {
         try {
             return ResponseEntity.ok(reservationService.addReservation(reservationRequest));
         } catch (DataAccessException e) {
-            System.out.println(e.getMessage());
             return ResponseEntity.badRequest().build();
         }
     }

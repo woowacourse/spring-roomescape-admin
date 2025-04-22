@@ -3,7 +3,9 @@ package roomescape.domain;
 import java.time.LocalDate;
 import java.time.LocalTime;
 import java.util.Objects;
+import roomescape.dto.validation.ValidReservation;
 
+@ValidReservation
 public class Reservation {
 
     private final Long id;

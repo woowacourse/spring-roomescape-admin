@@ -1,18 +1,17 @@
 package roomescape.dto;
 
-import com.fasterxml.jackson.annotation.JsonFormat;
 import java.time.LocalDate;
 import java.time.LocalTime;
 import roomescape.entity.Reservation;
+import roomescape.entity.ReservationTime;
 
 public record ReservationRequestDto(
         String name,
         LocalDate date,
-        @JsonFormat(pattern = "HH:mm")
-        LocalTime time
+        Long timeId
 ) {
 
     public Reservation toEntity(Long id) {
-        return new Reservation(id, this.name(), this.date(), this.time());
+        return new Reservation(id, this.name(), this.date(), new ReservationTime(timeId, LocalTime.MIN));
     }
 }

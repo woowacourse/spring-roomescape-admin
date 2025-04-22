@@ -31,7 +31,7 @@ public class ReservationController {
 
     @PostMapping("/reservations")
     public ReservationResponseDto postReservation(@RequestBody ReservationRequestDto requestDto) {
-        Reservation newReservation = repository.save(requestDto.toEntity(null));
+        Reservation newReservation = repository.save(requestDto.toEntity(null), requestDto.timeId());
         return ReservationResponseDto.toDto(newReservation);
     }
 

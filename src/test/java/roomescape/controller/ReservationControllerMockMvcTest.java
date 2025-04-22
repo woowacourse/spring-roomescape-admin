@@ -3,6 +3,7 @@ package roomescape.controller;
 import static org.hamcrest.Matchers.equalTo;
 import static org.hamcrest.Matchers.is;
 import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.BDDMockito.given;
 import static org.mockito.BDDMockito.willDoNothing;
 import static org.mockito.BDDMockito.willThrow;
@@ -24,6 +25,7 @@ import org.springframework.test.context.bean.override.mockito.MockitoBean;
 import org.springframework.test.web.servlet.MockMvc;
 import roomescape.dto.ReservationRequestDto;
 import roomescape.entity.Reservation;
+import roomescape.entity.ReservationTime;
 import roomescape.exceptions.EntityNotFoundException;
 import roomescape.repository.ReservationRepository;
 
@@ -44,8 +46,9 @@ public class ReservationControllerMockMvcTest {
     @Test
     @DisplayName("/admin/reservation 요청 시 예약 관리 페이지 응답")
     void readReservation() {
-        Reservation reservation1 = new Reservation(1L, "브라운", LocalDate.now().plusDays(1), LocalTime.now());
-        Reservation reservation2 = new Reservation(2L, "네오", LocalDate.now().plusDays(1), LocalTime.now());
+        ReservationTime reservationTime = new ReservationTime(1L, LocalTime.of(15, 0));
+        Reservation reservation1 = new Reservation(1L, "브라운", LocalDate.now().plusDays(1), reservationTime);
+        Reservation reservation2 = new Reservation(2L, "네오", LocalDate.now().plusDays(1), reservationTime);
 
         List<Reservation> reservations = List.of(
                 reservation1, reservation2
@@ -68,13 +71,14 @@ public class ReservationControllerMockMvcTest {
     @DisplayName("예약 관리 페이지 내에서 예약 추가")
     void postReservation() {
         LocalDate fixedDate = LocalDate.of(2023, 5, 15);
-        LocalTime fixedTime = LocalTime.of(14, 30);
+        Long expectedTimeId = 1L;
+        ReservationTime reservationTime = new ReservationTime(expectedTimeId, LocalTime.of(15, 0));
         Long expectedId = 1L;
 
-        ReservationRequestDto dto = new ReservationRequestDto("브라운", fixedDate, fixedTime);
-        Reservation savedEntity = new Reservation(expectedId, "브라운", fixedDate, fixedTime);
+        ReservationRequestDto dto = new ReservationRequestDto("브라운", fixedDate, expectedTimeId);
+        Reservation savedEntity = new Reservation(expectedId, "브라운", fixedDate, reservationTime);
 
-        given(reservationRepository.save(any(Reservation.class))).willReturn(savedEntity);
+        given(reservationRepository.save(any(Reservation.class), eq(1L))).willReturn(savedEntity);
 
         RestAssuredMockMvc.given().log().all()
                 .contentType(ContentType.JSON)
@@ -85,7 +89,7 @@ public class ReservationControllerMockMvcTest {
                 .body("id", is(expectedId.intValue()))
                 .body("name", is("브라운"))
                 .body("date", is(fixedDate.toString()))
-                .body("time", is(fixedTime.toString()));
+                .body("timeId", is(reservationTime.id().intValue()));
     }
 
     @Test

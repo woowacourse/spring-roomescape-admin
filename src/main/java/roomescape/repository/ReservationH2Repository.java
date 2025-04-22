@@ -2,7 +2,6 @@ package roomescape.repository;
 
 import java.sql.Date;
 import java.sql.PreparedStatement;
-import java.sql.Time;
 import java.util.List;
 import java.util.Objects;
 import org.springframework.context.annotation.Primary;
@@ -12,6 +11,7 @@ import org.springframework.jdbc.support.GeneratedKeyHolder;
 import org.springframework.jdbc.support.KeyHolder;
 import org.springframework.stereotype.Repository;
 import roomescape.entity.Reservation;
+import roomescape.entity.ReservationTime;
 import roomescape.exceptions.EntityNotFoundException;
 
 @Primary
@@ -26,19 +26,22 @@ public class ReservationH2Repository implements ReservationRepository {
 
     @Override
     public List<Reservation> findAll() {
-        String sql = "select * from reservation";
+        String sql = "SELECT r.id as reservation_id, r.name, r.date, t.id as time_id, t.start_at as time_value "
+                + "FROM reservation as r "
+                + "inner join reservation_time as t "
+                + "on r.time_id = t.id";
         return jdbcTemplate.query(sql, getReservationRowMapper());
     }
 
     @Override
-    public Reservation save(Reservation reservation) {
+    public Reservation save(Reservation reservation, long timeId) {
         KeyHolder keyHolder = new GeneratedKeyHolder();
-        String sql = "insert into reservation (name, date, time) values (?, ?, ?)";
+        String sql = "insert into reservation (name, date, time_id) values (?, ?, ?)";
         jdbcTemplate.update(connection -> {
             PreparedStatement ps = connection.prepareStatement(sql, new String[]{"id"});
             ps.setString(1, reservation.name());
             ps.setDate(2, Date.valueOf(reservation.date()));
-            ps.setTime(3, Time.valueOf(reservation.time()));
+            ps.setLong(3, timeId);
             return ps;
         }, keyHolder);
         Long id = Objects.requireNonNull(keyHolder.getKey()).longValue();
@@ -56,10 +59,13 @@ public class ReservationH2Repository implements ReservationRepository {
 
     private RowMapper<Reservation> getReservationRowMapper() {
         return (resultSet, rowNum) -> new Reservation(
-                resultSet.getLong("id"),
+                resultSet.getLong("reservation_id"),
                 resultSet.getString("name"),
                 resultSet.getDate("date").toLocalDate(),
-                resultSet.getTime("time").toLocalTime()
+                new ReservationTime(
+                        resultSet.getLong("time_id"),
+                        resultSet.getTime("time_value").toLocalTime()
+                )
         );
     }
 }

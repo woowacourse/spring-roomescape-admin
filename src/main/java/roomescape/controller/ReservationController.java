@@ -13,18 +13,19 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.util.UriComponentsBuilder;
 import roomescape.dao.QueryingDAO;
+import roomescape.dao.UpdatingDAO;
 import roomescape.dto.ReservationReqDto;
 import roomescape.dto.ReservationResDto;
-import roomescape.model.Reservations;
 
 @RestController
 @RequestMapping("/reservations")
 public class ReservationController {
 
-    private final Reservations reservations = new Reservations();
-
     @Autowired
     private QueryingDAO queryingDAO;
+
+    @Autowired
+    private UpdatingDAO updatingDAO;
 
     @GetMapping
     public ResponseEntity<List<ReservationResDto>> readAll() {
@@ -34,14 +35,14 @@ public class ReservationController {
 
     @PostMapping
     public ResponseEntity<ReservationResDto> create(@RequestBody ReservationReqDto dto, UriComponentsBuilder ucb) {
-        ReservationResDto newReservation = reservations.addAndGet(dto);
+        ReservationResDto newReservation = updatingDAO.addAndGet(dto);
         URI uri = ucb.path("reservations/{id}").buildAndExpand(newReservation.id()).toUri();
         return ResponseEntity.created(uri).body(newReservation);
     }
 
     @DeleteMapping("/{id}")
     public ResponseEntity<Void> delete(@PathVariable Long id) {
-        reservations.deleteById(id);
+        updatingDAO.deleteById(id);
         return ResponseEntity.noContent().build();
     }
 }

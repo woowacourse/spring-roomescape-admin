@@ -4,9 +4,12 @@ import static io.restassured.module.mockmvc.RestAssuredMockMvc.given;
 import static org.hamcrest.Matchers.is;
 
 import io.restassured.module.mockmvc.RestAssuredMockMvc;
+import java.time.LocalDate;
 import java.util.HashMap;
 import java.util.Map;
 import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.DisplayNameGeneration;
+import org.junit.jupiter.api.DisplayNameGenerator;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -19,6 +22,7 @@ import org.springframework.web.context.WebApplicationContext;
 @SpringBootTest
 @AutoConfigureMockMvc
 @DirtiesContext
+@DisplayNameGeneration(DisplayNameGenerator.ReplaceUnderscores.class)
 public class MissionStep1Test {
 
     @Autowired
@@ -59,7 +63,7 @@ public class MissionStep1Test {
         static {
             params = new HashMap<>();
             params.put("name", "브라운");
-            params.put("date", "2023-08-05");
+            params.put("date", LocalDate.now().plusDays(1).toString());
             params.put("time", "15:40");
         }
 

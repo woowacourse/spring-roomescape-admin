@@ -6,10 +6,13 @@ import io.restassured.RestAssured;
 import io.restassured.http.ContentType;
 import java.sql.Connection;
 import java.sql.SQLException;
+import java.time.LocalDate;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.DisplayNameGeneration;
+import org.junit.jupiter.api.DisplayNameGenerator;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -20,6 +23,7 @@ import roomescape.domain.Reservation;
 
 @SpringBootTest(webEnvironment = WebEnvironment.DEFINED_PORT)
 @DirtiesContext
+@DisplayNameGeneration(DisplayNameGenerator.ReplaceUnderscores.class)
 public class MissionStep2Test {
 
     @Autowired
@@ -30,7 +34,7 @@ public class MissionStep2Test {
     static {
         params = new HashMap<>();
         params.put("name", "브라운");
-        params.put("date", "2023-08-05");
+        params.put("date", LocalDate.now().plusDays(1).toString());
         params.put("time", "15:40");
     }
 
@@ -67,7 +71,7 @@ public class MissionStep2Test {
     void 육단계_데이터베이스_CRUD() {
         Map<String, String> params = new HashMap<>();
         params.put("name", "브라운");
-        params.put("date", "2023-08-05");
+        params.put("date", LocalDate.now().plusDays(1).toString());
         params.put("time", "10:00");
 
         RestAssured.given().log().all()

@@ -19,7 +19,7 @@ public class ReservationValidator implements ConstraintValidator<ValidReservatio
         LocalDate date = reservation.getDate();
         LocalTime currenTime = LocalTime.now();
 
-        if (isAfterDate(date, today) || isPastTodayTime(date, today, time, currenTime)) {
+        if (isPast(date, today) || isPastTodayTime(date, today, time, currenTime)) {
             return false;
         }
         return true;
@@ -29,8 +29,8 @@ public class ReservationValidator implements ConstraintValidator<ValidReservatio
         return reservation.getName().isBlank() || reservation.getName() == null;
     }
 
-    private boolean isAfterDate(LocalDate date, LocalDate today) {
-        return date.isAfter(today);
+    private boolean isPast(LocalDate date, LocalDate today) {
+        return date.isBefore(today);
     }
 
     private boolean isPastTodayTime(LocalDate date, LocalDate today, LocalTime time, LocalTime currenTime) {

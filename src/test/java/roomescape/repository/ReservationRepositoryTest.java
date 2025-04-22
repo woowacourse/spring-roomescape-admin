@@ -15,7 +15,7 @@ import org.springframework.jdbc.core.JdbcTemplate;
 import roomescape.entity.Reservation;
 
 @SpringBootTest
-public class ReservationRepostoryTest {
+public class ReservationRepositoryTest {
 
     @Autowired
     private JdbcTemplate jdbcTemplate;
@@ -31,7 +31,7 @@ public class ReservationRepostoryTest {
 
     @Test
     @DisplayName("아이디를 통해 예약을 가져온다.")
-    void findRerservationById() {
+    void findReservationByIdTest() {
         //given
         Long id = 1L;
 
@@ -49,7 +49,7 @@ public class ReservationRepostoryTest {
 
     @Test
     @DisplayName("모든 에약을 가져온다.")
-    void findALLReservations() {
+    void findALLReservationsTest() {
         //given
         //when
         List<Reservation> reservations = reservationRepository.findAll();
@@ -68,7 +68,7 @@ public class ReservationRepostoryTest {
 
     @Test
     @DisplayName("예약을 저장한다.")
-    void saveReservation(){
+    void saveReservationTest(){
         // given
         Reservation reservation = new Reservation("myeonghwa", LocalDate.of(1998, 6, 3), LocalTime.of(10, 0));
 
@@ -87,7 +87,7 @@ public class ReservationRepostoryTest {
 
     @Test
     @DisplayName("아이디를 통해 예약을 삭제한다.")
-    void deleteReservationById(){
+    void deleteReservationByIdTest(){
         // given
         Long id = 1L;
 
@@ -96,6 +96,20 @@ public class ReservationRepostoryTest {
 
         // then
         Assertions.assertThat(row).isEqualTo(1);
+    }
+
+    @Test
+    @DisplayName("날짜와 시간을 선택한다.")
+    void selectDateAndTimeTest(){
+        // given
+        LocalDate date = LocalDate.of(2025, 4, 22);
+        LocalTime time = LocalTime.of(4, 22);
+
+        // when
+        boolean isDuplicatedDateAndTime = reservationRepository.selectByDateAndTime(date, time);
+
+        // then
+        Assertions.assertThat(isDuplicatedDateAndTime).isTrue();
     }
 
 

@@ -1,28 +1,25 @@
 package roomescape;
 
-import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.jdbc.core.JdbcTemplate;
 import roomescape.reservation.JdbcReservationRepository;
 import roomescape.reservation.ReservationRepository;
-import roomescape.reservation.Reservations;
+import roomescape.reservation.ReservationService;
+import roomescape.reservation.ReservationServiceImpl;
 
 @Configuration
 public class AppConfig {
 
-    @Autowired
-    JdbcTemplate jdbcTemplate;
-
     @Bean
-    public Reservations reservations() {
-        return new Reservations(List.of());
+    public ReservationRepository reservationRepository(JdbcTemplate jdbcTemplate) {
+        return new JdbcReservationRepository(jdbcTemplate);
     }
 
     @Bean
-    public ReservationRepository reservationRepository() {
-        return new JdbcReservationRepository(jdbcTemplate);
+    public ReservationService reservationService(ReservationRepository reservationRepository) {
+        return new ReservationServiceImpl(reservationRepository);
     }
 
 }

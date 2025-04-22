@@ -1,6 +1,6 @@
 package roomescape.entity;
 
-import jakarta.validation.constraints.NotNull;
+import java.sql.Time;
 import java.time.LocalDate;
 import java.time.LocalTime;
 

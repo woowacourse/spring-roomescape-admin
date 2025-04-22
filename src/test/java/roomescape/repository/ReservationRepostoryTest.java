@@ -3,8 +3,8 @@ package roomescape.repository;
 import java.time.LocalDate;
 import java.time.LocalTime;
 import java.util.List;
-import org.assertj.core.api.Assertions;
 import org.assertj.core.api.SoftAssertions;
+import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -82,5 +82,12 @@ public class ReservationRepostoryTest {
             softAssertions.assertThat(savedReservation.getTime()).isEqualTo(LocalTime.of(10, 0));
 
         });
+    }
+
+
+    @AfterEach
+    void tearDown() {
+        jdbcTemplate.update("DELETE FROM reservation");
+        jdbcTemplate.update("ALTER TABLE reservation ALTER COLUMN id RESTART WITH 1");
     }
 }

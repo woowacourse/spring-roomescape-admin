@@ -13,4 +13,10 @@ public class ExceptionController {
     public ResponseEntity<String> handleNoSuchElementException() {
         return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
     }
+
+    @ExceptionHandler(Exception.class)
+    public ResponseEntity<String> handleGeneralException() {
+        return ResponseEntity.status(HttpStatus.SERVICE_UNAVAILABLE).build();
+    }
+
 }

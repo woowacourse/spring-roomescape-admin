@@ -1,5 +1,6 @@
 package roomescape.controller;
 
+import jakarta.validation.Valid;
 import java.util.List;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -28,7 +29,7 @@ public class ReservationController {
     }
 
     @PostMapping
-    public ReservationResponse addReservation(@RequestBody ReservationRequest request) {
+    public ReservationResponse addReservation(@Valid @RequestBody ReservationRequest request) {
         return service.registerReservation(request);
     }
 

@@ -4,6 +4,7 @@ import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.LocalTime;
 import java.time.format.DateTimeFormatter;
+import java.util.Objects;
 
 public class Reservation {
 
@@ -41,6 +42,21 @@ public class Reservation {
         if (name.length() > MAX_NAME_LENGTH) {
             throw new IllegalArgumentException(ERROR_NAME_LENGTH_MESSAGE);
         }
+    }
+
+    @Override
+    public boolean equals(final Object o) {
+        if (o == null || getClass() != o.getClass()) {
+            return false;
+        }
+        final Reservation that = (Reservation) o;
+        return Objects.equals(id, that.id) && Objects.equals(name, that.name)
+                && Objects.equals(dateTime, that.dateTime);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(id, name, dateTime);
     }
 
     public Long getId() {

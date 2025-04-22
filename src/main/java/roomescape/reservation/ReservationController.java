@@ -15,25 +15,25 @@ import org.springframework.web.bind.annotation.RequestMapping;
 @RequestMapping("/reservations")
 public class ReservationController {
 
-    private final ReservationDAO reservationDAO;
+    private final ReservationService reservationService;
 
     public ReservationController(
-            @Autowired final ReservationDAO reservationDAO
+            @Autowired final ReservationService reservationService
     ) {
-        this.reservationDAO = reservationDAO;
+        this.reservationService = reservationService;
     }
 
     @PostMapping
-    public ResponseEntity<Reservation> createReservation(
-            @RequestBody final Reservation reservation
+    public ResponseEntity<ReservationResponse> createReservation(
+            @RequestBody final ReservationRequest request
     ) {
-        final Reservation savedReservation = reservationDAO.saveReservation(reservation);
-        return ResponseEntity.ok(savedReservation);
+        final ReservationResponse response = reservationService.createReservation(request);
+        return ResponseEntity.ok(response);
     }
 
     @GetMapping
-    public ResponseEntity<List<Reservation>> readAllReservation() {
-        return ResponseEntity.ok(reservationDAO.findAllReservation());
+    public ResponseEntity<List<ReservationResponse>> readAllReservation() {
+        return ResponseEntity.ok(reservationService.findAllReservation());
     }
 
     @DeleteMapping("/{id}")
@@ -41,7 +41,7 @@ public class ReservationController {
             @PathVariable("id") final long id
     ) {
         try {
-            reservationDAO.deleteReservationById(id);
+            reservationService.deleteReservationById(id);
             return ResponseEntity.ok().build();
         } catch (final IllegalArgumentException e) {
             return ResponseEntity.notFound().build();

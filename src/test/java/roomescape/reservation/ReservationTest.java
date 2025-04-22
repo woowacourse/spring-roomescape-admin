@@ -14,7 +14,7 @@ public class ReservationTest {
     @Test
     void writeId1() {
         // given
-        final Reservation reservation = new Reservation(1,
+        final Reservation reservation = new Reservation(1L,
                 "", LocalDate.of(2025, 04, 19), LocalTime.of(10, 25, 0));
 
         // when & then
@@ -25,34 +25,18 @@ public class ReservationTest {
                 .hasMessageContaining("[ERROR]");
     }
 
-    @DisplayName("작성할 id가 비어있다면, 예외가 발생한다.")
-    @Test
-    void writeId2() {
-        // given
-        final long emptyId = 0;
-        final Reservation reservation = new Reservation(1,
-                "", LocalDate.of(2025, 04, 19), LocalTime.of(10, 25, 0));
-
-        // when & then
-        assertThatCode(() -> {
-            reservation.writeId(emptyId);
-        })
-                .isInstanceOf(IllegalStateException.class)
-                .hasMessageContaining("[ERROR]");
-    }
-
     @DisplayName("id를 기록한다.")
     @Test
     void writeId3() {
         // given
-        final Reservation reservation = new Reservation(0,
+        final Reservation reservation = new Reservation(null,
                 "", LocalDate.of(2025, 04, 19), LocalTime.of(10, 25, 0));
 
         // when
         final Reservation actual = reservation.writeId(1);
 
         // then
-        assertThat(actual).isEqualTo(new Reservation(1,
+        assertThat(actual).isEqualTo(new Reservation(1L,
                 "", LocalDate.of(2025, 04, 19), LocalTime.of(10, 25, 0)));
     }
 }

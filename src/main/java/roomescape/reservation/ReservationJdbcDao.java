@@ -11,11 +11,11 @@ import org.springframework.jdbc.support.KeyHolder;
 import org.springframework.stereotype.Repository;
 
 @Repository
-public class ReservationDAOImpl implements ReservationDAO {
+public class ReservationJdbcDao implements ReservationDao {
 
     private final JdbcTemplate jdbcTemplate;
 
-    public ReservationDAOImpl(
+    public ReservationJdbcDao(
             @Autowired JdbcTemplate jdbcTemplate
     ) {
         this.jdbcTemplate = jdbcTemplate;
@@ -34,8 +34,8 @@ public class ReservationDAOImpl implements ReservationDAO {
             return preparedStatement;
         }, keyHolder);
 
-        final long key = keyHolder.getKey().longValue();
-        return reservation.writeId(key);
+        final long id = keyHolder.getKey().longValue();
+        return new Reservation(id, reservation.name(), reservation.date(), reservation.time());
     }
 
     @Override

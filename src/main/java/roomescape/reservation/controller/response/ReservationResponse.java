@@ -1,8 +1,8 @@
-package roomescape.controller.response;
+package roomescape.reservation.controller.response;
 
 import java.time.LocalDate;
 import java.time.LocalTime;
-import roomescape.model.Reservation;
+import roomescape.reservation.model.Reservation;
 
 public record ReservationResponse(Long id, String name, LocalDate date, LocalTime time) {
 

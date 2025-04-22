@@ -1,4 +1,4 @@
-package roomescape.controller;
+package roomescape.reservation.controller;
 
 import java.util.NoSuchElementException;
 import org.springframework.http.HttpStatus;

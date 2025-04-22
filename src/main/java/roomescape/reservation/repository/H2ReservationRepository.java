@@ -1,4 +1,4 @@
-package roomescape.repository;
+package roomescape.reservation.repository;
 
 import java.util.List;
 import java.util.NoSuchElementException;
@@ -7,8 +7,8 @@ import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;
 import org.springframework.stereotype.Repository;
-import roomescape.controller.request.ReservationRequest;
-import roomescape.controller.response.ReservationResponse;
+import roomescape.reservation.controller.request.ReservationRequest;
+import roomescape.reservation.controller.response.ReservationResponse;
 
 @Primary
 @Repository

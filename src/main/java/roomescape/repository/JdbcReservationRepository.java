@@ -60,14 +60,9 @@ public class JdbcReservationRepository implements ReservationRepository {
         }
     }
 
-//    private final SimpleJdbcInsert simpleJdbcInsert = new SimpleJdbcInsert(jdbcTemplate).withTableName("reservation").usingColumns("name", "date", "time").usingGeneratedKeyColumns("id");;
-//    @Override
-//    public Reservation insertAndGet(Reservation reservationExcludeIndex) {
-//        Map<String, Object> parameters = new HashMap<>();
-//        parameters.put("name", reservationExcludeIndex.getName());
-//        parameters.put("date", reservationExcludeIndex.getDate());
-//        parameters.put("time", reservationExcludeIndex.getTime());
-//        Long id = simpleJdbcInsert.executeAndReturnKey(parameters).longValue();
-//        return Reservation.toEntity(reservationExcludeIndex, id);
-//    }
+    @Override
+    public boolean existByDateAndTime(LocalDate date, LocalTime time) {
+        String sql = "SELECT COUNT(*) FROM reservation WHERE date = ? AND time = ?";
+        return jdbcTemplate.queryForObject(sql, Long.class, date, time) > 0L;
+    }
 }

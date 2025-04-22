@@ -1,6 +1,5 @@
 package roomescape.controller.api;
 
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -14,24 +13,25 @@ import org.springframework.web.server.ResponseStatusException;
 import roomescape.dto.ReservationCreateRequest;
 import roomescape.dto.ReservationGetResponse;
 import roomescape.model.Reservation;
-import roomescape.repository.ReservationRepository;
+import roomescape.service.ReservationService;
 
+import java.time.LocalDate;
+import java.time.LocalTime;
 import java.util.List;
 
 @RestController
 @RequestMapping("/reservations")
 public class ReservationRestController {
 
-    private final ReservationRepository reservationRepository;
+    private final ReservationService reservationService;
 
-    @Autowired
-    public ReservationRestController(ReservationRepository reservationRepository) {
-        this.reservationRepository = reservationRepository;
+    public ReservationRestController(ReservationService reservationService) {
+        this.reservationService = reservationService;
     }
 
     @GetMapping
     public ResponseEntity<List<ReservationGetResponse>> getAllReservations() {
-        List<Reservation> reservations = reservationRepository.findAll();
+        List<Reservation> reservations = reservationService.getAll();
         List<ReservationGetResponse> reservationGetResponses = reservations.stream()
                 .map(ReservationGetResponse::from)
                 .toList();
@@ -41,22 +41,24 @@ public class ReservationRestController {
     }
 
     @PostMapping
-    public ResponseEntity<Reservation> addReservation(@RequestBody ReservationCreateRequest reservationCreateRequest) {
+    public ResponseEntity<ReservationGetResponse> addReservation(@RequestBody ReservationCreateRequest reservationCreateRequest) {
+        LocalDate date = reservationCreateRequest.date();
+        LocalTime time = reservationCreateRequest.time();
         try {
-            Reservation reservationExcludeIndex = new Reservation(reservationCreateRequest.name(), reservationCreateRequest.date(), reservationCreateRequest.time());
-            Reservation reservation = reservationRepository.insertAndGet(reservationExcludeIndex);
+            reservationService.validateDuplicateDateAndTime(date, time);
+            Reservation reservation = reservationService.add(reservationCreateRequest.name(), date, time);
             return ResponseEntity
                     .status(HttpStatus.OK)
-                    .body(reservation);
+                    .body(ReservationGetResponse.from(reservation));
         } catch (IllegalArgumentException exception) {
-            throw new ResponseStatusException(HttpStatus.BAD_REQUEST);
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, exception.getMessage());
         }
     }
 
     @DeleteMapping("/{id}")
     public ResponseEntity<Void> deleteReservation(@PathVariable("id") Long id) {
         try {
-            reservationRepository.deleteById(id);
+            reservationService.deleteById(id);
             return ResponseEntity
                     .status(HttpStatus.OK)
                     .build();

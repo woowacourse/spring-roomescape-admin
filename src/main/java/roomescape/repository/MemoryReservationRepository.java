@@ -2,6 +2,8 @@ package roomescape.repository;
 
 import roomescape.model.Reservation;
 
+import java.time.LocalDate;
+import java.time.LocalTime;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.atomic.AtomicLong;
@@ -34,5 +36,10 @@ public class MemoryReservationRepository implements ReservationRepository {
                 .filter(reservation -> reservation.getId().equals(id))
                 .findFirst()
                 .orElseThrow(() -> new IllegalArgumentException("존재하지 않는 예약 id입니다."));
+    }
+
+    @Override
+    public boolean existByDateAndTime(LocalDate date, LocalTime time) {
+        return false;
     }
 }

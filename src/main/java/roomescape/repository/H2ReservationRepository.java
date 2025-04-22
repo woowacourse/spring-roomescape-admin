@@ -8,11 +8,11 @@ import org.springframework.stereotype.Repository;
 import roomescape.entity.Reservation;
 
 @Repository
-public class ReservationRepositoryImpl implements ReservationRepository{
+public class H2ReservationRepository implements ReservationRepository{
 
     private final JdbcTemplate jdbcTemplate;
 
-    public ReservationRepositoryImpl(final JdbcTemplate jdbcTemplate) {
+    public H2ReservationRepository(final JdbcTemplate jdbcTemplate) {
         this.jdbcTemplate = jdbcTemplate;
     }
 

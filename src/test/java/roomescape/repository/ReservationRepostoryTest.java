@@ -14,12 +14,15 @@ import roomescape.entity.Reservation;
 @SpringBootTest
 public class ReservationRepostoryTest {
 
-    @Autowired private JdbcTemplate jdbcTemplate;
-    @Autowired private ReservationRepository reservationRepository;
+    @Autowired
+    private JdbcTemplate jdbcTemplate;
+    @Autowired
+    private ReservationRepository reservationRepository;
 
     @BeforeEach
     void setUp() {
-        jdbcTemplate.update("INSERT INTO reservation (name, date, time) VALUES (?, ?, ?)", "Lemon", "2025-04-22", "16:22");
+        jdbcTemplate.update("INSERT INTO reservation (name, date, time) VALUES (?, ?, ?)", "Lemon", "2025-04-22",
+                "16:22");
     }
 
     @Test
@@ -36,7 +39,9 @@ public class ReservationRepostoryTest {
             softAssertions.assertThat(reservation.getId()).isEqualTo(1);
             softAssertions.assertThat(reservation.getName()).isEqualTo("Lemon");
             softAssertions.assertThat(reservation.getDate()).isEqualTo(LocalDate.of(2025, 4, 22));
-            softAssertions.assertThat(reservation.getTime()).isEqualTo(LocalTime.of( 16, 22));
+            softAssertions.assertThat(reservation.getTime()).isEqualTo(LocalTime.of(16, 22));
         });
     }
+
+
 }

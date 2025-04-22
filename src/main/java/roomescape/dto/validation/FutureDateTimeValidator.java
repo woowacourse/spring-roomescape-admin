@@ -1,8 +1,9 @@
-package roomescape.dto;
+package roomescape.dto.validation;
 
 import jakarta.validation.ConstraintValidator;
 import jakarta.validation.ConstraintValidatorContext;
 import java.time.LocalDateTime;
+import roomescape.dto.AddReservationDto;
 
 public class FutureDateTimeValidator implements ConstraintValidator<FutureDateTime, AddReservationDto> {
 

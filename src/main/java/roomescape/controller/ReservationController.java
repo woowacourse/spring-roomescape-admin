@@ -33,10 +33,6 @@ public class ReservationController {
 
     @PostMapping
     public ResponseEntity<ReservationResponse> add(@RequestBody final AddReservationRequest addReservationRequest) {
-        if (addReservationRequest == null) {
-            throw new InvalidReservationException("예약을 추가할 수 없습니다.");
-        }
-
         final Reservation addReservation = addReservationRequest.toReservation(index.getAndIncrement());
         reservations.add(addReservation);
         final ReservationResponse reservationResponse = ReservationResponse.fromReservation(addReservation);
@@ -45,11 +41,15 @@ public class ReservationController {
 
     @DeleteMapping("/{id}")
     public ResponseEntity<Void> delete(@PathVariable final Long id) {
-        final Reservation deleteReservation = reservations.stream()
-                .filter((reservation) -> reservation.id().equals(id))
-                .findAny()
-                .orElseThrow(() -> new InvalidReservationException("존재하지 않는 예약 번호를 삭제할 수 없습니다."));
+        final Reservation deleteReservation = findReservationById(id);
         reservations.remove(deleteReservation);
         return ResponseEntity.ok().build();
+    }
+
+    private Reservation findReservationById(final Long id) {
+        return reservations.stream()
+                .filter((reservation) -> reservation.id().equals(id))
+                .findAny()
+                .orElseThrow(() -> new InvalidReservationException("해당 예약 번호의 예약을 찾을 수 없습니다."));
     }
 }

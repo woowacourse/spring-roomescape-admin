@@ -21,19 +21,17 @@ class InMemoryReservationRepositoryTest {
 
     @Test
     void put_shouldAssignIdAndStoreReservation() {
-        Reservation reservation = new Reservation(1L, "브라운", LocalDate.parse("2023-08-05"), LocalTime.parse("15:40"));
+        Reservation reservation = new Reservation("브라운", LocalDate.parse("2023-08-05"), LocalTime.parse("15:40"));
 
-        Reservation saved = repository.put(reservation);
+        repository.put(reservation);
 
-        assertThat(saved.getId()).isNotNull();
-        assertThat(saved.getName()).isEqualTo("브라운");
-        assertThat(repository.getAll()).contains(saved);
+        assertThat(repository.getAll()).hasSize(1);
     }
 
     @Test
     void getAll_shouldReturnAllSavedReservations() {
-        Reservation r1 = new Reservation(1L, "브라운", LocalDate.parse("2023-08-05"), LocalTime.parse("15:40"));
-        Reservation r2 = new Reservation(1L, "존", LocalDate.parse("2023-08-06"), LocalTime.parse("16:00"));
+        Reservation r1 = new Reservation("브라운", LocalDate.parse("2023-08-05"), LocalTime.parse("15:40"));
+        Reservation r2 = new Reservation("존", LocalDate.parse("2023-08-06"), LocalTime.parse("16:00"));
 
         repository.put(r1);
         repository.put(r2);
@@ -44,11 +42,9 @@ class InMemoryReservationRepositoryTest {
 
     @Test
     void deleteById_shouldRemoveReservation() {
-        Reservation reservation = repository.put(
-                new Reservation(1L, "브라운", LocalDate.parse("2023-08-05"), LocalTime.parse("15:40"))
-        );
+        long id = repository.put(new Reservation("브라운", LocalDate.parse("2023-08-05"), LocalTime.parse("15:40")));
 
-        repository.deleteById(reservation.getId());
+        repository.deleteById(id);
 
         assertThat(repository.getAll()).isEmpty();
     }

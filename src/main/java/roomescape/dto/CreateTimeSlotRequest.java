@@ -1,13 +1,10 @@
 package roomescape.dto;
 
+import com.fasterxml.jackson.annotation.JsonProperty;
 import java.time.LocalTime;
-import roomescape.model.TimeSlot;
 
 public record CreateTimeSlotRequest(
-    LocalTime startAt
+    @JsonProperty("startAt") LocalTime startAt
 ) {
 
-    public TimeSlot toEntity(final long id) {
-        return new TimeSlot(id, startAt);
-    }
 }

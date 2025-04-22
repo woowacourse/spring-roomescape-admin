@@ -24,8 +24,12 @@ public class ReservationFakeRepository implements ReservationRepository {
     }
 
     public long save(CreateReservationRequest request) {
-        TimeSlot timeSlot = defineTimeSlot(request);
-        final var reservation = request.toReservation(index.getAndIncrement(), timeSlot);
+        Reservation reservation = new Reservation(
+            index.getAndIncrement(),
+            request.name(),
+            request.date(),
+            defineTimeSlot(request)
+        );
         reservations.put(reservation.id(), reservation);
         return reservation.id();
     }

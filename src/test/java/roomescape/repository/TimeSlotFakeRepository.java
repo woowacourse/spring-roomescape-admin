@@ -19,7 +19,7 @@ public class TimeSlotFakeRepository implements TimeSlotRepository {
     }
 
     public long save(CreateTimeSlotRequest request) {
-        final var timeSlot = request.toEntity(index.getAndIncrement());
+        TimeSlot timeSlot = new TimeSlot(index.getAndIncrement(), request.startAt());
         timeSlots.put(timeSlot.id(), timeSlot);
         return timeSlot.id();
     }

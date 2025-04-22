@@ -1,7 +1,6 @@
 package roomescape.controller;
 
 import java.util.List;
-import java.util.concurrent.atomic.AtomicLong;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -21,7 +20,6 @@ import roomescape.dto.ReservationResponse;
 public class ReservationController {
 
     private final Reservations reservations = new Reservations();
-    private final AtomicLong personIndex = new AtomicLong(1);
 
     @GetMapping()
     public List<ReservationResponse> readReservations() {
@@ -31,9 +29,8 @@ public class ReservationController {
     }
 
     @PostMapping()
-    public Reservation createReservations(
-            @RequestBody ReservationRequest reservationRequest) {
-        Person person = new Person(personIndex.getAndIncrement(), reservationRequest.name());
+    public Reservation createReservations(@RequestBody ReservationRequest reservationRequest) {
+        Person person = new Person(reservationRequest.name());
         ReservationTime reservationTime = reservationRequest.getReservationTime();
 
         return reservations.save(person, reservationTime);

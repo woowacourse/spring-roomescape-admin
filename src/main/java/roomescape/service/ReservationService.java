@@ -1,7 +1,7 @@
 package roomescape.service;
 
+import java.time.DateTimeException;
 import java.time.LocalDate;
-import java.time.format.DateTimeParseException;
 import java.util.List;
 import org.springframework.stereotype.Service;
 import roomescape.dto.request.ReservationRequest;
@@ -10,23 +10,22 @@ import roomescape.mapper.ReservationMapper;
 import roomescape.model.Reservation;
 import roomescape.model.ReservationTime;
 import roomescape.repository.ReservationRepository;
-import roomescape.repository.TimeRepository;
 
 @Service
 public class ReservationService {
 
     private final ReservationRepository reservationRepository;
-    private final TimeRepository timeRepository;
+    private final TimeService timeService;
 
-    public ReservationService(ReservationRepository reservationRepository, TimeRepository timeRepository) {
+    public ReservationService(ReservationRepository reservationRepository, TimeService timeService) {
         this.reservationRepository = reservationRepository;
-        this.timeRepository = timeRepository;
+        this.timeService = timeService;
     }
 
     public ReservationResponse registerReservation(ReservationRequest request) {
         validateDateFormat(request.date());
 
-        ReservationTime reservationTime = timeRepository.findById(request.timeId());
+        ReservationTime reservationTime = timeService.getTimeById(request.timeId());
         Reservation reservation = ReservationMapper.toDomain(request, reservationTime);
         Long id = reservationRepository.save(reservation);
 
@@ -36,7 +35,7 @@ public class ReservationService {
     private void validateDateFormat(String date) {
         try {
             LocalDate.parse(date);
-        } catch (DateTimeParseException e) {
+        } catch (DateTimeException e) {
             throw new IllegalArgumentException("유효하지 않은 날짜입니다: " + date);
         }
     }

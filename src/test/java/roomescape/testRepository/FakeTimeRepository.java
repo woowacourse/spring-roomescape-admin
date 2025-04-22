@@ -9,11 +9,11 @@ public class FakeTimeRepository implements TimeRepository {
 
     private final List<ReservationTime> reservationTimes = new ArrayList<>();
 
-    private Long index = 1L;
+    private Long index = 0L;
 
     @Override
     public Long save(ReservationTime reservationTime) {
-        ReservationTime timeWithId = ReservationTime.withId(index++, reservationTime);
+        ReservationTime timeWithId = ReservationTime.withId(++index, reservationTime);
         reservationTimes.add(timeWithId);
         return index;
     }

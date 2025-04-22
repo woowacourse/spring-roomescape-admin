@@ -10,6 +10,8 @@ import java.util.List;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.params.ParameterizedTest;
+import org.junit.jupiter.params.provider.ValueSource;
 import roomescape.dto.request.ReservationRequest;
 import roomescape.dto.response.ReservationResponse;
 import roomescape.dto.response.TimeResponse;
@@ -28,7 +30,8 @@ class ReservationServiceTest {
     void setUp() {
         reservationRepository = new FakeReservationRepository();
         timeRepository = new FakeTimeRepository();
-        reservationService = new ReservationService(reservationRepository, timeRepository);
+        TimeService timeService = new TimeService(timeRepository);
+        reservationService = new ReservationService(reservationRepository, timeService);
     }
 
     @DisplayName("예약을 정상적으로 등록한다.")
@@ -56,7 +59,8 @@ class ReservationServiceTest {
     }
 
     @DisplayName("잘못된 형식의 date로 예약 등록 요청했을 때 예외가 발생한다.")
-    @Test
+    @ParameterizedTest
+    @ValueSource(strings = {"20000-04-01", "2024-04", "2024,10,00"})
     void registerReservationFail_when_invalidFormattedDate() {
         // given
         timeRepository.save(ReservationTime.withoutId(LocalTime.of(10, 0)));

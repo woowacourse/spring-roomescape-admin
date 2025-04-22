@@ -32,6 +32,5 @@ public class FakeReservationRepository implements ReservationRepository {
                 .findAny();
         findReservation.orElseThrow(() -> new IllegalArgumentException("존재하지 않는 id입니다." + id));
         reservations.remove(findReservation.get());
-        System.out.println(reservations.size());
     }
 }

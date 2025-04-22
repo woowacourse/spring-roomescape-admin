@@ -20,6 +20,6 @@ public class AdminController {
 
     @GetMapping("/time")
     public String getTimePage() {
-        return "startAt";
+        return "time";
     }
 }

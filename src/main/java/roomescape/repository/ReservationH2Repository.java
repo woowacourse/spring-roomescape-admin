@@ -3,7 +3,6 @@ package roomescape.repository;
 import java.sql.Date;
 import java.sql.PreparedStatement;
 import java.sql.Statement;
-import java.sql.Time;
 import java.util.List;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.support.GeneratedKeyHolder;
@@ -22,7 +21,7 @@ public class ReservationH2Repository implements ReservationRepository {
 
     @Override
     public long save(final Reservation reservation) {
-        String query = "INSERT INTO reservation (name, date, time) VALUES (?, ?, ?)";
+        String query = "INSERT INTO reservation (name, date, time_id) VALUES (?, ?, ?)";
 
         KeyHolder keyHolder = new GeneratedKeyHolder();
 
@@ -30,7 +29,7 @@ public class ReservationH2Repository implements ReservationRepository {
             PreparedStatement ps = connection.prepareStatement(query, Statement.RETURN_GENERATED_KEYS);
             ps.setString(1, reservation.getName());
             ps.setDate(2, Date.valueOf(reservation.getDate()));
-            ps.setTime(3, Time.valueOf(reservation.getTime()));
+            ps.setLong(3, reservation.getReservationTime().getId());
             return ps;
         }, keyHolder);
 
@@ -49,7 +48,8 @@ public class ReservationH2Repository implements ReservationRepository {
                         rs.getLong("id"),
                         rs.getString("name"),
                         rs.getDate("date").toLocalDate(),
-                        rs.getTime("time").toLocalTime()
+                        null
+//                        rs.getTime("time").toLocalTime()
                 )
         ));
     }

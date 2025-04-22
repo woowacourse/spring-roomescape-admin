@@ -20,7 +20,7 @@ import roomescape.reservationtime.domain.ReservationTime;
 
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.DEFINED_PORT)
 @DirtiesContext(classMode = DirtiesContext.ClassMode.BEFORE_EACH_TEST_METHOD)
-class H2ReservationRepositoryTest {
+class ReservationRepositoryImplTest {
 
     @Autowired
     private JdbcTemplate jdbcTemplate;
@@ -28,7 +28,7 @@ class H2ReservationRepositoryTest {
 
     @BeforeEach
     void beforeEach() {
-        reservationRepository = new H2ReservationRepository(jdbcTemplate);
+        reservationRepository = new ReservationRepositoryImpl(jdbcTemplate);
     }
 
     @Test

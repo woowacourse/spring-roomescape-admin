@@ -14,12 +14,12 @@ import roomescape.reservation.domain.Reservation;
 import roomescape.reservationtime.domain.ReservationTime;
 
 @Repository
-public class H2ReservationRepository implements ReservationRepository {
+public class ReservationRepositoryImpl implements ReservationRepository {
 
     private final JdbcTemplate jdbcTemplate;
 
     @Autowired
-    public H2ReservationRepository(JdbcTemplate jdbcTemplate) {
+    public ReservationRepositoryImpl(JdbcTemplate jdbcTemplate) {
         this.jdbcTemplate = jdbcTemplate;
     }
 

@@ -15,7 +15,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.test.annotation.DirtiesContext;
-import roomescape.reservation.controller.request.ReservationCreateRequest;
 import roomescape.reservation.controller.response.ReservationResponse;
 
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.DEFINED_PORT)
@@ -125,11 +124,14 @@ public class ReservationTest {
         jdbcTemplate.update("INSERT INTO reservation_time (start_at) VALUES (?)",
                 "10:00");
 
-        ReservationCreateRequest request = new ReservationCreateRequest("브라운", "2025-08-05", 1L);
+        Map<String, Object> params = new HashMap<>();
+        params.put("name", "브라운");
+        params.put("date", "2025-08-05");
+        params.put("timeId", 1);
 
         RestAssured.given().log().all()
                 .contentType(ContentType.JSON)
-                .body(request)
+                .body(params)
                 .when().post("/reservations")
                 .then().log().all()
                 .statusCode(201);

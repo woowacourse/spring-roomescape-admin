@@ -6,10 +6,10 @@ import roomescape.time.domain.ReservationTime;
 
 public record ReservationCreateRequest(
         String name,
-        String date,
+        LocalDate date,
         Long timeId
 ) {
     public Reservation to() {
-        return new Reservation(name, LocalDate.parse(date), new ReservationTime(timeId));
+        return new Reservation(name, date, new ReservationTime(timeId));
     }
 }

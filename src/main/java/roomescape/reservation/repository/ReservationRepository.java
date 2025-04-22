@@ -36,7 +36,7 @@ public class ReservationRepository {
                         LocalDate.parse(resultSet.getString("date")),
                         new ReservationTime(
                                 resultSet.getLong("time_id"),
-                                LocalTime.parse(resultSet.getString("start_at"))
+                                LocalTime.parse(resultSet.getString("time_value"))
                         )
                 ));
     }
@@ -49,12 +49,11 @@ public class ReservationRepository {
         SqlParameterSource parameters = new MapSqlParameterSource()
                 .addValue("name", reservation.getReserverName())
                 .addValue("date", reservation.getDate())
-                .addValue("time_id", reservation.getTimeId())
-                .addValue("start_at", reservation.getTime());
+                .addValue("time_id", reservation.getTimeId());
         Long id = jdbcInsert.executeAndReturnKey(parameters).longValue();
 
         return new Reservation(id, reservation.getReserverName(), reservation.getDate(),
-                new ReservationTime(reservation.getTimeId(), reservation.getTime()));
+                new ReservationTime(reservation.getTimeId(), reservation.getStartAt()));
     }
 
     public Optional<Reservation> findById(Long id) {
@@ -73,7 +72,7 @@ public class ReservationRepository {
                             LocalDate.parse(resultSet.getString("date")),
                             new ReservationTime(
                                     resultSet.getLong("time_id"),
-                                    LocalTime.parse(resultSet.getString("start_at"))
+                                    LocalTime.parse(resultSet.getString("time_value"))
                             )
                     ), id);
         } catch (EmptyResultDataAccessException e) {

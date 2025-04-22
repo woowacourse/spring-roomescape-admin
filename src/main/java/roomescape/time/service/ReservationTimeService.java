@@ -1,6 +1,7 @@
 package roomescape.time.service;
 
 import java.util.List;
+import java.util.NoSuchElementException;
 import org.springframework.stereotype.Service;
 import roomescape.time.domain.ReservationTime;
 import roomescape.time.repository.ReservationTimeRepository;
@@ -28,6 +29,6 @@ public class ReservationTimeService {
 
     public ReservationTime getById(Long id) {
         return reservationTimeRepository.findById(id)
-                .orElseThrow(() -> new IllegalArgumentException("[ERROR] 예약 시간을 찾을 수 없습니다."));
+                .orElseThrow(() -> new NoSuchElementException("[ERROR] 예약 시간을 찾을 수 없습니다."));
     }
 }

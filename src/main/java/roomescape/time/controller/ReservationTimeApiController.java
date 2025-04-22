@@ -24,12 +24,11 @@ public class ReservationTimeApiController {
 
     @PostMapping("/times")
     public ResponseEntity<ReservationTimeResponse> createTime(
-            @RequestBody ReservationTimeCreateRequest request) {
-        ReservationTime reservationTime = request.to();
+            @RequestBody ReservationTimeCreateRequest request
+    ) {
+        ReservationTime created = reservationTimeService.create(request.to());
 
-        ReservationTime saved = reservationTimeService.create(reservationTime);
-
-        return ResponseEntity.ok(ReservationTimeResponse.from(saved));
+        return ResponseEntity.ok(ReservationTimeResponse.from(created));
     }
 
     @GetMapping("/times")

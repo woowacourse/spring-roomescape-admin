@@ -10,7 +10,7 @@ public record ReservationResponse(Long id,
                                   @JsonFormat(pattern = "yyyy-MM-dd", timezone = "Asia/Seoul") LocalDate date,
                                   @JsonFormat(pattern = "HH:mm", timezone = "Asia/Seoul") LocalTime time) {
 
-    public static ReservationResponse toDto(Long id, Reservation reservation) {
-        return new ReservationResponse(id, reservation.getName(), reservation.getDate(), reservation.getTime());
+    public static ReservationResponse toDto(Reservation reservation) {
+        return new ReservationResponse(reservation.getId(), reservation.getName(), reservation.getDate(), reservation.getTime());
     }
 }

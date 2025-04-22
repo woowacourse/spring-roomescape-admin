@@ -11,6 +11,6 @@ public record ReservationRequest(
                                  @JsonFormat(pattern = "HH:mm", timezone = "Asia/Seoul") LocalTime time) {
 
     public Reservation toEntity(){
-        return new Reservation(name,date,time);
+        return new Reservation(null, name, date, time);
     }
 }

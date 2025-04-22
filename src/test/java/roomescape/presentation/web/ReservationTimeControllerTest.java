@@ -10,8 +10,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.test.context.bean.override.mockito.MockitoBean;
 import org.springframework.test.web.servlet.MockMvc;
-import roomescape.business.domain.ReservationTime;
 import roomescape.business.service.ReservationTimeService;
+import roomescape.dto.response.ReservationTimeResponse;
 
 import java.time.LocalTime;
 import java.util.List;
@@ -39,8 +39,8 @@ class ReservationTimeControllerTest {
         void 모든_예약을_조회할_수_있다() {
             Mockito.when(reservationTimeService.getAll())
                     .thenReturn(List.of(
-                            new ReservationTime(1, LocalTime.of(10, 0)),
-                            new ReservationTime(2, LocalTime.of(13, 0))
+                            new ReservationTimeResponse(1, "10:00"),
+                            new ReservationTimeResponse(2, "13:00")
                     ));
 
             RestAssuredMockMvc.given().log().all()
@@ -58,12 +58,10 @@ class ReservationTimeControllerTest {
 
     @Nested
     class 생성_테스트 {
-        private final LocalTime startTime = LocalTime.of(10, 0);
-
         @Test
         void 시간으로_생성할_수_있다() {
             Mockito.when(reservationTimeService.saveAndGet(Mockito.any()))
-                    .thenReturn(new ReservationTime(1, startTime));
+                    .thenReturn(new ReservationTimeResponse(1, "10:00"));
 
             final Map<String, Object> values = Map.of(
                     "startAt", LocalTime.of(10, 0).toString()
@@ -84,7 +82,7 @@ class ReservationTimeControllerTest {
         @Test
         void 시간이_없으면_400_응답을_반환한다() {
             Mockito.when(reservationTimeService.saveAndGet(Mockito.any()))
-                    .thenReturn(new ReservationTime(1, startTime));
+                    .thenReturn(new ReservationTimeResponse(1, "10:00"));
 
             final Map<String, Object> values = Map.of();
 

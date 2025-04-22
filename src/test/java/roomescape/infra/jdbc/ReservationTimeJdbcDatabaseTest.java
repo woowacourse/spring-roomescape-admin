@@ -8,8 +8,8 @@ import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.support.GeneratedKeyHolder;
 import org.springframework.jdbc.support.KeyHolder;
 import org.springframework.transaction.annotation.Transactional;
-import roomescape.business.domain.ReservationTime;
 import roomescape.dto.request.ReservationTimeCreateRequest;
+import roomescape.infra.entity.ReservationTimeEntity;
 
 import java.sql.PreparedStatement;
 import java.sql.Statement;
@@ -34,11 +34,11 @@ class ReservationTimeJdbcDatabaseTest {
         jdbcTemplate.update("INSERT INTO reservation_time (start_at) VALUES (?)", "10:00");
         jdbcTemplate.update("INSERT INTO reservation_time (start_at) VALUES (?)", "13:00");
 
-        final List<ReservationTime> result = timeDatabase.findAll();
+        final List<ReservationTimeEntity> result = timeDatabase.findAll();
 
         assertThat(result).hasSize(2);
-        assertThat(result.get(0).startTime()).isEqualTo(LocalTime.of(10, 0));
-        assertThat(result.get(1).startTime()).isEqualTo(LocalTime.of(13, 0));
+        assertThat(result.get(0).getStartAt()).isEqualTo("10:00");
+        assertThat(result.get(1).getStartAt()).isEqualTo("13:00");
     }
 
     @Test
@@ -53,24 +53,25 @@ class ReservationTimeJdbcDatabaseTest {
         }, keyHolder);
         long reservationTimeId = keyHolder.getKey().longValue();
 
-        final ReservationTime result = timeDatabase.findById(reservationTimeId).get();
+        final ReservationTimeEntity result = timeDatabase.findById(reservationTimeId).get();
 
-        assertThat(result.startTime()).isEqualTo(LocalTime.of(10, 0));
+        assertThat(result.getStartAt()).isEqualTo("10:00");
     }
 
     @Test
     void 저장_테스트() {
         final ReservationTimeCreateRequest request = new ReservationTimeCreateRequest(LocalTime.of(10, 0));
 
-        final long savedId = timeDatabase.saveAndGetId(request);
+        final long savedId = timeDatabase.saveAndGetId(ReservationTimeEntity.beforeSave(request));
 
-        final ReservationTime savedReservation = timeDatabase.findById(savedId).get();
-        assertThat(savedReservation.startTime()).isEqualTo(LocalTime.of(10, 0));
+        final ReservationTimeEntity savedReservation = timeDatabase.findById(savedId).get();
+        assertThat(savedReservation.getStartAt()).isEqualTo("10:00");
     }
 
     @Test
     void 삭제_테스트() {
-        final long savedId = timeDatabase.saveAndGetId(new ReservationTimeCreateRequest(LocalTime.of(10, 0)));
+        final ReservationTimeCreateRequest request = new ReservationTimeCreateRequest(LocalTime.of(10, 0));
+        final long savedId = timeDatabase.saveAndGetId(ReservationTimeEntity.beforeSave(request));
 
         timeDatabase.deleteById(savedId);
 

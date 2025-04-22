@@ -1,9 +1,8 @@
 package roomescape.dto.response;
 
-import roomescape.business.domain.ReservationTime;
+import roomescape.infra.entity.ReservationTimeEntity;
 
 import java.time.format.DateTimeFormatter;
-import java.util.List;
 
 public record ReservationTimeResponse(
         long id,
@@ -11,14 +10,8 @@ public record ReservationTimeResponse(
 ) {
     private static final DateTimeFormatter TIME_FORMATTER = DateTimeFormatter.ofPattern("HH:mm");
 
-    public static ReservationTimeResponse from(final ReservationTime time) {
-        String startTime = TIME_FORMATTER.format(time.startTime());
-        return new ReservationTimeResponse(time.id(), startTime);
-    }
-
-    public static List<ReservationTimeResponse> fromList(final List<ReservationTime> reservationTimes) {
-        return reservationTimes.stream()
-                .map(ReservationTimeResponse::from)
-                .toList();
+    public static ReservationTimeResponse from(final ReservationTimeEntity timeEntity) {
+        String startTime = TIME_FORMATTER.format(timeEntity.getStartAt());
+        return new ReservationTimeResponse(timeEntity.getId(), startTime);
     }
 }

@@ -3,12 +3,10 @@ package roomescape.infra.memory;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.stereotype.Repository;
-import roomescape.business.domain.Customer;
-import roomescape.business.domain.Reservation;
-import roomescape.business.domain.ReservationTime;
-import roomescape.dto.request.ReservationCreateRequest;
 import roomescape.infra.ReservationDatabase;
 import roomescape.infra.ReservationTimeDatabase;
+import roomescape.infra.entity.ReservationEntity;
+import roomescape.infra.entity.ReservationTimeEntity;
 
 import java.time.LocalDate;
 import java.util.HashMap;
@@ -27,9 +25,9 @@ public class ReservationMemoryDatabase implements ReservationDatabase {
             long timeId
     ) {
 
-        public Reservation toDomain(ReservationTimeDatabase database) {
-            final ReservationTime time = database.findById(timeId).get();
-            return new Reservation(id, new Customer(name), date, time);
+        public ReservationEntity toEntity(ReservationTimeDatabase database) {
+            final ReservationTimeEntity entity = database.findById(timeId).get();
+            return new ReservationEntity(id, name, date, entity);
         }
     }
 
@@ -47,30 +45,30 @@ public class ReservationMemoryDatabase implements ReservationDatabase {
     }
 
     @Override
-    public List<Reservation> findAll() {
+    public List<ReservationEntity> findAll() {
         return DATA.values().stream()
-                .map(data -> data.toDomain(timeDatabase))
+                .map(data -> data.toEntity(timeDatabase))
                 .toList();
     }
 
     @Override
-    public Optional<Reservation> findById(final long id) {
+    public Optional<ReservationEntity> findById(final long id) {
         final ReservationData reservationData = DATA.get(id);
 
         if (reservationData == null) {
             return Optional.empty();
         }
-        return Optional.of(reservationData.toDomain(timeDatabase));
+        return Optional.of(reservationData.toEntity(timeDatabase));
     }
 
     @Override
-    public long saveAndGetId(final ReservationCreateRequest request) {
+    public long saveAndGetId(final ReservationEntity request) {
         final long id = idGenerator.get();
         DATA.put(id, new ReservationData(
                 id,
-                request.name(),
-                request.date(),
-                request.timeId()
+                request.getName(),
+                request.getDate(),
+                request.getTime().getId()
         ));
         return id;
     }

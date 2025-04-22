@@ -3,12 +3,12 @@ package roomescape.presentation.console;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.stereotype.Component;
-import roomescape.business.domain.Reservation;
-import roomescape.business.domain.ReservationTime;
 import roomescape.business.service.ReservationService;
 import roomescape.business.service.ReservationTimeService;
 import roomescape.dto.request.ReservationCreateRequest;
 import roomescape.dto.request.ReservationTimeCreateRequest;
+import roomescape.dto.response.ReservationResponse;
+import roomescape.dto.response.ReservationTimeResponse;
 import roomescape.infra.ReservationDatabase;
 import roomescape.infra.ReservationTimeDatabase;
 import roomescape.presentation.console.view.InputView;
@@ -42,12 +42,12 @@ public class ConsoleController {
             try {
                 switch (inputView.getCommandType()) {
                     case 예약_전체_조회 -> {
-                        final List<Reservation> result = reservationService.getAll();
+                        final List<ReservationResponse> result = reservationService.getAll();
                         outputView.printAllReservations(result);
                     }
                     case 예약_추가 -> {
                         final ReservationCreateRequest request = inputView.getReservationCreateRequest();
-                        final Reservation reservation = reservationService.saveAndGet(request);
+                        final ReservationResponse reservation = reservationService.saveAndGet(request);
                         outputView.printSavedReservation(reservation);
                     }
                     case 예약_삭제 -> {
@@ -56,12 +56,12 @@ public class ConsoleController {
                         outputView.printDeleteCompleteMessage();
                     }
                     case 예약_시간_전체_조회 -> {
-                        final List<ReservationTime> result = reservationTimeService.getAll();
+                        final List<ReservationTimeResponse> result = reservationTimeService.getAll();
                         outputView.printAllReservationTimes(result);
                     }
                     case 예약_시간_추가 -> {
                         final ReservationTimeCreateRequest request = inputView.getReservationTimeCreateRequest();
-                        final ReservationTime result = reservationTimeService.saveAndGet(request);
+                        final ReservationTimeResponse result = reservationTimeService.saveAndGet(request);
                         outputView.printSavedReservationTime(result);
                     }
                     case 예약_시간_삭제 -> {

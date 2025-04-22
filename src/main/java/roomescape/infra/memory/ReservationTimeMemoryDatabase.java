@@ -2,9 +2,8 @@ package roomescape.infra.memory;
 
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.stereotype.Repository;
-import roomescape.business.domain.ReservationTime;
-import roomescape.dto.request.ReservationTimeCreateRequest;
 import roomescape.infra.ReservationTimeDatabase;
+import roomescape.infra.entity.ReservationTimeEntity;
 
 import java.time.LocalTime;
 import java.util.HashMap;
@@ -20,8 +19,8 @@ public class ReservationTimeMemoryDatabase implements ReservationTimeDatabase {
             long id,
             LocalTime time
     ) {
-        public ReservationTime toDomain() {
-            return new ReservationTime(id, time);
+        public ReservationTimeEntity toEntity() {
+            return new ReservationTimeEntity(id, time);
         }
     }
 
@@ -34,26 +33,26 @@ public class ReservationTimeMemoryDatabase implements ReservationTimeDatabase {
     }
 
     @Override
-    public List<ReservationTime> findAll() {
+    public List<ReservationTimeEntity> findAll() {
         return DATA.values().stream()
-                .map(ReservationTimeData::toDomain)
+                .map(ReservationTimeData::toEntity)
                 .toList();
     }
 
     @Override
-    public Optional<ReservationTime> findById(final long id) {
+    public Optional<ReservationTimeEntity> findById(final long id) {
         final ReservationTimeData reservationTimeData = DATA.get(id);
 
         if (reservationTimeData == null) {
             return Optional.empty();
         }
-        return Optional.of(reservationTimeData.toDomain());
+        return Optional.of(reservationTimeData.toEntity());
     }
 
     @Override
-    public long saveAndGetId(final ReservationTimeCreateRequest request) {
+    public long saveAndGetId(final ReservationTimeEntity request) {
         final long id = idGenerator.get();
-        DATA.put(id, new ReservationTimeData(id, request.startAt()));
+        DATA.put(id, new ReservationTimeData(id, request.getStartAt()));
         return id;
     }
 

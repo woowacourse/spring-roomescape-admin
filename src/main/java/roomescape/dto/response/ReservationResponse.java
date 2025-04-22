@@ -1,9 +1,9 @@
 package roomescape.dto.response;
 
-import roomescape.business.domain.Reservation;
+import roomescape.infra.entity.ReservationEntity;
+import roomescape.infra.entity.ReservationTimeEntity;
 
 import java.time.LocalDate;
-import java.util.List;
 
 public record ReservationResponse(
         long id,
@@ -11,13 +11,13 @@ public record ReservationResponse(
         LocalDate date,
         ReservationTimeResponse time
 ) {
-    public static ReservationResponse from(final Reservation reservation) {
-        return new ReservationResponse(reservation.id(), reservation.name(), reservation.date(), ReservationTimeResponse.from(reservation.reservationTime()));
-    }
-
-    public static List<ReservationResponse> fromList(final List<Reservation> reservations) {
-        return reservations.stream()
-                .map(ReservationResponse::from)
-                .toList();
+    public static ReservationResponse from(ReservationEntity reservationEntity) {
+        final ReservationTimeEntity timeEntity = reservationEntity.getTime();
+        return new ReservationResponse(
+                reservationEntity.getId(),
+                reservationEntity.getName(),
+                reservationEntity.getDate(),
+                ReservationTimeResponse.from(timeEntity)
+        );
     }
 }

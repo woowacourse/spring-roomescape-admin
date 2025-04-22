@@ -3,7 +3,6 @@ package roomescape.presentation.web;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
-import roomescape.business.domain.Reservation;
 import roomescape.business.service.ReservationService;
 import roomescape.dto.request.ReservationCreateRequest;
 import roomescape.dto.response.ReservationResponse;
@@ -21,16 +20,14 @@ public class ReservationController {
 
     @GetMapping("/reservations")
     public ResponseEntity<List<ReservationResponse>> getAll() {
-        final List<Reservation> reservations = reservationService.getAll();
-        final List<ReservationResponse> response = ReservationResponse.fromList(reservations);
+        final List<ReservationResponse> response = reservationService.getAll();
 
         return ResponseEntity.ok(response);
     }
 
     @PostMapping("/reservations")
     public ResponseEntity<ReservationResponse> add(@RequestBody ReservationCreateRequest request) {
-        final Reservation reservation = reservationService.saveAndGet(request);
-        final ReservationResponse response = ReservationResponse.from(reservation);
+        final ReservationResponse response = reservationService.saveAndGet(request);
 
         return ResponseEntity.ok(response);
     }

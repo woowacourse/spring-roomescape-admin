@@ -2,9 +2,10 @@ package roomescape.business.service;
 
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import roomescape.business.domain.ReservationTime;
 import roomescape.dto.request.ReservationTimeCreateRequest;
+import roomescape.dto.response.ReservationTimeResponse;
 import roomescape.infra.ReservationTimeDatabase;
+import roomescape.infra.entity.ReservationTimeEntity;
 
 import java.util.List;
 
@@ -18,15 +19,18 @@ public class ReservationTimeService {
     }
 
     @Transactional
-    public ReservationTime saveAndGet(final ReservationTimeCreateRequest request) {
-        final long savedId = database.saveAndGetId(request);
-        return database.findById(savedId)
+    public ReservationTimeResponse saveAndGet(final ReservationTimeCreateRequest request) {
+        final long savedId = database.saveAndGetId(ReservationTimeEntity.beforeSave(request));
+        final ReservationTimeEntity entity = database.findById(savedId)
                 .orElseThrow(() -> new IllegalStateException("예약 시간이 저장되었으나, 서버에서 문제가 발생하였습니다."));
+        return ReservationTimeResponse.from(entity);
     }
 
     @Transactional(readOnly = true)
-    public List<ReservationTime> getAll() {
-        return database.findAll();
+    public List<ReservationTimeResponse> getAll() {
+        return database.findAll().stream()
+                .map(ReservationTimeResponse::from)
+                .toList();
     }
 
     @Transactional

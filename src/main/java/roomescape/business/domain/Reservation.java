@@ -1,20 +1,17 @@
 package roomescape.business.domain;
 
 import java.time.LocalDate;
-import java.time.LocalTime;
 
 public class Reservation {
 
-    private final long id;
     private final Customer customer;
     private final LocalDate date;
     private final ReservationTime reservationTime;
 
-    public Reservation(final long id, final Customer customer, final LocalDate date, final ReservationTime reservationTime) {
+    public Reservation(final Customer customer, final LocalDate date, final ReservationTime reservationTime) {
         validateCustomer(customer);
         validateDate(date);
         validateTime(reservationTime);
-        this.id = id;
         this.customer = customer;
         this.date = date;
         this.reservationTime = reservationTime;
@@ -39,25 +36,5 @@ public class Reservation {
         if (customer == null) {
             throw new IllegalArgumentException("예약자는 null이 될 수 없습니다.");
         }
-    }
-
-    public long id() {
-        return id;
-    }
-
-    public String name() {
-        return customer.getName();
-    }
-
-    public LocalDate date() {
-        return date;
-    }
-
-    public ReservationTime reservationTime() {
-        return reservationTime;
-    }
-
-    public LocalTime startTime() {
-        return reservationTime.startTime();
     }
 }

@@ -1,18 +1,17 @@
 package roomescape.infra;
 
-import roomescape.business.domain.Reservation;
-import roomescape.dto.request.ReservationCreateRequest;
+import roomescape.infra.entity.ReservationEntity;
 
 import java.util.List;
 import java.util.Optional;
 
 public interface ReservationDatabase {
 
-    List<Reservation> findAll();
+    List<ReservationEntity> findAll();
 
-    Optional<Reservation> findById(long id);
+    Optional<ReservationEntity> findById(long id);
 
-    long saveAndGetId(final ReservationCreateRequest request);
+    long saveAndGetId(final ReservationEntity request);
 
     void deleteById(final long id);
 }

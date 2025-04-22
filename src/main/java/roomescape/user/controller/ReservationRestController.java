@@ -13,7 +13,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import roomescape.exception.DataNotFoundException;
 import roomescape.user.domain.Reservation;
-import roomescape.user.repository.ReservationRepository;
+import roomescape.user.repository.reservation.ReservationRepository;
 
 @RestController
 @RequestMapping("/reservations")

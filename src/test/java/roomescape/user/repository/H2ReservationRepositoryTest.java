@@ -10,6 +10,7 @@ import org.springframework.boot.test.autoconfigure.jdbc.JdbcTest;
 import org.springframework.context.annotation.Import;
 import org.springframework.test.context.ActiveProfiles;
 import roomescape.user.domain.Reservation;
+import roomescape.user.repository.reservation.H2ReservationRepository;
 
 
 @JdbcTest

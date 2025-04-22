@@ -1,4 +1,4 @@
-package roomescape.user.repository;
+package roomescape.user.repository.reservation;
 
 import java.sql.Date;
 import java.sql.PreparedStatement;

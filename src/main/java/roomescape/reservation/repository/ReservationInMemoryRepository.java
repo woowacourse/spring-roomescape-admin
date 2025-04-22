@@ -47,7 +47,7 @@ public class ReservationInMemoryRepository implements ReservationRepository {
     @Override
     public void deleteById(Long id) {
         if (!existReservation(id)) {
-            throw new EntityNotFoundException("삭제할 예약이 없습니다.");
+            throw new EntityNotFoundException("삭제할 예약정보가 없습니다.");
         }
         String sql = "DELETE FROM reservation WHERE id = :id";
         jdbcTemplate.update(sql, new MapSqlParameterSource("id", id));

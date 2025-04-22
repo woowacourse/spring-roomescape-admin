@@ -3,7 +3,10 @@ package roomescape.time.web;
 import java.util.List;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.ResponseBody;
+import roomescape.time.ReservationTime;
 import roomescape.time.ReservationTimeDao;
 
 @Controller
@@ -21,5 +24,12 @@ public class ReservationTimeController {
                 .stream()
                 .map(ReservationTimeResponse::new)
                 .toList();
+    }
+
+    @PostMapping("/times")
+    @ResponseBody
+    public ReservationTimeResponse create(@RequestBody ReservationTimeRequest request) {
+        ReservationTime savedReservation = reservationTimeDao.save(request.toReservationTime());
+        return new ReservationTimeResponse(savedReservation);
     }
 }

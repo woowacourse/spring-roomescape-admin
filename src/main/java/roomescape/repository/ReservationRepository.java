@@ -1,13 +1,15 @@
-package roomescape;
+package roomescape.repository;
 
 import java.sql.PreparedStatement;
 import java.util.List;
+import java.util.Objects;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.support.GeneratedKeyHolder;
 import org.springframework.jdbc.support.KeyHolder;
 import org.springframework.stereotype.Repository;
+import roomescape.Reservation;
 
 @Repository
 public class ReservationRepository {
@@ -44,7 +46,8 @@ public class ReservationRepository {
             return ps;
         }, keyHolder);
 
-        Reservation newReservation = Reservation.toEntity(reservation, keyHolder.getKey().longValue());
+        Reservation newReservation = Reservation.generateWithPrimaryKey(reservation, Objects.requireNonNull(
+                keyHolder.getKey()).longValue());
         return ResponseEntity.ok().body(newReservation);
     }
 

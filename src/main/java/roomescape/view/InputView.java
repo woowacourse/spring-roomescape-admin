@@ -21,7 +21,7 @@ public class InputView {
                 6. 예약 삭제
                 7. 종료
                 """;
-        System.out.println(message);
+        System.out.print(message);
         String input = scanner.nextLine();
         return Command.find(input);
     }

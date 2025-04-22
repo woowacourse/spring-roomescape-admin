@@ -8,6 +8,7 @@ import java.util.Map;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.simple.SimpleJdbcInsert;
 import org.springframework.stereotype.Repository;
+import roomescape.entity.ReservationTimeEntity;
 import roomescape.model.ReservationTime;
 
 @Repository
@@ -26,21 +27,26 @@ public class H2ReservationTimeRepository implements ReservationTimeRepository {
     @Override
     public List<ReservationTime> findAll() {
         String sql = "SELECT id, start_at FROM Reservation_Time";
-        return jdbcTemplate.query(
+        List<ReservationTimeEntity> reservationTimeEntities = jdbcTemplate.query(
                 sql,
-                (resultSet, rowNum) -> new ReservationTime(
-                        resultSet.getInt("id"),
-                        LocalTime.parse(resultSet.getString("start_at"))
+                (resultSet, rowNum) -> new ReservationTimeEntity(
+                        resultSet.getLong("id"),
+                        resultSet.getString("start_at")
                 )
         );
+        return reservationTimeEntities.stream()
+                .map(reservationTimeEntity -> new ReservationTime(
+                        reservationTimeEntity.getId(),
+                        LocalTime.parse(reservationTimeEntity.getStartAt(), DateTimeFormatter.ofPattern("HH:mm"))))
+                .toList();
     }
 
     @Override
     public ReservationTime add(ReservationTime reservationTime) {
         Map<String, String> params = new HashMap<>();
-        params.put("start_at", reservationTime.getStartAt().format(DateTimeFormatter.ofPattern("HH:mm")));
-        int id = jdbcInsert.executeAndReturnKey(params).intValue();
-        return reservationTime.createWithId(id);
+        params.put("start_at", reservationTime.getStartTime().format(DateTimeFormatter.ofPattern("HH:mm")));
+        long id = jdbcInsert.executeAndReturnKey(params).intValue();
+        return new ReservationTime(id, reservationTime.getStartTime());
     }
 
     @Override

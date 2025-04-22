@@ -27,14 +27,16 @@ public final class ReservationTimeApiController {
     @GetMapping
     public List<ReservationTimeResponseDto> reservationTimes() {
         return reservationTimeRepository.findAll().stream()
-                .map(ReservationTimeResponseDto::from)
+                .map(reservationTime -> new ReservationTimeResponseDto(
+                        reservationTime.getId(),
+                        reservationTime.getStartTime()))
                 .toList();
     }
 
     @PostMapping
     public ReservationTimeResponseDto create(@Valid @RequestBody ReservationTimeRequestDto reservationTimeRequestDto) {
-        ReservationTime reservationTime = reservationTimeRepository.add(reservationTimeRequestDto.toReservationTime());
-        return ReservationTimeResponseDto.from(reservationTime);
+        ReservationTime reservationTime = reservationTimeRepository.add(new ReservationTime(reservationTimeRequestDto.startAt()));
+        return new ReservationTimeResponseDto(reservationTime.getId(), reservationTime.getStartTime());
     }
 
     @DeleteMapping("/{id}")

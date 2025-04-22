@@ -9,27 +9,32 @@ public final class Reservation {
 
     private static final int MAX_NAME_LENGTH = 20;
 
-    private final Integer id;
+    private final Long id;
     private final String name;
-    private final LocalDate date;
-    private final LocalTime time;
+    private final ReservationDate date;
+    private final ReservationTime time;
 
-    public Reservation(Integer id, String name, LocalDate date, LocalTime time) {
+    public Reservation(Long id, String name, LocalDateTime startDateTime) {
         validateNameLength(name);
-        validateNotPastDateTime(LocalDateTime.of(date, time));
+        validateNotPastDateTime(startDateTime);
         this.id = id;
         this.name = name;
-        this.date = date;
-        this.time = time;
+        this.date = new ReservationDate(startDateTime.toLocalDate());
+        this.time = new ReservationTime(startDateTime.toLocalTime());
+    }
+
+    public Reservation(Long id, String name, LocalDate date, LocalTime time) {
+        this(id, name, LocalDateTime.of(date, time));
     }
 
     public Reservation(String name, LocalDate date, LocalTime time) {
-        validateNameLength(name);
-        validateNotPastDateTime(LocalDateTime.of(date, time));
-        this.id = null;
-        this.name = name;
-        this.date = date;
-        this.time = time;
+        this(null, name, LocalDateTime.of(date, time));
+    }
+
+    private void validateNotPastDateTime(LocalDateTime startDateTime) {
+        if (startDateTime.isBefore(LocalDateTime.now())) {
+            throw new ReservationException("과거 일시로 예약을 생성할 수 없습니다.");
+        }
     }
 
     private void validateNameLength(String name) {
@@ -38,17 +43,7 @@ public final class Reservation {
         }
     }
 
-    private void validateNotPastDateTime(LocalDateTime reservationDateTime) {
-        if (reservationDateTime.isBefore(LocalDateTime.now())) {
-            throw new ReservationException("과거 일시로 예약을 생성할 수 없습니다.");
-        }
-    }
-
-    public Reservation createWithId(Integer id) {
-        return new Reservation(id, name, date, time);
-    }
-
-    public int getId() {
+    public Long getId() {
         return id;
     }
 
@@ -56,11 +51,11 @@ public final class Reservation {
         return name;
     }
 
-    public LocalDate getDate() {
+    public ReservationDate getDate() {
         return date;
     }
 
-    public LocalTime getTime() {
+    public ReservationTime getTime() {
         return time;
     }
 }

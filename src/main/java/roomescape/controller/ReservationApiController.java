@@ -27,14 +27,26 @@ public final class ReservationApiController {
     @GetMapping
     public List<ReservationResponseDto> reservations() {
         return reservationRepository.findAll().stream()
-                .map(ReservationResponseDto::from)
+                .map(reservation -> new ReservationResponseDto(
+                        reservation.getId(),
+                        reservation.getName(),
+                        reservation.getDate().getStartDate(),
+                        reservation.getTime().getStartTime()))
                 .toList();
     }
 
     @PostMapping
     public ReservationResponseDto reserve(@Valid @RequestBody ReservationRequestDto reservationRequestDto) {
-        Reservation reservation = reservationRepository.add(reservationRequestDto.toReservation());
-        return ReservationResponseDto.from(reservation);
+        Reservation reservation = reservationRepository.add(new Reservation(
+                reservationRequestDto.name(),
+                reservationRequestDto.date(),
+                reservationRequestDto.time()
+        ));
+        return new ReservationResponseDto(
+                reservation.getId(),
+                reservation.getName(),
+                reservation.getDate().getStartDate(),
+                reservation.getTime().getStartTime());
     }
 
     @DeleteMapping("/{id}")

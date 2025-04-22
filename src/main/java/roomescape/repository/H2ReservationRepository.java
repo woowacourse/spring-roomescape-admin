@@ -9,6 +9,7 @@ import java.util.Map;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.simple.SimpleJdbcInsert;
 import org.springframework.stereotype.Repository;
+import roomescape.entity.ReservationEntity;
 import roomescape.model.Reservation;
 
 @Repository
@@ -27,29 +28,41 @@ public class H2ReservationRepository implements ReservationRepository {
     @Override
     public List<Reservation> findAll() {
         String sql = "SELECT id, name, date, time FROM Reservation";
-        return jdbcTemplate.query(
+        List<ReservationEntity> reservationEntities = jdbcTemplate.query(
                 sql,
-                (resultSet, rowNum) -> new Reservation(
-                        resultSet.getInt("id"),
+                (resultSet, rowNum) -> new ReservationEntity(
+                        resultSet.getLong("id"),
                         resultSet.getString("name"),
-                        LocalDate.parse(resultSet.getString("date")),
-                        LocalTime.parse(resultSet.getString("time"))
+                        resultSet.getString("date"),
+                        resultSet.getString("time")
                 )
         );
+        return reservationEntities.stream()
+                .map(reservationEntity -> new Reservation(
+                        reservationEntity.getId(),
+                        reservationEntity.getName(),
+                        LocalDate.parse(reservationEntity.getDate(), DateTimeFormatter.ofPattern("yyyy-MM-dd")),
+                        LocalTime.parse(reservationEntity.getTime(), DateTimeFormatter.ofPattern("HH:mm"))))
+                .toList();
     }
 
     @Override
     public Reservation add(Reservation reservation) {
+        ReservationEntity reservationEntity = new ReservationEntity(
+                reservation.getId(),
+                reservation.getName(),
+                reservation.getDate().getStartDate().toString(),
+                reservation.getTime().getStartTime().toString());
         Map<String, String> params = new HashMap<>();
-        params.put("name", reservation.getName());
-        params.put("date", reservation.getDate().format(DateTimeFormatter.ofPattern("yyyy-MM-dd")));
-        params.put("time", reservation.getTime().format(DateTimeFormatter.ofPattern("HH:mm")));
-        int id = jdbcInsert.executeAndReturnKey(params).intValue();
-        return reservation.createWithId(id);
+        params.put("name", reservationEntity.getName());
+        params.put("date", reservationEntity.getDate());
+        params.put("time", reservationEntity.getTime());
+        long id = jdbcInsert.executeAndReturnKey(params).intValue();
+        return new Reservation(id, reservation.getName(), reservation.getDate().getStartDate(), reservation.getTime().getStartTime());
     }
 
     @Override
-    public void removeById(int id) {
+    public void removeById(long id) {
         String sql = "DELETE FROM Reservation WHERE id = ?";
         jdbcTemplate.update(sql, id);
     }

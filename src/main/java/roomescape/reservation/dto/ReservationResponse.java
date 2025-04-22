@@ -8,6 +8,7 @@ import roomescape.reservation.model.Reservation;
 public record ReservationResponse(
         long id,
         String name,
+        @JsonFormat(pattern = "YYYY-MM-dd")
         LocalDate date,
         @JsonFormat(pattern = "HH:mm")
         LocalTime time

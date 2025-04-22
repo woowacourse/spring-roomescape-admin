@@ -3,22 +3,34 @@ package roomescape.service;
 import java.util.List;
 import org.springframework.stereotype.Service;
 import roomescape.domain.Reservation;
+import roomescape.domain.ReservationTime;
 import roomescape.dto.ReservationRequest;
 import roomescape.dto.ReservationResponse;
+import roomescape.dto.ReservationTimeRequest;
+import roomescape.dto.ReservationTimeResponse;
 import roomescape.repository.RoomescapeRepository;
+import roomescape.repository.RoomescapeTimeRepository;
 
 @Service
 public class RoomescapeService {
 
     private final RoomescapeRepository roomescapeRepository;
+    private final RoomescapeTimeRepository roomescapeTimeRepository;
 
-    public RoomescapeService(final RoomescapeRepository roomescapeRepository) {
+    public RoomescapeService(final RoomescapeRepository roomescapeRepository,
+                             final RoomescapeTimeRepository roomescapeTimeRepository) {
         this.roomescapeRepository = roomescapeRepository;
+        this.roomescapeTimeRepository = roomescapeTimeRepository;
     }
 
     public List<ReservationResponse> findReservations() {
         List<Reservation> reservations = roomescapeRepository.findAll();
         return reservations.stream().map(ReservationResponse::of).toList();
+    }
+
+    public List<ReservationTimeResponse> findReservationTimes() {
+        List<ReservationTime> reservationTimes = roomescapeTimeRepository.findAll();
+        return reservationTimes.stream().map(ReservationTimeResponse::of).toList();
     }
 
     public ReservationResponse addReservation(final ReservationRequest request) {
@@ -30,10 +42,23 @@ public class RoomescapeService {
         return ReservationResponse.of(saved);
     }
 
+    public ReservationTimeResponse addReservationTime(final ReservationTimeRequest request) {
+        ReservationTime reservationTime = request.toReservationTime();
+        ReservationTime saved = roomescapeTimeRepository.saveReservationTime(reservationTime);
+        return ReservationTimeResponse.of(saved);
+    }
+
     public void removeReservation(final long id) {
         int deleteCounts = roomescapeRepository.deleteById(id);
         if (deleteCounts == 0) {
             throw new IllegalArgumentException(String.format("[ERROR] 예약번호 %d번은 존재하지 않습니다.", id));
+        }
+    }
+
+    public void removeReservationTime(final long id) {
+        int deleteCounts = roomescapeTimeRepository.deleteById(id);
+        if (deleteCounts == 0) {
+            throw new IllegalArgumentException(String.format("[ERROR] 예약시간 %d번은 존재하지 않습니다.", id));
         }
     }
 
@@ -45,5 +70,4 @@ public class RoomescapeService {
         }
         return exists;
     }
-
 }

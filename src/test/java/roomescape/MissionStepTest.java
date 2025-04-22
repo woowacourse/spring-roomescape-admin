@@ -139,4 +139,70 @@ class MissionStepTest {
         Integer countAfterDelete = jdbcTemplate.queryForObject("SELECT count(1) from reservation", Integer.class);
         assertThat(countAfterDelete).isEqualTo(0);
     }
+
+    @DisplayName("칠단계")
+    @Test
+    void level7() {
+        Map<String, String> params = new HashMap<>();
+        params.put("startAt", "10:00");
+
+        RestAssured.given().log().all()
+                .contentType(ContentType.JSON)
+                .body(params)
+                .when().post("/times")
+                .then().log().all()
+                .statusCode(200);
+
+        RestAssured.given().log().all()
+                .when().get("/times")
+                .then().log().all()
+                .statusCode(200)
+                .body("size()", is(1));
+
+        RestAssured.given().log().all()
+                .when().delete("/times/1")
+                .then().log().all()
+                .statusCode(200);
+    }
+//
+//    @DisplayName("팔단계")
+//    @Test
+//    void level8() {
+//        Map<String, Object> reservation = new HashMap<>();
+//        reservation.put("name", "브라운");
+//        reservation.put("date", "2023-08-05");
+//        reservation.put("timeId", 1);
+//
+//        RestAssured.given().log().all()
+//                .contentType(ContentType.JSON)
+//                .body(reservation)
+//                .when().post("/reservations")
+//                .then().log().all()
+//                .statusCode(200);
+//
+//
+//        RestAssured.given().log().all()
+//                .when().get("/reservations")
+//                .then().log().all()
+//                .statusCode(200)
+//                .body("size()", is(1));
+//    }
+//
+//    @Autowired
+//    private ReservationController reservationController;
+//
+//    @DisplayName("구단계")
+//    @Test
+//    void level9() {
+//        boolean isJdbcTemplateInjected = false;
+//
+//        for (Field field : reservationController.getClass().getDeclaredFields()) {
+//            if (field.getType().equals(JdbcTemplate.class)) {
+//                isJdbcTemplateInjected = true;
+//                break;
+//            }
+//        }
+//
+//        assertThat(isJdbcTemplateInjected).isFalse();
+//    }
 }

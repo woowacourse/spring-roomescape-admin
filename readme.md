@@ -14,3 +14,8 @@
 ### 예약 취소
 - [x] "/reservations/{id}" delete 요청 시 해당 id로 설정된 예약을 삭제되고 204 NO_CONTENT 상태 코드가 반환된다.
 - [x] 만약 해당 예약이 삭제되었다면 404 NOT FOUND 상태 코드가 반환된다. 
+
+
+### 예약 시간
+- [x] "/times" post 요청으로 startAt 을 body로 전송하여 추가 할 수 있다.
+- [x] "/times" get 요청시 모든 예약 시간을 반환한다.

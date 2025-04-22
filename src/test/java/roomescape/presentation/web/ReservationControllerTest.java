@@ -43,8 +43,8 @@ class ReservationControllerTest {
 
             Mockito.when(reservationService.getAll())
                     .thenReturn(List.of(
-                            new ReservationResponse(1, "dompoo", date1, new ReservationTimeResponse(5, "10:00")),
-                            new ReservationResponse(2, "popo", date2, new ReservationTimeResponse(10, "13:00"))
+                            new ReservationResponse(1L, "dompoo", date1, new ReservationTimeResponse(5L, "10:00")),
+                            new ReservationResponse(2L, "popo", date2, new ReservationTimeResponse(10L, "13:00"))
                     ));
 
             RestAssuredMockMvc.given().log().all()
@@ -74,7 +74,7 @@ class ReservationControllerTest {
         @Test
         void 이름_날짜_시간으로_생성할_수_있다() {
             Mockito.when(reservationService.saveAndGet(Mockito.any()))
-                    .thenReturn(new ReservationResponse(1, name, createDate, new ReservationTimeResponse(5, "10:00")));
+                    .thenReturn(new ReservationResponse(1L, name, createDate, new ReservationTimeResponse(5L, "10:00")));
 
             final Map<String, Object> values = Map.of(
                     "name", name,

@@ -3,14 +3,22 @@ package roomescape.dto.response;
 import roomescape.business.domain.Reservation;
 
 import java.time.LocalDate;
+import java.util.Objects;
 
 public record ReservationResponse(
-        long id,
+        Long id,
         String name,
         LocalDate date,
         ReservationTimeResponse time
 ) {
-    public static ReservationResponse from(final Reservation reservation, final long reservationId, final long timeId) {
+    public ReservationResponse {
+        Objects.requireNonNull(id, "id가 설정되지 않았습니다.");
+        Objects.requireNonNull(name, "예약자명이 설정되지 않았습니다.");
+        Objects.requireNonNull(date, "날짜가 설정되지 않았습니다.");
+        Objects.requireNonNull(time, "시간이 설정되지 않았습니다.");
+    }
+
+    public static ReservationResponse from(final Reservation reservation, final Long reservationId, final Long timeId) {
         return new ReservationResponse(
                 reservationId,
                 reservation.customerName(),

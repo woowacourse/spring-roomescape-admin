@@ -1,17 +1,18 @@
-package roomescape.domain;
+package roomescape.service;
 
 import java.util.List;
 import org.springframework.stereotype.Component;
 import roomescape.dao.ReservationDAO;
+import roomescape.domain.Reservation;
 
 @Component
-public class Reservations {
+public class ReservationService {
 
     private static final int DUPLICATED_RESERVATION = -1;
 
     private final ReservationDAO reservationDAO;
 
-    public Reservations(final ReservationDAO reservationDAO) {
+    public ReservationService(final ReservationDAO reservationDAO) {
         this.reservationDAO = reservationDAO;
     }
 

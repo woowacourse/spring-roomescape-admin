@@ -12,17 +12,16 @@ import java.util.stream.Stream;
 
 class ReservationTest {
 
-    @DisplayName("id를 제외하고 필드가 존재하지 않으면 생성 불가능하다")
+    @DisplayName("Date와 Time이 존재하지 않으면 생성 불가능하다")
     @ParameterizedTest
     @MethodSource("invalidReservationArguments")
-    void invalidReservationInputTest(Long id, String name, LocalDate date, LocalTime time) {
+    void invalidReservationDateTimeTest(Long id, String name, LocalDate date, LocalTime time) {
         Assertions.assertThatThrownBy(() -> new Reservation(id, name, date, time))
                 .isInstanceOf(IllegalArgumentException.class);
     }
 
     static Stream<Arguments> invalidReservationArguments() {
         return Stream.of(
-                Arguments.of(1L, null, LocalDate.now(), LocalTime.now()),
                 Arguments.of(1L, "가이온", null, LocalTime.now()),
                 Arguments.of(1L, "가이온", LocalDate.now(), null)
         );
@@ -43,7 +42,8 @@ class ReservationTest {
     static Stream<Arguments> invalidNames() {
         return Stream.of(
                 Arguments.of(" "),
-                Arguments.of("")
+                Arguments.of(""),
+                Arguments.of((String) null)
         );
     }
 }

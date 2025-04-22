@@ -9,7 +9,7 @@ import java.util.List;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 
-class ReservationsTest {
+class InMemoryReservationDaoTest {
     LocalDate date = LocalDate.of(2025, 4, 22);
     LocalTime time = LocalTime.of(10, 0);
 
@@ -22,10 +22,10 @@ class ReservationsTest {
     @Test
     void test1() {
         //given
-        Reservations reservations = new Reservations();
+        InMemoryReservationDao inMemoryReservationRepository = new InMemoryReservationDao();
 
         //when
-        Reservation savedReservation = reservations.add(mimiReservation);
+        Reservation savedReservation = inMemoryReservationRepository.add(mimiReservation);
 
         //then
         assertThat(savedReservation).isEqualTo(mimiReservation);
@@ -35,12 +35,12 @@ class ReservationsTest {
     @Test
     void test3() {
         //given
-        Reservations reservations = new Reservations(List.of(
+        InMemoryReservationDao inMemoryReservationRepository = new InMemoryReservationDao(List.of(
                 mimiReservation, norangReservation, mintReservation
         ));
 
         //when
-        List<Reservation> all = reservations.getAll();
+        List<Reservation> all = inMemoryReservationRepository.getAll();
 
         //then
         assertThat(all).hasSize(3);
@@ -53,27 +53,27 @@ class ReservationsTest {
     @Test
     void test4() {
         //given
-        Reservations reservations = new Reservations(new ArrayList<>(List.of(
+        InMemoryReservationDao inMemoryReservationRepository = new InMemoryReservationDao(new ArrayList<>(List.of(
                 mimiReservation, norangReservation, mintReservation
         )));
 
         Long mimiId = 1L;
-        Reservations expectedReservations = new Reservations(List.of(
+        InMemoryReservationDao expectedInMemoryReservationRepository = new InMemoryReservationDao(List.of(
                 norangReservation, mintReservation
         ));
 
         //when
-        reservations.deleteById(mimiId);
+        inMemoryReservationRepository.deleteById(mimiId);
 
         //then
-        assertThat(reservations).isEqualTo(expectedReservations);
+        assertThat(inMemoryReservationRepository).isEqualTo(expectedInMemoryReservationRepository);
     }
 
     @DisplayName("존재하지 않는 id의 예약 정보를 삭제하려는 경우 예외가 발생한다.")
     @Test
     void test5() {
         //given
-        Reservations reservations = new Reservations(List.of(
+        InMemoryReservationDao inMemoryReservationRepository = new InMemoryReservationDao(List.of(
                 new Reservation("mimi", date, time),
                 new Reservation("norang", date, time),
                 new Reservation("mint", date, time)
@@ -81,7 +81,7 @@ class ReservationsTest {
         Long notExistedId = 4L;
 
         //when & then
-        assertThatThrownBy(() -> reservations.deleteById(notExistedId))
+        assertThatThrownBy(() -> inMemoryReservationRepository.deleteById(notExistedId))
                 .isInstanceOf(IllegalArgumentException.class)
                 .hasMessage("[ERROR] 존재하지 않는 id 입니다.");
     }

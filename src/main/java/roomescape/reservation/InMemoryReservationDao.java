@@ -5,14 +5,14 @@ import java.util.Collections;
 import java.util.List;
 import java.util.Objects;
 
-public class Reservations {
+public class InMemoryReservationDao implements ReservationDao {
     private final List<Reservation> reservations;
 
-    public Reservations() {
+    public InMemoryReservationDao() {
         this.reservations = new ArrayList<>();
     }
 
-    protected Reservations(List<Reservation> reservations) {
+    protected InMemoryReservationDao(List<Reservation> reservations) {
         this.reservations = reservations;
     }
 
@@ -41,7 +41,7 @@ public class Reservations {
         if (other == null || getClass() != other.getClass()) {
             return false;
         }
-        Reservations that = (Reservations) other;
+        InMemoryReservationDao that = (InMemoryReservationDao) other;
         return Objects.equals(reservations, that.reservations);
     }
 

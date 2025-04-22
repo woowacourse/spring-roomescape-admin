@@ -13,26 +13,26 @@ import org.springframework.web.bind.annotation.RestController;
 @RestController
 @RequestMapping("/reservations")
 public class ReservationApiController {
-    private final Reservations reservations;
+    private final ReservationDao reservationDao;
 
-    public ReservationApiController() {
-        this.reservations = new Reservations();
+    public ReservationApiController(ReservationDao reservationDao) {
+        this.reservationDao = reservationDao;
     }
 
     @PostMapping
     public ResponseEntity<Reservation> add(@RequestBody ReservationDto reservationDto) {
         Reservation reservation = reservationDto.createReservation();
-        return ResponseEntity.ok(reservations.add(reservation));
+        return ResponseEntity.ok(reservationDao.add(reservation));
     }
 
     @GetMapping
     public ResponseEntity<List<Reservation>> getAll() {
-        return ResponseEntity.ok(reservations.getAll());
+        return ResponseEntity.ok(reservationDao.getAll());
     }
 
     @DeleteMapping("/{id}")
     public ResponseEntity<Void> delete(@PathVariable Long id) {
-        reservations.deleteById(id);
+        reservationDao.deleteById(id);
         return ResponseEntity.ok().build();
     }
 }

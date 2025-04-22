@@ -1,16 +1,15 @@
 package roomescape.dto.request;
 
 import java.time.LocalDate;
-import java.time.LocalTime;
 
-public record ReservationCreateRequest(String name, LocalDate date, LocalTime time) {
+public record ReservationCreateRequest(String name, LocalDate date, Long timeId) {
 
     public ReservationCreateRequest {
-        validateBlank(name, date, time);
+        validateBlank(name, date, timeId);
     }
 
-    private void validateBlank(final String name, final LocalDate date, final LocalTime time) {
-        if (name == null || name.isBlank() || date == null || time == null) {
+    private void validateBlank(final String name, final LocalDate date, final Long timeId) {
+        if (name == null || name.isBlank() || date == null || timeId == null) {
             throw new IllegalArgumentException("빈 값으로 예약할 수 없습니다.");
         }
     }

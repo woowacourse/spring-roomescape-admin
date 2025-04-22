@@ -9,6 +9,7 @@ import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;
 import org.springframework.jdbc.core.simple.SimpleJdbcInsert;
 import org.springframework.stereotype.Repository;
+import roomescape.domain.ReservationTime.ReservationTime;
 import roomescape.dto.request.ReservationCreateRequest;
 
 @Repository
@@ -22,7 +23,15 @@ public class JdbcReservations implements Reservations {
 
     @Override
     public List<Reservation> findAll() {
-        final String sql = "SELECT id, name, date, time FROM reservation";
+        final String sql = "SELECT " +
+                "r.id as reservation_id, " +
+                "r.name, " +
+                "r.date, " +
+                "t.id as time_id, " +
+                "t.start_at as time_value " +
+                "FROM reservation as r " +
+                "inner join reservation_time as t " +
+                "on r.time_id = t.id";
         return jdbcTemplate.query(sql, reservationMapper);
     }
 
@@ -35,7 +44,7 @@ public class JdbcReservations implements Reservations {
         Map<String, Object> parameters = new HashMap<>();
         parameters.put("name", reservationCreateRequest.name());
         parameters.put("date", reservationCreateRequest.date());
-        parameters.put("time", reservationCreateRequest.time());
+        parameters.put("time_id", reservationCreateRequest.timeId());
 
         Number key = jdbcInsert.executeAndReturnKey(parameters);
         return key.longValue();
@@ -47,10 +56,17 @@ public class JdbcReservations implements Reservations {
         jdbcTemplate.update(sql, id);
     }
 
-    private final RowMapper<Reservation> reservationMapper = (resultSet, rowNum) -> new Reservation(
-            resultSet.getLong("id"),
-            resultSet.getString("name"),
-            resultSet.getObject("date", LocalDate.class),
-            resultSet.getObject("time", LocalTime.class)
-    );
+    private final RowMapper<Reservation> reservationMapper = (resultSet, rowNum) -> {
+        ReservationTime time = new ReservationTime(
+                resultSet.getLong("time_id"),
+                resultSet.getObject("time_value", LocalTime.class)
+        );
+
+        return new Reservation(
+                resultSet.getLong("reservation_id"),
+                resultSet.getString("name"),
+                resultSet.getObject("date", LocalDate.class),
+                time
+        );
+    };
 }

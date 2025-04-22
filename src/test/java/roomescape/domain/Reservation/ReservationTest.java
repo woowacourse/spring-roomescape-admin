@@ -1,4 +1,4 @@
-package roomescape.domain;
+package roomescape.domain.Reservation;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
@@ -7,7 +7,7 @@ import java.time.LocalTime;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.CsvSource;
-import roomescape.domain.Reservation.Reservation;
+import roomescape.domain.ReservationTime.ReservationTime;
 
 class ReservationTest {
 
@@ -17,7 +17,8 @@ class ReservationTest {
     void equalIdTest(final long firstId, final long secondId, boolean result) {
 
         // given
-        Reservation reservation = new Reservation(firstId, "체체", LocalDate.of(2024, 12, 12), LocalTime.of(10, 0));
+        Reservation reservation = new Reservation(firstId, "체체", LocalDate.of(2024, 12, 12),
+                new ReservationTime(1L, LocalTime.of(10, 0)));
 
         // when
 

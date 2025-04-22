@@ -18,7 +18,7 @@ class ReservationCreateRequestTest {
         final LocalTime time = LocalTime.of(10, 0);
 
         // when & then
-        assertThatThrownBy(() -> new ReservationCreateRequest(null, date, time))
+        assertThatThrownBy(() -> new ReservationCreateRequest(null, date, 1L))
                 .isInstanceOf(IllegalArgumentException.class)
                 .hasMessage("빈 값으로 예약할 수 없습니다.");
     }
@@ -33,7 +33,7 @@ class ReservationCreateRequestTest {
         final LocalTime time = LocalTime.of(10, 0);
 
         // when & then
-        assertThatThrownBy(() -> new ReservationCreateRequest(name, date, time))
+        assertThatThrownBy(() -> new ReservationCreateRequest(name, date, 1L))
                 .isInstanceOf(IllegalArgumentException.class)
                 .hasMessage("빈 값으로 예약할 수 없습니다.");
     }
@@ -48,7 +48,7 @@ class ReservationCreateRequestTest {
         final LocalTime time = LocalTime.of(10, 0);
 
         // when & then
-        assertThatThrownBy(() -> new ReservationCreateRequest(name, date, time))
+        assertThatThrownBy(() -> new ReservationCreateRequest(name, date, 1L))
                 .isInstanceOf(IllegalArgumentException.class)
                 .hasMessage("빈 값으로 예약할 수 없습니다.");
     }
@@ -62,7 +62,7 @@ class ReservationCreateRequestTest {
         final LocalTime time = LocalTime.of(10, 0);
 
         // when & then
-        assertThatThrownBy(() -> new ReservationCreateRequest(name, null, time))
+        assertThatThrownBy(() -> new ReservationCreateRequest(name, null, 1L))
                 .isInstanceOf(IllegalArgumentException.class)
                 .hasMessage("빈 값으로 예약할 수 없습니다.");
     }

@@ -239,4 +239,36 @@ public class MissionStepTest {
                 .then().log().all()
                 .statusCode(204);
     }
+
+    @Test
+    void 팔단계() {
+
+        Map<String, Object> reservationTime = new HashMap<>();
+        reservationTime.put("startAt", "10:00");
+
+        RestAssured.given().log().all()
+                .contentType(ContentType.JSON)
+                .body(reservationTime)
+                .when().post("/times")
+                .then().log().all()
+                .statusCode(201);
+
+        Map<String, Object> reservation = new HashMap<>();
+        reservation.put("name", "브라운");
+        reservation.put("date", "2023-08-05");
+        reservation.put("timeId", 1);
+
+        RestAssured.given().log().all()
+                .contentType(ContentType.JSON)
+                .body(reservation)
+                .when().post("/reservations")
+                .then().log().all()
+                .statusCode(201);
+
+        RestAssured.given().log().all()
+                .when().get("/reservations")
+                .then().log().all()
+                .statusCode(200)
+                .body("size()", is(1));
+    }
 }

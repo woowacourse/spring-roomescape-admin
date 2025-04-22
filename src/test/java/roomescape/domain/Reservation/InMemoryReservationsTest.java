@@ -1,4 +1,4 @@
-package roomescape.domain;
+package roomescape.domain.Reservation;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
@@ -8,21 +8,23 @@ import java.util.ArrayList;
 import java.util.List;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
-import roomescape.domain.Reservation.InMemoryReservations;
-import roomescape.domain.Reservation.Reservation;
-import roomescape.domain.Reservation.Reservations;
+import roomescape.domain.ReservationTime.InMemoryReservationTimes;
+import roomescape.domain.ReservationTime.ReservationTimes;
 import roomescape.dto.request.ReservationCreateRequest;
+import roomescape.dto.request.ReservationTimeCreateRequest;
 
 class InMemoryReservationsTest {
 
-    private final Reservations reservations = new InMemoryReservations(new ArrayList<>());
+    private final ReservationTimes reservationTimes = new InMemoryReservationTimes(new ArrayList<>());
+    private final Reservations reservations = new InMemoryReservations(new ArrayList<>(), reservationTimes);
 
     @DisplayName("예약을 조회한다.")
     @Test
     void getTest() {
 
         // given
-        reservations.create(new ReservationCreateRequest("체체", LocalDate.now(), LocalTime.now().plusHours(1)));
+        reservationTimes.create(new ReservationTimeCreateRequest(LocalTime.of(10, 0)));
+        reservations.create(new ReservationCreateRequest("체체", LocalDate.now().plusDays(1), 1L));
 
         // when
 
@@ -35,9 +37,10 @@ class InMemoryReservationsTest {
     void addTest() {
 
         // given
+        reservationTimes.create(new ReservationTimeCreateRequest(LocalTime.of(10, 0)));
 
         // when
-        reservations.create(new ReservationCreateRequest("체체", LocalDate.now(), LocalTime.now().plusHours(1)));
+        reservations.create(new ReservationCreateRequest("체체", LocalDate.now().plusDays(1), 1L));
 
         // then
         assertThat(reservations.findAll().size()).isEqualTo(1);
@@ -48,9 +51,10 @@ class InMemoryReservationsTest {
     void deleteTest() {
 
         // given
+        reservationTimes.create(new ReservationTimeCreateRequest(LocalTime.of(10, 0)));
+        reservations.create(new ReservationCreateRequest("체체", LocalDate.now().plusDays(1), 1L));
 
         // when
-        reservations.create(new ReservationCreateRequest("체체", LocalDate.now(), LocalTime.now().plusHours(1)));
         List<Reservation> reservations = this.reservations.findAll();
         Reservation findReservation = reservations.getFirst();
         this.reservations.delete(findReservation.getId());

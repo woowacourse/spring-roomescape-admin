@@ -26,7 +26,7 @@ public class H2ReservationTimeRepository implements ReservationTimeRepository {
 
     @Override
     public List<ReservationTime> findAll() {
-        String sql = "SELECT id, start_at FROM Reservation_Time";
+        String sql = "SELECT id, start_at FROM reservation_time";
         List<ReservationTimeEntity> reservationTimeEntities = jdbcTemplate.query(
                 sql,
                 (resultSet, rowNum) -> new ReservationTimeEntity(
@@ -42,6 +42,21 @@ public class H2ReservationTimeRepository implements ReservationTimeRepository {
     }
 
     @Override
+    public ReservationTime findById(long id) {
+        String sql = "SELECT id, start_at FROM reservation_time WHERE id = ?";
+        ReservationTimeEntity reservationTimeEntity = jdbcTemplate.queryForObject(
+                sql,
+                (resultSet, rowNum) -> new ReservationTimeEntity(
+                        resultSet.getLong("id"),
+                        resultSet.getString("start_at")
+                ),
+                id
+        );
+        return new ReservationTime(reservationTimeEntity.getId(),
+                LocalTime.parse(reservationTimeEntity.getStartAt(), DateTimeFormatter.ofPattern("HH:mm")));
+    }
+
+    @Override
     public ReservationTime add(ReservationTime reservationTime) {
         Map<String, String> params = new HashMap<>();
         params.put("start_at", reservationTime.getStartTime().format(DateTimeFormatter.ofPattern("HH:mm")));
@@ -50,8 +65,8 @@ public class H2ReservationTimeRepository implements ReservationTimeRepository {
     }
 
     @Override
-    public void removeById(int id) {
-        String sql = "DELETE FROM Reservation_Time WHERE id = ?";
+    public void removeById(long id) {
+        String sql = "DELETE FROM reservation_time WHERE id = ?";
         jdbcTemplate.update(sql, id);
     }
 }

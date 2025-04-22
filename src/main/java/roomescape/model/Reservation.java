@@ -31,6 +31,15 @@ public final class Reservation {
         this(null, name, LocalDateTime.of(date, time));
     }
 
+    public Reservation(Long id, String name, ReservationDate reservationDate, ReservationTime reservationTime) {
+        validateNameLength(name);
+        validateNotPastDateTime(LocalDateTime.of(reservationDate.getStartDate(), reservationTime.getStartTime()));
+        this.id = id;
+        this.name = name;
+        this.date = reservationDate;
+        this.time = reservationTime;
+    }
+
     public Reservation(String name, ReservationDate reservationDate, ReservationTime reservationTime) {
         validateNameLength(name);
         validateNotPastDateTime(LocalDateTime.of(reservationDate.getStartDate(), reservationTime.getStartTime()));

@@ -16,7 +16,7 @@ public class DatabaseConnectTest {
     @Autowired
     private JdbcTemplate jdbcTemplate;
 
-    @DisplayName("DateSource 객체를 이용하여 Connection을 확인할 수 있다.")
+    @DisplayName("[4단계] DateSource 객체를 이용하여 Connection을 확인할 수 있다.")
     @Test
     void connectDateSource() {
         try (Connection connection = jdbcTemplate.getDataSource().getConnection()) {
@@ -26,7 +26,7 @@ public class DatabaseConnectTest {
         }
     }
 
-    @DisplayName("Connection 객체를 이용하여 데이터베이스 이름을 검증할 수 있다.")
+    @DisplayName("[4단계] Connection 객체를 이용하여 데이터베이스 이름을 검증할 수 있다.")
     @Test
     void validateDatabaseName() {
         try (Connection connection = jdbcTemplate.getDataSource().getConnection()) {
@@ -36,7 +36,7 @@ public class DatabaseConnectTest {
         }
     }
 
-    @DisplayName("Connection 객체를 이용하여 테이블 이름을 검증할 수 있다.")
+    @DisplayName("[4단계] Connection 객체를 이용하여 테이블 이름을 검증할 수 있다.")
     @Test
     void validateDatabaseTableName() {
         try (Connection connection = jdbcTemplate.getDataSource().getConnection()) {

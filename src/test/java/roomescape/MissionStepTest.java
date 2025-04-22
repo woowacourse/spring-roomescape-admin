@@ -22,16 +22,7 @@ public class MissionStepTest {
     @Autowired
     private JdbcTemplate jdbcTemplate;
 
-    @DisplayName("/admin 경로 요청 시 200 OK를 반환한다")
-    @Test
-    void requestSuccessAdmin() {
-        RestAssured.given().log().all()
-                .when().get("/admin")
-                .then().log().all()
-                .statusCode(200);
-    }
-
-    @DisplayName("/admin/reservation 경로 요청시 200 OK를 반환한다.")
+    @DisplayName("[2단계] /admin/reservation 경로 요청시 200 OK를 반환한다.")
     @Test
     void requestSuccessReservation() {
         RestAssured.given().log().all()
@@ -40,7 +31,7 @@ public class MissionStepTest {
                 .statusCode(200);
     }
 
-    @DisplayName("/reservations 경로 요청시 200 OK를 반환한다.")
+    @DisplayName("[2단계] /reservations 경로 요청시 200 OK를 반환한다.")
     @Test
     void requestSuccessReservations() {
         RestAssured.given().log().all()
@@ -50,7 +41,7 @@ public class MissionStepTest {
                 .body("size()", is(0));
     }
 
-    @DisplayName("예약을 추가 할 수 있다.")
+    @DisplayName("[3단계] 예약을 추가 할 수 있다.")
     @Test
     void create() {
         //given
@@ -66,7 +57,7 @@ public class MissionStepTest {
                 .body("id", is(1));
     }
 
-    @DisplayName("모든 예약을 조회할 수 있다.")
+    @DisplayName("[3단계] 모든 예약을 조회할 수 있다.")
     @Test
     void read() {
         //given
@@ -80,7 +71,7 @@ public class MissionStepTest {
                 .body("size()", is(1));
     }
 
-    @DisplayName("단건 예약을 삭제할 수 있다.")
+    @DisplayName("[3단계] 단건 예약을 삭제할 수 있다.")
     @Test
     void delete() {
         //given
@@ -93,15 +84,7 @@ public class MissionStepTest {
                 .statusCode(200);
     }
 
-    private Map<String, String> dataFixture() {
-        Map<String, String> params = new HashMap<>();
-        params.put("name", "브라운");
-        params.put("date", "2023-08-05");
-        params.put("time", "15:40");
-        return params;
-    }
-
-    @DisplayName("데이터베이스에서 예약을 조회 할 수 있다.")
+    @DisplayName("[5단계] 데이터베이스에서 예약을 조회 할 수 있다.")
     @Test
     void readFromDatabase() {
         //given

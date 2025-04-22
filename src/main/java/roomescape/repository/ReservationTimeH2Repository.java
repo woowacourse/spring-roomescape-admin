@@ -3,6 +3,7 @@ package roomescape.repository;
 import java.sql.PreparedStatement;
 import java.sql.Statement;
 import java.sql.Time;
+import java.util.List;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.support.GeneratedKeyHolder;
 import org.springframework.jdbc.support.KeyHolder;
@@ -34,5 +35,14 @@ public class ReservationTimeH2Repository implements ReservationTimeRepository {
         reservationTime.setId(id);
 
         return id;
+    }
+
+    @Override
+    public List<ReservationTime> findAll() {
+        String query = "SELECT * FROM reservation_time";
+
+        return jdbcTemplate.query(query, ((rs, rowNum) ->
+                new ReservationTime(rs.getLong("id"), rs.getTime("start_at").toLocalTime()))
+        );
     }
 }

@@ -1,4 +1,4 @@
-package roomescape.unit;
+package roomescape.reservation.web;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertAll;
@@ -10,9 +10,6 @@ import java.util.List;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.http.ResponseEntity;
-import roomescape.reservation.web.ReservationController;
-import roomescape.reservation.web.ReservationRequest;
-import roomescape.reservation.web.ReservationResponse;
 import roomescape.reservation.dao.ListBasedReservationDao;
 
 class ReservationControllerTest {

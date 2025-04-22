@@ -7,10 +7,10 @@ public record ReservationDto(
         long id,
         String name,
         LocalDate date,
-        ReservationTimeResponseDto time
+        ReservationTimeDto time
 ) {
     public ReservationDto(final Reservation reservation) {
         this(reservation.getId(), reservation.getName(), reservation.getDate(),
-                new ReservationTimeResponseDto(reservation.getReservationTime()));
+                new ReservationTimeDto(reservation.getReservationTime()));
     }
 }

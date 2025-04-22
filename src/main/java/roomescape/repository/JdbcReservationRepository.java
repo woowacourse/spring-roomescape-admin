@@ -17,10 +17,12 @@ import java.util.List;
 public class JdbcReservationRepository implements ReservationRepository {
 
     private final JdbcTemplate jdbcTemplate;
+    private final KeyHolder keyHolder;
 
     @Autowired
     public JdbcReservationRepository(JdbcTemplate jdbcTemplate) {
         this.jdbcTemplate = jdbcTemplate;
+        this.keyHolder = new GeneratedKeyHolder();
     }
 
     @Override
@@ -38,11 +40,23 @@ public class JdbcReservationRepository implements ReservationRepository {
 
     @Override
     public Reservation insertAndGet(Reservation reservationExcludeIndex) {
-        return null;
+        String sql ="INSERT INTO reservation(name, date, time) VALUES(?, ?, ?)";
+        jdbcTemplate.update((Connection con) -> {
+            PreparedStatement preparedStatement = con.prepareStatement(sql, new String[]{"id"});
+            preparedStatement.setString(1, reservationExcludeIndex.getName());
+            preparedStatement.setObject(2, reservationExcludeIndex.getDate());
+            preparedStatement.setObject(3, reservationExcludeIndex.getTime());
+            return preparedStatement;
+        }, keyHolder);
+        return Reservation.toEntity(reservationExcludeIndex, keyHolder.getKeyAs(Long.class));
     }
 
     @Override
     public void deleteById(Long id) {
-
+        String sql = "DELETE FROM reservation WHERE id = ?";
+        int affectedRows = jdbcTemplate.update(sql, id);
+        if (affectedRows == 0) {
+            throw new IllegalArgumentException("존재하지 않는 예약 id입니다.");
+        }
     }
 }

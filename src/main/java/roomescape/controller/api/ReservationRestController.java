@@ -14,7 +14,6 @@ import org.springframework.web.server.ResponseStatusException;
 import roomescape.dto.ReservationCreateRequest;
 import roomescape.dto.ReservationGetResponse;
 import roomescape.model.Reservation;
-import roomescape.repository.JdbcReservationRepository;
 import roomescape.repository.ReservationRepository;
 
 import java.util.List;

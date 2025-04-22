@@ -106,4 +106,30 @@ public class MissionStepTest {
         Integer count = jdbcTemplate.queryForObject("SELECT COUNT(1) from reservation", Integer.class);
         assertThat(reservationGetResponses.size()).isEqualTo(count);
     }
+
+    @Test
+    void 육단계_예약을_추가하고_삭제한다() {
+        Map<String, String> params = new HashMap<>();
+        params.put("name", "브라운");
+        params.put("date", "2023-08-05");
+        params.put("time", "10:00");
+
+        RestAssured.given().log().all()
+                .contentType(ContentType.JSON)
+                .body(params)
+                .when().post("/reservations")
+                .then().log().all()
+                .statusCode(200);
+
+        Integer count = jdbcTemplate.queryForObject("SELECT COUNT(1) FROM reservation", Integer.class);
+        assertThat(count).isEqualTo(1);
+
+        RestAssured.given().log().all()
+                .when().delete("/reservations/1")
+                .then().log().all()
+                .statusCode(200);
+
+        Integer countAfterDelete = jdbcTemplate.queryForObject("SELECT COUNT(1) FROM reservation", Integer.class);
+        assertThat(countAfterDelete).isEqualTo(0);
+    }
 }

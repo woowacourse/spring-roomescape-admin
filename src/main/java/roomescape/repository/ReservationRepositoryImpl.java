@@ -18,7 +18,18 @@ public class ReservationRepositoryImpl implements ReservationRepository{
 
     @Override
     public Reservation findById(final long id) {
-        return null;
+        final String sql = "SELECT * FROM reservation WHERE id = ?";
+        return jdbcTemplate.queryForObject(sql,
+                (resultSet, rowNum) ->{
+                    Reservation reservation = new Reservation(
+                    resultSet.getLong("id"),
+                    resultSet.getString("name"),
+                            resultSet.getDate("date").toLocalDate(),
+                            resultSet.getTime("time").toLocalTime()
+                    );
+                    return reservation;
+                }, id);
+
     }
 
     @Override

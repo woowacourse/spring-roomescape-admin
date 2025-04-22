@@ -25,13 +25,14 @@ class ReservationTimeServiceTest {
     @Test
     void 예약시간을_추가하고_조회할_수_있다() {
         assertThat(reservationTimeService.allReservationTimes().size()).isEqualTo(0);
-        reservationTimeService.addReservationTime(new ReservationTime(1L, LocalTime.now()));
+        reservationTimeService.addReservationTime(new ReservationTime(1L, LocalTime.now().plusMinutes(30L)));
         assertThat(reservationTimeService.allReservationTimes().size()).isEqualTo(1);
     }
 
     @Test
     void 예약시간을_삭제하고_조회할_수_있다() {
-        long id = reservationTimeService.addReservationTime(new ReservationTime(null, LocalTime.now().plusHours(1L)));
+        ReservationTime reservationTime = new ReservationTime(null, LocalTime.now().plusHours(1L));
+        long id = reservationTimeService.addReservationTime(reservationTime);
         assertThat(reservationTimeService.allReservationTimes().size()).isEqualTo(1);
         reservationTimeService.deleteReservationTime(id);
         assertThat(reservationTimeService.allReservationTimes().size()).isEqualTo(0);

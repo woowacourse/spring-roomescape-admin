@@ -3,6 +3,7 @@ package roomescape.domain;
 import java.time.LocalDate;
 import java.time.LocalTime;
 import java.util.Objects;
+import roomescape.dto.validation.ReservationValidator;
 import roomescape.dto.validation.ValidReservation;
 
 @ValidReservation
@@ -18,6 +19,14 @@ public class Reservation {
         this.name = name;
         this.date = date;
         this.time = time;
+        validate();
+    }
+
+    private void validate() {
+        boolean valid = new ReservationValidator().isValid(this, null);
+        if (!valid) {
+            throw new IllegalArgumentException("유효하지 않은 예약입니다.");
+        }
     }
 
     public Long getId() {

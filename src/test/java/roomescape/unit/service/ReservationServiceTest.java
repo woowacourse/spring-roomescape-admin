@@ -26,14 +26,15 @@ class ReservationServiceTest {
     @Test
     void 예약을_추가하고_조회할_수_있다() {
         assertThat(reservationService.allReservations().size()).isEqualTo(0);
-        reservationService.addReservation(new Reservation(null, "praisebak", LocalDate.now(), LocalTime.now()));
+        reservationService.addReservation(
+                new Reservation(null, "praisebak", LocalDate.now().plusDays(1L), LocalTime.now()));
         assertThat(reservationService.allReservations().size()).isEqualTo(1);
     }
 
     @Test
     void 예약을_삭제하고_조회할_수_있다() {
         long id = reservationService.addReservation(
-                new Reservation(null, "praisebak", LocalDate.now(), LocalTime.now()));
+                new Reservation(null, "praisebak", LocalDate.now().plusDays(1L), LocalTime.now()));
         assertThat(reservationService.allReservations().size()).isEqualTo(1);
         reservationService.deleteReservation(id);
         assertThat(reservationService.allReservations().size()).isEqualTo(0);

@@ -18,7 +18,7 @@ public class TimeTest {
     @LocalServerPort
     private int port;
 
-    @DisplayName("time 관련 api 테스트")
+    @DisplayName("startAt 관련 api 테스트")
     @Test
     void 칠단계() {
         Map<String, String> params = new HashMap<>();

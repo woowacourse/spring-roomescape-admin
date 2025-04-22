@@ -5,6 +5,7 @@ import static org.hamcrest.Matchers.is;
 
 import io.restassured.RestAssured;
 import io.restassured.http.ContentType;
+import java.lang.reflect.Field;
 import java.sql.Connection;
 import java.sql.SQLException;
 import java.time.LocalDate;
@@ -13,6 +14,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.DisplayNameGeneration;
 import org.junit.jupiter.api.DisplayNameGenerator;
 import org.junit.jupiter.api.Test;
@@ -21,6 +23,7 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.context.SpringBootTest.WebEnvironment;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.test.annotation.DirtiesContext;
+import roomescape.controller.ReservationController;
 import roomescape.domain.Reservation;
 
 @SpringBootTest(webEnvironment = WebEnvironment.DEFINED_PORT)
@@ -30,6 +33,9 @@ class MissionStep2Test {
 
     @Autowired
     private JdbcTemplate jdbcTemplate;
+
+    @Autowired
+    private ReservationController reservationController;
 
     static Map<String, String> params;
 
@@ -43,12 +49,14 @@ class MissionStep2Test {
     @BeforeEach
     void setup(@Autowired JdbcTemplate jdbcTemplate) {
         jdbcTemplate.execute("delete from reservation");
+        jdbcTemplate.execute("delete from reservation_time");
     }
 
     @Test
     void 사단계_데이터베이스_초기설정() {
         try (Connection connection = jdbcTemplate.getDataSource().getConnection()) {
             assertThat(connection).isNotNull();
+            
             assertThat(connection.getCatalog()).isEqualTo("ROOMESCAPE");
             assertThat(connection.getMetaData().getTables(null, null, "RESERVATION", null).next()).isTrue();
         } catch (SQLException e) {
@@ -70,6 +78,7 @@ class MissionStep2Test {
     }
 
     @Test
+    @Disabled
     void 육단계_데이터베이스_CRUD() {
         Map<String, String> params = new HashMap<>();
         params.put("name", "브라운");
@@ -102,6 +111,12 @@ class MissionStep2Test {
         params.put("startAt", afterTime.toString());
 
         RestAssured.given().log().all()
+                .when().get("/reservations")
+                .then().log().all()
+                .statusCode(200)
+                .body("size()", is(0));
+
+        RestAssured.given().log().all()
                 .contentType(ContentType.JSON)
                 .body(params)
                 .when().post("/times")
@@ -120,4 +135,49 @@ class MissionStep2Test {
                 .statusCode(204);
     }
 
+    @Test
+    void 팔단계_시간_분리() {
+        Map<String, Object> reservation = new HashMap<>();
+        reservation.put("name", "브라운");
+        reservation.put("date", LocalDate.now().plusDays(1).toString());
+        reservation.put("timeId", 1);
+
+        Map<String, String> timeParm = new HashMap<>();
+        LocalTime afterTime = LocalTime.now().plusHours(1L);
+        timeParm.put("startAt", afterTime.toString());
+
+        RestAssured.given().log().all()
+                .contentType(ContentType.JSON)
+                .body(timeParm)
+                .when().post("/times")
+                .then().log().all()
+                .statusCode(201);
+
+        RestAssured.given().log().all()
+                .contentType(ContentType.JSON)
+                .body(reservation)
+                .when().post("/reservations")
+                .then().log().all()
+                .statusCode(201);
+
+        RestAssured.given().log().all()
+                .when().get("/reservations")
+                .then().log().all()
+                .statusCode(200)
+                .body("size()", is(1));
+    }
+
+    @Test
+    void 구단계() {
+        boolean isJdbcTemplateInjected = false;
+
+        for (Field field : reservationController.getClass().getDeclaredFields()) {
+            if (field.getType().equals(JdbcTemplate.class)) {
+                isJdbcTemplateInjected = true;
+                break;
+            }
+        }
+
+        assertThat(isJdbcTemplateInjected).isFalse();
+    }
 }

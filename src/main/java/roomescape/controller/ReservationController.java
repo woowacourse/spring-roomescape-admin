@@ -2,7 +2,6 @@ package roomescape.controller;
 
 import jakarta.validation.Valid;
 import java.net.URI;
-import java.time.LocalTime;
 import java.util.List;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -13,7 +12,6 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import roomescape.domain.Reservation;
-import roomescape.domain.ReservationTime;
 import roomescape.dto.AddReservationDto;
 import roomescape.dto.ReservationResponseDto;
 import roomescape.service.ReservationService;
@@ -24,11 +22,9 @@ import roomescape.service.ReservationTimeService;
 public class ReservationController {
 
     private final ReservationService reservationService;
-    private final ReservationTimeService reservationTimeService;
 
     public ReservationController(ReservationService reservationService, ReservationTimeService reservationTimeService) {
         this.reservationService = reservationService;
-        this.reservationTimeService = reservationTimeService;
     }
 
     @GetMapping
@@ -43,12 +39,7 @@ public class ReservationController {
 
     @PostMapping
     public ResponseEntity<Void> addReservations(@RequestBody @Valid AddReservationDto newReservationDto) {
-        LocalTime time = newReservationDto.time();
-        ReservationTime reservationTime = new ReservationTime(null, time);
-        Long addedReservationTime = reservationTimeService.addReservationTime(reservationTime);
-        
-        Reservation newReservation = newReservationDto.toReservation(addedReservationTime);
-        long addedReservationId = reservationService.addReservation(newReservation);
+        long addedReservationId = reservationService.addReservation(newReservationDto);
         return ResponseEntity.created(URI.create("/reservations/" + addedReservationId)).build();
     }
 

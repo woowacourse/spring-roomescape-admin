@@ -8,9 +8,6 @@ public class Reservation {
     private Person person;
     private ReservationTime reservationTime;
 
-    public Reservation() {
-    }
-
     public Reservation(final long id, final Person person, final ReservationTime reservationTime) {
         this.id = id;
         this.person = person;

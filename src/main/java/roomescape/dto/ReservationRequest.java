@@ -8,8 +8,7 @@ import roomescape.domain.Reservation;
 import roomescape.domain.ReservationTime;
 
 public record ReservationRequest(String name, LocalDate date, LocalTime time) {
-
-
+    
     public Reservation toReservation() {
         return new Reservation(toPerson(), toReservationTime());
     }

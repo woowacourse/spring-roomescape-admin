@@ -7,23 +7,27 @@ import java.time.LocalTime;
 import java.util.List;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 
 class ReservationTimeControllerTest {
     @DisplayName("방탈출_예약_시간을_추가하고_정보를_반환할_수_있다")
     @Test
     void create() {
         // given
-        ReservationTimeController reservationTimeController = new ReservationTimeController(new FakeReservationTimeDao());
+        ReservationTimeController reservationTimeController = new ReservationTimeController(
+                new FakeReservationTimeDao());
         LocalTime reservationTime = LocalTime.now();
         ReservationTimeRequest request = new ReservationTimeRequest(reservationTime);
 
         // when
-        ReservationTimeResponse result = reservationTimeController.create(request);
+        ResponseEntity<ReservationTimeResponse> result = reservationTimeController.create(request);
 
         // then
         assertAll(
-            () -> assertThat(result.id()).isEqualTo(1L),
-            () -> assertThat(result.startAt()).isEqualTo(reservationTime)
+                () -> assertThat(result.getStatusCode()).isEqualTo(HttpStatus.OK),
+                () -> assertThat(result.getBody().id()).isEqualTo(1L),
+                () -> assertThat(result.getBody().startAt()).isEqualTo(reservationTime)
         );
     }
 
@@ -31,28 +35,50 @@ class ReservationTimeControllerTest {
     @Test
     void getAll() {
         // given
-        ReservationTimeController reservationTimeController = new ReservationTimeController(new FakeReservationTimeDao());
+        ReservationTimeController reservationTimeController = new ReservationTimeController(
+                new FakeReservationTimeDao());
         reservationTimeController.create(new ReservationTimeRequest(LocalTime.now()));
 
         // when
-        List<ReservationTimeResponse> result = reservationTimeController.getAll();
+        ResponseEntity<List<ReservationTimeResponse>> result = reservationTimeController.getAll();
 
         // then
-        assertThat(result).hasSize(1);
+        assertAll(
+                () -> assertThat(result.getStatusCode()).isEqualTo(HttpStatus.OK),
+                () -> assertThat(result.getBody()).hasSize(1)
+        );
     }
 
     @DisplayName("주어진_id의_예약_시간을_삭제할_수_있다")
     @Test
     void delete() {
         // given
-        ReservationTimeController reservationTimeController = new ReservationTimeController(new FakeReservationTimeDao());
+        ReservationTimeController reservationTimeController = new ReservationTimeController(
+                new FakeReservationTimeDao());
         reservationTimeController.create(new ReservationTimeRequest(LocalTime.now()));
 
         // when
-        reservationTimeController.delete(1L);
+        ResponseEntity<Void> result = reservationTimeController.delete(1L);
 
         // then
-        List<ReservationTimeResponse> reponses = reservationTimeController.getAll();
-        assertThat(reponses).hasSize(0);
+        List<ReservationTimeResponse> responses = reservationTimeController.getAll().getBody();
+        assertAll(
+                () -> assertThat(result.getStatusCode()).isEqualTo(HttpStatus.OK),
+                () -> assertThat(responses).hasSize(0)
+        );
+    }
+
+    @DisplayName("존재하지_않는_id의_예약_시간을_삭제하려고_하면_404를_응답한다")
+    @Test
+    void delete_WhenResourceNotExists() {
+        // given
+        ReservationTimeController reservationTimeController = new ReservationTimeController(
+                new FakeReservationTimeDao());
+
+        // when
+        ResponseEntity<Void> result = reservationTimeController.delete(1L);
+
+        // then
+        assertThat(result.getStatusCode()).isEqualTo(HttpStatus.NOT_FOUND);
     }
 }

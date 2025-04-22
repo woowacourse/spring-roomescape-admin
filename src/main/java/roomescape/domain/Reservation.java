@@ -4,6 +4,7 @@ import java.time.LocalDate;
 import java.time.LocalTime;
 
 public class Reservation {
+
     private long id;
     private String name;
     private LocalDate date;
@@ -13,11 +14,15 @@ public class Reservation {
 
     }
 
-    public Reservation(long id, String name, LocalDate date, LocalTime time) {
-        this.id = id;
+    public Reservation(String name, LocalDate date, LocalTime time) {
         this.name = name;
         this.date = date;
         this.time = time;
+    }
+
+    public Reservation(long id, String name, LocalDate date, LocalTime time) {
+        this(name, date, time);
+        this.id = id;
     }
 
     public boolean isSameId(long id) {

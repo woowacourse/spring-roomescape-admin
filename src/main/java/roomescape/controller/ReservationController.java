@@ -2,11 +2,12 @@ package roomescape.controller;
 
 import java.time.LocalDate;
 import java.time.LocalTime;
-import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
-import java.util.concurrent.atomic.AtomicLong;
+import java.util.Map;
 import org.springframework.http.ResponseEntity;
 import org.springframework.jdbc.core.JdbcTemplate;
+import org.springframework.jdbc.core.simple.SimpleJdbcInsert;
 import org.springframework.stereotype.Controller;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -23,19 +24,20 @@ import roomescape.dto.ReservationResponse;
 @RequestMapping("/reservations")
 public class ReservationController {
 
-    private final AtomicLong index = new AtomicLong(1);
-    private final List<Reservation> reservations = new ArrayList<>();
     private final JdbcTemplate jdbcTemplate;
+    private final SimpleJdbcInsert simpleJdbcInsert;
 
     public ReservationController(JdbcTemplate jdbcTemplate) {
         this.jdbcTemplate = jdbcTemplate;
+        this.simpleJdbcInsert = new SimpleJdbcInsert(jdbcTemplate)
+            .withTableName("reservation")
+            .usingGeneratedKeyColumns("id");
     }
 
     @GetMapping
     public ResponseEntity<List<Reservation>> getAll() {
-        String sql = "select * from reservation";
         List<Reservation> reservationResponses = jdbcTemplate.query(
-            sql,
+            "select * from reservation",
             (resultSet, rowNum) ->
             {
                 LocalDate date = LocalDate.parse(resultSet.getString("date"));
@@ -53,18 +55,29 @@ public class ReservationController {
     @Transactional
     @PostMapping
     public ResponseEntity<ReservationResponse> create(@RequestBody ReservationRequest request) {
-        Reservation reservation = new Reservation(index.getAndIncrement(), request.name(),
-            request.date(), request.time());
-        reservations.add(reservation);
-        return ResponseEntity.ok().body(ReservationResponse.from(reservation));
+        Reservation reservation = new Reservation(request.name(), request.date(), request.time());
+        Map<String, Object> parameters = new HashMap<>();
+        parameters.put("name", reservation.getName());
+        parameters.put("date", reservation.getDate().toString());
+        parameters.put("time", reservation.getTime().toString());
+        Long id = simpleJdbcInsert.executeAndReturnKey(parameters).longValue();
+        return ResponseEntity.ok().body(new ReservationResponse(
+            id,
+            reservation.getName(),
+            reservation.getDate(),
+            reservation.getTime()
+        ));
     }
 
     @DeleteMapping("/{id}")
     public ResponseEntity<Void> delete(@PathVariable(name = "id") Long id) {
-        boolean isRemoved = reservations.removeIf(reservation -> reservation.isSameId(id));
-        if (isRemoved) {
-            return ResponseEntity.ok().build();
+        int update = jdbcTemplate.update(
+            "delete from reservation where id = ?",
+            id
+        );
+        if (update == 0) {
+            return ResponseEntity.notFound().build();
         }
-        return ResponseEntity.notFound().build();
+        return ResponseEntity.ok().build();
     }
 }

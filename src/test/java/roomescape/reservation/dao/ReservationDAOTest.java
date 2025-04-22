@@ -70,16 +70,15 @@ public class ReservationDAOTest {
     @Test
     void test3() {
         //given
-        long deleteId = 3;
         ReservationRequest reservationRequest = new ReservationRequest(
                 "피케이",
                 LocalDate.of(2025,4,22),
                 LocalTime.of(17,22)
         );
-        reservationDAO.insertReservation(reservationRequest);
+        long insertedId = reservationDAO.insertReservation(reservationRequest);
 
         //when
-        reservationDAO.removeReservation(deleteId);
+        reservationDAO.removeReservation(insertedId);
 
         //then
         Assertions.assertThat(reservationDAO.findAllReservations()).hasSize(0);

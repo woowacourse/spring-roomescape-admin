@@ -1,5 +1,6 @@
 package roomescape.user.domain;
 
+import com.fasterxml.jackson.annotation.JsonCreator;
 import java.time.LocalDate;
 import java.time.LocalTime;
 import lombok.EqualsAndHashCode;
@@ -14,12 +15,17 @@ public class Reservation {
     private final LocalDate date;
     private final LocalTime time;
 
+    @JsonCreator
     public Reservation(final Long id, final String name, final LocalDate date, final LocalTime time) {
         validateNotNull(name, date, time);
         this.id = id;
         this.name = name;
         this.date = date;
         this.time = time;
+    }
+
+    public Reservation(final Long id, final String name, final String date, final String time) {
+        this(id, name, LocalDate.parse(date), LocalTime.parse(time));
     }
 
     private void validateNotNull(final String name, final LocalDate date, final LocalTime time) {
@@ -32,5 +38,15 @@ public class Reservation {
         if (time == null) {
             throw new IllegalArgumentException("Time cannot be null");
         }
+    }
+
+    @Override
+    public String toString() {
+        return "Reservation{" +
+                "id=" + id +
+                ", name='" + name + '\'' +
+                ", date=" + date +
+                ", time=" + time +
+                '}';
     }
 }

@@ -1,6 +1,5 @@
 package roomescape.controller;
 
-import java.net.URI;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.atomic.AtomicLong;
@@ -33,14 +32,15 @@ public class ReservationController {
     }
 
     @PostMapping
-    public ResponseEntity<Void> save(@RequestBody final AddReservationRequest addReservationRequest) {
+    public ResponseEntity<ReservationResponse> add(@RequestBody final AddReservationRequest addReservationRequest) {
         if (addReservationRequest == null) {
             throw new InvalidReservationException("예약을 추가할 수 없습니다.");
         }
 
-        final Reservation newReservation = addReservationRequest.toReservation(index.getAndIncrement());
-        reservations.add(newReservation);
-        return ResponseEntity.created(URI.create("/reservations/" + newReservation.id())).build();
+        final Reservation addReservation = addReservationRequest.toReservation(index.getAndIncrement());
+        reservations.add(addReservation);
+        final ReservationResponse reservationResponse = ReservationResponse.fromReservation(addReservation);
+        return ResponseEntity.ok(reservationResponse);
     }
 
     @DeleteMapping("/{id}")
@@ -49,8 +49,7 @@ public class ReservationController {
                 .filter((reservation) -> reservation.id().equals(id))
                 .findAny()
                 .orElseThrow(() -> new InvalidReservationException("존재하지 않는 예약 번호를 삭제할 수 없습니다."));
-
         reservations.remove(deleteReservation);
-        return ResponseEntity.noContent().build();
+        return ResponseEntity.ok().build();
     }
 }

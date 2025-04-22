@@ -39,7 +39,6 @@ public class ReservationController {
                 )).toList();
     }
 
-
     @PostMapping
     public ReservationIDResponse createReservation(
             @RequestBody ReservationRequest reservationRequest

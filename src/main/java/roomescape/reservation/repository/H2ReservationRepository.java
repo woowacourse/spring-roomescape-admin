@@ -5,6 +5,7 @@ import java.time.LocalTime;
 import java.util.List;
 import java.util.Map;
 import java.util.NoSuchElementException;
+import org.springframework.context.annotation.Primary;
 import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;
@@ -14,6 +15,7 @@ import roomescape.reservation.controller.request.ReservationRequest;
 import roomescape.reservation.controller.response.ReservationResponse;
 import roomescape.reservationTime.controller.response.ReservationTimeResponse;
 
+@Primary
 @Repository
 public class H2ReservationRepository implements ReservationRepository {
 

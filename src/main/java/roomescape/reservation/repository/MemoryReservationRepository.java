@@ -10,14 +10,18 @@ import org.springframework.stereotype.Repository;
 import roomescape.reservation.controller.request.ReservationRequest;
 import roomescape.reservation.controller.response.ReservationResponse;
 import roomescape.reservation.model.Reservation;
+import roomescape.reservationTime.controller.response.ReservationTimeResponse;
+import roomescape.reservationTime.repository.MemoryReservationTimeRepository;
 
 @Repository
 public class MemoryReservationRepository implements ReservationRepository {
 
+    private final MemoryReservationTimeRepository timeRepository;
     private final ConcurrentHashMap<Long, Reservation> reservations;
     private final AtomicLong index;
 
-    public MemoryReservationRepository() {
+    public MemoryReservationRepository(final MemoryReservationTimeRepository timeRepository) {
+        this.timeRepository = timeRepository;
         this.reservations = new ConcurrentHashMap<>();
         this.index = new AtomicLong(1);
     }
@@ -41,8 +45,9 @@ public class MemoryReservationRepository implements ReservationRepository {
 
     @Override
     public long add(final ReservationRequest request) {
-        final Reservation reservation = request.toEntity();
+        final ReservationTimeResponse timeResponse = timeRepository.findById(request.timeId());
         final long id = index.getAndIncrement();
+        final Reservation reservation = request.toEntity(id, timeResponse);
         reservations.put(id, reservation);
         return id;
     }

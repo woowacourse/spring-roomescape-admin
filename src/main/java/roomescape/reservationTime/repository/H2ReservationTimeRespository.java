@@ -3,6 +3,7 @@ package roomescape.reservationTime.repository;
 import java.time.LocalTime;
 import java.util.List;
 import java.util.Map;
+import org.springframework.context.annotation.Primary;
 import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;
@@ -11,7 +12,7 @@ import org.springframework.stereotype.Repository;
 import roomescape.reservationTime.controller.request.ReservationTimeRequest;
 import roomescape.reservationTime.controller.response.ReservationTimeResponse;
 
-
+@Primary
 @Repository
 public class H2ReservationTimeRespository implements ReservationTimeRepository {
 

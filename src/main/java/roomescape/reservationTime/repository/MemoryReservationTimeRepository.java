@@ -6,13 +6,11 @@ import java.util.Map.Entry;
 import java.util.NoSuchElementException;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.atomic.AtomicLong;
-import org.springframework.context.annotation.Primary;
 import org.springframework.stereotype.Repository;
 import roomescape.reservationTime.controller.request.ReservationTimeRequest;
 import roomescape.reservationTime.controller.response.ReservationTimeResponse;
 import roomescape.reservationTime.model.ReservationTime;
 
-@Primary
 @Repository
 public class MemoryReservationTimeRepository implements ReservationTimeRepository {
 
@@ -43,8 +41,8 @@ public class MemoryReservationTimeRepository implements ReservationTimeRepositor
 
     @Override
     public long add(final ReservationTimeRequest request) {
-        final ReservationTime reservationTime = request.toEntity();
         final long id = index.getAndIncrement();
+        final ReservationTime reservationTime = request.toEntity(id);
         reservationTimes.put(id, reservationTime);
         return id;
     }

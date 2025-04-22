@@ -19,8 +19,7 @@ public record ReservationRegisterDto(
         String name,
 
         @NotNull
-        Long reservationTimeId
-
+        Long timeId
 ) {
     public Reservation toReservation(ReservationTime reservationTime) {
         return new Reservation(name, date, reservationTime);

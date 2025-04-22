@@ -9,6 +9,6 @@ public class ReservationPageController {
     @GetMapping("/admin/reservation")
     public String reservation(
     ) {
-        return "/admin/reservation-legacy.html";
+        return "/admin/reservation.html";
     }
 }

@@ -8,6 +8,7 @@ import org.springframework.test.annotation.DirtiesContext;
 import roomescape.database.ReservationDatabaseImpl;
 import roomescape.domain.Reservation;
 import roomescape.domain.dto.ReservationReqDto;
+import roomescape.exception.CustomException;
 import roomescape.fixture.ReservationFixture;
 
 import java.time.LocalDateTime;
@@ -49,7 +50,7 @@ class ReservationServiceTest {
 
             Assertions.assertThatCode(
                     () -> service.add(reqDto)
-            ).isInstanceOf(IllegalArgumentException.class);
+            ).isInstanceOf(CustomException.class);
         }
     }
 }

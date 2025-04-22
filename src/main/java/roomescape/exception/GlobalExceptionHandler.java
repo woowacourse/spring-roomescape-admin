@@ -7,10 +7,14 @@ import org.springframework.web.bind.annotation.RestControllerAdvice;
 @RestControllerAdvice
 public class GlobalExceptionHandler {
 
-    @ExceptionHandler(IllegalArgumentException.class)
-    public ResponseEntity<ErrorResponse> handlerIllegalArgument(IllegalArgumentException e) {
+    @ExceptionHandler(CustomException.class)
+    public ResponseEntity<ErrorResponse> handlerIllegalArgument(CustomException e) {
         e.printStackTrace();
-        return ResponseEntity.badRequest()
-                .body(new ErrorResponse("400", e.getMessage()));
+        return ResponseEntity.status(e.getErrorCode().getStatus())
+                .body(new ErrorResponse(
+                        String.valueOf(e.getErrorCode().getStatus()),
+                        e.getMessage()
+                ));
     }
+
 }

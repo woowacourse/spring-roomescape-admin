@@ -1,5 +1,8 @@
 package roomescape.domain;
 
+import roomescape.exception.CustomException;
+import roomescape.exception.ErrorCode;
+
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.LocalTime;
@@ -32,8 +35,17 @@ public class Reservation {
 
     private static void validateTense(LocalDateTime dateTime) {
         if (isPastTense(dateTime)) {
-            throw new IllegalArgumentException("과거시점으로 예약을 진행할 수 없습니다.");
+            throw new CustomException(ErrorCode.BAD_REQUEST, "과거시점으로 예약을 진행할 수 없습니다.");
         }
+    }
+
+    private static boolean isPastTense(LocalDateTime dateTime) {
+        LocalDateTime now = LocalDateTime.now();
+        return dateTime.isBefore(now);
+    }
+
+    public boolean isSameDateTime(Reservation compare) {
+        return this.getDateTime().isEqual(compare.getDateTime());
     }
 
     public LocalDateTime getDateTime() {
@@ -54,14 +66,5 @@ public class Reservation {
 
     public LocalTime getTime() {
         return time;
-    }
-
-    private static boolean isPastTense(LocalDateTime dateTime) {
-        LocalDateTime now = LocalDateTime.now();
-        return dateTime.isBefore(now);
-    }
-
-    public boolean isSameDateTime(Reservation compare) {
-        return this.getDateTime().isEqual(compare.getDateTime());
     }
 }

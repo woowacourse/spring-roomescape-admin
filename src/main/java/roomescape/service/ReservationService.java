@@ -6,6 +6,8 @@ import roomescape.database.ReservationDatabaseImpl;
 import roomescape.domain.Reservation;
 import roomescape.domain.dto.ReservationReqDto;
 import roomescape.domain.dto.ReservationResDto;
+import roomescape.exception.CustomException;
+import roomescape.exception.ErrorCode;
 
 import java.util.List;
 import java.util.stream.Collectors;
@@ -48,8 +50,8 @@ public class ReservationService {
     private void validateDuplicateDateTime(Reservation inputReservation) {
         List<Reservation> reservations = reservationDatabase.findAll();
         for (Reservation reservation : reservations) {
-            if (inputReservation.isSameDateTime(reservation)) { // TODO 2025. 4. 22. 11:12: 중복 예외 상태 코드는 409
-                throw new IllegalArgumentException("이미 예약되어 있는 시간입니다.");
+            if (inputReservation.isSameDateTime(reservation)) {
+                throw new CustomException(ErrorCode.CONFLICT, "이미 예약되어 있는 시간입니다.");
             }
         }
     }

@@ -5,6 +5,7 @@ import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
 import org.springframework.test.annotation.DirtiesContext;
+import roomescape.exception.CustomException;
 import roomescape.fixture.ReservationFixture;
 
 @DirtiesContext(classMode = DirtiesContext.ClassMode.BEFORE_EACH_TEST_METHOD)
@@ -23,7 +24,7 @@ class ReservationTest {
             // when & then
             Assertions.assertThatCode(
                     () -> ReservationFixture.createPastReservationBeforeOneDay(dummyName)
-            ).isInstanceOf(IllegalArgumentException.class);
+            ).isInstanceOf(CustomException.class);
         }
 
         @DisplayName("예약 시점이 미래이면 예외를 발생하지 않는다.")

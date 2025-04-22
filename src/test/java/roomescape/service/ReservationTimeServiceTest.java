@@ -46,12 +46,12 @@ class ReservationTimeServiceTest {
         // given
         CreateReservationTimeDto createReservationTimeDto = new CreateReservationTimeDto(LocalTime.of(9, 0));
         // when
-        ReservationTimeDto reservationTime = reservationTimeService.createReservationTime(createReservationTimeDto);
+        ReservationTimeDto reservationTimeDto = reservationTimeService.createReservationTime(createReservationTimeDto);
         // then
         SoftAssertions soft = new SoftAssertions();
         soft.assertThat(reservationTimeRepository.findAll()).hasSize(1);
-        soft.assertThat(reservationTime.id()).isEqualTo(1L);
-        soft.assertThat(reservationTime.startAt()).isEqualTo(LocalTime.of(9, 0));
+        soft.assertThat(reservationTimeDto.id()).isEqualTo(1L);
+        soft.assertThat(reservationTimeDto.startAt()).isEqualTo("09:00");
         soft.assertAll();
     }
 

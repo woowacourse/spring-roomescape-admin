@@ -15,9 +15,9 @@ import org.springframework.web.bind.annotation.RestController;
 @RestController
 public class ReservationController {
 
-    private final ReservationRepository reservationRepository;
+    private final ReservationDao reservationRepository;
 
-    public ReservationController(ReservationRepository reservationRepository) {
+    public ReservationController(ReservationDao reservationRepository) {
         this.reservationRepository = reservationRepository;
     }
 
@@ -36,11 +36,19 @@ public class ReservationController {
 
     @DeleteMapping("/{id}")
     public ResponseEntity<Void> deleteReservation(@PathVariable Long id) {
+        int deleted = reservationRepository.delete(id);
+        if (deleted == 0) {
+            return ResponseEntity.notFound().build();
+        }
+        return ResponseEntity.ok().build();
+    }
+
+    @GetMapping("/{id}")
+    public ResponseEntity<Reservation> getReservation(@PathVariable Long id) {
         try {
-            Reservation found = reservationRepository.findById(id)
-                    .orElseThrow(() -> new IllegalArgumentException("예약을 찾을 수 없습니다."));
-            reservationRepository.delete(found);
-            return ResponseEntity.ok().build();
+            Reservation reservation = reservationRepository.findById(id)
+                    .orElseThrow(() -> new IllegalArgumentException("값을 찾을 수 없습니다."));
+            return ResponseEntity.ok(reservation);
         } catch (IllegalArgumentException e) {
             return ResponseEntity.notFound().build();
         }

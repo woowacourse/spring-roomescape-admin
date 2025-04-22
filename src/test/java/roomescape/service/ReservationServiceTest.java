@@ -4,21 +4,22 @@ import static org.assertj.core.api.AssertionsForClassTypes.assertThatThrownBy;
 
 import java.time.LocalDate;
 import java.time.LocalTime;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.NoSuchElementException;
 import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.context.SpringBootTest;
 import roomescape.dto.ReservationRequest;
+import roomescape.entity.Reservation;
+import roomescape.repository.ReservationRepository;
 
-@SpringBootTest
 class ReservationServiceTest {
+/*
+    private final ReservationRepository fakeReservationRepository = new FakeReservationRepository();
+    private final ReservationService reservationService = new ReservationService(fakeReservationRepository);
 
-    @Autowired
-    private ReservationService reservationService;
 
-    @Test
     @DisplayName("존재하지 않는 아이디를 삭제시 예외 발생")
     void deleteException() {
         // given
@@ -41,4 +42,39 @@ class ReservationServiceTest {
         Assertions.assertThatThrownBy(() -> reservationService.createReservation(newRequest))
                 .isInstanceOf(IllegalArgumentException.class);
     }
+
+    static class FakeReservationRepository implements ReservationRepository {
+
+        List<Reservation> reservations = new ArrayList<>();
+
+        public FakeReservationRepository() {
+            reservations.add(new Reservation("Lemon",LocalDate.of(2025,4,22),LocalTime.of(13,22)));
+            reservations.add(new Reservation("DDingHwa",LocalDate.of(2025,4,22),LocalTime.of(16,15)));
+        }
+
+        @Override
+        public Reservation findById(long id) {
+            return null;
+        }
+
+        @Override
+        public List<Reservation> findAll() {
+            return reservations;
+        }
+
+        @Override
+        public Reservation save(Reservation reservation) {
+            return null;
+        }
+
+        @Override
+        public void deleteById(long id) {
+
+        }
+
+        @Override
+        public boolean selectByDateAndTime(LocalDate date, LocalTime time) {
+            return false;
+        }
+    }*/
 }

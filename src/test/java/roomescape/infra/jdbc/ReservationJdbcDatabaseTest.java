@@ -69,7 +69,7 @@ class ReservationJdbcDatabaseTest {
         }, keyHolder);
         long reservationId = keyHolder.getKey().longValue();
 
-        final Reservation result = database.findById(reservationId);
+        final Reservation result = database.findById(reservationId).get();
 
         assertThat(result.name()).isEqualTo("dompoo");
         assertThat(result.date()).isEqualTo(LocalDate.now().plusDays(20));
@@ -84,7 +84,7 @@ class ReservationJdbcDatabaseTest {
         final long savedId = database.saveAndGetId(request);
 
         assertThat(database.findAll().size()).isEqualTo(1);
-        final Reservation savedReservation = database.findById(savedId);
+        final Reservation savedReservation = database.findById(savedId).get();
         assertThat(savedReservation.name()).isEqualTo("dompoo");
         assertThat(savedReservation.startTime()).isEqualTo(LocalTime.of(10, 0));
         assertThat(savedReservation.date()).isEqualTo(LocalDate.of(2025, 5, 17));

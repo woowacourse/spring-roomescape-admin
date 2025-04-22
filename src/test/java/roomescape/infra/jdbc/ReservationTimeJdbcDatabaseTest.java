@@ -53,8 +53,8 @@ class ReservationTimeJdbcDatabaseTest {
         }, keyHolder);
         long reservationTimeId = keyHolder.getKey().longValue();
 
-        final ReservationTime result = timeDatabase.findById(reservationTimeId);
-        
+        final ReservationTime result = timeDatabase.findById(reservationTimeId).get();
+
         assertThat(result.startTime()).isEqualTo(LocalTime.of(10, 0));
     }
 
@@ -64,7 +64,7 @@ class ReservationTimeJdbcDatabaseTest {
 
         final long savedId = timeDatabase.saveAndGetId(request);
 
-        final ReservationTime savedReservation = timeDatabase.findById(savedId);
+        final ReservationTime savedReservation = timeDatabase.findById(savedId).get();
         assertThat(savedReservation.startTime()).isEqualTo(LocalTime.of(10, 0));
     }
 

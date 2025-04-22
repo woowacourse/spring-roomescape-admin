@@ -1,6 +1,7 @@
 package roomescape.infra.jdbc;
 
 import org.springframework.context.annotation.Primary;
+import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;
 import org.springframework.jdbc.core.simple.SimpleJdbcInsert;
@@ -14,6 +15,7 @@ import roomescape.infra.ReservationDatabase;
 import java.time.LocalDate;
 import java.time.LocalTime;
 import java.util.List;
+import java.util.Optional;
 
 @Repository
 @Primary
@@ -52,7 +54,7 @@ public class ReservationJdbcDatabase implements ReservationDatabase {
     }
 
     @Override
-    public Reservation findById(long id) {
+    public Optional<Reservation> findById(long id) {
         final String sql = """
                 SELECT
                     r.id AS reservation_id,
@@ -66,7 +68,12 @@ public class ReservationJdbcDatabase implements ReservationDatabase {
                 WHERE r.id = ?
                 """;
 
-        return jdbcTemplate.queryForObject(sql, ROW_MAPPER, id);
+        try {
+            final Reservation reservation = jdbcTemplate.queryForObject(sql, ROW_MAPPER, id);
+            return Optional.ofNullable(reservation);
+        } catch (EmptyResultDataAccessException e) {
+            return Optional.empty();
+        }
     }
 
     @Override

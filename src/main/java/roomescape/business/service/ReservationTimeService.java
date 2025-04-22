@@ -20,7 +20,8 @@ public class ReservationTimeService {
     @Transactional
     public ReservationTime saveAndGet(final ReservationTimeCreateRequest request) {
         final long savedId = database.saveAndGetId(request);
-        return database.findById(savedId);
+        return database.findById(savedId)
+                .orElseThrow(() -> new IllegalStateException("예약 시간이 저장되었으나, 서버에서 문제가 발생하였습니다."));
     }
 
     @Transactional(readOnly = true)
@@ -30,6 +31,8 @@ public class ReservationTimeService {
 
     @Transactional
     public void deleteById(final long id) {
+        database.findById(id)
+                .orElseThrow(() -> new IllegalArgumentException("존재하지 않는 예약 시간 id 입니다."));
         database.deleteById(id);
     }
 }

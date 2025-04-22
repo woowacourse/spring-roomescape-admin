@@ -14,6 +14,7 @@ import java.time.LocalDate;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 
 @Repository
 @ConditionalOnProperty(name = "room-escape.console-view.enabled", havingValue = "true")
@@ -27,7 +28,7 @@ public class ReservationMemoryDatabase implements ReservationDatabase {
     ) {
 
         public Reservation toDomain(ReservationTimeDatabase database) {
-            final ReservationTime time = database.findById(timeId);
+            final ReservationTime time = database.findById(timeId).get();
             return new Reservation(id, new Customer(name), date, time);
         }
     }
@@ -53,8 +54,13 @@ public class ReservationMemoryDatabase implements ReservationDatabase {
     }
 
     @Override
-    public Reservation findById(final long id) {
-        return DATA.get(id).toDomain(timeDatabase);
+    public Optional<Reservation> findById(final long id) {
+        final ReservationData reservationData = DATA.get(id);
+
+        if (reservationData == null) {
+            return Optional.empty();
+        }
+        return Optional.of(reservationData.toDomain(timeDatabase));
     }
 
     @Override

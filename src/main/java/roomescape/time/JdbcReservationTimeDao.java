@@ -44,4 +44,9 @@ public class JdbcReservationTimeDao implements ReservationTimeDao {
         int rowNumber = jdbcTemplate.update(sql, id);
         return rowNumber == 1;
     }
+
+    public ReservationTime getById(long id) {
+        String sql = "SELECT * FROM reservation_time WHERE id = ?";
+        return jdbcTemplate.queryForObject(sql, reservationRowMapper, id);
+    }
 }

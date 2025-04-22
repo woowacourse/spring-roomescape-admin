@@ -1,8 +1,9 @@
-package roomescape.time.web;
+package fake;
 
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
+import org.springframework.dao.EmptyResultDataAccessException;
 import roomescape.time.ReservationTime;
 import roomescape.time.ReservationTimeDao;
 
@@ -25,5 +26,13 @@ public class FakeReservationTimeDao implements ReservationTimeDao {
     @Override
     public boolean removeById(long id) {
         return reservationTimes.removeIf(reservation -> reservation.getId() == id);
+    }
+
+    @Override
+    public ReservationTime getById(long id) {
+        return reservationTimes.stream()
+                .filter(reservationTime -> reservationTime.getId() == id)
+                .findAny()
+                .orElseThrow(() -> new EmptyResultDataAccessException(1));
     }
 }

@@ -43,10 +43,8 @@ class InMemoryReservationDaoTest {
         List<Reservation> all = inMemoryReservationDao.getAll();
 
         //then
-        assertThat(all).hasSize(3);
-        assertThat(all.contains(mimiReservation)).isTrue();
-        assertThat(all.contains(norangReservation)).isTrue();
-        assertThat(all.contains(mintReservation)).isTrue();
+        assertThat(all).hasSize(3)
+                .contains(mimiReservation, norangReservation, mintReservation);
     }
 
     @DisplayName("id 해당하는 예약 정보를 삭제할 수 있다.")

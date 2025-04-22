@@ -1,0 +1,9 @@
+DROP TABLE IF EXISTS reservation;
+CREATE TABLE reservation
+(
+    id   BIGINT AUTO_INCREMENT PRIMARY KEY,
+    name VARCHAR(255) NOT NULL,
+    date VARCHAR(255) NOT NULL,
+    time VARCHAR(255) NOT NULL,
+    PRIMARY KEY (id)
+);

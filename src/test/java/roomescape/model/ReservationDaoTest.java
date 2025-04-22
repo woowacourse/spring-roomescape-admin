@@ -7,28 +7,27 @@ import java.sql.SQLException;
 import java.time.LocalDate;
 import java.time.LocalTime;
 import java.util.List;
+import javax.sql.DataSource;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.jdbc.core.BatchPreparedStatementSetter;
 import org.springframework.jdbc.core.JdbcTemplate;
-import org.springframework.test.annotation.DirtiesContext;
 import roomescape.dto.ReservationResponse;
+import roomescape.util.H2DataSourceFactory;
 
-@SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.DEFINED_PORT)
-@DirtiesContext(classMode = DirtiesContext.ClassMode.BEFORE_EACH_TEST_METHOD)
 class ReservationDaoTest {
 
-    @Autowired
     private ReservationDao reservationDao;
-
-    @Autowired
-    private JdbcTemplate jdbcTemplate;
 
     @BeforeEach
     void setup() {
+         DataSource dataSource = H2DataSourceFactory.getDataSource();
+        JdbcTemplate jdbcTemplate = new JdbcTemplate(dataSource);
+        reservationDao = new ReservationDao(jdbcTemplate);
+
+        H2DataSourceFactory.initializeTable(jdbcTemplate.getDataSource());
+
         List<Reservation> reservations = List.of(
                 new Reservation("루키", LocalDate.of(2025, 4, 20), LocalTime.of(15, 30)),
                 new Reservation("슬링키", LocalDate.of(2025, 4, 18), LocalTime.of(21, 22)),

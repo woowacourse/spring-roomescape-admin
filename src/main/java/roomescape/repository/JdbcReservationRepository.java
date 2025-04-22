@@ -4,6 +4,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 import org.springframework.jdbc.core.JdbcTemplate;
+import org.springframework.jdbc.core.RowMapper;
 import org.springframework.jdbc.core.simple.SimpleJdbcInsert;
 import roomescape.domain.Reservation;
 import roomescape.domain.ReservationDateTime;
@@ -13,6 +14,14 @@ public class JdbcReservationRepository implements ReservationRepository {
 
     private final JdbcTemplate jdbcTemplate;
     private final SimpleJdbcInsert simpleJdbcInsert;
+    private final RowMapper<Reservation> rowMapper = (rs, rowNum) -> new Reservation(
+            rs.getLong("reservation_id"),
+            rs.getString("name"),
+            ReservationDateTime.of(
+                    rs.getDate("date").toLocalDate(),
+                    new ReservationTime(rs.getLong("time_id"), rs.getTime("time_value").toLocalTime())
+            )
+    );
 
     public JdbcReservationRepository(JdbcTemplate jdbcTemplate) {
         this.jdbcTemplate = jdbcTemplate;
@@ -35,17 +44,8 @@ public class JdbcReservationRepository implements ReservationRepository {
                 JOIN reservation_time AS rt
                 ON r.time_id = rt.id
                 """;
-        return jdbcTemplate.query(
-                sql,
-                (rs, rowNum) -> new Reservation(
-                        rs.getLong("reservation_id"),
-                        rs.getString("name"),
-                        ReservationDateTime.of(
-                                rs.getDate("date").toLocalDate(),
-                                new ReservationTime(rs.getLong("time_id"), rs.getTime("time_value").toLocalTime())
-                        )
-                )
-        );
+
+        return jdbcTemplate.query(sql, rowMapper);
     }
 
     @Override
@@ -68,17 +68,7 @@ public class JdbcReservationRepository implements ReservationRepository {
     @Override
     public Optional<Reservation> findById(Long id) {
         String sql = "SELECT * FROM reservation WHERE id = ?";
-        Reservation reservation = jdbcTemplate.queryForObject(
-                sql,
-                (rs, rowNum) -> new Reservation(
-                        rs.getLong("reservation_id"),
-                        rs.getString("name"),
-                        ReservationDateTime.of(
-                                rs.getDate("date").toLocalDate(),
-                                new ReservationTime(rs.getLong("time_id"), rs.getTime("time_value").toLocalTime())
-                        )),
-                id
-        );
+        Reservation reservation = jdbcTemplate.queryForObject(sql, rowMapper, id);
         return Optional.ofNullable(reservation);
     }
 }

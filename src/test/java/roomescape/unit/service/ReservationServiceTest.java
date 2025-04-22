@@ -6,13 +6,11 @@ import java.time.LocalDate;
 import java.time.LocalTime;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import org.springframework.test.annotation.DirtiesContext;
 import roomescape.domain.Reservation;
 import roomescape.service.ReservationService;
 import roomescape.test.repository.FakeReservationRepository;
 
 
-@DirtiesContext
 class ReservationServiceTest {
 
     static ReservationService reservationService;

@@ -3,7 +3,7 @@ package roomescape.repository;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map.Entry;
-import java.util.NoSuchElementException;
+import java.util.Optional;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.atomic.AtomicLong;
 import org.springframework.stereotype.Repository;
@@ -32,11 +32,11 @@ public class MemoryReservationTimeRepository implements ReservationTimeRepositor
     }
 
     @Override
-    public ReservationTimeResponse findById(final Long id) {
+    public Optional<ReservationTimeResponse> findById(final Long id) {
         if (reservationTimes.containsKey(id)) {
-            return ReservationTimeResponse.from(id, reservationTimes.get(id));
+            return Optional.of(ReservationTimeResponse.from(id, reservationTimes.get(id)));
         }
-        throw new NoSuchElementException("해당하는 id의 예약시간이 없습니다.");
+        return Optional.empty();
     }
 
     @Override
@@ -49,10 +49,6 @@ public class MemoryReservationTimeRepository implements ReservationTimeRepositor
 
     @Override
     public void deleteById(final Long id) {
-        if (reservationTimes.containsKey(id)) {
-            reservationTimes.remove(id);
-            return;
-        }
-        throw new NoSuchElementException("해당하는 id의 예약시간이 없습니다.");
+        reservationTimes.remove(id);
     }
 }

@@ -21,7 +21,8 @@ public class ReservationService {
 
     public ReservationResponse create(final ReservationRequest request) {
         final long id = repository.add(request);
-        return repository.findById(id);
+        return repository.findById(id)
+                .orElseThrow(() -> new IllegalStateException("예약을 찾는 과정에서 문제가 생겼습니다."));
     }
 
     public void deleteById(final Long id) {

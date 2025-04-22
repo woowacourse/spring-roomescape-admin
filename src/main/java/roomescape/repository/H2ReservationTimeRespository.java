@@ -3,6 +3,7 @@ package roomescape.repository;
 import java.time.LocalTime;
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 import org.springframework.context.annotation.Primary;
 import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.jdbc.core.JdbcTemplate;
@@ -38,16 +39,17 @@ public class H2ReservationTimeRespository implements ReservationTimeRepository {
     }
 
     @Override
-    public ReservationTimeResponse findById(final Long id) {
+    public Optional<ReservationTimeResponse> findById(final Long id) {
         final String sql = """
                 SELECT * FROM RESERVATION_TIME
                 WHERE id = ?
                 """;
 
         try {
-            return jdbcTemplate.queryForObject(sql, ROW_MAPPER, id);
+            final ReservationTimeResponse response = jdbcTemplate.queryForObject(sql, ROW_MAPPER, id);
+            return Optional.ofNullable(response);
         } catch (EmptyResultDataAccessException e) {
-            return null;
+            return Optional.empty();
         }
     }
 

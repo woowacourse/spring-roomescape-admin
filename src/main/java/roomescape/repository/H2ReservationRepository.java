@@ -4,7 +4,7 @@ import java.time.LocalDate;
 import java.time.LocalTime;
 import java.util.List;
 import java.util.Map;
-import java.util.NoSuchElementException;
+import java.util.Optional;
 import org.springframework.context.annotation.Primary;
 import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.jdbc.core.JdbcTemplate;
@@ -51,7 +51,7 @@ public class H2ReservationRepository implements ReservationRepository {
     }
 
     @Override
-    public ReservationResponse findById(final Long id) {
+    public Optional<ReservationResponse> findById(final Long id) {
         String sql = """
                     SELECT
                         r.id as reservation_id,
@@ -65,9 +65,10 @@ public class H2ReservationRepository implements ReservationRepository {
                     where r.id = ?
                 """;
         try {
-            return jdbcTemplate.queryForObject(sql, ROW_MAPPER, id);
+            final ReservationResponse response = jdbcTemplate.queryForObject(sql, ROW_MAPPER, id);
+            return Optional.ofNullable(response);
         } catch (EmptyResultDataAccessException e) {
-            return null;
+            return Optional.empty();
         }
     }
 
@@ -88,9 +89,6 @@ public class H2ReservationRepository implements ReservationRepository {
 
     @Override
     public void deleteById(final Long id) {
-        if (findById(id) == null) {
-            throw new NoSuchElementException("해당하는 id의 예약기록이 없습니다.");
-        }
         String sql = "delete from reservation where id = ?";
         jdbcTemplate.update(sql, id);
     }

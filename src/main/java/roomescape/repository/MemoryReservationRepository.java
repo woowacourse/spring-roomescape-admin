@@ -3,7 +3,7 @@ package roomescape.repository;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map.Entry;
-import java.util.NoSuchElementException;
+import java.util.Optional;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.atomic.AtomicLong;
 import org.springframework.stereotype.Repository;
@@ -35,28 +35,24 @@ public class MemoryReservationRepository implements ReservationRepository {
     }
 
     @Override
-    public ReservationResponse findById(final Long id) {
+    public Optional<ReservationResponse> findById(final Long id) {
         if (reservations.containsKey(id)) {
-            return ReservationResponse.from(id, reservations.get(id));
+            return Optional.of(ReservationResponse.from(id, reservations.get(id)));
         }
-        throw new NoSuchElementException("해당하는 id의 예약기록이 없습니다.");
+        return Optional.empty();
     }
 
     @Override
     public long add(final ReservationRequest request) {
-        final ReservationTimeResponse timeResponse = timeRepository.findById(request.timeId());
+        final Optional<ReservationTimeResponse> timeResponse = timeRepository.findById(request.timeId());
         final long id = index.getAndIncrement();
-        final Reservation reservation = request.toEntity(id, timeResponse);
+        final Reservation reservation = request.toEntity(id, timeResponse.orElse(null));
         reservations.put(id, reservation);
         return id;
     }
 
     @Override
     public void deleteById(final Long id) {
-        if (reservations.containsKey(id)) {
-            reservations.remove(id);
-            return;
-        }
-        throw new NoSuchElementException("해당하는 id의 예약기록이 없습니다.");
+        reservations.remove(id);
     }
 }

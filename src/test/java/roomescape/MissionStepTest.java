@@ -205,7 +205,6 @@ public class MissionStepTest {
 
     @Test
     void findAllReservationTimeDatabaseTest() {
-
         Map<String, String> params = new HashMap<>();
         params.put("startAt", "10:00");
 
@@ -225,7 +224,6 @@ public class MissionStepTest {
 
     @Test
     void deleteReservationTimeDatabaseTest() {
-
         Map<String, String> params = new HashMap<>();
         params.put("startAt", "10:00");
 

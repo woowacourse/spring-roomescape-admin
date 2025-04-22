@@ -1,11 +1,14 @@
 package roomescape.service;
 
+import jakarta.validation.Valid;
 import java.util.List;
 import org.springframework.stereotype.Service;
+import org.springframework.validation.annotation.Validated;
 import roomescape.domain.ReservationTime;
 import roomescape.repository.ReservationTimeRepository;
 
 @Service
+@Validated
 public class ReservationTimeService {
 
     private final ReservationTimeRepository reservationTimeRepository;
@@ -14,7 +17,7 @@ public class ReservationTimeService {
         this.reservationTimeRepository = reservationTimeRepository;
     }
 
-    public List<ReservationTime> findAll() {
+    public List<ReservationTime> allReservationTimes() {
         return reservationTimeRepository.findAll();
     }
 
@@ -22,7 +25,7 @@ public class ReservationTimeService {
         reservationTimeRepository.deleteById(id);
     }
 
-    public Long addReservationTime(ReservationTime reservationTime) {
+    public Long addReservationTime(@Valid ReservationTime reservationTime) {
         return reservationTimeRepository.add(reservationTime);
     }
 }

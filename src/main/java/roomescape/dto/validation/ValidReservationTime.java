@@ -10,7 +10,7 @@ import java.lang.annotation.Target;
 
 @Target({ElementType.TYPE})
 @Retention(RetentionPolicy.RUNTIME)
-@Constraint(validatedBy = ReservationValidator.class)
+@Constraint(validatedBy = ReservationTimeValidator.class)
 public @interface ValidReservationTime {
     String message() default "유효하지 않은 시간입니다.";
 

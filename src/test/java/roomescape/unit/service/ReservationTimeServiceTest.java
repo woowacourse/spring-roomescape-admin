@@ -9,23 +9,25 @@ import org.junit.jupiter.api.DisplayNameGeneration;
 import org.junit.jupiter.api.DisplayNameGenerator;
 import org.junit.jupiter.api.Test;
 import roomescape.domain.Reservation;
-import roomescape.service.ReservationService;
-import roomescape.unit.repository.FakeReservationRepository;
+import roomescape.domain.ReservationTime;
+import roomescape.service.ReservationTimeService;
+import roomescape.unit.repository.FakeReservationTimeRepository;
 
 
 @DisplayNameGeneration(DisplayNameGenerator.ReplaceUnderscores.class)
-class ReservationServiceTest {
+class ReservationTimeServiceTest {
 
-    static ReservationService reservationService;
+    static ReservationTimeService reservationTimeService;
 
     @BeforeEach
     void setup() {
-        reservationService = new ReservationService(new FakeReservationRepository());
+        reservationTimeService = new ReservationTimeService(new FakeReservationTimeRepository());
     }
 
     @Test
     void 예약을_추가하고_조회할_수_있다() {
-        assertThat(reservationService.allReservations().size()).isEqualTo(0);
+        assertThat(reservationTimeService.allReservationTimes().size()).isEqualTo(0);
+        reservationTimeService.addReservationTime(new ReservationTime(1, LocalTime.now()));
         reservationService.addReservation(new Reservation(null, "praisebak", LocalDate.now(), LocalTime.now()));
         assertThat(reservationService.allReservations().size()).isEqualTo(1);
     }

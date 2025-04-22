@@ -1,4 +1,4 @@
-package roomescape.test.repository;
+package roomescape.unit.repository;
 
 import java.util.ArrayList;
 import java.util.Collections;

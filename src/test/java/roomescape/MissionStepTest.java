@@ -2,18 +2,27 @@ package roomescape;
 
 import io.restassured.RestAssured;
 import io.restassured.http.ContentType;
+import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.Test;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.test.annotation.DirtiesContext;
 
+import java.sql.Connection;
+import java.sql.SQLException;
 import java.util.HashMap;
 import java.util.Map;
 
+import static org.assertj.core.api.Assertions.assertThat;
 import static org.hamcrest.Matchers.is;
 
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.DEFINED_PORT)
 @DirtiesContext(classMode = DirtiesContext.ClassMode.BEFORE_EACH_TEST_METHOD)
 public class MissionStepTest {
+
+    @Autowired
+    private JdbcTemplate jdbcTemplate;
 
     @Test
     void 일단계_어드민_홈화면이_성공적으로_반환된다() {
@@ -68,5 +77,16 @@ public class MissionStepTest {
                 .then().log().all()
                 .statusCode(200)
                 .body("size()", is(0));
+    }
+
+    @Test
+    void 사단계_데이터베이스를_적용한다() {
+        try (Connection connection = jdbcTemplate.getDataSource().getConnection()) {
+            assertThat(connection).isNotNull();
+            assertThat(connection.getCatalog()).isEqualTo("DATABASE");
+            assertThat(connection.getMetaData().getTables(null, null, "RESERVATION", null).next()).isTrue();
+        } catch (SQLException exception) {
+            throw new RuntimeException(exception);
+        }
     }
 }

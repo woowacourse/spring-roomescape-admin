@@ -3,14 +3,12 @@ package roomescape.domain;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
+import org.springframework.stereotype.Component;
 
+@Component
 public class Reservations {
 
-    private final List<Reservation> reservations;
-
-    public Reservations() {
-        this.reservations = new ArrayList<>();
-    }
+    private final List<Reservation> reservations = new ArrayList<>();
 
     public List<Reservation> getReservations() {
         return Collections.unmodifiableList(reservations);

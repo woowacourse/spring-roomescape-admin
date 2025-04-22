@@ -4,6 +4,7 @@ import static org.hamcrest.Matchers.is;
 
 import io.restassured.RestAssured;
 import io.restassured.http.ContentType;
+import java.time.LocalTime;
 import java.util.HashMap;
 import java.util.Map;
 import org.junit.jupiter.api.Test;
@@ -18,6 +19,9 @@ public class ReservationTimeTest {
 
     @Autowired
     private JdbcTemplate jdbcTemplate;
+
+    @Autowired
+    private ReservationTimes reservationTimes;
 
     @Test
     void 칠단계() {
@@ -45,6 +49,7 @@ public class ReservationTimeTest {
 
     @Test
     void 팔단계() {
+        reservationTimes.addReservationTime(new ReservationTime(1L, LocalTime.of(10, 0)));
         jdbcTemplate.update("insert into reservation_time (id, start_at) values (1, '10:00')");
         Map<String, Object> reservation = new HashMap<>();
         reservation.put("name", "브라운");

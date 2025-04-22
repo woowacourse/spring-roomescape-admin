@@ -5,7 +5,6 @@ import java.sql.PreparedStatement;
 import java.sql.Statement;
 import java.sql.Time;
 import java.util.List;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.support.GeneratedKeyHolder;
 import org.springframework.jdbc.support.KeyHolder;
@@ -15,8 +14,11 @@ import roomescape.domain.Reservation;
 @Repository
 public class ReservationH2Repository implements ReservationRepository {
 
-    @Autowired
-    private JdbcTemplate jdbcTemplate;
+    private final JdbcTemplate jdbcTemplate;
+
+    public ReservationH2Repository(JdbcTemplate jdbcTemplate) {
+        this.jdbcTemplate = jdbcTemplate;
+    }
 
     @Override
     public long save(final Reservation reservation) {
@@ -32,7 +34,10 @@ public class ReservationH2Repository implements ReservationRepository {
             return ps;
         }, keyHolder);
 
-        return keyHolder.getKey().longValue();
+        long id = keyHolder.getKey().longValue();
+        reservation.setId(id);
+
+        return id;
     }
 
     @Override

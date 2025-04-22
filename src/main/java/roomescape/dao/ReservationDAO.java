@@ -1,7 +1,6 @@
 package roomescape.dao;
 
 import java.time.LocalDate;
-import java.time.LocalTime;
 import java.util.List;
 import roomescape.domain.Reservation;
 
@@ -9,7 +8,7 @@ public interface ReservationDAO {
 
     List<Reservation> findAll();
 
-    boolean existsByDateAndTime(LocalDate date, LocalTime time);
+    boolean existsByDateAndTimeId(LocalDate date, long time_id);
 
     long insert(Reservation reservation);
 

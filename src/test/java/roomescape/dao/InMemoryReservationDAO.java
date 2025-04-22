@@ -1,11 +1,9 @@
-package dao;
+package roomescape.dao;
 
 import java.time.LocalDate;
-import java.time.LocalTime;
 import java.util.Collections;
 import java.util.List;
 import java.util.concurrent.atomic.AtomicLong;
-import roomescape.dao.ReservationDAO;
 import roomescape.domain.Reservation;
 
 public class InMemoryReservationDAO implements ReservationDAO {
@@ -23,9 +21,9 @@ public class InMemoryReservationDAO implements ReservationDAO {
     }
 
     @Override
-    public boolean existsByDateAndTime(final LocalDate date, final LocalTime time) {
+    public boolean existsByDateAndTimeId(final LocalDate date, final long timeId) {
         return reservations.stream()
-                .anyMatch(reservation -> reservation.isSameDateTime(date, time));
+                .anyMatch(reservation -> reservation.isSameDateTime(date, timeId));
     }
 
     @Override

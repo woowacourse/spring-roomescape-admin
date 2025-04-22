@@ -1,11 +1,11 @@
 package roomescape.service;
 
 import java.util.List;
-import org.springframework.stereotype.Component;
+import org.springframework.stereotype.Service;
 import roomescape.dao.ReservationDAO;
 import roomescape.domain.Reservation;
 
-@Component
+@Service
 public class ReservationService {
 
     private static final int DUPLICATED_RESERVATION = -1;
@@ -32,6 +32,6 @@ public class ReservationService {
     }
 
     private boolean existsSameDateTime(final Reservation reservation) {
-        return reservationDAO.existsByDateAndTime(reservation.getDate(), reservation.getTime());
+        return reservationDAO.existsByDateAndTimeId(reservation.getDate(), reservation.getTime().getId());
     }
 }

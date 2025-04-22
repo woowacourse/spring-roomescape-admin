@@ -1,9 +1,7 @@
 package roomescape.dao;
 
 import java.sql.Date;
-import java.sql.Time;
 import java.time.LocalDate;
-import java.time.LocalTime;
 import java.util.List;
 import javax.sql.DataSource;
 import org.springframework.jdbc.core.JdbcTemplate;
@@ -13,6 +11,7 @@ import org.springframework.jdbc.core.namedparam.SqlParameterSource;
 import org.springframework.jdbc.core.simple.SimpleJdbcInsert;
 import org.springframework.stereotype.Repository;
 import roomescape.domain.Reservation;
+import roomescape.domain.ReservationTime;
 
 @Repository
 public class JdbcReservationDAO implements ReservationDAO {
@@ -27,22 +26,33 @@ public class JdbcReservationDAO implements ReservationDAO {
                 .withTableName("reservation")
                 .usingGeneratedKeyColumns("id");
         this.reservationRowMapper = (resultSet, rowNum) -> new Reservation(
-                resultSet.getLong("id"),
+                resultSet.getLong("reservation_id"),
                 resultSet.getString("name"),
                 resultSet.getDate("date").toLocalDate(),
-                resultSet.getTime("time").toLocalTime());
+                new ReservationTime(resultSet.getLong("time_id"),
+                        resultSet.getTime("time_value").toLocalTime()));
     }
 
     @Override
     public List<Reservation> findAll() {
-        String query = "SELECT * FROM reservation";
+        String query = """
+                SELECT
+                    r.id as reservation_id,
+                    r.name,
+                    r.date,
+                    t.id as time_id,
+                    t.start_at as time_value
+                FROM reservation as r
+                inner join reservation_time as t
+                on r.time_id = t.id
+                """;
         return jdbcTemplate.query(query, reservationRowMapper);
     }
 
     @Override
-    public boolean existsByDateAndTime(final LocalDate date, final LocalTime time) {
-        String query = "SELECT COUNT(*) FROM reservation WHERE date = ? AND time = ?";
-        Integer found = jdbcTemplate.queryForObject(query, Integer.class, date, time);
+    public boolean existsByDateAndTimeId(final LocalDate date, final long timeId) {
+        String query = "SELECT COUNT(*) FROM reservation WHERE date = ? AND time_id = ?";
+        Integer found = jdbcTemplate.queryForObject(query, Integer.class, date, timeId);
         return found != null && found > 0;
     }
 
@@ -51,7 +61,7 @@ public class JdbcReservationDAO implements ReservationDAO {
         SqlParameterSource parameters = new MapSqlParameterSource()
                 .addValue("name", reservation.getName())
                 .addValue("date", Date.valueOf(reservation.getDate()))
-                .addValue("time", Time.valueOf(reservation.getTime()));
+                .addValue("time_id", reservation.getTime().getId());
         Number newId = simpleJdbcInsert.executeAndReturnKey(parameters);
         return newId.longValue();
     }

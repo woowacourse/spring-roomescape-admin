@@ -1,32 +1,44 @@
-package roomescape.domain;
+package roomescape.service;
 
-import dao.InMemoryReservationDAO;
 import java.time.LocalDate;
 import java.time.LocalTime;
 import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
-import roomescape.service.ReservationService;
+import roomescape.dao.ImMemoryReservationTimeDAO;
+import roomescape.dao.InMemoryReservationDAO;
+import roomescape.domain.Reservation;
+import roomescape.domain.ReservationTime;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertAll;
 
 class ReservationServiceTest {
 
+    ReservationTimeService reservationTimeService;
+    ReservationService reservationService;
+
+    @BeforeEach
+    void provideService() {
+        ReservationTime time = new ReservationTime(LocalTime.of(10, 10));
+
+        reservationTimeService = new ReservationTimeService(
+                new ImMemoryReservationTimeDAO(new ArrayList<>()));
+        long savedTimeId = reservationTimeService.addReservationTime(time);
+        time = time.withId(savedTimeId);
+
+        reservationService = new ReservationService(new InMemoryReservationDAO(new ArrayList<>()));
+        reservationService.addReservation(new Reservation("reservation",
+                LocalDate.of(2025, 1, 1), time));
+    }
+
     @Test
     @DisplayName("같은 날짜 및 시간 예약이 존재하지 않을 경우, 예약 정보를 저장한 다음 id를 리턴한다")
     void saveReservation() {
         //given
         LocalDate date = LocalDate.of(2025, 4, 16);
-        LocalTime time = LocalTime.of(10, 10);
-        List<Reservation> currentReservation = new ArrayList<>();
-        ReservationService reservationService = new ReservationService(new InMemoryReservationDAO(currentReservation));
-        reservationService.addReservation(new Reservation("notSameReservation",
-                LocalDate.of(2025, 1, 1),
-                LocalTime.of(10, 10)));
-
+        ReservationTime time = reservationTimeService.findById(1L).get();
         //when
         Reservation reservation = new Reservation("test", date, time);
         long savedId = reservationService.addReservation(reservation);
@@ -39,21 +51,12 @@ class ReservationServiceTest {
 
     }
 
-    private static List<Reservation> provideReservationWithSameDateTime(LocalDate date, LocalTime time) {
-        return new ArrayList<>(Arrays.asList(new Reservation("sameReservation", date, time),
-                new Reservation("notSameReservation",
-                        LocalDate.of(2025, 1, 1),
-                        LocalTime.of(10, 10))));
-    }
-
     @Test
     @DisplayName("같은 날짜 및 시간 예약이 존재하면 -1을 리턴한다")
     void exceptionWhenSameDateTime() {
         //given
-        LocalDate date = LocalDate.of(2025, 4, 16);
-        LocalTime time = LocalTime.of(10, 10);
-        List<Reservation> currentReservation = provideReservationWithSameDateTime(date, time);
-        ReservationService reservationService = new ReservationService(new InMemoryReservationDAO(currentReservation));
+        LocalDate date = LocalDate.of(2025, 1, 1);
+        ReservationTime time = reservationTimeService.findById(1L).get();
 
         //when & then
         Reservation duplicated = new Reservation("test", date, time);
@@ -66,10 +69,8 @@ class ReservationServiceTest {
     void removeReservationById() {
         //given
         LocalDate date = LocalDate.of(2025, 4, 16);
-        LocalTime time = LocalTime.of(10, 10);
-        List<Reservation> currentReservation = provideReservationWithSameDateTime(date, time);
-        ReservationService reservationService = new ReservationService(new InMemoryReservationDAO(currentReservation));
-        long existedId = currentReservation.getFirst().getId();
+        ReservationTime time = reservationTimeService.findById(1L).get();
+        long existedId = 1L;
 
         //when
         boolean actual = reservationService.removeReservationById(existedId);
@@ -83,7 +84,7 @@ class ReservationServiceTest {
     void removeNotExistReservationById() {
         //given
         ReservationService reservationService = new ReservationService(new InMemoryReservationDAO(new ArrayList<>()));
-        long notExistId = 1;
+        long notExistId = 1L;
 
         //when
         boolean actual = reservationService.removeReservationById(notExistId);

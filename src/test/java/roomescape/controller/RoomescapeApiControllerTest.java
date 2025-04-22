@@ -3,14 +3,29 @@ package roomescape.controller;
 import io.restassured.RestAssured;
 import io.restassured.http.ContentType;
 import java.util.Map;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.test.annotation.DirtiesContext;
 
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.DEFINED_PORT)
 @DirtiesContext(classMode = DirtiesContext.ClassMode.BEFORE_EACH_TEST_METHOD)
 class RoomescapeApiControllerTest {
+
+    @Autowired
+    private JdbcTemplate jdbcTemplate;
+
+    @BeforeEach
+    void setDB() {
+        jdbcTemplate.execute("DELETE FROM reservation");
+        jdbcTemplate.execute("DELETE FROM reservation_time");
+        jdbcTemplate.execute("ALTER TABLE reservation ALTER COLUMN id RESTART WITH 1");
+        jdbcTemplate.execute("ALTER TABLE reservation_time ALTER COLUMN id RESTART WITH 1");
+        jdbcTemplate.update("INSERT INTO reservation_time (start_at) VALUES (?)", "15:40");
+    }
 
     @Test
     @DisplayName("같은 날짜 및 시간 예약이 존재하면 400 Bad Request를 던진다")
@@ -18,7 +33,7 @@ class RoomescapeApiControllerTest {
         //given
         Map<String, String> params = Map.of("name", "브라운",
                 "date", "2023-08-05",
-                "time", "15:40");
+                "timeId", "1");
 
         RestAssured.given().log().all()
                 .contentType(ContentType.JSON)
@@ -29,7 +44,7 @@ class RoomescapeApiControllerTest {
 
         Map<String, String> duplicated = Map.of("name", "네오",
                 "date", "2023-08-05",
-                "time", "15:40");
+                "timeId", "1");
 
         //when & then
         RestAssured.given().log().all()

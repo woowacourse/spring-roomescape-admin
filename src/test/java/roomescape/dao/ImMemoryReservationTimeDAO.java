@@ -1,10 +1,10 @@
-package dao;
+package roomescape.dao;
 
 import java.time.LocalTime;
 import java.util.Collections;
 import java.util.List;
+import java.util.Optional;
 import java.util.concurrent.atomic.AtomicLong;
-import roomescape.dao.ReservationTimeDAO;
 import roomescape.domain.ReservationTime;
 
 public class ImMemoryReservationTimeDAO implements ReservationTimeDAO {
@@ -21,6 +21,13 @@ public class ImMemoryReservationTimeDAO implements ReservationTimeDAO {
     @Override
     public List<ReservationTime> findAll() {
         return Collections.unmodifiableList(reservationTimes);
+    }
+
+    @Override
+    public Optional<ReservationTime> findById(final long id) {
+        return reservationTimes.stream()
+                .filter(reservationTime -> reservationTime.getId() == id)
+                .findAny();
     }
 
     @Override

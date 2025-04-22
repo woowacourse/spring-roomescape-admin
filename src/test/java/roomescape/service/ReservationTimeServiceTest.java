@@ -1,12 +1,12 @@
-package roomescape.domain;
+package roomescape.service;
 
-import dao.ImMemoryReservationTimeDAO;
 import java.time.LocalTime;
 import java.util.ArrayList;
 import java.util.List;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
-import roomescape.service.ReservationTimeService;
+import roomescape.dao.ImMemoryReservationTimeDAO;
+import roomescape.domain.ReservationTime;
 
 import static org.assertj.core.api.Assertions.assertThat;
 

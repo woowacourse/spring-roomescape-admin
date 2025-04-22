@@ -2,6 +2,7 @@ package roomescape.dao;
 
 import java.time.LocalTime;
 import java.util.List;
+import java.util.Optional;
 import javax.sql.DataSource;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;
@@ -31,8 +32,14 @@ public class JdbcReservationTimeDAO implements ReservationTimeDAO {
 
     @Override
     public List<ReservationTime> findAll() {
-        String query = "SELECT * from reservation_time";
+        String query = "SELECT * FROM reservation_time";
         return jdbcTemplate.query(query, reservationTimeRowMapper);
+    }
+
+    @Override
+    public Optional<ReservationTime> findById(final long id) {
+        String query = "SELECT * FROM reservation_time WHERE id = ?";
+        return Optional.ofNullable(jdbcTemplate.queryForObject(query, reservationTimeRowMapper, id));
     }
 
     @Override

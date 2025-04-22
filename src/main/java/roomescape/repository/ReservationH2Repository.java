@@ -43,17 +43,19 @@ public class ReservationH2Repository implements ReservationRepository {
 
     @Override
     public List<Reservation> findAll() {
-        String query = "SELECT * FROM reservation";
+        String query = "SELECT * FROM reservation as r inner join reservation_time as rt"
+                + " on r.time_id = rt.id";
 
-        return jdbcTemplate.query(query, ((rs, rowNum) ->
-                new Reservation(
-                        rs.getLong("id"),
+        return jdbcTemplate.query(query, (rs, rowNum) ->
+                new Reservation(rs.getLong("id"),
                         rs.getString("name"),
                         rs.getDate("date").toLocalDate(),
-                        null
-//                        rs.getTime("time").toLocalTime()
+                        new ReservationTime(
+                                rs.getLong("reservation_time.id"),
+                                rs.getTime("start_at").toLocalTime()
+                        )
                 )
-        ));
+        );
     }
 
     @Override

@@ -5,29 +5,25 @@ import static org.hamcrest.core.Is.is;
 
 import io.restassured.RestAssured;
 import io.restassured.http.ContentType;
-import java.time.Clock;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.boot.test.context.TestConfiguration;
-import org.springframework.context.annotation.Bean;
-import org.springframework.context.annotation.Primary;
+import org.springframework.context.annotation.Import;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.test.annotation.DirtiesContext;
-import org.springframework.test.context.ActiveProfiles;
-import roomescape.common.Constant;
-import roomescape.domain.Reservation;
+import roomescape.config.TestClockConfig;
 import roomescape.dto.ReservationResponse;
 
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.DEFINED_PORT)
 @DirtiesContext(classMode = DirtiesContext.ClassMode.BEFORE_EACH_TEST_METHOD)
+@Import(TestClockConfig.class)
 class MissionStepTest {
     private final Map<String, String> CREATE_RESERVATION_PARAMS = Map.of(
             "name", "브라운",
-            "date", "2025-08-05",
+            "date", "2025-04-22",
             "timeId", "1"
     );
     private final Map<String, String> CREATE_TIME_PARAMS = Map.of(
@@ -103,7 +99,7 @@ class MissionStepTest {
         createTime();
         jdbcTemplate.update("INSERT INTO reservation (name, date, time_id) VALUES (?, ?, ?)",
                 "브라운",
-                "2023-08-05",
+                "2025-04-22",
                 1L
         );
 
@@ -137,7 +133,7 @@ class MissionStepTest {
         createTime();
         Map<String, String> params = new HashMap<>();
         params.put("name", "브라운");
-        params.put("date", "2023-08-05");
+        params.put("date", "2025-04-22");
         params.put("timeId", "1");
 
         RestAssured.given().log().all()
@@ -187,7 +183,7 @@ class MissionStepTest {
     void 예약을_추가한다() {
         Map<String, Object> reservation = new HashMap<>();
         reservation.put("name", "브라운");
-        reservation.put("date", "2023-08-05");
+        reservation.put("date", "2025-04-22");
         reservation.put("timeId", 1);
 
         Map<String, String> params = new HashMap<>();

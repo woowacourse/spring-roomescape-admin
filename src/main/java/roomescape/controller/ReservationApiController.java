@@ -11,7 +11,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import roomescape.dao.ReservationDao;
-import roomescape.dao.TimeDao;
+import roomescape.dao.ReservationTimeDao;
 import roomescape.domain.Reservation;
 import roomescape.domain.ReservationDate;
 import roomescape.domain.ReservationDateTime;
@@ -25,16 +25,16 @@ import roomescape.dto.ReservationResponse;
 public class ReservationApiController {
     private final Clock clock;
     private final ReservationDao reservationDao;
-    private final TimeDao timeDao;
+    private final ReservationTimeDao reservationTimeDao;
 
     public ReservationApiController(
             final Clock clock,
             final ReservationDao reservationDao,
-            final TimeDao timeDao
+            final ReservationTimeDao reservationTimeDao
     ) {
         this.clock = clock;
         this.reservationDao = reservationDao;
-        this.timeDao = timeDao;
+        this.reservationTimeDao = reservationTimeDao;
     }
 
     @GetMapping
@@ -47,12 +47,13 @@ public class ReservationApiController {
     public ResponseEntity<ReservationResponse> createReservation(
             @RequestBody final CreateReservationRequest createReservationRequest
     ) {
-        ReservationTime reservationTime = timeDao.findTime(createReservationRequest.timeId())
+        ReservationTime reservationTime = reservationTimeDao.findTime(createReservationRequest.timeId())
                 .orElseThrow(() -> new IllegalArgumentException("존재하지 않는 예약시간입니다."));
         ReservationName name = new ReservationName(createReservationRequest.name());
         ReservationDateTime dateTime = new ReservationDateTime(
                 new ReservationDate(createReservationRequest.date()),
-                reservationTime
+                reservationTime,
+                clock
         );
         Reservation savedReservation = reservationDao.createReservation(name, dateTime);
         return ResponseEntity.ok(ReservationResponse.from(savedReservation));

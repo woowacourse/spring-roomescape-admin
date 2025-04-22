@@ -39,12 +39,10 @@ public class ReservationDao {
         return jdbcTemplate.query(sql, (resultSet, rowNum) -> new Reservation(
                 resultSet.getLong("id"),
                 new ReservationName(resultSet.getString("name")),
-                new ReservationDateTime(
-                        new ReservationDate(parseDate(resultSet.getString("date"))),
-                        new ReservationTime(
-                                resultSet.getLong("time_id"),
-                                parseTime(resultSet.getString("time_value"))
-                        )
+                new ReservationDate(parseDate(resultSet.getString("date"))),
+                new ReservationTime(
+                        resultSet.getLong("time_id"),
+                        parseTime(resultSet.getString("time_value"))
                 )
         ));
     }
@@ -63,7 +61,8 @@ public class ReservationDao {
         return new Reservation(
                 Objects.requireNonNull(keyHolder.getKey()).longValue(),
                 name,
-                dateTime
+                dateTime.reservationDate(),
+                dateTime.reservationTime()
         );
     }
 

@@ -1,5 +1,6 @@
 package roomescape.domain;
 
+import java.time.Clock;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.LocalTime;
@@ -9,9 +10,16 @@ public class ReservationDateTime {
     private final ReservationDate reservationDate;
     private final ReservationTime reservationTime;
 
-    public ReservationDateTime(final ReservationDate reservationDate, final ReservationTime reservationTime) {
+    public ReservationDateTime(
+            final ReservationDate reservationDate,
+            final ReservationTime reservationTime,
+            final Clock clock
+            ) {
         this.reservationDate = Objects.requireNonNull(reservationDate, "예약 날짜는 null일 수 없습니다.");
         this.reservationTime = Objects.requireNonNull(reservationTime, "예약 시간은 null일 수 없습니다.");
+        if (!this.isAfter(LocalDateTime.now(clock))) {
+            throw new IllegalArgumentException("예약 일시는 현재 이후여야 합니다.");
+        }
     }
 
     public LocalDate date() {

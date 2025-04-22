@@ -12,10 +12,10 @@ import org.springframework.stereotype.Repository;
 import roomescape.domain.ReservationTime;
 
 @Repository
-public class TimeDao {
+public class ReservationTimeDao {
     private final JdbcTemplate jdbcTemplate;
 
-    public TimeDao(final JdbcTemplate jdbcTemplate) {
+    public ReservationTimeDao(final JdbcTemplate jdbcTemplate) {
         this.jdbcTemplate = jdbcTemplate;
     }
 

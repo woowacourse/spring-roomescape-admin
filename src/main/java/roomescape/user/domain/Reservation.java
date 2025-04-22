@@ -24,8 +24,8 @@ public class Reservation {
         this.time = time;
     }
 
-    public Reservation(final Long id, final String name, final String date, final String time) {
-        this(id, name, LocalDate.parse(date), LocalTime.parse(time));
+    public Reservation(final String name, final LocalDate date, final LocalTime time) {
+        this(null, name, date, time);
     }
 
     private void validateNotNull(final String name, final LocalDate date, final LocalTime time) {

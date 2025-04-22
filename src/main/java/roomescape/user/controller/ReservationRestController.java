@@ -12,6 +12,8 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import roomescape.exception.DataNotFoundException;
+import roomescape.user.controller.dto.ReservationRequest;
+import roomescape.user.controller.dto.ReservationResponse;
 import roomescape.user.domain.Reservation;
 import roomescape.user.repository.reservation.ReservationRepository;
 
@@ -37,19 +39,22 @@ public class ReservationRestController {
     }
 
     @PostMapping
-    public ResponseEntity<Reservation> persistReservation(
-            @RequestBody final Reservation reservation
+    public ResponseEntity<ReservationResponse> persistReservation(
+            @RequestBody final ReservationRequest reservationRequest
     ) {
-        final Long id = reservationRepository.save(reservation);
+        final Long id = reservationRepository.save(reservationRequest.toReservation());
         final Reservation found = reservationRepository.getOneById(id);
-        return ResponseEntity.ok(found);
+        return ResponseEntity.ok(ReservationResponse.from(found));
     }
 
     @GetMapping
-    public ResponseEntity<List<Reservation>> retrieveReservations() {
+    public ResponseEntity<List<ReservationResponse>> retrieveReservations() {
         final List<Reservation> reservations = reservationRepository.findAll();
-
-        return ResponseEntity.ok(reservations);
+        final List<ReservationResponse> reservationResponses = reservations.stream()
+                .map(ReservationResponse::from)
+                .toList();
+        
+        return ResponseEntity.ok(reservationResponses);
     }
 
     @DeleteMapping("/{id}")

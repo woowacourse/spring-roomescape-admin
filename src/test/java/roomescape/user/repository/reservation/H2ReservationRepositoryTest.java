@@ -26,7 +26,6 @@ class H2ReservationRepositoryTest {
         final String name = "헤일러";
         final LocalDate date = LocalDate.parse("2023-08-05");
         final LocalTime time = LocalTime.parse("15:40");
-//        final ReservationTime reservationTime = new ReservationTime(null, time);
         final Reservation reservation = new Reservation(null, name, date, time);
 
         // when & then
@@ -37,8 +36,16 @@ class H2ReservationRepositoryTest {
     @Test
     void 예약_정보_목록을_조회한다() {
         // given
-        Reservation reservation1 = new Reservation(null, "헤일러", "2025-08-01", "10:00");
-        Reservation reservation2 = new Reservation(null, "머피", "2025-08-01", "18:00");
+        final String name = "헤일러";
+        final LocalDate date = LocalDate.parse("2025-08-01");
+        final LocalTime time = LocalTime.parse("10:00");
+        final Reservation reservation1 = new Reservation(name, date, time);
+
+        final String name2 = "머피";
+        final LocalDate date2 = LocalDate.parse("2025-08-01");
+        final LocalTime time2 = LocalTime.parse("18:00");
+        final Reservation reservation2 = new Reservation(name2, date2, time2);
+
         h2ReservationRepository.save(reservation1);
         h2ReservationRepository.save(reservation2);
 

@@ -64,8 +64,8 @@ public class H2ReservationRepository implements ReservationRepository {
     public List<Reservation> findAll() {
         final String sql = """
                 select
-                    r.id, 
-                    r.name, 
+                    r.id,
+                    r.name,
                     r.date,
                     t.id as time_id,
                     t.start_at as started_at

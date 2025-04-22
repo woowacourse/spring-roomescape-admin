@@ -21,11 +21,21 @@ class AdminControllerTest {
     }
 
     @Test
-    @DisplayName("모든 예약 페이지를 반환한다.")
-    void getAllReservations() {
+    @DisplayName("예약 페이지를 반환한다.")
+    void getReservationPage() {
         RestAssured
                 .given().log().all()
                 .when().get("/admin/reservation")
+                .then().log().all()
+                .statusCode(200);
+    }
+
+    @Test
+    @DisplayName("시간 페이지를 반환한다.")
+    void getTimePage() {
+        RestAssured
+                .given().log().all()
+                .when().get("/admin/time")
                 .then().log().all()
                 .statusCode(200);
     }

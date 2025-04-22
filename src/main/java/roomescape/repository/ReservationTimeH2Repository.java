@@ -61,10 +61,16 @@ public class ReservationTimeH2Repository implements ReservationTimeRepository {
     public Optional<ReservationTime> findById(Long id) {
         String query = "SELECT * FROM reservation_time WHERE id = ?";
 
-        ReservationTime reservationTime = jdbcTemplate.queryForObject(query, (rs, rowNum) ->
-                new ReservationTime(rs.getLong("id"), rs.getTime("start_at").toLocalTime())
+        List<ReservationTime> result = jdbcTemplate.query(
+                query,
+                (rs, rowNum) -> new ReservationTime(
+                        rs.getLong("id"),
+                        rs.getTime("start_at").toLocalTime()
+                ),
+                id
         );
 
-        return Optional.ofNullable(reservationTime);
+        return result.stream().findAny();
     }
+
 }

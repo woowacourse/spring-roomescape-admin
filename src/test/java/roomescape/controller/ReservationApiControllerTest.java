@@ -8,9 +8,11 @@ import io.restassured.http.ContentType;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.boot.test.web.server.LocalServerPort;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.test.annotation.DirtiesContext;
 import org.springframework.test.context.ActiveProfiles;
@@ -21,6 +23,8 @@ import roomescape.dto.ReservationResponse;
 @DirtiesContext(classMode = DirtiesContext.ClassMode.BEFORE_EACH_TEST_METHOD)
 class ReservationApiControllerTest {
 
+    @LocalServerPort
+    private int port;
     @Autowired
     private JdbcTemplate jdbcTemplate;
 
@@ -39,6 +43,11 @@ class ReservationApiControllerTest {
         params.put("date", "2023-08-05");
         params.put("time", "15:40");
         return params;
+    }
+
+    @BeforeEach
+    void setUp() {
+        RestAssured.port = port;
     }
 
     @Test

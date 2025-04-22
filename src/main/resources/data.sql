@@ -1,5 +1,10 @@
-INSERT INTO reservation (name, reservation_date, reservation_time)
+INSERT INTO reservation_time (start_at)
 VALUES
-    ('브라운', '2024-04-01', '10:00'),
-    ('솔라',   '2024-04-01', '11:00'),
-    ('브리',   '2024-04-02', '14:00');
+    ('10:00'),
+    ('11:00');
+
+INSERT INTO reservation (name, date, time_id)
+VALUES
+    ('브라운', '2024-04-01', 1),
+    ('솔라',   '2024-04-01', 2),
+    ('브리',   '2024-04-02', 1);

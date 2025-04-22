@@ -10,35 +10,30 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import roomescape.dto.request.ReservationRequest;
 import roomescape.dto.response.ReservationResponse;
-import roomescape.mapper.ReservationMapper;
-import roomescape.model.Reservation;
-import roomescape.repository.ReservationRepository;
+import roomescape.service.ReservationService;
 
 @RestController
 @RequestMapping("/reservations")
 public class ReservationController {
 
-    private final ReservationRepository repository;
+    private final ReservationService service;
 
-    public ReservationController(ReservationRepository repository) {
-        this.repository = repository;
+    public ReservationController(ReservationService service) {
+        this.service = service;
     }
 
     @GetMapping
     public List<ReservationResponse> getAllReservations() {
-        List<Reservation> allReservations = repository.findAll();
-        return ReservationMapper.toDtos(allReservations);
+        return service.getAllReservations();
     }
 
     @PostMapping
     public ReservationResponse addReservation(@RequestBody ReservationRequest request) {
-        Reservation reservation = ReservationMapper.toDomain(request);
-        Long id = repository.save(reservation);
-        return ReservationMapper.toDto(Reservation.withId(id, reservation));
+        return service.registerReservation(request);
     }
 
     @DeleteMapping("/{id}")
     public void deleteReservation(@PathVariable("id") Long id) {
-        repository.deleteById(id);
+        service.cancelReservation(id);
     }
 }

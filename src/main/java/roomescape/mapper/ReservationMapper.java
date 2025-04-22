@@ -1,33 +1,29 @@
 package roomescape.mapper;
 
 import java.time.LocalDate;
-import java.time.LocalDateTime;
-import java.time.LocalTime;
 import java.time.format.DateTimeFormatter;
 import java.util.List;
 import roomescape.dto.request.ReservationRequest;
 import roomescape.dto.response.ReservationResponse;
+import roomescape.dto.response.TimeResponse;
 import roomescape.model.Reservation;
+import roomescape.model.ReservationTime;
 
 public class ReservationMapper {
-    public static Reservation toDomain(ReservationRequest request) {
+    public static Reservation toDomain(ReservationRequest request, ReservationTime reservationTime) {
         LocalDate date = LocalDate.parse(request.date());
-        LocalTime time = LocalTime.parse(request.time());
-        LocalDateTime reservationTime = LocalDateTime.of(date, time);
-
-        return Reservation.withoutId(request.name(), reservationTime);
+        return Reservation.withoutId(request.name(), date, reservationTime);
     }
 
-    private static final DateTimeFormatter TIME_FORMATTER = java.time.format.DateTimeFormatter.ofPattern("HH:mm");
     private static final DateTimeFormatter DATE_FORMATTER = DateTimeFormatter.ofPattern("yyyy-MM-dd");
 
     public static ReservationResponse toDto(Reservation reservation) {
-        LocalDateTime dateTime = reservation.getReservationTime();
         return new ReservationResponse(
                 reservation.getId(),
                 reservation.getName(),
-                dateTime.toLocalDate().format(DATE_FORMATTER),
-                dateTime.toLocalTime().format(TIME_FORMATTER));
+                reservation.getReservationDate().format(DATE_FORMATTER),
+                TimeResponse.toDto(reservation.getReservationTime())
+        );
     }
 
     public static List<ReservationResponse> toDtos(List<Reservation> reservations) {

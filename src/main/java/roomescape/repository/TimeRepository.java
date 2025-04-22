@@ -51,6 +51,16 @@ public class TimeRepository {
         );
     }
 
+    public ReservationTime findById(Long id) {
+        String selectOneSql = "SELECT id, start_at FROM reservation_time WHERE id=?";
+        return jdbcTemplate.queryForObject(selectOneSql,
+                (rs, rowNum) -> ReservationTime.of(
+                        rs.getLong("id"),
+                        rs.getTime("start_at").toLocalTime()
+                ),
+                id);
+    }
+
     public void deleteById(Long id) {
         String deleteSql = "DELETE FROM reservation_time WHERE id=?";
         jdbcTemplate.update(deleteSql, id);

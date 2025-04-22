@@ -3,7 +3,6 @@ package roomescape.repository;
 import java.sql.Date;
 import java.sql.PreparedStatement;
 import java.sql.Statement;
-import java.sql.Time;
 import java.time.LocalDate;
 import java.time.LocalTime;
 import java.util.List;
@@ -13,6 +12,7 @@ import org.springframework.jdbc.support.GeneratedKeyHolder;
 import org.springframework.jdbc.support.KeyHolder;
 import org.springframework.stereotype.Repository;
 import roomescape.model.Reservation;
+import roomescape.model.ReservationTime;
 
 @Repository
 public class ReservationRepository {
@@ -23,35 +23,44 @@ public class ReservationRepository {
         this.jdbcTemplate = jdbcTemplate;
     }
 
-    private final RowMapper<Reservation> reservationRowMapper =
+    private final static RowMapper<Reservation> reservationRowMapper =
             (rs, rowNum) -> {
-                LocalDate date = rs.getObject("reservation_date", LocalDate.class);
-                LocalTime time = rs.getObject("reservation_time", LocalTime.class);
-                return Reservation.of(
-                        rs.getLong("id"),
-                        rs.getString("name"),
-                        date,
-                        time
-                );
+                Long id = rs.getLong("id");
+                String name = rs.getString("name");
+                LocalDate date = rs.getObject("date", LocalDate.class);
+                Long time_id = rs.getLong("time_id");
+                LocalTime time = rs.getObject("time_value", LocalTime.class);
+
+                return Reservation.of(id, name, date, ReservationTime.of(time_id, time));
             };
 
     public List<Reservation> findAll() {
-        String findAllSql = "SELECT id, name, reservation_date, reservation_time FROM reservation";
+        String findAllSql = """
+                SELECT
+                    r.id as reservation_id,
+                    r.name,
+                    r.date,
+                    t.id as time_id,
+                    t.start_at as time_value
+                FROM reservation as r
+                inner join reservation_time as t
+                on r.time_id = t.id
+                """;
         return jdbcTemplate.query(findAllSql, reservationRowMapper);
     }
 
     public Long save(Reservation reservation) {
         KeyHolder keyHolder = new GeneratedKeyHolder();
 
-        String insertSql = "INSERT INTO reservation(name, reservation_date, reservation_time) VALUES(?, ?, ?)";
+        String insertSql = "INSERT INTO reservation(name, date, time_id) VALUES(?, ?, ?)";
         jdbcTemplate.update(connection -> {
             PreparedStatement ps = connection.prepareStatement(
                     insertSql,
                     Statement.RETURN_GENERATED_KEYS
             );
             ps.setString(1, reservation.getName());
-            ps.setDate(2, Date.valueOf(reservation.getReservationTime().toLocalDate()));
-            ps.setTime(3, Time.valueOf(reservation.getReservationTime().toLocalTime()));
+            ps.setDate(2, Date.valueOf(reservation.getReservationDate()));
+            ps.setLong(3, reservation.getReservationTime().getId());
             return ps;
         }, keyHolder);
 

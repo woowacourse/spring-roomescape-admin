@@ -200,7 +200,39 @@ public class MissionStepTest {
                 .statusCode(200);
     }
 
-    private static void addAnyTime() {
+    @DisplayName("/times DELETE 요청에 존재하지 않는 자원이면 404로 응답한다")
+    @Test
+    void reservation_time_delete_api_not_found() {
+        RestAssured.given().log().all()
+                .when().delete("/times/1")
+                .then().log().all()
+                .statusCode(404);
+    }
+
+    @Test
+    void step_eight() {
+        addAnyTime();
+
+        Map<String, Object> reservation = new HashMap<>();
+        reservation.put("name", "브라운");
+        reservation.put("date", "2023-08-05");
+        reservation.put("timeId", 1);
+
+        RestAssured.given().log().all()
+                .contentType(ContentType.JSON)
+                .body(reservation)
+                .when().post("/reservations")
+                .then().log().all()
+                .statusCode(200);
+
+        RestAssured.given().log().all()
+                .when().get("/reservations")
+                .then().log().all()
+                .statusCode(200)
+                .body("size()", is(1));
+    }
+
+    private void addAnyTime() {
         Map<String, String> params = new HashMap<>();
         params.put("startAt", "10:00");
 

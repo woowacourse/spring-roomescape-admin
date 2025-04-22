@@ -17,6 +17,10 @@ public class ReservationTime {
         return new ReservationTime(null, startAt);
     }
 
+    public static ReservationTime of(final Long id, final LocalTime startAt) {
+        return new ReservationTime(id, startAt);
+    }
+
     private void validateTime(final LocalTime startAt) {
         if (startAt == null) {
             throw new IllegalArgumentException("[ERROR] 예약 시간은 반드시 입력해야 합니다.");

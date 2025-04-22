@@ -26,11 +26,13 @@ public class H2ReservationDao implements ReservationDao {
         resultSet.getObject("datetime", LocalDateTime.class)
     );
 
+    @Override
     public List<Reservation> findAll() {
         String sql = "SELECT id, name, datetime FROM reservation";
         return jdbcTemplate.query(sql, reservationRowMapper);
     }
 
+    @Override
     public Reservation insert(final Reservation reservation) {
         SimpleJdbcInsert simpleJdbcInsert = new SimpleJdbcInsert(jdbcTemplate)
                 .withTableName("reservation")
@@ -43,7 +45,8 @@ public class H2ReservationDao implements ReservationDao {
 
         return Reservation.of(savedId.longValue(), reservation.getCustomerName(), reservation.getReservationDateTime());
     }
-    
+
+    @Override
     public boolean deleteById(final Long id) {
         String sql = "DELETE FROM reservation WHERE id = ?";
         int deletedRows = jdbcTemplate.update(sql, id);

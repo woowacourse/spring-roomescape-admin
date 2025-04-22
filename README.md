@@ -5,7 +5,7 @@
 - [x] 예약 페이지 반환 기능 구현
 
 ## API 명세
-- [x] 예약 조회 API
+- [ ] 예약 조회 API
   - Request
     - ```
       GET /reservations HTTP/1.1
@@ -20,26 +20,32 @@
               "id": 1,
               "name": "브라운",
               "date": "2023-01-01",
-              "time": "10:00"
+              "time": {
+                  "id": 1,
+                  "startAt": 10:00
+              }
           },
           {
               "id": 2,
               "name": "브라운",
               "date": "2023-01-02",
-              "time": "11:00"
+              "time": {
+                  "id": 2,
+                  "startAt": 11:00
+              }
           }
       ]
       ``` 
-- [x] 예약 추가 API 
+- [ ] 예약 추가 API 
   - Request
     - ```
       POST /reservations HTTP/1.1
       content-type: application/json 
     
       {
-      "date": "2023-08-05",
-      "name": "브라운",
-      "time": "15:40"
+          "date": "2023-08-05",
+          "name": "브라운",
+          "timeId": 1
       }
       ```
   - Response
@@ -48,10 +54,13 @@
       Content-Type: application/json
       
       {
-      "id": 1,
-      "name": "브라운",
-      "date": "2023-08-05",
-      "time": "15:40"
+          "id": 1,
+          "name": "브라운",
+          "date": "2023-08-05",
+          "time": {
+              "id": 1,
+              "startAt": 10:00
+          }
       }
       ```
 - [x] 예약 취소 API

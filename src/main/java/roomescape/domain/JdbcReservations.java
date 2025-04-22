@@ -23,7 +23,7 @@ public class JdbcReservations implements Reservations {
     @Override
     public List<Reservation> findAll() {
         final String sql = "SELECT id, name, date, time FROM reservation";
-        return jdbcTemplate.query(sql, actorRowMapper);
+        return jdbcTemplate.query(sql, reservationMapper);
     }
 
     @Override
@@ -49,10 +49,10 @@ public class JdbcReservations implements Reservations {
         jdbcTemplate.update(sql, id);
     }
 
-    private final RowMapper<Reservation> actorRowMapper = (resultSet, rowNum) -> new Reservation(
+    private final RowMapper<Reservation> reservationMapper = (resultSet, rowNum) -> new Reservation(
             resultSet.getLong("id"),
             resultSet.getString("name"),
-            LocalDate.parse(resultSet.getString("date")),
-            LocalTime.parse(resultSet.getString("time"))
+            resultSet.getObject("date", LocalDate.class),
+            resultSet.getObject("time", LocalTime.class)
     );
 }

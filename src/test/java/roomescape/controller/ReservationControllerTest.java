@@ -65,7 +65,7 @@ class ReservationControllerTest {
         reservationController.delete(1L);
 
         // then
-        List<Reservation> reservationList = reservationController.read().getBody();
-        Assertions.assertThat(reservationList).isEmpty();
+        List<Reservation> actualResponse = reservationController.read().getBody();
+        Assertions.assertThat(actualResponse).isEmpty();
     }
 }

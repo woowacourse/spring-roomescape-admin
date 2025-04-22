@@ -1,6 +1,7 @@
 package roomescape;
 
 import java.time.LocalTime;
+import java.util.Objects;
 import com.fasterxml.jackson.annotation.JsonFormat;
 
 public class ReservationTime {
@@ -17,6 +18,10 @@ public class ReservationTime {
 
     public static ReservationTime generateWithPrimaryKey(ReservationTime reservationTime, long newPrimaryKey) {
         return new ReservationTime(newPrimaryKey, reservationTime.startAt);
+    }
+
+    public boolean isSameId(Long id) {
+        return Objects.equals(this.id, id);
     }
 
     public long getId() {

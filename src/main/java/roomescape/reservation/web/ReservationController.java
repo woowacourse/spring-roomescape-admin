@@ -12,7 +12,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import roomescape.reservation.Reservation;
 import roomescape.reservation.dao.ReservationDao;
 import roomescape.time.ReservationTime;
-import roomescape.time.ReservationTimeDao;
+import roomescape.time.dao.ReservationTimeDao;
 
 @Controller
 @RequestMapping("/reservations")

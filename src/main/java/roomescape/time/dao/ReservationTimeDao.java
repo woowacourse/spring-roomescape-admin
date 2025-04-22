@@ -1,6 +1,7 @@
-package roomescape.time;
+package roomescape.time.dao;
 
 import java.util.List;
+import roomescape.time.ReservationTime;
 
 public interface ReservationTimeDao {
     List<ReservationTime> findAll();

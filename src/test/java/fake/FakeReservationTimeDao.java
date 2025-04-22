@@ -5,7 +5,7 @@ import java.util.Collections;
 import java.util.List;
 import org.springframework.dao.EmptyResultDataAccessException;
 import roomescape.time.ReservationTime;
-import roomescape.time.ReservationTimeDao;
+import roomescape.time.dao.ReservationTimeDao;
 
 public class FakeReservationTimeDao implements ReservationTimeDao {
     private List<ReservationTime> reservationTimes = new ArrayList<>();

@@ -15,7 +15,7 @@ import org.springframework.http.ResponseEntity;
 import roomescape.reservation.dao.ListBasedReservationDao;
 import roomescape.reservation.dao.ReservationDao;
 import roomescape.time.ReservationTime;
-import roomescape.time.ReservationTimeDao;
+import roomescape.time.dao.ReservationTimeDao;
 
 class ReservationControllerTest {
     private ReservationController reservationController;

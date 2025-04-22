@@ -10,19 +10,21 @@ public class Reservation {
     private long id;
     private String name;
     private LocalDate date;
-    private LocalTime time;
+    private ReservationTime time;
 
     public Reservation() {
     }
 
-    public Reservation(final long id, final String name, final LocalDate date, final LocalTime time) {
+    public Reservation(long id, String name, LocalDate date, ReservationTime time) {
+        validateNameLength(name);
+        validateDateTime(date, time);
         this.id = id;
         this.name = name;
         this.date = date;
         this.time = time;
     }
 
-    public Reservation(final String name, final LocalDate date, final LocalTime time) {
+    public Reservation(final String name, final LocalDate date, final ReservationTime time) {
         validateNameLength(name);
         validateDateTime(date, time);
         this.name = name;
@@ -42,7 +44,7 @@ public class Reservation {
         return date;
     }
 
-    public LocalTime getTime() {
+    public ReservationTime getReservationTime() {
         return time;
     }
 
@@ -60,7 +62,7 @@ public class Reservation {
         }
     }
 
-    private void validateDateTime(final LocalDate date, final LocalTime time) {
+    private void validateDateTime(final LocalDate date, final ReservationTime time) {
         if (date.isBefore(LocalDate.now()) || date.isEqual(LocalDate.now()) && time.isBefore(LocalTime.now())) {
             throw new IllegalArgumentException("예약 날짜와 시각은 현재보다 이전일 수 없습니다.");
         }

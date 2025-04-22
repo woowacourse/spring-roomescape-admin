@@ -15,6 +15,10 @@ public class ReservationTime {
         this.startAt = startAt;
     }
 
+    public boolean isBefore(final LocalTime comparedTime) {
+        return startAt.isBefore(comparedTime);
+    }
+
     public void setId(Long id) {
         this.id = id;
     }

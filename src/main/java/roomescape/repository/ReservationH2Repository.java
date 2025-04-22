@@ -4,11 +4,13 @@ import java.sql.Date;
 import java.sql.PreparedStatement;
 import java.sql.Statement;
 import java.util.List;
+import java.util.Optional;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.support.GeneratedKeyHolder;
 import org.springframework.jdbc.support.KeyHolder;
 import org.springframework.stereotype.Repository;
 import roomescape.domain.Reservation;
+import roomescape.domain.ReservationTime;
 
 @Repository
 public class ReservationH2Repository implements ReservationRepository {
@@ -62,5 +64,25 @@ public class ReservationH2Repository implements ReservationRepository {
         if (update == 0) {
             throw new IllegalArgumentException("id에 해당하는 예약 내역이 없습니다.");
         }
+    }
+
+    @Override
+    public Optional<Reservation> findById(final long id) {
+        String query = "SELECT * FROM reservation as r inner join reservation_time as rt"
+                + "on r.time_id = rt.id"
+                + "WHERE r.id = ?";
+
+        Reservation reservation = jdbcTemplate.queryForObject(query, (rs, rowNum) ->
+                new Reservation(rs.getLong("r.id"),
+                        rs.getString("name"),
+                        rs.getDate("date").toLocalDate(),
+                        new ReservationTime(
+                                rs.getLong("rt.id"),
+                                rs.getTime("rt.start_at").toLocalTime()
+                        )
+                )
+        );
+
+        return Optional.ofNullable(reservation);
     }
 }

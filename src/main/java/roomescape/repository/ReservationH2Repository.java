@@ -5,10 +5,12 @@ import java.sql.PreparedStatement;
 import java.sql.Statement;
 import java.util.List;
 import java.util.Optional;
+import org.springframework.http.HttpStatus;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.support.GeneratedKeyHolder;
 import org.springframework.jdbc.support.KeyHolder;
 import org.springframework.stereotype.Repository;
+import org.springframework.web.server.ResponseStatusException;
 import roomescape.domain.Reservation;
 import roomescape.domain.ReservationTime;
 
@@ -64,7 +66,7 @@ public class ReservationH2Repository implements ReservationRepository {
         int update = jdbcTemplate.update(query, id);
 
         if (update == 0) {
-            throw new IllegalArgumentException("id에 해당하는 예약 내역이 없습니다.");
+            throw new ResponseStatusException(HttpStatus.NOT_FOUND, "id에 해당하는 예약 내역이 없습니다.");
         }
     }
 

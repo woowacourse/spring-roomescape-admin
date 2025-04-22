@@ -1,6 +1,6 @@
 package roomescape.dto;
 
-import roomescape.Reservation;
+import roomescape.ReservationEntity;
 
 import java.time.LocalDate;
 import java.time.LocalTime;
@@ -11,7 +11,7 @@ public record ReservationResponseDto(
         LocalDate date,
         LocalTime time
 ) {
-    public static ReservationResponseDto from(Reservation reservation) {
+    public static ReservationResponseDto from(ReservationEntity reservation) {
         return new ReservationResponseDto(
                 reservation.id(),
                 reservation.name(),

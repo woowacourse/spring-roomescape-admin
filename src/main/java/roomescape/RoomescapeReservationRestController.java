@@ -11,26 +11,26 @@ import java.util.List;
 @RestController
 @RequestMapping("/reservations")
 public class RoomescapeReservationRestController {
-    private final Reservations reservations;
+    private final ReservationDAO reservationDAO;
 
     public RoomescapeReservationRestController(JdbcTemplate jdbcTemplate) {
-        this.reservations = new Reservations(jdbcTemplate);
+        this.reservationDAO = new ReservationDAO(jdbcTemplate);
     }
 
     @GetMapping
     public List<ReservationResponseDto> getAllReservation() {
-        return reservations.findAll()
+        return reservationDAO.findAll()
                 .stream()
                 .map(ReservationResponseDto::from)
                 .toList();
     }
 
     @PostMapping
-    public ResponseEntity<ReservationResponseDto> createReservation(@RequestBody ReservationRequestDto reservationRequestDto) {
-        Reservation entity = reservationRequestDto.toEntity();
+    public ResponseEntity<ReservationResponseDto> createReservation(@RequestBody ReservationRequestDto request) {
+        ReservationEntity entity = request.toEntity();
         try {
-            reservations.save(entity);
-            return ResponseEntity.ok().body(ReservationResponseDto.from(entity));
+            ReservationEntity saved = reservationDAO.save(entity);
+            return ResponseEntity.ok().body(ReservationResponseDto.from(saved));
         } catch (IllegalArgumentException e) {
             return ResponseEntity.badRequest().build();
         }
@@ -39,7 +39,7 @@ public class RoomescapeReservationRestController {
     @DeleteMapping("/{id}")
     public ResponseEntity<Void> deleteReservation(@PathVariable("id") Long id) {
         try {
-            reservations.deleteById(id);
+            reservationDAO.deleteById(id);
             return ResponseEntity.ok().build();
         } catch (IllegalArgumentException e) {
             return ResponseEntity.notFound().build();

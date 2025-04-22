@@ -1,27 +1,38 @@
 package roomescape;
 
 import org.springframework.jdbc.core.JdbcTemplate;
+import org.springframework.jdbc.support.GeneratedKeyHolder;
 import org.springframework.stereotype.Component;
 
+import java.sql.PreparedStatement;
 import java.time.LocalDate;
 import java.time.LocalTime;
 import java.util.List;
 
 @Component
-public class Reservations {
+public class ReservationDAO {
     private final JdbcTemplate jdbcTemplate;
 
-    public Reservations(JdbcTemplate jdbcTemplate) {
+    public ReservationDAO(JdbcTemplate jdbcTemplate) {
         this.jdbcTemplate = jdbcTemplate;
     }
 
-    public void save(Reservation newReservation) {
-        List<Reservation> allReservations = findAll();
-        if (allReservations.stream().anyMatch(reservation -> reservation.isDuplicatedWith(newReservation))) {
+    public ReservationEntity save(ReservationEntity newReservation) {
+        List<ReservationEntity> allReservations = findAll();
+        if (allReservations.stream().anyMatch(reservation -> reservation.isDuplicatedWith(newReservation.getDateTime()))) {
             throw new IllegalArgumentException("이미 예약이 존재하는 날짜입니다.");
         }
         String query = "INSERT INTO reservation (name, date, time) VALUES (?, ?, ?)";
-        jdbcTemplate.update(query, newReservation.name(), newReservation.date(), newReservation.time());
+        GeneratedKeyHolder keyHolder = new GeneratedKeyHolder();
+        jdbcTemplate.update(connection -> {
+            PreparedStatement preparedStatement = connection.prepareStatement(query, new String[]{"id"});
+            preparedStatement.setString(1, newReservation.name());
+            preparedStatement.setString(2, newReservation.date().toString());
+            preparedStatement.setString(3, newReservation.time().toString());
+            return preparedStatement;
+        }, keyHolder);
+        final long id = keyHolder.getKey().longValue();
+        return newReservation.changeId(id);
     }
 
     public void deleteById(final Long id) {
@@ -32,12 +43,12 @@ public class Reservations {
         }
     }
 
-    public List<Reservation> findAll() {
+    public List<ReservationEntity> findAll() {
         String query = "SELECT id, name, date, time FROM reservation";
         return jdbcTemplate.query(query, (resultSet, rowNum) -> {
             LocalDate date = resultSet.getObject("date", LocalDate.class);
             LocalTime time = resultSet.getObject("time", LocalTime.class);
-            return new Reservation(
+            return new ReservationEntity(
                     resultSet.getLong("id"),
                     resultSet.getString("name"),
                     date,

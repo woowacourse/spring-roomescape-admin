@@ -6,22 +6,24 @@ import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.Arguments;
 import org.junit.jupiter.params.provider.MethodSource;
 
+import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.time.LocalTime;
 import java.util.stream.Stream;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
-class ReservationTest {
+class ReservationEntityTest {
     @DisplayName("날짜와 시간이 동일한 경우 중복 예약으로 판단한다.")
     @Test
     void duplicateWhenDateAndTimeIsSame() {
         // given
-        LocalDateTime dateTime = LocalDateTime.of(2025, 1, 2, 10, 0);
-        Reservation reservation = Reservation.of("test", dateTime);
-        Reservation other = Reservation.of("test2", dateTime);
+        LocalDate date = LocalDate.of(2025, 1, 2);
+        LocalTime time = LocalTime.of(10, 0);
+        ReservationEntity reservation = new ReservationEntity(null, "test", date, time);
 
         // when
-        final boolean isSame = reservation.isDuplicatedWith(other);
+        final boolean isSame = reservation.isDuplicatedWith(LocalDateTime.of(date, time));
 
         // then
         assertThat(isSame).isTrue();
@@ -32,12 +34,12 @@ class ReservationTest {
     @MethodSource
     void duplicateWhenBetweenStartAndEnd(String description, LocalDateTime otherDateTime, boolean expected) {
         // given
-        LocalDateTime dateTime = LocalDateTime.of(2025, 1, 2, 10, 0);
-        Reservation reservation = Reservation.of("test", dateTime);
-        Reservation other = Reservation.of("test2", otherDateTime);
+        LocalDate date = LocalDate.of(2025, 1, 2);
+        LocalTime time = LocalTime.of(10, 0);
+        ReservationEntity reservation = new ReservationEntity(null, "test", date, time);
 
         // when
-        final boolean isDuplicated = reservation.isDuplicatedWith(other);
+        final boolean isDuplicated = reservation.isDuplicatedWith(otherDateTime);
 
         // then
         assertThat(isDuplicated).isSameAs(expected);

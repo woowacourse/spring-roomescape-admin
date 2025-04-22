@@ -6,26 +6,28 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.annotation.DirtiesContext;
 
-import java.time.LocalDateTime;
+import java.time.LocalDate;
+import java.time.LocalTime;
 
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.DEFINED_PORT)
 @DirtiesContext(classMode = DirtiesContext.ClassMode.BEFORE_EACH_TEST_METHOD)
-class ReservationsTest {
+class ReservationDAOTest {
     @Autowired
-    private Reservations reservations;
+    private ReservationDAO reservationDAO;
 
     @Test
     @DisplayName("같은 날짜, 같은 시각에 이미 예약이 존재하는 경우, 재생성할 수 없다.")
     void duplicateReservation() {
         // given
-        LocalDateTime dateTime = LocalDateTime.of(2025, 1, 2, 12, 0);
-        reservations.save(Reservation.of("test", dateTime));
+        LocalDate date = LocalDate.of(2025, 1, 2);
+        LocalTime time = LocalTime.of(12, 0);
+        reservationDAO.save(new ReservationEntity(null, "test", date, time));
 
         // when & then
         assertThatThrownBy(() -> {
-            reservations.save(Reservation.of("test2", dateTime));
+            reservationDAO.save(new ReservationEntity(null, "test2", date, time));
         }).isInstanceOf(IllegalArgumentException.class);
     }
 
@@ -36,7 +38,7 @@ class ReservationsTest {
 
         // when & then
         assertThatThrownBy(() -> {
-            reservations.deleteById(1L);
+            reservationDAO.deleteById(1L);
         }).isInstanceOf(IllegalArgumentException.class);
     }
 }

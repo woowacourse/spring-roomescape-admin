@@ -52,7 +52,7 @@ public class JDBCTest {
     }
 
     @Test
-    void 육단계() {
+    void 데이터_추가_삭제_테스트() {
         Map<String, String> params = new HashMap<>();
         params.put("name", "포라");
         params.put("date", "2025-08-05");

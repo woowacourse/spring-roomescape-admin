@@ -13,7 +13,7 @@ public class Reservations implements ReservationRepository {
 
     @Override
     public Reservation save(Reservation reservation) {
-        Reservation entity = Reservation.toEntity(index.getAndIncrement(), reservation);
+        Reservation entity = new Reservation(index.getAndIncrement(), reservation);
         reservations.add(entity);
         return entity;
     }

@@ -7,11 +7,11 @@ public class Name {
     }
 
     public Name(String value) {
-        validateNull(value);
+        validateBlank(value);
         this.value = value;
     }
 
-    private void validateNull(final String value) {
+    private void validateBlank(final String value) {
         if (value.isBlank()) {
             throw new IllegalArgumentException("이름이 비어있습니다.");
         }

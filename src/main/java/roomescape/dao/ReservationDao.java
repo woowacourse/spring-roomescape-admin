@@ -44,7 +44,7 @@ public class ReservationDao {
         return new Person(name);
     }
 
-    public long insertReservation(Reservation reservation) {
+    public Reservation insert(Reservation reservation) {
         String sql = "insert into reservation (name, date, time) values(?,?,?)";
         KeyHolder keyHolder = new GeneratedKeyHolder();
         jdbcTemplate.update(connection -> {
@@ -55,10 +55,11 @@ public class ReservationDao {
             return ps;
         }, keyHolder);
 
-        return keyHolder.getKey().longValue();
+        Long id = keyHolder.getKey().longValue();
+        return new Reservation(id, reservation);
     }
 
-    public long deleteReservation(Long id) {
+    public long deleteById(Long id) {
         String sql = "delete from reservation where id = ?";
         return jdbcTemplate.update(sql, id);
     }

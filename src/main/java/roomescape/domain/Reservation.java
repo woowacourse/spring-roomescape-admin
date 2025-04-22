@@ -22,8 +22,22 @@ public class Reservation {
         this.reservationTime = reservationTime;
     }
 
+    public Reservation(final long id, final Reservation reservation) {
+        this.id = id;
+        this.person = reservation.getPerson();
+        this.reservationTime = reservation.getReservationTime();
+    }
+
     public String getPersonName() {
         return person.name();
+    }
+
+    public Person getPerson() {
+        return person;
+    }
+
+    public ReservationTime getReservationTime() {
+        return reservationTime;
     }
 
     public LocalDate getDate() {

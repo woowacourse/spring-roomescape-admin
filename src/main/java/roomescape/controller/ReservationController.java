@@ -33,13 +33,13 @@ public class ReservationController {
     }
 
     @PostMapping()
-    public long createReservations(@RequestBody ReservationRequest reservationRequest) {
+    public Reservation createReservations(@RequestBody ReservationRequest reservationRequest) {
         Reservation reservation = reservationRequest.toReservation();
-        return reservationDao.insertReservation(reservation);
+        return reservationDao.insert(reservation);
     }
 
     @DeleteMapping("/{id}")
     public long deleteReservation(@PathVariable(name = "id") Long id) {
-        return reservationDao.deleteReservation(id);
+        return reservationDao.deleteById(id);
     }
 }

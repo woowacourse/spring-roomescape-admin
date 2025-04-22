@@ -22,7 +22,7 @@ public class JdbcReservationTimeRepository implements ReservationTimeRepository 
 
     private final RowMapper<ReservationTime> reservationRowMapper = (resultSet, rowNumber) -> {
         long id = resultSet.getLong("id");
-        LocalTime time = LocalTime.parse(resultSet.getTime("time").toString());
+        LocalTime time = LocalTime.parse(resultSet.getTime("start_at").toString());
         return new ReservationTime(id, time);
     };
 
@@ -31,7 +31,7 @@ public class JdbcReservationTimeRepository implements ReservationTimeRepository 
         KeyHolder keyHolder = new GeneratedKeyHolder();
         int update = jdbcTemplate.update(connection -> {
             PreparedStatement ps = connection.prepareStatement(
-                    "insert into reservation_time (time) values(?)",
+                    "insert into reservation_time (start_at) values(?)",
                     new String[]{"id"});
             ps.setTime(1, Time.valueOf(reservationTime.getTime()));
             return ps;
@@ -42,7 +42,7 @@ public class JdbcReservationTimeRepository implements ReservationTimeRepository 
 
     @Override
     public List<ReservationTime> findAll() {
-        String sql = "select id,time from reservation_time";
+        String sql = "select id,start_at from reservation_time";
         return jdbcTemplate.query(sql, reservationRowMapper);
     }
 

@@ -16,7 +16,7 @@ import roomescape.reservation.dao.ReservationDao;
 @Controller
 @RequestMapping("/reservations")
 public class ReservationController {
-    private ReservationDao reservationDao;
+    private final ReservationDao reservationDao;
 
     @Autowired
     public ReservationController(ReservationDao reservationDao) {

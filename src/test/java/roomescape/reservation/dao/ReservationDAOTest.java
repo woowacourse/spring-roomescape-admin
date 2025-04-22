@@ -14,7 +14,6 @@ import org.springframework.jdbc.core.JdbcTemplate;
 import roomescape.reservation.domain.Reservation;
 import roomescape.reservation.dto.request.ReservationRequest;
 
-//@JdbcTest는 @ComponentScan을 사용하지 않기 때문에, 수동으로 DAO 빈을 설정해야함
 @JdbcTest
 @Import(ReservationDAO.class)
 public class ReservationDAOTest {

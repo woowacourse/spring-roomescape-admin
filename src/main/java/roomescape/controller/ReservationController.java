@@ -7,7 +7,6 @@ import roomescape.domain.Reservation;
 import roomescape.dto.request.ReservationRequest;
 import roomescape.dto.response.ReservationResponse;
 
-import java.time.LocalDateTime;
 import java.util.List;
 
 @RestController
@@ -29,8 +28,7 @@ public class ReservationController {
 
     @PostMapping
     public ResponseEntity<?> createReservation(@RequestBody ReservationRequest reservationRequest) {
-        LocalDateTime dateTime = LocalDateTime.of(reservationRequest.date(), reservationRequest.time());
-        Reservation reservation = new Reservation(reservationRequest.name(), dateTime);
+        Reservation reservation = reservationRequest.toReservation();
         long id = reservationDao.insert(reservation);
         return ResponseEntity.ok(ReservationResponse.of(id, reservation));
     }

@@ -22,7 +22,7 @@ public class ReservationRestController {
     private final ReservationRepository reservationRepository;
 
     public ReservationRestController(
-            @Qualifier("h2ReservationRepository") ReservationRepository reservationRepository) {
+            @Qualifier("h2ReservationRepository") final ReservationRepository reservationRepository) {
         this.reservationRepository = reservationRepository;
     }
 
@@ -37,7 +37,9 @@ public class ReservationRestController {
     }
 
     @PostMapping
-    public ResponseEntity<Reservation> persistReservation(@RequestBody final Reservation reservation) {
+    public ResponseEntity<Reservation> persistReservation(
+            @RequestBody final Reservation reservation
+    ) {
         final Long id = reservationRepository.save(reservation);
         final Reservation found = reservationRepository.getOneById(id);
         return ResponseEntity.ok(found);

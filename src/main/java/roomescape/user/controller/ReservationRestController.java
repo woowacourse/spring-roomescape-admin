@@ -15,11 +15,11 @@ import roomescape.user.domain.Reservation;
 import roomescape.user.repository.ReservationRepository;
 
 @RestController
-public class UserReservationRestController {
+public class ReservationRestController {
 
     private final ReservationRepository reservationRepository;
 
-    public UserReservationRestController(
+    public ReservationRestController(
             @Qualifier("h2ReservationRepository") ReservationRepository reservationRepository) {
         this.reservationRepository = reservationRepository;
     }

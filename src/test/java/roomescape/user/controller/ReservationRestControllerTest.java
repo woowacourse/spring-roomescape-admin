@@ -14,7 +14,7 @@ import org.springframework.test.annotation.DirtiesContext;
 
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.DEFINED_PORT)
 @DirtiesContext(classMode = DirtiesContext.ClassMode.BEFORE_EACH_TEST_METHOD)
-class UserReservationRestControllerTest {
+class ReservationRestControllerTest {
 
     @Test
     void 예약_정보_저장에_성공하는_경우_ok를_반환한다() {

@@ -36,7 +36,7 @@ public class ReservationRepository {
 
     public Reservation save(Reservation reservation) {
         String query = "INSERT INTO reservation (name, date, time) VALUES (?, ?, ?)";
-        return dao.save(query, reservation, (PreparedStatementProvider<Reservation>)this::psProvider);
+        return dao.save(query, reservation, this::psProvider);
     }
 
     private PreparedStatement psProvider(PreparedStatement preparedStatement, Reservation reservation)

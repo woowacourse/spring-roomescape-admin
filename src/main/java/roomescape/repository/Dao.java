@@ -24,7 +24,7 @@ public class Dao {
         return jdbcTemplate.query(query, rowMapper);
     }
 
-    public <T extends Entity> T save(String query, T object, PreparedStatementProvider psProvider) {
+    public <T extends Entity<T>> T save(String query, T object, PreparedStatementProvider<T> psProvider) {
         KeyHolder keyHolder = new GeneratedKeyHolder();
         jdbcTemplate.update(connection -> {
             PreparedStatement ps = connection.prepareStatement(query, new String[] {object.idColumnName()});

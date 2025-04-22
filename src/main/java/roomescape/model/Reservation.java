@@ -17,8 +17,9 @@ public record Reservation(
 
     @NotNull(message = "[ERROR] 시간은 반드시 필요합니다.")
     LocalTime time
-) implements Entity {
+) implements Entity<Reservation> {
 
+    @Override
     public Reservation withId(Long id) {
         if (id == null) {
             throw new IllegalArgumentException("[ERROR] 전달받은 id는 null일 수 없습니다.");

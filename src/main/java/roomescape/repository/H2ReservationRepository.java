@@ -78,7 +78,8 @@ public class H2ReservationRepository implements ReservationRepository{
     }
 
     @Override
-    public void deleteById(final long id) {
+    public int deleteById(final long id) {
+        return 0;
     }
 
     @Override

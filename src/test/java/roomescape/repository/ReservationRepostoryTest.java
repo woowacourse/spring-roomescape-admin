@@ -3,6 +3,7 @@ package roomescape.repository;
 import java.time.LocalDate;
 import java.time.LocalTime;
 import java.util.List;
+import org.assertj.core.api.Assertions;
 import org.assertj.core.api.SoftAssertions;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
@@ -82,6 +83,19 @@ public class ReservationRepostoryTest {
             softAssertions.assertThat(savedReservation.getTime()).isEqualTo(LocalTime.of(10, 0));
 
         });
+    }
+
+    @Test
+    @DisplayName("아이디를 통해 예약을 삭제한다.")
+    void deleteReservationById(){
+        // given
+        Long id = 1L;
+
+        // when
+        int row = reservationRepository.deleteById(id);
+
+        // then
+        Assertions.assertThat(row).isEqualTo(1);
     }
 
 

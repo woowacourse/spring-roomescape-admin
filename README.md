@@ -18,6 +18,12 @@
 - [x] 예약을 추가할 수 있다.
 - [x] 예약을 취소할 수 있다.
 
+## 7단계 - 시간 관리 기능
+
+- [x] 예약 가능한 시간을 추가할 수 있다.
+- [x] 예약 가능한 시간을 모두 조회할 수 있다.
+- [x] 예약 가능한 시간을 삭제할 수 있다.
+
 # API 명세
 
 ### 예약 목록 조회
@@ -31,7 +37,7 @@ HTTP/1.1 200
 Content-Type: application/json
 [
     {
-        "id": 1,
+        "id": 1, 
         "name": "브라운",
         "date": "2023-01-01",
         "time": "10:00"
@@ -43,6 +49,11 @@ Content-Type: application/json
         "time": "11:00"
     }
 ]
+
+id: number
+name: string
+date: string
+time: string 
 ```
 
 ### 예약 추가
@@ -51,23 +62,90 @@ Content-Type: application/json
 Request
 Content-Type: application/json
 POST /reservations
+
 {
-    "date": "2023-08-05",
     "name": "브라운",
+    "date": "2023-08-05",
     "time": "15:40"
 }
 
+name: string
+date: string
+time: string 
+
 Response
 HTTP/1.1 201
+Content-Type: application/json
 
+{
+    "id": 1
+}
+
+id: number
 ```
 
 ### 예약 취소
 
 ```
 Request
-DELETE /reservations/1 HTTP/1.1
+DELETE /reservations/{id} HTTP/1.1
 
 Response
 HTTP/1.1 204
+```
+
+### 예약 시간 추가
+
+```
+Request
+POST /times HTTP/1.1
+content-type: application/json
+
+{
+"startAt": "10:00"
+}
+
+startAt: string
+
+Response
+HTTP/1.1 200
+Content-Type: application/json
+
+{
+"id": 1,
+"startAt": "10:00"
+}
+
+id: number
+startAt: string
+```
+
+### 예약 시간 목록 조회
+
+```
+Request
+GET /times HTTP/1.1
+
+Response
+HTTP/1.1 200 
+Content-Type: application/json
+[
+   {
+        "id": 1,
+        "startAt": "10:00"
+    }
+]
+
+id: number
+startAt: string
+```
+
+### 예약 시간 삭제
+
+```
+Request
+DELETE /times/{id} HTTP/1.1
+
+Response
+HTTP/1.1 200
 ```

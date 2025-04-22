@@ -3,22 +3,28 @@ package roomescape.repository;
 import java.sql.PreparedStatement;
 import java.sql.Statement;
 import java.sql.Time;
-import java.time.LocalTime;
 import java.util.List;
 import org.springframework.jdbc.core.JdbcTemplate;
+import org.springframework.jdbc.core.RowMapper;
 import org.springframework.jdbc.support.GeneratedKeyHolder;
 import org.springframework.jdbc.support.KeyHolder;
 import org.springframework.stereotype.Repository;
 import roomescape.model.ReservationTime;
 
 @Repository
-public class JdbcTimeRepository implements TimeRepository{
+public class JdbcTimeRepository implements TimeRepository {
 
     private final JdbcTemplate jdbcTemplate;
 
     public JdbcTimeRepository(JdbcTemplate jdbcTemplate) {
         this.jdbcTemplate = jdbcTemplate;
     }
+
+    private final static RowMapper<ReservationTime> RESERVATION_TIME_ROW_MAPPER =
+            (rs, rowNum) -> ReservationTime.of(
+                    rs.getLong("id"),
+                    rs.getTime("start_at").toLocalTime()
+            );
 
     @Override
     public Long save(ReservationTime reservationTime) {
@@ -45,22 +51,13 @@ public class JdbcTimeRepository implements TimeRepository{
     public List<ReservationTime> findAll() {
         String findAllSql = "SELECT id, start_at FROM reservation_time";
 
-        return jdbcTemplate.query(findAllSql,
-                (rs, rowNum) -> ReservationTime.of(
-                        rs.getLong("id"),
-                        LocalTime.parse(rs.getString("start_at"))
-                )
-        );
+        return jdbcTemplate.query(findAllSql, RESERVATION_TIME_ROW_MAPPER);
     }
 
     @Override
     public ReservationTime findById(Long id) {
         String selectOneSql = "SELECT id, start_at FROM reservation_time WHERE id=?";
-        return jdbcTemplate.queryForObject(selectOneSql,
-                (rs, rowNum) -> ReservationTime.of(
-                        rs.getLong("id"),
-                        rs.getTime("start_at").toLocalTime()
-                ),
+        return jdbcTemplate.queryForObject(selectOneSql, RESERVATION_TIME_ROW_MAPPER,
                 id);
     }
 

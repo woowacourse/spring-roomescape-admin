@@ -22,7 +22,7 @@ public class JdbcReservationRepository implements ReservationRepository{
         this.jdbcTemplate = jdbcTemplate;
     }
 
-    private final static RowMapper<Reservation> reservationRowMapper =
+    private final static RowMapper<Reservation> RESERVATION_ROW_MAPPER =
             (rs, rowNum) -> {
                 Long id = rs.getLong("id");
                 String name = rs.getString("name");
@@ -46,7 +46,7 @@ public class JdbcReservationRepository implements ReservationRepository{
                 inner join reservation_time as t
                 on r.time_id = t.id
                 """;
-        return jdbcTemplate.query(findAllSql, reservationRowMapper);
+        return jdbcTemplate.query(findAllSql, RESERVATION_ROW_MAPPER);
     }
 
     @Override

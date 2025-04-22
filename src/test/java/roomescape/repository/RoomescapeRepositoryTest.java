@@ -5,14 +5,15 @@ import static org.assertj.core.api.Assertions.assertThat;
 import java.time.LocalDate;
 import java.time.LocalTime;
 import java.util.List;
-import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.test.annotation.DirtiesContext;
 import roomescape.domain.Reservation;
 
-@SpringBootTest
+@SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.DEFINED_PORT)
+@DirtiesContext(classMode = DirtiesContext.ClassMode.BEFORE_EACH_TEST_METHOD)
 class RoomescapeRepositoryTest {
 
     @Autowired
@@ -22,11 +23,6 @@ class RoomescapeRepositoryTest {
     void setUp() {
         Reservation reservation = new Reservation("브라운", LocalDate.parse("2023-08-05"), LocalTime.parse("15:40"));
         repository.saveReservation(reservation);
-    }
-
-    @AfterEach
-    void tearDown() {
-        repository.clear();
     }
 
     @Test
@@ -50,7 +46,7 @@ class RoomescapeRepositoryTest {
         assertThat(saved.getName()).isEqualTo("네오");
         assertThat(saved.getDate()).isEqualTo(LocalDate.parse("2023-08-05"));
         assertThat(saved.getTime()).isEqualTo(LocalTime.parse("15:40"));
-
+        assertThat(repository.findAll()).hasSize(2);
     }
 
     @Test

@@ -21,10 +21,6 @@ public final class Reservation {
         this.time = time;
     }
 
-    public Reservation(Long id, String name, String date, String time) {
-        this(id, name, LocalDate.parse(date), LocalTime.parse(time));
-    }
-
     protected Reservation(Long id, String name, LocalDate date, LocalTime time) {
         this.id = id;
         this.name = name;

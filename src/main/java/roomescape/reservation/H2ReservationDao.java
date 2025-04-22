@@ -1,6 +1,8 @@
 package roomescape.reservation;
 
+import java.sql.Date;
 import java.sql.PreparedStatement;
+import java.sql.Time;
 import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.JdbcTemplate;
@@ -38,8 +40,8 @@ public class H2ReservationDao implements ReservationDao {
                 (resultSet, rowNum) -> new Reservation(
                         resultSet.getLong("id"),
                         resultSet.getString("name"),
-                        resultSet.getString("date"),
-                        resultSet.getString("time"))
+                        resultSet.getDate("date").toLocalDate(),
+                        resultSet.getTime("time").toLocalTime())
         );
     }
 

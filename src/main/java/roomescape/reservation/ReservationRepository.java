@@ -3,9 +3,9 @@ package roomescape.reservation;
 import java.util.List;
 
 public interface ReservationRepository {
-    public Reservation saveReservation(Reservation wantToSaveReservation);
-    public int deleteReservation(Long wantToDeleteId);
-    public Reservation findReservationById(Long wandToFindId);
-    public List<Reservation> findAllReservations();
-    public boolean isExistReservation(Reservation wantToSaveReservation);
+    Reservation saveReservation(Reservation wantToSaveReservation);
+    void deleteReservation(Long wantToDeleteId);
+    Reservation findReservationById(Long wandToFindId);
+    List<Reservation> findAllReservations();
+    boolean isExistReservation(Reservation wantToSaveReservation);
 }

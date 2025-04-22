@@ -32,9 +32,9 @@ public class JdbcReservationRepository implements ReservationRepository {
     }
 
     @Override
-    public int deleteReservation(Long wantToDeleteId) {
+    public void deleteReservation(Long wantToDeleteId) {
         String query = "DELETE FROM RESERVATION WHERE id = ?";
-        return jdbcTemplate.update(query, Long.valueOf(wantToDeleteId));
+        jdbcTemplate.update(query, wantToDeleteId);
     }
 
     @Override
@@ -76,8 +76,8 @@ public class JdbcReservationRepository implements ReservationRepository {
     @Override
     public boolean isExistReservation(Reservation wantToSaveReservation) {
         String query = "SELECT COUNT(*) FROM RESERVATION WHERE DATE = ? AND TIME = ?";
-        Integer count = jdbcTemplate.queryForObject(query, Integer.class, wantToSaveReservation.getDate(), wantToSaveReservation.getTime());
-        return count != null && count > 0;
+        int count = jdbcTemplate.queryForObject(query, Integer.class, wantToSaveReservation.getDate(), wantToSaveReservation.getTime());
+        return count > 0;
     }
 
 }

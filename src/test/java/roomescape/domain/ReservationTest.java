@@ -13,7 +13,8 @@ class ReservationTest {
         final String name = "안녕하세요";
 
         //should
-        assertThatIllegalArgumentException().isThrownBy(() -> new Reservation(name, LocalDate.now(), LocalTime.now()));
+        assertThatIllegalArgumentException().isThrownBy(
+                () -> new Reservation(name, LocalDate.now(), new ReservationTime(LocalTime.now())));
     }
 
     @Test
@@ -22,7 +23,8 @@ class ReservationTest {
         final String name = " ";
 
         //should
-        assertThatIllegalArgumentException().isThrownBy(() -> new Reservation(name, LocalDate.now(), LocalTime.now()));
+        assertThatIllegalArgumentException().isThrownBy(
+                () -> new Reservation(name, LocalDate.now(), new ReservationTime(LocalTime.now())));
     }
 
     @Test
@@ -31,16 +33,17 @@ class ReservationTest {
         LocalDate date = LocalDate.now().minusDays(1);
 
         // should
-        assertThatIllegalArgumentException().isThrownBy(() -> new Reservation("히로", date, LocalTime.now()));
+        assertThatIllegalArgumentException().isThrownBy(
+                () -> new Reservation("히로", date, new ReservationTime(LocalTime.now())));
     }
 
     @Test
     void 시간이_지금보다_이전인_경우_예외가_발생한다() {
         // given
         final LocalDate now = LocalDate.now();
-        LocalTime time = LocalTime.now().minusHours(1);
+        ReservationTime reservationTime = new ReservationTime(LocalTime.now().minusHours(1));
 
         // should
-        assertThatIllegalArgumentException().isThrownBy(() -> new Reservation("히로", now, time));
+        assertThatIllegalArgumentException().isThrownBy(() -> new Reservation("히로", now, reservationTime));
     }
 }

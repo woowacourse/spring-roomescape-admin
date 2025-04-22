@@ -8,7 +8,6 @@ import roomescape.reservation.infrastructure.entity.ReservationEntity;
 import roomescape.reservation.ui.dto.ReservationRequestDto;
 import roomescape.reservation.ui.dto.ReservationResponseDto;
 import roomescape.reservation_time.application.converter.ReservationTimeConverter;
-import roomescape.reservation_time.domain.ReservationTimeId;
 
 import java.util.List;
 

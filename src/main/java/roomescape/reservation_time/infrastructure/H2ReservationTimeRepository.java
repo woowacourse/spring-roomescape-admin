@@ -6,7 +6,6 @@ import org.springframework.jdbc.core.RowMapper;
 import org.springframework.jdbc.support.GeneratedKeyHolder;
 import org.springframework.jdbc.support.KeyHolder;
 import org.springframework.stereotype.Repository;
-import roomescape.common.domain.DomainId;
 import roomescape.common.jdbc.JdbcUtils;
 import roomescape.reservation_time.application.converter.ReservationTimeConverter;
 import roomescape.reservation_time.domain.ReservationTime;
@@ -33,7 +32,7 @@ public class H2ReservationTimeRepository implements ReservationTimeRepository {
 
     @Override
     public Optional<ReservationTime> findById(final long id) {
-        String sql = "select id, start_at from reservation_time where id = ?";
+        final String sql = "select id, start_at from reservation_time where id = ?";
         return JdbcUtils.queryForOptional(jdbcTemplate, sql, reservationTimeMapper, id)
                 .map(ReservationTimeConverter::toDomain);
     }

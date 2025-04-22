@@ -8,8 +8,10 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.test.annotation.DirtiesContext;
+import roomescape.reservation.ui.ReservationController;
 import roomescape.reservation.ui.dto.ReservationResponseDto;
 
+import java.lang.reflect.Field;
 import java.sql.Connection;
 import java.sql.SQLException;
 import java.util.HashMap;
@@ -25,6 +27,8 @@ public class MissionStepTest {
 
     @Autowired
     private JdbcTemplate jdbcTemplate;
+    @Autowired
+    private ReservationController reservationController;
 
     @Test
     @DisplayName("1단계: localhost:8080/admin 요청 시 어드민 메인 페이지가 성공적으로 응답된다")
@@ -54,10 +58,22 @@ public class MissionStepTest {
     @Test
     @DisplayName("3단계: localhost:8080/reservations 에 POST 요청 시 예약이 추가되고, DELETE 요청 시 각각 예약이 취소된다")
     void third() {
+        final Map<String, String> times = new HashMap<>();
+        times.put("startAt", "10:00");
+
         final Map<String, String> params = new HashMap<>();
         params.put("name", "브라운");
         params.put("date", "2023-08-05");
-        params.put("time", "15:40");
+        params.put("timeId", "1");
+
+        RestAssured.given().log().all()
+                .contentType(ContentType.JSON)
+                .body(times)
+                .when().post("/times")
+                .then().log().all()
+                .statusCode(200)
+                .body("id", is(1));
+
 
         RestAssured.given().log().all()
                 .contentType(ContentType.JSON)
@@ -102,7 +118,11 @@ public class MissionStepTest {
     @Test
     @DisplayName("데이터베이스에 예약 하나 추가 후 예약 조회 API를 통해 조회한 예약 수와 데이터베이스 쿼리를 통해 조회한 예약 수가 같은지 비교할 수 있다")
     void fifth() {
-        jdbcTemplate.update("INSERT INTO reservation (name, date_time) VALUES (?, ?)", "브라운", "2023-08-05 15:40");
+        jdbcTemplate.update("INSERT INTO reservation_time (id, start_at) VALUES (?, ?)",
+                "1", "10:00");
+
+        jdbcTemplate.update("INSERT INTO reservation (name, date, time_id) VALUES (?, ?, ?)",
+                "브라운", "2023-08-05", 1);
 
         final List<ReservationResponseDto> reservations = RestAssured.given().log().all()
                 .when().get("/reservations")
@@ -118,10 +138,13 @@ public class MissionStepTest {
     @Test
     @DisplayName("예약 추가/삭제 API를 활용하고, 조회로 확인할 수 있다")
     void sixth() {
+        jdbcTemplate.update("INSERT INTO reservation_time (id, start_at) VALUES (?, ?)",
+                "1", "10:00");
+
         final Map<String, String> params = new HashMap<>();
         params.put("name", "브라운");
         params.put("date", "2023-08-05");
-        params.put("time", "10:00");
+        params.put("timeId", "1");
 
         RestAssured.given().log().all()
                 .contentType(ContentType.JSON)
@@ -142,4 +165,43 @@ public class MissionStepTest {
         assertThat(countAfterDelete).isEqualTo(0);
     }
 
+    @Test
+    @DisplayName("시간으로 API를 관리할 수 있다")
+    void seventh() {
+        final Map<String, String> params = new HashMap<>();
+        params.put("startAt", "10:00");
+
+        RestAssured.given().log().all()
+                .contentType(ContentType.JSON)
+                .body(params)
+                .when().post("/times")
+                .then().log().all()
+                .statusCode(200);
+
+        RestAssured.given().log().all()
+                .when().get("/times")
+                .then().log().all()
+                .statusCode(200)
+                .body("size()", is(1));
+
+        RestAssured.given().log().all()
+                .when().delete("/times/1")
+                .then().log().all()
+                .statusCode(200);
+    }
+
+    @Test
+    @DisplayName("컨트롤러에 jdbcTemplate가 존재하지 않는다")
+    void ninth() {
+        boolean isJdbcTemplateInjected = false;
+
+        for (final Field field : reservationController.getClass().getDeclaredFields()) {
+            if (field.getType().equals(JdbcTemplate.class)) {
+                isJdbcTemplateInjected = true;
+                break;
+            }
+        }
+
+        assertThat(isJdbcTemplateInjected).isFalse();
+    }
 }

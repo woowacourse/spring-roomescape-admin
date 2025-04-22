@@ -22,10 +22,10 @@ class InMemoryReservationDaoTest {
     @Test
     void test1() {
         //given
-        InMemoryReservationDao inMemoryReservationRepository = new InMemoryReservationDao();
+        InMemoryReservationDao inMemoryReservationDao = new InMemoryReservationDao();
 
         //when
-        Reservation savedReservation = inMemoryReservationRepository.add(mimiReservation);
+        Reservation savedReservation = inMemoryReservationDao.add(mimiReservation);
 
         //then
         assertThat(savedReservation).isEqualTo(mimiReservation);
@@ -35,12 +35,12 @@ class InMemoryReservationDaoTest {
     @Test
     void test3() {
         //given
-        InMemoryReservationDao inMemoryReservationRepository = new InMemoryReservationDao(List.of(
+        InMemoryReservationDao inMemoryReservationDao = new InMemoryReservationDao(List.of(
                 mimiReservation, norangReservation, mintReservation
         ));
 
         //when
-        List<Reservation> all = inMemoryReservationRepository.getAll();
+        List<Reservation> all = inMemoryReservationDao.getAll();
 
         //then
         assertThat(all).hasSize(3);
@@ -53,35 +53,33 @@ class InMemoryReservationDaoTest {
     @Test
     void test4() {
         //given
-        InMemoryReservationDao inMemoryReservationRepository = new InMemoryReservationDao(new ArrayList<>(List.of(
+        InMemoryReservationDao inMemoryReservationDao = new InMemoryReservationDao(new ArrayList<>(List.of(
                 mimiReservation, norangReservation, mintReservation
         )));
 
         Long mimiId = 1L;
-        InMemoryReservationDao expectedInMemoryReservationRepository = new InMemoryReservationDao(List.of(
+        InMemoryReservationDao expectedInMemoryReservationdao = new InMemoryReservationDao(List.of(
                 norangReservation, mintReservation
         ));
 
         //when
-        inMemoryReservationRepository.deleteById(mimiId);
+        inMemoryReservationDao.deleteById(mimiId);
 
         //then
-        assertThat(inMemoryReservationRepository).isEqualTo(expectedInMemoryReservationRepository);
+        assertThat(inMemoryReservationDao).isEqualTo(expectedInMemoryReservationdao);
     }
 
     @DisplayName("존재하지 않는 id의 예약 정보를 삭제하려는 경우 예외가 발생한다.")
     @Test
     void test5() {
         //given
-        InMemoryReservationDao inMemoryReservationRepository = new InMemoryReservationDao(List.of(
-                new Reservation("mimi", date, time),
-                new Reservation("norang", date, time),
-                new Reservation("mint", date, time)
+        InMemoryReservationDao inMemoryReservationDao = new InMemoryReservationDao(List.of(
+                mimiReservation, norangReservation, mintReservation
         ));
         Long notExistedId = 4L;
 
         //when & then
-        assertThatThrownBy(() -> inMemoryReservationRepository.deleteById(notExistedId))
+        assertThatThrownBy(() -> inMemoryReservationDao.deleteById(notExistedId))
                 .isInstanceOf(IllegalArgumentException.class)
                 .hasMessage("[ERROR] 존재하지 않는 id 입니다.");
     }

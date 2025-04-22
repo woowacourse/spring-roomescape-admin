@@ -16,7 +16,7 @@ public class H2ReservationDao implements ReservationDao {
 
     private final JdbcTemplate jdbcTemplate;
 
-    public H2ReservationDao(JdbcTemplate jdbcTemplate) {
+    public H2ReservationDao(final JdbcTemplate jdbcTemplate) {
         this.jdbcTemplate = jdbcTemplate;
     }
 

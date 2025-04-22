@@ -1,15 +1,16 @@
 package roomescape.repository;
 
 import org.springframework.jdbc.core.JdbcTemplate;
+import org.springframework.jdbc.core.RowMapper;
 import org.springframework.jdbc.support.GeneratedKeyHolder;
 import org.springframework.jdbc.support.KeyHolder;
 import org.springframework.stereotype.Repository;
 import roomescape.ReservationCreateRequest;
 import roomescape.entity.Reservation;
 
-import java.sql.Date;
 import java.sql.PreparedStatement;
-import java.sql.Time;
+import java.time.format.DateTimeFormatter;
+import java.time.format.FormatStyle;
 import java.util.List;
 
 @Repository
@@ -20,6 +21,12 @@ public class ReservationRepository {
     public ReservationRepository(JdbcTemplate jdbcTemplate) {
         this.jdbcTemplate = jdbcTemplate;
     }
+
+    private final RowMapper<Reservation> reservationRowMapper = (row, rowNum) ->
+            new Reservation(row.getLong("id"),
+                    row.getString("name"),
+                    row.getDate("date").toLocalDate(),
+                    row.getTime("time").toLocalTime());
 
     public Long add(final ReservationCreateRequest request) {
         String sql = "INSERT INTO RESERVATION (NAME, DATE, TIME) VALUES (?, ?, ?)";
@@ -45,11 +52,6 @@ public class ReservationRepository {
 
     public List<Reservation> findAll() {
         String sql = "SELECT * FROM RESERVATION";
-        return jdbcTemplate.query(sql, (row, rowNum) ->
-                new Reservation(row.getLong("id"),
-                        row.getString("name"),
-                        row.getDate("date").toLocalDate(),
-                        row.getTime("time").toLocalTime())
-        );
+        return jdbcTemplate.query(sql, reservationRowMapper);
     }
 }

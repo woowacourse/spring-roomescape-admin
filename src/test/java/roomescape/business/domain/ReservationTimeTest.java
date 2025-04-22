@@ -26,6 +26,17 @@ class ReservationTimeTest {
             assertThatThrownBy(() -> new ReservationTime(id, null))
                     .isInstanceOf(IllegalArgumentException.class);
         }
-    }
 
+        @Test
+        void _9시_이전이면_예외가_발생한다() {
+            assertThatThrownBy(() -> new ReservationTime(id, LocalTime.of(8, 59)))
+                    .isInstanceOf(IllegalArgumentException.class);
+        }
+
+        @Test
+        void _11시_이후이면_예외가_발생한다() {
+            assertThatThrownBy(() -> new ReservationTime(id, LocalTime.of(23, 1)))
+                    .isInstanceOf(IllegalArgumentException.class);
+        }
+    }
 }

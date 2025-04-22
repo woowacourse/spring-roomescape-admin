@@ -8,8 +8,22 @@ public class ReservationDateTime {
     private final ReservationTime time;
 
     private ReservationDateTime(final LocalDate date, final ReservationTime time) {
+        validateDate(date);
+        validateTime(time);
         this.date = date;
         this.time = time;
+    }
+
+    private void validateDate(LocalDate date) {
+        if (date == null) {
+            throw new IllegalArgumentException("날짜가 null일 수 없습니다.");
+        }
+    }
+
+    private void validateTime(ReservationTime time) {
+        if (time == null) {
+            throw new IllegalArgumentException("시간이 null일 수 없습니다.");
+        }
     }
 
     public static ReservationDateTime of(final LocalDate date, final ReservationTime time) {

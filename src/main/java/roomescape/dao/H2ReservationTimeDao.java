@@ -35,13 +35,15 @@ public class H2ReservationTimeDao implements ReservationTimeDao {
 
         Map<String, Object> parameters = new HashMap<>();
         parameters.put("start_at", reservationTime.getStartAt());
-        Number savedId = simpleJdbcInsert.execute(parameters);
+        Number savedId = simpleJdbcInsert.executeAndReturnKey(parameters);
 
         return ReservationTime.of(savedId.longValue(), reservationTime.getStartAt());
     }
 
     @Override
     public boolean deleteById(final Long id) {
-        return false;
+        String sql = "DELETE FROM reservation_time WHERE id = ?";
+        int deletedRows = jdbcTemplate.update(sql, id);
+        return deletedRows > 0;
     }
 }

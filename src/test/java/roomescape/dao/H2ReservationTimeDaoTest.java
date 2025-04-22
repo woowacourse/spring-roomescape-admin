@@ -39,4 +39,16 @@ class H2ReservationTimeDaoTest {
         ReservationTime reservationTime = ReservationTime.of(LocalTime.of(10, 0));
         assertThat(reservationTimeDao.insert(reservationTime)).isNotNull();
     }
+
+    @Test
+    void 특정_예약시간을_취소하면_true를_반환한다() {
+        ReservationTime reservationTime = ReservationTime.of(LocalTime.of(11, 0));
+        ReservationTime savedReservationTime = reservationTimeDao.insert(reservationTime);
+        assertThat(reservationTimeDao.deleteById(savedReservationTime.getId())).isTrue();
+    }
+
+    @Test
+    void 특정_예약시간을_취소했을때_예약이_없으면_false를_반환한다() {
+        assertThat(reservationTimeDao.deleteById(1L)).isFalse();
+    }
 }

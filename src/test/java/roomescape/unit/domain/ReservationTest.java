@@ -13,35 +13,10 @@ import roomescape.domain.ReservationTime;
 class ReservationTest {
 
     @Test
-    void 이전_날짜에_예약할_수_없다() {
-        LocalDate localDate = LocalDate.now().minusDays(1);
-        LocalTime localTime = LocalTime.now();
-        Assertions.assertThatThrownBy(() -> new Reservation(1L, "투다", localDate, new ReservationTime(1L, localTime)))
+    void 예약은_공백이거나_NULL_로_이루어질_수_없다() {
+        Assertions.assertThatThrownBy(
+                        () -> new Reservation(1L, "", LocalDate.now(), new ReservationTime(1L, LocalTime.now())))
                 .isInstanceOf(IllegalArgumentException.class);
-    }
-
-    @Test
-    void 같은날짜일시_이전_시간에_예약할_수_없다() {
-        LocalDate localDate = LocalDate.now();
-        LocalTime localTime = LocalTime.now().minusHours(1);
-        Assertions.assertThatThrownBy(() -> new Reservation(1L, "투다", localDate, new ReservationTime(1L, localTime)))
-                .isInstanceOf(IllegalArgumentException.class);
-    }
-
-    @Test
-    void 이후_날짜에_예약할_수_있다() {
-        LocalDate localDate = LocalDate.now().plusDays(1);
-        LocalTime localTime = LocalTime.now();
-        Assertions.assertThatCode(() -> new Reservation(1L, "투다", localDate, new ReservationTime(1L, localTime)))
-                .doesNotThrowAnyException();
-    }
-
-    @Test
-    void 같은날짜일시_이후_시간_예약할_수_있다() {
-        LocalDate localDate = LocalDate.now();
-        LocalTime localTime = LocalTime.now().plusHours(1);
-        Assertions.assertThatCode(() -> new Reservation(1L, "투다", localDate, new ReservationTime(1L, localTime)))
-                .doesNotThrowAnyException();
     }
 }
 

@@ -26,13 +26,13 @@ class ReservationTest {
         @Test
         void 예약자가_없으면_예외가_발생한다() {
             assertThatThrownBy(() -> new Reservation(null, date, time))
-                    .isInstanceOf(IllegalArgumentException.class);
+                    .isInstanceOf(NullPointerException.class);
         }
 
         @Test
         void 날짜가_없으면_예외가_발생한다() {
             assertThatThrownBy(() -> new Reservation(customer, null, time))
-                    .isInstanceOf(IllegalArgumentException.class);
+                    .isInstanceOf(NullPointerException.class);
         }
 
         @Test
@@ -44,7 +44,7 @@ class ReservationTest {
         @Test
         void 시간이_없으면_예외가_발생한다() {
             assertThatThrownBy(() -> new Reservation(customer, date, null))
-                    .isInstanceOf(IllegalArgumentException.class);
+                    .isInstanceOf(NullPointerException.class);
         }
     }
 }

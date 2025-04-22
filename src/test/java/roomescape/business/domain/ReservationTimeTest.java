@@ -23,7 +23,7 @@ class ReservationTimeTest {
         @Test
         void 시간이_없으면_예외가_발생한다() {
             assertThatThrownBy(() -> new ReservationTime(null))
-                    .isInstanceOf(IllegalArgumentException.class);
+                    .isInstanceOf(NullPointerException.class);
         }
 
         @Test

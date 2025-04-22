@@ -1,6 +1,7 @@
 package roomescape.business.domain;
 
 import java.time.LocalTime;
+import java.util.Objects;
 
 public class ReservationTime {
 
@@ -10,14 +11,12 @@ public class ReservationTime {
     private final LocalTime startTime;
 
     public ReservationTime(final LocalTime startTime) {
-        validateStartTime(startTime);
+        Objects.requireNonNull(startTime, "시작 시간은 null이 될 수 없습니다.");
+        validateStartTimeRange(startTime);
         this.startTime = startTime;
     }
 
-    private static void validateStartTime(final LocalTime startTime) {
-        if (startTime == null) {
-            throw new IllegalArgumentException("시작 시간은 null이 될 수 없습니다.");
-        }
+    private static void validateStartTimeRange(final LocalTime startTime) {
         if (startTime.isBefore(MIN_TIME)) {
             throw new IllegalArgumentException("시작 시간은 9시 이후이어야 합니다.");
         }

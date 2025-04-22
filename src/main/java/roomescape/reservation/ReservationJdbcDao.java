@@ -27,7 +27,7 @@ public class ReservationJdbcDao implements ReservationDao {
     public Reservation saveReservation(final Reservation reservation) {
         final SqlParameterSource sqlParameterSource = new BeanPropertySqlParameterSource(reservation);
         final Number id = simpleJdbcInsert.executeAndReturnKey(sqlParameterSource);
-        return new Reservation(id.longValue(), reservation.name(), reservation.date(), reservation.time());
+        return reservation.writeId(id.longValue());
     }
 
     @Override

@@ -13,7 +13,7 @@ public class AdminController {
 
     @GetMapping("/")
     public String home() {
-        return "admin/index";
+        return "redirect:admin";
     }
 
     @GetMapping("/admin/reservation")

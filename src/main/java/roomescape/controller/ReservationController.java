@@ -22,7 +22,7 @@ public class ReservationController {
 
     public ReservationController(ReservationDao reservationDao) {
         this.reservationDao = reservationDao;
-    }//생성자 책임을 분리한다. 싱글톤 객체 주입을 통해서.
+    }
 
     @GetMapping
     public ResponseEntity<List<ReservationResponse>> reservations() {

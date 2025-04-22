@@ -3,8 +3,8 @@ package roomescape.repository;
 import java.time.LocalDate;
 import java.time.LocalTime;
 import java.util.List;
+import org.assertj.core.api.Assertions;
 import org.assertj.core.api.SoftAssertions;
-import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -62,6 +62,25 @@ public class ReservationRepostoryTest {
             softAssertions.assertThat(reservations.getLast().getName()).isEqualTo("DDinghwa");
             softAssertions.assertThat(reservations.getLast().getDate()).isEqualTo(LocalDate.of(2025, 6, 3));
             softAssertions.assertThat(reservations.getLast().getTime()).isEqualTo(LocalTime.of(13, 0));
+        });
+    }
+
+    @Test
+    @DisplayName("예약을 저장한다.")
+    void saveReservation(){
+        // given
+        Reservation reservation = new Reservation("myeonghwa", LocalDate.of(1998, 6, 3), LocalTime.of(10, 0));
+
+        // when
+        Reservation savedReservation = reservationRepository.save(reservation);
+
+        // then
+        SoftAssertions.assertSoftly(softAssertions -> {
+            softAssertions.assertThat(savedReservation.getId()).isEqualTo(3);
+            softAssertions.assertThat(savedReservation.getName()).isEqualTo("myeonghwa");
+            softAssertions.assertThat(savedReservation.getDate()).isEqualTo( LocalDate.of(1998, 6, 3));
+            softAssertions.assertThat(savedReservation.getTime()).isEqualTo(LocalTime.of(10, 0));
+
         });
     }
 }

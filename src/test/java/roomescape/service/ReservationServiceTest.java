@@ -7,18 +7,21 @@ import java.time.LocalTime;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.NoSuchElementException;
+import java.util.concurrent.atomic.AtomicLong;
 import org.assertj.core.api.Assertions;
+import org.assertj.core.api.SoftAssertions;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import roomescape.dto.ReservationRequest;
+import roomescape.dto.ReservationResponse;
 import roomescape.entity.Reservation;
 import roomescape.repository.ReservationRepository;
 
+
 class ReservationServiceTest {
-/*
+
     private final ReservationRepository fakeReservationRepository = new FakeReservationRepository();
     private final ReservationService reservationService = new ReservationService(fakeReservationRepository);
-
 
     @DisplayName("존재하지 않는 아이디를 삭제시 예외 발생")
     void deleteException() {
@@ -43,18 +46,39 @@ class ReservationServiceTest {
                 .isInstanceOf(IllegalArgumentException.class);
     }
 
+    @Test
+    @DisplayName("전체 예약 목록 을 찾는다.")
+    void test(){
+        // given
+        // when
+        List<ReservationResponse> reservations = reservationService.getReservations();
+
+        // then
+        SoftAssertions.assertSoftly(softAssertions -> {
+            softAssertions.assertThat(reservations).hasSize(2);
+            softAssertions.assertThat(reservations.getFirst().id()).isEqualTo(1);
+            softAssertions.assertThat(reservations.getFirst().name()).isEqualTo("Lemon");
+            softAssertions.assertThat(reservations.getFirst().date()).isEqualTo(LocalDate.of(2025,4,22));
+            softAssertions.assertThat(reservations.getFirst().time()).isEqualTo(LocalTime.of(13,22));
+        });
+    }
+
     static class FakeReservationRepository implements ReservationRepository {
 
         List<Reservation> reservations = new ArrayList<>();
+        private final AtomicLong atomicLong = new AtomicLong(1);
 
         public FakeReservationRepository() {
-            reservations.add(new Reservation("Lemon",LocalDate.of(2025,4,22),LocalTime.of(13,22)));
-            reservations.add(new Reservation("DDingHwa",LocalDate.of(2025,4,22),LocalTime.of(16,15)));
+            reservations.add(new Reservation(atomicLong.getAndIncrement(),"Lemon",LocalDate.of(2025,4,22),LocalTime.of(13,22)));
+            reservations.add(new Reservation(atomicLong.getAndIncrement(),"DDingHwa",LocalDate.of(2025,4,22),LocalTime.of(16,15)));
         }
 
         @Override
         public Reservation findById(long id) {
-            return null;
+            return reservations.stream()
+                    .filter(reservation -> reservation.getId() == id)
+                    .findFirst()
+                    .orElse(null);
         }
 
         @Override
@@ -64,12 +88,13 @@ class ReservationServiceTest {
 
         @Override
         public Reservation save(Reservation reservation) {
-            return null;
+            reservations.add(reservation);
+            return reservation;
         }
 
         @Override
-        public void deleteById(long id) {
-
+        public int deleteById(long id) {
+            return 0;
         }
 
         @Override
@@ -77,6 +102,4 @@ class ReservationServiceTest {
             return false;
         }
     }
-
- */
 }

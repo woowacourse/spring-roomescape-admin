@@ -8,5 +8,5 @@ import java.time.LocalTime;
 
 public record ReservationRequestDto(@NotBlank String name,
                                     @NotNull LocalDate date,
-                                    @NotNull LocalTime time) {
+                                    @NotNull Long timeId) {
 }

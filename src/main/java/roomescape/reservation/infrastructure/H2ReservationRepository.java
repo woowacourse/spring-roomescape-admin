@@ -1,72 +1,105 @@
 package roomescape.reservation.infrastructure;
 
-import org.springframework.context.annotation.Primary;
+import lombok.RequiredArgsConstructor;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;
 import org.springframework.jdbc.support.GeneratedKeyHolder;
 import org.springframework.jdbc.support.KeyHolder;
 import org.springframework.stereotype.Repository;
 import roomescape.common.jdbc.JdbcUtils;
+import roomescape.reservation.application.converter.ReservationConverter;
 import roomescape.reservation.domain.Reservation;
+import roomescape.reservation.domain.ReservationId;
 import roomescape.reservation.domain.ReservationRepository;
 import roomescape.reservation.infrastructure.entity.ReservationEntity;
+import roomescape.reservation_time.infrastructure.entity.ReservationTimeEntity;
 
+import java.sql.Date;
 import java.sql.PreparedStatement;
 import java.sql.Statement;
-import java.sql.Timestamp;
 import java.util.List;
 import java.util.Objects;
 import java.util.Optional;
 
-@Primary
 @Repository
+@RequiredArgsConstructor
 public class H2ReservationRepository implements ReservationRepository {
 
     private final JdbcTemplate jdbcTemplate;
 
-    private final RowMapper<ReservationEntity> reservationMapper = (resultSet, rowNum) -> ReservationEntity.of(
-            resultSet.getLong("id"),
-            resultSet.getString("name"),
-            resultSet.getTimestamp("date_time").toLocalDateTime()
-    );
+    private final RowMapper<ReservationEntity> reservationMapper = (resultSet, rowNum) -> {
+        ReservationTimeEntity time = ReservationTimeEntity.of(
+                resultSet.getLong("time_id"),
+                resultSet.getTime("start_at")
+        );
 
-    public H2ReservationRepository(final JdbcTemplate jdbcTemplate) {
-        this.jdbcTemplate = jdbcTemplate;
-    }
+        return ReservationEntity.of(
+                resultSet.getLong("id"),
+                resultSet.getString("name"),
+                resultSet.getDate("date"),
+                time
+        );
+    };
 
     @Override
     public Optional<Reservation> findById(final long id) {
-        final String sql = "select id, name, date_time from reservation where id = ?";
+        final String sql = """
+                select
+                    r.id,
+                    r.name,
+                    r.date,
+                    t.id as time_id,
+                    t.start_at as start_at
+                from reservation r
+                join reservation_time t
+                    on r.time_id = t.id
+                where r.id = ?
+                """;
 
         return JdbcUtils.queryForOptional(jdbcTemplate, sql, reservationMapper, id)
-                .map(ReservationEntity::toDomain);
+                .map(ReservationConverter::toDomain);
     }
 
     @Override
     public List<Reservation> findAll() {
-        final String sql = "select id, name, date_time from reservation";
+        final String sql = """
+                select
+                    r.id, 
+                    r.name, 
+                    r.date,
+                    t.id as time_id,
+                    t.start_at as started_at
+                from reservation r
+                join reservation_time t
+                    on r.time_id = t.id
+                """;
 
         return jdbcTemplate.query(sql, reservationMapper).stream()
-                .map(ReservationEntity::toDomain)
+                .map(ReservationConverter::toDomain)
                 .toList();
     }
 
     @Override
     public Reservation save(final Reservation reservation) {
-        final String sql = "insert into reservation (name, date_time) values (?, ?)";
+        final String sql = "insert into reservation (name, date, time_id) values (?, ?, ?)";
         final KeyHolder keyHolder = new GeneratedKeyHolder();
 
         jdbcTemplate.update(connection -> {
             final PreparedStatement preparedStatement = connection.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS);
-            preparedStatement.setString(1, reservation.getName());
-            preparedStatement.setTimestamp(2, Timestamp.valueOf(reservation.getDatetime()));
+            preparedStatement.setString(1, reservation.getName().getValue());
+            preparedStatement.setDate(2, Date.valueOf(reservation.getDate().getValue()));
+            preparedStatement.setLong(3, reservation.getTime().getId().getValue());
 
             return preparedStatement;
         }, keyHolder);
 
         final long generatedId = Objects.requireNonNull(keyHolder.getKey()).longValue();
 
-        return Reservation.of(generatedId, reservation.getName(), reservation.getDatetime());
+        return Reservation.of(
+                ReservationId.from(generatedId),
+                reservation.getName(),
+                reservation.getDate(),
+                reservation.getTime());
     }
 
     @Override

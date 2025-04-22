@@ -1,41 +1,33 @@
 package roomescape.reservation.application.converter;
 
-import roomescape.common.domain.DomainEntityId;
 import roomescape.reservation.domain.Reservation;
 import roomescape.reservation.domain.ReservationDate;
+import roomescape.reservation.domain.ReservationId;
 import roomescape.reservation.domain.ReserverName;
-import roomescape.reservation_time.domain.ReservationTime;
 import roomescape.reservation.infrastructure.entity.ReservationEntity;
 import roomescape.reservation.ui.dto.ReservationRequestDto;
 import roomescape.reservation.ui.dto.ReservationResponseDto;
+import roomescape.reservation_time.application.converter.ReservationTimeConverter;
+import roomescape.reservation_time.domain.ReservationTimeId;
 
 import java.util.List;
 
 public class ReservationConverter {
 
-    public static Reservation toDomain(final ReservationEntity entity) {
+    public static Reservation toDomain(final ReservationEntity reservationEntity) {
         return Reservation.of(
-                DomainEntityId.from(entity.getId()),
-                ReserverName.from(entity.getName()),
-                ReservationDate.from(entity.getDate()),
-                ReservationTime.of(DomainEntityId.notAssigned(), entity.getTime()));
-    }
-
-    public static Reservation toDomain(final ReservationEntity reservationEntity,
-                                       final ReservationTime reservationTime) {
-        return Reservation.of(
-                DomainEntityId.from(reservationEntity.getId()),
+                ReservationId.from(reservationEntity.getId()),
                 ReserverName.from(reservationEntity.getName()),
-                ReservationDate.from(reservationEntity.getDate()),
-                reservationTime);
+                ReservationDate.from(reservationEntity.getDate().toLocalDate()),
+                ReservationTimeConverter.toDomain(reservationEntity.getTime()));
     }
 
     public static Reservation toDomain(final ReservationRequestDto requestDto) {
         return Reservation.of(
-                DomainEntityId.notAssigned(),
+                ReservationId.unassigned(),
                 ReserverName.from(requestDto.name()),
                 ReservationDate.from(requestDto.date()),
-                ReservationTime.of(DomainEntityId.notAssigned(), requestDto.time()));
+                ReservationTimeConverter.toDomain(requestDto.timeId()));
     }
 
     public static ReservationResponseDto toDto(final Reservation reservation) {
@@ -43,7 +35,7 @@ public class ReservationConverter {
                 reservation.getId().getValue(),
                 reservation.getName().getValue(),
                 reservation.getDate().getValue(),
-                reservation.getTime().getValue());
+                ReservationTimeConverter.toDto(reservation.getTime()));
     }
 
     public static List<ReservationResponseDto> toDto(final List<Reservation> reservations) {

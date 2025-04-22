@@ -1,39 +1,37 @@
 package roomescape.reservation.application;
 
+import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import roomescape.reservation.application.converter.ReservationConverter;
-import roomescape.reservation.domain.Reservation;
 import roomescape.reservation.domain.ReservationRepository;
 import roomescape.reservation.ui.dto.ReservationRequestDto;
 import roomescape.reservation.ui.dto.ReservationResponseDto;
 
 import java.util.List;
-import java.util.NoSuchElementException;
 
 @Service
+@RequiredArgsConstructor
 public class DefaultReservationService implements ReservationService {
 
     private final ReservationRepository reservationRepository;
 
-    public DefaultReservationService(final ReservationRepository reservationRepository) {
-        this.reservationRepository = reservationRepository;
-    }
-
     @Override
     public List<ReservationResponseDto> getAll() {
-        return ReservationConverter.toDto(reservationRepository.findAll());
+        return ReservationConverter.toDto(
+                reservationRepository.findAll());
     }
 
     @Override
     public ReservationResponseDto create(final ReservationRequestDto reservationRequestDto) {
-        final Reservation saved = reservationRepository.save(ReservationConverter.toDomain(reservationRequestDto));
-        return ReservationConverter.toDto(saved);
+        return ReservationConverter.toDto(
+                reservationRepository.save(
+                        ReservationConverter.toDomain(reservationRequestDto)));
     }
 
     @Override
     public void delete(final long id) {
         reservationRepository.findById(id)
-                .orElseThrow(NoSuchElementException::new);
+                .orElseThrow();
 
         reservationRepository.deleteById(id);
     }

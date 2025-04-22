@@ -25,7 +25,8 @@ import roomescape.domain.ReservationTime;
 @DirtiesContext(classMode = DirtiesContext.ClassMode.BEFORE_EACH_TEST_METHOD)
 @Import(TestClockConfig.class)
 class ReservationDaoTest {
-    @Autowired private JdbcTemplate jdbcTemplate;
+    @Autowired
+    private JdbcTemplate jdbcTemplate;
     private ReservationDao reservationDao;
     private final LocalDateTime now = LocalDateTime.of(2025, 4, 22, 10, 0);
 
@@ -33,13 +34,7 @@ class ReservationDaoTest {
 
     @BeforeEach
     void setup() {
-         reservationDao = new ReservationDao(jdbcTemplate);
-        jdbcTemplate.update("SET REFERENTIAL_INTEGRITY FALSE");
-        jdbcTemplate.update("TRUNCATE TABLE reservation");
-        jdbcTemplate.update("TRUNCATE TABLE reservation_time");
-        jdbcTemplate.update("ALTER TABLE reservation ALTER COLUMN id RESTART WITH 1");
-        jdbcTemplate.update("ALTER TABLE reservation_time ALTER COLUMN id RESTART WITH 1");
-        jdbcTemplate.update("SET REFERENTIAL_INTEGRITY TRUE");
+        reservationDao = new ReservationDao(jdbcTemplate);
         String sql = "insert into reservation_time(start_at) values(?)";
         LocalTime startAt = LocalTime.of(10, 0);
         jdbcTemplate.update(sql, startAt);

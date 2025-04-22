@@ -5,6 +5,7 @@ import static org.hamcrest.core.Is.is;
 
 import io.restassured.RestAssured;
 import io.restassured.http.ContentType;
+import java.lang.reflect.Field;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -15,6 +16,7 @@ import org.springframework.context.annotation.Import;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.test.annotation.DirtiesContext;
 import roomescape.config.TestClockConfig;
+import roomescape.controller.ReservationApiController;
 import roomescape.dto.ReservationResponse;
 
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.DEFINED_PORT)
@@ -31,6 +33,7 @@ class MissionStepTest {
     );
 
     @Autowired private JdbcTemplate jdbcTemplate;
+    @Autowired private ReservationApiController reservationApiController;
 
     @Test
     void 어드민_페이지를_조회시_200을_반환한다() {
@@ -209,5 +212,19 @@ class MissionStepTest {
                 .then().log().all()
                 .statusCode(200)
                 .body("size()", is(1));
+    }
+
+    @Test
+    void 레이어드_아키텍처를_적용했는지_확인한다() {
+        boolean isJdbcTemplateInjected = false;
+
+        for (Field field : reservationApiController.getClass().getDeclaredFields()) {
+            if (field.getType().equals(JdbcTemplate.class)) {
+                isJdbcTemplateInjected = true;
+                break;
+            }
+        }
+
+        assertThat(isJdbcTemplateInjected).isFalse();
     }
 }

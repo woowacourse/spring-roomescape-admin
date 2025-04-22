@@ -47,7 +47,7 @@ public class ReservationDao {
         ));
     }
 
-    public Reservation createReservation(ReservationName name, ReservationDateTime dateTime) {
+    public Reservation createReservation(final ReservationName name, final ReservationDateTime dateTime) {
         String sql = "insert into reservation(name, date, time_id) values(?, ?, ?)";
         String[] resultColumns = {"id"};
         KeyHolder keyHolder = new GeneratedKeyHolder();
@@ -66,16 +66,16 @@ public class ReservationDao {
         );
     }
 
-    public void deleteReservationById(Long id) {
+    public void deleteReservationById(final Long id) {
         String sql = "delete from reservation where id = ?";
         jdbcTemplate.update(sql, id);
     }
 
-    private LocalDate parseDate(String date) {
+    private LocalDate parseDate(final String date) {
         return LocalDate.parse(date);
     }
 
-    private LocalTime parseTime(String time) {
+    private LocalTime parseTime(final String time) {
         return LocalTime.parse(time);
     }
 }

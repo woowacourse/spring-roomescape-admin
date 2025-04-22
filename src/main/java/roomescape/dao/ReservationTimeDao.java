@@ -38,7 +38,7 @@ public class ReservationTimeDao {
         ));
     }
 
-    public Optional<ReservationTime> findTime(Long id) {
+    public Optional<ReservationTime> findTime(final Long id) {
         String sql = "select * from reservation_time where id = ?";
         List<ReservationTime> reservationTimes = jdbcTemplate.query(sql, (resultSet, rowNum) -> new ReservationTime(
                 resultSet.getLong("id"),

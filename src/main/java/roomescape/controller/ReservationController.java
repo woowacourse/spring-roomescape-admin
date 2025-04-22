@@ -11,12 +11,12 @@ import roomescape.model.Reservation;
 import java.util.List;
 
 @RestController
-public class ReservationApiController {
+public class ReservationController {
 
     private final ReservationDao reservationDao;
 
     @Autowired
-    public ReservationApiController(ReservationDao reservationDao) {
+    public ReservationController(ReservationDao reservationDao) {
         this.reservationDao = reservationDao;
     }
 

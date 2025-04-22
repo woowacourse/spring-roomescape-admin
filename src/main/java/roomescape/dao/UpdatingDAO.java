@@ -49,4 +49,8 @@ public class UpdatingDAO {
 
         return new ReservationTimeResDto(id.longValue(), dto.startAt());
     }
+
+    public void deleteById2(Long id) {
+        jdbcTemplate.update("DELETE FROM reservation_time WHERE id = ?", id);
+    }
 }

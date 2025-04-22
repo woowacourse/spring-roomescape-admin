@@ -100,7 +100,7 @@
           }
       ]
       ```
-- [ ] 시간 삭제 API
+- [x] 시간 삭제 API
   - Request
     - ```
       DELETE /times/1 HTTP/1.1

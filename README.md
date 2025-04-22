@@ -98,3 +98,54 @@ HTTP/1.1 200
 - 기존에 사용하던 List 및 AtomicLong 을 제거하세요.
 - 예약 관리 기능이 정상 동작하도록 기능을 완성하세요.
 
+## 7단계 - 시간 관리 기능
+
+- 방탈출 시간표가 정해져 있는데 직접 입력하기 번거로워서 선택하는 방식으로 수정하려합니다.
+- API 명세를 따라 시간 관리 API를 구현하세요.
+- 페이지는 templates/admin/time.html 파일을 이용하세요.
+
+#### 시간 생성
+```http request
+// Request
+POST /times HTTP/1.1
+content-type: application/json
+
+{
+    "startAt": "10:00"
+}
+
+// Response
+HTTP/1.1 200
+Content-Type: application/json
+
+{
+    "id": 1,
+    "startAt": "10:00"
+}
+```
+
+### 시간 모두 조회
+```http request
+// request
+GET /times HTTP/1.1
+
+// response
+HTTP/1.1 200 
+Content-Type: application/json
+
+[
+   {
+        "id": 1,
+        "startAt": "10:00"
+    }
+]
+```
+
+### 시간 삭제 API
+```http request
+// request
+DELETE /times/1 HTTP/1.1
+
+// response
+HTTP/1.1 200
+```

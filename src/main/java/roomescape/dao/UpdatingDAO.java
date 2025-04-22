@@ -1,5 +1,6 @@
 package roomescape.dao;
 
+import java.sql.Time;
 import java.util.Map;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.simple.SimpleJdbcInsert;
@@ -21,17 +22,20 @@ public class UpdatingDAO {
     public ReservationResDto addAndGet(ReservationReqDto dto) {
         SimpleJdbcInsert simpleJdbcInsert = new SimpleJdbcInsert(jdbcTemplate)
                 .withTableName("reservation")
-                .usingColumns("name", "date", "time")
+                .usingColumns("name", "date", "time_id")
                 .usingGeneratedKeyColumns("id");
 
         Map<String, Object> parameters = Map.of(
                 "name", dto.name(),
                 "date", dto.date(),
-                "time", dto.time()
+                "time_id", dto.timeId()
         );
         Number id = simpleJdbcInsert.executeAndReturnKey(parameters);
 
-        return new ReservationResDto(id.longValue(), dto.name(), dto.date(), dto.time());
+        Time startAt = jdbcTemplate.queryForObject("SELECT start_at FROM reservation_time WHERE id = ?", Time.class, dto.timeId());
+
+        ReservationTimeResDto timeRes = new ReservationTimeResDto((long) dto.timeId(), startAt.toLocalTime());
+        return new ReservationResDto(id.longValue(), dto.name(), dto.date(), timeRes);
     }
 
     public void deleteById(Long id) {

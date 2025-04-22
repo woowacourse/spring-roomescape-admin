@@ -16,11 +16,25 @@ public class QueryingDAO {
     }
 
     public List<ReservationResDto> findAllReservations() {
-        return jdbcTemplate.query("SELECT * FROM reservation", (resultSet, rowNum) -> new ReservationResDto(
-                resultSet.getLong("id"),
+        String sql = """
+                SELECT
+                r.id as reservation_id,
+                r.name,
+                r.date,
+                t.id as time_id,
+                t.start_at as time_value
+                FROM reservation AS r
+                INNER JOIN reservation_time AS t
+                ON r.time_id = t.id
+                """;
+        return jdbcTemplate.query(sql, (resultSet, rowNum) -> new ReservationResDto(
+                resultSet.getLong("reservation_id"),
                 resultSet.getString("name"),
                 resultSet.getDate("date").toLocalDate(),
-                resultSet.getTime("time").toLocalTime()
+                new ReservationTimeResDto(
+                        resultSet.getLong("time_id"),
+                        resultSet.getTime("time_value").toLocalTime()
+                )
         ));
     }
 

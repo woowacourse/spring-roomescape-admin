@@ -19,7 +19,7 @@ public class MemoryReservationTimeRepository implements ReservationTimeRepositor
 
     @Override
     public ReservationTime add(ReservationTime reservationTime) {
-        ReservationTime newReservationTime = new ReservationTime(index.getAndIncrement(), reservationTime);
+        ReservationTime newReservationTime = reservationTime.withId(index.getAndIncrement());
         reservationTimes.add(newReservationTime);
         return newReservationTime;
     }

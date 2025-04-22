@@ -15,8 +15,8 @@ public class Reservation {
         this.reservationDateTime = reservationDateTime;
     }
 
-    public Reservation(final Long id, final Reservation reservation) {
-        this(id, reservation.name, reservation.reservationDateTime);
+    public Reservation withId(Long id) {
+        return new Reservation(id, name, reservationDateTime);
     }
 
     public boolean isEqualId(final Long id) {

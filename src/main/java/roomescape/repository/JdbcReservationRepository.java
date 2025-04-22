@@ -56,7 +56,7 @@ public class JdbcReservationRepository implements ReservationRepository {
                 "time_id", reservation.getReservationTime().getId()
         );
         Long newId = simpleJdbcInsert.executeAndReturnKey(parameter).longValue();
-        return new Reservation(newId, reservation);
+        return reservation.withId(newId);
     }
 
     @Override

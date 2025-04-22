@@ -34,7 +34,7 @@ public class JdbcReservationTimeRepository implements ReservationTimeRepository 
     public ReservationTime add(ReservationTime reservationTime) {
         Map<String, Object> parameter = Map.of("start_at", reservationTime.getStartAt());
         Long newId = simpleJdbcInsert.executeAndReturnKey(parameter).longValue();
-        return new ReservationTime(newId, reservationTime);
+        return reservationTime.withId(newId);
     }
 
     @Override

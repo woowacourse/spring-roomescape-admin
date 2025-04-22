@@ -8,12 +8,19 @@ public class ReservationTime {
     private final LocalTime startAt;
 
     public ReservationTime(Long id, LocalTime startAt) {
+        validateStartAt(startAt);
         this.id = id;
         this.startAt = startAt;
     }
 
-    public ReservationTime(Long id, ReservationTime reservationTime) {
-        this(id, reservationTime.startAt);
+    private void validateStartAt(LocalTime startAt) {
+        if (startAt == null) {
+            throw new IllegalArgumentException("시작 시간이 null일 수 없습니다.");
+        }
+    }
+
+    public ReservationTime withId(Long id) {
+        return new ReservationTime(id, startAt);
     }
 
     public boolean isAfter(LocalTime comparedTime) {

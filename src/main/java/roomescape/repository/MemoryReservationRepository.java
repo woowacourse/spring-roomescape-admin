@@ -13,7 +13,7 @@ public class MemoryReservationRepository implements ReservationRepository {
     private final AtomicLong index = new AtomicLong(1);
 
     public Reservation add(final Reservation reservation) {
-        Reservation newReservation = new Reservation(index.getAndIncrement(), reservation);
+        Reservation newReservation = reservation.withId(index.getAndIncrement());
         reservations.add(newReservation);
         return newReservation;
     }

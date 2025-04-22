@@ -17,7 +17,7 @@ public record Reservation(
 
     @NotNull(message = "[ERROR] 시간은 반드시 필요합니다.")
     LocalTime time
-) {
+) implements Entity {
 
     public Reservation withId(Long id) {
         if (id == null) {

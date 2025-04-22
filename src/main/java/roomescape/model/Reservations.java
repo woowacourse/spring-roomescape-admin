@@ -1,49 +1,55 @@
 package roomescape.model;
 
 import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
 import java.time.LocalDate;
 import java.time.LocalTime;
 import java.util.List;
 
-import org.springframework.jdbc.core.JdbcTemplate;
-import org.springframework.jdbc.support.GeneratedKeyHolder;
-import org.springframework.jdbc.support.KeyHolder;
 import org.springframework.stereotype.Component;
+
+import roomescape.Dao;
+import roomescape.PreparedStatementProvider;
 
 @Component
 public class Reservations {
 
-    private final JdbcTemplate jdbcTemplate;
+    private final Dao dao;
 
-    public Reservations(JdbcTemplate jdbcTemplate) {
-        this.jdbcTemplate = jdbcTemplate;
+    public Reservations(Dao dao) {
+        this.dao = dao;
     }
 
     public List<Reservation> getAll() {
         String query = "SELECT id, name, date, time FROM reservation";
-        return jdbcTemplate.query(query, (resultSet, rowNum) -> new Reservation(
+        return dao.getAll(query, this::reservationRowMapper);
+    }
+
+    private Reservation reservationRowMapper(ResultSet resultSet, int rowNum) throws SQLException {
+        return new Reservation(
             resultSet.getLong("id"),
             resultSet.getString("name"),
             resultSet.getObject("date", LocalDate.class),
             resultSet.getObject("time", LocalTime.class)
-        ));
+        );
     }
 
     public Reservation save(Reservation reservation) {
         String query = "INSERT INTO reservation (name, date, time) VALUES (?, ?, ?)";
-        KeyHolder keyHolder = new GeneratedKeyHolder();
-        jdbcTemplate.update(connection -> {
-            PreparedStatement ps = connection.prepareStatement(query, new String[] {"id"});
-            ps.setString(1, reservation.name());
-            ps.setObject(2, reservation.date());
-            ps.setObject(3, reservation.time());
-            return ps;
-        }, keyHolder);
-        return reservation.withId(keyHolder.getKey().longValue());
+        return dao.save(query, reservation, (PreparedStatementProvider<Reservation>)this::psProvider);
+    }
+
+    private PreparedStatement psProvider(PreparedStatement preparedStatement, Reservation reservation)
+        throws SQLException {
+        preparedStatement.setString(1, reservation.name());
+        preparedStatement.setObject(2, reservation.date());
+        preparedStatement.setObject(3, reservation.time());
+        return preparedStatement;
     }
 
     public void remove(Long id) {
         String query = "DELETE FROM reservation WHERE id = ?";
-        jdbcTemplate.update(query, id);
+        dao.remove(query, id);
     }
 }

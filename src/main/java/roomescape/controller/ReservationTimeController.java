@@ -11,7 +11,6 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import roomescape.dto.CreateReservationTimeDto;
 import roomescape.dto.ReservationTimeDto;
-import roomescape.repository.ReservationTimeRepository;
 import roomescape.service.ReservationTimeService;
 
 @RestController
@@ -19,12 +18,9 @@ import roomescape.service.ReservationTimeService;
 public class ReservationTimeController {
 
     private final ReservationTimeService reservationTimeService;
-    private final ReservationTimeRepository reservationTimeRepository;
 
-    public ReservationTimeController(ReservationTimeService reservationTimeService,
-                                     ReservationTimeRepository reservationTimeRepository) {
+    public ReservationTimeController(ReservationTimeService reservationTimeService) {
         this.reservationTimeService = reservationTimeService;
-        this.reservationTimeRepository = reservationTimeRepository;
     }
 
     @GetMapping

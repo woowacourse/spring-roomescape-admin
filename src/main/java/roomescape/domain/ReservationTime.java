@@ -20,6 +20,10 @@ public class ReservationTime {
         return startAt.isAfter(comparedTime);
     }
 
+    public boolean isEqualId(Long id) {
+        return this.id.equals(id);
+    }
+
     public Long getId() {
         return id;
     }

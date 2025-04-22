@@ -10,28 +10,30 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
-import roomescape.dto.ReservationTimeReadDto;
+import roomescape.dto.ReservationTimeRequest;
+import roomescape.dto.ReservationTimeResponse;
 import roomescape.model.ReservationTime;
 import roomescape.repository.ReservationTimeRepository;
 
 @Controller
 @RequestMapping("times")
-public class ResercavationTimeController {
+public class ReservationTimeController {
     private final ReservationTimeRepository timeRepository;
 
-    public ResercavationTimeController(ReservationTimeRepository timeRepository) {
+    public ReservationTimeController(ReservationTimeRepository timeRepository) {
         this.timeRepository = timeRepository;
     }
 
     @PostMapping
-    public ResponseEntity<ReservationTimeReadDto> createReservationTime(@RequestBody ReservationTime time) {
-        ReservationTimeReadDto readDto = timeRepository.add(time);
-        return ResponseEntity.created(URI.create("times/" + readDto.getId())).body(readDto);
+    public ResponseEntity<ReservationTimeResponse> createReservationTime(@RequestBody ReservationTimeRequest request) {
+        ReservationTime newtime = new ReservationTime(request.getStartAt());
+        ReservationTimeResponse response = ReservationTimeResponse.from(timeRepository.add(newtime));
+        return ResponseEntity.created(URI.create("times/" + response.getId())).body(response);
     }
 
     @GetMapping
-    public ResponseEntity<List<ReservationTimeReadDto>> getReservationTimes() {
-        return ResponseEntity.ok(timeRepository.findAll());
+    public ResponseEntity<List<ReservationTimeResponse>> getReservationTimes() {
+        return ResponseEntity.ok(ReservationTimeResponse.from(timeRepository.findAll()));
     }
 
     @DeleteMapping("/{id}")

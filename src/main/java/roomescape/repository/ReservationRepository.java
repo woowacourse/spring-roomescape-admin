@@ -6,7 +6,6 @@ import java.util.Map;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.simple.SimpleJdbcInsert;
 import org.springframework.stereotype.Repository;
-import roomescape.dto.ReservationReadDto;
 import roomescape.exception.reservation.ReservationNotFoundException;
 import roomescape.model.Reservation;
 
@@ -22,14 +21,14 @@ public class ReservationRepository {
                 .usingGeneratedKeyColumns("id");
     }
 
-    public ReservationReadDto add(Reservation reservation) {
+    public Reservation add(Reservation reservation) {
         Map<String, Object> params = new HashMap<>();
         params.put("name", reservation.getName());
         params.put("date", reservation.getDate());
         params.put("time", reservation.getTime());
 
         Long id = jdbcInsert.executeAndReturnKey(params).longValue();
-        return new ReservationReadDto(id, reservation.getName(), reservation.getDate(), reservation.getTime());
+        return new Reservation(id, reservation.getName(), reservation.getDate(), reservation.getTime());
     }
 
     public int deleteBy(Long id) {
@@ -41,20 +40,20 @@ public class ReservationRepository {
         return rowNum;
     }
 
-    public List<ReservationReadDto> findAll() {
+    public List<Reservation> findAll() {
         String sql = "select * from reservation";
-        List<ReservationReadDto> dtos = jdbcTemplate.query(
+        List<Reservation> reservations = jdbcTemplate.query(
                 sql,
                 (resultSet, rowNum) -> {
-                    ReservationReadDto dto = new ReservationReadDto(
+                    Reservation reservation = new Reservation(
                             resultSet.getLong("id"),
                             resultSet.getString("name"),
                             resultSet.getDate("date").toLocalDate(),
                             resultSet.getTime("time").toLocalTime()
                     );
-                    return dto;
+                    return reservation;
                 }
         );
-        return dtos;
+        return reservations;
     }
 }

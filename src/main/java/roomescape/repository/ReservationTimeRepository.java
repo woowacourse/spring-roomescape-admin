@@ -7,7 +7,6 @@ import java.util.Map;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.simple.SimpleJdbcInsert;
 import org.springframework.stereotype.Repository;
-import roomescape.dto.ReservationTimeReadDto;
 import roomescape.exception.reservationTime.ReservationTimeNotFoundException;
 import roomescape.model.ReservationTime;
 
@@ -23,27 +22,27 @@ public class ReservationTimeRepository {
                 .usingGeneratedKeyColumns("id");
     }
 
-    public ReservationTimeReadDto add(ReservationTime time) {
+    public ReservationTime add(ReservationTime time) {
         Map<String, LocalTime> params = new HashMap<>();
         params.put("start_at", time.getStartAt());
 
         Long id = jdbcInsert.executeAndReturnKey(params).longValue();
-        return new ReservationTimeReadDto(id, time.getStartAt());
+        return new ReservationTime(id, time.getStartAt());
     }
 
-    public List<ReservationTimeReadDto> findAll() {
+    public List<ReservationTime> findAll() {
         String sql = "select * from reservation_time";
-        List<ReservationTimeReadDto> dtos = jdbcTemplate.query(
+        List<ReservationTime> times = jdbcTemplate.query(
                 sql,
                 (resultSet, rowNum) -> {
-                    ReservationTimeReadDto dto = new ReservationTimeReadDto(
+                    ReservationTime time = new ReservationTime(
                             resultSet.getLong("id"),
                             resultSet.getTime("start_at").toLocalTime()
                     );
-                    return dto;
+                    return time;
                 }
         );
-        return dtos;
+        return times;
     }
 
     public int deleteBy(Long id) {

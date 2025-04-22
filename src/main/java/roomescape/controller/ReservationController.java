@@ -10,8 +10,8 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
-import roomescape.dto.ReservationCreateDto;
-import roomescape.dto.ReservationReadDto;
+import roomescape.dto.ReservationRequest;
+import roomescape.dto.ReservationResponse;
 import roomescape.model.Reservation;
 import roomescape.repository.ReservationRepository;
 
@@ -25,15 +25,16 @@ public class ReservationController {
     }
 
     @GetMapping
-    public ResponseEntity<List<ReservationReadDto>> getReservations() {
-        return ResponseEntity.ok().body(reservationRepository.findAll());
+    public ResponseEntity<List<ReservationResponse>> getReservations() {
+        List<ReservationResponse> response = ReservationResponse.from(reservationRepository.findAll());
+        return ResponseEntity.ok().body(response);
     }
 
     @PostMapping
-    public ResponseEntity<ReservationReadDto> createReservation(@RequestBody ReservationCreateDto dto) {
-        Reservation newReservation = new Reservation(dto.getName(), dto.getDate(), dto.getTime());
-        ReservationReadDto readDto = reservationRepository.add(newReservation);
-        return ResponseEntity.created(URI.create("reservations/" + readDto.getId())).body(readDto);
+    public ResponseEntity<ReservationResponse> createReservation(@RequestBody ReservationRequest request) {
+        Reservation newReservation = new Reservation(request.getName(), request.getDate(), request.getTime());
+        ReservationResponse response = ReservationResponse.from(reservationRepository.add(newReservation));
+        return ResponseEntity.created(URI.create("reservations/" + response.getId())).body(response);
     }
 
     @DeleteMapping("/{id}")
@@ -41,6 +42,4 @@ public class ReservationController {
         reservationRepository.deleteBy(id);
         return ResponseEntity.ok().build();
     }
-
-
 }

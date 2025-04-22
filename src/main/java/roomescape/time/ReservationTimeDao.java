@@ -24,18 +24,24 @@ public class ReservationTimeDao {
     }
 
     public List<ReservationTime> findAll() {
-        String sql = "select * from reservation_time";
+        String sql = "SELECT * FROM reservation_time";
         return jdbcTemplate.query(sql, reservationRowMapper);
     }
 
     public ReservationTime save(ReservationTime reservationTime) {
         KeyHolder keyHolder = new GeneratedKeyHolder();
-        String sql = "insert into reservation_time(start_at) values(?)";
+        String sql = "INSERT INTO reservation_time(start_at) VALUES(?)";
         jdbcTemplate.update(connection -> {
             PreparedStatement preparedStatement = connection.prepareStatement(sql, new String[]{"id"});
             preparedStatement.setTime(1, Time.valueOf(reservationTime.getStartAt()));
             return preparedStatement;
         }, keyHolder);
         return new ReservationTime(keyHolder.getKeyAs(Long.class), reservationTime.getStartAt());
+    }
+
+    public boolean removeById(long id) {
+        String sql = "DELETE FROM reservation_time WHERE id = ?";
+        int rowNumber = jdbcTemplate.update(sql, id);
+        return rowNumber == 1;
     }
 }

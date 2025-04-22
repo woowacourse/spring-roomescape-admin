@@ -11,5 +11,6 @@ public class WabConfig implements WebMvcConfigurer {
     public void addViewControllers(ViewControllerRegistry registry) {
         registry.addViewController("/admin").setViewName("forward:/index.html");
         registry.addViewController("/admin/reservation").setViewName("/admin/reservation-legacy");
+        registry.addViewController("/admin/time").setViewName("/admin/time");
     }
 }

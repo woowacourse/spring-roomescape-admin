@@ -2,20 +2,27 @@ package roomescape.dao;
 
 import java.time.LocalDate;
 import java.time.LocalTime;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import org.springframework.jdbc.core.JdbcTemplate;
+import org.springframework.jdbc.core.simple.SimpleJdbcInsert;
 import org.springframework.stereotype.Repository;
 import roomescape.domain.Person;
 import roomescape.domain.Reservation;
 import roomescape.domain.ReservationTime;
 
 @Repository
-public class QueryingDao {
+public class ReservationDao {
 
     private final JdbcTemplate jdbcTemplate;
+    private final SimpleJdbcInsert insertActor;
 
-    public QueryingDao(JdbcTemplate jdbcTemplate) {
+    public ReservationDao(JdbcTemplate jdbcTemplate) {
         this.jdbcTemplate = jdbcTemplate;
+        this.insertActor = new SimpleJdbcInsert(jdbcTemplate.getDataSource())
+            .withTableName("reservation")
+            .usingGeneratedKeyColumns("id");
     }
 
     public List<Reservation> findAllReservation() {
@@ -32,5 +39,19 @@ public class QueryingDao {
                 );
                 return reservation;
             });
+    }
+
+    public void saveReservation(Reservation reservation) {
+        Map<String, Object> parameters = new HashMap<>(3);
+        parameters.put("name", reservation.getPersonName());
+        parameters.put("date", reservation.getDate());
+        parameters.put("time_id", reservation.getTimeId());
+        Number newId = insertActor.executeAndReturnKey(parameters);
+        reservation.setId(newId.longValue());
+    }
+
+    public void deleteReservation(Long id) {
+        String query = "delete from reservation where id = ?";
+        jdbcTemplate.update(query, id);
     }
 }

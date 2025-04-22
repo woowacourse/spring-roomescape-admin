@@ -1,4 +1,4 @@
-package roomescape.model;
+package roomescape.repository;
 
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
@@ -9,15 +9,14 @@ import java.util.List;
 
 import org.springframework.stereotype.Component;
 
-import roomescape.Dao;
-import roomescape.PreparedStatementProvider;
+import roomescape.model.Reservation;
 
 @Component
-public class Reservations {
+public class ReservationRepository {
 
     private final Dao dao;
 
-    public Reservations(Dao dao) {
+    public ReservationRepository(Dao dao) {
         this.dao = dao;
     }
 

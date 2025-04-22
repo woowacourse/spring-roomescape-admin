@@ -13,31 +13,31 @@ import org.springframework.web.bind.annotation.RestController;
 
 import jakarta.validation.Valid;
 import roomescape.model.Reservation;
-import roomescape.model.Reservations;
+import roomescape.repository.ReservationRepository;
 
 @RestController
 @RequestMapping("/reservations")
 public class ReservationController {
 
-    private final Reservations reservations;
+    private final ReservationRepository reservationRepository;
 
-    public ReservationController(Reservations reservations) {
-        this.reservations = reservations;
+    public ReservationController(ReservationRepository reservationRepository) {
+        this.reservationRepository = reservationRepository;
     }
 
     @GetMapping
     public ResponseEntity<List<Reservation>> reservations() {
-        return ResponseEntity.ok(reservations.getAll());
+        return ResponseEntity.ok(reservationRepository.getAll());
     }
 
     @PostMapping
     public ResponseEntity<Reservation> createReservation(@RequestBody @Valid Reservation reservation) {
-        return ResponseEntity.ok(reservations.save(reservation));
+        return ResponseEntity.ok(reservationRepository.save(reservation));
     }
 
     @DeleteMapping("/{reservationId}")
     public ResponseEntity<Void> deleteReservation(@PathVariable Long reservationId) {
-        reservations.remove(reservationId);
+        reservationRepository.remove(reservationId);
         return ResponseEntity.ok().build();
     }
 }

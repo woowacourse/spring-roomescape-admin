@@ -20,9 +20,7 @@ class ReservationServiceTest {
 
     @BeforeEach
     void setUp() {
-        ReservationMapper reservationMapper = new ReservationMapper();
-        FakeReservationDao fakeReservationDao = new FakeReservationDao(reservationMapper);
-        reservationService = new ReservationService(fakeReservationDao, reservationMapper);
+        reservationService = new ReservationService(new FakeReservationDao(), new ReservationMapper());
     }
 
     @Test

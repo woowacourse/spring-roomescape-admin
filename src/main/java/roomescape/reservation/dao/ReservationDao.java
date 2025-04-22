@@ -2,11 +2,10 @@ package roomescape.reservation.dao;
 
 import java.util.List;
 import roomescape.reservation.domain.Reservation;
-import roomescape.reservation.dto.ReservationRequest;
 
 public interface ReservationDao {
 
-    Reservation insert(ReservationRequest reservationRequest);
+    Reservation insert(Reservation reservation);
 
     Reservation findById(long id);
 

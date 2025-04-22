@@ -1,11 +1,8 @@
 package roomescape.reservation.dao;
 
-import java.sql.Date;
 import java.sql.PreparedStatement;
-import java.sql.Time;
 import java.time.LocalDate;
 import java.time.LocalTime;
-import java.util.ArrayList;
 import java.util.List;
 import java.util.NoSuchElementException;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -14,23 +11,20 @@ import org.springframework.jdbc.support.GeneratedKeyHolder;
 import org.springframework.jdbc.support.KeyHolder;
 import org.springframework.stereotype.Repository;
 import roomescape.reservation.domain.Reservation;
-import roomescape.reservation.dto.ReservationRequest;
 import roomescape.reservation.utils.ReservationMapper;
 
 @Repository
 public class ReservationDaoImpl implements ReservationDao {
 
-    private final ReservationMapper reservationMapper;
     private final JdbcTemplate jdbcTemplate;
 
     @Autowired
-    public ReservationDaoImpl(ReservationMapper reservationMapper, JdbcTemplate jdbcTemplate) {
-        this.reservationMapper = reservationMapper;
+    public ReservationDaoImpl(JdbcTemplate jdbcTemplate) {
         this.jdbcTemplate = jdbcTemplate;
     }
 
     @Override
-    public Reservation insert(ReservationRequest reservationRequest) {
+    public Reservation insert(Reservation reservation) {
         String sql = "insert into reservation (name, date, time) values (?, ?, ?)";
 
         KeyHolder keyHolder = new GeneratedKeyHolder();
@@ -39,13 +33,13 @@ public class ReservationDaoImpl implements ReservationDao {
             PreparedStatement ps = connection.prepareStatement(
                     sql,
                     new String[]{"id"});
-            ps.setString(1, reservationRequest.name());
-            ps.setObject(2, Date.valueOf(reservationRequest.date()));
-            ps.setObject(3, Time.valueOf(reservationRequest.time()));
+            ps.setString(1, reservation.getName());
+            ps.setObject(2, reservation.getDate());
+            ps.setObject(3, reservation.getTime());
             return ps;
         }, keyHolder);
 
-        return reservationMapper.toReservation(reservationRequest, keyHolder.getKey().longValue());
+        return new Reservation(keyHolder.getKey().longValue(), reservation);
     }
 
     @Override

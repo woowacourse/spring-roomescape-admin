@@ -26,21 +26,20 @@ class ReservationDaoImplTest {
 
     @BeforeEach
     void setUp() {
-        ReservationMapper reservationMapper = new ReservationMapper();
-        reservationDao = new ReservationDaoImpl(reservationMapper, jdbcTemplate);
+        reservationDao = new ReservationDaoImpl(jdbcTemplate);
     }
 
     @Test
     void 데이터를_전달받아_예약을_저장한다() {
         // Given
-        ReservationRequest reservationRequest = new ReservationRequest(
+        Reservation requestReservation = new Reservation(
                 "시소",
                 LocalDate.of(2025, 1, 1),
                 LocalTime.of(12, 10)
         );
 
         // When & Then
-        assertThat(reservationDao.insert(reservationRequest))
+        assertThat(reservationDao.insert(requestReservation))
                 .isInstanceOf(Reservation.class);
     }
 
@@ -55,12 +54,12 @@ class ReservationDaoImplTest {
     void ID를_전달받아_DB에_해당_ID가_존재한다면_삭제한다() {
         // Given
         final long id = 1L;
-        ReservationRequest reservationRequest = new ReservationRequest(
+        Reservation requestReservation = new Reservation(
                 "시소",
                 LocalDate.of(2025, 1, 1),
                 LocalTime.of(12, 10)
         );
-        reservationDao.insert(reservationRequest);
+        reservationDao.insert(requestReservation);
 
         // When & Then
         assertThatNoException()

@@ -8,8 +8,8 @@ import roomescape.reservation.dto.ReservationResponse;
 @Component
 public class ReservationMapper {
 
-    public Reservation toReservation(ReservationRequest reservationRequest, long index) {
-        return new Reservation(index, reservationRequest.name(), reservationRequest.date(), reservationRequest.time());
+    public Reservation toReservation(ReservationRequest reservationRequest) {
+        return new Reservation(reservationRequest.name(), reservationRequest.date(), reservationRequest.time());
     }
 
     public ReservationResponse toReservationResponse(Reservation reservation) {

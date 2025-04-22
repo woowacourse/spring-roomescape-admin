@@ -6,24 +6,20 @@ import java.util.List;
 import java.util.NoSuchElementException;
 import java.util.concurrent.atomic.AtomicLong;
 import roomescape.reservation.domain.Reservation;
-import roomescape.reservation.dto.ReservationRequest;
-import roomescape.reservation.utils.ReservationMapper;
 
 public class FakeReservationDao implements ReservationDao {
 
     private final List<Reservation> reservations;
     private final AtomicLong atomicLong;
-    private final ReservationMapper reservationMapper;
 
-    public FakeReservationDao(ReservationMapper reservationMapper) {
+    public FakeReservationDao() {
         this.reservations = Collections.synchronizedList(new ArrayList<>());
         this.atomicLong = new AtomicLong(1L);
-        this.reservationMapper = reservationMapper;
     }
 
     @Override
-    public Reservation insert(ReservationRequest reservationRequest) {
-        Reservation reservation = reservationMapper.toReservation(reservationRequest, atomicLong.getAndIncrement());
+    public Reservation insert(Reservation requestReservation) {
+        Reservation reservation = new Reservation(atomicLong.getAndIncrement(), requestReservation);
         reservations.add(reservation);
         return reservation;
     }

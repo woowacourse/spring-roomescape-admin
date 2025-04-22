@@ -22,7 +22,8 @@ public class ReservationService {
     }
 
     public ReservationResponse addReservation(ReservationRequest reservationRequest) {
-        return reservationMapper.toReservationResponse(reservationDao.insert(reservationRequest));
+        Reservation reservation = reservationMapper.toReservation(reservationRequest);
+        return reservationMapper.toReservationResponse(reservationDao.insert(reservation));
     }
 
     public ReservationResponse findReservationById(long id) {

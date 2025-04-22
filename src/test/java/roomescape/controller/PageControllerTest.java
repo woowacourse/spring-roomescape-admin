@@ -37,4 +37,11 @@ class PageControllerTest {
         String reservationPageViewName = pageController.getReservationPage();
         assertThat(reservationPageViewName).isEqualTo("admin/reservation");
     }
+
+    @DisplayName("시간페이지 요청시 시간페이지 뷰 이름을 리턴한다.")
+    @Test
+    void requestTimePage() {
+        String timePageViewName = pageController.getTimePage();
+        assertThat(timePageViewName).isEqualTo("admin/time");
+    }
 }

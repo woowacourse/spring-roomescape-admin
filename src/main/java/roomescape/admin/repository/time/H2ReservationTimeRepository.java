@@ -2,6 +2,7 @@ package roomescape.admin.repository.time;
 
 import java.sql.PreparedStatement;
 import java.sql.Time;
+import java.time.LocalTime;
 import java.util.List;
 import lombok.RequiredArgsConstructor;
 import org.springframework.jdbc.core.JdbcTemplate;
@@ -41,7 +42,22 @@ public class H2ReservationTimeRepository implements ReservationTimeRepository {
         );
 
         if (reservationTimes.size() != 1) {
-            throw new DataNotFoundException("해당 예약 정보가 존재하지 않습니다. id = " + id);
+            throw new DataNotFoundException("해당 예약 시간 데이터가 존재하지 않습니다. id = " + id);
+        }
+        return reservationTimes.getFirst();
+    }
+
+    @Override
+    public ReservationTime getOneByStartAt(LocalTime startAt) {
+        String sql = "select * from reservation_times where start_at = ?";
+        List<ReservationTime> reservationTimes = jdbcTemplate.query(sql, (rs, rowNum) ->
+                        new ReservationTime(rs.getLong("id"),
+                                rs.getTime("start_at").toLocalTime()),
+                startAt
+        );
+
+        if (reservationTimes.size() != 1) {
+            throw new DataNotFoundException("해당 예약 시간 데이터가 존재하지 않습니다. startAt = " + startAt);
         }
         return reservationTimes.getFirst();
     }

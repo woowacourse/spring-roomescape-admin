@@ -1,6 +1,6 @@
 package roomescape.dto;
 
-import roomescape.ReservationEntity;
+import roomescape.entity.ReservationEntity;
 
 import java.time.LocalDate;
 import java.time.LocalTime;

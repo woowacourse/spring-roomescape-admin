@@ -1,8 +1,9 @@
-package roomescape;
+package roomescape.dao;
 
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.support.GeneratedKeyHolder;
 import org.springframework.stereotype.Component;
+import roomescape.entity.ReservationEntity;
 
 import java.sql.PreparedStatement;
 import java.time.LocalDate;

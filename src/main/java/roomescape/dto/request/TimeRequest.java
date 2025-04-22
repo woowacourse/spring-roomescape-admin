@@ -15,7 +15,7 @@ public record TimeRequest(
         try {
             return LocalTime.parse(startAt);
         } catch (DateTimeException e) {
-            throw new IllegalStateException("TimeRequest의 startAt이 잘못된 형식입니다.");
+            throw new IllegalArgumentException("유효하지 않은 startAt입니다: " + startAt);
         }
     }
 }

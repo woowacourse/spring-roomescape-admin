@@ -3,21 +3,32 @@ package roomescape.reservation.dao;
 import java.time.LocalDate;
 import java.time.LocalTime;
 import java.util.NoSuchElementException;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.boot.test.autoconfigure.jdbc.JdbcTest;
+import org.springframework.jdbc.core.JdbcTemplate;
 import roomescape.reservation.domain.Reservation;
 import roomescape.reservation.dto.ReservationRequest;
+import roomescape.reservation.utils.ReservationMapper;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatNoException;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 
-@SpringBootTest
+@JdbcTest
 class ReservationDaoImplTest {
 
     @Autowired
+    private JdbcTemplate jdbcTemplate;
+
     private ReservationDao reservationDao;
+
+    @BeforeEach
+    void setUp() {
+        ReservationMapper reservationMapper = new ReservationMapper();
+        reservationDao = new ReservationDaoImpl(reservationMapper, jdbcTemplate);
+    }
 
     @Test
     void 데이터를_전달받아_예약을_저장한다() {

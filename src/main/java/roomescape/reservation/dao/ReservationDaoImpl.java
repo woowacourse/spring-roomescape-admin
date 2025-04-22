@@ -20,11 +20,14 @@ import roomescape.reservation.utils.ReservationMapper;
 @Repository
 public class ReservationDaoImpl implements ReservationDao {
 
-    @Autowired
-    private ReservationMapper reservationMapper;
+    private final ReservationMapper reservationMapper;
+    private final JdbcTemplate jdbcTemplate;
 
     @Autowired
-    private JdbcTemplate jdbcTemplate;
+    public ReservationDaoImpl(ReservationMapper reservationMapper, JdbcTemplate jdbcTemplate) {
+        this.reservationMapper = reservationMapper;
+        this.jdbcTemplate = jdbcTemplate;
+    }
 
     @Override
     public Reservation insert(ReservationRequest reservationRequest) {

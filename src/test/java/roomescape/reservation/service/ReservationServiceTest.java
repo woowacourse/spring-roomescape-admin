@@ -5,8 +5,6 @@ import java.time.LocalTime;
 import java.util.NoSuchElementException;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.context.SpringBootTest;
 import roomescape.reservation.dao.FakeReservationDao;
 import roomescape.reservation.dto.ReservationRequest;
 import roomescape.reservation.dto.ReservationResponse;
@@ -16,16 +14,13 @@ import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatNoException;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 
-@SpringBootTest
 class ReservationServiceTest {
-
-    @Autowired
-    private ReservationMapper reservationMapper;
 
     private ReservationService reservationService;
 
     @BeforeEach
     void setUp() {
+        ReservationMapper reservationMapper = new ReservationMapper();
         FakeReservationDao fakeReservationDao = new FakeReservationDao(reservationMapper);
         reservationService = new ReservationService(fakeReservationDao, reservationMapper);
     }

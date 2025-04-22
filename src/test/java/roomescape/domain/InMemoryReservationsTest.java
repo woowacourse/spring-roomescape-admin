@@ -8,6 +8,9 @@ import java.util.ArrayList;
 import java.util.List;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
+import roomescape.domain.Reservation.InMemoryReservations;
+import roomescape.domain.Reservation.Reservation;
+import roomescape.domain.Reservation.Reservations;
 import roomescape.dto.request.ReservationCreateRequest;
 
 class InMemoryReservationsTest {

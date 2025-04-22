@@ -42,7 +42,7 @@ class PageControllerTest {
     @DisplayName("/admin/time 페이지 연결 테스트")
     @Test
     void adminTimePage() throws URISyntaxException, IOException {
-        // [요구사항] RestAssured 를 사용하지 않고 테스트 코드 작성하기.
+        // [요구사항] RestAssured 를 사용하지 않고 테스트 코드 작성해보기.
         HttpURLConnection connection = (HttpURLConnection) new URI("http://localhost:8080/admin/time").toURL().openConnection();
         int responseCode = connection.getResponseCode();
 

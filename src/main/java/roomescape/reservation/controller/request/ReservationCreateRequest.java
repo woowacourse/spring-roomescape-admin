@@ -2,6 +2,7 @@ package roomescape.reservation.controller.request;
 
 import java.time.LocalDate;
 import roomescape.reservation.domain.Reservation;
+import roomescape.time.domain.ReservationTime;
 
 public record ReservationCreateRequest(
         String name,
@@ -9,7 +10,7 @@ public record ReservationCreateRequest(
         Long timeId
 ) {
     public Reservation to() {
-        return new Reservation(name, LocalDate.parse(date), null);
+        return new Reservation(name, LocalDate.parse(date), new ReservationTime(timeId));
     }
 
     public Long getTimeId() {

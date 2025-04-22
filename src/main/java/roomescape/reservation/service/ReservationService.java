@@ -24,8 +24,8 @@ public class ReservationService {
         return reservationRepository.findAll();
     }
 
-    public Reservation create(Reservation reservation, Long timeId) {
-        ReservationTime reservationTime = reservationTimeService.findById(timeId);
+    public Reservation create(Reservation reservation) {
+        ReservationTime reservationTime = reservationTimeService.findById(reservation.getTimeId());
         reservation.setReservationTime(reservationTime);
         return reservationRepository.save(reservation);
     }

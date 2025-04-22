@@ -12,6 +12,7 @@ import org.springframework.jdbc.core.namedparam.SqlParameterSource;
 import org.springframework.jdbc.core.simple.SimpleJdbcInsert;
 import org.springframework.stereotype.Repository;
 import roomescape.reservation.domain.Reservation;
+import roomescape.time.domain.ReservationTime;
 
 @Repository
 public class ReservationRepository {
@@ -33,7 +34,10 @@ public class ReservationRepository {
                         resultSet.getLong("id"),
                         resultSet.getString("name"),
                         LocalDate.parse(resultSet.getString("date")),
-                        LocalTime.parse(resultSet.getString("start_at"))
+                        new ReservationTime(
+                                resultSet.getLong("time_id"),
+                                LocalTime.parse(resultSet.getString("start_at"))
+                        )
                 ));
     }
 
@@ -45,10 +49,12 @@ public class ReservationRepository {
         SqlParameterSource parameters = new MapSqlParameterSource()
                 .addValue("name", reservation.getReserverName())
                 .addValue("date", reservation.getDate())
-                .addValue("time_id", reservation.getTimeId());
+                .addValue("time_id", reservation.getTimeId())
+                .addValue("start_at", reservation.getTime());
         Long id = jdbcInsert.executeAndReturnKey(parameters).longValue();
 
-        return new Reservation(id, reservation.getReserverName(), reservation.getDate(), reservation.getTime());
+        return new Reservation(id, reservation.getReserverName(), reservation.getDate(),
+                new ReservationTime(reservation.getTimeId(), reservation.getTime()));
     }
 
     public Optional<Reservation> findById(Long id) {
@@ -65,7 +71,10 @@ public class ReservationRepository {
                             resultSet.getLong("id"),
                             resultSet.getString("name"),
                             LocalDate.parse(resultSet.getString("date")),
-                            LocalTime.parse(resultSet.getString("start_at"))
+                            new ReservationTime(
+                                    resultSet.getLong("time_id"),
+                                    LocalTime.parse(resultSet.getString("start_at"))
+                            )
                     ), id);
         } catch (EmptyResultDataAccessException e) {
             return Optional.empty();

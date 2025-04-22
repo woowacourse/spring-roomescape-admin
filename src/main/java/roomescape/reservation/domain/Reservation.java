@@ -11,15 +11,15 @@ public class Reservation {
     private final ReservationDate reservationDate;
     private ReservationTime reservationTime;
 
-    public Reservation(Long id, String reserverName, LocalDate date, LocalTime time) {
+    public Reservation(Long id, String reserverName, LocalDate date, ReservationTime reservationTime) {
         this.id = id;
         this.reserverName = new ReserverName(reserverName);
         this.reservationDate = new ReservationDate(date);
-        this.reservationTime = new ReservationTime(time);
+        this.reservationTime = reservationTime;
     }
 
-    public Reservation(String reserverName, LocalDate date, LocalTime time) {
-        this(null, reserverName, date, time);
+    public Reservation(String reserverName, LocalDate date, ReservationTime reservationTime) {
+        this(null, reserverName, date, reservationTime);
     }
 
 //    private LocalDateTime validatePast(LocalDateTime reservationTime, LocalDateTime now) {

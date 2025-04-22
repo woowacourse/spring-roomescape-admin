@@ -17,4 +17,9 @@ public class RoomEscapeController {
     public String getReservationPage() {
         return "/admin/reservation-legacy";
     }
+
+    @GetMapping("/time")
+    public String getReservationTimePage() {
+        return "/admin/time.html";
+    }
 }

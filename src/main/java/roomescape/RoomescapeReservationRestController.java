@@ -3,7 +3,8 @@ package roomescape;
 import org.springframework.http.ResponseEntity;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.web.bind.annotation.*;
-import roomescape.dto.ReservationDto;
+import roomescape.dto.ReservationRequestDto;
+import roomescape.dto.ReservationResponseDto;
 
 import java.util.List;
 
@@ -17,16 +18,19 @@ public class RoomescapeReservationRestController {
     }
 
     @GetMapping
-    public List<Reservation> getAllReservation() {
-        return reservations.findAll();
+    public List<ReservationResponseDto> getAllReservation() {
+        return reservations.findAll()
+                .stream()
+                .map(ReservationResponseDto::from)
+                .toList();
     }
 
     @PostMapping
-    public ResponseEntity<Reservation> createReservation(@RequestBody ReservationDto reservationDto) {
-        Reservation entity = reservationDto.toEntity();
+    public ResponseEntity<ReservationResponseDto> createReservation(@RequestBody ReservationRequestDto reservationRequestDto) {
+        Reservation entity = reservationRequestDto.toEntity();
         try {
             reservations.save(entity);
-            return ResponseEntity.ok().body(entity);
+            return ResponseEntity.ok().body(ReservationResponseDto.from(entity));
         } catch (IllegalArgumentException e) {
             return ResponseEntity.badRequest().build();
         }

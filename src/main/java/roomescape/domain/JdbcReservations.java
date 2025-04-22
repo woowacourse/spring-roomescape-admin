@@ -1,13 +1,13 @@
 package roomescape.domain;
 
-import java.sql.PreparedStatement;
 import java.time.LocalDate;
 import java.time.LocalTime;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;
-import org.springframework.jdbc.support.GeneratedKeyHolder;
-import org.springframework.jdbc.support.KeyHolder;
+import org.springframework.jdbc.core.simple.SimpleJdbcInsert;
 import org.springframework.stereotype.Repository;
 import roomescape.dto.request.ReservationCreateRequest;
 
@@ -28,19 +28,17 @@ public class JdbcReservations implements Reservations {
 
     @Override
     public long create(final ReservationCreateRequest reservationCreateRequest) {
-        final String sql = "INSERT INTO reservation (name, date, time) VALUES (?, ?, ?)";
+        SimpleJdbcInsert jdbcInsert = new SimpleJdbcInsert(jdbcTemplate)
+                .withTableName("reservation")
+                .usingGeneratedKeyColumns("id");
 
-        KeyHolder keyHolder = new GeneratedKeyHolder();
-        jdbcTemplate.update(connection -> {
-            PreparedStatement ps = connection.prepareStatement(
-                    sql,
-                    new String[]{"id"});
-            ps.setString(1, reservationCreateRequest.name());
-            ps.setObject(2, reservationCreateRequest.date());
-            ps.setObject(3, reservationCreateRequest.time());
-            return ps;
-        }, keyHolder);
-        return keyHolder.getKey().longValue();
+        Map<String, Object> parameters = new HashMap<>();
+        parameters.put("name", reservationCreateRequest.name());
+        parameters.put("date", reservationCreateRequest.date());
+        parameters.put("time", reservationCreateRequest.time());
+
+        Number key = jdbcInsert.executeAndReturnKey(parameters);
+        return key.longValue();
     }
 
     @Override

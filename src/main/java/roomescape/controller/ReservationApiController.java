@@ -4,7 +4,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import roomescape.dao.ReservationDao;
-import roomescape.dto.CreateReservationRequestDto;
+import roomescape.dto.ReservationCreateRequestDto;
 import roomescape.dto.ReservationResponseDto;
 import roomescape.model.Reservation;
 
@@ -27,7 +27,7 @@ public class ReservationApiController {
     }
 
     @PostMapping("/reservations")
-    public ResponseEntity<ReservationResponseDto> addReservation(@RequestBody final CreateReservationRequestDto reservationDto) {
+    public ResponseEntity<ReservationResponseDto> addReservation(@RequestBody final ReservationCreateRequestDto reservationDto) {
         Reservation noIdReservation = reservationDto.toEntity();
         Long id = reservationDao.saveAndReturnId(noIdReservation);
         ReservationResponseDto responseDto = new ReservationResponseDto(id, noIdReservation.name(), noIdReservation.date(), noIdReservation.time());

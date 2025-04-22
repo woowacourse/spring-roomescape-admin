@@ -102,14 +102,20 @@ public class ReservationRepositoryTest {
     @DisplayName("날짜와 시간을 선택한다.")
     void selectDateAndTimeTest(){
         // given
-        LocalDate date = LocalDate.of(2025, 4, 22);
-        LocalTime time = LocalTime.of(4, 22);
+        LocalDate duplicatedDate = LocalDate.of(2025, 4, 22);
+        LocalTime duplicatedTime = LocalTime.of(16, 22);
+        LocalDate date = LocalDate.of(2025, 2, 2);
+        LocalTime time = LocalTime.of(10, 50);
 
         // when
-        boolean isDuplicatedDateAndTime = reservationRepository.selectByDateAndTime(date, time);
+        boolean isDuplicatedDateAndTime = reservationRepository.selectByDateAndTime(duplicatedDate,duplicatedTime);
+        boolean unDuplicatedDateAndTime = reservationRepository.selectByDateAndTime(date, time);
 
         // then
-        Assertions.assertThat(isDuplicatedDateAndTime).isTrue();
+        SoftAssertions.assertSoftly(softAssertions -> {
+            softAssertions.assertThat(unDuplicatedDateAndTime).isFalse();
+            softAssertions.assertThat(isDuplicatedDateAndTime).isTrue();
+        });
     }
 
 

@@ -85,7 +85,8 @@ public class H2ReservationRepository implements ReservationRepository{
 
     @Override
     public boolean selectByDateAndTime(LocalDate date, LocalTime time) {
-        return false;
+        final String sql = "SELECT COUNT(*) FROM reservation WHERE date = ? and time =?";
+        return jdbcTemplate.queryForObject(sql, Integer.class,date,time) > 0;
 
     }
 }

@@ -10,6 +10,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.test.context.bean.override.mockito.MockitoBean;
 import org.springframework.test.web.servlet.MockMvc;
+import roomescape.business.domain.Customer;
 import roomescape.business.domain.Reservation;
 import roomescape.business.domain.ReservationTime;
 import roomescape.business.service.ReservationService;
@@ -44,8 +45,8 @@ class ReservationControllerTest {
 
             Mockito.when(reservationService.getAll())
                     .thenReturn(List.of(
-                            new Reservation(1, "dompoo", date1, new ReservationTime(5, LocalTime.of(10, 0))),
-                            new Reservation(2, "popo", date2, new ReservationTime(10, LocalTime.of(13, 0)))
+                            new Reservation(1, new Customer("dompoo"), date1, new ReservationTime(5, LocalTime.of(10, 0))),
+                            new Reservation(2, new Customer("popo"), date2, new ReservationTime(10, LocalTime.of(13, 0)))
                     ));
 
             RestAssuredMockMvc.given().log().all()
@@ -75,7 +76,7 @@ class ReservationControllerTest {
         @Test
         void 이름_날짜_시간으로_생성할_수_있다() {
             Mockito.when(reservationService.saveAndGet(Mockito.any()))
-                    .thenReturn(new Reservation(1, name, createDate, new ReservationTime(5, LocalTime.of(10, 0))));
+                    .thenReturn(new Reservation(1, new Customer(name), createDate, new ReservationTime(5, LocalTime.of(10, 0))));
 
             final Map<String, Object> values = Map.of(
                     "name", name,

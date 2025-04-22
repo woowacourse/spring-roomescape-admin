@@ -3,6 +3,7 @@ package roomescape.infra.memory;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.stereotype.Repository;
+import roomescape.business.domain.Customer;
 import roomescape.business.domain.Reservation;
 import roomescape.business.domain.ReservationTime;
 import roomescape.dto.request.ReservationCreateRequest;
@@ -27,7 +28,7 @@ public class ReservationMemoryDatabase implements ReservationDatabase {
 
         public Reservation toDomain(ReservationTimeDatabase database) {
             final ReservationTime time = database.findById(timeId);
-            return new Reservation(id, name, date, time);
+            return new Reservation(id, new Customer(name), date, time);
         }
     }
 

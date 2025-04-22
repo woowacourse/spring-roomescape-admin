@@ -6,30 +6,18 @@ import java.time.LocalTime;
 public class Reservation {
 
     private final long id;
-    private final String name;
+    private final Customer customer;
     private final LocalDate date;
     private final ReservationTime reservationTime;
 
-    public Reservation(final long id, final String name, final LocalDate date, final ReservationTime reservationTime) {
-        validateName(name);
+    public Reservation(final long id, final Customer customer, final LocalDate date, final ReservationTime reservationTime) {
+        validateCustomer(customer);
         validateDate(date);
         validateTime(reservationTime);
         this.id = id;
-        this.name = name;
+        this.customer = customer;
         this.date = date;
         this.reservationTime = reservationTime;
-    }
-
-    private static void validateName(final String name) {
-        if (name == null) {
-            throw new IllegalArgumentException("예약자명은 null이 될 수 없습니다.");
-        }
-        if (name.isBlank()) {
-            throw new IllegalArgumentException("예약자명은 비어 있을 수 없습니다.");
-        }
-        if (name.length() > 10) {
-            throw new IllegalArgumentException("예약자명은 최대 10자 입니다.");
-        }
     }
 
     private static void validateDate(final LocalDate date) {
@@ -47,12 +35,18 @@ public class Reservation {
         }
     }
 
+    private void validateCustomer(final Customer customer) {
+        if (customer == null) {
+            throw new IllegalArgumentException("예약자는 null이 될 수 없습니다.");
+        }
+    }
+
     public long id() {
         return id;
     }
 
     public String name() {
-        return name;
+        return customer.getName();
     }
 
     public LocalDate date() {

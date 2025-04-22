@@ -1,6 +1,7 @@
 package roomescape.dto.response;
 
 import org.junit.jupiter.api.Test;
+import roomescape.business.domain.Customer;
 import roomescape.business.domain.Reservation;
 import roomescape.business.domain.ReservationTime;
 
@@ -15,7 +16,7 @@ class ReservationResponseTest {
     void 도메인으로부터_생성될_수_있다() {
         final Reservation reservation = new Reservation(
                 1L,
-                "dompoo",
+                new Customer("dompoo"),
                 LocalDate.of(2025, 5, 17),
                 new ReservationTime(2L, LocalTime.of(10, 0))
         );

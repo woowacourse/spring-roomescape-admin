@@ -5,6 +5,7 @@ import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;
 import org.springframework.jdbc.core.simple.SimpleJdbcInsert;
 import org.springframework.stereotype.Repository;
+import roomescape.business.domain.Customer;
 import roomescape.business.domain.Reservation;
 import roomescape.business.domain.ReservationTime;
 import roomescape.dto.request.ReservationCreateRequest;
@@ -24,7 +25,7 @@ public class ReservationJdbcDatabase implements ReservationDatabase {
         final LocalDate date = rs.getDate("date").toLocalDate();
         final long timeId = rs.getLong("time_id");
         final LocalTime timeValue = rs.getTime("time_value").toLocalTime();
-        return new Reservation(id, name, date, new ReservationTime(timeId, timeValue));
+        return new Reservation(id, new Customer(name), date, new ReservationTime(timeId, timeValue));
     };
 
     private final JdbcTemplate jdbcTemplate;

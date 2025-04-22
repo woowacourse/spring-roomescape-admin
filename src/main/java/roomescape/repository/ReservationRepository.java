@@ -13,7 +13,6 @@ public class ReservationRepository extends Repository<Reservation> {
 
     public ReservationRepository(Dao dao) {
         super(dao);
-        System.out.println("ReservationRepository init dao = " + dao);
     }
 
     @Override

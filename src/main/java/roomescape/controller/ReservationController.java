@@ -20,13 +20,16 @@ import roomescape.repository.ReservationRepository;
 public class ReservationController {
 
     private final ReservationRepository reservationRepository;
+    private final Service service;
 
-    public ReservationController(ReservationRepository reservationRepository) {
+    public ReservationController(ReservationRepository reservationRepository, Service service) {
         this.reservationRepository = reservationRepository;
+        this.service = service;
     }
 
     @GetMapping
     public ResponseEntity<List<Reservation>> reservations() {
+        System.out.println("service.getClass() = " + service.getClass());
         return ResponseEntity.ok(reservationRepository.getAll());
     }
 

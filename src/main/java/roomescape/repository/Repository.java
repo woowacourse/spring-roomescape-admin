@@ -13,7 +13,6 @@ public abstract class Repository<T extends Entity<T>> {
     private final Dao dao;
 
     protected Repository(Dao dao) {
-        System.out.println("Repository init dao = " + dao);
         this.dao = dao;
     }
 
@@ -28,15 +27,15 @@ public abstract class Repository<T extends Entity<T>> {
     protected abstract PreparedStatement preparedStatementProvider(PreparedStatement preparedStatement,
         Reservation reservation) throws SQLException;
 
-    public final List<T> getAll() {
+    public List<T> getAll() {
         return dao.getAll(getAllQuery(), this::rowMapper);
     }
 
-    public final Reservation save(Reservation reservation) {
+    public Reservation save(Reservation reservation) {
         return dao.save(saveQuery(), reservation, this::preparedStatementProvider);
     }
 
-    public final void remove(Long id) {
+    public void remove(Long id) {
         dao.remove(removeQuery(), id);
     }
 }

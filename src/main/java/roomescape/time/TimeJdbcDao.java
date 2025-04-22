@@ -9,14 +9,14 @@ import org.springframework.jdbc.core.simple.SimpleJdbcInsert;
 import org.springframework.stereotype.Repository;
 
 @Repository
-public class TimeJdbcDao implements TimeDao{
+public class TimeJdbcDao implements TimeDao {
 
     private final JdbcTemplate jdbcTemplate;
     private final SimpleJdbcInsert simpleJdbcInsert;
 
     public TimeJdbcDao(
             @Autowired JdbcTemplate jdbcTemplate
-    ){
+    ) {
         this.jdbcTemplate = jdbcTemplate;
         this.simpleJdbcInsert = new SimpleJdbcInsert(jdbcTemplate)
                 .withTableName("reservation_time")
@@ -43,5 +43,18 @@ public class TimeJdbcDao implements TimeDao{
         });
 
         return times;
+    }
+
+    @Override
+    public void deleteTimeById(final Long id) {
+        final String sql = "DELETE FROM RESERVATION_TIME WHERE id=?";
+        final int updatedCount = jdbcTemplate.update(sql, id);
+        validateUpdateSuccess(updatedCount);
+    }
+
+    private void validateUpdateSuccess(final int updatedCount) {
+        if (updatedCount == 0) {
+            throw new IllegalArgumentException("[ERROR]");
+        }
     }
 }

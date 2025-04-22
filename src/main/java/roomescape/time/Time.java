@@ -10,6 +10,14 @@ public record Time(Long id, LocalTime startAt) {
     }
 
     public Time writeId(final Long id){
+        validateCurrentIdEmpty();
+
         return new Time(id, startAt);
+    }
+
+    private void validateCurrentIdEmpty() {
+        if (this.id != null) {
+            throw new IllegalStateException("[ERROR]");
+        }
     }
 }

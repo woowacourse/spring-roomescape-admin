@@ -5,4 +5,5 @@ import java.util.List;
 public interface TimeDao {
     Time saveTime(Time time);
     List<Time> findAllTime();
+    void deleteTimeById(Long id);
 }

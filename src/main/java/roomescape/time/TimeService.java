@@ -27,4 +27,8 @@ public class TimeService {
                 .map(TimeResponse::createResponse)
                 .toList();
     }
+
+    public void deleteTimeById(final Long id){
+        timeDao.deleteTimeById(id);
+    }
 }

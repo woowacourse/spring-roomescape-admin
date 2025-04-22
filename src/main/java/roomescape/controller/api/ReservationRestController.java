@@ -1,5 +1,6 @@
 package roomescape.controller.api;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -13,7 +14,7 @@ import org.springframework.web.server.ResponseStatusException;
 import roomescape.dto.ReservationCreateRequest;
 import roomescape.dto.ReservationGetResponse;
 import roomescape.model.Reservation;
-import roomescape.repository.MemoryReservationRepository;
+import roomescape.repository.JdbcReservationRepository;
 import roomescape.repository.ReservationRepository;
 
 import java.util.List;
@@ -22,7 +23,12 @@ import java.util.List;
 @RequestMapping("/reservations")
 public class ReservationRestController {
 
-    private final ReservationRepository reservationRepository = new MemoryReservationRepository();
+    private final ReservationRepository reservationRepository;
+
+    @Autowired
+    public ReservationRestController(ReservationRepository reservationRepository) {
+        this.reservationRepository = reservationRepository;
+    }
 
     @GetMapping
     public ResponseEntity<List<ReservationGetResponse>> getAllReservations() {

@@ -7,6 +7,7 @@ import org.springframework.jdbc.support.GeneratedKeyHolder;
 import org.springframework.jdbc.support.KeyHolder;
 import org.springframework.stereotype.Repository;
 import roomescape.reservation.entity.ReservationTime;
+import roomescape.reservation.exception.EntityNotFoundException;
 
 import java.time.LocalTime;
 import java.util.List;
@@ -35,6 +36,20 @@ public class ReservationTimeInMemoryRepository {
         String sql = "SELECT * FROM reservation_time";
 
         return jdbcTemplate.query(sql, getReservationTimeRowMapper());
+    }
+
+    public void delete(Long id) {
+        if (!existReservationTime(id)) {
+            throw new EntityNotFoundException("삭제할 예약시간이 없습니다.");
+        }
+        String sql = "DELETE FROM reservation_time WHERE id = :id";
+        jdbcTemplate.update(sql, new MapSqlParameterSource("id", id));
+    }
+
+    private boolean existReservationTime(Long id) {
+        String sql = "SELECT EXISTS (SELECT 1 FROM reservation_time WHERE id = :id)";
+
+        return Boolean.TRUE.equals(jdbcTemplate.queryForObject(sql, new MapSqlParameterSource("id", id), Boolean.class));
     }
 
     private RowMapper<ReservationTime> getReservationTimeRowMapper() {

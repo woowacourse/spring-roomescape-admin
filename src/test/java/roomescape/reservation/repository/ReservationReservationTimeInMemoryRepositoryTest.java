@@ -7,11 +7,13 @@ import org.springframework.boot.test.autoconfigure.jdbc.JdbcTest;
 import org.springframework.jdbc.core.namedparam.MapSqlParameterSource;
 import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
 import roomescape.reservation.entity.ReservationTime;
+import roomescape.reservation.exception.EntityNotFoundException;
 
 import java.time.LocalTime;
 import java.util.List;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.assertThatThrownBy;
 
 @JdbcTest
 class ReservationReservationTimeInMemoryRepositoryTest {
@@ -57,5 +59,27 @@ class ReservationReservationTimeInMemoryRepositoryTest {
 
         // then
         assertThat(allReservationTimes).containsAll(List.of(savedTime1, savedTime2));
+    }
+
+    @Test
+    void 존재하지_않는_예약시간을_삭제하는_경우_예외가_발생한다() {
+        // when & then
+        assertThatThrownBy(() -> repository.delete(1L))
+            .isInstanceOf(EntityNotFoundException.class)
+            .hasMessage("삭제할 예약시간이 없습니다.");
+    }
+
+    @Test
+    void 예약시간을_삭제한다() {
+        // given
+        ReservationTime savedTime = repository.save(new ReservationTime(LocalTime.of(10, 0)));
+
+        // when
+        Long id = savedTime.getId();
+        repository.delete(id);
+
+        // then
+        List<ReservationTime> allReservationTimes = repository.findAll();
+        assertThat(allReservationTimes.isEmpty()).isTrue();
     }
 }

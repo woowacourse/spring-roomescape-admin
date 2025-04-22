@@ -1,4 +1,4 @@
-package roomescape.reservation.repository;
+package roomescape.reservation.repository.impl;
 
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
@@ -15,6 +15,7 @@ import org.springframework.stereotype.Repository;
 import roomescape.common.exception.AlreadyInUseException;
 import roomescape.common.exception.EntityNotFoundException;
 import roomescape.reservation.entity.ReservationTime;
+import roomescape.reservation.repository.ReservationTimeRepository;
 
 @Repository
 public class ReservationTimeRepositoryImpl implements ReservationTimeRepository {

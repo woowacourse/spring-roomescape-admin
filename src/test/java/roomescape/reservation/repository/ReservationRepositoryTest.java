@@ -16,6 +16,7 @@ import roomescape.config.TestConfig;
 import roomescape.reservation.entity.Reservation;
 import roomescape.reservation.entity.ReservationTime;
 import roomescape.common.exception.EntityNotFoundException;
+import roomescape.reservation.repository.impl.ReservationRepositoryImpl;
 
 class ReservationRepositoryTest {
 

@@ -1,5 +1,6 @@
 package roomescape;
 
+import java.util.List;
 import java.util.Optional;
 import org.springframework.stereotype.Service;
 import roomescape.controller.dto.ReservationDto;
@@ -37,6 +38,12 @@ public class ReservationService {
         }
 
         return new ReservationDto(foundReservation.get());
+    }
+
+    public List<ReservationDto> findAllReservations() {
+        return reservationRepository.findAll().stream()
+                .map(ReservationDto::new)
+                .toList();
     }
 
     private ReservationTime findReservationTime(ReservationRegisterDto reservationRegisterDto) {

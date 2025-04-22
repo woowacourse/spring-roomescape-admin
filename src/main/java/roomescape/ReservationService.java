@@ -41,7 +41,7 @@ public class ReservationService {
 
     private ReservationTime findReservationTime(ReservationRegisterDto reservationRegisterDto) {
         Optional<ReservationTime> foundReservationTime = reservationTimeRepository.findById(
-                reservationRegisterDto.reservationTimeId());
+                reservationRegisterDto.timeId());
         if (foundReservationTime.isEmpty()) {
             throw new IllegalArgumentException("해당 id 와 일치하는 예약 시각이 존재하지 않습니다.");
         }

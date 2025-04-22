@@ -2,6 +2,7 @@ package roomescape.repository;
 
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.atomic.AtomicLong;
 import roomescape.domain.Reservation;
@@ -31,5 +32,10 @@ public class ReservationInMemoryRepository implements ReservationRepository {
             throw new IllegalArgumentException("id에 해당하는 예약 내역이 없습니다.");
         }
         sources.remove(id);
+    }
+
+    @Override
+    public Optional<Reservation> findById(long id) {
+        return Optional.empty();
     }
 }

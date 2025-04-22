@@ -69,20 +69,20 @@ public class ReservationH2Repository implements ReservationRepository {
     @Override
     public Optional<Reservation> findById(final long id) {
         String query = "SELECT * FROM reservation as r inner join reservation_time as rt"
-                + "on r.time_id = rt.id"
-                + "WHERE r.id = ?";
+                + " on r.time_id = rt.id"
+                + " WHERE r.id = ?";
 
-        Reservation reservation = jdbcTemplate.queryForObject(query, (rs, rowNum) ->
-                new Reservation(rs.getLong("r.id"),
+        List<Reservation> result = jdbcTemplate.query(query, (rs, rowNum) ->
+                new Reservation(rs.getLong("id"),
                         rs.getString("name"),
                         rs.getDate("date").toLocalDate(),
                         new ReservationTime(
-                                rs.getLong("rt.id"),
-                                rs.getTime("rt.start_at").toLocalTime()
+                                rs.getLong("reservation_time.id"),
+                                rs.getTime("start_at").toLocalTime()
                         )
-                )
+                ), id
         );
 
-        return Optional.ofNullable(reservation);
+        return result.stream().findAny();
     }
 }

@@ -1,4 +1,4 @@
-package roomescape;
+package roomescape.dao;
 
 import java.sql.Date;
 import java.sql.Time;

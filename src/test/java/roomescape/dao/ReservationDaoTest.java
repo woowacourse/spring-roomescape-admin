@@ -1,15 +1,42 @@
-package roomescape.domain;
+package roomescape.dao;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
 import java.time.LocalDate;
 import java.time.LocalTime;
+import javax.sql.DataSource;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.test.autoconfigure.jdbc.JdbcTest;
+import org.springframework.jdbc.core.JdbcTemplate;
+import roomescape.domain.Reservation;
 
-class ReservationsTest {
+@JdbcTest
+class ReservationDaoTest {
 
-    final Reservations reservations = new Reservations();
+    private ReservationDao reservations;
+
+    @Autowired
+    private JdbcTemplate jdbcTemplate;
+
+    @Autowired
+    private DataSource dataSource;
+
+    @BeforeEach
+    void setUp() {
+        reservations = new ReservationDao(jdbcTemplate, dataSource);
+        jdbcTemplate.execute("DROP TABLE reservation IF EXISTS");
+        jdbcTemplate.execute("CREATE TABLE reservation"
+                + "("
+                + "    id      BIGINT       NOT NULL AUTO_INCREMENT,"
+                + "    name    VARCHAR(255) NOT NULL,"
+                + "    date    VARCHAR(255) NOT NULL,"
+                + "    time    VARCHAR(255) NOT NULL,"
+                + "    PRIMARY KEY (id)"
+                + ")");
+    }
 
     @DisplayName("새로운 예약을 생성할 수 있다.")
     @Test

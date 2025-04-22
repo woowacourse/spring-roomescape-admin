@@ -37,4 +37,16 @@ public class Reservation {
             throw new IllegalArgumentException("예약자는 null이 될 수 없습니다.");
         }
     }
+
+    public String customerName() {
+        return customer.name();
+    }
+
+    public LocalDate date() {
+        return date;
+    }
+
+    public ReservationTime reservationTime() {
+        return reservationTime;
+    }
 }

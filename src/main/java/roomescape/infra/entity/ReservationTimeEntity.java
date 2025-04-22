@@ -1,5 +1,6 @@
 package roomescape.infra.entity;
 
+import roomescape.business.domain.ReservationTime;
 import roomescape.dto.request.ReservationTimeCreateRequest;
 
 import java.time.LocalTime;
@@ -21,6 +22,10 @@ public class ReservationTimeEntity {
 
     public Map<String, ?> dataMap() {
         return Map.of("start_at", startAt);
+    }
+
+    public ReservationTime toDomain() {
+        return new ReservationTime(startAt);
     }
 
     public Long getId() {

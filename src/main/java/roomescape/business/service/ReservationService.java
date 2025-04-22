@@ -21,16 +21,16 @@ public class ReservationService {
     @Transactional
     public ReservationResponse saveAndGet(final ReservationCreateRequest request) {
         final long savedId = database.saveAndGetId(ReservationEntity.beforeSave(request));
-        final ReservationEntity reservationEntity = database.findById(savedId)
+        final ReservationEntity entity = database.findById(savedId)
                 .orElseThrow(() -> new IllegalStateException("예약이 저장되었으나, 서버에서 문제가 발생하였습니다."));
 
-        return ReservationResponse.from(reservationEntity);
+        return ReservationResponse.from(entity.toDomain(), entity.getId(), entity.getTimeId());
     }
 
     @Transactional(readOnly = true)
     public List<ReservationResponse> getAll() {
         return database.findAll().stream()
-                .map(ReservationResponse::from)
+                .map(entity -> ReservationResponse.from(entity.toDomain(), entity.getId(), entity.getTimeId()))
                 .toList();
     }
 

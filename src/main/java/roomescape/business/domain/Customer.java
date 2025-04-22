@@ -21,7 +21,7 @@ public class Customer {
         }
     }
 
-    public String getName() {
+    public String name() {
         return name;
     }
 }

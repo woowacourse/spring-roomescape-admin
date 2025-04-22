@@ -1,5 +1,7 @@
 package roomescape.infra.entity;
 
+import roomescape.business.domain.Customer;
+import roomescape.business.domain.Reservation;
 import roomescape.dto.request.ReservationCreateRequest;
 
 import java.time.LocalDate;
@@ -31,6 +33,10 @@ public class ReservationEntity {
         );
     }
 
+    public Reservation toDomain() {
+        return new Reservation(new Customer(name), date, time.toDomain());
+    }
+
     public Long getId() {
         return id;
     }
@@ -45,5 +51,9 @@ public class ReservationEntity {
 
     public LocalDate getDate() {
         return date;
+    }
+
+    public long getTimeId() {
+        return time.getId();
     }
 }

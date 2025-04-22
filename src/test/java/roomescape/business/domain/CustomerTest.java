@@ -16,7 +16,7 @@ class CustomerTest {
 
             final Customer customer = new Customer(name);
 
-            assertThat(customer.getName()).isEqualTo("dompoo");
+            assertThat(customer.name()).isEqualTo("dompoo");
         }
 
         @Test

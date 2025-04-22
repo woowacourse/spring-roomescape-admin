@@ -21,4 +21,12 @@ public record ReservationResponse(
         );
     }
 
+    public static ReservationResponse from(final long generatedId, final Reservation reservationRequest) {
+        return new ReservationResponse(
+                generatedId,
+                reservationRequest.getName(),
+                reservationRequest.getDate(),
+                reservationRequest.getTime()
+        );
+    }
 }

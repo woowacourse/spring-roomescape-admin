@@ -103,5 +103,49 @@ public class MissionStepTest {
 
         assertThat(reservations.size()).isEqualTo(count);
     }
+
+    @DisplayName("[6단계] 예약을 데이터베이스에 추가할 수 있다.")
+    @Test
+    void creatFromDatabase() {
+        //given
+        Map<String, String> params = dataFixture();
+
+        //when
+        RestAssured.given().log().all()
+                .contentType(ContentType.JSON)
+                .body(params)
+                .when().post("/reservations")
+                .then().log().all()
+                .statusCode(200);
+
+        //then
+        Integer count = jdbcTemplate.queryForObject("SELECT count(1) from reservation", Integer.class);
+        assertThat(count).isEqualTo(1);
+    }
+
+    @DisplayName("[6단계] 예약번호에 따른 예약 정보를 데이터베이스에서 삭제할 수 있다.")
+    @Test
+    void deleteFromDatabase() {
+        //given
+        create();
+
+        //when
+        RestAssured.given().log().all()
+                .when().delete("/reservations/1")
+                .then().log().all()
+                .statusCode(200);
+
+        //then
+        Integer countAfterDelete = jdbcTemplate.queryForObject("SELECT count(1) from reservation", Integer.class);
+        assertThat(countAfterDelete).isEqualTo(0);
+    }
+
+    private Map<String, String> dataFixture() {
+        Map<String, String> params = new HashMap<>();
+        params.put("name", "브라운");
+        params.put("date", "2023-08-05");
+        params.put("time", "15:40");
+        return params;
+    }
 }
 

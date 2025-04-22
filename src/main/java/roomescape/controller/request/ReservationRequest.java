@@ -9,8 +9,8 @@ public record ReservationRequest(
         LocalDate date,
         LocalTime time) {
 
-    public Reservation toReservation(final Long reservationIndex) {
-        return new Reservation(reservationIndex, this.name, this.date, this.time);
+    public Reservation toReservation() {
+        return Reservation.from(this.name, this.date, this.time);
     }
 
 }

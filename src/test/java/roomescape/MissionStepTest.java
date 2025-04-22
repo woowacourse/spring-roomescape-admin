@@ -98,6 +98,51 @@ public class MissionStepTest {
     }
 
     @Test
+    void 이름이_null인_경우_400_코드를_응답한다() {
+        Map<String, String> params = new HashMap<>();
+        params.put("name", null);
+        params.put("date", makeTodayMessage());
+        params.put("time", "15:40");
+
+        RestAssured.given().log().all()
+                .contentType(ContentType.JSON)
+                .body(params)
+                .when().post("/reservations")
+                .then().log().all()
+                .statusCode(400);
+    }
+
+    @Test
+    void 날짜가_null인_경우_400_코드를_응답한다() {
+        Map<String, String> params = new HashMap<>();
+        params.put("name", "메이");
+        params.put("date", null);
+        params.put("time", "15:40");
+
+        RestAssured.given().log().all()
+                .contentType(ContentType.JSON)
+                .body(params)
+                .when().post("/reservations")
+                .then().log().all()
+                .statusCode(400);
+    }
+
+    @Test
+    void 시간이_null인_경우_400_코드를_응답한다() {
+        Map<String, String> params = new HashMap<>();
+        params.put("name", "메이");
+        params.put("date", makeTodayMessage());
+        params.put("time", null);
+
+        RestAssured.given().log().all()
+                .contentType(ContentType.JSON)
+                .body(params)
+                .when().post("/reservations")
+                .then().log().all()
+                .statusCode(400);
+    }
+
+    @Test
     void 존재하지_않는_예약_기록을_삭제하려는_경우_400_코드를_응답한다() {
         RestAssured.given().log().all()
                 .when().delete("/reservations/1")

@@ -1,5 +1,6 @@
 package roomescape.controller;
 
+import jakarta.validation.Valid;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import roomescape.dao.ReservationDao;
@@ -27,7 +28,7 @@ public class ReservationController {
     }
 
     @PostMapping
-    public ResponseEntity<?> createReservation(@RequestBody ReservationRequest reservationRequest) {
+    public ResponseEntity<?> createReservation(@Valid @RequestBody ReservationRequest reservationRequest) {
         Reservation reservation = reservationRequest.toReservation();
         long id = reservationDao.insert(reservation);
         return ResponseEntity.ok(ReservationResponse.of(id, reservation));

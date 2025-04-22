@@ -21,64 +21,119 @@
     - [x] 예약 스키마 정의
     - [x] 조회, 추가, 취소에 대해서 DB 적용
 
+5. 예약 시간 추가, 조회, 삭제 구현
+    - [] API 명세를 따라 예약 시간 추가, 조회, 삭제 API 구현
+    - [] 예약 시간에 대해 DB 적용
+
 ### API 명세
 
 1. 예약 조회
     - Request
-      ```
-         GET /reservations HTTP/1.1
-      ```
+   ```
+   GET /reservations HTTP/1.1
+   ```
     - Response
-      ```
-         HTTP/1.1 200
-         Content-Type: application/json
-     
-         [
-             {
-                 "id": 1,"name": "브라운",
-                 "date": "2023-01-01",
-                 "time": "10:00"
-             },
-             {
-                 "id": 2,
-                 "name": "브라운",
-                 "date": "2023-01-02",
-                 "time": "11:00"
-             }
-         ]
-        ``` 
+   ```
+   HTTP/1.1 200
+   Content-Type: application/json
+   
+      [
+         {
+            "id": 1,"name": "브라운",
+            "date": "2023-01-01",
+            "time": "10:00"
+          },
+         {
+            "id": 2,
+            "name": "브라운",
+            "date": "2023-01-02",
+            "time": "11:00"
+         }
+      ]
+   ``` 
 
 2. 예약 추가
     - Request
-      ```
-      POST /reservations HTTP/1.1
-       content-type: application/json
- 
-       {
+   ```
+   POST /reservations HTTP/1.1
+   content-type: application/json 
+   
+   {
        "date": "2023-08-05",
        "name": "브라운",
        "time": "15:40"
-       }
-       ```
+   }
+   ```
     - Response
-       ```
-      HTTP/1.1 200 
-       Content-Type: application/json
+   ```
+   HTTP/1.1 200 
+   Content-Type: application/json
        
-       {
+   {
        "id": 1,
        "name": "브라운",
        "date": "2023-08-05",
        "time": "15:40"
-       }
-      ```
+   }
+   ```
 3. 예약 취소
     - Request
-      ```
-         DELETE /reservations/1 HTTP/1.1
-      ```
+   ```
+   DELETE /reservations/1 HTTP/1.1
+   ```
     - Response
-       ```
-      HTTP/1.1 200
-       ```
+   ```
+   HTTP/1.1 200
+   ```
+
+4. 예약 시간 추가
+    - Request
+   ```
+   POST /times HTTP/1.1
+   content-type: application/json
+
+   {
+       "startAt": "10:00"
+   }
+   ```
    
+   - Response
+   ```
+   HTTP/1.1 200
+   Content-Type: application/json
+
+   {
+       "id": 1,
+       "startAt": "10:00"
+   }
+   ```
+
+5. 예약 시간 조회
+   - Request
+   ```
+   GET /times HTTP/1.1
+   ```
+   
+   - Response
+   ```
+   HTTP/1.1 200 
+   Content-Type: application/json
+
+   [  
+      {
+         "id": 1,
+         "startAt": "10:00"
+      }
+   ]
+   ```
+   
+6. 예약 시간 삭제
+   - Request
+   ```
+   DELETE /times/1 HTTP/1.1
+   ```
+   
+   - Response
+   ```
+   HTTP/1.1 200
+   ```

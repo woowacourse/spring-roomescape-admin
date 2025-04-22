@@ -1,33 +1,36 @@
 package roomescape.controller;
 
+import static org.assertj.core.api.Assertions.assertThat;
+import static org.hamcrest.Matchers.is;
+
 import io.restassured.RestAssured;
 import io.restassured.http.ContentType;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
-import static org.hamcrest.Matchers.is;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.boot.test.web.server.LocalServerPort;
+import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.test.annotation.DirtiesContext;
+import org.springframework.test.context.ActiveProfiles;
+import roomescape.dto.ReservationResponse;
 
+@ActiveProfiles("test")
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.DEFINED_PORT)
 @DirtiesContext(classMode = DirtiesContext.ClassMode.BEFORE_EACH_TEST_METHOD)
-class ReservationApiControllerTest {
+class ReservationApiTest {
 
-    private static void createAndSendReservation() {
-        Map<String, String> params = createReservationData();
+    @LocalServerPort
+    private int port;
+    @Autowired
+    private JdbcTemplate jdbcTemplate;
 
-        RestAssured.given().log().all()
-                .contentType(ContentType.JSON)
-                .body(params)
-                .when().post("/reservations");
-    }
-
-    private static Map<String, String> createReservationData() {
-        Map<String, String> params = new HashMap<>();
-        params.put("name", "브라운");
-        params.put("date", "2023-08-05");
-        params.put("time", "15:40");
-        return params;
+    @BeforeEach
+    void setUp() {
+        RestAssured.port = port;
     }
 
     @Test
@@ -104,5 +107,58 @@ class ReservationApiControllerTest {
                 .then().log().all()
                 .statusCode(200)
                 .body("size()", is(0));
+    }
+
+    @Test
+    void DB_테이블_레코드_수와_API_응답_크기가_일치한다() {
+        List<ReservationResponse> reservations = RestAssured.given().log().all()
+                .when().get("/reservations")
+                .then().log().all()
+                .statusCode(200).extract()
+                .jsonPath().getList(".", ReservationResponse.class);
+
+        Integer count = jdbcTemplate.queryForObject("SELECT count(*) from reservation", Integer.class);
+
+        assertThat(reservations.size()).isEqualTo(count);
+    }
+
+    @Test
+    void 예약_추가_후_DB_테이블_레코드가_증가한다() {
+        createAndSendReservation();
+
+        Integer count = jdbcTemplate.queryForObject("SELECT count(*) from reservation", Integer.class);
+
+        assertThat(count).isEqualTo(1);
+    }
+
+    @Test
+    void 예약_삭제_후_DB_테이블_레코드가_감소한다() {
+        createAndSendReservation();
+
+        RestAssured.given().log().all()
+                .when().delete("/reservations/1")
+                .then().log().all()
+                .statusCode(200);
+
+        Integer countAfterDelete = jdbcTemplate.queryForObject("SELECT count(*) from reservation", Integer.class);
+
+        assertThat(countAfterDelete).isEqualTo(0);
+    }
+
+    private void createAndSendReservation() {
+        Map<String, String> params = createReservationData();
+
+        RestAssured.given().log().all()
+                .contentType(ContentType.JSON)
+                .body(params)
+                .when().post("/reservations");
+    }
+
+    private Map<String, String> createReservationData() {
+        Map<String, String> params = new HashMap<>();
+        params.put("name", "브라운");
+        params.put("date", "2023-08-05");
+        params.put("time", "15:40");
+        return params;
     }
 }

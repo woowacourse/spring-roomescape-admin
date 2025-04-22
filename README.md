@@ -31,8 +31,72 @@
 
 ## 📌 API 명세
 
-| Method | URL                   | Description |
-|--------|-----------------------|-------------|
-| GET    | /api/reservation      | 예약 전체 조회    |
-| POST   | /api/reservation      | 예약 추가       |
-| DELETE | /api/reservation/{id} | 예약 삭제       |
+| Method | URL                  | Description |
+|--------|----------------------|-------------|
+| GET    | api/reservation      | 예약 전체 조회    |
+| POST   | api/reservation      | 예약 추가       |
+| DELETE | api/reservation/{id} | 예약 삭제       |
+
+## 📝 API 상세 설명
+
+### 예약 전체 조회 (GET `api/reservation`)
+
+- 응답 예시
+
+```
+[
+    {
+        "id": 1,
+        "name": "브라운",
+        "date": "2023-01-01",
+        "time": "10:00"
+    }
+    {
+        "id": 2,
+        "name": "제임스",
+        "date": "2023-01-02",
+        "time": "11:00"
+    }
+]
+```
+
+### 예약 추가 (POST `api/reservation`)
+
+- 요청 예시
+
+```
+{
+    "date": "2023-08-05",
+    "name": "브라운",
+    "time": "15:40"
+}
+```
+
+- 응답 예시
+
+```
+{
+    "id": 1,
+    "name": "브라운",
+    "date": "2023-08-05",
+    "time": "15:40"
+}
+```
+
+### 예약 삭제 (DELETE `api/reservation/{id}`)
+
+- 요청 예시
+
+```
+  DELETE /reservations/1 HTTP/1.1
+```
+
+- 응답 예시
+    - 성공
+      ```
+        HTTP/1.1 200
+      ```
+    - 실패
+      ```
+        HTTP/1.1 404
+      ```

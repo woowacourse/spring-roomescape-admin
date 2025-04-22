@@ -53,7 +53,9 @@ public class RoomescapeRepositoryJdbc implements RoomescapeRepository {
     @Override
     public void clear() {
         String sql = "delete from reservation";
+        String resetAutoIncrementSql = "ALTER TABLE reservation ALTER COLUMN id RESTART WITH 1";
         template.update(sql);
+        template.update(resetAutoIncrementSql);
     }
 
     private RowMapper<Reservation> reservationRowMapper() {

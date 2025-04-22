@@ -58,4 +58,34 @@ class ReservationTimeServiceTest {
         //then
         assertThat(actual).isEqualTo(-1);
     }
+
+    @Test
+    @DisplayName("id를 기반으로 시간 데이터를 삭제할 수 있어야 한다")
+    void deleteById() {
+        //given
+        ReservationTimeService reservationTimeService = new ReservationTimeService(
+                new ImMemoryReservationTimeDAO(new ArrayList<>()));
+        reservationTimeService.addReservationTime(new ReservationTime(LocalTime.of(10, 0)));
+        ReservationTime savedTime = reservationTimeService.findAll().getFirst();
+
+        //when
+        boolean actual = reservationTimeService.deleteById(savedTime.getId());
+
+        //then
+        assertThat(actual).isTrue();
+    }
+
+    @Test
+    @DisplayName("존재하지 않는 id를 기반으로 시간 데이터를 삭제하면 false를 리턴해야 한다")
+    void deleteNotExistTimeById() {
+        //given
+        ReservationTimeService reservationTimeService = new ReservationTimeService(
+                new ImMemoryReservationTimeDAO(new ArrayList<>()));
+
+        //when
+        boolean actual = reservationTimeService.deleteById(100L);
+
+        //then
+        assertThat(actual).isFalse();
+    }
 }

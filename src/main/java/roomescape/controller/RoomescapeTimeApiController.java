@@ -39,4 +39,13 @@ public class RoomescapeTimeApiController {
         }
         return ResponseEntity.badRequest().build();
     }
+
+    @DeleteMapping("/times/{id}")
+    public ResponseEntity<Void> deleteReservationTime(@PathVariable long id) {
+        boolean deleted = reservationTimeService.deleteById(id);
+        if (deleted) {
+            return ResponseEntity.ok().build();
+        }
+        return ResponseEntity.badRequest().build();
+    }
 }

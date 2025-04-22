@@ -42,9 +42,9 @@ public class ReservationService {
 
     private Reservation convertReservation(ReservationReqDto dto) {
         return Reservation.of(
-                dto.getName(),
-                dto.getDate(),
-                dto.getTime());
+                dto.name(),
+                dto.date(),
+                dto.time());
     }
 
     private void validateDuplicateDateTime(Reservation inputReservation) {

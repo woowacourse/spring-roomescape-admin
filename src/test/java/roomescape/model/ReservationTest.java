@@ -22,7 +22,6 @@ class ReservationTest {
 
     static Stream<Arguments> invalidReservationArguments() {
         return Stream.of(
-                Arguments.of(1L, "가이온", LocalDate.now(), LocalTime.now()),
                 Arguments.of(1L, null, LocalDate.now(), LocalTime.now()),
                 Arguments.of(1L, "가이온", null, LocalTime.now()),
                 Arguments.of(1L, "가이온", LocalDate.now(), null)

@@ -21,7 +21,7 @@ public record Reservation(Long id, String name, LocalDate date, LocalTime time) 
     }
 
     private static void validateName(String name) {
-        if (name.isBlank() || name.isEmpty()) {
+        if (name == null || name.isBlank() || name.isEmpty()) {
             throw new IllegalArgumentException("Invalid name");
         }
     }

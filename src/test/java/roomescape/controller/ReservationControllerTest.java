@@ -2,7 +2,6 @@ package roomescape.controller;
 
 import static org.hamcrest.Matchers.equalTo;
 import static org.hamcrest.Matchers.is;
-import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.BDDMockito.given;
 import static org.mockito.BDDMockito.willDoNothing;
 import static org.mockito.BDDMockito.willThrow;
@@ -69,23 +68,15 @@ public class ReservationControllerTest {
     void postReservation() {
         LocalDate fixedDate = LocalDate.of(2023, 5, 15);
         LocalTime fixedTime = LocalTime.of(14, 30);
-        Long expectedId = 1L;
 
         ReservationRequestDto dto = new ReservationRequestDto("브라운", fixedDate, fixedTime);
-        Reservation savedEntity = new Reservation(expectedId, "브라운", fixedDate, fixedTime);
-
-        given(reservationRepository.save(any(Reservation.class))).willReturn(savedEntity);
 
         RestAssuredMockMvc.given().log().all()
                 .contentType(ContentType.JSON)
                 .body(dto)
                 .when().post("/reservations")
                 .then().log().all()
-                .statusCode(200)
-                .body("id", is(expectedId.intValue()))
-                .body("name", is("브라운"))
-                .body("date", is(fixedDate.toString()))
-                .body("time", is(fixedTime.toString()));
+                .statusCode(200);
     }
 
     @Test
@@ -98,7 +89,7 @@ public class ReservationControllerTest {
         RestAssuredMockMvc.given().log().all()
                 .when().delete("/reservations/" + reservationId)
                 .then().log().all()
-                .statusCode(200);
+                .statusCode(204);
 
         verify(reservationRepository, times(1)).deleteById(reservationId);
     }

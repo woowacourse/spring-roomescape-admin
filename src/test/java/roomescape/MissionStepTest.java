@@ -43,14 +43,13 @@ public class MissionStepTest {
                 .body("size()", is(0));
     }
 
-    @DisplayName("예약을 생성하고, 조회하고, 삭제 할 수 있다.")
+    @DisplayName("예약을 추가 할 수 있다.")
     @Test
-    void reservationCRD() {
-        Map<String, String> params = new HashMap<>();
-        params.put("name", "브라운");
-        params.put("date", "2023-08-05");
-        params.put("time", "15:40");
+    void create() {
+        //given
+        Map<String, String> params = dataFixture();
 
+        //when //then
         RestAssured.given().log().all()
                 .contentType(ContentType.JSON)
                 .body(params)
@@ -58,23 +57,52 @@ public class MissionStepTest {
                 .then().log().all()
                 .statusCode(200)
                 .body("id", is(1));
+    }
 
+    @DisplayName("모든 예약을 조회할 수 있다.")
+    @Test
+    void read() {
+        //given
+        create();
+
+        // when //then
         RestAssured.given().log().all()
                 .when().get("/reservations")
                 .then().log().all()
                 .statusCode(200)
                 .body("size()", is(1));
+    }
 
+    @DisplayName("단건 예약을 삭제할 수 있다.")
+    @Test
+    void delete() {
+        //given
+        create();
+
+        //when //then
         RestAssured.given().log().all()
                 .when().delete("/reservations/1")
                 .then().log().all()
                 .statusCode(200);
+    }
+
+    private Map<String, String> dataFixture() {
+        Map<String, String> params = new HashMap<>();
+        params.put("name", "브라운");
+        params.put("date", "2023-08-05");
+        params.put("time", "15:40");
+        return params;
+    }
 
         RestAssured.given().log().all()
                 .when().get("/reservations")
                 .then().log().all()
-                .statusCode(200)
-                .body("size()", is(0));
+                .statusCode(200).extract()
+                .jsonPath().getList(".", Reservation.class);
+
+        Integer count = jdbcTemplate.queryForObject("SELECT count(1) from reservation", Integer.class);
+
+        assertThat(reservations.size()).isEqualTo(count);
     }
 }
 

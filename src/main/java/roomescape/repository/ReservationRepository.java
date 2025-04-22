@@ -1,4 +1,4 @@
-package roomescape;
+package roomescape.repository;
 
 import java.sql.PreparedStatement;
 import java.util.List;
@@ -43,8 +43,7 @@ public class ReservationRepository {
             ps.setString(3, addReservationDto.time());
             return ps;
         }, keyHolder);
-        Long id = keyHolder.getKey().longValue();
-        return new Reservation(id, addReservationDto.name(), addReservationDto.date(), addReservationDto.time());
+        return AddReservationDto.toEntity(keyHolder.getKey().longValue(), addReservationDto);
     }
 
     public int deleteReservation(Long id) {

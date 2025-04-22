@@ -1,3 +1,3 @@
-package roomescape.reservation.dto;
+package roomescape.reservation.dto.response;
 
 public record ReservationIDResponse(Long id) { }

@@ -1,7 +1,6 @@
 package roomescape.reservation.controller;
 
 import java.util.List;
-import java.util.stream.Collectors;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -12,9 +11,9 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import roomescape.reservation.dao.ReservationDAO;
 import roomescape.reservation.domain.Reservation;
-import roomescape.reservation.dto.ReservationAllResponse;
-import roomescape.reservation.dto.ReservationRequest;
-import roomescape.reservation.dto.ReservationIDResponse;
+import roomescape.reservation.dto.response.ReservationAllResponse;
+import roomescape.reservation.dto.request.ReservationRequest;
+import roomescape.reservation.dto.response.ReservationIDResponse;
 
 @RestController
 @RequestMapping("/reservations")

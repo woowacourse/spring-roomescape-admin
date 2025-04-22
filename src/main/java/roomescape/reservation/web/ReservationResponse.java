@@ -1,18 +1,21 @@
 package roomescape.reservation.web;
 
-import com.fasterxml.jackson.annotation.JsonFormat;
 import java.time.LocalDate;
-import java.time.LocalTime;
 import roomescape.reservation.Reservation;
+import roomescape.time.web.ReservationTimeResponse;
 
 public record ReservationResponse(
         long id,
         String name,
         LocalDate date,
-        @JsonFormat(pattern = "HH:mm") LocalTime time
+        ReservationTimeResponse time
 ) {
     public static ReservationResponse from(Reservation reservation) {
-        return new ReservationResponse(reservation.getId(), reservation.getCustomerName(),
-                reservation.getReservationDate(), reservation.getReservationTime());
+        return new ReservationResponse(
+                reservation.getId(),
+                reservation.getCustomerName(),
+                reservation.getReservationDate(),
+                new ReservationTimeResponse(reservation.getReservationTime())
+        );
     }
 }

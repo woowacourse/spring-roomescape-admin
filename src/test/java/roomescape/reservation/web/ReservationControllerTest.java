@@ -4,24 +4,41 @@ import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertAll;
 import static org.springframework.http.HttpStatus.OK;
 
+import fake.FakeReservationTimeDao;
 import java.time.LocalDate;
 import java.time.LocalTime;
 import java.util.List;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.http.ResponseEntity;
 import roomescape.reservation.dao.ListBasedReservationDao;
+import roomescape.reservation.dao.ReservationDao;
+import roomescape.time.ReservationTime;
+import roomescape.time.ReservationTimeDao;
 
 class ReservationControllerTest {
+    private ReservationController reservationController;
+    private ReservationDao reservationDao;
+    private ReservationTimeDao reservationTimeDao;
+    private LocalDate date;
+    private LocalTime time;
+
+    @BeforeEach
+    public void init() {
+        reservationDao = new ListBasedReservationDao();
+        reservationTimeDao = new FakeReservationTimeDao();
+        reservationController = new ReservationController(reservationDao, reservationTimeDao);
+        date = LocalDate.now();
+        time = LocalTime.now();
+    }
+
     @DisplayName("예약을_생성할_수_있다")
     @Test
     void create() {
         // given
-        ReservationController reservationController = new ReservationController(new ListBasedReservationDao());
-        String name = "레오";
-        LocalDate date = LocalDate.now();
-        LocalTime time = LocalTime.now();
-        ReservationRequest request = new ReservationRequest(name, date, time);
+        ReservationTime savedReservationTime = reservationTimeDao.save(new ReservationTime(null, time));
+        ReservationRequest request = new ReservationRequest("레오", date, savedReservationTime.getId());
 
         // when
         ResponseEntity<ReservationResponse> result = reservationController.create(request);
@@ -31,9 +48,10 @@ class ReservationControllerTest {
         assertAll(
                 () -> assertThat(result.getStatusCode()).isEqualTo(OK),
                 () -> assertThat(response.id()).isOne(),
-                () -> assertThat(response.name()).isEqualTo(name),
+                () -> assertThat(response.name()).isEqualTo("레오"),
                 () -> assertThat(response.date()).isEqualTo(date),
-                () -> assertThat(response.time()).isEqualTo(time)
+                () -> assertThat(response.time().id()).isEqualTo(savedReservationTime.getId()),
+                () -> assertThat(response.time().startAt()).isEqualTo(savedReservationTime.getStartAt())
         );
     }
 
@@ -41,8 +59,8 @@ class ReservationControllerTest {
     @Test
     void getAll() {
         // given
-        ReservationController reservationController = new ReservationController(new ListBasedReservationDao());
-        ReservationRequest request = new ReservationRequest("레오", LocalDate.now(), LocalTime.now());
+        ReservationTime savedReservationTime = reservationTimeDao.save(new ReservationTime(null, time));
+        ReservationRequest request = new ReservationRequest("레오", LocalDate.now(), savedReservationTime.getId());
         reservationController.create(request);
 
         // when
@@ -60,15 +78,18 @@ class ReservationControllerTest {
     @Test
     void delete() {
         // given
-        ReservationController reservationController = new ReservationController(new ListBasedReservationDao());
-        ReservationRequest request = new ReservationRequest("레오", LocalDate.now(), LocalTime.now());
+        ReservationTime savedReservationTime = reservationTimeDao.save(new ReservationTime(null, time));
+        ReservationRequest request = new ReservationRequest("레오", LocalDate.now(), savedReservationTime.getId());
         ResponseEntity<ReservationResponse> responseEntity = reservationController.create(request);
 
         // when
-        reservationController.delete(responseEntity.getBody().id());
+        ResponseEntity<Void> result = reservationController.delete(responseEntity.getBody().id());
 
         // then
         List<ReservationResponse> responses = reservationController.getAll().getBody();
-        assertThat(responses).hasSize(0);
+        assertAll(
+                () -> assertThat(result.getStatusCode()).isEqualTo(OK),
+                () -> assertThat(responses).hasSize(0)
+        );
     }
 }

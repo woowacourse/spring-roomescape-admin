@@ -38,7 +38,6 @@ public class ReservationTimeController {
 
     @DeleteMapping("/times/{id}")
     public ResponseEntity<Void> delete(@PathVariable(name = "id") Long id) {
-        System.out.println(id);
         boolean isRemoved = reservationTimeDao.removeById(id);
         if (isRemoved) {
             return ResponseEntity.ok().build();

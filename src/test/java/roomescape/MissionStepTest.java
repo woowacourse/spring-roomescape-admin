@@ -62,10 +62,13 @@ public class MissionStepTest {
     @DisplayName("/reservations POST 요청에 정상적으로 응답한다")
     @Test
     void reservation_post_api() {
+        // 시간 추가
+        addAnyTime();
+
         Map<String, String> params = new HashMap<>();
         params.put("name", "브라운");
         params.put("date", "2023-08-05");
-        params.put("time", "15:40");
+        params.put("timeId", "1");
 
         RestAssured.given().log().all()
                 .contentType(ContentType.JSON)
@@ -85,10 +88,13 @@ public class MissionStepTest {
     @DisplayName("/reservations DELETE 요청에 정상적으로 응답한다")
     @Test
     void reservation_delete_api() {
+        // 시간 추가
+        addAnyTime();
+
         Map<String, String> params = new HashMap<>();
         params.put("name", "브라운");
         params.put("date", "2023-08-05");
-        params.put("time", "15:40");
+        params.put("timeId", "1");
 
         RestAssured.given().log().all()
                 .contentType(ContentType.JSON)
@@ -122,8 +128,11 @@ public class MissionStepTest {
     @DisplayName("/reservations GET api는 DB로부터 데이터를 조회한다")
     @Test
     void step_five() {
-        String sql = "INSERT INTO reservation (name, date, time) VALUES (?, ?, ?)";
-        jdbcTemplate.update(sql, "브라운", "2023-08-05", "15:40");
+        // 시간 추가
+        addAnyTime();
+
+        String sql = "INSERT INTO reservation (name, date, time_id) VALUES (?, ?, ?)";
+        jdbcTemplate.update(sql, "브라운", "2023-08-05", "1");
 
         List<ReservationResponse> reservations = RestAssured.given().log().all()
                 .when().get("/reservations")
@@ -139,10 +148,13 @@ public class MissionStepTest {
     @DisplayName("/reservations POST, DELETE api는 DB로부터 데이터를 삽입, 삭제한다")
     @Test
     void step_six() {
+        // 시간 추가
+        addAnyTime();
+
         Map<String, String> params = new HashMap<>();
         params.put("name", "브라운");
         params.put("date", "2023-08-05");
-        params.put("time", "10:00");
+        params.put("timeId", "1");
 
         RestAssured.given().log().all()
                 .contentType(ContentType.JSON)
@@ -186,5 +198,16 @@ public class MissionStepTest {
                 .when().delete("/times/1")
                 .then().log().all()
                 .statusCode(200);
+    }
+
+    private static void addAnyTime() {
+        Map<String, String> params = new HashMap<>();
+        params.put("startAt", "10:00");
+
+        RestAssured.given()
+                .contentType(ContentType.JSON)
+                .body(params)
+                .when().post("/times")
+                .then().statusCode(200);
     }
 }

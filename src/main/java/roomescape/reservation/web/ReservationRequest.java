@@ -1,11 +1,11 @@
 package roomescape.reservation.web;
 
 import java.time.LocalDate;
-import java.time.LocalTime;
 import roomescape.reservation.Reservation;
+import roomescape.time.ReservationTime;
 
-public record ReservationRequest(String name, LocalDate date, LocalTime time) {
-    public Reservation toReservation() {
+public record ReservationRequest(String name, LocalDate date, Long timeId) {
+    public Reservation toReservation(ReservationTime time) {
         return new Reservation(null, name, date, time);
     }
 }

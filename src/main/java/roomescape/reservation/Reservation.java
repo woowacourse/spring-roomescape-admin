@@ -1,22 +1,19 @@
 package roomescape.reservation;
 
 import java.time.LocalDate;
-import java.time.LocalDateTime;
-import java.time.LocalTime;
+import roomescape.time.ReservationTime;
 
 public class Reservation {
     private final Long id;
     private final String customerName;
-    private final LocalDateTime reservationDateTime;
+    private final LocalDate reservationDate;
+    private final ReservationTime time;
 
-    public Reservation(Long id, String customerName, LocalDateTime reservationDateTime) {
+    public Reservation(Long id, String customerName, LocalDate reservationDate, ReservationTime time) {
         this.id = id;
         this.customerName = customerName;
-        this.reservationDateTime = reservationDateTime;
-    }
-
-    public Reservation(Long id, String customerName, LocalDate reservationDate, LocalTime reservationTime) {
-        this(id, customerName, LocalDateTime.of(reservationDate, reservationTime));
+        this.reservationDate = reservationDate;
+        this.time = time;
     }
 
     public boolean isIdEquals(long id) {
@@ -32,10 +29,14 @@ public class Reservation {
     }
 
     public LocalDate getReservationDate() {
-        return reservationDateTime.toLocalDate();
+        return reservationDate;
     }
 
-    public LocalTime getReservationTime() {
-        return reservationDateTime.toLocalTime();
+    public ReservationTime getReservationTime() {
+        return time;
+    }
+
+    public long getReservationTimeId() {
+        return time.getId();
     }
 }

@@ -1,10 +1,17 @@
 package roomescape.dao;
 
+import java.sql.PreparedStatement;
 import java.time.LocalDate;
 import java.time.LocalTime;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
+import javax.sql.DataSource;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.JdbcTemplate;
+import org.springframework.jdbc.core.simple.SimpleJdbcInsert;
+import org.springframework.jdbc.support.GeneratedKeyHolder;
+import org.springframework.jdbc.support.KeyHolder;
 import org.springframework.stereotype.Repository;
 import roomescape.dto.request.ReservationCreateRequest;
 import roomescape.dto.response.ReservationResponse;
@@ -13,10 +20,14 @@ import roomescape.dto.response.ReservationResponse;
 public class ReservationDao {
 
     private JdbcTemplate jdbcTemplate;
+    private SimpleJdbcInsert simpleJdbcInsert;
 
     @Autowired
-    public ReservationDao(JdbcTemplate jdbcTemplate) {
+    public ReservationDao(JdbcTemplate jdbcTemplate, DataSource dataSource) {
         this.jdbcTemplate = jdbcTemplate;
+        this.simpleJdbcInsert = new SimpleJdbcInsert(dataSource)
+                .withTableName("reservation")
+                .usingGeneratedKeyColumns("id");
     }
 
     public List<ReservationResponse> findAll() {
@@ -34,9 +45,33 @@ public class ReservationDao {
                 });
     }
 
-    public int create(ReservationCreateRequest reservationCreateRequest) {
+    public Long create(ReservationCreateRequest reservationCreateRequest) {
         String sql = "insert into reservation (name, date, time) values (?, ?, ?)";
-        return this.jdbcTemplate.update(sql, reservationCreateRequest.name(), reservationCreateRequest.date(), reservationCreateRequest.time());
+        KeyHolder keyHolder = new GeneratedKeyHolder();
+
+        this.jdbcTemplate.update(con -> {
+            PreparedStatement ps = con.prepareStatement(
+                    sql,
+                    new String[]{"id"}
+            );
+            ps.setString(1, reservationCreateRequest.name());
+            ps.setString(2, reservationCreateRequest.date().toString());
+            ps.setString(3, reservationCreateRequest.time().toString());
+            return ps;
+        }, keyHolder);
+
+        return keyHolder.getKey().longValue();
+    }
+
+    public Long createWithMap(ReservationCreateRequest reservationCreateRequest) {
+        Map<String, Object> parameters = new HashMap<>();
+
+        parameters.put("name", reservationCreateRequest.name());
+        parameters.put("date", reservationCreateRequest.date());
+        parameters.put("time", reservationCreateRequest.time());
+
+        Number number = simpleJdbcInsert.executeAndReturnKey(parameters);
+        return number.longValue();
     }
 
     public int delete(Long id) {

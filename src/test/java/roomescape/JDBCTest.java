@@ -17,8 +17,6 @@ import roomescape.dto.response.ReservationResponse;
 
 import org.junit.jupiter.api.Test;
 
-//@JdbcTest
-//@AutoConfigureTestDatabase(replace = AutoConfigureTestDatabase.Replace.NONE)
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.DEFINED_PORT)
 @DirtiesContext(classMode = DirtiesContext.ClassMode.BEFORE_EACH_TEST_METHOD)
 public class JDBCTest {

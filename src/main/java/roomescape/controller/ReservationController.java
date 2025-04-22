@@ -27,7 +27,7 @@ public class ReservationController {
     }
 
     @PostMapping()
-    public int create(@Valid @RequestBody ReservationCreateRequest reservationCreateRequest) {
+    public Long create(@Valid @RequestBody ReservationCreateRequest reservationCreateRequest) {
         return reservationService.create(reservationCreateRequest);
     }
 

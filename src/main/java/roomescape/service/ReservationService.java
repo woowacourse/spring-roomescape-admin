@@ -17,8 +17,8 @@ public class ReservationService {
         return reservationDao.findAll();
     }
 
-    public int create(ReservationCreateRequest request) {
-        return reservationDao.create(request);
+    public Long create(ReservationCreateRequest request) {
+        return reservationDao.createWithMap(request);
     }
 
     public int delete(Long id) {

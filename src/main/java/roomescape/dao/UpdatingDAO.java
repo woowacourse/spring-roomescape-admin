@@ -1,9 +1,8 @@
 package roomescape.dao;
 
-import java.sql.PreparedStatement;
+import java.util.Map;
 import org.springframework.jdbc.core.JdbcTemplate;
-import org.springframework.jdbc.support.GeneratedKeyHolder;
-import org.springframework.jdbc.support.KeyHolder;
+import org.springframework.jdbc.core.simple.SimpleJdbcInsert;
 import org.springframework.stereotype.Repository;
 import roomescape.dto.ReservationReqDto;
 import roomescape.dto.ReservationResDto;
@@ -18,20 +17,19 @@ public class UpdatingDAO {
     }
 
     public ReservationResDto addAndGet(ReservationReqDto dto) {
-        String sql = "INSERT INTO reservation (name, date, time) VALUES (?, ?, ?)";
-        KeyHolder keyHolder = new GeneratedKeyHolder();
+        SimpleJdbcInsert simpleJdbcInsert = new SimpleJdbcInsert(jdbcTemplate)
+                .withTableName("reservation")
+                .usingColumns("name", "date", "time")
+                .usingGeneratedKeyColumns("id");
 
-        jdbcTemplate.update(connection -> {
-            PreparedStatement ps = connection.prepareStatement(sql, new String[]{"id"});
-            ps.setString(1, dto.name());
-            ps.setString(2, dto.date().toString());
-            ps.setString(3, dto.time().toString());
-            return ps;
-        }, keyHolder);
+        Map<String, Object> parameters = Map.of(
+                "name", dto.name(),
+                "date", dto.date(),
+                "time", dto.time()
+        );
+        Number id = simpleJdbcInsert.executeAndReturnKey(parameters);
 
-        long id = keyHolder.getKey().longValue();
-
-        return new ReservationResDto(id, dto.name(), dto.date(), dto.time());
+        return new ReservationResDto(id.longValue(), dto.name(), dto.date(), dto.time());
     }
 
     public void deleteById(Long id) {

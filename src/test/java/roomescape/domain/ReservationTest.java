@@ -10,7 +10,7 @@ class ReservationTest {
 
     @Test
     void sameIdTest() {
-        Person person = new Person(1, "이름");
+        Person person = new Person("이름");
         ReservationTime reservationTime = new ReservationTime(LocalDateTime.of(2024, 2, 25, 10, 0));
         Reservation reservation = new Reservation(1, person, reservationTime);
 

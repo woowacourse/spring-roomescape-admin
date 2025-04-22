@@ -30,8 +30,8 @@ public class ReservationController {
 
     @PostMapping()
     public Reservation createReservations(@RequestBody ReservationRequest reservationRequest) {
-        Person person = new Person(reservationRequest.name());
-        ReservationTime reservationTime = reservationRequest.getReservationTime();
+        Person person = reservationRequest.toPerson();
+        ReservationTime reservationTime = reservationRequest.toReservationTime();
 
         return reservations.save(person, reservationTime);
     }

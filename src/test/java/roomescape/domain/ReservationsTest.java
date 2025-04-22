@@ -16,7 +16,7 @@ class ReservationsTest {
 
     @BeforeEach
     void makeReservation() {
-        person = new Person(1, "이름");
+        person = new Person("이름");
         reservationTime = new ReservationTime(LocalDateTime.of(2024, 2, 25, 10, 0));
         reservations = new Reservations();
         reservations.save(person, reservationTime);

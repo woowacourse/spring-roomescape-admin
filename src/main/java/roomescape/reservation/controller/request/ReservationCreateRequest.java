@@ -12,8 +12,4 @@ public record ReservationCreateRequest(
     public Reservation to() {
         return new Reservation(name, LocalDate.parse(date), new ReservationTime(timeId));
     }
-
-    public Long getTimeId() {
-        return timeId;
-    }
 }

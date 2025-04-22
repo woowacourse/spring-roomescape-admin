@@ -34,7 +34,7 @@ public class ReservationTimeApiController {
 
     @GetMapping("/times")
     public ResponseEntity<List<ReservationTimeResponse>> getTimes() {
-        List<ReservationTime> reservationTimes = reservationTimeService.findAll();
+        List<ReservationTime> reservationTimes = reservationTimeService.getAll();
 
         return ResponseEntity.ok(ReservationTimeResponse.from(reservationTimes));
     }

@@ -17,7 +17,7 @@ public class ReservationTimeService {
         return reservationTimeRepository.save(reservationTime);
     }
 
-    public List<ReservationTime> findAll() {
+    public List<ReservationTime> getAll() {
         return reservationTimeRepository.findAll();
     }
 
@@ -25,7 +25,7 @@ public class ReservationTimeService {
         reservationTimeRepository.deleteById(id);
     }
 
-    public ReservationTime findById(Long id) {
+    public ReservationTime getById(Long id) {
         return reservationTimeRepository.findById(id)
                 .orElseThrow(() -> new IllegalArgumentException("[ERROR] 예약 시간을 찾을 수 없습니다."));
     }

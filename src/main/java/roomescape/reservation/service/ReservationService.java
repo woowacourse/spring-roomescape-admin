@@ -20,22 +20,22 @@ public class ReservationService {
         this.reservationTimeService = reservationTimeService;
     }
 
-    public List<Reservation> findAll() {
+    public List<Reservation> getAll() {
         return reservationRepository.findAll();
     }
 
     public Reservation create(Reservation reservation) {
-        ReservationTime reservationTime = reservationTimeService.findById(reservation.getTimeId());
+        ReservationTime reservationTime = reservationTimeService.getById(reservation.getTimeId());
         reservation.setReservationTime(reservationTime);
         return reservationRepository.save(reservation);
     }
 
     public void deleteById(Long id) {
-        Reservation reservation = findReservation(id);
+        Reservation reservation = getReservation(id);
         reservationRepository.deleteById(reservation.getId());
     }
 
-    private Reservation findReservation(Long id) {
+    private Reservation getReservation(Long id) {
         return reservationRepository.findById(id)
                 .orElseThrow(() -> new ReservationNotFoundException("[ERROR] 예약을 찾을 수 없습니다."));
     }

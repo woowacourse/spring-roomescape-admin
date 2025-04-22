@@ -27,7 +27,7 @@ public class ReservationApiController {
 
     @GetMapping
     public ResponseEntity<List<ReservationResponse>> getReservations() {
-        List<Reservation> founds = reservationService.findAll();
+        List<Reservation> founds = reservationService.getAll();
 
         return ResponseEntity
                 .ok(ReservationResponse.from(founds));

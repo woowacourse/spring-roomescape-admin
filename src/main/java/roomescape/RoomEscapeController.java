@@ -5,7 +5,11 @@ import java.time.LocalTime;
 import java.util.List;
 import org.springframework.http.ResponseEntity;
 import org.springframework.jdbc.core.JdbcTemplate;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
 
 @RestController
@@ -30,6 +34,20 @@ public class RoomEscapeController {
         });
 
         return ResponseEntity.ok(reservations);
+    }
+
+    @PostMapping("/reservations")
+    public ResponseEntity<Void> addReservation(@RequestBody ReservationDto reservationDto) {
+        String sql = "insert into reservation(name,date,time) values (?,?,?)";
+        jdbcTemplate.update(sql, reservationDto.name(), reservationDto.date(), reservationDto.time());
+        return ResponseEntity.ok().build();
+    }
+
+    @DeleteMapping("/reservations/{id}")
+    public ResponseEntity<Void> deleteReservation(@PathVariable long id) {
+        String sql = "delete from reservation where id =?";
+        jdbcTemplate.update(sql, id);
+        return ResponseEntity.ok().build();
     }
 
 //    @PostMapping("reservations")

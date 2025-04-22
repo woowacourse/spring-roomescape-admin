@@ -1,6 +1,5 @@
 package roomescape.entity;
 
-import java.sql.Time;
 import java.time.LocalDate;
 import java.time.LocalTime;
 
@@ -12,6 +11,9 @@ public class Reservation {
     private String name;
     private LocalDate date;
     private LocalTime time;
+
+    public Reservation() {
+    }
 
     public Reservation(final String name, final LocalDate date, final LocalTime time) {
         validateTime(time);

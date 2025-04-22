@@ -1,14 +1,12 @@
 package roomescape.controller;
 
-import java.sql.Date;
-import java.sql.PreparedStatement;
-import java.sql.Time;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import org.springframework.http.ResponseEntity;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;
-import org.springframework.jdbc.support.GeneratedKeyHolder;
-import org.springframework.jdbc.support.KeyHolder;
+import org.springframework.jdbc.core.simple.SimpleJdbcInsert;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -25,9 +23,13 @@ import roomescape.controller.response.ReservationResponse;
 public final class ReservationController {
 
     private final JdbcTemplate jdbcTemplate;
+    private SimpleJdbcInsert insertActor;
 
     public ReservationController(final JdbcTemplate jdbcTemplate) {
         this.jdbcTemplate = jdbcTemplate;
+        this.insertActor = new SimpleJdbcInsert(jdbcTemplate)
+                .withTableName("reservation")
+                .usingGeneratedKeyColumns("id");
     }
 
     @GetMapping
@@ -46,8 +48,9 @@ public final class ReservationController {
     @PostMapping
     ResponseEntity<ReservationResponse> create(@RequestBody ReservationRequest reservationRequest) {
         Reservation reservation = reservationRequest.toReservation();
-        final long id = saveAndGetId(reservation);
-        return ResponseEntity.ok().body(ReservationResponse.from(id, reservation));
+        Number number = saveAndGetId(reservation);
+
+        return ResponseEntity.ok().body(ReservationResponse.from(number.longValue(), reservation));
     }
 
     @DeleteMapping("/{id}")
@@ -66,21 +69,15 @@ public final class ReservationController {
                         resultSet.getTime("time").toLocalTime());
     }
 
-    private long saveAndGetId(final Reservation reservation) {
-        String sql = "insert into reservation (name, date, time) values (?, ?, ?)";
-        KeyHolder keyHolder = new GeneratedKeyHolder();
-        jdbcTemplate.update(connection -> {
-            final PreparedStatement ps = connection.prepareStatement(sql, new String[]{"id"});
-            ps.setString(1, reservation.getName());
-            ps.setDate(2, Date.valueOf(reservation.getDate()));
-            ps.setTime(3, Time.valueOf(reservation.getTime()));
-            return ps;
-        }, keyHolder);
-
-        return getGenerateId(keyHolder);
+    private Number saveAndGetId(final Reservation reservation) {
+        Map<String, Object> parameters = new HashMap<>(3);
+        parameters.put("name", reservation.getName());
+        parameters.put("date", reservation.getDate());
+        parameters.put("time", reservation.getTime());
+        return getGenerateId(parameters);
     }
 
-    private long getGenerateId(final KeyHolder keyHolder) {
-        return keyHolder.getKey().longValue();
+    private Number getGenerateId(final Map<String, Object> parameters) {
+        return insertActor.executeAndReturnKey(parameters);
     }
 }

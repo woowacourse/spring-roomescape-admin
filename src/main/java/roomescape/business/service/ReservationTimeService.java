@@ -23,13 +23,13 @@ public class ReservationTimeService {
         final long savedId = database.saveAndGetId(ReservationTimeEntity.beforeSave(request));
         final ReservationTimeEntity entity = database.findById(savedId)
                 .orElseThrow(() -> new IllegalStateException("예약 시간이 저장되었으나, 서버에서 문제가 발생하였습니다."));
-        return ReservationTimeResponse.from(entity.toDomain(), entity.getId());
+        return ReservationTimeResponse.from(entity.toDomain(), entity.id());
     }
 
     @Transactional(readOnly = true)
     public List<ReservationTimeResponse> getAll() {
         return database.findAll().stream()
-                .map(entity -> ReservationTimeResponse.from(entity.toDomain(), entity.getId()))
+                .map(entity -> ReservationTimeResponse.from(entity.toDomain(), entity.id()))
                 .toList();
     }
 

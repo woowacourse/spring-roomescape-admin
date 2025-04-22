@@ -24,13 +24,13 @@ public class ReservationService {
         final ReservationEntity entity = database.findById(savedId)
                 .orElseThrow(() -> new IllegalStateException("예약이 저장되었으나, 서버에서 문제가 발생하였습니다."));
 
-        return ReservationResponse.from(entity.toDomain(), entity.getId(), entity.getTimeId());
+        return ReservationResponse.from(entity.toDomain(), entity.id(), entity.timeId());
     }
 
     @Transactional(readOnly = true)
     public List<ReservationResponse> getAll() {
         return database.findAll().stream()
-                .map(entity -> ReservationResponse.from(entity.toDomain(), entity.getId(), entity.getTimeId()))
+                .map(entity -> ReservationResponse.from(entity.toDomain(), entity.id(), entity.timeId()))
                 .toList();
     }
 

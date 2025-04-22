@@ -37,8 +37,8 @@ class ReservationTimeJdbcDatabaseTest {
         final List<ReservationTimeEntity> result = timeDatabase.findAll();
 
         assertThat(result).hasSize(2);
-        assertThat(result.get(0).getStartAt()).isEqualTo("10:00");
-        assertThat(result.get(1).getStartAt()).isEqualTo("13:00");
+        assertThat(result.get(0).startAt()).isEqualTo("10:00");
+        assertThat(result.get(1).startAt()).isEqualTo("13:00");
     }
 
     @Test
@@ -55,7 +55,7 @@ class ReservationTimeJdbcDatabaseTest {
 
         final ReservationTimeEntity result = timeDatabase.findById(reservationTimeId).get();
 
-        assertThat(result.getStartAt()).isEqualTo("10:00");
+        assertThat(result.startAt()).isEqualTo("10:00");
     }
 
     @Test
@@ -65,7 +65,7 @@ class ReservationTimeJdbcDatabaseTest {
         final long savedId = timeDatabase.saveAndGetId(ReservationTimeEntity.beforeSave(request));
 
         final ReservationTimeEntity savedReservation = timeDatabase.findById(savedId).get();
-        assertThat(savedReservation.getStartAt()).isEqualTo("10:00");
+        assertThat(savedReservation.startAt()).isEqualTo("10:00");
     }
 
     @Test

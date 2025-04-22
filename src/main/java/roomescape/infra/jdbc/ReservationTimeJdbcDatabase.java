@@ -3,25 +3,17 @@ package roomescape.infra.jdbc;
 import org.springframework.context.annotation.Primary;
 import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.jdbc.core.JdbcTemplate;
-import org.springframework.jdbc.core.RowMapper;
 import org.springframework.jdbc.core.simple.SimpleJdbcInsert;
 import org.springframework.stereotype.Repository;
 import roomescape.infra.ReservationTimeDatabase;
 import roomescape.infra.entity.ReservationTimeEntity;
 
-import java.time.LocalTime;
 import java.util.List;
 import java.util.Optional;
 
 @Repository
 @Primary
 public class ReservationTimeJdbcDatabase implements ReservationTimeDatabase {
-
-    private static final RowMapper<ReservationTimeEntity> ROW_MAPPER = (rs, rowNum) -> {
-        final long id = rs.getLong("id");
-        final LocalTime startTime = rs.getTime("start_at").toLocalTime();
-        return new ReservationTimeEntity(id, startTime);
-    };
 
     private final JdbcTemplate jdbcTemplate;
 
@@ -35,7 +27,7 @@ public class ReservationTimeJdbcDatabase implements ReservationTimeDatabase {
                 SELECT * FROM RESERVATION_TIME
                 """;
 
-        return jdbcTemplate.query(sql, ROW_MAPPER);
+        return jdbcTemplate.query(sql, ReservationTimeEntity.getRowMapper());
     }
 
     @Override
@@ -46,7 +38,7 @@ public class ReservationTimeJdbcDatabase implements ReservationTimeDatabase {
                 """;
 
         try {
-            final ReservationTimeEntity reservationTime = jdbcTemplate.queryForObject(sql, ROW_MAPPER, id);
+            final ReservationTimeEntity reservationTime = jdbcTemplate.queryForObject(sql, ReservationTimeEntity.getRowMapper(), id);
             return Optional.ofNullable(reservationTime);
         } catch (EmptyResultDataAccessException e) {
             return Optional.empty();

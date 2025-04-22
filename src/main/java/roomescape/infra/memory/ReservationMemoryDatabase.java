@@ -66,9 +66,9 @@ public class ReservationMemoryDatabase implements ReservationDatabase {
         final long id = idGenerator.get();
         DATA.put(id, new ReservationData(
                 id,
-                entity.getName(),
-                entity.getDate(),
-                entity.getTime().getId()
+                entity.name(),
+                entity.date(),
+                entity.time().id()
         ));
         return id;
     }

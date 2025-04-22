@@ -46,13 +46,13 @@ class ReservationJdbcDatabaseTest {
         final List<ReservationEntity> result = database.findAll();
 
         assertThat(result.size()).isEqualTo(2);
-        assertThat(result.get(0).getName()).isEqualTo("dompoo");
-        assertThat(result.get(0).getDate()).isEqualTo(LocalDate.now().plusDays(20));
-        assertThat(result.get(0).getTime().getStartAt()).isEqualTo(LocalTime.of(10, 0));
+        assertThat(result.get(0).name()).isEqualTo("dompoo");
+        assertThat(result.get(0).date()).isEqualTo(LocalDate.now().plusDays(20));
+        assertThat(result.get(0).time().startAt()).isEqualTo(LocalTime.of(10, 0));
 
-        assertThat(result.get(1).getName()).isEqualTo("popo");
-        assertThat(result.get(1).getDate()).isEqualTo(LocalDate.now().plusDays(25));
-        assertThat(result.get(1).getTime().getStartAt()).isEqualTo(LocalTime.of(13, 0));
+        assertThat(result.get(1).name()).isEqualTo("popo");
+        assertThat(result.get(1).date()).isEqualTo(LocalDate.now().plusDays(25));
+        assertThat(result.get(1).time().startAt()).isEqualTo(LocalTime.of(13, 0));
     }
 
     @Test
@@ -72,9 +72,9 @@ class ReservationJdbcDatabaseTest {
 
         final ReservationEntity result = database.findById(reservationId).get();
 
-        assertThat(result.getName()).isEqualTo("dompoo");
-        assertThat(result.getDate()).isEqualTo(LocalDate.now().plusDays(20));
-        assertThat(result.getTime().getStartAt()).isEqualTo(LocalTime.of(10, 0));
+        assertThat(result.name()).isEqualTo("dompoo");
+        assertThat(result.date()).isEqualTo(LocalDate.now().plusDays(20));
+        assertThat(result.time().startAt()).isEqualTo(LocalTime.of(10, 0));
     }
 
     @Test
@@ -86,9 +86,9 @@ class ReservationJdbcDatabaseTest {
 
         assertThat(database.findAll().size()).isEqualTo(1);
         final ReservationEntity savedReservation = database.findById(savedId).get();
-        assertThat(savedReservation.getName()).isEqualTo("dompoo");
-        assertThat(savedReservation.getDate()).isEqualTo(LocalDate.of(2025, 5, 17));
-        assertThat(savedReservation.getTime().getStartAt()).isEqualTo(LocalTime.of(10, 0));
+        assertThat(savedReservation.name()).isEqualTo("dompoo");
+        assertThat(savedReservation.date()).isEqualTo(LocalDate.of(2025, 5, 17));
+        assertThat(savedReservation.time().startAt()).isEqualTo(LocalTime.of(10, 0));
     }
 
     @Test

@@ -4,9 +4,9 @@ import java.util.List;
 
 public interface ReservationRepository {
 
-    long addReservation(Reservation reservation);
+    long add(Reservation reservation);
 
-    List<Reservation> findAllReservations();
+    List<Reservation> findAll();
 
-    void deleteReservation(Long id);
+    void deleteById(Long id);
 }

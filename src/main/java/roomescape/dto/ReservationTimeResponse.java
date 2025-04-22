@@ -3,7 +3,7 @@ package roomescape.dto;
 import roomescape.entity.ReservationTime;
 import roomescape.util.FormatUtils;
 
-public record ReservationTimeResponse(Long id, String time) {
+public record ReservationTimeResponse(Long id, String startAt) {
 
     public static ReservationTimeResponse toDto(final ReservationTime reservationTime) {
 

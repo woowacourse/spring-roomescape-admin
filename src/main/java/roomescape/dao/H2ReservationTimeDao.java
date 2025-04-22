@@ -1,11 +1,14 @@
 package roomescape.dao;
 
 import org.springframework.jdbc.core.JdbcTemplate;
+import org.springframework.jdbc.core.simple.SimpleJdbcInsert;
 import org.springframework.stereotype.Repository;
 import roomescape.entity.ReservationTime;
 
 import java.time.LocalTime;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 @Repository
 public class H2ReservationTimeDao implements ReservationTimeDao {
@@ -26,7 +29,15 @@ public class H2ReservationTimeDao implements ReservationTimeDao {
 
     @Override
     public ReservationTime insert(final ReservationTime reservationTime) {
-        return null;
+        SimpleJdbcInsert simpleJdbcInsert = new SimpleJdbcInsert(jdbcTemplate)
+                .withTableName("reservation_time")
+                .usingGeneratedKeyColumns("id");
+
+        Map<String, Object> parameters = new HashMap<>();
+        parameters.put("start_at", reservationTime.getStartAt());
+        Number savedId = simpleJdbcInsert.execute(parameters);
+
+        return ReservationTime.of(savedId.longValue(), reservationTime.getStartAt());
     }
 
     @Override

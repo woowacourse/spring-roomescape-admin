@@ -1,8 +1,10 @@
 package roomescape.database;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 import roomescape.domain.Reservation;
 
+import javax.sql.DataSource;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -10,6 +12,9 @@ import java.util.List;
 public class ReservationDatabaseImpl implements ReservationDatabase {
 
     private final List<Reservation> reservations = new ArrayList<>();
+
+    @Autowired
+    public DataSource dataSource;
 
     @Override
     public List<Reservation> findAll() {

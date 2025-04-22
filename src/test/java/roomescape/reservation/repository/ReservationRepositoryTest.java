@@ -3,11 +3,10 @@ package roomescape.reservation.repository;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 
+import java.time.LocalDate;
 import java.time.LocalDateTime;
-import java.time.chrono.ChronoLocalDateTime;
+import java.time.LocalTime;
 import java.util.List;
-import java.util.Optional;
-import org.junit.jupiter.api.AfterAll;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
@@ -15,9 +14,13 @@ import org.junit.jupiter.api.Test;
 import org.springframework.jdbc.core.JdbcTemplate;
 import roomescape.config.TestConfig;
 import roomescape.reservation.entity.Reservation;
-import roomescape.reservation.exception.EntityNotFoundException;
+import roomescape.reservation.entity.ReservationTime;
+import roomescape.common.exception.EntityNotFoundException;
 
 class ReservationRepositoryTest {
+
+    private static final Long RESERVATION_TIME_ID = 1L;
+    private static final LocalTime RESERVATION_TIME_START_TIME = LocalTime.of(8, 0);
 
     private JdbcTemplate jdbcTemplate;
     private ReservationRepository reservationRepository;
@@ -26,36 +29,42 @@ class ReservationRepositoryTest {
     void init() {
         jdbcTemplate = TestConfig.getJdbcTemplate();
         reservationRepository = new ReservationRepositoryImpl(jdbcTemplate);
+
     }
 
     @DisplayName("예약 정보를 저장한다.")
     @Test
     void test1() {
         // given
+        ReservationTime reservationTime = saveReservationTime(RESERVATION_TIME_ID, RESERVATION_TIME_START_TIME);
+
         LocalDateTime now = LocalDateTime.now();
         String name = "꾹";
-        Reservation reservation = Reservation.withoutId(name, now);
+        Reservation reservation = Reservation.withoutId(name, now.toLocalDate(), reservationTime);
 
         // when
         Reservation result = reservationRepository.save(reservation);
 
         // then
         assertThat(result.getName()).isEqualTo(name);
-        assertThat(result.getDateTime()).isEqualTo(now);
+        assertThat(result.getReservationDate()).isEqualTo(now.toLocalDate());
+        assertThat(result.getReservationTime().getId()).isEqualTo(RESERVATION_TIME_ID);
     }
 
     @DisplayName("id가 같다면 해당 예약 정보로 변경한다.")
     @Test
     void test4() {
         // given
-        long id = 1;
+        long reservationId = 1;
         LocalDateTime now = LocalDateTime.now();
+
+        ReservationTime reservationTime = saveReservationTime(RESERVATION_TIME_ID, now.toLocalTime());
+
         String originalName = "꾹";
-        saveReservation(id, originalName, now);
+        saveReservation(reservationId, originalName, now.toLocalDate(), RESERVATION_TIME_ID);
 
         String changedName = "드라고";
-
-        Reservation updateReservation = new Reservation(id, changedName, now);
+        Reservation updateReservation = new Reservation(reservationId, changedName, now.toLocalDate(), reservationTime);
 
         // when
         Reservation result = reservationRepository.save(updateReservation);
@@ -68,8 +77,9 @@ class ReservationRepositoryTest {
     @Test
     void test8() {
         // given
+        ReservationTime reservationTime = saveReservationTime(RESERVATION_TIME_ID, RESERVATION_TIME_START_TIME);
         LocalDateTime now = LocalDateTime.now();
-        Reservation reservation = new Reservation(1L, "꾹", now);
+        Reservation reservation = new Reservation(1L, "꾹", now.toLocalDate(), reservationTime);
 
         // when & then
         assertThatThrownBy(() -> reservationRepository.save(reservation))
@@ -80,34 +90,40 @@ class ReservationRepositoryTest {
     @Test
     void test5() {
         // given
+
+        Long timeId = 1L;
+        LocalDateTime now = LocalDateTime.now();
+
+        saveReservationTime(timeId, now.toLocalTime());
+
         long id = 1;
         String name = "꾹";
-        LocalDateTime now = LocalDateTime.now();
-        saveReservation(id, name, now);
+        saveReservation(id, name, now.toLocalDate(), timeId);
 
         // when
         Reservation result = reservationRepository.findById(id).get();
 
         // then
-
         assertThat(result.getName()).isEqualTo(name);
-
-        ChronoLocalDateTime.timeLineOrder();
-        assertThat(result.getDateTime()).isEqualToIgnoringNanos(now);
+        assertThat(result.getReservationDate()).isEqualTo(now.toLocalDate());
+        assertThat(result.getReservationTime().getId()).isEqualTo(timeId);
+        assertThat(result.getReservationTime().getStartAt()).isEqualTo(now.toLocalTime());
     }
 
     @DisplayName("모든 예약 정보를 가져온다.")
     @Test
     void test6() {
         // given
-        LocalDateTime now = LocalDateTime.now();
+        LocalDate date = LocalDate.now();
+
+        saveReservationTime(RESERVATION_TIME_ID, RESERVATION_TIME_START_TIME);
 
         List<String> names = List.of("꾹", "헤일러", "라젤");
 
-        String sql = "insert into reservation (name, date_time) values (?, ?)";
+        String sql = "insert into reservation (name, date, time_id) values (?, ?, ?)";
 
         for (String name : names) {
-            jdbcTemplate.update(sql, name, now);
+            jdbcTemplate.update(sql, name, date, RESERVATION_TIME_ID);
         }
 
         // when
@@ -116,12 +132,19 @@ class ReservationRepositoryTest {
         // then
 
         List<String> resultNames = result.stream().map(Reservation::getName).toList();
-        List<LocalDateTime> resultDateTimes = result.stream().map(Reservation::getDateTime).toList();
+        List<LocalDate> resultDates = result.stream().map(Reservation::getReservationDate).toList();
+        List<LocalTime> resultTimes = result.stream().map(Reservation::getReservationTime)
+                .map(ReservationTime::getStartAt)
+                .toList();
 
         assertThat(resultNames).containsAll(names);
 
-        for (LocalDateTime resultDateTime : resultDateTimes) {
-            assertThat(resultDateTime).isEqualToIgnoringNanos(now);
+        for (LocalDate resultDate : resultDates) {
+            assertThat(resultDate).isEqualTo(date);
+        }
+
+        for (LocalTime resultTime : resultTimes) {
+            assertThat(resultTime).isEqualTo(RESERVATION_TIME_START_TIME);
         }
     }
 
@@ -129,28 +152,38 @@ class ReservationRepositoryTest {
     @Test
     void test7() {
         // given
-        long id = 1;
+        Long reservationId = 2L;
         String name = "꾹";
         LocalDateTime now = LocalDateTime.now();
 
-        saveReservation(id, name, now);
+        saveReservationTime(RESERVATION_TIME_ID, now.toLocalTime());
+        saveReservation(reservationId, name, now.toLocalDate(), RESERVATION_TIME_ID);
 
         // when
-        reservationRepository.deleteById(id);
+        reservationRepository.deleteById(reservationId);
 
         // then
         String sql = "select count(*) from reservation where id = ?";
-        int count = jdbcTemplate.queryForObject(sql,  Integer.class, id);
+        int count = jdbcTemplate.queryForObject(sql, Integer.class, reservationId);
         assertThat(count).isZero();
     }
 
-    private void saveReservation(Long id, String name, LocalDateTime dateTime) {
-        String sql = "insert into reservation (id, name, date_time) values (?, ?, ?)";
-        jdbcTemplate.update(sql, id, name, dateTime);
+    private ReservationTime saveReservationTime(Long id, LocalTime time) {
+        String insertTimeSql = "insert into reservation_time (id, start_at) values (?, ?)";
+        jdbcTemplate.update(insertTimeSql, id, time);
+
+        return new ReservationTime(id, time);
+    }
+
+    private void saveReservation(Long id, String name, LocalDate date, Long timeId) {
+        String sql = "insert into reservation (id, name, date, time_id) values (?, ?, ?, ?)";
+        jdbcTemplate.update(sql, id, name, date, timeId);
     }
 
     @AfterEach
-    void cleanUp(){
+    void cleanUp() {
         jdbcTemplate.update("truncate TABLE reservation");
+        jdbcTemplate.update("delete from reservation_time");
     }
+
 }

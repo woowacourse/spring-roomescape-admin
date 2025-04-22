@@ -2,6 +2,8 @@ package roomescape.reservation.repository;
 
 import java.sql.PreparedStatement;
 import java.sql.Statement;
+import java.time.LocalDate;
+import java.time.LocalTime;
 import java.util.List;
 import java.util.Optional;
 import org.springframework.dao.EmptyResultDataAccessException;
@@ -10,7 +12,8 @@ import org.springframework.jdbc.support.GeneratedKeyHolder;
 import org.springframework.jdbc.support.KeyHolder;
 import org.springframework.stereotype.Repository;
 import roomescape.reservation.entity.Reservation;
-import roomescape.reservation.exception.EntityNotFoundException;
+import roomescape.reservation.entity.ReservationTime;
+import roomescape.common.exception.EntityNotFoundException;
 
 @Repository
 public class ReservationRepositoryImpl implements ReservationRepository {
@@ -23,27 +26,34 @@ public class ReservationRepositoryImpl implements ReservationRepository {
 
     @Override
     public List<Reservation> findAll() {
-        String sql = "select * from reservation";
+        String sql = "select rs.id as reservation_id, rs.name, rs.date, rst.id as reservation_time_id, rst.start_at from reservation rs INNER JOIN reservation_time rst ON rs.time_id = rst.id";
 
-        return jdbcTemplate.query(sql, (resultSet, rowNum) -> new Reservation(
-                resultSet.getLong("id"),
-                resultSet.getString("name"),
-                resultSet.getTimestamp("date_time").toLocalDateTime()
-        ));
+        return jdbcTemplate.query(sql,
+                (resultSet, rowNum) -> new Reservation(
+                        resultSet.getLong("reservation_id"),
+                        resultSet.getString("name"),
+                        LocalDate.parse(resultSet.getString("date")),
+                        new ReservationTime(
+                                resultSet.getLong("reservation_time_id"),
+                                LocalTime.parse(resultSet.getString("start_at"))
+                        ))
+        );
     }
 
     @Override
-    public Optional<Reservation> findById(long id) {
-        String sql = "select * from reservation where id = ?";
+    public Optional<Reservation> findById(Long id) {
+        String sql = "select rs.id as reservation_id, rs.name, rs.date, rst.id  as reservation_time_id, rst.start_at from reservation rs inner join reservation_time rst on rs.time_id = rst.id where rs.id = ?";
 
         try {
-            Reservation reservation = jdbcTemplate.queryForObject(sql, (resultSet, rowNum) ->
-                    new Reservation(
-                            resultSet.getLong("id"),
+            Reservation reservation = jdbcTemplate.queryForObject(sql,
+                    (resultSet, rowNum) -> new Reservation(
+                            resultSet.getLong("reservation_id"),
                             resultSet.getString("name"),
-                            resultSet.getTimestamp("date_time").toLocalDateTime()
-                    ), id);
-
+                            LocalDate.parse(resultSet.getString("date")),
+                            new ReservationTime(
+                                    resultSet.getLong("reservation_time_id"),
+                                    LocalTime.parse(resultSet.getString("start_at")
+                                    ))), id);
             return Optional.ofNullable(reservation);
         } catch (EmptyResultDataAccessException e) {
             throw new EntityNotFoundException("entity not found");
@@ -52,6 +62,8 @@ public class ReservationRepositoryImpl implements ReservationRepository {
 
     @Override
     public Reservation save(Reservation reservation) {
+
+
         if (reservation.existId()) {
             return update(reservation);
         }
@@ -59,28 +71,40 @@ public class ReservationRepositoryImpl implements ReservationRepository {
         return create(reservation);
     }
 
-    public Reservation create(Reservation reservation) {
-        String sql = "insert into reservation (name, date_time) values (?, ?)";
+    private Reservation create(Reservation reservation) {
+        String sql = "insert into reservation (name, date, time_id) values (?, ?, ?)";
 
         KeyHolder keyHolder = new GeneratedKeyHolder();
 
         jdbcTemplate.update(conn -> {
-                    PreparedStatement ps = conn.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS);
-                    ps.setString(1, reservation.getName());
-                    ps.setString(2, reservation.getDateTime().toString());
-                    return ps;
-                }
-                , keyHolder);
+            PreparedStatement ps = conn.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS);
+            ps.setString(1, reservation.getName());
+            ps.setString(2, reservation.getReservationDate().toString());
+            ps.setLong(3, reservation.getReservationTime().getId());
+            return ps;
+        }, keyHolder);
 
         long id = keyHolder.getKey().longValue();
 
-        return new Reservation(id, reservation.getName(), reservation.getDateTime());
+        return new Reservation(id, reservation.getName(), reservation.getReservationDate(),
+                reservation.getReservationTime());
     }
 
-    public Reservation update(Reservation reservation) {
-        String sql = "update reservation set name = ?, date_time = ? where id = ?";
+    /**
+     * 현재 구조에서는 reservation의 start_at의 변경에 대해서는 처리하지 못한다.
+     * 해당 영역은 reservation 에 대해서만 처리해야 한다고 본다.
+     * 우선은 요구 사항에는 update와 관련된 부분이 없으므로 보류한다.
+     */
+    private Reservation update(Reservation reservation) {
+        String updateReservationSql = "update reservation set name = ?, date = ?, time_id = ? where id = ?";
+        checkReservationTime(reservation.getReservationTime());
 
-        int update = jdbcTemplate.update(sql, reservation.getName(), reservation.getDateTime(), reservation.getId());
+        int update = jdbcTemplate.update(updateReservationSql,
+                reservation.getName(),
+                reservation.getReservationDate(),
+                reservation.getReservationTime().getId(),
+                reservation.getId()
+        );
 
         if (update == 0) {
             throw new EntityNotFoundException("Reservation with id " + reservation.getId() + " not found");
@@ -89,8 +113,14 @@ public class ReservationRepositoryImpl implements ReservationRepository {
         return reservation;
     }
 
+    private void checkReservationTime(ReservationTime reservationTime) {
+        if (reservationTime == null) {
+            throw new EntityNotFoundException("reservationTime is null");
+        }
+    }
+
     @Override
-    public void deleteById(long id) {
+    public void deleteById(Long id) {
         String sql = "delete from reservation where id = ?";
 
         int result = jdbcTemplate.update(sql, id);

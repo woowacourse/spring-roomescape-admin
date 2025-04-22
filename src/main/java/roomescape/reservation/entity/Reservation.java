@@ -1,25 +1,35 @@
 package roomescape.reservation.entity;
 
-import java.time.LocalDateTime;
+import java.time.LocalDate;
 import java.util.Objects;
 
 public class Reservation {
 
     private final Long id;
     private final String name;
-    private final LocalDateTime dateTime;
+    private final LocalDate reservationDate;
+    private final ReservationTime reservationTime;
 
-    public Reservation(Long id, String name, LocalDateTime dateTime) {
+    public Reservation(Long id, String name, LocalDate reservationDate, ReservationTime reservationTime) {
+        validateReservation(name, reservationDate, reservationTime);
         this.id = id;
         this.name = name;
-        this.dateTime = dateTime;
+        this.reservationDate = reservationDate;
+        this.reservationTime = reservationTime;
     }
 
-    public static Reservation withoutId(String name, LocalDateTime localDateTime) {
-        return new Reservation(null, name, localDateTime);
+    public static Reservation withoutId(String name, LocalDate reservationDate, ReservationTime reservationTime) {
+        validateReservation(name, reservationDate, reservationTime);
+        return new Reservation(null, name, reservationDate, reservationTime);
     }
 
-    public boolean existId(){
+    private static void validateReservation(String name, LocalDate reservationDate, ReservationTime reservationTime) {
+        if (name == null || reservationDate == null || reservationTime == null) {
+            throw new IllegalArgumentException("Reservation cannot be null");
+        }
+    }
+
+    public boolean existId() {
         return id != null;
     }
 
@@ -31,8 +41,12 @@ public class Reservation {
         return name;
     }
 
-    public LocalDateTime getDateTime() {
-        return dateTime;
+    public LocalDate getReservationDate() {
+        return reservationDate;
+    }
+
+    public ReservationTime getReservationTime() {
+        return reservationTime;
     }
 
     @Override
@@ -42,20 +56,12 @@ public class Reservation {
         }
         Reservation that = (Reservation) o;
         return Objects.equals(id, that.id) && Objects.equals(name, that.name)
-                && Objects.equals(dateTime, that.dateTime);
+                && Objects.equals(reservationDate, that.reservationDate) && Objects.equals(
+                reservationTime, that.reservationTime);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(id, name, dateTime);
-    }
-
-    @Override
-    public String toString() {
-        return "Reservation{" +
-                "id=" + id +
-                ", name='" + name + '\'' +
-                ", dateTime=" + dateTime +
-                '}';
+        return Objects.hash(id, name, reservationDate, reservationTime);
     }
 }

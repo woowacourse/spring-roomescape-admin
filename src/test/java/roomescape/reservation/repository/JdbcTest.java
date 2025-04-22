@@ -37,7 +37,6 @@ class JdbcTest {
     @DisplayName("reservation jdbc 예약 정보 삽입 테스트")
     @Test
     void test2() {
-
         // given & when
         jdbcTemplate.update("INSERT INTO reservation (name, date_time) VALUES (?, ?)", "브라운", "2023-08-05 15:40");
 

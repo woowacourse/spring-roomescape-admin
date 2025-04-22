@@ -8,48 +8,41 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
-import roomescape.reservation.entity.Reservation;
 import roomescape.reservation.dto.ReservationRequestDto;
 import roomescape.reservation.dto.ReservationResponseDto;
-import roomescape.reservation.repository.ReservationRepository;
+import roomescape.reservation.service.ReservationService;
 
 @Controller
 public class ReservationController {
 
-    private final ReservationRepository reservationRepository;
+    private final ReservationService reservationServiceImpl;
 
-    public ReservationController(ReservationRepository reservationRepository) {
-        this.reservationRepository = reservationRepository;
+    public ReservationController(ReservationService reservationService) {
+        this.reservationServiceImpl = reservationService;
     }
 
     @GetMapping("/admin/reservation")
     public String adminReservationDashboard() {
-        return "/admin/reservation-legacy";
+        return "/admin/reservation";
     }
 
     @GetMapping("/reservations")
     public ResponseEntity<List<ReservationResponseDto>> readAllReservations() {
-        List<Reservation> reservations = reservationRepository.findAll();
-        List<ReservationResponseDto> allReservations = reservations.stream()
-                .map(ReservationResponseDto::toDto)
-                .toList();
+        List<ReservationResponseDto> responseDtos = reservationServiceImpl.getAll();
 
-        return ResponseEntity.ok(allReservations);
+        return ResponseEntity.ok(responseDtos);
     }
 
     @PostMapping("/reservations")
-    public ResponseEntity<ReservationResponseDto> add(@RequestBody ReservationRequestDto requestDto) {
-        Reservation reservation = Reservation.withoutId(requestDto.name(), requestDto.toDateTime());
-
-        Reservation saved = reservationRepository.save(reservation);
-        ReservationResponseDto responseDto = ReservationResponseDto.toDto(saved);
+    public ResponseEntity<ReservationResponseDto> save(@RequestBody ReservationRequestDto requestDto) {
+        ReservationResponseDto responseDto = reservationServiceImpl.save(requestDto);
 
         return ResponseEntity.ok(responseDto);
     }
 
     @DeleteMapping("/reservations/{id}")
     public ResponseEntity<Void> delete(@PathVariable("id") Long id) {
-        reservationRepository.deleteById(id);
+        reservationServiceImpl.delete(id);
         return ResponseEntity.noContent().build();
     }
 }

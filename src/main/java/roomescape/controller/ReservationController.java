@@ -36,7 +36,7 @@ public class ReservationController {
     ) {
         try {
             long id = reservationService.saveReservation(request);
-            Reservation savedReservation = reservationService.getById(id);
+            Reservation savedReservation = reservationService.getReservationById(id);
             return ResponseEntity.created(URI.create("reservations/" + id)).body(savedReservation);
         } catch (BadRequestException exception) {
             return ResponseEntity.badRequest().build();

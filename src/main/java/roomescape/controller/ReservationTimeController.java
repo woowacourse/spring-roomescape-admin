@@ -26,7 +26,7 @@ public class ReservationTimeController {
 
     @GetMapping("/times")
     public ResponseEntity<List<ReservationTime>> getReservationTimes() {
-        List<ReservationTime> reservationTimes = reservationTimeService.getAll();
+        List<ReservationTime> reservationTimes = reservationTimeService.getAllReservationTime();
         return ResponseEntity.ok().body(reservationTimes);
     }
 
@@ -35,9 +35,9 @@ public class ReservationTimeController {
             @RequestBody ReservationTimeCreationRequest request
     ) {
         try {
-            long id = reservationTimeService.saveReservationTime(request);
-            ReservationTime reservationTime = reservationTimeService.getById(id);
-            return ResponseEntity.created(URI.create("times/" + id)).body(reservationTime);
+            long savedId = reservationTimeService.saveReservationTime(request);
+            ReservationTime savedTime = reservationTimeService.getReservationTimeById(savedId);
+            return ResponseEntity.created(URI.create("times/" + savedId)).body(savedTime);
         } catch (BadRequestException exception) {
             return ResponseEntity.badRequest().build();
         } catch (NotFoundException exception) {

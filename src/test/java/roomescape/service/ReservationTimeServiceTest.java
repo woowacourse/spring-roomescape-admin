@@ -36,7 +36,7 @@ class ReservationTimeServiceTest {
         reservationTimeRepository.add(ReservationTime.createWithoutId(LocalTime.of(11, 0)));
         reservationTimeRepository.add(ReservationTime.createWithoutId(LocalTime.of(12, 0)));
 
-        List<ReservationTime> reservationTimes = reservationTimeService.getAll();
+        List<ReservationTime> reservationTimes = reservationTimeService.getAllReservationTime();
 
         assertThat(reservationTimes).hasSize(3);
     }

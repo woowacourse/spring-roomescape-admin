@@ -20,7 +20,8 @@ public class ReservationService {
     private final ReservationRepository reservationRepository;
     private final ReservationTimeRepository reservationTimeRepository;
 
-    public ReservationService(ReservationRepository reservationRepository,
+    public ReservationService(
+            ReservationRepository reservationRepository,
             ReservationTimeRepository reservationTimeRepository) {
         this.reservationRepository = reservationRepository;
         this.reservationTimeRepository = reservationTimeRepository;
@@ -30,14 +31,14 @@ public class ReservationService {
         return reservationRepository.findAll();
     }
 
-    public Reservation getById(long id) {
+    public Reservation getReservationById(long id) {
         return loadReservationById(id);
     }
 
     public long saveReservation(ReservationCreationRequest request) {
         ReservationTime reservationTime = loadReservationTimeById(request.getTimeId());
-        validatePastDateAndTime(request.getDate(), reservationTime.getStartAt());
-        validateAlreadyReserve(request.getDate(), reservationTime.getId());
+        validatePastDateTime(request.getDate(), reservationTime.getStartAt());
+        validateAlreadyReserved(request.getDate(), reservationTime.getId());
 
         Reservation reservation = Reservation.createWithoutId(
                 request.getName(), request.getDate(), reservationTime);
@@ -61,7 +62,7 @@ public class ReservationService {
                 .orElseThrow(() -> new NotFoundException("[ERROR] ID에 해당하는 예약시간이 존재하지 않습니다."));
     }
 
-    private void validatePastDateAndTime(LocalDate date, LocalTime time) {
+    private void validatePastDateTime(LocalDate date, LocalTime time) {
         LocalDateTime dateTime = LocalDateTime.of(date, time);
         LocalDateTime now = LocalDateTime.now();
         if (dateTime.isBefore(now)) {
@@ -69,7 +70,7 @@ public class ReservationService {
         }
     }
 
-    private void validateAlreadyReserve(LocalDate reservationDate, long reservationTimeId) {
+    private void validateAlreadyReserved(LocalDate reservationDate, long reservationTimeId) {
         Optional<Reservation> reservation =
                 reservationRepository.findByDateAndTime(reservationDate, reservationTimeId);
         if (reservation.isPresent()) {

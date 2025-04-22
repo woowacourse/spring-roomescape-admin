@@ -25,11 +25,11 @@ public class ReservationTimeService {
         this.reservationTimeRepository = reservationTimeRepository;
     }
 
-    public List<ReservationTime> getAll() {
+    public List<ReservationTime> getAllReservationTime() {
         return reservationTimeRepository.findAll();
     }
 
-    public ReservationTime getById(long reservationTimeId) {
+    public ReservationTime getReservationTimeById(long reservationTimeId) {
         return loadReservationTimeById(reservationTimeId);
     }
 
@@ -41,7 +41,7 @@ public class ReservationTimeService {
 
     public void deleteReservationTime(Long reservationTimeID) {
         loadReservationTimeById(reservationTimeID);
-        validateReservationsInTime(reservationTimeID);
+        validateReservationsExistenceInTime(reservationTimeID);
         reservationTimeRepository.deleteById(reservationTimeID);
     }
 
@@ -51,7 +51,7 @@ public class ReservationTimeService {
                 .orElseThrow(() -> new NotFoundException("[ERROR] ID에 해당하는 예약 시간이 존재하지 않습니다."));
     }
 
-    private void validateReservationsInTime(long timeId) {
+    private void validateReservationsExistenceInTime(long timeId) {
         List<Reservation> reservationsInTime = reservationRepository.findAllByReservationTimeId(timeId);
         if (!reservationsInTime.isEmpty()) {
             throw new BadRequestException("[ERROR] 이미 해당 시간에 대한 예약 데이터들이 존재합니다.");

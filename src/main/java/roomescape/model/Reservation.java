@@ -31,6 +31,15 @@ public final class Reservation {
         this(null, name, LocalDateTime.of(date, time));
     }
 
+    public Reservation(String name, ReservationDate reservationDate, ReservationTime reservationTime) {
+        validateNameLength(name);
+        validateNotPastDateTime(LocalDateTime.of(reservationDate.getStartDate(), reservationTime.getStartTime()));
+        this.id = null;
+        this.name = name;
+        this.date = reservationDate;
+        this.time = reservationTime;
+    }
+
     private void validateNotPastDateTime(LocalDateTime startDateTime) {
         if (startDateTime.isBefore(LocalDateTime.now())) {
             throw new ReservationException("과거 일시로 예약을 생성할 수 없습니다.");

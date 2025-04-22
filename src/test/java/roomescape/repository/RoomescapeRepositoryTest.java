@@ -8,11 +8,15 @@ import java.util.List;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.test.context.SpringBootTest;
 import roomescape.domain.Reservation;
 
+@SpringBootTest
 class RoomescapeRepositoryTest {
 
-    RoomescapeRepository repository = new RoomescapeRepositoryImpl();
+    @Autowired
+    RoomescapeRepository repository;
 
     @BeforeEach
     void setUp() {
@@ -52,7 +56,7 @@ class RoomescapeRepositoryTest {
     @Test
     void deleteById() {
         //when
-        int deleteCounts = repository.deleteById(0);
+        int deleteCounts = repository.deleteById(1);
 
         //then
         assertThat(deleteCounts).isEqualTo(1);

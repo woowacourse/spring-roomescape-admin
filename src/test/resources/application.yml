@@ -9,6 +9,9 @@ spring:
       mode: always
       platform: h2
 
+server:
+  port: 9090
+
 room-escape:
   console-view:
     enabled: false

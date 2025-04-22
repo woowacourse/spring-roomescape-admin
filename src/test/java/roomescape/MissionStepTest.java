@@ -2,8 +2,10 @@ package roomescape;
 
 import io.restassured.RestAssured;
 import io.restassured.http.ContentType;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.test.annotation.DirtiesContext;
@@ -30,6 +32,11 @@ public class MissionStepTest {
 
     @Autowired
     private ReservationController reservationController;
+
+    @BeforeEach
+    void setUp(@Value("${server.port}") int port) {
+        RestAssured.port = port;
+    }
 
     @Test
     void 일단계() {

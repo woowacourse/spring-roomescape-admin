@@ -59,4 +59,15 @@ public class JdbcReservationRepository implements ReservationRepository {
             throw new IllegalArgumentException("존재하지 않는 예약 id입니다.");
         }
     }
+
+//    private final SimpleJdbcInsert simpleJdbcInsert = new SimpleJdbcInsert(jdbcTemplate).withTableName("reservation").usingColumns("name", "date", "time").usingGeneratedKeyColumns("id");;
+//    @Override
+//    public Reservation insertAndGet(Reservation reservationExcludeIndex) {
+//        Map<String, Object> parameters = new HashMap<>();
+//        parameters.put("name", reservationExcludeIndex.getName());
+//        parameters.put("date", reservationExcludeIndex.getDate());
+//        parameters.put("time", reservationExcludeIndex.getTime());
+//        Long id = simpleJdbcInsert.executeAndReturnKey(parameters).longValue();
+//        return Reservation.toEntity(reservationExcludeIndex, id);
+//    }
 }

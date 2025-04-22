@@ -8,15 +8,9 @@ import roomescape.entity.Reservation;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.Optional;
-import java.util.concurrent.atomic.AtomicLong;
 
 @Repository
-public class FakeReservationRepository implements ReservationRepository {
-
-    private static final int START_ID_NUMBER = 1;
-
-    private final AtomicLong idGenerator = new AtomicLong(START_ID_NUMBER);
+public class ReservationRepositoryImpl implements ReservationRepository {
 
     private final Map<Long, Reservation> reservations = new HashMap<>();
 
@@ -34,8 +28,7 @@ public class FakeReservationRepository implements ReservationRepository {
 
     @Override
     public Reservation save(final Reservation reservation) {
-        reservation.setId(idGenerator.getAndIncrement());
-        reservations.put(reservation.getId(), reservation);
+
         return reservation;
     }
 

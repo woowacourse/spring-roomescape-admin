@@ -10,8 +10,8 @@ public record ReservationResponse(Long id, String name, String date, String time
          return new ReservationResponse(
                  reservation.getId(),
                  reservation.getCustomerName(),
-                 reservation.getReservationDateTime().toLocalDate().format(FormatUtils.DATE_FORMATTER),
-                 reservation.getReservationDateTime().toLocalTime().format(FormatUtils.TIME_FORMATTER)
+                 reservation.getReservationDate().format(FormatUtils.DATE_FORMATTER),
+                 reservation.getReservationTime().format(FormatUtils.TIME_FORMATTER)
          );
     }
 }

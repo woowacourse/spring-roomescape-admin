@@ -23,7 +23,7 @@ public class ReservationTime {
 
     private void validateTime(final LocalTime startAt) {
         if (startAt == null) {
-            throw new IllegalArgumentException("[ERROR] 예약 시간은 반드시 입력해야 합니다.");
+            throw new IllegalArgumentException("[ERROR] 예약시간은 반드시 입력해야 합니다.");
         }
     }
 

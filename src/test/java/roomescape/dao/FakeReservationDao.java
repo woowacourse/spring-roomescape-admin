@@ -2,7 +2,8 @@ package roomescape.dao;
 
 import roomescape.entity.Reservation;
 
-import java.time.LocalDateTime;
+import java.time.LocalDate;
+import java.time.LocalTime;
 import java.util.List;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
@@ -18,8 +19,8 @@ public class FakeReservationDao implements ReservationDao {
     }
 
     private void insertInitialValues() {
-        Reservation reservation1 = Reservation.of("듀이", LocalDateTime.now());
-        Reservation reservation2 = Reservation.of("범블비", LocalDateTime.now());
+        Reservation reservation1 = Reservation.of("듀이", LocalDate.now(), LocalTime.now());
+        Reservation reservation2 = Reservation.of("범블비", LocalDate.now(), LocalTime.now());
         insert(reservation1);
         insert(reservation2);
     }

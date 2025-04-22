@@ -6,7 +6,8 @@ import org.springframework.jdbc.core.simple.SimpleJdbcInsert;
 import org.springframework.stereotype.Repository;
 import roomescape.entity.Reservation;
 
-import java.time.LocalDateTime;
+import java.time.LocalDate;
+import java.time.LocalTime;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -23,12 +24,13 @@ public class H2ReservationDao implements ReservationDao {
     private final RowMapper<Reservation> reservationRowMapper = (resultSet, rowNum) -> Reservation.of(
         resultSet.getLong("id"),
         resultSet.getString("name"),
-        resultSet.getObject("datetime", LocalDateTime.class)
+        resultSet.getObject("date", LocalDate.class),
+        resultSet.getObject("time", LocalTime.class)
     );
 
     @Override
     public List<Reservation> findAll() {
-        String sql = "SELECT id, name, datetime FROM reservation";
+        String sql = "SELECT id, name, date, time FROM reservation";
         return jdbcTemplate.query(sql, reservationRowMapper);
     }
 
@@ -40,10 +42,11 @@ public class H2ReservationDao implements ReservationDao {
 
         Map<String, Object> parameters = new HashMap<>();
         parameters.put("name", reservation.getCustomerName());
-        parameters.put("datetime", reservation.getReservationDateTime());
+        parameters.put("date", reservation.getReservationDate());
+        parameters.put("time", reservation.getReservationTime());
         Number savedId = simpleJdbcInsert.executeAndReturnKey(parameters);
 
-        return Reservation.of(savedId.longValue(), reservation.getCustomerName(), reservation.getReservationDateTime());
+        return Reservation.of(savedId.longValue(), reservation.getCustomerName(), reservation.getReservationDate(), reservation.getReservationTime());
     }
 
     @Override

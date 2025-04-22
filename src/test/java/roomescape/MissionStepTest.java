@@ -122,7 +122,7 @@ public class MissionStepTest {
     @Test
     @DisplayName("예약추가 후 GET /reservations 요청시 모든 예약을 응답한다")
     void 예약추가후_get_reservations_요청시_모든_예약을_응답한다() {
-        jdbcTemplate.update("INSERT INTO reservation (name, datetime) VALUES (?, ?)", "브라운", "2023-08-05T15:40");
+        jdbcTemplate.update("INSERT INTO reservation (name, date, time) VALUES (?, ?, ?)", "브라운", "2023-08-05", "15:40");
 
         List<ReservationResponse> reservations = RestAssured.given().log().all()
                 .when().get("/reservations")

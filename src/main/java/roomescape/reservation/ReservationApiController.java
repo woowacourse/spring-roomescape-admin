@@ -21,7 +21,8 @@ public class ReservationApiController {
 
     @PostMapping
     public ResponseEntity<Reservation> add(@RequestBody ReservationDto reservationDto) {
-        return ResponseEntity.ok(reservations.add(reservationDto));
+        Reservation reservation = reservationDto.createReservation();
+        return ResponseEntity.ok(reservations.add(reservation));
     }
 
     @GetMapping

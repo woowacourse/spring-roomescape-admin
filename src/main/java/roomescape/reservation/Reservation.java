@@ -20,6 +20,13 @@ public final class Reservation {
         this.time = time;
     }
 
+    protected Reservation(Long id, String name, LocalDate date, LocalTime time) {
+        this.id = id;
+        this.name = name;
+        this.date = date;
+        this.time = time;
+    }
+
     public boolean hasSame(Long targetId) {
         return id.equals(targetId);
     }

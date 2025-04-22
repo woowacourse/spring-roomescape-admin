@@ -44,6 +44,7 @@ public class TimeService {
     }
 
     public ReservationTime getTimeById(Long id) {
-        return repository.findById(id);
+        return repository.findById(id)
+                .orElseThrow(() -> new IllegalArgumentException("삭제하려는 id가 존재하지 않습니다, id: " + id));
     }
 }

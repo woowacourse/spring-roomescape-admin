@@ -106,4 +106,16 @@ class TimeServiceTest {
                 () ->assertThat(reservationTime.getStartAt()).isEqualTo(LocalTime.of(10,0))
         );
     }
+
+    @DisplayName("존재하지 않는 id로 객체를 가져오려고 할 때 예외가 발생한다.")
+    @Test
+    void getReservationTime_fail_when_nonExistId() {
+        // then
+        Long id = 1L;
+
+        assertThatThrownBy(() -> timeService.getTimeById(id))
+                .isInstanceOf(IllegalArgumentException.class)
+                .hasMessage("삭제하려는 id가 존재하지 않습니다, id: " + id);
+
+    }
 }

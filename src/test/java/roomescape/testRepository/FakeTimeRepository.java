@@ -2,6 +2,7 @@ package roomescape.testRepository;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 import roomescape.model.ReservationTime;
 import roomescape.repository.TimeRepository;
 
@@ -24,16 +25,16 @@ public class FakeTimeRepository implements TimeRepository {
     }
 
     @Override
-    public ReservationTime findById(Long id) {
+    public Optional<ReservationTime> findById(Long id) {
         return reservationTimes.stream()
                 .filter(time -> time.getId().equals(id))
-                .findFirst()
-                .orElseThrow(() -> new IllegalArgumentException("해당 id의 ReservationTime이 존재하지 않습니다"));
+                .findFirst();
     }
 
     @Override
     public void deleteById(Long id) {
-        ReservationTime reservationTime = findById(id);
+        ReservationTime reservationTime = findById(id)
+                .orElseThrow(() -> new IllegalArgumentException("FakeTimeRepository: 삭제하려는 id 없음"));
         reservationTimes.remove(reservationTime);
     }
 }

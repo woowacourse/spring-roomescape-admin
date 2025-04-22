@@ -14,6 +14,7 @@ public class ReservationTime {
     public static ReservationTime of(Long id, LocalTime startAt) {
         return new ReservationTime(id, startAt);
     }
+
     public static ReservationTime withoutId(LocalTime startAt) {
         return new ReservationTime(null, startAt);
     }

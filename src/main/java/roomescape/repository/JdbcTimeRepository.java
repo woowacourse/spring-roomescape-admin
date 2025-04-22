@@ -3,6 +3,8 @@ package roomescape.repository;
 import java.sql.Time;
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
+import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;
 import org.springframework.jdbc.core.simple.SimpleJdbcInsert;
@@ -46,10 +48,15 @@ public class JdbcTimeRepository implements TimeRepository {
     }
 
     @Override
-    public ReservationTime findById(Long id) {
+    public Optional<ReservationTime> findById(Long id) {
         String selectOneSql = "SELECT id, start_at FROM reservation_time WHERE id=?";
-        return jdbcTemplate.queryForObject(selectOneSql, RESERVATION_TIME_ROW_MAPPER,
-                id);
+        try {
+            ReservationTime time = jdbcTemplate.queryForObject(selectOneSql, RESERVATION_TIME_ROW_MAPPER,
+                    id);
+            return Optional.of(time);
+        } catch (EmptyResultDataAccessException e) {
+            return Optional.empty();
+        }
     }
 
     @Override

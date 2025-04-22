@@ -37,11 +37,11 @@ public class H2ReservationRepository implements ReservationRepository {
     @Override
     public Reservation getOneById(Long id) {
         String sql = "select * from reservations where id = ?";
-        List<Reservation> reservation = jdbcTemplate.query(sql, (resultSet, rowNum) ->
-                        new Reservation(resultSet.getLong("id"),
-                                resultSet.getString("name"),
-                                resultSet.getDate("date").toLocalDate(),
-                                resultSet.getTime("time").toLocalTime()),
+        List<Reservation> reservation = jdbcTemplate.query(sql, (rs, rowNum) ->
+                        new Reservation(rs.getLong("id"),
+                                rs.getString("name"),
+                                rs.getDate("date").toLocalDate(),
+                                rs.getTime("time").toLocalTime()),
                 id
         );
         if (reservation.size() != 1) {
@@ -53,11 +53,11 @@ public class H2ReservationRepository implements ReservationRepository {
     @Override
     public List<Reservation> findAll() {
         String sql = "select * from reservations";
-        return jdbcTemplate.query(sql, (resultSet, rowCount) ->
-                new Reservation(resultSet.getLong("id"),
-                        resultSet.getString("name"),
-                        resultSet.getDate("date").toLocalDate(),
-                        resultSet.getTime("time").toLocalTime())
+        return jdbcTemplate.query(sql, (rs, rowNum) ->
+                new Reservation(rs.getLong("id"),
+                        rs.getString("name"),
+                        rs.getDate("date").toLocalDate(),
+                        rs.getTime("time").toLocalTime())
         );
     }
 

@@ -10,11 +10,10 @@ public class GlobalExceptionHandler {
     @ExceptionHandler(CustomException.class)
     public ResponseEntity<ErrorResponse> handlerIllegalArgument(CustomException e) {
         e.printStackTrace();
-        return ResponseEntity.status(e.getErrorCode().getStatus())
+        return ResponseEntity.status(e.getStatusValue())
                 .body(new ErrorResponse(
-                        String.valueOf(e.getErrorCode().getStatus()),
+                        String.valueOf(e.getStatusValue()),
                         e.getMessage()
                 ));
     }
-
 }

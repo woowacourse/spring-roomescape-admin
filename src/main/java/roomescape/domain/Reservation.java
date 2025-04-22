@@ -1,7 +1,7 @@
 package roomescape.domain;
 
+import org.springframework.http.HttpStatus;
 import roomescape.exception.CustomException;
-import roomescape.exception.ErrorCode;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
@@ -35,7 +35,7 @@ public class Reservation {
 
     private static void validateTense(LocalDateTime dateTime) {
         if (isPastTense(dateTime)) {
-            throw new CustomException(ErrorCode.BAD_REQUEST, "과거시점으로 예약을 진행할 수 없습니다.");
+            throw new CustomException(HttpStatus.BAD_REQUEST, "과거시점으로 예약을 진행할 수 없습니다.");
         }
     }
 

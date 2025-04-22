@@ -1,5 +1,6 @@
 package roomescape.service;
 
+import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import roomescape.database.ReservationDatabase;
 import roomescape.database.ReservationDatabaseImpl;
@@ -7,7 +8,6 @@ import roomescape.domain.Reservation;
 import roomescape.domain.dto.ReservationReqDto;
 import roomescape.domain.dto.ReservationResDto;
 import roomescape.exception.CustomException;
-import roomescape.exception.ErrorCode;
 
 import java.util.List;
 import java.util.stream.Collectors;
@@ -51,7 +51,7 @@ public class ReservationService {
         List<Reservation> reservations = reservationDatabase.findAll();
         for (Reservation reservation : reservations) {
             if (inputReservation.isSameDateTime(reservation)) {
-                throw new CustomException(ErrorCode.CONFLICT, "이미 예약되어 있는 시간입니다.");
+                throw new CustomException(HttpStatus.CONFLICT, "이미 예약되어 있는 시간입니다.");
             }
         }
     }

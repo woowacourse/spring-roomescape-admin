@@ -8,8 +8,8 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
+import roomescape.ReservationDao;
 import roomescape.domain.Reservation;
-import roomescape.domain.Reservations;
 import roomescape.dto.ReservationRequest;
 import roomescape.dto.ReservationResponse;
 
@@ -17,11 +17,15 @@ import roomescape.dto.ReservationResponse;
 @RequestMapping("/reservations")
 public class ReservationController {
 
-    private final Reservations reservations = new Reservations();
+    private final ReservationDao reservationDAO;
+
+    public ReservationController(final ReservationDao reservationDAO) {
+        this.reservationDAO = reservationDAO;
+    }
 
     @GetMapping
     public List<ReservationResponse> getReservations() {
-        return reservations.getReservations().stream()
+        return reservationDAO.getReservations().stream()
                 .map(ReservationResponse::new)
                 .toList();
     }
@@ -30,16 +34,15 @@ public class ReservationController {
     public ReservationResponse createReservation(
             @RequestBody final ReservationRequest reservationRequest
     ) {
-        final Reservation reservation = reservations.createReservation(
+        final Reservation reservation = reservationDAO.createReservation(
                 reservationRequest.name(),
                 reservationRequest.date(),
-                reservationRequest.time()
-        );
+                reservationRequest.time());
         return new ReservationResponse(reservation);
     }
 
     @DeleteMapping("/{id}")
     public void deleteReservation(@PathVariable("id") final Long id) {
-        reservations.deleteReservationById(id);
+        reservationDAO.deleteReservationById(id);
     }
 }

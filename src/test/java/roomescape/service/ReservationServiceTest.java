@@ -98,6 +98,7 @@ class ReservationServiceTest {
         ReservationTime reservationTime = new ReservationTime(LocalTime.of(10, 0));
         reservationTimeRepository.save(reservationTime);
         ReservationCreateRequest request = new ReservationCreateRequest("훌라", LocalDate.of(2024,4,21), 1);
+        reservationService.save(request);
 
         // when
         reservationService.deleteById(1);

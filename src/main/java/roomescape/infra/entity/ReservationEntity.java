@@ -15,29 +15,33 @@ public record ReservationEntity(
         LocalDate date,
         ReservationTimeEntity time
 ) {
-    private static final RowMapper<ReservationEntity> ROW_MAPPER = (rs, rowNum) -> {
-        final long id = rs.getLong("reservation_id");
-        final String name = rs.getString("name");
-        final LocalDate date = rs.getDate("date").toLocalDate();
-        final long timeId = rs.getLong("time_id");
-        final LocalTime timeValue = rs.getTime("time_value").toLocalTime();
+    public static final String TABLE_NAME = "reservation";
+
+    public static final String ID_COL_NAME = "id";
+    public static final String NAME_COL_NAME = "name";
+    public static final String DATE_COL_NAME = "date";
+    public static final String TIME_ID_COL_NAME = "time_id";
+    public static final String TIME_VALUE_COL_NAME = "time_value";
+
+    public static final RowMapper<ReservationEntity> ROW_MAPPER = (rs, rowNum) -> {
+        final long id = rs.getLong(ID_COL_NAME);
+        final String name = rs.getString(NAME_COL_NAME);
+        final LocalDate date = rs.getDate(DATE_COL_NAME).toLocalDate();
+        final long timeId = rs.getLong(TIME_ID_COL_NAME);
+        final LocalTime timeValue = rs.getTime(TIME_VALUE_COL_NAME).toLocalTime();
         return new ReservationEntity(id, name, date, new ReservationTimeEntity(timeId, timeValue));
     };
 
-    public Map<String, ?> dataMap() {
-        return Map.of(
-                "name", name,
-                "date", date,
-                "time_id", time.id()
-        );
-    }
-
-    public static RowMapper<ReservationEntity> getRowMapper() {
-        return ROW_MAPPER;
-    }
-
     public static ReservationEntity beforeSave(final ReservationCreateRequest request) {
         return new ReservationEntity(null, request.name(), request.date(), new ReservationTimeEntity(request.timeId(), null));
+    }
+
+    public Map<String, ?> toDataMap() {
+        return Map.of(
+                NAME_COL_NAME, name,
+                DATE_COL_NAME, date,
+                TIME_ID_COL_NAME, time.id()
+        );
     }
 
     public Reservation toDomain() {

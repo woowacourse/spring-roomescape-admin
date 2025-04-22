@@ -24,21 +24,27 @@ public class ReservationTimeJdbcDatabase implements ReservationTimeDatabase {
     @Override
     public List<ReservationTimeEntity> findAll() {
         final String sql = """
-                SELECT * FROM RESERVATION_TIME
+                SELECT
+                    id,
+                    start_at
+                FROM RESERVATION_TIME
                 """;
 
-        return jdbcTemplate.query(sql, ReservationTimeEntity.getRowMapper());
+        return jdbcTemplate.query(sql, ReservationTimeEntity.ROW_MAPPER);
     }
 
     @Override
     public Optional<ReservationTimeEntity> findById(final long id) {
         final String sql = """
-                SELECT * FROM RESERVATION_TIME
+                SELECT
+                    id,
+                    start_at
+                FROM RESERVATION_TIME
                 WHERE id = ?
                 """;
 
         try {
-            final ReservationTimeEntity reservationTime = jdbcTemplate.queryForObject(sql, ReservationTimeEntity.getRowMapper(), id);
+            final ReservationTimeEntity reservationTime = jdbcTemplate.queryForObject(sql, ReservationTimeEntity.ROW_MAPPER, id);
             return Optional.ofNullable(reservationTime);
         } catch (EmptyResultDataAccessException e) {
             return Optional.empty();
@@ -48,9 +54,9 @@ public class ReservationTimeJdbcDatabase implements ReservationTimeDatabase {
     @Override
     public long saveAndGetId(final ReservationTimeEntity entity) {
         final Number savedId = new SimpleJdbcInsert(jdbcTemplate)
-                .withTableName("reservation_time")
-                .usingGeneratedKeyColumns("id")
-                .executeAndReturnKey(entity.dataMap());
+                .withTableName(ReservationTimeEntity.TABLE_NAME)
+                .usingGeneratedKeyColumns(ReservationTimeEntity.ID_COL_NAME)
+                .executeAndReturnKey(entity.toDataMap());
 
         return savedId.longValue();
     }

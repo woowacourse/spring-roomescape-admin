@@ -11,22 +11,23 @@ public record ReservationTimeEntity(
         Long id,
         LocalTime startAt
 ) {
-    private static final RowMapper<ReservationTimeEntity> ROW_MAPPER = (rs, rowNum) -> {
-        final long id = rs.getLong("id");
-        final LocalTime startTime = rs.getTime("start_at").toLocalTime();
+    public static final String TABLE_NAME = "reservation_time";
+
+    public static final String ID_COL_NAME = "id";
+    public static final String START_AT_COL_NAME = "start_at";
+
+    public static final RowMapper<ReservationTimeEntity> ROW_MAPPER = (rs, rowNum) -> {
+        final long id = rs.getLong(ID_COL_NAME);
+        final LocalTime startTime = rs.getTime(START_AT_COL_NAME).toLocalTime();
         return new ReservationTimeEntity(id, startTime);
     };
 
-    public Map<String, ?> dataMap() {
-        return Map.of("start_at", startAt);
-    }
-
-    public static RowMapper<ReservationTimeEntity> getRowMapper() {
-        return ROW_MAPPER;
-    }
-
     public static ReservationTimeEntity beforeSave(final ReservationTimeCreateRequest request) {
         return new ReservationTimeEntity(null, request.startAt());
+    }
+
+    public Map<String, ?> toDataMap() {
+        return Map.of(START_AT_COL_NAME, startAt);
     }
 
     public ReservationTime toDomain() {

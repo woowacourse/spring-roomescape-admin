@@ -25,36 +25,40 @@ public class ReservationJdbcDatabase implements ReservationDatabase {
     public List<ReservationEntity> findAll() {
         final String sql = """
                 SELECT
-                    r.id AS reservation_id,
+                    r.id,
                     r.name,
                     r.date,
-                    t.id AS time_id,
-                    t.start_at AS time_value
+                    t.id AS ${timeIdColName},
+                    t.start_at AS ${timeValueColName}
                 FROM RESERVATION AS r
                 INNER JOIN RESERVATION_TIME AS t
                 ON r.time_id = t.id
-                """;
+                """
+                .replace("${timeIdColName}", ReservationEntity.TIME_ID_COL_NAME)
+                .replace("${timeValueColName}", ReservationEntity.TIME_VALUE_COL_NAME);
 
-        return jdbcTemplate.query(sql, ReservationEntity.getRowMapper());
+        return jdbcTemplate.query(sql, ReservationEntity.ROW_MAPPER);
     }
 
     @Override
     public Optional<ReservationEntity> findById(long id) {
         final String sql = """
                 SELECT
-                    r.id AS reservation_id,
+                    r.id,
                     r.name,
                     r.date,
-                    t.id AS time_id,
-                    t.start_at AS time_value
+                    t.id AS ${timeIdColName},
+                    t.start_at AS ${timeValueColName}
                 FROM RESERVATION AS r
                 INNER JOIN RESERVATION_TIME AS t
                 ON r.time_id = t.id
                 WHERE r.id = ?
-                """;
+                """
+                .replace("${timeIdColName}", ReservationEntity.TIME_ID_COL_NAME)
+                .replace("${timeValueColName}", ReservationEntity.TIME_VALUE_COL_NAME);
 
         try {
-            final ReservationEntity entity = jdbcTemplate.queryForObject(sql, ReservationEntity.getRowMapper(), id);
+            final ReservationEntity entity = jdbcTemplate.queryForObject(sql, ReservationEntity.ROW_MAPPER, id);
             return Optional.ofNullable(entity);
         } catch (EmptyResultDataAccessException e) {
             return Optional.empty();
@@ -64,9 +68,9 @@ public class ReservationJdbcDatabase implements ReservationDatabase {
     @Override
     public long saveAndGetId(final ReservationEntity entity) {
         final Number savedId = new SimpleJdbcInsert(jdbcTemplate)
-                .withTableName("reservation")
-                .usingGeneratedKeyColumns("id")
-                .executeAndReturnKey(entity.dataMap());
+                .withTableName(ReservationEntity.TABLE_NAME)
+                .usingGeneratedKeyColumns(ReservationEntity.ID_COL_NAME)
+                .executeAndReturnKey(entity.toDataMap());
 
         return savedId.longValue();
     }

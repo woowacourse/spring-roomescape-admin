@@ -1,7 +1,9 @@
 package roomescape.time;
 
+import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -19,11 +21,17 @@ public class TimeController {
         this.timeService = timeService;
     }
 
-    @PostMapping()
+    @PostMapping
     public ResponseEntity<TimeResponse> createTime(
             @RequestBody final TimeRequest request
     ) {
         final TimeResponse response = timeService.createTime(request);
+        return ResponseEntity.ok(response);
+    }
+
+    @GetMapping
+    public ResponseEntity<List<TimeResponse>> findAllTime() {
+        final List<TimeResponse> response = timeService.findAllTime();
         return ResponseEntity.ok(response);
     }
 

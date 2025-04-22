@@ -1,5 +1,6 @@
 package roomescape.time;
 
+import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.namedparam.BeanPropertySqlParameterSource;
@@ -28,5 +29,19 @@ public class TimeJdbcDao implements TimeDao{
         final SqlParameterSource sqlParameterSource = new BeanPropertySqlParameterSource(time);
         final Number id = simpleJdbcInsert.executeAndReturnKey(sqlParameterSource);
         return time.writeId(id.longValue());
+    }
+
+    @Override
+    public List<Time> findAllTime() {
+        final String sql = "SELECT * FROM RESERVATION_TIME";
+
+        final List<Time> times = jdbcTemplate.query(sql, (resultSet, rowNum) -> {
+            return new Time(
+                    resultSet.getLong(1),
+                    resultSet.getTime(2).toLocalTime()
+            );
+        });
+
+        return times;
     }
 }

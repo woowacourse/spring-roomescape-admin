@@ -12,4 +12,8 @@ public record TimeResponse(
                 Objects.requireNonNull(id);
                 Objects.requireNonNull(startAt);
         }
+
+        public static TimeResponse createResponse(final Time time){
+                return new TimeResponse(time.id(), time.startAt());
+        }
 }

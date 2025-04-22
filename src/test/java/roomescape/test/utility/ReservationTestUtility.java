@@ -6,6 +6,7 @@ import static roomescape.test.utility.ReservationTimeTestUtility.checkReservatio
 
 import java.util.List;
 import roomescape.domain.Reservation;
+import roomescape.dto.ReservationCreationRequest;
 
 public class ReservationTestUtility {
 
@@ -18,6 +19,12 @@ public class ReservationTestUtility {
         assertThat(actual.getDate()).isEqualTo(expected.getDate());
         checkReservationTimeId(actual.getTime().getId(), expected.getTime().getId());
         checkReservationTimeFieldWithoutId(actual.getTime(), expected.getTime());
+    }
+
+    public static void checkReservationFieldWithoutId(Reservation actual, ReservationCreationRequest creationDto) {
+        assertThat(actual.getName()).isEqualTo(creationDto.getName());
+        assertThat(actual.getDate()).isEqualTo(creationDto.getDate());
+        checkReservationTimeId(actual.getTime().getId(), creationDto.getTimeId());
     }
 
     public static void checkDeleteReservation(List<Reservation> reservations, long deletedId) {

@@ -2,12 +2,15 @@ package roomescape.controller;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertAll;
+import static roomescape.test.fixture.ReservationFixture.addReservationInRepository;
+import static roomescape.test.fixture.ReservationTimeFixture.addReservationTimeInRepository;
 import static roomescape.test.utility.HttpResponseTestUtility.checkLocationHeader;
 import static roomescape.test.utility.HttpResponseTestUtility.checkStatusCode;
 import static roomescape.test.utility.ReservationTimeTestUtility.checkDeleteReservationTime;
 import static roomescape.test.utility.ReservationTimeTestUtility.checkReservationTimeFieldWithoutId;
 import static roomescape.test.utility.ReservationTimeTestUtility.checkReservationTimeId;
 
+import java.time.LocalDate;
 import java.time.LocalTime;
 import java.util.List;
 import org.junit.jupiter.api.DisplayName;
@@ -21,24 +24,22 @@ import roomescape.repository.ReservationTimeRepository;
 import roomescape.service.ReservationTimeService;
 import roomescape.test.fake.FakeReservationRepository;
 import roomescape.test.fake.FakeReservationTimeRepository;
-import roomescape.test.fixture.ReservationFixture;
-import roomescape.test.fixture.ReservationTimeFixture;
 import roomescape.test.utility.HttpResponseTestUtility;
 
 class ReservationTimeControllerTest {
 
     private final ReservationRepository reservationRepository = new FakeReservationRepository();
-    private final ReservationTimeRepository reservationTimeRepository = new FakeReservationTimeRepository();
-    private final ReservationTimeService reservationTimeService =
-            new ReservationTimeService(reservationRepository, reservationTimeRepository);
-    private final ReservationTimeController controller = new ReservationTimeController(reservationTimeService);
+    private final ReservationTimeRepository timeRepository = new FakeReservationTimeRepository();
+    private final ReservationTimeService timeService =
+            new ReservationTimeService(reservationRepository, timeRepository);
+    private final ReservationTimeController controller = new ReservationTimeController(timeService);
 
     @DisplayName("등록된 모든 예약 가능 시간을 조회활 수 있다")
     @Test
     void canGetReservationTimes() {
-        reservationTimeRepository.add(ReservationTime.createWithoutId(LocalTime.of(10, 0)));
-        reservationTimeRepository.add(ReservationTime.createWithoutId(LocalTime.of(11, 0)));
-        reservationTimeRepository.add(ReservationTime.createWithoutId(LocalTime.of(12, 0)));
+        addReservationTimeInRepository(timeRepository, LocalTime.of(10, 0));
+        addReservationTimeInRepository(timeRepository, LocalTime.of(11, 0));
+        addReservationTimeInRepository(timeRepository, LocalTime.of(12, 0));
 
         ResponseEntity<List<ReservationTime>> response = controller.getReservationTimes();
 
@@ -51,20 +52,18 @@ class ReservationTimeControllerTest {
     @DisplayName("예약 가능 시간을 추가할 수 있다")
     @Test
     void canCreateReservationTime() {
-        ReservationTime expectedReservationTime = ReservationTime.createWithoutId(LocalTime.of(10, 0));
-        ReservationTimeCreationRequest request = new ReservationTimeCreationRequest(
-                expectedReservationTime.getStartAt());
+        ReservationTimeCreationRequest request = new ReservationTimeCreationRequest(LocalTime.of(10, 0));
 
         ResponseEntity<ReservationTime> response = controller.createReservationTime(request);
 
-        ReservationTime savedReservationTime = reservationTimeRepository.findAll().getFirst();
+        ReservationTime savedReservationTime = timeRepository.findAll().getFirst();
         assertAll(
                 () -> checkReservationTimeId(savedReservationTime.getId(), 1L),
-                () -> checkReservationTimeFieldWithoutId(savedReservationTime, expectedReservationTime),
+                () -> checkReservationTimeFieldWithoutId(savedReservationTime, request),
                 () -> checkStatusCode(response, HttpStatus.CREATED),
                 () -> checkLocationHeader(response, "times/1"),
                 () -> checkReservationTimeId(response.getBody().getId(), 1L),
-                () -> checkReservationTimeFieldWithoutId(response.getBody(), expectedReservationTime)
+                () -> checkReservationTimeFieldWithoutId(response.getBody(), request)
         );
     }
 
@@ -72,12 +71,12 @@ class ReservationTimeControllerTest {
     @Test
     void canCreateSameReservationTime() {
         LocalTime sameStartAt = LocalTime.of(10, 0);
-        reservationTimeRepository.add(ReservationTime.createWithoutId(sameStartAt));
+        addReservationTimeInRepository(timeRepository, sameStartAt);
         ReservationTimeCreationRequest request = new ReservationTimeCreationRequest(sameStartAt);
 
         ResponseEntity<ReservationTime> response = controller.createReservationTime(request);
 
-        List<ReservationTime> reservationTimes = reservationTimeRepository.findAll();
+        List<ReservationTime> reservationTimes = timeRepository.findAll();
         assertAll(
                 () -> assertThat(reservationTimes).hasSize(1),
                 () -> checkStatusCode(response, HttpStatus.BAD_REQUEST)
@@ -87,13 +86,13 @@ class ReservationTimeControllerTest {
     @DisplayName("ID를 통해 예약 가능 시간을 삭제할 수 있다")
     @Test
     void canDeleteReservationTime() {
-        reservationTimeRepository.add(ReservationTime.createWithoutId(LocalTime.of(10, 0)));
-        reservationTimeRepository.add(ReservationTime.createWithoutId(LocalTime.of(11, 0)));
-        reservationTimeRepository.add(ReservationTime.createWithoutId(LocalTime.of(12, 0)));
+        addReservationTimeInRepository(timeRepository, LocalTime.of(10, 0));
+        addReservationTimeInRepository(timeRepository, LocalTime.of(11, 0));
+        addReservationTimeInRepository(timeRepository, LocalTime.of(12, 0));
 
         ResponseEntity<Void> response = controller.deleteReservationTime(1L);
 
-        List<ReservationTime> reservationTimes = reservationTimeRepository.findAll();
+        List<ReservationTime> reservationTimes = timeRepository.findAll();
         assertAll(
                 () -> checkDeleteReservationTime(reservationTimes, 1L),
                 () -> checkStatusCode(response, HttpStatus.OK)
@@ -112,13 +111,12 @@ class ReservationTimeControllerTest {
     @DisplayName("이미 해당 시간에 예약이 존재하는 경우 예약을 제거할 수 없습니다.")
     @Test
     void canNotDeleteBecauseReservations() {
-        long savedId = reservationTimeRepository.add(ReservationTimeFixture.createReservationTime(LocalTime.of(10, 0)));
-        ReservationTime savedTime = reservationTimeRepository.findById(savedId).get();
-        reservationRepository.add(ReservationFixture.createReservation("reservation1", savedTime));
+        ReservationTime savedTime = addReservationTimeInRepository(timeRepository, LocalTime.of(10, 0));
+        addReservationInRepository(reservationRepository, LocalDate.now().plusDays(1), savedTime);
 
-        ResponseEntity<Void> response = controller.deleteReservationTime(savedId);
+        ResponseEntity<Void> response = controller.deleteReservationTime(savedTime.getId());
 
-        List<ReservationTime> reservationTimes = reservationTimeRepository.findAll();
+        List<ReservationTime> reservationTimes = timeRepository.findAll();
         assertAll(
                 () -> assertThat(reservationTimes).hasSize(1),
                 () -> checkStatusCode(response, HttpStatus.BAD_REQUEST)

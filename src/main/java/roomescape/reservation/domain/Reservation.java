@@ -1,38 +1,25 @@
 package roomescape.reservation.domain;
 
-import roomescape.common.domain.DomainEntityId;
+import lombok.AccessLevel;
+import lombok.AllArgsConstructor;
+import lombok.EqualsAndHashCode;
+import lombok.Getter;
+import roomescape.reservation_time.domain.ReservationTime;
 
-import java.time.LocalDateTime;
-
+@Getter
+@AllArgsConstructor(access = AccessLevel.PRIVATE)
+@EqualsAndHashCode(of = "id")
 public class Reservation {
 
-    private final DomainEntityId id;
+    private final ReservationId id;
     private final ReserverName name;
-    private final ReservationDateTime datetime;
+    private final ReservationDate date;
+    private final ReservationTime time;
 
-    private Reservation(final DomainEntityId id, final ReserverName name, final ReservationDateTime datetime) {
-        this.id = id;
-        this.name = name;
-        this.datetime = datetime;
-    }
-
-    public static Reservation of(final Long id, final String name, final LocalDateTime dateTime) {
-        return new Reservation(DomainEntityId.from(id), ReserverName.from(name), ReservationDateTime.from(dateTime));
-    }
-
-    public static Reservation of(final String name, final LocalDateTime dateTime) {
-        return of(null, name, dateTime);
-    }
-
-    public Long getId() {
-        return id.getValue();
-    }
-
-    public String getName() {
-        return name.getValue();
-    }
-
-    public LocalDateTime getDatetime() {
-        return datetime.getDateTime();
+    public static Reservation of(final ReservationId id,
+                                 final ReserverName name,
+                                 final ReservationDate date,
+                                 final ReservationTime time) {
+        return new Reservation(id, name, date, time);
     }
 }

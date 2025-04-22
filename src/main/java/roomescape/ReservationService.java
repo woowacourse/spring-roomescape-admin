@@ -46,6 +46,10 @@ public class ReservationService {
                 .toList();
     }
 
+    public void deleteReservationById(final Long id) {
+        reservationRepository.deleteById(id);
+    }
+
     private ReservationTime findReservationTime(ReservationRegisterDto reservationRegisterDto) {
         Optional<ReservationTime> foundReservationTime = reservationTimeRepository.findById(
                 reservationRegisterDto.timeId());

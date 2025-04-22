@@ -57,6 +57,10 @@ public class ReservationH2Repository implements ReservationRepository {
     @Override
     public void deleteById(final long id) {
         String query = "DELETE FROM reservation WHERE id = ?";
-        jdbcTemplate.update(query, id);
+        int update = jdbcTemplate.update(query, id);
+
+        if (update == 0) {
+            throw new IllegalArgumentException("id에 해당하는 예약 내역이 없습니다.");
+        }
     }
 }

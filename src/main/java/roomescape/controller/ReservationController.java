@@ -10,11 +10,13 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
 import roomescape.model.Reservation;
 import roomescape.dto.CreateReservationRequest;
 import roomescape.repository.ReservationRepository;
 
 @Controller
+@RequestMapping("/reservations")
 public class ReservationController {
 
     private final ReservationRepository reservationRepository;
@@ -24,28 +26,23 @@ public class ReservationController {
         this.reservationRepository = reservationRepository;
     }
 
-    @GetMapping("/")
-    public String homePage() {
-        return "home";
-    }
-
-    @GetMapping("/reservations")
+    @GetMapping
     public ResponseEntity<List<Reservation>> getReservations() {
         return ResponseEntity.ok(reservationRepository.getReservations());
     }
 
-    @PostMapping("/reservations")
+    @PostMapping
     public ResponseEntity<Reservation> addReservation(@RequestBody CreateReservationRequest request) {
         try {
             final var savedId = reservationRepository.save(request);
-            final var saved = reservationRepository.findById(savedId).get();
+            final Reservation saved = reservationRepository.findById(savedId).get();
             return ResponseEntity.ok(saved);
         } catch (IllegalArgumentException e) {
             return ResponseEntity.badRequest().build();
         }
     }
 
-    @DeleteMapping("/reservations/{id}")
+    @DeleteMapping("/{id}")
     public ResponseEntity<Void> deleteReservation(@PathVariable("id") Long id) {
         boolean isRemoved = reservationRepository.removeById(id);
         if (isRemoved) {

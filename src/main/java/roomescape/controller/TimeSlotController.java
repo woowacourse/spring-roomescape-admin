@@ -34,7 +34,7 @@ public class TimeSlotController {
     @PostMapping
     public ResponseEntity<TimeSlot> create(@RequestBody CreateTimeSlotRequest request) {
         final var savedId = repository.save(request);
-        final var saved = repository.findById(savedId).get();
+        final TimeSlot saved = repository.findById(savedId).get();
         return ResponseEntity.ok(saved);
     }
 

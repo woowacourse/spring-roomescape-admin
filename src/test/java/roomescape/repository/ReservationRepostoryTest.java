@@ -60,8 +60,8 @@ public class ReservationRepostoryTest {
             softAssertions.assertThat(reservations.getFirst().getDate()).isEqualTo(LocalDate.of(2025, 4, 22));
             softAssertions.assertThat(reservations.getFirst().getTime()).isEqualTo(LocalTime.of(16, 22));
             softAssertions.assertThat(reservations.getLast().getName()).isEqualTo("DDinghwa");
-            softAssertions.assertThat(reservations.getFirst().getDate()).isEqualTo(LocalDate.of(2025, 6, 3));
-            softAssertions.assertThat(reservations.getFirst().getTime()).isEqualTo(LocalTime.of(13, 0));
+            softAssertions.assertThat(reservations.getLast().getDate()).isEqualTo(LocalDate.of(2025, 6, 3));
+            softAssertions.assertThat(reservations.getLast().getTime()).isEqualTo(LocalTime.of(13, 0));
         });
     }
 }

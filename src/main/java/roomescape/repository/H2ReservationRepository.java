@@ -24,8 +24,8 @@ public class H2ReservationRepository implements ReservationRepository{
                     Reservation reservation = new Reservation(
                     resultSet.getLong("id"),
                     resultSet.getString("name"),
-                            resultSet.getDate("date").toLocalDate(),
-                            resultSet.getTime("time").toLocalTime()
+                    resultSet.getDate("date").toLocalDate(),
+                    resultSet.getTime("time").toLocalTime()
                     );
                     return reservation;
                 }, id);
@@ -34,7 +34,18 @@ public class H2ReservationRepository implements ReservationRepository{
 
     @Override
     public List<Reservation> findAll() {
-        return null;
+        final String sql = "SELECT * FROM reservation";
+        return jdbcTemplate.query(
+                sql,
+                (resultSet, rowNum) -> {
+                    Reservation reservation = new Reservation(
+                    resultSet.getLong("id"),
+                    resultSet.getString("name"),
+                    resultSet.getDate("date").toLocalDate(),
+                    resultSet.getTime("time").toLocalTime()
+                    );
+                    return reservation;
+                });
     }
 
     @Override

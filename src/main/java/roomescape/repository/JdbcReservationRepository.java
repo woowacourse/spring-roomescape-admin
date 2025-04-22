@@ -67,7 +67,18 @@ public class JdbcReservationRepository implements ReservationRepository {
 
     @Override
     public Optional<Reservation> findById(Long id) {
-        String sql = "SELECT * FROM reservation WHERE id = ?";
+        String sql = """
+                SELECT 
+                    r.id as reservation_id, 
+                    r.name,
+                    r.date, 
+                    rt.id AS time_id, 
+                    rt.start_at AS time_value
+                FROM reservation AS r
+                JOIN reservation_time AS rt
+                ON r.time_id = rt.id
+                WHERE r.id = ?
+                """;
         Reservation reservation = jdbcTemplate.queryForObject(sql, rowMapper, id);
         return Optional.ofNullable(reservation);
     }

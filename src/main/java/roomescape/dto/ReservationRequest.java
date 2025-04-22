@@ -10,7 +10,7 @@ public record ReservationRequest(String name, LocalDate date, LocalTime time) {
 
     public Reservation toEntity() {
         validateDateTime(date, time);
-        return new Reservation(null, name, LocalDateTime.of(date, time));
+        return Reservation.of(name, LocalDateTime.of(date, time));
     }
 
     private void validateDateTime(final LocalDate date, final LocalTime time) {

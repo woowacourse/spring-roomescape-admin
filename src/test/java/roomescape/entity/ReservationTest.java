@@ -13,19 +13,19 @@ class ReservationTest {
 
     @Test
     void 이름은_null일_수_없다() {
-        assertThatThrownBy(() -> new Reservation(1L, null, LocalDateTime.now()))
+        assertThatThrownBy(() -> Reservation.of(1L, null, LocalDateTime.now()))
                 .isInstanceOf(IllegalArgumentException.class);
     }
 
     @Test
     void 이름은_빈값일_수_없다() {
-        assertThatThrownBy(() -> new Reservation(1L, "", LocalDateTime.now()))
+        assertThatThrownBy(() -> Reservation.of(1L, "", LocalDateTime.now()))
                 .isInstanceOf(IllegalArgumentException.class);
     }
 
     @Test
     void 예약일자와_시간은_null일_수_없다() {
-        assertThatThrownBy(() -> new Reservation(1L, "듀이", null))
+        assertThatThrownBy(() -> Reservation.of(1L, "듀이", null))
                 .isInstanceOf(IllegalArgumentException.class);
     }
 }

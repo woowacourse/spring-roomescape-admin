@@ -8,12 +8,20 @@ public class Reservation {
     private final String customerName;
     private final LocalDateTime reservationDateTime;
 
-    public Reservation(final Long id, final String customerName, final LocalDateTime reservationDateTime) {
+    private Reservation(final Long id, final String customerName, final LocalDateTime reservationDateTime) {
         validateCustomerName(customerName);
         validateReservationDateTime(reservationDateTime);
         this.id = id;
         this.customerName = customerName;
         this.reservationDateTime = reservationDateTime;
+    }
+
+    public static Reservation of(final String customerName, final LocalDateTime reservationDateTime) {
+        return new Reservation(null, customerName, reservationDateTime);
+    }
+
+    public static Reservation of(final Long id, final String customerName, final LocalDateTime reservationDateTime) {
+        return new Reservation(id, customerName, reservationDateTime);
     }
 
     private void validateCustomerName(final String name) {

@@ -55,8 +55,12 @@ public class ReservationDao {
         return keyHolder.getKey().longValue();
     }
 
-    public void delete(final Long id) {
+    public void deleteById(final Long id) {
         String sql = "delete from reservation where id = ?";
-        jdbcTemplate.update(sql, id);
+        int affectedRows = jdbcTemplate.update(sql, id);
+
+        if (affectedRows == 0) {
+            throw new IllegalStateException("Invalid reservation id");
+        }
     }
 }

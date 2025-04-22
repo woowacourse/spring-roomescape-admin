@@ -3,7 +3,9 @@ package roomescape.controller;
 import jakarta.validation.Valid;
 import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -26,11 +28,11 @@ public class ReservationController {
 
     @PostMapping()
     public int create(@Valid @RequestBody ReservationCreateRequest reservationCreateRequest) {
-//        return reservationService.
-        return 1;
+        return reservationService.create(reservationCreateRequest);
     }
 
-    //    @DeleteMapping("/{id}")
-//    public int delete(@PathVariable Long id) {
-//    }
+    @DeleteMapping("/{id}")
+    public int delete(@PathVariable Long id) {
+        return reservationService.delete(id);
+    }
 }

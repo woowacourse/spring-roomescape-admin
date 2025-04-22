@@ -20,10 +20,6 @@ public class Reservation {
         this.dateTime = dateTime;
     }
 
-    public static Reservation createReservationWithId(final Long id, Reservation reservation) {
-        return new Reservation(id, reservation.getName(), reservation.getDateTime());
-    }
-
     public Long getId() {
         return id;
     }

@@ -89,7 +89,7 @@ public class ReservationRepositoryTest {
     @DisplayName("아이디를 통해 예약을 삭제한다.")
     void deleteReservationByIdTest(){
         // given
-        Long id = 1L;
+        long id = 1;
 
         // when
         int row = reservationRepository.deleteById(id);

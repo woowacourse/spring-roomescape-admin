@@ -8,7 +8,21 @@ public record ReservationResponse(
         Long id, String name, LocalDate date, LocalTime time
 ) {
 
-    public ReservationResponse(final Reservation reservation) {
-        this(reservation.getId(), reservation.getName(), reservation.getDate(), reservation.getTime());
+    public static ReservationResponse from(final Reservation reservation) {
+        return new ReservationResponse(
+                reservation.getId(),
+                reservation.getName(),
+                reservation.getDate(),
+                reservation.getTime()
+        );
+    }
+
+    public static ReservationResponse withId(final Reservation reservation, final Long id) {
+        return new ReservationResponse(
+                id,
+                reservation.getName(),
+                reservation.getDate(),
+                reservation.getTime()
+        );
     }
 }

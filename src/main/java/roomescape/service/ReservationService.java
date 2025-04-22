@@ -3,8 +3,9 @@ package roomescape.service;
 import java.util.List;
 import org.springframework.stereotype.Service;
 import roomescape.dao.ReservationDao;
+import roomescape.domain.Reservation;
+import roomescape.dto.ReservationRequest;
 import roomescape.dto.ReservationResponse;
-import roomescape.entity.ReservationEntity;
 
 @Service
 public class ReservationService {
@@ -16,11 +17,22 @@ public class ReservationService {
     }
 
     public List<ReservationResponse> findAll() {
-        final List<ReservationEntity> responses = reservationDao.findAll();
-
-        return responses.stream()
-                .map(ReservationEntity::toDomain)
-                .map(ReservationResponse::new)
+        return reservationDao.findAll().stream()
+                .map(ReservationResponse::from)
                 .toList();
+    }
+
+    public ReservationResponse create(final ReservationRequest reservationRequest) {
+        final Reservation reservation = reservationRequest.toDomain();
+        final Long id = reservationDao.save(reservation);
+        return ReservationResponse.withId(reservation, id);
+    }
+
+    public void remove(final Long id) {
+        final int rowNum = reservationDao.remove(id);
+
+        if (rowNum == 0) {
+            throw new IllegalArgumentException("해당하는 id가 없습니다.");
+        }
     }
 }

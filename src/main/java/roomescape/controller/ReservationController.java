@@ -30,7 +30,7 @@ public class ReservationController {
     }
 
     @GetMapping
-    public ResponseEntity<List<ReservationResponse>> reservations() {
+    public ResponseEntity<List<ReservationResponse>> getReservations() {
         List<ReservationResponse> reservations = reservationService.getReservations();
         return ResponseEntity.ok(reservations);
     }
@@ -38,7 +38,7 @@ public class ReservationController {
     @PostMapping
     public ResponseEntity<ReservationResponse> addReservation(@RequestBody ReservationRequest reservationRequest) {
         ReservationResponse newReservation = reservationService.addReservation(reservationRequest);
-        return ResponseEntity.ok().body(newReservation);
+        return ResponseEntity.ok(newReservation);
     }
 
     @DeleteMapping("/{id}")

@@ -60,13 +60,21 @@ public class ReservationTimeRepositoryTest {
     @Test
     @DisplayName("아이디를 통해 예약 시간을 삭제한다")
     void deleteReservationTimeById(){
+        //beforeEach
+        jdbcTemplate.update("INSERT INTO reservation_time (start_at) VALUES (?)", "10:00");
+
         // given
         long id = 1;
+
         // when
         int row = reservationTimeRepository.deleteById(id);
 
         // then
         Assertions.assertThat(row).isEqualTo(1);
+
+        //afterEach
+        jdbcTemplate.update("DELETE FROM reservation_time");
+        jdbcTemplate.update("ALTER TABLE reservation_time ALTER COLUMN id RESTART WITH 1");
     }
 
 }

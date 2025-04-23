@@ -15,12 +15,12 @@ import java.time.LocalTime;
 import java.util.List;
 
 @Repository
-public class ReservationInMemoryRepository implements ReservationRepository {
+public class ReservationDaoImpl implements ReservationDao {
 
     private final NamedParameterJdbcTemplate jdbcTemplate;
 
     @Autowired
-    public ReservationInMemoryRepository(NamedParameterJdbcTemplate jdbcTemplate) {
+    public ReservationDaoImpl(NamedParameterJdbcTemplate jdbcTemplate) {
         this.jdbcTemplate = jdbcTemplate;
     }
 

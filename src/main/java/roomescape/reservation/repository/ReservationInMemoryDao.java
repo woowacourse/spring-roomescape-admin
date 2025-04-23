@@ -7,7 +7,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
-public class ReservationRepositoryImpl implements ReservationRepository {
+public class ReservationInMemoryDao implements ReservationDao {
 
     private final List<Reservation> reservations = new ArrayList<>();
 

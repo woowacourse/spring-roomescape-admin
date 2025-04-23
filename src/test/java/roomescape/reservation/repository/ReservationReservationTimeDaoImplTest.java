@@ -16,15 +16,15 @@ import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 
 @JdbcTest
-class ReservationReservationTimeInMemoryRepositoryTest {
+class ReservationReservationTimeDaoImplTest {
 
     @Autowired
     NamedParameterJdbcTemplate jdbcTemplate;
-    ReservationTimeInMemoryRepository repository;
+    ReservationTimeDaoImpl repository;
 
     @BeforeEach
     void setUp() {
-        this.repository = new ReservationTimeInMemoryRepository(jdbcTemplate);
+        this.repository = new ReservationTimeDaoImpl(jdbcTemplate);
     }
 
     @Test

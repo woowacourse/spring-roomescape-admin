@@ -48,8 +48,7 @@ public class ConsoleApplication implements CommandLineRunner {
         if (function == 1) {
             CreateReservationTimeDto createReservationTimeDto = inputView.inputCreateReservationTime();
             ReservationTime reservationTime = reservationTimeService.createReservationTime(createReservationTimeDto);
-            System.out.println("예약 시간 생성을 완료했습니다.");
-            System.out.println("생성된 시간 : " + reservationTime.getStartAt());
+            outputView.printSuccessToCreateReservationTime(reservationTime);
         }
     }
 }

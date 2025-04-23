@@ -28,4 +28,37 @@ public class ReservationTimeControllerTest {
                 .then().log().all()
                 .statusCode(200);
     }
+
+    @Test
+    void 예약_시간_조회_요청을_성공한다() {
+        RestAssured.given().log().all()
+                .when().get("/times")
+                .then().log().all()
+                .statusCode(200);
+    }
+
+    @Test
+    void 예약_시간_추가로_목록_크기가_증가한다() {
+        createAndSendReservationTime();
+
+        RestAssured.given().log().all()
+                .when().get("/times")
+                .then().log().all()
+                .statusCode(200);
+    }
+
+    private void createAndSendReservationTime() {
+        Map<String, String> params = createReservationTimeData();
+
+        RestAssured.given().log().all()
+                .contentType(ContentType.JSON)
+                .body(params)
+                .when().post("/times");
+    }
+
+    private Map<String, String> createReservationTimeData() {
+        Map<String, String> params = new HashMap<>();
+        params.put("startAt", "10:00");
+        return params;
+    }
 }

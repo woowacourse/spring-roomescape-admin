@@ -4,6 +4,7 @@ import java.util.HashMap;
 import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.JdbcTemplate;
+import org.springframework.jdbc.core.RowMapper;
 import org.springframework.jdbc.core.simple.SimpleJdbcInsert;
 import org.springframework.stereotype.Repository;
 import roomescape.time.Time;
@@ -41,15 +42,7 @@ public class ReservationJdbcDao implements ReservationDao {
                         + "FROM RESERVATION AS R INNER JOIN RESERVATION_TIME AS T "
                         + "ON R.time_id=T.id";
 
-        final List<Reservation> reservations = jdbcTemplate.query(query, (rs, rowNum) -> {
-            return new Reservation(
-                    rs.getLong("id"),
-                    rs.getString("name"),
-                    rs.getDate("date").toLocalDate(),
-                    new Time(rs.getLong("time_id"), rs.getTime("start_at").toLocalTime())
-            );
-        });
-        return reservations;
+        return jdbcTemplate.query(query, reservationMapper());
     }
 
     @Override
@@ -60,14 +53,18 @@ public class ReservationJdbcDao implements ReservationDao {
                         + "ON R.time_id=T.id "
                         + "WHERE R.id=?";
 
-        return jdbcTemplate.queryForObject(query, (rs, rowNum) -> {
+        return jdbcTemplate.queryForObject(query, reservationMapper(), id);
+    }
+
+    private RowMapper<Reservation> reservationMapper() {
+        return (rs, rowNum) -> {
             return new Reservation(
                     rs.getLong("id"),
                     rs.getString("name"),
                     rs.getDate("date").toLocalDate(),
                     new Time(rs.getLong("time_id"), rs.getTime("start_at").toLocalTime())
             );
-        }, id);
+        };
     }
 
     @Override

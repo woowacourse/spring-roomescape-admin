@@ -3,18 +3,18 @@ package roomescape.repository;
 import java.sql.PreparedStatement;
 import java.sql.Statement;
 import java.time.LocalDate;
-import java.time.LocalDateTime;
 import java.time.LocalTime;
 import java.time.format.DateTimeFormatter;
 import java.util.List;
 
+import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.support.GeneratedKeyHolder;
 import org.springframework.jdbc.support.KeyHolder;
 import org.springframework.stereotype.Repository;
 
 import roomescape.model.Reservation;
-import roomescape.model.ReservationDateTime;
+import roomescape.model.exception.ReservationNotFoundException;
 
 @Repository
 public class ReservationDao {
@@ -33,17 +33,16 @@ public class ReservationDao {
         return jdbcTemplate.query(findAllSql, (resultSet, rowNum) -> new Reservation(
                 resultSet.getLong("id"),
                 resultSet.getString("name"),
-                new ReservationDateTime(LocalDateTime.of(
-                        LocalDate.parse(resultSet.getString("date")),
-                        LocalTime.parse(resultSet.getString("time"))
-                ))));
+                LocalDate.parse(resultSet.getString("date")),
+                LocalTime.parse(resultSet.getString("time"))
+        ));
     }
 
     public Long insert(final Reservation reservation) {
         KeyHolder generatedKeyHolder = new GeneratedKeyHolder();
         String insertSql = """
                 INSERT INTO reservation (name, date, time)
-                VALUES (?, ?, ?)            
+                VALUES (?, ?, ?)
                 """;
         jdbcTemplate.update(connection -> {
             PreparedStatement preparedStatement = connection.prepareStatement(insertSql,
@@ -61,7 +60,10 @@ public class ReservationDao {
                 DELETE FROM reservation
                 WHERE id = ?
                 """;
-        jdbcTemplate.update(deleteSql, id);
+        int updatedRow = jdbcTemplate.update(deleteSql, id);
+        if (updatedRow == 0) {
+            throw new ReservationNotFoundException("존재하지 않는 예약번호 입니다.");
+        }
     }
 
     public Reservation findById(final Long id) {
@@ -70,14 +72,16 @@ public class ReservationDao {
                 FROM reservation
                 WHERE id = ?
                 """;
-        return jdbcTemplate.queryForObject(findSql, (resultSet, rowNum) -> new Reservation(
-                        id,
-                        resultSet.getString("name"),
-                        new ReservationDateTime(LocalDateTime.of(
-                                LocalDate.parse(resultSet.getString("date")),
-                                LocalTime.parse(resultSet.getString("time"))
-                        ))),
-                id
-        );
+        try {
+            return jdbcTemplate.queryForObject(findSql,
+                    (resultSet, rowNum) -> new Reservation(
+                            id,
+                            resultSet.getString("name"),
+                            LocalDate.parse(resultSet.getString("date")),
+                            LocalTime.parse(resultSet.getString("time"))
+                    ), id);
+        } catch (EmptyResultDataAccessException e) {
+            throw new ReservationNotFoundException("존재하지 않는 예약번호 입니다.", e);
+        }
     }
 }

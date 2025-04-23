@@ -8,20 +8,23 @@ public class Reservation {
 
     private final Long id;
     private final String name;
-    private final ReservationDateTime reservationDateTime;
+    private final LocalDate date;
+    private final LocalTime time;
 
-    public Reservation(final Long id, final String name, final ReservationDateTime reservationDateTime) {
-        validate(id, name, reservationDateTime);
+    public Reservation(final Long id, final String name, final LocalDate date, final LocalTime time) {
+        validate(id, name, date, time);
         this.id = id;
         this.name = name;
-        this.reservationDateTime = reservationDateTime;
+        this.date = date;
+        this.time = time;
     }
 
-    private void validate(final Long id, final String name, final ReservationDateTime reservationDateTime) {
+    private void validate(final Long id, final String name, final LocalDate date, LocalTime time) {
         try {
             Objects.requireNonNull(id);
             Objects.requireNonNull(name);
-            Objects.requireNonNull(reservationDateTime);
+            Objects.requireNonNull(date);
+            Objects.requireNonNull(time);
             validateBlank(name);
         } catch (NullPointerException e) {
             throw new IllegalArgumentException(e);
@@ -43,10 +46,10 @@ public class Reservation {
     }
 
     public LocalDate getDate() {
-        return reservationDateTime.getDate();
+        return date;
     }
 
     public LocalTime getTime() {
-        return reservationDateTime.getTime();
+        return time;
     }
 }

@@ -1,32 +1,30 @@
 package roomescape.repository;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.assertThatThrownBy;
 
-import java.time.LocalDateTime;
+import java.time.LocalDate;
+import java.time.LocalTime;
 import java.util.List;
 
-import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.jdbc.JdbcTest;
+import org.springframework.context.annotation.Import;
 import org.springframework.jdbc.core.JdbcTemplate;
 
 import roomescape.model.Reservation;
-import roomescape.model.ReservationDateTime;
+import roomescape.model.exception.ReservationNotFoundException;
 
 @JdbcTest
+@Import(ReservationDao.class)
 class ReservationDaoTest {
-
-    private ReservationDao reservationDao;
 
     @Autowired
     private JdbcTemplate jdbcTemplate;
-
-    @BeforeEach
-    void setUp() {
-        this.reservationDao = new ReservationDao(jdbcTemplate);
-    }
+    @Autowired
+    private ReservationDao reservationDao;
 
     @DisplayName("저장된 모든 예약을 조회한다.")
     @Test
@@ -40,7 +38,7 @@ class ReservationDaoTest {
     @Test
     void insertReservation() {
         Reservation reservation = new Reservation(0L, "포스티",
-                new ReservationDateTime(LocalDateTime.of(2025, 4, 23, 10, 0)));
+                LocalDate.of(2025, 4, 23), LocalTime.of(10, 0));
 
         reservationDao.insert(reservation);
 
@@ -51,7 +49,7 @@ class ReservationDaoTest {
     @Test
     void deleteReservationById() {
         Reservation reservation = new Reservation(0L, "포스티",
-                new ReservationDateTime(LocalDateTime.of(2025, 4, 23, 10, 0)));
+                LocalDate.of(2025, 4, 23), LocalTime.of(10, 0));
         Long reservationId = reservationDao.insert(reservation);
 
         reservationDao.deleteById(reservationId);
@@ -63,7 +61,7 @@ class ReservationDaoTest {
     @Test
     void findReservationById() {
         Reservation reservation = new Reservation(0L, "포스티",
-                new ReservationDateTime(LocalDateTime.of(2025, 4, 23, 10, 0)));
+                LocalDate.of(2025, 4, 23), LocalTime.of(10, 0));
         Long reservationId = reservationDao.insert(reservation);
 
         Reservation findReservation = reservationDao.findById(reservationId);
@@ -71,5 +69,19 @@ class ReservationDaoTest {
         assertThat(findReservation.getName()).isEqualTo(reservation.getName());
         assertThat(findReservation.getDate()).isEqualTo(reservation.getDate());
         assertThat(findReservation.getTime()).isEqualTo(reservation.getTime());
+    }
+
+    @DisplayName("존재하지 않는 예약은 삭제할 수 없다.")
+    @Test
+    void deleteReservationByNonExistsId() {
+        assertThatThrownBy(() -> reservationDao.deleteById(1L))
+                .isInstanceOf(ReservationNotFoundException.class);
+    }
+
+    @DisplayName("존재하지 않는 예약은 조회할 수 없다.")
+    @Test
+    void findReservationByNonExistsId() {
+        assertThatThrownBy(() -> reservationDao.findById(1L))
+                .isInstanceOf(ReservationNotFoundException.class);
     }
 }

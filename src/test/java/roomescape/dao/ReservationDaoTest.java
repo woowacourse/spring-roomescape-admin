@@ -36,7 +36,8 @@ class ReservationDaoTest {
         Reservation reservation = new Reservation(1, person, reservationTime);
 
         reservationDao.insert(reservation);
-        assertThat(reservationDao.findAll().size()).isEqualTo(1);
+        int size = jdbcTemplate.queryForObject("select count(*) from reservation", Integer.class);
+        assertThat(size).isEqualTo(1);
     }
 
     @DisplayName("예약을 모두 가져오는지 확인합니다.")

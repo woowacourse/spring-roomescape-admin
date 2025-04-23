@@ -20,7 +20,7 @@ public class TimeDao {
         return new Time(id, startAt);
     };
 
-    private JdbcTemplate jdbcTemplate;
+    private final JdbcTemplate jdbcTemplate;
 
     @Autowired
     public TimeDao(JdbcTemplate jdbcTemplate) {
@@ -33,7 +33,7 @@ public class TimeDao {
         KeyHolder keyHolder = new GeneratedKeyHolder();
 
 
-        jdbcTemplate.update((connection) -> {
+        jdbcTemplate.update(connection -> {
             PreparedStatement preparedStatement = connection.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS);
             preparedStatement.setString(1, time.getStartAt().toString());
             return preparedStatement;
@@ -58,5 +58,11 @@ public class TimeDao {
         String sql = "select count(1) from reservation_time";
 
         return jdbcTemplate.queryForObject(sql, Integer.class);
+    }
+
+    public Time findById(Long id){
+        String sql = "SELECT id, start_at FROM reservation_time where id = ?";
+
+        return jdbcTemplate.queryForObject(sql, rowMapper, id);
     }
 }

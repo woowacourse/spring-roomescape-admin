@@ -12,6 +12,7 @@ import org.springframework.jdbc.support.GeneratedKeyHolder;
 import org.springframework.jdbc.support.KeyHolder;
 import org.springframework.stereotype.Component;
 import roomescape.dto.reservation.ReservationResponse;
+import roomescape.dto.time.TimeResponse;
 
 @Component
 public class ReservationDao {
@@ -20,11 +21,13 @@ public class ReservationDao {
 
     private final RowMapper<ReservationResponse> reservationMapper =
             (rs, rowNum) -> {
-                Long id = rs.getLong("id");
+                Long reservationId = rs.getLong("reservation_id");
                 String name = rs.getString("name");
                 LocalDate date = LocalDate.parse(rs.getString("date"));
-                LocalTime time = LocalTime.parse(rs.getString("time"));
-                return new ReservationResponse(id, name, date, time);
+                Long timeId = rs.getLong("time_id");
+                LocalTime startAt = LocalTime.parse(rs.getString("start_at"));
+                Time time = new Time(timeId, startAt);
+                return new ReservationResponse(reservationId, name, date, TimeResponse.from(time));
             };
 
     @Autowired
@@ -33,14 +36,14 @@ public class ReservationDao {
     }
 
     public ReservationResponse createReservation(Reservation reservation) {
-        String sql = "insert into reservation (name, date, time) values (?, ?, ?)";
+        String sql = "insert into reservation (name, date, time_id) values (?, ?, ?)";
         KeyHolder keyHolder = new GeneratedKeyHolder();
         jdbcTemplate.update(
                 connection -> {
                     PreparedStatement preparedStatement = connection.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS);
                     preparedStatement.setString(1, reservation.getName());
                     preparedStatement.setString(2, reservation.getDate().toString());
-                    preparedStatement.setString(3, reservation.getTime().toString());
+                    preparedStatement.setLong(3, reservation.getTime().getId());
                     return preparedStatement;
                 },
                 keyHolder
@@ -57,7 +60,17 @@ public class ReservationDao {
     }
 
     public List<ReservationResponse> getReservations() {
-        String sql = "select id, name, date, time from reservation";
+        String sql = """
+                SELECT
+                    r.id as reservation_id,
+                    r.name,
+                    r.date,
+                    t.id as time_id,
+                    t.start_at as time_value
+                FROM reservation as r
+                inner join reservation_time as t
+                on r.time_id = t.id
+                """;
         return jdbcTemplate.query(sql, reservationMapper);
     }
 }

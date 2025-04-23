@@ -9,8 +9,8 @@ import java.util.List;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import roomescape.dao.ReservationDao;
-import roomescape.dto.ReservationRequestDto;
-import roomescape.dto.ReservationResponseDto;
+import roomescape.dto.ReservationRequest;
+import roomescape.dto.ReservationResponse;
 import roomescape.entity.Reservation;
 import roomescape.entity.ReservationTime;
 import roomescape.exceptions.EntityNotFoundException;
@@ -23,7 +23,7 @@ public class ReservationServiceTest {
     @DisplayName("조회된 엔티티를 DTO로 매핑해 반환한다.")
     void test_readReservation() {
         //given & when
-        List<ReservationResponseDto> actual = reservationService.readReservation();
+        List<ReservationResponse> actual = reservationService.readReservation();
         //then
         assertThat(actual.size()).isEqualTo(1);
         assertThat(actual.getFirst().id()).isEqualTo(1);
@@ -34,9 +34,9 @@ public class ReservationServiceTest {
     void test_postReservation() {
         //given
         long timeId = 1L;
-        ReservationRequestDto requestDto = new ReservationRequestDto("브라운", LocalDate.now(), timeId);
+        ReservationRequest request = new ReservationRequest("브라운", LocalDate.now(), timeId);
         //when
-        ReservationResponseDto actual = reservationService.postReservation(requestDto);
+        ReservationResponse actual = reservationService.postReservation(request);
         //then
         assertThat(actual.id()).isEqualTo(1);
     }

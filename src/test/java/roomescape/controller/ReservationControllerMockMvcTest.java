@@ -20,8 +20,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.test.context.bean.override.mockito.MockitoBean;
 import org.springframework.test.web.servlet.MockMvc;
-import roomescape.dto.ReservationRequestDto;
-import roomescape.dto.ReservationResponseDto;
+import roomescape.dto.ReservationRequest;
+import roomescape.dto.ReservationResponse;
 import roomescape.exceptions.EntityNotFoundException;
 import roomescape.service.ReservationService;
 import roomescape.service.ReservationTimeService;
@@ -46,11 +46,11 @@ public class ReservationControllerMockMvcTest {
     @Test
     @DisplayName("/admin/reservation 요청 시 예약 관리 페이지 응답")
     void readReservation() {
-        ReservationResponseDto responseDto1 = new ReservationResponseDto(1L, "브라운", LocalDate.now().plusDays(1), 1L);
-        ReservationResponseDto responseDto2 = new ReservationResponseDto(2L, "네오", LocalDate.now().plusDays(1), 1L);
+        ReservationResponse response1 = new ReservationResponse(1L, "브라운", LocalDate.now().plusDays(1), 1L);
+        ReservationResponse response2 = new ReservationResponse(2L, "네오", LocalDate.now().plusDays(1), 1L);
 
-        List<ReservationResponseDto> reservations = List.of(
-                responseDto1, responseDto2
+        List<ReservationResponse> reservations = List.of(
+                response1, response2
         );
 
         given(reservationService.readReservation()).willReturn(reservations);
@@ -73,9 +73,9 @@ public class ReservationControllerMockMvcTest {
         Long expectedTimeId = 1L;
         Long expectedId = 1L;
 
-        ReservationRequestDto dto = new ReservationRequestDto("브라운", fixedDate, expectedTimeId);
-        ReservationResponseDto responseDto = new ReservationResponseDto(expectedId, "브라운", fixedDate, expectedTimeId);
-        given(reservationService.postReservation(dto)).willReturn(responseDto);
+        ReservationRequest dto = new ReservationRequest("브라운", fixedDate, expectedTimeId);
+        ReservationResponse response = new ReservationResponse(expectedId, "브라운", fixedDate, expectedTimeId);
+        given(reservationService.postReservation(dto)).willReturn(response);
 
         RestAssuredMockMvc.given().log().all()
                 .contentType(ContentType.JSON)

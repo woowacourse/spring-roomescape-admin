@@ -5,7 +5,7 @@ import java.time.LocalTime;
 import roomescape.entity.Reservation;
 import roomescape.entity.ReservationTime;
 
-public record ReservationRequestDto(
+public record ReservationRequest(
         String name,
         LocalDate date,
         Long timeId

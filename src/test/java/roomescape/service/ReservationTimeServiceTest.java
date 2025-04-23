@@ -8,8 +8,8 @@ import java.util.List;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import roomescape.dao.ReservationTimeDao;
-import roomescape.dto.ReservationTimeRequestDto;
-import roomescape.dto.ReservationTimeResponseDto;
+import roomescape.dto.ReservationTimeRequest;
+import roomescape.dto.ReservationTimeResponse;
 import roomescape.entity.ReservationTime;
 import roomescape.exceptions.EntityNotFoundException;
 
@@ -29,7 +29,7 @@ public class ReservationTimeServiceTest {
     @DisplayName("조회된 엔티티를 DTO로 매핑해 반환한다.")
     void test_readReservationTime() {
         //given & when
-        List<ReservationTimeResponseDto> actual = reservationService.readReservationTime();
+        List<ReservationTimeResponse> actual = reservationService.readReservationTime();
         //then
         assertThat(actual.size()).isEqualTo(1);
         assertThat(actual.getFirst().startAt()).isEqualTo(LocalTime.MIN);
@@ -39,9 +39,9 @@ public class ReservationTimeServiceTest {
     @DisplayName("저장한 엔티티를 DTO로 반환한다.")
     void test_postReservationTime() {
         //given
-        ReservationTimeRequestDto requestDto = new ReservationTimeRequestDto(LocalTime.MIN);
+        ReservationTimeRequest request = new ReservationTimeRequest(LocalTime.MIN);
         //when
-        ReservationTimeResponseDto actual = reservationService.postReservationTime(requestDto);
+        ReservationTimeResponse actual = reservationService.postReservationTime(request);
         //then
         assertThat(actual.startAt()).isEqualTo(LocalTime.MIN);
     }

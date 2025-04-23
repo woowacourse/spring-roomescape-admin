@@ -25,8 +25,8 @@ import org.springframework.jdbc.support.GeneratedKeyHolder;
 import org.springframework.jdbc.support.KeyHolder;
 import roomescape.dao.ReservationH2Dao;
 import roomescape.dao.ReservationTimeH2Dao;
-import roomescape.dto.ReservationRequestDto;
-import roomescape.dto.ReservationResponseDto;
+import roomescape.dto.ReservationRequest;
+import roomescape.dto.ReservationResponse;
 import roomescape.entity.Reservation;
 import roomescape.entity.ReservationTime;
 import roomescape.exceptions.EntityNotFoundException;
@@ -79,12 +79,12 @@ public class ReservationControllerTest {
         jdbcTemplate.batchUpdate(sql, getBatchPreparedStatementSetter(reservations));
 
         //when
-        List<ReservationResponseDto> result = controller.readReservation();
+        List<ReservationResponse> result = controller.readReservation();
 
         //then
         assertThat(result.size()).isEqualTo(2);
-        assertThat(result.getFirst()).isEqualTo(ReservationResponseDto.toDto(reservation1));
-        assertThat(result.getLast()).isEqualTo(ReservationResponseDto.toDto(reservation2));
+        assertThat(result.getFirst()).isEqualTo(ReservationResponse.toDto(reservation1));
+        assertThat(result.getLast()).isEqualTo(ReservationResponse.toDto(reservation2));
     }
 
     @Test
@@ -92,7 +92,7 @@ public class ReservationControllerTest {
     void postReservation() {
         //given
         LocalDate fixedDate = LocalDate.of(2026, 5, 15);
-        ReservationRequestDto dto = new ReservationRequestDto("브라운", fixedDate, 1L);
+        ReservationRequest dto = new ReservationRequest("브라운", fixedDate, 1L);
         //when
         controller.postReservation(dto);
         //then

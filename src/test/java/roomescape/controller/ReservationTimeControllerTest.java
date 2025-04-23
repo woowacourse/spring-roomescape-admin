@@ -20,8 +20,8 @@ import org.springframework.jdbc.datasource.embedded.EmbeddedDatabase;
 import org.springframework.jdbc.datasource.embedded.EmbeddedDatabaseBuilder;
 import org.springframework.jdbc.datasource.embedded.EmbeddedDatabaseType;
 import roomescape.dao.ReservationTimeH2Dao;
-import roomescape.dto.ReservationTimeRequestDto;
-import roomescape.dto.ReservationTimeResponseDto;
+import roomescape.dto.ReservationTimeRequest;
+import roomescape.dto.ReservationTimeResponse;
 import roomescape.entity.Reservation;
 import roomescape.entity.ReservationTime;
 import roomescape.exceptions.EntityNotFoundException;
@@ -63,12 +63,12 @@ public class ReservationTimeControllerTest {
         jdbcTemplate.batchUpdate(sql, getBatchPreparedStatementSetter(reservations));
 
         //when
-        List<ReservationTimeResponseDto> result = controller.readReservationTime();
+        List<ReservationTimeResponse> result = controller.readReservationTime();
 
         //then
         assertThat(result.size()).isEqualTo(2);
-        assertThat(result.getFirst()).isEqualTo(ReservationTimeResponseDto.toDto(reservationTime1));
-        assertThat(result.getLast()).isEqualTo(ReservationTimeResponseDto.toDto(reservationTime2));
+        assertThat(result.getFirst()).isEqualTo(ReservationTimeResponse.toDto(reservationTime1));
+        assertThat(result.getLast()).isEqualTo(ReservationTimeResponse.toDto(reservationTime2));
     }
 
     @Test
@@ -77,7 +77,7 @@ public class ReservationTimeControllerTest {
         //given
         LocalTime fixedTime = LocalTime.of(14, 30);
 
-        ReservationTimeRequestDto dto = new ReservationTimeRequestDto(fixedTime);
+        ReservationTimeRequest dto = new ReservationTimeRequest(fixedTime);
         //when
         controller.postReservationTime(dto);
         //then

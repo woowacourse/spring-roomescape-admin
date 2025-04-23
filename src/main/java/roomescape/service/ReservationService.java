@@ -4,8 +4,8 @@ import java.util.List;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import roomescape.dao.ReservationDao;
-import roomescape.dto.ReservationRequestDto;
-import roomescape.dto.ReservationResponseDto;
+import roomescape.dto.ReservationRequest;
+import roomescape.dto.ReservationResponse;
 import roomescape.entity.Reservation;
 
 @Service
@@ -18,15 +18,15 @@ public class ReservationService {
         this.reservationDao = reservationDao;
     }
 
-    public List<ReservationResponseDto> readReservation() {
+    public List<ReservationResponse> readReservation() {
         return reservationDao.findAll().stream()
-                .map(ReservationResponseDto::toDto)
+                .map(ReservationResponse::toDto)
                 .toList();
     }
 
-    public ReservationResponseDto postReservation(ReservationRequestDto requestDto) {
-        Reservation newReservation = reservationDao.save(requestDto.toEntity(), requestDto.timeId());
-        return ReservationResponseDto.toDto(newReservation);
+    public ReservationResponse postReservation(ReservationRequest request) {
+        Reservation newReservation = reservationDao.save(request.toEntity(), request.timeId());
+        return ReservationResponse.toDto(newReservation);
     }
 
     public void deleteReservation(long id) {

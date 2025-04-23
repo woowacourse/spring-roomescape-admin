@@ -34,6 +34,7 @@ public class ReservationController {
             .usingGeneratedKeyColumns("id");
     }
 
+    //TODO: Dto로 변경
     @GetMapping
     public ResponseEntity<List<Reservation>> getAll() {
         List<Reservation> reservationResponses = jdbcTemplate.query(

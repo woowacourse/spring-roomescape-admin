@@ -7,7 +7,7 @@ public record ReservationResponse(
         Long id,
         String name,
         String date,
-        ReservationTimeResponse reservationTimeResponse
+        ReservationTimeResponse time
 ) {
     public static ReservationResponse fromEntity(Reservation reservation) {
         return new ReservationResponse(

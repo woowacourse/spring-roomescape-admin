@@ -1,8 +1,12 @@
 package roomescape.controller;
 
+import java.time.LocalDate;
+import java.time.LocalTime;
 import java.util.List;
 import java.util.concurrent.atomic.AtomicLong;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
+import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -21,9 +25,20 @@ public class ReservationAPIController {
     private final Reservations reservations = new Reservations();
     private final AtomicLong index = new AtomicLong();
 
+    @Autowired
+    JdbcTemplate jdbcTemplate;
+
     @GetMapping
     public ResponseEntity<List<Reservation>> searchReservations() {
-        return ResponseEntity.ok().body(reservations.getAll());
+        String sql = "select id, name, date, time from reservation";
+        List<Reservation> reservationList = jdbcTemplate.query(sql,
+                (rs, rowNum) -> new Reservation(
+                        rs.getLong("id"),
+                        rs.getString("name"),
+                        LocalDate.parse(rs.getString("date")),
+                        LocalTime.parse(rs.getString("time")
+                        )));
+        return ResponseEntity.ok().body(reservationList);
     }
 
     @PostMapping

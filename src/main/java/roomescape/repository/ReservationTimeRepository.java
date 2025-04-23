@@ -20,12 +20,12 @@ public class ReservationTimeRepository {
 
     public ReservationTime add(CreateReservationTimeDto createReservationTimeDto) {
         SimpleJdbcInsert simpleJdbcInsert = new SimpleJdbcInsert(jdbcTemplate.getDataSource())
-                .withTableName("reservationTime")
-                .usingColumns("startAt")
+                .withTableName("reservation_time")
+                .usingColumns("start_at")
                 .usingGeneratedKeyColumns("id");
 
         SqlParameterSource parameters = new MapSqlParameterSource()
-                .addValue("startAt", createReservationTimeDto.startAt());
+                .addValue("start_at", createReservationTimeDto.startAt());
 
         Long id = simpleJdbcInsert.executeAndReturnKey(parameters).longValue();
 
@@ -33,25 +33,25 @@ public class ReservationTimeRepository {
     }
 
     private ReservationTime findById(Long id) {
-        String sql = "SELECT id, startAt FROM reservationTime WHERE id = ?";
+        String sql = "SELECT id, start_at FROM reservation_time WHERE id = ?";
         return jdbcTemplate.queryForObject(sql,
                 (resultSet, rowNum) -> new ReservationTime(
                         resultSet.getLong("id"),
-                        resultSet.getObject("startAt", LocalTime.class)
+                        resultSet.getObject("start_at", LocalTime.class)
                 ), id);
     }
 
     public List<ReservationTime> findAll() {
-        String sql = "SELECT id, startAt FROM reservationTime";
+        String sql = "SELECT id, start_at FROM reservation_time";
         return jdbcTemplate.query(sql,
                 (resultSet, rowNum) -> new ReservationTime(
                         resultSet.getLong("id"),
-                        resultSet.getObject("startAt", LocalTime.class)
+                        resultSet.getObject("start_at", LocalTime.class)
                 ));
     }
 
     public void deleteById(Long id) {
-        String sql = "DELETE FROM reservationTime WHERE id = ?";
+        String sql = "DELETE FROM reservation_time WHERE id = ?";
         jdbcTemplate.update(sql, id);
     }
 }

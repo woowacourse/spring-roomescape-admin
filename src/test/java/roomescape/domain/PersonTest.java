@@ -10,7 +10,7 @@ class PersonTest {
     @DisplayName("비어있는 이름이라면 예외를 발생시킵니다.")
     @ParameterizedTest
     @EmptySource
-    void isInvalidNameTest(String name) {
+    void invalidNameTest(String name) {
         assertThatCode(() -> new Person(name)).isInstanceOf(IllegalArgumentException.class);
     }
 }

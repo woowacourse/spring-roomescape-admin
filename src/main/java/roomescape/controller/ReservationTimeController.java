@@ -3,6 +3,7 @@ package roomescape.controller;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import roomescape.controller.dto.ReservationTimeCreateRequest;
 import roomescape.entity.ReservationTime;
 import roomescape.service.ReservationTimeService;
 

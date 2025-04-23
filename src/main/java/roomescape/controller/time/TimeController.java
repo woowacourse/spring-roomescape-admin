@@ -28,7 +28,7 @@ public class TimeController {
     }
 
     @PostMapping
-    ResponseEntity<Time> save(@RequestBody TimeRequest timeRequest) {
+    ResponseEntity<TimeResponse> save(@RequestBody TimeRequest timeRequest) {
         Time time = timeRequest.toTime();
         Long id = saveAndGetId(time);
         return ResponseEntity.ok(TimeResponse.from(id, time));

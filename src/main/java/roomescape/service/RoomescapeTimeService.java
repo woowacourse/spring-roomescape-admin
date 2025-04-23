@@ -1,29 +1,29 @@
 package roomescape.service;
 
 import org.springframework.stereotype.Service;
-import roomescape.dao.TimeDao;
-import roomescape.dto.TimeRequestDto;
-import roomescape.dto.TimeResponseDto;
+import roomescape.dao.ReservationTimeDao;
+import roomescape.dto.ReservationTimeRequestDto;
+import roomescape.dto.ReservationTimeResponseDto;
 import roomescape.entity.ReservationTimeEntity;
 
 import java.util.List;
 
 @Service
 public class RoomescapeTimeService {
-    private final TimeDao timeDao;
+    private final ReservationTimeDao timeDao;
 
-    public RoomescapeTimeService(TimeDao timeDao) {
+    public RoomescapeTimeService(ReservationTimeDao timeDao) {
         this.timeDao = timeDao;
     }
 
-    public TimeResponseDto create(TimeRequestDto requestDto) {
+    public ReservationTimeResponseDto create(ReservationTimeRequestDto requestDto) {
         ReservationTimeEntity saved = timeDao.save(requestDto.toEntity());
-        return TimeResponseDto.from(saved);
+        return ReservationTimeResponseDto.from(saved);
     }
 
-    public List<TimeResponseDto> getAllTimes() {
+    public List<ReservationTimeResponseDto> getAllTimes() {
         return timeDao.findAll().stream()
-                .map(TimeResponseDto::from)
+                .map(ReservationTimeResponseDto::from)
                 .toList();
     }
 

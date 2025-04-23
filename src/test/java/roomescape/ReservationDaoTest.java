@@ -5,7 +5,7 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.annotation.DirtiesContext;
-import roomescape.dao.ReservationDAO;
+import roomescape.dao.ReservationDao;
 import roomescape.entity.ReservationEntity;
 import roomescape.entity.ReservationTimeEntity;
 
@@ -16,9 +16,9 @@ import static org.assertj.core.api.Assertions.assertThatThrownBy;
 
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.DEFINED_PORT)
 @DirtiesContext(classMode = DirtiesContext.ClassMode.BEFORE_EACH_TEST_METHOD)
-class ReservationDAOTest {
+class ReservationDaoTest {
     @Autowired
-    private ReservationDAO reservationDAO;
+    private ReservationDao reservationDAO;
 
     @Test
     @DisplayName("같은 날짜, 같은 시각에 이미 예약이 존재하는 경우, 재생성할 수 없다.")

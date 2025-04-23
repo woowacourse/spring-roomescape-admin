@@ -1,8 +1,8 @@
 package roomescape.service;
 
 import org.springframework.stereotype.Service;
-import roomescape.dao.ReservationDAO;
-import roomescape.dao.TimeDao;
+import roomescape.dao.ReservationDao;
+import roomescape.dao.ReservationTimeDao;
 import roomescape.dto.ReservationRequestDto;
 import roomescape.dto.ReservationResponseDto;
 import roomescape.entity.ReservationEntity;
@@ -12,10 +12,10 @@ import java.util.List;
 
 @Service
 public class RoomescapeReservationService {
-    private final ReservationDAO reservationDAO;
-    private final TimeDao timeDao;
+    private final ReservationDao reservationDAO;
+    private final ReservationTimeDao timeDao;
 
-    public RoomescapeReservationService(ReservationDAO reservationDAO, TimeDao timeDao) {
+    public RoomescapeReservationService(ReservationDao reservationDAO, ReservationTimeDao timeDao) {
         this.reservationDAO = reservationDAO;
         this.timeDao = timeDao;
     }

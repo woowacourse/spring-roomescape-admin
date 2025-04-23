@@ -7,7 +7,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.test.annotation.DirtiesContext;
-import roomescape.controller.RoomescapeReservationRestController;
+import roomescape.controller.ReservationRestController;
 import roomescape.dto.ReservationResponseDto;
 
 import java.lang.reflect.Field;
@@ -189,7 +189,7 @@ public class MissionStepTest {
     }
 
     @Autowired
-    private RoomescapeReservationRestController reservationController;
+    private ReservationRestController reservationController;
 
     @Test
     void 구단계() {

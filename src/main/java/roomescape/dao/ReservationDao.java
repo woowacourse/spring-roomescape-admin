@@ -12,10 +12,10 @@ import java.time.LocalTime;
 import java.util.List;
 
 @Component
-public class ReservationDAO {
+public class ReservationDao {
     private final JdbcTemplate jdbcTemplate;
 
-    public ReservationDAO(JdbcTemplate jdbcTemplate) {
+    public ReservationDao(JdbcTemplate jdbcTemplate) {
         this.jdbcTemplate = jdbcTemplate;
     }
 

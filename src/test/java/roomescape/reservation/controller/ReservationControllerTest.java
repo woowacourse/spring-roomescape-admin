@@ -1,4 +1,4 @@
-package roomescape;
+package roomescape.reservation.controller;
 
 import io.restassured.RestAssured;
 import io.restassured.http.ContentType;
@@ -27,7 +27,7 @@ public class ReservationControllerTest {
     }
 
     @Test
-    @DisplayName("예약을 추가한다")
+    @DisplayName("예약을 추가하면 응답에 ID가 포함되고, 전체 조회 시 포함된다.")
     void createReservation() {
         Map<String, String> params = new HashMap<>();
         params.put("name", "브라운");
@@ -50,7 +50,7 @@ public class ReservationControllerTest {
     }
 
     @Test
-    @DisplayName("예약을 삭제한다")
+    @DisplayName("예약 삭제 후, 조회 결과에 나타나지 않아야 한다.")
     void deleteReservation() {
         createReservation();
 

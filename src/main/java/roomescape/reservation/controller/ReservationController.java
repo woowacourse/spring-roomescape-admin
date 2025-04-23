@@ -1,4 +1,4 @@
-package roomescape;
+package roomescape.reservation.controller;
 
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -8,6 +8,9 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
+import roomescape.reservation.model.Reservation;
+import roomescape.reservation.dao.ReservationDAO;
+import roomescape.reservation.dto.ReservationReqDto;
 
 import java.util.List;
 
@@ -15,24 +18,34 @@ import java.util.List;
 @RequestMapping("/reservations")
 public class ReservationController {
 
-    private final Reservations reservations = new Reservations();
+    private final ReservationDAO reservationDAO;
 
-    @GetMapping
-    public ResponseEntity<List<Reservation>> readAll() {
-        return ResponseEntity.ok(reservations.getAllReservations());
+    public ReservationController(ReservationDAO reservationDAO) {
+        this.reservationDAO = reservationDAO;
     }
 
     @PostMapping
     public ResponseEntity<Reservation> create(@RequestBody ReservationReqDto dto) {
-        Reservation newReservation = dto.toReservation(reservations.generateId());
-        reservations.add(newReservation);
+        Reservation reservationInfo = dto.toEntity();
+        Reservation newReservation = reservationDAO.insert(reservationInfo);
         return ResponseEntity.ok(newReservation);
+    }
+
+    @GetMapping
+    public ResponseEntity<List<Reservation>> findAll() {
+        return ResponseEntity.ok(reservationDAO.selectAll());
+    }
+
+    @GetMapping("/{id}")
+    public ResponseEntity<Reservation> findById(@PathVariable Long id) {
+        Reservation reservation = reservationDAO.selectBy(id);
+        return ResponseEntity.ok(reservation);
     }
 
     @DeleteMapping("/{id}")
     public ResponseEntity<Void> delete(@PathVariable Long id) {
         try {
-            reservations.deleteById(id);
+            reservationDAO.deleteBy(id);
             return ResponseEntity.ok().build();
         } catch (RuntimeException e) {
             return ResponseEntity.badRequest().build();

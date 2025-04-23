@@ -19,7 +19,7 @@ import org.junit.jupiter.api.Test;
 
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.DEFINED_PORT)
 @DirtiesContext(classMode = DirtiesContext.ClassMode.BEFORE_EACH_TEST_METHOD)
-public class JDBCTest {
+public class SpringJdbcTest {
     @Autowired
     private JdbcTemplate jdbcTemplate;
 

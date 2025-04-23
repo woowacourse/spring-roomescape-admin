@@ -25,7 +25,8 @@ import org.springframework.test.annotation.DirtiesContext;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
-import roomescape.config.SpringExtentionTestConfig;
+import org.springframework.transaction.annotation.Transactional;
+import roomescape.config.SpringExtensionTestConfig;
 import roomescape.dto.ReservationRequestDto;
 import roomescape.dto.ReservationResponseDto;
 import roomescape.entity.Reservation;
@@ -36,7 +37,8 @@ import roomescape.service.ReservationService;
 
 
 @ExtendWith(SpringExtension.class)
-@ContextConfiguration(classes = SpringExtentionTestConfig.class)
+@ContextConfiguration(classes = SpringExtensionTestConfig.class)
+@Transactional
 @ActiveProfiles("spring-extension-test")
 @DirtiesContext(classMode = DirtiesContext.ClassMode.BEFORE_EACH_TEST_METHOD)
 public class ReservationControllerSpringExtensionTest {
@@ -55,7 +57,7 @@ public class ReservationControllerSpringExtensionTest {
             ps.setString(1, "15:00");
             return ps;
         }, keyHolder);
-        
+
         ReservationService service = new ReservationService(new ReservationH2Repository(jdbcTemplate));
         controller = new ReservationController(service);
     }

@@ -12,7 +12,7 @@ import org.springframework.transaction.PlatformTransactionManager;
 
 @Configuration
 @Profile("spring-extension-test")
-public class SpringExtentionTestConfig {
+public class SpringExtensionTestConfig {
 
     @Bean
     public DataSource dataSource() {

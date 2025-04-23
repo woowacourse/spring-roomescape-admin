@@ -11,6 +11,8 @@ public class ReservationTime {
     private final LocalTime startAt;
 
     public ReservationTime(Long id, LocalTime startAt) {
+        validateNullId(id);
+        validateNullStartAt(startAt);
         this.id = id;
         this.startAt = startAt;
     }
@@ -39,5 +41,17 @@ public class ReservationTime {
     @Override
     public int hashCode() {
         return Objects.hash(id, startAt);
+    }
+
+    private void validateNullId(Long id) {
+        if (id == null) {
+            throw new IllegalArgumentException("[ERROR] 비어있는 ID로 예약 시간을 생성할 수 없습니다.");
+        }
+    }
+
+    private void validateNullStartAt(LocalTime startAt) {
+        if (startAt == null) {
+            throw new IllegalArgumentException("[ERROR] 비어있는 시작시간으로 예약 시간을 생성할 수 없습니다.");
+        }
     }
 }

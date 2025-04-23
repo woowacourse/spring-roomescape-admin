@@ -60,3 +60,33 @@
 
    3. 예약 취소 API
       - `DELETE` `/reservations/{id}` 로 요청 시 성공 여부 반환
+
+### 시간 API
+   1. 시간 추가 API
+      - `POST` `/times` 로 Resquest와 함께 요청 시 Response 반환
+      - Request
+        ```
+        {
+           "startAt": "10:00"
+        }
+        ```
+      - Response
+        ```
+        {
+           "id": 1,
+           "startAt": "10:00"
+        }
+        ```
+   2. 시간 조회 API
+      - `GET` `/times` 로 Resquest와 함께 요청 시 Response 반환
+      - Response
+        ```
+        [
+           {
+              "id": 1,
+              "startAt": "10:00"
+           }
+        ]
+        ```
+   3. 시간 삭제 API
+      - `DELETE` `/times/{id}` 로 Resquest와 함께 요청 시 Response 반환

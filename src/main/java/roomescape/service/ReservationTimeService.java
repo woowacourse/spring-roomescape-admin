@@ -21,6 +21,13 @@ public class ReservationTimeService {
         return ReservationTimeResponse.fromEntity(savedTime);
     }
 
+    public void deleteTime(Long id) {
+        boolean isDeleted = reservationTimeRepository.delete(id);
+        if (!isDeleted) {
+            throw new IllegalStateException("해당하는 ID가 없습니다");
+        }
+    }
+
     public List<ReservationTimeResponse> getReservationTimes() {
         return reservationTimeRepository.findAll();
     }

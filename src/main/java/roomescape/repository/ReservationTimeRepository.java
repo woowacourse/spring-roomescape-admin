@@ -45,4 +45,12 @@ public class ReservationTimeRepository {
                 }
         );
     }
+
+    public boolean delete(Long id) {
+        int deletedRow = jdbcTemplate.update(
+                "DELETE FROM reservation_time WHERE id = ?",
+                id
+        );
+        return deletedRow == 1;
+    }
 }

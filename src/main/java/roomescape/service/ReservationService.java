@@ -26,7 +26,7 @@ public class ReservationService {
         return ReservationResponse.fromEntity(savedReservation);
     }
 
-    public void deleteReservation(long id) {
+    public void deleteReservation(Long id) {
         boolean isDeleted = reservationRepository.delete(id);
         if (!isDeleted) {
             throw new IllegalStateException("해당하는 id가 없습니다");

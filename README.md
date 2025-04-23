@@ -79,3 +79,24 @@
     ```
     HTTP/1.1 200
     ```
+
+### 데이터베이스
+
+- [ ] h2 데이터베이스를 사용해 데이터를 저장한다.
+  - 데이터베이스 스키마
+    ```
+    CREATE TABLE reservation
+    (
+    id      BIGINT       NOT NULL AUTO_INCREMENT,
+    name    VARCHAR(255) NOT NULL,
+    date    VARCHAR(255) NOT NULL,
+    time    VARCHAR(255) NOT NULL,
+    PRIMARY KEY (id)
+    );
+    ```
+- [ ] API 처리 로직에서 데이터베이스를 활용한다.
+  - [ ] 예약 조회
+  - [ ] 예약 추가
+  - [ ] 예약 취소
+
+ 

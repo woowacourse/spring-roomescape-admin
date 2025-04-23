@@ -34,7 +34,7 @@ public class ReservationJdbcRepository implements ReservationRepository {
 
     public Optional<Reservation> findById(final long id) {
         var sql = """
-            select * from RESERVATION R
+            select R.id, R.name, R.date, R.time_id, RT.start_at from RESERVATION R
             left join RESERVATION_TIME RT on R.time_id = RT.id
             where R.id = ?
             """;
@@ -64,7 +64,7 @@ public class ReservationJdbcRepository implements ReservationRepository {
 
     public List<Reservation> getReservations() {
         var sql = """
-            select * from RESERVATION R
+            select R.id, R.name, R.date, R.time_id, RT.start_at from RESERVATION R
             left join RESERVATION_TIME RT on R.time_id = RT.id
             """;
 

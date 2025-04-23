@@ -6,6 +6,7 @@ import io.restassured.RestAssured;
 import io.restassured.http.ContentType;
 import io.restassured.response.Response;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -23,23 +24,18 @@ class ReservationRestControllerTest {
 
     @BeforeEach
     void setUp() {
-        Map<String, String> params = new HashMap<>();
-        params.put("startAt", TIME1);
-        RestAssured.given().log().all()
-                .contentType(ContentType.JSON)
-                .body(params)
-                .when().post("/times")
-                .then().log().all()
-                .statusCode(HttpStatus.OK.value());
+        List<String> times = List.of(TIME1, TIME2);
 
-        Map<String, String> params2 = new HashMap<>();
-        params2.put("startAt", TIME2);
-        RestAssured.given().log().all()
-                .contentType(ContentType.JSON)
-                .body(params2)
-                .when().post("/times")
-                .then().log().all()
-                .statusCode(HttpStatus.OK.value());
+        for (String time : times) {
+            Map<String, String> params = new HashMap<>();
+            params.put("startAt", time);
+            RestAssured.given().log().all()
+                    .contentType(ContentType.JSON)
+                    .body(params)
+                    .when().post("/times")
+                    .then().log().all()
+                    .statusCode(HttpStatus.OK.value());
+        }
     }
 
     @Test

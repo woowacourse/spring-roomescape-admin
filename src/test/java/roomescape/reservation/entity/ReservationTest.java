@@ -26,5 +26,4 @@ class ReservationTest {
         // then
         assertThat(result).isEqualTo(expected);
     }
-
 }

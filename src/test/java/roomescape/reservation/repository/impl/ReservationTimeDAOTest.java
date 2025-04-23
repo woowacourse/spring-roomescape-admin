@@ -124,10 +124,6 @@ class ReservationTimeDAOTest {
             ReservationTime saved = reservationTimeRepository.save(time);
 
             // then
-            /**
-             * 가져온 ID값에 대하여 SELECT로 재검증을 해야하는가?
-             * 해당 영역은 findById로 테스트할 수 있다고 생각한다. Null 이 아닌 것에 대해서만 검증하면 된다고 느낀다.
-             */
             assertThat(saved.getId()).isNotNull();
             assertThat(saved.getStartAt()).isEqualTo(now);
         }

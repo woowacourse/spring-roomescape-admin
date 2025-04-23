@@ -20,6 +20,10 @@ public class Reservation {
         this.time = time;
     }
 
+    public static Reservation of(final String name, final String date, final String time) {
+        return new Reservation(name, LocalDate.parse(date), LocalTime.parse(time));
+    }
+
     public long getId() {
         return id;
     }

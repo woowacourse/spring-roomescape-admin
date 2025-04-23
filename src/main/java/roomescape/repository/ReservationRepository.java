@@ -35,9 +35,9 @@ public class ReservationRepository {
 
         jdbcTemplate.update(con -> {
             PreparedStatement ps = con.prepareStatement(sql, new String[]{"id"});
-            ps.setString(1, reservation.name());
-            ps.setString(2, reservation.date().toString());
-            ps.setString(3, reservation.time().toString());
+            ps.setString(1, reservation.getName());
+            ps.setString(2, reservation.getDate().toString());
+            ps.setString(3, reservation.getTime().toString());
             return ps;
         }, keyHolder);
 

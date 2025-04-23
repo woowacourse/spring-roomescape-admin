@@ -2,6 +2,7 @@ package roomescape.domain;
 
 import java.time.LocalDate;
 import java.util.Objects;
+import roomescape.exception.InvalidReservationException;
 
 public class Reservation {
 
@@ -20,10 +21,10 @@ public class Reservation {
 
     private void validate() {
         if (name == null || name.isBlank()) {
-            throw new IllegalArgumentException("이름은 공백일 수 없습니다");
+            throw new InvalidReservationException("이름은 공백일 수 없습니다");
         }
         if (date == null || time == null) {
-            throw new IllegalArgumentException("시간은 공백일 수 없습니다.");
+            throw new InvalidReservationException("시간은 공백일 수 없습니다.");
         }
     }
 

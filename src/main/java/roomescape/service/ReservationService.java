@@ -9,6 +9,7 @@ import org.springframework.transaction.annotation.Transactional;
 import roomescape.domain.Reservation;
 import roomescape.domain.ReservationTime;
 import roomescape.dto.AddReservationDto;
+import roomescape.exception.InvalidReservationException;
 import roomescape.repository.ReservationRepository;
 
 @Service
@@ -47,7 +48,7 @@ public class ReservationService {
             isAfterNow = true;
         }
         if (isAfterNow) {
-            throw new IllegalArgumentException("과거 시간에 예약할 수 없습니다.");
+            throw new InvalidReservationException("과거 시간에 예약할 수 없습니다.");
         }
     }
 

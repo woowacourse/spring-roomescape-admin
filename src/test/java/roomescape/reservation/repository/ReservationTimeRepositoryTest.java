@@ -16,7 +16,7 @@ import roomescape.common.exception.AlreadyInUseException;
 import roomescape.common.exception.EntityNotFoundException;
 import roomescape.config.TestConfig;
 import roomescape.reservation.entity.ReservationTime;
-import roomescape.reservation.repository.impl.ReservationTimeRepositoryImpl;
+import roomescape.reservation.repository.impl.ReservationTimeDAO;
 
 class ReservationTimeRepositoryTest {
 
@@ -27,7 +27,7 @@ class ReservationTimeRepositoryTest {
     void init() {
         jdbcTemplate = TestConfig.getJdbcTemplate();
 
-        reservationTimeRepository = new ReservationTimeRepositoryImpl(jdbcTemplate);
+        reservationTimeRepository = new ReservationTimeDAO(jdbcTemplate);
     }
 
     @DisplayName("id에 따라 예약 시간을 반환한다.")

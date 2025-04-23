@@ -26,7 +26,6 @@ public class ReservationTimeController {
     public ResponseEntity<ReservationTime> saveTime(@RequestBody CreateTimeRequest createTimeRequest) {
         final ReservationTime reservationTime = reservationTimeService.saveTime(createTimeRequest.startAt());
         return ResponseEntity.ok(reservationTime);
-
     }
 
     @GetMapping

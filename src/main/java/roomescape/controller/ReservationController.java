@@ -1,7 +1,7 @@
 package roomescape.controller;
 
-import java.time.LocalDate;
 import java.time.LocalTime;
+import java.time.format.DateTimeFormatter;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -17,8 +17,10 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import roomescape.domain.Reservation;
+import roomescape.domain.ReservationTime;
 import roomescape.dto.ReservationRequest;
 import roomescape.dto.ReservationResponse;
+import roomescape.dto.ReservationTimeResponse;
 
 @Controller
 @RequestMapping("/reservations")
@@ -34,40 +36,66 @@ public class ReservationController {
             .usingGeneratedKeyColumns("id");
     }
 
-    //TODO: Dto로 변경
     @GetMapping
-    public ResponseEntity<List<Reservation>> getAll() {
-        List<Reservation> reservationResponses = jdbcTemplate.query(
-            "select * from reservation",
+    public ResponseEntity<List<ReservationResponse>> getAll() {
+        List<ReservationResponse> reservationResponses = jdbcTemplate.query(
+            "SELECT "
+                + "r.id as reservation_id, "
+                + "r.name, "
+                + "r.date, "
+                + "t.id as time_id, "
+                + "t.start_at as time_value "
+                + "FROM reservation as r "
+                + "inner join reservation_time as t "
+                + "on r.time_id = t.id",
             (resultSet, rowNum) ->
-            {
-                LocalDate date = LocalDate.parse(resultSet.getString("date"));
-                LocalTime time = LocalTime.parse(resultSet.getString("time"));
-                return new Reservation(
-                    resultSet.getLong("id"),
+                new ReservationResponse(
+                    resultSet.getLong("reservation_id"),
                     resultSet.getString("name"),
-                    date,
-                    time
-                );
-            });
+                    resultSet.getString("date"),
+                    new ReservationTimeResponse(
+                        resultSet.getLong("time_id"),
+                        LocalTime.parse(
+                            resultSet.getString("time_value"),
+                            DateTimeFormatter.ofPattern("HH:mm")
+                        )
+                    )
+                )
+        );
         return ResponseEntity.ok().body(reservationResponses);
     }
 
     @Transactional
     @PostMapping
     public ResponseEntity<ReservationResponse> create(@RequestBody ReservationRequest request) {
-        Reservation reservation = new Reservation(request.name(), request.date(), request.time());
+        ReservationTime reservationTime = jdbcTemplate.queryForObject(
+            "select * from reservation_time where id = ?",
+            (resultSet, rowNum) ->
+                new ReservationTime(
+                    request.timeId(),
+                    LocalTime.parse(
+                        resultSet.getString("start_at"),
+                        DateTimeFormatter.ofPattern("HH:mm")
+                    )
+                ),
+            request.timeId()
+        );
+        Reservation reservation = new Reservation(request.name(), request.date(), reservationTime);
         Map<String, Object> parameters = new HashMap<>();
         parameters.put("name", reservation.getName());
-        parameters.put("date", reservation.getDate().toString());
-        parameters.put("time", reservation.getTime().toString());
+        parameters.put("date", reservation.getDate());
+        parameters.put("time_id", reservationTime.getId());
         Long id = simpleJdbcInsert.executeAndReturnKey(parameters).longValue();
-        return ResponseEntity.ok().body(new ReservationResponse(
-            id,
-            reservation.getName(),
-            reservation.getDate(),
-            reservation.getTime()
-        ));
+        return ResponseEntity.ok().body(
+            new ReservationResponse(
+                id,
+                reservation.getName(),
+                reservation.getDate(),
+                new ReservationTimeResponse(
+                    reservationTime.getId(),
+                    reservationTime.getStartAt()
+                )
+            ));
     }
 
     @DeleteMapping("/{id}")

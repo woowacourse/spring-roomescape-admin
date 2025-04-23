@@ -20,7 +20,7 @@ public class ReservationService {
         this.repository = repository;
     }
 
-    public List<ReservationResponse> get() {
+    public List<ReservationResponse> getAll() {
         return repository.findAll().stream()
                 .map(ReservationResponse::from)
                 .toList();

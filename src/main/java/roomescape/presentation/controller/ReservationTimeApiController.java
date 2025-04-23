@@ -11,36 +11,30 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import roomescape.presentation.dto.ReservationTimeRequestDto;
 import roomescape.presentation.dto.ReservationTimeResponseDto;
-import roomescape.domain.ReservationTime;
-import roomescape.persist.repository.ReservationTimeRepository;
+import roomescape.service.ReservationTimeService;
 
 @RestController
 @RequestMapping("/times")
 public final class ReservationTimeApiController {
 
-    private final ReservationTimeRepository reservationTimeRepository;
+    private final ReservationTimeService reservationService;
 
-    public ReservationTimeApiController(ReservationTimeRepository reservationTimeRepository) {
-        this.reservationTimeRepository = reservationTimeRepository;
+    public ReservationTimeApiController(ReservationTimeService reservationService) {
+        this.reservationService = reservationService;
     }
 
     @GetMapping
     public List<ReservationTimeResponseDto> reservationTimes() {
-        return reservationTimeRepository.findAll().stream()
-                .map(reservationTime -> new ReservationTimeResponseDto(
-                        reservationTime.getId(),
-                        reservationTime.getStartTime()))
-                .toList();
+        return reservationService.getAllReservationTimes();
     }
 
     @PostMapping
     public ReservationTimeResponseDto create(@Valid @RequestBody ReservationTimeRequestDto reservationTimeRequestDto) {
-        ReservationTime reservationTime = reservationTimeRepository.add(new ReservationTime(reservationTimeRequestDto.startAt()));
-        return new ReservationTimeResponseDto(reservationTime.getId(), reservationTime.getStartTime());
+        return reservationService.addReservationTime(reservationTimeRequestDto);
     }
 
     @DeleteMapping("/{id}")
-    public void delete(@PathVariable int id) {
-        reservationTimeRepository.removeById(id);
+    public void delete(@PathVariable Long id) {
+        reservationService.deleteReservationTime(id);
     }
 }

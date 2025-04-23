@@ -32,6 +32,7 @@ import roomescape.entity.Reservation;
 import roomescape.entity.ReservationTime;
 import roomescape.exceptions.EntityNotFoundException;
 import roomescape.repository.ReservationH2Repository;
+import roomescape.service.ReservationService;
 
 
 @ExtendWith(SpringExtension.class)
@@ -54,7 +55,9 @@ public class ReservationControllerSpringExtensionTest {
             ps.setString(1, "15:00");
             return ps;
         }, keyHolder);
-        controller = new ReservationController(new ReservationH2Repository(jdbcTemplate));
+        
+        ReservationService service = new ReservationService(new ReservationH2Repository(jdbcTemplate));
+        controller = new ReservationController(service);
     }
 
     @Test

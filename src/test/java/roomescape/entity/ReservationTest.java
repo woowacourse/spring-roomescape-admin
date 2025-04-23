@@ -41,7 +41,7 @@ public class ReservationTest {
     }
 
     @Test
-    @DisplayName("null이나 공백을 입력할 경우, 예외가 발생한다.")
+    @DisplayName("time 값이 null이나 공백을 입력할 경우, 예외가 발생한다.")
     void error_validationTime() {
         //given
         ReservationTime time = null;

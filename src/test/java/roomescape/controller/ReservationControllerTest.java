@@ -29,6 +29,7 @@ import roomescape.entity.Reservation;
 import roomescape.entity.ReservationTime;
 import roomescape.exceptions.EntityNotFoundException;
 import roomescape.repository.ReservationH2Repository;
+import roomescape.service.ReservationService;
 
 public class ReservationControllerTest {
 
@@ -52,8 +53,8 @@ public class ReservationControllerTest {
             return ps;
         }, keyHolder);
 
-        controller = new ReservationController(
-                new ReservationH2Repository(jdbcTemplate));
+        ReservationService service = new ReservationService(new ReservationH2Repository(jdbcTemplate));
+        controller = new ReservationController(service);
     }
 
     @BeforeEach

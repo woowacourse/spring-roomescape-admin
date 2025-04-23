@@ -28,6 +28,15 @@ public class H2ReservationTimeDao implements ReservationTimeDao {
     }
 
     @Override
+    public ReservationTime findById(final Long id) {
+        String sql = "SELECT id, start_at FROM reservation_time WHERE id = ?";
+        return jdbcTemplate.queryForObject(sql, (resultSet, rowNum) -> ReservationTime.of(
+                resultSet.getLong("id"),
+                resultSet.getObject("start_at", LocalTime.class)
+        ), id);
+    }
+
+    @Override
     public ReservationTime insert(final ReservationTime reservationTime) {
         SimpleJdbcInsert simpleJdbcInsert = new SimpleJdbcInsert(jdbcTemplate)
                 .withTableName("reservation_time")

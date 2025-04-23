@@ -31,7 +31,14 @@ class H2ReservationTimeDaoTest {
 
     @Test
     void 모든_예약시간을_조회한다() {
-        assertThat(reservationTimeDao.findAll()).hasSize(0);
+        assertThat(reservationTimeDao.findAll()).hasSize(1);
+    }
+
+    @Test
+    void 특정_예약시간을_조회한다() {
+        ReservationTime reservationTime = ReservationTime.of(LocalTime.of(10, 0));
+        ReservationTime savedReservationTime = reservationTimeDao.insert(reservationTime);
+        assertThat(reservationTimeDao.findById(savedReservationTime.getId())).isEqualTo(savedReservationTime);
     }
 
     @Test
@@ -49,6 +56,6 @@ class H2ReservationTimeDaoTest {
 
     @Test
     void 특정_예약시간을_취소했을때_예약이_없으면_false를_반환한다() {
-        assertThat(reservationTimeDao.deleteById(1L)).isFalse();
+        assertThat(reservationTimeDao.deleteById(2L)).isFalse();
     }
 }

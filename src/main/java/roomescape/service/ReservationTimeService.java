@@ -14,8 +14,9 @@ public class ReservationTimeService {
 
     private final ReservationTimeRepository reservationTimeRepository;
 
-    public ReservationTime saveTime(final LocalTime time) {
-        return reservationTimeRepository.save(time);
+    public ReservationTimeResponse saveTime(final LocalTime time) {
+        final ReservationTime reservationTime = reservationTimeRepository.save(time);
+        return new ReservationTimeResponse(reservationTime);
     }
 
     public List<ReservationTimeResponse> findAll() {

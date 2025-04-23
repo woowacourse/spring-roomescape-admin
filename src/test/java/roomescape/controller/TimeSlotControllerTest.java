@@ -16,16 +16,17 @@ class TimeSlotControllerTest {
     @DisplayName("예약 시간을 추가할 수 있다.")
     void createTimeSlot() {
         //given
-        final var controller = new TimeSlotController(new TimeSlotFakeRepository());
+        var controller = new TimeSlotController(new TimeSlotFakeRepository());
+        var request = new CreateTimeSlotRequest(LocalTime.of(10, 0));
 
         //when
-        final var responseEntity = controller.create(new CreateTimeSlotRequest(LocalTime.of(10, 0)));
-        final var timeSlots = controller.getAllTimeSlots();
+        var responseEntity = controller.create(request);
 
         //then
+        var timeSlotList = controller.getAllTimeSlots().getBody();
         assertAll(
             () -> assertThat(responseEntity.getStatusCode()).isEqualTo(HttpStatus.OK),
-            () -> assertThat(timeSlots.getBody()).hasSize(1)
+            () -> assertThat(timeSlotList).hasSize(1)
         );
     }
 
@@ -33,14 +34,14 @@ class TimeSlotControllerTest {
     @DisplayName("예약 시간을 삭제할 수 있다.")
     void deleteTimeSlot() {
         //given
-        final var controller = new TimeSlotController(new TimeSlotFakeRepository());
-        final var createRequest = new CreateTimeSlotRequest(LocalTime.of(10, 0));
-        final var createdTimeSlot = controller.create(createRequest).getBody();
+        var controller = new TimeSlotController(new TimeSlotFakeRepository());
+        var createRequest = new CreateTimeSlotRequest(LocalTime.of(10, 0));
+        var createdTimeSlot = controller.create(createRequest).getBody();
 
         //when
-        final var deleteResponse = controller.delete(createdTimeSlot.id());
+        var responseEntity = controller.delete(createdTimeSlot.id());
 
         //then
-        assertThat(deleteResponse.getStatusCode()).isEqualTo(HttpStatus.OK);
+        assertThat(responseEntity.getStatusCode()).isEqualTo(HttpStatus.OK);
     }
 }

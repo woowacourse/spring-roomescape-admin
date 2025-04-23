@@ -24,7 +24,7 @@ public class ReservationFakeRepository implements ReservationRepository {
     }
 
     public long save(CreateReservationRequest request) {
-        Reservation reservation = new Reservation(
+        var reservation = new Reservation(
             index.getAndIncrement(),
             request.name(),
             request.date(),

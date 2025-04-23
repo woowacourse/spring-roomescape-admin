@@ -2,6 +2,9 @@ package roomescape.controller;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertAll;
+import static org.springframework.http.HttpStatus.BAD_REQUEST;
+import static org.springframework.http.HttpStatus.NO_CONTENT;
+import static org.springframework.http.HttpStatus.OK;
 
 import java.time.LocalDate;
 import java.util.stream.Stream;
@@ -11,10 +14,9 @@ import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.Arguments;
 import org.junit.jupiter.params.provider.MethodSource;
-import org.springframework.http.HttpStatus;
-import roomescape.repository.ReservationFakeRepository;
-import roomescape.model.Reservation;
 import roomescape.dto.CreateReservationRequest;
+import roomescape.model.Reservation;
+import roomescape.repository.ReservationFakeRepository;
 
 public class ReservationControllerTest {
 
@@ -31,20 +33,16 @@ public class ReservationControllerTest {
     @DisplayName("예약을 추가할 수 있다.")
     void addReservation() {
         //given
-        final var request = new CreateReservationRequest(
-            "포포",
-            LocalDate.of(2024, 4, 18),
-            timeSlotId
-        );
+        var request = createReservationRequest();
 
         //when
-        final var addResponse = controller.addReservation(request);
+        var responseEntity = controller.addReservation(request);
 
         //then
-        final var reservations = controller.getReservations();
+        var reservationList = controller.getReservations().getBody();
         assertAll(
-            () -> assertThat(addResponse.getStatusCode()).isEqualTo(HttpStatus.OK),
-            () -> assertThat(reservations.getBody()).hasSize(1)
+            () -> assertThat(responseEntity.getStatusCode()).isEqualTo(OK),
+            () -> assertThat(reservationList).hasSize(1)
         );
     }
 
@@ -52,16 +50,16 @@ public class ReservationControllerTest {
     @DisplayName("예약을 삭제할 수 있다.")
     void deleteReservation() {
         //given
-        final var addedReservation = addOneReservation(controller);
+        var addedReservation = addOneReservation(controller);
 
         //when
-        final var deleteResponse = controller.deleteReservation(addedReservation.id());
+        var responseEntity = controller.deleteReservation(addedReservation.id());
 
         //then
-        final var reservations = controller.getReservations();
+        var reservationList = controller.getReservations().getBody();
         assertAll(
-            () -> assertThat(deleteResponse.getStatusCode()).isEqualTo(HttpStatus.OK),
-            () -> assertThat(reservations.getBody()).isEmpty()
+            () -> assertThat(responseEntity.getStatusCode()).isEqualTo(OK),
+            () -> assertThat(reservationList).isEmpty()
         );
     }
 
@@ -70,37 +68,37 @@ public class ReservationControllerTest {
     @DisplayName("예약 추가 시 이름, 날짜, 시간 중 하나라도 없으면 400 Bad Request")
     void badRequestAnyParameterNull(CreateReservationRequest request) {
         //when
-        final var responseEntity = controller.addReservation(request);
+        var responseEntity = controller.addReservation(request);
 
         //then
-        assertThat(responseEntity.getStatusCode()).isEqualTo(HttpStatus.BAD_REQUEST);
+        assertThat(responseEntity.getStatusCode()).isEqualTo(BAD_REQUEST);
     }
 
     @Test
     @DisplayName("예약 추가 시 이름이 잘못된 형식이면 400 Bad Request")
     void badRequestAnyParameterInvalid() {
         //given
-        final var request = new CreateReservationRequest(
+        var request = new CreateReservationRequest(
             "여섯글자이름",
             LocalDate.of(2023, 8, 5),
             timeSlotId
         );
 
         //when
-        final var responseEntity = controller.addReservation(request);
+        var responseEntity = controller.addReservation(request);
 
         //then
-        assertThat(responseEntity.getStatusCode()).isEqualTo(HttpStatus.BAD_REQUEST);
+        assertThat(responseEntity.getStatusCode()).isEqualTo(BAD_REQUEST);
     }
 
     @Test
     @DisplayName("예약 삭제 시 존재하지 않는 Id를 삭제하면 204 No Content")
     void noContentDeleteNotExistId() {
         //when
-        final var responseEntity = controller.deleteReservation(5L);
+        var responseEntity = controller.deleteReservation(5L);
 
         //then
-        assertThat(responseEntity.getStatusCode()).isEqualTo(HttpStatus.NO_CONTENT);
+        assertThat(responseEntity.getStatusCode()).isEqualTo(NO_CONTENT);
     }
 
     public static Stream<Arguments> parametersThatAnyOneIsNull() {
@@ -111,12 +109,16 @@ public class ReservationControllerTest {
         );
     }
 
-    private Reservation addOneReservation(final ReservationController controller) {
-        final var request = new CreateReservationRequest(
+    private CreateReservationRequest createReservationRequest() {
+        return new CreateReservationRequest(
             "포포",
             LocalDate.of(2024, 4, 18),
             timeSlotId
         );
+    }
+
+    private Reservation addOneReservation(final ReservationController controller) {
+        var request = createReservationRequest();
         return controller.addReservation(request).getBody();
     }
 }

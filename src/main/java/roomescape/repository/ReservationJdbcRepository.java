@@ -17,11 +17,11 @@ public class ReservationJdbcRepository implements ReservationRepository {
 
     private static final RowMapper<Reservation> RESERVATION_ROW_MAPPER =
         (rs, rowNum) -> {
-            final var id = rs.getLong("id");
-            final var name = rs.getString("name");
-            final var date = rs.getDate("date").toLocalDate();
-            final var timeSlotId = rs.getLong("time_id");
-            final var time = rs.getTime("start_at").toLocalTime();
+            var id = rs.getLong("id");
+            var name = rs.getString("name");
+            var date = rs.getDate("date").toLocalDate();
+            var timeSlotId = rs.getLong("time_id");
+            var time = rs.getTime("start_at").toLocalTime();
             return new Reservation(id, name, date, new TimeSlot(timeSlotId, time));
         };
 
@@ -33,37 +33,37 @@ public class ReservationJdbcRepository implements ReservationRepository {
     }
 
     public Optional<Reservation> findById(final long id) {
-        final var sql = """
+        var sql = """
             select * from RESERVATION R
             left join RESERVATION_TIME RT on R.time_id = RT.id
             where R.id = ?
             """;
 
-        final var reservations = jdbcTemplate.query(sql, RESERVATION_ROW_MAPPER, id);
-        return reservations.stream().findAny();
+        var reservationList = jdbcTemplate.query(sql, RESERVATION_ROW_MAPPER, id);
+        return reservationList.stream().findAny();
     }
 
     public long save(CreateReservationRequest request) {
-        SimpleJdbcInsert insertActor = new SimpleJdbcInsert(jdbcTemplate);
-        final var generatedKey = insertActor.withTableName("RESERVATION")
+        var insert = new SimpleJdbcInsert(jdbcTemplate);
+        var generatedId = insert.withTableName("RESERVATION")
             .usingGeneratedKeyColumns("id")
             .executeAndReturnKey(Map.of(
                 "name", request.name(),
                 "date", request.date(),
                 "time_id", request.timeSlotId()
             ));
-        return generatedKey.longValue();
+        return generatedId.longValue();
     }
 
     public boolean removeById(long id) {
-        final var sql = "delete from RESERVATION where id = ?";
+        var sql = "delete from RESERVATION where id = ?";
 
-        final var removedRowsCount = jdbcTemplate.update(sql, id);
+        var removedRowsCount = jdbcTemplate.update(sql, id);
         return removedRowsCount > 0;
     }
 
     public List<Reservation> getReservations() {
-        final var sql = """
+        var sql = """
             select * from RESERVATION R
             left join RESERVATION_TIME RT on R.time_id = RT.id
             """;

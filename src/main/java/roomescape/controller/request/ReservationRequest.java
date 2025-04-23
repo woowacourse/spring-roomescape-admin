@@ -6,6 +6,8 @@ import jakarta.validation.constraints.NotNull;
 import java.time.LocalDate;
 import roomescape.controller.response.ReservationTimeResponse;
 import roomescape.domain.Reservation;
+import roomescape.domain.ReservationDate;
+import roomescape.domain.ReservationName;
 import roomescape.domain.ReservationTime;
 
 public record ReservationRequest(@NotBlank String name, @Future LocalDate date, @NotNull Long timeId) {
@@ -13,8 +15,8 @@ public record ReservationRequest(@NotBlank String name, @Future LocalDate date, 
     public Reservation toEntity(final Long id, final ReservationTimeResponse timeResponse) {
         return new Reservation(
                 id,
-                name,
-                date,
+                new ReservationName(name),
+                new ReservationDate(date),
                 new ReservationTime(
                         timeResponse.id(),
                         timeResponse.startAt()

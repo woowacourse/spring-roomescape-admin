@@ -8,16 +8,9 @@ public class ReservationTime {
     private final LocalTime startAt;
 
     public ReservationTime(final Long id, final LocalTime startAt) {
-        validateId(id);
         validateStartTime(startAt);
         this.id = id;
         this.startAt = startAt;
-    }
-
-    private void validateId(final Long id) {
-        if (id == null) {
-            throw new IllegalArgumentException("예약 id는 null이 될 수 없습니다.");
-        }
     }
 
     private void validateStartTime(final LocalTime startAt) {

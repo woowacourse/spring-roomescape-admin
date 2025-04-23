@@ -11,6 +11,7 @@ import roomescape.reservation.exception.EntityNotFoundException;
 
 import java.time.LocalTime;
 import java.util.List;
+import java.util.Optional;
 
 @Repository
 public class ReservationTimeInMemoryRepository {
@@ -38,12 +39,20 @@ public class ReservationTimeInMemoryRepository {
         return jdbcTemplate.query(sql, getReservationTimeRowMapper());
     }
 
-    public void delete(Long id) {
+    public void deleteById(Long id) {
         if (!existReservationTime(id)) {
             throw new EntityNotFoundException("삭제할 예약시간이 없습니다.");
         }
         String sql = "DELETE FROM reservation_time WHERE id = :id";
         jdbcTemplate.update(sql, new MapSqlParameterSource("id", id));
+    }
+
+    public Optional<ReservationTime> findById(Long id) {
+        String sql = "SELECT * FROM reservation_time WHERE id = :id";
+
+        ReservationTime reservationTime = jdbcTemplate.queryForObject(
+            sql, new MapSqlParameterSource("id", id), getReservationTimeRowMapper());
+        return Optional.ofNullable(reservationTime);
     }
 
     private boolean existReservationTime(Long id) {

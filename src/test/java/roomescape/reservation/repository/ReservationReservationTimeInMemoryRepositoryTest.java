@@ -64,7 +64,7 @@ class ReservationReservationTimeInMemoryRepositoryTest {
     @Test
     void 존재하지_않는_예약시간을_삭제하는_경우_예외가_발생한다() {
         // when & then
-        assertThatThrownBy(() -> repository.delete(1L))
+        assertThatThrownBy(() -> repository.deleteById(1L))
             .isInstanceOf(EntityNotFoundException.class)
             .hasMessage("삭제할 예약시간이 없습니다.");
     }
@@ -76,7 +76,7 @@ class ReservationReservationTimeInMemoryRepositoryTest {
 
         // when
         Long id = savedTime.getId();
-        repository.delete(id);
+        repository.deleteById(id);
 
         // then
         List<ReservationTime> allReservationTimes = repository.findAll();

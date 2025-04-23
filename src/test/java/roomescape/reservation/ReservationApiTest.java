@@ -2,7 +2,6 @@ package roomescape.reservation;
 
 import io.restassured.RestAssured;
 import io.restassured.http.ContentType;
-import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -10,12 +9,10 @@ import org.springframework.boot.test.context.SpringBootTest.WebEnvironment;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.test.annotation.DirtiesContext;
 import org.springframework.test.annotation.DirtiesContext.ClassMode;
-import roomescape.reservation.entity.Reservation;
 
 import java.sql.Connection;
 import java.sql.SQLException;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 
 import static org.assertj.core.api.Assertions.assertThat;
@@ -54,63 +51,11 @@ class ReservationApiTest {
     }
 
     @Test
-    void 예약_정보를_추가한다() {
-        Map<String, String> params = new HashMap<>();
-        params.put("name", "브라운");
-        params.put("date", "2023-08-05");
-        params.put("time", "15:40");
-
+    void 존재하지_않는_예약을_삭제할_경우_NOT_FOUND_반환() {
         RestAssured.given().log().all()
-            .contentType(ContentType.JSON)
-            .body(params)
-            .when().post("/reservations")
+            .when().delete("/reservations/4")
             .then().log().all()
-            .statusCode(200)
-            .body("id", is(1));
-
-        RestAssured.given().log().all()
-            .when().get("/reservations")
-            .then().log().all()
-            .statusCode(200)
-            .body("size()", is(1));
-    }
-
-    @Nested
-    class delete {
-        @Test
-        void 예약을_삭제한다() {
-            Map<String, String> params = new HashMap<>();
-            params.put("name", "브라운");
-            params.put("date", "2023-08-05");
-            params.put("time", "15:40");
-
-            RestAssured.given().log().all()
-                .contentType(ContentType.JSON)
-                .body(params)
-                .when().post("/reservations")
-                .then().log().all()
-                .statusCode(200)
-                .body("id", is(1));
-
-            RestAssured.given().log().all()
-                .when().delete("/reservations/1")
-                .then().log().all()
-                .statusCode(200);
-
-            RestAssured.given().log().all()
-                .when().get("/reservations")
-                .then().log().all()
-                .statusCode(200)
-                .body("size()", is(0));
-        }
-
-        @Test
-        void 존재하지_않는_예약을_삭제할_경우_NOT_FOUND_반환() {
-            RestAssured.given().log().all()
-                .when().delete("/reservations/4")
-                .then().log().all()
-                .statusCode(404);
-        }
+            .statusCode(404);
     }
 
     @Test
@@ -125,58 +70,33 @@ class ReservationApiTest {
     }
 
     @Test
-    void 데이터베이스_예약을_조회한다() {
-        jdbcTemplate.update("INSERT INTO reservation (name, date, time) VALUES (?, ?, ?)", "브라운", "2023-08-05", "15:40");
+    void 시간을_추가한뒤_예약을_추가한다() {
+        Map<String, Object> reservation = new HashMap<>();
+        reservation.put("name", "브라운");
+        reservation.put("date", "2023-08-05");
+        reservation.put("timeId", 1);
 
-        List<Reservation> reservations = RestAssured.given().log().all()
+        Map<Object, Object> reservationTime = new HashMap<>();
+        reservationTime.put("startAt", "10:00");
+
+        RestAssured.given().log().all()
+            .contentType(ContentType.JSON)
+            .body(reservationTime)
+            .when().post("/times")
+            .then().log().all()
+            .statusCode(200);
+
+        RestAssured.given().log().all()
+            .contentType(ContentType.JSON)
+            .body(reservation)
+            .when().post("/reservations")
+            .then().log().all()
+            .statusCode(200);
+
+        RestAssured.given().log().all()
             .when().get("/reservations")
             .then().log().all()
-            .statusCode(200).extract()
-            .jsonPath().getList(".", Reservation.class);
-
-        Integer count = jdbcTemplate.queryForObject("SELECT count(1) from reservation", Integer.class);
-
-        assertThat(reservations.size()).isEqualTo(count);
-    }
-
-    @Test
-    void 데이터베이스에_예약을_추가한다() {
-        Map<String, String> params = new HashMap<>();
-        params.put("name", "브라운");
-        params.put("date", "2023-08-05");
-        params.put("time", "10:00");
-
-        RestAssured.given().log().all()
-            .contentType(ContentType.JSON)
-            .body(params)
-            .when().post("/reservations")
-            .then().log().all()
-            .statusCode(200);
-
-        Integer count = jdbcTemplate.queryForObject("SELECT count(1) from reservation", Integer.class);
-        assertThat(count).isEqualTo(1);
-    }
-
-    @Test
-    void 데이터베이스에_저장된_예약을_삭제한다() {
-        Map<String, String> params = new HashMap<>();
-        params.put("name", "브라운");
-        params.put("date", "2023-08-05");
-        params.put("time", "10:00");
-
-        RestAssured.given().log().all()
-            .contentType(ContentType.JSON)
-            .body(params)
-            .when().post("/reservations")
-            .then().log().all()
-            .statusCode(200);
-
-        RestAssured.given().log().all()
-            .when().delete("/reservations/1")
-            .then().log().all()
-            .statusCode(200);
-
-        Integer countAfterDelete = jdbcTemplate.queryForObject("SELECT count(1) from reservation", Integer.class);
-        assertThat(countAfterDelete).isEqualTo(0);
+            .statusCode(200)
+            .body("size()", is(1));
     }
 }

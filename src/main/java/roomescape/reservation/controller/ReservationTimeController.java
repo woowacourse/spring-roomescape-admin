@@ -5,18 +5,18 @@ import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 import roomescape.reservation.dto.ReservationTimeRequestDto;
 import roomescape.reservation.dto.ReservationTimeResponseDto;
-import roomescape.reservation.entity.ReservationTime;
-import roomescape.reservation.repository.ReservationTimeInMemoryRepository;
+import roomescape.reservation.service.ReservationService;
+import roomescape.reservation.service.ReservationTimeService;
 
 import java.util.List;
 
 @Controller
 public class ReservationTimeController {
 
-    private final ReservationTimeInMemoryRepository repository;
+    private final ReservationTimeService reservationTimeService;
 
-    public ReservationTimeController(ReservationTimeInMemoryRepository repository) {
-        this.repository = repository;
+    public ReservationTimeController(ReservationTimeService reservationTimeService, ReservationService reservationService) {
+        this.reservationTimeService = reservationTimeService;
     }
 
     @GetMapping("/admin/time")
@@ -26,24 +26,17 @@ public class ReservationTimeController {
 
     @PostMapping("/times")
     public ResponseEntity<ReservationTimeResponseDto> add(@RequestBody ReservationTimeRequestDto requestDto) {
-        ReservationTime reservationTime = new ReservationTime(requestDto.startAt());
-        ReservationTime savedReservationTime = repository.save(reservationTime);
-        return ResponseEntity.ok(ReservationTimeResponseDto.toDto(savedReservationTime));
+        return ResponseEntity.ok(reservationTimeService.add(requestDto));
     }
 
     @GetMapping("/times")
     public ResponseEntity<List<ReservationTimeResponseDto>> findAll() {
-        List<ReservationTime> times = repository.findAll();
-        List<ReservationTimeResponseDto> allReservationTimes = times.stream()
-            .map(ReservationTimeResponseDto::toDto)
-            .toList();
-
-        return ResponseEntity.ok(allReservationTimes);
+        return ResponseEntity.ok(reservationTimeService.findAll());
     }
 
     @DeleteMapping("/times/{id}")
     public ResponseEntity<Void> delete(@PathVariable("id") Long id) {
-        repository.delete(id);
+        reservationTimeService.deleteById(id);
         return ResponseEntity.ok().build();
     }
 }

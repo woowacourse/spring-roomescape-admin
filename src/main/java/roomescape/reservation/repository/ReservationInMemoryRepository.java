@@ -7,6 +7,7 @@ import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
 import org.springframework.jdbc.support.GeneratedKeyHolder;
 import org.springframework.stereotype.Repository;
 import roomescape.reservation.entity.Reservation;
+import roomescape.reservation.entity.ReservationTime;
 import roomescape.reservation.exception.EntityNotFoundException;
 
 import java.time.LocalDate;
@@ -25,19 +26,19 @@ public class ReservationInMemoryRepository implements ReservationRepository {
 
     @Override
     public List<Reservation> findAll() {
-        String sql = "SELECT * FROM reservation";
+        String sql = "SELECT r.id AS resservation_id, r.name, r.date, t.id AS time_id, t.start_at AS time_value FROM reservation r JOIN reservation_time t ON r.id = t.id";
         return jdbcTemplate.query(sql, getReservationRowMapper());
     }
 
     @Override
     public Reservation save(Reservation reservation) {
-        String sql = "INSERT INTO reservation (name, date, time) VALUES(:name, :date, :time)";
+        String sql = "INSERT INTO reservation (name, date, time_id) VALUES(:name, :date, :time_id)";
         GeneratedKeyHolder keyHolder = new GeneratedKeyHolder();
 
         MapSqlParameterSource mapSqlParameterSource = new MapSqlParameterSource()
             .addValue("name", reservation.getName())
             .addValue("date", reservation.getDate())
-            .addValue("time", reservation.getTime());
+            .addValue("time_id", reservation.getTime().getId());
         jdbcTemplate.update(sql, mapSqlParameterSource, keyHolder);
 
         Number key = keyHolder.getKey();
@@ -65,7 +66,10 @@ public class ReservationInMemoryRepository implements ReservationRepository {
             resultSet.getLong("id"),
             resultSet.getString("name"),
             resultSet.getObject("date", LocalDate.class),
-            resultSet.getObject("time", LocalTime.class)
+            new ReservationTime(
+                resultSet.getLong("time_id"),
+                resultSet.getObject("time_value", LocalTime.class)
+            )
         );
     }
 }

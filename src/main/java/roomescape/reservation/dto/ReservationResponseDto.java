@@ -3,12 +3,12 @@ package roomescape.reservation.dto;
 import roomescape.reservation.entity.Reservation;
 
 import java.time.LocalDate;
-import java.time.LocalTime;
 
-public record ReservationResponseDto(Long id, String name, LocalDate date, LocalTime time) {
+public record ReservationResponseDto(Long id, String name, LocalDate date, ReservationTimeResponseDto time) {
 
     public static ReservationResponseDto toDto(Reservation reservation) {
         return new ReservationResponseDto(
-            reservation.getId(), reservation.getName(), reservation.getDate(), reservation.getTime());
+            reservation.getId(), reservation.getName(), reservation.getDate(),
+            ReservationTimeResponseDto.toDto(reservation.getTime()));
     }
 }

@@ -28,9 +28,10 @@ public class ReservationService {
     service는 by-pass만 해주면 되니까
     또 service 계층에선 reservation id를 못만드네 생각해보니까
      */
-    public Reservation createReservation(CreateReservationDto createReservationDto) {
+    public ReservationResponseDto createReservation(CreateReservationDto createReservationDto) {
         Long id = reservationRepository.addAndGetId(createReservationDto);
-        return reservationRepository.findById(id);
+        Reservation reservation = reservationRepository.findById(id);
+        return ReservationResponseDto.from(reservation);
     }
 
     public void deleteReservation(Long id) {

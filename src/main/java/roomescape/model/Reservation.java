@@ -2,13 +2,10 @@ package roomescape.model;
 
 import java.time.LocalDate;
 
-import com.fasterxml.jackson.annotation.JsonProperty;
-
 public record Reservation(
     Long id,
     String name,
     LocalDate date,
-    @JsonProperty("time")
     ReservationTime reservationTime
 ) implements Entity<Reservation> {
 

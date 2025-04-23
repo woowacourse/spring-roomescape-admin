@@ -13,8 +13,8 @@ import org.springframework.web.bind.annotation.RestController;
 
 import jakarta.validation.Valid;
 import roomescape.dto.ReservationRequest;
+import roomescape.dto.ReservationResponse;
 import roomescape.model.Reservation;
-import roomescape.model.ReservationTime;
 import roomescape.repository.ReservationRepository;
 import roomescape.repository.ReservationTimeRepository;
 
@@ -32,16 +32,20 @@ public class ReservationController {
     }
 
     @GetMapping
-    public ResponseEntity<List<Reservation>> reservations() {
-        return ResponseEntity.ok(reservationRepository.getAll());
+    public ResponseEntity<List<ReservationResponse>> reservations() {
+        var response = reservationRepository.getAll().stream()
+            .map(ReservationResponse::from)
+            .toList();
+        return ResponseEntity.ok(response);
     }
 
     @PostMapping
-    public ResponseEntity<Reservation> createReservation(@RequestBody @Valid ReservationRequest request) {
-        ReservationTime reservationTime = reservationTimeRepository.findById(request.timeId())
+    public ResponseEntity<ReservationResponse> createReservation(@RequestBody @Valid ReservationRequest request) {
+        var reservationTime = reservationTimeRepository.findById(request.timeId())
             .orElseThrow(() -> new IllegalArgumentException("[ERROR] 존재하지 않는 예약 시간입니다."));
-        return ResponseEntity.ok(reservationRepository.save(new Reservation(request.id(), request.name(),
-            request.date(), reservationTime)));
+        var saved = reservationRepository.save(new Reservation(request.id(), request.name(),
+            request.date(), reservationTime));
+        return ResponseEntity.ok(ReservationResponse.from(saved));
     }
 
     @DeleteMapping("/{reservationId}")

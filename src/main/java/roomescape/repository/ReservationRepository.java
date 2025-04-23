@@ -21,7 +21,7 @@ public class ReservationRepository {
         this.jdbcTemplate = jdbcTemplate;
     }
 
-    private final RowMapper<Reservation> reservationRowMapper = (row, rowNum) ->
+    private static final RowMapper<Reservation> reservationRowMapper = (row, rowNum) ->
             new Reservation(row.getLong("id"),
                     row.getString("name"),
                     row.getDate("date").toLocalDate(),
@@ -49,7 +49,7 @@ public class ReservationRepository {
         return jdbcTemplate.queryForObject(sql, reservationRowMapper, id);
     }
 
-    public void removeById(final Long id) {
+    public void deleteById(final Long id) {
         String sql = "DELETE FROM RESERVATION WHERE ID = ?";
         int updatedRow = jdbcTemplate.update(sql, id);
         if (updatedRow == 0) {

@@ -22,7 +22,6 @@ public class ReservationService {
 
     public Reservation addReservation(final ReservationCreateRequest reservationCreateRequest) {
         Long id = reservationRepository.add(reservationCreateRequest);
-
         return reservationRepository.findById(id);
     }
 
@@ -31,6 +30,6 @@ public class ReservationService {
     }
 
     public void deleteReservationById(final Long id) {
-        reservationRepository.removeById(id);
+        reservationRepository.deleteById(id);
     }
 }

@@ -8,32 +8,32 @@ import javax.sql.DataSource;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.simple.SimpleJdbcInsert;
 import org.springframework.stereotype.Repository;
-import roomescape.reservation.model.Time;
-import roomescape.reservation.model.TimeDetails;
+import roomescape.reservation.model.ReservationTime;
+import roomescape.reservation.model.ReservationTimeDetails;
 
 @Repository
-public class TimeRepository {
+public class ReservationTimeRepository {
 
     private final JdbcTemplate jdbcTemplate;
     private final SimpleJdbcInsert simpleJdbcInsert;
 
-    public TimeRepository(DataSource dataSource) {
+    public ReservationTimeRepository(DataSource dataSource) {
         this.jdbcTemplate = new JdbcTemplate(dataSource);
         this.simpleJdbcInsert = new SimpleJdbcInsert(dataSource)
                 .withTableName("reservation_time")
                 .usingGeneratedKeyColumns("id");
     }
 
-    public Time insertTime(TimeDetails timeDetails) {
+    public ReservationTime insertTime(ReservationTimeDetails reservationTimeDetails) {
         Map<String, Object> parameters = new HashMap<>();
-        parameters.put("start_at", timeDetails.startAt());
+        parameters.put("start_at", reservationTimeDetails.startAt());
         Number number = simpleJdbcInsert.executeAndReturnKey(parameters);
-        return new Time(number.longValue(), timeDetails.startAt());
+        return new ReservationTime(number.longValue(), reservationTimeDetails.startAt());
     }
 
-    public List<Time> findAll() {
+    public List<ReservationTime> findAll() {
         String sql = "Select * from reservation_time";
-        return jdbcTemplate.query(sql, (resultSet, rowNum) -> new Time(
+        return jdbcTemplate.query(sql, (resultSet, rowNum) -> new ReservationTime(
                 resultSet.getLong("id"),
                 resultSet.getObject("start_at", LocalTime.class)
         ));

@@ -2,7 +2,7 @@ package roomescape.reservation.model;
 
 import java.time.LocalTime;
 
-public record TimeDetails(
+public record ReservationTimeDetails(
         LocalTime startAt
 ) {
 }

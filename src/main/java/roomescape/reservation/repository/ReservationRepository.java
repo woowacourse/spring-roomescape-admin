@@ -40,7 +40,8 @@ public class ReservationRepository {
         parameters.put("date", reservationDetails.date());
         parameters.put("time", reservationDetails.time());
         Number number = simpleJdbcInsert.executeAndReturnKey(parameters);
-        return new Reservation(number.longValue(), reservationDetails);
+        return new Reservation(number.longValue(), reservationDetails.name(), reservationDetails.date(),
+                reservationDetails.time());
     }
 
     public boolean deleteReservationById(long id) {

@@ -1,4 +1,4 @@
-package roomescape.reservation;
+package roomescape.reservation.repository;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
@@ -12,7 +12,6 @@ import org.springframework.boot.test.autoconfigure.jdbc.JdbcTest;
 import org.springframework.context.annotation.Import;
 import roomescape.reservation.model.Reservation;
 import roomescape.reservation.model.ReservationDetails;
-import roomescape.reservation.repository.ReservationRepository;
 
 @JdbcTest(properties = "application-test.properties")
 @Import(ReservationRepository.class)
@@ -21,12 +20,13 @@ class ReservationRepositoryTest {
     @Autowired
     private ReservationRepository reservationRepository;
 
+    ReservationDetails reservationDetails = new ReservationDetails("test", LocalDate.of(2024, 12, 1),
+            LocalTime.of(12, 1));
+
     @DisplayName("전체 예약 리스트 불러온다.")
     @Test
     void findAll() {
         // given
-        ReservationDetails reservationDetails = new ReservationDetails("test", LocalDate.of(2024, 12, 1),
-                LocalTime.of(12, 1));
         reservationRepository.insertReservation(reservationDetails);
 
         // when
@@ -43,10 +43,6 @@ class ReservationRepositoryTest {
     @DisplayName("예약을 추가한다.")
     @Test
     void insertReservation() {
-        // given
-        ReservationDetails reservationDetails = new ReservationDetails("test", LocalDate.of(2024, 12, 1),
-                LocalTime.of(12, 1));
-
         // when
         Reservation reservation = reservationRepository.insertReservation(reservationDetails);
 
@@ -61,13 +57,10 @@ class ReservationRepositoryTest {
     @Test
     void deleteReservationById_existId() {
         // given
-        ReservationDetails reservationDetails = new ReservationDetails("test", LocalDate.of(2024, 12, 1),
-                LocalTime.of(12, 1));
-        reservationRepository.insertReservation(reservationDetails);
-        long id = 1L;
+        Reservation reservation = reservationRepository.insertReservation(reservationDetails);
 
         // when
-        boolean isDeleted = reservationRepository.deleteReservationById(id);
+        boolean isDeleted = reservationRepository.deleteReservationById(reservation.getId());
 
         // then
         assertThat(isDeleted).isTrue();

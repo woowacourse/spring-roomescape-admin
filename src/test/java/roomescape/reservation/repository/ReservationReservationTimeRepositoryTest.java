@@ -9,26 +9,26 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.jdbc.JdbcTest;
 import org.springframework.context.annotation.Import;
-import roomescape.reservation.model.Time;
-import roomescape.reservation.model.TimeDetails;
+import roomescape.reservation.model.ReservationTime;
+import roomescape.reservation.model.ReservationTimeDetails;
 
 @JdbcTest(properties = "application-test.properties")
-@Import(TimeRepository.class)
-class TimeRepositoryTest {
+@Import(ReservationTimeRepository.class)
+class ReservationReservationTimeRepositoryTest {
 
     @Autowired
-    TimeRepository timeRepository;
+    ReservationTimeRepository reservationTimeRepository;
 
-    TimeDetails timeDetails = new TimeDetails(LocalTime.of(12, 0));
+    ReservationTimeDetails reservationTimeDetails = new ReservationTimeDetails(LocalTime.of(12, 0));
 
     @DisplayName("Time을 추가한다.")
     @Test
     void insertTime() {
         // when
-        Time time = timeRepository.insertTime(timeDetails);
+        ReservationTime reservationTime = reservationTimeRepository.insertTime(reservationTimeDetails);
 
         // then
-        assertThat(time)
+        assertThat(reservationTime)
                 .hasFieldOrPropertyWithValue("startAt", LocalTime.of(12, 0));
     }
 
@@ -36,10 +36,10 @@ class TimeRepositoryTest {
     @Test
     void deleteById() {
         // given
-        Time time = timeRepository.insertTime(timeDetails);
+        ReservationTime reservationTime = reservationTimeRepository.insertTime(reservationTimeDetails);
 
         // when
-        boolean isDeleted = timeRepository.deleteTimeById(time.getId());
+        boolean isDeleted = reservationTimeRepository.deleteTimeById(reservationTime.getId());
 
         // then
         assertThat(isDeleted).isTrue();
@@ -49,14 +49,14 @@ class TimeRepositoryTest {
     @Test
     void findAll() {
         // given
-        timeRepository.insertTime(timeDetails);
+        reservationTimeRepository.insertTime(reservationTimeDetails);
 
         // when
-        List<Time> times = timeRepository.findAll();
+        List<ReservationTime> reservationTimes = reservationTimeRepository.findAll();
 
         // then
-        assertThat(times).hasSize(1);
-        assertThat(times.getFirst())
+        assertThat(reservationTimes).hasSize(1);
+        assertThat(reservationTimes.getFirst())
                 .hasFieldOrPropertyWithValue("startAt", LocalTime.of(12, 0));
     }
 }

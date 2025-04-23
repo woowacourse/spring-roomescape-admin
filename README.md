@@ -12,11 +12,11 @@
 
 2. 예약 화면
     - `GET /admin/reservation` 요청 시 아래 화면과 같이 예약 관리 페이지 응답
-        - 예약 페이지는 templates/admin/reservation-legacy.html
+        - 예약 페이지는 templates/admin/reservation.html
 
 3. 시간 화면
-    - `GET /admin/time` 요청 시 아래 화면과 같이 시간 관리 페이지 응답
-        - 시간 페이지는 templates/admin/time.html
+    - `GET /admin/reservationTime` 요청 시 아래 화면과 같이 시간 관리 페이지 응답
+        - 시간 페이지는 templates/admin/reservationTime.html
 
 ### 에약
 
@@ -29,13 +29,13 @@
                 "id": 1,
                 "name": "브라운",
                 "date": "2023-01-01",
-                "time": "10:00"
+                "reservationTime": "10:00"
             },
             {
                 "id": 2,
                 "name": "브라운",
                 "date": "2023-01-02",
-                "time": "11:00"
+                "reservationTime": "11:00"
             }
         ]
         ```
@@ -47,7 +47,7 @@
       {
          "date": "2023-08-05",
          "name": "브라운",
-         "time": "15:40"
+         "reservationTime": "15:40"
       }
       ```
     - Response
@@ -56,7 +56,7 @@
          "id": 1,
          "name": "브라운",
          "date": "2023-08-05",
-         "time": "15:40"
+         "reservationTime": "15:40"
       }
       ```
 
@@ -66,7 +66,7 @@
 ### 시간
 
 1. 시간 추가 API
-    - `POST /times` 요청 시 시간 추가 및 response 반환
+    - `POST /reservationTimes` 요청 시 시간 추가 및 response 반환
     - Request
     ```json
     {
@@ -82,12 +82,12 @@
     ```
 
 2. 시간 삭제 API
-    - `DELETE /times/{id}` 요청 시 시간 삭제 및 response 반환
+    - `DELETE /reservationTimes/{id}` 요청 시 시간 삭제 및 response 반환
     - response
         - `204 NoContent`
 
 3. 시간 조회 API
-    - `GET /times` 요청 시 전체 시간 response 반환
+    - `GET /reservationTimes` 요청 시 전체 시간 response 반환
     - response
    ```json
    [

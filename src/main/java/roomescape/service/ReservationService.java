@@ -12,8 +12,13 @@ import roomescape.dto.response.ReservationResponse;
 @Service
 public class ReservationService {
 
-    ReservationDao reservationDao;
-    ReservationTimeDao reservationTimeDao;
+    private final ReservationDao reservationDao;
+    private final ReservationTimeDao reservationTimeDao;
+
+    public ReservationService(final ReservationDao reservationDao, final ReservationTimeDao reservationTimeDao) {
+        this.reservationDao = reservationDao;
+        this.reservationTimeDao = reservationTimeDao;
+    }
 
     public ReservationCreateResponse create(ReservationCreateRequest reservationCreateRequest) {
         ReservationTime time = reservationTimeDao.findById(reservationCreateRequest.timeId());

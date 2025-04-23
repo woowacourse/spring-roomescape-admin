@@ -33,10 +33,11 @@ class ReservationServiceTest {
     @Test
     void 예약_정보를_저장한다() {
         // given
+        final LocalTime time = LocalTime.parse("10:00");
+        reservationTimeService.save(time);
+
         final String name = "헤일러";
         final LocalDate date = LocalDate.parse("2023-08-05");
-        final LocalTime time = LocalTime.parse("15:40");
-        Long tid = reservationTimeService.save(time);
 
         // when & then
         Assertions.assertThatCode(() -> reservationService.save(name, date, time))
@@ -48,6 +49,7 @@ class ReservationServiceTest {
         // given
         final LocalTime time = LocalTime.parse("10:00");
         final LocalTime time2 = LocalTime.parse("18:00");
+
         reservationTimeService.save(time);
         reservationTimeService.save(time2);
 

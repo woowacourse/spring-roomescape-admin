@@ -9,6 +9,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.annotation.DirtiesContext;
 import roomescape.dto.ReservationRequest;
+import roomescape.dto.ReservationTimeRequest;
+import roomescape.dto.ReservationTimeResponse;
 
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.DEFINED_PORT)
 @DirtiesContext(classMode = DirtiesContext.ClassMode.BEFORE_EACH_TEST_METHOD)
@@ -22,11 +24,14 @@ class RoomescapeServiceTest {
     void addReservation() {
         //given
         LocalDate date = LocalDate.of(2025, 4, 16);
-        LocalTime time = LocalTime.of(10, 10);
-        service.addReservation(new ReservationRequest("test", date, time));
+
+        ReservationTimeResponse response = service.addReservationTime(
+                new ReservationTimeRequest(LocalTime.parse("10:10")));
+
+        service.addReservation(new ReservationRequest("test", date, response.id()));
 
         //when & then
-        ReservationRequest duplicated = new ReservationRequest("test2", date, time);
+        ReservationRequest duplicated = new ReservationRequest("test2", date, response.id());
         Assertions.assertThatThrownBy(() -> service.addReservation(duplicated))
                 .isInstanceOf(IllegalArgumentException.class)
                 .hasMessage("[ERROR] 이미 존재하는 예약시간입니다.");

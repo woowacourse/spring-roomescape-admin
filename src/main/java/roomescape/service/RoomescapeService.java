@@ -34,10 +34,14 @@ public class RoomescapeService {
     }
 
     public ReservationResponse addReservation(final ReservationRequest request) {
-        Reservation reservation = request.toReservation();
+        long timeId = request.timeId();
+        ReservationTime time = roomescapeTimeRepository.findById(timeId);
+        Reservation reservation = new Reservation(request.name(), request.date(), time);
+
         if (existsSameReservation(reservation)) {
             throw new IllegalArgumentException("[ERROR] 이미 존재하는 예약시간입니다.");
         }
+
         Reservation saved = roomescapeRepository.saveReservation(reservation);
         return ReservationResponse.of(saved);
     }

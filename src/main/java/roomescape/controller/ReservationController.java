@@ -19,11 +19,11 @@ import roomescape.controller.dto.ReservationResponseDto;
 
 @RestController
 @RequestMapping("/reservations")
-public class RoomescapeController {
+public class ReservationController {
 
     private final ReservationService reservationService;
 
-    public RoomescapeController(ReservationService reservationService) {
+    public ReservationController(ReservationService reservationService) {
         this.reservationService = reservationService;
     }
 

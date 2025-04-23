@@ -56,7 +56,7 @@ class MissionStep2Test {
     void 사단계_데이터베이스_초기설정() {
         try (Connection connection = jdbcTemplate.getDataSource().getConnection()) {
             assertThat(connection).isNotNull();
-            
+
             assertThat(connection.getCatalog()).isEqualTo("ROOMESCAPE");
             assertThat(connection.getMetaData().getTables(null, null, "RESERVATION", null).next()).isTrue();
         } catch (SQLException e) {
@@ -162,7 +162,7 @@ class MissionStep2Test {
 
         RestAssured.given().log().all()
                 .when().get("/reservations")
-                .then().log().all()
+                .then().log().all()a
                 .statusCode(200)
                 .body("size()", is(1));
     }

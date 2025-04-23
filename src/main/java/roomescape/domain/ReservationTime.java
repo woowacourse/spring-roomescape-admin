@@ -11,6 +11,11 @@ public class ReservationTime {
         this.startAt = startAt;
     }
 
+    public static ReservationTime of(final long id, final String startAt) {
+        return new ReservationTime(id, LocalTime.parse(startAt));
+
+    }
+
     public long getId() {
         return id;
     }

@@ -17,15 +17,15 @@ import roomescape.dto.ReservationResponse;
 @RequestMapping("/reservations")
 public class ReservationController {
 
-    private final ReservationDao reservationDAO;
+    private final ReservationDao reservationDao;
 
-    public ReservationController(final ReservationDao reservationDAO) {
-        this.reservationDAO = reservationDAO;
+    public ReservationController(final ReservationDao reservationDao) {
+        this.reservationDao = reservationDao;
     }
 
     @GetMapping
     public List<ReservationResponse> getReservations() {
-        return reservationDAO.getReservations().stream()
+        return reservationDao.getReservations().stream()
                 .map(ReservationResponse::new)
                 .toList();
     }
@@ -34,7 +34,7 @@ public class ReservationController {
     public ReservationResponse createReservation(
             @RequestBody final ReservationRequest reservationRequest
     ) {
-        final Reservation reservation = reservationDAO.createReservation(
+        final Reservation reservation = reservationDao.createReservation(
                 reservationRequest.name(),
                 reservationRequest.date(),
                 reservationRequest.time());
@@ -43,6 +43,6 @@ public class ReservationController {
 
     @DeleteMapping("/{id}")
     public void deleteReservation(@PathVariable("id") final Long id) {
-        reservationDAO.deleteReservationById(id);
+        reservationDao.deleteReservationById(id);
     }
 }

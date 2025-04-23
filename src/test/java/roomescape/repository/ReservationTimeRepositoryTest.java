@@ -19,6 +19,7 @@ public class ReservationTimeRepositoryTest {
     @Autowired
     private ReservationTimeRepository reservationTimeRepository;
 
+
     @Test
     @DisplayName("시간을 추가한다.")
     void addReservationTimeTest(){
@@ -36,7 +37,11 @@ public class ReservationTimeRepositoryTest {
     @Test
     @DisplayName("전체 시간 목록을 가져온다.")
     void getAllReservationTimesTest(){
-        // given
+
+        //beforeEach
+        jdbcTemplate.update("INSERT INTO reservation_time (start_at) VALUES (?)", "10:00");
+
+        //given
         // when
         List<ReservationTime> reservationTimes = reservationTimeRepository.findAll();
 
@@ -45,5 +50,10 @@ public class ReservationTimeRepositoryTest {
             softAssertions.assertThat(reservationTimes).hasSize(1);
             softAssertions.assertThat(reservationTimes.getFirst().getStartAt()).isEqualTo(LocalTime.of(10, 0));
         });
+
+        //afterEach
+        jdbcTemplate.update("DELETE FROM reservation_time");
+        jdbcTemplate.update("ALTER TABLE reservation_time ALTER COLUMN id RESTART WITH 1");
     }
+
 }

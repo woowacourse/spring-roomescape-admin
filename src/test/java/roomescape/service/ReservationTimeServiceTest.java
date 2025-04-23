@@ -7,7 +7,6 @@ import org.assertj.core.api.Assertions;
 import org.assertj.core.api.SoftAssertions;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
-import roomescape.dto.ReservationRequest;
 import roomescape.dto.ReservationTimeRequest;
 import roomescape.dto.ReservationTimeResponse;
 import roomescape.entity.ReservationTime;
@@ -33,13 +32,14 @@ public class ReservationTimeServiceTest {
     @Test
     @DisplayName("전체 시간 목록을 가져온다")
     void getAllReservationTime(){
+
         // given
         // when
         List<ReservationTimeResponse> reservationTimeResponses  = reservationTimeService.getAllReservationTime();
         // then
         SoftAssertions.assertSoftly(softAssertions -> {
             softAssertions.assertThat(reservationTimeResponses).hasSize(1);
-            softAssertions.assertThat(reservationTimeResponses.getFirst().startAt()).isEqualTo(LocalTime.of(10,0));
+            softAssertions.assertThat(reservationTimeResponses.getFirst().startAt()).isEqualTo(LocalTime.of(22,0));
         });
     }
 
@@ -47,6 +47,10 @@ public class ReservationTimeServiceTest {
     static class FakeReservationTimeRepository implements ReservationTimeRepository {
 
         List<ReservationTime> reservationTimes = new ArrayList<>();
+
+        public FakeReservationTimeRepository() {
+            reservationTimes.add(new ReservationTime(LocalTime.of(22, 0)));
+        }
 
         @Override
         public ReservationTime save(ReservationTime reservationTime) {

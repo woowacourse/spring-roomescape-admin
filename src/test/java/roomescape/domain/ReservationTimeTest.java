@@ -7,20 +7,20 @@ import org.junit.jupiter.api.Test;
 
 class ReservationTimeTest {
 
-    @DisplayName("같은 시간인지 확인한다.")
+    @DisplayName("같은 시간 여부를 검증한다.")
     @Test
     void isSameTime() {
         //given
-        ReservationTime time1 = ReservationTime.parse("10:30");
-        ReservationTime time2 = ReservationTime.parse("10:30");
-        ReservationTime time3 = ReservationTime.parse("10:31");
+        ReservationTime time = ReservationTime.parse("10:30");
+        ReservationTime sameTime = ReservationTime.parse("10:30");
+        ReservationTime anotherTime = ReservationTime.parse("10:31");
 
         //when
-        boolean sameTime = time1.isSameTime(time2);
-        boolean isNotSameTime = time2.isSameTime(time3);
+        boolean isSameTime = time.isSameTime(sameTime);
+        boolean isNotSameTime = sameTime.isSameTime(anotherTime);
 
         //then
-        assertThat(sameTime).isTrue();
+        assertThat(isSameTime).isTrue();
         assertThat(isNotSameTime).isFalse();
     }
 }

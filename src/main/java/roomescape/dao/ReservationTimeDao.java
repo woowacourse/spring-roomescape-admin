@@ -14,6 +14,7 @@ import roomescape.domain.ReservationTimes;
 public class ReservationTimeDao {
 
     private static final String FIND_ALL_SQL = "select * from reservation_time";
+    private static final String FIND_BY_ID_SQL = "select * from reservation_time where id = ?";
     private static final String DELETE_BY_ID_SQL = "delete from reservation_time where id = ?";
     private static final RowMapper<ReservationTime> RESERVATION_TIME_ROW_MAPPER = (resultSet, row) ->
             new ReservationTime(
@@ -32,6 +33,14 @@ public class ReservationTimeDao {
                 FIND_ALL_SQL,
                 RESERVATION_TIME_ROW_MAPPER
         ));
+    }
+
+    public ReservationTime findById(Long id) {
+        return jdbcTemplate.queryForObject(
+                FIND_BY_ID_SQL,
+                RESERVATION_TIME_ROW_MAPPER,
+                id
+        );
     }
 
     public ReservationTime save(ReservationTime reservationTime) {

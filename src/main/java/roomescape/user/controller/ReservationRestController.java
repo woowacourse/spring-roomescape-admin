@@ -41,7 +41,7 @@ public class ReservationRestController {
         final Long id = reservationService.save(
                 reservationRequest.name(),
                 reservationRequest.date(),
-                reservationRequest.time()
+                reservationRequest.timeId()
         );
         final Reservation found = reservationService.getOneById(id);
         return ResponseEntity.ok(ReservationResponse.from(found));

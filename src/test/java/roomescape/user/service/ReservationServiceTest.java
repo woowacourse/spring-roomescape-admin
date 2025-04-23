@@ -34,13 +34,13 @@ class ReservationServiceTest {
     void 예약_정보를_저장한다() {
         // given
         final LocalTime time = LocalTime.parse("10:00");
-        reservationTimeService.save(time);
+        final Long time_id = reservationTimeService.save(time);
 
         final String name = "헤일러";
         final LocalDate date = LocalDate.parse("2023-08-05");
 
         // when & then
-        Assertions.assertThatCode(() -> reservationService.save(name, date, time))
+        Assertions.assertThatCode(() -> reservationService.save(name, date, time_id))
                 .doesNotThrowAnyException();
     }
 
@@ -50,8 +50,8 @@ class ReservationServiceTest {
         final LocalTime time = LocalTime.parse("10:00");
         final LocalTime time2 = LocalTime.parse("18:00");
 
-        reservationTimeService.save(time);
-        reservationTimeService.save(time2);
+        final Long time_id1 = reservationTimeService.save(time);
+        final Long time_id2 = reservationTimeService.save(time2);
 
         final String name = "헤일러";
         final LocalDate date = LocalDate.parse("2025-08-01");
@@ -59,8 +59,8 @@ class ReservationServiceTest {
         final String name2 = "머피";
         final LocalDate date2 = LocalDate.parse("2025-08-01");
 
-        reservationService.save(name, date, time);
-        reservationService.save(name2, date2, time2);
+        reservationService.save(name, date, time_id1);
+        reservationService.save(name2, date2, time_id2);
 
         // when
         List<Reservation> reservations = reservationService.findAll();

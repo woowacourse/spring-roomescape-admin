@@ -19,15 +19,14 @@ import org.springframework.test.annotation.DirtiesContext;
 @DirtiesContext(classMode = DirtiesContext.ClassMode.AFTER_EACH_TEST_METHOD)
 class ReservationRestControllerTest {
 
-    private final String TIME1 = "10:00";
-    private final String TIME2 = "11:00";
-
     @BeforeEach
     void setUp() {
-        List<String> times = List.of(TIME1, TIME2);
+        final String TIME1 = "10:00";
+        final String TIME2 = "11:00";
+        final List<String> times = List.of(TIME1, TIME2);
 
         for (String time : times) {
-            Map<String, String> params = new HashMap<>();
+            final Map<String, String> params = new HashMap<>();
             params.put("startAt", time);
             RestAssured.given().log().all()
                     .contentType(ContentType.JSON)
@@ -40,10 +39,10 @@ class ReservationRestControllerTest {
 
     @Test
     void 예약_정보_저장에_성공하는_경우_ok를_반환한다() {
-        Map<String, String> params = new HashMap<>();
+        final Map<String, String> params = new HashMap<>();
         params.put("name", "헤일러");
         params.put("date", "2025-04-15");
-        params.put("time", TIME1);
+        params.put("timeId", "1");
 
         RestAssured.given().log().all()
                 .contentType(ContentType.JSON)
@@ -55,7 +54,7 @@ class ReservationRestControllerTest {
 
     @Test
     void 요청_형식이_맞지_않아_예약_정보_저장에_실패하는_경우_bad_request를_반환한다() {
-        Map<String, String> params = new HashMap<>();
+        final Map<String, String> params = new HashMap<>();
         params.put("name", "헤일러");
         params.put("date", "2025 04 15");
         params.put("time", "10 00");
@@ -70,19 +69,19 @@ class ReservationRestControllerTest {
 
     @Test
     void 예약_정보_삭제에_성공한_경우_ok를_반환한다() {
-        Map<String, String> params = new HashMap<>();
+        final Map<String, String> params = new HashMap<>();
         params.put("name", "헤일러");
         params.put("date", "2025-04-15");
-        params.put("time", TIME2);
+        params.put("timeId", "2");
 
-        Response response = RestAssured.given().log().all()
+        final Response response = RestAssured.given().log().all()
                 .contentType(ContentType.JSON)
                 .body(params)
                 .when().post("/reservations")
                 .then().log().all()
                 .statusCode(HttpStatus.OK.value())
                 .extract().response();
-        Long id = response.jsonPath().getLong("id");
+        final long id = response.jsonPath().getLong("id");
 
         RestAssured.given().log().all()
                 .contentType(ContentType.JSON)
@@ -93,10 +92,10 @@ class ReservationRestControllerTest {
 
     @Test
     void 예약_정보를_삭제한다() {
-        Map<String, String> params = new HashMap<>();
+        final Map<String, String> params = new HashMap<>();
         params.put("name", "브라운");
         params.put("date", "2023-08-05");
-        params.put("time", TIME2);
+        params.put("timeId", "1");
 
         RestAssured.given().log().all()
                 .contentType(ContentType.JSON)

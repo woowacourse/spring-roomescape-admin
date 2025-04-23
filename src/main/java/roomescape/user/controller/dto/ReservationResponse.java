@@ -1,18 +1,19 @@
 package roomescape.user.controller.dto;
 
 import java.time.LocalDate;
-import java.time.LocalTime;
+import roomescape.admin.controller.dto.ReservationTimeResponse;
 import roomescape.user.domain.Reservation;
 
 public record ReservationResponse(
         Long id,
         String name,
         LocalDate date,
-        LocalTime time
+        ReservationTimeResponse time
 ) {
 
     public static ReservationResponse from(final Reservation reservation) {
         return new ReservationResponse(
-                reservation.getId(), reservation.getName(), reservation.getDate(), reservation.getTime().getStartAt());
+                reservation.getId(), reservation.getName(), reservation.getDate(),
+                ReservationTimeResponse.from(reservation.getTime()));
     }
 }

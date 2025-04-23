@@ -19,30 +19,30 @@ public class ReservationTimeDao {
     private final RowMapper<ReservationTime> actorRowMapper = (resultSet, rowNum) -> {
         ReservationTime reservationTime = new ReservationTime(
                 resultSet.getLong("id"),
-                resultSet.getTime("startAt").toLocalTime()
+                resultSet.getTime("start_at").toLocalTime()
         );
         return reservationTime;
     };
 
     public List<ReservationTime> findAll() {
-        String sql = "SELECT * FROM startAt";
+        String sql = "SELECT * FROM reservation_time";
         return jdbcTemplate.query(sql, actorRowMapper);
     }
 
     public Long saveTime(ReservationTime reservationTime) {
-        String sql = "INSERT INTO startAt (startAt) values(?)";
+        String sql = "INSERT INTO reservation_time (start_at) values(?)";
         KeyHolder keyHolder = new GeneratedKeyHolder();
 
         jdbcTemplate.update(connection -> {
             PreparedStatement ps = connection.prepareStatement(sql, new String[]{"id"});
-            ps.setTime(3, java.sql.Time.valueOf(reservationTime.getStartAt()));
+            ps.setTime(1, java.sql.Time.valueOf(reservationTime.getStartAt()));
             return ps;
         }, keyHolder);
         return keyHolder.getKey().longValue();
     }
 
     public void deleteTimeById(Long id) {
-        String sql = "DELETE FROM startAt WHERE id = ?";
+        String sql = "DELETE FROM reservation_time WHERE id = ?";
         jdbcTemplate.update(sql, id);
     }
 }

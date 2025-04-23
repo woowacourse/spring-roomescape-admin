@@ -9,6 +9,10 @@ public record TimeResponse(
         @JsonFormat(pattern = "HH:mm")
         LocalTime startAt) {
 
+    public static TimeResponse of(final Time time) {
+        return new TimeResponse(time.getId(), time.getStartAt());
+    }
+
     public static TimeResponse from(final Long id, final Time time) {
         return new TimeResponse(id, time.getStartAt());
     }

@@ -164,5 +164,19 @@ public class MissionStepTest {
                 .then().log().all()
                 .statusCode(200);
     }
+
+    @DisplayName("[7단계] 예약시간을 데이터베이스에서 조회할 수 있다.")
+    @Test
+    void readAllTime() {
+        //given
+        saveTime();
+
+        //when //then
+        RestAssured.given().log().all()
+                .when().get("/times")
+                .then().log().all()
+                .statusCode(200)
+                .body("size()", is(1));
+    }
 }
 

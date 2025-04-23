@@ -1,10 +1,13 @@
 package roomescape.controller.time;
 
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import org.springframework.http.ResponseEntity;
 import org.springframework.jdbc.core.JdbcTemplate;
+import org.springframework.jdbc.core.RowMapper;
 import org.springframework.jdbc.core.simple.SimpleJdbcInsert;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -34,6 +37,19 @@ public class TimeController {
         return ResponseEntity.ok(TimeResponse.from(id, time));
     }
 
+    @GetMapping
+    ResponseEntity<List<TimeResponse>> read() {
+        final String sql = "select id, start_at from reservation_time";
+        final RowMapper<Time> rowMapper = getRowMapper();
+        final List<Time> times = jdbcTemplate.query(sql, rowMapper);
+
+        final List<TimeResponse> timeResponses = times.stream()
+                .map(TimeResponse::of)
+                .toList();
+
+        return ResponseEntity.ok(timeResponses);
+    }
+
     private Long saveAndGetId(final Time time) {
         Map<String, Object> parameters = new HashMap<>(1);
         parameters.put("start_at", time.getStartAt());
@@ -43,5 +59,12 @@ public class TimeController {
     private Long getGenerateId(final Map<String, Object> parameters) {
         Number number = insertActor.executeAndReturnKey(parameters);
         return number.longValue();
+    }
+
+    private RowMapper<Time> getRowMapper() {
+        return (resultSet, rowNum) ->
+                Time.from(
+                        resultSet.getLong("id"),
+                        resultSet.getTime("start_at").toLocalTime());
     }
 }

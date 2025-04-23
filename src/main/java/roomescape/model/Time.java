@@ -12,7 +12,7 @@ public class Time {
         this.startAt = startAt;
     }
 
-    public static Time of(final Long id, final LocalTime startAt) {
+    public static Time from(final Long id, final LocalTime startAt) {
         return new Time(id, startAt);
     }
 

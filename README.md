@@ -2,7 +2,9 @@
 
 # 📖 API 목록
 
-## 1. 예약 목록 조회
+## 예약
+
+### 1. 예약 목록 조회
 
 - **URL**: `/reservations`
 - **Method**: `GET`
@@ -21,7 +23,7 @@
 ]
 ```
 
-## 2. 예약 생성
+### 2. 예약 생성
 
 - **URL**: `/reservations`
 - **Method**: `POST`
@@ -38,7 +40,7 @@
 }
 ```
 
-## 3. 예약 삭제
+### 3. 예약 삭제
 
 - **URL**: `/reservations/{id}`
 - **Method**: `DELETE`
@@ -46,6 +48,42 @@
     - `id` (Long) – 삭제할 예약의 고유 ID
 - **Response**: `200 OK`
 - **설명**: 해당 ID의 예약을 삭제합니다.
+
+---
+
+## 예약 시간
+
+### 1. 예약시간 목록 조회
+
+- **URL**: `/times`
+- **Method**: `GET`
+- **Response**: `200 OK`
+- **Response Body**:
+
+```json
+[
+  {
+    "id": 1,
+    "startAt": "10:00"
+  },
+  ...
+]
+```
+
+### 2. 예약시간 생성
+
+- **URL**: `/times`
+- **Method**: `POST`
+- **Response**: `200 OK`
+- **Request Header**:
+    - `Content-Type: application/json`
+- **Request Body**:
+
+```json
+{
+  "startAt": "10:00"
+}
+```
 
 ---
 

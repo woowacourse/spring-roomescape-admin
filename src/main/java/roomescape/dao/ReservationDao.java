@@ -18,18 +18,18 @@ import roomescape.domain.Reservation;
 public class ReservationDao {
 
     private final JdbcTemplate jdbcTemplate;
-    private final SimpleJdbcInsert insertReservation;
+    private final SimpleJdbcInsert reservationInserter;
     private final RowMapper<Reservation> reservationRowMapper = (resultSet, rowNum) ->
             new Reservation(
                     resultSet.getLong("id"),
                     resultSet.getString("name"),
                     resultSet.getDate("date").toLocalDate(),
-                    resultSet.getTime("time").toLocalTime()
+                    resultSet.getTime("startAt").toLocalTime()
             );
 
     public ReservationDao(final JdbcTemplate jdbcTemplate, final DataSource dataSource) {
         this.jdbcTemplate = jdbcTemplate;
-        this.insertReservation = new SimpleJdbcInsert(dataSource)
+        this.reservationInserter = new SimpleJdbcInsert(dataSource)
                 .withTableName("reservation")
                 .usingGeneratedKeyColumns("id");
     }
@@ -58,8 +58,8 @@ public class ReservationDao {
         final Map<String, Object> parameters = new HashMap<>(Map.of(
                 "name", name,
                 "date", Date.valueOf(date),
-                "time", Time.valueOf(time))
+                "startAt", Time.valueOf(time))
         );
-        return (Long) insertReservation.executeAndReturnKey(parameters);
+        return (Long) reservationInserter.executeAndReturnKey(parameters);
     }
 }

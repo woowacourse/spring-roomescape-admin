@@ -141,8 +141,9 @@ public class MissionStepTest {
         assertThat(countAfterDelete).isEqualTo(0);
     }
 
+    @DisplayName("7단계: 시간 관리 기능을 사용할 수 있다.")
     @Test
-    void 칠단계() {
+    void testTimeAPIs() {
         Map<String, String> params = new HashMap<>();
         params.put("startAt", "10:00");
 

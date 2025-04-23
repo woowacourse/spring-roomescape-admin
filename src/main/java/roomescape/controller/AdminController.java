@@ -20,6 +20,6 @@ public class AdminController {
 
     @GetMapping("/time")
     public String time() {
-        return "admin/time.html";
+        return "admin/startAt.html";
     }
 }

@@ -63,4 +63,21 @@ public class ReservationDao {
                 """;
         jdbcTemplate.update(deleteSql, id);
     }
+
+    public Reservation findById(final Long id) {
+        String findSql = """
+                SELECT name, date, time
+                FROM reservation
+                WHERE id = ?
+                """;
+        return jdbcTemplate.queryForObject(findSql, (resultSet, rowNum) -> new Reservation(
+                        id,
+                        resultSet.getString("name"),
+                        new ReservationDateTime(LocalDateTime.of(
+                                LocalDate.parse(resultSet.getString("date")),
+                                LocalTime.parse(resultSet.getString("time"))
+                        ))),
+                id
+        );
+    }
 }

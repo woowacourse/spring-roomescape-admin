@@ -58,4 +58,18 @@ class ReservationDaoTest {
 
         assertThat(reservationDao.findAll()).isEmpty();
     }
+
+    @DisplayName("예약 번호와 일치하는 예약을 조회한다.")
+    @Test
+    void findReservationById() {
+        Reservation reservation = new Reservation(0L, "포스티",
+                new ReservationDateTime(LocalDateTime.of(2025, 4, 23, 10, 0)));
+        Long reservationId = reservationDao.insert(reservation);
+
+        Reservation findReservation = reservationDao.findById(reservationId);
+
+        assertThat(findReservation.getName()).isEqualTo(reservation.getName());
+        assertThat(findReservation.getDate()).isEqualTo(reservation.getDate());
+        assertThat(findReservation.getTime()).isEqualTo(reservation.getTime());
+    }
 }

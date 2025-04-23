@@ -18,6 +18,7 @@ import roomescape.common.exception.EntityNotFoundException;
 import roomescape.config.TestConfig;
 import roomescape.reservation.entity.ReservationTime;
 import roomescape.reservation.repository.ReservationTimeRepository;
+import roomescape.utils.JdbcTemplateUtils;
 
 class ReservationTimeDAOTest {
 
@@ -62,15 +63,9 @@ class ReservationTimeDAOTest {
                 .isInstanceOf(EntityNotFoundException.class);
     }
 
-    /**
-     *    외래키 제약 조건에 의해 truncate를 사용할 수 없다. 제약을 거는게 맞을까?
-     *    코드 레벨에서 처리 방법은? 물론, 데이터베이스 제약에 의해 문제를 인지할 수 있다는 장점은 있다.
-     *    유연성을 준다면, 제약을 코드 레벨에서 하는 방법도 좋다고 생각한다.
-     */
     @AfterEach
     void cleanUp() {
-        jdbcTemplate.update("truncate table reservation");
-        jdbcTemplate.update("delete from reservation_time");
+        JdbcTemplateUtils.deleteAllTables(jdbcTemplate);
     }
 
     private void saveReservationTime(Long id, LocalTime startAt) {

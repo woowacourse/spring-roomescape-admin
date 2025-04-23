@@ -9,10 +9,8 @@ import java.time.LocalTime;
 import java.util.List;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
-import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
 import roomescape.common.exception.EntityNotFoundException;
@@ -20,6 +18,7 @@ import roomescape.config.TestConfig;
 import roomescape.reservation.entity.Reservation;
 import roomescape.reservation.entity.ReservationTime;
 import roomescape.reservation.repository.ReservationRepository;
+import roomescape.utils.JdbcTemplateUtils;
 
 class ReservationDAOTest {
 
@@ -186,7 +185,6 @@ class ReservationDAOTest {
 
     @AfterEach
     void cleanUp() {
-        jdbcTemplate.update("truncate TABLE reservation");
-        jdbcTemplate.update("delete from reservation_time");
+        JdbcTemplateUtils.deleteAllTables(jdbcTemplate);
     }
 }

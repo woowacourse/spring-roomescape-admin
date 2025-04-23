@@ -9,15 +9,15 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import roomescape.dto.AddTimeDto;
-import roomescape.model.Time;
-import roomescape.repository.TimeRepository;
+import roomescape.model.ReservationTime;
+import roomescape.repository.ReservationTimeRepository;
 
 @Controller
-public class TimeController {
-    private final TimeRepository timeRepository;
+public class ReservationTimeController {
+    private final ReservationTimeRepository reservationTimeRepository;
 
-    public TimeController(TimeRepository timeRepository) {
-        this.timeRepository = timeRepository;
+    public ReservationTimeController(ReservationTimeRepository reservationTimeRepository) {
+        this.reservationTimeRepository = reservationTimeRepository;
     }
 
     @GetMapping("admin/time")
@@ -26,18 +26,18 @@ public class TimeController {
     }
 
     @PostMapping("/times")
-    public ResponseEntity<Time> addTime(@RequestBody AddTimeDto addTimeDto) {
-        return ResponseEntity.ok(timeRepository.addTime(addTimeDto));
+    public ResponseEntity<ReservationTime> addTime(@RequestBody AddTimeDto addTimeDto) {
+        return ResponseEntity.ok(reservationTimeRepository.addTime(addTimeDto));
     }
 
     @GetMapping("/times")
-    public ResponseEntity<List<Time>> addTime() {
-        return ResponseEntity.ok(timeRepository.getAllTime());
+    public ResponseEntity<List<ReservationTime>> addTime() {
+        return ResponseEntity.ok(reservationTimeRepository.getAllTime());
     }
 
     @DeleteMapping("/times/{id}")
     public ResponseEntity<Integer> deleteTime(@PathVariable Long id) {
-        return ResponseEntity.ok(timeRepository.deleteTime(id));
+        return ResponseEntity.ok(reservationTimeRepository.deleteTime(id));
     }
 
 }

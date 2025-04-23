@@ -73,7 +73,7 @@ class ReservationControllerTest {
     }
 
 
-    @DisplayName("과거 날짜와 시간으로는 예약을 추가할 수 없다.")
+    @DisplayName("과거 날짜와 시간으로는 예약을 추가할 수 없다")
     @Test
     void canNotCreateReservationWithPastDateTime() {
         ReservationTime pastReservationTime = addReservationTimeInRepository(timeRepository, PAST_TIME);
@@ -85,7 +85,7 @@ class ReservationControllerTest {
                 .hasMessage("[ERROR] 이미 과거의 날짜와 시간입니다.");
     }
 
-    @DisplayName("이미 예약한 날짜와 시간으로는 예약이 불가능하다")
+    @DisplayName("이미 예약한 날짜와 시간으로는 예약을 추가할 수 없다")
     @Test
     void canNotCreateReservationWithSameDateTime() {
         LocalDate sameDate = NEXT_DATE;
@@ -99,7 +99,7 @@ class ReservationControllerTest {
                 .hasMessage("[ERROR] 이미 예약이 완료된 날짜와 시간입니다.");
     }
 
-    @DisplayName("특정 ID의 예약을 삭제할 수 있다.")
+    @DisplayName("특정 ID의 예약을 삭제할 수 있다")
     @Test
     void deleteReservation() {
         ReservationTime reservationTime = addReservationTimeInRepository(timeRepository, LocalTime.now());
@@ -117,7 +117,7 @@ class ReservationControllerTest {
         );
     }
 
-    @DisplayName("존재하지 않는 예약을 삭제하려고 할 경우 예외 응답을 보낸다.")
+    @DisplayName("존재하지 않는 예약을 삭제하려고 할 경우 예외를 발생시킨다")
     @Test
     void deleteNoneExistentReservation() {
         long noneExistentReservationId = 1L;

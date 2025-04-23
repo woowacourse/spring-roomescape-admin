@@ -104,7 +104,7 @@ class ReservationServiceTest {
         checkDeleteReservation(reservations, deleteReservationId);
     }
 
-    @DisplayName("존재하지 않는 예약을 삭제하려고 할 경우 예외 응답을 보낸다.")
+    @DisplayName("존재하지 않는 예약을 삭제하려고 할 경우 예외를 발생시킨다")
     @Test
     void deleteNoneExistentReservation() {
         long noneExistentReservationId = 1L;

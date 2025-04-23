@@ -94,7 +94,7 @@ class ReservationTimeControllerTest {
         );
     }
 
-    @DisplayName("존재하지 않는 예약 가능 시간을 삭제하려고 할 경우 예외 응답을 보낸다")
+    @DisplayName("존재하지 않는 예약 가능 시간을 삭제하려고 할 경우 예외를 발생시킨다")
     @Test
     void canNotDeleteWithInvalidId() {
         long noneExistentReservationId = 1L;
@@ -103,7 +103,7 @@ class ReservationTimeControllerTest {
                 .hasMessage("[ERROR] ID에 해당하는 예약 시간이 존재하지 않습니다.");
     }
 
-    @DisplayName("이미 해당 시간에 예약이 존재하는 경우 예약을 제거할 수 없습니다.")
+    @DisplayName("이미 해당 시간에 예약이 존재하는 경우 예약을 제거할 수 없다")
     @Test
     void canNotDeleteBecauseReservations() {
         ReservationTime savedTime = addReservationTimeInRepository(timeRepository, LocalTime.of(10, 0));

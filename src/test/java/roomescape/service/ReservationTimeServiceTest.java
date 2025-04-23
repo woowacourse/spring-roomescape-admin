@@ -19,11 +19,12 @@ public class ReservationTimeServiceTest {
 
     @Test
     @DisplayName("시간을 저장한다.")
-    void createReservationTime(){
+    void createReservationTime() {
         // given
         ReservationTimeRequest reservationTimeRequest = new ReservationTimeRequest(LocalTime.of(10, 0));
         // when
-        ReservationTimeResponse reservationTimeResponse = reservationTimeService.createReservationTime(reservationTimeRequest);
+        ReservationTimeResponse reservationTimeResponse = reservationTimeService.createReservationTime(
+                reservationTimeRequest);
 
         // then
         Assertions.assertThat(reservationTimeResponse.startAt()).isEqualTo(LocalTime.of(10, 0));
@@ -31,25 +32,47 @@ public class ReservationTimeServiceTest {
 
     @Test
     @DisplayName("전체 시간 목록을 가져온다")
-    void getAllReservationTime(){
+    void getAllReservationTime() {
 
         // given
         // when
-        List<ReservationTimeResponse> reservationTimeResponses  = reservationTimeService.getAllReservationTime();
+        List<ReservationTimeResponse> reservationTimeResponses = reservationTimeService.getAllReservationTime();
         // then
         SoftAssertions.assertSoftly(softAssertions -> {
             softAssertions.assertThat(reservationTimeResponses).hasSize(1);
-            softAssertions.assertThat(reservationTimeResponses.getFirst().startAt()).isEqualTo(LocalTime.of(22,0));
+            softAssertions.assertThat(reservationTimeResponses.getFirst().startAt()).isEqualTo(LocalTime.of(22, 0));
         });
     }
 
+    @Test
+    @DisplayName("아이디를 통해 예약 시간을 삭제한다")
+    void deleteReservationTimeById() {
+        // given
+        long id = 1;
+
+        // when
+        // then
+        Assertions.assertThatNoException().isThrownBy(() -> reservationTimeService.delete(id));
+    }
+
+    @Test
+    @DisplayName("존재하지 않은 아이디를 통해 삭제시 예외가 발생한다.")
+    void whenDeleteByNonExistingIdThrowException() {
+        // given
+        long id = 5;
+
+        // when
+        // then
+        Assertions.assertThatThrownBy(() -> reservationTimeService.delete(id))
+                .isInstanceOf(IllegalArgumentException.class);
+    }
 
     static class FakeReservationTimeRepository implements ReservationTimeRepository {
 
         List<ReservationTime> reservationTimes = new ArrayList<>();
 
         public FakeReservationTimeRepository() {
-            reservationTimes.add(new ReservationTime(LocalTime.of(22, 0)));
+            reservationTimes.add(new ReservationTime(1, LocalTime.of(22, 0)));
         }
 
         @Override
@@ -65,6 +88,11 @@ public class ReservationTimeServiceTest {
 
         @Override
         public int deleteById(long id) {
+            boolean existingId = reservationTimes.stream().anyMatch(reservation -> reservation.getId() == id);
+            if (existingId) {
+                reservationTimes.removeIf(reservation -> reservation.getId() == id);
+                return 1;
+            }
             return 0;
         }
     }

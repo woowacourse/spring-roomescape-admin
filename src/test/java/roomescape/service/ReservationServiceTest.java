@@ -35,10 +35,12 @@ class ReservationServiceTest {
 
     @Test
     @DisplayName("날짜와 시간이 모두 중복되면 예외가 발생한다.")
-    void whenDuplicateDateAndTimeThrowException(){
+    void whenDuplicateDateAndTimeThrowException() {
         // given
-        ReservationRequest existedRequest = new ReservationRequest("lemon", LocalDate.of(2025, 4, 18), LocalTime.of(16, 53));
-        ReservationRequest newRequest = new ReservationRequest("lemon", LocalDate.of(2025, 4, 18), LocalTime.of(16, 53));
+        ReservationRequest existedRequest = new ReservationRequest("lemon", LocalDate.of(2025, 4, 18),
+                LocalTime.of(16, 53));
+        ReservationRequest newRequest = new ReservationRequest("lemon", LocalDate.of(2025, 4, 18),
+                LocalTime.of(16, 53));
         // when
         reservationService.createReservation(existedRequest);
         // then
@@ -50,19 +52,19 @@ class ReservationServiceTest {
     @DisplayName("아이디를 통해 예약을 삭제한다.")
     void deleteReservationById() {
         // given
-        long validId = 1;  // 삭제할 예약 아이디 (유효한 값)
+        long validId = 1;
         // when
-        reservationService.delete(validId);  // 서비스에서 삭제 메서드 호출
+        reservationService.delete(validId);
 
         // then
-        Reservation deletedReservation = fakeReservationRepository.findById(validId);  // 리포지토리에서 해당 예약을 찾기
-        Assertions.assertThat(deletedReservation).isNull();  // 삭제된 예약은 존재하지 않아야 함
+        Reservation deletedReservation = fakeReservationRepository.findById(validId);
+        Assertions.assertThat(deletedReservation).isNull();
     }
 
 
     @Test
     @DisplayName("전체 예약 목록을 가져온다..")
-    void findAllReservations(){
+    void findAllReservations() {
         // given
         // when
         List<ReservationResponse> reservations = reservationService.getReservations();
@@ -72,11 +74,11 @@ class ReservationServiceTest {
             softAssertions.assertThat(reservations).hasSize(2);
             softAssertions.assertThat(reservations.getFirst().id()).isEqualTo(1);
             softAssertions.assertThat(reservations.getFirst().name()).isEqualTo("Lemon");
-            softAssertions.assertThat(reservations.getFirst().date()).isEqualTo(LocalDate.of(2025,4,22));
-            softAssertions.assertThat(reservations.getFirst().time()).isEqualTo(LocalTime.of(13,22));
+            softAssertions.assertThat(reservations.getFirst().date()).isEqualTo(LocalDate.of(2025, 4, 22));
+            softAssertions.assertThat(reservations.getFirst().time()).isEqualTo(LocalTime.of(13, 22));
         });
     }
-    
+
     //todo: @ActiveProfiles(value = "test") 로 테스트시 의존성을 부여하는 방법에 대해 찾아보기
     static class FakeReservationRepository implements ReservationRepository {
 
@@ -84,8 +86,10 @@ class ReservationServiceTest {
         private final AtomicLong atomicLong = new AtomicLong(1);
 
         public FakeReservationRepository() {
-            reservations.add(new Reservation(atomicLong.getAndIncrement(),"Lemon",LocalDate.of(2025,4,22),LocalTime.of(13,22)));
-            reservations.add(new Reservation(atomicLong.getAndIncrement(),"DDingHwa",LocalDate.of(2025,4,22),LocalTime.of(16,15)));
+            reservations.add(new Reservation(atomicLong.getAndIncrement(), "Lemon", LocalDate.of(2025, 4, 22),
+                    LocalTime.of(13, 22)));
+            reservations.add(new Reservation(atomicLong.getAndIncrement(), "DDingHwa", LocalDate.of(2025, 4, 22),
+                    LocalTime.of(16, 15)));
         }
 
         @Override

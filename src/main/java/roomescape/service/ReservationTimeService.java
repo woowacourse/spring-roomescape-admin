@@ -26,4 +26,11 @@ public class ReservationTimeService {
         List<ReservationTime> reservationTimes = reservationTimeRepository.findAll();
         return ReservationTimeResponse.from(reservationTimes);
     }
+
+    public void delete(long id) {
+        int deletedRows = reservationTimeRepository.deleteById(id);
+        if (deletedRows == 0) {
+            throw new IllegalArgumentException("삭제할 예약 시간이 존재하지 않습니다.");
+        }
+    }
 }

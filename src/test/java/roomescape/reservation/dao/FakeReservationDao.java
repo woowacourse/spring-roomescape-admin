@@ -25,11 +25,6 @@ public class FakeReservationDao implements ReservationDao {
     }
 
     @Override
-    public Reservation findById(long id) {
-        return reservations.get((int)(id - 1));
-    }
-
-    @Override
     public List<Reservation> findAll() {
         return reservations;
     }
@@ -41,5 +36,9 @@ public class FakeReservationDao implements ReservationDao {
         }
         Reservation targetReservation = findById(id);
         reservations.remove(targetReservation);
+    }
+
+    private Reservation findById(long id) {
+        return reservations.get((int)(id - 1));
     }
 }

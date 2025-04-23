@@ -26,10 +26,6 @@ public class ReservationService {
         return reservationMapper.toReservationResponse(reservationDao.insert(reservation));
     }
 
-    public ReservationResponse findReservationById(long id) {
-        return reservationMapper.toReservationResponse(reservationDao.findById(id));
-    }
-
     public List<ReservationResponse> findAllReservations() {
         List<Reservation> reservations = reservationDao.findAll();
         return reservations.stream()

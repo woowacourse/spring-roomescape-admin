@@ -7,8 +7,6 @@ public interface ReservationDao {
 
     Reservation insert(Reservation reservation);
 
-    Reservation findById(long id);
-
     List<Reservation> findAll();
 
     void delete(long id);

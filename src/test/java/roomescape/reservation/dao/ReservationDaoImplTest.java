@@ -9,8 +9,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.jdbc.JdbcTest;
 import org.springframework.jdbc.core.JdbcTemplate;
 import roomescape.reservation.domain.Reservation;
-import roomescape.reservation.dto.ReservationRequest;
-import roomescape.reservation.utils.ReservationMapper;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatNoException;
@@ -39,8 +37,8 @@ class ReservationDaoImplTest {
         );
 
         // When & Then
-        assertThat(reservationDao.insert(requestReservation))
-                .isInstanceOf(Reservation.class);
+        assertThat(reservationDao.insert(requestReservation).getId())
+                .isNotNull();
     }
 
     @Test

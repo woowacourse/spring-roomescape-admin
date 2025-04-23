@@ -42,20 +42,6 @@ public class ReservationDaoImpl implements ReservationDao {
     }
 
     @Override
-    public Reservation findById(long id) {
-        String sql = "select * from reservation where id = ?";
-
-        return jdbcTemplate.queryForObject(
-                sql,
-                (resultSet, rowNum) -> new Reservation(
-                        resultSet.getLong("id"),
-                        resultSet.getString("name"),
-                        resultSet.getObject("date", LocalDate.class),
-                        resultSet.getObject("time", LocalTime.class)
-                ), id);
-    }
-
-    @Override
     public List<Reservation> findAll() {
         String sql = "select * from reservation";
 

@@ -7,6 +7,7 @@ import roomescape.domain.Reservation;
 import roomescape.domain.ReservationTime;
 import roomescape.dto.ReservationDto;
 import roomescape.dto.request.ReservationRequest;
+import roomescape.dto.request.ReservationTimeRequest;
 import roomescape.dto.response.ReservationResponse;
 import roomescape.dto.response.ReservationTimeResponse;
 
@@ -40,7 +41,6 @@ public class ReservationService {
 
     public List<ReservationResponse> findAllReservations() {
         List<ReservationDto> reservationDtos = reservationDao.getAll();
-
         List<Reservation> reservations = ReservationDto.toReservations(reservationDtos);
 
         return reservations.stream()
@@ -56,5 +56,27 @@ public class ReservationService {
         if (count == 0) {
             throw new IllegalArgumentException("[ERROR] 해당 id에 대한 예약 기록이 존재하지 않습니다.");
         }
+    }
+
+    public ReservationTimeResponse createReservationTime(final ReservationTimeRequest request) {
+        ReservationTime reservationTime = request.toReservationTime();
+        long id = reservationTimeDao.save(reservationTime);
+        return ReservationTimeResponse.of(id, reservationTime);
+    }
+
+    public List<ReservationTimeResponse> findAllReservationTimes() {
+        List<ReservationTime> times = reservationTimeDao.getAll();
+        return ReservationTimeResponse.from(times);
+    }
+
+    public void deleteReservationTime(final Long id) {
+        int count = reservationTimeDao.delete(id);
+        if (count == 0) {
+            throw new IllegalArgumentException("[ERROR] 해당 id에 대한 시간 정보가 존재하지 않습니다.");
+        }
+    }
+
+    public void deleteAllReservationTimes() {
+        reservationTimeDao.deleteAll();
     }
 }

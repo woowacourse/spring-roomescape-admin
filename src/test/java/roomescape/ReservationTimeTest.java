@@ -3,6 +3,7 @@ package roomescape;
 import java.util.function.Supplier;
 import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.Test;
+import roomescape.domain.ReservationTime;
 
 class ReservationTimeTest {
     @Test

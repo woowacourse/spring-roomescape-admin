@@ -8,7 +8,7 @@ import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.support.GeneratedKeyHolder;
 import org.springframework.jdbc.support.KeyHolder;
 import org.springframework.stereotype.Repository;
-import roomescape.ReservationTime;
+import roomescape.domain.ReservationTime;
 import roomescape.repository.ReservationTimeRepository;
 
 @Repository
@@ -46,6 +46,14 @@ public class ReservationTimeRepositoryImpl implements ReservationTimeRepository 
         );
 
         return reservationTimes;
+    }
+
+    public ReservationTime readReservationTime(Long timeId) {
+        final String query = "SELECT id, start_at FROM reservation_time WHERE id = ?";
+        return jdbcTemplate.queryForObject(query, (resultSet, rowNum) -> new ReservationTime(
+                resultSet.getLong("id"),
+                resultSet.getTime("start_at").toLocalTime()
+        ), timeId);
     }
 
     public void deleteReservationTime(Long id) {

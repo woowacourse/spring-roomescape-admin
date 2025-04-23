@@ -8,7 +8,7 @@ import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.support.GeneratedKeyHolder;
 import org.springframework.jdbc.support.KeyHolder;
 import org.springframework.stereotype.Repository;
-import roomescape.Reservation;
+import roomescape.domain.Reservation;
 import roomescape.repository.ReservationRepository;
 
 @Repository
@@ -21,35 +21,42 @@ public class ReservationRepositoryImpl implements ReservationRepository {
     }
 
     public List<Reservation> readReservations() {
-        final String query = "SELECT id, name, date, time FROM reservation";
-        List<Reservation> reservations = jdbcTemplate.query(
+        final String query = """
+                SELECT
+                    r.id as reservation_id,
+                    r.name,
+                    r.date,
+                    t.id as time_id,
+                    t.start_at as time_value
+                FROM reservation as r
+                inner join reservation_time as t
+                on r.time_id = t.id
+                """;
+
+        return jdbcTemplate.query(
                 query,
                 (resultSet, rowNum) -> new Reservation(
                         resultSet.getLong("id"),
                         resultSet.getString("name"),
                         resultSet.getDate("date").toLocalDate(),
-                        resultSet.getTime("time").toLocalTime()
+                        resultSet.getLong("time_id")
                 )
         );
-
-        return reservations;
     }
 
     public Reservation createReservation(Reservation reservation) {
-        final String query = "INSERT INTO reservation (name, date, time) VALUES (?, ?, ?)";
+        final String query = "INSERT INTO reservation (name, date, time_id) VALUES (?, ?, ?)";
         KeyHolder keyHolder = new GeneratedKeyHolder();
         jdbcTemplate.update(connection -> {
             PreparedStatement ps = connection.prepareStatement(query, new String[]{"id"});
             ps.setString(1, reservation.getName());
             ps.setObject(2, reservation.getDate());
-            ps.setObject(3, reservation.getTime());
+            ps.setLong(3, reservation.getTimeId());
             return ps;
         }, keyHolder);
 
-        Reservation newReservation = Reservation.generateWithPrimaryKey(reservation, Objects.requireNonNull(
+        return Reservation.generateWithPrimaryKey(reservation, Objects.requireNonNull(
                 keyHolder.getKey()).longValue());
-
-        return newReservation;
     }
 
     public void deleteReservation(Long id) {

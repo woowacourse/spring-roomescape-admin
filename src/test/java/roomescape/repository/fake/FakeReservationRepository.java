@@ -2,8 +2,8 @@ package roomescape.repository.fake;
 
 import java.util.List;
 import java.util.concurrent.atomic.AtomicLong;
-import roomescape.Reservation;
-import roomescape.Reservations;
+import roomescape.domain.Reservation;
+import roomescape.domain.Reservations;
 import roomescape.repository.ReservationRepository;
 
 public class FakeReservationRepository implements ReservationRepository {

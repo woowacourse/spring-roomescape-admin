@@ -1,7 +1,7 @@
 package roomescape.repository;
 
 import java.util.List;
-import roomescape.Reservation;
+import roomescape.domain.Reservation;
 
 public interface ReservationRepository {
     Reservation createReservation(Reservation reservation);

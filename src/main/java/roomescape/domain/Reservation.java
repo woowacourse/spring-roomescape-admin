@@ -1,7 +1,6 @@
-package roomescape;
+package roomescape.domain;
 
 import java.time.LocalDate;
-import java.time.LocalTime;
 import java.util.Objects;
 import com.fasterxml.jackson.annotation.JsonFormat;
 
@@ -11,19 +10,18 @@ public class Reservation {
 
     @JsonFormat(pattern = "yyyy-MM-dd")
     private final LocalDate date;
-    @JsonFormat(pattern = "HH:mm")
-    private final LocalTime time;
+    private final Long timeId;
 
-    public Reservation(Long id, String name, LocalDate date, LocalTime time) {
-        validate(name, date, time);
+    public Reservation(Long id, String name, LocalDate date, Long timeId) {
+        validate(name, date, timeId);
         this.id = id;
         this.name = name;
         this.date = date;
-        this.time = time;
+        this.timeId = timeId;
     }
 
     public static Reservation generateWithPrimaryKey(Reservation reservation, Long newPrimaryKey) {
-        return new Reservation(newPrimaryKey, reservation.name, reservation.date, reservation.time);
+        return new Reservation(newPrimaryKey, reservation.name, reservation.date, reservation.timeId);
     }
 
     public boolean isSameId(Long id) {
@@ -42,12 +40,12 @@ public class Reservation {
         return date;
     }
 
-    public LocalTime getTime() {
-        return time;
+    public Long getTimeId() {
+        return timeId;
     }
 
-    private void validate(String name, LocalDate date, LocalTime time) {
-        if (name == null || date == null || time == null) {
+    private void validate(String name, LocalDate date, Long timeId) {
+        if (name == null || date == null || timeId == null) {
             throw new NullPointerException("예약 정보가 비어있습니다.");
         }
         if (name.isBlank()) {

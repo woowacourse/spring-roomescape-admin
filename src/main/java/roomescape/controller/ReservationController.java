@@ -10,29 +10,43 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
-import roomescape.Reservation;
+import roomescape.domain.Reservation;
+import roomescape.domain.ReservationTime;
+import roomescape.dto.ReservationResponse;
+import roomescape.dto.ReservationTimeResponse;
 import roomescape.repository.ReservationRepository;
+import roomescape.repository.ReservationTimeRepository;
 
 @RestController
 @RequestMapping("/reservations")
 public class ReservationController {
     private final ReservationRepository reservationRepository;
+    private final ReservationTimeRepository reservationTimeRepository;
 
     @Autowired
-    public ReservationController(ReservationRepository reservationRepository) {
+    public ReservationController(ReservationRepository reservationRepository, ReservationTimeRepository reservationTimeRepository) {
         this.reservationRepository = reservationRepository;
+        this.reservationTimeRepository = reservationTimeRepository;
     }
 
     @PostMapping
-    ResponseEntity<Reservation> create(@RequestBody Reservation reservation) {
+    ResponseEntity<ReservationResponse> create(@RequestBody Reservation reservation) {
         Reservation createdReservation = reservationRepository.createReservation(reservation);
-        return ResponseEntity.ok(createdReservation);
+        ReservationTime reservationTime = reservationTimeRepository.readReservationTime(createdReservation.getTimeId());
+
+        ReservationTimeResponse reservationTimeResponse = ReservationTimeResponse.of(reservationTime);
+        return ResponseEntity.ok(ReservationResponse.of(createdReservation, reservationTimeResponse));
     }
 
     @GetMapping()
-    public ResponseEntity<List<Reservation>> read() {
+    public ResponseEntity<List<ReservationResponse>> read() {
         List<Reservation> reservations = reservationRepository.readReservations();
-        return ResponseEntity.ok(reservations);
+        List<ReservationResponse> reservationResponses = reservations.stream().map(reservation -> {
+            ReservationTime reservationTime = reservationTimeRepository.readReservationTime(reservation.getTimeId());
+            return ReservationResponse.of(reservation, ReservationTimeResponse.of(reservationTime));
+        }).toList();
+
+        return ResponseEntity.ok(reservationResponses);
     }
 
     @DeleteMapping("/{id}")

@@ -6,6 +6,8 @@ import java.time.LocalTime;
 import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
+import roomescape.domain.Reservation;
+import roomescape.domain.Reservations;
 
 class ReservationsTest {
     @Test

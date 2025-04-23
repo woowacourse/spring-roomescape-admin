@@ -6,18 +6,18 @@ public class ReservationTime {
 
     private final Long id;
 
-    private final LocalTime time;
+    private final LocalTime startAt;
 
     public ReservationTime(final Long id, final LocalTime time) {
         this.id = id;
-        this.time = time;
+        this.startAt = time;
     }
 
     public Long getId() {
         return id;
     }
 
-    public LocalTime getTime() {
-        return time;
+    public LocalTime getStartAt() {
+        return startAt;
     }
 }

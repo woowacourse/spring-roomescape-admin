@@ -1,5 +1,7 @@
 package roomescape.domain;
 
+import roomescape.domain.exception.EmptyReserverNameException;
+
 public class ReserverName {
 
     private final String name;
@@ -11,7 +13,7 @@ public class ReserverName {
 
     private void validateName(final String name) {
         if (name == null || name.isBlank()) {
-            throw new IllegalArgumentException("예약자 이름은 빈 칸이 될 수 없습니다.");
+            throw new EmptyReserverNameException("예약자 이름은 빈 칸이 될 수 없습니다.");
         }
     }
 

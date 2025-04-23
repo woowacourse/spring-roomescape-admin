@@ -5,6 +5,7 @@ import org.springframework.stereotype.Service;
 import roomescape.controller.request.ReservationTimeRequest;
 import roomescape.controller.response.ReservationTimeResponse;
 import roomescape.repository.ReservationTimeRepository;
+import roomescape.service.exception.ReservationTimeNotFoundException;
 
 @Service
 public class ReservationTimeService {
@@ -23,16 +24,16 @@ public class ReservationTimeService {
 
     public ReservationTimeResponse getById(final Long id) {
         return ReservationTimeResponse.from(
-                repository.findById(id).orElseThrow(() -> new IllegalArgumentException("해당하는 id의 예약 시간이 없습니다.")));
+                repository.findById(id).orElseThrow(() -> new ReservationTimeNotFoundException("예약 시간을 찾을 수 없습니다.")));
     }
 
     public ReservationTimeResponse create(final ReservationTimeRequest request) {
         final long id = repository.add(request.toEntity());
-        return ReservationTimeResponse.from(repository.findById(id)
-                .orElseThrow(() -> new IllegalStateException("예약 시간을 찾는 과정에서 문제가 생겼습니다.")));
+        return getById(id);
     }
 
     public void deleteById(final Long id) {
-        repository.deleteById(id);
+        final ReservationTimeResponse reservationTimeResponse = getById(id);
+        repository.deleteById(reservationTimeResponse.id());
     }
 }

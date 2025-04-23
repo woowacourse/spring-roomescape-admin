@@ -1,6 +1,7 @@
 package roomescape.domain;
 
 import java.time.LocalDate;
+import roomescape.domain.exception.EmptyReservationDateException;
 
 public class ReservationDate {
 
@@ -13,10 +14,7 @@ public class ReservationDate {
 
     private void validateDate(final LocalDate date) {
         if (date == null) {
-            throw new IllegalArgumentException("예약 날짜는 null이 될 수 없습니다.");
-        }
-        if (date.isBefore(LocalDate.now())) {
-            throw new IllegalArgumentException("과거 날짜로 예약할 수 없습니다.");
+            throw new EmptyReservationDateException("예약 날짜는 null이 될 수 없습니다.");
         }
     }
 

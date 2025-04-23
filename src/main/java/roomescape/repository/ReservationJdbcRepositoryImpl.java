@@ -12,11 +12,11 @@ import roomescape.dto.CreateReservationDto;
 import roomescape.entity.Reservation;
 import roomescape.entity.ReservationTime;
 
-@Repository
-public class ReservationRepositoryImpl implements ReservationRepository {
+@Repository("reservationJdbcRepository")
+public class ReservationJdbcRepositoryImpl implements ReservationRepository {
     private final JdbcTemplate jdbcTemplate;
 
-    public ReservationRepositoryImpl(JdbcTemplate jdbcTemplate) {
+    public ReservationJdbcRepositoryImpl(JdbcTemplate jdbcTemplate) {
         this.jdbcTemplate = jdbcTemplate;
     }
 

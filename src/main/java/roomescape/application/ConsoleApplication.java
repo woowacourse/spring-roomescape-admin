@@ -27,5 +27,17 @@ public class ConsoleApplication implements CommandLineRunner {
 
     @Override
     public void run(String... args) throws Exception {
+        outputView.printStartMessage();
+        while (true) {
+            int function = inputView.selectAdminFunction();
+            if (function == 1) {
+                int reservationTimeFunction = inputView.selectReservationTimeFunction();
+            } else if (function == 2) {
+                int reservationFunction = inputView.selectReservationFunction();
+            } else {
+                System.out.println("잘못된 기능 입력입니다.");
+                System.out.println();
+            }
+        }
     }
 }

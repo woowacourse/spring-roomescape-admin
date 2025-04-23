@@ -29,6 +29,11 @@ public class ReservationTimeController {
         return ResponseEntity.ok(reservationTimeService.getAllReservationTimes());
     }
 
+    @GetMapping("/times/{id}")
+    public ResponseEntity<ReservationTimeResponse> getTimeById(@PathVariable Long id) {
+        return ResponseEntity.ok(reservationTimeService.getReservationTimeById(id));
+    }
+
     @ResponseStatus(HttpStatus.OK)
     @DeleteMapping("/times/{id}")
     public void deleteReservationTime(@PathVariable Long id) {

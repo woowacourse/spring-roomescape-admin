@@ -27,6 +27,10 @@ public class ReservationTimeService {
         return ReservationTimeResponse.toDto(reservationTimeRepository.findById(id));
     }
 
+    public ReservationTimeResponse getReservationTimeById(Long id) {
+        return ReservationTimeResponse.toDto(reservationTimeRepository.findById(id));
+    }
+
     public void deleteReservationTimeById(Long id) {
         reservationTimeRepository.deleteById(id);
     }

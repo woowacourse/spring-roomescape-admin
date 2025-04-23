@@ -1,4 +1,4 @@
-package roomescape.integrated.mission;
+package roomescape.integrate.mission;
 
 import static io.restassured.module.mockmvc.RestAssuredMockMvc.given;
 import static org.hamcrest.Matchers.is;

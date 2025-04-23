@@ -1,4 +1,4 @@
-package roomescape.integrated.mission;
+package roomescape.integrate.mission;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.hamcrest.Matchers.is;
@@ -162,7 +162,7 @@ class MissionStep2Test {
 
         RestAssured.given().log().all()
                 .when().get("/reservations")
-                .then().log().all()a
+                .then().log().all()
                 .statusCode(200)
                 .body("size()", is(1));
     }

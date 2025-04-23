@@ -11,6 +11,7 @@ import java.time.LocalTime;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -31,6 +32,10 @@ public class MissionStepTest {
     @Autowired
     private ReservationTimeDao reservationTimeDao;
 
+    @BeforeEach
+    void beforeEachTest(){
+        reservationTimeDao.saveTime(new ReservationTime(LocalTime.of(10, 10)));
+    }
 
     @DisplayName("관리자 페이지 GET 요청 시 200 OK를 반환한다")
     @Test
@@ -63,8 +68,6 @@ public class MissionStepTest {
         params.put("name", "브라운");
         params.put("date", "2023-08-05");
         params.put("timeId", "1");
-
-        reservationTimeDao.saveTime(new ReservationTime(LocalTime.of(10, 10)));
 
         RestAssured.given().log().all()
                 .contentType(ContentType.JSON)
@@ -131,7 +134,6 @@ public class MissionStepTest {
         params.put("name", "브라운");
         params.put("date", "2023-08-05");
         params.put("timeId", "1");
-        reservationTimeDao.saveTime(new ReservationTime(LocalTime.of(10, 10)));
 
         RestAssured.given().log().all()
                 .contentType(ContentType.JSON)
@@ -175,6 +177,29 @@ public class MissionStepTest {
                 .when().delete("/times/1")
                 .then().log().all()
                 .statusCode(200);
+    }
+
+    @DisplayName("예약 추가 이후 예약 개수 확인 테스트")
+    @Test
+    void 팔단계() {
+        Map<String, Object> reservation = new HashMap<>();
+        reservation.put("name", "브라운");
+        reservation.put("date", "2023-08-05");
+        reservation.put("timeId", 1);
+
+        RestAssured.given().log().all()
+                .contentType(ContentType.JSON)
+                .body(reservation)
+                .when().post("/reservations")
+                .then().log().all()
+                .statusCode(200);
+
+
+        RestAssured.given().log().all()
+                .when().get("/reservations")
+                .then().log().all()
+                .statusCode(200)
+                .body("size()", is(1));
     }
 
 }

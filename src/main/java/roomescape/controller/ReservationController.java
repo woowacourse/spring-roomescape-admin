@@ -47,6 +47,7 @@ public final class ReservationController {
 
     @PostMapping
     ResponseEntity<ReservationResponse> create(@RequestBody ReservationRequest reservationRequest) {
+        System.out.println(reservationRequest.time());
         Reservation reservation = reservationRequest.toReservation();
         Number number = saveAndGetId(reservation);
 

@@ -147,5 +147,21 @@ public class MissionStepTest {
         params.put("time", "15:40");
         return params;
     }
+
+    @DisplayName("[7단계] 예약시간을 데이터베이스에 추가할 수 있다.")
+    @Test
+    void saveTime() {
+        //given
+        Map<String, String> params = new HashMap<>();
+        params.put("startAt", "10:00");
+
+        //when //then
+        RestAssured.given().log().all()
+                .contentType(ContentType.JSON)
+                .body(params)
+                .when().post("/times")
+                .then().log().all()
+                .statusCode(200);
+    }
 }
 

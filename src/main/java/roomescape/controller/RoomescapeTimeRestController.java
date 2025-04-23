@@ -5,7 +5,7 @@ import org.springframework.web.bind.annotation.*;
 import roomescape.dao.TimeDao;
 import roomescape.dto.TimeRequestDto;
 import roomescape.dto.TimeResponseDto;
-import roomescape.entity.TimeEntity;
+import roomescape.entity.ReservationTimeEntity;
 
 import java.util.List;
 
@@ -20,7 +20,7 @@ public class RoomescapeTimeRestController {
 
     @PostMapping
     public ResponseEntity<TimeResponseDto> create(@RequestBody TimeRequestDto requestDto) {
-        TimeEntity saved = timeDao.save(requestDto.toEntity());
+        ReservationTimeEntity saved = timeDao.save(requestDto.toEntity());
         return ResponseEntity.ok().body(TimeResponseDto.from(saved));
     }
 

@@ -7,6 +7,7 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.annotation.DirtiesContext;
 import roomescape.dao.ReservationDAO;
 import roomescape.entity.ReservationEntity;
+import roomescape.entity.ReservationTimeEntity;
 
 import java.time.LocalDate;
 import java.time.LocalTime;
@@ -25,11 +26,12 @@ class ReservationDAOTest {
         // given
         LocalDate date = LocalDate.of(2025, 1, 2);
         LocalTime time = LocalTime.of(12, 0);
-        reservationDAO.save(new ReservationEntity(null, "test", date, time));
+        ReservationTimeEntity timeEntity = new ReservationTimeEntity(1L, time);
+        reservationDAO.save(new ReservationEntity(null, "test", date, timeEntity));
 
         // when & then
         assertThatThrownBy(() -> {
-            reservationDAO.save(new ReservationEntity(null, "test2", date, time));
+            reservationDAO.save(new ReservationEntity(null, "test2", date, timeEntity));
         }).isInstanceOf(IllegalArgumentException.class);
     }
 

@@ -3,19 +3,24 @@ package roomescape.controller;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import roomescape.dao.ReservationDAO;
+import roomescape.dao.TimeDao;
 import roomescape.dto.ReservationRequestDto;
 import roomescape.dto.ReservationResponseDto;
 import roomescape.entity.ReservationEntity;
+import roomescape.entity.ReservationTimeEntity;
 
 import java.util.List;
+import java.util.Optional;
 
 @RestController
 @RequestMapping("/reservations")
 public class RoomescapeReservationRestController {
     private final ReservationDAO reservationDAO;
+    private final TimeDao timeDao;
 
-    public RoomescapeReservationRestController(ReservationDAO reservationDAO) {
+    public RoomescapeReservationRestController(ReservationDAO reservationDAO, TimeDao timeDao) {
         this.reservationDAO = reservationDAO;
+        this.timeDao = timeDao;
     }
 
     @GetMapping
@@ -28,9 +33,12 @@ public class RoomescapeReservationRestController {
 
     @PostMapping
     public ResponseEntity<ReservationResponseDto> createReservation(@RequestBody ReservationRequestDto request) {
-        ReservationEntity entity = request.toEntity();
+        Optional<ReservationTimeEntity> timeEntity = timeDao.findById(request.timeId());
+        if (timeEntity.isEmpty()) {
+            return ResponseEntity.badRequest().build();
+        }
         try {
-            ReservationEntity saved = reservationDAO.save(entity);
+            ReservationEntity saved = reservationDAO.save(request.toEntity(timeEntity.get()));
             return ResponseEntity.ok().body(ReservationResponseDto.from(saved));
         } catch (IllegalArgumentException e) {
             return ResponseEntity.badRequest().build();

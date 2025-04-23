@@ -1,11 +1,11 @@
 package roomescape.dto;
 
-import roomescape.entity.TimeEntity;
+import roomescape.entity.ReservationTimeEntity;
 
 import java.time.LocalTime;
 
 public record TimeRequestDto(LocalTime startAt) {
-    public TimeEntity toEntity() {
-        return new TimeEntity(null, startAt);
+    public ReservationTimeEntity toEntity() {
+        return new ReservationTimeEntity(null, startAt);
     }
 }

@@ -22,14 +22,14 @@ public class TimeController {
     @PostMapping
     public ResponseEntity<ReservationTimeResponse> createTime(@RequestBody final ReservationTimeRequest reservationTimeRequest) {
         ReservationTime reservationTime = reservationTimeRequest.toReservationTime();
-        long id = reservationTimeDao.insert(reservationTime);
+        long id = reservationTimeDao.save(reservationTime);
         return ResponseEntity.ok(ReservationTimeResponse.of(id, reservationTime));
     }
 
     @GetMapping
     public ResponseEntity<List<ReservationTimeResponse>> readTimes() {
-        List<ReservationTime> reservations = reservationTimeDao.findAll();
-        return ResponseEntity.ok().body(ReservationTimeResponse.from(reservations));
+        List<ReservationTime> times = reservationTimeDao.getAll();
+        return ResponseEntity.ok().body(ReservationTimeResponse.from(times));
     }
 
     @DeleteMapping("/{id}")
@@ -38,6 +38,12 @@ public class TimeController {
         if (count == 0) {
             throw new IllegalArgumentException("[ERROR] 해당 id에 대한 시간 정보가 존재하지 않습니다.");
         }
+        return ResponseEntity.ok().build();
+    }
+
+    @DeleteMapping
+    public ResponseEntity<Void> deleteAll() {
+        reservationTimeDao.deleteAll();
         return ResponseEntity.ok().build();
     }
 }

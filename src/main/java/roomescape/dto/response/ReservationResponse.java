@@ -1,33 +1,20 @@
 package roomescape.dto.response;
 
-import com.fasterxml.jackson.annotation.JsonFormat;
 import roomescape.domain.Reservation;
 
 import java.time.LocalDate;
-import java.time.LocalDateTime;
-import java.time.LocalTime;
-import java.util.List;
 
 public record ReservationResponse(
         Long id,
         String name,
         LocalDate date,
-        @JsonFormat(pattern = "HH:mm")
-        LocalTime time) {
+        ReservationTimeResponse time) {
 
-    public static List<ReservationResponse> from(final List<Reservation> reservations) {
-        return reservations.stream()
-                .map(ReservationResponse::from)
-                .toList();
+    public static ReservationResponse of(final long id, final Reservation reservation, final ReservationTimeResponse timeResponse) {
+        return new ReservationResponse(id, reservation.getName(), reservation.getDate(), timeResponse);
     }
 
-    private static ReservationResponse from(final Reservation reservation) {
-        LocalDateTime dateTime = reservation.getDateTime();
-        return new ReservationResponse(reservation.getId(), reservation.getName(), dateTime.toLocalDate(), dateTime.toLocalTime());
-    }
-
-    public static ReservationResponse of(final long id, final Reservation reservation) {
-        LocalDateTime dateTime = reservation.getDateTime();
-        return new ReservationResponse(id, reservation.getName(), dateTime.toLocalDate(), dateTime.toLocalTime());
+    public static ReservationResponse of(final Reservation reservation, final ReservationTimeResponse timeResponse) {
+        return new ReservationResponse(reservation.getId(), reservation.getName(), reservation.getDate(), timeResponse);
     }
 }

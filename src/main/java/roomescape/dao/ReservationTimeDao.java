@@ -21,7 +21,7 @@ public class ReservationTimeDao {
         this.jdbcTemplate = jdbcTemplate;
     }
 
-    public long insert(final ReservationTime reservationTime) {
+    public long save(final ReservationTime reservationTime) {
         KeyHolder keyHolder = new GeneratedKeyHolder();
         String query = "INSERT INTO reservation_time(start_at) VALUES (?)";
         jdbcTemplate.update(connection -> {
@@ -32,9 +32,14 @@ public class ReservationTimeDao {
         return keyHolder.getKey().longValue();
     }
 
-    public List<ReservationTime> findAll() {
+    public List<ReservationTime> getAll() {
         String query = "SELECT * FROM reservation_time";
         return jdbcTemplate.query(query, timeRowMapper());
+    }
+
+    public ReservationTime findById(final Long timeId) {
+        String query = "SELECT * FROM reservation_time WHERE id = ?";
+        return jdbcTemplate.queryForObject(query, timeRowMapper(), timeId);
     }
 
     private RowMapper<ReservationTime> timeRowMapper() {

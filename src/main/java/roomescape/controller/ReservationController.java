@@ -3,10 +3,9 @@ package roomescape.controller;
 import jakarta.validation.Valid;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-import roomescape.dao.ReservationDao;
-import roomescape.domain.Reservation;
 import roomescape.dto.request.ReservationRequest;
 import roomescape.dto.response.ReservationResponse;
+import roomescape.service.ReservationService;
 
 import java.util.List;
 
@@ -14,32 +13,27 @@ import java.util.List;
 @RequestMapping("/reservations")
 public class ReservationController {
 
-    private final ReservationDao reservationDao;
+    private final ReservationService reservationService;
 
-    public ReservationController(final ReservationDao reservationDao) {
-        this.reservationDao = reservationDao;
+    public ReservationController(final ReservationService reservationService) {
+        this.reservationService = reservationService;
     }
 
     @GetMapping
     public ResponseEntity<List<ReservationResponse>> readReservations() {
-        List<Reservation> reservations = reservationDao.findAllReservations();
-        List<ReservationResponse> dtos = ReservationResponse.from(reservations);
-        return ResponseEntity.ok(dtos);
+        List<ReservationResponse> reservations = reservationService.findAllReservations();
+        return ResponseEntity.ok(reservations);
     }
 
     @PostMapping
-    public ResponseEntity<?> createReservation(@Valid @RequestBody ReservationRequest reservationRequest) {
-        Reservation reservation = reservationRequest.toReservation();
-        long id = reservationDao.insert(reservation);
-        return ResponseEntity.ok(ReservationResponse.of(id, reservation));
+    public ResponseEntity<?> createReservation(@Valid @RequestBody ReservationRequest request) {
+        ReservationResponse response = reservationService.createReservation(request);
+        return ResponseEntity.ok(response);
     }
 
     @DeleteMapping("/{id}")
     public ResponseEntity<?> deleteReservation(@PathVariable final Long id) {
-        int count = reservationDao.delete(id);
-        if (count == 0) {
-            throw new IllegalArgumentException("[ERROR] 해당 id에 대한 예약 기록이 존재하지 않습니다.");
-        }
+        reservationService.deleteReservation(id);
         return ResponseEntity.ok().build();
     }
 }

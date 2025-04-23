@@ -6,12 +6,9 @@ import org.springframework.jdbc.support.GeneratedKeyHolder;
 import org.springframework.jdbc.support.KeyHolder;
 import org.springframework.stereotype.Repository;
 import roomescape.domain.Reservation;
+import roomescape.dto.ReservationDto;
 
 import java.sql.PreparedStatement;
-import java.time.LocalDate;
-import java.time.LocalDateTime;
-import java.time.LocalTime;
-import java.time.format.DateTimeFormatter;
 import java.util.List;
 
 @Repository
@@ -23,22 +20,24 @@ public class ReservationDao {
         this.jdbcTemplate = jdbcTemplate;
     }
 
-    public long insert(final Reservation reservation) {
+    public long save(final Reservation reservation, final Long reservationTimeId) {
         KeyHolder keyHolder = new GeneratedKeyHolder();
-        String query = "INSERT INTO reservation(name, date, time) VALUES (?, ?, ?)";
+        String query = "INSERT INTO reservation(name, date, time_id) VALUES (?, ?, ?)";
         jdbcTemplate.update(connection -> {
             PreparedStatement ps = connection.prepareStatement(query, new String[]{"id"});
             ps.setString(1, reservation.getName());
-            ps.setString(2, reservation.getDateTime().toLocalDate().toString());
-            ps.setString(3, reservation.getDateTime().toLocalTime().toString());
+            ps.setString(2, reservation.getDate().toString());
+            ps.setLong(3, reservationTimeId);
             return ps;
         }, keyHolder);
 
         return keyHolder.getKey().longValue();
     }
 
-    public List<Reservation> findAllReservations() {
-        String query = "SELECT * FROM reservation";
+    public List<ReservationDto> getAll() {
+        String query = "SELECT r.id as reservation_id, r.name, r.date, t.id as time_id, t.start_at as time_value " +
+                "FROM reservation r " +
+                "INNER JOIN reservation_time t on r.time_id = t.id";
         return jdbcTemplate.query(query, reservationRowMapper());
     }
 
@@ -53,19 +52,13 @@ public class ReservationDao {
         jdbcTemplate.update(query);
     }
 
-    private RowMapper<Reservation> reservationRowMapper() {
-        return (resultSet, rowNum) -> new Reservation(
+    private RowMapper<ReservationDto> reservationRowMapper() {
+        return (resultSet, rowNum) -> new ReservationDto(
                 resultSet.getLong("id"),
                 resultSet.getString("name"),
-                toLocalDateTime(
-                        resultSet.getString("date"),
-                        resultSet.getString("time")
-                ));
-    }
-
-    private LocalDateTime toLocalDateTime(String date, String time) {
-        LocalDate parsedDate = LocalDate.parse(date, DateTimeFormatter.ofPattern("yyyy-MM-dd"));
-        LocalTime parsedTime = LocalTime.parse(time, DateTimeFormatter.ofPattern("HH:mm"));
-        return LocalDateTime.of(parsedDate, parsedTime);
+                resultSet.getString("date"),
+                resultSet.getLong("time_id"),
+                resultSet.getString("time_value")
+        );
     }
 }

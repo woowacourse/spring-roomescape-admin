@@ -6,10 +6,10 @@ import org.junit.jupiter.api.Test;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.datasource.DriverManagerDataSource;
 import roomescape.domain.Reservation;
+import roomescape.domain.ReservationTime;
 
 import javax.sql.DataSource;
 import java.time.LocalDate;
-import java.time.LocalDateTime;
 import java.time.LocalTime;
 
 import static org.assertj.core.api.Assertions.assertThat;
@@ -29,14 +29,25 @@ class ReservationDaoTest {
         JdbcTemplate jdbcTemplate = new JdbcTemplate(dataSource);
 
         jdbcTemplate.execute(
+                "CREATE TABLE reservation_time (" +
+                        "id BIGINT NOT NULL AUTO_INCREMENT, " +
+                        "start_at VARCHAR(255) NOT NULL, " +
+                        "PRIMARY KEY (id)" +
+                        ")"
+        );
+
+        jdbcTemplate.execute(
                 "CREATE TABLE reservation (" +
                         "id BIGINT NOT NULL AUTO_INCREMENT, " +
                         "name VARCHAR(255) NOT NULL, " +
                         "date VARCHAR(255) NOT NULL, " +
-                        "time VARCHAR(255) NOT NULL, " +
-                        "PRIMARY KEY (id)" +
+                        "time_id BIGINT, " +
+                        "PRIMARY KEY (id), " +
+                        "FOREIGN KEY (time_id) REFERENCES reservation_time (id)" +
                         ")"
         );
+
+        jdbcTemplate.execute("INSERT INTO reservation_time(start_at) VALUES ('11:10')");
 
         reservationDao = new ReservationDao(jdbcTemplate);
     }
@@ -48,29 +59,35 @@ class ReservationDaoTest {
 
     @Test
     void 데이터베이스에_예약_기록을_추가할_수_있다() {
+        // given
+        ReservationTime reservationTime = new ReservationTime(1L, LocalTime.now());
+
         // when & then
-        assertThat(reservationDao.insert(new Reservation("메이", LocalDateTime.of(LocalDate.now(), LocalTime.of(0, 0, 0)))))
+        assertThat(reservationDao.save(new Reservation("메이", LocalDate.now(), reservationTime), 1L))
                 .isEqualTo(1);
     }
 
     @Test
     void 데이터베이스에서_예약_목록을_가져올_수_있다() {
         // given
-        reservationDao.insert(new Reservation("메이", LocalDateTime.of(LocalDate.now(), LocalTime.of(0, 0, 0))));
-        reservationDao.insert(new Reservation("may", LocalDateTime.of(LocalDate.now(), LocalTime.of(0, 0, 0))));
+        ReservationTime reservationTime = new ReservationTime(1L, LocalTime.now());
+        reservationDao.save(new Reservation("메이", LocalDate.now(), reservationTime), 1L);
+        reservationDao.save(new Reservation("may", LocalDate.now(), reservationTime), 1L);
 
         // when & then
-        assertThat(reservationDao.findAllReservations().size())
+        assertThat(reservationDao.getAll().size())
                 .isEqualTo(2);
     }
 
     @Test
     void 데이터베이스의_예약_목록을_삭제할_수_있다() {
         // given
-        reservationDao.insert(new Reservation("메이", LocalDateTime.of(LocalDate.now(), LocalTime.of(0, 0, 0))));
-        reservationDao.insert(new Reservation("may", LocalDateTime.of(LocalDate.now(), LocalTime.of(0, 0, 0))));
+        ReservationTime reservationTime = new ReservationTime(1L, LocalTime.now());
+        reservationDao.save(new Reservation("메이", LocalDate.now(), reservationTime), 1L);
+        reservationDao.save(new Reservation("메이", LocalDate.now(), reservationTime), 1L);
 
-        Long id = reservationDao.findAllReservations().get(0).getId();
+
+        Long id = reservationDao.getAll().get(0).reservationId();
 
         // when & then
         assertThat(reservationDao.delete(id))

@@ -11,9 +11,9 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.ResponseBody;
 import roomescape.dto.ReservationResponseDto;
 import roomescape.dto.ReservationRequestDto;
-import roomescape.model.Id;
-import roomescape.model.Reservation;
-import roomescape.model.Reservations;
+import roomescape.domain_entity.Id;
+import roomescape.domain_entity.Reservation;
+import roomescape.domain_entity.Reservations;
 
 @Controller
 public class AdminController {

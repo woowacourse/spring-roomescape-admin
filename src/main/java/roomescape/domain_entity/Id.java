@@ -1,4 +1,4 @@
-package roomescape.model;
+package roomescape.domain_entity;
 
 import java.util.Objects;
 import java.util.concurrent.atomic.AtomicLong;

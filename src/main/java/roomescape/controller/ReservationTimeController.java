@@ -12,43 +12,39 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.server.ResponseStatusException;
+import roomescape.service.ReservationTimeService;
 import roomescape.service.dto.ReservationTimeRegisterDto;
 import roomescape.service.dto.ReservationTimeResponseDto;
-import roomescape.domain.ReservationTime;
-import roomescape.repository.ReservationTimeRepository;
 
 @RestController
 @RequestMapping("/times")
 public class ReservationTimeController {
 
-    private final ReservationTimeRepository reservationTimeRepository;
+    private final ReservationTimeService reservationTimeService;
 
-    public ReservationTimeController(ReservationTimeRepository reservationTimeRepository) {
-        this.reservationTimeRepository = reservationTimeRepository;
+    public ReservationTimeController(ReservationTimeService reservationTimeService) {
+        this.reservationTimeService = reservationTimeService;
     }
 
     @PostMapping
     @ResponseBody
     public ReservationTimeResponseDto registerReservationTime(
             @RequestBody final ReservationTimeRegisterDto reservationTimeRegisterDto) {
-        ReservationTime reservationTime = reservationTimeRegisterDto.toReservationTime();
-        reservationTimeRepository.save(reservationTime);
-        return new ReservationTimeResponseDto(reservationTime);
+        Long savedId = reservationTimeService.saveReservationTime(reservationTimeRegisterDto);
+        return new ReservationTimeResponseDto(reservationTimeService.findReservationTimeById(savedId));
     }
 
     @GetMapping
     @ResponseBody
     public List<ReservationTimeResponseDto> getReservationTimes() {
-        return reservationTimeRepository.findAll().stream()
-                .map(ReservationTimeResponseDto::new)
-                .toList();
+        return reservationTimeService.findAllReservationTimes();
     }
 
     @ResponseBody
     @DeleteMapping("/{id}")
     public ResponseEntity<String> deleteById(@PathVariable("id") final Long id) {
         try {
-            reservationTimeRepository.deleteById(id);
+            reservationTimeService.deleteReservationTimeById(id);
             return new ResponseEntity<>(HttpStatus.OK);
         } catch (ResponseStatusException e) {
             return new ResponseEntity<>(e.getMessage(), e.getStatusCode());

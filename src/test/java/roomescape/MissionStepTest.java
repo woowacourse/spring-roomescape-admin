@@ -139,7 +139,7 @@ public class MissionStepTest {
     void canConnectDatabase() {
         try (Connection connection = jdbcTemplate.getDataSource().getConnection()) {
             assertThat(connection).isNotNull();
-            assertThat(connection.getCatalog()).isEqualTo("ROOMESCAPE_DATABASE");
+            assertThat(connection.getCatalog()).isEqualTo("TEST_ROOMESCAPE_DATABASE");
             assertThat(connection.getMetaData().getTables(null, null, "RESERVATION", null).next()).isTrue();
         } catch (SQLException e) {
             throw new RuntimeException(e);

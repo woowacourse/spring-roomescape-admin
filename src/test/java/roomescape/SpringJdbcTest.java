@@ -8,12 +8,14 @@ import java.sql.SQLException;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.boot.test.context.SpringBootTest.WebEnvironment;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.test.annotation.DirtiesContext;
-import org.springframework.test.context.ActiveProfiles;
 
-@ActiveProfiles("test")
-@SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.DEFINED_PORT)
+@SpringBootTest(
+        webEnvironment = WebEnvironment.DEFINED_PORT,
+        properties = "spring.datasource.url=jdbc:h2:mem:testdb"
+)
 @DirtiesContext(classMode = DirtiesContext.ClassMode.BEFORE_EACH_TEST_METHOD)
 public class SpringJdbcTest {
 
@@ -26,7 +28,7 @@ public class SpringJdbcTest {
         Connection connection = jdbcTemplate.getDataSource().getConnection();
 
         assertThat(connection).isNotNull();
-        assertThat(connection.getCatalog()).isEqualTo("TEST");
+        assertThat(connection.getCatalog()).isEqualTo("TESTDB");
         assertThat(connection.getMetaData().getTables(null, null, "RESERVATION", null).next()).isTrue();
     }
 }

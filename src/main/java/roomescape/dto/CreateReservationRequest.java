@@ -9,4 +9,9 @@ public record CreateReservationRequest(
     @JsonProperty("timeId") Long timeSlotId
 ) {
 
+    public CreateReservationRequest {
+        if (name == null || date == null || timeSlotId == null) {
+            throw new IllegalArgumentException("모든 값이 존재해야 합니다.");
+        }
+    }
 }

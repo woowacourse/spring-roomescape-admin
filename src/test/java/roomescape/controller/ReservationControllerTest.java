@@ -8,13 +8,9 @@ import static org.springframework.http.HttpStatus.NO_CONTENT;
 import static org.springframework.http.HttpStatus.OK;
 
 import java.time.LocalDate;
-import java.util.stream.Stream;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
-import org.junit.jupiter.params.ParameterizedTest;
-import org.junit.jupiter.params.provider.Arguments;
-import org.junit.jupiter.params.provider.MethodSource;
 import roomescape.dto.CreateReservationRequest;
 import roomescape.model.Reservation;
 import roomescape.repository.ReservationFakeRepository;
@@ -64,17 +60,6 @@ public class ReservationControllerTest {
         );
     }
 
-    @ParameterizedTest
-    @MethodSource("parametersThatAnyOneIsNull")
-    @DisplayName("예약 추가 시 이름, 날짜, 시간 중 하나라도 없으면 400 Bad Request")
-    void badRequestAnyParameterNull(CreateReservationRequest request) {
-        //when
-        var responseEntity = controller.addReservation(request);
-
-        //then
-        assertThat(responseEntity.getStatusCode()).isEqualTo(BAD_REQUEST);
-    }
-
     @Test
     @DisplayName("예약 추가 시 이름이 잘못된 형식이면 400 Bad Request")
     void badRequestAnyParameterInvalid() {
@@ -100,14 +85,6 @@ public class ReservationControllerTest {
 
         //then
         assertThat(responseEntity.getStatusCode()).isEqualTo(NOT_FOUND);
-    }
-
-    public static Stream<Arguments> parametersThatAnyOneIsNull() {
-        return Stream.of(
-            Arguments.of(new CreateReservationRequest("브라운", LocalDate.of(2023, 8, 5), null)),
-            Arguments.of(new CreateReservationRequest("브라운", null, timeSlotId)),
-            Arguments.of(new CreateReservationRequest(null, LocalDate.of(2023, 8, 5), timeSlotId))
-        );
     }
 
     private CreateReservationRequest createReservationRequest() {

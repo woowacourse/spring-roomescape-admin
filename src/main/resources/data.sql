@@ -1,1 +1,0 @@
-INSERT INTO reservation (name, date, time) VALUES ('moda', '2024-10-10', '10:00:00');

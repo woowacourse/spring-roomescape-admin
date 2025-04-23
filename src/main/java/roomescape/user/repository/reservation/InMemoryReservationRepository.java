@@ -2,8 +2,8 @@ package roomescape.user.repository.reservation;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 import org.springframework.stereotype.Repository;
-import roomescape.exception.DataNotFoundException;
 import roomescape.user.domain.Reservation;
 
 @Repository
@@ -25,11 +25,10 @@ public class InMemoryReservationRepository implements ReservationRepository {
         id = id + 1;
     }
 
-    public Reservation getOneById(final Long id) {
+    public Optional<Reservation> findById(final Long id) {
         return reservations.stream()
                 .filter(reservation -> reservation.getId().equals(id))
-                .findFirst()
-                .orElseThrow(() -> new DataNotFoundException("해당 예약 정보가 존재하지 않습니다. id = " + id));
+                .findFirst();
     }
 
     public List<Reservation> findAll() {

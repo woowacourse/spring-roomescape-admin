@@ -43,7 +43,7 @@ public class ReservationRestController {
                 reservationRequest.date(),
                 reservationRequest.timeId()
         );
-        final Reservation found = reservationService.getOneById(id);
+        final Reservation found = reservationService.getById(id);
         return ResponseEntity.ok(ReservationResponse.from(found));
     }
 

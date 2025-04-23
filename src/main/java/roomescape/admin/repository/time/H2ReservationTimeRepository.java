@@ -2,15 +2,14 @@ package roomescape.admin.repository.time;
 
 import java.sql.PreparedStatement;
 import java.sql.Time;
-import java.time.LocalTime;
 import java.util.List;
+import java.util.Optional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.support.GeneratedKeyHolder;
 import org.springframework.jdbc.support.KeyHolder;
 import org.springframework.stereotype.Repository;
 import roomescape.admin.domain.ReservationTime;
-import roomescape.exception.DataNotFoundException;
 
 @Repository
 @RequiredArgsConstructor
@@ -33,7 +32,7 @@ public class H2ReservationTimeRepository implements ReservationTimeRepository {
     }
 
     @Override
-    public ReservationTime getOneById(final Long id) {
+    public Optional<ReservationTime> findById(final Long id) {
         String sql = "select * from reservation_times where id = ?";
         List<ReservationTime> reservationTimes = jdbcTemplate.query(sql, (rs, rowNum) ->
                         new ReservationTime(rs.getLong("id"),
@@ -41,27 +40,12 @@ public class H2ReservationTimeRepository implements ReservationTimeRepository {
                 id
         );
 
-        if (reservationTimes.size() != 1) {
-            throw new DataNotFoundException("해당 예약 시간 데이터가 존재하지 않습니다. id = " + id);
+        if (reservationTimes.size() == 1) {
+            return Optional.of(reservationTimes.getFirst());
         }
-        return reservationTimes.getFirst();
+        return Optional.empty();
     }
-
-    @Override
-    public ReservationTime getOneByStartAt(LocalTime startAt) {
-        String sql = "select * from reservation_times where start_at = ?";
-        List<ReservationTime> reservationTimes = jdbcTemplate.query(sql, (rs, rowNum) ->
-                        new ReservationTime(rs.getLong("id"),
-                                rs.getTime("start_at").toLocalTime()),
-                startAt
-        );
-
-        if (reservationTimes.size() != 1) {
-            throw new DataNotFoundException("해당 예약 시간 데이터가 존재하지 않습니다. startAt = " + startAt);
-        }
-        return reservationTimes.getFirst();
-    }
-
+    
     @Override
     public List<ReservationTime> findAll() {
         String sql = "select * from reservation_times";

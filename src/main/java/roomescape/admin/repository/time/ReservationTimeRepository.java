@@ -1,16 +1,14 @@
 package roomescape.admin.repository.time;
 
-import java.time.LocalTime;
 import java.util.List;
+import java.util.Optional;
 import roomescape.admin.domain.ReservationTime;
 
 public interface ReservationTimeRepository {
 
     Long save(ReservationTime reservationTime);
 
-    ReservationTime getOneById(Long id);
-
-    ReservationTime getOneByStartAt(LocalTime time);
+    Optional<ReservationTime> findById(Long id);
 
     List<ReservationTime> findAll();
 

@@ -93,9 +93,9 @@ class ReservationServiceTest {
         @Bean
         public ReservationService reservationService(
                 @Qualifier("h2ReservationRepository") ReservationRepository reservationRepository,
-                ReservationTimeRepository reservationTimeRepository
+                ReservationTimeService reservationTimeService
         ) {
-            return new ReservationService(reservationRepository, reservationTimeRepository);
+            return new ReservationService(reservationRepository, reservationTimeService);
         }
     }
 }

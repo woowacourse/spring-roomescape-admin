@@ -27,7 +27,7 @@ public class ReservationTimeRestController {
             @RequestBody final ReservationTimeRequest request
     ) {
         final Long id = reservationTimeService.save(request.startAt());
-        final ReservationTime found = reservationTimeService.getOneById(id);
+        final ReservationTime found = reservationTimeService.getById(id);
         return ResponseEntity.ok(ReservationTimeResponse.from(found));
     }
 

@@ -4,13 +4,13 @@ import java.sql.Date;
 import java.sql.PreparedStatement;
 import java.time.LocalTime;
 import java.util.List;
+import java.util.Optional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.support.GeneratedKeyHolder;
 import org.springframework.jdbc.support.KeyHolder;
 import org.springframework.stereotype.Repository;
 import roomescape.admin.domain.ReservationTime;
-import roomescape.exception.DataNotFoundException;
 import roomescape.user.domain.Reservation;
 
 @Repository
@@ -36,7 +36,7 @@ public class H2ReservationRepository implements ReservationRepository {
     }
 
     @Override
-    public Reservation getOneById(Long id) {
+    public Optional<Reservation> findById(Long id) {
         String sql = """
                 SELECT 
                     r.id as id,
@@ -49,7 +49,7 @@ public class H2ReservationRepository implements ReservationRepository {
                 ON r.time_id = t.id
                 WHERE r.id = ?
                 """;
-        List<Reservation> reservation = jdbcTemplate.query(sql, (rs, rowNum) ->
+        List<Reservation> reservations = jdbcTemplate.query(sql, (rs, rowNum) ->
                         new Reservation(
                                 rs.getLong("id"),
                                 rs.getString("name"),
@@ -61,11 +61,10 @@ public class H2ReservationRepository implements ReservationRepository {
                         ),
                 id
         );
-        if (reservation.size() != 1) {
-            throw new DataNotFoundException("해당 예약 정보가 존재하지 않습니다. id = " + id);
+        if (reservations.size() == 1) {
+            return Optional.of(reservations.getFirst());
         }
-
-        return reservation.getFirst();
+        return Optional.empty();
     }
 
     @Override

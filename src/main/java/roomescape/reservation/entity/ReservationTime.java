@@ -25,6 +25,10 @@ public class ReservationTime {
         return startAt;
     }
 
+    public boolean isSameId(Long id) {
+        return this.id == id;
+    }
+
     @Override
     public boolean equals(Object o) {
         if (o == null || getClass() != o.getClass()) return false;

@@ -8,7 +8,6 @@ import roomescape.reservation.entity.ReservationTime;
 import roomescape.reservation.exception.EntityNotFoundException;
 import roomescape.reservation.repository.ReservationDao;
 import roomescape.reservation.repository.ReservationTimeDao;
-import roomescape.reservation.repository.ReservationTimeDaoImpl;
 
 import java.util.List;
 
@@ -18,7 +17,7 @@ public class ReservationService {
     private final ReservationDao reservationDao;
     private final ReservationTimeDao reservationTimeDao;
 
-    public ReservationService(ReservationDao reservationDao, ReservationTimeDaoImpl reservationTimeDao) {
+    public ReservationService(ReservationDao reservationDao, ReservationTimeDao reservationTimeDao) {
         this.reservationDao = reservationDao;
         this.reservationTimeDao = reservationTimeDao;
     }

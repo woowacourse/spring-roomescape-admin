@@ -152,5 +152,57 @@ CREATE TABLE reservation_time
 
 ```
 
+## 8단계
 
+- [ ] 기존의 API에서 수정된 아래 API들을 구현한다.
 
+### API 명세
+
+- [ ]예약 추가 API
+- [ ]Request
+
+```
+POST /reservations HTTP/1.1
+content-type: application/json
+{
+"date": "2023-08-05",
+"name": "브라운",
+"timeId": 1
+}
+```
+
+- [ ]Response
+
+```
+HTTP/1.1 200
+Content-Type: application/json
+
+{
+"id": 1,
+"name": "브라운",
+"date": "2023-08-05",
+"time" : {
+"id": 1,
+"startAt" : "10:00"
+}
+}
+```
+
+- [ ] 예약 조회 API
+    - [ ] Request
+
+```
+GET /reservations HTTP/1.1
+Response
+[
+{
+"id": 1,
+"name": "브라운",
+"date": "2023-08-05",
+"time": {
+"id": 1,
+"startAt": "10:00"
+}
+}
+]
+```

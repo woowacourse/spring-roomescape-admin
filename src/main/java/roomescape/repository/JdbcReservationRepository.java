@@ -11,7 +11,6 @@ import org.springframework.jdbc.support.GeneratedKeyHolder;
 import org.springframework.jdbc.support.KeyHolder;
 import org.springframework.stereotype.Repository;
 import roomescape.domain.Reservation;
-import roomescape.domain.ReservationRepository;
 import roomescape.domain.ReservationTime;
 
 @Repository
@@ -34,7 +33,6 @@ public class JdbcReservationRepository implements ReservationRepository {
 
         return new Reservation(reservationId, name, date, reservationTime);
     };
-
 
     @Override
     public long add(Reservation reservation) {

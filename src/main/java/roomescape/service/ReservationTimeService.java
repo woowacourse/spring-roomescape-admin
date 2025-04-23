@@ -29,6 +29,6 @@ public class ReservationTimeService {
     }
 
     public ReservationTime findReservationTimeById(Long id) {
-        return reservationTimeRepository.findById(id);
+        return reservationTimeRepository.findById(id).orElseThrow(() -> new IllegalArgumentException("존재하지 않는 id입니다."));
     }
 }

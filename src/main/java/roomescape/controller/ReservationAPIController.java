@@ -3,7 +3,6 @@ package roomescape.controller;
 import java.time.LocalDate;
 import java.time.LocalTime;
 import java.util.List;
-import java.util.concurrent.atomic.AtomicLong;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.jdbc.core.JdbcTemplate;
@@ -23,7 +22,6 @@ import roomescape.dto.ReservationRequest;
 public class ReservationAPIController {
 
     private final Reservations reservations = new Reservations();
-    private final AtomicLong index = new AtomicLong();
 
     @Autowired
     JdbcTemplate jdbcTemplate;
@@ -42,11 +40,13 @@ public class ReservationAPIController {
     }
 
     @PostMapping
-    public ResponseEntity<Reservation> addReservation(@RequestBody ReservationRequest reservationRequest) {
-        Reservation newReservation = new Reservation(index.incrementAndGet(), reservationRequest.getName(),
-                reservationRequest.getDate(), reservationRequest.getTime());
-        reservations.add(newReservation);
-        return ResponseEntity.ok().body(newReservation);
+    public ResponseEntity<Void> addReservation(@RequestBody ReservationRequest reservationRequest) {
+        String sql = "insert into reservation(name, date, time) values (?,?,?)";
+        jdbcTemplate.update(sql,
+                reservationRequest.getName(),
+                reservationRequest.getDate(),
+                reservationRequest.getTime());
+        return ResponseEntity.ok().build();
     }
 
     @DeleteMapping("/{id}")

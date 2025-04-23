@@ -6,7 +6,7 @@ import org.springframework.jdbc.support.GeneratedKeyHolder;
 import org.springframework.jdbc.support.KeyHolder;
 import org.springframework.stereotype.Repository;
 import roomescape.dto.ReservationResponseDto;
-import roomescape.model.Reservation;
+import roomescape.dto.ReservationTimeResponseDto;
 
 import java.sql.PreparedStatement;
 import java.time.LocalDate;
@@ -23,16 +23,29 @@ public class ReservationDao {
     }
 
     public List<ReservationResponseDto> findAllReservations() {
-        String sql = "select * from reservation";
+        String sql = """
+                SELECT
+                    r.id as reservation_id,
+                    r.name,
+                    r.date,
+                    t.id as time_id,
+                    t.start_at as time_value
+                FROM reservation as r
+                inner join reservation_time as t
+                on r.time_id = t.id
+                """;
+
         RowMapper<ReservationResponseDto> rowMapper = (rs, rowNum) -> {
             String date = rs.getString("date");
-            String time = rs.getString("time");
+            Long timeId = rs.getLong("time_value");
+            String timeValue = rs.getString("time_value");
+            ReservationTimeResponseDto responseDto = new ReservationTimeResponseDto(timeId, LocalTime.parse(timeValue));
 
             ReservationResponseDto dto = new ReservationResponseDto(
-                    rs.getLong("id"),
+                    rs.getLong("reservation_id"),
                     rs.getString("name"),
                     LocalDate.parse(date),
-                    LocalTime.parse(time)
+                    responseDto
             );
             return dto;
         };
@@ -40,15 +53,17 @@ public class ReservationDao {
         return jdbcTemplate.query(sql, rowMapper);
     }
 
-    public Long saveAndReturnId(final Reservation reservation) {
-        String sql = "insert into reservation (name, date, time) values (?, ?, ?)";
+    public Long saveAndReturnId(final String name, final LocalDate requestDate, final Long timeId) {
+        String sql = """
+                    insert into reservation (name, date, time_id) values (?, ?, ?)
+                """;
         KeyHolder keyHolder = new GeneratedKeyHolder();
         jdbcTemplate.update(connection -> {
             PreparedStatement ps = connection.prepareStatement(
                     sql, new String[]{"id"});
-            ps.setString(1, reservation.name());
-            ps.setString(2, reservation.date().toString());
-            ps.setString(3, reservation.time().toString());
+            ps.setString(1, name);
+            ps.setString(2, requestDate.toString());
+            ps.setLong(3, timeId);
             return ps;
         }, keyHolder);
 

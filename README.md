@@ -30,7 +30,7 @@
 
 ```
 Request
-GET /reservations HTTP/1.1
+GET /reservationDao HTTP/1.1
 
 Response
 HTTP/1.1 200 
@@ -61,7 +61,7 @@ time: string
 ```
 Request
 Content-Type: application/json
-POST /reservations
+POST /reservationDao
 
 {
     "name": "브라운",
@@ -88,7 +88,7 @@ id: number
 
 ```
 Request
-DELETE /reservations/{id} HTTP/1.1
+DELETE /reservationDao/{id} HTTP/1.1
 
 Response
 HTTP/1.1 204

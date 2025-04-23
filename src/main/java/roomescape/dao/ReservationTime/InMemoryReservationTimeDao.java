@@ -1,16 +1,17 @@
-package roomescape.domain.ReservationTime;
+package roomescape.dao.ReservationTime;
 
 import java.util.List;
 import java.util.NoSuchElementException;
 import java.util.concurrent.atomic.AtomicLong;
+import roomescape.domain.ReservationTime;
 import roomescape.dto.request.ReservationTimeCreateRequest;
 
-public class InMemoryReservationTimes implements ReservationTimes {
+public class InMemoryReservationTimeDao implements ReservationTimeDao {
 
     private final AtomicLong index = new AtomicLong(1);
     private final List<ReservationTime> reservationTimes;
 
-    public InMemoryReservationTimes(final List<ReservationTime> reservationTimes) {
+    public InMemoryReservationTimeDao(final List<ReservationTime> reservationTimes) {
         this.reservationTimes = reservationTimes;
     }
 

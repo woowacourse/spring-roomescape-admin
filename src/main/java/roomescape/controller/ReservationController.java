@@ -10,9 +10,9 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
-import roomescape.domain.Reservation.Reservations;
-import roomescape.domain.ReservationTime.ReservationTime;
-import roomescape.domain.ReservationTime.ReservationTimes;
+import roomescape.dao.Reservation.ReservationDao;
+import roomescape.dao.ReservationTime.ReservationTimeDao;
+import roomescape.domain.ReservationTime;
 import roomescape.dto.request.ReservationCreateRequest;
 import roomescape.dto.response.ReservationCreateResponse;
 import roomescape.dto.response.ReservationResponse;
@@ -21,17 +21,17 @@ import roomescape.dto.response.ReservationResponse;
 @RequestMapping("/reservations")
 public class ReservationController {
 
-    private final Reservations reservations;
-    private final ReservationTimes reservationTimes;
+    private final ReservationDao reservationDao;
+    private final ReservationTimeDao reservationTimeDao;
 
-    public ReservationController(final Reservations reservations, final ReservationTimes reservationTimes) {
-        this.reservations = reservations;
-        this.reservationTimes = reservationTimes;
+    public ReservationController(final ReservationDao reservationDao, final ReservationTimeDao reservationTimeDao) {
+        this.reservationDao = reservationDao;
+        this.reservationTimeDao = reservationTimeDao;
     }
 
     @GetMapping
     public List<ReservationResponse> findAll() {
-        return reservations.findAll().stream()
+        return reservationDao.findAll().stream()
                 .map(reservation -> new ReservationResponse(
                         reservation.getId(),
                         reservation.getName(),
@@ -45,9 +45,9 @@ public class ReservationController {
     public ResponseEntity<ReservationCreateResponse> create(
             @RequestBody ReservationCreateRequest reservationCreateRequest) {
 
-        ReservationTime time = reservationTimes.findById(reservationCreateRequest.timeId());
+        ReservationTime time = reservationTimeDao.findById(reservationCreateRequest.timeId());
         ReservationCreateResponse reservationCreateResponse = new ReservationCreateResponse(
-                reservations.create(reservationCreateRequest), reservationCreateRequest.name(),
+                reservationDao.create(reservationCreateRequest), reservationCreateRequest.name(),
                 reservationCreateRequest.date(), time);
 
         return ResponseEntity.status(HttpStatus.CREATED).body(reservationCreateResponse);
@@ -55,7 +55,7 @@ public class ReservationController {
 
     @DeleteMapping("{id}")
     public ResponseEntity<Void> delete(@PathVariable Long id) {
-        reservations.delete(id);
+        reservationDao.delete(id);
         return ResponseEntity.noContent().build();
     }
 }

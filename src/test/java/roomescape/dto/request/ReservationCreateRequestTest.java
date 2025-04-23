@@ -6,6 +6,7 @@ import java.time.LocalDate;
 import java.time.LocalTime;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
+import roomescape.domain.ReservationTime;
 
 class ReservationCreateRequestTest {
 
@@ -15,7 +16,7 @@ class ReservationCreateRequestTest {
 
         // given
         final LocalDate date = LocalDate.of(2025, 4, 21);
-        final LocalTime time = LocalTime.of(10, 0);
+        final ReservationTime reservationTime = new ReservationTime(1L, LocalTime.of(10, 0));
 
         // when & then
         assertThatThrownBy(() -> new ReservationCreateRequest(null, date, 1L))

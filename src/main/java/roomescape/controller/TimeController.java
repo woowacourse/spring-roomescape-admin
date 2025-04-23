@@ -10,7 +10,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
-import roomescape.domain.ReservationTime.ReservationTimes;
+import roomescape.dao.ReservationTime.ReservationTimeDao;
 import roomescape.dto.request.ReservationTimeCreateRequest;
 import roomescape.dto.response.ReservationTimeCreateResponse;
 import roomescape.dto.response.ReservationTimeResponse;
@@ -19,15 +19,15 @@ import roomescape.dto.response.ReservationTimeResponse;
 @RequestMapping("/times")
 public class TimeController {
 
-    private final ReservationTimes reservationTimes;
+    private final ReservationTimeDao reservationTimeDao;
 
-    public TimeController(final ReservationTimes reservationTimes) {
-        this.reservationTimes = reservationTimes;
+    public TimeController(final ReservationTimeDao reservationTimeDao) {
+        this.reservationTimeDao = reservationTimeDao;
     }
 
     @GetMapping
     public List<ReservationTimeResponse> findAll() {
-        return reservationTimes.findAll().stream()
+        return reservationTimeDao.findAll().stream()
                 .map(reservationTime -> new ReservationTimeResponse(
                         reservationTime.getId(),
                         reservationTime.getStartAt()
@@ -39,14 +39,14 @@ public class TimeController {
     public ResponseEntity<ReservationTimeCreateResponse> create(
             @RequestBody ReservationTimeCreateRequest reservationTimeCreateRequest) {
         ReservationTimeCreateResponse reservationTimeCreateResponse = new ReservationTimeCreateResponse(
-                reservationTimes.create(reservationTimeCreateRequest),
+                reservationTimeDao.create(reservationTimeCreateRequest),
                 reservationTimeCreateRequest.startAt());
         return ResponseEntity.status(HttpStatus.CREATED).body(reservationTimeCreateResponse);
     }
 
     @DeleteMapping("{id}")
     public ResponseEntity<Void> delete(@PathVariable long id) {
-        reservationTimes.delete(id);
+        reservationTimeDao.delete(id);
         return ResponseEntity.noContent().build();
     }
 }

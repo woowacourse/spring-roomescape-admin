@@ -1,9 +1,10 @@
-package roomescape.domain.ReservationTime;
+package roomescape.dao.ReservationTime;
 
 import java.util.List;
+import roomescape.domain.ReservationTime;
 import roomescape.dto.request.ReservationTimeCreateRequest;
 
-public interface ReservationTimes {
+public interface ReservationTimeDao {
 
     List<ReservationTime> findAll();
 

@@ -12,6 +12,7 @@ import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
 import org.springframework.jdbc.core.JdbcTemplate;
+import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
 import roomescape.common.exception.AlreadyInUseException;
 import roomescape.common.exception.EntityNotFoundException;
 import roomescape.config.TestConfig;
@@ -26,8 +27,8 @@ class ReservationTimeRepositoryTest {
     @BeforeEach
     void init() {
         jdbcTemplate = TestConfig.getJdbcTemplate();
-
-        reservationTimeRepository = new ReservationTimeDAO(jdbcTemplate);
+        NamedParameterJdbcTemplate namedParameterJdbcTemplate = new NamedParameterJdbcTemplate(jdbcTemplate);
+        reservationTimeRepository = new ReservationTimeDAO(namedParameterJdbcTemplate, TestConfig.getDataSource());
     }
 
     @DisplayName("id에 따라 예약 시간을 반환한다.")
@@ -97,14 +98,15 @@ class ReservationTimeRepositoryTest {
 
         @DisplayName("Reservation 테이블에서 사용 중이라면 AlreadyUseException 예외를 반환한다.")
         @Test
-        void test2(){
+        void test2() {
             // given
             Long id = 1L;
             LocalTime now = LocalTime.of(9, 0);
             String sql = "insert into reservation_time(id, start_at) values(?, ?)";
             jdbcTemplate.update(sql, id, now);
 
-            jdbcTemplate.update("INSERT INTO reservation(name, date, time_id) VALUES (?, ?, ?)", "꾹", LocalTime.now(), id);
+            jdbcTemplate.update("INSERT INTO reservation(name, date, time_id) VALUES (?, ?, ?)", "꾹", LocalTime.now(),
+                    id);
 
             // when
             assertThatThrownBy(() -> reservationTimeRepository.deleteById(id))

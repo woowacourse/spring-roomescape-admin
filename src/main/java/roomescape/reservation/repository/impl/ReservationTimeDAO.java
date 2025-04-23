@@ -1,16 +1,18 @@
 package roomescape.reservation.repository.impl;
 
-import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.sql.Statement;
 import java.time.LocalTime;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
+import javax.sql.DataSource;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.EmptyResultDataAccessException;
-import org.springframework.jdbc.core.JdbcTemplate;
-import org.springframework.jdbc.support.GeneratedKeyHolder;
-import org.springframework.jdbc.support.KeyHolder;
+import org.springframework.jdbc.core.namedparam.MapSqlParameterSource;
+import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
+import org.springframework.jdbc.core.simple.SimpleJdbcInsert;
 import org.springframework.stereotype.Repository;
 import roomescape.common.exception.AlreadyInUseException;
 import roomescape.common.exception.EntityNotFoundException;
@@ -20,10 +22,17 @@ import roomescape.reservation.repository.ReservationTimeRepository;
 @Repository
 public class ReservationTimeDAO implements ReservationTimeRepository {
 
-    private final JdbcTemplate jdbcTemplate;
+    private static final String TABLE_NAME = "reservation_time";
 
-    public ReservationTimeDAO(JdbcTemplate jdbcTemplate) {
+    private final NamedParameterJdbcTemplate jdbcTemplate;
+    private final SimpleJdbcInsert jdbcInsert;
+
+    @Autowired
+    public ReservationTimeDAO(NamedParameterJdbcTemplate jdbcTemplate, DataSource dataSource) {
         this.jdbcTemplate = jdbcTemplate;
+        this.jdbcInsert = new SimpleJdbcInsert(dataSource)
+                .withTableName(TABLE_NAME)
+                .usingGeneratedKeyColumns("id");
     }
 
     @Override
@@ -37,12 +46,14 @@ public class ReservationTimeDAO implements ReservationTimeRepository {
 
     @Override
     public Optional<ReservationTime> findById(Long id) {
-        String sql = "select * from reservation_time where id = ?";
+        String sql = "select * from reservation_time where id = :id";
+
+        Map<String, Long> params = Map.of("id", id);
 
         try {
             ReservationTime reservationTime = jdbcTemplate.queryForObject(sql,
-                    (resultSet, rowNum) -> getReservationTime(resultSet),
-                    id
+                    params,
+                    (resultSet, rowNum) -> getReservationTime(resultSet)
             );
 
             return Optional.ofNullable(reservationTime);
@@ -72,11 +83,15 @@ public class ReservationTimeDAO implements ReservationTimeRepository {
     }
 
     private ReservationTime update(ReservationTime reservationTime) {
-        String sql = "update reservation_time set start_at = ? where id = ?";
+        String sql = "update reservation_time set start_at = :start_at where id = :id";
 
-        int update = jdbcTemplate.update(sql, reservationTime.getStartAt(), reservationTime.getId());
+        HashMap<String, Object> params = new HashMap<>();
+        params.put("start_at", reservationTime.getStartAt());
+        params.put("id", reservationTime.getId());
 
-        if (update == 0) {
+        int updateRowCount = jdbcTemplate.update(sql, params);
+
+        if (updateRowCount == 0) {
             throw new EntityNotFoundException("ReservationTime with id " + reservationTime.getId() + " not found");
         }
 
@@ -84,17 +99,10 @@ public class ReservationTimeDAO implements ReservationTimeRepository {
     }
 
     private ReservationTime create(ReservationTime reservationTime) {
-        String sql = "insert into reservation_time (start_at) values (?)";
+        MapSqlParameterSource params = new MapSqlParameterSource().addValue("start_at",
+                reservationTime.getStartAt());
 
-        KeyHolder keyHolder = new GeneratedKeyHolder();
-
-        jdbcTemplate.update(conn -> {
-            PreparedStatement ps = conn.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS);
-            ps.setString(1, reservationTime.getStartAt().toString());
-            return ps;
-        }, keyHolder);
-
-        long id = keyHolder.getKey().longValue();
+        long id = jdbcInsert.executeAndReturnKey(params).longValue();
 
         return new ReservationTime(id, reservationTime.getStartAt());
     }
@@ -103,21 +111,23 @@ public class ReservationTimeDAO implements ReservationTimeRepository {
     public void deleteById(Long id) {
         checkUsingReservationTime(id);
 
-        String deleteSql = "delete from reservation_time where id = ?";
+        String deleteSql = "delete from reservation_time where id = :id";
+        Map<String, Long> params = Map.of("id", id);
 
-        int update = jdbcTemplate.update(deleteSql, id);
+        int deleteRowCount = jdbcTemplate.update(deleteSql, params);
 
-        if (update != 1) {
+        if (deleteRowCount != 1) {
             throw new EntityNotFoundException("ReservationTime with id " + id + " not found");
         }
     }
 
     private void checkUsingReservationTime(Long timeId) {
-        String selectSql = "select count(*) from reservation where time_id = ?";
+        String selectSql = "select count(*) from reservation where time_id = :time_id";
+        Map<String, Long> params = Map.of("time_id", timeId);
 
-        Integer count = jdbcTemplate.queryForObject(selectSql, Integer.class, timeId);
+        int rowCountByTimeId = jdbcTemplate.queryForObject(selectSql, params, Integer.class);
 
-        if (count > 0) {
+        if (rowCountByTimeId > 0) {
             throw new AlreadyInUseException("reservation time with id " + timeId + " already exists");
         }
     }

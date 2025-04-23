@@ -9,7 +9,6 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
-import roomescape.common.Dao;
 import roomescape.reservation.Reservation;
 import roomescape.reservation.dto.ReservationDto;
 import roomescape.reservation.service.ReservationService;

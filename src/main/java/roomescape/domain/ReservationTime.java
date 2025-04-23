@@ -16,8 +16,16 @@ public class ReservationTime {
         this.startAt = startAt;
     }
 
+    public static ReservationTime parse(final String input) {
+        return new ReservationTime(LocalTime.parse(input));
+    }
+
     public ReservationTime toEntity(long id) {
         return new ReservationTime(id, this.startAt);
+    }
+
+    public boolean isSameTime(final ReservationTime other) {
+        return this.startAt.equals(other.startAt);
     }
 
     public long getId() {

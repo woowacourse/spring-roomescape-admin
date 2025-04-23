@@ -1,23 +1,22 @@
 package roomescape.reservation;
 
 import java.time.LocalDate;
-import java.time.LocalTime;
 import java.util.Objects;
 
 public record Reservation(
-        Long id, String name, LocalDate date, LocalTime time
+        Long id, String name, LocalDate date, Long timeId
 ) {
 
     public Reservation {
         Objects.requireNonNull(name);
         Objects.requireNonNull(date);
-        Objects.requireNonNull(time);
+        Objects.requireNonNull(timeId);
     }
 
     public Reservation writeId(final long writeId) {
         validateCurrentIdEmpty();
 
-        return new Reservation(writeId, name, date, time);
+        return new Reservation(writeId, name, date, timeId);
     }
 
     private void validateCurrentIdEmpty() {

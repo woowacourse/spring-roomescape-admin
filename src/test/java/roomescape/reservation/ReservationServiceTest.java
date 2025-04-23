@@ -9,16 +9,21 @@ import java.util.List;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
+import roomescape.time.FakeTimeDao;
+import roomescape.time.Time;
+import roomescape.time.TimeResponse;
 
 public class ReservationServiceTest {
 
     private ReservationService reservationService;
     private FakeReservationDao fakeReservationDao;
+    private FakeTimeDao fakeTimeDao;
 
     @BeforeEach
     void setUp() {
         fakeReservationDao = new FakeReservationDao();
-        reservationService = new ReservationService(fakeReservationDao);
+        fakeTimeDao = new FakeTimeDao();
+        reservationService = new ReservationService(fakeReservationDao, fakeTimeDao);
     }
 
 
@@ -26,8 +31,8 @@ public class ReservationServiceTest {
     @Test
     void create() {
         // given
-        final ReservationRequest request = new ReservationRequest("조앤", LocalDate.of(2025, 04, 21),
-                LocalTime.of(14, 20));
+        fakeTimeDao.saveTime(new Time(null, LocalTime.of(12, 40)));
+        final ReservationRequest request = new ReservationRequest("조앤", LocalDate.of(2025, 04, 21), 1L);
 
         // when
         final ReservationResponse response = reservationService.createReservation(request);
@@ -37,7 +42,7 @@ public class ReservationServiceTest {
             s.assertThat(response.id()).isNotNull();
             s.assertThat(response.name()).isEqualTo(request.name());
             s.assertThat(response.date()).isEqualTo(request.date());
-            s.assertThat(response.time()).isEqualTo(request.time());
+            s.assertThat(response.time()).isEqualTo(new TimeResponse(1L, LocalTime.of(12, 40)));
         });
     }
 

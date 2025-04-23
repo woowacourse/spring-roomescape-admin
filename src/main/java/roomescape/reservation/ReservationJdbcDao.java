@@ -7,20 +7,24 @@ import org.springframework.jdbc.core.namedparam.BeanPropertySqlParameterSource;
 import org.springframework.jdbc.core.namedparam.SqlParameterSource;
 import org.springframework.jdbc.core.simple.SimpleJdbcInsert;
 import org.springframework.stereotype.Repository;
+import roomescape.time.TimeDao;
 
 @Repository
 public class ReservationJdbcDao implements ReservationDao {
 
+    private final TimeDao timeDao;
     private final JdbcTemplate jdbcTemplate;
     private final SimpleJdbcInsert simpleJdbcInsert;
 
     public ReservationJdbcDao(
-            @Autowired JdbcTemplate jdbcTemplate
+            @Autowired JdbcTemplate jdbcTemplate,
+            @Autowired TimeDao timeDao
     ) {
         this.jdbcTemplate = jdbcTemplate;
         this.simpleJdbcInsert = new SimpleJdbcInsert(jdbcTemplate)
                 .withTableName("reservation")
                 .usingGeneratedKeyColumns("id");
+        this.timeDao = timeDao;
     }
 
     @Override
@@ -38,7 +42,7 @@ public class ReservationJdbcDao implements ReservationDao {
                     rs.getLong("id"),
                     rs.getString("name"),
                     rs.getDate("date").toLocalDate(),
-                    rs.getTime("time").toLocalTime()
+                    rs.getLong("time_id")
             );
         });
         return reservations;

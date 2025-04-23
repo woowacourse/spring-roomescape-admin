@@ -20,12 +20,13 @@ import org.springframework.test.annotation.DirtiesContext.ClassMode;
 public class ReservationApiTest {
 
     private static final Map<String, String> RESERVATION_BODY = new HashMap<>();
+    private static final Map<String, String> TIME_BODY = new HashMap<>();
 
     private int port;
 
     public ReservationApiTest(
             @LocalServerPort final int port
-    ){
+    ) {
         this.port = port;
     }
 
@@ -33,12 +34,21 @@ public class ReservationApiTest {
     static void initParams() {
         RESERVATION_BODY.put("name", "브라운");
         RESERVATION_BODY.put("date", "2023-08-05");
-        RESERVATION_BODY.put("time", "15:40");
+        RESERVATION_BODY.put("timeId", "1");
+
+        TIME_BODY.put("startAt", "10:00");
     }
 
     @DisplayName("예약을 생성하고, 200 OK를 응답")
     @Test
     void post() {
+        RestAssured.given().port(port).log().all()
+                .contentType(ContentType.JSON)
+                .body(TIME_BODY)
+                .when().post("/times")
+                .then().log().all()
+                .statusCode(200);
+
         RestAssured.given().port(port).log().all()
                 .contentType(ContentType.JSON)
                 .body(RESERVATION_BODY)
@@ -51,6 +61,13 @@ public class ReservationApiTest {
     @DisplayName("존재하는 모든 예약과 200 OK를 응답")
     @Test
     void get1() {
+        RestAssured.given().port(port).log().all()
+                .contentType(ContentType.JSON)
+                .body(TIME_BODY)
+                .when().post("/times")
+                .then().log().all()
+                .statusCode(200);
+
         RestAssured.given().port(port).log().all()
                 .contentType(ContentType.JSON)
                 .body(RESERVATION_BODY)
@@ -79,6 +96,12 @@ public class ReservationApiTest {
     @DisplayName("주어진 아이디에 해당하는 예약이 있다면 200 OK 응답")
     @Test
     void remove1() {
+        RestAssured.given().port(port).log().all()
+                .contentType(ContentType.JSON)
+                .body(TIME_BODY)
+                .when().post("/times")
+                .then().log().all()
+                .statusCode(200);
         RestAssured.given().port(port).log().all()
                 .contentType(ContentType.JSON)
                 .body(RESERVATION_BODY)

@@ -18,7 +18,7 @@ import org.springframework.boot.test.web.server.LocalServerPort;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.test.annotation.DirtiesContext;
 import org.springframework.test.annotation.DirtiesContext.ClassMode;
-import roomescape.reservation.Reservation;
+import roomescape.reservation.ReservationResponse;
 
 @SpringBootTest(webEnvironment = WebEnvironment.RANDOM_PORT)
 @DirtiesContext(classMode = ClassMode.AFTER_EACH_TEST_METHOD)
@@ -50,14 +50,15 @@ public class DataSourceTest {
     @DisplayName("데이터베이스에 예약 하나 추가 후 예약 조회 API를 통해 조회한 예약 수와 데이터베이스 쿼리를 통해 조회한 예약 수가 같은지 비교")
     @Test
     void 오단계() {
-        jdbcTemplate.update("INSERT INTO reservation (name, date, time) VALUES (?, ?, ?)", "브라운", "2023-08-05",
-                "15:40");
+        jdbcTemplate.update("INSERT INTO RESERVATION_TIME (start_at) VALUES (?)", "10:00");
+        jdbcTemplate.update("INSERT INTO RESERVATION (name, date, time_id) VALUES (?, ?, ?)", "브라운", "2023-08-05",
+                "1");
 
-        final List<Reservation> reservations = RestAssured.given().port(port).log().all()
+        final List<ReservationResponse> reservations = RestAssured.given().port(port).log().all()
                 .when().get("/reservations")
                 .then().log().all()
                 .statusCode(200).extract()
-                .jsonPath().getList(".", Reservation.class);
+                .jsonPath().getList(".", ReservationResponse.class);
 
         final Integer count = jdbcTemplate.queryForObject("SELECT count(1) from reservation", Integer.class);
 
@@ -67,14 +68,24 @@ public class DataSourceTest {
     @DisplayName("reservation 삽입, 삭제 검증")
     @Test
     void 육단계() {
-        Map<String, String> params = new HashMap<>();
-        params.put("name", "브라운");
-        params.put("date", "2023-08-05");
-        params.put("time", "10:00");
+        Map<String, String> RESERVATION_BODY = new HashMap<>();
+        RESERVATION_BODY.put("name", "브라운");
+        RESERVATION_BODY.put("date", "2023-08-05");
+        RESERVATION_BODY.put("timeId", "1");
+
+        Map<String, String> TIME_BODY = new HashMap<>();
+        TIME_BODY.put("startAt", "10:00");
 
         RestAssured.given().port(port).log().all()
                 .contentType(ContentType.JSON)
-                .body(params)
+                .body(TIME_BODY)
+                .when().post("/times")
+                .then().log().all()
+                .statusCode(200);
+
+        RestAssured.given().port(port).log().all()
+                .contentType(ContentType.JSON)
+                .body(RESERVATION_BODY)
                 .when().post("/reservations")
                 .then().log().all()
                 .statusCode(200);

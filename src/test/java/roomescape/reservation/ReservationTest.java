@@ -4,7 +4,6 @@ import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatCode;
 
 import java.time.LocalDate;
-import java.time.LocalTime;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 
@@ -15,7 +14,7 @@ public class ReservationTest {
     void writeId1() {
         // given
         final Reservation reservation = new Reservation(1L,
-                "", LocalDate.of(2025, 04, 19), LocalTime.of(10, 25, 0));
+                "", LocalDate.of(2025, 04, 19), 1L);
 
         // when & then
         assertThatCode(() -> {
@@ -30,13 +29,13 @@ public class ReservationTest {
     void writeId3() {
         // given
         final Reservation reservation = new Reservation(null,
-                "", LocalDate.of(2025, 04, 19), LocalTime.of(10, 25, 0));
+                "", LocalDate.of(2025, 04, 19), 1L);
 
         // when
         final Reservation actual = reservation.writeId(1);
 
         // then
         assertThat(actual).isEqualTo(new Reservation(1L,
-                "", LocalDate.of(2025, 04, 19), LocalTime.of(10, 25, 0)));
+                "", LocalDate.of(2025, 04, 19), 1L));
     }
 }

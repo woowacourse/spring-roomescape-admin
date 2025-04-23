@@ -14,6 +14,7 @@ import roomescape.domain.ReservationTimes;
 public class ReservationTimeDao {
 
     private static final String FIND_ALL_SQL = "select * from reservation_time";
+    private static final String DELETE_BY_ID_SQL = "delete from reservation_time where id = ?";
     private static final RowMapper<ReservationTime> RESERVATION_ROW_MAPPER = (resultSet, row) ->
             new ReservationTime(
                     resultSet.getLong("id"),
@@ -44,5 +45,10 @@ public class ReservationTimeDao {
         Long id = jdbcInsert.executeAndReturnKey(params).longValue();
 
         return new ReservationTime(id, reservationTime);
+    }
+
+    public boolean deleteById(Long id) {
+        int updatedRows = jdbcTemplate.update(DELETE_BY_ID_SQL, id);
+        return updatedRows > 0;
     }
 }

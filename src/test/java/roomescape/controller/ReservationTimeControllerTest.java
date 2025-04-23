@@ -1,5 +1,7 @@
 package roomescape.controller;
 
+import static org.hamcrest.Matchers.is;
+
 import io.restassured.RestAssured;
 import io.restassured.http.ContentType;
 import java.util.HashMap;
@@ -45,6 +47,38 @@ public class ReservationTimeControllerTest {
                 .when().get("/times")
                 .then().log().all()
                 .statusCode(200);
+    }
+
+    @Test
+    void 예약_시간_삭제_요청을_성공한다() {
+        createAndSendReservationTime();
+
+        RestAssured.given().log().all()
+                .when().delete("/times/1")
+                .then().log().all()
+                .statusCode(200);
+    }
+
+    @Test
+    void 예약_시간_삭제_ID가_일치하지_않는_경우_요청에_실패한다() {
+        RestAssured.given().log().all()
+                .when().delete("/times/1")
+                .then().log().all()
+                .statusCode(404);
+    }
+
+    @Test
+    void 예약_시간_삭제_요청으로_데이터가_삭제된다() {
+        createAndSendReservationTime();
+
+        RestAssured.given().log().all()
+                .when().delete("/times/1");
+
+        RestAssured.given().log().all()
+                .when().get("/times")
+                .then().log().all()
+                .statusCode(200)
+                .body("size()", is(0));
     }
 
     private void createAndSendReservationTime() {

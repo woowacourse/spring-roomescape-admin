@@ -5,9 +5,9 @@ import static org.hamcrest.CoreMatchers.is;
 
 import io.restassured.RestAssured;
 import io.restassured.http.ContentType;
+import java.lang.reflect.Field;
 import java.sql.Connection;
 import java.sql.SQLException;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import org.junit.jupiter.api.DisplayName;
@@ -16,6 +16,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.test.annotation.DirtiesContext;
+import roomescape.controller.ReservationController;
 import roomescape.dto.ReservationResponse;
 
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.DEFINED_PORT)
@@ -24,6 +25,9 @@ class MissionStepTest {
 
     @Autowired
     private JdbcTemplate jdbcTemplate;
+
+    @Autowired
+    private ReservationController reservationController;
 
     @DisplayName("일단계")
     @Test
@@ -52,10 +56,22 @@ class MissionStepTest {
     @DisplayName("삼단계")
     @Test
     void level3() {
+        Map<String, String> timeParams = Map.of(
+                "startAt", "15:40"
+        );
+
+        RestAssured.given().log().all()
+                .contentType(ContentType.JSON)
+                .body(timeParams)
+                .when().post("/times")
+                .then().log().all()
+                .statusCode(200)
+                .body("id", is(1));
+
         Map<String, String> params = Map.of(
                 "name", "브라운",
                 "date", "2023-08-05",
-                "time", "15:40"
+                "timeId", "1"
         );
 
         RestAssured.given().log().all()
@@ -99,8 +115,20 @@ class MissionStepTest {
     @DisplayName("오단계")
     @Test
     void level5() {
-        jdbcTemplate.update("INSERT INTO reservation (name, date, time) VALUES (?, ?, ?)",
-                "브라운", "2023-08-05", "15:40");
+        Map<String, String> timeParams = Map.of(
+                "startAt", "15:40"
+        );
+
+        RestAssured.given().log().all()
+                .contentType(ContentType.JSON)
+                .body(timeParams)
+                .when().post("/times")
+                .then().log().all()
+                .statusCode(200)
+                .body("id", is(1));
+
+        jdbcTemplate.update("INSERT INTO reservation (name, date, time_id) VALUES (?, ?, ?)",
+                "브라운", "2023-08-05", 1);
 
         List<ReservationResponse> reservations = RestAssured.given().log().all()
                 .when().get("/reservations")
@@ -116,10 +144,23 @@ class MissionStepTest {
     @DisplayName("육단계")
     @Test
     void level6() {
-        Map<String, String> params = new HashMap<>();
-        params.put("name", "브라운");
-        params.put("date", "2023-08-05");
-        params.put("time", "10:00");
+        Map<String, String> timeParams = Map.of(
+                "startAt", "15:40"
+        );
+
+        RestAssured.given().log().all()
+                .contentType(ContentType.JSON)
+                .body(timeParams)
+                .when().post("/times")
+                .then().log().all()
+                .statusCode(200)
+                .body("id", is(1));
+
+        Map<String, String> params = Map.of(
+                "name", "브라운",
+                "date", "2023-08-05",
+                "timeId", "1"
+        );
 
         RestAssured.given().log().all()
                 .contentType(ContentType.JSON)
@@ -143,8 +184,9 @@ class MissionStepTest {
     @DisplayName("칠단계")
     @Test
     void level7() {
-        Map<String, String> params = new HashMap<>();
-        params.put("startAt", "10:00");
+        Map<String, String> params = Map.of(
+                "startAt", "10:00"
+        );
 
         RestAssured.given().log().all()
                 .contentType(ContentType.JSON)
@@ -164,45 +206,55 @@ class MissionStepTest {
                 .then().log().all()
                 .statusCode(200);
     }
-//
-//    @DisplayName("팔단계")
-//    @Test
-//    void level8() {
-//        Map<String, Object> reservation = new HashMap<>();
-//        reservation.put("name", "브라운");
-//        reservation.put("date", "2023-08-05");
-//        reservation.put("timeId", 1);
-//
-//        RestAssured.given().log().all()
-//                .contentType(ContentType.JSON)
-//                .body(reservation)
-//                .when().post("/reservations")
-//                .then().log().all()
-//                .statusCode(200);
-//
-//
-//        RestAssured.given().log().all()
-//                .when().get("/reservations")
-//                .then().log().all()
-//                .statusCode(200)
-//                .body("size()", is(1));
-//    }
-//
-//    @Autowired
-//    private ReservationController reservationController;
-//
-//    @DisplayName("구단계")
-//    @Test
-//    void level9() {
-//        boolean isJdbcTemplateInjected = false;
-//
-//        for (Field field : reservationController.getClass().getDeclaredFields()) {
-//            if (field.getType().equals(JdbcTemplate.class)) {
-//                isJdbcTemplateInjected = true;
-//                break;
-//            }
-//        }
-//
-//        assertThat(isJdbcTemplateInjected).isFalse();
-//    }
+
+    @DisplayName("팔단계")
+    @Test
+    void level8() {
+        Map<String, String> timeParams = Map.of(
+                "startAt", "15:40"
+        );
+
+        RestAssured.given().log().all()
+                .contentType(ContentType.JSON)
+                .body(timeParams)
+                .when().post("/times")
+                .then().log().all()
+                .statusCode(200)
+                .body("id", is(1));
+
+        Map<String, String> params = Map.of(
+                "name", "브라운",
+                "date", "2023-08-05",
+                "timeId", "1"
+        );
+
+        RestAssured.given().log().all()
+                .contentType(ContentType.JSON)
+                .body(params)
+                .when().post("/reservations")
+                .then().log().all()
+                .statusCode(200);
+
+        RestAssured.given().log().all()
+                .when().get("/reservations")
+                .then().log().all()
+                .statusCode(200)
+                .body("size()", is(1));
+    }
+
+
+    @DisplayName("구단계")
+    @Test
+    void level9() {
+        boolean isJdbcTemplateInjected = false;
+
+        for (Field field : reservationController.getClass().getDeclaredFields()) {
+            if (field.getType().equals(JdbcTemplate.class)) {
+                isJdbcTemplateInjected = true;
+                break;
+            }
+        }
+
+        assertThat(isJdbcTemplateInjected).isFalse();
+    }
 }

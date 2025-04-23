@@ -25,7 +25,8 @@ public class ReservationH2Repository implements ReservationRepository {
 
     @Override
     public long save(final Reservation reservation) {
-        String query = "INSERT INTO reservation (name, date, time_id) VALUES (?, ?, ?)";
+        String query = "INSERT INTO reservation (name, date, time_id) "
+                + " VALUES (?, ?, ?)";
 
         KeyHolder keyHolder = new GeneratedKeyHolder();
 
@@ -62,7 +63,8 @@ public class ReservationH2Repository implements ReservationRepository {
 
     @Override
     public void deleteById(final long id) {
-        String query = "DELETE FROM reservation WHERE id = ?";
+        String query = "DELETE FROM reservation "
+                + " WHERE id = ?";
         int update = jdbcTemplate.update(query, id);
 
         if (update == 0) {

@@ -3,6 +3,7 @@ package roomescape.console.repository;
 import java.time.LocalTime;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 import java.util.concurrent.atomic.AtomicLong;
 import roomescape.domain.ReservationTime;
 import roomescape.persist.entity.ReservationTimeEntity;
@@ -23,14 +24,13 @@ public final class MemoryReservationTimeRepository implements ReservationTimeRep
     }
 
     @Override
-    public ReservationTime findById(long id) {
+    public Optional<ReservationTime> findById(long id) {
         return reservationTimes.stream()
                 .filter(reservationTimeEntity -> reservationTimeEntity.getId() == id)
                 .findFirst()
                 .map(reservationTimeEntity -> new ReservationTime(
                         reservationTimeEntity.getId(),
-                        LocalTime.parse(reservationTimeEntity.getStartAt())))
-                .orElse(null);
+                        LocalTime.parse(reservationTimeEntity.getStartAt())));
     }
 
     @Override
@@ -38,8 +38,7 @@ public final class MemoryReservationTimeRepository implements ReservationTimeRep
         long id = idGenerator.getAndIncrement();
         ReservationTimeEntity reservationTimeEntity = new ReservationTimeEntity(
                 id,
-                reservationTime.getStartTime().toString()
-        );
+                reservationTime.getStartTime().toString());
         reservationTimes.add(reservationTimeEntity);
         return new ReservationTime(
                 id,

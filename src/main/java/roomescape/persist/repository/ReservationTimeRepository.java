@@ -2,13 +2,14 @@ package roomescape.persist.repository;
 
 import java.time.LocalTime;
 import java.util.List;
+import java.util.Optional;
 import roomescape.domain.ReservationTime;
 
 public interface ReservationTimeRepository {
 
     List<ReservationTime> findAll();
 
-    ReservationTime findById(long id);
+    Optional<ReservationTime> findById(long id);
 
     ReservationTime add(ReservationTime reservationTime);
 

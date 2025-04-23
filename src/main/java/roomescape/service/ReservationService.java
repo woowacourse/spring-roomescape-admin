@@ -5,6 +5,7 @@ import org.springframework.stereotype.Service;
 import roomescape.domain.Reservation;
 import roomescape.domain.ReservationDate;
 import roomescape.domain.ReservationTime;
+import roomescape.domain.exception.ReservationTimeException;
 import roomescape.persist.repository.ReservationRepository;
 import roomescape.persist.repository.ReservationTimeRepository;
 import roomescape.presentation.dto.ReservationRequestDto;
@@ -29,14 +30,17 @@ public final class ReservationService {
                         reservation.getId(),
                         reservation.getName(),
                         reservation.getDate().getStartDate(),
-                        new ReservationTimeResponseDto(reservation.getTime().getId(),
-                                reservation.getTime().getStartTime())))
+                        new ReservationTimeResponseDto(
+                                reservation.getTime().getId(),
+                                reservation.getTime().getStartTime()
+                        )
+                ))
                 .toList();
     }
 
     public ReservationResponseDto makeReservation(ReservationRequestDto reservationRequestDto) {
         ReservationDate reservationDate = new ReservationDate(reservationRequestDto.date());
-        ReservationTime reservationTime = reservationTimeRepository.findById(reservationRequestDto.timeId());
+        ReservationTime reservationTime = getReservationTime(reservationRequestDto);
         Reservation reservation = reservationRepository.add(new Reservation(
                 reservationRequestDto.name(),
                 reservationDate,
@@ -46,8 +50,16 @@ public final class ReservationService {
                 reservation.getId(),
                 reservation.getName(),
                 reservation.getDate().getStartDate(),
-                new ReservationTimeResponseDto(reservationTime.getId(),
-                        reservationTime.getStartTime()));
+                new ReservationTimeResponseDto(
+                        reservationTime.getId(),
+                        reservationTime.getStartTime()
+                )
+        );
+    }
+
+    private ReservationTime getReservationTime(ReservationRequestDto reservationRequestDto) {
+        return reservationTimeRepository.findById(reservationRequestDto.timeId())
+                .orElseThrow(() -> new ReservationTimeException("예약 가능한 시간이 존재하지 않습니다."));
     }
 
     public void cancelReservation(long id) {

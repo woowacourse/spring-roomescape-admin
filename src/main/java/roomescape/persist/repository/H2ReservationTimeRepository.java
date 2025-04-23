@@ -5,7 +5,10 @@ import java.time.format.DateTimeFormatter;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
+import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.jdbc.core.JdbcTemplate;
+import org.springframework.jdbc.core.RowMapper;
 import org.springframework.jdbc.core.simple.SimpleJdbcInsert;
 import org.springframework.stereotype.Repository;
 import roomescape.persist.entity.ReservationTimeEntity;
@@ -27,38 +30,38 @@ public class H2ReservationTimeRepository implements ReservationTimeRepository {
     @Override
     public List<ReservationTime> findAll() {
         String sql = "SELECT id, start_at FROM reservation_time";
-        List<ReservationTimeEntity> reservationTimeEntities = jdbcTemplate.query(
-                sql,
-                (resultSet, rowNum) -> new ReservationTimeEntity(
-                        resultSet.getLong("id"),
-                        resultSet.getString("start_at")
-                )
+        RowMapper<ReservationTimeEntity> rowMapper = (rs, rowNum) -> new ReservationTimeEntity(
+                rs.getLong("id"),
+                rs.getString("start_at")
         );
+        List<ReservationTimeEntity> reservationTimeEntities = jdbcTemplate.query(sql, rowMapper);
         return reservationTimeEntities.stream()
                 .map(ReservationTimeEntity::toDomain)
                 .toList();
     }
 
     @Override
-    public ReservationTime findById(long id) {
+    public Optional<ReservationTime> findById(long id) {
         String sql = "SELECT id, start_at FROM reservation_time WHERE id = ?";
-        ReservationTimeEntity reservationTimeEntity = jdbcTemplate.queryForObject(
-                sql,
-                (resultSet, rowNum) -> new ReservationTimeEntity(
-                        resultSet.getLong("id"),
-                        resultSet.getString("start_at")
-                ),
-                id
-        );
-        return reservationTimeEntity.toDomain();
+        try {
+            RowMapper<ReservationTimeEntity> rowMapper = (rs, rowNum) -> new ReservationTimeEntity(
+                    rs.getLong("id"),
+                    rs.getString("start_at")
+            );
+            ReservationTimeEntity entity = jdbcTemplate.queryForObject(sql, rowMapper, id);
+            assert entity != null;
+            return Optional.of(entity.toDomain());
+        } catch (EmptyResultDataAccessException e) {
+            return Optional.empty();
+        }
     }
 
     @Override
     public ReservationTime add(ReservationTime reservationTime) {
         ReservationTimeEntity reservationTimeEntity = ReservationTimeEntity.fromDomain(reservationTime);
-        Map<String, String> params = new HashMap<>();
+        Map<String, Object> params = new HashMap<>();
         params.put("start_at", reservationTimeEntity.getStartAt());
-        long id = jdbcInsert.executeAndReturnKey(params).intValue();
+        long id = jdbcInsert.executeAndReturnKey(params).longValue();
         ReservationTimeEntity savedReservationTimeEntity = reservationTimeEntity.copyWithId(id);
         return savedReservationTimeEntity.toDomain();
     }
@@ -71,11 +74,9 @@ public class H2ReservationTimeRepository implements ReservationTimeRepository {
 
     @Override
     public boolean existsByStartTime(LocalTime localTime) {
-        String sql = "SELECT COUNT(*) FROM reservation_time WHERE start_at = ?";
-        int count = jdbcTemplate.queryForObject(
-                sql,
-                Integer.class,
-                localTime.format(DateTimeFormatter.ofPattern("HH:mm")));
-        return count > 0;
+        String sql = "SELECT EXISTS (SELECT 1 FROM reservation_time WHERE start_at = ?)";
+        String formattedTime = localTime.format(DateTimeFormatter.ofPattern("HH:mm"));
+        Boolean exists = jdbcTemplate.queryForObject(sql, Boolean.class, formattedTime);
+        return Boolean.TRUE.equals(exists);
     }
 }

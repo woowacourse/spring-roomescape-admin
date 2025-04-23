@@ -4,6 +4,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import org.springframework.jdbc.core.JdbcTemplate;
+import org.springframework.jdbc.core.RowMapper;
 import org.springframework.jdbc.core.simple.SimpleJdbcInsert;
 import org.springframework.stereotype.Repository;
 import roomescape.persist.entity.ReservationEntity;
@@ -35,18 +36,16 @@ public class H2ReservationRepository implements ReservationRepository {
                 FROM reservation r
                 INNER JOIN reservation_time t
                     ON r.time_id = t.id""";
-        List<ReservationEntity> reservationEntities = jdbcTemplate.query(
-                sql,
-                (resultSet, rowNum) -> new ReservationEntity(
-                        resultSet.getLong("reservation_id"),
-                        resultSet.getString("name"),
-                        resultSet.getString("date"),
-                        new ReservationTimeEntity(
-                                resultSet.getLong("time_id"),
-                                resultSet.getString("time_value")
-                        )
+        RowMapper<ReservationEntity> rowMapper = (resultSet, rowNum) -> new ReservationEntity(
+                resultSet.getLong("reservation_id"),
+                resultSet.getString("name"),
+                resultSet.getString("date"),
+                new ReservationTimeEntity(
+                        resultSet.getLong("time_id"),
+                        resultSet.getString("time_value")
                 )
         );
+        List<ReservationEntity> reservationEntities = jdbcTemplate.query(sql, rowMapper);
         return reservationEntities.stream()
                 .map(ReservationEntity::toDomain)
                 .toList();
@@ -55,11 +54,11 @@ public class H2ReservationRepository implements ReservationRepository {
     @Override
     public Reservation add(Reservation reservation) {
         ReservationEntity reservationEntity = ReservationEntity.fromDomain(reservation);
-        Map<String, String> params = new HashMap<>();
+        Map<String, Object> params = new HashMap<>();
         params.put("name", reservationEntity.getName());
         params.put("date", reservationEntity.getDate());
-        params.put("time_id", reservationEntity.getTimeEntity().getId().toString());
-        long id = jdbcInsert.executeAndReturnKey(params).intValue();
+        params.put("time_id", reservationEntity.getTimeEntity().getId());
+        long id = jdbcInsert.executeAndReturnKey(params).longValue();
         ReservationEntity savedEntity = reservationEntity.copyWithId(id);
         return savedEntity.toDomain();
     }

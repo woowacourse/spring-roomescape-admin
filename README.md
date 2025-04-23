@@ -1,22 +1,31 @@
 # 방탈출 예약 관리 애플리케이션
 
-방탈출 예약을 관리할 수 있는 웹 애플리케이션을 구현합니다.
+방탈출 예약을 관리할 수 있는 웹 애플리케이션(+콘솔 지원)을 구현합니다.
 
-## 구현할 기능 목록
+## 구현 기능 목록
 
-- [X] 관리자 홈 화면
-    - [X] `GET - /admin` 요청 시 관리자 홈 화면을 응답한다.
-- [X] 예약 조회
-    - [X] `GET - /admin/reservation` 요청 시 예약 관리 화면을 응답한다.
-        - [X] 예약 목록 조회 API를 구현한다.
-            - [X] `GET - /reservations` 요청 시 예약 목록을 반환한다.
-- [X] 예약 추가
-    - [X] 예약 추가 API를 구현한다.
+- 화면 구현
+    - [X] 관리자 홈 화면
+        - [X] `GET - /admin` 요청 시 관리자 홈 화면을 응답한다.
+    - [X] 예약 관리 화면
+        - [X] `GET - /admin/reservation` 요청 시 예약 관리 화면을 응답한다.
+    - [X] 예약 가능 시간 관리 화면
+        - [X] `GET - /admin/times` 요청 시 예약 가능 시간 관리 화면을 응답한다.
+- API 구현
+    - [X] 예약 목록 조회
+        - [X] `GET - /reservations` 요청 시 예약 목록을 반환한다.
+    - [X] 예약 추가
         - [X] `POST - /reservations` 요청 시 예약을 추가한다.
-        - [X] 과거 일시로 예약할 수 없다. 
-- [X] 예약 취소
-    - [X] 예약 삭제 API를 구현한다.
+        - [X] 과거 일시로 예약할 수 없다.
+    - [X] 예약 취소
         - [X] `DELETE - /reservations/{id}` 요청 시 예약을 취소한다.
+    - [X] 예약 가능 시간 목록 조회
+        - [X] `GET - /times` 요청 시 예약 가능 시간 목록을 반환한다.
+    - [X] 예약 가능 시간 추가
+        - [X] `POST - /times` 요청 시 예약 가능 시간을 추가한다.
+        - [X] 예약 가능 시간은 중복될 수 없다.
+    - [X] 예약 가능 시간 삭제
+        - [X] `DELETE - /times/{id}` 요청 시 예약 가능 시간을 삭제한다.
 
 ## 사용 예시
 
@@ -26,21 +35,36 @@
 
 ![관리자 홈 화면](images/adminHomePage.png)
 
-우측 상단 `Reservation`을 누르면 예약 관리 화면으로 이동합니다.
-`Time`은 현재 미구현 상태입니다.
+- 우측 상단 `Reservation`을 누르면 예약 관리 화면으로 이동합니다.
+- `Time`을 누르면 예약 가능 시간 관리 화면으로 이동합니다.
+
+### 예약 가능 시간 관리 화면
+
+![예약 가능 시간 관리 화면](images/adminReservationTimePage.png)
+
+![예약 가능 시간 추가 버튼](images/adminReservationTimeAddButton.png)
+
+![예약 가능 시간 추가](images/adminReservationTimeCreate.png)
+
+![예약 가능 시간 삭제](images/adminReservationTimeCreateAndDelete.png)
+
+- `예약 가능 시간 추가` 버튼으로 예약 가능 시간을 추가할 수 있습니다.
+- 추가 시 예약 가능 시간 목록에서 예약할 시간을 선택할 수 있습니다.
+- 추가 이후 `삭제` 버튼으로 예약 가능 시간을 삭제할 수 있습니다.
 
 ### 예약 관리 화면
 
 ![예약 관리 화면](images/adminReservationPage.png)
 
-![예약 추가](images/adminReservationPage2.png)
+![예약 추가 버튼](images/adminReservationAddButton.png)
 
-![예약 생성](images/adminReservationPage3.png)
+![예약 추가 시 시간 선택](images/adminReservationTimeSelect.png)
 
-![예약 취소](images/adminReservationPage4.png)
+![예약 추가 완료 및 삭제 버튼](images/adminReservationCreateAndDelete.png)
 
-`예약 추가` 버튼으로 예약을 추가할 수 있습니다.
-추가 이후 `삭제` 버튼으로 예약을 취소할 수 있습니다.
+- `예약 추가` 버튼으로 예약을 추가할 수 있습니다.
+- 예약 추가 시 예약 가능한 시간 목록에서 예약할 시간을 선택할 수 있습니다.
+- 추가 이후 `삭제` 버튼으로 예약을 취소할 수 있습니다.
 
 ## 10단계(선택) 콘솔 구현
 

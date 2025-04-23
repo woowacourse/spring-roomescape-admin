@@ -26,13 +26,13 @@ import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 import roomescape.config.SpringExtensionTestConfig;
+import roomescape.dao.ReservationH2Dao;
+import roomescape.dao.ReservationTimeH2Dao;
 import roomescape.dto.ReservationRequestDto;
 import roomescape.dto.ReservationResponseDto;
 import roomescape.entity.Reservation;
 import roomescape.entity.ReservationTime;
 import roomescape.exceptions.EntityNotFoundException;
-import roomescape.repository.ReservationH2Repository;
-import roomescape.repository.ReservationTimeH2Repository;
 import roomescape.service.ReservationService;
 import roomescape.service.ReservationTimeService;
 
@@ -58,8 +58,8 @@ public class ReservationControllerSpringExtensionTest {
             return ps;
         }, keyHolder);
 
-        ReservationService service = new ReservationService(new ReservationH2Repository(jdbcTemplate));
-        ReservationTimeService timeService = new ReservationTimeService(new ReservationTimeH2Repository(jdbcTemplate));
+        ReservationService service = new ReservationService(new ReservationH2Dao(jdbcTemplate));
+        ReservationTimeService timeService = new ReservationTimeService(new ReservationTimeH2Dao(jdbcTemplate));
         controller = new ReservationController(service, timeService);
     }
 

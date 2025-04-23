@@ -19,12 +19,12 @@ import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.datasource.embedded.EmbeddedDatabase;
 import org.springframework.jdbc.datasource.embedded.EmbeddedDatabaseBuilder;
 import org.springframework.jdbc.datasource.embedded.EmbeddedDatabaseType;
+import roomescape.dao.ReservationTimeH2Dao;
 import roomescape.dto.ReservationTimeRequestDto;
 import roomescape.dto.ReservationTimeResponseDto;
 import roomescape.entity.Reservation;
 import roomescape.entity.ReservationTime;
 import roomescape.exceptions.EntityNotFoundException;
-import roomescape.repository.ReservationTimeH2Repository;
 import roomescape.service.ReservationTimeService;
 
 public class ReservationTimeControllerTest {
@@ -40,8 +40,8 @@ public class ReservationTimeControllerTest {
                 .addScript("schema.sql")
                 .build();
         jdbcTemplate = new JdbcTemplate(dataSource);
-        
-        ReservationTimeService service = new ReservationTimeService(new ReservationTimeH2Repository(jdbcTemplate));
+
+        ReservationTimeService service = new ReservationTimeService(new ReservationTimeH2Dao(jdbcTemplate));
         controller = new ReservationTimeController(service);
     }
 

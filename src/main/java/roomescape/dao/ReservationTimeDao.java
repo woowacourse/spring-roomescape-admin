@@ -1,9 +1,9 @@
-package roomescape.repository;
+package roomescape.dao;
 
 import java.util.List;
 import roomescape.entity.ReservationTime;
 
-public interface ReservationTimeRepository {
+public interface ReservationTimeDao {
 
     void existsTimeById(long id);
 

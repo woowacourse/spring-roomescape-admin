@@ -7,16 +7,16 @@ import java.time.LocalTime;
 import java.util.List;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
+import roomescape.dao.ReservationTimeDao;
 import roomescape.dto.ReservationTimeRequestDto;
 import roomescape.dto.ReservationTimeResponseDto;
 import roomescape.entity.ReservationTime;
 import roomescape.exceptions.EntityNotFoundException;
-import roomescape.repository.ReservationTimeRepository;
 
 public class ReservationTimeServiceTest {
 
     private final ReservationTimeService reservationService = new ReservationTimeService(
-            new ReservationTimeTestRepository());
+            new ReservationTimeTestDao());
 
     @Test
     @DisplayName("time_id를 찾을 수 없다면, 예외가 발생한다.")
@@ -53,7 +53,7 @@ public class ReservationTimeServiceTest {
                 .isInstanceOf(EntityNotFoundException.class);
     }
 
-    private static class ReservationTimeTestRepository implements ReservationTimeRepository {
+    private static class ReservationTimeTestDao implements ReservationTimeDao {
 
         @Override
         public void existsTimeById(long id) {

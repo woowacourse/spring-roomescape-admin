@@ -1,4 +1,4 @@
-package roomescape.repository;
+package roomescape.dao;
 
 import java.sql.PreparedStatement;
 import java.sql.Time;
@@ -13,11 +13,11 @@ import roomescape.entity.ReservationTime;
 import roomescape.exceptions.EntityNotFoundException;
 
 @Repository
-public class ReservationTimeH2Repository implements ReservationTimeRepository {
+public class ReservationTimeH2Dao implements ReservationTimeDao {
 
     private final JdbcTemplate jdbcTemplate;
 
-    public ReservationTimeH2Repository(JdbcTemplate jdbcTemplate) {
+    public ReservationTimeH2Dao(JdbcTemplate jdbcTemplate) {
         this.jdbcTemplate = jdbcTemplate;
     }
 

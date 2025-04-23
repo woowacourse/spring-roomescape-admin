@@ -3,18 +3,18 @@ package roomescape.service;
 import java.util.List;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import roomescape.dao.ReservationTimeDao;
 import roomescape.dto.ReservationTimeRequestDto;
 import roomescape.dto.ReservationTimeResponseDto;
 import roomescape.entity.ReservationTime;
-import roomescape.repository.ReservationTimeRepository;
 
 @Service
 @Transactional
 public class ReservationTimeService {
 
-    private final ReservationTimeRepository repository;
+    private final ReservationTimeDao repository;
 
-    public ReservationTimeService(ReservationTimeRepository repository) {
+    public ReservationTimeService(ReservationTimeDao repository) {
         this.repository = repository;
     }
 

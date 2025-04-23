@@ -28,10 +28,6 @@ class ReservationDaoTest {
     @Autowired
     private JdbcTemplate jdbcTemplate;
 
-    private Reservation createTestReservation() {
-        return new Reservation(null, TEST_NAME, TEST_DATE_TIME);
-    }
-
     @Test
     void 예약_목록_전체를_조회해_반환한다() {
         // given
@@ -79,6 +75,10 @@ class ReservationDaoTest {
         // then
         assertThat(result).isTrue();
         assertThat(beforeExists).isNotEqualTo(afterExists);
+    }
+
+    private Reservation createTestReservation() {
+        return new Reservation(null, TEST_NAME, TEST_DATE_TIME);
     }
 
     @Test

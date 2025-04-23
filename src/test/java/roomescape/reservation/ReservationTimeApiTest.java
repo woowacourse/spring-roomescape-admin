@@ -4,6 +4,7 @@ import static org.hamcrest.Matchers.is;
 
 import io.restassured.RestAssured;
 import io.restassured.http.ContentType;
+import java.time.LocalDate;
 import java.time.LocalTime;
 import java.util.HashMap;
 import java.util.Map;
@@ -14,9 +15,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.context.SpringBootTest.WebEnvironment;
 import org.springframework.jdbc.core.JdbcTemplate;
-import org.springframework.test.annotation.DirtiesContext;
-import org.springframework.test.annotation.DirtiesContext.ClassMode;
+import roomescape.reservation.entity.Reservation;
 import roomescape.reservation.entity.ReservationTime;
+import roomescape.reservation.repository.ReservationRepository;
 import roomescape.reservation.repository.ReservationTimeRepository;
 
 @SpringBootTest(webEnvironment = WebEnvironment.DEFINED_PORT)
@@ -27,6 +28,9 @@ public class ReservationTimeApiTest {
 
     @Autowired
     private JdbcTemplate jdbcTemplate;
+
+    @Autowired
+    private ReservationRepository reservationRepository;
 
     @BeforeEach
     void setUp() {
@@ -105,5 +109,25 @@ public class ReservationTimeApiTest {
                 .when().delete("/times/4")
                 .then().log().all()
                 .statusCode(notFoundStatusCode);
+    }
+
+    @DisplayName("사용 중인 예약 시간이 있다면 삭제를 하면 409 CONFLICT를 반환한다.")
+    @Test
+    void test6() {
+        // given
+        int conflictStatusCode = 409;
+        ReservationTime reservationTime = ReservationTime.withoutId(LocalTime.now());
+
+        ReservationTime saved = reservationTimeRepository.save(reservationTime);
+        Long savedId = saved.getId();
+
+        Reservation reservation = Reservation.withoutId("꾹", LocalDate.now(), saved);
+        reservationRepository.save(reservation);
+
+        // when & then
+        RestAssured.given().log().all()
+                .when().delete("/times/" + savedId.intValue())
+                .then().log().all()
+                .statusCode(conflictStatusCode);
     }
 }

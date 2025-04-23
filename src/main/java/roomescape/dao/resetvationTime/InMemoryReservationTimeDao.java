@@ -1,4 +1,4 @@
-package roomescape.dao.ReservationTime;
+package roomescape.dao.resetvationTime;
 
 import java.util.List;
 import java.util.NoSuchElementException;

@@ -7,8 +7,8 @@ import java.util.ArrayList;
 import java.util.List;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
-import roomescape.dao.ReservationTime.InMemoryReservationTimeDao;
-import roomescape.dao.ReservationTime.ReservationTimeDao;
+import roomescape.dao.resetvationTime.InMemoryReservationTimeDao;
+import roomescape.dao.resetvationTime.ReservationTimeDao;
 import roomescape.domain.ReservationTime;
 import roomescape.dto.request.ReservationTimeCreateRequest;
 

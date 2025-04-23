@@ -1,9 +1,9 @@
-package roomescape.dao.Reservation;
+package roomescape.dao.reservation;
 
 import java.util.List;
 import java.util.NoSuchElementException;
 import java.util.concurrent.atomic.AtomicLong;
-import roomescape.dao.ReservationTime.ReservationTimeDao;
+import roomescape.dao.resetvationTime.ReservationTimeDao;
 import roomescape.domain.Reservation;
 import roomescape.domain.ReservationTime;
 import roomescape.dto.request.ReservationCreateRequest;

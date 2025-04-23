@@ -1,4 +1,4 @@
-package roomescape.dao.ReservationTime;
+package roomescape.dao.resetvationTime;
 
 import java.time.LocalTime;
 import java.util.HashMap;

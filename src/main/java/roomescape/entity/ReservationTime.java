@@ -8,9 +8,9 @@ public class ReservationTime {
 
     private final LocalTime startAt;
 
-    public ReservationTime(final Long id, final LocalTime time) {
+    public ReservationTime(final Long id, final LocalTime startAt) {
         this.id = id;
-        this.startAt = time;
+        this.startAt = startAt;
     }
 
     public Long getId() {

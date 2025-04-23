@@ -9,19 +9,25 @@ import org.springframework.stereotype.Service;
 import roomescape.dto.ReservationRequest;
 import roomescape.dto.ReservationResponse;
 import roomescape.model.Reservation;
+import roomescape.model.ReservationTime;
 import roomescape.repository.ReservationRepository;
+import roomescape.repository.ReservationTimeRepository;
 
 @Service
 public class ReservationService {
 
     private final ReservationRepository reservationRepository;
+    private final ReservationTimeRepository reservationTimeRepository;
 
-    public ReservationService(ReservationRepository reservationRepository) {
+    public ReservationService(ReservationRepository reservationRepository,
+                              ReservationTimeRepository reservationTimeRepository) {
         this.reservationRepository = reservationRepository;
+        this.reservationTimeRepository = reservationTimeRepository;
     }
 
     public ReservationResponse addReservation(ReservationRequest reservationRequest) {
-        Reservation reservation = reservationRequest.toEntity(null);
+        ReservationTime reservationTime = reservationTimeRepository.findById(reservationRequest.timeId());
+        Reservation reservation = reservationRequest.toEntityWithReservationTime(reservationTime);
         Reservation savedReservation = reservationRepository.save(reservation);
         return ReservationResponse.fromEntity(savedReservation);
     }

@@ -17,6 +17,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.test.annotation.DirtiesContext;
+import org.springframework.test.context.jdbc.Sql;
 import roomescape.model.Reservation;
 
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.DEFINED_PORT)
@@ -24,11 +25,11 @@ import roomescape.model.Reservation;
 @DisplayNameGeneration(ReplaceUnderscores.class)
 public class MissionStepTest {
 
-    private void 예약_생성(String name, String date, String time) {
+    private void 예약_생성(String name, String date, String timeId) {
         Map<String, String> params = new HashMap<>();
         params.put("name", name);
         params.put("date", date);
-        params.put("time", time);
+        params.put("timeId", timeId);
 
         RestAssured.given().log().all()
                 .contentType(ContentType.JSON)
@@ -61,8 +62,9 @@ public class MissionStepTest {
     }
 
     @Test
+    @Sql(statements = "INSERT INTO reservation_time (id, start_at) VALUES (1, '10:00')")
     void 예약을_생성하면_목록에_포함() {
-        예약_생성("브라운", "2023-08-05", "15:40");
+        예약_생성("브라운", "2023-08-05", "1");
 
         RestAssured.given().log().all()
                 .when().get("/reservations")
@@ -71,9 +73,10 @@ public class MissionStepTest {
                 .body("size()", is(1));
     }
 
+    @Sql(statements = "INSERT INTO reservation_time (id, start_at) VALUES (1, '10:00')")
     @Test
     void 예약을_생성하고_삭제_후_목록이_비어있음을_확인() {
-        예약_생성("브라운", "2023-08-05", "15:40");
+        예약_생성("브라운", "2023-08-05", "1");
 
         RestAssured.given().log().all()
                 .when().get("/reservations")
@@ -107,9 +110,10 @@ public class MissionStepTest {
         }
     }
 
+    @Sql(statements = "INSERT INTO reservation_time (id, start_at) VALUES (1, '10:00')")
     @Test
     void 예약생성시_DB에_정상적으로_삽입() {
-        jdbcTemplate.update("INSERT INTO reservation (name, date, time) VALUES (?, ?, ?)", "브라운", "2023-08-05", "15:40");
+        jdbcTemplate.update("INSERT INTO reservation (name, date, time_id) VALUES (?, ?, ?)", "브라운", "2023-08-05", 1);
 
         List<Reservation> reservations = RestAssured.given().log().all()
                 .when().get("/reservations")
@@ -122,12 +126,13 @@ public class MissionStepTest {
         assertThat(reservations.size()).isEqualTo(count);
     }
 
+    @Sql(statements = "INSERT INTO reservation_time (id, start_at) VALUES (1, '10:00')")
     @Test
     void 예약취소시_DB에서_정상적으로_삭제() {
         Map<String, String> params = new HashMap<>();
         params.put("name", "브라운");
         params.put("date", "2023-08-05");
-        params.put("time", "10:00");
+        params.put("timeId", "1");
 
         RestAssured.given().log().all()
                 .contentType(ContentType.JSON)
@@ -191,5 +196,28 @@ public class MissionStepTest {
                 .then().log().all()
                 .statusCode(200)
                 .body("size()", is(0));
+    }
+
+    @Sql(statements = "INSERT INTO reservation_time (id, start_at) VALUES (1, '10:00')")
+    @Test
+    void 팔단계() {
+        Map<String, Object> reservation = new HashMap<>();
+        reservation.put("name", "브라운");
+        reservation.put("date", "2023-08-05");
+        reservation.put("timeId", 1);
+
+        RestAssured.given().log().all()
+                .contentType(ContentType.JSON)
+                .body(reservation)
+                .when().post("/reservations")
+                .then().log().all()
+                .statusCode(200);
+
+
+        RestAssured.given().log().all()
+                .when().get("/reservations")
+                .then().log().all()
+                .statusCode(200)
+                .body("size()", is(1));
     }
 }

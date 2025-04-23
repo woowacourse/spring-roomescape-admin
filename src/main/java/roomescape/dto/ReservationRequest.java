@@ -4,18 +4,19 @@ import java.time.LocalDate;
 import java.time.LocalTime;
 import java.time.format.DateTimeFormatter;
 import roomescape.model.Reservation;
+import roomescape.model.ReservationTime;
 
 public record ReservationRequest(
         String name,
         String date,
-        String time
+        Long timeId
 ) {
-    public Reservation toEntity(Long id) {
+    public Reservation toEntityWithReservationTime(ReservationTime reservationTime) {
         return new Reservation(
-                id,
+                null,
                 name,
                 LocalDate.parse(date, DateTimeFormatter.ofPattern("yyyy-MM-dd")),
-                LocalTime.parse(time, DateTimeFormatter.ofPattern("HH:mm"))
+                reservationTime
         );
     }
 }

@@ -1,6 +1,8 @@
 package roomescape.repository;
 
 import java.sql.PreparedStatement;
+import java.time.LocalDate;
+import java.time.LocalTime;
 import java.util.List;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.support.GeneratedKeyHolder;
@@ -52,5 +54,18 @@ public class ReservationTimeRepository {
                 id
         );
         return deletedRow == 1;
+    }
+
+    public ReservationTime findById(Long id) {
+        return jdbcTemplate.queryForObject(
+                "SELECT id, start_at FROM reservation_time WHERE id = ?",
+                (rs, rowNum) -> {
+                  return new ReservationTime(
+                          rs.getLong("id"),
+                          LocalTime.parse(rs.getString("start_at"))
+                  );
+                },
+                id
+        );
     }
 }

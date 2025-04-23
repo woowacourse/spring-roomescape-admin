@@ -19,4 +19,9 @@ public class PageController {
     String welcomePage() {
         return "welcomePage";
     }
+
+    @GetMapping("/admin/time")
+    String time() {
+        return "admin/time";
+    }
 }

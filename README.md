@@ -1,4 +1,5 @@
 # 방탈출 예약 관리 프로그램
+
 # 📖 API 목록
 
 ## 1. 예약 목록 조회
@@ -7,6 +8,7 @@
 - **Method**: `GET`
 - **Response**: `200 OK`
 - **Response Body**:
+
 ```json
 [
   {
@@ -27,6 +29,7 @@
 - **Request Header**:
     - `Content-Type: application/json`
 - **Request Body**:
+
 ```json
 {
   "name": "홍길동",
@@ -46,8 +49,9 @@
 
 ---
 
-
 # 📄 페이지 목록
+
 - 웰컴 페이지 ``(/)``
 - 관리자 화면 ``(/admin)``
 - 예약 조회 화면 ``(/admin/reservations)``
+- 시간 조회 화면 ``(/admin/time)``

@@ -3,6 +3,7 @@ package roomescape.service;
 import java.util.List;
 import org.springframework.stereotype.Service;
 import roomescape.dao.TimeDao;
+import roomescape.dto.TimeRequestDto;
 import roomescape.dto.TimeResponseDto;
 import roomescape.model.Time;
 
@@ -22,4 +23,9 @@ public class TimeService {
                 .toList();
     }
 
+    public TimeResponseDto saveTime(TimeRequestDto timeRequestDto) {
+        Time time = timeRequestDto.convertToTime();
+        Long id = timeDao.saveTime(time);
+        return new TimeResponseDto(id, time.getTime());
+    }
 }

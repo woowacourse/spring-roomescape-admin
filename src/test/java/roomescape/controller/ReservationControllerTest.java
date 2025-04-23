@@ -21,7 +21,7 @@ import static org.hamcrest.Matchers.is;
 
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.DEFINED_PORT)
 @DirtiesContext(classMode = DirtiesContext.ClassMode.BEFORE_EACH_TEST_METHOD)
-class ReservationApiControllerTest {
+class ReservationControllerTest {
 
     @DisplayName("Reservation 목록을 가져온다.")
     @Test

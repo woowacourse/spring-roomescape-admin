@@ -6,7 +6,7 @@ import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.context.SpringBootTest;
 
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.DEFINED_PORT)
-class ReservationPageControllerTest {
+class AdminPageControllerTest {
 
     @DisplayName("WelcomePage 테스트")
     @Test

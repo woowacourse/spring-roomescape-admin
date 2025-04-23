@@ -6,6 +6,7 @@ import java.time.LocalDate;
 import java.time.LocalTime;
 import java.util.ArrayList;
 import java.util.List;
+import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import roomescape.dao.reservation.InMemoryReservationDao;
 import roomescape.dao.reservation.ReservationDao;
@@ -22,6 +23,7 @@ class ReservationServiceTest {
     private final ReservationService reservationService = new ReservationServiceImpl(reservationDao,
             reservationTimeDao);
 
+    @DisplayName("예약을 생성한다.")
     @Test
     void createTest() {
 
@@ -36,6 +38,7 @@ class ReservationServiceTest {
         assertThat(reservations.getFirst().name()).isEqualTo("체체");
     }
 
+    @DisplayName("예약을 모두 찾는다.")
     @Test
     void findAllTest() {
 
@@ -51,6 +54,7 @@ class ReservationServiceTest {
         assertThat(reservations.size()).isEqualTo(2);
     }
 
+    @DisplayName("예약을 삭제한다.")
     @Test
     void deleteTest() {
 

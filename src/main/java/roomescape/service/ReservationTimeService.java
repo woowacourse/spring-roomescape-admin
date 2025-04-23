@@ -25,7 +25,7 @@ public class ReservationTimeService {
     }
 
     public ReservationTimeResponseDto postReservationTime(ReservationTimeRequestDto requestDto) {
-        ReservationTime newReservation = repository.save(requestDto.toEntity(null));
+        ReservationTime newReservation = repository.save(requestDto.toEntity());
         return ReservationTimeResponseDto.toDto(newReservation);
     }
 

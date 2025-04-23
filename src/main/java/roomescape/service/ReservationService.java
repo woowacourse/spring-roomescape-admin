@@ -25,7 +25,7 @@ public class ReservationService {
     }
 
     public ReservationResponseDto postReservation(ReservationRequestDto requestDto) {
-        Reservation newReservation = repository.save(requestDto.toEntity(null), requestDto.timeId());
+        Reservation newReservation = repository.save(requestDto.toEntity(), requestDto.timeId());
         return ReservationResponseDto.toDto(newReservation);
     }
 

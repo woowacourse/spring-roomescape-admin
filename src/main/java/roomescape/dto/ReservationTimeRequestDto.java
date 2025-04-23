@@ -9,7 +9,11 @@ public record ReservationTimeRequestDto(
         LocalTime startAt
 ) {
 
-    public ReservationTime toEntity(Long id) {
+    public ReservationTime toEntity() {
+        return new ReservationTime(null, this.startAt());
+    }
+
+    public ReservationTime toEntity(long id) {
         return new ReservationTime(id, this.startAt());
     }
 }

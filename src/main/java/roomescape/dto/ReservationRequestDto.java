@@ -11,7 +11,7 @@ public record ReservationRequestDto(
         Long timeId
 ) {
 
-    public Reservation toEntity(Long id) {
-        return new Reservation(id, this.name(), this.date(), new ReservationTime(timeId, LocalTime.MIN));
+    public Reservation toEntity() {
+        return new Reservation(null, this.name(), this.date(), new ReservationTime(timeId, LocalTime.MIN));
     }
 }

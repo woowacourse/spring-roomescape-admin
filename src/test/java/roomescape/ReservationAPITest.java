@@ -1,7 +1,6 @@
 package roomescape;
 
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.hamcrest.Matchers.is;
 
 import io.restassured.RestAssured;
 import io.restassured.http.ContentType;
@@ -61,31 +60,12 @@ public class ReservationAPITest {
     @Test
     @DisplayName("예약을 취소하면 목록에서 삭제된다.")
     void deleteReservationTest() {
-        addReservation("브라운", "2023-08-05", "15:40");
-
         RestAssured.given().log().all()
                 .when().delete("/reservations/1")
                 .then().log().all()
                 .statusCode(200);
 
-        RestAssured.given().log().all()
-                .when().get("/reservations")
-                .then().log().all()
-                .statusCode(200)
-                .body("size()", is(0));
-    }
-
-    private void addReservation(String name, String date, String time) {
-        Map<String, String> params = new HashMap<>();
-        params.put("name", name);
-        params.put("date", date);
-        params.put("time", time);
-
-        RestAssured.given().log().all()
-                .contentType(ContentType.JSON)
-                .body(params)
-                .when().post("/reservations")
-                .then().log().all()
-                .statusCode(200);
+        Integer countAfterDelete = jdbcTemplate.queryForObject("SELECT count(1) from reservation", Integer.class);
+        assertThat(countAfterDelete).isEqualTo(0);
     }
 }

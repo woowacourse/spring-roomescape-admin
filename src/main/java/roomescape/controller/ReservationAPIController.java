@@ -14,14 +14,11 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import roomescape.domain.Reservation;
-import roomescape.domain.Reservations;
 import roomescape.dto.ReservationRequest;
 
 @RestController
 @RequestMapping("/reservations")
 public class ReservationAPIController {
-
-    private final Reservations reservations = new Reservations();
 
     @Autowired
     JdbcTemplate jdbcTemplate;
@@ -51,7 +48,8 @@ public class ReservationAPIController {
 
     @DeleteMapping("/{id}")
     public ResponseEntity<Void> deleteReservation(@PathVariable Long id) {
-        reservations.removeById(id);
+        String sql = "delete from reservation where id = ?";
+        jdbcTemplate.update(sql, id);
         return ResponseEntity.ok().build();
     }
 }

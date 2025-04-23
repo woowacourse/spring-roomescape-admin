@@ -20,4 +20,10 @@ public record Time(Long id, LocalTime startAt) {
             throw new IllegalStateException("[ERROR]");
         }
     }
+
+    @Override
+    public Long id(){
+        Objects.requireNonNull(id);
+        return id;
+    }
 }

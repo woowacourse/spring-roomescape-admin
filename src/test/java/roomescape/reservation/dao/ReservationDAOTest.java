@@ -34,8 +34,7 @@ class ReservationDAOTest {
     void insertTest() {
         // given
         ReservationDAO reservationDAO = new ReservationDAO(jdbcTemplate);
-        ReservationReqDTO reservationReqDto = new ReservationReqDTO("포비", LocalDate.now(), LocalTime.now());
-        Reservation reservationInfo = reservationReqDto.toEntity();
+        Reservation reservationInfo = getNewReservationInfo();
 
         // when
         Reservation newReservation = reservationDAO.insert(reservationInfo);
@@ -49,8 +48,7 @@ class ReservationDAOTest {
     void deleteByTest() {
         // given
         ReservationDAO reservationDAO = new ReservationDAO(jdbcTemplate);
-        ReservationReqDTO reservationReqDto = new ReservationReqDTO("포비", LocalDate.now(), LocalTime.now());
-        Reservation reservationInfo = reservationReqDto.toEntity();
+        Reservation reservationInfo = getNewReservationInfo();
 
         // when
         Reservation newReservation = reservationDAO.insert(reservationInfo);
@@ -61,12 +59,26 @@ class ReservationDAOTest {
     }
 
     @Test
+    @DisplayName("새 데이터 추가 시 생성된 id로 예약 데이터를 조회할 수 있다")
+    void selectByTest() {
+        // given
+        ReservationDAO reservationDAO = new ReservationDAO(jdbcTemplate);
+        Reservation reservationInfo = getNewReservationInfo();
+
+        // when
+        Reservation newReservation = reservationDAO.insert(reservationInfo);
+        Long reservationId = newReservation.getId();
+
+        // then
+        assertDoesNotThrow(() -> reservationDAO.selectBy(reservationId));
+    }
+
+    @Test
     @DisplayName("존재하지 않는 id의 데이터를 삭제하려고 하면 예외가 발생한다")
     void deleteByExceptionTest() {
         // given
         ReservationDAO reservationDAO = new ReservationDAO(jdbcTemplate);
-        ReservationReqDTO reservationReqDto = new ReservationReqDTO("포비", LocalDate.now(), LocalTime.now());
-        Reservation reservationInfo = reservationReqDto.toEntity();
+        Reservation reservationInfo = getNewReservationInfo();
 
         // when
         reservationDAO.insert(reservationInfo);
@@ -127,5 +139,10 @@ class ReservationDAOTest {
 
     private Integer countReservations() {
         return jdbcTemplate.queryForObject("SELECT count(1) from reservation", Integer.class);
+    }
+
+    private Reservation getNewReservationInfo() {
+        ReservationReqDTO reservationReqDto = new ReservationReqDTO("포비", LocalDate.now(), LocalTime.now());
+        return reservationReqDto.toEntity();
     }
 }

@@ -25,6 +25,7 @@ import roomescape.entity.Reservation;
 import roomescape.entity.ReservationTime;
 import roomescape.exceptions.EntityNotFoundException;
 import roomescape.repository.ReservationTimeH2Repository;
+import roomescape.service.ReservationTimeService;
 
 public class ReservationTimeControllerTest {
 
@@ -39,8 +40,9 @@ public class ReservationTimeControllerTest {
                 .addScript("schema.sql")
                 .build();
         jdbcTemplate = new JdbcTemplate(dataSource);
-        controller = new ReservationTimeController(
-                new ReservationTimeH2Repository(jdbcTemplate));
+        
+        ReservationTimeService service = new ReservationTimeService(new ReservationTimeH2Repository(jdbcTemplate));
+        controller = new ReservationTimeController(service);
     }
 
     @BeforeEach
@@ -50,7 +52,7 @@ public class ReservationTimeControllerTest {
     }
 
     @Test
-    @DisplayName("예약 목록을 조회한다.")
+    @DisplayName("예약 시간 목록을 조회한다.")
     void readReservationTime() {
         //given
         ReservationTime reservationTime1 = new ReservationTime(1L, LocalTime.of(15, 0));
@@ -70,7 +72,7 @@ public class ReservationTimeControllerTest {
     }
 
     @Test
-    @DisplayName("예약 관리 페이지 내에서 예약 추가")
+    @DisplayName("예약 시간 관리 페이지 내에서 예약 시간을 추가한다.")
     void postReservationTime() {
         //given
         LocalTime fixedTime = LocalTime.of(14, 30);

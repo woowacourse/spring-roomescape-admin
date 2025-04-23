@@ -18,6 +18,7 @@ public class CollectionReservationDao implements Dao<Reservation> {
         this.reservations = reservations;
     }
 
+    @Override
     public Reservation add(Reservation reservation) {
         reservations.add(reservation);
         return reservation;
@@ -31,10 +32,12 @@ public class CollectionReservationDao implements Dao<Reservation> {
                 .orElseThrow(() -> new IllegalArgumentException("[ERROR] 존재하지 않는 id 입니다."));
     }
 
+    @Override
     public List<Reservation> getAll() {
         return Collections.unmodifiableList(reservations);
     }
 
+    @Override
     public void deleteById(Long id) {
         reservations.remove(getById(id));
     }

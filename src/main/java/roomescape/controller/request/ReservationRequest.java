@@ -12,13 +12,13 @@ import roomescape.domain.ReserverName;
 
 public record ReservationRequest(@NotBlank String name, @Future LocalDate date, @NotNull Long timeId) {
 
-    public Reservation toEntity(final ReservationTimeResponse timeResponse) {
+    public Reservation toEntity(final ReservationTimeResponse reservationTimeResponse) {
         return new Reservation(
                 new ReserverName(name),
                 new ReservationDate(date),
                 new ReservationTime(
-                        timeResponse.id(),
-                        timeResponse.startAt()
+                        reservationTimeResponse.id(),
+                        reservationTimeResponse.startAt()
                 )
         );
     }

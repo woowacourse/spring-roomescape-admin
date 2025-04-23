@@ -9,6 +9,7 @@ import java.util.List;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.jdbc.core.JdbcTemplate;
+import roomescape.reservation.dao.H2ReservationDao;
 
 class H2ReservationDaoTest {
     LocalDate date = LocalDate.of(2025, 4, 22);

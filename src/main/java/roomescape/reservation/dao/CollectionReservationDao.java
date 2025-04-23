@@ -1,18 +1,20 @@
-package roomescape.reservation;
+package roomescape.reservation.dao;
 
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 import java.util.Objects;
+import roomescape.common.Dao;
+import roomescape.reservation.Reservation;
 
-public class InMemoryReservationDao implements ReservationDao {
+public class CollectionReservationDao implements Dao<Reservation> {
     private final List<Reservation> reservations;
 
-    public InMemoryReservationDao() {
+    public CollectionReservationDao() {
         this.reservations = new ArrayList<>();
     }
 
-    protected InMemoryReservationDao(List<Reservation> reservations) {
+    public CollectionReservationDao(List<Reservation> reservations) {
         this.reservations = reservations;
     }
 
@@ -41,7 +43,7 @@ public class InMemoryReservationDao implements ReservationDao {
         if (other == null || getClass() != other.getClass()) {
             return false;
         }
-        InMemoryReservationDao that = (InMemoryReservationDao) other;
+        CollectionReservationDao that = (CollectionReservationDao) other;
         return Objects.equals(reservations, that.reservations);
     }
 

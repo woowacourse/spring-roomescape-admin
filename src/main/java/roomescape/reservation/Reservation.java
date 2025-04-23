@@ -3,7 +3,6 @@ package roomescape.reservation;
 import java.time.LocalDate;
 import java.time.LocalTime;
 import java.util.Objects;
-import java.util.concurrent.atomic.AtomicLong;
 
 public final class Reservation {
     private Long id;
@@ -21,7 +20,7 @@ public final class Reservation {
         this.time = time;
     }
 
-    protected Reservation(Long id, String name, LocalDate date, LocalTime time) {
+    public Reservation(Long id, String name, LocalDate date, LocalTime time) {
         this.id = id;
         this.name = name;
         this.date = date;

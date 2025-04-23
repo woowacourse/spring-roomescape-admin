@@ -1,39 +1,76 @@
 package roomescape.repository;
 
+import java.sql.PreparedStatement;
+import java.time.LocalDate;
 import java.util.List;
-import java.util.concurrent.CopyOnWriteArrayList;
-import java.util.concurrent.atomic.AtomicLong;
+import org.springframework.jdbc.core.JdbcTemplate;
+import org.springframework.jdbc.core.RowMapper;
+import org.springframework.jdbc.support.GeneratedKeyHolder;
+import org.springframework.jdbc.support.KeyHolder;
+import org.springframework.stereotype.Repository;
 import roomescape.domain.Reservation;
+import roomescape.domain.ReservationTime;
 
+@Repository
 public class RoomescapeRepositoryImpl implements RoomescapeRepository {
 
-    private final List<Reservation> reservations = new CopyOnWriteArrayList<>();
-    private final AtomicLong index = new AtomicLong(1);
+    private JdbcTemplate template;
+
+    public RoomescapeRepositoryImpl(final JdbcTemplate template) {
+        this.template = template;
+    }
 
     @Override
     public List<Reservation> findAll() {
-        return reservations;
+        String sql = "SELECT r.id AS reservation_id, r.name, r.date, t.id AS time_id, t.start_at AS time_value "
+                + "FROM reservation as r "
+                + "INNER JOIN reservation_time AS t "
+                + "ON r.time_id = t.id";
+        return template.query(sql, reservationRowMapper());
     }
 
     @Override
     public Reservation saveReservation(final Reservation reservation) {
-        Reservation saved = reservation.toEntity(index.getAndIncrement());
-        reservations.add(saved);
-        return saved;
+        String sql = "insert into reservation (name, date, time_id) values (?, ?, ?)";
+        KeyHolder keyHolder = new GeneratedKeyHolder();
+        template.update(connection -> {
+            PreparedStatement ps = connection.prepareStatement(sql, new String[]{"id"});
+            ps.setString(1, reservation.getName());
+            ps.setString(2, reservation.getDate().toString());
+            ps.setLong(3, reservation.getTime().getId());
+            return ps;
+        }, keyHolder);
+
+        long id = keyHolder.getKey().longValue();
+
+        Reservation result = reservation.toEntity(id);
+        return result;
     }
 
     @Override
     public int deleteById(final long id) {
-        List<Reservation> candidates = reservations.stream()
-                .filter(reservation -> reservation.getId() == id)
-                .toList();
-        reservations.removeAll(candidates);
-        return candidates.size();
+        String sql = "delete from reservation where id = ?";
+        return template.update(sql, id);
     }
 
     @Override
     public void clear() {
-        reservations.clear();
+        String sql = "delete from reservation";
+        String resetAutoIncrementSql = "ALTER TABLE reservation ALTER COLUMN id RESTART WITH 1";
+        template.update(sql);
+        template.update(resetAutoIncrementSql);
     }
 
+    private RowMapper<Reservation> reservationRowMapper() {
+        return (rs, rowNum) -> {
+            String name = rs.getString("name");
+            String date = rs.getString("date");
+            String timeValue = rs.getString("time_value");
+            long timeId = rs.getLong("time_id");
+            long reservationId = rs.getLong("reservation_id");
+            ReservationTime reservationTime = ReservationTime.parse(timeValue).toEntity(timeId);
+            Reservation reservation = new Reservation(name, LocalDate.parse(date), reservationTime).toEntity(reservationId);
+            return reservation;
+        };
+    }
 }

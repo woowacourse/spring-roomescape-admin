@@ -1,20 +1,19 @@
 package roomescape.database;
 
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Repository;
 import roomescape.domain.Reservation;
 
-import java.util.ArrayList;
 import java.util.List;
 
 @Repository
 public class ReservationDatabaseImpl implements ReservationDatabase {
 
-    private final List<Reservation> reservations = new ArrayList<>();
+    private final JdbcTemplate jdbcTemplate;
 
-    @Autowired
-    public JdbcTemplate jdbcTemplate;
+    public ReservationDatabaseImpl(final JdbcTemplate jdbcTemplate) {
+        this.jdbcTemplate = jdbcTemplate;
+    }
 
     @Override
     public List<Reservation> findAll() {
@@ -33,10 +32,17 @@ public class ReservationDatabaseImpl implements ReservationDatabase {
 
     @Override
     public Reservation findById(Long id) {
-        return reservations.stream()
-                .filter(v -> v.getId().equals(id))
-                .findFirst()
-                .orElseThrow(() -> new IllegalArgumentException("잘못된 예약 번호입니다:" + id));
+        String sql = "select id, name, date, time from reservation where id = ?";
+
+        return jdbcTemplate.queryForObject(sql,
+                (resultSet, rowNum) ->
+                        new Reservation(
+                                resultSet.getLong("id"),
+                                resultSet.getString("name"),
+                                resultSet.getDate("date").toLocalDate(),
+                                resultSet.getTime("time").toLocalTime()
+                        ), id);
+
     }
 
     @Override
@@ -47,7 +53,8 @@ public class ReservationDatabaseImpl implements ReservationDatabase {
     }
 
     @Override
-    public void delete(Reservation reservation) {
-        reservations.remove(reservation);
+    public void delete(Long id) {
+        String sql = "delete from reservation where id = ?";
+        jdbcTemplate.update(sql, Long.valueOf(id));
     }
 }

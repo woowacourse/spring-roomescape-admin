@@ -3,7 +3,6 @@ package roomescape.service;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import roomescape.database.ReservationDatabase;
-import roomescape.database.ReservationDatabaseImpl;
 import roomescape.domain.Reservation;
 import roomescape.domain.dto.ReservationReqDto;
 import roomescape.domain.dto.ReservationResDto;
@@ -17,7 +16,7 @@ public class ReservationService {
 
     private final ReservationDatabase reservationDatabase;
 
-    public ReservationService(ReservationDatabaseImpl reservationDatabase) {
+    public ReservationService(ReservationDatabase reservationDatabase) {
         this.reservationDatabase = reservationDatabase;
     }
 
@@ -36,8 +35,7 @@ public class ReservationService {
     }
 
     public void delete(Long id) {
-        Reservation reservation = reservationDatabase.findById(id);
-        reservationDatabase.delete(reservation);
+        reservationDatabase.delete(id);
     }
 
     private Reservation convertReservation(ReservationReqDto dto) {

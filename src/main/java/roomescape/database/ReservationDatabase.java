@@ -1,7 +1,8 @@
 package roomescape.database;
 
-import java.util.List;
 import roomescape.domain.Reservation;
+
+import java.util.List;
 
 public interface ReservationDatabase {
 
@@ -11,5 +12,5 @@ public interface ReservationDatabase {
 
     Reservation add(Reservation reservation);
 
-    void delete(Reservation reservation);
+    void delete(Long id);
 }

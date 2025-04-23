@@ -151,7 +151,15 @@ public class ReservationTest {
     @Test
     void 예약_삭제시_존재하지_않는_예약이면_예외를_응답한다() {
         RestAssured.given().log().all()
-                .when().delete("/reservations/2")
+                .when().delete("/reservations/1")
+                .then().log().all()
+                .statusCode(404);
+    }
+
+    @Test
+    void 예약_시간_삭제시_존재하지_않는_예약시간이면_예외를_응답한다() {
+        RestAssured.given().log().all()
+                .when().delete("/times/1")
                 .then().log().all()
                 .statusCode(404);
     }

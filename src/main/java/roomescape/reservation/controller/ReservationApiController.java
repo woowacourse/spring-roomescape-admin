@@ -27,10 +27,10 @@ public class ReservationApiController {
 
     @GetMapping
     public ResponseEntity<List<ReservationResponse>> getReservations() {
-        List<Reservation> founds = reservationService.getAll();
+        List<Reservation> reservations = reservationService.getAll();
 
         return ResponseEntity
-                .ok(ReservationResponse.from(founds));
+                .ok(ReservationResponse.from(reservations));
     }
 
     @PostMapping

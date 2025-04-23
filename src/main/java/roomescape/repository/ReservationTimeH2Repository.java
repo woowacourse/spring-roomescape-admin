@@ -6,6 +6,7 @@ import java.sql.Time;
 import java.util.List;
 import java.util.Optional;
 import org.springframework.jdbc.core.JdbcTemplate;
+import org.springframework.jdbc.core.RowMapper;
 import org.springframework.jdbc.support.GeneratedKeyHolder;
 import org.springframework.jdbc.support.KeyHolder;
 import org.springframework.stereotype.Repository;
@@ -13,6 +14,12 @@ import roomescape.domain.ReservationTime;
 
 @Repository
 public class ReservationTimeH2Repository implements ReservationTimeRepository {
+
+    public static final String SELECT_RESERVATION_TIME = "SELECT * FROM reservation_time";
+    public static final RowMapper<ReservationTime> RESERVATION_TIME_ROW_MAPPER = (rs, rowNum) -> new ReservationTime(
+            rs.getLong("id"),
+            rs.getTime("start_at").toLocalTime()
+    );
 
     private final JdbcTemplate jdbcTemplate;
 
@@ -40,35 +47,21 @@ public class ReservationTimeH2Repository implements ReservationTimeRepository {
 
     @Override
     public List<ReservationTime> findAll() {
-        String query = "SELECT * FROM reservation_time";
-
-        return jdbcTemplate.query(query, ((rs, rowNum) ->
-                new ReservationTime(rs.getLong("id"), rs.getTime("start_at").toLocalTime()))
-        );
+        return jdbcTemplate.query(SELECT_RESERVATION_TIME, RESERVATION_TIME_ROW_MAPPER);
     }
 
     @Override
     public void deleteById(final long id) {
         String query = "DELETE FROM reservation_time WHERE id = ?";
-        int update = jdbcTemplate.update(query, id);
-
-        if (update == 0) {
-            throw new IllegalArgumentException("id에 해당하는 예약 시간이 없습니다.");
-        }
+        jdbcTemplate.update(query, id);
     }
 
     @Override
     public Optional<ReservationTime> findById(final long id) {
-        String query = "SELECT * FROM reservation_time WHERE id = ?";
+        String query = SELECT_RESERVATION_TIME
+                + " WHERE id = ?";
 
-        List<ReservationTime> result = jdbcTemplate.query(
-                query,
-                (rs, rowNum) -> new ReservationTime(
-                        rs.getLong("id"),
-                        rs.getTime("start_at").toLocalTime()
-                ),
-                id
-        );
+        List<ReservationTime> result = jdbcTemplate.query(query, RESERVATION_TIME_ROW_MAPPER, id);
 
         return result.stream().findAny();
     }

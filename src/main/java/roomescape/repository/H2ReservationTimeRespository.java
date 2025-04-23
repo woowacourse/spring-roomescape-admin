@@ -10,17 +10,16 @@ import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;
 import org.springframework.jdbc.core.simple.SimpleJdbcInsert;
 import org.springframework.stereotype.Repository;
-import roomescape.controller.request.ReservationTimeRequest;
-import roomescape.controller.response.ReservationTimeResponse;
+import roomescape.domain.ReservationTime;
 
 @Primary
 @Repository
 public class H2ReservationTimeRespository implements ReservationTimeRepository {
 
-    private static final RowMapper<ReservationTimeResponse> ROW_MAPPER = (rs, rowNum) -> {
+    private static final RowMapper<ReservationTime> ROW_MAPPER = (rs, rowNum) -> {
         final long id = rs.getLong("id");
         final LocalTime startAt = rs.getTime("start_at").toLocalTime();
-        return new ReservationTimeResponse(id, startAt);
+        return new ReservationTime(id, startAt);
     };
 
     private final JdbcTemplate jdbcTemplate;
@@ -30,7 +29,7 @@ public class H2ReservationTimeRespository implements ReservationTimeRepository {
     }
 
     @Override
-    public List<ReservationTimeResponse> findAll() {
+    public List<ReservationTime> findAll() {
         final String sql = """
                 SELECT * FROM reservation_time
                 """;
@@ -39,27 +38,27 @@ public class H2ReservationTimeRespository implements ReservationTimeRepository {
     }
 
     @Override
-    public Optional<ReservationTimeResponse> findById(final Long id) {
+    public Optional<ReservationTime> findById(final Long id) {
         final String sql = """
                 SELECT * FROM RESERVATION_TIME
                 WHERE id = ?
                 """;
 
         try {
-            final ReservationTimeResponse response = jdbcTemplate.queryForObject(sql, ROW_MAPPER, id);
-            return Optional.ofNullable(response);
+            final ReservationTime reservationTime = jdbcTemplate.queryForObject(sql, ROW_MAPPER, id);
+            return Optional.ofNullable(reservationTime);
         } catch (EmptyResultDataAccessException e) {
             return Optional.empty();
         }
     }
 
     @Override
-    public long add(final ReservationTimeRequest request) {
+    public long add(final ReservationTime reservationTime) {
         final Number id = new SimpleJdbcInsert(jdbcTemplate)
                 .withTableName("reservation_time")
                 .usingGeneratedKeyColumns("id")
                 .executeAndReturnKey(Map.of(
-                        "start_at", request.startAt()
+                        "start_at", reservationTime.getStartAt()
                 ));
         return id.longValue();
     }

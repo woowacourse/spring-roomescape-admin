@@ -2,14 +2,10 @@ package roomescape.repository;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Map.Entry;
 import java.util.Optional;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.atomic.AtomicLong;
 import org.springframework.stereotype.Repository;
-import roomescape.controller.request.ReservationRequest;
-import roomescape.controller.response.ReservationResponse;
-import roomescape.controller.response.ReservationTimeResponse;
 import roomescape.domain.Reservation;
 
 @Repository
@@ -26,28 +22,22 @@ public class MemoryReservationRepository implements ReservationRepository {
     }
 
     @Override
-    public List<ReservationResponse> findAll() {
-        final List<ReservationResponse> responses = new ArrayList<>();
-        for (Entry<Long, Reservation> each : reservations.entrySet()) {
-            responses.add(ReservationResponse.from(each.getKey(), each.getValue()));
-        }
-        return responses;
+    public List<Reservation> findAll() {
+        return new ArrayList<>(reservations.values());
     }
 
     @Override
-    public Optional<ReservationResponse> findById(final Long id) {
+    public Optional<Reservation> findById(final Long id) {
         if (reservations.containsKey(id)) {
-            return Optional.of(ReservationResponse.from(id, reservations.get(id)));
+            return Optional.of(reservations.get(id));
         }
         return Optional.empty();
     }
 
     @Override
-    public long add(final ReservationRequest request) {
-        final ReservationTimeResponse timeResponse = timeRepository.findById(request.timeId())
-                .orElseThrow(() -> new IllegalArgumentException("예약 시간이 존재하지 않습니다."));
+    public long add(final Reservation reservation) {
         final long id = index.getAndIncrement();
-        final Reservation reservation = request.toEntity(id, timeResponse);
+        reservation.setId(id);
         reservations.put(id, reservation);
         return id;
     }

@@ -11,21 +11,23 @@ import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;
 import org.springframework.jdbc.core.simple.SimpleJdbcInsert;
 import org.springframework.stereotype.Repository;
-import roomescape.controller.request.ReservationRequest;
-import roomescape.controller.response.ReservationResponse;
-import roomescape.controller.response.ReservationTimeResponse;
+import roomescape.domain.Reservation;
+import roomescape.domain.ReservationDate;
+import roomescape.domain.ReservationName;
+import roomescape.domain.ReservationTime;
 
 @Primary
 @Repository
 public class H2ReservationRepository implements ReservationRepository {
 
-    private static final RowMapper<ReservationResponse> ROW_MAPPER = (rs, rowNum) -> {
+    private static final RowMapper<Reservation> ROW_MAPPER = (rs, rowNum) -> {
         final long id = rs.getLong("reservation_id");
         final String name = rs.getString("name");
         final LocalDate date = rs.getDate("date").toLocalDate();
         final long timeId = rs.getLong("time_id");
         final LocalTime time = rs.getTime("time_value").toLocalTime();
-        return new ReservationResponse(id, name, date, new ReservationTimeResponse(timeId, time));
+        return new Reservation(id, new ReservationName(name), new ReservationDate(date),
+                new ReservationTime(timeId, time));
     };
 
     private final JdbcTemplate jdbcTemplate;
@@ -35,7 +37,7 @@ public class H2ReservationRepository implements ReservationRepository {
     }
 
     @Override
-    public List<ReservationResponse> findAll() {
+    public List<Reservation> findAll() {
         String sql = """
                     SELECT
                         r.id as reservation_id,
@@ -51,7 +53,7 @@ public class H2ReservationRepository implements ReservationRepository {
     }
 
     @Override
-    public Optional<ReservationResponse> findById(final Long id) {
+    public Optional<Reservation> findById(final Long id) {
         String sql = """
                     SELECT
                         r.id as reservation_id,
@@ -65,23 +67,23 @@ public class H2ReservationRepository implements ReservationRepository {
                     where r.id = ?
                 """;
         try {
-            final ReservationResponse response = jdbcTemplate.queryForObject(sql, ROW_MAPPER, id);
-            return Optional.ofNullable(response);
+            final Reservation reservation = jdbcTemplate.queryForObject(sql, ROW_MAPPER, id);
+            return Optional.ofNullable(reservation);
         } catch (EmptyResultDataAccessException e) {
             return Optional.empty();
         }
     }
 
     @Override
-    public long add(final ReservationRequest request) {
+    public long add(final Reservation reservation) {
         final Number id = new SimpleJdbcInsert(jdbcTemplate)
                 .withTableName("reservation")
                 .usingGeneratedKeyColumns("id")
                 .executeAndReturnKey(
                         Map.of(
-                                "name", request.name(),
-                                "date", request.date(),
-                                "time_id", request.timeId()
+                                "name", reservation.getName(),
+                                "date", reservation.getDate(),
+                                "time_id", reservation.getTime().getId()
                         )
                 );
         return id.longValue();

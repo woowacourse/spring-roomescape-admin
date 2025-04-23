@@ -2,13 +2,10 @@ package roomescape.repository;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Map.Entry;
 import java.util.Optional;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.atomic.AtomicLong;
 import org.springframework.stereotype.Repository;
-import roomescape.controller.request.ReservationTimeRequest;
-import roomescape.controller.response.ReservationTimeResponse;
 import roomescape.domain.ReservationTime;
 
 @Repository
@@ -23,26 +20,21 @@ public class MemoryReservationTimeRepository implements ReservationTimeRepositor
     }
 
     @Override
-    public List<ReservationTimeResponse> findAll() {
-        final ArrayList<ReservationTimeResponse> responses = new ArrayList<>();
-        for (Entry<Long, ReservationTime> each : reservationTimes.entrySet()) {
-            responses.add(ReservationTimeResponse.from(each.getKey(), each.getValue()));
-        }
-        return responses;
+    public List<ReservationTime> findAll() {
+        return new ArrayList<>(reservationTimes.values());
     }
 
     @Override
-    public Optional<ReservationTimeResponse> findById(final Long id) {
+    public Optional<ReservationTime> findById(final Long id) {
         if (reservationTimes.containsKey(id)) {
-            return Optional.of(ReservationTimeResponse.from(id, reservationTimes.get(id)));
+            return Optional.of(reservationTimes.get(id));
         }
         return Optional.empty();
     }
 
     @Override
-    public long add(final ReservationTimeRequest request) {
+    public long add(final ReservationTime reservationTime) {
         final long id = index.getAndIncrement();
-        final ReservationTime reservationTime = request.toEntity(id);
         reservationTimes.put(id, reservationTime);
         return id;
     }

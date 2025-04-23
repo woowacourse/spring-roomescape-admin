@@ -16,13 +16,20 @@ public class ReservationTimeService {
     }
 
     public List<ReservationTimeResponse> get() {
-        return repository.findAll();
+        return repository.findAll().stream()
+                .map(ReservationTimeResponse::from)
+                .toList();
+    }
+
+    public ReservationTimeResponse getById(final Long id) {
+        return ReservationTimeResponse.from(
+                repository.findById(id).orElseThrow(() -> new IllegalArgumentException("해당하는 id의 예약 시간이 없습니다.")));
     }
 
     public ReservationTimeResponse create(final ReservationTimeRequest request) {
-        final long id = repository.add(request);
-        return repository.findById(id)
-                .orElseThrow(() -> new IllegalStateException("예약 시간을 찾는 과정에서 문제가 생겼습니다."));
+        final long id = repository.add(request.toEntity());
+        return ReservationTimeResponse.from(repository.findById(id)
+                .orElseThrow(() -> new IllegalStateException("예약 시간을 찾는 과정에서 문제가 생겼습니다.")));
     }
 
     public void deleteById(final Long id) {

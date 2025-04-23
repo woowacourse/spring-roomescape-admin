@@ -46,26 +46,6 @@ public class TimeJdbcDao implements TimeDao {
     }
 
     @Override
-    public Time findTimeById(final Long id) {
-        final String sql = "SELECT * FROM RESERVATION_TIME WHERE id=?";
-
-        return jdbcTemplate.queryForObject(sql, (resultSet, rowNum) -> {
-            return new Time(
-                    resultSet.getLong("id"),
-                    resultSet.getTime("start_at").toLocalTime()
-            );
-        }, id);
-    }
-
-    @Override
-    public boolean existTimeById(final Long id) {
-        final String sql = "SELECT COUNT(*) FROM RESERVATION_TIME WHERE id=?";
-        final Long count = jdbcTemplate.queryForObject(sql, Long.class, id);
-
-        return count > 0L;
-    }
-
-    @Override
     public void deleteTimeById(final Long id) {
         final String sql = "DELETE FROM RESERVATION_TIME WHERE id=?";
         final int updatedCount = jdbcTemplate.update(sql, id);

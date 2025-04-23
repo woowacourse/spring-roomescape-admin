@@ -42,9 +42,7 @@ public class RoomescapeRepositoryImpl implements RoomescapeRepository {
         }, keyHolder);
 
         long id = keyHolder.getKey().longValue();
-
-        Reservation result = reservation.toEntity(id);
-        return result;
+        return reservation.toEntity(id);
     }
 
     @Override
@@ -63,13 +61,13 @@ public class RoomescapeRepositoryImpl implements RoomescapeRepository {
 
     private RowMapper<Reservation> reservationRowMapper() {
         return (rs, rowNum) -> {
-            String name = rs.getString("name");
-            String date = rs.getString("date");
-            String timeValue = rs.getString("time_value");
-            long timeId = rs.getLong("time_id");
-            long reservationId = rs.getLong("reservation_id");
-            ReservationTime reservationTime = ReservationTime.parse(timeValue).toEntity(timeId);
-            Reservation reservation = new Reservation(name, LocalDate.parse(date), reservationTime).toEntity(reservationId);
+            ReservationTime reservationTime = ReservationTime.parse(rs.getString("time_value"))
+                    .toEntity(rs.getLong("time_id"));
+            Reservation reservation = new Reservation(
+                    rs.getString("name"),
+                    LocalDate.parse(rs.getString("date")),
+                    reservationTime
+            ).toEntity(rs.getLong("reservation_id"));
             return reservation;
         };
     }

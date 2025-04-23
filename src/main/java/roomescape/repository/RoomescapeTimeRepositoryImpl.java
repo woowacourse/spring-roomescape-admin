@@ -61,9 +61,8 @@ public class RoomescapeTimeRepositoryImpl implements RoomescapeTimeRepository {
 
     private RowMapper<ReservationTime> reservationTimeRowMapper() {
         return (rs, rowNum) -> {
-            ReservationTime reservationTime = new ReservationTime(
-                    LocalTime.parse(rs.getString("start_at"))
-            ).toEntity(rs.getLong("id"));
+            ReservationTime reservationTime = new ReservationTime(LocalTime.parse(rs.getString("start_at")))
+                    .toEntity(rs.getLong("id"));
             return reservationTime;
         };
     }

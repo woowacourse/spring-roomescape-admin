@@ -45,8 +45,5 @@ public class Reservation {
     public Long getTimeId() {
         return reservationTime.getId();
     }
-
-    public void setReservationTime(ReservationTime reservationTime) {
-        this.reservationTime = reservationTime;
-    }
+    
 }

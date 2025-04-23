@@ -5,6 +5,8 @@ import java.util.Objects;
 
 public final class Reservation {
 
+    private static final long DEFAULT_ID = 0L;
+
     private final Long id;
     private final String name;
     private final LocalDate date;
@@ -19,7 +21,7 @@ public final class Reservation {
     }
 
     public static Reservation createWithoutId(String name, LocalDate date, ReservationTime time) {
-        return new Reservation(0L, name, date, time);
+        return new Reservation(DEFAULT_ID, name, date, time);
     }
 
     public long getId() {

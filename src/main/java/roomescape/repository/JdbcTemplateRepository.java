@@ -7,17 +7,16 @@ import java.util.List;
 import java.util.NoSuchElementException;
 import java.util.Optional;
 import javax.sql.DataSource;
-import org.springframework.dao.DataAccessException;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;
 import org.springframework.jdbc.core.namedparam.MapSqlParameterSource;
 import org.springframework.jdbc.core.simple.SimpleJdbcInsert;
 import org.springframework.stereotype.Repository;
 import roomescape.Reservation;
+import roomescape.ReservationTime;
 
 @Repository
 public class JdbcTemplateRepository implements ReservationRepository {
-
     private final JdbcTemplate template;
     private final SimpleJdbcInsert inserter;
 
@@ -25,57 +24,64 @@ public class JdbcTemplateRepository implements ReservationRepository {
         this.template = new JdbcTemplate(dataSource);
         this.inserter = new SimpleJdbcInsert(dataSource).withTableName("reservation")
                 .usingGeneratedKeyColumns("id")
-                .usingColumns("name", "date", "time");
+                .usingColumns("name", "date", "time_id");
     }
 
     @Override
     public List<Reservation> findAll() {
-        final String sql = "select id, name, date, time from reservation";
-        return template.query(sql, actorRowMapper);
+        final String sql = """
+                select 
+                    r.id as reservation_id, 
+                    r.name, r.date, 
+                    t.id as time_id, 
+                    t.start_at as time_value 
+                from reservation as r
+                inner join reservation_time as t 
+                on r.time_id = t.id
+                """;
+        return template.query(sql, reservationRowMapper);
     }
 
-    private final RowMapper<Reservation> actorRowMapper = (resultSet, rowNum) -> {
-        final DateTimeFormatter dateFormatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
-        final DateTimeFormatter timeFormatter = DateTimeFormatter.ofPattern("HH:mm");
-
-        LocalDate date = LocalDate.parse(resultSet.getString("date"), dateFormatter);
-        LocalTime time = LocalTime.parse(resultSet.getString("time"), timeFormatter);
-
-        return new Reservation(
-                resultSet.getLong("id"),
-                resultSet.getString("name"),
-                date,
-                time
-        );
-    };
-
     @Override
-    public boolean existsByDateAndTime(LocalDate date, LocalTime time) {
-        final String sql = "select count(*) from reservation where date = ? and time = ?";
+    public boolean existsByDateAndTime(final LocalDate date, final LocalTime time) {
+        final String sql = """
+                select count(*) 
+                from reservation as r                
+                inner join reservation_time as rt 
+                where r.date = ? 
+                  and rt.start_at = ?
+                """;
         final Integer count = template.queryForObject(sql, Integer.class, date, time);
         return count != null && count > 0;
     }
 
     @Override
-    public Reservation save(final String name, final LocalDate date, final LocalTime time) {
+    public Reservation save(final String name, final LocalDate date, final Long timeId, final LocalTime time) {
         MapSqlParameterSource params = new MapSqlParameterSource()
                 .addValue("name", name)
                 .addValue("date", date)
-                .addValue("time", time);
+                .addValue("time_id", timeId);
 
-        Number newId = inserter.executeAndReturnKey(params);
-        return new Reservation(newId.longValue(), name, date, time);
+        final long newId = inserter.executeAndReturnKey(params).longValue();
+        return new Reservation(newId, name, date, new ReservationTime(timeId, time));
     }
 
     @Override
     public Optional<Reservation> findById(final Long id) {
-        final String sql = "select id, name, date, time from reservation where id = ?";
-        try {
-            final Reservation reservation = template.queryForObject(sql, actorRowMapper, id);
-            return Optional.of(reservation);
-        } catch (DataAccessException e) {
-            return Optional.empty();
-        }
+        final String sql = """
+                 select 
+                    r.id as reservation_id, 
+                    r.name, r.date, 
+                    t.id as time_id, 
+                    t.start_at as time_value 
+                from reservation as r
+                inner join reservation_time as t on r.time_id = t.id
+                where r.id = ?
+                """;
+        return template.query(sql, reservationRowMapper, id)
+                .stream()
+                .findFirst();
+
     }
 
     @Override
@@ -86,4 +92,16 @@ public class JdbcTemplateRepository implements ReservationRepository {
             throw new NoSuchElementException("삭제하려고 하는 예약이 존재하지 않습니다. " + id);
         }
     }
+
+    private final RowMapper<Reservation> reservationRowMapper = (resultSet, rowNum) -> {
+        final DateTimeFormatter timeFormatter = DateTimeFormatter.ofPattern("HH:mm");
+        final LocalTime time = LocalTime.parse(resultSet.getString("time_value"), timeFormatter);
+
+        return new Reservation(
+                resultSet.getLong("id"),
+                resultSet.getString("name"),
+                resultSet.getObject("date", LocalDate.class),
+                new ReservationTime(resultSet.getLong("id"), time)
+        );
+    };
 }

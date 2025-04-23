@@ -12,8 +12,8 @@
   - [X] 데이터 조회 기능 구현
   - [X] 데이터 추가 기능 구현
   - [X] 데이터 삭제 기능 구현
-- [ ] 방탈출 시간을 사용자가 선택하는 방식으로 수정
-  - [ ] `templates/admin/time.html` 파일 사용
+- [X] 방탈출 시간을 사용자가 선택하는 방식으로 수정
+  - [X] `templates/admin/time.html` 파일 사용
 - [ ] 시간을 시간 테이블에 저장된 값만 선택할 수 있도록 수정
   - [ ] `templates/admin/reservation-legacy.html` 대신 `templates/admin/reservation.html` 파일로 변경
 - [ ] 레이어드 아키텍처를 적용하여 레이어별 책임과 역할 분리

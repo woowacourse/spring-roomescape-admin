@@ -9,6 +9,7 @@ import org.springframework.jdbc.core.simple.SimpleJdbcInsert;
 import org.springframework.stereotype.Repository;
 import roomescape.dto.CreateReservationDto;
 import roomescape.entity.Reservation;
+import roomescape.entity.ReservationTime;
 
 @Repository
 public class ReservationRepository {
@@ -24,26 +25,23 @@ public class ReservationRepository {
                 (resultSet, rowNum) -> new Reservation(
                         resultSet.getLong("id"),
                         resultSet.getString("name"),
-                        resultSet.getObject("dateTime", LocalDateTime.class)
+                        resultSet.getString("date"),
+                        resultSet.getObject("time", ReservationTime.class)
                 ));
     }
 
-    public Reservation add(CreateReservationDto createReservationDto) {
+    public Long addAndGetId(CreateReservationDto createReservationDto) {
         SimpleJdbcInsert insertQuery = new SimpleJdbcInsert(jdbcTemplate.getDataSource())
                 .withTableName("reservation")
-                .usingColumns("name", "dateTime")
+                .usingColumns("name", "date", "time_id")
                 .usingGeneratedKeyColumns("id");
 
         SqlParameterSource parameters = new MapSqlParameterSource()
                 .addValue("name", createReservationDto.name())
-                .addValue("dateTime", LocalDateTime.of(
-                        createReservationDto.date(),
-                        createReservationDto.time()
-                ));
+                .addValue("date", createReservationDto.date())
+                .addValue("time_id", createReservationDto.timeId());
 
-        Long id = insertQuery.executeAndReturnKey(parameters).longValue();
-
-        return findById(id);
+        return insertQuery.executeAndReturnKey(parameters).longValue();
     }
 
     public void deleteById(Long id) {
@@ -51,7 +49,7 @@ public class ReservationRepository {
         jdbcTemplate.update(sql, id);
     }
 
-    private Reservation findById(Long id) {
+    public Reservation findById(Long id) {
         String selectSql = "SELECT * FROM reservation WHERE id = ?";
         return jdbcTemplate.queryForObject(selectSql,
                 (resultSet, rowNum) -> new Reservation(

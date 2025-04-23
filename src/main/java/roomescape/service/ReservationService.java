@@ -29,7 +29,8 @@ public class ReservationService {
     또 service 계층에선 reservation id를 못만드네 생각해보니까
      */
     public Reservation createReservation(CreateReservationDto createReservationDto) {
-        return reservationRepository.add(createReservationDto);
+        Long id = reservationRepository.addAndGetId(createReservationDto);
+        return reservationRepository.findById(id);
     }
 
     public void deleteReservation(Long id) {

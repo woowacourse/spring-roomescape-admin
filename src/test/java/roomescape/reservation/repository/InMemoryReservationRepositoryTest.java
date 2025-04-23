@@ -8,7 +8,6 @@ import java.util.List;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import roomescape.reservation.domain.Reservation;
-import roomescape.reservation.entity.ReservationEntity;
 
 class InMemoryReservationRepositoryTest {
 
@@ -36,15 +35,15 @@ class InMemoryReservationRepositoryTest {
         repository.put(r1);
         repository.put(r2);
 
-        List<ReservationEntity> all = repository.getAll();
+        List<Reservation> all = repository.getAll();
         assertThat(all).hasSize(2);
     }
 
     @Test
     void deleteById_shouldRemoveReservation() {
-        long id = repository.put(new Reservation("브라운", LocalDate.parse("2023-08-05"), LocalTime.parse("15:40"))).id();
+        repository.put(new Reservation("브라운", LocalDate.parse("2023-08-05"), LocalTime.parse("15:40")));
 
-        repository.deleteById(id);
+        repository.deleteById(1);
 
         assertThat(repository.getAll()).isEmpty();
     }

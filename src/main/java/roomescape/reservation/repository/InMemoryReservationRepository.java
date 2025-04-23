@@ -7,7 +7,6 @@ import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.atomic.AtomicLong;
 import org.springframework.stereotype.Repository;
 import roomescape.reservation.domain.Reservation;
-import roomescape.reservation.entity.ReservationEntity;
 
 @Repository
 public class InMemoryReservationRepository implements ReservationRepository {
@@ -15,17 +14,16 @@ public class InMemoryReservationRepository implements ReservationRepository {
     private final AtomicLong index = new AtomicLong(1);
 
     @Override
-    public List<ReservationEntity> getAll() {
-        return reservations.entrySet().stream()
-                .map((entry)-> ReservationEntity.of(entry.getKey(), entry.getValue()))
+    public List<Reservation> getAll() {
+        return reservations.values().stream()
                 .toList();
     }
 
     @Override
-    public ReservationEntity put(final Reservation reservation) {
+    public Reservation put(final Reservation reservation) {
         long id = index.getAndIncrement();
         reservations.put(id, reservation);
-        return ReservationEntity.of(id, reservation);
+        return reservation;
     }
 
     @Override
@@ -34,7 +32,7 @@ public class InMemoryReservationRepository implements ReservationRepository {
     }
 
     @Override
-    public Optional<ReservationEntity> findById(final long id) {
-        return Optional.empty();
+    public Optional<Reservation> findById(final long id) {
+        return Optional.ofNullable(reservations.get(id));
     }
 }

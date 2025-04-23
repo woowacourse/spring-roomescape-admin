@@ -19,30 +19,33 @@ import roomescape.reservation.entity.ReservationEntity;
 public class H2ReservationRepository implements ReservationRepository {
 
     private final JdbcTemplate jdbcTemplate;
+    private final ReservationIdCache cache;
 
-    public H2ReservationRepository(final JdbcTemplate jdbcTemplate) {
+    public H2ReservationRepository(final JdbcTemplate jdbcTemplate, final ReservationIdCache cache) {
         this.jdbcTemplate = jdbcTemplate;
+        this.cache = cache;
     }
 
     @Override
-    public List<ReservationEntity> getAll() {
-        List<ReservationEntity> reservations = jdbcTemplate.query(
+    public List<Reservation> getAll() {
+        return jdbcTemplate.query(
                 "SELECT id, name, date, time FROM reservation",
                 (resultSet, rowNum) -> {
-                    ReservationEntity reservation = new ReservationEntity(
+                    ReservationEntity entity = new ReservationEntity(
                             resultSet.getLong("id"),
                             resultSet.getString("name"),
                             resultSet.getString("date"),
                             resultSet.getString("time")
                     );
+                    Reservation reservation = entity.toReservation();
+                    cache.put(reservation, entity.id());
                     return reservation;
                 }
         );
-        return reservations;
     }
 
     @Override
-    public ReservationEntity put(final Reservation reservation) {
+    public Reservation put(final Reservation reservation) {
         KeyHolder keyHolder = new GeneratedKeyHolder();
 
         jdbcTemplate.update(connection -> {
@@ -54,14 +57,10 @@ public class H2ReservationRepository implements ReservationRepository {
             return ps;
         }, keyHolder);
 
-        Number generatedId = keyHolder.getKey();
+        long generatedId = keyHolder.getKey().longValue();
+        cache.put(reservation, generatedId);
 
-        return new ReservationEntity(
-                generatedId.longValue(),
-                reservation.getName(),
-                reservation.getDate(),
-                reservation.getTime()
-        );
+        return reservation;
     }
 
     @Override
@@ -70,19 +69,17 @@ public class H2ReservationRepository implements ReservationRepository {
     }
 
     @Override
-    public Optional<ReservationEntity> findById(final long id) {
+    public Optional<Reservation> findById(final long id) {
         ReservationEntity reservationEntity = jdbcTemplate.queryForObject(
                 "SELECT id, name, date, time FROM reservation",
-                (resultSet, rowNum) -> {
-                    ReservationEntity r = new ReservationEntity(
-                            resultSet.getLong("id"),
-                            resultSet.getString("name"),
-                            resultSet.getString("date"),
-                            resultSet.getString("time")
-                    );
-                    return r;
-                }
+                (resultSet, rowNum) -> new ReservationEntity(
+                        resultSet.getLong("id"),
+                        resultSet.getString("name"),
+                        resultSet.getString("date"),
+                        resultSet.getString("time")
+                )
         );
-        return Optional.ofNullable(reservationEntity);
+        return Optional.ofNullable(reservationEntity)
+                .map(ReservationEntity::toReservation);
     }
 }

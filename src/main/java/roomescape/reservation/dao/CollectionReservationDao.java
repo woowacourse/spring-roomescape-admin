@@ -23,19 +23,20 @@ public class CollectionReservationDao implements Dao<Reservation> {
         return reservation;
     }
 
+    @Override
+    public Reservation getById(Long id) {
+        return reservations.stream()
+                .filter(reservation -> reservation.hasSame(id))
+                .findFirst()
+                .orElseThrow(() -> new IllegalArgumentException("[ERROR] 존재하지 않는 id 입니다."));
+    }
+
     public List<Reservation> getAll() {
         return Collections.unmodifiableList(reservations);
     }
 
     public void deleteById(Long id) {
-        reservations.remove(findById(id));
-    }
-
-    private Reservation findById(Long id) {
-        return reservations.stream()
-                .filter(reservation -> reservation.hasSame(id))
-                .findFirst()
-                .orElseThrow(() -> new IllegalArgumentException("[ERROR] 존재하지 않는 id 입니다."));
+        reservations.remove(getById(id));
     }
 
     @Override

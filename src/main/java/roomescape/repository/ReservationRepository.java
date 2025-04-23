@@ -6,9 +6,8 @@ import java.util.Map;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.simple.SimpleJdbcInsert;
 import org.springframework.stereotype.Repository;
-import roomescape.exception.reservation.ReservationNotFoundException;
-import roomescape.model.Reservation;
-import roomescape.model.ReservationTime;
+import roomescape.domain.Reservation;
+import roomescape.domain.ReservationTime;
 
 @Repository
 public class ReservationRepository {
@@ -34,11 +33,7 @@ public class ReservationRepository {
 
     public int deleteBy(Long id) {
         String sql = "delete from reservation where id = ?";
-        int rowNum = jdbcTemplate.update(sql, id);
-        if (rowNum == 0) {
-            throw new ReservationNotFoundException(id);
-        }
-        return rowNum;
+        return jdbcTemplate.update(sql, id);
     }
 
     public List<Reservation> findAll() {

@@ -1,0 +1,41 @@
+package roomescape.service;
+
+import java.util.List;
+import org.springframework.stereotype.Service;
+import roomescape.domain.Reservation;
+import roomescape.domain.ReservationTime;
+import roomescape.dto.ReservationRequest;
+import roomescape.dto.ReservationResponse;
+import roomescape.exception.reservation.ReservationNotFoundException;
+import roomescape.repository.ReservationRepository;
+
+@Service
+public class ReservationService {
+    private final ReservationRepository reservationRepository;
+    private final ReservationTimeService timeService;
+
+    public ReservationService(ReservationRepository reservationRepository, ReservationTimeService timeService) {
+        this.reservationRepository = reservationRepository;
+        this.timeService = timeService;
+    }
+
+    public ReservationResponse create(ReservationRequest request) {
+        ReservationTime time = timeService.getBy(request.getTimeId());
+        Reservation newReservation = new Reservation(request.getName(), request.getDate(), time);
+        return ReservationResponse.from(reservationRepository.add(newReservation));
+    }
+
+    public List<ReservationResponse> getAll() {
+        return reservationRepository.findAll().stream()
+                .map(ReservationResponse::from)
+                .toList();
+    }
+
+    public void deleteBy(Long id) {
+        int affectedCount = reservationRepository.deleteBy(id);
+        if (affectedCount == 0) {
+            throw new ReservationNotFoundException(id);
+        }
+    }
+
+}

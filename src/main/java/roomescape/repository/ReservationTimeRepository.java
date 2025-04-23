@@ -4,11 +4,11 @@ import java.time.LocalTime;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.simple.SimpleJdbcInsert;
 import org.springframework.stereotype.Repository;
-import roomescape.exception.reservationTime.ReservationTimeNotFoundException;
-import roomescape.model.ReservationTime;
+import roomescape.domain.ReservationTime;
 
 @Repository
 public class ReservationTimeRepository {
@@ -47,16 +47,12 @@ public class ReservationTimeRepository {
 
     public int deleteBy(Long id) {
         String sql = "delete from reservation_time where id = ?";
-        int rowNum = jdbcTemplate.update(sql, id);
-        if (rowNum == 0) {
-            throw new ReservationTimeNotFoundException(id);
-        }
-        return rowNum;
+        return jdbcTemplate.update(sql, id);
     }
 
-    public ReservationTime findBy(Long timeId) {
+    public Optional<ReservationTime> findBy(Long timeId) {
         String sql = "select * from reservation_time where id = ?";
-        ReservationTime time = jdbcTemplate.queryForObject(
+        List<ReservationTime> time = jdbcTemplate.query(
                 sql,
                 (resultSet, rowNum) ->
                         new ReservationTime(
@@ -65,6 +61,6 @@ public class ReservationTimeRepository {
                         ),
                 timeId
         );
-        return time;
+        return time.stream().findFirst();
     }
 }

@@ -10,7 +10,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import roomescape.reservation.model.Reservation;
 import roomescape.reservation.dao.ReservationDAO;
-import roomescape.reservation.dto.ReservationReqDto;
+import roomescape.reservation.dto.ReservationReqDTO;
 
 import java.util.List;
 
@@ -25,7 +25,7 @@ public class ReservationController {
     }
 
     @PostMapping
-    public ResponseEntity<Reservation> create(@RequestBody ReservationReqDto dto) {
+    public ResponseEntity<Reservation> create(@RequestBody ReservationReqDTO dto) {
         Reservation reservationInfo = dto.toEntity();
         Reservation newReservation = reservationDAO.insert(reservationInfo);
         return ResponseEntity.ok(newReservation);

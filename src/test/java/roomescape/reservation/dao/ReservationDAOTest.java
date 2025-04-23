@@ -8,7 +8,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.test.annotation.DirtiesContext;
-import roomescape.reservation.dto.ReservationReqDto;
+import roomescape.reservation.dto.ReservationReqDTO;
 import roomescape.reservation.model.Reservation;
 
 import java.time.LocalDate;
@@ -34,7 +34,7 @@ class ReservationDAOTest {
     void insertTest() {
         // given
         ReservationDAO reservationDAO = new ReservationDAO(jdbcTemplate);
-        ReservationReqDto reservationReqDto = new ReservationReqDto("포비", LocalDate.now(), LocalTime.now());
+        ReservationReqDTO reservationReqDto = new ReservationReqDTO("포비", LocalDate.now(), LocalTime.now());
         Reservation reservationInfo = reservationReqDto.toEntity();
 
         // when
@@ -49,7 +49,7 @@ class ReservationDAOTest {
     void deleteByTest() {
         // given
         ReservationDAO reservationDAO = new ReservationDAO(jdbcTemplate);
-        ReservationReqDto reservationReqDto = new ReservationReqDto("포비", LocalDate.now(), LocalTime.now());
+        ReservationReqDTO reservationReqDto = new ReservationReqDTO("포비", LocalDate.now(), LocalTime.now());
         Reservation reservationInfo = reservationReqDto.toEntity();
 
         // when
@@ -65,7 +65,7 @@ class ReservationDAOTest {
     void deleteByExceptionTest() {
         // given
         ReservationDAO reservationDAO = new ReservationDAO(jdbcTemplate);
-        ReservationReqDto reservationReqDto = new ReservationReqDto("포비", LocalDate.now(), LocalTime.now());
+        ReservationReqDTO reservationReqDto = new ReservationReqDTO("포비", LocalDate.now(), LocalTime.now());
         Reservation reservationInfo = reservationReqDto.toEntity();
 
         // when

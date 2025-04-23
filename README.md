@@ -18,6 +18,12 @@
 - [x] 예약을 추가할 수 있다.
 - [x] 예약을 취소할 수 있다.
 
+## 7단계 - 시간 관리 기능
+
+- [ ] 예약 시간을 시간표에서 선택할 수 있다.
+- [ ] 예약을 조회할 수 있다.
+- [ ] 예약을 삭제할 수 있다.
+
 # API 명세
 
 ### 예약 목록 조회
@@ -31,16 +37,16 @@ HTTP/1.1 200
 Content-Type: application/json
 [
     {
-        "id": "Integer",
-        "name": "String",
-        "date": "LocalDate (YYYY-MM-DD)",
-        "time": "LocalTime (HH:mm)"
+        "id": "Long",
+        "name": String,
+        "date": LocalDate (YYYY-MM-DD),
+        "time": LocalTime (HH:mm)
     },
     {
-        "id": 2,
-        "name": "브라운",
-        "date": "2023-01-02",
-        "time": "11:00"
+        "id": "Long",
+        "name": String,
+        "date": LocalDate (YYYY-MM-DD),
+        "time": LocalTime (HH:mm)
     }
 ]
 ```
@@ -52,19 +58,19 @@ Request
 Content-Type: application/json
 POST /reservations
 {
-    "name": "String",
-    "date": "LocalDate (YYYY-MM-DD)",
-    "time": "LocalTime (HH:mm)"
+    "name": String,
+    "date": LocalDate (YYYY-MM-DD),
+    "time": LocalTime (HH:mm)
 }
 
 Response
 Content-Type: application/json
 HTTP/1.1 200 
 {
-    "id": "Integer",
-    "name": "String",
-    "date": "LocalDate (YYYY-MM-DD)",
-    "time": "LocalTime (HH:mm)"
+    "id": Long,
+    "name": String,
+    "date": LocalDate (YYYY-MM-DD),
+    "time": LocalTime (HH:mm)
 }
 
 ```
@@ -74,6 +80,55 @@ HTTP/1.1 200
 ```
 Request
 DELETE /reservations/1 HTTP/1.1
+
+Response
+HTTP/1.1 200
+```
+
+### 시간 추가
+
+```
+Request
+POST /times HTTP/1.1
+content-type: application/json
+
+{
+    "startAt": LocalTime (HH:mm)
+}
+
+Response
+HTTP/1.1 200
+Content-Type: application/json
+
+{
+    "id": Long,
+    "startAt": LocalTime (HH:mm)
+}
+```
+
+### 시간 조회
+
+```
+Request
+GET /times HTTP/1.1
+
+Response
+HTTP/1.1 200 
+Content-Type: application/json
+
+[
+   {
+        "id": Long,
+        "startAt": LocalTime (HH:mm)
+    }
+]
+```
+
+### 시간 삭제
+
+```
+Request
+DELETE /times/1 HTTP/1.1
 
 Response
 HTTP/1.1 200

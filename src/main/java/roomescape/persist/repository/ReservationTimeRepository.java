@@ -1,5 +1,6 @@
 package roomescape.persist.repository;
 
+import java.time.LocalTime;
 import java.util.List;
 import roomescape.domain.ReservationTime;
 
@@ -12,4 +13,6 @@ public interface ReservationTimeRepository {
     ReservationTime add(ReservationTime reservationTime);
 
     void removeById(long id);
+
+    boolean existsByStartTime(LocalTime localTime);
 }

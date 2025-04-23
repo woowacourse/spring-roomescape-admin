@@ -69,4 +69,12 @@ public class H2ReservationTimeRepository implements ReservationTimeRepository {
         String sql = "DELETE FROM reservation_time WHERE id = ?";
         jdbcTemplate.update(sql, id);
     }
+
+    @Override
+    public boolean existsByStartTime(LocalTime localTime) {
+        String sql = "SELECT COUNT(*) FROM reservation_time WHERE start_at = ?";
+        int count = jdbcTemplate.queryForObject(sql, Integer.class,
+                localTime.format(DateTimeFormatter.ofPattern("HH:mm")));
+        return count > 0;
+    }
 }

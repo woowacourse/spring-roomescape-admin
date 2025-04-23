@@ -85,6 +85,15 @@
 }
 ```
 
+### 3. 예약시간 삭제
+
+- **URL**: `/times/{id}`
+- **Method**: `DELETE`
+- **Path Variable**:
+    - `id` (Long) – 삭제할 예약의 고유 ID
+- **Response**: `200 OK`
+- **설명**: 해당 ID의 예약시간을 삭제합니다.
+
 ---
 
 # 📄 페이지 목록

@@ -7,7 +7,9 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;
 import org.springframework.jdbc.core.simple.SimpleJdbcInsert;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -48,6 +50,13 @@ public class TimeController {
                 .toList();
 
         return ResponseEntity.ok(timeResponses);
+    }
+
+    @DeleteMapping("/{id}")
+    ResponseEntity<Void> delete(@PathVariable Long id) {
+        final String sql = "delete from reservation_time where id = ?";
+        jdbcTemplate.update(sql, id);
+        return ResponseEntity.ok().build();
     }
 
     private Long saveAndGetId(final Time time) {

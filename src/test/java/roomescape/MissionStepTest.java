@@ -178,5 +178,18 @@ public class MissionStepTest {
                 .statusCode(200)
                 .body("size()", is(1));
     }
+
+    @DisplayName("[7단계] 예약시간 번호에 따른 예약시간을 데이터베이스에서 삭제할 수 있다.")
+    @Test
+    void deleteTime() {
+        //given
+        saveTime();
+
+        //when //then
+        RestAssured.given().log().all()
+                .when().delete("/times/1")
+                .then().log().all()
+                .statusCode(200);
+    }
 }
 

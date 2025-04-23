@@ -39,4 +39,13 @@ public class AdminApiTest {
                 .then().log().all()
                 .statusCode(200);
     }
+
+    @DisplayName("/admin/time으로 요청이 들어오면 시간 설정 페이지를 응답한다.")
+    @Test
+    void adminTime() {
+        RestAssured.given().port(port).log().all()
+                .when().get("/admin/time")
+                .then().log().all()
+                .statusCode(200);
+    }
 }

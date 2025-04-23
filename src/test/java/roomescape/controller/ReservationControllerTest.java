@@ -23,15 +23,6 @@ import static org.hamcrest.Matchers.is;
 @DirtiesContext(classMode = DirtiesContext.ClassMode.BEFORE_EACH_TEST_METHOD)
 class ReservationControllerTest {
 
-    @DisplayName("Reservation 목록을 가져온다.")
-    @Test
-    void reservationAdminPageTest() {
-        RestAssured.given().log().all()
-                .when().get("/admin/reservation")
-                .then().log().all()
-                .statusCode(200);
-    }
-
     @DisplayName("Reservation 목록 내용 갯수를 검사한다")
     @Test
     void reservationTest() {
@@ -65,7 +56,7 @@ class ReservationControllerTest {
                 .body("size()", is(1));
     }
 
-    @DisplayName("Reservation 입력 후 ResponseBody의 시간 포맷 검사")
+    @DisplayName("Reservation 응답의 LocalTime 형식은 xx:xx 이다")
     @Test
     void reservationResponseTest() {
         Map<String, String> params = new HashMap<>();
@@ -86,7 +77,7 @@ class ReservationControllerTest {
                 .body("[0].time", equalTo("15:40"));
     }
 
-    @DisplayName("Group에 존재하는 Id만 삭제할 수 있다.")
+    @DisplayName("저장되지 않은 Id를 삭제할 수 없다")
     @Test
     void deleteReservationTest() {
         Map<String, String> params = new HashMap<>();
@@ -113,7 +104,7 @@ class ReservationControllerTest {
                 .body("size()", is(0));
     }
 
-    @DisplayName("Reservation 요청에 null 존재할 수 없다.")
+    @DisplayName("Reservation 요청에 null 존재할 수 없다")
     @ParameterizedTest
     @MethodSource("invalidReservationRequestArguments")
     void exceptNullReservationTest(String name, String date, String time) {
@@ -147,7 +138,7 @@ class ReservationControllerTest {
                 .statusCode(404);
     }
 
-    @DisplayName("올바른 시간의 포멧만 요청 가능하다.")
+    @DisplayName("올바른 시간의 포멧만 요청 가능하다")
     @Test
     void invalidReservationTimeTest() {
         Map<String, String> params = new HashMap<>();

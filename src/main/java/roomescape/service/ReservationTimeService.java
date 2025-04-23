@@ -12,7 +12,8 @@ public class ReservationTimeService {
         this.reservationTimeRepository = reservationTimeRepository;
     }
 
-    public ReservationTimeResponse createReservationTime(ReservationTime reservationTime) {
-        return null;
+    public ReservationTimeResponse createReservationTime(ReservationTime time) {
+        ReservationTime reservationTime = reservationTimeRepository.save(time);
+        return ReservationTimeResponse.from(reservationTime);
     }
 }

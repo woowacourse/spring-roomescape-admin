@@ -1,1 +1,1 @@
-INSERT INTO reservation (id, name, date, time) VALUES (1, 'moda', '2024-10-10', '10:00:00');
+INSERT INTO reservation (name, date, time) VALUES ('moda', '2024-10-10', '10:00:00');

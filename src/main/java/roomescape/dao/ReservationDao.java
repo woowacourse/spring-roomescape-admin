@@ -60,7 +60,7 @@ public class ReservationDao {
         int affectedRows = jdbcTemplate.update(sql, id);
 
         if (affectedRows == 0) {
-            throw new IllegalStateException();
+            throw new IllegalStateException("Reservation with id " + id + " not found");
         }
     }
 }

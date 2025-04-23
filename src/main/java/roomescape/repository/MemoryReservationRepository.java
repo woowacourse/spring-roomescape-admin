@@ -44,9 +44,10 @@ public class MemoryReservationRepository implements ReservationRepository {
 
     @Override
     public long add(final ReservationRequest request) {
-        final Optional<ReservationTimeResponse> timeResponse = timeRepository.findById(request.timeId());
+        final ReservationTimeResponse timeResponse = timeRepository.findById(request.timeId())
+                .orElseThrow(() -> new IllegalArgumentException("예약 시간이 존재하지 않습니다."));
         final long id = index.getAndIncrement();
-        final Reservation reservation = request.toEntity(id, timeResponse.orElse(null));
+        final Reservation reservation = request.toEntity(id, timeResponse);
         reservations.put(id, reservation);
         return id;
     }

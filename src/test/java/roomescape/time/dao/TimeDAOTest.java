@@ -55,9 +55,25 @@ public class TimeDAOTest {
         );
 
         //when
-        Time time = timeDAO.insertTime(timeRequest);
+        timeDAO.insertTime(timeRequest);
 
         //then
         Assertions.assertThat(timeDAO.findAllTimes()).hasSize(1);
+    }
+
+    @DisplayName("예약 시간 삭제 테스트")
+    @Test
+    void test3() {
+        //given
+        TimeRequest timeRequest = new TimeRequest(
+                LocalTime.of(17,5)
+        );
+        Time time = timeDAO.insertTime(timeRequest);
+
+        //when
+        timeDAO.deleteTime(time.getId());
+
+        //then
+        Assertions.assertThat(timeDAO.findAllTimes()).hasSize(0);
     }
 }

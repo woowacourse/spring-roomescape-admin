@@ -37,10 +37,15 @@ public class TimeDAO {
     }
 
     public Time insertTime(TimeRequest timeRequest) {
-        Map<String, LocalTime> parameters = new HashMap<>();
-        parameters.put("start_at", timeRequest.localTime());
+        Map<String, Object> parameters = new HashMap<>();
+        parameters.put("start_at", timeRequest.startAt());
 
         Number insertedId = simpleJdbcInsert.executeAndReturnKey(parameters);
-        return new Time(insertedId.longValue(), timeRequest.localTime());
+        return new Time(insertedId.longValue(), timeRequest.startAt());
+    }
+
+    public void deleteTime(Long id) {
+        String sql = "DELETE from reservation_time where id = ?";
+        jdbcTemplate.update(sql, id);
     }
 }

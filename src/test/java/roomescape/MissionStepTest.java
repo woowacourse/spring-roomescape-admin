@@ -224,7 +224,4 @@ public class MissionStepTest {
                 .then().log().all()
                 .statusCode(200);
     }
-
-
-
 }

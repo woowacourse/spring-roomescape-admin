@@ -61,7 +61,7 @@ class ReservationServiceTest {
 
 
     @Test
-    @DisplayName("전체 예약 목록 을 찾는다.")
+    @DisplayName("전체 예약 목록을 가져온다..")
     void findAllReservations(){
         // given
         // when

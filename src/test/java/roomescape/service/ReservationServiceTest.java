@@ -21,7 +21,7 @@ class ReservationServiceTest {
 
     @DisplayName("존재하지 않은 reservationTime으로 reservation 저장시에 예외를 발생한다.")
     @Test
-    void test() {
+    void createWithNonExistTime() {
         // given
         final long nonExistTimeId = 1L;
         final ReservationRequest request = new ReservationRequest("엠제이", LocalDate.now().plusDays(1), nonExistTimeId);

@@ -8,6 +8,7 @@ import io.restassured.http.ContentType;
 import java.sql.Connection;
 import java.sql.SQLException;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import org.junit.jupiter.api.DisplayNameGeneration;
 import org.junit.jupiter.api.DisplayNameGenerator;
@@ -18,14 +19,23 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.http.HttpStatus;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.test.annotation.DirtiesContext;
+import roomescape.domain.Reservation;
 
 @DisplayNameGeneration(DisplayNameGenerator.ReplaceUnderscores.class)
-@SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.DEFINED_PORT)
+@SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 @DirtiesContext(classMode = DirtiesContext.ClassMode.BEFORE_EACH_TEST_METHOD)
 public class MissionStepTest {
 
     @Autowired
     private JdbcTemplate jdbcTemplate;
+
+    private Map<String, String> createTestParams() {
+        Map<String, String> params = new HashMap<>();
+        params.put("name", "브라운");
+        params.put("date", "2023-08-05");
+        params.put("time", "15:40");
+        return params;
+    }
 
     @Test
     void 일단계() {
@@ -49,27 +59,8 @@ public class MissionStepTest {
                 .body("size()", is(0));
     }
 
-    @Test
-    void 사단계() {
-        try (Connection connection = jdbcTemplate.getDataSource().getConnection()) {
-            assertThat(connection).isNotNull();
-            assertThat(connection.getCatalog()).isEqualTo("DATABASE");
-            assertThat(connection.getMetaData().getTables(null, null, "RESERVATION", null).next()).isTrue();
-        } catch (SQLException e) {
-            throw new RuntimeException(e);
-        }
-    }
-
     @Nested
     class 삼단계 {
-
-        private Map<String, String> createTestParams() {
-            Map<String, String> params = new HashMap<>();
-            params.put("name", "브라운");
-            params.put("date", "2023-08-05");
-            params.put("time", "15:40");
-            return params;
-        }
 
         @Test
         void 삼단계_예약을_할_수_있다() {
@@ -113,5 +104,55 @@ public class MissionStepTest {
                     .statusCode(HttpStatus.OK.value())
                     .body("size()", is(0));
         }
+    }
+
+    @Test
+    void 사단계() {
+        try (Connection connection = jdbcTemplate.getDataSource().getConnection()) {
+            assertThat(connection).isNotNull();
+            assertThat(connection.getCatalog()).isEqualTo("DATABASE");
+            assertThat(connection.getMetaData().getTables(null, null, "RESERVATION", null).next()).isTrue();
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        }
+    }
+
+    @Test
+    void 오단계() {
+        jdbcTemplate.update("INSERT INTO reservation (name, date, time) VALUES (?, ?, ?)", "브라운", "2023-08-05",
+                "15:40");
+
+        List<Reservation> reservations = RestAssured.given().log().all()
+                .when().get("/reservations")
+                .then().log().all()
+                .statusCode(HttpStatus.OK.value()).extract()
+                .jsonPath().getList(".", Reservation.class);
+
+        Integer count = jdbcTemplate.queryForObject("SELECT count(1) FROM reservation", Integer.class);
+
+        assertThat(reservations.size()).isEqualTo(count);
+    }
+
+    @Test
+    void 육단계() {
+        Map<String, String> params = createTestParams();
+
+        RestAssured.given().log().all()
+                .contentType(ContentType.JSON)
+                .body(params)
+                .when().post("/reservations")
+                .then().log().all()
+                .statusCode(HttpStatus.OK.value());
+
+        Integer count = jdbcTemplate.queryForObject("SELECT count(1) FROM reservation", Integer.class);
+        assertThat(count).isEqualTo(1);
+
+        RestAssured.given().log().all()
+                .when().delete("/reservations/1")
+                .then().log().all()
+                .statusCode(HttpStatus.OK.value());
+
+        Integer countAfterDelete = jdbcTemplate.queryForObject("SELECT count(1) FROM reservation", Integer.class);
+        assertThat(countAfterDelete).isEqualTo(0);
     }
 }

@@ -12,6 +12,7 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.jdbc.core.JdbcTemplate;
+import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
 import roomescape.common.exception.EntityNotFoundException;
 import roomescape.config.TestConfig;
 import roomescape.reservation.entity.Reservation;
@@ -29,7 +30,8 @@ class ReservationRepositoryTest {
     @BeforeEach
     void init() {
         jdbcTemplate = TestConfig.getJdbcTemplate();
-        reservationRepository = new ReservationDAO(jdbcTemplate, TestConfig.getDataSource());
+        NamedParameterJdbcTemplate namedParameterJdbcTemplate = TestConfig.getNamedParameterJdbcTemplate();
+        reservationRepository = new ReservationDAO(namedParameterJdbcTemplate, TestConfig.getDataSource());
     }
 
     @DisplayName("예약 정보를 저장한다.")

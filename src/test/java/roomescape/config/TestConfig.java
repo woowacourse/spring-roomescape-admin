@@ -3,9 +3,11 @@ package roomescape.config;
 import java.io.IOException;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
+import java.util.Collections;
 import javax.sql.DataSource;
 import org.springframework.core.io.ClassPathResource;
 import org.springframework.jdbc.core.JdbcTemplate;
+import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
 import org.springframework.jdbc.datasource.DriverManagerDataSource;
 
 public class TestConfig {
@@ -26,6 +28,13 @@ public class TestConfig {
         jdbcTemplate.execute(getSchema());
 
         return jdbcTemplate;
+    }
+
+    public static NamedParameterJdbcTemplate getNamedParameterJdbcTemplate() {
+        NamedParameterJdbcTemplate namedParameterJdbcTemplate = new NamedParameterJdbcTemplate(getDataSource());
+        namedParameterJdbcTemplate.update(getSchema(), Collections.emptyMap());
+
+        return namedParameterJdbcTemplate;
     }
 
     public static String getSchema() {

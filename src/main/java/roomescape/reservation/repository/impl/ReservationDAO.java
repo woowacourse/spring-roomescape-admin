@@ -1,20 +1,18 @@
 package roomescape.reservation.repository.impl;
 
-import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.sql.Statement;
 import java.time.LocalDate;
 import java.time.LocalTime;
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
 import javax.sql.DataSource;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.EmptyResultDataAccessException;
-import org.springframework.jdbc.core.JdbcTemplate;
+import org.springframework.jdbc.core.namedparam.MapSqlParameterSource;
+import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
 import org.springframework.jdbc.core.simple.SimpleJdbcInsert;
-import org.springframework.jdbc.support.GeneratedKeyHolder;
-import org.springframework.jdbc.support.KeyHolder;
 import org.springframework.stereotype.Repository;
 import roomescape.common.exception.EntityNotFoundException;
 import roomescape.reservation.entity.Reservation;
@@ -26,11 +24,11 @@ public class ReservationDAO implements ReservationRepository {
 
     private static final String TABLE_NAME = "reservation";
 
-    private final JdbcTemplate jdbcTemplate;
+    private final NamedParameterJdbcTemplate jdbcTemplate;
     private final SimpleJdbcInsert jdbcInsert;
 
     @Autowired
-    public ReservationDAO(JdbcTemplate jdbcTemplate, DataSource dataSource) {
+    public ReservationDAO(NamedParameterJdbcTemplate jdbcTemplate, DataSource dataSource) {
         this.jdbcTemplate = jdbcTemplate;
         this.jdbcInsert = new SimpleJdbcInsert(dataSource)
                 .withTableName(TABLE_NAME)
@@ -55,12 +53,15 @@ public class ReservationDAO implements ReservationRepository {
         String sql = """
                 select rs.id as reservation_id, rs.name, rs.date, rst.id  as reservation_time_id, rst.start_at
                 from reservation rs
-                inner join reservation_time rst on rs.time_id = rst.id where rs.id = ?
+                inner join reservation_time rst on rs.time_id = rst.id where rs.id = :reservation_id
                 """;
+
+        Map<String, Long> params = Map.of("reservation_id", id);
 
         try {
             Reservation reservation = jdbcTemplate.queryForObject(sql,
-                    (resultSet, rowNum) -> getReservation(resultSet), id);
+                    params,
+                    (resultSet, rowNum) -> getReservation(resultSet));
             return Optional.ofNullable(reservation);
         } catch (EmptyResultDataAccessException e) {
             throw new EntityNotFoundException("entity not found");
@@ -93,41 +94,30 @@ public class ReservationDAO implements ReservationRepository {
     }
 
     private Reservation create(Reservation reservation) {
-        String sql = "insert into reservation (name, date, time_id) values (?, ?, ?)";
+        MapSqlParameterSource params = new MapSqlParameterSource()
+                .addValue("name", reservation.getName())
+                .addValue("date", reservation.getReservationDate())
+                .addValue("time_id", reservation.getReservationTimeId());
 
-        KeyHolder keyHolder = new GeneratedKeyHolder();
-
-        jdbcTemplate.update(conn -> {
-            PreparedStatement ps = conn.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS);
-            ps.setString(1, reservation.getName());
-            ps.setString(2, reservation.getReservationDate().toString());
-            ps.setLong(3, reservation.getReservationTime().getId());
-            return ps;
-        }, keyHolder);
-
-        long id = keyHolder.getKey().longValue();
+        long id = jdbcInsert.executeAndReturnKey(params).longValue();
 
         return new Reservation(id, reservation.getName(), reservation.getReservationDate(),
                 reservation.getReservationTime());
     }
 
-    /**
-     * 현재 구조에서는 reservation의 start_at의 변경에 대해서는 처리하지 못한다.
-     * 해당 영역은 reservation 에 대해서만 처리해야 한다고 본다.
-     * 우선은 요구 사항에는 update와 관련된 부분이 없으므로 보류한다.
-     */
     private Reservation update(Reservation reservation) {
-        String updateReservationSql = "update reservation set name = ?, date = ?, time_id = ? where id = ?";
+        String updateReservationSql = "update reservation set name = :name, date = :date, time_id = :time_id where id =:id";
         checkReservationTime(reservation.getReservationTime());
 
-        int update = jdbcTemplate.update(updateReservationSql,
-                reservation.getName(),
-                reservation.getReservationDate(),
-                reservation.getReservationTime().getId(),
-                reservation.getId()
-        );
+        MapSqlParameterSource params = new MapSqlParameterSource()
+                .addValue("name", reservation.getName())
+                .addValue("date", reservation.getReservationDate())
+                .addValue("time_id", reservation.getReservationTimeId())
+                .addValue("id", reservation.getId());
 
-        if (update == 0) {
+        int updatedRowCount = jdbcTemplate.update(updateReservationSql, params);
+
+        if (updatedRowCount == 0) {
             throw new EntityNotFoundException("Reservation with id " + reservation.getId() + " not found");
         }
 
@@ -142,11 +132,12 @@ public class ReservationDAO implements ReservationRepository {
 
     @Override
     public void deleteById(Long id) {
-        String sql = "delete from reservation where id = ?";
+        String sql = "delete from reservation where id = :id";
+        Map<String, Long> params = Map.of("id", id);
 
-        int result = jdbcTemplate.update(sql, id);
+        int updatedRowCount = jdbcTemplate.update(sql, params);
 
-        if (result != 1) {
+        if (updatedRowCount != 1) {
             throw new EntityNotFoundException("Reservation with id " + id + " not found");
         }
     }

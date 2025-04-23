@@ -20,7 +20,12 @@ public class OutputView {
 
     public void printReservationTimes(List<ReservationTime> reservationTimes) {
         System.out.println("예약 시간 목록입니다.");
-        reservationTimes.forEach(time -> System.out.println(time.getStartAt()));
+        reservationTimes.forEach(time -> System.out.println(time.getId() + " | " + time.getStartAt()));
+        System.out.println();
+    }
+
+    public void printSuccessToDeleteReservationTime() {
+        System.out.println("예약 시간 삭제를 완료했습니다.");
         System.out.println();
     }
 }

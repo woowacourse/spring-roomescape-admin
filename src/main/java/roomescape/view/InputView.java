@@ -42,4 +42,12 @@ public class InputView {
         System.out.println("생성할 예약 시간을 입력해 주세요. (ex: 20:30) ");
         return new CreateReservationTimeDto(scanner.nextLine());
     }
+
+    public Long inputDeleteReservationTimeId() {
+        System.out.println("예약 시간을 삭제합니다.");
+        System.out.println("삭제할 예약 시간의 id를 입력해 주세요. (ex: 1) ");
+        long value = scanner.nextLong();
+        scanner.nextLine();
+        return value;
+    }
 }

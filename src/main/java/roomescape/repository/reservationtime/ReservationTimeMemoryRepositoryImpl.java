@@ -39,6 +39,6 @@ public class ReservationTimeMemoryRepositoryImpl implements ReservationTimeRepos
 
     @Override
     public void deleteById(Long id) {
-
+        reservationTimes.remove(findById(id));
     }
 }

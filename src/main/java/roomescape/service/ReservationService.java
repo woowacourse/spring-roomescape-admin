@@ -4,7 +4,6 @@ import java.time.LocalDate;
 import java.time.LocalTime;
 import java.util.List;
 import java.util.NoSuchElementException;
-import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Service;
 import roomescape.dto.ReservationRequest;
 import roomescape.dto.ReservationResponse;
@@ -28,7 +27,7 @@ public class ReservationService {
         String name = reservationRequest.name();
         LocalDate date = reservationRequest.date();
         LocalTime time = reservationRequest.time();
-        if (reservationRepository.selectByDateAndTime(date,time)) {
+        if (reservationRepository.selectByDateAndTime(date, time)) {
             throw new IllegalArgumentException("해당 시간에는 예약이 존재합니다.");
         }
 

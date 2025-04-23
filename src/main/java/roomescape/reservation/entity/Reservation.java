@@ -38,10 +38,6 @@ public class Reservation {
     }
 
     public Long getReservationTimeId() {
-        if (reservationTime == null) {
-            return null;
-        }
-
         return reservationTime.getId();
     }
 

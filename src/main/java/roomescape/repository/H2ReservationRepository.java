@@ -67,7 +67,7 @@ public class H2ReservationRepository implements ReservationRepository{
             return ps;
         }, keyHolder);
 
-        Long generatedId = keyHolder.getKey().longValue();
+        long generatedId = keyHolder.getKey().longValue();
 
         return new Reservation(
                 generatedId,
@@ -87,6 +87,5 @@ public class H2ReservationRepository implements ReservationRepository{
     public boolean selectByDateAndTime(LocalDate date, LocalTime time) {
         final String sql = "SELECT COUNT(*) FROM reservation WHERE date = ? and time =?";
         return jdbcTemplate.queryForObject(sql, Integer.class,date,time) > 0;
-
     }
 }

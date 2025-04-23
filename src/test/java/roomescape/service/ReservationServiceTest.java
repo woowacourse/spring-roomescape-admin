@@ -13,6 +13,7 @@ import org.assertj.core.api.Assertions;
 import org.assertj.core.api.SoftAssertions;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
+import org.springframework.test.context.ActiveProfiles;
 import roomescape.dto.ReservationRequest;
 import roomescape.dto.ReservationResponse;
 import roomescape.entity.Reservation;
@@ -77,7 +78,8 @@ class ReservationServiceTest {
             softAssertions.assertThat(reservations.getFirst().time()).isEqualTo(LocalTime.of(13,22));
         });
     }
-
+    
+    //todo: @ActiveProfiles(value = "test") 로 테스트시 의존성을 부여하는 방법에 대해 찾아보기
     static class FakeReservationRepository implements ReservationRepository {
 
         List<Reservation> reservations = new ArrayList<>();

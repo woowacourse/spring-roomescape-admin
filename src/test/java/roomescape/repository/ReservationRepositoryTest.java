@@ -19,7 +19,9 @@ public class ReservationRepositoryTest {
 
     @Autowired
     private JdbcTemplate jdbcTemplate;
-    @Autowired private ReservationRepository reservationRepository;
+
+    @Autowired
+    private ReservationRepository reservationRepository;
 
     @BeforeEach
     void setUp() {
@@ -33,7 +35,7 @@ public class ReservationRepositoryTest {
     @DisplayName("아이디를 통해 예약을 가져온다.")
     void findReservationByIdTest() {
         //given
-        Long id = 1L;
+        long id = 1L;
 
         //when
         Reservation reservation = reservationRepository.findById(id);

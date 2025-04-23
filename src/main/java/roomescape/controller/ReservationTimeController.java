@@ -8,7 +8,7 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
-import roomescape.dto.AddTimeDto;
+import roomescape.dto.ReservationTimeRequestDto;
 import roomescape.model.ReservationTime;
 import roomescape.repository.ReservationTimeRepository;
 
@@ -26,8 +26,8 @@ public class ReservationTimeController {
     }
 
     @PostMapping("/times")
-    public ResponseEntity<ReservationTime> addTime(@RequestBody AddTimeDto addTimeDto) {
-        return ResponseEntity.ok(reservationTimeRepository.addTime(addTimeDto));
+    public ResponseEntity<ReservationTime> addTime(@RequestBody ReservationTimeRequestDto reservationTimeRequestDto) {
+        return ResponseEntity.ok(reservationTimeRepository.addTime(reservationTimeRequestDto));
     }
 
     @GetMapping("/times")

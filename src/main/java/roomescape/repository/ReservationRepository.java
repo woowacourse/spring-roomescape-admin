@@ -6,7 +6,7 @@ import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.support.GeneratedKeyHolder;
 import org.springframework.jdbc.support.KeyHolder;
 import org.springframework.stereotype.Repository;
-import roomescape.dto.AddReservationDto;
+import roomescape.dto.ReservationRequestDto;
 import roomescape.model.Reservation;
 
 @Repository
@@ -32,18 +32,18 @@ public class ReservationRepository {
         return reservations;
     }
 
-    public Reservation addReservation(AddReservationDto addReservationDto) {
+    public Reservation addReservation(ReservationRequestDto reservationRequestDto) {
         KeyHolder keyHolder = new GeneratedKeyHolder();
         String sql = "insert into reservation (name, date, time) values (?, ?, ?)";
         jdbcTemplate.update(connection -> {
             PreparedStatement ps = connection.prepareStatement(
                     sql, new String[]{"id"});
-            ps.setString(1, addReservationDto.name());
-            ps.setString(2, addReservationDto.date());
-            ps.setString(3, addReservationDto.time());
+            ps.setString(1, reservationRequestDto.name());
+            ps.setString(2, reservationRequestDto.date());
+            ps.setString(3, reservationRequestDto.time());
             return ps;
         }, keyHolder);
-        return AddReservationDto.toEntity(keyHolder.getKey().longValue(), addReservationDto);
+        return ReservationRequestDto.toEntity(keyHolder.getKey().longValue(), reservationRequestDto);
     }
 
     public int deleteReservation(Long id) {

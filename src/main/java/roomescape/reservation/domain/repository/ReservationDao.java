@@ -1,4 +1,4 @@
-package roomescape.model;
+package roomescape.reservation.domain.repository;
 
 import java.sql.PreparedStatement;
 import java.sql.Statement;
@@ -11,8 +11,10 @@ import org.springframework.jdbc.core.RowMapper;
 import org.springframework.jdbc.support.GeneratedKeyHolder;
 import org.springframework.jdbc.support.KeyHolder;
 import org.springframework.stereotype.Component;
-import roomescape.dto.reservation.ReservationResponse;
-import roomescape.dto.time.TimeResponse;
+import roomescape.reservation.domain.Reservation;
+import roomescape.reservation.domain.Time;
+import roomescape.reservation.controller.dto.ReservationResponse;
+import roomescape.reservation.controller.dto.TimeResponse;
 
 @Component
 public class ReservationDao {
@@ -35,7 +37,7 @@ public class ReservationDao {
         this.jdbcTemplate = jdbcTemplate;
     }
 
-    public ReservationResponse createReservation(Reservation reservation) {
+    public ReservationResponse save(Reservation reservation) {
         String sql = "insert into reservation (name, date, time_id) values (?, ?, ?)";
         KeyHolder keyHolder = new GeneratedKeyHolder();
         jdbcTemplate.update(

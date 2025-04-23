@@ -1,4 +1,4 @@
-package roomescape.controller;
+package roomescape.reservation.controller;
 
 import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -9,11 +9,11 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
-import roomescape.dto.reservation.ReservationRequest;
-import roomescape.dto.reservation.ReservationResponse;
-import roomescape.model.ReservationDao;
-import roomescape.model.Time;
-import roomescape.model.TimeDao;
+import roomescape.reservation.controller.dto.ReservationRequest;
+import roomescape.reservation.controller.dto.ReservationResponse;
+import roomescape.reservation.domain.repository.ReservationDao;
+import roomescape.reservation.domain.Time;
+import roomescape.reservation.domain.repository.TimeDao;
 
 @RequestMapping("/reservations")
 @RestController
@@ -36,7 +36,7 @@ public class ReservationController {
     @PostMapping
     public ReservationResponse addReservation(@RequestBody ReservationRequest request) {
         Time findTime = timeDao.findById(request.timeId());
-        return reservationDao.createReservation(request.toEntity(findTime));
+        return reservationDao.save(request.toEntity(findTime));
     }
 
     @DeleteMapping("/{id}")

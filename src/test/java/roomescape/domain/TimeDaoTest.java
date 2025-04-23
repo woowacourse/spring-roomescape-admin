@@ -1,4 +1,4 @@
-package roomescape.model;
+package roomescape.domain;
 
 
 import static org.assertj.core.api.Assertions.assertThat;
@@ -10,6 +10,8 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.jdbc.core.JdbcTemplate;
+import roomescape.reservation.domain.Time;
+import roomescape.reservation.domain.repository.TimeDao;
 import roomescape.util.H2DataSourceFactory;
 
 class TimeDaoTest {
@@ -77,5 +79,19 @@ class TimeDaoTest {
 
         // then
         assertThat(timeDao.getAll()).hasSize(2);
+    }
+
+    @DisplayName("id 값에 해당하는 Time 객체를 조회한다")
+    @Test
+    void find_by_id_test() {
+        // given
+        Long id = 1L;
+
+        // when
+        Time findTime = timeDao.findById(id);
+
+        // then
+        assertThat(findTime.getId()).isEqualTo(1L);
+        assertThat(findTime.getStartAt()).isEqualTo(LocalTime.of(03, 21));
     }
 }

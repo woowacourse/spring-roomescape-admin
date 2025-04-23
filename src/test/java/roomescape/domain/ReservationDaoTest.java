@@ -1,4 +1,4 @@
-package roomescape.model;
+package roomescape.domain;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
@@ -13,7 +13,9 @@ import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.jdbc.core.BatchPreparedStatementSetter;
 import org.springframework.jdbc.core.JdbcTemplate;
-import roomescape.dto.reservation.ReservationResponse;
+import roomescape.reservation.controller.dto.ReservationResponse;
+import roomescape.reservation.domain.Reservation;
+import roomescape.reservation.domain.repository.ReservationDao;
 import roomescape.util.H2DataSourceFactory;
 
 class ReservationDaoTest {
@@ -63,7 +65,7 @@ class ReservationDaoTest {
         Reservation reservation = new Reservation("루키", date, time);
 
         // when
-        ReservationResponse actual = reservationDao.createReservation(reservation);
+        ReservationResponse actual = reservationDao.save(reservation);
 
         // then
         ReservationResponse expected = new ReservationResponse(4L, name, date, time);

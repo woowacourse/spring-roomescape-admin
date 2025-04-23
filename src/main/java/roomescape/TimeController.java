@@ -1,11 +1,14 @@
 package roomescape;
 
 import java.sql.PreparedStatement;
+import java.time.LocalTime;
+import java.util.List;
 import org.springframework.http.ResponseEntity;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.support.GeneratedKeyHolder;
 import org.springframework.jdbc.support.KeyHolder;
 import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 
@@ -27,14 +30,26 @@ public class TimeController {
 
         jdbcTemplate.update((connection) -> {
             PreparedStatement ps = connection.prepareStatement(sql, new String[]{"id"});
-            ps.setString(1, String.valueOf(reservationTimeRequestDto.time()));
+            ps.setString(1, String.valueOf(reservationTimeRequestDto.startAt()));
             return ps;
         }, keyHolder);
 
         Long id = keyHolder.getKey().longValue();
         ReservationTimeResponseDto reservationTimeResponseDto = new ReservationTimeResponseDto(id,
-                reservationTimeRequestDto.time());
+                reservationTimeRequestDto.startAt());
         return ResponseEntity.ok(reservationTimeResponseDto);
 
     }
+
+    @GetMapping("/times")
+    public ResponseEntity<List<ReservationTimeResponseDto>> getReservationTime() {
+        String sql = "select * from reservation_time";
+        List<ReservationTimeResponseDto> reservationTimeResponseDtos = jdbcTemplate.query(sql, (resultSet, rowNUm) -> {
+            return new ReservationTimeResponseDto(resultSet.getLong("id"),
+                    LocalTime.parse(resultSet.getString("start_at")));
+        });
+        return ResponseEntity.ok(reservationTimeResponseDtos);
+
+    }
+
 }

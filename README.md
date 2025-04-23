@@ -94,8 +94,8 @@
 
 ### API 명세
 
-- [ ] 시간 추가 API 구현
-    - [ ] request
+- [x] 시간 추가 API 구현
+    - [x] request
     ```
     POST /times HTTP/1.1
     content-type: application/json
@@ -103,7 +103,7 @@
     "startAt": "10:00"
     }
     ```
-    - [ ] response
+    - [x] response
     ```
     HTTP/1.1 200
     Content-Type: application/json
@@ -113,12 +113,12 @@
     }
     ```
 
-- [ ] 시간 조회 API 구현
-    - [ ] request
+- [x] 시간 조회 API 구현
+    - [x] request
     ```
     GET /times HTTP/1.1
     ```
-    - [ ] response
+    - [x] response
     ```
     HTTP/1.1 200
     Content-Type: application/json

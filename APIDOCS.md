@@ -20,6 +20,13 @@
       예약 페이지 HTML 문서
       ```
 
+- GET /admin/time
+    - 설명 : 시간페이지 응답
+    - 정상 응답 (200)
+      ```
+      시간 페이지 HTML 문서
+      ```
+
 ### 예약 API
 
 - GET /reservations

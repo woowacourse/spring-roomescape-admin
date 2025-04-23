@@ -28,14 +28,14 @@ public class ReservationRepository {
                     new ReservationTime(row.getLong("time_id"), row.getTime("time_value").toLocalTime())
             );
 
-    public Long add(final ReservationCreateRequest request) {
+    public Long add(final Reservation reservation) {
         String sql = "INSERT INTO RESERVATION (NAME, DATE, TIME_ID) VALUES (?, ?, ?)";
         KeyHolder keyHolder = new GeneratedKeyHolder();
         jdbcTemplate.update(connection -> {
             PreparedStatement ps = connection.prepareStatement(sql, new String[]{"id"});
-            ps.setString(1, request.name());
-            ps.setString(2, String.valueOf(request.date()));
-            ps.setLong(3, request.timeId());
+            ps.setString(1, reservation.getName());
+            ps.setString(2, String.valueOf(reservation.getDate()));
+            ps.setLong(3, reservation.getTime().getId());
             return ps;
         }, keyHolder);
 

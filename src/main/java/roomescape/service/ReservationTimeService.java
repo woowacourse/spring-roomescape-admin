@@ -21,7 +21,7 @@ public class ReservationTimeService {
     }
 
     public ReservationTime addReservationTime(ReservationTimeCreateRequest reservationTimeCreateRequest) {
-        Long id = reservationTimeRepository.add(reservationTimeCreateRequest);
+        Long id = reservationTimeRepository.add(reservationTimeCreateRequest.toReservationTime());
         return reservationTimeRepository.findById(id);
     }
 

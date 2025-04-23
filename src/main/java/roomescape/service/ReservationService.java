@@ -21,7 +21,7 @@ public class ReservationService {
     }
 
     public Reservation addReservation(final ReservationCreateRequest reservationCreateRequest) {
-        Long id = reservationRepository.add(reservationCreateRequest);
+        Long id = reservationRepository.add(reservationCreateRequest.toReservation());
         return reservationRepository.findById(id);
     }
 

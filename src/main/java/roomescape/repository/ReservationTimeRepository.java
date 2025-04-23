@@ -24,13 +24,13 @@ public class ReservationTimeRepository {
             new ReservationTime(row.getLong("id"), row.getTime("start_at").toLocalTime()
             );
 
-    public Long add(final ReservationTimeCreateRequest reservationTime) {
+    public Long add(final ReservationTime reservationTime) {
         String sql = "INSERT INTO reservation_time (start_at) VALUES (?)";
         KeyHolder keyHolder = new GeneratedKeyHolder();
 
         jdbcTemplate.update(connection -> {
             PreparedStatement ps = connection.prepareStatement(sql, new String[] {"id"});
-            ps.setString(1, String.valueOf(reservationTime.startAt()));
+            ps.setString(1, String.valueOf(reservationTime.getStartAt()));
             return ps;
         }, keyHolder);
 

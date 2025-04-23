@@ -3,6 +3,7 @@ package roomescape.repository;
 import java.time.LocalTime;
 import java.time.format.DateTimeFormatter;
 import java.util.List;
+import java.util.Optional;
 import javax.sql.DataSource;
 import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.jdbc.core.JdbcTemplate;
@@ -48,11 +49,17 @@ public class JdbcReservationTimeRepository implements ReservationTimeRepository 
         }
     }
 
+    @Override
+    public Optional<ReservationTime> findById(final Long id) {
+        final String sql = "select id, start_at from reservation_time where id = ?";
+        return template.query(sql, actorRowMapper, id)
+                .stream()
+                .findFirst();
+    }
+
     private final RowMapper<ReservationTime> actorRowMapper = (resultSet, rowNum) -> {
         final DateTimeFormatter timeFormatter = DateTimeFormatter.ofPattern("HH:mm");
         LocalTime time = LocalTime.parse(resultSet.getString("start_at"), timeFormatter);
-
         return new ReservationTime(resultSet.getLong("id"), time);
     };
-
 }

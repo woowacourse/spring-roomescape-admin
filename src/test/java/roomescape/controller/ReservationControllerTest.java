@@ -1,5 +1,7 @@
 package roomescape.controller;
 
+import static org.hamcrest.CoreMatchers.is;
+
 import io.restassured.RestAssured;
 import io.restassured.http.ContentType;
 import java.util.Map;
@@ -16,10 +18,22 @@ class ReservationControllerTest {
     @Test
     void reservationAdd() {
         //given
+        Map<String, String> timeParams = Map.of(
+                "startAt", "15:40"
+        );
+
+        RestAssured.given().log().all()
+                .contentType(ContentType.JSON)
+                .body(timeParams)
+                .when().post("/times")
+                .then().log().all()
+                .statusCode(200)
+                .body("id", is(1));
+
         Map<String, String> params = Map.of(
                 "name", "브라운",
                 "date", "2023-08-05",
-                "time", "15:40"
+                "timeId", "1"
         );
 
         RestAssured.given().log().all()
@@ -32,7 +46,7 @@ class ReservationControllerTest {
         Map<String, String> duplicated = Map.of(
                 "name", "네오",
                 "date", "2023-08-05",
-                "time", "15:40"
+                "timeId", "1"
         );
 
         //when & then

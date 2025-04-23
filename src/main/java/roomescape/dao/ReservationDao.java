@@ -1,8 +1,8 @@
 package roomescape.dao;
 
 import java.sql.PreparedStatement;
-import java.time.LocalDate;
-import java.time.LocalTime;
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -13,8 +13,7 @@ import org.springframework.jdbc.core.simple.SimpleJdbcInsert;
 import org.springframework.jdbc.support.GeneratedKeyHolder;
 import org.springframework.jdbc.support.KeyHolder;
 import org.springframework.stereotype.Repository;
-import roomescape.dto.request.ReservationCreateRequest;
-import roomescape.dto.response.ReservationResponse;
+import roomescape.domain.Reservation;
 
 @Repository
 public class ReservationDao {
@@ -30,22 +29,23 @@ public class ReservationDao {
                 .usingGeneratedKeyColumns("id");
     }
 
-    public List<ReservationResponse> findAll() {
+    public List<Reservation> findAll() {
         String sql = "select * from reservation";
         return this.jdbcTemplate.query(sql,
                 (resultSet, rowNum) -> {
                     String dateString = resultSet.getString("date");
                     String timeString = resultSet.getString("time");
-                    return new ReservationResponse(
+                    DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm");
+
+                    return new Reservation(
                             resultSet.getLong("id"),
                             resultSet.getString("name"),
-                            LocalDate.parse(dateString),
-                            LocalTime.parse(timeString)
+                            LocalDateTime.parse(dateString + " " + timeString, formatter)
                     );
                 });
     }
 
-    public Long create(ReservationCreateRequest reservationCreateRequest) {
+    public Long create(Reservation reservation) {
         String sql = "insert into reservation (name, date, time) values (?, ?, ?)";
         KeyHolder keyHolder = new GeneratedKeyHolder();
 
@@ -54,21 +54,21 @@ public class ReservationDao {
                     sql,
                     new String[]{"id"}
             );
-            ps.setString(1, reservationCreateRequest.name());
-            ps.setString(2, reservationCreateRequest.date().toString());
-            ps.setString(3, reservationCreateRequest.time().toString());
+            ps.setString(1, reservation.getName());
+            ps.setString(2, reservation.getDateTime().toLocalDate().toString());
+            ps.setString(3, reservation.getDateTime().toLocalTime().toString());
             return ps;
         }, keyHolder);
 
         return keyHolder.getKey().longValue();
     }
 
-    public Long createWithMap(ReservationCreateRequest reservationCreateRequest) {
+    public Long createWithMap(Reservation reservation) {
         Map<String, Object> parameters = new HashMap<>();
 
-        parameters.put("name", reservationCreateRequest.name());
-        parameters.put("date", reservationCreateRequest.date());
-        parameters.put("time", reservationCreateRequest.time());
+        parameters.put("name", reservation.getName());
+        parameters.put("date", reservation.getDateTime().toLocalDate().toString());
+        parameters.put("time", reservation.getDateTime().toLocalTime().toString());
 
         Number number = simpleJdbcInsert.executeAndReturnKey(parameters);
         return number.longValue();

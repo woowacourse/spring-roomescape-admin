@@ -4,6 +4,7 @@ import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import roomescape.dao.ReservationDao;
+import roomescape.domain.Reservation;
 import roomescape.dto.request.ReservationCreateRequest;
 import roomescape.dto.response.ReservationResponse;
 
@@ -14,11 +15,19 @@ public class ReservationService {
     ReservationDao reservationDao;
 
     public List<ReservationResponse> findAll() {
-        return reservationDao.findAll();
+        List<Reservation> reservationDaoAll = reservationDao.findAll();
+
+        return reservationDaoAll.stream()
+                .map(reservation -> {
+                    return ReservationResponse.toDto(reservation);
+                })
+                .toList();
     }
 
     public Long create(ReservationCreateRequest request) {
-        return reservationDao.createWithMap(request);
+
+        Reservation reservation = request.toReservation();
+        return reservationDao.createWithMap(reservation);
     }
 
     public int delete(Long id) {

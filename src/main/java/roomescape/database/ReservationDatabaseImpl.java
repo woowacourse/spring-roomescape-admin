@@ -41,7 +41,6 @@ public class ReservationDatabaseImpl implements ReservationDatabase {
 
     @Override
     public Reservation add(Reservation reservation) {
-        reservations.add(reservation);
         String sql = "INSERT INTO reservation (name, date, time) VALUES (?, ?, ?)";
         jdbcTemplate.update(sql, reservation.getName(), reservation.getDate(), reservation.getTime());
         return reservation;

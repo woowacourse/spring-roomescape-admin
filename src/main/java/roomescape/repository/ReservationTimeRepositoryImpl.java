@@ -39,4 +39,10 @@ public class ReservationTimeRepositoryImpl implements ReservationTimeRepository 
             return new ReservationTime(id, startAt);
         });
     }
+
+    @Override
+    public void delete(final long id) {
+        final String sql = "delete from reservation_time where id = ?";
+        jdbcTemplate.update(sql, id);
+    }
 }

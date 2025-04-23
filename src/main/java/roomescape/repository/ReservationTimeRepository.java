@@ -9,4 +9,6 @@ public interface ReservationTimeRepository {
     ReservationTime insert(final LocalTime startAt);
 
     List<ReservationTime> findAll();
+
+    void delete(final long id);
 }

@@ -1,6 +1,7 @@
 package roomescape.repository;
 
 import org.springframework.jdbc.core.JdbcTemplate;
+import org.springframework.jdbc.core.RowMapper;
 import org.springframework.jdbc.support.GeneratedKeyHolder;
 import org.springframework.jdbc.support.KeyHolder;
 import org.springframework.stereotype.Repository;
@@ -19,6 +20,10 @@ public class ReservationTimeRepository {
         this.jdbcTemplate = jdbcTemplate;
     }
 
+    public static final RowMapper<ReservationTime> reservationTimeRowMapper = (row, rowNum) ->
+            new ReservationTime(row.getLong("id"), row.getTime("start_at").toLocalTime()
+            );
+
     public Long add(final ReservationTimeCreateRequest reservationTime) {
         String sql = "INSERT INTO reservation_time (start_at) VALUES (?)";
         KeyHolder keyHolder = new GeneratedKeyHolder();
@@ -34,15 +39,16 @@ public class ReservationTimeRepository {
 
     public List<ReservationTime> findAll() {
         String sql = "SELECT * FROM reservation_time";
-        return jdbcTemplate.query(sql, (rs, rowNum) ->
-                new ReservationTime(
-                        rs.getLong("id"),
-                        rs.getTime("start_at").toLocalTime()
-                ));
+        return jdbcTemplate.query(sql, reservationTimeRowMapper);
     }
 
-    public void delete(final Long id) {
+    public void deleteById(final Long id) {
         String sql = "DELETE FROM reservation_time WHERE id = ?";
         jdbcTemplate.update(sql, id);
+    }
+
+    public ReservationTime findById(final Long id) {
+        String sql = "SELECT * FROM reservation_time WHERE id = ?";
+        return jdbcTemplate.queryForObject(sql, reservationTimeRowMapper);
     }
 }

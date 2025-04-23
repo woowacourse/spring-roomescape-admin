@@ -49,6 +49,6 @@ public class ReservationTimeRepository {
 
     public ReservationTime findById(final Long id) {
         String sql = "SELECT * FROM reservation_time WHERE id = ?";
-        return jdbcTemplate.queryForObject(sql, reservationTimeRowMapper);
+        return jdbcTemplate.queryForObject(sql, reservationTimeRowMapper, id);
     }
 }

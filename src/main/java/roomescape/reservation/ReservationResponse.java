@@ -1,7 +1,6 @@
 package roomescape.reservation;
 
 import java.time.LocalDate;
-import roomescape.time.Time;
 import roomescape.time.TimeResponse;
 
 public record ReservationResponse(
@@ -11,12 +10,12 @@ public record ReservationResponse(
         TimeResponse time
 ) {
 
-    public static ReservationResponse createResponse(final Reservation reservation, final Time time){
+    public static ReservationResponse createResponse(final Reservation reservation) {
         return new ReservationResponse(
                 reservation.id(),
                 reservation.name(),
                 reservation.date(),
-                TimeResponse.createResponse(time)
+                TimeResponse.createResponse(reservation.time())
         );
     }
 }

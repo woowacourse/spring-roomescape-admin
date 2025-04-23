@@ -1,20 +1,29 @@
 package roomescape.reservation;
 
+import java.time.LocalTime;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
+import roomescape.time.Time;
 
 public class FakeReservationDao implements ReservationDao{
+
+    private static final Time DUMMY_TIME = new Time(1L, LocalTime.of(12, 40));
 
     private long NEXT_ID = 1L;
     private final List<Reservation> reservations = new ArrayList<>();
     private final List<Long> invokeDeleteId = new ArrayList<>();
 
     @Override
-    public Reservation saveReservation(final Reservation reservation) {
-        final Reservation writedReservation = reservation.writeId(NEXT_ID++);
+    public Long saveReservation(final Reservation reservation, final Long writeId) {
+        final Reservation writedReservation = new Reservation(
+                NEXT_ID++,
+                reservation.name(),
+                reservation.date(),
+                DUMMY_TIME
+        );
         reservations.add(writedReservation);
-        return writedReservation;
+        return writedReservation.id();
     }
 
     @Override
@@ -23,8 +32,16 @@ public class FakeReservationDao implements ReservationDao{
     }
 
     @Override
+    public Reservation findReservationById(final Long id) {
+        return reservations.stream()
+                .filter(reservation -> Objects.equals(reservation.id(), id))
+                .findAny()
+                .orElseThrow(IllegalStateException::new);
+    }
+
+    @Override
     public void deleteReservationById(final long id) {
-        this.reservations.stream()
+        reservations.stream()
                 .filter(reservation -> Objects.equals(reservation.id(), id))
                 .findAny()
                 .ifPresent(reservation -> reservations.remove(reservation));
@@ -32,7 +49,7 @@ public class FakeReservationDao implements ReservationDao{
     }
 
     public boolean isInvokeDeleteById(final Long id){
-        return this.invokeDeleteId.stream()
+        return invokeDeleteId.stream()
                 .anyMatch(value -> Objects.equals(value, id));
     }
 }

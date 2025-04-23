@@ -3,7 +3,8 @@ package roomescape.reservation;
 import java.util.List;
 
 public interface ReservationDao {
-    Reservation saveReservation(Reservation reservation);
+    Long saveReservation(Reservation reservation, Long timeId);
     List<Reservation> findAllReservation();
+    Reservation findReservationById(Long id);
     void deleteReservationById(long id);
 }

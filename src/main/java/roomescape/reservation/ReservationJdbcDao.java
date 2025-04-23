@@ -1,51 +1,73 @@
 package roomescape.reservation;
 
+import java.util.HashMap;
 import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.JdbcTemplate;
-import org.springframework.jdbc.core.namedparam.BeanPropertySqlParameterSource;
-import org.springframework.jdbc.core.namedparam.SqlParameterSource;
 import org.springframework.jdbc.core.simple.SimpleJdbcInsert;
 import org.springframework.stereotype.Repository;
-import roomescape.time.TimeDao;
+import roomescape.time.Time;
 
 @Repository
 public class ReservationJdbcDao implements ReservationDao {
 
-    private final TimeDao timeDao;
     private final JdbcTemplate jdbcTemplate;
     private final SimpleJdbcInsert simpleJdbcInsert;
 
     public ReservationJdbcDao(
-            @Autowired JdbcTemplate jdbcTemplate,
-            @Autowired TimeDao timeDao
+            @Autowired JdbcTemplate jdbcTemplate
     ) {
         this.jdbcTemplate = jdbcTemplate;
         this.simpleJdbcInsert = new SimpleJdbcInsert(jdbcTemplate)
                 .withTableName("reservation")
                 .usingGeneratedKeyColumns("id");
-        this.timeDao = timeDao;
     }
 
     @Override
-    public Reservation saveReservation(final Reservation reservation) {
-        final SqlParameterSource sqlParameterSource = new BeanPropertySqlParameterSource(reservation);
-        final Number id = simpleJdbcInsert.executeAndReturnKey(sqlParameterSource);
-        return reservation.writeId(id.longValue());
+    public Long saveReservation(final Reservation reservation, final Long timeId) {
+        final HashMap<String, Object> parameters = new HashMap<>();
+        parameters.put("name", reservation.name());
+        parameters.put("date", reservation.date());
+        parameters.put("time_id", timeId);
+
+        final Number id = simpleJdbcInsert.executeAndReturnKey(parameters);
+        return id.longValue();
     }
 
     @Override
     public List<Reservation> findAllReservation() {
-        final String query = "SELECT * FROM RESERVATION";
+        final String query =
+                "SELECT R.id, R.name, R.date, T.id AS time_id, T.start_at AS start_at "
+                        + "FROM RESERVATION AS R INNER JOIN RESERVATION_TIME AS T "
+                        + "ON R.time_id=T.id";
+
         final List<Reservation> reservations = jdbcTemplate.query(query, (rs, rowNum) -> {
             return new Reservation(
                     rs.getLong("id"),
                     rs.getString("name"),
                     rs.getDate("date").toLocalDate(),
-                    rs.getLong("time_id")
+                    new Time(rs.getLong("time_id"), rs.getTime("start_at").toLocalTime())
             );
         });
         return reservations;
+    }
+
+    @Override
+    public Reservation findReservationById(final Long id) {
+        final String query =
+                "SELECT R.id, R.name, R.date, T.id AS time_id, T.start_at AS start_at "
+                        + "FROM RESERVATION AS R INNER JOIN RESERVATION_TIME AS T "
+                        + "ON R.time_id=T.id "
+                        + "WHERE R.id=?";
+
+        return jdbcTemplate.queryForObject(query, (rs, rowNum) -> {
+            return new Reservation(
+                    rs.getLong("id"),
+                    rs.getString("name"),
+                    rs.getDate("date").toLocalDate(),
+                    new Time(rs.getLong("time_id"), rs.getTime("start_at").toLocalTime())
+            );
+        }, id);
     }
 
     @Override

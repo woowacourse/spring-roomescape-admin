@@ -3,49 +3,34 @@ package roomescape.reservation;
 import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import roomescape.time.Time;
-import roomescape.time.TimeDao;
 
 @Service
 public class ReservationService {
 
     private final ReservationDao reservationDAO;
-    private final TimeDao timeDao;
 
     public ReservationService(
-            @Autowired final ReservationDao reservationDAO,
-            @Autowired final TimeDao timeDao
+            @Autowired final ReservationDao reservationDAO
     ) {
         this.reservationDAO = reservationDAO;
-        this.timeDao = timeDao;
     }
 
     public ReservationResponse createReservation(final ReservationRequest reservationRequest) {
-        validateExistTimeById(reservationRequest.timeId());
-
         final Reservation notSavedReservation = new Reservation(
                 null,
                 reservationRequest.name(),
                 reservationRequest.date(),
-                reservationRequest.timeId()
+                null
         );
-        final Time time = timeDao.findTimeById(reservationRequest.timeId());
-        final Reservation savedReservation = reservationDAO.saveReservation(notSavedReservation);
-        return ReservationResponse.createResponse(savedReservation, time);
-    }
-
-    private void validateExistTimeById(final Long timeId) {
-        if (!timeDao.existTimeById(timeId)) {
-            throw new IllegalArgumentException("[ERROR]");
-        }
+        final Long savedReservationId = reservationDAO.saveReservation(notSavedReservation,
+                reservationRequest.timeId());
+        final Reservation savedReservation = reservationDAO.findReservationById(savedReservationId);
+        return ReservationResponse.createResponse(savedReservation);
     }
 
     public List<ReservationResponse> findAllReservation() {
         return reservationDAO.findAllReservation().stream()
-                .map(reservation -> {
-                    final Time time = timeDao.findTimeById(reservation.timeId());
-                    return ReservationResponse.createResponse(reservation, time);
-                })
+                .map(ReservationResponse::createResponse)
                 .toList();
     }
 

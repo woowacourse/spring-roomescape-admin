@@ -4,26 +4,20 @@ import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.SoftAssertions.assertSoftly;
 
 import java.time.LocalDate;
-import java.time.LocalTime;
 import java.util.List;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
-import roomescape.time.FakeTimeDao;
-import roomescape.time.Time;
-import roomescape.time.TimeResponse;
 
 public class ReservationServiceTest {
 
     private ReservationService reservationService;
     private FakeReservationDao fakeReservationDao;
-    private FakeTimeDao fakeTimeDao;
 
     @BeforeEach
     void setUp() {
         fakeReservationDao = new FakeReservationDao();
-        fakeTimeDao = new FakeTimeDao();
-        reservationService = new ReservationService(fakeReservationDao, fakeTimeDao);
+        reservationService = new ReservationService(fakeReservationDao);
     }
 
 
@@ -31,7 +25,6 @@ public class ReservationServiceTest {
     @Test
     void create() {
         // given
-        fakeTimeDao.saveTime(new Time(null, LocalTime.of(12, 40)));
         final ReservationRequest request = new ReservationRequest("조앤", LocalDate.of(2025, 04, 21), 1L);
 
         // when
@@ -42,7 +35,7 @@ public class ReservationServiceTest {
             s.assertThat(response.id()).isNotNull();
             s.assertThat(response.name()).isEqualTo(request.name());
             s.assertThat(response.date()).isEqualTo(request.date());
-            s.assertThat(response.time()).isEqualTo(new TimeResponse(1L, LocalTime.of(12, 40)));
+            s.assertThat(response.time().id()).isEqualTo(1L);
         });
     }
 

@@ -11,7 +11,7 @@ import org.springframework.jdbc.core.RowMapper;
 import org.springframework.jdbc.support.GeneratedKeyHolder;
 import org.springframework.jdbc.support.KeyHolder;
 import org.springframework.stereotype.Component;
-import roomescape.dto.ReservationResponse;
+import roomescape.dto.reservation.ReservationResponse;
 
 @Component
 public class ReservationDao {
@@ -36,7 +36,7 @@ public class ReservationDao {
         String sql = "insert into reservation (name, date, time) values (?, ?, ?)";
         KeyHolder keyHolder = new GeneratedKeyHolder();
         jdbcTemplate.update(
-                (connection) -> {
+                connection -> {
                     PreparedStatement preparedStatement = connection.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS);
                     preparedStatement.setString(1, reservation.getName());
                     preparedStatement.setString(2, reservation.getDate().toString());

@@ -13,7 +13,7 @@ import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.jdbc.core.BatchPreparedStatementSetter;
 import org.springframework.jdbc.core.JdbcTemplate;
-import roomescape.dto.ReservationResponse;
+import roomescape.dto.reservation.ReservationResponse;
 import roomescape.util.H2DataSourceFactory;
 
 class ReservationDaoTest {

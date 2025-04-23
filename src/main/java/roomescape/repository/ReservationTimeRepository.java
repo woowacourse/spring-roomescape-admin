@@ -49,4 +49,9 @@ public class ReservationTimeRepository {
                         resultSet.getObject("startAt", LocalTime.class)
                 ));
     }
+
+    public void deleteById(Long id) {
+        String sql = "DELETE FROM reservationTime WHERE id = ?";
+        jdbcTemplate.update(sql, id);
+    }
 }

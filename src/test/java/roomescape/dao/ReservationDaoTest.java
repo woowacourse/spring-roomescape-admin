@@ -77,10 +77,6 @@ class ReservationDaoTest {
         assertThat(beforeExists).isNotEqualTo(afterExists);
     }
 
-    private Reservation createTestReservation() {
-        return new Reservation(null, TEST_NAME, TEST_DATE_TIME);
-    }
-
     @Test
     void 예약_정보_삭제_내역이_없는_경우_FALSE를_반환한다() {
         // when
@@ -90,6 +86,10 @@ class ReservationDaoTest {
         // then
         assertThat(result).isFalse();
         assertThat(exists).isFalse();
+    }
+
+    private Reservation createTestReservation() {
+        return new Reservation(null, TEST_NAME, TEST_DATE_TIME);
     }
 
     private Integer getReservationCount() {

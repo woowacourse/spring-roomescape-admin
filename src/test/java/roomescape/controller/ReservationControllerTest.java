@@ -77,7 +77,7 @@ class ReservationControllerTest {
                 .body("[0].time", equalTo("15:40"));
     }
 
-    @DisplayName("저장되지 않은 Id를 삭제할 수 없다")
+    @DisplayName("Reservation 삭제 테스트")
     @Test
     void deleteReservationTest() {
         Map<String, String> params = new HashMap<>();

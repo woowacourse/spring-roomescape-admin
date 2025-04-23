@@ -1,6 +1,7 @@
 package roomescape.repository;
 
 import java.time.LocalTime;
+import java.util.List;
 import org.assertj.core.api.SoftAssertions;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -20,7 +21,7 @@ public class ReservationTimeRepositoryTest {
 
     @Test
     @DisplayName("시간을 추가한다.")
-    void test(){
+    void addReservationTimeTest(){
         // given
         ReservationTime time = new ReservationTime(LocalTime.of(10,0));
         // when
@@ -32,5 +33,17 @@ public class ReservationTimeRepositoryTest {
         });
     }
 
+    @Test
+    @DisplayName("전체 시간 목록을 가져온다.")
+    void getAllReservationTimesTest(){
+        // given
+        // when
+        List<ReservationTime> reservationTimes = reservationTimeRepository.findAll();
 
+        // then
+        SoftAssertions.assertSoftly(softAssertions -> {
+            softAssertions.assertThat(reservationTimes).hasSize(1);
+            softAssertions.assertThat(reservationTimes.getFirst().getStartAt()).isEqualTo(LocalTime.of(10, 0));
+        });
+    }
 }

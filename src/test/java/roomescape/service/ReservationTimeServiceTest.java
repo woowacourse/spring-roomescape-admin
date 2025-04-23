@@ -40,5 +40,10 @@ public class ReservationTimeServiceTest {
             reservationTimes.add(reservationTime);
             return reservationTime;
         }
+
+        @Override
+        public List<ReservationTime> findAll() {
+            return List.of();
+        }
     }
 }

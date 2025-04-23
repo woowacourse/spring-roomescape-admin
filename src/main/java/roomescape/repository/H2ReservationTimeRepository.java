@@ -3,7 +3,6 @@ package roomescape.repository;
 import java.sql.PreparedStatement;
 import java.sql.Statement;
 import java.sql.Time;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.support.GeneratedKeyHolder;
 import org.springframework.jdbc.support.KeyHolder;
@@ -26,14 +25,14 @@ public class H2ReservationTimeRepository implements ReservationTimeRepository{
 
         jdbcTemplate.update(connection -> {
             PreparedStatement ps = connection.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS);
-            ps.setTime(1, Time.valueOf(reservationTime.getTime()));
+            ps.setTime(1, Time.valueOf(reservationTime.getStartAt()));
                     return ps;
         },keyHolder);
         long generatedId = keyHolder.getKey().longValue();
 
         return new ReservationTime(
                 generatedId,
-                reservationTime.getTime()
+                reservationTime.getStartAt()
         );
     }
 }

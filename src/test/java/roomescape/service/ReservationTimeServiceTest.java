@@ -6,6 +6,8 @@ import java.util.List;
 import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
+import roomescape.dto.ReservationRequest;
+import roomescape.dto.ReservationTimeRequest;
 import roomescape.dto.ReservationTimeResponse;
 import roomescape.entity.ReservationTime;
 import roomescape.repository.ReservationTimeRepository;
@@ -19,13 +21,12 @@ public class ReservationTimeServiceTest {
     @DisplayName("시간을 저장한다.")
     void test(){
         // given
-        ReservationTime reservationTime = new ReservationTime(LocalTime.of(10, 0));
-
+        ReservationTimeRequest reservationTimeRequest = new ReservationTimeRequest(LocalTime.of(10, 0));
         // when
-        ReservationTimeResponse reservationTimeResponse = reservationTimeService.createReservationTime(reservationTime);
+        ReservationTimeResponse reservationTimeResponse = reservationTimeService.createReservationTime(reservationTimeRequest);
 
         // then
-        Assertions.assertThat(reservationTimeResponse.time()).isEqualTo(LocalTime.of(10, 0));
+        Assertions.assertThat(reservationTimeResponse.startAt()).isEqualTo(LocalTime.of(10, 0));
     }
 
 

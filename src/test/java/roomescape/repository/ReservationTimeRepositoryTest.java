@@ -28,7 +28,9 @@ public class ReservationTimeRepositoryTest {
         // then
         SoftAssertions.assertSoftly(softAssertions -> {
             softAssertions.assertThat(reservationTime.getId()).isEqualTo(1);
-            softAssertions.assertThat(reservationTime.getTime()).isEqualTo(LocalTime.of(10,0));
+            softAssertions.assertThat(reservationTime.getStartAt()).isEqualTo(LocalTime.of(10,0));
         });
     }
+
+
 }

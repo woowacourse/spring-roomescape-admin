@@ -2,38 +2,39 @@ package roomescape.controller;
 
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-import roomescape.dao.TimeDao;
 import roomescape.dto.TimeRequestDto;
 import roomescape.dto.TimeResponseDto;
-import roomescape.entity.ReservationTimeEntity;
+import roomescape.service.RoomescapeTimeService;
 
 import java.util.List;
 
 @RestController
 @RequestMapping("/times")
 public class RoomescapeTimeRestController {
-    private final TimeDao timeDao;
+    private final RoomescapeTimeService service;
 
-    public RoomescapeTimeRestController(TimeDao timeDao) {
-        this.timeDao = timeDao;
+    public RoomescapeTimeRestController(RoomescapeTimeService service) {
+        this.service = service;
     }
 
     @PostMapping
     public ResponseEntity<TimeResponseDto> create(@RequestBody TimeRequestDto requestDto) {
-        ReservationTimeEntity saved = timeDao.save(requestDto.toEntity());
-        return ResponseEntity.ok().body(TimeResponseDto.from(saved));
+        TimeResponseDto responseDto = service.create(requestDto);
+        return ResponseEntity.ok().body(responseDto);
     }
 
     @GetMapping
     public List<TimeResponseDto> getAllTimes() {
-        return timeDao.findAll().stream()
-                .map(TimeResponseDto::from)
-                .toList();
+        return service.getAllTimes();
     }
 
     @DeleteMapping("/{id}")
     public ResponseEntity<Void> delete(@PathVariable("id") Long id) {
-        timeDao.deleteById(id);
-        return ResponseEntity.ok().build();
+        try {
+            service.delete(id);
+            return ResponseEntity.ok().build();
+        } catch (IllegalArgumentException e) {
+            return ResponseEntity.notFound().build();
+        }
     }
 }

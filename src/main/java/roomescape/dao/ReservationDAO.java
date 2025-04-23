@@ -20,10 +20,6 @@ public class ReservationDAO {
     }
 
     public ReservationEntity save(ReservationEntity newReservation) {
-        List<ReservationEntity> allReservations = findAll();
-        if (allReservations.stream().anyMatch(reservation -> reservation.isDuplicatedWith(newReservation))) {
-            throw new IllegalArgumentException("이미 예약이 존재하는 날짜입니다.");
-        }
         String query = "INSERT INTO reservation (name, date, time_id) VALUES (?, ?, ?)";
         GeneratedKeyHolder keyHolder = new GeneratedKeyHolder();
         jdbcTemplate.update(connection -> {
@@ -37,12 +33,9 @@ public class ReservationDAO {
         return newReservation.changeId(id);
     }
 
-    public void deleteById(final Long id) {
+    public int deleteById(final Long id) {
         String query = "DELETE FROM reservation WHERE id = ?";
-        final int deletedCount = jdbcTemplate.update(query, id);
-        if (deletedCount == 0) {
-            throw new IllegalArgumentException("존재하지 않는 예약입니다.");
-        }
+        return jdbcTemplate.update(query, id);
     }
 
     public List<ReservationEntity> findAll() {

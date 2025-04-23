@@ -2,44 +2,31 @@ package roomescape.controller;
 
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-import roomescape.dao.ReservationDAO;
-import roomescape.dao.TimeDao;
 import roomescape.dto.ReservationRequestDto;
 import roomescape.dto.ReservationResponseDto;
-import roomescape.entity.ReservationEntity;
-import roomescape.entity.ReservationTimeEntity;
+import roomescape.service.RoomescapeReservationService;
 
 import java.util.List;
-import java.util.Optional;
 
 @RestController
 @RequestMapping("/reservations")
 public class RoomescapeReservationRestController {
-    private final ReservationDAO reservationDAO;
-    private final TimeDao timeDao;
+    private final RoomescapeReservationService service;
 
-    public RoomescapeReservationRestController(ReservationDAO reservationDAO, TimeDao timeDao) {
-        this.reservationDAO = reservationDAO;
-        this.timeDao = timeDao;
+    public RoomescapeReservationRestController(RoomescapeReservationService service) {
+        this.service = service;
     }
 
     @GetMapping
     public List<ReservationResponseDto> getAllReservation() {
-        return reservationDAO.findAll()
-                .stream()
-                .map(ReservationResponseDto::from)
-                .toList();
+        return service.getAllReservation();
     }
 
     @PostMapping
-    public ResponseEntity<ReservationResponseDto> createReservation(@RequestBody ReservationRequestDto request) {
-        Optional<ReservationTimeEntity> timeEntity = timeDao.findById(request.timeId());
-        if (timeEntity.isEmpty()) {
-            return ResponseEntity.badRequest().build();
-        }
+    public ResponseEntity<ReservationResponseDto> createReservation(@RequestBody ReservationRequestDto requestDto) {
         try {
-            ReservationEntity saved = reservationDAO.save(request.toEntity(timeEntity.get()));
-            return ResponseEntity.ok().body(ReservationResponseDto.from(saved));
+            ReservationResponseDto responseDto = service.createReservation(requestDto);
+            return ResponseEntity.ok().body(responseDto);
         } catch (IllegalArgumentException e) {
             return ResponseEntity.badRequest().build();
         }
@@ -48,7 +35,7 @@ public class RoomescapeReservationRestController {
     @DeleteMapping("/{id}")
     public ResponseEntity<Void> deleteReservation(@PathVariable("id") Long id) {
         try {
-            reservationDAO.deleteById(id);
+            service.deleteReservation(id);
             return ResponseEntity.ok().build();
         } catch (IllegalArgumentException e) {
             return ResponseEntity.notFound().build();

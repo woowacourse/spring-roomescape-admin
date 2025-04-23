@@ -40,12 +40,9 @@ public class TimeDao {
         });
     }
 
-    public void deleteById(final Long id) {
+    public int deleteById(final Long id) {
         String sql = "DELETE FROM reservation_time WHERE id = ?";
-        final int deleted = jdbcTemplate.update(sql, id);
-        if (deleted == 0) {
-            throw new IllegalArgumentException("존재하지 않는 id 입니다.");
-        }
+        return jdbcTemplate.update(sql, id);
     }
 
     public Optional<ReservationTimeEntity> findById(final Long id) {

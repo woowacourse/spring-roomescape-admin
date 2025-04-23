@@ -27,14 +27,7 @@ public class ReservationService {
     public Reservation createReservation(ReservationRequest request) {
         ReservationTime reservationTime = reservationTimeRepository.findById(request.timeId())
                 .orElseThrow(() -> new IllegalArgumentException("시간이 존재하지 않습니다."));
-
-        Reservation reservation = new Reservation(
-                null,
-                request.name(),
-                request.date(),
-                reservationTime
-        );
-
+        Reservation reservation = Reservation.createWithoutId(request.name(), request.date(), reservationTime);
         return reservationRepository.save(reservation);
     }
 

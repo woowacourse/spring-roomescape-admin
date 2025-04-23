@@ -20,11 +20,7 @@ public class ReservationTimeService {
     }
 
     public ReservationTime createReservationTime(ReservationTimeRequest request) {
-        ReservationTime reservationTime = new ReservationTime(
-                null,
-                request.startAt()
-        );
-
+        ReservationTime reservationTime = ReservationTime.createWithoutId(request.startAt());
         return reservationTimeRepository.save(reservationTime);
     }
 

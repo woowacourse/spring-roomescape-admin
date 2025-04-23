@@ -19,6 +19,10 @@ public class Reservation {
         this.time = time;
     }
 
+    public static Reservation createWithoutId(String name, LocalDate date, ReservationTime time) {
+        return new Reservation(null, name, date, time);
+    }
+
     public Long getId() {
         return id;
     }

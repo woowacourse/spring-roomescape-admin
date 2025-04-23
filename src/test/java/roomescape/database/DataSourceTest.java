@@ -1,6 +1,7 @@
 package roomescape.database;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.hamcrest.Matchers.is;
 
 import io.restassured.RestAssured;
 import io.restassured.http.ContentType;
@@ -100,5 +101,38 @@ public class DataSourceTest {
 
         Integer countAfterDelete = jdbcTemplate.queryForObject("SELECT count(1) from reservation", Integer.class);
         assertThat(countAfterDelete).isEqualTo(0);
+    }
+
+    @DisplayName("time과 reservation 연결 테스트")
+    @Test
+    void 팔단계() {
+        Map<String, Object> reservation = new HashMap<>();
+        reservation.put("name", "브라운");
+        reservation.put("date", "2023-08-05");
+        reservation.put("timeId", 1);
+
+        Map<String, String> TIME_BODY = new HashMap<>();
+        TIME_BODY.put("startAt", "10:00");
+
+        RestAssured.given().port(port).log().all()
+                .contentType(ContentType.JSON)
+                .body(TIME_BODY)
+                .when().post("/times")
+                .then().log().all()
+                .statusCode(200);
+
+        RestAssured.given().port(port).log().all()
+                .contentType(ContentType.JSON)
+                .body(reservation)
+                .when().post("/reservations")
+                .then().log().all()
+                .statusCode(200);
+
+
+        RestAssured.given().port(port).log().all()
+                .when().get("/reservations")
+                .then().log().all()
+                .statusCode(200)
+                .body("size()", is(1));
     }
 }

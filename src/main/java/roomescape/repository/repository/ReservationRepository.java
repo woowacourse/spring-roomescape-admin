@@ -1,4 +1,4 @@
-package roomescape.repository;
+package roomescape.repository.repository;
 
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
@@ -8,6 +8,7 @@ import java.time.LocalTime;
 
 import roomescape.model.Reservation;
 import roomescape.model.ReservationTime;
+import roomescape.repository.Dao;
 
 @org.springframework.stereotype.Repository
 public class ReservationRepository extends Repository<Reservation> {

@@ -1,4 +1,4 @@
-package roomescape.repository;
+package roomescape.repository.repository;
 
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
@@ -6,6 +6,7 @@ import java.sql.SQLException;
 import java.util.List;
 
 import roomescape.model.Entity;
+import roomescape.repository.Dao;
 
 public abstract class Repository<T extends Entity<T>> {
 

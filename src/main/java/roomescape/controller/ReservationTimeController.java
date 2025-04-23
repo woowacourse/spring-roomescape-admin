@@ -1,12 +1,12 @@
 package roomescape.controller;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import roomescape.dao.ReservationTimeDao;
 import roomescape.dto.ReservationTimeCreateRequestDto;
 import roomescape.dto.ReservationTimeResponseDto;
-import roomescape.model.ReservationTime;
 
 import java.util.List;
 
@@ -22,11 +22,14 @@ public class ReservationTimeController {
 
     @PostMapping("/times")
     public ResponseEntity<ReservationTimeResponseDto> addReservationTime(@RequestBody final ReservationTimeCreateRequestDto requestDto) {
-        ReservationTime reservationTime = requestDto.toEntity();
-        Long id = reservationTimeDao.saveAndReturnId(reservationTime);
-        ReservationTimeResponseDto responseDto = new ReservationTimeResponseDto(id, reservationTime.startAt());
+        try {
+            Long id = reservationTimeDao.saveAndReturnId(requestDto.startAt());
+            ReservationTimeResponseDto responseDto = new ReservationTimeResponseDto(id, requestDto.startAt());
 
-        return ResponseEntity.ok(responseDto);
+            return ResponseEntity.ok(responseDto);
+        } catch (IllegalArgumentException e) {
+            return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+        }
     }
 
     @GetMapping("/times")
@@ -39,7 +42,7 @@ public class ReservationTimeController {
     public ResponseEntity<Void> deleteReservationTime(@PathVariable Long id) {
         try {
             reservationTimeDao.deleteById(id);
-            return ResponseEntity.noContent().build();
+            return ResponseEntity.ok().build();
         } catch (IllegalStateException e) {
             return ResponseEntity.notFound().build();
         }

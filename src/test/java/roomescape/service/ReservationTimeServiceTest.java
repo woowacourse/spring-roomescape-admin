@@ -19,6 +19,13 @@ public class ReservationTimeServiceTest {
             new ReservationTimeTestRepository());
 
     @Test
+    @DisplayName("time_id를 찾을 수 없다면, 예외가 발생한다.")
+    void test_postReservationWhenCantFindReservationTime() {
+        assertThatThrownBy(() -> reservationService.existsTimeById(Long.MAX_VALUE))
+                .isInstanceOf(EntityNotFoundException.class);
+    }
+
+    @Test
     @DisplayName("조회된 엔티티를 DTO로 매핑해 반환한다.")
     void test_readReservationTime() {
         //given & when
@@ -50,7 +57,7 @@ public class ReservationTimeServiceTest {
 
         @Override
         public void existsTimeById(long id) {
-            
+            throw new EntityNotFoundException("");
         }
 
         @Override

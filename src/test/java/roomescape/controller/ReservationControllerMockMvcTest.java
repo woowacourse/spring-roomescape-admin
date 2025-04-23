@@ -24,6 +24,7 @@ import roomescape.dto.ReservationRequestDto;
 import roomescape.dto.ReservationResponseDto;
 import roomescape.exceptions.EntityNotFoundException;
 import roomescape.service.ReservationService;
+import roomescape.service.ReservationTimeService;
 
 @WebMvcTest(ReservationController.class)
 public class ReservationControllerMockMvcTest {
@@ -33,6 +34,9 @@ public class ReservationControllerMockMvcTest {
 
     @MockitoBean
     private ReservationService reservationService;
+
+    @MockitoBean
+    private ReservationTimeService reservationTimeService;
 
     @BeforeEach
     void setUp() {

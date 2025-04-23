@@ -14,14 +14,10 @@ import roomescape.entity.Reservation;
 import roomescape.entity.ReservationTime;
 import roomescape.exceptions.EntityNotFoundException;
 import roomescape.repository.ReservationRepository;
-import roomescape.repository.ReservationTimeRepository;
 
 public class ReservationServiceTest {
 
-    private final ReservationService reservationService = new ReservationService(
-            new ReservationTestRepository(),
-            new ReservationTimeTestRepository()
-    );
+    private final ReservationService reservationService = new ReservationService(new ReservationTestRepository());
 
     @Test
     @DisplayName("조회된 엔티티를 DTO로 매핑해 반환한다.")
@@ -43,17 +39,6 @@ public class ReservationServiceTest {
         ReservationResponseDto actual = reservationService.postReservation(requestDto);
         //then
         assertThat(actual.id()).isEqualTo(1);
-    }
-
-    @Test
-    @DisplayName("저장시 time_id를 찾을 수 없다면, 예외가 발생한다.")
-    void test_postReservationWhenCantFindReservationTime() {
-        //given
-        long timeId = Long.MAX_VALUE;
-        ReservationRequestDto requestDto = new ReservationRequestDto("브라운", LocalDate.now(), timeId);
-        //when&&then
-        assertThatThrownBy(() -> reservationService.postReservation(requestDto))
-                .isInstanceOf(EntityNotFoundException.class);
     }
 
     @Test
@@ -80,30 +65,6 @@ public class ReservationServiceTest {
         @Override
         public void deleteById(long id) {
             throw new EntityNotFoundException("");
-        }
-    }
-
-    private static class ReservationTimeTestRepository implements ReservationTimeRepository {
-
-        @Override
-        public void existsTimeById(long id) {
-            if (id == Long.MAX_VALUE) {
-                throw new EntityNotFoundException("");
-            }
-        }
-
-        @Override
-        public List<ReservationTime> findAll() {
-            return List.of();
-        }
-
-        @Override
-        public ReservationTime save(ReservationTime reservationTime) {
-            return null;
-        }
-
-        @Override
-        public void deleteById(long id) {
         }
     }
 }

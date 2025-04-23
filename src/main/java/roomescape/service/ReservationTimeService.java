@@ -18,6 +18,10 @@ public class ReservationTimeService {
         this.repository = repository;
     }
 
+    public void existsTimeById(long id) {
+        repository.existsTimeById(id);
+    }
+
     public List<ReservationTimeResponseDto> readReservationTime() {
         return repository.findAll().stream()
                 .map(ReservationTimeResponseDto::toDto)

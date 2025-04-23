@@ -46,16 +46,18 @@ public class ReservationH2Repository implements ReservationRepository {
 
     @Override
     public List<Reservation> findAll() {
-        String query = "SELECT * FROM reservation as r inner join reservation_time as rt"
-                + " on r.time_id = rt.id";
+        String query =
+                "SELECT r.id, r.name, r.date, rt.id as time_id, rt.start_at as time_start_at FROM reservation as r "
+                        + " inner join reservation_time as rt"
+                        + " on r.time_id = rt.id";
 
         return jdbcTemplate.query(query, (rs, rowNum) ->
                 new Reservation(rs.getLong("id"),
                         rs.getString("name"),
                         rs.getDate("date").toLocalDate(),
                         new ReservationTime(
-                                rs.getLong("reservation_time.id"),
-                                rs.getTime("start_at").toLocalTime()
+                                rs.getLong("time_id"),
+                                rs.getTime("time_start_at").toLocalTime()
                         )
                 )
         );
@@ -74,17 +76,19 @@ public class ReservationH2Repository implements ReservationRepository {
 
     @Override
     public Optional<Reservation> findById(final long id) {
-        String query = "SELECT * FROM reservation as r inner join reservation_time as rt"
-                + " on r.time_id = rt.id"
-                + " WHERE r.id = ?";
+        String query =
+                "SELECT r.id, r.name, r.date, r.time_id, rt.id as time_id, rt.start_at as time_start_at FROM reservation as r "
+                        + " inner join reservation_time as rt"
+                        + " on r.time_id = rt.id"
+                        + " WHERE r.id = ?";
 
         List<Reservation> result = jdbcTemplate.query(query, (rs, rowNum) ->
                 new Reservation(rs.getLong("id"),
                         rs.getString("name"),
                         rs.getDate("date").toLocalDate(),
                         new ReservationTime(
-                                rs.getLong("reservation_time.id"),
-                                rs.getTime("start_at").toLocalTime()
+                                rs.getLong("time_id"),
+                                rs.getTime("time_start_at").toLocalTime()
                         )
                 ), id
         );

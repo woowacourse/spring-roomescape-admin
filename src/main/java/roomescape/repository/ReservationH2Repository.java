@@ -17,6 +17,11 @@ import roomescape.domain.ReservationTime;
 @Repository
 public class ReservationH2Repository implements ReservationRepository {
 
+    public static final String SELECT_RESERVATION_WITH_TIME =
+            "SELECT r.id, r.name, r.date, rt.id as time_id, rt.start_at as time_start_at FROM reservation as r "
+                    + " inner join reservation_time as rt"
+                    + " on r.time_id = rt.id";
+
     private final JdbcTemplate jdbcTemplate;
 
     public ReservationH2Repository(JdbcTemplate jdbcTemplate) {
@@ -46,12 +51,7 @@ public class ReservationH2Repository implements ReservationRepository {
 
     @Override
     public List<Reservation> findAll() {
-        String query =
-                "SELECT r.id, r.name, r.date, rt.id as time_id, rt.start_at as time_start_at FROM reservation as r "
-                        + " inner join reservation_time as rt"
-                        + " on r.time_id = rt.id";
-
-        return jdbcTemplate.query(query, (rs, rowNum) ->
+        return jdbcTemplate.query(SELECT_RESERVATION_WITH_TIME, (rs, rowNum) ->
                 new Reservation(rs.getLong("id"),
                         rs.getString("name"),
                         rs.getDate("date").toLocalDate(),
@@ -76,11 +76,8 @@ public class ReservationH2Repository implements ReservationRepository {
 
     @Override
     public Optional<Reservation> findById(final long id) {
-        String query =
-                "SELECT r.id, r.name, r.date, r.time_id, rt.id as time_id, rt.start_at as time_start_at FROM reservation as r "
-                        + " inner join reservation_time as rt"
-                        + " on r.time_id = rt.id"
-                        + " WHERE r.id = ?";
+        String query = SELECT_RESERVATION_WITH_TIME
+                + " WHERE r.id = ?";
 
         List<Reservation> result = jdbcTemplate.query(query, (rs, rowNum) ->
                 new Reservation(rs.getLong("id"),

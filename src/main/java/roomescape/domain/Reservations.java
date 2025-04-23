@@ -2,26 +2,34 @@ package roomescape.domain;
 
 import java.time.LocalDateTime;
 import java.util.Collections;
+import java.util.List;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
+import java.util.function.Function;
+import java.util.stream.Collectors;
 
 public class Reservations {
 
     private final Map<Long, Reservation> reservations;
     private final Counter counter;
 
-    public Reservations(final Map<Long, Reservation> reservations, final Counter counter) {
-        this.reservations = reservations;
+    public Reservations(final List<Reservation> reservations,
+                        final Counter counter) {
+        final Map<Long, Reservation> reservationById = reservations.stream()
+                .collect(Collectors.toMap(Reservation::getId, Function.identity(), (existing, replacement) -> existing,
+                        ConcurrentHashMap::new));
+        this.reservations = reservationById;
         this.counter = counter;
     }
 
     public Reservations() {
-        this(new ConcurrentHashMap<>(), new Counter());
+        this.reservations = new ConcurrentHashMap<>();
+        this.counter = new Counter();
     }
 
     public Reservation addReservation(final String name, final LocalDateTime dateTime) {
         final long id = counter.getAndIncrease();
-        final Reservation reservation = new Reservation(id, name, dateTime);
+        final Reservation reservation = new Reservation(id, name, dateTime.toLocalDate(), dateTime.toLocalTime());
         reservations.put(id, reservation);
         return reservation;
     }

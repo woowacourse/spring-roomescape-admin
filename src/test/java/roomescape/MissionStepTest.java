@@ -8,6 +8,8 @@ import io.restassured.http.ContentType;
 import java.sql.Connection;
 import java.sql.SQLException;
 import java.time.LocalDate;
+import java.time.LocalTime;
+import java.time.format.DateTimeFormatter;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -199,6 +201,31 @@ public class MissionStepTest {
             } catch (SQLException e) {
                 throw new RuntimeException(e);
             }
+        }
+    }
+
+    @Nested
+    class Step5 {
+
+        @Autowired
+        private JdbcTemplate jdbcTemplate;
+
+        @Test
+        void 오단계() {
+            DateTimeFormatter timeFormatter = DateTimeFormatter.ofPattern("HH:mm");
+            String date = LocalDate.now().toString();
+            String time = LocalTime.now().format(timeFormatter);
+            jdbcTemplate.update("INSERT INTO reservation (name, date, time) VALUES (?, ?, ?)", "브라운", date, time);
+
+            List<Reservation> reservations = RestAssured.given().log().all()
+                    .when().get("/reservations")
+                    .then().log().all()
+                    .statusCode(200)
+                    .extract().jsonPath().getList(".", Reservation.class);
+
+            Integer count = jdbcTemplate.queryForObject("SELECT count(1) from reservation", Integer.class);
+
+            assertThat(reservations.size()).isEqualTo(count);
         }
     }
 }

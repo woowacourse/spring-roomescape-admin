@@ -17,15 +17,22 @@ import roomescape.domain.Reservation;
 import roomescape.domain.Reservations;
 import roomescape.dto.request.ReservationRequest;
 import roomescape.dto.response.ReservationResponse;
+import roomescape.repository.ReservationRepository;
 
 @RestController
 @RequestMapping("/reservations")
 public class ReservationController {
 
     private final Reservations reservations = new Reservations();
+    private final ReservationRepository reservationRepository;
+
+    public ReservationController(final ReservationRepository reservationRepository) {
+        this.reservationRepository = reservationRepository;
+    }
 
     @GetMapping
     public ResponseEntity<List<ReservationResponse>> readReservations() {
+        final Reservations reservations = reservationRepository.findAll();
         final List<ReservationResponse> dtos = ReservationResponse.from(reservations);
         return ResponseEntity.ok(dtos);
     }

@@ -11,8 +11,12 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.test.annotation.DirtiesContext;
+import org.springframework.transaction.annotation.Transactional;
 
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.DEFINED_PORT)
+@DirtiesContext(classMode = DirtiesContext.ClassMode.BEFORE_EACH_TEST_METHOD)
+@Transactional
 class TimeControllerTest {
 
     Map<String, String> params = new HashMap<>();
@@ -44,17 +48,20 @@ class TimeControllerTest {
     @DisplayName("시간 삭제 테스트")
     void deleteReservationTimeTest() {
 
-        RestAssured.given().log().all()
+        int id = RestAssured.given().log().all()
                 .contentType(ContentType.JSON)
                 .body(params)
                 .when().post("/times")
                 .then().log().all()
-                .statusCode(200);
+                .statusCode(200)
+                .extract()
+                .path("id");
 
         RestAssured.given().log().all()
-                .when().delete("/times/1")
+                .when().delete("/times/" + id)
                 .then().log().all()
                 .statusCode(200);
+
     }
 
     @AfterEach

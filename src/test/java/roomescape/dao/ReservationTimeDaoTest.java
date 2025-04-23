@@ -58,6 +58,32 @@ class ReservationTimeDaoTest {
         assertThat(exists).isTrue();
     }
 
+    @Test
+    void 예약_시간을_삭제한_데이터가_있는_경우_TRUE를_반환한다() {
+        // given
+        ReservationTime saved = reservationTimeDao.save(createTestReservationTime());
+
+        // when
+        Boolean beforeExists = isReservationTimeExists();
+        boolean result = reservationTimeDao.deleteById(saved.getId());
+        Boolean afterExists = isReservationTimeExists();
+
+        // then
+        assertThat(result).isTrue();
+        assertThat(beforeExists).isNotEqualTo(afterExists);
+    }
+
+    @Test
+    void 예약_시간을_삭제한_데이터가_없는_경우_FALSE를_반환한다() {
+        // when
+        boolean result = reservationTimeDao.deleteById(1L);
+        Boolean exists = isReservationTimeExists();
+
+        // then
+        assertThat(result).isFalse();
+        assertThat(exists).isFalse();
+    }
+
     private ReservationTime createTestReservationTime() {
         return new ReservationTime(null, LocalTime.MIDNIGHT);
     }

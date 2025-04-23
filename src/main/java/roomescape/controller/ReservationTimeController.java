@@ -1,10 +1,9 @@
 package roomescape.controller;
 
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.*;
 import roomescape.entity.ReservationTime;
 import roomescape.repository.ReservationTimeRepository;
 
@@ -28,5 +27,11 @@ public class ReservationTimeController {
     @GetMapping("/times")
     public ResponseEntity<List<ReservationTime>> getTimes() {
         return ResponseEntity.ok(reservationTimeRepository.findAll());
+    }
+
+    @ResponseStatus(HttpStatus.OK)
+    @DeleteMapping("/times/{id}")
+    public void deleteReservationTime(@PathVariable Long id) {
+        reservationTimeRepository.delete(id);
     }
 }

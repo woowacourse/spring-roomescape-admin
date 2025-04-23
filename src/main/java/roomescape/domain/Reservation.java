@@ -1,6 +1,5 @@
 package roomescape.domain;
 
-import com.fasterxml.jackson.annotation.JsonCreator;
 import org.springframework.http.HttpStatus;
 import roomescape.exception.CustomException;
 
@@ -21,7 +20,6 @@ public class Reservation {
 
     private final LocalTime time;
 
-    @JsonCreator
     public Reservation(Long id, String name, LocalDate date, LocalTime time) {
         this.id = id;
         this.name = name;

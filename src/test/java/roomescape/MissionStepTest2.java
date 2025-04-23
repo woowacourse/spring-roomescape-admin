@@ -10,7 +10,7 @@ import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.test.annotation.DirtiesContext;
 import org.springframework.test.context.BootstrapWith;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
-import roomescape.domain.Reservation;
+import roomescape.domain.dto.ReservationResDto;
 
 import java.sql.Connection;
 import java.sql.SQLException;
@@ -45,14 +45,14 @@ public class MissionStepTest2 { // TODO 2025. 4. 22. 20:31: class명 수정
     void 오단계() {
         jdbcTemplate.update("INSERT INTO reservation (name, date, time) VALUES (?, ?, ?)", "브라운", "2023-08-05", "15:40");
 
-        List<Reservation> reservations = RestAssured.given().log().all()
+        List<ReservationResDto> resDtos = RestAssured.given().log().all()
                 .when().get("/reservations")
                 .then().log().all()
                 .statusCode(200).extract()
-                .jsonPath().getList(".", Reservation.class);
+                .jsonPath().getList(".", ReservationResDto.class);
 
         Integer count = jdbcTemplate.queryForObject("SELECT count(1) from reservation", Integer.class);
 
-        assertThat(reservations.size()).isEqualTo(count);
+        assertThat(resDtos.size()).isEqualTo(count);
     }
 }

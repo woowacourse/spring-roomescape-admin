@@ -1,5 +1,6 @@
 package roomescape.application;
 
+import java.util.List;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.stereotype.Component;
@@ -49,6 +50,9 @@ public class ConsoleApplication implements CommandLineRunner {
             CreateReservationTimeDto createReservationTimeDto = inputView.inputCreateReservationTime();
             ReservationTime reservationTime = reservationTimeService.createReservationTime(createReservationTimeDto);
             outputView.printSuccessToCreateReservationTime(reservationTime);
+        } else if (function == 2) {
+            List<ReservationTime> reservationTimes = reservationTimeService.getAllReservationTimes();
+            outputView.printReservationTimes(reservationTimes);
         }
     }
 }

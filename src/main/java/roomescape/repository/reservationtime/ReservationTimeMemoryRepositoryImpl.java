@@ -1,6 +1,7 @@
 package roomescape.repository.reservationtime;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 import java.util.concurrent.atomic.AtomicLong;
 import org.springframework.stereotype.Repository;
@@ -33,7 +34,7 @@ public class ReservationTimeMemoryRepositoryImpl implements ReservationTimeRepos
 
     @Override
     public List<ReservationTime> findAll() {
-        return List.of();
+        return Collections.unmodifiableList(reservationTimes);
     }
 
     @Override

@@ -1,5 +1,6 @@
 package roomescape.view;
 
+import java.util.List;
 import org.springframework.stereotype.Component;
 import roomescape.entity.ReservationTime;
 
@@ -14,6 +15,12 @@ public class OutputView {
     public void printSuccessToCreateReservationTime(ReservationTime reservationTime) {
         System.out.println("예약 시간 생성을 완료했습니다.");
         System.out.println("생성된 예약 시간 : " + reservationTime.getStartAt());
+        System.out.println();
+    }
+
+    public void printReservationTimes(List<ReservationTime> reservationTimes) {
+        System.out.println("예약 시간 목록입니다.");
+        reservationTimes.forEach(time -> System.out.println(time.getStartAt()));
         System.out.println();
     }
 }

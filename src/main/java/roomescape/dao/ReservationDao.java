@@ -2,8 +2,6 @@ package roomescape.dao;
 
 import java.sql.Date;
 import java.sql.PreparedStatement;
-import java.sql.Time;
-import java.time.LocalDateTime;
 import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.JdbcTemplate;
@@ -12,7 +10,7 @@ import org.springframework.jdbc.support.GeneratedKeyHolder;
 import org.springframework.jdbc.support.KeyHolder;
 import org.springframework.stereotype.Repository;
 import roomescape.model.Reservation;
-import roomescape.model.ReservationDateTime;
+import roomescape.model.ReservationTime;
 
 @Repository
 public class ReservationDao {
@@ -23,38 +21,38 @@ public class ReservationDao {
         Reservation reservation = new Reservation(
                 resultSet.getLong("id"),
                 resultSet.getString("name"),
-                new ReservationDateTime(
-                        LocalDateTime.of(
-                                resultSet.getDate("date").toLocalDate(),
-                                resultSet.getTime("startAt").toLocalTime())
-                ));
+                resultSet.getDate("date").toLocalDate(),
+                new ReservationTime(resultSet.getLong("time_id"))
+        );
         return reservation;
     };
 
-
     public List<Reservation> findAll() {
-        String sql = "SELECT * FROM reservation";
+
+        String sql = "SELECT \n"
+                + "    r.id as reservation_id, \n"
+                + "    r.name, \n"
+                + "    r.date, \n"
+                + "    t.id as time_id, \n"
+                + "    t.start_at as time_value \n"
+                + "FROM reservation as r \n"
+                + "inner join reservation_time as t \n"
+                + "on r.time_id = t.id\n";
         return jdbcTemplate.query(sql, actorRowMapper);
     }
 
     public Long saveReservation(Reservation reservation) {
-        String sql = "INSERT INTO reservation (name, date, startAt) values (?,?,?)";
+        String sql = "INSERT INTO reservation (name, date, time_id) values (?,?,?)";
         KeyHolder keyHolder = new GeneratedKeyHolder();
 
         jdbcTemplate.update(connection -> {
             PreparedStatement ps = connection.prepareStatement(sql, new String[]{"id"});
             ps.setString(1, reservation.getName());
             ps.setDate(2, Date.valueOf(reservation.getDate()));
-            ps.setTime(3, Time.valueOf(reservation.getTime()));
+            ps.setLong(3, reservation.getTimeId());
             return ps;
         }, keyHolder);
         return keyHolder.getKey().longValue();
-    }
-
-    public Reservation findReservationById(Long id) {
-        String sql = "SELECT * FROM reservation WHERE id = ?";
-        Reservation reservation = jdbcTemplate.queryForObject(sql, actorRowMapper, id);
-        return reservation;
     }
 
     public void deleteById(Long id) {

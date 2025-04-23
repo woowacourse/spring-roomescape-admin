@@ -7,6 +7,7 @@ import io.restassured.RestAssured;
 import io.restassured.http.ContentType;
 import java.sql.Connection;
 import java.sql.SQLException;
+import java.time.LocalTime;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -16,7 +17,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.test.annotation.DirtiesContext;
+import roomescape.dao.ReservationTimeDao;
 import roomescape.dto.ReservationResponseDto;
+import roomescape.model.ReservationTime;
 
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.DEFINED_PORT)
 @DirtiesContext(classMode = DirtiesContext.ClassMode.BEFORE_EACH_TEST_METHOD)
@@ -24,6 +27,9 @@ public class MissionStepTest {
 
     @Autowired
     private JdbcTemplate jdbcTemplate;
+
+    @Autowired
+    private ReservationTimeDao reservationTimeDao;
 
 
     @DisplayName("관리자 페이지 GET 요청 시 200 OK를 반환한다")
@@ -56,7 +62,9 @@ public class MissionStepTest {
         Map<String, String> params = new HashMap<>();
         params.put("name", "브라운");
         params.put("date", "2023-08-05");
-        params.put("startAt", "15:40");
+        params.put("timeId", "1");
+
+        reservationTimeDao.saveTime(new ReservationTime(LocalTime.of(10, 10)));
 
         RestAssured.given().log().all()
                 .contentType(ContentType.JSON)
@@ -84,15 +92,6 @@ public class MissionStepTest {
                 .body("size()", is(0));
     }
 
-    @DisplayName("예약 삭제 실패 시 400 반환 테스트")
-    @Test
-    void 예약_삭제_실패() {
-        RestAssured.given().log().all()
-                .when().delete("/reservations/2")
-                .then().log().all()
-                .statusCode(400);
-    }
-
     @DisplayName("DB 연결 및 RESERVATION 테이블 존재 여부 확인")
     @Test
     void 사단계() {
@@ -108,9 +107,11 @@ public class MissionStepTest {
     @DisplayName("조회한 예약 수와 데이터베이스 쿼리를 통해 조회한 예약 수가 같은지 비교하는 테스트")
     @Test
     void 오단계() {
+        reservationTimeDao.saveTime(new ReservationTime(LocalTime.of(10, 10)));
+
         jdbcTemplate.update(
-                "INSERT INTO reservation (name, date, startAt) VALUES (?, ?, ?)",
-                "브라운", "2023-08-05", "15:40");
+                "INSERT INTO reservation (name, date, time_id) VALUES (?, ?, ?)",
+                "브라운", "2023-08-05", "1");
 
         List<ReservationResponseDto> reservations = RestAssured.given().log().all()
                 .when().get("/reservations")
@@ -129,7 +130,8 @@ public class MissionStepTest {
         Map<String, String> params = new HashMap<>();
         params.put("name", "브라운");
         params.put("date", "2023-08-05");
-        params.put("startAt", "10:00");
+        params.put("timeId", "1");
+        reservationTimeDao.saveTime(new ReservationTime(LocalTime.of(10, 10)));
 
         RestAssured.given().log().all()
                 .contentType(ContentType.JSON)

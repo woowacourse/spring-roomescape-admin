@@ -6,20 +6,23 @@ import java.util.Objects;
 
 public class Reservation {
 
-    private final Long id;
-    private final String name;
-    private final ReservationDateTime reservationDateTime;
+    private Long id;
+    private String name;
+    private LocalDate date;
+    private ReservationTime reservationTime;
 
-    public Reservation(Long id, String name, ReservationDateTime reservationDateTime) {
+    public Reservation(Long id, String name, LocalDate date, ReservationTime reservationTime) {
         this.id = Objects.requireNonNull(id);
         this.name = validateNonBlank(name);
-        this.reservationDateTime = reservationDateTime;
+        this.date = date;
+        this.reservationTime = reservationTime;
     }
 
-    public Reservation(String name, ReservationDateTime reservationDateTime){
+    public Reservation(String name, LocalDate date, ReservationTime reservationTime){
         this.id = null;
         this.name = name;
-        this.reservationDateTime = reservationDateTime;
+        this.date = date;
+        this.reservationTime = reservationTime;
     }
 
     private String validateNonBlank(String name) {
@@ -38,10 +41,14 @@ public class Reservation {
     }
 
     public LocalDate getDate() {
-        return reservationDateTime.getDate();
+        return date;
     }
 
     public LocalTime getTime() {
-        return reservationDateTime.getTime();
+        return reservationTime.getStartAt();
+    }
+
+    public Long getTimeId(){
+        return reservationTime.getId();
     }
 }

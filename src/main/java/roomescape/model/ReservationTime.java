@@ -16,6 +16,11 @@ public class ReservationTime {
         this.startAt = startAt;
     }
 
+    public ReservationTime(Long id){
+        this.id = id;
+        this.startAt = null;
+    }
+
     public Long getId() {
         return id;
     }

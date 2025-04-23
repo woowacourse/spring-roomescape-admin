@@ -9,7 +9,8 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
-import roomescape.controller.dto.CreateReservationTimeRequest;
+import roomescape.controller.request.CreateReservationTimeRequest;
+import roomescape.controller.response.ReservationTimeResponse;
 import roomescape.domain.ReservationTime;
 import roomescape.repository.ReservationTImeRepository;
 
@@ -24,18 +25,26 @@ public class ReservationTImeController {
     }
 
     @PostMapping
-    public ResponseEntity<ReservationTime> create(
+    public ResponseEntity<ReservationTimeResponse> create(
             @RequestBody CreateReservationTimeRequest createReservationTImeRequest) {
         Long id = reservationTImeRepository.create(new ReservationTime(createReservationTImeRequest.startAt()));
         ReservationTime reservationTime = reservationTImeRepository.findById(id)
                 .orElseThrow(IllegalArgumentException::new);
-        return ResponseEntity.ok(reservationTime);
+        return ResponseEntity.ok(new ReservationTimeResponse(
+                reservationTime.id(),
+                reservationTime.startAt()
+        ));
     }
 
     @GetMapping
-    public ResponseEntity<List<ReservationTime>> findAll() {
+    public ResponseEntity<List<ReservationTimeResponse>> findAll() {
         List<ReservationTime> reservationTimes = reservationTImeRepository.findAll();
-        return ResponseEntity.ok(reservationTimes);
+        List<ReservationTimeResponse> reservationTimeResponses = reservationTimes.stream()
+                .map(reservationTime -> new ReservationTimeResponse(
+                        reservationTime.id(),
+                        reservationTime.startAt()
+                )).toList();
+        return ResponseEntity.ok(reservationTimeResponses);
     }
 
     @DeleteMapping("/{reservationTimeId}")

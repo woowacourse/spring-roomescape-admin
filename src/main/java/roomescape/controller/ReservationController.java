@@ -9,7 +9,8 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
-import roomescape.controller.dto.CreateReservationRequest;
+import roomescape.controller.request.CreateReservationRequest;
+import roomescape.controller.response.ReservationResponse;
 import roomescape.domain.Reservation;
 import roomescape.repository.ReservationRepository;
 
@@ -24,13 +25,21 @@ public class ReservationController {
     }
 
     @GetMapping
-    public ResponseEntity<List<Reservation>> findReservations() {
+    public ResponseEntity<List<ReservationResponse>> findReservations() {
         List<Reservation> reservations = reservationRepository.findAll();
-        return ResponseEntity.ok(reservations);
+        List<ReservationResponse> reservationResponses = reservations.stream()
+                .map(reservation -> new ReservationResponse(
+                        reservation.getId(),
+                        reservation.getName(),
+                        reservation.getDate(),
+                        reservation.getTime()
+                ))
+                .toList();
+        return ResponseEntity.ok(reservationResponses);
     }
 
     @PostMapping
-    public ResponseEntity<Reservation> createReservation(
+    public ResponseEntity<ReservationResponse> createReservation(
             @RequestBody CreateReservationRequest createReservationRequest) {
         Long reservationId = reservationRepository.create(
                 new Reservation(
@@ -38,7 +47,12 @@ public class ReservationController {
                         createReservationRequest.date(),
                         createReservationRequest.time()));
         Reservation newReservation = reservationRepository.findById(reservationId).orElseThrow();
-        return ResponseEntity.ok(newReservation);
+        return ResponseEntity.ok(new ReservationResponse(
+                newReservation.getId(),
+                newReservation.getName(),
+                newReservation.getDate(),
+                newReservation.getTime()
+        ));
     }
 
     @DeleteMapping("/{reservationId}")

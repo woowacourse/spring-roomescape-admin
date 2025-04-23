@@ -12,6 +12,6 @@ public class AdminPageController {
 
     @GetMapping("/admin/reservation")
     public String adminReservation() {
-        return "admin/reservation-legacy";
+        return "admin/reservation";
     }
 }

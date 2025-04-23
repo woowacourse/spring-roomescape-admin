@@ -35,10 +35,10 @@ class ReservationServiceTest {
     @Test
     void deleteNonExistReservation() {
         // given
-        final long nonExistreservationId = 1;
+        final long nonExistReservationId = 1;
 
         // when & then
-        assertThatThrownBy(() -> reservationService.deleteById(nonExistreservationId))
+        assertThatThrownBy(() -> reservationService.deleteById(nonExistReservationId))
                 .isInstanceOf(ReservationNotFoundException.class);
     }
 }

@@ -1,15 +1,11 @@
 package roomescape.reservation.repository;
 
-import java.sql.Date;
-import java.sql.PreparedStatement;
-import java.sql.Statement;
-import java.sql.Time;
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
 import org.springframework.context.annotation.Primary;
 import org.springframework.jdbc.core.JdbcTemplate;
-import org.springframework.jdbc.support.GeneratedKeyHolder;
-import org.springframework.jdbc.support.KeyHolder;
+import org.springframework.jdbc.core.simple.SimpleJdbcInsert;
 import org.springframework.stereotype.Repository;
 import roomescape.reservation.domain.Reservation;
 import roomescape.reservation.entity.ReservationEntity;
@@ -44,22 +40,16 @@ public class H2ReservationRepository implements ReservationRepository {
         );
     }
 
-    @Override
     public Reservation put(final Reservation reservation) {
-        KeyHolder keyHolder = new GeneratedKeyHolder();
+        SimpleJdbcInsert simpleJdbcInsert = new SimpleJdbcInsert(jdbcTemplate)
+                .withTableName("reservation")
+                .usingGeneratedKeyColumns("id");
 
-        jdbcTemplate.update(connection -> {
-            String sql = "INSERT INTO reservation (name, date, time) VALUES (?, ?, ?)";
-            PreparedStatement ps = connection.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS);
-            ps.setString(1, reservation.getName());
-            ps.setDate(2, Date.valueOf(reservation.getDate()));
-            ps.setTime(3, Time.valueOf(reservation.getTime()));
-            return ps;
-        }, keyHolder);
+        long generatedId = simpleJdbcInsert.executeAndReturnKey(
+                Map.of("name", reservation.getName(), "date", reservation.getDate(), "time",
+                        reservation.getTime())).longValue();
 
-        long generatedId = keyHolder.getKey().longValue();
         cache.put(reservation, generatedId);
-
         return reservation;
     }
 

@@ -3,7 +3,6 @@ package roomescape.service;
 import java.util.List;
 import org.springframework.stereotype.Service;
 import roomescape.dto.CreateReservationDto;
-import roomescape.dto.ReservationResponseDto;
 import roomescape.entity.Reservation;
 import roomescape.repository.ReservationRepository;
 
@@ -16,10 +15,8 @@ public class ReservationService {
         this.reservationRepository = reservationRepository;
     }
 
-    public List<ReservationResponseDto> getAllReservations() {
-        return reservationRepository.findAll().stream()
-                .map(ReservationResponseDto::from)
-                .toList();
+    public List<Reservation> getAllReservations() {
+        return reservationRepository.findAll();
     }
 
     /*
@@ -28,10 +25,9 @@ public class ReservationService {
     service는 by-pass만 해주면 되니까
     또 service 계층에선 reservation id를 못만드네 생각해보니까
      */
-    public ReservationResponseDto createReservation(CreateReservationDto createReservationDto) {
+    public Reservation createReservation(CreateReservationDto createReservationDto) {
         Long id = reservationRepository.addAndGetId(createReservationDto);
-        Reservation reservation = reservationRepository.findById(id);
-        return ReservationResponseDto.from(reservation);
+        return reservationRepository.findById(id);
     }
 
     public void deleteReservation(Long id) {

@@ -3,7 +3,6 @@ package roomescape.service;
 import java.util.List;
 import org.springframework.stereotype.Service;
 import roomescape.dto.CreateReservationTimeDto;
-import roomescape.dto.ReservationTimeResponseDto;
 import roomescape.entity.ReservationTime;
 import roomescape.repository.ReservationTimeRepository;
 
@@ -21,10 +20,8 @@ public class ReservationTimeService {
         return reservationTimeRepository.findById(id);
     }
 
-    public List<ReservationTimeResponseDto> getAllReservationTimes() {
-        return reservationTimeRepository.findAll().stream()
-                .map(ReservationTimeResponseDto::from)
-                .toList();
+    public List<ReservationTime> getAllReservationTimes() {
+        return reservationTimeRepository.findAll();
     }
 
     public void deleteReservationTime(Long id) {

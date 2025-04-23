@@ -9,7 +9,6 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import roomescape.dto.CreateReservationTimeDto;
-import roomescape.dto.ReservationTimeResponseDto;
 import roomescape.entity.ReservationTime;
 import roomescape.service.ReservationTimeService;
 
@@ -24,13 +23,12 @@ public class ReservationTimeController {
     }
 
     @PostMapping
-    public ReservationTimeResponseDto createTime(@RequestBody CreateReservationTimeDto request) {
-        ReservationTime reservationTime = reservationTimeService.createReservationTime(request);
-        return ReservationTimeResponseDto.from(reservationTime);
+    public ReservationTime createTime(@RequestBody CreateReservationTimeDto request) {
+        return reservationTimeService.createReservationTime(request);
     }
 
     @GetMapping
-    public List<ReservationTimeResponseDto> getTimes() {
+    public List<ReservationTime> getTimes() {
         return reservationTimeService.getAllReservationTimes();
     }
 

@@ -53,7 +53,7 @@ class JdbcTemplateRepositoryTest {
         LocalTime time = LocalTime.of(9, 30);
 
         // when
-        var saved = repository.save(name, date, time);
+        var saved = repository.save(name, date, 1L, time);
 
         // then
         assertThat(saved.getId()).isNotNull();
@@ -69,7 +69,7 @@ class JdbcTemplateRepositoryTest {
         LocalDate date = LocalDate.of(2026, 1, 1);
         LocalTime time = LocalTime.of(14, 1);
 
-        repository.save(existedName, existedDate, existedTime);
+        repository.save(existedName, existedDate, 1L, existedTime);
 
         // when
         // then
@@ -82,8 +82,8 @@ class JdbcTemplateRepositoryTest {
     @Test
     void 모든_예약_조회() {
         // given
-        repository.save("테스트1", LocalDate.of(2025, 11, 12), LocalTime.of(13, 1));
-        repository.save("테스트2", LocalDate.of(2025, 11, 12), LocalTime.of(13, 1));
+        repository.save("테스트1", LocalDate.of(2025, 11, 12), 1L, LocalTime.of(13, 1));
+        repository.save("테스트2", LocalDate.of(2025, 11, 12), 1L, LocalTime.of(13, 1));
 
         // when
         final List<Reservation> reservations = repository.findAll();

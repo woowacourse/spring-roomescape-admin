@@ -13,6 +13,10 @@ public class ReservationTime {
         this.startAt = startAt;
     }
 
+    public ReservationTime(final LocalTime startAt) {
+        this(null, startAt);
+    }
+
     private void validateStartTime(final LocalTime startAt) {
         if (startAt == null) {
             throw new IllegalArgumentException("예약 시작 시간은 null이 될 수 없습니다.");

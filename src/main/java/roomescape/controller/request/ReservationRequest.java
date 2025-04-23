@@ -7,14 +7,14 @@ import java.time.LocalDate;
 import roomescape.controller.response.ReservationTimeResponse;
 import roomescape.domain.Reservation;
 import roomescape.domain.ReservationDate;
-import roomescape.domain.ReservationName;
 import roomescape.domain.ReservationTime;
+import roomescape.domain.ReserverName;
 
 public record ReservationRequest(@NotBlank String name, @Future LocalDate date, @NotNull Long timeId) {
 
     public Reservation toEntity(final ReservationTimeResponse timeResponse) {
         return new Reservation(
-                new ReservationName(name),
+                new ReserverName(name),
                 new ReservationDate(date),
                 new ReservationTime(
                         timeResponse.id(),

@@ -6,6 +6,7 @@ import java.sql.Statement;
 import java.util.List;
 import java.util.Optional;
 import org.springframework.jdbc.core.JdbcTemplate;
+import org.springframework.jdbc.core.RowMapper;
 import org.springframework.jdbc.support.GeneratedKeyHolder;
 import org.springframework.jdbc.support.KeyHolder;
 import org.springframework.stereotype.Repository;
@@ -15,10 +16,20 @@ import roomescape.domain.ReservationTime;
 @Repository
 public class ReservationH2Repository implements ReservationRepository {
 
-    public static final String SELECT_RESERVATION_WITH_TIME =
+    private static final String SELECT_RESERVATION_WITH_TIME =
             "SELECT r.id, r.name, r.date, rt.id as time_id, rt.start_at as time_start_at FROM reservation as r "
                     + " inner join reservation_time as rt"
                     + " on r.time_id = rt.id";
+
+    private static final RowMapper<Reservation> RESERVATION_ROW_MAPPER = (rs, rowNum) ->
+            new Reservation(rs.getLong("id"),
+                    rs.getString("name"),
+                    rs.getDate("date").toLocalDate(),
+                    new ReservationTime(
+                            rs.getLong("time_id"),
+                            rs.getTime("time_start_at").toLocalTime()
+                    )
+            );
 
     private final JdbcTemplate jdbcTemplate;
 
@@ -49,16 +60,7 @@ public class ReservationH2Repository implements ReservationRepository {
 
     @Override
     public List<Reservation> findAll() {
-        return jdbcTemplate.query(SELECT_RESERVATION_WITH_TIME, (rs, rowNum) ->
-                new Reservation(rs.getLong("id"),
-                        rs.getString("name"),
-                        rs.getDate("date").toLocalDate(),
-                        new ReservationTime(
-                                rs.getLong("time_id"),
-                                rs.getTime("time_start_at").toLocalTime()
-                        )
-                )
-        );
+        return jdbcTemplate.query(SELECT_RESERVATION_WITH_TIME, RESERVATION_ROW_MAPPER);
     }
 
     @Override
@@ -74,17 +76,6 @@ public class ReservationH2Repository implements ReservationRepository {
         String query = SELECT_RESERVATION_WITH_TIME
                 + " WHERE r.id = ?";
 
-        List<Reservation> result = jdbcTemplate.query(query, (rs, rowNum) ->
-                new Reservation(rs.getLong("id"),
-                        rs.getString("name"),
-                        rs.getDate("date").toLocalDate(),
-                        new ReservationTime(
-                                rs.getLong("time_id"),
-                                rs.getTime("time_start_at").toLocalTime()
-                        )
-                ), id
-        );
-
-        return result.stream().findAny();
+        return jdbcTemplate.query(query, RESERVATION_ROW_MAPPER, id).stream().findAny();
     }
 }

@@ -38,11 +38,15 @@ public class ReservationService {
 
     private void validateAddReservationDateTime(Reservation newReservation, LocalDate nowDate,
                                                 LocalTime nowTime) {
+        boolean isAfterNow = false;
         if (newReservation.getDate().isBefore(nowDate)) {
-            throw new IllegalArgumentException("과거 시간에 예약할 수 없습니다.");
+            isAfterNow = true;
         }
 
         if (newReservation.getDate().isEqual(nowDate) && newReservation.getTime().getTime().isBefore(nowTime)) {
+            isAfterNow = true;
+        }
+        if (isAfterNow) {
             throw new IllegalArgumentException("과거 시간에 예약할 수 없습니다.");
         }
     }

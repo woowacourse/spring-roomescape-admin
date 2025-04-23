@@ -17,4 +17,9 @@ public class AdminController {
     public String getAdminReservationPage() {
         return "admin/reservation-legacy";
     }
+
+    @GetMapping("/time")
+    public String getAdminTimePage() {
+        return "admin/time";
+    }
 }

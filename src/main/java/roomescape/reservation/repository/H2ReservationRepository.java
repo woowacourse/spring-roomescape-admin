@@ -1,9 +1,15 @@
 package roomescape.reservation.repository;
 
+import java.sql.Date;
+import java.sql.PreparedStatement;
+import java.sql.Statement;
+import java.sql.Time;
 import java.util.List;
 import java.util.Optional;
 import org.springframework.context.annotation.Primary;
 import org.springframework.jdbc.core.JdbcTemplate;
+import org.springframework.jdbc.support.GeneratedKeyHolder;
+import org.springframework.jdbc.support.KeyHolder;
 import org.springframework.stereotype.Repository;
 import roomescape.reservation.domain.Reservation;
 import roomescape.reservation.entity.ReservationEntity;
@@ -37,12 +43,30 @@ public class H2ReservationRepository implements ReservationRepository {
 
     @Override
     public ReservationEntity put(final Reservation reservation) {
-        return null;
+        KeyHolder keyHolder = new GeneratedKeyHolder();
+
+        jdbcTemplate.update(connection -> {
+            String sql = "INSERT INTO reservation (name, date, time) VALUES (?, ?, ?)";
+            PreparedStatement ps = connection.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS);
+            ps.setString(1, reservation.getName());
+            ps.setDate(2, Date.valueOf(reservation.getDate()));
+            ps.setTime(3, Time.valueOf(reservation.getTime()));
+            return ps;
+        }, keyHolder);
+
+        Number generatedId = keyHolder.getKey();
+
+        return new ReservationEntity(
+                generatedId.longValue(),
+                reservation.getName(),
+                reservation.getDate(),
+                reservation.getTime()
+        );
     }
 
     @Override
     public void deleteById(final long id) {
-
+        jdbcTemplate.update("DELETE FROM reservation WHERE id = ?", id);
     }
 
     @Override

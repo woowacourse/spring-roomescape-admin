@@ -47,7 +47,7 @@ public class RoomescapeService {
     }
 
     public ReservationTimeResponse addReservationTime(final ReservationTimeRequest request) {
-        ReservationTime reservationTime = request.toReservationTime();
+        ReservationTime reservationTime = new ReservationTime(request.startAt());
         ReservationTime saved = roomescapeTimeRepository.saveReservationTime(reservationTime);
         return ReservationTimeResponse.of(saved);
     }

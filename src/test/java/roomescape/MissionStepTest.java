@@ -1,13 +1,18 @@
 package roomescape;
 
+import static org.assertj.core.api.Assertions.assertThat;
 import static org.hamcrest.CoreMatchers.is;
 
+import java.sql.Connection;
+import java.sql.SQLException;
 import java.util.HashMap;
 import java.util.Map;
 
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.test.annotation.DirtiesContext;
 
 import io.restassured.RestAssured;
@@ -16,6 +21,9 @@ import io.restassured.http.ContentType;
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.DEFINED_PORT)
 @DirtiesContext(classMode = DirtiesContext.ClassMode.BEFORE_EACH_TEST_METHOD)
 class MissionStepTest {
+
+    @Autowired
+    private JdbcTemplate jdbcTemplate;
 
     @DisplayName("어드민 페이지에 접속하면 어드민 메인 페이지를 반환한다.")
     @Test
@@ -81,5 +89,17 @@ class MissionStepTest {
                 .when().delete("/reservations/2")
                 .then().log().all()
                 .statusCode(404);
+    }
+
+    @DisplayName("JdbcTemplate을 이용해 DataSource 접근, DB 연동을 확인한다.")
+    @Test
+    void applyDataBase() {
+        try (Connection connection = jdbcTemplate.getDataSource().getConnection()) {
+            assertThat(connection).isNotNull();
+            assertThat(connection.getCatalog()).isEqualTo("DATABASE");
+            assertThat(connection.getMetaData().getTables(null, null, "RESERVATION", null).next()).isTrue();
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        }
     }
 }

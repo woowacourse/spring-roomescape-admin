@@ -6,7 +6,9 @@ import org.springframework.web.bind.annotation.*;
 import roomescape.dao.ReservationDao;
 import roomescape.dto.ReservationCreateRequestDto;
 import roomescape.dto.ReservationResponseDto;
+import roomescape.dto.ReservationTimeResponseDto;
 import roomescape.model.Reservation;
+import roomescape.model.ReservationTime;
 
 import java.util.List;
 
@@ -27,18 +29,26 @@ public class ReservationController {
     }
 
     @PostMapping("/reservations")
-    public ResponseEntity<ReservationResponseDto> addReservation(@RequestBody final ReservationCreateRequestDto reservationDto) {
-        Reservation noIdReservation = reservationDto.toEntity();
-        Long id = reservationDao.saveAndReturnId(noIdReservation);
-        ReservationResponseDto responseDto = new ReservationResponseDto(id, noIdReservation.name(), noIdReservation.date(), noIdReservation.time());
-        return ResponseEntity.ok(responseDto);
+    public ResponseEntity<ReservationResponseDto> addReservation(@RequestBody final ReservationCreateRequestDto requestDto) {
+        try {
+            Long id = reservationDao.saveAndReturnId(requestDto.name(), requestDto.date(), requestDto.timeId());
+            Reservation newReservation = reservationDao.findById(id);
+            ReservationTime reservationTime = newReservation.reservationTime();
+
+            ReservationTimeResponseDto timeResponseDto = new ReservationTimeResponseDto(reservationTime.id(), reservationTime.startAt());
+            ReservationResponseDto responseDto = new ReservationResponseDto(
+                    newReservation.id(), newReservation.name(), newReservation.date(), timeResponseDto);
+            return ResponseEntity.ok(responseDto);
+        } catch (IllegalArgumentException e) {
+            return ResponseEntity.badRequest().build();
+        }
     }
 
     @DeleteMapping("/reservations/{id}")
     public ResponseEntity<Void> deleteReservation(@PathVariable("id") final Long id) {
         try {
             reservationDao.deleteById(id);
-            return ResponseEntity.noContent().build();
+            return ResponseEntity.ok().build();
         } catch (IllegalStateException e) {
             return ResponseEntity.notFound().build();
         }

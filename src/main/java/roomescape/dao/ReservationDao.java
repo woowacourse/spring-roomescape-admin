@@ -6,7 +6,8 @@ import org.springframework.jdbc.support.GeneratedKeyHolder;
 import org.springframework.jdbc.support.KeyHolder;
 import org.springframework.stereotype.Repository;
 import roomescape.dto.ReservationResponseDto;
-import roomescape.dto.ReservationTimeResponseDto;
+import roomescape.model.Reservation;
+import roomescape.model.ReservationTime;
 
 import java.sql.PreparedStatement;
 import java.time.LocalDate;
@@ -16,6 +17,21 @@ import java.util.List;
 @Repository
 public class ReservationDao {
 
+    private static final RowMapper<Reservation> rowMapper = (rs, rowNum) -> {
+        String date = rs.getString("date");
+        Long timeId = rs.getLong("time_id");
+        String timeValue = rs.getString("start_at");
+        ReservationTime reservationTime = new ReservationTime(timeId, LocalTime.parse(timeValue));
+
+        Reservation reservation = new Reservation(
+                rs.getLong("id"),
+                rs.getString("name"),
+                LocalDate.parse(date),
+                reservationTime
+        );
+        return reservation;
+    };
+
     private final JdbcTemplate jdbcTemplate;
 
     public ReservationDao(final JdbcTemplate jdbcTemplate) {
@@ -24,38 +40,31 @@ public class ReservationDao {
 
     public List<ReservationResponseDto> findAllReservations() {
         String sql = """
-                SELECT
-                    r.id as reservation_id,
-                    r.name,
-                    r.date,
-                    t.id as time_id,
-                    t.start_at as time_value
+                SELECT *
                 FROM reservation as r
                 inner join reservation_time as t
                 on r.time_id = t.id
                 """;
+        List<Reservation> reservations = jdbcTemplate.query(sql, rowMapper);
+        return reservations.stream()
+                .map(reservation -> ReservationResponseDto.from(reservation))
+                .toList();
+    }
 
-        RowMapper<ReservationResponseDto> rowMapper = (rs, rowNum) -> {
-            String date = rs.getString("date");
-            Long timeId = rs.getLong("time_value");
-            String timeValue = rs.getString("time_value");
-            ReservationTimeResponseDto responseDto = new ReservationTimeResponseDto(timeId, LocalTime.parse(timeValue));
-
-            ReservationResponseDto dto = new ReservationResponseDto(
-                    rs.getLong("reservation_id"),
-                    rs.getString("name"),
-                    LocalDate.parse(date),
-                    responseDto
-            );
-            return dto;
-        };
-
-        return jdbcTemplate.query(sql, rowMapper);
+    public Reservation findById(Long id) {
+        String sql = """
+                SELECT *
+                FROM reservation as r
+                inner join reservation_time as t
+                on r.time_id = t.id
+                where r.id = ?
+                """;
+        return jdbcTemplate.queryForObject(sql, rowMapper, id);
     }
 
     public Long saveAndReturnId(final String name, final LocalDate requestDate, final Long timeId) {
         String sql = """
-                    insert into reservation (name, date, time_id) values (?, ?, ?)
+                insert into reservation (name, date, time_id) values (?, ?, ?)
                 """;
         KeyHolder keyHolder = new GeneratedKeyHolder();
         jdbcTemplate.update(connection -> {

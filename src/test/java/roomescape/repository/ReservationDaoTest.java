@@ -2,6 +2,7 @@ package roomescape.repository;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
+import java.time.LocalDateTime;
 import java.util.List;
 
 import org.junit.jupiter.api.BeforeEach;
@@ -12,6 +13,7 @@ import org.springframework.boot.test.autoconfigure.jdbc.JdbcTest;
 import org.springframework.jdbc.core.JdbcTemplate;
 
 import roomescape.model.Reservation;
+import roomescape.model.ReservationDateTime;
 
 @JdbcTest
 class ReservationDaoTest {
@@ -32,5 +34,16 @@ class ReservationDaoTest {
         List<Reservation> reservations = reservationDao.findAll();
 
         assertThat(reservations).hasSize(0);
+    }
+
+    @DisplayName("예약을 저장한다.")
+    @Test
+    void insertReservation() {
+        Reservation reservation = new Reservation(0L, "포스티",
+                new ReservationDateTime(LocalDateTime.of(2025, 4, 23, 10, 0)));
+
+        Long id = reservationDao.insert(reservation);
+
+        assertThat(id).isEqualTo(1L);
     }
 }

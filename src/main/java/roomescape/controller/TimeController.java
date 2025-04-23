@@ -38,6 +38,6 @@ public class TimeController {
     @DeleteMapping("/{id}")
     public ResponseEntity<Void> times(@PathVariable Long id) {
         reservationTimeRepository.remove(id);
-        return ResponseEntity.noContent().build();
+        return ResponseEntity.ok().build();
     }
 }

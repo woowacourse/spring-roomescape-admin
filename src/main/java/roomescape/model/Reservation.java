@@ -1,16 +1,15 @@
 package roomescape.model;
 
 import java.time.LocalDate;
-import java.time.LocalTime;
 import roomescape.exception.reservation.ReservationFieldRequiredException;
 
 public class Reservation {
     private final Long id;
     private String name;
     private LocalDate date;
-    private LocalTime time;
+    private ReservationTime time;
 
-    public Reservation(Long id, String name, LocalDate date, LocalTime time) {
+    public Reservation(Long id, String name, LocalDate date, ReservationTime time) {
         validate(name, date, time);
         this.id = id;
         this.name = name;
@@ -18,7 +17,7 @@ public class Reservation {
         this.time = time;
     }
 
-    public Reservation(String name, LocalDate date, LocalTime time) {
+    public Reservation(String name, LocalDate date, ReservationTime time) {
         this(null, name, date, time);
     }
 
@@ -34,14 +33,20 @@ public class Reservation {
         return date;
     }
 
-    public LocalTime getTime() {
+    public ReservationTime getTime() {
         return time;
     }
 
-    private void validate(String name, LocalDate date, LocalTime time) {
+    private void validate(String name, LocalDate date, ReservationTime time) {
         validateName(name);
         validateDate(date);
         validateTime(time);
+    }
+
+    private void validateTime(ReservationTime time) {
+        if (time == null) {
+            throw new ReservationFieldRequiredException("시간");
+        }
     }
 
     private void validateName(String name) {
@@ -53,12 +58,6 @@ public class Reservation {
     private void validateDate(LocalDate date) {
         if (date == null) {
             throw new ReservationFieldRequiredException("날짜");
-        }
-    }
-
-    private void validateTime(LocalTime time) {
-        if (time == null) {
-            throw new ReservationFieldRequiredException("시간");
         }
     }
 }

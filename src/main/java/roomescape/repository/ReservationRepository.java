@@ -8,6 +8,7 @@ import org.springframework.jdbc.core.simple.SimpleJdbcInsert;
 import org.springframework.stereotype.Repository;
 import roomescape.exception.reservation.ReservationNotFoundException;
 import roomescape.model.Reservation;
+import roomescape.model.ReservationTime;
 
 @Repository
 public class ReservationRepository {
@@ -25,7 +26,7 @@ public class ReservationRepository {
         Map<String, Object> params = new HashMap<>();
         params.put("name", reservation.getName());
         params.put("date", reservation.getDate());
-        params.put("time", reservation.getTime());
+        params.put("time_id", reservation.getTime().getId());
 
         Long id = jdbcInsert.executeAndReturnKey(params).longValue();
         return new Reservation(id, reservation.getName(), reservation.getDate(), reservation.getTime());
@@ -41,15 +42,17 @@ public class ReservationRepository {
     }
 
     public List<Reservation> findAll() {
-        String sql = "select * from reservation";
+        String sql = "SELECT r.id as reservation_id, r.name, r.date, t.id as time_id, t.start_at as time_value FROM reservation as r inner join reservation_time as t on r.time_id = t.id";
         List<Reservation> reservations = jdbcTemplate.query(
                 sql,
                 (resultSet, rowNum) -> {
                     Reservation reservation = new Reservation(
-                            resultSet.getLong("id"),
+                            resultSet.getLong("reservation_id"),
                             resultSet.getString("name"),
                             resultSet.getDate("date").toLocalDate(),
-                            resultSet.getTime("time").toLocalTime()
+                            new ReservationTime(
+                                    resultSet.getLong("time_id"),
+                                    resultSet.getTime("time_value").toLocalTime())
                     );
                     return reservation;
                 }

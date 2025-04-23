@@ -18,7 +18,7 @@ class ReservationTest {
     void validateName(String name) {
         // given
         LocalDate date = LocalDate.now();
-        LocalTime time = LocalTime.now();
+        ReservationTime time = new ReservationTime(LocalTime.now());
 
         // when // then
         assertThatThrownBy(() -> new Reservation(name, date, time))
@@ -31,7 +31,7 @@ class ReservationTest {
         // given
         String name = "에드";
         LocalDate date = null;
-        LocalTime time = LocalTime.now();
+        ReservationTime time = new ReservationTime(LocalTime.now());
 
         assertThatThrownBy(() -> new Reservation(name, date, time))
                 .isInstanceOf(ReservationFieldRequiredException.class);
@@ -43,7 +43,7 @@ class ReservationTest {
         // given
         String name = "에드";
         LocalDate date = LocalDate.now().plusDays(1);
-        LocalTime time = null;
+        ReservationTime time = null;
 
         assertThatThrownBy(() -> new Reservation(name, date, time))
                 .isInstanceOf(ReservationFieldRequiredException.class);

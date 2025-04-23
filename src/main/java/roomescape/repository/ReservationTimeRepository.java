@@ -53,4 +53,18 @@ public class ReservationTimeRepository {
         }
         return rowNum;
     }
+
+    public ReservationTime findBy(Long timeId) {
+        String sql = "select * from reservation_time where id = ?";
+        ReservationTime time = jdbcTemplate.queryForObject(
+                sql,
+                (resultSet, rowNum) ->
+                        new ReservationTime(
+                                resultSet.getLong("id"),
+                                resultSet.getTime("start_at").toLocalTime()
+                        ),
+                timeId
+        );
+        return time;
+    }
 }

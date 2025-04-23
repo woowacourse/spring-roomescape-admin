@@ -192,3 +192,71 @@ HTTP/1.1 200
   ```
   HTTP/1.1 200
   ```
+
+# 8단계
+
+- [x] 예약 기능에서 시간을 시간 테이블에 저장된 값만 선택할 수 있도록 한다
+- [x] 외래키 지정을 통해 reservation과 reservation_time과의 관계를 설정한다
+- [x] 예약 추가 API의 명세를 다음과 같이 수정한다
+
+  Request
+  ```
+  POST /reservations HTTP/1.1
+  content-type: application/json
+  
+  {
+      "date": "2023-08-05",
+      "name": "브라운",
+      "timeId": 1
+  }
+  ```
+  Response
+  ```
+  HTTP/1.1 200
+  Content-Type: application/json
+  
+  {
+      "id": 1,
+      "name": "브라운",
+      "date": "2023-08-05",
+      "time" : {
+          "id": 1,
+          "startAt" : "10:00"
+      }
+  }
+  ```
+
+- [x] 예약 조회 API의 명세를 다음과 같이 수정한다
+
+  Request
+  ```
+  GET /reservations HTTP/1.1
+  ```
+  Response
+  ```
+  [
+    {
+        "id": 1,
+        "name": "브라운",
+        "date": "2023-08-05",
+        "time": {
+            "id": 1,
+            "startAt": "10:00"
+        }
+    }
+  ]
+  ```
+
+
+
+
+
+
+
+
+
+
+
+
+
+

@@ -81,7 +81,6 @@ public class JdbcTemplateRepository implements ReservationRepository {
         return template.query(sql, reservationRowMapper, id)
                 .stream()
                 .findFirst();
-
     }
 
     @Override

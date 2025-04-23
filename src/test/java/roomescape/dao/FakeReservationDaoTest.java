@@ -5,6 +5,7 @@ import org.junit.jupiter.api.DisplayNameGeneration;
 import org.junit.jupiter.api.DisplayNameGenerator;
 import org.junit.jupiter.api.Test;
 import roomescape.entity.Reservation;
+import roomescape.entity.ReservationTime;
 
 import java.time.LocalDate;
 import java.time.LocalTime;
@@ -13,6 +14,8 @@ import static org.assertj.core.api.Assertions.assertThat;
 
 @DisplayNameGeneration(DisplayNameGenerator.ReplaceUnderscores.class)
 class FakeReservationDaoTest {
+
+    private static final ReservationTime TEST_TIME = ReservationTime.of(LocalTime.now());
 
     private ReservationDao reservationDao;
 
@@ -28,7 +31,7 @@ class FakeReservationDaoTest {
 
     @Test
     void 예약을_추가하면_추가한_예약을_반환한다() {
-        Reservation newReservation = Reservation.of("피글렛", LocalDate.now(), LocalTime.now());
+        Reservation newReservation = Reservation.of("피글렛", LocalDate.now(), TEST_TIME);
         assertThat(reservationDao.insert(newReservation)).isNotNull();
     }
 

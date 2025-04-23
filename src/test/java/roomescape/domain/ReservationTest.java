@@ -1,0 +1,52 @@
+package roomescape.domain;
+
+import static org.assertj.core.api.Assertions.assertThatThrownBy;
+
+import java.time.LocalDate;
+import java.time.LocalTime;
+import org.junit.jupiter.api.DisplayName;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.params.ParameterizedTest;
+import org.junit.jupiter.params.provider.NullAndEmptySource;
+
+class ReservationTest {
+
+    private static final ReservationTime EXAMPLE_RESERVATION_TIME = new ReservationTime(1L, LocalTime.of(10, 0));
+
+    @DisplayName("NULL 또는 비어있는 이름으로 예약을 생성할 수 없다")
+    @ParameterizedTest
+    @NullAndEmptySource
+    void cannotCreateReservationWithBlankName(String blankName) {
+        assertThatThrownBy(() -> new Reservation(1L, blankName, LocalDate.now(), EXAMPLE_RESERVATION_TIME))
+                .isInstanceOf(IllegalArgumentException.class)
+                .hasMessage("[ERROR] 비어있는 이름으로 예약을 생성할 수 없습니다.");
+    }
+
+    @DisplayName("비어있는 ID로는 예약을 생성할 수 없다")
+    @Test
+    void cannotCreateReservationWithNullId() {
+        Long nullId = null;
+        assertThatThrownBy(() -> new Reservation(nullId, "reservation", LocalDate.now(), EXAMPLE_RESERVATION_TIME))
+                .isInstanceOf(IllegalArgumentException.class)
+                .hasMessage("[ERROR] 비어있는 ID로 예약을 생성할 수 없습니다.");
+    }
+
+    @DisplayName("비어있는 예약날짜로는 예약을 생성할 수 없다")
+    @Test
+    void cannotCreateReservationWithNullDate() {
+        LocalDate nullDate = null;
+        assertThatThrownBy(() -> new Reservation(1L, "reservation", nullDate, EXAMPLE_RESERVATION_TIME))
+                .isInstanceOf(IllegalArgumentException.class)
+                .hasMessage("[ERROR] 비어있는 예약날짜로 예약을 생성할 수 없습니다.");
+    }
+
+    @DisplayName("비어있는 예약시간으로는 예약을 생성할 수 없다")
+    @Test
+    void cannotCreateReservationWithNullTime() {
+        ReservationTime nullTime = null;
+        assertThatThrownBy(() -> new Reservation(1L, "reservation", LocalDate.now(), nullTime))
+                .isInstanceOf(IllegalArgumentException.class)
+                .hasMessage("[ERROR] 비어있는 예약시간으로는 예약을 생성할 수 없습니다.");
+    }
+
+}

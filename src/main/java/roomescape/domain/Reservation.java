@@ -11,6 +11,7 @@ public final class Reservation {
     private final ReservationTime time;
 
     public Reservation(Long id, String name, LocalDate date, ReservationTime time) {
+        validate(id, name, date, time);
         this.id = id;
         this.name = name;
         this.date = date;
@@ -50,5 +51,36 @@ public final class Reservation {
     @Override
     public int hashCode() {
         return Objects.hash(id, name, date, time);
+    }
+
+    private void validate(Long id, String name, LocalDate date, ReservationTime time) {
+        validateNullId(id);
+        validateBlankName(name);
+        validateNullDate(date);
+        validateNullTime(time);
+    }
+
+    private void validateBlankName(String name) {
+        if (name == null || name.isBlank()) {
+            throw new IllegalArgumentException("[ERROR] 비어있는 이름으로 예약을 생성할 수 없습니다.");
+        }
+    }
+
+    private void validateNullId(Long id) {
+        if (id == null) {
+            throw new IllegalArgumentException("[ERROR] 비어있는 ID로 예약을 생성할 수 없습니다.");
+        }
+    }
+
+    private void validateNullDate(LocalDate date) {
+        if (date == null) {
+            throw new IllegalArgumentException("[ERROR] 비어있는 예약날짜로 예약을 생성할 수 없습니다.");
+        }
+    }
+
+    private void validateNullTime(ReservationTime reservationTime) {
+        if (reservationTime == null) {
+            throw new IllegalArgumentException("[ERROR] 비어있는 예약시간으로는 예약을 생성할 수 없습니다.");
+        }
     }
 }

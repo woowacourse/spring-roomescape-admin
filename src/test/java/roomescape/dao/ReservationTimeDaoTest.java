@@ -26,6 +26,9 @@ public class ReservationTimeDaoTest {
 
         JdbcTemplate jdbcTemplate = new JdbcTemplate(dataSource);
 
+        jdbcTemplate.execute("DROP TABLE IF EXISTS reservation");
+        jdbcTemplate.execute("DROP TABLE IF EXISTS reservation_time");
+
         jdbcTemplate.execute(
                 "CREATE TABLE reservation_time (" +
                         "id BIGINT NOT NULL AUTO_INCREMENT, " +

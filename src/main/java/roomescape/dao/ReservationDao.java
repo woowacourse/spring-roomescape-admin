@@ -20,14 +20,14 @@ public class ReservationDao {
         this.jdbcTemplate = jdbcTemplate;
     }
 
-    public long save(final Reservation reservation, final Long reservationTimeId) {
+    public long save(final Reservation reservation) {
         KeyHolder keyHolder = new GeneratedKeyHolder();
         String query = "INSERT INTO reservation(name, date, time_id) VALUES (?, ?, ?)";
         jdbcTemplate.update(connection -> {
             PreparedStatement ps = connection.prepareStatement(query, new String[]{"id"});
             ps.setString(1, reservation.getName());
             ps.setString(2, reservation.getDate().toString());
-            ps.setLong(3, reservationTimeId);
+            ps.setLong(3, reservation.getTime().getId());
             return ps;
         }, keyHolder);
 

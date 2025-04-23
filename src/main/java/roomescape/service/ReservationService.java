@@ -11,6 +11,7 @@ import roomescape.dto.request.ReservationTimeRequest;
 import roomescape.dto.response.ReservationResponse;
 import roomescape.dto.response.ReservationTimeResponse;
 
+import java.time.LocalDate;
 import java.util.List;
 
 @Service
@@ -26,17 +27,14 @@ public class ReservationService {
 
     public ReservationResponse createReservation(final ReservationRequest request) {
         Long timeId = request.timeId();
-        ReservationTime time = findReservationTimeById(timeId);
+        ReservationTime time = reservationTimeDao.findById(timeId);
         ReservationTimeResponse timeResponse = ReservationTimeResponse.of(time);
 
+        checkReservationAlreadyExist(request.date(), timeId);
+
         Reservation reservation = new Reservation(request.name(), request.date(), time);
-        long id = reservationDao.save(reservation, timeId);
-
+        long id = reservationDao.save(reservation);
         return ReservationResponse.of(id, reservation, timeResponse);
-    }
-
-    private ReservationTime findReservationTimeById(final Long id) {
-        return reservationTimeDao.findById(id);
     }
 
     public List<ReservationResponse> findAllReservations() {
@@ -78,5 +76,18 @@ public class ReservationService {
 
     public void deleteAllReservationTimes() {
         reservationTimeDao.deleteAll();
+    }
+
+    private void checkReservationAlreadyExist(final LocalDate date, final Long timeId) {
+        List<ReservationDto> reservationsDtos = reservationDao.getAll();
+        List<Reservation> reservations = ReservationDto.toReservations(reservationsDtos);
+
+        long count = reservations.stream()
+                .filter(reservation -> reservation.isSameDateAndTime(date, timeId))
+                .count();
+
+        if (count != 0) {
+            throw new IllegalArgumentException("[ERROR] 해당 날짜와 시간에 대한 예약 기록이 존재합니다.");
+        }
     }
 }

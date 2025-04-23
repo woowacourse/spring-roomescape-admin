@@ -77,4 +77,10 @@ public class Reservation {
             throw new IllegalArgumentException("[ERROR] 과거 날짜에 대한 예약을 할 수 없습니다.");
         }
     }
+
+    public boolean isSameDateAndTime(final LocalDate date, final Long timeId) {
+        boolean isSameDate = this.date.equals(date);
+        boolean isSameTime = this.time.isSameId(timeId);
+        return isSameDate && isSameTime;
+    }
 }

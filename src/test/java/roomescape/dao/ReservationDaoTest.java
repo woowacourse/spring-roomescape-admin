@@ -28,6 +28,9 @@ class ReservationDaoTest {
 
         JdbcTemplate jdbcTemplate = new JdbcTemplate(dataSource);
 
+        jdbcTemplate.execute("DROP TABLE IF EXISTS reservation");
+        jdbcTemplate.execute("DROP TABLE IF EXISTS reservation_time");
+
         jdbcTemplate.execute(
                 "CREATE TABLE reservation_time (" +
                         "id BIGINT NOT NULL AUTO_INCREMENT, " +
@@ -63,7 +66,7 @@ class ReservationDaoTest {
         ReservationTime reservationTime = new ReservationTime(1L, LocalTime.now());
 
         // when & then
-        assertThat(reservationDao.save(new Reservation("메이", LocalDate.now(), reservationTime), 1L))
+        assertThat(reservationDao.save(new Reservation("메이", LocalDate.now(), reservationTime)))
                 .isEqualTo(1);
     }
 
@@ -71,8 +74,8 @@ class ReservationDaoTest {
     void 데이터베이스에서_예약_목록을_가져올_수_있다() {
         // given
         ReservationTime reservationTime = new ReservationTime(1L, LocalTime.now());
-        reservationDao.save(new Reservation("메이", LocalDate.now(), reservationTime), 1L);
-        reservationDao.save(new Reservation("may", LocalDate.now(), reservationTime), 1L);
+        reservationDao.save(new Reservation("메이", LocalDate.now(), reservationTime));
+        reservationDao.save(new Reservation("may", LocalDate.now(), reservationTime));
 
         // when & then
         assertThat(reservationDao.getAll().size())
@@ -83,9 +86,8 @@ class ReservationDaoTest {
     void 데이터베이스의_예약_목록을_삭제할_수_있다() {
         // given
         ReservationTime reservationTime = new ReservationTime(1L, LocalTime.now());
-        reservationDao.save(new Reservation("메이", LocalDate.now(), reservationTime), 1L);
-        reservationDao.save(new Reservation("메이", LocalDate.now(), reservationTime), 1L);
-
+        reservationDao.save(new Reservation("메이", LocalDate.now(), reservationTime));
+        reservationDao.save(new Reservation("메이", LocalDate.now(), reservationTime));
 
         Long id = reservationDao.getAll().get(0).reservationId();
 

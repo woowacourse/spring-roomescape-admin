@@ -44,9 +44,21 @@ class ReservationTimeDaoTest {
     }
 
     @Test
+    void 예약_시간을_조회해_반환한다() {
+        // given
+        ReservationTime saved = reservationTimeDao.save(createTestReservationTime());
+
+        // when
+        ReservationTime result = reservationTimeDao.findById(1L);
+
+        // then
+        assertThat(result).isEqualTo(saved);
+    }
+
+    @Test
     void 예약_시간_정보를_저장해_ID가_할당된_예약_시간_정보를_반환한다() {
         // given
-        ReservationTime reservationTime = new ReservationTime(null, LocalTime.MIDNIGHT);
+        ReservationTime reservationTime = createTestReservationTime();
 
         // when
         ReservationTime saved = reservationTimeDao.save(reservationTime);

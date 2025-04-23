@@ -3,7 +3,7 @@ package roomescape;
 import java.util.List;
 import java.util.Optional;
 import org.springframework.stereotype.Service;
-import roomescape.controller.dto.ReservationDto;
+import roomescape.controller.dto.ReservationResponseDto;
 import roomescape.controller.dto.ReservationRegisterDto;
 import roomescape.domain.Reservation;
 import roomescape.domain.ReservationTime;
@@ -30,19 +30,19 @@ public class ReservationService {
         return savedId;
     }
 
-    public ReservationDto findReservationById(final Long id) {
+    public ReservationResponseDto findReservationById(final Long id) {
         Optional<Reservation> foundReservation = reservationRepository.findById(id);
 
         if (foundReservation.isEmpty()) {
             throw new IllegalArgumentException("해당 id 와 일치하는 예약 내역이 존재하지 않습니다.");
         }
 
-        return new ReservationDto(foundReservation.get());
+        return new ReservationResponseDto(foundReservation.get());
     }
 
-    public List<ReservationDto> findAllReservations() {
+    public List<ReservationResponseDto> findAllReservations() {
         return reservationRepository.findAll().stream()
-                .map(ReservationDto::new)
+                .map(ReservationResponseDto::new)
                 .toList();
     }
 

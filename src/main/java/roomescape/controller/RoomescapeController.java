@@ -14,7 +14,7 @@ import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.server.ResponseStatusException;
 import roomescape.ReservationService;
-import roomescape.controller.dto.ReservationDto;
+import roomescape.controller.dto.ReservationResponseDto;
 import roomescape.controller.dto.ReservationRegisterDto;
 
 @RestController
@@ -29,13 +29,13 @@ public class RoomescapeController {
 
     @GetMapping
     @ResponseStatus(HttpStatus.OK)
-    public List<ReservationDto> getReservations() {
+    public List<ReservationResponseDto> getReservations() {
         return reservationService.findAllReservations();
     }
 
     @PostMapping
     @ResponseStatus(HttpStatus.OK)
-    public ReservationDto registerReservation(
+    public ReservationResponseDto registerReservation(
             @RequestBody @Valid final ReservationRegisterDto reservationRegisterDto) {
         Long savedId = reservationService.saveReservation(reservationRegisterDto);
         return reservationService.findReservationById(savedId);

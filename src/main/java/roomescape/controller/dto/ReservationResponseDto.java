@@ -3,14 +3,14 @@ package roomescape.controller.dto;
 import java.time.LocalDate;
 import roomescape.domain.Reservation;
 
-public record ReservationDto(
+public record ReservationResponseDto(
         long id,
         String name,
         LocalDate date,
-        ReservationTimeDto time
+        ReservationTimeResponseDto time
 ) {
-    public ReservationDto(final Reservation reservation) {
+    public ReservationResponseDto(final Reservation reservation) {
         this(reservation.getId(), reservation.getName(), reservation.getDate(),
-                new ReservationTimeDto(reservation.getReservationTime()));
+                new ReservationTimeResponseDto(reservation.getReservationTime()));
     }
 }

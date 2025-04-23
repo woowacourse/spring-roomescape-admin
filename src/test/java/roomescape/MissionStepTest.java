@@ -137,7 +137,7 @@ public class MissionStepTest {
     }
 
     @Test
-    void 칠단계() {
+    void 예약_시간을_생성_조회_삭제할_수_있다() {
         Map<String, String> params = new HashMap<>();
         params.put("startAt", "10:00");
 

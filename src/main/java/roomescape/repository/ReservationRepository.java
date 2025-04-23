@@ -44,19 +44,21 @@ public class ReservationRepository {
         return keyHolder.getKey().longValue();
     }
 
-    public void delete(Long reservationId) {
+    public void deleteById(Long reservationId) {
         jdbcTemplate.update("DELETE FROM reservation WHERE id = ?", reservationId);
     }
 
     public Optional<Reservation> findById(Long reservationId) {
         try {
-            Reservation reservation = jdbcTemplate.queryForObject("SELECT id, name, date, time FROM reservation",
+            Reservation reservation = jdbcTemplate.queryForObject(
+                    "SELECT id, name, date, time FROM reservation WHERE id = ?",
                     (rs, rowNum) ->
                             new Reservation(
                                     rs.getLong("id"),
                                     rs.getString("name"),
                                     rs.getDate("date").toLocalDate(),
-                                    rs.getTime("time").toLocalTime()));
+                                    rs.getTime("time").toLocalTime()),
+                    reservationId);
             return Optional.of(reservation);
         } catch (EmptyResultDataAccessException exception) {
             return Optional.empty();

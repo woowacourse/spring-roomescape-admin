@@ -4,12 +4,14 @@ import java.time.LocalDate;
 import java.time.LocalTime;
 
 public class Reservation {
+    
+    public static final String ERROR_MESSAGE_FORMAT = "[ERROR]  예약 필수 정보가 누락되었습니다. %s: %s";
+
     private Long id;
     private String name;
     private LocalDate date;
     private LocalTime time;
 
-    public static final String ERROR_MESSAGE_FORMAT = "[ERROR]  예약 필수 정보가 누락되었습니다. %s: %s";
 
     public Reservation(Long id, String name, LocalDate date, LocalTime time) {
         validateName(name);

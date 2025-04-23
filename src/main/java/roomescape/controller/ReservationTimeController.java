@@ -1,7 +1,10 @@
 package roomescape.controller;
 
+import jakarta.servlet.http.HttpServletResponse;
 import java.util.List;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -36,5 +39,14 @@ public class ReservationTimeController {
         ReservationTime savedReservationTime = reservationTimeDao.save(newReservationTime);
 
         return new ReservationTimeResponse(savedReservationTime);
+    }
+
+    @DeleteMapping("{id}")
+    public void deleteReservationTime(@PathVariable Long id, HttpServletResponse response) {
+        boolean isDeleted = reservationTimeDao.deleteById(id);
+
+        if (!isDeleted) {
+            response.setStatus(HttpServletResponse.SC_NOT_FOUND);
+        }
     }
 }

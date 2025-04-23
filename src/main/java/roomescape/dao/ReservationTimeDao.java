@@ -8,36 +8,41 @@ import org.springframework.jdbc.core.RowMapper;
 import org.springframework.jdbc.support.GeneratedKeyHolder;
 import org.springframework.jdbc.support.KeyHolder;
 import org.springframework.stereotype.Repository;
-import roomescape.model.Time;
+import roomescape.model.ReservationTime;
 
 @Repository
-public class TimeDao {
+public class ReservationTimeDao {
 
     @Autowired
     private JdbcTemplate jdbcTemplate;
 
-    private final RowMapper<Time> actorRowMapper = (resultSet, rowNum) -> {
-        Time time = new Time(
+    private final RowMapper<ReservationTime> actorRowMapper = (resultSet, rowNum) -> {
+        ReservationTime reservationTime = new ReservationTime(
                 resultSet.getLong("id"),
-                resultSet.getTime("time").toLocalTime()
+                resultSet.getTime("startAt").toLocalTime()
         );
-        return time;
+        return reservationTime;
     };
 
-    public List<Time> findAll() {
-        String sql = "SELECT * FROM time";
+    public List<ReservationTime> findAll() {
+        String sql = "SELECT * FROM startAt";
         return jdbcTemplate.query(sql, actorRowMapper);
     }
 
-    public Long saveTime(Time time) {
-        String sql = "INSERT INTO time (time) values(?)";
+    public Long saveTime(ReservationTime reservationTime) {
+        String sql = "INSERT INTO startAt (startAt) values(?)";
         KeyHolder keyHolder = new GeneratedKeyHolder();
 
         jdbcTemplate.update(connection -> {
             PreparedStatement ps = connection.prepareStatement(sql, new String[]{"id"});
-            ps.setTime(3, java.sql.Time.valueOf(time.getTime()));
+            ps.setTime(3, java.sql.Time.valueOf(reservationTime.getStartAt()));
             return ps;
         }, keyHolder);
         return keyHolder.getKey().longValue();
+    }
+
+    public void deleteTimeById(Long id) {
+        String sql = "DELETE FROM startAt WHERE id = ?";
+        jdbcTemplate.update(sql, id);
     }
 }

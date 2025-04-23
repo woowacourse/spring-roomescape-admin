@@ -26,7 +26,7 @@ public class ReservationDao {
                 new ReservationDateTime(
                         LocalDateTime.of(
                                 resultSet.getDate("date").toLocalDate(),
-                                resultSet.getTime("time").toLocalTime())
+                                resultSet.getTime("startAt").toLocalTime())
                 ));
         return reservation;
     };
@@ -38,7 +38,7 @@ public class ReservationDao {
     }
 
     public Long saveReservation(Reservation reservation) {
-        String sql = "INSERT INTO reservation (name, date, time) values (?,?,?)";
+        String sql = "INSERT INTO reservation (name, date, startAt) values (?,?,?)";
         KeyHolder keyHolder = new GeneratedKeyHolder();
 
         jdbcTemplate.update(connection -> {

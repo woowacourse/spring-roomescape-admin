@@ -18,8 +18,8 @@ public class AdminController {
         return "admin/reservation-legacy";
     }
 
-    @GetMapping("/time")
+    @GetMapping("/startAt")
     public String time(){
-        return "admin/time";
+        return "admin/startAt";
     }
 }

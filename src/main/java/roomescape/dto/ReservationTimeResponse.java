@@ -1,6 +1,7 @@
 package roomescape.dto;
 
 import java.time.LocalTime;
+import java.util.List;
 import roomescape.entity.ReservationTime;
 
 public record ReservationTimeResponse(long id, LocalTime startAt){
@@ -10,5 +11,11 @@ public record ReservationTimeResponse(long id, LocalTime startAt){
                 reservationTime.getId(),
                 reservationTime.getStartAt()
         );
+    }
+
+    public static List<ReservationTimeResponse> from(List<ReservationTime> reservationTimes) {
+        return reservationTimes.stream()
+                .map(ReservationTimeResponse::from)
+                .toList();
     }
 }

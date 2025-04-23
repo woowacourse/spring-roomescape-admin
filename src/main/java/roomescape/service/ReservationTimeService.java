@@ -23,6 +23,7 @@ public class ReservationTimeService {
     }
 
     public List<ReservationTimeResponse> getAllReservationTime() {
-        return null;
+        List<ReservationTime> reservationTimes = reservationTimeRepository.findAll();
+        return ReservationTimeResponse.from(reservationTimes);
     }
 }

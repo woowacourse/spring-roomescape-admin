@@ -4,6 +4,7 @@ import jakarta.validation.constraints.Future;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 import java.time.LocalDate;
+import java.time.LocalTime;
 import roomescape.controller.response.ReservationTimeResponse;
 import roomescape.domain.Reservation;
 import roomescape.domain.ReservationDate;
@@ -18,7 +19,7 @@ public record ReservationRequest(@NotBlank String name, @Future LocalDate date, 
                 new ReservationDate(date),
                 new ReservationTime(
                         reservationTimeResponse.id(),
-                        reservationTimeResponse.startAt()
+                        LocalTime.parse(reservationTimeResponse.startAt())
                 )
         );
     }

@@ -3,6 +3,7 @@ package roomescape.controller;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertAll;
 import static org.springframework.http.HttpStatus.BAD_REQUEST;
+import static org.springframework.http.HttpStatus.NOT_FOUND;
 import static org.springframework.http.HttpStatus.NO_CONTENT;
 import static org.springframework.http.HttpStatus.OK;
 
@@ -58,7 +59,7 @@ public class ReservationControllerTest {
         //then
         var reservationList = controller.getReservations().getBody();
         assertAll(
-            () -> assertThat(responseEntity.getStatusCode()).isEqualTo(OK),
+            () -> assertThat(responseEntity.getStatusCode()).isEqualTo(NO_CONTENT),
             () -> assertThat(reservationList).isEmpty()
         );
     }
@@ -92,13 +93,13 @@ public class ReservationControllerTest {
     }
 
     @Test
-    @DisplayName("예약 삭제 시 존재하지 않는 Id를 삭제하면 204 No Content")
+    @DisplayName("예약 삭제 시 존재하지 않는 Id를 삭제하면 404 NOT FOUND")
     void noContentDeleteNotExistId() {
         //when
         var responseEntity = controller.deleteReservation(5L);
 
         //then
-        assertThat(responseEntity.getStatusCode()).isEqualTo(NO_CONTENT);
+        assertThat(responseEntity.getStatusCode()).isEqualTo(NOT_FOUND);
     }
 
     public static Stream<Arguments> parametersThatAnyOneIsNull() {

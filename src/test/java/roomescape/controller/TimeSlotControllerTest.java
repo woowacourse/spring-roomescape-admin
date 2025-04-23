@@ -42,6 +42,6 @@ class TimeSlotControllerTest {
         var responseEntity = controller.delete(createdTimeSlot.id());
 
         //then
-        assertThat(responseEntity.getStatusCode()).isEqualTo(HttpStatus.OK);
+        assertThat(responseEntity.getStatusCode()).isEqualTo(HttpStatus.NO_CONTENT);
     }
 }

@@ -16,6 +16,7 @@
 ## 3단계 - 예약 추가 / 취소
 
 - [x] 예약을 추가할 수 있다.
+    - [x] 예약 시간은 정해진 예약 시간만 추가할 수 있다.
 - [x] 예약을 취소할 수 있다.
 
 ## 7단계 - 시간 관리 기능
@@ -64,24 +65,36 @@ Content-Type: application/json
 POST /reservationDao
 
 {
+    "date": "2026-08-05",
     "name": "브라운",
-    "date": "2023-08-05",
-    "time": "15:40"
+    "timeId": 1
 }
 
 name: string
 date: string
-time: string 
+timeId: number 
 
 Response
 HTTP/1.1 201
 Content-Type: application/json
 
 {
-    "id": 1
+    "id": 1,
+    "name": "브라운",
+    "date": "2026-08-05",
+    "time": {
+        "id": 1,
+        "startAt": "10:00:00"
+    }
 }
 
 id: number
+name: string
+date: string
+time
+  id: number
+  startAt: string
+  
 ```
 
 ### 예약 취소
@@ -102,7 +115,7 @@ POST /times HTTP/1.1
 content-type: application/json
 
 {
-"startAt": "10:00"
+    "startAt": "10:00"
 }
 
 startAt: string
@@ -112,8 +125,8 @@ HTTP/1.1 200
 Content-Type: application/json
 
 {
-"id": 1,
-"startAt": "10:00"
+    "id": 1,
+    "startAt": "10:00"
 }
 
 id: number

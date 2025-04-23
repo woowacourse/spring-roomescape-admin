@@ -24,7 +24,6 @@ import roomescape.repository.ReservationTimeRepository;
 import roomescape.service.ReservationTimeService;
 import roomescape.test.fake.FakeReservationRepository;
 import roomescape.test.fake.FakeReservationTimeRepository;
-import roomescape.test.utility.HttpResponseTestUtility;
 
 class ReservationTimeControllerTest {
 
@@ -41,12 +40,9 @@ class ReservationTimeControllerTest {
         addReservationTimeInRepository(timeRepository, LocalTime.of(11, 0));
         addReservationTimeInRepository(timeRepository, LocalTime.of(12, 0));
 
-        ResponseEntity<List<ReservationTime>> response = controller.getReservationTimes();
+        List<ReservationTime> responseBody = controller.getReservationTimes();
 
-        assertAll(
-                () -> HttpResponseTestUtility.checkStatusCode(response, HttpStatus.OK),
-                () -> assertThat(response.getBody()).hasSize(3)
-        );
+        assertThat(responseBody).hasSize(3);
     }
 
     @DisplayName("예약 가능 시간을 추가할 수 있다")

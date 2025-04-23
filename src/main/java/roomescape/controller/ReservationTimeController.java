@@ -25,9 +25,8 @@ public class ReservationTimeController {
     }
 
     @GetMapping("/times")
-    public ResponseEntity<List<ReservationTime>> getReservationTimes() {
-        List<ReservationTime> reservationTimes = reservationTimeService.getAllReservationTime();
-        return ResponseEntity.ok().body(reservationTimes);
+    public List<ReservationTime> getReservationTimes() {
+        return reservationTimeService.getAllReservationTime();
     }
 
     @PostMapping("/times")

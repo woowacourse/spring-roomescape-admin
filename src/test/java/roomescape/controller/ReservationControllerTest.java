@@ -44,13 +44,9 @@ class ReservationControllerTest {
         addReservationInRepository(reservationRepository, NEXT_DATE, reservationTime);
         addReservationInRepository(reservationRepository, NEXT_DATE, reservationTime);
 
-        ResponseEntity<List<Reservation>> response = controller.getReservations();
+        List<Reservation> responseBody = controller.getReservations();
 
-        List<Reservation> actualReservations = response.getBody();
-        assertAll(
-                () -> assertThat(actualReservations).hasSize(3),
-                () -> checkStatusCode(response, HttpStatus.OK)
-        );
+        assertThat(responseBody).hasSize(3);
     }
 
     @DisplayName("예약을 추가할 수 있다.")

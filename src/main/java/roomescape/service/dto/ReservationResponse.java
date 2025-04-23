@@ -1,0 +1,17 @@
+package roomescape.service.dto;
+
+import roomescape.entity.Reservation;
+
+import java.time.LocalDate;
+
+public record ReservationResponse(
+        Long id,
+        String name,
+        LocalDate date,
+        ReservationTimeResponse time
+) {
+
+    public static ReservationResponse toDto(Reservation reservation) {
+        return new ReservationResponse(reservation.getId(), reservation.getName(), reservation.getDate(), ReservationTimeResponse.toDto(reservation.getTime()));
+    }
+}

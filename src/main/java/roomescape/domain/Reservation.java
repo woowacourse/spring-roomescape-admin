@@ -12,7 +12,7 @@ public class Reservation {
     private LocalDate date;
     private ReservationTime time;
 
-    public Reservation(long id, String name, LocalDate date, ReservationTime time) {
+    public Reservation(final long id, final String name, final LocalDate date, final ReservationTime time) {
         validateNameLength(name);
         validateDateTime(date, time);
         this.id = id;
@@ -45,7 +45,7 @@ public class Reservation {
         return time;
     }
 
-    public void setId(long id) {
+    public void setId(final long id) {
         this.id = id;
     }
 

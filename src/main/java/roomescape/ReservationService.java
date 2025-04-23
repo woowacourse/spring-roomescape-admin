@@ -3,8 +3,8 @@ package roomescape;
 import java.util.List;
 import java.util.Optional;
 import org.springframework.stereotype.Service;
-import roomescape.controller.dto.ReservationResponseDto;
 import roomescape.controller.dto.ReservationRegisterDto;
+import roomescape.controller.dto.ReservationResponseDto;
 import roomescape.domain.Reservation;
 import roomescape.domain.ReservationTime;
 import roomescape.repository.ReservationRepository;
@@ -30,7 +30,7 @@ public class ReservationService {
         return savedId;
     }
 
-    public ReservationResponseDto findReservationById(final Long id) {
+    public ReservationResponseDto findReservationById(final long id) {
         Optional<Reservation> foundReservation = reservationRepository.findById(id);
 
         if (foundReservation.isEmpty()) {

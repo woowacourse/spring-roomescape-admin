@@ -1,4 +1,4 @@
-package roomescape.reservation.repository;
+package roomescape.reservation.repository.impl;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatCode;
@@ -17,9 +17,9 @@ import roomescape.common.exception.AlreadyInUseException;
 import roomescape.common.exception.EntityNotFoundException;
 import roomescape.config.TestConfig;
 import roomescape.reservation.entity.ReservationTime;
-import roomescape.reservation.repository.impl.ReservationTimeDAO;
+import roomescape.reservation.repository.ReservationTimeRepository;
 
-class ReservationTimeRepositoryTest {
+class ReservationTimeDAOTest {
 
     private JdbcTemplate jdbcTemplate;
     private ReservationTimeRepository reservationTimeRepository;

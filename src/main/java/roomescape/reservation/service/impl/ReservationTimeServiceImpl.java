@@ -22,7 +22,7 @@ public class ReservationTimeServiceImpl implements ReservationTimeService {
         List<ReservationTime> reservationTimes = reservationTimeRepository.findAll();
 
         return reservationTimes.stream()
-                .map(ReservationTimeResponseDto::toDto)
+                .map(ReservationTimeResponseDto::from)
                 .toList();
     }
 
@@ -32,7 +32,7 @@ public class ReservationTimeServiceImpl implements ReservationTimeService {
 
         ReservationTime saved = reservationTimeRepository.save(reservationTime);
 
-        return ReservationTimeResponseDto.toDto(saved);
+        return ReservationTimeResponseDto.from(saved);
     }
 
     @Override

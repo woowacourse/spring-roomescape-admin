@@ -23,7 +23,7 @@ public class FakeReservationService implements ReservationService {
     public List<ReservationResponseDto> getAll() {
         return reservations.values()
                 .stream()
-                .map(ReservationResponseDto::toDto)
+                .map(ReservationResponseDto::from)
                 .toList();
     }
 
@@ -40,7 +40,7 @@ public class FakeReservationService implements ReservationService {
 
         reservations.put(id, reservation);
 
-        return ReservationResponseDto.toDto(reservation);
+        return ReservationResponseDto.from(reservation);
     }
 
     @Override

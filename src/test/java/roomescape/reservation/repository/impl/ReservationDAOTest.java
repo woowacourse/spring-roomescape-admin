@@ -1,4 +1,4 @@
-package roomescape.reservation.repository;
+package roomescape.reservation.repository.impl;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
@@ -9,17 +9,19 @@ import java.time.LocalTime;
 import java.util.List;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
+import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
 import roomescape.common.exception.EntityNotFoundException;
 import roomescape.config.TestConfig;
 import roomescape.reservation.entity.Reservation;
 import roomescape.reservation.entity.ReservationTime;
-import roomescape.reservation.repository.impl.ReservationDAO;
+import roomescape.reservation.repository.ReservationRepository;
 
-class ReservationRepositoryTest {
+class ReservationDAOTest {
 
     private static final Long RESERVATION_TIME_ID = 1L;
     private static final LocalTime RESERVATION_TIME_START_TIME = LocalTime.of(8, 0);
@@ -187,5 +189,4 @@ class ReservationRepositoryTest {
         jdbcTemplate.update("truncate TABLE reservation");
         jdbcTemplate.update("delete from reservation_time");
     }
-
 }

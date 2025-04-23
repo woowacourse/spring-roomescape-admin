@@ -125,8 +125,8 @@ public class ReservationTimeDAO implements ReservationTimeRepository {
         String selectSql = "select count(*) from reservation where time_id = :time_id";
         Map<String, Long> params = Map.of("time_id", timeId);
 
-        int rowCountByTimeId = jdbcTemplate.queryForObject(selectSql, params, Integer.class);
 
+        int rowCountByTimeId = jdbcTemplate.queryForObject(selectSql, params, Integer.class);
         if (rowCountByTimeId > 0) {
             throw new AlreadyInUseException("reservation time with id " + timeId + " already exists");
         }

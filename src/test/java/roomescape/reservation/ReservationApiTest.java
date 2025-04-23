@@ -11,14 +11,11 @@ import java.util.Map;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
-import org.junit.jupiter.api.TestInstance;
-import org.junit.jupiter.api.TestInstance.Lifecycle;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.context.SpringBootTest.WebEnvironment;
 import org.springframework.jdbc.core.JdbcTemplate;
-import org.springframework.test.annotation.DirtiesContext;
-import org.springframework.test.annotation.DirtiesContext.ClassMode;
+import org.springframework.test.context.ActiveProfiles;
 import roomescape.reservation.entity.Reservation;
 import roomescape.reservation.entity.ReservationTime;
 import roomescape.reservation.repository.ReservationRepository;
@@ -37,7 +34,7 @@ class ReservationApiTest {
     private JdbcTemplate jdbcTemplate;
 
     @BeforeEach
-    void init(){
+    void init() {
         jdbcTemplate.update("TRUNCATE TABLE reservation");
         jdbcTemplate.update("DELETE FROM reservation_time");
     }
@@ -103,7 +100,7 @@ class ReservationApiTest {
 
     @DisplayName("존재하지 않는 예약 시간 ID 를 추가하면 예외를 반환한다.")
     @Test
-    void test5(){
+    void test5() {
         Map<String, Object> reservation = new HashMap<>();
         reservation.put("name", "브라운");
         reservation.put("date", "2023-08-05");

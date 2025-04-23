@@ -28,7 +28,7 @@ public class ReservationServiceImpl implements ReservationService {
         List<Reservation> reservations = reservationRepository.findAll();
 
         return reservations.stream()
-                .map(ReservationResponseDto::toDto)
+                .map(ReservationResponseDto::from)
                 .toList();
     }
 
@@ -42,7 +42,7 @@ public class ReservationServiceImpl implements ReservationService {
 
         Reservation saved = reservationRepository.save(reservation);
 
-        return ReservationResponseDto.toDto(saved);
+        return ReservationResponseDto.from(saved);
     }
 
     @Override

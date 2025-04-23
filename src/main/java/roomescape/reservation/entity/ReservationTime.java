@@ -20,8 +20,6 @@ public class ReservationTime {
     }
 
     public static ReservationTime withoutId(LocalTime startAt) {
-        validateReservationTime(startAt);
-
         return new ReservationTime(null, startAt);
     }
 

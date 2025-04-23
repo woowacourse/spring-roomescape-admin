@@ -10,6 +10,7 @@ import org.springframework.boot.test.context.SpringBootTest.WebEnvironment;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.test.annotation.DirtiesContext;
 import roomescape.domain.ReservationTime;
+import roomescape.domain.ReservationTimes;
 
 @SpringBootTest(
         webEnvironment = WebEnvironment.DEFINED_PORT,
@@ -25,6 +26,24 @@ class ReservationTimeDaoTest {
     private JdbcTemplate jdbcTemplate;
 
     @Test
+    void 예약_시간_목록_전체를_조회해_반환한다() {
+        // given
+        ReservationTime firstReservationTime = reservationTimeDao.save(createTestReservationTime());
+        ReservationTime secondReservationTime = reservationTimeDao.save(createTestReservationTime());
+
+        // when
+        ReservationTimes findReservationTimes = reservationTimeDao.findAll();
+        Integer count = getReservationTimeCount();
+
+        // then
+        assertThat(findReservationTimes.getReservationTimes())
+                .contains(firstReservationTime, secondReservationTime);
+
+        assertThat(count)
+                .isEqualTo(findReservationTimes.getReservationTimes().size());
+    }
+
+    @Test
     void 예약_시간_정보를_저장해_ID가_할당된_예약_시간_정보를_반환한다() {
         // given
         ReservationTime reservationTime = new ReservationTime(null, LocalTime.MIDNIGHT);
@@ -37,6 +56,17 @@ class ReservationTimeDaoTest {
         assertThat(saved.getId()).isEqualTo(1L);
         assertThat(saved.getTime()).isEqualTo(LocalTime.MIDNIGHT);
         assertThat(exists).isTrue();
+    }
+
+    private ReservationTime createTestReservationTime() {
+        return new ReservationTime(null, LocalTime.MIDNIGHT);
+    }
+
+    private Integer getReservationTimeCount() {
+        return jdbcTemplate.queryForObject(
+                "select count(*) from reservation_time",
+                Integer.class
+        );
     }
 
     private Boolean isReservationTimeExists() {

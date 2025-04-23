@@ -7,6 +7,7 @@ import roomescape.model.ReservationTime;
 
 import java.time.LocalTime;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 @Repository
@@ -20,6 +21,17 @@ public class JdbcReservationTimeRepository implements ReservationTimeRepository 
         this.simpleJdbcInsert = new SimpleJdbcInsert(jdbcTemplate)
                 .withTableName("reservation_time")
                 .usingGeneratedKeyColumns("id");
+    }
+
+    @Override
+    public List<ReservationTime> findAll() {
+        String sql = "SELECT * FROM reservation_time";
+        return jdbcTemplate.query(sql, (resultSet, rowNum) -> {
+            Long id = resultSet.getLong("id");
+            LocalTime startAt = resultSet.getObject("start_at", LocalTime.class);
+            ReservationTime reservationTime = new ReservationTime(startAt);
+            return ReservationTime.toEntity(reservationTime, id);
+        });
     }
 
     @Override

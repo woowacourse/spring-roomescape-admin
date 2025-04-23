@@ -1,10 +1,12 @@
 package roomescape.service;
 
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import roomescape.model.ReservationTime;
 import roomescape.repository.ReservationTimeRepository;
 
 import java.time.LocalTime;
+import java.util.List;
 
 @Service
 public class ReservationTimeService {
@@ -13,6 +15,10 @@ public class ReservationTimeService {
 
     public ReservationTimeService(ReservationTimeRepository reservationTimeRepository) {
         this.reservationTimeRepository = reservationTimeRepository;
+    }
+
+    public List<ReservationTime> getAll() {
+        return reservationTimeRepository.findAll();
     }
 
     public void validateDuplicateStartTime(LocalTime startAt) {

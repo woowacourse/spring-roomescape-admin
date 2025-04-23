@@ -13,4 +13,10 @@ public final class DomainExceptionHandler {
         return ResponseEntity.status(HttpStatus.BAD_REQUEST)
                 .body(exception.getMessage());
     }
+
+    @ExceptionHandler(ReservationTimeException.class)
+    public ResponseEntity<String> handleReservationTimeException(ReservationTimeException exception) {
+        return ResponseEntity.status(HttpStatus.BAD_REQUEST)
+                .body(exception.getMessage());
+    }
 }

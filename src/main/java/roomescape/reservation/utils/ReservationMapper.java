@@ -9,7 +9,11 @@ import roomescape.reservation.dto.ReservationResponse;
 public class ReservationMapper {
 
     public Reservation toReservation(ReservationRequest reservationRequest) {
-        return new Reservation(reservationRequest.name(), reservationRequest.date(), reservationRequest.time());
+        return new Reservation(
+                reservationRequest.name(),
+                reservationRequest.date(),
+                reservationRequest.time()
+        );
     }
 
     public ReservationResponse toReservationResponse(Reservation reservation) {

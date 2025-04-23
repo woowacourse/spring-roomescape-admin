@@ -24,7 +24,7 @@ public abstract class Repository<T extends Entity<T>> {
 
     protected abstract T rowMapper(ResultSet resultSet, int rowNum) throws SQLException;
 
-    protected abstract PreparedStatement preparedStatementProvider(PreparedStatement preparedStatement,
+    protected abstract PreparedStatement preparedStatementParameterSetup(PreparedStatement preparedStatement,
         T object) throws SQLException;
 
     public List<T> getAll() {
@@ -32,7 +32,7 @@ public abstract class Repository<T extends Entity<T>> {
     }
 
     public T save(T object) {
-        return dao.save(saveQuery(), object, this::preparedStatementProvider);
+        return dao.save(saveQuery(), object, this::preparedStatementParameterSetup);
     }
 
     public void remove(Long id) {

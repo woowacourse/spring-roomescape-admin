@@ -40,7 +40,7 @@ public class ReservationTimeRepository extends Repository<ReservationTime> {
     }
 
     @Override
-    protected PreparedStatement preparedStatementProvider(PreparedStatement preparedStatement,
+    protected PreparedStatement preparedStatementParameterSetup(PreparedStatement preparedStatement,
         ReservationTime object) throws SQLException {
         preparedStatement.setObject(1, object.startAt());
         return preparedStatement;

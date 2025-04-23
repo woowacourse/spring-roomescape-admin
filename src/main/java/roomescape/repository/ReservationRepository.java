@@ -8,6 +8,7 @@ import org.springframework.jdbc.support.KeyHolder;
 import org.springframework.stereotype.Repository;
 import roomescape.dto.ReservationRequestDto;
 import roomescape.model.Reservation;
+import roomescape.model.ReservationTime;
 
 @Repository
 public class ReservationRepository {
@@ -19,31 +20,31 @@ public class ReservationRepository {
     }
 
     public List<Reservation> getAllReservations() {
-        String sql = "SELECT id, name, date, time FROM reservation";
+        String sql = "SELECT r.id, r.name, r.date, r.time_id, t.start_at FROM reservation as r inner join reservation_time as t on r.time_id = t.id";
         List<Reservation> reservations = jdbcTemplate.query(sql, (rs, rowNum) -> {
             Reservation reservation = new Reservation(
                     rs.getLong("id"),
                     rs.getString("name"),
                     rs.getString("date"),
-                    rs.getString("time")
+                    new ReservationTime(rs.getLong("time_id"), rs.getString("start_at"))
             );
             return reservation;
         });
         return reservations;
     }
 
-    public Reservation addReservation(ReservationRequestDto reservationRequestDto) {
+    public Reservation addReservation(ReservationRequestDto reservationRequestDto, ReservationTime reservationTime) {
         KeyHolder keyHolder = new GeneratedKeyHolder();
-        String sql = "insert into reservation (name, date, time) values (?, ?, ?)";
+        String sql = "insert into reservation (name, date, time_id) values (?, ?, ?)";
         jdbcTemplate.update(connection -> {
             PreparedStatement ps = connection.prepareStatement(
                     sql, new String[]{"id"});
             ps.setString(1, reservationRequestDto.name());
             ps.setString(2, reservationRequestDto.date());
-            ps.setString(3, reservationRequestDto.time());
+            ps.setLong(3, reservationRequestDto.timeId());
             return ps;
         }, keyHolder);
-        return ReservationRequestDto.toEntity(keyHolder.getKey().longValue(), reservationRequestDto);
+        return ReservationRequestDto.toEntity(keyHolder.getKey().longValue(), reservationRequestDto, reservationTime);
     }
 
     public int deleteReservation(Long id) {

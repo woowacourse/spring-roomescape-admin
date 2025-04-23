@@ -9,6 +9,7 @@ import org.springframework.jdbc.support.GeneratedKeyHolder;
 import org.springframework.jdbc.support.KeyHolder;
 import org.springframework.stereotype.Repository;
 import roomescape.domain.Reservation;
+import roomescape.domain.ReservationTime;
 
 @Repository
 public class ReservationRepository {
@@ -20,24 +21,32 @@ public class ReservationRepository {
     }
 
     public List<Reservation> findAll() {
-        return jdbcTemplate.query("SELECT id, name, date, time FROM reservation",
+        return jdbcTemplate.query("SELECT \n"
+                        + "    r.id as reservation_id, \n"
+                        + "    r.name, \n"
+                        + "    r.date, \n"
+                        + "    t.id as time_id, \n"
+                        + "    t.start_at as time_value \n"
+                        + "FROM reservation as r \n"
+                        + "inner join reservation_time as t \n"
+                        + "on r.time_id = t.id",
                 (rs, rowNum) ->
                         new Reservation(
-                                rs.getLong("id"),
+                                rs.getLong("reservation_id"),
                                 rs.getString("name"),
                                 rs.getDate("date").toLocalDate(),
-                                rs.getTime("time").toLocalTime()));
+                                new ReservationTime(rs.getLong("time_id"), rs.getTime("time_value").toLocalTime())));
     }
 
     public Long create(Reservation reservation) {
-        String sql = "INSERT INTO reservation(name, date, time) VALUES (?, ?, ?)";
+        String sql = "INSERT INTO reservation(name, date, time_id) VALUES (?, ?, ?)";
         KeyHolder keyHolder = new GeneratedKeyHolder();
 
         jdbcTemplate.update(con -> {
             PreparedStatement ps = con.prepareStatement(sql, new String[]{"id"});
             ps.setString(1, reservation.getName());
             ps.setString(2, reservation.getDate().toString());
-            ps.setString(3, reservation.getTime().toString());
+            ps.setLong(3, reservation.getTime().id());
             return ps;
         }, keyHolder);
 
@@ -51,13 +60,23 @@ public class ReservationRepository {
     public Optional<Reservation> findById(Long reservationId) {
         try {
             Reservation reservation = jdbcTemplate.queryForObject(
-                    "SELECT id, name, date, time FROM reservation WHERE id = ?",
+                    "SELECT \n"
+                            + "    r.id as reservation_id, \n"
+                            + "    r.name, \n"
+                            + "    r.date, \n"
+                            + "    t.id as time_id, \n"
+                            + "    t.start_at as time_value \n"
+                            + "FROM reservation as r \n"
+                            + "inner join reservation_time as t \n"
+                            + "on r.time_id = t.id \n"
+                            + "WHERE r.id = ?",
                     (rs, rowNum) ->
                             new Reservation(
-                                    rs.getLong("id"),
+                                    rs.getLong("reservation_id"),
                                     rs.getString("name"),
                                     rs.getDate("date").toLocalDate(),
-                                    rs.getTime("time").toLocalTime()),
+                                    new ReservationTime(rs.getLong("time_id"),
+                                            rs.getTime("time_value").toLocalTime())),
                     reservationId);
             return Optional.of(reservation);
         } catch (EmptyResultDataAccessException exception) {

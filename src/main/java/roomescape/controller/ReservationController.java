@@ -11,17 +11,23 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import roomescape.controller.request.CreateReservationRequest;
 import roomescape.controller.response.ReservationResponse;
+import roomescape.controller.response.ReservationTimeResponse;
 import roomescape.domain.Reservation;
+import roomescape.domain.ReservationTime;
 import roomescape.repository.ReservationRepository;
+import roomescape.repository.ReservationTImeRepository;
 
 @RestController
 @RequestMapping("/reservations")
 public class ReservationController {
 
     private final ReservationRepository reservationRepository;
+    private final ReservationTImeRepository reservationTImeRepository;
 
-    public ReservationController(ReservationRepository reservationRepository) {
+    public ReservationController(ReservationRepository reservationRepository,
+                                 ReservationTImeRepository reservationTImeRepository) {
         this.reservationRepository = reservationRepository;
+        this.reservationTImeRepository = reservationTImeRepository;
     }
 
     @GetMapping
@@ -32,7 +38,10 @@ public class ReservationController {
                         reservation.getId(),
                         reservation.getName(),
                         reservation.getDate(),
-                        reservation.getTime()
+                        new ReservationTimeResponse(
+                                reservation.getTime().id(),
+                                reservation.getTime().startAt()
+                        )
                 ))
                 .toList();
         return ResponseEntity.ok(reservationResponses);
@@ -41,17 +50,22 @@ public class ReservationController {
     @PostMapping
     public ResponseEntity<ReservationResponse> createReservation(
             @RequestBody CreateReservationRequest createReservationRequest) {
+        ReservationTime reservationTime = reservationTImeRepository.findById(createReservationRequest.timeId())
+                .orElseThrow();
         Long reservationId = reservationRepository.create(
                 new Reservation(
                         createReservationRequest.name(),
                         createReservationRequest.date(),
-                        createReservationRequest.time()));
+                        reservationTime));
         Reservation newReservation = reservationRepository.findById(reservationId).orElseThrow();
         return ResponseEntity.ok(new ReservationResponse(
                 newReservation.getId(),
                 newReservation.getName(),
                 newReservation.getDate(),
-                newReservation.getTime()
+                new ReservationTimeResponse(
+                        reservationTime.id(),
+                        reservationTime.startAt()
+                )
         ));
     }
 

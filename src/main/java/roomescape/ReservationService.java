@@ -22,8 +22,10 @@ public class ReservationService {
     }
 
     public Long saveReservation(final ReservationRegisterDto reservationRegisterDto) {
-        ReservationTime reservationTime = findReservationTime(reservationRegisterDto);
+        ReservationTime reservationTime = findReservationTime(reservationRegisterDto.timeId());
+
         Reservation reservation = reservationRegisterDto.toReservation(reservationTime);
+
         long savedId = reservationRepository.save(reservation);
         reservation.setId(savedId);
 
@@ -31,13 +33,8 @@ public class ReservationService {
     }
 
     public ReservationResponseDto findReservationById(final long id) {
-        Optional<Reservation> foundReservation = reservationRepository.findById(id);
-
-        if (foundReservation.isEmpty()) {
-            throw new IllegalArgumentException("해당 id 와 일치하는 예약 내역이 존재하지 않습니다.");
-        }
-
-        return new ReservationResponseDto(foundReservation.get());
+        Reservation foundReservation = findReservationWithId(id);
+        return new ReservationResponseDto(foundReservation);
     }
 
     public List<ReservationResponseDto> findAllReservations() {
@@ -46,13 +43,23 @@ public class ReservationService {
                 .toList();
     }
 
-    public void deleteReservationById(final Long id) {
+    public void deleteReservationById(final long id) {
+        findReservationWithId(id);
         reservationRepository.deleteById(id);
     }
 
-    private ReservationTime findReservationTime(ReservationRegisterDto reservationRegisterDto) {
-        Optional<ReservationTime> foundReservationTime = reservationTimeRepository.findById(
-                reservationRegisterDto.timeId());
+    private Reservation findReservationWithId(long id) {
+        Optional<Reservation> foundReservation = reservationRepository.findById(id);
+
+        if (foundReservation.isEmpty()) {
+            throw new IllegalArgumentException("해당 id 와 일치하는 예약 내역이 존재하지 않습니다.");
+        }
+        return foundReservation.get();
+    }
+
+    private ReservationTime findReservationTime(final long id) {
+        Optional<ReservationTime> foundReservationTime = reservationTimeRepository.findById(id);
+
         if (foundReservationTime.isEmpty()) {
             throw new IllegalArgumentException("해당 id 와 일치하는 예약 시각이 존재하지 않습니다.");
         }

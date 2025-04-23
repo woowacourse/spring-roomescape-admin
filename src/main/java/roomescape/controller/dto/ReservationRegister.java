@@ -8,7 +8,7 @@ import org.hibernate.validator.constraints.Length;
 import org.springframework.format.annotation.DateTimeFormat;
 import roomescape.domain.Reservation;
 
-public record ReservationRegisterDto(
+public record ReservationRegister(
         @FutureOrPresent
         @DateTimeFormat(pattern = "yyyy-MM-dd")
         LocalDate date,

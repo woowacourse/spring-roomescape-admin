@@ -10,8 +10,8 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
-import roomescape.controller.dto.ReservationDto;
-import roomescape.controller.dto.ReservationRegisterDto;
+import roomescape.controller.dto.ReservationResponse;
+import roomescape.controller.dto.ReservationRegister;
 import roomescape.domain.Reservation;
 import roomescape.repository.ReservationRepository;
 
@@ -26,19 +26,19 @@ public class RoomescapeController {
     }
 
     @GetMapping
-    public List<ReservationDto> getReservations() {
+    public List<ReservationResponse> getReservations() {
         return reservationRepository.findAll().stream()
-                .map(ReservationDto::toDto)
+                .map(ReservationResponse::toDto)
                 .toList();
     }
 
     @PostMapping
-    public ResponseEntity<ReservationDto> registerReservation(
-            @RequestBody @Valid final ReservationRegisterDto reservationRegisterDto) {
+    public ResponseEntity<ReservationResponse> registerReservation(
+            @RequestBody @Valid final ReservationRegister reservationRegister) {
         try {
-            Reservation reservation = reservationRegisterDto.toEntity();
+            Reservation reservation = reservationRegister.toEntity();
             this.reservationRepository.save(reservation);
-            return ResponseEntity.ok().body(ReservationDto.toDto(reservation));
+            return ResponseEntity.ok().body(ReservationResponse.toDto(reservation));
         } catch (IllegalArgumentException e) {
             return ResponseEntity.badRequest().build();
         }

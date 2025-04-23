@@ -7,6 +7,7 @@ import java.time.LocalDate;
 import java.time.LocalTime;
 
 import roomescape.model.Reservation;
+import roomescape.model.ReservationTime;
 
 @org.springframework.stereotype.Repository
 public class ReservationRepository extends Repository<Reservation> {
@@ -17,12 +18,22 @@ public class ReservationRepository extends Repository<Reservation> {
 
     @Override
     protected String getAllQuery() {
-        return "SELECT id, name, date, time FROM reservation";
+        return """
+            SELECT
+                r.id as reservation_id,
+                r.name,
+                r.date,
+                t.id as time_id,
+                t.start_at as time_value
+            FROM reservation as r
+            inner join reservation_time as t
+            on r.time_id = t.id
+            """;
     }
 
     @Override
     protected String saveQuery() {
-        return "INSERT INTO reservation (name, date, time) VALUES (?, ?, ?)";
+        return "INSERT INTO reservation (name, date, time_id) VALUES (?, ?, ?)";
     }
 
     @Override
@@ -36,7 +47,10 @@ public class ReservationRepository extends Repository<Reservation> {
             resultSet.getLong("id"),
             resultSet.getString("name"),
             resultSet.getObject("date", LocalDate.class),
-            resultSet.getObject("time", LocalTime.class)
+            new ReservationTime(
+                resultSet.getLong("time_id"),
+                resultSet.getObject("time_value", LocalTime.class)
+            )
         );
     }
 
@@ -45,7 +59,7 @@ public class ReservationRepository extends Repository<Reservation> {
         throws SQLException {
         preparedStatement.setString(1, object.name());
         preparedStatement.setObject(2, object.date());
-        preparedStatement.setObject(3, object.time());
+        preparedStatement.setObject(3, object.reservationTime().id());
         return preparedStatement;
     }
 }

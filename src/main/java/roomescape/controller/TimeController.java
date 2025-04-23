@@ -12,32 +12,32 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import jakarta.validation.Valid;
-import roomescape.model.Time;
-import roomescape.repository.TimeRepository;
+import roomescape.model.ReservationTime;
+import roomescape.repository.ReservationTimeRepository;
 
 @RestController
 @RequestMapping("times")
 public class TimeController {
 
-    private final TimeRepository timeRepository;
+    private final ReservationTimeRepository reservationTimeRepository;
 
-    public TimeController(TimeRepository timeRepository) {
-        this.timeRepository = timeRepository;
+    public TimeController(ReservationTimeRepository reservationTimeRepository) {
+        this.reservationTimeRepository = reservationTimeRepository;
     }
 
     @GetMapping
-    public ResponseEntity<List<Time>> times() {
-        return ResponseEntity.ok(timeRepository.getAll());
+    public ResponseEntity<List<ReservationTime>> times() {
+        return ResponseEntity.ok(reservationTimeRepository.getAll());
     }
 
     @PostMapping
-    public ResponseEntity<Time> times(@RequestBody @Valid Time time) {
-        return ResponseEntity.ok(timeRepository.save(time));
+    public ResponseEntity<ReservationTime> times(@RequestBody @Valid ReservationTime reservationTime) {
+        return ResponseEntity.ok(reservationTimeRepository.save(reservationTime));
     }
 
     @DeleteMapping("/{id}")
     public ResponseEntity<Void> times(@PathVariable Long id) {
-        timeRepository.remove(id);
+        reservationTimeRepository.remove(id);
         return ResponseEntity.noContent().build();
     }
 }

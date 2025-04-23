@@ -4,13 +4,14 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.time.LocalTime;
+import java.util.Optional;
 
-import roomescape.model.Time;
+import roomescape.model.ReservationTime;
 
 @org.springframework.stereotype.Repository
-public class TimeRepository extends Repository<Time> {
+public class ReservationTimeRepository extends Repository<ReservationTime> {
 
-    public TimeRepository(Dao dao) {
+    public ReservationTimeRepository(Dao dao) {
         super(dao);
     }
 
@@ -30,17 +31,22 @@ public class TimeRepository extends Repository<Time> {
     }
 
     @Override
-    protected Time rowMapper(ResultSet resultSet, int rowNum) throws SQLException {
-        return new Time(
+    protected ReservationTime rowMapper(ResultSet resultSet, int rowNum) throws SQLException {
+        return new ReservationTime(
             resultSet.getLong("id"),
             resultSet.getObject("start_at", LocalTime.class)
         );
     }
 
     @Override
-    protected PreparedStatement preparedStatementProvider(PreparedStatement preparedStatement, Time object) throws
-        SQLException {
+    protected PreparedStatement preparedStatementProvider(PreparedStatement preparedStatement,
+        ReservationTime object) throws SQLException {
         preparedStatement.setObject(1, object.startAt());
         return preparedStatement;
+    }
+
+    public Optional<ReservationTime> findById(Long id) {
+        String query = "SELECT id, start_at FROM reservation_time WHERE id = ?";
+        return dao.findById(query, id, this::rowMapper);
     }
 }

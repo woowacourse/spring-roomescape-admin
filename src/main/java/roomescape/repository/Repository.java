@@ -9,7 +9,7 @@ import roomescape.model.Entity;
 
 public abstract class Repository<T extends Entity<T>> {
 
-    private final Dao dao;
+    protected final Dao dao;
 
     protected Repository(Dao dao) {
         this.dao = dao;

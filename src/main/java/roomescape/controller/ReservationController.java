@@ -12,17 +12,23 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import jakarta.validation.Valid;
+import roomescape.dto.ReservationRequest;
 import roomescape.model.Reservation;
+import roomescape.model.ReservationTime;
 import roomescape.repository.ReservationRepository;
+import roomescape.repository.ReservationTimeRepository;
 
 @RestController
 @RequestMapping("/reservations")
 public class ReservationController {
 
     private final ReservationRepository reservationRepository;
+    private final ReservationTimeRepository reservationTimeRepository;
 
-    public ReservationController(ReservationRepository reservationRepository) {
+    public ReservationController(ReservationRepository reservationRepository,
+        ReservationTimeRepository reservationTimeRepository) {
         this.reservationRepository = reservationRepository;
+        this.reservationTimeRepository = reservationTimeRepository;
     }
 
     @GetMapping
@@ -31,8 +37,11 @@ public class ReservationController {
     }
 
     @PostMapping
-    public ResponseEntity<Reservation> createReservation(@RequestBody @Valid Reservation reservation) {
-        return ResponseEntity.ok(reservationRepository.save(reservation));
+    public ResponseEntity<Reservation> createReservation(@RequestBody @Valid ReservationRequest request) {
+        ReservationTime reservationTime = reservationTimeRepository.findById(request.timeId())
+            .orElseThrow(() -> new IllegalArgumentException("[ERROR] 존재하지 않는 예약 시간입니다."));
+        return ResponseEntity.ok(reservationRepository.save(new Reservation(request.id(), request.name(),
+            request.date(), reservationTime)));
     }
 
     @DeleteMapping("/{reservationId}")

@@ -2,7 +2,9 @@ package roomescape.repository;
 
 import java.sql.PreparedStatement;
 import java.util.List;
+import java.util.Optional;
 
+import org.springframework.dao.support.DataAccessUtils;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;
 import org.springframework.jdbc.support.GeneratedKeyHolder;
@@ -22,6 +24,10 @@ public class Dao {
 
     public <T> List<T> getAll(String query, RowMapper<T> rowMapper) {
         return jdbcTemplate.query(query, rowMapper);
+    }
+
+    public <T> Optional<T> findById(String query, Long id, RowMapper<T> rowMapper) {
+        return DataAccessUtils.optionalResult(jdbcTemplate.query(query, rowMapper, id));
     }
 
     public <T extends Entity<T>> T save(String query, T object, PreparedStatementProvider<T> psProvider) {

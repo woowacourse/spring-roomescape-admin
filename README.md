@@ -29,13 +29,19 @@
                 "id": 1,
                 "name": "브라운",
                 "date": "2023-01-01",
-                "reservationTime": "10:00"
+                "time": {
+                   "id": 1,
+                   "startAt": "10:00"
+                }
             },
             {
                 "id": 2,
                 "name": "브라운",
                 "date": "2023-01-02",
-                "reservationTime": "11:00"
+                "time": {
+                   "id": 1,
+                   "startAt": "10:00"
+                }
             }
         ]
         ```
@@ -45,18 +51,20 @@
     - Request
       ```json
       {
-         "date": "2023-08-05",
-         "name": "브라운",
-         "reservationTime": "15:40"
+          "date": "2023-08-05",
+          "name": "브라운",
+          "timeId": 1
       }
       ```
     - Response
       ```json
       {
-         "id": 1,
-         "name": "브라운",
-         "date": "2023-08-05",
-         "reservationTime": "15:40"
+          "id": 1,
+          "name": "브라운",
+          "date": "2023-08-05",
+          "time" : {
+          "id": 1,
+          "startAt" : "10:00"
       }
       ```
 

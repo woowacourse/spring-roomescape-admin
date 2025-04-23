@@ -5,6 +5,8 @@ import roomescape.entity.ReservationTime;
 
 public interface ReservationTimeRepository {
 
+    void existsTimeById(long id);
+
     List<ReservationTime> findAll();
 
     ReservationTime save(ReservationTime reservationTime);

@@ -4,7 +4,6 @@ import java.sql.PreparedStatement;
 import java.sql.Time;
 import java.util.List;
 import java.util.Objects;
-import org.springframework.context.annotation.Primary;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;
 import org.springframework.jdbc.support.GeneratedKeyHolder;
@@ -13,7 +12,6 @@ import org.springframework.stereotype.Repository;
 import roomescape.entity.ReservationTime;
 import roomescape.exceptions.EntityNotFoundException;
 
-@Primary
 @Repository
 public class ReservationTimeH2Repository implements ReservationTimeRepository {
 
@@ -21,6 +19,15 @@ public class ReservationTimeH2Repository implements ReservationTimeRepository {
 
     public ReservationTimeH2Repository(JdbcTemplate jdbcTemplate) {
         this.jdbcTemplate = jdbcTemplate;
+    }
+
+    @Override
+    public void existsTimeById(long id) {
+        String sql = "SELECT COUNT(*) FROM reservation_time WHERE id = ?";
+        Integer count = jdbcTemplate.queryForObject(sql, Integer.class, id);
+        if (count == null || count == 0) {
+            throw new EntityNotFoundException("해당 예약 시간이 존재하지 않습니다: " + id);
+        }
     }
 
     @Override

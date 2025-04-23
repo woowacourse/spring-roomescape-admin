@@ -49,6 +49,11 @@ public class ReservationTimeServiceTest {
     private static class ReservationTimeTestRepository implements ReservationTimeRepository {
 
         @Override
+        public void existsTimeById(long id) {
+            
+        }
+
+        @Override
         public List<ReservationTime> findAll() {
             return List.of(
                     new ReservationTime(1L, LocalTime.MIN));

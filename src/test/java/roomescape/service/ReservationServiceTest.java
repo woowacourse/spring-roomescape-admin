@@ -14,10 +14,14 @@ import roomescape.entity.Reservation;
 import roomescape.entity.ReservationTime;
 import roomescape.exceptions.EntityNotFoundException;
 import roomescape.repository.ReservationRepository;
+import roomescape.repository.ReservationTimeRepository;
 
 public class ReservationServiceTest {
 
-    private final ReservationService reservationService = new ReservationService(new ReservationTestRepository());
+    private final ReservationService reservationService = new ReservationService(
+            new ReservationTestRepository(),
+            new ReservationTimeTestRepository()
+    );
 
     @Test
     @DisplayName("조회된 엔티티를 DTO로 매핑해 반환한다.")
@@ -33,7 +37,8 @@ public class ReservationServiceTest {
     @DisplayName("저장한 엔티티를 DTO로 반환한다.")
     void test_postReservation() {
         //given
-        ReservationRequestDto requestDto = new ReservationRequestDto("브라운", LocalDate.now(), 1L);
+        long timeId = 1L;
+        ReservationRequestDto requestDto = new ReservationRequestDto("브라운", LocalDate.now(), timeId);
         //when
         ReservationResponseDto actual = reservationService.postReservation(requestDto);
         //then
@@ -41,9 +46,20 @@ public class ReservationServiceTest {
     }
 
     @Test
+    @DisplayName("저장시 time_id를 찾을 수 없다면, 예외가 발생한다.")
+    void test_postReservationWhenCantFindReservationTime() {
+        //given
+        long timeId = Long.MAX_VALUE;
+        ReservationRequestDto requestDto = new ReservationRequestDto("브라운", LocalDate.now(), timeId);
+        //when&&then
+        assertThatThrownBy(() -> reservationService.postReservation(requestDto))
+                .isInstanceOf(EntityNotFoundException.class);
+    }
+
+    @Test
     @DisplayName("저장소에 없는 값을 삭제하려할 경우, 예외가 발생한다.")
     void test_deleteReservation() {
-        assertThatThrownBy(() -> reservationService.deleteReservation(999L))
+        assertThatThrownBy(() -> reservationService.deleteReservation(Long.MAX_VALUE))
                 .isInstanceOf(EntityNotFoundException.class);
     }
 
@@ -64,6 +80,30 @@ public class ReservationServiceTest {
         @Override
         public void deleteById(long id) {
             throw new EntityNotFoundException("");
+        }
+    }
+
+    private static class ReservationTimeTestRepository implements ReservationTimeRepository {
+
+        @Override
+        public void existsTimeById(long id) {
+            if (id == Long.MAX_VALUE) {
+                throw new EntityNotFoundException("");
+            }
+        }
+
+        @Override
+        public List<ReservationTime> findAll() {
+            return List.of();
+        }
+
+        @Override
+        public ReservationTime save(ReservationTime reservationTime) {
+            return null;
+        }
+
+        @Override
+        public void deleteById(long id) {
         }
     }
 }

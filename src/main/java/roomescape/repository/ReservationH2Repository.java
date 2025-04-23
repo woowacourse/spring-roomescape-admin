@@ -4,7 +4,6 @@ import java.sql.Date;
 import java.sql.PreparedStatement;
 import java.util.List;
 import java.util.Objects;
-import org.springframework.context.annotation.Primary;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;
 import org.springframework.jdbc.support.GeneratedKeyHolder;
@@ -14,7 +13,6 @@ import roomescape.entity.Reservation;
 import roomescape.entity.ReservationTime;
 import roomescape.exceptions.EntityNotFoundException;
 
-@Primary
 @Repository
 public class ReservationH2Repository implements ReservationRepository {
 
@@ -26,8 +24,8 @@ public class ReservationH2Repository implements ReservationRepository {
 
     @Override
     public List<Reservation> findAll() {
-        String sql = "SELECT r.id as reservation_id, r.name, r.date, t.id as time_id, t.start_at as time_value "
-                + "FROM reservation as r "
+        String sql = "select r.id as reservation_id, r.name, r.date, t.id as time_id, t.start_at as time_value "
+                + "from reservation as r "
                 + "inner join reservation_time as t "
                 + "on r.time_id = t.id";
         return jdbcTemplate.query(sql, getReservationRowMapper());

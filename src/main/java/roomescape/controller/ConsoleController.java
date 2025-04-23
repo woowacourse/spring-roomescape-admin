@@ -6,6 +6,8 @@ import roomescape.dto.CreateReservationDto;
 import roomescape.dto.CreateReservationTimeDto;
 import roomescape.repository.MemoryReservationRepository;
 import roomescape.repository.MemoryReservationTimeRepository;
+import roomescape.repository.ReservationRepository;
+import roomescape.repository.ReservationTimeRepository;
 import roomescape.service.ReservationService;
 import roomescape.service.ReservationTimeService;
 import roomescape.view.Command;
@@ -22,8 +24,8 @@ public class ConsoleController {
     public ConsoleController() {
         inputView = new InputView();
         outputView = new OutputView();
-        MemoryReservationTimeRepository memoryReservationTimeRepository = new MemoryReservationTimeRepository();
-        MemoryReservationRepository memoryReservationRepository = new MemoryReservationRepository();
+        ReservationTimeRepository memoryReservationTimeRepository = new MemoryReservationTimeRepository();
+        ReservationRepository memoryReservationRepository = new MemoryReservationRepository();
         reservationService = new ReservationService(
                 memoryReservationRepository,
                 memoryReservationTimeRepository,
@@ -31,7 +33,6 @@ public class ConsoleController {
         );
         reservationTimeService = new ReservationTimeService(memoryReservationTimeRepository);
     }
-
 
     public void run() {
         Command command = null;
@@ -42,45 +43,54 @@ public class ConsoleController {
     }
 
     private void processCommand(Command command) {
-        if (command == Command.TIME_GET) {
-            outputView.printReservationTimes(reservationTimeService.findAllReservationTime());
-            return;
+        switch (command) {
+            case TIME_GET -> getAllTimes();
+            case TIME_ADD -> addNewTime();
+            case TIME_DELETE -> deleteTime();
+            case RESERVATION_GET -> getAllReservations();
+            case RESERVATION_ADD -> addNewReservation();
+            case RESERVATION_DELETE -> deleteReservation();
         }
-        if (command == Command.TIME_ADD) {
-            retry(() -> {
-                CreateReservationTimeDto createReservationTimeDto = inputView.readReservationTimeDto();
-                reservationTimeService.createReservationTime(createReservationTimeDto);
-            });
-            outputView.printSuccessMessage();
-            return;
-        }
-        if (command == Command.TIME_DELETE) {
-            retry(() -> {
-                Long id = inputView.readReservationTimeId();
-                reservationTimeService.deleteReservationTime(id);
-            });
-            outputView.printSuccessMessage();
-            return;
-        }
-        if (command == Command.RESERVATION_GET) {
-            outputView.printReservations(reservationService.findAllReservations());
-            return;
-        }
-        if (command == Command.RESERVATION_ADD) {
-            retry(() -> {
-                CreateReservationDto createReservationDto = inputView.readReservationDto();
-                reservationService.createReservation(createReservationDto);
-            });
-            outputView.printSuccessMessage();
-            return;
-        }
-        if (command == Command.RESERVATION_DELETE) {
-            retry(() -> {
-                Long id = inputView.readReservationId();
-                reservationService.deleteReservation(id);
-            });
-            outputView.printSuccessMessage();
-        }
+    }
+
+    private void deleteReservation() {
+        retry(() -> {
+            Long id = inputView.readReservationId();
+            reservationService.deleteReservation(id);
+        });
+        outputView.printSuccessMessage();
+    }
+
+    private void addNewReservation() {
+        retry(() -> {
+            CreateReservationDto createReservationDto = inputView.readReservationDto();
+            reservationService.createReservation(createReservationDto);
+        });
+        outputView.printSuccessMessage();
+    }
+
+    private void getAllReservations() {
+        outputView.printReservations(reservationService.findAllReservations());
+    }
+
+    private void getAllTimes() {
+        outputView.printReservationTimes(reservationTimeService.findAllReservationTime());
+    }
+
+    private void deleteTime() {
+        retry(() -> {
+            Long id = inputView.readReservationTimeId();
+            reservationTimeService.deleteReservationTime(id);
+        });
+        outputView.printSuccessMessage();
+    }
+
+    private void addNewTime() {
+        retry(() -> {
+            CreateReservationTimeDto createReservationTimeDto = inputView.readReservationTimeDto();
+            reservationTimeService.createReservationTime(createReservationTimeDto);
+        });
+        outputView.printSuccessMessage();
     }
 
     private <T> T retry(Supplier<T> supplier) {

@@ -1,6 +1,9 @@
 package roomescape.persist.entity;
 
+import java.time.LocalTime;
+import java.time.format.DateTimeFormatter;
 import java.util.Objects;
+import roomescape.domain.ReservationTime;
 
 public final class ReservationTimeEntity {
 
@@ -10,6 +13,30 @@ public final class ReservationTimeEntity {
     public ReservationTimeEntity(Long id, String startAt) {
         this.id = id;
         this.startAt = startAt;
+    }
+
+    private ReservationTimeEntity(String startAt) {
+        this.id = null;
+        this.startAt = startAt;
+    }
+
+    public ReservationTimeEntity copyWithId(Long id) {
+        return new ReservationTimeEntity(id, startAt);
+    }
+
+    public static ReservationTimeEntity fromDomain(ReservationTime newReservationTime) {
+        String formattedStartAt = newReservationTime.getStartTime().format(DateTimeFormatter.ofPattern("HH:mm"));
+        if (newReservationTime.getId() != null) {
+            return new ReservationTimeEntity(newReservationTime.getId(), formattedStartAt);
+        }
+        return new ReservationTimeEntity(formattedStartAt);
+    }
+
+    public ReservationTime toDomain() {
+        if (id == null) {
+            throw new IllegalArgumentException("예약 가능 시간 엔티티의 ID가 null이어서 도메인 객체로 변환할 수 없습니다.");
+        }
+        return new ReservationTime(id, LocalTime.parse(startAt, DateTimeFormatter.ofPattern("HH:mm")));
     }
 
     public Long getId() {

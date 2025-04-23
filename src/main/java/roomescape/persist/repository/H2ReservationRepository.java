@@ -1,8 +1,5 @@
 package roomescape.persist.repository;
 
-import java.time.LocalDate;
-import java.time.LocalTime;
-import java.time.format.DateTimeFormatter;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -12,8 +9,6 @@ import org.springframework.stereotype.Repository;
 import roomescape.persist.entity.ReservationEntity;
 import roomescape.persist.entity.ReservationTimeEntity;
 import roomescape.domain.Reservation;
-import roomescape.domain.ReservationDate;
-import roomescape.domain.ReservationTime;
 
 @Repository
 public class H2ReservationRepository implements ReservationRepository {
@@ -53,32 +48,20 @@ public class H2ReservationRepository implements ReservationRepository {
                 )
         );
         return reservationEntities.stream()
-                .map(reservationEntity -> new Reservation(
-                        reservationEntity.getId(),
-                        reservationEntity.getName(),
-                        new ReservationDate(LocalDate.parse(reservationEntity.getDate(),
-                                DateTimeFormatter.ofPattern("yyyy-MM-dd"))),
-                        new ReservationTime(reservationEntity.getTimeEntity().getId(),
-                                LocalTime.parse(reservationEntity.getTimeEntity().getStartAt(),
-                                        DateTimeFormatter.ofPattern("HH:mm")))))
+                .map(ReservationEntity::toDomain)
                 .toList();
     }
 
     @Override
     public Reservation add(Reservation reservation) {
-        ReservationEntity reservationEntity = new ReservationEntity(
-                reservation.getId(),
-                reservation.getName(),
-                reservation.getDate().getStartDate().toString(),
-                new ReservationTimeEntity(reservation.getTime().getId(),
-                        reservation.getTime().getStartTime().toString()));
+        ReservationEntity reservationEntity = ReservationEntity.fromDomain(reservation);
         Map<String, String> params = new HashMap<>();
         params.put("name", reservationEntity.getName());
         params.put("date", reservationEntity.getDate());
         params.put("time_id", reservationEntity.getTimeEntity().getId().toString());
         long id = jdbcInsert.executeAndReturnKey(params).intValue();
-        return new Reservation(id, reservation.getName(), reservation.getDate().getStartDate(),
-                reservation.getTime().getStartTime());
+        ReservationEntity savedEntity = reservationEntity.copyWithId(id);
+        return savedEntity.toDomain();
     }
 
     @Override

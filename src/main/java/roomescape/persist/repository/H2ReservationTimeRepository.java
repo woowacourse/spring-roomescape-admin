@@ -35,9 +35,7 @@ public class H2ReservationTimeRepository implements ReservationTimeRepository {
                 )
         );
         return reservationTimeEntities.stream()
-                .map(reservationTimeEntity -> new ReservationTime(
-                        reservationTimeEntity.getId(),
-                        LocalTime.parse(reservationTimeEntity.getStartAt(), DateTimeFormatter.ofPattern("HH:mm"))))
+                .map(ReservationTimeEntity::toDomain)
                 .toList();
     }
 
@@ -52,16 +50,17 @@ public class H2ReservationTimeRepository implements ReservationTimeRepository {
                 ),
                 id
         );
-        return new ReservationTime(reservationTimeEntity.getId(),
-                LocalTime.parse(reservationTimeEntity.getStartAt(), DateTimeFormatter.ofPattern("HH:mm")));
+        return reservationTimeEntity.toDomain();
     }
 
     @Override
     public ReservationTime add(ReservationTime reservationTime) {
+        ReservationTimeEntity reservationTimeEntity = ReservationTimeEntity.fromDomain(reservationTime);
         Map<String, String> params = new HashMap<>();
-        params.put("start_at", reservationTime.getStartTime().format(DateTimeFormatter.ofPattern("HH:mm")));
+        params.put("start_at", reservationTimeEntity.getStartAt());
         long id = jdbcInsert.executeAndReturnKey(params).intValue();
-        return new ReservationTime(id, reservationTime.getStartTime());
+        ReservationTimeEntity savedReservationTimeEntity = reservationTimeEntity.copyWithId(id);
+        return savedReservationTimeEntity.toDomain();
     }
 
     @Override
@@ -73,7 +72,9 @@ public class H2ReservationTimeRepository implements ReservationTimeRepository {
     @Override
     public boolean existsByStartTime(LocalTime localTime) {
         String sql = "SELECT COUNT(*) FROM reservation_time WHERE start_at = ?";
-        int count = jdbcTemplate.queryForObject(sql, Integer.class,
+        int count = jdbcTemplate.queryForObject(
+                sql,
+                Integer.class,
                 localTime.format(DateTimeFormatter.ofPattern("HH:mm")));
         return count > 0;
     }

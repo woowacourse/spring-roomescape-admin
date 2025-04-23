@@ -30,7 +30,7 @@ public class StubReservationRepository implements ReservationRepository {
     }
 
     @Override
-    public Reservation save(final String name, final LocalDate date, final LocalTime time) {
+    public Reservation save(final String name, final LocalDate date, final Long timeId, final LocalTime time) {
         return createResult;
     }
 

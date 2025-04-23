@@ -11,12 +11,18 @@ import org.springframework.stereotype.Repository;
 import roomescape.domain.ReservationTime;
 
 @Repository
-public class RoomescapeTimeRepositoryJdbc implements RoomescapeTimeRepository {
+public class RoomescapeTimeRepositoryImpl implements RoomescapeTimeRepository {
 
     private JdbcTemplate template;
 
-    public RoomescapeTimeRepositoryJdbc(final JdbcTemplate template) {
+    public RoomescapeTimeRepositoryImpl(final JdbcTemplate template) {
         this.template = template;
+    }
+
+    @Override
+    public ReservationTime findById(final Long id) {
+        String sql = "select * from reservation_time where id=?";
+        return template.queryForObject(sql, reservationTimeRowMapper(), id);
     }
 
     @Override
@@ -57,7 +63,7 @@ public class RoomescapeTimeRepositoryJdbc implements RoomescapeTimeRepository {
         return (rs, rowNum) -> {
             ReservationTime reservationTime = new ReservationTime(
                     LocalTime.parse(rs.getString("start_at"))
-            );
+            ).toEntity(rs.getLong("id"));
             return reservationTime;
         };
     }

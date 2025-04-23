@@ -5,6 +5,8 @@ import roomescape.domain.ReservationTime;
 
 public interface RoomescapeTimeRepository {
 
+    ReservationTime findById(Long timeId);
+
     List<ReservationTime> findAll();
 
     ReservationTime saveReservationTime(final ReservationTime reservationTime);

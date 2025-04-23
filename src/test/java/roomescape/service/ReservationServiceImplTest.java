@@ -16,7 +16,7 @@ import roomescape.dto.request.ReservationCreateRequest;
 import roomescape.dto.request.ReservationTimeCreateRequest;
 import roomescape.dto.response.ReservationResponse;
 
-class ReservationServiceTest {
+class ReservationServiceImplTest {
 
     private final ReservationTimeDao reservationTimeDao = new InMemoryReservationTimeDao(new ArrayList<>());
     private final ReservationDao reservationDao = new InMemoryReservationDao(new ArrayList<>(), reservationTimeDao);

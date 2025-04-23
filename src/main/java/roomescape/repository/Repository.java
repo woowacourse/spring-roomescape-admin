@@ -6,7 +6,6 @@ import java.sql.SQLException;
 import java.util.List;
 
 import roomescape.model.Entity;
-import roomescape.model.Reservation;
 
 public abstract class Repository<T extends Entity<T>> {
 
@@ -25,14 +24,14 @@ public abstract class Repository<T extends Entity<T>> {
     protected abstract T rowMapper(ResultSet resultSet, int rowNum) throws SQLException;
 
     protected abstract PreparedStatement preparedStatementProvider(PreparedStatement preparedStatement,
-        Reservation reservation) throws SQLException;
+        T object) throws SQLException;
 
     public List<T> getAll() {
         return dao.getAll(getAllQuery(), this::rowMapper);
     }
 
-    public Reservation save(Reservation reservation) {
-        return dao.save(saveQuery(), reservation, this::preparedStatementProvider);
+    public T save(T object) {
+        return dao.save(saveQuery(), object, this::preparedStatementProvider);
     }
 
     public void remove(Long id) {

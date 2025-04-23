@@ -41,11 +41,11 @@ public class ReservationRepository extends Repository<Reservation> {
     }
 
     @Override
-    protected PreparedStatement preparedStatementProvider(PreparedStatement preparedStatement, Reservation reservation)
+    protected PreparedStatement preparedStatementProvider(PreparedStatement preparedStatement, Reservation object)
         throws SQLException {
-        preparedStatement.setString(1, reservation.name());
-        preparedStatement.setObject(2, reservation.date());
-        preparedStatement.setObject(3, reservation.time());
+        preparedStatement.setString(1, object.name());
+        preparedStatement.setObject(2, object.date());
+        preparedStatement.setObject(3, object.time());
         return preparedStatement;
     }
 }

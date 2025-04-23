@@ -16,11 +16,11 @@ import roomescape.dto.request.ReservationCreateRequest;
 import roomescape.dto.request.ReservationTimeCreateRequest;
 import roomescape.dto.response.ReservationResponse;
 
-class ReservationServiceImplTest {
+class ReservationServiceTest {
 
     private final ReservationTimeDao reservationTimeDao = new InMemoryReservationTimeDao(new ArrayList<>());
     private final ReservationDao reservationDao = new InMemoryReservationDao(new ArrayList<>(), reservationTimeDao);
-    private final ReservationService reservationService = new ReservationServiceImpl(reservationDao,
+    private final ReservationService reservationService = new ReservationService(reservationDao,
             reservationTimeDao);
 
     @DisplayName("예약을 생성한다.")

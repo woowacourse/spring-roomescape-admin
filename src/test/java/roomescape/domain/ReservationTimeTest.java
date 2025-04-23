@@ -15,7 +15,7 @@ public class ReservationTimeTest {
     void equalIdTest(final long firstId, final long secondId, boolean result) {
 
         // given
-        ReservationTime reservationTime = new ReservationTime(1L, LocalTime.of(10, 0));
+        ReservationTime reservationTime = new ReservationTime(firstId, LocalTime.of(10, 0));
 
         // when
 

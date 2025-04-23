@@ -1,10 +1,9 @@
 package roomescape.user.domain;
 
-import com.fasterxml.jackson.annotation.JsonCreator;
 import java.time.LocalDate;
-import java.time.LocalTime;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
+import roomescape.admin.domain.ReservationTime;
 
 @Getter
 @EqualsAndHashCode(of = {"id"})
@@ -13,10 +12,9 @@ public class Reservation {
     private final Long id;
     private final String name;
     private final LocalDate date;
-    private final LocalTime time;
-
-    @JsonCreator
-    public Reservation(final Long id, final String name, final LocalDate date, final LocalTime time) {
+    private final ReservationTime time;
+    
+    public Reservation(final Long id, final String name, final LocalDate date, final ReservationTime time) {
         validateNotNull(name, date, time);
         this.id = id;
         this.name = name;
@@ -24,11 +22,11 @@ public class Reservation {
         this.time = time;
     }
 
-    public Reservation(final String name, final LocalDate date, final LocalTime time) {
+    public Reservation(final String name, final LocalDate date, final ReservationTime time) {
         this(null, name, date, time);
     }
 
-    private void validateNotNull(final String name, final LocalDate date, final LocalTime time) {
+    private void validateNotNull(final String name, final LocalDate date, final ReservationTime time) {
         if (name == null || name.isBlank()) {
             throw new IllegalArgumentException("Name cannot be null or blank");
         }

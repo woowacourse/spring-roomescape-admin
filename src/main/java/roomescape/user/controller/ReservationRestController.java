@@ -1,7 +1,7 @@
 package roomescape.user.controller;
 
 import java.util.List;
-import org.springframework.beans.factory.annotation.Qualifier;
+import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.ExceptionHandler;
@@ -15,18 +15,14 @@ import roomescape.exception.DataNotFoundException;
 import roomescape.user.controller.dto.ReservationRequest;
 import roomescape.user.controller.dto.ReservationResponse;
 import roomescape.user.domain.Reservation;
-import roomescape.user.repository.reservation.ReservationRepository;
+import roomescape.user.service.ReservationService;
 
 @RestController
+@RequiredArgsConstructor
 @RequestMapping("/reservations")
 public class ReservationRestController {
 
-    private final ReservationRepository reservationRepository;
-
-    public ReservationRestController(
-            @Qualifier("h2ReservationRepository") final ReservationRepository reservationRepository) {
-        this.reservationRepository = reservationRepository;
-    }
+    private final ReservationService reservationService;
 
     @ExceptionHandler(IllegalArgumentException.class)
     public ResponseEntity<Void> handleIllegalArgumentException(final IllegalArgumentException e) {
@@ -42,26 +38,28 @@ public class ReservationRestController {
     public ResponseEntity<ReservationResponse> persistReservation(
             @RequestBody final ReservationRequest reservationRequest
     ) {
-        final Long id = reservationRepository.save(reservationRequest.toReservation());
-        final Reservation found = reservationRepository.getOneById(id);
+        final Long id = reservationService.save(
+                reservationRequest.name(),
+                reservationRequest.date(),
+                reservationRequest.time()
+        );
+        final Reservation found = reservationService.getOneById(id);
         return ResponseEntity.ok(ReservationResponse.from(found));
     }
 
     @GetMapping
     public ResponseEntity<List<ReservationResponse>> retrieveReservations() {
-        final List<Reservation> reservations = reservationRepository.findAll();
+        final List<Reservation> reservations = reservationService.findAll();
         final List<ReservationResponse> reservationResponses = reservations.stream()
                 .map(ReservationResponse::from)
                 .toList();
-        
+
         return ResponseEntity.ok(reservationResponses);
     }
 
     @DeleteMapping("/{id}")
     public ResponseEntity<Void> deleteReservation(@PathVariable final Long id) {
-        final Reservation found = reservationRepository.getOneById(id);
-
-        reservationRepository.delete(found);
+        reservationService.deleteById(id);
 
         return ResponseEntity.ok().build();
     }

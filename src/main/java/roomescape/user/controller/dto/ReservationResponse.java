@@ -11,8 +11,8 @@ public record ReservationResponse(
         LocalTime time
 ) {
 
-    public static ReservationResponse from(Reservation reservation) {
+    public static ReservationResponse from(final Reservation reservation) {
         return new ReservationResponse(
-                reservation.getId(), reservation.getName(), reservation.getDate(), reservation.getTime());
+                reservation.getId(), reservation.getName(), reservation.getDate(), reservation.getTime().getStartAt());
     }
 }

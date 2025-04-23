@@ -131,5 +131,4 @@ public class ReservationTimeDAO implements ReservationTimeRepository {
             throw new AlreadyInUseException("reservation time with id " + timeId + " already exists");
         }
     }
-
 }

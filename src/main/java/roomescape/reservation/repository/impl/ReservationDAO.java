@@ -58,6 +58,10 @@ public class ReservationDAO implements ReservationRepository {
 
         Map<String, Long> params = Map.of("reservation_id", id);
 
+        return getReservation(sql, params);
+    }
+
+    private Optional<Reservation> getReservation(String sql, Map<String, Long> params) {
         try {
             Reservation reservation = jdbcTemplate.queryForObject(sql,
                     params,

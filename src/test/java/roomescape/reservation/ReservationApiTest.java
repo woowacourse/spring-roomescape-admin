@@ -158,5 +158,4 @@ class ReservationApiTest {
                 .then().log().all()
                 .statusCode(200);
     }
-
 }

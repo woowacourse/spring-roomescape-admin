@@ -51,5 +51,4 @@ class JdbcTest {
 
         assertThat(reservations.size()).isEqualTo(count);
     }
-
 }

@@ -92,5 +92,4 @@ public class ReservationTimeServiceTest {
         assertThatThrownBy(() -> reservationTimeRepository.deleteById(id))
                 .isInstanceOf(EntityNotFoundException.class);
     }
-
 }

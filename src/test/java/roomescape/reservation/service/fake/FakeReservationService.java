@@ -59,5 +59,4 @@ public class FakeReservationService implements ReservationService {
     public void addReservationTime(Long id, ReservationTime reservationTime){
         reservationTimes.put(id, reservationTime);
     }
-
 }

@@ -34,5 +34,4 @@ class ReservationTimeTest {
 
         softAssertions.assertAll();
     }
-
 }

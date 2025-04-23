@@ -169,5 +169,4 @@ class ReservationTimeDAOTest {
                     .isInstanceOf(EntityNotFoundException.class);
         }
     }
-
 }

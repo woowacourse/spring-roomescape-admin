@@ -46,5 +46,5 @@ public class TestConfig {
             throw new RuntimeException("파일을 가져오는 데 문제가 생겼습니다!");
         }
     }
-    
+
 }

@@ -124,5 +124,4 @@ class ReservationServiceTest {
         assertThatThrownBy(() -> reservationService.delete(id))
                 .isInstanceOf(EntityNotFoundException.class);
     }
-
 }

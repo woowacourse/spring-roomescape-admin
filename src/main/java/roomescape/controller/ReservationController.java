@@ -5,7 +5,6 @@ import java.util.List;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
-import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -19,7 +18,7 @@ import roomescape.service.dto.ReservationResponse;
 @RestController
 @RequestMapping("/reservations")
 @RequiredArgsConstructor
-public class RoomescapeController {
+public class ReservationController {
 
     private final ReservationService reservationService;
 
@@ -39,17 +38,5 @@ public class RoomescapeController {
     public ResponseEntity<Void> deleteReservation(@PathVariable Long id) {
         reservationService.deleteReservation(id);
         return ResponseEntity.ok().build();
-    }
-
-    @ExceptionHandler(IllegalArgumentException.class)
-    public ResponseEntity<Void> handleIllegalException(IllegalArgumentException e) {
-        System.out.println("IllegalArgumentException occurred: " + e.getMessage());
-        return ResponseEntity.badRequest().build();
-    }
-
-    @ExceptionHandler(IllegalStateException.class)
-    public ResponseEntity<Void> handleIllegalException(IllegalStateException e) {
-        System.out.println("IllegalStateException occurred: " + e.getMessage());
-        return ResponseEntity.internalServerError().build();
     }
 }

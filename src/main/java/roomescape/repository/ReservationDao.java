@@ -45,7 +45,7 @@ public class ReservationDao {
                 INSERT INTO reservation (name, date, time)
                 VALUES (?, ?, ?)            
                 """;
-        jdbcTemplate.update((connection) -> {
+        jdbcTemplate.update(connection -> {
             PreparedStatement preparedStatement = connection.prepareStatement(insertSql,
                     Statement.RETURN_GENERATED_KEYS);
             preparedStatement.setString(1, reservation.getName());
@@ -54,5 +54,13 @@ public class ReservationDao {
             return preparedStatement;
         }, generatedKeyHolder);
         return generatedKeyHolder.getKey().longValue();
+    }
+
+    public void deleteById(final Long id) {
+        String deleteSql = """
+                DELETE FROM reservation
+                WHERE id = ?
+                """;
+        jdbcTemplate.update(deleteSql, id);
     }
 }

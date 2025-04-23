@@ -33,7 +33,7 @@ class ReservationDaoTest {
     void findAllReservations() {
         List<Reservation> reservations = reservationDao.findAll();
 
-        assertThat(reservations).hasSize(0);
+        assertThat(reservations).isEmpty();
     }
 
     @DisplayName("예약을 저장한다.")
@@ -42,8 +42,20 @@ class ReservationDaoTest {
         Reservation reservation = new Reservation(0L, "포스티",
                 new ReservationDateTime(LocalDateTime.of(2025, 4, 23, 10, 0)));
 
-        Long id = reservationDao.insert(reservation);
+        reservationDao.insert(reservation);
 
-        assertThat(id).isEqualTo(1L);
+        assertThat(reservationDao.findAll()).hasSize(1);
+    }
+
+    @DisplayName("예약 번호와 일치하는 예약을 삭제한다.")
+    @Test
+    void deleteReservationById() {
+        Reservation reservation = new Reservation(0L, "포스티",
+                new ReservationDateTime(LocalDateTime.of(2025, 4, 23, 10, 0)));
+        Long reservationId = reservationDao.insert(reservation);
+
+        reservationDao.deleteById(reservationId);
+
+        assertThat(reservationDao.findAll()).isEmpty();
     }
 }

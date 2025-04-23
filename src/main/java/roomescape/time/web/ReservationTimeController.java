@@ -35,7 +35,6 @@ public class ReservationTimeController {
         ReservationTime savedReservation = reservationTimeDao.save(request.toReservationTime());
         ReservationTimeResponse response = new ReservationTimeResponse(savedReservation);
         return ResponseEntity.ok().body(response);
-
     }
 
     @DeleteMapping("/{id}")

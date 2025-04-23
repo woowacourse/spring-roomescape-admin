@@ -50,4 +50,9 @@ public class H2ReservationTimeRepository implements ReservationTimeRepository{
                  return reservationTime;
                 });
     }
+
+    @Override
+    public int deleteById(long id) {
+        return 0;
+    }
 }

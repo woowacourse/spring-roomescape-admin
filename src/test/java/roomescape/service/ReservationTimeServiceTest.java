@@ -62,5 +62,10 @@ public class ReservationTimeServiceTest {
         public List<ReservationTime> findAll() {
             return reservationTimes;
         }
+
+        @Override
+        public int deleteById(long id) {
+            return 0;
+        }
     }
 }

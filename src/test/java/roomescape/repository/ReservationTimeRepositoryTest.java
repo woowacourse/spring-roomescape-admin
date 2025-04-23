@@ -2,6 +2,7 @@ package roomescape.repository;
 
 import java.time.LocalTime;
 import java.util.List;
+import org.assertj.core.api.Assertions;
 import org.assertj.core.api.SoftAssertions;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -54,6 +55,18 @@ public class ReservationTimeRepositoryTest {
         //afterEach
         jdbcTemplate.update("DELETE FROM reservation_time");
         jdbcTemplate.update("ALTER TABLE reservation_time ALTER COLUMN id RESTART WITH 1");
+    }
+
+    @Test
+    @DisplayName("아이디를 통해 예약 시간을 삭제한다")
+    void deleteReservationTimeById(){
+        // given
+        long id = 1;
+        // when
+        int row = reservationTimeRepository.deleteById(id);
+
+        // then
+        Assertions.assertThat(row).isEqualTo(1);
     }
 
 }

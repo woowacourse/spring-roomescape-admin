@@ -1,9 +1,9 @@
-package roomescape.model;
+package roomescape.domain;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.LocalTime;
-import roomescape.exception.ReservationException;
+import roomescape.domain.exception.ReservationException;
 
 public final class Reservation {
 

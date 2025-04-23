@@ -1,4 +1,4 @@
-package roomescape.entity;
+package roomescape.persist.entity;
 
 import java.util.Objects;
 

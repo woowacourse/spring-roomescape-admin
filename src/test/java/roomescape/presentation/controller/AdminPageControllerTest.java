@@ -1,4 +1,4 @@
-package roomescape.controller;
+package roomescape.presentation.controller;
 
 import static org.hamcrest.Matchers.containsString;
 

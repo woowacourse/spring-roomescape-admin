@@ -5,6 +5,7 @@ import java.time.format.DateTimeFormatter;
 import java.util.Objects;
 import roomescape.domain.Reservation;
 import roomescape.domain.ReservationDate;
+import roomescape.domain.ReservationDateTimeFormatter;
 
 public final class ReservationEntity {
 
@@ -47,9 +48,12 @@ public final class ReservationEntity {
         if (timeEntity.getId() == null) {
             throw new IllegalArgumentException("예약 가능 시간 엔티티의 ID가 null이어서 도메인 객체로 변환할 수 없습니다.");
         }
-        return new Reservation(id, name,
-                new ReservationDate(LocalDate.parse(date, DateTimeFormatter.ofPattern("yyyy-MM-dd"))),
-                timeEntity.toDomain());
+        return new Reservation(
+                id,
+                name,
+                new ReservationDate(ReservationDateTimeFormatter.parseDate(date)),
+                timeEntity.toDomain()
+        );
     }
 
     public Long getId() {

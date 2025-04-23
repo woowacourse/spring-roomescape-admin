@@ -21,7 +21,8 @@ public final class ConsoleReservationTimeController {
     public void addReservationTime() {
         LocalTime time = View.readReservationTime();
         ReservationTimeResponseDto reservationTimeResponseDto = reservationTimeService.addReservationTime(
-                new ReservationTimeRequestDto(time));
+                new ReservationTimeRequestDto(time)
+        );
         View.printReservationTime(reservationTimeResponseDto);
     }
 

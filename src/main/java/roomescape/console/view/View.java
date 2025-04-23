@@ -1,10 +1,9 @@
 package roomescape.console.view;
 
-import java.time.LocalDate;
 import java.time.LocalTime;
-import java.time.format.DateTimeFormatter;
 import java.util.List;
 import java.util.Scanner;
+import roomescape.domain.ReservationDateTimeFormatter;
 import roomescape.presentation.dto.ReservationRequestDto;
 import roomescape.presentation.dto.ReservationResponseDto;
 import roomescape.presentation.dto.ReservationTimeResponseDto;
@@ -38,7 +37,7 @@ public final class View {
         displayAvailableTimes(availableTimes);
         System.out.println("예약 시간 ID를 입력하세요:");
         Long timeId = scanner.nextLong();
-        return new ReservationRequestDto(name, LocalDate.parse(date), timeId);
+        return new ReservationRequestDto(name, ReservationDateTimeFormatter.parseDate(date), timeId);
     }
 
     private static void displayAvailableTimes(List<ReservationTimeResponseDto> availableTimes) {
@@ -77,7 +76,7 @@ public final class View {
     public static LocalTime readReservationTime() {
         System.out.println("예약 시간을 입력하세요 (HH:MM):");
         Scanner scanner = new Scanner(System.in);
-        return LocalTime.parse(scanner.nextLine(), DateTimeFormatter.ofPattern("HH:mm"));
+        return ReservationDateTimeFormatter.parseTime(scanner.nextLine());
     }
 
     public static void printReservationTime(ReservationTimeResponseDto reservationTimeResponseDto) {

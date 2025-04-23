@@ -1,7 +1,6 @@
 package roomescape.persist.repository;
 
 import java.time.LocalTime;
-import java.time.format.DateTimeFormatter;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -11,6 +10,7 @@ import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;
 import org.springframework.jdbc.core.simple.SimpleJdbcInsert;
 import org.springframework.stereotype.Repository;
+import roomescape.domain.ReservationDateTimeFormatter;
 import roomescape.persist.entity.ReservationTimeEntity;
 import roomescape.domain.ReservationTime;
 
@@ -73,10 +73,10 @@ public class H2ReservationTimeRepository implements ReservationTimeRepository {
     }
 
     @Override
-    public boolean existsByStartTime(LocalTime localTime) {
+    public boolean existsByStartTime(LocalTime startAt) {
         String sql = "SELECT EXISTS (SELECT 1 FROM reservation_time WHERE start_at = ?)";
-        String formattedTime = localTime.format(DateTimeFormatter.ofPattern("HH:mm"));
-        Boolean exists = jdbcTemplate.queryForObject(sql, Boolean.class, formattedTime);
+        String formattedStartAt = ReservationDateTimeFormatter.formatTime(startAt);
+        Boolean exists = jdbcTemplate.queryForObject(sql, Boolean.class, formattedStartAt);
         return Boolean.TRUE.equals(exists);
     }
 }

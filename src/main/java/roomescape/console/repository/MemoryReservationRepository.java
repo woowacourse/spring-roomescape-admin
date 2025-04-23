@@ -1,14 +1,12 @@
 package roomescape.console.repository;
 
-import java.time.LocalDate;
-import java.time.LocalTime;
-import java.time.format.DateTimeFormatter;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.concurrent.atomic.AtomicLong;
 import roomescape.domain.Reservation;
 import roomescape.domain.ReservationDate;
+import roomescape.domain.ReservationDateTimeFormatter;
 import roomescape.domain.ReservationTime;
 import roomescape.persist.entity.ReservationEntity;
 import roomescape.persist.entity.ReservationTimeEntity;
@@ -25,11 +23,9 @@ public final class MemoryReservationRepository implements ReservationRepository 
                 .map(reservationEntity -> new Reservation(
                         reservationEntity.getId(),
                         reservationEntity.getName(),
-                        new ReservationDate(LocalDate.parse(reservationEntity.getDate(),
-                                DateTimeFormatter.ofPattern("yyyy-MM-dd"))),
+                        new ReservationDate(ReservationDateTimeFormatter.parseDate(reservationEntity.getDate())),
                         new ReservationTime(reservationEntity.getTimeEntity().getId(),
-                                LocalTime.parse(reservationEntity.getTimeEntity().getStartAt(),
-                                        DateTimeFormatter.ofPattern("HH:mm")))
+                                ReservationDateTimeFormatter.parseTime(reservationEntity.getTimeEntity().getStartAt()))
                 ))
                 .toList();
     }

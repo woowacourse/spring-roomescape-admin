@@ -38,7 +38,8 @@ public final class MemoryReservationTimeRepository implements ReservationTimeRep
         long id = idGenerator.getAndIncrement();
         ReservationTimeEntity reservationTimeEntity = new ReservationTimeEntity(
                 id,
-                reservationTime.getStartTime().toString());
+                reservationTime.getStartTime().toString()
+        );
         reservationTimes.add(reservationTimeEntity);
         return new ReservationTime(
                 id,

@@ -29,8 +29,7 @@ public final class ReservationTimeService {
         if (reservationTimeRepository.existsByStartTime(reservationTimeRequestDto.startAt())) {
             throw new ReservationTimeException("예약 가능한 시간은 중복될 수 없습니다.");
         }
-        ReservationTime reservationTime = reservationTimeRepository.add(
-                new ReservationTime(reservationTimeRequestDto.startAt()));
+        ReservationTime reservationTime = reservationTimeRepository.add(new ReservationTime(reservationTimeRequestDto.startAt()));
         return new ReservationTimeResponseDto(reservationTime.getId(), reservationTime.getStartTime());
     }
 

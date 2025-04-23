@@ -87,3 +87,70 @@
 ## 6단계
 
 - [x] 예약 추가 및 삭제 시 데이터베이스를 활용해 예약을 추가하고 삭제한다.
+
+## 7단계
+
+- [ ] 아래의 시간 관리 관련 API 기능들을 구현한다.
+
+### API 명세
+
+- [ ] 시간 추가 API 구현
+    - [ ] request
+    ```
+    POST /times HTTP/1.1
+    content-type: application/json
+      {
+    "startAt": "10:00"
+    }
+    ```
+    - [ ] response
+    ```
+    HTTP/1.1 200
+    Content-Type: application/json
+      {
+    "id": 1,
+    "startAt": "10:00"
+    }
+    ```
+
+- [ ] 시간 조회 API 구현
+    - [ ] request
+    ```
+    GET /times HTTP/1.1
+    ```
+    - [ ] response
+    ```
+    HTTP/1.1 200
+    Content-Type: application/json
+    
+    [
+    {
+    "id": 1,
+    "startAt": "10:00"
+    }
+    ]
+    ```
+- [ ] 시간 삭제 API 구현
+    - [ ] request
+    ```
+    DELETE /times/1 HTTP/1.1
+    ```
+    - [ ] response
+    ```
+    HTTP/1.1 200    
+    ```  
+
+### 데이터베이스 스키마 - 예약 시간
+
+```sql
+CREATE TABLE reservation_time
+(
+    id       BIGINT       NOT NULL AUTO_INCREMENT,
+    start_at VARCHAR(255) NOT NULL,
+    PRIMARY KEY (id)
+);
+
+```
+
+
+

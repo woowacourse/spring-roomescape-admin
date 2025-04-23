@@ -36,7 +36,7 @@ public class JdbcReservationTimeRepository implements ReservationTimeRepository 
 
     @Override
     public boolean existByStartAt(LocalTime startAt) {
-        String sql = "SELECT COUNT(*) FROM reservation_time WHERE startAt = ?";
+        String sql = "SELECT COUNT(*) FROM reservation_time WHERE start_at = ?";
         return jdbcTemplate.queryForObject(sql, Long.class, startAt) > 0L;
     }
 
@@ -46,5 +46,11 @@ public class JdbcReservationTimeRepository implements ReservationTimeRepository 
         params.put("start_at", reservationTime.getStartAt());
         Long id = simpleJdbcInsert.executeAndReturnKey(params).longValue();
         return ReservationTime.toEntity(reservationTime, id);
+    }
+
+    @Override
+    public int deleteByIdAndCountAffected(Long id) {
+        String sql = "DELETE FROM reservation_time WHERE id = ?";
+        return jdbcTemplate.update(sql, id);
     }
 }

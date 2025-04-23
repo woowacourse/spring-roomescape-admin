@@ -12,4 +12,6 @@ public interface ReservationTimeRepository {
     boolean existByStartAt(LocalTime startAt);
 
     ReservationTime insertAndGet(ReservationTime reservationTime);
+
+    int deleteByIdAndCountAffected(Long id);
 }

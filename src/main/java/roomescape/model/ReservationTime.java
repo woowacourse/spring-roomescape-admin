@@ -28,6 +28,10 @@ public class ReservationTime {
         return id != null;
     }
 
+    public Long getId() {
+        return id;
+    }
+
     public LocalTime getStartAt() {
         return startAt;
     }

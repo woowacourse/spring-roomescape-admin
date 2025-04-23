@@ -2,12 +2,16 @@ package roomescape.controller.api;
 
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.server.ResponseStatusException;
+import roomescape.dto.ReservationTimeCreateRequest;
+import roomescape.dto.ReservationTimeGetResponse;
 import roomescape.model.ReservationTime;
 import roomescape.service.ReservationTimeService;
 
@@ -25,22 +29,38 @@ public class ReservationTimeRestController {
     }
 
     @GetMapping
-    public ResponseEntity<List<ReservationTime>> getReservationTimes() {
+    public ResponseEntity<List<ReservationTimeGetResponse>> getReservationTimes() {
+        List<ReservationTime> reservationTimes = reservationTimeService.getAll();
+        List<ReservationTimeGetResponse> reservationTimeGetResponses = reservationTimes.stream()
+                .map(ReservationTimeGetResponse::from)
+                .toList();
         return ResponseEntity
                 .status(HttpStatus.OK)
-                .body(reservationTimeService.getAll());
+                .body(reservationTimeGetResponses);
     }
 
     @PostMapping
-    public ResponseEntity<ReservationTime> addReservationTime(@RequestBody LocalTime startAt) {
+    public ResponseEntity<ReservationTimeGetResponse> addReservationTime(@RequestBody ReservationTimeCreateRequest reservationTimeCreateRequest) {
         try {
-            reservationTimeService.validateDuplicateStartTime(startAt);
-            ReservationTime newReservationTime = reservationTimeService.addAndGet(startAt);
+            reservationTimeService.validateDuplicateStartTime(reservationTimeCreateRequest.startAt());
+            ReservationTime newReservationTime = reservationTimeService.addAndGet(reservationTimeCreateRequest.startAt());
             return ResponseEntity
                     .status(HttpStatus.OK)
-                    .body(newReservationTime);
+                    .body(ReservationTimeGetResponse.from(newReservationTime));
         } catch (IllegalArgumentException exception) {
             throw new ResponseStatusException(HttpStatus.BAD_REQUEST, exception.getMessage());
+        }
+    }
+
+    @DeleteMapping("/{id}")
+    public ResponseEntity<Void> deleteReservationTime(@PathVariable("id") Long id) {
+        try {
+            reservationTimeService.deleteById(id);
+            return ResponseEntity
+                    .status(HttpStatus.OK)
+                    .build();
+        } catch (IllegalArgumentException exception) {
+            throw new ResponseStatusException(HttpStatus.NOT_FOUND);
         }
     }
 }

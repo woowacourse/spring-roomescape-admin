@@ -1,4 +1,4 @@
-package roomescape.controller.time;
+package roomescape.controller.reservationtime;
 
 import java.util.HashMap;
 import java.util.List;
@@ -14,18 +14,18 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
-import roomescape.controller.time.request.TimeRequest;
-import roomescape.controller.time.response.TimeResponse;
-import roomescape.model.Time;
+import roomescape.controller.reservationtime.request.ReservationTimeRequest;
+import roomescape.controller.reservationtime.response.ReservationTimeResponse;
+import roomescape.model.ReservationTime;
 
 @RequestMapping("/times")
 @RestController
-public class TimeController {
+public class ReservationTimeController {
 
     private final JdbcTemplate jdbcTemplate;
     private SimpleJdbcInsert insertActor;
 
-    public TimeController(final JdbcTemplate jdbcTemplate) {
+    public ReservationTimeController(final JdbcTemplate jdbcTemplate) {
         this.jdbcTemplate = jdbcTemplate;
         this.insertActor = new SimpleJdbcInsert(jdbcTemplate)
                 .withTableName("reservation_time")
@@ -33,23 +33,23 @@ public class TimeController {
     }
 
     @PostMapping
-    ResponseEntity<TimeResponse> save(@RequestBody TimeRequest timeRequest) {
-        Time time = timeRequest.toTime();
+    ResponseEntity<ReservationTimeResponse> save(@RequestBody ReservationTimeRequest reservationTimeRequest) {
+        ReservationTime time = reservationTimeRequest.toTime();
         Long id = saveAndGetId(time);
-        return ResponseEntity.ok(TimeResponse.from(id, time));
+        return ResponseEntity.ok(ReservationTimeResponse.from(id, time));
     }
 
     @GetMapping
-    ResponseEntity<List<TimeResponse>> read() {
+    ResponseEntity<List<ReservationTimeResponse>> read() {
         final String sql = "select id, start_at from reservation_time";
-        final RowMapper<Time> rowMapper = getRowMapper();
-        final List<Time> times = jdbcTemplate.query(sql, rowMapper);
+        final RowMapper<ReservationTime> rowMapper = getRowMapper();
+        final List<ReservationTime> times = jdbcTemplate.query(sql, rowMapper);
 
-        final List<TimeResponse> timeResponses = times.stream()
-                .map(TimeResponse::of)
+        final List<ReservationTimeResponse> reservationTimeResponses = times.stream()
+                .map(ReservationTimeResponse::of)
                 .toList();
 
-        return ResponseEntity.ok(timeResponses);
+        return ResponseEntity.ok(reservationTimeResponses);
     }
 
     @DeleteMapping("/{id}")
@@ -59,7 +59,7 @@ public class TimeController {
         return ResponseEntity.ok().build();
     }
 
-    private Long saveAndGetId(final Time time) {
+    private Long saveAndGetId(final ReservationTime time) {
         Map<String, Object> parameters = new HashMap<>(1);
         parameters.put("start_at", time.getStartAt());
         return getGenerateId(parameters);
@@ -70,9 +70,9 @@ public class TimeController {
         return number.longValue();
     }
 
-    private RowMapper<Time> getRowMapper() {
+    private RowMapper<ReservationTime> getRowMapper() {
         return (resultSet, rowNum) ->
-                Time.from(
+                ReservationTime.from(
                         resultSet.getLong("id"),
                         resultSet.getTime("start_at").toLocalTime());
     }

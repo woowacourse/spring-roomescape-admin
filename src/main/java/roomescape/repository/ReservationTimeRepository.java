@@ -18,7 +18,7 @@ public class ReservationTimeRepository {
         this.jdbcTemplate = jdbcTemplate;
     }
 
-    public ReservationTime add(CreateReservationTimeDto createReservationTimeDto) {
+    public Long addAndGetId(CreateReservationTimeDto createReservationTimeDto) {
         SimpleJdbcInsert simpleJdbcInsert = new SimpleJdbcInsert(jdbcTemplate.getDataSource())
                 .withTableName("reservation_time")
                 .usingColumns("start_at")
@@ -27,12 +27,10 @@ public class ReservationTimeRepository {
         SqlParameterSource parameters = new MapSqlParameterSource()
                 .addValue("start_at", createReservationTimeDto.startAt());
 
-        Long id = simpleJdbcInsert.executeAndReturnKey(parameters).longValue();
-
-        return findById(id);
+        return simpleJdbcInsert.executeAndReturnKey(parameters).longValue();
     }
 
-    private ReservationTime findById(Long id) {
+    public ReservationTime findById(Long id) {
         String sql = "SELECT id, start_at FROM reservation_time WHERE id = ?";
         return jdbcTemplate.queryForObject(sql,
                 (resultSet, rowNum) -> new ReservationTime(

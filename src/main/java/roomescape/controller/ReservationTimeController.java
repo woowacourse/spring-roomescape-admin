@@ -11,33 +11,31 @@ import org.springframework.web.bind.annotation.RestController;
 import roomescape.dto.CreateReservationTimeDto;
 import roomescape.dto.ReservationTimeResponseDto;
 import roomescape.entity.ReservationTime;
-import roomescape.repository.ReservationTimeRepository;
+import roomescape.service.ReservationTimeService;
 
 @RestController
 @RequestMapping("/times")
 public class ReservationTimeController {
 
-    private final ReservationTimeRepository reservationTimeRepository;
+    private final ReservationTimeService reservationTimeService;
 
-    public ReservationTimeController(ReservationTimeRepository reservationTimeRepository) {
-        this.reservationTimeRepository = reservationTimeRepository;
+    public ReservationTimeController(ReservationTimeService reservationTimeService) {
+        this.reservationTimeService = reservationTimeService;
     }
 
     @PostMapping
     public ReservationTimeResponseDto createTime(@RequestBody CreateReservationTimeDto request) {
-        ReservationTime reservationTime = reservationTimeRepository.add(request);
+        ReservationTime reservationTime = reservationTimeService.createReservationTime(request);
         return ReservationTimeResponseDto.from(reservationTime);
     }
 
     @GetMapping
     public List<ReservationTimeResponseDto> getTimes() {
-        return reservationTimeRepository.findAll().stream()
-                .map(ReservationTimeResponseDto::from)
-                .toList();
+        return reservationTimeService.getAllReservationTimes();
     }
 
     @DeleteMapping("/{id}")
     public void deleteTime(@PathVariable Long id) {
-        reservationTimeRepository.deleteById(id);
+        reservationTimeService.deleteReservationTime(id);
     }
 }

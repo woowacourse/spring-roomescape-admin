@@ -7,6 +7,7 @@ import org.springframework.jdbc.support.KeyHolder;
 import org.springframework.stereotype.Repository;
 import roomescape.controller.ReservationCreateRequest;
 import roomescape.entity.Reservation;
+import roomescape.entity.ReservationTime;
 
 import java.sql.PreparedStatement;
 import java.util.List;
@@ -24,7 +25,8 @@ public class ReservationRepository {
             new Reservation(row.getLong("id"),
                     row.getString("name"),
                     row.getDate("date").toLocalDate(),
-                    row.getTime("time").toLocalTime());
+                    new ReservationTime(row.getLong("time_id"), row.getTime("time_value").toLocalTime())
+            );
 
     public Long add(final ReservationCreateRequest request) {
         String sql = "INSERT INTO RESERVATION (NAME, DATE, TIME) VALUES (?, ?, ?)";
@@ -33,7 +35,7 @@ public class ReservationRepository {
             PreparedStatement ps = connection.prepareStatement(sql, new String[]{"id"});
             ps.setString(1, request.name());
             ps.setString(2, String.valueOf(request.date()));
-            ps.setString(3, String.valueOf(request.time()));
+            ps.setLong(3, request.reservationId());
             return ps;
         }, keyHolder);
 
@@ -41,7 +43,9 @@ public class ReservationRepository {
     }
 
     public Reservation findById(final Long id) {
-        String sql = "SELECT * FROM RESERVATION WHERE id = ?";
+        String sql = "SELECT r.id as reservation_id, r.name, r.date, t.id as time_id, t.start_at as time_value " +
+                "FROM reservation as r inner join reservation_time as t on r.time_id = t.id " +
+                "WHERE id = ?";
         return jdbcTemplate.queryForObject(sql, reservationRowMapper, id);
     }
 
@@ -54,7 +58,8 @@ public class ReservationRepository {
     }
 
     public List<Reservation> findAll() {
-        String sql = "SELECT * FROM RESERVATION";
+        String sql = "SELECT r.id as reservation_id, r.name, r.date, t.id as time_id, t.start_at as time_value " +
+                "FROM reservation as r inner join reservation_time as t on r.time_id = t.id";
         return jdbcTemplate.query(sql, reservationRowMapper);
     }
 }

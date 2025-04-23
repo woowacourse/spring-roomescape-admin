@@ -11,12 +11,14 @@ import roomescape.domain.ReservationTime;
 @Repository
 public class MemoryReservationTimeRepository implements ReservationTimeRepository {
 
+    private static final int START_INDEX = 1;
+
     private final ConcurrentHashMap<Long, ReservationTime> reservationTimes;
     private final AtomicLong index;
 
     public MemoryReservationTimeRepository() {
         this.reservationTimes = new ConcurrentHashMap<>();
-        this.index = new AtomicLong(1);
+        this.index = new AtomicLong(START_INDEX);
     }
 
     @Override

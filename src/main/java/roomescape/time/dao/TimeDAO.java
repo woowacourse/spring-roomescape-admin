@@ -1,16 +1,25 @@
 package roomescape.time.dao;
 
+import java.time.LocalTime;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import org.springframework.jdbc.core.JdbcTemplate;
+import org.springframework.jdbc.core.simple.SimpleJdbcInsert;
 import org.springframework.stereotype.Repository;
 import roomescape.time.domain.Time;
+import roomescape.time.dto.TimeRequest;
 
 @Repository
 public class TimeDAO {
 
     private final JdbcTemplate jdbcTemplate;
+    private final SimpleJdbcInsert simpleJdbcInsert;
     public TimeDAO(final JdbcTemplate jdbcTemplate) {
         this.jdbcTemplate = jdbcTemplate;
+        this.simpleJdbcInsert = new SimpleJdbcInsert(jdbcTemplate)
+                .withTableName("reservation_time")
+                .usingGeneratedKeyColumns("id");
     }
 
     public List<Time> findAllTimes() {
@@ -25,5 +34,13 @@ public class TimeDAO {
                     return time;
                 });
         return times;
+    }
+
+    public Time insertTime(TimeRequest timeRequest) {
+        Map<String, LocalTime> parameters = new HashMap<>();
+        parameters.put("start_at", timeRequest.localTime());
+
+        Number insertedId = simpleJdbcInsert.executeAndReturnKey(parameters);
+        return new Time(insertedId.longValue(), timeRequest.localTime());
     }
 }

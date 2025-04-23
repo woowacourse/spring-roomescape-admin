@@ -2,10 +2,13 @@ package roomescape.time.controller;
 
 import java.util.List;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import roomescape.time.dao.TimeDAO;
 import roomescape.time.domain.Time;
+import roomescape.time.dto.TimeRequest;
 import roomescape.time.dto.TimeResponse;
 
 @RestController
@@ -25,5 +28,14 @@ public class TimeController {
         return times.stream()
                 .map(time -> new TimeResponse(time.getId(), time.getLocalTime()))
                 .toList();
+    }
+
+    @PostMapping
+    public TimeResponse createTime(@RequestBody TimeRequest timeRequest) {
+        Time time = timeDAO.insertTime(timeRequest);
+        return new TimeResponse(
+                time.getId(),
+                time.getLocalTime()
+        );
     }
 }

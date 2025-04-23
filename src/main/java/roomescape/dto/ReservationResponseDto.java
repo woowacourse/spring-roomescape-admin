@@ -1,8 +1,8 @@
 package roomescape.dto;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
-import roomescape.model.Reservation;
-import roomescape.model.ReservationTime;
+import roomescape.domain.Reservation;
+import roomescape.domain.ReservationTime;
 
 import java.time.LocalDate;
 

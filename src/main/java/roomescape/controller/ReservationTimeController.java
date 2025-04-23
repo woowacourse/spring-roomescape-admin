@@ -4,9 +4,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-import roomescape.dao.ReservationTimeDao;
 import roomescape.dto.ReservationTimeCreateRequestDto;
 import roomescape.dto.ReservationTimeResponseDto;
+import roomescape.repository.ReservationTimeDao;
 
 import java.util.List;
 

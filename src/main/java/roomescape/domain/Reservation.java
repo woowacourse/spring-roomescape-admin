@@ -1,4 +1,4 @@
-package roomescape.model;
+package roomescape.domain;
 
 import java.time.LocalDate;
 
@@ -8,10 +8,6 @@ public record Reservation(Long id, String name, LocalDate date, ReservationTime 
         validateName(name);
         validateDate(date);
         validateReservationTime(reservationTime);
-    }
-
-    public boolean isSameId(Long id) {
-        return this.id == id;
     }
 
     private static void validateName(String name) {

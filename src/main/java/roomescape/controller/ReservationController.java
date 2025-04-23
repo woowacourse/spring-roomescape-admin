@@ -3,12 +3,12 @@ package roomescape.controller;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-import roomescape.dao.ReservationDao;
+import roomescape.domain.Reservation;
+import roomescape.domain.ReservationTime;
 import roomescape.dto.ReservationCreateRequestDto;
 import roomescape.dto.ReservationResponseDto;
 import roomescape.dto.ReservationTimeResponseDto;
-import roomescape.model.Reservation;
-import roomescape.model.ReservationTime;
+import roomescape.repository.ReservationDao;
 
 import java.util.List;
 

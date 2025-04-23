@@ -3,6 +3,7 @@ package roomescape.time;
 import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.JdbcTemplate;
+import org.springframework.jdbc.core.RowMapper;
 import org.springframework.jdbc.core.namedparam.BeanPropertySqlParameterSource;
 import org.springframework.jdbc.core.namedparam.SqlParameterSource;
 import org.springframework.jdbc.core.simple.SimpleJdbcInsert;
@@ -35,25 +36,22 @@ public class TimeJdbcDao implements TimeDao {
     public List<Time> findAllTime() {
         final String sql = "SELECT * FROM RESERVATION_TIME";
 
-        final List<Time> times = jdbcTemplate.query(sql, (resultSet, rowNum) -> {
-            return new Time(
-                    resultSet.getLong("id"),
-                    resultSet.getTime("start_at").toLocalTime()
-            );
-        });
-
-        return times;
+        return jdbcTemplate.query(sql, timeMapper());
     }
 
     @Override
     public Time findTimeById(final Long id) {
         final String sql = "SELECT * FROM RESERVATION_TIME WHERE id=?";
-        return jdbcTemplate.queryForObject(sql, (rs, rowNum) -> {
+        return jdbcTemplate.queryForObject(sql, timeMapper(), id);
+    }
+
+    private RowMapper<Time> timeMapper() {
+        return (resultSet, rowNum) -> {
             return new Time(
-                    rs.getLong("id"),
-                    rs.getTime("start_at").toLocalTime()
+                    resultSet.getLong("id"),
+                    resultSet.getTime("start_at").toLocalTime()
             );
-        }, id);
+        };
     }
 
     @Override

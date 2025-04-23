@@ -15,11 +15,9 @@ import roomescape.dto.ReservationResponseDto;
 import roomescape.dto.ReservationRequestDto;
 import roomescape.domain_entity.Id;
 import roomescape.domain_entity.Reservation;
-import roomescape.domain_entity.Reservations;
 
 @Controller
 public class AdminController {
-    private final Reservations reservations = new Reservations();
 
     @Autowired
     private ReservationDao reservationDao;
@@ -48,7 +46,7 @@ public class AdminController {
             @RequestBody ReservationRequestDto reservationRequest
     ) {
         Reservation newReservation = reservationRequest.toEntity();
-        reservations.add(newReservation);
+        reservationDao.create(newReservation);
         return ResponseEntity.ok().body(ReservationResponseDto.of(newReservation));
     }
 
@@ -58,7 +56,7 @@ public class AdminController {
             @PathVariable("id") long idRequest
     ) {
         try {
-            reservations.deleteById(new Id(idRequest));
+            reservationDao.deleteById(new Id(idRequest));
             return ResponseEntity.ok().build();
         } catch (IllegalArgumentException e) {
             return ResponseEntity.badRequest().body(e.getMessage());

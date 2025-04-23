@@ -17,8 +17,9 @@ public class ReservationDao {
     }
 
     public List<Reservation> findAll() {
+        String sql = "select id, name, date, time from reservation";
         List<Reservation> reservations = jdbcTemplate.query(
-                "select id, name, date, time from reservation",
+                sql,
                 (rs, rowNum) ->
                         new Reservation(
                                 new Id(rs.getLong("id")),
@@ -29,5 +30,6 @@ public class ReservationDao {
         );
         return reservations;
     }
+
 
 }

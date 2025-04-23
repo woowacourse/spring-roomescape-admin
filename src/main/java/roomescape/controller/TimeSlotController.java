@@ -2,7 +2,6 @@ package roomescape.controller;
 
 import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -42,8 +41,8 @@ public class TimeSlotController {
     public ResponseEntity<Void> delete(@PathVariable("id") Long id) {
         boolean isRemoved = repository.removeById(id);
         if (isRemoved) {
-            return ResponseEntity.ok().build();
+            return ResponseEntity.noContent().build();
         }
-        return ResponseEntity.status(HttpStatus.NO_CONTENT).build();
+        return ResponseEntity.notFound().build();
     }
 }

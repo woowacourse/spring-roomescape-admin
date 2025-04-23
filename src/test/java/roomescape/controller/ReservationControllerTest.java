@@ -1,6 +1,7 @@
 package roomescape.controller;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import static org.junit.jupiter.api.Assertions.assertAll;
 import static roomescape.test.fixture.ReservationFixture.addReservationInRepository;
 import static roomescape.test.fixture.ReservationTimeFixture.addReservationTimeInRepository;
@@ -20,6 +21,8 @@ import org.springframework.http.ResponseEntity;
 import roomescape.domain.Reservation;
 import roomescape.domain.ReservationTime;
 import roomescape.dto.ReservationCreationRequest;
+import roomescape.exception.BadRequestException;
+import roomescape.exception.NotFoundException;
 import roomescape.repository.ReservationRepository;
 import roomescape.repository.ReservationTimeRepository;
 import roomescape.service.ReservationService;
@@ -77,12 +80,9 @@ class ReservationControllerTest {
         ReservationCreationRequest request = new ReservationCreationRequest(
                 "reservation", LocalDate.now(), pastReservationTime.getId());
 
-        ResponseEntity<Reservation> response = controller.createReservation(request);
-
-        assertAll(
-                () -> assertThat(reservationRepository.findAll()).isEmpty(),
-                () -> checkStatusCode(response, HttpStatus.BAD_REQUEST)
-        );
+        assertThatThrownBy(() -> controller.createReservation(request))
+                .isInstanceOf(BadRequestException.class)
+                .hasMessage("[ERROR] 이미 과거의 날짜와 시간입니다.");
     }
 
     @DisplayName("이미 예약한 날짜와 시간으로는 예약이 불가능하다")
@@ -94,12 +94,9 @@ class ReservationControllerTest {
         ReservationCreationRequest request =
                 new ReservationCreationRequest("reservation1", sameDate, sameTime.getId());
 
-        ResponseEntity<Reservation> response = controller.createReservation(request);
-
-        assertAll(
-                () -> assertThat(reservationRepository.findAll()).hasSize(1),
-                () -> checkStatusCode(response, HttpStatus.BAD_REQUEST)
-        );
+        assertThatThrownBy(() -> controller.createReservation(request))
+                .isInstanceOf(BadRequestException.class)
+                .hasMessage("[ERROR] 이미 예약이 완료된 날짜와 시간입니다.");
     }
 
     @DisplayName("특정 ID의 예약을 삭제할 수 있다.")
@@ -124,9 +121,8 @@ class ReservationControllerTest {
     @Test
     void deleteNoneExistentReservation() {
         long noneExistentReservationId = 1L;
-
-        ResponseEntity<Void> response = controller.deleteReservation(noneExistentReservationId);
-
-        checkStatusCode(response, HttpStatus.NOT_FOUND);
+        assertThatThrownBy(() -> controller.deleteReservation(noneExistentReservationId))
+                .isInstanceOf(NotFoundException.class)
+                .hasMessage("[ERROR] ID에 해당하는 예약이 존재하지 않습니다.");
     }
 }

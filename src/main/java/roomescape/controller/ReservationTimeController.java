@@ -2,8 +2,10 @@ package roomescape.controller;
 
 import java.net.URI;
 import java.util.List;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
+import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -33,26 +35,24 @@ public class ReservationTimeController {
     public ResponseEntity<ReservationTime> createReservationTime(
             @RequestBody ReservationTimeCreationRequest request
     ) {
-        try {
-            long savedId = reservationTimeService.saveReservationTime(request);
-            ReservationTime savedTime = reservationTimeService.getReservationTimeById(savedId);
-            return ResponseEntity.created(URI.create("times/" + savedId)).body(savedTime);
-        } catch (BadRequestException exception) {
-            return ResponseEntity.badRequest().build();
-        } catch (NotFoundException exception) {
-            return ResponseEntity.notFound().build();
-        }
+        long savedId = reservationTimeService.saveReservationTime(request);
+        ReservationTime savedTime = reservationTimeService.getReservationTimeById(savedId);
+        return ResponseEntity.created(URI.create("times/" + savedId)).body(savedTime);
     }
 
     @DeleteMapping("/times/{reservationTimeId}")
     public ResponseEntity<Void> deleteReservationTime(@PathVariable("reservationTimeId") Long id) {
-        try {
-            reservationTimeService.deleteReservationTime(id);
-            return ResponseEntity.noContent().build();
-        } catch (BadRequestException exception) {
-            return ResponseEntity.badRequest().build();
-        } catch (NotFoundException exception) {
-            return ResponseEntity.notFound().build();
-        }
+        reservationTimeService.deleteReservationTime(id);
+        return ResponseEntity.noContent().build();
+    }
+
+    @ExceptionHandler(NotFoundException.class)
+    public ResponseEntity<String> notFoundExceptionHandler(NotFoundException exception) {
+        return ResponseEntity.status(HttpStatus.NOT_FOUND).body(exception.getMessage());
+    }
+
+    @ExceptionHandler(BadRequestException.class)
+    public ResponseEntity<String> badRequestExceptionHandler(BadRequestException exception) {
+        return ResponseEntity.badRequest().body(exception.getMessage());
     }
 }

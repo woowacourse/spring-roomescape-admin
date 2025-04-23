@@ -1,6 +1,7 @@
 package roomescape.controller;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import static org.junit.jupiter.api.Assertions.assertAll;
 import static roomescape.test.fixture.ReservationFixture.addReservationInRepository;
 import static roomescape.test.fixture.ReservationTimeFixture.addReservationTimeInRepository;
@@ -19,6 +20,8 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import roomescape.domain.ReservationTime;
 import roomescape.dto.ReservationTimeCreationRequest;
+import roomescape.exception.BadRequestException;
+import roomescape.exception.NotFoundException;
 import roomescape.repository.ReservationRepository;
 import roomescape.repository.ReservationTimeRepository;
 import roomescape.service.ReservationTimeService;
@@ -70,13 +73,9 @@ class ReservationTimeControllerTest {
         addReservationTimeInRepository(timeRepository, sameStartAt);
         ReservationTimeCreationRequest request = new ReservationTimeCreationRequest(sameStartAt);
 
-        ResponseEntity<ReservationTime> response = controller.createReservationTime(request);
-
-        List<ReservationTime> reservationTimes = timeRepository.findAll();
-        assertAll(
-                () -> assertThat(reservationTimes).hasSize(1),
-                () -> checkStatusCode(response, HttpStatus.BAD_REQUEST)
-        );
+        assertThatThrownBy(() -> controller.createReservationTime(request))
+                .isInstanceOf(BadRequestException.class)
+                .hasMessage("[Error] 이미 추가가 완료된 예약 가능 시간입니다.");
     }
 
     @DisplayName("ID를 통해 예약 가능 시간을 삭제할 수 있다")
@@ -99,9 +98,9 @@ class ReservationTimeControllerTest {
     @Test
     void canNotDeleteWithInvalidId() {
         long noneExistentReservationId = 1L;
-        ResponseEntity<Void> response = controller.deleteReservationTime(noneExistentReservationId);
-
-        checkStatusCode(response, HttpStatus.NOT_FOUND);
+        assertThatThrownBy(() -> controller.deleteReservationTime(noneExistentReservationId))
+                .isInstanceOf(NotFoundException.class)
+                .hasMessage("[ERROR] ID에 해당하는 예약 시간이 존재하지 않습니다.");
     }
 
     @DisplayName("이미 해당 시간에 예약이 존재하는 경우 예약을 제거할 수 없습니다.")
@@ -110,12 +109,8 @@ class ReservationTimeControllerTest {
         ReservationTime savedTime = addReservationTimeInRepository(timeRepository, LocalTime.of(10, 0));
         addReservationInRepository(reservationRepository, LocalDate.now().plusDays(1), savedTime);
 
-        ResponseEntity<Void> response = controller.deleteReservationTime(savedTime.getId());
-
-        List<ReservationTime> reservationTimes = timeRepository.findAll();
-        assertAll(
-                () -> assertThat(reservationTimes).hasSize(1),
-                () -> checkStatusCode(response, HttpStatus.BAD_REQUEST)
-        );
+        assertThatThrownBy(() -> controller.deleteReservationTime(savedTime.getId()))
+                .isInstanceOf(BadRequestException.class)
+                .hasMessage("[ERROR] 이미 해당 시간에 대한 예약 데이터들이 존재합니다.");
     }
 }

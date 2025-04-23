@@ -148,10 +148,9 @@ public class MissionStepTest {
         assertThat(countAfterDelete).isEqualTo(0);
     }
 
-    @Test
-    void 칠단계() {
+    private static void 예약_시간_생성(String startAt) {
         Map<String, String> params = new HashMap<>();
-        params.put("startAt", "10:00");
+        params.put("startAt", startAt);
 
         RestAssured.given().log().all()
                 .contentType(ContentType.JSON)
@@ -159,6 +158,22 @@ public class MissionStepTest {
                 .when().post("/times")
                 .then().log().all()
                 .statusCode(200);
+    }
+
+    @Test
+    void 예약_시간이_정상적으로_생성(){
+        예약_시간_생성("10:00");
+
+        RestAssured.given().log().all()
+                .when().get("/times")
+                .then().log().all()
+                .statusCode(200)
+                .body("size()", is(1));
+    }
+
+    @Test
+    void 예약_시간이_정상적으로_삭제() {
+        예약_시간_생성("10:00");
 
         RestAssured.given().log().all()
                 .when().get("/times")
@@ -170,6 +185,11 @@ public class MissionStepTest {
                 .when().delete("/times/1")
                 .then().log().all()
                 .statusCode(200);
-    }
 
+        RestAssured.given().log().all()
+                .when().get("/times")
+                .then().log().all()
+                .statusCode(200)
+                .body("size()", is(0));
+    }
 }

@@ -45,7 +45,7 @@ public class ReservationController {
     public ResponseEntity<String> deleteReservation(@PathVariable(name = "id") final long id) {
         try {
             reservationService.deleteReservationById(id);
-            return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+            return new ResponseEntity<>(HttpStatus.OK);
         } catch (ResponseStatusException e) {
             return new ResponseEntity<>(e.getMessage(), e.getStatusCode());
         }

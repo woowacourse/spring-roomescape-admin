@@ -2,7 +2,9 @@ package roomescape;
 
 import java.util.List;
 import java.util.Optional;
+import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
+import org.springframework.web.server.ResponseStatusException;
 import roomescape.controller.dto.ReservationRegisterDto;
 import roomescape.controller.dto.ReservationResponseDto;
 import roomescape.domain.Reservation;
@@ -23,7 +25,6 @@ public class ReservationService {
 
     public Long saveReservation(final ReservationRegisterDto reservationRegisterDto) {
         ReservationTime reservationTime = findReservationTime(reservationRegisterDto.timeId());
-
         Reservation reservation = reservationRegisterDto.toReservation(reservationTime);
 
         long savedId = reservationRepository.save(reservation);
@@ -52,7 +53,7 @@ public class ReservationService {
         Optional<Reservation> foundReservation = reservationRepository.findById(id);
 
         if (foundReservation.isEmpty()) {
-            throw new IllegalArgumentException("해당 id 와 일치하는 예약 내역이 존재하지 않습니다.");
+            throw new ResponseStatusException(HttpStatus.NOT_FOUND, "해당 id 와 일치하는 예약 내역이 존재하지 않습니다.");
         }
         return foundReservation.get();
     }
@@ -61,7 +62,7 @@ public class ReservationService {
         Optional<ReservationTime> foundReservationTime = reservationTimeRepository.findById(id);
 
         if (foundReservationTime.isEmpty()) {
-            throw new IllegalArgumentException("해당 id 와 일치하는 예약 시각이 존재하지 않습니다.");
+            throw new ResponseStatusException(HttpStatus.NOT_FOUND, "해당 id 와 일치하는 예약 시각이 존재하지 않습니다.");
         }
         return foundReservationTime.get();
     }

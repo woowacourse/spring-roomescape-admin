@@ -204,6 +204,8 @@ public class MissionStepTest {
         }
     }
 
+    private final DateTimeFormatter timeFormatter = DateTimeFormatter.ofPattern("HH:mm");
+
     @Nested
     class Step5 {
 
@@ -212,7 +214,6 @@ public class MissionStepTest {
 
         @Test
         void 오단계() {
-            DateTimeFormatter timeFormatter = DateTimeFormatter.ofPattern("HH:mm");
             String date = LocalDate.now().toString();
             String time = LocalTime.now().format(timeFormatter);
             jdbcTemplate.update("INSERT INTO reservation (name, date, time) VALUES (?, ?, ?)", "브라운", date, time);
@@ -226,6 +227,42 @@ public class MissionStepTest {
             Integer count = jdbcTemplate.queryForObject("SELECT count(1) from reservation", Integer.class);
 
             assertThat(reservations.size()).isEqualTo(count);
+        }
+    }
+
+    @Nested
+    class Step6 {
+
+        @Autowired
+        private JdbcTemplate jdbcTemplate;
+
+        @Test
+        void 육단계() {
+            String date = LocalDate.now().toString();
+            String time = LocalTime.now().format(timeFormatter);
+
+            Map<String, String> params = new HashMap<>();
+            params.put("name", "브라운");
+            params.put("date", date);
+            params.put("time", time);
+
+            RestAssured.given().log().all()
+                    .contentType(ContentType.JSON)
+                    .body(params)
+                    .when().post("/reservations")
+                    .then().log().all()
+                    .statusCode(200);
+
+            Integer count = jdbcTemplate.queryForObject("SELECT count(1) from reservation", Integer.class);
+            assertThat(count).isEqualTo(1);
+
+            RestAssured.given().log().all()
+                    .when().delete("/reservations/1")
+                    .then().log().all()
+                    .statusCode(200);
+
+            Integer countAfterDelete = jdbcTemplate.queryForObject("SELECT count(1) from reservation", Integer.class);
+            assertThat(countAfterDelete).isEqualTo(0);
         }
     }
 }

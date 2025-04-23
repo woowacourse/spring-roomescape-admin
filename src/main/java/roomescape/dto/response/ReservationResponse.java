@@ -1,7 +1,6 @@
 package roomescape.dto.response;
 
 import roomescape.domain.Reservation;
-import roomescape.domain.Reservations;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
@@ -10,8 +9,8 @@ import java.util.List;
 
 public record ReservationResponse(Long id, String name, LocalDate date, LocalTime time) {
 
-    public static List<ReservationResponse> from(final Reservations reservations) {
-        return reservations.getReservations().values().stream()
+    public static List<ReservationResponse> from(final List<Reservation> reservations) {
+        return reservations.stream()
                 .map(ReservationResponse::from)
                 .toList();
     }

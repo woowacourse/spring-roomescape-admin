@@ -59,11 +59,11 @@ class ReservationServiceTest {
     void deleteTest() {
 
         // given
-        reservationTimeDao.create(new ReservationTimeCreateRequest(LocalTime.of(10, 10)));
+        Long timeId = reservationTimeDao.create(new ReservationTimeCreateRequest(LocalTime.of(10, 10)));
         reservationService.create(new ReservationCreateRequest("체체", LocalDate.of(2024, 10, 10), 1L));
 
         // when
-        reservationService.delete(1L);
+        reservationService.delete(timeId);
         List<ReservationResponse> reservations = reservationService.findAll();
 
         // then

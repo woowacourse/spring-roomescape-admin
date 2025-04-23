@@ -25,10 +25,10 @@ public class TimeJdbcDao implements TimeDao {
 
 
     @Override
-    public Time saveTime(final Time time) {
+    public Long saveTime(final Time time) {
         final SqlParameterSource sqlParameterSource = new BeanPropertySqlParameterSource(time);
         final Number id = simpleJdbcInsert.executeAndReturnKey(sqlParameterSource);
-        return time.writeId(id.longValue());
+        return id.longValue();
     }
 
     @Override
@@ -43,6 +43,17 @@ public class TimeJdbcDao implements TimeDao {
         });
 
         return times;
+    }
+
+    @Override
+    public Time findTimeById(final Long id) {
+        final String sql = "SELECT * FROM RESERVATION_TIME WHERE id=?";
+        return jdbcTemplate.queryForObject(sql, (rs, rowNum) -> {
+            return new Time(
+                    rs.getLong("id"),
+                    rs.getTime("start_at").toLocalTime()
+            );
+        }, id);
     }
 
     @Override

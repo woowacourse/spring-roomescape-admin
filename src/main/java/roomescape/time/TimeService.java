@@ -18,17 +18,18 @@ public class TimeService {
 
     public TimeResponse createTime(final TimeRequest request) {
         final Time notSavedTime = new Time(null, request.startAt());
-        final Time savedTime = timeDao.saveTime(notSavedTime);
-        return new TimeResponse(savedTime.id(), savedTime.startAt());
+        final Long savedTimeId = timeDao.saveTime(notSavedTime);
+        final Time savedTime = timeDao.findTimeById(savedTimeId);
+        return TimeResponse.createResponse(savedTime);
     }
 
-    public List<TimeResponse> findAllTime(){
+    public List<TimeResponse> findAllTime() {
         return timeDao.findAllTime().stream()
                 .map(TimeResponse::createResponse)
                 .toList();
     }
 
-    public void deleteTimeById(final Long id){
+    public void deleteTimeById(final Long id) {
         timeDao.deleteTimeById(id);
     }
 }

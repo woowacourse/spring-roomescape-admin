@@ -48,7 +48,7 @@ public class ReservationTimeController {
     public ResponseEntity<Void> deleteReservationTime(@PathVariable("reservationTimeId") Long id) {
         try {
             reservationTimeService.deleteReservationTime(id);
-            return ResponseEntity.ok().build();
+            return ResponseEntity.noContent().build();
         } catch (BadRequestException exception) {
             return ResponseEntity.badRequest().build();
         } catch (NotFoundException exception) {

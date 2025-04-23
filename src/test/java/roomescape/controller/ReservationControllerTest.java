@@ -116,7 +116,7 @@ class ReservationControllerTest {
         List<Reservation> reservations = reservationRepository.findAll();
         assertAll(
                 () -> checkDeleteReservation(reservations, deleteReservationId),
-                () -> checkStatusCode(response, HttpStatus.OK)
+                () -> checkStatusCode(response, HttpStatus.NO_CONTENT)
         );
     }
 

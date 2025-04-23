@@ -48,7 +48,7 @@ public class ReservationController {
     public ResponseEntity<Void> deleteReservation(@PathVariable Long id) {
         try {
             reservationService.deleteReservation(id);
-            return ResponseEntity.ok().build();
+            return ResponseEntity.noContent().build();
         } catch (BadRequestException exception) {
             return ResponseEntity.badRequest().build();
         } catch (NotFoundException exception) {

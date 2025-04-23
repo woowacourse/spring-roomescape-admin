@@ -91,7 +91,7 @@ class ReservationTimeControllerTest {
         List<ReservationTime> reservationTimes = timeRepository.findAll();
         assertAll(
                 () -> checkDeleteReservationTime(reservationTimes, 1L),
-                () -> checkStatusCode(response, HttpStatus.OK)
+                () -> checkStatusCode(response, HttpStatus.NO_CONTENT)
         );
     }
 

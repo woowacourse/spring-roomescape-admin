@@ -1,6 +1,7 @@
 package roomescape.repository;
 
-import java.time.LocalDateTime;
+import java.sql.ResultSet;
+import java.sql.SQLException;
 import java.util.List;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.namedparam.MapSqlParameterSource;
@@ -20,14 +21,11 @@ public class ReservationRepository {
     }
 
     public List<Reservation> findAll() {
-        String sql = "SELECT * FROM reservation";
-        return jdbcTemplate.query(sql,
-                (resultSet, rowNum) -> new Reservation(
-                        resultSet.getLong("id"),
-                        resultSet.getString("name"),
-                        resultSet.getString("date"),
-                        resultSet.getObject("time", ReservationTime.class)
-                ));
+        String sql = "SELECT r.id AS r_id, r.name, r.date, rt.id AS rt_id, rt.start_at "
+                + "FROM reservation r "
+                + "INNER JOIN reservation_time rt "
+                + "ON r.time_id = rt.id ";
+        return jdbcTemplate.query(sql, (resultSet, rowNum) -> getReservationData(resultSet));
     }
 
     public Long addAndGetId(CreateReservationDto createReservationDto) {
@@ -50,13 +48,27 @@ public class ReservationRepository {
     }
 
     public Reservation findById(Long id) {
-        String selectSql = "SELECT * FROM reservation WHERE id = ?";
+        String selectSql = "SELECT r.id AS r_id, r.name, r.date, rt.id AS rt_id, rt.start_at "
+                + "FROM reservation r "
+                + "INNER JOIN reservation_time rt "
+                + "ON r.time_id = rt.id "
+                + "WHERE r.id = ?";
+
         return jdbcTemplate.queryForObject(selectSql,
-                (resultSet, rowNum) -> new Reservation(
-                        resultSet.getLong("id"),
-                        resultSet.getString("name"),
-                        resultSet.getObject("dateTime", LocalDateTime.class)
-                ),
+                (resultSet, rowNum) -> getReservationData(resultSet),
                 id);
+    }
+
+    private Reservation getReservationData(ResultSet resultSet) throws SQLException {
+        ReservationTime reservationTime = new ReservationTime(
+                resultSet.getLong("rt_id"),
+                resultSet.getString("start_at")
+        );
+        return new Reservation(
+                resultSet.getLong("id"),
+                resultSet.getString("name"),
+                resultSet.getString("date"),
+                reservationTime
+        );
     }
 }

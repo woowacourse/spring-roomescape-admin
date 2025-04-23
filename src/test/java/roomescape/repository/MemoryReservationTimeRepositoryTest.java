@@ -5,7 +5,6 @@ import static org.assertj.core.api.Assertions.assertThat;
 import java.time.LocalTime;
 import java.util.List;
 import java.util.Optional;
-import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.CsvSource;
@@ -14,11 +13,6 @@ import roomescape.domain.ReservationTime;
 class MemoryReservationTimeRepositoryTest {
 
     private MemoryReservationTimeRepository reservationTimeRepository = new MemoryReservationTimeRepository();
-
-    @BeforeEach
-    void setUp() {
-        //reservationTimeRepository = new MemoryReservationTimeRepository();
-    }
 
     @Test
     void 전체_예약시간을_조회한다() {

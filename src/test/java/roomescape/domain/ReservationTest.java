@@ -22,6 +22,19 @@ class ReservationTest {
                 .hasMessage("[ERROR] 비어있는 이름으로 예약을 생성할 수 없습니다.");
     }
 
+    @DisplayName("최대 길이를 넘는 이름으로는 예약을 생성할 수 없다")
+    @Test
+    void cannotCreateReservationWithTooLongName() {
+        StringBuilder tooLongNameBuilder = new StringBuilder();
+        for (int i = 0; i <= 255; i++) {
+            tooLongNameBuilder.append('i');
+        }
+        String tooLongName = tooLongNameBuilder.toString();
+        assertThatThrownBy(() -> new Reservation(1L, tooLongName, LocalDate.now(), EXAMPLE_RESERVATION_TIME))
+                .isInstanceOf(IllegalArgumentException.class)
+                .hasMessage("[ERROR] 이름으로 입력된 문자열의 길이가 최대값(255자)을 초과했습니다.");
+    }
+
     @DisplayName("비어있는 ID로는 예약을 생성할 수 없다")
     @Test
     void cannotCreateReservationWithNullId() {

@@ -6,6 +6,7 @@ import java.util.Objects;
 public final class Reservation {
 
     private static final long DEFAULT_ID = 0L;
+    private static final int MAX_NAME_LENGTH = 255;
 
     private final Long id;
     private final String name;
@@ -58,6 +59,7 @@ public final class Reservation {
     private void validate(Long id, String name, LocalDate date, ReservationTime time) {
         validateNullId(id);
         validateBlankName(name);
+        validateNameLength(name);
         validateNullDate(date);
         validateNullTime(time);
     }
@@ -65,6 +67,13 @@ public final class Reservation {
     private void validateBlankName(String name) {
         if (name == null || name.isBlank()) {
             throw new IllegalArgumentException("[ERROR] 비어있는 이름으로 예약을 생성할 수 없습니다.");
+        }
+    }
+
+    private void validateNameLength(String name) {
+        if (name.length() > MAX_NAME_LENGTH) {
+            String message = String.format("[ERROR] 이름으로 입력된 문자열의 길이가 최대값(%s자)을 초과했습니다.", MAX_NAME_LENGTH);
+            throw new IllegalArgumentException(message);
         }
     }
 

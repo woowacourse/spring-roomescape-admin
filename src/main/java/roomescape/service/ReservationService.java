@@ -5,6 +5,7 @@ import org.springframework.stereotype.Service;
 import roomescape.dao.ReservationDao;
 import roomescape.dto.ReservationRequestDto;
 import roomescape.dto.ReservationResponseDto;
+import roomescape.dto.ReservationTimeResponseDto;
 import roomescape.model.Reservation;
 
 @Service
@@ -22,7 +23,7 @@ public class ReservationService {
                 id,
                 reservation.getName(),
                 reservation.getDate(),
-                reservation.getTime()
+                new ReservationTimeResponseDto(reservation.getTimeId(), reservation.getTime())
         );
     }
 

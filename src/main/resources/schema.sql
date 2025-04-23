@@ -7,3 +7,10 @@ CREATE TABLE reservation
     datetime DATETIME     NOT NULL,
     PRIMARY KEY (id)
 );
+
+CREATE TABLE reservation_time
+(
+    id       BIGINT NOT NULL AUTO_INCREMENT,
+    start_at TIME   NOT NULL,
+    PRIMARY KEY (id)
+);

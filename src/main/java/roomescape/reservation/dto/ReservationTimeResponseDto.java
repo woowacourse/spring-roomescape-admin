@@ -6,7 +6,7 @@ import roomescape.reservation.entity.ReservationTime;
 
 public record ReservationTimeResponseDto(Long id, @JsonFormat(pattern = "HH:mm") LocalTime startAt) {
 
-    public static ReservationTimeResponseDto toDto(ReservationTime reservationTime) {
+    public static ReservationTimeResponseDto from(ReservationTime reservationTime) {
         return new ReservationTimeResponseDto(reservationTime.getId(), reservationTime.getStartAt());
     }
 }

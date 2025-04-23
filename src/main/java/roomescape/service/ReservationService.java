@@ -22,8 +22,11 @@ public class ReservationService {
         return ReservationResponseDto.from(findReservation);
     }
 
-    public List<Reservation> getAllReservations() {
-        return reservationDao.findAll();
+    public List<ReservationResponseDto> getAllReservations() {
+        List<Reservation> reservations = reservationDao.findAll();
+        return reservations.stream()
+                .map(ReservationResponseDto::from)
+                .toList();
     }
 
     public void cancelReservation(Long id) {

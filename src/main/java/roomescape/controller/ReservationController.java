@@ -1,8 +1,6 @@
 package roomescape.controller;
 
-import java.time.LocalDateTime;
 import java.util.List;
-import java.util.concurrent.atomic.AtomicLong;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -13,8 +11,6 @@ import org.springframework.web.bind.annotation.RestController;
 import roomescape.dto.ReservationRequestDto;
 import roomescape.dto.ReservationResponseDto;
 import roomescape.model.Reservation;
-import roomescape.model.ReservationDateTime;
-import roomescape.model.Reservations;
 import roomescape.service.ReservationService;
 
 @RestController
@@ -27,8 +23,8 @@ public class ReservationController {
     }
 
     @GetMapping("/reservations")
-    public ResponseEntity<List<Reservation>> reservations() {
-        List<Reservation> allReservation = reservationService.getAllReservations();
+    public ResponseEntity<List<ReservationResponseDto>> reservations() {
+        List<ReservationResponseDto> allReservation = reservationService.getAllReservations();
         return ResponseEntity.ok(allReservation);
     }
 

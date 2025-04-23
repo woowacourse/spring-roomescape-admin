@@ -29,13 +29,13 @@ public class ReservationRepository {
             );
 
     public Long add(final ReservationCreateRequest request) {
-        String sql = "INSERT INTO RESERVATION (NAME, DATE, TIME) VALUES (?, ?, ?)";
+        String sql = "INSERT INTO RESERVATION (NAME, DATE, TIME_ID) VALUES (?, ?, ?)";
         KeyHolder keyHolder = new GeneratedKeyHolder();
         jdbcTemplate.update(connection -> {
             PreparedStatement ps = connection.prepareStatement(sql, new String[]{"id"});
             ps.setString(1, request.name());
             ps.setString(2, String.valueOf(request.date()));
-            ps.setLong(3, request.reservationId());
+            ps.setLong(3, request.timeId());
             return ps;
         }, keyHolder);
 

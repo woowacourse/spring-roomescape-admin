@@ -1,4 +1,4 @@
-package roomescape.time.controller;
+package roomescape.reservationTime.controller;
 
 import java.util.List;
 import org.springframework.http.ResponseEntity;
@@ -10,27 +10,27 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import roomescape.common.Dao;
-import roomescape.time.Time;
-import roomescape.time.dto.TimeDto;
+import roomescape.reservationTime.ReservationTime;
+import roomescape.reservationTime.dto.ReservationTimeDto;
 
 @RestController
 @RequestMapping("/times")
-public class TimeApiController {
+public class ReservationTimeApiController {
 
-    private final Dao<Time> timeDao;
+    private final Dao<ReservationTime> timeDao;
 
-    public TimeApiController(Dao<Time> timeDao) {
+    public ReservationTimeApiController(Dao<ReservationTime> timeDao) {
         this.timeDao = timeDao;
     }
 
     @PostMapping
-    public ResponseEntity<Time> add(@RequestBody TimeDto timeDto) {
-        Time time = timeDto.createTime();
+    public ResponseEntity<ReservationTime> add(@RequestBody ReservationTimeDto reservationTimeDto) {
+        ReservationTime time = reservationTimeDto.createTime();
         return ResponseEntity.ok(timeDao.add(time));
     }
 
     @GetMapping
-    public ResponseEntity<List<Time>> getAll() {
+    public ResponseEntity<List<ReservationTime>> getAll() {
         return ResponseEntity.ok(timeDao.getAll());
     }
 

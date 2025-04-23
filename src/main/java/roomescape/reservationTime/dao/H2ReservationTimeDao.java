@@ -1,4 +1,4 @@
-package roomescape.time.dao;
+package roomescape.reservationTime.dao;
 
 import java.sql.PreparedStatement;
 import java.util.List;
@@ -8,18 +8,18 @@ import org.springframework.jdbc.support.GeneratedKeyHolder;
 import org.springframework.jdbc.support.KeyHolder;
 import org.springframework.stereotype.Component;
 import roomescape.common.Dao;
-import roomescape.time.Time;
+import roomescape.reservationTime.ReservationTime;
 
 @Component
-public class H2TimeDao implements Dao<Time> {
+public class H2ReservationTimeDao implements Dao<ReservationTime> {
     private final JdbcTemplate jdbcTemplate;
 
-    public H2TimeDao(JdbcTemplate jdbcTemplate, ConnectionDetails connectionDetails) {
+    public H2ReservationTimeDao(JdbcTemplate jdbcTemplate, ConnectionDetails connectionDetails) {
         this.jdbcTemplate = jdbcTemplate;
     }
 
     @Override
-    public Time add(Time time) {
+    public ReservationTime add(ReservationTime time) {
         String sql = "insert into reservation_time(start_at) values (?)";
         KeyHolder keyHolder = new GeneratedKeyHolder();
 
@@ -30,14 +30,14 @@ public class H2TimeDao implements Dao<Time> {
         }, keyHolder);
 
         Long id = keyHolder.getKey().longValue();
-        return new Time(id, time.getStartAt());
+        return new ReservationTime(id, time.getStartAt());
     }
 
     @Override
-    public List<Time> getAll() {
+    public List<ReservationTime> getAll() {
         String sql = "select id, start_at from reservation_time";
         return jdbcTemplate.query(sql,
-                (resultSet, rowNum) -> new Time(
+                (resultSet, rowNum) -> new ReservationTime(
                         resultSet.getLong("id"),
                         resultSet.getTime("start_at").toLocalTime()
                 ));

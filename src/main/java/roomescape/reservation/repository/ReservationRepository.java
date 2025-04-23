@@ -1,4 +1,4 @@
-package roomescape.reservation;
+package roomescape.reservation.repository;
 
 import java.time.LocalDate;
 import java.time.LocalTime;
@@ -9,8 +9,8 @@ import javax.sql.DataSource;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.simple.SimpleJdbcInsert;
 import org.springframework.stereotype.Repository;
-import roomescape.reservation.dto.ReservationRequest;
 import roomescape.reservation.model.Reservation;
+import roomescape.reservation.model.ReservationDetails;
 
 @Repository
 public class ReservationRepository {
@@ -34,13 +34,13 @@ public class ReservationRepository {
         ));
     }
 
-    public Reservation insertReservation(ReservationRequest request) {
+    public Reservation insertReservation(ReservationDetails reservationDetails) {
         Map<String, Object> parameters = new HashMap<>();
-        parameters.put("name", request.name());
-        parameters.put("date", request.date());
-        parameters.put("time", request.time());
+        parameters.put("name", reservationDetails.name());
+        parameters.put("date", reservationDetails.date());
+        parameters.put("time", reservationDetails.time());
         Number number = simpleJdbcInsert.executeAndReturnKey(parameters);
-        return new Reservation(number.longValue(), request.name(), request.date(), request.time());
+        return new Reservation(number.longValue(), reservationDetails);
     }
 
     public boolean deleteReservationById(long id) {

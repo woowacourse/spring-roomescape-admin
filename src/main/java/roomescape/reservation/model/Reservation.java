@@ -1,20 +1,23 @@
 package roomescape.reservation.model;
 
+import com.fasterxml.jackson.annotation.JsonCreator;
 import java.time.LocalDate;
 import java.time.LocalTime;
 
 public final class Reservation {
 
     private final long id;
-    private final String name;
-    private final LocalDate date;
-    private final LocalTime time;
+    private final ReservationDetails reservationDetails;
 
+    public Reservation(long id, ReservationDetails reservationDetails) {
+        this.id = id;
+        this.reservationDetails = reservationDetails;
+    }
+
+    @JsonCreator
     public Reservation(long id, String name, LocalDate date, LocalTime time) {
         this.id = id;
-        this.name = name;
-        this.date = date;
-        this.time = time;
+        this.reservationDetails = new ReservationDetails(name, date, time);
     }
 
     public long getId() {
@@ -22,14 +25,14 @@ public final class Reservation {
     }
 
     public String getName() {
-        return name;
+        return reservationDetails.name();
     }
 
     public LocalDate getDate() {
-        return date;
+        return reservationDetails.date();
     }
 
     public LocalTime getTime() {
-        return time;
+        return reservationDetails.time();
     }
 }

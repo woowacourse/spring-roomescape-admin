@@ -22,13 +22,6 @@ public class Reservation {
         this(null, reserverName, date, reservationTime);
     }
 
-//    private LocalDateTime validatePast(LocalDateTime reservationTime, LocalDateTime now) {
-//        if (reservationTime.isBefore(now)) {
-//            throw new PastReservationException("[ERROR] 예약 불가능한 시간입니다.");
-//        }
-//        return reservationTime;
-//    }
-
     public Long getId() {
         return id;
     }

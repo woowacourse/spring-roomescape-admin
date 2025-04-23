@@ -2,6 +2,7 @@ package roomescape.reservation.service;
 
 import java.util.List;
 import org.springframework.stereotype.Service;
+import roomescape.reservation.controller.request.ReservationCreateRequest;
 import roomescape.reservation.domain.Reservation;
 import roomescape.reservation.repository.ReservationRepository;
 import roomescape.reservation.service.exception.ReservationNotFoundException;
@@ -24,8 +25,9 @@ public class ReservationService {
         return reservationRepository.findAll();
     }
 
-    public Reservation create(Reservation reservation) {
-        ReservationTime reservationTime = reservationTimeService.getById(reservation.getTimeId());
+    public Reservation create(ReservationCreateRequest request) {
+        ReservationTime reservationTime = reservationTimeService.getById(request.timeId());
+        Reservation reservation = new Reservation(request.name(), request.date(), reservationTime);
         reservation.setReservationTime(reservationTime);
         return reservationRepository.save(reservation);
     }

@@ -16,14 +16,4 @@ public class ReservationTest {
         assertThatThrownBy(() -> new ReserverName(input))
                 .isInstanceOf(ReserverNameEmptyException.class);
     }
-
-//    @Test
-//    void 과거_시간으로_예약할_수_없다() {
-//        LocalDateTime now = LocalDateTime.now();
-//        LocalDateTime reservationDateTime = now.minusMinutes(1);
-//
-//        assertThatThrownBy(() -> new ReservationDate(
-//                reservationDateTime, now
-//        )).isInstanceOf(PastReservationException.class);
-//    }
 }

@@ -26,7 +26,7 @@ public class ReservationTimeApiController {
     public ResponseEntity<ReservationTimeResponse> createTime(
             @RequestBody ReservationTimeCreateRequest request
     ) {
-        ReservationTime created = reservationTimeService.create(request.to());
+        ReservationTime created = reservationTimeService.create(request);
 
         return ResponseEntity.ok(ReservationTimeResponse.from(created));
     }

@@ -46,7 +46,7 @@ public class ReservationTest {
 
         Map<String, Object> reservation = new HashMap<>();
         reservation.put("name", "브라운");
-        reservation.put("date", "2023-08-05");
+        reservation.put("date", "2025-08-05");
         reservation.put("timeId", 1);
 
         RestAssured.given().log().all()
@@ -125,10 +125,20 @@ public class ReservationTest {
 
     @Test
     void 방탈출_예약_생성시_예약자_이름이_비어있으면_예외를_응답한다() {
+        Map<String, String> params1 = new HashMap<>();
+        params1.put("startAt", "10:00");
+
+        RestAssured.given().log().all()
+                .contentType(ContentType.JSON)
+                .body(params1)
+                .when().post("/times")
+                .then().log().all()
+                .statusCode(200);
+
         Map<String, String> params = new HashMap<>();
         params.put("name", "");
         params.put("date", "2025-08-05");
-        params.put("time", "15:40");
+        params.put("timeId", "1");
 
         RestAssured.given().log().all()
                 .contentType(ContentType.JSON)

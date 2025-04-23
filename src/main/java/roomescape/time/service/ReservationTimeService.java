@@ -3,6 +3,7 @@ package roomescape.time.service;
 import java.util.List;
 import java.util.NoSuchElementException;
 import org.springframework.stereotype.Service;
+import roomescape.time.controller.request.ReservationTimeCreateRequest;
 import roomescape.time.domain.ReservationTime;
 import roomescape.time.repository.ReservationTimeRepository;
 
@@ -15,7 +16,8 @@ public class ReservationTimeService {
         this.reservationTimeRepository = reservationTimeRepository;
     }
 
-    public ReservationTime create(ReservationTime reservationTime) {
+    public ReservationTime create(ReservationTimeCreateRequest request) {
+        ReservationTime reservationTime = request.to();
         return reservationTimeRepository.save(reservationTime);
     }
 

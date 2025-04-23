@@ -1,4 +1,4 @@
-package roomescape.controller;
+package roomescape.controller.time;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -9,9 +9,9 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
-import roomescape.Time;
-import roomescape.controller.request.TimeRequest;
-import roomescape.controller.response.TimeResponse;
+import roomescape.controller.time.request.TimeRequest;
+import roomescape.controller.time.response.TimeResponse;
+import roomescape.model.Time;
 
 @RequestMapping("/times")
 @RestController

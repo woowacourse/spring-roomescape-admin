@@ -1,7 +1,7 @@
-package roomescape.controller.request;
+package roomescape.controller.time.request;
 
 import java.time.LocalTime;
-import roomescape.Time;
+import roomescape.model.Time;
 
 public record TimeRequest(LocalTime startAt) {
 

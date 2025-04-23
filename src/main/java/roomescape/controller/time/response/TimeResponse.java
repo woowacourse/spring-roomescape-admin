@@ -1,8 +1,8 @@
-package roomescape.controller.response;
+package roomescape.controller.time.response;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
 import java.time.LocalTime;
-import roomescape.Time;
+import roomescape.model.Time;
 
 public record TimeResponse(
         Long id,

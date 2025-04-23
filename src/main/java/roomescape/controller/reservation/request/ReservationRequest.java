@@ -1,8 +1,8 @@
-package roomescape.controller.request;
+package roomescape.controller.reservation.request;
 
 import java.time.LocalDate;
 import java.time.LocalTime;
-import roomescape.Reservation;
+import roomescape.model.Reservation;
 
 public record ReservationRequest(
         String name,

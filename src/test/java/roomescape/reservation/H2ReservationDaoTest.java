@@ -10,10 +10,11 @@ import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.jdbc.core.JdbcTemplate;
 import roomescape.reservation.dao.H2ReservationDao;
+import roomescape.reservationTime.ReservationTime;
 
 class H2ReservationDaoTest {
     LocalDate date = LocalDate.of(2025, 4, 22);
-    LocalTime time = LocalTime.of(10, 0);
+    ReservationTime time = new ReservationTime(LocalTime.of(10, 0));
 
     Reservation mimiReservation = new Reservation(1L, "mimi", date, time);
     Reservation norangReservation = new Reservation(2L, "norang", date, time);

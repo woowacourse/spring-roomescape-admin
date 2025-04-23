@@ -11,6 +11,7 @@ import org.springframework.jdbc.core.PreparedStatementCreator;
 import org.springframework.jdbc.core.RowMapper;
 import org.springframework.jdbc.support.KeyHolder;
 import org.springframework.lang.Nullable;
+import roomescape.reservationTime.ReservationTime;
 
 public class FakeJdbcTemplate extends JdbcTemplate {
 
@@ -18,7 +19,7 @@ public class FakeJdbcTemplate extends JdbcTemplate {
 
     public FakeJdbcTemplate() {
         LocalDate date = LocalDate.of(2025, 4, 22);
-        LocalTime time = LocalTime.of(10, 0);
+        ReservationTime time = new ReservationTime(LocalTime.of(10, 0));
 
         this.database = new ArrayList<>(List.of(
                 new Reservation(1L, "mimi", date, time),

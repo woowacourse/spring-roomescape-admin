@@ -12,30 +12,30 @@ import org.springframework.web.bind.annotation.RestController;
 import roomescape.common.Dao;
 import roomescape.reservation.Reservation;
 import roomescape.reservation.dto.ReservationDto;
+import roomescape.reservation.service.ReservationService;
 
 @RestController
 @RequestMapping("/reservations")
 public class ReservationApiController {
-    private final Dao<Reservation> reservationDao;
+    private final ReservationService reservationService;
 
-    public ReservationApiController(Dao<Reservation> reservationDao) {
-        this.reservationDao = reservationDao;
+    public ReservationApiController(ReservationService reservationService) {
+        this.reservationService = reservationService;
     }
 
     @PostMapping
     public ResponseEntity<Reservation> add(@RequestBody ReservationDto reservationDto) {
-        Reservation reservation = reservationDto.createReservation();
-        return ResponseEntity.ok(reservationDao.add(reservation));
+        return ResponseEntity.ok(reservationService.add(reservationDto));
     }
 
     @GetMapping
     public ResponseEntity<List<Reservation>> getAll() {
-        return ResponseEntity.ok(reservationDao.getAll());
+        return ResponseEntity.ok(reservationService.getAll());
     }
 
     @DeleteMapping("/{id}")
     public ResponseEntity<Void> delete(@PathVariable Long id) {
-        reservationDao.deleteById(id);
+        reservationService.deleteById(id);
         return ResponseEntity.ok().build();
     }
 }

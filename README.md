@@ -16,8 +16,8 @@
 
 ### 시간 관리 페이지
 
-- [ ] /admin/time 요청 시 시간 관리 페이지가 응답한다.
-  - [ ] templates/admin/time.html 파일을 이용한다.
+- [x] /admin/time 요청 시 시간 관리 페이지가 응답한다.
+  - [x] templates/admin/time.html 파일을 이용한다.
 
 ### 예약 조회
 

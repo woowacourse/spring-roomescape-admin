@@ -10,9 +10,9 @@ public interface ReservationRepository {
 
     List<Reservation> findAll();
 
+    boolean existByDateAndTime(LocalDate date, LocalTime time);
+
     Reservation insertAndGet(Reservation reservationExcludeIndex);
 
-    void deleteById(Long id);
-
-    boolean existByDateAndTime(LocalDate date, LocalTime time);
+    int deleteByIdAndCountAffected(Long id);
 }

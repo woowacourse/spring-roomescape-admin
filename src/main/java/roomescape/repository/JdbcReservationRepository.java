@@ -33,36 +33,33 @@ public class JdbcReservationRepository implements ReservationRepository {
             String name = resultSet.getString("name");
             LocalDate date = resultSet.getObject("date", LocalDate.class);
             LocalTime time = resultSet.getObject("time", LocalTime.class);
-            Reservation reservationExcludeIndex = new Reservation(name, date, time);
-            return Reservation.toEntity(reservationExcludeIndex, id);
+            Reservation reservation = new Reservation(name, date, time);
+            return Reservation.toEntity(reservation, id);
         });
-    }
-
-    @Override
-    public Reservation insertAndGet(Reservation reservationExcludeIndex) {
-        String sql ="INSERT INTO reservation(name, date, time) VALUES(?, ?, ?)";
-        jdbcTemplate.update((Connection con) -> {
-            PreparedStatement preparedStatement = con.prepareStatement(sql, new String[]{"id"});
-            preparedStatement.setString(1, reservationExcludeIndex.getName());
-            preparedStatement.setObject(2, reservationExcludeIndex.getDate());
-            preparedStatement.setObject(3, reservationExcludeIndex.getTime());
-            return preparedStatement;
-        }, keyHolder);
-        return Reservation.toEntity(reservationExcludeIndex, keyHolder.getKeyAs(Long.class));
-    }
-
-    @Override
-    public void deleteById(Long id) {
-        String sql = "DELETE FROM reservation WHERE id = ?";
-        int affectedRows = jdbcTemplate.update(sql, id);
-        if (affectedRows == 0) {
-            throw new IllegalArgumentException("존재하지 않는 예약 id입니다.");
-        }
     }
 
     @Override
     public boolean existByDateAndTime(LocalDate date, LocalTime time) {
         String sql = "SELECT COUNT(*) FROM reservation WHERE date = ? AND time = ?";
         return jdbcTemplate.queryForObject(sql, Long.class, date, time) > 0L;
+    }
+
+    @Override
+    public Reservation insertAndGet(Reservation reservation) {
+        String sql ="INSERT INTO reservation(name, date, time) VALUES(?, ?, ?)";
+        jdbcTemplate.update((Connection con) -> {
+            PreparedStatement preparedStatement = con.prepareStatement(sql, new String[]{"id"});
+            preparedStatement.setString(1, reservation.getName());
+            preparedStatement.setObject(2, reservation.getDate());
+            preparedStatement.setObject(3, reservation.getTime());
+            return preparedStatement;
+        }, keyHolder);
+        return Reservation.toEntity(reservation, keyHolder.getKeyAs(Long.class));
+    }
+
+    @Override
+    public int deleteByIdAndCountAffected(Long id) {
+        String sql = "DELETE FROM reservation WHERE id = ?";
+        return jdbcTemplate.update(sql, id);
     }
 }

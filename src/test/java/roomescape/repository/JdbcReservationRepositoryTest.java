@@ -81,19 +81,9 @@ class JdbcReservationRepositoryTest {
         Long deleteId = 1L;
 
         // When
-        jdbcReservationRepository.deleteById(deleteId);
+        jdbcReservationRepository.deleteByIdAndCountAffected(deleteId);
 
         // Then
         assertThat(jdbcReservationRepository.findAll()).isEqualTo(List.of(reservationExcludeIndex2));
-    }
-
-    @Test
-    void 존재하지_않는_예약의_id로는_삭제할_수_없다() {
-        // Given
-        // When
-        // Then
-        assertThatThrownBy(() -> jdbcReservationRepository.deleteById(1L))
-                .isInstanceOf(IllegalArgumentException.class)
-                .hasMessage("존재하지 않는 예약 id입니다.");
     }
 }

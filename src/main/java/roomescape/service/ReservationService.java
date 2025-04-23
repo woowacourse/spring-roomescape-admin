@@ -30,11 +30,15 @@ public class ReservationService {
     }
 
     public Reservation add(String name, LocalDate date, LocalTime time) {
-        Reservation reservationExcludeIndex = new Reservation(name, date, time);
-        return reservationRepository.insertAndGet(reservationExcludeIndex);
+        Reservation reservation = new Reservation(name, date, time);
+        return reservationRepository.insertAndGet(reservation);
     }
 
     public void deleteById(Long id) {
-        reservationRepository.deleteById(id);
+        int affectedRows = reservationRepository.deleteByIdAndCountAffected(id);
+        System.out.println(affectedRows);
+        if (affectedRows == 0) {
+            throw new IllegalArgumentException("존재하지 않는 예약 id입니다.");
+        }
     }
 }

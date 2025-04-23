@@ -18,6 +18,11 @@ public class ReservationTimeController {
         this.reservationTimeRepository = reservationTimeRepository;
     }
 
+    @GetMapping("/admin/time")
+    public String getAdminReservationTimePage() {
+        return "admin/time";
+    }
+
     @PostMapping("/times")
     public ResponseEntity<ReservationTime> createTime(@RequestBody ReservationTimeCreateRequest request) {
         Long id = reservationTimeRepository.add(request);

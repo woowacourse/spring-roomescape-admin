@@ -1,6 +1,7 @@
 package roomescape.repository;
 
 import java.time.LocalTime;
+import java.util.List;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.namedparam.MapSqlParameterSource;
 import org.springframework.jdbc.core.namedparam.SqlParameterSource;
@@ -38,5 +39,14 @@ public class ReservationTimeRepository {
                         resultSet.getLong("id"),
                         resultSet.getObject("startAt", LocalTime.class)
                 ), id);
+    }
+
+    public List<ReservationTime> findAll() {
+        String sql = "SELECT id, startAt FROM reservationTime";
+        return jdbcTemplate.query(sql,
+                (resultSet, rowNum) -> new ReservationTime(
+                        resultSet.getLong("id"),
+                        resultSet.getObject("startAt", LocalTime.class)
+                ));
     }
 }

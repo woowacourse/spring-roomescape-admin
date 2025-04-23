@@ -1,7 +1,6 @@
 package roomescape.reservation.repository;
 
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.assertj.core.api.Assertions.assertThatThrownBy;
 
 import java.time.LocalDate;
 import java.time.LocalTime;
@@ -9,6 +8,7 @@ import java.util.List;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import roomescape.reservation.domain.Reservation;
+import roomescape.reservation.entity.ReservationEntity;
 
 class InMemoryReservationRepositoryTest {
 
@@ -36,23 +36,16 @@ class InMemoryReservationRepositoryTest {
         repository.put(r1);
         repository.put(r2);
 
-        List<Reservation> all = repository.getAll();
+        List<ReservationEntity> all = repository.getAll();
         assertThat(all).hasSize(2);
     }
 
     @Test
     void deleteById_shouldRemoveReservation() {
-        long id = repository.put(new Reservation("브라운", LocalDate.parse("2023-08-05"), LocalTime.parse("15:40")));
+        long id = repository.put(new Reservation("브라운", LocalDate.parse("2023-08-05"), LocalTime.parse("15:40"))).id();
 
         repository.deleteById(id);
 
         assertThat(repository.getAll()).isEmpty();
-    }
-
-    @Test
-    void deleteById_withInvalidId_shouldThrowException() {
-        assertThatThrownBy(() -> repository.deleteById(999L))
-                .isInstanceOf(IllegalArgumentException.class)
-                .hasMessageContaining("요청한 id와 일치하는 예약 정보가 없습니다.");
     }
 }

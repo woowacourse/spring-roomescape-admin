@@ -2,10 +2,12 @@ package roomescape.reservation.repository;
 
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.atomic.AtomicLong;
 import org.springframework.stereotype.Repository;
 import roomescape.reservation.domain.Reservation;
+import roomescape.reservation.entity.ReservationEntity;
 
 @Repository
 public class InMemoryReservationRepository implements ReservationRepository {
@@ -13,23 +15,26 @@ public class InMemoryReservationRepository implements ReservationRepository {
     private final AtomicLong index = new AtomicLong(1);
 
     @Override
-    public List<Reservation> getAll() {
-        return reservations.values().stream()
+    public List<ReservationEntity> getAll() {
+        return reservations.entrySet().stream()
+                .map((entry)-> ReservationEntity.of(entry.getKey(), entry.getValue()))
                 .toList();
     }
 
     @Override
-    public long put(Reservation reservation) {
+    public ReservationEntity put(final Reservation reservation) {
         long id = index.getAndIncrement();
         reservations.put(id, reservation);
-        return id;
+        return ReservationEntity.of(id, reservation);
     }
 
     @Override
     public void deleteById(final long id) {
-        if (!reservations.containsKey(id)) {
-            throw new IllegalArgumentException("요청한 id와 일치하는 예약 정보가 없습니다.");
-        }
         reservations.remove(id);
+    }
+
+    @Override
+    public Optional<ReservationEntity> findById(final long id) {
+        return Optional.empty();
     }
 }

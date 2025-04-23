@@ -28,16 +28,17 @@ public class ReservationDao {
     };
 
     public List<Reservation> findAll() {
-
-        String sql = "SELECT \n"
-                + "    r.id as reservation_id, \n"
-                + "    r.name, \n"
-                + "    r.date, \n"
-                + "    t.id as time_id, \n"
-                + "    t.start_at as time_value \n"
-                + "FROM reservation as r \n"
-                + "inner join reservation_time as t \n"
-                + "on r.time_id = t.id\n";
+        String sql = """
+        SELECT 
+            r.id AS reservation_id,
+            r.name,
+            r.date,
+            t.id AS time_id,
+            t.start_at AS time_value
+        FROM reservation r
+        INNER JOIN reservation_time t
+            ON r.time_id = t.id
+        """;
         return jdbcTemplate.query(sql, actorRowMapper);
     }
 

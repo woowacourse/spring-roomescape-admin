@@ -24,16 +24,17 @@ public class ReservationController {
 
     @GetMapping()
     public List<ReservationResponse> readReservations() {
-        List<Reservation> reservations = reservationDao.findAllReservations();
+        List<Reservation> reservations = reservationDao.findAll();
         return reservations.stream()
                 .map(ReservationResponse::from)
                 .toList();
     }
 
     @PostMapping()
-    public Reservation createReservations(@RequestBody ReservationRequest reservationRequest) {
+    public ReservationResponse createReservations(@RequestBody ReservationRequest reservationRequest) {
         Reservation reservation = reservationRequest.toReservation();
-        return reservationDao.insert(reservation);
+        Reservation idWithReservation = reservationDao.insert(reservation);
+        return ReservationResponse.from(idWithReservation);
     }
 
     @DeleteMapping("/{id}")

@@ -21,7 +21,7 @@ public class ReservationDao {
         this.jdbcTemplate = jdbcTemplate;
     }
 
-    public List<Reservation> findAllReservations() {
+    public List<Reservation> findAll() {
         String sql = "select id, name, date, time from reservation";
         List<Reservation> foundReservations = jdbcTemplate.query(
                 sql, (rs, rowNum) -> {
@@ -29,8 +29,7 @@ public class ReservationDao {
                     String name = rs.getString("name");
                     String date = rs.getString("date");
                     String time = rs.getString("time");
-                    Reservation reservation = new Reservation(id, toPerson(name), toReservationTime(date, time));
-                    return reservation;
+                    return new Reservation(id, toPerson(name), toReservationTime(date, time));
                 }
         );
         return foundReservations;

@@ -83,7 +83,7 @@ public class H2ReservationRepository implements ReservationRepository {
                         Map.of(
                                 "name", reservation.getName(),
                                 "date", reservation.getDate(),
-                                "time_id", reservation.getTime().getId()
+                                "time_id", reservation.getTimeId()
                         )
                 );
         return id.longValue();

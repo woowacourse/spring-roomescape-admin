@@ -12,7 +12,7 @@ public record ReservationResponse(Long id, String name, LocalDate date, Reservat
                 reservation.getDate(),
                 new ReservationTimeResponse(
                         reservation.getId(),
-                        reservation.getTime().getStartAt()
+                        reservation.getTime()
                 )
         );
     }

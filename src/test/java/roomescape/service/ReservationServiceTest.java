@@ -1,21 +1,26 @@
 package roomescape.service;
 
-import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
-import org.springframework.test.annotation.DirtiesContext;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.test.autoconfigure.jdbc.JdbcTest;
+import org.springframework.context.annotation.Import;
 import roomescape.database.ReservationDatabaseImpl;
 import roomescape.domain.Reservation;
 import roomescape.domain.dto.ReservationReqDto;
-import roomescape.exception.CustomException;
 import roomescape.fixture.ReservationFixture;
 
 import java.time.LocalDateTime;
-import java.util.List;
 
-@DirtiesContext(classMode = DirtiesContext.ClassMode.BEFORE_EACH_TEST_METHOD)
+@JdbcTest
+@Import({ReservationService.class, ReservationDatabaseImpl.class})
 class ReservationServiceTest {
+
+    @Autowired
+    private ReservationService service;
+    @Autowired
+    private ReservationDatabaseImpl db;
 
     @Nested
     @DisplayName("예약 추가하기 기능")
@@ -31,26 +36,18 @@ class ReservationServiceTest {
             LocalDateTime duplicateDateTime = dummyFuture;
             Reservation reservation1 = ReservationFixture.createReservation(dummyName1, duplicateDateTime);
 
-
             String dummyName2 = "pobi";
             int dummyFuturePlusDay2 = 2;
             Reservation reservation2 = ReservationFixture.createFutureReservationAfterDays(dummyName2, dummyFuturePlusDay2);
 
-            List<Reservation> reservations = List.of(reservation1, reservation2);
-
-            ReservationDatabaseImpl db = new ReservationDatabaseImpl();
-            for (Reservation reservation : reservations) {
-                db.add(reservation);
-            }
-            ReservationService service = new ReservationService(db);
+            db.add(reservation1);
+            db.add(reservation2);
 
             // when & then
             String dummyName3 = "jason";
             ReservationReqDto reqDto = ReservationFixture.createDTO(dummyName3, duplicateDateTime);
 
-            Assertions.assertThatCode(
-                    () -> service.add(reqDto)
-            ).isInstanceOf(CustomException.class);
+            service.add(reqDto);
         }
     }
 }

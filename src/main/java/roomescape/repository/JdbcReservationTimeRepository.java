@@ -27,8 +27,9 @@ public class JdbcReservationTimeRepository implements ReservationTimeRepository 
 
     @Override
     public ReservationTime save(final LocalTime startAt) {
+        final String time = startAt.format(DateTimeFormatter.ofPattern("HH:mm"));
         final MapSqlParameterSource params = new MapSqlParameterSource()
-                .addValue("start_at", startAt.toString());
+                .addValue("start_at", time);
         final Long newId = inserter.executeAndReturnKey(params).longValue();
         return new ReservationTime(newId, startAt);
     }
@@ -59,7 +60,7 @@ public class JdbcReservationTimeRepository implements ReservationTimeRepository 
 
     private final RowMapper<ReservationTime> actorRowMapper = (resultSet, rowNum) -> {
         final DateTimeFormatter timeFormatter = DateTimeFormatter.ofPattern("HH:mm");
-        LocalTime time = LocalTime.parse(resultSet.getString("start_at"), timeFormatter);
+        final LocalTime time = LocalTime.parse(resultSet.getString("start_at"), timeFormatter);
         return new ReservationTime(resultSet.getLong("id"), time);
     };
 }

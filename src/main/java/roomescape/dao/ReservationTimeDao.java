@@ -15,7 +15,7 @@ public class ReservationTimeDao {
 
     private static final String FIND_ALL_SQL = "select * from reservation_time";
     private static final String DELETE_BY_ID_SQL = "delete from reservation_time where id = ?";
-    private static final RowMapper<ReservationTime> RESERVATION_ROW_MAPPER = (resultSet, row) ->
+    private static final RowMapper<ReservationTime> RESERVATION_TIME_ROW_MAPPER = (resultSet, row) ->
             new ReservationTime(
                     resultSet.getLong("id"),
                     resultSet.getObject("start_at", LocalTime.class)
@@ -30,7 +30,7 @@ public class ReservationTimeDao {
     public ReservationTimes findAll() {
         return new ReservationTimes(jdbcTemplate.query(
                 FIND_ALL_SQL,
-                RESERVATION_ROW_MAPPER
+                RESERVATION_TIME_ROW_MAPPER
         ));
     }
 

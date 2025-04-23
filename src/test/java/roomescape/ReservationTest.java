@@ -16,7 +16,7 @@ class ReservationTest {
     @Test
     void isSameId() {
         // given
-        Reservation reservation = new Reservation(1L, "히스타", LocalDate.now(), LocalTime.now());
+        Reservation reservation = new Reservation(1L, "히스타", LocalDate.now(), 2L);
 
         // when
         boolean actual = reservation.isSameId(1L);
@@ -27,9 +27,8 @@ class ReservationTest {
 
     private static Stream<Arguments> getInvalidReservations() {
         return Stream.of(
-                Arguments.of((Supplier<Reservation>) () -> new Reservation(1L, null, LocalDate.now(), LocalTime.now())),
-                Arguments.of((Supplier<Reservation>) () -> new Reservation(2L, "히스타", null, LocalTime.now())),
-                Arguments.of((Supplier<Reservation>) () -> new Reservation(3L, "히스타", LocalDate.now(), null))
+                Arguments.of((Supplier<Reservation>) () -> new Reservation(1L, null, LocalDate.now(), 1L)),
+                Arguments.of((Supplier<Reservation>) () -> new Reservation(2L, "히스타", null, 1L))
         );
     }
 
@@ -46,7 +45,7 @@ class ReservationTest {
     @Test
     void validateBlankName() {
         // given
-        Supplier<Reservation> supplier = () -> new Reservation(1L, " ", LocalDate.now(), LocalTime.now());
+        Supplier<Reservation> supplier = () -> new Reservation(1L, " ", LocalDate.now(), 1L);
 
         // when & then
         Assertions.assertThatIllegalArgumentException().isThrownBy(

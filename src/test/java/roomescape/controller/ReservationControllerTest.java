@@ -10,62 +10,77 @@ import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.CsvSource;
 import org.springframework.http.ResponseEntity;
 import roomescape.domain.Reservation;
+import roomescape.domain.ReservationTime;
+import roomescape.dto.ReservationResponse;
 import roomescape.repository.fake.FakeReservationRepository;
+import roomescape.repository.fake.FakeReservationTimeRepository;
 
 class ReservationControllerTest {
-    private final ReservationController reservationController = new ReservationController(new FakeReservationRepository());
+    FakeReservationRepository fakeReservationRepository = new FakeReservationRepository();
+    FakeReservationTimeRepository fakeReservationTimeRepository = new FakeReservationTimeRepository();
+    private final ReservationController reservationController = new ReservationController(fakeReservationRepository, fakeReservationTimeRepository);
 
-    @ParameterizedTest
-    @CsvSource(value = {"히스타, 2002-12-02, 18:00"})
-    void create(String nickname, LocalDate date, LocalTime time) {
-        // given
-        Reservation reservation = new Reservation(null, nickname, date, time);
-
-        // when
-        ResponseEntity<Reservation> actualResponse = reservationController.create(reservation);
-
-        // then
-        assertAll(
-                () -> Assertions.assertThat(actualResponse.getStatusCode().is2xxSuccessful()).isTrue(),
-                () -> Assertions.assertThat(actualResponse.getBody().getName()).isEqualTo(reservation.getName()),
-                () -> Assertions.assertThat(actualResponse.getBody().getDate()).isEqualTo(reservation.getDate()),
-                () -> Assertions.assertThat(actualResponse.getBody().getTime()).isEqualTo(reservation.getTime())
-        );
+    private void makeStubReservationTime(Long id, LocalTime startAt) {
+        fakeReservationTimeRepository.createReservationTime(new ReservationTime(id, startAt));
     }
 
     @ParameterizedTest
-    @CsvSource(value = {
-            "히스타, 2002-12-02, 18:00",
-            "이프, 2025-04-22, 20:03"
-    })
-    void read(String nickname, LocalDate date, LocalTime time) {
+    @CsvSource(value = {"히스타, 2002-12-02, 1, 18:00"})
+    void create(String nickname, LocalDate date, Long timeId, LocalTime time) {
         // given
-        create(nickname, date, time);
+        makeStubReservationTime(timeId, time);
+        Reservation reservation = new Reservation(null, nickname, date, timeId);
 
         // when
-        ResponseEntity<List<Reservation>> actualResponse = reservationController.read();
+        ResponseEntity<ReservationResponse> actualResponse = reservationController.create(reservation);
 
         // then
-        List<Reservation> reservationList = actualResponse.getBody();
+        Assertions.assertThat(actualResponse).isNotNull();
+        Assertions.assertThat(actualResponse.getBody()).isNotNull();
+        assertAll(
+                () -> Assertions.assertThat(actualResponse.getStatusCode().is2xxSuccessful()).isTrue(),
+                () -> Assertions.assertThat(actualResponse.getBody().name()).isEqualTo(reservation.getName()),
+                () -> Assertions.assertThat(actualResponse.getBody().date()).isEqualTo(reservation.getDate()),
+                () -> Assertions.assertThat(actualResponse.getBody().reservationTimeResponse().id()).isEqualTo(timeId),
+                () -> Assertions.assertThat(actualResponse.getBody().reservationTimeResponse().startAt()).isEqualTo(time)
+        );
+    }
+
+    @Test
+    void read() {
+        // given
+        LocalDate givenDate = LocalDate.now();
+        LocalTime givenTime = LocalTime.now();
+        String givenName = "히스타";
+        Long givenTimeId = 1L;
+
+        create(givenName, givenDate, givenTimeId, givenTime);
+
+        // when
+        ResponseEntity<List<ReservationResponse>> actualResponse = reservationController.read();
+
+        // then
+        List<ReservationResponse> reservationList = actualResponse.getBody();
 
         Assertions.assertThat(reservationList).hasSize(1);
         assertAll(
-                () -> Assertions.assertThat(reservationList.getFirst().getName()).isEqualTo(nickname),
-                () -> Assertions.assertThat(reservationList.getFirst().getDate()).isEqualTo(date),
-                () -> Assertions.assertThat(reservationList.getFirst().getTime()).isEqualTo(time)
+                () -> Assertions.assertThat(reservationList.getFirst().name()).isEqualTo(givenName),
+                () -> Assertions.assertThat(reservationList.getFirst().date()).isEqualTo(givenDate),
+                () -> Assertions.assertThat(reservationList.getFirst().reservationTimeResponse().id()).isEqualTo(givenTimeId),
+                () -> Assertions.assertThat(reservationList.getFirst().reservationTimeResponse().startAt()).isEqualTo(givenTime)
         );
     }
 
     @Test
     void delete() {
         // given
-        create("히스타", LocalDate.now(), LocalTime.now());
+        create("히스타", LocalDate.now(), 1L, LocalTime.now());
 
         // when
         reservationController.delete(1L);
 
         // then
-        List<Reservation> actualResponse = reservationController.read().getBody();
+        List<ReservationResponse> actualResponse = reservationController.read().getBody();
         Assertions.assertThat(actualResponse).isEmpty();
     }
 }

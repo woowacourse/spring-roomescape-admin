@@ -1,5 +1,6 @@
 package roomescape.repository.fake;
 
+import java.time.LocalTime;
 import java.util.List;
 import java.util.concurrent.atomic.AtomicLong;
 import roomescape.domain.ReservationTime;
@@ -20,6 +21,14 @@ public class FakeReservationTimeRepository implements ReservationTimeRepository 
     @Override
     public List<ReservationTime> readReservationTimes() {
         return reservationTimes.getReservationTimes();
+    }
+
+    @Override
+    public ReservationTime readReservationTime(Long id) {
+        return reservationTimes.getReservationTimes().stream()
+                .filter(reservationTime -> reservationTime.isSameId(id))
+                .findFirst()
+                .orElseThrow(() -> new IllegalArgumentException("일치하는 예약 시간 ID를 찾을 수 없습니다."));
     }
 
     @Override

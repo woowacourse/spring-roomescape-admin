@@ -28,7 +28,7 @@ class ReservationsTest {
         Reservations reservations = new Reservations();
 
         // when
-        reservations.add(new Reservation(0L, "도기", LocalDate.now(), LocalTime.now()));
+        reservations.add(new Reservation(0L, "도기", LocalDate.now(), 1L));
 
         // then
         Assertions.assertThat(reservations.getReservations()).hasSize(1);
@@ -38,7 +38,7 @@ class ReservationsTest {
     void remove() {
         // given
         Reservations reservations = new Reservations();
-        reservations.add(new Reservation(0L, "히스타", LocalDate.now(), LocalTime.now()));
+        reservations.add(new Reservation(0L, "히스타", LocalDate.now(), 1L));
 
         // when
         reservations.remove(0L);
@@ -52,7 +52,7 @@ class ReservationsTest {
     void removeNotExistId() {
         // given
         Reservations reservations = new Reservations();
-        reservations.add(new Reservation(0L, "이프", LocalDate.now(), LocalTime.now()));
+        reservations.add(new Reservation(0L, "이프", LocalDate.now(), 1L));
 
         // when & then
         Assertions.assertThatIllegalArgumentException().isThrownBy(

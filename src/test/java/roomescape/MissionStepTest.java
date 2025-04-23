@@ -18,7 +18,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.test.annotation.DirtiesContext;
-import roomescape.controller.RoomescapeController;
+import roomescape.controller.ReservationController;
 import roomescape.entity.Reservation;
 
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.DEFINED_PORT)
@@ -202,13 +202,13 @@ public class MissionStepTest {
     }
 
     @Autowired
-    private RoomescapeController roomescapeController;
+    private ReservationController reservationController;
 
     @Test
     void 구단계() {
         boolean isJdbcTemplateInjected = false;
 
-        for (Field field : roomescapeController.getClass().getDeclaredFields()) {
+        for (Field field : reservationController.getClass().getDeclaredFields()) {
             if (field.getType().equals(JdbcTemplate.class)) {
                 isJdbcTemplateInjected = true;
                 break;

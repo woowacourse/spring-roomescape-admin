@@ -2,25 +2,19 @@ package roomescape.controller;
 
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 import roomescape.entity.ReservationTime;
 import roomescape.repository.ReservationTimeRepository;
 
 import java.util.List;
 
-@Controller
+@RestController
 public class ReservationTimeController {
 
     private final ReservationTimeRepository reservationTimeRepository;
 
     public ReservationTimeController(final ReservationTimeRepository reservationTimeRepository) {
         this.reservationTimeRepository = reservationTimeRepository;
-    }
-
-    @GetMapping("/admin/time")
-    public String getAdminReservationTimePage() {
-        return "admin/time";
     }
 
     @PostMapping("/times")

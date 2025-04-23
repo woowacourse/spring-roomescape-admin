@@ -9,11 +9,11 @@ import roomescape.service.ReservationService;
 import java.util.List;
 
 @RestController
-public class RoomescapeController {
+public class ReservationController {
 
     private final ReservationService reservationService;
 
-    public RoomescapeController(ReservationService reservationService) {
+    public ReservationController(ReservationService reservationService) {
         this.reservationService = reservationService;
     }
 

@@ -50,9 +50,9 @@ class ReservationDaoTest {
     void deleteReservationById() {
         Reservation reservation = new Reservation(0L, "포스티",
                 LocalDate.of(2025, 4, 23), LocalTime.of(10, 0));
-        Long reservationId = reservationDao.insert(reservation);
+        Reservation insertedReservation = reservationDao.insert(reservation);
 
-        reservationDao.deleteById(reservationId);
+        reservationDao.deleteById(insertedReservation.getId());
 
         assertThat(reservationDao.findAll()).isEmpty();
     }
@@ -62,9 +62,9 @@ class ReservationDaoTest {
     void findReservationById() {
         Reservation reservation = new Reservation(0L, "포스티",
                 LocalDate.of(2025, 4, 23), LocalTime.of(10, 0));
-        Long reservationId = reservationDao.insert(reservation);
+        Reservation insertedReservation = reservationDao.insert(reservation);
 
-        Reservation findReservation = reservationDao.findById(reservationId);
+        Reservation findReservation = reservationDao.findById(insertedReservation.getId());
 
         assertThat(findReservation.getName()).isEqualTo(reservation.getName());
         assertThat(findReservation.getDate()).isEqualTo(reservation.getDate());

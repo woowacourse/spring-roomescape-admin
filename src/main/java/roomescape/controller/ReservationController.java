@@ -38,8 +38,9 @@ public class ReservationController {
 
     @PostMapping
     public ResponseEntity<ReservationResponse> addReservation(@RequestBody final ReservationCreateRequest request) {
-        Long reservationId = reservationDao.insert(new Reservation(0L, request.name(), request.date(), request.time()));
-        Reservation reservation = reservationDao.findById(reservationId);
+        Reservation reservation = reservationDao.insert(
+                new Reservation(0L, request.name(), request.date(), request.time())
+        );
         return ResponseEntity.status(HttpStatus.CREATED)
                 .body(new ReservationResponse(reservation));
     }

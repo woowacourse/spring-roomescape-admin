@@ -38,7 +38,7 @@ public class ReservationDao {
         ));
     }
 
-    public Long insert(final Reservation reservation) {
+    public Reservation insert(final Reservation reservation) {
         KeyHolder generatedKeyHolder = new GeneratedKeyHolder();
         String insertSql = """
                 INSERT INTO reservation (name, date, time)
@@ -52,7 +52,8 @@ public class ReservationDao {
             preparedStatement.setString(3, reservation.getTime().format(DateTimeFormatter.ofPattern("HH:mm")));
             return preparedStatement;
         }, generatedKeyHolder);
-        return generatedKeyHolder.getKey().longValue();
+        return new Reservation(generatedKeyHolder.getKey().longValue(), reservation.getName(),
+                reservation.getDate(), reservation.getTime());
     }
 
     public void deleteById(final Long id) {

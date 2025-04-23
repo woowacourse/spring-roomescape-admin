@@ -1,23 +1,27 @@
 package roomescape.repository;
 
-import java.sql.PreparedStatement;
 import java.time.LocalDate;
 import java.time.LocalTime;
-import java.time.format.DateTimeFormatter;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;
-import org.springframework.jdbc.support.GeneratedKeyHolder;
-import org.springframework.jdbc.support.KeyHolder;
+import org.springframework.jdbc.core.simple.SimpleJdbcInsert;
 import org.springframework.stereotype.Repository;
 import roomescape.model.Reservation;
 
 @Repository
 public class H2ReservationRepository implements ReservationRepository {
     private final JdbcTemplate jdbcTemplate;
+    private final SimpleJdbcInsert insertReservation;
 
     public H2ReservationRepository(JdbcTemplate jdbcTemplate) {
         this.jdbcTemplate = jdbcTemplate;
+        this.insertReservation = new SimpleJdbcInsert(jdbcTemplate)
+                .withTableName("reservation")
+                .usingColumns("name", "date", "time")
+                .usingGeneratedKeyColumns("id");
     }
 
     private final RowMapper<Reservation> reservationRowMapper = (resultSet, rowNum) -> {
@@ -43,18 +47,14 @@ public class H2ReservationRepository implements ReservationRepository {
 
     @Override
     public Reservation add(final Reservation reservation) {
-        String sql = "insert into reservation (name, date, time) values (?, ?, ?)";
-        KeyHolder keyHolder = new GeneratedKeyHolder();
+        Map<String, Object> parameters = new HashMap<>(3);
+        parameters.put("name", reservation.getName());
+        parameters.put("date", reservation.getDate());
+        parameters.put("time", reservation.getTime());
 
-        jdbcTemplate.update(connection -> {
-            PreparedStatement pstmt = connection.prepareStatement(sql, new String[]{"id"});
-            pstmt.setString(1, reservation.getName());
-            pstmt.setString(2, reservation.getDate().format(DateTimeFormatter.ofPattern("yyyy-MM-dd")));
-            pstmt.setString(3, reservation.getTime().format(DateTimeFormatter.ofPattern("HH:mm:ss")));
-            return pstmt;
-        }, keyHolder);
+        Number newId = insertReservation.executeAndReturnKey(parameters);
 
-        return findById(keyHolder.getKey().longValue());
+        return findById(newId.longValue());
     }
 
     @Override

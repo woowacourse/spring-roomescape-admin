@@ -17,11 +17,11 @@ import roomescape.dto.ReservationResponse;
 
 @RestController
 @RequestMapping("reservations")
-public class ReservationApi {
+public class ReservationController {
 
     private final ReservationDao reservationDao;
 
-    public ReservationApi(ReservationDao reservationDao) {
+    public ReservationController(ReservationDao reservationDao) {
         this.reservationDao = reservationDao;
     }
 

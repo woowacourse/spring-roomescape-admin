@@ -12,8 +12,8 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.server.ResponseStatusException;
-import roomescape.controller.dto.ReservationTimeRegisterDto;
-import roomescape.controller.dto.ReservationTimeResponseDto;
+import roomescape.service.dto.ReservationTimeRegisterDto;
+import roomescape.service.dto.ReservationTimeResponseDto;
 import roomescape.domain.ReservationTime;
 import roomescape.repository.ReservationTimeRepository;
 

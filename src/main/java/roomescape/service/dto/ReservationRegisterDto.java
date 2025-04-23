@@ -1,4 +1,4 @@
-package roomescape.controller.dto;
+package roomescape.service.dto;
 
 import jakarta.validation.constraints.FutureOrPresent;
 import jakarta.validation.constraints.NotBlank;

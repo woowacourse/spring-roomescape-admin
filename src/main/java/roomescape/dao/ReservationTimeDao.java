@@ -1,19 +1,36 @@
 package roomescape.dao;
 
+import java.time.LocalTime;
 import java.util.HashMap;
 import java.util.Map;
 import org.springframework.jdbc.core.JdbcTemplate;
+import org.springframework.jdbc.core.RowMapper;
 import org.springframework.jdbc.core.simple.SimpleJdbcInsert;
 import org.springframework.stereotype.Component;
 import roomescape.domain.ReservationTime;
+import roomescape.domain.ReservationTimes;
 
 @Component
 public class ReservationTimeDao {
+
+    private static final String FIND_ALL_SQL = "select * from reservation_time";
+    private static final RowMapper<ReservationTime> RESERVATION_ROW_MAPPER = (resultSet, row) ->
+            new ReservationTime(
+                    resultSet.getLong("id"),
+                    resultSet.getObject("start_at", LocalTime.class)
+            );
 
     private final JdbcTemplate jdbcTemplate;
 
     public ReservationTimeDao(JdbcTemplate jdbcTemplate) {
         this.jdbcTemplate = jdbcTemplate;
+    }
+
+    public ReservationTimes findAll() {
+        return new ReservationTimes(jdbcTemplate.query(
+                FIND_ALL_SQL,
+                RESERVATION_ROW_MAPPER
+        ));
     }
 
     public ReservationTime save(ReservationTime reservationTime) {

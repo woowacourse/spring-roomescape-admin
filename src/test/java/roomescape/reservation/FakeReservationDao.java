@@ -6,11 +6,11 @@ import java.util.List;
 import java.util.Objects;
 import roomescape.time.Time;
 
-public class FakeReservationDao implements ReservationDao{
+public class FakeReservationDao implements ReservationDao {
 
     private static final Time DUMMY_TIME = new Time(1L, LocalTime.of(12, 40));
 
-    private long NEXT_ID = 1L;
+    private Long NEXT_ID = 1L;
     private final List<Reservation> reservations = new ArrayList<>();
     private final List<Long> invokeDeleteId = new ArrayList<>();
 
@@ -48,7 +48,7 @@ public class FakeReservationDao implements ReservationDao{
         invokeDeleteId.add(id);
     }
 
-    public boolean isInvokeDeleteById(final Long id){
+    public boolean isInvokeDeleteById(final Long id) {
         return invokeDeleteId.stream()
                 .anyMatch(value -> Objects.equals(value, id));
     }

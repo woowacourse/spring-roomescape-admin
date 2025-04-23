@@ -3,7 +3,7 @@ package roomescape.service;
 import java.util.List;
 import roomescape.dto.CreateReservationTimeDto;
 import roomescape.entity.ReservationTime;
-import roomescape.repository.ReservationTimeRepository;
+import roomescape.repository.reservationtime.ReservationTimeRepository;
 
 public class ReservationTimeService {
 

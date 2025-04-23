@@ -1,4 +1,4 @@
-package roomescape.repository;
+package roomescape.repository.reservationtime;
 
 import java.util.List;
 import org.springframework.jdbc.core.JdbcTemplate;

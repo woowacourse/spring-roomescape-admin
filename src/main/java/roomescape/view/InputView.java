@@ -2,6 +2,7 @@ package roomescape.view;
 
 import java.util.Scanner;
 import org.springframework.stereotype.Component;
+import roomescape.dto.CreateReservationTimeDto;
 
 @Component
 public class InputView {
@@ -28,5 +29,11 @@ public class InputView {
         System.out.println("2. 예약 목록 조회");
         System.out.println("3. 예약 삭제");
         return scanner.nextInt();
+    }
+
+    public CreateReservationTimeDto inputCreateReservationTime() {
+        System.out.println("예약 시간을 생성합니다.");
+        System.out.println("생성할 예약 시간을 입력해 주세요. (ex: 20:30) ");
+        return new CreateReservationTimeDto(scanner.nextLine());
     }
 }

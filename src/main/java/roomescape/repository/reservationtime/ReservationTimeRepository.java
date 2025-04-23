@@ -1,4 +1,4 @@
-package roomescape.repository;
+package roomescape.repository.reservationtime;
 
 import java.util.List;
 import roomescape.dto.CreateReservationTimeDto;

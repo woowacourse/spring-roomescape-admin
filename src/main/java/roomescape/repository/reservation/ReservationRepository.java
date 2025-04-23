@@ -1,4 +1,4 @@
-package roomescape.repository;
+package roomescape.repository.reservation;
 
 import java.util.List;
 import org.springframework.stereotype.Repository;

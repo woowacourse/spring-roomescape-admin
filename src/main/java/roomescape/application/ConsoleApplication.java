@@ -3,6 +3,8 @@ package roomescape.application;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.stereotype.Component;
+import roomescape.dto.CreateReservationTimeDto;
+import roomescape.entity.ReservationTime;
 import roomescape.service.ReservationService;
 import roomescape.service.ReservationTimeService;
 import roomescape.view.InputView;
@@ -32,12 +34,22 @@ public class ConsoleApplication implements CommandLineRunner {
             int function = inputView.selectAdminFunction();
             if (function == 1) {
                 int reservationTimeFunction = inputView.selectReservationTimeFunction();
+                processReservationTimeFunction(reservationTimeFunction);
             } else if (function == 2) {
                 int reservationFunction = inputView.selectReservationFunction();
             } else {
                 System.out.println("잘못된 기능 입력입니다.");
                 System.out.println();
             }
+        }
+    }
+
+    private void processReservationTimeFunction(int function) {
+        if (function == 1) {
+            CreateReservationTimeDto createReservationTimeDto = inputView.inputCreateReservationTime();
+            ReservationTime reservationTime = reservationTimeService.createReservationTime(createReservationTimeDto);
+            System.out.println("예약 시간 생성을 완료했습니다.");
+            System.out.println("생성된 시간 : " + reservationTime.getStartAt());
         }
     }
 }

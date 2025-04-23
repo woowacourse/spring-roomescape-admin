@@ -4,6 +4,7 @@ import java.time.LocalTime;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 import javax.sql.DataSource;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.simple.SimpleJdbcInsert;
@@ -43,5 +44,13 @@ public class ReservationTimeRepository {
         String sql = "delete from reservation_time where id = ?";
         int updated = jdbcTemplate.update(sql, id);
         return updated != 0;
+    }
+
+    public Optional<ReservationTime> findById(long id) {
+        String sql = "select * from reservation_time where id = ?";
+        return jdbcTemplate.query(sql, (resultSet, rowNum) -> new ReservationTime(
+                resultSet.getLong("id"),
+                resultSet.getObject("start_at", LocalTime.class)
+        ), id).stream().findFirst();
     }
 }

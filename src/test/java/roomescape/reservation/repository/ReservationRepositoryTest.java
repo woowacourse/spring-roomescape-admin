@@ -12,21 +12,27 @@ import org.springframework.boot.test.autoconfigure.jdbc.JdbcTest;
 import org.springframework.context.annotation.Import;
 import roomescape.reservation.model.Reservation;
 import roomescape.reservation.model.ReservationDetails;
+import roomescape.reservation.model.ReservationTime;
+import roomescape.reservation.model.ReservationTimeDetails;
 
 @JdbcTest(properties = "application-test.properties")
-@Import(ReservationRepository.class)
+@Import({ReservationRepository.class, ReservationTimeRepository.class})
 class ReservationRepositoryTest {
 
     @Autowired
     private ReservationRepository reservationRepository;
+    @Autowired
+    private ReservationTimeRepository reservationTimeRepository;
 
-    ReservationDetails reservationDetails = new ReservationDetails("test", LocalDate.of(2024, 12, 1),
-            LocalTime.of(12, 1));
+    ReservationTimeDetails timeDetails = new ReservationTimeDetails(LocalTime.of(12, 0));
 
     @DisplayName("전체 예약 리스트 불러온다.")
     @Test
     void findAll() {
         // given
+        ReservationTime reservationTime = reservationTimeRepository.insertTime(timeDetails);
+        ReservationDetails reservationDetails = new ReservationDetails("test", LocalDate.of(2024, 12, 1),
+                reservationTime);
         reservationRepository.insertReservation(reservationDetails);
 
         // when
@@ -36,27 +42,31 @@ class ReservationRepositoryTest {
         assertThat(reservations).hasSize(1);
         assertThat(reservations.getFirst())
                 .hasFieldOrPropertyWithValue("name", "test")
-                .hasFieldOrPropertyWithValue("date", LocalDate.of(2024, 12, 1))
-                .hasFieldOrPropertyWithValue("time", LocalTime.of(12, 1));
+                .hasFieldOrPropertyWithValue("date", LocalDate.of(2024, 12, 1));
     }
 
     @DisplayName("예약을 추가한다.")
     @Test
     void insertReservation() {
         // when
+        ReservationTime reservationTime = reservationTimeRepository.insertTime(timeDetails);
+        ReservationDetails reservationDetails = new ReservationDetails("test", LocalDate.of(2024, 12, 1),
+                reservationTime);
         Reservation reservation = reservationRepository.insertReservation(reservationDetails);
 
         // then
         assertThat(reservation)
                 .hasFieldOrPropertyWithValue("name", "test")
-                .hasFieldOrPropertyWithValue("date", LocalDate.of(2024, 12, 1))
-                .hasFieldOrPropertyWithValue("time", LocalTime.of(12, 1));
+                .hasFieldOrPropertyWithValue("date", LocalDate.of(2024, 12, 1));
     }
 
     @DisplayName("id가 일치하는 예약을 삭제하면 true를 반환한다.")
     @Test
     void deleteReservationById_existId() {
         // given
+        ReservationTime reservationTime = reservationTimeRepository.insertTime(timeDetails);
+        ReservationDetails reservationDetails = new ReservationDetails("test", LocalDate.of(2024, 12, 1),
+                reservationTime);
         Reservation reservation = reservationRepository.insertReservation(reservationDetails);
 
         // when

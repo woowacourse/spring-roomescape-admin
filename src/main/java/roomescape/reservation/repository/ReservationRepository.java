@@ -11,6 +11,7 @@ import org.springframework.jdbc.core.simple.SimpleJdbcInsert;
 import org.springframework.stereotype.Repository;
 import roomescape.reservation.model.Reservation;
 import roomescape.reservation.model.ReservationDetails;
+import roomescape.reservation.model.ReservationTime;
 
 @Repository
 public class ReservationRepository {
@@ -26,11 +27,23 @@ public class ReservationRepository {
     }
 
     public List<Reservation> findAll() {
-        return jdbcTemplate.query("select * from reservation", (resultSet, rowNum) -> new Reservation(
-                resultSet.getLong("id"),
+        String sql = """
+                SELECT
+                    r.id as reservation_id,
+                    r.name,
+                    r.date,
+                    t.id as time_id,
+                    t.start_at as time_value
+                FROM reservation as r
+                inner join reservation_time as t
+                on r.time_id = t.id
+                """;
+        return jdbcTemplate.query(sql, (resultSet, rowNum) -> new Reservation(
+                resultSet.getLong("reservation_id"),
                 resultSet.getString("name"),
                 resultSet.getObject("date", LocalDate.class),
-                resultSet.getObject("time", LocalTime.class)
+                new ReservationTime(resultSet.getLong("time_id"),
+                        resultSet.getObject("start_at", LocalTime.class))
         ));
     }
 
@@ -38,7 +51,7 @@ public class ReservationRepository {
         Map<String, Object> parameters = new HashMap<>();
         parameters.put("name", reservationDetails.name());
         parameters.put("date", reservationDetails.date());
-        parameters.put("time", reservationDetails.time());
+        parameters.put("time_id", reservationDetails.time().getId());
         Number number = simpleJdbcInsert.executeAndReturnKey(parameters);
         return new Reservation(number.longValue(), reservationDetails.name(), reservationDetails.date(),
                 reservationDetails.time());

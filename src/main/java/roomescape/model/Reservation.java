@@ -24,14 +24,14 @@ public class Reservation {
     }
 
     public static Reservation toEntity(Reservation reservation, Long id) {
-        if (isEntity(reservation)) {
+        if (reservation.isEntity()) {
             throw new IllegalArgumentException("이미 Entity화 되어있는 객체입니다.");
         }
         return new Reservation(id, reservation.name, reservation.date, reservation.time);
     }
 
-    private static boolean isEntity(Reservation reservation) {
-        return reservation.id != null;
+    private boolean isEntity() {
+        return id != null;
     }
 
     private void validate(String name, LocalDate date, LocalTime time) {

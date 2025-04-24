@@ -26,7 +26,7 @@ class ReservationTest {
         LocalTime reservationTime = reservationDateTime.toLocalTime();
 
         // when & then
-        assertThatCode(() -> new Reservation(id, name, reservationDate, reservationTime))
+        assertThatCode(() -> new Reservation(id, name, reservationDate, new ReservationTime(id, reservationTime)))
                 .doesNotThrowAnyException();
     }
 
@@ -42,7 +42,7 @@ class ReservationTest {
         LocalTime reservationTime = reservationDateTime.toLocalTime();
 
         // when & then
-        assertThatCode(() -> new Reservation(id, name, reservationDate, reservationTime))
+        assertThatCode(() -> new Reservation(id, name, reservationDate, new ReservationTime(id, reservationTime)))
                 .isInstanceOf(DomainException.class)
                 .hasMessage("과거 일시로 예약을 생성할 수 없습니다.");
     }
@@ -58,7 +58,7 @@ class ReservationTest {
         LocalTime reservationTime = reservationDateTime.toLocalTime();
 
         // when & then
-        assertThatCode(() -> new Reservation(id, emptyName, reservationDate, reservationTime))
+        assertThatCode(() -> new Reservation(id, emptyName, reservationDate, new ReservationTime(id, reservationTime)))
                 .isInstanceOf(DomainException.class)
                 .hasMessage("예약자명이 입력되지 않았습니다.");
     }
@@ -73,7 +73,7 @@ class ReservationTest {
         LocalTime reservationTime = reservationDateTime.toLocalTime();
 
         // when & then
-        assertThatCode(() -> new Reservation(id, name, null, reservationTime))
+        assertThatCode(() -> new Reservation(id, name, null, new ReservationTime(id, reservationTime)))
                 .isInstanceOf(DomainException.class)
                 .hasMessage("예약 날짜가 입력되지 않았습니다.");
     }

@@ -10,6 +10,7 @@ import org.springframework.jdbc.core.RowMapper;
 import org.springframework.jdbc.core.simple.SimpleJdbcInsert;
 import org.springframework.stereotype.Repository;
 import roomescape.model.Reservation;
+import roomescape.model.ReservationTime;
 
 @Repository
 public class H2ReservationRepository implements ReservationRepository {
@@ -18,10 +19,10 @@ public class H2ReservationRepository implements ReservationRepository {
     private final SimpleJdbcInsert insertReservation;
     private final RowMapper<Reservation> reservationRowMapper = (resultSet, rowNum) -> {
         Reservation reservation = new Reservation(
-                resultSet.getLong("id"),
+                resultSet.getLong("reservation_id"),
                 resultSet.getString("name"),
                 LocalDate.parse(resultSet.getString("date")),
-                LocalTime.parse(resultSet.getString("time"))
+                new ReservationTime(resultSet.getLong("time_id"), LocalTime.parse(resultSet.getString("time_value")))
         );
         return reservation;
     };
@@ -30,31 +31,53 @@ public class H2ReservationRepository implements ReservationRepository {
         this.jdbcTemplate = jdbcTemplate;
         this.insertReservation = new SimpleJdbcInsert(jdbcTemplate)
                 .withTableName("reservation")
-                .usingColumns("name", "date", "time")
+                .usingColumns("name", "date", "time_id")
                 .usingGeneratedKeyColumns("id");
     }
 
     @Override
-    public Reservation add(final Reservation reservation) {
+    public Long add(final Reservation reservation) {
         Map<String, Object> parameters = new HashMap<>(3);
         parameters.put("name", reservation.getName());
         parameters.put("date", reservation.getDate());
-        parameters.put("time", reservation.getTime());
+        parameters.put("time_id", reservation.getTime().getId());
 
         Number newId = insertReservation.executeAndReturnKey(parameters);
 
-        return findById(newId.longValue());
+        return newId.longValue();
     }
 
     @Override
     public Reservation findById(Long id) {
-        String sql = "select id, name, date, time from reservation where id = ?";
+        String sql = """
+                select
+                    r.id as reservation_id,
+                    r.name,
+                    r.date,
+                    t.id as time_id,
+                    t.start_at as time_value
+                from reservation as r
+                inner join reservation_time as t
+                on r.time_id = t.id
+                where r.id = ?
+                """;
         return jdbcTemplate.queryForObject(sql, reservationRowMapper, id);
     }
 
     @Override
     public List<Reservation> findAll() {
-        String sql = "select id, name, date, time from reservation";
+        String sql = """
+                select
+                    r.id as reservation_id,
+                    r.name,
+                    r.date,
+                    t.id as time_id,
+                    t.start_at as time_value
+                from reservation as r
+                inner join reservation_time as t
+                on r.time_id = t.id
+                """;
+
         return jdbcTemplate.query(sql, reservationRowMapper);
     }
 

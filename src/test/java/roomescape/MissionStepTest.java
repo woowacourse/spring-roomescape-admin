@@ -8,10 +8,12 @@ import io.restassured.http.ContentType;
 import java.sql.Connection;
 import java.sql.SQLException;
 import java.time.LocalDate;
+import java.time.LocalTime;
 import java.time.format.DateTimeFormatter;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -23,6 +25,16 @@ import roomescape.dto.ReservationResponseDto;
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.DEFINED_PORT)
 @DirtiesContext(classMode = DirtiesContext.ClassMode.BEFORE_EACH_TEST_METHOD)
 public class MissionStepTest {
+
+    @Autowired
+    private JdbcTemplate jdbcTemplate;
+
+    @BeforeEach
+    void setUp() {
+        LocalTime reservationTime = LocalTime.of(11, 0);
+
+        jdbcTemplate.update("INSERT INTO reservation_time (start_at) VALUES (?)", reservationTime);
+    }
 
     @DisplayName("1단계 - 관리자 홈 화면 응답 성공")
     @Test
@@ -51,10 +63,10 @@ public class MissionStepTest {
     @DisplayName("3단계 - 예약 추가 성공")
     @Test
     void step3_1() {
-        Map<String, String> params = new HashMap<>();
+        Map<String, Object> params = new HashMap<>();
         params.put("name", "브라운");
         params.put("date", LocalDate.now().plusDays(1).format(DateTimeFormatter.ofPattern("yyyy-MM-dd")));
-        params.put("time", "15:40");
+        params.put("timeId", 1);
 
         RestAssured.given().log().all()
                 .contentType(ContentType.JSON)
@@ -74,10 +86,10 @@ public class MissionStepTest {
     @DisplayName("3단계 - 예약 삭제 성공")
     @Test
     void step3_2() {
-        Map<String, String> params = new HashMap<>();
+        Map<String, Object> params = new HashMap<>();
         params.put("name", "브라운");
         params.put("date", LocalDate.now().plusDays(1).format(DateTimeFormatter.ofPattern("yyyy-MM-dd")));
-        params.put("time", "15:40");
+        params.put("timeId", 1);
 
         RestAssured.given().log().all()
                 .contentType(ContentType.JSON)
@@ -99,9 +111,6 @@ public class MissionStepTest {
                 .body("size()", is(0));
     }
 
-    @Autowired
-    private JdbcTemplate jdbcTemplate;
-
     @DisplayName("4단계 - 데이터베이스 연결 성공")
     @Test
     void step4() {
@@ -118,10 +127,10 @@ public class MissionStepTest {
     @Test
     void step5() {
         jdbcTemplate.update(
-                "INSERT INTO reservation (name, date, time) VALUES (?, ?, ?)",
+                "INSERT INTO reservation (name, date, time_id) VALUES (?, ?, ?)",
                 "브라운",
                 LocalDate.now().plusDays(1).format(DateTimeFormatter.ofPattern("yyyy-MM-dd")),
-                "15:40"
+                1L
         );
 
         List<ReservationResponseDto> reservations = RestAssured.given().log().all()
@@ -138,10 +147,10 @@ public class MissionStepTest {
     @DisplayName("6단계 - 데이터베이스에 예약 추가 성공")
     @Test
     void step6_1() {
-        Map<String, String> params = new HashMap<>();
+        Map<String, Object> params = new HashMap<>();
         params.put("name", "브라운");
         params.put("date", LocalDate.now().plusDays(1).format(DateTimeFormatter.ofPattern("yyyy-MM-dd")));
-        params.put("time", "10:00");
+        params.put("timeId", 1);
 
         RestAssured.given().log().all()
                 .contentType(ContentType.JSON)
@@ -157,10 +166,10 @@ public class MissionStepTest {
     @DisplayName("6단계 - 데이터베이스에서 예약 삭제 성공")
     @Test
     void step6_2() {
-        Map<String, String> params = new HashMap<>();
+        Map<String, Object> params = new HashMap<>();
         params.put("name", "브라운");
         params.put("date", LocalDate.now().plusDays(1).format(DateTimeFormatter.ofPattern("yyyy-MM-dd")));
-        params.put("time", "10:00");
+        params.put("timeId", 1);
 
         RestAssured.given().log().all()
                 .contentType(ContentType.JSON)
@@ -195,7 +204,7 @@ public class MissionStepTest {
                 .when().get("/times")
                 .then().log().all()
                 .statusCode(200)
-                .body("size()", is(1));
+                .body("size()", is(2));
     }
 
     @DisplayName("7단계 - 예약 시간 삭제 성공")
@@ -215,5 +224,27 @@ public class MissionStepTest {
                 .when().delete("/times/1")
                 .then().log().all()
                 .statusCode(200);
+    }
+
+    @DisplayName("시간을 선택해서 예약 추가 및 조회 성공")
+    @Test
+    void step8() {
+        Map<String, Object> reservation = new HashMap<>();
+        reservation.put("name", "브라운");
+        reservation.put("date", "2025-08-05");
+        reservation.put("timeId", 1);
+
+        RestAssured.given().log().all()
+                .contentType(ContentType.JSON)
+                .body(reservation)
+                .when().post("/reservations")
+                .then().log().all()
+                .statusCode(200);
+
+        RestAssured.given().log().all()
+                .when().get("/reservations")
+                .then().log().all()
+                .statusCode(200)
+                .body("size()", is(1));
     }
 }

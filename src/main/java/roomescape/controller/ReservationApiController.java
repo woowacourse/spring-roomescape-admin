@@ -8,19 +8,22 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
-import roomescape.repository.ReservationRepository;
-import roomescape.model.Reservation;
 import roomescape.dto.ReservationRequestDto;
 import roomescape.dto.ReservationResponseDto;
+import roomescape.repository.ReservationRepository;
+import roomescape.service.ReservationService;
 
 @RestController
 @RequestMapping("/reservations")
 public final class ReservationApiController {
 
     private final ReservationRepository reservationRepository;
+    private final ReservationService reservationService;
 
-    public ReservationApiController(ReservationRepository reservationRepository) {
+    public ReservationApiController(ReservationRepository reservationRepository,
+                                    final ReservationService reservationService) {
         this.reservationRepository = reservationRepository;
+        this.reservationService = reservationService;
     }
 
     @GetMapping
@@ -32,8 +35,7 @@ public final class ReservationApiController {
 
     @PostMapping
     public ReservationResponseDto reserve(@RequestBody ReservationRequestDto reservationRequestDto) {
-        Reservation reservation = reservationRepository.add(reservationRequestDto.toReservation());
-        return ReservationResponseDto.from(reservation);
+        return reservationService.createReservation(reservationRequestDto);
     }
 
     @DeleteMapping("/{id}")

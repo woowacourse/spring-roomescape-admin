@@ -2,7 +2,6 @@ package roomescape.model;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
-import java.time.LocalTime;
 import roomescape.exception.DomainException;
 
 public final class Reservation {
@@ -10,23 +9,23 @@ public final class Reservation {
     private final Long id;
     private final String name;
     private final LocalDate date;
-    private final LocalTime time;
+    private final ReservationTime time;
 
-    public Reservation(Long id, String name, LocalDate date, LocalTime time) {
+    public Reservation(Long id, String name, LocalDate date, ReservationTime time) {
         validateNotBlankName(name);
         validateNotNullDateTime(date, time);
-        validateNotPastDateTime(LocalDateTime.of(date, time));
+        validateNotPastDateTime(LocalDateTime.of(date, time.getStartAt()));
         this.id = id;
         this.name = name;
         this.date = date;
         this.time = time;
     }
 
-    public Reservation(String name, LocalDate date, LocalTime time) {
+    public Reservation(String name, LocalDate date, ReservationTime time) {
         this(null, name, date, time);
     }
 
-    private void validateNotNullDateTime(LocalDate date, LocalTime time) {
+    private void validateNotNullDateTime(LocalDate date, ReservationTime time) {
         if (date == null) {
             throw new DomainException("예약 날짜가 입력되지 않았습니다.");
         }
@@ -63,7 +62,7 @@ public final class Reservation {
         return date;
     }
 
-    public LocalTime getTime() {
+    public ReservationTime getTime() {
         return time;
     }
 }

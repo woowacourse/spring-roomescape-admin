@@ -11,7 +11,7 @@ import org.springframework.stereotype.Repository;
 import roomescape.domain.ReservationTime;
 
 @Repository
-public class TimeDao {
+public class ReservationTimeDao {
 
     @Autowired
     private JdbcTemplate jdbcTemplate;

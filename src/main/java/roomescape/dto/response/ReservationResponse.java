@@ -7,11 +7,11 @@ public record ReservationResponse(
         Long id,
         String name,
         LocalDate date,
-        TimeResponse time
+        ReservationTimeResponse time
 ) {
     public static ReservationResponse toDto(Reservation reservation) {
         System.out.println(reservation.getReservationTime().toString());
-        TimeResponse dto = TimeResponse.toDto(reservation.getReservationTime());
+        ReservationTimeResponse dto = ReservationTimeResponse.toDto(reservation.getReservationTime());
         return new ReservationResponse(reservation.getId(), reservation.getName(), reservation.getDate(), dto);
     }
 }

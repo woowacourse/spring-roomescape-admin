@@ -4,7 +4,7 @@ import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import roomescape.dao.ReservationDao;
-import roomescape.dao.TimeDao;
+import roomescape.dao.ReservationTimeDao;
 import roomescape.domain.Reservation;
 import roomescape.domain.ReservationTime;
 import roomescape.dto.request.ReservationCreateRequest;
@@ -17,7 +17,7 @@ public class ReservationService {
     ReservationDao reservationDao;
 
     @Autowired
-    private TimeDao timeDao;
+    private ReservationTimeDao reservationTimeDao;
 
     public List<ReservationResponse> findAll() {
         List<Reservation> reservationDaoAll = reservationDao.findAll();
@@ -28,7 +28,7 @@ public class ReservationService {
     }
 
     public Long create(ReservationCreateRequest request) {
-        ReservationTime reservationTime = timeDao.findById(request.timeId());
+        ReservationTime reservationTime = reservationTimeDao.findById(request.timeId());
         Reservation reservation = request.toReservation(reservationTime);
         return reservationDao.create(reservation);
     }

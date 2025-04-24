@@ -1,6 +1,7 @@
 package roomescape.domain;
 
 import java.time.LocalTime;
+import java.time.format.DateTimeFormatter;
 import java.util.Objects;
 
 public class ReservationTime {
@@ -15,6 +16,10 @@ public class ReservationTime {
 
     public ReservationTime(Long id, ReservationTime reservationTime) {
         this(id, reservationTime.time);
+    }
+
+    public String formatTime(DateTimeFormatter formatter) {
+        return time.format(formatter);
     }
 
     @Override

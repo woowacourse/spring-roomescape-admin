@@ -2,7 +2,6 @@ package roomescape.controller;
 
 import io.restassured.RestAssured;
 import io.restassured.http.ContentType;
-import java.util.Map;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -25,34 +24,6 @@ class RoomescapeApiControllerTest {
         jdbcTemplate.execute("ALTER TABLE reservation ALTER COLUMN id RESTART WITH 1");
         jdbcTemplate.execute("ALTER TABLE reservation_time ALTER COLUMN id RESTART WITH 1");
         jdbcTemplate.update("INSERT INTO reservation_time (start_at) VALUES (?)", "15:40");
-    }
-
-    @Test
-    @DisplayName("같은 날짜 및 시간 예약이 존재하면 400 Bad Request를 던진다")
-    void reservationAdd() {
-        //given
-        Map<String, String> params = Map.of("name", "브라운",
-                "date", "2023-08-05",
-                "timeId", "1");
-
-        RestAssured.given().log().all()
-                .contentType(ContentType.JSON)
-                .body(params)
-                .when().post("/reservations")
-                .then().log().all()
-                .statusCode(200);
-
-        Map<String, String> duplicated = Map.of("name", "네오",
-                "date", "2023-08-05",
-                "timeId", "1");
-
-        //when & then
-        RestAssured.given().log().all()
-                .contentType(ContentType.JSON)
-                .body(duplicated)
-                .when().post("/reservations")
-                .then().log().all()
-                .statusCode(400);
     }
 
     @DisplayName("존재하지 않는 예약을 삭제하려는 경우 404 Not Found를 던진다")

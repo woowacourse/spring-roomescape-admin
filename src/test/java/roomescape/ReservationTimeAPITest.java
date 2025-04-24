@@ -86,6 +86,37 @@ public class ReservationTimeAPITest {
         assertThat(times.size()).isEqualTo(count);
     }
 
+    @Test
+    @DisplayName("시간을 삭제하면 목록에서 삭제된다.")
+    void deleteReservationTest() {
+        // given
+        addReservationTime("10:00");
+
+        // when & then
+        RestAssured.given().log().all()
+                .when().delete("/times/1")
+                .then().log().all()
+                .statusCode(200);
+    }
+
+    @Test
+    @DisplayName("시간 삭제 시 데이터베이스에서 삭제된다.")
+    void deleteReservationDataBaseTest() {
+        // given
+        String sql = "insert into reservation_time (start_at) values (?)";
+        jdbcTemplate.update(sql, "10:00");
+
+        // when
+        RestAssured.given().log().all()
+                .when().delete("/times/1")
+                .then().log().all()
+                .statusCode(200);
+        Integer countAfterDelete = jdbcTemplate.queryForObject("select count(1) from reservation_time", Integer.class);
+
+        // then
+        assertThat(countAfterDelete).isEqualTo(0);
+    }
+
     private void addReservationTime(String startAt) {
         Map<String, String> params = new HashMap<>();
         params.put("startAt", startAt);

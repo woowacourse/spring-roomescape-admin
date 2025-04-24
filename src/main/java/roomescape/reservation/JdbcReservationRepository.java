@@ -17,35 +17,11 @@ public class JdbcReservationRepository implements ReservationRepository {
     }
 
     @Override
-    public Reservation saveReservation(ReservationRequest wantToSaveReservationRequest) {
+    public Reservation saveReservation(Reservation wantToSaveReservation) {
         String insertQuery = "INSERT INTO RESERVATION (name, date, time_id) values (?,?,?)";
-        String findQuery = "SELECT id, start_at FROM reservation_time WHERE id = ?";
         KeyHolder keyHolder = new GeneratedKeyHolder();
 
-        ReservationTime wantToFindReservationTime = jdbcTemplate.queryForObject(
-                findQuery,
-                (result, rowNum) -> {
-                    ReservationTime reservationTime = new ReservationTime(
-                            result.getLong("id"),
-                            result.getTime("start_at").toLocalTime()
-                    );
-                    return reservationTime;
-                }
-                , wantToSaveReservationRequest.getTimeId());
-
-        jdbcTemplate.update(connection -> {
-            PreparedStatement preparedStatement = connection.prepareStatement(
-                    insertQuery, new String[]{"id"});
-            preparedStatement.setString(1, wantToSaveReservationRequest.getName());
-            preparedStatement.setDate(2, java.sql.Date.valueOf(wantToSaveReservationRequest.getDate()));
-            preparedStatement.setLong(3, wantToSaveReservationRequest.getTimeId());
-            return preparedStatement;
-        }, keyHolder);
-
-        Reservation wantToSaveReservation = new Reservation(
-                wantToSaveReservationRequest.getName(), wantToSaveReservationRequest.getDate(),
-                wantToFindReservationTime
-        );
+        insertReservation(wantToSaveReservation, insertQuery, keyHolder);
 
         return Reservation.toEntity(wantToSaveReservation, keyHolder.getKey().longValue());
     }
@@ -77,13 +53,12 @@ public class JdbcReservationRepository implements ReservationRepository {
                             result.getTime("start_at").toLocalTime()
                     );
 
-                    Reservation reservation = new Reservation(
+                    return new Reservation(
                             result.getLong("id"),
                             result.getString("name"),
                             result.getDate("date").toLocalDate(),
                             wantToFindReservationTime
                     );
-                    return reservation;
                 }
         );
     }
@@ -93,6 +68,29 @@ public class JdbcReservationRepository implements ReservationRepository {
         int count = jdbcTemplate.queryForObject(query, Integer.class,
                 reservationRequest.getDate(), reservationRequest.getTimeId());
         return count > 0;
+    }
+
+    private void insertReservation(Reservation wantToSaveReservation, String insertQuery, KeyHolder keyHolder) {
+        jdbcTemplate.update(connection -> {
+            PreparedStatement preparedStatement = connection.prepareStatement(
+                    insertQuery, new String[]{"id"});
+            preparedStatement.setString(1, wantToSaveReservation.getName());
+            preparedStatement.setDate(2, java.sql.Date.valueOf(wantToSaveReservation.getDate()));
+            preparedStatement.setLong(3, wantToSaveReservation.getTime().getId());
+            return preparedStatement;
+        }, keyHolder);
+    }
+
+    private ReservationTime findReservationTimeById(ReservationRequest wantToSaveReservationRequest, String findQuery) {
+        return jdbcTemplate.queryForObject(
+                findQuery,
+                (result, rowNum) -> {
+                    return new ReservationTime(
+                            result.getLong("id"),
+                            result.getTime("start_at").toLocalTime()
+                    );
+                }
+                , wantToSaveReservationRequest.getTimeId());
     }
 
 }

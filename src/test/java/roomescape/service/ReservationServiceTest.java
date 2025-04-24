@@ -37,6 +37,7 @@ class ReservationServiceTest {
     @Test
     @DisplayName("날짜와 시간이 모두 중복되면 예외가 발생한다.")
     void whenDuplicateDateAndTimeThrowException() {
+
         // given
         ReservationRequest existedRequest = new ReservationRequest("lemon", LocalDate.of(2025, 4, 18),
                 1L);
@@ -73,35 +74,28 @@ class ReservationServiceTest {
         // then
         SoftAssertions.assertSoftly(softAssertions -> {
             softAssertions.assertThat(reservations).hasSize(2);
-            softAssertions.assertThat(reservations.get(0).id()).isEqualTo(1);
-            softAssertions.assertThat(reservations.get(0).name()).isEqualTo("Lemon");
-            softAssertions.assertThat(reservations.get(0).date()).isEqualTo(LocalDate.of(2025, 4, 22));
-            softAssertions.assertThat(reservations.get(0).time().startAt()).isEqualTo(LocalTime.of(10, 0));
-            softAssertions.assertThat(reservations.get(1).id()).isEqualTo(2);
-            softAssertions.assertThat(reservations.get(1).name()).isEqualTo("DDingHwa");
-            softAssertions.assertThat(reservations.get(1).date()).isEqualTo(LocalDate.of(2025, 4, 22));
-            softAssertions.assertThat(reservations.get(1).time().startAt()).isEqualTo(LocalTime.of(12, 0));
+            softAssertions.assertThat(reservations.getFirst().id()).isEqualTo(1);
+            softAssertions.assertThat(reservations.getFirst().name()).isEqualTo("Lemon");
+            softAssertions.assertThat(reservations.getFirst().date()).isEqualTo(LocalDate.of(2025, 4, 22));
+            softAssertions.assertThat(reservations.getFirst().time().startAt()).isEqualTo(LocalTime.of(10, 0));
         });
     }
 
     //todo: @ActiveProfiles(value = "test") 로 테스트시 의존성을 부여하는 방법에 대해 찾아보기
     static class FakeReservationRepository implements ReservationRepository {
 
-        private List<Reservation> reservations = new ArrayList<>();
-        private ReservationTime reservationTime1 = new ReservationTime(1L, LocalTime.of(10, 0));
-        private ReservationTime reservationTime2 = new ReservationTime(2L, LocalTime.of(12, 0));
+        List<Reservation> reservations = new ArrayList<>();
         private final AtomicLong atomicLong = new AtomicLong(1);
 
-
         public FakeReservationRepository() {
-            reservations.add(new Reservation(atomicLong.getAndIncrement(), "Lemon", LocalDate.of(2025, 4, 22),
-                    reservationTime1));
+            reservations.add(new Reservation(atomicLong.getAndIncrement(),
+                    "Lemon", LocalDate.of(2025, 4, 22), new ReservationTime(1L, LocalTime.of(10, 0))));
             reservations.add(new Reservation(atomicLong.getAndIncrement(), "DDingHwa", LocalDate.of(2025, 4, 22),
-                    reservationTime2));
+                    new ReservationTime(2L, LocalTime.of(12, 0))));
         }
 
         @Override
-        public Reservation findById(long id) {
+        public Reservation findById(Long id) {
             return reservations.stream()
                     .filter(reservation -> reservation.getId() == id)
                     .findFirst()
@@ -120,13 +114,6 @@ class ReservationServiceTest {
         }
 
         @Override
-        public boolean selectByDateAndTime(LocalDate date, Long timeId) {
-            return reservations.stream().anyMatch(
-                    reservation -> reservation.getDate().equals(date) && reservation.getTime().getId().equals(timeId)
-            );
-        }
-
-        @Override
         public int deleteById(Long id) {
             boolean existingId = reservations.stream().anyMatch(reservation -> reservation.getId() == id);
             if (existingId) {
@@ -134,6 +121,13 @@ class ReservationServiceTest {
                 return 1;
             }
             return 0;
+        }
+
+        @Override
+        public boolean selectByDateAndTime(LocalDate date, Long timeId) {
+            return reservations.stream().anyMatch(
+                    reservation -> reservation.getDate().equals(date) && reservation.getTime().getId().equals(timeId)
+            );
         }
     }
 }

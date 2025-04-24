@@ -13,6 +13,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.jdbc.core.JdbcTemplate;
 import roomescape.entity.Reservation;
+import roomescape.entity.ReservationTime;
 
 @SpringBootTest
 public class ReservationRepositoryTest {
@@ -25,10 +26,12 @@ public class ReservationRepositoryTest {
 
     @BeforeEach
     void setUp() {
-        jdbcTemplate.update("INSERT INTO reservation (name, date, time) VALUES (?, ?, ?)", "Lemon", "2025-04-22",
-                "16:22");
-        jdbcTemplate.update("INSERT INTO reservation (name, date, time) VALUES (?, ?, ?)", "DDinghwa", "2025-06-03",
-                "13:00");
+        jdbcTemplate.update("INSERT INTO reservation_time (start_at) VALUES (?)", "10:00");
+        jdbcTemplate.update("INSERT INTO reservation_time (start_at) VALUES (?)", "12:00");
+        jdbcTemplate.update("INSERT INTO reservation (name, date, time_id) VALUES (?, ?, ? )", "Lemon", "2025-04-22",
+                1);
+        jdbcTemplate.update("INSERT INTO reservation (name, date, time_id) VALUES (?, ?, ?)", "DDinghwa", "2025-06-03",
+                2);
     }
 
     @Test
@@ -45,7 +48,8 @@ public class ReservationRepositoryTest {
             softAssertions.assertThat(reservation.getId()).isEqualTo(1);
             softAssertions.assertThat(reservation.getName()).isEqualTo("Lemon");
             softAssertions.assertThat(reservation.getDate()).isEqualTo(LocalDate.of(2025, 4, 22));
-            softAssertions.assertThat(reservation.getTime()).isEqualTo(LocalTime.of(16, 22));
+            softAssertions.assertThat(reservation.getTime().getId()).isEqualTo(1);
+            softAssertions.assertThat(reservation.getTime().getStartAt()).isEqualTo(LocalTime.of(10, 0));
         });
     }
 
@@ -61,18 +65,25 @@ public class ReservationRepositoryTest {
             softAssertions.assertThat(reservations).hasSize(2);
             softAssertions.assertThat(reservations.getFirst().getName()).isEqualTo("Lemon");
             softAssertions.assertThat(reservations.getFirst().getDate()).isEqualTo(LocalDate.of(2025, 4, 22));
-            softAssertions.assertThat(reservations.getFirst().getTime()).isEqualTo(LocalTime.of(16, 22));
+            softAssertions.assertThat(reservations.getFirst().getTime().getId()).isEqualTo(1);
+            softAssertions.assertThat(reservations.getFirst().getTime().getStartAt()).isEqualTo(LocalTime.of(10, 0));
+
             softAssertions.assertThat(reservations.getLast().getName()).isEqualTo("DDinghwa");
             softAssertions.assertThat(reservations.getLast().getDate()).isEqualTo(LocalDate.of(2025, 6, 3));
-            softAssertions.assertThat(reservations.getLast().getTime()).isEqualTo(LocalTime.of(13, 0));
+            softAssertions.assertThat(reservations.getLast().getTime().getId()).isEqualTo(2);
+            softAssertions.assertThat(reservations.getLast().getTime().getStartAt()).isEqualTo(LocalTime.of(12, 0));
+
         });
     }
 
     @Test
     @DisplayName("예약을 저장한다.")
-    void saveReservationTest(){
+    void saveReservationTest() {
         // given
-        Reservation reservation = new Reservation("myeonghwa", LocalDate.of(1998, 6, 3), LocalTime.of(10, 0));
+        Reservation reservation = new Reservation(
+                "myeonghwa",
+                LocalDate.of(1998, 6, 3),
+                new ReservationTime(1L));
 
         // when
         Reservation savedReservation = reservationRepository.save(reservation);
@@ -81,15 +92,14 @@ public class ReservationRepositoryTest {
         SoftAssertions.assertSoftly(softAssertions -> {
             softAssertions.assertThat(savedReservation.getId()).isEqualTo(3);
             softAssertions.assertThat(savedReservation.getName()).isEqualTo("myeonghwa");
-            softAssertions.assertThat(savedReservation.getDate()).isEqualTo( LocalDate.of(1998, 6, 3));
-            softAssertions.assertThat(savedReservation.getTime()).isEqualTo(LocalTime.of(10, 0));
-
+            softAssertions.assertThat(savedReservation.getDate()).isEqualTo(LocalDate.of(1998, 6, 3));
+            softAssertions.assertThat(savedReservation.getTime().getId()).isEqualTo(1);
         });
     }
 
     @Test
     @DisplayName("아이디를 통해 예약을 삭제한다.")
-    void deleteReservationByIdTest(){
+    void deleteReservationByIdTest() {
         // given
         long id = 1;
 
@@ -102,16 +112,16 @@ public class ReservationRepositoryTest {
 
     @Test
     @DisplayName("날짜와 시간을 선택한다.")
-    void selectDateAndTimeTest(){
+    void selectDateAndTimeTest() {
         // given
         LocalDate duplicatedDate = LocalDate.of(2025, 4, 22);
-        LocalTime duplicatedTime = LocalTime.of(16, 22);
+        Long duplicatedTimeId = 1L;
         LocalDate date = LocalDate.of(2025, 2, 2);
-        LocalTime time = LocalTime.of(10, 50);
+        Long unduplicatedTimeId = 1L;
 
         // when
-        boolean isDuplicatedDateAndTime = reservationRepository.selectByDateAndTime(duplicatedDate,duplicatedTime);
-        boolean unDuplicatedDateAndTime = reservationRepository.selectByDateAndTime(date, time);
+        boolean isDuplicatedDateAndTime = reservationRepository.selectByDateAndTime(duplicatedDate, duplicatedTimeId);
+        boolean unDuplicatedDateAndTime = reservationRepository.selectByDateAndTime(date, unduplicatedTimeId);
 
         // then
         SoftAssertions.assertSoftly(softAssertions -> {

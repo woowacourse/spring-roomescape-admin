@@ -22,7 +22,7 @@ public class H2ReservationRepository implements ReservationRepository {
     }
 
     @Override
-    public Reservation findById(final long id) {
+    public Reservation findById(final Long id) {
         final String sql = "SELECT r.id as reservation_id, r.name, r.date,"
                 + " t.id as time_id, t.start_at as time_value "
                 + " FROM reservation as r "

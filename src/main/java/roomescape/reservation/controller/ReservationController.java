@@ -26,17 +26,12 @@ public class ReservationController {
 
     @GetMapping
     public ResponseEntity<List<ReservationResponse>> getReservations() {
-        List<Reservation> reservations = reservationService.getReservations();
-        List<ReservationResponse> reservationResponses = reservations.stream()
-                .map(ReservationResponse::from)
-                .toList();
-        return ResponseEntity.ok(reservationResponses);
+        return ResponseEntity.ok(reservationService.getReservations());
     }
 
     @PostMapping
     public ResponseEntity<ReservationResponse> addReservation(@RequestBody ReservationRequest reservationRequest) {
-        Reservation reservation = reservationService.addReservation(reservationRequest);
-        return ResponseEntity.ok(ReservationResponse.from(reservation));
+        return ResponseEntity.ok(reservationService.addReservation(reservationRequest));
     }
 
     @DeleteMapping("/{id}")

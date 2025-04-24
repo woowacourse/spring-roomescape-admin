@@ -32,8 +32,8 @@ public class ReservationTimeController {
 
     @GetMapping
     public ResponseEntity<List<ReservationTimeResponse>> getTimes() {
-        List<ReservationTimeResponse> reservationTimeRespons = reservationTimeService.getTimes();
-        return ResponseEntity.ok(reservationTimeRespons);
+        List<ReservationTimeResponse> reservationTimeResponse = reservationTimeService.getTimes();
+        return ResponseEntity.ok(reservationTimeResponse);
     }
 
     @DeleteMapping("/{id}")

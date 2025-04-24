@@ -53,14 +53,11 @@ public class Reservation {
             return false;
         }
         var that = (Reservation) obj;
-        return Objects.equals(this.id, that.id) &&
-                Objects.equals(this.name, that.name) &&
-                Objects.equals(this.date, that.date) &&
-                Objects.equals(this.time, that.time);
+        return Objects.equals(this.id, that.id);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(id, name, date, time);
+        return Objects.hash(id);
     }
 }

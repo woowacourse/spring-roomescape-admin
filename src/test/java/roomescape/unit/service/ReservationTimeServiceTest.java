@@ -24,13 +24,6 @@ class ReservationTimeServiceTest {
     }
 
     @Test
-    void 과거_시간을_추가할_수_없다() {
-        assertThat(reservationTimeService.allReservationTimes().size()).isEqualTo(0);
-        reservationTimeService.addReservationTime(new AddReservationTimeDto(LocalTime.now().plusMinutes(30L)));
-        assertThat(reservationTimeService.allReservationTimes().size()).isEqualTo(1);
-    }
-
-    @Test
     void 예약시간을_추가하고_조회할_수_있다() {
         assertThat(reservationTimeService.allReservationTimes().size()).isEqualTo(0);
         reservationTimeService.addReservationTime(new AddReservationTimeDto(LocalTime.now().plusMinutes(30L)));

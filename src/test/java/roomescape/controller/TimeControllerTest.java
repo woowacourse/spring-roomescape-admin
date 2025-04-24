@@ -10,18 +10,30 @@ import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.test.annotation.DirtiesContext;
+import org.springframework.jdbc.core.JdbcTemplate;
 
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.DEFINED_PORT)
-@DirtiesContext(classMode = DirtiesContext.ClassMode.BEFORE_EACH_TEST_METHOD)
 class TimeControllerTest {
 
     Map<String, String> params = new HashMap<>();
 
+    @Autowired
+    private JdbcTemplate jdbcTemplate;
+
     @BeforeEach
     void setUp() {
         params.put("startAt", "10:00");
+        jdbcTemplate.update("""
+        SET REFERENTIAL_INTEGRITY FALSE;
+        TRUNCATE TABLE reservation;
+        ALTER TABLE reservation ALTER COLUMN id RESTART WITH 1;
+        TRUNCATE TABLE reservation_time;
+        ALTER TABLE reservation_time ALTER COLUMN id RESTART WITH 1;
+        SET REFERENTIAL_INTEGRITY TRUE;
+        """);
+
     }
 
     @Test

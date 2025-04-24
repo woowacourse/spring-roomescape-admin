@@ -21,15 +21,15 @@ import java.util.List;
 @RequestMapping("/times")
 public class ReservationTimeRestController {
 
-    private final ReservationService reservationTimeService;
+    private final ReservationService reservationService;
 
-    public ReservationTimeRestController(ReservationService reservationTimeService) {
-        this.reservationTimeService = reservationTimeService;
+    public ReservationTimeRestController(ReservationService reservationService) {
+        this.reservationService = reservationService;
     }
 
     @GetMapping
     public ResponseEntity<List<ReservationTimeGetResponse>> getReservationTimes() {
-        List<ReservationTime> reservationTimes = reservationTimeService.getAllReservationTime();
+        List<ReservationTime> reservationTimes = reservationService.getAllReservationTime();
         List<ReservationTimeGetResponse> reservationTimeGetResponses = reservationTimes.stream()
                 .map(ReservationTimeGetResponse::from)
                 .toList();
@@ -41,8 +41,8 @@ public class ReservationTimeRestController {
     @PostMapping
     public ResponseEntity<ReservationTimeGetResponse> addReservationTime(@RequestBody ReservationTimeCreateRequest reservationTimeCreateRequest) {
         try {
-            reservationTimeService.validateDuplicateStartTime(reservationTimeCreateRequest.startAt());
-            ReservationTime newReservationTime = reservationTimeService.addReservationTimeAndReturn(reservationTimeCreateRequest.startAt());
+            reservationService.validateDuplicateStartTime(reservationTimeCreateRequest.startAt());
+            ReservationTime newReservationTime = reservationService.addReservationTimeAndReturn(reservationTimeCreateRequest.startAt());
             return ResponseEntity
                     .status(HttpStatus.OK)
                     .body(ReservationTimeGetResponse.from(newReservationTime));
@@ -54,7 +54,7 @@ public class ReservationTimeRestController {
     @DeleteMapping("/{id}")
     public ResponseEntity<Void> deleteReservationTime(@PathVariable("id") Long id) {
         try {
-            reservationTimeService.deleteReservationTimeById(id);
+            reservationService.deleteReservationTimeById(id);
             return ResponseEntity
                     .status(HttpStatus.OK)
                     .build();

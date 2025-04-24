@@ -7,6 +7,9 @@ import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;
 import org.springframework.jdbc.core.simple.SimpleJdbcInsert;
 import org.springframework.stereotype.Repository;
+import roomescape.domain.ReservationDate;
+import roomescape.domain.ReservationDateTimeFormatter;
+import roomescape.domain.ReservationTime;
 import roomescape.persist.entity.ReservationEntity;
 import roomescape.persist.entity.ReservationTimeEntity;
 import roomescape.domain.Reservation;
@@ -67,5 +70,19 @@ public class H2ReservationRepository implements ReservationRepository {
     public void removeById(long id) {
         String sql = "DELETE FROM reservation WHERE id = ?";
         jdbcTemplate.update(sql, id);
+    }
+
+    @Override
+    public boolean isReservationDateTimeTaken(ReservationDate reservationDate, ReservationTime reservationTime) {
+        String sql = """
+                SELECT EXISTS (
+                    SELECT 1
+                    FROM reservation r
+                    INNER JOIN reservation_time t ON r.time_id = t.id
+                    WHERE r.date = ? AND t.start_at = ?)""";
+        String formattedDate = ReservationDateTimeFormatter.formatDate(reservationDate.getStartDate());
+        String formattedTime = ReservationDateTimeFormatter.formatTime(reservationTime.getStartTime());
+        Boolean exists = jdbcTemplate.queryForObject(sql, Boolean.class, formattedDate, formattedTime);
+        return Boolean.TRUE.equals(exists);
     }
 }

@@ -13,6 +13,7 @@ import org.junit.jupiter.api.Test;
 import roomescape.domain.Reservation;
 import roomescape.domain.ReservationDate;
 import roomescape.domain.ReservationTime;
+import roomescape.domain.exception.ReservationException;
 import roomescape.domain.exception.ReservationTimeException;
 import roomescape.persist.repository.FakeReservationRepository;
 import roomescape.persist.repository.FakeReservationTimeRepository;
@@ -75,6 +76,23 @@ class ReservationServiceTest {
                 .usingRecursiveComparison()
                 .ignoringFields("id")
                 .isEqualTo(expected);
+    }
+
+    @DisplayName("이미 예약된 시간에 예약을 생성할 경우 예외가 발생한다.")
+    @Test
+    void shouldThrowException_WhenMakingReservationWithTakenTime() {
+        // given
+        LocalDateTime now = LocalDateTime.now().plusDays(1);
+        ReservationDate reservationDate = new ReservationDate(1L, now.toLocalDate());
+        ReservationTime reservationTime = reservationTimeRepository.add(new ReservationTime(now.toLocalTime()));
+        reservationRepository.add(new Reservation("브라운", reservationDate, reservationTime));
+        ReservationRequestDto reservationRequestDto = new ReservationRequestDto("벨로", now.toLocalDate(),
+                reservationTime.getId());
+
+        // when & then
+        assertThatCode(() -> reservationService.makeReservation(reservationRequestDto))
+                .isInstanceOf(ReservationException.class)
+                .hasMessage("해당 날짜와 시간에 이미 예약이 존재합니다.");
     }
 
     @DisplayName("존재하지 않는 예약 가능 시간으로 예약을 생성할 경우 예외가 발생한다.")

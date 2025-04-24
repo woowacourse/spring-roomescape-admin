@@ -5,6 +5,8 @@ import java.util.List;
 import java.util.Map;
 import java.util.concurrent.atomic.AtomicLong;
 import roomescape.domain.Reservation;
+import roomescape.domain.ReservationDate;
+import roomescape.domain.ReservationTime;
 import roomescape.persist.entity.ReservationEntity;
 
 public final class FakeReservationRepository implements ReservationRepository {
@@ -30,5 +32,21 @@ public final class FakeReservationRepository implements ReservationRepository {
     @Override
     public void removeById(long id) {
         reservations.remove(id);
+    }
+
+    @Override
+    public boolean isReservationDateTimeTaken(ReservationDate reservationDate, ReservationTime reservationTime) {
+        return reservations.values().stream()
+                .anyMatch(reservationEntity ->
+                        isSameDate(reservationDate, reservationEntity)
+                                && isSameTime(reservationTime, reservationEntity));
+    }
+
+    private boolean isSameTime(ReservationTime reservationTime, ReservationEntity reservationEntity) {
+        return reservationEntity.getTimeEntity().getStartAt().equals(reservationTime.getStartTime().toString());
+    }
+
+    private boolean isSameDate(ReservationDate reservationDate, ReservationEntity reservationEntity) {
+        return reservationEntity.getDate().equals(reservationDate.getStartDate().toString());
     }
 }

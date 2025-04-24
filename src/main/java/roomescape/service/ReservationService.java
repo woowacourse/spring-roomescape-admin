@@ -5,6 +5,7 @@ import org.springframework.stereotype.Service;
 import roomescape.domain.Reservation;
 import roomescape.domain.ReservationDate;
 import roomescape.domain.ReservationTime;
+import roomescape.domain.exception.ReservationException;
 import roomescape.domain.exception.ReservationTimeException;
 import roomescape.persist.repository.ReservationRepository;
 import roomescape.persist.repository.ReservationTimeRepository;
@@ -41,6 +42,7 @@ public final class ReservationService {
     public ReservationResponseDto makeReservation(ReservationRequestDto reservationRequestDto) {
         ReservationDate reservationDate = new ReservationDate(reservationRequestDto.date());
         ReservationTime reservationTime = getReservationTime(reservationRequestDto);
+        validateReservationDateTimeAvailability(reservationDate, reservationTime);
         Reservation reservation = reservationRepository.add(new Reservation(
                 reservationRequestDto.name(),
                 reservationDate,
@@ -60,6 +62,12 @@ public final class ReservationService {
     private ReservationTime getReservationTime(ReservationRequestDto reservationRequestDto) {
         return reservationTimeRepository.findById(reservationRequestDto.timeId())
                 .orElseThrow(() -> new ReservationTimeException("예약 가능한 시간이 존재하지 않습니다."));
+    }
+
+    private void validateReservationDateTimeAvailability(ReservationDate reservationDate, ReservationTime reservationTime) {
+        if (reservationRepository.isReservationDateTimeTaken(reservationDate, reservationTime)) {
+            throw new ReservationException("해당 날짜와 시간에 이미 예약이 존재합니다.");
+        }
     }
 
     public void cancelReservation(long id) {

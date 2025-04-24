@@ -55,4 +55,21 @@ public final class MemoryReservationRepository implements ReservationRepository 
     public void removeById(long id) {
         reservations.remove(id);
     }
+
+    @Override
+    public boolean isReservationDateTimeTaken(ReservationDate reservationDate, ReservationTime reservationTime) {
+        return reservations.values().stream()
+                .anyMatch(reservationEntity ->
+                        isSameDate(reservationDate, reservationEntity)
+                                && isSameTime(reservationTime, reservationEntity));
+    }
+
+    private boolean isSameDate(ReservationDate reservationDate, ReservationEntity reservationEntity) {
+        return reservationEntity.getDate().equals(reservationDate.getStartDate().toString());
+    }
+
+    private boolean isSameTime(ReservationTime reservationTime, ReservationEntity reservationEntity) {
+        return reservationEntity.getTimeEntity().getStartAt()
+                .equals(reservationTime.getStartTime().toString());
+    }
 }

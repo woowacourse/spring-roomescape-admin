@@ -9,8 +9,12 @@ public class AddReservationTimeService implements AddReservationTimeUseCase {
 
     private final ReservationTimeRepository reservationTimeRepository;
 
-    @Override
-    public void addReservationTime(final LocalTime startAt) {
+    public AddReservationTimeService(final ReservationTimeRepository reservationTimeRepository) {
+        this.reservationTimeRepository = reservationTimeRepository;
+    }
 
+    @Override
+    public long addReservationTime(final LocalTime startAt) {
+        return reservationTimeRepository.addReservationTime(startAt);
     }
 }

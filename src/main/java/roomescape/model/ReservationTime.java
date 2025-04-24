@@ -18,4 +18,8 @@ public class ReservationTime {
             throw new IllegalArgumentException("시작 시간이 존재하지 않습니다.");
         }
     }
+
+    public LocalTime getStartAt() {
+        return startAt;
+    }
 }

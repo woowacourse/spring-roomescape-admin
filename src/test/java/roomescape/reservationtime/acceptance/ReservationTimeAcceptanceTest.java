@@ -1,11 +1,11 @@
-package roomescape.reservationtime.controller;
+package roomescape.reservationtime.acceptance;
 
 import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
-import static org.hamcrest.Matchers.is;
 
 import io.restassured.RestAssured;
 import io.restassured.http.ContentType;
 import java.lang.reflect.Field;
+import java.time.LocalTime;
 import java.util.List;
 import java.util.Map;
 import org.junit.jupiter.api.DisplayName;
@@ -14,14 +14,12 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.test.annotation.DirtiesContext;
+import roomescape.reservationtime.controller.ReservationTimeController;
 import roomescape.reservationtime.domain.ReservationTime;
 
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.DEFINED_PORT)
 @DirtiesContext(classMode = DirtiesContext.ClassMode.BEFORE_EACH_TEST_METHOD)
-class ReservationTimeControllerTest {
-
-    @Autowired
-    private JdbcTemplate jdbcTemplate;
+class ReservationTimeAcceptanceTest {
 
     @Autowired
     private ReservationTimeController reservationTimeController;
@@ -30,7 +28,15 @@ class ReservationTimeControllerTest {
     @DisplayName("시간을 조회하는 API를 요청한다.")
     void getReservationTimes() {
         // given
-        jdbcTemplate.update("INSERT INTO reservation_time (start_at) VALUES (?)", "10:00");
+        var params = Map.of(
+                "startAt", "10:00"
+        );
+
+        RestAssured
+                .given().log().all()
+                .contentType(ContentType.JSON)
+                .body(params)
+                .when().post("/times");
 
         // when
         List<ReservationTime> reservationTimes = RestAssured
@@ -41,8 +47,13 @@ class ReservationTimeControllerTest {
                 .jsonPath().getList(".", ReservationTime.class);
 
         // then
-        Integer count = jdbcTemplate.queryForObject("SELECT count(1) from reservation_time", Integer.class);
-        assertThat(reservationTimes.size()).isEqualTo(count);
+        ReservationTime expected = new ReservationTime(
+                1L,
+                LocalTime.of(10, 0)
+        );
+
+        assertThat(reservationTimes.getFirst()).isEqualTo(expected);
+        assertThat(reservationTimes.size()).isEqualTo(1);
     }
 
     @Test
@@ -53,33 +64,56 @@ class ReservationTimeControllerTest {
                 "startAt", "10:00"
         );
 
-        // when & then
+        // when
         RestAssured
                 .given().log().all()
                 .contentType(ContentType.JSON)
                 .body(params)
-                .when().post("/times")
-                .then().log().all()
-                .statusCode(200)
-                .body("id", is(1));
+                .when().post("/times");
+
+        // then
+        List<ReservationTime> reservationTimes = RestAssured
+                .given()
+                .when().get("/times")
+                .then().extract()
+                .jsonPath().getList(".", ReservationTime.class);
+
+        ReservationTime expected = new ReservationTime(
+                1L,
+                LocalTime.of(10, 0)
+        );
+
+        assertThat(reservationTimes.getFirst()).isEqualTo(expected);
+        assertThat(reservationTimes.size()).isEqualTo(1);
     }
 
     @Test
     @DisplayName("시간을 삭제하는 API를 요청한다.")
     void deleteReservationTime() {
         // given
-        jdbcTemplate.update("INSERT INTO reservation_time (start_at) VALUES (?)", "10:00");
+        var params = Map.of(
+                "startAt", "10:00"
+        );
+
+        RestAssured
+                .given().log().all()
+                .contentType(ContentType.JSON)
+                .body(params)
+                .when().post("/times");
 
         // when
         RestAssured
                 .given().log().all()
-                .when().delete("/times/1")
-                .then().log().all()
-                .statusCode(200);
+                .when().delete("/times/1");
 
         // then
-        Integer count = jdbcTemplate.queryForObject("SELECT count(1) from reservation_time", Integer.class);
-        assertThat(count).isEqualTo(0);
+        List<ReservationTime> reservationTimes = RestAssured
+                .given()
+                .when().get("/times")
+                .then().extract()
+                .jsonPath().getList(".", ReservationTime.class);
+
+        assertThat(reservationTimes.size()).isEqualTo(0);
     }
 
     @Test

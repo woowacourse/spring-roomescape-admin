@@ -2,13 +2,13 @@ package roomescape.dao;
 
 import java.time.LocalTime;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;
 import org.springframework.jdbc.core.simple.SimpleJdbcInsert;
 import org.springframework.stereotype.Component;
 import roomescape.domain.ReservationTime;
-import roomescape.domain.ReservationTimes;
 
 @Component
 public class ReservationTimeDao {
@@ -28,11 +28,11 @@ public class ReservationTimeDao {
         this.jdbcTemplate = jdbcTemplate;
     }
 
-    public ReservationTimes findAll() {
-        return new ReservationTimes(jdbcTemplate.query(
+    public List<ReservationTime> findAll() {
+        return jdbcTemplate.query(
                 FIND_ALL_SQL,
                 RESERVATION_TIME_ROW_MAPPER
-        ));
+        );
     }
 
     public ReservationTime findById(Long id) {

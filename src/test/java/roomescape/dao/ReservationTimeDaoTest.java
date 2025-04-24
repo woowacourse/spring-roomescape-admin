@@ -3,6 +3,7 @@ package roomescape.dao;
 import static org.assertj.core.api.Assertions.assertThat;
 
 import java.time.LocalTime;
+import java.util.List;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -10,7 +11,6 @@ import org.springframework.boot.test.context.SpringBootTest.WebEnvironment;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.test.annotation.DirtiesContext;
 import roomescape.domain.ReservationTime;
-import roomescape.domain.ReservationTimes;
 
 @SpringBootTest(
         webEnvironment = WebEnvironment.DEFINED_PORT,
@@ -32,15 +32,15 @@ class ReservationTimeDaoTest {
         ReservationTime secondReservationTime = reservationTimeDao.save(createTestReservationTime());
 
         // when
-        ReservationTimes findReservationTimes = reservationTimeDao.findAll();
+        List<ReservationTime> findReservationTimes = reservationTimeDao.findAll();
         Integer count = getReservationTimeCount();
 
         // then
-        assertThat(findReservationTimes.getReservationTimes())
+        assertThat(findReservationTimes)
                 .contains(firstReservationTime, secondReservationTime);
 
         assertThat(count)
-                .isEqualTo(findReservationTimes.getReservationTimes().size());
+                .isEqualTo(findReservationTimes.size());
     }
 
     @Test

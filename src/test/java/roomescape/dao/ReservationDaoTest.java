@@ -4,6 +4,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 
 import java.time.LocalDate;
 import java.time.LocalTime;
+import java.util.List;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -13,7 +14,6 @@ import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.test.annotation.DirtiesContext;
 import roomescape.domain.Reservation;
 import roomescape.domain.ReservationTime;
-import roomescape.domain.Reservations;
 
 @SpringBootTest(
         webEnvironment = WebEnvironment.DEFINED_PORT,
@@ -47,12 +47,12 @@ class ReservationDaoTest {
         Reservation testReservation = reservationDao.save(createTestReservation());
 
         // when
-        Reservations findReservations = reservationDao.findAll();
+        List<Reservation> findReservations = reservationDao.findAll();
         Integer count = getReservationCount();
 
         // then
-        assertThat(findReservations.getReservations()).contains(testReservation);
-        assertThat(count).isEqualTo(findReservations.getReservations().size());
+        assertThat(findReservations).contains(testReservation);
+        assertThat(count).isEqualTo(findReservations.size());
     }
 
     @Test

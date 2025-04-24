@@ -2,6 +2,7 @@ package roomescape.dao;
 
 import java.time.LocalDate;
 import java.time.LocalTime;
+import java.util.List;
 import java.util.Map;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;
@@ -9,7 +10,6 @@ import org.springframework.jdbc.core.simple.SimpleJdbcInsert;
 import org.springframework.stereotype.Component;
 import roomescape.domain.Reservation;
 import roomescape.domain.ReservationTime;
-import roomescape.domain.Reservations;
 
 @Component
 public class ReservationDao {
@@ -43,11 +43,11 @@ public class ReservationDao {
         this.jdbcTemplate = jdbcTemplate;
     }
 
-    public Reservations findAll() {
-        return new Reservations(jdbcTemplate.query(
+    public List<Reservation> findAll() {
+        return jdbcTemplate.query(
                 FIND_ALL_SQL,
                 RESERVATION_ROW_MAPPER
-        ));
+        );
     }
 
     public Reservation save(Reservation reservation) {

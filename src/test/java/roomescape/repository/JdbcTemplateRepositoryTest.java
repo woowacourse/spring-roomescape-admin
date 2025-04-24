@@ -27,6 +27,7 @@ class JdbcTemplateRepositoryTest {
         db = new EmbeddedDatabaseBuilder()
                 .setType(EmbeddedDatabaseType.H2)
                 .addScript("classpath:schema.sql")
+                .addScript("classpath:data.sql")
                 .build();
     }
 
@@ -50,7 +51,7 @@ class JdbcTemplateRepositoryTest {
         // given
         String name = "레포지토리테스트";
         LocalDate date = LocalDate.of(2025, 7, 1);
-        LocalTime time = LocalTime.of(9, 30);
+        LocalTime time = LocalTime.of(10, 0);
 
         // when
         var saved = repository.save(name, date, 1L, time);
@@ -65,7 +66,7 @@ class JdbcTemplateRepositoryTest {
         // given
         String existedName = "레포지토리테스트";
         LocalDate existedDate = LocalDate.of(2025, 7, 1);
-        LocalTime existedTime = LocalTime.of(9, 30);
+        LocalTime existedTime = LocalTime.of(10, 0);
         LocalDate date = LocalDate.of(2026, 1, 1);
         LocalTime time = LocalTime.of(14, 1);
 
@@ -82,9 +83,15 @@ class JdbcTemplateRepositoryTest {
     @Test
     void 모든_예약_조회() {
         // given
-        repository.save("테스트1", LocalDate.of(2025, 11, 12), 1L, LocalTime.of(13, 1));
-        repository.save("테스트2", LocalDate.of(2025, 11, 12), 1L, LocalTime.of(13, 1));
+        String name = "레포지토리테스트";
+        LocalDate date = LocalDate.of(2025, 7, 1);
+        LocalTime time1 = LocalTime.of(10, 0);
+        LocalTime time2 = LocalTime.of(11, 0);
 
+        // when
+        repository.save(name, date, 1L, time1);
+        repository.save(name, date, 2L, time2);
+        // given
         // when
         final List<Reservation> reservations = repository.findAll();
 

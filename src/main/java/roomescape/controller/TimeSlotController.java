@@ -10,7 +10,7 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
-import roomescape.dto.CreateTimeSlotRequest;
+import roomescape.repository.dto.SaveTimeSlotDto;
 import roomescape.model.TimeSlot;
 import roomescape.repository.TimeSlotRepository;
 
@@ -31,7 +31,7 @@ public class TimeSlotController {
     }
 
     @PostMapping
-    public ResponseEntity<TimeSlot> create(@RequestBody CreateTimeSlotRequest request) {
+    public ResponseEntity<TimeSlot> create(@RequestBody SaveTimeSlotDto request) {
         long savedId = repository.save(request);
         TimeSlot saved = repository.findById(savedId).get();
         return ResponseEntity.ok(saved);

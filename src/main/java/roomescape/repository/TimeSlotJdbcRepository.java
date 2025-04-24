@@ -9,7 +9,7 @@ import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;
 import org.springframework.jdbc.core.simple.SimpleJdbcInsert;
 import org.springframework.stereotype.Repository;
-import roomescape.dto.CreateTimeSlotRequest;
+import roomescape.repository.dto.SaveTimeSlotDto;
 import roomescape.model.TimeSlot;
 
 @Repository
@@ -37,7 +37,7 @@ public class TimeSlotJdbcRepository implements TimeSlotRepository {
     }
 
     @Override
-    public long save(final CreateTimeSlotRequest request) {
+    public long save(final SaveTimeSlotDto request) {
         var insert = new SimpleJdbcInsert(jdbcTemplate);
 
         var generatedId = insert.withTableName("reservation_time")

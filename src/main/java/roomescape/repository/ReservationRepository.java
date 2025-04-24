@@ -3,13 +3,13 @@ package roomescape.repository;
 import java.util.List;
 import java.util.Optional;
 import roomescape.model.Reservation;
-import roomescape.dto.CreateReservationRequest;
+import roomescape.repository.dto.SaveReservationDto;
 
 public interface ReservationRepository {
 
     Optional<Reservation> findById(long id);
 
-    long save(CreateReservationRequest request);
+    long save(SaveReservationDto dto);
 
     boolean removeById(long id);
 

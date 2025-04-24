@@ -11,8 +11,9 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import roomescape.model.Reservation;
-import roomescape.dto.CreateReservationRequest;
+import roomescape.controller.dto.CreateReservationRequest;
 import roomescape.repository.ReservationRepository;
+import roomescape.repository.dto.SaveReservationDto;
 
 @Controller
 @RequestMapping("/reservations")
@@ -33,7 +34,8 @@ public class ReservationController {
     @PostMapping
     public ResponseEntity<Reservation> addReservation(@RequestBody CreateReservationRequest request) {
         try {
-            long savedId = reservationRepository.save(request);
+            var saveDto = convertToSaveDto(request);
+            long savedId = reservationRepository.save(saveDto);
             Reservation saved = reservationRepository.findById(savedId).get();
             return ResponseEntity.ok(saved);
         } catch (IllegalArgumentException e) {
@@ -48,5 +50,13 @@ public class ReservationController {
             return ResponseEntity.noContent().build();
         }
         return ResponseEntity.notFound().build();
+    }
+
+    private SaveReservationDto convertToSaveDto(final CreateReservationRequest request) {
+        return new SaveReservationDto(
+            request.name(),
+            request.date(),
+            request.timeSlotId()
+        );
     }
 }

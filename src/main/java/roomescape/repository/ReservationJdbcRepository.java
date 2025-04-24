@@ -8,9 +8,9 @@ import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;
 import org.springframework.jdbc.core.simple.SimpleJdbcInsert;
 import org.springframework.stereotype.Repository;
-import roomescape.dto.CreateReservationRequest;
 import roomescape.model.Reservation;
 import roomescape.model.TimeSlot;
+import roomescape.repository.dto.SaveReservationDto;
 
 @Repository
 public class ReservationJdbcRepository implements ReservationRepository {
@@ -43,14 +43,14 @@ public class ReservationJdbcRepository implements ReservationRepository {
         return reservationList.stream().findAny();
     }
 
-    public long save(CreateReservationRequest request) {
+    public long save(SaveReservationDto dto) {
         var insert = new SimpleJdbcInsert(jdbcTemplate);
         var generatedId = insert.withTableName("RESERVATION")
             .usingGeneratedKeyColumns("id")
             .executeAndReturnKey(Map.of(
-                "name", request.name(),
-                "date", request.date(),
-                "time_id", request.timeSlotId()
+                "name", dto.name(),
+                "date", dto.date(),
+                "time_id", dto.timeSlotId()
             ));
         return generatedId.longValue();
     }

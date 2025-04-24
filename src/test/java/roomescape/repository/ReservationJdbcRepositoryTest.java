@@ -12,8 +12,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.jdbc.JdbcTest;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.simple.SimpleJdbcInsert;
-import roomescape.dto.CreateReservationRequest;
 import roomescape.model.Reservation;
+import roomescape.repository.dto.SaveReservationDto;
 
 @JdbcTest
 public class ReservationJdbcRepositoryTest {
@@ -94,8 +94,8 @@ public class ReservationJdbcRepositoryTest {
         assertThat(repository.getReservations()).hasSize(2);
     }
 
-    private CreateReservationRequest createReservationRequest() {
-        return new CreateReservationRequest(
+    private SaveReservationDto createReservationRequest() {
+        return new SaveReservationDto(
             "브라운",
             LocalDate.of(2023, 12, 1),
             timeSlotId

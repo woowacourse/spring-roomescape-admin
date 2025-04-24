@@ -22,7 +22,7 @@ public class ReservationController {
         this.reservationDao = reservationDao;
     }
 
-    @GetMapping()
+    @GetMapping
     public List<ReservationResponse> readReservations() {
         List<Reservation> reservations = reservationDao.findAll();
         return reservations.stream()
@@ -30,7 +30,7 @@ public class ReservationController {
                 .toList();
     }
 
-    @PostMapping()
+    @PostMapping
     public ReservationResponse createReservations(@RequestBody ReservationRequest reservationRequest) {
         Reservation reservation = reservationRequest.toReservation();
         Reservation idWithReservation = reservationDao.insert(reservation);
@@ -38,7 +38,7 @@ public class ReservationController {
     }
 
     @DeleteMapping("/{id}")
-    public long deleteReservation(@PathVariable(name = "id") Long id) {
+    public long deleteReservation(@PathVariable(name = "id") long id) {
         return reservationDao.deleteById(id);
     }
 }

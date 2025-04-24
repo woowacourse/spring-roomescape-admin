@@ -54,11 +54,11 @@ public class ReservationDao {
             return ps;
         }, keyHolder);
 
-        Long id = keyHolder.getKey().longValue();
+        long id = keyHolder.getKey().longValue();
         return new Reservation(id, reservation);
     }
 
-    public long deleteById(Long id) {
+    public long deleteById(long id) {
         String sql = "delete from reservation where id = ?";
         return jdbcTemplate.update(sql, id);
     }

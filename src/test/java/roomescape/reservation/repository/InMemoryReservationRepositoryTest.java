@@ -20,7 +20,7 @@ class InMemoryReservationRepositoryTest {
     }
 
     @Test
-    void put_shouldAssignIdAndStoreReservation() {
+    void put_shouldStoreReservation() {
         Reservation reservation = new Reservation("브라운", futureDate, new ReservationTime("15:40"));
 
         repository.put(reservation);

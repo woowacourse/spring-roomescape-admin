@@ -5,6 +5,7 @@ import java.sql.Time;
 import java.time.LocalTime;
 import java.util.List;
 import java.util.Optional;
+import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;
 import org.springframework.jdbc.support.GeneratedKeyHolder;
@@ -56,10 +57,11 @@ public class JdbcReservationTimeRepository implements ReservationTimeRepository 
     @Override
     public Optional<ReservationTime> findById(Long id) {
         String sql = "select id,start_at from reservation_time where id=?";
-        ReservationTime reservationTime = jdbcTemplate.queryForObject(sql, reservationRowMapper, id);
-        if (reservationTime == null) {
+        try {
+            ReservationTime reservationTime = jdbcTemplate.queryForObject(sql, reservationRowMapper, id);
+            return Optional.of(reservationTime);
+        } catch (EmptyResultDataAccessException e) {
             return Optional.empty();
         }
-        return Optional.of(reservationTime);
     }
 }

@@ -116,7 +116,7 @@
             ```http request
             HTTP/1.1 400
             ```
-- [ ] 시간을 추가한다.
+- [x] 시간을 추가한다.
   - request
     ```http request
     POST /times HTTP/1.1
@@ -128,7 +128,7 @@
     ```
   - response
     ```http request
-    HTTP/1.1 200
+    HTTP/1.1 201
     Content-Type: application/json
     
     {

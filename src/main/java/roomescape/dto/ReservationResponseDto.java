@@ -9,14 +9,13 @@ import java.time.LocalDate;
 public record ReservationResponseDto(Long id, String name, @JsonFormat(pattern = "yyyy-MM-dd") LocalDate date,
                                      ReservationTimeResponseDto time) {
 
-    public static ReservationResponseDto from(Reservation reservation) {
-        ReservationTime reservationTime = reservation.reservationTime();
-        ReservationTimeResponseDto responseDto = ReservationTimeResponseDto.from(reservationTime);
+    public static ReservationResponseDto from(Reservation reservation, ReservationTime reservationTime) {
+        ReservationTimeResponseDto timeResponseDto = ReservationTimeResponseDto.from(reservationTime);
 
         return new ReservationResponseDto(
                 reservation.id(),
                 reservation.name(),
                 reservation.date(),
-                responseDto);
+                timeResponseDto);
     }
 }

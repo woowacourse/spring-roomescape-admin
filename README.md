@@ -3,9 +3,10 @@
 ## 화면 렌더링
 - [x] 예약 메인 홈페이지 반환 기능 구현
 - [x] 예약 페이지 반환 기능 구현
+- [x] 시간 관리 페이지 반환 기능 구현
 
 ## API 명세
-- [ ] 예약 조회 API
+- [x] 예약 조회 API
   - Request
     - ```
       GET /reservations HTTP/1.1
@@ -36,7 +37,7 @@
           }
       ]
       ``` 
-- [ ] 예약 추가 API 
+- [x] 예약 추가 API 
   - Request
     - ```
       POST /reservations HTTP/1.1

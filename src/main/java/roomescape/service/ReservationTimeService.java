@@ -1,5 +1,6 @@
 package roomescape.service;
 
+import jakarta.validation.constraints.NotNull;
 import java.util.List;
 import org.springframework.stereotype.Service;
 import roomescape.dto.ReservationTimeRequest;
@@ -10,7 +11,7 @@ import roomescape.repository.ReservationTimeRepository;
 @Service
 public class ReservationTimeService {
 
-    private ReservationTimeRepository reservationTimeRepository;
+    private final ReservationTimeRepository reservationTimeRepository;
 
     public ReservationTimeService(final ReservationTimeRepository reservationTimeRepository) {
         this.reservationTimeRepository = reservationTimeRepository;
@@ -32,5 +33,10 @@ public class ReservationTimeService {
         if (deletedRows == 0) {
             throw new IllegalArgumentException("삭제할 예약 시간이 존재하지 않습니다.");
         }
+    }
+
+    public ReservationTimeResponse getReservationTime(@NotNull Long timeId) {
+        ReservationTime reservationTime = reservationTimeRepository.findById(timeId);
+        return ReservationTimeResponse.from(reservationTime);
     }
 }

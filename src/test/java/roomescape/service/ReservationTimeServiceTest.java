@@ -95,5 +95,15 @@ public class ReservationTimeServiceTest {
             }
             return 0;
         }
+
+        @Override
+        public ReservationTime findById(Long timeId) {
+            return reservationTimes.stream()
+                    .filter(reservationTime ->
+                            reservationTime.getId().equals(timeId)
+                    )
+                    .findFirst()
+                    .orElse(null);
+        }
     }
 }

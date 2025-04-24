@@ -11,12 +11,26 @@ import org.springframework.stereotype.Repository;
 import roomescape.entity.ReservationTime;
 
 @Repository
-public class H2ReservationTimeRepository implements ReservationTimeRepository{
+public class H2ReservationTimeRepository implements ReservationTimeRepository {
 
-      private final JdbcTemplate jdbcTemplate;
+    private final JdbcTemplate jdbcTemplate;
 
     public H2ReservationTimeRepository(JdbcTemplate jdbcTemplate) {
         this.jdbcTemplate = jdbcTemplate;
+    }
+
+    @Override
+    public ReservationTime findById(Long timeId) {
+        final String sql = "SELECT * FROM reservation_time WHERE id = ?";
+        return jdbcTemplate.queryForObject(
+                sql,
+                (resultSet, rowNum) -> {
+                    ReservationTime reservationTime = new ReservationTime(
+                            timeId,
+                            resultSet.getTime("start_at").toLocalTime()
+                    );
+                    return reservationTime;
+                }, timeId);
     }
 
     @Override
@@ -27,8 +41,8 @@ public class H2ReservationTimeRepository implements ReservationTimeRepository{
         jdbcTemplate.update(connection -> {
             PreparedStatement ps = connection.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS);
             ps.setTime(1, Time.valueOf(reservationTime.getStartAt()));
-                    return ps;
-        },keyHolder);
+            return ps;
+        }, keyHolder);
         long generatedId = keyHolder.getKey().longValue();
 
         return new ReservationTime(
@@ -43,11 +57,11 @@ public class H2ReservationTimeRepository implements ReservationTimeRepository{
         return jdbcTemplate.query(
                 sql,
                 (resultSet, rowNum) -> {
-                 ReservationTime reservationTime = new ReservationTime(
-                         resultSet.getLong("id"),
-                         resultSet.getTime("start_at").toLocalTime()
-                 );
-                 return reservationTime;
+                    ReservationTime reservationTime = new ReservationTime(
+                            resultSet.getLong("id"),
+                            resultSet.getTime("start_at").toLocalTime()
+                    );
+                    return reservationTime;
                 });
     }
 
@@ -56,4 +70,5 @@ public class H2ReservationTimeRepository implements ReservationTimeRepository{
         final String sql = "DELETE FROM reservation_time WHERE id = ?";
         return jdbcTemplate.update(sql, id);
     }
+
 }

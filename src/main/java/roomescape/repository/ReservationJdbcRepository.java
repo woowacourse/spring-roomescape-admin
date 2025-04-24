@@ -14,7 +14,7 @@ import roomescape.domain.Reservation;
 import roomescape.domain.ReservationTime;
 
 @Repository
-public class ReservationH2Repository implements ReservationRepository {
+public class ReservationJdbcRepository implements ReservationRepository {
 
     private static final String SELECT_RESERVATION_WITH_TIME =
             "SELECT r.id, r.name, r.date, rt.id as time_id, rt.start_at as time_start_at FROM reservation as r "
@@ -33,7 +33,7 @@ public class ReservationH2Repository implements ReservationRepository {
 
     private final JdbcTemplate jdbcTemplate;
 
-    public ReservationH2Repository(JdbcTemplate jdbcTemplate) {
+    public ReservationJdbcRepository(JdbcTemplate jdbcTemplate) {
         this.jdbcTemplate = jdbcTemplate;
     }
 

@@ -12,7 +12,6 @@ public record ReservationRequestDto(LocalDate date, String name, Long timeId) {
         }
     }
 
-    // TODO:
     public ReservationEntity toEntity(ReservationTimeEntity timeEntity) {
         return new ReservationEntity(null, name, date, timeEntity);
     }

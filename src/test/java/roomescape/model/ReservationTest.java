@@ -16,9 +16,12 @@ class ReservationTest {
     @ParameterizedTest
     void 예약자_이름은_공백일_수_없다(String name) {
         // Given
+        LocalTime time = LocalTime.now();
+        ReservationTime reservationTime = new ReservationTime(time);
+
         // When
         // Then
-        assertThatThrownBy(() -> new Reservation(name, LocalDate.now(), LocalTime.now()))
+        assertThatThrownBy(() -> new Reservation(name, LocalDate.now(), reservationTime))
                 .isInstanceOf(IllegalArgumentException.class)
                 .hasMessage("예약자 이름은 빈 칸일 수 없습니다.");
     }
@@ -29,15 +32,16 @@ class ReservationTest {
         String name = "프리";
         LocalDate date = LocalDate.now();
         LocalTime time = LocalTime.now();
+        ReservationTime reservationTime = new ReservationTime(time);
         // When
         // Then
         assertThatThrownBy(() -> new Reservation(name, date, null))
                 .isInstanceOf(IllegalArgumentException.class)
                 .hasMessage("예약자 이름과 예약 날짜, 시간을 올바르게 입력해 주세요.");
-        assertThatThrownBy(() -> new Reservation(name, null, time))
+        assertThatThrownBy(() -> new Reservation(name, null, reservationTime))
                 .isInstanceOf(IllegalArgumentException.class)
                 .hasMessage("예약자 이름과 예약 날짜, 시간을 올바르게 입력해 주세요.");
-        assertThatThrownBy(() -> new Reservation(null, date, time))
+        assertThatThrownBy(() -> new Reservation(null, date, reservationTime))
                 .isInstanceOf(IllegalArgumentException.class)
                 .hasMessage("예약자 이름과 예약 날짜, 시간을 올바르게 입력해 주세요.");
     }
@@ -48,7 +52,8 @@ class ReservationTest {
         String name = "프리";
         LocalDate date = LocalDate.now();
         LocalTime time = LocalTime.now();
-        Reservation reservationExcludeIndex = new Reservation(name, date, time);
+        ReservationTime reservationTime = new ReservationTime(time);
+        Reservation reservationExcludeIndex = new Reservation(name, date, reservationTime);
 
         // When
         Reservation reservationEntity = Reservation.toEntity(reservationExcludeIndex, 1L);
@@ -57,7 +62,7 @@ class ReservationTest {
         assertThat(reservationEntity.getId()).isEqualTo(1L);
         assertThat(reservationEntity.getName()).isEqualTo(name);
         assertThat(reservationEntity.getDate()).isEqualTo(date);
-        assertThat(reservationEntity.getTime()).isEqualTo(time);
+        assertThat(reservationEntity.getTime()).isEqualTo(reservationTime);
     }
 
     @Test
@@ -66,7 +71,8 @@ class ReservationTest {
         String name = "프리";
         LocalDate date = LocalDate.now();
         LocalTime time = LocalTime.now();
-        Reservation reservationExcludeIndex = new Reservation(name, date, time);
+        ReservationTime reservationTime = new ReservationTime(time);
+        Reservation reservationExcludeIndex = new Reservation(name, date, reservationTime);
         Reservation reservationEntity = Reservation.toEntity(reservationExcludeIndex, 1L);
 
         // When & Then

@@ -14,4 +14,6 @@ public interface ReservationTimeRepository {
     ReservationTime insertAndGet(ReservationTime reservationTime);
 
     int deleteByIdAndCountAffected(Long id);
+
+    ReservationTime findById(Long id);
 }

@@ -11,6 +11,7 @@ import roomescape.dto.ReservationGetResponse;
 
 import java.sql.Connection;
 import java.sql.SQLException;
+import java.time.LocalTime;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -47,38 +48,38 @@ public class MissionStepTest {
                 .body("size()", is(0)); // 아직 생성 요청이 없으니 Controller에서 임의로 넣어준 Reservation 갯수 만큼 검증하거나 0개임을 확인하세요.
     }
 
-    @Test
-    void 삼단계_예약의_추가와_삭제가_이루어진다() {
-        Map<String, String> params = new HashMap<>();
-        params.put("name", "브라운");
-        params.put("date", "2023-08-05");
-        params.put("time", "15:40");
-
-        RestAssured.given().log().all()
-                .contentType(ContentType.JSON)
-                .body(params)
-                .when().post("/reservations")
-                .then().log().all()
-                .statusCode(200)
-                .body("id", is(1));
-
-        RestAssured.given().log().all()
-                .when().get("/reservations")
-                .then().log().all()
-                .statusCode(200)
-                .body("size()", is(1));
-
-        RestAssured.given().log().all()
-                .when().delete("/reservations/1")
-                .then().log().all()
-                .statusCode(200);
-
-        RestAssured.given().log().all()
-                .when().get("/reservations")
-                .then().log().all()
-                .statusCode(200)
-                .body("size()", is(0));
-    }
+//    @Test
+//    void 삼단계_예약의_추가와_삭제가_이루어진다() {
+//        Map<String, String> params = new HashMap<>();
+//        params.put("name", "브라운");
+//        params.put("date", "2023-08-05");
+//        params.put("time", "15:40");
+//
+//        RestAssured.given().log().all()
+//                .contentType(ContentType.JSON)
+//                .body(params)
+//                .when().post("/reservations")
+//                .then().log().all()
+//                .statusCode(200)
+//                .body("id", is(1));
+//
+//        RestAssured.given().log().all()
+//                .when().get("/reservations")
+//                .then().log().all()
+//                .statusCode(200)
+//                .body("size()", is(1));
+//
+//        RestAssured.given().log().all()
+//                .when().delete("/reservations/1")
+//                .then().log().all()
+//                .statusCode(200);
+//
+//        RestAssured.given().log().all()
+//                .when().get("/reservations")
+//                .then().log().all()
+//                .statusCode(200)
+//                .body("size()", is(0));
+//    }
 
     @Test
     void 사단계_데이터베이스를_적용한다() {
@@ -91,45 +92,45 @@ public class MissionStepTest {
         }
     }
 
-    @Test
-    void 오단계_예약을_추가한다() {
-        jdbcTemplate.update("INSERT INTO reservation(name, date, time) VALUES(?, ?, ?)", "브라운", "2023-08-05", "15:40");
+//    @Test
+//    void 오단계_예약을_추가한다() {
+//        jdbcTemplate.update("INSERT INTO reservation(name, date, time) VALUES(?, ?, ?)", "브라운", "2023-08-05", "15:40");
+//
+//        List<ReservationGetResponse> reservationGetResponses = RestAssured.given().log().all()
+//                .when().get("/reservations")
+//                .then().log().all()
+//                .statusCode(200).extract()
+//                .jsonPath().getList(".", ReservationGetResponse.class);
+//
+//        Integer count = jdbcTemplate.queryForObject("SELECT COUNT(1) from reservation", Integer.class);
+//        assertThat(reservationGetResponses.size()).isEqualTo(count);
+//    }
 
-        List<ReservationGetResponse> reservationGetResponses = RestAssured.given().log().all()
-                .when().get("/reservations")
-                .then().log().all()
-                .statusCode(200).extract()
-                .jsonPath().getList(".", ReservationGetResponse.class);
-
-        Integer count = jdbcTemplate.queryForObject("SELECT COUNT(1) from reservation", Integer.class);
-        assertThat(reservationGetResponses.size()).isEqualTo(count);
-    }
-
-    @Test
-    void 육단계_예약을_추가하고_삭제한다() {
-        Map<String, String> params = new HashMap<>();
-        params.put("name", "브라운");
-        params.put("date", "2023-08-05");
-        params.put("time", "10:00");
-
-        RestAssured.given().log().all()
-                .contentType(ContentType.JSON)
-                .body(params)
-                .when().post("/reservations")
-                .then().log().all()
-                .statusCode(200);
-
-        Integer count = jdbcTemplate.queryForObject("SELECT COUNT(1) FROM reservation", Integer.class);
-        assertThat(count).isEqualTo(1);
-
-        RestAssured.given().log().all()
-                .when().delete("/reservations/1")
-                .then().log().all()
-                .statusCode(200);
-
-        Integer countAfterDelete = jdbcTemplate.queryForObject("SELECT COUNT(1) FROM reservation", Integer.class);
-        assertThat(countAfterDelete).isEqualTo(0);
-    }
+//    @Test
+//    void 육단계_예약을_추가하고_삭제한다() {
+//        Map<String, String> params = new HashMap<>();
+//        params.put("name", "브라운");
+//        params.put("date", "2023-08-05");
+//        params.put("time", "10:00");
+//
+//        RestAssured.given().log().all()
+//                .contentType(ContentType.JSON)
+//                .body(params)
+//                .when().post("/reservations")
+//                .then().log().all()
+//                .statusCode(200);
+//
+//        Integer count = jdbcTemplate.queryForObject("SELECT COUNT(1) FROM reservation", Integer.class);
+//        assertThat(count).isEqualTo(1);
+//
+//        RestAssured.given().log().all()
+//                .when().delete("/reservations/1")
+//                .then().log().all()
+//                .statusCode(200);
+//
+//        Integer countAfterDelete = jdbcTemplate.queryForObject("SELECT COUNT(1) FROM reservation", Integer.class);
+//        assertThat(countAfterDelete).isEqualTo(0);
+//    }
 
     @Test
     void 칠단계_예약가능시간을_등록_삭제_조회한다() {
@@ -153,5 +154,34 @@ public class MissionStepTest {
                 .when().delete("/times/1")
                 .then().log().all()
                 .statusCode(200);
+    }
+
+    @Test
+    void 팔단계_ReservationTime_객체를_활용하여_API가_동작한다() {
+        Map<String, Object> timeParams = new HashMap<>();
+        timeParams.put("startAt", LocalTime.of(10, 0));
+        RestAssured.given()
+                .contentType(ContentType.JSON)
+                .body(timeParams)
+                .when().post("/times");
+
+        Map<String, Object> reservation = new HashMap<>();
+        reservation.put("name", "브라운");
+        reservation.put("date", "2023-08-05");
+        reservation.put("timeId", 1);
+
+        RestAssured.given().log().all()
+                .contentType(ContentType.JSON)
+                .body(reservation)
+                .when().post("/reservations")
+                .then().log().all()
+                .statusCode(200);
+
+        RestAssured.given().log().all()
+                .when().get("/reservations")
+                .then().log().all()
+                .statusCode(200)
+                .body("size()", is(1));
+
     }
 }

@@ -37,4 +37,8 @@ public class ReservationTimeService {
             throw new IllegalArgumentException("존재하지 않는 예약 시간 id입니다.");
         }
     }
+
+    public ReservationTime getById(Long timeId) {
+        return reservationTimeRepository.findById(timeId);
+    }
 }

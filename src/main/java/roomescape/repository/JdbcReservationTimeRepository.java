@@ -53,4 +53,12 @@ public class JdbcReservationTimeRepository implements ReservationTimeRepository 
         String sql = "DELETE FROM reservation_time WHERE id = ?";
         return jdbcTemplate.update(sql, id);
     }
+
+    @Override
+    public ReservationTime findById(Long id) {
+        String sql = "SELECT * FROM reservation_time WHERE id = ?";
+        return jdbcTemplate.queryForObject(sql,
+                (resultSet, rowNum) -> ReservationTime.toEntity(new ReservationTime(resultSet.getObject("start_at", LocalTime.class)), resultSet.getLong("id")),
+                id);
+    }
 }

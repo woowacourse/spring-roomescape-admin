@@ -9,18 +9,35 @@ public class Reservation {
     private final Long id;
     private final String name;
     private final LocalDate date;
-    private final LocalTime time;
+    private final ReservationTime time;
 
-    public Reservation(String name, LocalDate date, LocalTime time) {
+    public Reservation(String name, LocalDate date, ReservationTime time) {
         this(null, name, date, time);
     }
 
-    private Reservation(Long id, String name, LocalDate date, LocalTime time) {
+    private Reservation(Long id, String name, LocalDate date, ReservationTime time) {
         validate(name, date, time);
         this.id = id;
         this.name = name;
         this.date = date;
         this.time = time;
+    }
+
+    private void validate(String name, LocalDate date, ReservationTime time) {
+        validateNotNull(name, date, time);
+        validateName(name);
+    }
+
+    private void validateNotNull(String name, LocalDate date, ReservationTime time) {
+        if (name == null || date == null || time == null) {
+            throw new IllegalArgumentException("예약자 이름과 예약 날짜, 시간을 올바르게 입력해 주세요.");
+        }
+    }
+
+    private void validateName(String name) {
+        if (name.isBlank() || name.isEmpty()) {
+            throw new IllegalArgumentException("예약자 이름은 빈 칸일 수 없습니다.");
+        }
     }
 
     public static Reservation toEntity(Reservation reservation, Long id) {
@@ -32,23 +49,6 @@ public class Reservation {
 
     private boolean isEntity() {
         return id != null;
-    }
-
-    private void validate(String name, LocalDate date, LocalTime time) {
-        validateNotNull(name, date, time);
-        validateName(name);
-    }
-
-    private void validateNotNull(String name, LocalDate date, LocalTime time) {
-        if (name == null || date == null || time == null) {
-            throw new IllegalArgumentException("예약자 이름과 예약 날짜, 시간을 올바르게 입력해 주세요.");
-        }
-    }
-
-    private void validateName(String name) {
-        if (name.isBlank() || name.isEmpty()) {
-            throw new IllegalArgumentException("예약자 이름은 빈 칸일 수 없습니다.");
-        }
     }
 
     public Long getId() {
@@ -63,7 +63,7 @@ public class Reservation {
         return date;
     }
 
-    public LocalTime getTime() {
+    public ReservationTime getTime() {
         return time;
     }
 

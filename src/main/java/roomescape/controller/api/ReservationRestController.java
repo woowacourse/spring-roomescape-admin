@@ -1,5 +1,6 @@
 package roomescape.controller.api;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -13,10 +14,11 @@ import org.springframework.web.server.ResponseStatusException;
 import roomescape.dto.ReservationCreateRequest;
 import roomescape.dto.ReservationGetResponse;
 import roomescape.model.Reservation;
+import roomescape.model.ReservationTime;
 import roomescape.service.ReservationService;
+import roomescape.service.ReservationTimeService;
 
 import java.time.LocalDate;
-import java.time.LocalTime;
 import java.util.List;
 
 @RestController
@@ -24,9 +26,12 @@ import java.util.List;
 public class ReservationRestController {
 
     private final ReservationService reservationService;
+    private final ReservationTimeService reservationTimeService;
 
-    public ReservationRestController(ReservationService reservationService) {
+    @Autowired
+    public ReservationRestController(ReservationService reservationService, ReservationTimeService reservationTimeService) {
         this.reservationService = reservationService;
+        this.reservationTimeService = reservationTimeService;
     }
 
     @GetMapping
@@ -43,10 +48,11 @@ public class ReservationRestController {
     @PostMapping
     public ResponseEntity<ReservationGetResponse> addReservation(@RequestBody ReservationCreateRequest reservationCreateRequest) {
         LocalDate date = reservationCreateRequest.date();
-        LocalTime time = reservationCreateRequest.time();
+        Long timeId = reservationCreateRequest.timeId();
         try {
-            reservationService.validateDuplicateDateAndTime(date, time);
-            Reservation reservation = reservationService.add(reservationCreateRequest.name(), date, time);
+            reservationService.validateDuplicateDateAndTimeId(date, timeId);
+            ReservationTime reservationTime = reservationTimeService.getById(timeId);
+            Reservation reservation = reservationService.add(reservationCreateRequest.name(), date, reservationTime);
             return ResponseEntity
                     .status(HttpStatus.OK)
                     .body(ReservationGetResponse.from(reservation));

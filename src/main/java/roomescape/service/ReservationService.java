@@ -3,10 +3,10 @@ package roomescape.service;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import roomescape.model.Reservation;
+import roomescape.model.ReservationTime;
 import roomescape.repository.ReservationRepository;
 
 import java.time.LocalDate;
-import java.time.LocalTime;
 import java.util.List;
 
 @Service
@@ -23,14 +23,14 @@ public class ReservationService {
         return reservationRepository.findAll();
     }
 
-    public void validateDuplicateDateAndTime(LocalDate date, LocalTime time) {
-        if (reservationRepository.existByDateAndTime(date, time)) {
+    public void validateDuplicateDateAndTimeId(LocalDate date, Long timeId) {
+        if (reservationRepository.existByDateAndTimeId(date, timeId)) {
             throw new IllegalArgumentException("해당 시간은 이미 예약되었습니다.");
         }
     }
 
-    public Reservation add(String name, LocalDate date, LocalTime time) {
-        Reservation reservation = new Reservation(name, date, time);
+    public Reservation add(String name, LocalDate date, ReservationTime reservationTime) {
+        Reservation reservation = new Reservation(name, date, reservationTime);
         return reservationRepository.insertAndGet(reservation);
     }
 

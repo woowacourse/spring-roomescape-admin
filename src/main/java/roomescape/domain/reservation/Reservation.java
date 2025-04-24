@@ -6,11 +6,8 @@ import roomescape.exception.CustomException;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.LocalTime;
-import java.util.concurrent.atomic.AtomicLong;
 
 public class Reservation {
-
-    private final static AtomicLong ID_GENERATOR = new AtomicLong(0);
 
     private final Long id;
 
@@ -28,7 +25,7 @@ public class Reservation {
     }
 
     private Reservation(String name, LocalDate date, LocalTime time) {
-        this.id = ID_GENERATOR.incrementAndGet();
+        this.id = null;
         this.name = name;
         this.date = date;
         this.time = time;

@@ -12,11 +12,14 @@ import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.test.annotation.DirtiesContext;
 import org.springframework.test.context.BootstrapWith;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
+import roomescape.domain.reservation.dto.ReservationReqDto;
 import roomescape.domain.reservation.dto.ReservationResDto;
 
 import java.sql.Connection;
 import java.sql.SQLException;
+import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.time.LocalTime;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -61,17 +64,17 @@ public class MissionStepTest2 { // TODO 2025. 4. 22. 20:31: class명 수정
 
     @Test
     void 육단계() {
+        LocalDateTime localDateTime = LocalDateTime.now().plusDays(1);
 
-        LocalDateTime dummyFuture = LocalDateTime.now().plusDays(1);
+        String dummyName = "브라운";
+        LocalDate dummyDate = localDateTime.toLocalDate();
+        LocalTime dummyTime = localDateTime.toLocalTime();
 
-        Map<String, String> params = new HashMap<>();
-        params.put("name", "브라운");
-        params.put("date", dummyFuture.toLocalDate().toString());
-        params.put("time", dummyFuture.toLocalTime().toString());
+        ReservationReqDto dto = new ReservationReqDto(dummyName, dummyDate, dummyTime);
 
         RestAssured.given().log().all()
                 .contentType(ContentType.JSON)
-                .body(params)
+                .body(dto)
                 .when().post("/reservations")
                 .then().log().all()
                 .statusCode(HttpStatus.CREATED.value());

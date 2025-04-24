@@ -38,13 +38,6 @@ public class ReservationService {
         reservationDatabase.delete(id);
     }
 
-    private Reservation convertReservation(ReservationReqDto dto) {
-        return Reservation.of(
-                dto.name(),
-                dto.date(),
-                dto.time());
-    }
-
     private void validateDuplicateDateTime(Reservation inputReservation) {
         List<Reservation> reservations = reservationDatabase.findAll();
         for (Reservation reservation : reservations) {
@@ -52,6 +45,13 @@ public class ReservationService {
                 throw new CustomException(HttpStatus.CONFLICT, "이미 예약되어 있는 시간입니다.");
             }
         }
+    }
+
+    private Reservation convertReservation(ReservationReqDto dto) {
+        return Reservation.of(
+                dto.name(),
+                dto.date(),
+                dto.time());
     }
 
     private ReservationResDto convertReservationResDto(Reservation reservation) {

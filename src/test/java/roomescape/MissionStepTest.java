@@ -6,10 +6,11 @@ import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.http.HttpStatus;
 import org.springframework.test.annotation.DirtiesContext;
+import roomescape.domain.reservation.dto.ReservationReqDto;
 
+import java.time.LocalDate;
 import java.time.LocalDateTime;
-import java.util.HashMap;
-import java.util.Map;
+import java.time.LocalTime;
 
 import static org.hamcrest.core.Is.is;
 
@@ -44,24 +45,21 @@ public class MissionStepTest {
         LocalDateTime localDateTime = LocalDateTime.now().plusDays(1);
 
         String dummyName = "브라운";
-        String dummyDateText = localDateTime.toLocalDate().toString();
-        String dummyTimeText = localDateTime.toLocalTime().toString();
+        LocalDate dummyDate = localDateTime.toLocalDate();
+        LocalTime dummyTime = localDateTime.toLocalTime();
 
-        Map<String, String> params = new HashMap<>();
-        params.put("name", dummyName);
-        params.put("date", dummyDateText);
-        params.put("time", dummyTimeText);
+        ReservationReqDto dto = new ReservationReqDto(dummyName, dummyDate, dummyTime);
 
         RestAssured.given().log().all()
                 .contentType(ContentType.JSON)
-                .body(params)
+                .body(dto)
                 .when().post("/reservations")
                 .then().log().all()
                 .statusCode(HttpStatus.CREATED.value());
 
         RestAssured.given().log().all()
                 .contentType(ContentType.JSON)
-                .body(params)
+                .body(dto)
                 .when().get("/reservations")
                 .then().log().all()
                 .statusCode(HttpStatus.OK.value())
@@ -73,17 +71,14 @@ public class MissionStepTest {
         LocalDateTime localDateTime = LocalDateTime.now().plusDays(1);
 
         String dummyName = "브라운";
-        String dummyDateText = localDateTime.toLocalDate().toString();
-        String dummyTimeText = localDateTime.toLocalTime().toString();
+        LocalDate dummyDate = localDateTime.toLocalDate();
+        LocalTime dummyTime = localDateTime.toLocalTime();
 
-        Map<String, String> params = new HashMap<>();
-        params.put("name", dummyName);
-        params.put("date", dummyDateText);
-        params.put("time", dummyTimeText);
+        ReservationReqDto dto = new ReservationReqDto(dummyName, dummyDate, dummyTime);
 
         RestAssured.given().log().all()
                 .contentType(ContentType.JSON)
-                .body(params)
+                .body(dto)
                 .when().post("/reservations")
                 .then().log().all()
                 .statusCode(HttpStatus.CREATED.value());

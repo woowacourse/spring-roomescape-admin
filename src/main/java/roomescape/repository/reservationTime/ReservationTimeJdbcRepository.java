@@ -1,4 +1,4 @@
-package roomescape.repository;
+package roomescape.repository.reservationTime;
 
 import java.time.LocalTime;
 import java.util.HashMap;
@@ -11,17 +11,18 @@ import org.springframework.stereotype.Repository;
 import roomescape.domain.ReservationTime;
 
 @Repository
-public class ReservationTimeRepository {
+public class ReservationTimeJdbcRepository implements ReservationTimeRepository {
     private final JdbcTemplate jdbcTemplate;
     private final SimpleJdbcInsert jdbcInsert;
 
-    public ReservationTimeRepository(JdbcTemplate jdbcTemplate) {
+    public ReservationTimeJdbcRepository(JdbcTemplate jdbcTemplate) {
         this.jdbcTemplate = jdbcTemplate;
         this.jdbcInsert = new SimpleJdbcInsert(jdbcTemplate)
                 .withTableName("reservation_time")
                 .usingGeneratedKeyColumns("id");
     }
 
+    @Override
     public ReservationTime add(ReservationTime time) {
         Map<String, LocalTime> params = new HashMap<>();
         params.put("start_at", time.getStartAt());
@@ -30,6 +31,7 @@ public class ReservationTimeRepository {
         return new ReservationTime(id, time.getStartAt());
     }
 
+    @Override
     public List<ReservationTime> findAll() {
         String sql = "select * from reservation_time";
         List<ReservationTime> times = jdbcTemplate.query(
@@ -45,11 +47,13 @@ public class ReservationTimeRepository {
         return times;
     }
 
+    @Override
     public int deleteBy(Long id) {
         String sql = "delete from reservation_time where id = ?";
         return jdbcTemplate.update(sql, id);
     }
 
+    @Override
     public Optional<ReservationTime> findBy(Long timeId) {
         String sql = "select * from reservation_time where id = ?";
         List<ReservationTime> time = jdbcTemplate.query(

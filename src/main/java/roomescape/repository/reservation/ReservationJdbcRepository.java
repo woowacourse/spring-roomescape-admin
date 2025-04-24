@@ -1,4 +1,4 @@
-package roomescape.repository;
+package roomescape.repository.reservation;
 
 import java.util.HashMap;
 import java.util.List;
@@ -10,17 +10,18 @@ import roomescape.domain.Reservation;
 import roomescape.domain.ReservationTime;
 
 @Repository
-public class ReservationRepository {
+public class ReservationJdbcRepository implements ReservationRepository {
     private final JdbcTemplate jdbcTemplate;
     private final SimpleJdbcInsert jdbcInsert;
 
-    public ReservationRepository(JdbcTemplate jdbcTemplate) {
+    public ReservationJdbcRepository(JdbcTemplate jdbcTemplate) {
         this.jdbcTemplate = jdbcTemplate;
         this.jdbcInsert = new SimpleJdbcInsert(jdbcTemplate)
                 .withTableName("reservation")
                 .usingGeneratedKeyColumns("id");
     }
 
+    @Override
     public Reservation add(Reservation reservation) {
         Map<String, Object> params = new HashMap<>();
         params.put("name", reservation.getName());
@@ -31,11 +32,13 @@ public class ReservationRepository {
         return new Reservation(id, reservation.getName(), reservation.getDate(), reservation.getTime());
     }
 
+    @Override
     public int deleteBy(Long id) {
         String sql = "delete from reservation where id = ?";
         return jdbcTemplate.update(sql, id);
     }
 
+    @Override
     public List<Reservation> findAll() {
         String sql = "SELECT r.id as reservation_id, r.name, r.date, t.id as time_id, t.start_at as time_value FROM reservation as r inner join reservation_time as t on r.time_id = t.id";
         List<Reservation> reservations = jdbcTemplate.query(

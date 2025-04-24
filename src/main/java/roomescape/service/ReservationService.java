@@ -7,7 +7,7 @@ import roomescape.domain.ReservationTime;
 import roomescape.dto.ReservationRequest;
 import roomescape.dto.ReservationResponse;
 import roomescape.exception.reservation.ReservationNotFoundException;
-import roomescape.repository.ReservationRepository;
+import roomescape.repository.reservation.ReservationRepository;
 
 @Service
 public class ReservationService {

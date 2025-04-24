@@ -15,4 +15,9 @@ public class AdminRoomEscapeController {
     public String reservation() {
         return "/admin/reservation";
     }
+
+    @GetMapping("/admin/time")
+    public String time() {
+        return "/admin/time";
+    }
 }

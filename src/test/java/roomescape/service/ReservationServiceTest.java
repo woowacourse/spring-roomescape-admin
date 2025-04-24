@@ -10,27 +10,25 @@ import roomescape.dao.ImMemoryReservationTimeDAO;
 import roomescape.dao.InMemoryReservationDAO;
 import roomescape.domain.Reservation;
 import roomescape.domain.ReservationTime;
+import roomescape.dto.ReservationRequest;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import static org.junit.jupiter.api.Assertions.assertAll;
 
 class ReservationServiceTest {
 
-    ReservationTimeService reservationTimeService;
     ReservationService reservationService;
+    ReservationTimeService reservationTimeService;
 
     @BeforeEach
     void provideService() {
         ReservationTime time = new ReservationTime(LocalTime.of(10, 10));
-
-        reservationTimeService = new ReservationTimeService(
-                new ImMemoryReservationTimeDAO(new ArrayList<>()));
-        long savedTimeId = reservationTimeService.addReservationTime(time);
-        time = time.withId(savedTimeId);
-
-        reservationService = new ReservationService(new InMemoryReservationDAO(new ArrayList<>()));
-        reservationService.addReservation(new Reservation("reservation",
-                LocalDate.of(2025, 1, 1), time));
+        ImMemoryReservationTimeDAO reservationTimeDAO = new ImMemoryReservationTimeDAO(new ArrayList<>());
+        reservationTimeService = new ReservationTimeService(reservationTimeDAO);
+        long savedTimeId = reservationTimeDAO.insert(time);
+        reservationService = new ReservationService(new InMemoryReservationDAO(new ArrayList<>()), reservationTimeDAO);
+        reservationService.addReservation(new ReservationRequest("reservation", LocalDate.of(2025, 1, 1), savedTimeId));
     }
 
     @Test
@@ -38,15 +36,15 @@ class ReservationServiceTest {
     void saveReservation() {
         //given
         LocalDate date = LocalDate.of(2025, 4, 16);
-        ReservationTime time = reservationTimeService.findById(1L).get();
+
         //when
-        Reservation reservation = new Reservation("test", date, time);
-        long savedId = reservationService.addReservation(reservation);
+        ReservationRequest reservationRequest = new ReservationRequest("test", date, 1L);
+        Reservation actual = reservationService.addReservation(reservationRequest);
 
         //then
         assertAll(
                 () -> assertThat(reservationService.findAll()).hasSize(2),
-                () -> assertThat(savedId).isEqualTo(2L)
+                () -> assertThat(actual.getId()).isEqualTo(2L)
         );
 
     }
@@ -56,12 +54,14 @@ class ReservationServiceTest {
     void exceptionWhenSameDateTime() {
         //given
         LocalDate date = LocalDate.of(2025, 1, 1);
-        ReservationTime time = reservationTimeService.findById(1L).get();
+        long timeId = 1L;
 
         //when & then
-        Reservation duplicated = new Reservation("test", date, time);
-        long savedId = reservationService.addReservation(duplicated);
-        assertThat(savedId).isEqualTo(-1);
+        ReservationRequest duplicated = new ReservationRequest("test", date, timeId);
+        assertThatThrownBy(() -> reservationService.addReservation(duplicated))
+                .isInstanceOf(IllegalArgumentException.class)
+                .hasMessage("[ERROR] 같은 날짜/시간 예약이 존재합니다: date=%s, time=%s"
+                        .formatted(date, reservationTimeService.findById(timeId).get().getStartAt()));
     }
 
     @Test
@@ -83,13 +83,25 @@ class ReservationServiceTest {
     @DisplayName("존재하지 않는 예약을 삭제하려는 경우 false를 리턴한다")
     void removeNotExistReservationById() {
         //given
-        ReservationService reservationService = new ReservationService(new InMemoryReservationDAO(new ArrayList<>()));
-        long notExistId = 1L;
+        long notExistId = 100L;
 
         //when
         boolean actual = reservationService.removeReservationById(notExistId);
 
         //then
         assertThat(actual).isFalse();
+    }
+
+    @Test
+    @DisplayName("존재하지 않는 timeId인 경우 예외를 발생한다")
+    void throwExceptionWhenNotExistTimeId() {
+        //given
+        long notExistTimeId = 100L;
+        ReservationRequest request = new ReservationRequest("test", LocalDate.of(2025, 1, 1), notExistTimeId);
+
+        //when & then
+        assertThatThrownBy(() -> reservationService.addReservation(request))
+                .isInstanceOf(IllegalArgumentException.class)
+                .hasMessage("[ERROR] 존재하지 않는 예약 가능 시간입니다: timeId=%d".formatted(notExistTimeId));
     }
 }

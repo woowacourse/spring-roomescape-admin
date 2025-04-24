@@ -1,7 +1,6 @@
 package roomescape.controller;
 
 import java.util.List;
-import java.util.Optional;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -10,22 +9,17 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
 import roomescape.domain.Reservation;
-import roomescape.domain.ReservationTime;
 import roomescape.dto.ReservationRequest;
 import roomescape.dto.ReservationResponse;
 import roomescape.service.ReservationService;
-import roomescape.service.ReservationTimeService;
 
 @RestController
 public class RoomescapeApiController {
 
     private final ReservationService reservationService;
-    private final ReservationTimeService reservationTimeService;
 
-    public RoomescapeApiController(final ReservationService reservationService,
-                                   final ReservationTimeService reservationTimeService) {
+    public RoomescapeApiController(final ReservationService reservationService) {
         this.reservationService = reservationService;
-        this.reservationTimeService = reservationTimeService;
     }
 
     @GetMapping("/reservations")
@@ -38,16 +32,8 @@ public class RoomescapeApiController {
 
     @PostMapping("/reservations")
     public ResponseEntity<ReservationResponse> addReservation(@RequestBody ReservationRequest request) {
-        Optional<ReservationTime> reservationTimeOptional = reservationTimeService.findById(request.timeId());
-        if (reservationTimeOptional.isEmpty()) {
-            return ResponseEntity.badRequest().build();
-        }
-        Reservation reservation = new Reservation(request.name(), request.date(), reservationTimeOptional.get());
-        long savedId = reservationService.addReservation(reservation);
-        if (savedId > 0) {
-            return ResponseEntity.ok(ReservationResponse.from(reservation.withId(savedId)));
-        }
-        return ResponseEntity.badRequest().build();
+        Reservation reservation = reservationService.addReservation(request);
+        return ResponseEntity.ok(ReservationResponse.from(reservation));
     }
 
     @DeleteMapping("/reservations/{id}")

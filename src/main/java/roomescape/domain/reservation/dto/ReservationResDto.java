@@ -1,4 +1,4 @@
-package roomescape.domain.dto;
+package roomescape.domain.reservation.dto;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 

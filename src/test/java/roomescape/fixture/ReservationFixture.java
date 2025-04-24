@@ -1,7 +1,7 @@
 package roomescape.fixture;
 
-import roomescape.domain.Reservation;
-import roomescape.domain.dto.ReservationReqDto;
+import roomescape.domain.reservation.Reservation;
+import roomescape.domain.reservation.dto.ReservationReqDto;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;

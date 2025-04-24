@@ -1,4 +1,4 @@
-package roomescape.domain;
+package roomescape.domain.reservation;
 
 import org.springframework.http.HttpStatus;
 import roomescape.exception.CustomException;

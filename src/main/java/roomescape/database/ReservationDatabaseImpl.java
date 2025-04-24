@@ -2,7 +2,7 @@ package roomescape.database;
 
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Repository;
-import roomescape.domain.Reservation;
+import roomescape.domain.reservation.Reservation;
 
 import java.util.List;
 

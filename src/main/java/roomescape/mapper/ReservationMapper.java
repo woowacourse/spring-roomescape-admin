@@ -5,7 +5,6 @@ import roomescape.domain.Reservation;
 import roomescape.domain.ReservationTime;
 import roomescape.dto.request.ReservationRequest;
 import roomescape.dto.response.ReservationResponse;
-import roomescape.dto.response.TimeResponse;
 
 public class ReservationMapper {
 
@@ -18,7 +17,7 @@ public class ReservationMapper {
                 reservation.getId(),
                 reservation.getName(),
                 reservation.getReservationDate(),
-                TimeResponse.toDto(reservation.getReservationTime())
+                ReservationTimeMapper.toDto(reservation.getReservationTime())
         );
     }
 

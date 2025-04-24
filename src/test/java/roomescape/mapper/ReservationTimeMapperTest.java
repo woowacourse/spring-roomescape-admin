@@ -1,15 +1,34 @@
-package roomescape.dto.response;
+package roomescape.mapper;
 
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.junit.jupiter.api.Assertions.assertAll;
+import static org.junit.jupiter.api.Assertions.*;
 
 import java.time.LocalTime;
 import java.util.List;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import roomescape.domain.ReservationTime;
+import roomescape.dto.request.TimeRequest;
+import roomescape.dto.response.TimeResponse;
 
-class TimeResponseTest {
+class ReservationTimeMapperTest {
+
+    @DisplayName("request를 ReservationTime으로 변경한다.")
+    @Test
+    void request_toReservation() {
+        // given
+        LocalTime time = LocalTime.of(10, 0);
+        TimeRequest request = new TimeRequest(time);
+
+        // when
+        ReservationTime reservationTime = ReservationTimeMapper.toDomain(request);
+
+        // then
+        assertAll(
+                () -> assertThat(reservationTime.getId()).isNull(),
+                () -> assertThat(reservationTime.getStartAt()).isEqualTo(time)
+        );
+    }
 
     @DisplayName("ReservationTime을 Response로 변환한다.")
     @Test
@@ -18,7 +37,7 @@ class TimeResponseTest {
         ReservationTime reservationTime = ReservationTime.of(1L, LocalTime.of(10, 0));
 
         // when
-        TimeResponse response = TimeResponse.toDto(reservationTime);
+        TimeResponse response = ReservationTimeMapper.toDto(reservationTime);
 
         // then
         assertAll(
@@ -42,7 +61,7 @@ class TimeResponseTest {
         List<ReservationTime> reservationTimes = List.of(reservationTime1, reservationTime2, reservationTime3);
 
         // when
-        List<TimeResponse> responses = TimeResponse.toDtos(reservationTimes);
+        List<TimeResponse> responses = ReservationTimeMapper.toDtos(reservationTimes);
 
         // then
         assertAll(
@@ -52,4 +71,5 @@ class TimeResponseTest {
                         .containsExactly(time1, time2, time3)
         );
     }
+
 }

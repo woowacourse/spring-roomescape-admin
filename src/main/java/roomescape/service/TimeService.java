@@ -5,6 +5,7 @@ import org.springframework.stereotype.Service;
 import roomescape.domain.ReservationTime;
 import roomescape.dto.request.TimeRequest;
 import roomescape.dto.response.TimeResponse;
+import roomescape.mapper.ReservationTimeMapper;
 import roomescape.repository.TimeRepository;
 
 @Service
@@ -18,14 +19,16 @@ public class TimeService {
 
     public List<TimeResponse> getAllTimes() {
         List<ReservationTime> reservationTimes = repository.findAll();
-        return TimeResponse.toDtos(reservationTimes);
+        return ReservationTimeMapper.toDtos(reservationTimes);
     }
 
     public TimeResponse registerNewTime(TimeRequest request) {
-        ReservationTime reservationTime = request.toDomain();
-        Long id = repository.save(reservationTime);
+        ReservationTime newReservationTime = ReservationTimeMapper.toDomain(request);
+        Long id = repository.save(newReservationTime);
 
-        return TimeResponse.toDto(ReservationTime.assignId(id, reservationTime));
+        ReservationTime saved = ReservationTime.assignId(id, newReservationTime);
+
+        return ReservationTimeMapper.toDto(saved);
     }
 
     public void deleteTime(Long id) {

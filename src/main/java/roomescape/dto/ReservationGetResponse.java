@@ -11,7 +11,7 @@ public record ReservationGetResponse(
         ReservationTimeGetResponse time
 ) {
 
-    public static ReservationGetResponse from(Reservation reservation) {
-        return new ReservationGetResponse(reservation.getId(), reservation.getName(), reservation.getDate(), ReservationTimeGetResponse.from(reservation.getTime()));
+    public static ReservationGetResponse from(Reservation reservationEntity) {
+        return new ReservationGetResponse(reservationEntity.getId(), reservationEntity.getName(), reservationEntity.getDate(), ReservationTimeGetResponse.from(reservationEntity.getTime()));
     }
 }

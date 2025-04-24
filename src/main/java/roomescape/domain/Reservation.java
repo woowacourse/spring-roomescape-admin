@@ -11,34 +11,31 @@ public class Reservation {
     private final Long id;
     private final String name;
     private final LocalDate date;
-    private final LocalTime time;
+    private final ReservationTime time;
 
-    public Reservation(final Long id, final String name, final LocalDate date, final LocalTime time) {
+    @JsonCreator
+    public Reservation(
+            @JsonProperty("id") Long id,
+            @JsonProperty("name") String name,
+            @JsonProperty("date") LocalDate date,
+            @JsonProperty("time") ReservationTime time
+    ) {
         this.id = id;
         this.name = name;
         this.date = date;
         this.time = time;
     }
 
-    @JsonCreator
-    public Reservation(
-            @JsonProperty("id") final Long id,
-            @JsonProperty("name") final String name,
-            @JsonProperty("date") final String date,
-            @JsonProperty("time") final String time
-    ) {
-        this.id = id;
-        this.name = name;
-        this.date = LocalDate.parse(date);
-        this.time = LocalTime.parse(time);
+    public Reservation(final Long id, final String name, final String date, final Long timeId, final String startAt) {
+        this(id, name, LocalDate.parse(date), new ReservationTime(timeId, LocalTime.parse(startAt)));
     }
 
-    public Reservation(final String name, final String date, final String time) {
-        this(null, name, LocalDate.parse(date), LocalTime.parse(time));
+    public Reservation(final String name, final String date, final ReservationTime time) {
+        this(null, name, LocalDate.parse(date), time);
     }
 
-    public static Reservation create(final String name, final String date, final String time) {
-        return new Reservation(null, name, date, time);
+    public static Reservation create(final String name, final String date, final ReservationTime time) {
+        return new Reservation(null, name, LocalDate.parse(date), time);
     }
 
     public Reservation register(final Long id) {
@@ -57,7 +54,7 @@ public class Reservation {
         return date;
     }
 
-    public LocalTime getTime() {
+    public ReservationTime getTime() {
         return time;
     }
 
@@ -78,4 +75,15 @@ public class Reservation {
     public int hashCode() {
         return Objects.hash(id, name, date, time);
     }
+
+    @Override
+    public String toString() {
+        return "Reservation{" +
+                "id=" + id +
+                ", name='" + name + '\'' +
+                ", date=" + date +
+                ", time=" + time +
+                '}';
+    }
+
 }

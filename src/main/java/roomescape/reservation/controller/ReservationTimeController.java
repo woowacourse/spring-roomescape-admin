@@ -1,6 +1,7 @@
 package roomescape.reservation.controller;
 
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -8,6 +9,8 @@ import org.springframework.web.bind.annotation.RestController;
 import roomescape.reservation.dao.ReservationTimeDAO;
 import roomescape.reservation.dto.ReservationTimeReqDTO;
 import roomescape.reservation.model.ReservationTime;
+
+import java.util.List;
 
 @RequestMapping("/times")
 @RestController
@@ -24,5 +27,11 @@ public class ReservationTimeController {
         ReservationTime reservationTimeInfo = timeDto.toEntity();
         ReservationTime newReservationTime = timeDAO.insert(reservationTimeInfo);
         return ResponseEntity.ok(newReservationTime);
+    }
+
+    @GetMapping
+    public ResponseEntity<List<ReservationTime>> findAll() {
+        List<ReservationTime> reservationTimes = timeDAO.selectAll();
+        return ResponseEntity.ok(reservationTimes);
     }
 }

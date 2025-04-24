@@ -6,6 +6,7 @@ import org.springframework.stereotype.Component;
 import roomescape.reservation.model.ReservationTime;
 
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 @Component
@@ -26,5 +27,16 @@ public class ReservationTimeDAO {
         params.put("start_at", reservationTime.getStartAt());
         Long timeId = simpleJdbcInsert.executeAndReturnKey(params).longValue();
         return new ReservationTime(timeId, reservationTime.getStartAt());
+    }
+
+    public List<ReservationTime> selectAll() {
+        String sql = "select * from reservation_time";
+
+        return jdbcTemplate.query(sql,
+                (rs, rowNum) -> new ReservationTime(
+                        rs.getLong("id"),
+                        rs.getTime("start_at").toLocalTime()
+                )
+        );
     }
 }

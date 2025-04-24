@@ -12,7 +12,7 @@ import roomescape.exception.InvalidReservationException;
 public class ReservationMemoryRepositoryImpl implements ReservationRepository {
 
     private final AtomicLong id = new AtomicLong(0);
-    private final List<Reservation> reservations = new ArrayList<>();
+    private final List<Reservation> reservations = Collections.synchronizedList(new ArrayList<>());
 
     @Override
     public List<Reservation> findAll() {

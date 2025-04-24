@@ -13,7 +13,7 @@ import roomescape.exception.InvalidReservationTimeException;
 public class ReservationTimeMemoryRepositoryImpl implements ReservationTimeRepository {
 
     private final AtomicLong id = new AtomicLong(0);
-    private final List<ReservationTime> reservationTimes = new ArrayList<>();
+    private final List<ReservationTime> reservationTimes = Collections.synchronizedList(new ArrayList<>());
 
     @Override
     public Long addAndGetId(CreateReservationTimeDto createReservationTimeDto) {

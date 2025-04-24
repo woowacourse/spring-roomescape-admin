@@ -46,7 +46,7 @@ public class FakeJdbcTemplate extends JdbcTemplate {
     @Override
     public int update(String sql, @Nullable Object... args) {
         Long id = (Long) args[0];
-        database.removeIf(reservation -> reservation.isSameId(id));
+        database.removeIf(reservation -> Objects.equals(reservation.id(), id));
         return 1;
     }
 

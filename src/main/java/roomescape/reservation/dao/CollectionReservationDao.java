@@ -35,7 +35,7 @@ public class CollectionReservationDao implements Dao<Reservation> {
     @Override
     public Optional<Reservation> findById(Long id) {
         return reservations.stream()
-                .filter(reservation -> reservation.isSameId(id))
+                .filter(reservation -> Objects.equals(reservation.id(), id))
                 .findFirst();
     }
 
@@ -46,7 +46,7 @@ public class CollectionReservationDao implements Dao<Reservation> {
 
     @Override
     public void deleteById(Long id) {
-        reservations.removeIf(reservation -> reservation.isSameId(id));
+        reservations.removeIf(reservation -> Objects.equals(reservation.id(), id));
     }
 
     @Override

@@ -11,7 +11,7 @@ import roomescape.domain.ReservationTime;
 
 @DisplayNameGeneration(DisplayNameGenerator.ReplaceUnderscores.class)
 class ReservationTest {
-
+    
     @Test
     void 예약은_공백이거나_NULL_로_이루어질_수_없다() {
         Assertions.assertThatThrownBy(

@@ -12,11 +12,14 @@ import java.time.LocalTime;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.boot.test.context.SpringBootTest.WebEnvironment;
+import org.springframework.boot.test.web.server.LocalServerPort;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.test.annotation.DirtiesContext;
 import roomescape.reservation.controller.ReservationController;
@@ -24,7 +27,7 @@ import roomescape.reservation.model.Reservation;
 import roomescape.reservation.model.ReservationTime;
 import roomescape.reservation.repository.H2ReservationTimeRepository;
 
-@SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.DEFINED_PORT)
+@SpringBootTest(webEnvironment = WebEnvironment.RANDOM_PORT)
 @DirtiesContext(classMode = DirtiesContext.ClassMode.BEFORE_EACH_TEST_METHOD)
 public class MissionStepTest {
 
@@ -34,6 +37,15 @@ public class MissionStepTest {
     private H2ReservationTimeRepository h2ReservationTimeRepository;
     @Autowired
     private ReservationController reservationController;
+
+    @LocalServerPort
+    private int port;
+
+    @BeforeEach
+    void setUp() {
+        RestAssured.port = port;
+    }
+
 
     @DisplayName("welcomePage를 반환한다.")
     @Test

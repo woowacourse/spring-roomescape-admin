@@ -18,13 +18,6 @@ public class ReservationDao {
         this.jdbcTemplate = jdbcTemplate;
     }
 
-    public List<Reservation> findAll() {
-        final String sql = "SELECT id, name, date, time FROM RESERVATION";
-        return jdbcTemplate.query(sql, ReservationEntity.getDefaultRowMapper()).stream()
-                .map(ReservationEntity::toDomain)
-                .toList();
-    }
-
     public Long save(final Reservation reservation) {
         final ReservationEntity reservationEntity = ReservationEntity.from(reservation);
         final String sql = "INSERT INTO RESERVATION (name, date, time) values (?, ?, ?)";
@@ -39,6 +32,13 @@ public class ReservationDao {
         }, keyHolder);
 
         return keyHolder.getKey().longValue();
+    }
+
+    public List<Reservation> findAll() {
+        final String sql = "SELECT id, name, date, time FROM RESERVATION";
+        return jdbcTemplate.query(sql, ReservationEntity.getDefaultRowMapper()).stream()
+                .map(ReservationEntity::toDomain)
+                .toList();
     }
 
     public int remove(final Long id) {

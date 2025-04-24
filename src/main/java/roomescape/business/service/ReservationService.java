@@ -16,16 +16,16 @@ public class ReservationService {
         this.reservationDao = reservationDao;
     }
 
-    public List<ReservationResponse> findAll() {
-        return reservationDao.findAll().stream()
-                .map(ReservationResponse::from)
-                .toList();
-    }
-
     public ReservationResponse create(final ReservationRequest reservationRequest) {
         final Reservation reservation = reservationRequest.toDomain();
         final Long id = reservationDao.save(reservation);
         return ReservationResponse.withId(reservation, id);
+    }
+
+    public List<ReservationResponse> findAll() {
+        return reservationDao.findAll().stream()
+                .map(ReservationResponse::from)
+                .toList();
     }
 
     public void remove(final Long id) {

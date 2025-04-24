@@ -2,12 +2,12 @@ package roomescape.domain;
 
 import java.time.LocalDate;
 
-public record Reservation(Long id, String name, LocalDate date, ReservationTime reservationTime) {
+public record Reservation(Long id, String name, LocalDate date, ReservationTime time) {
 
     public Reservation {
         validateName(name);
         validateDate(date);
-        validateReservationTime(reservationTime);
+        validateReservationTime(time);
     }
 
     private static void validateName(String name) {

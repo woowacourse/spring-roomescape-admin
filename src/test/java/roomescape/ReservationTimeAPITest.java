@@ -26,9 +26,11 @@ public class ReservationTimeAPITest {
     @Test
     @DisplayName("시간 추가 시 추가된 내역을 반환한다.")
     void addReservationTimeTest() {
+        // given
         Map<String, String> params = new HashMap<>();
         params.put("startAt", "10:00");
 
+        // when & then
         RestAssured.given().log().all()
                 .contentType(ContentType.JSON)
                 .body(params)
@@ -40,10 +42,14 @@ public class ReservationTimeAPITest {
     @Test
     @DisplayName("시간 추가 시 데이터베이스에 저장된다.")
     void addReservationTimeDataBaseTest() {
+        // given
         String sql = "insert into reservation_time (start_at) values (?)";
-        jdbcTemplate.update(sql, "10:00");
 
+        // when
+        jdbcTemplate.update(sql, "10:00");
         Integer count = jdbcTemplate.queryForObject("select count(1) from reservation_time", Integer.class);
+
+        // then
         assertThat(count).isEqualTo(1);
     }
 

@@ -89,3 +89,32 @@
            "startAt": "10:00"
        }
        ```
+       
+- [ ] 예약 시간 조회 API
+   - Request
+     - ```
+       GET /times HTTP/1.1
+       ```
+       
+   - Response
+     - ```
+       HTTP/1.1 200
+       Content-Type: application/json
+       [
+           {
+               "id": 1,
+               "startAt": "10:00"
+           }
+       ]
+       ``` 
+
+- [ ] 예약 시간 삭제 API
+   - Request
+     - ```
+       DELETE /times/1 HTTP/1.1
+       ```
+       
+   - Response
+     - ```
+       HTTP/1.1 200
+       ``` 

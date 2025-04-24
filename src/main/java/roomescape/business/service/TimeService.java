@@ -28,4 +28,12 @@ public class TimeService {
                 .map(TimeResponse::from)
                 .toList();
     }
+
+    public void remove(final Long id) {
+        final int rowNum = timeDao.remove(id);
+
+        if (rowNum == 0) {
+            throw new IllegalArgumentException("해당하는 id가 없습니다.");
+        }
+    }
 }

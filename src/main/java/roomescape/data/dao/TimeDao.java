@@ -39,4 +39,10 @@ public class TimeDao {
                 .map(TimeEntity::toDomain)
                 .toList();
     }
+
+    public int remove(final Long id) {
+        final String sql = "DELETE FROM reservation_time WHERE id = ?";
+
+        return jdbcTemplate.update(sql, id);
+    }
 }

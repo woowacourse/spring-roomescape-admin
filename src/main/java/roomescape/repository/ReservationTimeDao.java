@@ -46,4 +46,12 @@ public class ReservationTimeDao {
                         LocalTime.parse(resultSet.getString("start_at"))
                 ));
     }
+
+    public void deleteById(final Long id) {
+        String deleteByIdSql = """
+                DELETE FROM reservation_time
+                WHERE id = ?
+                """;
+        jdbcTemplate.update(deleteByIdSql, id);
+    }
 }

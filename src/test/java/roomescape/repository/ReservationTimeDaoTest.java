@@ -41,4 +41,15 @@ class ReservationTimeDaoTest {
         assertThat(reservationTimeDao.findAll()).hasSize(1);
     }
 
+    @DisplayName("예약 시간 번호로 예약을 삭제한다.")
+    @Test
+    void deleteReservationTimeById() {
+        ReservationTime reservationTime = new ReservationTime(null, LocalTime.of(10, 0));
+        ReservationTime insertedReservationTime = reservationTimeDao.insert(reservationTime);
+        Long insertedReservationTimeId = insertedReservationTime.getId();
+
+        reservationTimeDao.deleteById(insertedReservationTimeId);
+
+        assertThat(reservationTimeDao.findAll()).isEmpty();
+    }
 }

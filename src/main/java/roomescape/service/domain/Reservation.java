@@ -51,13 +51,13 @@ public final class Reservation {
         }
 
         final Reservation that = (Reservation) o;
-        return id == that.id && Objects.equals(name, that.name) && Objects.equals(date, that.date)
-                && Objects.equals(time, that.time);
+        return Objects.equals(id, that.id) && Objects.equals(name, that.name)
+                && Objects.equals(date, that.date) && Objects.equals(time, that.time);
     }
 
     @Override
     public int hashCode() {
-        int result = Long.hashCode(id);
+        int result = Objects.hashCode(id);
         result = 31 * result + Objects.hashCode(name);
         result = 31 * result + Objects.hashCode(date);
         result = 31 * result + Objects.hashCode(time);

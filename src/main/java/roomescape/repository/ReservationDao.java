@@ -15,6 +15,9 @@ import roomescape.service.domain.ReservationTime;
 @Repository
 public class ReservationDao {
 
+    public static final String RESERVATION_TABLE = "reservation";
+    public static final String RESERVATION_PK = "id";
+
     private final JdbcTemplate jdbcTemplate;
     private final SimpleJdbcInsert reservationInserter;
     private final RowMapper<Reservation> reservationRowMapper = (resultSet, rowNum) ->
@@ -31,8 +34,8 @@ public class ReservationDao {
     public ReservationDao(final JdbcTemplate jdbcTemplate, final DataSource dataSource) {
         this.jdbcTemplate = jdbcTemplate;
         this.reservationInserter = new SimpleJdbcInsert(dataSource)
-                .withTableName("reservation")
-                .usingGeneratedKeyColumns("id");
+                .withTableName(RESERVATION_TABLE)
+                .usingGeneratedKeyColumns(RESERVATION_PK);
     }
 
     public List<Reservation> getReservations() {
@@ -51,7 +54,7 @@ public class ReservationDao {
     }
 
     public Reservation createReservation(final Reservation convertedRequest) {
-        Long id = insertReservationAndRetrieveKey(convertedRequest);
+        long id = insertReservationAndRetrieveKey(convertedRequest);
         return getReservationById(id);
     }
 

@@ -39,12 +39,12 @@ public final class ReservationTime {
         }
 
         final ReservationTime that = (ReservationTime) o;
-        return id == that.id && Objects.equals(startAt, that.startAt);
+        return Objects.equals(id, that.id) && Objects.equals(startAt, that.startAt);
     }
 
     @Override
     public int hashCode() {
-        int result = Long.hashCode(id);
+        int result = Objects.hashCode(id);
         result = 31 * result + Objects.hashCode(startAt);
         return result;
     }

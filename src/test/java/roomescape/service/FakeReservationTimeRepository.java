@@ -6,6 +6,7 @@ import roomescape.repository.ReservationTimeRepository;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
+import java.util.Optional;
 import java.util.concurrent.atomic.AtomicLong;
 
 public class FakeReservationTimeRepository implements ReservationTimeRepository {
@@ -27,15 +28,16 @@ public class FakeReservationTimeRepository implements ReservationTimeRepository 
 
     @Override
     public void deleteById(final Long id) {
-        ReservationTime reservationTime = findById(id);
-        reservationTimes.remove(reservationTime);
+        reservationTimes.remove(findById(id).get());
     }
 
     @Override
-    public ReservationTime findById(final Long id) {
-        return reservationTimes.stream()
-                .filter(reservationTimes -> reservationTimes.getId().equals(id))
-                .findFirst()
-                .orElseThrow(() -> new IllegalArgumentException("존재하지 않는 시간입니다."));
+    public Optional<ReservationTime> findById(final Long id) {
+        for (ReservationTime reservationTime : reservationTimes) {
+            if (reservationTime.getId().equals(id)) {
+                return Optional.of(reservationTime);
+            }
+        }
+        return Optional.empty();
     }
 }

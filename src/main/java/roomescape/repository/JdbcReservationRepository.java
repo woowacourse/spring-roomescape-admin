@@ -1,5 +1,6 @@
 package roomescape.repository;
 
+import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;
 import org.springframework.jdbc.support.GeneratedKeyHolder;
@@ -10,6 +11,7 @@ import roomescape.entity.ReservationTime;
 
 import java.sql.PreparedStatement;
 import java.util.List;
+import java.util.Optional;
 
 @Repository
 public class JdbcReservationRepository implements ReservationRepository {
@@ -43,20 +45,22 @@ public class JdbcReservationRepository implements ReservationRepository {
     }
 
     @Override
-    public Reservation findById(final Long id) {
-        String sql = "SELECT r.id as reservation_id, r.name, r.date, t.id as time_id, t.start_at as time_value " +
-                "FROM reservation as r inner join reservation_time as t on r.time_id = t.id " +
-                "WHERE r.id = ?";
-        return jdbcTemplate.queryForObject(sql, reservationRowMapper, id);
+    public Optional<Reservation> findById(final Long id) {
+        try {
+            String sql = "SELECT r.id as reservation_id, r.name, r.date, t.id as time_id, t.start_at as time_value " +
+                    "FROM reservation as r inner join reservation_time as t on r.time_id = t.id " +
+                    "WHERE r.id = ?";
+            Reservation reservation = jdbcTemplate.queryForObject(sql, reservationRowMapper, id);
+            return Optional.of(reservation);
+        } catch (EmptyResultDataAccessException e) {
+            return Optional.empty();
+        }
     }
 
     @Override
     public void deleteById(final Long id) {
         String sql = "DELETE FROM RESERVATION WHERE ID = ?";
-        int updatedRow = jdbcTemplate.update(sql, id);
-        if (updatedRow == 0) {
-            throw new IllegalArgumentException("해당 하는 예약이 없습니다.");
-        }
+        jdbcTemplate.update(sql, id);
     }
 
     @Override

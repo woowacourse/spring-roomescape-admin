@@ -1,5 +1,6 @@
 package roomescape.repository;
 
+import org.springframework.dao.IncorrectResultSizeDataAccessException;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;
 import org.springframework.jdbc.support.GeneratedKeyHolder;
@@ -9,6 +10,7 @@ import roomescape.entity.ReservationTime;
 
 import java.sql.PreparedStatement;
 import java.util.List;
+import java.util.Optional;
 
 @Repository
 public class JdbcReservationTimeRepository implements ReservationTimeRepository {
@@ -50,8 +52,14 @@ public class JdbcReservationTimeRepository implements ReservationTimeRepository 
     }
 
     @Override
-    public ReservationTime findById(final Long id) {
-        String sql = "SELECT * FROM reservation_time WHERE id = ?";
-        return jdbcTemplate.queryForObject(sql, reservationTimeRowMapper, id);
+    public Optional<ReservationTime> findById(final Long id) {
+        try {
+            String sql = "SELECT * FROM reservation_time WHERE id = ?";
+            ReservationTime reservationTime = jdbcTemplate.queryForObject(sql, reservationTimeRowMapper, id);
+            return Optional.of(reservationTime);
+        } catch (IncorrectResultSizeDataAccessException e) {
+            return Optional.empty();
+        }
+
     }
 }

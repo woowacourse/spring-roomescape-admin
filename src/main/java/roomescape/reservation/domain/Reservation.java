@@ -1,7 +1,7 @@
-package roomescape.domain.reservation;
+package roomescape.reservation.domain;
 
 import org.springframework.http.HttpStatus;
-import roomescape.exception.CustomException;
+import roomescape.globalException.CustomException;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;

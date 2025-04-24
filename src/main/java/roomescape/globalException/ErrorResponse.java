@@ -1,4 +1,4 @@
-package roomescape.exception;
+package roomescape.globalException;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 

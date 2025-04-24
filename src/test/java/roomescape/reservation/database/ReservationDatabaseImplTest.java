@@ -1,4 +1,4 @@
-package roomescape.database;
+package roomescape.reservation.database;
 
 import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.DisplayName;
@@ -7,8 +7,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.jdbc.JdbcTest;
 import org.springframework.context.annotation.Import;
 import org.springframework.dao.IncorrectResultSizeDataAccessException;
-import roomescape.domain.reservation.Reservation;
-import roomescape.fixture.ReservationFixture;
+import roomescape.reservation.domain.Reservation;
+import roomescape.reservation.fixture.ReservationFixture;
 
 import java.util.List;
 

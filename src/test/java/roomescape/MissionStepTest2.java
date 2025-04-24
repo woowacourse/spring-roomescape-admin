@@ -12,8 +12,8 @@ import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.test.annotation.DirtiesContext;
 import org.springframework.test.context.BootstrapWith;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
-import roomescape.domain.reservation.dto.ReservationReqDto;
-import roomescape.domain.reservation.dto.ReservationResDto;
+import roomescape.reservation.domain.dto.ReservationReqDto;
+import roomescape.reservation.domain.dto.ReservationResDto;
 
 import java.sql.Connection;
 import java.sql.SQLException;

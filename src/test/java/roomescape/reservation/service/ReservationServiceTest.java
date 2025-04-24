@@ -1,4 +1,4 @@
-package roomescape.service;
+package roomescape.reservation.service;
 
 import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.DisplayName;
@@ -7,11 +7,11 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.jdbc.JdbcTest;
 import org.springframework.context.annotation.Import;
-import roomescape.database.ReservationDatabaseImpl;
-import roomescape.domain.reservation.Reservation;
-import roomescape.domain.reservation.dto.ReservationReqDto;
-import roomescape.exception.CustomException;
-import roomescape.fixture.ReservationFixture;
+import roomescape.reservation.database.ReservationDatabaseImpl;
+import roomescape.reservation.domain.Reservation;
+import roomescape.reservation.domain.dto.ReservationReqDto;
+import roomescape.globalException.CustomException;
+import roomescape.reservation.fixture.ReservationFixture;
 
 import java.time.LocalDateTime;
 

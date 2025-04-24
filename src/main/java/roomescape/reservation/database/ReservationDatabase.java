@@ -1,6 +1,6 @@
-package roomescape.database;
+package roomescape.reservation.database;
 
-import roomescape.domain.reservation.Reservation;
+import roomescape.reservation.domain.Reservation;
 
 import java.util.List;
 

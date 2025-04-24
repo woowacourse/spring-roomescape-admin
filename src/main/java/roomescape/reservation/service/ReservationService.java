@@ -1,12 +1,12 @@
-package roomescape.service;
+package roomescape.reservation.service;
 
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
-import roomescape.database.ReservationDatabase;
-import roomescape.domain.reservation.Reservation;
-import roomescape.domain.reservation.dto.ReservationReqDto;
-import roomescape.domain.reservation.dto.ReservationResDto;
-import roomescape.exception.CustomException;
+import roomescape.reservation.database.ReservationDatabase;
+import roomescape.reservation.domain.Reservation;
+import roomescape.reservation.domain.dto.ReservationReqDto;
+import roomescape.reservation.domain.dto.ReservationResDto;
+import roomescape.globalException.CustomException;
 
 import java.util.List;
 import java.util.stream.Collectors;

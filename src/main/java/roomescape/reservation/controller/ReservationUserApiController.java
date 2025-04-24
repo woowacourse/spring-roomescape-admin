@@ -1,20 +1,20 @@
-package roomescape.controller;
+package roomescape.reservation.controller;
 
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-import roomescape.domain.reservation.dto.ReservationReqDto;
-import roomescape.domain.reservation.dto.ReservationResDto;
-import roomescape.service.ReservationService;
+import roomescape.reservation.domain.dto.ReservationReqDto;
+import roomescape.reservation.domain.dto.ReservationResDto;
+import roomescape.reservation.service.ReservationService;
 
 import java.util.List;
 
 @RestController
-public class UserApiController {
+public class ReservationUserApiController {
 
     private final ReservationService reservationService;
 
-    public UserApiController(ReservationService reservationService) {
+    public ReservationUserApiController(ReservationService reservationService) {
         this.reservationService = reservationService;
     }
 

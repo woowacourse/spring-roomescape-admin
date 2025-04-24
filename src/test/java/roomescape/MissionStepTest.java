@@ -6,7 +6,7 @@ import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.http.HttpStatus;
 import org.springframework.test.annotation.DirtiesContext;
-import roomescape.domain.reservation.dto.ReservationReqDto;
+import roomescape.reservation.domain.dto.ReservationReqDto;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;

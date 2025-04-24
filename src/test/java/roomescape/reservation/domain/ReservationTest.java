@@ -1,12 +1,12 @@
-package roomescape.domain;
+package roomescape.reservation.domain;
 
 import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
 import org.springframework.test.annotation.DirtiesContext;
-import roomescape.exception.CustomException;
-import roomescape.fixture.ReservationFixture;
+import roomescape.globalException.CustomException;
+import roomescape.reservation.fixture.ReservationFixture;
 
 @DirtiesContext(classMode = DirtiesContext.ClassMode.BEFORE_EACH_TEST_METHOD)
 class ReservationTest {

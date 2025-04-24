@@ -7,11 +7,10 @@ import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.atomic.AtomicLong;
 import org.springframework.stereotype.Repository;
 import roomescape.common.domain.Cacheable;
-import roomescape.common.repository.AbstractRepository;
 import roomescape.reservation.domain.Reservation;
 
 @Repository
-public class InMemoryReservationRepository implements AbstractRepository<Reservation> {
+public class InMemoryReservationRepository implements ReservationRepository {
     private final Map<Long, Reservation> reservations = new ConcurrentHashMap<>();
     private final AtomicLong index = new AtomicLong(1);
 

@@ -8,6 +8,7 @@ import io.restassured.http.ContentType;
 import java.lang.reflect.Field;
 import java.sql.Connection;
 import java.sql.SQLException;
+import java.time.LocalDate;
 import java.util.HashMap;
 import java.util.Map;
 import org.junit.jupiter.api.Test;
@@ -25,6 +26,7 @@ public class MissionStepTest {
     private JdbcTemplate jdbcTemplate;
     @Autowired
     private ReservationController reservationController;
+    private final String futureDate = LocalDate.now().plusDays(1).toString();
 
     @Test
     void step1_accessAdminPage() {
@@ -46,7 +48,7 @@ public class MissionStepTest {
     void step3_createAndDeleteReservation() {
         Map<String, Object> params = new HashMap<>();
         params.put("name", "브라운");
-        params.put("date", "2023-08-05");
+        params.put("date", futureDate);
         params.put("timeId", 1);
 
         Map<String, String> reservationTime = new HashMap<>();
@@ -108,7 +110,7 @@ public class MissionStepTest {
                 .then().log().all()
                 .statusCode(200);
 
-        jdbcTemplate.update("INSERT INTO reservation (name, date, time_id) VALUES (?, ?, ?)", "브라운", "2023-08-05",
+        jdbcTemplate.update("INSERT INTO reservation (name, date, time_id) VALUES (?, ?, ?)", "브라운", futureDate,
                 "1");
 
         RestAssured.given().log().all()
@@ -124,7 +126,7 @@ public class MissionStepTest {
     void step6_addReservationWithDatabase() {
         Map<String, Object> params = new HashMap<>();
         params.put("name", "브라운");
-        params.put("date", "2023-08-05");
+        params.put("date", futureDate);
         params.put("timeId", 1);
 
         Map<String, String> reservationTime = new HashMap<>();
@@ -184,7 +186,7 @@ public class MissionStepTest {
     void step8_schemaModification() {
         Map<String, Object> reservation = new HashMap<>();
         reservation.put("name", "브라운");
-        reservation.put("date", "2023-08-05");
+        reservation.put("date", futureDate);
         reservation.put("timeId", 1);
 
         Map<String, String> reservationTime = new HashMap<>();
@@ -224,5 +226,4 @@ public class MissionStepTest {
 
         assertThat(isJdbcTemplateInjected).isFalse();
     }
-
 }

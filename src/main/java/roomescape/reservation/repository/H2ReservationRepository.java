@@ -8,7 +8,6 @@ import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.simple.SimpleJdbcInsert;
 import org.springframework.stereotype.Repository;
 import roomescape.common.domain.Cacheable;
-import roomescape.common.repository.AbstractRepository;
 import roomescape.common.repository.IdCache;
 import roomescape.reservation.domain.Reservation;
 import roomescape.reservation.entity.ReservationEntity;
@@ -16,7 +15,7 @@ import roomescape.reservationtime.entity.ReservationTimeEntity;
 
 @Repository
 @Primary
-public class H2ReservationRepository implements AbstractRepository<Reservation> {
+public class H2ReservationRepository implements ReservationRepository {
 
     private final JdbcTemplate jdbcTemplate;
     private final IdCache idCache;

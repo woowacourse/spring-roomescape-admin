@@ -2,20 +2,21 @@ package roomescape.reservation;
 
 import java.util.List;
 import org.springframework.stereotype.Service;
-import roomescape.common.repository.AbstractRepository;
 import roomescape.reservation.domain.Reservation;
 import roomescape.reservation.dto.request.ReservationCreateRequest;
 import roomescape.reservation.dto.response.ReservationResponse;
+import roomescape.reservation.repository.ReservationRepository;
 import roomescape.reservationtime.domain.ReservationTime;
+import roomescape.reservationtime.dto.repository.ReservationTimeRepository;
 
 @Service
 public class ReservationService {
 
-    private final AbstractRepository<Reservation> reservationRepository;
-    private final AbstractRepository<ReservationTime> reservationTimeRepository;
+    private final ReservationRepository reservationRepository;
+    private final ReservationTimeRepository reservationTimeRepository;
 
-    public ReservationService(final AbstractRepository<Reservation> reservationRepository,
-                              final AbstractRepository<ReservationTime> reservationTimeRepository) {
+    public ReservationService(final ReservationRepository reservationRepository,
+                              final ReservationTimeRepository reservationTimeRepository) {
         this.reservationRepository = reservationRepository;
         this.reservationTimeRepository = reservationTimeRepository;
     }

@@ -1,5 +1,6 @@
 package roomescape.reservationtime.dto.repository;
 
+import java.time.LocalTime;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
@@ -7,13 +8,12 @@ import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.simple.SimpleJdbcInsert;
 import org.springframework.stereotype.Repository;
 import roomescape.common.domain.Cacheable;
-import roomescape.common.repository.AbstractRepository;
 import roomescape.common.repository.IdCache;
 import roomescape.reservationtime.domain.ReservationTime;
 import roomescape.reservationtime.entity.ReservationTimeEntity;
 
 @Repository
-public class H2ReservationTimeRepository implements AbstractRepository<ReservationTime> {
+public class H2ReservationTimeRepository implements ReservationTimeRepository{
     private final JdbcTemplate jdbcTemplate;
     private final IdCache cache;
 
@@ -68,6 +68,19 @@ public class H2ReservationTimeRepository implements AbstractRepository<Reservati
         );
         return Optional.ofNullable(reservationTimeEntity)
                 .map(ReservationTimeEntity::toReservationTime);
+    }
+
+    @Override
+    public boolean checkExistsByStartAt(final LocalTime time) {
+        ReservationTimeEntity reservationTimeEntity = jdbcTemplate.queryForObject(
+                "SELECT id, start_at FROM reservation_time WHERE start_at = ?",
+                (resultSet, rowNum) -> new ReservationTimeEntity(
+                        resultSet.getLong("id"),
+                        resultSet.getString("start_at")
+                ),
+                time
+        );
+        return reservationTimeEntity != null;
     }
 
     @Override

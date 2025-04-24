@@ -9,11 +9,11 @@ import roomescape.reservationtime.domain.ReservationTime;
 
 class ReservationTest {
     @Test
-    void startAt_shouldBeThrownIfTimeIsBeforeNow() {
+    void createReservation_shouldThrowException_whenTimeIsBeforeNow() {
         assertThatThrownBy(() -> new Reservation(
                 "대니",
-                LocalDate.now(),
-                new ReservationTime(LocalTime.now().minusHours(1)))
+                LocalDate.now().minusDays(1),
+                new ReservationTime(LocalTime.now()))
         ).isInstanceOf(IllegalArgumentException.class);
     }
 }

@@ -1,4 +1,4 @@
-package roomescape;
+package roomescape.service;
 
 import java.time.LocalTime;
 import java.util.List;
@@ -8,8 +8,8 @@ import static org.junit.jupiter.api.Assertions.assertThrows;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.web.server.ResponseStatusException;
+import roomescape.FakeReservationTimeRepositoryImpl;
 import roomescape.domain.ReservationTime;
-import roomescape.service.ReservationTimeService;
 import roomescape.service.dto.ReservationTimeRegisterDto;
 import roomescape.service.dto.ReservationTimeResponseDto;
 

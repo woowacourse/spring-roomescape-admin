@@ -63,8 +63,8 @@ public class H2ReservationTimeRepository implements AbstractRepository<Reservati
                 (resultSet, rowNum) -> new ReservationTimeEntity(
                         resultSet.getLong("id"),
                         resultSet.getString("start_at")
-                )
-                , id
+                ),
+                id
         );
         return Optional.ofNullable(reservationTimeEntity)
                 .map(ReservationTimeEntity::toReservationTime);

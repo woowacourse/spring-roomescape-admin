@@ -42,7 +42,7 @@ public class H2ReservationRepository implements ReservationRepository {
     };
 
     @Override
-    public Optional<Reservation> findById(final long id) {
+    public Optional<Reservation> findById(final ReservationId id) {
         final String sql = """
                 select
                     r.id,
@@ -56,7 +56,7 @@ public class H2ReservationRepository implements ReservationRepository {
                 where r.id = ?
                 """;
 
-        return JdbcUtils.queryForOptional(jdbcTemplate, sql, reservationMapper, id)
+        return JdbcUtils.queryForOptional(jdbcTemplate, sql, reservationMapper, id.getValue())
                 .map(ReservationConverter::toDomain);
     }
 
@@ -103,8 +103,8 @@ public class H2ReservationRepository implements ReservationRepository {
     }
 
     @Override
-    public void deleteById(final long id) {
+    public void deleteById(final ReservationId id) {
         final String sql = "delete from reservation where id = ?";
-        jdbcTemplate.update(sql, id);
+        jdbcTemplate.update(sql, id.getValue());
     }
 }

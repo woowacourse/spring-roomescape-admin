@@ -22,12 +22,6 @@ public class ReservationTimeConverter {
                 entity.getTime().toLocalTime());
     }
 
-    public static ReservationTime toDomain(final Long id) {
-        return ReservationTime.of(
-                ReservationTimeId.from(id),
-                null);
-    }
-
     public static ReservationTimeResponseDto toDto(final ReservationTime reservationTime) {
         return new ReservationTimeResponseDto(
                 reservationTime.getId().getValue(),

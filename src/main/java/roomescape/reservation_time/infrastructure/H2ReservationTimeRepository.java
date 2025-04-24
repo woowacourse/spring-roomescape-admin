@@ -31,9 +31,9 @@ public class H2ReservationTimeRepository implements ReservationTimeRepository {
     );
 
     @Override
-    public Optional<ReservationTime> findById(final long id) {
+    public Optional<ReservationTime> findById(final ReservationTimeId id) {
         final String sql = "select id, start_at from reservation_time where id = ?";
-        return JdbcUtils.queryForOptional(jdbcTemplate, sql, reservationTimeMapper, id)
+        return JdbcUtils.queryForOptional(jdbcTemplate, sql, reservationTimeMapper, id.getValue())
                 .map(ReservationTimeConverter::toDomain);
     }
 
@@ -64,8 +64,8 @@ public class H2ReservationTimeRepository implements ReservationTimeRepository {
     }
 
     @Override
-    public void deleteById(final long id) {
+    public void deleteById(final ReservationTimeId id) {
         final String sql = "delete from reservation_time where id = ?";
-        jdbcTemplate.update(sql, id);
+        jdbcTemplate.update(sql, id.getValue());
     }
 }

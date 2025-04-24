@@ -8,6 +8,7 @@ import roomescape.reservation.infrastructure.entity.ReservationEntity;
 import roomescape.reservation.ui.dto.ReservationRequestDto;
 import roomescape.reservation.ui.dto.ReservationResponseDto;
 import roomescape.reservation_time.application.converter.ReservationTimeConverter;
+import roomescape.reservation_time.domain.ReservationTime;
 
 import java.util.List;
 
@@ -21,12 +22,13 @@ public class ReservationConverter {
                 ReservationTimeConverter.toDomain(reservationEntity.getTime()));
     }
 
-    public static Reservation toDomain(final ReservationRequestDto requestDto) {
+    public static Reservation toDomain(final ReservationRequestDto requestDto,
+                                       final ReservationTime reservationTime) {
         return Reservation.of(
                 ReservationId.unassigned(),
                 ReserverName.from(requestDto.name()),
                 ReservationDate.from(requestDto.date()),
-                ReservationTimeConverter.toDomain(requestDto.timeId()));
+                reservationTime);
     }
 
     public static ReservationResponseDto toDto(final Reservation reservation) {

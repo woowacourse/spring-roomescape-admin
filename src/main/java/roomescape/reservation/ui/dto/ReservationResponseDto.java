@@ -7,5 +7,5 @@ import java.time.LocalDate;
 public record ReservationResponseDto(long id,
                                      String name,
                                      LocalDate date,
-                                     ReservationTimeResponseDto timeDto) {
+                                     ReservationTimeResponseDto time) {
 }

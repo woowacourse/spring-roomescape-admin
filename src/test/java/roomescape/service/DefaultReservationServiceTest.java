@@ -5,6 +5,7 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import roomescape.reservation.application.DefaultReservationService;
+import roomescape.reservation.domain.ReservationId;
 
 import java.util.NoSuchElementException;
 
@@ -23,7 +24,7 @@ class DefaultReservationServiceTest {
         final long invalidId = 1;
 
         // when & then
-        assertThatThrownBy(() -> reservationService.delete(invalidId)).
-                isInstanceOf(NoSuchElementException.class);
+        assertThatThrownBy(() -> reservationService.delete(ReservationId.from(invalidId)))
+                .isInstanceOf(NoSuchElementException.class);
     }
 }

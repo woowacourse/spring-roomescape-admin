@@ -9,20 +9,20 @@ import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.support.GeneratedKeyHolder;
 import org.springframework.jdbc.support.KeyHolder;
 import org.springframework.stereotype.Repository;
-import roomescape.time.domain.Time;
+import roomescape.time.domain.ReservationTime;
 
 @Repository
-public class TimeDaoImpl implements TimeDao {
+public class ReservationTimeDaoImpl implements ReservationTimeDao {
 
     private final JdbcTemplate jdbcTemplate;
 
     @Autowired
-    public TimeDaoImpl(JdbcTemplate jdbcTemplate) {
+    public ReservationTimeDaoImpl(JdbcTemplate jdbcTemplate) {
         this.jdbcTemplate = jdbcTemplate;
     }
 
     @Override
-    public Time insert(Time time) {
+    public ReservationTime insert(ReservationTime reservationTime) {
         String sql = "insert into reservation_time (start_at) values (?)";
 
         KeyHolder keyHolder = new GeneratedKeyHolder();
@@ -31,25 +31,25 @@ public class TimeDaoImpl implements TimeDao {
             PreparedStatement ps = connection.prepareStatement(
                     sql,
                     new String[]{"id"});
-            ps.setObject(1, time.getStartAt());
+            ps.setObject(1, reservationTime.getStartAt());
             return ps;
         }, keyHolder);
 
-        return new Time(keyHolder.getKey().longValue(), time);
+        return new ReservationTime(keyHolder.getKey().longValue(), reservationTime);
     }
 
     @Override
-    public List<Time> findAll() {
+    public List<ReservationTime> findAll() {
         String sql = "select * from reservation_time";
 
-        List<Time> times =  jdbcTemplate.query(
+        List<ReservationTime> reservationTimes =  jdbcTemplate.query(
                 sql,
-                (resultSet, rowNum) -> new Time(
+                (resultSet, rowNum) -> new ReservationTime(
                         resultSet.getLong("id"),
                         resultSet.getObject("start_at", LocalTime.class)
                 ));
 
-        return times;
+        return reservationTimes;
     }
 
     @Override

@@ -12,33 +12,33 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
-import roomescape.time.dto.TimeRequest;
-import roomescape.time.dto.TimeResponse;
-import roomescape.time.service.TimeService;
+import roomescape.time.dto.ReservationTimeRequest;
+import roomescape.time.dto.ReservationTimeResponse;
+import roomescape.time.service.ReservationTimeService;
 
 @RestController
 @RequestMapping("/times")
-public class TimeController {
+public class ReservationTimeController {
 
     @Autowired
-    private TimeService timeService;
+    private ReservationTimeService reservationTimeService;
 
     @PostMapping
-    public ResponseEntity<TimeResponse> addTime(@RequestBody @Valid TimeRequest timeRequest) {
-        TimeResponse timeResponse = timeService.addTime(timeRequest);
-        return ResponseEntity.ok(timeResponse);
+    public ResponseEntity<ReservationTimeResponse> addTime(@RequestBody @Valid ReservationTimeRequest reservationTimeRequest) {
+        ReservationTimeResponse reservationTimeResponse = reservationTimeService.addTime(reservationTimeRequest);
+        return ResponseEntity.ok(reservationTimeResponse);
     }
 
     @GetMapping
-    public ResponseEntity<List<TimeResponse>> getTimes() {
-        List<TimeResponse> timeResponses = timeService.findAllTimes();
-        return ResponseEntity.ok(timeResponses);
+    public ResponseEntity<List<ReservationTimeResponse>> getTimes() {
+        List<ReservationTimeResponse> reservationTimeRespons = reservationTimeService.findAllTimes();
+        return ResponseEntity.ok(reservationTimeRespons);
     }
 
     @DeleteMapping("/{id}")
     public ResponseEntity<Void> deleteTime(@PathVariable("id") long id) {
         try {
-            timeService.deleteTimeById(id);
+            reservationTimeService.deleteTimeById(id);
             return ResponseEntity.ok().build();
         } catch (NoSuchElementException e) {
             return ResponseEntity.badRequest().build();

@@ -22,14 +22,29 @@ public class JdbcReservationRepository implements ReservationRepository {
         String findQuery = "SELECT id, start_at FROM reservation_time WHERE id = ?";
         KeyHolder keyHolder = new GeneratedKeyHolder();
 
-        ReservationTime requestTime = findReservationTimeById(wantToSaveReservationRequest,
-                findQuery);
+        ReservationTime wantToFindReservationTime = jdbcTemplate.queryForObject(
+                findQuery,
+                (result, rowNum) -> {
+                    ReservationTime reservationTime = new ReservationTime(
+                            result.getLong("id"),
+                            result.getTime("start_at").toLocalTime()
+                    );
+                    return reservationTime;
+                }
+                , wantToSaveReservationRequest.getTimeId());
 
-        insertReservation(wantToSaveReservationRequest, insertQuery, keyHolder);
+        jdbcTemplate.update(connection -> {
+            PreparedStatement preparedStatement = connection.prepareStatement(
+                    insertQuery, new String[]{"id"});
+            preparedStatement.setString(1, wantToSaveReservationRequest.getName());
+            preparedStatement.setDate(2, java.sql.Date.valueOf(wantToSaveReservationRequest.getDate()));
+            preparedStatement.setLong(3, wantToSaveReservationRequest.getTimeId());
+            return preparedStatement;
+        }, keyHolder);
 
         Reservation wantToSaveReservation = new Reservation(
                 wantToSaveReservationRequest.getName(), wantToSaveReservationRequest.getDate(),
-                requestTime
+                wantToFindReservationTime
         );
 
         return Reservation.toEntity(wantToSaveReservation, keyHolder.getKey().longValue());
@@ -54,23 +69,13 @@ public class JdbcReservationRepository implements ReservationRepository {
                 inner join reservation_time as t
                 on r.time_id = t.id""";
 
-        ReservationTime wantToFindReservationTime = findReservationTime(query);
-
-        return findReservations(query, wantToFindReservationTime);
-    }
-
-    @Override
-    public boolean isExistReservation(ReservationRequest reservationRequest) {
-        String query = "SELECT COUNT(*) FROM RESERVATION WHERE DATE = ? AND TIME_ID = ?";
-        int count = jdbcTemplate.queryForObject(query, Integer.class,
-                reservationRequest.getDate(), reservationRequest.getTimeId());
-        return count > 0;
-    }
-
-    private List<Reservation> findReservations(String sql, ReservationTime wantToFindReservationTime) {
         return jdbcTemplate.query(
-                sql,
+                query,
                 (result, rowNum) -> {
+                    ReservationTime wantToFindReservationTime = new ReservationTime(
+                            result.getLong("time_id"),
+                            result.getTime("start_at").toLocalTime()
+                    );
 
                     Reservation reservation = new Reservation(
                             result.getLong("id"),
@@ -83,43 +88,11 @@ public class JdbcReservationRepository implements ReservationRepository {
         );
     }
 
-    private ReservationTime findReservationTime(String sql) {
-        ReservationTime wantToFindReservationTime = jdbcTemplate.queryForObject(
-                sql,
-                (result, rowNum) -> {
-                    ReservationTime reservationTime = new ReservationTime(
-                            result.getLong("time_id"),
-                            result.getTime("start_at").toLocalTime()
-                    );
-                    return reservationTime;
-                }
-        );
-        return wantToFindReservationTime;
-    }
-
-    private ReservationTime findReservationTimeById(ReservationRequest wantToSaveReservationRequest, String findQuery) {
-        ReservationTime wantToFindReservationTime = jdbcTemplate.queryForObject(
-                findQuery,
-                (result, rowNum) -> {
-                    ReservationTime reservationTime = new ReservationTime(
-                            result.getLong("id"),
-                            result.getTime("start_at").toLocalTime()
-                    );
-                    return reservationTime;
-                }
-                , wantToSaveReservationRequest.getTimeId());
-        return wantToFindReservationTime;
-    }
-
-    private void insertReservation(ReservationRequest wantToSaveReservationRequest, String insertQuery, KeyHolder keyHolder) {
-        jdbcTemplate.update(connection -> {
-            PreparedStatement preparedStatement = connection.prepareStatement(
-                    insertQuery, new String[]{"id"});
-            preparedStatement.setString(1, wantToSaveReservationRequest.getName());
-            preparedStatement.setDate(2, java.sql.Date.valueOf(wantToSaveReservationRequest.getDate()));
-            preparedStatement.setLong(3, wantToSaveReservationRequest.getTimeId());
-            return preparedStatement;
-        }, keyHolder);
+    public boolean isExistReservation(ReservationRequest reservationRequest) {
+        String query = "SELECT COUNT(*) FROM RESERVATION WHERE DATE = ? AND TIME_ID = ?";
+        int count = jdbcTemplate.queryForObject(query, Integer.class,
+                reservationRequest.getDate(), reservationRequest.getTimeId());
+        return count > 0;
     }
 
 }

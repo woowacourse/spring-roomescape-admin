@@ -11,7 +11,7 @@ import org.junit.jupiter.params.provider.CsvSource;
 import org.springframework.http.ResponseEntity;
 import roomescape.domain.Reservation;
 import roomescape.domain.ReservationTime;
-import roomescape.dto.ReservationResponse;
+import roomescape.dto.response.ReservationResponse;
 import roomescape.repository.fake.FakeReservationRepository;
 import roomescape.repository.fake.FakeReservationTimeRepository;
 

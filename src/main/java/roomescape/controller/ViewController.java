@@ -4,24 +4,24 @@ import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
 
 @Controller
-public class PageController {
+public class ViewController {
     @GetMapping()
-    String welcomePage() {
+    String welcome() {
         return "welcomePage";
     }
 
     @GetMapping("/admin")
-    String adminPage() {
+    String admin() {
         return "admin/index";
     }
 
     @GetMapping("/admin/reservation")
-    String adminReservationPage() {
+    String adminReservation() {
         return "admin/reservation";
     }
 
     @GetMapping("/admin/time")
-    String adminTimePage() {
+    String adminTime() {
         return "admin/time";
     }
 }

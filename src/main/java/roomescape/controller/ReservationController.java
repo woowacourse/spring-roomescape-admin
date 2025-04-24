@@ -12,8 +12,8 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import roomescape.domain.Reservation;
 import roomescape.domain.ReservationTime;
-import roomescape.dto.ReservationResponse;
-import roomescape.dto.ReservationTimeResponse;
+import roomescape.dto.request.ReservationRequest;
+import roomescape.dto.response.ReservationResponse;
 import roomescape.repository.ReservationRepository;
 import roomescape.repository.ReservationTimeRepository;
 
@@ -30,20 +30,19 @@ public class ReservationController {
     }
 
     @PostMapping
-    ResponseEntity<ReservationResponse> create(@RequestBody Reservation reservation) {
-        Reservation createdReservation = reservationRepository.createReservation(reservation);
+    ResponseEntity<ReservationResponse> create(@RequestBody ReservationRequest reservationRequest) {
+        Reservation createdReservation = reservationRepository.createReservation(reservationRequest.toReservation());
         ReservationTime reservationTime = reservationTimeRepository.readReservationTime(createdReservation.getTimeId());
 
-        ReservationTimeResponse reservationTimeResponse = ReservationTimeResponse.of(reservationTime);
-        return ResponseEntity.ok(ReservationResponse.of(createdReservation, reservationTimeResponse));
+        return ResponseEntity.ok(ReservationResponse.of(createdReservation, reservationTime));
     }
 
-    @GetMapping()
+    @GetMapping
     public ResponseEntity<List<ReservationResponse>> read() {
         List<Reservation> reservations = reservationRepository.readReservations();
         List<ReservationResponse> reservationResponses = reservations.stream().map(reservation -> {
             ReservationTime reservationTime = reservationTimeRepository.readReservationTime(reservation.getTimeId());
-            return ReservationResponse.of(reservation, ReservationTimeResponse.of(reservationTime));
+            return ReservationResponse.of(reservation, reservationTime);
         }).toList();
 
         return ResponseEntity.ok(reservationResponses);

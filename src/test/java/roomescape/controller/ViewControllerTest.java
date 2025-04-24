@@ -11,7 +11,7 @@ import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.context.SpringBootTest;
 
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.DEFINED_PORT)
-class PageControllerTest {
+class ViewControllerTest {
     @DisplayName("/ 페이지 연결 테스트(웰컴 페이지)")
     @Test
     void welcomePage() {

@@ -47,16 +47,16 @@ class ReservationTest {
     }
 
     @Test
-    void 지정한_id를_가진_예약_객체를_생성한다() {
+    void 지정한_id를_가진_예약_엔티티를_생성한다() {
         // Given
         String name = "프리";
         LocalDate date = LocalDate.now();
         LocalTime time = LocalTime.now();
         ReservationTime reservationTime = new ReservationTime(time);
-        Reservation reservationExcludeIndex = new Reservation(name, date, reservationTime);
+        Reservation reservation = new Reservation(name, date, reservationTime);
 
         // When
-        Reservation reservationEntity = Reservation.toEntity(reservationExcludeIndex, 1L);
+        Reservation reservationEntity = reservation.toEntity(1L);
 
         // Then
         assertThat(reservationEntity.getId()).isEqualTo(1L);
@@ -66,17 +66,17 @@ class ReservationTest {
     }
 
     @Test
-    void 이미_Entity화_되어있는_객체는_또다시_Entity화_시킬_수_없다() {
+    void 이미_엔티티화_되어있는_객체는_또다시_엔티티화_시킬_수_없다() {
         // Given
         String name = "프리";
         LocalDate date = LocalDate.now();
         LocalTime time = LocalTime.now();
         ReservationTime reservationTime = new ReservationTime(time);
-        Reservation reservationExcludeIndex = new Reservation(name, date, reservationTime);
-        Reservation reservationEntity = Reservation.toEntity(reservationExcludeIndex, 1L);
+        Reservation reservation = new Reservation(name, date, reservationTime);
+        Reservation reservationEntity = reservation.toEntity(1L);
 
         // When & Then
-        assertThatThrownBy(() -> Reservation.toEntity(reservationEntity, 2L))
+        assertThatThrownBy(() -> reservationEntity.toEntity(2L))
                 .isInstanceOf(IllegalArgumentException.class)
                 .hasMessage("이미 Entity화 되어있는 객체입니다.");
     }

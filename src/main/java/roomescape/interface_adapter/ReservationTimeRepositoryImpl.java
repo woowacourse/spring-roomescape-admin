@@ -6,7 +6,7 @@ import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.support.GeneratedKeyHolder;
 import org.springframework.jdbc.support.KeyHolder;
 import org.springframework.stereotype.Repository;
-import roomescape.usecase.ReservationTimeOutputModel;
+import roomescape.usecase.CreateReservationTimeOutput;
 import roomescape.usecase.ReservationTimeRepository;
 
 @Repository
@@ -19,7 +19,7 @@ public class ReservationTimeRepositoryImpl implements ReservationTimeRepository 
     }
 
     @Override
-    public ReservationTimeOutputModel addReservationTime(final LocalTime startAt) {
+    public CreateReservationTimeOutput addReservationTime(final LocalTime startAt) {
         String sql = "insert into reservation_time(start_at) values(?) ";
         KeyHolder keyHolder = new GeneratedKeyHolder();
         jdbcTemplate.update((connection) -> {
@@ -29,7 +29,7 @@ public class ReservationTimeRepositoryImpl implements ReservationTimeRepository 
             return ps;
         }, keyHolder);
         long id = keyHolder.getKey().longValue();
-        return new ReservationTimeOutputModel(id, startAt);
+        return new CreateReservationTimeOutput(id, startAt);
 
     }
 }

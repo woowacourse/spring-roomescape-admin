@@ -23,9 +23,7 @@ public class ReservationService {
         List<Reservation> reservationDaoAll = reservationDao.findAll();
 
         return reservationDaoAll.stream()
-                .map(reservation -> {
-                    return ReservationResponse.toDto(reservation);
-                })
+                .map(ReservationResponse::toDto)
                 .toList();
     }
 
@@ -33,10 +31,6 @@ public class ReservationService {
         ReservationTime reservationTime = timeDao.findById(request.timeId());
         Reservation reservation = request.toReservation(reservationTime);
         return reservationDao.create(reservation);
-    }
-
-    public ReservationTime findReservationTimeById(final Long id) {
-        return timeDao.findById(id);
     }
 
     public int delete(Long id) {

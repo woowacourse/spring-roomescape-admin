@@ -47,7 +47,7 @@ public class ReservationDao {
                     );
 
                     return new Reservation(
-                            resultSet.getLong("id"),
+                            resultSet.getLong("reservation_id"),
                             resultSet.getString("name"),
                             resultSet.getObject("date", LocalDate.class),
                             reservationTime
@@ -66,7 +66,7 @@ public class ReservationDao {
             );
             ps.setString(1, reservation.getName());
             ps.setString(2, reservation.getDate().toString());
-            ps.setString(3, reservation.getReservationTime().getId().toString());
+            ps.setLong(3, reservation.getReservationTime().getId());
             return ps;
         }, keyHolder);
 

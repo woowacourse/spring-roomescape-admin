@@ -52,10 +52,22 @@ public class ReservationTimeTest {
                 .then().log().all()
                 .statusCode(200);
 
+        Map<String, Object> reservation2 = new HashMap<>();
+        reservation2.put("name", "포라");
+        reservation2.put("date", "2025-08-05");
+        reservation2.put("timeId", 2);
+
+        RestAssured.given().log().all()
+                .contentType(ContentType.JSON)
+                .body(reservation2)
+                .when().post("/reservations")
+                .then().log().all()
+                .statusCode(200);
+
         RestAssured.given().log().all()
                 .when().get("/reservations")
                 .then().log().all()
                 .statusCode(200)
-                .body("size()", is(1));
+                .body("size()", is(2));
     }
 }

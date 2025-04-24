@@ -8,6 +8,7 @@ import roomescape.service.dto.ReservationTimeResponse;
 import java.time.LocalTime;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.assertThatThrownBy;
 
 public class ReservationTimeServiceTest {
 
@@ -39,8 +40,8 @@ public class ReservationTimeServiceTest {
     }
 
     @Test
-    @DisplayName("예약 시간 삭제 테스트")
-    public void deleteReservationTimeTest() {
+    @DisplayName("예약 시간 삭제 테스트 - 성공")
+    public void deleteReservationTimeTest1() {
         //given, when
         addReservationTime();
 
@@ -51,13 +52,37 @@ public class ReservationTimeServiceTest {
     }
 
     @Test
+    @DisplayName("예약 시간 삭제 테스트 - 실패")
+    public void deleteReservationTimeTest2() {
+        //given, when
+        addReservationTime();
+
+        //then
+        assertThatThrownBy(() -> reservationTimeService.deleteReservationTimeById(2L))
+                .isInstanceOf(IllegalArgumentException.class)
+                .hasMessage("해당하는 예약 시간이 없습니다.");
+    }
+
+    @Test
     @DisplayName("예약 시간 단건 조회 테스트 - 성공")
-    public void getReservationTimeByIdTest() {
+    public void getReservationTimeByIdTest1() {
         //given, when
         addReservationTime();
 
         //then
         assertThat(reservationTimeService.getReservationTimeById(1L))
                 .isEqualTo(new ReservationTimeResponse(1L, LocalTime.MIN));
+    }
+
+    @Test
+    @DisplayName("예약 시간 단건 조회 테스트 - 실패")
+    public void getReservationTimeByIdTest2() {
+        //given, when
+        addReservationTime();
+
+        //then
+        assertThatThrownBy(() -> reservationTimeService.getReservationTimeById(2L))
+                .isInstanceOf(IllegalArgumentException.class)
+                .hasMessage("해당하는 예약 시간이 없습니다.");
     }
 }

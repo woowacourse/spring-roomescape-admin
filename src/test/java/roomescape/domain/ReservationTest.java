@@ -33,6 +33,7 @@ class ReservationTest {
         LocalDate date = null;
         ReservationTime time = new ReservationTime(LocalTime.now());
 
+        // when // then
         assertThatThrownBy(() -> new Reservation(name, date, time))
                 .isInstanceOf(ReservationFieldRequiredException.class);
     }
@@ -45,6 +46,7 @@ class ReservationTest {
         LocalDate date = LocalDate.now().plusDays(1);
         ReservationTime time = null;
 
+        // when // then
         assertThatThrownBy(() -> new Reservation(name, date, time))
                 .isInstanceOf(ReservationFieldRequiredException.class);
     }

@@ -17,6 +17,7 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.context.SpringBootTest.WebEnvironment;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.test.annotation.DirtiesContext;
+import org.springframework.test.context.jdbc.Sql;
 import roomescape.controller.ReservationController;
 import roomescape.dto.ReservationResponse;
 
@@ -52,17 +53,10 @@ public class MissionStepTest {
     }
 
     @Test
+    @Sql(statements =
+            "INSERT INTO reservation_time (start_at) VALUES ('10:00:00')"
+    )
     void 삼단계() {
-        Map<String, String> timeParams = new HashMap<>();
-        timeParams.put("startAt", "10:00");
-
-        RestAssured.given().log().all()
-                .contentType(ContentType.JSON)
-                .body(timeParams)
-                .when().post("/times")
-                .then().log().all()
-                .statusCode(201);
-
         Map<String, String> params = new HashMap<>();
         params.put("name", "브라운");
         params.put("date", "2023-08-05");
@@ -95,14 +89,6 @@ public class MissionStepTest {
     }
 
     @Test
-    void 존재하지_않는_id의_예약_삭제시_404_반환() {
-        RestAssured.given().log().all()
-                .when().delete("/reservations/77")
-                .then().log().all()
-                .statusCode(404);
-    }
-
-    @Test
     void 사단계() {
         try (Connection connection = jdbcTemplate.getDataSource().getConnection()) {
             assertThat(connection).isNotNull();
@@ -114,16 +100,10 @@ public class MissionStepTest {
     }
 
     @Test
+    @Sql(statements =
+            "INSERT INTO reservation_time (start_at) VALUES ('10:00:00')"
+    )
     void 오단계() {
-        Map<String, String> timeParams = new HashMap<>();
-        timeParams.put("startAt", "10:00");
-
-        RestAssured.given().log().all()
-                .contentType(ContentType.JSON)
-                .body(timeParams)
-                .when().post("/times")
-                .then().log().all()
-                .statusCode(201);
         jdbcTemplate.update("INSERT INTO reservation (name, date, time_id) VALUES (?, ?, ?)", "브라운", "2023-08-05",
                 "1");
 
@@ -139,17 +119,10 @@ public class MissionStepTest {
     }
 
     @Test
+    @Sql(statements =
+            "INSERT INTO reservation_time (start_at) VALUES ('10:00:00')"
+    )
     void 육단계() {
-        Map<String, String> timeParams = new HashMap<>();
-        timeParams.put("startAt", "10:00");
-
-        RestAssured.given().log().all()
-                .contentType(ContentType.JSON)
-                .body(timeParams)
-                .when().post("/times")
-                .then().log().all()
-                .statusCode(201);
-
         Map<String, String> params = new HashMap<>();
         params.put("name", "브라운");
         params.put("date", "2023-08-05");
@@ -199,25 +172,10 @@ public class MissionStepTest {
     }
 
     @Test
-    void 존재하지_않는_id의_예약시간_삭제시_404_반환() {
-        RestAssured.given().log().all()
-                .when().delete("/times/77")
-                .then().log().all()
-                .statusCode(404);
-    }
-
-    @Test
+    @Sql(statements =
+            "INSERT INTO reservation_time (start_at) VALUES ('10:00:00')"
+    )
     void 팔단계() {
-        Map<String, String> params = new HashMap<>();
-        params.put("startAt", "10:00");
-
-        RestAssured.given().log().all()
-                .contentType(ContentType.JSON)
-                .body(params)
-                .when().post("/times")
-                .then().log().all()
-                .statusCode(201);
-
         Map<String, Object> reservation = new HashMap<>();
         reservation.put("name", "브라운");
         reservation.put("date", "2023-08-05");

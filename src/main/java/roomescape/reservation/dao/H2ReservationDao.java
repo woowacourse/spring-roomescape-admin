@@ -26,26 +26,26 @@ public class H2ReservationDao implements Dao<Reservation> {
 
         jdbcTemplate.update(connection -> {
             PreparedStatement preparedStatement = connection.prepareStatement(sql, new String[]{"id"});
-            preparedStatement.setString(1, reservation.getName());
-            preparedStatement.setString(2, reservation.getDate().toString());
-            preparedStatement.setLong(3, reservation.getTime().getId());
+            preparedStatement.setString(1, reservation.name());
+            preparedStatement.setString(2, reservation.date().toString());
+            preparedStatement.setLong(3, reservation.time().id());
             return preparedStatement;
         }, keyHolder);
 
         Long id = keyHolder.getKey().longValue();
-        return new Reservation(id, reservation.getName(), reservation.getDate(), reservation.getTime());
+        return new Reservation(id, reservation.name(), reservation.date(), reservation.time());
     }
 
     @Override
     public Reservation getById(Long id) {
-        String sql = "select id, name, date, time_id from reservation_time where id = ?";
+        String sql = "select id, name, date, time_id from reservation where id = ?";
         return jdbcTemplate.queryForObject(sql,
                 (resultSet, rowNum) -> new Reservation(
                         resultSet.getLong("id"),
                         resultSet.getString("name"),
                         resultSet.getDate("date").toLocalDate(),
                         new ReservationTime(
-                                resultSet.getLong("time_id")
+                                resultSet.getLong("time_id"), null
                         )
                 ));
     }

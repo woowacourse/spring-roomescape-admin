@@ -25,12 +25,12 @@ public class H2ReservationTimeDao implements Dao<ReservationTime> {
 
         jdbcTemplate.update(connection -> {
             PreparedStatement preparedStatement = connection.prepareStatement(sql, new String[]{"id"});
-            preparedStatement.setString(1, time.getStartAt().toString());
+            preparedStatement.setString(1, time.startAt().toString());
             return preparedStatement;
         }, keyHolder);
 
         Long id = keyHolder.getKey().longValue();
-        return new ReservationTime(id, time.getStartAt());
+        return new ReservationTime(id, time.startAt());
     }
 
     @Override

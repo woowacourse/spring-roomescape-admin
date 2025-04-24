@@ -19,7 +19,7 @@ public class FakeJdbcTemplate extends JdbcTemplate {
 
     public FakeJdbcTemplate() {
         LocalDate date = LocalDate.of(2025, 4, 22);
-        ReservationTime time = new ReservationTime(LocalTime.of(10, 0));
+        ReservationTime time = new ReservationTime(null, LocalTime.of(10, 0));
 
         this.database = new ArrayList<>(List.of(
                 new Reservation(1L, "mimi", date, time),
@@ -46,7 +46,7 @@ public class FakeJdbcTemplate extends JdbcTemplate {
     @Override
     public int update(String sql, @Nullable Object... args) {
         Long id = (Long) args[0];
-        database.removeIf(reservation -> reservation.hasSame(id));
+        database.removeIf(reservation -> reservation.isSameId(id));
         return 1;
     }
 

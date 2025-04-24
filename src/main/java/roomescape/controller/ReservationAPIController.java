@@ -24,19 +24,20 @@ import roomescape.dto.ReservationRequest;
 public class ReservationAPIController {
 
     @Autowired
-    JdbcTemplate jdbcTemplate;
+    private JdbcTemplate jdbcTemplate;
 
     @GetMapping
     public ResponseEntity<List<Reservation>> searchReservations() {
         String sql = "select id, name, date, time from reservation";
-        List<Reservation> reservationList = jdbcTemplate.query(sql,
+        List<Reservation> reservations = jdbcTemplate.query(sql,
                 (rs, rowNum) -> new Reservation(
                         rs.getLong("id"),
                         rs.getString("name"),
                         LocalDate.parse(rs.getString("date")),
-                        LocalTime.parse(rs.getString("time")
-                        )));
-        return ResponseEntity.ok().body(reservationList);
+                        LocalTime.parse(rs.getString("time"))
+                )
+        );
+        return ResponseEntity.ok(reservations);
     }
 
     @PostMapping

@@ -7,8 +7,10 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.test.annotation.DirtiesContext;
+import roomescape.controller.api.ReservationRestController;
 import roomescape.dto.ReservationGetResponse;
 
+import java.lang.reflect.Field;
 import java.sql.Connection;
 import java.sql.SQLException;
 import java.time.LocalTime;
@@ -25,6 +27,9 @@ public class MissionStepTest {
 
     @Autowired
     private JdbcTemplate jdbcTemplate;
+
+    @Autowired
+    private ReservationRestController reservationRestController;
 
     @Test
     void 일단계_어드민_홈화면이_성공적으로_반환된다() {
@@ -182,6 +187,19 @@ public class MissionStepTest {
                 .then().log().all()
                 .statusCode(200)
                 .body("size()", is(1));
+    }
 
+    @Test
+    void 구단계_컨트롤러에서_JdbcTemplate_필드가_제거되었는지_검사한다() {
+        boolean isJdbcTemplateInjected = false;
+
+        for (Field field : reservationRestController.getClass().getDeclaredFields()) {
+            if (field.getType().equals(JdbcTemplate.class)) {
+                isJdbcTemplateInjected = true;
+                break;
+            }
+        }
+
+        assertThat(isJdbcTemplateInjected).isFalse();
     }
 }

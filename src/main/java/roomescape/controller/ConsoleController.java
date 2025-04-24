@@ -3,10 +3,12 @@ package roomescape.controller;
 import java.util.List;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Component;
+import roomescape.constant.Function;
 import roomescape.dto.CreateReservationDto;
 import roomescape.dto.CreateReservationTimeDto;
 import roomescape.entity.Reservation;
 import roomescape.entity.ReservationTime;
+import roomescape.exception.InvalidFunctionException;
 import roomescape.service.ReservationService;
 import roomescape.service.ReservationTimeService;
 import roomescape.view.InputView;
@@ -32,44 +34,51 @@ public class ConsoleController {
     public void run() {
         outputView.printStartMessage();
         while (true) {
-            int function = inputView.selectAdminFunction();
-            if (function == 1) {
-                int reservationTimeFunction = inputView.selectReservationTimeFunction();
-                processReservationTimeFunction(reservationTimeFunction);
-            } else if (function == 2) {
-                int reservationFunction = inputView.selectReservationFunction();
-                processReservationFunction(reservationFunction);
-            } else {
-                System.out.println("잘못된 기능 입력입니다.");
-                System.out.println();
+            try {
+                Function function = Function.getSystemFunction(inputView.selectAdminFunction());
+                processSystemFunction(function);
+            } catch (InvalidFunctionException e) {
+                System.out.println(e.getMessage());
             }
         }
     }
 
-    private void processReservationTimeFunction(int function) {
-        if (function == 1) {
+    private void processSystemFunction(Function function) {
+        if (function == Function.RESERVATION_TIME) {
+            Function reservationTimeFunction = Function.getReservationTimeFunction(
+                    inputView.selectReservationTimeFunction());
+            processReservationTimeFunction(reservationTimeFunction);
+        } else if (function == Function.RESERVATION) {
+            Function reservationFunction = Function.getReservationFunction(
+                    inputView.selectReservationFunction());
+            processReservationFunction(reservationFunction);
+        }
+    }
+
+    private void processReservationTimeFunction(Function function) {
+        if (function == Function.ADD_RESERVATION_TIME) {
             CreateReservationTimeDto createReservationTimeDto = inputView.inputCreateReservationTime();
             ReservationTime reservationTime = reservationTimeService.createReservationTime(createReservationTimeDto);
             outputView.printSuccessToCreateReservationTime(reservationTime);
-        } else if (function == 2) {
+        } else if (function == Function.GET_RESERVATION_TIMES) {
             List<ReservationTime> reservationTimes = reservationTimeService.getAllReservationTimes();
             outputView.printReservationTimes(reservationTimes);
-        } else if (function == 3) {
+        } else if (function == Function.DELETE_RESERVATION_TIME) {
             Long id = inputView.inputDeleteReservationTimeId();
             reservationTimeService.deleteReservationTime(id);
             outputView.printSuccessToDeleteReservationTime();
         }
     }
 
-    private void processReservationFunction(int function) {
-        if (function == 1) {
+    private void processReservationFunction(Function function) {
+        if (function == Function.ADD_RESERVATION) {
             CreateReservationDto createReservationDto = inputView.inputCreateReservation();
             Reservation reservation = reservationService.createReservation(createReservationDto);
             outputView.printSuccessToCreateReservation(reservation);
-        } else if (function == 2) {
+        } else if (function == Function.GET_RESERVATIONS) {
             List<Reservation> reservations = reservationService.getAllReservations();
             outputView.printReservations(reservations);
-        } else if (function == 3) {
+        } else if (function == Function.DELETE_RESERVATION) {
             Long id = inputView.inputDeleteReservationId();
             reservationService.deleteReservation(id);
             outputView.printSuccessToDeleteReservation();

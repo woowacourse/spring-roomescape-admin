@@ -1,5 +1,7 @@
 package roomescape.repository.reservationtime;
 
+import java.sql.ResultSet;
+import java.sql.SQLException;
 import java.util.List;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.namedparam.MapSqlParameterSource;
@@ -11,6 +13,11 @@ import roomescape.entity.ReservationTime;
 
 @Repository("reservationTimeJdbcRepository")
 public class ReservationTimeJdbcRepositoryImpl implements ReservationTimeRepository {
+
+    private static final String RESERVATION_TIME_TABLE = "reservation_time";
+    private static final String RESERVATION_TIME_ID = "id";
+    private static final String RESERVATION_TIME_START_AT = "start_at";
+
     private final JdbcTemplate jdbcTemplate;
 
     public ReservationTimeJdbcRepositoryImpl(JdbcTemplate jdbcTemplate) {
@@ -20,12 +27,12 @@ public class ReservationTimeJdbcRepositoryImpl implements ReservationTimeReposit
     @Override
     public Long addAndGetId(CreateReservationTimeDto createReservationTimeDto) {
         SimpleJdbcInsert simpleJdbcInsert = new SimpleJdbcInsert(jdbcTemplate.getDataSource())
-                .withTableName("reservation_time")
-                .usingColumns("start_at")
-                .usingGeneratedKeyColumns("id");
+                .withTableName(RESERVATION_TIME_TABLE)
+                .usingColumns(RESERVATION_TIME_START_AT)
+                .usingGeneratedKeyColumns(RESERVATION_TIME_ID);
 
         SqlParameterSource parameters = new MapSqlParameterSource()
-                .addValue("start_at", createReservationTimeDto.startAt());
+                .addValue(RESERVATION_TIME_START_AT, createReservationTimeDto.startAt());
 
         return simpleJdbcInsert.executeAndReturnKey(parameters).longValue();
     }
@@ -34,25 +41,26 @@ public class ReservationTimeJdbcRepositoryImpl implements ReservationTimeReposit
     public ReservationTime findById(Long id) {
         String sql = "SELECT id, start_at FROM reservation_time WHERE id = ?";
         return jdbcTemplate.queryForObject(sql,
-                (resultSet, rowNum) -> new ReservationTime(
-                        resultSet.getLong("id"),
-                        resultSet.getString("start_at")
-                ), id);
+                (resultSet, rowNum) -> getReservationTimeData(resultSet), id);
     }
 
     @Override
     public List<ReservationTime> findAll() {
         String sql = "SELECT id, start_at FROM reservation_time";
         return jdbcTemplate.query(sql,
-                (resultSet, rowNum) -> new ReservationTime(
-                        resultSet.getLong("id"),
-                        resultSet.getString("start_at")
-                ));
+                (resultSet, rowNum) -> getReservationTimeData(resultSet));
     }
 
     @Override
     public void deleteById(Long id) {
         String sql = "DELETE FROM reservation_time WHERE id = ?";
         jdbcTemplate.update(sql, id);
+    }
+
+    private ReservationTime getReservationTimeData(ResultSet resultSet) throws SQLException {
+        return new ReservationTime(
+                resultSet.getLong(RESERVATION_TIME_ID),
+                resultSet.getString(RESERVATION_TIME_START_AT)
+        );
     }
 }

@@ -13,6 +13,15 @@ import roomescape.entity.ReservationTime;
 
 @Repository("reservationJdbcRepository")
 public class ReservationJdbcRepositoryImpl implements ReservationRepository {
+
+    private static final String RESERVATION_TABLE = "reservation";
+    private static final String RESERVATION_ID = "id";
+    private static final String RESERVATION_NAME = "name";
+    private static final String RESERVATION_DATE = "date";
+
+    private static final String RESERVATION_TIME_ID = "time_id";
+    private static final String RESERVATION_TIME_START_AT = "start_at";
+
     private final JdbcTemplate jdbcTemplate;
 
     public ReservationJdbcRepositoryImpl(JdbcTemplate jdbcTemplate) {
@@ -21,7 +30,7 @@ public class ReservationJdbcRepositoryImpl implements ReservationRepository {
 
     @Override
     public List<Reservation> findAll() {
-        String sql = "SELECT r.id AS r_id, r.name, r.date, rt.id AS rt_id, rt.start_at "
+        String sql = "SELECT r.id AS id, r.name, r.date, rt.id AS time_id, rt.start_at "
                 + "FROM reservation r "
                 + "INNER JOIN reservation_time rt "
                 + "ON r.time_id = rt.id ";
@@ -31,14 +40,14 @@ public class ReservationJdbcRepositoryImpl implements ReservationRepository {
     @Override
     public Long addAndGetId(Reservation reservation) {
         SimpleJdbcInsert insertQuery = new SimpleJdbcInsert(jdbcTemplate.getDataSource())
-                .withTableName("reservation")
-                .usingColumns("name", "date", "time_id")
-                .usingGeneratedKeyColumns("id");
+                .withTableName(RESERVATION_TABLE)
+                .usingColumns(RESERVATION_NAME, RESERVATION_DATE, RESERVATION_TIME_ID)
+                .usingGeneratedKeyColumns(RESERVATION_ID);
 
         SqlParameterSource parameters = new MapSqlParameterSource()
-                .addValue("name", reservation.getName())
-                .addValue("date", reservation.getDate())
-                .addValue("time_id", reservation.getTime().getId());
+                .addValue(RESERVATION_NAME, reservation.getName())
+                .addValue(RESERVATION_DATE, reservation.getDate())
+                .addValue(RESERVATION_TIME_ID, reservation.getTime().getId());
 
         return insertQuery.executeAndReturnKey(parameters).longValue();
     }
@@ -51,7 +60,7 @@ public class ReservationJdbcRepositoryImpl implements ReservationRepository {
 
     @Override
     public Reservation findById(Long id) {
-        String selectSql = "SELECT r.id AS r_id, r.name, r.date, rt.id AS rt_id, rt.start_at "
+        String selectSql = "SELECT r.id AS id, r.name, r.date, rt.id AS time_id, rt.start_at "
                 + "FROM reservation r "
                 + "INNER JOIN reservation_time rt "
                 + "ON r.time_id = rt.id "
@@ -64,13 +73,14 @@ public class ReservationJdbcRepositoryImpl implements ReservationRepository {
 
     private Reservation getReservationData(ResultSet resultSet) throws SQLException {
         ReservationTime reservationTime = new ReservationTime(
-                resultSet.getLong("rt_id"),
-                resultSet.getString("start_at")
+                resultSet.getLong(RESERVATION_TIME_ID),
+                resultSet.getString(RESERVATION_TIME_START_AT)
         );
+
         return new Reservation(
-                resultSet.getLong("id"),
-                resultSet.getString("name"),
-                resultSet.getString("date"),
+                resultSet.getLong(RESERVATION_ID),
+                resultSet.getString(RESERVATION_NAME),
+                resultSet.getString(RESERVATION_DATE),
                 reservationTime
         );
     }

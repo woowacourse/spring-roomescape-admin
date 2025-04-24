@@ -27,10 +27,7 @@ public class ReservationService {
         ReservationTime reservationTime = findReservationTime(reservationRegisterDto.timeId());
         Reservation reservation = reservationRegisterDto.toReservation(reservationTime);
 
-        long savedId = reservationRepository.save(reservation);
-        reservation.setId(savedId);
-
-        return savedId;
+        return reservationRepository.save(reservation);
     }
 
     public ReservationResponseDto findReservationById(final long id) {

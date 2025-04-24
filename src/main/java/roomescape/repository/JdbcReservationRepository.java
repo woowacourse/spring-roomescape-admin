@@ -36,8 +36,8 @@ public class JdbcReservationRepository implements ReservationRepository {
             Long timeId = resultSet.getLong("time_id");
             LocalTime startAt = resultSet.getObject("start_at", LocalTime.class);
             ReservationTime time = new ReservationTime(startAt);
-            Reservation reservation = new Reservation(name, date, ReservationTime.toEntity(time, timeId));
-            return Reservation.toEntity(reservation, id);
+            Reservation reservation = new Reservation(name, date, time.toEntity(timeId));
+            return reservation.toEntity(id);
         });
     }
 
@@ -57,7 +57,7 @@ public class JdbcReservationRepository implements ReservationRepository {
             preparedStatement.setObject(3, reservation.getTime().getId());
             return preparedStatement;
         }, keyHolder);
-        return Reservation.toEntity(reservation, keyHolder.getKeyAs(Long.class));
+        return reservation.toEntity(keyHolder.getKeyAs(Long.class));
     }
 
     @Override

@@ -30,7 +30,7 @@ public class JdbcReservationTimeRepository implements ReservationTimeRepository 
             Long id = resultSet.getLong("id");
             LocalTime startAt = resultSet.getObject("start_at", LocalTime.class);
             ReservationTime reservationTime = new ReservationTime(startAt);
-            return ReservationTime.toEntity(reservationTime, id);
+            return reservationTime.toEntity(id);
         });
     }
 
@@ -45,7 +45,7 @@ public class JdbcReservationTimeRepository implements ReservationTimeRepository 
         Map<String, Object> params = new HashMap<>();
         params.put("start_at", reservationTime.getStartAt());
         Long id = simpleJdbcInsert.executeAndReturnKey(params).longValue();
-        return ReservationTime.toEntity(reservationTime, id);
+        return reservationTime.toEntity(id);
     }
 
     @Override
@@ -58,7 +58,12 @@ public class JdbcReservationTimeRepository implements ReservationTimeRepository 
     public ReservationTime findById(Long id) {
         String sql = "SELECT * FROM reservation_time WHERE id = ?";
         return jdbcTemplate.queryForObject(sql,
-                (resultSet, rowNum) -> ReservationTime.toEntity(new ReservationTime(resultSet.getObject("start_at", LocalTime.class)), resultSet.getLong("id")),
+                (resultSet, rowNum) -> {
+                    Long timeId = resultSet.getLong("id");
+                    LocalTime startAt = resultSet.getObject("start_at", LocalTime.class);
+                    ReservationTime reservationTime = new ReservationTime(startAt);
+                    return reservationTime.toEntity(timeId);
+                },
                 id);
     }
 }

@@ -40,11 +40,11 @@ public class Reservation {
         }
     }
 
-    public static Reservation toEntity(Reservation reservation, Long id) {
-        if (reservation.isEntity()) {
+    public Reservation toEntity(Long id) {
+        if (isEntity()) {
             throw new IllegalArgumentException("이미 Entity화 되어있는 객체입니다.");
         }
-        return new Reservation(id, reservation.name, reservation.date, reservation.time);
+        return new Reservation(id, name, date, time);
     }
 
     private boolean isEntity() {

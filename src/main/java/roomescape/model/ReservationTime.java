@@ -18,11 +18,11 @@ public class ReservationTime {
         this.startAt = startAt;
     }
 
-    public static ReservationTime toEntity(ReservationTime reservationTime, Long id) {
-        if (reservationTime.isEntity()) {
+    public ReservationTime toEntity(Long id) {
+        if (isEntity()) {
             throw new IllegalArgumentException("이미 Entity화 되어있는 객체입니다.");
         }
-        return new ReservationTime(id, reservationTime.startAt);
+        return new ReservationTime(id, startAt);
     }
 
     private boolean isEntity() {

@@ -8,38 +8,34 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
-import roomescape.domain.Reservation;
-import roomescape.domain.Reservations;
-import roomescape.dto.ReservationRequest;
-import roomescape.dto.ReservationResponse;
+import roomescape.controller.dto.ReservationRequest;
+import roomescape.controller.dto.ReservationResponse;
+import roomescape.service.ReservationService;
 
 @RestController
 @RequestMapping("/reservations")
 public class ReservationController {
 
-    private final Reservations reservations = new Reservations();
+    private final ReservationService reservationService;
 
-    @GetMapping
-    public List<ReservationResponse> getReservations() {
-        return reservations.getReservations().stream()
-                .map(ReservationResponse::new)
-                .toList();
+    public ReservationController(final ReservationService reservationService) {
+        this.reservationService = reservationService;
     }
 
     @PostMapping
     public ReservationResponse createReservation(
             @RequestBody final ReservationRequest reservationRequest
     ) {
-        final Reservation reservation = reservations.createReservation(
-                reservationRequest.name(),
-                reservationRequest.date(),
-                reservationRequest.time()
-        );
-        return new ReservationResponse(reservation);
+        return reservationService.createReservation(reservationRequest);
+    }
+
+    @GetMapping
+    public List<ReservationResponse> getReservations() {
+        return reservationService.getReservations();
     }
 
     @DeleteMapping("/{id}")
-    public void deleteReservation(@PathVariable("id") final Long id) {
-        reservations.deleteReservationById(id);
+    public void deleteReservation(@PathVariable("id") final long id) {
+        reservationService.deleteReservation(id);
     }
 }

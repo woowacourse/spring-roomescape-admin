@@ -13,6 +13,7 @@ import org.springframework.jdbc.core.simple.SimpleJdbcInsert;
 import org.springframework.stereotype.Repository;
 import roomescape.domain.Reservation;
 import roomescape.domain.ReservationDate;
+import roomescape.domain.ReservationDateTime;
 import roomescape.domain.ReservationTime;
 import roomescape.domain.ReserverName;
 
@@ -26,8 +27,8 @@ public class H2ReservationRepository implements ReservationRepository {
         final LocalDate date = rs.getDate("date").toLocalDate();
         final long timeId = rs.getLong("time_id");
         final LocalTime time = rs.getTime("time_value").toLocalTime();
-        return new Reservation(id, new ReserverName(name), new ReservationDate(date),
-                new ReservationTime(timeId, time));
+        return new Reservation(id, new ReserverName(name), new ReservationDateTime(new ReservationDate(date),
+                new ReservationTime(timeId, time)));
     };
 
     private final JdbcTemplate jdbcTemplate;

@@ -37,12 +37,13 @@ public class ReservationController {
         final Reservation reservation = reservationDao.createReservation(
                 reservationRequest.name(),
                 reservationRequest.date(),
-                reservationRequest.time());
+                reservationRequest.timeId()
+        );
         return new ReservationResponse(reservation);
     }
 
     @DeleteMapping("/{id}")
-    public void deleteReservation(@PathVariable("id") final Long id) {
+    public void deleteReservation(@PathVariable("id") final long id) {
         reservationDao.deleteReservationById(id);
     }
 }

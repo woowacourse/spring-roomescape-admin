@@ -18,7 +18,7 @@
 - [x] 예약을 추가할 수 있다.
 - [x] 예약을 취소할 수 있다.
 
-## 7단계 - 시간 관리 기능
+## 7, 8단계 - 시간 관리 기능
 
 - [ ] 예약 시간을 시간표에서 선택할 수 있다.
 - [ ] 예약을 조회할 수 있다.
@@ -50,7 +50,10 @@ Content-Type: application/json
         "id": "Long",
         "name": String,
         "date": LocalDate (YYYY-MM-DD),
-        "time": LocalTime (HH:mm)
+        "time": {
+            "id": Long,
+            "startAt" : LocalTime (HH:mm)
+        }
     }
 ]
 ```
@@ -64,7 +67,7 @@ POST /reservations
 {
     "name": String,
     "date": LocalDate (YYYY-MM-DD),
-    "time": LocalTime (HH:mm)
+    "timeId": Long
 }
 
 Response
@@ -74,7 +77,10 @@ HTTP/1.1 200
     "id": Long,
     "name": String,
     "date": LocalDate (YYYY-MM-DD),
-    "time": LocalTime (HH:mm)
+    "time": {
+        "id": Long,
+        "startAt" : LocalTime (HH:mm)
+    }
 }
 
 ```

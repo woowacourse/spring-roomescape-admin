@@ -4,10 +4,12 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 import java.util.Objects;
+import java.util.concurrent.atomic.AtomicLong;
 import roomescape.common.Dao;
 import roomescape.reservation.Reservation;
 
 public class CollectionReservationDao implements Dao<Reservation> {
+    private final AtomicLong index = new AtomicLong(0);
     private final List<Reservation> reservations;
 
     public CollectionReservationDao() {
@@ -20,8 +22,13 @@ public class CollectionReservationDao implements Dao<Reservation> {
 
     @Override
     public Reservation add(Reservation reservation) {
-        reservations.add(reservation);
-        return reservation;
+        Reservation newReservation = new Reservation(
+                index.incrementAndGet(),
+                reservation.name(),
+                reservation.date(),
+                reservation.time());
+        reservations.add(newReservation);
+        return newReservation;
     }
 
     @Override

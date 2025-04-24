@@ -14,6 +14,13 @@ import java.util.List;
 @Repository
 public class JdbcReservationTimeRepository implements ReservationTimeRepository {
 
+    private static final RowMapper<ReservationTime> rowMapper = ((rs, rowNum) -> {
+        String startAt = rs.getString("start_at");
+        LocalTime reservationStartAt = LocalTime.parse(startAt);
+        ReservationTime reservationTime = new ReservationTime(rs.getLong("id"), reservationStartAt);
+        return reservationTime;
+    });
+
     private final JdbcTemplate jdbcTemplate;
 
     public JdbcReservationTimeRepository(JdbcTemplate jdbcTemplate) {
@@ -38,13 +45,14 @@ public class JdbcReservationTimeRepository implements ReservationTimeRepository 
     @Override
     public List<ReservationTime> findAll() {
         String sql = "select * from reservation_time";
-        RowMapper<ReservationTime> rowMapper = ((rs, rowNum) -> {
-            String startAt = rs.getString("start_at");
-            LocalTime reservationStartAt = LocalTime.parse(startAt);
-            ReservationTime reservationTime = new ReservationTime(rs.getLong("id"), reservationStartAt);
-            return reservationTime;
-        });
+
         return jdbcTemplate.query(sql, rowMapper);
+    }
+
+    @Override
+    public ReservationTime findById(Long id) {
+        String sql = "select * from reservation_time where id = ?";
+        return jdbcTemplate.queryForObject(sql, rowMapper, id);
     }
 
     @Override

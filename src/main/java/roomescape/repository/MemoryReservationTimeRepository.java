@@ -36,4 +36,12 @@ public class MemoryReservationTimeRepository implements ReservationTimeRepositor
 
         reservationTimes.remove(deleteReservation);
     }
+
+    @Override
+    public ReservationTime findById(Long id) {
+        return reservationTimes.stream()
+                .filter(reservationTime -> Objects.equals(reservationTime.id(), id))
+                .findFirst()
+                .orElseThrow(() -> new IllegalStateException("No ReservationTime with id: " + id));
+    }
 }

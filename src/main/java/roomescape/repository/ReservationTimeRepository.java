@@ -6,9 +6,11 @@ import java.util.List;
 
 public interface ReservationTimeRepository {
 
-    public ReservationTime save(ReservationTime reservationTime);
+    ReservationTime save(ReservationTime reservationTime);
 
-    public List<ReservationTime> findAll();
+    List<ReservationTime> findAll();
 
-    public void deleteById(Long id);
+    void deleteById(Long id);
+
+    ReservationTime findById(Long id);
 }

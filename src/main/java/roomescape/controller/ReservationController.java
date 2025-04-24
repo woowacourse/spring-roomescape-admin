@@ -28,7 +28,7 @@ public class ReservationController {
         try {
             ReservationResponseDto responseDto = reservationService.createReservation(requestDto);
             return ResponseEntity.ok(responseDto);
-        } catch (IllegalArgumentException e) {
+        } catch (IllegalStateException e) {
             return ResponseEntity.badRequest().build();
         }
     }

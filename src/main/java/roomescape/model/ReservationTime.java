@@ -14,7 +14,11 @@ public final class ReservationTime {
         this.startAt = startAt;
     }
 
-    private void validateNotNullTime(LocalTime time) {
+    public ReservationTime(final LocalTime startAt) {
+        this(null, startAt);
+    }
+
+    private void validateNotNullTime(final LocalTime time) {
         if (time == null) {
             throw new DomainException("예약 시간이 입력되지 않았습니다.");
         }

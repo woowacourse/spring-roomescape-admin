@@ -26,7 +26,7 @@ public class ReservationTimeController {
     }
 
     @GetMapping
-    public ResponseEntity<List<ReservationTimeResponse>> getTimes() {
+    public ResponseEntity<List<ReservationTimeResponse>> getReservationTimes() {
         List<ReservationTimeResponse> reservationTimes = reservationTimeDao.findAll()
                 .stream()
                 .map(ReservationTimeResponse::toDto)
@@ -35,13 +35,13 @@ public class ReservationTimeController {
     }
 
     @PostMapping
-    public ResponseEntity<ReservationTimeResponse> createTime(@RequestBody final ReservationTimeRequest reservationTimeRequest) {
+    public ResponseEntity<ReservationTimeResponse> createReservationTime(@RequestBody final ReservationTimeRequest reservationTimeRequest) {
         ReservationTime newReservationTime = reservationTimeDao.insert(reservationTimeRequest.toEntity());
         return ResponseEntity.ok().body(ReservationTimeResponse.toDto(newReservationTime));
     }
 
     @DeleteMapping("/{id}")
-    public ResponseEntity<Void> deleteById(@PathVariable("id") final Long id) {
+    public ResponseEntity<Void> deleteReservationTime(@PathVariable("id") final Long id) {
         if (reservationTimeDao.deleteById(id)) {
             return ResponseEntity.ok().build();
         }

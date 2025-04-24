@@ -51,9 +51,8 @@ public class JdbcReservationDAO implements ReservationDAO {
 
     @Override
     public boolean existsByDateAndTimeId(final LocalDate date, final long timeId) {
-        String query = "SELECT COUNT(*) FROM reservation WHERE date = ? AND time_id = ?";
-        Integer found = jdbcTemplate.queryForObject(query, Integer.class, date, timeId);
-        return found != null && found > 0;
+        String query = "SELECT EXISTS (SELECT 1 FROM reservation WHERE date = ? AND time_id = ?) AS exist";
+        return Boolean.TRUE.equals(jdbcTemplate.queryForObject(query, Boolean.class, date, timeId));
     }
 
     @Override

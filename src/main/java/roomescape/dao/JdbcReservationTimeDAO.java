@@ -52,9 +52,8 @@ public class JdbcReservationTimeDAO implements ReservationTimeDAO {
 
     @Override
     public boolean existsByStartAt(final LocalTime startAt) {
-        String query = "SELECT COUNT(*) FROM reservation_time WHERE start_at = ?";
-        Integer found = jdbcTemplate.queryForObject(query, Integer.class, startAt);
-        return found != null && found > 0;
+        String query = "SELECT EXISTS (SELECT 1 FROM reservation_time WHERE start_at = ?)";
+        return Boolean.TRUE.equals(jdbcTemplate.queryForObject(query, Boolean.class, startAt));
     }
 
     @Override

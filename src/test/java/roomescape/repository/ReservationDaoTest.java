@@ -1,4 +1,4 @@
-package roomescape.dao;
+package roomescape.repository;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
@@ -11,8 +11,8 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.jdbc.JdbcTest;
 import org.springframework.jdbc.core.JdbcTemplate;
-import roomescape.domain.Reservation;
-import roomescape.domain.ReservationTime;
+import roomescape.service.domain.Reservation;
+import roomescape.service.domain.ReservationTime;
 
 @JdbcTest
 class ReservationDaoTest {
@@ -52,7 +52,7 @@ class ReservationDaoTest {
                     FOREIGN KEY (time_id) REFERENCES reservation_time (id)
                 );
                 """);
-        reservationTime = reservationTimeDao.createReservationTime(time);
+        reservationTime = reservationTimeDao.createReservationTime(new ReservationTime(time));
     }
 
     @DisplayName("새로운 예약을 생성할 수 있다.")
@@ -62,7 +62,7 @@ class ReservationDaoTest {
         String name = "norang";
         LocalDate date = LocalDate.of(2025, 9, 24);
         // when
-        Reservation reservation = reservationDao.createReservation(name, date, 1L);
+        Reservation reservation = reservationDao.createReservation(new Reservation(name, date, 1L));
         // then
         assertThat(reservation).isEqualTo(
                 new Reservation(1L, name, date, new ReservationTime(1L, LocalTime.of(10, 0))));
@@ -74,7 +74,7 @@ class ReservationDaoTest {
         // given
         String name = "norang";
         LocalDate date = LocalDate.of(2025, 9, 24);
-        reservationDao.createReservation(name, date, 1L);
+        reservationDao.createReservation(new Reservation(name, date, 1L));
         // when
         reservationDao.deleteReservationById(1L);
         // then
@@ -87,7 +87,7 @@ class ReservationDaoTest {
         // given
         String name = "norang";
         LocalDate date = LocalDate.of(2025, 9, 24);
-        Reservation reservation = reservationDao.createReservation(name, date, 1L);
+        Reservation reservation = reservationDao.createReservation(new Reservation(name, date, 1L));
         // when
         // then
         assertThat(reservationDao.getReservations()).containsExactly(reservation);

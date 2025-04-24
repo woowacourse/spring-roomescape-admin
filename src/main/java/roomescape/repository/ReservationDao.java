@@ -1,7 +1,6 @@
-package roomescape.dao;
+package roomescape.repository;
 
 import java.sql.Date;
-import java.time.LocalDate;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -10,8 +9,8 @@ import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;
 import org.springframework.jdbc.core.simple.SimpleJdbcInsert;
 import org.springframework.stereotype.Repository;
-import roomescape.domain.Reservation;
-import roomescape.domain.ReservationTime;
+import roomescape.service.domain.Reservation;
+import roomescape.service.domain.ReservationTime;
 
 @Repository
 public class ReservationDao {
@@ -51,8 +50,8 @@ public class ReservationDao {
         return jdbcTemplate.query(sql, reservationRowMapper);
     }
 
-    public Reservation createReservation(final String name, final LocalDate date, final long timeId) {
-        long id = insertReservationAndRetrieveKey(name, date, timeId);
+    public Reservation createReservation(final Reservation convertedRequest) {
+        Long id = insertReservationAndRetrieveKey(convertedRequest);
         return getReservationById(id);
     }
 
@@ -77,11 +76,11 @@ public class ReservationDao {
         return jdbcTemplate.queryForObject(sql, reservationRowMapper, id);
     }
 
-    private long insertReservationAndRetrieveKey(final String name, final LocalDate date, final long timeId) {
+    private long insertReservationAndRetrieveKey(final Reservation convertedRequest) {
         final Map<String, Object> parameters = new HashMap<>(Map.of(
-                "name", name,
-                "date", Date.valueOf(date),
-                "time_id", timeId)
+                "name", convertedRequest.getName(),
+                "date", Date.valueOf(convertedRequest.getDate()),
+                "time_id", convertedRequest.getTimeId())
         );
         return (long) reservationInserter.executeAndReturnKey(parameters);
     }

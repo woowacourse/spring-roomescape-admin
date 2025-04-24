@@ -1,4 +1,4 @@
-package roomescape.dao;
+package roomescape.repository;
 
 import java.time.LocalTime;
 import java.util.HashMap;
@@ -9,7 +9,7 @@ import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;
 import org.springframework.jdbc.core.simple.SimpleJdbcInsert;
 import org.springframework.stereotype.Repository;
-import roomescape.domain.ReservationTime;
+import roomescape.service.domain.ReservationTime;
 
 @Repository
 public class ReservationTimeDao {
@@ -29,8 +29,8 @@ public class ReservationTimeDao {
                 .usingGeneratedKeyColumns("id");
     }
 
-    public ReservationTime createReservationTime(final LocalTime time) {
-        final long id = insertReservationTimeAndRetrieveKey(time);
+    public ReservationTime createReservationTime(final ReservationTime reservationTime) {
+        final Long id = insertReservationTimeAndRetrieveKey(reservationTime);
         return getReservationTimeById(id);
     }
 
@@ -49,8 +49,8 @@ public class ReservationTimeDao {
         return jdbcTemplate.queryForObject(sql, reservationTimeRowMapper, id);
     }
 
-    private long insertReservationTimeAndRetrieveKey(final LocalTime time) {
-        final Map<String, Object> parameters = new HashMap<>(Map.of("start_at", time));
+    private long insertReservationTimeAndRetrieveKey(final ReservationTime reservationTime) {
+        final Map<String, Object> parameters = new HashMap<>(Map.of("start_at", reservationTime.getStartAt()));
         return (long) reservationTimeInserter.executeAndReturnKey(parameters);
     }
 }

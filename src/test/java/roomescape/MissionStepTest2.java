@@ -92,9 +92,6 @@ public class MissionStepTest2 { // TODO 2025. 4. 22. 20:31: class명 수정
 
     @Test
     void 칠단계() {
-//        Map<String, String> params = new HashMap<>();
-//        params.put("startAt", "10:00");
-
         ReservationTimeReqDto dto = new ReservationTimeReqDto(LocalTime.of(10, 10));
 
         RestAssured.given().log().all()

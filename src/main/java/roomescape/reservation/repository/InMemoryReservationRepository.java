@@ -35,4 +35,19 @@ public class InMemoryReservationRepository implements ReservationRepository {
     public Optional<Reservation> findById(final long id) {
         return Optional.ofNullable(reservations.get(id));
     }
+
+    @Override
+    public Long getCachedId(final Reservation reservation) {
+        return 0L;
+    }
+
+    @Override
+    public void cacheId(final Reservation reservation, final Long id) {
+
+    }
+
+    @Override
+    public void clearAllCachedIds() {
+
+    }
 }

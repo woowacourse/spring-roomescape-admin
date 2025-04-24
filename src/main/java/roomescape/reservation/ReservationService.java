@@ -7,26 +7,22 @@ import roomescape.reservation.domain.Reservation;
 import roomescape.reservation.dto.request.ReservationCreateRequest;
 import roomescape.reservation.dto.response.ReservationCreateResponse;
 import roomescape.reservation.dto.response.ReservationGetResponse;
-import roomescape.reservation.repository.ReservationIdCache;
 import roomescape.reservation.repository.ReservationRepository;
 
 @Service
 public class ReservationService {
 
     private final ReservationRepository reservationRepository;
-    private final ReservationIdCache cache;
 
-    public ReservationService(final ReservationRepository reservationRepository, final ReservationIdCache cache) {
+    public ReservationService(final ReservationRepository reservationRepository) {
         this.reservationRepository = reservationRepository;
-        this.cache = cache;
     }
 
     public List<ReservationGetResponse> getReservations() {
-        List<ReservationGetResponse> response = reservationRepository.getAll().stream()
-                .map(reservation -> ReservationGetResponse.from(cache.get(reservation), reservation))
+        return reservationRepository.getAll().stream()
+                .map(reservation -> ReservationGetResponse.from(reservationRepository.getCachedId(reservation),
+                        reservation))
                 .toList();
-        cache.clear();
-        return response;
     }
 
     public void delete(long id) {
@@ -37,9 +33,8 @@ public class ReservationService {
 
     public ResponseEntity<ReservationCreateResponse> create(final ReservationCreateRequest request) {
         Reservation newReservation = reservationRepository.put(request.toReservation());
-        long newId = cache.get(newReservation);
-        cache.clear();
+        long newId = reservationRepository.getCachedId(newReservation);
+        reservationRepository.clearAllCachedIds();
         return ResponseEntity.ok(ReservationCreateResponse.from(newId, newReservation));
-
     }
 }

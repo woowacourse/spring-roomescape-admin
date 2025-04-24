@@ -34,7 +34,7 @@ public class H2ReservationRepository implements ReservationRepository {
                             resultSet.getString("time")
                     );
                     Reservation reservation = entity.toReservation();
-                    cache.put(reservation, entity.id());
+                    cacheId(reservation, entity.id());
                     return reservation;
                 }
         );
@@ -49,7 +49,7 @@ public class H2ReservationRepository implements ReservationRepository {
                 Map.of("name", reservation.getName(), "date", reservation.getDate(), "time",
                         reservation.getTime())).longValue();
 
-        cache.put(reservation, generatedId);
+        cacheId(reservation, generatedId);
         return reservation;
     }
 
@@ -71,5 +71,20 @@ public class H2ReservationRepository implements ReservationRepository {
         );
         return Optional.ofNullable(reservationEntity)
                 .map(ReservationEntity::toReservation);
+    }
+
+    @Override
+    public Long getCachedId(final Reservation reservation) {
+        return cache.get(reservation);
+    }
+
+    @Override
+    public void cacheId(final Reservation reservation, final Long id) {
+        cache.put(reservation, id);
+    }
+
+    @Override
+    public void clearAllCachedIds() {
+        cache.clear();
     }
 }

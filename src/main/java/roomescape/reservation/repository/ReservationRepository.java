@@ -12,4 +12,10 @@ public interface ReservationRepository {
     void deleteById(long id);
 
     Optional<Reservation> findById(long id);
+
+    Long getCachedId(Reservation reservation);
+
+    void cacheId(Reservation reservation, Long id);
+
+    void clearAllCachedIds();
 }

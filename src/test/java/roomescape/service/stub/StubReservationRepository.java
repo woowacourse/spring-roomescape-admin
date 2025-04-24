@@ -1,4 +1,4 @@
-package roomescape;
+package roomescape.service.stub;
 
 import java.time.LocalDate;
 import java.time.LocalTime;
@@ -6,6 +6,8 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 import java.util.concurrent.atomic.AtomicLong;
+import roomescape.Reservation;
+import roomescape.ReservationTime;
 import roomescape.repository.ReservationRepository;
 
 public class StubReservationRepository implements ReservationRepository {

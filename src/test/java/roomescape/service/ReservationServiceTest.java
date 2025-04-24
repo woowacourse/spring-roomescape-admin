@@ -11,10 +11,10 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import roomescape.Reservation;
 import roomescape.ReservationTime;
-import roomescape.StubReservationRepository;
-import roomescape.StubReservationTimeRepository;
 import roomescape.controller.dto.ReservationRequest;
 import roomescape.service.dto.ReservationResponse;
+import roomescape.service.stub.StubReservationRepository;
+import roomescape.service.stub.StubReservationTimeRepository;
 
 class ReservationServiceTest {
 

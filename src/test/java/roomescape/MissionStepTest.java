@@ -158,7 +158,7 @@ public class MissionStepTest {
     @Test
     void 칠단계() {
         Map<String, String> params = new HashMap<>();
-        params.put("startAt", "10:00");
+        params.put("startAt", "20:00");
 
         RestAssured.given().log().all()
                 .contentType(ContentType.JSON)
@@ -171,7 +171,7 @@ public class MissionStepTest {
                 .when().get("/times")
                 .then().log().all()
                 .statusCode(200)
-                .body("size()", is(1));
+                .body("size()", is(6));
 
         RestAssured.given().log().all()
                 .when().delete("/times/1")

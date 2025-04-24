@@ -5,6 +5,7 @@ import org.springframework.jdbc.support.GeneratedKeyHolder;
 import org.springframework.jdbc.support.KeyHolder;
 import org.springframework.stereotype.Repository;
 import roomescape.reservation.domain.Reservation;
+import roomescape.reservationTime.domain.ReservationTime;
 
 import java.sql.PreparedStatement;
 import java.util.List;
@@ -20,14 +21,28 @@ public class ReservationRepositoryImpl implements ReservationRepository {
 
     @Override
     public List<Reservation> findAll() {
+        String sql = "SELECT \n" +
+                "    r.id as reservation_id, \n" +
+                "    r.name, \n" +
+                "    r.date, \n" +
+                "    t.id as time_id, \n" +
+                "    t.start_at as time_value \n" +
+                "FROM reservation as r \n" +
+                "inner join reservation_time as t \n" +
+                "on r.time_id = t.id\n";
         return jdbcTemplate.query(
-                "select id, name, date, time from reservation",
+                sql,
                 (resultSet, rowNum) -> {
+                    ReservationTime time = new ReservationTime(
+                            resultSet.getLong("time_id"),
+                            resultSet.getTime("time_value").toLocalTime()
+                    );
+
                     Reservation reservation = new Reservation(
                             resultSet.getLong("id"),
                             resultSet.getString("name"),
                             resultSet.getDate("date").toLocalDate(),
-                            resultSet.getTime("time").toLocalTime()
+                            time
                     );
                     return reservation;
                 });
@@ -43,7 +58,7 @@ public class ReservationRepositoryImpl implements ReservationRepository {
                                 resultSet.getLong("id"),
                                 resultSet.getString("name"),
                                 resultSet.getDate("date").toLocalDate(),
-                                resultSet.getTime("time").toLocalTime()
+                                new ReservationTime(resultSet.getTime("time").toLocalTime())
                         ), id);
     }
 
@@ -69,7 +84,7 @@ public class ReservationRepositoryImpl implements ReservationRepository {
                     new String[]{"id"});
             ps.setString(1, reservation.getName());
             ps.setString(2, reservation.getDate().toString());
-            ps.setString(3, reservation.getTime().toString());
+            ps.setString(3, reservation.getReservationTime().toString());
             return ps;
         }, keyHolder);
 

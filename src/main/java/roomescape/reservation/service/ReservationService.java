@@ -59,7 +59,7 @@ public class ReservationService {
                 reservation.getId(),
                 reservation.getName(),
                 reservation.getDate(),
-                reservation.getTime()
+                reservation.getReservationTime().getStartAt()
         );
     }
 }

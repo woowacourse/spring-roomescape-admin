@@ -1,7 +1,7 @@
-package roomescape.dto;
+package roomescape.presentation.dto;
 
 import java.time.LocalTime;
-import roomescape.domain.Time;
+import roomescape.business.domain.Time;
 
 public record TimeRequest(LocalTime startAt) {
 

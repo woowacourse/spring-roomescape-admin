@@ -1,9 +1,9 @@
-package roomescape.entity;
+package roomescape.data.entity;
 
 import java.time.LocalDate;
 import java.time.LocalTime;
 import org.springframework.jdbc.core.RowMapper;
-import roomescape.domain.Reservation;
+import roomescape.business.domain.Reservation;
 
 public record ReservationEntity(
         Long id,

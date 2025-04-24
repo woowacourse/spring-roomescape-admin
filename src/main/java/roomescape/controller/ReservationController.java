@@ -9,47 +9,33 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
-import roomescape.dao.ReservationDao;
-import roomescape.dao.ReservationTimeDao;
-import roomescape.domain.Reservation;
-import roomescape.domain.ReservationTime;
-import roomescape.domain.Reservations;
 import roomescape.dto.request.ReservationRequest;
 import roomescape.dto.response.ReservationResponse;
+import roomescape.service.ReservationService;
 
 @RestController
 @RequestMapping("reservations")
 public class ReservationController {
 
-    private final ReservationDao reservationDao;
-    private final ReservationTimeDao reservationTimeDao;
+    private final ReservationService reservationService;
 
-    public ReservationController(ReservationDao reservationDao, ReservationTimeDao reservationTimeDao) {
-        this.reservationDao = reservationDao;
-        this.reservationTimeDao = reservationTimeDao;
+    public ReservationController(ReservationService reservationService) {
+        this.reservationService = reservationService;
     }
 
     @GetMapping
     public List<ReservationResponse> getReservations() {
-        Reservations reservations = reservationDao.findAll();
-        return reservations.getReservations().stream()
-                .map(ReservationResponse::new)
-                .toList();
+        return reservationService.getReservations();
     }
 
     @PostMapping
-    public ReservationResponse createReservation(@RequestBody ReservationRequest request) {
-        ReservationTime reservationTime = reservationTimeDao.findById(request.timeId());
-
-        Reservation newReservation = request.toReservation(null, reservationTime);
-        Reservation savedReservation = reservationDao.save(newReservation);
-
-        return new ReservationResponse(savedReservation);
+    public ReservationResponse saveReservation(@RequestBody ReservationRequest request) {
+        return reservationService.saveReservation(request);
     }
 
     @DeleteMapping("{id}")
     public void deleteReservation(@PathVariable Long id, HttpServletResponse response) {
-        boolean isDeleted = reservationDao.deleteById(id);
+        boolean isDeleted = reservationService.deleteReservation(id);
 
         if (!isDeleted) {
             response.setStatus(HttpServletResponse.SC_NOT_FOUND);

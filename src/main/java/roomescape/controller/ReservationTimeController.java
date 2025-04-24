@@ -9,41 +9,33 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
-import roomescape.dao.ReservationTimeDao;
-import roomescape.domain.ReservationTime;
-import roomescape.domain.ReservationTimes;
 import roomescape.dto.request.ReservationTimeRequest;
 import roomescape.dto.response.ReservationTimeResponse;
+import roomescape.service.ReservationTimeService;
 
 @RestController
 @RequestMapping("times")
 public class ReservationTimeController {
 
-    private final ReservationTimeDao reservationTimeDao;
+    private final ReservationTimeService reservationTimeService;
 
-    public ReservationTimeController(ReservationTimeDao reservationTimeDao) {
-        this.reservationTimeDao = reservationTimeDao;
+    public ReservationTimeController(final ReservationTimeService reservationTimeService) {
+        this.reservationTimeService = reservationTimeService;
     }
 
     @GetMapping
     public List<ReservationTimeResponse> getReservationTimes() {
-        ReservationTimes reservationTimes = reservationTimeDao.findAll();
-        return reservationTimes.getReservationTimes().stream()
-                .map(ReservationTimeResponse::new)
-                .toList();
+        return reservationTimeService.getReservationTimes();
     }
 
     @PostMapping
-    public ReservationTimeResponse createReservationTime(@RequestBody ReservationTimeRequest request) {
-        ReservationTime newReservationTime = request.toReservationTime(null);
-        ReservationTime savedReservationTime = reservationTimeDao.save(newReservationTime);
-
-        return new ReservationTimeResponse(savedReservationTime);
+    public ReservationTimeResponse saveReservationTime(@RequestBody ReservationTimeRequest request) {
+        return reservationTimeService.saveReservationTime(request);
     }
 
     @DeleteMapping("{id}")
     public void deleteReservationTime(@PathVariable Long id, HttpServletResponse response) {
-        boolean isDeleted = reservationTimeDao.deleteById(id);
+        boolean isDeleted = reservationTimeService.deleteReservationTime(id);
 
         if (!isDeleted) {
             response.setStatus(HttpServletResponse.SC_NOT_FOUND);

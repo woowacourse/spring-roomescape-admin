@@ -50,7 +50,7 @@ class ReservationControllerTest {
 
     @Test
     void 예약_추가_요청을_성공한다() {
-        Map<String, String> params = createReservationData();
+        Map<String, String> params = saveReservationData();
 
         RestAssured.given().log().all()
                 .contentType(ContentType.JSON)
@@ -62,7 +62,7 @@ class ReservationControllerTest {
 
     @Test
     void 요청으로_추가된_예약_정보를_응답한다() {
-        Map<String, String> params = createReservationData();
+        Map<String, String> params = saveReservationData();
 
         RestAssured.given().log().all()
                 .contentType(ContentType.JSON)
@@ -152,7 +152,7 @@ class ReservationControllerTest {
     }
 
     private void createAndSendReservation() {
-        Map<String, String> params = createReservationData();
+        Map<String, String> params = saveReservationData();
 
         RestAssured.given().log().all()
                 .contentType(ContentType.JSON)
@@ -160,7 +160,7 @@ class ReservationControllerTest {
                 .when().post("/reservations");
     }
 
-    private Map<String, String> createReservationData() {
+    private Map<String, String> saveReservationData() {
         return Map.of(
                 "name", "브라운",
                 "date", "2023-08-05",

@@ -82,7 +82,7 @@ public class ReservationTimeControllerTest {
     }
 
     private void createAndSendReservationTime() {
-        Map<String, String> params = createReservationTimeData();
+        Map<String, String> params = saveReservationTimeData();
 
         RestAssured.given().log().all()
                 .contentType(ContentType.JSON)
@@ -90,7 +90,7 @@ public class ReservationTimeControllerTest {
                 .when().post("/times");
     }
 
-    private Map<String, String> createReservationTimeData() {
+    private Map<String, String> saveReservationTimeData() {
         Map<String, String> params = new HashMap<>();
         params.put("startAt", "10:00");
         return params;

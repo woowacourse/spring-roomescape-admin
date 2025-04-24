@@ -21,20 +21,20 @@ public class ReservationService {
         this.reservationTimeRepository = reservationTimeRepository;
     }
 
-    public List<ReservationResponseDto> findAllReservationResponses() {
-        List<Reservation> allReservations = reservationRepository.findAll();
-
-        return allReservations.stream()
-                .map(reservation -> ReservationResponseDto.from(reservation, reservation.time()))
-                .toList();
-    }
-
     public ReservationResponseDto createReservation(ReservationCreateRequestDto dto) {
         ReservationTime reservationTime = reservationTimeRepository.findById(dto.timeId());
         Reservation requestReservation = dto.toEntityWith(reservationTime);
         Reservation newReservation = reservationRepository.save(requestReservation);
         ReservationResponseDto reservationResponseDto = ReservationResponseDto.from(newReservation, newReservation.time());
         return reservationResponseDto;
+    }
+
+    public List<ReservationResponseDto> findAllReservationResponses() {
+        List<Reservation> allReservations = reservationRepository.findAll();
+
+        return allReservations.stream()
+                .map(reservation -> ReservationResponseDto.from(reservation, reservation.time()))
+                .toList();
     }
 
     public void deleteReservation(Long id) {

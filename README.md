@@ -26,7 +26,7 @@
     - `localhost:8080/admin`: admin/index page
 - [x] 예약 관리 페이지가 응답한다.
     - `/admin/reservation`: admin/reservation-legacy page
-- [ ] 시간 관리 페이지를 응답한다.
+- [x] 시간 관리 페이지를 응답한다.
   - `/admin/time`: templates/admin/time page
 - [x] 예약 관리 페이지 로드 시 예약 목록을 조회한다.
     - request `GET /reservations HTTP/1.1`

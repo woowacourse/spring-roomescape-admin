@@ -5,7 +5,6 @@ import java.util.List;
 import static org.assertj.core.api.Assertions.assertThat;
 import org.junit.jupiter.api.Assertions;
 import static org.junit.jupiter.api.Assertions.assertThrows;
-import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.web.server.ResponseStatusException;
 import roomescape.FakeReservationTimeRepositoryImpl;
@@ -18,11 +17,6 @@ public class ReservationTimeServiceTest {
 
     private final ReservationTimeService reservationTimeService = new ReservationTimeService(
             fakeReservationTimeRepositoryImpl);
-
-    @BeforeEach
-    void setUp() {
-        fakeReservationTimeRepositoryImpl.clear();
-    }
 
     @Test
     void 예약_시각_저장_시에_저장된_id를_반환한다() {

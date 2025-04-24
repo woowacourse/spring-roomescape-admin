@@ -7,16 +7,11 @@ import java.util.Optional;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.atomic.AtomicLong;
 import roomescape.domain.ReservationTime;
+import roomescape.repository.ReservationTimeRepository;
 
-public class FakeReservationTimeRepositoryImpl implements FakeReservationTimeRepository {
+public class FakeReservationTimeRepositoryImpl implements ReservationTimeRepository {
     private final Map<Long, ReservationTime> sources = new ConcurrentHashMap<>();
     private final AtomicLong id = new AtomicLong(1L);
-
-    @Override
-    public void clear() {
-        sources.clear();
-        id.set(1L);
-    }
 
     @Override
     public long save(final ReservationTime reservationTime) {

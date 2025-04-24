@@ -15,14 +15,14 @@ import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import static org.junit.jupiter.api.Assertions.assertAll;
 
-class MemoryReservationRepositoryTest {
+class FakeReservationRepositoryTest {
 
     ReservationRepository reservationRepository;
 
     @DisplayName("Reservation을 저장할 수 있다")
     @Test
     void saveReservationTest() {
-        reservationRepository = new MemoryReservationRepository(new ArrayList<>());
+        reservationRepository = new FakeReservationRepository(new ArrayList<>());
 
         ReservationTime reservationTime = new ReservationTime(2L, LocalTime.now());
         Reservation reservation = new Reservation(null, "가이온", LocalDate.now(), reservationTime);
@@ -44,7 +44,7 @@ class MemoryReservationRepositoryTest {
         ReservationTime reservationTime3 = new ReservationTime(3L, LocalTime.now());
         Reservation reservation3 = new Reservation(3L, "가이온3", LocalDate.now(), reservationTime3);
 
-        reservationRepository = new MemoryReservationRepository(List.of(reservation1, reservation2, reservation3));
+        reservationRepository = new FakeReservationRepository(List.of(reservation1, reservation2, reservation3));
 
         List<Reservation> allReservations = reservationRepository.findAll();
         Long reservationId = allReservations.get(0).id();
@@ -62,7 +62,7 @@ class MemoryReservationRepositoryTest {
     @DisplayName("원하는 Id의 Reservation을 삭제할 수 있디")
     @Test
     void deleteReservationTest() {
-        reservationRepository = new MemoryReservationRepository(new ArrayList<>());
+        reservationRepository = new FakeReservationRepository(new ArrayList<>());
         ReservationTime reservationTime = new ReservationTime(1L, LocalTime.now());
         Reservation reservation = new Reservation(null, "가이온1", LocalDate.now(), reservationTime);
         reservationRepository.save(reservation);
@@ -75,7 +75,7 @@ class MemoryReservationRepositoryTest {
     @DisplayName("존재하지 않는 Id의 Reservation을 삭제할 수 없다")
     @Test
     void invalidDeleteReservationTest() {
-        reservationRepository = new MemoryReservationRepository(new ArrayList<>());
+        reservationRepository = new FakeReservationRepository(new ArrayList<>());
         ReservationTime reservationTime = new ReservationTime(1L, LocalTime.now());
         Reservation reservation = new Reservation(null, "가이온1", LocalDate.now(), reservationTime);
         reservationRepository.save(reservation);

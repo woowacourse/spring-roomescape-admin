@@ -13,14 +13,14 @@ import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertAll;
 import static org.junit.jupiter.api.Assertions.assertDoesNotThrow;
 
-class MemoryReservationTimeRepositoryTest {
+class FakeReservationTimeRepositoryTest {
 
     ReservationTimeRepository reservationTimeRepository;
 
     @DisplayName("Reservation Time을 저장할 수 있다")
     @Test
     void saveReservationTimeTest() {
-        reservationTimeRepository = new MemoryReservationTimeRepository(new ArrayList<>());
+        reservationTimeRepository = new FakeReservationTimeRepository(new ArrayList<>());
         ReservationTime reservationTime = new ReservationTime(null, LocalTime.now());
 
         ReservationTime savedReservation = reservationTimeRepository.save(reservationTime);
@@ -35,7 +35,7 @@ class MemoryReservationTimeRepositoryTest {
         ReservationTime reservationTime1 = new ReservationTime(1L, LocalTime.now());
         ReservationTime reservationTime2 = new ReservationTime(2L, LocalTime.now());
         ReservationTime reservationTime3 = new ReservationTime(3L, LocalTime.now());
-        reservationTimeRepository = new MemoryReservationTimeRepository(List.of(reservationTime1, reservationTime2, reservationTime3));
+        reservationTimeRepository = new FakeReservationTimeRepository(List.of(reservationTime1, reservationTime2, reservationTime3));
 
         List<ReservationTime> allReservationTimes = reservationTimeRepository.findAll();
 
@@ -56,7 +56,7 @@ class MemoryReservationTimeRepositoryTest {
     void deleteReservationTimeTest() {
         ArrayList<ReservationTime> reservationTimes = new ArrayList<>();
         reservationTimes.add(new ReservationTime(1L, LocalTime.now()));
-        reservationTimeRepository = new MemoryReservationTimeRepository(reservationTimes);
+        reservationTimeRepository = new FakeReservationTimeRepository(reservationTimes);
 
         Long deleteId = 1L;
 
@@ -68,7 +68,7 @@ class MemoryReservationTimeRepositoryTest {
     void deleteInvalidReservationTimeTest() {
         ArrayList<ReservationTime> reservationTimes = new ArrayList<>();
         reservationTimes.add(new ReservationTime(1L, LocalTime.now()));
-        reservationTimeRepository = new MemoryReservationTimeRepository(reservationTimes);
+        reservationTimeRepository = new FakeReservationTimeRepository(reservationTimes);
 
         Long deleteId = 5L;
 

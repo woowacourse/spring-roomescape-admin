@@ -8,8 +8,8 @@ import roomescape.domain.ReservationTime;
 import roomescape.dto.ReservationCreateRequestDto;
 import roomescape.dto.ReservationResponseDto;
 import roomescape.dto.ReservationTimeResponseDto;
-import roomescape.repository.MemoryReservationRepository;
-import roomescape.repository.MemoryReservationTimeRepository;
+import roomescape.repository.FakeReservationRepository;
+import roomescape.repository.FakeReservationTimeRepository;
 import roomescape.repository.ReservationRepository;
 import roomescape.repository.ReservationTimeRepository;
 
@@ -31,8 +31,8 @@ class ReservationServiceTest {
     void createReservationTest() {
         LocalTime startTime = LocalTime.now();
 
-        ReservationRepository reservationRepository = new MemoryReservationRepository(new ArrayList<>());
-        ReservationTimeRepository reservationTimeRepository = new MemoryReservationTimeRepository(List.of(new ReservationTime(1L, startTime)));
+        ReservationRepository reservationRepository = new FakeReservationRepository(new ArrayList<>());
+        ReservationTimeRepository reservationTimeRepository = new FakeReservationTimeRepository(List.of(new ReservationTime(1L, startTime)));
         reservationService = new ReservationService(reservationRepository, reservationTimeRepository);
 
         ReservationCreateRequestDto requestDto = new ReservationCreateRequestDto("가이온", LocalDate.now(), 1L);
@@ -57,8 +57,8 @@ class ReservationServiceTest {
     @DisplayName("요청한 ReservationTime의 id가 존재하지 않으면 Reservation을 생성할 수 없다")
     @Test
     void createInvalidReservationIdTest() {
-        ReservationRepository reservationRepository = new MemoryReservationRepository(new ArrayList<>());
-        ReservationTimeRepository reservationTimeRepository = new MemoryReservationTimeRepository(new ArrayList<>());
+        ReservationRepository reservationRepository = new FakeReservationRepository(new ArrayList<>());
+        ReservationTimeRepository reservationTimeRepository = new FakeReservationTimeRepository(new ArrayList<>());
         reservationService = new ReservationService(reservationRepository, reservationTimeRepository);
 
         ReservationCreateRequestDto requestDto = new ReservationCreateRequestDto("가이온", LocalDate.now(), 1L);
@@ -74,8 +74,8 @@ class ReservationServiceTest {
         Reservation reservation1 = new Reservation(1L, "가이온", LocalDate.of(2025, 4, 24), reservationTime);
         Reservation reservation2 = new Reservation(2L, "홍길동", LocalDate.of(2025, 4, 25), reservationTime);
 
-        ReservationRepository reservationRepository = new MemoryReservationRepository(new ArrayList<>(List.of(reservation1, reservation2)));
-        ReservationTimeRepository reservationTimeRepository = new MemoryReservationTimeRepository(List.of(reservationTime));
+        ReservationRepository reservationRepository = new FakeReservationRepository(new ArrayList<>(List.of(reservation1, reservation2)));
+        ReservationTimeRepository reservationTimeRepository = new FakeReservationTimeRepository(List.of(reservationTime));
         ReservationService reservationService = new ReservationService(reservationRepository, reservationTimeRepository);
 
         List<ReservationResponseDto> responses = reservationService.findAllReservationResponses();
@@ -91,8 +91,8 @@ class ReservationServiceTest {
         ReservationTime reservationTime = new ReservationTime(1L, startTime);
         Reservation reservation = new Reservation(1L, "가이온", LocalDate.of(2025, 4, 24), reservationTime);
 
-        ReservationRepository reservationRepository = new MemoryReservationRepository(new ArrayList<>(List.of(reservation)));
-        ReservationTimeRepository reservationTimeRepository = new MemoryReservationTimeRepository(List.of(reservationTime));
+        ReservationRepository reservationRepository = new FakeReservationRepository(new ArrayList<>(List.of(reservation)));
+        ReservationTimeRepository reservationTimeRepository = new FakeReservationTimeRepository(List.of(reservationTime));
         ReservationService reservationService = new ReservationService(reservationRepository, reservationTimeRepository);
 
         reservationService.deleteReservation(1L);
@@ -108,8 +108,8 @@ class ReservationServiceTest {
         ReservationTime reservationTime = new ReservationTime(1L, startTime);
         Reservation reservation = new Reservation(1L, "가이온", LocalDate.of(2025, 4, 24), reservationTime);
 
-        ReservationRepository reservationRepository = new MemoryReservationRepository(new ArrayList<>(List.of(reservation)));
-        ReservationTimeRepository reservationTimeRepository = new MemoryReservationTimeRepository(List.of(reservationTime));
+        ReservationRepository reservationRepository = new FakeReservationRepository(new ArrayList<>(List.of(reservation)));
+        ReservationTimeRepository reservationTimeRepository = new FakeReservationTimeRepository(List.of(reservationTime));
         ReservationService reservationService = new ReservationService(reservationRepository, reservationTimeRepository);
 
         assertThatThrownBy(() -> reservationService.deleteReservation(2L)).isInstanceOf(IllegalStateException.class);

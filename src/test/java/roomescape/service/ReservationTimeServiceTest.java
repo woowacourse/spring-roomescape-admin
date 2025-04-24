@@ -4,7 +4,7 @@ import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import roomescape.dto.ReservationTimeCreateRequestDto;
 import roomescape.dto.ReservationTimeResponseDto;
-import roomescape.repository.MemoryReservationTimeRepository;
+import roomescape.repository.FakeReservationTimeRepository;
 import roomescape.repository.ReservationTimeRepository;
 
 import java.time.LocalTime;
@@ -16,7 +16,7 @@ import static org.assertj.core.api.AssertionsForClassTypes.assertThatThrownBy;
 
 class ReservationTimeServiceTest {
 
-    ReservationTimeRepository reservationTimeRepository = new MemoryReservationTimeRepository(new ArrayList<>());
+    ReservationTimeRepository reservationTimeRepository = new FakeReservationTimeRepository(new ArrayList<>());
     ReservationTimeService reservationTimeService = new ReservationTimeService(reservationTimeRepository);
 
     @DisplayName("ReservationTime을 생성할 수 있다")

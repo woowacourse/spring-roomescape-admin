@@ -6,12 +6,12 @@ import java.util.List;
 import java.util.Objects;
 import java.util.concurrent.atomic.AtomicLong;
 
-public class MemoryReservationRepository implements ReservationRepository {
+public class FakeReservationRepository implements ReservationRepository {
 
     private List<Reservation> reservations;
     AtomicLong reservationId = new AtomicLong(1);
 
-    public MemoryReservationRepository(final List<Reservation> reservations) {
+    public FakeReservationRepository(final List<Reservation> reservations) {
         this.reservations = reservations;
     }
 

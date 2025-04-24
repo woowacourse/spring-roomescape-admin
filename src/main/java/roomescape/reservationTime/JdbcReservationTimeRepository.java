@@ -42,12 +42,30 @@ public class JdbcReservationTimeRepository implements ReservationTimeRepository 
         return jdbcTemplate.query(
                 query,
                 (result, rowNum) -> {
-                    ReservationTime reservationTime = new ReservationTime(
+                    return new ReservationTime(
                             result.getLong("id"),
                             result.getTime("start_at").toLocalTime()
                     );
-                    return reservationTime;
                 }
         );
     }
+
+    @Override
+    public ReservationTime findById(Long wantToFindId) {
+        String query = "SELECT id, start_at FROM reservation_time WHERE id = ?";
+        return findReservationTimeById(wantToFindId, query);
+    }
+
+    private ReservationTime findReservationTimeById(Long wantToFindId, String findQuery) {
+        return jdbcTemplate.queryForObject(
+                findQuery,
+                (result, rowNum) -> {
+                    return new ReservationTime(
+                            result.getLong("id"),
+                            result.getTime("start_at").toLocalTime()
+                    );
+                }
+                , wantToFindId);
+    }
+
 }

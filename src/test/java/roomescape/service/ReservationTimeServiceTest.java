@@ -35,9 +35,7 @@ class ReservationTimeServiceTest {
         List<ReservationTimeResponse> responses = reservationTimeService.findAll();
 
         //then
-        assertAll(() -> {
-            assertThat(responses).hasSize(1);
-        });
+        assertAll(() -> assertThat(responses).hasSize(1));
     }
 
     @DisplayName("id를 통해 예약 시간을 찾는다.")

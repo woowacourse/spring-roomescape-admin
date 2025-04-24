@@ -20,13 +20,10 @@ public class ReservationTimeDao implements ReservationTimeRepository {
         this.jdbcTemplate = jdbcTemplate;
     }
 
-    private final RowMapper<ReservationTime> reservationTimeRowMapper = (resultSet, rowNum) -> {
-        ReservationTime reservationTime = new ReservationTime(
-                resultSet.getLong("id"),
-                LocalTime.parse(resultSet.getString("start_at"))
-        );
-        return reservationTime;
-    };
+    private final RowMapper<ReservationTime> reservationTimeRowMapper = (resultSet, rowNum) -> new ReservationTime(
+            resultSet.getLong("id"),
+            LocalTime.parse(resultSet.getString("start_at"))
+    );
 
     public ReservationTime save(ReservationTime reservationTime) {
         KeyHolder keyHolder = new GeneratedKeyHolder();

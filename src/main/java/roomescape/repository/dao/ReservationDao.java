@@ -23,18 +23,15 @@ public class ReservationDao implements ReservationRepository {
         this.jdbcTemplate = jdbcTemplate;
     }
 
-    private final RowMapper<Reservation> reservationRowMapper = (resultSet, rowNum) -> {
-        Reservation reservation = new Reservation(
-                resultSet.getLong("reservation_id"),
-                Name.from(resultSet.getString("name")),
-                LocalDate.parse(resultSet.getString("date")),
-                new ReservationTime(
-                        resultSet.getLong("time_id"),
-                        LocalTime.parse(resultSet.getString("time_value"))
-                )
-        );
-        return reservation;
-    };
+    private final RowMapper<Reservation> reservationRowMapper = (resultSet, rowNum) -> new Reservation(
+            resultSet.getLong("reservation_id"),
+            Name.from(resultSet.getString("name")),
+            LocalDate.parse(resultSet.getString("date")),
+            new ReservationTime(
+                    resultSet.getLong("time_id"),
+                    LocalTime.parse(resultSet.getString("time_value"))
+            )
+    );
 
     public Reservation save(Reservation reservation) {
         KeyHolder keyHolder = new GeneratedKeyHolder();
@@ -54,15 +51,17 @@ public class ReservationDao implements ReservationRepository {
     }
 
     public List<Reservation> findAll() {
-        String sql = "SELECT \n"
-                + "    r.id as reservation_id, \n"
-                + "    r.name, \n"
-                + "    r.date, \n"
-                + "    t.id as time_id, \n"
-                + "    t.start_at as time_value \n"
-                + "FROM reservation as r \n"
-                + "inner join reservation_time as t \n"
-                + "on r.time_id = t.id";
+        String sql = """
+                SELECT
+                    r.id as reservation_id,
+                    r.name,
+                    r.date,
+                    t.id as time_id,
+                    t.start_at as time_value
+                FROM reservation as r
+                inner join reservation_time as t
+                on r.time_id = t.id
+                """;
 
         return jdbcTemplate.query(
                 sql, reservationRowMapper
@@ -70,16 +69,18 @@ public class ReservationDao implements ReservationRepository {
     }
 
     public Reservation findById(long id) {
-        String sql = "SELECT \n"
-                + "    r.id as reservation_id, \n"
-                + "    r.name, \n"
-                + "    r.date, \n"
-                + "    t.id as time_id, \n"
-                + "    t.start_at as time_value \n"
-                + "FROM reservation as r \n"
-                + "inner join reservation_time as t \n"
-                + "on r.time_id = t.id  \n"
-                + "WHERE r.id = ?";
+        String sql = """
+                SELECT
+                    r.id as reservation_id,
+                    r.name,
+                    r.date,
+                    t.id as time_id,
+                    t.start_at as time_value
+                FROM reservation as r
+                inner join reservation_time as t
+                on r.time_id = t.id
+                WHERE r.id = ?
+                """;
 
         return jdbcTemplate.queryForObject(sql, reservationRowMapper, id);
     }

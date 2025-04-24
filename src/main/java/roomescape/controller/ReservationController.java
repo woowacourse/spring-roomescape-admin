@@ -12,10 +12,10 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.server.ResponseStatusException;
-import roomescape.repository.ReservationRepository;
 import roomescape.domain.Reservation;
 import roomescape.dto.request.ReservationRequest;
 import roomescape.dto.response.ReservationResponse;
+import roomescape.repository.ReservationRepository;
 
 @RestController
 @RequestMapping("/reservations")
@@ -35,10 +35,10 @@ public class ReservationController {
     }
 
     @PostMapping
-    public ResponseEntity<ReservationResponse> createReservation(
+    public ResponseEntity<Reservation> createReservation(
             @Valid @RequestBody final ReservationRequest reservationRequest) {
         final Reservation reservation = makeReservation(reservationRequest);
-        return ResponseEntity.ok(ReservationResponse.from(reservation));
+        return ResponseEntity.ok(reservation);
     }
 
     @DeleteMapping("/{id}")
@@ -49,7 +49,7 @@ public class ReservationController {
     private Reservation makeReservation(final ReservationRequest reservationRequest) {
         try {
             return reservationRepository.insert(reservationRequest.name(), reservationRequest.date(),
-                    reservationRequest.time());
+                    reservationRequest.timeId());
         } catch (IllegalArgumentException e) {
             throw new ResponseStatusException(HttpStatus.BAD_REQUEST);
         }

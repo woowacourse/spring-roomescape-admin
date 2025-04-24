@@ -11,9 +11,9 @@ public class Reservation {
     private final long id;
     private final String name;
     private final LocalDate date;
-    private final LocalTime time;
+    private final ReservationTime time;
 
-    public Reservation(final long id, final String name, final LocalDate date, final LocalTime time) {
+    public Reservation(final long id, final String name, final LocalDate date, final ReservationTime time) {
         validate(name, date, time);
         this.id = id;
         this.name = name;
@@ -21,7 +21,7 @@ public class Reservation {
         this.time = time;
     }
 
-    private void validate(final String name, final LocalDate date, final LocalTime time) {
+    private void validate(final String name, final LocalDate date, final ReservationTime time) {
         validateName(name);
         validateDateTime(date, time);
     }
@@ -35,7 +35,7 @@ public class Reservation {
         }
     }
 
-    private void validateDateTime(final LocalDate date, final LocalTime time) {
+    private void validateDateTime(final LocalDate date, final ReservationTime time) {
         if (date == null) {
             throw new IllegalArgumentException("[ERROR] 날짜는 null이 될 수 없습니다.");
         }
@@ -55,7 +55,11 @@ public class Reservation {
         return name;
     }
 
-    public LocalDateTime getDateTime() {
-        return LocalDateTime.of(date, time);
+    public LocalDate getDate() {
+        return date;
+    }
+
+    public ReservationTime getTime() {
+        return time;
     }
 }

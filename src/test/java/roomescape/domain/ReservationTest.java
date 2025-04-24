@@ -8,7 +8,7 @@ import org.junit.jupiter.api.Test;
 class ReservationTest {
 
     private final LocalDate date = LocalDate.now();
-    private final LocalTime time = LocalTime.now();
+    private final ReservationTime time = new ReservationTime(1, LocalTime.now());
 
     @Test
     void 이름이_null인_경우_예외를_발생시킨다() {

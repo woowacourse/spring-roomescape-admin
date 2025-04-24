@@ -68,10 +68,12 @@ public class MissionStepTest {
 
             @Test
             void 예약을_추가한다() {
+                makeReservationTime();
+
                 Map<String, String> params = new HashMap<>();
                 params.put("name", "브라운");
                 params.put("date", makeTodayMessage());
-                params.put("time", "15:40");
+                params.put("timeId", "1");
 
                 RestAssured.given().log().all()
                         .contentType(ContentType.JSON)
@@ -90,40 +92,48 @@ public class MissionStepTest {
 
             @Test
             void 이름_null_검증_테스트() {
+                makeReservationTime();
+
                 Map<String, String> params = new HashMap<>();
                 params.put("name", null);
                 params.put("date", makeTodayMessage());
-                params.put("time", "15:40");
+                params.put("timeId", "1");
 
                 createBadReservation(params);
             }
 
             @Test
             void 이름_size_검증_테스트() {
+                makeReservationTime();
+
                 Map<String, String> params = new HashMap<>();
                 params.put("name", "잠실에사는비행기데코피크민");
                 params.put("date", makeTodayMessage());
-                params.put("time", "15:40");
+                params.put("timeId", "1");
 
                 createBadReservation(params);
             }
 
             @Test
             void 날짜_null_검증_테스트() {
+                makeReservationTime();
+
                 Map<String, String> params = new HashMap<>();
                 params.put("name", "밍트");
                 params.put("date", null);
-                params.put("time", "15:40");
+                params.put("timeId", "1");
 
                 createBadReservation(params);
             }
 
             @Test
             void 과거_날짜_검증_테스트() {
+                makeReservationTime();
+
                 Map<String, String> params = new HashMap<>();
                 params.put("name", "밍트");
                 params.put("date", makeYesterdayMessage());
-                params.put("time", "15:40");
+                params.put("timeId", "1");
 
                 createBadReservation(params);
             }
@@ -133,9 +143,14 @@ public class MissionStepTest {
                 Map<String, String> params = new HashMap<>();
                 params.put("name", "밍트");
                 params.put("date", makeTodayMessage());
-                params.put("time", null);
+                params.put("timeId", null);
 
-                createBadReservation(params);
+                RestAssured.given().log().all()
+                        .contentType(ContentType.JSON)
+                        .body(params)
+                        .when().post("/reservations")
+                        .then().log().all()
+                        .statusCode(500);
             }
 
             private void createBadReservation(final Map<String, String> params) {
@@ -150,10 +165,12 @@ public class MissionStepTest {
 
         @Test
         void 예약을_삭제한다() {
+            makeReservationTime();
+
             Map<String, String> params = new HashMap<>();
             params.put("name", "브라운");
             params.put("date", makeTodayMessage());
-            params.put("time", "15:40");
+            params.put("timeId", "1");
 
             RestAssured.given().log().all()
                     .contentType(ContentType.JSON)
@@ -214,9 +231,10 @@ public class MissionStepTest {
 
         @Test
         void 오단계() {
+            makeReservationTime();
+
             String date = LocalDate.now().toString();
-            String time = LocalTime.now().format(timeFormatter);
-            jdbcTemplate.update("INSERT INTO reservation (name, date, time) VALUES (?, ?, ?)", "브라운", date, time);
+            jdbcTemplate.update("INSERT INTO reservation (name, date, time_id) VALUES (?, ?, ?)", "브라운", date, "1");
 
             List<Reservation> reservations = RestAssured.given().log().all()
                     .when().get("/reservations")
@@ -238,13 +256,14 @@ public class MissionStepTest {
 
         @Test
         void 육단계() {
+            makeReservationTime();
+
             String date = LocalDate.now().toString();
-            String time = LocalTime.now().format(timeFormatter);
 
             Map<String, String> params = new HashMap<>();
             params.put("name", "브라운");
             params.put("date", date);
-            params.put("time", time);
+            params.put("timeId", "1");
 
             RestAssured.given().log().all()
                     .contentType(ContentType.JSON)
@@ -271,27 +290,14 @@ public class MissionStepTest {
 
         @Test
         void 예약시간을_생성한다() {
-            Map<String, String> params = new HashMap<>();
-            params.put("startAt", "10:00");
-
-            RestAssured.given().log().all()
-                    .contentType(ContentType.JSON)
-                    .body(params)
-                    .when().post("/times")
-                    .then().log().all()
-                    .statusCode(200);
-
-            RestAssured.given().log().all()
-                    .when().get("/times")
-                    .then().log().all()
-                    .statusCode(200)
-                    .body("size()", is(1));
+            makeReservationTime();
         }
 
         @Test
         void 예약시간을_삭제한다() {
             Map<String, String> params = new HashMap<>();
-            params.put("startAt", "10:00");
+            String time = LocalTime.now().format(timeFormatter);
+            params.put("startAt", time);
 
             RestAssured.given().log().all()
                     .contentType(ContentType.JSON)
@@ -316,6 +322,69 @@ public class MissionStepTest {
                     .then().log().all()
                     .statusCode(200)
                     .body("size()", is(0));
+        }
+    }
+
+    private void makeReservationTime() {
+        Map<String, String> params = new HashMap<>();
+        String time = LocalTime.now().format(timeFormatter);
+        params.put("startAt", time);
+
+        RestAssured.given().log().all()
+                .contentType(ContentType.JSON)
+                .body(params)
+                .when().post("/times")
+                .then().log().all()
+                .statusCode(200);
+
+        RestAssured.given().log().all()
+                .when().get("/times")
+                .then().log().all()
+                .statusCode(200)
+                .body("size()", is(1));
+    }
+
+    @Nested
+    class Step8 {
+
+        @Test
+        void 팔단계() {
+            Map<String, String> params = new HashMap<>();
+            String time = LocalTime.now().format(timeFormatter);
+            params.put("startAt", time);
+
+            RestAssured.given().log().all()
+                    .contentType(ContentType.JSON)
+                    .body(params)
+                    .when().post("/times")
+                    .then().log().all()
+                    .statusCode(200);
+
+            RestAssured.given().log().all()
+                    .when().get("/times")
+                    .then().log().all()
+                    .statusCode(200)
+                    .body("size()", is(1));
+
+            String date = LocalDate.now().toString();
+
+            Map<String, Object> reservation = new HashMap<>();
+            reservation.put("name", "브라운");
+            reservation.put("date", date);
+            reservation.put("timeId", 1);
+
+            RestAssured.given().log().all()
+                    .contentType(ContentType.JSON)
+                    .body(reservation)
+                    .when().post("/reservations")
+                    .then().log().all()
+                    .statusCode(200);
+
+            RestAssured.given().log().all()
+                    .when().get("/reservations")
+                    .then().log().all()
+                    .statusCode(200)
+                    .body("size()", is(1));
         }
     }
 }

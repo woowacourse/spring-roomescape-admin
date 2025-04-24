@@ -9,6 +9,7 @@ import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.simple.SimpleJdbcInsert;
 import org.springframework.stereotype.Repository;
 import roomescape.domain.Reservation;
+import roomescape.domain.ReservationTime;
 
 @Repository
 public class ReservationRepositoryImpl implements ReservationRepository {
@@ -25,25 +26,50 @@ public class ReservationRepositoryImpl implements ReservationRepository {
 
     @Override
     public List<Reservation> findAll() {
-        final String sql = "select * from reservation";
+        final String sql = """
+                SELECT
+                    r.id as reservation_id,
+                    r.name,
+                    r.date,
+                    t.id as time_id,
+                    t.start_at as time_value
+                FROM reservation as r
+                inner join reservation_time as t
+                on r.time_id = t.id
+                """;
         List<Reservation> query = jdbcTemplate.query(sql, (resultSet, rowNumber) -> {
             long id = resultSet.getInt("id");
             String name = resultSet.getString("name");
             LocalDate date = LocalDate.parse(resultSet.getString("date"));
-            LocalTime time = LocalTime.parse(resultSet.getString("time"));
-            return new Reservation(id, name, date, time);
+            long timeId = resultSet.getLong("time_id");
+            LocalTime time = LocalTime.parse(resultSet.getString("time_value"));
+            ReservationTime reservationTime = new ReservationTime(timeId, time);
+            return new Reservation(id, name, date, reservationTime);
         });
         return query;
     }
 
     @Override
-    public Reservation insert(final String name, final LocalDate date, final LocalTime time) {
+    public Reservation insert(final String name, final LocalDate date, final long timeId) {
+        long id = insertReservation(name, date, timeId);
+        ReservationTime reservationTime = findReservationTime(timeId);
+        return new Reservation(id, name, date, reservationTime);
+    }
+
+    private ReservationTime findReservationTime(final long timeId) {
+        final String sql = "select * from reservation_time where id = ?";
+        return jdbcTemplate.queryForObject(sql, (resultSet, rowNumber) -> {
+            LocalTime startTime = LocalTime.parse(resultSet.getString("start_at"));
+            return new ReservationTime(timeId, startTime);
+        }, timeId);
+    }
+
+    private long insertReservation(final String name, final LocalDate date, final long timeId) {
         Map<String, Object> parameters = new HashMap<>();
         parameters.put("name", name);
-        parameters.put("date", date);
-        parameters.put("time", time);
-        long id = (long) simpleJdbcInsert.executeAndReturnKey(parameters);
-        return new Reservation(id, name, date, time);
+        parameters.put("date", date.toString());
+        parameters.put("time_id", timeId);
+        return (long) simpleJdbcInsert.executeAndReturnKey(parameters);
     }
 
     @Override

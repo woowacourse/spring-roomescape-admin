@@ -25,6 +25,8 @@ public class ConsoleController {
     private final ReservationService reservationService;
     private final ReservationTimeService reservationTimeService;
 
+    private boolean keepRun = true;
+
     public ConsoleController(
             final InputView inputView,
             final OutputView outputView,
@@ -38,44 +40,46 @@ public class ConsoleController {
     }
 
     public void run() {
-        while (true) {
+        while (keepRun) {
             try {
-                switch (inputView.getCommandType()) {
-                    case 예약_전체_조회 -> {
-                        final List<ReservationResponse> result = reservationService.getAll();
-                        outputView.printAllReservations(result);
-                    }
-                    case 예약_추가 -> {
-                        final ReservationCreateRequest request = inputView.getReservationCreateRequest();
-                        final ReservationResponse reservation = reservationService.saveAndGet(request);
-                        outputView.printSavedReservation(reservation);
-                    }
-                    case 예약_삭제 -> {
-                        final long id = inputView.getDeleteReservationId();
-                        reservationService.deleteById(id);
-                        outputView.printDeleteCompleteMessage();
-                    }
-                    case 예약_시간_전체_조회 -> {
-                        final List<ReservationTimeResponse> result = reservationTimeService.getAll();
-                        outputView.printAllReservationTimes(result);
-                    }
-                    case 예약_시간_추가 -> {
-                        final ReservationTimeCreateRequest request = inputView.getReservationTimeCreateRequest();
-                        final ReservationTimeResponse result = reservationTimeService.saveAndGet(request);
-                        outputView.printSavedReservationTime(result);
-                    }
-                    case 예약_시간_삭제 -> {
-                        final long id = inputView.getDeleteReservationTimeId();
-                        reservationTimeService.deleteById(id);
-                        outputView.printDeleteCompleteMessage();
-                    }
-                    case 종료 -> {
-                        return;
-                    }
-                }
+                handleRequest();
             } catch (Exception e) {
                 System.out.println("실행 중 오류가 발생하였습니다.");
             }
+        }
+    }
+
+    private void handleRequest() {
+        switch (inputView.getCommandType()) {
+            case 예약_전체_조회 -> {
+                final List<ReservationResponse> result = reservationService.getAll();
+                outputView.printAllReservations(result);
+            }
+            case 예약_추가 -> {
+                final ReservationCreateRequest request = inputView.getReservationCreateRequest();
+                final ReservationResponse reservation = reservationService.saveAndGet(request);
+                outputView.printSavedReservation(reservation);
+            }
+            case 예약_삭제 -> {
+                final long id = inputView.getDeleteReservationId();
+                reservationService.deleteById(id);
+                outputView.printDeleteCompleteMessage();
+            }
+            case 예약_시간_전체_조회 -> {
+                final List<ReservationTimeResponse> result = reservationTimeService.getAll();
+                outputView.printAllReservationTimes(result);
+            }
+            case 예약_시간_추가 -> {
+                final ReservationTimeCreateRequest request = inputView.getReservationTimeCreateRequest();
+                final ReservationTimeResponse result = reservationTimeService.saveAndGet(request);
+                outputView.printSavedReservationTime(result);
+            }
+            case 예약_시간_삭제 -> {
+                final long id = inputView.getDeleteReservationTimeId();
+                reservationTimeService.deleteById(id);
+                outputView.printDeleteCompleteMessage();
+            }
+            case 종료 -> keepRun = false;
         }
     }
 }

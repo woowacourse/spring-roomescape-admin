@@ -1,5 +1,7 @@
 package roomescape.reservation.dao;
 
+import java.sql.Date;
+import java.sql.Time;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -40,8 +42,8 @@ public class ReservationDAO {
     public long insertReservation(final ReservationRequest reservationRequest) {
         Map<String, Object> parameters = new HashMap<>();
         parameters.put("name", reservationRequest.name());
-        parameters.put("date", reservationRequest.date());
-        parameters.put("time", reservationRequest.time());
+        parameters.put("date", Date.valueOf(reservationRequest.date()));
+        parameters.put("time", Time.valueOf(reservationRequest.time()));
         Number newId = simpleJdbcInsert.executeAndReturnKey(parameters);
         return newId.longValue();
     }

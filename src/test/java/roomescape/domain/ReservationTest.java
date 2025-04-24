@@ -1,31 +1,30 @@
 package roomescape.domain;
 
-import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatIllegalArgumentException;
 import static org.junit.jupiter.api.Assertions.assertAll;
 import static org.junit.jupiter.api.Assertions.assertDoesNotThrow;
 
-import java.time.LocalDateTime;
-import java.time.format.DateTimeFormatter;
+import java.time.LocalDate;
+import java.time.LocalTime;
 import org.junit.jupiter.api.Test;
-import org.junit.jupiter.params.ParameterizedTest;
-import org.junit.jupiter.params.provider.CsvSource;
 
 class ReservationTest {
-    
+
     private static final int MAX_NAME_LENGTH = 255;
+    private static final LocalDate TEST_DATE = LocalDate.MAX;
+    private static final ReservationTime TEST_RESERVATION_TIME = new ReservationTime(null, LocalTime.MAX);
 
     @Test
     void 이름이_BLACK인_경우_예외가_발생한다() {
         assertAll(
                 () -> assertThatIllegalArgumentException()
-                        .isThrownBy(() -> new Reservation(null, " ", LocalDateTime.MAX))
+                        .isThrownBy(() -> new Reservation(null, " ", TEST_DATE, TEST_RESERVATION_TIME))
                         .withMessage("이름은 공백이거나 NULL일 수 없습니다."),
                 () -> assertThatIllegalArgumentException()
-                        .isThrownBy(() -> new Reservation(null, null, LocalDateTime.MAX))
+                        .isThrownBy(() -> new Reservation(null, null, TEST_DATE, TEST_RESERVATION_TIME))
                         .withMessage("이름은 공백이거나 NULL일 수 없습니다."),
                 () -> assertThatIllegalArgumentException()
-                        .isThrownBy(() -> new Reservation(null, "", LocalDateTime.MAX))
+                        .isThrownBy(() -> new Reservation(null, "", TEST_DATE, TEST_RESERVATION_TIME))
                         .withMessage("이름은 공백이거나 NULL일 수 없습니다.")
         );
     }
@@ -36,7 +35,7 @@ class ReservationTest {
         String name = "a".repeat(MAX_NAME_LENGTH);
 
         // when & then
-        assertDoesNotThrow(() -> new Reservation(null, name, LocalDateTime.MAX));
+        assertDoesNotThrow(() -> new Reservation(null, name, TEST_DATE, TEST_RESERVATION_TIME));
     }
 
     @Test
@@ -46,33 +45,7 @@ class ReservationTest {
 
         // when & then
         assertThatIllegalArgumentException()
-                .isThrownBy(() -> new Reservation(null, name, LocalDateTime.MAX))
+                .isThrownBy(() -> new Reservation(null, name, TEST_DATE, TEST_RESERVATION_TIME))
                 .withMessage("이름의 길이는 255 초과할 수 없습니다.");
-    }
-
-    @ParameterizedTest
-    @CsvSource({
-            "yyyy-MM-dd, HH:mm, 2024-12-23, 15:00",
-            "yyyy/MM/dd, HH:mm, 2024/12/23, 15:00",
-            "dd-MM-yyyy, HH:mm, 23-12-2024, 15:00",
-            "MM/dd/yyyy, HH:mm, 12/23/2024, 15:00"
-    })
-    void 시간과_날짜를_포멧팅_형식으로_반환한다(String datePattern, String timePattern, String dateExpected, String timeExpected) {
-        // given
-        DateTimeFormatter dateFormatter = DateTimeFormatter.ofPattern(datePattern);
-        DateTimeFormatter timeFormatter = DateTimeFormatter.ofPattern(timePattern);
-
-        LocalDateTime dateTime = LocalDateTime.of(2024, 12, 23, 15, 0);
-        Reservation reservation = new Reservation(null, "testName", dateTime);
-
-        // when
-        String resultDate = reservation.formatDateTime(dateFormatter);
-        String resultTime = reservation.formatDateTime(timeFormatter);
-
-        // then
-        assertAll(
-                () -> assertThat(resultDate).isEqualTo(dateExpected),
-                () -> assertThat(resultTime).isEqualTo(timeExpected)
-        );
     }
 }

@@ -3,6 +3,7 @@ package roomescape.controller.reservation;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;
@@ -16,7 +17,9 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import roomescape.controller.reservation.request.ReservationRequest;
 import roomescape.controller.reservation.response.ReservationResponse;
+import roomescape.controller.reservationtime.ReservationTimeController;
 import roomescape.model.Reservation;
+import roomescape.model.ReservationTime;
 
 @RequestMapping("/reservations")
 @RestController
@@ -24,6 +27,9 @@ public final class ReservationController {
 
     private final JdbcTemplate jdbcTemplate;
     private SimpleJdbcInsert insertActor;
+
+    @Autowired
+    private ReservationTimeController reservationTimeController;
 
     public ReservationController(final JdbcTemplate jdbcTemplate) {
         this.jdbcTemplate = jdbcTemplate;
@@ -33,8 +39,16 @@ public final class ReservationController {
     }
 
     @GetMapping
-    ResponseEntity<List<ReservationResponse>> read() {
-        final String sql = "select id, name, date, time from reservation";
+    public ResponseEntity<List<ReservationResponse>> read() {
+        final String sql = "SELECT \n"
+                + "    r.id as reservation_id, \n"
+                + "    r.name, \n"
+                + "    r.date, \n"
+                + "    t.id as time_id, \n"
+                + "    t.start_at as time_value \n"
+                + "FROM reservation as r \n"
+                + "inner join reservation_time as t \n"
+                + "on r.time_id = t.id";
         final RowMapper<Reservation> rowMapper = getRowMapper();
         final List<Reservation> reservations = jdbcTemplate.query(sql, rowMapper);
 
@@ -46,16 +60,16 @@ public final class ReservationController {
     }
 
     @PostMapping
-    ResponseEntity<ReservationResponse> create(@RequestBody ReservationRequest reservationRequest) {
-        System.out.println(reservationRequest.time());
-        Reservation reservation = reservationRequest.toReservation();
-        Number number = saveAndGetId(reservation);
+    public ResponseEntity<ReservationResponse> create(@RequestBody ReservationRequest reservationRequest) {
+        ReservationTime time = reservationTimeController.findById(reservationRequest.timeId());
+        Reservation reservation = reservationRequest.toReservation(time);
+        long id = saveAndGetId(reservation).longValue();
 
-        return ResponseEntity.ok().body(ReservationResponse.from(number.longValue(), reservation));
+        return ResponseEntity.ok().body(ReservationResponse.from(id, reservation));
     }
 
     @DeleteMapping("/{id}")
-    ResponseEntity<Void> delete(@PathVariable Long id) {
+    public ResponseEntity<Void> delete(@PathVariable Long id) {
         final String sql = "delete from reservation where id = ?";
         jdbcTemplate.update(sql, id);
         return ResponseEntity.ok().build();
@@ -63,18 +77,23 @@ public final class ReservationController {
 
     private RowMapper<Reservation> getRowMapper() {
         return (resultSet, rowNum) ->
-                Reservation.from(
-                        resultSet.getLong("id"),
-                        resultSet.getString("name"),
-                        resultSet.getDate("date").toLocalDate(),
-                        resultSet.getTime("time").toLocalTime());
+        {
+            long id = resultSet.getLong("time_id");
+            ReservationTime time = reservationTimeController.findById(id);
+
+            return Reservation.from(
+                    resultSet.getLong("id"),
+                    resultSet.getString("name"),
+                    resultSet.getDate("date").toLocalDate(),
+                    time);
+        };
     }
 
     private Number saveAndGetId(final Reservation reservation) {
         Map<String, Object> parameters = new HashMap<>(3);
         parameters.put("name", reservation.getName());
         parameters.put("date", reservation.getDate());
-        parameters.put("time", reservation.getTime());
+        parameters.put("time_id", reservation.getTime().getId());
         return getGenerateId(parameters);
     }
 

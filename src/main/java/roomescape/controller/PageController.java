@@ -6,22 +6,22 @@ import org.springframework.web.bind.annotation.GetMapping;
 @Controller
 public class PageController {
     @GetMapping("/admin")
-    String admin() {
+    public String admin() {
         return "admin/index";
     }
 
     @GetMapping("/admin/reservation")
-    String reservation() {
+    public String reservation() {
         return "admin/reservation";
     }
 
     @GetMapping
-    String welcomePage() {
+    public String welcomePage() {
         return "welcomePage";
     }
 
     @GetMapping("/admin/time")
-    String time() {
+    public String time() {
         return "admin/time";
     }
 }

@@ -33,14 +33,14 @@ public class ReservationTimeController {
     }
 
     @PostMapping
-    ResponseEntity<ReservationTimeResponse> save(@RequestBody ReservationTimeRequest reservationTimeRequest) {
+    public ResponseEntity<ReservationTimeResponse> save(@RequestBody ReservationTimeRequest reservationTimeRequest) {
         ReservationTime time = reservationTimeRequest.toTime();
         Long id = saveAndGetId(time);
         return ResponseEntity.ok(ReservationTimeResponse.from(id, time));
     }
 
     @GetMapping
-    ResponseEntity<List<ReservationTimeResponse>> read() {
+    public ResponseEntity<List<ReservationTimeResponse>> read() {
         final String sql = "select id, start_at from reservation_time";
         final RowMapper<ReservationTime> rowMapper = getRowMapper();
         final List<ReservationTime> times = jdbcTemplate.query(sql, rowMapper);
@@ -53,10 +53,16 @@ public class ReservationTimeController {
     }
 
     @DeleteMapping("/{id}")
-    ResponseEntity<Void> delete(@PathVariable Long id) {
+    public ResponseEntity<Void> delete(@PathVariable Long id) {
         final String sql = "delete from reservation_time where id = ?";
         jdbcTemplate.update(sql, id);
         return ResponseEntity.ok().build();
+    }
+
+    public ReservationTime findById(final Long id) {
+        String sql = "select id, start_at from reservation_time where id =?";
+        RowMapper<ReservationTime> rowMapper = getRowMapper();
+        return jdbcTemplate.queryForObject(sql, rowMapper, id);
     }
 
     private Long saveAndGetId(final ReservationTime time) {

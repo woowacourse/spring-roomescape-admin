@@ -1,16 +1,16 @@
 package roomescape.controller.reservation.request;
 
 import java.time.LocalDate;
-import java.time.LocalTime;
 import roomescape.model.Reservation;
+import roomescape.model.ReservationTime;
 
 public record ReservationRequest(
         String name,
         LocalDate date,
-        LocalTime time) {
+        Long timeId) {
 
-    public Reservation toReservation() {
-        return Reservation.from(this.name, this.date, this.time);
+    public Reservation toReservation(final ReservationTime time) {
+        return Reservation.from(this.name, this.date, time);
     }
 
 }

@@ -12,7 +12,6 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
-import org.springframework.web.server.ResponseStatusException;
 import roomescape.service.ReservationService;
 import roomescape.service.dto.ReservationRegisterDto;
 import roomescape.service.dto.ReservationResponseDto;
@@ -46,8 +45,8 @@ public class ReservationController {
         try {
             reservationService.deleteReservationById(id);
             return new ResponseEntity<>(HttpStatus.OK);
-        } catch (ResponseStatusException e) {
-            return new ResponseEntity<>(e.getMessage(), e.getStatusCode());
+        } catch (IllegalArgumentException e) {
+            return new ResponseEntity<>(e.getMessage(), HttpStatus.NOT_FOUND);
         }
     }
 }

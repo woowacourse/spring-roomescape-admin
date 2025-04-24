@@ -11,7 +11,6 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
-import org.springframework.web.server.ResponseStatusException;
 import roomescape.service.ReservationTimeService;
 import roomescape.service.dto.ReservationTimeRegisterDto;
 import roomescape.service.dto.ReservationTimeResponseDto;
@@ -46,8 +45,8 @@ public class ReservationTimeController {
         try {
             reservationTimeService.deleteReservationTimeById(id);
             return new ResponseEntity<>(HttpStatus.OK);
-        } catch (ResponseStatusException e) {
-            return new ResponseEntity<>(e.getMessage(), e.getStatusCode());
+        } catch (IllegalArgumentException e) {
+            return new ResponseEntity<>(e.getMessage(), HttpStatus.NOT_FOUND);
         }
     }
 }

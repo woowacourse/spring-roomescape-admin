@@ -7,7 +7,6 @@ import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import static org.junit.jupiter.api.Assertions.assertAll;
 import org.junit.jupiter.api.Test;
-import org.springframework.web.server.ResponseStatusException;
 import roomescape.FakeReservationRepositoryImpl;
 import roomescape.FakeReservationTimeRepositoryImpl;
 import roomescape.domain.Reservation;
@@ -54,7 +53,7 @@ class ReservationServiceTest {
 
         // when & then
         assertThatThrownBy(() -> reservationService.saveReservation(reservationRegisterDto))
-                .isInstanceOf(ResponseStatusException.class);
+                .isInstanceOf(IllegalArgumentException.class);
     }
 
     @Test
@@ -88,7 +87,7 @@ class ReservationServiceTest {
     @Test
     void 존재하지_않는_id를_이용해_Reservation을_조회하려고_하면_예외가_발생한다() {
         assertThatThrownBy(() -> reservationService.findReservationById(1L))
-                .isInstanceOf(ResponseStatusException.class);
+                .isInstanceOf(IllegalArgumentException.class);
     }
 
     @Test
@@ -145,6 +144,6 @@ class ReservationServiceTest {
     @Test
     void 존재하지_않는_id의_객체를_삭제하고자_하면_예외가_발생한다() {
         assertThatThrownBy(() -> reservationService.deleteReservationById(1L))
-                .isInstanceOf(ResponseStatusException.class);
+                .isInstanceOf(IllegalArgumentException.class);
     }
 }

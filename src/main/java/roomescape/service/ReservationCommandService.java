@@ -19,7 +19,6 @@ public class ReservationCommandService {
         this.reservationTimeService = reservationTimeService;
     }
 
-
     public List<ReservationResponse> getReservations() {
         return reservationService.getReservations();
     }
@@ -31,7 +30,7 @@ public class ReservationCommandService {
         return ReservationResponse.of(reservationResponse, reservationTimeResponse);
     }
 
-    public void delete(long id) {
+    public void delete(Long id) {
         reservationService.delete(id);
     }
 }

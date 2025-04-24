@@ -37,7 +37,7 @@ public class ReservationService {
         return ReservationResponse.from(saved);
     }
 
-    public void delete(final long id) {
+    public void delete(final Long id) {
         if (reservationRepository.findById(id) == null) {
             throw new NoSuchElementException("없는 예약번호 입니다.");
         }

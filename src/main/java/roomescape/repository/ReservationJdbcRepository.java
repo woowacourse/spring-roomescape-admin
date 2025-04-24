@@ -7,7 +7,6 @@ import org.springframework.jdbc.support.KeyHolder;
 import org.springframework.stereotype.Repository;
 import roomescape.domain.Reservation;
 import roomescape.domain.ReservationTime;
-import roomescape.dto.ReservationResponseDto;
 
 import java.sql.PreparedStatement;
 import java.time.LocalDate;
@@ -39,33 +38,18 @@ public class ReservationJdbcRepository implements ReservationRepository {
     }
 
     @Override
-    public List<ReservationResponseDto> findAll() {
+    public List<Reservation> findAll() {
         String sql = """
                 SELECT *
                 FROM reservation as r
                 inner join reservation_time as t
                 on r.time_id = t.id
                 """;
-        List<Reservation> reservations = jdbcTemplate.query(sql, rowMapper);
-        return reservations.stream()
-                .map(reservation -> ReservationResponseDto.from(reservation))
-                .toList();
+        return jdbcTemplate.query(sql, rowMapper);
     }
 
     @Override
-    public Reservation findById(Long id) {
-        String sql = """
-                SELECT *
-                FROM reservation as r
-                inner join reservation_time as t
-                on r.time_id = t.id
-                where r.id = ?
-                """;
-        return jdbcTemplate.queryForObject(sql, rowMapper, id);
-    }
-
-    @Override
-    public Long saveAndReturnId(final String name, final LocalDate requestDate, final Long timeId) {
+    public Reservation save(final String name, final LocalDate requestDate, final Long timeId) {
         String sql = """
                 insert into reservation (name, date, time_id) values (?, ?, ?)
                 """;
@@ -79,7 +63,19 @@ public class ReservationJdbcRepository implements ReservationRepository {
             return ps;
         }, keyHolder);
 
-        return keyHolder.getKey().longValue();
+        Long reservationKey = keyHolder.getKey().longValue();
+        return findById(reservationKey);
+    }
+
+    private Reservation findById(Long id) {
+        String sql = """
+                SELECT *
+                FROM reservation as r
+                inner join reservation_time as t
+                on r.time_id = t.id
+                where r.id = ?
+                """;
+        return jdbcTemplate.queryForObject(sql, rowMapper, id);
     }
 
     @Override

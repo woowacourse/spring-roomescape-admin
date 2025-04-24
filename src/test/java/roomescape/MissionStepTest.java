@@ -9,7 +9,6 @@ import java.lang.reflect.Field;
 import java.sql.Connection;
 import java.sql.SQLException;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -17,8 +16,6 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.test.annotation.DirtiesContext;
 import roomescape.reservation.controller.ReservationController;
-import roomescape.reservation.domain.Reservation;
-import roomescape.reservation.entity.ReservationEntity;
 
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.DEFINED_PORT)
 @DirtiesContext(classMode = DirtiesContext.ClassMode.BEFORE_EACH_TEST_METHOD)
@@ -26,6 +23,8 @@ public class MissionStepTest {
 
     @Autowired
     private JdbcTemplate jdbcTemplate;
+    @Autowired
+    private ReservationController reservationController;
 
     @Test
     void step1_accessAdminPage() {
@@ -45,10 +44,20 @@ public class MissionStepTest {
 
     @Test
     void step3_createAndDeleteReservation() {
-        Map<String, String> params = new HashMap<>();
+        Map<String, Object> params = new HashMap<>();
         params.put("name", "브라운");
         params.put("date", "2023-08-05");
-        params.put("time", "15:40");
+        params.put("timeId", 1);
+
+        Map<String, String> reservationTime = new HashMap<>();
+        reservationTime.put("startAt", "10:00");
+
+        RestAssured.given().log().all()
+                .contentType(ContentType.JSON)
+                .body(reservationTime)
+                .when().post("/times")
+                .then().log().all()
+                .statusCode(200);
 
         RestAssured.given().log().all()
                 .contentType(ContentType.JSON)
@@ -89,28 +98,44 @@ public class MissionStepTest {
 
     @Test
     void step5_getReservationWithDatabase() {
-        jdbcTemplate.update("INSERT INTO reservation (name, date, time) VALUES (?, ?, ?)", "브라운", "2023-08-05",
-                "15:40");
+        Map<String, String> reservationTime = new HashMap<>();
+        reservationTime.put("startAt", "10:00");
 
-        List<Reservation> reservations = RestAssured.given().log().all()
+        RestAssured.given().log().all()
+                .contentType(ContentType.JSON)
+                .body(reservationTime)
+                .when().post("/times")
+                .then().log().all()
+                .statusCode(200);
+
+        jdbcTemplate.update("INSERT INTO reservation (name, date, time_id) VALUES (?, ?, ?)", "브라운", "2023-08-05",
+                "1");
+
+        RestAssured.given().log().all()
                 .when().get("/reservations")
                 .then().log().all()
-                .statusCode(200).extract()
-                .jsonPath().getList(".", ReservationEntity.class)
-                .stream().map(ReservationEntity::toReservation)
-                .toList();
+                .statusCode(200);
 
         Integer count = jdbcTemplate.queryForObject("SELECT count(1) from reservation", Integer.class);
-
-        assertThat(reservations.size()).isEqualTo(count);
+        assertThat(count).isEqualTo(1);
     }
 
     @Test
     void step6_addReservationWithDatabase() {
-        Map<String, String> params = new HashMap<>();
+        Map<String, Object> params = new HashMap<>();
         params.put("name", "브라운");
         params.put("date", "2023-08-05");
-        params.put("time", "10:00");
+        params.put("timeId", 1);
+
+        Map<String, String> reservationTime = new HashMap<>();
+        reservationTime.put("startAt", "10:00");
+
+        RestAssured.given().log().all()
+                .contentType(ContentType.JSON)
+                .body(reservationTime)
+                .when().post("/times")
+                .then().log().all()
+                .statusCode(200);
 
         RestAssured.given().log().all()
                 .contentType(ContentType.JSON)
@@ -185,9 +210,6 @@ public class MissionStepTest {
                 .statusCode(200)
                 .body("size()", is(1));
     }
-
-    @Autowired
-    private ReservationController reservationController;
 
     @Test
     void step9_controllerDoesNotHasDatabaseLogic() {

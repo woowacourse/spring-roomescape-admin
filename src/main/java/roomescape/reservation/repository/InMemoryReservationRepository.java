@@ -6,6 +6,7 @@ import java.util.Optional;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.atomic.AtomicLong;
 import org.springframework.stereotype.Repository;
+import roomescape.common.domain.Cacheable;
 import roomescape.common.repository.AbstractRepository;
 import roomescape.reservation.domain.Reservation;
 
@@ -38,12 +39,12 @@ public class InMemoryReservationRepository implements AbstractRepository<Reserva
     }
 
     @Override
-    public Long getCachedId(final Reservation reservation) {
+    public Long getCachedId(final Cacheable domain) {
         return 0L;
     }
 
     @Override
-    public void cacheId(final Reservation reservation, final Long id) {
+    public void cacheId(final Cacheable domain, final Long id) {
 
     }
 }

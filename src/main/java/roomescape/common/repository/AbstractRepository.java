@@ -2,6 +2,7 @@ package roomescape.common.repository;
 
 import java.util.List;
 import java.util.Optional;
+import roomescape.common.domain.Cacheable;
 
 public interface AbstractRepository<T> {
     List<T> getAll();
@@ -12,7 +13,7 @@ public interface AbstractRepository<T> {
 
     Optional<T> findById(long id);
 
-    Long getCachedId(T item);
+    Long getCachedId(Cacheable domain);
 
-    void cacheId(T item, Long id);
+    void cacheId(Cacheable domain, Long id);
 }

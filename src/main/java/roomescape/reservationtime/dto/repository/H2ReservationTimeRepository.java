@@ -6,6 +6,7 @@ import java.util.Optional;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.simple.SimpleJdbcInsert;
 import org.springframework.stereotype.Repository;
+import roomescape.common.domain.Cacheable;
 import roomescape.common.repository.AbstractRepository;
 import roomescape.common.repository.IdCache;
 import roomescape.reservationtime.domain.ReservationTime;
@@ -14,9 +15,9 @@ import roomescape.reservationtime.entity.ReservationTimeEntity;
 @Repository
 public class H2ReservationTimeRepository implements AbstractRepository<ReservationTime> {
     private final JdbcTemplate jdbcTemplate;
-    private final IdCache<ReservationTime> cache;
+    private final IdCache cache;
 
-    public H2ReservationTimeRepository(final JdbcTemplate jdbcTemplate, final IdCache<ReservationTime> cache) {
+    public H2ReservationTimeRepository(final JdbcTemplate jdbcTemplate, final IdCache cache) {
         this.jdbcTemplate = jdbcTemplate;
         this.cache = cache;
     }
@@ -70,12 +71,12 @@ public class H2ReservationTimeRepository implements AbstractRepository<Reservati
     }
 
     @Override
-    public Long getCachedId(final ReservationTime reservationTime) {
-        return cache.getCachedId(reservationTime);
+    public Long getCachedId(final Cacheable domain) {
+        return cache.getCachedId(domain);
     }
 
     @Override
-    public void cacheId(final ReservationTime reservationTime, final Long id) {
-        cache.cacheId(reservationTime, id);
+    public void cacheId(final Cacheable domain, final Long id) {
+        cache.cacheId(domain, id);
     }
 }

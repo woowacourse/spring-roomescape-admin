@@ -7,11 +7,11 @@ import org.springframework.context.annotation.Primary;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.simple.SimpleJdbcInsert;
 import org.springframework.stereotype.Repository;
+import roomescape.common.domain.Cacheable;
 import roomescape.common.repository.AbstractRepository;
 import roomescape.common.repository.IdCache;
 import roomescape.reservation.domain.Reservation;
 import roomescape.reservation.entity.ReservationEntity;
-import roomescape.reservationtime.domain.ReservationTime;
 import roomescape.reservationtime.entity.ReservationTimeEntity;
 
 @Repository
@@ -19,14 +19,11 @@ import roomescape.reservationtime.entity.ReservationTimeEntity;
 public class H2ReservationRepository implements AbstractRepository<Reservation> {
 
     private final JdbcTemplate jdbcTemplate;
-    private final IdCache<Reservation> cache;
-    private final IdCache<ReservationTime> timeCache;
+    private final IdCache idCache;
 
-    public H2ReservationRepository(final JdbcTemplate jdbcTemplate, final IdCache<Reservation> cache,
-                                   final IdCache<ReservationTime> timeCache) {
+    public H2ReservationRepository(final JdbcTemplate jdbcTemplate, final IdCache idCache) {
         this.jdbcTemplate = jdbcTemplate;
-        this.cache = cache;
-        this.timeCache = timeCache;
+        this.idCache = idCache;
     }
 
     @Override
@@ -54,7 +51,7 @@ public class H2ReservationRepository implements AbstractRepository<Reservation> 
                     );
                     Reservation reservation = entity.toReservation();
                     cacheId(reservation, entity.id());
-                    timeCache.cacheId(reservation.getTime(), timeEntity.id());
+                    cacheId(reservation.getTime(), timeEntity.id());
                     return reservation;
                 }
         );
@@ -67,7 +64,7 @@ public class H2ReservationRepository implements AbstractRepository<Reservation> 
 
         long generatedId = simpleJdbcInsert.executeAndReturnKey(
                 Map.of("name", reservation.getName(), "date", reservation.getDate(), "time_id",
-                        timeCache.getCachedId(reservation.getTime()))).longValue();
+                        getCachedId(reservation.getTime()))).longValue();
 
         cacheId(reservation, generatedId);
         return reservation;
@@ -88,35 +85,34 @@ public class H2ReservationRepository implements AbstractRepository<Reservation> 
                         + "t.id as time_id, "
                         + "t.start_at as time_value "
                         + "FROM reservation as r "
-                        + "WHERE r.id = ?"
                         + "inner join reservation_time as t "
-                        + "on r.time_id = t.id",
+                        + "on r.time_id = t.id "
+                        + "WHERE r.id = ?",
                 (resultSet, rowNum) -> {
                     ReservationTimeEntity timeEntity = new ReservationTimeEntity(
                             resultSet.getLong("time_id"),
                             resultSet.getString("time_value"));
 
-                    ReservationEntity entity = new ReservationEntity(
+                    return new ReservationEntity(
                             resultSet.getLong("id"),
                             resultSet.getString("name"),
                             resultSet.getString("date"),
                             timeEntity
                     );
-                    return entity;
-                }
-                , id
+                },
+                id
         );
         return Optional.ofNullable(reservationEntity)
                 .map(ReservationEntity::toReservation);
     }
 
     @Override
-    public Long getCachedId(final Reservation reservation) {
-        return cache.getCachedId(reservation);
+    public Long getCachedId(final Cacheable domain) {
+        return idCache.getCachedId(domain);
     }
 
     @Override
-    public void cacheId(final Reservation reservation, final Long id) {
-        cache.cacheId(reservation, id);
+    public void cacheId(final Cacheable domain, final Long id) {
+        idCache.cacheId(domain, id);
     }
 }

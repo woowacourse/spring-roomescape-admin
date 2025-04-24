@@ -2,6 +2,7 @@ package roomescape.controller;
 
 import java.net.URI;
 import java.util.List;
+import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -32,9 +33,13 @@ public class ReservationController {
 
     @GetMapping("{id}")
     public ResponseEntity<ReservationResponse> getReservation(@PathVariable long id) {
-        ReservationResponse response = reservationService.findById(id);
+        try {
+            ReservationResponse response = reservationService.findById(id);
 
-        return ResponseEntity.ok(response);
+            return ResponseEntity.ok(response);
+        } catch (EmptyResultDataAccessException e) {
+            return ResponseEntity.notFound().build();
+        }
     }
 
     @PostMapping

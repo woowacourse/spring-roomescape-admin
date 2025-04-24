@@ -8,7 +8,7 @@ public class Reservation {
     private LocalDate date;
     private ReservationTime time;
 
-    public Reservation() {
+    private Reservation() {
     }
 
     public Reservation(long id, Name name, LocalDate date, ReservationTime time) {

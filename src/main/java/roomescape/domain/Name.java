@@ -3,7 +3,7 @@ package roomescape.domain;
 public class Name {
     private String value;
 
-    public Name() {
+    private Name() {
     }
 
     public Name(String value) {

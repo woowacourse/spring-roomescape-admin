@@ -30,7 +30,7 @@ class ReservationReservationTimeDaoImplTest {
     }
 
     @Test
-    void 데이터를_전달받아_예약을_저장한다() {
+    void 데이터를_전달받아_예약시간을_저장한다() {
         // Given
         ReservationTime requestReservationTime = new ReservationTime(
                 LocalTime.of(12, 10)
@@ -42,10 +42,20 @@ class ReservationReservationTimeDaoImplTest {
     }
 
     @Test
-    void 저장된_모든_예약내역을_불러온다() {
+    void 저장된_모든_예약시간을_불러온다() {
         // When & Then
         assertThatNoException()
                 .isThrownBy(() -> reservationTimeDao.findAll());
+    }
+
+    @Test
+    void ID를_전달받아_해당_ID의_예약시간을_불러온다() {
+        // Given
+        final long id = 1L;
+
+        // When & Then
+        assertThat(reservationTimeDao.findById(id))
+                .isInstanceOf(ReservationTime.class);
     }
 
     @Test

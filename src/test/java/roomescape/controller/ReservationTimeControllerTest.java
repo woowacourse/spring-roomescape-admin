@@ -30,4 +30,21 @@ class ReservationTimeControllerTest {
                 .body("id", is(1))
                 .body("startAt", is("10:00"));
     }
+
+    @DisplayName("모든 예약 시간을 조회하면 200 응답이 온다.")
+    @Test
+    void findAllReservationTimes() {
+        Map<String, String> params = Map.of("startAt", "10:00");
+
+        RestAssured.given().log().all()
+                .contentType(ContentType.JSON)
+                .body(params)
+                .when().post("/times");
+
+        RestAssured.given().log().all()
+                .when().get("/times")
+                .then().log().all()
+                .statusCode(200)
+                .body("size()", is(1));
+    }
 }

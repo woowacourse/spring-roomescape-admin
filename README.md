@@ -136,7 +136,7 @@
         "startAt": "10:00"
     }
     ```
-- [ ] 모든 시간을 조회한다.
+- [x] 모든 시간을 조회한다.
     - request
       ```http request
       GET /times HTTP/1.1

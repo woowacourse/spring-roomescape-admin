@@ -65,4 +65,12 @@ public class InputView {
                 Long.parseLong(parameters[2].trim())
         );
     }
+
+    public Long inputDeleteReservationId() {
+        System.out.println("예약을 삭제합니다.");
+        System.out.println("삭제할 예약의 id를 입력해 주세요. (ex: 1) ");
+        long value = scanner.nextLong();
+        scanner.nextLine();
+        return value;
+    }
 }

@@ -71,6 +71,10 @@ public class ConsoleApplication implements CommandLineRunner {
         } else if (function == 2) {
             List<Reservation> reservations = reservationService.getAllReservations();
             outputView.printReservations(reservations);
+        } else if (function == 3) {
+            Long id = inputView.inputDeleteReservationId();
+            reservationService.deleteReservation(id);
+            outputView.printSuccessToDeleteReservation();
         }
     }
 }

@@ -34,7 +34,8 @@ public class ReservationMemoryRepositoryImpl implements ReservationRepository {
 
     @Override
     public void deleteById(Long id) {
-
+        Reservation reservation = findById(id);
+        reservations.remove(reservation);
     }
 
     @Override

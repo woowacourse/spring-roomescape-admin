@@ -52,4 +52,9 @@ public class OutputView {
         );
         System.out.println();
     }
+
+    public void printSuccessToDeleteReservation() {
+        System.out.println("예약 삭제를 완료했습니다.");
+        System.out.println();
+    }
 }

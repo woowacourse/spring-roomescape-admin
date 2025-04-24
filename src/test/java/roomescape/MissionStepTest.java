@@ -10,6 +10,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import org.assertj.core.api.Assertions;
+import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -24,6 +25,7 @@ public class MissionStepTest {
     @Autowired
     private JdbcTemplate jdbcTemplate;
 
+    @DisplayName("/admin 페이지를 조회한다")
     @Test
     void 일단계() {
         RestAssured.given().log().all()
@@ -32,6 +34,7 @@ public class MissionStepTest {
                 .statusCode(200);
     }
 
+    @DisplayName("/admin/reservation 페이지를 조회한다")
     @Test
     void 이단계() {
         RestAssured.given().log().all()
@@ -46,6 +49,7 @@ public class MissionStepTest {
                 .body("size()", is(0)); // 아직 생성 요청이 없으니 Controller에서 임의로 넣어준 Reservation 갯수 만큼 검증하거나 0개임을 확인하세요.
     }
 
+    @DisplayName("모든 예약 목록을 조회한다")
     @Test
     void 삼단계() {
         Map<String, String> params = new HashMap<>();
@@ -58,7 +62,7 @@ public class MissionStepTest {
                 .body(params)
                 .when().post("/reservations")
                 .then().log().all()
-                .statusCode(200)
+                .statusCode(201)
                 .body("id", is(1));
 
         RestAssured.given().log().all()
@@ -70,7 +74,7 @@ public class MissionStepTest {
         RestAssured.given().log().all()
                 .when().delete("/reservations/1")
                 .then().log().all()
-                .statusCode(200);
+                .statusCode(204);
 
         RestAssured.given().log().all()
                 .when().get("/reservations")
@@ -79,6 +83,7 @@ public class MissionStepTest {
                 .body("size()", is(0));
     }
 
+    @DisplayName("데이터베이스에 연결한다")
     @Test
     void 사단계() {
         try (Connection connection = jdbcTemplate.getDataSource().getConnection()) {
@@ -90,6 +95,7 @@ public class MissionStepTest {
         }
     }
 
+    @DisplayName("데이터베이스에서 예약을 조회한다")
     @Test
     void 오단계() {
         jdbcTemplate.update("INSERT INTO reservation (name, date, time) VALUES (?, ?, ?)", "브라운", "2023-08-05",
@@ -106,6 +112,7 @@ public class MissionStepTest {
         Assertions.assertThat(reservations.size()).isEqualTo(count);
     }
 
+    @DisplayName("데이터베이스에 예약을 추가 및 삭제한다")
     @Test
     void 육단계() {
         Map<String, String> params = new HashMap<>();
@@ -118,7 +125,7 @@ public class MissionStepTest {
                 .body(params)
                 .when().post("/reservations")
                 .then().log().all()
-                .statusCode(200);
+                .statusCode(201);
 
         Integer count = jdbcTemplate.queryForObject("SELECT count(1) from reservation", Integer.class);
         Assertions.assertThat(count).isEqualTo(1);
@@ -126,7 +133,7 @@ public class MissionStepTest {
         RestAssured.given().log().all()
                 .when().delete("/reservations/1")
                 .then().log().all()
-                .statusCode(200);
+                .statusCode(204);
 
         Integer countAfterDelete = jdbcTemplate.queryForObject("SELECT count(1) from reservation", Integer.class);
         Assertions.assertThat(countAfterDelete).isEqualTo(0);

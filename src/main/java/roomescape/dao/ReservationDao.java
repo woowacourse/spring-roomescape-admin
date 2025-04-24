@@ -1,8 +1,6 @@
 package roomescape.dao;
 
 import java.sql.PreparedStatement;
-import java.time.LocalDate;
-import java.time.LocalTime;
 import java.util.List;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.support.GeneratedKeyHolder;
@@ -11,6 +9,7 @@ import org.springframework.stereotype.Component;
 import roomescape.domain_entity.Id;
 import roomescape.domain_entity.Reservation;
 import roomescape.dto.ReservationRequestDto;
+import roomescape.mapper.ReservationMapper;
 
 @Component
 public class ReservationDao {
@@ -24,13 +23,7 @@ public class ReservationDao {
         String sql = "select id, name, date, time from reservation";
         List<Reservation> reservations = jdbcTemplate.query(
                 sql,
-                (rs, rowNum) ->
-                        new Reservation(
-                                new Id(rs.getLong("id")),
-                                rs.getString("name"),
-                                LocalDate.parse(rs.getString("date")),
-                                LocalTime.parse(rs.getString("time"))
-                        )
+                new ReservationMapper()
         );
         return reservations;
     }

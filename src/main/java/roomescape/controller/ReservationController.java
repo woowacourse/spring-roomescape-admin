@@ -9,25 +9,25 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
-import roomescape.dao.ReservationDao;
 import roomescape.dto.ReservationRequest;
 import roomescape.dto.ReservationResponse;
 import roomescape.model.Reservation;
+import roomescape.service.ReservationService;
 
 @RequestMapping("/reservations")
 @RestController
 public class ReservationController {
 
-    private final ReservationDao reservationDao;
+    private final ReservationService reservationService;
 
-    public ReservationController(ReservationDao reservationDao) {
-        this.reservationDao = reservationDao;
+    public ReservationController(ReservationService reservationService) {
+        this.reservationService = reservationService;
     }
 
     @GetMapping
     public ResponseEntity<List<ReservationResponse>> reservations() {
 
-        List<Reservation> reservations = reservationDao.selectAllReservation();
+        List<Reservation> reservations = reservationService.selectAllReservation();
 
         List<ReservationResponse> reservationResponses = reservations.stream()
                 .map(ReservationResponse::toDto).toList();
@@ -40,7 +40,7 @@ public class ReservationController {
 
         Reservation reservation = request.toEntity();
 
-        Reservation addedReservation = reservationDao.addReservation(reservation);
+        Reservation addedReservation = reservationService.addReservation(reservation);
 
         ReservationResponse reservationResponse = ReservationResponse.toDto(addedReservation);
 
@@ -50,7 +50,7 @@ public class ReservationController {
     @DeleteMapping("/{id}")
     public ResponseEntity<Void> deleteReservation(@PathVariable("id") Long id) {
 
-        int effectedRow = reservationDao.deleteReservationById(id);
+        int effectedRow = reservationService.deleteReservationById(id);
 
         if (effectedRow == 1) {
             return ResponseEntity.ok().build();

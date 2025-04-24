@@ -6,16 +6,19 @@ import java.util.List;
 import java.util.Map;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.simple.SimpleJdbcInsert;
-import org.springframework.stereotype.Component;
+import org.springframework.stereotype.Repository;
 import roomescape.model.Reservation;
 
-@Component
+@Repository
 public class ReservationDao {
 
     private final JdbcTemplate jdbcTemplate;
+    private final SimpleJdbcInsert simpleJdbcInsert;
 
     public ReservationDao(JdbcTemplate jdbcTemplate) {
         this.jdbcTemplate = jdbcTemplate;
+        this.simpleJdbcInsert = new SimpleJdbcInsert(jdbcTemplate).withTableName("reservation")
+                .usingGeneratedKeyColumns("id");
     }
 
     public List<Reservation> selectAllReservation() {
@@ -31,14 +34,12 @@ public class ReservationDao {
     }
 
     public Reservation addReservation(Reservation reservation) {
-        final Map<String, String> parameters = Map.of("name", reservation.getName(), "date",
-                reservation.getDate().toString(), "time", reservation.getTime().toString());
+        final Map<String, String> parameters = Map.of(
+                "name", reservation.getName(),
+                "date", reservation.getDate().toString(),
+                "time", reservation.getTime().toString());
 
-        SimpleJdbcInsert simpleJdbcInsert = new SimpleJdbcInsert(jdbcTemplate)
-                .withTableName("reservation")
-                .usingGeneratedKeyColumns("id");
-
-        Long id = (Long) simpleJdbcInsert.executeAndReturnKey(parameters);
+        Long id = simpleJdbcInsert.executeAndReturnKey(parameters).longValue();
 
         return new Reservation(id, reservation.getName(), reservation.getDate(), reservation.getTime());
     }

@@ -2,9 +2,8 @@ package roomescape.e2e;
 
 import io.restassured.RestAssured;
 import io.restassured.http.ContentType;
-import java.util.HashMap;
+import java.time.LocalDate;
 import java.util.List;
-import java.util.Map;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -12,6 +11,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.test.annotation.DirtiesContext;
+import roomescape.dto.ReservationRequest;
 import roomescape.dto.ReservationResponse;
 
 import static org.assertj.core.api.Assertions.assertThat;
@@ -38,14 +38,11 @@ public class ReservationApiTest {
     @DisplayName("예약 추가 시 예약 정보를 저장하고 200 OK를, 삭제 시 id에 해당하는 예약을 제거하고 200 OK를 응답해야 한다")
     void level3() {
         jdbcTemplate.update("INSERT INTO reservation_time(start_at) values (?)", "11:00");
-        Map<String, String> params = new HashMap<>();
-        params.put("name", "브라운");
-        params.put("date", "2023-08-05");
-        params.put("timeId", "2");
+        ReservationRequest request = new ReservationRequest("브라운", LocalDate.parse("2023-08-05"), 2L);
 
         RestAssured.given().log().all()
                 .contentType(ContentType.JSON)
-                .body(params)
+                .body(request)
                 .when().post("/reservations")
                 .then().log().all()
                 .statusCode(200)
@@ -87,14 +84,11 @@ public class ReservationApiTest {
     @DisplayName("DB에 저장된 예약 정보를 추가/삭제 할 수 있어야 한다")
     void level6() {
         jdbcTemplate.update("INSERT INTO reservation_time(start_at) values (?)", "11:00");
-        Map<String, String> params = new HashMap<>();
-        params.put("name", "브라운");
-        params.put("date", "2023-08-05");
-        params.put("timeId", "2");
+        ReservationRequest request = new ReservationRequest("브라운", LocalDate.parse("2023-08-05"), 2L);
 
         RestAssured.given().log().all()
                 .contentType(ContentType.JSON)
-                .body(params)
+                .body(request)
                 .when().post("/reservations")
                 .then().log().all()
                 .statusCode(200);
@@ -115,14 +109,11 @@ public class ReservationApiTest {
     @DisplayName("주어진 API 구조를 기반으로 예약 데이터를 추가해야 한다")
     void level8() {
         jdbcTemplate.update("INSERT INTO reservation_time(start_at) values (?)", "11:00");
-        Map<String, Object> reservation = new HashMap<>();
-        reservation.put("name", "브라운");
-        reservation.put("date", "2023-08-05");
-        reservation.put("timeId", 2L);
+        ReservationRequest request = new ReservationRequest("브라운", LocalDate.parse("2023-08-05"), 2L);
 
         RestAssured.given().log().all()
                 .contentType(ContentType.JSON)
-                .body(reservation)
+                .body(request)
                 .when().post("/reservations")
                 .then().log().all()
                 .statusCode(200);

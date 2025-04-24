@@ -2,12 +2,12 @@ package roomescape.e2e;
 
 import io.restassured.RestAssured;
 import io.restassured.http.ContentType;
-import java.util.HashMap;
-import java.util.Map;
+import java.time.LocalTime;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.annotation.DirtiesContext;
+import roomescape.dto.ReservationTimeRequest;
 
 import static org.hamcrest.CoreMatchers.is;
 
@@ -18,12 +18,11 @@ public class ReservationTimeApiTest {
     @Test
     @DisplayName("시간 관리 데이터를 추가/삭제할 수 있다")
     void level7() {
-        Map<String, String> params = new HashMap<>();
-        params.put("startAt", "10:00");
+        ReservationTimeRequest request = new ReservationTimeRequest(LocalTime.parse("10:00"));
 
         RestAssured.given().log().all()
                 .contentType(ContentType.JSON)
-                .body(params)
+                .body(request)
                 .when().post("/times")
                 .then().log().all()
                 .statusCode(200);

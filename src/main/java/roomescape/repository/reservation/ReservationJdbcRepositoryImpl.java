@@ -8,7 +8,6 @@ import org.springframework.jdbc.core.namedparam.MapSqlParameterSource;
 import org.springframework.jdbc.core.namedparam.SqlParameterSource;
 import org.springframework.jdbc.core.simple.SimpleJdbcInsert;
 import org.springframework.stereotype.Repository;
-import roomescape.dto.CreateReservationDto;
 import roomescape.entity.Reservation;
 import roomescape.entity.ReservationTime;
 
@@ -30,16 +29,16 @@ public class ReservationJdbcRepositoryImpl implements ReservationRepository {
     }
 
     @Override
-    public Long addAndGetId(CreateReservationDto createReservationDto) {
+    public Long addAndGetId(Reservation reservation) {
         SimpleJdbcInsert insertQuery = new SimpleJdbcInsert(jdbcTemplate.getDataSource())
                 .withTableName("reservation")
                 .usingColumns("name", "date", "time_id")
                 .usingGeneratedKeyColumns("id");
 
         SqlParameterSource parameters = new MapSqlParameterSource()
-                .addValue("name", createReservationDto.name())
-                .addValue("date", createReservationDto.date())
-                .addValue("time_id", createReservationDto.timeId());
+                .addValue("name", reservation.getName())
+                .addValue("date", reservation.getDate())
+                .addValue("time_id", reservation.getTime().getId());
 
         return insertQuery.executeAndReturnKey(parameters).longValue();
     }

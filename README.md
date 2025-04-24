@@ -8,13 +8,13 @@
 
 - Request
 
-    ```json
+    ```
     GET /reservations HTTP/1.1
     ```
 
 - Response
 
-    ```json
+    ```
     HTTP/1.1 200 
     Content-Type: application/json
     
@@ -39,7 +39,7 @@
 
 - Request
 
-    ```json
+    ```
     POST /reservations HTTP/1.1
     content-type: application/json
     
@@ -52,7 +52,7 @@
 
 - Response
 
-    ```json
+    ```
     HTTP/1.1 200 
     Content-Type: application/json
     
@@ -69,13 +69,13 @@
 
 - Request
 
-    ```json
+    ```
     DELETE /reservations/1 HTTP/1.1
     ```
 
 - Response
 
-    ```json
+    ```
     HTTP/1.1 200
     ```
 
@@ -88,13 +88,13 @@
 
 - Request
 
-    ```json
+    ```
     GET /times HTTP/1.1
     ```
 
 - Response
 
-    ```json
+    ```
     HTTP/1.1 200 
     Content-Type: application/json
     
@@ -111,7 +111,7 @@
 
 - Request
 
-    ```json
+    ```
     POST /times HTTP/1.1
     content-type: application/json
     
@@ -122,7 +122,7 @@
 
 - Response
 
-    ```json
+    ```
     HTTP/1.1 200
     Content-Type: application/json
     
@@ -137,12 +137,12 @@
 
 - Request
 
-    ```json
+    ```
     DELETE /times/1 HTTP/1.1
     ```
 
 - Response
 
-    ```json
+    ```
     HTTP/1.1 200
     ```

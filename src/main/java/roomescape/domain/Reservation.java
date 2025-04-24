@@ -15,6 +15,7 @@ public class Reservation {
     }
 
     public Reservation(final Person person, final ReservationTime reservationTime) {
+        this.id = 0L;
         this.person = person;
         this.reservationTime = reservationTime;
     }

@@ -19,8 +19,12 @@ public class ReservationTimeRestController {
 
     @PostMapping
     public ResponseEntity<ReservationTimeResponseDto> create(@RequestBody ReservationTimeRequestDto requestDto) {
-        ReservationTimeResponseDto responseDto = service.create(requestDto);
-        return ResponseEntity.ok().body(responseDto);
+        try {
+            ReservationTimeResponseDto responseDto = service.create(requestDto);
+            return ResponseEntity.ok().body(responseDto);
+        } catch (IllegalArgumentException e) {
+            return ResponseEntity.badRequest().build();
+        }
     }
 
     @GetMapping

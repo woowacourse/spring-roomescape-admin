@@ -1,6 +1,7 @@
 package roomescape.service;
 
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.time.LocalTime;
 import java.util.List;
 import org.springframework.stereotype.Service;
@@ -30,23 +31,14 @@ public class ReservationService {
     public long addReservation(AddReservationDto newReservation) {
         ReservationTime reservationTime = reservationTimeService.findReservationTimeById(newReservation.timeId());
         Reservation reservation = newReservation.toReservation(reservationTime);
-        LocalDate nowDate = LocalDate.now();
-        LocalTime nowTime = LocalTime.now();
-        validateAddReservationDateTime(reservation, nowDate, nowTime);
+        LocalDateTime currentDateTime = LocalDateTime.of(LocalDate.now(), LocalTime.now());
+        validateAddReservationDateTime(reservation, currentDateTime);
         return reservationDao.add(reservation);
     }
 
-    private void validateAddReservationDateTime(Reservation newReservation, LocalDate nowDate,
-                                                LocalTime nowTime) {
-        boolean isAfterNow = false;
-        if (newReservation.getDate().isBefore(nowDate)) {
-            isAfterNow = true;
-        }
-
-        if (newReservation.getDate().isEqual(nowDate) && newReservation.getStartAt().isBefore(nowTime)) {
-            isAfterNow = true;
-        }
-        if (isAfterNow) {
+    private void validateAddReservationDateTime(Reservation newReservation, LocalDateTime currentDateTime) {
+        LocalDateTime reservationDateTime = LocalDateTime.of(newReservation.getDate(), newReservation.getStartAt());
+        if (reservationDateTime.isBefore(currentDateTime)) {
             throw new InvalidReservationException("과거 시간에 예약할 수 없습니다.");
         }
     }

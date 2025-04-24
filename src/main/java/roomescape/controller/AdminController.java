@@ -20,4 +20,9 @@ public class AdminController {
     public String reservation() {
         return "admin/reservation-legacy";
     }
+
+    @GetMapping("/admin/time")
+    public String time() {
+        return "admin/time";
+    }
 }

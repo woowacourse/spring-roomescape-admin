@@ -7,6 +7,7 @@ public class Time {
     private Long id;
 
     private final LocalTime startAt;
+
     public Time(final LocalTime startAt) {
         this.startAt = startAt;
     }

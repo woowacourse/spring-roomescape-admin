@@ -36,6 +36,7 @@ public class ReservationDao {
 
     public List<Reservation> findAll() {
         final String sql = "SELECT id, name, date, time FROM RESERVATION";
+
         return jdbcTemplate.query(sql, ReservationEntity.getDefaultRowMapper()).stream()
                 .map(ReservationEntity::toDomain)
                 .toList();

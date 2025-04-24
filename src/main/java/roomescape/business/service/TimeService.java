@@ -1,10 +1,11 @@
 package roomescape.business.service;
 
+import java.util.List;
 import org.springframework.stereotype.Service;
 import roomescape.business.domain.Time;
+import roomescape.data.dao.TimeDao;
 import roomescape.presentation.dto.TimeRequest;
 import roomescape.presentation.dto.TimeResponse;
-import roomescape.data.dao.TimeDao;
 
 @Service
 public class TimeService {
@@ -20,5 +21,11 @@ public class TimeService {
         final Long id = timeDao.save(time);
 
         return TimeResponse.withId(id, time);
+    }
+
+    public List<TimeResponse> findAll() {
+        return timeDao.findAll().stream()
+                .map(TimeResponse::from)
+                .toList();
     }
 }

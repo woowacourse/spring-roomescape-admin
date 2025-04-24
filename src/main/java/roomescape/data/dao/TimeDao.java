@@ -1,6 +1,7 @@
 package roomescape.data.dao;
 
 import java.sql.PreparedStatement;
+import java.util.List;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.support.GeneratedKeyHolder;
 import org.springframework.jdbc.support.KeyHolder;
@@ -29,5 +30,13 @@ public class TimeDao {
         }, keyHolder);
 
         return keyHolder.getKey().longValue();
+    }
+
+    public List<Time> findAll() {
+        final String sql = "SELECT id, start_at FROM reservation_time";
+
+        return jdbcTemplate.query(sql, TimeEntity.getDefaultRowMapper()).stream()
+                .map(TimeEntity::toDomain)
+                .toList();
     }
 }

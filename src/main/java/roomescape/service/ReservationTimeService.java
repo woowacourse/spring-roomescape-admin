@@ -6,10 +6,13 @@ import roomescape.dto.ReservationTimeRequestDto;
 import roomescape.dto.ReservationTimeResponseDto;
 import roomescape.entity.ReservationTimeEntity;
 
+import java.time.LocalTime;
 import java.util.List;
 
 @Service
 public class ReservationTimeService {
+    private static final LocalTime OPERATING_START = LocalTime.of(10, 0);
+    private static final LocalTime OPERATING_END = LocalTime.of(22, 0);
     private final ReservationTimeDao timeDao;
 
     public ReservationTimeService(ReservationTimeDao timeDao) {
@@ -17,8 +20,17 @@ public class ReservationTimeService {
     }
 
     public ReservationTimeResponseDto create(ReservationTimeRequestDto requestDto) {
-        ReservationTimeEntity saved = timeDao.save(requestDto.toEntity());
+        ReservationTimeEntity entity = requestDto.toEntity();
+        validateOperatingTime(entity);
+        ReservationTimeEntity saved = timeDao.save(entity);
         return ReservationTimeResponseDto.from(saved);
+    }
+
+    private void validateOperatingTime(ReservationTimeEntity entity) {
+        LocalTime startAt = entity.startAt();
+        if (startAt.isBefore(OPERATING_START) || startAt.isAfter(OPERATING_END)) {
+            throw new IllegalArgumentException("운영 시간 이외의 날짜는 예약할 수 없습니다.");
+        }
     }
 
     public List<ReservationTimeResponseDto> getAllTimes() {

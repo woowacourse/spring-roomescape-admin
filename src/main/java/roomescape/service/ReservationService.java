@@ -25,7 +25,6 @@ public class ReservationService {
     }
 
     public Long create(ReservationCreateRequest request) {
-
         Reservation reservation = request.toReservation();
         return reservationDao.createWithMap(reservation);
     }

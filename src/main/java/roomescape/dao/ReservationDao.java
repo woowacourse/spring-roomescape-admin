@@ -34,7 +34,7 @@ public class ReservationDao {
         return this.jdbcTemplate.query(sql,
                 (resultSet, rowNum) -> {
                     String dateString = resultSet.getString("date");
-                    String timeString = resultSet.getString("time");
+                    String timeString = resultSet.getString("startAt");
                     DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm");
 
                     return new Reservation(

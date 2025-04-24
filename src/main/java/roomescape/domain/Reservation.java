@@ -8,8 +8,7 @@ public class Reservation {
     private final String name;
     private final LocalDateTime dateTime;
 
-
-    public Reservation(String name, LocalDateTime dateTime) {
+    public Reservation(final String name, final LocalDateTime dateTime) {
         this.name = name;
         this.dateTime = dateTime;
     }

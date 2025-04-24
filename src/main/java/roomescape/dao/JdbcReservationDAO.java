@@ -16,21 +16,21 @@ import roomescape.domain.ReservationTime;
 @Repository
 public class JdbcReservationDAO implements ReservationDAO {
 
+    private static final RowMapper<Reservation> reservationRowMapper = (resultSet, rowNum) -> new Reservation(
+            resultSet.getLong("reservation_id"),
+            resultSet.getString("name"),
+            resultSet.getDate("date").toLocalDate(),
+            new ReservationTime(resultSet.getLong("time_id"),
+                    resultSet.getTime("time_value").toLocalTime()));
+
     private final JdbcTemplate jdbcTemplate;
     private final SimpleJdbcInsert simpleJdbcInsert;
-    private final RowMapper<Reservation> reservationRowMapper;
 
     public JdbcReservationDAO(final JdbcTemplate jdbcTemplate, final DataSource dataSource) {
         this.jdbcTemplate = jdbcTemplate;
         this.simpleJdbcInsert = new SimpleJdbcInsert(dataSource)
                 .withTableName("reservation")
                 .usingGeneratedKeyColumns("id");
-        this.reservationRowMapper = (resultSet, rowNum) -> new Reservation(
-                resultSet.getLong("reservation_id"),
-                resultSet.getString("name"),
-                resultSet.getDate("date").toLocalDate(),
-                new ReservationTime(resultSet.getLong("time_id"),
-                        resultSet.getTime("time_value").toLocalTime()));
     }
 
     @Override

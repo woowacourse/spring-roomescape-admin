@@ -2,6 +2,7 @@ package roomescape.reservation.dao;
 
 import io.restassured.RestAssured;
 import io.restassured.http.ContentType;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -29,6 +30,11 @@ class ReservationDAOTest {
 
     @Autowired
     private JdbcTemplate jdbcTemplate;
+
+    @BeforeEach
+    void insertReservationTime() {
+        jdbcTemplate.update("insert into reservation_time (start_at) values (?)", "10:00");
+    }
 
     @Test
     @DisplayName("새 예약 데이터를 추가하면 해당 데이터에 아이디를 부여한다.")
@@ -94,7 +100,7 @@ class ReservationDAOTest {
     @DisplayName("예약 조회 API를 통해 조회한 예약 수와 DB 쿼리를 통해 조회한 예약 수가 같은지 비교한다.")
     void checkReservationCount() {
         // given
-        jdbcTemplate.update("INSERT INTO reservation (name, date, time) VALUES (?, ?, ?)", "브라운", "2023-08-05", "15:40");
+        jdbcTemplate.update("INSERT INTO reservation (name, date, time_id) VALUES (?, ?, ?)", "브라운", "2023-08-05", 1);
 
         // when
         List<Reservation> reservations = RestAssured.given().log().all()
@@ -112,10 +118,10 @@ class ReservationDAOTest {
     @DisplayName("예약을 삭제하면 DB에서 실제로 제거된다.")
     void verifyReservationIsDeletedInDB() {
         // given
-        Map<String, String> params = new HashMap<>();
+        Map<String, Object> params = new HashMap<>();
         params.put("name", "브라운");
         params.put("date", "2023-08-05");
-        params.put("time", "10:00");
+        params.put("timeId", 1);
 
         RestAssured.given().log().all()
                 .contentType(ContentType.JSON)
@@ -144,7 +150,7 @@ class ReservationDAOTest {
 
     private Reservation getNewReservationInfo() {
         ReservationReqDTO reservationReqDto = new ReservationReqDTO("포비", LocalDate.now(), 1L);
-        ReservationTime reservationTime = new ReservationTime(LocalTime.of(10, 0));
+        ReservationTime reservationTime = new ReservationTime(1L, LocalTime.of(10, 0));
         return reservationReqDto.toEntityWith(reservationTime);
     }
 }

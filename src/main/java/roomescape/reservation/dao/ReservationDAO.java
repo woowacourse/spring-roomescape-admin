@@ -6,8 +6,10 @@ import org.springframework.jdbc.support.GeneratedKeyHolder;
 import org.springframework.jdbc.support.KeyHolder;
 import org.springframework.stereotype.Component;
 import roomescape.reservation.model.Reservation;
+import roomescape.reservation.model.ReservationTime;
 
 import java.sql.PreparedStatement;
+import java.time.LocalTime;
 import java.util.List;
 import java.util.NoSuchElementException;
 
@@ -26,13 +28,13 @@ public class ReservationDAO {
     }
 
     private Long insertWithKeyHolder(Reservation reservation) {
-        String sql = "insert into reservation (name, date, time) values (?, ?, ?)";
+        String sql = "insert into reservation (name, date, time_id) values (?, ?, ?)";
         KeyHolder keyHolder = new GeneratedKeyHolder();
         jdbcTemplate.update(con -> {
             PreparedStatement ps = con.prepareStatement(sql, new String[]{"id"});
             ps.setString(1, reservation.getName());
             ps.setString(2, reservation.getDate().toString());
-            ps.setString(3, reservation.getTime().toString());
+            ps.setLong(3, reservation.getTime().getId());
             return ps;
         }, keyHolder);
 
@@ -40,13 +42,25 @@ public class ReservationDAO {
     }
 
     public Reservation selectBy(Long id) {
-        String sql = "select * from reservation where id = ?";
+        String sql = """
+                select r.id, r.name, r.date, rt.id as time_id, rt.start_at as time_value
+                from reservation r
+                inner join reservation_time rt
+                on r.time_id = rt.id
+                where r.id = ?
+                """;
         return findReservationById(sql, id);
     }
 
     public List<Reservation> selectAll() {
-        String sql = "select * from reservation";
-        return jdbcTemplate.query(sql, rowMapperForReservation());
+        String sql = """
+                select r.id, r.name, r.date, rt.id as time_id, rt.start_at as time_value
+                from reservation r
+                inner join reservation_time rt
+                on r.time_id = rt.id
+                """;
+
+        return jdbcTemplate.query(sql, rowMapperWithJoin());
     }
 
     public void deleteBy(Long id) {
@@ -57,22 +71,28 @@ public class ReservationDAO {
         }
     }
 
-    private RowMapper<Reservation> rowMapperForReservation() {
-        return (rs, rowNum) -> new Reservation(
-                rs.getLong("id"),
-                rs.getString("name"),
-                rs.getDate("date").toLocalDate(),
-                rs.getTime("time").toLocalTime()
-        );
+    private RowMapper<Reservation> rowMapperWithJoin() {
+        return (rs, rowNum) -> {
+            long timeId = rs.getLong("time_id");
+            LocalTime startAt = rs.getTime("time_value").toLocalTime();
+            ReservationTime time = new ReservationTime(timeId, startAt);
+
+            return new Reservation(
+                    rs.getLong("id"),
+                    rs.getString("name"),
+                    rs.getDate("date").toLocalDate(),
+                    time
+            );
+        };
     }
 
     private Reservation findReservationById(String sql, Long id) {
         return jdbcTemplate.queryForObject(sql,
                 (rs, rowNum) -> new Reservation(
-                rs.getLong("id"),
-                rs.getString("name"),
-                rs.getDate("date").toLocalDate(),
-                rs.getTime("time").toLocalTime()
-        ), id);
+                        rs.getLong("id"),
+                        rs.getString("name"),
+                        rs.getDate("date").toLocalDate(),
+                        new ReservationTime(rs.getLong("time_id"), rs.getTime("time_value").toLocalTime())
+                ), id);
     }
 }

@@ -32,13 +32,13 @@ public class ReservationTimeController {
     }
 
     @GetMapping
-    public ResponseEntity<List<ReservationTime>> findAll() {
+    public ResponseEntity<List<ReservationTime>> getAll() {
         List<ReservationTime> reservationTimes = timeDAO.selectAll();
         return ResponseEntity.ok(reservationTimes);
     }
 
     @DeleteMapping("/{id}")
-    public ResponseEntity<Void> delete(@PathVariable Long id) {
+    public ResponseEntity<Void> deleteBy(@PathVariable Long id) {
         try {
             timeDAO.deleteBy(id);
             return ResponseEntity.ok().build();

@@ -15,7 +15,7 @@
       - 어드민 페이지는 `templates/admin/index.html`
    2. 예약 화면
        - `GET` `/admin/reservation` 요청 시 아래 화면과 같이 예약 관리 페이지가 응답
-       - 예약 페이지는 `templates/admin/reservation-legacy.html`
+       - 예약 페이지는 `templates/admin/reservation.html`
      
 ### 예약 API
    1. 예약 목록 조회 API

@@ -1,55 +1,16 @@
 package roomescape.reservation.repository;
 
-import java.time.LocalTime;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 import java.util.Optional;
-import javax.sql.DataSource;
-import org.springframework.jdbc.core.JdbcTemplate;
-import org.springframework.jdbc.core.simple.SimpleJdbcInsert;
-import org.springframework.stereotype.Repository;
 import roomescape.reservation.model.ReservationTime;
 
-@Repository
-public class ReservationTimeRepository {
+public interface ReservationTimeRepository {
 
-    private final JdbcTemplate jdbcTemplate;
-    private final SimpleJdbcInsert simpleJdbcInsert;
+    ReservationTime insertTime(ReservationTime reservationTime);
 
-    public ReservationTimeRepository(DataSource dataSource) {
-        this.jdbcTemplate = new JdbcTemplate(dataSource);
-        this.simpleJdbcInsert = new SimpleJdbcInsert(dataSource)
-                .withTableName("reservation_time")
-                .usingGeneratedKeyColumns("id");
-    }
+    List<ReservationTime> findAll();
 
-    public ReservationTime insertTime(ReservationTime reservationTime) {
-        Map<String, Object> parameters = new HashMap<>();
-        parameters.put("start_at", reservationTime.getStartAt());
-        Number number = simpleJdbcInsert.executeAndReturnKey(parameters);
-        return new ReservationTime(number.longValue(), reservationTime.getStartAt());
-    }
+    boolean deleteTimeById(long id);
 
-    public List<ReservationTime> findAll() {
-        String sql = "Select * from reservation_time";
-        return jdbcTemplate.query(sql, (resultSet, rowNum) -> new ReservationTime(
-                resultSet.getLong("id"),
-                resultSet.getObject("start_at", LocalTime.class)
-        ));
-    }
-
-    public boolean deleteTimeById(long id) {
-        String sql = "delete from reservation_time where id = ?";
-        int updated = jdbcTemplate.update(sql, id);
-        return updated != 0;
-    }
-
-    public Optional<ReservationTime> findById(long id) {
-        String sql = "select * from reservation_time where id = ?";
-        return jdbcTemplate.query(sql, (resultSet, rowNum) -> new ReservationTime(
-                resultSet.getLong("id"),
-                resultSet.getObject("start_at", LocalTime.class)
-        ), id).stream().findFirst();
-    }
+    Optional<ReservationTime> findById(long id);
 }

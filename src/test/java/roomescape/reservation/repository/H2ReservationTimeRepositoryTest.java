@@ -12,11 +12,11 @@ import org.springframework.context.annotation.Import;
 import roomescape.reservation.model.ReservationTime;
 
 @JdbcTest(properties = "application-test.properties")
-@Import(ReservationTimeRepository.class)
-class ReservationReservationTimeRepositoryTest {
+@Import(H2ReservationTimeRepository.class)
+class H2ReservationTimeRepositoryTest {
 
     @Autowired
-    ReservationTimeRepository reservationTimeRepository;
+    H2ReservationTimeRepository h2ReservationTimeRepository;
 
     ReservationTime reservationTimeWithoutId = ReservationTime.createWithoutId(LocalTime.of(12, 0));
 
@@ -24,7 +24,7 @@ class ReservationReservationTimeRepositoryTest {
     @Test
     void insertTime() {
         // when
-        ReservationTime reservationTime = reservationTimeRepository.insertTime(reservationTimeWithoutId);
+        ReservationTime reservationTime = h2ReservationTimeRepository.insertTime(reservationTimeWithoutId);
 
         // then
         assertThat(reservationTime)
@@ -35,10 +35,10 @@ class ReservationReservationTimeRepositoryTest {
     @Test
     void deleteById() {
         // given
-        ReservationTime reservationTime = reservationTimeRepository.insertTime(reservationTimeWithoutId);
+        ReservationTime reservationTime = h2ReservationTimeRepository.insertTime(reservationTimeWithoutId);
 
         // when
-        boolean isDeleted = reservationTimeRepository.deleteTimeById(reservationTime.getId());
+        boolean isDeleted = h2ReservationTimeRepository.deleteTimeById(reservationTime.getId());
 
         // then
         assertThat(isDeleted).isTrue();
@@ -48,10 +48,10 @@ class ReservationReservationTimeRepositoryTest {
     @Test
     void findAll() {
         // given
-        reservationTimeRepository.insertTime(reservationTimeWithoutId);
+        h2ReservationTimeRepository.insertTime(reservationTimeWithoutId);
 
         // when
-        List<ReservationTime> reservationTimes = reservationTimeRepository.findAll();
+        List<ReservationTime> reservationTimes = h2ReservationTimeRepository.findAll();
 
         // then
         assertThat(reservationTimes).hasSize(1);

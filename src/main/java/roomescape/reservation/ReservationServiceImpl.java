@@ -1,6 +1,7 @@
 package roomescape.reservation;
 
 import java.util.List;
+import roomescape.dto.ReservationRequest;
 
 public class ReservationServiceImpl implements ReservationService {
 
@@ -11,7 +12,7 @@ public class ReservationServiceImpl implements ReservationService {
     }
 
     @Override
-    public Reservation saveReservation(Reservation wantToSaveReservation) {
+    public Reservation saveReservation(ReservationRequest wantToSaveReservation) {
         return reservationRepository.saveReservation(wantToSaveReservation);
     }
 
@@ -21,18 +22,13 @@ public class ReservationServiceImpl implements ReservationService {
     }
 
     @Override
-    public Reservation findReservationById(Long wandToFindId) {
-        return reservationRepository.findReservationById(wandToFindId);
-    }
-
-    @Override
     public List<Reservation> findAllReservations() {
         return reservationRepository.findAllReservations();
     }
 
     @Override
-    public void validateReservationTimeAvailability(Reservation wantToSaveReservation) {
-        if (reservationRepository.isExistReservation(wantToSaveReservation)) {
+    public void validateReservationTimeAvailability(ReservationRequest wantToSaveReservationRequest) {
+        if (reservationRepository.isExistReservation(wantToSaveReservationRequest)) {
             throw new IllegalArgumentException("[ERROR] 이미 예약되었어요. 다른 날짜를 골라주세요.");
         }
     }

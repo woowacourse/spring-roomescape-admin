@@ -2,7 +2,6 @@ package roomescape.controller;
 
 import java.util.List;
 import java.util.Objects;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -13,6 +12,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.server.ResponseStatusException;
+import roomescape.dto.ReservationRequest;
 import roomescape.reservation.Reservation;
 import roomescape.reservation.ReservationService;
 
@@ -26,23 +26,20 @@ public class ReservationController {
         this.reservationService = reservationService;
     }
 
-    @GetMapping()
+    @GetMapping
     public List<Reservation> getReservations(
     ) {
         return reservationService.findAllReservations();
     }
 
-    @PostMapping()
+    @PostMapping
     public ResponseEntity<Reservation> createReservation(
-            @RequestBody Reservation reservation
-    ) {
-        try{
-            reservationService.validateReservationTimeAvailability(reservation);
-        } catch (IllegalArgumentException e) {
-            throw new ResponseStatusException(HttpStatus.BAD_REQUEST);
-        }
+            @RequestBody ReservationRequest reservationRequest
+            ) {
 
-        Reservation newReservation = reservationService.saveReservation(reservation);
+        validateReservationTimeAvailability(reservationRequest);
+
+        Reservation newReservation = reservationService.saveReservation(reservationRequest);
         return ResponseEntity.ok().body(newReservation);
     }
 
@@ -50,14 +47,22 @@ public class ReservationController {
     public ResponseEntity<List<Reservation>> deleteReservation(
             @PathVariable Long id
     ) {
-        Reservation reservation = reservationService.findAllReservations().stream()
+        reservationService.findAllReservations().stream()
                 .filter(it -> Objects.equals(it.getId(), id))
                 .findFirst()
-                .orElseThrow(RuntimeException::new);
+                .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND));
 
-        reservationService.deleteReservation(reservation.getId());
+        reservationService.deleteReservation(id);
 
         return ResponseEntity.ok().body(reservationService.findAllReservations());
+    }
+
+    private void validateReservationTimeAvailability(ReservationRequest reservationRequest) {
+        try{
+            reservationService.validateReservationTimeAvailability(reservationRequest);
+        } catch (IllegalArgumentException e) {
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST);
+        }
     }
 
 }

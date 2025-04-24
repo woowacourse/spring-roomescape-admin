@@ -1,11 +1,11 @@
 package roomescape.reservation;
 
 import java.util.List;
+import roomescape.dto.ReservationRequest;
 
 public interface ReservationRepository {
-    Reservation saveReservation(Reservation wantToSaveReservation);
+    Reservation saveReservation(ReservationRequest wantToSaveReservationRequest);
     void deleteReservation(Long wantToDeleteId);
-    Reservation findReservationById(Long wandToFindId);
     List<Reservation> findAllReservations();
-    boolean isExistReservation(Reservation wantToSaveReservation);
+    boolean isExistReservation(ReservationRequest wantToSaveReservationRequest);
 }

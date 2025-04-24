@@ -10,12 +10,12 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.jdbc.JdbcTest;
 import org.springframework.context.annotation.Import;
 import org.springframework.jdbc.core.JdbcTemplate;
-import roomescape.time.domain.Time;
+import roomescape.time.domain.ReservationTime;
 import roomescape.time.dto.TimeRequest;
 
 @JdbcTest
 @Import(TimeDAO.class)
-public class TimeDAOTest {
+public class ReservationTimeDAOTest {
 
     @Autowired
     private JdbcTemplate jdbcTemplate;
@@ -40,10 +40,10 @@ public class TimeDAOTest {
         );
 
         //when
-        List<Time> reservationTimes = timeDAO.findAllTimes();
+        List<ReservationTime> reservationReservationTimes = timeDAO.findAllTimes();
 
         //then
-        Assertions.assertThat(reservationTimes.size()).isOne();
+        Assertions.assertThat(reservationReservationTimes.size()).isOne();
     }
 
     @DisplayName("예약 시간 추가 테스트")
@@ -68,10 +68,10 @@ public class TimeDAOTest {
         TimeRequest timeRequest = new TimeRequest(
                 LocalTime.of(17,5)
         );
-        Time time = timeDAO.insertTime(timeRequest);
+        ReservationTime reservationTime = timeDAO.insertTime(timeRequest);
 
         //when
-        timeDAO.deleteTime(time.getId());
+        timeDAO.deleteTime(reservationTime.getId());
 
         //then
         Assertions.assertThat(timeDAO.findAllTimes()).hasSize(0);

@@ -6,15 +6,16 @@ import java.util.List;
 import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
+import org.springframework.jdbc.core.JdbcTemplate;
 import roomescape.domain.Reservation;
 
-class ReservationRepositoryImplTest {
+class ReservationH2RepositoryTest {
 
     @DisplayName("예약 객체를 추가한다")
     @Test
     void add() {
         // given
-        ReservationRepository reservationRepository = new ReservationRepositoryImpl();
+        ReservationRepository reservationRepository = new ReservationH2Repository(new JdbcTemplate());
         Reservation reservation = Reservation.of("예약자", LocalDate.now(), LocalTime.now());
 
         // when
@@ -29,7 +30,7 @@ class ReservationRepositoryImplTest {
     @Test
     void findAll() {
         // given
-        ReservationRepository reservationRepository = new ReservationRepositoryImpl();
+        ReservationRepository reservationRepository = new ReservationH2Repository(new JdbcTemplate());
         Reservation reservation = Reservation.of("예약자", LocalDate.now(), LocalTime.now());
         reservationRepository.add(reservation);
 
@@ -44,7 +45,7 @@ class ReservationRepositoryImplTest {
     @Test
     void findById() {
         // given
-        ReservationRepository reservationRepository = new ReservationRepositoryImpl();
+        ReservationRepository reservationRepository = new ReservationH2Repository(new JdbcTemplate());
         Reservation reservation = Reservation.of("예약자", LocalDate.now(), LocalTime.now());
         reservationRepository.add(reservation);
 
@@ -59,7 +60,7 @@ class ReservationRepositoryImplTest {
     @Test
     void delete() {
         // given
-        ReservationRepository reservationRepository = new ReservationRepositoryImpl();
+        ReservationRepository reservationRepository = new ReservationH2Repository(new JdbcTemplate());
         Reservation reservation = Reservation.of("예약자", LocalDate.now(), LocalTime.now());
         reservationRepository.add(reservation);
 

@@ -8,6 +8,7 @@ public class Time {
     private final LocalTime startAt;
 
     public Time(Long id, LocalTime startAt) {
+        validateStartAt(startAt);
         this.id = id;
         this.startAt = startAt;
     }
@@ -26,5 +27,11 @@ public class Time {
 
     public LocalTime getStartAt() {
         return startAt;
+    }
+
+    public void validateStartAt(LocalTime startAt) {
+        if (startAt == null) {
+            throw new IllegalArgumentException("시간은 null일 수 없습니다.");
+        }
     }
 }

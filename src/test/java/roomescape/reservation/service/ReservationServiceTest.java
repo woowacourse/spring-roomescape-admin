@@ -7,7 +7,6 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import roomescape.reservation.dao.FakeReservationDao;
 import roomescape.reservation.dto.ReservationRequest;
-import roomescape.reservation.dto.ReservationResponse;
 import roomescape.reservation.utils.ReservationMapper;
 
 import static org.assertj.core.api.Assertions.assertThat;
@@ -33,8 +32,8 @@ class ReservationServiceTest {
         );
 
         // When & Then
-        assertThat(reservationService.addReservation(reservationRequest))
-                .isInstanceOf(ReservationResponse.class);
+        assertThat(reservationService.addReservation(reservationRequest).id())
+                .isNotNull();
     }
 
     @Test

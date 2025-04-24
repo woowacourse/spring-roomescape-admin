@@ -14,8 +14,12 @@ import roomescape.time.domain.Time;
 @Repository
 public class TimeDaoImpl implements TimeDao {
 
+    private final JdbcTemplate jdbcTemplate;
+
     @Autowired
-    private JdbcTemplate jdbcTemplate;
+    public TimeDaoImpl(JdbcTemplate jdbcTemplate) {
+        this.jdbcTemplate = jdbcTemplate;
+    }
 
     @Override
     public Time insert(Time time) {

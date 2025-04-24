@@ -49,6 +49,6 @@ public class ReservationTimeController {
     public ResponseEntity<Void> deleteTimeById(@PathVariable long id) {
         reservationTimeService.deleteById(id);
 
-        return ResponseEntity.ok().build();
+        return ResponseEntity.noContent().build();
     }
 }

@@ -7,17 +7,19 @@ import org.springframework.context.annotation.Primary;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.simple.SimpleJdbcInsert;
 import org.springframework.stereotype.Repository;
+import roomescape.common.repository.CommonRepository;
+import roomescape.common.repository.IdCache;
 import roomescape.reservation.domain.Reservation;
 import roomescape.reservation.entity.ReservationEntity;
 
 @Repository
 @Primary
-public class H2ReservationRepository implements ReservationRepository {
+public class H2ReservationRepository implements CommonRepository<Reservation> {
 
     private final JdbcTemplate jdbcTemplate;
-    private final ReservationIdCache cache;
+    private final IdCache<Reservation> cache;
 
-    public H2ReservationRepository(final JdbcTemplate jdbcTemplate, final ReservationIdCache cache) {
+    public H2ReservationRepository(final JdbcTemplate jdbcTemplate, final IdCache<Reservation> cache) {
         this.jdbcTemplate = jdbcTemplate;
         this.cache = cache;
     }
@@ -75,16 +77,11 @@ public class H2ReservationRepository implements ReservationRepository {
 
     @Override
     public Long getCachedId(final Reservation reservation) {
-        return cache.get(reservation);
+        return cache.getCachedId(reservation);
     }
 
     @Override
     public void cacheId(final Reservation reservation, final Long id) {
-        cache.put(reservation, id);
-    }
-
-    @Override
-    public void clearAllCachedIds() {
-        cache.clear();
+        cache.cacheId(reservation, id);
     }
 }

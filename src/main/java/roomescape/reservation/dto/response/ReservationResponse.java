@@ -4,13 +4,13 @@ import java.time.LocalDate;
 import java.time.LocalTime;
 import roomescape.reservation.domain.Reservation;
 
-public record ReservationCreateResponse(
+public record ReservationResponse(
         long id,
         String name,
         LocalDate date,
         LocalTime time
 ) {
-    public static ReservationCreateResponse from(long id, Reservation reservation) {
-        return new ReservationCreateResponse(id, reservation.getName(), reservation.getDate(), reservation.getTime());
+    public static ReservationResponse from(long id, Reservation reservation) {
+        return new ReservationResponse(id, reservation.getName(), reservation.getDate(), reservation.getTime());
     }
 }

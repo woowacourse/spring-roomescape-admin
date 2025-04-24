@@ -3,24 +3,23 @@ package roomescape.reservation;
 import java.util.List;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
+import roomescape.common.repository.CommonRepository;
 import roomescape.reservation.domain.Reservation;
 import roomescape.reservation.dto.request.ReservationCreateRequest;
-import roomescape.reservation.dto.response.ReservationCreateResponse;
-import roomescape.reservation.dto.response.ReservationGetResponse;
-import roomescape.reservation.repository.ReservationRepository;
+import roomescape.reservation.dto.response.ReservationResponse;
 
 @Service
 public class ReservationService {
 
-    private final ReservationRepository reservationRepository;
+    private final CommonRepository<Reservation> reservationRepository;
 
-    public ReservationService(final ReservationRepository reservationRepository) {
+    public ReservationService(final CommonRepository<Reservation> reservationRepository) {
         this.reservationRepository = reservationRepository;
     }
 
-    public List<ReservationGetResponse> getReservations() {
+    public List<ReservationResponse> getReservations() {
         return reservationRepository.getAll().stream()
-                .map(reservation -> ReservationGetResponse.from(reservationRepository.getCachedId(reservation),
+                .map(reservation -> ReservationResponse.from(reservationRepository.getCachedId(reservation),
                         reservation))
                 .toList();
     }
@@ -31,10 +30,9 @@ public class ReservationService {
         reservationRepository.deleteById(id);
     }
 
-    public ResponseEntity<ReservationCreateResponse> create(final ReservationCreateRequest request) {
+    public ReservationResponse create(final ReservationCreateRequest request) {
         Reservation newReservation = reservationRepository.put(request.toReservation());
         long newId = reservationRepository.getCachedId(newReservation);
-        reservationRepository.clearAllCachedIds();
-        return ResponseEntity.ok(ReservationCreateResponse.from(newId, newReservation));
+        return ReservationResponse.from(newId, newReservation);
     }
 }

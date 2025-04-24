@@ -14,10 +14,6 @@ public record ReservationEntity(
         this(id, name, LocalDate.parse(date), LocalTime.parse(time));
     }
 
-    public static ReservationEntity of(long id, Reservation reservation) {
-        return new ReservationEntity(id, reservation.getName(), reservation.getDate(), reservation.getTime());
-    }
-
     public Reservation toReservation() {
         return new Reservation(name, date, time);
     }

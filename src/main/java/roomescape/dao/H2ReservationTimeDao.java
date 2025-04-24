@@ -1,6 +1,7 @@
 package roomescape.dao;
 
 import org.springframework.jdbc.core.JdbcTemplate;
+import org.springframework.jdbc.core.RowMapper;
 import org.springframework.jdbc.core.simple.SimpleJdbcInsert;
 import org.springframework.stereotype.Repository;
 import roomescape.entity.ReservationTime;
@@ -19,21 +20,20 @@ public class H2ReservationTimeDao implements ReservationTimeDao {
         this.jdbcTemplate = jdbcTemplate;
     }
 
+    private final static RowMapper<ReservationTime> timeRowMapper = (resultSet, rowNum) -> ReservationTime.of(
+            resultSet.getLong("id"),
+            resultSet.getObject("start_at", LocalTime.class));
+
     @Override
     public List<ReservationTime> findAll() {
         String sql = "SELECT id, start_at FROM reservation_time";
-        return jdbcTemplate.query(sql, (resultSet, rowNum) -> ReservationTime.of(
-                        resultSet.getLong("id"),
-                        resultSet.getObject("start_at", LocalTime.class)));
+        return jdbcTemplate.query(sql, timeRowMapper);
     }
 
     @Override
     public ReservationTime findById(final Long id) {
         String sql = "SELECT id, start_at FROM reservation_time WHERE id = ?";
-        return jdbcTemplate.queryForObject(sql, (resultSet, rowNum) -> ReservationTime.of(
-                resultSet.getLong("id"),
-                resultSet.getObject("start_at", LocalTime.class)
-        ), id);
+        return jdbcTemplate.queryForObject(sql, timeRowMapper, id);
     }
 
     @Override

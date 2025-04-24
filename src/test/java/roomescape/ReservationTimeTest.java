@@ -15,7 +15,39 @@ import org.junit.jupiter.api.Test;
 @DirtiesContext(classMode = DirtiesContext.ClassMode.BEFORE_EACH_TEST_METHOD)
 public class ReservationTimeTest {
     @Test
-    void 칠단계() {
+    void 예약시간_추가_테스트() {
+        Map<String, String> params = new HashMap<>();
+        params.put("startAt", "10:00");
+
+        RestAssured.given().log().all()
+                .contentType(ContentType.JSON)
+                .body(params)
+                .when().post("/times")
+                .then().log().all()
+                .statusCode(200);
+    }
+
+    @Test
+    void 예약시간_조회_테스트() {
+        Map<String, String> params = new HashMap<>();
+        params.put("startAt", "10:00");
+
+        RestAssured.given().log().all()
+                .contentType(ContentType.JSON)
+                .body(params)
+                .when().post("/times")
+                .then().log().all()
+                .statusCode(200);
+
+        RestAssured.given().log().all()
+                .when().get("/times")
+                .then().log().all()
+                .statusCode(200)
+                .body("size()", is(1));
+    }
+
+    @Test
+    void 예약시간_삭제_테스트() {
         Map<String, String> params = new HashMap<>();
         params.put("startAt", "10:00");
 
@@ -39,7 +71,42 @@ public class ReservationTimeTest {
     }
 
     @Test
-    void 팔단계() {
+    void 예약_추가_테스트() {
+        Map<String, String> params = new HashMap<>();
+        params.put("startAt", "10:00");
+
+        RestAssured.given().log().all()
+                .contentType(ContentType.JSON)
+                .body(params)
+                .when().post("/times")
+                .then().log().all()
+                .statusCode(200);
+
+        Map<String, Object> reservation = new HashMap<>();
+        reservation.put("name", "브라운");
+        reservation.put("date", "2023-08-05");
+        reservation.put("timeId", 1);
+
+        RestAssured.given().log().all()
+                .contentType(ContentType.JSON)
+                .body(reservation)
+                .when().post("/reservations")
+                .then().log().all()
+                .statusCode(200);
+    }
+
+    @Test
+    void 예약_조회_테스트() {
+        Map<String, String> params = new HashMap<>();
+        params.put("startAt", "10:00");
+
+        RestAssured.given().log().all()
+                .contentType(ContentType.JSON)
+                .body(params)
+                .when().post("/times")
+                .then().log().all()
+                .statusCode(200);
+
         Map<String, Object> reservation = new HashMap<>();
         reservation.put("name", "브라운");
         reservation.put("date", "2023-08-05");
@@ -52,22 +119,10 @@ public class ReservationTimeTest {
                 .then().log().all()
                 .statusCode(200);
 
-        Map<String, Object> reservation2 = new HashMap<>();
-        reservation2.put("name", "포라");
-        reservation2.put("date", "2025-08-05");
-        reservation2.put("timeId", 2);
-
-        RestAssured.given().log().all()
-                .contentType(ContentType.JSON)
-                .body(reservation2)
-                .when().post("/reservations")
-                .then().log().all()
-                .statusCode(200);
-
         RestAssured.given().log().all()
                 .when().get("/reservations")
                 .then().log().all()
                 .statusCode(200)
-                .body("size()", is(2));
+                .body("size()", is(1));
     }
 }

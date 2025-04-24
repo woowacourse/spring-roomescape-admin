@@ -4,9 +4,11 @@ import java.util.List;
 
 public interface BasicRepository<T> {
 
-    List<T> findAll();
-
     T add(T t);
+
+    T findById(Long id);
+
+    List<T> findAll();
 
     void removeById(Long id);
 }

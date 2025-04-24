@@ -32,12 +32,6 @@ public class H2ReservationTimeRepository implements ReservationTimeRepository {
     }
 
     @Override
-    public List<ReservationTime> findAll() {
-        String sql = "select id, start_at from reservation_time";
-        return jdbcTemplate.query(sql, reservationTimeRowMapper);
-    }
-
-    @Override
     public ReservationTime add(final ReservationTime reservationTime) {
         Map<String, Object> parameters = new HashMap<>(1);
         parameters.put("start_at", reservationTime.getStartAt());
@@ -47,9 +41,16 @@ public class H2ReservationTimeRepository implements ReservationTimeRepository {
         return findById(newId.longValue());
     }
 
+    @Override
     public ReservationTime findById(final Long id) {
         String sql = "select id, start_at from reservation_time where id = ?";
         return jdbcTemplate.queryForObject(sql, reservationTimeRowMapper, id);
+    }
+
+    @Override
+    public List<ReservationTime> findAll() {
+        String sql = "select id, start_at from reservation_time";
+        return jdbcTemplate.query(sql, reservationTimeRowMapper);
     }
 
     @Override

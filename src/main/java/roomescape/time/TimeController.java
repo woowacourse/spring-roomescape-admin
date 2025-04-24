@@ -44,7 +44,7 @@ public class TimeController {
         try {
             timeService.deleteTimeById(id);
             return ResponseEntity.ok().build();
-        } catch (final IllegalStateException e) {
+        } catch (final IllegalArgumentException e) {
             return ResponseEntity.notFound().build();
         }
     }

@@ -26,12 +26,12 @@ public class ReservationTimeController {
 
     @GetMapping("/times")
     public ResponseEntity<List<ReservationTimeResponse>> getTimes() {
-        return ResponseEntity.ok(reservationTimeService.getAllReservationTimes());
+        return ResponseEntity.ok().body(reservationTimeService.getAllReservationTimes());
     }
 
     @GetMapping("/times/{id}")
     public ResponseEntity<ReservationTimeResponse> getTimeById(@PathVariable Long id) {
-        return ResponseEntity.ok(reservationTimeService.getReservationTimeById(id));
+        return ResponseEntity.ok().body(reservationTimeService.getReservationTimeById(id));
     }
 
     @ResponseStatus(HttpStatus.OK)

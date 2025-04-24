@@ -2,10 +2,8 @@ package roomescape.repositiory;
 
 import java.util.ArrayList;
 import java.util.List;
-import org.springframework.stereotype.Repository;
 import roomescape.domain.Reservation;
 
-@Repository
 public class ReservationRepositoryImpl implements ReservationRepository {
 
     private final List<Reservation> reservations = new ArrayList<>();

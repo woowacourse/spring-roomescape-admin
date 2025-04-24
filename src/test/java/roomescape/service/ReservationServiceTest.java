@@ -5,8 +5,10 @@ import java.time.LocalTime;
 import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
+import org.springframework.jdbc.core.JdbcTemplate;
 import roomescape.domain.Reservation;
 import roomescape.domain.dto.ReservationRequestDto;
+import roomescape.repositiory.ReservationH2Repository;
 
 class ReservationServiceTest {
 
@@ -14,7 +16,8 @@ class ReservationServiceTest {
     @Test
     void add() {
         // given
-        ReservationService reservationService = new ReservationService();
+        ReservationH2Repository reservationRepository = new ReservationH2Repository(new JdbcTemplate());
+        ReservationService reservationService = new ReservationService(reservationRepository);
 
         // when
         Reservation addedReservation = reservationService.add(
@@ -28,7 +31,8 @@ class ReservationServiceTest {
     @Test
     void delete() {
         // given
-        ReservationService reservationService = new ReservationService();
+        ReservationH2Repository reservationRepository = new ReservationH2Repository(new JdbcTemplate());
+        ReservationService reservationService = new ReservationService(reservationRepository);
         Reservation addedReservation = reservationService.add(
                 new ReservationRequestDto("예약자", LocalDate.now(), LocalTime.now()));
 
@@ -43,7 +47,8 @@ class ReservationServiceTest {
     @Test
     void readAll() {
         // given
-        ReservationService reservationService = new ReservationService();
+        ReservationH2Repository reservationRepository = new ReservationH2Repository(new JdbcTemplate());
+        ReservationService reservationService = new ReservationService(reservationRepository);
         Reservation addedReservation = reservationService.add(
                 new ReservationRequestDto("예약자", LocalDate.now(), LocalTime.now()));
 

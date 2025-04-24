@@ -96,7 +96,6 @@ public class MissionStepTest {
                 .body("size()", is(0));
     }
 
-
     @Test
     void 사단계() {
         try (Connection connection = jdbcTemplate.getDataSource().getConnection()) {
@@ -153,8 +152,6 @@ public class MissionStepTest {
         Integer countAfterDelete = jdbcTemplate.queryForObject("SELECT count(1) from reservation", Integer.class);
         assertThat(countAfterDelete).isEqualTo(0);
     }
-
-
 
     @Test
     void 칠단계() {

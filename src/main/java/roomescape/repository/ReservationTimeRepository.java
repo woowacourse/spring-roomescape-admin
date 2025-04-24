@@ -2,6 +2,7 @@ package roomescape.repository;
 
 import java.sql.PreparedStatement;
 import java.util.List;
+import java.util.Objects;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.support.GeneratedKeyHolder;
 import org.springframework.jdbc.support.KeyHolder;
@@ -24,19 +25,15 @@ public class ReservationTimeRepository {
             ps.setString(1, startAt);
             return ps;
         }, keyHolder);
-        return new ReservationTime(keyHolder.getKey().longValue(), startAt);
+        return new ReservationTime(Objects.requireNonNull(keyHolder.getKey()).longValue(), startAt);
     }
 
     public List<ReservationTime> getAllTime() {
         String sql = "select * from reservation_time";
-        List<ReservationTime> reservationTimes = jdbcTemplate.query(sql, (rs, rowNum) -> {
-            ReservationTime reservationTime = new ReservationTime(
-                    rs.getLong("id"),
-                    rs.getString("start_at")
-            );
-            return reservationTime;
-        });
-        return reservationTimes;
+        return jdbcTemplate.query(sql, (rs, rowNum) -> new ReservationTime(
+                rs.getLong("id"),
+                rs.getString("start_at")
+        ));
     }
 
     public Integer deleteTime(Long id) {

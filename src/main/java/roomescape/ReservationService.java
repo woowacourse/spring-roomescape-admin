@@ -13,7 +13,8 @@ public class ReservationService {
     private final ReservationRepository reservationRepository;
     private final ReservationTimeRepository reservationTimeRepository;
 
-    public ReservationService(ReservationRepository reservationRepository, ReservationTimeRepository reservationTimeRepository) {
+    public ReservationService(ReservationRepository reservationRepository,
+                              ReservationTimeRepository reservationTimeRepository) {
         this.reservationRepository = reservationRepository;
         this.reservationTimeRepository = reservationTimeRepository;
     }
@@ -23,7 +24,8 @@ public class ReservationService {
     }
 
     public Reservation addReservation(ReservationRequestDto reservationRequestDto) {
-        ReservationTime reservationTime = reservationTimeRepository.getReservationTimeById(reservationRequestDto.timeId());
+        ReservationTime reservationTime = reservationTimeRepository.getReservationTimeById(
+                reservationRequestDto.timeId());
         return reservationRepository.addReservation(reservationRequestDto, reservationTime);
     }
 

@@ -14,8 +14,7 @@ import roomescape.model.ReservationTime;
 
 @Controller
 public class ReservationTimeController {
-
-    ReservationService reservationService;
+    private final ReservationService reservationService;
 
     public ReservationTimeController(ReservationService reservationService) {
         this.reservationService = reservationService;

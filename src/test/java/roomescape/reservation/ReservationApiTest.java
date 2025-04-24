@@ -22,7 +22,7 @@ public class ReservationApiTest {
     private static final Map<String, String> RESERVATION_BODY = new HashMap<>();
     private static final Map<String, String> TIME_BODY = new HashMap<>();
 
-    private int port;
+    private final int port;
 
     public ReservationApiTest(
             @LocalServerPort final int port
@@ -42,13 +42,10 @@ public class ReservationApiTest {
     @DisplayName("예약을 생성하고, 200 OK를 응답")
     @Test
     void post() {
-        RestAssured.given().port(port).log().all()
-                .contentType(ContentType.JSON)
-                .body(TIME_BODY)
-                .when().post("/times")
-                .then().log().all()
-                .statusCode(200);
+        // given
+        givenCreateTime();
 
+        // when & then
         RestAssured.given().port(port).log().all()
                 .contentType(ContentType.JSON)
                 .body(RESERVATION_BODY)
@@ -61,21 +58,11 @@ public class ReservationApiTest {
     @DisplayName("존재하는 모든 예약과 200 OK를 응답")
     @Test
     void get1() {
-        RestAssured.given().port(port).log().all()
-                .contentType(ContentType.JSON)
-                .body(TIME_BODY)
-                .when().post("/times")
-                .then().log().all()
-                .statusCode(200);
+        // given
+        givenCreateTime();
+        givenCreateReservation();
 
-        RestAssured.given().port(port).log().all()
-                .contentType(ContentType.JSON)
-                .body(RESERVATION_BODY)
-                .when().post("/reservations")
-                .then().log().all()
-                .statusCode(200)
-                .body("id", is(1));
-
+        // when & then
         RestAssured.given().port(port).log().all()
                 .when().get("/reservations")
                 .then().log().all()
@@ -86,6 +73,7 @@ public class ReservationApiTest {
     @DisplayName("예약이 존재하지 않는다면 200 OK와 빈 컬렉션 응답")
     @Test
     void get2() {
+        // given & when & then
         RestAssured.given().port(port).log().all()
                 .when().get("/reservations")
                 .then().log().all()
@@ -96,20 +84,11 @@ public class ReservationApiTest {
     @DisplayName("주어진 아이디에 해당하는 예약이 있다면 200 OK 응답")
     @Test
     void remove1() {
-        RestAssured.given().port(port).log().all()
-                .contentType(ContentType.JSON)
-                .body(TIME_BODY)
-                .when().post("/times")
-                .then().log().all()
-                .statusCode(200);
-        RestAssured.given().port(port).log().all()
-                .contentType(ContentType.JSON)
-                .body(RESERVATION_BODY)
-                .when().post("/reservations")
-                .then().log().all()
-                .statusCode(200)
-                .body("id", is(1));
+        // given
+        givenCreateTime();
+        givenCreateReservation();
 
+        // when & then
         RestAssured.given().port(port).log().all()
                 .when().delete("/reservations/1")
                 .then().log().all()
@@ -119,9 +98,28 @@ public class ReservationApiTest {
     @DisplayName("주어진 아이디에 해당하는 예약이 없다면 404로 응답한다.")
     @Test
     void remove2() {
+        // given & when & then
         RestAssured.given().port(port).log().all()
                 .when().delete("/reservations/100")
                 .then().log().all()
                 .statusCode(404);
+    }
+
+    private void givenCreateTime() {
+        RestAssured.given().port(port).log().all()
+                .contentType(ContentType.JSON)
+                .body(TIME_BODY)
+                .when().post("/times")
+                .then().log().all()
+                .statusCode(200);
+    }
+
+    private void givenCreateReservation() {
+        RestAssured.given().port(port).log().all()
+                .contentType(ContentType.JSON)
+                .body(RESERVATION_BODY)
+                .when().post("/reservations")
+                .then().log().all()
+                .statusCode(200);
     }
 }

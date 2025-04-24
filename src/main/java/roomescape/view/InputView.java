@@ -3,8 +3,8 @@ package roomescape.view;
 import java.time.LocalDate;
 import java.time.LocalTime;
 import java.util.Scanner;
-import roomescape.dto.CreateReservationDto;
-import roomescape.dto.CreateReservationTimeDto;
+import roomescape.dto.request.ReservationRequest;
+import roomescape.dto.request.ReservationTimeRequest;
 
 public class InputView {
 
@@ -26,21 +26,21 @@ public class InputView {
         return Command.find(input);
     }
 
-    public CreateReservationTimeDto readReservationTimeDto() {
+    public ReservationTimeRequest readReservationTimeDto() {
         System.out.println("예약 시간을 입력하시오. ex) 10:00");
         String input = scanner.nextLine();
         LocalTime startAt = LocalTime.parse(input);
-        return new CreateReservationTimeDto(startAt);
+        return new ReservationTimeRequest(startAt);
     }
 
-    public CreateReservationDto readReservationDto() {
+    public ReservationRequest readReservationDto() {
         System.out.println("이름을 입력하시오.");
         String name = scanner.nextLine();
         System.out.println("날짜를 입력하시오. ex) 2025-01-01");
         LocalDate date = LocalDate.parse(scanner.nextLine());
         System.out.println("예약시간 ID를 입력하시오.");
         Long timeId = Long.parseLong(scanner.nextLine());
-        return new CreateReservationDto(name, date, timeId);
+        return new ReservationRequest(name, date, timeId);
     }
 
     public Long readReservationTimeId() {

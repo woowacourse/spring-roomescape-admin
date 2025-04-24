@@ -1,4 +1,4 @@
-package roomescape.dto;
+package roomescape.dto.request;
 
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
@@ -8,7 +8,7 @@ import roomescape.domain.Reservation;
 import roomescape.domain.ReservationDateTime;
 import roomescape.domain.ReservationTime;
 
-public record CreateReservationDto(
+public record ReservationRequest(
         @NotNull @NotBlank
         String name,
 

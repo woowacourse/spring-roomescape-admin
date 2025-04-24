@@ -15,8 +15,8 @@ import org.junit.jupiter.api.Test;
 import roomescape.domain.Reservation;
 import roomescape.domain.ReservationDateTime;
 import roomescape.domain.ReservationTime;
-import roomescape.dto.CreateReservationDto;
-import roomescape.dto.ReservationDto;
+import roomescape.dto.request.ReservationRequest;
+import roomescape.dto.response.ReservationResponse;
 import roomescape.repository.MemoryReservationRepository;
 import roomescape.repository.MemoryReservationTimeRepository;
 import roomescape.repository.ReservationRepository;
@@ -43,7 +43,7 @@ class ReservationServiceTest {
         reservationRepository.add(new Reservation(null, "name1", ReservationDateTime.of(date, time)));
         reservationRepository.add(new Reservation(null, "name2", ReservationDateTime.of(date, time)));
         // when
-        List<ReservationDto> allReservations = reservationService.findAllReservations();
+        List<ReservationResponse> allReservations = reservationService.findAllReservations();
         // then
         assertThat(allReservations).hasSize(2);
     }
@@ -54,9 +54,9 @@ class ReservationServiceTest {
         ReservationTime time = new ReservationTime(null, LocalTime.of(9, 0));
         reservationTimeRepository.add(time);
         LocalDate date = LocalDate.of(2025, 12, 12);
-        CreateReservationDto createReservationDto = new CreateReservationDto("name1", date, 1L);
+        ReservationRequest reservationRequest = new ReservationRequest("name1", date, 1L);
         // when
-        ReservationDto reservation = reservationService.createReservation(createReservationDto);
+        ReservationResponse reservation = reservationService.createReservation(reservationRequest);
         // then
         SoftAssertions soft = new SoftAssertions();
         soft.assertThat(reservationRepository.findAll()).hasSize(1);
@@ -71,9 +71,9 @@ class ReservationServiceTest {
     void 예약시간이_존재하지_않을_경우_예외가_발생한다() {
         // given
         LocalDate date = LocalDate.of(2025, 12, 12);
-        CreateReservationDto createReservationDto = new CreateReservationDto("name1", date, 1L);
+        ReservationRequest reservationRequest = new ReservationRequest("name1", date, 1L);
         // when & then
-        assertThatThrownBy(() -> reservationService.createReservation(createReservationDto))
+        assertThatThrownBy(() -> reservationService.createReservation(reservationRequest))
                 .isInstanceOf(IllegalArgumentException.class);
     }
 

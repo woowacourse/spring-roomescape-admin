@@ -2,8 +2,8 @@ package roomescape.controller;
 
 import java.time.Clock;
 import java.util.function.Supplier;
-import roomescape.dto.CreateReservationDto;
-import roomescape.dto.CreateReservationTimeDto;
+import roomescape.dto.request.ReservationRequest;
+import roomescape.dto.request.ReservationTimeRequest;
 import roomescape.repository.MemoryReservationRepository;
 import roomescape.repository.MemoryReservationTimeRepository;
 import roomescape.repository.ReservationRepository;
@@ -63,8 +63,8 @@ public class ConsoleController {
 
     private void addNewReservation() {
         retry(() -> {
-            CreateReservationDto createReservationDto = inputView.readReservationDto();
-            reservationService.createReservation(createReservationDto);
+            ReservationRequest reservationRequest = inputView.readReservationDto();
+            reservationService.createReservation(reservationRequest);
         });
         outputView.printSuccessMessage();
     }
@@ -87,8 +87,8 @@ public class ConsoleController {
 
     private void addNewTime() {
         retry(() -> {
-            CreateReservationTimeDto createReservationTimeDto = inputView.readReservationTimeDto();
-            reservationTimeService.createReservationTime(createReservationTimeDto);
+            ReservationTimeRequest reservationTimeRequest = inputView.readReservationTimeDto();
+            reservationTimeService.createReservationTime(reservationTimeRequest);
         });
         outputView.printSuccessMessage();
     }

@@ -8,8 +8,8 @@ import org.assertj.core.api.SoftAssertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import roomescape.domain.ReservationTime;
-import roomescape.dto.CreateReservationTimeDto;
-import roomescape.dto.ReservationTimeDto;
+import roomescape.dto.request.ReservationTimeRequest;
+import roomescape.dto.response.ReservationTimeResponse;
 import roomescape.repository.MemoryReservationTimeRepository;
 import roomescape.repository.ReservationTimeRepository;
 
@@ -31,7 +31,7 @@ class ReservationTimeServiceTest {
         reservationTimeRepository.add(reservationTime1);
         reservationTimeRepository.add(reservationTime2);
         // when
-        List<ReservationTimeDto> times = reservationTimeService.findAllReservationTime();
+        List<ReservationTimeResponse> times = reservationTimeService.findAllReservationTime();
         // then
         SoftAssertions soft = new SoftAssertions();
         soft.assertThat(reservationTimeRepository.findAll()).hasSize(2);
@@ -44,14 +44,15 @@ class ReservationTimeServiceTest {
     @Test
     void 예약시간을_추가한다() {
         // given
-        CreateReservationTimeDto createReservationTimeDto = new CreateReservationTimeDto(LocalTime.of(9, 0));
+        ReservationTimeRequest reservationTimeRequest = new ReservationTimeRequest(LocalTime.of(9, 0));
         // when
-        ReservationTimeDto reservationTimeDto = reservationTimeService.createReservationTime(createReservationTimeDto);
+        ReservationTimeResponse reservationTimeResponse = reservationTimeService.createReservationTime(
+                reservationTimeRequest);
         // then
         SoftAssertions soft = new SoftAssertions();
         soft.assertThat(reservationTimeRepository.findAll()).hasSize(1);
-        soft.assertThat(reservationTimeDto.id()).isEqualTo(1L);
-        soft.assertThat(reservationTimeDto.startAt()).isEqualTo("09:00");
+        soft.assertThat(reservationTimeResponse.id()).isEqualTo(1L);
+        soft.assertThat(reservationTimeResponse.startAt()).isEqualTo("09:00");
         soft.assertAll();
     }
 

@@ -14,7 +14,7 @@ public class AddReservationTimeService implements AddReservationTimeUseCase {
     }
 
     @Override
-    public long addReservationTime(final LocalTime startAt) {
+    public ReservationTimeResponseDto addReservationTime(final LocalTime startAt) {
         return reservationTimeRepository.addReservationTime(startAt);
     }
 }

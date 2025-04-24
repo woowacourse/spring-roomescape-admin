@@ -4,8 +4,8 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
-import roomescape.ReservationTimeResponseDto;
 import roomescape.usecase.AddReservationTimeUseCase;
+import roomescape.usecase.ReservationTimeResponseDto;
 
 @Controller
 public class ReservationTimeController {
@@ -21,9 +21,10 @@ public class ReservationTimeController {
     @PostMapping("/times")
     public ResponseEntity<ReservationTimeResponseDto> addReservationTime(
             @RequestBody ReservationTimeRequestDto reservationTimeRequestDto) {
-        long id = addReservationTimeUseCase.addReservationTime(reservationTimeRequestDto.startAt());
+        ReservationTimeResponseDto reservationTimeResponseDto = addReservationTimeUseCase.addReservationTime(
+                reservationTimeRequestDto.startAt());
 
-        return ResponseEntity.ok();
+        return ResponseEntity.ok(reservationTimeResponseDto);
 
     }
 

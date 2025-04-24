@@ -23,14 +23,9 @@ public class ReservationService {
                 .findById(reservationRequest.timeId())
                 .orElseThrow(() -> new IllegalArgumentException("[ERROR] 시간 id가 존재하지 않습니다."));
 
-        Reservation reservation = new Reservation(
-                null,
-                reservationRequest.name(),
-                reservationRequest.date(),
-                findReservationTime);
-
-        Reservation savedReservation = reservationDao.add(reservation);
-        return ReservationResponse.of(savedReservation);
+        Reservation newReservation = reservationRequest.createReservation(findReservationTime);
+        Reservation savedReservation = reservationDao.add(newReservation);
+        return ReservationResponse.from(savedReservation);
     }
 
     public AllReservationResponse findAll() {

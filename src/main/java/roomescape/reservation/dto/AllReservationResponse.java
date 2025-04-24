@@ -6,7 +6,7 @@ import roomescape.reservation.Reservation;
 public record AllReservationResponse(List<ReservationResponse> reservations) {
     public static AllReservationResponse from(List<Reservation> allResponse) {
         return new AllReservationResponse(allResponse.stream()
-                .map(ReservationResponse::of)
+                .map(ReservationResponse::from)
                 .toList());
     }
 }

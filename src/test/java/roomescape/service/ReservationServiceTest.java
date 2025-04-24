@@ -1,5 +1,6 @@
 package roomescape.service;
 
+import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
@@ -9,6 +10,7 @@ import org.springframework.context.annotation.Import;
 import roomescape.database.ReservationDatabaseImpl;
 import roomescape.domain.reservation.Reservation;
 import roomescape.domain.reservation.dto.ReservationReqDto;
+import roomescape.exception.CustomException;
 import roomescape.fixture.ReservationFixture;
 
 import java.time.LocalDateTime;
@@ -47,7 +49,9 @@ class ReservationServiceTest {
             String dummyName3 = "jason";
             ReservationReqDto reqDto = ReservationFixture.createDTO(dummyName3, duplicateDateTime);
 
-            service.add(reqDto);
+            Assertions.assertThatThrownBy(
+                    () -> service.add(reqDto)
+            ).isInstanceOf(CustomException.class);
         }
     }
 }

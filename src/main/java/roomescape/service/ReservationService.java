@@ -1,4 +1,4 @@
-package roomescape;
+package roomescape.service;
 
 import java.util.List;
 import org.springframework.stereotype.Service;
@@ -6,17 +6,16 @@ import roomescape.dto.ReservationRequestDto;
 import roomescape.model.Reservation;
 import roomescape.model.ReservationTime;
 import roomescape.repository.ReservationRepository;
-import roomescape.repository.ReservationTimeRepository;
 
 @Service
 public class ReservationService {
     private final ReservationRepository reservationRepository;
-    private final ReservationTimeRepository reservationTimeRepository;
+    private final ReservationTimeService reservationTimeService;
 
     public ReservationService(ReservationRepository reservationRepository,
-                              ReservationTimeRepository reservationTimeRepository) {
+                              ReservationTimeService reservationTimeService) {
         this.reservationRepository = reservationRepository;
-        this.reservationTimeRepository = reservationTimeRepository;
+        this.reservationTimeService = reservationTimeService;
     }
 
     public List<Reservation> getAllReservations() {
@@ -24,7 +23,7 @@ public class ReservationService {
     }
 
     public Reservation addReservation(ReservationRequestDto reservationRequestDto) {
-        ReservationTime reservationTime = reservationTimeRepository.getReservationTimeById(
+        ReservationTime reservationTime = reservationTimeService.getReservationTimeById(
                 reservationRequestDto.timeId());
         return reservationRepository.addReservation(reservationRequestDto, reservationTime);
     }
@@ -33,15 +32,4 @@ public class ReservationService {
         return reservationRepository.deleteReservation(id);
     }
 
-    public ReservationTime addTime(String startAt) {
-        return reservationTimeRepository.addTime(startAt);
-    }
-
-    public List<ReservationTime> getAllTime() {
-        return reservationTimeRepository.getAllTime();
-    }
-
-    public Integer deleteTime(Long id) {
-        return reservationTimeRepository.deleteTime(id);
-    }
 }

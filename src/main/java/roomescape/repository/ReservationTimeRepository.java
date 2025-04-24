@@ -11,12 +11,12 @@ import org.springframework.stereotype.Repository;
 import roomescape.domain.ReservationTime;
 
 @Repository
-public class ReservationTImeRepository {
+public class ReservationTimeRepository {
 
     private final JdbcTemplate jdbcTemplate;
 
     // 서프는 모니터 안끄고 다님ㅜㅜ
-    public ReservationTImeRepository(JdbcTemplate jdbcTemplate) {
+    public ReservationTimeRepository(JdbcTemplate jdbcTemplate) {
         this.jdbcTemplate = jdbcTemplate;
     }
 

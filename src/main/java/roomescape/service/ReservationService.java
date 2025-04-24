@@ -6,7 +6,7 @@ import org.springframework.transaction.annotation.Transactional;
 import roomescape.domain.Reservation;
 import roomescape.domain.ReservationTime;
 import roomescape.repository.ReservationRepository;
-import roomescape.repository.ReservationTImeRepository;
+import roomescape.repository.ReservationTimeRepository;
 import roomescape.service.request.CreateReservationRequest;
 import roomescape.service.response.ReservationResponse;
 import roomescape.service.response.ReservationTimeResponse;
@@ -15,10 +15,10 @@ import roomescape.service.response.ReservationTimeResponse;
 @Transactional
 public class ReservationService {
 
-    private final ReservationTImeRepository reservationTImeRepository;
+    private final ReservationTimeRepository reservationTImeRepository;
     private final ReservationRepository reservationRepository;
 
-    public ReservationService(ReservationTImeRepository reservationTImeRepository,
+    public ReservationService(ReservationTimeRepository reservationTImeRepository,
                               ReservationRepository reservationRepository) {
         this.reservationTImeRepository = reservationTImeRepository;
         this.reservationRepository = reservationRepository;
@@ -35,7 +35,7 @@ public class ReservationService {
                         reservationTime));
     }
 
-    public void delete(Long reservationId) {
+    public void deleteById(Long reservationId) {
         reservationRepository.deleteById(reservationId);
     }
 

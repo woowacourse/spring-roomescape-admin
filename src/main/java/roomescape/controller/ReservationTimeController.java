@@ -9,47 +9,37 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
-import roomescape.domain.ReservationTime;
-import roomescape.repository.ReservationTImeRepository;
+import roomescape.service.ReservationTimeService;
 import roomescape.service.request.CreateReservationTimeRequest;
 import roomescape.service.response.ReservationTimeResponse;
 
 @RestController
 @RequestMapping("/times")
-public class ReservationTImeController {
+public class ReservationTimeController {
 
-    private final ReservationTImeRepository reservationTImeRepository;
+    private final ReservationTimeService reservationService;
 
-    public ReservationTImeController(ReservationTImeRepository reservationTImeRepository) {
-        this.reservationTImeRepository = reservationTImeRepository;
+    public ReservationTimeController(ReservationTimeService reservationService) {
+        this.reservationService = reservationService;
     }
 
     @PostMapping
     public ResponseEntity<ReservationTimeResponse> create(
             @RequestBody CreateReservationTimeRequest createReservationTImeRequest) {
-        Long id = reservationTImeRepository.create(new ReservationTime(createReservationTImeRequest.startAt()));
-        ReservationTime reservationTime = reservationTImeRepository.findById(id)
-                .orElseThrow(IllegalArgumentException::new);
-        return ResponseEntity.ok(new ReservationTimeResponse(
-                reservationTime.id(),
-                reservationTime.startAt()
-        ));
+        Long id = reservationService.create(createReservationTImeRequest);
+        ReservationTimeResponse reservationTimeResponse = reservationService.findById(id);
+        return ResponseEntity.ok(reservationTimeResponse);
     }
 
     @GetMapping
     public ResponseEntity<List<ReservationTimeResponse>> findAll() {
-        List<ReservationTime> reservationTimes = reservationTImeRepository.findAll();
-        List<ReservationTimeResponse> reservationTimeResponses = reservationTimes.stream()
-                .map(reservationTime -> new ReservationTimeResponse(
-                        reservationTime.id(),
-                        reservationTime.startAt()
-                )).toList();
+        List<ReservationTimeResponse> reservationTimeResponses = reservationService.findAll();
         return ResponseEntity.ok(reservationTimeResponses);
     }
 
     @DeleteMapping("/{reservationTimeId}")
     public ResponseEntity<Void> deleteReservationTime(@PathVariable("reservationTimeId") Long reservationTimeId) {
-        reservationTImeRepository.deleteById(reservationTimeId);
+        reservationService.deleteById(reservationTimeId);
         return ResponseEntity.ok().build();
     }
 }

@@ -26,7 +26,7 @@ public class ReservationTimeRepositoryImpl implements ReservationTimeRepository 
     public ReservationTime insert(final LocalTime startAt) {
         Map<String, Object> parameters = new HashMap<>();
         parameters.put("start_at", startAt);
-        long id = (long) simpleJdbcInsert.executeAndReturnKey(parameters);
+        long id = simpleJdbcInsert.executeAndReturnKey(parameters).longValue();
         return new ReservationTime(id, startAt);
     }
 
@@ -34,7 +34,7 @@ public class ReservationTimeRepositoryImpl implements ReservationTimeRepository 
     public List<ReservationTime> findAll() {
         final String sql = "select * from reservation_time";
         return jdbcTemplate.query(sql, (resultSet, rowNumber) -> {
-            long id = resultSet.getInt("id");
+            long id = resultSet.getLong("id");
             LocalTime startAt = LocalTime.parse(resultSet.getString("start_at"));
             return new ReservationTime(id, startAt);
         });

@@ -51,9 +51,9 @@ public class ReservationRepositoryImpl implements ReservationRepository {
 
     @Override
     public Reservation insert(final String name, final LocalDate date, final long timeId) {
-        long id = insertReservation(name, date, timeId);
+        long reservationId = insertReservation(name, date, timeId);
         ReservationTime reservationTime = findReservationTime(timeId);
-        return new Reservation(id, name, date, reservationTime);
+        return new Reservation(reservationId, name, date, reservationTime);
     }
 
     private ReservationTime findReservationTime(final long timeId) {
@@ -69,7 +69,8 @@ public class ReservationRepositoryImpl implements ReservationRepository {
         parameters.put("name", name);
         parameters.put("date", date.toString());
         parameters.put("time_id", timeId);
-        return (long) simpleJdbcInsert.executeAndReturnKey(parameters);
+        Number key = simpleJdbcInsert.executeAndReturnKey(parameters);
+        return key.longValue();
     }
 
     @Override

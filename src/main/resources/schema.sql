@@ -1,8 +1,8 @@
-create table reservation
+CREATE TABLE reservation
 (
-    id   bigint       not null auto_increment,
-    name varchar(255) not null,
-    date varchar(255) not null,
-    time varchar(255) not null,
-    primary key (id)
+    id   BIGINT       NOT NULL AUTO_INCREMENT,
+    name VARCHAR(255) NOT NULL,
+    date VARCHAR(255) NOT NULL,
+    time VARCHAR(255) NOT NULL,
+    PRIMARY KEY (id)
 );

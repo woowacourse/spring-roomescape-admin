@@ -8,8 +8,7 @@ import java.time.LocalDate;
 
 public record ReservationCreateRequestDto(String name, @JsonFormat(pattern = "yyyy-MM-dd") LocalDate date,
                                           Long timeId) {
-    public Reservation toEntity() {
-        ReservationTime reservationTime = new ReservationTime(timeId, null);
+    public Reservation toEntityWith(ReservationTime reservationTime) {
         return new Reservation(null, name, date, reservationTime);
     }
 }

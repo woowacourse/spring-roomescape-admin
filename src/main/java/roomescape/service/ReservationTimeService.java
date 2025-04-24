@@ -3,41 +3,41 @@ package roomescape.service;
 import java.util.List;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import roomescape.controller.request.CreateReservationTimeRequest;
+import roomescape.controller.response.ReservationTimeResponse;
 import roomescape.domain.ReservationTime;
-import roomescape.repository.ReservationTimeRepository;
-import roomescape.service.request.CreateReservationTimeRequest;
-import roomescape.service.response.ReservationTimeResponse;
+import roomescape.persistence.ReservationTimeDao;
 
 @Service
 @Transactional
 public class ReservationTimeService {
 
-    private final ReservationTimeRepository reservationTImeRepository;
+    private final ReservationTimeDao reservationTImeDao;
 
-    public ReservationTimeService(ReservationTimeRepository reservationTImeRepository) {
-        this.reservationTImeRepository = reservationTImeRepository;
+    public ReservationTimeService(ReservationTimeDao reservationTImeDao) {
+        this.reservationTImeDao = reservationTImeDao;
     }
 
     public Long create(CreateReservationTimeRequest createReservationTimeRequest) {
-        return reservationTImeRepository.create(new ReservationTime(createReservationTimeRequest.startAt()));
+        return reservationTImeDao.create(new ReservationTime(createReservationTimeRequest.startAt()));
     }
 
     public ReservationTimeResponse findById(Long reservationTimeId) {
-        ReservationTime reservationTime = reservationTImeRepository.findById(reservationTimeId)
+        ReservationTime reservationTime = reservationTImeDao.findById(reservationTimeId)
                 .orElseThrow(
                         () -> new IllegalArgumentException(reservationTimeId + "에 해당하는 reservation_time 튜플이 없습니다."));
         return toReservationResponse(reservationTime);
     }
 
     public List<ReservationTimeResponse> findAll() {
-        List<ReservationTime> reservationTimes = reservationTImeRepository.findAll();
+        List<ReservationTime> reservationTimes = reservationTImeDao.findAll();
         return reservationTimes.stream()
                 .map(this::toReservationResponse)
                 .toList();
     }
 
     public void deleteById(Long reservationTimeId) {
-        reservationTImeRepository.deleteById(reservationTimeId);
+        reservationTImeDao.deleteById(reservationTimeId);
     }
 
     private ReservationTimeResponse toReservationResponse(ReservationTime reservationTime) {

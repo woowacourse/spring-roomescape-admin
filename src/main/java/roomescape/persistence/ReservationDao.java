@@ -1,4 +1,4 @@
-package roomescape.repository;
+package roomescape.persistence;
 
 import java.sql.PreparedStatement;
 import java.util.List;
@@ -12,11 +12,11 @@ import roomescape.domain.Reservation;
 import roomescape.domain.ReservationTime;
 
 @Repository
-public class ReservationRepository {
+public class ReservationDao {
 
     private final JdbcTemplate jdbcTemplate;
 
-    public ReservationRepository(JdbcTemplate jdbcTemplate) {
+    public ReservationDao(JdbcTemplate jdbcTemplate) {
         this.jdbcTemplate = jdbcTemplate;
     }
 
@@ -38,7 +38,6 @@ public class ReservationRepository {
                                 new ReservationTime(rs.getLong("time_id"), rs.getTime("time_value").toLocalTime())));
     }
 
-    // 서프는 모니터 안끄고 다님ㅜㅜ
     public Long create(Reservation reservation) {
         String sql = "INSERT INTO reservation(name, date, time_id) VALUES (?, ?, ?)";
         KeyHolder keyHolder = new GeneratedKeyHolder();

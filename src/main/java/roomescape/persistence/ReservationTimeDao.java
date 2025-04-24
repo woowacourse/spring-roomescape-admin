@@ -1,4 +1,4 @@
-package roomescape.repository;
+package roomescape.persistence;
 
 import java.sql.PreparedStatement;
 import java.util.List;
@@ -11,12 +11,11 @@ import org.springframework.stereotype.Repository;
 import roomescape.domain.ReservationTime;
 
 @Repository
-public class ReservationTimeRepository {
+public class ReservationTimeDao {
 
     private final JdbcTemplate jdbcTemplate;
 
-    // 서프는 모니터 안끄고 다님ㅜㅜ
-    public ReservationTimeRepository(JdbcTemplate jdbcTemplate) {
+    public ReservationTimeDao(JdbcTemplate jdbcTemplate) {
         this.jdbcTemplate = jdbcTemplate;
     }
 

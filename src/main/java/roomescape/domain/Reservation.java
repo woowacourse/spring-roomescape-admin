@@ -12,14 +12,14 @@ public class Reservation {
     private final ReservationTime time;
 
     public Reservation(Long id, String name, LocalDate date, ReservationTime time) {
+        validate(name, date, time);
         this.id = id;
         this.name = name;
         this.date = date;
         this.time = time;
-        validate();
     }
 
-    private void validate() {
+    private void validate(String name, LocalDate date, ReservationTime time) {
         if (name == null || name.isBlank()) {
             throw new InvalidReservationException("이름은 공백일 수 없습니다");
         }

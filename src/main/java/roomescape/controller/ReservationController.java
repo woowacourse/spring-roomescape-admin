@@ -15,21 +15,21 @@ import org.springframework.web.server.ResponseStatusException;
 import roomescape.domain.Reservation;
 import roomescape.dto.request.ReservationRequest;
 import roomescape.dto.response.ReservationResponse;
-import roomescape.repository.ReservationRepository;
+import roomescape.service.ReservationService;
 
 @RestController
 @RequestMapping("/reservations")
 public class ReservationController {
 
-    private final ReservationRepository reservationRepository;
+    private final ReservationService reservationService;
 
-    public ReservationController(final ReservationRepository reservationRepository) {
-        this.reservationRepository = reservationRepository;
+    public ReservationController(final ReservationService reservationService) {
+        this.reservationService = reservationService;
     }
 
     @GetMapping
     public ResponseEntity<List<ReservationResponse>> readReservations() {
-        final List<Reservation> reservations = reservationRepository.findAll();
+        final List<Reservation> reservations = reservationService.findAll();
         final List<ReservationResponse> dtos = ReservationResponse.from(reservations);
         return ResponseEntity.ok(dtos);
     }
@@ -43,12 +43,12 @@ public class ReservationController {
 
     @DeleteMapping("/{id}")
     public void deleteReservation(@PathVariable final Long id) {
-        reservationRepository.delete(id);
+        reservationService.delete(id);
     }
 
     private Reservation makeReservation(final ReservationRequest reservationRequest) {
         try {
-            return reservationRepository.insert(reservationRequest.name(), reservationRequest.date(),
+            return reservationService.insert(reservationRequest.name(), reservationRequest.date(),
                     reservationRequest.timeId());
         } catch (IllegalArgumentException e) {
             throw new ResponseStatusException(HttpStatus.BAD_REQUEST);

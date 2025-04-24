@@ -3,16 +3,15 @@ package roomescape.reservation.model;
 import com.fasterxml.jackson.annotation.JsonCreator;
 
 import java.time.LocalDate;
-import java.time.LocalTime;
 
 public class Reservation {
 
     private final Long id;
     private final String name;
     private final LocalDate date;
-    private final LocalTime time;
+    private final ReservationTime time;
 
-    public Reservation(Long id, String name, LocalDate date, LocalTime time) {
+    public Reservation(Long id, String name, LocalDate date, ReservationTime time) {
         validateName(name);
         validateDate(date);
         validateTime(time);
@@ -23,7 +22,7 @@ public class Reservation {
     }
 
     @JsonCreator
-    public Reservation(String name, LocalDate date, LocalTime time) {
+    public Reservation(String name, LocalDate date, ReservationTime time) {
         this.id = null;
         this.name = name;
         this.date = date;
@@ -42,7 +41,7 @@ public class Reservation {
         return date;
     }
 
-    public LocalTime getTime() {
+    public ReservationTime getTime() {
         return time;
     }
 
@@ -58,7 +57,7 @@ public class Reservation {
         }
     }
 
-    private void validateTime(LocalTime time) {
+    private void validateTime(ReservationTime time) {
         if (time == null) {
             throw new IllegalArgumentException("[ERROR] 시간을 입력해주세요.");
         }

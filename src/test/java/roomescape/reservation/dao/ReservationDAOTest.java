@@ -10,6 +10,7 @@ import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.test.annotation.DirtiesContext;
 import roomescape.reservation.dto.ReservationReqDTO;
 import roomescape.reservation.model.Reservation;
+import roomescape.reservation.model.ReservationTime;
 
 import java.time.LocalDate;
 import java.time.LocalTime;
@@ -142,7 +143,8 @@ class ReservationDAOTest {
     }
 
     private Reservation getNewReservationInfo() {
-        ReservationReqDTO reservationReqDto = new ReservationReqDTO("포비", LocalDate.now(), LocalTime.now());
-        return reservationReqDto.toEntity();
+        ReservationReqDTO reservationReqDto = new ReservationReqDTO("포비", LocalDate.now(), 1L);
+        ReservationTime reservationTime = new ReservationTime(LocalTime.of(10, 0));
+        return reservationReqDto.toEntityWith(reservationTime);
     }
 }

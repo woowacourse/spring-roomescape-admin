@@ -19,7 +19,7 @@ class ReservationTest {
         // given
         String invalidName = "";
         LocalDate validDate = LocalDate.now();
-        LocalTime validTime = LocalTime.now();
+        ReservationTime validTime = new ReservationTime(1L, LocalTime.now());
 
         // when & then
         assertThatThrownBy(() -> new Reservation(VALID_ID, invalidName, validDate, validTime))
@@ -33,7 +33,7 @@ class ReservationTest {
         // given
         String invalidName = null;
         LocalDate validDate = LocalDate.now();
-        LocalTime validTime = LocalTime.now();
+        ReservationTime validTime = new ReservationTime(1L, LocalTime.now());
 
         // when & then
         assertThatThrownBy(() -> new Reservation(VALID_ID, invalidName, validDate, validTime))
@@ -46,7 +46,7 @@ class ReservationTest {
     void dateExceptionTest() {
         // given
         LocalDate invalidDate = null;
-        LocalTime validTime = LocalTime.now();
+        ReservationTime validTime = new ReservationTime(1L, LocalTime.now());
 
         // when & then
         assertThatThrownBy(() -> new Reservation(VALID_ID, VALID_NAME, invalidDate, validTime))
@@ -58,7 +58,7 @@ class ReservationTest {
     @DisplayName("시간 값이 null이면 예외가 발생한다")
     void timeExceptionTest() {
         // given
-        LocalTime invalidTime = null;
+        ReservationTime invalidTime = null;
         LocalDate validDate = LocalDate.now();
 
         // when & then

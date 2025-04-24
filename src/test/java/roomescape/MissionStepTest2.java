@@ -14,15 +14,14 @@ import org.springframework.test.context.BootstrapWith;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 import roomescape.reservation.domain.dto.ReservationReqDto;
 import roomescape.reservation.domain.dto.ReservationResDto;
+import roomescape.reservationTime.domain.dto.ReservationTimeReqDto;
 
 import java.sql.Connection;
 import java.sql.SQLException;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.LocalTime;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
 import static org.hamcrest.core.Is.is;
@@ -93,15 +92,17 @@ public class MissionStepTest2 { // TODO 2025. 4. 22. 20:31: class명 수정
 
     @Test
     void 칠단계() {
-        Map<String, String> params = new HashMap<>();
-        params.put("startAt", "10:00");
+//        Map<String, String> params = new HashMap<>();
+//        params.put("startAt", "10:00");
+
+        ReservationTimeReqDto dto = new ReservationTimeReqDto(LocalTime.of(10, 10));
 
         RestAssured.given().log().all()
                 .contentType(ContentType.JSON)
-                .body(params)
+                .body(dto)
                 .when().post("/times")
                 .then().log().all()
-                .statusCode(200);
+                .statusCode(HttpStatus.CREATED.value());
 
         RestAssured.given().log().all()
                 .when().get("/times")
@@ -112,6 +113,6 @@ public class MissionStepTest2 { // TODO 2025. 4. 22. 20:31: class명 수정
         RestAssured.given().log().all()
                 .when().delete("/times/1")
                 .then().log().all()
-                .statusCode(200);
+                .statusCode(HttpStatus.NO_CONTENT.value());
     }
 }

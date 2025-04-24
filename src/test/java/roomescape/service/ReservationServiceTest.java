@@ -5,19 +5,23 @@ import java.time.LocalTime;
 import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.jdbc.JdbcTest;
-import org.springframework.jdbc.core.JdbcTemplate;
+import org.springframework.context.annotation.Import;
 import roomescape.domain.dto.ReservationRequestDto;
 import roomescape.repositiory.ReservationH2Repository;
 
 @JdbcTest
+@Import({ReservationH2Repository.class})
 class ReservationServiceTest {
+
+    @Autowired
+    private ReservationH2Repository reservationRepository;
 
     @DisplayName("예약한다")
     @Test
     void add() {
         // given
-        ReservationH2Repository reservationRepository = new ReservationH2Repository(new JdbcTemplate());
         ReservationService reservationService = new ReservationService(reservationRepository);
 
         // when
@@ -32,7 +36,6 @@ class ReservationServiceTest {
     @Test
     void delete() {
         // given
-        ReservationH2Repository reservationRepository = new ReservationH2Repository(new JdbcTemplate());
         ReservationService reservationService = new ReservationService(reservationRepository);
         Long id = reservationService.add(
                 new ReservationRequestDto("예약자", LocalDate.now(), LocalTime.now()));
@@ -48,7 +51,6 @@ class ReservationServiceTest {
     @Test
     void readAll() {
         // given
-        ReservationH2Repository reservationRepository = new ReservationH2Repository(new JdbcTemplate());
         ReservationService reservationService = new ReservationService(reservationRepository);
         Long id = reservationService.add(
                 new ReservationRequestDto("예약자", LocalDate.now(), LocalTime.now()));

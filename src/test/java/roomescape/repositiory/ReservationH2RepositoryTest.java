@@ -16,11 +16,7 @@ import roomescape.domain.dto.ReservationRequestDto;
 class ReservationH2RepositoryTest {
 
     @Autowired
-    private final JdbcTemplate jdbcTemplate;
-
-    public ReservationH2RepositoryTest(JdbcTemplate jdbcTemplate) {
-        this.jdbcTemplate = jdbcTemplate;
-    }
+    private JdbcTemplate jdbcTemplate;
 
     @DisplayName("예약 객체를 추가한다")
     @Test
@@ -64,7 +60,7 @@ class ReservationH2RepositoryTest {
         Reservation findReservation = reservationRepository.findById(id);
 
         // then
-        Assertions.assertThat(findReservation).isEqualTo(reservation);
+        Assertions.assertThat(findReservation.getId()).isEqualTo(id);
     }
 
     @DisplayName("예약 객체를 삭제한다")

@@ -32,4 +32,13 @@ class ReservationTimeDaoTest {
         assertThat(insertedReservationTime.getStartAt()).isEqualTo(LocalTime.of(10, 0));
     }
 
+    @DisplayName("모든 예약을 조회한다.")
+    @Test
+    void findAllReservationTime() {
+        ReservationTime reservationTime = new ReservationTime(null, LocalTime.of(10, 0));
+        reservationTimeDao.insert(reservationTime);
+
+        assertThat(reservationTimeDao.findAll()).hasSize(1);
+    }
+
 }

@@ -2,7 +2,9 @@ package roomescape.repository;
 
 import java.sql.PreparedStatement;
 import java.sql.Statement;
+import java.time.LocalTime;
 import java.time.format.DateTimeFormatter;
+import java.util.List;
 
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.support.GeneratedKeyHolder;
@@ -31,5 +33,17 @@ public class ReservationTimeDao {
             return preparedStatement;
         }, keyHolder);
         return new ReservationTime(keyHolder.getKey().longValue(), reservationTime.getStartAt());
+    }
+
+    public List<ReservationTime> findAll() {
+        String findAllSql = """
+                SELECT id, start_at
+                FROM reservation_time
+                """;
+        return jdbcTemplate.query(findAllSql, (resultSet, rowNum) ->
+                new ReservationTime(
+                        resultSet.getLong("id"),
+                        LocalTime.parse(resultSet.getString("start_at"))
+                ));
     }
 }

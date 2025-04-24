@@ -1,13 +1,13 @@
 package roomescape.dao;
 
+import java.time.LocalTime;
 import java.util.List;
 import java.util.Map;
 import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.simple.SimpleJdbcInsert;
 import org.springframework.stereotype.Repository;
-import roomescape.dto.ReservationTimeReqDto;
-import roomescape.dto.ReservationTimeResDto;
+import roomescape.model.ReservationTime;
 
 @Repository
 public class ReservationTimeDAO {
@@ -18,23 +18,23 @@ public class ReservationTimeDAO {
         this.jdbcTemplate = jdbcTemplate;
     }
 
-    public List<ReservationTimeResDto> findAllReservationTimes() {
-        return jdbcTemplate.query("SELECT * FROM reservation_time", (resultSet, rowNum) -> new ReservationTimeResDto(
+    public List<ReservationTime> findAllReservationTimes() {
+        return jdbcTemplate.query("SELECT * FROM reservation_time", (resultSet, rowNum) -> new ReservationTime(
                 resultSet.getLong("id"),
                 resultSet.getTime("start_at").toLocalTime()
         ));
     }
 
-    public ReservationTimeResDto addAndGet(ReservationTimeReqDto dto) {
+    public ReservationTime addAndGet(LocalTime startAt) {
         SimpleJdbcInsert simpleJdbcInsert = new SimpleJdbcInsert(jdbcTemplate)
                 .withTableName("reservation_time")
                 .usingColumns("start_at")
                 .usingGeneratedKeyColumns("id");
 
-        Map<String, Object> parameters = Map.of("start_at", dto.startAt());
+        Map<String, Object> parameters = Map.of("start_at", startAt);
         Number id = simpleJdbcInsert.executeAndReturnKey(parameters);
 
-        return new ReservationTimeResDto(id.longValue(), dto.startAt());
+        return new ReservationTime(id.longValue(), startAt);
     }
 
     public void deleteById(Long id) {

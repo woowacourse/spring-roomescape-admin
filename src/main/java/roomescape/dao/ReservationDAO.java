@@ -1,15 +1,15 @@
 package roomescape.dao;
 
 import java.sql.Time;
+import java.time.LocalDate;
 import java.util.List;
 import java.util.Map;
 import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.simple.SimpleJdbcInsert;
 import org.springframework.stereotype.Repository;
-import roomescape.dto.ReservationReqDto;
-import roomescape.dto.ReservationResDto;
-import roomescape.dto.ReservationTimeResDto;
+import roomescape.model.Reservation;
+import roomescape.model.ReservationTime;
 
 @Repository
 public class ReservationDAO {
@@ -20,7 +20,7 @@ public class ReservationDAO {
         this.jdbcTemplate = jdbcTemplate;
     }
 
-    public List<ReservationResDto> findAllReservations() {
+    public List<Reservation> findAllReservations() {
         String sql = """
                 SELECT
                 r.id as reservation_id,
@@ -32,34 +32,34 @@ public class ReservationDAO {
                 INNER JOIN reservation_time AS t
                 ON r.time_id = t.id
                 """;
-        return jdbcTemplate.query(sql, (resultSet, rowNum) -> new ReservationResDto(
+        return jdbcTemplate.query(sql, (resultSet, rowNum) -> new Reservation(
                 resultSet.getLong("reservation_id"),
                 resultSet.getString("name"),
                 resultSet.getDate("date").toLocalDate(),
-                new ReservationTimeResDto(
+                new ReservationTime(
                         resultSet.getLong("time_id"),
                         resultSet.getTime("time_value").toLocalTime()
                 )
         ));
     }
 
-    public ReservationResDto addAndGet(ReservationReqDto dto) {
+    public Reservation addAndGet(String name, LocalDate date, int timeId) {
         SimpleJdbcInsert simpleJdbcInsert = new SimpleJdbcInsert(jdbcTemplate)
                 .withTableName("reservation")
                 .usingColumns("name", "date", "time_id")
                 .usingGeneratedKeyColumns("id");
 
         Map<String, Object> parameters = Map.of(
-                "name", dto.name(),
-                "date", dto.date(),
-                "time_id", dto.timeId()
+                "name", name,
+                "date", date,
+                "time_id", timeId
         );
         Number id = simpleJdbcInsert.executeAndReturnKey(parameters);
 
-        Time startAt = jdbcTemplate.queryForObject("SELECT start_at FROM reservation_time WHERE id = ?", Time.class, dto.timeId());
+        Time startAt = jdbcTemplate.queryForObject("SELECT start_at FROM reservation_time WHERE id = ?", Time.class, timeId);
 
-        ReservationTimeResDto timeRes = new ReservationTimeResDto((long) dto.timeId(), startAt.toLocalTime());
-        return new ReservationResDto(id.longValue(), dto.name(), dto.date(), timeRes);
+        ReservationTime timeRes = new ReservationTime((long) timeId, startAt.toLocalTime());
+        return new Reservation(id.longValue(), name, date, timeRes);
     }
 
     public void deleteById(Long id) {

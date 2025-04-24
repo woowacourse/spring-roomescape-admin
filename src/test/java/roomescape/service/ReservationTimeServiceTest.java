@@ -1,32 +1,26 @@
 package roomescape.service;
 
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.assertj.core.api.Java6Assertions.assertThatThrownBy;
-import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.Mockito.when;
+import static org.assertj.core.api.Assertions.assertThatThrownBy;
 
 import java.time.LocalTime;
 import java.util.List;
-import java.util.Optional;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
-import org.junit.jupiter.api.extension.ExtendWith;
-import org.mockito.InjectMocks;
-import org.mockito.Mock;
-import org.mockito.junit.jupiter.MockitoExtension;
 import roomescape.domain.ReservationTime;
 import roomescape.dto.ReservationTimeRequest;
 import roomescape.dto.ReservationTimeResponse;
 import roomescape.exception.reservationTime.ReservationTimeNotFoundException;
-import roomescape.repository.ReservationTimeRepository;
+import roomescape.fixture.ReservationTimeRepositoryStub;
 
-@ExtendWith(MockitoExtension.class)
 class ReservationTimeServiceTest {
-    @Mock
-    private ReservationTimeRepository timeRepository;
-
-    @InjectMocks
     private ReservationTimeService timeService;
+
+    @BeforeEach
+    void setUp() {
+        this.timeService = new ReservationTimeService(new ReservationTimeRepositoryStub());
+    }
 
     @DisplayName("예약 시간을 생성한다")
     @Test
@@ -35,16 +29,15 @@ class ReservationTimeServiceTest {
         // given
         LocalTime now = LocalTime.now();
         ReservationTimeRequest request = new ReservationTimeRequest(now);
-        Long mockId = 1L;
-        ReservationTime savedTime = new ReservationTime(mockId, now);
-
-        when(timeRepository.add(any(ReservationTime.class))).thenReturn(savedTime);
+        Long fakeId = 1L;
+        ReservationTime savedTime = new ReservationTime(fakeId, now);
 
         // when
         ReservationTimeResponse result = timeService.create(request);
 
         // then
-        assertThat(result.getStartAt()).isEqualTo(now);
+        assertThat(result.getId()).isEqualTo(savedTime.getId());
+        assertThat(result.getStartAt()).isEqualTo(savedTime.getStartAt());
     }
 
     @DisplayName("전체 예약 시간을 조회한다")
@@ -54,10 +47,11 @@ class ReservationTimeServiceTest {
         LocalTime time1 = LocalTime.now();
         LocalTime time2 = LocalTime.now().plusHours(1);
 
-        ReservationTime mockTime1 = new ReservationTime(1L, time1);
-        ReservationTime mockTime2 = new ReservationTime(2L, time2);
+        ReservationTimeRequest request1 = new ReservationTimeRequest(time1);
+        ReservationTimeRequest request2 = new ReservationTimeRequest(time2);
 
-        when(timeRepository.findAll()).thenReturn(List.of(mockTime1, mockTime2));
+        timeService.create(request1);
+        timeService.create(request2);
 
         // when
         List<ReservationTimeResponse> responses = timeService.getAll();
@@ -71,7 +65,6 @@ class ReservationTimeServiceTest {
     void delete() {
         // given
         Long id = 99L;
-        when(timeRepository.deleteBy(id)).thenReturn(0);
 
         // when // then
         assertThatThrownBy(() -> timeService.deleteBy(id))
@@ -83,7 +76,6 @@ class ReservationTimeServiceTest {
     void get() {
         // given
         Long id = 99L;
-        when(timeRepository.findBy(id)).thenReturn(Optional.empty());
 
         // when // then
         assertThatThrownBy(() -> timeService.getBy(id))

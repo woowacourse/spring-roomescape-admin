@@ -1,0 +1,34 @@
+package roomescape.fixture;
+
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import roomescape.domain.Reservation;
+import roomescape.repository.reservation.ReservationRepository;
+
+public class ReservationRepositoryStub implements ReservationRepository {
+    private final Map<Long, Reservation> reservations = new HashMap<>();
+    private Long id = 1L;
+
+    @Override
+    public Reservation add(Reservation reservation) {
+        Reservation newReservation = new Reservation(id, reservation.getName(), reservation.getDate(),
+                reservation.getTime());
+        reservations.put(id++, newReservation);
+        return newReservation;
+    }
+
+    @Override
+    public int deleteBy(Long id) {
+        Reservation removedReservation = reservations.remove(id);
+        if (removedReservation == null) {
+            return 0;
+        }
+        return 1;
+    }
+
+    @Override
+    public List<Reservation> findAll() {
+        return reservations.values().stream().toList();
+    }
+}

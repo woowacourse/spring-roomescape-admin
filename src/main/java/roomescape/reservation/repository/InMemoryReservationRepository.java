@@ -49,6 +49,6 @@ public class InMemoryReservationRepository implements ReservationRepository {
 
     @Override
     public void cacheId(final Cacheable domain, final Long id) {
-
+        reservations.put(id, (Reservation) domain);
     }
 }

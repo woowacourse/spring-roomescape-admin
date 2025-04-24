@@ -57,5 +57,6 @@ public class InMemoryReservationTimeRepository implements ReservationTimeReposit
 
     @Override
     public void cacheId(final Cacheable domain, final Long id) {
+        reservationTimes.put(id, (ReservationTime) domain);
     }
 }

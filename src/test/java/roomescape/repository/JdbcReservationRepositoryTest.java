@@ -17,10 +17,10 @@ import org.springframework.jdbc.datasource.embedded.EmbeddedDatabaseBuilder;
 import org.springframework.jdbc.datasource.embedded.EmbeddedDatabaseType;
 import roomescape.Reservation;
 
-class JdbcTemplateRepositoryTest {
+class JdbcReservationRepositoryTest {
 
     private static EmbeddedDatabase db;
-    private JdbcTemplateRepository repository;
+    private JdbcReservationRepository repository;
 
     @BeforeAll
     static void initDatabase() {
@@ -33,7 +33,7 @@ class JdbcTemplateRepositoryTest {
 
     @BeforeEach
     void setUp() {
-        repository = new JdbcTemplateRepository(db);
+        repository = new JdbcReservationRepository(db);
     }
 
     @AfterEach

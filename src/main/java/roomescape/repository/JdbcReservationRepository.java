@@ -16,11 +16,11 @@ import roomescape.Reservation;
 import roomescape.ReservationTime;
 
 @Repository
-public class JdbcTemplateRepository implements ReservationRepository {
+public class JdbcReservationRepository implements ReservationRepository {
     private final JdbcTemplate template;
     private final SimpleJdbcInsert inserter;
 
-    public JdbcTemplateRepository(final DataSource dataSource) {
+    public JdbcReservationRepository(final DataSource dataSource) {
         this.template = new JdbcTemplate(dataSource);
         this.inserter = new SimpleJdbcInsert(dataSource).withTableName("reservation")
                 .usingGeneratedKeyColumns("id")

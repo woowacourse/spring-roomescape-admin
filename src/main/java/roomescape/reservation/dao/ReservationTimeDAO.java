@@ -8,6 +8,7 @@ import roomescape.reservation.model.ReservationTime;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.NoSuchElementException;
 
 @Component
 public class ReservationTimeDAO {
@@ -38,5 +39,13 @@ public class ReservationTimeDAO {
                         rs.getTime("start_at").toLocalTime()
                 )
         );
+    }
+
+    public void deleteBy(Long id) {
+        String sql = "delete from reservation_time where id = ?";
+        int deletedCount = jdbcTemplate.update(sql, id);
+        if (deletedCount == 0) {
+            throw new NoSuchElementException("해당 ID의 예약 시간이 존재하지 않습니다. " + id);
+        }
     }
 }

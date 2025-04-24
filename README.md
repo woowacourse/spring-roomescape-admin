@@ -13,3 +13,70 @@
 -[x] 조회 쿼리를 이용하여 데이터가 저장되었는지 확인
 -[x] 예약 취소 API를 활용하여 테이블에 예약 정보 삭제
 -[x] 조회 쿼리를 이용하여 데이터가 삭제되었는지 확인
+
+
+7단계 api 요구사항
+
+시간만을 통해서 설정할 수 있게끔 한다.
+
+
+
+### Request
+
+```http request
+POST /times HTTP/1.1
+content-type: application/json
+
+{
+    "startAt": "10:00"
+}
+
+
+```
+
+### Response
+
+```http request
+HTTP/1.1 200
+Content-Type: application/json
+
+{
+    "id": 1,
+    "startAt": "10:00"
+}
+
+```
+
+### Request
+
+```http request
+GET /times HTTP/1.1
+
+```
+
+### Response
+
+```http request
+HTTP/1.1 200 
+Content-Type: application/json
+
+[
+   {
+        "id": 1,
+        "startAt": "10:00"
+    }
+]
+```
+
+### Request
+
+```http request
+DELETE /times/1 HTTP/1.1
+
+```
+
+### Response
+
+```http request
+HTTP/1.1 200
+```

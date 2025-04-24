@@ -1,6 +1,5 @@
 package roomescape.reservation.domain;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
 import java.time.LocalDate;
 import java.util.Objects;
 import roomescape.reservationtime.domain.ReservationTime;
@@ -37,16 +36,6 @@ public class Reservation {
 
     public ReservationTime getTime() {
         return time;
-    }
-
-    @JsonIgnore
-    public boolean isIdNull() {
-        return this.id == null;
-    }
-
-    @JsonIgnore
-    public boolean isIdEqualTo(Long id) {
-        return this.id.equals(id);
     }
 
     @Override

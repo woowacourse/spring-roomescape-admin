@@ -1,18 +1,33 @@
 package roomescape.reservation;
 
+import java.time.LocalDate;
 import java.util.List;
 import roomescape.dto.ReservationRequest;
+import roomescape.reservationTime.ReservationTime;
+import roomescape.reservationTime.ReservationTimeRepository;
 
 public class ReservationServiceImpl implements ReservationService {
 
     private final ReservationRepository reservationRepository;
+    private final ReservationTimeRepository reservationTimeRepository;
 
-    public ReservationServiceImpl(ReservationRepository reservationRepository) {
+    public ReservationServiceImpl(ReservationRepository reservationRepository, ReservationTimeRepository reservationTimeRepository) {
         this.reservationRepository = reservationRepository;
+        this.reservationTimeRepository = reservationTimeRepository;
     }
 
     @Override
-    public Reservation saveReservation(ReservationRequest wantToSaveReservation) {
+    public Reservation saveReservation(ReservationRequest wantToSaveReservationRequest) {
+        String name = wantToSaveReservationRequest.getName();
+        LocalDate date = wantToSaveReservationRequest.getDate();
+        Long timeId = wantToSaveReservationRequest.getTimeId();
+
+        ReservationTime request = reservationTimeRepository.findById(timeId);
+
+        Reservation wantToSaveReservation = new Reservation(
+                name, date, request
+        );
+
         return reservationRepository.saveReservation(wantToSaveReservation);
     }
 

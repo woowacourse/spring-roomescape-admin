@@ -20,14 +20,14 @@ public class ReservationDao {
 
     public Long save(final Reservation reservation) {
         final ReservationEntity reservationEntity = ReservationEntity.from(reservation);
-        final String sql = "INSERT INTO RESERVATION (name, date, time) values (?, ?, ?)";
+        final String sql = "INSERT INTO RESERVATION (name, date, time_id) values (?, ?, ?)";
         final KeyHolder keyHolder = new GeneratedKeyHolder();
 
         jdbcTemplate.update(connection -> {
             PreparedStatement ps = connection.prepareStatement(sql, new String[]{"id"});
             ps.setString(1, reservationEntity.name());
-            ps.setString(2, reservationEntity.date().toString());
-            ps.setString(3, reservationEntity.time().toString());
+            ps.setString(2, reservationEntity.date());
+            ps.setLong(3, reservationEntity.timeEntity().id());
             return ps;
         }, keyHolder);
 
@@ -35,7 +35,18 @@ public class ReservationDao {
     }
 
     public List<Reservation> findAll() {
-        final String sql = "SELECT id, name, date, time FROM RESERVATION";
+        final String sql =
+                """
+                SELECT\s
+                r.id as reservation_id,\s
+                r.name,\s
+                r.date,\s
+                t.id as time_id,\s
+                t.start_at as time_value\s
+                FROM reservation as r\s
+                inner join reservation_time as t\s
+                on r.time_id = t.id
+               """;
 
         return jdbcTemplate.query(sql, ReservationEntity.getDefaultRowMapper()).stream()
                 .map(ReservationEntity::toDomain)

@@ -27,9 +27,12 @@ public class ReservationController {
     public ResponseEntity<ReservationResponse> create(
             @RequestBody final ReservationRequest reservationRequest
     ) {
-        final ReservationResponse reservationResponse = reservationService.create(reservationRequest);
-
-        return ResponseEntity.ok(reservationResponse);
+        try {
+            final ReservationResponse reservationResponse = reservationService.create(reservationRequest);
+            return ResponseEntity.ok(reservationResponse);
+        } catch (IllegalArgumentException e) {
+            return ResponseEntity.notFound().build();
+        }
     }
 
     @GetMapping

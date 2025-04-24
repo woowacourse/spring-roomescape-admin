@@ -8,15 +8,15 @@ public class Reservation {
     private Long id;
     private final String name;
     private final LocalDate date;
-    private final LocalTime time;
+    private final Time time;
 
-    public Reservation(final String name, final LocalDate date, final LocalTime time) {
+    public Reservation(final String name, final LocalDate date, final Time time) {
         this.name = name;
         this.date = date;
         this.time = time;
     }
 
-    public Reservation(final Long id, final String name, final LocalDate date, final LocalTime time) {
+    public Reservation(final Long id, final String name, final LocalDate date, final Time time) {
         this.id = id;
         this.name = name;
         this.date = date;
@@ -35,7 +35,7 @@ public class Reservation {
         return date;
     }
 
-    public LocalTime getTime() {
+    public Time getTime() {
         return time;
     }
 }

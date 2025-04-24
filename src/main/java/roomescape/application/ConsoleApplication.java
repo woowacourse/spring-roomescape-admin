@@ -68,6 +68,9 @@ public class ConsoleApplication implements CommandLineRunner {
             CreateReservationDto createReservationDto = inputView.inputCreateReservation();
             Reservation reservation = reservationService.createReservation(createReservationDto);
             outputView.printSuccessToCreateReservation(reservation);
+        } else if (function == 2) {
+            List<Reservation> reservations = reservationService.getAllReservations();
+            outputView.printReservations(reservations);
         }
     }
 }

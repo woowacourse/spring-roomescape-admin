@@ -38,4 +38,18 @@ public class OutputView {
                 reservation.getTime().getStartAt());
         System.out.println();
     }
+
+    public void printReservations(List<Reservation> reservations) {
+        System.out.println("예약 목록입니다.");
+        System.out.println("id | 예약자명 | 예약 날짜 | 예약 시간");
+        reservations.forEach(reservation ->
+                System.out.printf("%d | %s | %s | %s \n",
+                        reservation.getId(),
+                        reservation.getName(),
+                        reservation.getDate(),
+                        reservation.getTime().getStartAt()
+                )
+        );
+        System.out.println();
+    }
 }

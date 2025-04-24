@@ -21,9 +21,11 @@ public class TimeTest {
     @DisplayName("startAt 관련 api 테스트")
     @Test
     void 칠단계() {
+        // given
         Map<String, String> params = new HashMap<>();
         params.put("startAt", "10:00");
 
+        // when & then
         RestAssured.given().port(port).log().all()
                 .contentType(ContentType.JSON)
                 .body(params)

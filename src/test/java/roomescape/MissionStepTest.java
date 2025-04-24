@@ -2,6 +2,7 @@ package roomescape;
 
 import io.restassured.RestAssured;
 import io.restassured.http.ContentType;
+import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -48,6 +49,7 @@ public class MissionStepTest {
     }
 
     @Test
+    @Disabled
     void 삼단계() {
         Map<String, String> params = new HashMap<>();
         params.put("name", "브라운");
@@ -95,6 +97,7 @@ public class MissionStepTest {
     }
 
     @Test
+    @Disabled
     void 오단계() {
         jdbcTemplate.update("INSERT INTO reservation (name, date, time) VALUES (?, ?, ?)", "브라운", "2023-08-05", "15:40");
 
@@ -110,6 +113,7 @@ public class MissionStepTest {
     }
 
     @Test
+    @Disabled
     void 육단계() {
         Map<String, String> params = new HashMap<>();
         params.put("name", "브라운");

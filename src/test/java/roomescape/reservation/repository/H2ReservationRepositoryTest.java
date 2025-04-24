@@ -14,26 +14,26 @@ import roomescape.reservation.model.Reservation;
 import roomescape.reservation.model.ReservationTime;
 
 @JdbcTest(properties = "application-test.properties")
-@Import({ReservationRepository.class, ReservationTimeRepository.class})
-class ReservationRepositoryTest {
+@Import({H2ReservationRepository.class, H2ReservationTimeRepository.class})
+class H2ReservationRepositoryTest {
 
     ReservationTime time = ReservationTime.createWithoutId(LocalTime.of(12, 0));
     @Autowired
-    private ReservationRepository reservationRepository;
+    private H2ReservationRepository h2ReservationRepository;
     @Autowired
-    private ReservationTimeRepository reservationTimeRepository;
+    private H2ReservationTimeRepository h2ReservationTimeRepository;
 
     @DisplayName("전체 예약 리스트 불러온다.")
     @Test
     void findAll() {
         // given
-        ReservationTime reservationTime = reservationTimeRepository.insertTime(time);
+        ReservationTime reservationTime = h2ReservationTimeRepository.insertTime(time);
         Reservation reservationWithoutId = Reservation.createWithoutId("test", LocalDate.of(2024, 12, 1),
                 reservationTime);
-        reservationRepository.insertReservation(reservationWithoutId);
+        h2ReservationRepository.insertReservation(reservationWithoutId);
 
         // when
-        List<Reservation> reservations = reservationRepository.findAll();
+        List<Reservation> reservations = h2ReservationRepository.findAll();
 
         // then
         assertThat(reservations).hasSize(1);
@@ -46,10 +46,10 @@ class ReservationRepositoryTest {
     @Test
     void insertReservation() {
         // when
-        ReservationTime reservationTime = reservationTimeRepository.insertTime(time);
+        ReservationTime reservationTime = h2ReservationTimeRepository.insertTime(time);
         Reservation reservationWithoutId = Reservation.createWithoutId("test", LocalDate.of(2024, 12, 1),
                 reservationTime);
-        Reservation reservation = reservationRepository.insertReservation(reservationWithoutId);
+        Reservation reservation = h2ReservationRepository.insertReservation(reservationWithoutId);
 
         // then
         assertThat(reservation)
@@ -61,13 +61,13 @@ class ReservationRepositoryTest {
     @Test
     void deleteReservationById_existId() {
         // given
-        ReservationTime reservationTime = reservationTimeRepository.insertTime(time);
+        ReservationTime reservationTime = h2ReservationTimeRepository.insertTime(time);
         Reservation reservationWithoutId = Reservation.createWithoutId("test", LocalDate.of(2024, 12, 1),
                 reservationTime);
-        Reservation reservation = reservationRepository.insertReservation(reservationWithoutId);
+        Reservation reservation = h2ReservationRepository.insertReservation(reservationWithoutId);
 
         // when
-        boolean isDeleted = reservationRepository.deleteReservationById(reservation.getId());
+        boolean isDeleted = h2ReservationRepository.deleteReservationById(reservation.getId());
 
         // then
         assertThat(isDeleted).isTrue();
@@ -80,7 +80,7 @@ class ReservationRepositoryTest {
         long id = 1L;
 
         // when
-        boolean isDeleted = reservationRepository.deleteReservationById(id);
+        boolean isDeleted = h2ReservationRepository.deleteReservationById(id);
 
         // then
         assertThat(isDeleted).isFalse();

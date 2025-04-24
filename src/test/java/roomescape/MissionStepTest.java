@@ -5,6 +5,7 @@ import static org.hamcrest.Matchers.is;
 
 import io.restassured.RestAssured;
 import io.restassured.http.ContentType;
+import java.lang.reflect.Field;
 import java.sql.Connection;
 import java.sql.SQLException;
 import java.time.LocalTime;
@@ -18,9 +19,10 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.test.annotation.DirtiesContext;
+import roomescape.reservation.controller.ReservationController;
 import roomescape.reservation.model.Reservation;
 import roomescape.reservation.model.ReservationTime;
-import roomescape.reservation.repository.ReservationTimeRepository;
+import roomescape.reservation.repository.H2ReservationTimeRepository;
 
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.DEFINED_PORT)
 @DirtiesContext(classMode = DirtiesContext.ClassMode.BEFORE_EACH_TEST_METHOD)
@@ -29,7 +31,9 @@ public class MissionStepTest {
     @Autowired
     private JdbcTemplate jdbcTemplate;
     @Autowired
-    private ReservationTimeRepository reservationTimeRepository;
+    private H2ReservationTimeRepository h2ReservationTimeRepository;
+    @Autowired
+    private ReservationController reservationController;
 
     @DisplayName("welcomePage를 반환한다.")
     @Test
@@ -190,7 +194,7 @@ public class MissionStepTest {
 
     @Test
     void 팔단계() {
-        reservationTimeRepository.insertTime(ReservationTime.createWithoutId(LocalTime.of(12, 0)));
+        h2ReservationTimeRepository.insertTime(ReservationTime.createWithoutId(LocalTime.of(12, 0)));
         Map<String, Object> reservation = new HashMap<>();
         reservation.put("name", "브라운");
         reservation.put("date", "2023-08-05");
@@ -208,5 +212,19 @@ public class MissionStepTest {
                 .then().log().all()
                 .statusCode(200)
                 .body("size()", is(1));
+    }
+
+    @Test
+    void 구단계() {
+        boolean isJdbcTemplateInjected = false;
+
+        for (Field field : reservationController.getClass().getDeclaredFields()) {
+            if (field.getType().equals(JdbcTemplate.class)) {
+                isJdbcTemplateInjected = true;
+                break;
+            }
+        }
+
+        assertThat(isJdbcTemplateInjected).isFalse();
     }
 }

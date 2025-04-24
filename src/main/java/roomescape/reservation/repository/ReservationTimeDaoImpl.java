@@ -53,9 +53,9 @@ public class ReservationTimeDaoImpl implements ReservationTimeDao{
     public Optional<ReservationTime> findById(Long id) {
         String sql = "SELECT * FROM reservation_time WHERE id = :id";
 
-        ReservationTime reservationTime = jdbcTemplate.queryForObject(
+        List<ReservationTime> findReservationTime = jdbcTemplate.query(
             sql, new MapSqlParameterSource("id", id), getReservationTimeRowMapper());
-        return Optional.ofNullable(reservationTime);
+        return findReservationTime.stream().findFirst();
     }
 
     private boolean existReservationTime(Long id) {

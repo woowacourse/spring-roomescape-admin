@@ -83,4 +83,12 @@ class ReservationServiceTest {
         List<ReservationResponseDto> allReservation = reservationService.findAll();
         assertThat(allReservation.isEmpty()).isTrue();
     }
+
+    @Test
+    void 없는_예약을_삭제하면_예외가_발생한다() {
+        // when & then
+        assertThatThrownBy(() -> reservationService.deleteById(9L))
+            .isInstanceOf(EntityNotFoundException.class)
+            .hasMessage("삭제할 예약정보가 없습니다.");
+    }
 }

@@ -39,6 +39,9 @@ public class ReservationService {
     }
 
     public void deleteById(Long id) {
+        reservationDao.findById(id)
+            .orElseThrow(() -> new EntityNotFoundException("삭제할 예약정보가 없습니다."));
+
         reservationDao.deleteById(id);
     }
 }

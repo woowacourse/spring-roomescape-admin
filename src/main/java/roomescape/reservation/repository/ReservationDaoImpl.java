@@ -8,11 +8,11 @@ import org.springframework.jdbc.support.GeneratedKeyHolder;
 import org.springframework.stereotype.Repository;
 import roomescape.reservation.entity.Reservation;
 import roomescape.reservation.entity.ReservationTime;
-import roomescape.reservation.exception.EntityNotFoundException;
 
 import java.time.LocalDate;
 import java.time.LocalTime;
 import java.util.List;
+import java.util.Optional;
 
 @Repository
 public class ReservationDaoImpl implements ReservationDao {
@@ -47,18 +47,17 @@ public class ReservationDaoImpl implements ReservationDao {
 
     @Override
     public void deleteById(Long id) {
-        if (!existReservation(id)) {
-            throw new EntityNotFoundException("삭제할 예약정보가 없습니다.");
-        }
         String sql = "DELETE FROM reservation WHERE id = :id";
         jdbcTemplate.update(sql, new MapSqlParameterSource("id", id));
     }
 
-    private boolean existReservation(Long id) {
-        String sql = "SELECT EXISTS (SELECT 1 FROM reservation WHERE id = :id)";
-        return Boolean.TRUE.equals(
-            jdbcTemplate.queryForObject(sql, new MapSqlParameterSource("id", id), Boolean.class)
-        );
+    @Override
+    public Optional<Reservation> findById(Long id) {
+        String sql = "SELECT * FROM reservation WHERE id = :id";
+        List<Reservation> findReservation = jdbcTemplate.query(
+            sql, new MapSqlParameterSource("id", id), getReservationRowMapper());
+
+        return findReservation.stream().findFirst();
     }
 
     private RowMapper<Reservation> getReservationRowMapper() {

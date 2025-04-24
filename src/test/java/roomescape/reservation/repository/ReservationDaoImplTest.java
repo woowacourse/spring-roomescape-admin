@@ -9,14 +9,12 @@ import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
 import org.springframework.test.annotation.DirtiesContext;
 import roomescape.reservation.entity.Reservation;
 import roomescape.reservation.entity.ReservationTime;
-import roomescape.reservation.exception.EntityNotFoundException;
 
 import java.time.LocalDate;
 import java.time.LocalTime;
 import java.util.List;
 
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.assertj.core.api.Assertions.assertThatThrownBy;
 
 
 @JdbcTest
@@ -82,14 +80,6 @@ class ReservationDaoImplTest {
 
         // then
         assertThat(all).containsExactly(drago, cookie);
-    }
-
-    @Test
-    void 없는_예약을_삭제하면_예외가_발생한다() {
-        // when & then
-        assertThatThrownBy(() -> reservationDao.deleteById(9L))
-            .isInstanceOf(EntityNotFoundException.class)
-            .hasMessage("삭제할 예약정보가 없습니다.");
     }
 
     @Test

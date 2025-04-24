@@ -11,11 +11,11 @@ import roomescape.entity.ReservationTimeEntity;
 import java.util.List;
 
 @Service
-public class RoomescapeReservationService {
+public class ReservationService {
     private final ReservationDao reservationDAO;
     private final ReservationTimeDao timeDao;
 
-    public RoomescapeReservationService(ReservationDao reservationDAO, ReservationTimeDao timeDao) {
+    public ReservationService(ReservationDao reservationDAO, ReservationTimeDao timeDao) {
         this.reservationDAO = reservationDAO;
         this.timeDao = timeDao;
     }

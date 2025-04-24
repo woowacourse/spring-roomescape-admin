@@ -9,10 +9,10 @@ import roomescape.entity.ReservationTimeEntity;
 import java.util.List;
 
 @Service
-public class RoomescapeTimeService {
+public class ReservationTimeService {
     private final ReservationTimeDao timeDao;
 
-    public RoomescapeTimeService(ReservationTimeDao timeDao) {
+    public ReservationTimeService(ReservationTimeDao timeDao) {
         this.timeDao = timeDao;
     }
 

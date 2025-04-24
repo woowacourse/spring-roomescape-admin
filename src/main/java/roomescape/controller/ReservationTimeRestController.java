@@ -4,16 +4,16 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import roomescape.dto.ReservationTimeRequestDto;
 import roomescape.dto.ReservationTimeResponseDto;
-import roomescape.service.RoomescapeTimeService;
+import roomescape.service.ReservationTimeService;
 
 import java.util.List;
 
 @RestController
 @RequestMapping("/times")
 public class ReservationTimeRestController {
-    private final RoomescapeTimeService service;
+    private final ReservationTimeService service;
 
-    public ReservationTimeRestController(RoomescapeTimeService service) {
+    public ReservationTimeRestController(ReservationTimeService service) {
         this.service = service;
     }
 

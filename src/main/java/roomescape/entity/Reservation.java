@@ -1,36 +1,28 @@
 package roomescape.entity;
 
 import java.time.LocalDate;
-import java.time.LocalTime;
 
 public class Reservation {
-    public static final LocalTime START_RESERVATION_TIME = LocalTime.of(10, 0);
-    public static final LocalTime LAST_RESERVATION_TIME = LocalTime.of(23, 0);
 
-    private long id;
+    private Long id;
     private String name;
     private LocalDate date;
-    private LocalTime time;
+    private ReservationTime time;
 
     public Reservation() {
     }
 
-    public Reservation(final String name, final LocalDate date, final LocalTime time) {
-        validateTime(time);
+    public Reservation(final String name, final LocalDate date, final ReservationTime time) {
         this.name = name;
         this.date = date;
         this.time = time;
     }
 
-    public Reservation(final long id, final String name, final LocalDate date, final LocalTime time) {
-        this(name,date,time);
+    public Reservation(Long id, String name, LocalDate date, ReservationTime time) {
         this.id = id;
-    }
-
-    private void validateTime(final LocalTime time) {
-        if(time.isBefore(START_RESERVATION_TIME) || time.isAfter(LAST_RESERVATION_TIME)){
-            throw new IllegalArgumentException("예약할 수 없는 시간입니다.");
-        }
+        this.name = name;
+        this.date = date;
+        this.time = time;
     }
 
     public long getId() {
@@ -45,11 +37,11 @@ public class Reservation {
         return date;
     }
 
-    public LocalTime getTime() {
+    public ReservationTime getTime() {
         return time;
     }
 
-    public void setId(final long id) {
+    public void setId(final Long id) {
         this.id = id;
     }
 }

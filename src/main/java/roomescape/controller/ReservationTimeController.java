@@ -6,17 +6,17 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import roomescape.dto.ReservationTimeCreateRequestDto;
 import roomescape.dto.ReservationTimeResponseDto;
-import roomescape.repository.ReservationTimeDao;
+import roomescape.repository.ReservationTimeJdbcRepository;
 
 import java.util.List;
 
 @RestController
 public class ReservationTimeController {
 
-    private final ReservationTimeDao reservationTimeDao;
+    private final ReservationTimeJdbcRepository reservationTimeDao;
 
     @Autowired
-    public ReservationTimeController(ReservationTimeDao reservationTimeDao) {
+    public ReservationTimeController(ReservationTimeJdbcRepository reservationTimeDao) {
         this.reservationTimeDao = reservationTimeDao;
     }
 

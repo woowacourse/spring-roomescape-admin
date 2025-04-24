@@ -8,17 +8,17 @@ import roomescape.domain.ReservationTime;
 import roomescape.dto.ReservationCreateRequestDto;
 import roomescape.dto.ReservationResponseDto;
 import roomescape.dto.ReservationTimeResponseDto;
-import roomescape.repository.ReservationDao;
+import roomescape.repository.ReservationJdbcRepository;
 
 import java.util.List;
 
 @RestController
 public class ReservationController {
 
-    private final ReservationDao reservationDao;
+    private final ReservationJdbcRepository reservationDao;
 
     @Autowired
-    public ReservationController(ReservationDao reservationDao) {
+    public ReservationController(ReservationJdbcRepository reservationDao) {
         this.reservationDao = reservationDao;
     }
 

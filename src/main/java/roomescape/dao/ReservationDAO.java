@@ -1,6 +1,7 @@
 package roomescape.dao;
 
 import java.sql.Time;
+import java.util.List;
 import java.util.Map;
 import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.jdbc.core.JdbcTemplate;
@@ -8,16 +9,38 @@ import org.springframework.jdbc.core.simple.SimpleJdbcInsert;
 import org.springframework.stereotype.Repository;
 import roomescape.dto.ReservationReqDto;
 import roomescape.dto.ReservationResDto;
-import roomescape.dto.ReservationTimeReqDto;
 import roomescape.dto.ReservationTimeResDto;
 
 @Repository
-public class UpdatingDAO {
+public class ReservationDAO {
 
     private final JdbcTemplate jdbcTemplate;
 
-    public UpdatingDAO(JdbcTemplate jdbcTemplate) {
+    public ReservationDAO(JdbcTemplate jdbcTemplate) {
         this.jdbcTemplate = jdbcTemplate;
+    }
+
+    public List<ReservationResDto> findAllReservations() {
+        String sql = """
+                SELECT
+                r.id as reservation_id,
+                r.name,
+                r.date,
+                t.id as time_id,
+                t.start_at as time_value
+                FROM reservation AS r
+                INNER JOIN reservation_time AS t
+                ON r.time_id = t.id
+                """;
+        return jdbcTemplate.query(sql, (resultSet, rowNum) -> new ReservationResDto(
+                resultSet.getLong("reservation_id"),
+                resultSet.getString("name"),
+                resultSet.getDate("date").toLocalDate(),
+                new ReservationTimeResDto(
+                        resultSet.getLong("time_id"),
+                        resultSet.getTime("time_value").toLocalTime()
+                )
+        ));
     }
 
     public ReservationResDto addAndGet(ReservationReqDto dto) {
@@ -41,25 +64,6 @@ public class UpdatingDAO {
 
     public void deleteById(Long id) {
         int rows = jdbcTemplate.update("DELETE FROM reservation WHERE id = ?", id);
-        if (rows == 0) {
-            throw new EmptyResultDataAccessException(rows);
-        }
-    }
-
-    public ReservationTimeResDto addAndGet2(ReservationTimeReqDto dto) {
-        SimpleJdbcInsert simpleJdbcInsert = new SimpleJdbcInsert(jdbcTemplate)
-                .withTableName("reservation_time")
-                .usingColumns("start_at")
-                .usingGeneratedKeyColumns("id");
-
-        Map<String, Object> parameters = Map.of("start_at", dto.startAt());
-        Number id = simpleJdbcInsert.executeAndReturnKey(parameters);
-
-        return new ReservationTimeResDto(id.longValue(), dto.startAt());
-    }
-
-    public void deleteById2(Long id) {
-        int rows = jdbcTemplate.update("DELETE FROM reservation_time WHERE id = ?", id);
         if (rows == 0) {
             throw new EmptyResultDataAccessException(rows);
         }

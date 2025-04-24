@@ -12,8 +12,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.util.UriComponentsBuilder;
-import roomescape.dao.QueryingDAO;
-import roomescape.dao.UpdatingDAO;
+import roomescape.dao.ReservationTimeDAO;
 import roomescape.dto.ReservationTimeReqDto;
 import roomescape.dto.ReservationTimeResDto;
 
@@ -22,27 +21,24 @@ import roomescape.dto.ReservationTimeResDto;
 public class ReservationTimeController {
 
     @Autowired
-    QueryingDAO queryingDAO;
-
-    @Autowired
-    UpdatingDAO updatingDAO;
+    ReservationTimeDAO reservationTimeDAO;
 
     @GetMapping
     private ResponseEntity<List<ReservationTimeResDto>> readAll() {
-        List<ReservationTimeResDto> response = queryingDAO.findAllReservationTimes();
+        List<ReservationTimeResDto> response = reservationTimeDAO.findAllReservationTimes();
         return ResponseEntity.ok(response);
     }
 
     @PostMapping
     private ResponseEntity<ReservationTimeResDto> create(@RequestBody ReservationTimeReqDto dto, UriComponentsBuilder ucb) {
-        ReservationTimeResDto newReservationTime = updatingDAO.addAndGet2(dto);
+        ReservationTimeResDto newReservationTime = reservationTimeDAO.addAndGet(dto);
         URI uri = ucb.path("/times/{id}").buildAndExpand(newReservationTime.id()).toUri();
         return ResponseEntity.created(uri).body(newReservationTime);
     }
 
     @DeleteMapping("/{id}")
     private ResponseEntity<Void> delete(@PathVariable Long id) {
-        updatingDAO.deleteById2(id);
+        reservationTimeDAO.deleteById(id);
         return ResponseEntity.noContent().build();
     }
 }

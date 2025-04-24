@@ -22,6 +22,7 @@ public class ReservationTimeService {
     public ReservationTimeResponseDto create(ReservationTimeRequestDto requestDto) {
         ReservationTimeEntity entity = requestDto.toEntity();
         validateOperatingTime(entity);
+        validateDuplicated(entity);
         ReservationTimeEntity saved = timeDao.save(entity);
         return ReservationTimeResponseDto.from(saved);
     }
@@ -30,6 +31,13 @@ public class ReservationTimeService {
         LocalTime startAt = entity.startAt();
         if (startAt.isBefore(OPERATING_START) || startAt.isAfter(OPERATING_END)) {
             throw new IllegalArgumentException("운영 시간 이외의 날짜는 예약할 수 없습니다.");
+        }
+    }
+
+    private void validateDuplicated(ReservationTimeEntity entity) {
+        List<ReservationTimeEntity> times = timeDao.findAll();
+        if (times.stream().anyMatch(time -> time.isDuplicatedWith(entity))) {
+            throw new IllegalArgumentException("러닝 타임이 겹치는 시간이 존재합니다.");
         }
     }
 

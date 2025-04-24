@@ -55,5 +55,7 @@ public class H2ReservationTimeRepository implements ReservationTimeRepository {
 
     @Override
     public void removeById(final Long id) {
+        String sql = "delete from reservation_time where id = ?";
+        jdbcTemplate.update(sql, id);
     }
 }

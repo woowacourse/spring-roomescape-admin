@@ -1,6 +1,7 @@
 package roomescape.repository;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.assertThatCode;
 import static org.junit.jupiter.api.Assertions.assertAll;
 
 import java.time.LocalTime;
@@ -21,6 +22,8 @@ public class H2ReservationTimeRepositoryTest {
     @Autowired
     private JdbcTemplate jdbcTemplate;
 
+    private ReservationTime reservationTime;
+
     @BeforeEach
     void setUp() {
         h2ReservationTimeRepository = new H2ReservationTimeRepository(jdbcTemplate);
@@ -31,16 +34,13 @@ public class H2ReservationTimeRepositoryTest {
                              + "start_at    VARCHAR(255) NOT NULL, "
                              + "PRIMARY KEY (id))");
 
-        jdbcTemplate.update("INSERT INTO reservation_time(id, start_at) VALUES (?, ?)", null, LocalTime.of(10, 0));
+        reservationTime = new ReservationTime(LocalTime.of(10, 0));
     }
 
     @DisplayName("예약 시간을 추가할 수 있다.")
     @Test
     void addTest() {
-        // given
-        ReservationTime reservationTime = new ReservationTime(LocalTime.of(8, 0));
-
-        // when
+        // given & when
         ReservationTime addedReservationTime = h2ReservationTimeRepository.add(reservationTime);
 
         // then
@@ -48,7 +48,7 @@ public class H2ReservationTimeRepositoryTest {
                 () -> assertThat(addedReservationTime)
                         .isNotNull(),
                 () -> assertThat(addedReservationTime.getId())
-                        .isEqualTo(2L),
+                        .isEqualTo(1L),
                 () -> assertThat(addedReservationTime.getStartAt())
                         .isEqualTo(reservationTime.getStartAt())
         );
@@ -58,6 +58,7 @@ public class H2ReservationTimeRepositoryTest {
     @Test
     void findByIdTest() {
         // given
+        h2ReservationTimeRepository.add(reservationTime);
 
         // when
         ReservationTime foundReservationTime = h2ReservationTimeRepository.findById(1L);
@@ -77,6 +78,7 @@ public class H2ReservationTimeRepositoryTest {
     @Test
     void findAllTest() {
         // given
+        h2ReservationTimeRepository.add(reservationTime);
 
         // when
         List<ReservationTime> reservationTimes = h2ReservationTimeRepository.findAll();
@@ -84,5 +86,20 @@ public class H2ReservationTimeRepositoryTest {
         // then
         assertThat(reservationTimes)
                 .hasSize(1);
+    }
+
+    @DisplayName("id로 예약 시간을 삭제할 수 있다.")
+    @Test
+    void removeByIdTest() {
+        // given
+        h2ReservationTimeRepository.add(reservationTime);
+
+        // when & then
+        assertAll(
+                () -> assertThatCode(() -> h2ReservationTimeRepository.removeById(1L))
+                        .doesNotThrowAnyException(),
+                () -> assertThat(h2ReservationTimeRepository.findAll())
+                        .isEmpty()
+        );
     }
 }

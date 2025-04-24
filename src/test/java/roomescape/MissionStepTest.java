@@ -11,8 +11,10 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.test.annotation.DirtiesContext;
 import org.springframework.test.context.ActiveProfiles;
+import roomescape.controller.ReservationController;
 import roomescape.dto.ReservationResponse;
 
+import java.lang.reflect.Field;
 import java.sql.Connection;
 import java.sql.SQLException;
 import java.util.HashMap;
@@ -30,6 +32,9 @@ public class MissionStepTest {
 
     @Autowired
     private JdbcTemplate jdbcTemplate;
+
+    @Autowired
+    private ReservationController reservationController;
 
     @Test
     @DisplayName("GET /admin 요청시 어드민 메인 페이지를 응답한다")
@@ -168,7 +173,7 @@ public class MissionStepTest {
     @DisplayName("POST /times 요청시 시간 추가, GET 요청시 모든시간 조회, DELETE 요청시 시간을 삭제한다")
     void post_요청시_시간을_추가하고_get_요청시_모든시간_조회하고_delete_요청시_시간을_삭제한다() {
         Map<String, String> params = new HashMap<>();
-        params.put("startAt", "10:00");
+        params.put("startAt", "11:00");
 
         RestAssured.given().log().all()
                 .contentType(ContentType.JSON)
@@ -187,5 +192,19 @@ public class MissionStepTest {
                 .when().delete("/times/1")
                 .then().log().all()
                 .statusCode(200);
+    }
+
+    @Test
+    void controller에_JdbcTemplate_필드가_존재하지_않는다() {
+        boolean isJdbcTemplateInjected = false;
+
+        for (Field field : reservationController.getClass().getDeclaredFields()) {
+            if (field.getType().equals(JdbcTemplate.class)) {
+                isJdbcTemplateInjected = true;
+                break;
+            }
+        }
+
+        assertThat(isJdbcTemplateInjected).isFalse();
     }
 }

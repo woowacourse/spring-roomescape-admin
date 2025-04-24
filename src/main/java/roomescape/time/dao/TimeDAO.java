@@ -1,12 +1,13 @@
 package roomescape.time.dao;
 
+import java.sql.Time;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.simple.SimpleJdbcInsert;
 import org.springframework.stereotype.Repository;
-import roomescape.time.domain.Time;
+import roomescape.time.domain.ReservationTime;
 import roomescape.time.dto.TimeRequest;
 
 @Repository
@@ -21,26 +22,26 @@ public class TimeDAO {
                 .usingGeneratedKeyColumns("id");
     }
 
-    public List<Time> findAllTimes() {
+    public List<ReservationTime> findAllTimes() {
         String sql = "SELECT * from reservation_time";
-        List<Time> times = jdbcTemplate.query(
+        List<ReservationTime> reservationTimes = jdbcTemplate.query(
                 sql,
                 (resultSet, rowNum) -> {
-                    Time time = new Time(
+                    ReservationTime reservationTime = new ReservationTime(
                             resultSet.getLong("id"),
                             resultSet.getTime("start_at").toLocalTime()
                     );
-                    return time;
+                    return reservationTime;
                 });
-        return times;
+        return reservationTimes;
     }
 
-    public Time insertTime(TimeRequest timeRequest) {
+    public ReservationTime insertTime(TimeRequest timeRequest) {
         Map<String, Object> parameters = new HashMap<>();
-        parameters.put("start_at", timeRequest.startAt());
+        parameters.put("start_at", Time.valueOf(timeRequest.startAt()));
 
         Number insertedId = simpleJdbcInsert.executeAndReturnKey(parameters);
-        return new Time(insertedId.longValue(), timeRequest.startAt());
+        return new ReservationTime(insertedId.longValue(), timeRequest.startAt());
     }
 
     public void deleteTime(Long id) {

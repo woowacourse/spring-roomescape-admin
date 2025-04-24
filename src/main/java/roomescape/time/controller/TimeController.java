@@ -9,7 +9,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import roomescape.time.dao.TimeDAO;
-import roomescape.time.domain.Time;
+import roomescape.time.domain.ReservationTime;
 import roomescape.time.dto.TimeRequest;
 import roomescape.time.dto.TimeResponse;
 
@@ -25,19 +25,19 @@ public class TimeController {
 
     @GetMapping
     public List<TimeResponse> getTime() {
-        List<Time> times = timeDAO.findAllTimes();
+        List<ReservationTime> reservationTimes = timeDAO.findAllTimes();
 
-        return times.stream()
-                .map(time -> new TimeResponse(time.getId(), time.getLocalTime()))
+        return reservationTimes.stream()
+                .map(reservationTime -> new TimeResponse(reservationTime.getId(), reservationTime.getLocalTime()))
                 .toList();
     }
 
     @PostMapping
     public TimeResponse createTime(@RequestBody TimeRequest timeRequest) {
-        Time time = timeDAO.insertTime(timeRequest);
+        ReservationTime reservationTime = timeDAO.insertTime(timeRequest);
         return new TimeResponse(
-                time.getId(),
-                time.getLocalTime()
+                reservationTime.getId(),
+                reservationTime.getLocalTime()
         );
     }
 

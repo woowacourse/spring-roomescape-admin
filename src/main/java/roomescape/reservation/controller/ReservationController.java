@@ -8,7 +8,7 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
-import roomescape.reservation.dto.ReservationRequestDto;
+import roomescape.reservation.dto.ReservationRequest;
 import roomescape.reservation.dto.ReservationResponseDto;
 import roomescape.reservation.service.ReservationService;
 
@@ -34,7 +34,7 @@ public class ReservationController {
     }
 
     @PostMapping("/reservations")
-    public ResponseEntity<ReservationResponseDto> save(@RequestBody ReservationRequestDto requestDto) {
+    public ResponseEntity<ReservationResponseDto> save(@RequestBody ReservationRequest requestDto) {
         ReservationResponseDto responseDto = reservationServiceImpl.save(requestDto);
 
         return ResponseEntity.ok(responseDto);

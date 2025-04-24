@@ -21,9 +21,9 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.jdbc.core.JdbcTemplate;
-import roomescape.reservation.dto.ReservationRequestDto;
+import roomescape.reservation.dto.ReservationRequest;
 import roomescape.reservation.dto.ReservationResponseDto;
-import roomescape.reservation.dto.ReservationTimeResponseDto;
+import roomescape.reservation.dto.ReservationTimeResponse;
 import roomescape.reservation.entity.Reservation;
 import roomescape.reservation.entity.ReservationTime;
 import roomescape.common.exception.EntityNotFoundException;
@@ -52,7 +52,7 @@ class ReservationControllerTest {
         reservationService.addReservationTime(timeId, new ReservationTime(timeId, time));
 
         for (String name : names) {
-            ReservationRequestDto requestDto = new ReservationRequestDto(name, now, timeId);
+            ReservationRequest requestDto = new ReservationRequest(name, now, timeId);
             reservationService.save(requestDto);
         }
 
@@ -69,7 +69,7 @@ class ReservationControllerTest {
         List<LocalDate> resultDates = body.stream().map(ReservationResponseDto::date).toList();
         List<LocalTime> resultTimes = body.stream()
                 .map(ReservationResponseDto::time)
-                .map(ReservationTimeResponseDto::startAt)
+                .map(ReservationTimeResponse::startAt)
                 .toList();
 
         assertThat(resultNames).containsExactlyElementsOf(names);
@@ -95,9 +95,9 @@ class ReservationControllerTest {
 
         LocalDate localDate = LocalDate.parse(date);
 
-        ReservationRequestDto requestDto = new ReservationRequestDto(name, localDate, timeId);
-        ReservationTimeResponseDto reservationTimeResponseDto = new ReservationTimeResponseDto(timeId, localTime);
-        ReservationResponseDto expected = new ReservationResponseDto(1L, name, localDate, reservationTimeResponseDto);
+        ReservationRequest requestDto = new ReservationRequest(name, localDate, timeId);
+        ReservationTimeResponse reservationTimeResponse = new ReservationTimeResponse(timeId, localTime);
+        ReservationResponseDto expected = new ReservationResponseDto(1L, name, localDate, reservationTimeResponse);
 
         // when
         ResponseEntity<ReservationResponseDto> result = reservationController.save(requestDto);

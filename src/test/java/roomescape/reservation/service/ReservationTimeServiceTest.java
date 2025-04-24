@@ -9,8 +9,8 @@ import java.util.List;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
-import roomescape.reservation.dto.ReservationTimeRequestDto;
-import roomescape.reservation.dto.ReservationTimeResponseDto;
+import roomescape.reservation.dto.ReservationTimeRequest;
+import roomescape.reservation.dto.ReservationTimeResponse;
 import roomescape.reservation.entity.ReservationTime;
 import roomescape.common.exception.EntityNotFoundException;
 import roomescape.reservation.repository.ReservationTimeRepository;
@@ -41,10 +41,10 @@ public class ReservationTimeServiceTest {
         }
 
         // when
-        List<ReservationTimeResponseDto> result = reservationTimeService.getAll();
+        List<ReservationTimeResponse> result = reservationTimeService.getAll();
 
         // then
-        List<LocalTime> resultTimes = result.stream().map(ReservationTimeResponseDto::startAt).toList();
+        List<LocalTime> resultTimes = result.stream().map(ReservationTimeResponse::startAt).toList();
         assertThat(resultTimes).containsExactlyInAnyOrderElementsOf(localTimes);
     }
 
@@ -52,7 +52,7 @@ public class ReservationTimeServiceTest {
     @Test
     void test2() {
         // given & when
-        List<ReservationTimeResponseDto> result = reservationTimeService.getAll();
+        List<ReservationTimeResponse> result = reservationTimeService.getAll();
 
         // then
         assertThat(result).isEmpty();
@@ -63,10 +63,10 @@ public class ReservationTimeServiceTest {
     void test3() {
         // given
         LocalTime localTime1 = LocalTime.of(8, 0);
-        ReservationTimeRequestDto reservationTimeRequestDto = new ReservationTimeRequestDto(localTime1);
+        ReservationTimeRequest reservationTimeRequest = new ReservationTimeRequest(localTime1);
 
         // when
-        ReservationTimeResponseDto result = reservationTimeService.save(reservationTimeRequestDto);
+        ReservationTimeResponse result = reservationTimeService.save(reservationTimeRequest);
 
         // then
         assertThat(result.id()).isNotNull();

@@ -4,7 +4,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.atomic.AtomicLong;
-import roomescape.reservation.dto.ReservationRequestDto;
+import roomescape.reservation.dto.ReservationRequest;
 import roomescape.reservation.dto.ReservationResponseDto;
 import roomescape.reservation.entity.Reservation;
 import roomescape.reservation.entity.ReservationTime;
@@ -28,7 +28,7 @@ public class FakeReservationService implements ReservationService {
     }
 
     @Override
-    public ReservationResponseDto save(ReservationRequestDto requestDto) {
+    public ReservationResponseDto save(ReservationRequest requestDto) {
         if (!reservationTimes.containsKey(requestDto.timeId())){
             throw new EntityNotFoundException("Time not found id = " + requestDto.timeId());
         }

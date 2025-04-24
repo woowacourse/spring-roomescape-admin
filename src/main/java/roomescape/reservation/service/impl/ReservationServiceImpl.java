@@ -2,7 +2,7 @@ package roomescape.reservation.service.impl;
 
 import java.util.List;
 import org.springframework.stereotype.Service;
-import roomescape.reservation.dto.ReservationRequestDto;
+import roomescape.reservation.dto.ReservationRequest;
 import roomescape.reservation.dto.ReservationResponseDto;
 import roomescape.reservation.entity.Reservation;
 import roomescape.reservation.entity.ReservationTime;
@@ -33,7 +33,7 @@ public class ReservationServiceImpl implements ReservationService {
     }
 
     @Override
-    public ReservationResponseDto save(ReservationRequestDto requestDto) {
+    public ReservationResponseDto save(ReservationRequest requestDto) {
         Long timeId = requestDto.timeId();
         ReservationTime reservationTime = reservationTimeRepository.findById(timeId)
                 .orElseThrow(() -> new EntityNotFoundException("reservationsTime not found id =" + timeId));

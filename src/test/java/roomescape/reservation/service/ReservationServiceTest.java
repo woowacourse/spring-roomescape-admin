@@ -11,9 +11,9 @@ import org.assertj.core.api.SoftAssertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
-import roomescape.reservation.dto.ReservationRequestDto;
+import roomescape.reservation.dto.ReservationRequest;
 import roomescape.reservation.dto.ReservationResponseDto;
-import roomescape.reservation.dto.ReservationTimeResponseDto;
+import roomescape.reservation.dto.ReservationTimeResponse;
 import roomescape.reservation.entity.Reservation;
 import roomescape.reservation.entity.ReservationTime;
 import roomescape.common.exception.EntityNotFoundException;
@@ -78,7 +78,7 @@ class ReservationServiceTest {
         String name = "꾹";
         LocalDate date = LocalDate.of(2020, 1, 1);
 
-        ReservationRequestDto requestDto = new ReservationRequestDto(name, date, reservationTimeId);
+        ReservationRequest requestDto = new ReservationRequest(name, date, reservationTimeId);
 
         // when
         ReservationResponseDto result = reservationService.save(requestDto);
@@ -88,7 +88,7 @@ class ReservationServiceTest {
 
         softAssertions.assertThat(result.name()).isEqualTo(name);
         softAssertions.assertThat(result.date()).isEqualTo(date);
-        softAssertions.assertThat(result.time()).isEqualTo(new ReservationTimeResponseDto(reservationTimeId, time));
+        softAssertions.assertThat(result.time()).isEqualTo(new ReservationTimeResponse(reservationTimeId, time));
 
         softAssertions.assertAll();
     }
@@ -97,7 +97,7 @@ class ReservationServiceTest {
     @Test
     void test4() {
         Long notExistId = 1000L;
-        ReservationRequestDto requestDto = new ReservationRequestDto("꾹", LocalDate.now(), notExistId);
+        ReservationRequest requestDto = new ReservationRequest("꾹", LocalDate.now(), notExistId);
 
         assertThatThrownBy(() -> reservationService.save(requestDto))
                 .isInstanceOf(EntityNotFoundException.class);

@@ -1,14 +1,14 @@
 package roomescape.reservation.service;
 
 import java.util.List;
-import roomescape.reservation.dto.ReservationTimeRequestDto;
-import roomescape.reservation.dto.ReservationTimeResponseDto;
+import roomescape.reservation.dto.ReservationTimeRequest;
+import roomescape.reservation.dto.ReservationTimeResponse;
 
 public interface ReservationTimeService {
 
-    List<ReservationTimeResponseDto> getAll();
+    List<ReservationTimeResponse> getAll();
 
-    ReservationTimeResponseDto save(ReservationTimeRequestDto requestDto);
+    ReservationTimeResponse save(ReservationTimeRequest requestDto);
 
     void delete(Long id);
 }

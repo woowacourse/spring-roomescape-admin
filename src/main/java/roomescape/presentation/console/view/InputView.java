@@ -24,16 +24,7 @@ public class InputView {
                 """);
 
         final String input = readLine();
-        return switch (input.trim()) {
-            case "1" -> CommandType.예약_추가;
-            case "2" -> CommandType.예약_전체_조회;
-            case "3" -> CommandType.예약_삭제;
-            case "4" -> CommandType.예약_시간_추가;
-            case "5" -> CommandType.예약_시간_전체_조회;
-            case "6" -> CommandType.예약_시간_삭제;
-            case "7" -> CommandType.종료;
-            default -> throw new RuntimeException();
-        };
+        return CommandType.from(Integer.parseInt(input.trim()));
     }
 
     public ReservationCreateRequest getReservationCreateRequest() {

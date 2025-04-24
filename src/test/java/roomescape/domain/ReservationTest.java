@@ -3,6 +3,7 @@ package roomescape.domain;
 import java.time.LocalDate;
 import java.time.LocalTime;
 import static org.assertj.core.api.Assertions.assertThatIllegalArgumentException;
+import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import org.junit.jupiter.api.Test;
 
 class ReservationTest {
@@ -40,6 +41,10 @@ class ReservationTest {
     @Test
     void 시간이_지금보다_이전인_경우_예외가_발생한다() {
         // should
-        assertThatIllegalArgumentException().isThrownBy(() -> new ReservationTime(LocalTime.now().minusHours(1)));
+        assertThatThrownBy(() -> new Reservation(
+                "히로",
+                LocalDate.now(),
+                new ReservationTime(LocalTime.now().minusHours(1))
+        ));
     }
 }

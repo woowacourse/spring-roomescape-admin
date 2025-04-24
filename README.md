@@ -38,9 +38,9 @@
       content-type: application/json 
     
       {
-      "date": "2023-08-05",
-      "name": "브라운",
-      "time": "15:40"
+          "date": "2023-08-05",
+          "name": "브라운",
+          "time": "15:40"
       }
       ```
       
@@ -50,10 +50,10 @@
       Content-Type: application/json
       
       {
-      "id": 1,
-      "name": "브라운",
-      "date": "2023-08-05",
-      "time": "15:40"
+          "id": 1,
+          "name": "브라운",
+          "date": "2023-08-05",
+          "time": "15:40"
       }
       ```
       
@@ -67,3 +67,25 @@
      - ```
        HTTP/1.1 200
        ``` 
+
+- [x] 예약 시간 추가 API
+   - Request
+     - ```
+       POST /times HTTP/1.1
+       content-type: application/json
+       
+       {
+           "startAt": "10:00"
+       } 
+       ``` 
+       
+   - response
+     - ```
+       HTTP/1.1 200
+       Content-Type: application/json
+       
+       {
+           "id": 1,
+           "startAt": "10:00"
+       }
+       ```

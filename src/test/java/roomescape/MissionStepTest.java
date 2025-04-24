@@ -19,7 +19,7 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.test.annotation.DirtiesContext;
 import roomescape.reservation.model.Reservation;
-import roomescape.reservation.model.ReservationTimeDetails;
+import roomescape.reservation.model.ReservationTime;
 import roomescape.reservation.repository.ReservationTimeRepository;
 
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.DEFINED_PORT)
@@ -190,7 +190,7 @@ public class MissionStepTest {
 
     @Test
     void 팔단계() {
-        reservationTimeRepository.insertTime(new ReservationTimeDetails(LocalTime.of(12, 0)));
+        reservationTimeRepository.insertTime(ReservationTime.createWithoutId(LocalTime.of(12, 0)));
         Map<String, Object> reservation = new HashMap<>();
         reservation.put("name", "브라운");
         reservation.put("date", "2023-08-05");
@@ -202,7 +202,6 @@ public class MissionStepTest {
                 .when().post("/reservations")
                 .then().log().all()
                 .statusCode(200);
-
 
         RestAssured.given().log().all()
                 .when().get("/reservations")

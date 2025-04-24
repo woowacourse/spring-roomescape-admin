@@ -10,7 +10,6 @@ import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.simple.SimpleJdbcInsert;
 import org.springframework.stereotype.Repository;
 import roomescape.reservation.model.ReservationTime;
-import roomescape.reservation.model.ReservationTimeDetails;
 
 @Repository
 public class ReservationTimeRepository {
@@ -25,11 +24,11 @@ public class ReservationTimeRepository {
                 .usingGeneratedKeyColumns("id");
     }
 
-    public ReservationTime insertTime(ReservationTimeDetails reservationTimeDetails) {
+    public ReservationTime insertTime(ReservationTime reservationTime) {
         Map<String, Object> parameters = new HashMap<>();
-        parameters.put("start_at", reservationTimeDetails.startAt());
+        parameters.put("start_at", reservationTime.getStartAt());
         Number number = simpleJdbcInsert.executeAndReturnKey(parameters);
-        return new ReservationTime(number.longValue(), reservationTimeDetails.startAt());
+        return new ReservationTime(number.longValue(), reservationTime.getStartAt());
     }
 
     public List<ReservationTime> findAll() {

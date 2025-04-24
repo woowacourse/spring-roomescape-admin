@@ -11,29 +11,26 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.jdbc.JdbcTest;
 import org.springframework.context.annotation.Import;
 import roomescape.reservation.model.Reservation;
-import roomescape.reservation.model.ReservationDetails;
 import roomescape.reservation.model.ReservationTime;
-import roomescape.reservation.model.ReservationTimeDetails;
 
 @JdbcTest(properties = "application-test.properties")
 @Import({ReservationRepository.class, ReservationTimeRepository.class})
 class ReservationRepositoryTest {
 
+    ReservationTime time = ReservationTime.createWithoutId(LocalTime.of(12, 0));
     @Autowired
     private ReservationRepository reservationRepository;
     @Autowired
     private ReservationTimeRepository reservationTimeRepository;
 
-    ReservationTimeDetails timeDetails = new ReservationTimeDetails(LocalTime.of(12, 0));
-
     @DisplayName("전체 예약 리스트 불러온다.")
     @Test
     void findAll() {
         // given
-        ReservationTime reservationTime = reservationTimeRepository.insertTime(timeDetails);
-        ReservationDetails reservationDetails = new ReservationDetails("test", LocalDate.of(2024, 12, 1),
+        ReservationTime reservationTime = reservationTimeRepository.insertTime(time);
+        Reservation reservationWithoutId = Reservation.createWithoutId("test", LocalDate.of(2024, 12, 1),
                 reservationTime);
-        reservationRepository.insertReservation(reservationDetails);
+        reservationRepository.insertReservation(reservationWithoutId);
 
         // when
         List<Reservation> reservations = reservationRepository.findAll();
@@ -49,10 +46,10 @@ class ReservationRepositoryTest {
     @Test
     void insertReservation() {
         // when
-        ReservationTime reservationTime = reservationTimeRepository.insertTime(timeDetails);
-        ReservationDetails reservationDetails = new ReservationDetails("test", LocalDate.of(2024, 12, 1),
+        ReservationTime reservationTime = reservationTimeRepository.insertTime(time);
+        Reservation reservationWithoutId = Reservation.createWithoutId("test", LocalDate.of(2024, 12, 1),
                 reservationTime);
-        Reservation reservation = reservationRepository.insertReservation(reservationDetails);
+        Reservation reservation = reservationRepository.insertReservation(reservationWithoutId);
 
         // then
         assertThat(reservation)
@@ -64,10 +61,10 @@ class ReservationRepositoryTest {
     @Test
     void deleteReservationById_existId() {
         // given
-        ReservationTime reservationTime = reservationTimeRepository.insertTime(timeDetails);
-        ReservationDetails reservationDetails = new ReservationDetails("test", LocalDate.of(2024, 12, 1),
+        ReservationTime reservationTime = reservationTimeRepository.insertTime(time);
+        Reservation reservationWithoutId = Reservation.createWithoutId("test", LocalDate.of(2024, 12, 1),
                 reservationTime);
-        Reservation reservation = reservationRepository.insertReservation(reservationDetails);
+        Reservation reservation = reservationRepository.insertReservation(reservationWithoutId);
 
         // when
         boolean isDeleted = reservationRepository.deleteReservationById(reservation.getId());

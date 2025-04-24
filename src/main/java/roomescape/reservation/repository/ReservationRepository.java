@@ -10,7 +10,6 @@ import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.simple.SimpleJdbcInsert;
 import org.springframework.stereotype.Repository;
 import roomescape.reservation.model.Reservation;
-import roomescape.reservation.model.ReservationDetails;
 import roomescape.reservation.model.ReservationTime;
 
 @Repository
@@ -47,14 +46,13 @@ public class ReservationRepository {
         ));
     }
 
-    public Reservation insertReservation(ReservationDetails reservationDetails) {
+    public Reservation insertReservation(Reservation reservation) {
         Map<String, Object> parameters = new HashMap<>();
-        parameters.put("name", reservationDetails.name());
-        parameters.put("date", reservationDetails.date());
-        parameters.put("time_id", reservationDetails.time().getId());
+        parameters.put("name", reservation.getName());
+        parameters.put("date", reservation.getDate());
+        parameters.put("time_id", reservation.getTime().getId());
         Number number = simpleJdbcInsert.executeAndReturnKey(parameters);
-        return new Reservation(number.longValue(), reservationDetails.name(), reservationDetails.date(),
-                reservationDetails.time());
+        return new Reservation(number.longValue(), reservation.getName(), reservation.getDate(), reservation.getTime());
     }
 
     public boolean deleteReservationById(long id) {

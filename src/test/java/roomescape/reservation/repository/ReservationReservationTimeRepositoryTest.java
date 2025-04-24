@@ -10,7 +10,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.jdbc.JdbcTest;
 import org.springframework.context.annotation.Import;
 import roomescape.reservation.model.ReservationTime;
-import roomescape.reservation.model.ReservationTimeDetails;
 
 @JdbcTest(properties = "application-test.properties")
 @Import(ReservationTimeRepository.class)
@@ -19,13 +18,13 @@ class ReservationReservationTimeRepositoryTest {
     @Autowired
     ReservationTimeRepository reservationTimeRepository;
 
-    ReservationTimeDetails reservationTimeDetails = new ReservationTimeDetails(LocalTime.of(12, 0));
+    ReservationTime reservationTimeWithoutId = ReservationTime.createWithoutId(LocalTime.of(12, 0));
 
     @DisplayName("Time을 추가한다.")
     @Test
     void insertTime() {
         // when
-        ReservationTime reservationTime = reservationTimeRepository.insertTime(reservationTimeDetails);
+        ReservationTime reservationTime = reservationTimeRepository.insertTime(reservationTimeWithoutId);
 
         // then
         assertThat(reservationTime)
@@ -36,7 +35,7 @@ class ReservationReservationTimeRepositoryTest {
     @Test
     void deleteById() {
         // given
-        ReservationTime reservationTime = reservationTimeRepository.insertTime(reservationTimeDetails);
+        ReservationTime reservationTime = reservationTimeRepository.insertTime(reservationTimeWithoutId);
 
         // when
         boolean isDeleted = reservationTimeRepository.deleteTimeById(reservationTime.getId());
@@ -49,7 +48,7 @@ class ReservationReservationTimeRepositoryTest {
     @Test
     void findAll() {
         // given
-        reservationTimeRepository.insertTime(reservationTimeDetails);
+        reservationTimeRepository.insertTime(reservationTimeWithoutId);
 
         // when
         List<ReservationTime> reservationTimes = reservationTimeRepository.findAll();

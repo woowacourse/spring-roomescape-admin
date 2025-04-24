@@ -4,7 +4,6 @@ import java.util.List;
 import org.springframework.stereotype.Service;
 import roomescape.reservation.dto.ReservationRequest;
 import roomescape.reservation.model.Reservation;
-import roomescape.reservation.model.ReservationDetails;
 import roomescape.reservation.model.ReservationTime;
 import roomescape.reservation.repository.ReservationRepository;
 import roomescape.reservation.repository.ReservationTimeRepository;
@@ -28,8 +27,8 @@ public class ReservationService {
     public Reservation addReservation(ReservationRequest request) {
         ReservationTime reservationTime = reservationTimeRepository.findById(request.timeId())
                 .orElseThrow(() -> new IllegalArgumentException("존재하지 않는 시간입니다."));
-        ReservationDetails reservationDetails = new ReservationDetails(request.name(), request.date(), reservationTime);
-        return reservationRepository.insertReservation(reservationDetails);
+        Reservation reservation = Reservation.createWithoutId(request.name(), request.date(), reservationTime);
+        return reservationRepository.insertReservation(reservation);
     }
 
     public boolean deleteReservationById(long id) {

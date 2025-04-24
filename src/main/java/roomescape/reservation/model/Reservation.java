@@ -5,11 +5,19 @@ import java.time.LocalDate;
 public final class Reservation {
 
     private final long id;
-    private final ReservationDetails reservationDetails;
+    private final String name;
+    private final LocalDate date;
+    private final ReservationTime time;
 
     public Reservation(long id, String name, LocalDate date, ReservationTime time) {
         this.id = id;
-        this.reservationDetails = new ReservationDetails(name, date, time);
+        this.name = name;
+        this.date = date;
+        this.time = time;
+    }
+
+    public static Reservation createWithoutId(String name, LocalDate date, ReservationTime time) {
+        return new Reservation(0, name, date, time);
     }
 
     public long getId() {
@@ -17,14 +25,14 @@ public final class Reservation {
     }
 
     public String getName() {
-        return reservationDetails.name();
+        return name;
     }
 
     public LocalDate getDate() {
-        return reservationDetails.date();
+        return date;
     }
 
     public ReservationTime getTime() {
-        return reservationDetails.time();
+        return time;
     }
 }

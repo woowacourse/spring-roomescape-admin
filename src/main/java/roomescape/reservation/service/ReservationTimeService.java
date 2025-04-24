@@ -5,7 +5,6 @@ import org.springframework.stereotype.Service;
 import roomescape.reservation.dto.ReservationTimeRequest;
 import roomescape.reservation.dto.ReservationTimeResponse;
 import roomescape.reservation.model.ReservationTime;
-import roomescape.reservation.model.ReservationTimeDetails;
 import roomescape.reservation.repository.ReservationTimeRepository;
 
 @Service
@@ -18,9 +17,8 @@ public class ReservationTimeService {
     }
 
     public ReservationTimeResponse addTime(ReservationTimeRequest reservationTimeRequest) {
-        ReservationTimeDetails reservationTimeDetails = new ReservationTimeDetails(reservationTimeRequest.startAt());
-        ReservationTime reservationTime = reservationTimeRepository.insertTime(reservationTimeDetails);
-        return ReservationTimeResponse.from(reservationTime);
+        ReservationTime reservationTime = ReservationTime.createWithoutId(reservationTimeRequest.startAt());
+        return ReservationTimeResponse.from(reservationTimeRepository.insertTime(reservationTime));
     }
 
     public List<ReservationTimeResponse> getTimes() {

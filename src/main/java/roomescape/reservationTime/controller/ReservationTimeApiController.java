@@ -29,8 +29,8 @@ public class ReservationTimeApiController {
     }
 
     @GetMapping
-    public ResponseEntity<List<ReservationTime>> getAll() {
-        return ResponseEntity.ok(reservationTimeService.getAll());
+    public ResponseEntity<List<ReservationTime>> findAll() {
+        return ResponseEntity.ok(reservationTimeService.findAll());
     }
 
     @DeleteMapping("/{id}")

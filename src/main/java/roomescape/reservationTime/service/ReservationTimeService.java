@@ -19,8 +19,8 @@ public class ReservationTimeService {
         return reservationTimeDao.add(newReservationTime);
     }
 
-    public List<ReservationTime> getAll() {
-        return reservationTimeDao.getAll();
+    public List<ReservationTime> findAll() {
+        return reservationTimeDao.findAll();
     }
 
     public void deleteById(Long id) {

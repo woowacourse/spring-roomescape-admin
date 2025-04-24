@@ -2,7 +2,9 @@ package roomescape.reservationTime.dao;
 
 import java.sql.PreparedStatement;
 import java.util.List;
+import java.util.Optional;
 import org.springframework.boot.autoconfigure.service.connection.ConnectionDetails;
+import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.support.GeneratedKeyHolder;
 import org.springframework.jdbc.support.KeyHolder;
@@ -34,17 +36,21 @@ public class H2ReservationTimeDao implements Dao<ReservationTime> {
     }
 
     @Override
-    public ReservationTime getById(Long id) {
+    public Optional<ReservationTime> findById(Long id) {
         String sql = "select id, start_at from reservation_time where id = ?";
-        return jdbcTemplate.queryForObject(sql,
-                (resultSet, rowNum) -> new ReservationTime(
-                        resultSet.getLong("id"),
-                        resultSet.getTime("start_at").toLocalTime()
-                ), id);
+        try {
+            return Optional.ofNullable(jdbcTemplate.queryForObject(sql,
+                    (resultSet, rowNum) -> new ReservationTime(
+                            resultSet.getLong("id"),
+                            resultSet.getTime("start_at").toLocalTime()
+                    ), id));
+        } catch (EmptyResultDataAccessException e) {
+            return Optional.empty();
+        }
     }
 
     @Override
-    public List<ReservationTime> getAll() {
+    public List<ReservationTime> findAll() {
         String sql = "select id, start_at from reservation_time";
         return jdbcTemplate.query(sql,
                 (resultSet, rowNum) -> new ReservationTime(

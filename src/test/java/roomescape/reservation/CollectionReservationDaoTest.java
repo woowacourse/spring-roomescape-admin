@@ -42,7 +42,7 @@ class CollectionReservationDaoTest {
         ));
 
         //when
-        List<Reservation> all = collectionReservationDao.getAll();
+        List<Reservation> all = collectionReservationDao.findAll();
 
         //then
         assertThat(all).hasSize(3)
@@ -67,20 +67,5 @@ class CollectionReservationDaoTest {
 
         //then
         assertThat(collectionReservationDao).isEqualTo(expectedCollectionReservationdao);
-    }
-
-    @DisplayName("존재하지 않는 id의 예약 정보를 삭제하려는 경우 예외가 발생한다.")
-    @Test
-    void test5() {
-        //given
-        CollectionReservationDao collectionReservationDao = new CollectionReservationDao(List.of(
-                mimiReservation, norangReservation, mintReservation
-        ));
-        Long notExistedId = 4L;
-
-        //when & then
-        assertThatThrownBy(() -> collectionReservationDao.deleteById(notExistedId))
-                .isInstanceOf(IllegalArgumentException.class)
-                .hasMessage("[ERROR] 존재하지 않는 id 입니다.");
     }
 }

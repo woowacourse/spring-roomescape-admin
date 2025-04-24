@@ -6,7 +6,6 @@ import roomescape.reservationTime.ReservationTime;
 
 public record ReservationRequest(String name, LocalDate date, Long timeId) {
     public Reservation createReservation() {
-        ReservationTime reservationTime = new ReservationTime(timeId, null);
-        return new Reservation(null, name, date, reservationTime);
+        return new Reservation(null, name, date, new ReservationTime(timeId, null));
     }
 }

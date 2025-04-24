@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 import java.util.Objects;
+import java.util.Optional;
 import java.util.concurrent.atomic.AtomicLong;
 import roomescape.common.Dao;
 import roomescape.reservation.Reservation;
@@ -32,21 +33,20 @@ public class CollectionReservationDao implements Dao<Reservation> {
     }
 
     @Override
-    public Reservation getById(Long id) {
+    public Optional<Reservation> findById(Long id) {
         return reservations.stream()
                 .filter(reservation -> reservation.isSameId(id))
-                .findFirst()
-                .orElseThrow(() -> new IllegalArgumentException("[ERROR] 존재하지 않는 id 입니다."));
+                .findFirst();
     }
 
     @Override
-    public List<Reservation> getAll() {
+    public List<Reservation> findAll() {
         return Collections.unmodifiableList(reservations);
     }
 
     @Override
     public void deleteById(Long id) {
-        reservations.remove(getById(id));
+        reservations.removeIf(reservation -> reservation.isSameId(id));
     }
 
     @Override

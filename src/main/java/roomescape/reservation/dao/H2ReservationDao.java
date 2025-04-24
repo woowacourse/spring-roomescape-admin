@@ -2,6 +2,7 @@ package roomescape.reservation.dao;
 
 import java.sql.PreparedStatement;
 import java.util.List;
+import java.util.Optional;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.support.GeneratedKeyHolder;
 import org.springframework.jdbc.support.KeyHolder;
@@ -37,21 +38,13 @@ public class H2ReservationDao implements Dao<Reservation> {
     }
 
     @Override
-    public Reservation getById(Long id) {
-        String sql = "select id, name, date, time_id from reservation where id = ?";
-        return jdbcTemplate.queryForObject(sql,
-                (resultSet, rowNum) -> new Reservation(
-                        resultSet.getLong("id"),
-                        resultSet.getString("name"),
-                        resultSet.getDate("date").toLocalDate(),
-                        new ReservationTime(
-                                resultSet.getLong("time_id"), null
-                        )
-                ));
+    public Optional<Reservation> findById(Long id) {
+        // 미사용
+        return Optional.empty();
     }
 
     @Override
-    public List<Reservation> getAll() {
+    public List<Reservation> findAll() {
         String sql = "SELECT r.id as reservation_id, r.name, r.date, "
                 + "t.id as time_id, "
                 + "t.start_at as time_value "

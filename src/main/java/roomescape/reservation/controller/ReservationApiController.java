@@ -28,8 +28,8 @@ public class ReservationApiController {
     }
 
     @GetMapping
-    public ResponseEntity<AllReservationResponse> getAll() {
-        return ResponseEntity.ok(reservationService.getAll());
+    public ResponseEntity<AllReservationResponse> findAll() {
+        return ResponseEntity.ok(reservationService.findAll());
     }
 
     @DeleteMapping("/{id}")

@@ -41,7 +41,7 @@ class H2ReservationDaoTest {
         H2ReservationDao h2ReservationDao = new H2ReservationDao(new FakeJdbcTemplate());
 
         //when
-        List<Reservation> all = h2ReservationDao.getAll();
+        List<Reservation> all = h2ReservationDao.findAll();
 
         //then
         assertThat(all).hasSize(3)

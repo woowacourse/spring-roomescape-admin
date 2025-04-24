@@ -39,6 +39,7 @@ public class DatabaseTest {
     @Test
     @DisplayName("데이터베이스에 데이터를 추가할 수 있다")
     void insertToDatabase() {
+        jdbcTemplate.update("INSERT INTO reservation_time (start_at) VALUES (?)", "10:00");
         jdbcTemplate.update("INSERT INTO reservation (name, date, time_id) VALUES (?, ?, ?)", "브라운", "2023-08-05", "1");
 
         List<Reservation> reservations = RestAssured.given().log().all()
@@ -55,6 +56,8 @@ public class DatabaseTest {
     @Test
     @DisplayName("데이터베이스의 데이터를 삭제할 수 있다")
     void deleteFromDatabase() {
+        jdbcTemplate.update("INSERT INTO reservation_time (start_at) VALUES (?)", "10:00");
+
         Map<String, String> params = new HashMap<>();
         params.put("name", "브라운");
         params.put("date", "2023-08-05");

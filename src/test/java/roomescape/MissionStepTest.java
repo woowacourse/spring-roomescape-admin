@@ -53,23 +53,12 @@ class MissionStepTest {
 
     @Test
     void 삼단계() {
-        Map<String, Object> reservationTime = new HashMap<>();
-        reservationTime.put("id", 1);
-        reservationTime.put("startAt", "23:33");
-
         Map<String, String> params = new HashMap<>();
         final LocalDate now = LocalDate.now();
         final LocalDate localDate = now.plusDays(1);
         params.put("name", "브라운");
         params.put("date", localDate.toString());
         params.put("timeId", "1");
-
-        RestAssured.given().log().all()
-                .contentType(ContentType.JSON)
-                .body(reservationTime)
-                .when().post("/times")
-                .then().log().all()
-                .statusCode(200);
 
         RestAssured.given().log().all()
                 .contentType(ContentType.JSON)
@@ -118,17 +107,6 @@ class MissionStepTest {
 
     @Test
     void 오단계() {
-        Map<String, Object> reservationTime = new HashMap<>();
-        reservationTime.put("id", 1);
-        reservationTime.put("startAt", "23:33");
-
-        RestAssured.given().log().all()
-                .contentType(ContentType.JSON)
-                .body(reservationTime)
-                .when().post("/times")
-                .then().log().all()
-                .statusCode(200);
-
         jdbcTemplate.update("INSERT INTO reservation (name, date, time_id) VALUES (?, ?, ?)", "브라운", "2023-08-05",
                 1);
 
@@ -145,21 +123,10 @@ class MissionStepTest {
 
     @Test
     void 육단계() {
-        Map<String, Object> reservationTime = new HashMap<>();
-        reservationTime.put("id", 1);
-        reservationTime.put("startAt", "23:33");
-
         Map<String, String> params = new HashMap<>();
         params.put("name", "브라운");
         params.put("date", "2023-08-05");
         params.put("timeId", "1");
-
-        RestAssured.given().log().all()
-                .contentType(ContentType.JSON)
-                .body(reservationTime)
-                .when().post("/times")
-                .then().log().all()
-                .statusCode(200);
 
         RestAssured.given().log().all()
                 .contentType(ContentType.JSON)
@@ -182,21 +149,11 @@ class MissionStepTest {
 
     @Test
     void 칠단계() {
-        Map<String, String> params = new HashMap<>();
-        params.put("startAt", "10:00");
-
-        RestAssured.given().log().all()
-                .contentType(ContentType.JSON)
-                .body(params)
-                .when().post("/times")
-                .then().log().all()
-                .statusCode(200);
-
         RestAssured.given().log().all()
                 .when().get("/times")
                 .then().log().all()
                 .statusCode(200)
-                .body("size()", is(1));
+                .body("size()", is(2));
 
         RestAssured.given().log().all()
                 .when().delete("/times/1")
@@ -206,21 +163,10 @@ class MissionStepTest {
 
     @Test
     void 팔단계() {
-        Map<String, Object> reservationTime = new HashMap<>();
-        reservationTime.put("id", 1);
-        reservationTime.put("startAt", "23:33");
-
         Map<String, Object> reservation = new HashMap<>();
         reservation.put("name", "브라운");
         reservation.put("date", "2023-08-05");
         reservation.put("timeId", 1);
-
-        RestAssured.given().log().all()
-                .contentType(ContentType.JSON)
-                .body(reservationTime)
-                .when().post("/times")
-                .then().log().all()
-                .statusCode(200);
 
         RestAssured.given().log().all()
                 .contentType(ContentType.JSON)

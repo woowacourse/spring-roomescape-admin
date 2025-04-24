@@ -1,13 +1,13 @@
-package roomescape.controller;
+package roomescape.presentation.controller;
 
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
-import roomescape.dto.TimeRequest;
-import roomescape.dto.TimeResponse;
-import roomescape.service.TimeService;
+import roomescape.presentation.dto.TimeRequest;
+import roomescape.presentation.dto.TimeResponse;
+import roomescape.business.service.TimeService;
 
 @RestController
 @RequestMapping("/times")

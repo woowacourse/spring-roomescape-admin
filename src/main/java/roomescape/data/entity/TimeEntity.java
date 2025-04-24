@@ -1,6 +1,6 @@
-package roomescape.entity;
+package roomescape.data.entity;
 
-import roomescape.domain.Time;
+import roomescape.business.domain.Time;
 
 public record TimeEntity(Long id, String startAt) {
 

@@ -1,10 +1,10 @@
-package roomescape.service;
+package roomescape.business.service;
 
 import org.springframework.stereotype.Service;
-import roomescape.domain.Time;
-import roomescape.dto.TimeRequest;
-import roomescape.dto.TimeResponse;
-import roomescape.dao.TimeDao;
+import roomescape.business.domain.Time;
+import roomescape.presentation.dto.TimeRequest;
+import roomescape.presentation.dto.TimeResponse;
+import roomescape.data.dao.TimeDao;
 
 @Service
 public class TimeService {

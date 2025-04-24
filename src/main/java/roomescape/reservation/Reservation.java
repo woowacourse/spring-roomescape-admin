@@ -10,10 +10,31 @@ public class Reservation {
     private final ReservationTime time;
 
     public Reservation(Long id, String customerName, LocalDate reservationDate, ReservationTime time) {
+        validateCustomerName(customerName);
+        validateReservationDate(reservationDate);
+        validateReservationTime(time);
         this.id = id;
         this.customerName = customerName;
         this.reservationDate = reservationDate;
         this.time = time;
+    }
+
+    private void validateCustomerName(String customerName) {
+        if (customerName == null || customerName.isBlank()) {
+            throw new IllegalArgumentException("유효하지 않은 예약자 이름입니다.");
+        }
+    }
+
+    private void validateReservationDate(LocalDate reservationDate) {
+        if (reservationDate == null) {
+            throw new IllegalArgumentException("예약 날짜는 null일 수 없습니다.");
+        }
+    }
+
+    private void validateReservationTime(ReservationTime time) {
+        if (time == null) {
+            throw new IllegalArgumentException("예약 시간은 null일 수 없습니다.");
+        }
     }
 
     public boolean isIdEquals(long id) {

@@ -1,24 +1,23 @@
 package roomescape;
 
 
-import jakarta.validation.constraints.NotBlank;
-import jakarta.validation.constraints.NotNull;
 import java.time.LocalDate;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
+import lombok.NonNull;
 
 @Getter
 @AllArgsConstructor
 public class Reservation {
-    @NotNull
+    @NonNull
     private final Long id;
 
-    @NotBlank
+    @NonNull
     private final String name;
 
-    @NotNull
+    @NonNull
     private final LocalDate date;
 
-    @NotNull
+    @NonNull
     private final ReservationTime time;
 }

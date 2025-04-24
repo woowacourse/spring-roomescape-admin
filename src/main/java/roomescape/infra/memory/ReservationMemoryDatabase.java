@@ -77,4 +77,8 @@ public class ReservationMemoryDatabase implements ReservationDatabase {
     public void deleteById(final long id) {
         DATA.remove(id);
     }
+
+    public void deleteAll() {
+        DATA.clear();
+    }
 }

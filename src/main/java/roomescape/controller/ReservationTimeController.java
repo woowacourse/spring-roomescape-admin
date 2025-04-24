@@ -14,36 +14,31 @@ import org.springframework.web.bind.annotation.RestController;
 import jakarta.validation.Valid;
 import roomescape.dto.request.ReservationTimeRequest;
 import roomescape.dto.response.ReservationTimeResponse;
-import roomescape.model.ReservationTime;
-import roomescape.repository.repository.ReservationTimeRepository;
+import roomescape.service.ReservationTimeService;
 
 @RestController
 @RequestMapping("times")
 public class ReservationTimeController {
 
-    private final ReservationTimeRepository reservationTimeRepository;
+    private final ReservationTimeService reservationTimeService;
 
-    public ReservationTimeController(ReservationTimeRepository reservationTimeRepository) {
-        this.reservationTimeRepository = reservationTimeRepository;
+    public ReservationTimeController(ReservationTimeService reservationTimeService) {
+        this.reservationTimeService = reservationTimeService;
     }
 
     @GetMapping
     public ResponseEntity<List<ReservationTimeResponse>> times() {
-        var response = reservationTimeRepository.getAll().stream()
-            .map(ReservationTimeResponse::from)
-            .toList();
-        return ResponseEntity.ok(response);
+        return ResponseEntity.ok(reservationTimeService.getAll());
     }
 
     @PostMapping
     public ResponseEntity<ReservationTimeResponse> times(@RequestBody @Valid ReservationTimeRequest request) {
-        var saved = reservationTimeRepository.save(new ReservationTime(request.id(), request.startAt()));
-        return ResponseEntity.ok(ReservationTimeResponse.from(saved));
+        return ResponseEntity.ok(reservationTimeService.create(request));
     }
 
     @DeleteMapping("/{id}")
     public ResponseEntity<Void> times(@PathVariable Long id) {
-        reservationTimeRepository.remove(id);
+        reservationTimeService.remove(id);
         return ResponseEntity.ok().build();
     }
 }

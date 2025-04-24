@@ -4,6 +4,8 @@ import java.time.LocalDate;
 
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
+import roomescape.model.Reservation;
+import roomescape.model.ReservationTime;
 
 public record ReservationRequest(
     Long id,
@@ -17,4 +19,8 @@ public record ReservationRequest(
     @NotNull(message = "[ERROR] 시간은 반드시 필요합니다.")
     Long timeId
 ) {
+
+    public Reservation toEntity() {
+        return new Reservation(id, name, date, new ReservationTime(timeId, null));
+    }
 }

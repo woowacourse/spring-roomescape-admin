@@ -16,4 +16,8 @@ public record Reservation(
         }
         return new Reservation(id, name, date, reservationTime);
     }
+
+    public Reservation withReservationTime(ReservationTime reservationTime) {
+        return new Reservation(id, name, date, reservationTime);
+    }
 }

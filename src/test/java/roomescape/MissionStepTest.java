@@ -3,6 +3,7 @@ package roomescape;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.hamcrest.Matchers.is;
 
+import java.lang.reflect.Field;
 import java.sql.Connection;
 import java.sql.SQLException;
 import java.util.HashMap;
@@ -17,6 +18,7 @@ import org.springframework.test.annotation.DirtiesContext;
 
 import io.restassured.RestAssured;
 import io.restassured.http.ContentType;
+import roomescape.controller.ReservationController;
 import roomescape.model.Reservation;
 
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.DEFINED_PORT)
@@ -25,6 +27,9 @@ public class MissionStepTest {
 
     @Autowired
     private JdbcTemplate jdbcTemplate;
+
+    @Autowired
+    private ReservationController reservationController;
 
     @Test
     void 일단계() {
@@ -187,5 +192,19 @@ public class MissionStepTest {
             .then().log().all()
             .statusCode(200)
             .body("size()", is(1));
+    }
+
+    @Test
+    void 구단계() {
+        boolean isJdbcTemplateInjected = false;
+
+        for (Field field : reservationController.getClass().getDeclaredFields()) {
+            if (field.getType().equals(JdbcTemplate.class)) {
+                isJdbcTemplateInjected = true;
+                break;
+            }
+        }
+
+        assertThat(isJdbcTemplateInjected).isFalse();
     }
 }

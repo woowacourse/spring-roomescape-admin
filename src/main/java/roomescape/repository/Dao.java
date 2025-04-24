@@ -4,6 +4,7 @@ import java.sql.PreparedStatement;
 import java.util.List;
 import java.util.Optional;
 
+import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.dao.support.DataAccessUtils;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;
@@ -40,6 +41,10 @@ public class Dao {
     }
 
     public void remove(String query, Long id) {
-        jdbcTemplate.update(query, id);
+        try {
+            jdbcTemplate.update(query, id);
+        } catch (DataIntegrityViolationException e) {
+            throw new IllegalArgumentException("데이터 무결성을 위반했습니다.", e);
+        }
     }
 }

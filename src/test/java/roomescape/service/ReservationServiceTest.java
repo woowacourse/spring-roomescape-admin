@@ -1,7 +1,6 @@
 package roomescape.service;
 
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import static org.junit.jupiter.api.Assertions.assertAll;
 
 import java.time.LocalDate;
@@ -10,13 +9,11 @@ import java.util.List;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
-import org.junit.jupiter.params.ParameterizedTest;
-import org.junit.jupiter.params.provider.ValueSource;
+import roomescape.domain.Reservation;
+import roomescape.domain.ReservationTime;
 import roomescape.dto.request.ReservationRequest;
 import roomescape.dto.response.ReservationResponse;
 import roomescape.dto.response.TimeResponse;
-import roomescape.domain.Reservation;
-import roomescape.domain.ReservationTime;
 import roomescape.testRepository.FakeReservationRepository;
 import roomescape.testRepository.FakeTimeRepository;
 
@@ -38,9 +35,10 @@ class ReservationServiceTest {
     @Test
     void register_Reservation() {
         // given
-        timeRepository.save(ReservationTime.withoutId(LocalTime.of(10, 0)));
+        LocalTime time = LocalTime.of(10, 0);
+        timeRepository.save(ReservationTime.withoutId(time));
 
-        String date = "2025-04-01";
+        LocalDate date = LocalDate.of(2025, 4, 1);
         String name = "멍구";
         Long timeId = 1L;
 
@@ -54,45 +52,8 @@ class ReservationServiceTest {
                 () -> assertThat(response.id()).isEqualTo(1),
                 () -> assertThat(response.name()).isEqualTo("멍구"),
                 () -> assertThat(response.date()).isEqualTo("2025-04-01"),
-                () -> assertThat(response.time()).isEqualTo(new TimeResponse(1L, "10:00"))
+                () -> assertThat(response.time()).isEqualTo(new TimeResponse(1L, time))
         );
-    }
-
-    @DisplayName("잘못된 형식의 date로 예약 등록 요청했을 때 예외가 발생한다.")
-    @ParameterizedTest
-    @ValueSource(strings = {"20000-04-01", "2024-04", "2024,10,00"})
-    void registerReservationFail_when_invalidFormattedDate() {
-        // given
-        timeRepository.save(ReservationTime.withoutId(LocalTime.of(10, 0)));
-
-        String date = "20255-04-01";
-        String name = "멍구";
-        Long timeId = 1L;
-
-        ReservationRequest reservationRequest = new ReservationRequest(date, name, timeId);
-
-        // when & then
-        assertThatThrownBy(() -> reservationService.registerReservation(reservationRequest))
-                .isInstanceOf(IllegalArgumentException.class)
-                .hasMessage("유효하지 않은 날짜입니다: " + date);
-    }
-
-    @DisplayName("없는 날짜(2월 30일)로 예약 등록 요청했을 때 예외가 발생한다.")
-    @Test
-    void registerReservationFail_when_nonExistDate() {
-        // given
-        timeRepository.save(ReservationTime.withoutId(LocalTime.of(10, 0)));
-
-        String date = "2025-02-30";
-        String name = "멍구";
-        Long timeId = 1L;
-
-        ReservationRequest reservationRequest = new ReservationRequest(date, name, timeId);
-
-        // when & then
-        assertThatThrownBy(() -> reservationService.registerReservation(reservationRequest))
-                .isInstanceOf(IllegalArgumentException.class)
-                .hasMessage("유효하지 않은 날짜입니다: " + date);
     }
 
     @DisplayName("모든 예약을 조회할 수 있다.")

@@ -9,11 +9,9 @@ import java.util.List;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
-import org.junit.jupiter.params.ParameterizedTest;
-import org.junit.jupiter.params.provider.ValueSource;
+import roomescape.domain.ReservationTime;
 import roomescape.dto.request.TimeRequest;
 import roomescape.dto.response.TimeResponse;
-import roomescape.domain.ReservationTime;
 import roomescape.repository.TimeRepository;
 import roomescape.testRepository.FakeTimeRepository;
 
@@ -32,9 +30,13 @@ class TimeServiceTest {
     @Test
     void getAllTimes() {
         // given
-        timeRepository.save(ReservationTime.of(1L, LocalTime.of(10,0)));
-        timeRepository.save(ReservationTime.of(2L, LocalTime.of(11,0)));
-        timeRepository.save(ReservationTime.of(3L, LocalTime.of(12,0)));
+        LocalTime time1 = LocalTime.of(10, 0);
+        LocalTime time2 = LocalTime.of(11, 0);
+        LocalTime time3 = LocalTime.of(12, 0);
+
+        timeRepository.save(ReservationTime.of(1L, time1));
+        timeRepository.save(ReservationTime.of(2L, time2));
+        timeRepository.save(ReservationTime.of(3L, time3));
 
         // when
         List<TimeResponse> allTimes = timeService.getAllTimes();
@@ -44,7 +46,7 @@ class TimeServiceTest {
                 () -> assertThat(allTimes).hasSize(3),
                 () -> assertThat(allTimes)
                         .extracting(TimeResponse::startAt)
-                        .containsExactly("10:00", "11:00", "12:00")
+                        .containsExactly(time1, time2, time3)
         );
     }
 
@@ -52,7 +54,8 @@ class TimeServiceTest {
     @Test
     void registerNewTime_withRequest() {
         // given
-        TimeRequest timeRequest = new TimeRequest("10:00");
+        LocalTime time = LocalTime.of(10, 0);
+        TimeRequest timeRequest = new TimeRequest(time);
 
         // when
         TimeResponse timeResponse = timeService.registerNewTime(timeRequest);
@@ -60,21 +63,8 @@ class TimeServiceTest {
         // then
         assertAll(
                 () -> assertThat(timeResponse.id()).isEqualTo(1L),
-                () -> assertThat(timeResponse.startAt()).isEqualTo("10:00")
+                () -> assertThat(timeResponse.startAt()).isEqualTo(time)
         );
-    }
-
-    @DisplayName("시간 등록 요청의 time 형식이 유효하지 않은 형식일 때 예외를 발생시킨다.")
-    @ParameterizedTest
-    @ValueSource(strings = {"100:00", "1:00", "10,00", "12:1"})
-    void registerNewTimeFail_when_invalidFormattedTime(String startAt) {
-        // given
-        TimeRequest timeRequest = new TimeRequest(startAt);
-
-        // when & then
-        assertThatThrownBy(() ->timeService.registerNewTime(timeRequest))
-                .isInstanceOf(IllegalArgumentException.class)
-                .hasMessage("유효하지 않은 시간입니다: " + startAt);
     }
 
     @DisplayName("등록된 시간을 id로 제거한다.")
@@ -116,6 +106,5 @@ class TimeServiceTest {
         assertThatThrownBy(() -> timeService.getTimeById(id))
                 .isInstanceOf(IllegalArgumentException.class)
                 .hasMessage("삭제하려는 id가 존재하지 않습니다, id: " + id);
-
     }
 }

@@ -14,9 +14,8 @@ class TimeRequestTest {
     @Test
     void request_toReservation() {
         // given
-        TimeRequest reservationRequest = new TimeRequest(
-                "10:00"
-        );
+        LocalTime time = LocalTime.of(10, 0);
+        TimeRequest reservationRequest = new TimeRequest(time);
 
         // when
         ReservationTime reservationTime = reservationRequest.toDomain();
@@ -24,7 +23,7 @@ class TimeRequestTest {
         // then
         assertAll(
                 () -> assertThat(reservationTime.getId()).isNull(),
-                () -> assertThat(reservationTime.getStartAt()).isEqualTo(LocalTime.of(10,0))
+                () -> assertThat(reservationTime.getStartAt()).isEqualTo(time)
         );
     }
 }

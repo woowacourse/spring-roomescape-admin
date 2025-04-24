@@ -8,11 +8,10 @@ import java.time.LocalTime;
 import java.util.List;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
-import roomescape.dto.request.ReservationRequest;
-import roomescape.dto.response.ReservationResponse;
-import roomescape.dto.response.TimeResponse;
 import roomescape.domain.Reservation;
 import roomescape.domain.ReservationTime;
+import roomescape.dto.request.ReservationRequest;
+import roomescape.dto.response.ReservationResponse;
 
 class ReservationMapperTest {
 
@@ -20,8 +19,9 @@ class ReservationMapperTest {
     @Test
     void request_toReservation() {
         // given
+        LocalDate reservationDate = LocalDate.of(2024, 4, 1);
         ReservationTime reservationTime = ReservationTime.of(1L, LocalTime.of(10, 0));
-        ReservationRequest request = new ReservationRequest("2024-04-01", "멍구", 1L);
+        ReservationRequest request = new ReservationRequest(reservationDate, "멍구", 1L);
 
         // when
         Reservation reservation = ReservationMapper.toDomain(request, reservationTime);
@@ -30,7 +30,7 @@ class ReservationMapperTest {
         assertAll(
                 () -> assertThat(reservation.getId()).isNull(),
                 () -> assertThat(reservation.getName()).isEqualTo("멍구"),
-                () -> assertThat(reservation.getReservationDate()).isEqualTo(LocalDate.of(2024, 4, 1)),
+                () -> assertThat(reservation.getReservationDate()).isEqualTo(reservationDate),
                 () -> assertThat(reservation.getReservationTime()).isEqualTo(reservationTime)
         );
     }
@@ -39,18 +39,22 @@ class ReservationMapperTest {
     @Test
     void reservation_toResponse() {
         // given
-        ReservationTime reservationTime = ReservationTime.of(1L, LocalTime.of(10, 0));
-        Reservation reservation = Reservation.of(1L, "멍구", LocalDate.of(2025, 4, 1), reservationTime);
+        Long timeId = 1L;
+        String name = "멍구";
+
+        LocalDate reservationDate = LocalDate.of(2025, 4, 1);
+        ReservationTime reservationTime = ReservationTime.of(timeId, LocalTime.of(10, 0));
+        Reservation reservation = Reservation.of(timeId, name, reservationDate, reservationTime);
 
         // when
         ReservationResponse response = ReservationMapper.toDto(reservation);
 
         // then
         assertAll(
-                () -> assertThat(response.id()).isEqualTo(1L),
-                () -> assertThat(response.name()).isEqualTo("멍구"),
-                () -> assertThat(response.date()).isEqualTo("2025-04-01"),
-                () -> assertThat(response.time()).isEqualTo(new TimeResponse(1L, "10:00"))
+                () -> assertThat(response.id()).isEqualTo(timeId),
+                () -> assertThat(response.name()).isEqualTo(name),
+                () -> assertThat(response.date()).isEqualTo(reservationDate),
+                () -> assertThat(response.time().id()).isEqualTo(timeId)
         );
     }
 

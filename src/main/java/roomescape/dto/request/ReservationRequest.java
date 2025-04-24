@@ -1,14 +1,15 @@
 package roomescape.dto.request;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
-import jakarta.validation.constraints.Pattern;
+import java.time.LocalDate;
 
 public record ReservationRequest(
 
-        @NotBlank(message = "날짜는 필수입니다.")
-        @Pattern(regexp = "\\d{4}-\\d{2}-\\d{2}")
-        String date,
+        @JsonFormat(pattern = "yyyy-MM-dd")
+        @NotNull
+        LocalDate date,
 
         @NotBlank
         String name,

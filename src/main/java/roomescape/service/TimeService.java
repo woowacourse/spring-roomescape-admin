@@ -1,12 +1,10 @@
 package roomescape.service;
 
-import java.time.DateTimeException;
-import java.time.LocalTime;
 import java.util.List;
 import org.springframework.stereotype.Service;
+import roomescape.domain.ReservationTime;
 import roomescape.dto.request.TimeRequest;
 import roomescape.dto.response.TimeResponse;
-import roomescape.domain.ReservationTime;
 import roomescape.repository.TimeRepository;
 
 @Service
@@ -24,19 +22,10 @@ public class TimeService {
     }
 
     public TimeResponse registerNewTime(TimeRequest request) {
-        validateRequestTime(request.startAt());
         ReservationTime reservationTime = request.toDomain();
         Long id = repository.save(reservationTime);
 
         return TimeResponse.toDto(ReservationTime.assignId(id, reservationTime));
-    }
-
-    private void validateRequestTime(String time) {
-        try {
-            LocalTime.parse(time);
-        } catch (DateTimeException e) {
-            throw new IllegalArgumentException("유효하지 않은 시간입니다: " + time);
-        }
     }
 
     public void deleteTime(Long id) {

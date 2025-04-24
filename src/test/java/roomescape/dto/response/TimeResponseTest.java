@@ -31,9 +31,13 @@ class TimeResponseTest {
     @Test
     void multiple_reservationTimes_toResponses() {
         // given
-        ReservationTime reservationTime1 = ReservationTime.of(1L, LocalTime.of(10, 0));
-        ReservationTime reservationTime2 = ReservationTime.of(2L, LocalTime.of(11, 0));
-        ReservationTime reservationTime3 = ReservationTime.of(3L, LocalTime.of(12, 0));
+        LocalTime time1 = LocalTime.of(10, 0);
+        LocalTime time2 = LocalTime.of(11, 0);
+        LocalTime time3 = LocalTime.of(12, 0);
+
+        ReservationTime reservationTime1 = ReservationTime.of(1L, time1);
+        ReservationTime reservationTime2 = ReservationTime.of(2L, time2);
+        ReservationTime reservationTime3 = ReservationTime.of(3L, time3);
 
         List<ReservationTime> reservationTimes = List.of(reservationTime1, reservationTime2, reservationTime3);
 
@@ -45,7 +49,7 @@ class TimeResponseTest {
                 () -> assertThat(responses).hasSize(3),
                 () -> assertThat(responses)
                         .extracting(TimeResponse::startAt)
-                        .containsExactly("10:00", "11:00", "12:00")
+                        .containsExactly(time1, time2, time3)
         );
     }
 }

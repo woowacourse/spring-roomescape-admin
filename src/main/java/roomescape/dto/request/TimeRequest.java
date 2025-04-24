@@ -1,16 +1,16 @@
 package roomescape.dto.request;
 
-import jakarta.validation.constraints.NotBlank;
-import jakarta.validation.constraints.Pattern;
+import com.fasterxml.jackson.annotation.JsonFormat;
+import jakarta.validation.constraints.NotNull;
 import java.time.LocalTime;
 import roomescape.domain.ReservationTime;
 
 public record TimeRequest(
-        @NotBlank
-        @Pattern(regexp = "\\d{2}:\\d{2}")
-        String startAt
+        @JsonFormat(pattern = "HH:mm")
+        @NotNull
+        LocalTime startAt
 ) {
     public ReservationTime toDomain() {
-        return ReservationTime.withoutId(LocalTime.parse(startAt));
+        return ReservationTime.withoutId(startAt);
     }
 }

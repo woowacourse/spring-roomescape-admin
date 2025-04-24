@@ -1,5 +1,6 @@
 package roomescape.repository;
 
+import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.simple.SimpleJdbcInsert;
 import org.springframework.stereotype.Repository;
@@ -57,13 +58,17 @@ public class JdbcReservationTimeRepository implements ReservationTimeRepository 
     @Override
     public ReservationTime findById(Long id) {
         String sql = "SELECT * FROM reservation_time WHERE id = ?";
-        return jdbcTemplate.queryForObject(sql,
-                (resultSet, rowNum) -> {
-                    Long timeId = resultSet.getLong("id");
-                    LocalTime startAt = resultSet.getObject("start_at", LocalTime.class);
-                    ReservationTime reservationTime = new ReservationTime(startAt);
-                    return reservationTime.toEntity(timeId);
-                },
-                id);
+        try {
+            return jdbcTemplate.queryForObject(sql,
+                    (resultSet, rowNum) -> {
+                        Long timeId = resultSet.getLong("id");
+                        LocalTime startAt = resultSet.getObject("start_at", LocalTime.class);
+                        ReservationTime reservationTime = new ReservationTime(startAt);
+                        return reservationTime.toEntity(timeId);
+                    },
+                    id);
+        } catch (EmptyResultDataAccessException exception) {
+            throw new IllegalArgumentException("존재하지 않는 예약시간의 id입니다.");
+        }
     }
 }

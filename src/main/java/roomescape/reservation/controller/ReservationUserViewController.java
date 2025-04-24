@@ -13,6 +13,6 @@ public class ReservationUserViewController {
 
     @GetMapping("admin/reservation")
     public String reservation() {
-        return "admin/reservation-legacy";
+        return "admin/reservation";
     }
 }

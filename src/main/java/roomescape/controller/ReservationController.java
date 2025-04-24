@@ -38,7 +38,7 @@ public class ReservationController {
     }
 
     @DeleteMapping("/{id}")
-    public long deleteReservation(@PathVariable(name = "id") long id) {
-        return reservationDao.deleteById(id);
+    public void deleteReservation(@PathVariable(name = "id") long id) {
+        reservationDao.deleteById(id);
     }
 }

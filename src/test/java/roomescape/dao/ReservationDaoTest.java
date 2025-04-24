@@ -73,13 +73,12 @@ class ReservationDaoTest {
         reservationDao.insert(reservation1);
         reservationDao.insert(reservation2);
 
-        long answerId = 1;
-        long deletedId = reservationDao.deleteById(answerId);
+        int effectedRowsCount = reservationDao.deleteById(2);
 
         List<Reservation> reservations = reservationDao.findAll();
         assertAll(
                 () -> assertThat(reservations.size()).isEqualTo(1),
-                () -> assertThat(deletedId).isEqualTo(answerId)
+                () -> assertThat(effectedRowsCount).isEqualTo(1)
         );
     }
 }

@@ -1,13 +1,13 @@
 package roomescape.dao;
 
-import java.sql.PreparedStatement;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.LocalTime;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import org.springframework.jdbc.core.JdbcTemplate;
-import org.springframework.jdbc.support.GeneratedKeyHolder;
-import org.springframework.jdbc.support.KeyHolder;
+import org.springframework.jdbc.core.simple.SimpleJdbcInsert;
 import org.springframework.stereotype.Repository;
 import roomescape.domain.Person;
 import roomescape.domain.Reservation;
@@ -16,9 +16,13 @@ import roomescape.domain.ReservationTime;
 @Repository
 public class ReservationDao {
     private JdbcTemplate jdbcTemplate;
+    private SimpleJdbcInsert insertReservation;
 
     public ReservationDao(final JdbcTemplate jdbcTemplate) {
         this.jdbcTemplate = jdbcTemplate;
+        this.insertReservation = new SimpleJdbcInsert(jdbcTemplate)
+                .withTableName("reservation")
+                .usingGeneratedKeyColumns("id");
     }
 
     public List<Reservation> findAll() {
@@ -44,21 +48,16 @@ public class ReservationDao {
     }
 
     public Reservation insert(Reservation reservation) {
-        String sql = "insert into reservation (name, date, time) values(?,?,?)";
-        KeyHolder keyHolder = new GeneratedKeyHolder();
-        jdbcTemplate.update(connection -> {
-            PreparedStatement ps = connection.prepareStatement(sql, new String[]{"id"});
-            ps.setString(1, reservation.getPersonName());
-            ps.setString(2, reservation.getDate().toString());
-            ps.setString(3, reservation.getTime().toString());
-            return ps;
-        }, keyHolder);
+        Map<String, Object> parameters = new HashMap<>();
+        parameters.put("name", reservation.getPersonName());
+        parameters.put("date", reservation.getDate());
+        parameters.put("time", reservation.getTime());
+        long newId = insertReservation.executeAndReturnKey(parameters).longValue();
 
-        long id = keyHolder.getKey().longValue();
-        return new Reservation(id, reservation);
+        return new Reservation(newId, reservation);
     }
 
-    public long deleteById(long id) {
+    public int deleteById(long id) {
         String sql = "delete from reservation where id = ?";
         return jdbcTemplate.update(sql, id);
     }

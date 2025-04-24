@@ -3,6 +3,7 @@ package roomescape.application;
 import java.util.List;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.boot.CommandLineRunner;
+import org.springframework.context.annotation.Profile;
 import org.springframework.stereotype.Component;
 import roomescape.dto.CreateReservationDto;
 import roomescape.dto.CreateReservationTimeDto;
@@ -13,6 +14,7 @@ import roomescape.service.ReservationTimeService;
 import roomescape.view.InputView;
 import roomescape.view.OutputView;
 
+@Profile("console")
 @Component
 public class ConsoleApplication implements CommandLineRunner {
 
@@ -31,7 +33,7 @@ public class ConsoleApplication implements CommandLineRunner {
     }
 
     @Override
-    public void run(String... args) throws Exception {
+    public void run(String... args) {
         outputView.printStartMessage();
         while (true) {
             int function = inputView.selectAdminFunction();

@@ -5,11 +5,12 @@ import java.time.LocalTime;
 import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
+import org.springframework.boot.test.autoconfigure.jdbc.JdbcTest;
 import org.springframework.jdbc.core.JdbcTemplate;
-import roomescape.domain.Reservation;
 import roomescape.domain.dto.ReservationRequestDto;
 import roomescape.repositiory.ReservationH2Repository;
 
+@JdbcTest
 class ReservationServiceTest {
 
     @DisplayName("예약한다")
@@ -20,11 +21,11 @@ class ReservationServiceTest {
         ReservationService reservationService = new ReservationService(reservationRepository);
 
         // when
-        Reservation addedReservation = reservationService.add(
+        Long id = reservationService.add(
                 new ReservationRequestDto("예약자", LocalDate.now(), LocalTime.now()));
 
         // then
-        Assertions.assertThat(addedReservation).isNotNull();
+        Assertions.assertThat(id).isNotNull();
     }
 
     @DisplayName("예약을 취소한다")
@@ -33,11 +34,11 @@ class ReservationServiceTest {
         // given
         ReservationH2Repository reservationRepository = new ReservationH2Repository(new JdbcTemplate());
         ReservationService reservationService = new ReservationService(reservationRepository);
-        Reservation addedReservation = reservationService.add(
+        Long id = reservationService.add(
                 new ReservationRequestDto("예약자", LocalDate.now(), LocalTime.now()));
 
         // when
-        reservationService.delete(addedReservation.getId());
+        reservationService.delete(id);
 
         // then
         Assertions.assertThat(reservationService.readAll()).isEmpty();
@@ -49,12 +50,12 @@ class ReservationServiceTest {
         // given
         ReservationH2Repository reservationRepository = new ReservationH2Repository(new JdbcTemplate());
         ReservationService reservationService = new ReservationService(reservationRepository);
-        Reservation addedReservation = reservationService.add(
+        Long id = reservationService.add(
                 new ReservationRequestDto("예약자", LocalDate.now(), LocalTime.now()));
 
         // when
         int firstReadSize = reservationService.readAll().size();
-        reservationService.delete(addedReservation.getId());
+        reservationService.delete(id);
         int secondReadSize = reservationService.readAll().size();
 
         // then

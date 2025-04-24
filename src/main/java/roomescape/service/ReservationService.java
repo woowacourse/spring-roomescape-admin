@@ -21,20 +21,15 @@ public class ReservationService {
         return reservationRepository.findAll();
     }
 
-    public Reservation add(ReservationRequestDto reservationDto) {
-        Reservation reservation = convertReservation(reservationDto);
-        return reservationRepository.add(reservation);
+    public Reservation readOne(Long id) {
+        return reservationRepository.findById(id);
+    }
+
+    public Long add(ReservationRequestDto reservationDto) {
+        return reservationRepository.add(reservationDto);
     }
 
     public void delete(Long id) {
-        Reservation reservation = reservationRepository.findById(id);
-        reservationRepository.delete(reservation);
-    }
-
-    private Reservation convertReservation(ReservationRequestDto reservationDto) {
-        return Reservation.of(
-                reservationDto.name(),
-                reservationDto.date(),
-                reservationDto.time());
+        reservationRepository.delete(id);
     }
 }

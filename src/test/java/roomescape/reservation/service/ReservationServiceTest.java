@@ -7,7 +7,7 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.jdbc.JdbcTest;
 import org.springframework.context.annotation.Import;
-import roomescape.reservation.database.ReservationDatabaseImpl;
+import roomescape.reservation.database.ReservationRepositoryImpl;
 import roomescape.reservation.domain.Reservation;
 import roomescape.reservation.domain.dto.ReservationReqDto;
 import roomescape.globalException.CustomException;
@@ -16,13 +16,13 @@ import roomescape.reservation.fixture.ReservationFixture;
 import java.time.LocalDateTime;
 
 @JdbcTest
-@Import({ReservationService.class, ReservationDatabaseImpl.class})
+@Import({ReservationService.class, ReservationRepositoryImpl.class})
 class ReservationServiceTest {
 
     @Autowired
     private ReservationService service;
     @Autowired
-    private ReservationDatabaseImpl db;
+    private ReservationRepositoryImpl db;
 
     @Nested
     @DisplayName("예약 추가하기 기능")

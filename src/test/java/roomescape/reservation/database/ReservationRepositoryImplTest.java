@@ -13,11 +13,11 @@ import roomescape.reservation.fixture.ReservationFixture;
 import java.util.List;
 
 @JdbcTest
-@Import({ReservationDatabaseImpl.class})
-class ReservationDatabaseImplTest {
+@Import({ReservationRepositoryImpl.class})
+class ReservationRepositoryImplTest {
 
     @Autowired
-    private ReservationDatabaseImpl db;
+    private ReservationRepositoryImpl db;
 
     @DisplayName("존재하지 않는 예약 ID로 조회하면 예외가 발생한다.")
     @Test

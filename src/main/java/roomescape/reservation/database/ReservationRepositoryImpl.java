@@ -10,11 +10,11 @@ import java.sql.PreparedStatement;
 import java.util.List;
 
 @Repository
-public class ReservationDatabaseImpl implements ReservationDatabase {
+public class ReservationRepositoryImpl implements ReservationRepository {
 
     private final JdbcTemplate jdbcTemplate;
 
-    public ReservationDatabaseImpl(final JdbcTemplate jdbcTemplate) {
+    public ReservationRepositoryImpl(final JdbcTemplate jdbcTemplate) {
         this.jdbcTemplate = jdbcTemplate;
     }
 

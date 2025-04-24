@@ -69,8 +69,17 @@ class ReservationTimeRepositoryImplTest {
         ReservationTime saved = reservationTimeRepository.save(reservationTime);
 
         // then
-        assertThat(saved.getId()).isEqualTo(1L);
-        assertThat(saved.getStartAt()).isEqualTo(reservationTime.getStartAt());
+        ReservationTime found = jdbcTemplate.queryForObject(
+                "select id, start_at from reservation_time where id = ?",
+                (resultSet, rowNum) ->
+                        new ReservationTime(
+                                resultSet.getLong("id"),
+                                LocalTime.parse(resultSet.getString("start_at"))
+                        ),
+                1L);
+        assertThat(found.getId()).isEqualTo(1L);
+        assertThat(found.getStartAt()).isEqualTo(reservationTime.getStartAt());
+        assertThat(found).isEqualTo(saved);
     }
 
     @Test

@@ -109,10 +109,28 @@ class ReservationRepositoryImplTest {
         Reservation saved = reservationRepository.save(reservation);
 
         // then
-        assertThat(saved.getId()).isEqualTo(1L);
-        assertThat(saved.getName()).isEqualTo(reservation.getName());
-        assertThat(saved.getDate()).isEqualTo(reservation.getDate());
-        assertThat(saved.getTime()).isEqualTo(reservation.getTime());
+        Reservation found = jdbcTemplate.queryForObject(
+                "select r.id, r.name, r.date, rt.id as time_id, rt.start_at "
+                        + "from reservation r "
+                        + "inner join reservation_time rt on r.time_id = rt.id "
+                        + "where r.id = ?",
+                (resultSet, rowNum) ->
+                        new Reservation(
+                                resultSet.getLong("id"),
+                                resultSet.getString("name"),
+                                LocalDate.parse(resultSet.getString("date")),
+                                new ReservationTime(
+                                        resultSet.getLong("time_id"),
+                                        LocalTime.parse(resultSet.getString("start_at"))
+                                )
+                        ),
+                1L
+        );
+        assertThat(found.getId()).isEqualTo(1L);
+        assertThat(found.getName()).isEqualTo(reservation.getName());
+        assertThat(found.getDate()).isEqualTo(reservation.getDate());
+        assertThat(found.getTime()).isEqualTo(reservation.getTime());
+        assertThat(found).isEqualTo(saved);
     }
 
     @Test

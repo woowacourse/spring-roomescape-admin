@@ -27,7 +27,7 @@ public class MissionStepTest {
     }
 
     @Test
-    void readReservations() {
+    void readAll() {
         RestAssured.given().log().all()
                 .when().get("/admin/reservation")
                 .then().log().all()

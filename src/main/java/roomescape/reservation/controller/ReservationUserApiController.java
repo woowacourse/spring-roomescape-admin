@@ -19,7 +19,7 @@ public class ReservationUserApiController {
     }
 
     @GetMapping("reservations")
-    public ResponseEntity<List<ReservationResDto>> readReservations() {
+    public ResponseEntity<List<ReservationResDto>> readAll() {
         List<ReservationResDto> resDtos = service.readAll();
         return ResponseEntity.ok(resDtos);
     }

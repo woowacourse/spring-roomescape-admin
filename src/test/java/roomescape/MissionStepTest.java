@@ -2,6 +2,8 @@ package roomescape;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.hamcrest.Matchers.is;
+import static roomescape.fixture.TextFixture.makeTodayMessage;
+import static roomescape.fixture.TextFixture.makeYesterdayMessage;
 
 import io.restassured.RestAssured;
 import io.restassured.http.ContentType;
@@ -9,8 +11,6 @@ import java.lang.reflect.Field;
 import java.sql.Connection;
 import java.sql.SQLException;
 import java.time.LocalDate;
-import java.time.LocalTime;
-import java.time.format.DateTimeFormatter;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -22,12 +22,11 @@ import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.test.annotation.DirtiesContext;
 import roomescape.controller.ReservationController;
 import roomescape.domain.Reservation;
+import roomescape.fixture.TextFixture;
 
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.DEFINED_PORT)
 @DirtiesContext(classMode = DirtiesContext.ClassMode.BEFORE_EACH_TEST_METHOD)
 public class MissionStepTest {
-
-    private static final String DATE_FORMAT = "%d-%02d-%02d";
 
     @Nested
     class Step1 {
@@ -195,16 +194,6 @@ public class MissionStepTest {
         }
     }
 
-    private String makeYesterdayMessage() {
-        LocalDate yesterday = LocalDate.now().minusDays(1);
-        return String.format(DATE_FORMAT, yesterday.getYear(), yesterday.getMonthValue(), yesterday.getDayOfMonth());
-    }
-
-    private String makeTodayMessage() {
-        LocalDate today = LocalDate.now();
-        return String.format(DATE_FORMAT, today.getYear(), today.getMonthValue(), today.getDayOfMonth());
-    }
-
     @Nested
     class Step4 {
 
@@ -222,8 +211,6 @@ public class MissionStepTest {
             }
         }
     }
-
-    private final DateTimeFormatter timeFormatter = DateTimeFormatter.ofPattern("HH:mm");
 
     @Nested
     class Step5 {
@@ -298,7 +285,7 @@ public class MissionStepTest {
         @Test
         void 예약시간을_삭제한다() {
             Map<String, String> params = new HashMap<>();
-            String time = LocalTime.now().format(timeFormatter);
+            String time = TextFixture.makeNowTime();
             params.put("startAt", time);
 
             RestAssured.given().log().all()
@@ -329,7 +316,7 @@ public class MissionStepTest {
 
     private void makeReservationTime() {
         Map<String, String> params = new HashMap<>();
-        String time = LocalTime.now().format(timeFormatter);
+        String time = TextFixture.makeNowTime();
         params.put("startAt", time);
 
         RestAssured.given().log().all()
@@ -352,7 +339,7 @@ public class MissionStepTest {
         @Test
         void 팔단계() {
             Map<String, String> params = new HashMap<>();
-            String time = LocalTime.now().format(timeFormatter);
+            String time = TextFixture.makeNowTime();
             params.put("startAt", time);
 
             RestAssured.given().log().all()
@@ -392,7 +379,7 @@ public class MissionStepTest {
 
     @Nested
     class Step9 {
-        
+
         @Autowired
         private ReservationController reservationController;
 

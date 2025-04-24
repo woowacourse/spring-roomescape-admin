@@ -12,7 +12,7 @@ public class MemoryReservationRepository implements ReservationRepository {
     private final List<Reservation> reservations = Collections.synchronizedList(new ArrayList<>());
     private final AtomicLong index = new AtomicLong(1);
 
-    public Reservation add(final Reservation reservation) {
+    public Reservation save(final Reservation reservation) {
         Reservation newReservation = reservation.withId(index.getAndIncrement());
         reservations.add(newReservation);
         return newReservation;

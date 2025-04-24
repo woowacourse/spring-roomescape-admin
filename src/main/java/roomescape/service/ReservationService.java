@@ -37,7 +37,7 @@ public class ReservationService {
                 .orElseThrow(() -> new IllegalArgumentException("존재하지 않는 예약 시간입니다."));
 
         Reservation reservation = reservationRequest.toReservationWith(reservationTime, LocalDateTime.now(clock));
-        Reservation savedReservation = reservationRepository.add(reservation);
+        Reservation savedReservation = reservationRepository.save(reservation);
         return ReservationResponse.from(savedReservation);
     }
 

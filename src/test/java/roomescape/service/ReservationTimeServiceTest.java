@@ -28,8 +28,8 @@ class ReservationTimeServiceTest {
         // given
         ReservationTime reservationTime1 = new ReservationTime(null, LocalTime.of(9, 0));
         ReservationTime reservationTime2 = new ReservationTime(null, LocalTime.of(10, 0));
-        reservationTimeRepository.add(reservationTime1);
-        reservationTimeRepository.add(reservationTime2);
+        reservationTimeRepository.save(reservationTime1);
+        reservationTimeRepository.save(reservationTime2);
         // when
         List<ReservationTimeResponse> times = reservationTimeService.findAllReservationTime();
         // then
@@ -59,7 +59,7 @@ class ReservationTimeServiceTest {
     @Test
     void 시간을_삭제한다() {
         // given
-        reservationTimeRepository.add(new ReservationTime(null, LocalTime.of(9, 0)));
+        reservationTimeRepository.save(new ReservationTime(null, LocalTime.of(9, 0)));
         // when & then
         reservationTimeService.deleteReservationTime(1L);
         SoftAssertions soft = new SoftAssertions();
@@ -71,7 +71,7 @@ class ReservationTimeServiceTest {
     @Test
     void 시간을_삭제할_때_존재하지_않는_시간ID인_경우_예외가_발생한다() {
         // given
-        reservationTimeRepository.add(new ReservationTime(null, LocalTime.of(9, 0)));
+        reservationTimeRepository.save(new ReservationTime(null, LocalTime.of(9, 0)));
         // when & then
         assertThatThrownBy(() -> reservationTimeService.deleteReservationTime(2L))
                 .isInstanceOf(IllegalArgumentException.class);

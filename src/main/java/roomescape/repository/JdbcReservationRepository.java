@@ -49,7 +49,7 @@ public class JdbcReservationRepository implements ReservationRepository {
     }
 
     @Override
-    public Reservation add(Reservation reservation) {
+    public Reservation save(Reservation reservation) {
         Map<String, Object> parameter = Map.of(
                 "name", reservation.getName(),
                 "date", reservation.getDate(),

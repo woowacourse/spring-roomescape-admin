@@ -17,7 +17,7 @@ class MemoryReservationTimeRepositoryTest {
     @Test
     void 전체_예약시간을_조회한다() {
         // given
-        reservationTimeRepository.add(new ReservationTime(null, LocalTime.of(9, 0)));
+        reservationTimeRepository.save(new ReservationTime(null, LocalTime.of(9, 0)));
         // when
         List<ReservationTime> reservationTimes = reservationTimeRepository.findAll();
         // then
@@ -29,7 +29,7 @@ class MemoryReservationTimeRepositoryTest {
         // given
         ReservationTime reservationTime = new ReservationTime(null, LocalTime.of(9, 0));
         // when
-        reservationTimeRepository.add(reservationTime);
+        reservationTimeRepository.save(reservationTime);
         // then
         int reservationTimeCount = reservationTimeRepository.findAll().size();
         assertThat(reservationTimeCount).isEqualTo(1);
@@ -43,8 +43,8 @@ class MemoryReservationTimeRepositoryTest {
     })
     void ID로_예약을_조회한다(Long id, boolean expected) {
         // given
-        reservationTimeRepository.add(new ReservationTime(null, LocalTime.of(9, 0)));
-        reservationTimeRepository.add(new ReservationTime(null, LocalTime.of(9, 0)));
+        reservationTimeRepository.save(new ReservationTime(null, LocalTime.of(9, 0)));
+        reservationTimeRepository.save(new ReservationTime(null, LocalTime.of(9, 0)));
         // when
         Optional<ReservationTime> optionalReservationTime = reservationTimeRepository.findById(id);
         // then
@@ -58,7 +58,7 @@ class MemoryReservationTimeRepositoryTest {
     })
     void 예약을_삭제한다(Long id, int count) {
         // given
-        reservationTimeRepository.add(new ReservationTime(null, LocalTime.of(9, 0)));
+        reservationTimeRepository.save(new ReservationTime(null, LocalTime.of(9, 0)));
         // when
         reservationTimeRepository.deleteById(id);
         // then

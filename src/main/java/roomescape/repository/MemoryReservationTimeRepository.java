@@ -18,7 +18,7 @@ public class MemoryReservationTimeRepository implements ReservationTimeRepositor
     }
 
     @Override
-    public ReservationTime add(ReservationTime reservationTime) {
+    public ReservationTime save(ReservationTime reservationTime) {
         ReservationTime newReservationTime = reservationTime.withId(index.getAndIncrement());
         reservationTimes.add(newReservationTime);
         return newReservationTime;

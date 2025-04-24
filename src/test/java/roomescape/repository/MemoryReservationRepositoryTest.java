@@ -29,7 +29,7 @@ class MemoryReservationRepositoryTest {
     void 예약을_조회한다() {
         // given
         Reservation reservation = new Reservation(1L, "name1", RESERVATION_DATE_TIME);
-        memoryReservationRepository.add(reservation);
+        memoryReservationRepository.save(reservation);
         // when
         List<Reservation> reservations = memoryReservationRepository.findAll();
 
@@ -41,7 +41,7 @@ class MemoryReservationRepositoryTest {
     void 예약이_존재하는지_확인한다() {
         // given
         Reservation reservation = new Reservation(1L, "name1", RESERVATION_DATE_TIME);
-        memoryReservationRepository.add(reservation);
+        memoryReservationRepository.save(reservation);
         // when & then
         SoftAssertions softly = new SoftAssertions();
         softly.assertThat(memoryReservationRepository.findById(1L).isPresent()).isTrue();
@@ -54,7 +54,7 @@ class MemoryReservationRepositoryTest {
         // given
         Reservation reservation = new Reservation(1L, "name1", RESERVATION_DATE_TIME);
         // when
-        memoryReservationRepository.add(reservation);
+        memoryReservationRepository.save(reservation);
         // then
         List<Reservation> reservations = memoryReservationRepository.findAll();
         assertThat(reservations).hasSize(1);
@@ -66,8 +66,8 @@ class MemoryReservationRepositoryTest {
         Reservation reservation1 = new Reservation(1L, "name1", RESERVATION_DATE_TIME);
         Reservation reservation2 = new Reservation(1L, "name2", RESERVATION_DATE_TIME);
         // when
-        memoryReservationRepository.add(reservation1);
-        memoryReservationRepository.add(reservation2);
+        memoryReservationRepository.save(reservation1);
+        memoryReservationRepository.save(reservation2);
         // then
         List<Reservation> reservations = memoryReservationRepository.findAll();
         assertThat(reservations).contains(
@@ -80,7 +80,7 @@ class MemoryReservationRepositoryTest {
     void 예약을_삭제한다() {
         // given
         Reservation reservation = new Reservation(1L, "name1", RESERVATION_DATE_TIME);
-        memoryReservationRepository.add(reservation);
+        memoryReservationRepository.save(reservation);
         // when
         memoryReservationRepository.deleteById(1L);
 

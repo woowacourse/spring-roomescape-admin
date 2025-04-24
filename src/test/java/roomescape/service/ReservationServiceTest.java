@@ -40,8 +40,8 @@ class ReservationServiceTest {
         // given
         LocalDate date = LocalDate.of(2025, 12, 12);
         ReservationTime time = new ReservationTime(1L, LocalTime.of(9, 0));
-        reservationRepository.add(new Reservation(null, "name1", ReservationDateTime.of(date, time)));
-        reservationRepository.add(new Reservation(null, "name2", ReservationDateTime.of(date, time)));
+        reservationRepository.save(new Reservation(null, "name1", ReservationDateTime.of(date, time)));
+        reservationRepository.save(new Reservation(null, "name2", ReservationDateTime.of(date, time)));
         // when
         List<ReservationResponse> allReservations = reservationService.findAllReservations();
         // then
@@ -52,7 +52,7 @@ class ReservationServiceTest {
     void 예약을_생성한다() {
         // given
         ReservationTime time = new ReservationTime(null, LocalTime.of(9, 0));
-        reservationTimeRepository.add(time);
+        reservationTimeRepository.save(time);
         LocalDate date = LocalDate.of(2025, 12, 12);
         ReservationRequest reservationRequest = new ReservationRequest("name1", date, 1L);
         // when
@@ -82,7 +82,7 @@ class ReservationServiceTest {
         // given
         LocalDate date = LocalDate.of(2025, 12, 12);
         ReservationTime time = new ReservationTime(1L, LocalTime.of(9, 0));
-        reservationRepository.add(new Reservation(null, "name1", ReservationDateTime.of(date, time)));
+        reservationRepository.save(new Reservation(null, "name1", ReservationDateTime.of(date, time)));
         // when & then
         SoftAssertions soft = new SoftAssertions();
         soft.assertThatCode(() -> reservationService.deleteReservation(1L))
@@ -96,7 +96,7 @@ class ReservationServiceTest {
         // given
         LocalDate date = LocalDate.of(2025, 12, 12);
         ReservationTime time = new ReservationTime(1L, LocalTime.of(9, 0));
-        reservationRepository.add(new Reservation(null, "name1", ReservationDateTime.of(date, time)));
+        reservationRepository.save(new Reservation(null, "name1", ReservationDateTime.of(date, time)));
         // when & then
         assertThatThrownBy(() -> reservationService.deleteReservation(2L))
                 .isInstanceOf(IllegalArgumentException.class);

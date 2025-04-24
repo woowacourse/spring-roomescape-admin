@@ -8,8 +8,8 @@ public record ReservationResponse(Long id,
                                   String name,
                                   @JsonFormat(pattern = "yyyy-MM-dd", timezone = "Asia/Seoul") LocalDate date,
                                   TimeResponse time) {
-    public static ReservationResponse toDto(Long id, Reservation reservation) {
-        return new ReservationResponse(id, reservation.getName(), reservation.getDate(),
-                TimeResponse.from(reservation.getTime()));
+
+    public static ReservationResponse from(Reservation reservation){
+        return new ReservationResponse(reservation.getId(), reservation.getName(), reservation.getDate(), TimeResponse.from(reservation.getTime()));
     }
 }

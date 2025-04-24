@@ -12,9 +12,8 @@ public class Time {
         this.startAt = startAt;
     }
 
-    public Time(LocalTime startAt) {
-        this.id = null;
-        this.startAt = startAt;
+    public Time withId(Long id){
+        return new Time(id, this.startAt);
     }
 
     public Long getId() {

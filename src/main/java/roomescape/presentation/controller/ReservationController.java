@@ -23,12 +23,6 @@ public class ReservationController {
         this.reservationService = reservationService;
     }
 
-    @GetMapping
-    public ResponseEntity<List<ReservationResponse>> readAll() {
-        final List<ReservationResponse> responses = reservationService.findAll();
-        return ResponseEntity.ok(responses);
-    }
-
     @PostMapping
     public ResponseEntity<ReservationResponse> create(
             @RequestBody final ReservationRequest reservationRequest
@@ -36,6 +30,12 @@ public class ReservationController {
         final ReservationResponse reservationResponse = reservationService.create(reservationRequest);
 
         return ResponseEntity.ok(reservationResponse);
+    }
+
+    @GetMapping
+    public ResponseEntity<List<ReservationResponse>> readAll() {
+        final List<ReservationResponse> responses = reservationService.findAll();
+        return ResponseEntity.ok(responses);
     }
 
     @DeleteMapping("/{id}")

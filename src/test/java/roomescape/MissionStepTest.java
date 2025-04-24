@@ -5,6 +5,7 @@ import static org.hamcrest.Matchers.is;
 
 import io.restassured.RestAssured;
 import io.restassured.http.ContentType;
+import java.lang.reflect.Field;
 import java.sql.Connection;
 import java.sql.SQLException;
 import java.util.HashMap;
@@ -15,6 +16,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.test.annotation.DirtiesContext;
+import roomescape.reservation.controller.ReservationController;
 import roomescape.reservation.domain.Reservation;
 import roomescape.reservation.entity.ReservationEntity;
 
@@ -183,4 +185,22 @@ public class MissionStepTest {
                 .statusCode(200)
                 .body("size()", is(1));
     }
+
+    @Autowired
+    private ReservationController reservationController;
+
+    @Test
+    void step9_controllerDoesNotHasDatabaseLogic() {
+        boolean isJdbcTemplateInjected = false;
+
+        for (Field field : reservationController.getClass().getDeclaredFields()) {
+            if (field.getType().equals(JdbcTemplate.class)) {
+                isJdbcTemplateInjected = true;
+                break;
+            }
+        }
+
+        assertThat(isJdbcTemplateInjected).isFalse();
+    }
+
 }

@@ -43,7 +43,7 @@ public class ReservationService {
             isAfterNow = true;
         }
 
-        if (newReservation.getDate().isEqual(nowDate) && newReservation.getTime().getTime().isBefore(nowTime)) {
+        if (newReservation.getDate().isEqual(nowDate) && newReservation.getStartAt().isBefore(nowTime)) {
             isAfterNow = true;
         }
         if (isAfterNow) {

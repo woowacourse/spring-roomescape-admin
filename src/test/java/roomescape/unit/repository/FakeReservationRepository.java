@@ -17,7 +17,8 @@ public class FakeReservationRepository implements ReservationRepository {
     @Override
     public long add(Reservation reservation) {
         long id = index.getAndIncrement();
-        reservations.add(new Reservation(id, reservation.getName(), reservation.getDate(), reservation.getTime()));
+        reservations.add(
+                new Reservation(id, reservation.getName(), reservation.getDate(), reservation.getReservationTime()));
         return id;
     }
 

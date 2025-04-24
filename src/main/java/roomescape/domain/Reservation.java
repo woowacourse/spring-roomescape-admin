@@ -1,6 +1,7 @@
 package roomescape.domain;
 
 import java.time.LocalDate;
+import java.time.LocalTime;
 import java.util.Objects;
 import roomescape.exception.InvalidReservationException;
 
@@ -40,8 +41,12 @@ public class Reservation {
         return date;
     }
 
-    public ReservationTime getTime() {
+    public ReservationTime getReservationTime() {
         return time;
+    }
+
+    public LocalTime getStartAt() {
+        return time.getTime();
     }
 
     @Override

@@ -32,7 +32,7 @@ public class ReservationController {
         List<Reservation> reservations = reservationService.allReservations();
         List<ReservationResponseDto> reservationDtos = reservations.stream()
                 .map((reservation) -> new ReservationResponseDto(reservation.getId(), reservation.getName(),
-                        reservation.getTime().getTime(), reservation.getDate()))
+                        reservation.getStartAt(), reservation.getDate()))
                 .toList();
         return ResponseEntity.ok(reservationDtos);
     }

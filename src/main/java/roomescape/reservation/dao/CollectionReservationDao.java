@@ -27,7 +27,7 @@ public class CollectionReservationDao implements Dao<Reservation> {
     @Override
     public Reservation getById(Long id) {
         return reservations.stream()
-                .filter(reservation -> reservation.hasSame(id))
+                .filter(reservation -> reservation.isSameId(id))
                 .findFirst()
                 .orElseThrow(() -> new IllegalArgumentException("[ERROR] 존재하지 않는 id 입니다."));
     }

@@ -1,8 +1,9 @@
-package roomescape.time;
+package roomescape.time.dto;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
 import java.time.LocalTime;
 import java.util.Objects;
+import roomescape.time.Time;
 
 public record TimeResponse(
         Long id,

@@ -10,6 +10,8 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
+import roomescape.time.dto.TimeRequest;
+import roomescape.time.dto.TimeResponse;
 
 @RestController
 @RequestMapping("/times")

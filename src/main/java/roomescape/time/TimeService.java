@@ -3,6 +3,8 @@ package roomescape.time;
 import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import roomescape.time.dto.TimeRequest;
+import roomescape.time.dto.TimeResponse;
 
 @Service
 public class TimeService {

@@ -2,6 +2,7 @@ package roomescape.view;
 
 import java.util.Scanner;
 import org.springframework.stereotype.Component;
+import roomescape.dto.CreateReservationDto;
 import roomescape.dto.CreateReservationTimeDto;
 
 @Component
@@ -49,5 +50,19 @@ public class InputView {
         long value = scanner.nextLong();
         scanner.nextLine();
         return value;
+    }
+
+    public CreateReservationDto inputCreateReservation() {
+        System.out.println("예약을 생성합니다.");
+        System.out.println("생성할 예약의 예약자 이름, 예약 날짜, 생성할 시간 id를 입력해 주세요.");
+        System.out.println("(ex: 피글렛, 2025-04-24, 1)");
+        String value = scanner.nextLine();
+
+        String[] parameters = value.split(",");
+        return new CreateReservationDto(
+                parameters[0].trim(),
+                parameters[1].trim(),
+                Long.parseLong(parameters[2].trim())
+        );
     }
 }

@@ -4,7 +4,9 @@ import java.util.List;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.stereotype.Component;
+import roomescape.dto.CreateReservationDto;
 import roomescape.dto.CreateReservationTimeDto;
+import roomescape.entity.Reservation;
 import roomescape.entity.ReservationTime;
 import roomescape.service.ReservationService;
 import roomescape.service.ReservationTimeService;
@@ -38,6 +40,7 @@ public class ConsoleApplication implements CommandLineRunner {
                 processReservationTimeFunction(reservationTimeFunction);
             } else if (function == 2) {
                 int reservationFunction = inputView.selectReservationFunction();
+                processReservationFunction(reservationFunction);
             } else {
                 System.out.println("잘못된 기능 입력입니다.");
                 System.out.println();
@@ -57,6 +60,14 @@ public class ConsoleApplication implements CommandLineRunner {
             Long id = inputView.inputDeleteReservationTimeId();
             reservationTimeService.deleteReservationTime(id);
             outputView.printSuccessToDeleteReservationTime();
+        }
+    }
+
+    private void processReservationFunction(int function) {
+        if (function == 1) {
+            CreateReservationDto createReservationDto = inputView.inputCreateReservation();
+            Reservation reservation = reservationService.createReservation(createReservationDto);
+            outputView.printSuccessToCreateReservation(reservation);
         }
     }
 }

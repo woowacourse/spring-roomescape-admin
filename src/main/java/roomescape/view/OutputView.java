@@ -2,6 +2,7 @@ package roomescape.view;
 
 import java.util.List;
 import org.springframework.stereotype.Component;
+import roomescape.entity.Reservation;
 import roomescape.entity.ReservationTime;
 
 @Component
@@ -27,6 +28,14 @@ public class OutputView {
 
     public void printSuccessToDeleteReservationTime() {
         System.out.println("예약 시간 삭제를 완료했습니다.");
+        System.out.println();
+    }
+
+    public void printSuccessToCreateReservation(Reservation reservation) {
+        System.out.println("예약 생성을 완료했습니다.");
+        System.out.println("               예약자명 | 예약 날짜 | 예약 시간");
+        System.out.printf("생성된 예약 정보 : %s | %s | %s\n", reservation.getName(), reservation.getDate(),
+                reservation.getTime().getStartAt());
         System.out.println();
     }
 }

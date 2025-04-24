@@ -12,7 +12,7 @@
 ### 예약 관리 페이지
 
 - [x] /admin/reservation 요청 시 예약 관리 페이지가 응답한다.
-  - [x] templates/admin/reservation-legacy.html 파일을 이용한다.
+  - [ ] templates/admin/reservation.html 파일을 이용한다.
 
 ### 시간 관리 페이지
 
@@ -31,18 +31,15 @@
     HTTP/1.1 200 
     Content-Type: application/json
     [
-         {
-             "id": 1,
-             "name": "브라운",
-             "date": "2023-01-01",
-             "time": "10:00"
-         },
-         {
-             "id": 2,
-             "name": "브라운",
-             "date": "2023-01-02",
-             "time": "11:00"
-         }
+        {
+            "id": 1,
+            "name": "브라운",
+            "date": "2023-08-05",
+            "time": {
+                "id": 1,
+                "startAt": "10:00"
+            }
+        }
     ]
     ```
 
@@ -57,7 +54,7 @@
       {
         "date": "2023-08-05",
         "name": "브라운",
-        "time": "15:40"
+        "timeId": 1
       }
     ```
   - Response
@@ -69,7 +66,10 @@
       "id": 1,
       "name": "브라운",
       "date": "2023-08-05",
-      "time": "15:40"
+      "time" : {
+        "id": 1,
+        "startAt" : "10:00"
+      }
     }
     ```
 
@@ -152,7 +152,9 @@
           name    VARCHAR(255) NOT NULL,
           date    VARCHAR(255) NOT NULL,
           time    VARCHAR(255) NOT NULL,
+          time_id BIGINT,
           PRIMARY KEY (id)
+          FOREIGN KEY (time_id) REFERENCES reservation_time (id)
       );
       ```
     - 예약 시간

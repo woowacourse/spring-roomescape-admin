@@ -22,20 +22,6 @@ public class ReservationTimeRepositoryTest {
 
 
     @Test
-    @DisplayName("시간을 추가한다.")
-    void addReservationTimeTest() {
-        // given
-        ReservationTime time = new ReservationTime(LocalTime.of(20, 0));
-        // when
-        ReservationTime reservationTime = reservationTimeRepository.save(time);
-        // then
-        SoftAssertions.assertSoftly(softAssertions -> {
-            softAssertions.assertThat(reservationTime.getId()).isEqualTo(6);
-            softAssertions.assertThat(reservationTime.getStartAt()).isEqualTo(LocalTime.of(20, 0));
-        });
-    }
-
-    @Test
     @DisplayName("전체 시간 목록을 가져온다.")
     void getAllReservationTimesTest() {
         //given
@@ -50,10 +36,24 @@ public class ReservationTimeRepositoryTest {
     }
 
     @Test
+    @DisplayName("시간을 추가한다.")
+    void addReservationTimeTest() {
+        // given
+        ReservationTime time = new ReservationTime(LocalTime.of(20, 0));
+        // when
+        ReservationTime reservationTime = reservationTimeRepository.save(time);
+        // then
+        SoftAssertions.assertSoftly(softAssertions -> {
+            softAssertions.assertThat(reservationTime.getId()).isEqualTo(6);
+            softAssertions.assertThat(reservationTime.getStartAt()).isEqualTo(LocalTime.of(20, 0));
+        });
+    }
+
+    @Test
     @DisplayName("아이디를 통해 예약 시간을 삭제한다")
     void deleteReservationTimeById() {
         // given
-        long id = 1;
+        Long id = 1L;
 
         // when
         int row = reservationTimeRepository.deleteById(id);

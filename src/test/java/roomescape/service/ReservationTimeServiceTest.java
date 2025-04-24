@@ -87,7 +87,7 @@ public class ReservationTimeServiceTest {
         }
 
         @Override
-        public int deleteById(long id) {
+        public int deleteById(Long id) {
             boolean existingId = reservationTimes.stream().anyMatch(reservation -> reservation.getId() == id);
             if (existingId) {
                 reservationTimes.removeIf(reservation -> reservation.getId() == id);

@@ -12,7 +12,7 @@ class AdminPageControllerTest {
 
     @Test
     @DisplayName("예약 페이지를 조회한다")
-    void readAdminPage() {
+    void getAdminReservationPage() {
         RestAssured.given().log().all()
                 .when().get("/admin/reservation")
                 .then().log().all()
@@ -21,11 +21,19 @@ class AdminPageControllerTest {
 
     @Test
     @DisplayName("어드민 메인 페이지를 조회한다")
-    void readReservationPage() {
+    void getReservationMainPage() {
         RestAssured.given().log().all()
                 .when().get("/admin")
                 .then().log().all()
                 .statusCode(200);
     }
 
+    @Test
+    @DisplayName("어드민 시간 관리 페이지를 조회한다.")
+    void getTimeManagementPage() {
+        RestAssured.given().log().all()
+                .when().get("/admin/time")
+                .then().log().all()
+                .statusCode(200);
+    }
 }

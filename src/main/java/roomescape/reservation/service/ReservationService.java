@@ -1,10 +1,11 @@
 package roomescape.reservation.service;
 
-import java.util.List;
 import org.springframework.stereotype.Service;
 import roomescape.common.Dao;
 import roomescape.reservation.Reservation;
-import roomescape.reservation.dto.ReservationDto;
+import roomescape.reservation.dto.AllReservationResponse;
+import roomescape.reservation.dto.ReservationRequest;
+import roomescape.reservation.dto.ReservationResponse;
 import roomescape.reservationTime.ReservationTime;
 
 @Service
@@ -17,19 +18,14 @@ public class ReservationService {
         this.reservationTimeDao = reservationTimeDao;
     }
 
-    public Reservation add(ReservationDto reservationDto) {
-        Reservation reservation = reservationDto.createReservation();
-        Reservation findReservation = reservationDao.add(reservation);
-        ReservationTime findReservationTime = reservationTimeDao.getById(reservationDto.timeId());
-        return new Reservation( // ?
-                findReservation.getId(),
-                findReservation.getName(),
-                findReservation.getDate(),
-                findReservationTime);
+    public ReservationResponse add(ReservationRequest reservationRequest) {
+        Reservation savedReservation = reservationDao.add(reservationRequest.createReservation());
+        ReservationTime findReservationTime = reservationTimeDao.getById(reservationRequest.timeId());
+        return ReservationResponse.of(savedReservation, findReservationTime);
     }
 
-    public List<Reservation> getAll() {
-        return reservationDao.getAll();
+    public AllReservationResponse getAll() {
+        return AllReservationResponse.from(reservationDao.getAll());
     }
 
     public void deleteById(Long id) {

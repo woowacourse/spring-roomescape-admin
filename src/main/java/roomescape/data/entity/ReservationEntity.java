@@ -1,23 +1,24 @@
 package roomescape.data.entity;
 
 import java.time.LocalDate;
-import java.time.LocalTime;
+import java.time.format.DateTimeFormatter;
 import org.springframework.jdbc.core.RowMapper;
 import roomescape.business.domain.Reservation;
 
 public record ReservationEntity(
         Long id,
         String name,
-        LocalDate date,
-        LocalTime time
+        String date,
+        TimeEntity timeEntity
 ) {
 
+    private static final DateTimeFormatter DATE_FORMATTER = DateTimeFormatter.ofPattern("yyyy-MM-dd");
     private static final RowMapper<ReservationEntity> DEFAULT_ROW_MAPPER =
             (rs, rowNum) -> new ReservationEntity(
                     rs.getLong(1),
                     rs.getString(2),
-                    rs.getDate(3).toLocalDate(),
-                    rs.getTime(4).toLocalTime()
+                    rs.getString(3),
+                    new TimeEntity(rs.getLong(4), rs.getString(5))
             );
 
     public static RowMapper<ReservationEntity> getDefaultRowMapper() {
@@ -25,13 +26,19 @@ public record ReservationEntity(
     }
 
     public Reservation toDomain() {
-        return new Reservation(id, name, date, time);
+        return new Reservation(
+                id,
+                name,
+                LocalDate.parse(date ,DATE_FORMATTER),
+                timeEntity.toDomain());
     }
 
     public static ReservationEntity from(final Reservation reservation) {
         return new ReservationEntity(
-                reservation.getId(), reservation.getName(),
-                reservation.getDate(), reservation.getTime()
+                reservation.getId(),
+                reservation.getName(),
+                DATE_FORMATTER.format(reservation.getDate()),
+                TimeEntity.from(reservation.getTime())
         );
     }
 }

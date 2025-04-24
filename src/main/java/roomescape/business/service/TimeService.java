@@ -23,6 +23,11 @@ public class TimeService {
         return TimeResponse.withId(id, time);
     }
 
+    public Time find(final Long id) {
+        return timeDao.find(id)
+                .orElseThrow(() -> new IllegalArgumentException("해당하는 id가 없습니다."));
+    }
+
     public List<TimeResponse> findAll() {
         return timeDao.findAll().stream()
                 .map(TimeResponse::from)

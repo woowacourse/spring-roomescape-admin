@@ -1,7 +1,7 @@
 package roomescape.reservation;
 
-import static org.assertj.core.api.Assertions.assertThatThrownBy;
 
+import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import java.time.LocalDate;
 import java.time.LocalTime;
 import org.junit.jupiter.api.DisplayName;
@@ -33,5 +33,4 @@ public class ReservationTest {
         assertThatThrownBy(() -> {
             reservation.time();
         }).isInstanceOf(NullPointerException.class);
-    }
 }

@@ -48,7 +48,7 @@ public class JdbcReservationRepository implements ReservationRepository {
     }
 
     @Override
-    public Reservation insertAndGet(Reservation reservation) {
+    public Reservation insertAndReturn(Reservation reservation) {
         String sql ="INSERT INTO reservation(name, date, time_id) VALUES(?, ?, ?)";
         jdbcTemplate.update((Connection con) -> {
             PreparedStatement preparedStatement = con.prepareStatement(sql, new String[]{"id"});

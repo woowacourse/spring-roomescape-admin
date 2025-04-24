@@ -41,7 +41,7 @@ public class JdbcReservationTimeRepository implements ReservationTimeRepository 
     }
 
     @Override
-    public ReservationTime insertAndGet(ReservationTime reservationTime) {
+    public ReservationTime insertAndReturn(ReservationTime reservationTime) {
         Map<String, Object> params = new HashMap<>();
         params.put("start_at", reservationTime.getStartAt());
         Long id = simpleJdbcInsert.executeAndReturnKey(params).longValue();

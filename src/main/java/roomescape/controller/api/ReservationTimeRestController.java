@@ -13,24 +13,23 @@ import org.springframework.web.server.ResponseStatusException;
 import roomescape.dto.ReservationTimeCreateRequest;
 import roomescape.dto.ReservationTimeGetResponse;
 import roomescape.model.ReservationTime;
-import roomescape.service.ReservationTimeService;
+import roomescape.service.ReservationService;
 
-import java.time.LocalTime;
 import java.util.List;
 
 @RestController
 @RequestMapping("/times")
 public class ReservationTimeRestController {
 
-    private final ReservationTimeService reservationTimeService;
+    private final ReservationService reservationTimeService;
 
-    public ReservationTimeRestController(ReservationTimeService reservationTimeService) {
+    public ReservationTimeRestController(ReservationService reservationTimeService) {
         this.reservationTimeService = reservationTimeService;
     }
 
     @GetMapping
     public ResponseEntity<List<ReservationTimeGetResponse>> getReservationTimes() {
-        List<ReservationTime> reservationTimes = reservationTimeService.getAll();
+        List<ReservationTime> reservationTimes = reservationTimeService.getAllReservationTime();
         List<ReservationTimeGetResponse> reservationTimeGetResponses = reservationTimes.stream()
                 .map(ReservationTimeGetResponse::from)
                 .toList();
@@ -43,7 +42,7 @@ public class ReservationTimeRestController {
     public ResponseEntity<ReservationTimeGetResponse> addReservationTime(@RequestBody ReservationTimeCreateRequest reservationTimeCreateRequest) {
         try {
             reservationTimeService.validateDuplicateStartTime(reservationTimeCreateRequest.startAt());
-            ReservationTime newReservationTime = reservationTimeService.addAndGet(reservationTimeCreateRequest.startAt());
+            ReservationTime newReservationTime = reservationTimeService.addReservationTimeAndReturn(reservationTimeCreateRequest.startAt());
             return ResponseEntity
                     .status(HttpStatus.OK)
                     .body(ReservationTimeGetResponse.from(newReservationTime));
@@ -55,7 +54,7 @@ public class ReservationTimeRestController {
     @DeleteMapping("/{id}")
     public ResponseEntity<Void> deleteReservationTime(@PathVariable("id") Long id) {
         try {
-            reservationTimeService.deleteById(id);
+            reservationTimeService.deleteReservationTimeById(id);
             return ResponseEntity
                     .status(HttpStatus.OK)
                     .build();

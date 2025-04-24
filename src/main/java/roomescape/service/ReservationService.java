@@ -18,8 +18,8 @@ public class ReservationService {
         this.reservationDAO = reservationDAO;
     }
 
-    public List<ReservationResDto> findAllReservations() {
-        List<Reservation> reservations = reservationDAO.findAllReservations();
+    public List<ReservationResDto> findAll() {
+        List<Reservation> reservations = reservationDAO.findAll();
         return reservations.stream()
                 .map(this::convertToReservationResDto)
                 .toList();

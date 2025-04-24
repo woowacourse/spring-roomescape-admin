@@ -26,7 +26,7 @@ class ReservationTimeDaoTest {
     private JdbcTemplate jdbcTemplate;
 
     @Test
-    void 예약_시간_목록_전체를_조회해_반환한다() {
+    void 예약_시간_전체를_조회해_반환한다() {
         // given
         ReservationTime firstReservationTime = reservationTimeDao.save(createTestReservationTime());
         ReservationTime secondReservationTime = reservationTimeDao.save(createTestReservationTime());

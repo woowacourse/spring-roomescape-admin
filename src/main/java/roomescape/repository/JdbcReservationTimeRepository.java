@@ -21,7 +21,7 @@ public class JdbcReservationTimeRepository implements ReservationTimeRepository 
         this.jdbcTemplate = jdbcTemplate;
     }
 
-    public static final RowMapper<ReservationTime> reservationTimeRowMapper = (row, rowNum) ->
+    private static final RowMapper<ReservationTime> reservationTimeRowMapper = (row, rowNum) ->
             new ReservationTime(row.getLong("id"), row.getTime("start_at").toLocalTime()
             );
 

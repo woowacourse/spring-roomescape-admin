@@ -5,30 +5,34 @@ import static org.assertj.core.api.AssertionsForClassTypes.assertThatThrownBy;
 
 import java.time.LocalTime;
 import java.util.List;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.jdbc.core.JdbcTemplate;
-import org.springframework.test.annotation.DirtiesContext;
 import roomescape.reservationtime.domain.ReservationTime;
 import roomescape.reservationtime.dto.ReservationTimeRequest;
+import roomescape.reservationtime.repository.FakeReservationTimeRepository;
+import roomescape.reservationtime.repository.ReservationTimeRepository;
 
-@SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.DEFINED_PORT)
-@DirtiesContext(classMode = DirtiesContext.ClassMode.BEFORE_EACH_TEST_METHOD)
 class ReservationTimeServiceTest {
 
-    @Autowired
-    private JdbcTemplate jdbcTemplate;
-
-    @Autowired
+    private ReservationTimeRepository reservationTimeRepository;
     private ReservationTimeService reservationTimeService;
+
+    @BeforeEach
+    void beforeEach() {
+        reservationTimeRepository = new FakeReservationTimeRepository();
+        reservationTimeService = new ReservationTimeService(reservationTimeRepository);
+    }
 
     @Test
     @DisplayName("모든 시간을 조회한다.")
     void getReservationTimes() {
         // given
-        jdbcTemplate.update("INSERT INTO reservation_time (start_at) VALUES (?)", "10:00");
+        ReservationTime reservationTime = new ReservationTime(
+                1L,
+                LocalTime.of(10, 0)
+        );
+        reservationTimeRepository.save(reservationTime);
 
         // when
         List<ReservationTime> reservationTimes = reservationTimeService.getReservationTimes();
@@ -62,7 +66,11 @@ class ReservationTimeServiceTest {
     @DisplayName("시간이 중복되면 예외가 발생한다.")
     void createReservationTime_Duplicate() {
         // given
-        jdbcTemplate.update("INSERT INTO reservation_time (start_at) VALUES (?)", "10:00");
+        ReservationTime reservationTime = new ReservationTime(
+                1L,
+                LocalTime.of(10, 0)
+        );
+        reservationTimeRepository.save(reservationTime);
         ReservationTimeRequest request = new ReservationTimeRequest(
                 LocalTime.of(10, 0)
         );
@@ -77,19 +85,17 @@ class ReservationTimeServiceTest {
     @DisplayName("id로 시간을 삭제한다.")
     void deleteReservationTime() {
         // given
-        jdbcTemplate.update("INSERT INTO reservation_time (start_at) VALUES (?)", "10:00");
+        ReservationTime reservationTime = new ReservationTime(
+                1L,
+                LocalTime.of(10, 0)
+        );
+        reservationTimeRepository.save(reservationTime);
 
         // when
         reservationTimeService.deleteReservationTime(1L);
 
         // then
-        List<ReservationTime> reservationTimes = jdbcTemplate.query(
-                "select id, start_at from reservation_time",
-                (resultSet, rowNum) -> new ReservationTime(
-                        resultSet.getLong("id"),
-                        LocalTime.parse(resultSet.getString("start_at"))
-                )
-        );
+        List<ReservationTime> reservationTimes = reservationTimeRepository.findAll();
         assertThat(reservationTimes.size()).isEqualTo(0);
     }
 }

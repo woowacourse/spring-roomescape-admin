@@ -9,13 +9,19 @@ public class ReservationTime {
     private final LocalTime startAt;
 
     public ReservationTime(LocalTime startAt) {
-        id = null;
-        this.startAt = startAt;
+        this(null, startAt);
     }
 
     private ReservationTime(Long id, LocalTime startAt) {
+        validateNotNull(startAt);
         this.id = id;
         this.startAt = startAt;
+    }
+
+    private void validateNotNull(LocalTime startAt) {
+        if (startAt == null) {
+            throw new IllegalArgumentException("시간을 올바르게 입력해 주세요.");
+        }
     }
 
     public ReservationTime toEntity(Long id) {

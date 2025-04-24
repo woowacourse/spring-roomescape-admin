@@ -153,7 +153,7 @@
           }
       ]
       ```
-- [ ] 시간을 삭제한다.
+- [x] 시간을 삭제한다.
     - request
       ```http request
       DELETE /times/1 HTTP/1.1

@@ -47,4 +47,20 @@ class ReservationTimeControllerTest {
                 .statusCode(200)
                 .body("size()", is(1));
     }
+
+    @DisplayName("예약 시간을 삭제하면 200 응답이 온다.")
+    @Test
+    void deleteReservation() {
+        Map<String, String> params = Map.of("startAt", "10:00");
+
+        RestAssured.given().log().all()
+                .contentType(ContentType.JSON)
+                .body(params)
+                .when().post("/times");
+
+        RestAssured.given().log().all()
+                .when().delete("/times/1")
+                .then().log().all()
+                .statusCode(200);
+    }
 }

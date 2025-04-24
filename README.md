@@ -83,3 +83,67 @@ Content-Type: application/json
 
 ### 응답
 `DELETE /reservations/1 HTTP/1.1`
+
+## 시간 추가
+### 요청
+- 메서드 : POST
+- 요청 URL : /times
+- 설명 : 시간을 추가한다.
+
+```json
+POST /times HTTP/1.1
+content-type: application/json
+
+{
+    "startAt": "10:00"
+}
+```
+
+### 응답
+```json
+HTTP/1.1 200
+Content-Type: application/json
+
+{
+    "id": 1,
+    "startAt": "10:00"
+}
+```
+
+## 시간 조회
+### 요청
+- 메서드 : GET
+- 요청 URL : /times
+- 설명 : 시간을 조회한다.
+
+```json
+GET /times HTTP/1.1
+```
+
+### 응답
+```json
+HTTP/1.1 200
+Content-Type: application/json
+
+[
+  {
+    "id": 1,
+    "startAt": "10:00"
+  }
+]
+```
+
+## 시간 삭제
+### 요청
+- 메서드 : DELETE
+- 요청 URL : /times/{id}
+- 설명 : 시간을 삭제한다.
+
+```json
+DELETE /times/1 HTTP/1.1
+```
+
+### 응답
+```json
+HTTP/1.1 200
+```

@@ -2,6 +2,7 @@ package roomescape.reservation.domain;
 
 import org.springframework.http.HttpStatus;
 import roomescape.globalException.CustomException;
+import roomescape.reservationTime.domain.ReservationTime;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
@@ -15,26 +16,26 @@ public class Reservation {
 
     private final LocalDate date;
 
-    private final LocalTime time;
+    private final ReservationTime reservationTime;
 
-    public Reservation(Long id, String name, LocalDate date, LocalTime time) {
+    public Reservation(Long id, String name, LocalDate date, ReservationTime reservationTime) {
         this.id = id;
         this.name = name;
         this.date = date;
-        this.time = time;
+        this.reservationTime = reservationTime;
     }
 
-    private Reservation(String name, LocalDate date, LocalTime time) {
+    private Reservation(String name, LocalDate date, ReservationTime reservationTime) {
         this.id = null;
         this.name = name;
         this.date = date;
-        this.time = time;
+        this.reservationTime = reservationTime;
     }
 
     public static Reservation of(String name, LocalDate date, LocalTime time) {
         LocalDateTime dateTime = LocalDateTime.of(date, time);
         validateTense(dateTime);
-        return new Reservation(name, date, time);
+        return new Reservation(name, date, new ReservationTime(time));
     }
 
     private static void validateTense(LocalDateTime dateTime) {
@@ -53,7 +54,7 @@ public class Reservation {
     }
 
     public LocalDateTime getDateTime() {
-        return LocalDateTime.of(date, time);
+        return LocalDateTime.of(date, reservationTime.getStartAt());
     }
 
     public Long getId() {
@@ -68,7 +69,7 @@ public class Reservation {
         return date;
     }
 
-    public LocalTime getTime() {
-        return time;
+    public ReservationTime getReservationTime() {
+        return reservationTime;
     }
 }

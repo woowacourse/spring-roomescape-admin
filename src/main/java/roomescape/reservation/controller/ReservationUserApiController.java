@@ -12,27 +12,27 @@ import java.util.List;
 @RestController
 public class ReservationUserApiController {
 
-    private final ReservationService reservationService;
+    private final ReservationService service;
 
-    public ReservationUserApiController(ReservationService reservationService) {
-        this.reservationService = reservationService;
+    public ReservationUserApiController(ReservationService service) {
+        this.service = service;
     }
 
     @GetMapping("reservations")
     public ResponseEntity<List<ReservationResDto>> readReservations() {
-        List<ReservationResDto> resDtos = reservationService.readAll();
+        List<ReservationResDto> resDtos = service.readAll();
         return ResponseEntity.ok(resDtos);
     }
 
     @PostMapping("reservations")
     public ResponseEntity<ReservationResDto> add(@RequestBody ReservationReqDto dto) {
-        ReservationResDto resDto = reservationService.add(dto);
+        ReservationResDto resDto = service.add(dto);
         return ResponseEntity.status(HttpStatus.CREATED).body(resDto);
     }
 
     @DeleteMapping("reservations/{reservationId}")
     public ResponseEntity<Void> delete(@PathVariable("reservationId") Long id) {
-       reservationService.delete(id);
+       service.delete(id);
         return ResponseEntity.noContent().build();
     }
 }

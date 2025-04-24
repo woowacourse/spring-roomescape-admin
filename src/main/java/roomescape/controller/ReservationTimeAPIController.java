@@ -8,7 +8,9 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.support.GeneratedKeyHolder;
 import org.springframework.jdbc.support.KeyHolder;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -48,5 +50,12 @@ public class ReservationTimeAPIController {
                         LocalTime.parse(rs.getString("start_at"))
                 ));
         return ResponseEntity.ok(times);
+    }
+
+    @DeleteMapping("/{id}")
+    public ResponseEntity<Void> deleteTime(@PathVariable Long id) {
+        String sql = "delete from reservation_time where id = ?";
+        jdbcTemplate.update(sql, id);
+        return ResponseEntity.ok().build();
     }
 }

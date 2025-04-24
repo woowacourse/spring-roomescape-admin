@@ -25,7 +25,8 @@ public class ReservationTimeRepository {
             ps.setString(1, startAt);
             return ps;
         }, keyHolder);
-        return new ReservationTime(Objects.requireNonNull(keyHolder.getKey()).longValue(), startAt);
+        return new ReservationTime(Objects.requireNonNull(keyHolder.getKey())
+                .longValue(), startAt);
     }
 
     public List<ReservationTime> getAllTime() {

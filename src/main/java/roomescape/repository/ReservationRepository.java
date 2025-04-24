@@ -40,7 +40,8 @@ public class ReservationRepository {
             ps.setLong(3, reservationRequestDto.timeId());
             return ps;
         }, keyHolder);
-        return ReservationRequestDto.toEntity(Objects.requireNonNull(keyHolder.getKey()).longValue(), reservationRequestDto, reservationTime);
+        return ReservationRequestDto.toEntity(Objects.requireNonNull(keyHolder.getKey()).longValue(),
+                reservationRequestDto, reservationTime);
     }
 
     public int deleteReservation(Long id) {

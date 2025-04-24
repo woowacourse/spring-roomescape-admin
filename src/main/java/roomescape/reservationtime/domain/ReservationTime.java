@@ -25,6 +25,10 @@ public class ReservationTime {
         return startAt;
     }
 
+    public boolean isStartAtEqualTo(ReservationTime reservationTime) {
+        return this.startAt.equals(reservationTime.startAt);
+    }
+
     @Override
     public boolean equals(Object object) {
         if (object == null || getClass() != object.getClass()) {

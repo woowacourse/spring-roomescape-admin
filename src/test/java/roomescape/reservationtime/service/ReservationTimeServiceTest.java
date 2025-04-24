@@ -1,6 +1,7 @@
 package roomescape.reservationtime.service;
 
 import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
+import static org.assertj.core.api.AssertionsForClassTypes.assertThatThrownBy;
 
 import java.time.LocalTime;
 import java.util.List;
@@ -55,6 +56,21 @@ class ReservationTimeServiceTest {
                 LocalTime.of(10, 0)
         );
         assertThat(created).isEqualTo(expected);
+    }
+
+    @Test
+    @DisplayName("시간이 중복되면 예외가 발생한다.")
+    void createReservationTime_Duplicate() {
+        // given
+        jdbcTemplate.update("INSERT INTO reservation_time (start_at) VALUES (?)", "10:00");
+        ReservationTimeRequest request = new ReservationTimeRequest(
+                LocalTime.of(10, 0)
+        );
+
+        // when & then
+        assertThatThrownBy(() -> reservationTimeService.createReservationTime(request))
+                .isInstanceOf(IllegalArgumentException.class)
+                .hasMessage("이미 존재하는 시간입니다.");
     }
 
     @Test

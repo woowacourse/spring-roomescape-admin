@@ -24,9 +24,9 @@ public class ReservationController {
     }
 
     @PostMapping("/reservations")
-    public ResponseEntity<ReservationResponseDto> addReservation(@RequestBody final ReservationCreateRequestDto requestDto) {
+    public ResponseEntity<ReservationResponseDto> postReservation(@RequestBody final ReservationCreateRequestDto requestDto) {
         try {
-            ReservationResponseDto responseDto = reservationService.saveAndGetReservationResponse(requestDto);
+            ReservationResponseDto responseDto = reservationService.createReservation(requestDto);
             return ResponseEntity.ok(responseDto);
         } catch (IllegalArgumentException e) {
             return ResponseEntity.badRequest().build();

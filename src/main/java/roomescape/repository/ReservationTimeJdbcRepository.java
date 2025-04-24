@@ -5,7 +5,7 @@ import org.springframework.jdbc.core.RowMapper;
 import org.springframework.jdbc.support.GeneratedKeyHolder;
 import org.springframework.jdbc.support.KeyHolder;
 import org.springframework.stereotype.Repository;
-import roomescape.dto.ReservationTimeResponseDto;
+import roomescape.domain.ReservationTime;
 
 import java.sql.PreparedStatement;
 import java.time.LocalTime;
@@ -21,7 +21,7 @@ public class ReservationTimeJdbcRepository implements ReservationTimeRepository 
     }
 
     @Override
-    public Long saveAndReturnId(final LocalTime startAt) {
+    public ReservationTime save(final LocalTime startAt) {
         String sql = "insert into reservation_time (start_at) values (?)";
         KeyHolder keyHolder = new GeneratedKeyHolder();
         jdbcTemplate.update(connection -> {
@@ -29,17 +29,18 @@ public class ReservationTimeJdbcRepository implements ReservationTimeRepository 
             ps.setString(1, startAt.toString());
             return ps;
         }, keyHolder);
-        return keyHolder.getKey().longValue();
+        Long id = keyHolder.getKey().longValue();
+        return new ReservationTime(id, startAt);
     }
 
     @Override
-    public List<ReservationTimeResponseDto> findAll() {
+    public List<ReservationTime> findAll() {
         String sql = "select * from reservation_time";
-        RowMapper<ReservationTimeResponseDto> rowMapper = ((rs, rowNum) -> {
+        RowMapper<ReservationTime> rowMapper = ((rs, rowNum) -> {
             String startAt = rs.getString("start_at");
             LocalTime reservationStartAt = LocalTime.parse(startAt);
-            ReservationTimeResponseDto responseDto = new ReservationTimeResponseDto(rs.getLong("id"), reservationStartAt);
-            return responseDto;
+            ReservationTime reservationTime = new ReservationTime(rs.getLong("id"), reservationStartAt);
+            return reservationTime;
         });
         return jdbcTemplate.query(sql, rowMapper);
     }

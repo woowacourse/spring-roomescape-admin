@@ -13,7 +13,7 @@ import roomescape.reservation.model.Reservation;
 import roomescape.reservation.model.ReservationTime;
 
 @Repository
-public class H2ReservationRepository implements ReservationRepository{
+public class H2ReservationRepository implements ReservationRepository {
 
     private final JdbcTemplate jdbcTemplate;
     private final SimpleJdbcInsert simpleJdbcInsert;

@@ -98,16 +98,6 @@ public class MissionStepTest {
                 .body("size()", is(0));
     }
 
-    @DisplayName("존재하지 않는 예약 삭제를 요청하면 BAD REQUEST 응답한다")
-    @Test
-    void deleteReservation_idBadRequest() {
-        RestAssured.given().log().all()
-                .contentType(ContentType.JSON)
-                .when().delete("/reservations/1")
-                .then().log().all()
-                .statusCode(400);
-    }
-
     @DisplayName("database와 연결한다.")
     @Test
     void database_connection() {

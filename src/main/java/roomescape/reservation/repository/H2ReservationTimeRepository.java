@@ -12,7 +12,7 @@ import org.springframework.stereotype.Repository;
 import roomescape.reservation.model.ReservationTime;
 
 @Repository
-public class H2ReservationTimeRepository implements ReservationTimeRepository{
+public class H2ReservationTimeRepository implements ReservationTimeRepository {
 
     private final JdbcTemplate jdbcTemplate;
     private final SimpleJdbcInsert simpleJdbcInsert;

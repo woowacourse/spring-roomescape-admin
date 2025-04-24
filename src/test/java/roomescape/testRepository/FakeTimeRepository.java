@@ -14,7 +14,7 @@ public class FakeTimeRepository implements TimeRepository {
 
     @Override
     public Long save(ReservationTime reservationTime) {
-        ReservationTime timeWithId = ReservationTime.withId(++index, reservationTime);
+        ReservationTime timeWithId = ReservationTime.assignId(++index, reservationTime);
         reservationTimes.add(timeWithId);
         return index;
     }

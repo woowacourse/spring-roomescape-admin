@@ -19,7 +19,7 @@ public class ReservationTime {
         return new ReservationTime(null, startAt);
     }
 
-    public static ReservationTime withId(Long id, ReservationTime reservationTime) {
+    public static ReservationTime assignId(Long id, ReservationTime reservationTime) {
         return new ReservationTime(id, reservationTime.startAt);
     }
 

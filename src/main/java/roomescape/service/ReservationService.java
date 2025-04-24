@@ -29,7 +29,7 @@ public class ReservationService {
         Reservation reservation = ReservationMapper.toDomain(request, reservationTime);
         Long id = reservationRepository.save(reservation);
 
-        return ReservationMapper.toDto(Reservation.withId(id, reservation));
+        return ReservationMapper.toDto(Reservation.assignId(id, reservation));
     }
 
     private void validateDateFormat(String date) {

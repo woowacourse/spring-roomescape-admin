@@ -19,12 +19,12 @@ public class Reservation {
         return new Reservation(id, name, date, time);
     }
 
-    public static Reservation withId(Long id, Reservation reservation) {
-        return new Reservation(id, reservation.getName(), reservation.getReservationDate(), reservation.getReservationTime());
-    }
-
     public static Reservation withoutId(String name, LocalDate reservationDate, ReservationTime reservationTime) {
         return new Reservation(null, name, reservationDate, reservationTime);
+    }
+
+    public static Reservation assignId(Long id, Reservation reservation) {
+        return new Reservation(id, reservation.getName(), reservation.getReservationDate(), reservation.getReservationTime());
     }
 
     public Long getId() {

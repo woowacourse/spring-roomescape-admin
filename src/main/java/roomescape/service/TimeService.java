@@ -28,7 +28,7 @@ public class TimeService {
         ReservationTime reservationTime = request.toDomain();
         Long id = repository.save(reservationTime);
 
-        return TimeResponse.toDto(ReservationTime.withId(id, reservationTime));
+        return TimeResponse.toDto(ReservationTime.assignId(id, reservationTime));
     }
 
     private void validateRequestTime(String time) {

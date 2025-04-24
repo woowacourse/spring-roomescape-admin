@@ -1,13 +1,13 @@
 package roomescape.service;
 
 import java.time.LocalDate;
-import java.time.LocalTime;
 import java.util.List;
 import java.util.NoSuchElementException;
 import org.springframework.stereotype.Service;
 import roomescape.dto.ReservationRequest;
 import roomescape.dto.ReservationResponse;
 import roomescape.entity.Reservation;
+import roomescape.entity.ReservationTime;
 import roomescape.repository.ReservationRepository;
 
 @Service
@@ -26,12 +26,12 @@ public class ReservationService {
     public ReservationResponse createReservation(final ReservationRequest reservationRequest) {
         String name = reservationRequest.name();
         LocalDate date = reservationRequest.date();
-        LocalTime time = reservationRequest.time();
-        if (reservationRepository.selectByDateAndTime(date, time)) {
+        Long timeId = reservationRequest.timeId();
+        if (reservationRepository.selectByDateAndTime(date, timeId)) {
             throw new IllegalArgumentException("해당 시간에는 예약이 존재합니다.");
         }
 
-        Reservation reservation = new Reservation(name, date, time);
+        Reservation reservation = new Reservation(name, date, new ReservationTime(timeId));
 
         final Reservation saved = reservationRepository.save(reservation);
         return ReservationResponse.from(saved);

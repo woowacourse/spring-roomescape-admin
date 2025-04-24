@@ -8,7 +8,6 @@ import org.springframework.jdbc.support.KeyHolder;
 import org.springframework.stereotype.Component;
 import roomescape.domain_entity.Id;
 import roomescape.domain_entity.Reservation;
-import roomescape.dto.ReservationRequestDto;
 import roomescape.mapper.ReservationMapper;
 
 @Component
@@ -28,7 +27,7 @@ public class ReservationDao {
         return reservations;
     }
 
-    public long create(ReservationRequestDto newReservation) {
+    public long create(Reservation newReservation) {
         KeyHolder keyHolder = new GeneratedKeyHolder();
         String sql = "insert into reservation (name, date, time) values (?, ?, ?)";
         jdbcTemplate.update(
@@ -37,9 +36,9 @@ public class ReservationDao {
                             sql,
                             new String[]{"id"}
                     );
-                    ps.setString(1, newReservation.name());
-                    ps.setObject(2, newReservation.date());
-                    ps.setObject(3, newReservation.time());
+                    ps.setString(1, newReservation.getName());
+                    ps.setObject(2, newReservation.getDate());
+                    ps.setObject(3, newReservation.getTime());
                     return ps;
                 },
                 keyHolder
@@ -51,7 +50,7 @@ public class ReservationDao {
         String sql = "delete from reservation where id = ?";
         jdbcTemplate.update(
                 sql,
-                id.getValue()
+                id.value()
         );
     }
 }

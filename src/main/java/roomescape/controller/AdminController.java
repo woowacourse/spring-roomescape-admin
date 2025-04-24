@@ -45,8 +45,9 @@ public class AdminController {
     public ResponseEntity<ReservationResponseDto> createReservation(
             @RequestBody ReservationRequestDto reservationRequest
     ) {
-        long id = reservationDao.create(reservationRequest);
-        Reservation newReservation = reservationRequest.toReservationWith(id);
+        Reservation newReservation = reservationRequest.toReservation();
+        long id = reservationDao.create(newReservation);
+        newReservation.setId(new Id(id));
         return ResponseEntity.ok().body(ReservationResponseDto.of(newReservation));
     }
 

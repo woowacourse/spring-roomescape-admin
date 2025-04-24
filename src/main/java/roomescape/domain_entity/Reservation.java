@@ -12,11 +12,22 @@ public class Reservation {
     public Reservation() {
     }
 
+    public Reservation(String name, LocalDate date, LocalTime time) {
+        this.id = Id.empty();
+        this.name = name;
+        this.date = date;
+        this.time = time;
+    }
+
     public Reservation(Id id, String name, LocalDate date, LocalTime time) {
         this.id = id;
         this.name = name;
         this.date = date;
         this.time = time;
+    }
+
+    public void setId(Id id) {
+        this.id = id;
     }
 
     public Id getId() {

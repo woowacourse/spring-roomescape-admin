@@ -9,7 +9,7 @@ public interface ReservationTimeRepository {
 
     public Long saveAndReturnId(final LocalTime startAt);
 
-    public List<ReservationTimeResponseDto> findAllReservationTimes();
+    public List<ReservationTimeResponseDto> findAll();
 
     public void deleteById(Long id);
 }

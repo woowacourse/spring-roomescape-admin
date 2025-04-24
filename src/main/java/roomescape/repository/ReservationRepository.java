@@ -8,7 +8,7 @@ import java.util.List;
 
 public interface ReservationRepository {
 
-    List<ReservationResponseDto> findAllReservations();
+    List<ReservationResponseDto> findAll();
 
     Reservation findById(Long id);
 

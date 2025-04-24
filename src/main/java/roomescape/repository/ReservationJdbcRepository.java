@@ -38,7 +38,8 @@ public class ReservationJdbcRepository implements ReservationRepository {
         this.jdbcTemplate = jdbcTemplate;
     }
 
-    public List<ReservationResponseDto> findAllReservations() {
+    @Override
+    public List<ReservationResponseDto> findAll() {
         String sql = """
                 SELECT *
                 FROM reservation as r
@@ -51,6 +52,7 @@ public class ReservationJdbcRepository implements ReservationRepository {
                 .toList();
     }
 
+    @Override
     public Reservation findById(Long id) {
         String sql = """
                 SELECT *
@@ -62,6 +64,7 @@ public class ReservationJdbcRepository implements ReservationRepository {
         return jdbcTemplate.queryForObject(sql, rowMapper, id);
     }
 
+    @Override
     public Long saveAndReturnId(final String name, final LocalDate requestDate, final Long timeId) {
         String sql = """
                 insert into reservation (name, date, time_id) values (?, ?, ?)
@@ -79,6 +82,7 @@ public class ReservationJdbcRepository implements ReservationRepository {
         return keyHolder.getKey().longValue();
     }
 
+    @Override
     public void deleteById(final Long id) {
         String sql = "delete from reservation where id = ?";
         int affectedRows = jdbcTemplate.update(sql, id);

@@ -20,6 +20,7 @@ public class ReservationTimeJdbcRepository implements ReservationTimeRepository 
         this.jdbcTemplate = jdbcTemplate;
     }
 
+    @Override
     public Long saveAndReturnId(final LocalTime startAt) {
         String sql = "insert into reservation_time (start_at) values (?)";
         KeyHolder keyHolder = new GeneratedKeyHolder();
@@ -31,7 +32,8 @@ public class ReservationTimeJdbcRepository implements ReservationTimeRepository 
         return keyHolder.getKey().longValue();
     }
 
-    public List<ReservationTimeResponseDto> findAllReservationTimes() {
+    @Override
+    public List<ReservationTimeResponseDto> findAll() {
         String sql = "select * from reservation_time";
         RowMapper<ReservationTimeResponseDto> rowMapper = ((rs, rowNum) -> {
             String startAt = rs.getString("start_at");
@@ -42,6 +44,7 @@ public class ReservationTimeJdbcRepository implements ReservationTimeRepository 
         return jdbcTemplate.query(sql, rowMapper);
     }
 
+    @Override
     public void deleteById(Long id) {
         String sql = "delete from reservation_time where id = ?";
         int affectedRows = jdbcTemplate.update(sql, id);

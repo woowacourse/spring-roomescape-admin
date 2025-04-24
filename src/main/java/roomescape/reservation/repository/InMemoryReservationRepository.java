@@ -6,11 +6,11 @@ import java.util.Optional;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.atomic.AtomicLong;
 import org.springframework.stereotype.Repository;
-import roomescape.common.repository.CommonRepository;
+import roomescape.common.repository.AbstractRepository;
 import roomescape.reservation.domain.Reservation;
 
 @Repository
-public class InMemoryReservationRepository implements CommonRepository<Reservation> {
+public class InMemoryReservationRepository implements AbstractRepository<Reservation> {
     private final Map<Long, Reservation> reservations = new ConcurrentHashMap<>();
     private final AtomicLong index = new AtomicLong(1);
 

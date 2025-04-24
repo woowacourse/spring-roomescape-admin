@@ -6,13 +6,13 @@ import java.util.Optional;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.simple.SimpleJdbcInsert;
 import org.springframework.stereotype.Repository;
-import roomescape.common.repository.CommonRepository;
+import roomescape.common.repository.AbstractRepository;
 import roomescape.common.repository.IdCache;
 import roomescape.reservationtime.domain.ReservationTime;
 import roomescape.reservationtime.entity.ReservationTimeEntity;
 
 @Repository
-public class H2ReservationTimeRepository implements CommonRepository<ReservationTime> {
+public class H2ReservationTimeRepository implements AbstractRepository<ReservationTime> {
     private final JdbcTemplate jdbcTemplate;
     private final IdCache<ReservationTime> cache;
 
@@ -58,11 +58,12 @@ public class H2ReservationTimeRepository implements CommonRepository<Reservation
     @Override
     public Optional<ReservationTime> findById(final long id) {
         ReservationTimeEntity reservationTimeEntity = jdbcTemplate.queryForObject(
-                "SELECT id, start_at FROM reservation_time",
+                "SELECT id, start_at FROM reservation_time WHERE id = ?",
                 (resultSet, rowNum) -> new ReservationTimeEntity(
                         resultSet.getLong("id"),
                         resultSet.getString("start_at")
                 )
+                , id
         );
         return Optional.ofNullable(reservationTimeEntity)
                 .map(ReservationTimeEntity::toReservationTime);

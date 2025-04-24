@@ -1,26 +1,34 @@
 package roomescape.reservation;
 
 import java.util.List;
-import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
-import roomescape.common.repository.CommonRepository;
+import roomescape.common.repository.AbstractRepository;
 import roomescape.reservation.domain.Reservation;
 import roomescape.reservation.dto.request.ReservationCreateRequest;
 import roomescape.reservation.dto.response.ReservationResponse;
+import roomescape.reservationtime.domain.ReservationTime;
 
 @Service
 public class ReservationService {
 
-    private final CommonRepository<Reservation> reservationRepository;
+    private final AbstractRepository<Reservation> reservationRepository;
+    private final AbstractRepository<ReservationTime> reservationTimeRepository;
 
-    public ReservationService(final CommonRepository<Reservation> reservationRepository) {
+    public ReservationService(final AbstractRepository<Reservation> reservationRepository,
+                              final AbstractRepository<ReservationTime> reservationTimeRepository) {
         this.reservationRepository = reservationRepository;
+        this.reservationTimeRepository = reservationTimeRepository;
     }
 
     public List<ReservationResponse> getReservations() {
         return reservationRepository.getAll().stream()
-                .map(reservation -> ReservationResponse.from(reservationRepository.getCachedId(reservation),
-                        reservation))
+                .map(reservation -> {
+                    ReservationTime time = reservation.getTime();
+                    return ReservationResponse.from(
+                            reservationRepository.getCachedId(reservation),
+                            reservationTimeRepository.getCachedId(time),
+                            reservation, time);
+                })
                 .toList();
     }
 
@@ -31,8 +39,11 @@ public class ReservationService {
     }
 
     public ReservationResponse create(final ReservationCreateRequest request) {
-        Reservation newReservation = reservationRepository.put(request.toReservation());
+        ReservationTime time = reservationTimeRepository.findById(request.timeId())
+                .orElseThrow();
+        reservationTimeRepository.cacheId(time, request.timeId());
+        Reservation newReservation = reservationRepository.put(new Reservation(request.name(), request.date(), time));
         long newId = reservationRepository.getCachedId(newReservation);
-        return ReservationResponse.from(newId, newReservation);
+        return ReservationResponse.from(newId, request.timeId(), newReservation, time);
     }
 }

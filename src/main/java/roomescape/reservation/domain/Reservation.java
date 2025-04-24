@@ -1,14 +1,14 @@
 package roomescape.reservation.domain;
 
 import java.time.LocalDate;
-import java.time.LocalTime;
+import roomescape.reservationtime.domain.ReservationTime;
 
 public class Reservation {
     private final String name;
     private final LocalDate date;
-    private final LocalTime time;
+    private final ReservationTime time;
 
-    public Reservation(final String name, final LocalDate date, final LocalTime time) {
+    public Reservation(final String name, final LocalDate date, final ReservationTime time) {
         this.name = name;
         this.date = date;
         this.time = time;
@@ -22,7 +22,7 @@ public class Reservation {
         return date;
     }
 
-    public LocalTime getTime() {
+    public ReservationTime getTime() {
         return time;
     }
 }

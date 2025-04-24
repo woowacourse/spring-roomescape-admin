@@ -9,6 +9,10 @@ public class ReservationTime {
         this.startAt = startAt;
     }
 
+    public ReservationTime(final String startAt) {
+        this.startAt = LocalTime.parse(startAt);
+    }
+
     public LocalTime getStartAt() {
         return startAt;
     }

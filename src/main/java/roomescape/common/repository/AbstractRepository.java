@@ -3,7 +3,7 @@ package roomescape.common.repository;
 import java.util.List;
 import java.util.Optional;
 
-public interface CommonRepository<T> {
+public interface AbstractRepository<T> {
     List<T> getAll();
 
     T put(T item);

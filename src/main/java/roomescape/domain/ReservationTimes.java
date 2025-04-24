@@ -10,7 +10,7 @@ public class ReservationTimes {
 
     private final List<ReservationTime> reservationTimes = new ArrayList<>();
 
-    public void addReservationTime(ReservationTime reservationTime) {
+    public synchronized void addReservationTime(ReservationTime reservationTime) {
         reservationTimes.add(reservationTime);
     }
 
@@ -18,12 +18,12 @@ public class ReservationTimes {
         return Collections.unmodifiableList(reservationTimes);
     }
 
-    public void deleteById(long id) {
+    public synchronized void deleteById(long id) {
         ReservationTime reservationTime = findById(id);
         reservationTimes.remove(reservationTime);
     }
 
-    public ReservationTime findById(long id) {
+    public synchronized ReservationTime findById(long id) {
         return reservationTimes.stream()
             .filter(reservation -> reservation.getId() == id)
             .findFirst()

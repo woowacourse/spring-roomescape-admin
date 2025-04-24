@@ -14,16 +14,16 @@ public class Reservations {
         return Collections.unmodifiableList(reservations);
     }
 
-    public void save(Reservation reservation) {
+    public synchronized void save(Reservation reservation) {
         reservations.add(reservation);
     }
 
-    public void deleteById(long id) {
+    public synchronized void deleteById(long id) {
         Reservation reservation = findById(id);
         reservations.remove(reservation);
     }
 
-    private Reservation findById(long id) {
+    private synchronized Reservation findById(long id) {
         return reservations.stream()
             .filter(reservation -> reservation.getId() == id)
             .findFirst()

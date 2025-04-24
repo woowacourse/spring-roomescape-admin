@@ -15,8 +15,8 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.context.SpringBootTest.WebEnvironment;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.test.annotation.DirtiesContext;
+import roomescape.application.dto.response.ReservationResponse;
 import roomescape.domain.ReservationTime;
-import roomescape.dto.response.ReservationResponse;
 
 @SpringBootTest(
         webEnvironment = WebEnvironment.DEFINED_PORT,

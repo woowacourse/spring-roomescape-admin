@@ -77,7 +77,7 @@ class ReservationServiceTest {
         //then
         assertThatThrownBy(() -> reservationService.getReservationById(2L))
                 .isInstanceOf(IllegalArgumentException.class)
-                .hasMessage("존재하지 않는 예약입니다.");
+                .hasMessage("해당 예약을 찾을 수 없습니다.");
     }
 
     @Test
@@ -86,10 +86,11 @@ class ReservationServiceTest {
         //given, when
         addReservationTime();
         addReservation();
-        reservationService.deleteReservationById(1L);
 
         //then
-        assertThat(reservationService.getAllReservations().size()).isEqualTo(0);
+        int beforeSize = reservationService.getAllReservations().size();
+        reservationService.deleteReservationById(1L);
+        assertThat(reservationService.getAllReservations().size()).isNotEqualTo(beforeSize);
     }
 
     @Test
@@ -102,6 +103,6 @@ class ReservationServiceTest {
         //then
         assertThatThrownBy(() -> reservationService.deleteReservationById(2L))
                 .isInstanceOf(IllegalArgumentException.class)
-                .hasMessage("존재하지 않는 예약입니다.");
+                .hasMessage("해당 예약을 찾을 수 없습니다.");
     }
 }

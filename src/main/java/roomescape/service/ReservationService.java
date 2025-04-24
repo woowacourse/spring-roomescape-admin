@@ -1,6 +1,5 @@
 package roomescape.service;
 
-import jakarta.validation.Valid;
 import java.time.LocalDate;
 import java.time.LocalTime;
 import java.util.List;
@@ -28,7 +27,7 @@ public class ReservationService {
     }
 
     @Transactional
-    public long addReservation(@Valid AddReservationDto newReservation) {
+    public long addReservation(AddReservationDto newReservation) {
         ReservationTime reservationTime = reservationTimeService.findReservationTimeById(newReservation.timeId());
         Reservation reservation = newReservation.toReservation(reservationTime);
         LocalDate nowDate = LocalDate.now();

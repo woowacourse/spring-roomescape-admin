@@ -21,8 +21,8 @@ public class AppConfig {
     }
 
     @Bean
-    public ReservationService reservationService(ReservationRepository reservationRepository) {
-        return new ReservationServiceImpl(reservationRepository);
+    public ReservationService reservationService(ReservationRepository reservationRepository, ReservationTimeRepository reservationTimeRepository) {
+        return new ReservationServiceImpl(reservationRepository, reservationTimeRepository);
     }
 
     @Bean

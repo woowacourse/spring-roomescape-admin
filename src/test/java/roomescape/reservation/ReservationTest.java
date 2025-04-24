@@ -33,4 +33,5 @@ public class ReservationTest {
         assertThatThrownBy(() -> {
             reservation.time();
         }).isInstanceOf(NullPointerException.class);
+    }
 }

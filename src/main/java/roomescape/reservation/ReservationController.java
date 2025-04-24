@@ -36,7 +36,7 @@ public class ReservationController {
     @GetMapping
     public ResponseEntity<List<ReservationResponse>> readAllReservation() {
         return ResponseEntity.ok(reservationService.findAllReservation());
-
+    }
 
     @DeleteMapping("/{id}")
     public ResponseEntity<Void> deleteReservationById(

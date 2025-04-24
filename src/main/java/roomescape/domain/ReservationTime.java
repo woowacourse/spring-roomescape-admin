@@ -7,20 +7,12 @@ public class ReservationTime {
     private LocalTime startAt;
 
     public ReservationTime(final Long id, final LocalTime startAt) {
-        validateTime(startAt);
         this.id = id;
         this.startAt = startAt;
     }
 
     public ReservationTime(final LocalTime startAt) {
-        validateTime(startAt);
         this.startAt = startAt;
-    }
-
-    private void validateTime(final LocalTime startAt) {
-        if (startAt.isBefore(LocalTime.now())) {
-            throw new IllegalArgumentException("예약 시각은 현재보다 이전일 수 없습니다.");
-        }
     }
 
     public boolean isBefore(final LocalTime comparedTime) {

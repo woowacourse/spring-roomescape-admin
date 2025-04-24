@@ -5,11 +5,11 @@ import java.util.Optional;
 import roomescape.domain.ReservationTime;
 
 public interface ReservationTimeRepository {
-    long save(ReservationTime reservationTime);
+    Long save(ReservationTime reservationTime);
 
     List<ReservationTime> findAll();
 
-    void deleteById(long id);
+    void deleteById(Long id);
 
-    Optional<ReservationTime> findById(long id);
+    Optional<ReservationTime> findById(Long id);
 }

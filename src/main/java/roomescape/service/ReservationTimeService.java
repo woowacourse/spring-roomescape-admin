@@ -24,7 +24,7 @@ public class ReservationTimeService {
         return reservationTimeRepository.save(reservationTime);
     }
 
-    public ReservationTime findReservationTimeById(final long id) {
+    public ReservationTime findReservationTimeById(final Long id) {
         Optional<ReservationTime> foundReservationTime = reservationTimeRepository.findById(id);
 
         if (foundReservationTime.isEmpty()) {
@@ -39,7 +39,7 @@ public class ReservationTimeService {
                 .toList();
     }
 
-    public void deleteReservationTimeById(final long id) {
+    public void deleteReservationTimeById(final Long id) {
         findReservationTimeById(id);
         reservationTimeRepository.deleteById(id);
     }

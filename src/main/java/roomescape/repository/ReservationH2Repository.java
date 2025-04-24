@@ -38,7 +38,7 @@ public class ReservationH2Repository implements ReservationRepository {
     }
 
     @Override
-    public long save(final Reservation reservation) {
+    public Long save(final Reservation reservation) {
         String query = "INSERT INTO reservation (name, date, time_id) "
                 + " VALUES (?, ?, ?)";
 
@@ -52,7 +52,7 @@ public class ReservationH2Repository implements ReservationRepository {
             return ps;
         }, keyHolder);
 
-        long id = keyHolder.getKey().longValue();
+        Long id = keyHolder.getKey().longValue();
         reservation.setId(id);
 
         return id;
@@ -64,7 +64,7 @@ public class ReservationH2Repository implements ReservationRepository {
     }
 
     @Override
-    public void deleteById(final long id) {
+    public void deleteById(final Long id) {
         String query = "DELETE FROM reservation "
                 + " WHERE id = ?";
 
@@ -72,7 +72,7 @@ public class ReservationH2Repository implements ReservationRepository {
     }
 
     @Override
-    public Optional<Reservation> findById(final long id) {
+    public Optional<Reservation> findById(final Long id) {
         String query = SELECT_RESERVATION_WITH_TIME
                 + " WHERE r.id = ?";
 

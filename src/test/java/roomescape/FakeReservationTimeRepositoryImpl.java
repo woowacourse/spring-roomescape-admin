@@ -14,7 +14,7 @@ public class FakeReservationTimeRepositoryImpl implements ReservationTimeReposit
     private final AtomicLong id = new AtomicLong(1L);
 
     @Override
-    public long save(final ReservationTime reservationTime) {
+    public Long save(final ReservationTime reservationTime) {
         long id = this.id.getAndIncrement();
         reservationTime.setId(id);
         sources.put(id, reservationTime);
@@ -28,12 +28,12 @@ public class FakeReservationTimeRepositoryImpl implements ReservationTimeReposit
     }
 
     @Override
-    public void deleteById(long id) {
+    public void deleteById(Long id) {
         sources.remove(id);
     }
 
     @Override
-    public Optional<ReservationTime> findById(long id) {
+    public Optional<ReservationTime> findById(Long id) {
         return Optional.ofNullable(sources.get(id));
     }
 }

@@ -7,12 +7,12 @@ public class Reservation {
 
     private static final int VALID_MAX_NAME_LENGTH = 4;
 
-    private long id;
+    private Long id;
     private String name;
     private LocalDate date;
     private ReservationTime time;
 
-    public Reservation(final long id, final String name, final LocalDate date, final ReservationTime time) {
+    public Reservation(final Long id, final String name, final LocalDate date, final ReservationTime time) {
         validateNameLength(name);
         validateDateTime(date, time);
         this.id = id;
@@ -29,7 +29,7 @@ public class Reservation {
         this.time = time;
     }
 
-    public long getId() {
+    public Long getId() {
         return id;
     }
 
@@ -45,7 +45,7 @@ public class Reservation {
         return time;
     }
 
-    public void setId(final long id) {
+    public void setId(final Long id) {
         this.id = id;
     }
 

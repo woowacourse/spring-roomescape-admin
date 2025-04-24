@@ -30,7 +30,7 @@ public class ReservationService {
         return reservationRepository.save(reservation);
     }
 
-    public ReservationResponseDto findReservationById(final long id) {
+    public ReservationResponseDto findReservationById(final Long id) {
         Reservation foundReservation = findReservationWithId(id);
         return new ReservationResponseDto(foundReservation);
     }
@@ -41,12 +41,12 @@ public class ReservationService {
                 .toList();
     }
 
-    public void deleteReservationById(final long id) {
+    public void deleteReservationById(final Long id) {
         findReservationWithId(id);
         reservationRepository.deleteById(id);
     }
 
-    private Reservation findReservationWithId(long id) {
+    private Reservation findReservationWithId(Long id) {
         Optional<Reservation> foundReservation = reservationRepository.findById(id);
 
         if (foundReservation.isEmpty()) {
@@ -55,7 +55,7 @@ public class ReservationService {
         return foundReservation.get();
     }
 
-    private ReservationTime findReservationTime(final long id) {
+    private ReservationTime findReservationTime(final Long id) {
         Optional<ReservationTime> foundReservationTime = reservationTimeRepository.findById(id);
 
         if (foundReservationTime.isEmpty()) {

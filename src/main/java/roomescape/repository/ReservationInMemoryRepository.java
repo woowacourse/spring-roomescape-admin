@@ -13,8 +13,8 @@ public class ReservationInMemoryRepository implements ReservationRepository {
     private final AtomicLong id = new AtomicLong(1L);
 
     @Override
-    public long save(final Reservation reservation) {
-        long id = this.id.getAndIncrement();
+    public Long save(final Reservation reservation) {
+        Long id = this.id.getAndIncrement();
         reservation.setId(id);
         sources.put(id, reservation);
 
@@ -27,7 +27,7 @@ public class ReservationInMemoryRepository implements ReservationRepository {
     }
 
     @Override
-    public void deleteById(final long id) {
+    public void deleteById(final Long id) {
         if (!sources.containsKey(id)) {
             throw new IllegalArgumentException("id에 해당하는 예약 내역이 없습니다.");
         }
@@ -35,7 +35,7 @@ public class ReservationInMemoryRepository implements ReservationRepository {
     }
 
     @Override
-    public Optional<Reservation> findById(long id) {
+    public Optional<Reservation> findById(Long id) {
         return Optional.empty();
     }
 }

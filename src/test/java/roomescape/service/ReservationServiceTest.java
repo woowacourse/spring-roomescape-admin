@@ -29,10 +29,10 @@ class ReservationServiceTest {
     void 예약_저장_시에_저장된_id를_반환한다() {
         // given
         ReservationTime reservationTime = new ReservationTime(LocalTime.of(23, 30));
-        long savedReservationTimeId = reservationTimeRepository.save(reservationTime);
+        Long savedReservationTimeId = reservationTimeRepository.save(reservationTime);
 
         // when
-        long savedId = reservationService.saveReservation(
+        Long savedId = reservationService.saveReservation(
                 new ReservationRegisterDto(
                         LocalDate.now().plusDays(1),
                         "히로",
@@ -62,11 +62,11 @@ class ReservationServiceTest {
         // given
         LocalTime startAt = LocalTime.of(23, 30);
         ReservationTime reservationTime = new ReservationTime(startAt);
-        long savedReservationTimeId = reservationTimeRepository.save(reservationTime);
+        Long savedReservationTimeId = reservationTimeRepository.save(reservationTime);
 
         String name = "히로";
         LocalDate reservationDate = LocalDate.now().plusDays(1);
-        long savedReservationId = reservationRepository.save(new Reservation(
+        Long savedReservationId = reservationRepository.save(new Reservation(
                 name,
                 reservationDate,
                 reservationTime
@@ -96,13 +96,13 @@ class ReservationServiceTest {
         // given
         LocalTime startAt = LocalTime.of(23, 30);
         ReservationTime reservationTime = new ReservationTime(startAt);
-        long savedReservationTimeId = reservationTimeRepository.save(reservationTime);
+        Long savedReservationTimeId = reservationTimeRepository.save(reservationTime);
 
         Reservation firstReservation = new Reservation("히로", LocalDate.now().plusDays(1), reservationTime);
         Reservation secondReservation = new Reservation("히포", LocalDate.now().plusDays(2), reservationTime);
 
-        long firstReservationSavedId = reservationRepository.save(firstReservation);
-        long secondReservationSavedId = reservationRepository.save(secondReservation);
+        Long firstReservationSavedId = reservationRepository.save(firstReservation);
+        Long secondReservationSavedId = reservationRepository.save(secondReservation);
 
         // when
         List<ReservationResponseDto> responseDtos = reservationService.findAllReservations();
@@ -133,7 +133,7 @@ class ReservationServiceTest {
         reservationTimeRepository.save(reservationTime);
 
         Reservation reservation = new Reservation("히로", LocalDate.now().plusDays(1), reservationTime);
-        long savedReservationId = reservationRepository.save(reservation);
+        Long savedReservationId = reservationRepository.save(reservation);
 
         // when
         reservationService.deleteReservationById(savedReservationId);

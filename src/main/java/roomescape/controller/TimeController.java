@@ -11,7 +11,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import roomescape.dao.TimeDao;
-import roomescape.domain.Time;
+import roomescape.domain.ReservationTime;
 import roomescape.dto.request.TimeRequest;
 import roomescape.dto.response.TimeResponse;
 
@@ -24,9 +24,9 @@ public class TimeController {
 
     @GetMapping()
     public List<TimeResponse> findAll() {
-        List<Time> timeDaoAll = timeDao.findAll();
+        List<ReservationTime> reservationTimeDaoAll = timeDao.findAll();
 
-        return timeDaoAll.stream()
+        return reservationTimeDaoAll.stream()
                 .map(time -> {
                     return TimeResponse.toDto(time);
                 })
@@ -35,8 +35,8 @@ public class TimeController {
 
     @PostMapping()
     public Long create(@Valid @RequestBody TimeRequest timeRequest) {
-        Time time = timeRequest.toTime();
-        return timeDao.create(time);
+        ReservationTime reservationTime = timeRequest.toTime();
+        return timeDao.create(reservationTime);
     }
 
     @DeleteMapping("/{id}")

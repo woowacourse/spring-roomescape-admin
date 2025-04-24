@@ -44,13 +44,13 @@ Content-Type: application/json
         "id": "Long",
         "name": String,
         "date": LocalDate (YYYY-MM-DD),
-        "time": LocalTime (HH:mm)
+        "reservationTime": LocalTime (HH:mm)
     },
     {
         "id": "Long",
         "name": String,
         "date": LocalDate (YYYY-MM-DD),
-        "time": {
+        "reservationTime": {
             "id": Long,
             "startAt" : LocalTime (HH:mm)
         }
@@ -77,7 +77,7 @@ HTTP/1.1 200
     "id": Long,
     "name": String,
     "date": LocalDate (YYYY-MM-DD),
-    "time": {
+    "reservationTime": {
         "id": Long,
         "startAt" : LocalTime (HH:mm)
     }

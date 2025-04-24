@@ -8,7 +8,7 @@ import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.support.GeneratedKeyHolder;
 import org.springframework.jdbc.support.KeyHolder;
 import org.springframework.stereotype.Repository;
-import roomescape.domain.Time;
+import roomescape.domain.ReservationTime;
 
 @Repository
 public class TimeDao {
@@ -16,20 +16,20 @@ public class TimeDao {
     @Autowired
     private JdbcTemplate jdbcTemplate;
 
-    public List<Time> findAll() {
+    public List<ReservationTime> findAll() {
         String sql = "select * from reservation_time";
         return this.jdbcTemplate.query(sql,
                 (resultSet, rowNum) -> {
                     String timeString = resultSet.getString("start_at");
 
-                    return new Time(
+                    return new ReservationTime(
                             resultSet.getLong("id"),
                             LocalTime.parse(timeString)
                     );
                 });
     }
 
-    public Long create(Time time) {
+    public Long create(ReservationTime reservationTime) {
         String sql = "insert into reservation_time (start_at) values (?)";
         KeyHolder keyHolder = new GeneratedKeyHolder();
 
@@ -38,7 +38,7 @@ public class TimeDao {
                     sql,
                     new String[]{"id"}
             );
-            LocalTime startAt = time.getStartAt();
+            LocalTime startAt = reservationTime.getStartAt();
             ps.setString(1, startAt.toString());
             return ps;
         }, keyHolder);
@@ -49,5 +49,19 @@ public class TimeDao {
     public int delete(Long id) {
         String sql = "delete from reservation_time where id = ?";
         return this.jdbcTemplate.update(sql, id);
+    }
+
+    public ReservationTime findById(Long id) {
+        String sql = "select * from reservation_time where id = ?";
+
+        return this.jdbcTemplate.queryForObject(sql,
+                (resultSet, rowNum) -> {
+                    ReservationTime reservationTime = new ReservationTime(
+                            resultSet.getLong("id"),
+                            resultSet.getObject("start_at", LocalTime.class)
+                    );
+                    return reservationTime;
+                }, id
+        );
     }
 }

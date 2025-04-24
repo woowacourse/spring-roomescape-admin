@@ -1,11 +1,14 @@
 package roomescape.controller;
 
+import java.sql.PreparedStatement;
 import java.time.LocalDate;
 import java.time.LocalTime;
 import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.jdbc.core.JdbcTemplate;
+import org.springframework.jdbc.support.GeneratedKeyHolder;
+import org.springframework.jdbc.support.KeyHolder;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -37,13 +40,23 @@ public class ReservationAPIController {
     }
 
     @PostMapping
-    public ResponseEntity<Void> addReservation(@RequestBody ReservationRequest reservationRequest) {
+    public ResponseEntity<Reservation> addReservation(@RequestBody ReservationRequest reservationRequest) {
         String sql = "insert into reservation(name, date, time) values (?,?,?)";
-        jdbcTemplate.update(sql,
+        KeyHolder keyHolder = new GeneratedKeyHolder();
+        jdbcTemplate.update(connection -> {
+            PreparedStatement ps = connection.prepareStatement(sql, new String[]{"id"});
+            ps.setString(1, reservationRequest.getName());
+            ps.setString(2, reservationRequest.getDate().toString());
+            ps.setString(3, reservationRequest.getTime().toString());
+            return ps;
+        }, keyHolder);
+        Reservation reservation = new Reservation(
+                keyHolder.getKey().longValue(),
                 reservationRequest.getName(),
                 reservationRequest.getDate(),
-                reservationRequest.getTime());
-        return ResponseEntity.ok().build();
+                reservationRequest.getTime()
+        );
+        return ResponseEntity.ok(reservation);
     }
 
     @DeleteMapping("/{id}")

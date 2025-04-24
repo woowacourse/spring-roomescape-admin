@@ -4,16 +4,15 @@ import java.sql.PreparedStatement;
 import java.sql.Statement;
 import java.time.LocalTime;
 import java.util.List;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;
 import org.springframework.jdbc.support.GeneratedKeyHolder;
 import org.springframework.jdbc.support.KeyHolder;
-import org.springframework.stereotype.Component;
+import org.springframework.stereotype.Repository;
 import roomescape.reservation.domain.Time;
 
-@Component
-public class TimeDao {
+@Repository
+public class JdbcTimeDao implements TimeRepository {
 
     private final RowMapper<Time> rowMapper = (rs, rowNum) -> {
         Long id = rs.getLong("id");
@@ -23,16 +22,14 @@ public class TimeDao {
 
     private final JdbcTemplate jdbcTemplate;
 
-    @Autowired
-    public TimeDao(JdbcTemplate jdbcTemplate) {
+    public JdbcTimeDao(JdbcTemplate jdbcTemplate) {
         this.jdbcTemplate = jdbcTemplate;
     }
 
-    public Time saveTime(Time time){
-        String sql = "insert into reservation_time (start_at) values (?)";
+    public Long save(Time time) {
+        String sql = "INSERT INTO reservation_time (start_at) VALUES (?)";
 
         KeyHolder keyHolder = new GeneratedKeyHolder();
-
 
         jdbcTemplate.update(connection -> {
             PreparedStatement preparedStatement = connection.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS);
@@ -40,25 +37,17 @@ public class TimeDao {
             return preparedStatement;
         }, keyHolder);
 
-        Long id = keyHolder.getKey().longValue();
-
-        return new Time(id, time.getStartAt());
+        return keyHolder.getKey().longValue();
     }
 
-    public List<Time> getAll(){
+    public List<Time> findAll() {
         String sql = "SELECT id, start_at FROM reservation_time";
         return jdbcTemplate.query(sql, rowMapper);
     }
 
-    public void deleteById(Long id){
+    public int deleteById(Long id) {
         String sql = "delete from reservation_time where id = ?";
-        jdbcTemplate.update(sql, id);
-    }
-
-    public int getCount(){
-        String sql = "select count(1) from reservation_time";
-
-        return jdbcTemplate.queryForObject(sql, Integer.class);
+        return jdbcTemplate.update(sql, id);
     }
 
     public Time findById(Long id){
@@ -66,4 +55,5 @@ public class TimeDao {
 
         return jdbcTemplate.queryForObject(sql, rowMapper, id);
     }
+
 }

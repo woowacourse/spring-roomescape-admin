@@ -5,23 +5,20 @@ import java.sql.Statement;
 import java.time.LocalDate;
 import java.time.LocalTime;
 import java.util.List;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;
 import org.springframework.jdbc.support.GeneratedKeyHolder;
 import org.springframework.jdbc.support.KeyHolder;
-import org.springframework.stereotype.Component;
+import org.springframework.stereotype.Repository;
 import roomescape.reservation.domain.Reservation;
 import roomescape.reservation.domain.Time;
-import roomescape.reservation.controller.dto.ReservationResponse;
-import roomescape.reservation.controller.dto.TimeResponse;
 
-@Component
-public class ReservationDao {
+@Repository
+public class JdbcReservationDao implements ReservationRepository {
 
     private final JdbcTemplate jdbcTemplate;
 
-    private final RowMapper<ReservationResponse> reservationMapper =
+    private final RowMapper<Reservation> reservationMapper =
             (rs, rowNum) -> {
                 Long reservationId = rs.getLong("reservation_id");
                 String name = rs.getString("name");
@@ -29,20 +26,21 @@ public class ReservationDao {
                 Long timeId = rs.getLong("time_id");
                 LocalTime startAt = LocalTime.parse(rs.getString("start_at"));
                 Time time = new Time(timeId, startAt);
-                return new ReservationResponse(reservationId, name, date, TimeResponse.from(time));
+                return new Reservation(reservationId, name, date, time);
             };
 
-    @Autowired
-    public ReservationDao(JdbcTemplate jdbcTemplate) {
+    public JdbcReservationDao(JdbcTemplate jdbcTemplate) {
         this.jdbcTemplate = jdbcTemplate;
     }
 
-    public ReservationResponse save(Reservation reservation) {
-        String sql = "insert into reservation (name, date, time_id) values (?, ?, ?)";
+    @Override
+    public Long save(Reservation reservation) {
+        String sql = "INSERT INTO reservation (name, date, time_id) VALUES (?, ?, ?)";
         KeyHolder keyHolder = new GeneratedKeyHolder();
         jdbcTemplate.update(
                 connection -> {
-                    PreparedStatement preparedStatement = connection.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS);
+                    PreparedStatement preparedStatement = connection.prepareStatement(sql,
+                            Statement.RETURN_GENERATED_KEYS);
                     preparedStatement.setString(1, reservation.getName());
                     preparedStatement.setString(2, reservation.getDate().toString());
                     preparedStatement.setLong(3, reservation.getTime().getId());
@@ -51,17 +49,17 @@ public class ReservationDao {
                 keyHolder
         );
 
-        Long id = keyHolder.getKey().longValue();
-
-        return ReservationResponse.toDto(id, reservation);
+        return keyHolder.getKey().longValue();
     }
 
-    public void deleteReservation(Long id) {
+    @Override
+    public int deleteById(Long id) {
         String sql = "delete from reservation where id = ?";
-        jdbcTemplate.update(sql, id);
+        return jdbcTemplate.update(sql, id);
     }
 
-    public List<ReservationResponse> getReservations() {
+    @Override
+    public List<Reservation> findAll() {
         String sql = """
                 SELECT
                     r.id as reservation_id,
@@ -75,4 +73,5 @@ public class ReservationDao {
                 """;
         return jdbcTemplate.query(sql, reservationMapper);
     }
+
 }

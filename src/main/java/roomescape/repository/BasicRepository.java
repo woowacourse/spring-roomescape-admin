@@ -4,7 +4,7 @@ import java.util.List;
 
 public interface BasicRepository<T> {
 
-    T add(T t);
+    Long add(T t);
 
     T findById(Long id);
 

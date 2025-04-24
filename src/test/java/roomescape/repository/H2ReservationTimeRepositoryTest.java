@@ -28,6 +28,7 @@ public class H2ReservationTimeRepositoryTest {
     void setUp() {
         h2ReservationTimeRepository = new H2ReservationTimeRepository(jdbcTemplate);
 
+        jdbcTemplate.execute("DROP TABLE IF EXISTS reservation");
         jdbcTemplate.execute("DROP TABLE IF EXISTS reservation_time");
         jdbcTemplate.execute("CREATE TABLE reservation_time ("
                              + "id      BIGINT       NOT NULL AUTO_INCREMENT, "
@@ -41,17 +42,12 @@ public class H2ReservationTimeRepositoryTest {
     @Test
     void addTest() {
         // given & when
-        ReservationTime addedReservationTime = h2ReservationTimeRepository.add(reservationTime);
+        Long newId = h2ReservationTimeRepository.add(reservationTime);
 
         // then
-        assertAll(
-                () -> assertThat(addedReservationTime)
-                        .isNotNull(),
-                () -> assertThat(addedReservationTime.getId())
-                        .isEqualTo(1L),
-                () -> assertThat(addedReservationTime.getStartAt())
-                        .isEqualTo(reservationTime.getStartAt())
-        );
+        assertThat(newId)
+                .isNotNull()
+                .isEqualTo(1L);
     }
 
     @DisplayName("id로 예약 시간을 조회할 수 있다.")

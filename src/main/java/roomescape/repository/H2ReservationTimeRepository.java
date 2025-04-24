@@ -32,13 +32,13 @@ public class H2ReservationTimeRepository implements ReservationTimeRepository {
     }
 
     @Override
-    public ReservationTime add(final ReservationTime reservationTime) {
-        Map<String, Object> parameters = new HashMap<>(1);
+    public Long add(final ReservationTime reservationTime) {
+        Map<String, LocalTime> parameters = new HashMap<>(1);
         parameters.put("start_at", reservationTime.getStartAt());
 
         Number newId = insertReservationTime.executeAndReturnKey(parameters);
 
-        return findById(newId.longValue());
+        return newId.longValue();
     }
 
     @Override

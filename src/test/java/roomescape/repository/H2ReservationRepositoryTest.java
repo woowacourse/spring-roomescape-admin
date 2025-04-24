@@ -15,6 +15,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.jdbc.JdbcTest;
 import org.springframework.jdbc.core.JdbcTemplate;
 import roomescape.model.Reservation;
+import roomescape.model.ReservationTime;
 
 @JdbcTest
 class H2ReservationRepositoryTest {
@@ -31,27 +32,49 @@ class H2ReservationRepositoryTest {
         h2ReservationRepository = new H2ReservationRepository(jdbcTemplate);
 
         jdbcTemplate.execute("DROP TABLE IF EXISTS reservation");
+        jdbcTemplate.execute("DROP TABLE IF EXISTS reservation_time");
+
+        jdbcTemplate.execute("CREATE TABLE reservation_time("
+                             + "id      BIGINT       NOT NULL AUTO_INCREMENT, "
+                             + "start_at    VARCHAR(255) NOT NULL, "
+                             + "PRIMARY KEY (id))");
+
         jdbcTemplate.execute("CREATE TABLE reservation("
                              + "id      BIGINT       NOT NULL AUTO_INCREMENT, "
                              + "name    VARCHAR(255) NOT NULL, "
                              + "date    VARCHAR(255) NOT NULL, "
-                             + "time    VARCHAR(255) NOT NULL, "
-                             + "PRIMARY KEY (id))");
+                             + "time_id BIGINT, "
+                             + "PRIMARY KEY (id), "
+                             + "FOREIGN KEY (time_id) REFERENCES reservation_time (id))");
 
-        LocalDateTime reservationDateTime = LocalDateTime.now().plusDays(1);
-        LocalDate reservationDate = reservationDateTime.toLocalDate();
-        LocalTime reservationTime = reservationDateTime.toLocalTime().withNano(0);
-        reservation = new Reservation(null, "브라운", reservationDate, reservationTime);
+        LocalDate reservationDate = LocalDateTime.now().plusDays(1).toLocalDate();
+        LocalTime reservationTime = LocalTime.of(10, 0);
+
+        jdbcTemplate.update("INSERT INTO reservation_time (id, start_at) VALUES (?, ?)", 1, reservationTime);
+
+        reservation = new Reservation(null, "브라운", reservationDate, new ReservationTime(1L, reservationTime));
+    }
+
+    @DisplayName("예약을 추가할 수 있다.")
+    @Test
+    void addTest() {
+        // given & when
+        Long newId = h2ReservationRepository.add(reservation);
+
+        // then
+        assertThat(newId)
+                .isNotNull()
+                .isEqualTo(1L);
     }
 
     @DisplayName("id로 예약을 조회할 수 있다.")
     @Test
     void findByIdTest() {
         // given
-        h2ReservationRepository.add(reservation);
+        Long newId = h2ReservationRepository.add(reservation);
 
         // when
-        Reservation foundReservation = h2ReservationRepository.findById(1L);
+        Reservation foundReservation = h2ReservationRepository.findById(newId);
 
         // then
         assertAll(
@@ -63,8 +86,8 @@ class H2ReservationRepositoryTest {
                         .isEqualTo(reservation.getName()),
                 () -> assertThat(foundReservation.getDate())
                         .isEqualTo(reservation.getDate()),
-                () -> assertThat(foundReservation.getTime())
-                        .isEqualTo(reservation.getTime())
+                () -> assertThat(foundReservation.getTime().getId())
+                        .isEqualTo(reservation.getTime().getId())
         );
     }
 
@@ -82,35 +105,15 @@ class H2ReservationRepositoryTest {
                 .hasSize(1);
     }
 
-    @DisplayName("예약을 추가할 수 있다.")
-    @Test
-    void addTest() {
-        // given & when
-        Reservation addedReservation = h2ReservationRepository.add(reservation);
-
-        // then
-        assertAll(
-                () -> assertThat(addedReservation.getId())
-                        .isNotNull()
-                        .isEqualTo(1L),
-                () -> assertThat(addedReservation.getName())
-                        .isEqualTo(reservation.getName()),
-                () -> assertThat(addedReservation.getDate())
-                        .isEqualTo(reservation.getDate()),
-                () -> assertThat(addedReservation.getTime())
-                        .isEqualTo(reservation.getTime())
-        );
-    }
-
     @DisplayName("id로 예약을 삭제할 수 있다.")
     @Test
     void removeByIdTest() {
         // given
-        Reservation addedReservation = h2ReservationRepository.add(reservation);
+        Long newId = h2ReservationRepository.add(reservation);
 
         // when & then
         assertAll(
-                () -> assertThatCode(() -> h2ReservationRepository.removeById(addedReservation.getId()))
+                () -> assertThatCode(() -> h2ReservationRepository.removeById(newId))
                         .doesNotThrowAnyException(),
                 () -> assertThat(h2ReservationRepository.findAll())
                         .isEmpty()

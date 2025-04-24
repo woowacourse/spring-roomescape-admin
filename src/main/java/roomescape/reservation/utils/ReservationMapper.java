@@ -1,18 +1,28 @@
 package roomescape.reservation.utils;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import roomescape.reservation.domain.Reservation;
 import roomescape.reservation.dto.ReservationRequest;
 import roomescape.reservation.dto.ReservationResponse;
+import roomescape.time.domain.ReservationTime;
+import roomescape.time.utils.ReservationTimeMapper;
 
 @Component
 public class ReservationMapper {
 
-    public Reservation toReservation(ReservationRequest reservationRequest) {
+    private ReservationTimeMapper reservationTimeMapper;
+
+    @Autowired
+    public ReservationMapper(ReservationTimeMapper reservationTimeMapper) {
+        this.reservationTimeMapper = reservationTimeMapper;
+    }
+
+    public Reservation toReservation(ReservationRequest reservationRequest, ReservationTime reservationTime) {
         return new Reservation(
                 reservationRequest.name(),
                 reservationRequest.date(),
-                reservationRequest.time()
+                reservationTime
         );
     }
 
@@ -21,7 +31,7 @@ public class ReservationMapper {
                 reservation.getId(),
                 reservation.getName(),
                 reservation.getDate(),
-                reservation.getTime()
+                reservationTimeMapper.toTimeResponse(reservation.getReservationTime())
         );
     }
 }

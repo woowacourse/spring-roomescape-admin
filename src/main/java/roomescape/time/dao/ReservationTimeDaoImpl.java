@@ -47,10 +47,26 @@ public class ReservationTimeDaoImpl implements ReservationTimeDao {
                 (resultSet, rowNum) -> new ReservationTime(
                         resultSet.getLong("id"),
                         resultSet.getObject("start_at", LocalTime.class)
-                ));
+                )
+        );
 
         return reservationTimes;
     }
+
+    @Override
+    public ReservationTime findById(long id) {
+        String sql = "select * from reservation_time where id = ?";
+
+        return jdbcTemplate.queryForObject(
+                sql,
+                (resultSet, rowNum) -> new ReservationTime(
+                        resultSet.getLong("id"),
+                        resultSet.getObject("start_at", LocalTime.class)
+                ),
+                id
+        );
+    }
+
 
     @Override
     public void delete(long id) {

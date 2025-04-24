@@ -8,13 +8,17 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.jdbc.JdbcTest;
 import org.springframework.jdbc.core.JdbcTemplate;
+import org.springframework.test.annotation.DirtiesContext;
 import roomescape.reservation.domain.Reservation;
+import roomescape.time.domain.ReservationTime;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatNoException;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
+import static org.springframework.test.annotation.DirtiesContext.ClassMode.BEFORE_EACH_TEST_METHOD;
 
 @JdbcTest
+@DirtiesContext(classMode = BEFORE_EACH_TEST_METHOD)
 class ReservationDaoImplTest {
 
     @Autowired
@@ -25,6 +29,12 @@ class ReservationDaoImplTest {
     @BeforeEach
     void setUp() {
         reservationDao = new ReservationDaoImpl(jdbcTemplate);
+        Reservation requestReservation = new Reservation(
+                "시소",
+                LocalDate.of(2025, 1, 1),
+                new ReservationTime(2L, LocalTime.now())
+        );
+        reservationDao.insert(requestReservation);
     }
 
     @Test
@@ -33,7 +43,7 @@ class ReservationDaoImplTest {
         Reservation requestReservation = new Reservation(
                 "시소",
                 LocalDate.of(2025, 1, 1),
-                LocalTime.of(12, 10)
+                new ReservationTime(2L, LocalTime.now())
         );
 
         // When & Then
@@ -55,7 +65,10 @@ class ReservationDaoImplTest {
         Reservation requestReservation = new Reservation(
                 "시소",
                 LocalDate.of(2025, 1, 1),
-                LocalTime.of(12, 10)
+                new ReservationTime(
+                        1L,
+                        LocalTime.now()
+                )
         );
         reservationDao.insert(requestReservation);
 
@@ -67,7 +80,7 @@ class ReservationDaoImplTest {
     @Test
     void ID를_전달받아_DB에_해당_ID가_존재하지_않는다면_예외가_발생한다() {
         // Given
-        final long id = 1L;
+        final long id = 5L;
 
         // When & Then
         assertThatThrownBy(() -> reservationDao.delete(id))

@@ -8,21 +8,26 @@ import roomescape.reservation.domain.Reservation;
 import roomescape.reservation.dto.ReservationRequest;
 import roomescape.reservation.dto.ReservationResponse;
 import roomescape.reservation.utils.ReservationMapper;
+import roomescape.time.dao.ReservationTimeDao;
+import roomescape.time.domain.ReservationTime;
 
 @Service
 public class ReservationService {
 
     private final ReservationDao reservationDao;
+    private final ReservationTimeDao reservationTimeDao;
     private final ReservationMapper reservationMapper;
 
     @Autowired
-    public ReservationService(ReservationDao reservationDao, ReservationMapper reservationMapper) {
+    public ReservationService(ReservationDao reservationDao, ReservationTimeDao reservationTimeDao, ReservationMapper reservationMapper) {
         this.reservationDao = reservationDao;
+        this.reservationTimeDao = reservationTimeDao;
         this.reservationMapper = reservationMapper;
     }
 
     public ReservationResponse addReservation(ReservationRequest reservationRequest) {
-        Reservation reservation = reservationMapper.toReservation(reservationRequest);
+        ReservationTime reservationTime = reservationTimeDao.findById(reservationRequest.timeId());
+        Reservation reservation = reservationMapper.toReservation(reservationRequest, reservationTime);
         return reservationMapper.toReservationResponse(reservationDao.insert(reservation));
     }
 

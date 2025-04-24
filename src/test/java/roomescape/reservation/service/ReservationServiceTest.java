@@ -6,8 +6,12 @@ import java.util.NoSuchElementException;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import roomescape.reservation.dao.FakeReservationDao;
+import roomescape.reservation.domain.Reservation;
 import roomescape.reservation.dto.ReservationRequest;
 import roomescape.reservation.utils.ReservationMapper;
+import roomescape.time.dao.FakeReservationTimeDao;
+import roomescape.time.domain.ReservationTime;
+import roomescape.time.utils.ReservationTimeMapper;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatNoException;
@@ -15,11 +19,31 @@ import static org.assertj.core.api.Assertions.assertThatThrownBy;
 
 class ReservationServiceTest {
 
-    private ReservationService reservationService;
+    private final ReservationService reservationService;
+    private final FakeReservationDao fakeReservationDao;
+    private final FakeReservationTimeDao fakeReservationTimeDao;
+
+    ReservationServiceTest() {
+        fakeReservationDao = new FakeReservationDao();
+        fakeReservationTimeDao = new FakeReservationTimeDao();
+        reservationService = new ReservationService(
+                fakeReservationDao,
+                fakeReservationTimeDao,
+                new ReservationMapper(new ReservationTimeMapper())
+        );
+    }
 
     @BeforeEach
     void setUp() {
-        reservationService = new ReservationService(new FakeReservationDao(), new ReservationMapper());
+        ReservationTime savedTime = fakeReservationTimeDao.insert(new ReservationTime(
+                LocalTime.of(12, 30)
+        ));
+
+        fakeReservationDao.insert(new Reservation(
+                "시소",
+                LocalDate.of(2025, 12, 30),
+                savedTime
+        ));
     }
 
     @Test
@@ -28,7 +52,7 @@ class ReservationServiceTest {
         ReservationRequest reservationRequest = new ReservationRequest(
                 "시소",
                 LocalDate.of(2025, 1, 1),
-                LocalTime.of(12, 10)
+                1L
         );
 
         // When & Then
@@ -50,7 +74,7 @@ class ReservationServiceTest {
         ReservationRequest reservationRequest = new ReservationRequest(
                 "시소",
                 LocalDate.of(2025, 1, 1),
-                LocalTime.of(12, 10)
+                1L
         );
         reservationService.addReservation(reservationRequest);
 
@@ -62,7 +86,7 @@ class ReservationServiceTest {
     @Test
     void ID를_전달받아_DB에_해당_ID가_존재하지_않는다면_예외가_발생한다() {
         // Given
-        final long id = 1L;
+        final long id = 10L;
 
         // When & Then
         assertThatThrownBy(() -> reservationService.deleteReservationById(id))

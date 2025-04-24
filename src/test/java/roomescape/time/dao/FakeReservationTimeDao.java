@@ -26,6 +26,11 @@ public class FakeReservationTimeDao implements ReservationTimeDao {
     }
 
     @Override
+    public ReservationTime findById(long id) {
+        return reservationTimes.get((int)(id - 1));
+    }
+
+    @Override
     public void delete(long id) {
         ReservationTime targetReservationTime = reservationTimes.stream()
                 .filter(time -> Objects.equals(time.getId(), id))

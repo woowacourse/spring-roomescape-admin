@@ -7,10 +7,12 @@ import java.util.List;
 import java.util.NoSuchElementException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.JdbcTemplate;
+import org.springframework.jdbc.core.RowMapper;
 import org.springframework.jdbc.support.GeneratedKeyHolder;
 import org.springframework.jdbc.support.KeyHolder;
 import org.springframework.stereotype.Repository;
 import roomescape.reservation.domain.Reservation;
+import roomescape.time.domain.ReservationTime;
 
 @Repository
 public class ReservationDaoImpl implements ReservationDao {
@@ -24,7 +26,7 @@ public class ReservationDaoImpl implements ReservationDao {
 
     @Override
     public Reservation insert(Reservation reservation) {
-        String sql = "insert into reservation (name, date, time) values (?, ?, ?)";
+        String sql = "insert into reservation (name, date, time_id) values (?, ?, ?)";
 
         KeyHolder keyHolder = new GeneratedKeyHolder();
 
@@ -34,7 +36,7 @@ public class ReservationDaoImpl implements ReservationDao {
                     new String[]{"id"});
             ps.setString(1, reservation.getName());
             ps.setObject(2, reservation.getDate());
-            ps.setObject(3, reservation.getTime());
+            ps.setLong(3, reservation.getReservationTime().getId());
             return ps;
         }, keyHolder);
 
@@ -43,16 +45,19 @@ public class ReservationDaoImpl implements ReservationDao {
 
     @Override
     public List<Reservation> findAll() {
-        String sql = "select * from reservation";
+        String sql = """
+                select
+                    r.id,
+                    r.name,
+                    r.date,
+                    t.id as time_id,
+                    t.start_at
+                from reservation as r
+                    join reservation_time as t
+                    on r.time_id = t.id
+                """;
 
-        List<Reservation> reservations =  jdbcTemplate.query(
-                sql,
-                (resultSet, rowNum) -> new Reservation(
-                        resultSet.getLong("id"),
-                        resultSet.getString("name"),
-                        resultSet.getObject("date", LocalDate.class),
-                        resultSet.getObject("time", LocalTime.class)
-                ));
+        List<Reservation> reservations =  jdbcTemplate.query(sql, getRowMapper());
 
         return reservations;
     }
@@ -64,5 +69,17 @@ public class ReservationDaoImpl implements ReservationDao {
         if (result != 1) {
             throw new NoSuchElementException("데이터베이스에 해당 id가 존재하지 않습니다.");
         }
+    }
+
+    private RowMapper<Reservation> getRowMapper() {
+        return (resultSet, rowNum) -> new Reservation(
+                resultSet.getLong("id"),
+                resultSet.getString("name"),
+                resultSet.getObject("date", LocalDate.class),
+                new ReservationTime(
+                        resultSet.getLong("time_id"),
+                        resultSet.getObject("start_at", LocalTime.class)
+                )
+        );
     }
 }

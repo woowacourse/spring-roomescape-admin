@@ -9,5 +9,7 @@ public interface ReservationTimeDao {
 
     List<ReservationTime> findAll();
 
+    ReservationTime findById(long id);
+
     void delete(long id);
 }

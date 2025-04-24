@@ -29,8 +29,9 @@ public class DefaultReservationService implements ReservationService {
 
     @Override
     public ReservationResponseDto create(final ReservationRequestDto reservationRequestDto) {
-        final ReservationTime reservationTime = reservationTimeRepository.findById(ReservationTimeId.from(reservationRequestDto.timeId()))
-                .orElseThrow(NoSuchElementException::new);
+        final ReservationTime reservationTime =
+                reservationTimeRepository.findById(ReservationTimeId.from(reservationRequestDto.timeId()))
+                        .orElseThrow(NoSuchElementException::new);
         return ReservationConverter.toDto(
                 reservationRepository.save(
                         ReservationConverter.toDomain(reservationRequestDto, reservationTime)));

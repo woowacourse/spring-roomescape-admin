@@ -58,22 +58,13 @@ public class MissionStepTest {
     @Test
     @DisplayName("3단계: localhost:8080/reservations 에 POST 요청 시 예약이 추가되고, DELETE 요청 시 각각 예약이 취소된다")
     void third() {
-        final Map<String, String> times = new HashMap<>();
-        times.put("startAt", "10:00");
+        jdbcTemplate.update("INSERT INTO reservation_time (id, start_at) VALUES (?, ?)",
+                "1", "10:00");
 
         final Map<String, String> params = new HashMap<>();
         params.put("name", "브라운");
         params.put("date", "2023-08-05");
         params.put("timeId", "1");
-
-        RestAssured.given().log().all()
-                .contentType(ContentType.JSON)
-                .body(times)
-                .when().post("/times")
-                .then().log().all()
-                .statusCode(200)
-                .body("id", is(1));
-
 
         RestAssured.given().log().all()
                 .contentType(ContentType.JSON)
@@ -168,15 +159,8 @@ public class MissionStepTest {
     @Test
     @DisplayName("시간으로 API를 관리할 수 있다")
     void seventh() {
-        final Map<String, String> params = new HashMap<>();
-        params.put("startAt", "10:00");
-
-        RestAssured.given().log().all()
-                .contentType(ContentType.JSON)
-                .body(params)
-                .when().post("/times")
-                .then().log().all()
-                .statusCode(200);
+        jdbcTemplate.update("INSERT INTO reservation_time (id, start_at) VALUES (?, ?)",
+                "1", "10:00");
 
         RestAssured.given().log().all()
                 .when().get("/times")

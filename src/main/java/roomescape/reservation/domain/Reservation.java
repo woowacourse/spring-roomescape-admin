@@ -2,34 +2,34 @@ package roomescape.reservation.domain;
 
 import java.time.LocalDate;
 import java.time.LocalTime;
+import roomescape.time.domain.ReservationTime;
 
 public class Reservation {
 
     private final Long id;
     private final String name;
     private final LocalDate date;
-    private final LocalTime time;
+    private final ReservationTime reservationTime;
 
-    public Reservation(Long id, String name, LocalDate date, LocalTime time) {
+    public Reservation(Long id, String name, LocalDate date, ReservationTime reservationTime) {
         validateName(name);
         validateDate(date);
-        validateTime(time);
 
         this.id = id;
         this.name = name;
         this.date = date;
-        this.time = time;
+        this.reservationTime = reservationTime;
     }
 
-    public Reservation(String name, LocalDate date, LocalTime time) {
-        this(null, name, date, time);
+    public Reservation(String name, LocalDate date, ReservationTime reservationTime) {
+        this(null, name, date, reservationTime);
     }
 
     public Reservation(Long id, Reservation reservation) {
         this.id = id;
         this.name = reservation.name;
         this.date = reservation.date;
-        this.time = reservation.time;
+        this.reservationTime = reservation.reservationTime;
     }
 
     public Long getId() {
@@ -44,8 +44,8 @@ public class Reservation {
         return date;
     }
 
-    public LocalTime getTime() {
-        return time;
+    public ReservationTime getReservationTime() {
+        return reservationTime;
     }
 
     private void validateName(String name) {
@@ -57,12 +57,6 @@ public class Reservation {
     private void validateDate(LocalDate date) {
         if (date == null) {
             throw new IllegalArgumentException("date는 빈 값일 수 없습니다.");
-        }
-    }
-
-    private void validateTime(LocalTime time) {
-        if (time == null) {
-            throw new IllegalArgumentException("time은 빈 값일 수 없습니다.");
         }
     }
 }

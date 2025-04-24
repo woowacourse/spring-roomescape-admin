@@ -2,6 +2,7 @@ package roomescape.dao;
 
 import java.sql.Time;
 import java.util.Map;
+import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.simple.SimpleJdbcInsert;
 import org.springframework.stereotype.Repository;
@@ -39,7 +40,10 @@ public class UpdatingDAO {
     }
 
     public void deleteById(Long id) {
-        jdbcTemplate.update("DELETE FROM reservation WHERE id = ?", id);
+        int rows = jdbcTemplate.update("DELETE FROM reservation WHERE id = ?", id);
+        if (rows == 0) {
+            throw new EmptyResultDataAccessException(rows);
+        }
     }
 
     public ReservationTimeResDto addAndGet2(ReservationTimeReqDto dto) {
@@ -55,6 +59,9 @@ public class UpdatingDAO {
     }
 
     public void deleteById2(Long id) {
-        jdbcTemplate.update("DELETE FROM reservation_time WHERE id = ?", id);
+        int rows = jdbcTemplate.update("DELETE FROM reservation_time WHERE id = ?", id);
+        if (rows == 0) {
+            throw new EmptyResultDataAccessException(rows);
+        }
     }
 }

@@ -4,40 +4,41 @@ import java.util.List;
 import org.springframework.stereotype.Service;
 import roomescape.application.dto.request.ReservationRequest;
 import roomescape.application.dto.response.ReservationResponse;
-import roomescape.dao.ReservationDao;
-import roomescape.dao.ReservationTimeDao;
 import roomescape.domain.Reservation;
 import roomescape.domain.ReservationTime;
 import roomescape.domain.Reservations;
+import roomescape.repository.ReservationRepository;
+import roomescape.repository.ReservationTimeRepository;
 
 @Service
 public class ReservationService {
 
-    private final ReservationDao reservationDao;
-    private final ReservationTimeDao reservationTimeDao;
+    private final ReservationRepository reservationRepository;
+    private final ReservationTimeRepository reservationTimeRepository;
 
-    public ReservationService(ReservationDao reservationDao, ReservationTimeDao reservationTimeDao) {
-        this.reservationDao = reservationDao;
-        this.reservationTimeDao = reservationTimeDao;
+    public ReservationService(ReservationRepository reservationRepository,
+                              ReservationTimeRepository reservationTimeRepository) {
+        this.reservationRepository = reservationRepository;
+        this.reservationTimeRepository = reservationTimeRepository;
     }
 
     public List<ReservationResponse> getReservations() {
-        Reservations reservations = reservationDao.findAll();
+        Reservations reservations = reservationRepository.findAll();
         return reservations.getReservations().stream()
                 .map(ReservationResponse::new)
                 .toList();
     }
 
     public ReservationResponse saveReservation(ReservationRequest request) {
-        ReservationTime reservationTime = reservationTimeDao.findById(request.timeId());
+        ReservationTime reservationTime = reservationTimeRepository.findById(request.timeId());
 
         Reservation newReservation = request.toReservation(null, reservationTime);
-        Reservation savedReservation = reservationDao.save(newReservation);
+        Reservation savedReservation = reservationRepository.save(newReservation);
 
         return new ReservationResponse(savedReservation);
     }
 
     public boolean deleteReservation(Long id) {
-        return reservationDao.deleteById(id);
+        return reservationRepository.deleteById(id);
     }
 }

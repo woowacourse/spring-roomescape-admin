@@ -10,7 +10,7 @@ import java.util.concurrent.atomic.AtomicLong;
 
 public class FakeReservationRepository implements ReservationRepository {
 
-    AtomicLong index = new AtomicLong();
+    AtomicLong index = new AtomicLong(1L);
     List<Reservation> reservations = new ArrayList<>();
 
     @Override

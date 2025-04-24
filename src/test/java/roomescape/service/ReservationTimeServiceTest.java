@@ -2,14 +2,13 @@ package roomescape.service;
 
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
-import org.springframework.boot.test.context.SpringBootTest;
 import roomescape.controller.dto.ReservationTimeCreateRequest;
+import roomescape.service.dto.ReservationTimeResponse;
 
 import java.time.LocalTime;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
-@SpringBootTest
 public class ReservationTimeServiceTest {
 
     private final ReservationTimeService reservationTimeService = new ReservationTimeService(new FakeReservationTimeRepository());
@@ -41,13 +40,24 @@ public class ReservationTimeServiceTest {
 
     @Test
     @DisplayName("예약 시간 삭제 테스트")
-    public void getReservationTimeTest() {
+    public void deleteReservationTimeTest() {
         //given, when
         addReservationTime();
 
         //then
         assertThat(reservationTimeService.getAllReservationTimes().size()).isEqualTo(1);
-        reservationTimeService.deleteReservationTimeById(0L);
+        reservationTimeService.deleteReservationTimeById(1L);
         assertThat(reservationTimeService.getAllReservationTimes().size()).isEqualTo(0);
+    }
+
+    @Test
+    @DisplayName("예약 시간 단건 조회 테스트 - 성공")
+    public void getReservationTimeByIdTest() {
+        //given, when
+        addReservationTime();
+
+        //then
+        assertThat(reservationTimeService.getReservationTimeById(1L))
+                .isEqualTo(new ReservationTimeResponse(1L, LocalTime.MIN));
     }
 }

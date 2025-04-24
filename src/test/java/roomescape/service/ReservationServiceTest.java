@@ -2,7 +2,6 @@ package roomescape.service;
 
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
-import org.springframework.boot.test.context.SpringBootTest;
 import roomescape.controller.dto.ReservationCreateRequest;
 import roomescape.controller.dto.ReservationTimeCreateRequest;
 import roomescape.service.dto.ReservationResponse;
@@ -14,7 +13,6 @@ import java.time.LocalTime;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 
-@SpringBootTest
 class ReservationServiceTest {
 
     private final ReservationService reservationService = new ReservationService(new FakeReservationRepository());
@@ -27,7 +25,7 @@ class ReservationServiceTest {
     }
 
     public void addReservation() {
-        ReservationCreateRequest request = new ReservationCreateRequest("test1", RESERVATION_DATE, 0L);
+        ReservationCreateRequest request = new ReservationCreateRequest("test1", RESERVATION_DATE, 1L);
         reservationService.addReservation(request);
     }
 
@@ -37,7 +35,7 @@ class ReservationServiceTest {
         //given, when
         addReservationTime();
 
-        ReservationCreateRequest request = new ReservationCreateRequest("test1", LocalDate.now().minusDays(1), 0L);
+        ReservationCreateRequest request = new ReservationCreateRequest("test1", LocalDate.now().minusDays(1), 1L);
 
         // then
         assertThatThrownBy(() -> reservationService.addReservation(request))
@@ -50,7 +48,7 @@ class ReservationServiceTest {
     void reservationAddTest2() {
         //given, when
         addReservationTime();
-        ReservationCreateRequest request = new ReservationCreateRequest("test1", RESERVATION_DATE, 0L);
+        ReservationCreateRequest request = new ReservationCreateRequest("test1", RESERVATION_DATE, 1L);
         reservationService.addReservation(request);
 
         // then
@@ -65,8 +63,8 @@ class ReservationServiceTest {
         addReservation();
 
         //then
-        assertThat(reservationService.getReservationById(0L))
-                .isEqualTo(new ReservationResponse(0L, "test1", RESERVATION_DATE, new ReservationTimeResponse(0L, LocalTime.MIN)));
+        assertThat(reservationService.getReservationById(1L))
+                .isEqualTo(new ReservationResponse(1L, "test1", RESERVATION_DATE, new ReservationTimeResponse(1L, LocalTime.MIN)));
     }
 
     @Test
@@ -77,7 +75,7 @@ class ReservationServiceTest {
         addReservation();
 
         //then
-        assertThatThrownBy(() -> reservationService.getReservationById(1L))
+        assertThatThrownBy(() -> reservationService.getReservationById(2L))
                 .isInstanceOf(IllegalArgumentException.class)
                 .hasMessage("존재하지 않는 예약입니다.");
     }
@@ -88,7 +86,7 @@ class ReservationServiceTest {
         //given, when
         addReservationTime();
         addReservation();
-        reservationService.deleteReservationById(0L);
+        reservationService.deleteReservationById(1L);
 
         //then
         assertThat(reservationService.getAllReservations().size()).isEqualTo(0);
@@ -102,7 +100,7 @@ class ReservationServiceTest {
         addReservation();
 
         //then
-        assertThatThrownBy(() -> reservationService.deleteReservationById(1L))
+        assertThatThrownBy(() -> reservationService.deleteReservationById(2L))
                 .isInstanceOf(IllegalArgumentException.class)
                 .hasMessage("존재하지 않는 예약입니다.");
     }

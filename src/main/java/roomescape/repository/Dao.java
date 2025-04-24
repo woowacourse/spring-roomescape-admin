@@ -44,7 +44,7 @@ public class Dao {
         try {
             jdbcTemplate.update(query, id);
         } catch (DataIntegrityViolationException e) {
-            throw new IllegalArgumentException("데이터 무결성을 위반했습니다.", e);
+            throw new IllegalArgumentException("[ERROR] 데이터 무결성을 위반했습니다.", e);
         }
     }
 }

@@ -2,7 +2,9 @@ package roomescape.dao;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
-import java.time.LocalDateTime;
+import java.time.LocalDate;
+import java.time.LocalTime;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -10,6 +12,7 @@ import org.springframework.boot.test.context.SpringBootTest.WebEnvironment;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.test.annotation.DirtiesContext;
 import roomescape.domain.Reservation;
+import roomescape.domain.ReservationTime;
 import roomescape.domain.Reservations;
 
 @SpringBootTest(
@@ -20,7 +23,8 @@ import roomescape.domain.Reservations;
 class ReservationDaoTest {
 
     private static final String TEST_NAME = "TestName";
-    private static final LocalDateTime TEST_DATE_TIME = LocalDateTime.MAX;
+    private static final LocalDate TEST_DATE = LocalDate.MAX;
+    private static final ReservationTime TEST_RESERVATION_TIME = new ReservationTime(1L, LocalTime.MIDNIGHT);
 
     @Autowired
     private ReservationDao reservationDao;
@@ -28,42 +32,48 @@ class ReservationDaoTest {
     @Autowired
     private JdbcTemplate jdbcTemplate;
 
+    @BeforeEach
+    void setUp() {
+        jdbcTemplate.update(
+                "insert into reservation_time (id, start_at) values (?, ?)",
+                TEST_RESERVATION_TIME.getId(),
+                TEST_RESERVATION_TIME.getTime()
+        );
+    }
+
     @Test
-    void 예약_목록_전체를_조회해_반환한다() {
+    void 예약_전체를_조회해_반환한다() {
         // given
-        Reservation firstReservation = reservationDao.save(createTestReservation());
-        Reservation secondReservation = reservationDao.save(createTestReservation());
+        Reservation testReservation = reservationDao.save(createTestReservation());
 
         // when
         Reservations findReservations = reservationDao.findAll();
         Integer count = getReservationCount();
 
         // then
-        assertThat(findReservations.getReservations())
-                .contains(firstReservation, secondReservation);
-
-        assertThat(count)
-                .isEqualTo(findReservations.getReservations().size());
+        assertThat(findReservations.getReservations()).contains(testReservation);
+        assertThat(count).isEqualTo(findReservations.getReservations().size());
     }
 
     @Test
-    void 예약_정보를_저장해_ID가_할당된_예약_정보를_반환한다() {
+    void 예약을_저장해_ID가_할당된_예약을_반환한다() {
         // given
         Reservation reservation = createTestReservation();
 
         // when
-        Reservation saved = reservationDao.save(reservation);
+        Reservation savedReservation = reservationDao.save(reservation);
         Boolean exists = isReservationExists();
 
         // then
-        assertThat(saved.getId()).isEqualTo(1L);
-        assertThat(saved.getName()).isEqualTo(TEST_NAME);
-        assertThat(saved.getDateTime()).isEqualTo(TEST_DATE_TIME);
+        assertThat(savedReservation.getId()).isEqualTo(1L);
+        assertThat(savedReservation.getName()).isEqualTo(TEST_NAME);
+        assertThat(savedReservation.getDate()).isEqualTo(TEST_DATE);
+        assertThat(savedReservation.getTime()).isEqualTo(TEST_RESERVATION_TIME);
         assertThat(exists).isTrue();
     }
 
     @Test
-    void 예약_정보를_삭제_내용이_있는_경우_TRUE를_반환한다() {
+    void 예약을_삭제한_데이터가_있는_경우_TRUE를_반환한다() {
         // given
         Reservation saved = reservationDao.save(createTestReservation());
 
@@ -78,7 +88,7 @@ class ReservationDaoTest {
     }
 
     @Test
-    void 예약_정보_삭제_내역이_없는_경우_FALSE를_반환한다() {
+    void 예약을_삭제한_데이터가_없는_경우_FALSE를_반환한다() {
         // when
         boolean result = reservationDao.deleteById(1L);
         Boolean exists = isReservationExists();
@@ -89,7 +99,7 @@ class ReservationDaoTest {
     }
 
     private Reservation createTestReservation() {
-        return new Reservation(null, TEST_NAME, TEST_DATE_TIME);
+        return new Reservation(null, TEST_NAME, TEST_DATE, TEST_RESERVATION_TIME);
     }
 
     private Integer getReservationCount() {

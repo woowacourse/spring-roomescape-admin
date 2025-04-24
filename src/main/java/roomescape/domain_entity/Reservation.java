@@ -19,17 +19,6 @@ public class Reservation {
         this.time = time;
     }
 
-    public Reservation(String name, LocalDate date, LocalTime time) {
-        this.id = new Id();
-        this.name = name;
-        this.date = date;
-        this.time = time;
-    }
-
-    public boolean isSameId(Id id) {
-        return this.id.equals(id);
-    }
-
     public Id getId() {
         return id;
     }

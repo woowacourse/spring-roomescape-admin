@@ -33,9 +33,10 @@ public class OutputView {
 
     public void printSuccessToCreateReservation(Reservation reservation) {
         System.out.println("예약 생성을 완료했습니다.");
-        System.out.println("               예약자명 | 예약 날짜 | 예약 시간");
-        System.out.printf("생성된 예약 정보 : %s | %s | %s\n", reservation.getName(), reservation.getDate(),
-                reservation.getTime().getStartAt());
+        System.out.println("id | 예약자명 | 예약 날짜 | 예약 시간");
+        System.out.printf("%d | %s | %s | %s\n",
+                reservation.getId(), reservation.getName(),
+                reservation.getDate(), reservation.getTime().getStartAt());
         System.out.println();
     }
 

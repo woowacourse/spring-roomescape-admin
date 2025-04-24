@@ -1,11 +1,14 @@
 package roomescape.controller;
 
 import java.sql.PreparedStatement;
+import java.time.LocalTime;
+import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.support.GeneratedKeyHolder;
 import org.springframework.jdbc.support.KeyHolder;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -34,5 +37,16 @@ public class ReservationTimeAPIController {
                 reservationTimeRequest.getStartAt()
         );
         return ResponseEntity.ok(reservationTime);
+    }
+
+    @GetMapping
+    public ResponseEntity<List<ReservationTime>> searchTime() {
+        String sql = "select id, start_at from reservation_time";
+        List<ReservationTime> times = jdbcTemplate.query(sql,
+                (rs, rowNum) -> new ReservationTime(
+                        rs.getLong("id"),
+                        LocalTime.parse(rs.getString("start_at"))
+                ));
+        return ResponseEntity.ok(times);
     }
 }

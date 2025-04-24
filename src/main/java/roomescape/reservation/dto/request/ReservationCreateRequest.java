@@ -1,10 +1,10 @@
-package roomescape.dto.request;
+package roomescape.reservation.dto.request;
 
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 import java.time.LocalDate;
-import roomescape.domain.Reservation;
-import roomescape.domain.ReservationTime;
+import roomescape.reservation.Reservation;
+import roomescape.reservationtime.ReservationTime;
 
 public record ReservationCreateRequest(
         @NotBlank String name,

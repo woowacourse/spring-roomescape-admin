@@ -1,4 +1,4 @@
-package roomescape.controller;
+package roomescape.ui;
 
 import static org.assertj.core.api.Assertions.assertThat;
 

@@ -1,4 +1,4 @@
-package roomescape.dao;
+package roomescape.reservationtime.dao;
 
 import java.sql.PreparedStatement;
 import java.time.LocalTime;
@@ -8,7 +8,7 @@ import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.support.GeneratedKeyHolder;
 import org.springframework.jdbc.support.KeyHolder;
 import org.springframework.stereotype.Repository;
-import roomescape.domain.ReservationTime;
+import roomescape.reservationtime.ReservationTime;
 
 @Repository
 public class ReservationTimeDao {

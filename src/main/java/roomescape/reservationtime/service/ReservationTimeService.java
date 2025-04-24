@@ -1,14 +1,14 @@
-package roomescape.service;
+package roomescape.reservationtime.service;
 
 import jakarta.validation.Valid;
 import java.util.List;
 import org.springframework.stereotype.Service;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
-import roomescape.dao.ReservationTimeDao;
-import roomescape.domain.ReservationTime;
-import roomescape.dto.request.ReservationTimeRequest;
-import roomescape.dto.response.ReservationTimeResponse;
+import roomescape.reservationtime.ReservationTime;
+import roomescape.reservationtime.dao.ReservationTimeDao;
+import roomescape.reservationtime.dto.request.ReservationTimeRequest;
+import roomescape.reservationtime.dto.response.ReservationTimeResponse;
 
 @Service
 public class ReservationTimeService {

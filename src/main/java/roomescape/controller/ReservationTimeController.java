@@ -1,5 +1,6 @@
 package roomescape.controller;
 
+import jakarta.validation.Valid;
 import java.util.List;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
@@ -24,7 +25,7 @@ public class ReservationTimeController {
 
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
-    public ReservationTimeResponse saveTime(@RequestBody CreateTimeRequest createTimeRequest) {
+    public ReservationTimeResponse saveTime(@Valid @RequestBody CreateTimeRequest createTimeRequest) {
         return reservationTimeService.saveTime(createTimeRequest.startAt());
     }
 

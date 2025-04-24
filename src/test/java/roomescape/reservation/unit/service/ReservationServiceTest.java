@@ -1,4 +1,4 @@
-package roomescape.reservation.service;
+package roomescape.reservation.unit.service;
 
 import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
 
@@ -10,11 +10,11 @@ import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import roomescape.reservation.domain.Reservation;
 import roomescape.reservation.dto.ReservationRequest;
-import roomescape.reservation.repository.FakeReservationRepository;
 import roomescape.reservation.repository.ReservationRepository;
+import roomescape.reservation.unit.repository.FakeReservationRepository;
 import roomescape.reservationtime.domain.ReservationTime;
-import roomescape.reservationtime.repository.FakeReservationTimeRepository;
 import roomescape.reservationtime.repository.ReservationTimeRepository;
+import roomescape.reservationtime.unit.repository.FakeReservationTimeRepository;
 
 class ReservationServiceTest {
 

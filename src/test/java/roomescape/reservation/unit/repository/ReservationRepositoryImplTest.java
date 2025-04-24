@@ -1,4 +1,4 @@
-package roomescape.reservation.repository;
+package roomescape.reservation.unit.repository;
 
 import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
 

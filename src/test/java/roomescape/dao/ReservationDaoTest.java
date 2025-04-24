@@ -26,6 +26,17 @@ class ReservationDaoTest {
     @BeforeEach
     void initialize() {
         reservationDao = new ReservationDao(jdbcTemplate);
+        jdbcTemplate.update("insert into reservation (name, date, time) values (?, ?, ?)",
+                "아마",
+                "2024-12-25",
+                "11:00"
+        );
+
+        jdbcTemplate.update("insert into reservation (name, date, time) values (?, ?, ?)",
+                "후후",
+                "2024-12-26",
+                "11:00"
+        );
     }
 
     @DisplayName("예약을 저장하는지 확인합니다.")
@@ -37,23 +48,12 @@ class ReservationDaoTest {
 
         reservationDao.insert(reservation);
         int size = jdbcTemplate.queryForObject("select count(*) from reservation", Integer.class);
-        assertThat(size).isEqualTo(1);
+        assertThat(size).isEqualTo(3);
     }
 
     @DisplayName("예약을 모두 가져오는지 확인합니다.")
     @Test
     void findAllTest() {
-        Person person1 = new Person("아마");
-        ReservationTime reservationTime1 = new ReservationTime(LocalDateTime.of(2024, 12, 25, 11, 0));
-        Reservation reservation1 = new Reservation(1, person1, reservationTime1);
-
-        Person person2 = new Person("후후");
-        ReservationTime reservationTime2 = new ReservationTime(LocalDateTime.of(2024, 11, 25, 11, 0));
-        Reservation reservation2 = new Reservation(2, person2, reservationTime2);
-
-        reservationDao.insert(reservation1);
-        reservationDao.insert(reservation2);
-
         List<Reservation> reservations = reservationDao.findAll();
 
         assertThat(reservations.size()).isEqualTo(2);
@@ -62,17 +62,6 @@ class ReservationDaoTest {
     @DisplayName("id를 통해 예약을 삭제하는지 확인합니다.")
     @Test
     void deleteByIdTest() {
-        Person person1 = new Person("아마");
-        ReservationTime reservationTime1 = new ReservationTime(LocalDateTime.of(2024, 12, 25, 11, 0));
-        Reservation reservation1 = new Reservation(1, person1, reservationTime1);
-
-        Person person2 = new Person("후후");
-        ReservationTime reservationTime2 = new ReservationTime(LocalDateTime.of(2024, 11, 25, 11, 0));
-        Reservation reservation2 = new Reservation(2, person2, reservationTime2);
-
-        reservationDao.insert(reservation1);
-        reservationDao.insert(reservation2);
-
         int effectedRowsCount = reservationDao.deleteById(2);
 
         List<Reservation> reservations = reservationDao.findAll();

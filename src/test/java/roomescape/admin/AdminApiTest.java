@@ -14,7 +14,7 @@ import org.springframework.test.annotation.DirtiesContext.ClassMode;
 @DirtiesContext(classMode = ClassMode.AFTER_EACH_TEST_METHOD)
 public class AdminApiTest {
 
-    private int port;
+    private final int port;
 
     public AdminApiTest(
             @LocalServerPort final int port

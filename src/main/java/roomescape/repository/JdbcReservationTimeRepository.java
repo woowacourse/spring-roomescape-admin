@@ -21,7 +21,9 @@ public class JdbcReservationTimeRepository implements ReservationTimeRepository 
     }
 
     @Override
-    public ReservationTime save(final LocalTime startAt) {
+    public ReservationTime save(ReservationTime reservationTime) {
+        LocalTime startAt = reservationTime.startAt();
+
         String sql = "insert into reservation_time (start_at) values (?)";
         KeyHolder keyHolder = new GeneratedKeyHolder();
         jdbcTemplate.update(connection -> {

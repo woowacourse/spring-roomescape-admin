@@ -6,7 +6,6 @@ import roomescape.dto.ReservationTimeCreateRequestDto;
 import roomescape.dto.ReservationTimeResponseDto;
 import roomescape.repository.ReservationTimeRepository;
 
-import java.time.LocalTime;
 import java.util.List;
 
 @Service
@@ -19,7 +18,7 @@ public class ReservationTimeService {
     }
 
     public ReservationTimeResponseDto createReservationTime(final ReservationTimeCreateRequestDto requestDto) {
-        LocalTime requestTime = requestDto.startAt();
+        ReservationTime requestTime = requestDto.toEntity();
         ReservationTime savedTime = reservationTimeRepository.save(requestTime);
         return ReservationTimeResponseDto.from(savedTime);
     }

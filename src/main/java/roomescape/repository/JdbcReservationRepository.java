@@ -49,7 +49,7 @@ public class JdbcReservationRepository implements ReservationRepository {
     }
 
     @Override
-    public Reservation save(final String name, final LocalDate requestDate, final Long timeId) {
+    public Reservation save(final Reservation reservation) {
         String sql = """
                 insert into reservation (name, date, time_id) values (?, ?, ?)
                 """;
@@ -57,9 +57,9 @@ public class JdbcReservationRepository implements ReservationRepository {
         jdbcTemplate.update(connection -> {
             PreparedStatement ps = connection.prepareStatement(
                     sql, new String[]{"id"});
-            ps.setString(1, name);
-            ps.setString(2, requestDate.toString());
-            ps.setLong(3, timeId);
+            ps.setString(1, reservation.name());
+            ps.setString(2, reservation.date().toString());
+            ps.setLong(3, reservation.time().id());
             return ps;
         }, keyHolder);
 

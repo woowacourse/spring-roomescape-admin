@@ -26,7 +26,8 @@ public class ReservationService {
     }
 
     public ReservationResponseDto createReservation(ReservationCreateRequestDto dto) {
-        Reservation newReservation = reservationRepository.save(dto.name(), dto.date(), dto.timeId());
+        Reservation requestReservation = dto.toEntity();
+        Reservation newReservation = reservationRepository.save(requestReservation);
         ReservationResponseDto reservationResponseDto = ReservationResponseDto.from(newReservation, newReservation.time());
         return reservationResponseDto;
     }

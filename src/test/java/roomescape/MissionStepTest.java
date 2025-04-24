@@ -200,7 +200,6 @@ public class MissionStepTest {
                 .then().log().all()
                 .statusCode(200);
 
-
         RestAssured.given().log().all()
                 .when().get("/reservations")
                 .then().log().all()

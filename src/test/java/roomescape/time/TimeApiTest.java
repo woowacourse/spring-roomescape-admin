@@ -28,6 +28,7 @@ public class TimeApiTest {
     @DisplayName("시간 생성")
     @Test
     void createTime() {
+        // given & when & then
         RestAssured.given().port(port).log().all()
                 .contentType(ContentType.JSON)
                 .body(new TimeRequest(LocalTime.of(10, 0)))
@@ -39,6 +40,7 @@ public class TimeApiTest {
     @DisplayName("시간 모두 조회")
     @Test
     void findAllTime() {
+        // given & when & then
         RestAssured.given().port(port).log().all()
                 .when().get("/times")
                 .then().log().all()
@@ -60,6 +62,16 @@ public class TimeApiTest {
                 .statusCode(200);
     }
 
+    @DisplayName("존재하지 않는 아이디를 가진 시간을 삭제하려고하면 404를 반환한다.")
+    @Test
+    void deleteTime1() {
+        // given & when & then
+        RestAssured.given().port(port).log().all()
+                .when().delete("times/100")
+                .then().log().all()
+                .statusCode(404);
+    }
+
     private void givenCreateTime(final TimeRequest body) {
         RestAssured.given().port(port).log().all()
                 .contentType(ContentType.JSON)
@@ -67,15 +79,6 @@ public class TimeApiTest {
                 .when().post("/times")
                 .then().log().all()
                 .statusCode(200);
-    }
-
-    @DisplayName("존재하지 않는 아이디를 가진 시간을 삭제하려고하면 404를 반환한다.")
-    @Test
-    void deleteTime1() {
-        RestAssured.given().port(port).log().all()
-                .when().delete("times/100")
-                .then().log().all()
-                .statusCode(404);
     }
 
 

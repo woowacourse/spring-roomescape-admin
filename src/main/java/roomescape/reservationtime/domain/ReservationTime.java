@@ -5,7 +5,7 @@ import java.util.Objects;
 
 public class ReservationTime {
 
-    private Long id;
+    private final Long id;
     private final LocalTime startAt;
 
     public ReservationTime(Long id, LocalTime startAt) {
@@ -23,10 +23,6 @@ public class ReservationTime {
 
     public LocalTime getStartAt() {
         return startAt;
-    }
-
-    public void setId(Long id) {
-        this.id = id;
     }
 
     @Override

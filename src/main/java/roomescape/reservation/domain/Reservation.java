@@ -7,7 +7,7 @@ import roomescape.reservationtime.domain.ReservationTime;
 
 public class Reservation {
 
-    private Long id;
+    private final Long id;
     private final String name;
     private final LocalDate date;
     private final ReservationTime time;
@@ -37,10 +37,6 @@ public class Reservation {
 
     public ReservationTime getTime() {
         return time;
-    }
-
-    public void setId(Long id) {
-        this.id = id;
     }
 
     @JsonIgnore

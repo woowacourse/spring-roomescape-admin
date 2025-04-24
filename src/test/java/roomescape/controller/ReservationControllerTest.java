@@ -1,4 +1,4 @@
-package roomescape;
+package roomescape.controller;
 
 import io.restassured.RestAssured;
 import io.restassured.http.ContentType;
@@ -8,30 +8,14 @@ import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.annotation.DirtiesContext;
+import org.springframework.test.context.jdbc.Sql;
 
 import static org.hamcrest.Matchers.is;
 
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.DEFINED_PORT)
 @DirtiesContext(classMode = DirtiesContext.ClassMode.BEFORE_EACH_TEST_METHOD)
-public class MissionStepTest {
-
-    @Test
-    @DisplayName("예약 페이지를 조회한다")
-    void readAdminPage() {
-        RestAssured.given().log().all()
-                .when().get("/admin/reservation")
-                .then().log().all()
-                .statusCode(200);
-    }
-
-    @Test
-    @DisplayName("어드민 메인 페이지를 조회한다")
-    void readReservationPage() {
-        RestAssured.given().log().all()
-                .when().get("/admin")
-                .then().log().all()
-                .statusCode(200);
-    }
+@Sql("/test-data.sql")
+class ReservationControllerTest {
 
     @Test
     @DisplayName("예약 목록을 조회한다")
@@ -40,7 +24,7 @@ public class MissionStepTest {
                 .when().get("/reservations")
                 .then().log().all()
                 .statusCode(200)
-                .body("size()", is(0));
+                .body("size()", is(1));
     }
 
     @Test
@@ -57,20 +41,18 @@ public class MissionStepTest {
                 .when().post("/reservations")
                 .then().log().all()
                 .statusCode(201)
-                .body("id", is(1));
+                .body("id", is(2));
 
         RestAssured.given().log().all()
                 .when().get("/reservations")
                 .then().log().all()
                 .statusCode(200)
-                .body("size()", is(1));
+                .body("size()", is(2));
     }
 
     @Test
     @DisplayName("예약을 삭제한다")
     void deleteReservation() {
-        createReservation();
-
         RestAssured.given().log().all()
                 .when().delete("/reservations/1")
                 .then().log().all()
@@ -89,7 +71,7 @@ public class MissionStepTest {
         Map<String, String> params = new HashMap<>();
         params.put("name", "");
         params.put("date", "2023-08-05");
-        params.put("time", "15:40");
+        params.put("timeId", "1");
 
         RestAssured.given().log().all()
                 .contentType(ContentType.JSON)
@@ -103,7 +85,7 @@ public class MissionStepTest {
     @DisplayName("예약을 삭제할 수 없으면 오류 상태코드를 반환한다")
     void deleteReservationException() {
         RestAssured.given().log().all()
-                .when().delete("/reservations/100099")
+                .when().delete("/reservations/100")
                 .then().log().all()
                 .statusCode(500);
     }

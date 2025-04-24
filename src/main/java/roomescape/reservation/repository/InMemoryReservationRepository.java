@@ -2,6 +2,7 @@ package roomescape.reservation.repository;
 
 import java.util.List;
 import java.util.Map;
+import java.util.Map.Entry;
 import java.util.Optional;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.atomic.AtomicLong;
@@ -39,7 +40,11 @@ public class InMemoryReservationRepository implements ReservationRepository {
 
     @Override
     public Long getCachedId(final Cacheable domain) {
-        return 0L;
+        return reservations.entrySet().stream()
+                .filter(entry -> entry.getValue().equals(domain))
+                .map(Entry::getKey)
+                .findAny()
+                .orElseThrow();
     }
 
     @Override

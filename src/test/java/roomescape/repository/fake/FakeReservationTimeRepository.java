@@ -1,10 +1,9 @@
 package roomescape.repository.fake;
 
-import java.time.LocalTime;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.atomic.AtomicLong;
 import roomescape.domain.ReservationTime;
-import roomescape.domain.ReservationTimes;
 import roomescape.repository.ReservationTimeRepository;
 
 public class FakeReservationTimeRepository implements ReservationTimeRepository {
@@ -13,7 +12,8 @@ public class FakeReservationTimeRepository implements ReservationTimeRepository 
 
     @Override
     public ReservationTime createReservationTime(ReservationTime reservationTime) {
-        ReservationTime createdReservationTime = ReservationTime.generateWithPrimaryKey(reservationTime, id.getAndIncrement());
+        ReservationTime createdReservationTime = ReservationTime.generateWithPrimaryKey(reservationTime,
+                id.getAndIncrement());
         reservationTimes.add(createdReservationTime);
         return createdReservationTime;
     }
@@ -34,5 +34,28 @@ public class FakeReservationTimeRepository implements ReservationTimeRepository 
     @Override
     public void deleteReservationTime(Long id) {
         reservationTimes.remove(id);
+    }
+
+    public static class ReservationTimes {
+        private final List<ReservationTime> reservationTimes;
+
+        public ReservationTimes() {
+            this.reservationTimes = new ArrayList<>();
+        }
+
+        public void add(ReservationTime reservationTime) {
+            reservationTimes.add(reservationTime);
+        }
+
+        public void remove(Long id) {
+            boolean removed = reservationTimes.removeIf(reservationTime -> reservationTime.isSameId(id));
+            if (!removed) {
+                throw new IllegalArgumentException("일치하는 ID의 예약을 찾을 수 없습니다.");
+            }
+        }
+
+        public List<ReservationTime> getReservationTimes() {
+            return new ArrayList<>(reservationTimes);
+        }
     }
 }

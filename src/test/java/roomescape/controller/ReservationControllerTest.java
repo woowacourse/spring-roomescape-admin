@@ -9,8 +9,8 @@ import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.CsvSource;
 import org.springframework.http.ResponseEntity;
-import roomescape.domain.Reservation;
 import roomescape.domain.ReservationTime;
+import roomescape.dto.request.ReservationRequest;
 import roomescape.dto.response.ReservationResponse;
 import roomescape.repository.fake.FakeReservationRepository;
 import roomescape.repository.fake.FakeReservationTimeRepository;
@@ -29,20 +29,20 @@ class ReservationControllerTest {
     void create(String nickname, LocalDate date, Long timeId, LocalTime time) {
         // given
         makeStubReservationTime(timeId, time);
-        Reservation reservation = new Reservation(null, nickname, date, timeId);
+        ReservationRequest reservationRequest = new ReservationRequest(nickname, date, timeId);
 
         // when
-        ResponseEntity<ReservationResponse> actualResponse = reservationController.create(reservation);
+        ResponseEntity<ReservationResponse> actualResponse = reservationController.create(reservationRequest);
 
         // then
         Assertions.assertThat(actualResponse).isNotNull();
         Assertions.assertThat(actualResponse.getBody()).isNotNull();
         assertAll(
                 () -> Assertions.assertThat(actualResponse.getStatusCode().is2xxSuccessful()).isTrue(),
-                () -> Assertions.assertThat(actualResponse.getBody().name()).isEqualTo(reservation.getName()),
-                () -> Assertions.assertThat(actualResponse.getBody().date()).isEqualTo(reservation.getDate()),
-                () -> Assertions.assertThat(actualResponse.getBody().reservationTimeResponse().id()).isEqualTo(timeId),
-                () -> Assertions.assertThat(actualResponse.getBody().reservationTimeResponse().startAt()).isEqualTo(time)
+                () -> Assertions.assertThat(actualResponse.getBody().name()).isEqualTo(reservationRequest.name()),
+                () -> Assertions.assertThat(actualResponse.getBody().date()).isEqualTo(reservationRequest.date()),
+                () -> Assertions.assertThat(actualResponse.getBody().reservationTime().getId()).isEqualTo(timeId),
+                () -> Assertions.assertThat(actualResponse.getBody().reservationTime().getStartAt()).isEqualTo(time)
         );
     }
 
@@ -66,8 +66,8 @@ class ReservationControllerTest {
         assertAll(
                 () -> Assertions.assertThat(reservationList.getFirst().name()).isEqualTo(givenName),
                 () -> Assertions.assertThat(reservationList.getFirst().date()).isEqualTo(givenDate),
-                () -> Assertions.assertThat(reservationList.getFirst().reservationTimeResponse().id()).isEqualTo(givenTimeId),
-                () -> Assertions.assertThat(reservationList.getFirst().reservationTimeResponse().startAt()).isEqualTo(givenTime)
+                () -> Assertions.assertThat(reservationList.getFirst().reservationTime().getId()).isEqualTo(givenTimeId),
+                () -> Assertions.assertThat(reservationList.getFirst().reservationTime().getStartAt()).isEqualTo(givenTime)
         );
     }
 

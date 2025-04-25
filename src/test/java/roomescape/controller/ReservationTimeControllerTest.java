@@ -9,6 +9,7 @@ import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.CsvSource;
 import org.springframework.http.ResponseEntity;
 import roomescape.domain.ReservationTime;
+import roomescape.dto.request.ReservationTimeRequest;
 import roomescape.repository.fake.FakeReservationTimeRepository;
 
 class ReservationTimeControllerTest {
@@ -18,15 +19,15 @@ class ReservationTimeControllerTest {
     @CsvSource(value = {"18:00"})
     void create(LocalTime startAt) {
         // given
-        ReservationTime reservationTime = new ReservationTime(1L, startAt);
+        ReservationTimeRequest reservationTimeRequest = new ReservationTimeRequest(startAt);
 
         // when
-        ResponseEntity<ReservationTime> actualResponse = reservationTimeController.create(reservationTime);
+        ResponseEntity<ReservationTime> actualResponse = reservationTimeController.create(reservationTimeRequest);
 
         // then
         assertAll(
                 () -> Assertions.assertThat(actualResponse.getStatusCode().is2xxSuccessful()).isTrue(),
-                () -> Assertions.assertThat(actualResponse.getBody().getStartAt()).isEqualTo(reservationTime.getStartAt())
+                () -> Assertions.assertThat(actualResponse.getBody().getStartAt()).isEqualTo(reservationTimeRequest.startAt())
         );
     }
 

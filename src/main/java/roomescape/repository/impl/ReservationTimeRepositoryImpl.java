@@ -3,6 +3,7 @@ package roomescape.repository.impl;
 import java.sql.PreparedStatement;
 import java.util.List;
 import java.util.Objects;
+import java.util.Optional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.support.GeneratedKeyHolder;
@@ -48,12 +49,14 @@ public class ReservationTimeRepositoryImpl implements ReservationTimeRepository 
         return reservationTimes;
     }
 
-    public ReservationTime readReservationTime(Long timeId) {
+    public Optional<ReservationTime> readReservationTime(Long timeId) {
         final String query = "SELECT id, start_at FROM reservation_time WHERE id = ?";
-        return jdbcTemplate.queryForObject(query, (resultSet, rowNum) -> new ReservationTime(
-                resultSet.getLong("id"),
-                resultSet.getTime("start_at").toLocalTime()
-        ), timeId);
+        return Optional.ofNullable(
+                jdbcTemplate.queryForObject(query, (resultSet, rowNum) -> new ReservationTime(
+                        resultSet.getLong("id"),
+                        resultSet.getTime("start_at").toLocalTime()
+                ), timeId)
+        );
     }
 
     public void deleteReservationTime(Long id) {

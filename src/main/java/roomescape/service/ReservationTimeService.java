@@ -2,14 +2,12 @@ package roomescape.service;
 
 import java.util.List;
 import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
-import roomescape.controller.request.CreateReservationTimeRequest;
-import roomescape.controller.response.ReservationTimeResponse;
 import roomescape.domain.ReservationTime;
 import roomescape.persistence.ReservationTimeDao;
+import roomescape.service.param.CreateReservationTimeParam;
+import roomescape.service.result.ReservationTimeResult;
 
 @Service
-@Transactional
 public class ReservationTimeService {
 
     private final ReservationTimeDao reservationTImeDao;
@@ -18,21 +16,20 @@ public class ReservationTimeService {
         this.reservationTImeDao = reservationTImeDao;
     }
 
-    public Long create(CreateReservationTimeRequest createReservationTimeRequest) {
-        return reservationTImeDao.create(new ReservationTime(createReservationTimeRequest.startAt()));
+    public Long create(CreateReservationTimeParam createReservationTimeParam) {
+        return reservationTImeDao.create(new ReservationTime(createReservationTimeParam.startAt()));
     }
 
-    public ReservationTimeResponse findById(Long reservationTimeId) {
-        ReservationTime reservationTime = reservationTImeDao.findById(reservationTimeId)
-                .orElseThrow(
-                        () -> new IllegalArgumentException(reservationTimeId + "에 해당하는 reservation_time 튜플이 없습니다."));
-        return toReservationResponse(reservationTime);
+    public ReservationTimeResult findById(Long reservationTimeId) {
+        ReservationTime reservationTime = reservationTImeDao.findById(reservationTimeId).orElseThrow(
+                () -> new IllegalArgumentException(reservationTimeId + "에 해당하는 reservation_time 튜플이 없습니다."));
+        return toReservationResult(reservationTime);
     }
 
-    public List<ReservationTimeResponse> findAll() {
+    public List<ReservationTimeResult> findAll() {
         List<ReservationTime> reservationTimes = reservationTImeDao.findAll();
         return reservationTimes.stream()
-                .map(this::toReservationResponse)
+                .map(this::toReservationResult)
                 .toList();
     }
 
@@ -40,7 +37,7 @@ public class ReservationTimeService {
         reservationTImeDao.deleteById(reservationTimeId);
     }
 
-    private ReservationTimeResponse toReservationResponse(ReservationTime reservationTime) {
-        return new ReservationTimeResponse(reservationTime.id(), reservationTime.startAt());
+    private ReservationTimeResult toReservationResult(ReservationTime reservationTime) {
+        return new ReservationTimeResult(reservationTime.id(), reservationTime.startAt());
     }
 }

@@ -1,6 +1,7 @@
 package roomescape.controller.request;
 
 import java.time.LocalDate;
+import roomescape.service.param.CreateReservationParam;
 
 public record CreateReservationRequest(
         String name,
@@ -32,5 +33,9 @@ public record CreateReservationRequest(
         if (timeId == null) {
             throw new IllegalArgumentException(String.format(ERROR_MESSAGE_FORMAT, "timeId", timeId));
         }
+    }
+
+    public CreateReservationParam toServiceParam() {
+        return new CreateReservationParam(name, date, timeId);
     }
 }

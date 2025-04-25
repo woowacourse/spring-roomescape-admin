@@ -2,17 +2,15 @@ package roomescape.service;
 
 import java.util.List;
 import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
-import roomescape.controller.request.CreateReservationRequest;
-import roomescape.controller.response.ReservationResponse;
-import roomescape.controller.response.ReservationTimeResponse;
 import roomescape.domain.Reservation;
 import roomescape.domain.ReservationTime;
 import roomescape.persistence.ReservationDao;
 import roomescape.persistence.ReservationTimeDao;
+import roomescape.service.param.CreateReservationParam;
+import roomescape.service.result.ReservationResult;
+import roomescape.service.result.ReservationTimeResult;
 
 @Service
-@Transactional
 public class ReservationService {
 
     private final ReservationTimeDao reservationTImeDao;
@@ -24,14 +22,15 @@ public class ReservationService {
         this.reservationDao = reservationDao;
     }
 
-    public Long create(CreateReservationRequest createReservationRequest) {
-        ReservationTime reservationTime = reservationTImeDao.findById(createReservationRequest.timeId())
-                .orElseThrow(() -> new IllegalArgumentException(
-                        createReservationRequest.timeId() + "에 해당하는 reservation_time 튜플이 없습니다."));
+    public Long create(CreateReservationParam createReservationParam) {
+        ReservationTime reservationTime = reservationTImeDao.findById(createReservationParam.timeId()).orElseThrow(
+                () -> new IllegalArgumentException(
+                        createReservationParam.timeId() + "에 해당하는 reservation_time 튜플이 없습니다."));
+
         return reservationDao.create(
                 new Reservation(
-                        createReservationRequest.name(),
-                        createReservationRequest.date(),
+                        createReservationParam.name(),
+                        createReservationParam.date(),
                         reservationTime));
     }
 
@@ -39,25 +38,25 @@ public class ReservationService {
         reservationDao.deleteById(reservationId);
     }
 
-    public List<ReservationResponse> findAll() {
+    public List<ReservationResult> findAll() {
         List<Reservation> reservations = reservationDao.findAll();
         return reservations.stream()
-                .map(this::toReservationResponse)
+                .map(this::toReservationResult)
                 .toList();
     }
 
-    public ReservationResponse findById(Long reservationId) {
+    public ReservationResult findById(Long reservationId) {
         Reservation reservation = reservationDao.findById(reservationId)
                 .orElseThrow(() -> new IllegalArgumentException(reservationId + "에 해당하는 reservation_time 튜플이 없습니다."));
-        return toReservationResponse(reservation);
+        return toReservationResult(reservation);
     }
 
-    private ReservationResponse toReservationResponse(Reservation reservation) {
-        return new ReservationResponse(
+    private ReservationResult toReservationResult(Reservation reservation) {
+        return new ReservationResult(
                 reservation.getId(),
                 reservation.getName(),
                 reservation.getDate(),
-                new ReservationTimeResponse(
+                new ReservationTimeResult(
                         reservation.getTime().id(),
                         reservation.getTime().startAt()));
     }

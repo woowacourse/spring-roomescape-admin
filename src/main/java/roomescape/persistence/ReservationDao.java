@@ -75,8 +75,7 @@ public class ReservationDao {
                                     rs.getLong("reservation_id"),
                                     rs.getString("name"),
                                     rs.getDate("date").toLocalDate(),
-                                    new ReservationTime(rs.getLong("time_id"),
-                                            rs.getTime("time_value").toLocalTime())),
+                                    new ReservationTime(rs.getLong("time_id"), rs.getTime("time_value").toLocalTime())),
                     reservationId);
             return Optional.of(reservation);
         } catch (EmptyResultDataAccessException exception) {

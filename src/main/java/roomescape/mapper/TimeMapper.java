@@ -1,0 +1,19 @@
+package roomescape.mapper;
+
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.time.LocalTime;
+import org.springframework.jdbc.core.RowMapper;
+import roomescape.domain_entity.Id;
+import roomescape.domain_entity.Time;
+
+public class TimeMapper implements RowMapper<Time> {
+
+    @Override
+    public Time mapRow(ResultSet rs, int rowNum) throws SQLException {
+        return new Time(
+                new Id(rs.getLong("id")),
+                rs.getObject("start_at", LocalTime.class)
+        );
+    }
+}

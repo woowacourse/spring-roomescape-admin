@@ -7,6 +7,7 @@ import roomescape.dao.ReservationTimeDao;
 import roomescape.dto.ReservationTimeRequest;
 import roomescape.dto.ReservationTimeResponse;
 import roomescape.entity.ReservationTime;
+import roomescape.exceptions.EntityNotFoundException;
 
 @Service
 @Transactional
@@ -19,7 +20,9 @@ public class ReservationTimeService {
     }
 
     public void existsTimeById(long id) {
-        repository.existsTimeById(id);
+        if (!repository.existsTimeById(id)) {
+            throw new EntityNotFoundException("해당 예약 시간이 존재하지 않습니다: " + id);
+        }
     }
 
     public List<ReservationTimeResponse> readReservationTime() {

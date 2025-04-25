@@ -22,12 +22,10 @@ public class ReservationTimeH2Dao implements ReservationTimeDao {
     }
 
     @Override
-    public void existsTimeById(long id) {
+    public boolean existsTimeById(long id) {
         String sql = "SELECT COUNT(*) FROM reservation_time WHERE id = ?";
         Integer count = jdbcTemplate.queryForObject(sql, Integer.class, id);
-        if (count == null || count == 0) {
-            throw new EntityNotFoundException("해당 예약 시간이 존재하지 않습니다: " + id);
-        }
+        return count != null && count != 0;
     }
 
     @Override

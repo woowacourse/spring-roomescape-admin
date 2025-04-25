@@ -56,8 +56,8 @@ public class ReservationTimeServiceTest {
     private static class ReservationTimeTestDao implements ReservationTimeDao {
 
         @Override
-        public void existsTimeById(long id) {
-            throw new EntityNotFoundException("");
+        public boolean existsTimeById(long id) {
+            return false;
         }
 
         @Override

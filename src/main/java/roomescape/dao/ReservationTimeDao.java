@@ -2,7 +2,6 @@ package roomescape.dao;
 
 import java.sql.PreparedStatement;
 import java.util.List;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;
 import org.springframework.jdbc.support.GeneratedKeyHolder;
@@ -13,8 +12,7 @@ import roomescape.model.ReservationTime;
 @Repository
 public class ReservationTimeDao {
 
-    @Autowired
-    private JdbcTemplate jdbcTemplate;
+    private final JdbcTemplate jdbcTemplate;
 
     private final RowMapper<ReservationTime> actorRowMapper = (resultSet, rowNum) -> {
         ReservationTime reservationTime = new ReservationTime(
@@ -23,6 +21,10 @@ public class ReservationTimeDao {
         );
         return reservationTime;
     };
+
+    public ReservationTimeDao(JdbcTemplate jdbcTemplate) {
+        this.jdbcTemplate = jdbcTemplate;
+    }
 
     public List<ReservationTime> findAll() {
         String sql = "SELECT * FROM reservation_time";

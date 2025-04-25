@@ -37,8 +37,9 @@ public class MemoryReservationRepository implements ReservationRepository {
     @Override
     public long add(final Reservation reservation) {
         final long id = index.getAndIncrement();
-        reservation.setId(id);
-        reservations.put(id, reservation);
+        final Reservation savedReservation = new Reservation(id, reservation.getName(), reservation.getDate(),
+                reservation.getTime());
+        reservations.put(id, savedReservation);
         return id;
     }
 

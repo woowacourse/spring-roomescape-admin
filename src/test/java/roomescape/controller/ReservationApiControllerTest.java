@@ -4,10 +4,7 @@ import static org.hamcrest.Matchers.is;
 
 import io.restassured.RestAssured;
 import io.restassured.http.ContentType;
-import java.time.LocalDate;
 import java.time.LocalTime;
-import java.time.format.DateTimeFormatter;
-import java.util.HashMap;
 import java.util.Map;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -15,6 +12,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.test.annotation.DirtiesContext;
+import roomescape.ReservationTestFixture;
 
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.DEFINED_PORT)
 @DirtiesContext(classMode = DirtiesContext.ClassMode.BEFORE_EACH_TEST_METHOD)
@@ -26,10 +24,7 @@ class ReservationApiControllerTest {
     @DisplayName("예약 목록을 조회할 수 있다.")
     @Test
     void getReservationsTest() {
-        RestAssured.given().log().all()
-                .when().get("/reservations")
-                .then().log().all()
-                .statusCode(200)
+        ReservationTestFixture.successGet("/reservations")
                 .body("size()", is(0));
     }
 
@@ -39,23 +34,12 @@ class ReservationApiControllerTest {
         LocalTime reservationTime = LocalTime.of(11, 0);
         jdbcTemplate.update("INSERT INTO reservation_time (start_at) VALUES (?)", reservationTime);
 
-        RestAssured.given().log().all()
-                .when().get("/reservations")
-                .then().log().all()
-                .statusCode(200)
+        ReservationTestFixture.successGet("/reservations")
                 .body("size()", is(0));
 
-        Map<String, Object> params = new HashMap<>();
-        params.put("name", "브라운");
-        params.put("date", LocalDate.now().plusDays(1).format(DateTimeFormatter.ofPattern("yyyy-MM-dd")));
-        params.put("timeId", 1L);
+        Map<String, Object> params = ReservationTestFixture.createReservationRequestBody();
 
-        RestAssured.given().log().all()
-                .contentType(ContentType.JSON)
-                .body(params)
-                .when().post("/reservations")
-                .then().log().all()
-                .statusCode(200)
+        ReservationTestFixture.successPostWithJason(params, "/reservations")
                 .body("id", is(1));
     }
 
@@ -65,23 +49,12 @@ class ReservationApiControllerTest {
         LocalTime reservationTime = LocalTime.of(11, 0);
         jdbcTemplate.update("INSERT INTO reservation_time (start_at) VALUES (?)", reservationTime);
 
-        RestAssured.given().log().all()
-                .when().get("/reservations")
-                .then().log().all()
-                .statusCode(200)
+        ReservationTestFixture.successGet("/reservations")
                 .body("size()", is(0));
 
-        Map<String, Object> params = new HashMap<>();
-        params.put("name", "브라운");
-        params.put("date", LocalDate.now().plusDays(1).format(DateTimeFormatter.ofPattern("yyyy-MM-dd")));
-        params.put("timeId", 1);
+        Map<String, Object> params = ReservationTestFixture.createReservationRequestBody();
 
-        RestAssured.given().log().all()
-                .contentType(ContentType.JSON)
-                .body(params)
-                .when().post("/reservations")
-                .then().log().all()
-                .statusCode(200)
+        ReservationTestFixture.successPostWithJason(params, "/reservations")
                 .body("id", is(1));
 
         RestAssured.given().log().all()

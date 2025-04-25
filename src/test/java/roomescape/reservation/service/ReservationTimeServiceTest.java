@@ -4,7 +4,6 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import roomescape.reservation.dto.ReservationTimeRequestDto;
 import roomescape.reservation.dto.ReservationTimeResponseDto;
-import roomescape.reservation.entity.ReservationTime;
 import roomescape.reservation.exception.EntityNotFoundException;
 
 import java.time.LocalTime;
@@ -32,7 +31,7 @@ class ReservationTimeServiceTest {
         ReservationTimeResponseDto response = reservationTimeService.add(request);
 
         // then
-        ReservationTimeResponseDto expected = ReservationTimeResponseDto.toDto(new ReservationTime(1L, startAt));
+        ReservationTimeResponseDto expected = new ReservationTimeResponseDto(1L, startAt);
         assertThat(response).isEqualTo(expected);
     }
 
@@ -49,8 +48,8 @@ class ReservationTimeServiceTest {
 
         // then
         assertThat(all).containsExactly(
-            ReservationTimeResponseDto.toDto(new ReservationTime(1L, tenHour)),
-            ReservationTimeResponseDto.toDto(new ReservationTime(2L, elevenHour)));
+            new ReservationTimeResponseDto(1L, tenHour),
+            new ReservationTimeResponseDto(2L, elevenHour));
     }
 
     @Test

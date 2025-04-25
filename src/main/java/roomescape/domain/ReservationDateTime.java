@@ -20,11 +20,15 @@ public class ReservationDateTime {
 
     private void validateDateTime(final ReservationDate date, final ReservationTime time) {
         ZoneId zoneId = ZoneId.of("Asia/Seoul");
-        ZonedDateTime now = ZonedDateTime.now(zoneId);
+        LocalDateTime now = ZonedDateTime.now(zoneId).toLocalDateTime();
 
-        if (LocalDateTime.of(date.getDate(), time.getStartAt()).isBefore(now.toLocalDateTime())) {
+        if (getDateTime(date, time).isBefore(now)) {
             throw new PastReservationException("과거 날짜로 예약할 수 없습니다.");
         }
+    }
+
+    private LocalDateTime getDateTime(final ReservationDate date, final ReservationTime time) {
+        return LocalDateTime.of(date.getDate(), time.getStartAt());
     }
 
     public LocalDate getDate() {

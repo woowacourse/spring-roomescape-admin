@@ -67,7 +67,6 @@ public class ReservationTimeDaoImpl implements ReservationTimeDao {
         );
     }
 
-
     @Override
     public void delete(long id) {
         String sql = "delete from reservation_time where id = ?";

@@ -13,7 +13,7 @@ import static org.hamcrest.CoreMatchers.is;
 
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.DEFINED_PORT)
 @DirtiesContext(classMode = DirtiesContext.ClassMode.BEFORE_EACH_TEST_METHOD)
-public class ReservationTimeApiTest {
+public class ReservationTimeApiE2ETest {
 
     @Test
     @DisplayName("시간 관리 데이터를 추가/삭제할 수 있다")

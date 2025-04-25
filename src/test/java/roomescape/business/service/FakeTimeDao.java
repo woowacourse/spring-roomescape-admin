@@ -43,6 +43,7 @@ public class FakeTimeDao implements TimeDao {
     @Override
     public List<Time> findAll() {
         return database.stream()
+                .filter(timeEntity -> timeEntity.id() != null)
                 .map(TimeEntity::toDomain)
                 .toList();
     }

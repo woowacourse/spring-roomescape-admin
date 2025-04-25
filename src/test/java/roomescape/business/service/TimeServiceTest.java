@@ -12,6 +12,8 @@ import roomescape.presentation.dto.TimeResponse;
 
 class TimeServiceTest {
 
+    private static final LocalTime FORMATTED_MAX_LOCAL_TIME = LocalTime.of(23, 59);
+
     private TimeService timeService;
 
     @BeforeEach
@@ -23,8 +25,8 @@ class TimeServiceTest {
     @Test
     void create() {
         // given
-        final TimeRequest timeRequest = new TimeRequest(LocalTime.MAX);
-        final TimeResponse expected = new TimeResponse(1L, LocalTime.MAX);
+        final TimeRequest timeRequest = new TimeRequest(FORMATTED_MAX_LOCAL_TIME);
+        final TimeResponse expected = new TimeResponse(1L, FORMATTED_MAX_LOCAL_TIME);
 
         // when & then
         assertThat(timeService.create(timeRequest))
@@ -35,13 +37,28 @@ class TimeServiceTest {
     @Test
     void find() {
         // given
-        timeService.create(new TimeRequest(LocalTime.MAX));
+        timeService.create(new TimeRequest(FORMATTED_MAX_LOCAL_TIME));
 
         final Long id = 1L;
-        final Time expected = new Time(1L, LocalTime.of(23, 59));
+        final Time expected = new Time(1L, FORMATTED_MAX_LOCAL_TIME);
 
         // when & then
         assertThat(timeService.find(id))
                 .isEqualTo(expected);
+    }
+
+    @DisplayName("모든 방탈출 시간을 조회한다.")
+    @Test
+    void findAll() {
+        // given
+        timeService.create(new TimeRequest(LocalTime.of(10, 0)));
+        timeService.create(new TimeRequest(LocalTime.of(20, 15)));
+
+        // when & then
+        assertThat(timeService.findAll())
+                .containsExactly(
+                        new TimeResponse(1L, LocalTime.of(10, 0)),
+                        new TimeResponse(2L, LocalTime.of(20, 15))
+                );
     }
 }

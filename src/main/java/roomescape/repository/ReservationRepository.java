@@ -9,7 +9,10 @@ import org.springframework.jdbc.support.KeyHolder;
 import org.springframework.stereotype.Repository;
 import roomescape.dto.ReservationRequestDto;
 import roomescape.model.Reservation;
+import roomescape.model.ReservationDate;
+import roomescape.model.ReservationDateTime;
 import roomescape.model.ReservationTime;
+import roomescape.model.UserName;
 
 @Repository
 public class ReservationRepository {
@@ -23,9 +26,11 @@ public class ReservationRepository {
         String sql = "SELECT r.id, r.name, r.date, r.time_id, t.start_at FROM reservation as r inner join reservation_time as t on r.time_id = t.id";
         return jdbcTemplate.query(sql, (rs, rowNum) -> new Reservation(
                 rs.getLong("id"),
-                rs.getString("name"),
-                rs.getString("date"),
-                new ReservationTime(rs.getLong("time_id"), rs.getString("start_at"))
+                new UserName(rs.getString("name")),
+                new ReservationDateTime(
+                        new ReservationDate(rs.getString("date")),
+                        new ReservationTime(rs.getLong("time_id"), rs.getString("start_at"))
+                )
         ));
     }
 

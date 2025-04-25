@@ -19,14 +19,14 @@ import roomescape.time.domain.ReservationTime;
 import roomescape.time.dto.TimeRequest;
 
 @JdbcTest
-@Import(TimeDAO.class)
-public class ReservationTimeDAOTest {
+@Import(ReservationTimeJdbcDao.class)
+public class ReservationTimeJdbcDaoTest {
 
     @Autowired
     private JdbcTemplate jdbcTemplate;
 
     @Autowired
-    private TimeDAO timeDAO;
+    private ReservationTimeJdbcDao reservationTimeJdbcDao;
 
     @AfterEach
     void afterEach() {
@@ -45,7 +45,7 @@ public class ReservationTimeDAOTest {
         );
 
         //when
-        List<ReservationTime> reservationReservationTimes = timeDAO.findAllTimes();
+        List<ReservationTime> reservationReservationTimes = reservationTimeJdbcDao.findAllTimes();
 
         //then
         Assertions.assertThat(reservationReservationTimes.size()).isOne();
@@ -60,7 +60,7 @@ public class ReservationTimeDAOTest {
         );
 
         //when
-        ReservationTime reservationTime = timeDAO.insertTime(timeRequest);
+        ReservationTime reservationTime = reservationTimeJdbcDao.insertTime(timeRequest);
 
         //then
         Assertions.assertThat(reservationTime.getId()).isNotNull();
@@ -80,9 +80,9 @@ public class ReservationTimeDAOTest {
         }, keyHolder);
 
         //when
-        timeDAO.deleteTime(keyHolder.getKey().longValue());
+        reservationTimeJdbcDao.deleteTime(keyHolder.getKey().longValue());
 
         //then
-        Assertions.assertThat(timeDAO.findAllTimes()).hasSize(0);
+        Assertions.assertThat(reservationTimeJdbcDao.findAllTimes()).hasSize(0);
     }
 }

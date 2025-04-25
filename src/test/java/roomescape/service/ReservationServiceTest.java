@@ -7,28 +7,28 @@ import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import static org.junit.jupiter.api.Assertions.assertAll;
 import org.junit.jupiter.api.Test;
-import roomescape.FakeReservationRepositoryImpl;
-import roomescape.FakeReservationTimeRepositoryImpl;
+import roomescape.FakeReservationDaoImpl;
+import roomescape.FakeReservationTimeDaoImpl;
 import roomescape.domain.Reservation;
 import roomescape.domain.ReservationTime;
-import roomescape.repository.ReservationRepository;
-import roomescape.repository.ReservationTimeRepository;
+import roomescape.repository.ReservationDao;
+import roomescape.repository.ReservationTimeDao;
 import roomescape.service.dto.ReservationRegisterDto;
 import roomescape.service.dto.ReservationResponseDto;
 
 class ReservationServiceTest {
-    private final ReservationTimeRepository reservationTimeRepository = new FakeReservationTimeRepositoryImpl();
-    private final ReservationRepository reservationRepository = new FakeReservationRepositoryImpl();
+    private final ReservationTimeDao reservationTimeDao = new FakeReservationTimeDaoImpl();
+    private final ReservationDao reservationDao = new FakeReservationDaoImpl();
 
     private final ReservationService reservationService = new ReservationService(
-            reservationRepository, reservationTimeRepository
+            reservationDao, reservationTimeDao
     );
 
     @Test
     void 예약_저장_시에_저장된_id를_반환한다() {
         // given
         ReservationTime reservationTime = new ReservationTime(LocalTime.of(23, 30));
-        Long savedReservationTimeId = reservationTimeRepository.save(reservationTime);
+        Long savedReservationTimeId = reservationTimeDao.save(reservationTime);
 
         // when
         Long savedId = reservationService.saveReservation(
@@ -61,11 +61,11 @@ class ReservationServiceTest {
         // given
         LocalTime startAt = LocalTime.of(23, 30);
         ReservationTime reservationTime = new ReservationTime(startAt);
-        Long savedReservationTimeId = reservationTimeRepository.save(reservationTime);
+        Long savedReservationTimeId = reservationTimeDao.save(reservationTime);
 
         String name = "히로";
         LocalDate reservationDate = LocalDate.now().plusDays(1);
-        Long savedReservationId = reservationRepository.save(new Reservation(
+        Long savedReservationId = reservationDao.save(new Reservation(
                 name,
                 reservationDate,
                 reservationTime
@@ -95,13 +95,13 @@ class ReservationServiceTest {
         // given
         LocalTime startAt = LocalTime.of(23, 30);
         ReservationTime reservationTime = new ReservationTime(startAt);
-        Long savedReservationTimeId = reservationTimeRepository.save(reservationTime);
+        Long savedReservationTimeId = reservationTimeDao.save(reservationTime);
 
         Reservation firstReservation = new Reservation("히로", LocalDate.now().plusDays(1), reservationTime);
         Reservation secondReservation = new Reservation("히포", LocalDate.now().plusDays(2), reservationTime);
 
-        Long firstReservationSavedId = reservationRepository.save(firstReservation);
-        Long secondReservationSavedId = reservationRepository.save(secondReservation);
+        Long firstReservationSavedId = reservationDao.save(firstReservation);
+        Long secondReservationSavedId = reservationDao.save(secondReservation);
 
         // when
         List<ReservationResponseDto> responseDtos = reservationService.findAllReservations();
@@ -129,16 +129,16 @@ class ReservationServiceTest {
         // given
         LocalTime startAt = LocalTime.of(23, 30);
         ReservationTime reservationTime = new ReservationTime(startAt);
-        reservationTimeRepository.save(reservationTime);
+        reservationTimeDao.save(reservationTime);
 
         Reservation reservation = new Reservation("히로", LocalDate.now().plusDays(1), reservationTime);
-        Long savedReservationId = reservationRepository.save(reservation);
+        Long savedReservationId = reservationDao.save(reservation);
 
         // when
         reservationService.deleteReservationById(savedReservationId);
 
         // then
-        assertThat(reservationRepository.findById(savedReservationId)).isEmpty();
+        assertThat(reservationDao.findById(savedReservationId)).isEmpty();
     }
 
     @Test

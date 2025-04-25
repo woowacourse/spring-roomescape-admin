@@ -6,24 +6,24 @@ import java.util.Map;
 import java.util.Optional;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.atomic.AtomicLong;
-import roomescape.domain.Reservation;
-import roomescape.repository.ReservationRepository;
+import roomescape.domain.ReservationTime;
+import roomescape.repository.ReservationTimeDao;
 
-public class FakeReservationRepositoryImpl implements ReservationRepository {
-    private final Map<Long, Reservation> sources = new ConcurrentHashMap<>();
+public class FakeReservationTimeDaoImpl implements ReservationTimeDao {
+    private final Map<Long, ReservationTime> sources = new ConcurrentHashMap<>();
     private final AtomicLong id = new AtomicLong(1L);
 
     @Override
-    public Long save(final Reservation reservation) {
+    public Long save(final ReservationTime reservationTime) {
         long id = this.id.getAndIncrement();
-        reservation.setId(id);
-        sources.put(id, reservation);
+        reservationTime.setId(id);
+        sources.put(id, reservationTime);
 
         return id;
     }
 
     @Override
-    public List<Reservation> findAll() {
+    public List<ReservationTime> findAll() {
         return new ArrayList<>(sources.values());
     }
 
@@ -33,7 +33,7 @@ public class FakeReservationRepositoryImpl implements ReservationRepository {
     }
 
     @Override
-    public Optional<Reservation> findById(Long id) {
+    public Optional<ReservationTime> findById(Long id) {
         return Optional.ofNullable(sources.get(id));
     }
 }

@@ -6,26 +6,26 @@ import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.web.server.ResponseStatusException;
 import roomescape.domain.ReservationTime;
-import roomescape.repository.ReservationTimeRepository;
+import roomescape.repository.ReservationTimeDao;
 import roomescape.service.dto.ReservationTimeRegisterDto;
 import roomescape.service.dto.ReservationTimeResponseDto;
 
 @Service
 public class ReservationTimeService {
 
-    private final ReservationTimeRepository reservationTimeRepository;
+    private final ReservationTimeDao reservationTimeDao;
 
-    public ReservationTimeService(ReservationTimeRepository reservationTimeRepository) {
-        this.reservationTimeRepository = reservationTimeRepository;
+    public ReservationTimeService(ReservationTimeDao reservationTimeDao) {
+        this.reservationTimeDao = reservationTimeDao;
     }
 
     public Long saveReservationTime(final ReservationTimeRegisterDto reservationTimeRegisterDto) {
         ReservationTime reservationTime = reservationTimeRegisterDto.toReservationTime();
-        return reservationTimeRepository.save(reservationTime);
+        return reservationTimeDao.save(reservationTime);
     }
 
     public ReservationTime findReservationTimeById(final Long id) {
-        Optional<ReservationTime> foundReservationTime = reservationTimeRepository.findById(id);
+        Optional<ReservationTime> foundReservationTime = reservationTimeDao.findById(id);
 
         if (foundReservationTime.isEmpty()) {
             throw new ResponseStatusException(HttpStatus.NOT_FOUND, "해당 id 와 일치하는 예약 시각이 존재하지 않습니다.");
@@ -34,14 +34,14 @@ public class ReservationTimeService {
     }
 
     public List<ReservationTimeResponseDto> findAllReservationTimes() {
-        return reservationTimeRepository.findAll().stream()
+        return reservationTimeDao.findAll().stream()
                 .map(ReservationTimeResponseDto::new)
                 .toList();
     }
 
     public void deleteReservationTimeById(final Long id) {
         findReservationTimeById(id);
-        reservationTimeRepository.deleteById(id);
+        reservationTimeDao.deleteById(id);
     }
 
 }

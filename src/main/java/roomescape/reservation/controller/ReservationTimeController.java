@@ -11,6 +11,7 @@ import roomescape.reservation.service.ReservationTimeService;
 import java.util.List;
 
 @Controller
+@RequestMapping("/times")
 public class ReservationTimeController {
 
     private final ReservationTimeService reservationTimeService;
@@ -19,22 +20,17 @@ public class ReservationTimeController {
         this.reservationTimeService = reservationTimeService;
     }
 
-    @GetMapping("/admin/time")
-    public String adminReservationTimeDashboard() {
-        return "admin/time";
-    }
-
-    @PostMapping("/times")
+    @PostMapping
     public ResponseEntity<ReservationTimeResponseDto> add(@RequestBody ReservationTimeRequestDto requestDto) {
         return ResponseEntity.ok(reservationTimeService.add(requestDto));
     }
 
-    @GetMapping("/times")
+    @GetMapping
     public ResponseEntity<List<ReservationTimeResponseDto>> findAll() {
         return ResponseEntity.ok(reservationTimeService.findAll());
     }
 
-    @DeleteMapping("/times/{id}")
+    @DeleteMapping("/{id}")
     public ResponseEntity<Void> delete(@PathVariable("id") Long id) {
         reservationTimeService.deleteById(id);
         return ResponseEntity.ok().build();

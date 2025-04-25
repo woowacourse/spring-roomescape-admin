@@ -28,7 +28,12 @@ public class H2ReservationTimeRepository implements ReservationTimeRepository {
             return ps;
         }, keyHolder);
 
-        return keyHolder.getKey().longValue();
+        Number key = keyHolder.getKey();
+        if (key == null) {
+            throw new IllegalStateException("생성된 키가 존재하지 않습니다.");
+        }
+
+        return key.longValue();
     }
 
     @Override

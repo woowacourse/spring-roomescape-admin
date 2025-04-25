@@ -32,7 +32,12 @@ public class H2ReservationRepository implements ReservationRepository {
             return ps;
         }, keyHolder);
 
-        return keyHolder.getKey().longValue();
+        Number key = keyHolder.getKey();
+        if (key == null) {
+            throw new IllegalStateException("생성된 키가 존재하지 않습니다.");
+        }
+
+        return key.longValue();
     }
 
     @Override

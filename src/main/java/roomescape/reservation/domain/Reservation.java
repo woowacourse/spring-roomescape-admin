@@ -2,6 +2,7 @@ package roomescape.reservation.domain;
 
 import java.time.LocalDate;
 import java.time.LocalTime;
+import java.util.Objects;
 import roomescape.time.domain.ReservationTime;
 
 public class Reservation {
@@ -58,5 +59,18 @@ public class Reservation {
         if (date == null) {
             throw new IllegalArgumentException("date는 빈 값일 수 없습니다.");
         }
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (!(o instanceof Reservation that)) {
+            return false;
+        }
+        return Objects.equals(id, that.id);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hashCode(id);
     }
 }

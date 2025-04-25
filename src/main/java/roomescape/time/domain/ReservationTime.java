@@ -1,6 +1,7 @@
 package roomescape.time.domain;
 
 import java.time.LocalTime;
+import java.util.Objects;
 
 public class ReservationTime {
 
@@ -33,5 +34,18 @@ public class ReservationTime {
         if (startAt == null) {
             throw new IllegalArgumentException("시간은 null일 수 없습니다.");
         }
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (!(o instanceof ReservationTime that)) {
+            return false;
+        }
+        return Objects.equals(id, that.id) || Objects.equals(startAt, that.startAt);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(id, startAt);
     }
 }

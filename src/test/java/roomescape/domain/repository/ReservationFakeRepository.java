@@ -13,7 +13,7 @@ public class ReservationFakeRepository implements ReservationRepository {
     private final AtomicLong idGenerator = new AtomicLong();
 
     @Override
-    public Long save(Reservation reservation) {
+    public Long saveAndReturnId(Reservation reservation) {
         Long id = idGenerator.incrementAndGet();
         reservations.put(id, reservation.withId(id));
         return id;

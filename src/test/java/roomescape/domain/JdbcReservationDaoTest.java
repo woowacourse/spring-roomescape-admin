@@ -9,14 +9,12 @@ import javax.sql.DataSource;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
-import org.junit.jupiter.api.TestInstance;
 import org.springframework.jdbc.core.JdbcTemplate;
 import roomescape.reservation.domain.Reservation;
 import roomescape.reservation.domain.Time;
 import roomescape.reservation.domain.repository.JdbcReservationDao;
 import roomescape.util.TestDataSourceFactory;
 
-@TestInstance(TestInstance.Lifecycle.PER_CLASS)
 class JdbcReservationDaoTest {
 
     private JdbcReservationDao jdbcReservationDao;
@@ -39,7 +37,7 @@ class JdbcReservationDaoTest {
         Reservation reservation = new Reservation(null, name, date, time);
 
         // when
-        Long id = jdbcReservationDao.save(reservation);
+        Long id = jdbcReservationDao.saveAndReturnId(reservation);
 
         // then
         assertThat(id).isEqualTo(6L);

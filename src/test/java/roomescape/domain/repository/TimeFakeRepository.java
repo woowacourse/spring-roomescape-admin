@@ -13,7 +13,7 @@ public class TimeFakeRepository implements TimeRepository {
     private final AtomicLong idGenerator = new AtomicLong();
 
     @Override
-    public Long save(Time time) {
+    public Long saveAndReturnId(Time time) {
         Long id = idGenerator.incrementAndGet();
         times.put(id, time.withId(id));
         return id;

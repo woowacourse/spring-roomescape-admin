@@ -21,7 +21,7 @@ public class TimeService {
 
     public TimeResponse add(TimeRequest request) {
         Time newTime = request.newTime();
-        Long id = timeRepository.save(request.newTime());
+        Long id = timeRepository.saveAndReturnId(request.newTime());
         return TimeResponse.from(newTime.withId(id));
     }
 

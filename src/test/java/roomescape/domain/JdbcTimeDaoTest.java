@@ -34,7 +34,7 @@ class JdbcTimeDaoTest {
         Time time = new Time(null, startAt);
 
         // when
-        Long id = jdbcTimeDao.save(time);
+        Long id = jdbcTimeDao.saveAndReturnId(time);
 
         // then
         assertThat(id).isEqualTo(7L);

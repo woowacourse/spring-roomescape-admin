@@ -33,7 +33,7 @@ public class ReservationService {
         Time findTime = timeRepository.findById(request.timeId());
         Reservation reservation = request.newReservation(findTime);
 
-        Long id = reservationRepository.save(reservation);
+        Long id = reservationRepository.saveAndReturnId(reservation);
         return ReservationResponse.from(reservation.withId(id));
     }
 

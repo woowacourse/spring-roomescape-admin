@@ -26,7 +26,7 @@ public class JdbcTimeDao implements TimeRepository {
         this.jdbcTemplate = jdbcTemplate;
     }
 
-    public Long save(Time time) {
+    public Long saveAndReturnId(Time time) {
         String sql = "INSERT INTO reservation_time (start_at) VALUES (?)";
 
         KeyHolder keyHolder = new GeneratedKeyHolder();

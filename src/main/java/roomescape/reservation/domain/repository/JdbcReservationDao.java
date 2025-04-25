@@ -34,7 +34,7 @@ public class JdbcReservationDao implements ReservationRepository {
     }
 
     @Override
-    public Long save(Reservation reservation) {
+    public Long saveAndReturnId(Reservation reservation) {
         String sql = "INSERT INTO reservation (name, date, time_id) VALUES (?, ?, ?)";
         KeyHolder keyHolder = new GeneratedKeyHolder();
         jdbcTemplate.update(

@@ -5,7 +5,7 @@ import roomescape.reservation.domain.Reservation;
 
 public interface ReservationRepository {
 
-    Long save(Reservation reservation);
+    Long saveAndReturnId(Reservation reservation);
 
     int deleteById(Long id);
 

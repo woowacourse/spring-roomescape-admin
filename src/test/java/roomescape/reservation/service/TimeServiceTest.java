@@ -30,7 +30,7 @@ class TimeServiceTest {
         );
 
         for (Time time : times) {
-            timeRepository.save(time);
+            timeRepository.saveAndReturnId(time);
         }
 
         timeService = new TimeService(timeRepository);

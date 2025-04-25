@@ -36,7 +36,7 @@ class ReservationServiceTest {
         );
 
         for (Time time : times) {
-            timeRepository.save(time);
+            timeRepository.saveAndReturnId(time);
         }
 
         List<Reservation> reservations = List.of(
@@ -46,7 +46,7 @@ class ReservationServiceTest {
         );
 
         for (Reservation reservation : reservations) {
-            reservationRepository.save(reservation);
+            reservationRepository.saveAndReturnId(reservation);
         }
 
         reservationService = new ReservationService(reservationRepository, timeRepository);
@@ -87,4 +87,5 @@ class ReservationServiceTest {
         assertThatCode(() -> reservationService.remove(removeId))
                 .doesNotThrowAnyException();
     }
+
 }

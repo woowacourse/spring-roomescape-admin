@@ -20,7 +20,7 @@ public class ReservationRepository {
                 currentId, reservation.getName(), reservation.getDate(), reservation.getTime());
 
         reservations.put(currentId, created);
-        
+
         return currentId;
     }
 
@@ -32,8 +32,12 @@ public class ReservationRepository {
         return List.copyOf(reservations.values());
     }
 
-    public void delete(final Reservation reservation) {
-        reservations.remove(reservation.getId());
+    public void deleteById(final Long id) {
+        if (!reservations.containsKey(id)) {
+            throw new IllegalStateException("Reservation with id " + id + " does not exist");
+        }
+
+        reservations.remove(id);
     }
 
     public void clear() {

@@ -27,6 +27,11 @@ public class UserReservationRestController {
         return ResponseEntity.badRequest().build();
     }
 
+    @ExceptionHandler(IllegalStateException.class)
+    public ResponseEntity<Void> handleIllegalStateException(final IllegalStateException e) {
+        return ResponseEntity.notFound().build();
+    }
+
     @GetMapping
     public ResponseEntity<List<Reservation>> retrieveReservations() {
         final List<Reservation> reservations = reservationRepository.findAll();
@@ -45,12 +50,7 @@ public class UserReservationRestController {
 
     @DeleteMapping("/{id}")
     public ResponseEntity<Void> deleteReservation(@PathVariable final Long id) {
-        final Optional<Reservation> found = reservationRepository.findById(id);
-        if (found.isEmpty()) {
-            return ResponseEntity.notFound().build();
-        }
-
-        reservationRepository.delete(found.get());
+        reservationRepository.deleteById(id);
 
         return ResponseEntity.ok().build();
     }

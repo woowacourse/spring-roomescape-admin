@@ -26,7 +26,7 @@ public class ReservationDaoImpl implements ReservationDao {
 
     @Override
     public List<Reservation> findAll() {
-        String sql = "SELECT r.id AS reservation_id, r.name AS name, r.date AS date, t.id AS time_id, t.start_at AS time_value FROM reservation r JOIN reservation_time t ON r.time_id = t.id";
+        String sql = "SELECT r.id, r.name AS name, r.date AS date, t.id AS time_id, t.start_at AS time_value FROM reservation r JOIN reservation_time t ON r.time_id = t.id";
         return jdbcTemplate.query(sql, getReservationRowMapper());
     }
 
@@ -62,7 +62,7 @@ public class ReservationDaoImpl implements ReservationDao {
 
     private RowMapper<Reservation> getReservationRowMapper() {
         return (resultSet, rowNum) -> new Reservation(
-            resultSet.getLong("reservation_id"),
+            resultSet.getLong("id"),
             resultSet.getString("name"),
             resultSet.getObject("date", LocalDate.class),
             new ReservationTime(

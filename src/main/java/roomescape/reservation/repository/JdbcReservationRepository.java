@@ -84,7 +84,7 @@ public class JdbcReservationRepository implements ReservationRepository {
     }
 
     @Override
-    public void remove(final Long id) {
+    public void deleteById(final Long id) {
         final String sql = "delete from reservation where id = ?";
         final int rows = template.update(sql, id);
         if (rows == 0) {

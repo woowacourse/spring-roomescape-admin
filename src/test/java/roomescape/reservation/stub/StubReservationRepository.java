@@ -50,7 +50,7 @@ public class StubReservationRepository implements ReservationRepository {
     }
 
     @Override
-    public void remove(final Long id) {
+    public void deleteById(final Long id) {
         data.removeIf(r -> r.getId().equals(id));
     }
 

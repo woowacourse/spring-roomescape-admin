@@ -62,7 +62,7 @@ class JdbcReservationTimeRepositoryTest {
     void id에_알맞은_예약_시간을_삭제한다() {
         // given
         // when
-        repository.delete(1L);
+        repository.deleteById(1L);
         final List<ReservationTime> reservationTimes = repository.findAll();
 
         // then

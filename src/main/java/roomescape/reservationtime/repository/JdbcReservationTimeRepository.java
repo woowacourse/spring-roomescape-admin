@@ -41,7 +41,7 @@ public class JdbcReservationTimeRepository implements ReservationTimeRepository 
     }
 
     @Override
-    public void delete(final Long id) {
+    public void deleteById(final Long id) {
         final String sql = "delete from reservation_time where id = ?";
         final int rowsAffected = template.update(sql, id);
 

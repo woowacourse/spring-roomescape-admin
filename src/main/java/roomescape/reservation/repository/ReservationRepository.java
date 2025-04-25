@@ -16,5 +16,5 @@ public interface ReservationRepository {
 
     Optional<Reservation> findById(final Long id);
 
-    void remove(final Long id);
+    void deleteById(final Long id);
 }

@@ -27,6 +27,6 @@ public class ReservationTimeService {
     }
 
     public void delete(final Long id) {
-        reservationTimeRepository.delete(id);
+        reservationTimeRepository.deleteById(id);
     }
 }

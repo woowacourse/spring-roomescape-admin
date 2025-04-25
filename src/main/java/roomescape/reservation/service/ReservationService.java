@@ -40,6 +40,6 @@ public class ReservationService {
     public void deleteReservation(final Long id) {
         final Reservation reservation = reservationRepository.findById(id)
                 .orElseThrow(() -> new IllegalArgumentException("존재하지 않는 예약입니다."));
-        reservationRepository.remove(reservation.getId());
+        reservationRepository.deleteById(reservation.getId());
     }
 }

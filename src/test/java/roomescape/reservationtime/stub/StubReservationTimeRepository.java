@@ -28,7 +28,7 @@ public class StubReservationTimeRepository implements ReservationTimeRepository 
     }
 
     @Override
-    public void delete(final Long id) {
+    public void deleteById(final Long id) {
         data.removeIf(time -> time.getId().equals(id));
     }
 

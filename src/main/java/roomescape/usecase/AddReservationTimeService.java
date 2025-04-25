@@ -2,6 +2,7 @@ package roomescape.usecase;
 
 import java.time.LocalTime;
 import org.springframework.stereotype.Service;
+import roomescape.enttity.ReservationTime;
 
 
 @Service
@@ -15,6 +16,7 @@ public class AddReservationTimeService implements AddReservationTimeUseCase {
 
     @Override
     public CreateReservationTimeOutput addReservationTime(final LocalTime startAt) {
-        return reservationTimeRepository.addReservationTime(startAt);
+        ReservationTime reservationTime = new ReservationTime(null, startAt);
+        return reservationTimeRepository.addReservationTime(reservationTime);
     }
 }

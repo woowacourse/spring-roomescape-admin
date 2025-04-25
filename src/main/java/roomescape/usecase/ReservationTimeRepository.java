@@ -1,7 +1,9 @@
 package roomescape.usecase;
 
-import java.time.LocalTime;
+import roomescape.enttity.ReservationTime;
 
 public interface ReservationTimeRepository {
-    CreateReservationTimeOutput addReservationTime(LocalTime startAt);
+    CreateReservationTimeOutput addReservationTime(ReservationTime reservationTime);
+
+    GetReservationTimeOutput getReservationTime();
 }

@@ -2,10 +2,6 @@ package roomescape.domain_entity;
 
 public record Id(long value) {
 
-    public Id (long value) {
-        this.value = value;
-    }
-
     public static Id empty() {
         return new Id(0);
     }

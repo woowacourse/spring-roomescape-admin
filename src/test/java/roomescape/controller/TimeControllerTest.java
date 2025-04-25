@@ -1,12 +1,12 @@
 package roomescape.controller;
 
 import static org.hamcrest.CoreMatchers.is;
-import static org.junit.jupiter.api.Assertions.*;
 
 import io.restassured.RestAssured;
 import io.restassured.http.ContentType;
 import java.util.HashMap;
 import java.util.Map;
+import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.annotation.DirtiesContext;
@@ -16,7 +16,8 @@ import org.springframework.test.annotation.DirtiesContext;
 class TimeControllerTest {
 
     @Test
-    void 칠단계() {
+    @DisplayName("시간을 생성한다.")
+    void createTime() {
         Map<String, String> params = new HashMap<>();
         params.put("startAt", "10:00");
 
@@ -32,10 +33,20 @@ class TimeControllerTest {
                 .then().log().all()
                 .statusCode(200)
                 .body("size()", is(1));
+    }
 
+    @Test
+    @DisplayName("시간을 삭제한다.")
+    void deleteTime() {
         RestAssured.given().log().all()
                 .when().delete("/times/1")
                 .then().log().all()
                 .statusCode(200);
+
+        RestAssured.given().log().all()
+                .when().get("/times")
+                .then().log().all()
+                .statusCode(200)
+                .body("size()", is(0));
     }
 }

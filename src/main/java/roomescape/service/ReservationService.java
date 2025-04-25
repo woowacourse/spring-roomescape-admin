@@ -24,8 +24,8 @@ public class ReservationService {
 
     public Reservation createReservation(ReservationRequestDto reservationRequest) {
         Reservation newReservation = reservationRequest.toReservation();
-        long id = reservationDao.create(newReservation);
-        newReservation.setId(new Id(id));
+        long reservationId = reservationDao.create(newReservation);
+        newReservation.setId(new Id(reservationId));
 
         ReservationTime reservationTime = timeDao.findById(reservationRequest.timeId());
         newReservation.setTime(reservationTime);

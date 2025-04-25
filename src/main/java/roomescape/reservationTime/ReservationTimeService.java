@@ -3,8 +3,10 @@ package roomescape.reservationTime;
 import java.util.List;
 
 public interface ReservationTimeService {
-    ReservationTime savaReservation(ReservationTime wantToSaveReservationTime);
+    ReservationTime savaReservationTime(ReservationTime wantToSaveReservationTime);
     void deleteReservation(Long wantToDeleteId);
     List<ReservationTime> findAllReservationTime();
     ReservationTime findById(Long timeId);
+    void validateSaveReservationTimeAvailability(ReservationTime wantToValidateReservationTime);
+    void validateDeleteReservationTimeAvailability(Long wantToValidateReservationTimeId);
 }

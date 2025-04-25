@@ -74,6 +74,42 @@ class TimeControllerTest {
 
     }
 
+    @Test
+    @DisplayName("중복된 시간 추가 테스트")
+    void alreadyExistReservationTimeTest() {
+        RestAssured.given().log().all()
+                .contentType(ContentType.JSON)
+                .body(params)
+                .when().post("/times")
+                .then().log().all()
+                .statusCode(200);
+
+        RestAssured.given().log().all()
+                .contentType(ContentType.JSON)
+                .body(params)
+                .when().post("/times")
+                .then().log().all()
+                .statusCode(400);
+    }
+
+    @Test
+    @DisplayName("없는 시간 삭제 테스트")
+    void deleteFailTest() {
+        int id = RestAssured.given().log().all()
+                .contentType(ContentType.JSON)
+                .body(params)
+                .when().post("/times")
+                .then().log().all()
+                .statusCode(200)
+                .extract()
+                .path("id");
+
+        RestAssured.given().log().all()
+                .when().delete("/times/" + (id+1))
+                .then().log().all()
+                .statusCode(404);
+    }
+
     @AfterEach
     void afterEach() {
         params.clear();

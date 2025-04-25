@@ -11,7 +11,7 @@ public class ReservationTimeServiceImpl implements ReservationTimeService {
     }
 
     @Override
-    public ReservationTime savaReservation(ReservationTime wantToSaveReservationTime) {
+    public ReservationTime savaReservationTime(ReservationTime wantToSaveReservationTime) {
         return reservationTimeRepository.saveReservationTime(wantToSaveReservationTime);
     }
 
@@ -28,6 +28,20 @@ public class ReservationTimeServiceImpl implements ReservationTimeService {
     @Override
     public ReservationTime findById(Long timeId) {
         return reservationTimeRepository.findById(timeId);
+    }
+
+    @Override
+    public void validateSaveReservationTimeAvailability(ReservationTime wantToValidateReservationTimeId) {
+        if (reservationTimeRepository.isExistTimeByStartTime(wantToValidateReservationTimeId)) {
+            throw new IllegalArgumentException("[ERROR] 이미 존재하는 시간이에요. 다시 입력해 주세요.");
+        }
+    }
+
+    @Override
+    public void validateDeleteReservationTimeAvailability(Long wantToValidateReservationTimeId) {
+        if (!reservationTimeRepository.isExistTimeById(wantToValidateReservationTimeId)) {
+            throw new IllegalArgumentException("[ERROR] 삭제하고자 하는 시간이 없어요. 확인해 주세요.");
+        }
     }
 
 }

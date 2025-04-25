@@ -12,15 +12,15 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
-import roomescape.user.domain.Reservation;
-import roomescape.user.repository.ReservationRepository;
+import roomescape.user.domain.ReservationTime;
+import roomescape.user.repository.ReservationTimeRepository;
 
 @RequiredArgsConstructor
 @RestController
-@RequestMapping("/reservations")
-public class UserReservationRestController {
+@RequestMapping("/times")
+public class UserReservationTimeRestController {
 
-    private final ReservationRepository reservationRepository;
+    private final ReservationTimeRepository reservationTimeRepository;
 
     @ExceptionHandler(IllegalArgumentException.class)
     public ResponseEntity<Void> handleIllegalArgumentException(final IllegalArgumentException e) {
@@ -33,24 +33,24 @@ public class UserReservationRestController {
     }
 
     @GetMapping
-    public ResponseEntity<List<Reservation>> retrieveReservations() {
-        final List<Reservation> reservations = reservationRepository.findAll();
+    public ResponseEntity<List<ReservationTime>> retrieveReservationTimes() {
+        final List<ReservationTime> reservationTimes = reservationTimeRepository.findAll();
 
-        return ResponseEntity.ok(reservations);
+        return ResponseEntity.ok(reservationTimes);
     }
 
     @PostMapping
-    public ResponseEntity<Reservation> persistReservation(@RequestBody final Reservation reservation) {
-        final Long id = reservationRepository.save(reservation);
-        final Optional<Reservation> found = reservationRepository.findById(id);
+    public ResponseEntity<ReservationTime> persistReservationTime(@RequestBody final ReservationTime reservationTime) {
+        final Long id = reservationTimeRepository.save(reservationTime);
+        final Optional<ReservationTime> found = reservationTimeRepository.findById(id);
 
         return found.map(ResponseEntity::ok)
                 .orElseGet(() -> ResponseEntity.notFound().build());
     }
 
     @DeleteMapping("/{id}")
-    public ResponseEntity<Void> removeReservation(@PathVariable final Long id) {
-        reservationRepository.deleteById(id);
+    public ResponseEntity<Void> removeReservationTime(@PathVariable final Long id) {
+        reservationTimeRepository.deleteById(id);
 
         return ResponseEntity.ok().build();
     }

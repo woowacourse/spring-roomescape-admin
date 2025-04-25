@@ -9,5 +9,4 @@ public record ReservationResponse(
         String name,
         @JsonFormat(pattern = "yyyy-MM-dd") LocalDate date,
         TimeResponse time) {
-
 }

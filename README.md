@@ -1,5 +1,23 @@
 # 방 탈출 예약 관리
 
+# 페이지 경로
+
+### 메인 페이지
+```
+localhost:8080/
+localhost:8080/admin
+```
+
+### 시간 관리 페이지
+```
+localhost:8080/time
+```
+
+### 방탈출 예약 페이지
+```
+localhost:8080/reservation
+```
+
 ## 요구 사항
 
 - [X] 프로젝트 관련 gradle 의존성 추가
@@ -14,9 +32,9 @@
   - [X] 데이터 삭제 기능 구현
 - [X] 방탈출 시간을 사용자가 선택하는 방식으로 수정
   - [X] `templates/admin/time.html` 파일 사용
-- [ ] 시간을 시간 테이블에 저장된 값만 선택할 수 있도록 수정
-  - [ ] `templates/admin/reservation-legacy.html` 대신 `templates/admin/reservation.html` 파일로 변경
-- [ ] 레이어드 아키텍처를 적용하여 레이어별 책임과 역할 분리
+- [X] 시간을 시간 테이블에 저장된 값만 선택할 수 있도록 수정
+  - [X] `templates/admin/reservation-legacy.html` 대신 `templates/admin/reservation.html` 파일로 변경
+- [X] 레이어드 아키텍처를 적용하여 레이어별 책임과 역할 분리
 ---
 # API 명세
 

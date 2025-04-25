@@ -25,8 +25,7 @@ public class ReservationService {
         ReservationTime reservationTime = reservationTimeRepository.findById(dto.timeId());
         Reservation requestReservation = dto.toEntityWith(reservationTime);
         Reservation newReservation = reservationRepository.save(requestReservation);
-        ReservationResponseDto reservationResponseDto = ReservationResponseDto.from(newReservation, newReservation.time());
-        return reservationResponseDto;
+        return ReservationResponseDto.from(newReservation, newReservation.time());
     }
 
     public List<ReservationResponseDto> findAllReservationResponses() {

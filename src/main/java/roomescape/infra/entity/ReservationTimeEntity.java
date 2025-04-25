@@ -2,7 +2,7 @@ package roomescape.infra.entity;
 
 import org.springframework.jdbc.core.RowMapper;
 import roomescape.business.domain.ReservationTime;
-import roomescape.dto.request.ReservationTimeCreateRequest;
+import roomescape.presentation.dto.request.ReservationTimeCreateRequest;
 
 import java.time.LocalTime;
 import java.util.Map;

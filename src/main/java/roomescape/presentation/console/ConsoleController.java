@@ -5,14 +5,14 @@ import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.stereotype.Component;
 import roomescape.business.service.ReservationService;
 import roomescape.business.service.ReservationTimeService;
-import roomescape.dto.request.ReservationCreateRequest;
-import roomescape.dto.request.ReservationTimeCreateRequest;
-import roomescape.dto.response.ReservationResponse;
-import roomescape.dto.response.ReservationTimeResponse;
 import roomescape.infra.ReservationDatabase;
 import roomescape.infra.ReservationTimeDatabase;
 import roomescape.presentation.console.view.InputView;
 import roomescape.presentation.console.view.OutputView;
+import roomescape.presentation.dto.request.ReservationCreateRequest;
+import roomescape.presentation.dto.request.ReservationTimeCreateRequest;
+import roomescape.presentation.dto.response.ReservationResponse;
+import roomescape.presentation.dto.response.ReservationTimeResponse;
 
 import java.util.List;
 

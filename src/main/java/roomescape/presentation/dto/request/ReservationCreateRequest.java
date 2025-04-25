@@ -1,4 +1,4 @@
-package roomescape.dto.request;
+package roomescape.presentation.dto.request;
 
 import org.springframework.util.ObjectUtils;
 

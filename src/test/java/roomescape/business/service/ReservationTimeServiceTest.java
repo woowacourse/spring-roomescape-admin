@@ -3,8 +3,8 @@ package roomescape.business.service;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mockito;
-import roomescape.dto.request.ReservationTimeCreateRequest;
-import roomescape.dto.response.ReservationTimeResponse;
+import roomescape.presentation.dto.request.ReservationTimeCreateRequest;
+import roomescape.presentation.dto.response.ReservationTimeResponse;
 import roomescape.infra.ReservationTimeDatabase;
 import roomescape.infra.entity.ReservationTimeEntity;
 

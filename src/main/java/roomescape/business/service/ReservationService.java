@@ -2,10 +2,10 @@ package roomescape.business.service;
 
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import roomescape.dto.request.ReservationCreateRequest;
-import roomescape.dto.response.ReservationResponse;
 import roomescape.infra.ReservationDatabase;
 import roomescape.infra.entity.ReservationEntity;
+import roomescape.presentation.dto.request.ReservationCreateRequest;
+import roomescape.presentation.dto.response.ReservationResponse;
 
 import java.util.List;
 

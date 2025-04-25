@@ -1,8 +1,8 @@
 package roomescape.presentation.console.view;
 
 import org.springframework.stereotype.Component;
-import roomescape.dto.request.ReservationCreateRequest;
-import roomescape.dto.request.ReservationTimeCreateRequest;
+import roomescape.presentation.dto.request.ReservationCreateRequest;
+import roomescape.presentation.dto.request.ReservationTimeCreateRequest;
 
 import java.io.BufferedReader;
 import java.io.IOException;

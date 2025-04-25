@@ -1,8 +1,8 @@
 package roomescape.presentation.console.view;
 
 import org.springframework.stereotype.Component;
-import roomescape.dto.response.ReservationResponse;
-import roomescape.dto.response.ReservationTimeResponse;
+import roomescape.presentation.dto.response.ReservationResponse;
+import roomescape.presentation.dto.response.ReservationTimeResponse;
 
 import java.util.List;
 

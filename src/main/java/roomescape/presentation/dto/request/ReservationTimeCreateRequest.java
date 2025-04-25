@@ -1,4 +1,4 @@
-package roomescape.dto.request;
+package roomescape.presentation.dto.request;
 
 import java.time.LocalTime;
 import java.util.Objects;

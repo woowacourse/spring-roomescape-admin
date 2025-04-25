@@ -8,8 +8,8 @@ import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.support.GeneratedKeyHolder;
 import org.springframework.jdbc.support.KeyHolder;
 import org.springframework.transaction.annotation.Transactional;
-import roomescape.dto.request.ReservationCreateRequest;
-import roomescape.dto.request.ReservationTimeCreateRequest;
+import roomescape.presentation.dto.request.ReservationCreateRequest;
+import roomescape.presentation.dto.request.ReservationTimeCreateRequest;
 import roomescape.infra.entity.ReservationEntity;
 import roomescape.infra.entity.ReservationTimeEntity;
 

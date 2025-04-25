@@ -9,7 +9,7 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.test.annotation.DirtiesContext;
-import roomescape.dto.response.ReservationResponse;
+import roomescape.presentation.dto.response.ReservationResponse;
 import roomescape.presentation.web.ReservationController;
 
 import java.lang.reflect.Field;

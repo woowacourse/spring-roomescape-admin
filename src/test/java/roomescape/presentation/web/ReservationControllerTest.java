@@ -11,8 +11,8 @@ import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.test.context.bean.override.mockito.MockitoBean;
 import org.springframework.test.web.servlet.MockMvc;
 import roomescape.business.service.ReservationService;
-import roomescape.dto.response.ReservationResponse;
-import roomescape.dto.response.ReservationTimeResponse;
+import roomescape.presentation.dto.response.ReservationResponse;
+import roomescape.presentation.dto.response.ReservationTimeResponse;
 
 import java.time.LocalDate;
 import java.util.List;

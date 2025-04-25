@@ -20,7 +20,6 @@ public class ReservationController {
 
     private final ReservationService reservationService;
 
-    @Autowired
     public ReservationController(final ReservationService reservationService) {
         this.reservationService = reservationService;
     }

@@ -79,12 +79,8 @@ public class JdbcReservationRepository implements ReservationRepository {
     }
 
     @Override
-    public void deleteById(final Long id) {
+    public int deleteById(final long id) {
         String sql = "delete from reservation where id = ?";
-        int affectedRows = jdbcTemplate.update(sql, id);
-
-        if (affectedRows == 0) {
-            throw new IllegalStateException("Reservation with id " + id + " not found");
-        }
+        return jdbcTemplate.update(sql, id);
     }
 }

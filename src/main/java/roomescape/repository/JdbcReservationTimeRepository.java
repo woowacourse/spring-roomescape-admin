@@ -50,18 +50,14 @@ public class JdbcReservationTimeRepository implements ReservationTimeRepository 
     }
 
     @Override
-    public ReservationTime findById(Long id) {
+    public ReservationTime findById(long id) {
         String sql = "select * from reservation_time where id = ?";
         return jdbcTemplate.queryForObject(sql, rowMapper, id);
     }
 
     @Override
-    public void deleteById(Long id) {
+    public int deleteById(long id) {
         String sql = "delete from reservation_time where id = ?";
-        int affectedRows = jdbcTemplate.update(sql, id);
-
-        if (affectedRows == 0) {
-            throw new IllegalStateException("Reservation time with id " + id + " not found");
-        }
+        return jdbcTemplate.update(sql, id);
     }
 }

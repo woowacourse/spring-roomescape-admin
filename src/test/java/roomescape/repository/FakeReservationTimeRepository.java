@@ -28,17 +28,21 @@ public class FakeReservationTimeRepository implements ReservationTimeRepository 
     }
 
     @Override
-    public void deleteById(Long id) {
+    public int deleteById(long id) {
         ReservationTime deleteReservation = reservationTimes.stream()
                 .filter(reservationTime -> Objects.equals(reservationTime.id(), id))
                 .findFirst()
                 .orElseThrow(() -> new IllegalStateException());
+        int affectedRows = (int) reservationTimes.stream()
+                .filter(reservationTime -> Objects.equals(reservationTime.id(), id))
+                .count();
 
         reservationTimes.remove(deleteReservation);
+        return affectedRows;
     }
 
     @Override
-    public ReservationTime findById(Long id) {
+    public ReservationTime findById(long id) {
         return reservationTimes.stream()
                 .filter(reservationTime -> Objects.equals(reservationTime.id(), id))
                 .findFirst()

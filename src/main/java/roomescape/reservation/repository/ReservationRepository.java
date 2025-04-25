@@ -12,7 +12,7 @@ public interface ReservationRepository {
 
     boolean existsByDateAndTime(final LocalDate date, final LocalTime time);
 
-    Reservation save(final String name, final LocalDate date, final Long timeId, final LocalTime time);
+    Reservation save(final Reservation reservation);
 
     Optional<Reservation> findById(final Long id);
 

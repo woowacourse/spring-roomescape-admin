@@ -8,7 +8,6 @@ import java.util.Optional;
 import java.util.concurrent.atomic.AtomicLong;
 import roomescape.reservation.Reservation;
 import roomescape.reservation.repository.ReservationRepository;
-import roomescape.reservationtime.ReservationTime;
 
 public class StubReservationRepository implements ReservationRepository {
 
@@ -37,16 +36,16 @@ public class StubReservationRepository implements ReservationRepository {
     }
 
     @Override
-    public Reservation save(final String name, final LocalDate date, final Long timeId, final LocalTime time) {
+    public Reservation save(final Reservation reservation) {
         long newId = atomicLong.incrementAndGet();
-        Reservation reservation = new Reservation(
+        final Reservation newReservation = new Reservation(
                 newId,
-                name,
-                date,
-                new ReservationTime(timeId, time)
+                reservation.getName(),
+                reservation.getDate(),
+                reservation.getTime()
         );
-        data.add(reservation);
-        return reservation;
+        data.add(newReservation);
+        return newReservation;
     }
 
     @Override

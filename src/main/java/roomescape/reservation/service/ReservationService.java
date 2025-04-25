@@ -31,9 +31,8 @@ public class ReservationService {
         if (reservationRepository.existsByDateAndTime(request.date(), reservationTime.getStartAt())) {
             throw new IllegalArgumentException("해당 시간은 이미 예약되어있습니다.");
         }
-
-        final Reservation newReservation = reservationRepository.save(request.name(), request.date(),
-                reservationTime.getId(), reservationTime.getStartAt());
+        final Reservation reservation = new Reservation(request.name(), request.date(), reservationTime);
+        final Reservation newReservation = reservationRepository.save(reservation);
         return new ReservationResponse(newReservation);
     }
 

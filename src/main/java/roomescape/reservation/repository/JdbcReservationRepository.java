@@ -56,14 +56,14 @@ public class JdbcReservationRepository implements ReservationRepository {
     }
 
     @Override
-    public Reservation save(final String name, final LocalDate date, final Long timeId, final LocalTime time) {
+    public Reservation save(final Reservation reservation) {
         MapSqlParameterSource params = new MapSqlParameterSource()
-                .addValue("name", name)
-                .addValue("date", date)
-                .addValue("time_id", timeId);
+                .addValue("name", reservation.getName())
+                .addValue("date", reservation.getDate())
+                .addValue("time_id", reservation.getTime().getId());
 
         final long newId = inserter.executeAndReturnKey(params).longValue();
-        return new Reservation(newId, name, date, new ReservationTime(timeId, time));
+        return new Reservation(newId, reservation.getName(), reservation.getDate(), reservation.getTime());
     }
 
     @Override

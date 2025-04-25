@@ -16,6 +16,7 @@ import org.springframework.jdbc.datasource.embedded.EmbeddedDatabase;
 import org.springframework.jdbc.datasource.embedded.EmbeddedDatabaseBuilder;
 import org.springframework.jdbc.datasource.embedded.EmbeddedDatabaseType;
 import roomescape.reservation.Reservation;
+import roomescape.reservationtime.ReservationTime;
 
 class JdbcReservationRepositoryTest {
 
@@ -52,9 +53,10 @@ class JdbcReservationRepositoryTest {
         String name = "레포지토리테스트";
         LocalDate date = LocalDate.of(2025, 7, 1);
         LocalTime time = LocalTime.of(10, 0);
+        final Reservation reservation = new Reservation(null, name, date, new ReservationTime(1L, time));
 
         // when
-        var saved = repository.save(name, date, 1L, time);
+        var saved = repository.save(reservation);
 
         // then
         assertThat(saved.getId()).isNotNull();
@@ -69,8 +71,10 @@ class JdbcReservationRepositoryTest {
         LocalTime existedTime = LocalTime.of(10, 0);
         LocalDate date = LocalDate.of(2026, 1, 1);
         LocalTime time = LocalTime.of(14, 1);
+        final Reservation reservation = new Reservation(null, existedName, existedDate,
+                new ReservationTime(1L, existedTime));
 
-        repository.save(existedName, existedDate, 1L, existedTime);
+        repository.save(reservation);
 
         // when
         // then
@@ -83,14 +87,17 @@ class JdbcReservationRepositoryTest {
     @Test
     void 모든_예약_조회() {
         // given
-        String name = "레포지토리테스트";
+        String name1 = "레포지토리테스트1";
+        String name2 = "레포지토리테스트2";
         LocalDate date = LocalDate.of(2025, 7, 1);
         LocalTime time1 = LocalTime.of(10, 0);
         LocalTime time2 = LocalTime.of(11, 0);
+        final Reservation reservation1 = new Reservation(null, name1, date, new ReservationTime(1L, time1));
+        final Reservation reservation2 = new Reservation(null, name2, date, new ReservationTime(2L, time2));
 
         // when
-        repository.save(name, date, 1L, time1);
-        repository.save(name, date, 2L, time2);
+        repository.save(reservation1);
+        repository.save(reservation2);
         // given
         // when
         final List<Reservation> reservations = repository.findAll();

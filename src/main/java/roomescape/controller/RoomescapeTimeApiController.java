@@ -7,12 +7,14 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import roomescape.domain.ReservationTime;
 import roomescape.dto.ReservationTimeRequest;
 import roomescape.dto.ReservationTimeResponse;
 import roomescape.service.ReservationTimeService;
 
+@RequestMapping("/times")
 @RestController
 public class RoomescapeTimeApiController {
 
@@ -22,7 +24,7 @@ public class RoomescapeTimeApiController {
         this.reservationTimeService = reservationTimeService;
     }
 
-    @GetMapping("/times")
+    @GetMapping
     public List<ReservationTimeResponse> findAll() {
         return reservationTimeService.findAll()
                 .stream()
@@ -30,7 +32,7 @@ public class RoomescapeTimeApiController {
                 .toList();
     }
 
-    @PostMapping("/times")
+    @PostMapping
     public ResponseEntity<ReservationTimeResponse> addReservationTime(@RequestBody ReservationTimeRequest request) {
         ReservationTime reservationTime = request.toReservationTime();
         long savedId = reservationTimeService.addReservationTime(reservationTime);
@@ -40,7 +42,7 @@ public class RoomescapeTimeApiController {
         return ResponseEntity.badRequest().build();
     }
 
-    @DeleteMapping("/times/{id}")
+    @DeleteMapping("/{id}")
     public ResponseEntity<Void> deleteReservationTime(@PathVariable long id) {
         boolean deleted = reservationTimeService.deleteById(id);
         if (deleted) {

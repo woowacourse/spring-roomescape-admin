@@ -3,7 +3,8 @@ package roomescape.usecase.Reservation;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import org.springframework.stereotype.Service;
-import roomescape.enttity.ReservationTime.ReservationTime;
+import roomescape.domain.Reservation;
+import roomescape.domain.ReservationTime;
 import roomescape.usecase.ReservationTime.ReservationTimeRepository;
 
 

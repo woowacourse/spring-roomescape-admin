@@ -8,7 +8,7 @@ import java.time.LocalDate;
 import java.time.LocalTime;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import roomescape.enttity.ReservationTime.ReservationTime;
+import roomescape.domain.ReservationTime;
 import roomescape.usecase.Reservation.AddReservationService;
 import roomescape.usecase.Reservation.ReservationInput;
 import roomescape.usecase.Reservation.ReservationRepository;

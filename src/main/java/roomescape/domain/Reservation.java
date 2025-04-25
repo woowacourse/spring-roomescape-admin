@@ -1,7 +1,6 @@
-package roomescape.usecase.Reservation;
+package roomescape.domain;
 
 import java.time.LocalDate;
-import roomescape.enttity.ReservationTime.ReservationTime;
 
 public class Reservation {
 

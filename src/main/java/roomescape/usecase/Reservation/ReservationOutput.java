@@ -1,6 +1,7 @@
 package roomescape.usecase.Reservation;
 
 import java.time.LocalDate;
+import roomescape.domain.Reservation;
 import roomescape.usecase.ReservationTime.ReservationTimeOutput;
 
 public record ReservationOutput(Long id, String name, LocalDate date, ReservationTimeOutput reservationTimeOutput) {

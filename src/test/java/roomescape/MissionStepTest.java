@@ -7,9 +7,13 @@ import io.restassured.RestAssured;
 import io.restassured.http.ContentType;
 import java.sql.Connection;
 import java.sql.SQLException;
+import java.time.LocalDate;
+import java.time.LocalTime;
+import java.time.format.DateTimeFormatter;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -20,6 +24,22 @@ import roomescape.presentation.dto.ReservationResponse;
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.DEFINED_PORT)
 @DirtiesContext(classMode = DirtiesContext.ClassMode.BEFORE_EACH_TEST_METHOD)
 public class MissionStepTest {
+
+    private static final LocalTime MAX_LOCAL_TIME = LocalTime.MAX;
+    private static final LocalDate MAX_LOCAL_DATE = LocalDate.MAX;
+
+    @BeforeEach
+    void setUp() {
+        Map<String, String> params = new HashMap<>();
+        params.put("startAt", MAX_LOCAL_TIME.toString());
+
+        RestAssured.given().log().all()
+                .contentType(ContentType.JSON)
+                .body(params)
+                .when().post("/times")
+                .then().log().all()
+                .statusCode(200);
+    }
 
     @Test
     void 일단계() {
@@ -47,8 +67,8 @@ public class MissionStepTest {
     void 삼단계() {
         Map<String, String> params = Map.of(
                 "name", "브라운",
-                "date", "2023-08-05",
-                "time", "15:40"
+                "date", MAX_LOCAL_DATE.toString(),
+                "timeId", "1"
         );
 
         RestAssured.given().log().all()
@@ -93,7 +113,9 @@ public class MissionStepTest {
 
     @Test
     void 오단계() {
-        jdbcTemplate.update("INSERT INTO reservation (name, date, time) VALUES (?, ?, ?)", "브라운", "2023-08-05", "15:40");
+        jdbcTemplate.update("INSERT INTO reservation (name, date, time_id) VALUES (?, ?, ?)",
+                "브라운", MAX_LOCAL_DATE.toString(), 1L
+        );
 
         List<ReservationResponse> reservations = RestAssured.given().log().all()
                 .when().get("/reservations")
@@ -110,8 +132,8 @@ public class MissionStepTest {
     void 육단계() {
         Map<String, String> params = Map.of(
                 "name", "브라운",
-                "date", "2023-08-05",
-                "time", "15:40"
+                "date", MAX_LOCAL_DATE.toString(),
+                "timeId", "1"
         );
 
         RestAssured.given().log().all()
@@ -149,7 +171,7 @@ public class MissionStepTest {
                 .when().get("/times")
                 .then().log().all()
                 .statusCode(200)
-                .body("size()", is(1));
+                .body("size()", is(2));
 
         RestAssured.given().log().all()
                 .when().delete("/times/1")

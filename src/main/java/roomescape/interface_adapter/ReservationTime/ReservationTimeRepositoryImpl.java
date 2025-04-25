@@ -46,10 +46,10 @@ public class ReservationTimeRepositoryImpl implements ReservationTimeRepository 
     }
 
     @Override
-    public ReservationTimeOutput getReservationTIme(final Long timeId) {
+    public ReservationTime getReservationTime(final Long timeId) {
         String sql = "select * from reservation_time where id = ?";
         return jdbcTemplate.queryForObject(sql, (resultSet, rowNUm) -> {
-            return new ReservationTimeOutput(
+            return new ReservationTime(
                     resultSet.getLong("id"),
                     LocalTime.parse(resultSet.getString("start_at"))
             );

@@ -18,7 +18,7 @@ public class Reservation {
         this.reservationTime = reservationTime;
     }
 
-    public Reservation(String name, LocalDate date, ReservationTime reservationTime){
+    public Reservation(String name, LocalDate date, ReservationTime reservationTime) {
         this.id = null;
         this.name = name;
         this.date = date;
@@ -48,7 +48,7 @@ public class Reservation {
         return reservationTime.getStartAt();
     }
 
-    public Long getTimeId(){
+    public Long getTimeId() {
         return reservationTime.getId();
     }
 }

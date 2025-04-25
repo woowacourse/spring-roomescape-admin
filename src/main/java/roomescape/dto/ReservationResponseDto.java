@@ -8,7 +8,7 @@ public record ReservationResponseDto(
         String name,
         LocalDate date,
         ReservationTimeResponseDto time
-){
+) {
     public static ReservationResponseDto from(Reservation reservationInfo) {
         return new ReservationResponseDto(
                 reservationInfo.getId(),

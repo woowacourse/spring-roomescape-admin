@@ -3,10 +3,9 @@ package roomescape.reservation.domain;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.LocalTime;
-import roomescape.common.domain.Cacheable;
 import roomescape.reservationtime.domain.ReservationTime;
 
-public class Reservation implements Cacheable {
+public class Reservation {
     private final String name;
     private final LocalDate date;
     private final ReservationTime time;

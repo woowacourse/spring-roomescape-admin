@@ -8,6 +8,7 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import roomescape.business.domain.Time;
+import roomescape.fake.FakeTimeDao;
 import roomescape.presentation.dto.TimeRequest;
 import roomescape.presentation.dto.TimeResponse;
 
@@ -22,18 +23,6 @@ class TimeServiceTest {
         timeService = new TimeService(new FakeTimeDao());
     }
 
-    @DisplayName("방탈출 시간을 저장한다.")
-    @Test
-    void create() {
-        // given
-        final TimeRequest timeRequest = new TimeRequest(FORMATTED_MAX_LOCAL_TIME);
-        final TimeResponse expected = new TimeResponse(1L, FORMATTED_MAX_LOCAL_TIME);
-
-        // when & then
-        assertThat(timeService.create(timeRequest))
-                .isEqualTo(expected);
-    }
-
     @DisplayName("방탈출 시간을 조회한다.")
     @Test
     void find() {
@@ -45,6 +34,18 @@ class TimeServiceTest {
 
         // when & then
         assertThat(timeService.find(id))
+                .isEqualTo(expected);
+    }
+
+    @DisplayName("방탈출 시간을 저장한다.")
+    @Test
+    void create() {
+        // given
+        final TimeRequest timeRequest = new TimeRequest(FORMATTED_MAX_LOCAL_TIME);
+        final TimeResponse expected = new TimeResponse(1L, FORMATTED_MAX_LOCAL_TIME);
+
+        // when & then
+        assertThat(timeService.create(timeRequest))
                 .isEqualTo(expected);
     }
 

@@ -8,6 +8,7 @@ import java.util.List;
 
 import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.jdbc.core.JdbcTemplate;
+import org.springframework.jdbc.core.RowMapper;
 import org.springframework.jdbc.support.GeneratedKeyHolder;
 import org.springframework.jdbc.support.KeyHolder;
 import org.springframework.stereotype.Repository;
@@ -44,11 +45,7 @@ public class ReservationTimeDao {
                 SELECT id, start_at
                 FROM reservation_time
                 """;
-        return jdbcTemplate.query(findAllSql, (resultSet, rowNum) ->
-                new ReservationTime(
-                        resultSet.getLong("id"),
-                        LocalTime.parse(resultSet.getString("start_at"))
-                ));
+        return jdbcTemplate.query(findAllSql, getReservationTimeRowMapper());
     }
 
     public void deleteById(final Long id) {
@@ -66,13 +63,16 @@ public class ReservationTimeDao {
                 WHERE id = ?
                 """;
         try {
-            return jdbcTemplate.queryForObject(findByIdSql, (rs, rowNum) ->
-                    new ReservationTime(
-                            rs.getLong("id"),
-                            LocalTime.parse(rs.getString("start_at"))
-                    ), id);
+            return jdbcTemplate.queryForObject(findByIdSql, getReservationTimeRowMapper(), id);
         } catch (EmptyResultDataAccessException e) {
             throw new ReservationTimeNotFoundException("존재하지 않는 예약 시간 입니다.", e);
         }
+    }
+
+    private RowMapper<ReservationTime> getReservationTimeRowMapper() {
+        return (resultSet, rowNum) -> new ReservationTime(
+                resultSet.getLong("id"),
+                LocalTime.parse(resultSet.getString("start_at"))
+        );
     }
 }

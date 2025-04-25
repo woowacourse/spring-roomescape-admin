@@ -80,3 +80,64 @@ DELETE /times/1 HTTP/1.1
 ```http request
 HTTP/1.1 200
 ```
+## 8단계
+
+-[x] 기존에 구현한 예약 기능에서 시간을 시간 테이블에 저장된 값만 선택할 수 있도록 수정하세요.
+-[x] templates/admin/reservation-legacy.html 대신 templates/admin/reservation.html 파일을 활용하세요.
+-[x] 외래키 지정을 통해 reservation 테이블과 reservation_time 테이블의 관계를 설정해주세요.
+
+## Request
+
+```http request
+
+POST /reservations HTTP/1.1
+content-type: application/json
+
+{
+    "date": "2023-08-05",
+    "name": "브라운",
+    "timeId": 1
+}
+
+```
+
+## Response
+
+```http request
+HTTP/1.1 200
+Content-Type: application/json
+
+{
+    "id": 1,
+    "name": "브라운",
+    "date": "2023-08-05",
+    "time" : {
+        "id": 1,
+        "startAt" : "10:00"
+    }
+}
+
+```
+## Request
+```http request
+GET /reservations HTTP/1.1
+```
+## Response
+
+```http request
+[
+    {
+        "id": 1,
+        "name": "브라운",
+        "date": "2023-08-05",
+        "time": {
+            "id": 1,
+            "startAt": "10:00"
+        }
+    }
+]
+```
+# 9단계
+
+레이어드 아키텍처를 적용하여 레이어별 책임과 역할에 따라 클래스 분리를 해보세요.
+분리한 클래스는 매번 새로 생성하지 않고 스프링 빈으로 등록해서 사용해보세요.

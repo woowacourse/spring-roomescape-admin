@@ -3,32 +3,27 @@ package roomescape.repository;
 import static org.assertj.core.api.Assertions.assertThat;
 
 import java.time.LocalDate;
-import java.time.LocalDateTime;
-import java.time.LocalTime;
 import java.util.List;
+import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.jdbc.JdbcTest;
 import org.springframework.jdbc.core.JdbcTemplate;
-import org.springframework.stereotype.Repository;
 import roomescape.domain.Reservation;
-import roomescape.domain.ReservationTime;
 import roomescape.fixture.TextFixture;
 
 @JdbcTest
-class ReservationRepositoryImplTest {
+class ReservationDaoImplTest {
 
-    private ReservationRepository reservationRepository;
+    private ReservationDao reservationDao;
 
     @Autowired
     private JdbcTemplate jdbcTemplate;
 
     @BeforeEach
     void setUp() {
-        ReservationDao reservationDao = new ReservationDao(jdbcTemplate);
-        ReservationTimeDao reservationTimeDao = new ReservationTimeDao(jdbcTemplate);
-        reservationRepository = new ReservationRepositoryImpl(reservationDao, reservationTimeDao);
+        reservationDao = new ReservationDao(jdbcTemplate);
 
         jdbcTemplate.execute("DROP TABLE reservation IF EXISTS");
         jdbcTemplate.execute("DROP TABLE reservation_time IF EXISTS");
@@ -45,23 +40,30 @@ class ReservationRepositoryImplTest {
                 "mint", TextFixture.makeTodayMessage(), "1");
     }
 
-
     @Test
     void findAll() {
-        List<Reservation> reservations = reservationRepository.findAll();
+        List<Reservation> reservations = reservationDao.findAll();
+
         assertThat(reservations.size()).isEqualTo(1);
     }
 
     @Test
     void insert() {
-        LocalDate now = LocalDate.now();
-        reservationRepository.insert("밍트", now, 1);
+        long reservationId = reservationDao.insertReservation("mint", LocalDate.now(), 1L);
 
-        List<Reservation> reservations = reservationRepository.findAll();
-        assertThat(reservations.size()).isEqualTo(2);
+        List<Reservation> reservations = reservationDao.findAll();
+        Assertions.assertAll(
+                () -> assertThat(reservations.size()).isEqualTo(2),
+                () -> assertThat(reservationId).isEqualTo(2)
+        );
     }
 
     @Test
     void delete() {
+        reservationDao.delete(1);
+
+        List<Reservation> reservations = reservationDao.findAll();
+
+        assertThat(reservations).isEmpty();
     }
 }

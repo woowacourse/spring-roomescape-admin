@@ -22,7 +22,8 @@ class ReservationTimeRepositoryImplTest {
 
     @BeforeEach
     void setUp() {
-        reservationTimeRepository = new ReservationTimeRepositoryImpl(jdbcTemplate);
+        ReservationTimeDao reservationTimeDao = new ReservationTimeDao(jdbcTemplate);
+        reservationTimeRepository = new ReservationTimeRepositoryImpl(reservationTimeDao);
 
         jdbcTemplate.execute("DROP TABLE reservation IF EXISTS");
         jdbcTemplate.execute("DROP TABLE reservation_time IF EXISTS");
@@ -40,25 +41,23 @@ class ReservationTimeRepositoryImplTest {
     }
 
     @Test
-    void insert() {
-        reservationTimeRepository.insert(LocalTime.now());
+    void findAll() {
         List<ReservationTime> reservationTimes = reservationTimeRepository.findAll();
-
-        assertThat(reservationTimes.size()).isEqualTo(2);
+        assertThat(reservationTimes.size()).isEqualTo(1);
     }
 
     @Test
-    void findAll() {
-        List<ReservationTime> reservationTimes = reservationTimeRepository.findAll();
-
-        assertThat(reservationTimes.size()).isEqualTo(1);
+    void insert() {
+        LocalTime now = LocalTime.now();
+        ReservationTime reservationTime = reservationTimeRepository.insert(now);
+        assertThat(reservationTime.getStartAt()).isEqualTo(now);
     }
 
     @Test
     void delete() {
         reservationTimeRepository.delete(1);
-        List<ReservationTime> reservationTimes = reservationTimeRepository.findAll();
 
-        assertThat(reservationTimes.size()).isEqualTo(0);
+        List<ReservationTime> reservationTimes = reservationTimeRepository.findAll();
+        assertThat(reservationTimes).isEmpty();
     }
 }

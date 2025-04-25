@@ -47,19 +47,25 @@ public class ReservationController {
     public ResponseEntity<List<Reservation>> deleteReservation(
             @PathVariable Long id
     ) {
-        reservationService.findAllReservations().stream()
-                .filter(it -> Objects.equals(it.getId(), id))
-                .findFirst()
-                .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND));
+        validateDeleteReservationAvailability(id);
 
         reservationService.deleteReservation(id);
 
         return ResponseEntity.ok().body(reservationService.findAllReservations());
     }
 
+    private void validateDeleteReservationAvailability(Long id) {
+        try {
+            reservationService.validateDeleteReservationAvailability(id);
+        } catch (IllegalArgumentException e) {
+            System.out.println(e.getMessage());
+            throw new ResponseStatusException(HttpStatus.NOT_FOUND);
+        }
+    }
+
     private void validateReservationTimeAvailability(ReservationRequest reservationRequest) {
         try{
-            reservationService.validateReservationTimeAvailability(reservationRequest);
+            reservationService.validateSaveReservationAvailability(reservationRequest);
         } catch (IllegalArgumentException e) {
             throw new ResponseStatusException(HttpStatus.BAD_REQUEST);
         }

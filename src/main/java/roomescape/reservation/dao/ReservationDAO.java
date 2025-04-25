@@ -1,5 +1,6 @@
 package roomescape.reservation.dao;
 
+import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;
 import org.springframework.jdbc.support.GeneratedKeyHolder;
@@ -49,7 +50,17 @@ public class ReservationDAO {
                 on r.time_id = rt.id
                 where r.id = ?
                 """;
-        return findReservationById(sql, id);
+        try {
+            return jdbcTemplate.queryForObject(sql,
+                    (rs, rowNum) -> new Reservation(
+                            rs.getLong("id"),
+                            rs.getString("name"),
+                            rs.getDate("date").toLocalDate(),
+                            new ReservationTime(rs.getLong("time_id"), rs.getTime("time_value").toLocalTime())
+                    ), id);
+        } catch (EmptyResultDataAccessException e) {
+            throw new NoSuchElementException("해당 ID의 예약이 존재하지 않습니다. id = " + id);
+        }
     }
 
     public List<Reservation> selectAll() {
@@ -84,15 +95,5 @@ public class ReservationDAO {
                     time
             );
         };
-    }
-
-    private Reservation findReservationById(String sql, Long id) {
-        return jdbcTemplate.queryForObject(sql,
-                (rs, rowNum) -> new Reservation(
-                        rs.getLong("id"),
-                        rs.getString("name"),
-                        rs.getDate("date").toLocalDate(),
-                        new ReservationTime(rs.getLong("time_id"), rs.getTime("time_value").toLocalTime())
-                ), id);
     }
 }

@@ -6,11 +6,11 @@ import roomescape.util.DateTimeFormatUtils;
 public record ReservationResponseDto(Long id,
                                      String name,
                                      String date,
-                                     String startAt) {
+                                     ReservationTimeResponseDto time) {
 
     public static ReservationResponseDto from(Reservation reservation) {
         String date = DateTimeFormatUtils.dateFormatter.format(reservation.getDate());
-        String time = DateTimeFormatUtils.timeFormatter.format(reservation.getTime().getStartAt());
-        return new ReservationResponseDto(reservation.getId(), reservation.getName(), date, time);
+        return new ReservationResponseDto(reservation.getId(), reservation.getName(), date,
+                ReservationTimeResponseDto.from(reservation.getTime()));
     }
 }

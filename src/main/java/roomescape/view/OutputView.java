@@ -36,7 +36,7 @@ public class OutputView {
         System.out.println("id | 예약자명 | 예약 날짜 | 예약 시간");
         System.out.printf("%d | %s | %s | %s\n",
                 reservation.id(), reservation.name(),
-                reservation.date(), reservation.startAt());
+                reservation.date(), reservation.time().startAt());
         System.out.println();
     }
 
@@ -48,7 +48,7 @@ public class OutputView {
                         reservation.id(),
                         reservation.name(),
                         reservation.date(),
-                        reservation.startAt()
+                        reservation.time().startAt()
                 )
         );
         System.out.println();

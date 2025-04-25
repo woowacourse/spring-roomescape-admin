@@ -5,5 +5,5 @@ import java.util.List;
 public interface GetReservationTimeUseCase {
     List<ReservationTimeOutput> getAllReservationTimes();
 
-    ReservationTimeOutput getReservationTime(Long id);
+//    ReservationTimeOutput getReservationTime(Long id);
 }

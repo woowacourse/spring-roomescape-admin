@@ -17,8 +17,8 @@ public class GetReservationTimeService implements GetReservationTimeUseCase {
         return reservationTimeRepository.getAllReservationTimes();
     }
 
-    @Override
-    public ReservationTimeOutput getReservationTime(Long timeId) {
-        return reservationTimeRepository.getReservationTIme(timeId);
-    }
+//    @Override
+//    public ReservationTimeOutput getReservationTime(Long timeId) {
+//        return reservationTimeRepository.getReservationTIme(timeId);
+//    }
 }

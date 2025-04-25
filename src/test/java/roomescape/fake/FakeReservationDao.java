@@ -1,0 +1,56 @@
+package roomescape.fake;
+
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Objects;
+import roomescape.business.domain.Reservation;
+import roomescape.data.dao.ReservationDao;
+import roomescape.data.entity.ReservationEntity;
+import roomescape.data.entity.TimeEntity;
+
+public class FakeReservationDao implements ReservationDao {
+
+    private final List<ReservationEntity> reservations = new ArrayList<>();
+    private final List<TimeEntity> times;
+
+    private int index = 1;
+
+    public FakeReservationDao(final List<TimeEntity> times) {
+        this.times = times;
+        final ReservationEntity dummy = new ReservationEntity(null, null, null, null);
+        reservations.add(dummy);
+    }
+
+    @Override
+    public Long save(final Reservation reservation) {
+        final ReservationEntity temp = ReservationEntity.from(reservation);
+        final ReservationEntity reservationEntity = new ReservationEntity(
+                (long) index,
+                temp.name(), temp.date(), temp.timeEntity()
+        );
+        reservations.add(index, reservationEntity);
+
+        return (long) index++;
+    }
+
+    @Override
+    public List<Reservation> findAll() {
+        return reservations.stream()
+                .filter(reservationEntity -> times.stream()
+                        .anyMatch(timeEntity -> Objects.equals(reservationEntity.timeEntity().id(), timeEntity.id()))
+                )
+                .map(ReservationEntity::toDomain)
+                .toList();
+    }
+
+    @Override
+    public int remove(final Long id) {
+        try {
+            reservations.remove(reservations.get(Math.toIntExact(id)));
+            index--;
+            return 1;
+        } catch (IndexOutOfBoundsException e) {
+            return 0;
+        }
+    }
+}

@@ -9,13 +9,13 @@ import roomescape.data.entity.TimeEntity;
 
 public class FakeTimeDao implements TimeDao {
 
-    private final List<TimeEntity> database = new ArrayList<>();
+    private final List<TimeEntity> times = new ArrayList<>();
 
     private int index = 1;
 
     public FakeTimeDao() {
         final TimeEntity dummy = new TimeEntity(null, null);
-        database.add(dummy);
+        times.add(dummy);
     }
 
     @Override
@@ -25,7 +25,7 @@ public class FakeTimeDao implements TimeDao {
                 (long) index,
                 temp.startAt()
         );
-        database.add(index, timeEntity);
+        times.add(index, timeEntity);
 
         return (long) index++;
     }
@@ -33,7 +33,7 @@ public class FakeTimeDao implements TimeDao {
     @Override
     public Optional<Time> find(final Long id) {
         try {
-            final TimeEntity timeEntity = database.get(Math.toIntExact(id));
+            final TimeEntity timeEntity = times.get(Math.toIntExact(id));
             return Optional.of(timeEntity.toDomain());
         } catch (IndexOutOfBoundsException e) {
             return Optional.empty();
@@ -42,7 +42,7 @@ public class FakeTimeDao implements TimeDao {
 
     @Override
     public List<Time> findAll() {
-        return database.stream()
+        return times.stream()
                 .filter(timeEntity -> timeEntity.id() != null)
                 .map(TimeEntity::toDomain)
                 .toList();
@@ -51,11 +51,15 @@ public class FakeTimeDao implements TimeDao {
     @Override
     public int remove(final Long id) {
         try {
-            database.remove(database.get(Math.toIntExact(id)));
+            times.remove(times.get(Math.toIntExact(id)));
             index--;
             return 1;
         } catch (IndexOutOfBoundsException e) {
             return 0;
         }
+    }
+
+    public List<TimeEntity> getTimes() {
+        return times;
     }
 }

@@ -63,7 +63,7 @@ public class JdbcReservationRepository implements ReservationRepository {
             return ps;
         }, keyHolder);
 
-        Long reservationKey = keyHolder.getKey().longValue();
+        long reservationKey = keyHolder.getKey().longValue();
         return findById(reservationKey);
     }
 

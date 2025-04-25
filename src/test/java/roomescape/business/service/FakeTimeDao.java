@@ -11,7 +11,7 @@ public class FakeTimeDao implements TimeDao {
 
     private final List<TimeEntity> database = new ArrayList<>();
 
-    private int index = 1;
+    private int index = 0;
 
     @Override
     public Long save(final Time time) {
@@ -41,7 +41,8 @@ public class FakeTimeDao implements TimeDao {
     @Override
     public int remove(final Long id) {
         try {
-            database.remove(id);
+            database.remove(database.get(Math.toIntExact(id)));
+            index--;
             return 1;
         } catch (IndexOutOfBoundsException e) {
             return 0;

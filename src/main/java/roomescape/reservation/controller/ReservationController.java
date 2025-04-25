@@ -9,16 +9,16 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import roomescape.reservation.dto.ReservationRequest;
-import roomescape.reservation.dto.ReservationResponseDto;
+import roomescape.reservation.dto.ReservationResponse;
 import roomescape.reservation.service.ReservationService;
 
 @Controller
 public class ReservationController {
 
-    private final ReservationService reservationServiceImpl;
+    private final ReservationService reservationService;
 
     public ReservationController(ReservationService reservationService) {
-        this.reservationServiceImpl = reservationService;
+        this.reservationService = reservationService;
     }
 
     @GetMapping("/admin/reservation")
@@ -27,22 +27,22 @@ public class ReservationController {
     }
 
     @GetMapping("/reservations")
-    public ResponseEntity<List<ReservationResponseDto>> readAllReservations() {
-        List<ReservationResponseDto> responseDtos = reservationServiceImpl.getAll();
+    public ResponseEntity<List<ReservationResponse>> readAllReservations() {
+        List<ReservationResponse> response = reservationService.getAll();
 
-        return ResponseEntity.ok(responseDtos);
+        return ResponseEntity.ok(response);
     }
 
     @PostMapping("/reservations")
-    public ResponseEntity<ReservationResponseDto> save(@RequestBody ReservationRequest requestDto) {
-        ReservationResponseDto responseDto = reservationServiceImpl.save(requestDto);
+    public ResponseEntity<ReservationResponse> save(@RequestBody ReservationRequest request) {
+        ReservationResponse response = reservationService.save(request);
 
-        return ResponseEntity.ok(responseDto);
+        return ResponseEntity.ok(response);
     }
 
     @DeleteMapping("/reservations/{id}")
     public ResponseEntity<Void> delete(@PathVariable("id") Long id) {
-        reservationServiceImpl.delete(id);
+        reservationService.delete(id);
         return ResponseEntity.noContent().build();
     }
 }

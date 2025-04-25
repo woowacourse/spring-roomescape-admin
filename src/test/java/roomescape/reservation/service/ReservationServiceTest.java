@@ -12,7 +12,7 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import roomescape.reservation.dto.ReservationRequest;
-import roomescape.reservation.dto.ReservationResponseDto;
+import roomescape.reservation.dto.ReservationResponse;
 import roomescape.reservation.dto.ReservationTimeResponse;
 import roomescape.reservation.entity.Reservation;
 import roomescape.reservation.entity.ReservationTime;
@@ -57,8 +57,8 @@ class ReservationServiceTest {
         }
 
         // when
-        List<ReservationResponseDto> result = reservationService.getAll();
-        List<String> resultNames = result.stream().map(ReservationResponseDto::name).toList();
+        List<ReservationResponse> result = reservationService.getAll();
+        List<String> resultNames = result.stream().map(ReservationResponse::name).toList();
 
         assertThat(resultNames).containsExactlyInAnyOrderElementsOf(names);
     }
@@ -66,7 +66,7 @@ class ReservationServiceTest {
     @DisplayName("예약 정보가 없다면 빈 리스트를 반환한다.")
     @Test
     void test2() {
-        List<ReservationResponseDto> result = reservationService.getAll();
+        List<ReservationResponse> result = reservationService.getAll();
 
         assertThat(result).isEmpty();
     }
@@ -81,7 +81,7 @@ class ReservationServiceTest {
         ReservationRequest requestDto = new ReservationRequest(name, date, reservationTimeId);
 
         // when
-        ReservationResponseDto result = reservationService.save(requestDto);
+        ReservationResponse result = reservationService.save(requestDto);
 
         // then
         SoftAssertions softAssertions = new SoftAssertions();

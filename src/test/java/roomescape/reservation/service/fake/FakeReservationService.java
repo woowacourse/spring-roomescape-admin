@@ -5,7 +5,7 @@ import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.atomic.AtomicLong;
 import roomescape.reservation.dto.ReservationRequest;
-import roomescape.reservation.dto.ReservationResponseDto;
+import roomescape.reservation.dto.ReservationResponse;
 import roomescape.reservation.entity.Reservation;
 import roomescape.reservation.entity.ReservationTime;
 import roomescape.common.exception.EntityNotFoundException;
@@ -20,27 +20,27 @@ public class FakeReservationService implements ReservationService {
     private final Map<Long, ReservationTime> reservationTimes = new ConcurrentHashMap<>();
 
     @Override
-    public List<ReservationResponseDto> getAll() {
+    public List<ReservationResponse> getAll() {
         return reservations.values()
                 .stream()
-                .map(ReservationResponseDto::from)
+                .map(ReservationResponse::from)
                 .toList();
     }
 
     @Override
-    public ReservationResponseDto save(ReservationRequest requestDto) {
-        if (!reservationTimes.containsKey(requestDto.timeId())){
-            throw new EntityNotFoundException("Time not found id = " + requestDto.timeId());
+    public ReservationResponse save(ReservationRequest request) {
+        if (!reservationTimes.containsKey(request.timeId())){
+            throw new EntityNotFoundException("Time not found id = " + request.timeId());
         }
-        ReservationTime reservationTime = reservationTimes.get(requestDto.timeId());
+        ReservationTime reservationTime = reservationTimes.get(request.timeId());
 
         long id = this.id.getAndIncrement();
-        Reservation reservation = new Reservation(id, requestDto.name(), requestDto.date(),
+        Reservation reservation = new Reservation(id, request.name(), request.date(),
                 reservationTime);
 
         reservations.put(id, reservation);
 
-        return ReservationResponseDto.from(reservation);
+        return ReservationResponse.from(reservation);
     }
 
     @Override

@@ -29,17 +29,17 @@ public class ReservationTimeController {
     @GetMapping("/times")
     public ResponseEntity<List<ReservationTimeResponse>> readAllReservationTimes() {
 
-        List<ReservationTimeResponse> responseDtos = reservationTimeService.getAll();
+        List<ReservationTimeResponse> responses = reservationTimeService.getAll();
 
-        return ResponseEntity.ok(responseDtos);
+        return ResponseEntity.ok(responses);
     }
 
     @PostMapping("/times")
-    public ResponseEntity<ReservationTimeResponse> add(@RequestBody ReservationTimeRequest requestDto) {
+    public ResponseEntity<ReservationTimeResponse> add(@RequestBody ReservationTimeRequest request) {
 
-        ReservationTimeResponse responseDto = reservationTimeService.save(requestDto);
+        ReservationTimeResponse response = reservationTimeService.save(request);
 
-        return ResponseEntity.ok(responseDto);
+        return ResponseEntity.ok(response);
     }
 
     @DeleteMapping("/times/{id}")

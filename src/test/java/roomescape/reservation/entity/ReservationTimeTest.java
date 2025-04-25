@@ -26,6 +26,7 @@ class ReservationTimeTest {
     void test2(){
         SoftAssertions softAssertions = new SoftAssertions();
 
+
         softAssertions.assertThatThrownBy(() -> new ReservationTime(1L, null))
                 .isInstanceOf(IllegalArgumentException.class);
 

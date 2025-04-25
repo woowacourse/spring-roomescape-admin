@@ -2,13 +2,13 @@ package roomescape.reservation.service;
 
 import java.util.List;
 import roomescape.reservation.dto.ReservationRequest;
-import roomescape.reservation.dto.ReservationResponseDto;
+import roomescape.reservation.dto.ReservationResponse;
 
 public interface ReservationService {
 
-    List<ReservationResponseDto> getAll();
+    List<ReservationResponse> getAll();
 
-    ReservationResponseDto save(ReservationRequest requestDto);
+    ReservationResponse save(ReservationRequest request);
 
     void delete(Long id);
 }

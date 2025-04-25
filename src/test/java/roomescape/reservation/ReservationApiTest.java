@@ -15,7 +15,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.context.SpringBootTest.WebEnvironment;
 import org.springframework.jdbc.core.JdbcTemplate;
-import org.springframework.test.context.ActiveProfiles;
 import roomescape.reservation.entity.Reservation;
 import roomescape.reservation.entity.ReservationTime;
 import roomescape.reservation.repository.ReservationRepository;
@@ -57,7 +56,6 @@ class ReservationApiTest {
                 .statusCode(200);
     }
 
-    // TODO 이런 식으로 넣어서 처리하는게 맞을까...
     @DisplayName("모든 예약 정보를 반환한다.")
     @Test
     void test3() {

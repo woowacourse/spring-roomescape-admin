@@ -27,8 +27,8 @@ public class ReservationTimeServiceImpl implements ReservationTimeService {
     }
 
     @Override
-    public ReservationTimeResponse save(ReservationTimeRequest requestDto) {
-        ReservationTime reservationTime = ReservationTime.withoutId(requestDto.startAt());
+    public ReservationTimeResponse save(ReservationTimeRequest request) {
+        ReservationTime reservationTime = ReservationTime.withoutId(request.startAt());
 
         ReservationTime saved = reservationTimeRepository.save(reservationTime);
 

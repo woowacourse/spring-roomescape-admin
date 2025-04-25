@@ -22,7 +22,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.jdbc.core.JdbcTemplate;
 import roomescape.reservation.dto.ReservationRequest;
-import roomescape.reservation.dto.ReservationResponseDto;
+import roomescape.reservation.dto.ReservationResponse;
 import roomescape.reservation.dto.ReservationTimeResponse;
 import roomescape.reservation.entity.Reservation;
 import roomescape.reservation.entity.ReservationTime;
@@ -52,23 +52,23 @@ class ReservationControllerTest {
         reservationService.addReservationTime(timeId, new ReservationTime(timeId, time));
 
         for (String name : names) {
-            ReservationRequest requestDto = new ReservationRequest(name, now, timeId);
-            reservationService.save(requestDto);
+            ReservationRequest request = new ReservationRequest(name, now, timeId);
+            reservationService.save(request);
         }
 
         // when
-        ResponseEntity<List<ReservationResponseDto>> result = reservationController.readAllReservations();
-        List<ReservationResponseDto> body = result.getBody();
+        ResponseEntity<List<ReservationResponse>> result = reservationController.readAllReservations();
+        List<ReservationResponse> body = result.getBody();
 
         // then
         assertThat(result.getStatusCode()).isEqualTo(HttpStatus.OK);
 
         Assertions.assertNotNull(body);
 
-        List<String> resultNames = body.stream().map(ReservationResponseDto::name).toList();
-        List<LocalDate> resultDates = body.stream().map(ReservationResponseDto::date).toList();
+        List<String> resultNames = body.stream().map(ReservationResponse::name).toList();
+        List<LocalDate> resultDates = body.stream().map(ReservationResponse::date).toList();
         List<LocalTime> resultTimes = body.stream()
-                .map(ReservationResponseDto::time)
+                .map(ReservationResponse::time)
                 .map(ReservationTimeResponse::startAt)
                 .toList();
 
@@ -95,12 +95,12 @@ class ReservationControllerTest {
 
         LocalDate localDate = LocalDate.parse(date);
 
-        ReservationRequest requestDto = new ReservationRequest(name, localDate, timeId);
+        ReservationRequest request = new ReservationRequest(name, localDate, timeId);
         ReservationTimeResponse reservationTimeResponse = new ReservationTimeResponse(timeId, localTime);
-        ReservationResponseDto expected = new ReservationResponseDto(1L, name, localDate, reservationTimeResponse);
+        ReservationResponse expected = new ReservationResponse(1L, name, localDate, reservationTimeResponse);
 
         // when
-        ResponseEntity<ReservationResponseDto> result = reservationController.save(requestDto);
+        ResponseEntity<ReservationResponse> result = reservationController.save(request);
 
         // then
         assertThat(result.getStatusCode()).isEqualTo(HttpStatus.OK);

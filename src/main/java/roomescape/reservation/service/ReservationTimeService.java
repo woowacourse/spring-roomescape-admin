@@ -8,7 +8,7 @@ public interface ReservationTimeService {
 
     List<ReservationTimeResponse> getAll();
 
-    ReservationTimeResponse save(ReservationTimeRequest requestDto);
+    ReservationTimeResponse save(ReservationTimeRequest request);
 
     void delete(Long id);
 }

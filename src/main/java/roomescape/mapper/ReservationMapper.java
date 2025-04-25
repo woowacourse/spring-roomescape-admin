@@ -7,6 +7,7 @@ import java.time.LocalTime;
 import org.springframework.jdbc.core.RowMapper;
 import roomescape.domain_entity.Id;
 import roomescape.domain_entity.Reservation;
+import roomescape.domain_entity.ReservationTime;
 
 public class ReservationMapper implements RowMapper<Reservation> {
 
@@ -15,8 +16,11 @@ public class ReservationMapper implements RowMapper<Reservation> {
         return new Reservation(
                 new Id(rs.getLong("id")),
                 rs.getString("name"),
-                LocalDate.parse(rs.getString("date")),
-                LocalTime.parse(rs.getString("time_id"))
+                rs.getObject("date", LocalDate.class),
+                new ReservationTime(
+                        new Id(rs.getLong("time_id")),
+                        rs.getObject("start_at", LocalTime.class)
+                )
         );
     }
 }

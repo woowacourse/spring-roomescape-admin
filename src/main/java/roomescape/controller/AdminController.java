@@ -48,11 +48,12 @@ public class AdminController {
             @RequestBody ReservationRequestDto reservationRequest
     ) {
         Reservation newReservation = reservationRequest.toReservation();
-        ReservationTime reservationTime = timeDao.findById(newReservation.getId());
-        newReservation.setTime(reservationTime);
-
         long id = reservationDao.create(newReservation);
         newReservation.setId(new Id(id));
+
+        ReservationTime reservationTime = timeDao.findById(reservationRequest.timeId());
+        newReservation.setTime(reservationTime);
+
         return ResponseEntity.ok().body(newReservation);
     }
 

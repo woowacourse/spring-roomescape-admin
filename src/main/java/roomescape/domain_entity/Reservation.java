@@ -1,7 +1,6 @@
 package roomescape.domain_entity;
 
 import java.time.LocalDate;
-import java.time.LocalTime;
 
 public class Reservation {
     private Id id;

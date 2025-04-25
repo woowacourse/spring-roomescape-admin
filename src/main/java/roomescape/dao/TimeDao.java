@@ -34,7 +34,7 @@ public class TimeDao {
     }
 
     public List<ReservationTime> findAll() {
-        String sql = "select * from reservation_time";
+        String sql = "select id, start_at from reservation_time";
         return jdbcTemplate.query(
                 sql,
                 new TimeMapper()
@@ -42,7 +42,7 @@ public class TimeDao {
     }
 
     public ReservationTime findById(long id) {
-        String sql = "select from reservation_time where id = ?";
+        String sql = "select id, start_at from reservation_time where id = ?";
         return jdbcTemplate.queryForObject(
                 sql,
                 new TimeMapper(),

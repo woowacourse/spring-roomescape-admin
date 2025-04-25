@@ -8,10 +8,7 @@ import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.stereotype.Component;
 
-//@SpringBootApplication
-@EnableAutoConfiguration
-@ComponentScan
-//@Configuration
+@SpringBootApplication
 public class RoomescapeApplication {
     public static void main(String[] args) {
         SpringApplication.run(RoomescapeApplication.class, args);

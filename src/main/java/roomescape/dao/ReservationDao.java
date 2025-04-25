@@ -18,7 +18,12 @@ public class ReservationDao {
     private JdbcTemplate jdbcTemplate;
 
     public List<Reservation> findAll() {
-        String sql = "select id, name, date, time from reservation";
+        String sql = """
+        select r.id as id, r.name, r.date, rt.id as time_id, rt.start_at
+        from reservation as r 
+        inner join reservation_time as rt 
+        on r.time_id = rt.id
+        """;
         List<Reservation> reservations = jdbcTemplate.query(
                 sql,
                 new ReservationMapper()
@@ -37,7 +42,7 @@ public class ReservationDao {
                     );
                     ps.setString(1, newReservation.getName());
                     ps.setObject(2, newReservation.getDate());
-                    ps.setLong(3, newReservation.getTime().getId().value());
+                    ps.setLong(3, newReservation.getTime().getId());
                     return ps;
                 },
                 keyHolder

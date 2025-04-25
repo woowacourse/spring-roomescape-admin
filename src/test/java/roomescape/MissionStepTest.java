@@ -88,7 +88,7 @@ class MissionStepTest {
         RestAssured.given().log().all()
                 .when().delete("/reservations/1")
                 .then().log().all()
-                .statusCode(200);
+                .statusCode(204);
 
         RestAssured.given().log().all()
                 .when().get("/reservations")
@@ -97,13 +97,13 @@ class MissionStepTest {
                 .body("size()", is(5));
     }
 
-    @DisplayName("데이터 삭제를 성공하면 200 코드를 반환한다")
+    @DisplayName("데이터 삭제를 성공하면 204 코드를 반환한다")
     @Test
     void reservation_delete_exception() {
         RestAssured.given().log().all()
                 .when().delete("/reservations/1")
                 .then().log().all()
-                .statusCode(200);
+                .statusCode(204);
     }
 
     @DisplayName("연결된 DB 커넥션을 확인한다")
@@ -157,7 +157,7 @@ class MissionStepTest {
         RestAssured.given().log().all()
                 .when().delete("/times/7")
                 .then().log().all()
-                .statusCode(200);
+                .statusCode(204);
     }
 
     @DisplayName("Controller에서 JdbcTemplate의 의존을 분리한다")

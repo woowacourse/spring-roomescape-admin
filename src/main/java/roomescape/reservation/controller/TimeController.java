@@ -1,6 +1,7 @@
 package roomescape.reservation.controller;
 
 import java.util.List;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -34,8 +35,9 @@ public class TimeController {
     }
 
     @DeleteMapping("/{id}")
-    public void deleteTime(@PathVariable("id") Long id){
+    public ResponseEntity<Void> deleteTime(@PathVariable("id") Long id){
         timeService.remove(id);
+        return ResponseEntity.noContent().build();
     }
 
 }

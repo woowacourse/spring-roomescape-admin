@@ -7,7 +7,7 @@ import java.time.LocalTime;
 public class Reservation {
 
     @JsonProperty
-    private final Long id;
+    private Long id;
     @JsonProperty
     private final String name;
     @JsonProperty
@@ -22,6 +22,11 @@ public class Reservation {
         this.time = time;
     }
 
+    public Reservation(String name, LocalDate date, LocalTime time) {
+        this.name = name;
+        this.date = date;
+        this.time = time;
+    }
 
     public Long getId() {
         return id;
@@ -37,5 +42,9 @@ public class Reservation {
 
     public LocalTime getTime() {
         return time;
+    }
+
+    public void setId(Long id) {
+        this.id = id;
     }
 }

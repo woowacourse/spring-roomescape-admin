@@ -22,11 +22,12 @@ class ReservationH2RepositoryTest {
     @Test
     void add() {
         // given
-        ReservationRepository reservationRepository = new ReservationH2Repository(jdbcTemplate);
+        ReservationRepository reservationRepository = new ReservationRepository(jdbcTemplate);
         ReservationRequestDto reservation = new ReservationRequestDto("예약자", LocalDate.now(), LocalTime.now());
 
         // when
-        Long id = reservationRepository.add(reservation);
+        Long id = reservationRepository.add(
+                new Reservation(reservation.name(), reservation.date(), reservation.time()));
 
         // then
         Assertions.assertThat(id).isEqualTo(reservationRepository.findById(id).getId());
@@ -37,9 +38,11 @@ class ReservationH2RepositoryTest {
     @Test
     void findAll() {
         // given
-        ReservationRepository reservationRepository = new ReservationH2Repository(jdbcTemplate);
-        ReservationRequestDto reservation = new ReservationRequestDto("예약자", LocalDate.now(), LocalTime.now());
-        reservationRepository.add(reservation);
+        ReservationRepository reservationRepository = new ReservationRepository(jdbcTemplate);
+        ReservationRequestDto reservationRequestDto = new ReservationRequestDto("예약자", LocalDate.now(),
+                LocalTime.now());
+        reservationRepository.add(new Reservation(reservationRequestDto.name(), reservationRequestDto.date(),
+                reservationRequestDto.time()));
 
         // when
         List<Reservation> reservations = reservationRepository.findAll();
@@ -52,9 +55,10 @@ class ReservationH2RepositoryTest {
     @Test
     void findById() {
         // given
-        ReservationRepository reservationRepository = new ReservationH2Repository(jdbcTemplate);
-        ReservationRequestDto reservation = new ReservationRequestDto("예약자", LocalDate.now(), LocalTime.now());
-        Long id = reservationRepository.add(reservation);
+        ReservationRepository reservationRepository = new ReservationRepository(jdbcTemplate);
+        ReservationRequestDto reservationDto = new ReservationRequestDto("예약자", LocalDate.now(), LocalTime.now());
+        Long id = reservationRepository.add(
+                new Reservation(reservationDto.name(), reservationDto.date(), reservationDto.time()));
 
         // when
         Reservation findReservation = reservationRepository.findById(id);
@@ -67,9 +71,10 @@ class ReservationH2RepositoryTest {
     @Test
     void delete() {
         // given
-        ReservationRepository reservationRepository = new ReservationH2Repository(jdbcTemplate);
-        ReservationRequestDto reservation = new ReservationRequestDto("예약자", LocalDate.now(), LocalTime.now());
-        Long id = reservationRepository.add(reservation);
+        ReservationRepository reservationRepository = new ReservationRepository(jdbcTemplate);
+        ReservationRequestDto reservationDto = new ReservationRequestDto("예약자", LocalDate.now(), LocalTime.now());
+        Long id = reservationRepository.add(
+                new Reservation(reservationDto.name(), reservationDto.date(), reservationDto.time()));
 
         // when
         reservationRepository.delete(id);

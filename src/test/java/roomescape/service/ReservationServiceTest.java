@@ -8,24 +8,32 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.jdbc.JdbcTest;
 import org.springframework.context.annotation.Import;
+import roomescape.domain.ReservationTime;
 import roomescape.domain.dto.ReservationRequestDto;
-import roomescape.repositiory.ReservationH2Repository;
+import roomescape.domain.dto.ReservationTimeRequestDto;
+import roomescape.repositiory.GeneralRepository;
+import roomescape.repositiory.ReservationRepository;
+import roomescape.repositiory.ReservationTimeRepository;
 
 @JdbcTest
-@Import({ReservationH2Repository.class})
+@Import({ReservationRepository.class, ReservationTimeRepository.class})
 class ReservationServiceTest {
 
     @Autowired
-    private ReservationH2Repository reservationRepository;
+    private ReservationRepository reservationRepository;
+    @Autowired
+    private ReservationTimeRepository reservationTimeRepository;
 
     @DisplayName("예약한다")
     @Test
-    void add() {
+    void addReservation() {
         // given
-        ReservationService reservationService = new ReservationService(reservationRepository);
+        ReservationService reservationService = new ReservationService(
+                reservationRepository,
+                reservationTimeRepository);
 
         // when
-        Long id = reservationService.add(
+        Long id = reservationService.addReservation(
                 new ReservationRequestDto("예약자", LocalDate.now(), LocalTime.now()));
 
         // then
@@ -36,8 +44,10 @@ class ReservationServiceTest {
     @Test
     void delete() {
         // given
-        ReservationService reservationService = new ReservationService(reservationRepository);
-        Long id = reservationService.add(
+        ReservationService reservationService = new ReservationService(
+                reservationRepository,
+                reservationTimeRepository);
+        Long id = reservationService.addReservation(
                 new ReservationRequestDto("예약자", LocalDate.now(), LocalTime.now()));
 
         // when
@@ -51,8 +61,10 @@ class ReservationServiceTest {
     @Test
     void readAll() {
         // given
-        ReservationService reservationService = new ReservationService(reservationRepository);
-        Long id = reservationService.add(
+        ReservationService reservationService = new ReservationService(
+                reservationRepository,
+                reservationTimeRepository);
+        Long id = reservationService.addReservation(
                 new ReservationRequestDto("예약자", LocalDate.now(), LocalTime.now()));
 
         // when

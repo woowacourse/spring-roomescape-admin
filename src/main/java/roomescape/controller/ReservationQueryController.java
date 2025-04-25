@@ -50,7 +50,7 @@ public class ReservationQueryController {
     @GetMapping("reservations/{reservationId}")
     @ResponseBody
     public ResponseEntity<Reservation> readReservation(@PathVariable("reservationId") Long id) {
-        Reservation reservation = reservationService.readOne(id);
+        Reservation reservation = reservationService.readReservationOne(id);
         return ResponseEntity.ok(reservation);
     }
 }

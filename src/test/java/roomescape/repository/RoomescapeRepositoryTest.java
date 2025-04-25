@@ -65,6 +65,7 @@ class RoomescapeRepositoryTest {
         //then
         assertThat(found).hasSize(1);
         assertThat(notFound).isEmpty();
+        assertEqualReservationElements(found.getFirst(), 1L, "브라운", "2023-08-05", 1L, "15:40");
     }
 
     @Test
@@ -74,6 +75,7 @@ class RoomescapeRepositoryTest {
 
         //then
         assertThat(reservations).hasSize(1);
+        assertEqualReservationElements(reservations.getFirst(), 1L, "브라운", "2023-08-05", 1L, "15:40");
     }
 
     @Test
@@ -84,11 +86,13 @@ class RoomescapeRepositoryTest {
 
         //when
         Reservation saved = repository.save(reservation);
+        Reservation firstReservation = repository.findById(1L);
+        Reservation secondReservation = repository.findById(2L);
 
         //then
-        assertThat(saved.getName()).isEqualTo("네오");
-        assertThat(saved.getDate()).isEqualTo(LocalDate.parse("2023-08-05"));
-        assertThat(saved.getTime().isSameTime(ReservationTime.parse("15:40"))).isTrue();
+        assertEqualReservationElements(saved, 2L, "네오", "2023-08-05", 1L, "15:40");
+        assertEqualReservationElements(firstReservation, 1L, "브라운", "2023-08-05", 1L, "15:40");
+        assertEqualReservationElements(secondReservation, 2L, "네오", "2023-08-05", 1L, "15:40");
         assertThat(repository.findAll()).hasSize(2);
     }
 
@@ -99,15 +103,22 @@ class RoomescapeRepositoryTest {
 
         //then
         assertThat(deleteCounts).isEqualTo(1);
+        assertThat(repository.findAll()).isEmpty();
     }
 
     @Test
     void existsByDateAndTime() {
+        //given
+        LocalDate date = LocalDate.parse("2023-08-05");
+        LocalDate anotherDate = LocalDate.parse("2023-08-06");
+        ReservationTime time = ReservationTime.parse("15:40");
+        ReservationTime anotherTime = ReservationTime.parse("15:41");
+
         //when
-        boolean found = repository.existsByDateAndTime(LocalDate.parse("2023-08-05"), ReservationTime.parse("15:40"));
-        boolean notFound1 = repository.existsByDateAndTime(LocalDate.parse("2023-08-05"), ReservationTime.parse("15:41"));
-        boolean notFound2 = repository.existsByDateAndTime(LocalDate.parse("2023-08-06"), ReservationTime.parse("15:40"));
-        boolean notFound3 = repository.existsByDateAndTime(LocalDate.parse("2023-08-06"), ReservationTime.parse("15:41"));
+        boolean found = repository.existsByDateAndTime(date, time);
+        boolean notFound1 = repository.existsByDateAndTime(date, anotherTime);
+        boolean notFound2 = repository.existsByDateAndTime(anotherDate, time);
+        boolean notFound3 = repository.existsByDateAndTime(anotherDate, anotherTime);
 
         //then
         assertThat(found).isTrue();

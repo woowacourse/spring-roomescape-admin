@@ -14,7 +14,7 @@ public record ReservationRequest(String name,
         validateTimeId(timeId);
     }
 
-    public Reservation newReservation(Time time) {
+    public Reservation toReservationWithoutId(Time time) {
         return new Reservation(null, name, date, time);
     }
 

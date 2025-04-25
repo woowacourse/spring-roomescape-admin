@@ -1,7 +1,6 @@
 package roomescape.reservation.service;
 
 import java.util.List;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import roomescape.reservation.controller.dto.ReservationRequest;
 import roomescape.reservation.controller.dto.ReservationResponse;
@@ -16,7 +15,6 @@ public class ReservationService {
     private final ReservationRepository reservationRepository;
     private final TimeRepository timeRepository;
 
-    @Autowired
     public ReservationService(ReservationRepository reservationRepository, TimeRepository timeRepository) {
         this.reservationRepository = reservationRepository;
         this.timeRepository = timeRepository;
@@ -31,7 +29,7 @@ public class ReservationService {
 
     public ReservationResponse add(ReservationRequest request) {
         Time findTime = timeRepository.findById(request.timeId());
-        Reservation reservation = request.newReservation(findTime);
+        Reservation reservation = request.toReservationWithoutId(findTime);
 
         Long id = reservationRepository.saveAndReturnId(reservation);
         return ReservationResponse.from(reservation.withId(id));

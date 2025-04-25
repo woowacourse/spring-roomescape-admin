@@ -10,7 +10,7 @@ public record TimeRequest(@JsonFormat(pattern = "HH:mm", timezone = "Asia/Seoul"
         validateStartAt(startAt);
     }
 
-    public Time newTime() {
+    public Time toTimeWithoutId() {
         return new Time(null, startAt);
     }
 

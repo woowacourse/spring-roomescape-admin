@@ -26,6 +26,15 @@
 
 ## 2. Console Application 버전
 
+⚠️ Console Application을 이용하시려면 아래 과정을 수행 하셔야 합니다.
+
+1. 프로젝트의 `/build/libs` 로 이동합니다.
+2. 아래 커맨드를 실행합니다. (console application을 활성화하는 명령입니다.)
+   ```
+   java -Dspring.profiles.active=console -jar spring-roomescape-admin-0.0.1-SNAPSHOT.jar
+   ``` 
+3. 이제 web application과 동시에 console application을 사용할 수 있습니다.
+
 ### 1) 사용 기능 선택
 
 - [x] 사용할 기능 카테고리를 선택한다.

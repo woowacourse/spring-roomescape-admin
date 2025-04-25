@@ -24,18 +24,6 @@ public class ReservationCommandController {
         this.reservationService = reservationService;
     }
 
-    @GetMapping("reservations")
-    public ResponseEntity<List<Reservation>> readReservations() {
-        List<Reservation> reservations = reservationService.readAll();
-        return ResponseEntity.ok(reservations);
-    }
-
-    @GetMapping("reservations/{reservationId}")
-    public ResponseEntity<Reservation> readReservation(@PathVariable("reservationId") Long id) {
-        Reservation reservation = reservationService.readOne(id);
-        return ResponseEntity.ok(reservation);
-    }
-
     @PostMapping("reservations")
     public ResponseEntity<Reservation> add(@RequestBody ReservationRequestDto reservationDto) {
         Long id = reservationService.add(reservationDto);

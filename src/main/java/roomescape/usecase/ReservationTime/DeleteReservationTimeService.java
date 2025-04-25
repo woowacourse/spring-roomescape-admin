@@ -6,17 +6,17 @@ import org.springframework.stereotype.Service;
 @Service
 public class DeleteReservationTimeService implements DeleteReservationTimeUsecase {
     private final ReservationTimeRepository reservationTimeRepository;
-    private final GetReservationTimeService getReservationTimeService;
+    private final GetReservationTimeUseCase getReservationTimeUseCase;
 
     public DeleteReservationTimeService(final ReservationTimeRepository reservationTimeRepository,
-                                        final GetReservationTimeService getReservationTimeService) {
+                                        final GetReservationTimeService getReservationTimeUseCase) {
         this.reservationTimeRepository = reservationTimeRepository;
-        this.getReservationTimeService = getReservationTimeService;
+        this.getReservationTimeUseCase = getReservationTimeUseCase;
     }
 
     @Override
     public void deleteReservationTime(long id) {
-        List<ReservationTimeOutput> reservationTimeOutputs = getReservationTimeService.getReservationTime();
+        List<ReservationTimeOutput> reservationTimeOutputs = getReservationTimeUseCase.getReservationTime();
         reservationTimeOutputs.stream()
                 .filter(reservationTimeOutput -> reservationTimeOutput.id().equals(id))
                 .findAny()

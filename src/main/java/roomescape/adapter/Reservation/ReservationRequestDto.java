@@ -1,4 +1,4 @@
-package roomescape.interface_adapter.Reservation;
+package roomescape.adapter.Reservation;
 
 import java.time.LocalDate;
 import roomescape.usecase.Reservation.ReservationInput;

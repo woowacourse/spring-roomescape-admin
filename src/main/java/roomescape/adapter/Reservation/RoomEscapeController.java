@@ -1,4 +1,4 @@
-package roomescape.interface_adapter.Reservation;
+package roomescape.adapter.Reservation;
 
 import java.util.List;
 import org.springframework.http.ResponseEntity;

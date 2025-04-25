@@ -1,4 +1,4 @@
-package roomescape.interface_adapter.ReservationTime;
+package roomescape.adapter.ReservationTime;
 
 import java.time.LocalTime;
 

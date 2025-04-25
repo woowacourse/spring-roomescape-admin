@@ -1,4 +1,4 @@
-package roomescape.interface_adapter.Reservation;
+package roomescape.adapter.Reservation;
 
 import java.sql.PreparedStatement;
 import java.time.LocalDate;

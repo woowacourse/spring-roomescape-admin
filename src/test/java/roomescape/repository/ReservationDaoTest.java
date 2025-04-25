@@ -46,7 +46,7 @@ class ReservationDaoTest {
     @DisplayName("예약을 저장한다.")
     @Test
     void insertReservation() {
-        Reservation reservation = new Reservation(0L, "포스티",
+        Reservation reservation = new Reservation(null, "포스티",
                 LocalDate.of(2025, 4, 23), new ReservationTime(1L, LocalTime.of(10, 0)));
 
         reservationDao.insert(reservation);
@@ -57,7 +57,7 @@ class ReservationDaoTest {
     @DisplayName("예약 번호와 일치하는 예약을 삭제한다.")
     @Test
     void deleteReservationById() {
-        Reservation reservation = new Reservation(0L, "포스티",
+        Reservation reservation = new Reservation(null, "포스티",
                 LocalDate.of(2025, 4, 23), new ReservationTime(1L, LocalTime.of(10, 0)));
         Reservation insertedReservation = reservationDao.insert(reservation);
 

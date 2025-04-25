@@ -20,7 +20,7 @@ public class ReservationTimeService {
 
     public ReservationTimeResponse createReservationTime(final ReservationTimeCreateRequest request) {
         ReservationTime reservationTime = reservationTimeDao.insert(
-                new ReservationTime(0L, request.startAt()));
+                new ReservationTime(null, request.startAt()));
         return new ReservationTimeResponse(reservationTime);
     }
 

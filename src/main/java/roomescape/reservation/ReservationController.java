@@ -2,6 +2,7 @@ package roomescape.reservation;
 
 import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -29,8 +30,12 @@ public class ReservationController {
     public ResponseEntity<ReservationResponse> createReservation(
             @RequestBody final ReservationRequest request
     ) {
-        final ReservationResponse response = reservationService.createReservation(request);
-        return ResponseEntity.ok(response);
+        try {
+            final ReservationResponse response = reservationService.createReservation(request);
+            return ResponseEntity.ok(response);
+        } catch (final DataIntegrityViolationException e){
+            return ResponseEntity.badRequest().build();
+        }
     }
 
     @GetMapping

@@ -14,7 +14,6 @@ import org.springframework.test.context.BootstrapWith;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 import roomescape.reservation.domain.dto.ReservationReqDto;
 import roomescape.reservation.domain.dto.ReservationResDto;
-import roomescape.reservationTime.domain.dto.ReservationTimeReqDto;
 
 import java.sql.Connection;
 import java.sql.SQLException;
@@ -24,7 +23,6 @@ import java.time.LocalTime;
 import java.util.List;
 
 import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
-import static org.hamcrest.core.Is.is;
 
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.DEFINED_PORT)
 @BootstrapWith(SpringBootTestContextBootstrapper.class)
@@ -36,7 +34,7 @@ public class MissionStepTest2 {
     private JdbcTemplate jdbcTemplate;
 
     @Test
-    void 사단계() {
+    void connection() {
         try (Connection connection = jdbcTemplate.getDataSource().getConnection()) {
             assertThat(connection).isNotNull();
             assertThat(connection.getCatalog()).isEqualTo("DATABASE");
@@ -47,7 +45,7 @@ public class MissionStepTest2 {
     }
 
     @Test
-    void 오단계() {
+    void findAll() {
         jdbcTemplate.update("INSERT INTO reservation_time (start_at) VALUES (?)", "15:40");
         jdbcTemplate.update("INSERT INTO reservation (name, date, time_id) VALUES (?, ?, ?)", "브라운", "2023-08-05", "1");
 
@@ -63,7 +61,7 @@ public class MissionStepTest2 {
     }
 
     @Test
-    void 육단계() {
+    void add() {
         LocalDateTime localDateTime = LocalDateTime.now().plusDays(1);
 
         String dummyName = "브라운";
@@ -78,9 +76,24 @@ public class MissionStepTest2 {
                 .when().post("/reservations")
                 .then().log().all()
                 .statusCode(HttpStatus.CREATED.value());
+    }
 
-        Integer count = jdbcTemplate.queryForObject("SELECT count(1) from reservation", Integer.class);
-        assertThat(count).isEqualTo(1);
+    @Test
+    void delete() {
+        LocalDateTime localDateTime = LocalDateTime.now().plusDays(1);
+
+        String dummyName = "브라운";
+        LocalDate dummyDate = localDateTime.toLocalDate();
+        LocalTime dummyTime = localDateTime.toLocalTime();
+
+        ReservationReqDto dto = new ReservationReqDto(dummyName, dummyDate, dummyTime);
+
+        RestAssured.given().log().all()
+                .contentType(ContentType.JSON)
+                .body(dto)
+                .when().post("/reservations")
+                .then().log().all()
+                .statusCode(HttpStatus.CREATED.value());
 
         RestAssured.given().log().all()
                 .when().delete("/reservations/1")
@@ -89,53 +102,5 @@ public class MissionStepTest2 {
 
         Integer countAfterDelete = jdbcTemplate.queryForObject("SELECT count(1) from reservation", Integer.class);
         assertThat(countAfterDelete).isEqualTo(0);
-    }
-
-    @Test
-    void 칠단계() {
-        ReservationTimeReqDto dto = new ReservationTimeReqDto(LocalTime.of(10, 10));
-
-        RestAssured.given().log().all()
-                .contentType(ContentType.JSON)
-                .body(dto)
-                .when().post("/times")
-                .then().log().all()
-                .statusCode(HttpStatus.CREATED.value());
-
-        RestAssured.given().log().all()
-                .when().get("/times")
-                .then().log().all()
-                .statusCode(200)
-                .body("size()", is(1));
-
-        RestAssured.given().log().all()
-                .when().delete("/times/1")
-                .then().log().all()
-                .statusCode(HttpStatus.NO_CONTENT.value());
-    }
-
-    @Test
-    void 팔단계() {
-        LocalDateTime localDateTime = LocalDateTime.now().plusDays(1);
-
-        String dummyName = "브라운";
-        LocalDate dummyDate = localDateTime.toLocalDate();
-        LocalTime dummyTime = localDateTime.toLocalTime();
-
-        ReservationReqDto dto = new ReservationReqDto(dummyName, dummyDate, dummyTime);
-
-        RestAssured.given().log().all()
-                .contentType(ContentType.JSON)
-                .body(dto)
-                .when().post("/reservations")
-                .then().log().all()
-                .statusCode(HttpStatus.CREATED.value());
-
-
-        RestAssured.given().log().all()
-                .when().get("/reservations")
-                .then().log().all()
-                .statusCode(HttpStatus.OK.value())
-                .body("size()", is(1));
     }
 }

@@ -15,7 +15,6 @@ import roomescape.reservation.entity.ReservationTime;
 import roomescape.common.exception.EntityNotFoundException;
 import roomescape.reservation.repository.ReservationTimeRepository;
 import roomescape.reservation.repository.fake.FakeReservationTimeRepository;
-import roomescape.reservation.service.impl.ReservationTimeServiceImpl;
 
 public class ReservationTimeServiceTest {
 
@@ -25,7 +24,7 @@ public class ReservationTimeServiceTest {
     @BeforeEach
     void setUp() {
         reservationTimeRepository = new FakeReservationTimeRepository();
-        reservationTimeService = new ReservationTimeServiceImpl(reservationTimeRepository);
+        reservationTimeService = new ReservationTimeService(reservationTimeRepository);
     }
 
     @DisplayName("모든 시간 정보를 가져온다.")

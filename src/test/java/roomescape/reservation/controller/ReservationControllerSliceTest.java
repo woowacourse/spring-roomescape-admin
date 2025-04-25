@@ -1,5 +1,6 @@
 package roomescape.reservation.controller;
 
+import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
@@ -8,6 +9,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.SerializationFeature;
 import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
+import java.lang.reflect.Field;
 import java.time.LocalDate;
 import java.time.LocalTime;
 import java.time.format.DateTimeFormatter;
@@ -15,9 +17,13 @@ import java.util.List;
 import java.util.concurrent.atomic.AtomicLong;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
+import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.http.MediaType;
 import org.springframework.http.converter.json.MappingJackson2HttpMessageConverter;
+import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
@@ -37,7 +43,7 @@ public class ReservationControllerSliceTest {
     @BeforeEach
     void setUp() {
         mapper.registerModule(new JavaTimeModule());
-        mapper.disable(SerializationFeature.WRITE_DATES_AS_TIMESTAMPS); // <-- 핵심!
+        mapper.disable(SerializationFeature.WRITE_DATES_AS_TIMESTAMPS);
 
         reservationService = mock(ReservationService.class);
         ReservationController reservationController = new ReservationController(reservationService);
@@ -95,15 +101,36 @@ public class ReservationControllerSliceTest {
                 .andExpect(jsonPath("$.name").value(name))
                 .andExpect(jsonPath("$.date").value(date.toString()))
                 .andExpect(jsonPath("$.time.id").value(timeId))
-                .andExpect(jsonPath("$.time.startAt").value(time.toString()));
+                .andExpect(jsonPath("$.time.startAt").value(formatStartAt(time)));
 
     }
 
+    private String formatStartAt(LocalTime time) {
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("HH:mm");
 
-//    private String toStartAt(LocalTime time){
-//        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("HH:mm");
-//
-//
-//
-//    }
+        return time.format(formatter);
+    }
+
+    @SpringBootTest
+    @Nested
+    class bean {
+
+        @Autowired
+        private ReservationController reservationController;
+
+        @DisplayName("컨트롤러 jdbc 분리 테스트")
+        @Test
+        void test1() {
+            boolean isJdbcTemplateInjected = false;
+
+            for (Field field : reservationController.getClass().getDeclaredFields()) {
+                if (field.getType().equals(JdbcTemplate.class)) {
+                    isJdbcTemplateInjected = true;
+                    break;
+                }
+            }
+
+            assertThat(isJdbcTemplateInjected).isFalse();
+        }
+    }
 }

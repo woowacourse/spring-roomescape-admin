@@ -28,7 +28,6 @@ public class ReservationTimeController {
 
     @GetMapping("/times")
     public ResponseEntity<List<ReservationTimeResponse>> readAllReservationTimes() {
-
         List<ReservationTimeResponse> responses = reservationTimeService.getAll();
 
         return ResponseEntity.ok(responses);

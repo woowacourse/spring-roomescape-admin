@@ -11,17 +11,16 @@ import org.assertj.core.api.SoftAssertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
+import roomescape.common.exception.EntityNotFoundException;
 import roomescape.reservation.dto.ReservationRequest;
 import roomescape.reservation.dto.ReservationResponse;
 import roomescape.reservation.dto.ReservationTimeResponse;
 import roomescape.reservation.entity.Reservation;
 import roomescape.reservation.entity.ReservationTime;
-import roomescape.common.exception.EntityNotFoundException;
 import roomescape.reservation.repository.ReservationRepository;
 import roomescape.reservation.repository.ReservationTimeRepository;
 import roomescape.reservation.repository.fake.FakeReservationRepository;
 import roomescape.reservation.repository.fake.FakeReservationTimeRepository;
-import roomescape.reservation.service.impl.ReservationServiceImpl;
 
 class ReservationServiceTest {
 
@@ -37,7 +36,7 @@ class ReservationServiceTest {
     void setUp() {
         reservationRepository = new FakeReservationRepository();
         ReservationTimeRepository reservationTimeRepository = new FakeReservationTimeRepository();
-        reservationService = new ReservationServiceImpl(reservationRepository, reservationTimeRepository);
+        reservationService = new ReservationService(reservationRepository, reservationTimeRepository);
 
         ReservationTime saved = reservationTimeRepository.save(ReservationTime.withoutId(time));
         reservationTimeId = saved.getId();

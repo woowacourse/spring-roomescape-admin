@@ -17,9 +17,7 @@ public class ReservationTimeTest {
         // given
         ReservationTime reservationTime = new ReservationTime(firstId, LocalTime.of(10, 0));
 
-        // when
-
-        // then
+        // when & then
         assertThat(reservationTime.isEqualId(secondId)).isEqualTo(result);
     }
 }

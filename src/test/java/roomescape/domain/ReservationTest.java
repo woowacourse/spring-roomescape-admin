@@ -19,9 +19,7 @@ class ReservationTest {
         Reservation reservation = new Reservation(firstId, "체체", LocalDate.of(2024, 12, 12),
                 new ReservationTime(1L, LocalTime.of(10, 0)));
 
-        // when
-
-        // then
+        // when & then
         assertThat(reservation.isEqualId(secondId)).isEqualTo(result);
     }
 }

@@ -11,9 +11,7 @@ class ReservationTimeCreateRequestTest {
     @Test
     void validateTimeNullThrowExceptionTest() {
 
-        // given
-
-        // when & then
+        // given & when & then
         assertThatThrownBy(() -> new ReservationTimeCreateRequest(null))
                 .isInstanceOf(IllegalArgumentException.class)
                 .hasMessage("빈 값으로 예약할 수 없습니다.");

@@ -25,22 +25,20 @@ public enum Function {
 
     public static Function getSystemFunction(int value) {
         List<Function> functions = List.of(RESERVATION, RESERVATION_TIME);
-        return functions.stream()
-                .filter(function -> value == function.getValue())
-                .findAny()
-                .orElseThrow(() -> new InvalidFunctionException("잘못된 기능 선택입니다."));
+        return getFilteredFunction(value, functions);
     }
 
     public static Function getReservationFunction(int value) {
         List<Function> functions = List.of(ADD_RESERVATION, GET_RESERVATIONS, DELETE_RESERVATION);
-        return functions.stream()
-                .filter(function -> value == function.getValue())
-                .findAny()
-                .orElseThrow(() -> new InvalidFunctionException("잘못된 기능 선택입니다."));
+        return getFilteredFunction(value, functions);
     }
 
     public static Function getReservationTimeFunction(int value) {
         List<Function> functions = List.of(ADD_RESERVATION_TIME, GET_RESERVATION_TIMES, DELETE_RESERVATION_TIME);
+        return getFilteredFunction(value, functions);
+    }
+
+    private static Function getFilteredFunction(int value, List<Function> functions) {
         return functions.stream()
                 .filter(function -> value == function.getValue())
                 .findAny()

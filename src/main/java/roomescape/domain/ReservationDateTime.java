@@ -3,6 +3,8 @@ package roomescape.domain;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.LocalTime;
+import java.time.ZoneId;
+import java.time.ZonedDateTime;
 import roomescape.domain.exception.PastReservationException;
 
 public class ReservationDateTime {
@@ -17,7 +19,10 @@ public class ReservationDateTime {
     }
 
     private void validateDateTime(final ReservationDate date, final ReservationTime time) {
-        if (LocalDateTime.of(date.getDate(), time.getStartAt()).isBefore(LocalDateTime.now())) {
+        ZoneId zoneId = ZoneId.of("Asia/Seoul");
+        ZonedDateTime now = ZonedDateTime.now(zoneId);
+
+        if (LocalDateTime.of(date.getDate(), time.getStartAt()).isBefore(now.toLocalDateTime())) {
             throw new PastReservationException("과거 날짜로 예약할 수 없습니다.");
         }
     }

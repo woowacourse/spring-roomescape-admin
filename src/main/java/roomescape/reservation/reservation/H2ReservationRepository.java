@@ -21,7 +21,7 @@ public class H2ReservationRepository implements ReservationRepository {
 
     @Override
     public Long save(Reservation reservation) {
-        String sql = "insert into reservations (name, date, time_id) values (?, ?, ?)";
+        String sql = "INSERT INTO reservations (name, date, time_id) VALUES (?, ?, ?)";
         KeyHolder keyHolder = new GeneratedKeyHolder();
 
         jdbcTemplate.update(connection -> {
@@ -39,13 +39,13 @@ public class H2ReservationRepository implements ReservationRepository {
     public Optional<Reservation> findById(Long id) {
         String sql = """
                 SELECT 
-                    r.id as id,
-                    r.name as name,
-                    r.date as date,
-                    t.id as time_id,
-                    t.start_at as start_at
-                FROM reservations as r
-                INNER JOIN reservation_times as t
+                    r.id AS id,
+                    r.name AS name,
+                    r.date AS date,
+                    t.id AS time_id,
+                    t.start_at AS start_at
+                FROM reservations AS r
+                INNER JOIN reservation_times AS t
                 ON r.time_id = t.id
                 WHERE r.id = ?
                 """;
@@ -71,14 +71,14 @@ public class H2ReservationRepository implements ReservationRepository {
     public List<Reservation> findAll() {
         String sql = """
                 SELECT 
-                    r.id as id, 
-                    r.name as name, 
+                    r.id AS id, 
+                    r.name AS name, 
                     date, 
                     time_id, 
                     start_at 
-                FROM reservations as r
-                inner join reservation_times as t
-                on r.time_id = t.id
+                FROM reservations AS r
+                INNER JOIN reservation_times AS t
+                ON r.time_id = t.id
                 """;
 
         return jdbcTemplate.query(sql, (rs, rowNum) ->
@@ -96,7 +96,7 @@ public class H2ReservationRepository implements ReservationRepository {
 
     @Override
     public void delete(Reservation reservation) {
-        String sql = "delete from reservations where id = ?";
+        String sql = "DELETE FROM reservations WHERE id = ?";
         jdbcTemplate.update(sql, reservation.getId());
     }
 }

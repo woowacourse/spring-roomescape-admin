@@ -19,7 +19,7 @@ public class H2ReservationTimeRepository implements ReservationTimeRepository {
 
     @Override
     public Long save(final ReservationTime reservationTime) {
-        String sql = "insert into reservation_times (start_at) values (?)";
+        String sql = "INSERT INTO reservation_times (start_at) VALUE (?)";
         KeyHolder keyHolder = new GeneratedKeyHolder();
 
         jdbcTemplate.update(connection -> {
@@ -33,7 +33,7 @@ public class H2ReservationTimeRepository implements ReservationTimeRepository {
 
     @Override
     public Optional<ReservationTime> findById(final Long id) {
-        String sql = "select * from reservation_times where id = ?";
+        String sql = "SELECT * FROM reservation_times WHERE id = ?";
         List<ReservationTime> reservationTimes = jdbcTemplate.query(sql, (rs, rowNum) ->
                         new ReservationTime(rs.getLong("id"),
                                 rs.getTime("start_at").toLocalTime()),
@@ -48,7 +48,7 @@ public class H2ReservationTimeRepository implements ReservationTimeRepository {
 
     @Override
     public List<ReservationTime> findAll() {
-        String sql = "select * from reservation_times";
+        String sql = "SELECT * FROM reservation_times";
         return jdbcTemplate.query(sql, (resultSet, rowCount) ->
                 new ReservationTime(resultSet.getLong("id"),
                         resultSet.getTime("start_at").toLocalTime())
@@ -57,7 +57,7 @@ public class H2ReservationTimeRepository implements ReservationTimeRepository {
 
     @Override
     public void delete(final ReservationTime reservationTime) {
-        String sql = "delete from reservation_times where id = ?";
+        String sql = "DELETE FROM reservation_times WHERE id = ?";
         jdbcTemplate.update(sql, reservationTime.getId());
     }
 }

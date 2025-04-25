@@ -3,7 +3,7 @@ package roomescape.interface_adapter.ReservationTime;
 import java.time.LocalTime;
 import roomescape.usecase.ReservationTime.ReservationTimeOutput;
 
-//TODO OUTPUT과 분리
+
 public record ReservationTimeResponseDto(Long id, LocalTime start_at) {
     public static ReservationTimeResponseDto from(final ReservationTimeOutput reservationTimeOutputModel) {
         return new ReservationTimeResponseDto(

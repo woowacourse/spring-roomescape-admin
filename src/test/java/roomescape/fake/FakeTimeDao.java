@@ -9,13 +9,21 @@ import roomescape.data.entity.TimeEntity;
 
 public class FakeTimeDao implements TimeDao {
 
-    private final List<TimeEntity> times = new ArrayList<>();
+    private final List<TimeEntity> times;
 
     private int index = 1;
 
     public FakeTimeDao() {
+        this.times = new ArrayList<>();
         final TimeEntity dummy = new TimeEntity(null, null);
         times.add(dummy);
+    }
+
+    public FakeTimeDao(final List<TimeEntity> times) {
+        this.times = times;
+        index += times.size();
+        final TimeEntity dummy = new TimeEntity(null, null);
+        times.addFirst(dummy);
     }
 
     @Override

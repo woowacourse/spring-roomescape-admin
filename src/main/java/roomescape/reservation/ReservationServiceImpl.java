@@ -17,17 +17,6 @@ public class ReservationServiceImpl implements ReservationService {
     }
 
     @Override
-    public Reservation toReservation(ReservationRequest wantToSaveReservationRequest) {
-        String name = wantToSaveReservationRequest.getName();
-        LocalDate date = wantToSaveReservationRequest.getDate();
-        Long timeId = wantToSaveReservationRequest.getTimeId();
-
-        ReservationTime request = reservationTimeService.findById(timeId);
-
-        return new Reservation(name, date, request);
-    }
-
-    @Override
     public Reservation saveReservation(ReservationRequest wantToSaveReservationRequest) {
         String name = wantToSaveReservationRequest.getName();
         LocalDate date = wantToSaveReservationRequest.getDate();

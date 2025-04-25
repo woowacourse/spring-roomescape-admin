@@ -43,14 +43,14 @@ public class ConsoleController {
     }
 
     private void processSystemFunction(Function function) {
-        if (function == Function.RESERVATION_TIME) {
-            Function reservationTimeFunction = Function.getReservationTimeFunction(
-                    inputView.selectReservationTimeFunction());
-            processReservationTimeFunction(reservationTimeFunction);
-        } else if (function == Function.RESERVATION) {
+        if (function == Function.RESERVATION) {
             Function reservationFunction = Function.getReservationFunction(
                     inputView.selectReservationFunction());
             processReservationFunction(reservationFunction);
+        } else if (function == Function.RESERVATION_TIME) {
+            Function reservationTimeFunction = Function.getReservationTimeFunction(
+                    inputView.selectReservationTimeFunction());
+            processReservationTimeFunction(reservationTimeFunction);
         }
     }
 

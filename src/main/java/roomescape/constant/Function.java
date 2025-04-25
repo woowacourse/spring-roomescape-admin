@@ -6,7 +6,7 @@ import roomescape.exception.InvalidFunctionException;
 public enum Function {
 
     RESERVATION(1),
-    RESERVATION_TIME(1),
+    RESERVATION_TIME(2),
 
     ADD_RESERVATION(1),
     GET_RESERVATIONS(2),

@@ -7,23 +7,13 @@ import roomescape.dto.CreateReservationTimeDto;
 
 @Component
 public class InputView {
-    
+
     private final Scanner scanner = new Scanner(System.in);
 
     public int selectAdminFunction() {
         System.out.println("이용하려는 기능을 선택해 주세요.");
-        System.out.println("1. 예약 시간 관리");
-        System.out.println("2. 예약 관리");
-        int value = scanner.nextInt();
-        scanner.nextLine();
-        return value;
-    }
-
-    public int selectReservationTimeFunction() {
-        System.out.println("예약 시간 관리 기능입니다. 실행할 기능을 선택해 주세요.");
-        System.out.println("1. 예약 시간 추가");
-        System.out.println("2. 예약 시간 목록 조회");
-        System.out.println("3. 예약 시간 삭제");
+        System.out.println("1. 예약 관리");
+        System.out.println("2. 예약 시간 관리");
         int value = scanner.nextInt();
         scanner.nextLine();
         return value;
@@ -49,6 +39,16 @@ public class InputView {
         System.out.println("예약 시간을 삭제합니다.");
         System.out.println("삭제할 예약 시간의 id를 입력해 주세요. (ex: 1) ");
         long value = scanner.nextLong();
+        scanner.nextLine();
+        return value;
+    }
+
+    public int selectReservationTimeFunction() {
+        System.out.println("예약 시간 관리 기능입니다. 실행할 기능을 선택해 주세요.");
+        System.out.println("1. 예약 시간 추가");
+        System.out.println("2. 예약 시간 목록 조회");
+        System.out.println("3. 예약 시간 삭제");
+        int value = scanner.nextInt();
         scanner.nextLine();
         return value;
     }

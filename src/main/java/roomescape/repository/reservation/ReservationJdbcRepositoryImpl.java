@@ -2,6 +2,8 @@ package roomescape.repository.reservation;
 
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.time.LocalDate;
+import java.time.LocalTime;
 import java.util.List;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.namedparam.MapSqlParameterSource;
@@ -74,13 +76,13 @@ public class ReservationJdbcRepositoryImpl implements ReservationRepository {
     private Reservation getReservationData(ResultSet resultSet) throws SQLException {
         ReservationTime reservationTime = new ReservationTime(
                 resultSet.getLong(RESERVATION_TIME_ID),
-                resultSet.getString(RESERVATION_TIME_START_AT)
+                resultSet.getObject(RESERVATION_TIME_START_AT, LocalTime.class)
         );
 
         return new Reservation(
                 resultSet.getLong(RESERVATION_ID),
                 resultSet.getString(RESERVATION_NAME),
-                resultSet.getString(RESERVATION_DATE),
+                resultSet.getObject(RESERVATION_DATE, LocalDate.class),
                 reservationTime
         );
     }

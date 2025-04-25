@@ -18,7 +18,7 @@ class ReservationTest {
     private static final LocalTime VALID_TIME = LocalTime.now();
 
     @ParameterizedTest
-    @DisplayName("이름이 빈 문자열이거나 null이면 예외가 발생한다")
+    @DisplayName("이름이 빈 문자열이거나 null이면 예외가 발생한다.")
     @NullAndEmptySource
     void nameEmptyExceptionTest(String invalidName) {
         // given
@@ -31,7 +31,7 @@ class ReservationTest {
     }
 
     @ParameterizedTest
-    @DisplayName("날짜 값이 null이면 예외가 발생한다")
+    @DisplayName("날짜 값이 null이면 예외가 발생한다.")
     @NullSource
     void dateExceptionTest(LocalDate invalidDate) {
         // given
@@ -44,7 +44,7 @@ class ReservationTest {
     }
 
     @ParameterizedTest
-    @DisplayName("시간 값이 null이면 예외가 발생한다")
+    @DisplayName("시간 값이 null이면 예외가 발생한다.")
     @NullSource
     void timeExceptionTest(ReservationTime invalidTime) {
         // when & then

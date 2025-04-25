@@ -11,7 +11,7 @@ import org.springframework.test.annotation.DirtiesContext;
 class AdminPageControllerTest {
 
     @Test
-    @DisplayName("예약 페이지를 조회한다")
+    @DisplayName("예약 페이지를 조회한다.")
     void getAdminReservationPage() {
         RestAssured.given().log().all()
                 .when().get("/admin/reservation")
@@ -20,7 +20,7 @@ class AdminPageControllerTest {
     }
 
     @Test
-    @DisplayName("어드민 메인 페이지를 조회한다")
+    @DisplayName("어드민 메인 페이지를 조회한다.")
     void getReservationMainPage() {
         RestAssured.given().log().all()
                 .when().get("/admin")

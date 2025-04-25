@@ -15,6 +15,11 @@ public class AdminDisplayController {
 
     @GetMapping("/reservation")
     public String displayAdminReservation() {
-        return "admin/reservation-legacy";
+        return "admin/reservation";
+    }
+
+    @GetMapping("/time")
+    public String displayAdminTime() {
+        return "/admin/time";
     }
 }

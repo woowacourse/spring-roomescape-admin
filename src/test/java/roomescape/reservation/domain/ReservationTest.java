@@ -7,6 +7,11 @@ import org.junit.jupiter.api.Test;
 import org.springframework.test.annotation.DirtiesContext;
 import roomescape.globalException.CustomException;
 import roomescape.reservation.fixture.ReservationFixture;
+import roomescape.reservationTime.domain.ReservationTime;
+
+import java.time.LocalDate;
+import java.time.LocalDateTime;
+import java.time.LocalTime;
 
 @DirtiesContext(classMode = DirtiesContext.ClassMode.BEFORE_EACH_TEST_METHOD)
 class ReservationTest {
@@ -20,10 +25,13 @@ class ReservationTest {
         void isPastTense_throwsExceptionByPastTime() {
             // given
             String dummyName = "kali";
+            LocalDate dummyPastDate = LocalDate.of(2024, 4, 25);
+            LocalTime dummyTime = LocalTime.of(11, 13);
+            ReservationTime reservationTime = new ReservationTime(dummyTime);
 
             // when & then
-            Assertions.assertThatCode(
-                    () -> ReservationFixture.createPastReservationBeforeOneDay(dummyName)
+            Assertions.assertThatThrownBy(
+                    () -> ReservationFixture.createReservation(dummyName, dummyPastDate, reservationTime)
             ).isInstanceOf(CustomException.class);
         }
 
@@ -32,11 +40,52 @@ class ReservationTest {
         void isPastTense_doesNotThrowExceptionByFutureTime() {
             // given
             String dummyName = "kali";
+            LocalDateTime dummyFuture = LocalDateTime.now().plusDays(1);
+            LocalDate dummyPastDate = dummyFuture.toLocalDate();
+            LocalTime dummyTime = dummyFuture.toLocalTime();
+            ReservationTime reservationTime = new ReservationTime(dummyTime);
 
             // when & then
             Assertions.assertThatCode(
-                    () -> ReservationFixture.createFutureReservationAfterOneDay(dummyName)
+                    () -> ReservationFixture.createReservation(dummyName, dummyPastDate, reservationTime)
             ).doesNotThrowAnyException();
+        }
+
+        @DisplayName("localDate만 다르고 localTime이 같으면 isSameDateTime에서 false이다.")
+        @Test
+        void isSameDateTime_false_bySameDateDifferenceTime() {
+            // given
+            String dummyName = "kali";
+            LocalDateTime dateTime1 = LocalDateTime.now().plusDays(1);
+            ReservationTime duplicateReservationTime = new ReservationTime(dateTime1.toLocalTime());
+
+            Reservation reservation1 = Reservation.of(dummyName, dateTime1.toLocalDate(), duplicateReservationTime);
+
+            LocalDateTime dateTime2 = LocalDateTime.now().plusDays(2);
+            Reservation reservation2 = Reservation.of("aa", dateTime2.toLocalDate(), duplicateReservationTime);
+
+            // when
+            Assertions.assertThat(reservation1.isSameDateTime(reservation2)).isFalse();
+        }
+
+
+
+        @DisplayName("date와 reservationTime의 startAt 필드를 합쳐서 LocalDateTime 형식으로 반환할 수 있다")
+        @Test
+        void getDateTime() {
+            // given
+            LocalDate localDate = LocalDate.of(2023, 11, 2);
+            LocalTime localTime = LocalTime.of(22, 33);
+
+            LocalDateTime expected = LocalDateTime.of(localDate, localTime);
+
+            ReservationTime reservationTime = new ReservationTime(localTime);
+
+            // when
+            LocalDateTime actual = LocalDateTime.of(localDate, reservationTime.getStartAt());
+
+            // then
+            Assertions.assertThat(actual).isEqualTo(expected);
         }
     }
 }

@@ -81,10 +81,8 @@ public class ReservationRepositoryImpl implements ReservationRepository {
         String sql = "INSERT INTO reservation (name, date, time_id) VALUES (?, ?, ?)";
         KeyHolder keyHolder = new GeneratedKeyHolder();
 
-        // reservationTime 객체로 id를 찾기
-        Long reservationTimeId = reservationTimeRepository.insertWithKeyHolder(reservation.getReservationTime());
+        Long reservationTimeId = reservation.getReservationTime().getId();
 
-        // reservationTimeId로 reservation 찾기
         jdbcTemplate.update(connection -> {
             PreparedStatement ps = connection.prepareStatement(
                     sql,

@@ -7,6 +7,8 @@ import roomescape.reservation.domain.Reservation;
 import roomescape.reservation.domain.dto.ReservationReqDto;
 import roomescape.reservation.domain.dto.ReservationResDto;
 import roomescape.globalException.CustomException;
+import roomescape.reservationTime.domain.ReservationTime;
+import roomescape.reservationTime.repository.ReservationTimeRepository;
 
 import java.util.List;
 import java.util.stream.Collectors;
@@ -15,9 +17,11 @@ import java.util.stream.Collectors;
 public class ReservationService {
 
     private final ReservationRepository reservationRepository;
+    private final ReservationTimeRepository reservationTimeRepository;
 
-    public ReservationService(ReservationRepository reservationRepository) {
+    public ReservationService(ReservationRepository reservationRepository, ReservationTimeRepository reservationTimeRepository) {
         this.reservationRepository = reservationRepository;
+        this.reservationTimeRepository = reservationTimeRepository;
     }
 
     public List<ReservationResDto> readAll() {
@@ -48,10 +52,11 @@ public class ReservationService {
     }
 
     private Reservation convertReservation(ReservationReqDto dto) {
+        ReservationTime reservationTime = reservationTimeRepository.findById(dto.timeId());
         return Reservation.of(
                 dto.name(),
                 dto.date(),
-                dto.time());
+                reservationTime);
     }
 
     private ReservationResDto convertReservationResDto(Reservation reservation) {

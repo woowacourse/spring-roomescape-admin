@@ -6,7 +6,6 @@ import roomescape.reservationTime.domain.ReservationTime;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
-import java.time.LocalTime;
 
 public class Reservation {
 
@@ -32,10 +31,10 @@ public class Reservation {
         this.reservationTime = reservationTime;
     }
 
-    public static Reservation of(String name, LocalDate date, LocalTime time) {
-        LocalDateTime dateTime = LocalDateTime.of(date, time);
+    public static Reservation of(String name, LocalDate date, ReservationTime reservationTime) {
+        LocalDateTime dateTime = LocalDateTime.of(date, reservationTime.getStartAt());
         validateTense(dateTime);
-        return new Reservation(name, date, new ReservationTime(time));
+        return new Reservation(name, date, reservationTime);
     }
 
     private static void validateTense(LocalDateTime dateTime) {

@@ -19,7 +19,7 @@ import roomescape.domain_entity.ReservationTime;
 
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.DEFINED_PORT)
 @DirtiesContext(classMode = DirtiesContext.ClassMode.BEFORE_EACH_TEST_METHOD)
-public class AdminControllerTest {
+public class ReservationControllerTest {
 
     @Autowired
     private TimeDao timeDao;

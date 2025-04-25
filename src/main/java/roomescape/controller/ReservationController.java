@@ -18,7 +18,7 @@ import roomescape.domain_entity.Id;
 import roomescape.domain_entity.Reservation;
 
 @Controller
-public class AdminController {
+public class ReservationController {
 
     @Autowired
     private ReservationDao reservationDao;

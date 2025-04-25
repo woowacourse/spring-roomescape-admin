@@ -28,7 +28,7 @@ public class TimeController {
         List<ReservationTime> reservationTimes = timeDAO.findAllTimes();
 
         return reservationTimes.stream()
-                .map(reservationTime -> new TimeResponse(reservationTime.getId(), reservationTime.getLocalTime()))
+                .map(reservationTime -> new TimeResponse(reservationTime.getId(), reservationTime.getStartAt()))
                 .toList();
     }
 
@@ -37,7 +37,7 @@ public class TimeController {
         ReservationTime reservationTime = timeDAO.insertTime(timeRequest);
         return new TimeResponse(
                 reservationTime.getId(),
-                reservationTime.getLocalTime()
+                reservationTime.getStartAt()
         );
     }
 

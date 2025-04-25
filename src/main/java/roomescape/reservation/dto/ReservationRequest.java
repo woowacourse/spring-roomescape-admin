@@ -1,7 +1,8 @@
 package roomescape.reservation.dto;
 
+import jakarta.validation.constraints.NotNull;
 import java.time.LocalDate;
 
-public record ReservationRequest(String name, LocalDate date, Long timeId) {
+public record ReservationRequest(@NotNull String name, @NotNull LocalDate date,@NotNull Long timeId) {
 
 }

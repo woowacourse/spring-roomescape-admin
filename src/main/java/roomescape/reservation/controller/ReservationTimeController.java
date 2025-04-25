@@ -3,6 +3,7 @@ package roomescape.reservation.controller;
 import java.util.List;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -34,7 +35,7 @@ public class ReservationTimeController {
     }
 
     @PostMapping("/times")
-    public ResponseEntity<ReservationTimeResponse> add(@RequestBody ReservationTimeRequest request) {
+    public ResponseEntity<ReservationTimeResponse> add(@Validated  @RequestBody ReservationTimeRequest request) {
 
         ReservationTimeResponse response = reservationTimeService.save(request);
 
@@ -47,4 +48,6 @@ public class ReservationTimeController {
 
         return ResponseEntity.noContent().build();
     }
+
+
 }

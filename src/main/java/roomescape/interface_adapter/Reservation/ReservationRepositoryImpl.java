@@ -37,7 +37,7 @@ public class ReservationRepositoryImpl implements ReservationRepository {
 
         long id = keyHolder.getKey().longValue();
 
-        return new Reservation(reservation.getId(), reservation.getName(), reservation.getDate(),
+        return new Reservation(id, reservation.getName(), reservation.getDate(),
                 reservation.getReservationTime());
 
     }
@@ -65,5 +65,10 @@ public class ReservationRepositoryImpl implements ReservationRepository {
         return reservations.stream()
                 .map(ReservationOutput::from)
                 .toList();
+    }
+
+    @Override
+    public void deleteReservation(final long id) {
+        jdbcTemplate.update("delete from reservation where id = ?", id);
     }
 }

@@ -30,7 +30,11 @@ public class ReservationTime {
         return startAt;
     }
 
-    public void validateStartAt(LocalTime startAt) {
+    public boolean isPast() {
+        return startAt.isBefore(LocalTime.now());
+    }
+
+    private void validateStartAt(LocalTime startAt) {
         if (startAt == null) {
             throw new IllegalArgumentException("시간은 null일 수 없습니다.");
         }

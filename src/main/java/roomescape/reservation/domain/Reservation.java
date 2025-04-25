@@ -1,7 +1,6 @@
 package roomescape.reservation.domain;
 
 import java.time.LocalDate;
-import java.time.LocalTime;
 import java.util.Objects;
 import roomescape.time.domain.ReservationTime;
 
@@ -59,6 +58,10 @@ public class Reservation {
         if (date == null) {
             throw new IllegalArgumentException("date는 빈 값일 수 없습니다.");
         }
+    }
+
+    public boolean isPast() {
+        return date.isBefore(LocalDate.now()) && reservationTime.isPast();
     }
 
     @Override

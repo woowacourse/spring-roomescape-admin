@@ -37,7 +37,7 @@ public class ReservationController {
     public ResponseEntity<ReservationResponse> addReservation(@Valid @RequestBody ReservationRequest reservationRequest) {
         try {
             return ResponseEntity.ok(reservationService.addReservation(reservationRequest));
-        } catch (DataAccessException e) {
+        } catch (DataAccessException | IllegalArgumentException e) {
             return ResponseEntity.badRequest().build();
         }
     }

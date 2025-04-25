@@ -28,6 +28,11 @@ public class ReservationService {
     public ReservationResponse addReservation(ReservationRequest reservationRequest) {
         ReservationTime reservationTime = reservationTimeDao.findById(reservationRequest.timeId());
         Reservation reservation = reservationMapper.toReservation(reservationRequest, reservationTime);
+
+        if (reservation.isPast()) {
+            throw new IllegalArgumentException("현재보다 이전 시간대는 예약할 수 없습니다.");
+        }
+
         return reservationMapper.toReservationResponse(reservationDao.insert(reservation));
     }
 

@@ -32,7 +32,7 @@ public class FakeReservationTimeDaoImpl implements ReservationTimeDao {
     @Override
     public ReservationTime findById(Long id) {
         return reservationTimes.stream()
-            .filter(reservation -> reservation.getId() == id)
+            .filter(reservationTime -> reservationTime.getId().equals(id))
             .findFirst()
             .orElseThrow(() -> new IllegalArgumentException("존재하지 않는 예약번호 입니다."));
     }

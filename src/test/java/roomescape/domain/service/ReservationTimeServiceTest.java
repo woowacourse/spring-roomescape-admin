@@ -5,7 +5,6 @@ import static org.assertj.core.api.Assertions.assertThat;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
-import roomescape.domain.ReservationTimes;
 import roomescape.domain.dao.FakeReservationTimeDaoImpl;
 import roomescape.dto.ReservationTimeRequestDto;
 import roomescape.service.ReservationTimeService;
@@ -13,16 +12,13 @@ import roomescape.service.ReservationTimeService;
 public class ReservationTimeServiceTest {
 
     private ReservationTimeService reservationTimeService;
-    private ReservationTimes reservationTimes;
 
     @BeforeEach
     void init() {
-        reservationTimes = new ReservationTimes();
-        reservationTimeService = new ReservationTimeService(
-            new FakeReservationTimeDaoImpl(), reservationTimes);
+        reservationTimeService = new ReservationTimeService(new FakeReservationTimeDaoImpl());
     }
 
-    @DisplayName("reservationTimeRequestDto가 들어왔을 때, Fake 객체 및 캐싱DB에 저장되어야 한다.")
+    @DisplayName("reservationTimeRequestDto가 들어왔을 때, Fake 객체에 저장되어야 한다.")
     @Test
     void given_reservation_time_request_dto_then_save_db() {
         //given
@@ -31,10 +27,8 @@ public class ReservationTimeServiceTest {
 
         //when
         reservationTimeService.saveReservationTime(reservationTimeRequestDto);
-
         //then
         assertThat(reservationTimeService.getAllReservationTimes().size()).isEqualTo(1);
-        assertThat(reservationTimes.getReservationTimes().size()).isEqualTo(1);
     }
 
     @DisplayName("여러 번 ReservationTime을 저장할 때, 성공적으로 Fake객체 및 캐싱 DB에 저장되고, 읽어올 수 있어야 한다.")
@@ -55,7 +49,6 @@ public class ReservationTimeServiceTest {
 
         //then
         assertThat(reservationTimeService.getAllReservationTimes().size()).isEqualTo(3);
-        assertThat(reservationTimes.getReservationTimes().size()).isEqualTo(3);
     }
 
     @DisplayName("reservationTimeId가 주어졌을 떄, Fake 객체 및 캐싱DB에서 삭제되어야 한다.")
@@ -71,6 +64,5 @@ public class ReservationTimeServiceTest {
 
         //then
         assertThat(reservationTimeService.getAllReservationTimes().size()).isEqualTo(0);
-        assertThat(reservationTimes.getReservationTimes().size()).isEqualTo(0);
     }
 }

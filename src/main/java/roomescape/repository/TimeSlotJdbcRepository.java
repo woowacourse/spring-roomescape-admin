@@ -9,7 +9,6 @@ import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;
 import org.springframework.jdbc.core.simple.SimpleJdbcInsert;
 import org.springframework.stereotype.Repository;
-import roomescape.repository.dto.SaveTimeSlotDto;
 import roomescape.model.TimeSlot;
 
 @Repository
@@ -37,13 +36,13 @@ public class TimeSlotJdbcRepository implements TimeSlotRepository {
     }
 
     @Override
-    public long save(final SaveTimeSlotDto request) {
+    public long save(final TimeSlot timeSlot) {
         var insert = new SimpleJdbcInsert(jdbcTemplate);
 
         var generatedId = insert.withTableName("reservation_time")
             .usingGeneratedKeyColumns("id")
             .executeAndReturnKey(Map.of(
-                "start_at", request.startAt()
+                "start_at", timeSlot.startAt()
             ));
         return generatedId.longValue();
     }
@@ -55,7 +54,7 @@ public class TimeSlotJdbcRepository implements TimeSlotRepository {
     }
 
     @Override
-    public List<TimeSlot> getTimeSlots() {
+    public List<TimeSlot> findAll() {
         var sql = "SELECT * FROM RESERVATION_TIME";
         return jdbcTemplate.query(sql, TIME_SLOT_ROW_MAPPER);
     }

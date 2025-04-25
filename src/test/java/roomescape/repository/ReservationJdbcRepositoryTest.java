@@ -3,6 +3,7 @@ package roomescape.repository;
 import static org.assertj.core.api.Assertions.assertThat;
 
 import java.time.LocalDate;
+import java.time.LocalTime;
 import java.util.Map;
 import java.util.Optional;
 import org.junit.jupiter.api.BeforeEach;
@@ -13,7 +14,7 @@ import org.springframework.boot.test.autoconfigure.jdbc.JdbcTest;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.simple.SimpleJdbcInsert;
 import roomescape.model.Reservation;
-import roomescape.repository.dto.SaveReservationDto;
+import roomescape.model.TimeSlot;
 
 @JdbcTest
 public class ReservationJdbcRepositoryTest {
@@ -39,8 +40,8 @@ public class ReservationJdbcRepositoryTest {
     void findReservation() {
         //given
         var repository = new ReservationJdbcRepository(jdbcTemplate);
-        var request = createReservationRequest();
-        var savedId = repository.save(request);
+        var reservation = readyReservation();
+        var savedId = repository.save(reservation);
 
         //when
         Optional<Reservation> found = repository.findById(savedId);
@@ -54,14 +55,13 @@ public class ReservationJdbcRepositoryTest {
     void addReservation() {
         // given
         var repository = new ReservationJdbcRepository(jdbcTemplate);
-        var request = createReservationRequest();
+        var reservation = readyReservation();
 
         // when
-        repository.save(request);
+        repository.save(reservation);
 
         // then
-        var reservationList = repository.getReservations();
-        assertThat(reservationList).hasSize(1);
+        assertThat(repository.findAll()).hasSize(1);
     }
 
     @Test
@@ -69,14 +69,14 @@ public class ReservationJdbcRepositoryTest {
     void removeReservation() {
         // given
         var repository = new ReservationJdbcRepository(jdbcTemplate);
-        var request = createReservationRequest();
-        var savedId = repository.save(request);
+        var reservation = readyReservation();
+        var savedId = repository.save(reservation);
 
         // when
         repository.removeById(savedId);
 
         // then
-        assertThat(repository.getReservations()).isEmpty();
+        assertThat(repository.findAll()).isEmpty();
     }
 
     @Test
@@ -84,21 +84,22 @@ public class ReservationJdbcRepositoryTest {
     void getAllReservation() {
         // given
         var repository = new ReservationJdbcRepository(jdbcTemplate);
-        var request1 = createReservationRequest();
-        var request2 = createReservationRequest();
-        repository.save(request1);
-        repository.save(request2);
+        var reservation1 = readyReservation();
+        var reservation2 = readyReservation();
+        repository.save(reservation1);
+        repository.save(reservation2);
 
         // when
         // then
-        assertThat(repository.getReservations()).hasSize(2);
+        assertThat(repository.findAll()).hasSize(2);
     }
 
-    private SaveReservationDto createReservationRequest() {
-        return new SaveReservationDto(
+    private Reservation readyReservation() {
+        return new Reservation(
+            null,
             "브라운",
             LocalDate.of(2023, 12, 1),
-            timeSlotId
+            new TimeSlot(timeSlotId, LocalTime.of(10, 0))
         );
     }
 }

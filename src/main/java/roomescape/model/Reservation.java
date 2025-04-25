@@ -12,17 +12,16 @@ public record Reservation(
     private static final int NAME_MAX_LENGTH = 5;
 
     public Reservation {
-        validateNotNull(id, name, date, timeSlot);
+        validateNotNull(name, date, timeSlot);
         validateNameLength(name);
     }
 
     private void validateNotNull(
-        final Long id,
         final String name,
         final LocalDate date,
         final TimeSlot timeSlot
     ) {
-        if (id == null || name == null || date == null || timeSlot == null) {
+        if (name == null || date == null || timeSlot == null) {
             throw new IllegalArgumentException("모든 값들이 존재해야 합니다.");
         }
     }

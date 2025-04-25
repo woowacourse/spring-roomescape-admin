@@ -5,7 +5,6 @@ import java.util.Map;
 import java.util.Optional;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.atomic.AtomicLong;
-import roomescape.repository.dto.SaveTimeSlotDto;
 import roomescape.model.TimeSlot;
 
 public class TimeSlotFakeRepository implements TimeSlotRepository {
@@ -18,10 +17,11 @@ public class TimeSlotFakeRepository implements TimeSlotRepository {
         return Optional.ofNullable(timeSlots.get(id));
     }
 
-    public long save(SaveTimeSlotDto request) {
-        var timeSlot = new TimeSlot(index.getAndIncrement(), request.startAt());
-        timeSlots.put(timeSlot.id(), timeSlot);
-        return timeSlot.id();
+    public long save(TimeSlot timeSlot) {
+        var id = index.getAndIncrement();
+        var created = new TimeSlot(id, timeSlot.startAt());
+        timeSlots.put(id, created);
+        return id;
     }
 
     public boolean removeById(long id) {
@@ -29,7 +29,7 @@ public class TimeSlotFakeRepository implements TimeSlotRepository {
         return removed != null;
     }
 
-    public List<TimeSlot> getTimeSlots() {
+    public List<TimeSlot> findAll() {
         return List.copyOf(timeSlots.values());
     }
 }

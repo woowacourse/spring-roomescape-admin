@@ -1,19 +1,13 @@
 package roomescape.repository;
 
-import java.time.LocalTime;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.atomic.AtomicLong;
 import roomescape.model.Reservation;
-import roomescape.model.TimeSlot;
-import roomescape.repository.dto.SaveReservationDto;
 
 public class ReservationFakeRepository implements ReservationRepository {
-
-    public static final TimeSlot FIXED_TIME_SLOT
-        = new TimeSlot(1L, LocalTime.of(10, 0));
 
     private final Map<Long, Reservation> reservations = new ConcurrentHashMap<>();
     private final AtomicLong index = new AtomicLong(1L);
@@ -23,15 +17,16 @@ public class ReservationFakeRepository implements ReservationRepository {
         return Optional.ofNullable(reservations.get(id));
     }
 
-    public long save(SaveReservationDto dto) {
-        var reservation = new Reservation(
-            index.getAndIncrement(),
-            dto.name(),
-            dto.date(),
-            defineTimeSlot(dto)
+    public long save(Reservation reservation) {
+        var id = index.getAndIncrement();
+        var created = new Reservation(
+            id,
+            reservation.name(),
+            reservation.date(),
+            reservation.timeSlot()
         );
-        reservations.put(reservation.id(), reservation);
-        return reservation.id();
+        reservations.put(id, created);
+        return id;
     }
 
     public boolean removeById(long id) {
@@ -39,14 +34,7 @@ public class ReservationFakeRepository implements ReservationRepository {
         return removed != null;
     }
 
-    public List<Reservation> getReservations() {
+    public List<Reservation> findAll() {
         return List.copyOf(reservations.values());
-    }
-
-    private TimeSlot defineTimeSlot(final SaveReservationDto dto) {
-        if (dto.timeSlotId() != null) {
-            return FIXED_TIME_SLOT;
-        }
-        return null;
     }
 }

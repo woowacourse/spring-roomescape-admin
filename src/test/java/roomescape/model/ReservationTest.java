@@ -17,24 +17,15 @@ public class ReservationTest {
         return Stream.of(
             Arguments.of(
                 null,
-                "brown",
                 LocalDate.of(2023, 12, 1),
                 new TimeSlot(1L, LocalTime.of(10, 0))
             ),
             Arguments.of(
-                1L,
-                null,
-                LocalDate.of(2023, 12, 1),
-                new TimeSlot(1L, LocalTime.of(10, 0))
-            ),
-            Arguments.of(
-                1L,
                 "brown",
                 null,
                 new TimeSlot(1L, LocalTime.of(10, 0))
             ),
             Arguments.of(
-                1L,
                 "brown",
                 LocalDate.of(2023, 12, 1),
                 null
@@ -44,12 +35,12 @@ public class ReservationTest {
 
     @ParameterizedTest
     @MethodSource("NullValues")
-    @DisplayName("예약 생성 시 모든 값들이 존재하지 않으면 예외가 발생한다")
-    void ExceptionAnyValueNull(Long id, String name, LocalDate date, TimeSlot timeSlot) {
+    @DisplayName("예약 생성 시 id가 아닌 모든 값들이 존재하지 않으면 예외가 발생한다")
+    void ExceptionAnyValueNull(String name, LocalDate date, TimeSlot timeSlot) {
         // given
         // when
         // then
-        assertThatThrownBy(() -> new Reservation(id, name, date, timeSlot))
+        assertThatThrownBy(() -> new Reservation(1L, name, date, timeSlot))
             .isInstanceOf(IllegalArgumentException.class);
     }
 

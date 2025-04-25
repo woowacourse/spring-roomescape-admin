@@ -10,36 +10,35 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
-import roomescape.repository.dto.SaveTimeSlotDto;
+import roomescape.controller.dto.CreateTimeSlotRequest;
 import roomescape.model.TimeSlot;
-import roomescape.repository.TimeSlotRepository;
+import roomescape.service.TimeSlotService;
 
 @Controller
 @RequestMapping("/times")
 public class TimeSlotController {
 
-    private final TimeSlotRepository repository;
+    private final TimeSlotService service;
 
     @Autowired
-    public TimeSlotController(TimeSlotRepository repository) {
-        this.repository = repository;
-    }
-
-    @GetMapping
-    public ResponseEntity<List<TimeSlot>> getAllTimeSlots() {
-        return ResponseEntity.ok(repository.getTimeSlots());
+    public TimeSlotController(final TimeSlotService service) {
+        this.service = service;
     }
 
     @PostMapping
-    public ResponseEntity<TimeSlot> create(@RequestBody SaveTimeSlotDto request) {
-        long savedId = repository.save(request);
-        TimeSlot saved = repository.findById(savedId).get();
-        return ResponseEntity.ok(saved);
+    public ResponseEntity<TimeSlot> add(@RequestBody CreateTimeSlotRequest request) {
+        TimeSlot added = service.add(request.startAt());
+        return ResponseEntity.ok(added);
+    }
+
+    @GetMapping
+    public ResponseEntity<List<TimeSlot>> allTimeSlots() {
+        return ResponseEntity.ok(service.allTimeSlots());
     }
 
     @DeleteMapping("/{id}")
     public ResponseEntity<Void> delete(@PathVariable("id") Long id) {
-        boolean isRemoved = repository.removeById(id);
+        boolean isRemoved = service.removeById(id);
         if (isRemoved) {
             return ResponseEntity.noContent().build();
         }

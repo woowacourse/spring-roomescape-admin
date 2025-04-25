@@ -10,7 +10,6 @@ import org.springframework.jdbc.core.simple.SimpleJdbcInsert;
 import org.springframework.stereotype.Repository;
 import roomescape.model.Reservation;
 import roomescape.model.TimeSlot;
-import roomescape.repository.dto.SaveReservationDto;
 
 @Repository
 public class ReservationJdbcRepository implements ReservationRepository {
@@ -43,14 +42,14 @@ public class ReservationJdbcRepository implements ReservationRepository {
         return reservationList.stream().findAny();
     }
 
-    public long save(SaveReservationDto dto) {
+    public long save(Reservation reservation) {
         var insert = new SimpleJdbcInsert(jdbcTemplate);
         var generatedId = insert.withTableName("RESERVATION")
             .usingGeneratedKeyColumns("id")
             .executeAndReturnKey(Map.of(
-                "name", dto.name(),
-                "date", dto.date(),
-                "time_id", dto.timeSlotId()
+                "name", reservation.name(),
+                "date", reservation.date(),
+                "time_id", reservation.timeSlot().id()
             ));
         return generatedId.longValue();
     }
@@ -62,7 +61,7 @@ public class ReservationJdbcRepository implements ReservationRepository {
         return removedRowsCount > 0;
     }
 
-    public List<Reservation> getReservations() {
+    public List<Reservation> findAll() {
         var sql = """
             select R.id, R.name, R.date, R.time_id, RT.start_at from RESERVATION R
             left join RESERVATION_TIME RT on R.time_id = RT.id

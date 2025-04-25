@@ -11,7 +11,7 @@ import roomescape.time.utils.ReservationTimeMapper;
 @Component
 public class ReservationMapper {
 
-    private ReservationTimeMapper reservationTimeMapper;
+    private final ReservationTimeMapper reservationTimeMapper;
 
     @Autowired
     public ReservationMapper(ReservationTimeMapper reservationTimeMapper) {

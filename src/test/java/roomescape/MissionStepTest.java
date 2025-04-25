@@ -64,7 +64,7 @@ public class MissionStepTest {
         Test_ReservationTime_Post();
         Map<String, String> params = new HashMap<>();
         params.put("name", "브라운");
-        params.put("date", "2023-08-05");
+        params.put("date", "2025-08-05");
         params.put("timeId", "1");
 
         RestAssured.given().log().all()
@@ -127,7 +127,7 @@ public class MissionStepTest {
         Test_ReservationTime_Post();
         Map<String, String> params = new HashMap<>();
         params.put("name", "브라운");
-        params.put("date", "2023-08-05");
+        params.put("date", "2025-08-05");
         params.put("timeId", "1");
 
         RestAssured.given().log().all()
@@ -178,7 +178,7 @@ public class MissionStepTest {
         Test_ReservationTime_Post();
         Map<String, Object> reservation = new HashMap<>();
         reservation.put("name", "브라운");
-        reservation.put("date", "2023-08-05");
+        reservation.put("date", "2025-08-05");
         reservation.put("timeId", 1);
 
         RestAssured.given().log().all()

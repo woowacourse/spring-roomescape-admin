@@ -1,9 +1,9 @@
 package roomescape.reservation.domain.dto;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
+import roomescape.reservationTime.domain.dto.ReservationTimeResDto;
 
 import java.time.LocalDate;
-import java.time.LocalTime;
 
 public class ReservationResDto {
 
@@ -16,13 +16,13 @@ public class ReservationResDto {
     @JsonProperty
     private final LocalDate date;
 
-    @JsonProperty
-    private final LocalTime time;
+    @JsonProperty("time")
+    private final ReservationTimeResDto reservationTimeResDto;
 
-    public ReservationResDto(Long id, String name, LocalDate date, LocalTime time) {
+    public ReservationResDto(Long id, String name, LocalDate date, ReservationTimeResDto reservationTimeResDto) {
         this.id = id;
         this.name = name;
         this.date = date;
-        this.time = time;
+        this.reservationTimeResDto = reservationTimeResDto;
     }
 }

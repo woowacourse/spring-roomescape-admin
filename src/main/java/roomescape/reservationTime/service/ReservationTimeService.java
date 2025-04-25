@@ -46,7 +46,7 @@ public class ReservationTimeService {
         }
     }
 
-    private ReservationTimeResDto convertToReservationTimeResDto(ReservationTime reservationTime) {
+    public ReservationTimeResDto convertToReservationTimeResDto(ReservationTime reservationTime) {
         return new ReservationTimeResDto(
                 reservationTime.getId(),
                 reservationTime.getStartAt()

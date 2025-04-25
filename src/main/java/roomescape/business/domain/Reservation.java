@@ -12,6 +12,7 @@ public class Reservation {
 
     public Reservation(final String name, final LocalDate date, final Time time) {
         validateNonNull(name, date, time);
+        validateNameIsNotBlank(name);
         this.name = name;
         this.date = date;
         this.time = time;
@@ -19,10 +20,17 @@ public class Reservation {
 
     public Reservation(final Long id, final String name, final LocalDate date, final Time time) {
         validateNonNull(id, name, date, time);
+        validateNameIsNotBlank(name);
         this.id = id;
         this.name = name;
         this.date = date;
         this.time = time;
+    }
+
+    private void validateNameIsNotBlank(final String name) {
+        if (name.isBlank()) {
+            throw new IllegalArgumentException("name이 empty 입니다.");
+        }
     }
 
     private void validateNonNull(

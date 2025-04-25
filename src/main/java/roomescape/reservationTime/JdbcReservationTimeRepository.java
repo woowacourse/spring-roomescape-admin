@@ -56,6 +56,22 @@ public class JdbcReservationTimeRepository implements ReservationTimeRepository 
         return findReservationTimeById(wantToFindId, query);
     }
 
+    @Override
+    public boolean isExistTimeByStartTime(ReservationTime wantToValidateTime) {
+        String query = "SELECT COUNT(*) FROM reservation_time WHERE start_at = ?";
+        int count = jdbcTemplate.queryForObject(query, Integer.class,
+                wantToValidateTime.getStartAt());
+        return count > 0;
+    }
+
+    @Override
+    public boolean isExistTimeById(Long wantToValidateReservationTimeId) {
+        String query = "SELECT COUNT(*) FROM reservation_time WHERE id = ?";
+        int count = jdbcTemplate.queryForObject(query, Integer.class, wantToValidateReservationTimeId);
+
+        return count > 0;
+    }
+
     private ReservationTime findReservationTimeById(Long wantToFindId, String findQuery) {
         return jdbcTemplate.queryForObject(
                 findQuery,

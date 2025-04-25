@@ -7,4 +7,6 @@ public interface ReservationTimeRepository {
     void deleteReservationTime(Long wantToDeleteId);
     List<ReservationTime> findAllReservationTimes();
     ReservationTime findById(Long wantToFindId);
+    boolean isExistTimeByStartTime(ReservationTime wantToValidateTime);
+    boolean isExistTimeById(Long wantToValidateReservationTimeId);
 }

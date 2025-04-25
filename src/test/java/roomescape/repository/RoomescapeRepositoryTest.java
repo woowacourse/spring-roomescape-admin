@@ -48,6 +48,17 @@ class RoomescapeRepositoryTest {
     }
 
     @Test
+    void findByDate() {
+        //when
+        List<Reservation> found = repository.findByDate(LocalDate.of(2023, 8, 5));
+        List<Reservation> notFound = repository.findByDate(LocalDate.of(2023, 8, 6));
+
+        //then
+        assertThat(found).hasSize(1);
+        assertThat(notFound).isEmpty();
+    }
+
+    @Test
     void findAll() {
         //when
         List<Reservation> reservations = repository.findAll();

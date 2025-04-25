@@ -7,6 +7,8 @@ import roomescape.domain.ReservationTime;
 
 public interface RoomescapeRepository {
 
+    List<Reservation> findByDate(LocalDate date);
+
     List<Reservation> findAll();
 
     Reservation save(final Reservation reservation);

@@ -9,16 +9,15 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
-import roomescape.dao.TimeDao;
-import roomescape.domain_entity.Id;
 import roomescape.domain_entity.ReservationTime;
 import roomescape.dto.TimeRequestDto;
+import roomescape.service.TimeService;
 
 @Controller
 public class TimeController {
 
     @Autowired
-    private TimeDao timeDao;
+    private TimeService timeService;
 
     @GetMapping("/admin/time")
     public String displayAdminTime() {
@@ -29,16 +28,14 @@ public class TimeController {
     public ResponseEntity<ReservationTime> createTime(
             @RequestBody TimeRequestDto timeRequest
     ) {
-        ReservationTime reservationTime = timeRequest.toTime();
-        long id = timeDao.create(reservationTime);
-        reservationTime.setId(new Id(id));
+        ReservationTime reservationTime = timeService.createTime(timeRequest);
         return ResponseEntity.ok().body(reservationTime);
     }
 
     @GetMapping("/times")
     public ResponseEntity<List<ReservationTime>> getTimes(
     ) {
-        List<ReservationTime> reservationTimes = timeDao.findAll();
+        List<ReservationTime> reservationTimes = timeService.findAllTimes();
         return ResponseEntity.ok().body(reservationTimes);
     }
 
@@ -46,7 +43,7 @@ public class TimeController {
     public ResponseEntity<Void> deleteTime(
             @PathVariable("id") long idRequest
     ) {
-        timeDao.delteById(new Id(idRequest));
+        timeService.deleteTime(idRequest);
         return ResponseEntity.ok().build();
     }
 }

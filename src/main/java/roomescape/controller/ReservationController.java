@@ -10,18 +10,16 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.ResponseBody;
-import roomescape.dao.ReservationDao;
 import roomescape.dao.TimeDao;
-import roomescape.domain_entity.ReservationTime;
 import roomescape.dto.ReservationRequestDto;
-import roomescape.domain_entity.Id;
 import roomescape.domain_entity.Reservation;
+import roomescape.service.ReservationService;
 
 @Controller
 public class ReservationController {
 
     @Autowired
-    private ReservationDao reservationDao;
+    private ReservationService reservationService;
     @Autowired
     private TimeDao timeDao;
 
@@ -38,7 +36,7 @@ public class ReservationController {
     @GetMapping("/reservations")
     @ResponseBody
     public ResponseEntity<List<Reservation>> readReservations() {
-        List<Reservation> reservationResponseDtos = reservationDao.findAll();
+        List<Reservation> reservationResponseDtos = reservationService.findAllReservations();
         return ResponseEntity.ok().body(reservationResponseDtos);
     }
 
@@ -47,13 +45,7 @@ public class ReservationController {
     public ResponseEntity<Reservation> createReservation(
             @RequestBody ReservationRequestDto reservationRequest
     ) {
-        Reservation newReservation = reservationRequest.toReservation();
-        long id = reservationDao.create(newReservation);
-        newReservation.setId(new Id(id));
-
-        ReservationTime reservationTime = timeDao.findById(reservationRequest.timeId());
-        newReservation.setTime(reservationTime);
-
+        Reservation newReservation = reservationService.createReservation(reservationRequest);
         return ResponseEntity.ok().body(newReservation);
     }
 
@@ -63,7 +55,7 @@ public class ReservationController {
             @PathVariable("id") long idRequest
     ) {
         try {
-            reservationDao.deleteById(new Id(idRequest));
+            reservationService.deleteReservation(idRequest);
             return ResponseEntity.ok().build();
         } catch (IllegalArgumentException e) {
             return ResponseEntity.badRequest().body(e.getMessage());

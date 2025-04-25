@@ -3,7 +3,6 @@ package roomescape.reservationtime.repository;
 import java.time.LocalTime;
 import java.util.List;
 import java.util.Optional;
-import roomescape.common.domain.Cacheable;
 import roomescape.reservationtime.domain.ReservationTime;
 
 public interface ReservationTimeRepository {
@@ -17,7 +16,7 @@ public interface ReservationTimeRepository {
 
     boolean checkExistsByStartAt(LocalTime time);
 
-    Long getCachedId(Cacheable domain);
+    Long getCachedId(ReservationTime reservationTime);
 
-    void cacheId(Cacheable domain, Long id);
+    void cacheId(ReservationTime reservationTime, Long id);
 }

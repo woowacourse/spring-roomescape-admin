@@ -4,18 +4,17 @@ import java.util.HashMap;
 import java.util.Map;
 import org.springframework.stereotype.Component;
 import org.springframework.web.context.annotation.RequestScope;
-import roomescape.common.domain.Cacheable;
 
 @RequestScope
 @Component
-public class IdCache {
-    private final Map<Cacheable, Long> cache = new HashMap<>();
+public abstract class IdCache<T> {
+    private final Map<T, Long> cache = new HashMap<>();
 
-    public void cacheId(Cacheable domain, Long id) {
+    public void cacheId(T domain, Long id) {
         cache.put(domain, id);
     }
 
-    public Long getCachedId(Cacheable domain) {
+    public Long getCachedId(T domain) {
         return cache.get(domain);
     }
 }

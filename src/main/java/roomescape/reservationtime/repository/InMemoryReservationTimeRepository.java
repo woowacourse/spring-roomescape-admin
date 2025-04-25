@@ -8,7 +8,6 @@ import java.util.Optional;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.atomic.AtomicLong;
 import org.springframework.stereotype.Repository;
-import roomescape.common.domain.Cacheable;
 import roomescape.reservationtime.domain.ReservationTime;
 
 @Repository
@@ -47,16 +46,16 @@ public class InMemoryReservationTimeRepository implements ReservationTimeReposit
     }
 
     @Override
-    public Long getCachedId(final Cacheable domain) {
+    public Long getCachedId(final ReservationTime reservationTime) {
         return reservationTimes.entrySet().stream()
-                .filter(entry -> entry.getValue().equals(domain))
+                .filter(entry -> entry.getValue().equals(reservationTime))
                 .map(Entry::getKey)
                 .findAny()
                 .orElseThrow();
     }
 
     @Override
-    public void cacheId(final Cacheable domain, final Long id) {
-        reservationTimes.put(id, (ReservationTime) domain);
+    public void cacheId(final ReservationTime reservationTime, final Long id) {
+        reservationTimes.put(id, reservationTime);
     }
 }

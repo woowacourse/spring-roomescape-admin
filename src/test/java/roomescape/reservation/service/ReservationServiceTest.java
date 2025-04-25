@@ -33,7 +33,7 @@ class ReservationServiceTest {
     }
 
     @Test
-    void createReservation_shouldReturnResponse_WhenSuccessful() {
+    void createReservation_shouldReturnResponseWhenSuccessful() {
         ReservationTime time = new ReservationTime(LocalTime.of(10, 0));
         reservationTimeRepository.put(time);
 

@@ -2,7 +2,6 @@ package roomescape.reservation.repository;
 
 import java.util.List;
 import java.util.Optional;
-import roomescape.common.domain.Cacheable;
 import roomescape.reservation.domain.Reservation;
 
 public interface ReservationRepository {
@@ -14,7 +13,7 @@ public interface ReservationRepository {
 
     Optional<Reservation> findById(long id);
 
-    Long getCachedId(Cacheable domain);
+    Long getCachedId(Reservation reservation);
 
-    void cacheId(Cacheable domain, Long id);
+    void cacheId(Reservation reservation, Long id);
 }

@@ -10,7 +10,7 @@ import roomescape.service.dto.reservation.request.ReservationRequest;
 import roomescape.service.dto.reservation.response.ReservationResponse;
 
 @Service
-public class ReservationService {
+public final class ReservationService {
 
     private final ReservationDao reservationDao;
     private final ReservationTimeDao reservationTimeDao;

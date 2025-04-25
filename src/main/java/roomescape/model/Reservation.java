@@ -2,7 +2,7 @@ package roomescape.model;
 
 import java.time.LocalDate;
 
-public class Reservation {
+public final class Reservation {
 
     private final Long id;
     private final String name;

@@ -5,6 +5,7 @@ import static org.hamcrest.Matchers.is;
 
 import io.restassured.RestAssured;
 import io.restassured.http.ContentType;
+import java.lang.reflect.Field;
 import java.time.LocalTime;
 import java.util.HashMap;
 import java.util.List;
@@ -15,6 +16,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.test.annotation.DirtiesContext;
+import roomescape.controller.reservation.ReservationController;
 import roomescape.controller.reservationtime.ReservationTimeController;
 import roomescape.controller.reservationtime.request.ReservationTimeRequest;
 import roomescape.model.Reservation;
@@ -27,6 +29,9 @@ public class MissionStepTest {
     private JdbcTemplate jdbcTemplate;
     @Autowired
     private ReservationTimeController reservationTimeController;
+    @Autowired
+    private ReservationController reservationController;
+
 
     @DisplayName("/admin/reservation 경로 요청시 200 OK를 반환한다.")
     @Test
@@ -161,6 +166,19 @@ public class MissionStepTest {
                 .when().delete("/times/1")
                 .then().log().all()
                 .statusCode(200);
+    }
+
+    @DisplayName("ReservationController 클래스에 JdbcTemplate 필드가 존재하는지 확인한다.")
+    @Test
+    void hasJdbcTemplate() {
+        boolean isJdbcTemplateInjected = false;
+        for (Field field : reservationController.getClass().getDeclaredFields()) {
+            if (field.getType().equals(JdbcTemplate.class)) {
+                isJdbcTemplateInjected = true;
+                break;
+            }
+        }
+        assertThat(isJdbcTemplateInjected).isFalse();
     }
 
 }

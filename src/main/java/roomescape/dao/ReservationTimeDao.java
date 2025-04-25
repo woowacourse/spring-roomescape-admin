@@ -6,12 +6,12 @@ import java.util.Map;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.simple.SimpleJdbcInsert;
 import org.springframework.stereotype.Repository;
-import roomescape.model.ReservationTime;
+import roomescape.entity.ReservationTime;
 
 @Repository
 public class ReservationTimeDao {
 
-    JdbcTemplate jdbcTemplate;
+    private final JdbcTemplate jdbcTemplate;
     private final SimpleJdbcInsert simpleJdbcInsert;
 
     public ReservationTimeDao(JdbcTemplate jdbcTemplate) {
@@ -44,5 +44,16 @@ public class ReservationTimeDao {
         int effectedRowCount = jdbcTemplate.update(sql,id);
 
         return effectedRowCount;
+    }
+
+    public ReservationTime findTimeById(Long reservationTimeId) {
+        String sql = "SELECT id,start_at FROM reservation_time where id=?";
+
+        ReservationTime reservationTime = jdbcTemplate.queryForObject(sql, (rs, rowNum) -> {
+            return new ReservationTime(rs.getLong("id"), LocalTime.parse(rs.getString("start_at"))
+            );
+        }, reservationTimeId);
+
+        return reservationTime;
     }
 }

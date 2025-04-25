@@ -6,8 +6,8 @@ import org.springframework.stereotype.Component;
 import roomescape.constant.Function;
 import roomescape.dto.CreateReservationDto;
 import roomescape.dto.CreateReservationTimeDto;
-import roomescape.entity.Reservation;
-import roomescape.entity.ReservationTime;
+import roomescape.dto.ReservationResponseDto;
+import roomescape.dto.ReservationTimeResponseDto;
 import roomescape.service.ReservationService;
 import roomescape.service.ReservationTimeService;
 import roomescape.view.InputView;
@@ -66,12 +66,13 @@ public class ConsoleController {
 
     private void createReservationTime() {
         CreateReservationTimeDto createReservationTimeDto = inputView.inputCreateReservationTime();
-        ReservationTime reservationTime = reservationTimeService.createReservationTime(createReservationTimeDto);
+        ReservationTimeResponseDto reservationTime = reservationTimeService.createReservationTime(
+                createReservationTimeDto);
         outputView.printSuccessToCreateReservationTime(reservationTime);
     }
 
     private void getAllReservationTimes() {
-        List<ReservationTime> reservationTimes = reservationTimeService.getAllReservationTimes();
+        List<ReservationTimeResponseDto> reservationTimes = reservationTimeService.getAllReservationTimes();
         outputView.printReservationTimes(reservationTimes);
     }
 
@@ -93,12 +94,12 @@ public class ConsoleController {
 
     private void createReservation() {
         CreateReservationDto createReservationDto = inputView.inputCreateReservation();
-        Reservation reservation = reservationService.createReservation(createReservationDto);
+        ReservationResponseDto reservation = reservationService.createReservation(createReservationDto);
         outputView.printSuccessToCreateReservation(reservation);
     }
 
     private void getReservations() {
-        List<Reservation> reservations = reservationService.getAllReservations();
+        List<ReservationResponseDto> reservations = reservationService.getAllReservations();
         outputView.printReservations(reservations);
     }
 

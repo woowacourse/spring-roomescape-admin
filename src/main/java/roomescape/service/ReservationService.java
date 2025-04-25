@@ -3,6 +3,7 @@ package roomescape.service;
 import java.time.LocalDate;
 import java.util.List;
 import roomescape.dto.CreateReservationDto;
+import roomescape.dto.ReservationResponseDto;
 import roomescape.entity.Reservation;
 import roomescape.entity.ReservationTime;
 import roomescape.repository.reservation.ReservationRepository;
@@ -20,11 +21,13 @@ public class ReservationService {
         this.reservationTimeRepository = reservationTimeRepository;
     }
 
-    public List<Reservation> getAllReservations() {
-        return reservationRepository.findAll();
+    public List<ReservationResponseDto> getAllReservations() {
+        return reservationRepository.findAll().stream()
+                .map(ReservationResponseDto::from)
+                .toList();
     }
 
-    public Reservation createReservation(CreateReservationDto createReservationDto) {
+    public ReservationResponseDto createReservation(CreateReservationDto createReservationDto) {
         ReservationTime time = reservationTimeRepository.findById(createReservationDto.timeId());
         Reservation reservation = new Reservation(
                 createReservationDto.name(),
@@ -33,7 +36,8 @@ public class ReservationService {
         );
 
         Long id = reservationRepository.addAndGetId(reservation);
-        return reservationRepository.findById(id);
+        Reservation resultReservation = reservationRepository.findById(id);
+        return ReservationResponseDto.from(resultReservation);
     }
 
     public void deleteReservation(Long id) {

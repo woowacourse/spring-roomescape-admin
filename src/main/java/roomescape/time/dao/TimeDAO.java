@@ -36,7 +36,7 @@ public class TimeDAO {
         return reservationTimes;
     }
 
-    public ReservationTime insertTime(TimeRequest timeRequest) {
+    public ReservationTime insertTime(final TimeRequest timeRequest) {
         Map<String, Object> parameters = new HashMap<>();
         parameters.put("start_at", Time.valueOf(timeRequest.startAt()));
 
@@ -44,8 +44,21 @@ public class TimeDAO {
         return new ReservationTime(insertedId.longValue(), timeRequest.startAt());
     }
 
-    public void deleteTime(Long id) {
+    public void deleteTime(final Long id) {
         String sql = "DELETE from reservation_time where id = ?";
         jdbcTemplate.update(sql, id);
+    }
+
+    public ReservationTime findReservationTimeById(final Long id) {
+        String sql = "SELECT id, start_at from reservation_time where id = ?";
+        return jdbcTemplate.queryForObject(
+                sql,
+                (resultset, rowNum) -> {
+                    ReservationTime reservationTime = new ReservationTime(
+                            resultset.getLong("id"),
+                            resultset.getTime("start_at").toLocalTime()
+                    );
+                    return reservationTime;
+                }, id);
     }
 }

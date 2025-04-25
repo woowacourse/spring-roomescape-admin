@@ -55,18 +55,6 @@ public class ReservationTimeServiceTest {
         Assertions.assertThatNoException().isThrownBy(() -> reservationTimeService.delete(id));
     }
 
-    @Test
-    @DisplayName("존재하지 않은 아이디를 통해 삭제시 예외가 발생한다.")
-    void whenDeleteByNonExistingIdThrowException() {
-        // given
-        long id = 5;
-
-        // when
-        // then
-        Assertions.assertThatThrownBy(() -> reservationTimeService.delete(id))
-                .isInstanceOf(IllegalArgumentException.class);
-    }
-
     static class FakeReservationTimeRepository implements ReservationTimeRepository {
 
         List<ReservationTime> reservationTimes = new ArrayList<>();

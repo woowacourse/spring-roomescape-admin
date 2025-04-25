@@ -28,11 +28,9 @@ public class ReservationTimeService {
         return ReservationTimeResponse.from(reservationTimes);
     }
 
-    public void delete(long id) {
+    public Boolean delete(Long id) {
         int deletedRows = reservationTimeRepository.deleteById(id);
-        if (deletedRows == 0) {
-            throw new IllegalArgumentException("삭제할 예약 시간이 존재하지 않습니다.");
-        }
+        return deletedRows > 0;
     }
 
     public ReservationTimeResponse getReservationTime(@NotNull Long timeId) {

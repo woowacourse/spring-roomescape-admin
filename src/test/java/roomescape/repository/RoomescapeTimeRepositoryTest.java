@@ -4,14 +4,16 @@ import static org.assertj.core.api.Assertions.assertThat;
 
 import java.time.LocalTime;
 import java.util.List;
-import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.test.annotation.DirtiesContext;
+import org.springframework.test.annotation.DirtiesContext.ClassMode;
 import roomescape.domain.ReservationTime;
 
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.DEFINED_PORT)
+@DirtiesContext(classMode = ClassMode.BEFORE_EACH_TEST_METHOD)
 class RoomescapeTimeRepositoryTest {
 
     @Autowired
@@ -21,11 +23,6 @@ class RoomescapeTimeRepositoryTest {
     void setUp() {
         ReservationTime reservationTime = ReservationTime.parse("15:40").toEntity(1L);
         timeRepository.saveReservationTime(reservationTime);
-    }
-
-    @AfterEach
-    void tearDown() {
-        timeRepository.clear();
     }
 
     @Test
@@ -68,12 +65,4 @@ class RoomescapeTimeRepositoryTest {
         assertThat(deleteCounts).isEqualTo(1);
     }
 
-    @Test
-    void clear() {
-        //when
-        timeRepository.clear();
-
-        //then
-        assertThat(timeRepository.findAll()).isEmpty();
-    }
 }

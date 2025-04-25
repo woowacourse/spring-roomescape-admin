@@ -51,14 +51,6 @@ public class RoomescapeTimeRepositoryImpl implements RoomescapeTimeRepository {
         return template.update(sql, id);
     }
 
-    @Override
-    public void clear() {
-        String sql = "delete from reservation_time";
-        String resetAutoIncrementSql = "ALTER TABLE reservation_time ALTER COLUMN id RESTART WITH 1";
-        template.update(sql);
-        template.update(resetAutoIncrementSql);
-    }
-
     private RowMapper<ReservationTime> reservationTimeRowMapper() {
         return (rs, rowNum) -> {
             ReservationTime reservationTime = new ReservationTime(LocalTime.parse(rs.getString("start_at")))

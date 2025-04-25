@@ -10,6 +10,4 @@ public interface RoomescapeRepository {
     Reservation saveReservation(final Reservation reservation);
 
     int deleteById(final long id);
-
-    void clear();
 }

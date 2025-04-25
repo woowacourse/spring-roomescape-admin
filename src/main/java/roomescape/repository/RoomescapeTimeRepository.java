@@ -12,6 +12,4 @@ public interface RoomescapeTimeRepository {
     ReservationTime saveReservationTime(final ReservationTime reservationTime);
 
     int deleteById(final long id);
-
-    void clear();
 }

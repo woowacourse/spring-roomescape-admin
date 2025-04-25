@@ -5,10 +5,10 @@ import roomescape.reservationTime.ReservationTime;
 
 public class Reservation {
 
-    private Long id;
-    private String name;
-    private LocalDate date;
-    private ReservationTime time;
+    private final Long id;
+    private final String name;
+    private final LocalDate date;
+    private final ReservationTime time;
 
     public Reservation(Long id, String name, LocalDate date, ReservationTime time) {
         this.id = id;
@@ -18,9 +18,7 @@ public class Reservation {
     }
 
     public Reservation(String name, LocalDate date, ReservationTime time) {
-        this.name = name;
-        this.date = date;
-        this.time = time;
+        this(null, name, date, time);
     }
 
     public static Reservation toEntity(Reservation reservation, Long id) {

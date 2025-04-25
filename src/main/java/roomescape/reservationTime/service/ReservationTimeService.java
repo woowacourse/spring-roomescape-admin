@@ -1,6 +1,8 @@
 package roomescape.reservationTime.service;
 
+import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
+import roomescape.globalException.CustomException;
 import roomescape.reservationTime.domain.ReservationTime;
 import roomescape.reservationTime.domain.dto.ReservationTimeReqDto;
 import roomescape.reservationTime.domain.dto.ReservationTimeResDto;
@@ -26,12 +28,22 @@ public class ReservationTimeService {
 
     public ReservationTimeResDto add(ReservationTimeReqDto dto) {
         ReservationTime reservationTime = convertToReservationTime(dto);
+        validateDuplicateTime(reservationTime);
         ReservationTime savedReservationTime = repository.add(reservationTime);
         return convertToReservationTimeResDto(savedReservationTime);
     }
 
     public void delete(Long id) {
         repository.delete(id);
+    }
+
+    private void validateDuplicateTime(ReservationTime inputReservationTime) {
+        List<ReservationTime> reservationTimes = repository.findAll();
+        for (ReservationTime reservationTime : reservationTimes) {
+            if (inputReservationTime.isSameTime(reservationTime)) {
+                throw new CustomException(HttpStatus.CONFLICT, "이미 등록되어 있는 시간입니다.");
+            }
+        }
     }
 
     private ReservationTimeResDto convertToReservationTimeResDto(ReservationTime reservationTime) {

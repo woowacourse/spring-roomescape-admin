@@ -1,16 +1,41 @@
 package roomescape.model;
 
 import java.time.LocalDate;
-import java.time.LocalTime;
 import java.util.Objects;
 
-public record Reservation(long id, String name, LocalDate date, LocalTime time) {
+public class Reservation {
 
-    private static final String IS_NULL_VALUE = "[EXCEPTION] 널 값은 입력될 수 없습니다.";
+    private static final String NULL_VALUE_EXCEPTION = "널 값은 입력될 수 없습니다.";
 
-    public Reservation {
-        Objects.requireNonNull(name, IS_NULL_VALUE);
-        Objects.requireNonNull(date, IS_NULL_VALUE);
-        Objects.requireNonNull(time, IS_NULL_VALUE);
+    private Long id;
+    private final String name;
+    private final LocalDate date;
+    private final ReservationTime time;
+
+    public Reservation(String name, LocalDate date, ReservationTime time) {
+        this.name = Objects.requireNonNull(name, NULL_VALUE_EXCEPTION);
+        this.date = date;
+        this.time = time;
+    }
+
+    public Reservation(Long id, String name, LocalDate date, ReservationTime time) {
+        this(name, date, time);
+        this.id = id;
+    }
+
+    public Long getId() {
+        return id;
+    }
+
+    public String getName() {
+        return name;
+    }
+
+    public LocalDate getDate() {
+        return date;
+    }
+
+    public ReservationTime getTime() {
+        return time;
     }
 }

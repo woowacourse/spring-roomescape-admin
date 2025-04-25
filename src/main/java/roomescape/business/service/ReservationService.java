@@ -1,5 +1,6 @@
 package roomescape.business.service;
 
+import java.time.LocalDateTime;
 import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -23,10 +24,23 @@ public class ReservationService {
 
     public ReservationResponse create(final ReservationRequest reservationRequest) {
         final Time time = timeService.find(reservationRequest.timeId());
+        validateIsFuture(LocalDateTime.of(
+                reservationRequest.date(),
+                time.getStartAt()
+        ));
+
         final Reservation reservation = reservationRequest.toDomain(time);
         final Long id = reservationDao.save(reservation);
 
         return ReservationResponse.withId(reservation, id);
+    }
+
+    private void validateIsFuture(final LocalDateTime reservationDateTime) {
+        final LocalDateTime now = LocalDateTime.now();
+
+        if (now.isAfter(reservationDateTime)) {
+            throw new IllegalArgumentException("예약 날짜 및 시간이 현재보다 과거일 수 없습니다.");
+        }
     }
 
     public List<ReservationResponse> findAll() {

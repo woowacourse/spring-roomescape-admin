@@ -3,17 +3,17 @@ package roomescape.business.service;
 import java.util.List;
 import org.springframework.stereotype.Service;
 import roomescape.business.domain.Time;
-import roomescape.data.dao.TimeDao;
+import roomescape.data.dao.JdbcTimeDao;
 import roomescape.presentation.dto.TimeRequest;
 import roomescape.presentation.dto.TimeResponse;
 
 @Service
 public class TimeService {
 
-    private final TimeDao timeDao;
+    private final JdbcTimeDao timeDao;
 
-    public TimeService(final TimeDao timeDao) {
-        this.timeDao = timeDao;
+    public TimeService(final JdbcTimeDao jdbcTimeDao) {
+        this.timeDao = jdbcTimeDao;
     }
 
     public TimeResponse create(final TimeRequest timeRequest) {

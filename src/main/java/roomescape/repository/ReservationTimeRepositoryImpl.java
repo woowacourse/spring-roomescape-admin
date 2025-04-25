@@ -12,37 +12,24 @@ import roomescape.domain.ReservationTime;
 @Repository
 public class ReservationTimeRepositoryImpl implements ReservationTimeRepository {
 
-    private final JdbcTemplate jdbcTemplate;
-    private final SimpleJdbcInsert simpleJdbcInsert;
+    private final ReservationTimeDao reservationTimeDao;
 
-    public ReservationTimeRepositoryImpl(final JdbcTemplate jdbcTemplate) {
-        this.jdbcTemplate = jdbcTemplate;
-        this.simpleJdbcInsert = new SimpleJdbcInsert(jdbcTemplate)
-                .withTableName("reservation_time")
-                .usingGeneratedKeyColumns("id");
+    public ReservationTimeRepositoryImpl(final ReservationTimeDao reservationTimeDao) {
+        this.reservationTimeDao = reservationTimeDao;
     }
 
     @Override
     public ReservationTime insert(final LocalTime startAt) {
-        Map<String, Object> parameters = new HashMap<>();
-        parameters.put("start_at", startAt);
-        long id = simpleJdbcInsert.executeAndReturnKey(parameters).longValue();
-        return new ReservationTime(id, startAt);
+        return reservationTimeDao.insert(startAt);
     }
 
     @Override
     public List<ReservationTime> findAll() {
-        final String sql = "select * from reservation_time";
-        return jdbcTemplate.query(sql, (resultSet, rowNumber) -> {
-            long id = resultSet.getLong("id");
-            LocalTime startAt = LocalTime.parse(resultSet.getString("start_at"));
-            return new ReservationTime(id, startAt);
-        });
+        return reservationTimeDao.findAll();
     }
 
     @Override
     public void delete(final long id) {
-        final String sql = "delete from reservation_time where id = ?";
-        jdbcTemplate.update(sql, id);
+        reservationTimeDao.delete(id);
     }
 }

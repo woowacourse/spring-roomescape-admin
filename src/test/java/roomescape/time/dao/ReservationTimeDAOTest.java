@@ -1,5 +1,8 @@
 package roomescape.time.dao;
 
+import java.sql.PreparedStatement;
+import java.sql.Statement;
+import java.sql.Time;
 import java.time.LocalTime;
 import java.util.List;
 import org.assertj.core.api.Assertions;
@@ -10,6 +13,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.jdbc.JdbcTest;
 import org.springframework.context.annotation.Import;
 import org.springframework.jdbc.core.JdbcTemplate;
+import org.springframework.jdbc.support.GeneratedKeyHolder;
+import org.springframework.jdbc.support.KeyHolder;
 import roomescape.time.domain.ReservationTime;
 import roomescape.time.dto.TimeRequest;
 
@@ -55,23 +60,27 @@ public class ReservationTimeDAOTest {
         );
 
         //when
-        timeDAO.insertTime(timeRequest);
+        ReservationTime reservationTime = timeDAO.insertTime(timeRequest);
 
         //then
-        Assertions.assertThat(timeDAO.findAllTimes()).hasSize(1);
+        Assertions.assertThat(reservationTime.getId()).isNotNull();
     }
 
     @DisplayName("예약 시간 삭제 테스트")
     @Test
     void test3() {
         //given
-        TimeRequest timeRequest = new TimeRequest(
-                LocalTime.of(17,5)
-        );
-        ReservationTime reservationTime = timeDAO.insertTime(timeRequest);
+        LocalTime localTime = LocalTime.of(16,20);
+        String insertQuery = "INSERT into reservation_time (start_at) VALUES (?)";
+        KeyHolder keyHolder = new GeneratedKeyHolder();
+        jdbcTemplate.update(connection -> {
+            PreparedStatement ps = connection.prepareStatement(insertQuery, Statement.RETURN_GENERATED_KEYS);
+            ps.setTime(1, Time.valueOf(localTime));
+            return ps;
+        }, keyHolder);
 
         //when
-        timeDAO.deleteTime(reservationTime.getId());
+        timeDAO.deleteTime(keyHolder.getKey().longValue());
 
         //then
         Assertions.assertThat(timeDAO.findAllTimes()).hasSize(0);

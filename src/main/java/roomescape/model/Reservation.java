@@ -37,7 +37,7 @@ public class Reservation {
 
     private void validateReservationDateInFuture(LocalDate localDate, ReservationTime reservationTime){
         LocalDateTime reservationDateTime = LocalDateTime.of(localDate, reservationTime.getStartAt());
-        if(reservationDateTime.isBefore(LocalDateTime.now().plusDays(1))){
+        if(reservationDateTime.isBefore(LocalDateTime.now())){
             throw new IllegalArgumentException("과거 및 당일 예약은 불가능합니다.");
         }
     }

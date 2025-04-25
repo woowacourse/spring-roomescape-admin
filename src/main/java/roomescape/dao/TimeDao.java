@@ -18,7 +18,7 @@ public class TimeDao {
     private JdbcTemplate jdbcTemplate;
 
     public long create(Time time) {
-        String sql = "insert into time (start_at) values (?)";
+        String sql = "insert into reservation_time (start_at) values (?)";
         KeyHolder keyHolder = new GeneratedKeyHolder();
         jdbcTemplate.update(
                 connection -> {
@@ -34,7 +34,7 @@ public class TimeDao {
     }
 
     public List<Time> findAll() {
-        String sql = "select * from time";
+        String sql = "select * from reservation_time";
         return jdbcTemplate.query(
                 sql,
                 new TimeMapper()
@@ -42,11 +42,10 @@ public class TimeDao {
     }
 
     public void delteById(Id id) {
-        String sql = "delete from time where id = ?";
+        String sql = "delete from reservation_time where id = ?";
         jdbcTemplate.update(
                 sql,
                 id.value()
         );
     }
-
 }

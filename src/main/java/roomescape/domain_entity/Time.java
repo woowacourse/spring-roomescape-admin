@@ -9,13 +9,21 @@ public class Time {
     public Time() {
     }
 
+    public Time(LocalTime startAt) {
+        this.startAt = startAt;
+    }
+
     public Time(Id id, LocalTime startAt) {
         this.id = id;
         this.startAt = startAt;
     }
 
-    public Id getId() {
-        return id;
+    public void setId(Id id) {
+        this.id = id;
+    }
+
+    public long getId() {
+        return id.value();
     }
 
     public LocalTime getStartAt() {

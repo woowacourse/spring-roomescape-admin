@@ -6,7 +6,6 @@ import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import java.time.LocalTime;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
-import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
 import roomescape.business.domain.Time;
 import roomescape.presentation.dto.TimeRequest;
@@ -57,7 +56,7 @@ class TimeServiceTest {
         final Time expected = new Time(1L, FORMATTED_MAX_LOCAL_TIME);
 
         // when & then
-        assertThatThrownBy(() ->timeService.find(id))
+        assertThatThrownBy(() -> timeService.find(id))
                 .isInstanceOf(IllegalArgumentException.class);
     }
 
@@ -74,5 +73,16 @@ class TimeServiceTest {
                         new TimeResponse(1L, LocalTime.of(10, 0)),
                         new TimeResponse(2L, LocalTime.of(20, 15))
                 );
+    }
+
+    @DisplayName("방탈출 시간을 삭제한다.")
+    @Test
+    void remove() {
+        // given
+        timeService.create(new TimeRequest(FORMATTED_MAX_LOCAL_TIME));
+        timeService.remove(1L);
+
+        // when & then
+        assertThat(timeService.findAll()).isEmpty();
     }
 }

@@ -4,18 +4,18 @@ import java.time.LocalTime;
 
 public class ReservationTime {
     private final Long id;
-    private final LocalTime localTime;
+    private final LocalTime startAt;
 
-    public ReservationTime(final Long id, final LocalTime localTime) {
+    public ReservationTime(final Long id, final LocalTime startAt) {
         this.id = id;
-        this.localTime = localTime;
+        this.startAt = startAt;
     }
 
     public Long getId() {
         return id;
     }
 
-    public LocalTime getLocalTime() {
-        return localTime;
+    public LocalTime getStartAt() {
+        return startAt;
     }
 }

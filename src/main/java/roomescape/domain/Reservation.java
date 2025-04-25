@@ -29,7 +29,7 @@ public class Reservation {
     }
 
     public String getPersonName() {
-        return person.name();
+        return person.getName();
     }
 
     public LocalDate getDate() {

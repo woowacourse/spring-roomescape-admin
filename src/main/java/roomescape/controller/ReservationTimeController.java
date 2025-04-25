@@ -13,17 +13,17 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
-import roomescape.dto.request.ReservationCreateRequest;
-import roomescape.dto.response.ReservationResponse;
-import roomescape.service.ReservationService;
+import roomescape.dto.request.ReservationTimeCreateRequest;
+import roomescape.dto.response.ReservationTimeResponse;
+import roomescape.service.ReservationTimeService;
 
 @Controller
-@RequestMapping("/reservations")
-public class ReservationController {
-    private final ReservationService reservationService;
+@RequestMapping("/times")
+public class ReservationTimeController {
+    private final ReservationTimeService reservationTimeService;
 
-    public ReservationController(ReservationService reservationService) {
-        this.reservationService = reservationService;
+    public ReservationTimeController(ReservationTimeService reservationTimeService) {
+        this.reservationTimeService = reservationTimeService;
     }
 
     @ExceptionHandler(EmptyResultDataAccessException.class)
@@ -33,30 +33,30 @@ public class ReservationController {
     }
 
     @GetMapping
-    public ResponseEntity<List<ReservationResponse>> getReservations() {
-        List<ReservationResponse> responses = reservationService.findAll();
+    public ResponseEntity<List<ReservationTimeResponse>> getTimes() {
+        List<ReservationTimeResponse> responses = reservationTimeService.findAll();
 
         return ResponseEntity.ok(responses);
     }
 
-    @GetMapping("{id}")
-    public ResponseEntity<ReservationResponse> getReservation(@PathVariable long id) {
-        ReservationResponse response = reservationService.findById(id);
+    @GetMapping("/{id}")
+    public ResponseEntity<ReservationTimeResponse> getTimeById(@PathVariable long id) {
+        ReservationTimeResponse response = reservationTimeService.findById(id);
 
         return ResponseEntity.ok(response);
     }
 
     @PostMapping
-    public ResponseEntity<ReservationResponse> createReservation(@RequestBody ReservationCreateRequest request) {
-        ReservationResponse response = reservationService.save(request);
-        URI uri = URI.create("/reservations/" + response.id());
+    public ResponseEntity<ReservationTimeResponse> createTime(@RequestBody ReservationTimeCreateRequest request) {
+        ReservationTimeResponse response = reservationTimeService.save(request);
+        URI uri = URI.create("/times/" + response.id());
 
         return ResponseEntity.created(uri).body(response);
     }
 
     @DeleteMapping("/{id}")
-    public ResponseEntity<Void> deleteReservationById(@PathVariable long id) {
-        reservationService.deleteById(id);
+    public ResponseEntity<Void> deleteTimeById(@PathVariable long id) {
+        reservationTimeService.deleteById(id);
 
         return ResponseEntity.noContent().build();
     }

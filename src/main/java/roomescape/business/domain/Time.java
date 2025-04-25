@@ -36,4 +36,18 @@ public class Time {
     public LocalTime getStartAt() {
         return startAt;
     }
+
+    @Override
+    public boolean equals(final Object o) {
+        if (o == null || getClass() != o.getClass()) {
+            return false;
+        }
+        final Time time = (Time) o;
+        return Objects.equals(id, time.id) && Objects.equals(startAt, time.startAt);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(id, startAt);
+    }
 }

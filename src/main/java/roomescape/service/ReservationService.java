@@ -4,9 +4,9 @@ import java.util.List;
 import org.springframework.stereotype.Service;
 import roomescape.dao.ReservationDao;
 import roomescape.dao.ReservationTimeDao;
-import roomescape.entity.Reservation;
+import roomescape.model.Reservation;
 import roomescape.entity.ReservationTime;
-import roomescape.model.ReservationWithTimeId;
+import roomescape.entity.ReservationWithTimeId;
 
 @Service
 public class ReservationService {

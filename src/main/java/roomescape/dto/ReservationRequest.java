@@ -2,7 +2,7 @@ package roomescape.dto;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
 import java.time.LocalDate;
-import roomescape.model.ReservationWithTimeId;
+import roomescape.entity.ReservationWithTimeId;
 
 public record ReservationRequest(
                                  String name,

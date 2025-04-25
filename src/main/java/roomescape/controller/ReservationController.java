@@ -15,16 +15,20 @@ import org.springframework.web.bind.annotation.RestController;
 import roomescape.dto.ReservationCreateRequest;
 import roomescape.dto.ReservationResponse;
 import roomescape.model.Reservation;
+import roomescape.model.ReservationTime;
 import roomescape.repository.ReservationDao;
+import roomescape.repository.ReservationTimeDao;
 
 @RestController
 @RequestMapping("/reservations")
 public class ReservationController {
 
     private final ReservationDao reservationDao;
+    private final ReservationTimeDao reservationTimeDao;
 
-    public ReservationController(final ReservationDao reservationDao) {
+    public ReservationController(final ReservationDao reservationDao, final ReservationTimeDao reservationTimeDao) {
         this.reservationDao = reservationDao;
+        this.reservationTimeDao = reservationTimeDao;
     }
 
     @GetMapping
@@ -38,9 +42,10 @@ public class ReservationController {
 
     @PostMapping
     public ResponseEntity<ReservationResponse> addReservation(@RequestBody final ReservationCreateRequest request) {
+        ReservationTime reservationTime = reservationTimeDao.findById(request.timeId());
+
         Reservation reservation = reservationDao.insert(
-                new Reservation(0L, request.name(), request.date(), request.time())
-        );
+                new Reservation(0L, request.name(), request.date(), reservationTime));
         return ResponseEntity.status(HttpStatus.CREATED)
                 .body(new ReservationResponse(reservation));
     }

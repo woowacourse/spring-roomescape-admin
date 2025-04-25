@@ -9,6 +9,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -26,6 +27,11 @@ class MissionStepTest {
 
     @Autowired
     private JdbcTemplate jdbcTemplate;
+
+    @BeforeEach
+    void setUp() {
+        jdbcTemplate.update("insert into reservation_time (start_at) values (?)", "15:40");
+    }
 
     @DisplayName("어드민 페이지에 접속하면 어드민 메인 페이지를 반환한다.")
     @Test
@@ -57,7 +63,7 @@ class MissionStepTest {
         Map<String, String> params = new HashMap<>();
         params.put("name", "브라운");
         params.put("date", "2023-08-05");
-        params.put("time", "15:40");
+        params.put("timeId", "1");
 
         RestAssured.given().log().all()
                 .contentType(ContentType.JSON)
@@ -109,7 +115,7 @@ class MissionStepTest {
     @Test
     void selectReservationInDatabase() {
         jdbcTemplate.update(
-                "INSERT INTO reservation (name, date, time) VALUES (?, ?, ?)", "브라운", "2023-08-05", "15:40"
+                "INSERT INTO reservation (name, date, time_id) VALUES (?, ?, ?)", "브라운", "2023-08-05", 1
         );
 
         List<Reservation> reservations = RestAssured.given().log().all()
@@ -129,7 +135,7 @@ class MissionStepTest {
         Map<String, String> params = new HashMap<>();
         params.put("name", "브라운");
         params.put("date", "2023-08-05");
-        params.put("time", "10:00");
+        params.put("timeId", "1");
 
         RestAssured.given().log().all()
                 .contentType(ContentType.JSON)
@@ -154,7 +160,7 @@ class MissionStepTest {
     @Test
     void manageReservationTime() {
         Map<String, String> params = new HashMap<>();
-        params.put("startAt", "10:00");
+        params.put("startAt", "15:00");
 
         RestAssured.given().log().all()
                 .contentType(ContentType.JSON)
@@ -167,7 +173,7 @@ class MissionStepTest {
                 .when().get("/times")
                 .then().log().all()
                 .statusCode(200)
-                .body("size()", is(1));
+                .body("size()", is(2));
 
         RestAssured.given().log().all()
                 .when().delete("/times/1")

@@ -13,21 +13,13 @@ import org.junit.jupiter.params.provider.ValueSource;
 
 class ReservationTest {
 
-    @DisplayName("예약번호가 존재하지 않으면 예약을 생성할 수 없다.")
-    @Test
-    void createReservationWithoutId() {
-        assertThatThrownBy(() -> new Reservation(
-                null, "포스티", LocalDate.of(2025, 1, 1), LocalTime.of(10, 0)
-        )).isInstanceOf(IllegalArgumentException.class);
-    }
-
     @DisplayName("예약자명이 존재하지 않으면 예약을 생성할 수 없다.")
     @NullAndEmptySource
     @ValueSource(strings = " ")
     @ParameterizedTest
     void createReservationWithoutName(String name) {
         assertThatThrownBy(() -> new Reservation(
-                1L, name, LocalDate.of(2025, 1, 1), LocalTime.of(10, 0)
+                1L, name, LocalDate.of(2025, 1, 1), new ReservationTime(1L, LocalTime.of(10, 0))
         )).isInstanceOf(IllegalArgumentException.class);
     }
 
@@ -35,7 +27,7 @@ class ReservationTest {
     @Test
     void createReservationWithoutReservationDate() {
         assertThatThrownBy(() -> new Reservation(
-                1L, "포스티", null, LocalTime.of(10, 0)
+                1L, "포스티", null, new ReservationTime(1L, LocalTime.of(10, 0))
         )).isInstanceOf(IllegalArgumentException.class);
     }
 

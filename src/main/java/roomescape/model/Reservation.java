@@ -1,7 +1,6 @@
 package roomescape.model;
 
 import java.time.LocalDate;
-import java.time.LocalTime;
 import java.util.Objects;
 
 public class Reservation {
@@ -9,22 +8,21 @@ public class Reservation {
     private final Long id;
     private final String name;
     private final LocalDate date;
-    private final LocalTime time;
+    private final ReservationTime time;
 
-    public Reservation(final Long id, final String name, final LocalDate date, final LocalTime time) {
-        validate(id, name, date, time);
+    public Reservation(final Long id, final String name, final LocalDate date, final ReservationTime time) {
+        validate(name, date, time);
         this.id = id;
         this.name = name;
         this.date = date;
         this.time = time;
     }
 
-    private void validate(final Long id, final String name, final LocalDate date, LocalTime time) {
+    private void validate(final String name, final LocalDate date, final ReservationTime reservationTime) {
         try {
-            Objects.requireNonNull(id);
             Objects.requireNonNull(name);
             Objects.requireNonNull(date);
-            Objects.requireNonNull(time);
+            Objects.requireNonNull(reservationTime);
             validateBlank(name);
         } catch (NullPointerException e) {
             throw new IllegalArgumentException(e);
@@ -49,7 +47,7 @@ public class Reservation {
         return date;
     }
 
-    public LocalTime getTime() {
+    public ReservationTime getTime() {
         return time;
     }
 }

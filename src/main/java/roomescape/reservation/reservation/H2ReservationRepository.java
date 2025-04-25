@@ -1,4 +1,4 @@
-package roomescape.user.repository.reservation;
+package roomescape.reservation.reservation;
 
 import java.sql.Date;
 import java.sql.PreparedStatement;
@@ -10,8 +10,8 @@ import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.support.GeneratedKeyHolder;
 import org.springframework.jdbc.support.KeyHolder;
 import org.springframework.stereotype.Repository;
-import roomescape.admin.domain.ReservationTime;
-import roomescape.user.domain.Reservation;
+import roomescape.time.domain.ReservationTime;
+import roomescape.reservation.domain.Reservation;
 
 @Repository
 @RequiredArgsConstructor

@@ -1,12 +1,12 @@
-package roomescape.admin.service;
+package roomescape.time.service;
 
 import java.time.LocalTime;
 import java.util.List;
 import java.util.Optional;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Service;
-import roomescape.admin.domain.ReservationTime;
-import roomescape.admin.repository.time.ReservationTimeRepository;
+import roomescape.time.domain.ReservationTime;
+import roomescape.time.time.ReservationTimeRepository;
 import roomescape.exception.DataNotFoundException;
 
 @Service

@@ -1,4 +1,4 @@
-package roomescape.user.controller;
+package roomescape.reservation.controller;
 
 import java.util.List;
 import lombok.RequiredArgsConstructor;
@@ -10,10 +10,10 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
-import roomescape.user.controller.dto.ReservationRequest;
-import roomescape.user.controller.dto.ReservationResponse;
-import roomescape.user.domain.Reservation;
-import roomescape.user.service.ReservationService;
+import roomescape.reservation.controller.dto.ReservationRequest;
+import roomescape.reservation.controller.dto.ReservationResponse;
+import roomescape.reservation.domain.Reservation;
+import roomescape.reservation.service.ReservationService;
 
 @RestController
 @RequiredArgsConstructor

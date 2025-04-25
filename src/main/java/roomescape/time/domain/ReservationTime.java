@@ -1,4 +1,4 @@
-package roomescape.admin.domain;
+package roomescape.time.domain;
 
 import java.time.LocalTime;
 import lombok.EqualsAndHashCode;

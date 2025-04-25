@@ -4,7 +4,8 @@ import java.time.LocalDate;
 import java.time.LocalTime;
 import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.Test;
-import roomescape.admin.domain.ReservationTime;
+import roomescape.reservation.domain.Reservation;
+import roomescape.time.domain.ReservationTime;
 
 class ReservationTest {
 

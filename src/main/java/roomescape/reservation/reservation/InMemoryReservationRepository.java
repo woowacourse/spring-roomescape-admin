@@ -1,10 +1,10 @@
-package roomescape.user.repository.reservation;
+package roomescape.reservation.reservation;
 
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 import org.springframework.stereotype.Repository;
-import roomescape.user.domain.Reservation;
+import roomescape.reservation.domain.Reservation;
 
 @Repository
 public class InMemoryReservationRepository implements ReservationRepository {

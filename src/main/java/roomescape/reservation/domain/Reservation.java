@@ -1,9 +1,9 @@
-package roomescape.user.domain;
+package roomescape.reservation.domain;
 
 import java.time.LocalDate;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
-import roomescape.admin.domain.ReservationTime;
+import roomescape.time.domain.ReservationTime;
 
 @Getter
 @EqualsAndHashCode(of = {"id"})

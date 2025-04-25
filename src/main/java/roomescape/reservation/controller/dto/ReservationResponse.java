@@ -1,8 +1,8 @@
-package roomescape.user.controller.dto;
+package roomescape.reservation.controller.dto;
 
 import java.time.LocalDate;
-import roomescape.admin.controller.dto.ReservationTimeResponse;
-import roomescape.user.domain.Reservation;
+import roomescape.time.controller.dto.ReservationTimeResponse;
+import roomescape.reservation.domain.Reservation;
 
 public record ReservationResponse(
         Long id,

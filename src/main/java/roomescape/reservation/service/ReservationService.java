@@ -1,14 +1,14 @@
-package roomescape.user.service;
+package roomescape.reservation.service;
 
 import java.time.LocalDate;
 import java.util.List;
 import java.util.Optional;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Service;
-import roomescape.admin.service.ReservationTimeService;
+import roomescape.reservation.reservation.ReservationRepository;
+import roomescape.time.service.ReservationTimeService;
 import roomescape.exception.DataNotFoundException;
-import roomescape.user.domain.Reservation;
-import roomescape.user.repository.reservation.ReservationRepository;
+import roomescape.reservation.domain.Reservation;
 
 @Service
 public class ReservationService {

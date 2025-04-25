@@ -90,7 +90,7 @@
 
 ## 7단계
 
-- [ ] 아래의 시간 관리 관련 API 기능들을 구현한다.
+- [x] 아래의 시간 관리 관련 API 기능들을 구현한다.
 
 ### API 명세
 
@@ -130,12 +130,12 @@
     }
     ]
     ```
-- [ ] 시간 삭제 API 구현
-    - [ ] request
+- [x] 시간 삭제 API 구현
+    - [x] request
     ```
     DELETE /times/1 HTTP/1.1
     ```
-    - [ ] response
+    - [x] response
     ```
     HTTP/1.1 200    
     ```  
@@ -154,12 +154,12 @@ CREATE TABLE reservation_time
 
 ## 8단계
 
-- [ ] 기존의 API에서 수정된 아래 API들을 구현한다.
+- [x] 기존의 API에서 수정된 아래 API들을 구현한다.
 
 ### API 명세
 
-- [ ]예약 추가 API
-- [ ]Request
+- [x] 예약 추가 API
+- [x] Request
 
 ```
 POST /reservations HTTP/1.1
@@ -171,7 +171,7 @@ content-type: application/json
 }
 ```
 
-- [ ]Response
+- [x] Response
 
 ```
 HTTP/1.1 200
@@ -188,8 +188,8 @@ Content-Type: application/json
 }
 ```
 
-- [ ] 예약 조회 API
-    - [ ] Request
+- [x] 예약 조회 API
+    - [x] Request
 
 ```
 GET /reservations HTTP/1.1

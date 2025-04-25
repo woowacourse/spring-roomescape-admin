@@ -85,4 +85,12 @@ class TimeServiceTest {
         // when & then
         assertThat(timeService.findAll()).isEmpty();
     }
+
+    @DisplayName("삭제하려는 방탈출 시간 id가 없다면 예외가 발생한다.")
+    @Test
+    void remove2() {
+        // given & when & then
+        assertThatThrownBy(() -> timeService.remove(1L))
+                .isInstanceOf(IllegalArgumentException.class);
+    }
 }

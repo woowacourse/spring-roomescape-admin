@@ -7,4 +7,6 @@ public interface ReservationTimeRepository {
     ReservationTimeOutput addReservationTime(ReservationTime reservationTime);
 
     List<ReservationTimeOutput> getReservationTime();
+
+    void deleteReservationTime(long id);
 }

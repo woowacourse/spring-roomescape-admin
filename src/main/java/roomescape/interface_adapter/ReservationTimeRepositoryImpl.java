@@ -45,10 +45,17 @@ public class ReservationTimeRepositoryImpl implements ReservationTimeRepository 
         });
     }
 
-//        String sql = "select * from reservation_time";
-//        List<ReservationTimeResponseDto> reservationTimeResponseDtos = jdbcTemplate.query(sql, (resultSet, rowNUm) -> {
-//            return new ReservationTimeResponseDto(resultSet.getLong("id"),
-//                    LocalTime.parse(resultSet.getString("start_at")));
-//        });
-//        return ResponseEntity.ok(reservationTimeResponseDtos);
+    @Override
+    public void deleteReservationTime(final long id) {
+        String sql = "delete from reservation_time where id = ?";
+        jdbcTemplate.update(sql, id);
+    }
+
+//
+//    @DeleteMapping("/times/{id}")
+//    public ResponseEntity<Void> deleteReservationTime(@PathVariable long id) {
+//        String sql = "delete from reservation_time where id = ?";
+//        jdbcTemplate.update(sql, id);
+//        return ResponseEntity.ok().build();
+//    }
 }

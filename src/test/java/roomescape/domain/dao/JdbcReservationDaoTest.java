@@ -49,9 +49,14 @@ public class JdbcReservationDaoTest {
     @DisplayName("reservation 객체가 주어졌을 때, db에 저장되며 id값이 부여되어야 한다.")
     @Test
     void given_reservation_then_save_db_and_set_id() {
+        //given
         Reservation reservation = new Reservation(new Person("james"), LocalDate.of(2025, 12, 25),
             reservationTime);
+
+        //when
         reservationDao.saveReservation(reservation);
+
+        //then
         assertThat(reservation.getId()).isEqualTo(1L);
         assertThat(reservationDao.findAllReservation().size()).isEqualTo(1);
     }
@@ -59,6 +64,7 @@ public class JdbcReservationDaoTest {
     @DisplayName("db에 존재하는 모든 reservation을 가져올 수 있어야 한다.")
     @Test
     void get_all_reservation() {
+        //given
         Reservation reservation1 = new Reservation(new Person("james"), LocalDate.of(2025, 12, 25),
             reservationTime);
         reservationDao.saveReservation(reservation1);
@@ -69,6 +75,7 @@ public class JdbcReservationDaoTest {
             reservationTime);
         reservationDao.saveReservation(reservation3);
 
+        //when, then
         assertThat(reservationDao.findAllReservation()).containsExactlyInAnyOrder(reservation1,
             reservation2, reservation3);
         assertThat(reservationDao.findAllReservation().size()).isEqualTo(3);
@@ -77,10 +84,15 @@ public class JdbcReservationDaoTest {
     @DisplayName("reservationId가 주어졌을 때, 해당하는 데이터를 삭제해야 한다.")
     @Test
     void given_reservation_id_then_delete_data() {
+        //given
         Reservation reservation = new Reservation(new Person("james"), LocalDate.of(2025, 12, 25),
             reservationTime);
         reservationDao.saveReservation(reservation);
+
+        //when
         reservationDao.deleteReservation(1L);
+
+        //then
         assertThat(reservationDao.findAllReservation().size()).isEqualTo(0);
     }
 }

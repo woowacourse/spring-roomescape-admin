@@ -139,7 +139,7 @@ public class MissionStepTest {
         Assertions.assertThat(countAfterDelete).isEqualTo(0);
     }
 
-    @DisplayName("")
+    @DisplayName("방탈출 시간을 등록하고 조회한다")
     @Test
     void 칠단계() {
         Map<String, String> params = new HashMap<>();
@@ -150,7 +150,7 @@ public class MissionStepTest {
                 .body(params)
                 .when().post("/times")
                 .then().log().all()
-                .statusCode(200);
+                .statusCode(201);
 
         RestAssured.given().log().all()
                 .when().get("/times")
@@ -161,6 +161,6 @@ public class MissionStepTest {
         RestAssured.given().log().all()
                 .when().delete("/times/1")
                 .then().log().all()
-                .statusCode(200);
+                .statusCode(204);
     }
 }

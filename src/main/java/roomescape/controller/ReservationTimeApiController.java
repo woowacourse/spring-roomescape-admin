@@ -10,35 +10,30 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import roomescape.dto.ReservationTimeRequestDto;
 import roomescape.dto.ReservationTimeResponseDto;
-import roomescape.model.ReservationTime;
-import roomescape.repository.ReservationTimeRepository;
+import roomescape.service.ReservationTimeService;
 
 @RestController
 @RequestMapping("/times")
 public class ReservationTimeApiController {
 
-    private final ReservationTimeRepository reservationTimeRepository;
+    private final ReservationTimeService reservationTimeService;
 
-    public ReservationTimeApiController(ReservationTimeRepository reservationTimeRepository) {
-        this.reservationTimeRepository = reservationTimeRepository;
+    public ReservationTimeApiController(final ReservationTimeService reservationTimeService) {
+        this.reservationTimeService = reservationTimeService;
     }
 
     @GetMapping()
     public List<ReservationTimeResponseDto> times() {
-        return reservationTimeRepository.findAll().stream()
-                .map(ReservationTimeResponseDto::from)
-                .toList();
+        return reservationTimeService.getAllReservationTimes();
     }
 
     @PostMapping
     public ReservationTimeResponseDto add(@RequestBody ReservationTimeRequestDto reservationTimeRequestDto) {
-        Long id = reservationTimeRepository.add(reservationTimeRequestDto.toReservationTime());
-        ReservationTime reservationTime = reservationTimeRepository.findById(id);
-        return ReservationTimeResponseDto.from(reservationTime);
+        return reservationTimeService.createReservationTime(reservationTimeRequestDto);
     }
 
     @DeleteMapping("/{id}")
     public void delete(@PathVariable Long id) {
-        reservationTimeRepository.removeById(id);
+        reservationTimeService.deleteReservationTime(id);
     }
 }

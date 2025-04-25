@@ -7,7 +7,7 @@ import org.junit.jupiter.api.Assertions;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import org.junit.jupiter.api.Test;
 import org.springframework.web.server.ResponseStatusException;
-import roomescape.FakeReservationTimeDaoImpl;
+import roomescape.fake.FakeReservationTimeDaoImpl;
 import roomescape.domain.ReservationTime;
 import roomescape.service.dto.ReservationTimeRegisterDto;
 import roomescape.service.dto.ReservationTimeResponseDto;

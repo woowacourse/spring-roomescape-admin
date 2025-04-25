@@ -1,4 +1,4 @@
-package roomescape;
+package roomescape.fake;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -6,24 +6,24 @@ import java.util.Map;
 import java.util.Optional;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.atomic.AtomicLong;
-import roomescape.domain.ReservationTime;
-import roomescape.repository.ReservationTimeDao;
+import roomescape.domain.Reservation;
+import roomescape.repository.ReservationDao;
 
-public class FakeReservationTimeDaoImpl implements ReservationTimeDao {
-    private final Map<Long, ReservationTime> sources = new ConcurrentHashMap<>();
+public class FakeReservationDaoImpl implements ReservationDao {
+    private final Map<Long, Reservation> sources = new ConcurrentHashMap<>();
     private final AtomicLong id = new AtomicLong(1L);
 
     @Override
-    public Long save(final ReservationTime reservationTime) {
+    public Long save(final Reservation reservation) {
         long id = this.id.getAndIncrement();
-        reservationTime.setId(id);
-        sources.put(id, reservationTime);
+        reservation.setId(id);
+        sources.put(id, reservation);
 
         return id;
     }
 
     @Override
-    public List<ReservationTime> findAll() {
+    public List<Reservation> findAll() {
         return new ArrayList<>(sources.values());
     }
 
@@ -33,7 +33,7 @@ public class FakeReservationTimeDaoImpl implements ReservationTimeDao {
     }
 
     @Override
-    public Optional<ReservationTime> findById(Long id) {
+    public Optional<Reservation> findById(Long id) {
         return Optional.ofNullable(sources.get(id));
     }
 }

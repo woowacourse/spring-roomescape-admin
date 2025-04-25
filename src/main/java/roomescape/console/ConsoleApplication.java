@@ -3,7 +3,7 @@ package roomescape.console;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.context.annotation.Profile;
 import org.springframework.stereotype.Component;
-import roomescape.console.presentation.controller.ConsoleController;
+import roomescape.console.controller.ConsoleController;
 
 @Profile("console")
 @Component

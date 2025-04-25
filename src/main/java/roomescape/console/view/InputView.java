@@ -1,4 +1,4 @@
-package roomescape.console.presentation.view;
+package roomescape.console.view;
 
 import java.util.Scanner;
 import org.springframework.stereotype.Component;

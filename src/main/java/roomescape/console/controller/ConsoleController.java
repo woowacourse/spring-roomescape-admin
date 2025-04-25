@@ -1,11 +1,11 @@
-package roomescape.console.presentation.controller;
+package roomescape.console.controller;
 
 import java.util.List;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Component;
 import roomescape.console.constant.Function;
-import roomescape.console.presentation.view.InputView;
-import roomescape.console.presentation.view.OutputView;
+import roomescape.console.view.InputView;
+import roomescape.console.view.OutputView;
 import roomescape.presentation.dto.CreateReservationDto;
 import roomescape.presentation.dto.CreateReservationTimeDto;
 import roomescape.presentation.dto.ReservationResponseDto;

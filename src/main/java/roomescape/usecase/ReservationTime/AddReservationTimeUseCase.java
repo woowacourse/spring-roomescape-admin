@@ -1,4 +1,4 @@
-package roomescape.usecase;
+package roomescape.usecase.ReservationTime;
 
 
 import java.time.LocalTime;

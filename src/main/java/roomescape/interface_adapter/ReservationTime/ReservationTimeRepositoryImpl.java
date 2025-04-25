@@ -1,4 +1,4 @@
-package roomescape.interface_adapter;
+package roomescape.interface_adapter.ReservationTime;
 
 import java.sql.PreparedStatement;
 import java.time.LocalTime;
@@ -7,9 +7,9 @@ import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.support.GeneratedKeyHolder;
 import org.springframework.jdbc.support.KeyHolder;
 import org.springframework.stereotype.Repository;
-import roomescape.enttity.ReservationTime;
-import roomescape.usecase.ReservationTimeOutput;
-import roomescape.usecase.ReservationTimeRepository;
+import roomescape.enttity.ReservationTime.ReservationTime;
+import roomescape.usecase.ReservationTime.ReservationTimeOutput;
+import roomescape.usecase.ReservationTime.ReservationTimeRepository;
 
 @Repository
 public class ReservationTimeRepositoryImpl implements ReservationTimeRepository {

@@ -1,4 +1,4 @@
-package roomescape.interface_adapter;
+package roomescape.interface_adapter.ReservationTime;
 
 import java.util.List;
 import org.springframework.http.ResponseEntity;
@@ -8,10 +8,10 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
-import roomescape.usecase.AddReservationTimeUseCase;
-import roomescape.usecase.DeleteReservationTimeUsecase;
-import roomescape.usecase.GetReservationTimeUseCase;
-import roomescape.usecase.ReservationTimeOutput;
+import roomescape.usecase.ReservationTime.AddReservationTimeUseCase;
+import roomescape.usecase.ReservationTime.DeleteReservationTimeUsecase;
+import roomescape.usecase.ReservationTime.GetReservationTimeUseCase;
+import roomescape.usecase.ReservationTime.ReservationTimeOutput;
 
 @Controller
 public class ReservationTimeController {

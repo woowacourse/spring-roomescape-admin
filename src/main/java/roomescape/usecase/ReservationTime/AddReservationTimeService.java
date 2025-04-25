@@ -1,8 +1,8 @@
-package roomescape.usecase;
+package roomescape.usecase.ReservationTime;
 
 import java.time.LocalTime;
 import org.springframework.stereotype.Service;
-import roomescape.enttity.ReservationTime;
+import roomescape.enttity.ReservationTime.ReservationTime;
 
 
 @Service

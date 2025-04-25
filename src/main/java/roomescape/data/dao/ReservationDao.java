@@ -1,61 +1,13 @@
 package roomescape.data.dao;
 
-import java.sql.PreparedStatement;
 import java.util.List;
-import org.springframework.jdbc.core.JdbcTemplate;
-import org.springframework.jdbc.support.GeneratedKeyHolder;
-import org.springframework.jdbc.support.KeyHolder;
-import org.springframework.stereotype.Repository;
 import roomescape.business.domain.Reservation;
-import roomescape.data.entity.ReservationEntity;
 
-@Repository
-public class ReservationDao {
+public interface ReservationDao {
 
-    private final JdbcTemplate jdbcTemplate;
+    Long save(Reservation reservation);
 
-    public ReservationDao(final JdbcTemplate jdbcTemplate) {
-        this.jdbcTemplate = jdbcTemplate;
-    }
+    List<Reservation> findAll();
 
-    public Long save(final Reservation reservation) {
-        final ReservationEntity reservationEntity = ReservationEntity.from(reservation);
-        final String sql = "INSERT INTO RESERVATION (name, date, time_id) values (?, ?, ?)";
-        final KeyHolder keyHolder = new GeneratedKeyHolder();
-
-        jdbcTemplate.update(connection -> {
-            PreparedStatement ps = connection.prepareStatement(sql, new String[]{"id"});
-            ps.setString(1, reservationEntity.name());
-            ps.setString(2, reservationEntity.date());
-            ps.setLong(3, reservationEntity.timeEntity().id());
-            return ps;
-        }, keyHolder);
-
-        return keyHolder.getKey().longValue();
-    }
-
-    public List<Reservation> findAll() {
-        final String sql =
-                """
-                SELECT\s
-                r.id as reservation_id,\s
-                r.name,\s
-                r.date,\s
-                t.id as time_id,\s
-                t.start_at as time_value\s
-                FROM reservation as r\s
-                inner join reservation_time as t\s
-                on r.time_id = t.id
-               """;
-
-        return jdbcTemplate.query(sql, ReservationEntity.getDefaultRowMapper()).stream()
-                .map(ReservationEntity::toDomain)
-                .toList();
-    }
-
-    public int remove(final Long id) {
-        final String sql = "DELETE FROM RESERVATION WHERE id = ?";
-
-        return jdbcTemplate.update(sql, id);
-    }
+    int remove(final Long id);
 }

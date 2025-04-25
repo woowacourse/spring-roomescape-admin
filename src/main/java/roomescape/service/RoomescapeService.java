@@ -1,6 +1,7 @@
 package roomescape.service;
 
 import java.util.List;
+import java.util.Optional;
 import org.springframework.stereotype.Service;
 import roomescape.domain.Reservation;
 import roomescape.domain.ReservationTime;
@@ -68,11 +69,11 @@ public class RoomescapeService {
     }
 
     private boolean existsSameReservation(final Reservation reservation) {
-        List<Reservation> reservations = roomescapeRepository.findAll();
-        boolean exists = false;
-        for (Reservation candidate : reservations) {
-            exists = candidate.isDuplicateReservation(reservation);
-        }
-        return exists;
+        // 방법1
+        // return roomescapeRepository.existsByDateAndTime(reservation.getDate(), reservation.getTime());
+        // 방법2
+        List<Reservation> reservations = roomescapeRepository.findByDate(reservation.getDate());
+        return reservations.stream()
+                .anyMatch(candidate -> candidate.isDuplicateReservation(reservation));
     }
 }

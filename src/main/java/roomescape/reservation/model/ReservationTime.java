@@ -14,7 +14,7 @@ public final class ReservationTime {
     }
 
     public static ReservationTime createWithoutId(LocalTime startAt) {
-        return new ReservationTime(0, startAt);
+        return new ReservationTime(0L, startAt);
     }
 
     @Override

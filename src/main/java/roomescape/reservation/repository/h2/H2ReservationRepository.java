@@ -7,6 +7,7 @@ import java.util.List;
 import java.util.Map;
 import javax.sql.DataSource;
 import org.springframework.jdbc.core.JdbcTemplate;
+import org.springframework.jdbc.core.RowMapper;
 import org.springframework.jdbc.core.simple.SimpleJdbcInsert;
 import org.springframework.stereotype.Repository;
 import roomescape.reservation.model.Reservation;
@@ -18,6 +19,14 @@ public class H2ReservationRepository implements ReservationRepository {
 
     private final JdbcTemplate jdbcTemplate;
     private final SimpleJdbcInsert simpleJdbcInsert;
+
+    private static final RowMapper<Reservation> RESERVATION_ROW_MAPPER = (resultSet, rowNum) -> new Reservation(
+            resultSet.getLong("reservation_id"),
+            resultSet.getString("name"),
+            resultSet.getObject("date", LocalDate.class),
+            new ReservationTime(resultSet.getLong("time_id"),
+                    resultSet.getObject("start_at", LocalTime.class))
+    );
 
     public H2ReservationRepository(DataSource dataSource) {
         this.jdbcTemplate = new JdbcTemplate(dataSource);
@@ -39,13 +48,7 @@ public class H2ReservationRepository implements ReservationRepository {
                 inner join reservation_time as t
                 on r.time_id = t.id
                 """;
-        return jdbcTemplate.query(sql, (resultSet, rowNum) -> new Reservation(
-                resultSet.getLong("reservation_id"),
-                resultSet.getString("name"),
-                resultSet.getObject("date", LocalDate.class),
-                new ReservationTime(resultSet.getLong("time_id"),
-                        resultSet.getObject("start_at", LocalTime.class))
-        ));
+        return jdbcTemplate.query(sql, RESERVATION_ROW_MAPPER);
     }
 
     @Override

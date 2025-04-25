@@ -25,16 +25,40 @@ public class ReservationDao {
             rs.getLong("id"),
             rs.getString("name"),
             rs.getDate("date").toLocalDate(),
-            rs.getTime("time").toLocalTime()
+            new ReservationTime(
+                    rs.getLong("time_id"),
+                    rs.getTime("time_value").toLocalTime()
+            )
     );
 
     public List<Reservation> findAll() {
-        String sql = "SELECT id, name, date, time FROM reservation";
+        String sql = """
+                SELECT
+                    r.id as reservation_id,
+                    r.name,
+                    r.date,
+                    t.id as time_id,
+                    t.start_at as time_value
+                FROM reservation as r
+                inner join reservation_time as t
+                on r.time_id = t.id
+                """;
         return jdbcTemplate.query(sql, allRowMapper);
     }
 
     public Optional<Reservation> findById(Long id) {
-        String sql = "SELECT id, name, date, time FROM reservation WHERE id = ?";
+        String sql = """
+                SELECT
+                    r.id as reservation_id,
+                    r.name,
+                    r.date,
+                    t.id as time_id,
+                    t.start_at as time_value
+                FROM reservation as r
+                inner join reservation_time as t
+                on r.time_id = t.id
+                where r.id = ?
+                """;
         try {
             Reservation found = jdbcTemplate.queryForObject(sql, allRowMapper, id);
             return Optional.ofNullable(found);
@@ -44,14 +68,14 @@ public class ReservationDao {
     }
 
     public Reservation save(Reservation reservation) {
-        String sql = "INSERT INTO reservation(name, date, time) VALUES (?, ?, ?)";
+        String sql = "INSERT INTO reservation(name, date, time_id) VALUES (?, ?, ?)";
         PreparedStatementCreator ppsc = con -> {
             PreparedStatement ppst = con.prepareStatement(
                     sql, new String[]{"id"}
             );
             ppst.setString(1, reservation.getName());
             ppst.setString(2, reservation.getDate().toString());
-            ppst.setString(3, reservation.getTime().toString());
+            ppst.setLong(3, reservation.getTime().getId());
             return ppst;
         };
         KeyHolder keyHolder = new GeneratedKeyHolder();

@@ -6,14 +6,57 @@ import io.restassured.RestAssured;
 import io.restassured.http.ContentType;
 import java.util.HashMap;
 import java.util.Map;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.test.annotation.DirtiesContext;
+import org.springframework.jdbc.core.JdbcTemplate;
 
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.DEFINED_PORT)
-@DirtiesContext(classMode = DirtiesContext.ClassMode.BEFORE_EACH_TEST_METHOD)
 public class ReservationTest {
+
+    @Autowired
+    JdbcTemplate jdbcTemplate;
+
+    @BeforeEach
+    void setUp() {
+        String createTableSql = """
+                DROP TABLE IF EXISTS reservation, reservation_time;
+                
+                CREATE TABLE reservation_time
+                (
+                    id       BIGINT       NOT NULL AUTO_INCREMENT,
+                    start_at VARCHAR(255) NOT NULL,
+                    PRIMARY KEY (id)
+                );
+                
+                CREATE TABLE reservation
+                (
+                    id      BIGINT       NOT NULL AUTO_INCREMENT,
+                    name    VARCHAR(255) NOT NULL,
+                    date    VARCHAR(255) NOT NULL,
+                    time_id BIGINT,
+                    PRIMARY KEY (id),
+                    FOREIGN KEY (time_id) REFERENCES reservation_time (id)
+                );
+                """;
+        jdbcTemplate.execute(createTableSql);
+        String insertSql = """
+                INSERT INTO RESERVATION_TIME(id, start_at) VALUES 
+                   ('1', '13:40'), 
+                   ('2', '14:40'),
+                   ('3', '15:40')
+                ;
+                
+                INSERT INTO RESERVATION(name, date, time_id) VALUES
+                    ('브라운', '2023-03-03', '1'),
+                    ('솔라', '2023-03-03', '2'),
+                    ('네오', '2023-03-05', '3')
+                ;
+                """;
+        jdbcTemplate.update(insertSql);
+    }
 
     @Test
     @DisplayName("예약을 성공적으로 추가한다")
@@ -22,7 +65,7 @@ public class ReservationTest {
         Map<String, String> params = new HashMap<>();
         params.put("name", "브라운");
         params.put("date", "2023-08-05");
-        params.put("time", "15:40");
+        params.put("timeId", "1");
 
         // when, then
         RestAssured.given().log().all()
@@ -31,7 +74,7 @@ public class ReservationTest {
                 .when().post("/reservations")
                 .then().log().all()
                 .statusCode(200)
-                .body("id", is(1));
+                .body("id", is(4));
     }
 
     @Test
@@ -157,7 +200,7 @@ public class ReservationTest {
                 .when().get("/reservations")
                 .then().log().all()
                 .statusCode(200)
-                .body("size()", is(0));
+                .body("size()", is(3));
     }
 
     @Test

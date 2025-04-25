@@ -16,9 +16,11 @@ import org.springframework.web.bind.annotation.RestController;
 public class ReservationController {
 
     private final ReservationDao reservationRepository;
+    private final ReservationTimeDao reservationTimeRepository;
 
-    public ReservationController(ReservationDao reservationRepository) {
+    public ReservationController(ReservationDao reservationRepository, ReservationTimeDao reservationTimeRepository) {
         this.reservationRepository = reservationRepository;
+        this.reservationTimeRepository = reservationTimeRepository;
     }
 
     @GetMapping
@@ -29,7 +31,9 @@ public class ReservationController {
 
     @PostMapping
     public ResponseEntity<Reservation> createReservation(@RequestBody @Valid ReservationRequest request) {
-        Reservation reservation = request.toEntity();
+        ReservationTime reservationTime = reservationTimeRepository.findById(request.timeId())
+                .orElseThrow(() -> new IllegalArgumentException("예약 시간이 존재하지 않습니다."));
+        Reservation reservation = new Reservation(null, request.name(), request.date(), reservationTime);
         Reservation saved = reservationRepository.save(reservation);
         return ResponseEntity.ok(saved);
     }

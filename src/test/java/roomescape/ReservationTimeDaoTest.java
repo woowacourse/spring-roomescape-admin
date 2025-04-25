@@ -24,10 +24,11 @@ class ReservationTimeDaoTest {
     @BeforeEach
     void setUp() {
         String createTableSql = """
-                DROP TABLE IF EXISTS RESERVATION_TIME;
-                CREATE TABLE RESERVATION_TIME
+                DROP TABLE IF EXISTS reservation, reservation_time;
+                
+                CREATE TABLE reservation_time
                 (
-                    id   BIGINT       NOT NULL AUTO_INCREMENT,
+                    id       BIGINT       NOT NULL AUTO_INCREMENT,
                     start_at VARCHAR(255) NOT NULL,
                     PRIMARY KEY (id)
                 );

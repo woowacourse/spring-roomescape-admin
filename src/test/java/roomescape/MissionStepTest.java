@@ -9,7 +9,6 @@ import java.sql.Connection;
 import java.sql.SQLException;
 import java.time.LocalDate;
 import java.time.LocalTime;
-import java.time.format.DateTimeFormatter;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -25,13 +24,13 @@ import roomescape.presentation.dto.ReservationResponse;
 @DirtiesContext(classMode = DirtiesContext.ClassMode.BEFORE_EACH_TEST_METHOD)
 public class MissionStepTest {
 
-    private static final LocalTime MAX_LOCAL_TIME = LocalTime.MAX;
-    private static final LocalDate MAX_LOCAL_DATE = LocalDate.MAX;
+    private static final LocalTime FORMATTED_MAX_LOCAL_TIME = LocalTime.of(23, 59);
+    private static final LocalDate FORMATTED_MAX_LOCAL_DATE = LocalDate.of(9999, 12, 31);
 
     @BeforeEach
     void setUp() {
         Map<String, String> params = new HashMap<>();
-        params.put("startAt", MAX_LOCAL_TIME.toString());
+        params.put("startAt", FORMATTED_MAX_LOCAL_TIME.toString());
 
         RestAssured.given().log().all()
                 .contentType(ContentType.JSON)
@@ -67,7 +66,7 @@ public class MissionStepTest {
     void 삼단계() {
         Map<String, String> params = Map.of(
                 "name", "브라운",
-                "date", MAX_LOCAL_DATE.toString(),
+                "date", FORMATTED_MAX_LOCAL_DATE.toString(),
                 "timeId", "1"
         );
 
@@ -114,7 +113,7 @@ public class MissionStepTest {
     @Test
     void 오단계() {
         jdbcTemplate.update("INSERT INTO reservation (name, date, time_id) VALUES (?, ?, ?)",
-                "브라운", MAX_LOCAL_DATE.toString(), 1L
+                "브라운", FORMATTED_MAX_LOCAL_DATE.toString(), 1L
         );
 
         List<ReservationResponse> reservations = RestAssured.given().log().all()
@@ -132,7 +131,7 @@ public class MissionStepTest {
     void 육단계() {
         Map<String, String> params = Map.of(
                 "name", "브라운",
-                "date", MAX_LOCAL_DATE.toString(),
+                "date", FORMATTED_MAX_LOCAL_DATE.toString(),
                 "timeId", "1"
         );
 

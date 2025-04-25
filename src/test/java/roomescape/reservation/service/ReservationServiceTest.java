@@ -53,7 +53,7 @@ class ReservationServiceTest {
         Assertions.assertThat(insertedReservation.id()).isNotNull();
     }
 
-    @DisplayName("요청받은 timeId가 존재하지 않는 경우 예외 발생 테스트")
+    @DisplayName("요청받은 timeId가 존재하지 않는 경우 예약을 생성할 수 없다")
     @Test
     void test2() {
         //given

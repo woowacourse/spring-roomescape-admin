@@ -1,19 +1,27 @@
-package roomescape;
+package roomescape.model;
 
 import java.time.LocalDate;
-import java.time.LocalTime;
 
-public record Reservation(Long id, String name, LocalDate date, LocalTime time) {
+public record Reservation(
+    Long id,
+    String name,
+    LocalDate date,
+    TimeSlot timeSlot
+) {
 
     private static final int NAME_MAX_LENGTH = 5;
 
     public Reservation {
-        validateNotNull(id, name, date, time);
+        validateNotNull(name, date, timeSlot);
         validateNameLength(name);
     }
 
-    private void validateNotNull(final Long id, final String name, final LocalDate date, final LocalTime time) {
-        if (id == null || name == null || date == null || time == null) {
+    private void validateNotNull(
+        final String name,
+        final LocalDate date,
+        final TimeSlot timeSlot
+    ) {
+        if (name == null || date == null || timeSlot == null) {
             throw new IllegalArgumentException("모든 값들이 존재해야 합니다.");
         }
     }

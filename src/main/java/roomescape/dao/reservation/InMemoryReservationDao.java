@@ -6,7 +6,6 @@ import java.util.concurrent.atomic.AtomicLong;
 import roomescape.dao.resetvationTime.ReservationTimeDao;
 import roomescape.domain.Reservation;
 import roomescape.domain.ReservationTime;
-import roomescape.dto.request.ReservationCreateRequest;
 
 public class InMemoryReservationDao implements ReservationDao {
 
@@ -25,15 +24,15 @@ public class InMemoryReservationDao implements ReservationDao {
     }
 
     @Override
-    public long create(final ReservationCreateRequest reservationCreateRequest) {
-        ReservationTime reservationTime = reservationTimeDao.findById(reservationCreateRequest.timeId());
-        Reservation reservation = new Reservation(index.getAndIncrement(),
-                reservationCreateRequest.name(),
-                reservationCreateRequest.date(),
+    public Reservation create(final Reservation reservation) {
+        ReservationTime reservationTime = reservationTimeDao.findById(reservation.getTime().getId());
+        Reservation savedReservation = new Reservation(index.getAndIncrement(),
+                reservation.getName(),
+                reservation.getDate(),
                 reservationTime
         );
-        reservations.add(reservation);
-        return reservation.getId();
+        reservations.add(savedReservation);
+        return savedReservation;
     }
 
     @Override

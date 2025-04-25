@@ -11,6 +11,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import roomescape.dao.resetvationTime.ReservationTimeDao;
+import roomescape.domain.ReservationTime;
 import roomescape.dto.request.ReservationTimeCreateRequest;
 import roomescape.dto.response.ReservationTimeCreateResponse;
 import roomescape.dto.response.ReservationTimeResponse;
@@ -28,19 +29,17 @@ public class TimeController {
     @GetMapping
     public List<ReservationTimeResponse> findAll() {
         return reservationTimeDao.findAll().stream()
-                .map(reservationTime -> new ReservationTimeResponse(
-                        reservationTime.getId(),
-                        reservationTime.getStartAt()
-                ))
+                .map(ReservationTimeResponse::new)
                 .toList();
     }
 
     @PostMapping
     public ResponseEntity<ReservationTimeCreateResponse> create(
             @RequestBody ReservationTimeCreateRequest reservationTimeCreateRequest) {
+        ReservationTime reservationTime = reservationTimeDao.create(
+                new ReservationTime(reservationTimeCreateRequest.startAt()));
         ReservationTimeCreateResponse reservationTimeCreateResponse = new ReservationTimeCreateResponse(
-                reservationTimeDao.create(reservationTimeCreateRequest),
-                reservationTimeCreateRequest.startAt());
+                reservationTime);
         return ResponseEntity.status(HttpStatus.CREATED).body(reservationTimeCreateResponse);
     }
 

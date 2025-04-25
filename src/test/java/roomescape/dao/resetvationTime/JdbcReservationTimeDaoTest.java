@@ -12,7 +12,6 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.test.context.TestPropertySource;
 import roomescape.domain.ReservationTime;
-import roomescape.dto.request.ReservationTimeCreateRequest;
 
 @SpringBootTest
 @TestPropertySource(locations = "classpath:application-test.properties")
@@ -29,27 +28,29 @@ class JdbcReservationTimeDaoTest {
         jdbcTemplate.update("DELETE FROM reservation_time");
     }
 
-    @DisplayName("예약을 데이터베이스에 추가한다.")
+    @DisplayName("예약 시간을 데이터베이스에 추가한다.")
     @Test
     void addTest() {
 
         // given
-        jdbcReservationTimeDao.create(new ReservationTimeCreateRequest(LocalTime.of(10, 10)));
+        ReservationTime reservationTime = new ReservationTime(LocalTime.of(10, 10));
 
         // when
-        List<ReservationTime> reservationTimes = jdbcReservationTimeDao.findAll();
+        ReservationTime savedReservationTime = jdbcReservationTimeDao.create(reservationTime);
 
         // then
-        assertThat(reservationTimes.getFirst().getStartAt()).isEqualTo(LocalTime.of(10, 10));
+        assertThat(savedReservationTime.getStartAt()).isEqualTo(LocalTime.of(10, 10));
     }
 
-    @DisplayName("데이터이스에 있는 예약 정보들을 가져온다.")
+    @DisplayName("데이터이스에 있는 예약 시간 정보들을 가져온다.")
     @Test
     void findAllTest() {
 
         // given
-        jdbcReservationTimeDao.create(new ReservationTimeCreateRequest(LocalTime.of(10, 10)));
-        jdbcReservationTimeDao.create(new ReservationTimeCreateRequest(LocalTime.of(11, 10)));
+        ReservationTime reservationTime1 = new ReservationTime(LocalTime.of(10, 10));
+        jdbcReservationTimeDao.create(reservationTime1);
+        ReservationTime reservationTime2 = new ReservationTime(LocalTime.of(11, 10));
+        jdbcReservationTimeDao.create(reservationTime2);
 
         // when
         List<ReservationTime> reservationTimes = jdbcReservationTimeDao.findAll();
@@ -58,15 +59,16 @@ class JdbcReservationTimeDaoTest {
         assertThat(reservationTimes.size()).isEqualTo(2);
     }
 
-    @DisplayName("데이터이스에 있는 예약 정보를 삭제한다.")
+    @DisplayName("데이터이스에 있는 예약 시간 정보를 삭제한다.")
     @Test
     void deleteTest() {
 
         // given
-        Long id = jdbcReservationTimeDao.create(new ReservationTimeCreateRequest(LocalTime.of(10, 10)));
+        ReservationTime reservationTime = new ReservationTime(LocalTime.of(10, 10));
+        ReservationTime savedReservationTime = jdbcReservationTimeDao.create(reservationTime);
 
         // when
-        jdbcReservationTimeDao.delete(id);
+        jdbcReservationTimeDao.delete(savedReservationTime.getId());
         List<ReservationTime> reservationTimes = jdbcReservationTimeDao.findAll();
 
         // then

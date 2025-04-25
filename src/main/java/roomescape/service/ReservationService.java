@@ -4,11 +4,11 @@ import java.util.List;
 import org.springframework.stereotype.Service;
 import roomescape.dao.reservation.ReservationDao;
 import roomescape.dao.resetvationTime.ReservationTimeDao;
+import roomescape.domain.Reservation;
 import roomescape.domain.ReservationTime;
 import roomescape.dto.request.ReservationCreateRequest;
 import roomescape.dto.response.ReservationCreateResponse;
 import roomescape.dto.response.ReservationResponse;
-import roomescape.dto.response.ReservationTimeResponse;
 
 @Service
 public class ReservationService {
@@ -23,11 +23,10 @@ public class ReservationService {
 
     public ReservationCreateResponse create(ReservationCreateRequest reservationCreateRequest) {
         ReservationTime time = reservationTimeDao.findById(reservationCreateRequest.timeId());
-        return new ReservationCreateResponse(
-                reservationDao.create(reservationCreateRequest),
-                reservationCreateRequest.name(),
-                reservationCreateRequest.date(),
-                new ReservationTimeResponse(time.getId(), time.getStartAt()));
+        Reservation reservation = new Reservation(reservationCreateRequest.name(), reservationCreateRequest.date(),
+                time);
+        Reservation savedReservation = reservationDao.create(reservation);
+        return new ReservationCreateResponse(savedReservation);
     }
 
     public List<ReservationResponse> findAll() {

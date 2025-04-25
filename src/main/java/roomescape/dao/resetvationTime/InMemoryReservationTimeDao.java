@@ -4,7 +4,6 @@ import java.util.List;
 import java.util.NoSuchElementException;
 import java.util.concurrent.atomic.AtomicLong;
 import roomescape.domain.ReservationTime;
-import roomescape.dto.request.ReservationTimeCreateRequest;
 
 public class InMemoryReservationTimeDao implements ReservationTimeDao {
 
@@ -21,13 +20,11 @@ public class InMemoryReservationTimeDao implements ReservationTimeDao {
     }
 
     @Override
-    public long create(final ReservationTimeCreateRequest reservationTimeCreateRequest) {
-        ReservationTime reservationTime = new ReservationTime(
-                index.getAndIncrement(),
-                reservationTimeCreateRequest.startAt()
-        );
-        reservationTimes.add(reservationTime);
-        return reservationTime.getId();
+    public ReservationTime create(final ReservationTime reservationTime) {
+        ReservationTime savedReservationTime = new ReservationTime(index.getAndIncrement(),
+                reservationTime.getStartAt());
+        reservationTimes.add(savedReservationTime);
+        return savedReservationTime;
     }
 
     @Override

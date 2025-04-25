@@ -14,8 +14,7 @@ import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.test.context.TestPropertySource;
 import roomescape.dao.resetvationTime.JdbcReservationTimeDao;
 import roomescape.domain.Reservation;
-import roomescape.dto.request.ReservationCreateRequest;
-import roomescape.dto.request.ReservationTimeCreateRequest;
+import roomescape.domain.ReservationTime;
 
 @SpringBootTest
 @TestPropertySource(locations = "classpath:application-test.properties")
@@ -41,14 +40,16 @@ class JdbcReservationDaoTest {
     void addTest() {
 
         // given
-        Long timeId = jdbcReservationTimeDao.create(new ReservationTimeCreateRequest(LocalTime.of(10, 10)));
-        jdbcReservationDao.create(new ReservationCreateRequest("체체", LocalDate.of(2024, 10, 10), timeId));
+        ReservationTime reservationTime = new ReservationTime(LocalTime.of(10, 10));
+        ReservationTime savedReservationTime = jdbcReservationTimeDao.create(reservationTime);
+        Reservation reservation = new Reservation("체체", LocalDate.of(2024, 10, 10),
+                savedReservationTime);
 
         // when
-        List<Reservation> reservations = jdbcReservationDao.findAll();
+        Reservation savedReservation = jdbcReservationDao.create(reservation);
 
         // then
-        assertThat(reservations.getFirst().getName()).isEqualTo("체체");
+        assertThat(savedReservation.getName()).isEqualTo("체체");
     }
 
     @DisplayName("에약을 데이터베이스에서 조회한다.")
@@ -56,12 +57,18 @@ class JdbcReservationDaoTest {
     void findAllTest() {
 
         // given
-        Long timeId = jdbcReservationTimeDao.create(new ReservationTimeCreateRequest(LocalTime.of(10, 10)));
-        jdbcReservationDao.create(new ReservationCreateRequest("체체", LocalDate.of(2024, 10, 10), timeId));
-        jdbcReservationDao.create(new ReservationCreateRequest("체체", LocalDate.of(2024, 11, 10), timeId));
+        ReservationTime reservationTime = new ReservationTime(LocalTime.of(10, 10));
+        ReservationTime savedReservationTime = jdbcReservationTimeDao.create(reservationTime);
+        Reservation reservation1 = new Reservation("체체", LocalDate.of(2024, 10, 10),
+                savedReservationTime);
+        Reservation reservation2 = new Reservation("체체", LocalDate.of(2024, 10, 10),
+                savedReservationTime);
+        jdbcReservationDao.create(reservation1);
+        jdbcReservationDao.create(reservation2);
 
         // when
         List<Reservation> reservations = jdbcReservationDao.findAll();
+        System.out.println(reservations.getFirst().getName());
 
         // then
         assertThat(reservations.size()).isEqualTo(2);
@@ -72,12 +79,14 @@ class JdbcReservationDaoTest {
     void deleteTest() {
 
         // given
-        Long timeId = jdbcReservationTimeDao.create(new ReservationTimeCreateRequest(LocalTime.of(10, 10)));
-        Long reservationId = jdbcReservationDao.create(
-                new ReservationCreateRequest("체체", LocalDate.of(2024, 10, 10), timeId));
+        ReservationTime reservationTime = new ReservationTime(LocalTime.of(10, 10));
+        ReservationTime savedReservationTime = jdbcReservationTimeDao.create(reservationTime);
+        Reservation reservation = new Reservation("체체", LocalDate.of(2024, 10, 10),
+                savedReservationTime);
+        Reservation savedReservation = jdbcReservationDao.create(reservation);
 
         // when
-        jdbcReservationDao.delete(reservationId);
+        jdbcReservationDao.delete(savedReservation.getId());
         List<Reservation> reservations = jdbcReservationDao.findAll();
 
         // then

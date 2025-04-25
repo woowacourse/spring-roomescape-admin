@@ -12,8 +12,8 @@ import roomescape.dao.reservation.InMemoryReservationDao;
 import roomescape.dao.reservation.ReservationDao;
 import roomescape.dao.resetvationTime.InMemoryReservationTimeDao;
 import roomescape.dao.resetvationTime.ReservationTimeDao;
+import roomescape.domain.ReservationTime;
 import roomescape.dto.request.ReservationCreateRequest;
-import roomescape.dto.request.ReservationTimeCreateRequest;
 import roomescape.dto.response.ReservationResponse;
 
 class ReservationServiceTest {
@@ -28,8 +28,9 @@ class ReservationServiceTest {
     void createTest() {
 
         // given
-        reservationTimeDao.create(new ReservationTimeCreateRequest(LocalTime.of(10, 10)));
-        reservationService.create(new ReservationCreateRequest("체체", LocalDate.of(2024, 10, 10), 1L));
+        ReservationTime savedReservationTime = reservationTimeDao.create(new ReservationTime(LocalTime.of(10, 10)));
+        reservationService.create(
+                new ReservationCreateRequest("체체", LocalDate.of(2024, 10, 10), savedReservationTime.getId()));
 
         // when
         List<ReservationResponse> reservations = reservationService.findAll();
@@ -43,9 +44,11 @@ class ReservationServiceTest {
     void findAllTest() {
 
         // given
-        reservationTimeDao.create(new ReservationTimeCreateRequest(LocalTime.of(10, 10)));
-        reservationService.create(new ReservationCreateRequest("체체", LocalDate.of(2024, 10, 10), 1L));
-        reservationService.create(new ReservationCreateRequest("체체2", LocalDate.of(2024, 10, 11), 1L));
+        ReservationTime savedReservationTime = reservationTimeDao.create(new ReservationTime(LocalTime.of(10, 10)));
+        reservationService.create(
+                new ReservationCreateRequest("체체", LocalDate.of(2024, 10, 10), savedReservationTime.getId()));
+        reservationService.create(
+                new ReservationCreateRequest("체체2", LocalDate.of(2024, 10, 11), savedReservationTime.getId()));
 
         // when
         List<ReservationResponse> reservations = reservationService.findAll();
@@ -59,11 +62,12 @@ class ReservationServiceTest {
     void deleteTest() {
 
         // given
-        Long timeId = reservationTimeDao.create(new ReservationTimeCreateRequest(LocalTime.of(10, 10)));
-        reservationService.create(new ReservationCreateRequest("체체", LocalDate.of(2024, 10, 10), 1L));
+        ReservationTime savedReservationTime = reservationTimeDao.create(new ReservationTime(LocalTime.of(10, 10)));
+        reservationService.create(
+                new ReservationCreateRequest("체체", LocalDate.of(2024, 10, 10), savedReservationTime.getId()));
 
         // when
-        reservationService.delete(timeId);
+        reservationService.delete(savedReservationTime.getId());
         List<ReservationResponse> reservations = reservationService.findAll();
 
         // then

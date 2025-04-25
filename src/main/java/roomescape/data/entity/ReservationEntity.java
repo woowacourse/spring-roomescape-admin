@@ -29,7 +29,7 @@ public record ReservationEntity(
         return new Reservation(
                 id,
                 name,
-                LocalDate.parse(date ,DATE_FORMATTER),
+                LocalDate.parse(date, DATE_FORMATTER),
                 timeEntity.toDomain());
     }
 

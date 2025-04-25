@@ -75,6 +75,7 @@ date: string
 timeId: number 
 
 Response
+Location: http://url/reservations/{id}
 HTTP/1.1 201
 Content-Type: application/json
 
@@ -122,6 +123,7 @@ startAt: string
 
 Response
 HTTP/1.1 200
+Location: http://url/times/{id}
 Content-Type: application/json
 
 {

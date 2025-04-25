@@ -16,7 +16,7 @@ public class DeleteReservationTimeService implements DeleteReservationTimeUsecas
 
     @Override
     public void deleteReservationTime(long id) {
-        List<ReservationTimeOutput> reservationTimeOutputs = getReservationTimeUseCase.getReservationTime();
+        List<ReservationTimeOutput> reservationTimeOutputs = getReservationTimeUseCase.getAllReservationTimes();
         reservationTimeOutputs.stream()
                 .filter(reservationTimeOutput -> reservationTimeOutput.id().equals(id))
                 .findAny()

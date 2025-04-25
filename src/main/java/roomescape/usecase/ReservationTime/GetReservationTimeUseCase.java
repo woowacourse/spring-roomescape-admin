@@ -3,5 +3,7 @@ package roomescape.usecase.ReservationTime;
 import java.util.List;
 
 public interface GetReservationTimeUseCase {
-    List<ReservationTimeOutput> getReservationTime();
+    List<ReservationTimeOutput> getAllReservationTimes();
+
+    ReservationTimeOutput getReservationTime(Long id);
 }

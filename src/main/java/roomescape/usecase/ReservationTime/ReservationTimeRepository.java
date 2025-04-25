@@ -6,7 +6,9 @@ import roomescape.enttity.ReservationTime.ReservationTime;
 public interface ReservationTimeRepository {
     ReservationTimeOutput addReservationTime(ReservationTime reservationTime);
 
-    List<ReservationTimeOutput> getReservationTime();
+    List<ReservationTimeOutput> getAllReservationTimes();
+
+    ReservationTimeOutput getReservationTIme(Long timeId);
 
     void deleteReservationTime(long id);
 }

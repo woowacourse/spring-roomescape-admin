@@ -35,7 +35,7 @@ public class ReservationTimeRepositoryImpl implements ReservationTimeRepository 
     }
 
     @Override
-    public List<ReservationTimeOutput> getReservationTime() {
+    public List<ReservationTimeOutput> getAllReservationTimes() {
         String sql = "select * from reservation_time";
         return jdbcTemplate.query(sql, (resultSet, rowNUm) -> {
             return new ReservationTimeOutput(
@@ -43,6 +43,18 @@ public class ReservationTimeRepositoryImpl implements ReservationTimeRepository 
                     LocalTime.parse(resultSet.getString("start_at"))
             );
         });
+    }
+
+    @Override
+    public ReservationTimeOutput getReservationTIme(final Long timeId) {
+        String sql = "select * from reservation_time where id = ?";
+        return jdbcTemplate.queryForObject(sql, (resultSet, rowNUm) -> {
+            return new ReservationTimeOutput(
+                    resultSet.getLong("id"),
+                    LocalTime.parse(resultSet.getString("start_at"))
+            );
+        }, timeId);
+
     }
 
     @Override

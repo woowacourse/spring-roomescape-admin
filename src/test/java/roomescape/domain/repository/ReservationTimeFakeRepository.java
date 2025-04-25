@@ -4,23 +4,23 @@ import java.util.List;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.atomic.AtomicLong;
-import roomescape.reservation.domain.Time;
-import roomescape.reservation.domain.repository.TimeRepository;
+import roomescape.reservation.domain.ReservationTime;
+import roomescape.reservation.domain.repository.ReservationTimeRepository;
 
-public class TimeFakeRepository implements TimeRepository {
+public class ReservationTimeFakeRepository implements ReservationTimeRepository {
 
-    private final Map<Long, Time> times = new ConcurrentHashMap<>();
+    private final Map<Long, ReservationTime> times = new ConcurrentHashMap<>();
     private final AtomicLong idGenerator = new AtomicLong();
 
     @Override
-    public Long saveAndReturnId(Time time) {
+    public Long saveAndReturnId(ReservationTime time) {
         Long id = idGenerator.incrementAndGet();
         times.put(id, time.withId(id));
         return id;
     }
 
     @Override
-    public List<Time> findAll() {
+    public List<ReservationTime> findAll() {
         return times.values().stream().toList();
     }
 
@@ -34,7 +34,7 @@ public class TimeFakeRepository implements TimeRepository {
     }
 
     @Override
-    public Time findById(Long id) {
+    public ReservationTime findById(Long id) {
         return times.get(id);
     }
 

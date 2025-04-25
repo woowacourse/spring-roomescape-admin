@@ -2,16 +2,18 @@ package roomescape.reservation.controller.dto;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
 import java.time.LocalTime;
-import roomescape.reservation.domain.Time;
+import roomescape.reservation.domain.ReservationTime;
 
-public record TimeRequest(@JsonFormat(pattern = "HH:mm", timezone = "Asia/Seoul") LocalTime startAt) {
+public record ReservationTimeRequest(
+        @JsonFormat(pattern = "HH:mm", timezone = "Asia/Seoul") LocalTime startAt
+) {
 
-    public TimeRequest {
+    public ReservationTimeRequest {
         validateStartAt(startAt);
     }
 
-    public Time toTimeWithoutId() {
-        return new Time(null, startAt);
+    public ReservationTime toTimeWithoutId() {
+        return new ReservationTime(null, startAt);
     }
 
     private void validateStartAt(LocalTime startAt) {

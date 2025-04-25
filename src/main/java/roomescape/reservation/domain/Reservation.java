@@ -7,9 +7,9 @@ public class Reservation {
     private final Long id;
     private final String name;
     private final LocalDate date;
-    private final Time time;
+    private final ReservationTime time;
 
-    public Reservation(Long id, String name, LocalDate date, Time time) {
+    public Reservation(Long id, String name, LocalDate date, ReservationTime time) {
         this.id = id;
         this.name = name;
         this.date = date;
@@ -32,7 +32,8 @@ public class Reservation {
         return date;
     }
 
-    public Time getTime() {
+    public ReservationTime getTime() {
         return time;
     }
+
 }

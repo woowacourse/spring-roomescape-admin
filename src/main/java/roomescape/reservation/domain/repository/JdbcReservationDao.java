@@ -11,7 +11,7 @@ import org.springframework.jdbc.support.GeneratedKeyHolder;
 import org.springframework.jdbc.support.KeyHolder;
 import org.springframework.stereotype.Repository;
 import roomescape.reservation.domain.Reservation;
-import roomescape.reservation.domain.Time;
+import roomescape.reservation.domain.ReservationTime;
 
 @Repository
 public class JdbcReservationDao implements ReservationRepository {
@@ -25,7 +25,7 @@ public class JdbcReservationDao implements ReservationRepository {
                 LocalDate date = LocalDate.parse(rs.getString("date"));
                 Long timeId = rs.getLong("time_id");
                 LocalTime startAt = LocalTime.parse(rs.getString("start_at"));
-                Time time = new Time(timeId, startAt);
+                ReservationTime time = new ReservationTime(timeId, startAt);
                 return new Reservation(reservationId, name, date, time);
             };
 
@@ -54,7 +54,7 @@ public class JdbcReservationDao implements ReservationRepository {
 
     @Override
     public int deleteById(Long id) {
-        String sql = "delete from reservation where id = ?";
+        String sql = "DELETE FROM reservation WHERE id = ?";
         return jdbcTemplate.update(sql, id);
     }
 
@@ -62,14 +62,14 @@ public class JdbcReservationDao implements ReservationRepository {
     public List<Reservation> findAll() {
         String sql = """
                 SELECT
-                    r.id as reservation_id,
+                    r.id AS reservation_id,
                     r.name,
                     r.date,
-                    t.id as time_id,
-                    t.start_at as time_value
-                FROM reservation as r
-                inner join reservation_time as t
-                on r.time_id = t.id
+                    t.id AS time_id,
+                    t.start_at AS time_value
+                FROM reservation AS r
+                INNER JOIN reservation_time AS t
+                ON r.time_id = t.id
                 """;
         return jdbcTemplate.query(sql, reservationMapper);
     }

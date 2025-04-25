@@ -10,14 +10,14 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import roomescape.domain.repository.ReservationFakeRepository;
-import roomescape.domain.repository.TimeFakeRepository;
+import roomescape.domain.repository.ReservationTimeFakeRepository;
 import roomescape.reservation.controller.dto.ReservationRequest;
 import roomescape.reservation.controller.dto.ReservationResponse;
-import roomescape.reservation.controller.dto.TimeResponse;
+import roomescape.reservation.controller.dto.ReservationTimeResponse;
 import roomescape.reservation.domain.Reservation;
-import roomescape.reservation.domain.Time;
+import roomescape.reservation.domain.ReservationTime;
 import roomescape.reservation.domain.repository.ReservationRepository;
-import roomescape.reservation.domain.repository.TimeRepository;
+import roomescape.reservation.domain.repository.ReservationTimeRepository;
 
 class ReservationServiceTest {
 
@@ -26,17 +26,17 @@ class ReservationServiceTest {
     @BeforeEach
     void setup() {
         ReservationRepository reservationRepository = new ReservationFakeRepository();
-        TimeRepository timeRepository = new TimeFakeRepository();
+        ReservationTimeRepository reservationTimeRepository = new ReservationTimeFakeRepository();
 
-        List<Time> times = List.of(
-                new Time(null, LocalTime.of(3, 12)),
-                new Time(null, LocalTime.of(11, 33)),
-                new Time(null, LocalTime.of(16, 54)),
-                new Time(null, LocalTime.of(23, 53))
+        List<ReservationTime> times = List.of(
+                new ReservationTime(null, LocalTime.of(3, 12)),
+                new ReservationTime(null, LocalTime.of(11, 33)),
+                new ReservationTime(null, LocalTime.of(16, 54)),
+                new ReservationTime(null, LocalTime.of(23, 53))
         );
 
-        for (Time time : times) {
-            timeRepository.saveAndReturnId(time);
+        for (ReservationTime time : times) {
+            reservationTimeRepository.saveAndReturnId(time);
         }
 
         List<Reservation> reservations = List.of(
@@ -49,7 +49,7 @@ class ReservationServiceTest {
             reservationRepository.saveAndReturnId(reservation);
         }
 
-        reservationService = new ReservationService(reservationRepository, timeRepository);
+        reservationService = new ReservationService(reservationRepository, reservationTimeRepository);
     }
 
     @DisplayName("전체 예약 정보를 조회한다")
@@ -73,7 +73,7 @@ class ReservationServiceTest {
 
         // then
         ReservationResponse expected = new ReservationResponse(4L, "루키", LocalDate.of(2025, 5, 3),
-                new TimeResponse(4L, LocalTime.of(23, 53)));
+                new ReservationTimeResponse(4L, LocalTime.of(23, 53)));
         assertThat(response).isEqualTo(expected);
     }
 

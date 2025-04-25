@@ -10,20 +10,20 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.jdbc.core.JdbcTemplate;
-import roomescape.reservation.domain.Time;
-import roomescape.reservation.domain.repository.JdbcTimeDao;
+import roomescape.reservation.domain.ReservationTime;
+import roomescape.reservation.domain.repository.JdbcReservationTimeDao;
 import roomescape.util.TestDataSourceFactory;
 
-class JdbcTimeDaoTest {
+class JdbcReservationTimeDaoTest {
 
-    private JdbcTimeDao jdbcTimeDao;
+    private JdbcReservationTimeDao jdbcReservationTimeDao;
     private JdbcTemplate jdbcTemplate;
 
     @BeforeEach
     void setup() {
         DataSource dataSource = TestDataSourceFactory.getEmbeddedDataSource();
         jdbcTemplate = new JdbcTemplate(dataSource);
-        jdbcTimeDao = new JdbcTimeDao(jdbcTemplate);
+        jdbcReservationTimeDao = new JdbcReservationTimeDao(jdbcTemplate);
     }
 
     @DisplayName("시간 데이터를 저장한다")
@@ -31,10 +31,10 @@ class JdbcTimeDaoTest {
     void save_time_test() {
         // given
         LocalTime startAt = LocalTime.of(15, 21);
-        Time time = new Time(null, startAt);
+        ReservationTime time = new ReservationTime(null, startAt);
 
         // when
-        Long id = jdbcTimeDao.saveAndReturnId(time);
+        Long id = jdbcReservationTimeDao.saveAndReturnId(time);
 
         // then
         assertThat(id).isEqualTo(7L);
@@ -44,7 +44,7 @@ class JdbcTimeDaoTest {
     @Test
     void get_all_test() {
         // when
-        List<Time> all = jdbcTimeDao.findAll();
+        List<ReservationTime> all = jdbcReservationTimeDao.findAll();
 
         // then
         assertThat(all).hasSize(6);
@@ -57,7 +57,7 @@ class JdbcTimeDaoTest {
         Long id = 6L;
 
         // when
-        jdbcTimeDao.deleteById(id);
+        jdbcReservationTimeDao.deleteById(id);
 
         // then
         String sql = "SELECT COUNT(*) FROM reservation_time";
@@ -72,7 +72,7 @@ class JdbcTimeDaoTest {
         Long id = 1L;
 
         // when
-        Time findTime = jdbcTimeDao.findById(id);
+        ReservationTime findTime = jdbcReservationTimeDao.findById(id);
 
         // then
         assertThat(findTime.getId()).isEqualTo(1L);

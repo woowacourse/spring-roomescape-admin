@@ -5,19 +5,19 @@ import org.springframework.stereotype.Service;
 import roomescape.reservation.controller.dto.ReservationRequest;
 import roomescape.reservation.controller.dto.ReservationResponse;
 import roomescape.reservation.domain.Reservation;
-import roomescape.reservation.domain.Time;
+import roomescape.reservation.domain.ReservationTime;
 import roomescape.reservation.domain.repository.ReservationRepository;
-import roomescape.reservation.domain.repository.TimeRepository;
+import roomescape.reservation.domain.repository.ReservationTimeRepository;
 
 @Service
 public class ReservationService {
 
     private final ReservationRepository reservationRepository;
-    private final TimeRepository timeRepository;
+    private final ReservationTimeRepository reservationTimeRepository;
 
-    public ReservationService(ReservationRepository reservationRepository, TimeRepository timeRepository) {
+    public ReservationService(ReservationRepository reservationRepository, ReservationTimeRepository reservationTimeRepository) {
         this.reservationRepository = reservationRepository;
-        this.timeRepository = timeRepository;
+        this.reservationTimeRepository = reservationTimeRepository;
     }
 
     public List<ReservationResponse> getAll() {
@@ -28,7 +28,7 @@ public class ReservationService {
     }
 
     public ReservationResponse add(ReservationRequest request) {
-        Time findTime = timeRepository.findById(request.timeId());
+        ReservationTime findTime = reservationTimeRepository.findById(request.timeId());
         Reservation reservation = request.toReservationWithoutId(findTime);
 
         Long id = reservationRepository.saveAndReturnId(reservation);

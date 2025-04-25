@@ -11,7 +11,7 @@ import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.jdbc.core.JdbcTemplate;
 import roomescape.reservation.domain.Reservation;
-import roomescape.reservation.domain.Time;
+import roomescape.reservation.domain.ReservationTime;
 import roomescape.reservation.domain.repository.JdbcReservationDao;
 import roomescape.util.TestDataSourceFactory;
 
@@ -33,7 +33,7 @@ class JdbcReservationDaoTest {
         // given
         String name = "루키";
         LocalDate date = LocalDate.of(2024, 12, 31);
-        Time time = new Time(6L, LocalTime.of(13, 15));
+        ReservationTime time = new ReservationTime(6L, LocalTime.of(13, 15));
         Reservation reservation = new Reservation(null, name, date, time);
 
         // when

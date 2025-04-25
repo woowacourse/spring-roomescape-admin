@@ -33,7 +33,6 @@ public class H2ReservationTimeRespository implements ReservationTimeRepository {
         final String sql = """
                 SELECT * FROM reservation_time
                 """;
-
         return jdbcTemplate.query(sql, ROW_MAPPER);
     }
 
@@ -43,7 +42,6 @@ public class H2ReservationTimeRespository implements ReservationTimeRepository {
                 SELECT * FROM RESERVATION_TIME
                 WHERE id = ?
                 """;
-
         try {
             final ReservationTime reservationTime = jdbcTemplate.queryForObject(sql, ROW_MAPPER, id);
             return Optional.ofNullable(reservationTime);
@@ -58,8 +56,9 @@ public class H2ReservationTimeRespository implements ReservationTimeRepository {
                 .withTableName("reservation_time")
                 .usingGeneratedKeyColumns("id")
                 .executeAndReturnKey(Map.of(
-                        "start_at", reservationTime.getStartAt()
-                ));
+                                "start_at", reservationTime.getStartAt()
+                        )
+                );
         return id.longValue();
     }
 

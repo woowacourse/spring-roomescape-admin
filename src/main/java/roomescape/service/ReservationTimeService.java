@@ -22,14 +22,14 @@ public class ReservationTimeService {
         return ReservationTimeResponse.from(id, time);
     }
 
-    public List<ReservationTimeResponse> read() {
-        final List<ReservationTime> times = reservationTimeDao.read();
+    public List<ReservationTimeResponse> readAll() {
+        final List<ReservationTime> times = reservationTimeDao.readAll();
         return times.stream()
                 .map(ReservationTimeResponse::of)
                 .toList();
     }
 
-    public void delete(final Long id) {
-        reservationTimeDao.delete(id);
+    public void deleteById(final Long id) {
+        reservationTimeDao.deleteById(id);
     }
 }

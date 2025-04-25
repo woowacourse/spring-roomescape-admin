@@ -29,13 +29,13 @@ public class ReservationTimeDao {
         return getGenerateId(number);
     }
 
-    public List<ReservationTime> read() {
+    public List<ReservationTime> readAll() {
         final String sql = "select id, start_at from reservation_time";
         final RowMapper<ReservationTime> rowMapper = getRowMapper();
         return jdbcTemplate.query(sql, rowMapper);
     }
 
-    public void delete(final Long id) {
+    public void deleteById(final Long id) {
         final String sql = "delete from reservation_time where id = ?";
         jdbcTemplate.update(sql, id);
     }

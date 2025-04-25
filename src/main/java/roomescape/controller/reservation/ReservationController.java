@@ -30,14 +30,14 @@ public final class ReservationController {
     }
 
     @GetMapping
-    public ResponseEntity<List<ReservationResponse>> read() {
-        final List<ReservationResponse> reservationResponses = reservationService.read();
+    public ResponseEntity<List<ReservationResponse>> readAll() {
+        final List<ReservationResponse> reservationResponses = reservationService.readAll();
         return ResponseEntity.ok(reservationResponses);
     }
 
     @DeleteMapping("/{id}")
     public ResponseEntity<Void> delete(@PathVariable Long id) {
-        reservationService.delete(id);
+        reservationService.deleteBy(id);
         return ResponseEntity.ok().build();
     }
 

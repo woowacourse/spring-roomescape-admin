@@ -33,7 +33,7 @@ public class ReservationDao {
         return getGenerateId(number);
     }
 
-    public List<ReservationResponse> read() {
+    public List<ReservationResponse> readAll() {
         final String sql = "SELECT \n"
                 + "    r.id as reservation_id, \n"
                 + "    r.name, \n"

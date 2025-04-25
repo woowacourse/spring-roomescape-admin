@@ -27,11 +27,11 @@ public class ReservationService {
         return ReservationResponse.from(id, reservation);
     }
 
-    public List<ReservationResponse> read() {
-        return reservationDao.read();
+    public List<ReservationResponse> readAll() {
+        return reservationDao.readAll();
     }
 
-    public void delete(final Long id) {
+    public void deleteBy(final Long id) {
         reservationDao.delete(id);
     }
 }

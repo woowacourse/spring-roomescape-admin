@@ -8,10 +8,10 @@ import org.junit.jupiter.api.Test;
 import roomescape.reservation.dao.FakeReservationDao;
 import roomescape.reservation.domain.Reservation;
 import roomescape.reservation.dto.ReservationRequest;
-import roomescape.reservation.utils.ReservationMapper;
+import roomescape.reservation.service.utils.ReservationMapper;
 import roomescape.time.dao.FakeReservationTimeDao;
 import roomescape.time.domain.ReservationTime;
-import roomescape.time.utils.ReservationTimeMapper;
+import roomescape.time.service.utils.ReservationTimeMapper;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatNoException;

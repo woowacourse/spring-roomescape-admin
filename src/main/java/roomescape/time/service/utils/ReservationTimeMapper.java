@@ -1,5 +1,6 @@
-package roomescape.time.utils;
+package roomescape.time.service.utils;
 
+import java.util.List;
 import org.springframework.stereotype.Component;
 import roomescape.time.domain.ReservationTime;
 import roomescape.time.dto.ReservationTimeRequest;
@@ -19,5 +20,12 @@ public class ReservationTimeMapper {
                 reservationTime.getId(),
                 reservationTime.getStartAt()
         );
+    }
+
+    public List<ReservationTimeResponse> toTimeResponses(List<ReservationTime> reservationTimes) {
+        return reservationTimes
+                .stream()
+                .map(this::toTimeResponse)
+                .toList();
     }
 }

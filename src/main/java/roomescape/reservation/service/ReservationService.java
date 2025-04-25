@@ -7,7 +7,7 @@ import roomescape.reservation.dao.ReservationDao;
 import roomescape.reservation.domain.Reservation;
 import roomescape.reservation.dto.ReservationRequest;
 import roomescape.reservation.dto.ReservationResponse;
-import roomescape.reservation.utils.ReservationMapper;
+import roomescape.reservation.service.utils.ReservationMapper;
 import roomescape.time.dao.ReservationTimeDao;
 import roomescape.time.domain.ReservationTime;
 
@@ -32,10 +32,7 @@ public class ReservationService {
     }
 
     public List<ReservationResponse> findAllReservations() {
-        List<Reservation> reservations = reservationDao.findAll();
-        return reservations.stream()
-                .map(reservationMapper::toReservationResponse)
-                .toList();
+        return reservationMapper.toReservationResponses(reservationDao.findAll());
     }
 
     public void deleteReservationById(long id) {

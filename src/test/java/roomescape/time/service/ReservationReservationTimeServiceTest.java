@@ -6,7 +6,7 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import roomescape.time.dao.FakeReservationTimeDao;
 import roomescape.time.dto.ReservationTimeRequest;
-import roomescape.time.utils.ReservationTimeMapper;
+import roomescape.time.service.utils.ReservationTimeMapper;
 
 import static org.assertj.core.api.Assertions.*;
 

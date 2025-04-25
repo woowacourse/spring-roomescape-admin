@@ -1,12 +1,13 @@
-package roomescape.reservation.utils;
+package roomescape.reservation.service.utils;
 
+import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import roomescape.reservation.domain.Reservation;
 import roomescape.reservation.dto.ReservationRequest;
 import roomescape.reservation.dto.ReservationResponse;
 import roomescape.time.domain.ReservationTime;
-import roomescape.time.utils.ReservationTimeMapper;
+import roomescape.time.service.utils.ReservationTimeMapper;
 
 @Component
 public class ReservationMapper {
@@ -33,5 +34,11 @@ public class ReservationMapper {
                 reservation.getDate(),
                 reservationTimeMapper.toTimeResponse(reservation.getReservationTime())
         );
+    }
+
+    public List<ReservationResponse> toReservationResponses(List<Reservation> reservations) {
+        return reservations.stream()
+                .map(this::toReservationResponse)
+                .toList();
     }
 }

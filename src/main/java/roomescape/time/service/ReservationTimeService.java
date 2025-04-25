@@ -8,7 +8,7 @@ import roomescape.time.dao.ReservationTimeDao;
 import roomescape.time.domain.ReservationTime;
 import roomescape.time.dto.ReservationTimeRequest;
 import roomescape.time.dto.ReservationTimeResponse;
-import roomescape.time.utils.ReservationTimeMapper;
+import roomescape.time.service.utils.ReservationTimeMapper;
 
 @Service
 public class ReservationTimeService {
@@ -28,10 +28,7 @@ public class ReservationTimeService {
     }
 
     public List<ReservationTimeResponse> findAllTimes() {
-        return reservationTimeDao.findAll()
-                .stream()
-                .map(reservationTimeMapper::toTimeResponse)
-                .toList();
+        return reservationTimeMapper.toTimeResponses(reservationTimeDao.findAll());
     }
 
     public void deleteTimeById(long id) {

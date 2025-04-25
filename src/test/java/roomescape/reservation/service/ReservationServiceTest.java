@@ -53,9 +53,29 @@ class ReservationServiceTest {
         Assertions.assertThat(insertedReservation.id()).isNotNull();
     }
 
-    @DisplayName("id를 통한 Reservation 삭제 테스트")
+    @DisplayName("요청받은 timeId가 존재하지 않는 경우 예외 발생 테스트")
     @Test
     void test2() {
+        //given
+        TimeRequest timeRequest = new TimeRequest(LocalTime.of(17, 48));
+        reservationTimeDao.insertTime(timeRequest);
+
+        ReservationRequest reservationRequest = new ReservationRequest(
+                "피케이",
+                LocalDate.of(2025,4,25),
+                2L
+        );
+
+        //when & then
+        Assertions.assertThatThrownBy(
+                () -> reservationService.createReservation(reservationRequest))
+                .isInstanceOf(IllegalArgumentException.class)
+                .hasMessage("[ERROR] 요청받은 timeId가 존재하지 않습니다.");
+    }
+
+    @DisplayName("id를 통한 Reservation 삭제 테스트")
+    @Test
+    void test3() {
         //given
         Reservation reservation = reservationDao.insertReservation(
                 new Reservation(
@@ -73,7 +93,7 @@ class ReservationServiceTest {
 
     @DisplayName("모든 예약 정보 조회")
     @Test
-    void test3() {
+    void test4() {
         //given
         reservationDao.insertReservation(
                 new Reservation(

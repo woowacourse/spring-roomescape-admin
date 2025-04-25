@@ -1,6 +1,5 @@
 package roomescape.usecase.ReservationTime;
 
-import java.util.List;
 import org.springframework.stereotype.Service;
 
 @Service
@@ -16,11 +15,22 @@ public class DeleteReservationTimeService implements DeleteReservationTimeUsecas
 
     @Override
     public void deleteReservationTime(long id) {
-        List<ReservationTimeOutput> reservationTimeOutputs = getReservationTimeUseCase.getAllReservationTimes();
-        reservationTimeOutputs.stream()
-                .filter(reservationTimeOutput -> reservationTimeOutput.id().equals(id))
-                .findAny()
-                .orElseThrow(() -> new IllegalArgumentException("해당 시간이 존재하지 않습니다"));
+        boolean exists = reservationTimeRepository.existsById(id);
+        if (!exists) {
+            throw new IllegalArgumentException("해당 시간이 존재하지 않습니다");
+        }
+
         reservationTimeRepository.deleteReservationTime(id);
     }
+
+//    @Override
+//    public void deleteReservationTime(long id) {
+//        List<ReservationTimeOutput> reservationTimeOutputs = getReservationTimeUseCase.getAllReservationTimes();
+//        reservationTimeOutputs.stream()
+//                .filter(reservationTimeOutput -> reservationTimeOutput.id().equals(id))
+//                .findAny()
+//                .orElseThrow(() -> new IllegalArgumentException("해당 시간이 존재하지 않습니다"));
+//        reservationTimeRepository.deleteReservationTime(id);
+//    }
+
 }

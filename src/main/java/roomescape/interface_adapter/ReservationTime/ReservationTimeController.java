@@ -1,4 +1,4 @@
-package roomescape;
+package roomescape.interface_adapter.ReservationTime;
 
 import java.util.List;
 import org.springframework.http.ResponseEntity;
@@ -8,8 +8,6 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
-import roomescape.interface_adapter.ReservationTime.ReservationTimeRequestDto;
-import roomescape.interface_adapter.ReservationTime.ReservationTimeResponseDto;
 import roomescape.usecase.ReservationTime.AddReservationTimeUseCase;
 import roomescape.usecase.ReservationTime.DeleteReservationTimeUsecase;
 import roomescape.usecase.ReservationTime.GetReservationTimeUseCase;

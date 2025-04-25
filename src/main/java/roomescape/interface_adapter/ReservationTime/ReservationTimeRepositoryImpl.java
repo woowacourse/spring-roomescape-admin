@@ -63,6 +63,13 @@ public class ReservationTimeRepositoryImpl implements ReservationTimeRepository 
         jdbcTemplate.update(sql, id);
     }
 
+    @Override
+    public boolean existsById(final long id) {
+        String sql = "SELECT COUNT(*) FROM reservation_time WHERE id = ?";
+        Integer count = jdbcTemplate.queryForObject(sql, Integer.class, id);
+        return count != null && count > 0;
+    }
+
 //
 //    @DeleteMapping("/times/{id}")
 //    public ResponseEntity<Void> deleteReservationTime(@PathVariable long id) {

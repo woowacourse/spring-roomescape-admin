@@ -36,7 +36,7 @@ public class InMemoryReservationDao implements ReservationDao {
     }
 
     @Override
-    public void delete(final Long id) {
+    public void delete(final long id) {
         Reservation reservation = reservations.stream()
                 .filter(it -> it.isEqualId(id))
                 .findFirst()

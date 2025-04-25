@@ -9,5 +9,5 @@ public interface ReservationDao {
 
     Reservation create(Reservation reservation);
 
-    void delete(final Long id);
+    void delete(long id);
 }

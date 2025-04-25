@@ -26,6 +26,6 @@ public class AddReservationService implements AddReservationUseCase {
         Reservation reservation = new Reservation(null, reservationInput.name(), reservationInput.date(),
                 reservationTime);
         Reservation reservationWithId = reservationRepository.addReservation(reservation);
-        return ReservationOutput.from(reservationWithId, reservationTime);
+        return ReservationOutput.from(reservationWithId);
     }
 }

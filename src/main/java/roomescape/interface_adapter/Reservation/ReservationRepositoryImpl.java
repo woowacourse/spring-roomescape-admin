@@ -1,11 +1,16 @@
 package roomescape.interface_adapter.Reservation;
 
 import java.sql.PreparedStatement;
+import java.time.LocalDate;
+import java.time.LocalTime;
+import java.util.List;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.support.GeneratedKeyHolder;
 import org.springframework.jdbc.support.KeyHolder;
 import org.springframework.stereotype.Repository;
+import roomescape.enttity.ReservationTime.ReservationTime;
 import roomescape.usecase.Reservation.Reservation;
+import roomescape.usecase.Reservation.ReservationOutput;
 import roomescape.usecase.Reservation.ReservationRepository;
 
 @Repository
@@ -35,5 +40,30 @@ public class ReservationRepositoryImpl implements ReservationRepository {
         return new Reservation(reservation.getId(), reservation.getName(), reservation.getDate(),
                 reservation.getReservationTime());
 
+    }
+
+    @Override
+    public List<ReservationOutput> getAllReservations() {
+        String sql = "SELECT \n"
+                + "    r.id as reservation_id, \n"
+                + "    r.name, \n"
+                + "    r.date, \n"
+                + "    t.id as time_id, \n"
+                + "    t.start_at as time_value \n"
+                + "FROM reservation as r \n"
+                + "inner join reservation_time as t \n"
+                + "on r.time_id = t.id";
+        List<Reservation> reservations = jdbcTemplate.query(sql, (rs, rowNum) -> new Reservation(
+                rs.getLong("id"),
+                rs.getString("name"),
+                LocalDate.parse(rs.getString("date")),
+                new ReservationTime(
+                        rs.getLong("id"),
+                        LocalTime.parse(rs.getString("start_at"))
+                )
+        ));
+        return reservations.stream()
+                .map(ReservationOutput::from)
+                .toList();
     }
 }

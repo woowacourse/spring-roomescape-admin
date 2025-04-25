@@ -1,28 +1,30 @@
 package roomescape.interface_adapter.Reservation;
 
+import java.util.List;
 import org.springframework.http.ResponseEntity;
 import org.springframework.jdbc.core.JdbcTemplate;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
 import roomescape.usecase.Reservation.AddReservationUseCase;
+import roomescape.usecase.Reservation.GetReservationUseCase;
 import roomescape.usecase.Reservation.ReservationInput;
 import roomescape.usecase.Reservation.ReservationOutput;
-import roomescape.usecase.ReservationTime.GetReservationTimeUseCase;
 
 @RestController
 public class RoomEscapeController {
 
     private final JdbcTemplate jdbcTemplate;
-    private final GetReservationTimeUseCase getReservationTimeUseCase;
+    private final GetReservationUseCase getReservationUseCase;
     private final AddReservationUseCase addReservationUseCase;
 
     public RoomEscapeController(final JdbcTemplate jdbcTemplate,
-                                final GetReservationTimeUseCase getReservationTimeUseCase,
+                                final GetReservationUseCase getReservationUseCase,
                                 final AddReservationUseCase addReservationUseCase
     ) {
         this.jdbcTemplate = jdbcTemplate;
-        this.getReservationTimeUseCase = getReservationTimeUseCase;
+        this.getReservationUseCase = getReservationUseCase;
 
         this.addReservationUseCase = addReservationUseCase;
     }
@@ -36,13 +38,13 @@ public class RoomEscapeController {
         return ResponseEntity.ok(reservationOutput);
     }
 
-//    @PostMapping("/reservations")
-//    public ResponseEntity<Void> addReservation(@RequestBody ReservationRequestDto reservationDto) {
-//        String sql = "insert into reservation(name,date,time) values (?,?,?)";
-//        jdbcTemplate.update(sql, reservationDto.name(), reservationDto.date(), reservationDto.time());
-//        return ResponseEntity.ok().build();
-//    }
-//    @GetMapping("reservations")
+    @GetMapping("reservations")
+    public ResponseEntity<List<ReservationOutput>> checkReservation() {
+        List<ReservationOutput> reservationOutput = getReservationUseCase.getReservationOutput();
+        return ResponseEntity.ok(reservationOutput);
+    }
+
+    //    @GetMapping("reservations")
 //    public ResponseEntity<List<Reservation>> checkReservation() {
 //        String sql = "select * from reservation";
 //        List<Reservation> reservations = jdbcTemplate.query(sql, (resultSet, rowNum) -> {
@@ -55,6 +57,13 @@ public class RoomEscapeController {
 //        });
 //
 //        return ResponseEntity.ok(reservations);
+//    }
+
+//    @PostMapping("/reservations")
+//    public ResponseEntity<Void> addReservation(@RequestBody ReservationRequestDto reservationDto) {
+//        String sql = "insert into reservation(name,date,time) values (?,?,?)";
+//        jdbcTemplate.update(sql, reservationDto.name(), reservationDto.date(), reservationDto.time());
+//        return ResponseEntity.ok().build();
 //    }
 
 //

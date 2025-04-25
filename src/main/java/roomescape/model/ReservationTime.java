@@ -1,10 +1,13 @@
 package roomescape.model;
 
+import static util.FormatValidator.validateTimeFormat;
+
 public class ReservationTime {
     private final Long id;
     private final String start_at;
 
     public ReservationTime(Long id, String start_at) {
+        validateTimeFormat(start_at);
         this.id = id;
         this.start_at = start_at;
     }

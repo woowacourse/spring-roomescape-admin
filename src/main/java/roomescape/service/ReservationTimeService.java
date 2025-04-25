@@ -17,7 +17,7 @@ public class ReservationTimeService {
     }
 
     public ReservationTime saveReservationTime(ReservationTimeRequest request) {
-        return reservationTimeRepository.createReservationTime(request.toReservationTime());
+        return reservationTimeRepository.saveReservationTime(request.toReservationTime());
     }
 
     public List<ReservationTime> readReservationTime() {

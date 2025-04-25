@@ -21,16 +21,16 @@ class ReservationControllerTest {
     private final FakeReservationTimeRepository fakeReservationTimeRepository = new FakeReservationTimeRepository();
     private final ReservationController reservationController = new ReservationController(new ReservationService(fakeReservationRepository, fakeReservationTimeRepository));
 
-    private void makeStubReservationTime(Long id, LocalTime startAt) {
-        fakeReservationTimeRepository.createReservationTime(new ReservationTime(id, startAt));
+    private void makeStubReservationTime(LocalTime startAt) {
+        fakeReservationTimeRepository.saveReservationTime(new ReservationTime(null, startAt));
     }
 
     @ParameterizedTest
-    @CsvSource(value = {"히스타, 2002-12-02, 1, 18:00"})
-    void create(String nickname, LocalDate date, Long timeId, LocalTime time) {
+    @CsvSource(value = {"히스타, 2002-12-02, 18:00"})
+    void create(String nickname, LocalDate date, LocalTime time) {
         // given
-        makeStubReservationTime(timeId, time);
-        ReservationRequest reservationRequest = new ReservationRequest(nickname, date, timeId);
+        makeStubReservationTime(time);
+        ReservationRequest reservationRequest = new ReservationRequest(nickname, date, 1L);
 
         // when
         ResponseEntity<ReservationResponse> actualResponse = reservationController.create(reservationRequest);
@@ -42,7 +42,7 @@ class ReservationControllerTest {
                 () -> Assertions.assertThat(actualResponse.getStatusCode().is2xxSuccessful()).isTrue(),
                 () -> Assertions.assertThat(actualResponse.getBody().name()).isEqualTo(reservationRequest.name()),
                 () -> Assertions.assertThat(actualResponse.getBody().date()).isEqualTo(reservationRequest.date()),
-                () -> Assertions.assertThat(actualResponse.getBody().reservationTime().getId()).isEqualTo(timeId),
+                () -> Assertions.assertThat(actualResponse.getBody().reservationTime().getId()).isEqualTo(1L),
                 () -> Assertions.assertThat(actualResponse.getBody().reservationTime().getStartAt()).isEqualTo(time)
         );
     }
@@ -53,9 +53,10 @@ class ReservationControllerTest {
         LocalDate givenDate = LocalDate.now();
         LocalTime givenTime = LocalTime.now();
         String givenName = "히스타";
-        Long givenTimeId = 1L;
 
-        create(givenName, givenDate, givenTimeId, givenTime);
+        makeStubReservationTime(givenTime);
+        ReservationRequest reservationRequest = new ReservationRequest(givenName, givenDate, 1L);
+        reservationController.create(reservationRequest);
 
         // when
         ResponseEntity<List<ReservationResponse>> actualResponse = reservationController.read();
@@ -67,7 +68,7 @@ class ReservationControllerTest {
         assertAll(
                 () -> Assertions.assertThat(reservationList.getFirst().name()).isEqualTo(givenName),
                 () -> Assertions.assertThat(reservationList.getFirst().date()).isEqualTo(givenDate),
-                () -> Assertions.assertThat(reservationList.getFirst().reservationTime().getId()).isEqualTo(givenTimeId),
+                () -> Assertions.assertThat(reservationList.getFirst().reservationTime().getId()).isEqualTo(1L),
                 () -> Assertions.assertThat(reservationList.getFirst().reservationTime().getStartAt()).isEqualTo(givenTime)
         );
     }
@@ -75,7 +76,10 @@ class ReservationControllerTest {
     @Test
     void delete() {
         // given
-        create("히스타", LocalDate.now(), 1L, LocalTime.now());
+        makeStubReservationTime(LocalTime.now());
+        ReservationRequest reservationRequest = new ReservationRequest("히스타", LocalDate.now(), 1L);
+        reservationController.create(reservationRequest);
+
 
         // when
         reservationController.delete(1L);

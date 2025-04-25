@@ -11,7 +11,7 @@ public class FakeReservationRepository implements ReservationRepository {
     private final AtomicLong id = new AtomicLong(1);
 
     @Override
-    public Reservation createReservation(Reservation reservation) {
+    public Reservation saveReservation(Reservation reservation) {
         Reservation createdReservation = Reservation.generateWithPrimaryKey(reservation, id.getAndIncrement());
         reservations.add(createdReservation);
         return createdReservation;

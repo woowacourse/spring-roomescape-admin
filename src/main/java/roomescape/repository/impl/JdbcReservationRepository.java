@@ -10,12 +10,12 @@ import roomescape.domain.Reservation;
 import roomescape.repository.ReservationRepository;
 
 @Repository
-public class ReservationRepositoryImpl implements ReservationRepository {
+public class JdbcReservationRepository implements ReservationRepository {
     private final JdbcTemplate jdbcTemplate;
     private final SimpleJdbcInsert simpleJdbcInsert;
 
     @Autowired
-    public ReservationRepositoryImpl(JdbcTemplate jdbcTemplate) {
+    public JdbcReservationRepository(JdbcTemplate jdbcTemplate) {
         this.jdbcTemplate = jdbcTemplate;
         this.simpleJdbcInsert = new SimpleJdbcInsert(jdbcTemplate)
                 .withTableName("reservation")
@@ -46,7 +46,7 @@ public class ReservationRepositoryImpl implements ReservationRepository {
         );
     }
 
-    public Reservation createReservation(Reservation reservation) {
+    public Reservation saveReservation(Reservation reservation) {
         Map<String, Object> parameters = Map.ofEntries(
                 Map.entry("name", reservation.getName()),
                 Map.entry("date", reservation.getDate()),

@@ -23,7 +23,7 @@ public class ReservationService {
     }
 
     public ReservationResponse saveReservation(ReservationRequest request) {
-        Reservation createdReservation = reservationRepository.createReservation(request.toReservation());
+        Reservation createdReservation = reservationRepository.saveReservation(request.toReservation());
         ReservationTime reservationTime = reservationTimeRepository.readReservationTime(createdReservation.getTimeId())
                 .orElseThrow(() -> new IllegalArgumentException("올바른 예약 시간을 찾을 수 없습니다. 나중에 다시 시도해주세요."));
 

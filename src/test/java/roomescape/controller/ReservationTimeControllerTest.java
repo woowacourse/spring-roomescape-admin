@@ -37,7 +37,7 @@ class ReservationTimeControllerTest {
     void read() {
         // given
         LocalTime givenLocalTime = LocalTime.now();
-        create(givenLocalTime);
+        reservationTimeController.create(new ReservationTimeRequest(givenLocalTime));
 
         // when
         List<ReservationTime> actualResponse = reservationTimeController.read().getBody();
@@ -51,7 +51,7 @@ class ReservationTimeControllerTest {
     void delete() {
         // given
         LocalTime givenLocalTime = LocalTime.now();
-        create(givenLocalTime);
+        reservationTimeController.create(new ReservationTimeRequest(givenLocalTime));
 
         // when
         reservationTimeController.delete(1L);

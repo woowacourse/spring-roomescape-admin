@@ -6,7 +6,6 @@ import java.sql.Connection;
 import java.sql.SQLException;
 import java.time.LocalTime;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 import io.restassured.RestAssured;
 import io.restassured.http.ContentType;
@@ -15,9 +14,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.test.annotation.DirtiesContext;
-import roomescape.domain.Reservation;
 import roomescape.domain.ReservationTime;
-import roomescape.repository.impl.ReservationTimeRepositoryImpl;
+import roomescape.repository.impl.JdbcReservationTimeRepository;
 
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.DEFINED_PORT)
 @DirtiesContext(classMode = DirtiesContext.ClassMode.BEFORE_EACH_TEST_METHOD)
@@ -90,7 +88,7 @@ public class MissionStepTest {
         reservation.put("date", "2023-08-05");
         reservation.put("timeId", 1);
 
-        new ReservationTimeRepositoryImpl(jdbcTemplate).createReservationTime(new ReservationTime(1L, LocalTime.now()));
+        new JdbcReservationTimeRepository(jdbcTemplate).saveReservationTime(new ReservationTime(1L, LocalTime.now()));
 
         RestAssured.given().log().all()
                 .contentType(ContentType.JSON)

@@ -12,7 +12,7 @@ public class FakeReservationTimeRepository implements ReservationTimeRepository 
     private final AtomicLong id = new AtomicLong(1);
 
     @Override
-    public ReservationTime createReservationTime(ReservationTime reservationTime) {
+    public ReservationTime saveReservationTime(ReservationTime reservationTime) {
         ReservationTime createdReservationTime = ReservationTime.generateWithPrimaryKey(reservationTime,
                 id.getAndIncrement());
         reservationTimes.add(createdReservationTime);

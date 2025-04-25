@@ -5,7 +5,7 @@ import java.util.Optional;
 import roomescape.domain.ReservationTime;
 
 public interface ReservationTimeRepository {
-    ReservationTime createReservationTime(ReservationTime reservationTime);
+    ReservationTime saveReservationTime(ReservationTime reservationTime);
     List<ReservationTime> readReservationTimes();
     Optional<ReservationTime> readReservationTime(Long id);
     void deleteReservationTime(Long id);

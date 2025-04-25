@@ -11,18 +11,18 @@ import roomescape.domain.ReservationTime;
 import roomescape.repository.ReservationTimeRepository;
 
 @Repository
-public class ReservationTimeRepositoryImpl implements ReservationTimeRepository {
+public class JdbcReservationTimeRepository implements ReservationTimeRepository {
     private final JdbcTemplate jdbcTemplate;
     private final SimpleJdbcInsert simpleJdbcInsert;
 
     @Autowired
-    public ReservationTimeRepositoryImpl(JdbcTemplate jdbcTemplate) {
+    public JdbcReservationTimeRepository(JdbcTemplate jdbcTemplate) {
         this.jdbcTemplate = jdbcTemplate;
         this.simpleJdbcInsert = new SimpleJdbcInsert(jdbcTemplate).withTableName("reservation_time")
                 .usingGeneratedKeyColumns("id");
     }
 
-    public ReservationTime createReservationTime(ReservationTime reservationTime) {
+    public ReservationTime saveReservationTime(ReservationTime reservationTime) {
         Map<String, Object> parameters = Map.ofEntries(Map.entry("start_at", reservationTime.getStartAt()));
         long generatedKey = simpleJdbcInsert.executeAndReturnKey(parameters).longValue();
 

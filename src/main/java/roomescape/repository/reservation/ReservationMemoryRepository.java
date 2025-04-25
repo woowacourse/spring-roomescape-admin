@@ -9,7 +9,7 @@ import roomescape.entity.Reservation;
 import roomescape.exception.InvalidReservationException;
 
 @Repository("reservationMemoryRepository")
-public class ReservationMemoryRepositoryImpl implements ReservationRepository {
+public class ReservationMemoryRepository implements ReservationRepository {
 
     private final AtomicLong id = new AtomicLong(0);
     private final List<Reservation> reservations = Collections.synchronizedList(new ArrayList<>());

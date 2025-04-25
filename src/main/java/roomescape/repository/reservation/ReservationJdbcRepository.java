@@ -14,7 +14,7 @@ import roomescape.entity.Reservation;
 import roomescape.entity.ReservationTime;
 
 @Repository("reservationJdbcRepository")
-public class ReservationJdbcRepositoryImpl implements ReservationRepository {
+public class ReservationJdbcRepository implements ReservationRepository {
 
     private static final String RESERVATION_TABLE = "reservation";
     private static final String RESERVATION_ID = "id";
@@ -26,7 +26,7 @@ public class ReservationJdbcRepositoryImpl implements ReservationRepository {
 
     private final JdbcTemplate jdbcTemplate;
 
-    public ReservationJdbcRepositoryImpl(JdbcTemplate jdbcTemplate) {
+    public ReservationJdbcRepository(JdbcTemplate jdbcTemplate) {
         this.jdbcTemplate = jdbcTemplate;
     }
 

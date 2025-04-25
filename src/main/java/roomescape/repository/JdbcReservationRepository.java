@@ -25,7 +25,7 @@ public class JdbcReservationRepository implements ReservationRepository {
             (rs, rowNum) -> {
                 Long id = rs.getLong("id");
                 String name = rs.getString("name");
-                LocalDate date = rs.getObject("date", LocalDate.class);
+                LocalDate date = rs.getObject("reservation_date", LocalDate.class);
                 Long time_id = rs.getLong("time_id");
                 LocalTime time = rs.getObject("time_value", LocalTime.class);
 
@@ -37,12 +37,12 @@ public class JdbcReservationRepository implements ReservationRepository {
         String findAllSql = """
                 SELECT
                     r.id as reservation_id,
-                    r.name,
-                    r.date,
+                    r.name as name,
+                    r.date as reservation_date,
                     t.id as time_id,
                     t.start_at as time_value
                 FROM reservation as r
-                inner join reservation_time as t
+                join reservation_time as t
                 on r.time_id = t.id
                 """;
         return jdbcTemplate.query(findAllSql, RESERVATION_ROW_MAPPER);

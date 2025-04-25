@@ -41,13 +41,13 @@ public class ReservationTimeController {
     public ResponseEntity<ReservationTimeResponse> save(
             @RequestBody final ReservationTimeRegister reservationTimeRegister
     ) {
-        return ResponseEntity.ok(reservationService.save(reservationTimeRegister));
+        return ResponseEntity.ok(reservationService.saveReservationTime(reservationTimeRegister));
     }
 
     @DeleteMapping("/{id}")
     public ResponseEntity<Void> delete(final @PathVariable(name = "id") Long id) {
         try {
-            reservationService.deleteById(id);
+            reservationService.deleteReservationTimeById(id);
             return ResponseEntity.ok().build();
         } catch (final IllegalArgumentException e) {
             return ResponseEntity.notFound().build();

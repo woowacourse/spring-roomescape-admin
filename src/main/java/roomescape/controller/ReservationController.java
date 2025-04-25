@@ -33,7 +33,7 @@ public class ReservationController {
     public ResponseEntity<ReservationResponse> registerReservation(
             @RequestBody @Valid final ReservationRegister reservationRegister) {
         try {
-            return ResponseEntity.ok().body(reservationService.save(reservationRegister));
+            return ResponseEntity.ok().body(reservationService.saveReservation(reservationRegister));
         } catch (IllegalArgumentException e) {
             return ResponseEntity.badRequest().build();
         }

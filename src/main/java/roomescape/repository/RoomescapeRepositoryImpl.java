@@ -21,6 +21,18 @@ public class RoomescapeRepositoryImpl implements RoomescapeRepository {
     }
 
     @Override
+    public Reservation findById(final long id) {
+        String sql =  """
+                SELECT r.id AS reservation_id, r.name, r.date, t.id AS time_id, t.start_at AS time_value
+                FROM reservation as r 
+                INNER JOIN reservation_time AS t
+                ON r.time_id = t.id
+                WHERE r.id = ?
+                """;
+        return template.queryForObject(sql, reservationRowMapper(), id);
+    }
+
+    @Override
     public List<Reservation> findByDate(final LocalDate date) {
         String sql = """
                 SELECT r.id AS reservation_id, r.name, r.date, t.id AS time_id, t.start_at AS time_value

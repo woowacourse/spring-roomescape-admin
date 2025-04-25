@@ -48,6 +48,15 @@ class RoomescapeRepositoryTest {
     }
 
     @Test
+    void findById() {
+        //when
+        Reservation reservation = repository.findById(1L);
+
+        //then
+        assertEqualReservationElements(reservation, 1L, "브라운", "2023-08-05", 1L, "15:40");
+    }
+
+    @Test
     void findByDate() {
         //when
         List<Reservation> found = repository.findByDate(LocalDate.of(2023, 8, 5));
@@ -105,6 +114,16 @@ class RoomescapeRepositoryTest {
         assertThat(notFound1).isFalse();
         assertThat(notFound2).isFalse();
         assertThat(notFound3).isFalse();
+    }
+
+    private void assertEqualReservationElements(final Reservation reservation, final long id, final String name,
+                                                final String date, final long timeId, final String time) {
+
+        assertThat(reservation.getId()).isEqualTo(id);
+        assertThat(reservation.getName()).isEqualTo(name);
+        assertThat(reservation.getDate()).isEqualTo(date);
+        assertThat(reservation.getTime().getId()).isEqualTo(timeId);
+        assertThat(reservation.getTime().getStartAt()).isEqualTo(time);
     }
 
 }

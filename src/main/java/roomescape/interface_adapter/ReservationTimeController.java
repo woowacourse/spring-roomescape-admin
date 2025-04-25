@@ -1,20 +1,26 @@
 package roomescape.interface_adapter;
 
+import java.util.List;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import roomescape.usecase.AddReservationTimeUseCase;
-import roomescape.usecase.CreateReservationTimeOutput;
+import roomescape.usecase.GetReservationTimeUseCase;
+import roomescape.usecase.ReservationTimeOutput;
 
 @Controller
 public class ReservationTimeController {
 
 
     private final AddReservationTimeUseCase addReservationTimeUseCase;
+    private final GetReservationTimeUseCase getReservationTimeUseCase;
 
-    public ReservationTimeController(final AddReservationTimeUseCase addReservationTimeUseCase) {
+    public ReservationTimeController(final AddReservationTimeUseCase addReservationTimeUseCase,
+                                     final GetReservationTimeUseCase getReservationTimeUseCase) {
         this.addReservationTimeUseCase = addReservationTimeUseCase;
+        this.getReservationTimeUseCase = getReservationTimeUseCase;
     }
 
 
@@ -22,23 +28,22 @@ public class ReservationTimeController {
     public ResponseEntity<ReservationTimeResponseDto> addReservationTime(
             @RequestBody ReservationTimeRequestDto reservationTimeRequestDto) {
 
-        CreateReservationTimeOutput createReservationTimeOutput = addReservationTimeUseCase.addReservationTime(
+        ReservationTimeOutput reservationTimeOutput = addReservationTimeUseCase.addReservationTime(
                 reservationTimeRequestDto.startAt());
         ReservationTimeResponseDto reservationTimeResponseDto = ReservationTimeResponseDto.from(
-                createReservationTimeOutput);
+                reservationTimeOutput);
         return ResponseEntity.ok(reservationTimeResponseDto);
 
     }
 
-//    @GetMapping("/times")
-//    public ResponseEntity<List<ReservationTimeResponseDto>> getReservationTime() {
-//        String sql = "select * from reservation_time";
-//        List<ReservationTimeResponseDto> reservationTimeResponseDtos = jdbcTemplate.query(sql, (resultSet, rowNUm) -> {
-//            return new ReservationTimeResponseDto(resultSet.getLong("id"),
-//                    LocalTime.parse(resultSet.getString("start_at")));
-//        });
-//        return ResponseEntity.ok(reservationTimeResponseDtos);
-//    }
+    @GetMapping("/times")
+    public ResponseEntity<List<ReservationTimeResponseDto>> getReservationTime() {
+        List<ReservationTimeOutput> reservationTimeOutputs = getReservationTimeUseCase.getReservationTime();
+        List<ReservationTimeResponseDto> reservationTimeResponseDtos = reservationTimeOutputs.stream()
+                .map(ReservationTimeResponseDto::from)
+                .toList();
+        return ResponseEntity.ok(reservationTimeResponseDtos);
+    }
 //
 //    @DeleteMapping("/times/{id}")
 //    public ResponseEntity<Void> deleteReservationTime(@PathVariable long id) {

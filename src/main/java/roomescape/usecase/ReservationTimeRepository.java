@@ -1,9 +1,10 @@
 package roomescape.usecase;
 
+import java.util.List;
 import roomescape.enttity.ReservationTime;
 
 public interface ReservationTimeRepository {
-    CreateReservationTimeOutput addReservationTime(ReservationTime reservationTime);
+    ReservationTimeOutput addReservationTime(ReservationTime reservationTime);
 
-    GetReservationTimeOutput getReservationTime();
+    List<ReservationTimeOutput> getReservationTime();
 }

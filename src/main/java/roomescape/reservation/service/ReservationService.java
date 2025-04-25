@@ -5,9 +5,9 @@ import java.util.List;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import roomescape.reservation.Reservation;
-import roomescape.reservation.controller.dto.ReservationRequest;
+import roomescape.reservation.dto.ReservationRequest;
+import roomescape.reservation.dto.ReservationResponse;
 import roomescape.reservation.repository.ReservationRepository;
-import roomescape.reservation.service.dto.ReservationResponse;
 import roomescape.reservationtime.ReservationTime;
 import roomescape.reservationtime.repository.ReservationTimeRepository;
 

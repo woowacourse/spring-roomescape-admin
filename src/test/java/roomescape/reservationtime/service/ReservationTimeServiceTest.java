@@ -8,7 +8,7 @@ import java.util.Optional;
 import org.assertj.core.api.SoftAssertions;
 import org.junit.jupiter.api.Test;
 import roomescape.reservationtime.ReservationTime;
-import roomescape.reservationtime.service.dto.ReservationTimeResponse;
+import roomescape.reservationtime.dto.ReservationTimeResponse;
 import roomescape.reservationtime.stub.StubReservationTimeRepository;
 
 class ReservationTimeServiceTest {

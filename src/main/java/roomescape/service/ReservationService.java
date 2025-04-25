@@ -21,9 +21,9 @@ public class ReservationService {
     }
 
     public ReservationResponse save(final ReservationRequest reservationRequest) {
-        ReservationTime time = reservationTimeDao.findById(reservationRequest.timeId());
-        Reservation reservation = reservationRequest.toReservation(time);
-        long id = reservationDao.save(reservation);
+        final ReservationTime time = reservationTimeDao.findById(reservationRequest.timeId());
+        final Reservation reservation = reservationRequest.toReservation(time);
+        final long id = reservationDao.save(reservation);
         return ReservationResponse.from(id, reservation);
     }
 

@@ -17,13 +17,13 @@ public class ReservationTimeService {
     }
 
     public ReservationTimeResponse save(final ReservationTimeRequest reservationTimeRequest) {
-        ReservationTime time = reservationTimeRequest.toTime();
-        long id = reservationTimeDao.save(time);
+        final ReservationTime time = reservationTimeRequest.toTime();
+        final long id = reservationTimeDao.save(time);
         return ReservationTimeResponse.from(id, time);
     }
 
     public List<ReservationTimeResponse> read() {
-        List<ReservationTime> times = reservationTimeDao.read();
+        final List<ReservationTime> times = reservationTimeDao.read();
         return times.stream()
                 .map(ReservationTimeResponse::of)
                 .toList();

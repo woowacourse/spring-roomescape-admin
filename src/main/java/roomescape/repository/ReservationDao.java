@@ -25,11 +25,11 @@ public class ReservationDao {
     }
 
     public long save(final Reservation reservation) {
-        Map<String, Object> reservationParameters = new HashMap<>(3);
+        final Map<String, Object> reservationParameters = new HashMap<>(3);
         reservationParameters.put("name", reservation.getName());
         reservationParameters.put("date", reservation.getDate());
         reservationParameters.put("time_id", reservation.getTime().getId());
-        Number number = insertActor.executeAndReturnKey(reservationParameters);
+        final Number number = insertActor.executeAndReturnKey(reservationParameters);
         return getGenerateId(number);
     }
 

@@ -25,13 +25,13 @@ public final class ReservationTimeController {
 
     @PostMapping
     public ResponseEntity<ReservationTimeResponse> save(@RequestBody ReservationTimeRequest reservationTimeRequest) {
-        ReservationTimeResponse reservationTimeResponse = reservationTimeService.save(reservationTimeRequest);
+        final ReservationTimeResponse reservationTimeResponse = reservationTimeService.save(reservationTimeRequest);
         return ResponseEntity.ok(reservationTimeResponse);
     }
 
     @GetMapping
     public ResponseEntity<List<ReservationTimeResponse>> read() {
-        List<ReservationTimeResponse> reservationTimeResponses = reservationTimeService.read();
+        final List<ReservationTimeResponse> reservationTimeResponses = reservationTimeService.read();
         return ResponseEntity.ok(reservationTimeResponses);
     }
 

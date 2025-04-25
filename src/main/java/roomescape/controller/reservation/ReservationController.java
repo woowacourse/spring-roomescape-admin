@@ -25,13 +25,13 @@ public final class ReservationController {
 
     @PostMapping
     public ResponseEntity<ReservationResponse> save(@RequestBody ReservationRequest reservationRequest) {
-        ReservationResponse reservationResponse = reservationService.save(reservationRequest);
+        final ReservationResponse reservationResponse = reservationService.save(reservationRequest);
         return ResponseEntity.ok(reservationResponse);
     }
 
     @GetMapping
     public ResponseEntity<List<ReservationResponse>> read() {
-        List<ReservationResponse> reservationResponses = reservationService.read();
+        final List<ReservationResponse> reservationResponses = reservationService.read();
         return ResponseEntity.ok(reservationResponses);
     }
 

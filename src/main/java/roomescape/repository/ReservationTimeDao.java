@@ -23,9 +23,9 @@ public class ReservationTimeDao {
     }
 
     public long save(final ReservationTime time) {
-        Map<String, Object> reservationTimeParameters = new HashMap<>(1);
-        reservationTimeParameters.put("start_at", time.getStartAt());
-        Number number = insertActor.executeAndReturnKey(reservationTimeParameters);
+        final Map<String, Object> reservationTime = new HashMap<>(1);
+        reservationTime.put("start_at", time.getStartAt());
+        final Number number = insertActor.executeAndReturnKey(reservationTime);
         return getGenerateId(number);
     }
 
@@ -41,8 +41,8 @@ public class ReservationTimeDao {
     }
 
     public ReservationTime findById(final Long id) {
-        String sql = "select id, start_at from reservation_time where id =?";
-        RowMapper<ReservationTime> rowMapper = getRowMapper();
+        final String sql = "select id, start_at from reservation_time where id =?";
+        final RowMapper<ReservationTime> rowMapper = getRowMapper();
         return jdbcTemplate.queryForObject(sql, rowMapper, id);
     }
 

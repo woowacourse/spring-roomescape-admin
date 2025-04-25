@@ -63,7 +63,7 @@ public class TimeJdbcDao implements TimeDao {
 
     private void validateUpdateSuccess(final int updatedCount) {
         if (updatedCount == 0) {
-            throw new IllegalArgumentException("[ERROR]");
+            throw new IllegalArgumentException("수정/삭제된 Time이 존재하지 않습니다.");
         }
     }
 }

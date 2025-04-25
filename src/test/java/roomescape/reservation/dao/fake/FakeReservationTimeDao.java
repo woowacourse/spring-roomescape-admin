@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 import java.util.concurrent.atomic.AtomicLong;
+import org.springframework.dao.EmptyResultDataAccessException;
 import roomescape.time.dao.ReservationTimeDao;
 import roomescape.time.domain.ReservationTime;
 import roomescape.time.dto.TimeRequest;
@@ -43,6 +44,6 @@ public class FakeReservationTimeDao implements ReservationTimeDao {
         return reservationTimes.stream()
                 .filter(reservationTime -> reservationTime.getId().equals(id))
                 .findFirst()
-                .orElseThrow();
+                .orElseThrow(() -> new EmptyResultDataAccessException("[ERROR] 해당하는 예약 시간 정보가 없습니다.",1));
     }
 }

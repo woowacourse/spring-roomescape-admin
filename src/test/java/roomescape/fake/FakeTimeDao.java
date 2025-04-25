@@ -1,4 +1,4 @@
-package roomescape.business.service;
+package roomescape.fake;
 
 import java.util.ArrayList;
 import java.util.List;

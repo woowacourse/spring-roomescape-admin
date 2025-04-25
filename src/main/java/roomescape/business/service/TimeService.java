@@ -16,16 +16,16 @@ public class TimeService {
         this.timeDao = timeDao;
     }
 
+    public Time find(final Long id) {
+        return timeDao.find(id)
+                .orElseThrow(() -> new IllegalArgumentException("해당하는 id가 없습니다."));
+    }
+
     public TimeResponse create(final TimeRequest timeRequest) {
         final Time time = timeRequest.toDomain();
         final Long id = timeDao.save(time);
 
         return TimeResponse.withId(id, time);
-    }
-
-    public Time find(final Long id) {
-        return timeDao.find(id)
-                .orElseThrow(() -> new IllegalArgumentException("해당하는 id가 없습니다."));
     }
 
     public List<TimeResponse> findAll() {

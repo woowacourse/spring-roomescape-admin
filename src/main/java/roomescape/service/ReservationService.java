@@ -23,7 +23,7 @@ public class ReservationService {
 
     public ReservationResponseDto createReservation(ReservationCreateRequestDto dto) {
         ReservationTime reservationTime = reservationTimeRepository.findById(dto.timeId());
-        Reservation requestReservation = dto.toEntityWith(reservationTime);
+        Reservation requestReservation = dto.createWithoutId(reservationTime);
         Reservation newReservation = reservationRepository.save(requestReservation);
         return ReservationResponseDto.from(newReservation, newReservation.time());
     }

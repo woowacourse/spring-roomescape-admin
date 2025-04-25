@@ -18,7 +18,7 @@ public class ReservationTimeService {
     }
 
     public ReservationTimeResponseDto createReservationTime(final ReservationTimeCreateRequestDto requestDto) {
-        ReservationTime requestTime = requestDto.toEntity();
+        ReservationTime requestTime = requestDto.createWithoutId();
         ReservationTime savedTime = reservationTimeRepository.save(requestTime);
         return ReservationTimeResponseDto.from(savedTime);
     }

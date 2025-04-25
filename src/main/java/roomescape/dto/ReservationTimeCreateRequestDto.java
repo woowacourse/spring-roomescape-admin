@@ -7,7 +7,7 @@ import java.time.LocalTime;
 
 public record ReservationTimeCreateRequestDto(@JsonFormat(pattern = "HH:mm") LocalTime startAt) {
 
-    public ReservationTime toEntity() {
+    public ReservationTime createWithoutId() {
         return new ReservationTime(null, startAt);
     }
 }

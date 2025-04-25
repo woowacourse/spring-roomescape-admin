@@ -19,6 +19,8 @@ import roomescape.reservationtime.repository.ReservationTimeRepository;
 
 class ReservationServiceTest {
 
+    private final LocalDate futureDate = LocalDate.now().plusDays(1);
+
     private ReservationService reservationService;
     private ReservationRepository reservationRepository;
     private ReservationTimeRepository reservationTimeRepository;
@@ -46,8 +48,8 @@ class ReservationServiceTest {
     @Test
     void getReservations_shouldReturnAllCreatedReservations() {
         reservationTimeRepository.put(new ReservationTime(LocalTime.of(10, 0)));
-        reservationService.create(new ReservationCreateRequest("A", LocalDate.now(), 1L));
-        reservationService.create(new ReservationCreateRequest("B", LocalDate.now(), 1L));
+        reservationService.create(new ReservationCreateRequest("A", futureDate, 1L));
+        reservationService.create(new ReservationCreateRequest("B", futureDate, 1L));
 
         List<ReservationResponse> result = reservationService.getReservations();
         assertThat(result).hasSize(2);
@@ -64,7 +66,7 @@ class ReservationServiceTest {
     void deleteReservation_shouldRemoveSuccessfully() {
         reservationTimeRepository.put(new ReservationTime(LocalTime.of(9, 0)));
         ReservationResponse response = reservationService.create(
-                new ReservationCreateRequest("Test", LocalDate.now(), 1L)
+                new ReservationCreateRequest("Test", futureDate, 1L)
         );
 
         reservationService.delete(response.id());
@@ -75,7 +77,7 @@ class ReservationServiceTest {
 
     @Test
     void createReservation_shouldThrowException_WhenTimeIdNotFound() {
-        ReservationCreateRequest request = new ReservationCreateRequest("누구", LocalDate.now(), 99L);
+        ReservationCreateRequest request = new ReservationCreateRequest("누구", futureDate, 99L);
 
         assertThatThrownBy(() -> reservationService.create(request))
                 .isInstanceOf(NoSuchElementException.class);

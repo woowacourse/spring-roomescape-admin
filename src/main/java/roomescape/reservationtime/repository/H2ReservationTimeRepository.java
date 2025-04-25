@@ -15,7 +15,7 @@ import roomescape.reservationtime.entity.ReservationTimeEntity;
 
 @Repository
 @Primary
-public class H2ReservationTimeRepository implements ReservationTimeRepository{
+public class H2ReservationTimeRepository implements ReservationTimeRepository {
     private final JdbcTemplate jdbcTemplate;
     private final IdCache cache;
 

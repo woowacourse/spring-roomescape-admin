@@ -11,7 +11,6 @@ import roomescape.reservationtime.repository.ReservationTimeRepository;
 
 @Service
 public class ReservationService {
-
     private final ReservationRepository reservationRepository;
     private final ReservationTimeRepository reservationTimeRepository;
 
@@ -40,11 +39,16 @@ public class ReservationService {
     }
 
     public ReservationResponse create(final ReservationCreateRequest request) {
-        ReservationTime time = reservationTimeRepository.findById(request.timeId())
-                .orElseThrow();
-        reservationTimeRepository.cacheId(time, request.timeId());
+        ReservationTime time = findById(request.timeId());
         Reservation newReservation = reservationRepository.put(new Reservation(request.name(), request.date(), time));
         long newId = reservationRepository.getCachedId(newReservation);
         return ReservationResponse.from(newId, request.timeId(), newReservation, time);
+    }
+
+    public ReservationTime findById(final long id) {
+        ReservationTime time = reservationTimeRepository.findById(id)
+                .orElseThrow();
+        reservationTimeRepository.cacheId(time, id);
+        return time;
     }
 }

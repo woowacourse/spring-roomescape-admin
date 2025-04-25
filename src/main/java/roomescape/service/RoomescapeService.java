@@ -14,6 +14,7 @@ import roomescape.repository.RoomescapeTimeRepository;
 @Service
 public class RoomescapeService {
 
+    public static final int DELETE_FAILED_COUNT = 0;
     private final RoomescapeRepository roomescapeRepository;
     private final RoomescapeTimeRepository roomescapeTimeRepository;
 
@@ -54,14 +55,14 @@ public class RoomescapeService {
 
     public void removeReservation(final long id) {
         int deleteCounts = roomescapeRepository.deleteById(id);
-        if (deleteCounts == 0) {
+        if (deleteCounts == DELETE_FAILED_COUNT) {
             throw new IllegalArgumentException(String.format("[ERROR] 예약번호 %d번은 존재하지 않습니다.", id));
         }
     }
 
     public void removeReservationTime(final long id) {
         int deleteCounts = roomescapeTimeRepository.deleteById(id);
-        if (deleteCounts == 0) {
+        if (deleteCounts == DELETE_FAILED_COUNT) {
             throw new IllegalArgumentException(String.format("[ERROR] 예약시간 %d번은 존재하지 않습니다.", id));
         }
     }

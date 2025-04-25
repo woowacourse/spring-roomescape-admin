@@ -1,13 +1,12 @@
 package roomescape.dto;
 
 import java.time.LocalDate;
-import java.time.LocalTime;
-import roomescape.model.Id;
 import roomescape.model.Reservation;
+import roomescape.model.ReservationTime;
 
-public record ReservationRequest(String name, LocalDate date, LocalTime time) {
+public record ReservationRequest(String name, String date, Long timeId) {
 
-    public Reservation toReservation(final Id id) {
-        return new Reservation(id.getIdValue(), name, date, time);
+    public Reservation toReservation() {
+        return new Reservation(name, LocalDate.parse(date), new ReservationTime(timeId));
     }
 }

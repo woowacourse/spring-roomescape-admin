@@ -1,6 +1,7 @@
 package roomescape.reservation.service;
 
 import java.util.List;
+import org.springframework.dao.DataAccessException;
 import org.springframework.stereotype.Service;
 import roomescape.reservation.dao.ReservationDao;
 import roomescape.reservation.domain.Reservation;
@@ -21,17 +22,21 @@ public class ReservationService {
     }
 
     public ReservationResponse createReservation(final ReservationRequest reservationRequest) {
-        ReservationTime reservationTime = reservationTimeDao.findReservationTimeById(reservationRequest.timeId());
-        Reservation notSavedreservation = new Reservation(
-                null, reservationRequest.name(), reservationRequest.date(), reservationTime
-        );
-        Reservation savedReservation = reservationDao.insertReservation(notSavedreservation);
-        return new ReservationResponse(
-                savedReservation.getId(),
-                savedReservation.getName(),
-                savedReservation.getDate(),
-                new TimeResponse(savedReservation.getTime().getId(), savedReservation.getTime().getStartAt())
-        );
+        try {
+            ReservationTime reservationTime = reservationTimeDao.findReservationTimeById(reservationRequest.timeId());
+            Reservation notSavedreservation = new Reservation(
+                    null, reservationRequest.name(), reservationRequest.date(), reservationTime
+            );
+            Reservation savedReservation = reservationDao.insertReservation(notSavedreservation);
+            return new ReservationResponse(
+                    savedReservation.getId(),
+                    savedReservation.getName(),
+                    savedReservation.getDate(),
+                    new TimeResponse(savedReservation.getTime().getId(), savedReservation.getTime().getStartAt())
+            );
+        } catch (DataAccessException dataAccessException) {
+            throw new IllegalArgumentException("[ERROR] 요청받은 timeId가 존재하지 않습니다.");
+        }
     }
 
     public void removeReservation(final long id) {

@@ -7,7 +7,7 @@ public interface RoomescapeRepository {
 
     List<Reservation> findAll();
 
-    Reservation saveReservation(final Reservation reservation);
+    Reservation save(final Reservation reservation);
 
     int deleteById(final long id);
 }

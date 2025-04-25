@@ -32,7 +32,7 @@ public class RoomescapeTimeRepositoryImpl implements RoomescapeTimeRepository {
     }
 
     @Override
-    public ReservationTime saveReservationTime(final ReservationTime reservationTime) {
+    public ReservationTime save(final ReservationTime reservationTime) {
         String sql = "insert into reservation_time (start_at) values (?)";
         KeyHolder keyHolder = new GeneratedKeyHolder();
         template.update(connection -> {

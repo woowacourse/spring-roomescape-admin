@@ -42,13 +42,13 @@ public class RoomescapeService {
             throw new IllegalArgumentException("[ERROR] 이미 존재하는 예약시간입니다.");
         }
 
-        Reservation saved = roomescapeRepository.saveReservation(reservation);
+        Reservation saved = roomescapeRepository.save(reservation);
         return ReservationResponse.of(saved);
     }
 
     public ReservationTimeResponse addReservationTime(final ReservationTimeRequest request) {
         ReservationTime reservationTime = new ReservationTime(request.startAt());
-        ReservationTime saved = roomescapeTimeRepository.saveReservationTime(reservationTime);
+        ReservationTime saved = roomescapeTimeRepository.save(reservationTime);
         return ReservationTimeResponse.of(saved);
     }
 

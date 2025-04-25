@@ -56,12 +56,12 @@ class RoomescapeTimeRepositoryTest {
     }
 
     @Test
-    void saveReservationTime() {
+    void save() {
         //given
         ReservationTime reservationTime = ReservationTime.parse("16:30");
 
         //when
-        ReservationTime saved = timeRepository.saveReservationTime(reservationTime);
+        ReservationTime saved = timeRepository.save(reservationTime);
 
         //then
         assertThat(saved.getId()).isEqualTo(2L);

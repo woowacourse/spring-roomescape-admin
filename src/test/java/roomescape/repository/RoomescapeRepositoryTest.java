@@ -57,13 +57,13 @@ class RoomescapeRepositoryTest {
     }
 
     @Test
-    void saveReservation() {
+    void save() {
         //given
         Reservation reservation = new Reservation("네오", LocalDate.parse("2023-08-05"),
                 ReservationTime.parse("15:40").toEntity(1L));
 
         //when
-        Reservation saved = repository.saveReservation(reservation);
+        Reservation saved = repository.save(reservation);
 
         //then
         assertThat(saved.getName()).isEqualTo("네오");

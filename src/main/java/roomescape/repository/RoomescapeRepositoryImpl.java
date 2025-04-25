@@ -32,7 +32,7 @@ public class RoomescapeRepositoryImpl implements RoomescapeRepository {
     }
 
     @Override
-    public Reservation saveReservation(final Reservation reservation) {
+    public Reservation save(final Reservation reservation) {
         String sql = "insert into reservation (name, date, time_id) values (?, ?, ?)";
         KeyHolder keyHolder = new GeneratedKeyHolder();
         template.update(connection -> {

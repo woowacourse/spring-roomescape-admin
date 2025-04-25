@@ -19,7 +19,6 @@ public class Reservation {
     }
 
     public static Reservation withoutId(String name, LocalDate reservationDate, ReservationTime reservationTime) {
-        validateReservation(name, reservationDate, reservationTime);
         return new Reservation(null, name, reservationDate, reservationTime);
     }
 

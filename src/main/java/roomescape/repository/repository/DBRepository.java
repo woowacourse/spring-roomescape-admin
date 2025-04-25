@@ -8,11 +8,11 @@ import java.util.List;
 import roomescape.model.Entity;
 import roomescape.repository.Dao;
 
-public abstract class Repository<T extends Entity<T>> {
+public abstract class DBRepository<T extends Entity<T>> {
 
     protected final Dao dao;
 
-    protected Repository(Dao dao) {
+    protected DBRepository(Dao dao) {
         this.dao = dao;
     }
 

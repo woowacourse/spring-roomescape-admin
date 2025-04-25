@@ -6,12 +6,14 @@ import java.sql.SQLException;
 import java.time.LocalDate;
 import java.time.LocalTime;
 
+import org.springframework.stereotype.Repository;
+
 import roomescape.model.Reservation;
 import roomescape.model.ReservationTime;
 import roomescape.repository.Dao;
 
-@org.springframework.stereotype.Repository
-public class ReservationRepository extends Repository<Reservation> {
+@Repository
+public class ReservationRepository extends DBRepository<Reservation> {
 
     public ReservationRepository(Dao dao) {
         super(dao);

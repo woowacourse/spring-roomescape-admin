@@ -20,7 +20,7 @@ public final class Reservation {
         return new Reservation(id, name, date, time);
     }
 
-    public static Reservation from(final String name, final LocalDate date, final ReservationTime time) {
+    public static Reservation fromWithoutId(final String name, final LocalDate date, final ReservationTime time) {
         return new Reservation(null, name, date, time);
     }
 

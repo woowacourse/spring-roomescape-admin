@@ -10,7 +10,7 @@ public record ReservationRequest(
         Long timeId) {
 
     public Reservation toReservation(final ReservationTime time) {
-        return Reservation.from(this.name, this.date, time);
+        return Reservation.fromWithoutId(this.name, this.date, time);
     }
 
 }

@@ -1,11 +1,13 @@
 package roomescape.service;
 
+import java.time.LocalDate;
 import java.util.List;
 import roomescape.dto.CreateReservationDto;
 import roomescape.entity.Reservation;
 import roomescape.entity.ReservationTime;
 import roomescape.repository.reservation.ReservationRepository;
 import roomescape.repository.reservationtime.ReservationTimeRepository;
+import roomescape.util.DateTimeFormatUtils;
 
 public class ReservationService {
 
@@ -26,7 +28,7 @@ public class ReservationService {
         ReservationTime time = reservationTimeRepository.findById(createReservationDto.timeId());
         Reservation reservation = new Reservation(
                 createReservationDto.name(),
-                createReservationDto.date(),
+                LocalDate.parse(createReservationDto.date(), DateTimeFormatUtils.dateFormatter),
                 time
         );
 

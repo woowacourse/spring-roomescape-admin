@@ -1,5 +1,6 @@
 package roomescape.repository.reservationtime;
 
+import java.time.LocalTime;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
@@ -8,9 +9,10 @@ import org.springframework.stereotype.Repository;
 import roomescape.dto.CreateReservationTimeDto;
 import roomescape.entity.ReservationTime;
 import roomescape.exception.InvalidReservationTimeException;
+import roomescape.util.DateTimeFormatUtils;
 
 @Repository("reservationTimeMemoryRepository")
-public class ReservationTimeMemoryRepositoryImpl implements ReservationTimeRepository {
+public class ReservationTimeMemoryRepository implements ReservationTimeRepository {
 
     private final AtomicLong id = new AtomicLong(0);
     private final List<ReservationTime> reservationTimes = Collections.synchronizedList(new ArrayList<>());
@@ -18,7 +20,8 @@ public class ReservationTimeMemoryRepositoryImpl implements ReservationTimeRepos
     @Override
     public Long addAndGetId(CreateReservationTimeDto createReservationTimeDto) {
         long newId = id.getAndIncrement();
-        ReservationTime reservationTime = new ReservationTime(newId, createReservationTimeDto.startAt());
+        LocalTime time = LocalTime.parse(createReservationTimeDto.startAt(), DateTimeFormatUtils.timeFormatter);
+        ReservationTime reservationTime = new ReservationTime(newId, time);
         reservationTimes.add(reservationTime);
         return newId;
     }

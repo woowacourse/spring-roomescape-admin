@@ -6,10 +6,10 @@ import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 
 @ControllerAdvice
-public final class DomainExceptionHandler {
+public final class UserIllegalArgumentExceptionHandler {
 
-    @ExceptionHandler(DomainException.class)
-    public ResponseEntity<String> handleDomainException(DomainException exception) {
+    @ExceptionHandler(UserIllegalArgumentException.class)
+    public ResponseEntity<String> handleDomainException(UserIllegalArgumentException exception) {
         return ResponseEntity.status(HttpStatus.BAD_REQUEST)
                 .body(exception.getMessage());
     }

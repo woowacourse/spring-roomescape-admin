@@ -10,7 +10,7 @@ import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.NullAndEmptySource;
 import org.junit.jupiter.params.provider.ValueSource;
-import roomescape.exception.DomainException;
+import roomescape.exception.UserIllegalArgumentException;
 
 class ReservationTest {
 
@@ -43,7 +43,7 @@ class ReservationTest {
 
         // when & then
         assertThatCode(() -> new Reservation(id, name, reservationDate, new ReservationTime(id, reservationTime)))
-                .isInstanceOf(DomainException.class)
+                .isInstanceOf(UserIllegalArgumentException.class)
                 .hasMessage("과거 일시로 예약을 생성할 수 없습니다.");
     }
 
@@ -59,7 +59,7 @@ class ReservationTest {
 
         // when & then
         assertThatCode(() -> new Reservation(id, emptyName, reservationDate, new ReservationTime(id, reservationTime)))
-                .isInstanceOf(DomainException.class)
+                .isInstanceOf(UserIllegalArgumentException.class)
                 .hasMessage("예약자명이 입력되지 않았습니다.");
     }
 
@@ -74,7 +74,7 @@ class ReservationTest {
 
         // when & then
         assertThatCode(() -> new Reservation(id, name, null, new ReservationTime(id, reservationTime)))
-                .isInstanceOf(DomainException.class)
+                .isInstanceOf(UserIllegalArgumentException.class)
                 .hasMessage("예약 날짜가 입력되지 않았습니다.");
     }
 
@@ -89,7 +89,7 @@ class ReservationTest {
 
         // when & then
         assertThatCode(() -> new Reservation(id, name, reservationDate, null))
-                .isInstanceOf(DomainException.class)
+                .isInstanceOf(UserIllegalArgumentException.class)
                 .hasMessage("예약 시간이 입력되지 않았습니다.");
     }
 }

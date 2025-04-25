@@ -1,4 +1,4 @@
-package roomescape.reservation.repository;
+package roomescape.reservation.repository.h2;
 
 import java.time.LocalDate;
 import java.time.LocalTime;
@@ -11,6 +11,7 @@ import org.springframework.jdbc.core.simple.SimpleJdbcInsert;
 import org.springframework.stereotype.Repository;
 import roomescape.reservation.model.Reservation;
 import roomescape.reservation.model.ReservationTime;
+import roomescape.reservation.repository.ReservationRepository;
 
 @Repository
 public class H2ReservationRepository implements ReservationRepository {

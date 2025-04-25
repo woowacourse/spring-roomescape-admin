@@ -25,7 +25,7 @@ import org.springframework.test.annotation.DirtiesContext;
 import roomescape.reservation.controller.ReservationController;
 import roomescape.reservation.model.Reservation;
 import roomescape.reservation.model.ReservationTime;
-import roomescape.reservation.repository.H2ReservationTimeRepository;
+import roomescape.reservation.repository.h2.H2ReservationTimeRepository;
 
 @SpringBootTest(webEnvironment = WebEnvironment.RANDOM_PORT)
 @DirtiesContext(classMode = DirtiesContext.ClassMode.BEFORE_EACH_TEST_METHOD)
@@ -178,18 +178,18 @@ public class MissionStepTest {
         RestAssured.given().log().all()
                 .contentType(ContentType.JSON)
                 .body(params)
-                .when().post("/times")
+                .when().post("/reservations/times")
                 .then().log().all()
                 .statusCode(200);
 
         RestAssured.given().log().all()
-                .when().get("/times")
+                .when().get("/reservations/times")
                 .then().log().all()
                 .statusCode(200)
                 .body("size()", is(1));
 
         RestAssured.given().log().all()
-                .when().delete("/times/1")
+                .when().delete("/reservations/times/1")
                 .then().log().all()
                 .statusCode(204);
     }

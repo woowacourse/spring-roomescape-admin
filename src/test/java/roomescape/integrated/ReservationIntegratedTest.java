@@ -1,6 +1,7 @@
-package roomescape.dao;
+package roomescape.integrated;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.hamcrest.CoreMatchers.is;
 
 import io.restassured.RestAssured;
 import io.restassured.http.ContentType;
@@ -18,14 +19,20 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.test.annotation.DirtiesContext;
+import roomescape.dao.ReservationDao;
+import roomescape.dao.TimeDao;
 import roomescape.domain_entity.Id;
 import roomescape.domain_entity.Reservation;
 import roomescape.domain_entity.ReservationTime;
+import roomescape.dto.TimeRequestDto;
+import roomescape.service.TimeService;
 
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.DEFINED_PORT)
 @DirtiesContext(classMode = DirtiesContext.ClassMode.BEFORE_EACH_TEST_METHOD)
-class ReservationDaoTest {
+public class ReservationIntegratedTest {
 
+    @Autowired
+    private TimeService timeService;
     @Autowired
     private JdbcTemplate jdbcTemplate;
     @Autowired
@@ -34,7 +41,7 @@ class ReservationDaoTest {
     private ReservationDao reservationDao;
 
     @Test
-    void 사단계() {
+    void checkDatabaseConnection() {
         try (Connection connection = jdbcTemplate.getDataSource().getConnection()) {
             assertThat(connection).isNotNull();
             assertThat(connection.getCatalog()).isEqualTo("DATABASE");
@@ -45,9 +52,84 @@ class ReservationDaoTest {
     }
 
     @Test
+    @DisplayName("예약 관리 메인 페이지를 렌더링한다.")
+    void displayMainAdmin() {
+        RestAssured.given().log().all()
+                .when().get("/admin")
+                .then().log().all()
+                .statusCode(200);
+    }
+
+    @Test
+    @DisplayName("예약을 생성한다.")
+    void createReservation() {
+        //given
+        timeService.createTime(new TimeRequestDto(LocalTime.of(10, 0, 0)));
+        Map<String, Object> reservation = new HashMap<>();
+        reservation.put("name", "브라운");
+        reservation.put("date", "2023-08-05");
+        reservation.put("timeId", 1);
+
+        //when
+        RestAssured.given().log().all()
+                .contentType(ContentType.JSON)
+                .body(reservation)
+                .when().post("/reservations")
+                .then().log().all()
+                .statusCode(200)
+                .body("id", is(1),
+                        "name", is("브라운"),
+                        "date", is("2023-08-05"),
+                        "time.id", is(1),
+                        "time.startAt", is("10:00:00")
+                );
+
+        //then
+        RestAssured.given().log().all()
+                .when().get("/reservations")
+                .then().log().all()
+                .statusCode(200)
+                .body("size()", is(1));
+    }
+
+    @Test
+    @DisplayName("전체 예약을 조회한다.")
+    void readAllReservations() {
+        createReservation();
+
+        RestAssured.given().log().all()
+                .when().get("/admin/reservation")
+                .then().log().all()
+                .statusCode(200);
+
+        RestAssured.given().log().all()
+                .when().get("/reservations")
+                .then().log().all()
+                .statusCode(200)
+                .body("size()", is(1));
+    }
+
+    @Test
+    @DisplayName("예약을 삭제한다.")
+    void deleteReservation() {
+        createReservation();
+
+        RestAssured.given().log().all()
+                .when().delete("/reservations/1")
+                .then().log().all()
+                .statusCode(200);
+
+        RestAssured.given().log().all()
+                .when().get("/reservations")
+                .then().log().all()
+                .statusCode(200)
+                .body("size()", is(0));
+    }
+
+    @Test
     @Disabled
-    @DisplayName("전체 예약 조회 시 DB 전체 데이터를 조회한다.")
-    void 오단계() {
+    @DisplayName("Read 요청 수행 시 DB 전체 데이터를 조회한다.")
+    void retrieveReservationsWhenRead() {
         ReservationTime time = new ReservationTime(new Id(1L), LocalTime.of(10, 0, 0));
         timeDao.create(time);
         reservationDao.create(new Reservation("브라운", LocalDate.of(2025,4,26), time));

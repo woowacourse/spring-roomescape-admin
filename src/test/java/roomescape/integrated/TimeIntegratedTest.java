@@ -1,4 +1,4 @@
-package roomescape.controller;
+package roomescape.integrated;
 
 import static org.hamcrest.CoreMatchers.is;
 
@@ -13,7 +13,7 @@ import org.springframework.test.annotation.DirtiesContext;
 
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.DEFINED_PORT)
 @DirtiesContext(classMode = DirtiesContext.ClassMode.BEFORE_EACH_TEST_METHOD)
-class TimeControllerTest {
+class TimeIntegratedTest {
 
     @Test
     @DisplayName("시간을 생성한다.")

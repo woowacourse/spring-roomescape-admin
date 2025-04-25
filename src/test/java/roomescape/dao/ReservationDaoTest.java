@@ -1,6 +1,7 @@
-package roomescape;
+package roomescape.dao;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.junit.jupiter.api.Assertions.*;
 
 import io.restassured.RestAssured;
 import io.restassured.http.ContentType;
@@ -18,7 +19,7 @@ import roomescape.domain_entity.Reservation;
 
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.DEFINED_PORT)
 @DirtiesContext(classMode = DirtiesContext.ClassMode.BEFORE_EACH_TEST_METHOD)
-public class DatabaseTest {
+class ReservationDaoTest {
 
     @Autowired
     private JdbcTemplate jdbcTemplate;
@@ -74,4 +75,5 @@ public class DatabaseTest {
         Integer countAfterDelete = jdbcTemplate.queryForObject("SELECT count(*) from reservation", Integer.class);
         assertThat(countAfterDelete).isEqualTo(0);
     }
+
 }

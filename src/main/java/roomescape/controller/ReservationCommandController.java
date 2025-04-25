@@ -17,10 +17,10 @@ import roomescape.service.ReservationService;
 @RestController
 public class ReservationCommandController {
 
-    @Autowired
     private final ReservationService reservationService;
 
-    private ReservationCommandController(ReservationService reservationService) {
+    @Autowired
+    public ReservationCommandController(ReservationService reservationService) {
         this.reservationService = reservationService;
     }
 

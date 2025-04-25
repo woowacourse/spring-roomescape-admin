@@ -10,9 +10,9 @@ import roomescape.repositiory.ReservationRepository;
 @Service
 public class ReservationService {
 
-    @Autowired
     private final ReservationRepository reservationRepository;
 
+    @Autowired
     public ReservationService(ReservationRepository reservationRepository) {
         this.reservationRepository = reservationRepository;
     }

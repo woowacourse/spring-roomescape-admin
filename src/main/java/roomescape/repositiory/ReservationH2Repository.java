@@ -15,10 +15,10 @@ import roomescape.domain.dto.ReservationRequestDto;
 @Repository
 public class ReservationH2Repository implements ReservationRepository {
 
-    @Autowired
     private final JdbcTemplate jdbcTemplate;
     private final KeyHolder keyHolder = new GeneratedKeyHolder();
 
+    @Autowired
     public ReservationH2Repository(JdbcTemplate jdbcTemplate) {
         this.jdbcTemplate = jdbcTemplate;
     }

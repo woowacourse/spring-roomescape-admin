@@ -26,7 +26,7 @@ public class ReservationJdbcDaoTest {
     private JdbcTemplate jdbcTemplate;
 
     @Autowired
-    private ReservationJdbcDao reservationJdbcDao;
+    private ReservationDao reservationDao;
 
     @BeforeEach
     void setUp() {
@@ -48,7 +48,7 @@ public class ReservationJdbcDaoTest {
         );
 
         //when
-        List<Reservation> reservations = reservationJdbcDao.findAllReservations();
+        List<Reservation> reservations = reservationDao.findAllReservations();
 
         //then
         Assertions.assertThat(reservations.size()).isOne();
@@ -61,7 +61,7 @@ public class ReservationJdbcDaoTest {
         ReservationTime reservationTime = new ReservationTime(1L, LocalTime.of(13,31));
 
         //when
-        Reservation reservation = reservationJdbcDao.insertReservation(
+        Reservation reservation = reservationDao.insertReservation(
                 new Reservation(
                         null,
                         "우가",
@@ -74,7 +74,7 @@ public class ReservationJdbcDaoTest {
 
     @DisplayName("특정 ID 예약 삭제 테스트")
     @Test
-    void removeReservation_removesById() {
+    void test3() {
         //given
         String insertQuery = "INSERT INTO reservation (name, date, time_id) VALUES (?, ?, ?)";
         KeyHolder keyHolder = new GeneratedKeyHolder();
@@ -90,10 +90,10 @@ public class ReservationJdbcDaoTest {
         Long insertedId = keyHolder.getKey().longValue();
 
         //when
-        reservationJdbcDao.removeReservation(insertedId);
+        reservationDao.removeReservation(insertedId);
 
         //then
-        Assertions.assertThat(reservationJdbcDao.findAllReservations()).isEmpty();
+        Assertions.assertThat(reservationDao.findAllReservations()).isEmpty();
     }
 
 

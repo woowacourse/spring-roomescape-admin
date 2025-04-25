@@ -26,7 +26,7 @@ public class ReservationTimeJdbcDaoTest {
     private JdbcTemplate jdbcTemplate;
 
     @Autowired
-    private ReservationTimeJdbcDao reservationTimeJdbcDao;
+    private ReservationTimeDao reservationTimeDao;
 
     @AfterEach
     void afterEach() {
@@ -45,7 +45,7 @@ public class ReservationTimeJdbcDaoTest {
         );
 
         //when
-        List<ReservationTime> reservationReservationTimes = reservationTimeJdbcDao.findAllTimes();
+        List<ReservationTime> reservationReservationTimes = reservationTimeDao.findAllTimes();
 
         //then
         Assertions.assertThat(reservationReservationTimes.size()).isOne();
@@ -60,7 +60,7 @@ public class ReservationTimeJdbcDaoTest {
         );
 
         //when
-        ReservationTime reservationTime = reservationTimeJdbcDao.insertTime(timeRequest);
+        ReservationTime reservationTime = reservationTimeDao.insertTime(timeRequest);
 
         //then
         Assertions.assertThat(reservationTime.getId()).isNotNull();
@@ -80,9 +80,9 @@ public class ReservationTimeJdbcDaoTest {
         }, keyHolder);
 
         //when
-        reservationTimeJdbcDao.deleteTime(keyHolder.getKey().longValue());
+        reservationTimeDao.deleteTime(keyHolder.getKey().longValue());
 
         //then
-        Assertions.assertThat(reservationTimeJdbcDao.findAllTimes()).hasSize(0);
+        Assertions.assertThat(reservationTimeDao.findAllTimes()).hasSize(0);
     }
 }

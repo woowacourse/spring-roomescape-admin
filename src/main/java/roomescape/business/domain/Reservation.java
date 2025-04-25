@@ -43,8 +43,8 @@ public class Reservation {
     }
 
     private void validateNonNull(
-            final Long id, final String name, final LocalDate date, final Time time)
-    {
+            final Long id, final String name, final LocalDate date, final Time time
+    ) {
         Objects.requireNonNull(id);
         Objects.requireNonNull(name);
         Objects.requireNonNull(date);

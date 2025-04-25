@@ -35,7 +35,7 @@ public class ReservationTimeController {
     }
 
     @DeleteMapping("/{id}")
-    public void deleteTime(@PathVariable Long id) {
+    public void deleteTime(@PathVariable("id") Long id) {
         reservationTimeService.deleteReservationTime(id);
     }
 }

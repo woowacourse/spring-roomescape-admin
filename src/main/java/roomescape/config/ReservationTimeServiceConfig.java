@@ -8,6 +8,7 @@ import roomescape.service.ReservationTimeService;
 
 @Configuration
 public class ReservationTimeServiceConfig {
+
     @Bean
     public ReservationTimeService webReservationTimeService(
             @Qualifier("reservationTimeJdbcRepository") ReservationTimeRepository repository) {

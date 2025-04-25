@@ -7,6 +7,7 @@ import roomescape.dto.CreateReservationTimeDto;
 
 @Component
 public class InputView {
+    
     private final Scanner scanner = new Scanner(System.in);
 
     public int selectAdminFunction() {

@@ -57,32 +57,56 @@ public class ConsoleController {
 
     private void processReservationTimeFunction(Function function) {
         if (function == Function.ADD_RESERVATION_TIME) {
-            CreateReservationTimeDto createReservationTimeDto = inputView.inputCreateReservationTime();
-            ReservationTime reservationTime = reservationTimeService.createReservationTime(createReservationTimeDto);
-            outputView.printSuccessToCreateReservationTime(reservationTime);
+            createReservationTime();
         } else if (function == Function.GET_RESERVATION_TIMES) {
-            List<ReservationTime> reservationTimes = reservationTimeService.getAllReservationTimes();
-            outputView.printReservationTimes(reservationTimes);
+            getAllReservationTimes();
         } else if (function == Function.DELETE_RESERVATION_TIME) {
-            Long id = inputView.inputDeleteReservationTimeId();
-            reservationTimeService.deleteReservationTime(id);
-            outputView.printSuccessToDeleteReservationTime();
+            deleteReservationTime();
         }
+    }
+
+    private void createReservationTime() {
+        CreateReservationTimeDto createReservationTimeDto = inputView.inputCreateReservationTime();
+        ReservationTime reservationTime = reservationTimeService.createReservationTime(createReservationTimeDto);
+        outputView.printSuccessToCreateReservationTime(reservationTime);
+    }
+
+    private void getAllReservationTimes() {
+        List<ReservationTime> reservationTimes = reservationTimeService.getAllReservationTimes();
+        outputView.printReservationTimes(reservationTimes);
+    }
+
+    private void deleteReservationTime() {
+        Long id = inputView.inputDeleteReservationTimeId();
+        reservationTimeService.deleteReservationTime(id);
+        outputView.printSuccessToDeleteReservationTime();
     }
 
     private void processReservationFunction(Function function) {
         if (function == Function.ADD_RESERVATION) {
-            CreateReservationDto createReservationDto = inputView.inputCreateReservation();
-            Reservation reservation = reservationService.createReservation(createReservationDto);
-            outputView.printSuccessToCreateReservation(reservation);
+            createReservation();
         } else if (function == Function.GET_RESERVATIONS) {
-            List<Reservation> reservations = reservationService.getAllReservations();
-            outputView.printReservations(reservations);
+            getReservations();
         } else if (function == Function.DELETE_RESERVATION) {
-            Long id = inputView.inputDeleteReservationId();
-            reservationService.deleteReservation(id);
-            outputView.printSuccessToDeleteReservation();
+            deleteReservation();
         }
+    }
+
+    private void createReservation() {
+        CreateReservationDto createReservationDto = inputView.inputCreateReservation();
+        Reservation reservation = reservationService.createReservation(createReservationDto);
+        outputView.printSuccessToCreateReservation(reservation);
+    }
+
+    private void getReservations() {
+        List<Reservation> reservations = reservationService.getAllReservations();
+        outputView.printReservations(reservations);
+    }
+
+    private void deleteReservation() {
+        Long id = inputView.inputDeleteReservationId();
+        reservationService.deleteReservation(id);
+        outputView.printSuccessToDeleteReservation();
     }
 
 }

@@ -10,6 +10,7 @@ import roomescape.service.ReservationTimeService;
 import java.util.List;
 
 @RestController
+@RequestMapping("/times")
 public class ReservationTimeController {
 
     private ReservationTimeService reservationTimeService;
@@ -18,13 +19,13 @@ public class ReservationTimeController {
         this.reservationTimeService = reservationTimeService;
     }
 
-    @GetMapping("/times")
+    @GetMapping
     public ResponseEntity<List<ReservationTimeResponseDto>> getAllReservationTimes() {
         List<ReservationTimeResponseDto> allReservationTimeResponses = reservationTimeService.findAllReservationTimes();
         return ResponseEntity.ok(allReservationTimeResponses);
     }
 
-    @PostMapping("/times")
+    @PostMapping
     public ResponseEntity<ReservationTimeResponseDto> postReservationTime(@RequestBody final ReservationTimeCreateRequestDto requestDto) {
         try {
             ReservationTimeResponseDto responseDto = reservationTimeService.createReservationTime(requestDto);
@@ -34,7 +35,7 @@ public class ReservationTimeController {
         }
     }
 
-    @DeleteMapping("/times/{id}")
+    @DeleteMapping("/{id}")
     public ResponseEntity<Void> deleteReservationTime(@PathVariable Long id) {
         try {
             reservationTimeService.deleteReservationTimeById(id);

@@ -5,15 +5,16 @@ import java.util.List;
 import roomescape.dto.ReservationRequest;
 import roomescape.reservationTime.ReservationTime;
 import roomescape.reservationTime.ReservationTimeRepository;
+import roomescape.reservationTime.ReservationTimeService;
 
 public class ReservationServiceImpl implements ReservationService {
 
     private final ReservationRepository reservationRepository;
-    private final ReservationTimeRepository reservationTimeRepository;
+    private final ReservationTimeService reservationTimeService;
 
-    public ReservationServiceImpl(ReservationRepository reservationRepository, ReservationTimeRepository reservationTimeRepository) {
+    public ReservationServiceImpl(ReservationRepository reservationRepository, ReservationTimeService reservationTimeService) {
         this.reservationRepository = reservationRepository;
-        this.reservationTimeRepository = reservationTimeRepository;
+        this.reservationTimeService = reservationTimeService;
     }
 
     @Override
@@ -22,7 +23,7 @@ public class ReservationServiceImpl implements ReservationService {
         LocalDate date = wantToSaveReservationRequest.getDate();
         Long timeId = wantToSaveReservationRequest.getTimeId();
 
-        ReservationTime request = reservationTimeRepository.findById(timeId);
+        ReservationTime request = reservationTimeService.findById(timeId);
 
         Reservation wantToSaveReservation = new Reservation(
                 name, date, request

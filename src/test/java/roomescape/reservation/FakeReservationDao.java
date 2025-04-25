@@ -4,11 +4,11 @@ import java.time.LocalTime;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
-import roomescape.time.Time;
+import roomescape.time.ReservationTime;
 
 public class FakeReservationDao implements ReservationDao {
 
-    private static final Time DUMMY_TIME = new Time(1L, LocalTime.of(12, 40));
+    private static final ReservationTime DUMMY_RESERVATION_TIME = new ReservationTime(1L, LocalTime.of(12, 40));
 
     private Long NEXT_ID = 1L;
     private final List<Reservation> reservations = new ArrayList<>();
@@ -20,7 +20,7 @@ public class FakeReservationDao implements ReservationDao {
                 NEXT_ID++,
                 reservation.name(),
                 reservation.date(),
-                DUMMY_TIME
+                DUMMY_RESERVATION_TIME
         );
         reservations.add(writedReservation);
         return writedReservation.id();

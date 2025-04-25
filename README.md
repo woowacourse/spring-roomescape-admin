@@ -32,13 +32,13 @@ Content-Type: application/json
         "id": 1,
         "name": "브라운",
         "date": "2023-01-01",
-        "time": "10:00"
+        "reservationTime": "10:00"
     },
     {
         "id": 2,
         "name": "브라운",
         "date": "2023-01-02",
-        "time": "11:00"
+        "reservationTime": "11:00"
     }
 ]
 
@@ -58,7 +58,7 @@ content-type: application/json
 {
     "date": "2023-08-05",
     "name": "브라운",
-    "time": "15:40"
+    "reservationTime": "15:40"
 }
 
 // Response
@@ -69,7 +69,7 @@ Content-Type: application/json
     "id": 1,
     "name": "브라운",
     "date": "2023-08-05",
-    "time": "15:40"
+    "reservationTime": "15:40"
 }
 ```
 
@@ -101,7 +101,7 @@ HTTP/1.1 200
 
 - 방탈출 시간표가 정해져 있는데 직접 입력하기 번거로워서 선택하는 방식으로 수정하려합니다.
 - API 명세를 따라 시간 관리 API를 구현하세요.
-- 페이지는 templates/admin/time.html 파일을 이용하세요.
+- 페이지는 templates/admin/reservationTime.html 파일을 이용하세요.
 
 #### 시간 생성
 ```http request
@@ -176,7 +176,7 @@ Content-Type: application/json
 "id": 1,
 "name": "브라운",
 "date": "2023-08-05",
-"time" : {
+"reservationTime" : {
     "id": 1,
     "startAt" : "10:00"
     }
@@ -193,7 +193,7 @@ GET /reservations HTTP/1.1
   "id": 1,
   "name": "브라운",
   "date": "2023-08-05",
-  "time": {
+  "reservationTime": {
     "id": 1,
     "startAt": "10:00"
     }

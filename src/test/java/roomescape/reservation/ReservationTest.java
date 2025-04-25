@@ -6,7 +6,7 @@ import java.time.LocalDate;
 import java.time.LocalTime;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
-import roomescape.time.Time;
+import roomescape.time.ReservationTime;
 
 public class ReservationTest {
 
@@ -15,7 +15,7 @@ public class ReservationTest {
     void id() {
         // given
         final Reservation reservation = new Reservation(null, "", LocalDate.of(2024, 12, 06),
-                new Time(1L, LocalTime.of(12, 40)));
+                new ReservationTime(1L, LocalTime.of(12, 40)));
 
         // when & then
         assertThatThrownBy(() -> {
@@ -31,7 +31,7 @@ public class ReservationTest {
 
         // when & then
         assertThatThrownBy(() -> {
-            reservation.time();
+            reservation.reservationTime();
         }).isInstanceOf(NullPointerException.class);
     }
 }

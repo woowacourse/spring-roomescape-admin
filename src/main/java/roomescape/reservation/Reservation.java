@@ -2,10 +2,10 @@ package roomescape.reservation;
 
 import java.time.LocalDate;
 import java.util.Objects;
-import roomescape.time.Time;
+import roomescape.time.ReservationTime;
 
 public record Reservation(
-        Long id, String name, LocalDate date, Time time
+        Long id, String name, LocalDate date, ReservationTime reservationTime
 ) {
 
     public Long id(){
@@ -13,8 +13,8 @@ public record Reservation(
         return id;
     }
 
-    public Time time(){
-        Objects.requireNonNull(time);
-        return time;
+    public ReservationTime reservationTime(){
+        Objects.requireNonNull(reservationTime);
+        return reservationTime;
     }
 }

@@ -3,9 +3,9 @@ package roomescape.time;
 import java.time.LocalTime;
 import java.util.Objects;
 
-public record Time(Long id, LocalTime startAt) {
+public record ReservationTime(Long id, LocalTime startAt) {
 
-    public Time {
+    public ReservationTime {
         Objects.requireNonNull(startAt);
     }
 

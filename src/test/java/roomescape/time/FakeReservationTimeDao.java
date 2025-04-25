@@ -4,27 +4,27 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 
-public class FakeTimeDao implements TimeDao {
+public class FakeReservationTimeDao implements ReservationTimeDao {
 
-    private final List<Time> times = new ArrayList<>();
+    private final List<ReservationTime> reservationTimes = new ArrayList<>();
     private final List<Long> invokeDeleteId = new ArrayList<>();
     private Long NEXT_ID = 1L;
 
     @Override
-    public Long saveTime(final Time time) {
-        final Time saveTime = new Time(NEXT_ID++, time.startAt());
-        times.add(saveTime);
-        return saveTime.id();
+    public Long saveTime(final ReservationTime reservationTime) {
+        final ReservationTime saveReservationTime = new ReservationTime(NEXT_ID++, reservationTime.startAt());
+        reservationTimes.add(saveReservationTime);
+        return saveReservationTime.id();
     }
 
     @Override
-    public List<Time> findAllTime() {
-        return new ArrayList<>(times);
+    public List<ReservationTime> findAllTime() {
+        return new ArrayList<>(reservationTimes);
     }
 
     @Override
-    public Time findTimeById(final Long id) {
-        return times.stream()
+    public ReservationTime findTimeById(final Long id) {
+        return reservationTimes.stream()
                 .filter(time -> Objects.equals(time.id(), id))
                 .findAny()
                 .orElseThrow(IllegalStateException::new);
@@ -32,10 +32,10 @@ public class FakeTimeDao implements TimeDao {
 
     @Override
     public void deleteTimeById(final Long id) {
-        times.stream()
+        reservationTimes.stream()
                 .filter(time -> Objects.equals(time.id(), id))
                 .findAny()
-                .ifPresent(time -> times.remove(time));
+                .ifPresent(time -> reservationTimes.remove(time));
 
         invokeDeleteId.add(id);
     }

@@ -12,15 +12,15 @@ import org.springframework.boot.test.context.SpringBootTest.WebEnvironment;
 import org.springframework.boot.test.web.server.LocalServerPort;
 import org.springframework.test.annotation.DirtiesContext;
 import org.springframework.test.annotation.DirtiesContext.ClassMode;
-import roomescape.time.dto.TimeRequest;
+import roomescape.time.dto.ReservationTimeRequest;
 
 @SpringBootTest(webEnvironment = WebEnvironment.RANDOM_PORT)
 @DirtiesContext(classMode = ClassMode.AFTER_EACH_TEST_METHOD)
-public class TimeApiTest {
+public class ReservationTimeApiTest {
 
     private final int port;
 
-    public TimeApiTest(
+    public ReservationTimeApiTest(
             @LocalServerPort final int port
     ){
         this.port = port;
@@ -32,7 +32,7 @@ public class TimeApiTest {
         // given & when & then
         RestAssured.given().port(port).log().all()
                 .contentType(ContentType.JSON)
-                .body(new TimeRequest(LocalTime.of(10, 0)))
+                .body(new ReservationTimeRequest(LocalTime.of(10, 0)))
                 .when().post("/times")
                 .then().log().all()
                 .statusCode(200);
@@ -53,7 +53,7 @@ public class TimeApiTest {
     @Test
     void deleteTime() {
         // given
-        final TimeRequest request = new TimeRequest(LocalTime.of(10, 0));
+        final ReservationTimeRequest request = new ReservationTimeRequest(LocalTime.of(10, 0));
         givenCreateTime(request);
 
         // when & then
@@ -73,7 +73,7 @@ public class TimeApiTest {
                 .statusCode(404);
     }
 
-    private void givenCreateTime(final TimeRequest body) {
+    private void givenCreateTime(final ReservationTimeRequest body) {
         RestAssured.given().port(port).log().all()
                 .contentType(ContentType.JSON)
                 .body(body)

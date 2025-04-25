@@ -10,12 +10,12 @@ import org.springframework.jdbc.core.simple.SimpleJdbcInsert;
 import org.springframework.stereotype.Repository;
 
 @Repository
-public class TimeJdbcDao implements TimeDao {
+public class ReservationTimeJdbcDao implements ReservationTimeDao {
 
     private final JdbcTemplate jdbcTemplate;
     private final SimpleJdbcInsert simpleJdbcInsert;
 
-    public TimeJdbcDao(
+    public ReservationTimeJdbcDao(
             @Autowired JdbcTemplate jdbcTemplate
     ) {
         this.jdbcTemplate = jdbcTemplate;
@@ -26,28 +26,28 @@ public class TimeJdbcDao implements TimeDao {
 
 
     @Override
-    public Long saveTime(final Time time) {
-        final SqlParameterSource sqlParameterSource = new BeanPropertySqlParameterSource(time);
+    public Long saveTime(final ReservationTime reservationTime) {
+        final SqlParameterSource sqlParameterSource = new BeanPropertySqlParameterSource(reservationTime);
         final Number id = simpleJdbcInsert.executeAndReturnKey(sqlParameterSource);
         return id.longValue();
     }
 
     @Override
-    public List<Time> findAllTime() {
+    public List<ReservationTime> findAllTime() {
         final String sql = "SELECT * FROM RESERVATION_TIME";
 
         return jdbcTemplate.query(sql, timeMapper());
     }
 
     @Override
-    public Time findTimeById(final Long id) {
+    public ReservationTime findTimeById(final Long id) {
         final String sql = "SELECT * FROM RESERVATION_TIME WHERE id=?";
         return jdbcTemplate.queryForObject(sql, timeMapper(), id);
     }
 
-    private RowMapper<Time> timeMapper() {
+    private RowMapper<ReservationTime> timeMapper() {
         return (resultSet, rowNum) -> {
-            return new Time(
+            return new ReservationTime(
                     resultSet.getLong("id"),
                     resultSet.getTime("start_at").toLocalTime()
             );

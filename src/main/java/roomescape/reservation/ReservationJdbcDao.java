@@ -7,7 +7,7 @@ import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;
 import org.springframework.jdbc.core.simple.SimpleJdbcInsert;
 import org.springframework.stereotype.Repository;
-import roomescape.time.Time;
+import roomescape.time.ReservationTime;
 
 @Repository
 public class ReservationJdbcDao implements ReservationDao {
@@ -62,7 +62,7 @@ public class ReservationJdbcDao implements ReservationDao {
                     rs.getLong("id"),
                     rs.getString("name"),
                     rs.getDate("date").toLocalDate(),
-                    new Time(rs.getLong("time_id"), rs.getTime("start_at").toLocalTime())
+                    new ReservationTime(rs.getLong("time_id"), rs.getTime("start_at").toLocalTime())
             );
         };
     }

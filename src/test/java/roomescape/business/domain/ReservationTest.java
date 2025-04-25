@@ -10,13 +10,14 @@ import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.Arguments;
 import org.junit.jupiter.params.provider.MethodSource;
+import org.junit.jupiter.params.provider.ValueSource;
 
 class ReservationTest {
 
     @DisplayName("첫 번째 생성자로 null은 들어올 수 없다.")
     @ParameterizedTest
     @MethodSource("provideConstructorArguments")
-    void reservation1(
+    void validateNonNull1(
             final String name,
             final LocalDate localDate,
             final Time time
@@ -29,7 +30,7 @@ class ReservationTest {
     @DisplayName("두 번째 생성자로 null은 들어올 수 없다.")
     @ParameterizedTest
     @MethodSource("provideConstructorArguments")
-    void reservation2(
+    void validateNonNull2(
             final String name,
             final LocalDate localDate,
             final Time time
@@ -51,5 +52,14 @@ class ReservationTest {
                 Arguments.of("hotteok", null, new Time(LocalTime.now())),
                 Arguments.of("hotteok", LocalDate.now(), null)
         );
+    }
+
+    @DisplayName("이름은 공백이나 빈칸일 수 없다.")
+    @ParameterizedTest
+    @ValueSource(strings = {"", "  ", "     "})
+    void validateNameIsNotBlack(final String name) {
+        // given & when & then
+        assertThatThrownBy(() -> new Reservation(name, LocalDate.now(), new Time(LocalTime.now())))
+                .isInstanceOf(IllegalArgumentException.class);
     }
 }

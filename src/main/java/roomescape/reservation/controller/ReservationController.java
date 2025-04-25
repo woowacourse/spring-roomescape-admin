@@ -9,48 +9,37 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
-import roomescape.reservation.dao.ReservationDAO;
-import roomescape.reservation.domain.Reservation;
-import roomescape.reservation.dto.response.ReservationAllResponse;
-import roomescape.reservation.dto.request.ReservationRequest;
-import roomescape.reservation.dto.response.ReservationIDResponse;
+import roomescape.reservation.dto.ReservationRequest;
+import roomescape.reservation.dto.ReservationResponse;
+import roomescape.reservation.service.ReservationService;
 
 @RestController
 @RequestMapping("/reservations")
 public class ReservationController {
 
-    private final ReservationDAO reservationDAO;
+    private final ReservationService reservationService;
 
     @Autowired
-    public ReservationController(final ReservationDAO reservationDAO) {
-        this.reservationDAO = reservationDAO;
+    public ReservationController(final ReservationService reservationService) {
+        this.reservationService = reservationService;
     }
 
     @GetMapping
-    public List<ReservationAllResponse> getReservations() {
-        List<Reservation> reservations = reservationDAO.findAllReservations();
-
-        return reservations.stream()
-                .map(reservation -> new ReservationAllResponse(
-                        reservation.getId(),
-                        reservation.getName(),
-                        reservation.getDate(),
-                        reservation.getTime()
-                )).toList();
+    public List<ReservationResponse> getReservations() {
+        return reservationService.findAllReservations();
     }
 
     @PostMapping
-    public ReservationIDResponse createReservation(
+    public ReservationResponse createReservation(
             @RequestBody ReservationRequest reservationRequest
     ) {
-        long insertedId = reservationDAO.insertReservation(reservationRequest);
-        return new ReservationIDResponse(insertedId);
+        return reservationService.createReservation(reservationRequest);
     }
 
     @DeleteMapping("/{id}")
     public void deleteReservations(
             @PathVariable("id") long id
     ) {
-        reservationDAO.removeReservation(id);
+        reservationService.removeReservation(id);
     }
 }

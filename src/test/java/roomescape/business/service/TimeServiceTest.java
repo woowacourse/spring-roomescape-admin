@@ -1,10 +1,12 @@
 package roomescape.business.service;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.assertThatThrownBy;
 
 import java.time.LocalTime;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
+import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
 import roomescape.business.domain.Time;
 import roomescape.presentation.dto.TimeRequest;
@@ -45,6 +47,18 @@ class TimeServiceTest {
         // when & then
         assertThat(timeService.find(id))
                 .isEqualTo(expected);
+    }
+
+    @DisplayName("조회하려는 방탈출 시간 id가 없다면 예외가 발생한다.")
+    @Test
+    void find2() {
+        // given
+        final Long id = 1L;
+        final Time expected = new Time(1L, FORMATTED_MAX_LOCAL_TIME);
+
+        // when & then
+        assertThatThrownBy(() ->timeService.find(id))
+                .isInstanceOf(IllegalArgumentException.class);
     }
 
     @DisplayName("모든 방탈출 시간을 조회한다.")

@@ -9,8 +9,6 @@ import roomescape.domain.ReservationTime;
 @Service
 public class ReservationTimeService {
 
-    private static final int DUPLICATED_RESERVATION_TIME = -1;
-
     private final ReservationTimeDAO reservationTimeDAO;
 
     public ReservationTimeService(final ReservationTimeDAO reservationTimeDAO) {
@@ -27,7 +25,7 @@ public class ReservationTimeService {
 
     public long addReservationTime(final ReservationTime reservationTime) {
         if (reservationTimeDAO.existsByStartAt(reservationTime.getStartAt())) {
-            return DUPLICATED_RESERVATION_TIME;
+            throw new IllegalArgumentException("이미 존재하는 예약 가능 시간입니다: %s".formatted(reservationTime.getStartAt()));
         }
         return reservationTimeDAO.insert(reservationTime);
     }

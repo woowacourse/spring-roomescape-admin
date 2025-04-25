@@ -9,6 +9,7 @@ import roomescape.dao.ImMemoryReservationTimeDAO;
 import roomescape.domain.ReservationTime;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.assertThatThrownBy;
 
 class ReservationTimeServiceTest {
 
@@ -43,20 +44,19 @@ class ReservationTimeServiceTest {
     }
 
     @Test
-    @DisplayName("이미 존재하는 시간 데이터일 경우 -1을 리턴해야 한다")
+    @DisplayName("이미 존재하는 시간 데이터일 경우 예외를 던진다")
     void cannotAddReservationTime() {
         //given
         ReservationTimeService reservationTimeService = new ReservationTimeService(
                 new ImMemoryReservationTimeDAO(new ArrayList<>()));
         ReservationTime savedTime = new ReservationTime(LocalTime.of(10, 0));
         reservationTimeService.addReservationTime(savedTime);
-
-        //when
         ReservationTime duplicatedTime = new ReservationTime(LocalTime.of(10, 0));
-        long actual = reservationTimeService.addReservationTime(duplicatedTime);
 
-        //then
-        assertThat(actual).isEqualTo(-1);
+        //when & then
+        assertThatThrownBy(() -> reservationTimeService.addReservationTime(duplicatedTime))
+                .isInstanceOf(IllegalArgumentException.class)
+                .hasMessage("이미 존재하는 예약 가능 시간입니다: %s".formatted(duplicatedTime.getStartAt()));
     }
 
     @Test

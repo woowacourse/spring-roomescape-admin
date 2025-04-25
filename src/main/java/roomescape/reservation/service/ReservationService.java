@@ -3,6 +3,7 @@ package roomescape.reservation.service;
 import org.springframework.stereotype.Service;
 import roomescape.reservation.dto.ReservationRequestDto;
 import roomescape.reservation.dto.ReservationResponseDto;
+import roomescape.reservation.dto.ReservationTimeResponseDto;
 import roomescape.reservation.entity.Reservation;
 import roomescape.reservation.entity.ReservationTime;
 import roomescape.reservation.exception.EntityNotFoundException;
@@ -25,7 +26,7 @@ public class ReservationService {
     public List<ReservationResponseDto> findAll() {
         List<Reservation> reservations = reservationDao.findAll();
         return reservations.stream()
-            .map(ReservationResponseDto::toDto)
+            .map(this::createResponseDto)
             .toList();
     }
 
@@ -35,7 +36,7 @@ public class ReservationService {
         Reservation reservation = new Reservation(requestDto.name(), requestDto.date(), reservationTime);
 
         Reservation saved = reservationDao.save(reservation);
-        return ReservationResponseDto.toDto(saved);
+        return createResponseDto(saved);
     }
 
     public void deleteById(Long id) {
@@ -43,5 +44,11 @@ public class ReservationService {
             .orElseThrow(() -> new EntityNotFoundException("삭제할 예약정보가 없습니다."));
 
         reservationDao.deleteById(id);
+    }
+
+    private ReservationResponseDto createResponseDto(Reservation reservation) {
+        ReservationTime time = reservation.getTime();
+        ReservationTimeResponseDto reservationTimeResponseDto = new ReservationTimeResponseDto(time.getId(), time.getStartAt());
+        return new ReservationResponseDto(reservation.getId(), reservation.getName(), reservation.getDate(), reservationTimeResponseDto);
     }
 }

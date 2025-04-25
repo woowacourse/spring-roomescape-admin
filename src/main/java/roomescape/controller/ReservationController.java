@@ -1,7 +1,6 @@
 package roomescape.controller;
 
 import java.util.List;
-import java.util.concurrent.atomic.AtomicLong;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -9,38 +8,37 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
-import roomescape.domain.Person;
+import roomescape.dao.ReservationDao;
 import roomescape.domain.Reservation;
-import roomescape.domain.ReservationTime;
-import roomescape.domain.Reservations;
 import roomescape.dto.ReservationRequest;
 import roomescape.dto.ReservationResponse;
 
 @RestController
 @RequestMapping("/reservations")
 public class ReservationController {
+    private final ReservationDao reservationDao;
 
-    private final Reservations reservations = new Reservations();
-    private final AtomicLong personIndex = new AtomicLong(1);
+    public ReservationController(final ReservationDao reservationDao) {
+        this.reservationDao = reservationDao;
+    }
 
-    @GetMapping("")
+    @GetMapping
     public List<ReservationResponse> readReservations() {
-        return reservations.getReservations().stream()
+        List<Reservation> reservations = reservationDao.findAll();
+        return reservations.stream()
                 .map(ReservationResponse::from)
                 .toList();
     }
 
-    @PostMapping("")
-    public Reservation createReservations(
-            @RequestBody ReservationRequest reservationRequest) {
-        Person person = new Person(personIndex.getAndIncrement(), reservationRequest.name());
-        ReservationTime reservationTime = reservationRequest.getReservationTime();
-
-        return reservations.save(person, reservationTime);
+    @PostMapping
+    public ReservationResponse createReservations(@RequestBody ReservationRequest reservationRequest) {
+        Reservation reservation = reservationRequest.toReservation();
+        Reservation idWithReservation = reservationDao.insert(reservation);
+        return ReservationResponse.from(idWithReservation);
     }
 
     @DeleteMapping("/{id}")
-    public void deleteReservation(@PathVariable(name = "id") Long id) {
-        reservations.deleteById(id);
+    public void deleteReservation(@PathVariable(name = "id") long id) {
+        reservationDao.deleteById(id);
     }
 }

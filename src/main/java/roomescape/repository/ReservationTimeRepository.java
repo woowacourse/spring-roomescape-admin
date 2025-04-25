@@ -6,9 +6,9 @@ import roomescape.domain.ReservationTime;
 
 public interface ReservationTimeRepository {
 
-    ReservationTime insert(final LocalTime startAt);
+    ReservationTime insert(LocalTime startAt);
 
     List<ReservationTime> findAll();
 
-    void delete(final long id);
+    void delete(long id);
 }

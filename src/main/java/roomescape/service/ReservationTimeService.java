@@ -23,7 +23,7 @@ public class ReservationTimeService {
         return reservationTimeRepository.findAll();
     }
 
-    public void delete(final long id){
+    public void delete(final long id) {
         reservationTimeRepository.delete(id);
     }
 }

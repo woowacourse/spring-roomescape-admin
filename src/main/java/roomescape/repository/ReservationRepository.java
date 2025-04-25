@@ -8,7 +8,7 @@ public interface ReservationRepository {
 
     List<Reservation> findAll();
 
-    Reservation insert(final String name, final LocalDate date, final long timeId);
+    Reservation insert(String name, LocalDate date, long timeId);
 
-    void delete(final long id);
+    void delete(long id);
 }

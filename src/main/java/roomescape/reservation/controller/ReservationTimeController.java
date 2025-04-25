@@ -10,7 +10,7 @@ import roomescape.reservation.service.ReservationTimeService;
 
 import java.util.List;
 
-@Controller
+@RestController
 @RequestMapping("/times")
 public class ReservationTimeController {
 

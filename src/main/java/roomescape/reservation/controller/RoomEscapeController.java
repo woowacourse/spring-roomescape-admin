@@ -18,7 +18,6 @@ public class RoomEscapeController {
         return "admin/time";
     }
 
-
     @GetMapping("/reservation")
     public String adminReservationDashboard() {
         return "admin/reservation";

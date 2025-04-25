@@ -1,7 +1,6 @@
 package roomescape.reservation.controller;
 
 import org.springframework.http.ResponseEntity;
-import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 import roomescape.reservation.dto.ReservationRequestDto;
 import roomescape.reservation.dto.ReservationResponseDto;
@@ -9,7 +8,7 @@ import roomescape.reservation.service.ReservationService;
 
 import java.util.List;
 
-@Controller
+@RestController
 @RequestMapping("/reservations")
 public class ReservationController {
 

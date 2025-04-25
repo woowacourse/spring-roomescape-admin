@@ -14,42 +14,34 @@ import org.springframework.web.bind.annotation.RestController;
 
 import roomescape.dto.ReservationTimeCreateRequest;
 import roomescape.dto.ReservationTimeResponse;
-import roomescape.model.ReservationTime;
-import roomescape.repository.ReservationTimeDao;
+import roomescape.service.ReservationTimeService;
 
 @RestController
 @RequestMapping("/times")
 public class ReservationTimeController {
 
-    private final ReservationTimeDao reservationTimeDao;
+    private final ReservationTimeService reservationTimeService;
 
-    public ReservationTimeController(final ReservationTimeDao reservationTimeDao) {
-        this.reservationTimeDao = reservationTimeDao;
+    public ReservationTimeController(final ReservationTimeService reservationTimeService) {
+        this.reservationTimeService = reservationTimeService;
     }
 
     @PostMapping
     public ResponseEntity<ReservationTimeResponse> addReservationTime(
             @RequestBody final ReservationTimeCreateRequest request
     ) {
-        ReservationTime reservationTime = reservationTimeDao.insert(
-                new ReservationTime(0L, request.startAt()));
-
         return ResponseEntity.status(HttpStatus.CREATED)
-                .body(new ReservationTimeResponse(reservationTime));
+                .body(reservationTimeService.createReservationTime(request));
     }
 
     @GetMapping
     public ResponseEntity<List<ReservationTimeResponse>> reservationTimes() {
-        List<ReservationTimeResponse> reservationTimeResponses = reservationTimeDao.findAll()
-                .stream()
-                .map(ReservationTimeResponse::new)
-                .toList();
-        return ResponseEntity.ok(reservationTimeResponses);
+        return ResponseEntity.ok(reservationTimeService.findAllReservationTimes());
     }
 
     @DeleteMapping("/{id}")
     public ResponseEntity<Void> deleteReservationTime(@PathVariable("id") final Long id) {
-        reservationTimeDao.deleteById(id);
+        reservationTimeService.deleteReservationTime(id);
         return ResponseEntity.ok().build();
     }
 }

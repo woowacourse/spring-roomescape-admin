@@ -81,16 +81,4 @@ public class JdbcReservationRepository implements ReservationRepository {
         }, keyHolder);
     }
 
-    private ReservationTime findReservationTimeById(ReservationRequest wantToSaveReservationRequest, String findQuery) {
-        return jdbcTemplate.queryForObject(
-                findQuery,
-                (result, rowNum) -> {
-                    return new ReservationTime(
-                            result.getLong("id"),
-                            result.getTime("start_at").toLocalTime()
-                    );
-                }
-                , wantToSaveReservationRequest.getTimeId());
-    }
-
 }

@@ -24,18 +24,6 @@ public class MissionStepTest {
     @Autowired
     private JdbcTemplate jdbcTemplate;
 
-    void Test_ReservationTime_Post() {
-        Map<String, String> params = new HashMap<>();
-        params.put("startAt", "10:00");
-
-        RestAssured.given().log().all()
-                .contentType(ContentType.JSON)
-                .body(params)
-                .when().post("/times")
-                .then().log().all()
-                .statusCode(200);
-    }
-
     @Test
     void 일단계() {
         RestAssured.given().log().all()
@@ -61,7 +49,7 @@ public class MissionStepTest {
 
     @Test
     void 삼단계() {
-        Test_ReservationTime_Post();
+        setReservationTime();
         Map<String, String> params = new HashMap<>();
         params.put("name", "브라운");
         params.put("date", "2025-08-05");
@@ -107,7 +95,7 @@ public class MissionStepTest {
 
     @Test
     void 오단계() {
-        Test_ReservationTime_Post();
+        setReservationTime();
         jdbcTemplate.update("INSERT INTO reservation (name, date, time_id) VALUES (?, ?, ?)", "브라운", "2023-08-05",
                 "1");
 
@@ -124,7 +112,7 @@ public class MissionStepTest {
 
     @Test
     void 육단계() {
-        Test_ReservationTime_Post();
+        setReservationTime();
         Map<String, String> params = new HashMap<>();
         params.put("name", "브라운");
         params.put("date", "2025-08-05");
@@ -175,7 +163,7 @@ public class MissionStepTest {
 
     @Test
     void 팔단계() {
-        Test_ReservationTime_Post();
+        setReservationTime();
         Map<String, Object> reservation = new HashMap<>();
         reservation.put("name", "브라운");
         reservation.put("date", "2025-08-05");
@@ -206,5 +194,16 @@ public class MissionStepTest {
                 .body("size()", is(0));
     }
 
+    void setReservationTime() {
+        Map<String, String> params = new HashMap<>();
+        params.put("startAt", "11:11");
+
+        RestAssured.given().log().all()
+                .contentType(ContentType.JSON)
+                .body(params)
+                .when().post("/times")
+                .then().log().all()
+                .statusCode(200);
+    }
 
 }

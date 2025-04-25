@@ -28,7 +28,10 @@ public final class ReservationService {
     }
 
     public List<ReservationResponse> readAll() {
-        return reservationDao.readAll();
+        List<Reservation> reservations = reservationDao.readAll();
+        return reservations.stream()
+                .map(ReservationResponse::of)
+                .toList();
     }
 
     public void deleteBy(final Long id) {

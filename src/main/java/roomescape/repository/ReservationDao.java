@@ -9,7 +9,6 @@ import org.springframework.jdbc.core.simple.SimpleJdbcInsert;
 import org.springframework.stereotype.Repository;
 import roomescape.model.Reservation;
 import roomescape.model.ReservationTime;
-import roomescape.service.dto.reservation.response.ReservationResponse;
 
 @Repository
 public class ReservationDao {
@@ -33,7 +32,7 @@ public class ReservationDao {
         return getGenerateId(number);
     }
 
-    public List<ReservationResponse> readAll() {
+    public List<Reservation> readAll() {
         final String sql = "SELECT \n"
                 + "    r.id as reservation_id, \n"
                 + "    r.name, \n"
@@ -44,11 +43,7 @@ public class ReservationDao {
                 + "inner join reservation_time as t \n"
                 + "on r.time_id = t.id";
         final RowMapper<Reservation> rowMapper = getRowMapper();
-        final List<Reservation> reservations = jdbcTemplate.query(sql, rowMapper);
-
-        return reservations.stream()
-                .map(ReservationResponse::of)
-                .toList();
+        return jdbcTemplate.query(sql, rowMapper);
     }
 
     public void delete(final Long id) {

@@ -24,13 +24,17 @@ public class H2ReservationRepository implements ReservationRepository {
         String sql = "INSERT INTO reservations (name, date, time_id) VALUES (?, ?, ?)";
         KeyHolder keyHolder = new GeneratedKeyHolder();
 
-        jdbcTemplate.update(connection -> {
+        int rowAffected = jdbcTemplate.update(connection -> {
             PreparedStatement ps = connection.prepareStatement(sql, new String[]{"id"});
             ps.setString(1, reservation.getName());
             ps.setDate(2, Date.valueOf(reservation.getDate()));
             ps.setLong(3, reservation.getTime().getId());
             return ps;
         }, keyHolder);
+
+        if (rowAffected != 1) {
+            throw new IllegalStateException("예약 정보 저장에 실패했습니다.");
+        }
 
         Number key = keyHolder.getKey();
         if (key == null) {

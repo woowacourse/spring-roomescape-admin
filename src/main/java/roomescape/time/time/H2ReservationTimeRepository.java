@@ -22,11 +22,15 @@ public class H2ReservationTimeRepository implements ReservationTimeRepository {
         String sql = "INSERT INTO reservation_times (start_at) VALUE (?)";
         KeyHolder keyHolder = new GeneratedKeyHolder();
 
-        jdbcTemplate.update(connection -> {
+        int rowAffected = jdbcTemplate.update(connection -> {
             PreparedStatement ps = connection.prepareStatement(sql, new String[]{"id"});
             ps.setTime(1, Time.valueOf(reservationTime.getStartAt()));
             return ps;
         }, keyHolder);
+
+        if (rowAffected != 1) {
+            throw new IllegalStateException("예약 시간 저장에 실패했습니다.");
+        }
 
         Number key = keyHolder.getKey();
         if (key == null) {

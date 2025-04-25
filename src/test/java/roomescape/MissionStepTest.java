@@ -266,8 +266,44 @@ public class MissionStepTest {
         assertThat(countAfterDelete).isEqualTo(0);
     }
 
+    @DisplayName("timd_id에 해당하는 리소스가 없는 경우 404 not found 상태 반환 확인")
     @Test
-    void 칠단계() {
+    void test10() {
+        //given
+        Map<String, Object> reservation = new HashMap<>();
+        reservation.put("name", "브라운");
+        reservation.put("date", "2023-08-05");
+        reservation.put("timeId", 1);
+
+        //when & then
+        RestAssured.given().log().all()
+                .contentType(ContentType.JSON)
+                .body(reservation)
+                .when().post("/reservations")
+                .then().log().all()
+                .statusCode(404);
+    }
+
+    @DisplayName("times POST 요청 왔을 때 상태 반환 200 확인")
+    @Test
+    void test11() {
+        //given
+        Map<String, String> params = new HashMap<>();
+        params.put("startAt", "10:00");
+
+        //when & then
+        RestAssured.given().log().all()
+                .contentType(ContentType.JSON)
+                .body(params)
+                .when().post("/times")
+                .then().log().all()
+                .statusCode(200);
+    }
+
+    @DisplayName("/times GET 요청 시 200 확인")
+    @Test
+    void test12() {
+        //given
         Map<String, String> params = new HashMap<>();
         params.put("startAt", "10:00");
 
@@ -278,20 +314,31 @@ public class MissionStepTest {
                 .then().log().all()
                 .statusCode(200);
 
+        //when & then
         RestAssured.given().log().all()
                 .when().get("/times")
                 .then().log().all()
                 .statusCode(200)
                 .body("size()", is(1));
+    }
 
+    @DisplayName("특정 time_id DELETE 요청 시 200 상태 확인")
+    @Test
+    void test13() {
+        //given
+        Map<String, String> params = new HashMap<>();
+        params.put("startAt", "10:00");
+
+        //when & then
         RestAssured.given().log().all()
                 .when().delete("/times/1")
                 .then().log().all()
                 .statusCode(200);
     }
 
+    @DisplayName("예약시간 등록 후 /reservations 페이지에서 GET 요청 시 보여지는 등록된 시간 갯수 확인")
     @Test
-    void 팔단계() {
+    void test14() {
         Map<String, String> params = new HashMap<>();
         params.put("startAt", "10:00");
 
@@ -322,8 +369,9 @@ public class MissionStepTest {
                 .body("size()", is(1));
     }
 
+    @DisplayName("계층 분리 확인하는 테스트 코드")
     @Test
-    void 구단계() {
+    void test15() {
         boolean isJdbcTemplateInjected = false;
 
         for (Field field : reservationController.getClass().getDeclaredFields()) {

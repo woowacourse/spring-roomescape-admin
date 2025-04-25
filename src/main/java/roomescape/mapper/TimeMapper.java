@@ -5,13 +5,13 @@ import java.sql.SQLException;
 import java.time.LocalTime;
 import org.springframework.jdbc.core.RowMapper;
 import roomescape.domain_entity.Id;
-import roomescape.domain_entity.Time;
+import roomescape.domain_entity.ReservationTime;
 
-public class TimeMapper implements RowMapper<Time> {
+public class TimeMapper implements RowMapper<ReservationTime> {
 
     @Override
-    public Time mapRow(ResultSet rs, int rowNum) throws SQLException {
-        return new Time(
+    public ReservationTime mapRow(ResultSet rs, int rowNum) throws SQLException {
+        return new ReservationTime(
                 new Id(rs.getLong("id")),
                 rs.getObject("start_at", LocalTime.class)
         );

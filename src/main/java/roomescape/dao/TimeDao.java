@@ -8,7 +8,7 @@ import org.springframework.jdbc.support.GeneratedKeyHolder;
 import org.springframework.jdbc.support.KeyHolder;
 import org.springframework.stereotype.Component;
 import roomescape.domain_entity.Id;
-import roomescape.domain_entity.Time;
+import roomescape.domain_entity.ReservationTime;
 import roomescape.mapper.TimeMapper;
 
 @Component
@@ -17,7 +17,7 @@ public class TimeDao {
     @Autowired
     private JdbcTemplate jdbcTemplate;
 
-    public long create(Time time) {
+    public long create(ReservationTime time) {
         String sql = "insert into reservation_time (start_at) values (?)";
         KeyHolder keyHolder = new GeneratedKeyHolder();
         jdbcTemplate.update(
@@ -33,7 +33,7 @@ public class TimeDao {
         return keyHolder.getKey().longValue();
     }
 
-    public List<Time> findAll() {
+    public List<ReservationTime> findAll() {
         String sql = "select * from reservation_time";
         return jdbcTemplate.query(
                 sql,

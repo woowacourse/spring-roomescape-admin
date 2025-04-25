@@ -2,18 +2,22 @@ package roomescape.domain_entity;
 
 import java.time.LocalTime;
 
-public class Time {
+public class ReservationTime {
     private Id id;
     private LocalTime startAt;
 
-    public Time() {
+    public ReservationTime() {
     }
 
-    public Time(LocalTime startAt) {
+    public ReservationTime(Id id) {
+        this.id = id;
+    }
+
+    public ReservationTime(LocalTime startAt) {
         this.startAt = startAt;
     }
 
-    public Time(Id id, LocalTime startAt) {
+    public ReservationTime(Id id, LocalTime startAt) {
         this.id = id;
         this.startAt = startAt;
     }

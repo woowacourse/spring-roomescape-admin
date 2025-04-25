@@ -9,10 +9,9 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestParam;
 import roomescape.dao.TimeDao;
 import roomescape.domain_entity.Id;
-import roomescape.domain_entity.Time;
+import roomescape.domain_entity.ReservationTime;
 import roomescape.dto.TimeRequestDto;
 
 @Controller
@@ -27,20 +26,20 @@ public class TimeController {
     }
 
     @PostMapping("/times")
-    public ResponseEntity<Time> createTime(
+    public ResponseEntity<ReservationTime> createTime(
             @RequestBody TimeRequestDto timeRequest
     ) {
-        Time time = timeRequest.toTime();
-        long id = timeDao.create(time);
-        time.setId(new Id(id));
-        return ResponseEntity.ok().body(time);
+        ReservationTime reservationTime = timeRequest.toTime();
+        long id = timeDao.create(reservationTime);
+        reservationTime.setId(new Id(id));
+        return ResponseEntity.ok().body(reservationTime);
     }
 
     @GetMapping("/times")
-    public ResponseEntity<List<Time>> getTimes(
+    public ResponseEntity<List<ReservationTime>> getTimes(
     ) {
-        List<Time> times = timeDao.findAll();
-        return ResponseEntity.ok().body(times);
+        List<ReservationTime> reservationTimes = timeDao.findAll();
+        return ResponseEntity.ok().body(reservationTimes);
     }
 
     @DeleteMapping("/times/{id}")

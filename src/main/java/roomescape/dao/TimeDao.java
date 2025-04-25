@@ -41,6 +41,15 @@ public class TimeDao {
         );
     }
 
+    public ReservationTime findById(long id) {
+        String sql = "select from reservation_time where id = ?";
+        return jdbcTemplate.queryForObject(
+                sql,
+                new TimeMapper(),
+                id
+        );
+    }
+
     public void delteById(Id id) {
         String sql = "delete from reservation_time where id = ?";
         jdbcTemplate.update(

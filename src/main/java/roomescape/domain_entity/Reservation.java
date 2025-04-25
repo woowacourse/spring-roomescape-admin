@@ -30,8 +30,12 @@ public class Reservation {
         this.id = id;
     }
 
-    public Id getId() {
-        return id;
+    public void setTime(ReservationTime reservationTime) {
+        this.time = reservationTime;
+    }
+
+    public long getId() {
+        return id.value();
     }
 
     public String getName() {

@@ -28,7 +28,7 @@ public class ReservationDao {
 
     public long create(Reservation newReservation) {
         KeyHolder keyHolder = new GeneratedKeyHolder();
-        String sql = "insert into reservation (name, date, time) values (?, ?, ?)";
+        String sql = "insert into reservation (name, date, time_id) values (?, ?, ?)";
         jdbcTemplate.update(
                 connection -> {
                     PreparedStatement ps = connection.prepareStatement(
@@ -37,7 +37,7 @@ public class ReservationDao {
                     );
                     ps.setString(1, newReservation.getName());
                     ps.setObject(2, newReservation.getDate());
-                    ps.setObject(3, newReservation.getTime());
+                    ps.setLong(3, newReservation.getTime().getId().value());
                     return ps;
                 },
                 keyHolder

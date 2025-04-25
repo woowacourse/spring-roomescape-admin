@@ -16,7 +16,7 @@ public class ReservationMapper implements RowMapper<Reservation> {
                 new Id(rs.getLong("id")),
                 rs.getString("name"),
                 LocalDate.parse(rs.getString("date")),
-                LocalTime.parse(rs.getString("time"))
+                LocalTime.parse(rs.getString("time_id"))
         );
     }
 }

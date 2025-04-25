@@ -11,7 +11,8 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.ResponseBody;
 import roomescape.dao.ReservationDao;
-import roomescape.dto.ReservationResponseDto;
+import roomescape.dao.TimeDao;
+import roomescape.domain_entity.ReservationTime;
 import roomescape.dto.ReservationRequestDto;
 import roomescape.domain_entity.Id;
 import roomescape.domain_entity.Reservation;
@@ -21,6 +22,8 @@ public class AdminController {
 
     @Autowired
     private ReservationDao reservationDao;
+    @Autowired
+    private TimeDao timeDao;
 
     @GetMapping("/admin")
     public String displayMain() {
@@ -34,21 +37,23 @@ public class AdminController {
 
     @GetMapping("/reservations")
     @ResponseBody
-    public ResponseEntity<List<ReservationResponseDto>> readReservations() {
-        List<ReservationResponseDto> reservationResponseDtos = reservationDao.findAll().stream()
-                .map(ReservationResponseDto::of).toList();
+    public ResponseEntity<List<Reservation>> readReservations() {
+        List<Reservation> reservationResponseDtos = reservationDao.findAll();
         return ResponseEntity.ok().body(reservationResponseDtos);
     }
 
     @PostMapping("/reservations")
     @ResponseBody
-    public ResponseEntity<ReservationResponseDto> createReservation(
+    public ResponseEntity<Reservation> createReservation(
             @RequestBody ReservationRequestDto reservationRequest
     ) {
         Reservation newReservation = reservationRequest.toReservation();
+        ReservationTime reservationTime = timeDao.findById(newReservation.getId());
+        newReservation.setTime(reservationTime);
+
         long id = reservationDao.create(newReservation);
         newReservation.setId(new Id(id));
-        return ResponseEntity.ok().body(ReservationResponseDto.of(newReservation));
+        return ResponseEntity.ok().body(newReservation);
     }
 
     @DeleteMapping("/reservations/{id}")

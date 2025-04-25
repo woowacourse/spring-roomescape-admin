@@ -11,6 +11,7 @@ import org.junit.jupiter.api.Test;
 import roomescape.reservationtime.domain.ReservationTime;
 import roomescape.reservationtime.dto.ReservationTimeRequest;
 import roomescape.reservationtime.repository.ReservationTimeRepository;
+import roomescape.reservationtime.service.ReservationTimeService;
 import roomescape.reservationtime.unit.repository.FakeReservationTimeRepository;
 
 class ReservationTimeServiceTest {

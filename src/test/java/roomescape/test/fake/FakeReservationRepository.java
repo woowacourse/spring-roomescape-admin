@@ -24,13 +24,6 @@ public class FakeReservationRepository extends ReservationRepository {
     }
 
     @Override
-    public List<Reservation> findAllByReservationTimeId(long reservationTimeId) {
-        return reservations.values().stream()
-                .filter(reservation -> reservation.getTime().getId().equals(reservationTimeId))
-                .toList();
-    }
-
-    @Override
     public Optional<Reservation> findById(long id) {
         if (!reservations.containsKey(id)) {
             return Optional.empty();
@@ -39,11 +32,17 @@ public class FakeReservationRepository extends ReservationRepository {
     }
 
     @Override
-    public Optional<Reservation> findByDateAndTime(LocalDate date, long timeId) {
+    public boolean checkExistenceByDateTime(LocalDate date, long timeId) {
+        return reservations.values()
+                .stream()
+                .anyMatch(reservation ->
+                        reservation.getDate().equals(date) && reservation.getTime().getId().equals(timeId));
+    }
+
+    @Override
+    public boolean checkExistenceInTime(long reservationTimeId) {
         return reservations.values().stream()
-                .filter(reservation ->
-                        reservation.getDate().equals(date) && reservation.getTime().getId().equals(timeId))
-                .findFirst();
+                .anyMatch(reservation -> reservation.getTime().getId().equals(reservationTimeId));
     }
 
     @Override

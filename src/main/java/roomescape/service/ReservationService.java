@@ -71,9 +71,8 @@ public class ReservationService {
     }
 
     private void validateAlreadyReserved(LocalDate reservationDate, long reservationTimeId) {
-        Optional<Reservation> reservation =
-                reservationRepository.findByDateAndTime(reservationDate, reservationTimeId);
-        if (reservation.isPresent()) {
+        boolean isAlreadyReserved = reservationRepository.checkExistenceByDateTime(reservationDate, reservationTimeId);
+        if (isAlreadyReserved) {
             throw new BadRequestException("[ERROR] 이미 예약이 완료된 날짜와 시간입니다.");
         }
     }

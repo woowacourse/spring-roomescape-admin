@@ -32,10 +32,9 @@ public class FakeReservationTimeRepository extends ReservationTimeRepository {
     }
 
     @Override
-    public Optional<ReservationTime> findByStartAt(LocalTime startAt) {
+    public boolean findByStartAt(LocalTime startAt) {
         return reservationTimes.values().stream()
-                .filter(time -> time.getStartAt().equals(startAt))
-                .findFirst();
+                .anyMatch(time -> time.getStartAt().equals(startAt));
     }
 
     @Override

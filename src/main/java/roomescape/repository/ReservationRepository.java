@@ -45,15 +45,6 @@ public class ReservationRepository {
         return template.query(sql, mapper);
     }
 
-    public List<Reservation> findAllByReservationTimeId(long reservationTimeId) {
-        String sql = "SELECT r.id as reservation_id, r.name, r.date, rt.id as time_id, rt.start_at "
-                + "FROM reservation AS r "
-                + "INNER JOIN reservation_time AS rt "
-                + "ON r.time_id = rt.id "
-                + "WHERE r.time_id = ? ";
-        return template.query(sql, mapper, reservationTimeId);
-    }
-
     public Optional<Reservation> findById(long id) {
         String sql = "SELECT r.id as reservation_id, r.name, r.date, rt.id as time_id, rt.start_at "
                 + "FROM reservation AS r "
@@ -68,18 +59,22 @@ public class ReservationRepository {
         }
     }
 
-    public Optional<Reservation> findByDateAndTime(LocalDate date, long timeId) {
-        String sql = "SELECT r.id as reservation_id, r.name, r.date, rt.id as time_id, rt.start_at "
+    public boolean checkExistenceByDateTime(LocalDate date, long timeId) {
+        String sql = "SELECT EXISTS ( "
+                + "SELECT * "
                 + "FROM reservation AS r "
-                + "INNER JOIN reservation_time AS rt "
-                + "ON r.time_id = rt.id "
-                + "WHERE r.date = ? AND r.time_id = ? ";
-        try {
-            Reservation reservation = template.queryForObject(sql, mapper, date, timeId);
-            return Optional.of(reservation);
-        } catch (EmptyResultDataAccessException exception) {
-            return Optional.empty();
-        }
+                + "INNER JOIN reservation_time AS rt ON r.time_id = rt.id "
+                + "WHERE r.date = ? AND r.time_id = ?)";
+        return template.queryForObject(sql, Boolean.class, date, timeId);
+    }
+
+    public boolean checkExistenceInTime(long reservationTimeId) {
+        String sql = "SELECT EXISTS ( "
+                + "SELECT * "
+                + "FROM reservation AS r "
+                + "INNER JOIN reservation_time AS rt ON r.time_id = rt.id "
+                + "WHERE r.time_id = ?)";
+        return template.queryForObject(sql, Boolean.class, reservationTimeId);
     }
 
     public long add(Reservation reservation) {

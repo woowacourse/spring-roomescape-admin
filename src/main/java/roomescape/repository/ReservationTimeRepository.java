@@ -45,14 +45,12 @@ public class ReservationTimeRepository {
         }
     }
 
-    public Optional<ReservationTime> findByStartAt(LocalTime startAt) {
-        String sql = "SELECT * FROM reservation_time WHERE reservation_time.start_at = ?";
-        try {
-            ReservationTime reservationTime = template.queryForObject(sql, mapper, startAt);
-            return Optional.of(reservationTime);
-        } catch (EmptyResultDataAccessException exception) {
-            return Optional.empty();
-        }
+    public boolean findByStartAt(LocalTime startAt) {
+        String sql = "SELECT EXISTS ( "
+                + "SELECT * "
+                + "FROM reservation_time AS rt "
+                + "WHERE rt.start_at = ?)";
+        return template.queryForObject(sql, Boolean.class, startAt);
     }
 
     public long add(ReservationTime reservationTime) {

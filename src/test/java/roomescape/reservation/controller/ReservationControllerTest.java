@@ -64,6 +64,15 @@ public class ReservationControllerTest {
                 .body("size()", is(0));
     }
 
+    @Test
+    @DisplayName("존재하지 않는 예약을 삭제하면 예외가 발생한다.")
+    void deleteNonExistentReservation() {
+        RestAssured.given().log().all()
+                .when().delete("/reservations/999")
+                .then().log().all()
+                .statusCode(404);
+    }
+
     private void setUpReservation() {
         createReservationTime();
         createNewReservation();

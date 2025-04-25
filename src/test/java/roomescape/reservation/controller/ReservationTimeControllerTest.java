@@ -41,4 +41,13 @@ class ReservationTimeControllerTest {
                 .then().log().all()
                 .statusCode(200);
     }
+
+    @Test
+    @DisplayName("존재하지 않는 예약 시간을 삭제하면 예외가 발생한다.")
+    void deleteNonExistentReservationTime() {
+        RestAssured.given().log().all()
+                .when().delete("/times/999")
+                .then().log().all()
+                .statusCode(404);
+    }
 }

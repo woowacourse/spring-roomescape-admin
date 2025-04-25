@@ -43,7 +43,7 @@ public class ReservationTimeController {
             timeDAO.deleteBy(id);
             return ResponseEntity.ok().build();
         } catch (RuntimeException e) {
-            return ResponseEntity.badRequest().build();
+            return ResponseEntity.notFound().build();
         }
     }
 }

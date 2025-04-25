@@ -8,7 +8,6 @@ import roomescape.dto.CreateReservationDto;
 import roomescape.dto.CreateReservationTimeDto;
 import roomescape.entity.Reservation;
 import roomescape.entity.ReservationTime;
-import roomescape.exception.InvalidFunctionException;
 import roomescape.service.ReservationService;
 import roomescape.service.ReservationTimeService;
 import roomescape.view.InputView;
@@ -37,7 +36,7 @@ public class ConsoleController {
             try {
                 Function function = Function.getSystemFunction(inputView.selectAdminFunction());
                 processSystemFunction(function);
-            } catch (InvalidFunctionException e) {
+            } catch (RuntimeException e) {
                 System.out.println(e.getMessage());
             }
         }

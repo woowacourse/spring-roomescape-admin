@@ -1,13 +1,11 @@
 package roomescape.repository.impl;
 
-import java.sql.PreparedStatement;
 import java.util.List;
-import java.util.Objects;
+import java.util.Map;
 import java.util.Optional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.JdbcTemplate;
-import org.springframework.jdbc.support.GeneratedKeyHolder;
-import org.springframework.jdbc.support.KeyHolder;
+import org.springframework.jdbc.core.simple.SimpleJdbcInsert;
 import org.springframework.stereotype.Repository;
 import roomescape.domain.ReservationTime;
 import roomescape.repository.ReservationTimeRepository;
@@ -15,48 +13,37 @@ import roomescape.repository.ReservationTimeRepository;
 @Repository
 public class ReservationTimeRepositoryImpl implements ReservationTimeRepository {
     private final JdbcTemplate jdbcTemplate;
+    private final SimpleJdbcInsert simpleJdbcInsert;
 
     @Autowired
     public ReservationTimeRepositoryImpl(JdbcTemplate jdbcTemplate) {
         this.jdbcTemplate = jdbcTemplate;
+        this.simpleJdbcInsert = new SimpleJdbcInsert(jdbcTemplate).withTableName("reservation_time")
+                .usingGeneratedKeyColumns("id");
     }
 
     public ReservationTime createReservationTime(ReservationTime reservationTime) {
-        final String query = "INSERT INTO reservation_time (start_at) VALUES (?)";
-        KeyHolder keyHolder = new GeneratedKeyHolder();
-        jdbcTemplate.update(connection -> {
-            PreparedStatement ps = connection.prepareStatement(query, new String[]{"id"});
-            ps.setObject(1, reservationTime.getStartAt());
-            return ps;
-        }, keyHolder);
+        Map<String, Object> parameters = Map.ofEntries(Map.entry("start_at", reservationTime.getStartAt()));
+        long generatedKey = simpleJdbcInsert.executeAndReturnKey(parameters).longValue();
 
-        ReservationTime createdReservationTime = ReservationTime.generateWithPrimaryKey(
-                reservationTime, Objects.requireNonNull(keyHolder.getKey()).longValue());
-
-        return createdReservationTime;
+        return ReservationTime.generateWithPrimaryKey(reservationTime, generatedKey);
     }
 
     public List<ReservationTime> readReservationTimes() {
         final String query = "SELECT id, start_at FROM reservation_time";
-        List<ReservationTime> reservationTimes = jdbcTemplate.query(
-                query,
-                (resultSet, rowNum) -> new ReservationTime(
-                        resultSet.getLong("id"),
-                        resultSet.getTime("start_at").toLocalTime()
-                )
-        );
+        List<ReservationTime> reservationTimes = jdbcTemplate.query(query,
+                (resultSet, rowNum) -> new ReservationTime(resultSet.getLong("id"),
+                        resultSet.getTime("start_at").toLocalTime()));
 
         return reservationTimes;
     }
 
     public Optional<ReservationTime> readReservationTime(Long timeId) {
         final String query = "SELECT id, start_at FROM reservation_time WHERE id = ?";
-        return Optional.ofNullable(
-                jdbcTemplate.queryForObject(query, (resultSet, rowNum) -> new ReservationTime(
-                        resultSet.getLong("id"),
-                        resultSet.getTime("start_at").toLocalTime()
-                ), timeId)
-        );
+
+        return Optional.ofNullable(jdbcTemplate.queryForObject(query,
+                (resultSet, rowNum) -> new ReservationTime(resultSet.getLong("id"),
+                        resultSet.getTime("start_at").toLocalTime()), timeId));
     }
 
     public void deleteReservationTime(Long id) {

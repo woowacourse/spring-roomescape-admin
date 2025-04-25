@@ -11,9 +11,11 @@ import org.springframework.http.ResponseEntity;
 import roomescape.domain.ReservationTime;
 import roomescape.dto.request.ReservationTimeRequest;
 import roomescape.repository.fake.FakeReservationTimeRepository;
+import roomescape.service.ReservationTimeService;
 
 class ReservationTimeControllerTest {
-    private final ReservationTimeController reservationTimeController = new ReservationTimeController(new FakeReservationTimeRepository());
+    private final ReservationTimeService fakeReservationTimeService = new ReservationTimeService(new FakeReservationTimeRepository());
+    private final ReservationTimeController reservationTimeController = new ReservationTimeController(fakeReservationTimeService);
 
     @ParameterizedTest
     @CsvSource(value = {"18:00"})

@@ -13,7 +13,7 @@ public class ReservationTime {
         this.startAt = startAt;
     }
 
-    public static ReservationTime generateWithPrimaryKey(ReservationTime reservationTime, long newPrimaryKey) {
+    public static ReservationTime generateWithPrimaryKey(ReservationTime reservationTime, Long newPrimaryKey) {
         return new ReservationTime(newPrimaryKey, reservationTime.startAt);
     }
 

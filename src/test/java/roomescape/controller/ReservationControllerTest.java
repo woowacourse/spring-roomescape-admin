@@ -14,11 +14,12 @@ import roomescape.dto.request.ReservationRequest;
 import roomescape.dto.response.ReservationResponse;
 import roomescape.repository.fake.FakeReservationRepository;
 import roomescape.repository.fake.FakeReservationTimeRepository;
+import roomescape.service.ReservationService;
 
 class ReservationControllerTest {
-    FakeReservationRepository fakeReservationRepository = new FakeReservationRepository();
-    FakeReservationTimeRepository fakeReservationTimeRepository = new FakeReservationTimeRepository();
-    private final ReservationController reservationController = new ReservationController(fakeReservationRepository, fakeReservationTimeRepository);
+    private final FakeReservationRepository fakeReservationRepository = new FakeReservationRepository();
+    private final FakeReservationTimeRepository fakeReservationTimeRepository = new FakeReservationTimeRepository();
+    private final ReservationController reservationController = new ReservationController(new ReservationService(fakeReservationRepository, fakeReservationTimeRepository));
 
     private void makeStubReservationTime(Long id, LocalTime startAt) {
         fakeReservationTimeRepository.createReservationTime(new ReservationTime(id, startAt));

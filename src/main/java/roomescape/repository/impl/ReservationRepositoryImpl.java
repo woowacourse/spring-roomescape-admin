@@ -1,12 +1,10 @@
 package roomescape.repository.impl;
 
-import java.sql.PreparedStatement;
 import java.util.List;
-import java.util.Objects;
+import java.util.Map;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.JdbcTemplate;
-import org.springframework.jdbc.support.GeneratedKeyHolder;
-import org.springframework.jdbc.support.KeyHolder;
+import org.springframework.jdbc.core.simple.SimpleJdbcInsert;
 import org.springframework.stereotype.Repository;
 import roomescape.domain.Reservation;
 import roomescape.repository.ReservationRepository;
@@ -14,10 +12,14 @@ import roomescape.repository.ReservationRepository;
 @Repository
 public class ReservationRepositoryImpl implements ReservationRepository {
     private final JdbcTemplate jdbcTemplate;
+    private final SimpleJdbcInsert simpleJdbcInsert;
 
     @Autowired
     public ReservationRepositoryImpl(JdbcTemplate jdbcTemplate) {
         this.jdbcTemplate = jdbcTemplate;
+        this.simpleJdbcInsert = new SimpleJdbcInsert(jdbcTemplate)
+                .withTableName("reservation")
+                .usingGeneratedKeyColumns("id");
     }
 
     public List<Reservation> readReservations() {
@@ -45,18 +47,15 @@ public class ReservationRepositoryImpl implements ReservationRepository {
     }
 
     public Reservation createReservation(Reservation reservation) {
-        final String query = "INSERT INTO reservation (name, date, time_id) VALUES (?, ?, ?)";
-        KeyHolder keyHolder = new GeneratedKeyHolder();
-        jdbcTemplate.update(connection -> {
-            PreparedStatement ps = connection.prepareStatement(query, new String[]{"id"});
-            ps.setString(1, reservation.getName());
-            ps.setObject(2, reservation.getDate());
-            ps.setLong(3, reservation.getTimeId());
-            return ps;
-        }, keyHolder);
+        Map<String, Object> parameters = Map.ofEntries(
+                Map.entry("name", reservation.getName()),
+                Map.entry("date", reservation.getDate()),
+                Map.entry("time_id", reservation.getTimeId())
+        );
 
-        return Reservation.generateWithPrimaryKey(reservation, Objects.requireNonNull(
-                keyHolder.getKey()).longValue());
+        Long generatedKey = simpleJdbcInsert.executeAndReturnKey(parameters).longValue();
+
+        return Reservation.generateWithPrimaryKey(reservation, generatedKey);
     }
 
     public void deleteReservation(Long id) {

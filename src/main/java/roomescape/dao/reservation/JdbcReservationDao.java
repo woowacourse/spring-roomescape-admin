@@ -41,11 +41,10 @@ public class JdbcReservationDao implements ReservationDao {
                 .withTableName("reservation")
                 .usingGeneratedKeyColumns("id");
 
-        Map<String, Object> parameters = new HashMap<>();
-        parameters.put("name", reservation.getName());
-        parameters.put("date", reservation.getDate());
-        parameters.put("time_id", reservation.getTime().getId());
-
+        Map<String, Object> parameters = new HashMap<>(Map.of(
+                "name", reservation.getName(),
+                "date", reservation.getDate(),
+                "time_id", reservation.getTime().getId()));
         Number key = jdbcInsert.executeAndReturnKey(parameters);
         return new Reservation(key.longValue(), reservation.getName(), reservation.getDate(), reservation.getTime());
     }

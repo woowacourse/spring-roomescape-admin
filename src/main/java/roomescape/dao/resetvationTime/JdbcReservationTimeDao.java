@@ -31,8 +31,8 @@ public class JdbcReservationTimeDao implements ReservationTimeDao {
                 .withTableName("reservation_time")
                 .usingGeneratedKeyColumns("id");
 
-        Map<String, Object> parameters = new HashMap<>();
-        parameters.put("start_at", reservationTime.getStartAt());
+        Map<String, Object> parameters = new HashMap<>(Map.of(
+                "start_at", reservationTime.getStartAt()));
 
         Number key = jdbcInsert.executeAndReturnKey(parameters);
         return new ReservationTime(key.longValue(), reservationTime.getStartAt());

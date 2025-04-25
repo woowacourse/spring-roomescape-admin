@@ -14,7 +14,7 @@ import org.junit.jupiter.params.provider.ValueSource;
 
 class ReservationTest {
 
-    @DisplayName("첫 번째 생성자로 null은 들어올 수 없다.")
+    @DisplayName("생성자1로 null은 들어올 수 없다.")
     @ParameterizedTest
     @MethodSource("provideConstructorArguments")
     void validateNonNull1(
@@ -27,7 +27,7 @@ class ReservationTest {
                 .isInstanceOf(NullPointerException.class);
     }
 
-    @DisplayName("두 번째 생성자로 null은 들어올 수 없다.")
+    @DisplayName("생성자2로 null은 들어올 수 없다.")
     @ParameterizedTest
     @MethodSource("provideConstructorArguments")
     void validateNonNull2(
@@ -38,7 +38,7 @@ class ReservationTest {
         // given & when & then
         assertAll(
                 () -> assertThatThrownBy(
-                        () -> new Reservation(null, "hotteok", LocalDate.now(), new Time(LocalTime.now())))
+                        () -> new Reservation(null, "hotteok", LocalDate.MAX, new Time(LocalTime.MAX)))
                         .isInstanceOf(NullPointerException.class),
                 () -> assertThatThrownBy(
                         () -> new Reservation(1L, name, localDate, time))
@@ -48,9 +48,9 @@ class ReservationTest {
 
     private static Stream<Arguments> provideConstructorArguments() {
         return Stream.of(
-                Arguments.of(null, LocalDate.now(), new Time(LocalTime.now())),
-                Arguments.of("hotteok", null, new Time(LocalTime.now())),
-                Arguments.of("hotteok", LocalDate.now(), null)
+                Arguments.of(null, LocalDate.MAX, new Time(LocalTime.MAX)),
+                Arguments.of("hotteok", null, new Time(LocalTime.MAX)),
+                Arguments.of("hotteok", LocalDate.MAX, null)
         );
     }
 
@@ -59,7 +59,7 @@ class ReservationTest {
     @ValueSource(strings = {"", "  ", "     "})
     void validateNameIsNotBlack(final String name) {
         // given & when & then
-        assertThatThrownBy(() -> new Reservation(name, LocalDate.now(), new Time(LocalTime.now())))
+        assertThatThrownBy(() -> new Reservation(name, LocalDate.MAX, new Time(LocalTime.MAX)))
                 .isInstanceOf(IllegalArgumentException.class);
     }
 }

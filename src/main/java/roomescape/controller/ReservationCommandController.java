@@ -33,8 +33,8 @@ public class ReservationCommandController {
     }
 
     @DeleteMapping("reservations/{reservationId}")
-    public ResponseEntity<Void> delete(@PathVariable("reservationId") Long id) {
-        reservationService.delete(id);
+    public ResponseEntity<Void> deleteReservation(@PathVariable("reservationId") Long id) {
+        reservationService.deleteReservation(id);
         return ResponseEntity.noContent().build();
     }
 
@@ -44,5 +44,11 @@ public class ReservationCommandController {
         ReservationTime reservationTime = reservationService.readTimeOne(id);
         String location = "/times/" + id;
         return ResponseEntity.created(URI.create(location)).body(reservationTime);
+    }
+
+    @DeleteMapping("times/{timeId}")
+    public ResponseEntity<Void> deleteReservationTime(@PathVariable("timeId") Long id) {
+        reservationService.deleteReservationTime(id);
+        return ResponseEntity.noContent().build();
     }
 }

@@ -1,7 +1,6 @@
 package roomescape.domain;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
-import java.time.LocalDate;
 import java.time.LocalTime;
 
 public class ReservationTime {

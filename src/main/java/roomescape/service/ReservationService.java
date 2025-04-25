@@ -23,7 +23,7 @@ public class ReservationService {
         this.reservationTimeRepository = reservationTimeRepository;
     }
 
-    public List<Reservation> readAll() {
+    public List<Reservation> readReservationAll() {
         return reservationRepository.findAll();
     }
 
@@ -36,7 +36,7 @@ public class ReservationService {
                 new Reservation(reservationDto.name(), reservationDto.date(), reservationDto.time()));
     }
 
-    public void delete(Long id) {
+    public void deleteReservation(Long id) {
         reservationRepository.delete(id);
     }
 
@@ -44,7 +44,15 @@ public class ReservationService {
         return reservationTimeRepository.add(new ReservationTime(reservationTimeRequestDto.startAt()));
     }
 
+    public List<ReservationTime> readTimeAll() {
+        return reservationTimeRepository.findAll();
+    }
+
     public ReservationTime readTimeOne(Long id) {
         return reservationTimeRepository.findById(id);
+    }
+
+    public void deleteReservationTime(Long id) {
+        reservationTimeRepository.delete(id);
     }
 }

@@ -8,6 +8,7 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.ResponseBody;
 import roomescape.domain.Reservation;
+import roomescape.domain.ReservationTime;
 import roomescape.service.ReservationService;
 
 @Controller
@@ -43,7 +44,7 @@ public class ReservationQueryController {
     @GetMapping("reservations")
     @ResponseBody
     public ResponseEntity<List<Reservation>> readReservations() {
-        List<Reservation> reservations = reservationService.readAll();
+        List<Reservation> reservations = reservationService.readReservationAll();
         return ResponseEntity.ok(reservations);
     }
 
@@ -52,5 +53,19 @@ public class ReservationQueryController {
     public ResponseEntity<Reservation> readReservation(@PathVariable("reservationId") Long id) {
         Reservation reservation = reservationService.readReservationOne(id);
         return ResponseEntity.ok(reservation);
+    }
+
+    @GetMapping("times")
+    @ResponseBody
+    public ResponseEntity<List<ReservationTime>> readReservationTimes() {
+        List<ReservationTime> reservationTimes = reservationService.readTimeAll();
+        return ResponseEntity.ok(reservationTimes);
+    }
+
+    @GetMapping("times/{timeId}")
+    @ResponseBody
+    public ResponseEntity<ReservationTime> readReservationTime(@PathVariable("timeId") Long id) {
+        ReservationTime reservationTime = reservationService.readTimeOne(id);
+        return ResponseEntity.ok(reservationTime);
     }
 }

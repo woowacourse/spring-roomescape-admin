@@ -33,7 +33,7 @@ public class ReservationService {
         return ReservationMapper.toDtos(reservations);
     }
 
-    public void cancelReservation(Long id) {
+    public void deleteReservation(Long id) {
         reservationRepository.deleteById(id);
     }
 }

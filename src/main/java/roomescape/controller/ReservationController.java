@@ -35,6 +35,6 @@ public class ReservationController {
 
     @DeleteMapping("/{id}")
     public void deleteReservation(@PathVariable("id") Long id) {
-        service.cancelReservation(id);
+        service.deleteReservation(id);
     }
 }

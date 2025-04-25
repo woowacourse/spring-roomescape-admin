@@ -89,7 +89,7 @@ class ReservationServiceTest {
         assertThat(reservationRepository.findAll()).hasSize(1);
 
         // when
-        reservationService.cancelReservation(1L);
+        reservationService.deleteReservation(1L);
 
         // then
         assertThat(reservationRepository.findAll()).hasSize(0);

@@ -52,7 +52,10 @@ class RoomescapeTimeRepositoryTest {
         List<ReservationTime> times = timeRepository.findAll();
 
         //then
+        ReservationTime time = times.getFirst();
         assertThat(times).hasSize(1);
+        assertThat(time.getId()).isEqualTo(1L);
+        assertThat(time.getStartAt()).isEqualTo(LocalTime.parse("15:40"));
     }
 
     @Test
@@ -62,10 +65,16 @@ class RoomescapeTimeRepositoryTest {
 
         //when
         ReservationTime saved = timeRepository.save(reservationTime);
+        ReservationTime firstTime = timeRepository.findById(1L);
+        ReservationTime secondTime = timeRepository.findById(2L);
 
         //then
         assertThat(saved.getId()).isEqualTo(2L);
         assertThat(saved.getStartAt()).isEqualTo(LocalTime.parse("16:30"));
+        assertThat(firstTime.getId()).isEqualTo(1L);
+        assertThat(firstTime.getStartAt()).isEqualTo(LocalTime.parse("15:40"));
+        assertThat(secondTime.getId()).isEqualTo(2L);
+        assertThat(secondTime.getStartAt()).isEqualTo(LocalTime.parse("16:30"));
     }
 
     @Test
@@ -75,6 +84,7 @@ class RoomescapeTimeRepositoryTest {
 
         //then
         assertThat(deleteCounts).isEqualTo(1);
+        assertThat(timeRepository.findAll()).isEmpty();
     }
 
 }

@@ -14,7 +14,8 @@ class ReservationTest {
         final String name = "안녕하세요";
 
         //should
-        assertThatIllegalArgumentException().isThrownBy(() -> new Reservation(1L,name, LocalDate.now(), ReservationTime.of(LocalTime.MAX)));
+        assertThatIllegalArgumentException().isThrownBy(
+                () -> new Reservation(1L, name, LocalDate.now(), ReservationTime.of(LocalTime.MAX)));
     }
 
     @Test
@@ -23,6 +24,7 @@ class ReservationTest {
         LocalDate date = LocalDate.now().minusDays(1);
 
         // should
-        assertThatIllegalArgumentException().isThrownBy(() -> new Reservation(1L, "히로", date, ReservationTime.of(LocalTime.MAX)));
+        assertThatIllegalArgumentException().isThrownBy(
+                () -> new Reservation(1L, "히로", date, ReservationTime.of(LocalTime.MAX)));
     }
 }

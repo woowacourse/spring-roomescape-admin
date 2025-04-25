@@ -45,10 +45,11 @@ public class ReservationTimeJdbcRepository implements ReservationTimeRepository 
     @Override
     public Optional<ReservationTime> findById(final long id) {
         final String sql = "SELECT * FROM reservation_time WHERE id = ?";
-        final List<ReservationTime> reservationTimes = jdbcTemplate.query(sql, (resultSet, rowNum) -> ReservationTime.of(
-                resultSet.getLong("id"),
-                resultSet.getString("start_at")
-        ), id);
+        final List<ReservationTime> reservationTimes = jdbcTemplate.query(sql,
+                (resultSet, rowNum) -> ReservationTime.of(
+                        resultSet.getLong("id"),
+                        resultSet.getString("start_at")
+                ), id);
         if (reservationTimes.isEmpty()) {
             return Optional.empty();
         }

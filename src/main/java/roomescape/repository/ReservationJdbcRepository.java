@@ -38,19 +38,19 @@ public class ReservationJdbcRepository implements ReservationRepository {
     @Override
     public List<Reservation> findAll() {
         final String sql = """
-        SELECT 
-            r.id AS reservation_id,
-            r.name,
-            r.date,
-            t.id AS time_id,
-            t.start_at AS time_value 
-        FROM 
-            reservation AS r 
-        INNER JOIN 
-            reservation_time AS t 
-        ON 
-            r.time_id = t.id
-        """;
+                SELECT 
+                    r.id AS reservation_id,
+                    r.name,
+                    r.date,
+                    t.id AS time_id,
+                    t.start_at AS time_value 
+                FROM 
+                    reservation AS r 
+                INNER JOIN 
+                    reservation_time AS t 
+                ON 
+                    r.time_id = t.id
+                """;
         return jdbcTemplate.query(sql,
                 (resultSet, rowNum) -> Reservation.of(
                         resultSet.getLong("id"),

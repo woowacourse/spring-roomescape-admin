@@ -19,14 +19,14 @@ import roomescape.reservation.domain.Reservation;
 import roomescape.time.domain.ReservationTime;
 
 @JdbcTest
-@Import(ReservationDAO.class)
-public class ReservationDAOTest {
+@Import(ReservationJdbcDao.class)
+public class ReservationJdbcDaoTest {
 
     @Autowired
     private JdbcTemplate jdbcTemplate;
 
     @Autowired
-    private ReservationDAO reservationDAO;
+    private ReservationJdbcDao reservationJdbcDao;
 
     @BeforeEach
     void setUp() {
@@ -48,7 +48,7 @@ public class ReservationDAOTest {
         );
 
         //when
-        List<Reservation> reservations = reservationDAO.findAllReservations();
+        List<Reservation> reservations = reservationJdbcDao.findAllReservations();
 
         //then
         Assertions.assertThat(reservations.size()).isOne();
@@ -61,7 +61,7 @@ public class ReservationDAOTest {
         ReservationTime reservationTime = new ReservationTime(1L, LocalTime.of(13,31));
 
         //when
-        Reservation reservation = reservationDAO.insertReservation(
+        Reservation reservation = reservationJdbcDao.insertReservation(
                 new Reservation(
                         null,
                         "우가",
@@ -90,10 +90,10 @@ public class ReservationDAOTest {
         Long insertedId = keyHolder.getKey().longValue();
 
         //when
-        reservationDAO.removeReservation(insertedId);
+        reservationJdbcDao.removeReservation(insertedId);
 
         //then
-        Assertions.assertThat(reservationDAO.findAllReservations()).isEmpty();
+        Assertions.assertThat(reservationJdbcDao.findAllReservations()).isEmpty();
     }
 
 

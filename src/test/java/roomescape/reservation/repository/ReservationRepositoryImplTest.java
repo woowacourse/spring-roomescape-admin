@@ -10,11 +10,12 @@ import org.springframework.dao.IncorrectResultSizeDataAccessException;
 import roomescape.reservation.database.ReservationRepositoryImpl;
 import roomescape.reservation.domain.Reservation;
 import roomescape.reservation.fixture.ReservationFixture;
+import roomescape.reservationTime.repository.ReservationTimeRepositoryImpl;
 
 import java.util.List;
 
 @JdbcTest
-@Import({ReservationRepositoryImpl.class})
+@Import({ReservationRepositoryImpl.class, ReservationTimeRepositoryImpl.class})
 class ReservationRepositoryImplTest {
 
     @Autowired

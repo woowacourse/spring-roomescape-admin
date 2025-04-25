@@ -13,4 +13,6 @@ public interface ReservationTimeRepository {
     ReservationTime findById(Long id);
 
     void delete(Long id);
+
+    Long insertWithKeyHolder(ReservationTime reservationTime);
 }

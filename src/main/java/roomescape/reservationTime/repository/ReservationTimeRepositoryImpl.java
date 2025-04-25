@@ -55,7 +55,8 @@ public class ReservationTimeRepositoryImpl implements ReservationTimeRepository 
         jdbcTemplate.update(sql, Long.valueOf(id));
     }
 
-    private Long insertWithKeyHolder(ReservationTime reservationTime) {
+    @Override
+    public Long insertWithKeyHolder(ReservationTime reservationTime) {
         String sql = "INSERT INTO reservation_time (start_at) VALUES (?)";
         KeyHolder keyHolder = new GeneratedKeyHolder();
 

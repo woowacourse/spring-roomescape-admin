@@ -6,6 +6,7 @@ import org.springframework.jdbc.support.KeyHolder;
 import org.springframework.stereotype.Repository;
 import roomescape.reservation.domain.Reservation;
 import roomescape.reservationTime.domain.ReservationTime;
+import roomescape.reservationTime.repository.ReservationTimeRepository;
 
 import java.sql.PreparedStatement;
 import java.util.List;
@@ -14,9 +15,11 @@ import java.util.List;
 public class ReservationRepositoryImpl implements ReservationRepository {
 
     private final JdbcTemplate jdbcTemplate;
+    private final ReservationTimeRepository reservationTimeRepository;
 
-    public ReservationRepositoryImpl(final JdbcTemplate jdbcTemplate) {
+    public ReservationRepositoryImpl(final JdbcTemplate jdbcTemplate, ReservationTimeRepository reservationTimeRepository) {
         this.jdbcTemplate = jdbcTemplate;
+        this.reservationTimeRepository = reservationTimeRepository;
     }
 
     @Override
@@ -50,7 +53,7 @@ public class ReservationRepositoryImpl implements ReservationRepository {
 
     @Override
     public Reservation findById(Long id) {
-        String sql = "select id, name, date, time from reservation where id = ?";
+        String sql = "select id, name, date, time_id from reservation where id = ?";
 
         return jdbcTemplate.queryForObject(sql,
                 (resultSet, rowNum) ->
@@ -58,7 +61,7 @@ public class ReservationRepositoryImpl implements ReservationRepository {
                                 resultSet.getLong("id"),
                                 resultSet.getString("name"),
                                 resultSet.getDate("date").toLocalDate(),
-                                new ReservationTime(resultSet.getTime("time").toLocalTime())
+                                reservationTimeRepository.findById(resultSet.getLong("time_id"))
                         ), id);
     }
 
@@ -75,16 +78,20 @@ public class ReservationRepositoryImpl implements ReservationRepository {
     }
 
     private Long insertWithKeyHolder(Reservation reservation) {
-        String sql = "INSERT INTO reservation (name, date, time) VALUES (?, ?, ?)";
+        String sql = "INSERT INTO reservation (name, date, time_id) VALUES (?, ?, ?)";
         KeyHolder keyHolder = new GeneratedKeyHolder();
 
+        // reservationTime 객체로 id를 찾기
+        Long reservationTimeId = reservationTimeRepository.insertWithKeyHolder(reservation.getReservationTime());
+
+        // reservationTimeId로 reservation 찾기
         jdbcTemplate.update(connection -> {
             PreparedStatement ps = connection.prepareStatement(
                     sql,
                     new String[]{"id"});
             ps.setString(1, reservation.getName());
             ps.setString(2, reservation.getDate().toString());
-            ps.setString(3, reservation.getReservationTime().toString());
+            ps.setLong(3, reservationTimeId);
             return ps;
         }, keyHolder);
 

@@ -12,11 +12,12 @@ import roomescape.reservation.domain.Reservation;
 import roomescape.reservation.domain.dto.ReservationReqDto;
 import roomescape.globalException.CustomException;
 import roomescape.reservation.fixture.ReservationFixture;
+import roomescape.reservationTime.repository.ReservationTimeRepositoryImpl;
 
 import java.time.LocalDateTime;
 
 @JdbcTest
-@Import({ReservationService.class, ReservationRepositoryImpl.class})
+@Import({ReservationService.class, ReservationRepositoryImpl.class, ReservationTimeRepositoryImpl.class})
 class ReservationServiceTest {
 
     @Autowired

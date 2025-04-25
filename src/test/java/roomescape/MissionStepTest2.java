@@ -29,8 +29,8 @@ import static org.hamcrest.core.Is.is;
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.DEFINED_PORT)
 @BootstrapWith(SpringBootTestContextBootstrapper.class)
 @ExtendWith({SpringExtension.class})
-@DirtiesContext(classMode = DirtiesContext.ClassMode.AFTER_EACH_TEST_METHOD) // TODO 2025. 4. 22. 20:33: DirtiesContext가 적합한지 고민 필요
-public class MissionStepTest2 { // TODO 2025. 4. 22. 20:31: class명 수정
+@DirtiesContext(classMode = DirtiesContext.ClassMode.AFTER_EACH_TEST_METHOD)
+public class MissionStepTest2 {
 
     @Autowired
     private JdbcTemplate jdbcTemplate;
@@ -48,12 +48,13 @@ public class MissionStepTest2 { // TODO 2025. 4. 22. 20:31: class명 수정
 
     @Test
     void 오단계() {
-        jdbcTemplate.update("INSERT INTO reservation (name, date, time) VALUES (?, ?, ?)", "브라운", "2023-08-05", "15:40");
+        jdbcTemplate.update("INSERT INTO reservation_time (start_at) VALUES (?)", "15:40");
+        jdbcTemplate.update("INSERT INTO reservation (name, date, time_id) VALUES (?, ?, ?)", "브라운", "2023-08-05", "1");
 
         List<ReservationResDto> resDtos = RestAssured.given().log().all()
                 .when().get("/reservations")
                 .then().log().all()
-                .statusCode(200).extract()
+                .statusCode(HttpStatus.OK.value()).extract()
                 .jsonPath().getList(".", ReservationResDto.class);
 
         Integer count = jdbcTemplate.queryForObject("SELECT count(1) from reservation", Integer.class);
@@ -111,5 +112,30 @@ public class MissionStepTest2 { // TODO 2025. 4. 22. 20:31: class명 수정
                 .when().delete("/times/1")
                 .then().log().all()
                 .statusCode(HttpStatus.NO_CONTENT.value());
+    }
+
+    @Test
+    void 팔단계() {
+        LocalDateTime localDateTime = LocalDateTime.now().plusDays(1);
+
+        String dummyName = "브라운";
+        LocalDate dummyDate = localDateTime.toLocalDate();
+        LocalTime dummyTime = localDateTime.toLocalTime();
+
+        ReservationReqDto dto = new ReservationReqDto(dummyName, dummyDate, dummyTime);
+
+        RestAssured.given().log().all()
+                .contentType(ContentType.JSON)
+                .body(dto)
+                .when().post("/reservations")
+                .then().log().all()
+                .statusCode(HttpStatus.CREATED.value());
+
+
+        RestAssured.given().log().all()
+                .when().get("/reservations")
+                .then().log().all()
+                .statusCode(HttpStatus.OK.value())
+                .body("size()", is(1));
     }
 }

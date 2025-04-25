@@ -53,6 +53,20 @@ public class RoomescapeRepositoryImpl implements RoomescapeRepository {
         return template.update(sql, id);
     }
 
+    @Override
+    public boolean existsByDateAndTime(final LocalDate date, final ReservationTime time) {
+        String sql = """
+                SELECT r.id AS reservation_id, r.name, r.date, t.id AS time_id, t.start_at AS time_value
+                FROM reservation as r 
+                INNER JOIN reservation_time AS t
+                ON r.time_id = t.id
+                WHERE r.date = ? and t.start_at = ?
+                """;
+        List<Reservation> result = template.query(sql, reservationRowMapper(), date.toString(),
+                time.getStartAt().toString());
+        return !result.isEmpty();
+    }
+
     private RowMapper<Reservation> reservationRowMapper() {
         return (rs, rowNum) -> {
             ReservationTime reservationTime = ReservationTime.parse(rs.getString("time_value"))

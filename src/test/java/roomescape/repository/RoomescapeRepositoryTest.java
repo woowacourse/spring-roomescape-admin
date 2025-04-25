@@ -81,4 +81,19 @@ class RoomescapeRepositoryTest {
         assertThat(deleteCounts).isEqualTo(1);
     }
 
+    @Test
+    void existsByDateAndTime() {
+        //when
+        boolean found = repository.existsByDateAndTime(LocalDate.parse("2023-08-05"), ReservationTime.parse("15:40"));
+        boolean notFound1 = repository.existsByDateAndTime(LocalDate.parse("2023-08-05"), ReservationTime.parse("15:41"));
+        boolean notFound2 = repository.existsByDateAndTime(LocalDate.parse("2023-08-06"), ReservationTime.parse("15:40"));
+        boolean notFound3 = repository.existsByDateAndTime(LocalDate.parse("2023-08-06"), ReservationTime.parse("15:41"));
+
+        //then
+        assertThat(found).isTrue();
+        assertThat(notFound1).isFalse();
+        assertThat(notFound2).isFalse();
+        assertThat(notFound3).isFalse();
+    }
+
 }

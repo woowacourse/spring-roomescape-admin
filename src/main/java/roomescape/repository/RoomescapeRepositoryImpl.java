@@ -22,10 +22,12 @@ public class RoomescapeRepositoryImpl implements RoomescapeRepository {
 
     @Override
     public List<Reservation> findAll() {
-        String sql = "SELECT r.id AS reservation_id, r.name, r.date, t.id AS time_id, t.start_at AS time_value "
-                + "FROM reservation as r "
-                + "INNER JOIN reservation_time AS t "
-                + "ON r.time_id = t.id";
+        String sql = """
+                SELECT r.id AS reservation_id, r.name, r.date, t.id AS time_id, t.start_at AS time_value
+                FROM reservation as r 
+                INNER JOIN reservation_time AS t
+                ON r.time_id = t.id
+                """;
         return template.query(sql, reservationRowMapper());
     }
 

@@ -5,11 +5,13 @@ import org.junit.jupiter.api.Test;
 import roomescape.reservation.dto.ReservationTimeRequestDto;
 import roomescape.reservation.dto.ReservationTimeResponseDto;
 import roomescape.reservation.entity.ReservationTime;
+import roomescape.reservation.exception.EntityNotFoundException;
 
 import java.time.LocalTime;
 import java.util.List;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.assertThatThrownBy;
 
 class ReservationTimeServiceTest {
 
@@ -64,5 +66,13 @@ class ReservationTimeServiceTest {
         // then
         List<ReservationTimeResponseDto> all = reservationTimeService.findAll();
         assertThat(all.isEmpty()).isTrue();
+    }
+
+    @Test
+    void 없는_예약시간을_삭제하면_예외가_발생한다() {
+        // when & then
+        assertThatThrownBy(() -> reservationTimeService.deleteById(9L))
+            .isInstanceOf(EntityNotFoundException.class)
+            .hasMessage("삭제할 예약시간이 없습니다.");
     }
 }

@@ -3,6 +3,7 @@ package roomescape.repository;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.simple.SimpleJdbcInsert;
 import org.springframework.stereotype.Repository;
@@ -39,6 +40,19 @@ public class ReservationTimeJdbcRepository implements ReservationTimeRepository 
                         resultSet.getString("start_at")
                 )
         );
+    }
+
+    @Override
+    public Optional<ReservationTime> findById(final long id) {
+        final String sql = "SELECT * FROM reservation_time WHERE id = ?";
+        final List<ReservationTime> reservationTimes = jdbcTemplate.query(sql, (resultSet, rowNum) -> ReservationTime.of(
+                resultSet.getLong("id"),
+                resultSet.getString("start_at")
+        ), id);
+        if (reservationTimes.isEmpty()) {
+            return Optional.empty();
+        }
+        return Optional.of(reservationTimes.getFirst());
     }
 
     @Override

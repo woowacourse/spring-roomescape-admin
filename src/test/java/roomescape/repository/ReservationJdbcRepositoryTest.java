@@ -12,6 +12,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.jdbc.JdbcTest;
 import org.springframework.jdbc.core.JdbcTemplate;
 import roomescape.domain.Reservation;
+import roomescape.domain.ReservationTime;
 
 @JdbcTest
 class ReservationJdbcRepositoryTest {
@@ -21,18 +22,25 @@ class ReservationJdbcRepositoryTest {
 
     private ReservationJdbcRepository reservationJdbcRepository;
 
+    private ReservationTimeRepository reservationTimeRepository;
+
     @BeforeEach
     void setUp() {
         reservationJdbcRepository = new ReservationJdbcRepository(jdbcTemplate);
+        reservationTimeRepository = new ReservationTimeJdbcRepository(jdbcTemplate);
+        reservationTimeRepository.save(ReservationTime.of(LocalTime.now()));
+        jdbcTemplate.execute("ALTER TABLE reservation_time ALTER COLUMN id RESTART WITH 1");
     }
 
+    //    @Disabled
     @DisplayName("예약 데이터를 성공적으로 저장한다.")
     @Test
     void saveTest() {
         //given
         final LocalDate date = LocalDate.MAX;
         final LocalTime time = LocalTime.MAX;
-        final Reservation reservation = new Reservation("윌슨", date, time);
+        final Reservation reservation = Reservation.of(1L, "윌슨", date.toString(),
+                ReservationTime.of(1L, time.toString()));
 
         //when
         final long id = reservationJdbcRepository.save(reservation);
@@ -47,7 +55,8 @@ class ReservationJdbcRepositoryTest {
         //given
         final LocalDate date = LocalDate.MAX;
         final LocalTime time = LocalTime.MAX;
-        final Reservation reservation = new Reservation("윌슨", date, time);
+        final Reservation reservation = Reservation.of(1L, "윌슨", date.toString(),
+                ReservationTime.of(1L, time.toString()));
         reservationJdbcRepository.save(reservation);
 
         //when
@@ -63,7 +72,8 @@ class ReservationJdbcRepositoryTest {
         //given
         final LocalDate date = LocalDate.MAX;
         final LocalTime time = LocalTime.MAX;
-        final Reservation reservation = new Reservation("윌슨", date, time);
+        final Reservation reservation = Reservation.of(1L, "윌슨", date.toString(),
+                ReservationTime.of(1L, time.toString()));
         final long id = reservationJdbcRepository.save(reservation);
 
         //when

@@ -19,11 +19,13 @@ class ReservationTimeJdbcRepositoryTest {
 
     @Autowired
     private JdbcTemplate jdbcTemplate;
+
     private ReservationTimeJdbcRepository reservationTimeJdbcRepository;
 
     @BeforeEach
     void setUp() {
         reservationTimeJdbcRepository = new ReservationTimeJdbcRepository(jdbcTemplate);
+        jdbcTemplate.execute("ALTER TABLE reservation_time ALTER COLUMN id RESTART WITH 1");
     }
 
     @DisplayName("예약 시간을 성공적으로 저장한다.")
@@ -60,11 +62,11 @@ class ReservationTimeJdbcRepositoryTest {
     @Test
     void deleteByIdTest() {
         //given
-        final ReservationTime reservationTime = new ReservationTime(1L, LocalTime.of(12, 0));
-        reservationTimeJdbcRepository.save(reservationTime);
+        final ReservationTime reservationTime = ReservationTime.of(LocalTime.MAX);
+        final ReservationTime savedReservationTime = reservationTimeJdbcRepository.save(reservationTime);
 
         //when
-        final int expected = reservationTimeJdbcRepository.deleteById(reservationTime.getId());
+        final int expected = reservationTimeJdbcRepository.deleteById(savedReservationTime.getId());
 
         //then
         assertThat(expected).isPositive();

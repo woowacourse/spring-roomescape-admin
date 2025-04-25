@@ -9,6 +9,7 @@ import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.simple.SimpleJdbcInsert;
 import org.springframework.stereotype.Repository;
 import roomescape.domain.Reservation;
+import roomescape.domain.ReservationTime;
 
 @Repository
 @Primary
@@ -30,18 +31,32 @@ public class ReservationJdbcRepository implements ReservationRepository {
         Map<String, Object> parameters = new HashMap<>();
         parameters.put("name", reservation.getName());
         parameters.put("date", reservation.getDate().toString());
-        parameters.put("time", reservation.getTime().toString());
+        parameters.put("time_id", reservation.getReservationId());
         return jdbcInsert.executeAndReturnKey(parameters).longValue();
     }
 
     @Override
     public List<Reservation> findAll() {
-        final String sql = "SELECT * FROM reservation";
+        final String sql = """
+        SELECT 
+            r.id AS reservation_id,
+            r.name,
+            r.date,
+            t.id AS time_id,
+            t.start_at AS time_value 
+        FROM 
+            reservation AS r 
+        INNER JOIN 
+            reservation_time AS t 
+        ON 
+            r.time_id = t.id
+        """;
         return jdbcTemplate.query(sql,
                 (resultSet, rowNum) -> Reservation.of(
+                        resultSet.getLong("id"),
                         resultSet.getString("name"),
                         resultSet.getString("date"),
-                        resultSet.getString("time")
+                        ReservationTime.of(resultSet.getLong("time_id"), resultSet.getString("time_value"))
                 ));
     }
 

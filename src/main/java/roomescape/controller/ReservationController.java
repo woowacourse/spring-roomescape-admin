@@ -10,35 +10,30 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
-import roomescape.controller.dto.ReservationResponse;
 import roomescape.controller.dto.ReservationRegister;
-import roomescape.domain.Reservation;
-import roomescape.repository.ReservationRepository;
+import roomescape.controller.dto.ReservationResponse;
+import roomescape.service.ReservationService;
 
 @RestController
 @RequestMapping("/reservations")
-public class RoomescapeController {
+public class ReservationController {
 
-    private final ReservationRepository reservationRepository;
+    private final ReservationService reservationService;
 
-    public RoomescapeController(final ReservationRepository reservationRepository) {
-        this.reservationRepository = reservationRepository;
+    public ReservationController(final ReservationService reservationService) {
+        this.reservationService = reservationService;
     }
 
     @GetMapping
     public List<ReservationResponse> getReservations() {
-        return reservationRepository.findAll().stream()
-                .map(ReservationResponse::toDto)
-                .toList();
+        return reservationService.getAllReservation();
     }
 
     @PostMapping
     public ResponseEntity<ReservationResponse> registerReservation(
             @RequestBody @Valid final ReservationRegister reservationRegister) {
         try {
-            Reservation reservation = reservationRegister.toEntity();
-            this.reservationRepository.save(reservation);
-            return ResponseEntity.ok().body(ReservationResponse.toDto(reservation));
+            return ResponseEntity.ok().body(reservationService.save(reservationRegister));
         } catch (IllegalArgumentException e) {
             return ResponseEntity.badRequest().build();
         }
@@ -47,7 +42,7 @@ public class RoomescapeController {
     @DeleteMapping("/{id}")
     public ResponseEntity<Void> deleteReservation(@PathVariable(name = "id") final long id) {
         try {
-            reservationRepository.deleteById(id);
+            reservationService.deleteReservationById(id);
             return ResponseEntity.ok().build();
         } catch (IllegalArgumentException e) {
             return ResponseEntity.notFound().build();

@@ -25,4 +25,9 @@ public class ReservationTimeServiceImpl implements ReservationTimeService {
         return reservationTimeRepository.findAllReservationTimes();
     }
 
+    @Override
+    public ReservationTime findById(Long timeId) {
+        return reservationTimeRepository.findById(timeId);
+    }
+
 }

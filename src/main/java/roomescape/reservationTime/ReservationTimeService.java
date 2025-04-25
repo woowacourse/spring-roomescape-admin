@@ -6,4 +6,5 @@ public interface ReservationTimeService {
     ReservationTime savaReservation(ReservationTime wantToSaveReservationTime);
     void deleteReservation(Long wantToDeleteId);
     List<ReservationTime> findAllReservationTime();
+    ReservationTime findById(Long timeId);
 }

@@ -10,8 +10,8 @@ import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.support.GeneratedKeyHolder;
 import org.springframework.jdbc.support.KeyHolder;
 import org.springframework.stereotype.Repository;
-import roomescape.time.domain.ReservationTime;
 import roomescape.reservation.domain.Reservation;
+import roomescape.time.domain.ReservationTime;
 
 @Repository
 @RequiredArgsConstructor
@@ -61,7 +61,7 @@ public class H2ReservationRepository implements ReservationRepository {
                         ),
                 id
         );
-        if (reservations.size() == 1) {
+        if (!reservations.isEmpty()) {
             return Optional.of(reservations.getFirst());
         }
         return Optional.empty();

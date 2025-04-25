@@ -40,12 +40,12 @@ public class H2ReservationTimeRepository implements ReservationTimeRepository {
                 id
         );
 
-        if (reservationTimes.size() == 1) {
+        if (!reservationTimes.isEmpty()) {
             return Optional.of(reservationTimes.getFirst());
         }
         return Optional.empty();
     }
-    
+
     @Override
     public List<ReservationTime> findAll() {
         String sql = "select * from reservation_times";

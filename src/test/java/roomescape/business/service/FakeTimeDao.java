@@ -11,14 +11,23 @@ public class FakeTimeDao implements TimeDao {
 
     private final List<TimeEntity> database = new ArrayList<>();
 
-    private int index = 0;
+    private int index = 1;
+
+    public FakeTimeDao() {
+        final TimeEntity dummy = new TimeEntity(null, null);
+        database.add(dummy);
+    }
 
     @Override
     public Long save(final Time time) {
-        final TimeEntity timeEntity = TimeEntity.from(time);
-        database.add(index++, timeEntity);
+        final TimeEntity temp = TimeEntity.from(time);
+        final TimeEntity timeEntity = new TimeEntity(
+                (long) index,
+                temp.startAt()
+        );
+        database.add(index, timeEntity);
 
-        return (long) index;
+        return (long) index++;
     }
 
     @Override

@@ -1,8 +1,8 @@
-package roomescape.repository.reservationtime;
+package roomescape.persistence.repository.reservationtime;
 
 import java.util.List;
-import roomescape.dto.CreateReservationTimeDto;
 import roomescape.entity.ReservationTime;
+import roomescape.presentation.dto.CreateReservationTimeDto;
 
 public interface ReservationTimeRepository {
 

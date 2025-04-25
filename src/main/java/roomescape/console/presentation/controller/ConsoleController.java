@@ -1,17 +1,17 @@
-package roomescape.controller;
+package roomescape.console.presentation.controller;
 
 import java.util.List;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Component;
-import roomescape.constant.Function;
-import roomescape.dto.CreateReservationDto;
-import roomescape.dto.CreateReservationTimeDto;
-import roomescape.dto.ReservationResponseDto;
-import roomescape.dto.ReservationTimeResponseDto;
+import roomescape.console.constant.Function;
+import roomescape.console.presentation.view.InputView;
+import roomescape.console.presentation.view.OutputView;
+import roomescape.presentation.dto.CreateReservationDto;
+import roomescape.presentation.dto.CreateReservationTimeDto;
+import roomescape.presentation.dto.ReservationResponseDto;
+import roomescape.presentation.dto.ReservationTimeResponseDto;
 import roomescape.service.ReservationService;
 import roomescape.service.ReservationTimeService;
-import roomescape.view.InputView;
-import roomescape.view.OutputView;
 
 @Component
 public class ConsoleController {

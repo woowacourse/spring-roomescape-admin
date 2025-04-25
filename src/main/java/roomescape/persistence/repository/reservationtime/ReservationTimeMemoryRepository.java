@@ -1,4 +1,4 @@
-package roomescape.repository.reservationtime;
+package roomescape.persistence.repository.reservationtime;
 
 import java.time.LocalTime;
 import java.util.ArrayList;
@@ -6,9 +6,9 @@ import java.util.Collections;
 import java.util.List;
 import java.util.concurrent.atomic.AtomicLong;
 import org.springframework.stereotype.Repository;
-import roomescape.dto.CreateReservationTimeDto;
 import roomescape.entity.ReservationTime;
 import roomescape.exception.InvalidReservationTimeException;
+import roomescape.presentation.dto.CreateReservationTimeDto;
 import roomescape.util.DateTimeFormatUtils;
 
 @Repository("reservationTimeMemoryRepository")

@@ -1,4 +1,4 @@
-package roomescape.controller;
+package roomescape.presentation.controller;
 
 import java.util.List;
 import org.springframework.beans.factory.annotation.Qualifier;
@@ -9,8 +9,8 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
-import roomescape.dto.CreateReservationTimeDto;
-import roomescape.dto.ReservationTimeResponseDto;
+import roomescape.presentation.dto.CreateReservationTimeDto;
+import roomescape.presentation.dto.ReservationTimeResponseDto;
 import roomescape.service.ReservationTimeService;
 
 @RestController

@@ -1,10 +1,10 @@
-package roomescape.repository.reservation;
+package roomescape.persistence.repository.reservation;
 
 import java.util.List;
 import roomescape.entity.Reservation;
 
 public interface ReservationRepository {
-    
+
     List<Reservation> findAll();
 
     Long addAndGetId(Reservation reservation);

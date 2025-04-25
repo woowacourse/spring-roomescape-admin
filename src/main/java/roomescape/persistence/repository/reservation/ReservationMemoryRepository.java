@@ -1,4 +1,4 @@
-package roomescape.repository.reservation;
+package roomescape.persistence.repository.reservation;
 
 import java.util.ArrayList;
 import java.util.Collections;

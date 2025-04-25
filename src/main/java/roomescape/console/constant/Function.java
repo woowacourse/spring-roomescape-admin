@@ -1,4 +1,4 @@
-package roomescape.constant;
+package roomescape.console.constant;
 
 import java.util.List;
 import roomescape.exception.InvalidFunctionException;

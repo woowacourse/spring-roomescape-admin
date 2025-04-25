@@ -2,12 +2,12 @@ package roomescape.service;
 
 import java.time.LocalDate;
 import java.util.List;
-import roomescape.dto.CreateReservationDto;
-import roomescape.dto.ReservationResponseDto;
 import roomescape.entity.Reservation;
 import roomescape.entity.ReservationTime;
-import roomescape.repository.reservation.ReservationRepository;
-import roomescape.repository.reservationtime.ReservationTimeRepository;
+import roomescape.persistence.repository.reservation.ReservationRepository;
+import roomescape.persistence.repository.reservationtime.ReservationTimeRepository;
+import roomescape.presentation.dto.CreateReservationDto;
+import roomescape.presentation.dto.ReservationResponseDto;
 import roomescape.util.DateTimeFormatUtils;
 
 public class ReservationService {

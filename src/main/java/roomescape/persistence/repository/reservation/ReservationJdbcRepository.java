@@ -1,4 +1,4 @@
-package roomescape.repository.reservation;
+package roomescape.persistence.repository.reservation;
 
 import java.sql.ResultSet;
 import java.sql.SQLException;

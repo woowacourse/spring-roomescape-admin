@@ -1,4 +1,4 @@
-package roomescape.repository.reservationtime;
+package roomescape.persistence.repository.reservationtime;
 
 import java.sql.ResultSet;
 import java.sql.SQLException;
@@ -9,8 +9,8 @@ import org.springframework.jdbc.core.namedparam.MapSqlParameterSource;
 import org.springframework.jdbc.core.namedparam.SqlParameterSource;
 import org.springframework.jdbc.core.simple.SimpleJdbcInsert;
 import org.springframework.stereotype.Repository;
-import roomescape.dto.CreateReservationTimeDto;
 import roomescape.entity.ReservationTime;
+import roomescape.presentation.dto.CreateReservationTimeDto;
 
 @Repository("reservationTimeJdbcRepository")
 public class ReservationTimeJdbcRepository implements ReservationTimeRepository {

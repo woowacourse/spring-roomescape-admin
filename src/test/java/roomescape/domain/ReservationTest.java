@@ -61,7 +61,7 @@ class ReservationTest {
 
     @DisplayName("과거 예약인지 검증할 수 있다")
     @Test
-    void canValidatePastReservation() {
+    void canValidateFieldPastReservation() {
         ReservationTime pastReservationTime = new ReservationTime(1L, LocalTime.now().minusSeconds(1));
         Reservation pastReservation = new Reservation(1L, "reservation", LocalDate.now(), pastReservationTime);
 

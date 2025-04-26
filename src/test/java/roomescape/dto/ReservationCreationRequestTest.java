@@ -13,7 +13,7 @@ class ReservationCreationRequestTest {
     @DisplayName("null이거나 공백인 이름을 허용하지 않는다")
     @ParameterizedTest
     @NullAndEmptySource
-    void validateName(String invalidName) {
+    void validateFieldName(String invalidName) {
         assertThatThrownBy(() -> new ReservationCreationRequest(invalidName, LocalDate.now(), 1L))
                 .isInstanceOf(IllegalArgumentException.class)
                 .hasMessage("[ERROR] 이름은 빈 값이나 공백값을 허용하지 않습니다.");
@@ -21,7 +21,7 @@ class ReservationCreationRequestTest {
 
     @DisplayName("비어있는 날짜를 허용하지 않는다.")
     @Test
-    void validateDate() {
+    void validateFieldDate() {
         assertThatThrownBy(() -> new ReservationCreationRequest("kim", null, 1L))
                 .isInstanceOf(IllegalArgumentException.class)
                 .hasMessage("[ERROR] 날짜는 빈 값을 허용하지 않습니다.");
@@ -29,7 +29,7 @@ class ReservationCreationRequestTest {
 
     @DisplayName("비어있는 시간을 허용하지 않는다.")
     @Test
-    void validateTime() {
+    void validateFieldTime() {
         assertThatThrownBy(() -> new ReservationCreationRequest("kim", LocalDate.now(), null))
                 .isInstanceOf(IllegalArgumentException.class)
                 .hasMessage("[ERROR] 시간은 빈 값을 허용하지 않습니다.");

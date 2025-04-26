@@ -16,7 +16,7 @@ public final class Reservation {
     private final ReservationTime time;
 
     public Reservation(Long id, String name, LocalDate date, ReservationTime time) {
-        validate(id, name, date, time);
+        validateField(id, name, date, time);
         this.id = id;
         this.name = name;
         this.date = date;
@@ -66,7 +66,7 @@ public final class Reservation {
         }
     }
 
-    private void validate(Long id, String name, LocalDate date, ReservationTime time) {
+    private void validateField(Long id, String name, LocalDate date, ReservationTime time) {
         validateNullId(id);
         validateBlankName(name);
         validateNameLength(name);

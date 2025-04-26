@@ -13,10 +13,9 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.context.SpringBootTest.WebEnvironment;
 import org.springframework.boot.test.web.server.LocalServerPort;
 import org.springframework.test.annotation.DirtiesContext;
-import org.springframework.test.annotation.DirtiesContext.ClassMode;
+import org.springframework.test.annotation.DirtiesContext.MethodMode;
 
 @SpringBootTest(webEnvironment = WebEnvironment.RANDOM_PORT)
-@DirtiesContext(classMode = ClassMode.AFTER_EACH_TEST_METHOD)
 public class ReservationApiTest {
 
     private static final Map<String, String> RESERVATION_BODY = new HashMap<>();
@@ -39,6 +38,7 @@ public class ReservationApiTest {
         TIME_BODY.put("startAt", "10:00");
     }
 
+    @DirtiesContext(methodMode = MethodMode.AFTER_METHOD)
     @DisplayName("예약을 생성하고, 200 OK를 응답")
     @Test
     void post() {
@@ -55,6 +55,7 @@ public class ReservationApiTest {
                 .body("id", is(1));
     }
 
+    @DirtiesContext(methodMode = MethodMode.AFTER_METHOD)
     @DisplayName("존재하는 모든 예약과 200 OK를 응답")
     @Test
     void get1() {
@@ -81,6 +82,7 @@ public class ReservationApiTest {
                 .body("size()", is(0));
     }
 
+    @DirtiesContext(methodMode = MethodMode.AFTER_METHOD)
     @DisplayName("주어진 아이디에 해당하는 예약이 있다면 200 OK 응답")
     @Test
     void remove1() {
@@ -95,6 +97,7 @@ public class ReservationApiTest {
                 .statusCode(200);
     }
 
+    @DirtiesContext(methodMode = MethodMode.AFTER_METHOD)
     @DisplayName("주어진 아이디에 해당하는 예약이 없다면 404로 응답한다.")
     @Test
     void remove2() {

@@ -11,11 +11,10 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.context.SpringBootTest.WebEnvironment;
 import org.springframework.boot.test.web.server.LocalServerPort;
 import org.springframework.test.annotation.DirtiesContext;
-import org.springframework.test.annotation.DirtiesContext.ClassMode;
+import org.springframework.test.annotation.DirtiesContext.MethodMode;
 import roomescape.time.dto.ReservationTimeRequest;
 
 @SpringBootTest(webEnvironment = WebEnvironment.RANDOM_PORT)
-@DirtiesContext(classMode = ClassMode.AFTER_EACH_TEST_METHOD)
 public class ReservationTimeApiTest {
 
     private final int port;
@@ -26,6 +25,7 @@ public class ReservationTimeApiTest {
         this.port = port;
     }
 
+    @DirtiesContext(methodMode = MethodMode.AFTER_METHOD)
     @DisplayName("시간 생성")
     @Test
     void createTime() {
@@ -49,6 +49,7 @@ public class ReservationTimeApiTest {
                 .body("size()", is(0));
     }
 
+    @DirtiesContext(methodMode = MethodMode.AFTER_METHOD)
     @DisplayName("시간 삭제")
     @Test
     void deleteTime() {

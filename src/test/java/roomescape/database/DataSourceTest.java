@@ -18,11 +18,10 @@ import org.springframework.boot.test.context.SpringBootTest.WebEnvironment;
 import org.springframework.boot.test.web.server.LocalServerPort;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.test.annotation.DirtiesContext;
-import org.springframework.test.annotation.DirtiesContext.ClassMode;
+import org.springframework.test.annotation.DirtiesContext.MethodMode;
 import roomescape.reservation.dto.ReservationResponse;
 
 @SpringBootTest(webEnvironment = WebEnvironment.RANDOM_PORT)
-@DirtiesContext(classMode = ClassMode.AFTER_EACH_TEST_METHOD)
 public class DataSourceTest {
 
     private final JdbcTemplate jdbcTemplate;
@@ -48,6 +47,7 @@ public class DataSourceTest {
         }
     }
 
+    @DirtiesContext(methodMode = MethodMode.AFTER_METHOD)
     @DisplayName("데이터베이스에 예약 하나 추가 후 예약 조회 API를 통해 조회한 예약 수와 데이터베이스 쿼리를 통해 조회한 예약 수가 같은지 비교")
     @Test
     void 오단계() {
@@ -68,6 +68,7 @@ public class DataSourceTest {
         assertThat(reservations.size()).isEqualTo(count);
     }
 
+    @DirtiesContext(methodMode = MethodMode.AFTER_METHOD)
     @DisplayName("reservation 삽입, 삭제 검증")
     @Test
     void 육단계() {
@@ -109,6 +110,7 @@ public class DataSourceTest {
         assertThat(countAfterDelete).isEqualTo(0);
     }
 
+    @DirtiesContext(methodMode = MethodMode.AFTER_METHOD)
     @DisplayName("time과 reservation 연결 테스트")
     @Test
     void 팔단계() {

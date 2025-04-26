@@ -11,6 +11,8 @@ import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.context.SpringBootTest.WebEnvironment;
 import org.springframework.boot.test.web.server.LocalServerPort;
+import org.springframework.test.annotation.DirtiesContext;
+import org.springframework.test.annotation.DirtiesContext.MethodMode;
 
 @SpringBootTest(webEnvironment = WebEnvironment.RANDOM_PORT)
 public class ReservationTimeTest {
@@ -18,6 +20,7 @@ public class ReservationTimeTest {
     @LocalServerPort
     private int port;
 
+    @DirtiesContext(methodMode = MethodMode.AFTER_METHOD)
     @DisplayName("startAt 관련 api 테스트")
     @Test
     void 칠단계() {

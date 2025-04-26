@@ -8,6 +8,7 @@ import org.springframework.test.annotation.DirtiesContext;
 import roomescape.globalException.CustomException;
 import roomescape.reservation.fixture.ReservationFixture;
 import roomescape.reservationTime.domain.ReservationTime;
+import roomescape.reservationTime.domain.dto.ReservationTimeReqDto;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
@@ -27,7 +28,7 @@ class ReservationTest {
             String dummyName = "kali";
             LocalDate dummyPastDate = LocalDate.of(2024, 4, 25);
             LocalTime dummyTime = LocalTime.of(11, 13);
-            ReservationTime reservationTime = new ReservationTime(dummyTime);
+            ReservationTime reservationTime = ReservationTime.from(new ReservationTimeReqDto(dummyTime));
 
             // when & then
             Assertions.assertThatThrownBy(
@@ -43,7 +44,7 @@ class ReservationTest {
             LocalDateTime dummyFuture = LocalDateTime.now().plusDays(1);
             LocalDate dummyPastDate = dummyFuture.toLocalDate();
             LocalTime dummyTime = dummyFuture.toLocalTime();
-            ReservationTime reservationTime = new ReservationTime(dummyTime);
+            ReservationTime reservationTime = ReservationTime.from(new ReservationTimeReqDto(dummyTime));
 
             // when & then
             Assertions.assertThatCode(
@@ -57,7 +58,7 @@ class ReservationTest {
             // given
             String dummyName = "kali";
             LocalDateTime dateTime1 = LocalDateTime.now().plusDays(1);
-            ReservationTime duplicateReservationTime = new ReservationTime(dateTime1.toLocalTime());
+            ReservationTime duplicateReservationTime = ReservationTime.from(new ReservationTimeReqDto(dateTime1.toLocalTime()));
 
             Reservation reservation1 = Reservation.of(dummyName, dateTime1.toLocalDate(), duplicateReservationTime);
 
@@ -79,7 +80,7 @@ class ReservationTest {
 
             LocalDateTime expected = LocalDateTime.of(localDate, localTime);
 
-            ReservationTime reservationTime = new ReservationTime(localTime);
+            ReservationTime reservationTime = ReservationTime.from(new ReservationTimeReqDto(localTime));
 
             // when
             LocalDateTime actual = LocalDateTime.of(localDate, reservationTime.getStartAt());

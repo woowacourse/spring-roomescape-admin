@@ -27,7 +27,7 @@ public class ReservationTimeService {
     }
 
     public ReservationTimeResDto add(ReservationTimeReqDto dto) {
-        ReservationTime reservationTime = convertToReservationTime(dto);
+        ReservationTime reservationTime = convertToReservationTimeReqDto(dto);
         validateDuplicateTime(reservationTime);
         ReservationTime savedReservationTime = repository.add(reservationTime);
         return convertToReservationTimeResDto(savedReservationTime);
@@ -53,9 +53,7 @@ public class ReservationTimeService {
         );
     }
 
-    private ReservationTime convertToReservationTime(ReservationTimeReqDto dto) {
-        return new ReservationTime(
-                dto.startAt()
-        );
+    private ReservationTime convertToReservationTimeReqDto(ReservationTimeReqDto dto) {
+        return ReservationTime.from(dto);
     }
 }

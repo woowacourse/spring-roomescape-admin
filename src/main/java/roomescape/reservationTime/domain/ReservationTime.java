@@ -1,5 +1,7 @@
 package roomescape.reservationTime.domain;
 
+import roomescape.reservationTime.domain.dto.ReservationTimeReqDto;
+
 import java.time.LocalTime;
 
 public class ReservationTime {
@@ -12,9 +14,13 @@ public class ReservationTime {
         this.startAt = startAt;
     }
 
-    public ReservationTime(LocalTime time) {
+    private ReservationTime(LocalTime time) {
         this.id = null;
         this.startAt = time;
+    }
+
+    public static ReservationTime from(ReservationTimeReqDto reqDto) {
+        return new ReservationTime(reqDto.startAt());
     }
 
     public boolean isSameTime(ReservationTime reservationTime) {

@@ -13,6 +13,7 @@ import roomescape.reservation.domain.Reservation;
 import roomescape.reservation.domain.dto.ReservationReqDto;
 import roomescape.reservation.fixture.ReservationFixture;
 import roomescape.reservationTime.domain.ReservationTime;
+import roomescape.reservationTime.domain.dto.ReservationTimeReqDto;
 import roomescape.reservationTime.repository.ReservationTimeRepositoryImpl;
 
 import java.time.LocalDate;
@@ -45,7 +46,7 @@ class ReservationServiceTest {
             LocalDate dummyDate = dummyFuture.toLocalDate();
             LocalTime dummyTime = LocalTime.of(11, 33);
 
-            ReservationTime reservationTime1 = new ReservationTime(dummyTime);
+            ReservationTime reservationTime1 = ReservationTime.from(new ReservationTimeReqDto(dummyTime));
             ReservationTime savedReservationTime1 = reservationTimeRepository.add(reservationTime1);
             Reservation reservation1 = Reservation.of(dummyName1, dummyDate, savedReservationTime1);
 
@@ -55,7 +56,7 @@ class ReservationServiceTest {
             LocalDate dummyDate2 = dummyFuture2.toLocalDate();
             LocalTime dummyTime2 = LocalTime.of(22, 44);
 
-            ReservationTime reservationTime2 = new ReservationTime(dummyTime2);
+            ReservationTime reservationTime2 = ReservationTime.from(new ReservationTimeReqDto(dummyTime2));
             ReservationTime savedReservationTime2 = reservationTimeRepository.add(reservationTime2);
             Reservation reservation2 = Reservation.of(dummyName2, dummyDate2, savedReservationTime2);
 
@@ -78,7 +79,7 @@ class ReservationServiceTest {
         void add_success_withDifferenceDateAndSameTime() {
             // given
             LocalTime duplicateTime = LocalTime.of(11, 22);
-            ReservationTime reservationTime = new ReservationTime(duplicateTime);
+            ReservationTime reservationTime = ReservationTime.from(new ReservationTimeReqDto(duplicateTime));
             Long reservationTimeId = reservationTimeRepository.insertWithKeyHolder(reservationTime);
             ReservationTime savedReservationTime = reservationTimeRepository.findById(reservationTimeId);
 

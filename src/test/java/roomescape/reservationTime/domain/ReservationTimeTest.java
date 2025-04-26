@@ -3,6 +3,7 @@ package roomescape.reservationTime.domain;
 import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
+import roomescape.reservationTime.domain.dto.ReservationTimeReqDto;
 
 import java.time.LocalTime;
 
@@ -18,8 +19,8 @@ class ReservationTimeTest {
         LocalTime inputStartAt = LocalTime.of(dummyHour, dummyMinute);
         LocalTime reservationStartAt = LocalTime.of(dummyHour, dummyMinute);
 
-        ReservationTime inputReservationTime = new ReservationTime(inputStartAt);
-        ReservationTime reservationTime = new ReservationTime(reservationStartAt);
+        ReservationTime inputReservationTime = ReservationTime.from(new ReservationTimeReqDto(inputStartAt));
+        ReservationTime reservationTime = ReservationTime.from(new ReservationTimeReqDto(reservationStartAt));
 
         // when
         boolean actual = reservationTime.isSameTime(inputReservationTime);

@@ -11,7 +11,7 @@ import roomescape.exception.InvalidReservationTimeException;
 import roomescape.presentation.dto.CreateReservationTimeDto;
 import roomescape.util.DateTimeFormatUtils;
 
-@Repository("reservationTimeMemoryRepository")
+@Repository
 public class ReservationTimeMemoryRepository implements ReservationTimeRepository {
 
     private final AtomicLong id = new AtomicLong(0);

@@ -8,7 +8,7 @@ import org.springframework.stereotype.Repository;
 import roomescape.entity.Reservation;
 import roomescape.exception.InvalidReservationException;
 
-@Repository("reservationMemoryRepository")
+@Repository
 public class ReservationMemoryRepository implements ReservationRepository {
 
     private final AtomicLong id = new AtomicLong(0);

@@ -13,7 +13,7 @@ import org.springframework.stereotype.Repository;
 import roomescape.entity.Reservation;
 import roomescape.entity.ReservationTime;
 
-@Repository("reservationJdbcRepository")
+@Repository
 public class ReservationJdbcRepository implements ReservationRepository {
 
     private static final String RESERVATION_TABLE = "reservation";

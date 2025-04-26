@@ -98,4 +98,27 @@ public class ReservationServiceTest {
                         new ReservationResponse(2L, "hotteok", FORMATTED_MAX_LOCAL_DATE.minusDays(1), FORMATTED_MAX_LOCAL_TIME)
                 );
     }
+
+    @DisplayName("방탈출 예약을 삭제한다.")
+    @Test
+    void remove() {
+        // given
+        reservationService.create(new ReservationRequest(
+                "hotteok", FORMATTED_MAX_LOCAL_DATE, 1L
+        ));
+
+        // when
+        reservationService.remove(1L);
+
+        // then
+        assertThat(reservationService.findAll()).isEmpty();
+    }
+
+    @DisplayName("석재하려는 예약이 존재하지 않으면 예외가 발생한다.")
+    @Test
+    void removeOrThrowIfIdNotExists() {
+        // given & when & then
+        assertThatThrownBy(() -> reservationService.remove(1L))
+                .isInstanceOf(IllegalArgumentException.class);
+    }
 }

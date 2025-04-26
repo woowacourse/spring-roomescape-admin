@@ -24,12 +24,12 @@ public class AdminReservationController {
     }
 
     @GetMapping
-    public List<ReservationResponse> getAllReservations() {
+    public List<ReservationResponse> findAllReservations() {
         return ReservationResponse.toResponses(reservationService.findAll());
     }
 
     @PostMapping
-    public Reservation getReservationById(@RequestBody ReservationRequest reservationRequest) {
+    public Reservation saveReservationById(@RequestBody ReservationRequest reservationRequest) {
         return reservationService.save(reservationRequest.toReservation());
     }
 

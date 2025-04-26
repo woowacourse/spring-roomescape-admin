@@ -20,6 +20,6 @@ public class AdminDisplayController {
 
     @GetMapping("/time")
     public String displayAdminTime() {
-        return "/admin/time";
+        return "admin/time";
     }
 }

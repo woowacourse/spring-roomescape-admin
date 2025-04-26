@@ -24,12 +24,12 @@ public class AdminReservationTimeController {
     }
 
     @GetMapping
-    public List<ReservationTimeResponse> getAllReservationTimes() {
+    public List<ReservationTimeResponse> findAllReservationTimes() {
         return ReservationTimeResponse.toResponses(reservationTimeService.findAll());
     }
 
     @PostMapping
-    public ReservationTime getReservationTimeById(@RequestBody ReservationTimeRequest reservationTimeRequest) {
+    public ReservationTime saveReservationTimeById(@RequestBody ReservationTimeRequest reservationTimeRequest) {
         return reservationTimeService.save(reservationTimeRequest.toReservationTime());
     }
 

@@ -15,17 +15,17 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.test.annotation.DirtiesContext;
-import roomescape.controller.ReservationAPIController;
+import roomescape.controller.ReservationController;
 import roomescape.domain.Reservation;
 
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.DEFINED_PORT)
 @DirtiesContext(classMode = DirtiesContext.ClassMode.BEFORE_EACH_TEST_METHOD)
-public class ReservationAPITest {
+public class ReservationTest {
 
     @Autowired
     private JdbcTemplate jdbcTemplate;
     @Autowired
-    private ReservationAPIController reservationAPIController;
+    private ReservationController reservationController;
 
     @Test
     @DisplayName("예약 목록 조회 요청 시 예약 목록을 반환한다.")
@@ -124,11 +124,13 @@ public class ReservationAPITest {
     }
 
     private void addReservation(String name, String date, String timeId) {
+        // given
         Map<String, String> params = new HashMap<>();
         params.put("name", name);
         params.put("date", date);
         params.put("timeId", timeId);
 
+        // when & then
         RestAssured.given().log().all()
                 .contentType(ContentType.JSON)
                 .body(params)
@@ -140,11 +142,13 @@ public class ReservationAPITest {
     @Test
     @DisplayName("예약 추가, 조회 시 시간을 함께 선택한다.")
     void selectTimeTest() {
+        // given
         Map<String, Object> reservation = new HashMap<>();
         reservation.put("name", "브라운");
         reservation.put("date", "2023-08-05");
         reservation.put("timeId", 1);
 
+        // when & then
         RestAssured.given().log().all()
                 .contentType(ContentType.JSON)
                 .body(reservation)
@@ -162,15 +166,18 @@ public class ReservationAPITest {
     @Test
     @DisplayName("레이어드 아키텍처를 적용하여 컨트롤러 이외의 클래스로 로직을 분리한다.")
     void LayeredArchitectureTest() {
+        // given
         boolean isJdbcTemplateInjected = false;
 
-        for (Field field : reservationAPIController.getClass().getDeclaredFields()) {
+        // when
+        for (Field field : reservationController.getClass().getDeclaredFields()) {
             if (field.getType().equals(JdbcTemplate.class)) {
                 isJdbcTemplateInjected = true;
                 break;
             }
         }
 
+        // then
         assertThat(isJdbcTemplateInjected).isFalse();
     }
 }

@@ -16,10 +16,6 @@ public class ReservationTime {
         this(null, time);
     }
 
-    public ReservationTime(Long id) {
-        this(id, null);
-    }
-
     public Long getId() {
         return id;
     }

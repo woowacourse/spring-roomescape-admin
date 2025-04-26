@@ -11,7 +11,7 @@ public class Reservation {
     private final Long id;
     private final ReserverName reserverName;
     private final ReservationDate reservationDate;
-    private ReservationTime reservationTime;
+    private final ReservationTime reservationTime;
 
     private Reservation(
             Long id,

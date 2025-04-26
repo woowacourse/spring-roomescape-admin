@@ -32,7 +32,7 @@ public class ReservationService {
     }
 
     public Long addReservation(ReservationRequestDto reservationDto) {
-        ReservationTime reservationTime = reservationTimeRepository.findById(reservationDto.reservationTimeId());
+        ReservationTime reservationTime = reservationTimeRepository.findById(reservationDto.timeId());
         return reservationRepository.add(
                 new Reservation(reservationDto.name(), reservationDto.date(), reservationTime));
     }

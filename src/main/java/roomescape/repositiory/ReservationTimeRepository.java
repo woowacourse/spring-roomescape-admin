@@ -8,6 +8,7 @@ import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.support.GeneratedKeyHolder;
 import org.springframework.jdbc.support.KeyHolder;
 import org.springframework.stereotype.Repository;
+import roomescape.domain.Reservation;
 import roomescape.domain.ReservationTime;
 
 @Repository
@@ -22,7 +23,7 @@ public class ReservationTimeRepository implements GeneralRepository<ReservationT
     }
 
     @Override
-    public List findAll() {
+    public List<ReservationTime> findAll() {
         String query = "select id, start_at from reservation_time";
         return jdbcTemplate.query(query, (rs, rowNum) -> new ReservationTime(
                 rs.getLong("id"),
@@ -32,7 +33,7 @@ public class ReservationTimeRepository implements GeneralRepository<ReservationT
 
     @Override
     public ReservationTime findById(Long id) {
-        String query = "select id, start_at from reservation_time where id=?";
+        String query = "select id, start_at from reservation_time where id = ?";
         return jdbcTemplate.queryForObject(query, (rs, rowNum) -> new ReservationTime(
                 rs.getLong("id"),
                 rs.getObject("start_at", LocalTime.class)), id);

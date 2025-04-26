@@ -52,18 +52,18 @@ public class ReservationRepository implements GeneralRepository<Reservation> {
                                 rs.getLong("time_id"),
                                 rs.getObject("time_value", LocalTime.class)
                         )
-                ));
+                ), id);
     }
 
     @Override
     public Long add(Reservation reservation) {
-        String query = "insert into RESERVATION (name, date, time) values (?,?,?)";
+        String query = "insert into RESERVATION (name, date, time_id) values (?,?,?)";
 
         jdbcTemplate.update(connection -> {
             PreparedStatement ps = connection.prepareStatement(query, new String[]{"id"});
             ps.setString(1, reservation.getName());
             ps.setObject(2, reservation.getDate());
-            ps.setObject(3, reservation.getTime());
+            ps.setObject(3, reservation.getTime().getId());
             return ps;
         }, keyHolder);
 

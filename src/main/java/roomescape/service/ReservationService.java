@@ -2,6 +2,8 @@ package roomescape.service;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import roomescape.dto.ReservationCreateRequest;
+import roomescape.dto.ReservationTimeCreateRequest;
 import roomescape.model.Reservation;
 import roomescape.model.ReservationTime;
 import roomescape.repository.ReservationRepository;
@@ -27,7 +29,10 @@ public class ReservationService {
         return reservationRepository.findAll();
     }
 
-    public Reservation reserveNewTime(String name, LocalDate date, Long timeId) {
+    public Reservation reserveNewTime(ReservationCreateRequest reservationCreateRequest) {
+        String name = reservationCreateRequest.name();
+        LocalDate date = reservationCreateRequest.date();
+        Long timeId = reservationCreateRequest.timeId();
         validateDuplicateReservationDateTime(date, timeId);
         return addReservationAndReturn(name, date, timeId);
     }
@@ -55,7 +60,8 @@ public class ReservationService {
         return reservationTimeRepository.findAll();
     }
 
-    public ReservationTime createNewReservationTime(LocalTime startAt) {
+    public ReservationTime createNewReservationTime(ReservationTimeCreateRequest reservationTimeCreateRequest) {
+        LocalTime startAt = reservationTimeCreateRequest.startAt();
         validateDuplicateStartTime(startAt);
         return addReservationTimeAndReturn(startAt);
     }

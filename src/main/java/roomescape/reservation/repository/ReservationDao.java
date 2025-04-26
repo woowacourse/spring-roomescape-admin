@@ -1,16 +1,17 @@
 package roomescape.reservation.repository;
 
-import java.util.List;
-import java.util.Optional;
 import roomescape.reservation.entity.Reservation;
 
-public interface ReservationRepository {
+import java.util.List;
+import java.util.Optional;
+
+public interface ReservationDao {
 
     List<Reservation> findAll();
-
-    Optional<Reservation> findById(Long id);
 
     Reservation save(Reservation reservation);
 
     void deleteById(Long id);
+
+    Optional<Reservation> findById(Long id);
 }

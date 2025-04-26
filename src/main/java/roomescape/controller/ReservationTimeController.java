@@ -10,39 +10,36 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
-import roomescape.dao.ReservationTimeDao;
 import roomescape.domain.ReservationTime;
 import roomescape.dto.ReservationTimeRequest;
+import roomescape.service.ReservationTimeService;
 
 @RequestMapping("/times")
 @RestController
 public class ReservationTimeController {
 
-    private final ReservationTimeDao reservationTimeRepository;
+    private final ReservationTimeService reservationTimeService;
 
-    public ReservationTimeController(ReservationTimeDao reservationTimeRepository) {
-        this.reservationTimeRepository = reservationTimeRepository;
+    public ReservationTimeController(ReservationTimeService reservationTimeService) {
+        this.reservationTimeService = reservationTimeService;
     }
 
     @PostMapping
     public ResponseEntity<ReservationTime> create(@RequestBody @Valid ReservationTimeRequest reservationTimeRequest) {
-        ReservationTime reservationTime = reservationTimeRequest.toEntity();
-        ReservationTime saved = reservationTimeRepository.save(reservationTime);
+        ReservationTime saved = reservationTimeService.createReservationTime(reservationTimeRequest);
         return ResponseEntity.ok(saved);
     }
 
     @GetMapping
     public ResponseEntity<List<ReservationTime>> getTimes() {
-        List<ReservationTime> times = reservationTimeRepository.findAll();
+        List<ReservationTime> times = reservationTimeService.getReservationTimes();
         return ResponseEntity.ok(times);
     }
 
     @DeleteMapping("/{id}")
     public ResponseEntity<Void> delete(@PathVariable Long id) {
         try {
-            reservationTimeRepository.findById(id)
-                    .orElseThrow(() -> new IllegalArgumentException("예약 시간을 찾을 수 없습니다."));
-            reservationTimeRepository.delete(id);
+            reservationTimeService.deleteReservationTime(id);
             return ResponseEntity.ok().build();
         } catch (IllegalArgumentException e) {
             return ResponseEntity.notFound().build();

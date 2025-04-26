@@ -34,7 +34,7 @@ class ReservationH2RepositoryTest {
         // given
         ReservationRepository reservationRepository = new ReservationRepository(jdbcTemplate);
         ReservationRequestDto reservation = new ReservationRequestDto("예약자", LocalDate.now(), reservationTimeId);
-        ReservationTime reservationTime = reservationTimeRepository.findById(reservation.reservationTimeId());
+        ReservationTime reservationTime = reservationTimeRepository.findById(reservation.timeId());
 
         // when
         Long id = reservationRepository.add(
@@ -52,7 +52,7 @@ class ReservationH2RepositoryTest {
         ReservationRepository reservationRepository = new ReservationRepository(jdbcTemplate);
         ReservationRequestDto reservationRequestDto = new ReservationRequestDto("예약자", LocalDate.now(),
                 reservationTimeId);
-        ReservationTime reservationTime = reservationTimeRepository.findById(reservationRequestDto.reservationTimeId());
+        ReservationTime reservationTime = reservationTimeRepository.findById(reservationRequestDto.timeId());
         reservationRepository.add(
                 new Reservation(reservationRequestDto.name(), reservationRequestDto.date(), reservationTime));
 
@@ -69,7 +69,7 @@ class ReservationH2RepositoryTest {
         // given
         ReservationRepository reservationRepository = new ReservationRepository(jdbcTemplate);
         ReservationRequestDto reservationDto = new ReservationRequestDto("예약자", LocalDate.now(), reservationTimeId);
-        ReservationTime reservationTime = reservationTimeRepository.findById(reservationDto.reservationTimeId());
+        ReservationTime reservationTime = reservationTimeRepository.findById(reservationDto.timeId());
         Long id = reservationRepository.add(
                 new Reservation(reservationDto.name(), reservationDto.date(), reservationTime));
 
@@ -86,7 +86,9 @@ class ReservationH2RepositoryTest {
         // given
         ReservationRepository reservationRepository = new ReservationRepository(jdbcTemplate);
         ReservationRequestDto reservationDto = new ReservationRequestDto("예약자", LocalDate.now(), reservationTimeId);
-        Long id = reservationRepository.add(new Reservation(reservationDto.name(), reservationDto.date(), null));
+        ReservationTime reservationTime = reservationTimeRepository.findById(reservationDto.timeId());
+        Long id = reservationRepository.add(
+                new Reservation(reservationDto.name(), reservationDto.date(), reservationTime));
 
         // when
         reservationRepository.delete(id);

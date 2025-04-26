@@ -52,10 +52,21 @@ public class MissionStepTest {
     @DisplayName("모든 예약 목록을 조회한다")
     @Test
     void 삼단계() {
-        Map<String, String> params = new HashMap<>();
+        Map<String, String> timeParam = new HashMap<>();
+        timeParam.put("startAt", "15:40");
+
+        RestAssured.given().log().all()
+                .contentType(ContentType.JSON)
+                .body(timeParam)
+                .when().post("/times")
+                .then().log().all()
+                .statusCode(201)
+                .body("id", is(1));
+
+        Map<String, Object> params = new HashMap<>();
         params.put("name", "브라운");
         params.put("date", "2023-08-05");
-        params.put("time", "15:40");
+        params.put("timeId", 1);
 
         RestAssured.given().log().all()
                 .contentType(ContentType.JSON)
@@ -98,8 +109,19 @@ public class MissionStepTest {
     @DisplayName("데이터베이스에서 예약을 조회한다")
     @Test
     void 오단계() {
-        jdbcTemplate.update("INSERT INTO reservation (name, date, time) VALUES (?, ?, ?)", "브라운", "2023-08-05",
-                "15:40");
+        Map<String, String> timeParam = new HashMap<>();
+        timeParam.put("startAt", "15:40");
+
+        RestAssured.given().log().all()
+                .contentType(ContentType.JSON)
+                .body(timeParam)
+                .when().post("/times")
+                .then().log().all()
+                .statusCode(201)
+                .body("id", is(1));
+
+        jdbcTemplate.update("INSERT INTO reservation (name, date, time_id) VALUES (?, ?, ?)", "브라운", "2023-08-05",
+                1);
 
         List<Reservation> reservations = RestAssured.given().log().all()
                 .when().get("/reservations")

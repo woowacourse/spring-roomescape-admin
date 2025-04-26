@@ -31,14 +31,14 @@ public class ReservationService {
         return reservationRepository.findAll();
     }
 
+    public Reservation getReservation(Long id) {
+        return reservationRepository.findById(id)
+                .orElseThrow(() -> new IllegalArgumentException("예약이 존재하지 않습니다."));
+    }
+
     public void deleteReservation(Long id) {
         reservationRepository.findById(id)
                 .orElseThrow(() -> new IllegalArgumentException("예약이 존재하지 않습니다."));
         reservationRepository.delete(id);
-    }
-
-    public Reservation getReservation(Long id) {
-        return reservationRepository.findById(id)
-                .orElseThrow(() -> new IllegalArgumentException("예약이 존재하지 않습니다."));
     }
 }

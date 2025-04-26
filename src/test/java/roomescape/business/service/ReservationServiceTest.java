@@ -71,7 +71,7 @@ public class ReservationServiceTest {
     void createOrThrowIfFuture() {
         // given
         final ReservationRequest reservationRequest = new ReservationRequest(
-                "hotteok", LocalDate.of(0 ,1, 1), 1L
+                "hotteok", LocalDate.of(0, 1, 1), 1L
         );
 
         // when & then
@@ -95,7 +95,8 @@ public class ReservationServiceTest {
         assertThat(reservationService.findAll())
                 .containsExactly(
                         new ReservationResponse(1L, "hotteok", FORMATTED_MAX_LOCAL_DATE, FORMATTED_MAX_LOCAL_TIME),
-                        new ReservationResponse(2L, "hotteok", FORMATTED_MAX_LOCAL_DATE.minusDays(1), FORMATTED_MAX_LOCAL_TIME)
+                        new ReservationResponse(2L, "hotteok", FORMATTED_MAX_LOCAL_DATE.minusDays(1),
+                                FORMATTED_MAX_LOCAL_TIME)
                 );
     }
 

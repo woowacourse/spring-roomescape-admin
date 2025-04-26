@@ -4,9 +4,6 @@ import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import static org.junit.jupiter.api.Assertions.assertAll;
 import static roomescape.test.fixture.ReservationTimeFixture.addReservationTimeInRepository;
-import static roomescape.test.utility.ReservationTestUtility.checkDeleteReservation;
-import static roomescape.test.utility.ReservationTestUtility.checkReservationFieldWithoutId;
-import static roomescape.test.utility.ReservationTestUtility.checkReservationId;
 
 import java.time.LocalDate;
 import java.time.LocalTime;
@@ -52,21 +49,19 @@ class ReservationControllerTest {
     @DisplayName("예약을 추가할 수 있다.")
     @Test
     void createReservation() {
-        ReservationTime reservationTime = addReservationTimeInRepository(timeRepository, LocalTime.now());
-        ReservationCreationRequest request = new ReservationCreationRequest(
-                "reservation1", NEXT_DATE, reservationTime.getId());
+        ReservationTime time = addReservationTimeInRepository(timeRepository, LocalTime.now());
+        ReservationCreationRequest request = new ReservationCreationRequest("reservation1", NEXT_DATE, time.getId());
 
         ResponseEntity<Reservation> response = controller.createReservation(request);
 
-        Reservation newReservation = reservationRepository.findAll().getFirst();
+        Reservation savedReservation = reservationRepository.findAll().getFirst();
+        Reservation expectedSavedReservation = new Reservation(1L, request.getName(), request.getDate(), time);
         assertAll(
-                () -> checkReservationId(newReservation.getId(), 1L),
-                () -> checkReservationFieldWithoutId(newReservation, request),
+                () -> assertThat(savedReservation).isEqualTo(expectedSavedReservation),
                 () -> assertThat(response.getStatusCode()).isEqualTo(HttpStatus.CREATED),
-                () -> assertThat(response.getHeaders().getLocation().getPath()).isEqualTo(
-                        "reservations/" + newReservation.getId()),
-                () -> checkReservationId(response.getBody().getId(), 1L),
-                () -> checkReservationFieldWithoutId(response.getBody(), request)
+                () -> assertThat(response.getHeaders().getLocation().getPath())
+                        .isEqualTo("reservations/" + expectedSavedReservation.getId()),
+                () -> assertThat(response.getBody()).isEqualTo(expectedSavedReservation)
         );
     }
 
@@ -74,9 +69,9 @@ class ReservationControllerTest {
     @DisplayName("과거 날짜와 시간으로는 예약을 추가할 수 없다")
     @Test
     void canNotCreateReservationWithPastDateTime() {
-        ReservationTime pastReservationTime = addReservationTimeInRepository(timeRepository, PAST_TIME);
-        ReservationCreationRequest request = new ReservationCreationRequest(
-                "reservation", LocalDate.now(), pastReservationTime.getId());
+        ReservationTime pastTime = addReservationTimeInRepository(timeRepository, PAST_TIME);
+        ReservationCreationRequest request =
+                new ReservationCreationRequest("reservation", LocalDate.now(), pastTime.getId());
 
         assertThatThrownBy(() -> controller.createReservation(request))
                 .isInstanceOf(BadRequestException.class)
@@ -105,13 +100,14 @@ class ReservationControllerTest {
         reservationRepository.add(Reservation.createWithoutId("reservation1", NEXT_DATE, reservationTime));
         reservationRepository.add(Reservation.createWithoutId("reservation2", NEXT_DATE, reservationTime));
         reservationRepository.add(Reservation.createWithoutId("reservation3", NEXT_DATE, reservationTime));
-        long deleteReservationId = reservationRepository.findAll().getFirst().getId();
+        long deletedId = reservationRepository.findAll().getFirst().getId();
 
-        ResponseEntity<Void> response = controller.deleteReservation(deleteReservationId);
+        ResponseEntity<Void> response = controller.deleteReservation(deletedId);
 
-        List<Reservation> reservations = reservationRepository.findAll();
         assertAll(
-                () -> checkDeleteReservation(reservations, deleteReservationId),
+                () -> assertThat(reservationRepository.findAll())
+                        .extracting(Reservation::getId)
+                        .doesNotContain(deletedId),
                 () -> assertThat(response.getStatusCode()).isEqualTo(HttpStatus.NO_CONTENT)
         );
     }
@@ -119,8 +115,8 @@ class ReservationControllerTest {
     @DisplayName("존재하지 않는 예약을 삭제하려고 할 경우 예외를 발생시킨다")
     @Test
     void deleteNoneExistentReservation() {
-        long noneExistentReservationId = 1L;
-        assertThatThrownBy(() -> controller.deleteReservation(noneExistentReservationId))
+        long noneExistentId = 1L;
+        assertThatThrownBy(() -> controller.deleteReservation(noneExistentId))
                 .isInstanceOf(NotFoundException.class)
                 .hasMessage("[ERROR] ID에 해당하는 예약이 존재하지 않습니다.");
     }

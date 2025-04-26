@@ -4,9 +4,6 @@ import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import static org.junit.jupiter.api.Assertions.assertAll;
 import static roomescape.test.fixture.ReservationTimeFixture.addReservationTimeInRepository;
-import static roomescape.test.utility.ReservationTimeTestUtility.checkDeleteReservationTime;
-import static roomescape.test.utility.ReservationTimeTestUtility.checkReservationTimeFieldWithoutId;
-import static roomescape.test.utility.ReservationTimeTestUtility.checkReservationTimeId;
 
 import java.time.LocalDate;
 import java.time.LocalTime;
@@ -27,6 +24,8 @@ import roomescape.test.fake.FakeReservationRepository;
 import roomescape.test.fake.FakeReservationTimeRepository;
 
 class ReservationTimeControllerTest {
+
+    private static final LocalDate NEXT_DATE = LocalDate.now().plusDays(1);
 
     private final ReservationRepository reservationRepository = new FakeReservationRepository();
     private final ReservationTimeRepository timeRepository = new FakeReservationTimeRepository();
@@ -53,14 +52,13 @@ class ReservationTimeControllerTest {
 
         ResponseEntity<ReservationTime> response = controller.createReservationTime(request);
 
-        ReservationTime savedReservationTime = timeRepository.findAll().getFirst();
+        ReservationTime savedTime = timeRepository.findAll().getFirst();
+        ReservationTime expectedSavedTime = new ReservationTime(1L, request.getStartAt());
         assertAll(
-                () -> checkReservationTimeId(savedReservationTime.getId(), 1L),
-                () -> checkReservationTimeFieldWithoutId(savedReservationTime, request),
+                () -> assertThat(savedTime).isEqualTo(expectedSavedTime),
                 () -> assertThat(response.getStatusCode()).isEqualTo(HttpStatus.CREATED),
                 () -> assertThat(response.getHeaders().getLocation().getPath()).isEqualTo("times/1"),
-                () -> checkReservationTimeId(response.getBody().getId(), 1L),
-                () -> checkReservationTimeFieldWithoutId(response.getBody(), request)
+                () -> assertThat(response.getBody()).isEqualTo(expectedSavedTime)
         );
     }
 
@@ -85,9 +83,8 @@ class ReservationTimeControllerTest {
 
         ResponseEntity<Void> response = controller.deleteReservationTime(1L);
 
-        List<ReservationTime> reservationTimes = timeRepository.findAll();
         assertAll(
-                () -> checkDeleteReservationTime(reservationTimes, 1L),
+                () -> assertThat(timeRepository.findAll()).extracting(ReservationTime::getId).doesNotContain(1L),
                 () -> assertThat(response.getStatusCode()).isEqualTo(HttpStatus.NO_CONTENT)
         );
     }
@@ -95,8 +92,8 @@ class ReservationTimeControllerTest {
     @DisplayName("존재하지 않는 예약 가능 시간을 삭제하려고 할 경우 예외를 발생시킨다")
     @Test
     void canNotDeleteWithInvalidId() {
-        long noneExistentReservationId = 1L;
-        assertThatThrownBy(() -> controller.deleteReservationTime(noneExistentReservationId))
+        long noneExistentId = 1L;
+        assertThatThrownBy(() -> controller.deleteReservationTime(noneExistentId))
                 .isInstanceOf(NotFoundException.class)
                 .hasMessage("[ERROR] ID에 해당하는 예약 시간이 존재하지 않습니다.");
     }
@@ -105,7 +102,7 @@ class ReservationTimeControllerTest {
     @Test
     void canNotDeleteBecauseReservations() {
         ReservationTime savedTime = addReservationTimeInRepository(timeRepository, LocalTime.of(10, 0));
-        reservationRepository.add(Reservation.createWithoutId("reservation2", LocalDate.now().plusDays(1), savedTime));
+        reservationRepository.add(Reservation.createWithoutId("reservation2", NEXT_DATE, savedTime));
 
         assertThatThrownBy(() -> controller.deleteReservationTime(savedTime.getId()))
                 .isInstanceOf(BadRequestException.class)

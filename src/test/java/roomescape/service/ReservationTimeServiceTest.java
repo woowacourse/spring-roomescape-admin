@@ -4,9 +4,6 @@ import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import static org.junit.jupiter.api.Assertions.assertAll;
 import static roomescape.test.fixture.ReservationTimeFixture.addReservationTimeInRepository;
-import static roomescape.test.utility.ReservationTimeTestUtility.checkDeleteReservationTime;
-import static roomescape.test.utility.ReservationTimeTestUtility.checkReservationTimeFieldWithoutId;
-import static roomescape.test.utility.ReservationTimeTestUtility.checkReservationTimeId;
 
 import java.time.LocalDate;
 import java.time.LocalTime;
@@ -47,13 +44,14 @@ class ReservationTimeServiceTest {
     void canCreateReservationTime() {
         ReservationTimeCreationRequest request = new ReservationTimeCreationRequest(LocalTime.of(10, 0));
 
-        long id = reservationTimeService.saveReservationTime(request);
+        long savedId = reservationTimeService.saveReservationTime(request);
 
-        ReservationTime savedReservationTime = timeRepository.findAll().getFirst();
+        ReservationTime savedTime = timeRepository.findAll().getFirst();
+        ReservationTime expectedSavedTime = new ReservationTime(1L, request.getStartAt());
+
         assertAll(
-                () -> checkReservationTimeId(id, 1L),
-                () -> checkReservationTimeId(savedReservationTime.getId(), 1L),
-                () -> checkReservationTimeFieldWithoutId(savedReservationTime, request)
+                () -> assertThat(savedId).isEqualTo(1L),
+                () -> assertThat(savedTime).isEqualTo(expectedSavedTime)
         );
     }
 
@@ -79,14 +77,16 @@ class ReservationTimeServiceTest {
 
         reservationTimeService.deleteReservationTime(deletedId);
 
-        checkDeleteReservationTime(timeRepository.findAll(), deletedId);
+        assertThat(timeRepository.findAll())
+                .extracting(ReservationTime::getId)
+                .doesNotContain(deletedId);
     }
 
     @DisplayName("존재하지 않는 예약 가능 시간을 삭제하려고 할 경우 예외 응답을 보낸다")
     @Test
     void canNotDeleteWithInvalidId() {
-        long noneExistentReservationId = 1L;
-        assertThatThrownBy(() -> reservationTimeService.deleteReservationTime(noneExistentReservationId))
+        long noneExistentId = 1L;
+        assertThatThrownBy(() -> reservationTimeService.deleteReservationTime(noneExistentId))
                 .isInstanceOf(NotFoundException.class)
                 .hasMessage("[ERROR] ID에 해당하는 예약 시간이 존재하지 않습니다.");
     }

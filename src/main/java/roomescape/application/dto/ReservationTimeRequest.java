@@ -7,9 +7,9 @@ public record ReservationTimeRequest(
         LocalTime startAt
 ) {
 
-    public ReservationTime toReservationTime(Long id) {
+    public ReservationTime toReservationTimeWithNullId() {
         return new ReservationTime(
-                id,
+                null,
                 startAt
         );
     }

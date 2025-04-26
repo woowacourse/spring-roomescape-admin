@@ -25,7 +25,7 @@ public class ReservationTimeService {
     }
 
     public ReservationTimeResponse saveReservationTime(ReservationTimeRequest request) {
-        ReservationTime newReservationTime = request.toReservationTime(null);
+        ReservationTime newReservationTime = request.toReservationTimeWithNullId();
         ReservationTime savedReservationTime = reservationTimeRepository.save(newReservationTime);
 
         return new ReservationTimeResponse(savedReservationTime);

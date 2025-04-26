@@ -1,6 +1,5 @@
 package roomescape.reservation.controller;
 
-import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -14,6 +13,7 @@ import roomescape.reservation.exception.ReservationNotFoundException;
 import roomescape.reservation.model.Reservation;
 import roomescape.reservation.service.ReservationService;
 
+import java.net.URI;
 import java.util.List;
 
 @RestController
@@ -29,8 +29,9 @@ public class ReservationController {
     @PostMapping
     public ResponseEntity<Reservation> create(@RequestBody ReservationReqDTO dto) {
         try {
-            return ResponseEntity.status(HttpStatus.CREATED)
-                            .body(reservationService.create(dto));
+            Reservation created = reservationService.create(dto);
+            URI location = URI.create("/reservations/" + created.getId());
+            return ResponseEntity.created(location).body(created);
         } catch (IllegalArgumentException e) {
             return ResponseEntity.badRequest().build();
         }

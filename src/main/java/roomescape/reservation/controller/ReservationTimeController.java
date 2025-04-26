@@ -1,6 +1,5 @@
 package roomescape.reservation.controller;
 
-import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -14,6 +13,7 @@ import roomescape.reservation.exception.ReservationTimeNotFoundException;
 import roomescape.reservation.model.ReservationTime;
 import roomescape.reservation.service.ReservationTimeService;
 
+import java.net.URI;
 import java.util.List;
 
 @RequestMapping("/times")
@@ -30,8 +30,13 @@ public class ReservationTimeController {
 
     @PostMapping
     public ResponseEntity<ReservationTime> create(@RequestBody ReservationTimeReqDTO timeDto) {
-        return ResponseEntity.status(HttpStatus.CREATED)
-                .body(reservationTimeService.create(timeDto));
+        try {
+            ReservationTime created = reservationTimeService.create(timeDto);
+            URI location = URI.create("/times/" + created.getId());
+            return ResponseEntity.created(location).body(created);
+        } catch (IllegalArgumentException e) {
+            return ResponseEntity.badRequest().build();
+        }
     }
 
     @GetMapping

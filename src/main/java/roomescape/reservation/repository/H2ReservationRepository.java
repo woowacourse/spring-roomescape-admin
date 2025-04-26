@@ -2,7 +2,6 @@ package roomescape.reservation.repository;
 
 import java.sql.Date;
 import java.sql.PreparedStatement;
-import java.time.LocalTime;
 import java.util.List;
 import java.util.Optional;
 import lombok.RequiredArgsConstructor;
@@ -65,7 +64,7 @@ public class H2ReservationRepository implements ReservationRepository {
                                 rs.getDate("date").toLocalDate(),
                                 new ReservationTime(
                                         rs.getLong("time_id"),
-                                        LocalTime.parse(rs.getString("start_at"))
+                                        rs.getTime("start_at").toLocalTime()
                                 )
                         ),
                 id
@@ -97,7 +96,7 @@ public class H2ReservationRepository implements ReservationRepository {
                         rs.getDate("date").toLocalDate(),
                         new ReservationTime(
                                 rs.getLong("time_id"),
-                                LocalTime.parse(rs.getString("start_at"))
+                                rs.getTime("start_at").toLocalTime()
                         )
                 )
         );

@@ -42,6 +42,10 @@ public class Reservation {
         return time;
     }
 
+    public void setId(final long id) {
+        this.id = id;
+    }
+
     private void validate(final String name, final LocalDate date) {
         validateName(name);
         validateDate(date);

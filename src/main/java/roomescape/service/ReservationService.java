@@ -29,6 +29,7 @@ public class ReservationService {
         ReservationTimeResponse timeResponse = ReservationTimeResponse.of(time);
         Reservation reservation = new Reservation(request.name(), request.date(), time);
         long id = reservationDao.save(reservation);
+        reservation.setId(id);
         return ReservationResponse.of(id, reservation, timeResponse);
     }
 
@@ -54,6 +55,7 @@ public class ReservationService {
     public ReservationTimeResponse createReservationTime(final ReservationTimeRequest request) {
         ReservationTime reservationTime = request.toReservationTime();
         long id = reservationTimeDao.save(reservationTime);
+        reservationTime.setId(id);
         return ReservationTimeResponse.of(id, reservationTime);
     }
 

@@ -25,6 +25,10 @@ public class ReservationTime {
         return startAt;
     }
 
+    public void setId(final Long id) {
+        this.id = id;
+    }
+
     @Override
     public boolean equals(final Object o) {
         if (this == o) return true;

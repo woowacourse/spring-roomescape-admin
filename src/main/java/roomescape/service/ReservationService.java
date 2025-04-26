@@ -1,8 +1,5 @@
 package roomescape.service;
 
-import java.time.LocalDate;
-import java.time.LocalDateTime;
-import java.time.LocalTime;
 import java.util.List;
 import java.util.Optional;
 import org.springframework.stereotype.Service;
@@ -37,11 +34,12 @@ public class ReservationService {
 
     public long saveReservation(ReservationCreationRequest request) {
         ReservationTime reservationTime = loadReservationTimeById(request.getTimeId());
-        validatePastDateTime(request.getDate(), reservationTime.getStartAt());
-        validateAlreadyReserved(request.getDate(), reservationTime.getId());
-
         Reservation reservation = Reservation.createWithoutId(
                 request.getName(), request.getDate(), reservationTime);
+
+        reservation.validatePastDateTime();
+        validateAlreadyReserved(reservation);
+
         return reservationRepository.add(reservation);
     }
 
@@ -62,16 +60,9 @@ public class ReservationService {
                 .orElseThrow(() -> new NotFoundException("[ERROR] ID에 해당하는 예약시간이 존재하지 않습니다."));
     }
 
-    private void validatePastDateTime(LocalDate date, LocalTime time) {
-        LocalDateTime dateTime = LocalDateTime.of(date, time);
-        LocalDateTime now = LocalDateTime.now();
-        if (dateTime.isBefore(now)) {
-            throw new BadRequestException("[ERROR] 이미 과거의 날짜와 시간입니다.");
-        }
-    }
-
-    private void validateAlreadyReserved(LocalDate reservationDate, long reservationTimeId) {
-        boolean isAlreadyReserved = reservationRepository.checkExistenceByDateTime(reservationDate, reservationTimeId);
+    private void validateAlreadyReserved(Reservation reservation) {
+        boolean isAlreadyReserved = reservationRepository.checkExistenceByDateTime(
+                reservation.getDate(), reservation.getTime().getId());
         if (isAlreadyReserved) {
             throw new BadRequestException("[ERROR] 이미 예약이 완료된 날짜와 시간입니다.");
         }

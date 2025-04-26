@@ -8,6 +8,7 @@ import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.NullAndEmptySource;
+import roomescape.exception.BadRequestException;
 
 class ReservationTest {
 
@@ -58,4 +59,14 @@ class ReservationTest {
                 .hasMessage("[ERROR] 비어있는 예약시간으로는 예약을 생성할 수 없습니다.");
     }
 
+    @DisplayName("과거 예약인지 검증할 수 있다")
+    @Test
+    void canValidatePastReservation() {
+        ReservationTime pastReservationTime = new ReservationTime(1L, LocalTime.now().minusSeconds(1));
+        Reservation pastReservation = new Reservation(1L, "reservation", LocalDate.now(), pastReservationTime);
+
+        assertThatThrownBy(pastReservation::validatePastDateTime)
+                .isInstanceOf(BadRequestException.class)
+                .hasMessage("[ERROR] 이미 과거의 날짜와 시간입니다.");
+    }
 }

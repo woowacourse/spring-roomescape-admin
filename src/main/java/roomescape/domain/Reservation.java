@@ -1,7 +1,9 @@
 package roomescape.domain;
 
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.Objects;
+import roomescape.exception.BadRequestException;
 
 public final class Reservation {
 
@@ -54,6 +56,14 @@ public final class Reservation {
     @Override
     public int hashCode() {
         return Objects.hash(id, name, date, time);
+    }
+
+    public void validatePastDateTime() {
+        LocalDateTime dateTime = LocalDateTime.of(date, time.getStartAt());
+        LocalDateTime now = LocalDateTime.now();
+        if (dateTime.isBefore(now)) {
+            throw new BadRequestException("[ERROR] 이미 과거의 날짜와 시간입니다.");
+        }
     }
 
     private void validate(Long id, String name, LocalDate date, ReservationTime time) {

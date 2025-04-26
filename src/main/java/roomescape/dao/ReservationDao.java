@@ -1,5 +1,6 @@
 package roomescape.dao;
 
+import java.time.LocalDate;
 import java.time.LocalTime;
 import java.time.format.DateTimeFormatter;
 import java.util.HashMap;
@@ -12,12 +13,12 @@ import roomescape.domain.Reservation;
 import roomescape.domain.ReservationTime;
 
 @Repository
-public class ReservationsDao {
+public class ReservationDao {
 
     private final JdbcTemplate jdbcTemplate;
     private final SimpleJdbcInsert simpleJdbcInsert;
 
-    public ReservationsDao(JdbcTemplate jdbcTemplate) {
+    public ReservationDao(JdbcTemplate jdbcTemplate) {
         this.jdbcTemplate = jdbcTemplate;
         simpleJdbcInsert = new SimpleJdbcInsert(jdbcTemplate)
             .withTableName("reservation")
@@ -36,10 +37,15 @@ public class ReservationsDao {
                 + "inner join reservation_time as t "
                 + "on r.time_id = t.id",
             (resultSet, rowNum) ->
-                new Reservation(
+            {
+                LocalDate date = LocalDate.parse(
+                    resultSet.getString("date"),
+                    DateTimeFormatter.ofPattern("yyyy-MM-dd")
+                );
+                return new Reservation(
                     resultSet.getLong("reservation_id"),
                     resultSet.getString("name"),
-                    resultSet.getString("date"),
+                    date,
                     new ReservationTime(
                         resultSet.getLong("time_id"),
                         LocalTime.parse(
@@ -47,7 +53,8 @@ public class ReservationsDao {
                             DateTimeFormatter.ofPattern("HH:mm")
                         )
                     )
-                )
+                );
+            }
         );
     }
 

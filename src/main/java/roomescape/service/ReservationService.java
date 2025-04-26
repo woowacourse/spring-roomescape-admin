@@ -1,9 +1,12 @@
 package roomescape.service;
 
+import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
 import java.util.List;
+import java.util.Optional;
 import org.springframework.stereotype.Service;
-import roomescape.dao.ReservationTimesDao;
-import roomescape.dao.ReservationsDao;
+import roomescape.dao.ReservationTimeDao;
+import roomescape.dao.ReservationDao;
 import roomescape.domain.Reservation;
 import roomescape.domain.ReservationTime;
 import roomescape.dto.ReservationRequest;
@@ -12,15 +15,15 @@ import roomescape.dto.ReservationResponse;
 @Service
 public class ReservationService {
 
-    private final ReservationsDao reservationDao;
-    private final ReservationTimesDao reservationTimesDao;
+    private final ReservationDao reservationDao;
+    private final ReservationTimeDao reservationTimeDao;
 
     public ReservationService(
-        ReservationsDao reservationDao,
-        ReservationTimesDao reservationTimesDao
+        ReservationDao reservationDao,
+        ReservationTimeDao reservationTimeDao
     ) {
         this.reservationDao = reservationDao;
-        this.reservationTimesDao = reservationTimesDao;
+        this.reservationTimeDao = reservationTimeDao;
     }
 
     public List<ReservationResponse> findAll() {
@@ -31,9 +34,19 @@ public class ReservationService {
     }
 
     public ReservationResponse create(ReservationRequest request) {
-        ReservationTime reservationTime = reservationTimesDao.findById(request.timeId());
-        Reservation reservation = new Reservation(request.name(), request.date(), reservationTime);
-        return ReservationResponse.from(reservationDao.save(reservation));
+        Optional<ReservationTime> reservationTime = reservationTimeDao.findById(request.timeId());
+        if(reservationTime.isPresent()) {
+             LocalDate date = LocalDate.parse(
+                 request.date(),
+                 DateTimeFormatter.ofPattern("yyyy-MM-dd")
+             );
+            Reservation reservation = new Reservation(
+                request.name(),
+                date,
+                reservationTime.get());
+            return ReservationResponse.from(reservationDao.save(reservation));
+        }
+        throw new IllegalArgumentException("해당하는 시간이 없습니다");
     }
 
     public void deleteReservation(Long id) {

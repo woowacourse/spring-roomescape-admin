@@ -51,7 +51,7 @@ class ReservationServiceTest {
         // Given
         ReservationRequest reservationRequest = new ReservationRequest(
                 "시소",
-                LocalDate.of(2025, 1, 1),
+                LocalDate.of(2025, 6, 1),
                 1L
         );
 
@@ -73,7 +73,7 @@ class ReservationServiceTest {
         final long id = 1L;
         ReservationRequest reservationRequest = new ReservationRequest(
                 "시소",
-                LocalDate.of(2025, 1, 1),
+                LocalDate.of(2025, 6, 1),
                 1L
         );
         reservationService.addReservation(reservationRequest);

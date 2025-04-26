@@ -51,7 +51,7 @@ public class H2ReservationTimeRespository implements ReservationTimeRepository {
     }
 
     @Override
-    public long add(final ReservationTime reservationTime) {
+    public ReservationTime add(final ReservationTime reservationTime) {
         final Number id = new SimpleJdbcInsert(jdbcTemplate)
                 .withTableName("reservation_time")
                 .usingGeneratedKeyColumns("id")
@@ -59,7 +59,7 @@ public class H2ReservationTimeRespository implements ReservationTimeRepository {
                                 "start_at", reservationTime.getStartAt()
                         )
                 );
-        return id.longValue();
+        return new ReservationTime(id.longValue(), reservationTime.getStartAt());
     }
 
     @Override

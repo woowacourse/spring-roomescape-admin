@@ -76,7 +76,7 @@ public class H2ReservationRepository implements ReservationRepository {
     }
 
     @Override
-    public long add(final Reservation reservation) {
+    public Reservation add(final Reservation reservation) {
         final Number id = new SimpleJdbcInsert(jdbcTemplate)
                 .withTableName("reservation")
                 .usingGeneratedKeyColumns("id")
@@ -87,7 +87,7 @@ public class H2ReservationRepository implements ReservationRepository {
                                 "time_id", reservation.getTimeId()
                         )
                 );
-        return id.longValue();
+        return new Reservation(id.longValue(), reservation.getName(), reservation.getDate(), reservation.getTime());
     }
 
     @Override

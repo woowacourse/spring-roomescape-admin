@@ -35,8 +35,8 @@ public class ReservationService {
     public ReservationResponse create(final ReservationRequest request) {
         final ReservationTimeResponse reservationTimeResponse = reservationTimeService.getById(request.timeId());
         final Reservation reservation = request.toEntity(reservationTimeResponse);
-        final long id = repository.add(reservation);
-        return getById(id);
+        final Reservation savedReservation = repository.add(reservation);
+        return ReservationResponse.from(savedReservation);
     }
 
     public void deleteById(final Long id) {

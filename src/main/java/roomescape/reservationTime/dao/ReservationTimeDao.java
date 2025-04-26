@@ -1,47 +1,46 @@
 package roomescape.reservationTime.dao;
 
-import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
+import javax.sql.DataSource;
 import org.springframework.dao.EmptyResultDataAccessException;
-import org.springframework.jdbc.core.JdbcTemplate;
-import org.springframework.jdbc.support.GeneratedKeyHolder;
-import org.springframework.jdbc.support.KeyHolder;
+import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
+import org.springframework.jdbc.core.simple.SimpleJdbcInsert;
 import org.springframework.stereotype.Repository;
 import roomescape.common.Dao;
 import roomescape.reservationTime.domain.ReservationTime;
 
 @Repository
 public class ReservationTimeDao implements Dao<ReservationTime> {
-    private final JdbcTemplate jdbcTemplate;
+    private final SimpleJdbcInsert simpleJdbcInsert;
+    private final NamedParameterJdbcTemplate namedParameterJdbcTemplate;
 
-    public ReservationTimeDao(JdbcTemplate jdbcTemplate) {
-        this.jdbcTemplate = jdbcTemplate;
+    public ReservationTimeDao(DataSource dataSource) {
+        this.simpleJdbcInsert = new SimpleJdbcInsert(dataSource)
+                .withTableName("reservation_time")
+                .usingGeneratedKeyColumns("id");
+        this.namedParameterJdbcTemplate = new NamedParameterJdbcTemplate(dataSource);
     }
 
     @Override
     public ReservationTime add(ReservationTime time) {
-        String sql = "insert into reservation_time(start_at) values (?)";
-        KeyHolder keyHolder = new GeneratedKeyHolder();
-
-        jdbcTemplate.update(connection -> {
-            PreparedStatement preparedStatement = connection.prepareStatement(sql, new String[]{"id"});
-            preparedStatement.setString(1, time.startAt().toString());
-            return preparedStatement;
-        }, keyHolder);
-
-        Long id = keyHolder.getKey().longValue();
+        Map<String, Object> parameters = new HashMap<>(1);
+        parameters.put("start_at", time.startAt());
+        Long id = simpleJdbcInsert.executeAndReturnKey(parameters).longValue();
         return new ReservationTime(id, time.startAt());
     }
 
     @Override
     public Optional<ReservationTime> findById(Long id) {
-        String sql = "select id, start_at from reservation_time where id = ?";
+        String sql = "select id, start_at from reservation_time where id = :id";
+        Map<String, Object> parameter = Map.of("id", id);
         try {
-            return Optional.of(jdbcTemplate.queryForObject(sql,
-                    (resultSet, rowNum) -> createReservationTime(resultSet), id));
+            return Optional.of(namedParameterJdbcTemplate.queryForObject(sql, parameter,
+                    (resultSet, rowNum) -> createReservationTime(resultSet)));
         } catch (EmptyResultDataAccessException e) {
             return Optional.empty();
         }
@@ -49,14 +48,16 @@ public class ReservationTimeDao implements Dao<ReservationTime> {
 
     @Override
     public List<ReservationTime> findAll() {
-        String sql = "select id, start_at from reservation_time";
-        return jdbcTemplate.query(sql,
+        String sql = "SELECT id, start_at FROM reservation_time";
+        return namedParameterJdbcTemplate.query(sql,
                 (resultSet, rowNum) -> createReservationTime(resultSet));
     }
 
     @Override
     public void deleteById(Long id) {
-        jdbcTemplate.update("delete from reservation_time where id = ?", id);
+        String sql = "DELETE FROM reservation_time WHERE id = :id";
+        Map<String, Object> parameter = Map.of("id", id);
+        namedParameterJdbcTemplate.update(sql, parameter);
     }
 
     private ReservationTime createReservationTime(ResultSet resultSet) throws SQLException {

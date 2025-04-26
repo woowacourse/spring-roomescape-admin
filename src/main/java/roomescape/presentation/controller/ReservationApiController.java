@@ -24,7 +24,7 @@ public final class ReservationApiController {
     }
 
     @GetMapping
-    public List<ReservationResponseDto> reservations() {
+    public List<ReservationResponseDto> getReservations() {
         return reservationService.getAllReservations();
     }
 
@@ -34,7 +34,7 @@ public final class ReservationApiController {
     }
 
     @DeleteMapping("/{id}")
-    public void cancel(@PathVariable Long id) {
+    public void cancelReservation(@PathVariable Long id) {
         reservationService.cancelReservation(id);
     }
 }

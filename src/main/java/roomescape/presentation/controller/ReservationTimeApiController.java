@@ -24,17 +24,18 @@ public final class ReservationTimeApiController {
     }
 
     @GetMapping
-    public List<ReservationTimeResponseDto> reservationTimes() {
+    public List<ReservationTimeResponseDto> getReservationTimes() {
         return reservationService.getAllReservationTimes();
     }
 
     @PostMapping
-    public ReservationTimeResponseDto create(@Valid @RequestBody ReservationTimeRequestDto reservationTimeRequestDto) {
+    public ReservationTimeResponseDto createReservationTime(
+            @Valid @RequestBody ReservationTimeRequestDto reservationTimeRequestDto) {
         return reservationService.addReservationTime(reservationTimeRequestDto);
     }
 
     @DeleteMapping("/{id}")
-    public void delete(@PathVariable Long id) {
+    public void deleteReservationTime(@PathVariable Long id) {
         reservationService.deleteReservationTime(id);
     }
 }

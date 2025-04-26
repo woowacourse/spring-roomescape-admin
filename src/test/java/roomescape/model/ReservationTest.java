@@ -18,10 +18,10 @@ class ReservationTest {
         String name = "프리";
         LocalDate date = LocalDate.of(2025, 4, 24);
         LocalTime time = LocalTime.of(10, 0);
-        ReservationTime reservationTime = new ReservationTime(EntityId.generate(1L), time);
+        ReservationTime reservationTime = new ReservationTime(new EntityId(1L), time);
 
         // When
-        Reservation reservation = new Reservation(EntityId.generate(1L), name, date, reservationTime);
+        Reservation reservation = new Reservation(new EntityId(1L), name, date, reservationTime);
 
         // Then
         assertThat(reservation.getId()).isEqualTo(1L);

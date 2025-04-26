@@ -15,7 +15,7 @@ public class ReservationTimeTest {
         LocalTime time = LocalTime.of(10, 0);
 
         // When
-        ReservationTime reservationTime = new ReservationTime(EntityId.generate(1L), time);
+        ReservationTime reservationTime = new ReservationTime(new EntityId(1L), time);
 
         // Then
         assertThat(reservationTime.getId()).isEqualTo(1L);

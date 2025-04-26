@@ -32,10 +32,10 @@ public class JdbcReservationRepository implements ReservationRepository {
         String sql = "SELECT * FROM reservation INNER JOIN reservation_time ON reservation.time_id = reservation_time.id";
         return jdbcTemplate.query(sql, (resultSet, rowNum) -> {
             ReservationTime time = new ReservationTime(
-                    EntityId.generate(resultSet.getLong("time_id")),
+                    new EntityId(resultSet.getLong("time_id")),
                     resultSet.getObject("start_at", LocalTime.class));
             return new Reservation(
-                    EntityId.generate(resultSet.getLong("id")),
+                    new EntityId(resultSet.getLong("id")),
                     resultSet.getString("name"),
                     resultSet.getObject("date", LocalDate.class),
                     time);
@@ -59,7 +59,7 @@ public class JdbcReservationRepository implements ReservationRepository {
             return preparedStatement;
         }, keyHolder);
         return new Reservation(
-                EntityId.generate(keyHolder.getKeyAs(Long.class)),
+                new EntityId(keyHolder.getKeyAs(Long.class)),
                 reservation.getName(), reservation.getDate(), reservation.getTime());
     }
 

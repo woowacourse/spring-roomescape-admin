@@ -17,8 +17,8 @@ public class ReservationGetResponseTest {
     void Reservation_엔티티로부터_해당_Dto를_파싱한다() {
         // Given
         LocalTime startAt = LocalTime.of(10, 0);
-        ReservationTime reservationTime = new ReservationTime(EntityId.generate(1L), startAt);
-        Reservation reservation = new Reservation(EntityId.generate(1L), "프리", LocalDate.of(2025, 4, 24), reservationTime);
+        ReservationTime reservationTime = new ReservationTime(new EntityId(1L), startAt);
+        Reservation reservation = new Reservation(new EntityId(1L), "프리", LocalDate.of(2025, 4, 24), reservationTime);
 
         // When
         ReservationGetResponse reservationGetResponse = ReservationGetResponse.from(reservation);

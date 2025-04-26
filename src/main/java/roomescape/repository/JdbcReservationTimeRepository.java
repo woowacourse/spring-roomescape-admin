@@ -29,7 +29,7 @@ public class JdbcReservationTimeRepository implements ReservationTimeRepository 
     public List<ReservationTime> findAll() {
         String sql = "SELECT * FROM reservation_time";
         return jdbcTemplate.query(sql, (resultSet, rowNum) -> new ReservationTime(
-                EntityId.generate(resultSet.getLong("id")),
+                new EntityId(resultSet.getLong("id")),
                 resultSet.getObject("start_at", LocalTime.class)));
     }
 
@@ -44,7 +44,7 @@ public class JdbcReservationTimeRepository implements ReservationTimeRepository 
         Map<String, Object> params = new HashMap<>();
         params.put("start_at", reservationTime.getStartAt());
         Long id = simpleJdbcInsert.executeAndReturnKey(params).longValue();
-        return new ReservationTime(EntityId.generate(id), reservationTime.getStartAt());
+        return new ReservationTime(new EntityId(id), reservationTime.getStartAt());
     }
 
     @Override
@@ -59,7 +59,7 @@ public class JdbcReservationTimeRepository implements ReservationTimeRepository 
         try {
             return jdbcTemplate.queryForObject(sql,
                     (resultSet, rowNum) -> new ReservationTime(
-                            EntityId.generate(resultSet.getLong("id")),
+                            new EntityId(resultSet.getLong("id")),
                             resultSet.getObject("start_at", LocalTime.class)),
                     id);
         } catch (EmptyResultDataAccessException exception) {

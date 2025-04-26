@@ -22,7 +22,7 @@ public class FakeReservationRepository implements ReservationRepository {
     @Override
     public Reservation insert(Reservation reservation) {
         Reservation reservationEntity = new Reservation(
-                EntityId.generate(index.getAndIncrement()), reservation.getName(), reservation.getDate(), reservation.getTime());
+                new EntityId(index.getAndIncrement()), reservation.getName(), reservation.getDate(), reservation.getTime());
         reservations.add(reservationEntity);
         return reservationEntity;
     }

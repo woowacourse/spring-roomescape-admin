@@ -30,7 +30,7 @@ public class ReservationService {
         return reservationRepository.findAll();
     }
 
-    public Reservation reserveNewTime(ReservationCreateRequest reservationCreateRequest) {
+    public Reservation createReservationAtNewDateTime(ReservationCreateRequest reservationCreateRequest) {
         String name = reservationCreateRequest.name();
         LocalDate date = reservationCreateRequest.date();
         Long timeId = reservationCreateRequest.timeId();

@@ -43,7 +43,7 @@ class JdbcReservationRepositoryTest {
         String name = "프리";
         LocalDate date = LocalDate.of(2025, 4, 24);
         LocalTime time = LocalTime.of(10, 0);
-        ReservationTime reservationTime = new ReservationTime(EntityId.generate(1L), time);
+        ReservationTime reservationTime = new ReservationTime(new EntityId(1L), time);
         Reservation reservation1 = new Reservation(EntityId.generateUnassigned(), name, date, reservationTime);
         Reservation reservation2 = new Reservation(EntityId.generateUnassigned(), name, date, reservationTime);
 
@@ -69,7 +69,7 @@ class JdbcReservationRepositoryTest {
         String name = "프리";
         LocalDate date = LocalDate.of(2025, 4, 24);
         LocalTime time = LocalTime.of(10, 0);
-        ReservationTime reservationTime = new ReservationTime(EntityId.generate(1L), time);
+        ReservationTime reservationTime = new ReservationTime(new EntityId(1L), time);
         Reservation reservation1 = new Reservation(EntityId.generateUnassigned(), name, date, reservationTime);
         Reservation reservation2 = new Reservation(EntityId.generateUnassigned(), name, date, reservationTime);
         Reservation reservation1Entity = jdbcReservationRepository.insert(reservation1);
@@ -93,7 +93,7 @@ class JdbcReservationRepositoryTest {
         String name = "프리";
         LocalDate date = LocalDate.of(2025, 4, 24);
         LocalTime time = LocalTime.of(10, 0);
-        ReservationTime reservationTime = new ReservationTime(EntityId.generate(1L), time);
+        ReservationTime reservationTime = new ReservationTime(new EntityId(1L), time);
         Reservation reservation1 = new Reservation(EntityId.generateUnassigned(), name, date, reservationTime);
         Reservation reservation2 = new Reservation(EntityId.generateUnassigned(), name, date, reservationTime);
         jdbcReservationRepository.insert(reservation1);
@@ -114,7 +114,7 @@ class JdbcReservationRepositoryTest {
         String name = "프리";
         LocalDate date = LocalDate.of(2025, 4, 24);
         LocalTime time = LocalTime.of(10, 0);
-        ReservationTime reservationTime = new ReservationTime(EntityId.generate(1L), time);
+        ReservationTime reservationTime = new ReservationTime(new EntityId(1L), time);
         Reservation reservation = new Reservation(EntityId.generateUnassigned(), name, date, reservationTime);
         jdbcReservationRepository.insert(reservation);
 

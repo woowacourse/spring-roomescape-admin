@@ -37,7 +37,7 @@ public class ReservationRestController {
     @PostMapping
     public ReservationGetResponse addReservation(@RequestBody ReservationCreateRequest reservationCreateRequest) {
         try {
-            Reservation reservation = reservationService.reserveNewTime(reservationCreateRequest);
+            Reservation reservation = reservationService.createReservationAtNewDateTime(reservationCreateRequest);
             return ReservationGetResponse.from(reservation);
         } catch (IllegalArgumentException exception) {
             throw new ResponseStatusException(HttpStatus.BAD_REQUEST, exception.getMessage());

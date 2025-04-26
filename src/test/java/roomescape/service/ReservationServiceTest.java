@@ -96,7 +96,7 @@ public class ReservationServiceTest {
         Long timeId = reservationTimeEntity.getId();
 
         // When
-        Reservation reservationEntity = reservationService.reserveNewTime(new ReservationCreateRequest(name, date, timeId));
+        Reservation reservationEntity = reservationService.createReservationAtNewDateTime(new ReservationCreateRequest(name, date, timeId));
 
         // Then
         assertThat(reservationEntity.getId()).isEqualTo(1L);
@@ -113,10 +113,10 @@ public class ReservationServiceTest {
         String name = "프리";
         LocalDate date = LocalDate.of(2025, 4, 24);
         Long timeId = reservationTimeEntity.getId();
-        reservationService.reserveNewTime(new ReservationCreateRequest(name, date, timeId));
+        reservationService.createReservationAtNewDateTime(new ReservationCreateRequest(name, date, timeId));
 
         // When & Then
-        assertThatThrownBy(() -> reservationService.reserveNewTime(new ReservationCreateRequest(name, date, timeId)))
+        assertThatThrownBy(() -> reservationService.createReservationAtNewDateTime(new ReservationCreateRequest(name, date, timeId)))
                 .isInstanceOf(IllegalArgumentException.class)
                 .hasMessage("해당 시간은 이미 예약되었습니다.");
     }
@@ -132,8 +132,8 @@ public class ReservationServiceTest {
         LocalDate date = LocalDate.of(2025, 4, 24);
 
         // When
-        Reservation reservationEntity1 = reservationService.reserveNewTime(new ReservationCreateRequest(name, date, reservationTimeEntity1.getId()));
-        Reservation reservationEntity2 = reservationService.reserveNewTime(new ReservationCreateRequest(name, date, reservationTimeEntity2.getId()));
+        Reservation reservationEntity1 = reservationService.createReservationAtNewDateTime(new ReservationCreateRequest(name, date, reservationTimeEntity1.getId()));
+        Reservation reservationEntity2 = reservationService.createReservationAtNewDateTime(new ReservationCreateRequest(name, date, reservationTimeEntity2.getId()));
 
         // Then
         assertThat(reservationService.getAllReservation()).containsExactlyInAnyOrder(reservationEntity1, reservationEntity2);
@@ -147,7 +147,7 @@ public class ReservationServiceTest {
         String name = "프리";
         LocalDate date = LocalDate.of(2025, 4, 24);
         Long timeId = reservationTimeEntity.getId();
-        reservationService.reserveNewTime(new ReservationCreateRequest(name, date, timeId));
+        reservationService.createReservationAtNewDateTime(new ReservationCreateRequest(name, date, timeId));
         Long deleteId = 1L;
 
         // When

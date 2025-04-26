@@ -10,6 +10,7 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.test.annotation.DirtiesContext;
 import roomescape.reservation.dto.ReservationReqDTO;
+import roomescape.reservation.exception.ReservationNotFoundException;
 import roomescape.reservation.model.Reservation;
 import roomescape.reservation.model.ReservationTime;
 
@@ -18,7 +19,6 @@ import java.time.LocalTime;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.NoSuchElementException;
 
 import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
 import static org.assertj.core.api.AssertionsForClassTypes.assertThatThrownBy;
@@ -51,7 +51,7 @@ class ReservationDAOTest {
     }
 
     @Test
-    @DisplayName("새 데이터 추가 시 생성된 id로 예약 데이터를 삭제할 수 있다")
+    @DisplayName("새 데이터 추가 시 생성된 id로 예약 데이터를 삭제할 수 있다.")
     void deleteByTest() {
         // given
         ReservationDAO reservationDAO = new ReservationDAO(jdbcTemplate);
@@ -66,7 +66,7 @@ class ReservationDAOTest {
     }
 
     @Test
-    @DisplayName("새 데이터 추가 시 생성된 id로 예약 데이터를 조회할 수 있다")
+    @DisplayName("새 데이터 추가 시 생성된 id로 예약 데이터를 조회할 수 있다.")
     void selectByTest() {
         // given
         ReservationDAO reservationDAO = new ReservationDAO(jdbcTemplate);
@@ -81,7 +81,23 @@ class ReservationDAOTest {
     }
 
     @Test
-    @DisplayName("존재하지 않는 id의 데이터를 삭제하려고 하면 예외가 발생한다")
+    @DisplayName("존재하지 않는 id의 예약 데이터를 조회하려고 하면 예외가 발생한다.")
+    void getByExceptionTest() {
+        // given
+        ReservationDAO reservationDAO = new ReservationDAO(jdbcTemplate);
+        Reservation reservationInfo = getNewReservationInfo();
+
+        // when
+        reservationDAO.insert(reservationInfo);
+        Long invalidId = 20L;
+
+        // then
+        assertThatThrownBy(() -> reservationDAO.deleteBy(invalidId))
+                .isInstanceOf(ReservationNotFoundException.class);
+    }
+
+    @Test
+    @DisplayName("존재하지 않는 id의 예약 데이터를 삭제하려고 하면 예외가 발생한다.")
     void deleteByExceptionTest() {
         // given
         ReservationDAO reservationDAO = new ReservationDAO(jdbcTemplate);
@@ -93,7 +109,7 @@ class ReservationDAOTest {
 
         // then
         assertThatThrownBy(() -> reservationDAO.deleteBy(invalidId))
-                .isInstanceOf(NoSuchElementException.class);
+                .isInstanceOf(ReservationNotFoundException.class);
     }
 
     @Test
@@ -128,7 +144,7 @@ class ReservationDAOTest {
                 .body(params)
                 .when().post("/reservations")
                 .then().log().all()
-                .statusCode(200);
+                .statusCode(201);
 
         Integer count = countReservations();
         assertThat(count).isEqualTo(1);
